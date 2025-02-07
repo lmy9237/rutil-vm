@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	                    http://www.springframework.org/schema/util
+	                    http://www.springframework.org/schema/util/spring-util-4.3.xsd
+	">
+
+ 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:sqlmap/sql-map-config.xml" />
+		<property name="mapperLocations">
+			<util:list>
+				<value>classpath:sqlmap/**/*-SQL.xml</value>
+			</util:list>
+		</property>
+	</bean>
+
+
+	<bean id="sqlSessionFactoryEngine" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceEngine" />
+		<property name="configLocation" value="classpath:sqlmap/sql-map-config.xml" />
+		<property name="mapperLocations">
+			<util:list>
+				<value>classpath:sqlmap/**/*-SQL.xml</value>
+			</util:list>
+		</property>
+	</bean>
+
+
+	<bean id="systemSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceSystem" />
+		<property name="configLocation" value="classpath:sqlmap/sql-map-config.xml" />
+		<property name="mapperLocations" value="classpath:sqlmap/com/itinfo/admin/*-SQL.xml" />
+	</bean>
+
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+		<constructor-arg index="1" value="REUSE" />
+	</bean>
+
+	<bean id="sqlSessionTemplateEngine" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg index="0" ref="sqlSessionFactoryEngine" />
+		<constructor-arg index="1" value="REUSE" />
+	</bean>
+	
+	<bean id="systemSqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg index="0" ref="systemSqlSessionFactory" />
+		<constructor-arg index="1" value="REUSE" />
+	</bean>
+
+</beans>

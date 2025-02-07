@@ -1,0 +1,37 @@
+/*도메인(새로만들기, 편집, 가져오기)*/
+.storage-domain-administer-popup{
+  height: 87%;
+  width: 58%;
+}
+.storage-domain-new-first{
+  display: flex;
+  padding: 0.4rem;
+  font-size: 0.32rem;
+  justify-content: space-between;
+  border-bottom: 1px solid #dfdddd;
+}
+.storage-domain-new-first>div{
+  width: 48%;
+}
+
+.domain-new-select{
+  width: 100%;
+  margin-bottom: 0.3rem;
+}
+.domain-num-box{
+  padding: 0.2rem;
+  width: 100%;
+}
+.domain-new-select select, 
+.domain-new-select input,
+.domain-num-box input
+{
+  width: 56%;
+}
+
+/*도메인 삭제*/
+.domain-delete-popup{
+  height: 33.4vh;
+  width: 38%;
+}
+

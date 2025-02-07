@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "src/org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd" >
+
+<mapper namespace="USERS">
+	<select id="retrieveUsers" resultType="com.itinfo.model.UserVo">
+		SELECT
+			NO, ID, ADMINISTRATIVE, NAME, LAST_NAME
+			, PRINCIPAL, NAMESPACE, EMAIL, AUTH_PROVIDER, LOGIN_COUNT
+			, BLOCK_TIME
+		FROM
+			SYSTEM_USERS
+		WHERE 1=1
+	</select>
+	
+	<select id="retrieveUser" parameterType="String" resultType="com.itinfo.model.UserVo">
+		SELECT
+			NO, ID, 'admin!123' AS PASSWORD, ADMINISTRATIVE, NAME
+			, LAST_NAME, PRINCIPAL, NAMESPACE, EMAIL, AUTH_PROVIDER
+			, LOGIN_COUNT, BLOCK_TIME
+		FROM
+			SYSTEM_USERS
+		WHERE 1=1
+		AND ID = #{id}
+	</select>
+	
+	<select id="isExistUser" parameterType="com.itinfo.model.UserVo" resultType="java.lang.Boolean">
+		SELECT EXISTS(
+			SELECT NO FROM SYSTEM_USERS WHERE 1=1 AND ID = #{id}
+		)
+	</select>
+	
+	<select id="login" parameterType="String" resultType="String">
+		SELECT PASSWORD FROM SYSTEM_USERS WHERE 1=1
+		AND ID::TEXT = #{id}
+	</select>
+	
+	<update id="updateUser" parameterType="com.itinfo.model.UserVo">
+		UPDATE
+			SYSTEM_USERS
+		SET
+			ADMINISTRATIVE = #{administrative}
+			, NAME = #{name}
+			, LAST_NAME = #{lastName}
+			, EMAIL = #{email}
+		WHERE 1=1
+		AND NO = #{no}
+	</update>
+
+	<update id="updatePassword" parameterType="com.itinfo.model.UserVo">
+		UPDATE
+			SYSTEM_USERS
+		SET
+			PASSWORD = #{newPassword}
+		WHERE 1=1
+		AND ID::TEXT = #{id}
+	</update>
+
+	<update id="updateLoginCount" parameterType="com.itinfo.model.UserVo">
+		UPDATE
+			SYSTEM_USERS
+		SET
+			LOGIN_COUNT = #{loginCount}
+		WHERE 1=1
+		AND ID::TEXT = #{id}
+	</update>
+
+	<update id="setBlockTime" parameterType="com.itinfo.model.UserVo">
+		UPDATE
+			SYSTEM_USERS
+		SET
+			BLOCK_TIME = #{blockTime}
+		WHERE 1=1
+		AND ID::TEXT = #{id}
+	</update>
+
+	<update id="initLoginCount" parameterType="String">
+		UPDATE
+			SYSTEM_USERS
+		SET
+			LOGIN_COUNT = 0
+			, BLOCK_TIME = null
+		WHERE 1=1
+		AND ID::TEXT = #{userId}
+	</update>
+	
+	<insert id="addUser" parameterType="com.itinfo.model.UserVo">
+		INSERT INTO SYSTEM_USERS (
+			ID, PASSWORD, ADMINISTRATIVE, NAME, LAST_NAME
+			, EMAIL
+		) VALUES (
+			#{id}, #{password}, #{administrative}, #{name}, #{lastName}
+			, #{email}
+		)
+	</insert>
+	
+	<delete id="removeUsers" parameterType="java.util.List">
+		DELETE FROM
+			SYSTEM_USERS
+		WHERE 1=1
+		AND NO IN
+		<foreach collection="list" item="users" index="index" open="(" close=")" separator=",">
+		#{users.no}
+		</foreach>
+	</delete>
+</mapper>

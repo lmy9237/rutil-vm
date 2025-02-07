@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap">
+	<div class="header">
+		<h1 class="logo"><img src="images/logo.png" alt="Okestro contrabass"></h1>
+		<div class="loginInfo">
+			<button type="button" class="btn-logined">admin</button>
+			<button type="button" class="btn-logout">로그아웃</button>
+		</div>
+	</div>
+	<!-- //header -->
+
+	<div class="container">
+		<div class="containnerBox">
+			<div class="left-wrap">
+				<div class="left-inner">
+					<ul class="leftmenu">
+						<li><a href="dashboard.html" class="menu-dashboard"><span>대시보드</span></a></li>
+						<li><a href="symphony.html" class="menu-symphony"><span>심포니</span></a></li>
+						<li>
+							<a href="#" class="menu-computing hasSub"><span>컴퓨팅</span></a>
+							<div class="left-submenu">
+								<ul>
+									<li><a href="virtualmachine.html">가상머신</a></li>
+									<li><a href="templete.html">템플릿</a></li>
+									<li><a href="host.html">호스트</a></li>
+									<li><a href="cluster.html">클러스터</a></li>
+								</ul>
+							</div>
+						</li>
+						<li><a href="network.html" class="menu-network"><span>네트워크</span></a></li>
+						<li><a href="#" class="menu-storage hasSub"><span>스토리지</span></a>
+							<div class="left-submenu">
+								<ul>
+									<li><a href="domain.html">도메인</a></li>
+									<li><a href="disk.html">디스크</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="#" class="menu-manage hasSub"><span>관리</span></a>
+							<div class="left-submenu">
+								<ul>
+									<li><a href="user.html">사용자</a></li>
+									<li><a href="instance.html">인스턴스 유형</a></li>
+									<li><a href="setting.html">설정</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<button class="btn-leftwrap">접기</button>
+			</div>
+			<!-- //left-wrap -->
+			<div class="cont-wrap">
+				<div class="cont-inner long">
+					<div class="doc-list-wrap">
+						<div class="doc-tit">
+							<h2 class="tit"><a href="virtualmachine.html">가상머신</a></h2>
+							<p class="location">컴퓨팅 &gt; <a href="virtualmachine.html">가상머신</a></p>
+							<!-- <button class="btn btn-primary btn-topR"><img src="images/btn-list.png" alt="" class="icoImg"> 목록</button> -->
+						</div>
+
+						<div class="detail-unitBox">
+							<div class="detail-header">
+								<h3>Centos</h3>
+								<p class="detail-updateInfo">마지막 업데이트 2021.03.05 02:25:44 <span class="name">홍길동</span></p>
+							</div>
+							<div class="detail-body">
+								<div class="rw-list3-wrap">
+									<ul class="rw-list3">
+										<li>
+											<div class="rdBox">
+												<div class="blue-ico exp"></div>
+												<div class="txtBox">
+													<p class="tit">설명</p>
+													<p>클러스트 내의 호스트입니다.</p>
+												</div>
+											</div>
+										</li>
+										<li>
+											<div class="rdBox">
+												<div class="blue-ico time"></div>
+												<div class="txtBox">
+													<p class="tit">부팅시간(업타임)</p>
+													<p>4 시간</p>
+												</div>
+											</div>
+										</li>
+										<li>
+											<div class="rdBox">
+												<div class="blue-ico etime"></div>
+												<div class="txtBox">
+													<p class="tit">실행 호스트</p>
+													<p>클러스트 내의 호스트</p>
+												</div>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<div class="rw-chart-wrap">
+									<div class="rdBox donut-rdBox">
+										<div class="donut-tbl">
+											<div class="donut-tbc">
+												<p class="donut-tit">CPU</p>
+												<div class="donut-wrap" id="donut-chart1">
+													<svg width="124" height="124">
+													  <circle r="31" cx="62" cy="62" />
+													</svg>
+													<div class="donut-inner"><span class="num" data-num="50">50</span><span class="unit">%</span></div>
+												</div>
+												<p class="donut-txt"><span>50%</span> 사용가능</p>
+											</div>
+											<div class="donut-tbc">
+												<p class="donut-tit">메모리</p>
+												<div class="donut-wrap" id="donut-chart2">
+													<svg width="124" height="124">
+													  <circle r="31" cx="62" cy="62" />
+													</svg>
+													<div class="donut-inner"><span class="num" data-num="20">20</span><span class="unit">%</span></div>
+												</div>
+												<p class="donut-txt"><span>20%</span> 사용가능</p>
+											</div>
+										</div>
+									</div>
+									<div class="rdBox">
+										<div class="chartBox">
+											<div class="chart-header">
+												<p class="tit">CPU, 메모리, 네트워크 이용률</p>
+												<ul class="chart-labelBox">
+													<li><span style="background-color: #025cfc;"></span>메모리</li>
+													<li><span style="background-color: #b620e0;"></span>CPU</li>
+													<li><span style="background-color: #2231a9;"></span>네트워크</li>
+												</ul>
+											</div>
+											<div id="chartdiv">
+												<!--  
+													1. 마우스 오버할때 들어가야할 불릿 정리
+														<span class="chartbullet bul-memory"></span>
+														<span class="chartbullet bul-cpu"></span>
+														<span class="chartbullet bul-network"></span>
+													2. 마우스 오버할때 x좌표의 폰트 색상 변화
+														- 메모리		: #025cfc
+														- CPU			: #b620e0
+														- 네트워크	: #2231a9
+												 -->
+											 </div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- //detail-unitBox -->
+
+						<div class="detail-unitBox">
+							<div class="detail-header">
+								<h3>시스템 정보</h3>
+							</div>
+							<div class="detail-body scrollBodyX">
+								<div class="tbl-list-wrap" style="min-width: 1000px;">
+									<table class="tbl-list">
+										<caption></caption>
+										<colgroup>
+											<col style="width: 15.5%; min-width: 155px;">
+											<col style="width: 27.5%; min-width: 275px;">
+											<col style="width: 16%; min-width: 160px;">
+											<col style="width: 23%; min-width: 230px;">
+											<col style="width: auto; min-width: 155px;">
+										</colgroup>
+										<thead>
+											<tr>
+												<th>CPU 코어 수</th>
+												<th>설정된 메모리</th>
+												<th>할당할 실제 메모리</th>
+												<th>OS 정보</th>
+												<th>에이전트 정보</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>8(8:1:1:1)</td>
+												<td>2939MB</td>
+												<td>30494MB</td>
+												<td>Other OS</td>
+												<td>Other OS</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!-- //detail-unitBox -->
+
+						<div class="detail-unitBox">
+							<div class="detail-header">
+								<h3>네트워크 인터페이스</h3>
+								<div class="btnSet-right">
+									<div class="btn-box">
+										<button type="button" class="btn-icon btn-icon-edit btn-tooltip">편집</button>
+										<div class="c-tooltip top-right">
+											<span class="c-tooltip-arrow"></span>
+											<span class="txt">편집</span>
+										</div>
+									</div>
+									<!-- 해당 팝업 ( pop_ifedit.html ) 의 내용은 wrap 바로 다음에 위치 -->
+								</div>
+							</div>
+							<div class="detail-body scrollBodyX">
+								<div class="tbl-list-wrap" style="min-width: 1000px;">
+									<table class="tbl-list">
+										<caption></caption>
+										<colgroup>
+											<col style="width: 8.5%; min-width: 120px;"><!-- 상태아이콘에 해당되는 곳은 min-width: 120px 필수 조정 -->
+											<col style="width: 18%; min-width: 180px;">
+											<col style="width: 17%; min-width: 170px;">
+											<col style="width: 17%; min-width: 170px;">
+											<col style="width: 17%; min-width: 170px;">
+											<col style="width: auto; min-width: 220px;">
+										</colgroup>
+										<thead>
+											<tr>
+												<th>상태</th>
+												<th>NIC</th>
+												<th>이름</th>
+												<th>IPv4</th>
+												<th>IPv6</th>
+												<th>IPv6</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+													<div class="icoStat-box">
+														<span class="icoStat ico-up btn-tooltip"></span>
+														<div class="c-tooltip j-right">
+															<span class="c-tooltip-arrow"></span>
+															<span class="txt">완료</span>
+														</div>
+													</div>
+													<div class="icoStat-box">
+														<span class="icoStat ico-locked btn-tooltip"></span>
+														<div class="c-tooltip j-right">
+															<span class="c-tooltip-arrow"></span>
+															<span class="txt">잠금</span>
+														</div>
+													</div>
+													<div class="icoStat-box">
+														<span class="icoStat ico-waiting btn-tooltip"></span>
+														<div class="c-tooltip j-right">
+															<span class="c-tooltip-arrow"></span>
+															<span class="txt">작업중</span>
+														</div>
+													</div>
+													<div class="icoStat-box">
+														<span class="icoStat ico-ingdown btn-tooltip"></span>
+														<div class="c-tooltip j-right">
+															<span class="c-tooltip-arrow"></span>
+															<span class="txt">내려가는중</span>
+														</div>
+													</div>
+													<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+												</td>
+												<td>nic1</td>
+												<td>sweweww11</td>
+												<td>해당 없음</td>
+												<td>해당 없음</td>
+												<td>34:34:ad:we:00:00</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!-- //detail-unitBox -->
+
+						<div class="detail-unitBox">
+							<div class="detail-header">
+								<h3>디스크</h3>
+							</div>
+							<div class="detail-body scrollBodyX">
+								<div class="tbl-list-wrap" style="min-width: 1000px;">
+									<table class="tbl-list">
+										<caption></caption>
+										<colgroup>
+											<col style="width: 8.5%; min-width: 120px;"><!-- 상태아이콘에 해당되는 곳은 min-width: 120px 필수 조정 -->
+											<col style="width: 10%; min-width: 100px;">
+											<col style="width: 12%; min-width: 120px;">
+											<col style="width: 16%; min-width: 160px;">
+											<col style="width: 10.5%; min-width: 105px;">
+											<col style="width: 11%; min-width: 110px;">
+											<col style="width: 10.5%; min-width: 105px;">
+											<col style="width: auto; min-width: 200px;">
+										</colgroup>
+										<thead>
+											<tr>
+												<th>상태</th>
+												<th>별칭</th>
+												<th>가상크기</th>
+												<th>연결대상</th>
+												<th>인터페이스</th>
+												<th>정렬</th>
+												<th>유형</th>
+												<th>설명</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+													<div class="icoStat-box">
+														<span class="icoStat ico-up btn-tooltip"></span>
+														<div class="c-tooltip j-right">
+															<span class="c-tooltip-arrow"></span>
+															<span class="txt">완료</span>
+														</div>
+													</div>
+													<div class="icoStat-box">
+														<span class="icoStat ico-locked btn-tooltip"></span>
+														<div class="c-tooltip j-right">
+															<span class="c-tooltip-arrow"></span>
+															<span class="txt">잠금</span>
+														</div>
+													</div>
+													<div class="icoStat-box">
+														<span class="icoStat ico-waiting btn-tooltip"></span>
+														<div class="c-tooltip j-right">
+															<span class="c-tooltip-arrow"></span>
+															<span class="txt">작업중</span>
+														</div>
+													</div>
+													<div class="icoStat-box">
+														<span class="icoStat ico-ingdown btn-tooltip"></span>
+														<div class="c-tooltip j-right">
+															<span class="c-tooltip-arrow"></span>
+															<span class="txt">내려가는중</span>
+														</div>
+													</div>
+													<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+												</td>
+												<td>nic1</td>
+												<td>100.0GB</td>
+												<td>HostedEngine</td>
+												<td>VIRTIO</td>
+												<td>Unknown</td>
+												<td>IMAGE</td>
+												<td>Hosted-Engine disk</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!-- //detail-unitBox -->
+
+						<div class="detail-unitBox">
+							<div class="detail-header">
+								<h3>스냅샷</h3>
+								<div class="btnSet-right">
+									<div class="btn-box">
+										<button type="button" class="btn-icon btn-icon-del btn-tooltip">삭제</button>
+										<div class="c-tooltip top-right">
+											<span class="c-tooltip-arrow"></span>
+											<span class="txt">삭제</span>
+										</div>
+									</div>
+									<div class="btn-box">
+										<button type="button" class="btn-icon btn-icon-copy btn-tooltip" disabled>복제</button>
+										<div class="c-tooltip top-right">
+											<span class="c-tooltip-arrow"></span>
+											<span class="txt">복제</span>
+										</div>
+									</div>
+									<div class="btn-box">
+										<button type="button" class="btn-icon btn-icon-z btn-tooltip" disabled>되돌리기</button>
+										<div class="c-tooltip top-right">
+											<span class="c-tooltip-arrow"></span>
+											<span class="txt">되돌리기</span>
+										</div>
+									</div>
+									<div class="btn-box">
+										<button type="button" class="btn-icon btn-icon-preview btn-tooltip">미리보기</button>
+										<div class="c-tooltip top-right">
+											<span class="c-tooltip-arrow"></span>
+											<span class="txt">미리보기</span>
+										</div>
+									</div>
+									<div class="btn-box">
+										<button type="button" class="btn-icon btn-icon-commit btn-tooltip">커밋</button>
+										<div class="c-tooltip top-right">
+											<span class="c-tooltip-arrow"></span>
+											<span class="txt">커밋</span>
+										</div>
+									</div>
+									<div class="btn-box">
+										<button type="button" class="btn-icon btn-icon-vmmake btn-tooltip">생성</button>
+										<div class="c-tooltip top-right">
+											<span class="c-tooltip-arrow"></span>
+											<span class="txt">생성</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="detail-body">
+								<div class="folding-Box">
+									<!-- Active VM 영역 반복 시작 -->
+									<div class="folding-wrap">
+										<div class="folding-header">
+											<p class="tit"><span class="ico-camera"></span> Active VM</p> 
+											<!-- 클래스명 정리  
+												기본 : ico-camera
+												active : ico-camera에 클래스 ico-camera-active 추가
+												locked : ico-camera에 클래스 ico-camera-locked 추가
+											-->
+											<button class="btn-folding active">펼치기/닫기</button> <!-- 디폴트 펼침 : 클래스 active 추가 -->
+										</div>
+										<div class="folding-body" style="display: block;"><!-- 디폴트 : 처음 한개만 열려있으므로 임시로 display:block 처리. 나머지는 없음 -->
+											<div class="tabs">
+												<ul>
+													<li><a href="#tabs-1">일반</a></li>
+													<li><a href="#tabs-2">디스크</a></li>
+													<li><a href="#tabs-3">네트워크 인터페이스</a></li>
+													<li><a href="#tabs-4">설치된 애플리케이션</a></li>
+												</ul>
+												<div id="tabs-1">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic1</td>
+																		<td>nic1</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+												<div id="tabs-2">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic2</td>
+																		<td>nic2</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+												<div id="tabs-3">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic3</td>
+																		<td>nic3</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+												<div id="tabs-4">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic4</td>
+																		<td>nic4</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- //folding-wrap -- Active VM 영역 반복 끝 -->
+
+									<div class="folding-wrap">
+										<div class="folding-header">
+											<p class="tit"><span class="ico-camera ico-camera-active"></span> Active VM</p>
+											<button class="btn-folding">펼치기/닫기</button>
+										</div>
+										<div class="folding-body">
+											<div class="tabs">
+												<ul>
+													<li><a href="#tabs-21">일반</a></li>
+													<li><a href="#tabs-22">디스크</a></li>
+													<li><a href="#tabs-23">네트워크 인터페이스</a></li>
+													<li><a href="#tabs-24">설치된 애플리케이션</a></li>
+												</ul>
+												<div id="tabs-21">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic1</td>
+																		<td>nic1</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+												<div id="tabs-22">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic2</td>
+																		<td>nic2</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+												<div id="tabs-23">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic3</td>
+																		<td>nic3</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+												<div id="tabs-24">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic4</td>
+																		<td>nic4</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- //folding-wrap -- Active VM 영역 반복 끝 -->
+
+									<div class="folding-wrap">
+										<div class="folding-header">
+											<p class="tit"><span class="ico-camera ico-camera-locked"></span> Active VM</p>
+											<button class="btn-folding">펼치기/닫기</button>
+										</div>
+										<div class="folding-body">
+											<div class="tabs">
+												<ul>
+													<li><a href="#tabs-31">일반</a></li>
+													<li><a href="#tabs-32">디스크</a></li>
+													<li><a href="#tabs-33">네트워크 인터페이스</a></li>
+													<li><a href="#tabs-34">설치된 애플리케이션</a></li>
+												</ul>
+												<div id="tabs-31">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic1</td>
+																		<td>nic1</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+												<div id="tabs-32">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic2</td>
+																		<td>nic2</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+												<div id="tabs-33">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic3</td>
+																		<td>nic3</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+												<div id="tabs-34">
+													<div class="scrollBodyX">
+														<div class="tbl-list-wrap" style="min-width: 930px;">
+															<table class="tbl-list">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 9%; min-width: 90px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 13%; min-width: 130px;">
+																	<col style="width: 19%; min-width: 190px;">
+																	<col style="width: 15%; min-width: 150px;">
+																	<col style="width: 17%; min-width: 170px;">
+																	<col style="width: auto; min-width: 60px;">
+																</colgroup>
+																<thead>
+																	<tr>
+																		<th>생성날짜</th>
+																		<th>상태</th>
+																		<th>메모리</th>
+																		<th class="txt-left">설명</th>
+																		<th>설정된 메모리</th>
+																		<th>할당할 실제 메모리</th>
+																		<th>CPU</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>nic4</td>
+																		<td>nic4</td>
+																		<td>False</td>
+																		<td class="txt-left">HostedEngine</td>
+																		<td>Unknown</td>
+																		<td>IMAGE</td>
+																		<td>4(1:4:1)</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- //folding-wrap -- Active VM 영역 반복 끝 -->
+									
+								</div>
+								<!-- //folding-Box -->
+							</div>
+						</div>
+						<!-- //detail-unitBox -->
+
+						<div class="detail-unitBox">
+							<div class="detail-header">
+								<h3>이벤트</h3>
+							</div>
+							<div class="detail-body">
+								<div class="scrollBodyX">
+									<div class="list-tot" style="min-width: 1000px;">
+										<div class="list-fix-wrap">
+											<table class="tbl-list">
+												<caption></caption>
+												<colgroup>
+													<col style="width: 8.5%; min-width: 120px;"><!-- 상태아이콘에 해당되는 곳은 min-width: 120px 필수 조정 -->
+													<col style="width: 25%; min-width: 255px;">
+													<col style="width: auto;">
+													<col style="width: 20%; min-width: 100px;">
+												</colgroup>
+												<tbody>
+													<th>타입</th>
+													<th>시간</th>
+													<th class="txt-left">메시지</th>
+													<th></th>
+												</tbody>
+											</table>
+										</div><!-- //list-fix-wrap -->
+										<div class="list-scroll-wrap detail-ms-wrap scrollBodyY">
+											<div class="list-scroll-cont">
+												<table class="tbl-list">
+													<caption></caption>
+													<colgroup>
+													<col style="width: 8.5%; min-width: 120px;"><!-- 상태아이콘에 해당되는 곳은 min-width: 120px 필수 조정 -->
+													<col style="width: 25%; min-width: 255px;">
+													<col style="width: auto;">
+													<col style="width: 20%; min-width: 100px;">
+													</colgroup>
+													<tbody>
+														<!-- 한줄반복 시작 -->
+														<tr>
+															<td>
+																<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+																<div class="icoStat-box">
+																	<span class="icoStat ico-up btn-tooltip"></span>
+																	<div class="c-tooltip j-right">
+																		<span class="c-tooltip-arrow"></span>
+																		<span class="txt">완료</span>
+																	</div>
+																</div>
+																<div class="icoStat-box">
+																	<span class="icoStat ico-locked btn-tooltip"></span>
+																	<div class="c-tooltip j-right">
+																		<span class="c-tooltip-arrow"></span>
+																		<span class="txt">잠금</span>
+																	</div>
+																</div>
+																<div class="icoStat-box">
+																	<span class="icoStat ico-waiting btn-tooltip"></span>
+																	<div class="c-tooltip j-right">
+																		<span class="c-tooltip-arrow"></span>
+																		<span class="txt">작업중</span>
+																	</div>
+																</div>
+																<div class="icoStat-box">
+																	<span class="icoStat ico-ingdown btn-tooltip"></span>
+																	<div class="c-tooltip j-right">
+																		<span class="c-tooltip-arrow"></span>
+																		<span class="txt">내려가는중</span>
+																	</div>
+																</div>
+																<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															</td>
+															<td>2021-03-24 13:32:00</td>
+															<td class="txt-left">VM HostedEngine is not responding.</td>
+															<td></td>
+														</tr>
+														<!-- //한줄반복 끝 -->
+
+														<tr>
+															<td>
+																<div class="icoStat-box">
+																	<span class="icoStat ico-locked btn-tooltip"></span>
+																	<div class="c-tooltip j-right">
+																		<span class="c-tooltip-arrow"></span>
+																		<span class="txt">잠금</span>
+																	</div>
+																</div>
+															</td>
+															<td>2021-03-24 13:32:00</td>
+															<td class="txt-left">VM HostedEngine is not responding.</td>
+															<td></td>
+														</tr>
+														<tr>
+															<td>
+																<div class="icoStat-box">
+																	<span class="icoStat ico-waiting btn-tooltip"></span>
+																	<div class="c-tooltip j-right">
+																		<span class="c-tooltip-arrow"></span>
+																		<span class="txt">작업중</span>
+																	</div>
+																</div>
+															</td>
+															<td>2021-03-24 13:32:00</td>
+															<td class="txt-left">VM HostedEngine is not responding.</td>
+															<td></td>
+														</tr>
+														<tr>
+															<td>
+																<div class="icoStat-box">
+																	<span class="icoStat ico-ingdown btn-tooltip"></span>
+																	<div class="c-tooltip j-right">
+																		<span class="c-tooltip-arrow"></span>
+																		<span class="txt">내려가는중</span>
+																	</div>
+																</div>
+															</td>
+															<td>2021-03-24 13:32:00</td>
+															<td class="txt-left">VM HostedEngine is not responding.</td>
+															<td></td>
+														</tr>
+														<tr>
+															<td>
+																<div class="icoStat-box">
+																	<span class="icoStat ico-unknown btn-tooltip"></span>
+																	<div class="c-tooltip j-right">
+																		<span class="c-tooltip-arrow"></span>
+																		<span class="txt">응답없음</span>
+																	</div>
+																</div>
+															</td>
+															<td>2021-03-24 13:32:00</td>
+															<td class="txt-left">VM HostedEngine is not responding.</td>
+															<td></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div><!-- //list-scroll-wrap -->
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- //detail-unitBox -->
+
+						<div class="doc-list-btm">
+							<div class="paging-wrap">
+								<button class="btn-page goFirst">맨처음으로</button><!-- 비활성화는 속성 disabled 추가 -->
+								<button class="btn-page goPrev">맨처음으로</button>
+
+								<button class="btn-go-page here">1</button><!-- 현재 페이지 : 클래스 here 추가 -->
+								<button class="btn-go-page">2</button>
+								<button class="btn-go-page">3</button>
+								<button class="btn-go-page">4</button>
+								<button class="btn-go-page">5</button>
+
+								<button class="btn-page goNext">맨처음으로</button>
+								<button class="btn-page goLast">맨처음으로</button><!-- 비활성화는 속성 disabled 추가 -->
+							</div>
+						</div>
+						<!-- //doc-list-btm -->
+					</div>
+					<!-- //doc-list-wrap -->
+				</div>
+			</div>
+			<!-- //cont-wrap -->
+		</div>
+		<!-- //containnerBox -->
+	</div>
+	<!-- //container -->
+
+</div>	
+
+<!-- modalBox 는 반드시 "body태그 끝나기 전" && "wrap 바로 다음"에 위치!! -->
+<div class="modalBox">
+	<!-- 상세내용은 pop_으로 시작하는 해당 html 파일을 확인해주세요~ -->
+</div>
+
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+<script>
+
+	/* 2π × r = 2π × 31 ≈ 195 */
+	function funcDonutChart ( data , elm){
+		var _this = $('#'+elm);
+		var _dcNum = (195 * (100 - data)) / 100 * -1; 
+		_this.find('circle').css({
+			"strokeDashoffset" : -195,
+			"strokeDasharray" : 195
+		});
+		_this.find('circle').stop().delay(300).animate({
+			"strokeDashoffset" : _dcNum
+		},500);
+	}
+
+	funcDonutChart(50 , 'donut-chart1');
+	funcDonutChart(20 , 'donut-chart2');
+
+</script>
+
+<script src="js/core.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/themes_animated.js"></script>
+<!-- Chart code -->
+<script>
+am4core.ready(function() {
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create chart instance
+var chart = am4core.create("chartdiv", am4charts.XYChart);
+
+// Add data
+chart.data = [
+  {date:new Date(2019,5,12), value1:0, value2:20, value3:10},
+  {date:new Date(2019,5,13), value1:10, value2:10, value3:25},
+  {date:new Date(2019,5,14), value1:40, value2:70, value3:50},
+  {date:new Date(2019,5,15), value1:50, value2:60, value3:62},
+  {date:new Date(2019,5,16), value1:50, value2:10, value3:25},
+  {date:new Date(2019,5,17), value1:50, value2:80, value3:58},
+  {date:new Date(2019,5,18), value1:70, value2:90, value3:70},
+  {date:new Date(2019,5,19), value1:20, value2:80, value3:60},
+  {date:new Date(2019,5,20), value1:80, value2:30, value3:90},
+  {date:new Date(2019,5,21), value1:60, value2:90, value3:95}
+
+]
+
+// Create axes
+var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+dateAxis.renderer.minGridDistance = 20;
+dateAxis.renderer.grid.template.stroke = am4core.color("#cccccc");
+dateAxis.renderer.labels.template.fill = am4core.color("#cccccc");
+dateAxis.renderer.grid.template.location = 0.5;
+dateAxis.startLocation = 0.5;
+dateAxis.endLocation = 0.5;
+dateAxis.renderer.minLabelPosition = 0.05;
+dateAxis.renderer.maxLabelPosition = 0.95;
+dateAxis.tooltip.disabled = true;
+
+var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.min = 0;
+valueAxis.max = 100;
+valueAxis.renderer.grid.template.stroke = am4core.color("#cccccc");
+valueAxis.renderer.labels.template.fill = am4core.color("#cccccc");
+valueAxis.strictMinMax = true;
+valueAxis.renderer.grid.template.disabled = true;
+valueAxis.renderer.labels.template.disabled = true;
+valueAxis.tooltip.disabled = true;
+
+function createGrid(value) {
+  var range = valueAxis.axisRanges.create();
+  range.value = value;
+  range.label.text = "{value}";
+}
+
+createGrid(0);
+createGrid(10);
+createGrid(20);
+createGrid(30);
+createGrid(40);
+createGrid(50);
+createGrid(60);
+createGrid(70);
+createGrid(80);
+createGrid(90);
+createGrid(100);
+
+// Create series
+var series = chart.series.push(new am4charts.LineSeries());
+series.dataFields.valueY = "value1";
+series.dataFields.dateX = "date";
+series.strokeWidth = 2;
+series.stroke = am4core.color("#025cfc");
+series.minBulletDistance = 10;
+series.tooltipText = "메모리 이용률\n{date} {value1}%";
+series.tooltip.pointerOrientation = "down";
+series.tooltip.getFillFromObject = false;
+series.tooltip.background.strokeWidth = 0;
+series.tooltip.background.fill = am4core.color("#000000");
+series.tooltip.background.fillOpacity = 0.7;
+series.tooltip.fontSize = 13;
+series.tooltip.fontFamily = 'NotoSansCJKkr-Bold'
+series.tooltip.background.cornerRadius = 5;
+series.tooltip.dy = -12;
+
+// Create series
+var series2 = chart.series.push(new am4charts.LineSeries());
+series2.dataFields.valueY = "value2";
+series2.dataFields.dateX = "date";
+series2.strokeWidth = 2;
+series2.stroke = am4core.color("#b620e0");
+
+// Create series
+var series3 = chart.series.push(new am4charts.LineSeries());
+series3.dataFields.valueY = "value3";
+series3.dataFields.dateX = "date";
+series3.strokeWidth = 2;
+series3.stroke = am4core.color("#2231a9");
+
+
+// Add cursor
+chart.cursor = new am4charts.XYCursor();
+chart.cursor.xAxis = dateAxis;
+
+}); // end am4core.ready()
+</script>
+
+</body>
+</html>

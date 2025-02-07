@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+	">
+
+	<!--
+	<import resource="classpath*:agfw/core/spring/agfw-core-context.xml"/>
+	<import resource="classpath*:agfw/core/spring/tx-context.xml"/>
+	 -->
+	
+	<!-- query for postgresql context -->
+	<import resource="classpath*:spring/query-postgresql-context.xml" />
+	
+	<!-- query for h2db context
+	<import resource="classpath*:spring/query-h2db-context.xml" /-->
+
+	<!-- karajan context
+	<import resource="classpath*:spring/karajan-context.xml"/-->
+	
+	<context:component-scan base-package="com.itinfo">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	<!-- h2db -->
+	<!-- <jdbc:embedded-database id="dataSourceSystem" type="H2">
+	    <jdbc:script location="classpath:com.itinfo/sqlmap/com.itinfo/system/*.sql" />
+	</jdbc:embedded-database> -->
+	<jdbc:initialize-database data-source="dataSourceSystem" ignore-failures="ALL">
+	    <jdbc:script location="classpath:sqlmap/com/itinfo/system/*.sql" />
+	</jdbc:initialize-database>
+	
+	<bean id="systemJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg ref="dataSourceSystem" />
+    </bean>
+
+	<!-- jdbcTemplate -->
+	<bean id="itinfoJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
+
+	<!-- user connection service -->
+	<bean id="securityConnectionService" class="com.itinfo.security.SecurityConnectionService">
+	</bean>
+	
+	<!-- admin connection service -->
+	<bean id="adminConnectionService" class="com.itinfo.service.engine.AdminConnectionService">
+	</bean>
+
+	<!-- karajan service -->
+	<bean id="karajanService" class="com.itinfo.service.engine.KarajanService" />
+	
+	<!-- workload prediction service -->
+	<bean id="workloadPredictionService"
+		  class="com.itinfo.service.engine.WorkloadPredictionService">
+		<constructor-arg>
+			<ref bean="queryGetVmWorkload" />
+		</constructor-arg>
+		<property name="jdbcTemplate" ref="itinfoJdbcTemplate"/>
+	</bean>
+
+	<!-- MultipartResolver 설정 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
+	 <!-- websocket with sockjs -->
+	 <websocket:message-broker application-destination-prefix="/cbase">
+        <websocket:stomp-endpoint path="/websocket/karajan" >
+            <websocket:sockjs/>
+        </websocket:stomp-endpoint>
+        <websocket:simple-broker prefix="/topic, /queue"/>
+    </websocket:message-broker>
+    
+	<!-- task executor -->
+	<task:executor id="karajanTaskExecutor" pool-size="10"/>
+	<task:annotation-driven executor="karajanTaskExecutor"/>
+
+</beans>

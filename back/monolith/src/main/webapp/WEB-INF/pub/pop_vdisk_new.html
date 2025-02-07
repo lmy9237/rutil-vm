@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap opened"><!-- modal 열림/닫힘 상태에 따라 클래스 opened 추가/삭제 -->
+	<!-- 해당 화면 내용 -->
+</div>	
+
+<!-- modalBox 는 반드시 "wrap 바로 다음" && "body태그 끝나기 전"에 위치!! -->
+<div class="modalBox active"> <!-- 보이기/안보이기 : 클래스 active 추가/삭제 -->
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap">
+			<div class="c-modal-inner">
+				//기존의 화면내용
+			</div>
+		</section>
+	</div>
+</div>
+
+<!-- 팝업이 이중으로 떠야할때: 이전 modalBox 바로 다음에 위치 -->
+<div class="modalBox active">
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap c-modal-auto">
+			<div class="c-modal-inner">
+				<div class="c-modal-header">
+					<h1>새 가상 디스크</h1>
+				</div>
+				<div class="c-modal-body">
+					<div class="c-modal-body_inner pt-40">
+						<div class="frmSet">
+							<div class="frm-unit half-left">
+								<p class="tit">크기</p>
+								<div class="inputBox">
+									<input type="text" class="input-custom" placeholder="#GBtye">
+								</div>
+							</div>
+							<div class="frm-unit half-right">
+								<p class="tit">설명</p>
+								<div class="inputBox">
+									<input type="text" class="input-custom" placeholder="설명입력">
+								</div>
+							</div>
+						</div>
+						<div class="frmSet">
+							<div class="frm-unit">
+								<p class="tit">이름 <span class="mustbe"></span></p>
+								<div class="inputBox">
+									<input type="text" class="input-custom" placeholder="이름입력">
+								</div>
+								<p class="errTxt">4~20자 영문, 숫자와 특수기호(_),(-)만 사용 가능합니다.</p><!-- 에러없으면 p태그 자체를 삭제 -->
+							</div>
+						</div>
+						<div class="frmSet">
+							<div class="frm-unit half-left">
+								<p class="tit">인터페이스</p>
+								<div class="fullselect-wrap">
+									<select name="" id="">
+										<option value="Virtlo-SCSI">Virtlo-SCSI</option>
+										<option value="list2">list2</option>
+										<option value="list3">list3</option>
+										<option value="list4">list4</option>
+										<option value="list5">list5</option>
+										<option value="list6">list6</option>
+									</select>
+								</div>
+							</div>
+							<div class="frm-unit half-right">
+								<p class="tit">&nbsp;</p>
+								<div class="frm-only-check">
+									<label class="ui-check">
+										<input type="checkbox">
+										<span class="chk-ico"></span> 부팅 가능
+									</label>
+									<label class="ui-check">
+										<input type="checkbox">
+										<span class="chk-ico"></span> 공유 가능
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="frmSet">
+							<div class="frm-unit">
+								<p class="tit">스토리지 도메인</p>
+								<div class="fullselect-wrap">
+									<select name="" id="">
+										<option value="dfgldkdd:(1.0GB)">dfgldkdd:(1.0GB)</option>
+										<option value="list2">list2</option>
+										<option value="list3">list3</option>
+										<option value="list4">list4</option>
+										<option value="list5">list5</option>
+										<option value="list6">list6</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!-- //c-modal-body -->
+				<div class="c-modal-footer">
+					<div class="buttonSet">
+						<button class="btn-c-modal btn-cancel">취소</button>
+						<button class="btn-c-modal">확인</button>
+					</div>
+				</div> <!-- //c-modal-footer -->
+			</div>
+		</section>
+	</div>
+</div>
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+.disk-move-popup {
+  height: 37%;
+  width: 39%;
+}
+
+/*새로만들기*/
+.img-input-box select {
+  width: 55%;
+}
+.disk-new-img {
+  display: flex;
+  padding: 0 0.35rem;
+}
+.disk-new-img-right {
+  padding-left: 0.3rem;
+}
+.disk-new-img-right div {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 0.13rem;
+}
+.disk-new-img-right label {
+  margin-left: 0.1rem;
+}
+
+.disk-new-img-left {
+  width: 60%;
+}
+.disk-new-img-left > div {
+  display: flex;
+  justify-content: space-between;
+}
+/*디스크(업로드)*/
+.storage-disk-upload-popup {
+  height: 78.4vh;
+  width: 58%;
+}
+.storage-upload-first {
+  padding: 0.4rem;
+  display: flex;
+  font-size: 0.34rem;
+  margin-bottom: 1rem;
+}
+.storage-upload-first > button {
+  font-weight: 600;
+  margin-right: 0.4rem;
+  padding: 0.1rem;
+}
+
+.disk-option {
+  background-color: #e6e6e6;
+  font-weight: 600;
+  padding: 0.35rem 0.4rem;
+}

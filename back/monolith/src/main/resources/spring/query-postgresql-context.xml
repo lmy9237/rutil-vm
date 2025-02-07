@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+   <description>
+		가상머신 별 작업량(Workload)을 조회하기 위한 SQL을 저장한다.
+		WorkloadPredictionService에서 사용하며 스케줄러에서 호출된다.
+	</description>
+
+    <bean id="queryGetVmWorkload" class="java.lang.String">
+        <constructor-arg>
+            <value>
+			SELECT
+				HISTORY_DATETIME AT TIME ZONE 'ASIA/SEOUL' AS HISTORY_DATETIME
+				, COALESCE(CPU_USAGE_PERCENT, 0) AS CPU_USAGE_PERCENT
+				, COALESCE(MEMORY_USAGE_PERCENT, 0) AS MEMORY_USAGE_PERCENT
+				, ROUND(COALESCE(MEMORY_USAGE_PERCENT, 0) * CAST(? AS FLOAT) / 100) AS MEMORY_USAGE
+			FROM
+				VM_SAMPLES_HISTORY
+			WHERE 1=1
+			AND VM_ID::TEXT = ?
+			AND	(HISTORY_DATETIME <![CDATA[ > ]]> CURRENT_DATE -1 AND HISTORY_DATETIME <![CDATA[ < ]]> CURRENT_DATE)
+			ORDER BY HISTORY_DATETIME DESC
+            </value>
+        </constructor-arg>
+    </bean>
+</beans>

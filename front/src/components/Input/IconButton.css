@@ -1,0 +1,8 @@
+/* IconInput.css */
+.icon-button-conatiner {
+  display:flex;flex-direction:row;justify-content:center;align-items:center;height:auto;
+}
+.icon-button-conatiner > p {
+  padding:3px
+}
+.icon-button-conatiner > span { color: white; }

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap opened"><!-- modal 열림/닫힘 상태에 따라 클래스 opened 추가/삭제 -->
+	<!-- 해당 화면 내용 -->
+</div>	
+
+<!-- modalBox 는 반드시 "wrap 바로 다음" && "body태그 끝나기 전"에 위치!! -->
+<div class="modalBox active"> <!-- 보이기/안보이기 : 클래스 active 추가/삭제 -->
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap">
+			<div class="c-modal-inner">
+				//기존의 화면내용
+			</div>
+		</section>
+	</div>
+</div>
+
+<!-- 팝업이 이중으로 떠야할때: 이전 modalBox 바로 다음에 위치 -->
+<div class="modalBox active">
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap c-modal-auto">
+			<div class="c-modal-inner">
+				<div class="c-modal-header">
+					<h1>스냅샷 생성</h1>
+				</div>
+				<div class="c-modal-body">
+					<div class="c-modal-body_inner pt-40">
+						<div class="frmSet">
+							<div class="frm-unit">
+								<p class="tit">설명</p>
+								<div class="inputBox">
+									<input type="text" class="input-custom" placeholder="설명입력">
+								</div>
+							</div>
+						</div>
+						<div class="frmSet">
+							<div class="frm-unit">
+								<p class="tit">포괄할 디스크</p>
+								<div class="doc-list-wrap">
+									<div class="doc-list-body">
+										<div class="doc-list-inner">
+											<div class="list-tot">
+												<div class="list-fix-wrap">
+													<table>
+														<caption></caption>
+														<colgroup>
+																<col style="width: 50px;">
+																<col style="width: 200px;">
+																<col style="width: auto;">
+														</colgroup>
+														<tbody>
+															<th>
+																<label class="ui-check mr-0">
+																	<input type="checkbox">
+																	<span class="chk-ico"></span>
+																</label>
+															</th>
+															<th>별칭</th>
+															<th>설명</th>
+														</tbody>
+													</table>
+												</div><!-- //list-fix-wrap -->
+
+												<div class="list-scroll-wrap scrollBodyY">
+													<!-- 0. 조회 내역이 없을때 - 시작 -->
+													<!-- <div class="nodata-wrap">
+														<p class="nodata">조회된 내용이 없습니다.</p>
+													</div> -->
+													<!-- //0. 조회 내역이 없을때 - 끝 -->
+
+													<!-- 1. 조회 내역이 있을때 - 시작 -->
+													<div class="list-scroll-cont">
+														<table>
+															<caption></caption>
+															<colgroup>
+																<col style="width: 50px;">
+																<col style="width: 200px;">
+																<col style="width: auto;">
+															</colgroup>
+															<tbody>
+																<!-- 한줄반복 시작 -->
+																<tr>
+																	<td>
+																		<label class="ui-check mr-0">
+																			<input type="checkbox">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-strong">he_metadata</td>
+																	<td class="txt-left">Hosted-Engine metadata disk</td>
+																</tr>
+																<!-- //한줄반복 끝 -->
+
+																<tr>
+																	<td>
+																		<label class="ui-check mr-0">
+																			<input type="checkbox">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-strong">he_metadata</td>
+																	<td class="txt-left">Hosted-Engine metadata disk</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="ui-check mr-0">
+																			<input type="checkbox">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-strong">he_metadata</td>
+																	<td class="txt-left">Hosted-Engine metadata disk</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="ui-check mr-0">
+																			<input type="checkbox">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-strong">he_metadata</td>
+																	<td class="txt-left">Hosted-Engine metadata disk</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="ui-check mr-0">
+																			<input type="checkbox">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-strong">he_metadata</td>
+																	<td class="txt-left">Hosted-Engine metadata disk</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="ui-check mr-0">
+																			<input type="checkbox">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-strong">he_metadata</td>
+																	<td class="txt-left">Hosted-Engine metadata disk</td>
+																</tr>
+
+															</tbody>
+														</table>
+													</div>
+													<!-- //1. 조회 내역이 있을때 - 끝 -->
+
+												</div><!-- //list-scroll-wrap -->
+											</div>
+										</div>
+									</div>
+									<!-- //doc-list-body -->
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div> <!-- //c-modal-body -->
+				<div class="c-modal-footer">
+					<div class="buttonSet">
+						<button class="btn-c-modal btn-cancel">취소</button>
+						<button class="btn-c-modal">확인</button>
+					</div>
+				</div> <!-- //c-modal-footer -->
+			</div>
+		</section>
+	</div>
+</div>
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+</body>
+</html>

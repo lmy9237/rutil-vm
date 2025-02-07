@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "src/org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd" >
+
+<mapper namespace="PROPERTIES">
+	<select id="retrieveSystemProperties" resultType="com.itinfo.model.SystemPropertiesVo">
+		SELECT
+			MAX(CASE WHEN PROPERTY = 'id' THEN PROPERTY_VALUE ELSE '' END) AS ID,
+			MAX(CASE WHEN PROPERTY = 'password' THEN PROPERTY_VALUE ELSE '' END) AS PASSWORD,
+			MAX(CASE WHEN PROPERTY = 'ip' THEN PROPERTY_VALUE ELSE '' END) AS IP,
+			MAX(CASE WHEN PROPERTY = 'vnc_ip' THEN PROPERTY_VALUE ELSE '' END) AS VNC_IP,
+			MAX(CASE WHEN PROPERTY = 'vnc_port' THEN PROPERTY_VALUE ELSE '' END) AS VNC_PORT,
+			MAX(CASE WHEN PROPERTY = 'cpu_threshold' THEN PROPERTY_VALUE ELSE '' END) AS CPU_THRESHOLD,
+			MAX(CASE WHEN PROPERTY = 'memory_threshold' THEN PROPERTY_VALUE ELSE '' END) AS MEMORY_THRESHOLD,
+			MAX(CASE WHEN PROPERTY = 'grafana_uri' THEN PROPERTY_VALUE ELSE '' END) AS GRAFANA_URI,
+			MAX(CASE WHEN PROPERTY = 'deepLearning_uri' THEN PROPERTY_VALUE ELSE '' END) AS DEEPLEARNING_URI,
+			MAX(CASE WHEN PROPERTY = 'symphony_power_controll' THEN PROPERTY_VALUE ELSE '' END) AS SYMPHONY_POWER_CONTROLL,
+			MAX(CASE WHEN PROPERTY = 'login_limit' THEN PROPERTY_VALUE ELSE '' END) AS LOGIN_LIMIT
+		FROM
+			SYSTEM_PROPERTIES
+		WHERE 1=1
+	</select>
+
+	<update id="updateSystemProperties" parameterType="com.itinfo.model.SystemPropertiesVo">
+		UPDATE
+			SYSTEM_PROPERTIES
+		SET
+			PROPERTY_VALUE = CASE
+			WHEN PROPERTY = 'id'							THEN #{id}
+			WHEN PROPERTY = 'password'						THEN #{password}
+			WHEN PROPERTY = 'ip'							THEN #{ip}
+			WHEN PROPERTY = 'vnc_ip'						THEN #{vncIp}
+			WHEN PROPERTY = 'vnc_port'						THEN #{vncPort}
+			WHEN PROPERTY = 'cpu_threshold'					THEN #{cpuThreshold}
+			WHEN PROPERTY = 'memory_threshold'				THEN #{memoryThreshold}
+			WHEN PROPERTY = 'grafana_uri'					THEN #{grafanaUri}
+			WHEN PROPERTY = 'deepLearning_uri'				THEN #{deepLearningUri}
+			WHEN PROPERTY = 'symphony_power_controll'		THEN #{symphonyPowerControll}
+			WHEN PROPERTY = 'login_limit'					THEN #{loginLimit}
+		END
+	</update>
+</mapper>

@@ -1,0 +1,24 @@
+.rutil-general{
+    display:flex;
+    justify-content: space-between;
+    font-size:0.36rem;
+}
+.logo-general{
+    width:10%;
+    margin: 0 0.3rem 0.1rem 0;
+}
+.rutil-general-first-contents{
+    width:40%;
+}
+.rutil-general-first-contents>div:first-child{
+    display:flex;
+    border-bottom:1px solid gray;
+    margin-bottom: 0.3rem;
+}
+.type-info-boxs{
+    border:1px solid gray;
+    padding:0.2rem;
+}
+.type-info-box{
+    margin-bottom:0.2rem;
+}

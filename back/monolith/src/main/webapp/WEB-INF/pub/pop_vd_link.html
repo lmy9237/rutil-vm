@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap opened"><!-- modal 열림/닫힘 상태에 따라 클래스 opened 추가/삭제 -->
+	<!-- 해당 화면 내용 -->
+</div>	
+
+<!-- modalBox 는 반드시 "wrap 바로 다음" && "body태그 끝나기 전"에 위치!! -->
+<div class="modalBox active"> <!-- 보이기/안보이기 : 클래스 active 추가/삭제 -->
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap">
+			<div class="c-modal-inner">
+				//기존의 화면내용
+			</div>
+		</section>
+	</div>
+</div>
+
+<!-- 팝업이 이중으로 떠야할때: 이전 modalBox 바로 다음에 위치 -->
+<div class="modalBox active">
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap c-modal-big c-modal-auto">
+			<div class="c-modal-inner">
+				<div class="c-modal-header">
+					<h1>가상 디스크 연결</h1>
+				</div>
+				<div class="c-modal-body">
+					<div class="c-modal-body_inner pt-40">
+						<div class="clx mb-20" style="margin-top: -20px;">
+							<div class="searchBox fl-r">
+								<input type="text" class="input-custom" placeholder="검색어를 입력하세요.">
+								<button class="btn-search">검색</button>
+							</div>
+						</div>
+						<div class="frmSet pb-0">
+							<div class="frm-unit">
+								<div class="doc-list-wrap">
+									<div class="doc-list-body">
+										<div class="doc-list-inner">
+											<div class="list-tot">
+												<div class="list-fix-wrap">
+													<table>
+														<caption></caption>
+														<colgroup>
+															<col style="width: 25px;">
+															<col style="width: 120px;">
+															<col style="width: 160px;">
+															<col style="width: 80px;">
+															<col style="width: 120px;">
+															<col style="width: 120px;">
+															<col style="width: auto;">
+														</colgroup>
+														<tbody>
+															<th></th>
+															<th>이름</th>
+															<th>ID</th>
+															<th>가상크기<br>실제크기</th>
+															<th>스토리지 도메인</th>
+															<th>인터페이스</th>
+															<th>설명</th>
+														</tbody>
+													</table>
+												</div><!-- //list-fix-wrap -->
+
+												<div class="list-scroll-wrap scroll-css" style="max-height: 240px;">
+													<!-- 0. 조회 내역이 없을때 - 시작 -->
+													<!-- <div class="nodata-wrap">
+														<p class="nodata">조회된 내용이 없습니다.</p>
+													</div> -->
+													<!-- //0. 조회 내역이 없을때 - 끝 -->
+
+													<!-- 1. 조회 내역이 있을때 - 시작 -->
+													<div class="list-scroll-cont">
+														<table class="tbl-long">
+															<caption></caption>
+															<colgroup>
+																<col style="width: 25px;">
+																<col style="width: 120px;">
+																<col style="width: 160px;">
+																<col style="width: 80px;">
+																<col style="width: 120px;">
+																<col style="width: 120px;">
+																<col style="width: auto;">
+															</colgroup>
+															<tbody>
+																<!-- 한줄반복 시작 -->
+																<tr>
+																	<td class="fullTd">
+																		<label class="ui-check mr-0 mt-0">
+																			<input type="radio" name="link" id="radio1">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-left txt-strong">
+																		<label for="radio1" class="txt-ellipsis line2">he_metadata</label><!-- label의 for값은 앞의 radio의 id값과 일치시킬것 -->
+																	</td>
+																	<td class="txt-left">ef51f977-7db1-4b79-beb2-572b3e0c3094</td>
+																	<td>
+																		<p>1.0 GB</p>
+																		<p>1.0 GB</p>
+																	</td>
+																	<td class="txt-left">he_metadata</td>
+																	<td>
+																		<div class="fullselect-wrap">
+																			<select name="" id="">
+																				<option value="virtio_scsi">virtio_scsi</option>
+																				<option value="IDE">IDE</option>
+																				<option value="virtio">virtio</option>
+																				<option value="virtio">virtio</option>
+																			</select>
+																		</div>
+																	</td>
+																	<td class="txt-left">
+																		<p class="txt-ellipsis line2">Hosted-Engine metadata disk Hosted-Engine metadata disk Hosted-Engine metadata disk</p>
+																	</td>
+																</tr>
+																<!-- //한줄반복 끝 -->
+																<tr>
+																	<td class="fullTd">
+																		<label class="ui-check mr-0 mt-0">
+																			<input type="radio" name="link" id="radio2">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-left txt-strong">
+																		<label for="radio2" class="txt-ellipsis line2">he_metadata he_metadata he_metadata he_metadata</label><!-- label의 for값은 앞의 radio의 id값과 일치시킬것 -->
+																	</td>
+																	<td class="txt-left">ef51f977-7db1-4b79-beb2-572b3e0c3094</td>
+																	<td>
+																		<p>1.0 GB</p>
+																		<p>1.0 GB</p>
+																	</td>
+																	<td class="txt-left">he_metadata</td>
+																	<td>
+																		<div class="fullselect-wrap">
+																			<select name="" id="">
+																				<option value="virtio_scsi">virtio_scsi</option>
+																				<option value="IDE">IDE</option>
+																				<option value="virtio">virtio</option>
+																				<option value="virtio">virtio</option>
+																			</select>
+																		</div>
+																	</td>
+																	<td class="txt-left">
+																		<p class="txt-ellipsis line2">Hosted-Engine metadata disk Hosted-Engine metadata disk Hosted-Engine metadata disk</p>
+																	</td>
+																</tr>
+																<tr>
+																	<td class="fullTd">
+																		<label class="ui-check mr-0 mt-0">
+																			<input type="radio" name="link" id="radio3">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-left txt-strong">
+																		<label for="radio3" class="txt-ellipsis line2">he_metadata he_metadata he_metadata he_metadata</label><!-- label의 for값은 앞의 radio의 id값과 일치시킬것 -->
+																	</td>
+																	<td class="txt-left">ef51f977-7db1-4b79-beb2-572b3e0c3094</td>
+																	<td>
+																		<p>1.0 GB</p>
+																		<p>1.0 GB</p>
+																	</td>
+																	<td class="txt-left">he_metadata</td>
+																	<td>
+																		<div class="fullselect-wrap">
+																			<select name="" id="">
+																				<option value="virtio_scsi">virtio_scsi</option>
+																				<option value="IDE">IDE</option>
+																				<option value="virtio">virtio</option>
+																				<option value="virtio">virtio</option>
+																			</select>
+																		</div>
+																	</td>
+																	<td class="txt-left">
+																		<p class="txt-ellipsis line2">Hosted-Engine metadata disk Hosted-Engine metadata disk Hosted-Engine metadata disk</p>
+																	</td>
+																</tr>
+																<tr>
+																	<td class="fullTd">
+																		<label class="ui-check mr-0 mt-0">
+																			<input type="radio" name="link" id="radio4">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-left txt-strong">
+																		<label for="radio4" class="txt-ellipsis line2">he_metadata he_metadata he_metadata he_metadata</label><!-- label의 for값은 앞의 radio의 id값과 일치시킬것 -->
+																	</td>
+																	<td class="txt-left">ef51f977-7db1-4b79-beb2-572b3e0c3094</td>
+																	<td>
+																		<p>1.0 GB</p>
+																		<p>1.0 GB</p>
+																	</td>
+																	<td class="txt-left">he_metadata</td>
+																	<td>
+																		<div class="fullselect-wrap">
+																			<select name="" id="">
+																				<option value="virtio_scsi">virtio_scsi</option>
+																				<option value="IDE">IDE</option>
+																				<option value="virtio">virtio</option>
+																				<option value="virtio">virtio</option>
+																			</select>
+																		</div>
+																	</td>
+																	<td class="txt-left">
+																		<p class="txt-ellipsis line2">Hosted-Engine metadata disk Hosted-Engine metadata disk Hosted-Engine metadata disk</p>
+																	</td>
+																</tr>
+																<tr>
+																	<td class="fullTd">
+																		<label class="ui-check mr-0 mt-0">
+																			<input type="radio" name="link" id="radio5">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-left txt-strong">
+																		<label for="radio5" class="txt-ellipsis line2">he_metadata he_metadata he_metadata he_metadata</label><!-- label의 for값은 앞의 radio의 id값과 일치시킬것 -->
+																	</td>
+																	<td class="txt-left">ef51f977-7db1-4b79-beb2-572b3e0c3094</td>
+																	<td>
+																		<p>1.0 GB</p>
+																		<p>1.0 GB</p>
+																	</td>
+																	<td class="txt-left">he_metadata</td>
+																	<td>
+																		<div class="fullselect-wrap">
+																			<select name="" id="">
+																				<option value="virtio_scsi">virtio_scsi</option>
+																				<option value="IDE">IDE</option>
+																				<option value="virtio">virtio</option>
+																				<option value="virtio">virtio</option>
+																			</select>
+																		</div>
+																	</td>
+																	<td class="txt-left">
+																		<p class="txt-ellipsis line2">Hosted-Engine metadata disk Hosted-Engine metadata disk Hosted-Engine metadata disk</p>
+																	</td>
+																</tr>
+																<tr>
+																	<td class="fullTd">
+																		<label class="ui-check mr-0 mt-0">
+																			<input type="radio" name="link" id="radio6">
+																			<span class="chk-ico"></span>
+																		</label>
+																	</td>
+																	<td class="txt-left txt-strong">
+																		<label for="radio6" class="txt-ellipsis line2">he_metadata he_metadata he_metadata he_metadata</label><!-- label의 for값은 앞의 radio의 id값과 일치시킬것 -->
+																	</td>
+																	<td class="txt-left">ef51f977-7db1-4b79-beb2-572b3e0c3094</td>
+																	<td>
+																		<p>1.0 GB</p>
+																		<p>1.0 GB</p>
+																	</td>
+																	<td class="txt-left">he_metadata</td>
+																	<td>
+																		<div class="fullselect-wrap">
+																			<select name="" id="">
+																				<option value="virtio_scsi">virtio_scsi</option>
+																				<option value="IDE">IDE</option>
+																				<option value="virtio">virtio</option>
+																				<option value="virtio">virtio</option>
+																			</select>
+																		</div>
+																	</td>
+																	<td class="txt-left">
+																		<p class="txt-ellipsis line2">Hosted-Engine metadata disk Hosted-Engine metadata disk Hosted-Engine metadata disk</p>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+													<!-- //1. 조회 내역이 있을때 - 끝 -->
+
+												</div><!-- //list-scroll-wrap -->
+
+											</div>
+										</div>
+									</div>
+									<!-- //doc-list-body -->
+								</div>
+
+							</div>
+						</div>
+						<div class="doc-list-btm">
+							<div class="page-tbl">
+								<div class="page-td">
+									Rows per page :
+								</div>
+								<div class="page-td">
+									<div class="select-wrap miniWrap">
+										<select name="" id="">
+											<option value="5">5</option>
+											<option value="10">10</option>
+											<option value="15">1500</option>
+										</select>
+									</div>
+								</div>
+								<div class="page-td">
+									1-7 of 100
+								</div>
+								<div class="page-td btn-page-wrap">
+									<button class="btn-page-prev">이전</button>
+									<button class="btn-page-next">다음</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!-- //c-modal-body -->
+				<div class="c-modal-footer">
+					<div class="buttonSet">
+						<button class="btn-c-modal btn-cancel">취소</button>
+						<button class="btn-c-modal">확인</button>
+					</div>
+				</div> <!-- //c-modal-footer -->
+			</div>
+		</section>
+	</div>
+</div>
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+</body>
+</html>

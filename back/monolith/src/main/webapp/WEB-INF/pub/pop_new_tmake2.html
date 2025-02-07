@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap opened"><!-- modal 열림/닫힘 상태에 따라 클래스 opened 추가/삭제 -->
+	<!-- 해당 화면 내용 -->
+</div>	
+
+<!-- modalBox 는 반드시 "wrap 바로 다음" && "body태그 끝나기 전"에 위치!! -->
+<div class="modalBox active"> <!-- 보이기/안보이기 : 클래스 active 추가/삭제 -->
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap">
+			<div class="c-modal-inner">
+				<div class="c-modal-header">
+					<h1>새 가상머신</h1>
+					<p class="mustbeTxt">표시 항목( <span class="mustbe"></span> ) 은 필수 입력 항목입니다. </p>
+					<div class="steps-wrap">
+						<ul class="long">
+							<li>
+								<button type="button" class="btn-step end">템플릿 이미지 선택 <span class="mustbe"></span></button>
+								<!-- 
+									* tab 및 단계에 따른 클래스 정리 
+									현재 상태	: button에 클래스 active
+									작성완료		: button에 클래스 end
+								-->
+							</li>
+							<li>
+								<button type="button" class="btn-step active">인스턴스 사이즈 선택 <span class="mustbe"></span></button>
+							</li>
+							<li>
+								<button type="button" class="btn-step">추가정보 입력 <span class="mustbe"></span></button>
+							</li>
+						</ul>
+					</div>
+				</div><!-- //c-modal-header -->
+				<div class="c-modal-body scroll-css">
+					<div class="steps-cont-wrap">
+						<div class="c-modal-body_inner">
+							<div class="frmSet pb-0">
+								<div class="frm-unit">
+									<div class="doc-list-wrap">
+										<div class="doc-list-body">
+											<div class="doc-list-inner">
+												<div class="list-tot">
+													<div class="list-fix-wrap">
+														<table>
+															<caption></caption>
+															<colgroup>
+																<col style="width: 45px;">
+																<col style="width: 170px;">
+																<col style="width: auto;">
+																<col style="width: 130px;">
+																<col style="width: 110px;">
+															</colgroup>
+															<tbody>
+																<th></th>
+																<th class="txt-left">이름</th>
+																<th>설명</th>
+																<th>CPU</th>
+																<th>메모리</th>
+															</tbody>
+														</table>
+													</div><!-- //list-fix-wrap -->
+
+													<div class="list-scroll-wrap scrollBodyY" style="max-height: 330px;">
+														<!-- 0. 조회 내역이 없을때 - 시작 -->
+														<!-- <div class="nodata-wrap">
+															<p class="nodata">조회된 내용이 없습니다.</p>
+														</div> -->
+														<!-- //0. 조회 내역이 없을때 - 끝 -->
+
+														<!-- 1. 조회 내역이 있을때 - 시작 -->
+														<div class="list-scroll-cont">
+															<table class="tbl-long tbl-radio">
+																<caption></caption>
+																<colgroup>
+																	<col style="width: 45px;">
+																	<col style="width: 170px;">
+																	<col style="width: auto;">
+																	<col style="width: 130px;">
+																	<col style="width: 110px;">
+																</colgroup>
+																<tbody>
+																	<!-- 한줄반복 시작 -->
+																	<tr>
+																		<td class="fullTd">
+																			<label class="ui-check mr-0 mt-0">
+																				<input type="radio" name="intSize">
+																				<span class="chk-ico"></span>
+																			</label>
+																		</td>
+																		<td class="txt-left txt-strong">Large</td>
+																		<td class="txt-left">Large instance type</td>
+																		<td>2Cores</td>
+																		<td>8GB</td>
+																	</tr>
+																	<!-- //한줄반복 끝 -->
+																	<tr>
+																		<td class="fullTd">
+																			<label class="ui-check mr-0 mt-0">
+																				<input type="radio" name="intSize">
+																				<span class="chk-ico"></span>
+																			</label>
+																		</td>
+																		<td class="txt-left txt-strong">Medium</td>
+																		<td class="txt-left">Medium instance type</td>
+																		<td>2Cores</td>
+																		<td>4GB</td>
+																	</tr>
+																	<tr>
+																		<td class="fullTd">
+																			<label class="ui-check mr-0 mt-0">
+																				<input type="radio" name="intSize">
+																				<span class="chk-ico"></span>
+																			</label>
+																		</td>
+																		<td class="txt-left txt-strong">Large</td>
+																		<td class="txt-left">Large instance type</td>
+																		<td>2Cores</td>
+																		<td>8GB</td>
+																	</tr>
+																	<tr>
+																		<td class="fullTd">
+																			<label class="ui-check mr-0 mt-0">
+																				<input type="radio" name="intSize">
+																				<span class="chk-ico"></span>
+																			</label>
+																		</td>
+																		<td class="txt-left txt-strong">Medium</td>
+																		<td class="txt-left">Medium instance type</td>
+																		<td>2Cores</td>
+																		<td>4GB</td>
+																	</tr>
+																	<tr>
+																		<td class="fullTd">
+																			<label class="ui-check mr-0 mt-0">
+																				<input type="radio" name="intSize">
+																				<span class="chk-ico"></span>
+																			</label>
+																		</td>
+																		<td class="txt-left txt-strong">Large</td>
+																		<td class="txt-left">Large instance type</td>
+																		<td>2Cores</td>
+																		<td>8GB</td>
+																	</tr>
+																	<tr>
+																		<td class="fullTd">
+																			<label class="ui-check mr-0 mt-0">
+																				<input type="radio" name="intSize">
+																				<span class="chk-ico"></span>
+																			</label>
+																		</td>
+																		<td class="txt-left txt-strong">Medium</td>
+																		<td class="txt-left">Medium instance type</td>
+																		<td>2Cores</td>
+																		<td>4GB</td>
+																	</tr>
+																	<tr>
+																		<td class="fullTd">
+																			<label class="ui-check mr-0 mt-0">
+																				<input type="radio" name="intSize">
+																				<span class="chk-ico"></span>
+																			</label>
+																		</td>
+																		<td class="txt-left txt-strong">he_metadata</td>
+																		<td class="txt-left">Large instance type</td>
+																		<td>2Cores</td>
+																		<td>8GB</td>
+																	</tr>
+																	<tr>
+																		<td class="fullTd">
+																			<label class="ui-check mr-0 mt-0">
+																				<input type="radio" name="intSize">
+																				<span class="chk-ico"></span>
+																			</label>
+																		</td>
+																		<td class="txt-left txt-strong">Large</td>
+																		<td class="txt-left">Large instance type</td>
+																		<td>2Cores</td>
+																		<td>4GB</td>
+																	</tr>
+																	<tr>
+																		<td class="fullTd">
+																			<label class="ui-check mr-0 mt-0">
+																				<input type="radio" name="intSize">
+																				<span class="chk-ico"></span>
+																			</label>
+																		</td>
+																		<td class="txt-left txt-strong">Medium</td>
+																		<td class="txt-left">Medium instance type</td>
+																		<td>2Cores</td>
+																		<td>8GB</td>
+																	</tr>
+																	<tr>
+																		<td class="fullTd">
+																			<label class="ui-check mr-0 mt-0">
+																				<input type="radio" name="intSize">
+																				<span class="chk-ico"></span>
+																			</label>
+																		</td>
+																		<td class="txt-left txt-strong">Large</td>
+																		<td class="txt-left">Large instance type</td>
+																		<td>2Cores</td>
+																		<td>4GB</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+														<!-- //1. 조회 내역이 있을때 - 끝 -->
+
+													</div><!-- //list-scroll-wrap -->
+
+												</div>
+											</div>
+										</div>
+										<!-- //doc-list-body -->
+									</div>
+
+								</div>
+							</div>
+
+						</div><!-- //c-modal-body_inner -->
+					</div><!-- //steps-cont-wrap -->
+				</div><!-- //c-modal-body -->
+				<div class="c-modal-footer">
+					<div class="buttonSet">
+						<button class="btn-c-modal btn-cancel">취소</button>
+						<button class="btn-c-modal">다음</button><!-- 비활성화일때(필수값 입력안했을때) 속성 disabled 추가 : 아랫줄 참조 -->
+						<!-- <button class="btn-c-modal" disabled>다음</button> -->
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+</body>
+</html>

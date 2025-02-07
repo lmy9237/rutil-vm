@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "src/org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd" >
+
+<mapper namespace="DASHBOARD">
+	<select id="retrieveHosts" parameterType="java.util.List" resultType="com.itinfo.model.HostVo">
+		SELECT
+			EXTRACT(EPOCH FROM HISTORY_DATETIME AT TIME ZONE 'ASIA/SEOUL') * 1000 AS HISTORY_DATETIME
+			, ROUND(AVG(MEMORY_USAGE_PERCENT)) AS MEMORY_USAGE_PERCENT
+			, ROUND(AVG(CPU_USAGE_PERCENT)) AS CPU_USAGE_PERCENT
+		FROM
+			HOST_SAMPLES_HISTORY
+		WHERE 1=1
+		AND HOST_ID::TEXT IN
+		<foreach collection="list" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+		GROUP BY HISTORY_DATETIME
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 360
+	</select>
+	
+	<select id="retrieveStorages" parameterType="java.util.List" resultType="com.itinfo.model.StorageVo">
+		SELECT
+			EXTRACT(EPOCH FROM HISTORY_DATETIME AT TIME ZONE 'ASIA/SEOUL') * 1000 AS HISTORY_DATETIME
+			, SUM(AVAILABLE_DISK_SIZE_GB) AS AVAILABLE_DISK_SIZE_GB
+			, SUM(USED_DISK_SIZE_GB) AS USED_DISK_SIZE_GB
+		FROM
+			STORAGE_DOMAIN_HOURLY_HISTORY
+		WHERE 1=1
+		AND STORAGE_DOMAIN_ID::TEXT IN
+		<foreach collection="list" item="storageId" index="index" open="(" close=")" separator=",">#{storageId}</foreach>
+		AND	STORAGE_DOMAIN_STATUS = '1'
+		GROUP BY HISTORY_DATETIME
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 360
+	</select> 
+	
+	<select id="retrieveHostsInterface" parameterType="java.util.List" resultType="com.itinfo.model.HostInterfaceVo">
+		SELECT
+			EXTRACT(EPOCH FROM HISTORY_DATETIME AT TIME ZONE 'ASIA/SEOUL') * 1000 AS HISTORY_DATETIME,
+			SUM(RECEIVE_RATE_PERCENT) AS RECEIVE_RATE_PERCENT,
+			SUM(TRANSMIT_RATE_PERCENT) AS TRANSMIT_RATE_PERCENT
+		FROM
+			HOST_INTERFACE_SAMPLES_HISTORY
+		WHERE 1=1
+		AND HOST_INTERFACE_ID::TEXT IN
+		<foreach collection="list" item="interfaceId" index="index" open="(" close=")" separator=",">#{interfaceId}</foreach>
+		GROUP BY HISTORY_DATETIME
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 360
+	</select>
+</mapper>

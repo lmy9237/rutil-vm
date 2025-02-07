@@ -1,0 +1,48 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+  gap: 0.1rem;
+  width: 80%;
+}
+
+.grid-item {
+  border: 1px solid #d9d9d9;
+  display: flex;
+  cursor:pointer;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: 2px;
+  background-color: inherit; /* 기본 배경색 제거 또는 상속 */
+  transition: opacity 0.1s ease-in-out;
+  overflow: hidden; 
+  
+}
+.grid-item:hover {
+  opacity: 0.7;
+}
+
+
+/* .grid-item:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  font-size: 12px;
+} */
+
+.percent placeholder{
+  margin-top: 5px;
+  font-size: 12px;
+  color: #000000;
+  z-index: 1;
+
+}

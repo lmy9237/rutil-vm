@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Debug Launch RutilVM (Kotlin)",
+      "request": "launch",
+      "projectName": "rutil-vm-api",
+      "mainClass": "com.itinfo.rutilvm.api.RutilVmApplicationKt",
+      "classPaths": [
+        "rutil-vm-api/build/classes",
+        "rutil-vm-common/build/classes",
+        "rutil-vm-util/build/classes",
+        "rutil-vm-util-ovirt/build/classes",
+        // "license-common/build/classes",
+        // "license-dec/build/classes",
+        // "license-enc/build/classes",
+        // "license-/build/classes",
+      ]
+      // "cwd": "${workspaceFolder}",
+      // "console": "internalConsole",
+      // "stopOnEntry": false,
+      // "args": ""
+    }
+  ]
+}

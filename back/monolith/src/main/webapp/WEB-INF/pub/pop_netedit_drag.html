@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap opened"><!-- modal 열림/닫힘 상태에 따라 클래스 opened 추가/삭제 -->
+	<!-- 해당 화면 내용 -->
+</div>	
+
+<!-- modalBox 는 반드시 "wrap 바로 다음" && "body태그 끝나기 전"에 위치!! -->
+<div class="modalBox active"> <!-- 보이기/안보이기 : 클래스 active 추가/삭제 -->
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap c-modal-big">
+			<div class="c-modal-inner">
+				<div class="c-modal-header">
+					<h1>호스트host2의 할당된 네트워크 설정</h1>
+					<div class="btn-posRT">
+						<div class="btn-box">
+							<button class="btn-icon btn-icon-refresh btn-tooltip">초기화</button>
+							<div class="c-tooltip bottom-center">
+								<div class="c-tooltip-inner"></div>
+								<span class="c-tooltip-arrow"></span>
+								<span class="txt">초기화</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="c-modal-body scroll-css">
+					<div class="c-modal-body_inner pt-30">
+						<div class="pop-dndBox mini">
+							<div class="pop-dndBox-item">
+								<h2 class="pop-dndBox-tit">인터페이스</h2>
+							</div>
+							<div class="pop-dndBox-item">
+								<h2 class="pop-dndBox-tit">할당된 네트워크</h2>
+							</div>
+							<div class="pop-dndBox-item">
+								<h2 class="pop-dndBox-tit">미 할당된 네트워크</h2>
+							</div>
+						</div>
+						<div class="pop-dndBox">
+							<div class="pop-dndBox-item double scroll-css">
+
+								<!-- 회색박스 시작 -->
+								<div class="pop-dndBox-line">
+									<!-- 회색박스안 - 왼쪽 영역 시작 -->
+									<div class="pdl-item-left bonding"><!-- 본딩영역일때만 .bonding -->
+										<div class="pdl-header"><!-- 본딩영역일때만 .pdl-header 영역 필요 -->
+											<p class="tit">bond0bond0dbond0bond0d..</p>
+											<button class="btn-pdl-unbond">본딩해제</button>
+										</div>
+
+										<!-- 우측에 - 버튼 있는 형태 시작 : btn-dnd가 pop-dnd-list-line 으로 감싸지고 button.btn-dnd-right 와 함께 있는 형태-->
+										<div class="pop-dnd-list-line">
+											<div class="btn-dnd"><!-- 드래그앤드롭 요소 영역 .btn-dnd -->
+												<div class="icoStat-box left">
+													<span class="icoStat ico-up"></span>
+												</div>
+												<span class="txt">eth0</span>
+											</div>
+											<button class="btn-dnd-right"></button>
+										</div><!-- //pop-dnd-list-line -->
+
+										<div class="pop-dnd-list-line">
+											<div class="btn-dnd">
+												<div class="icoStat-box left">
+													<span class="icoStat ico-down"></span>
+												</div>
+												<span class="txt">eth0</span>
+											</div>
+											<button class="btn-dnd-right"></button>
+										</div><!-- //pop-dnd-list-line -->
+
+										<div class="pop-dnd-list-line">
+											<div class="btn-dnd dragging"><!-- 드래그 중일때는 클래스 dragging 추가 -->
+												<div class="icoStat-box left">
+													<span class="icoStat ico-up"></span>
+												</div>
+												<span class="txt">eth0</span>
+											</div>
+											<button class="btn-dnd-right"></button>
+										</div><!-- //pop-dnd-list-line -->
+										<!-- //우측에 - 버튼 있는 형태 끝 -->
+										
+									</div>
+									<!-- //회색박스안 - 왼쪽 영역 끝 -->
+
+
+									<!-- 회색박스안 - 가운데 버튼영역 시작 -->
+									<div class="pdl-item-center">
+										<button class="btn-pd left"></button>
+										<button class="btn-pd right"></button>
+									</div>
+									<!-- //회색박스안 - 가운데 버튼영역 끝 -->
+
+
+									<!-- 회색박스안 - 오른쪽 영역 시작 -->
+									<div class="pdl-item-right">
+
+										<!-- 0. 드래그 없는 경우 -->
+										<!-- <div class="btn_newDnd"></div> -->
+
+										<!-- 1. 드래그 있는 경우 -->
+										<div class="btn-dnd">
+											<div class="icoStat-box left">
+												<span class="icoStat ico-down"></span>
+											</div>
+											<span class="txt">ovirtmgmt</span>
+											<div class="icoRightBox">
+												<!-- 상태 아이콘 시작 - 최대 4개까지, staticolist.html 참조 -->
+												<div class="icoStat-box">
+													<span class="icoStat ico-noinfo"></span>
+												</div>
+												<div class="icoStat-box">
+													<span class="icoStat ico-display"></span>
+												</div>
+												<div class="icoStat-box">
+													<span class="icoStat ico-save"></span>
+												</div>
+												<div class="icoStat-box">
+													<span class="icoStat ico-unlink"></span>
+												</div>
+												<!-- //상태 아이콘 끝 - 최대 4개까지, staticolist.html 참조 -->
+											</div>
+										</div>
+
+									</div>
+									<!-- //회색박스안 - 오른쪽 영역 끝 -->
+
+								</div>
+								<!-- //회색박스 끝 -->
+
+
+								<!-- 회색박스 시작 -->
+								<div class="pop-dndBox-line">
+									<!-- 회색박스안 - 왼쪽 영역 시작 -->
+									<div class="pdl-item-left"><!-- 본딩영역 아니므로 .bonding 없음!! -->
+
+										<div class="btn-dnd"><!-- 드래그앤드롭 요소 영역 .btn-dnd -->
+											<div class="icoStat-box left">
+												<span class="icoStat ico-up"></span>
+											</div>
+											<span class="txt">eth0</span>
+										</div>
+										
+									</div>
+									<!-- //회색박스안 - 왼쪽 영역 끝 -->
+
+
+									<!-- 회색박스안 - 가운데 버튼영역 시작 -->
+									<div class="pdl-item-center">
+										<!-- <button class="btn-pd left"></button> --> <!-- 상황에 따라 버튼만 주석처리!! -->
+										<!-- <button class="btn-pd right"></button> --> <!-- 상황에 따라 버튼만 주석처리!! -->
+									</div>
+									<!-- //회색박스안 - 가운데 버튼영역 끝 -->
+
+
+									<!-- 회색박스안 - 오른쪽 영역 시작 -->
+									<div class="pdl-item-right">
+
+										<!-- 0. 상태 없는 경우 -->
+										<div class="btn_newDnd"></div>
+
+										<!-- 1. 드래그 있는 경우 -->
+										<!-- <div class="btn-dnd">
+											<div class="icoStat-box left">
+												<span class="icoStat ico-down"></span>
+											</div>
+											<span class="txt">ovirtmgmt</span>
+											<div class="icoRightBox">
+												<div class="icoStat-box">
+													<span class="icoStat ico-noinfo"></span>
+												</div>
+											</div>
+										</div> -->
+
+									</div>
+									<!-- //회색박스안 - 오른쪽 영역 끝 -->
+
+								</div>
+								<!-- //회색박스 끝 -->
+
+
+								<!-- 회색박스 시작 -->
+								<div class="pop-dndBox-line">
+									<!-- 회색박스안 - 왼쪽 영역 시작 -->
+									<div class="pdl-item-left"><!-- 본딩영역 아니므로 .bonding 없음!! -->
+
+										<div class="btn-dnd"><!-- 드래그앤드롭 요소 영역 .btn-dnd -->
+											<div class="icoStat-box left">
+												<span class="icoStat ico-up"></span>
+											</div>
+											<span class="txt">eth0</span>
+										</div>
+										
+									</div>
+									<!-- //회색박스안 - 왼쪽 영역 끝 -->
+
+
+									<!-- 회색박스안 - 가운데 버튼영역 시작 -->
+									<div class="pdl-item-center">
+										<!-- <button class="btn-pd left"></button> --> <!-- 상황에 따라 버튼만 주석처리!! -->
+										<!-- <button class="btn-pd right"></button> --> <!-- 상황에 따라 버튼만 주석처리!! -->
+									</div>
+									<!-- //회색박스안 - 가운데 버튼영역 끝 -->
+
+
+									<!-- 회색박스안 - 오른쪽 영역 시작 -->
+									<div class="pdl-item-right">
+
+										<!-- 0. 상태 없는 경우 -->
+										<div class="btn_newDnd"></div>
+
+										<!-- 1. 드래그 있는 경우 -->
+										<!-- <div class="btn-dnd">
+											<div class="icoStat-box left">
+												<span class="icoStat ico-down"></span>
+											</div>
+											<span class="txt">ovirtmgmt</span>
+											<div class="icoRightBox">
+												<div class="icoStat-box">
+													<span class="icoStat ico-noinfo"></span>
+												</div>
+											</div>
+										</div> -->
+
+									</div>
+									<!-- //회색박스안 - 오른쪽 영역 끝 -->
+
+								</div>
+								<!-- //회색박스 끝 -->
+
+
+								<!-- 회색박스 시작 -->
+								<div class="pop-dndBox-line">
+									<!-- 회색박스안 - 왼쪽 영역 시작 -->
+									<div class="pdl-item-left"><!-- 본딩영역 아니므로 .bonding 없음!! -->
+
+										<div class="btn-dnd"><!-- 드래그앤드롭 요소 영역 .btn-dnd -->
+											<div class="icoStat-box left">
+												<span class="icoStat ico-up"></span>
+											</div>
+											<span class="txt">eth0</span>
+										</div>
+										
+									</div>
+									<!-- //회색박스안 - 왼쪽 영역 끝 -->
+
+
+									<!-- 회색박스안 - 가운데 버튼영역 시작 -->
+									<div class="pdl-item-center">
+										<button class="btn-pd left"></button> <!-- 상황에 따라 버튼만 주석처리!! -->
+										<button class="btn-pd right"></button> <!-- 상황에 따라 버튼만 주석처리!! -->
+									</div>
+									<!-- //회색박스안 - 가운데 버튼영역 끝 -->
+
+
+									<!-- 회색박스안 - 오른쪽 영역 시작 -->
+									<div class="pdl-item-right">
+
+										<!-- 0. 상태 없는 경우 -->
+										<!-- <div class="btn_newDnd"></div> -->
+
+										<!-- 1. 상태 있는 경우 -->
+										<div class="btn-dnd">
+											<div class="icoStat-box left">
+												<span class="icoStat ico-down"></span>
+											</div>
+											<span class="txt">ovirtmgmt</span>
+											<div class="icoRightBox">
+												<!-- 상태 아이콘 시작 - 최대 4개까지, staticolist.html 참조 -->
+												<div class="icoStat-box">
+													<span class="icoStat ico-noinfo"></span>
+												</div>
+												<!-- //상태 아이콘 끝 - 최대 4개까지, staticolist.html 참조 -->
+											</div>
+										</div>
+
+									</div>
+									<!-- //회색박스안 - 오른쪽 영역 끝 -->
+
+								</div>
+								<!-- //회색박스 끝 -->
+
+
+							</div>
+
+
+							<!-- 미 할당된 네트워크 영역 시작 -->
+							<div class="pop-dndBox-item">
+								<div class="pop-dndBox-cont">
+									<div class="scroll-css">
+
+										<!-- 0. 상태 없는 경우 -->
+										<!-- <div class="btn_newDnd"></div> -->
+
+										<!-- 1. 상태 있는 경우 -->
+										<div class="btn-dnd">
+											<div class="icoStat-box left">
+												<span class="icoStat ico-up"></span>
+											</div>
+											<span class="txt">eth0</span>
+										</div>
+										
+										<div class="btn-dnd">
+											<div class="icoStat-box left">
+												<span class="icoStat ico-up"></span>
+											</div>
+											<span class="txt">eth0</span>
+										</div>
+
+										<div class="btn-dnd">
+											<div class="icoStat-box left">
+												<span class="icoStat ico-up"></span>
+											</div>
+											<span class="txt">eth0</span>
+										</div>
+
+									</div>
+								</div>
+							</div>
+							<!-- //미 할당된 네트워크 영역 끝 -->
+						</div>
+					</div>
+				</div>
+				<div class="c-modal-footer">
+					<div class="buttonSet">
+						<button class="btn-c-modal btn-cancel">취소</button>
+						<button class="btn-c-modal">확인</button>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+</body>
+</html>

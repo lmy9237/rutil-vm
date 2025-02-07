@@ -1,0 +1,12 @@
+rootProject.name = "rutil-vm-back"
+include(":monolith")
+include(":rutil-vm-common")
+include(":rutil-vm-util")
+include(":rutil-vm-util-ovirt")
+include(":rutil-vm-api")
+include(":rutil-vm-api-repository")
+include(":rutil-vm-api-socket")
+include(":rutil-vm-license-common")
+include(":rutil-vm-license-enc")
+include(":rutil-vm-license-dec")
+include(":rutil-vm-license-validate")

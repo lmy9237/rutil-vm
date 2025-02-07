@@ -1,0 +1,112 @@
+/* Tables.css */
+.custom-outer{
+  width: 100%;
+  max-height: 62.4vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.custom-table td, 
+.custom-table th {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: ellipsis;
+}
+.custom-table tbody tr {
+  cursor: pointer; 
+}
+
+/*pagingtable.css*/
+.pagination {
+  margin-bottom: 10px; 
+}
+.pagination button.active {
+  background-color: rgb(218, 236, 245);
+}
+.pagination span {
+  margin-right: auto;
+  display: flex;
+  align-items: center; 
+}
+.search-box button {
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+
+.search-box{
+  width: 40%;
+  display: flex;
+  margin-bottom: 0.15rem;
+}
+.search-box input{
+  height: 3.1vh;
+  width: 92%;
+  outline: none;   
+}
+.search-box>button{
+  height: 3.1vh;
+  width: 5%;
+  cursor: pointer;
+  font-size: 0.3rem;
+}
+.paging-btns{
+    display:flex;
+    justify-content: space-between;
+    position:relative;
+    height: 4vh;
+}
+.paging-btns span{
+  display:block;
+  display: flex;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  margin: 0 0.2rem;
+}
+.paging-arrows{
+  margin-bottom:0.2rem;
+  position:absolute;
+  right:0;
+}
+.paging-arrow{
+    font-size: 0.4rem;
+    font-weight: 800;
+    color:gray;
+    border: 1px solid #DDDDDD;
+}
+/*tablesOuter*/
+.section-table-outer table { 
+  width:100%;border-collapse:collapse; 
+}
+.section-table-outer table tbody tr { cursor: pointer; }
+.section-table-outer table tbody tr:hover { background-color: #ebececd8; }
+.section-table-outer th,
+.section-table-outer td { border: 1px solid rgb(204, 204, 204); }
+.section-table-outer th { padding: 0.04rem;text-align: center;background-color: #d1e2eb; }
+.section-table-outer td { padding: 0.02rem 0.1rem; }
+.section-table-outer td:nth-child(2) { width: 10%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; }
+.section-table-outer input[type="checkbox"]{ text-align: center; }
+.section-table-outer select{ width: 100%; }
+.section-table-outer > button {
+    display: flex;
+    cursor: pointer;
+    padding: 0.07rem 0.1rem;
+    margin-bottom: 0.13rem;
+}
+.section-table-outer { 
+  font-size: 0.3rem; 
+}
+/*tablerowclick*/
+.row-click{
+  color: blue;
+  cursor: pointer; 
+  font-weight:600;  
+  textAlign: left;
+}
+.row-click:hover{
+  text-decoration: underline;
+}

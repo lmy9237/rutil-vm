@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap">
+	<div class="header">
+		<h1 class="logo"><img src="images/logo.png" alt="Okestro contrabass"></h1>
+		<div class="loginInfo">
+			<button type="button" class="btn-logined">admin</button>
+			<button type="button" class="btn-logout">로그아웃</button>
+		</div>
+	</div>
+	<!-- //header -->
+
+	<div class="container">
+		<div class="containnerBox">
+			<div class="left-wrap">
+				<div class="left-inner">
+					<ul class="leftmenu">
+						<li><a href="dashboard.html" class="menu-dashboard"><span>대시보드</span></a></li>
+						<li><a href="symphony.html" class="menu-symphony"><span>심포니</span></a></li>
+						<li>
+							<a href="#" class="menu-computing hasSub"><span>컴퓨팅</span></a>
+							<div class="left-submenu">
+								<ul>
+									<li><a href="virtualmachine.html">가상머신</a></li>
+									<li><a href="templete.html">템플릿</a></li>
+									<li><a href="host.html">호스트</a></li>
+									<li><a href="cluster.html">클러스터</a></li>
+								</ul>
+							</div>
+						</li>
+						<li><a href="network.html" class="menu-network"><span>네트워크</span></a></li>
+						<li><a href="#" class="menu-storage hasSub"><span>스토리지</span></a>
+							<div class="left-submenu">
+								<ul>
+									<li><a href="domain.html">도메인</a></li>
+									<li><a href="disk.html">디스크</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="#" class="menu-manage hasSub"><span>관리</span></a>
+							<div class="left-submenu">
+								<ul>
+									<li><a href="user.html">사용자</a></li>
+									<li><a href="instance.html">인스턴스 유형</a></li>
+									<li><a href="setting.html">설정</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<button class="btn-leftwrap">접기</button>
+			</div>
+			<!-- //left-wrap -->
+			<div class="cont-wrap">
+				<div class="cont-inner full">
+					<div class="doc-list-wrap">
+						<div class="doc-tit">
+							<h2 class="tit"><a href="virtualmachine.html">상태아이콘 정리</a></h2>
+						</div>
+						<div style="padding-bottom: 45px;">
+							<h3 style="margin-bottom: 10px;">1. 툴팁 있는 아이콘 형태</h3>
+
+							<div class="icoStat-box">
+								<span class="icoStat ico-up btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">완료</span>
+								</div>
+							</div>
+                            <div class="icoStat-box">
+								<span class="icoStat ico-down btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">내려감</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-locked btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">잠금</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-waiting btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">작업중</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-ingdown btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">내려가는중</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-suspended btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">일시정지</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-unknown btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">응답없음</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-save btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">저장중</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-reboot btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">재부팅중</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-sm btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">유지보수</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-sming btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">유지보수 준비중</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-unlink btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">연결해제</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-noinfo btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">알수없음</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-detach btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">분리중</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-display btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">DISPLAY</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-migration btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">MIGRATION</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-management btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">MANAGEMENT</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-defaultroot btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">DEFAULT ROUTE</span>
+								</div>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-mixed btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">mixed</span>
+								</div>
+							</div>
+                            
+                            <div class="icoStat-box">
+								<span class="icoStat ico-install btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">install</span>
+								</div>
+							</div>
+                            <div class="icoStat-box">
+								<span class="icoStat ico-install-fail btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">install-fail</span>
+								</div>
+							</div>
+                             <div class="icoStat-box">
+								<span class="icoStat ico-pending-app btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">pending-app</span>
+								</div>
+							</div>
+                            <div class="icoStat-box">
+								<span class="icoStat ico-crown btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">crown</span>
+								</div>
+							</div>
+                            <div class="icoStat-box">
+								<span class="icoStat ico_connect btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">connect</span>
+								</div>
+							</div>
+                            <div class="icoStat-box">
+								<span class="icoStat ico-initializ btn-tooltip"></span>
+								<div class="c-tooltip j-right">
+									<span class="c-tooltip-arrow"></span>
+									<span class="txt">initializ</span>
+								</div>
+							</div>
+
+						</div>
+
+						<div style="padding-bottom: 45px;">
+							<h3 style="margin-bottom: 10px;">2. 툴팁 없는 아이콘 형태</h3>
+
+							<div class="icoStat-box">
+								<span class="icoStat ico-up"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-locked"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-waiting"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-ingdown"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-suspended"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-unknown"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-save"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-reboot"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-sm"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-sming"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-unlink"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-noinfo"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-detach"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-display"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-migration"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-management"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-defaultroot"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-mixed"></span>
+							</div>
+							<div class="icoStat-box">
+								<span class="icoStat ico-down"></span>
+							</div>
+
+						</div>
+
+						<div class="doc-list-body scrollBodyX">
+							<div class="doc-list-inner">
+								<h3 style="margin-bottom: 10px;">3. 테이블 안에 위치할때, 예시</h3>
+								<div class="list-tot" style="min-width: 100%;">
+									<div class="list-fix-wrap">
+										<table>
+											<caption></caption>
+											<colgroup>
+													<col style="width: 5%; min-width: 110px;"><!-- 상태아이콘에 해당되는 곳은 min-width: 110px 필수 조정 -->
+													<col style="width: auto;">
+											</colgroup>
+											<tbody>
+												<th>상태</th>
+												<th>설명</th>
+											</tbody>
+										</table>
+									</div><!-- //list-fix-wrap -->
+
+									<div class="list-scroll-wrap scrollBodyY">
+										<!-- 1. 조회 내역이 있을때 - 시작 -->
+										<div class="list-scroll-cont">
+											<table>
+												<caption></caption>
+												<colgroup>
+													<col style="width: 5%; min-width: 110px;"><!-- 상태아이콘에 해당되는 곳은 min-width: 110px 필수 조정 -->
+													<col style="width: auto;">
+												</colgroup>
+												<tbody>
+													<tr>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지 -->
+														</td>
+														<td>
+															상태아이콘에 해당되는 곳은 colgroup의 col에서 min-width: 110px 필수 조정 (주석참조)
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<!-- //1. 조회 내역이 있을때 - 끝 -->
+									</div><!-- //list-scroll-wrap -->
+								</div>
+							</div>
+						</div>
+						<!-- //doc-list-body -->
+					</div>
+					<!-- //doc-list-wrap -->
+				</div>
+			</div>
+			<!-- //cont-wrap -->
+		</div>
+		<!-- //containnerBox -->
+	</div>
+	<!-- //container -->
+
+</div>	
+
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+</body>
+</html>

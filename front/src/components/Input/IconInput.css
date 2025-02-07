@@ -1,0 +1,38 @@
+/* IconInput.css */
+.icon-input-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc; /* Input border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 5px; /* Inner padding */
+  width: 100%; /* Full width */
+  max-width: 400px; /* Maximum width */
+  background-color: #fff; /* Background color */
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  padding: 0 8px; /* Spacing between the icon and the input */
+  color: #999; /* Icon color */
+}
+  
+.input-icon {
+  font-size: 16px; /* Icon size */
+}
+  
+.icon-input {
+  flex: 1; /* Take remaining width */
+  border: none; /* Remove default border */
+  outline: none; /* Remove outline */
+  font-size: 16px; /* Input text size */
+  padding: 8px; /* Padding for input text */
+}
+  
+.icon-input::placeholder {
+  color: #999; /* Placeholder color */
+}
+
+.icon-input-container:focus-within {
+  border-color: #007bff; /* Highlight border on focus */
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+    <context-root>/</context-root>
+    <resource-ref>
+        <res-ref-name>karajan</res-ref-name>
+        <jndi-name>java:/karajan</jndi-name>
+    </resource-ref>
+    <resource-ref>
+        <res-ref-name>karajanEngine</res-ref-name>
+        <jndi-name>java:/karajanEngine</jndi-name>
+    </resource-ref>
+</jboss-web>

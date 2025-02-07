@@ -1,0 +1,8 @@
+/* AreaChart.css */
+.apexcharts-xaxistooltip{
+    display:none;
+}
+.wave_graph{
+    margin-left:0.5rem;
+    width:97%;
+}

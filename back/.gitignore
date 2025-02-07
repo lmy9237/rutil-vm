@@ -1,0 +1,72 @@
+*.iml
+.gradle
+/local.properties
+.idea
+.DS_*
+build
+bin
+/captures
+.externalNativeBuild
+out
+.cxx
+docker/okestro/*.war
+docker/monolith/okestro-*
+docker/monolith/ROOT
+docker/itcloud/*.war
+docker/itcloud/itcloud-*
+docker/itcloud/ROOT
+*.tar
+README.html
+logs
+*-dokka
+
+### react ###
+*.log
+**/*.backup.*
+**/*.back.*
+
+node_modules
+bower_components
+rutil-vm-api/src/main/resources/static
+
+*.sublime*
+
+psd
+thumb
+sketch
+
+### VisualStudioCode ###
+.vscode/*
+.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# misc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*storybook.log

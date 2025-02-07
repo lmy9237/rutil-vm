@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap opened"><!-- modal 열림/닫힘 상태에 따라 클래스 opened 추가/삭제 -->
+	<!-- 해당 화면 내용 -->
+</div>	
+
+<!-- modalBox 는 반드시 "wrap 바로 다음" && "body태그 끝나기 전"에 위치!! -->
+<div class="modalBox active"> <!-- 보이기/안보이기 : 클래스 active 추가/삭제 -->
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap c-modal-small">
+			<div class="c-modal-inner">
+				<div class="c-modal-header">
+					<h1>네트워크 인터페이스 편집</h1>
+				</div>
+				<div class="c-modal-body scroll-css">
+					<div class="steps-cont-wrap">
+						<div class="c-modal-body_inner pt-30">
+							<div class="frmSet">
+								<div class="frm-unit">
+									<p class="tit">이름</p>
+									<div class="inputBox">
+										<input type="text" class="input-custom" value="Vnet0">
+									</div>
+								</div>
+							</div>
+							<div class="frmSet">
+								<div class="frm-unit">
+									<p class="tit">프로파일</p>
+									<div class="fullselect-wrap">
+										<select name="" id="">
+											<option value="list1">list1</option>
+											<option value="list2">list2</option>
+											<option value="list3">list3</option>
+											<option value="list4">list4</option>
+											<option value="list5">list5</option>
+											<option value="list6">list6</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="frmSet">
+								<div class="frm-unit">
+									<p class="tit">
+										<label class="ui-check">사용자 지정 MAC 주소 
+											<input type="checkbox">
+											<span class="chk-ico"></span>
+										</label>
+									</p>
+									<div class="inputBox">
+										<input type="text" class="input-custom" value="00:16:32:23" disabled><!-- 활성화/비활성화 : disabled 추가/삭제 -->
+									</div>
+								</div>
+							</div>
+							<div class="frmSet">
+								<div class="frm-unit">
+									<p class="tit">링크상태</p>
+									<div class="radio-wrap">
+										<label class="ui-check w90">
+											<input type="radio" name="radio-linkstat" checked>
+											<span class="chk-ico"></span>
+											<span class="txt">UP</span>
+										</label>
+										<label class="ui-check w90">
+											<input type="radio" name="radio-linkstat">
+											<span class="chk-ico"></span>
+											<span class="txt">Down</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="frmSet">
+								<div class="frm-unit">
+									<p class="tit">캐드상태</p>
+									<div class="radio-wrap">
+										<label class="ui-check w90">
+											<input type="radio" name="radio-cadstat">
+											<span class="chk-ico"></span>
+											<span class="txt">연결됨</span>
+										</label>
+										<label class="ui-check w90">
+											<input type="radio" name="radio-cadstat">
+											<span class="chk-ico"></span>
+											<span class="txt">분리</span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="c-modal-footer">
+					<div class="buttonSet">
+						<button class="btn-c-modal btn-cancel">취소</button>
+						<button class="btn-c-modal">확인</button>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+</body>
+</html>

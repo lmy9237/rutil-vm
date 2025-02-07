@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap opened"><!-- modal 열림/닫힘 상태에 따라 클래스 opened 추가/삭제 -->
+	<!-- 해당 화면 내용 -->
+</div>	
+
+<!-- modalBox 는 반드시 "wrap 바로 다음" && "body태그 끝나기 전"에 위치!! -->
+<div class="modalBox active"> <!-- 보이기/안보이기 : 클래스 active 추가/삭제 -->
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap c-modal-small">
+			<div class="c-modal-inner">
+				<div class="c-modal-header pb-30">
+					<h1>새 템플릿</h1>
+					<p class="mustbeTxt">표시 항목( <span class="mustbe"></span> ) 은 필수 입력 항목입니다. </p>
+				</div>
+				<div class="c-modal-body scroll-css">
+					<div class="c-modal-body_inner">
+						<div class="frmSet">
+							<div class="frm-unit">
+								<p class="tit">이름 <span class="mustbe"></span></p>
+								<div class="inputBox">
+									<input type="text" class="input-custom" placeholder="이름입력">
+								</div>
+								<p class="errTxt">4~20자 영문, 숫자와 특수기호(_),(-)만 사용 가능합니다.</p><!-- 에러없으면 p태그 자체를 삭제 -->
+							</div>
+						</div>
+						<div class="frmSet">
+							<div class="frm-unit">
+								<p class="tit">설명</p>
+								<div class="inputBox">
+									<input type="text" class="input-custom" placeholder="설명입력">
+								</div>
+							</div>
+						</div>
+						<div class="frmSet pb-30">
+							<div class="frm-unit">
+								<p class="tit">클러스트</p>
+								<div class="fullselect-wrap">
+									<select name="" id="">
+										<option value="Default">Default</option>
+										<option value="list2">list2</option>
+										<option value="list3">list3</option>
+										<option value="list4">list4</option>
+										<option value="list5">list5</option>
+										<option value="list6">list6</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<h2 class="steps-tit pb-0">CPU 할당</h2>
+						<div class="frmSet">
+							<div class="frm-unit">
+								<div class="doc-list-wrap">
+									<div class="doc-list-body ov-vs">
+										<div class="doc-list-inner">
+											<div class="list-tot">
+												<div class="list-fix-wrap">
+													<table>
+														<caption></caption>
+														<colgroup>
+															<col style="width: auto;">
+															<col style="width: 100px;">
+															<col style="width: 140px;">
+															<col style="width: 140px;">
+															<col style="width: 160px;">
+														</colgroup>
+														<tbody>
+															<tr>
+																<th>별칭</th>
+																<th>가상크기</th>
+																<th>포맷</th>
+																<th>대상</th>
+																<th>디스크 프로파일</th>
+															</tr>
+														</tbody>
+													</table>
+												</div><!-- //list-fix-wrap -->
+
+												<div class="list-scroll-wrap" style="min-height: initial; max-height: initial;">
+													<div class="list-scroll-cont">
+														<table class="tbl-long">
+															<caption></caption>
+															<colgroup>
+																<col style="width: auto;">
+																<col style="width: 100px;">
+																<col style="width: 140px;">
+																<col style="width: 140px;">
+																<col style="width: 160px;">
+															</colgroup>
+															<tbody>
+																<tr>
+																	<td class="txt-left txt-strong fullTd">
+																		<input type="text" class="input-custom" value="disk">
+																	</td>
+																	<td>1.0 GB</td>
+																	<td>
+																		<div class="fullselect-wrap">
+																			<select name="" id="">
+																				<option value="virtio_scsi">virtio_scsi</option>
+																				<option value="IDE">IDE</option>
+																				<option value="virtio">virtio</option>
+																				<option value="virtio">virtio</option>
+																			</select>
+																		</div>
+																	</td>
+																	<td>
+																		<div class="fullselect-wrap">
+																			<select name="" id="">
+																				<option value="virtio_scsi">virtio_scsi</option>
+																				<option value="IDE">IDE</option>
+																				<option value="virtio">virtio</option>
+																				<option value="virtio">virtio</option>
+																			</select>
+																		</div>
+																	</td>
+																	<td>
+																		<div class="fullselect-wrap">
+																			<select name="" id="">
+																				<option value="hostted_storage">hostted_storage</option>
+																				<option value="IDE">IDE</option>
+																				<option value="virtio">virtio</option>
+																				<option value="virtio">virtio</option>
+																			</select>
+																		</div>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div><!-- //list-scroll-wrap -->
+											</div>
+										</div>
+									</div>
+									<!-- //doc-list-body -->
+								</div>
+
+							</div>
+						</div><!-- //frmSet -->
+						<div class="grayBox">
+							<ul class="chklist">
+								<li>
+									<label class="ui-check">
+										<input type="checkbox">
+										<span class="chk-ico"></span>
+										<span class="txt">가상 머신 권한 복사</span>
+									</label>
+								</li>
+								<li>
+									<label class="ui-check">
+										<input type="checkbox">
+										<span class="chk-ico"></span>
+										<span class="txt">템플릿 봉인 (Linux만 해당)</span>
+									</label>
+								</li>
+								<li>
+									<label class="ui-check">
+										<input type="checkbox">
+										<span class="chk-ico"></span>
+										<span class="txt">모든 사용자에게 이 템플릿 접근을 허용</span>
+									</label>
+								</li>
+							</ul>
+						</div>
+						<div class="frmSet">
+							<div class="frm-unit">
+								<p class="tit">서브 템플릿 버전으로 생성
+									<label class="ui-check ui-switch">
+										<input type="checkbox" data-target="#visualTarget">
+										<span class="chk-ico"></span>
+									</label>
+									<!-- 
+										1. 디폴트가 x상태이려면
+											1-1. 서브 템플릿 버전으로 생성 옆의 checkbox에서 checked 삭제
+											1-2. #visualTarget 에 display:none;
+										2. 디폴트가 체크상태이려면
+											2-1. 서브 템플릿 버전으로 생성 옆의 checkbox에서 checked 넣기
+											2-2. #visualTarget 에 display:block;
+									 -->
+								</p>
+							</div>
+						</div>
+
+						<div id="visualTarget" style="display: none;">
+							<div class="frmSet">
+								<div class="frm-unit half-left">
+									<p class="tit">Rooy 템플릿</p>
+									<div class="fullselect-wrap">
+										<select name="" id="">
+											<option value="testTemplate">testTemplate</option>
+											<option value="list2">list2</option>
+											<option value="list3">list3</option>
+											<option value="list4">list4</option>
+											<option value="list5">list5</option>
+											<option value="list6">list6</option>
+										</select>
+									</div>
+								</div>
+								<div class="frm-unit half-right">
+									<p class="tit">하위 버전 이름</p>
+									<div class="inputBox">
+										<input type="text" class="input-custom" value="testTemplate">
+									</div>
+								</div>
+							</div>
+						</div><!-- //visualTarget -->
+
+					</div>
+				</div>
+				<div class="c-modal-footer">
+					<div class="buttonSet">
+						<button class="btn-c-modal btn-cancel">취소</button>
+						<button class="btn-c-modal">확인</button>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+<script>
+	$(document).on('change', '.ui-switch input[type="checkbox"]', function(){
+		var _this = $(this);
+		var _target = _this.attr('data-target');
+		if(_this.is(':checked')){
+			$(_target).css('display', 'block');
+		}else{
+			$(_target).css('display', 'none');
+		}
+	});
+</script>
+</body>
+</html>

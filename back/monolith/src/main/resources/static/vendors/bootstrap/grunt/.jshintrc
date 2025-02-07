@@ -1,0 +1,9 @@
+{
+  "extends" : "../js/.jshintrc",
+  "esversion" : 6,
+  "asi"     : false,
+  "browser" : false,
+  "es3"     : false,
+  "node"    : true,
+  "globalstrict" : true
+}

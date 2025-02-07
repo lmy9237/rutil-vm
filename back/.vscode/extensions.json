@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "vscjava.vscode-java-debug",
+    "ms-azuretools.vscode-docker",
+    "vscjava.vscode-gradle",
+    "Oracle.oracle-java",
+    "mathiasfrohlich.Kotlin",
+    "redhat.java",
+    "alefragnani.project-manager",
+    "vscjava.vscode-spring-boot-dashboard"
+  ],
+  "unwantedRecommendations": []
+}

@@ -1,0 +1,95 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 4097 (0x1001)
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=US, O=ititinfo.com, CN=ovirt.ititinfo.com.11655
+        Validity
+            Not Before: Nov 21 09:15:22 2023 GMT
+            Not After : Nov 22 09:15:22 2028 GMT
+        Subject: C=US, O=ititinfo.com, CN=ovirt.ititinfo.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                RSA Public-Key: (2048 bit)
+                Modulus:
+                    00:a1:2f:9b:6a:49:ae:e9:10:c8:b4:09:42:b6:21:
+                    59:1b:87:9f:c6:f9:d0:ed:25:b9:a0:8c:37:6f:43:
+                    0d:ec:47:8e:21:29:56:3d:8a:0d:af:51:d3:20:e6:
+                    0e:c4:73:f3:82:06:31:0c:64:b2:4f:29:ec:e6:a3:
+                    1c:e6:f2:0f:8b:73:bd:90:60:8b:4d:cf:e3:f0:b3:
+                    c8:c6:f4:de:96:6f:e0:fe:a9:0f:60:da:1c:14:f7:
+                    e8:e0:18:15:fb:88:00:a8:25:93:46:51:6d:ef:f1:
+                    53:dc:79:db:b2:7a:95:b9:b4:7a:35:f2:78:9d:45:
+                    68:31:1e:6c:dc:09:7e:4a:8b:e2:87:09:00:a9:08:
+                    3e:57:22:34:be:66:e1:93:9b:9f:14:cf:75:d8:8e:
+                    d9:65:4c:60:c4:1d:1b:24:41:bf:df:25:43:09:ac:
+                    ba:14:07:a5:a5:b8:3b:db:8d:fb:f8:0c:d6:cc:4a:
+                    d3:03:3a:7b:2a:2e:9d:1b:c4:f2:04:5c:a8:a6:43:
+                    03:c7:c9:e1:15:05:75:df:7a:d8:a5:64:b2:98:52:
+                    b9:b8:b2:d5:85:84:ae:d0:78:8b:fa:50:88:10:bc:
+                    1b:3a:ce:65:0c:6a:85:b7:c6:e9:d6:8e:4a:f0:fb:
+                    5b:83:7a:e9:ef:8a:6e:8f:d8:d7:30:e5:50:ef:2a:
+                    6c:93
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Subject Key Identifier: 
+                CB:75:40:77:FB:88:E5:D3:0F:DC:DF:A3:11:64:B6:47:8C:8E:35:26
+            Authority Information Access: 
+                CA Issuers - URI:http://ovirt.ititinfo.com:80/ovirt-engine/services/pki-resource?resource=ca-certificate&format=X509-PEM-CA
+
+            X509v3 Authority Key Identifier: 
+                keyid:39:D2:4A:94:64:A0:35:29:80:A0:93:00:D6:24:63:DC:AB:2A:CB:31
+                DirName:/C=US/O=ititinfo.com/CN=ovirt.ititinfo.com.11655
+                serial:10:00
+
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Extended Key Usage: critical
+                TLS Web Server Authentication, TLS Web Client Authentication
+            X509v3 Subject Alternative Name: 
+                DNS:ovirt.ititinfo.com
+    Signature Algorithm: sha256WithRSAEncryption
+         13:3c:43:13:e2:d3:a7:53:e9:2e:e7:df:f5:38:3c:7e:39:6f:
+         f6:21:ea:9a:89:9b:b1:a0:1b:9a:20:55:ea:04:65:36:7f:16:
+         48:a6:54:47:20:a3:a8:99:bf:f9:25:6a:11:73:db:01:f1:31:
+         36:f1:2d:92:a6:8c:15:3c:c2:60:84:57:3a:b2:2e:4f:34:c9:
+         f2:42:6d:8b:ae:81:aa:95:19:b1:42:fa:34:f5:28:9a:85:08:
+         1d:f2:24:cf:1d:fb:d3:32:67:9d:07:c3:78:54:21:89:3c:de:
+         42:93:b4:06:74:63:ee:56:06:d5:13:d9:40:cf:c5:ae:25:17:
+         bb:e8:36:6d:b9:eb:e0:de:7d:5d:13:9a:7f:de:d3:6e:80:ee:
+         c1:69:8c:73:a2:b6:f4:c3:05:7d:f0:8b:88:eb:cc:e0:55:1f:
+         65:b7:ec:d7:c9:28:ef:ee:d7:f9:f2:1d:42:63:6f:45:8d:8e:
+         98:de:3d:c9:bc:b1:1e:80:04:d7:f7:aa:32:a9:c2:16:bf:17:
+         c1:b0:ea:48:20:28:16:92:70:99:e5:87:f9:f0:87:d4:f5:c3:
+         f7:f6:bd:fa:7b:88:86:5a:a2:11:30:15:ab:ae:47:56:41:9e:
+         df:7f:10:f3:27:2a:e9:0a:e2:10:fc:41:81:51:ff:6b:9d:78:
+         f6:57:99:0b
+-----BEGIN CERTIFICATE-----
+MIIEgDCCA2igAwIBAgICEAEwDQYJKoZIhvcNAQELBQAwRzELMAkGA1UEBhMCVVMx
+FTATBgNVBAoMDGl0aXRpbmZvLmNvbTEhMB8GA1UEAwwYb3ZpcnQuaXRpdGluZm8u
+Y29tLjExNjU1MB4XDTIzMTEyMTA5MTUyMloXDTI4MTEyMjA5MTUyMlowQTELMAkG
+A1UEBhMCVVMxFTATBgNVBAoMDGl0aXRpbmZvLmNvbTEbMBkGA1UEAwwSb3ZpcnQu
+aXRpdGluZm8uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoS+b
+akmu6RDItAlCtiFZG4efxvnQ7SW5oIw3b0MN7EeOISlWPYoNr1HTIOYOxHPzggYx
+DGSyTyns5qMc5vIPi3O9kGCLTc/j8LPIxvTelm/g/qkPYNocFPfo4BgV+4gAqCWT
+RlFt7/FT3HnbsnqVubR6NfJ4nUVoMR5s3Al+SovihwkAqQg+VyI0vmbhk5ufFM91
+2I7ZZUxgxB0bJEG/3yVDCay6FAelpbg72437+AzWzErTAzp7Ki6dG8TyBFyopkMD
+x8nhFQV133rYpWSymFK5uLLVhYSu0HiL+lCIELwbOs5lDGqFt8bp1o5K8Ptbg3rp
+74puj9jXMOVQ7ypskwIDAQABo4IBejCCAXYwHQYDVR0OBBYEFMt1QHf7iOXTD9zf
+oxFktkeMjjUmMIGGBggrBgEFBQcBAQR6MHgwdgYIKwYBBQUHMAKGamh0dHA6Ly9v
+dmlydC5pdGl0aW5mby5jb206ODAvb3ZpcnQtZW5naW5lL3NlcnZpY2VzL3BraS1y
+ZXNvdXJjZT9yZXNvdXJjZT1jYS1jZXJ0aWZpY2F0ZSZmb3JtYXQ9WDUwOS1QRU0t
+Q0EwcAYDVR0jBGkwZ4AUOdJKlGSgNSmAoJMA1iRj3KsqyzGhS6RJMEcxCzAJBgNV
+BAYTAlVTMRUwEwYDVQQKDAxpdGl0aW5mby5jb20xITAfBgNVBAMMGG92aXJ0Lml0
+aXRpbmZvLmNvbS4xMTY1NYICEAAwCQYDVR0TBAIwADAOBgNVHQ8BAf8EBAMCBaAw
+IAYDVR0lAQH/BBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMB0GA1UdEQQWMBSCEm92
+aXJ0Lml0aXRpbmZvLmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAEzxDE+LTp1PpLuff
+9Tg8fjlv9iHqmombsaAbmiBV6gRlNn8WSKZURyCjqJm/+SVqEXPbAfExNvEtkqaM
+FTzCYIRXOrIuTzTJ8kJti66BqpUZsUL6NPUomoUIHfIkzx370zJnnQfDeFQhiTze
+QpO0BnRj7lYG1RPZQM/FriUXu+g2bbnr4N59XROaf97TboDuwWmMc6K29MMFffCL
+iOvM4FUfZbfs18ko7+7X+fIdQmNvRY2OmN49ybyxHoAE1/eqMqnCFr8XwbDqSCAo
+FpJwmeWH+fCH1PXD9/a9+nuIhlqiETAVq65HVkGe338Q8ycq6QriEPxBgVH/a514
+9leZCw==
+-----END CERTIFICATE-----

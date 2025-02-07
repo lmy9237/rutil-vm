@@ -1,0 +1,24 @@
+${AnsiColor.RED}____/\\\\\\\\\________________________________________/\\\\\\_____/\\\________/\\\__/\\\\____________/\\\\_
+${AnsiColor.BRIGHT_YELLOW} __/\\\///////\\\_____________________________________\////\\\____\/\\\_______\/\\\_\/\\\\\\________/\\\\\\_
+${AnsiColor.BRIGHT_GREEN}  _\/\\\_____\/\\\_____________________/\\\_______/\\\____\/\\\____\//\\\______/\\\__\/\\\//\\\____/\\\//\\\_
+${AnsiColor.BRIGHT_CYAN}   _\/\\\\\\\\\\\/_____/\\\____/\\\__/\\\\\\\\\\\_\///_____\/\\\_____\//\\\____/\\\___\/\\\\///\\\/\\\/_\/\\\_
+${AnsiColor.BLUE}    _\/\\\//////\\\____\/\\\___\/\\\_\////\\\////___/\\\____\/\\\______\//\\\__/\\\____\/\\\__\///\\\/___\/\\\_
+${AnsiColor.BRIGHT_CYAN}     _\/\\\____\//\\\___\/\\\___\/\\\____\/\\\______\/\\\____\/\\\_______\//\\\/\\\_____\/\\\____\///_____\/\\\_
+${AnsiColor.BRIGHT_GREEN}      _\/\\\_____\//\\\__\/\\\___\/\\\____\/\\\_/\\__\/\\\____\/\\\________\//\\\\\______\/\\\_____________\/\\\_
+${AnsiColor.BRIGHT_YELLOW}       _\/\\\______\//\\\_\//\\\\\\\\\_____\//\\\\\___\/\\\__/\\\\\\\\\______\//\\\_______\/\\\_____________\/\\\_
+${AnsiColor.RED}        _\///________\///___\/////////_______\/////____\///__\/////////________\///________\///______________\///__
+
+${AnsiColor.BLUE}${application.title}-${application.version}
+
+${AnsiColor.BLUE}:: Powered by Spring Boot ${spring-boot.version} ::
+
+${AnsiColor.BRIGHT_YELLOW}- Release Date ${application.release-date}
+${AnsiColor.BRIGHT_YELLOW}- Trying to run it on Ovirt Environment (${application.ovirt.ip}:${server.port}) ...
+${AnsiColor.BRIGHT_YELLOW}- Swagger 3 (https://${application.ovirt.ip}:${server.port}/swagger-ui/)
+
+${AnsiColor.RED}- PostgresDB Environment (${application.ovirt.ip}:5432)
+${AnsiColor.RED}- /ovirt_engine_history (${spring.datasource.history.username} / ${spring.datasource.history.password})
+${AnsiColor.RED}- /engine (${spring.datasource.engine.username} / ${spring.datasource.engine.password})
+${AnsiColor.RED}- /aaa (${spring.datasource.aaa.username} / ${spring.datasource.aaa.password})
+
+${AnsiColor.DEFAULT}

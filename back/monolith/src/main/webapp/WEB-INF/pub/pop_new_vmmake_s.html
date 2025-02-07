@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap opened"><!-- modal 열림/닫힘 상태에 따라 클래스 opened 추가/삭제 -->
+	<!-- 해당 화면 내용 -->
+</div>	
+
+<!-- modalBox 는 반드시 "wrap 바로 다음" && "body태그 끝나기 전"에 위치!! -->
+<div class="modalBox active"> <!-- 보이기/안보이기 : 클래스 active 추가/삭제 -->
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap">
+			<div class="c-modal-inner">
+				<div class="c-modal-header">
+					<h1>새 가상머신</h1>
+					<p class="mustbeTxt">표시 항목( <span class="mustbe"></span> ) 은 필수 입력 항목입니다. </p>
+					<div class="steps-wrap">
+						<ul>
+							<li>
+								<button type="button" class="btn-step end">일반 <span class="mustbe"></span></button>
+								<!-- 
+									* tab 및 단계에 따른 클래스 정리 
+									현재 상태	: button에 클래스 active
+									작성완료		: button에 클래스 end
+								-->
+							</li>
+							<li>
+								<button type="button" class="btn-step end">부트옵션 <span class="mustbe"></span></button>
+							</li>
+							<li>
+								<button type="button" class="btn-step active">시스템</button>
+							</li>
+							<li>
+								<button type="button" class="btn-step">호스트</button>
+							</li>
+							<li>
+								<button type="button" class="btn-step">초기실행</button>
+							</li>
+							<li>
+								<button type="button" class="btn-step">리소스 할당</button>
+							</li>
+						</ul>
+					</div>
+				</div><!-- //c-modal-header -->
+				<div class="c-modal-body scroll-css">
+					<div class="steps-cont-wrap">
+						<div class="c-modal-body_inner">
+							<h2 class="steps-tit step-tit-black">시스템</h2>
+							<div class="frmSet">
+								<div class="frm-unit half-left">
+									<p class="tit">메모리 크기</p>
+									<div class="inputBox">
+										<input type="text" class="input-custom" value="1024 MB">
+									</div>
+								</div>
+								<div class="frm-unit half-right">
+									<div class="tooltipM-wrap">
+										<p class="tit">최대 메모리</p>
+										<div class="btn-box">
+											<button class="btn-tooltipm btn-tooltip">i</button>
+											<div class="c-tooltip bottom-center">
+												<div class="c-tooltip-inner"></div>
+												<span class="c-tooltip-arrow"></span>
+												<span class="txt">메모리 핫 플러그를 실행할 수 있는<br>가상머신 메모리 상환</span>
+											</div>
+										</div>
+									</div>
+									<div class="inputBox">
+										<input type="text" class="input-custom" value="4096 MB">
+									</div>
+								</div>
+							</div>
+							<div class="frmSet">
+								<div class="frm-unit half-left">
+									<div class="tooltipM-wrap">
+										<p class="tit">총 가상 CPU</p>
+										<div class="btn-box">
+											<button class="btn-tooltipm btn-tooltip">i</button>
+											<div class="c-tooltip top-center">
+												<div class="c-tooltip-inner"></div>
+												<span class="c-tooltip-arrow"></span>
+												<span class="txt">소켓 수를 변경하여 CPU를 핫애드합니다.<br>CPU 핫애드가 올바르게 지원되는지 확인<br>하려면 게스트 운영 체제 관련 문서를 참조<br>하십시오.</span>
+											</div>
+										</div>
+									</div>
+									<div class="inputBox">
+										<input type="text" class="input-custom" value="100">
+									</div>
+								</div>
+								<div class="frm-unit half-right">
+									<p class="tit">가상 소캣</p>
+									<div class="fullselect-wrap">
+										<select name="" id="">
+											<option value="1">1</option>
+											<option value="10">10</option>
+											<option value="99" selected>99</option>
+											<option value="100">100</option>
+											<option value="200">200</option>
+											<option value="300">300</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="frmSet mb-20">
+								<div class="frm-unit half-left">
+									<p class="tit">가상 소캣 당 코어</p>
+									<div class="fullselect-wrap">
+										<select name="" id="">
+											<option value="1" selected>1</option>
+											<option value="10">10</option>
+											<option value="99">99</option>
+											<option value="100">100</option>
+											<option value="200">200</option>
+											<option value="300">300</option>
+										</select>
+									</div>
+								</div>
+								<div class="frm-unit half-right">
+									<div class="tooltipM-wrap">
+										<p class="tit">코어 당 스레드</p>
+										<div class="btn-box">
+											<button class="btn-tooltipm btn-tooltip">i</button>
+											<div class="c-tooltip top-center">
+												<div class="c-tooltip-inner"></div>
+												<span class="c-tooltip-arrow"></span>
+												<span class="txt">동시 멀티스레딩을 설정합니다. 값을 변경<br>하기 전 호스트 아키텍처를확인합니다. 설<br>정 값이 확실하지 않은 경우 코어당 스레드<br>수를 1로 설정합니다. 다음과 같은 값을 사<br>용할 것을 권장합니다.</span>
+											</div>
+										</div>
+									</div>
+									<div class="fullselect-wrap">
+										<select name="" id="">
+											<option value="1" selected>1</option>
+											<option value="10">10</option>
+											<option value="99">99</option>
+											<option value="100">100</option>
+											<option value="200">200</option>
+											<option value="300">300</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<!-- //시스템 영역 끝 -->
+
+							<h2 class="steps-tit step-tit-black">콘솔</h2>
+							<div class="frmSet">
+								<div class="frm-unit half-left">
+									<p class="tit">그래픽프로토콜</p>
+									<div class="fullselect-wrap" id="testSelect1"><!-- id는 스크립트 소스의 예시 때문에 임시로 넣었습니다. -->
+										<select name="" id="">
+											<option value="비활성화">비활성화</option>
+											<option value="list2">list2</option>
+											<option value="list3">list3</option>
+											<option value="list4">list4</option>
+											<option value="list5">list5</option>
+											<option value="list6">list6</option>
+										</select>
+									</div>
+									<script>
+										//select에 disalbed 처리 하고 싶다면?
+										//$('#testSelect1').find('.custom-select__option--value').attr('disabled', 'disabled');
+										//select에 disabled를 풀고 싶다면?
+										//$('#testSelect1').find('.custom-select__option--value').removeAttr('disabled');
+									</script>
+								</div>
+								<div class="frm-unit half-right">
+									<p class="tit">USB 지원</p>
+									<div class="fullselect-wrap" id="testSelect2"><!-- id는 스크립트 소스의 예시 때문에 임시로 넣었습니다. -->
+										<select name="" id="">
+											<option value="비활성화">비활성화</option>
+											<option value="list2">list2</option>
+											<option value="list3">list3</option>
+											<option value="list4">list4</option>
+											<option value="list5">list5</option>
+											<option value="list6">list6</option>
+										</select>
+									</div>
+									<script>
+										//select에 disalbed 처리 하고 싶다면?
+										//$('#testSelect2').find('.custom-select__option--value').attr('disabled', 'disabled');
+										//select에 disabled를 풀고 싶다면?
+										//$('#testSelect2').find('.custom-select__option--value').removeAttr('disabled');
+									</script>
+								</div>
+							</div>
+							<div class="frmSet">
+								<div class="frm-unit half-left">
+									<p class="tit">콘솔 분리 작업</p>
+									<div class="fullselect-wrap" id="testSelect3"><!-- id는 스크립트 소스의 예시 때문에 임시로 넣었습니다. -->
+										<select name="" id="">
+											<option value="화면잠금 비활성화">화면잠금 비활성화</option>
+											<option value="list2">list2</option>
+											<option value="list3">list3</option>
+											<option value="list4">list4</option>
+											<option value="list5">list5</option>
+											<option value="list6">list6</option>
+										</select>
+									</div>
+									<script>
+										//select에 disalbed 처리 하고 싶다면?
+										//$('#testSelect3').find('.custom-select__option--value').attr('disabled', 'disabled');
+										//select에 disabled를 풀고 싶다면?
+										//$('#testSelect3').find('.custom-select__option--value').removeAttr('disabled');
+									</script>
+								</div>
+								<div class="frm-unit half-right">
+									<p class="tit">모니터</p>
+									<div class="fullselect-wrap" id="testSelect4"><!-- id는 스크립트 소스의 예시 때문에 임시로 넣었습니다. -->
+										<select name="" id="">
+											<option value="1 비활성화">1 비활성화</option>
+											<option value="list2">list2</option>
+											<option value="list3">list3</option>
+											<option value="list4">list4</option>
+											<option value="list5">list5</option>
+											<option value="list6">list6</option>
+										</select>
+									</div>
+									<script>
+										//select에 disalbed 처리 하고 싶다면?
+										//$('#testSelect4').find('.custom-select__option--value').attr('disabled', 'disabled');
+										//select에 disabled를 풀고 싶다면?
+										//$('#testSelect4').find('.custom-select__option--value').removeAttr('disabled');
+									</script>
+								</div>
+							</div>
+							<div class="frmSet mb-20">
+								<div class="frm-unit half-left">
+									<p class="tit">단일 로그인 방식</p>
+									<div class="fullselect-wrap">
+										<select name="" id="">
+											<option value="게스트 에이전트 사용">게스트 에이전트 사용</option>
+											<option value="list2">list2</option>
+											<option value="list3">list3</option>
+											<option value="list4">list4</option>
+											<option value="list5">list5</option>
+											<option value="list6">list6</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<!-- //콘솔 영역 끝 -->
+
+							<h2 class="steps-tit step-tit-black">고가용성</h2>
+							<div class="frmSet">
+								<div class="frm-unit half-left">
+									<p class="tit">고가용성 사용 
+										<label class="ui-check">
+											<input type="checkbox">
+											<span class="chk-ico"></span>
+										</label>
+									</p>
+								</div>
+							</div>
+							<div class="frmSet">
+								<div class="frm-unit half-left">
+									<p class="tit">가상머신 임대 대상 스토리지 도메인</p>
+									<div class="fullselect-wrap" id="testSelect5"><!-- id는 스크립트 소스의 예시 때문에 임시로 넣었습니다. -->
+										<select name="" id="">
+											<option value="비활성화">비활성화</option>
+											<option value="list2">list2</option>
+											<option value="list3">list3</option>
+										</select>
+									</div>
+									<script>
+										//select에 disalbed 처리 하고 싶다면?
+										//$('#testSelect5').find('.custom-select__option--value').attr('disabled', 'disabled');
+										//select에 disabled를 풀고 싶다면?
+										//$('#testSelect5').find('.custom-select__option--value').removeAttr('disabled');
+									</script>
+								</div>
+								<div class="frm-unit half-right">
+									<p class="tit">재개 동작</p>
+									<div class="fullselect-wrap" id="testSelect6"><!-- id는 스크립트 소스의 예시 때문에 임시로 넣었습니다. -->
+										<select name="" id="">
+											<option value="비활성화">비활성화</option>
+											<option value="list2">list2</option>
+											<option value="list3">list3</option>
+										</select>
+									</div>
+									<script>
+										//select에 disalbed 처리 하고 싶다면?
+										//$('#testSelect6').find('.custom-select__option--value').attr('disabled', 'disabled');
+										//select에 disabled를 풀고 싶다면?
+										//$('#testSelect6').find('.custom-select__option--value').removeAttr('disabled');
+									</script>
+								</div>
+							</div>
+							<div class="frmSet">
+								<div class="frm-unit half-left">
+									<p class="tit">실행/마이그레이션 큐에서 우선 순위</p>
+									<div class="fullselect-wrap">
+										<select name="" id="">
+											<option value="낮음">낮음</option>
+											<option value="보통">보통</option>
+											<option value="높음">높음</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div><!-- //c-modal-body_inner -->
+					</div><!-- //steps-cont-wrap -->
+				</div><!-- //c-modal-body -->
+				<div class="c-modal-footer">
+					<div class="buttonSet">
+						<button class="btn-c-modal btn-cancel">취소</button>
+						<button class="btn-c-modal">확인</button><!-- 비활성화일때(필수값 입력안했을때) 속성 disabled 추가 : 아랫줄 참조 -->
+						<!-- <button class="btn-c-modal" disabled>확인</button> -->
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+</body>
+</html>

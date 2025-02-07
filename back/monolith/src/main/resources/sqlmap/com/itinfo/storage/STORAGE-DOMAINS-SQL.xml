@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "src/org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd" >
+
+<mapper namespace="STORAGE-DOMAINS">
+
+	<select id="retrieveStorageDomainUsage" parameterType="String" resultType="com.itinfo.model.StorageDomainUsageVo">
+		SELECT
+			STORAGE_DOMAIN_ID, AVAILABLE_DISK_SIZE_GB, USED_DISK_SIZE_GB, STORAGE_DOMAIN_STATUS
+			, EXTRACT(EPOCH FROM HISTORY_DATETIME AT TIME ZONE 'ASIA/SEOUL') * 1000 AS HISTORY_DATETIME
+		FROM
+			STORAGE_DOMAIN_HOURLY_HISTORY
+		WHERE 1=1
+		AND STORAGE_DOMAIN_ID::TEXT = #{storageDomainId}
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 360
+	</select>
+	
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "src/org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd" >
+
+<mapper namespace="COMPUTE-CLUSTER">
+	<select id="retrieveHostSw" parameterType="String" resultType="com.itinfo.model.HostSwVo">
+		SELECT
+			HOST_ID, HOST_OS, KERNEL_VERSION, KVM_VERSION, VDSM_VERSION
+		FROM
+			HOST_CONFIGURATION
+		WHERE 1=1
+		AND HOST_ID::TEXT = #{hostId}
+		ORDER BY HISTORY_ID DESC
+		LIMIT 1
+	</select>
+	
+	<select id="retrieveClusterChartUsage" parameterType="java.util.List" resultType="com.itinfo.model.HostUsageVo">
+		SELECT
+			EXTRACT(EPOCH FROM HISTORY_DATETIME AT TIME ZONE 'ASIA/SEOUL') * 1000 AS HISTORY_DATETIME
+			, ROUND(AVG(MEMORY_USAGE_PERCENT)) AS MEMORY_USAGE_PERCENT
+			, ROUND(AVG(CPU_USAGE_PERCENT)) AS CPU_USAGE_PERCENT
+		FROM
+			HOST_SAMPLES_HISTORY
+		WHERE 1=1
+		AND HOST_ID::TEXT IN
+		<foreach collection="list" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+		GROUP BY HISTORY_DATETIME
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 360
+	</select>
+	
+	<select id="retrieveHostChartUsage" parameterType="String" resultType="com.itinfo.model.HostUsageVo">
+		SELECT
+			HOST_ID, HOST_STATUS, CPU_USAGE_PERCENT, MEMORY_USAGE_PERCENT,
+			<!-- TO_CHAR(HISTORY_DATETIME, 'YYYYMMDDHH24MI') AS HISTORY_DATETIME -->
+			EXTRACT(EPOCH FROM HISTORY_DATETIME AT TIME ZONE 'ASIA/SEOUL') * 1000 AS HISTORY_DATETIME
+		FROM
+			HOST_SAMPLES_HISTORY
+		WHERE 1=1
+		AND HOST_ID::TEXT = #{hostId}
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 360
+	</select>
+	
+		
+	<select id="retrieveHostLastUsage" parameterType="String" resultType="com.itinfo.model.HostUsageVo">
+		SELECT
+			HOST_ID, HOST_STATUS, CPU_USAGE_PERCENT, MEMORY_USAGE_PERCENT
+			, TO_CHAR(HISTORY_DATETIME, 'YYYYMMDDHH24MI') AS HISTORY_DATETIME
+		FROM
+			HOST_SAMPLES_HISTORY
+		WHERE 1=1
+		AND HOST_ID::TEXT = #{hostId}
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 1
+	</select>
+
+
+	<select id="retrieveVmLastUsage" parameterType="String" resultType="com.itinfo.model.VmUsageVo">
+		SELECT
+			VM_ID, VM_STATUS, CPU_USAGE_PERCENT, MEMORY_USAGE_PERCENT
+			, TO_CHAR(HISTORY_DATETIME, 'YYYYMMDDHH24MI') AS HISTORY_DATETIME
+		FROM
+			VM_SAMPLES_HISTORY
+		WHERE 1=1
+		AND VM_ID::TEXT = #{id}
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 1
+	</select>
+	
+	
+	<select id="retrieveHostInterfaceLastUsage" parameterType="String" resultType="com.itinfo.model.NicUsageVo">
+		SELECT
+			HOST_INTERFACE_ID, RECEIVE_RATE_PERCENT, TRANSMIT_RATE_PERCENT, RECEIVED_TOTAL_BYTE, TRANSMITTED_TOTAL_BYTE
+			, TO_CHAR(HISTORY_DATETIME, 'YYYYMMDDHH24MI') AS HISTORY_DATETIME
+		FROM
+			HOST_INTERFACE_SAMPLES_HISTORY
+		WHERE 1=1
+		AND HOST_INTERFACE_ID::TEXT = #{nicId}
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 1
+	</select>
+	
+	
+	
+	<select id="retrieveVmInterfaceLastUsage" parameterType="String" resultType="com.itinfo.model.NicUsageVo">
+		SELECT
+			VM_INTERFACE_ID, RECEIVE_RATE_PERCENT, TRANSMIT_RATE_PERCENT, RECEIVED_TOTAL_BYTE, TRANSMITTED_TOTAL_BYTE
+			, TO_CHAR(HISTORY_DATETIME, 'YYYYMMDDHH24MI') AS HISTORY_DATETIME
+		FROM
+			VM_INTERFACE_SAMPLES_HISTORY
+		WHERE 1=1
+		AND VM_INTERFACE_ID::TEXT = #{nicId}
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 1
+	</select>
+
+	<select id="retrieveHostHaInfo" resultType="com.itinfo.model.HostHaVo" >
+		SELECT
+			VDS_ID AS HOST_ID, HA_SCORE, HA_CONFIGURED, HA_ACTIVE, HA_GLOBAL_MAINTENANCE
+			, HA_LOCAL_MAINTENANCE
+		FROM
+			VDS_STATISTICS
+		WHERE 1=1
+		AND HA_CONFIGURED IS TRUE
+	</select>
+</mapper>

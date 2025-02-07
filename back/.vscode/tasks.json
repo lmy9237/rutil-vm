@@ -1,0 +1,128 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "bootRun-rutil-vm-api (백앤드 실행)",
+      "type": "shell",
+      "command": "./gradlew",
+      "args":[
+        ":rutil-vm-api:bootRun",
+        "-Pprofile=local",
+        "-PskipNpm=true",
+        "--parallel",
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [{
+        "pattern": [
+          {
+            "regexp": "\\b\\B",
+            "file": 1,
+            "location": 2,
+            "message": 3
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Listening for",
+          "endsPattern": "^.*transport dt_socket at address.*"
+        }
+      }]
+    }, {
+      "label": "bootJar-rutil-vm-api (백앤드 생성 STAGE)",
+      "type": "shell",
+      "command": "./gradlew",
+      "args":[
+        ":rutil-vm-api:bootJar",
+        "-Pprofile=staging",
+        "-PskipNpm=true",
+        "--parallel",
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [{
+        "pattern": [
+          {
+            "regexp": "\\b\\B",
+            "file": 1,
+            "location": 2,
+            "message": 3
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Listening for",
+          "endsPattern": "^.*transport dt_socket at address.*"
+        }
+      }]
+    }, {
+      "label": "refresh-dependencies (의존 jar 동기화)",
+      "type": "shell",
+      "command": "./gradlew",
+      "args":[
+        "--refresh-dependencies",
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }, {
+      "label": "build-rutil-vm-api (빌드)",
+      "type": "shell",
+      "command": "./gradlew",
+      "args":[
+        ":rutil-vm-api:build",
+        "-Pprofile=staging",
+        "-PskipNpm=true",
+        "--parallel",
+        "-x test"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+    }, {
+      "label": "build-rutil-vm-api-safely (안전빌드)",
+      "type": "shell",
+      "command": "./gradlew",
+      "args":[
+        ":rutil-vm-api:build",
+        "-Pprofile=staging",
+        "-PskipNpm=true",
+        "--parallel",
+        // "-x test"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+    }
+  ],
+  "inputs": [
+    {
+      "id": "terminate",
+      "type": "command",
+      "command": "workbench.action.tasks.terminate",
+      "args": "run-itcloud"
+    }
+  ]
+}

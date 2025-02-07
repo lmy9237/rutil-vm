@@ -1,0 +1,12 @@
+
+@import url('/vendors/bootstrap/dist/css/bootstrap.min.css');
+@import url('/vendors/font-awesome/css/font-awesome.min.css');
+@import url('/vendors/iCheck/skins/flat/green.css');
+@import url('/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css');
+@import url('/vendors/jqvmap/dist/jqvmap.min.css');
+@import url('/vendors/bootstrap-daterangepicker/daterangepicker.css');
+@import url('/vendors/ion.rangeSlider/css/ion.rangeSlider.css');
+@import url('/vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css');
+@import url('./custom.min.css');
+@import url('./style.css');
+@import url('./notify.css');

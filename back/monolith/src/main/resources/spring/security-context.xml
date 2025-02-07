@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+	<http auto-config='true' use-expressions="true">
+		<csrf disabled="true"/>
+		<intercept-url pattern="/websocket/**" access="permitAll" />
+		<intercept-url pattern="/css/**" access="permitAll" />
+		<intercept-url pattern="/images/**" access="permitAll" />
+		<!--<intercept-url pattern="/login" requires-channel="https" access="permitAll" />-->
+		<intercept-url pattern="/vmConsole/**" access="permitAll"/>
+		<intercept-url pattern="/login" access="permitAll" />
+		<intercept-url pattern="/login/**" access="permitAll" />
+		<intercept-url pattern="/resources/**" access="permitAll" />
+		<intercept-url pattern="/js/**" access="permitAll" />
+		<intercept-url pattern="/vendors/**" access="permitAll" />
+		<intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+
+		<!-- swagger -->
+		<intercept-url pattern="/swagger-ui.html/**" access="isAnonymous()" />
+		<intercept-url pattern="/configuration/**" access="isAnonymous()" />
+		<intercept-url pattern="/swagger-resources/**" access="isAnonymous()" />
+		<intercept-url pattern="/v2/api-docs" access="isAnonymous()" />
+		<intercept-url pattern="/webjars/**" access="isAnonymous()" />
+		<intercept-url pattern="/webjars/springfox-swagger-ui/*.{js,css}" access="isAnonymous()" />
+
+		<form-login login-page="/login"
+			default-target-url="/loginSuccess"
+			
+			username-parameter="userid"
+			password-parameter="passwd"
+			authentication-failure-url="/login"
+			authentication-failure-handler-ref="customAuthFailureHandler"
+			always-use-default-target='true' />
+
+		<logout invalidate-session="true" logout-url="/logout" logout-success-url="/login" />
+
+		<access-denied-handler error-page="/com/itinfo/login/accessDenied" />
+        <!-- ref="customAccessDeniedHandler" -->
+	</http>
+
+	<beans:bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+
+	<authentication-manager>
+		<authentication-provider ref="customAuthProvider" />
+	</authentication-manager>
+
+	<beans:bean id="customAuthProvider" class="com.itinfo.security.CustomAuthProvider">
+	</beans:bean>
+	
+	<beans:bean id="customAuthFailureHandler" class="com.itinfo.security.CustomAuthFailureHandler">
+	</beans:bean>
+
+	<beans:bean id="customAccessDeniedHandler" class="com.itinfo.security.CustomAccessDeniedHandler">
+	</beans:bean>
+</beans:beans>

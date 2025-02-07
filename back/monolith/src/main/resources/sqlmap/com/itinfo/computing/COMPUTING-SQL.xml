@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "src/org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd" >
+
+<mapper namespace="COMPUTING">
+	<select id="retrieveVmUsage" parameterType="String" resultType="com.itinfo.model.VmUsageVo">
+		SELECT
+			EXTRACT(EPOCH FROM HISTORY_DATETIME AT TIME ZONE 'ASIA/SEOUL') * 1000 AS HISTORY_DATETIME
+			, CPU_USAGE_PERCENT, MEMORY_USAGE_PERCENT
+		FROM
+			VM_SAMPLES_HISTORY
+		WHERE 1=1
+		AND VM_ID::TEXT = #{id}
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 360
+	</select>
+	
+	<select id="retrieveVmUsageOne" parameterType="String" resultType="com.itinfo.model.VmUsageVo">
+		SELECT
+			EXTRACT(EPOCH FROM HISTORY_DATETIME AT TIME ZONE 'ASIA/SEOUL') * 1000 AS HISTORY_DATETIME
+			, CPU_USAGE_PERCENT, MEMORY_USAGE_PERCENT
+		FROM
+			VM_SAMPLES_HISTORY
+		WHERE 1=1
+		AND VM_ID::TEXT = #{id}
+		ORDER BY HISTORY_DATETIME DESC
+		LIMIT 1
+	</select>
+	
+	<select id="retrieveVmNetworkUsage" parameterType="String" resultType="com.itinfo.model.VmNetworkUsageVo">
+		SELECT
+			EXTRACT(EPOCH FROM HISTORY_DATETIME AT TIME ZONE 'ASIA/SEOUL') * 1000 AS HISTORY_DATETIME,
+			AVG(RECEIVE_RATE_PERCENT) AS RECEIVE_RATE_PERCENT,
+			AVG(TRANSMIT_RATE_PERCENT) AS TRANSMIT_RATE_PERCENT
+		FROM
+			VM_INTERFACE_SAMPLES_HISTORY
+		WHERE
+			VM_INTERFACE_ID::TEXT IN 
+			<foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+				#{id} 
+			</foreach>
+		GROUP BY
+			HISTORY_DATETIME
+		ORDER BY
+			HISTORY_DATETIME DESC
+		LIMIT 360
+	</select>
+	
+	<select id="retrieveVmNetworkUsageOne" parameterType="String" resultType="com.itinfo.model.VmNetworkUsageVo">
+		SELECT
+			EXTRACT(EPOCH FROM HISTORY_DATETIME AT TIME ZONE 'ASIA/SEOUL') * 1000 AS HISTORY_DATETIME,
+			AVG(RECEIVE_RATE_PERCENT) AS RECEIVE_RATE_PERCENT,
+			AVG(TRANSMIT_RATE_PERCENT) AS TRANSMIT_RATE_PERCENT
+		FROM
+			VM_INTERFACE_SAMPLES_HISTORY
+		WHERE
+			VM_INTERFACE_ID::TEXT IN 
+			<foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+				#{id} 
+			</foreach>
+		GROUP BY
+			HISTORY_DATETIME
+		ORDER BY
+			HISTORY_DATETIME DESC
+		LIMIT 1
+	</select>
+	
+	<select id="retrieveVmDevices" parameterType="String" resultType="com.itinfo.model.VmDeviceVo">
+		SELECT
+			HISTORY_ID,
+			TYPE,
+			ADDRESS,
+			IS_READONLY AS READONLY,
+			IS_PLUGGED AS PLUGGED,
+			IS_MANAGED AS MANAGED,
+			DEVICE_ID
+		FROM
+			VM_DEVICE_HISTORY
+		WHERE
+			VM_ID::TEXT = #{id}
+		ORDER BY
+			UPDATE_DATE
+	</select>
+</mapper>

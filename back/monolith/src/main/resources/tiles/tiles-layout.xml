@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+       
+<!-- set layout -->       
+<tiles-definitions>
+	<definition name="defaultLayout" template="/WEB-INF/jsp/layout/defaultLayout.jsp">
+		<put-attribute name="includejsBefore" value="/WEB-INF/jsp/com/includejsBefore.jsp" />
+		<put-attribute name="includejsAfter" value="/WEB-INF/jsp/com/includejsAfter.jsp" />
+		<put-attribute name="top" value="/WEB-INF/jsp/layout/top.jsp" />
+		<put-attribute name="left" value="/WEB-INF/jsp/layout/left.jsp" />
+		<put-attribute name="body" value="/WEB-INF/jsp/layout/body.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/jsp/layout/footer.jsp" />
+	</definition>
+  
+	<definition name="loginLayout" template="/WEB-INF/jsp/layout/loginLayout.jsp">
+		<put-attribute name="includejsBefore" value="/WEB-INF/jsp/com/includejsBefore.jsp" />
+		<put-attribute name="includejsAfter" value="/WEB-INF/jsp/com/includejsAfter.jsp" />
+		<put-attribute name="body" value="/WEB-INF/jsp/layout/body.jsp" />
+	</definition>
+  
+	<definition name="/*/*/login" extends="loginLayout">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/login.jsp" />
+	</definition>
+
+	<definition name="/*/*/*" extends="defaultLayout">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}.jsp" />
+	</definition>
+</tiles-definitions>

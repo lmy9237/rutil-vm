@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap">
+	<div class="header">
+		<h1 class="logo"><img src="images/logo.png" alt="Okestro contrabass"></h1>
+		<div class="loginInfo">
+			<button type="button" class="btn-logined">admin</button>
+			<button type="button" class="btn-logout">로그아웃</button>
+		</div>
+	</div>
+	<!-- //header -->
+
+	<div class="container">
+		<div class="containnerBox">
+			<div class="left-wrap">
+				<div class="left-inner">
+					<ul class="leftmenu">
+						<li><a href="dashboard.html" class="menu-dashboard"><span>대시보드</span></a></li>
+						<li><a href="symphony.html" class="menu-symphony"><span>심포니</span></a></li>
+						<li>
+							<a href="#" class="menu-computing hasSub"><span>컴퓨팅</span></a>
+							<div class="left-submenu">
+								<ul>
+									<li><a href="virtualmachine.html">가상머신</a></li>
+									<li><a href="templete.html">템플릿</a></li>
+									<li><a href="host.html">호스트</a></li>
+									<li><a href="cluster.html">클러스터</a></li>
+								</ul>
+							</div>
+						</li>
+						<li><a href="network.html" class="menu-network"><span>네트워크</span></a></li>
+						<li><a href="#" class="menu-storage hasSub"><span>스토리지</span></a>
+							<div class="left-submenu">
+								<ul>
+									<li><a href="domain.html">도메인</a></li>
+									<li><a href="disk.html">디스크</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="#" class="menu-manage hasSub"><span>관리</span></a>
+							<div class="left-submenu">
+								<ul>
+									<li><a href="user.html">사용자</a></li>
+									<li><a href="instance.html">인스턴스 유형</a></li>
+									<li><a href="setting.html">설정</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<button class="btn-leftwrap">접기</button>
+			</div>
+			<!-- //left-wrap -->
+			<div class="cont-wrap">
+				<div class="cont-inner">
+					<div class="doc-list-wrap">
+						<div class="doc-tit">
+							<h2 class="tit"><a href="virtualmachine.html">호스트</a></h2>
+							<p class="location">컴퓨팅 &gt; <a href="host.html">호스트</a></p>
+							<div class="btnSet-right">
+								<div class="btn-box">
+									<button type="button" class="btn-icon btn-icon-refresh btn-tooltip">새로고침</button>
+									<div class="c-tooltip top-right">
+										<div class="c-tooltip-inner"></div>
+										<span class="c-tooltip-arrow"></span>
+										<span class="txt">새로고침</span>
+									</div>
+								</div>
+								<div class="btn-box">
+									<button type="button" class="btn-icon btn-icon-vmmake btn-tooltip">템플릿 기반 가상머신 생성</button>
+									<div class="c-tooltip top-right">
+										<span class="c-tooltip-arrow"></span>
+										<span class="txt">템플릿 기반 가상머신 생성</span>
+									</div>
+								</div>
+								<div class="btn-box">
+									<button type="button" class="btn-icon btn-icon-new btn-tooltip">등록</button>
+									<div class="c-tooltip top-right">
+										<span class="c-tooltip-arrow"></span>
+										<span class="txt">등록</span>
+									</div>
+								</div>
+							</div>
+							<div class="changeStatBox">
+								<button class="btn-stat-chg">상태값 변경</button>
+								<div class="target-stat-chg">
+									<button class="btn-chg-stat play" disabled>실행</button>
+									<button class="btn-chg-stat pause">일시정지</button>
+									<button class="btn-chg-stat stop" disabled>종료</button>
+									<button class="btn-chg-stat reboot">재부팅</button>
+								</div>
+							</div>
+						</div>
+						<div class="doc-list-body scrollBodyX">
+							<div class="doc-list-inner">
+								<div class="list-tot" style="min-width: 1240px;">
+									<div class="list-fix-wrap">
+										<table>
+											<caption></caption>
+											<colgroup>
+												<col style="width: 3%; min-width: 40px;">
+												<col style="width: 5%; min-width: 120px;"><!-- 상태아이콘에 해당되는 곳은 min-width: 120px 필수 조정 -->
+												<col style="width: 9%; min-width: 120px;">
+												<col style="width: 7.5%; min-width: 100px;">
+												<col style="width: 9%; min-width: 121px;">
+												<col style="width: 8%; min-width: 102px;">
+												<col style="width: 8%; min-width: 101px;">
+												<col style="width: 6%; min-width: 80px;">
+												<col style="width: auto; min-width: 103px;">
+												<col style="width: 8%; min-width: 100px;">
+												<col style="width: 9%; min-width: 120px;">
+												<col style="width: 8%; min-width: 101px;">
+												<col style="width: 6%; min-width: 80px;">
+												<col style="width: 6%; min-width: 80px;">
+											</colgroup>
+											<tbody>
+												<tr>
+													<th>
+														<label class="ui-check">
+															<input type="checkbox">
+															<span class="chk-ico"></span>
+														</label>
+													</th>
+													<th>상태</th>
+													<th class="txt-left">이름</th>
+													<th>설명</th>
+													<th>용도</th>
+													<th>IP</th>
+													<th>호스트명</th>
+													<th>CPU 사용률</th>
+													<th>CPU 할당량</th>
+													<th>메모리 사용률</th>
+													<th>메모리 할당량</th>
+													<th>네트워크</th>
+													<th>가동시간</th>
+													<th>작업</th>
+												</tr>
+											</tbody>
+										</table>
+									</div><!-- //list-fix-wrap -->
+
+									<div class="list-scroll-wrap scrollBodyY">
+										<!-- 0. 조회 내역이 없을때 - 시작 -->
+										<div class="nodata-wrap">
+											<p class="nodata">생성된 가상머신이 없습니다.</p>
+										</div>
+										<!-- //0. 조회 내역이 없을때 - 끝 -->
+
+										<!-- 1. 조회 내역이 있을때 - 시작 -->
+										<div class="list-scroll-cont">
+											<table>
+												<caption></caption>
+												<colgroup>
+													<col style="width: 3%; min-width: 40px;">
+													<col style="width: 5%; min-width: 120px;"><!-- 상태아이콘에 해당되는 곳은 min-width: 120px 필수 조정 -->
+													<col style="width: 9%; min-width: 120px;">
+													<col style="width: 7.5%; min-width: 100px;">
+													<col style="width: 9%; min-width: 121px;">
+													<col style="width: 8%; min-width: 102px;">
+													<col style="width: 8%; min-width: 101px;">
+													<col style="width: 6%; min-width: 80px;">
+													<col style="width: auto; min-width: 103px;">
+													<col style="width: 8%; min-width: 100px;">
+													<col style="width: 9%; min-width: 120px;">
+													<col style="width: 8%; min-width: 101px;">
+													<col style="width: 6%; min-width: 80px;">
+													<col style="width: 6%; min-width: 80px;">
+												</colgroup>
+												<tbody>
+													<!-- 한줄반복 시작 -->
+													<tr>
+														<td>
+															<label class="ui-check">
+																<input type="checkbox">
+																<span class="chk-ico"></span>
+															</label>
+														</td>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+														</td>
+														<td class="txt-left"><a href="detail.html" class="link">ovirt</a></td>
+														<td>가상머신</td>
+														<td>시스템 관리</td>
+														<td>100.0.0.121</td>
+														<td>ov-host01</td>
+														<td>0%</td>
+														<td>8</td>
+														<td>0%</td>
+														<td>4096MB</td>
+														<td>0%</td>
+														<td>12일</td>
+														<td>
+															<div class="list-popbtn-wrap">
+																<button type="button" class="btn-openPop"></button>
+																<div class="openPop-target scrollBodyY long">
+																	<div class="openPop-target_inner">
+																		<ul>
+																			<li><button><span class="ico ico-hostconsole"></span>호스트 콘솔</button></li><!-- 비활성화는 button에 disabled 속성 추가 -->
+																			<li><button><span class="ico ico-activation"></span>활성</button></li>
+																			<li><button><span class="ico ico-sm"></span>유지보수</button></li>
+																			<li><button><span class="ico ico-power"></span>전원관리</button></li>
+																		</ul>
+																	</div>
+																</div><!-- //openPop-target -->
+															</div>
+														</td>
+													</tr>
+													<!-- //한줄반복 끝 -->
+
+													<tr>
+														<td>
+															<label class="ui-check">
+																<input type="checkbox">
+																<span class="chk-ico"></span>
+															</label>
+														</td>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+														</td>
+														<td class="txt-left"><a href="detail.html" class="link">ovirt</a></td>
+														<td>가상머신</td>
+														<td>시스템 관리</td>
+														<td>100.0.0.121</td>
+														<td>ov-host01</td>
+														<td>0%</td>
+														<td>8</td>
+														<td>0%</td>
+														<td>4096MB</td>
+														<td>0%</td>
+														<td>12일</td>
+														<td>
+															<div class="list-popbtn-wrap">
+																<button type="button" class="btn-openPop"></button>
+																<div class="openPop-target scrollBodyY long">
+																	<div class="openPop-target_inner">
+																		<ul>
+																			<li><button><span class="ico ico-hostconsole"></span>호스트 콘솔</button></li>
+																			<li><button><span class="ico ico-activation"></span>활성</button></li>
+																			<li><button><span class="ico ico-sm"></span>유지보수</button></li>
+																			<li><button><span class="ico ico-power"></span>전원관리</button></li>
+																		</ul>
+																	</div>
+																</div><!-- //openPop-target -->
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<label class="ui-check">
+																<input type="checkbox">
+																<span class="chk-ico"></span>
+															</label>
+														</td>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+														</td>
+														<td class="txt-left"><a href="detail.html" class="link">ovirt</a></td>
+														<td>가상머신</td>
+														<td>시스템 관리</td>
+														<td>100.0.0.121</td>
+														<td>ov-host01</td>
+														<td>0%</td>
+														<td>8</td>
+														<td>0%</td>
+														<td>4096MB</td>
+														<td>0%</td>
+														<td>12일</td>
+														<td>
+															<div class="list-popbtn-wrap">
+																<button type="button" class="btn-openPop"></button>
+																<div class="openPop-target scrollBodyY long">
+																	<div class="openPop-target_inner">
+																		<ul>
+																			<li><button><span class="ico ico-hostconsole"></span>호스트 콘솔</button></li>
+																			<li><button><span class="ico ico-activation"></span>활성</button></li>
+																			<li><button><span class="ico ico-sm"></span>유지보수</button></li>
+																			<li><button><span class="ico ico-power"></span>전원관리</button></li>
+																		</ul>
+																	</div>
+																</div><!-- //openPop-target -->
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<label class="ui-check">
+																<input type="checkbox">
+																<span class="chk-ico"></span>
+															</label>
+														</td>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+														</td>
+														<td class="txt-left"><a href="detail.html" class="link">ovirt</a></td>
+														<td>가상머신</td>
+														<td>시스템 관리</td>
+														<td>100.0.0.121</td>
+														<td>ov-host01</td>
+														<td>0%</td>
+														<td>8</td>
+														<td>0%</td>
+														<td>4096MB</td>
+														<td>0%</td>
+														<td>12일</td>
+														<td>
+															<div class="list-popbtn-wrap">
+																<button type="button" class="btn-openPop"></button>
+																<div class="openPop-target scrollBodyY long">
+																	<div class="openPop-target_inner">
+																		<ul>
+																			<li><button><span class="ico ico-hostconsole"></span>호스트 콘솔</button></li>
+																			<li><button><span class="ico ico-activation"></span>활성</button></li>
+																			<li><button><span class="ico ico-sm"></span>유지보수</button></li>
+																			<li><button><span class="ico ico-power"></span>전원관리</button></li>
+																		</ul>
+																	</div>
+																</div><!-- //openPop-target -->
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<label class="ui-check">
+																<input type="checkbox">
+																<span class="chk-ico"></span>
+															</label>
+														</td>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+														</td>
+														<td class="txt-left"><a href="detail.html" class="link">ovirt</a></td>
+														<td>가상머신</td>
+														<td>시스템 관리</td>
+														<td>100.0.0.121</td>
+														<td>ov-host01</td>
+														<td>0%</td>
+														<td>8</td>
+														<td>0%</td>
+														<td>4096MB</td>
+														<td>0%</td>
+														<td>12일</td>
+														<td>
+															<div class="list-popbtn-wrap">
+																<button type="button" class="btn-openPop"></button>
+																<div class="openPop-target scrollBodyY long">
+																	<div class="openPop-target_inner">
+																		<ul>
+																			<li><button><span class="ico ico-hostconsole"></span>호스트 콘솔</button></li>
+																			<li><button><span class="ico ico-activation"></span>활성</button></li>
+																			<li><button><span class="ico ico-sm"></span>유지보수</button></li>
+																			<li><button><span class="ico ico-power"></span>전원관리</button></li>
+																		</ul>
+																	</div>
+																</div><!-- //openPop-target -->
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<label class="ui-check">
+																<input type="checkbox">
+																<span class="chk-ico"></span>
+															</label>
+														</td>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+														</td>
+														<td class="txt-left"><a href="detail.html" class="link">ovirt</a></td>
+														<td>가상머신</td>
+														<td>시스템 관리</td>
+														<td>100.0.0.121</td>
+														<td>ov-host01</td>
+														<td>0%</td>
+														<td>8</td>
+														<td>0%</td>
+														<td>4096MB</td>
+														<td>0%</td>
+														<td>12일</td>
+														<td>
+															<div class="list-popbtn-wrap">
+																<button type="button" class="btn-openPop"></button>
+																<div class="openPop-target scrollBodyY long">
+																	<div class="openPop-target_inner">
+																		<ul>
+																			<li><button><span class="ico ico-hostconsole"></span>호스트 콘솔</button></li>
+																			<li><button><span class="ico ico-activation"></span>활성</button></li>
+																			<li><button><span class="ico ico-sm"></span>유지보수</button></li>
+																			<li><button><span class="ico ico-power"></span>전원관리</button></li>
+																		</ul>
+																	</div>
+																</div><!-- //openPop-target -->
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<label class="ui-check">
+																<input type="checkbox">
+																<span class="chk-ico"></span>
+															</label>
+														</td>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+														</td>
+														<td class="txt-left"><a href="detail.html" class="link">ovirt</a></td>
+														<td>가상머신</td>
+														<td>시스템 관리</td>
+														<td>100.0.0.121</td>
+														<td>ov-host01</td>
+														<td>0%</td>
+														<td>8</td>
+														<td>0%</td>
+														<td>4096MB</td>
+														<td>0%</td>
+														<td>12일</td>
+														<td>
+															<div class="list-popbtn-wrap">
+																<button type="button" class="btn-openPop"></button>
+																<div class="openPop-target scrollBodyY long">
+																	<div class="openPop-target_inner">
+																		<ul>
+																			<li><button><span class="ico ico-hostconsole"></span>호스트 콘솔</button></li>
+																			<li><button><span class="ico ico-activation"></span>활성</button></li>
+																			<li><button><span class="ico ico-sm"></span>유지보수</button></li>
+																			<li><button><span class="ico ico-power"></span>전원관리</button></li>
+																		</ul>
+																	</div>
+																</div><!-- //openPop-target -->
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<label class="ui-check">
+																<input type="checkbox">
+																<span class="chk-ico"></span>
+															</label>
+														</td>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+														</td>
+														<td class="txt-left"><a href="detail.html" class="link">ovirt</a></td>
+														<td>가상머신</td>
+														<td>시스템 관리</td>
+														<td>100.0.0.121</td>
+														<td>ov-host01</td>
+														<td>0%</td>
+														<td>8</td>
+														<td>0%</td>
+														<td>4096MB</td>
+														<td>0%</td>
+														<td>12일</td>
+														<td>
+															<div class="list-popbtn-wrap">
+																<button type="button" class="btn-openPop"></button>
+																<div class="openPop-target scrollBodyY long">
+																	<div class="openPop-target_inner">
+																		<ul>
+																			<li><button><span class="ico ico-hostconsole"></span>호스트 콘솔</button></li>
+																			<li><button><span class="ico ico-activation"></span>활성</button></li>
+																			<li><button><span class="ico ico-sm"></span>유지보수</button></li>
+																			<li><button><span class="ico ico-power"></span>전원관리</button></li>
+																		</ul>
+																	</div>
+																</div><!-- //openPop-target -->
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<label class="ui-check">
+																<input type="checkbox">
+																<span class="chk-ico"></span>
+															</label>
+														</td>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+														</td>
+														<td class="txt-left"><a href="detail.html" class="link">ovirt</a></td>
+														<td>가상머신</td>
+														<td>시스템 관리</td>
+														<td>100.0.0.121</td>
+														<td>ov-host01</td>
+														<td>0%</td>
+														<td>8</td>
+														<td>0%</td>
+														<td>4096MB</td>
+														<td>0%</td>
+														<td>12일</td>
+														<td>
+															<div class="list-popbtn-wrap">
+																<button type="button" class="btn-openPop"></button>
+																<div class="openPop-target scrollBodyY long">
+																	<div class="openPop-target_inner">
+																		<ul>
+																			<li><button><span class="ico ico-hostconsole"></span>호스트 콘솔</button></li>
+																			<li><button><span class="ico ico-activation"></span>활성</button></li>
+																			<li><button><span class="ico ico-sm"></span>유지보수</button></li>
+																			<li><button><span class="ico ico-power"></span>전원관리</button></li>
+																		</ul>
+																	</div>
+																</div><!-- //openPop-target -->
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<label class="ui-check">
+																<input type="checkbox">
+																<span class="chk-ico"></span>
+															</label>
+														</td>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+														</td>
+														<td class="txt-left"><a href="detail.html" class="link">ovirt</a></td>
+														<td>가상머신</td>
+														<td>시스템 관리</td>
+														<td>100.0.0.121</td>
+														<td>ov-host01</td>
+														<td>0%</td>
+														<td>8</td>
+														<td>0%</td>
+														<td>4096MB</td>
+														<td>0%</td>
+														<td>12일</td>
+														<td>
+															<div class="list-popbtn-wrap">
+																<button type="button" class="btn-openPop"></button>
+																<div class="openPop-target scrollBodyY long">
+																	<div class="openPop-target_inner">
+																		<ul>
+																			<li><button><span class="ico ico-hostconsole"></span>호스트 콘솔</button></li>
+																			<li><button><span class="ico ico-activation"></span>활성</button></li>
+																			<li><button><span class="ico ico-sm"></span>유지보수</button></li>
+																			<li><button><span class="ico ico-power"></span>전원관리</button></li>
+																		</ul>
+																	</div>
+																</div><!-- //openPop-target -->
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<label class="ui-check">
+																<input type="checkbox">
+																<span class="chk-ico"></span>
+															</label>
+														</td>
+														<td>
+															<!-- 상태아이콘 예시 시작 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+															<div class="icoStat-box">
+																<span class="icoStat ico-up btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">완료</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-locked btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">잠금</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-waiting btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">작업중</span>
+																</div>
+															</div>
+															<div class="icoStat-box">
+																<span class="icoStat ico-ingdown btn-tooltip"></span>
+																<div class="c-tooltip j-right">
+																	<span class="c-tooltip-arrow"></span>
+																	<span class="txt">내려가는중</span>
+																</div>
+															</div>
+															<!-- //상태아이콘 예시 끝 : 최대 4개까지, 상태아이콘은 staticolist.html에서 확인 -->
+														</td>
+														<td class="txt-left"><a href="detail.html" class="link">ovirt</a></td>
+														<td>가상머신</td>
+														<td>시스템 관리</td>
+														<td>100.0.0.121</td>
+														<td>ov-host01</td>
+														<td>0%</td>
+														<td>8</td>
+														<td>0%</td>
+														<td>4096MB</td>
+														<td>0%</td>
+														<td>12일</td>
+														<td>
+															<div class="list-popbtn-wrap">
+																<button type="button" class="btn-openPop"></button>
+																<div class="openPop-target scrollBodyY long">
+																	<div class="openPop-target_inner">
+																		<ul>
+																			<li><button><span class="ico ico-hostconsole"></span>호스트 콘솔</button></li>
+																			<li><button><span class="ico ico-activation"></span>활성</button></li>
+																			<li><button><span class="ico ico-sm"></span>유지보수</button></li>
+																			<li><button><span class="ico ico-power"></span>전원관리</button></li>
+																		</ul>
+																	</div>
+																</div><!-- //openPop-target -->
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<!-- //1. 조회 내역이 있을때 - 끝 -->
+									</div><!-- //list-scroll-wrap -->
+								</div>
+							</div>
+						</div>
+						<!-- //doc-list-body -->
+						<div class="doc-list-btm">
+							<div class="paging-wrap">
+								<button class="btn-page goFirst">맨처음으로</button><!-- 비활성화는 속성 disabled 추가 -->
+								<button class="btn-page goPrev">맨처음으로</button>
+
+								<button class="btn-go-page here">1</button><!-- 현재 페이지 : 클래스 here 추가 -->
+								<button class="btn-go-page">2</button>
+								<button class="btn-go-page">3</button>
+								<button class="btn-go-page">4</button>
+								<button class="btn-go-page">5</button>
+
+								<button class="btn-page goNext">맨처음으로</button>
+								<button class="btn-page goLast">맨처음으로</button><!-- 비활성화는 속성 disabled 추가 -->
+							</div>
+						</div>
+						<!-- //doc-list-btm -->
+					</div>
+					<!-- //doc-list-wrap -->
+				</div>
+			</div>
+			<!-- //cont-wrap -->
+		</div>
+		<!-- //containnerBox -->
+	</div>
+	<!-- //container -->
+
+</div>	
+
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+</body>
+</html>

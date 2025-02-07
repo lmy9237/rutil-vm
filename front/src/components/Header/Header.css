@@ -1,0 +1,120 @@
+.header{
+    height: 5.5%;
+    margin: 0 auto;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 0 0.3rem;
+    background-color: #ffffff;
+    display: flex;
+    margin-bottom: 0.1rem;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.13);
+}
+
+.header-right {
+    font-size: 0.4rem;
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 추가 */
+}
+.menu-icon{
+    margin-right: 0.24rem;
+    font-size: 0.44rem;
+    color: rgb(145, 150, 155);
+}
+.menu-icon:hover{
+    color: black;
+}
+.header-right > span {
+    color: rgb(0, 0, 0);
+    font-weight: 600;
+    cursor: pointer;
+}
+.header-right > span:hover{
+    color: #5dcbf7;
+}
+.header-left {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.5em;
+    min-width:6%;
+    align-items: center; /* 세로 중앙 정렬 추가 */
+}
+.header-left span{
+    font-size: 0.4rem;
+}
+.header-left > div{
+    padding: 0 0.15rem;
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+}
+.header-left > div > i {
+    font-size: 1.2em;
+    cursor: pointer;
+}
+.header-left > div:hover{
+    border-radius: 50%;
+    background-color: #ebececd8;
+}
+/* Header 아이콘들 */
+.user-btn,
+.fa-bell-wrapper { position: relative; }
+.user-btn{
+    display: flex;
+    align-items: center;
+}
+.user-loginbox{
+    position: absolute;
+    background-color: #ffffff;
+    z-index: 4;
+    width: 9vw;
+    left: -55%;
+    font-size: 0.3rem;
+    border: 1px solid rgb(204, 204, 204);
+    top: 113%;
+    border-radius: 3px;
+}
+.user-loginbox>div{
+    padding: 0.09rem 0.12rem ;
+}
+.user-loginbox>div:hover{
+    background-color: #ebececd8;
+}
+.bell-box{
+    position: absolute;
+    background-color: #ffffff;
+    z-index: 3;
+    width: 11.65vw;
+    left: -138%;
+    right: 0;
+    font-size: 0.3rem;
+    border: 1px solid rgb(204, 204, 204);
+    top: 121%;
+    height: 89.6vh;
+    border-radius: 2px;
+}
+
+.path{
+    font-size:0.32rem;
+    margin-bottom: 0.2rem;
+}
+.path_icon{
+    color:gray;
+    font-weight:800;
+    font-size:0.25rem;
+    margin:0 0.14rem;
+}
+.last-path-element {
+    color: #0b4db5;
+    font-weight: bold;
+    font-size: 0.4rem
+  }
+.logo{
+    height:4vh;
+    margin-right:0.25rem;
+}
+
+.rutil-logo{
+    width: 4.6vw;
+    display:block;
+}

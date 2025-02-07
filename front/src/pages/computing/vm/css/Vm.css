@@ -1,0 +1,202 @@
+/*일반파트*/
+.vm-detail-general-boxs{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:0.2rem;
+    border:1px solid #dedede;
+}
+.detail-general-box{
+    width: 35%;
+    height: 38vh;
+}
+.detail_general_mini_box{
+    width: 25%;
+    height: 33vh;
+}
+.detail_general_mini_box>div:first-child,
+.detail-general-box>div:first-child
+{
+    font-size:0.4rem;
+    font-weight:600;
+    padding:0.18rem;
+}
+.capacity{
+    font-size:0.35rem;
+    padding: 0.2rem;
+}
+.capacity>div:first-child{
+    font-weight:600;
+}
+.capacity_outer{
+    flex-direction: column;
+    display:flex;
+    height:70%;
+    justify-content:space-between;
+}
+.capacity_box{
+    display: flex;
+    height: 48%;
+    justify-content: space-between;
+    align-items: center;
+}
+.related_object{
+    display:flex;
+    align-items: center;
+}
+.vm_table_container{
+    width:100%;
+}
+.detail-general-boxs-bottom{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+}
+.vm-general-box{
+    display:flex;
+    font-size:0.36rem;
+    align-items: center;
+    font-weight:600;
+    border-bottom:1px solid #dedede;
+    padding:0.1rem;
+}
+.vm-general-bottom-box{
+    width: 33%;
+    border: 1px solid #dedede;
+    height: 33vh;
+}
+.vm-add-snapshot-btn{
+    display:flex;
+    font-size:0.32rem;
+    align-items: center;
+    background:#d7e8ef;
+    padding:0.1rem;
+    width:27%;
+    margin: 0.2rem;
+}
+.vm-add-snapshot-btn:hover{
+    font-weight:600;
+    cursor:pointer;
+    color:blue;
+}
+.disk-bar{
+    height:90%;
+}
+/*네트워크 인터페이스*/
+.network-interface-outer{
+    height: 66vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.network-content{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.34rem;
+    border-bottom: 1px solid rgb(226, 226, 226);
+    cursor: pointer;
+}
+.network-content:hover{
+    background-color: #ebececd8;
+}
+.network-content>div:first-child{
+    padding: 0.5rem 0.3rem;
+}
+.network-content i{
+    color: #757575;
+    padding: 0.05rem;
+}
+.network-content i:first-child{
+    padding-right: 0.3rem;
+    border-right: 1px solid #757575;
+    font-size: 0.2rem;
+}
+.network-content>div:nth-child(n+2){
+    text-align: center;
+    padding-top: 0.4rem;
+}
+.network-content>div>div:nth-child(2){
+    font-size: 0.27rem;
+    color:#4F4F4F;
+}
+
+.network-content-detail>div{
+    width: 50%;
+    padding:0.2rem;
+}
+.network-content-detail-box>div{
+    font-size:0.4rem;
+    margin-bottom:0.2rem;
+}
+.network-content-detail-box .snap-table th{
+    margin-right: 0.6rem;
+    display: block;
+}
+
+/*스냅샷*/
+.snapshot-content{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.34rem;
+    border-bottom: 1px solid rgb(226, 226, 226);
+    padding: 1% 0;
+    cursor: pointer;
+}
+.snapshot-content:hover{
+    background-color: #ebececd8;
+    border-left: 2px solid rgb(161, 161, 161);
+}
+.snapshot-content-left{
+    color: #4F4F4F;
+    width: 20%;
+    display: flex;
+}
+.snapshot-content-left>div{
+    border-radius: 50%;
+    padding: 3%;
+    background-color: #dbdbdb;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    margin-right: 10%;
+}
+.snapshot-content-left span{
+    font-weight: 600;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+.snapshot-content-left i{
+  margin-top: 1px;
+}
+.snapshot-content-right{
+    color: #4F4F4F;
+    display: flex; 
+    justify-content: right;
+    width: 60%;
+}
+
+.snap-hidden-content {
+    display: none;
+    overflow: hidden;
+  }
+.snap-hidden-content.active {
+    display: block;
+    max-height: 33vh;
+    border: 1px solid #b9b9b9;
+    border-top: none;
+    color:gray;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.3rem;
+    font-size: 0.34rem;
+}
+.snap-table{
+    height: 100%;
+    text-align: left;
+    color:gray;
+    margin-bottom: 1rem;
+}
+.snap-table:last-child{
+    margin-bottom: 0;
+}

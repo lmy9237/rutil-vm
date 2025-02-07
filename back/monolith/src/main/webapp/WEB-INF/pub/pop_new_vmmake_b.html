@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="Okestro contrabass">
+	<meta name="keywords" content="Okestro contrabass">
+	<meta name="title" content="Okestro contrabass">
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/customSelect.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Okestro contrabass</title>
+</head>
+<body>
+
+<div class="wrap opened"><!-- modal 열림/닫힘 상태에 따라 클래스 opened 추가/삭제 -->
+	<!-- 해당 화면 내용 -->
+</div>	
+
+<!-- modalBox 는 반드시 "wrap 바로 다음" && "body태그 끝나기 전"에 위치!! -->
+<div class="modalBox active"> <!-- 보이기/안보이기 : 클래스 active 추가/삭제 -->
+	<div class="modalBox-inner">
+		<section class="c-modal-wrap">
+			<div class="c-modal-inner">
+				<div class="c-modal-header">
+					<h1>새 가상머신</h1>
+					<p class="mustbeTxt">표시 항목( <span class="mustbe"></span> ) 은 필수 입력 항목입니다. </p>
+					<div class="steps-wrap">
+						<ul>
+							<li>
+								<button type="button" class="btn-step end">일반 <span class="mustbe"></span></button>
+								<!-- 
+									* tab 및 단계에 따른 클래스 정리 
+									현재 상태	: button에 클래스 active
+									작성완료		: button에 클래스 end
+								-->
+							</li>
+							<li>
+								<button type="button" class="btn-step active">부트옵션 <span class="mustbe"></span></button>
+							</li>
+							<li>
+								<button type="button" class="btn-step">시스템</button>
+							</li>
+							<li>
+								<button type="button" class="btn-step">호스트</button>
+							</li>
+							<li>
+								<button type="button" class="btn-step">초기실행</button>
+							</li>
+							<li>
+								<button type="button" class="btn-step">리소스 할당</button>
+							</li>
+						</ul>
+					</div>
+				</div><!-- //c-modal-header -->
+				<div class="c-modal-body scroll-css">
+					<div class="steps-cont-wrap">
+						<div class="c-modal-body_inner">
+							<h2 class="steps-tit">부트순서</h2>
+							<div class="frmSet">
+								<div class="frm-unit half-left">
+									<p class="tit">첫 번째 장치</p>
+									<div class="fullselect-wrap">
+										<select name="" id="">
+											<option value="하드 디스크">하드 디스크</option>
+											<option value="CD-ROM">CD-ROM</option>
+											<option value="네트워크">네트워크</option>
+											<option value="Medium">Medium</option>
+										</select>
+									</div>
+								</div>
+								<div class="frm-unit half-right">
+									<p class="tit">두 번째 장치</p>
+									<div class="fullselect-wrap">
+										<select name="" id="">
+											<option value="데스크탑">데스크탑</option>
+											<option value="서버">서버</option>
+											<option value="고성능">고성능</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="frmSet">
+								<div class="frm-unit">
+									<p class="tit">CD/DVD 연결 
+										<label class="ui-check">
+											<input type="checkbox">
+											<span class="chk-ico"></span>
+										</label>
+									</p>
+									<div class="fullselect-wrap" id="testSelect"><!-- id는 스크립트 소스의 예시 때문에 임시로 넣었습니다. -->
+										<select name="" id="">
+											<option value="ovirt-node-ng-installer-4.2.0-2-10-1221.ei7.iso">ovirt-node-ng-installer-4.2.0-2-10-1221.ei7.iso</option>
+											<option value="list2">list2</option>
+											<option value="list3">list3</option>
+										</select>
+									</div>
+									<script>
+										//select에 disalbed 처리 하고 싶다면?
+										//$('#testSelect').find('.custom-select__option--value').attr('disabled', 'disabled');
+										//select에 disabled를 풀고 싶다면?
+										//$('#testSelect').find('.custom-select__option--value').removeAttr('disabled');
+									</script>
+								</div>
+							</div>
+						</div><!-- //c-modal-body_inner -->
+					</div><!-- //steps-cont-wrap -->
+				</div><!-- //c-modal-body -->
+				<div class="c-modal-footer">
+					<div class="buttonSet">
+						<button class="btn-c-modal btn-cancel">취소</button>
+						<button class="btn-c-modal">다음</button><!-- 비활성화일때(필수값 입력안했을때) 속성 disabled 추가 : 아랫줄 참조 -->
+						<!-- <button class="btn-c-modal" disabled>다음</button> -->
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+
+<script src="js/jquery.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+<script src="js/bootstrap.bundle.min.js"></script> <!-- 개발화면에서 삭제해주세요! -->
+
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mCustomScrollbar.min.js"></script>
+<script src="js/jquery.custom-select.js"></script>
+<script src="js/pub_ui.js"></script>
+
+</body>
+</html>
