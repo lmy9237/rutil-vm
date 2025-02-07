@@ -181,36 +181,7 @@ button[disabled],select[disabled],input[disabled]{
 .right-click-menu-box .right-click-menu-btn:hover{
     background:rgb(236, 236, 236);
 }
-/*이미지,직접lun버튼*/
-.storage-disk-new-popup{
-    border: 1px solid #dfdddd;
-    position: absolute;
-    border-radius: 4px;
-    background: #fff;
-    top: 50%;
-    height: 74%;
-    width: 50%;
-    left: 50%;
-    z-index:99999;
-    transform: translate(-50%, -50%);
-    box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); 
-}
-.disk-new-nav{
-    padding: 0.2rem;
-    width: 50%;
-    font-size: 0.3rem;
-    display: flex;
-}
-.disk-new-nav>div{
-    padding: 10px;
-    margin-right: 2%;
-    cursor: pointer;
-}
-.disk-new-nav .active {
-    color: rgb(35, 132, 243); 
-    font-weight: 600;
-    border-bottom: 2px solid rgb(35, 132, 243);
-}
+
 .empty-nav-outer{
     width: 100%;
     padding: 0.6rem 0.3rem;
@@ -389,6 +360,9 @@ button[disabled],select[disabled],input[disabled]{
 .inactive-tab {
     color: black;
 }
+input{
+    cursor:pointer;
+}
 input[type="text"], 
 input[type="number"],
 input[type="password"],
@@ -397,7 +371,6 @@ select {
     border-radius: 3px;
     padding:0 0.1rem;
     height: 3.4vh;
-    cursor: pointer;
     font-size: 0.29rem;
     outline: none;
 }
@@ -405,7 +378,6 @@ select {
 input[type="checkbox"],
 input[type="radio"]{
     margin-right:0.15rem;
-    cursor:pointer;
     width:0.3rem;
     display: flex;
     justify-content: center;
@@ -414,7 +386,6 @@ input[type="radio"]{
 
 input[type="submit"]{
     border:1px solid gray;
-    cursor:pointer;
     border-radius: 3px;
     padding: 0 0.1rem;
 }

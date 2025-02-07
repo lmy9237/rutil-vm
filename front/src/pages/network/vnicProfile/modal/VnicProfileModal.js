@@ -29,7 +29,7 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
     id: '',
     name: '',
     description: '',
-    // passthrough: '',
+    // passThrough: '',
     portMirroring: false,
     migration: true,
     networkFilter: null,
@@ -43,7 +43,7 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
       id: '',
       name: '',
       description: '',
-      // passthrough: '',
+      // passThrough: '',
       portMirroring: false,
       migration: true,
       networkFilter: nFilters[0]?.id || "",
@@ -167,6 +167,18 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
     }
   }, [nFilters, editMode]);
   
+  // 통과에 따라 네트워크필터, 마이그레이션 활성화
+  const handlePassthroughChange = (e) => {
+    const isChecked = e.target.checked;
+  
+    setFormState((prev) => ({
+      ...prev,
+      passThrough: isChecked ? "ENABLED" : "DISABLED",
+      networkFilter: isChecked ? null : prev.networkFilter, // Passthrough 활성화 시 네트워크 필터 제거
+      portMirroring: isChecked ? false : prev.portMirroring, // Passthrough 활성화 시 포트 미러링 비활성화
+    }));
+  };
+  
   const handleFormSubmit = () => {
     // 이름 유효성 검사
     if (!formState.name) {
@@ -179,17 +191,24 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
       return toast.error("유효한 네트워크를 선택해주세요.");
     }
   
-    // 네트워크 필터 유효성 검사
-    if (!formState.networkFilter) {
-      return toast.error("유효한 네트워크 필터를 선택해주세요.");
-    }
-  
-    // API에 전달할 데이터 구성
+    // 기본 데이터 객체 생성
     const dataToSubmit = {
+      id: formState.id,
+      name: formState.name,
+      description: formState.description,
+      passThrough: formState.passThrough,
+      migration: formState.migration,
+      portMirroring: formState.passThrough === "ENABLED" ? false : formState.portMirroring, // ✅ Passthrough 시 포트 미러링 비활성화
       networkVo: { id: selectedNetwork.id, name: selectedNetwork.name },
-      networkFilterVo: { id: formState.networkFilter.id, name: formState.networkFilter.name }, // 필터 정보 추가
-      ...formState,
     };
+  
+    // ✅ Passthrough가 `DISABLED`일 때만 네트워크 필터 포함
+    if (formState.passThrough !== "ENABLED" && formState.networkFilter) {
+      dataToSubmit.networkFilterVo = {
+        id: formState.networkFilter.id,
+        name: formState.networkFilter.name,
+      };
+    }
   
     console.log("dataToSubmit:", dataToSubmit);
   
@@ -214,6 +233,10 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
       }
     );
   };
+  
+  
+  
+  
   
   
 
@@ -291,57 +314,48 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
             </FormGroup>
                       
             <FormGroup label="네트워크 필터">
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <select
-                  id="networkFilter"
-                  value={formState.networkFilter?.id || ""} // 객체의 ID를 드롭다운 값으로 사용
-                  onChange={(e) => {
-                    const selectedFilter = nFilters.find((filter) => filter.id === e.target.value);
-                    setFormState((prev) => ({
-                      ...prev,
-                      networkFilter: selectedFilter || null, // 선택한 필터 객체를 저장, 없으면 null
-                    }));
-                  }}
-                >
-                  <option value="">필터 선택 없음</option>
-                  {isNFiltersLoading ? (
-                    <option>로딩중...</option>
-                  ) : (
-                    nFilters.map((filter) => (
-                      <option key={filter.id} value={filter.id}>
-                        {filter.name}
-                      </option>
-                    ))
-                  )}
-                </select>
-                <span style={{ marginLeft: "1rem" }}>
-                  {formState.networkFilter
-                    ? `ID: ${formState.networkFilter.id}, Name: ${formState.networkFilter.name}`
-                    : "필터를 선택해주세요."}
-                </span>
-              </div>
-            </FormGroup>
-
-
-
-
-
-
+  <div style={{ display: "flex", alignItems: "center" }}>
+    <select
+      id="networkFilter"
+      value={formState.networkFilter?.id || ""}
+      disabled={formState.passThrough === "ENABLED"} // ✅ Passthrough 체크 시 비활성화
+      onChange={(e) => {
+        const selectedFilter = nFilters.find((filter) => filter.id === e.target.value);
+        setFormState((prev) => ({
+          ...prev,
+          networkFilter: selectedFilter || null,
+        }));
+      }}
+    >
+      <option value="">필터 선택 없음</option>
+      {isNFiltersLoading ? (
+        <option>로딩중...</option>
+      ) : (
+        nFilters.map((filter) => (
+          <option key={filter.id} value={filter.id}>
+            {filter.name}
+          </option>
+        ))
+      )}
+    </select>
+    <span style={{ marginLeft: "1rem" }}>
+      {formState.networkFilter
+        ? `ID: ${formState.networkFilter.id}, Name: ${formState.networkFilter.name}`
+        : "필터를 선택해주세요."}
+    </span>
+  </div>
+</FormGroup>
 
             <div className="vnic-new-checkbox">
               <input 
                 type="checkbox" 
-                id="passthrough" 
-                checked={formState.passthrough === "ENABLED"}
-                onChange={(e) =>
-                  setFormState((prev) => ({
-                    ...prev,
-                    passthrough: e.target.checked ? "ENABLED" : "DISABLED", // 백엔드가 원하는 형식으로 변환
-                  }))
-                }
+                id="passThrough" 
+                checked={formState.passThrough === "ENABLED"}
+                onChange={handlePassthroughChange}
               />
-              <label htmlFor="passthrough">통과</label>
+              <label htmlFor="passThrough">통과</label>
             </div>
+
 
 
             <div className="vnic-new-checkbox">
@@ -349,7 +363,7 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
                 type="checkbox"
                 id="migration"
                 checked={formState.migration}
-                disabled={!formState.passthrough} // 통과 여부에 따라 활성화
+                disabled={formState.passThrough !== "ENABLED"}
                 onChange={(e) =>
                   setFormState((prev) => ({ ...prev, migration: e.target.checked }))
                 }
@@ -362,7 +376,7 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
               <label htmlFor="failover_vnic_profile">페일오버 vNIC 프로파일</label>
               <select
                 id="failover_vnic_profile"
-                disabled={!formState.migration || !formState.passthrough}
+                disabled={!formState.migration || !formState.passThrough}
               >
                 <option value="none">없음</option>
                 {!isFailoverNicsLoading &&
@@ -375,18 +389,19 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
             </div> */}
 
 
-            <div className="vnic-new-checkbox">
-              <input 
-                type="checkbox" 
-                id="portMirroring" 
-                checked={formState.portMirroring} 
-                disabled={formState.passthrough} // 통과 여부에 따라 활성화
-                onChange={(e) => 
-                  setFormState((prev) => ({ ...prev, portMirroring: e.target.checked }))
-                }
-              />
-              <label htmlFor="portMirroring">포트 미러링</label>
-            </div>
+<div className="vnic-new-checkbox">
+  <input 
+    type="checkbox" 
+    id="portMirroring" 
+    checked={formState.portMirroring} 
+    disabled={formState.passThrough === "ENABLED"} // ✅ Passthrough 체크 시 비활성화
+    onChange={(e) => 
+      setFormState((prev) => ({ ...prev, portMirroring: e.target.checked }))
+    }
+  />
+  <label htmlFor="portMirroring">포트 미러링</label>
+</div>
+
 
             {/* 모든 사용자 허용 - 편집 모드가 아닌 경우에만 표시 */}
             {/* {!editMode && (

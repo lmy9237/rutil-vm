@@ -161,7 +161,7 @@ const NetworkModal = ({ isOpen, editMode = false, networkId, dcId, onClose }) =>
             <hr/>
 
             <div className="network-form-group center">
-              <div className='network-new-input center'>
+              <div className='network-new-input flex'>
                 <LabelCheckbox
                   className='network-checkbox'
                   label="VLAN 태깅 활성화"
@@ -175,6 +175,7 @@ const NetworkModal = ({ isOpen, editMode = false, networkId, dcId, onClose }) =>
                     }));
                   }}
                 />
+
                 <LabelInputNum 
                   id="vlan" 
                   value={formState.vlan === null ? '' : formState.vlan} 

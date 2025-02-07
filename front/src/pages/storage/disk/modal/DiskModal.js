@@ -209,7 +209,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
       overlayClassName="Overlay newRolePopupOverlay"
       shouldCloseOnOverlayClick={false}
     >
-      <div className="storage-disk-new-popup">
+      <div className="storage-disk-new-popup modal">
         <div className="popup-header">
           <h1>{editMode ? '디스크 편집' : '새 디스크 생성'}</h1>
           <button onClick={onClose}><FontAwesomeIcon icon={faTimes} fixedWidth/></button>

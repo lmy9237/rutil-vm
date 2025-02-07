@@ -135,7 +135,7 @@ const TemplateEditModal = ({ isOpen, editMode = false, templateId, onClose }) =>
           </div>
 
           <div className="backup-edit-content">
-            <div className="template-option-box" style={{ borderBottom: '1px solid gray', paddingBottom: '0.3rem' }}>
+            <div className="template-option-box center" style={{ borderBottom: '1px solid #a7a6a6', paddingBottom: '0.3rem' }}>
                 <label htmlFor="optimization">최적화 옵션</label>
                   <select
                     id="optimization"

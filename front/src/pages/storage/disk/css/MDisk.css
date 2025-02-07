@@ -31,6 +31,29 @@
   display: flex;
   justify-content: space-between;
 }
+
+/*이미지,직접lun버튼*/
+.storage-disk-new-popup {
+  height: 74%;
+  width: 50%;
+}
+.disk-new-nav {
+  padding: 0.1rem 0.2rem 0.2rem 0.2rem;
+  width: 50%;
+  font-size: 0.3rem;
+  display: flex;
+}
+.disk-new-nav > div {
+  padding: 10px;
+  margin-right: 2%;
+  cursor: pointer;
+}
+.disk-new-nav .active {
+  color: rgb(35, 132, 243);
+  font-weight: 600;
+  border-bottom: 2px solid rgb(35, 132, 243);
+}
+
 /*디스크(업로드)*/
 .storage-disk-upload-popup {
   height: 78.4vh;

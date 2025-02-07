@@ -149,7 +149,7 @@ const TemplateNeworkNewInterModal = ({
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
-      <div className="new_network_interface">
+      <div className="new-network-interface modal">
         <div className="popup-header">
           <h1>{editMode ? '네트워크 인터페이스 편집' : '새 네트워크 인터페이스 생성'}</h1>
           <button onClick={onRequestClose}>

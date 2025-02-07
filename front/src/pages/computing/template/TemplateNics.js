@@ -73,7 +73,7 @@ const TemplateNics = ({ templateId }) => {
           network: <TableRowClick type="network" id={nic?.networkVo?.id}>{nic?.networkVo?.name}</TableRowClick>,
           vnicProfile: <TableRowClick type="vnicProfile" id={nic?.vnicProfileVo?.id}>{nic?.vnicProfileVo?.name}</TableRowClick>,
           linked: nic?.linked === true ? "Up" : 'Down',
-          plugged: nic?.plugged === true ? <input type="checkbox" checked disabled/> : <input type="checkbox" disabled/>,
+          plugged: <input type="checkbox" checked={nic?.plugged === true} disabled />,
         }))}
         onRowClick={(selectedRows) => setSelectedVnicProfiles(selectedRows)}
         clickableColumnIndex={[3, 4]} // 클릭 가능한 열 인덱스
