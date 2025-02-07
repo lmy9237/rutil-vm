@@ -224,48 +224,43 @@ fun List<StorageDomain>.toStorageDomainInfoVos(conn: Connection): List<StorageDo
  * 기본
  */
 fun StorageDomainVo.toStorageDomainBuilder(): StorageDomainBuilder {
-	log.info("st: {}", this)
 	return StorageDomainBuilder()
 		.name(this@toStorageDomainBuilder.name)
 		.type(StorageDomainType.fromValue(this@toStorageDomainBuilder.domainType))
 		.description(this@toStorageDomainBuilder.description)
+		.comment(this@toStorageDomainBuilder.comment)
 		.warningLowSpaceIndicator(this@toStorageDomainBuilder.warning)
 		.criticalSpaceActionBlocker(this@toStorageDomainBuilder.spaceBlocker)  //디스크 공간 동작 차단
 		.dataCenters(*arrayOf(DataCenterBuilder().id(this@toStorageDomainBuilder.dataCenterVo.id).build()))
 		.host(HostBuilder().name(this@toStorageDomainBuilder.hostVo.name).build())
+}
+
+fun StorageDomainVo.toAddStorageDomainBuilder(): StorageDomain {
+	log.info("toAddStorageDomainBuilder: {}", this)
+	return this@toAddStorageDomainBuilder
+		.toStorageDomainBuilder()
 		.storage(
-			when (StorageType.fromValue(this@toStorageDomainBuilder.storageType)) {
-				StorageType.NFS -> this@toStorageDomainBuilder.toAddNFSBuilder()
-				StorageType.ISCSI -> this@toStorageDomainBuilder.toAddISCSIBuilder()
-				StorageType.FCP -> this@toStorageDomainBuilder.toAddFCPBuilder()
+			when (StorageType.fromValue(this@toAddStorageDomainBuilder.storageType)) {
+				StorageType.NFS -> this@toAddStorageDomainBuilder.toAddNFSBuilder()
+				StorageType.ISCSI -> this@toAddStorageDomainBuilder.toAddISCSIBuilder()
+				StorageType.FCP -> this@toAddStorageDomainBuilder.toAddFCPBuilder()
 				else -> throw IllegalArgumentException("Unsupported storage type")
 			}
 		)
+		.build()
 }
 
-fun StorageDomainVo.toAddStorageDomainBuilder(): StorageDomain =
-	this@toAddStorageDomainBuilder.toStorageDomainBuilder().build()
-
-
 fun StorageDomainVo.toImportStorageDomainBuilder(): StorageDomain {
-
-	return StorageDomainBuilder()
+	log.info("toImportStorageDomainBuilder: {}", this)
+	// TODO: 가져오기 id값의 위치를 알아봐야 할 듯
+	return this@toImportStorageDomainBuilder
+		.toStorageDomainBuilder()
 		.id(this@toImportStorageDomainBuilder.id)
-		.name(this@toImportStorageDomainBuilder.name)
-		.type(StorageDomainType.fromValue(this@toImportStorageDomainBuilder.domainType))
-		.description(this@toImportStorageDomainBuilder.description)
-		.comment(this@toImportStorageDomainBuilder.comment)
-		.warningLowSpaceIndicator(this@toImportStorageDomainBuilder.warning)
-		.criticalSpaceActionBlocker(this@toImportStorageDomainBuilder.spaceBlocker)  //디스크 공간 동작 차단
-//		.dataCenters(*arrayOf(DataCenterBuilder().id(this@toImportStorageDomainBuilder.dataCenterVo.id).build()))
-		.host(HostBuilder().name(this@toImportStorageDomainBuilder.hostVo.name).build())
 		.storage(HostStorageBuilder().type(StorageType.fromValue(this@toImportStorageDomainBuilder.storageType)))
 		.build()
 }
 
-/**
- * NFS
- */
+// NFS
 fun StorageDomainVo.toAddNFSBuilder(): HostStorage {
 	return HostStorageBuilder()
 			.address(this@toAddNFSBuilder.storageAddress)
@@ -275,9 +270,7 @@ fun StorageDomainVo.toAddNFSBuilder(): HostStorage {
 	.build()
 }
 
-/**
- * ISCSI
- */
+// ISCSI
 fun StorageDomainVo.toAddISCSIBuilder(): HostStorage {
 	return HostStorageBuilder()
 		.type(StorageType.fromValue(this@toAddISCSIBuilder.storageType))
@@ -287,9 +280,7 @@ fun StorageDomainVo.toAddISCSIBuilder(): HostStorage {
 	.build()
 }
 
-/**
- * Fibre Channel
- */
+// Fibre Channel
 fun StorageDomainVo.toAddFCPBuilder(): HostStorage {
 	return HostStorageBuilder()
 		.type(StorageType.fromValue(this@toAddFCPBuilder.storageType))

@@ -37,13 +37,11 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
 
   const { mutate: addHost } = useAddHost();
   const { mutate: editHost } = useEditHost();
- 
   const { data: host} = useHost(hId);
   const { data: clusters=[], isLoading: isClustersLoading} = useAllClusters((e) => ({...e,}));
 
   useEffect(() => {
-    if (!isOpen)
-      setFormState(initialFormState);
+    if (!isOpen) return setFormState(initialFormState);
     if (editMode && host) {
       console.log('hostModal', host);
       setFormState({
@@ -137,28 +135,15 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
             </div>
           </>
         )}
-
           <div>
             <div>vGPU 배치</div>
-            <div className='flex'>
-              <input 
-                type="radio" 
-                id="vgpu" 
-                name="consolidated" 
-                value="consolidated"
-                checked={formState.vgpu === 'consolidated'}
-                onChange={handleInputChange('vgpu')}
-              />
-              <label htmlFor="consolidated" style={{marginRight:'0.2rem'}}>통합</label>
-              <input 
-                type="radio" 
-                id="vgpu" 
-                name="separated" 
-                value="separated"
-                checked={formState.vgpu === 'separated'}
-                onChange={handleInputChange('vgpu')}
-              />
-              <label htmlFor="separated">분산</label>
+            <div className="flex">
+              {['consolidated', 'separated'].map((option) => (
+                <label key={option} style={{ marginRight: '0.2rem' }}>
+                  <input type="radio" name="vgpu" value={option} checked={formState.vgpu === option} onChange={handleInputChange('vgpu')} />
+                  {option === 'consolidated' ? '통합' : '분산'}
+                </label>
+              ))}
             </div>
           </div>
           <LabelSelectOptions label="호스트 엔진 배포 작업 선택" value={String(formState.hostedEngine)} onChange={handleInputChange('hostedEngine')} options={hostEngines} />          

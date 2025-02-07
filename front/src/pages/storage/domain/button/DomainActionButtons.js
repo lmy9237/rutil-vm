@@ -15,7 +15,7 @@ const DomainActionButtons = ({ openModal, isEditDisabled, isDeleteDisabled, stat
     { type: 'create', label: '생성' },
     { type: 'import', label: '가져오기' },
     { type: 'edit', label: '편집', disabled: isEditDisabled },
-    { type: 'delete', label: '삭제', disabled: isDeleteDisabled || !isMaintenance },
+    { type: 'delete', label: '삭제', disabled: isDeleteDisabled || isMaintenance || !isUnknown },
     { type: 'destory', label: '파괴', disabled: isDeleteDisabled || !isMaintenance },
   ];
 

@@ -8,14 +8,15 @@ const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId,
     create: (
       <DomainModal
         isOpen={activeModal === 'create'}
+        mode={activeModal}
         datacenterId={datacenterId}
         onClose={onClose}
       />
     ),
     edit: (
       <DomainModal
-        editMode
         isOpen={activeModal === 'edit'}
+        mode={activeModal}
         domainId={domain?.id}
         onClose={onClose}
       />
@@ -23,7 +24,7 @@ const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId,
     import: (
       <DomainModal
         isOpen={activeModal === 'import'}
-        // importMode={true}
+        mode={activeModal}
         domainId={domain?.id}
         onClose={onClose}
       />

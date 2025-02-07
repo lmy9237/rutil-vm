@@ -24,112 +24,81 @@ import DomainNfs from './DomainCreate/DomainNfs';
 import DomainIscsi from './DomainCreate/DomainIscsi';
 import DomainFibre from './DomainCreate/DomainFibre';
 import LabelInputNum from '../../../../utils/LabelInputNum';
+import { CheckKoreanName, CheckName } from '../../../../utils/CheckName';
+import { xButton } from '../../../../utils/Icon';
 
-const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }) => {
+// 일반 정보
+const initialFormState = {
+  id: '',
+  domainType: 'data', // 기본값 설정
+  storageType: 'nfs', // 기본값 설정
+  name: '',    
+  comment: '',
+  description: '',
+  warning: '10',
+  spaceBlocker: '5',
+};
+
+// import = 가져오기
+// nfs 는 같음, iscsi 주소, 포트, 사용자 인증 이름, 암호 해서 검색
+const importFormState = {
+  target: '',
+  address: '',
+  port: 3260,
+  chapName: '',
+  chapPassword: '',
+  useChap: false,
+};
+
+const domainTypes = [
+  { value: "data", label: "데이터" },
+  { value: "iso", label: "ISO" },
+  { value: "export", label: "내보내기" },
+];
+
+const storageTypeOptions = (dType) => {
+  switch (dType) {
+    case 'iso':
+    case 'export':
+      return [{ value: 'nfs', label: 'NFS' }];
+    default: // data
+      return [
+        { value: 'nfs', label: 'NFS' },
+        { value: 'iscsi', label: 'ISCSI' },
+        { value: 'fcp', label: 'Fibre Channel' },
+      ];
+  }
+};
+
+const DomainModal = ({ isOpen, mode='create', domainId, datacenterId, onClose }) => {
+  const dLabel = mode === 'edit' ? '편집' : mode === "import" ? '가져오기' : '생성';
+  const editMode = mode === 'edit';
+  const importMode = mode === 'import';
+
   const { mutate: addDomain } = useAddDomain();
-  const { mutate: editDomain } = useEditDomain();
+  const { mutate: editDomain } = useEditDomain(); // 편집은 단순 이름, 설명 변경정도
   const { mutate: importDomain } = useImportDomain(); // 가져오기
 
   const { mutate: loginIscsiFromHost } = useLoginIscsiFromHost();  // 가져오기 iscsi 로그인
   const { mutate: importIscsiFromHost } = useImportIscsiFromHost(); // 가져오기 iscsi
   const { mutate: importFcpFromHost } = useImportFcpFromHost();   // 가져오기 fibre
 
-  // 일반정보
-  const [formState, setFormState] = useState({
-    id: '',
-    domainType: 'data', // 기본값 설정
-    storageType: 'nfs', // 기본값 설정
-    name: '',    
-    comment: '',
-    description: '',
-    warning: '10',
-    spaceBlocker: '5',
-  });
-
-  // import = 가져오기
-  // nfs 는 같음, iscsi 주소, 포트, 사용자 인증 이름, 암호 해서 검색
-  const [formImportState, setFormImportState] = useState({
-    target: '',
-    address: '',
-    port: 3260,
-    chapName: '',
-    chapPassword: '',
-    useChap: false,
-  });
-
+  const [formState, setFormState] = useState(initialFormState); // 일반정보
+  const [formImportState, setFormImportState] = useState(importFormState); // 가져오기
   const [dataCenterVoId, setDataCenterVoId] = useState('');  
   const [hostVoName, setHostVoName] = useState('');
   const [hostVoId, setHostVoId] = useState('');
   const [storageTypes, setStorageTypes] = useState([]);
+  const [nfsAddress, setNfsAddress] = useState('');
+  const [lunId, setLunId] = useState(''); // iscsi, fibre 생성시 사용  
+  const [iscsiSearchResults, setIscsiSearchResults] = useState([]); // 검색결과
+  const [fcpSearchResults, setFcpSearchResults] = useState([]); // 검색결과
 
-  const [nfsAddress, setNfsAddress] = useState('');  // nfs
-  const [lunId, setLunId] = useState(''); // iscsi, fibre 생성시 사용
-  
-  const [iscsiSearchResults, setIscsiSearchResults] = useState([]);
-  const [fcpSearchResults, setFcpSearchResults] = useState([]);
-
-  // 초기화
-  const resetForm = () => {
-    setFormState({
-      id: '',
-      domainType: 'data', // 도메인 유형 기본값 설정
-      storageType: 'nfs', // 스토리지 유형 기본값 설정
-      name: '',
-      comment: '',
-      description: '',
-      warning: '10',
-      spaceBlocker: '5',
-    });
-    setFormImportState({
-      target: '',
-      address: '',
-      port: 3260,
-      chapName: '',
-      chapPassword: '',
-      useChap: false,
-    });
-    setIscsiSearchResults([]); // iSCSI 검색 결과 초기화
-    setFcpSearchResults([]);   // FCP 검색 결과 초기화
-    setNfsAddress('');
-    setLunId('');
-  };
-
-
-  // 도메인 데이터 가져오기
-  const {
-    data: domain,
-    refetch: refetchDomain,
-    isLoading: isDomainLoading,
-  } = useDomainById(domainId);
-
-  // 데이터센터 가져오기
-  const {
-    data: dataCenters = [],
-    refetch: refetchDatacenters,
-    isLoading: isDatacentersLoading
-  } = useAllDataCenters((e) => ({...e,}));
-
-  const {
-    data: dataCenter,
-    refetch: refetchDataCenter,
-    isLoading: isDataCenterLoading,
-  } = useDataCenter(datacenterId);
-
-  // 호스트 가져오기
-  const {
-    data: hosts = [],
-    refetch: refetchHosts,
-    isLoading: isHostsLoading,
-  } = useHostsFromDataCenter(
-    dataCenterVoId ? dataCenterVoId : null, (e) => ({...e,}));
-
-  // iscsi 목록 가져오기
-  const {
-    data: iscsis = [],
-    refetch: refetchIscsis,
-    error: isIscsisError,
-    isLoading: isIscsisLoading,
-  } = useIscsiFromHost(hostVoId, ((e) => {
+  const { data: domain } = useDomainById(domainId);
+  const { data: dataCenters = [], isLoading: isDatacentersLoading } = useAllDataCenters((e) => ({...e,}));
+  const { data: dataCenter } = useDataCenter(datacenterId);  
+  const { data: hosts = [], isLoading: isHostsLoading } = useHostsFromDataCenter(dataCenterVoId, (e) => ({...e,}));
+  const { data: iscsis = [], refetch: refetchIscsis, isLoading: isIscsisLoading } = useIscsiFromHost(hostVoId, ((e) => {
     const unit = e?.logicalUnits[0];
     return {
       ...e,
@@ -145,14 +114,7 @@ const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }
       serial: unit?.serial,
     };
   }));
-
-  // fibre 목록 가져오기
-  const {
-    data: fibres = [],
-    refetch: refetchFibres,
-    error: isFibresError,
-    isLoading: isFibresLoading,
-  } = useFibreFromHost(hostVoId ? hostVoId : null, ((e) => {
+  const { data: fibres = [], refetch: refetchFibres, isLoading: isFibresLoading } = useFibreFromHost(hostVoId, ((e) => {
     const unit = e?.logicalUnits[0];
     return {
       ...e,
@@ -165,61 +127,40 @@ const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }
     };
   }));
 
-  const domainTypes = [
-    { value: "data", label: "데이터" },
-    { value: "iso", label: "ISO" },
-    { value: "export", label: "내보내기" },
-  ];
-
-  const storageTypeOptions = (dType) => {
-    switch (dType) {
-      case 'iso':
-      case 'export':
-        return [{ value: 'nfs', label: 'NFS' }];
-      default: // data
-        return [
-          { value: 'nfs', label: 'NFS' },
-          { value: 'iscsi', label: 'ISCSI' },
-          { value: 'fcp', label: 'Fibre Channel' },
-        ];
-    }
-  };
-
   const isNfs = formState.storageType === 'nfs' || domain?.storageType === 'nfs';
   const isIscsi = formState.storageType === 'iscsi' || domain?.storageType === 'iscsi';
   const isFibre = formState.storageType === 'fcp' || domain?.storageType === 'fcp';
-
-  // 편집은 단순 이름, 설명 변경정도
-  useEffect(() => {
-    if (editMode && domain) {
-      const updatedState = {
-        id: domain.id || '',
-        domainType: domain.domainType || '', 
-        storageType: domain.storageType || '', 
-        name: domain.name || '',    
-        comment: domain.comment || '',
-        description: domain.description || '',
-        warning: domain.warning || '',
-        spaceBlocker: domain.spaceBlocker || '',
-      };
-      setFormState(updatedState);
-      setDataCenterVoId(domain?.dataCenterVo?.id || '');
-      setHostVoId(domain?.hostVo?.id || '');
-      setHostVoName(domain?.hostVo?.name || '');
-      
-      if (updatedState.storageType === 'nfs') {
-        setNfsAddress(domain?.storageAddress || '');
-      } else if (updatedState.storageType === 'iscsi' || updatedState.storageType === 'fcp') {
-        setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id || '');
-      }
-    }
-  }, [editMode, domain]);  
   
   useEffect(() => {
-    if (!isOpen) {
-      resetForm(); // 모달이 닫힐 때 상태를 초기화
+    if (!isOpen){
+      setFormState(initialFormState);
+      setFormImportState(formImportState);
     }
-  }, [isOpen]);
+    if (editMode && domain) {
+      setFormState({
+        id: domain.id,
+        domainType: domain.domainType, 
+        storageType: domain.storageType, 
+        name: domain.name,    
+        comment: domain.comment,
+        description: domain.description,
+        warning: domain.warning,
+        spaceBlocker: domain.spaceBlocker,
+      });
+      setDataCenterVoId(domain?.dataCenterVo?.id);
+      setHostVoId(domain?.hostVo?.id);
+      setHostVoName(domain?.hostVo?.name);
+      setNfsAddress(domain?.storageAddress);
+      setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id)
+      
+      // if (setFormState.storageType === 'nfs') {
+      //   setNfsAddress(domain?.storageAddress);
+      // } else if (setFormState.storageType === 'iscsi' || setFormState.storageType === 'fcp') {
+      //   setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id);
+      // }
+    }
+  }, [isOpen, editMode, domain]);  
+  
   
   useEffect(() => {
     if(datacenterId){
@@ -241,6 +182,12 @@ const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }
       refetchIscsis();
     }
   }, [hostVoId, formState.storageType, refetchIscsis]);
+
+  useEffect(() => {
+    if (formState.storageType === 'fibre' && hostVoId) {
+      refetchFibres();
+    }
+  }, [hostVoId, formState.storageType, refetchFibres]);
   
 
   useEffect(() => {
@@ -273,20 +220,12 @@ const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }
     });
   }, [formState.storageType]);
 
-  // const handleRowClick = (row) => {
-  //   console.log('선택한 행 데이터:', row);
-  //   setLunId(row.id); // 선택된 LUN ID 설정
-  //   setFormImportState((prev) => ({
-  //     ...prev,
-  //     target: row.target || '',
-  //     address: row.address || '',
-  //     port: row.port || 3260, // 기본값 유지
-  //   }));
-  // };
-  
+  const handleInputChange = (field) => (e) => {
+    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
+  };
 
   const validateForm = () => {
-    if (!formState.name) return '이름을 입력해주세요.';
+    if (!CheckKoreanName(formState.name) || !CheckName(formState.name)) return '이름이 유효하지 않습니다.';
     if (!dataCenterVoId) return '데이터 센터를 선택해주세요.';
     if (!hostVoName) return '호스트를 선택해주세요.';
     if (formState.storageType === 'NFS' && !nfsAddress) return '경로를 입력해주세요.';
@@ -303,35 +242,33 @@ const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }
   
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) {
-      toast.error(error);
-      return;
-    }
+    if (error) return toast.error(error);
   
+    const selectedDataCenter = dataCenters.find((dc) => dc.id === dataCenterVoId);
+    const selectedHost = hosts.find((h) => h.name === hostVoName);
+
+    const onSuccess = () => {
+      onClose();
+      toast.success(`도메인 ${dLabel} 완료`);
+    };
+    const onError = (err) => toast.error(`Error ${dLabel} domain: ${err}`);
+
     let dataToSubmit;
   
-    // 편집
-    if (editMode) { 
-      // 'edit' 액션에서는 formState 데이터만 제출
+    // 편집: formState 데이터만 제출
+    if (editMode) {     
       dataToSubmit = {
         ...formState,
       };
-    // 가져오기
-    // }else if(importMode){  
-    //   dataToSubmit = {
-    //     ...formState,
-    //   }
-    // 생성
+    // 생성, 가져오기
     } else {
-      const selectedDataCenter = dataCenters.find((dc) => dc.id === dataCenterVoId);
-      const selectedHost = hosts.find((h) => h.name === hostVoName);
-
       const logicalUnit =
         formState.storageType === 'iscsi' ? iscsis.find((iLun) => iLun.id === lunId)
           : formState.storageType === 'fcp'? fibres.find((fLun) => fLun.id === lunId)
           : null;
 
       const [storageAddress, storagePath] = nfsAddress.split(':');
+      console.log()
 
       dataToSubmit = {
         ...formState,
@@ -343,58 +280,23 @@ const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }
     }
   
     console.log('Data to submit:', dataToSubmit);
-  
-    if (editMode) {
-      editDomain(
-        { domainId: formState.id, domainData: dataToSubmit },
-        {
-          onSuccess: () => {
-            onClose();
-            toast.success('도메인 편집 완료');
-          },
-        }
-      );
-    // } else if (importMode) {
-    //   importDomain(dataToSubmit, {
-    //     onSuccess: () => {
-    //       toast.success('도메인 가져오기 완료');
-    //       onClose();
-    //     },
-    //   });
-    } else {
-      addDomain(dataToSubmit, {
-        onSuccess: () => {
-          onClose();
-          toast.success('도메인 생성 완료');
-        },
-      });
-    }
+
+    editMode ? editDomain({ domainId: formState.id, domainData: dataToSubmit }, { onSuccess, onError })
+    : importMode ? importDomain(dataToSubmit, { onSuccess, onError })
+    : addDomain(dataToSubmit, { onSuccess, onError })    
   };
 
   
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel="도메인 관리"
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
-    >
+    <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel={dLabel} className="Modal" overlayClassName="Overlay" shouldCloseOnOverlayClick={false} >
       <div className="storage-domain-administer-popup modal">
         <div className="popup-header">
-          <h1>{
-            // importMode ? "도메인 가져오기":
-            editMode ? "도메인 편집"
-            : "새로운 도메인 생성"
-          }
-          </h1>
-          <button onClick={onClose}><FontAwesomeIcon icon={faTimes} fixedWidth/></button>
+          <h1> 도메인 {dLabel} </h1>
+          <button onClick={onClose}> { xButton() } </button>
         </div>
 
         <div className="storage-domain-new-first">
-          <div >
-
+          <div>
             <LabelSelectOptionsID 
               className="domain-new-select center"
               label="데이터센터"
@@ -404,24 +306,12 @@ const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }
               loading={isDatacentersLoading}
               options={dataCenters}
             />
-            <LabelSelectOptions
-              className="domain-new-select center"
-              label="도메인 유형"
-              value={formState.domainType}
-              onChange={(e) => setFormState((prev) => ({ ...prev, domainType: e.target.value }))}
-              disabled={editMode}
-              options={domainTypes}
-            />
-            <LabelSelectOptions
-              className="domain-new-select center"
-              label="스토리지 유형"
-              value={formState.storageType}
-              onChange={(e) => setFormState((prev) => ({ ...prev, storageType: e.target.value }))}
-              disabled={editMode}
-              options={storageTypes}
-            />
+            <LabelSelectOptions label="도메인 유형" value={formState.domainType} onChange={handleInputChange('domainType')} disabled={editMode} options={domainTypes} className="domain-new-select center" />
+            <LabelSelectOptions label="스토리지 유형" value={formState.storageType} onChange={handleInputChange('storageType')} disabled={editMode} options={storageTypes} className="domain-new-select center"/>
+            <LabelSelectOptionsID label="호스트" value={hostVoId} onChange={(e) => setHostVoId(e.target.value)} disabled={editMode} loading={isHostsLoading} options={hosts} className="domain-new-select center" /> 
 
-            <div className="domain-new-select center">
+            {/* 호스트 이름이 들어가야함 */}
+            {/* <div className="domain-new-select center">
               <label>호스트</label>
               <select
                 label="호스트"
@@ -439,42 +329,22 @@ const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }
                   ))
                 )}
               </select>
-            </div>
+            </div> */}
           </div>
 
           <div className="domain-new-right">
-            <LabelInput
-              className="domain-new-select center"
-              label="이름"
-              id='name'
-              autoFocus={true}
-              value={formState.name}
-              onChange={(e) => setFormState((prev) => ({ ...prev, name: e.target.value }))}
-            />
-            <LabelInput
-              className="domain-new-select center"
-              label="설명"
-              id='description'
-              value={formState.description}
-              onChange={(e) => setFormState((prev) => ({ ...prev, description: e.target.value }))}
-            />
-            <LabelInput
-              className="domain-new-select center"
-              label="코멘트"
-              id='comment'
-              value={formState.comment}
-              onChange={(e) => setFormState((prev) => ({ ...prev, comment: e.target.value }))}
-            />
+            <LabelInput label="이름" id="name" value={formState.name} onChange={handleInputChange('name')} autoFocus className="domain-new-select center" />
+            <LabelInput label="설명" id="description" value={formState.description} onChange={handleInputChange('description')} className="domain-new-select center" />
+            <LabelInput label="코멘트" id="comment" value={formState.comment} onChange={handleInputChange('comment')} className="domain-new-select center" />
           </div>
         </div>
    
       {/* NFS 의 경우 */}
       {isNfs && (
         <DomainNfs
-          editMode={editMode}
-          // importMode={importMode}
+          mode={mode}
           nfsAddress={nfsAddress}
-          setNfsAddres={setNfsAddress}
+          setNfsAddress={setNfsAddress}
           domain={domain}
         />
       )}
@@ -482,7 +352,7 @@ const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }
       {/* ISCSI 의 경우 */}
       {isIscsi && (
         <DomainIscsi
-          editMode={editMode}
+          mode={mode}
           domain={domain}
           iscsis={iscsis}
           iscsiSearchResults={iscsiSearchResults}
@@ -504,7 +374,7 @@ const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }
       {/* Firbre 의 경우 */}
       {isFibre && (
         <DomainFibre
-          editMode={editMode}
+          mode={mode}
           domain={domain}
           fibres={fibres}
           fcpSearchResults={fcpSearchResults}
@@ -514,35 +384,22 @@ const DomainModal = ({ isOpen, editMode=false, domainId, datacenterId, onClose }
           hostVoId={hostVoId}
           importFcpFromHost={importFcpFromHost}
           // handleRowClick={handleRowClick}
-          formImportState={formImportState}  // ✅ formImportState 전달
-          setFormImportState={setFormImportState} // ✅ 상태 업데이트 함수 전달
+          formImportState={formImportState}
+          setFormImportState={setFormImportState}
         />
       )}
-    
       <div><hr/></div>
 
       <div className="tab-content">
         <div className="storage-specific-content">
-          <LabelInputNum
-            className='domain-num-box center'
-            label="디스크 공간 부족 경고 표시(%)"
-            id='warning'
-            value={formState.warning}
-            onChange={(e) => setFormState((prev) => ({ ...prev, warning: e.target.value }))}
-          />
-          <LabelInputNum
-            className='domain-num-box center'
-            label="심각히 부족한 디스크 공간의 동작 차단(GB)"
-            id='spaceBlocker'
-            value={formState.spaceBlocker}
-            onChange={(e) => setFormState((prev) => ({ ...prev, spaceBlocker: e.target.value }))}
-          />
+          <LabelInputNum label="디스크 공간 부족 경고 표시(%)" id='warning' value={formState.warning} onChange={handleInputChange('warning')} className='domain-num-box center' />
+          <LabelInputNum label="심각히 부족한 디스크 공간의 동작 차단(GB)" id='spaceBlocker' value={formState.spaceBlocker} onChange={handleInputChange('spaceBlocker')} className='domain-num-box center' />
         </div>
       </div>
 
       <div className="edit-footer">
         <button style={{ display: 'none' }}></button>
-        <button onClick={handleFormSubmit}>{editMode ? '편집' : '완료'}</button>
+        <button onClick={ handleFormSubmit }>{dLabel}</button>
         <button onClick={onClose}>취소</button>
       </div>
     </div>
