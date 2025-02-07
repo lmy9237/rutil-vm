@@ -1,0 +1,5 @@
+{
+  "root": true,
+  "plugins": ["import", "react"],
+  "extends": ["airbnb", "plugin:import/recommended", "plugin:react/recommended"]
+}

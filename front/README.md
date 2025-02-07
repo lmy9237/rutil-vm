@@ -1,6 +1,6 @@
 # rutil-vm-front
 
-![favicon](itcloud/src/main/frontend/public/favicon.ico)
+![favicon](public/favicon.ico)
   
 루틸 VM 프론트앤드
 
@@ -14,8 +14,7 @@
 ![React.js (`18.3.x`)][shield-reactjs]
 ![Storybook (`8.2.x`)][shield-storybook]
 
-
-## ![React.js (`18.3.x`)][shield-reactjs]React.js
+## React.js
 
 > [!IMPORTANT] 
 > 

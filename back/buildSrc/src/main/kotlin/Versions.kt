@@ -7,6 +7,7 @@ object Versions {
     const val gradle = "7.4.2"
     const val kotlin = "1.5.31"
     const val kotlinDsl = "2.1.7"
+    const val ktlint = "11.6.1"
 
     const val tomcatPlugin = "2.5"
     const val tomcatEmbedded = "9.0.63" // 변환할 버전 10.1.25

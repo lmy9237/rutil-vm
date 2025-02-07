@@ -7,6 +7,9 @@ plugins {
     id("org.springframework.boot") version Versions.springBoot
     id("org.jetbrains.dokka") version Versions.kotlin
     id("io.spring.dependency-management") version "1.1.4"
+
+    id("org.jlleitschuh.gradle.ktlint") version Versions.ktlint
+    id("org.jlleitschuh.gradle.ktlint-idea") version Versions.ktlint
 }
 
 allprojects {
@@ -39,8 +42,8 @@ subprojects {
         println("name: ${this.name}\tversion: ${this.version}\tdescription: ${this.description}")
     }
 
-    apply(plugin="org.jetbrains.kotlin.jvm")
-    apply(plugin="org.jetbrains.dokka")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "org.jetbrains.dokka")
 
     tasks.withType<JavaCompile> {
         sourceCompatibility = Versions.java

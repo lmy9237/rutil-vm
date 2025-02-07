@@ -1,4 +1,4 @@
-package com.itinfo.rutilvm.service.computing
+package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.itcloud.model.IdentifiedVo

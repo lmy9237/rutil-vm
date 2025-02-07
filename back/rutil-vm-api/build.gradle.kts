@@ -9,6 +9,8 @@ plugins {
     id("org.jetbrains.kotlin.plugin.jpa")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
+    id("org.jlleitschuh.gradle.ktlint")
+    id("org.jlleitschuh.gradle.ktlint-idea")
 }
 
 springBoot {
@@ -19,7 +21,7 @@ springBoot {
 
 val profile: String = project.findProperty("profile") as? String ?: "local"
 val skipNpm: Boolean = (project.findProperty("skipNpm") as? String)?.toBoolean() ?: false
-var artifactName: String = "rutil-vm-api-${profile}"
+var artifactName: String = "rutil-vm-api-$profile"
 println("profile  : $profile")
 println("skipNpm  : $skipNpm")
 val defaultBuildClassPath: String = "build/classes/kotlin/main"
@@ -30,8 +32,9 @@ println("explodedWarPath  : $explodedWarPath")
 
 sourceSets {
     main {
-        if (profile == "prd" || profile == "staging")
-            resources.srcDir("src/main/resources-${profile}")
+        if (profile == "prd" || profile == "staging") {
+            resources.srcDir("src/main/resources-$profile")
+        }
     }
 }
 
@@ -42,8 +45,8 @@ tasks.clean {
 tasks.war {
     baseName = artifactName
     into("WEB-INF/classes") {
-        from("../util/${defaultBuildClassPath}")
-        from("../common/${defaultBuildClassPath}")
+        from("../util/$defaultBuildClassPath")
+        from("../common/$defaultBuildClassPath")
     }
     /*
     doFirst {
@@ -69,20 +72,20 @@ val putModules = task("putModules") {
     doLast {
         // Smart Tomcat 을 위해 구성
         copy {
-            from("${project.rootDir}/util/${defaultBuildClassPath}")
+            from("${project.rootDir}/util/$defaultBuildClassPath")
             into("$buildDir/classes/kotlin/main")
         }
         copy {
-            from("${project.rootDir}/common/${defaultBuildClassPath}")
+            from("${project.rootDir}/common/$defaultBuildClassPath")
             into("$buildDir/classes/kotlin/main")
         }
         // 실제 exploded-war에 배치하도록 구성
         copy {
-            from("${project.rootDir}/util/${defaultBuildClassPath}")
+            from("${project.rootDir}/util/$defaultBuildClassPath")
             into("$explodedWarPath/WEB-INF/classes")
         }
         copy {
-            from("${project.rootDir}/common/${defaultBuildClassPath}")
+            from("${project.rootDir}/common/$defaultBuildClassPath")
             into("$explodedWarPath/WEB-INF/classes")
         }
     }
@@ -93,7 +96,7 @@ val placeOutputToDocker = task("placeOutputToDocker") {
         // delete(file("$explodedWarDockerPath/ROOT"))
         copy {
             from(explodedWarPath)
-            into(file("${explodedWarDockerPath}/ROOT"))
+            into(file("$explodedWarDockerPath/ROOT"))
         }
     }
 }
@@ -120,7 +123,6 @@ tasks.named<BootJar>("bootJar") {
     enabled = false
 }
 */
-
 
 task("exploreOutput") {
     description = "find artifact(s) in the project directory"
@@ -171,7 +173,6 @@ val copyReactBuildFiles by tasks.register<Copy>("copyReactBuildFiles") {
 }
 */
 
-
 dependencies {
     implementation(project(":rutil-vm-common"))
     implementation(project(":rutil-vm-util"))
@@ -216,5 +217,5 @@ dependencies {
     testImplementation(Dependencies.springBootTest)
     testImplementation(Dependencies.hamcrest)
     implementation("com.jcraft:jsch:0.1.55")
-    implementation ("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 }

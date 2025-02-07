@@ -30,7 +30,7 @@ name: Build and Publish rutil Docker Image and OpenVPN linux server
 on:
   push:
     tags:
-      - 'rutil-v*'  # Triggers on tags with prefix 'v'
+      - 'back-v*'  # Triggers on tags with prefix 'v'
 
 jobs:
   build:

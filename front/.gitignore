@@ -1,5 +1,6 @@
 
 ### react ###
+build
 *.log
 **/*.backup.*
 **/*.back.*

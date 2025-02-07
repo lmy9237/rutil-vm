@@ -1,5 +1,6 @@
-package com.itinfo.rutilvm.ovirt
+package com.itinfo.rutilvm.api.ovirt
 
+import com.itinfo.rutilvm.api.ovirt.ConnectionService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import org.junit.jupiter.api.Test
 import org.hamcrest.MatcherAssert.assertThat
@@ -15,13 +16,12 @@ import org.springframework.boot.test.context.SpringBootTest
  */
 @SpringBootTest
 class ConnectionServiceTest {
-	@Autowired
-	private lateinit var service: ConnectionService
+	@Autowired private lateinit var service: ConnectionService
 
 	/**
 	 * [should_getConnection]
 	 * [ConnectionService.getConnection]에 대한 단위테스트
-	 * 
+	 *
 	 * @see ConnectionService.getConnection
 	 */
 	@Test

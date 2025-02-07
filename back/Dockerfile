@@ -2,11 +2,10 @@
 # ------------------------------
 # Stage 1: Build the application using Gradle
 FROM gradle:7.4.2-jdk11-focal AS build
-WORKDIR /home/gradle/project
-
-# Add labels to the build stage
 LABEL maintainer="Chan Hee Lee <chanhi2000@gmail.com>"
 LABEL build-stage="gradle"
+
+WORKDIR /home/gradle/project
 
 # Copy the Gradle wrapper and build files
 COPY gradle /home/gradle/project/gradle
@@ -32,16 +31,14 @@ COPY rutil-vm-util-ovirt /home/gradle/project/rutil-vm-util-ovirt
 # RUN ls /home/gradle/project/rutil-vm-api/src/main/resources/static
 
 # Build the application
-RUN ./gradlew rutil-vm-api:bootJar -Pprofile=staging -PskipNpm=true --parallel
+RUN ./gradlew rutil-vm-api:bootJar -Pprofile=staging -PskipNpm=true
 
 # ------------------------------
 # Stage 2: Run the application
 # Base image for the runtime stage
 FROM eclipse-temurin:11-jdk-focal
-
-# Add labels to the runtime stage
 LABEL maintainer="Chan Hee Lee <chanhi2000@gmail.com>"
-LABEL description="RutilVM"
+LABEL description="RutilVM (API)"
 LABEL version="0.2.0-beta1"
 LABEL vcs-url="https://github.com/ititcloud/rutil-vm"
 LABEL build-date="2025-02-06"

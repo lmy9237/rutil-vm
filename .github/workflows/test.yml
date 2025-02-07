@@ -1,38 +1,38 @@
-name: Test OVPN Connection
-
-on:
-  push:
-    tags:
-      - 'itcloud-v*'  # Triggers on tags with prefix 'v'
-
-
-jobs:
-  show-context:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Show github context object
-        run: echo $JSON
-        env:
-          JSON: ${{ toJSON(github) }}
-  
-  test:
-    runs-on: ubuntu-latest
-    name: Typical Usage of OpenVPN
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install OpenVPN
-        run: |
-          sudo apt update
-          sudo apt install -y openvpn openvpn-systemd-resolved
-      
-      - name: Connect to VPN
-        uses: "kota65535/github-openvpn-connect-action@v2"
-        with:
-          config_file: .github/workflows/client.ovpn
-          username: ${{ secrets.OVPN_USERNAME }}
-          password: ${{ secrets.OVPN_PASSWORD }}
-      
-      - name: Check if connected
-        run: curl -v ${{ secrets.SERVER_IP }}
+# name: Test OVPN Connection
+# 
+# on:
+#   push:
+#     tags:
+#       - 'itcloud-v*'  # Triggers on tags with prefix 'v'
+# 
+# 
+# jobs:
+#   show-context:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Show github context object
+#         run: echo $JSON
+#         env:
+#           JSON: ${{ toJSON(github) }}
+#   
+#   test:
+#     runs-on: ubuntu-latest
+#     name: Typical Usage of OpenVPN
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+# 
+#       - name: Install OpenVPN
+#         run: |
+#           sudo apt update
+#           sudo apt install -y openvpn openvpn-systemd-resolved
+#       
+#       - name: Connect to VPN
+#         uses: "kota65535/github-openvpn-connect-action@v2"
+#         with:
+#           config_file: .github/workflows/client.ovpn
+#           username: ${{ secrets.OVPN_USERNAME }}
+#           password: ${{ secrets.OVPN_PASSWORD }}
+#       
+#       - name: Check if connected
+#         run: curl -v ${{ secrets.SERVER_IP }}

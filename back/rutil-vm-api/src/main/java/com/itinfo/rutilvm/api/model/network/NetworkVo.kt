@@ -209,10 +209,11 @@ fun NetworkVo.toNetworkBuilder(): NetworkBuilder {
 		.comment(network.comment)
 		.mtu(network.mtu)  // 제한수가 있음
 		.portIsolation(network.portIsolation)
-	if(network.usage.vm){
+
+	if (network.usage.vm) {
 		builder.usages(NetworkUsage.VM)
 	}
-	if(network.vlan != 0){
+	if (network.vlan != 0) {
 		builder.vlan(VlanBuilder().id(network.vlan))
 	}
 //	.externalProvider(

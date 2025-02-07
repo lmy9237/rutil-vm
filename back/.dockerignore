@@ -1,0 +1,10 @@
+bin/
+build/
+.gradle/
+.vscode/
+.idea/
+*.iml
+*.iws
+target/
+.sonar/
+.sonarlint/
