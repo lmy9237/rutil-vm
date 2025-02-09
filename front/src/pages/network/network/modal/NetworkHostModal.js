@@ -283,6 +283,7 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
               <FontAwesomeIcon
                 icon={faPencilAlt}
                 className="icon"
+                style={{cursor:'pointer'}}
                 onClick={openSecondModal}
               />
             </div>

@@ -185,7 +185,7 @@ const Dashboard = () => {
           ]}
         />
 
-        <div className="dash-section flex">
+        <div className="dash-section center">
           <div className="dash-section-contents">
             <h1>CPU</h1>
             <div className="graphs flex">

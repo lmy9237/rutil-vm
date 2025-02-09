@@ -1,8 +1,6 @@
 /*dashboard.css*/
 .dash-section {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
   background-color: #ffffff;
   padding: 0 0.2rem;
