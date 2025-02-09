@@ -20,10 +20,7 @@ const ClusterDeleteModal = ({ isOpen, onClose, data }) => {
   }, [data]);
 
   const handleDelete = () => {
-    if (ids.length === 0) {
-      toast.error('삭제할 클러스터 ID가 없습니다.');
-      return;
-    }
+    if (ids.length === 0) return toast.error('삭제할 클러스터 ID가 없습니다.');
   
     ids.forEach((clusterId, index) => {
       deleteCluster(clusterId, {

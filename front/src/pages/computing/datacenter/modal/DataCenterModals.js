@@ -1,6 +1,8 @@
 import React from "react";
 import DataCenterModal from "./DataCenterModal";
 import DataCenterDeleteModal from "./DataCenterDeleteModal";
+import DeleteModal from "../../../../utils/DeleteModal";
+import { useDeleteDataCenter } from "../../../../api/RQHook";
 
 const DataCenterModals = ({ activeModal, dataCenter, selectedDataCenters = [], onClose }) => {
   const modals = {
@@ -23,6 +25,14 @@ const DataCenterModals = ({ activeModal, dataCenter, selectedDataCenters = [], o
         data={selectedDataCenters}
         onClose={onClose}
       />
+      // <DeleteModal
+      //   isOpen={activeModal === 'delete' }
+      //   onClose={onClose}
+      //   label={'데이터센터'}
+      //   data={selectedDataCenters}
+      //   api={useDeleteDataCenter()}
+      //   navigation={'/computing/rutil-manager/datacenters'}
+      // />
     )
   };
 

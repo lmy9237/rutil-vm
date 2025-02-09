@@ -1,34 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import Modal from 'react-modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
-import { useDeleteDisk } from '../../../../api/RQHook';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { warnButton, xButton } from '../../../../utils/Icon';
+import { useDeleteDisk } from '../../../../api/RQHook';
 
 const DiskDeleteModal = ({ isOpen, onClose, data }) => {
   const navigate = useNavigate();
-  const [ids, setIds] = useState([]);
-  const [alias, setAlias] = useState([]);
   const { mutate: deleteDisk } = useDeleteDisk();
-
-  useEffect(() => {
-    if (Array.isArray(data)) {
-      const ids = data.map((item) => item.id);
-      const alias = data.map((item) => item.alias); // name이 없는 경우 처리
-      setIds(ids);
-      setAlias(alias);
-    } else if (data) {
-      setIds([data.id]);
-      setAlias([data.alias]);
-    }
+  
+  const { ids, aliass } = useMemo(() => {
+    if (!data) return { ids: [], aliass: [] };
+    
+    const dataArray = Array.isArray(data) ? data : [data];
+    return {
+      ids: dataArray.map((item) => item.id),
+      aliass: dataArray.map((item) => item.alias || 'undefined'),
+    };
   }, [data]);
 
-  const handleFormSubmit = () => {
-    if (!ids.length) {
-      console.error('삭제할 디스크 ID가 없습니다.');
-      return;
-    }
+  const handleDelete = () => {
+    if (!ids.length) return console.error('삭제할 디스크 ID가 없습니다.');    
   
     ids.forEach((diskId, index) => {
       deleteDisk(diskId, {
@@ -41,38 +33,29 @@ const DiskDeleteModal = ({ isOpen, onClose, data }) => {
         },
         onError: (error) => {
           toast.success('디스크 삭제 오류:', error.message);
-          // console.error(`디스크 삭제 오류:`, error);
         },
       });
     });
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
-    >
+    <Modal isOpen={isOpen} onRequestClose={onClose} className="Modal" overlayClassName="Overlay" shouldCloseOnOverlayClick={false} >
       <div className="storage-delete-popup modal">
         <div className="popup-header">
           <h1>디스크 삭제</h1>
-          <button onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
-          </button>
+          <button onClick={onClose}>{ xButton() }</button>
         </div>
 
         <div className="disk-delete-box">
           <div>
-            <FontAwesomeIcon style={{ marginRight: '0.3rem' }} icon={faExclamationTriangle} />
-            <span> {alias.join(', ')} 를(을) 삭제하시겠습니까? </span>
+            { warnButton() }
+            <span> {aliass.join(', ')} 를(을) 삭제하시겠습니까? </span>
           </div>
         </div>
 
         <div className="edit-footer">
           <button style={{ display: 'none' }}></button>
-          <button onClick={handleFormSubmit}>OK</button>
+          <button onClick={handleDelete}>OK</button>
           <button onClick={onClose}>취소</button>
         </div>
       </div>

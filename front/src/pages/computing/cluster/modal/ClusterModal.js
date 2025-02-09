@@ -135,8 +135,7 @@ const ClusterModal = ({ isOpen, editMode = false, clusterId, datacenterId, onClo
   const { data: networks = [], isLoading: isNetworksLoading, } = useNetworksFromDataCenter(dataCenterVoId, (e) => ({...e,}));
   
   useEffect(() => {
-    if (!isOpen)
-      setFormState(initialFormState);
+    if (!isOpen) return setFormState(initialFormState);
     if (editMode && cluster) {
       setFormState({
         id: cluster.id,
