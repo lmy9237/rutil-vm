@@ -1,53 +1,28 @@
 .template-eidt-popup{
-    position: absolute;
-    box-sizing: border-box;
-    border-radius: 4px;
-    background: #fff;
-    top: 50%;
     width: 55%;
-    left: 50%;
     height: 55%;             
-    font-size:0.33rem;                                    
-    transform: translate(-50%, -50%);
-    box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); /*x y 번짐 색상*/
 }
 .template-edit-texts>div{
     padding: 1.2% 0.3rem;
     display: flex;
     justify-content: space-between;
 }
-.template-edit-texts input[type="text"]{
+.template-edit-texts input[type="text"],
+.template-option-box select
+{
     width: 50%;
 }
 .host-textbox input{
     width: 47%;
-    height: 3.5vh;
-    padding: 0 3px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.29rem;
-    border: 1px solid #a7a6a6;
 }
 .monitor{
-    display: flex;
-    justify-content: space-between;
     width: 57%;
 }
 .monitor select{
     width: 12%;
-    height: 3.5vh;
-    border: 1px solid #8b8989;
-    background: white;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.29rem;
-    outline: none;
 }
 .template-option-box{
     padding: 1.2% 0.3rem;
-}
-.template-option-box select{
-    width: 50%;
 }
 .t-new-checkbox{
     display: flex;

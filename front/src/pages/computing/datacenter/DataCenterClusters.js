@@ -1,5 +1,4 @@
 import React from 'react';
-import '../datacenter/css/DataCenter.css';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useClustersFromDataCenter } from '../../../api/RQHook';
 import ClusterDupl from '../../computing/cluster/ClusterDupl';

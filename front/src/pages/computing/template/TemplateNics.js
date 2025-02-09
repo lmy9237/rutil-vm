@@ -77,6 +77,13 @@ const TemplateNics = ({ templateId }) => {
         }))}
         onRowClick={(selectedRows) => setSelectedVnicProfiles(selectedRows)}
         clickableColumnIndex={[3, 4]} // 클릭 가능한 열 인덱스
+        onContextMenuItems={(row) => [
+          <NicActionButtons
+            openModal={openModal}
+            isEditDisabled={!row} 
+            type='context'
+          />
+        ]}
       />
 
       {/* nic 모달창 */}

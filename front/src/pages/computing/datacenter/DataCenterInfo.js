@@ -5,7 +5,6 @@ import NavButton from '../../../components/navigation/NavButton';
 import HeaderButton from '../../../components/button/HeaderButton';
 import Footer from '../../../components/footer/Footer';
 import Path from '../../../components/Header/Path';
-import '../datacenter/css/DataCenter.css';
 import { useDataCenter } from '../../../api/RQHook';
 import DataCenterClusters from './DataCenterClusters';
 import DataCenterHosts from './DataCenterHosts';

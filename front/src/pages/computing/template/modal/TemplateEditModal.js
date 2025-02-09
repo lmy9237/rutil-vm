@@ -107,7 +107,7 @@ const TemplateEditModal = ({ isOpen, editMode = false, templateId, onClose }) =>
       overlayClassName="Overlay newRolePopupOverlay"
       shouldCloseOnOverlayClick={false}
     >
-      <div className="template-eidt-popup">
+      <div className="template-eidt-popup modal">
         <div className="popup-header">
           <h1>{editMode ? '템플릿 수정' : '템플릿 생성'}</h1>
           <button onClick={onClose}>
@@ -217,9 +217,9 @@ const TemplateEditModal = ({ isOpen, editMode = false, templateId, onClose }) =>
               <>
                 <div className="p-1.5">
                   <div className="font-bold">그래픽 콘솔</div>
-                  <div className="monitor">
-                    <label htmlFor="monitor_select">모니터</label>
-                    <select id="monitor_select">
+                  <div className="monitor center">
+                    <label htmlFor="monitor-select">모니터</label>
+                    <select id="monitor-select">
                       <option value="1">1</option>
                     </select>
                   </div>

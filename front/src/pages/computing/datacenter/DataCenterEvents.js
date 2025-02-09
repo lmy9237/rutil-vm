@@ -1,5 +1,4 @@
 import React from 'react';
-import '../datacenter/css/DataCenter.css';
 import { useEventsFromDataCenter } from '../../../api/RQHook';
 import EventTable from '../../event/EventTable';
 

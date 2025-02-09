@@ -185,10 +185,10 @@ const Dashboard = () => {
           ]}
         />
 
-        <div className="dash-section">
+        <div className="dash-section flex">
           <div className="dash-section-contents">
             <h1>CPU</h1>
-            <div className="graphs">
+            <div className="graphs flex">
               <div className="graph-wrap active-on-visible" data-active-on-visible-callback-func-name="CircleRun">
                 {cpuMemory && <CpuApexChart cpu={cpuMemory?.totalCpuUsagePercent ?? 0} />/* ApexChart 컴포넌트를 여기에 삽입 */}
               </div>
@@ -207,7 +207,7 @@ const Dashboard = () => {
 
           <div className="dash-section-contents">
             <h1>MEMORY</h1>
-            <div className="graphs">
+            <div className="graphs flex">
               <div className="graph-wrap active-on-visible" data-active-on-visible-callback-func-name="CircleRun">
                 {cpuMemory && <MemoryApexChart memory={cpuMemory?.totalMemoryUsagePercent}/> /* ApexChart 컴포넌트를 여기에 삽입 */}
               </div>
@@ -224,7 +224,7 @@ const Dashboard = () => {
 
           <div className="dash-section-contents" style={{ borderRight: 'none' }}>
             <h1>STORAGE</h1>
-            <div className="graphs">
+            <div className="graphs flex">
               <div className="graph-wrap active-on-visible" data-active-on-visible-callback-func-name="CircleRun">
                 {storage && <StorageApexChart storage = {storage?.usedPercent} /> /* ApexChart 컴포넌트를 여기에 삽입 */}
               </div>

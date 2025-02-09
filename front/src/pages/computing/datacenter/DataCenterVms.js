@@ -1,5 +1,4 @@
 import React from 'react';
-import '../datacenter/css/DataCenter.css';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useVMsFromDataCenter } from '../../../api/RQHook';
 import VmDupl from '../../computing/vm/VmDupl';

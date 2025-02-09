@@ -1,5 +1,4 @@
 import React from 'react';
-import '../datacenter/css/DataCenter.css';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useNetworksFromDataCenter } from '../../../api/RQHook';
 import NetworkDupl from '../../network/network/NetworkDupl';

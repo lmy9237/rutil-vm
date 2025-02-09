@@ -1,5 +1,4 @@
 import React from 'react';
-import '../datacenter/css/DataCenter.css';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useDomainsFromDataCenter } from '../../../api/RQHook';
 import DomainDupl from '../../storage/domain/DomainDupl';

@@ -2,7 +2,6 @@
   height: 67%;
   width: 39%;
 }
-
 .host-new-content {
   height: 78%;
 }
@@ -10,9 +9,8 @@
   display: flex;
   justify-content: space-between;
   padding: 0.2rem;
-  align-items:center;
+  align-items: center;
 }
-
 .host-new-content select,
 .host-new-content input[type="text"],
 .host-new-content input[type="number"],
