@@ -153,15 +153,14 @@ const DomainModal = ({ isOpen, mode='create', domainId, datacenterId, onClose })
       setNfsAddress(domain?.storageAddress);
       setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id)
       
-      // if (setFormState.storageType === 'nfs') {
-      //   setNfsAddress(domain?.storageAddress);
-      // } else if (setFormState.storageType === 'iscsi' || setFormState.storageType === 'fcp') {
-      //   setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id);
-      // }
+      if (setFormState.storageType === 'nfs') {
+        setNfsAddress(domain?.storageAddress);
+      } else if (setFormState.storageType === 'iscsi' || setFormState.storageType === 'fcp') {
+        setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id);
+      }
     }
   }, [isOpen, editMode, domain]);  
-  
-  
+    
   useEffect(() => {
     if(datacenterId){
       setDataCenterVoId(datacenterId);
@@ -169,6 +168,22 @@ const DomainModal = ({ isOpen, mode='create', domainId, datacenterId, onClose })
       setDataCenterVoId(dataCenters[0].id);
     }
   }, [dataCenters, datacenterId, editMode]);
+
+  useEffect(() => {
+    if (dataCenterVoId) {
+      setFormState((prev) => ({
+        ...initialFormState, // 초기 상태로 리셋
+        domainType: prev.domainType, // 유지할 값 (원래 설정된 데이터 유지)
+      }));
+      // 관련된 상태 초기화
+      setStorageTypes(storageTypeOptions(initialFormState.domainType));
+      setNfsAddress('');
+      setLunId('');
+      setIscsiSearchResults([]);
+      setFcpSearchResults([]);
+      setFormImportState(importFormState);
+    }
+  }, [dataCenterVoId]);
   
   useEffect(() => {
     if (!editMode && hosts && hosts.length > 0) {
@@ -306,7 +321,7 @@ const DomainModal = ({ isOpen, mode='create', domainId, datacenterId, onClose })
               loading={isDatacentersLoading}
               options={dataCenters}
             />
-            <LabelSelectOptions label="도메인 유형" value={formState.domainType} onChange={handleInputChange('domainType')} disabled={editMode} options={domainTypes} className="domain-new-select center" />
+            <LabelSelectOptions label="도메인 기능" value={formState.domainType} onChange={handleInputChange('domainType')} disabled={editMode} options={domainTypes} className="domain-new-select center" />
             <LabelSelectOptions label="스토리지 유형" value={formState.storageType} onChange={handleInputChange('storageType')} disabled={editMode} options={storageTypes} className="domain-new-select center"/>
             <LabelSelectOptionsID label="호스트" value={hostVoId} onChange={(e) => setHostVoId(e.target.value)} disabled={editMode} loading={isHostsLoading} options={hosts} className="domain-new-select center" /> 
 
