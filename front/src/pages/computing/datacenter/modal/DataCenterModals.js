@@ -20,19 +20,19 @@ const DataCenterModals = ({ activeModal, dataCenter, selectedDataCenters = [], o
       />
     ),
     delete: (
-      <DataCenterDeleteModal
-        isOpen={activeModal === 'delete' }
-        data={selectedDataCenters}
-        onClose={onClose}
-      />
-      // <DeleteModal
+      // <DataCenterDeleteModal
       //   isOpen={activeModal === 'delete' }
-      //   onClose={onClose}
-      //   label={'데이터센터'}
       //   data={selectedDataCenters}
-      //   api={useDeleteDataCenter()}
-      //   navigation={'/computing/rutil-manager/datacenters'}
+      //   onClose={onClose}
       // />
+      <DeleteModal
+        isOpen={activeModal === 'delete' }
+        onClose={onClose}
+        label={'데이터센터'}
+        data={selectedDataCenters}
+        api={useDeleteDataCenter()}
+        navigation={'/computing/rutil-manager/datacenters'}
+      />
     )
   };
 

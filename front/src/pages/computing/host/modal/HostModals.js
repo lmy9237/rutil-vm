@@ -2,6 +2,8 @@ import React from "react";
 import HostModal from "./HostModal";
 import HostDeleteModal from "./HostDeleteModal";
 import HostActionModal from "./HostActionModal";
+import { useDeleteHost } from "../../../../api/RQHook";
+import DeleteModal from "../../../../utils/DeleteModal";
 
 const HostModals = ({ activeModal, host, selectedHosts = [], clusterId, onClose }) => {
   const modals = {
@@ -22,10 +24,18 @@ const HostModals = ({ activeModal, host, selectedHosts = [], clusterId, onClose 
       />
     ),
     delete: (
-      <HostDeleteModal
+      // <HostDeleteModal
+      //   isOpen={activeModal === 'delete' }
+      //   data={selectedHosts}
+      //   onClose={onClose}
+      // />
+      <DeleteModal
         isOpen={activeModal === 'delete' }
-        data={selectedHosts}
         onClose={onClose}
+        label={'호스트'}
+        data={selectedHosts}
+        api={useDeleteHost()}
+        // navigation={''}
       />
     ),
     action: (

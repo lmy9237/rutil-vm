@@ -2,6 +2,8 @@ import React from "react";
 import NetworkModal from "./NetworkModal";
 import NetworkDeleteModal from "./NetworkDeleteModal";
 import NetworkImportModal from "./NetworkImportModal";
+import DeleteModal from "../../../../utils/DeleteModal";
+import { useDeleteNetwork } from "../../../../api/RQHook";
 
 const NetworkModals = ({ activeModal, network, selectedNetworks = [], dcId, onClose }) => {
   const modals = {
@@ -20,10 +22,18 @@ const NetworkModals = ({ activeModal, network, selectedNetworks = [], dcId, onCl
     />
     ),
     delete: (
-      <NetworkDeleteModal
+      // <NetworkDeleteModal
+      //   isOpen={activeModal === 'delete' }
+      //   data={selectedNetworks}
+      //   onClose={onClose}
+      // />
+      <DeleteModal
         isOpen={activeModal === 'delete' }
-        data={selectedNetworks}
         onClose={onClose}
+        label={'네트워크'}
+        data={selectedNetworks}
+        api={useDeleteNetwork()}
+        // navigation={''}
       />
     ),
     import: (

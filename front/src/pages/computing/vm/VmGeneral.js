@@ -19,28 +19,28 @@ const VmGeneral = ({ vmId }) => {
     { label: "", value: ' ' },
     { label: "클러스터", 
       value: 
-        <div className='related_object'>
+        <div className='related-object'>
           <FontAwesomeIcon icon={faEarthAmericas} fixedWidth className="mr-0.5"/>
           <span className="text-blue-500 font-bold">{vm?.clusterVo?.name}</span>
         </div>
     },
     { label: "호스트", 
       value:  
-        <div className='related_object'>
+        <div className='related-object'>
           <FontAwesomeIcon icon={faUser} fixedWidth className="mr-0.5"/>
           <span className="text-blue-500 font-bold"> {vm?.hostVo?.name}</span>
         </div>
     },
     { label: "네트워크", 
       value:  
-        <div className='related_object'>
+        <div className='related-object'>
           <FontAwesomeIcon icon={faServer} fixedWidth className="mr-0.5"/>
           <span className="text-blue-500 font-bold"> {vm?.hostVo?.name}</span>
         </div>
     },
     // { label: "스토리지 도메인", 
     //   value:  
-    //     <div className='related_object'>
+    //     <div className='related-object'>
     //       <FontAwesomeIcon icon={faDatabase} fixedWidth className="mr-0.5"/>
     //       <span>{vm?.storageDomainVo?.name}</span>
     //     </div>
@@ -97,26 +97,26 @@ const VmGeneral = ({ vmId }) => {
           </table>
         </div>
           
-        <div className='detail_general_mini_box'>
+        <div className='detail-general-mini-box'>
           <div>용량 및 사용량</div>
-          <div className='capacity_outer'>
+          <div className='capacity-outer'>
             <div className='capacity'>
               <div>CPU</div>
-              <div className='capacity_box'>
+              <div className='capacity-box'>
                 <div>{vm?.usageDto?.cpuPercent}% 사용됨</div>
                 <div>{vm?.cpuTopologyCnt} CPU 할당됨</div>
               </div>
             </div>
             <div className='capacity'>
               <div>메모리</div>
-              <div className='capacity_box'>
-                <div>{vm?.usageDto?.memoryPercent}% 사용됨</div>
+              <div className='capacity-box'>
+                <div>{vm?.usageDto?.memoryPercent}% 사용됨 (vm down 시 안떠야됨)</div>
                 <div>{Math.round(vm?.memoryActual / 1024 / 1024) || '0'} MB 할당됨</div>
               </div>
             </div>
             <div className='capacity'>
               <div>스토리지</div>
-              <div className='capacity_box'>
+              <div className='capacity-box'>
                 <div></div>
                 <div></div>
               </div>
@@ -127,7 +127,7 @@ const VmGeneral = ({ vmId }) => {
 
       <div className='detail-general-boxs-bottom'>
         <div className="vm-general-bottom-box">     
-          <div className="vm_table_container">
+          <div className="vm-table-container">
             <table className="table">
               <tbody>
                 {typeTableRows.map((row, index) => (

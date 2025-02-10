@@ -218,16 +218,16 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
         )} 
 
         {/* 직접LUN */}
-        { activeTab === 'directlun' && (
-          <div id="storage_directlun_outer">
-            <div className="disk-new-img">
+        {activeTab === 'directlun' && (
+          <div id="storage-directlun-outer">
+            <div id="storage-lun-first">
               <div className="disk-new-img-left">
                 <div className="img-input-box">
-                  <label>별칭</label>
+                  <span>별칭</span>
                   <input type="text" />
                 </div>
                 <div className="img-input-box">
-                  <label>설명</label>
+                  <span>설명</span>
                   <input type="text" />
                 </div>
                 <div className="img-select-box">
@@ -258,7 +258,6 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
             </div>
           </div>
         )}
-
         <div className="edit-footer">
           <button style={{ display: 'none' }}></button>
           <button onClick={handleFormSubmit}>{dLabel}</button>

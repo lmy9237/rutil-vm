@@ -17,7 +17,7 @@ const VmDisks = ({ vmId }) => {
    
   return (
     <div>
-      <div className="disk_type">
+      <div className="disk-type">
         <div className="flex">
           <span>디스크 유형: </span>
           {diskTypes.map(({ type, label }) => (

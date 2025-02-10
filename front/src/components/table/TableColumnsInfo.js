@@ -384,7 +384,7 @@ const TableColumnsInfo = {
     { header: '할당 정책', accessor: 'sparse', clickable: false },
     // { header: '스토리지 도메인', accessor: 'storageDomain', clickable: false },
     // { header: '생성 일자', accessor: 'creationDate', clickable: false },
-    { header: '연결 대상', accessor: 'connectVm', clickable: false },
+    { header: '연결 대상', accessor: 'connect', clickable: false },
     // { header: '연결 대상(템플릿)', accessor: 'connectTemplate', clickable: false },
     { header: '상태', accessor: 'status', clickable: false },
     { header: '유형', accessor: 'storageType', clickable: false },
@@ -453,7 +453,7 @@ const TableColumnsInfo = {
   
   STORAGE_DOMAINS_FROM_DISK: [
     { header: '', accessor: 'icon', clickable: false, width: '5%'  },
-    { header: '도메인 이름', accessor: 'name', clickable: false },
+    { header: '도메인 이름', accessor: 'storageDomain', clickable: false },
     { header: '도메인 유형', accessor: 'domainType', clickable: false },
     { header: '상태', accessor: 'status', clickable: false },
     // { header: '전체 공간', accessor: 'diskSize', clickable: false },

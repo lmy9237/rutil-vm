@@ -15,54 +15,50 @@ import LabelInputNum from '../../../../utils/LabelInputNum';
 import LabelSelectOptionsID from '../../../../utils/LabelSelectOptionsID';
 import LabelSelectOptions from '../../../../utils/LabelSelectOptions';
 import LabelCheckbox from '../../../../utils/LabelCheckbox';
+import { xButton } from '../../../../utils/Icon';
+
+const initialFormState = {
+  id: '',
+  size: '',
+  appendSize: 0,
+  alias: '',
+  description: '',
+  interface_: 'VIRTIO_SCSI', // 인터페이스 
+  sparse: true, //할당정책: 씬
+  active: true, // 디스크 활성화
+  wipeAfterDelete: false, // 삭제 후 초기화
+  bootable: false, // 부팅가능
+  sharable: false, // 공유가능
+  readOnly: false, // 읽기전용
+  cancelActive: false, // 취소 활성화
+  backup: true, // 증분 백업사용
+};
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+const interfaceList = [
+  { value: "VIRTIO_SCSI", label: "VirtIO-SCSI" },
+  { value: "VIRTIO", label: "VirtIO" },
+  { value: "SATA", label: "SATA" },
+];
+
+const sparseList = [
+  { value: "true", label: "씬 프로비저닝" },
+  { value: "false", label: "사전 할당" },
+];
 
 // type은 vm이면 가상머신 생성할때 디스크 생성하는 창, disk면 가상머신 디스크 목록에서 생성하는
 const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachment, type="disk", onCreateDisk, onClose }) => {
+  const dLabel = editMode ? '편집' : '생성';
   const { mutate: addDiskVm } = useAddDiskFromVM();
   const { mutate: editDiskVm } = useEditDiskFromVM();
   const { mutate: editDisk } = useEditDisk();
 
   const [activeTab, setActiveTab] = useState('img');
+  const handleTabClick = (tab) => { setActiveTab(tab); };
 
-  const [formState, setFormState] = useState({
-    id: '',
-    size: '',
-    appendSize: 0,
-    alias: '',
-    description: '',
-    interface_: 'VIRTIO_SCSI', // 인터페이스 
-    sparse: true, //할당정책: 씬
-    active: true, // 디스크 활성화
-    wipeAfterDelete: false, // 삭제 후 초기화
-    bootable: false, // 부팅가능
-    sharable: false, // 공유가능
-    readOnly: false, // 읽기전용
-    cancelActive: false, // 취소 활성화
-    backup: true, // 증분 백업사용
-  });
+  const [formState, setFormState] = useState(initialFormState);
   const [domainVoId, setDomainVoId] = useState('');
   const [diskProfileVoId, setDiskProfileVoId] = useState('');
-
-  const resetForm = () => {
-    setFormState({
-      id: '',
-      size: '',
-      appendSize: 0,
-      alias: '',
-      description: '',
-      interface_: 'VIRTIO_SCSI',
-      sparse: true,
-      active: true,
-      wipeAfterDelete: false,
-      bootable: false,
-      sharable: false,
-      readOnly: false, 
-      cancelActive: false,
-      backup: true,
-    });
-    setDomainVoId('');
-    setDiskProfileVoId('');
-  };
 
 
   // 디스크 데이터 가져오기
@@ -77,32 +73,18 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
     data: domains = [],
     refetch: refetchDomains,
     isLoading: isDomainsLoading,
-  } = useAllActiveDomainFromDataCenter(
-    dataCenterId, (e) => ({...e,})
-  );
+  } = useAllActiveDomainFromDataCenter(dataCenterId, (e) => ({...e,}));
 
   // 선택한 도메인이 가진 디스크 프로파일 가져오기
   const {
     data: diskProfiles = [],
     refetch: diskProfilesRefetch,
     isLoading: isDiskProfilesLoading,
-  } = useAllDiskProfileFromDomain(
-    domainVoId, (e) => ({...e,})
-  );  
+  } = useAllDiskProfileFromDomain(domainVoId, (e) => ({...e,}));  
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const interfaceList = [
-    { value: "VIRTIO_SCSI", label: "VirtIO-SCSI" },
-    { value: "VIRTIO", label: "VirtIO" },
-    { value: "SATA", label: "SATA" },
-  ];
-
-  const sparseList = [
-    { value: "true", label: "씬 프로비저닝" },
-    { value: "false", label: "사전 할당" },
-  ];
 
   useEffect(() => {
+    if (!isOpen) return setFormState(initialFormState);
     if (editMode && diskAttachment) {
       setFormState({
         id: diskAttachment?.id || '',
@@ -122,10 +104,8 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
       });
       setDomainVoId(diskAttachment?.diskImageVo?.storageDomainVo?.id || '');
       setDiskProfileVoId(diskAttachment?.diskImageVo?.diskProfileVo?.id || '');
-    } else if (!editMode) {
-      resetForm();
     }
-  }, [editMode, diskAttachment]);
+  }, [isOpen, editMode, diskAttachment]);
 
   useEffect(() => {
     if (!editMode && domains.length > 0) {
@@ -144,6 +124,14 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
       setFormState((prev) => ({ ...prev, interface_: interfaceList[0].value }));
     }
   }, [interfaceList, editMode, formState.interface_]);
+
+  const handleInputChange = (field) => (e) => {
+    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
+  const handleInputChangeCheck = (field) => (e) => {
+    setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
+  };
   
 
   const validateForm = () => {
@@ -238,35 +226,18 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel={editMode ? '디스크 편집' : '디스크 생성'}
-      className="Modal"
-      overlayClassName="Overlay newRolePopupOverlay"
-      shouldCloseOnOverlayClick={false}
-    >
-      <div className="storage-disk-new-popup">
+    <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel={dLabel} className="Modal" overlayClassName="Overlay newRolePopupOverlay" shouldCloseOnOverlayClick={false} >
+      <div className="storage-disk-new-popup modal">
         <div className="popup-header">
-          <h1>{editMode ? '디스크 편집' : '새 디스크 생성'}</h1>
-          <button onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth/>
-          </button>
+          <h1>디스크 {dLabel}</h1>
+          <button onClick={onClose}> { xButton() } </button>
         </div>
 
         <div className="disk-new-nav">
-          <div
-            id="storage-img-btn"
-            onClick={() => setActiveTab('img')}
-            className={activeTab === 'img' ? 'active' : ''}
-          >
+          <div id="storage_img_btn" onClick={() => handleTabClick('img')} className={activeTab === 'img' ? 'active' : ''} >
             이미지
           </div>
-          <div
-            id="storage-directlun-btn"
-            onClick={() => setActiveTab('directlun')}
-            className={activeTab === 'directlun' ? 'active' : ''}
-          >
+          <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
             직접 LUN
           </div>
         </div>
@@ -275,37 +246,13 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
         {activeTab === 'img' && (
           <div className="disk-new-img">
             <div className="disk-new-img-left">
-
-              <LabelInputNum
-                className="img-input-box"
-                label="크기(GB)"
-                value={formState.size}
-                autoFocus={true}
-                onChange={(e) => setFormState((prev) => ({ ...prev, size: e.target.value }))}
-                disabled={editMode}
-              />
-
-            {editMode && (
-              <LabelInputNum
-                className="img-input-box"
-                label="추가크기(GB)"
-                value={formState.appendSize}
-                onChange={(e) => setFormState((prev) => ({ ...prev, appendSize: e.target.value }))}
-              />
-            )} 
-
-              <LabelInput
-                className="img-input-box"
-                label="별칭"
-                value={formState.alias}
-                onChange={(e) => setFormState((prev) => ({ ...prev, alias: e.target.value }))}
-              />
-              <LabelInput
-                className="img-input-box"
-                label="설명"
-                value={formState.description}
-                onChange={(e) => setFormState((prev) => ({ ...prev, description: e.target.value }))}
-              />
+            <LabelInputNum className="img-input-box" label="크기(GB)" value={formState.size} onChange={handleInputChange('size')} autoFocus={true} disabled={editMode} />
+              {editMode && (
+                <LabelInputNum className="img-input-box" label="추가크기(GB)" value={formState.appendSize} onChange={handleInputChange('appendSize')} />
+              )} 
+              <LabelInput className="img-input-box" label="별칭" value={formState.alias} onChange={handleInputChange('alias')} />
+              <LabelInput className="img-input-box" label="설명" value={formState.description} onChange={handleInputChange('description')} />
+              
               <LabelSelectOptions
                 className="img-input-box"
                 label="인터페이스"
@@ -343,55 +290,15 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
             </div>
             
             <div className="disk-new-img-right">
-            
             {!editMode && (
-              <LabelCheckbox
-                label="디스크 활성화"
-                id="active"
-                checked={formState.active}
-                onChange={(e) => setFormState((prev) => ({ ...prev, active: e.target.checked }))}
-              />
+              <LabelCheckbox label="디스크 활성화" id="active" checked={formState.active} onChange={handleInputChangeCheck('active')} />
             )}
-              <LabelCheckbox
-                label="삭제 후 초기화"
-                id="wipeAfterDelete"
-                checked={formState.wipeAfterDelete}
-                onChange={(e) => setFormState((prev) => ({ ...prev, wipeAfterDelete: e.target.checked }))}
-              />              
-              <LabelCheckbox
-                label="부팅 가능"
-                id="bootable"
-                checked={formState.bootable}
-                onChange={(e) => setFormState((prev) => ({ ...prev, bootable: e.target.checked }))}
-                disabled={editMode && !formState.bootable} 
-              />
-              <LabelCheckbox
-                label="공유 가능"
-                id="sharable"
-                checked={formState.sharable}
-                onChange={(e) => setFormState((prev) => ({ ...prev, sharable: e.target.checked }))}
-                disabled={editMode}
-              />
-              <LabelCheckbox
-                label="읽기 전용"
-                id="readOnly"
-                checked={formState.readOnly}
-                onChange={(e) => setFormState((prev) => ({ ...prev, readOnly: e.target.checked }))}
-                disabled={editMode}
-              />
-              <LabelCheckbox
-                label="취소 활성화"
-                id="cancelActive"
-                checked={formState.cancelActive}
-                onChange={(e) => setFormState((prev) => ({ ...prev, cancelActive: e.target.checked }))}
-                disabled={editMode}
-              />
-              <LabelCheckbox
-                label="증분 백업 사용"
-                id="backup"
-                checked={formState.backup}
-                onChange={(e) => setFormState((prev) => ({ ...prev, backup: e.target.checked }))}
-              />
+              <LabelCheckbox label="삭제 후 초기화" id="wipeAfterDelete" checked={formState.wipeAfterDelete} onChange={handleInputChangeCheck('wipeAfterDelete')} />
+              <LabelCheckbox label="부팅 가능" id="bootable" checked={formState.bootable} onChange={handleInputChangeCheck('bootable')} disabled={editMode && !formState.bootable}  />
+              <LabelCheckbox label="공유 가능" id="sharable" checked={formState.sharable} onChange={handleInputChangeCheck('sharable')} disabled={editMode} />
+              <LabelCheckbox label="읽기 전용" id="readOnly" checked={formState.readOnly} onChange={handleInputChangeCheck('readOnly')} disabled={editMode} />
+              <LabelCheckbox label="취소 활성화" id="cancelActive" checked={formState.cancelActive} onChange={handleInputChangeCheck('cancelActive')} disabled={editMode} />
+              <LabelCheckbox label="증분 백업 사용" id="backup" checked={formState.backup} onChange={handleInputChangeCheck('backup')}/>
             </div>
           </div>
         )} 
@@ -437,6 +344,7 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
           </div>
         )}
         <div className="edit-footer">
+          <button style={{ display: 'none' }}></button>
           <button onClick={type==="disk" ? handleFormSubmit : handleOkClick}>{editMode ? '편집' : '생성'}</button>
           <button onClick={onClose}>취소</button>
         </div>

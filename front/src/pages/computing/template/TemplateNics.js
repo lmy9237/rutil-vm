@@ -4,7 +4,6 @@ import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TemplateNeworkNewInterModal from './modal/TemplateNeworkNewInterModal';
-import DeleteModal from "../../../components/DeleteModal";
 import { renderTFStatusIcon } from "../../../utils/Icon";
 import TemplateNicDeleteModal from "./modal/TemplateNicDeleteModal";
 import NicActionButtons from "../../network/vnicProfile/NicActionButton";

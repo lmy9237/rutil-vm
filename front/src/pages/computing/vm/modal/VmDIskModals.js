@@ -23,7 +23,7 @@ const VmDiskModals = ({ activeModal, vmId, disk, selectedDisks = [], onClose }) 
         vm={vm}
         diskAttachment={disk}
         onClose={onClose}
-    />
+      />
     ),    
     delete: (
       <VmDiskDeleteModal

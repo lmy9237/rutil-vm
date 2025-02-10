@@ -3,7 +3,7 @@ import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useNetworksFromDataCenter } from '../../../api/RQHook';
 import NetworkDupl from '../../network/network/NetworkDupl';
 
-const DataCenterNetworks = ({datacenterId}) => {
+const DataCenterNetworks = ({ datacenterId }) => {
   const {
     data: networks = [], isLoading: isNetworksLoading,
   } = useNetworksFromDataCenter(datacenterId, (e) => ({ ...e }));

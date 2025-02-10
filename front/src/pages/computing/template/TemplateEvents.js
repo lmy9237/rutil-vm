@@ -1,5 +1,5 @@
 import React from 'react';
-import {useAllEventFromTemplate, useEventFromCluster} from "../../../api/RQHook";
+import {useAllEventFromTemplate} from "../../../api/RQHook";
 import EventTable from '../../event/EventTable';
 
 const TemplateEvents = ({ templateId }) => {

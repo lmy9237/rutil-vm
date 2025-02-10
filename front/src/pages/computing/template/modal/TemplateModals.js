@@ -3,6 +3,8 @@ import TemplateEditModal from './TemplateEditModal';
 import TemplateDeleteModal from './TemplateDeleteModal';
 // import VmModal from "../../vm/modal/VmModal";
 import VmNewModal from "../../vm/modal/VmNewModal";
+import DeleteModal from "../../../../utils/DeleteModal";
+import { useDeleteTemplate } from "../../../../api/RQHook";
 
 const TemplateModals = ({ activeModal, template, selectedTemplates = [], onClose }) => {
   const modals = {
@@ -15,13 +17,21 @@ const TemplateModals = ({ activeModal, template, selectedTemplates = [], onClose
         isOpen={activeModal === 'edit'}
         templateId={template?.id}
         onClose={onClose}
-    />
+      />
     ),
     delete: (
-      <TemplateDeleteModal
+      // <TemplateDeleteModal
+      //   isOpen={activeModal === 'delete' }
+      //   data={selectedTemplates}
+      //   onClose={onClose}
+      // />
+      <DeleteModal
         isOpen={activeModal === 'delete' }
-        data={selectedTemplates}
         onClose={onClose}
+        label={'템플릿'}
+        data={selectedTemplates}
+        api={useDeleteTemplate()}
+        // navigation={''}
       />
     ),
     addVm: (
