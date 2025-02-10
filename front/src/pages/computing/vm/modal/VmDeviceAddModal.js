@@ -17,7 +17,7 @@ const VmDeviceAddModal = ({ isOpen, onRequestClose, hostDevices }) => {
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
-      <div className="device-add-popup-outer">
+      <div className="device-add-popup-outer modal">
         <div className="popup-header">
           <h1>호스트 장치 추가</h1>
           <button onClick={onRequestClose}>

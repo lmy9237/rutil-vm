@@ -29,7 +29,7 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
     if (!hostId) {
       console.error("hostId가 없습니다. 요청을 건너뜁니다.");
     } else {
-      console.log("hostId:", hostId);
+      console.log("호스트아이디:", hostId);
     }
   }, [hostId]);
 
@@ -69,22 +69,24 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
   }, [nicData]);
 
 
-  // Outer 생성
-  const [outer, setOuter] = useState(() => {
-    let bondCounter = 0; // bond 이름을 위한 카운터
-    return (
-      nicData?.map((nic) => ({
-        id: nic.id || `outer${bondCounter + 1}`,
-        name: nic.bondingVo?.slaves?.length > 1 ? `bond${bondCounter++}` : "", // bond 이름 설정
-        children: nic.bondingVo?.slaves?.length > 0
-          ? nic.bondingVo.slaves.map((slave) => ({ id: slave.id, name: slave.name }))
-          : [{ id: nic.id, name: nic.name }],
-        networks: nic.networkVo?.id
-          ? [{ id: nic.networkVo.id, name: nic.networkVo.name }]
-          : [],
-      })) || []
-    );
-  });
+  const [outer, setOuter] = useState([]);
+
+  useEffect(() => {
+    if (nicData && nicData.length > 0) {
+      let bondCounter = 0;
+      setOuter(
+        nicData.map((nic) => ({
+          id: nic.id || `outer${bondCounter + 1}`,
+          name: nic.bondingVo?.slaves?.length > 1 ? `bond${bondCounter++}` : "",
+          children: nic.bondingVo?.slaves?.length > 0
+            ? nic.bondingVo.slaves.map((slave) => ({ id: slave.id, name: slave.name }))
+            : [{ id: nic.id, name: nic.name }],
+          networks: nic.networkVo?.id ? [{ id: nic.networkVo.id, name: nic.networkVo.name }] : [],
+        }))
+      );
+    }
+  }, [nicData]);
+  
 
   // Interfaces 생성
   const [unassignedInterface, setUnassignedInterface] = useState(
@@ -129,7 +131,7 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
     if (source === "container" && targetType === "interface") {
       if (parentId === targetId) {
         alert("같은 Interface 내에서는 이동할 수 없습니다.");
-        dragItem.current = null; // Reset drag state
+        dragItem.current = null; 
         return;
       }
   
@@ -139,37 +141,33 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
         const updatedOuter = prevOuter
           .map((outerItem) => {
             if (outerItem.id === parentId) {
-              // Check if the container is the only one left and a network is assigned
               if (outerItem.networks.length > 0 && outerItem.children.length === 1) {
                 alert("Container를 이동할 수 없습니다. 연결된 네트워크가 있고 container가 하나뿐입니다.");
-                validMove = false; // Invalid move, abort further updates
+                validMove = false; 
                 return outerItem;
               }
-              // Remove the item from the source interface
               return {
                 ...outerItem,
                 children: outerItem.children.filter((child) => child.id !== item.id),
               };
             }
             if (outerItem.id === targetId) {
-              // Check if both `outerItem` and `parentId` contain 1 container each
               const sourceOuter = prevOuter.find((o) => o.id === parentId);
               if (
                 sourceOuter &&
                 sourceOuter.children.length === 1 &&
                 outerItem.children.length === 1
               ) {
-                // Check if both have networks assigned
+
                 if (sourceOuter.networks.length > 0 && outerItem.networks.length > 0) {
                   alert("Container를 이동할 수 없습니다. 연결된 네트워크가 있고 container가 하나뿐입니다.");
-                  validMove = false; // Do not allow the move
+                  validMove = false; 
                   return outerItem;
                 }
-                openBondingModal("create"); // Open bonding modal in create mode
-                validMove = false; // Prevent the move until bonding is resolved
+                openBondingModal("create"); 
+                validMove = false;
                 return outerItem;
               }
-              // Add the item to the target interface
               return {
                 ...outerItem,
                 children: [...outerItem.children, item],
@@ -177,7 +175,7 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
             }
             return outerItem;
           })
-          .filter((outerItem) => outerItem.children.length > 0 || outerItem.networks.length > 0); // Remove empty outer
+          .filter((outerItem) => outerItem.children.length > 0 || outerItem.networks.length > 0); 
   
         return validMove ? updatedOuter : prevOuter;
       });
@@ -215,14 +213,12 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
       setOuter((prevOuter) =>
         prevOuter.map((outerItem) => {
           if (outerItem.id === parentId) {
-            // Remove the network from the source outer
             return {
               ...outerItem,
               networks: outerItem.networks.filter((network) => network.id !== item.id),
             };
           }
           if (outerItem.id === targetId) {
-            // Add the network to the target outer
             if (outerItem.networks.length > 0) {
               alert("1개의 네트워크만 걸 수 있습니다.");
               return outerItem;

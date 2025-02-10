@@ -1,16 +1,7 @@
 /*새로만들기*/
 .vm-edit-popup {
-  border: 1px solid #dfdddd;
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 4px;
-  background: #fff;
-  top: 50%;
   height: 84.4vh;
   width: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
 }
 .cpu-res-box {
   display: flex;
@@ -81,10 +72,6 @@
 .cpu-res-box select,
 .cpu-res input {
   width: 47%;
-  height: 3.3vh;
-  padding: 0 3px;
-  cursor: pointer;
-  font-size: 0.29rem;
 }
 
 .edit-second-content > div,
@@ -109,7 +96,6 @@
 .host-second-content {
   padding: 2%;
 }
-
 .ha-mode-second-content {
   padding: 2%;
 }
@@ -125,10 +111,6 @@
 
 .ha-mode-second-content > div:nth-child(n + 2) select {
   width: 47%;
-  height: 3.3vh;
-  padding: 0 3px;
-  cursor: pointer;
-  font-size: 0.29rem;
 }
 
 .ha-mode-article > span {
@@ -144,9 +126,6 @@
 #threads input[type="text"],
 .boot-checkboxs input[type="text"] {
   width: 94%;
-  height: 3.3vh;
-  padding: 0 3px;
-  cursor: pointer;
 }
 .edit-third-content {
   padding: 2.3% 2% 2% 2%;
@@ -188,34 +167,13 @@
 
 /*가상머신 ... 버튼 새템플릿 생성*/
 .new-template-popup {
-  border: 1px solid #dfdddd;
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 4px;
-  background: #fff;
-  top: 50%;
-  height: 77vh;
   width: 45%;
-  left: 50%;
-  font-size: 0.33rem;
-  transform: translate(-50%, -50%);
-  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
 }
 
 /*스냅샷 생성*/
 .snapshot-new-popup {
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 4px;
-  background: #fff;
-  top: 50%;
-  font-size: 0.34rem;
   height: 52%;
   width: 32%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
 }
 .snapshot-new-table {
   max-height: 21vh;
@@ -228,18 +186,8 @@
 }
 /*..버튼 가져오기 팝업*/
 .vm-bring-popup {
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 4px;
-  background: #fff;
-  top: 50%;
-  font-size: 0.34rem;
   height: 85%;
   width: 69%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
 }
 .load-btn {
   width: 4%;
@@ -259,18 +207,8 @@
 }
 /*호스트 장치(장치추가 팝업)*/
 .device-add-popup-outer {
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 4px;
-  background: #fff;
-  top: 50%;
-  font-size: 0.34rem;
   height: 92%;
   width: 74%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
 }
 
 .able-host-device-table {
@@ -278,48 +216,7 @@
   overflow-y: auto; /* 세로 스크롤 추가 */
   overflow-x: hidden; /* 가로 스크롤 숨김 */
 }
-/* .select-box select{
-    width: 47%;
-    height: 3.3vh;
-    padding: 0 3px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.29rem; 
-} */
-/*호스트 장치(View CPU Pinning 팝업)*/
-.device-view-popup-outer {
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 4px;
-  background: #fff;
-  top: 50%;
-  font-size: 0.34rem;
-  height: 92%;
-  width: 42%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-}
-.device-view-popup {
-  overflow-y: auto; /* 세로 스크롤 추가 */
-  overflow-x: hidden; /* 가로 스크롤 숨김 */
-  padding: 0.5rem;
-  height: 79vh;
-}
-.device-view-boxs {
-  padding: 0.3rem 1.2rem;
-}
-.device-view-boxs > span {
-  display: block;
-}
-.device-view-box {
-  box-shadow: 0 6px 7px rgba(0, 0, 0, 0.3);
-  width: 35%;
-  border-raius: 3px;
-  height: 15vh;
-  padding: 0.1rem;
-}
+
 /*네트워크 인터페이스 */
 .network_content_detail {
   font-size: 0.3rem;
@@ -351,36 +248,17 @@
 .network-popup-content input[type="text"],
 .network-popup-content select {
   width: 47%;
-  height: 3.3vh;
-  padding: 0 3px;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 0.29rem;
-  border: 1px solid #a7a6a6;
 }
 /*마이그레이션 팝업*/
 .migration-popup-content {
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 4px;
-  background: #fff;
-  top: 50%;
-  font-size: 0.34rem;
   height: 42%;
   width: 70%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
 }
 .migration-article-outer {
   padding: 0.4rem;
 }
 .migration-dropdown {
   margin-bottom: 0.2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 .migration-article > div:last-child {
   width: 100%;
@@ -399,19 +277,8 @@
 }
 /* 삭제모달창 */
 .vm-delete-popup {
-  border: 1px solid #dfdddd;
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 4px;
-  height: 30vh;
-  background: #fff;
-  top: 50%;
   max-height: 90%;
-  overflow-y: auto;
   width: 38%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
 }
 .vm-delete-popup {
   display: flex;
@@ -422,18 +289,8 @@
 }
 /*ova내보내기*/
 .vm-ova-popup {
-  border: 1px solid #dfdddd;
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 4px;
-  background: #fff;
-  top: 50%;
   height: 34.4vh;
-  font-size: 0.32rem;
   width: 33%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
 }
 .ova-new-box {
   display: flex;
@@ -443,10 +300,4 @@
 .ova-new-box select,
 .ova-new-box input {
   width: 47%;
-  height: 3.3vh;
-  padding: 0 3px;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 0.29rem;
-  border: 1px solid #a7a6a6;
 }

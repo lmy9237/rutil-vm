@@ -246,13 +246,13 @@ class TemplateController: BaseController() {
 	}
 
 	@ApiOperation(
-		httpMethod="DELETE",
-		value="템플릿 Nic 삭제",
-		notes="템플릿을 Nic 삭제한다"
+		httpMethod = "DELETE",
+		value = "템플릿 Nic 삭제",
+		notes = "템플릿의 Nic을 삭제한다."
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name="templateId", value="템플릿 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="nicId", value="nic ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "templateId", value = "템플릿 ID", dataTypeClass = String::class, required = true, paramType = "path"),
+		ApiImplicitParam(name = "nicId", value = "nic ID", dataTypeClass = String::class, required = true, paramType = "path")
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
@@ -261,16 +261,20 @@ class TemplateController: BaseController() {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun removeNic(
-		@RequestBody templateId: String? = null,
-		@RequestBody nicId: String? = null,
+		@PathVariable templateId: String,
+		@PathVariable nicId: String
 	): ResponseEntity<Boolean> {
-		if (templateId.isNullOrEmpty())
+		if (templateId.isNullOrEmpty()) {
 			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
-		if (nicId.isNullOrEmpty())
+		}
+		if (nicId.isNullOrEmpty()) {
 			throw ErrorPattern.NIC_VO_INVALID.toException()
-		log.info("/computing/templates/{}/nics/{} ... 템플릿 nic 삭제", templateId, nicId)
+		}
+
+		log.info("/computing/templates/{}/nics/{} ... 템플릿 NIC 삭제", templateId, nicId)
 		return ResponseEntity.ok(iTemplate.removeNicFromTemplate(templateId, nicId))
 	}
+
 
 	@ApiOperation(
 		httpMethod="GET",

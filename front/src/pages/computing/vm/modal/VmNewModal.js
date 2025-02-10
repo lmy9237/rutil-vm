@@ -537,7 +537,7 @@ const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
-      <div className="vm-edit-popup">
+      <div className="vm-edit-popup modal">
         <div className="popup-header">
           <h1>{editMode ? '가상머신 편집' : '가상머신 생성'}</h1>
           <button onClick={onClose}>

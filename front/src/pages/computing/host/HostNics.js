@@ -224,14 +224,8 @@ const HostNics = ({ hostId }) => {
             </div>
         ))}
       </div>
-{/* 
+
       <NetworkHostModal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        nicData={nics}
-        hostId={hostId}
-      /> */}
-          <NetworkHostModal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
         nicData={nics}

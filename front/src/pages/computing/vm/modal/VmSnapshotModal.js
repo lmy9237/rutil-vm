@@ -105,7 +105,7 @@ const VmSnapshotModal = ({ isOpen, data, vmId, onClose }) => {
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
-      <div className="snapshot-new-popup">
+      <div className="snapshot-new-popup modal">
         <div className="popup-header">
           <h1>스냅샷 생성</h1>
           <button onClick={onClose}>

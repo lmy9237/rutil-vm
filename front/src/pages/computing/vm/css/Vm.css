@@ -9,11 +9,11 @@
     width: 35%;
     height: 38vh;
 }
-.detail_general_mini_box{
+.detail-general-mini-box{
     width: 25%;
     height: 33vh;
 }
-.detail_general_mini_box>div:first-child,
+.detail-general-mini-box>div:first-child,
 .detail-general-box>div:first-child
 {
     font-size:0.4rem;

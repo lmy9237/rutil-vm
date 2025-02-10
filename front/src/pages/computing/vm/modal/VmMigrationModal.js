@@ -51,7 +51,7 @@ const VmMigrationModal = ({ isOpen, onRequestClose, selectedVm = {},selectedVms 
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
-      <div className="migration-popup-content">
+      <div className="migration-popup-content modal">
         <div className="popup-header">
           <h1>가상머신 마이그레이션</h1>
           <button onClick={onRequestClose}>
@@ -63,7 +63,7 @@ const VmMigrationModal = ({ isOpen, onRequestClose, selectedVm = {},selectedVms 
 
           <div className="migration-article">
             <div>
-              <div className="migration-dropdown">
+              <div className="migration-dropdown center">
                 <label htmlFor="host">
                   대상 호스트 <FontAwesomeIcon icon={faInfoCircle} fixedWidth />
                 </label>

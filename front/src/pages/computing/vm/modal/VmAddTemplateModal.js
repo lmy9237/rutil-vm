@@ -37,25 +37,35 @@ const VmAddTemplateModal = ({
   const [selectedCpuProfile, setSelectedCpuProfile] = useState(''); // 선택된 CPU 프로파일 ID
   
   useEffect(() => {
-    console.log('VM ID아아아:', vmId); //잘찍힘
+    console.log('VM ID아아아:', vmId);
   }, [vmId]);
-  console.log('vmId:', vmId);
-  console.log('vmVo:', {
+  console.log('vmIdddggg:', vmId);
+  console.log('vmVogggggg:', {
     id: selectedVm?.id || '',
     name: selectedVm?.name || '',
+    dataCenterId: selectedVm?.dataCenterVo.id || '',
   });
-  // 데이터센터 ID 가져오기
-  useEffect(() => {
-    if (selectedVm?.dataCenterId) {
-      setDataCenterId(selectedVm.dataCenterId);
-    }
-  }, [selectedVm]);
 
+  useEffect(() => {
+    if (isOpen && selectedVm?.dataCenterVo.id) {
+      setDataCenterId(selectedVm.dataCenterVo.id);
+    }
+  }, [isOpen, selectedVm]);
+  
   // 데이터센터 ID 기반으로 클러스터 목록 가져오기
-  const { data: clustersFromDataCenter } = useClustersFromDataCenter(dataCenterId, (cluster) => ({
-    id: cluster.id,
-    name: cluster.name,
-  }));
+  const { data: clustersFromDataCenter } = useClustersFromDataCenter(
+    isOpen && dataCenterId ? dataCenterId : null,  // 모달이 열렸을 때만 실행
+    (cluster) => ({
+      id: cluster.id,
+      name: cluster.name,
+    })
+  );
+
+  useEffect(() => {
+    console.log("클러스터 데이터 조회 결과:", clustersFromDataCenter);
+  }, [clustersFromDataCenter]);
+
+
   useEffect(() => {
     if (clustersFromDataCenter) {
       setClusters(clustersFromDataCenter);
@@ -227,7 +237,7 @@ const handleFormSubmit = () => {
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
-      <div className="new-template-popup" style={{ height: isSubtemplate ? '88vh' : '77vh' }}>
+      <div className="new-template-popup modal" style={{ height: isSubtemplate ? '88vh' : '77vh' }}>
         <div className="popup-header">
           <h1>새 템플릿</h1>
           <button onClick={onRequestClose}>

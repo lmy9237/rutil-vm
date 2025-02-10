@@ -52,7 +52,7 @@ const VmExportOVAModal = ({ isOpen, onRequestClose, selectedVms }) => {
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
-      <div className="vm-ova-popup">
+      <div className="vm-ova-popup modal">
         <div className="popup-header">
           <h1>가상 어플라이언스로 가상 머신 내보내기</h1>
           <button onClick={onRequestClose}>
@@ -60,7 +60,7 @@ const VmExportOVAModal = ({ isOpen, onRequestClose, selectedVms }) => {
           </button>
         </div>
 
-        <div className="py-1">
+        <div>
           <div className="ova-new-box">
             <label htmlFor="host_select">호스트</label>
             <select

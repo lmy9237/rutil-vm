@@ -23,7 +23,7 @@ const NetworkActionButtons = ({ openModal, isEditDisabled, isDeleteDisabled,type
           {label}
         </button>
       ))}
-      <button className='right-click-menu-btn' onClick={() => navigate('/vnicProfiles')}>vnicProfile</button>
+      <button className='right-click-menu-btn' onClick={() => navigate('/vnicProfiles')}>vNICProfile</button>
     </div>
   );
 };

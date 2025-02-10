@@ -92,7 +92,6 @@
 .network-separation-left > div:first-child {
   display: flex;
   justify-content: space-between;
-  height: 13%;
 }
 .network-item {
   padding: 15px;

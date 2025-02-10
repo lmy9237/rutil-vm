@@ -17,8 +17,8 @@ const VmDisks = ({ vmId }) => {
    
   return (
     <div>
-      <div className="disk-type">
-        <div className="flex">
+
+        <div className="host-filter-btns" style={{ marginBottom: 0 }}>
           <span>디스크 유형: </span>
           {diskTypes.map(({ type, label }) => (
             <button
@@ -29,7 +29,7 @@ const VmDisks = ({ vmId }) => {
             </button>
           ))}
         </div>
-      </div>
+   
 
       <VmDiskDupl
         vmDisks={activeDiskType === 'all' ? disks

@@ -2478,6 +2478,31 @@ background-color: #f0f0f0;
     transform: translate(-50%, -50%);
     box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
     font-size:0.33rem;
+
+    호스트 장치(View CPU Pinning 팝업)
+.device-view-popup-outer {
+    height: 92%;
+    width: 42%;
+  }
+  .device-view-popup {
+    overflow-y: auto; 
+    overflow-x: hidden; 
+    padding: 0.5rem;
+    height: 79vh;
+  }
+  .device-view-boxs {
+    padding: 0.3rem 1.2rem;
+  }
+  .device-view-boxs > span {
+    display: block;
+  }
+  .device-view-box {
+    box-shadow: 0 6px 7px rgba(0, 0, 0, 0.3);
+    width: 35%;
+    border-raius: 3px;
+    height: 15vh;
+    padding: 0.1rem;
+  }
 */
 
 /* Computing.css */

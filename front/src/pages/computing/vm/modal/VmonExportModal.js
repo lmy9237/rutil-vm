@@ -46,7 +46,7 @@ const VmonExportModal = ({ isOpen, onRequestClose, selectedVm }) => {
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
-      <div className="vm-bring-popup">
+      <div className="vm-bring-popup modal">
         <div className="popup-header">
           <h1>가상머신 가져오기</h1>
           <button onClick={onRequestClose}>
