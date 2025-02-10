@@ -33,7 +33,7 @@ class BasicConfiguration {
 		private const val PNAME_POSTGRES_JDBC_PROTOCOL = "postgres.jdbc.protocol"
 		private const val PNAME_POSTGRES_JDBC_URL = "postgres.jdbc.url"
 		private const val PNAME_POSTGRES_JDBC_PORT = "postgres.jdbc.port"
-		
+
 		private const val PNAME_POSTGRES_DATA_SOURCE_DB = "postgres.dataSource.db"
 		private const val PNAME_POSTGRES_DATA_SOURCE_ID = "postgres.dataSource.jdbc.id"
 		private const val PNAME_POSTGRES_DATA_SOURCE_PW = "postgres.dataSource.jdbc.pw"
@@ -43,9 +43,13 @@ class BasicConfiguration {
 		private const val PNAME_POSTGRES_DATA_SOURCE_ENGINE_PW = "postgres.dataSourceEngine.jdbc.pw"
 
 		private const val PROP_APP_FULL_PATH = "application.properties"
+		private const val PNAME_APP_NAME = "application.name"
+		private const val PNAME_APP_VERSION = "application.version"
 		private const val PNAME_APP_OVIRT_IP = "application.ovirt.ip"
 		private const val PNAME_APP_OVIRT_VNC_IP = "application.ovirt.vnc.ip"
 		private const val PNAME_APP_OVIRT_VNC_PORT = "application.ovirt.vnc.port"
+
+
 
 		private val propH: PropertiesHelper = PropertiesHelper.getInstance()
 		@Volatile private var INSTANCE: BasicConfiguration? = null
@@ -60,6 +64,16 @@ class BasicConfiguration {
 			return bc
 		}
 	}
+	val appName: String
+		get() = appProp?.get(PNAME_APP_NAME).toString()
+	val appVersion: String
+		get() = appProp?.get(PNAME_APP_VERSION).toString()
+	val ovirtIp: String
+		get() = appProp?.get(PNAME_APP_OVIRT_IP).toString()
+	val ovirtVncIp: String
+		get() = appProp?.get(PNAME_APP_OVIRT_VNC_IP).toString()
+	val ovirtVncPort: Int
+		get() = appProp?.get(PNAME_APP_OVIRT_VNC_PORT).toString().toIntOrNull() ?: 9999
 
 	val postgresDriverClassname: String
 		get() = databaseProp?.get(PNAME_POSTGRES_DRIVER_CLASS_NAME).toString()
@@ -86,12 +100,6 @@ class BasicConfiguration {
 		get() = commonProp?.get(PNAME_SYSTEM_ADMIN_ID).toString()
 	val systemAdminPw: String
 		get() = commonProp?.get(PNAME_SYSTEM_ADMIN_PW).toString()
-	val ovirtIp: String
-		get() = appProp?.get(PNAME_APP_OVIRT_IP).toString()
-	val ovirtVncIp: String
-		get() = appProp?.get(PNAME_APP_OVIRT_VNC_IP).toString()
-	val ovirtVncPort: Int
-		get() = appProp?.get(PNAME_APP_OVIRT_VNC_PORT).toString().toIntOrNull() ?: 9999
 	val ovirtThresholdCpu: Int
 		get() = commonProp?.get(PNAME_SYSETM_OVIRT_THRESHOLD_CPU).toString().toIntOrNull() ?: 80
 	val ovirtThresholdMemory: Int

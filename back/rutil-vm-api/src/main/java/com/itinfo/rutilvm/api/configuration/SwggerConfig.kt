@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.configuration
 
 import com.itinfo.rutilvm.common.LoggerDelegate
+import com.itinfo.rutilvm.util.BasicConfiguration
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -20,6 +21,11 @@ import springfox.documentation.spring.web.plugins.Docket
 @Configuration
 @Import(BeanValidatorPluginsConfiguration::class)
 class SwaggerConfig {
+
+	private val basicConf
+		get() = BasicConfiguration.getInstance()
+
+
     @Bean
     fun api(): Docket {
         log.debug("... api")
@@ -38,11 +44,11 @@ class SwaggerConfig {
 
     private fun apiInfo(): ApiInfo {
         return ApiInfo(
-            "RutilVM",
-            "RutilVM API",
-            "0.0.2",
-            "Terms of service",
-            Contact("ititcloud", "https://github.com/ITJEONGBO", "itcloud@ititinfo.com"),
+			basicConf.appName,
+            "${basicConf.appName} API",
+			basicConf.appVersion,
+            "Terms of Service",
+            Contact("ititcloud", "https://github.com/ititcloud", "itcloud@ititinfo.com"),
             "Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0", emptyList()
         )
     }

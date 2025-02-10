@@ -21,9 +21,9 @@ import org.springframework.web.servlet.resource.ResourceResolverChain
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView
 import javax.servlet.http.HttpServletRequest
 
-
 @Configuration
-@ComponentScan(basePackages = ["com.itinfo.rutilvm"],
+@ComponentScan(
+	basePackages = ["com.itinfo.rutilvm.api"],
 	includeFilters = [
 		ComponentScan.Filter(type = FilterType.ANNOTATION, classes = [Controller::class]),
 		ComponentScan.Filter(type = FilterType.ANNOTATION, classes = [Service::class]),
@@ -32,15 +32,16 @@ import javax.servlet.http.HttpServletRequest
 	]
 )
 class WebMvcConfig : WebMvcConfigurer {
-/*
-	override fun configureViewResolvers(registry: ViewResolverRegistry) {
-		log.info("... configureViewResolvers")
-		registry.viewResolver(jspViewResolver())
-		registry.jsp("/WEB-INF/views/", ".jsp")
-		// super.configureViewResolvers(registry)
-	}
-*/
-	@Bean(name=["jsonView"])
+	/*
+		override fun configureViewResolvers(registry: ViewResolverRegistry) {
+			log.info("... configureViewResolvers")
+			registry.viewResolver(jspViewResolver())
+			registry.jsp("/WEB-INF/views/", ".jsp")
+			// super.configureViewResolvers(registry)
+		}
+	*/
+
+	@Bean(name = ["jsonView"])
 	fun jsonView(): MappingJackson2JsonView {
 		log.info("... jsonView")
 		return MappingJackson2JsonView().apply {
@@ -57,7 +58,6 @@ class WebMvcConfig : WebMvcConfigurer {
 			addAllowedOrigin(URL_REACT_DEV) // 리엑트 돌릴 때
 			allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
 			allowedHeaders = listOf("*")
-			exposedHeaders = listOf("*")
 		}
 		return UrlBasedCorsConfigurationSource().apply {
 			registerCorsConfiguration("/**", config)
@@ -67,7 +67,11 @@ class WebMvcConfig : WebMvcConfigurer {
 	override fun addCorsMappings(registry: CorsRegistry) {
 		registry.addMapping("/**")
 			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-			.allowedOrigins(URL_REACT_DEV)
+			.allowedOrigins("*")
+//			.allowedOrigins(URL_REACT_DEV, URL_REACT_DEV_SSL)
+			.allowedHeaders("*")
+			.maxAge(3000)
+
 		super.addCorsMappings(registry)
 	}
 
@@ -91,33 +95,45 @@ class WebMvcConfig : WebMvcConfigurer {
 //		}
 //	}
 
-
 	override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
 		log.info("addResourceHandlers ...")
-		// registry.addResourceHandler("/css/**").addResourceLocations("classpath:static/static/css/")
-		// registry.addResourceHandler("/js/**").addResourceLocations("classpath:static/static/js/")
-		// registry.addResourceHandler("/externlib/**").addResourceLocations("classpath:static/externlib/")
-		registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/",
-				"classpath:/resources/",
-				"classpath:/static/",
-				"classpath:/public/"
+//		registry.addResourceHandler("/css/**").addResourceLocations("classpath:static/static/css/")
+//		registry.addResourceHandler("/js/**").addResourceLocations("classpath:static/static/js/")
+// 		registry.addResourceHandler("/externlib/**").addResourceLocations("classpath:static/externlib/")
+		registry.addResourceHandler("/**").addResourceLocations(
+			"classpath:/META-INF/resources/",
+			"classpath:/resources/",
+			"classpath:/static/",
+			"classpath:/public/"
 		)
-		registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/")
-		registry.addResourceHandler("/images_old/**").addResourceLocations("classpath:/static/images_old/")
-		registry.addResourceHandler("/fonts/**").addResourceLocations("classpath:/static/fonts/")
-		registry.addResourceHandler("/vendors/**").addResourceLocations("classpath:/static/vendors/")
+		registry.addResourceHandler("/images/**")
+			.addResourceLocations("classpath:/static/images/")
+		registry.addResourceHandler("/images_old/**")
+			.addResourceLocations("classpath:/static/images_old/")
+		registry.addResourceHandler("/fonts/**")
+			.addResourceLocations("classpath:/static/fonts/")
+		registry.addResourceHandler("/vendors/**")
+			.addResourceLocations("classpath:/static/vendors/")
+
 		// SwaggerConfig
-		registry.addResourceHandler("/v2/api-docs/**").addResourceLocations("classpath:/META-INF/resources/")
-		registry.addResourceHandler("/swagger-ui.html**").addResourceLocations("classpath:/META-INF/resources/")
-		registry.addResourceHandler("/swagger-ui/**").addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
-		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/")
+		registry.addResourceHandler("/v2/api-docs/**")
+			.addResourceLocations("classpath:/META-INF/resources/")
+		registry.addResourceHandler("/swagger-ui.html**")
+			.addResourceLocations("classpath:/META-INF/resources/")
+		registry.addResourceHandler("/swagger-ui/**")
+			.addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
+		registry.addResourceHandler("/webjars/**")
+			.addResourceLocations("classpath:/META-INF/resources/webjars/")
 
 		this.serveDirectory(registry, "/", "classpath:/static/")
 		super.addResourceHandlers(registry)
 	}
 
-
-	private fun serveDirectory(registry: ResourceHandlerRegistry, endpoint: String, location: String) {
+	private fun serveDirectory(
+		registry: ResourceHandlerRegistry,
+		endpoint: String,
+		location: String
+	) {
 		// implementation will come here
 		// 1
 		val endpointPatterns: Array<String> = if (endpoint.endsWith("/"))
@@ -136,7 +152,8 @@ class WebMvcConfig : WebMvcConfigurer {
 					locations: MutableList<out Resource>,
 					chain: ResourceResolverChain
 				): Resource? {
-					val resource: Resource? = super.resolveResource(request, requestPath, locations, chain)
+					val resource: Resource? =
+						super.resolveResource(request, requestPath, locations, chain)
 					if (resource != null)
 						return resource
 					return super.resolveResource(request, "/index.html", locations, chain)
@@ -146,6 +163,7 @@ class WebMvcConfig : WebMvcConfigurer {
 
 	companion object {
 		const val URL_REACT_DEV = "http://localhost:3000"
+		const val URL_REACT_DEV_SSL = "https://localhost:3000"
 		private val log by LoggerDelegate()
 	}
 }

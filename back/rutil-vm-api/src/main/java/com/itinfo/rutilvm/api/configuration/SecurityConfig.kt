@@ -9,9 +9,11 @@ import com.itinfo.rutilvm.security.SecurityConnectionService
 */
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.Customizer
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer
 import org.springframework.security.config.http.SessionCreationPolicy
 
 import org.springframework.security.web.SecurityFilterChain
@@ -20,7 +22,6 @@ import kotlin.jvm.Throws
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(securedEnabled = true)
 class SecurityConfig(
 
 ) {
@@ -29,9 +30,9 @@ class SecurityConfig(
 	@Throws(Exception::class)
 	fun filterChain(http: HttpSecurity): SecurityFilterChain? {
 		log.debug("... filterChan")
-		http.cors()
-			.and()
+		http.cors(Customizer.withDefaults())
 			.csrf().disable()
+			// .httpBasic().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.exceptionHandling()

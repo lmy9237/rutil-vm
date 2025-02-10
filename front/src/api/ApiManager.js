@@ -3,10 +3,25 @@ import DEFAULT_VALUES from "./DefaultValues"
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-axios.defaults.baseURL = 'https://' + window.location.hostname + ":" + 8443
-// axios.defaults.baseURL = 'https://192.168.0.70:8443'
-axios.defaults.headers.post['Content-Type'] = 'application/json';
-
+// axios.defaults.withCredentials = true;
+/*
+axios.defaults.baseURL = `https://rutilvm-dev.ititinfo.com:8443`
+axios.defaults.baseURL = process.env.BASE_URL_API_STAGING
+axios.defaults.proxy = {
+  host: '192.168.0.70',
+  port: 8444,
+  protocol: 'https'
+}
+*/
+axios.defaults.headers.common['Content-Type'] ='application/json;charset=utf-8';
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+axios.interceptors.request.use(config => {
+  console.log('request INTERCEPTED ...')
+  config.headers['Content-Type'] ='application/json;charset=utf-8';
+  config.headers['Access-Control-Allow-Origin'] = '*';
+  config.headers['Access-Control-Allow-Headers'] = '*';
+  return config;
+});
 /**
  * @name makeAPICall
  * @description axios API 호출
@@ -17,15 +32,17 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 // const makeAPICall = async ({method = "GET", url, data, defaultValues}) => {
 const makeAPICall = async ({method = "GET", url, data}) => {
   try {
-    const res = 
-      (data === null || data === undefined) ? await axios.get(url) 
-      : await axios({
+    const res = await axios({
         method: method,
         url: url,
-        headers: { },
+        headers: {
+          "Content-Type": "application/json",
+          // "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "*",
+        },
         // TODO: access_token으로 모든 API 처리하기
         data: method === "GET" ? null : data,
-    }); 
+    });
     res.headers.get(`access_token`) && localStorage.setItem('token', res.headers.get(`access_token`)) // 로그인이 처음으로 성공했을 때 진행
     return res.data?.body
   } catch(e) {
