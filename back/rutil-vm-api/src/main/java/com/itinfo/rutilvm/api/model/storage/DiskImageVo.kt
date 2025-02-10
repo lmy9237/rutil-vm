@@ -138,7 +138,6 @@ fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		sharable { disk.shareable() }
-		// storageDomainVo { storageDomain?.toStorageDomainIdName() }
 		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
@@ -311,6 +310,23 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
 	}
 }
+
+
+fun Disk.toUnregisterdDisk(): DiskImageVo {
+    val disk = this@toUnregisterdDisk
+//    val diskLink: Disk? = conn.findDisk(this@toUnregisterdDisk.id()).getOrNull()
+    return DiskImageVo.builder {
+        id { disk.id() }
+        alias { disk.alias() }
+        sharable { disk.shareable() }
+        virtualSize { disk.provisionedSize() }
+        actualSize { disk.actualSize() }
+        sparse { disk.sparse() }
+        description { disk.description() }
+    }
+}
+fun List<Disk>.toUnregisterdDisks(): List<DiskImageVo> =
+    this@toUnregisterdDisks.map { it.toUnregisterdDisk() }
 
 
 /**

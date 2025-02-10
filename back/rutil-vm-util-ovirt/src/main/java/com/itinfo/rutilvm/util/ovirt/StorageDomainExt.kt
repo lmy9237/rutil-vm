@@ -213,6 +213,18 @@ fun Connection.findAllVmsFromStorageDomain(storageDomainId: String): Result<List
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun Connection.findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): Result<List<Vm>> = runCatching {
+	if(this.findStorageDomain(storageDomainId).isFailure) {
+		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+	}
+	this.srvVmsFromStorageDomain(storageDomainId).list().unregistered(true).send().vm()
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFailWithin(Term.DISK, "목록조회", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 
 private fun Connection.srvDisksFromStorageDomain(storageId: String): StorageDomainDisksService =
 	this.srvStorageDomain(storageId).disksService()
@@ -222,6 +234,18 @@ fun Connection.findAllDisksFromStorageDomain(storageDomainId: String): Result<Li
 		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 	}
 	this.srvDisksFromStorageDomain(storageDomainId).list().send().disks() ?: listOf()
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFailWithin(Term.DISK, "목록조회", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): Result<List<Disk>> = runCatching {
+	if(this.findStorageDomain(storageDomainId).isFailure) {
+		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+	}
+	this.srvDisksFromStorageDomain(storageDomainId).list().unregistered(true).send().disks() ?: listOf()
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
 }.onFailure {
@@ -246,6 +270,15 @@ private fun Connection.srvTemplatesFromStorageDomain(storageId: String): Storage
 
 fun Connection.findAllTemplatesFromStorageDomain(storageDomainId: String): Result<List<Template>> = runCatching {
 	this.srvTemplatesFromStorageDomain(storageDomainId).list().send().templates()
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.TEMPLATE, "목록조회", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFailWithin(Term.TEMPLATE, "목록조회", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: String): Result<List<Template>> = runCatching {
+	this.srvTemplatesFromStorageDomain(storageDomainId).list().unregistered(true).send().templates()
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.TEMPLATE, "목록조회", storageDomainId)
 }.onFailure {

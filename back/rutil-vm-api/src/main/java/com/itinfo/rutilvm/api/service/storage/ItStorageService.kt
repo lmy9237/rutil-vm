@@ -159,6 +159,15 @@ interface ItStorageService {
 	@Throws(Error::class)
 	fun findAllVmsFromStorageDomain(storageDomainId: String): List<VmVo>
 	/**
+	 * [ItStorageService.findAllUnregisteredVmsFromStorageDomain]
+	 * 스토리지도메인 - 가상머신 불러오기 목록
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @return List<[VmVo]> 가상머신 목록
+	 */
+	@Throws(Error::class)
+	fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmVo>
+	/**
 	 * [ItStorageService.findAllDisksFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 목록
 	 *
@@ -167,6 +176,15 @@ interface ItStorageService {
 	 */
 	@Throws(Error::class)
 	fun findAllDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo>
+	/**
+	 * [ItStorageService.findAllUnregisteredDisksFromStorageDomain]
+	 * 스토리지 도메인 - 디스크 불러오기 목록
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @return List<[DiskImageVo]> 디스크 목록
+	 */
+	@Throws(Error::class)
+	fun findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo>
 	/**
 	 * [ItStorageService.findAllDiskSnapshotsFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 스냅샷 목록
@@ -185,9 +203,15 @@ interface ItStorageService {
 	 */
 	@Throws(Error::class)
 	fun findAllTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo>
-
-	// 스토리지 도메인 - 디스크 목록
-
+    /**
+	 * [ItStorageService.findAllTemplatesFromStorageDomain]
+	 * 스토리지도메인 - 템플릿 불러오기 목록
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @return List<[TemplateVo]> 템플릿 목록
+	 */
+	@Throws(Error::class)
+	fun findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo>
 	/**
 	 * [ItStorageService.findAllDiskProfilesFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 프로파일 목록
@@ -368,8 +392,16 @@ class StorageServiceImpl(
 		return res.toStorageDomainVms(conn, storageDomainId)
 	}
 
+    @Throws(Error::class)
+    override fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmVo> {
+        log.info("findAllUnregisteredVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
+        val res: List<Vm> = conn.findAllUnregisteredVmsFromStorageDomain(storageDomainId)
+            .getOrDefault(listOf())
+        return res.toStorageDomainVms(conn, storageDomainId)
+    }
 
-	@Throws(Error::class)
+
+    @Throws(Error::class)
 	override fun findAllDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo> {
 		log.info("findAllDisksFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<Disk> = conn.findAllDisksFromStorageDomain(storageDomainId)
@@ -377,7 +409,16 @@ class StorageServiceImpl(
 		return res.toDiskMenus(conn)
 	}
 
-	@Throws(Error::class)
+    @Throws(Error::class)
+    override fun findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo> {
+        log.info("findAllUnregisteredDisksFromStorageDomain ... storageDomainId: {}", storageDomainId)
+        val res: List<Disk> = conn.findAllUnregisteredDisksFromStorageDomain(storageDomainId)
+            .getOrDefault(listOf())
+        return res.toUnregisterdDisks()
+    }
+
+
+    @Throws(Error::class)
 	override fun findAllDiskSnapshotsFromStorageDomain(storageDomainId: String): List<SnapshotDiskVo> {
 		log.info("findAllDiskSnapshotsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val diskSnapshots: List<DiskSnapshot> = conn.findAllDiskSnapshotsFromStorageDomain(storageDomainId)
@@ -402,6 +443,14 @@ class StorageServiceImpl(
 	}
 
 	@Throws(Error::class)
+    override fun findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo> {
+        log.info("findAllUnregisteredTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
+        val res: List<Template> = conn.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId)
+            .getOrDefault(listOf())
+        return res.toTemplatesMenu(conn)
+    }
+
+    @Throws(Error::class)
 	override fun findAllDiskProfilesFromStorageDomain(storageDomainId: String): List<DiskProfileVo> {
 		log.info("findAllDiskProfilesFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<DiskProfile> = conn.findAllDiskProfilesFromStorageDomain(storageDomainId)

@@ -334,7 +334,29 @@ class StorageController: BaseController() {
 		log.info("/storages/{}/vms ... 스토리지 도메인 밑에 붙어있는 가상머신 목록", storageDomainId)
 		return ResponseEntity.ok(iDomain.findAllVmsFromStorageDomain(storageDomainId))
 	}
-	
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="스토리지 도메인 가상머신 가져오기 목록",
+		notes="선택된 스토리지 도메인의 가상머신 가져오기 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{storageDomainId}/vms/unregistered")
+	@ResponseBody
+	fun unregisterdVms(
+		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
+	): ResponseEntity<List<VmVo>> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/vms/unregistered ... 스토리지 도메인 밑에 붙어있는 가상머신 가져오기 목록", storageDomainId)
+		return ResponseEntity.ok(iDomain.findAllUnregisteredVmsFromStorageDomain(storageDomainId))
+	}
+
 	@ApiOperation(
 		httpMethod="GET",
 		value="스토리지 도메인 디스크 목록",
@@ -355,6 +377,27 @@ class StorageController: BaseController() {
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/disks ... 스토리지 도메인 밑에 붙어있는 Disk 목록", storageDomainId)
 		return ResponseEntity.ok(iDomain.findAllDisksFromStorageDomain(storageDomainId))
+	}
+	@ApiOperation(
+		httpMethod="GET",
+		value="스토리지 도메인 디스크 불러오기 목록",
+		notes="선택된 스토리지 도메인의 디스크 불러오기 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{storageDomainId}/disks/unregistered")
+	@ResponseBody
+	fun unregisteredDisks(
+		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
+	): ResponseEntity<List<DiskImageVo>> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/disks/unregistered ... 스토리지 도메인 밑에 붙어있는 Disk 불러오기 목록", storageDomainId)
+		return ResponseEntity.ok(iDomain.findAllUnregisteredDisksFromStorageDomain(storageDomainId))
 	}
 
 	@ApiOperation(
@@ -399,6 +442,28 @@ class StorageController: BaseController() {
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/templates ... 스토리지 도메인 밑에 붙어있는 템플릿 목록", storageDomainId)
 		return ResponseEntity.ok(iDomain.findAllTemplatesFromStorageDomain(storageDomainId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="스토리지 도메인 템플릿 가져오기 목록",
+		notes="선택된 스토리지 도메인의 템플릿 가져오기 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{storageDomainId}/templates/unregistered")
+	@ResponseBody
+	fun unregisteredTemplates(
+		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
+	): ResponseEntity<List<TemplateVo>> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/templates/unregistered ... 스토리지 도메인 밑에 붙어있는 템플릿 목록", storageDomainId)
+		return ResponseEntity.ok(iDomain.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId))
 	}
 
 
