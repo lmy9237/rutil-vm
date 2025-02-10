@@ -158,9 +158,9 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
           <div id="storage_img_btn" onClick={() => handleTabClick('img')} className={activeTab === 'img' ? 'active' : ''} >
             이미지
           </div>
-          <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
+          {/* <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
             직접 LUN
-          </div>
+          </div> */}
         </div>
 
         {/*이미지*/}
@@ -218,7 +218,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
         )} 
 
         {/* 직접LUN */}
-        {activeTab === 'directlun' && (
+        {/* {activeTab === 'directlun' && (
           <div id="storage-directlun-outer">
             <div id="storage-lun-first">
               <div className="disk-new-img-left">
@@ -257,7 +257,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
         <div className="edit-footer">
           <button style={{ display: 'none' }}></button>
           <button onClick={handleFormSubmit}>{dLabel}</button>

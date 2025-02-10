@@ -14,6 +14,7 @@ const VmDiskModals = ({ activeModal, vmId, disk, selectedDisks = [], onClose }) 
         isOpen={activeModal === 'create'} 
         vm={vm}
         dataCenterId={vm?.dataCenterVo?.id}
+        
         onClose={onClose} 
       />,
     edit: (

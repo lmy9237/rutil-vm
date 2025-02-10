@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { 
   useAllActiveDomainFromDataCenter, 
   useAllDiskProfileFromDomain,
   useAddDiskFromVM,
   useEditDiskFromVM,
   useEditDisk,
+  useDiskAttachmentFromVm,
 } from '../../../../api/RQHook';
 import toast from 'react-hot-toast';
 import LabelInput from '../../../../utils/LabelInput';
@@ -62,11 +61,11 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
 
 
   // 디스크 데이터 가져오기
-  // const {
-  //   data: diskAtt,
-  //   refetch: refetchDisk,
-  //   isLoading: isDiskLoading
-  // } = useDiskAttachmentFromVm(vm?.id, diskAttachment?.id);
+  const {
+    data: diskAtt,
+    refetch: refetchDisk,
+    isLoading: isDiskLoading
+  } = useDiskAttachmentFromVm(vm?.id, diskAttachment?.id);
 
   // 선택한 데이터센터가 가진 도메인 가져오기
   const {
@@ -81,7 +80,6 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
     refetch: diskProfilesRefetch,
     isLoading: isDiskProfilesLoading,
   } = useAllDiskProfileFromDomain(domainVoId, (e) => ({...e,}));  
-
 
   useEffect(() => {
     if (!isOpen) return setFormState(initialFormState);
@@ -102,16 +100,16 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
         cancelActive: diskAttachment?.cancelActive || false,
         backup: diskAttachment?.diskImageVo?.backup || false,
       });
-      setDomainVoId(diskAttachment?.diskImageVo?.storageDomainVo?.id || '');
+      setDomainVoId(diskAttachment?.diskImageVo?.storageDomainVo?.id);
       setDiskProfileVoId(diskAttachment?.diskImageVo?.diskProfileVo?.id || '');
     }
   }, [isOpen, editMode, diskAttachment]);
 
   useEffect(() => {
-    if (!editMode && domains.length > 0) {
-      setDomainVoId(domains[0].id);
-    }
-  }, [domains, editMode]);
+      if (!editMode && domains.length > 0) {
+        setDomainVoId(domains[0].id);
+      }
+    }, [domains, editMode]);
 
   useEffect(() => {
     if (!editMode && diskProfiles.length > 0) {
@@ -133,7 +131,6 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
     setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
   };
   
-
   const validateForm = () => {
     if (!formState.alias) return '별칭을 입력해주세요.';
     if (!formState.size) return '크기를 입력해주세요.';
@@ -142,11 +139,10 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
     return null;
   };
 
-    // vm disk에서 생성 (가상머신 생성x)
+  // vm disk에서 생성 (가상머신 생성x)
   const handleOkClick = () => {
     if (!formState.alias || !formState.size || !domainVoId || !diskProfileVoId) {
-      toast.error('필수 값을 입력하세요.');
-      return;
+      return toast.error('필수 값을 입력하세요.');
     }
 
     const newDisk = {
@@ -160,17 +156,13 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
       diskProfileVo: { id: diskProfileVoId },
       isCreated: true, // 🚀 생성된 디스크는 isCreated: true
     };
-
     onCreateDisk(newDisk);
     onClose();
   };
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) {
-      toast.error(error);
-      return;
-    }
+    if (error) return toast.error(error);
     
     const sizeToBytes = parseInt(formState.size, 10) * 1024 * 1024 * 1024; // GB -> Bytes 변환
     const appendSizeToBytes = parseInt(formState.appendSize || 0, 10) * 1024 * 1024 * 1024; // GB -> Bytes 변환 (기본값 0)
@@ -197,33 +189,20 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
         diskProfileVo: { id: selectedDiskProfile?.id, name: selectedDiskProfile?.name },
       }
     }
-    console.log("Form Data: ", dataToSubmit); // 데이터 확인 로그
 
-    if (editMode) {
-      editDiskVm(
-        { vmId: vm?.id, diskAttachmentId: diskAttachment?.id, diskAttachment: dataToSubmit }, {
-        onSuccess: () => {
-          toast.success("가상머신 디스크 편집 완료");
-          onClose();
-        },
-        onError: (error) => {
-          toast.error('Error editing cluster:', error);
-        }
-      });
-    } else {
-      addDiskVm(
-        { vmId: vm?.id, diskData: dataToSubmit },
-        {
-        onSuccess: () => {
-          toast.success("가상머신 디스크 생성 완료");
-          onClose(); // 성공 시 모달 닫기
-        },
-        onError: (error) => {
-          toast.error('오류 발생:', error);
-        },
-      });
-    }
+    const onSuccess = () => {
+      onClose();
+      toast.success(`가상머신 디스크 ${dLabel} 완료`);
+    };
+    const onError = (err) => toast.error(`Error ${dLabel} disk: ${err}`);
+
+    console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
+    
+    editMode 
+      ? editDiskVm({ vmId: vm?.id, diskAttachmentId: diskAttachment?.id, diskAttachment: dataToSubmit }, { onSuccess, onError })
+      : addDiskVm({ vmId: vm?.id, diskData: dataToSubmit }, { onSuccess, onError });
   };
+
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel={dLabel} className="Modal" overlayClassName="Overlay newRolePopupOverlay" shouldCloseOnOverlayClick={false} >
@@ -237,11 +216,10 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
           <div id="storage_img_btn" onClick={() => handleTabClick('img')} className={activeTab === 'img' ? 'active' : ''} >
             이미지
           </div>
-          <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
+          {/* <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
             직접 LUN
-          </div>
+          </div> */}
         </div>
-
         {/*이미지*/}
         {activeTab === 'img' && (
           <div className="disk-new-img">
@@ -270,7 +248,6 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
                 loading={isDomainsLoading}
                 options={domains}
               />
-              <span>{formState.sparse}</span>
               <LabelSelectOptions
                 className="img-input-box"
                 label="할당 정책"
@@ -290,20 +267,17 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
             </div>
             
             <div className="disk-new-img-right">
-            {!editMode && (
-              <LabelCheckbox label="디스크 활성화" id="active" checked={formState.active} onChange={handleInputChangeCheck('active')} />
-            )}
               <LabelCheckbox label="삭제 후 초기화" id="wipeAfterDelete" checked={formState.wipeAfterDelete} onChange={handleInputChangeCheck('wipeAfterDelete')} />
-              <LabelCheckbox label="부팅 가능" id="bootable" checked={formState.bootable} onChange={handleInputChangeCheck('bootable')} disabled={editMode && !formState.bootable}  />
-              <LabelCheckbox label="공유 가능" id="sharable" checked={formState.sharable} onChange={handleInputChangeCheck('sharable')} disabled={editMode} />
-              <LabelCheckbox label="읽기 전용" id="readOnly" checked={formState.readOnly} onChange={handleInputChangeCheck('readOnly')} disabled={editMode} />
-              <LabelCheckbox label="취소 활성화" id="cancelActive" checked={formState.cancelActive} onChange={handleInputChangeCheck('cancelActive')} disabled={editMode} />
+              <LabelCheckbox label="부팅 가능" id="bootable" checked={formState.bootable} onChange={handleInputChangeCheck('bootable')} disabled={!formState.bootable}  />
+              <LabelCheckbox label="공유 가능" id="sharable" checked={formState.sharable} onChange={handleInputChangeCheck('sharable')} />
+              <LabelCheckbox label="읽기 전용" id="readOnly" checked={formState.readOnly} onChange={handleInputChangeCheck('readOnly')} />
+              <LabelCheckbox label="취소 활성화" id="cancelActive" checked={formState.cancelActive} onChange={handleInputChangeCheck('cancelActive')} />
               <LabelCheckbox label="증분 백업 사용" id="backup" checked={formState.backup} onChange={handleInputChangeCheck('backup')}/>
             </div>
           </div>
-        )} 
+        )}
         {/* 직접LUN */}
-        {activeTab === 'directlun' && (
+        {/* {activeTab === 'directlun' && (
           <div id="storage-directlun-outer">
             <div id="storage-lun-first">
               <div className="disk-new-img-left">
@@ -342,10 +316,10 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
               </div>
             </div>
           </div>
-        )}
+        )} */}
         <div className="edit-footer">
           <button style={{ display: 'none' }}></button>
-          <button onClick={type==="disk" ? handleFormSubmit : handleOkClick}>{editMode ? '편집' : '생성'}</button>
+          <button onClick={type ==="disk" ? handleFormSubmit : handleOkClick}>{dLabel}</button>
           <button onClick={onClose}>취소</button>
         </div>
       </div>
