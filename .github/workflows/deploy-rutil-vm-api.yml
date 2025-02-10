@@ -1,0 +1,122 @@
+#
+# deploy-rutil-vm-api.yml
+# 도커 이미지 생성처리 Github Action
+# 
+# [build]
+#
+# 1. <버전> 값 추출 후 환경변수로 저장
+# 2. Dockerfile을 가지고 docker build 진행
+# 3. 성공 후, hub.docker.com 으로 배포 (ititcloud/rutil-vm-api:<버전>)
+# 4. docker save 실행 후 도커이미지 tar 파일 생성
+# 5. 아티팩트 배출
+#  a. rutil-vm-api-*.tar: 도커이미지 tar 파일 
+#  b. version.txt: <버전> 값
+#
+# NOTE: 
+#    모든 작업이 성공적으로 진행 될 경우
+#    deploy-rutil-vm-api.yml가 다음으로 실행
+#
+# [deploy]
+# 
+# 1. docker-image.yml 가 성공했는지 확인
+# 2. rutil-vm-api*.tar 다운로드 
+#  a. <버전> 값 추출
+#  b. 환경변수 VERSION에 저장
+# 3. rutil-vm-api-*.tar 업로드
+#
+name: Build and Publish RutilVM API Docker Image
+
+on:
+  push:
+    tags:
+      - 'api-v*'  # Triggers on tags with prefix 'v'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract_version.outputs.version }}
+    steps:
+      # Step 1: Check out the repository (if needed for your file operations)
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: Docker Buildx 구성
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Step 3: Docker 로그인 처리
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      # Step 4a: Tag에서 Version값 추출
+      - name: Extract version number
+        id: extract_version
+        run: |
+          VERSION=$(echo "${GITHUB_REF}" | sed -E 's|refs/tags/api-v(.*)|\1|')
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+
+      # Step 4b: Version값 확인
+      - name: Identify the extracted version
+        run: |
+          echo "Extracted version: ${{ env.VERSION }}"
+
+      # Step 5: Docker이미지 빌드
+      - name: Build Docker image
+        run: |
+          docker buildx build --platform linux/amd64 --load -t ${{ secrets.DOCKER_HUB_USERNAME }}/rutil-vm-api:${{ env.VERSION }} ./back
+
+      # Step 6: Docker 이미지 tar파일로 변환
+      - name: Save Docker image as tarball
+        run: |
+          docker save ${{ secrets.DOCKER_HUB_USERNAME }}/rutil-vm-api:${{ env.VERSION }} -o rutil-vm-api-${{ env.VERSION }}.tar
+
+      # Step 6: (Github 아티팩트로) Docker이미지 tar파일 업로드
+      - name: Upload Docker image tarball as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rutil-artifact
+          path: ./rutil-vm-api-${{ env.VERSION }}.tar
+
+      # Step 7: hub.docker.com으로 Docker이미지 푸시
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./back
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/rutil-vm-api:${{ env.VERSION }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      # Step 1: Check out the repository (if needed for your file operations)
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Extract 'version number'
+        run: |
+          VERSION=${{ needs.build.outputs.VERSION }}
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - name: Identify 'version number' 
+        run: |
+          echo "Extracted version: ${{ env.VERSION }}"
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: rutil-artifact
+          path: .
+      - name: Upload Artifact(s)
+        uses: bungabear/synology_upload_action@master
+        with:
+          host:  ${{ secrets.SYNOLOGY_HOST }}
+          username:  ${{ secrets.SYNOLOGY_USERNAME }}
+          password:  ${{ secrets.SYNOLOGY_PASSWORD }}
+          filepath: rutil-vm-api-${{ env.VERSION }}.tar
+          filename:  rutil-vm-api-${{ env.VERSION }}.tar
+          uploadpath: /docker
+          overwrite: true
+          createparent: true

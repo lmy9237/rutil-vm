@@ -1,0 +1,36 @@
+#
+# test-synology-nas-upload
+#
+name: Test Synology NAS Upload
+
+on:
+  push:
+    tags:
+      - 'api-v*'  # Triggers on tags with prefix 'v'
+
+
+jobs:
+  test-synology-connection:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Check out the repository (if needed for your file operations)
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+ 
+      # Step 2: Create a simple test file that will be uploaded to your NAS
+      - name: Create test file
+        run: echo "This is a test file to validate the Synology NAS connection." > test_file.txt
+
+      # Step 3: Use the bungabear/synology_upload_action to upload the test file.
+      # If the connection details are incorrect, this step will fail.
+      - name: Validate connection by uploading test file to Synology NAS
+        uses: bungabear/synology_upload_action@master
+        with:
+          host:  ${{ secrets.SYNOLOGY_HOST }}
+          username:  ${{ secrets.SYNOLOGY_USERNAME }}
+          password:  ${{ secrets.SYNOLOGY_PASSWORD }}
+          filepath: test_file.txt
+          filename: test_file.txt
+          uploadpath: /docker
+          overwrite: true
+          createparent: true

@@ -27,4 +27,4 @@
 
 [shield-nodejs]: https://img.shields.io/badge/Node.js-11.0.23-5FA04E?logo=nodedotjs&logoColor=5FA04E&style=flat-square
 [shield-reactjs]: https://img.shields.io/badge/React.js-18.3.x-61DAFB?logo=react&logoColor=61DAFB&style=flat-square
-[shield-storybook]: https://img.shields.io/badge/Storybook-8.2.x-FF4785?logo=react&logoColor=FF4785&style=flat-square
+[shield-storybook]: https://img.shields.io/badge/Storybook-8.2.x-FF4785?logo=storybook&logoColor=FF4785&style=flat-square

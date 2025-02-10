@@ -75,6 +75,7 @@
   //
   "java.import.gradle.user.home": "C:\\development\\.gradle",
   "java.configuration.updateBuildConfiguration": "interactive",
+  "java.compile.nullAnalysis.mode": "automatic",
   "gradle.allowParallelRun": true,
 }
 ```
