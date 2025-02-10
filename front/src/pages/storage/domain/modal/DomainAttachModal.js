@@ -10,8 +10,8 @@ const DomainAttachModal = ({ isOpen, action, data, datacenterId, onClose }) => {
   // action으로 type 전달
   const { mutate: attachDomain } = useAttachDomain();
   
-  const [id, setId] = useState([]);
-  const [name, setName] = useState([]);
+  const [ids, setId] = useState([]);
+  const [names, setName] = useState([]);
   
   useEffect(() => {
     setId([data.id]);
