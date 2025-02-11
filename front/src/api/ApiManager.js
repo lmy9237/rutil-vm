@@ -2420,11 +2420,11 @@ migrateHostsFromVM: async (vmId) => {
    * @param {String} dataCenterId - 데이터센터 ID
    * @returns {Promise<Object>} API 응답 결과
    */
-  attachDomain: async (domainId, dataCenterId) => {
+  attachDomain: async (storageDomainId, dataCenterId) => {
     return makeAPICall({
       method: "POST",
-      url: ENDPOINTS.ATTACH_FROM_DATACENTER(domainId, dataCenterId), 
-      data: {domainId, dataCenterId}
+      url: ENDPOINTS.ATTACH_FROM_DATACENTER(storageDomainId, dataCenterId), 
+      data: {storageDomainId, dataCenterId}
     });
   },
 

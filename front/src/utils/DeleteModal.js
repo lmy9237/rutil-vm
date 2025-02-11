@@ -22,7 +22,7 @@ const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
     if (!ids.length) return console.error(`삭제할 ${label} ID가 없습니다.`);    
   
     ids.forEach((id, index) => {
-        deleteApi(id, {
+      deleteApi(id, {
         onSuccess: () => {
           if (ids.length === 1 || index === ids.length - 1) { 
             onClose(); 

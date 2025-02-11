@@ -41,7 +41,7 @@ class StorageController: BaseController() {
 		log.info("/storages/domains ... 스토리지 도메인 목록")
 		return ResponseEntity.ok(iDomain.findAll())
 	}
-	
+
 	@ApiOperation(
 		httpMethod="GET",
 		value="스토리지 도메인",
@@ -164,7 +164,7 @@ class StorageController: BaseController() {
 		log.info("Received delete request: storageDomainId={}, format={}, hostName={}", storageDomainId, format, hostName)
 		return ResponseEntity.ok(iDomain.remove(storageDomainId, format, hostName))
 	}
-	
+
 	@ApiOperation(
 		httpMethod="DELETE",
 		value="스토리지 도메인 파괴",
@@ -233,7 +233,7 @@ class StorageController: BaseController() {
 			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-		log.info("/storages/{}/dataCenters/{}/attach ... 데이터센터 연결", storageDomainId, dataCenterId)
+		log.info("/{}/dataCenters/{}/attach ... 데이터센터 연결", storageDomainId, dataCenterId)
 		return ResponseEntity.ok(iDomain.attachFromDataCenter(dataCenterId, storageDomainId))
 	}
 

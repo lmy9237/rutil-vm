@@ -18,15 +18,8 @@ const VMRow = ({ vm, isExpanded, toggleRow }) => (
   <>
     <tr>
       <td onClick={() => toggleRow(vm?.id)} style={{ cursor: 'pointer' }}>
-        <FontAwesomeIcon
-          icon={isExpanded ? faMinusCircle : faPlusCircle}
-          fixedWidth
-        />
-        <FontAwesomeIcon
-          icon={faDesktop}
-          fixedWidth
-          style={{ margin: '0 5px 0 10px' }}
-        />
+        <FontAwesomeIcon icon={isExpanded ? faMinusCircle : faPlusCircle} fixedWidth/>
+        <FontAwesomeIcon icon={faDesktop} style={{ margin: '0 5px 0 10px' }} fixedWidth/>
         {vm?.name || ''}
       </td>
       <td>{vm?.diskAttachments?.length || 0}</td>
@@ -96,14 +89,20 @@ const DomainVms = ({ domainId }) => {
             </tr>
           </thead>
           <tbody>
-            {vms.map((vm) => (
+            {vms.length === 0 ? (
+              <>
+              <tr>
+                <td colSpan={'5'}>없음</td>
+              </tr>
+              </>
+            ) : (vms.map((vm) => (
               <VMRow
                 key={vm.id}
                 vm={vm}
                 isExpanded={isRowExpanded[vm.id]}
                 toggleRow={toggleRow}
               />
-            ))}
+            )))}
           </tbody>
         </table>
       </div>

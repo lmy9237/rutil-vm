@@ -42,10 +42,8 @@ fun Connection.findStorageDomain(storageDomainId: String): Result<StorageDomain>
 
 
 fun Connection.attachStorageDomainsToDataCenter(storageDomainId: String, dataCenterId: String): Result<Boolean> = runCatching {
-	this.srvDataCenter(dataCenterId).storageDomainsService()
-		.add()
-		.storageDomain(StorageDomainBuilder().id(storageDomainId).build())
-		.send().storageDomain() ?: throw ErrorPattern.DATACENTER_NOT_FOUND.toError()
+	this.srvDataCenter(dataCenterId).storageDomainsService().add()
+		.storageDomain(StorageDomainBuilder().id(storageDomainId).build()).send()
 	true
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"연결", storageDomainId)

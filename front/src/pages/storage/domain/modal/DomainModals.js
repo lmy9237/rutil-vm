@@ -2,7 +2,7 @@ import React from "react";
 import DomainModal from "./DomainModal";
 import DomainDeleteModal from "./DomainDeleteModal";
 import DomainActionModal from "./DomainActionModal";
-import DomainGetVmTemplateModal from "./DomainGetVmTemplateModal";
+import DomainAttachModal from "./DomainAttachModal";
 
 const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId, onClose }) => {
   const modals = {
@@ -53,13 +53,20 @@ const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId,
     ),
     action: (
       <DomainActionModal
-        isOpen={['attach', 'detach', 'activate', 'maintenance'].includes(activeModal)}
+        isOpen={['detach', 'activate', 'maintenance'].includes(activeModal)}
         action={activeModal}
         data={selectedDomains}
         datacenterId={datacenterId}
         onClose={onClose}
       />
     ),
+    attach: (
+      <DomainAttachModal
+        isOpen={activeModal === 'attach'}
+        data={selectedDomains}
+        onClose={onClose}
+      />
+    )
   };
 
   return (

@@ -107,7 +107,7 @@ const DomainIscsi = ({
                 <Tables
                   columns={TableColumnsInfo.TARGETS_LUNS}
                   data={iscsiSearchResults}
-                  onRowClick={handleRowClick}
+                  onRowClick={ (row) => handleRowClick(row) }
                   shouldHighlight1stCol={true}
                 />
               </div>

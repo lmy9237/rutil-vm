@@ -7,15 +7,11 @@ import DomainActionButtons from './button/DomainActionButtons';
 import { renderDataCenterStatusIcon } from '../../../utils/Icon';
 
 const DomainActionModal = React.lazy(() => import('./modal/DomainActionModal'));
+const DomainAttachModal = React.lazy(()=> import('./modal/DomainAttachModal'));
 
 const DomainDatacenters = ({ domainId }) => {
-  const {
-    data: datacenters = [], isLoading: isDatacentersLoading
-  } = useAllDataCenterFromDomain(domainId, (e) => ({...e,}));  
-
-  const {
-    data: domain, isLoading: isDomainLoading,
-  } = useDomainById(domainId);
+  const { data: datacenters = [], isLoading: isDatacentersLoading } = useAllDataCenterFromDomain(domainId, (e) => ({...e,}));  
+  const { data: domain } = useDomainById(domainId);
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDataCenters, setSelectedDataCenters] = useState([]); // 다중 선택된 데이터센터
@@ -26,13 +22,22 @@ const DomainDatacenters = ({ domainId }) => {
 
   const renderModals = () => (
     <Suspense fallback={<div>Loading...</div>}>
-      <DomainActionModal
-        isOpen={['attach', 'detach', 'activate', 'maintenance'].includes(activeModal)}
-        action={activeModal} // `type` 전달
-        data={domain}
-        datacenterId={selectedDataCenters[0]?.id}
-        onClose={closeModal}
-      />
+      {activeModal === 'attach' ? (
+        <DomainAttachModal
+          isOpen={true}
+          data={domain}
+          datacenterId={selectedDataCenters[0]?.id}
+          onClose={closeModal}
+        />
+      ): (
+        <DomainActionModal
+          isOpen={['detach', 'activate', 'maintenance'].includes(activeModal)}
+          action={activeModal} // `type` 전달
+          data={domain}
+          datacenterId={selectedDataCenters[0]?.id}
+          onClose={closeModal}
+        />
+      )}      
     </Suspense>
   );
 

@@ -114,7 +114,7 @@ const VmDiskConnectionModal = ({ isOpen, vm, dataCenterId, type="disk", existing
       className="Modal"
       overlayClassName="Overlay newRolePopupOverlay"
     >
-      <div className="storage-disk-new-popup">
+      <div className="storage-disk-new-popup modal">
         <div className="popup-header">
           <h1>가상 디스크 연결</h1>
           <button onClick={onClose}>

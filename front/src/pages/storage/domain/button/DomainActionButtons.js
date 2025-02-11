@@ -27,7 +27,8 @@ const DomainActionButtons = ({ openModal, isEditDisabled, isDeleteDisabled, stat
   ];
 
   const domainDcActions = [
-    { type: 'attach', label: '연결', disabled: isDeleteDisabled || isActive }, // 연결 disabled 조건 구하기
+    { type: 'attach', label: '연결' }, // 연결 disabled 조건 구하기
+    // { type: 'attach', label: '연결', disabled: isDeleteDisabled || isActive }, // 연결 disabled 조건 구하기
     { type: 'detach', label: '분리', disabled: isDeleteDisabled || isActive },
     { type: 'activate', label: '활성', disabled: isDeleteDisabled || isActive },
     { type: 'maintenance', label: '유지보수', disabled: isDeleteDisabled || isMaintenance },

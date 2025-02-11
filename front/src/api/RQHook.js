@@ -2910,7 +2910,7 @@ export const useActivateDomain = () => {
 export const useAttachDomain = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({domainId, dataCenterId}) => await ApiManager.attachDomain(domainId, dataCenterId),
+    mutationFn: async ({storageDomainId, dataCenterId}) => await ApiManager.attachDomain(storageDomainId, dataCenterId),
     onSuccess: () => {
       queryClient.invalidateQueries('allStorageDomains');
     },

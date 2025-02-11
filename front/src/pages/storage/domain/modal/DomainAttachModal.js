@@ -1,73 +1,67 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { useAttachDomain } from '../../../../api/RQHook';
 import toast from 'react-hot-toast';
+import { useAllDataCenters, useAttachDomain } from '../../../../api/RQHook';
+import { xButton } from '../../../../utils/Icon';
+import TablesOuter from '../../../../components/table/TablesOuter';
+import TableColumnsInfo from '../../../../components/table/TableColumnsInfo';
 
 // 도메인 - 데이터센터 연결
-const DomainAttachModal = ({ isOpen, action, data, datacenterId, onClose }) => {
-  // action으로 type 전달
+// action으로 type 전달
+const DomainAttachModal = ({ isOpen, data, onClose }) => {
   const { mutate: attachDomain } = useAttachDomain();
-  
-  const [ids, setId] = useState([]);
-  const [names, setName] = useState([]);
-  
-  useEffect(() => {
-    setId([data.id]);
-    setName([data.name]);    
-  }, [data]);
+  const { data: datacenters = [] } = useAllDataCenters((e) => ({ ...e }));
+    
+  const [selectedId, setSelectedId] = useState(null); // 단일 값으로 변경
+  const [selectedName, setSelectedName] = useState(null); // 단일 값으로 변경
 
-  const getContentLabel = () => {
-    const labels = {
-      attach: '연결',
-      detach: '분리',
-      activate: '활성',
-      maintenance: '유지보수'
-    };
-    return labels[action] || '';
+  const handleRowClick = (row) => {
+    const selectedRow = Array.isArray(row) ? row[0] : row;
+    if (selectedRow?.id) {
+      console.log('선택한 ID:', selectedRow.id);
+      setSelectedId(selectedRow.id);
+      setSelectedName(selectedRow.name);
+    }
   };
 
   const handleFormSubmit = () => {
-    if (!ids.length) return toast.error('실행할 도메인이 없습니다.');
-    
-    ids.forEach((domainId, index) => {
-      attachDomain({ domainId, dataCenterId: datacenterId },{
-        onSuccess: () => {
-          onClose(); // 모든 작업 완료 후 모달 닫기
-          toast.success(`도메인 ${getContentLabel()} 완료`);
-        },
-        onError: (error) => {
-          onClose(); // 일부 실패해도 모달 닫기
-          toast.error(`일부 도메인 ${getContentLabel()} 실패`);
-        },
-      });
+    if (!selectedId) return toast.error('데이터센터를 선택하세요.');
+
+    console.log(`domain: ${data?.id}, dc: ${selectedId}`)
+    attachDomain({ storageDomainId: data?.id, dataCenterId: selectedId },{
+      onSuccess: () => {
+        onClose();
+        toast.success(`도메인 데이터센터 ${selectedName} 연결 완료`);
+      },
+      onError: (error) => {
+        toast.error(`도메인 데이터센터 ${selectedName} 연결 실패: ${error.message}`);
+      },
     });
   };
   
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel={`${action}`}
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
-    >
-      <div className="storage-delete-popup modal">
+    <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel={'attach'} className="Modal" overlayClassName="Overlay" shouldCloseOnOverlayClick={false} >
+      <div className="get-vm-template modal">
         <div className="popup-header">
-          <h1> 스토리지 도메인 {getContentLabel(action)}</h1>
-          <button onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
-          </button>
+          <h1> 스토리지 도메인 연결</h1>
+          <button onClick={onClose}> { xButton() } </button>
         </div>
 
-        <div className="disk-delete-box">
+        <div className="datacenter-new-content modal-content">
           <div>
-            <FontAwesomeIcon style={{ marginRight: '0.3rem' }} icon={faExclamationTriangle} />
-            <span> {names.join(', ')} 를(을) {getContentLabel(action)} 하시겠습니까?</span>
+            <TablesOuter
+              columns={TableColumnsInfo.DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN}
+              data={datacenters.map((datacenter) => ({
+                ...datacenter,
+                name: datacenter?.name,
+                storageType: datacenter?.storageType ? '로컬' : '공유됨'
+              }))}
+              shouldHighlight1stCol={true}
+              onRowClick={ (row) => handleRowClick(row) }
+            />
           </div>
+          <span>id: {selectedId}</span>
         </div>
 
         <div className="edit-footer">

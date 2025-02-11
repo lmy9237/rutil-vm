@@ -324,6 +324,10 @@ const TableColumnsInfo = {
     { header: '이름', accessor: 'name', clickable: false , width: '17%'},
     { header: '데이터 센터 내의 도메인 상태', accessor: 'domainStatus', clickable: false },
   ],
+  DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN : [
+    { header: '이름', accessor: 'name', clickable: false , width: '17%'},
+    { header: '스토리지 유형', accessor: 'storageType', clickable: false },    
+  ],
   TEMPLATES_FROM_STORAGE_DOMAIN: [
     { header: '별칭', accessor: 'name', clickable: false },
     { header: '디스크', accessor: 'disk', clickable: false },

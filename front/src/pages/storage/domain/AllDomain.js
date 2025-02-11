@@ -1,6 +1,6 @@
 import React from 'react';
 import HeaderButton from '../../../components/button/HeaderButton';
-// import Footer from '../../../components/footer/Footer';
+import Footer from '../../../components/footer/Footer';
 import DomainDupl from './DomainDupl';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useAllStorageDomains } from '../../../api/RQHook'
@@ -28,7 +28,7 @@ const AllDomain = () => {
           // disk={true}          
         />
       </div>
-      {/* <Footer/> */}
+      <Footer/>
     </div>
   );
 };

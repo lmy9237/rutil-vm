@@ -1,8 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import Modal from 'react-modal';
 import toast from 'react-hot-toast';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { 
   useAddDomain, 
   useAllDataCenters, 

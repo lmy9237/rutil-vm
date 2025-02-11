@@ -4,9 +4,7 @@ import TableColumnsInfo from '../../components/table/TableColumnsInfo';
 import DataCenterDupl from '../computing/datacenter/DataCenterDupl';
 
 const DataCenters = () => {
-  const { 
-    data: datacenters = []
-  } = useAllDataCenters((e) => ({ ...e }));
+  const { data: datacenters = [] } = useAllDataCenters((e) => ({ ...e }));
   
   return (
     <>
