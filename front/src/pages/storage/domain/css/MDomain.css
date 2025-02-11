@@ -34,4 +34,8 @@
   height: 33.4vh;
   width: 38%;
 }
-
+/*가상머신 / 템플릿 가져오기*/
+.get-vm-template{
+  height: 70%;
+  width: 48%;
+}

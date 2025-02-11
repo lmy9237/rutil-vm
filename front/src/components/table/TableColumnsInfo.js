@@ -414,7 +414,25 @@ const TableColumnsInfo = {
     { header: '설명', accessor: 'description', clickable: false },
     { header: '디스크 스냅샷 ID', accessor: 'id', clickable: false, width: '16%' },
   ],
-  
+
+  GET_VMS_TEMPLATES: [
+    { header: '이름', accessor: 'name', clickable: false, width: '10%' },
+    { header: '소스', accessor: 'source', clickable: false },
+    { header: '메모리', accessor: 'memory', clickable: false },
+    { header: 'CPU', accessor: 'cpu', clickable: false },
+    { header: '아키텍처', accessor: 'architecture', clickable: false },
+    { header: '디스크', accessor: 'disk', clickable: false },
+    { header: '생성일자', accessor: 'createdAt', clickable: false },
+    { header: '내보낸 시점', accessor: 'exportedAt', clickable: false },
+  ],  
+  GET_DISKS: [
+    { header: '별칭', accessor: 'name', clickable: false },
+    { header: '디스크', accessor: 'disk', clickable: false },
+    { header: '가상 크기', accessor: 'virtualSize', clickable: false },
+    { header: '실제 크기', accessor: 'actualSize', clickable: false },
+    { header: '생성 일자', accessor: 'creationTime', clickable: false },
+    { header: '설명', accessor: 'description', clickable: false },
+  ],  
   TEMPLATE_VMS:[
     { header: '상태', accessor: 'icon', clickable: false, width: '5%' },
     { header: '이름', accessor: 'name', clickable: true, width: '20%' },

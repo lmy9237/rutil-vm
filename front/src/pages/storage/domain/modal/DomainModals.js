@@ -2,6 +2,7 @@ import React from "react";
 import DomainModal from "./DomainModal";
 import DomainDeleteModal from "./DomainDeleteModal";
 import DomainActionModal from "./DomainActionModal";
+import DomainGetVmTemplateModal from "./DomainGetVmTemplateModal";
 
 const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId, onClose }) => {
   const modals = {

@@ -14,6 +14,9 @@ import DomainDisks from './DomainDisks';
 import DomainTemplates from './DomainTemplates';
 import DomainDiskSnapshots from './DomainDiskSnapshots';
 import DomainModals from './modal/DomainModals';
+import DomainGetVms from './DomainGetVms';
+import DomainGetTemplates from './DomainGetTemplates';
+import DomainGetDisks from './DomainGetDisks';
 
 const DomainInfo = () => {
   const navigate = useNavigate();
@@ -31,10 +34,13 @@ const DomainInfo = () => {
   const sections = [
     { id: 'general', label: '일반' },
     { id: 'datacenters', label: '데이터 센터' },
+    { id: 'getVms', label: '가상머신 가져오기' },
     { id: 'vms', label: '가상머신' },
+    { id: 'getTemplates', label: '템플릿 가져오기' },
     { id: 'disks', label: '디스크' },
     { id: 'diskSnapshots', label: '디스크 스냅샷' },
     { id: 'templates', label: '템플릿' },
+    { id: 'getDisks', label: '디스크 불러오기' },
     { id: 'events', label: '이벤트' },
   ];
 
@@ -54,10 +60,13 @@ const DomainInfo = () => {
     const SectionComponent = {
       general: DomainGeneral,
       datacenters: DomainDatacenters,
+      getVms: DomainGetVms,
       vms: DomainVms,
+      getTemplates: DomainGetTemplates,
       disks: DomainDisks,
       diskSnapshots: DomainDiskSnapshots,
       templates: DomainTemplates,
+      getDisks: DomainGetDisks,
       events: DomainEvents,
     }[activeTab];
     return SectionComponent ? <SectionComponent domainId={domainId} /> : null;
