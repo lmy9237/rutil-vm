@@ -1,13 +1,13 @@
-package com.itinfo.rutilvm.service.computing
+package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.itcloud.model.IdentifiedVo
-import com.itinfo.itcloud.model.computing.*
-import com.itinfo.itcloud.model.network.NetworkVo
-import com.itinfo.itcloud.model.network.VnicProfileVo
-import com.itinfo.itcloud.model.setting.PermissionVo
-import com.itinfo.itcloud.model.storage.DiskImageVo
-import com.itinfo.itcloud.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.model.network.NetworkVo
+import com.itinfo.rutilvm.api.model.network.VnicProfileVo
+import com.itinfo.rutilvm.api.model.setting.PermissionVo
+import com.itinfo.rutilvm.api.model.storage.DiskImageVo
+import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.BeforeEach

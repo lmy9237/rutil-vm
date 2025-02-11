@@ -1,7 +1,7 @@
-package com.itinfo.rutilvm.service.common
+package com.itinfo.rutilvm.api.service.common
 
 import org.junit.jupiter.api.Test
-import com.itinfo.itcloud.model.common.TreeNavigationalDataCenter
+import com.itinfo.rutilvm.api.model.common.TreeNavigationalDataCenter
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.springframework.beans.factory.annotation.Autowired

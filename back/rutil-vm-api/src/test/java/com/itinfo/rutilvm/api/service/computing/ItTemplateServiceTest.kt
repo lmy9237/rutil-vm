@@ -1,16 +1,16 @@
-package com.itinfo.rutilvm.service.computing
+package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.itcloud.model.IdentifiedVo
-import com.itinfo.itcloud.model.computing.ClusterVo
-import com.itinfo.itcloud.model.computing.EventVo
-import com.itinfo.itcloud.model.computing.TemplateVo
-import com.itinfo.itcloud.model.computing.VmVo
-import com.itinfo.itcloud.model.network.NetworkVo
-import com.itinfo.itcloud.model.network.NicVo
-import com.itinfo.itcloud.model.storage.DiskAttachmentVo
-import com.itinfo.itcloud.model.storage.DiskImageVo
-import com.itinfo.itcloud.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.computing.ClusterVo
+import com.itinfo.rutilvm.api.model.computing.TemplateVo
+import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.EventVo
+import com.itinfo.rutilvm.api.model.network.NetworkVo
+import com.itinfo.rutilvm.api.model.network.NicVo
+import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
+import com.itinfo.rutilvm.api.model.storage.DiskImageVo
+import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 //import com.itinfo.itcloud.service.computing.ItClusterServiceTest.Companion
 import org.junit.jupiter.api.Test
 import org.hamcrest.MatcherAssert.assertThat

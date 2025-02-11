@@ -1,13 +1,9 @@
-package com.itinfo.rutilvm.service.computing
+package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.itcloud.model.IdentifiedVo
-import com.itinfo.itcloud.model.computing.*
-import com.itinfo.itcloud.model.network.HostNicVo
-import com.itinfo.itcloud.model.network.NetworkVo
-import com.itinfo.itcloud.model.setting.PermissionVo
-import com.itinfo.itcloud.model.storage.IscsiDetailVo
-import com.itinfo.itcloud.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
 import org.junit.jupiter.api.Test
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
@@ -47,7 +43,7 @@ class ItHostServiceTest {
 	/**
 	 * [should_findAll]
 	 * [ItHostService.findAll]에 대한 단위테스트
-	 * 
+	 *
 	 * @see ItHostService.findAll
 	 */
 	@Test
@@ -67,7 +63,7 @@ class ItHostServiceTest {
 	/**
 	 * [should_findOne]
 	 * [ItHostService.findOne]에 대한 단위테스트
-	 * 
+	 *
 	 * @see ItHostService.findOne
 	 */
 	@Test
@@ -153,7 +149,7 @@ class ItHostServiceTest {
 	/**
 	 * [should_findAllVmsFromHost]
 	 * [ItHostService.findAllVmsFromHost]에 대한 단위테스트
-	 * 
+	 *
 	 * @see ItHostService.findAllVmsFromHost
 	 */
 	@Test

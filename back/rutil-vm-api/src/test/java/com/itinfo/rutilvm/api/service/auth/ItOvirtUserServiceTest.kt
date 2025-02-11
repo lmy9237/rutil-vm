@@ -1,7 +1,6 @@
 package com.itinfo.rutilvm.api.service.auth
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.api.repository.aaarepository.entity.OvirtUser
 import com.itinfo.rutilvm.api.model.auth.UserVo
 
 import org.hamcrest.MatcherAssert.assertThat

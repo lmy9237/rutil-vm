@@ -1,12 +1,12 @@
-package com.itinfo.rutilvm.service.computing
+package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.itcloud.model.computing.DashBoardVo
-import com.itinfo.itcloud.model.computing.SizeVo
-import com.itinfo.itcloud.repository.history.dto.HostUsageDto
-import com.itinfo.itcloud.repository.history.dto.LineDto
-import com.itinfo.itcloud.repository.history.dto.StorageUsageDto
-import com.itinfo.itcloud.repository.history.dto.UsageDto
+import com.itinfo.rutilvm.api.model.computing.DashBoardVo
+import com.itinfo.rutilvm.api.model.computing.SizeVo
+import com.itinfo.rutilvm.api.repository.history.dto.HostUsageDto
+import com.itinfo.rutilvm.api.repository.history.dto.LineDto
+import com.itinfo.rutilvm.api.repository.history.dto.StorageUsageDto
+import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.BeforeEach

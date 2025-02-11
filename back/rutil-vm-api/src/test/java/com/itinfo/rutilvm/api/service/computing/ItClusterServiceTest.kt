@@ -1,18 +1,19 @@
 package com.itinfo.rutilvm.api.service.computing
 
+import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.computing.ClusterVo
+import com.itinfo.rutilvm.api.model.computing.EventVo
+import com.itinfo.rutilvm.api.model.computing.HostVo
+import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.network.NetworkVo
+import com.itinfo.rutilvm.api.model.network.UsageVo
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.itcloud.model.IdentifiedVo
-import com.itinfo.itcloud.model.computing.*
-import com.itinfo.itcloud.model.network.NetworkVo
-import com.itinfo.itcloud.model.network.UsageVo
-import com.itinfo.itcloud.model.setting.PermissionVo
-import com.itinfo.itcloud.model.storage.StorageDomainVo
-import org.junit.jupiter.api.Test
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.nullValue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.ovirt.engine.sdk4.types.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

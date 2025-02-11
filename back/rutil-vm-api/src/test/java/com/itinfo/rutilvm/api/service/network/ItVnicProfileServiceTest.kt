@@ -1,10 +1,10 @@
-package com.itinfo.rutilvm.service.network
+package com.itinfo.rutilvm.api.service.network
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.itcloud.model.IdentifiedVo
-import com.itinfo.itcloud.model.computing.TemplateVo
-import com.itinfo.itcloud.model.computing.VmVo
-import com.itinfo.itcloud.model.network.VnicProfileVo
+import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.computing.TemplateVo
+import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.BeforeEach

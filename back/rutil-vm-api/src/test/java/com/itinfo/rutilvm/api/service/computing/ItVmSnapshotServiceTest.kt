@@ -1,8 +1,8 @@
-package com.itinfo.rutilvm.service.computing
+package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.itcloud.model.computing.SnapshotVo
-import com.itinfo.itcloud.model.network.NicVo
+import com.itinfo.rutilvm.api.model.computing.SnapshotVo
+import com.itinfo.rutilvm.api.model.network.NicVo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.BeforeEach

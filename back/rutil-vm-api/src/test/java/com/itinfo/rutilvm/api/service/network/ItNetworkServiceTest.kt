@@ -1,13 +1,13 @@
-package com.itinfo.rutilvm.service.network
+package com.itinfo.rutilvm.api.service.network
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.itcloud.model.IdentifiedVo
-import com.itinfo.itcloud.model.computing.ClusterVo
-import com.itinfo.itcloud.model.computing.DataCenterVo
-import com.itinfo.itcloud.model.computing.HostVo
-import com.itinfo.itcloud.model.computing.VmVo
-import com.itinfo.itcloud.model.network.*
-import com.itinfo.itcloud.model.setting.PermissionVo
+import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.computing.ClusterVo
+import com.itinfo.rutilvm.api.model.computing.DataCenterVo
+import com.itinfo.rutilvm.api.model.computing.HostVo
+import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.network.*
+import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import org.junit.jupiter.api.Test
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`

@@ -1,35 +1,19 @@
-package com.itinfo.rutilvm.service.storage
+package com.itinfo.rutilvm.api.service.storage
 
+import com.itinfo.rutilvm.api.model.computing.DataCenterVo
+import com.itinfo.rutilvm.api.model.computing.EventVo
+import com.itinfo.rutilvm.api.model.computing.SnapshotDiskVo
+import com.itinfo.rutilvm.api.model.computing.TemplateVo
+import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.storage.DiskImageVo
+import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.itcloud.model.IdentifiedVo
-import com.itinfo.itcloud.model.computing.*
-import com.itinfo.itcloud.model.setting.PermissionVo
-import com.itinfo.itcloud.model.storage.DiskImageVo
-import com.itinfo.itcloud.model.storage.DiskProfileVo
-import com.itinfo.itcloud.model.storage.HostStorageVo
-import com.itinfo.itcloud.model.storage.StorageDomainVo
-import org.apache.commons.fileupload.FileItem
-import org.apache.commons.fileupload.disk.DiskFileItem
-import org.apache.commons.io.IOUtils
-
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.ovirt.engine.sdk4.types.Host
-import org.ovirt.engine.sdk4.types.StorageDomainType
-import org.ovirt.engine.sdk4.types.StorageType
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.multipart.commons.CommonsMultipartFile
-
-import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
-import java.io.InputStream
-import java.nio.file.Files
 
 /**
  * [ItStorageServiceTest]
@@ -55,7 +39,7 @@ class ItStorageServiceTest {
 		clusterId = "023c79d8-3819-11ef-bf08-00163e6c8feb"
 		networkId = "00000000-0000-0000-0000-000000000009"
 		host01 = "671e18b2-964d-4cc6-9645-08690c94d249"
-		domainId = "213b1a0a-b0c0-4d10-95a4-7aafed4f76b9"
+		domainId = "61a08ba0-ab2e-4b68-9726-bbf578ebf1e8"
 		nfs = "06faa572-f1ac-4874-adcc-9d26bb74a54d"
 	}
 
@@ -186,7 +170,7 @@ class ItStorageServiceTest {
 	fun should_findAllDataCentersFromStorageDomain() {
 		log.debug("should_findAllDataCentersFromStorageDomain ... ")
 		val result: List<DataCenterVo> =
-			service.findAllDataCentersFromStorageDomain("2741d400-55c1-4c44-8631-53d34e8050e8")
+			service.findAllDataCentersFromStorageDomain(domainId)
 
 		assertThat(result, `is`(not(nullValue())))
 		result.forEach { println(it) }
@@ -204,11 +188,8 @@ class ItStorageServiceTest {
 	@Test
 	fun should_attachFromDataCenter() {
 		log.debug("should_attachFromDataCenter ... ")
-		val dataCenterId = "92dedc62-7bdd-11ef-9270-00163e2fda35"
-		val storageDomainId = "ead3bea8-0f10-435f-9acb-242dfa14010a"
-
 		val result: Boolean =
-			service.attachFromDataCenter(dataCenterId, storageDomainId)
+			service.attachFromDataCenter(dataCenterId, domainId)
 
 		assertThat(result, `is`(not(nullValue())))
 		assertThat(result, `is`(true))
@@ -223,11 +204,8 @@ class ItStorageServiceTest {
 	@Test
 	fun should_detachFromDataCenter() {
 		log.debug("should_detachFromDataCenter ... ")
-		val dataCenterId = "92dedc62-7bdd-11ef-9270-00163e2fda35"
-		val storageDomainId = "ead3bea8-0f10-435f-9acb-242dfa14010a"
-
 		val result: Boolean =
-			service.detachFromDataCenter(dataCenterId, storageDomainId)
+			service.detachFromDataCenter(dataCenterId, domainId)
 
 		assertThat(result, `is`(not(nullValue())))
 		assertThat(result, `is`(true))
@@ -242,11 +220,8 @@ class ItStorageServiceTest {
 	@Test
 	fun should_activateFromDataCenter() {
 		log.debug("should_activateFromDataCenter ... ")
-		val dataCenterId = "92dedc62-7bdd-11ef-9270-00163e2fda35"
-		val storageDomainId = "ead3bea8-0f10-435f-9acb-242dfa14010a"
-
 		val result: Boolean =
-			service.activateFromDataCenter(dataCenterId, storageDomainId)
+			service.activateFromDataCenter(dataCenterId, domainId)
 
 		assertThat(result, `is`(not(nullValue())))
 		assertThat(result, `is`(true))
@@ -261,11 +236,8 @@ class ItStorageServiceTest {
 	@Test
 	fun should_maintenanceFromDataCenter() {
 		log.debug("should_maintenanceFromDataCenter ... ")
-		val dataCenterId = "92dedc62-7bdd-11ef-9270-00163e2fda35"
-		val storageDomainId = "ead3bea8-0f10-435f-9acb-242dfa14010a"
-
 		val result: Boolean =
-			service.maintenanceFromDataCenter(dataCenterId, storageDomainId)
+			service.maintenanceFromDataCenter(dataCenterId, domainId)
 
 		assertThat(result, `is`(not(nullValue())))
 		assertThat(result, `is`(true))
@@ -283,7 +255,7 @@ class ItStorageServiceTest {
 	fun should_findAllVmsFromStorageDomain() {
 		log.debug("should_findAllVmsFromStorageDomain ... ")
 		val result: List<VmVo> =
-			service.findAllVmsFromStorageDomain("ed8f0c7f-89d9-459e-8a84-3388dfade338")
+			service.findAllVmsFromStorageDomain(domainId)
 
 		assertThat(result, `is`(not(nullValue())))
 		result.forEach { println(it) }
@@ -300,13 +272,28 @@ class ItStorageServiceTest {
 	fun should_findAllTemplatesFromStorageDomain() {
 		log.debug("should_findAllTemplatesFromStorageDomain ... ")
 		val result: List<TemplateVo> =
-			service.findAllTemplatesFromStorageDomain("072fbaa1-08f3-4a40-9f34-a5ca22dd1d74")
+			service.findAllTemplatesFromStorageDomain(domainId)
 
 		assertThat(result, `is`(not(nullValue())))
 		result.forEach { println(it) }
 		assertThat(result.size, `is`(0))
 	}
 
+	/**
+	 * [should_findAllUnregisteredTemplatesFromStorageDomain]
+	 * [ItStorageService.findAllUnregisteredTemplatesFromStorageDomain] 의 단위테스트
+	 *
+	 * @see [ItStorageService.findAllUnregisteredTemplatesFromStorageDomain]
+	 */
+	@Test
+	fun should_findAllUnregisteredTemplatesFromStorageDomain() {
+		log.debug("should_findAllUnregisteredTemplatesFromStorageDomain ... ")
+		val result: List<TemplateVo> =
+			service.findAllUnregisteredTemplatesFromStorageDomain(domainId)
+
+		assertThat(result, `is`(not(nullValue())))
+		result.forEach { println(it) }
+	}
 
 
 	/**
@@ -318,15 +305,27 @@ class ItStorageServiceTest {
 	@Test
 	fun should_findAllDisksFromStorageDomain() {
 		log.debug("should_findAllDisksFromStorageDomain ... ")
-		val start = System.currentTimeMillis()
 		val result: List<DiskImageVo> =
 			service.findAllDisksFromStorageDomain(domainId)
-		val end = System.currentTimeMillis()
-
-//        log.info("수행시간: {}", end-start)
 		assertThat(result, `is`(not(nullValue())))
 		result.forEach { println(it) }
 		assertThat(result.size, `is`(15))
+	}
+
+	/**
+	 * [should_findAllUnregisteredDisksFromStorageDomain]
+	 * [ItStorageService.findAllUnregisteredDisksFromStorageDomain] 의 단위테스트
+	 *
+	 * @see [ItStorageService.findAllUnregisteredDisksFromStorageDomain]
+	 */
+	@Test
+	fun should_findAllUnregisteredDisksFromStorageDomain() {
+		log.debug("should_findAllUnregisteredDisksFromStorageDomain ... ")
+		val result: List<DiskImageVo> =
+			service.findAllUnregisteredDisksFromStorageDomain(domainId)
+
+		assertThat(result, `is`(not(nullValue())))
+		result.forEach { println(it) }
 	}
 
 	/**

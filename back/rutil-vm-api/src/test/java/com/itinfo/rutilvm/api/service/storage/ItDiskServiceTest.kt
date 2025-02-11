@@ -1,11 +1,11 @@
-package com.itinfo.rutilvm.service.storage
+package com.itinfo.rutilvm.api.service.storage
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.itcloud.model.IdentifiedVo
-import com.itinfo.itcloud.model.computing.VmVo
-import com.itinfo.itcloud.model.storage.DiskImageVo
-import com.itinfo.itcloud.model.storage.DiskProfileVo
-import com.itinfo.itcloud.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.storage.DiskImageVo
+import com.itinfo.rutilvm.api.model.storage.DiskProfileVo
+import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import org.apache.commons.fileupload.FileItem
 import org.apache.commons.fileupload.disk.DiskFileItem
 import org.apache.commons.io.IOUtils

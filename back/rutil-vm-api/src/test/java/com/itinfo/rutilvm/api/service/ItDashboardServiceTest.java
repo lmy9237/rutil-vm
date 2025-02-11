@@ -1,4 +1,4 @@
-package com.itinfo.rutilvm.service;
+package com.itinfo.rutilvm.api.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

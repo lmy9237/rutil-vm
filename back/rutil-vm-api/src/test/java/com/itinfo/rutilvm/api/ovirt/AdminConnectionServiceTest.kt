@@ -1,4 +1,4 @@
-package com.itinfo.rutilvm.ovirt
+package com.itinfo.rutilvm.api.ovirt
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import org.junit.jupiter.api.Test
@@ -24,7 +24,7 @@ class AdminConnectionServiceTest {
 	/**
 	 * [should_getConnection]
 	 * [AdminConnectionService.getConnection]에 대한 단위테스트
-	 * 
+	 *
 	 * @see AdminConnectionService.getConnection
 	 */
 	@Test
@@ -33,7 +33,7 @@ class AdminConnectionServiceTest {
 		assertThat(service, `is`(not(nullValue())))
 		// TODO: 메소드의 결과값에 대한 검증처리
 	}
-	
+
 	companion object {
 		private val log by LoggerDelegate()
 	}
