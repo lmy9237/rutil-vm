@@ -5,11 +5,11 @@ import NavButton from '../../../components/navigation/NavButton';
 import HeaderButton from '../../../components/button/HeaderButton';
 import Footer from '../../../components/footer/Footer';
 import Path from '../../../components/Header/Path';
-import { useDiskById } from '../../../api/RQHook.js';
 import DiskGeneral from './DiskGeneral.js';
 import DiskVms from './DiskVms.js'
 import DiskDomains from './DiskDomains.js';
-import DiskModals from './modal/DiskModals.js';
+import DiskModals from '../../../components/modal/disk/DiskModals';
+import { useDiskById } from '../../../api/RQHook.js';
 
 const DiskInfo = () => {
   const navigate = useNavigate();

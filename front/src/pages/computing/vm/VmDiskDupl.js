@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
 import VmDiskActionButtons from './button/VmDiskActionButtons';
-import VmDiskModals from './modal/VmDIskModals';
-import { renderTFStatusIcon } from '../../../utils/Icon';
-import { formatBytesToGBToFixedZero } from '../../../utils/format';
+import VmDiskModals from '../../../components/modal/vm/VmDiskModals';
+import { renderTFStatusIcon } from '../../../components/Icon';
+import { formatBytesToGBToFixedZero } from '../../../util';
 
+/**
+ * @name VmDiskDupl
+ * @description ...
+ * 
+ * @param {Array} vmDisks
+ * @returns 
+ */
 const VmDiskDupl = ({ vmDisks = [], columns = [], vmId }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);

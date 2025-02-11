@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import Modal from 'react-modal';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { warnButton, xButton } from './Icon';
+import { warnButton, xButton } from '../components/Icon';
 
 const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
   const navigate = useNavigate();

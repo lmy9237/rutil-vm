@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TablesOuter from '../../../components/table/TablesOuter';
-import HostActionButtons from './button/HostActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
-import HostModals from './modal/HostModals';
-import { renderHostStatusIcon } from '../../../utils/Icon';
+import HostModals from '../../../components/modal/host/HostModals';
+import HostActionButtons from './button/HostActionButtons'
+import { renderHostStatusIcon } from '../../../components/Icon';
 import NetworkActionButtons from '../../network/network/button/NetworkActionButtons';
 
 const HostDupl = ({ hosts = [], columns = [], clusterId }) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
 import { useNavigate } from 'react-router-dom';
-import { renderVmStatusIcon } from '../../../utils/Icon';
+import { renderVmStatusIcon } from '../../../components/Icon';
 
 const VmTable = ({
   columns,

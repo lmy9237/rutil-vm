@@ -3,8 +3,8 @@ import { faDesktop, faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
-import {useAllTemplateFromDomain} from "../../../api/RQHook";
-import { formatBytesToGB, formatBytesToGBToFixedZero } from '../../../utils/format';
+import { useAllTemplateFromDomain } from "../../../api/RQHook";
+import { formatBytesToGB, formatBytesToGBToFixedZero } from '../../../util';
 
 const TemplateRow = ({ template, isExpanded, toggleRow }) => (
   <>
@@ -47,24 +47,24 @@ const DiskRow = ({ disk }) => (
 );
 
 const DomainTemplates = ({ domainId }) => {
-  const { 
-    data: templates=[], 
-    status: templatesStatus, 
-    isLoading: isTemplatesLoading, 
+  const {
+    data: templates = [],
+    status: templatesStatus,
+    isLoading: isTemplatesLoading,
     isError: isTemplatesError,
   } = useAllTemplateFromDomain(domainId, (e) => ({
     ...e,
   }));
-  
+
   return (
     <>
-      <TablesOuter 
+      <TablesOuter
         columns={TableColumnsInfo.TEMPLATES_FROM_STORAGE_DOMAIN}
         data={templates.map((t) => ({
           ...t,
           virtualSize: formatBytesToGBToFixedZero(t?.virtualSize) + ' GB',
           actualSize: formatBytesToGBToFixedZero(t?.actualSize) + ' GB'
-        }))} 
+        }))}
       />
     </>
   );

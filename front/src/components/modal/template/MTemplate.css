@@ -1,0 +1,31 @@
+.template-eidt-popup{
+    width: 55%;
+    height: 55%;             
+}
+.template-edit-texts>div{
+    padding: 1.2% 0.3rem;
+    display: flex;
+    justify-content: space-between;
+}
+.template-edit-texts input[type="text"],
+.template-option-box select
+{
+    width: 50%;
+}
+.host-textbox input{
+    width: 47%;
+}
+.monitor{
+    width: 57%;
+}
+.monitor select{
+    width: 12%;
+}
+.template-option-box{
+    padding: 1.2% 0.3rem;
+}
+.t-new-checkbox{
+    display: flex;
+    align-items: center;
+    margin-left:0.24rem;
+}

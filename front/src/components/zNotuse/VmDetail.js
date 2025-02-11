@@ -21,16 +21,16 @@ import VmApplication from '../../pages/computing/vm/VmApplications';
 import VmSnapshot from '../../pages/computing/vm/VmSnapshots';
 import VmNetwork from '../../pages/computing/vm/VmNics';
 import VmDisk from '../../pages/computing/vm/VmDisks';
-import VmModals from '../../pages/computing/vm/modal/VmModals';
-import VmActionModal from '../../pages/computing/vm/modal/VmActionModal';
+import VmModals from '../modal/vm/VmModals';
+import VmActionModal from '../modal/vm/VmActionModal';
 
 // React Modal 설정
 Modal.setAppElement('#root');
 
 
 const VmDetail = () => {
-  const { id,section } = useParams();
-  const [activeNavTab, setActiveNavTab] = useState('general'); 
+  const { id, section } = useParams();
+  const [activeNavTab, setActiveNavTab] = useState('general');
   const handleNavTabClick = (tab) => {
     setActiveNavTab(tab);
     if (tab !== 'general') {
@@ -45,7 +45,7 @@ const VmDetail = () => {
     } else {
       setActiveNavTab(section);
     }
-  }, [section]); 
+  }, [section]);
 
   const openPopup = (popupType) => {
     setActivePopup(popupType);
@@ -56,7 +56,7 @@ const VmDetail = () => {
     setSelectedVm(vm); // 현재 VM 데이터 설정
     setIsModalOpen(true); // 모달 열기
   };
-  
+
   const closeModal = () => {
     setIsModalOpen(false); // 모달 창 닫힘
     setActivePopup(null);  // 팝업 상태 초기화
@@ -65,7 +65,7 @@ const VmDetail = () => {
     setIsModalOpen(false); // 모달 닫기
     setAction(null); // 액션 초기화
   };
- 
+
 
 
   const [activePopup, setActivePopup] = useState(null);
@@ -75,11 +75,11 @@ const VmDetail = () => {
     setIsModalOpen(false); // 팝업 닫기
   };
   const handleTabClickModal = (tab) => {
-      setSelectedTab(tab);
+    setSelectedTab(tab);
   };
   const [selectedTab, setSelectedTab] = useState('network_new_common_btn');
   const [activeSection, setActiveSection] = useState('common_outer');
- 
+
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false); // 생성 팝업 상태
   const [selectedModalTab, setSelectedModalTab] = useState('common');
   // 탭 클릭 핸들러
@@ -93,7 +93,7 @@ const VmDetail = () => {
     pause: false,
     stop: false,
   });
-  
+
   const toggleModal = (type, isOpen) => {
     setModals((prev) => ({
       ...prev,
@@ -124,7 +124,7 @@ const VmDetail = () => {
 
   const [action, setAction] = useState(null); // 현재 동작
   const [selectedVm, setSelectedVm] = useState(null);
-  
+
   const handleActionClick = (actionType) => {
     if (actionType === 'templates') {
       navigate('/computing/vms/templates');
@@ -151,30 +151,30 @@ const VmDetail = () => {
   // headerbutton 컴포넌트
   const buttons = [
     // { id: 'new_btn', label: '새로 만들기',onClick:() => openPopup('new')},
-    { id: 'edit_btn', label: '편집', onClick:() => openPopup('edit')},
+    { id: 'edit_btn', label: '편집', onClick: () => openPopup('edit') },
     { id: 'run_btn', label: <><i className="fa fa-play"></i> 실행</>, onClick: () => toggleModal('start', true) },
     { id: 'pause_btn', label: '일시중지', onClick: () => toggleModal('pause', true) },
     { id: 'stop_btn', label: <><i className="fa fa-stop"></i> 종료</>, onClick: () => toggleModal('stop', true) },
-    { id: 'reboot_btn', label: <><i className="fa fa-repeat"></i> 재부팅</>, onClick: () => toggleModal.log('reboot',true) },
-    { id: 'snapshot_btn', label: '스냅샷 생성', onClick:() => openPopup('snapshots')},
-    { id: 'migration_btn', label: '마이그레이션', onClick:() => openPopup('migration')} ,
+    { id: 'reboot_btn', label: <><i className="fa fa-repeat"></i> 재부팅</>, onClick: () => toggleModal.log('reboot', true) },
+    { id: 'snapshot_btn', label: '스냅샷 생성', onClick: () => openPopup('snapshots') },
+    { id: 'migration_btn', label: '마이그레이션', onClick: () => openPopup('migration') },
   ];
   const popupItems = [
     { id: 'import', label: '가져오기', onClick: () => openPopup('onExport') },
-    { id: 'clone_vm', label: '가상 머신 복제',onClick: () => openPopup('vm_copy')  },
-    { id: 'delete', label: '삭제',onClick: () => openPopup('delete')  },
+    { id: 'clone_vm', label: '가상 머신 복제', onClick: () => openPopup('vm_copy') },
+    { id: 'delete', label: '삭제', onClick: () => openPopup('delete') },
     { id: 'create_template', label: '템플릿 생성', onClick: () => openPopup('addTemplate') },
-    { id: 'export_ova', label: 'OVA로 내보내기' ,onClick: () => openPopup('exportova') }
+    { id: 'export_ova', label: 'OVA로 내보내기', onClick: () => openPopup('exportova') }
   ];
 
   const [shouldRefresh, setShouldRefresh] = useState(false);
-  const { 
+  const {
     data: vm,
     status: vmStatus,
     isRefetching: isVmRefetching,
-    refetch: vmRefetch, 
+    refetch: vmRefetch,
     isError: isVmError,
-    error: vmError, 
+    error: vmError,
     isLoading: isVmLoading,
   } = useVmById(id);
   useEffect(() => {
@@ -187,27 +187,27 @@ const VmDetail = () => {
       vmRefetch();
     }
   }, [shouldRefresh, vmRefetch]);
- 
+
 
   const pathData = [vm?.name, sections.find(section => section.id === activeNavTab)?.label];
   const renderSectionContent = () => {
     switch (activeNavTab) {
       case 'general':
-        return <VmGeneral vm={vm}/>;
+        return <VmGeneral vm={vm} />;
       case 'disks':
         return <VmDisk vm={vm} />;
       case 'network':
-        return <VmNetwork vm={vm}/>;
+        return <VmNetwork vm={vm} />;
       case 'snapshots':
-        return <VmSnapshot vm={vm}/>;
+        return <VmSnapshot vm={vm} />;
       case 'applications':
-        return <VmApplication vm={vm}/>;
+        return <VmApplication vm={vm} />;
       case 'events':
-        return <VmEvent vm={vm}/>;
+        return <VmEvent vm={vm} />;
       case 'hostDevices':
-        return <VmHostDevice vm={vm}/>;
+        return <VmHostDevice vm={vm} />;
       default:
-        return <VmGeneral vm={vm}/>;
+        return <VmGeneral vm={vm} />;
     }
   };
 
@@ -221,11 +221,11 @@ const VmDetail = () => {
       />
 
       <div className="content-outer">
-        <NavButton 
-          sections={sections} 
-          activeSection={activeNavTab} 
-          handleSectionClick={handleNavTabClick}  
-          />
+        <NavButton
+          sections={sections}
+          activeSection={activeNavTab}
+          handleSectionClick={handleNavTabClick}
+        />
         <div className="host-btn-outer">
           {activeNavTab !== 'general' && <Path pathElements={pathData} />}
           {renderSectionContent()}
@@ -253,9 +253,9 @@ const VmDetail = () => {
           )
         );
       })}
-      <Footer/>
-        {/*새로만들기(생성)추가팝업 */}
-        {/* <Modal
+      <Footer />
+      {/*새로만들기(생성)추가팝업 */}
+      {/* <Modal
        isOpen={isCreatePopupOpen}
        onRequestClose={() => setIsCreatePopupOpen(false)}
       contentLabel="새 가상 디스크"
@@ -392,8 +392,8 @@ const VmDetail = () => {
       </div>
         </Modal> */}
 
-        {/*...버튼 가상머신복제 팝업 */}
-        {/* <Modal
+      {/*...버튼 가상머신복제 팝업 */}
+      {/* <Modal
         isOpen={activePopup === 'vm_copy'}
         onRequestClose={closePopup}
         contentLabel="디스크 업로드"

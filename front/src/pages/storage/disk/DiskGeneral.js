@@ -1,5 +1,5 @@
 import { useDiskById } from "../../../api/RQHook";
-import { formatBytesToGB, formatBytesToGBToFixedZero } from '../../../utils/format';
+import { formatBytesToGB, formatBytesToGBToFixedZero } from '../../../util';
 
 const DiskGeneral = ({ diskId }) => {
   const { data: disk } = useDiskById(diskId);

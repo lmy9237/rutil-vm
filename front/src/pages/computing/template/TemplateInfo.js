@@ -6,13 +6,13 @@ import HeaderButton from '../../../components/button/HeaderButton';
 import Footer from '../../../components/footer/Footer';
 import { useTemplate } from '../../../api/RQHook';
 import Path from '../../../components/Header/Path';
+import TemplateModals from '../../../components/modal/template/TemplateModals';
 import TemplateGeneral from './TemplateGeneral';
 import TemplateVms from './TemplateVms';
 import TemplateEvents from './TemplateEvents';
 import TemplateNics from './TemplateNics';
 import TemplateDisks from './TemplateDisks';
 import TemplateStorage from './TemplateStorage';
-import TemplateModals from './modal/TemplateModals';
 
 const TemplateInfo = () => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const TemplateInfo = () => {
 
   const [activeTab, setActiveTab] = useState('general');
   const [activeModal, setActiveModal] = useState(null);
-  
+
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
 
@@ -45,7 +45,7 @@ const TemplateInfo = () => {
   useEffect(() => {
     setActiveTab(section || 'general');
   }, [section]);
-  
+
   const handleTabClick = (tab) => {
     const path = tab === 'general' ? `/computing/templates/${templateId}` : `/computing/templates/${templateId}/${tab}`;
     navigate(path);

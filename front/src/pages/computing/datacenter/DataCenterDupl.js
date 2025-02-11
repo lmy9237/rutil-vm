@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TablesOuter from '../../../components/table/TablesOuter';
 import DataCenterActionButtons from './button/DataCenterActionButtons';
-import DataCenterModals from './modal/DataCenterModals';
-import { renderDataCenterStatus, renderDatacenterStatusIcon } from '../../../utils/Icon';
+import DataCenterModals from '../../../components/modal/datacenter/DataCenterModals';
+import { renderDataCenterStatus, renderDatacenterStatusIcon } from '../../../components/Icon';
 
 const DataCenterDupl = ({ datacenters = [], columns = [] }) => {
   const navigate = useNavigate();

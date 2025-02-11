@@ -1,19 +1,18 @@
-import React from 'react';
-import { useAllStorageDomainFromDisk } from "../../../api/RQHook";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { renderDomainStatusIcon } from '../../../utils/Icon';
-import { formatBytesToGBToFixedZero } from '../../../utils/format';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
+import { renderDomainStatusIcon } from '../../../components/Icon';
+import { formatBytesToGBToFixedZero } from '../../../util';
+import { useAllStorageDomainFromDisk } from "../../../api/RQHook";
 
 const DiskDomains = ({ diskId }) => {
   const {
     data: domains = [],
-  } = useAllStorageDomainFromDisk(diskId, (e) => ({ 
+  } = useAllStorageDomainFromDisk(diskId, (e) => ({
     ...e,
     status: e.status === 'ACTIVE' ? '활성화' : '비활성화',
   }));
-  
+
   const sizeCheck = (size) => {
     if (size === 0) {
       return 'N/A';
@@ -33,7 +32,7 @@ const DiskDomains = ({ diskId }) => {
           domainType:
             domain?.domainType === 'data' ? '데이터'
               : domain?.domainType === 'iso' ? 'ISO'
-              : 'EXPORT',
+                : 'EXPORT',
           diskSize: sizeCheck(domain?.diskSize),
           availableSize: sizeCheck(domain?.availableSize),
           usedSize: sizeCheck(domain?.usedSize),

@@ -2,7 +2,7 @@ import React, { Suspense, useState } from 'react';
 import { useAllDiskSnapshotFromDomain } from "../../../api/RQHook";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from '../../../components/table/TablesOuter';
-import { formatBytesToGBToFixedZero } from '../../../utils/format';
+import { formatBytesToGBToFixedZero } from '../../../util';
 
 const DeleteModal = React.lazy(() => import('../../../components/DeleteModal'));
 

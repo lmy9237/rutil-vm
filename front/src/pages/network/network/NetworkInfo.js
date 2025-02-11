@@ -5,14 +5,14 @@ import NavButton from '../../../components/navigation/NavButton';
 import HeaderButton from '../../../components/button/HeaderButton';
 import Footer from '../../../components/footer/Footer';
 import Path from '../../../components/Header/Path';
+import NetworkModals from '../../../components/modal/network/NetworkModals';
+import NetworkGeneral from './NetworkGeneral';
+import NetworkVnicProfiles from './NetworkVnicProfiles';
+import NetworkHosts from './NetworkHosts';
+import NetworkVms from './NetworkVms'
+import NetworkTemplates from './NetworkTemplates'
+import NetworkClusters from './NetworkClusters';
 import { useNetworkById } from '../../../api/RQHook';
-import NetworkGeneral from './NetworkGeneral.js';
-import NetworkVnicProfiles from './NetworkVnicProfiles.js';
-import NetworkHosts from './NetworkHosts.js';
-import NetworkVms from './NetworkVms.js'
-import NetworkTemplates from './NetworkTemplates.js'
-import NetworkClusters from './NetworkClusters.js';
-import NetworkModals from './modal/NetworkModals.js';
 
 const NetworkInfo = () => {
   const navigate = useNavigate();

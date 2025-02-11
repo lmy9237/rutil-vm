@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDomainById } from '../../../api/RQHook';
-import { formatBytesToGBToFixedZero, zeroValue } from '../../../utils/format';
+import { formatBytesToGBToFixedZero, zeroValue } from '../../../util';
 
 const DomainGeneral = ({ domainId }) => {
   const { data: domain } = useDomainById(domainId);
@@ -24,19 +24,19 @@ const DomainGeneral = ({ domainId }) => {
   ];
 
   return (
-      <div>
-        <table className="table">
-          <tbody>
+    <div>
+      <table className="table">
+        <tbody>
           {tableRows.map((row, index) => (
-          <tr key={index}>
-            <th>{row.label}:</th>
-            <td>{row.value}</td>
-          </tr>
-        ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  };
-  
-  export default DomainGeneral;
+            <tr key={index}>
+              <th>{row.label}:</th>
+              <td>{row.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default DomainGeneral;

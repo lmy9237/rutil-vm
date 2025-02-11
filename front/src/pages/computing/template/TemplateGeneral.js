@@ -1,5 +1,5 @@
 import { useTemplate } from '../../../api/RQHook';
-import { formatBytesToGBToFixedZero } from '../../../utils/format';
+import { formatBytesToGBToFixedZero } from '../../../util';
 
 const TemplateGeneral = ({ templateId }) => {
   const { data: template } = useTemplate(templateId);

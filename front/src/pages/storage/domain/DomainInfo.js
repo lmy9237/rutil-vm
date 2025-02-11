@@ -4,8 +4,8 @@ import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 import NavButton from '../../../components/navigation/NavButton';
 import HeaderButton from '../../../components/button/HeaderButton';
 import Footer from '../../../components/footer/Footer';
-import { useDomainById } from '../../../api/RQHook';
 import Path from '../../../components/Header/Path';
+import DomainModals from '../../../components/modal/domain/DomainModals';
 import DomainGeneral from './DomainGeneral';
 import DomainDatacenters from './DomainDatacenters';
 import DomainVms from './DomainVms';
@@ -13,10 +13,10 @@ import DomainEvents from './DomainEvents';
 import DomainDisks from './DomainDisks';
 import DomainTemplates from './DomainTemplates';
 import DomainDiskSnapshots from './DomainDiskSnapshots';
-import DomainModals from './modal/DomainModals';
 import DomainGetVms from './DomainGetVms';
 import DomainGetTemplates from './DomainGetTemplates';
 import DomainGetDisks from './DomainGetDisks';
+import { useDomainById } from '../../../api/RQHook';
 
 const DomainInfo = () => {
   const navigate = useNavigate();

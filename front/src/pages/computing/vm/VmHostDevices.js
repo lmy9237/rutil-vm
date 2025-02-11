@@ -3,7 +3,7 @@ import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useHostdevicesFromVM } from '../../../api/RQHook';
 
-const VmDeviceAddModal = React.lazy(() => import('./modal/VmDeviceAddModal'));
+const VmDeviceAddModal = React.lazy(() => import('../../../components/modal/vm/VmDeviceAddModal'));
 
 const VmHostDevices = ({ vmId }) => {
   const { 

@@ -1,7 +1,7 @@
 import React from 'react';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import {useVMFromCluster} from "../../../api/RQHook";
-import VmDupl from '../../computing/vm/VmDupl';
+import VmDupl from '../../../components/dupl/VmDupl';
 
 const ClusterVms = ({ clusterId }) => {
   const { 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import NavButton from '../../../components/navigation/NavButton';
@@ -12,8 +12,8 @@ import HostVms from './HostVms'
 import HostNics from './HostNics'
 import HostDevices from './HostDevices';
 import HostEvents from './HostEvents'
-import HostModals from './modal/HostModals';
-import { renderHostStatus } from '../../../utils/Icon';
+import HostModals from '../../../components/modal/host/HostModals';
+import { renderHostStatus } from '../../../components/Icon';
 
 const HostInfo = () => {
   const navigate = useNavigate();

@@ -5,14 +5,14 @@ import NavButton from '../../../components/navigation/NavButton';
 import HeaderButton from '../../../components/button/HeaderButton';
 import Footer from '../../../components/footer/Footer';
 import Path from '../../../components/Header/Path';
-import { useDataCenter } from '../../../api/RQHook';
+import DataCenterModals from '../../../components/modal/datacenter/DataCenterModals';
 import DataCenterClusters from './DataCenterClusters';
 import DataCenterHosts from './DataCenterHosts';
 import DataCenterVms from './DataCenterVms';
 import DataCenterDomains from './DataCenterDomains';
 import DataCenterNetworks from './DataCenterNetworks';
 import DataCenterEvents from './DataCenterEvents';
-import DataCenterModals from './modal/DataCenterModals';
+import { useDataCenter } from '../../../api/RQHook';
 
 const DataCenterInfo = () => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const DataCenterInfo = () => {
   const { id: dataCenterId, section } = useParams();
   const {
     data: dataCenter, status, isRefetching, refetch, isError, error, isLoading
-  } = useDataCenter(dataCenterId, (e) => ({...e,}));
+  } = useDataCenter(dataCenterId, (e) => ({ ...e, }));
 
   const [activeTab, setActiveTab] = useState('clusters');
   const [activeModal, setActiveModal] = useState(null);
@@ -50,11 +50,11 @@ const DataCenterInfo = () => {
   const handleTabClick = (tab) => {
     // 현재 경로에서 섹션 추출: computing, storages, networks 중 하나
     const section = location.pathname.split('/')[1]; // 첫 번째 세그먼트가 섹션 정보
-  
+
     // 섹션이 유효한 값인지 확인 (예외 처리 포함)
     const validSections = ['computing', 'storages', 'networks'];
     const currentSection = validSections.includes(section) ? section : 'computing'; // 기본값을 'computing'으로 설정
-  
+
     // 동적 경로 생성 및 이동
     const path = `/${currentSection}/datacenters/${dataCenterId}/${tab}`;
     navigate(path);
@@ -76,7 +76,7 @@ const DataCenterInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: 'edit', label: '편집', onClick: () => openModal("edit")},
+    { type: 'edit', label: '편집', onClick: () => openModal("edit") },
     { type: 'delete', label: '삭제', onClick: () => openModal("delete") },
   ];
 
@@ -88,10 +88,10 @@ const DataCenterInfo = () => {
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
-        <NavButton 
-          sections={sections} 
-          activeSection={activeTab} 
-          handleSectionClick={handleTabClick} 
+        <NavButton
+          sections={sections}
+          activeSection={activeTab}
+          handleSectionClick={handleTabClick}
         />
         <div className="host-btn-outer">
           <Path pathElements={pathData} />
@@ -106,7 +106,7 @@ const DataCenterInfo = () => {
         selectedDataCenters={dataCenter}
         onClose={closeModal}
       />
-      <Footer/>
+      <Footer />
     </div>
   );
 };

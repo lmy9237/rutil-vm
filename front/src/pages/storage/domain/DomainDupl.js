@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DomainActionButtons from './button/DomainActionButtons';
-import TablesOuter from '../../../components/table/TablesOuter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
-import DomainModals from './modal/DomainModals';
-import { renderDomainStatus, renderDomainStatusIcon } from '../../../utils/Icon';
-import { formatBytesToGBToFixedZero } from '../../../utils/format';
+import DomainActionButtons from './button/DomainActionButtons';
+import TablesOuter from '../../../components/table/TablesOuter';
+import DomainModals from '../../../components/modal/domain/DomainModals';
+import { renderDomainStatus, renderDomainStatusIcon } from '../../../components/Icon';
+import { formatBytesToGBToFixedZero } from '../../../util';
 
 const DomainDupl = ({ domains = [], columns = [], actionType = 'domain', datacenterId }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
-  const [selectedDomains, setSelectedDomains] = useState([]); 
+  const [selectedDomains, setSelectedDomains] = useState([]);
   const selectedIds = (Array.isArray(selectedDomains) ? selectedDomains : []).map(sd => sd.id).join(', ');
-  
+
   const handleNameClick = (id) => navigate(`/storages/domains/${id}`);
-  
+
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
-  
+
   return (
     <>
       <DomainActionButtons
         openModal={openModal}
         isEditDisabled={selectedDomains.length !== 1}
-        isDeleteDisabled={selectedDomains.length === 0} 
+        isDeleteDisabled={selectedDomains.length === 0}
         status={selectedDomains[0]?.status}
         actionType={actionType} // 도메인인지, 데이터센터인지
       />
@@ -38,14 +38,14 @@ const DomainDupl = ({ domains = [], columns = [], actionType = 'domain', datacen
           status: renderDomainStatus(domain?.status),
           hostedEngine: domain?.hostedEngine === true ? (
             <FontAwesomeIcon icon={faPencil} fixedWidth style={{ color: 'gold', fontSize: '0.3rem', transform: 'rotate(90deg)' }} />) : '',
-          domainType: 
-            domain?.domainType === 'data' ? '데이터' 
-            : domain?.domainType === 'iso' ? 'ISO'
-            : 'EXPORT',
-          storageType: 
+          domainType:
+            domain?.domainType === 'data' ? '데이터'
+              : domain?.domainType === 'iso' ? 'ISO'
+                : 'EXPORT',
+          storageType:
             domain?.storageType === 'nfs' ? 'NFS'
-            : domain?.storageType === 'iscsi' ? 'iSCSI'
-            : 'Fibre Channel',
+              : domain?.storageType === 'iscsi' ? 'iSCSI'
+                : 'Fibre Channel',
           diskSize: formatBytesToGBToFixedZero(domain?.diskSize) + ' GB',
           availableSize: formatBytesToGBToFixedZero(domain?.availableSize) + ' GB',
           usedSize: formatBytesToGBToFixedZero(domain?.usedSize) + ' GB',
@@ -56,7 +56,7 @@ const DomainDupl = ({ domains = [], columns = [], actionType = 'domain', datacen
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
       />
-      
+
       {/* 도메인 모달창 */}
       <DomainModals
         activeModal={activeModal}

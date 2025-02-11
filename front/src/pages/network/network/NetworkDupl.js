@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import NetworkActionButtons from './button/NetworkActionButtons';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
-import NetworkModals from './modal/NetworkModals';
+import NetworkModals from '../../../components/modal/network/NetworkModals';
   
 const NetworkDupl = ({ networks = [], columns = [] }) => {
   const navigate = useNavigate();

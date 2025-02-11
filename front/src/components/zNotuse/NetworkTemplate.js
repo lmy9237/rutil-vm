@@ -1,10 +1,10 @@
-import { useAllTemplatesFromNetwork } from "../../api/RQHook";
+import { useState, useEffect, Suspense } from 'react'; 
+import { useNavigate } from 'react-router-dom';
 import TableColumnsInfo from "../table/TableColumnsInfo";
 import TableOuter from "../table/TableOuter";
-import { useNavigate } from 'react-router-dom';
-import { useState, useEffect, Suspense } from 'react'; 
 import TableColumnsInfo from "../table/TableColumnsInfo";
 import DeleteModal from "../Modal/DeleteModal";
+import { useAllTemplatesFromNetwork } from "../../api/RQHook";
 
 // 애플리케이션 섹션
 const NetworkTemplate = ({ network }) => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHost } from "../../../api/RQHook";
 import './css/Host.css';
-import { formatBytesToMB } from '../../../utils/format';
+import { formatBytesToMB } from '../../../util';
 
 const HostGeneral = ({ hostId }) => {
   const { data: host } = useHost(hostId);

@@ -1,7 +1,6 @@
-import React from 'react';
 import PagingTableOuter from '../../components/table/PagingTableOuter';
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
-import { renderSeverityIcon } from '../../utils/Icon';
+import { renderSeverityIcon } from '../../components/Icon';
 
 const EventTable = ({ events =[]} ) => {
   return (

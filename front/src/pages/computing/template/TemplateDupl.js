@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import TemplateActionButtons from './button/TemplateActionButtons';
-import TemplateModals from './modal/TemplateModals';
 import { useNavigate } from 'react-router-dom';
+import TemplateActionButtons from './button/TemplateActionButtons';
+import TemplateModals from '../../../components/modal/template/TemplateModals';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
 

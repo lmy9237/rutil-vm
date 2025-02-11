@@ -1,9 +1,9 @@
 import React from 'react';
-import TablesOuter from '../../../components/table/TablesOuter';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
-import { formatBytesToGBToFixedZero, renderDomainStatusIcon } from '../../../utils/format';
+import TablesOuter from '../../../components/table/TablesOuter';
+import { formatBytesToGBToFixedZero, renderDomainStatusIcon } from '../../../util';
 
 const DomainTable = ({
   columns,
@@ -80,7 +80,7 @@ export default DomainTable;
 // import { useNavigate } from 'react-router-dom';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faPlay, faPencil, faWrench } from '@fortawesome/free-solid-svg-icons';
-// import { formatBytesToGBToFixedZero } from '../util/format';
+// import { formatBytesToGBToFixedZero } from '../util';
 
 // const DomainTable = ({
 //   columns,

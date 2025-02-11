@@ -4,7 +4,7 @@ import { faCrown, faTimes,faArrowCircleUp, faArrowCircleDown } from "@fortawesom
 import { useNetworkInterfaceFromHost } from "../../../api/RQHook";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import NetworkHostModal from "../../network/network/modal/NetworkHostModal";
+import NetworkHostModal from "../../../components/modal/network/NetworkHostModal";
 
 const HostNics = ({ hostId }) => {
   const { data: nics = [] } = useNetworkInterfaceFromHost(hostId, (e) => ({

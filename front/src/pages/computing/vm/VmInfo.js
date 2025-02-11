@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import HeaderButton from '../../../components/button/HeaderButton';
 import { faMicrochip } from '@fortawesome/free-solid-svg-icons';
-import './css/Vm.css';
 import Footer from '../../../components/footer/Footer';
 import NavButton from '../../../components/navigation/NavButton';
 import Path from '../../../components/Header/Path';
-import { useVmById } from '../../../api/RQHook';
+import VmModals from '../../../components/modal/vm/VmModals';
+import { renderVmStatus } from '../../../components/Icon';
 import VmGeneral from './VmGeneral';
 import VmHostDevices from './VmHostDevices';
 import VmEvents from './VmEvents';
@@ -14,8 +14,8 @@ import VmApplications from './VmApplications';
 import VmSnapshots from './VmSnapshots';
 import VmNics from './VmNics';
 import VmDisks from './VmDisks';
-import VmModals from './modal/VmModals';
-import { renderVmStatus } from '../../../utils/Icon';
+import { useVmById } from '../../../api/RQHook';
+import './css/Vm.css';
 
 const VmInfo = () => {
   const navigate = useNavigate();

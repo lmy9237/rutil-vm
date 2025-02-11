@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ClusterActionButtons from './button/ClusterActionButtons';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
-import ClusterModals from './modal/ClusterModals';
+import ClusterModals from '../../../components/modal/cluster/ClusterModals';
 
 const ClusterDupl = ({ clusters = [], columns = [], datacenterId }) => {
   const navigate = useNavigate();

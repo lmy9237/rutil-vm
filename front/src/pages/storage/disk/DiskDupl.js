@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DiskActionButtons from './button/DiskActionButtons';
+import DiskModals from '../../../components/modal/disk/DiskModals';
 import TablesOuter from '../../../components/table/TablesOuter';
-import { icon } from '../../../utils/Icon';
-import { formatBytesToGBToFixedZero } from '../../../utils/format';
 import TableRowClick from '../../../components/table/TableRowClick';
-import DiskModals from './modal/DiskModals';
+import { icon } from '../../../components/Icon';
+import { formatBytesToGBToFixedZero } from '../../../util';
 
 const DiskDupl = ({ disks = [], columns = [], type = 'disk' }) => {
   const navigate = useNavigate();
@@ -14,9 +14,9 @@ const DiskDupl = ({ disks = [], columns = [], type = 'disk' }) => {
   const selectedIds = (Array.isArray(selectedDisks) ? selectedDisks : []).map((disk) => disk.id).join(', ');
 
   const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
-  
+
   const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);  
+  const closeModal = () => setActiveModal(null);
 
   return (
     <div onClick={(e) => e.stopPropagation()}> {/* 테이블 외부 클릭 방지 */}
@@ -57,7 +57,7 @@ const DiskDupl = ({ disks = [], columns = [], type = 'disk' }) => {
               icon: icon(d.status),
               storageDomain: <TableRowClick type="domains" id={d?.diskImageVo?.storageDomainVo?.id}>{d?.diskImageVo?.storageDomainVo?.name}</TableRowClick>,
               storageType: d?.diskImageVo?.storageType,
-              
+
             };
           }
         })}
@@ -69,7 +69,7 @@ const DiskDupl = ({ disks = [], columns = [], type = 'disk' }) => {
         onContextMenuItems={(row) => [ // 마우스 버튼
           <DiskActionButtons
             openModal={openModal}
-            isEditDisabled={!row} 
+            isEditDisabled={!row}
             type='context'
           />
         ]}

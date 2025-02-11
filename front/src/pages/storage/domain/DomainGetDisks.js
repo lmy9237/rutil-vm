@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useAllDataCenterFromDomain } from "../../../api/RQHook";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import DomainGetVmTemplateModal from './modal/DomainGetVmTemplateModal';
+import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
+import DomainGetDiskModal from '../../../components/modal/domain/DomainGetDiskModal';
 import DeleteModal from '../../../components/DeleteModal';
-import DomainGetDiskModal from './modal/DomainGetDiskModal';
 
 const DomainGetDisks = ({ domainId }) => {
   const { data: datacenters = [], isLoading: isDatacentersLoading } = useAllDataCenterFromDomain(domainId, (e) => ({ ...e }));

@@ -2,7 +2,7 @@ import React from 'react';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useAllVmsFromTemplate } from '../../../api/RQHook';
 import TablesOuter from '../../../components/table/TablesOuter';
-import { renderVmStatusIcon } from '../../../utils/Icon';
+import { renderVmStatusIcon } from '../../../components/Icon';
 
 const TemplateVms = ({ templateId }) => {
   const {

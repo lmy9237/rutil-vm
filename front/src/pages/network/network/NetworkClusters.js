@@ -1,10 +1,10 @@
 import React, { Suspense, useState } from 'react'; 
-import { useAllClustersFromNetwork} from "../../../api/RQHook";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
-import { renderStatusClusterIcon } from '../../../utils/Icon';
+import { renderStatusClusterIcon } from '../../../components/Icon';
+import { useAllClustersFromNetwork} from "../../../api/RQHook";
 
-const NetworkClusterModal = React.lazy(() => import('./modal/NetworkClusterModal'));
+const NetworkClusterModal = React.lazy(() => import('../../../components/modal/network/NetworkClusterModal'));
 
 // 애플리케이션 섹션
 const NetworkClusters = ({ networkId }) => {

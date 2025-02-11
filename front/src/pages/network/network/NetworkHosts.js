@@ -1,24 +1,24 @@
-import React, { Suspense, useEffect, useState } from 'react'; 
+import React, { Suspense, useEffect, useState } from 'react';
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from '../../../components/table/TableRowClick';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { renderHostStatusIcon, renderUpDownStatusIcon } from '../../../utils/Icon';
-import { formatBytesToMB } from '../../../utils/format';
-import { 
-  useConnectedHostsFromNetwork, 
-  useDisconnectedHostsFromNetwork, 
+import { renderHostStatusIcon, renderUpDownStatusIcon } from '../../../components/Icon';
+import {
+  useConnectedHostsFromNetwork,
+  useDisconnectedHostsFromNetwork,
   useNetworkInterfaceFromHost
 } from "../../../api/RQHook";
+import { formatBytesToMB } from '../../../util';
 
-const NetworkHostModal = React.lazy(() => import('./modal/NetworkHostModal'));
+const NetworkHostModal = React.lazy(() => import('../../../components/modal/network/NetworkHostModal'));
 
 const NetworkHosts = ({ networkId }) => {
-  const { 
-    data: connectedHosts = [], isLoading: isConnectedLoading, 
-  } = useConnectedHostsFromNetwork(networkId, (e) => ({...e})); 
-  const { 
-    data: disconnectedHosts = [], isLoading: isDisconnectedLoading, 
-  } = useDisconnectedHostsFromNetwork(networkId, (e) => ({...e})); 
+  const {
+    data: connectedHosts = [], isLoading: isConnectedLoading,
+  } = useConnectedHostsFromNetwork(networkId, (e) => ({ ...e }));
+  const {
+    data: disconnectedHosts = [], isLoading: isDisconnectedLoading,
+  } = useDisconnectedHostsFromNetwork(networkId, (e) => ({ ...e }));
 
 
   const [activeFilter, setActiveFilter] = useState("connected");
@@ -39,14 +39,14 @@ const NetworkHosts = ({ networkId }) => {
       networkDeviceStatus: renderUpDownStatusIcon(host?.hostNicVos?.[0]?.status),
       networkDevice: host?.hostNicVos?.[0]?.name,
       speed: host?.hostNicVos?.[0]?.speed,
-      rx: host?.hostNicVos?.[0]?.rxSpeed ? Math.round(formatBytesToMB(host.hostNicVos[0].rxSpeed)): "",
-      tx: host?.hostNicVos?.[0]?.txSpeed ? Math.round(formatBytesToMB(host.hostNicVos[0].txSpeed)): "",
-      totalRx: host?.hostNicVos?.[0]?.rxTotalSpeed ? host.hostNicVos[0].rxTotalSpeed.toLocaleString(): "",
-      totalTx: host?.hostNicVos?.[0]?.txTotalSpeed ? host.hostNicVos[0].txTotalSpeed.toLocaleString(): "",
+      rx: host?.hostNicVos?.[0]?.rxSpeed ? Math.round(formatBytesToMB(host.hostNicVos[0].rxSpeed)) : "",
+      tx: host?.hostNicVos?.[0]?.txSpeed ? Math.round(formatBytesToMB(host.hostNicVos[0].txSpeed)) : "",
+      totalRx: host?.hostNicVos?.[0]?.rxTotalSpeed ? host.hostNicVos[0].rxTotalSpeed.toLocaleString() : "",
+      totalTx: host?.hostNicVos?.[0]?.txTotalSpeed ? host.hostNicVos[0].txTotalSpeed.toLocaleString() : "",
     }));
   };
 
-  const { data: nics = [] } = useNetworkInterfaceFromHost(selectedHostId, (e) => ({ ...e,}));
+  const { data: nics = [] } = useNetworkInterfaceFromHost(selectedHostId, (e) => ({ ...e, }));
   useEffect(() => {
     if (isModalOpen) {
       if (nics.length > 0) {
@@ -76,8 +76,8 @@ const NetworkHosts = ({ networkId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <button 
-          onClick={() => setIsModalOpen(true)} 
+        <button
+          onClick={() => setIsModalOpen(true)}
           disabled={!selectedHostId} // selectedHost가 없으면 버튼 비활성화
         >
           호스트 네트워크 설정
@@ -93,7 +93,7 @@ const NetworkHosts = ({ networkId }) => {
         </button>
       </div>
 
-      <span>id = {selectedHostId || ''}</span> 
+      <span>id = {selectedHostId || ''}</span>
 
       {/* {isHostsLoading ? (
         <p>로딩 중...</p>
@@ -112,24 +112,24 @@ const NetworkHosts = ({ networkId }) => {
             : transformHostData(disconnectedHosts)
         }
         onRowClick={(row) => setSelectedHost(row)}
-        // onContextMenuItems={(row) => [
-        //   <div className='right-click-menu-box'>
-        //     <button 
-        //     onClick={() => setIsModalOpen(true)} 
-        //     className='right-click-menu-btn'
-        //     disabled={!selectedHost} // selectedHost가 없으면 버튼 비활성화
-        //   >
-        //     호스트 네트워크 설정
-        //   </button>
-        // </div>
-        // ]}
+      // onContextMenuItems={(row) => [
+      //   <div className='right-click-menu-box'>
+      //     <button 
+      //     onClick={() => setIsModalOpen(true)} 
+      //     className='right-click-menu-btn'
+      //     disabled={!selectedHost} // selectedHost가 없으면 버튼 비활성화
+      //   >
+      //     호스트 네트워크 설정
+      //   </button>
+      // </div>
+      // ]}
       />
 
       {/* 호스트 네트워크 모달창 */}
-      { renderModals() }
+      {renderModals()}
 
     </>
-    );
-  };
-  
+  );
+};
+
 export default NetworkHosts;

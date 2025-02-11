@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import VnicProfileActionButtons from './button/VnicProfileActionButtons.js';
 import TablesOuter from '../../../components/table/TablesOuter.js';
 import TableRowClick from '../../../components/table/TableRowClick.js';
-import VnicProfileModals from './modal/VnicProfileModals.js';
+import VnicProfileModals from '../../../components/modal/vnic-profile/VnicProfileModals';
 
 const VnicProfileDupl = ({ vnicProfiles = [], columns = [], networkId }) => {
   const navigate = useNavigate();

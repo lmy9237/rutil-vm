@@ -1,10 +1,10 @@
 import { Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAllTemplatesFromNetwork } from "../../../api/RQHook";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DeleteModal from "../../../components/DeleteModal";
-import TemplateNicDeleteModal from "../../computing/template/modal/TemplateNicDeleteModal";
+import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
+import { useAllTemplatesFromNetwork } from "../../../api/RQHook";
 
 const NetworkTemplates = ({ networkId }) => {
   const navigate = useNavigate();

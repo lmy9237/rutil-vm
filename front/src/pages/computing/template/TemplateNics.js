@@ -3,9 +3,9 @@ import { useAllNicsFromTemplate } from "../../../api/RQHook";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
-import TemplateNeworkNewInterModal from './modal/TemplateNeworkNewInterModal';
-import { renderTFStatusIcon } from "../../../utils/Icon";
-import TemplateNicDeleteModal from "./modal/TemplateNicDeleteModal";
+import { renderTFStatusIcon } from "../../../components/Icon";
+import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
+import TemplateNeworkNewInterModal from '../../../components/modal/template/TemplateNeworkNewInterModal';
 import NicActionButtons from "../../network/vnicProfile/NicActionButton";
 
 const TemplateNics = ({ templateId }) => {

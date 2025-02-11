@@ -1,13 +1,13 @@
 import React, { Suspense, useState } from 'react'; 
-import { useAllDataCenterFromDomain, useDomainById } from "../../../api/RQHook";
+import DomainActionButtons from './button/DomainActionButtons';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import DomainActionButtons from './button/DomainActionButtons';
-import { renderDataCenterStatusIcon } from '../../../utils/Icon';
+import { renderDataCenterStatusIcon } from '../../../components/Icon';
+import { useAllDataCenterFromDomain, useDomainById } from "../../../api/RQHook";
 
-const DomainActionModal = React.lazy(() => import('./modal/DomainActionModal'));
-const DomainAttachModal = React.lazy(()=> import('./modal/DomainAttachModal'));
+const DomainActionModal = React.lazy(() => import('../../../components/modal/domain/DomainActionModal'));
+const DomainAttachModal = React.lazy(()=> import('../../../components/modal/domain/DomainAttachModal'));
 
 const DomainDatacenters = ({ domainId }) => {
   const { data: datacenters = [], isLoading: isDatacentersLoading } = useAllDataCenterFromDomain(domainId, (e) => ({...e,}));  

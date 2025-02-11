@@ -3,13 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import HeaderButton from '../../../components/button/HeaderButton';
 import Footer from '../../../components/footer/Footer';
 import Path from '../../../components/Header/Path';
-import { adjustFontSize } from '../../../UIEvent';
 import { faLaptop, } from '@fortawesome/free-solid-svg-icons'
 import NavButton from '../../../components/navigation/NavButton';
 import VnicProfileVms from './VnicProfileVms';
 import VnicProfileTemplates from './VnicProfileTemplates';
+import VnicProfileModals from '../../../components/modal/vnic-profile/VnicProfileModals';
 import { useVnicProfile } from '../../../api/RQHook';
-import VnicProfileModals from './modal/VnicProfileModals';
+import { adjustFontSize } from '../../../UIEvent';
 
 const VnicProfileInfo = () => {
   const navigate = useNavigate();

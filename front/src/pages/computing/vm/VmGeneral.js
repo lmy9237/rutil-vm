@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComputer, faEarthAmericas, faPlus, faServer, faUser } from "@fortawesome/free-solid-svg-icons";
 import VmGeneralChart from "./VmGeneralChart";
 import { useVmById } from "../../../api/RQHook";
-import { formatBytesToMB } from "../../../utils/format";
+import { formatBytesToMB } from "../../../util";
 
 // 운영 시스템
 const osSystemList = [

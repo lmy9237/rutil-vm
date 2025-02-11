@@ -1,11 +1,11 @@
 import { Suspense, useState } from 'react';
-import { useAllVmsFromNetwork } from "../../../api/RQHook";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
-import { renderUpDownStatusIcon, renderVmStatusIcon } from "../../../utils/Icon";
-import { formatBytesToMB } from '../../../utils/format';
-import VmDeleteModal from '../../computing/vm/modal/VmDeleteModal';
+import VmDeleteModal from '../../../components/modal/vm/VmDeleteModal';
+import { renderUpDownStatusIcon, renderVmStatusIcon } from "../../../components/Icon";
+import { useAllVmsFromNetwork } from "../../../api/RQHook";
+import { formatBytesToMB } from '../../../util';
 
 // const 
 

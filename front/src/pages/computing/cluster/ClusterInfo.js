@@ -5,14 +5,14 @@ import NavButton from '../../../components/navigation/NavButton'
 import HeaderButton from '../../../components/button/HeaderButton';
 import Footer from '../../../components/footer/Footer';
 import Path from '../../../components/Header/Path';
-import './css/Cluster.css';
-import { useCluster } from '../../../api/RQHook';
+import ClusterModals from '../../../components/modal/cluster/ClusterModals';
 import ClusterGeneral from './ClusterGeneral';
 import ClusterHosts from './ClusterHosts';
 import ClusterVms from './ClusterVms';
 import ClusterNetworks from './ClusterNetworks';
 import ClusterEvents from './ClusterEvents';
-import ClusterModals from './modal/ClusterModals';
+import { useCluster } from '../../../api/RQHook';
+import './css/Cluster.css';
 
 const ClusterInfo = () => {
   const navigate = useNavigate();
