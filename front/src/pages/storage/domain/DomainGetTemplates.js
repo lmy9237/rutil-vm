@@ -1,16 +1,16 @@
 import React, { useState } from 'react'; 
-import { useAllDataCenterFromDomain } from "../../../api/RQHook";
+import { useAllUnregisteredTemplateFromDomain } from "../../../api/RQHook";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
 import DeleteModal from '../../../components/DeleteModal';
 
 const DomainGetTemplates = ({ domainId }) => {
-  const { data: datacenters = [], isLoading: isDatacentersLoading } = useAllDataCenterFromDomain(domainId, (e) => ({ ...e }));
+  const { data: templates = [], isLoading: isTemplatesLoading } = useAllUnregisteredTemplateFromDomain(domainId, (e) => ({ ...e }));
 
   const [activeModal, setActiveModal] = useState(null);
-  const [selectedDataCenters, setSelectedDataCenters] = useState([]); // 다중 선택된 데이터센터
-  const selectedIds = (Array.isArray(selectedDataCenters) ? selectedDataCenters : []).map((dc) => dc.id).join(', ');
+  const [selectedTemplates, setSelectedTemplates] = useState([]); // 다중 선택된 데이터센터
+  const selectedIds = (Array.isArray(selectedTemplates) ? selectedTemplates : []).map((t) => t.id).join(', ');
 
   return (
     <>
@@ -22,6 +22,19 @@ const DomainGetTemplates = ({ domainId }) => {
 
       <TablesOuter 
         columns={TableColumnsInfo.GET_VMS_TEMPLATES} 
+        data={templates.map((t) => {
+          return {
+            ...t,
+            name: t.name,
+            source: t.source,
+            memory: t.memorySize,
+            cpu: t.osSystem,
+            cpuArc: t.cpuArc,
+            disk: t.disk,
+            createdAt: t.createdAt,
+            exportedAt: t.exportedAt,
+          };
+        })}
         shouldHighlight1stCol={true}
         onRowClick={{ console }}
         multiSelect={true}
@@ -31,7 +44,7 @@ const DomainGetTemplates = ({ domainId }) => {
       {activeModal === 'get' && (
         <DomainGetVmTemplateModal 
           isOpen={true} 
-          data={selectedDataCenters} 
+          data={selectedTemplates} 
           type="template"
           onClose={() => setActiveModal(null)} 
         />
@@ -43,7 +56,7 @@ const DomainGetTemplates = ({ domainId }) => {
           type="DataCenter" 
           onRequestClose={() => setActiveModal(null)} 
           contentLabel={'템플릿'}
-          data={selectedDataCenters}
+          data={selectedTemplates}
         />
       )}
     </>

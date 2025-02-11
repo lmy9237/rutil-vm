@@ -1,17 +1,17 @@
 import React, { useState } from 'react'; 
-import { useAllDataCenterFromDomain } from "../../../api/RQHook";
+import { useAllUnregisteredDiskFromDomain } from "../../../api/RQHook";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
 import DomainGetDiskModal from '../../../components/modal/domain/DomainGetDiskModal';
 import DeleteModal from '../../../components/DeleteModal';
+import { formatBytesToGBToFixedZero } from '../../../util';
 
 const DomainGetDisks = ({ domainId }) => {
-  const { data: datacenters = [], isLoading: isDatacentersLoading } = useAllDataCenterFromDomain(domainId, (e) => ({ ...e }));
+  const { data: disks = [], isLoading: isDisksLoading } = useAllUnregisteredDiskFromDomain(domainId, (e) => ({ ...e }));
 
   const [activeModal, setActiveModal] = useState(null);
-  const [selectedDataCenters, setSelectedDataCenters] = useState([]); // 다중 선택된 데이터센터
-  const selectedIds = (Array.isArray(selectedDataCenters) ? selectedDataCenters : []).map((dc) => dc.id).join(', ');
+  const [selecteDisks, setSelectedDisks] = useState([]); // 다중 선택된 데이터센터
+  const selectedIds = (Array.isArray(setSelectedDisks) ? setSelectedDisks : []).map((disk) => disk.id).join(', ');
 
   return (
     <>
@@ -22,7 +22,16 @@ const DomainGetDisks = ({ domainId }) => {
       <span>ID: {selectedIds || ''}</span>
 
       <TablesOuter 
-        columns={TableColumnsInfo.GET_DISKS} 
+        columns={TableColumnsInfo.GET_DISKS}
+        data={disks.map((d) => {
+          return {
+            ...d,
+            alias: d?.alias,
+            sparse: d?.sparse ? '씬 프로비저닝' : '사전 할당',            
+            virtualSize: formatBytesToGBToFixedZero(d?.virtualSize) + " GiB",
+            actualSize: formatBytesToGBToFixedZero(d?.actualSize),
+          }
+        })}
         shouldHighlight1stCol={true}
         onRowClick={{ console }}
         multiSelect={true}
@@ -32,7 +41,7 @@ const DomainGetDisks = ({ domainId }) => {
       {activeModal === 'get' && (
         <DomainGetDiskModal 
           isOpen={true} 
-          data={selectedDataCenters} 
+          data={selecteDisks} 
           onClose={() => setActiveModal(null)} 
         />
       )}
@@ -43,7 +52,7 @@ const DomainGetDisks = ({ domainId }) => {
           type="Vm" 
           onRequestClose={() => setActiveModal(null)} 
           contentLabel={'디스크'}
-          data={selectedDataCenters}
+          data={selecteDisks}
         />
       )}
     </>

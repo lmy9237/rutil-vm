@@ -2656,6 +2656,28 @@ export const useAllVMFromDomain = (storageDomainId, mapPredicate) => useQuery({
 })
 
 /**
+ * @name useAllUnregisteredVMFromDomain
+ * @description 도메인 내 가상머신 불러오기 목록조회 useQuery훅
+ * 
+ * @param {string} storageDomainId 도메인ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllUnregisterdVMsFromDomain
+ */
+export const useAllUnregisteredVMFromDomain = (storageDomainId, mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['AllVMFromDomain', storageDomainId], 
+  queryFn: async () => {
+    console.log(`useAllUnregisteredVMFromDomain ... ${storageDomainId}`);
+    const res = await ApiManager.findAllUnregisterdVMsFromDomain(storageDomainId); 
+    return res?.map((e) => mapPredicate(e)) ?? []; 
+  },
+  enabled: !!storageDomainId,
+  staleTime: 0,
+  cacheTime: 0,
+})
+/**
  * @name useAllDiskFromDomain
  * @description 도메인 내 디스크 목록조회 useQuery훅
  * 
@@ -2671,6 +2693,66 @@ export const useAllDiskFromDomain = (storageDomainId, mapPredicate) => useQuery(
   queryFn: async () => {
     console.log(`useAllDiskFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllDisksFromDomain(storageDomainId); 
+    return res?.map((e) => mapPredicate(e)) ?? []; 
+  },
+  enabled: !!storageDomainId,
+})
+/**
+ * @name useAllUnregisteredDiskFromDomain
+ * @description 도메인 내 디스크 가져오기 목록조회 useQuery훅
+ * 
+ * @param {string} storageDomainId 도메인ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllUnregisteredDisksFromDomain
+ */
+export const useAllUnregisteredDiskFromDomain = (storageDomainId, mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['AllUnregisteredDiskFromDomain', storageDomainId], 
+  queryFn: async () => {
+    console.log(`useAllUnregisteredDiskFromDomain ... ${storageDomainId}`);
+    const res = await ApiManager.findAllUnregisteredDisksFromDomain(storageDomainId); 
+    return res?.map((e) => mapPredicate(e)) ?? []; 
+  },
+  enabled: !!storageDomainId,
+})
+/**
+ * @name useAllTemplateFromDomain
+ * @description 도메인 내 템플릿 목록조회 useQuery훅
+ * 
+ * @param {string} storageDomainId 도메인ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllTemplatesFromDomain
+ */
+export const useAllTemplateFromDomain = (storageDomainId, mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['AllTemplateFromDomain', storageDomainId], 
+  queryFn: async () => {
+    console.log(`useAllTemplateFromDomain ... ${storageDomainId}`);
+    const res = await ApiManager.findAllTemplatesFromDomain(storageDomainId); 
+    return res?.map((e) => mapPredicate(e)) ?? []; 
+  },
+  enabled: !!storageDomainId,
+})
+/**
+ * @name useAllUnregisteredTemplateFromDomain
+ * @description 도메인 내 템플릿 불러오기 목록조회 useQuery훅
+ * 
+ * @param {string} storageDomainId 도메인ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllUnregisteredTemplatesFromDomain
+ */
+export const useAllUnregisteredTemplateFromDomain = (storageDomainId, mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['AllUnregisteredTemplateFromDomain', storageDomainId], 
+  queryFn: async () => {
+    console.log(`useAllUnregisteredTemplateFromDomain ... ${storageDomainId}`);
+    const res = await ApiManager.findAllUnregisteredTemplatesFromDomain(storageDomainId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
   enabled: !!storageDomainId,
@@ -2699,8 +2781,6 @@ export const useAllDiskProfileFromDomain = (storageDomainId, mapPredicate) => us
   },
   enabled: !!storageDomainId, // storageDomainId가 있을 때만 쿼리 실행
 });
-
-
 /**
  * @name useAllDiskSnapshotFromDomain
  * @description 도메인 내 디스크스냅샷 목록조회 useQuery훅
@@ -2722,26 +2802,6 @@ export const useAllDiskSnapshotFromDomain = (storageDomainId, mapPredicate) => u
   enabled: !!storageDomainId,
   staleTime: 0,
   cacheTime: 0,
-})
-/**
- * @name useAllTemplateFromDomain
- * @description 도메인 내 템플릿 목록조회 useQuery훅
- * 
- * @param {string} storageDomainId 도메인ID
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findAllDataCenterFromDomain
- */
-export const useAllTemplateFromDomain = (storageDomainId, mapPredicate) => useQuery({
-  refetchOnWindowFocus: true,
-  queryKey: ['AllTemplateFromDomain', storageDomainId], 
-  queryFn: async () => {
-    console.log(`useAllTemplateFromDomain ... ${storageDomainId}`);
-    const res = await ApiManager.findAllTemplatesFromDomain(storageDomainId); 
-    return res?.map((e) => mapPredicate(e)) ?? []; 
-  },
-  enabled: !!storageDomainId,
 })
 /**
  * @name useAllEventFromDomain

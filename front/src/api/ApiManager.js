@@ -2145,7 +2145,6 @@ migrateHostsFromVM: async (vmId) => {
     url: ENDPOINTS.FIND_DATA_CENTERS_FROM_STORAGE_DOMAINS(storageDomainId),
     // defaultValues: DEFAULT_VALUES.FIND_DATACENTER_FROM_DOMAIN
   }),
-
   /**
    * @name ApiManager.findAllVMsFromDomain
    * @description 가상머신 목록
@@ -2160,7 +2159,20 @@ migrateHostsFromVM: async (vmId) => {
     url: ENDPOINTS.FIND_VMS_FROM_STORAGE_DOMAINS(storageDomainId),
     // defaultValues: DEFAULT_VALUES.FIND_VMS_FROM_STORAGE_DOMAINS
   }),
-
+  /**
+   * @name ApiManager.findAllUnregisterdVMsFromDomain
+   * @description 가상머신 불러오기 목록
+   *
+   * @param {string} storageDomainId
+   * @returns 
+   * 
+   * @see
+   */
+  findAllUnregisterdVMsFromDomain : async (storageDomainId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_UNREGISTERD_VMS_FROM_STORAGE_DOMAINS(storageDomainId),
+    // defaultValues: DEFAULT_VALUES.FIND_VMS_FROM_STORAGE_DOMAINS
+  }),
   /**
    * @name ApiManager.findAllDisksFromDomain
    * @description 디스크 목록
@@ -2175,7 +2187,48 @@ migrateHostsFromVM: async (vmId) => {
     url: ENDPOINTS.FIND_DISKS_FROM_STORAGE_DOMAINS(storageDomainId),
     // defaultValues: DEFAULT_VALUES.FIND_DISK_FROM_DOMAIN
   }),
-
+  /**
+   * @name ApiManager.findAllUnregisteredDisksFromDomain
+   * @description 디스크 가져오기 목록
+   *
+   * @param {string} storageDomainId
+   * @returns 
+   * 
+   * @see
+   */
+  findAllUnregisteredDisksFromDomain: async (storageDomainId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_UNREGISTERD_DISKS_FROM_STORAGE_DOMAINS(storageDomainId),
+    // defaultValues: DEFAULT_VALUES.FIND_DISK_FROM_DOMAIN
+  }),
+  /**
+   * @name ApiManager.findAllTemplatesFromDomain
+   * @description 템플릿 목록
+   *
+   * @param {string} storageDomainId
+   * @returns 
+   * 
+   * @see
+   */
+  findAllTemplatesFromDomain: async (storageDomainId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_TEMPLATES_FROM_STORAGE_DOMAINS(storageDomainId),
+    // defaultValues: DEFAULT_VALUES.TEMPLATE_FROM_DOMAIN
+  }),
+  /**
+   * @name ApiManager.findAllUnregisteredTemplatesFromDomain
+   * @description 템플릿 불러오기 목록
+   *
+   * @param {string} storageDomainId
+   * @returns 
+   * 
+   * @see
+   */
+  findAllUnregisteredTemplatesFromDomain: async (storageDomainId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_UNREGISTERD_TEMPLATES_FROM_STORAGE_DOMAINS(storageDomainId),
+    // defaultValues: DEFAULT_VALUES.TEMPLATE_FROM_DOMAIN
+  }),
   /**
    * @name ApiManager.findAllDiskProfilesFromDomain
    * @description 디스크 프로파일 목록
@@ -2205,20 +2258,6 @@ migrateHostsFromVM: async (vmId) => {
     method: "GET", 
     url: ENDPOINTS.FIND_DISK_SNAPSHOTS_FROM_STORAGE_DOMAINS(storageDomainId),
     // defaultValues: DEFAULT_VALUES.DISK_SNAPSHOT_FROM_DOMAIN
-  }),
-  /**
-   * @name ApiManager.findAllTemplatesFromDomain
-   * @description 템플릿 목록
-   *
-   * @param {string} storageDomainId
-   * @returns 
-   * 
-   * @see
-   */
-  findAllTemplatesFromDomain: async (storageDomainId) => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_TEMPLATES_FROM_STORAGE_DOMAINS(storageDomainId),
-    // defaultValues: DEFAULT_VALUES.TEMPLATE_FROM_DOMAIN
   }),
   /**
    * @name ApiManager.findAllEventsFromDomain
