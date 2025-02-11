@@ -1,9 +1,5 @@
 package com.itinfo.rutilvm.api
 
-import com.itinfo.rutilvm.common.GsonLocalDateTimeAdapter
-
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.builder.SpringApplicationBuilder
@@ -13,7 +9,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.core.SpringVersion
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 
 private val log = LoggerFactory.getLogger(RutilVmApplication::class.java)
 

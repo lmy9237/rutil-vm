@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("v2")
 @Api(value="ClustersController", tags=["clusters"])
-class ClustersController {
+class ClustersController: BaseController() {
 	@Autowired private lateinit var clustersService: ClustersService
 	@Autowired private lateinit var websocketService: WebsocketService
 
@@ -35,7 +35,7 @@ class ClustersController {
 		log.info("... fetchClusters")
 		val clusters =
 			clustersService.retrieveClusters()
-		return JSONObject().apply { 
+		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = clusters
 		}
 	}
@@ -153,7 +153,7 @@ class ClustersController {
 	@ResponseBody
 	fun retrieveNetworks(): JSONObject {
 		log.info("... retrieveNetworks")
-		val networks: List<NetworkVo> = 
+		val networks: List<NetworkVo> =
 			clustersService.retrieveNetworks()
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = networks
@@ -194,7 +194,7 @@ class ClustersController {
 			this[ItInfoConstant.RESULT_KEY] = "OK"
 		}
 	}
-	
+
 	companion object {
 		private val log by LoggerDelegate()
 	}

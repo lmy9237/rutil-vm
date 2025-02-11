@@ -1,9 +1,9 @@
 package com.itinfo.rutilvm.api.service.computing
 
+import com.itinfo.rutilvm.api.configuration.PropertiesConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.auth.RutilProperties
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.fromStorageDomainsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.network.*
@@ -175,9 +175,9 @@ interface ItHostService {
 class HostServiceImpl(
 
 ): BaseService(), ItHostService {
+	@Autowired private lateinit var propConfig: PropertiesConfig
 	@Autowired private lateinit var hostConfigurationRepository: HostConfigurationRepository
 	@Autowired private lateinit var itGraphService: ItGraphService
-	@Autowired private lateinit var rutil: RutilProperties
 
 	@Throws(Error::class)
 	override fun findAll(): List<HostVo> {
@@ -214,8 +214,8 @@ class HostServiceImpl(
 		val res: Host? = conn.addHost(
 			hostVo.toAddHostBuilder(),
 			deployHostedEngine,
-			rutil.id,
-			rutil.password
+			propConfig.rebootHostId,
+			propConfig.rebootHostPassword
 		).getOrNull()
 		return res?.toHostVo(conn)
 	}

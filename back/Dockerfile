@@ -47,43 +47,42 @@ LABEL license="Apache-2.0"
 LABEL environment="production"
 LABEL app-name="rutil-vm-api"
 
-ENV ITCLOUD_VERSION=0.2.0-beta1
-ENV ITCLOUD_RELEASE_DATE=2025-02-06
-ENV ITCLOUD_PORT_HTTP=8080
-ENV ITCLOUD_PORT_HTTPS=8443
-ENV ITCLOUD_OVIRT_IP=192.168.0.70
+ENV RUTIL_VM_VERSION=0.2.0-beta1
+ENV RUTIL_VM_RELEASE_DATE=2025-02-06
+ENV RUTIL_VM_PORT_HTTP=8080
+ENV RUTIL_VM_PORT_HTTPS=8443
+ENV RUTIL_VM_OVIRT_IP=192.168.0.70
 RUN echo "================== common.properties =================="
 RUN echo ""
-RUN echo "version: $ITCLOUD_VERSION"
-RUN echo "release-date: $ITCLOUD_RELEASE_DATE"
-RUN echo "http-port: $ITCLOUD_PORT_HTTP"
-RUN echo "http-ports: $ITCLOUD_PORT_HTTPS"
-RUN echo "ovirt-ip: $ITCLOUD_OVIRT_IP"
+RUN echo "version: $RUTIL_VM_VERSION"
+RUN echo "release-date: $RUTIL_VM_RELEASE_DATE"
+RUN echo "http-port: $RUTIL_VM_PORT_HTTP"
+RUN echo "http-ports: $RUTIL_VM_PORT_HTTPS"
+RUN echo "ovirt-ip: $RUTIL_VM_OVIRT_IP"
 RUN echo ""
 
-ENV POSTGRES_JDBC_URL=192.168.0.70
 ENV POSTGRES_JDBC_PORT=5432
 ENV POSTGRES_DATASOURCE_JDBC_ID=rutil
 ENV POSTGRES_DATASOURCE_JDBC_PW=rutil1!
-ENV POSTGRES_JDBC_URL_HISTORY="jdbc:postgresql://$POSTGRES_JDBC_URL:$POSTGRES_JDBC_PORT/ovirt_engine_history?currentSchema=public"
-ENV POSTGRES_JDBC_URL_ENGINE="jdbc:postgresql://$POSTGRES_JDBC_URL:$POSTGRES_JDBC_PORT/engine?currentSchema=public"
-ENV POSTGRES_JDBC_URL_AAA="jdbc:postgresql://$POSTGRES_JDBC_URL:$POSTGRES_JDBC_PORT/engine?currentSchema=aaa_jdbc"
+# ENV POSTGRES_JDBC_URL_HISTORY="jdbc:postgresql://$RUTIL_VM_OVIRT_IP:$POSTGRES_JDBC_PORT/ovirt_engine_history?currentSchema=public"
+# ENV POSTGRES_JDBC_URL_ENGINE="jdbc:postgresql://$RUTIL_VM_OVIRT_IP:$POSTGRES_JDBC_PORT/engine?currentSchema=public"
+# ENV POSTGRES_JDBC_URL_AAA="jdbc:postgresql://$RUTIL_VM_OVIRT_IP:$POSTGRES_JDBC_PORT/engine?currentSchema=aaa_jdbc"
 RUN echo "================== database.properties =================="
 RUN echo ""
 RUN echo ""
 
-#ENV ITCLOUD_SSL_ENABLED=${ITCLOUD_SSL_ENABLED}
-#ENV ITCLOUD_SSL_FILE=${ITCLOUD_SSL_FILE}
-#ENV ITCLOUD_SSL_PASSWORD=${ITCLOUD_SSL_PASSWORD}
-#ENV ITCLOUD_SSL_ALIAS=${ITCLOUD_SSL_ALIAS}
+#ENV RUTIL_VM_SSL_ENABLED=${RUTIL_VM_SSL_ENABLED}
+#ENV RUTIL_VM_SSL_FILE=${RUTIL_VM_SSL_FILE}
+#ENV RUTIL_VM_SSL_PASSWORD=${RUTIL_VM_SSL_PASSWORD}
+#ENV RUTIL_VM_SSL_ALIAS=${RUTIL_VM_SSL_ALIAS}
 RUN echo "================== application.properties =================="
 RUN echo ""
-RUN echo "application.version: $ITCLOUD_VERSION"
+RUN echo "application.version: $RUTIL_VM_VERSION"
 RUN echo ""
-RUN echo "server.ssl.enabled: $ITCLOUD_SSL_ENABLED"
+RUN echo "server.ssl.enabled: $RUTIL_VM_SSL_ENABLED"
 RUN echo "server.ssl.key-store:"
-RUN echo "server.ssl.key-store-password: $ITCLOUD_SSL_PASSWORD"
-RUN echo "server.ssl.key-alias: $ITCLOUD_SSL_ALIAS"
+RUN echo "server.ssl.key-store-password: $RUTIL_VM_SSL_PASSWORD"
+RUN echo "server.ssl.key-alias: $RUTIL_VM_SSL_ALIAS"
 RUN echo ""
 RUN echo "spring.datasource.engine.url: $POSTGRES_JDBC_URL_ENGINE"
 RUN echo "spring.datasource.engine.username: $POSTGRES_DATASOURCE_JDBC_ID"
@@ -107,19 +106,18 @@ COPY --from=build /home/gradle/project/rutil-vm-api/build/libs/*.jar app.jar
 EXPOSE 8080
 EXPOSE 8443
 
-# ENTRYPOINT [ "java", "-jar", "app.jar"]
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
-CMD [\
-#  "--server.ssl.enabled=${ITCLOUD_SSL_ENABLED}", \
-#  "--server.ssl.key-store-password=${ITCLOUD_SSL_PASSWORD}", \
-#  "--server.ssl.key-alias=${ITCLOUD_SSL_ALIAS}", \
-  "--spring.datasource.engine.url=${POSTGRES_JDBC_URL_ENGINE}", \
+ENTRYPOINT [ "java", "-jar", "app.jar", \
+  # "-Dspring-boot.run.arguments=", \
+  "--application.ovirt.ip=${RUTIL_VM_OVIRT_IP}", \
+  "--application.ovirt.port.ssl=${RUTIL_VM_OVIRT_PORT_HTTPS}", \
+  "--server.port=${RUTIL_VM_PORT_HTTPS}", \
+  # "--spring.datasource.engine.url=${RUTIL_VM_OVIRT_IP}", \
   "--spring.datasource.engine.username=${POSTGRES_DATASOURCE_JDBC_ID}", \
   "--spring.datasource.engine.password=${POSTGRES_DATASOURCE_JDBC_PW}", \
-  "--spring.datasource.history.url=${POSTGRES_JDBC_URL_HISTORY}", \
+  # "--spring.datasource.history.url=${POSTGRES_JDBC_URL_HISTORY}", \
   "--spring.datasource.history.username=${POSTGRES_DATASOURCE_JDBC_ID}", \
   "--spring.datasource.history.password=${POSTGRES_DATASOURCE_JDBC_PW}", \
-  "--spring.datasource.aaa.url=${POSTGRES_JDBC_URL_AAA}", \
+  # "--spring.datasource.aaa.url=${POSTGRES_JDBC_URL_AAA}", \
   "--spring.datasource.aaa.username=${POSTGRES_DATASOURCE_JDBC_ID}", \
   "--spring.datasource.aaa.password=${POSTGRES_DATASOURCE_JDBC_PW}" \
 ]

@@ -1,0 +1,38 @@
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
+
+# User specific environment and startup programs
+
+PATH=$PATH:$HOME/bin
+DOCKER_IMG=ititcloud/rutil-vm-api:0.2.0-beta2
+RUTIL_VM_HOME=$HOME/rutil-vm
+DOCKER_COMPOSE_FILENAME=deploy-local-70.yaml
+export RUTIL_VM_HOME
+export DOCKER_COMPOSE_FILENAME
+export PATH
+
+#
+# docker logs -f <컨테이너명>
+#
+function dl() {
+  docker logs -f $1
+}
+
+#
+# docker rmi <이미지>
+#
+function drmi() {
+  docker rmi $1
+}
+
+function startDk() {
+  docker compose -f "$RUTIL_VM_HOME/$DOCKER_COMPOSE_FILENAME" up -d;dl rutil-vm-api
+}
+
+function stopDk() {
+  docker compose -f "$HOME/rutil-vm/$DOCKER_COMPOSE_FILENAME" down
+}

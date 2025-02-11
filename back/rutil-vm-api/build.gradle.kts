@@ -20,10 +20,10 @@ springBoot {
 }
 
 val profile: String = project.findProperty("profile") as? String ?: "local"
-val skipNpm: Boolean = (project.findProperty("skipNpm") as? String)?.toBoolean() ?: false
+// val skipNpm: Boolean = (project.findProperty("skipNpm") as? String)?.toBoolean() ?: false
 var artifactName: String = "rutil-vm-api-$profile"
 println("profile  : $profile")
-println("skipNpm  : $skipNpm")
+// println("skipNpm  : $skipNpm")
 val defaultBuildClassPath: String = "build/classes/kotlin/main"
 val explodedWarName: String = "exploded"
 val explodedWarPath: String = "$buildDir/libs/$explodedWarName"
@@ -32,7 +32,7 @@ println("explodedWarPath  : $explodedWarPath")
 
 sourceSets {
     main {
-        if (profile == "prd" || profile == "staging") {
+        if (profile == "prd" || profile == "staging" || profile == "local70") {
             resources.srcDir("src/main/resources-$profile")
         }
     }

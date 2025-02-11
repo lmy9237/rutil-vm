@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest
 
 @Controller
 @Api(value="LoginController", tags=["login"])
-class LoginController {
+class LoginController: BaseController() {
 	@Autowired private lateinit var connectionService: ConnectionService
 	@Autowired private lateinit var systemPropertiesService: SystemPropertiesService
 	@Autowired private lateinit var usersService: UsersService
@@ -37,7 +37,7 @@ class LoginController {
 	fun scopeTest(): JSONObject {
 		log.info("... scopeTest")
 		return JSONObject().apply {
-			this[ItInfoConstant.RESULT_KEY] = connectionService.uid	
+			this[ItInfoConstant.RESULT_KEY] = connectionService.uid
 		}
 	}
 
@@ -107,7 +107,7 @@ class LoginController {
 		val systemProperties: SystemPropertiesVo =
 			systemPropertiesService.retrieveSystemProperties()
 		val redirectUrl: String =
-			if ((systemProperties.ip.isNotEmpty() && systemProperties.password.isNotEmpty()))
+			if ((systemProperties.ovirtIp.isNotEmpty() && systemProperties.password.isNotEmpty()))
 				"/dashboard"
 			else
 				"/admin/systemProperties"
@@ -131,9 +131,8 @@ class LoginController {
 	): JSONObject {
 		log.info("... resetAdminLoginCount")
 //		usersService.initLoginCount(userId)
-
 		val systemProperties = systemPropertiesService.retrieveSystemProperties()
-		systemProperties.ip = ""
+		systemProperties.ovirtIp = ""
 		systemProperties.password = ""
 		systemProperties.vncIp = ""
 		systemProperties.vncPort = ""
@@ -148,7 +147,7 @@ class LoginController {
 			this[ItInfoConstant.RESULT_KEY] = if (updateResult > 0) "OK" else "FAIl"
 		}
 	}
-	
+
 	companion object {
 		private val log by LoggerDelegate()
 	}

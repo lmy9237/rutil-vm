@@ -1,7 +1,7 @@
 package com.itinfo.rutilvm.api.model.computing
 
+import com.itinfo.rutilvm.api.configuration.PropertiesConfig
 import com.itinfo.rutilvm.common.gson
-import com.itinfo.rutilvm.api.model.auth.RutilProperties
 import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.Connection
@@ -83,7 +83,7 @@ class DashBoardVo (
     }
 }
 
-fun Connection.toDashboardVo(rutilProperties: RutilProperties): DashBoardVo {
+fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashBoardVo {
     val allDataCenters = this@toDashboardVo.findAllDataCenters().getOrDefault(listOf())
     val allHosts = this@toDashboardVo.findAllHosts().getOrDefault(listOf())
     val allVms = this@toDashboardVo.findAllVms().getOrDefault(listOf())
@@ -135,7 +135,7 @@ fun Connection.toDashboardVo(rutilProperties: RutilProperties): DashBoardVo {
         eventsError { eventsError }
         eventsWarning { eventsWarning }
         bootTime { date?.let { ovirtDf.format(it) } }
-        version { rutilProperties.version }
-        releaseDate { rutilProperties.releaseDate }
+        version { propConfig.version }
+        releaseDate { propConfig.releaseDate }
     }
 }

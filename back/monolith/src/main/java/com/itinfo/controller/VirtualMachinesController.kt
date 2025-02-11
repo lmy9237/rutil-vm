@@ -40,7 +40,7 @@ class VirtualMachinesController {
 		@RequestParam(name="status") status: String,
 	): JSONObject {
 		log.info("... retrieveVms('$status')")
-		val vms: List<VmVo> = 
+		val vms: List<VmVo> =
 			if ((status == "all")) virtualMachinesService.retrieveVmsAll()
 			else virtualMachinesService.retrieveVms(status)
 		return JSONObject().apply {
@@ -73,7 +73,7 @@ class VirtualMachinesController {
 	@ResponseBody
 	fun retrieveVmsClusters(): JSONObject {
 		log.info("... retrieveVmsClusters")
-		val clusters: List<ClusterVo> = 
+		val clusters: List<ClusterVo> =
 			virtualMachinesService.retrieveVmsClusters()
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = clusters
@@ -93,7 +93,7 @@ class VirtualMachinesController {
 		@RequestParam(name="id") id: String,
 	): JSONObject {
 		log.info("... retrieveVm('$id')")
-		val vm: VmVo = 
+		val vm: VmVo =
 			virtualMachinesService.retrieveVm(id)
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = vm
@@ -113,7 +113,7 @@ class VirtualMachinesController {
 		@RequestParam(name="id") id: String,
 	): JSONObject {
 		log.info("... retrieveVmNetworkInterface('$id')")
-		val vmNics: List<VmNicVo> = 
+		val vmNics: List<VmNicVo> =
 			virtualMachinesService.retrieveVmNics(id)
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = vmNics
@@ -190,7 +190,7 @@ class VirtualMachinesController {
 		@RequestParam(name="id") id: String,
 	): JSONObject {
 		log.info("... retrieveVmDisks('$id')")
-		val list: List<DiskVo> = 
+		val list: List<DiskVo> =
 			virtualMachinesService.retrieveDisks(id)
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = list
@@ -229,7 +229,7 @@ class VirtualMachinesController {
 		@RequestParam(name="id") id: String,
 	): JSONObject {
 		log.info("... retrieveVmDevices('$id')")
-		val list: List<VmDeviceVo> = 
+		val list: List<VmDeviceVo> =
 			virtualMachinesService.retrieveVmDevices(id)
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = list
@@ -246,7 +246,7 @@ class VirtualMachinesController {
 		@RequestParam(name="id") id: String,
 	): JSONObject {
 		log.info("... retrieveVmEvents('$id')")
-		val list: List<EventVo> = 
+		val list: List<EventVo> =
 			virtualMachinesService.retrieveVmEvents(id)
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = list
@@ -361,7 +361,7 @@ class VirtualMachinesController {
 		@RequestParam(name="name") name: String,
 	): JSONObject {
 		log.info("... checkDuplicateName('$name')")
-		val result: Boolean = 
+		val result: Boolean =
 			virtualMachinesService.checkDuplicateName(name)
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = result
@@ -381,7 +381,7 @@ class VirtualMachinesController {
 		@RequestBody(required=true) disk: DiskVo,
 	): JSONObject {
 		log.info("... checkDuplicateDiskName")
-		val result: Boolean = 
+		val result: Boolean =
 			virtualMachinesService.checkDuplicateDiskName(disk)
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = result
@@ -394,7 +394,7 @@ class VirtualMachinesController {
 	@ResponseBody
 	fun createVmInfo(): JSONObject {
 		log.info("... createVmInfo")
-		val vmCreate: VmCreateVo = 
+		val vmCreate: VmCreateVo =
 			virtualMachinesService.retrieveVmCreateInfo()
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = vmCreate
@@ -469,7 +469,7 @@ class VirtualMachinesController {
 		@RequestParam(name="snapshotId") snapshotId: String,
 	): JSONObject {
 		log.info("... cloneVmInfo('$vmId')")
-		val vmCreate = 
+		val vmCreate =
 			virtualMachinesService.retrieveVmCloneInfo(vmId, snapshotId)
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = vmCreate
@@ -508,7 +508,7 @@ class VirtualMachinesController {
 		@RequestBody vmCreate: VmCreateVo,
 	): JSONObject {
 		log.info("... recommendHosts")
-		val recommendHosts: List<Array<String>> = 
+		val recommendHosts: List<Array<String>> =
 			virtualMachinesService.recommendHosts(vmCreate)
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = recommendHosts
@@ -521,7 +521,7 @@ class VirtualMachinesController {
 	@ResponseBody
 	fun retrieveDisks(): JSONObject {
 		log.info("... retrieveDisks")
-		val disks: List<DiskVo> = 
+		val disks: List<DiskVo> =
 			virtualMachinesService.retrieveDisks()
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = disks
@@ -534,7 +534,7 @@ class VirtualMachinesController {
 	@ResponseBody
 	fun retrieveDiskProfiles(): JSONObject {
 		log.info("... retrieveDiskProfiles")
-		val diskProfiles: List<DiskProfileVo> = 
+		val diskProfiles: List<DiskProfileVo> =
 			virtualMachinesService.retrieveDiskProfiles()
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = diskProfiles
@@ -645,7 +645,7 @@ class VirtualMachinesController {
 	@ResponseBody
 	fun retrieveDiscs(): JSONObject {
 		log.info("... retrieveDiscs")
-		val discs: List<StorageDomainVo> = 
+		val discs: List<StorageDomainVo> =
 			virtualMachinesService.retrieveDiscs()
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = discs
@@ -681,7 +681,7 @@ class VirtualMachinesController {
 	fun retrieveEngineIp(): JSONObject {
 		log.info("... retrieveEngineIp")
 		val engineIp: String =
-			systemPropertiesService.retrieveSystemProperties().ip
+			systemPropertiesService.retrieveSystemProperties().ovirtIp
 		return JSONObject().apply {
 			this[ItInfoConstant.RESULT_KEY] = engineIp
 		}
@@ -700,7 +700,7 @@ class VirtualMachinesController {
 			this[ItInfoConstant.RESULT_KEY] = systemPropertiesService.retrieveSystemProperties().grafanaUri
 		}
 	}
-	
+
 	companion object {
 		private val log by LoggerDelegate()
 	}

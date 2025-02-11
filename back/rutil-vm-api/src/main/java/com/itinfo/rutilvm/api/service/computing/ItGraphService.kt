@@ -1,8 +1,8 @@
 package com.itinfo.rutilvm.api.service.computing
 
+import com.itinfo.rutilvm.api.configuration.PropertiesConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
-import com.itinfo.rutilvm.api.model.auth.RutilProperties
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.repository.history.*
 import com.itinfo.rutilvm.api.repository.history.dto.*
@@ -115,7 +115,7 @@ interface ItGraphService {
 class GraphServiceImpl(
 
 ): BaseService(), ItGraphService {
-	@Autowired private lateinit var rutil: RutilProperties
+	@Autowired private lateinit var propConfig: PropertiesConfig
 	@Autowired private lateinit var hostSamplesHistoryRepository: HostSamplesHistoryRepository
 	@Autowired private lateinit var hostInterfaceSampleHistoryRepository: HostInterfaceSampleHistoryRepository
 	@Autowired private lateinit var vmSamplesHistoryRepository: VmSamplesHistoryRepository
@@ -130,7 +130,7 @@ class GraphServiceImpl(
 
 	override fun getDashboard(): DashBoardVo {
 		log.info("getDashboard ... ")
-		return conn.toDashboardVo(rutil)
+		return conn.toDashboardVo(propConfig)
 	}
 
 	override fun totalCpuMemory(): HostUsageDto {

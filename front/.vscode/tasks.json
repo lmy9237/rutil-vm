@@ -1,0 +1,56 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "start-rutil-vm-react (프론트 실행)",
+      "type": "shell",
+      "command": "npm start",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [{
+        "owner": "custom",
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Starting the development server...",
+          "endsPattern": "Compiled successfully!"
+        }
+      }]
+    }, {
+      "label": "stop-rutil-vm-react (프론트 종료)",
+      "type": "shell",
+      "command": "",
+      "windows": {
+        "command": "taskkill /F /IM node.exe"
+      },
+      "linux": {
+        "command": "pkill -f 'react-scripts'"
+      },
+      "osx": {
+        "command": "pkill -f 'react-scripts'"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "terminate",
+      "type": "command",
+      "command": "workbench.action.tasks.terminate",
+      "args": "run-itcloud"
+    }
+  ]
+}

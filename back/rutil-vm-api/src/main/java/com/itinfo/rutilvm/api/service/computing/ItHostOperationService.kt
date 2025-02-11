@@ -1,14 +1,12 @@
 package com.itinfo.rutilvm.api.service.computing
 
+import com.itinfo.rutilvm.api.configuration.PropertiesConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.api.model.auth.RutilProperties
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
-import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import org.ovirt.engine.sdk4.Error
-import org.ovirt.engine.sdk4.types.Host
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.net.UnknownHostException
@@ -116,7 +114,7 @@ interface ItHostOperationService {
 class HostOperationServiceImpl(
 
 ): BaseService(), ItHostOperationService {
-    @Autowired private lateinit var rutil: RutilProperties
+    @Autowired private lateinit var propConfig: PropertiesConfig
 
     @Throws(Error::class)
     override fun deactivate(hostId: String): Boolean {
@@ -179,8 +177,8 @@ class HostOperationServiceImpl(
     @Throws(UnknownHostException::class, Error::class)
     override fun restart(hostId: String): Boolean {
         log.info("reStart ... hostId: {}", hostId)
-        val name = rutil.id
-        val password = rutil.password
+        val name = propConfig.rebootHostId
+        val password = propConfig.rebootHostPassword
         log.info("Host ID: {}, Password: {}", name, password)
         val res: Result<Boolean> = conn.restartHost(hostId, name, password)
         return res.isSuccess

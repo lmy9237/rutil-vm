@@ -30,7 +30,7 @@ class GlobalFilter: Filter {
 		val req = request as HttpServletRequest
 		val path = req.requestURI.substring(req.contextPath.length)
 
-		val requestWrapper = ContentCachingRequestWrapper(request as HttpServletRequest)
+		val requestWrapper = ContentCachingRequestWrapper(request)
 		val responseWrapper = ContentCachingResponseWrapper(response as HttpServletResponse)
 
 		filterChain?.doFilter(requestWrapper, responseWrapper)

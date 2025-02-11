@@ -97,23 +97,25 @@
 > ```sh
 > #
 > # 프로퍼티 `profile` 유형
-> # - local: 로컬 (개발환경)
+> # - local: 로컬 (개발환경 192.168.0.20)
+> # - local: 로컬 (개발환경 192.168.0.70)
 > # - staging
 > #
 > # 스프링부트 프로젝트 실행 (개발)
-> ./gradlew rutil-vm-api:bootRun -Pprofile=staging -PskipNpm=true --parallel
+> ./gradlew rutil-vm-api:bootRun -Pprofile=local --parallel
+> ./gradlew rutil-vm-api:bootRun -Pprofile=local70 --parallel
 > 
 > # 아티팩트 생성 (운영)
-> ./gradlew rutil-vm-api:bootJar -Pprofile=staging -PskipNpm=true --parallel
+> ./gradlew rutil-vm-api:bootJar -Pprofile=staging --parallel
 > ```
 
 ![itcloud:bootRun](../imgs/gradle-rutil-vm-api-bootRun.png)
 
-## Run in VSCode
+### Run in VSCode
 
 - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>입력
 - 프롬트 창에 `Tasks: Run Task` 입력
-- `bootRun-rutil-vm-api` 선택
+- (실행대상 ovirt서버에 따라) `bootRun-rutil-vm-api-20` 또는 `bootRun-rutil-vm-api-70` 선택
 
 ---
 
@@ -125,10 +127,7 @@
 > 
 > ```sh
 > # Running on macOS M1
-> docker build -t rutil-vm-api:0.2.0-beta1 .
-> 
-> # Okestro
-> docker build -t okestro:0.0.5 .
+> docker build -t ititcloud/rutil-vm-api:0.2.0-beta1 .
 > ```
 
 > [!NOTE]
@@ -140,15 +139,14 @@
 > ```sh
 > # rutil-vm-api
 > docker run -d -it --name rutil-vm-api \
->   -e ITCLOUD_PORT_HTTP=8080 \
->   -e ITCLOUD_PORT_HTTPS=8443 \
->   -e ITCLOUD_OVIRT_IP=192.168.0.70 \
->   -e POSTGRES_JDBC_URL=192.168.0.70 \
->   -e POSTGRES_JDBC_PORT=5432 \
->   -e POSTGRES_DATASOURCE_JDBC_ID=<rutil> \
->   -e POSTGRES_DATASOURCE_JDBC_PW=<rutil1!> \
->   -p 8080:8080 -p 8443:8443 \
->   rutil-vm-api:0.2.0-beta1
+> -e RUTIL_VM_OVIRT_IP=192.168.0.20 \      # ovirt 주소 
+> -e RUTIL_VM_OVIRT_PORT_HTTPS=443 \       # ovirt 포트 번호
+> -e RUTIL_VM_PORT_HTTPS=8443 \            # rutilVM 호스팅 포트번호
+> -e POSTGRES_JDBC_PORT=5432 \             # PostgresDB 포트번호
+> -e POSTGRES_DATASOURCE_JDBC_ID=rutil \   # 테이블스페이스접근 ID
+> -e POSTGRES_DATASOURCE_JDBC_PW=rutil1! \ # 테이블스페이스접근 PW
+> -p 8080:8080 -p 8443:8443 \              # Port Mapping
+> ititcloud/rutil-vm-api:0.2.0-beta2
 > 
 > # postgres
 > docker run -d -it \
@@ -164,15 +162,14 @@
 > ```batch
 > :: iotcloud
 > docker run -d -it --name rutil-vm-back ^
->   -e ITCLOUD_PORT_HTTP=8080 ^
->   -e ITCLOUD_PORT_HTTPS=8443 ^
->   -e ITCLOUD_OVIRT_IP=192.168.0.70 ^
->   -e POSTGRES_JDBC_URL=192.168.0.70 ^
->   -e POSTGRES_JDBC_PORT=5432 ^
->   -e POSTGRES_DATASOURCE_JDBC_ID=<rutil> ^
->   -e POSTGRES_DATASOURCE_JDBC_PW=<rutil1!> ^
->   -p 8080:8080 -p 8443:8443 ^
->   itinfo/rutil-vm-back:0.1.0
+> -e RUTIL_VM_OVIRT_IP=192.168.0.20 ^
+> -e RUTIL_VM_OVIRT_PORT_HTTPS=443 ^
+> -e RUTIL_VM_PORT_HTTPS=8443 ^
+> -e POSTGRES_JDBC_PORT=5432 ^
+> -e POSTGRES_DATASOURCE_JDBC_ID=rutil ^
+> -e POSTGRES_DATASOURCE_JDBC_PW=rutil1! ^
+> -p 8080:8080 -p 8443:8443 ^
+> ititcloud/rutil-vm-back:0.1.0
 > 
 > :: postgres
 > docker run -d -it ^
@@ -183,107 +180,6 @@
 >   postgres:12.12-alpine
 > ```
 >
-
-## 
-
-### (사용자 정보 접근을 위한) PostgresDB 초기 구성
-
-> Postgres 관리자 권한으로 로그인
-
-```sh
-su - postgres # postgres 사용자로 su 로그인
-psql -U postgres -d engine # postgres 사용자로 engine 테이블스페이스에 로그인 (비밀번호X)
-```
-
-```sql
-GRANT ALL ON SCHEMA aaa_jdbc TO okestro;
-#
-# GRANT
-```
-
-### 유용한 쿼리
-
-```sql
-# DESCRIBE 테이블
-SELECT table_name, column_name, data_type FROM information_schema.columns WHERE 1=1
-AND table_schema = 'aaa_jdbc'
-AND table_name = 'users';
-```
-
-```sh
-cd /etc/pki/ovirt-engine/certs
-```
-
----
-
-## 🩺Troubleshooting
-
-### admin 계정 잠김
-
-ssh로 해당 서버 접근하여 아래 커맨드 실행
-
-```sh
-ssh root@192.168.0.70 -p 22
-# ...
-# root@192.168.0.70's password:
-# Web console: https://ovirt.ititinfo.local:9090/ or https://192.168.0.70:9090/
-# 
-# Last login: Mon Sep  2 11:08:15 2024 from 192.168.0.218
-sudo ovirt-aaa-jdbc-tool user show admin # admin 계정 확인
-#
-# Picked up JAVA_TOOL_OPTIONS: -Dcom.redhat.fips=false
-# -- User admin(<고유아이디>) --
-# Namespace: *
-# Name: admin
-# ID: <고유아이디>
-# Display Name:
-# Email: admin@localhost
-# First Name: admin
-# Last Name:
-# Department:
-# Title:
-# Description:
-# Account Disabled: false
-# Account Locked: false
-# Account Unlocked At: 2024-09-02 02:45:20Z
-# Account Valid From: 2024-08-27 09:48:37Z
-# Account Valid To: 2224-08-27 09:48:37Z
-# Account Without Password: false
-# Last successful Login At: 2024-09-02 02:45:31Z
-# Last unsuccessful Login At: 2024-09-02 02:44:51Z
-# Password Valid To: 2025-03-01 01:07:15Z
-#
-sudo ovirt-aaa-jdbc-tool user password-reset admin --password-valid-to="2029-12-31 23:59:59Z"
-#
-# Picked up JAVA_TOOL_OPTIONS: -Dcom.redhat.fips=false
-# Password:
-# Reenter password:
-# new password already used 
-# 
-# >>> 비밀번호 변경실패... 이미 사용했던 비밀번호
-# 
-sudo ovirt-aaa-jdbc-tool user password-reset admin --password-valid-to="2029-12-31 23:59:59Z" --force # 강제 변경
-# 
-# Picked up JAVA_TOOL_OPTIONS: -Dcom.redhat.fips=false
-# Password:
-# Reenter password:
-# updating user admin...
-# user updated successfully
-#
-# >>> 비밀번호 변경성공!
-# 
-sudo ovirt-aaa-jdbc-tool user unlock admin # admin 계정 잠금 풀기
-# Picked up JAVA_TOOL_OPTIONS: -Dcom.redhat.fips=false
-# updating user admin...
-# user updated successfully
-```
-
----
-
-## Dependencies 주입
-
-https://medium.com/@tericcabrel/implement-jwt-authentication-in-a-spring-boot-3-application-5839e4fd8fac
-https://hoestory.tistory.com/70
 
 [shield-java]: https://img.shields.io/badge/Temurin-11-f3812a?logo=openjdk&logoColor=f3812a&style=flat-square
 [shield-spring]: https://img.shields.io/badge/Spring-4.3.14.RELEASE-6DB33F?logo=spring&logoColor=6DB33F&style=flat-square

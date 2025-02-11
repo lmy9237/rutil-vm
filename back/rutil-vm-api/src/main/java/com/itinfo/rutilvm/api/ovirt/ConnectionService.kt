@@ -14,13 +14,14 @@ import java.util.*
 @Service
 class ConnectionService {
 	@Autowired private lateinit var itSystemPropertyService: ItSystemPropertiesService
+
 	private val uid: String
 		get() = Random().nextInt(1000).toString()
 
 	fun getConnection(): Connection {
 		val systemPropertiesVO: SystemPropertiesVo =
 			itSystemPropertyService.findOne()
-		log.info(systemPropertiesVO.ip)
+		log.info(systemPropertiesVO.ovirtIp)
 		return systemPropertiesVO.toConnection()
 	}
 	companion object {

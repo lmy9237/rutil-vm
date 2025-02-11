@@ -12,6 +12,7 @@ import com.itinfo.rutilvm.util.ovirt.error.ItCloudException
 import io.swagger.annotations.Api
 import org.ovirt.engine.sdk4.Error
 import org.postgresql.util.PSQLException
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -25,7 +26,7 @@ class RootController: BaseController() {
 }
 
 @ControllerAdvice
-class BaseController(
+open class BaseController(
 
 ) {
 	@ExceptionHandler(InvalidRequestException::class, PSQLException::class)
