@@ -374,7 +374,7 @@ fun DiskImageVo.toAddSnapshotDisk(): Disk {
  * 	파일 크기가 자동으로 디스크 옵션에 추가, 파일 명칭이 파일의 이름으로 지정됨 (+설명)
  * 	디스크 이미지 업로드
  *  required: provisioned_size, alias, description, wipe_after_delete, shareable, backup, disk_profile.
- *	
+ *
  */
 fun DiskImageVo.toUploadDiskBuilder(conn: Connection, fileSize: Long): Disk {
 	val storageDomain: StorageDomain = conn.findStorageDomain(this@toUploadDiskBuilder.storageDomainVo.id)

@@ -320,29 +320,30 @@ fun List<Vm>.toVmsIdName(): List<VmVo> =
     this@toVmsIdName.map { it.toVmIdName() }
 
 fun Vm.toVmMenu(conn: Connection): VmVo {
-    val cluster: Cluster? = conn.findCluster(this@toVmMenu.cluster().id()).getOrNull()
+	val vm = this@toVmMenu
+    val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
     val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
 
     return VmVo.builder {
-        id { this@toVmMenu.id() }
-        name { this@toVmMenu.name() }
-        comment { this@toVmMenu.comment() }
-        creationTime {  ovirtDf.format(this@toVmMenu.creationTime()) }
-        status { this@toVmMenu.status() }
-        description { this@toVmMenu.description() }
-        hostEngineVm { this@toVmMenu.origin() == "managed_hosted_engine" } // 엔진여부
+        id { vm.id() }
+        name { vm.name() }
+        comment { vm.comment() }
+        creationTime {  ovirtDf.format(vm.creationTime()) }
+        status { vm.status() }
+        description { vm.description() }
+        hostEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
 
         clusterVo { cluster?.fromClusterToIdentifiedVo() }
         dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-        if (this@toVmMenu.status() == VmStatus.UP) {
-            val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toVmMenu.id())
-            val nics: List<Nic> = conn.findAllNicsFromVm(this@toVmMenu.id()).getOrDefault(listOf())
-            val host: Host? = conn.findHost(this@toVmMenu.host().id()).getOrNull()
-            fqdn { this@toVmMenu.fqdn() }
+        if (vm.status() == VmStatus.UP) {
+            val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
+            val nics: List<Nic> = conn.findAllNicsFromVm(vm.id()).getOrDefault(listOf())
+            val host: Host? = conn.findHost(vm.host().id()).getOrNull()
+            fqdn { vm.fqdn() }
             upTime { statistics.findVmUptime() }
             hostVo { host?.fromHostToIdentifiedVo() }
-            ipv4 { nics.findVmIpv4(conn, this@toVmMenu.id()) }
-            ipv6 { nics.findVmIpv6(conn, this@toVmMenu.id()) }
+            ipv4 { nics.findVmIpv4(conn, vm.id()) }
+            ipv6 { nics.findVmIpv6(conn, vm.id()) }
             usageDto { statistics.toVmUsage() }
         } else {
             fqdn { null }
@@ -427,7 +428,6 @@ fun Vm.toStorageDomainVm(conn: Connection, storageDomainId: String): VmVo {
             val disk = conn.findDisk(diskAttachment.disk().id()).getOrNull()
             disk?.storageDomains()?.any { it.id() == storageDomainId } == true
         }
-
     return VmVo.builder {
         id { this@toStorageDomainVm.id() }
         name { this@toStorageDomainVm.name() }
@@ -449,6 +449,29 @@ fun Vm.toNetworkNic(conn: Connection): VmVo {
         clusterVo { cluster?.fromClusterToIdentifiedVo() }
     }
 }
+
+
+fun Vm.toUnregisterdVm(): VmVo {
+	val vm = this@toUnregisterdVm
+	return VmVo.builder {
+		id { vm.id() }
+		name { vm.name() }
+		comment { vm.comment() }
+		description { vm.description() }
+		memorySize { vm.memory() }
+		// creationTime {  ovirtDf.format(vm.creationTime()) }
+		cpuTopologyCnt {
+			vm.cpu().topology().coresAsInteger() *
+				vm.cpu().topology().socketsAsInteger() *
+				vm.cpu().topology().threadsAsInteger()
+		}
+		// cpuArc { vm.cpu().architecture() }
+		// diskCnt
+	}
+}
+fun List<Vm>.toUnregisterdVms(): List<VmVo> =
+	this@toUnregisterdVms.map { it.toUnregisterdVm() }
+
 
 
 // region: Add VmBuilder

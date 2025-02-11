@@ -143,7 +143,7 @@ fun Connection.destroyStorageDomain(storageDomainId: String): Result<Boolean> = 
 	if(this.findStorageDomain(storageDomainId).isFailure) {
 		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 	}
-	
+
 	this.srvStorageDomain(storageDomainId).remove().destroy(true).send()
 	this.expectStorageDomainDeleted(storageDomainId)
 }.onSuccess {

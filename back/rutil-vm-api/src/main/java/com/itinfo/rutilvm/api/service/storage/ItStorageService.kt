@@ -397,7 +397,7 @@ class StorageServiceImpl(
         log.info("findAllUnregisteredVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
         val res: List<Vm> = conn.findAllUnregisteredVmsFromStorageDomain(storageDomainId)
             .getOrDefault(listOf())
-        return res.toStorageDomainVms(conn, storageDomainId)
+        return res.toUnregisterdVms()
     }
 
 
@@ -423,13 +423,9 @@ class StorageServiceImpl(
 		log.info("findAllDiskSnapshotsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val diskSnapshots: List<DiskSnapshot> = conn.findAllDiskSnapshotsFromStorageDomain(storageDomainId)
 			.getOrDefault(listOf())
-
 		val allVms: List<Vm> = conn.findAllVms(follow = "snapshots").getOrDefault(listOf())
-
 		val res = diskSnapshots.filter { diskSnapshot ->
-			allVms.any { vm ->
-				conn.findSnapshotFromVm(vm.id(), diskSnapshot.snapshot().id()).getOrNull() != null
-			}
+			allVms.any { vm -> conn.findSnapshotFromVm(vm.id(), diskSnapshot.snapshot().id()).getOrNull() != null }
 		}
 		return res.toSnapshotDiskVos()
 	}
@@ -447,7 +443,7 @@ class StorageServiceImpl(
         log.info("findAllUnregisteredTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
         val res: List<Template> = conn.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId)
             .getOrDefault(listOf())
-        return res.toTemplatesMenu(conn)
+        return res.toUnregisterdTemplates()
     }
 
     @Throws(Error::class)
