@@ -237,7 +237,7 @@ const handleFormSubmit = () => {
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
-      <div className="new-template-popup modal" style={{ height: isSubtemplate ? '88vh' : '77vh' }}>
+      <div className="new-template-popup modal" style={{ height: isSubtemplate ? '88vh' : '79vh' }}>
         <div className="popup-header">
           <h1>새 템플릿</h1>
           <button onClick={onRequestClose}>

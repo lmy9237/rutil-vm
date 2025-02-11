@@ -47,6 +47,14 @@ const VmDupl = ({ vms = [], columns =[], actionType, status }) => {
           clickableColumnIndex={[1]}
           onClickableColumnClick={(row) => handleNameClick(row.id)}        
           multiSelect={true}
+          onContextMenuItems={(row) => [
+            <VmActionButtons
+              openModal={openModal}
+              isEditDisabled={!row} 
+              type='context'
+              isContextMenu={true} 
+            />
+          ]}
         />
         
         {/* vm 모달 */}

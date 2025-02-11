@@ -429,6 +429,16 @@ const TableColumnsInfo = {
     { header: '생성일자', accessor: 'createdAt', clickable: false },
     { header: '내보낸 시점', accessor: 'exportedAt', clickable: false },
   ],  
+  GET_DISK_TEMPLATES: [
+    { header: '별칭', accessor: 'alias', clickable: true ,width:'10%'},
+    { header: '가상 크기', accessor: 'virtualSize', clickable: false },
+    { header: '생성 일자', accessor: 'creationTime', clickable: false },
+    { header: '할당 정책', accessor: 'sparse', clickable: false },
+    { header: '상태', accessor: 'status', clickable: false },
+    { header: '스토리지 유형', accessor: 'storageType', clickable: false },    
+    { header: '생성 일자', accessor: 'date', clickable: false },
+    { header: '설명', accessor: 'description', clickable: false },
+  ],
   GET_DISKS: [
     { header: '별칭', accessor: 'name', clickable: false },
     { header: '디스크', accessor: 'disk', clickable: false },

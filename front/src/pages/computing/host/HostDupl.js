@@ -7,6 +7,7 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import TableRowClick from '../../../components/table/TableRowClick';
 import HostModals from './modal/HostModals';
 import { renderHostStatusIcon } from '../../../utils/Icon';
+import NetworkActionButtons from '../../network/network/button/NetworkActionButtons';
 
 const HostDupl = ({ hosts = [], columns = [], clusterId }) => {
   const navigate = useNavigate();
@@ -56,6 +57,14 @@ const HostDupl = ({ hosts = [], columns = [], clusterId }) => {
         clickableColumnIndex={[2]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
+        onContextMenuItems={(row) => [
+          <HostActionButtons
+            openModal={openModal}
+            isEditDisabled={!row} 
+            type='context'
+            isContextMenu={true} 
+          />
+        ]}
       />
 
       {/* 호스트 모달창 */}

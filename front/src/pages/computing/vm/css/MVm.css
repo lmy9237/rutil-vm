@@ -169,6 +169,11 @@
 .new-template-popup {
   width: 45%;
 }
+.new-template-popup .section-table-outer{
+  height:15vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
 /*스냅샷 생성*/
 .snapshot-new-popup {

@@ -139,7 +139,7 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
             <div>vGPU 배치</div>
             <div className="flex">
               {['consolidated', 'separated'].map((option) => (
-                <label key={option} style={{ marginRight: '0.2rem' }}>
+                <label key={option} style={{ marginRight: '0.2rem',display:'flex' }}>
                   <input type="radio" name="vgpu" value={option} checked={formState.vgpu === option} onChange={handleInputChange('vgpu')} />
                   {option === 'consolidated' ? '통합' : '분산'}
                 </label>
