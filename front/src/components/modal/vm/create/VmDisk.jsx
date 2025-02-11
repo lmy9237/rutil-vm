@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
+import Loading from "../../../common/Loading";
 // import VmDiskModal from "../VmDiskModal"
 // import VmDiskConnectionModal from "../VmDiskConnectionModal"
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
@@ -64,7 +65,7 @@ const VmDisk = ({
           <button onClick={() => setIsCreatePopupOpen(true)}>생성</button>
         </div>
 
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading/>}>
           {isConnectionPopupOpen && (
             <VmDiskConnectionModal
               isOpen={isConnectionPopupOpen}

@@ -1,10 +1,21 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
+
+/**
+ * @name VmGeneralChart
+ * @description 가상머신 일반정보 차트
+ * (/computing/vms/<vmId>)
+ * 
+ * @param {string} vmId 가상머신 ID
+ * @returns 
+ * 
+ * @todo 값 부여
+ */
 const VmGeneralChart = () => {
   const [state, setState] = React.useState({
     series: [
-      { data: [540, 580, 690, 1100, 1200, 1380],},
+      { data: [540, 580, 690, 1100, 1200, 1380], },
     ],
     options: {
       chart: {
@@ -20,7 +31,7 @@ const VmGeneralChart = () => {
       },
       dataLabels: { enabled: false },
       xaxis: {
-        categories: ['ex1','ex1','ex1','ex1','ex1','ex1',],
+        categories: ['ex1', 'ex1', 'ex1', 'ex1', 'ex1', 'ex1',],
       },
     },
   });

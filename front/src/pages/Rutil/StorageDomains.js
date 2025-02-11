@@ -1,19 +1,23 @@
 import React from 'react';
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
+import DomainDupl from '../../components/dupl/DomainDupl';
 import { useAllStorageDomains } from '../../api/RQHook';
-import DomainDupl from '../../pages/storage/domain/DomainDupl';
 
 const StorageDomains = () => {
   const {
-    data: storageDomains = []
+    data: storageDomains = [],
+    isLoading: isStorageDomainsLoading,
+    isError: isStorageDomainsError,
+    isSuccess: isStorageDomainsSuccess,
   } = useAllStorageDomains((e) => ({...e,}));
 
   return (
     <>    
-      <DomainDupl
-        columns={TableColumnsInfo.STORAGE_DOMAINS}
-        domains={storageDomains}
+      <DomainDupl domains={storageDomains} columns={TableColumnsInfo.STORAGE_DOMAINS}  
         type={'rutil'}
+        isLoading={isStorageDomainsLoading}
+        isError={isStorageDomainsError}
+        isSuccess={isStorageDomainsSuccess}
       />
     </>
   );

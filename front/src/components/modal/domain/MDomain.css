@@ -40,7 +40,7 @@
   width: 48%;
 }
 .get-modal-content{
-  border:1px solid gray;
+  border:var(--border-simple);
   height: 27vh;
 }
 .get-template-info{

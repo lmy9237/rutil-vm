@@ -14,7 +14,7 @@
   height: 48vh;
   width: 60%;
   background-color: #fafafa;
-  border-right: 1px solid #ddd;
+  border-right: var(--border-simple);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   font-weight: 800;
 }
@@ -61,7 +61,7 @@
   padding-top: 0.3rem;
 }
 .edit-first-content {
-  border-bottom: 1px solid #cecece;
+  border-bottom: var(--border-simple);
   font-size: 0.32rem;
 }
 .new-template-popup .edit-first-content {
@@ -200,7 +200,7 @@
 .load-btn {
   width: 4%;
   padding: 0.1rem;
-  border: 1px solid gray;
+  border: var(--border-simple);
   display: flex;
   align-items: center;
   cursor: pointer;

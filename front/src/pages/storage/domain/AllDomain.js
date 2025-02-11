@@ -1,16 +1,18 @@
 import React from 'react';
+import { faDatabase } from '@fortawesome/free-solid-svg-icons'
+import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import HeaderButton from '../../../components/button/HeaderButton';
 import Footer from '../../../components/footer/Footer';
-import DomainDupl from './DomainDupl';
-import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
+import DomainDupl from '../../../components/dupl/DomainDupl';
 import { useAllStorageDomains } from '../../../api/RQHook'
-import { faDatabase } from '@fortawesome/free-solid-svg-icons'
 
 const AllDomain = () => {
   const {
     data: storageDomains = [],
+    isLoading: isStorageDomainsLoading,
+    isError: isStorageDomainsError,
+    isSuccess: isStorageDomainsSuccess,
   } = useAllStorageDomains((e) => ({...e,}));
-
 
   return(
     <div id="section">
@@ -20,12 +22,13 @@ const AllDomain = () => {
           title="스토리지 도메인"
         />
       </div>
-      <div className="host-btn-outer">
-        <DomainDupl
-          columns={TableColumnsInfo.STORAGE_DOMAINS}
-          domains={storageDomains || []}            
+      <div className="w-full px-[0.5rem] py-[0.5rem]"
+>
+        <DomainDupl domains={storageDomains || []} columns={TableColumnsInfo.STORAGE_DOMAINS} 
           actionType={'domain'}
-          // disk={true}          
+          isLoading={isStorageDomainsLoading}
+          isError={isStorageDomainsError}
+          isSuccess={isStorageDomainsSuccess}        
         />
       </div>
       <Footer/>

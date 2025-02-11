@@ -7,10 +7,10 @@ import { convertBytesToMB } from "../../../util";
 // 운영 시스템
 const osSystemList = [
   { value: 'debian_7', label: 'Debian 7+' },
-  { value: 'debian_9', label: 'Debian 9+' },    
+  { value: 'debian_9', label: 'Debian 9+' },
   { value: 'freebsd', label: 'FreeBSD 9.2' },
   { value: 'freebsdx64', label: 'FreeBSD 9.2 x64' },
-  { value: 'other_linux', label: 'Linux' },  
+  { value: 'other_linux', label: 'Linux' },
   // { value: 'other_linux_s390x', label: 'Linux' },
   // { value: 'other_linux_ppc64', label: 'Linux' },
   { value: 'other', label: 'Other OS' },
@@ -73,15 +73,26 @@ const chipsetOptionList = [
   { value: 'Q35_OVMF', label: 'UEFI의 Q35 칩셋' },
   { value: 'Q35_SEA_BIOS', label: 'BIOS의 Q35 칩셋' },
   { value: 'Q35_SECURE_BOOT', label: 'UEFI SecureBoot의 Q35 칩셋' },
-]; 
+];
 
-// 애플리케이션 섹션
+/**
+ * @name VmGeneral
+ * @description 가상머신 일반정보
+ * (/computing/vms/<vmId>)
+ * 
+ * @param {string} vmId 가상머신 ID
+ * @returns 
+ */
 const VmGeneral = ({ vmId }) => {
-  const { data: vm } = useVmById(vmId);
-  
+  const {
+    data: vm,
+    isLoading: isVmLoading,
+    isError: isVmError,
+    isSuccess: isVmSuccess,
+  } = useVmById(vmId);
+
   const osLabel = osSystemList.find(option => option.value === vm?.osSystem)?.label || vm?.osSystem;
   const chipsetLabel = chipsetOptionList.find(option => option.value === vm?.chipsetFirmwareType)?.label || vm?.chipsetFirmwareType;
-  
 
   const generalTableRows = [
     { label: "전원상태", value: vm?.status },
@@ -92,24 +103,27 @@ const VmGeneral = ({ vmId }) => {
     { label: "FQDN", value: vm?.fqdn },
     // { label: "실행 호스트", value: vm?.hostVo?.name },
     { label: "", value: ' ' },
-    { label: "클러스터", 
-      value: 
+    {
+      label: "클러스터",
+      value:
         <div className='related-object'>
-          <FontAwesomeIcon icon={faEarthAmericas} fixedWidth className="mr-0.5"/>
+          <FontAwesomeIcon icon={faEarthAmericas} fixedWidth className="mr-0.5" />
           <span className="text-blue-500 font-bold">{vm?.clusterVo?.name}</span>
         </div>
     },
-    { label: "호스트", 
-      value:  
+    {
+      label: "호스트",
+      value:
         <div className='related-object'>
-          <FontAwesomeIcon icon={faUser} fixedWidth className="mr-0.5"/>
+          <FontAwesomeIcon icon={faUser} fixedWidth className="mr-0.5" />
           <span className="text-blue-500 font-bold"> {vm?.hostVo?.name}</span>
         </div>
     },
-    { label: "네트워크", 
-      value:  
+    {
+      label: "네트워크",
+      value:
         <div className='related-object'>
-          <FontAwesomeIcon icon={faServer} fixedWidth className="mr-0.5"/>
+          <FontAwesomeIcon icon={faServer} fixedWidth className="mr-0.5" />
           <span className="text-blue-500 font-bold"> {vm?.hostVo?.name}</span>
         </div>
     },
@@ -124,7 +138,7 @@ const VmGeneral = ({ vmId }) => {
 
   const hardwareTableRows = [
     { label: "CPU", value: `${vm?.cpuTopologyCnt}(${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` },
-    { label: "메모리", value: convertBytesToMB(vm?.memorySize) +' MB' ?? '0'},
+    { label: "메모리", value: convertBytesToMB(vm?.memorySize) + ' MB' ?? '0' },
     { label: "하드 디스크", value: vm?.storageDomainVo?.name },
     { label: "네트워크 어댑터", value: vm?.nicVos?.[0]?.name },
     { label: "칩셋/펌웨어 유형", value: chipsetLabel }
@@ -139,9 +153,9 @@ const VmGeneral = ({ vmId }) => {
     { label: "로그인된 사용자", value: vm?.loggedInUser },
     { label: "콘솔 사용자", value: vm?.consoleUser },
     { label: "콘솔 클라이언트 IP", value: vm?.consoleClientIp },
-    
+
   ];
-  
+
   return (
     <>
       <div className='vm-detail-general-boxs'>
@@ -157,7 +171,7 @@ const VmGeneral = ({ vmId }) => {
             </tbody>
           </table>
         </div>
-          
+
         <div className='detail-general-box'>
           <div>VM 하드웨어</div>
           <table className="table">
@@ -171,7 +185,7 @@ const VmGeneral = ({ vmId }) => {
             </tbody>
           </table>
         </div>
-          
+
         <div className='detail-general-mini-box'>
           <div>용량 및 사용량</div>
           <div className='capacity-outer'>
@@ -201,7 +215,7 @@ const VmGeneral = ({ vmId }) => {
       </div>
 
       <div className='detail-general-boxs-bottom'>
-        <div className="vm-general-bottom-box">     
+        <div className="vm-general-bottom-box">
           <div className="vm-table-container">
             <table className="table">
               <tbody>
@@ -218,22 +232,22 @@ const VmGeneral = ({ vmId }) => {
 
         <div className="vm-general-bottom-box">
           <div className="vm-general-box">
-            <FontAwesomeIcon icon={faComputer} className="mr-0.5"/>
+            <FontAwesomeIcon icon={faComputer} className="mr-0.5" />
             <div className="mr-0.5">스냅샷</div>
             <div>2</div>
           </div>
           <div className="vm-add-snapshot-btn">
-            <FontAwesomeIcon icon={faPlus} className="mr-0.5"/>
+            <FontAwesomeIcon icon={faPlus} className="mr-0.5" />
             <div className="mr-0.5">스냅샷 생성</div>
           </div>
         </div>
         <div className="vm-general-bottom-box">
           <div className="vm-general-box">
-            <FontAwesomeIcon icon={faComputer} className="mr-0.5"/>
+            <FontAwesomeIcon icon={faComputer} className="mr-0.5" />
             <div>디스크</div>
           </div>
           <div className="disk-bar">
-            <VmGeneralChart /> 
+            <VmGeneralChart />
           </div>
         </div>
       </div>

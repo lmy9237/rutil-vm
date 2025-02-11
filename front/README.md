@@ -32,7 +32,7 @@
 - [TODO Highlight (`wayou.vscode-todo-highlight`)](https://marketplace.visualstudio.com/items?itemName=wayou.vscode-todo-highlight)
 - [Todo Tree (`Gruntfuggly.todo-tree`)](https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree)
 
-> [!TIP] 
+> [!TIP]
 > 
 > 일괄 설치
 > 

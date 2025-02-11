@@ -5,6 +5,6 @@
 export const adjustFontSize = () => {
   // 
   const width = window.innerWidth;
-  // const fontSize = width / 40; // 필요에 따라 이 값을 조정하세요
-  // document.documentElement.style.fontSize = fontSize + 'px';
+  const fontSize = width / 40; // 필요에 따라 이 값을 조정하세요
+  document.documentElement.style.fontSize = fontSize + 'px';
 }

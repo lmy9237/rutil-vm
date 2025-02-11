@@ -1,18 +1,22 @@
 import React from 'react';
+import VmDupl from '../../components/dupl/VmDupl';
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
 import { useAllVMs } from '../../api/RQHook';
-import VmDupl from '../../pages/computing/vm/VmDupl';
 
 const Vms = () => {
   const { 
-    data: vms = [] 
+    data: vms = [],
+    isLoading: isVmsLoading,
+    isError: isVmsError,
+  isSuccess: isVmsSuccess,
   } = useAllVMs((e) => ({ ...e }));
 
   return (
     <>
-      <VmDupl
-        columns={TableColumnsInfo.VMS}
-        vms={vms}
+      <VmDupl vms={vms} columns={TableColumnsInfo.VMS}
+        isLoading={isVmsLoading}
+        isError={isVmsError}
+        isSuccess={isVmsSuccess}
       />
     </>
   );

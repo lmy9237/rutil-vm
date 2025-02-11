@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Loading from '../../../components/common/Loading';
 import { useAllStoragesFromTemplate } from '../../../api/RQHook';
 
 const TemplateStorage = ({ templateId }) => {
@@ -55,8 +56,10 @@ const TemplateStorage = ({ templateId }) => {
     };
   }
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading storage data.</div>;
+  if (isLoading)
+    return <Loading/>;
+  if (isError)
+    return <div>Error loading storage data.</div>;
 
   return (
     <div className="host_empty_outer">

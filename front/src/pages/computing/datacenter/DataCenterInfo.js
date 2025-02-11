@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import NavButton from '../../../components/navigation/NavButton';
@@ -13,6 +13,7 @@ import DataCenterDomains from './DataCenterDomains';
 import DataCenterNetworks from './DataCenterNetworks';
 import DataCenterEvents from './DataCenterEvents';
 import { useDataCenter } from '../../../api/RQHook';
+import Loading from '../../../components/common/Loading';
 
 const DataCenterInfo = () => {
   const navigate = useNavigate();
@@ -93,9 +94,12 @@ const DataCenterInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="host-btn-outer">
+        <div className="w-full px-[0.5rem] py-[0.5rem]"
+>
           <Path pathElements={pathData} />
-          {renderSectionContent()}
+          <Suspense fallback={<Loading/>}>
+            {renderSectionContent()}
+          </Suspense>
         </div>
       </div>
 

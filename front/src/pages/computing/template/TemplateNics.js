@@ -1,12 +1,13 @@
 import { Suspense, useState } from "react";
 import { useAllNicsFromTemplate } from "../../../api/RQHook";
+import Loading from "../../../components/common/Loading";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
-import { renderTFStatusIcon } from "../../../components/Icon";
 import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
 import TemplateNeworkNewInterModal from '../../../components/modal/template/TemplateNeworkNewInterModal';
 import NicActionButtons from "../../network/vnicProfile/NicActionButton";
+import { renderTFStatusIcon } from "../../../components/Icon";
 
 const TemplateNics = ({ templateId }) => {
   const { 
@@ -23,7 +24,7 @@ const TemplateNics = ({ templateId }) => {
   // 템플릿에 연결된 vNIC 프로파일 데이터 가져오기
 
   const renderModals = () => (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading/>}>
       {activeModal === 'create' && (
         <TemplateNeworkNewInterModal
           isOpen={true}

@@ -682,7 +682,7 @@
 //               height: "71vh",
 //               width: "30%",
 //               backgroundColor: "#FAFAFA",
-//               borderRight: "1px solid #ddd",
+//               borderRight: "var(--border-simple)",
 //               boxShadow: "1px 0 5px rgba(0, 0, 0, 0.1)",
 //               fontWeight: 800,
 //             }}

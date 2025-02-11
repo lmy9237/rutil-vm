@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-import toast from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import Modal from "react-modal";
+import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { 
-  useAddVnicProfile, 
-  useAllDataCenters, 
-  useAllnicFromVM, 
-  useEditVnicProfile, 
-  useNetworkFilters, 
-  useNetworksFromDataCenter, 
-  useVnicProfile
-} from '../../../api/RQHook';
-import './MVnic.css';
+import LoadingOption from "../../common/LoadingOption";
+import {
+  useAddVnicProfile,
+  useAllDataCenters,
+  useAllnicFromVM,
+  useEditVnicProfile,
+  useNetworkFilters,
+  useNetworksFromDataCenter,
+  useVnicProfile,
+} from "../../../api/RQHook";
+import "./MVnic.css";
 
 const FormGroup = ({ label, children }) => (
   <div className="vnic-new-box">
@@ -21,64 +22,62 @@ const FormGroup = ({ label, children }) => (
   </div>
 );
 
-const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, onClose }) => {
+const VnicProfileModal = ({
+  isOpen,
+  editMode = false,
+  vnicProfileId,
+  networkId,
+  onClose,
+}) => {
   const { mutate: addVnicProfile } = useAddVnicProfile();
   const { mutate: editVnicProfile } = useEditVnicProfile();
 
   const [formState, setFormState] = useState({
-    id: '',
-    name: '',
-    description: '',
+    id: "",
+    name: "",
+    description: "",
     // passThrough: '',
     portMirroring: false,
     migration: true,
     networkFilter: null,
   });
-  const [dataCenterVoId, setDataCenterVoId] = useState('');  
-  const [networkVoId, setNetworkVoId] = useState(networkId || '');  
+  const [dataCenterVoId, setDataCenterVoId] = useState("");
+  const [networkVoId, setNetworkVoId] = useState(networkId || "");
   // const [networkFilter, setNetworkFilter] = useState('');
 
   const resetForm = () => {
     setFormState({
-      id: '',
-      name: '',
-      description: '',
+      id: "",
+      name: "",
+      description: "",
       // passThrough: '',
       portMirroring: false,
       migration: true,
       networkFilter: nFilters[0]?.id || "",
     });
-    setDataCenterVoId('');
-    setNetworkVoId(networkId || '');
+    setDataCenterVoId("");
+    setNetworkVoId(networkId || "");
   };
 
-  const { 
-    data: vnic,
-    isLoading: isVnicLoading
-  } = useVnicProfile( vnicProfileId);
-  
-  const {
-    data: datacenters = [],
-    isLoading: isDataCentersLoading
-  } = useAllDataCenters((e) => ({...e,}));
+  const { data: vnic, isLoading: isVnicLoading } =
+    useVnicProfile(vnicProfileId);
 
-  const {
-    data: networks = [],
-    isLoading: isNetworksLoading
-  } = useNetworksFromDataCenter(dataCenterVoId || undefined, (e) => ({...e,}));
-  
+  const { data: datacenters = [], isLoading: isDataCentersLoading } =
+    useAllDataCenters((e) => ({ ...e }));
+
+  const { data: networks = [], isLoading: isNetworksLoading } =
+    useNetworksFromDataCenter(dataCenterVoId || undefined, (e) => ({ ...e }));
+
   //페일오버
-  // const { 
-  //   data: failoverNics = [], 
-  //   isLoading: isFailoverNicsLoading 
+  // const {
+  //   data: failoverNics = [],
+  //   isLoading: isFailoverNicsLoading
   // } = useAllnicFromVM(dataCenterVoId, (e) => ({
   //   id: e?.id,
   //   name: e?.name,
   // }));
-  const {
-    data: nFilters = [],
-    isLoading: isNFiltersLoading
-  } = useNetworkFilters((e) => ({...e,}));
+  const { data: nFilters = [], isLoading: isNFiltersLoading } =
+    useNetworkFilters((e) => ({ ...e }));
   useEffect(() => {
     if (isNFiltersLoading) {
       console.log("Filters are loading...");
@@ -86,7 +85,7 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
       console.log("Filters loaded: ", nFilters);
     }
   }, [nFilters, isNFiltersLoading]);
-  // const nFilters = [ 
+  // const nFilters = [
   //   { value: "vdsm-no-mac-spoofing", label: "vdsm-no-mac-spoofing" },
   //   { value: "allow-arp", label: "allow-arp" },
   //   { value: "allow-dhcp", label: "allow-dhcp" },
@@ -114,19 +113,26 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
   }, [isOpen]);
 
   useEffect(() => {
-    if (isOpen && !isVnicLoading && !isDataCentersLoading && !isNetworksLoading) {
+    if (
+      isOpen &&
+      !isVnicLoading &&
+      !isDataCentersLoading &&
+      !isNetworksLoading
+    ) {
       if (editMode && vnic) {
         setFormState({
-          id: vnic?.id || '',
-          name: vnic?.name || '',
-          description: vnic?.description || '',
+          id: vnic?.id || "",
+          name: vnic?.name || "",
+          description: vnic?.description || "",
           migration: vnic?.migration || false,
           passThrough: vnic?.passThrough || "DISABLED",
           portMirroring: vnic?.portMirroring || false,
-          networkFilter: vnic?.networkFilterVo ? { id: vnic.networkFilterVo.id, name: vnic.networkFilterVo.name } : null,
+          networkFilter: vnic?.networkFilterVo
+            ? { id: vnic.networkFilterVo.id, name: vnic.networkFilterVo.name }
+            : null,
         });
-        setDataCenterVoId(vnic?.dataCenterVo?.id || '');
-        setNetworkVoId(vnic?.networkVo?.id || '');
+        setDataCenterVoId(vnic?.dataCenterVo?.id || "");
+        setNetworkVoId(vnic?.networkVo?.id || "");
       } else if (!editMode && datacenters.length > 0) {
         resetForm();
         setDataCenterVoId(datacenters[0].id);
@@ -137,8 +143,16 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
         }
       }
     }
-  }, [isOpen, editMode, vnic, datacenters, networks, isVnicLoading, isDataCentersLoading, isNetworksLoading]);
-  
+  }, [
+    isOpen,
+    editMode,
+    vnic,
+    datacenters,
+    networks,
+    isVnicLoading,
+    isDataCentersLoading,
+    isNetworksLoading,
+  ]);
 
   useEffect(() => {
     if (!editMode && datacenters.length > 0) {
@@ -166,11 +180,11 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
       }));
     }
   }, [nFilters, editMode]);
-  
+
   // 통과에 따라 네트워크필터, 마이그레이션 활성화
   const handlePassthroughChange = (e) => {
     const isChecked = e.target.checked;
-  
+
     setFormState((prev) => ({
       ...prev,
       passThrough: isChecked ? "ENABLED" : "DISABLED",
@@ -178,19 +192,19 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
       portMirroring: isChecked ? false : prev.portMirroring, // Passthrough 활성화 시 포트 미러링 비활성화
     }));
   };
-  
+
   const handleFormSubmit = () => {
     // 이름 유효성 검사
     if (!formState.name) {
       return toast.error("이름을 입력해주세요.");
     }
-  
+
     // 네트워크 유효성 검사
     const selectedNetwork = networks.find((n) => n.id === networkVoId);
     if (!selectedNetwork) {
       return toast.error("유효한 네트워크를 선택해주세요.");
     }
-  
+
     // 기본 데이터 객체 생성
     const dataToSubmit = {
       id: formState.id,
@@ -198,10 +212,11 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
       description: formState.description,
       passThrough: formState.passThrough,
       migration: formState.migration,
-      portMirroring: formState.passThrough === "ENABLED" ? false : formState.portMirroring, // ✅ Passthrough 시 포트 미러링 비활성화
+      portMirroring:
+        formState.passThrough === "ENABLED" ? false : formState.portMirroring, // ✅ Passthrough 시 포트 미러링 비활성화
       networkVo: { id: selectedNetwork.id, name: selectedNetwork.name },
     };
-  
+
     // ✅ Passthrough가 `DISABLED`일 때만 네트워크 필터 포함
     if (formState.passThrough !== "ENABLED" && formState.networkFilter) {
       dataToSubmit.networkFilterVo = {
@@ -209,13 +224,15 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
         name: formState.networkFilter.name,
       };
     }
-  
+
     console.log("dataToSubmit:", dataToSubmit);
-  
+
     // API 요청
     const mutation = editMode ? editVnicProfile : addVnicProfile;
     mutation(
-      editMode ? { vnicId: formState.id, vnicData: dataToSubmit } : dataToSubmit,
+      editMode
+        ? { vnicId: formState.id, vnicData: dataToSubmit }
+        : dataToSubmit,
       {
         onSuccess: () => {
           toast.success(
@@ -233,33 +250,30 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
       }
     );
   };
-  
-  
-  
-  
-  
-  
 
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
-      contentLabel={editMode ? 'vNIC 프로파일 편집' : '새로 만들기'}
+      contentLabel={editMode ? "vNIC 프로파일 편집" : "새로 만들기"}
       className="Modal"
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
       <div className="vnic-new-content-popup modal">
         <div className="popup-header">
-          <h1>{editMode ? '가상 머신 인터페이스 프로파일 편집' : '가상 머신 인터페이스 프로파일'}</h1>
+          <h1>
+            {editMode
+              ? "가상 머신 인터페이스 프로파일 편집"
+              : "가상 머신 인터페이스 프로파일"}
+          </h1>
           <button onClick={onClose}>
             <FontAwesomeIcon icon={faTimes} fixedWidth />
           </button>
         </div>
 
         <div className="vnic-new-content">
-          <div className="vnic-new-contents" style={{ paddingTop: '0.2rem' }}>
-
+          <div className="vnic-new-contents" style={{ paddingTop: "0.2rem" }}>
             <FormGroup label="데이터 센터">
               <select
                 value={dataCenterVoId}
@@ -269,7 +283,8 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
                 {isDataCentersLoading ? (
                   <option>로딩중~</option>
                 ) : (
-                  datacenters && datacenters.map((dc) => (
+                  datacenters &&
+                  datacenters.map((dc) => (
                     <option key={dc.id} value={dc.id}>
                       {dc.name}: {dc.id}
                     </option>
@@ -287,7 +302,8 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
                 {isNetworksLoading ? (
                   <option>loading ~~</option>
                 ) : (
-                  networks && networks.map((n) => (
+                  networks &&
+                  networks.map((n) => (
                     <option key={n.id} value={n.id}>
                       {n.name}: {networkVoId}
                     </option>
@@ -301,7 +317,9 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
                 type="text"
                 value={formState.name}
                 autoFocus
-                onChange={(e) => setFormState((prev) => ({ ...prev, name: e.target.value }))}
+                onChange={(e) =>
+                  setFormState((prev) => ({ ...prev, name: e.target.value }))
+                }
               />
             </FormGroup>
 
@@ -309,54 +327,59 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
               <input
                 type="text"
                 value={formState.description}
-                onChange={(e) => setFormState((prev) => ({ ...prev, description: e.target.value }))}
+                onChange={(e) =>
+                  setFormState((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
               />
             </FormGroup>
-                      
+
             <FormGroup label="네트워크 필터">
-  <div style={{ display: "flex", alignItems: "center" }}>
-    <select
-      id="networkFilter"
-      value={formState.networkFilter?.id || ""}
-      disabled={formState.passThrough === "ENABLED"} // ✅ Passthrough 체크 시 비활성화
-      onChange={(e) => {
-        const selectedFilter = nFilters.find((filter) => filter.id === e.target.value);
-        setFormState((prev) => ({
-          ...prev,
-          networkFilter: selectedFilter || null,
-        }));
-      }}
-    >
-      <option value="">필터 선택 없음</option>
-      {isNFiltersLoading ? (
-        <option>로딩중...</option>
-      ) : (
-        nFilters.map((filter) => (
-          <option key={filter.id} value={filter.id}>
-            {filter.name}
-          </option>
-        ))
-      )}
-    </select>
-    <span style={{ marginLeft: "1rem" }}>
-      {formState.networkFilter
-        ? `ID: ${formState.networkFilter.id}, Name: ${formState.networkFilter.name}`
-        : "필터를 선택해주세요."}
-    </span>
-  </div>
-</FormGroup>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <select
+                  id="networkFilter"
+                  value={formState.networkFilter?.id || ""}
+                  disabled={formState.passThrough === "ENABLED"} // ✅ Passthrough 체크 시 비활성화
+                  onChange={(e) => {
+                    const selectedFilter = nFilters.find(
+                      (filter) => filter.id === e.target.value
+                    );
+                    setFormState((prev) => ({
+                      ...prev,
+                      networkFilter: selectedFilter || null,
+                    }));
+                  }}
+                >
+                  <option value="">필터 선택 없음</option>
+                  {isNFiltersLoading ? (
+                    <LoadingOption />
+                  ) : (
+                    nFilters.map((filter) => (
+                      <option key={filter.id} value={filter.id}>
+                        {filter.name}
+                      </option>
+                    ))
+                  )}
+                </select>
+                <span style={{ marginLeft: "1rem" }}>
+                  {formState.networkFilter
+                    ? `ID: ${formState.networkFilter.id}, Name: ${formState.networkFilter.name}`
+                    : "필터를 선택해주세요."}
+                </span>
+              </div>
+            </FormGroup>
 
             <div className="vnic-new-checkbox">
-              <input 
-                type="checkbox" 
-                id="passThrough" 
+              <input
+                type="checkbox"
+                id="passThrough"
                 checked={formState.passThrough === "ENABLED"}
                 onChange={handlePassthroughChange}
               />
               <label htmlFor="passThrough">통과</label>
             </div>
-
-
 
             <div className="vnic-new-checkbox">
               <input
@@ -365,12 +388,15 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
                 checked={formState.migration}
                 disabled={formState.passThrough !== "ENABLED"}
                 onChange={(e) =>
-                  setFormState((prev) => ({ ...prev, migration: e.target.checked }))
+                  setFormState((prev) => ({
+                    ...prev,
+                    migration: e.target.checked,
+                  }))
                 }
               />
               <label htmlFor="migration">마이그레이션 가능</label>
             </div>
-            
+
             {/* 페일오버 vNIC 프로파일 */}
             {/* <div className="vnic-new-box">
               <label htmlFor="failover_vnic_profile">페일오버 vNIC 프로파일</label>
@@ -388,20 +414,21 @@ const VnicProfileModal = ({ isOpen, editMode = false, vnicProfileId, networkId, 
               </select>
             </div> */}
 
-
-<div className="vnic-new-checkbox">
-  <input 
-    type="checkbox" 
-    id="portMirroring" 
-    checked={formState.portMirroring} 
-    disabled={formState.passThrough === "ENABLED"} // ✅ Passthrough 체크 시 비활성화
-    onChange={(e) => 
-      setFormState((prev) => ({ ...prev, portMirroring: e.target.checked }))
-    }
-  />
-  <label htmlFor="portMirroring">포트 미러링</label>
-</div>
-
+            <div className="vnic-new-checkbox">
+              <input
+                type="checkbox"
+                id="portMirroring"
+                checked={formState.portMirroring}
+                disabled={formState.passThrough === "ENABLED"} // ✅ Passthrough 체크 시 비활성화
+                onChange={(e) =>
+                  setFormState((prev) => ({
+                    ...prev,
+                    portMirroring: e.target.checked,
+                  }))
+                }
+              />
+              <label htmlFor="portMirroring">포트 미러링</label>
+            </div>
 
             {/* 모든 사용자 허용 - 편집 모드가 아닌 경우에만 표시 */}
             {/* {!editMode && (

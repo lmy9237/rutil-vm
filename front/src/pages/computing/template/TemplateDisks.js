@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useAllDisksFromTemplate } from '../../../api/RQHook';
+import Loading from '../../../components/common/Loading';
 import TableRowClick from '../../../components/table/TableRowClick';
 import DiskActionModal from '../../../components/modal/disk/DiskActionModal';
+import { useAllDisksFromTemplate } from '../../../api/RQHook';
 
 const TemplateDisks = ({ templateId }) => {
   const [isRowExpanded, setRowExpanded] = useState({});
@@ -65,8 +66,10 @@ const TemplateDisks = ({ templateId }) => {
     };
   }
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading disks data.</div>;
+  if (isLoading) 
+    return <Loading/>;
+  if (isError) 
+    return <div>Error loading disks data.</div>;
 
   return (
     <div className="host_empty_outer">

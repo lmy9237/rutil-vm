@@ -1,20 +1,24 @@
 import React from 'react';
 import Modal from 'react-modal';
-import HeaderButton from '../../../components/button/HeaderButton';
+import { useAllVnicProfiles } from '../../../api/RQHook';
+import { faLaptop } from '@fortawesome/free-solid-svg-icons';
 import Footer from '../../../components/footer/Footer';
-import {useAllVnicProfiles } from '../../../api/RQHook';
-import {  faLaptop } from '@fortawesome/free-solid-svg-icons'; 
+import HeaderButton from '../../../components/button/HeaderButton';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import VnicProfileDupl from './VnicProfileDupl';
+import VnicProfileDupl from '../../../components/dupl/VnicProfileDupl';
 
 // React Modal 설정
 Modal.setAppElement('#root');
 
 const AllVnic = () => {
-  const { 
-    data: vnicProfiles = [], isLoading: isVnicProfilesLoading,
-  } = useAllVnicProfiles((e) => ({...e,}));
-
+  const {
+    data: vnicProfiles = [],
+    isLoading: isVnicProfilesLoading,
+    isError: isVnicProfilesError,
+    isSuccess: isVnicProfilesSuccess,
+  } = useAllVnicProfiles((e) => ({
+    ...e,
+  }));
 
   return (
     <div id="section">
@@ -24,13 +28,15 @@ const AllVnic = () => {
           title="VNIC 프로파일"
         />
       </div>
-      <div className="host-btn-outer">
+      <div className="w-full px-[0.5rem] py-[0.5rem]"
+>
         <VnicProfileDupl
+          isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
           columns={TableColumnsInfo.VNIC_PROFILES}
           vnicProfiles={vnicProfiles || []}
         />
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

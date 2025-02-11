@@ -3,13 +3,16 @@ import { faDatabase } from '@fortawesome/free-solid-svg-icons'
 import Footer from '../../../components/footer/Footer';
 import HeaderButton from '../../../components/button/HeaderButton';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
+import DiskDupl from '../../../components/dupl/DiskDupl';
 import { useAllDisks } from '../../../api/RQHook';
-import DiskDupl from './DiskDupl';
 
 const AllDisk = () => {
-  const { 
-    data: disks = [], isLoading
-} = useAllDisks((e) => ({...e,}));
+  const {
+    data: disks = [],
+    isLoading: isDisksLoading,
+    isError: isDisksError,
+    isSuccess: isDisksSuccess,
+  } = useAllDisks((e) => ({ ...e, }));
 
   return (
     <div id="section">
@@ -18,15 +21,17 @@ const AllDisk = () => {
           titleIcon={faDatabase}
           title="디스크"
         />
-        </div>
-        <div className="host-btn-outer">
-          <DiskDupl
-            columns={TableColumnsInfo.DISKS}
-            disks={disks}          
-          />
-        </div>
-        <Footer/>
       </div>
+      <div className="w-full px-[0.5rem] py-[0.5rem]"
+>
+        <DiskDupl disks={disks} columns={TableColumnsInfo.DISKS}
+          isLoading={isDisksLoading}
+          isError={isDisksError}
+          isSuccess={isDisksSuccess}
+        />
+      </div>
+      <Footer />
+    </div>
   );
 };
 

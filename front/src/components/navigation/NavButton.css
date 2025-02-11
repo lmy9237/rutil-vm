@@ -1,5 +1,5 @@
 .content-header {
-    border-right: 1px solid #dddddd;
+    border-right: var(--border-simple);
     width: 12%;
 }
 .active {

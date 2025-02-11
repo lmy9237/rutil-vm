@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { faDesktop, faHdd, faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Loading from '../../../components/common/Loading';
+import TablesOuter from '../../../components/table/TablesOuter';
+import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useAllVMFromDomain } from '../../../api/RQHook';
 import { checkZeroSizeToGB } from '../../../util';
 
@@ -16,8 +19,8 @@ const VMRow = ({ vm, isExpanded, toggleRow }) => (
   <>
     <tr>
       <td onClick={() => toggleRow(vm?.id)} style={{ cursor: 'pointer' }}>
-        <FontAwesomeIcon icon={isExpanded ? faMinusCircle : faPlusCircle} fixedWidth/>
-        <FontAwesomeIcon icon={faDesktop} style={{ margin: '0 5px 0 10px' }} fixedWidth/>
+        <FontAwesomeIcon icon={isExpanded ? faMinusCircle : faPlusCircle} fixedWidth />
+        <FontAwesomeIcon icon={faDesktop} style={{ margin: '0 5px 0 10px' }} fixedWidth />
         {vm?.name || ''}
       </td>
       <td>{vm?.diskAttachments?.length}</td>
@@ -28,7 +31,7 @@ const VMRow = ({ vm, isExpanded, toggleRow }) => (
     {isExpanded &&
       vm.diskAttachments?.map((disk, index) => (
         <DiskRow key={`${vm.id}-${index}`} disk={disk} />
-    ))}
+      ))}
   </>
 );
 
@@ -45,6 +48,15 @@ const DiskRow = ({ disk }) => (
   </tr>
 );
 
+/**
+ * @name DomainVms
+ * @description 도메인에 종속 된 VM정보
+ * 
+ * @param {string} domainId 도메인ID
+ * @returns 
+ * 
+ * @see DomainGetVms
+ */
 const DomainVms = ({ domainId }) => {
   const [isRowExpanded, setRowExpanded] = useState({});
 
@@ -56,7 +68,10 @@ const DomainVms = ({ domainId }) => {
   };
 
   const {
-    data: vms = [], isLoading, isError,
+    data: vms = [],
+    isLoading: isVmsLoading,
+    isError: isVmsError,
+    isSuccess: isVmsSuccess,
   } = useAllVMFromDomain(domainId, (vm) => {
     const totalVirtualSize = calculateTotalVirtualSize(vm?.diskAttachmentVos || []);
     const totalActualSize = calculateTotalActualSize(vm?.diskAttachmentVos || []);
@@ -68,11 +83,21 @@ const DomainVms = ({ domainId }) => {
     };
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading VMs data.</div>;
+  if (isVmsLoading)
+    return (<Loading />);
+  
+  if (isVmsError)
+    return (<div>Error loading VMs data.</div>);
 
+  console.log("...")
   return (
-    <div className="host-empty-outer">
+    <>
+      <TablesOuter
+        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+        columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}
+        data={vms}
+      />
+      {/*<div className="host-empty-outer">
       <div className="section-table-outer">
         <table>
           <thead>
@@ -87,9 +112,9 @@ const DomainVms = ({ domainId }) => {
           <tbody>
             {vms.length === 0 ? (
               <>
-              <tr>
-                <td colSpan={'5'}>없음</td>
-              </tr>
+                <tr>
+                  <td colSpan={'5'}>없음</td>
+                </tr>
               </>
             ) : (vms.map((vm) => (
               <VMRow
@@ -102,7 +127,9 @@ const DomainVms = ({ domainId }) => {
           </tbody>
         </table>
       </div>
-    </div>
+    </div>*/}
+    </>
+    
   );
 };
 

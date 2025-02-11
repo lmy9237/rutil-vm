@@ -2,7 +2,7 @@
 .icon-input-container {
   display: flex;
   align-items: center;
-  border: 1px solid #ccc; /* Input border */
+  border: var(--border-simple);
   border-radius: 4px; /* Rounded corners */
   padding: 5px; /* Inner padding */
   width: 100%; /* Full width */

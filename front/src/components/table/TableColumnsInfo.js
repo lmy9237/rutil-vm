@@ -2,7 +2,6 @@
  * @name TableColumnsInfo
  * @description 테이블 컬럼 정보
  */
-
 const TableColumnsInfo = {
   DATACENTERS: [
     { header: '', accessor: 'icon', clickable: false, width: '3%'  },
@@ -112,7 +111,6 @@ const TableColumnsInfo = {
     { header: '제품', accessor: 'productName', clickable: false },
     { header: '드라이버', accessor: 'driver', clickable: false },
   ],
-
   VMS: [
     { header: '', accessor: 'icon', clickable: false, width: '8%' },
     { header: '이름', accessor: 'name', clickable: true, width: '20%' },
@@ -188,10 +186,7 @@ const TableColumnsInfo = {
     { header: '드라이버', accessor: 'driver', clickable: false },
     { header: '현재 사용중', accessor: 'used', clickable: false },
   ],
-
-
-
-  TEMPLATES:[
+  TEMPLATES: [
     { header: '이름', accessor: 'name', clickable: true },
     { header: '생성일자', accessor: 'creationTime', clickable: false },
     { header: '상태', accessor: 'status', clickable: false },
@@ -221,7 +216,6 @@ const TableColumnsInfo = {
     { header: '링크 상태', accessor: 'linked', clickable: false },
     { header: '유형', accessor: 'interface_', clickable: false },
   ],
-
   NETWORKS: [
     { header: '이름', accessor: 'name', clickable: true },
     { header: '코멘트', accessor: 'comment', clickable: false },
@@ -319,6 +313,7 @@ const TableColumnsInfo = {
     { header: '설명', accessor: 'description' },
     { header: '코멘트', accessor: 'comment', width: '12%' },
   ],
+  
   DATACENTERS_FROM_STORAGE_DOMAIN : [
     { header: '', accessor: 'icon', clickable: false, width: '4%' },
     { header: '이름', accessor: 'name', clickable: false , width: '17%'},
@@ -335,7 +330,13 @@ const TableColumnsInfo = {
     { header: '실제 크기', accessor: 'actualSize', clickable: false },
     { header: '생성 일자', accessor: 'creationTime', clickable: false },
   ],
-
+  VMS_FROM_STORAGE_DOMAIN: [
+    { header: '별칭', accessor: 'name', clickable: false },
+    { header: '디스크', accessor: 'disk', clickable: false },
+    { header: '가상 크기', accessor: 'virtualSize', clickable: false },
+    { header: '실제 크기', accessor: 'actualSize', clickable: false },
+    { header: '생성 일자', accessor: 'creationTime', clickable: false },
+  ],
   TARGETS_LUNS: [
     { header: 'Select', accessor: 'checkbox', clickable: true },
     { header: 'Target Name', accessor: 'target', clickable: true },

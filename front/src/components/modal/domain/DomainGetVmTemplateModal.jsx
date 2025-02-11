@@ -1,42 +1,48 @@
-import { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-import { toast } from 'react-hot-toast';
-import TablesOuter from '../../table/TablesOuter';
-import TableColumnsInfo from '../../table/TableColumnsInfo';
-import { xButton } from '../../Icon';
-import { useDataCenter, useTemplate } from '../../../api/RQHook';
-import { CheckKoreanName } from '../../../util';
-import './MDomain.css';
+import { useState, useEffect } from "react";
+import Modal from "react-modal";
+import { toast } from "react-hot-toast";
+import TablesOuter from "../../table/TablesOuter";
+import TableColumnsInfo from "../../table/TableColumnsInfo";
+import { xButton } from "../../Icon";
+import { useDataCenter, useTemplate } from "../../../api/RQHook";
+import { CheckKoreanName } from "../../../util";
+import "./MDomain.css";
 
 const initialFormState = {
-  id: '',
-  name: '',
-  comment: '',
-  description: '',
+  id: "",
+  name: "",
+  comment: "",
+  description: "",
   storageType: false,
-  version: '4.7',
-  quotaMode: 'DISABLED',
+  version: "4.7",
+  quotaMode: "DISABLED",
 };
 
-const DomainGetVmTemplateModal = ({ isOpen, type = 'vm', dcId, onClose }) => {
-  const isVmMode = type === 'vm'; // true면 "가상머신", false면 "템플릿"
+const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
+  const isVmMode = type === "vm"; // true면 "가상머신", false면 "템플릿"
   const [formState, setFormState] = useState(initialFormState);
   const { data: datacenter } = useDataCenter(dcId);
   const [activeFilter, setActiveFilter] = useState("general");
-  const buttonClass = (filter) => `filter_button ${activeFilter === filter ? "active" : ""}`;
+  const buttonClass = (filter) =>
+    `filter_button ${activeFilter === filter ? "active" : ""}`;
 
   // 임시 데이터 (데이터가 없을 경우 기본값 사용)
   const placeholderData = [
     {
       alias: "Disk-001",
       virtualSize: "100GB",
-      profiles: [{ value: "profile1", label: "Profile A" }, { value: "profile2", label: "Profile B" }],
-    },
-    {
+      profiles: [
+        { value: "profile1", label: "Profile A" },
+        { value: "profile2", label: "Profile B" },
+      ],
+    }, {
       alias: "Disk-002",
       virtualSize: "200GB",
-      profiles: [{ value: "profile3", label: "Profile C" }, { value: "profile4", label: "Profile D" }],
-    }
+      profiles: [
+        { value: "profile3", label: "Profile C" },
+        { value: "profile4", label: "Profile D" },
+      ],
+    },
   ];
   const tableRows = [
     { label: "템플릿 ID", value: "TMP-12345" },
@@ -58,7 +64,6 @@ const DomainGetVmTemplateModal = ({ isOpen, type = 'vm', dcId, onClose }) => {
     { label: "소스", value: "N/A" },
     { label: "상태 비저장", value: "아니오" },
   ];
-
 
   useEffect(() => {
     if (!isOpen) return setFormState(initialFormState);
@@ -82,7 +87,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = 'vm', dcId, onClose }) => {
   const validateForm = () => {
     if (!CheckKoreanName(formState.name)) return '이름이 유효하지 않습니다.';
     if (!formState.name) return '이름을 입력해주세요.';
-    if (!CheckKoreanName(formState.description)) return '영어만 입력가능.';
+    if (!CheckKoreanName(formState.description)) return "영어만 입력가능.";
     return null;
   };
 
@@ -91,27 +96,26 @@ const DomainGetVmTemplateModal = ({ isOpen, type = 'vm', dcId, onClose }) => {
     if (error) return toast.error(error);
 
     onClose();
-    toast.success(`${isVmMode ? '가상머신' : '템플릿'} 가져오기 완료`);
+    toast.success(`${isVmMode ? "가상머신" : "템플릿"} 가져오기 완료`);
   };
 
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
-      contentLabel={isVmMode ? '가상머신' : '템플릿'}
+      contentLabel={isVmMode ? "가상머신" : "템플릿"}
       className="Modal"
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
       <div className="get-vm-template modal">
         <div className="popup-header">
-          <h1>{isVmMode ? '가상머신 가져오기' : '템플릿 가져오기'}</h1>
+          <h1>{isVmMode ? "가상머신 가져오기" : "템플릿 가져오기"}</h1>
           <button onClick={onClose}>{xButton()}</button>
         </div>
 
-        <div className='get-modal-content mb-1'>
+        <div className="get-modal-content mb-1">
           <div className="section-table-outer p-0.5">
-
             <table>
               <thead>
                 <tr>
@@ -127,19 +131,21 @@ const DomainGetVmTemplateModal = ({ isOpen, type = 'vm', dcId, onClose }) => {
               <tbody>
                 {placeholderData.map((disk, index) => (
                   <tr key={index}>
-                    <td>{disk.alias || "N/A"}</td>  {/* 별칭 */}
-                    <td>{disk.virtualSize || "N/A"}</td>  {/* 가상 크기 */}
-                    <td>4 GB</td>  {/* 메모리 (임시값) */}
-                    <td>4</td>  {/* CPU (임시값) */}
-                    <td>x86_64</td>  {/* 아키텍처 (임시값) */}
-                    <td>{disk.virtualSize || "N/A"}</td>  {/* 디스크 (일반 텍스트) */}
+                    <td>{disk.alias || "N/A"}</td> {/* 별칭 */}
+                    <td>{disk.virtualSize || "N/A"}</td> {/* 가상 크기 */}
+                    <td>4 GB</td> {/* 메모리 (임시값) */}
+                    <td>4</td> {/* CPU (임시값) */}
+                    <td>x86_64</td> {/* 아키텍처 (임시값) */}
+                    <td>{disk.virtualSize || "N/A"}</td>{" "}
+                    {/* 디스크 (일반 텍스트) */}
                     <td>
                       <select>
                         <option value="cluster-01">Cluster-01</option>
                         <option value="cluster-02">Cluster-02</option>
                         <option value="cluster-03">Cluster-03</option>
                       </select>
-                    </td>  {/* 클러스터 (select) */}
+                    </td>{" "}
+                    {/* 클러스터 (select) */}
                   </tr>
                 ))}
               </tbody>
@@ -147,36 +153,45 @@ const DomainGetVmTemplateModal = ({ isOpen, type = 'vm', dcId, onClose }) => {
           </div>
         </div>
 
-        <div className='get-modal-content'>
+        <div className="get-modal-content">
           {/* 필터 버튼 */}
-          <div className="host-filter-btns" style={{ marginBottom: '0' }}>
-            <button className={buttonClass("general")} onClick={() => setActiveFilter("general")}>
+          <div className="host-filter-btns" style={{ marginBottom: "0" }}>
+            <button
+              className={buttonClass("general")}
+              onClick={() => setActiveFilter("general")}
+            >
               일반 정보
             </button>
-            <button className={buttonClass("disk")} onClick={() => setActiveFilter("disk")}>
+            <button
+              className={buttonClass("disk")}
+              onClick={() => setActiveFilter("disk")}
+            >
               디스크
             </button>
-            <button className={buttonClass("network")} onClick={() => setActiveFilter("network")}>
+            <button
+              className={buttonClass("network")}
+              onClick={() => setActiveFilter("network")}
+            >
               네트워크 인터페이스
             </button>
           </div>
 
           {/* 섹션 변경 */}
           {activeFilter === "general" && (
-            <div className='get-template-info'>
+            <div className="get-template-info">
               {Array.from({ length: 3 }, (_, groupIndex) => (
                 <div key={groupIndex}>
                   {tableRows
                     .filter((_, index) => index % 3 === groupIndex) // 3등분하여 그룹화
-                    .map((row, index) => (
-                      row.label && (
-                        <div key={index}>
-                          <div>{row.label}</div>
-                          <div>{row.value}</div>
-                        </div>
-                      )
-                    ))
-                  }
+                    .map(
+                      (row, index) =>
+                        row.label && (
+                          <div key={index}>
+                            <div>{row.label}</div>
+                            <div>{row.value}</div>
+                          </div>
+                        )
+                    )}
                 </div>
               ))}
             </div>
@@ -202,7 +217,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = 'vm', dcId, onClose }) => {
         </div>
 
         <div className="edit-footer">
-          <button style={{ display: 'none' }}></button>
+          <button style={{ display: "none" }}></button>
           <button onClick={handleFormSubmit}>가져오기</button>
           <button onClick={onClose}>취소</button>
         </div>

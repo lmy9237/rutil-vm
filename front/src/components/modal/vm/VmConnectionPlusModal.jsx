@@ -23,7 +23,9 @@ const VmConnectionPlusModal = ({
 
   const handleOkClick = () => {
     if (selectedDiskId) {
-      const selectedDiskDetails = disks.find((disk) => disk.id === selectedDiskId);
+      const selectedDiskDetails = disks.find(
+        (disk) => disk.id === selectedDiskId
+      );
       onSelectDisk(selectedDiskId, selectedDiskDetails);
       onRequestClose();
     } else {
@@ -42,14 +44,15 @@ const VmConnectionPlusModal = ({
         onChange={() => setSelectedDiskId(e.id)}
       />
     ),
-    virtualSize: e?.virtualSize/(Math.pow(1024, 3))+" GB",
-    actualSize: e?.actualSize/(Math.pow(1024, 3))+" GB",
+    virtualSize: e?.virtualSize / Math.pow(1024, 3) + " GB",
+    actualSize: e?.actualSize / Math.pow(1024, 3) + " GB",
     storageDomainVo: e?.storageDomainVo?.name,
     status: e?.status === "UNINITIALIZED" ? "초기화되지 않음" : "UP",
   }));
 
   // 제외된 디스크 ID를 필터링
-  const disks = rawDisks?.filter((disk) => !excludedDiskIds.includes(disk.id)) || [];
+  const disks =
+    rawDisks?.filter((disk) => !excludedDiskIds.includes(disk.id)) || [];
 
   return (
     <Modal

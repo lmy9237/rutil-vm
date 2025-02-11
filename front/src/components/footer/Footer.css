@@ -20,7 +20,7 @@
     color: rgb(10, 55, 107);
     cursor: pointer;
     background-color: white;
-    border: 1px solid #295b9c;
+    border: 1px solid var(--color-primary-1);
     border-radius: 3px;
     
 }

@@ -2,7 +2,17 @@ import PagingTableOuter from '../../components/table/PagingTableOuter';
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
 import { renderSeverityIcon } from '../../components/Icon';
 
-const EventTable = ({ events =[]} ) => {
+/**
+ * @name EventTable
+ * @description ...
+ * 
+ * @param {Array} domains,
+ * @returns
+ */
+const EventTable = ({ 
+  isLoading, isError, isSuccess,
+  events =[]}
+) => {
   return (
     <>
       <PagingTableOuter

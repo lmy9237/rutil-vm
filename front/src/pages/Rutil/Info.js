@@ -1,15 +1,22 @@
 import logo from '../../assets/images/logo.png'
-import { 
-  useDashboard, 
-  useDashboardCpuMemory, 
+import {
+  useDashboard,
+  useDashboardCpuMemory,
   useDashboardStorage,
 } from '../../api/RQHook';
 
+/**
+ * @name Info
+ * @description Rutil Manager 정보
+ * 
+ * @returns 
+ */
 const Info = () => {
   const { data: dashboard = [] } = useDashboard();
   const { data: cpuMemory = [] } = useDashboardCpuMemory();
   const { data: storage = [] } = useDashboardStorage();
-  
+
+  console.log("...")
   return (
     <div className="rutil-general">
       <div className="rutil-general-first-contents">
@@ -22,13 +29,13 @@ const Info = () => {
         </div>
         <div>
           <div>
-            <span>데이터센터: {dashboard?.datacenters ?? 0}</span><br/>
-            <span>클러스터: {dashboard?.clusters ?? 0}</span><br/>
-            <span>호스트: {dashboard?.hosts ?? 0}</span><br/>
-            <span>가상머신: {dashboard?.vmsUp ?? 0} / {dashboard?.vms}</span><br/>
-            <span>스토리지 도메인: {dashboard?.storageDomains ?? 0}</span><br/>
+            <span>데이터센터: {dashboard?.datacenters ?? 0}</span><br />
+            <span>클러스터: {dashboard?.clusters ?? 0}</span><br />
+            <span>호스트: {dashboard?.hosts ?? 0}</span><br />
+            <span>가상머신: {dashboard?.vmsUp ?? 0} / {dashboard?.vms}</span><br />
+            <span>스토리지 도메인: {dashboard?.storageDomains ?? 0}</span><br />
           </div>
-          <br/>
+          <br />
           <div>부팅시간(업타임): <strong>{dashboard?.bootTime ?? ""}</strong></div>
         </div>
       </div>

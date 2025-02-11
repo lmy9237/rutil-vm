@@ -146,7 +146,7 @@
     position: absolute;
     display: none;
     background-color: white;
-    border: 1px solid #ccc;
+    border: var(--border-simple);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
     z-index: 1000;
     border-radius: 3px;
@@ -253,7 +253,7 @@
         box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); /*x y 번짐 색상*/
     }
     .set_part_text{
-        border-bottom: 1px solid gray;
+        border-bottom: var(--border-simple);
         font-size: 0.34rem;
         padding: 0.1rem 0.4rem;
     }

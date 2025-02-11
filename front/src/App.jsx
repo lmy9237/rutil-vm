@@ -2,7 +2,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { Route, HashRouter as Router, Routes } from 'react-router-dom';
-import './App.css';
 import STOMP from './Socket';
 
 import Header from './components/Header/Header';
@@ -29,9 +28,11 @@ import Event from './pages/event/Event';
 import SettingInfo from './pages/setting/SettingInfo';
 import Login from './pages/login/Login';
 import Error from './pages/Error';
+import './App.css';
 
 
 const App = () => {
+  //region: 웹소켓연결
   const [stompClient, setStompClient] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
@@ -61,15 +62,18 @@ const App = () => {
       }
     };
   }, []);
+  //endregion: 웹소켓연결
 
   const showMessage = (message) => {
+    console.log(`App > showMessage ...`)
     setMessages((prevMessages) => [...prevMessages, message]);
   };
 
   const showToast = (msg) => {
+    console.log(`App > showToast ...`);
     toast(`${msg.content}`, {
       icon: `${msg.symbol}`,
-      duration: 4000,
+      duration: 1500,
       ariaProps: {
         role: 'status',
         'aria-live': 'polite',
@@ -78,14 +82,12 @@ const App = () => {
   };
 
   const queryClient = new QueryClient()
-  
   const isAuthenticated = () => {
-    // Implement your authentication logic here
+    console.log(`App > isAuthenticated ...`);
     return localStorage.getItem('token') !== null; // Example: check if a token exists
   };
   
   const [authenticated, setAuthenticated] = useState(false);
-  
   useEffect(() => {
     setAuthenticated(isAuthenticated());
   }, []);
@@ -93,8 +95,9 @@ const App = () => {
 
   const [asideVisible, setAsideVisible] = useState(true); // aside-outer 상태 관리
   const toggleAside = () => {
+    console.log(`App > toggleAside ...`);
     setAsideVisible((prev) => !prev); // 열림/닫힘 상태만 변경
-};
+  };
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
@@ -150,8 +153,6 @@ const App = () => {
               <Route path="/events" element={<Event />} />
               <Route path="/settings/:section" element={<SettingInfo />} />
               <Route path="/error" element={<Error />} />
-         
-
             </Routes>
           </MainOuter>
           </>
@@ -167,13 +168,13 @@ const App = () => {
         gutter={4} 
         toastOptions={{
           style: {
-            fontSize: '12px', // 글씨 크기를 작게 설정
+            fontSize: '10px', // 글씨 크기를 작게 설정
             background: '#333', // 배경색 (선택)
             color: '#fff', // 글자색 (선택)
           },
           success: {
             style: {
-              fontSize: '12px', // 성공 알림의 글씨 크기
+              fontSize: '10px', // 성공 알림의 글씨 크기
               background: 'green',
               color: '#fff',
             },

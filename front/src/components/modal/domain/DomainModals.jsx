@@ -4,11 +4,30 @@ import DomainDeleteModal from "./DomainDeleteModal";
 import DomainActionModal from "./DomainActionModal";
 import DomainAttachModal from "./DomainAttachModal";
 
-const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId, onClose }) => {
+/**
+ * @name DomainModals
+ * @description 도메인 모달
+ *
+ * @param {boolean} isOpen
+ *
+ * @returns
+ * 
+ * @see DomainModal
+ * @see DomainDeleteModal
+ * @see DomainActionModal
+ * @see DomainAttachModal
+ */
+const DomainModals = ({
+  activeModal,
+  domain,
+  selectedDomains = [],
+  datacenterId,
+  onClose,
+}) => {
   const modals = {
     create: (
       <DomainModal
-        isOpen={activeModal === 'create'}
+        isOpen={activeModal === "create"}
         mode={activeModal}
         datacenterId={datacenterId}
         onClose={onClose}
@@ -16,7 +35,7 @@ const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId,
     ),
     edit: (
       <DomainModal
-        isOpen={activeModal === 'edit'}
+        isOpen={activeModal === "edit"}
         mode={activeModal}
         domainId={domain?.id}
         onClose={onClose}
@@ -24,7 +43,7 @@ const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId,
     ),
     import: (
       <DomainModal
-        isOpen={activeModal === 'import'}
+        isOpen={activeModal === "import"}
         mode={activeModal}
         domainId={domain?.id}
         onClose={onClose}
@@ -37,7 +56,7 @@ const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId,
     ),
     delete: (
       <DomainDeleteModal
-        isOpen={activeModal === 'delete' }
+        isOpen={activeModal === "delete"}
         data={selectedDomains}
         deleteMode={true}
         onClose={onClose}
@@ -45,7 +64,7 @@ const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId,
     ),
     destroy: (
       <DomainDeleteModal
-        isOpen={activeModal === 'destroy'}
+        isOpen={activeModal === "destroy"}
         data={selectedDomains}
         deleteMode={false}
         onClose={onClose}
@@ -53,7 +72,7 @@ const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId,
     ),
     action: (
       <DomainActionModal
-        isOpen={['detach', 'activate', 'maintenance'].includes(activeModal)}
+        isOpen={["detach", "activate", "maintenance"].includes(activeModal)}
         action={activeModal}
         data={selectedDomains}
         datacenterId={datacenterId}
@@ -62,17 +81,18 @@ const DomainModals = ({ activeModal, domain, selectedDomains = [], datacenterId,
     ),
     attach: (
       <DomainAttachModal
-        isOpen={activeModal === 'attach'}
+        isOpen={activeModal === "attach"}
         data={selectedDomains}
         onClose={onClose}
       />
-    )
+    ),
   };
 
+  console.log("...")
   return (
     <>
       {Object.keys(modals).map((key) => (
-          <React.Fragment key={key}>{modals[key]}</React.Fragment>
+        <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>
   );

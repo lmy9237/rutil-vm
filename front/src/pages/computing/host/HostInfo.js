@@ -5,8 +5,6 @@ import NavButton from '../../../components/navigation/NavButton';
 import HeaderButton from '../../../components/button/HeaderButton';
 import Footer from '../../../components/footer/Footer';
 import Path from '../../../components/Header/Path';
-import './css/Host.css';
-import { useHost } from '../../../api/RQHook';
 import HostGeneral from './HostGeneral';
 import HostVms from './HostVms'
 import HostNics from './HostNics'
@@ -14,7 +12,25 @@ import HostDevices from './HostDevices';
 import HostEvents from './HostEvents'
 import HostModals from '../../../components/modal/host/HostModals';
 import { renderHostStatus } from '../../../components/Icon';
+import { useHost } from '../../../api/RQHook';
+import './Host.css';
 
+/**
+ * @name HostInfo
+ * @description 호스트 종합페이지
+ * (/computing/hosts/<hostId>)
+ * 
+ * @param {string} hostId 호스트 ID
+ * 
+ * @see HostGeneral
+ * @see HostVms
+ * @see HostNics
+ * @see HostDevices
+ * @see HostEvents
+ * @see HostModals
+ * 
+ * @returns
+ */
 const HostInfo = () => {
   const navigate = useNavigate();
   const { id: hostId, section } = useParams();
@@ -50,7 +66,9 @@ const HostInfo = () => {
   }, [section]);
 
   const handleTabClick = (tab) => {
-    const path = tab === 'general' ? `/computing/hosts/${hostId}` : `/computing/hosts/${hostId}/${tab}`;
+    const path = (tab === 'general') 
+      ? `/computing/hosts/${hostId}`
+      : `/computing/hosts/${hostId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
   };
@@ -85,6 +103,7 @@ const HostInfo = () => {
     { type: 'haOff', label: '글로벌 HA 유지 관리를 비활성화', disabled: !isUp, onClick: () => openModal('haOff') },
   ];
 
+  console.log("...")
   return (
     <div id="section">
       <HeaderButton
@@ -100,7 +119,8 @@ const HostInfo = () => {
           activeSection={activeTab} 
           handleSectionClick={handleTabClick} 
         />
-        <div className="host-btn-outer">
+        <div className="w-full px-[0.5rem] py-[0.5rem]"
+>
           <Path pathElements={pathData} />
           {renderSectionContent()}
         </div>

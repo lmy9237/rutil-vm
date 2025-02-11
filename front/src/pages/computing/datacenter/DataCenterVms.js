@@ -1,16 +1,22 @@
 import React from 'react';
+import VmDupl from '../../../components/dupl/VmDupl';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useVMsFromDataCenter } from '../../../api/RQHook';
-import VmDupl from '../../computing/vm/VmDupl';
 
 const DataCenterVms = ({ datacenterId }) => {
   const {
-    data: vms = [], isLoading: isVmsLoading
+    data: vms = [],
+    isLoading: isVmsLoading,
+    isError: isVmsError,
+    isSuccess: isVmsSuccess,
   } = useVMsFromDataCenter(datacenterId, (e) => ({ ...e }));
   
   return (
     <>
       <VmDupl
+        isLoading={isVmsLoading}
+        isError={isVmsError}
+        isSuccess={isVmsSuccess}
         vms={vms}
         columns={TableColumnsInfo.VMS}
       />

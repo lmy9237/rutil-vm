@@ -18,7 +18,7 @@
   
   .vnc-controls input {
     padding: 8px;
-    border: 1px solid #ccc;
+    border: var(--border-simple);
     border-radius: 4px;
   }
   
@@ -44,6 +44,6 @@
     width: 80%; /* Adjust as needed */
     height: 70%; /* Adjust as needed */
     background-color: #000; /* Background color for the VNC canvas */
-    border: 1px solid #ccc;
+    border: var(--border-simple);
   }
   

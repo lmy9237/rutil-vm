@@ -2,13 +2,22 @@ import React from 'react';
 import {faDesktop } from '@fortawesome/free-solid-svg-icons';
 import Footer from '../../../components/footer/Footer';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import { useAllTemplates } from '../../../api/RQHook';
-import TemplateDupl from '../../computing/template/TemplateDupl';
+import TemplateDupl from '../../../components/dupl/TemplateDupl';
 import HeaderButton from '../../../components/button/HeaderButton';
+import { useAllTemplates } from '../../../api/RQHook';
 
+/**
+ * @name AllTemplates
+ * @description 탬플릿 전체
+ * 
+ * @returns 
+ */
 const AllTemplates = () => {
   const { 
-    data: templates = [], isLoading: isTemplatesLoading,
+    data: templates = [],
+    isLoading: isTemplatesLoading, 
+    isError: isTemplatesError,
+    isSuccess: isTemplatesSuccess,
   } = useAllTemplates((e) => ({...e,}));
 
   return (
@@ -19,10 +28,12 @@ const AllTemplates = () => {
           title={'템플릿'}
         />
       </div>
-      <div className="host-btn-outer">
-        <TemplateDupl
-          columns={TableColumnsInfo.TEMPLATES}
-          templates={templates || []}
+      <div className="w-full px-[0.5rem] py-[0.5rem]"
+>
+        <TemplateDupl templates={templates || []} columns={TableColumnsInfo.TEMPLATES}
+          isLoading={isTemplatesLoading}
+          isError={isTemplatesError}
+          isSuccess={isTemplatesSuccess}
         />
       </div>
       <Footer/>

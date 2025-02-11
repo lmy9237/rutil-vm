@@ -5,9 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRefresh, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const PagingTable = ({
-  columns, 
+  isLoading, isError, isSuccess,
+  columns = [], 
   data = [], 
-  onRowClick = () => {}, 
+  onRowClick = () => {},
   clickableColumnIndex = [], 
   itemsPerPage = 20, 
   showSearchBox = true 
@@ -36,8 +37,10 @@ const PagingTable = ({
   // 총 페이지 수 계산
   const totalPages = Math.ceil(validData.length / itemsPerPage);
 
-  // 페이지 변경 처리 함수
+  
   const handlePageChange = (direction) => {
+    // 페이지 변경 처리 함수
+    console.log("PagingTable > handlePageChange ... ")
     if (direction === 'next' && currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     } else if (direction === 'prev' && currentPage > 1) {

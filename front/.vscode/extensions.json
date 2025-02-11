@@ -1,8 +1,16 @@
 {
   "recommendations": [
-    "ms-azuretools.vscode-docker",
-    "alefragnani.project-manager",
     "aaron-bond.better-comments",
+    "pranaygp.vscode-css-peek",
+    "mikestead.dotenv",
+    "necinc.elmmet",
+    "dsznajder.es7-react-js-snippets",
+    "Zignd.html-css-class-completion",
+    "mithril-emmet",
+    "christian-kohler.path-intellisense",
+    "esbenp.prettier-vscode",
+    "wayou.vscode-todo-highlight",
+    "Gruntfuggly.todo-tree",
   ],
   "unwantedRecommendations": []
 }

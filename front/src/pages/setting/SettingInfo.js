@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
+import {
   faChevronLeft, faChevronRight, faChevronDown, faEllipsisV, faSearch
   , faFilter,
   faTimes,
@@ -16,16 +16,16 @@ import HeaderButton from '../../components/button/HeaderButton';
 import Footer from '../../components/footer/Footer';
 import NavButton from '../../components/navigation/NavButton';
 import Path from '../../components/Header/Path';
-import './css/Setting.css';
 import { adjustFontSize } from '../../UIEvent';
 import SettingUsers from './SettingUsers';
 import SettingSessions from './SettingSessions';
+import './Setting.css';
 
 const SettingInfo = () => {
   const { section } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(section || 'users'); // 초기값 설정
-  
+
   const sections = [
     { id: 'users', label: '사용자' },
     { id: 'sessions', label: '활성 사용자 세션' },
@@ -58,7 +58,7 @@ const SettingInfo = () => {
   }, []);
 
   const pathData = ['관리', sections.find(section => section.id === activeTab)?.label];
-  
+
   const sectionComponents = {
     users: SettingUsers,
     sessions: SettingSessions,
@@ -86,7 +86,8 @@ const SettingInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="host-btn-outer">
+        <div className="w-full px-[0.5rem] py-[0.5rem]"
+>
           <Path pathElements={pathData} />
           {renderSectionContent()}
         </div>

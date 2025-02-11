@@ -1,18 +1,22 @@
 import React from 'react';
-import { useAllDiskFromDomain } from "../../../api/RQHook";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import DiskDupl from '../disk/DiskDupl';
+import DiskDupl from '../../../components/dupl/DiskDupl';
+import { useAllDiskFromDomain } from "../../../api/RQHook";
 
 const DomainDisks = ({ domainId }) => {
   const {
-    data: disks = [], isLoading: isDisksLoading,
+    data: disks = [],
+    isLoading: isDisksLoading,
+    isError: isDisksError,
+    isSuccess: isDisksSuccess,
   } = useAllDiskFromDomain(domainId, (e) => ({ ...e }));
 
   return (
     <>
-      <DiskDupl
-        columns={TableColumnsInfo.DISKS_FROM_STORAGE_DOMAIN}
-        disks={disks}
+      <DiskDupl disks={disks} columns={TableColumnsInfo.DISKS_FROM_STORAGE_DOMAIN}
+        isLoading={isDisksLoading}
+        isError={isDisksError}
+        isSuccess={isDisksSuccess}
       />
     </>
   );

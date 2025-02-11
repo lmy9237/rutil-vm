@@ -1,10 +1,24 @@
 import React, { useState } from 'react';
 import { useHost } from "../../../api/RQHook";
-import './css/Host.css';
 import { convertBytesToMB } from '../../../util';
+import './Host.css';
 
+/**
+ * @name HostGeneral
+ * @description 호스트 일반정보
+ * (/computing/hosts/<hostId>)
+ * 
+ * @param {string} hostId 호스트 ID
+ * @returns
+ */
 const HostGeneral = ({ hostId }) => {
-  const { data: host } = useHost(hostId);
+  const { 
+    data: host,
+    isLoading: isHostLoading,
+    isError: isHostError,
+    isSuccess: isHostSuccess,
+  } = useHost(hostId);
+
   const [activeTab, setActiveTab] = useState("general");
 
   const renderGeneralTab = [
@@ -62,6 +76,7 @@ const HostGeneral = ({ hostId }) => {
     { tab: 'software', label: '소프트웨어', tableRows: renderSoftwareTab },
   ];
 
+  console.log("...")
   return (
     <div className="host-content-outer">
       <div className="host-tabs">
@@ -74,7 +89,7 @@ const HostGeneral = ({ hostId }) => {
           </button>
         ))}
       </div>
-      
+
       <div className='host-table-outer'>
         <table className="host-table">
           <tbody>

@@ -1,16 +1,29 @@
 import { Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../../components/common/Loading";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DeleteModal from "../../../utils/DeleteModal";
 import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
 import { useAllTemplatesFromNetwork } from "../../../api/RQHook";
 
+/**
+ * @name NetworkTemplates
+ * @description 네트워크에 종속 된 탬플릿 목록
+ *
+ * @param {string} networkId 네트워크 ID
+ * @returns
+ */
 const NetworkTemplates = ({ networkId }) => {
   const navigate = useNavigate();
   const { 
-    data: templates = [], isLoading: isTemplatesLoading
-  } = useAllTemplatesFromNetwork(networkId, (e) => ({ ...e }));
+    data: templates = [],
+    isLoading: isTemplatesLoading,
+    isError: isTemplatesError,
+    isSuccess: isTemplatesSuccess,
+  } = useAllTemplatesFromNetwork(networkId, (e) => ({ 
+    ...e
+  }));
 
   const [selectedNics, setSelectedNics] = useState([]); // 선택된 항목
   const [modalData, setModalData] = useState(null); // 모달에 전달할 데이터
@@ -23,23 +36,25 @@ const NetworkTemplates = ({ networkId }) => {
   // 이름 클릭 시 이동
   const handleNameClick = (id) => navigate(`/computing/templates/${id}`);
 
-  // 제거 버튼 클릭 시 모달 열기
   const openDeleteModal = () => {
+    // 제거 버튼 클릭 시 모달 열기
+    console.log("NetworkTemplates > openDeleteModal ...")
     if (selectedNics.length > 0) { // 선택된 항목이 있을 때만 동작
       setModalData(selectedNics); // 선택된 항목을 모달에 전달
       setIsModalOpen(true); // 모달 열기
     }
   };
 
-  // 모달 닫기
   const closeDeleteModal = () => {
+    // 모달 닫기
+    console.log("NetworkTemplates > closeDeleteModal ...")
     setIsModalOpen(false); // 모달 닫기
     setModalData(null); // 모달 데이터 초기화
   };
 
   // 모달 렌더링
   const renderModals = () => (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading/>}>
       {isModalOpen && (
         <TemplateNicDeleteModal
           isOpen={isModalOpen}
@@ -52,6 +67,7 @@ const NetworkTemplates = ({ networkId }) => {
   );
   
 
+  console.log("...")
   return (
     <>
       <div className="header-right-btns">
@@ -64,9 +80,8 @@ const NetworkTemplates = ({ networkId }) => {
       <br />
       <span>선택된 NIC ID: {selectedNicIds || '없음'}</span>
 
-      <TablesOuter
-        columns={TableColumnsInfo.TEMPLATES_FROM_NETWORK}
-        data={templates}
+      <TablesOuter data={templates} columns={TableColumnsInfo.TEMPLATES_FROM_NETWORK}
+        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedNics(selectedRows)} // 선택된 항목 업데이트
         multiSelect={true}

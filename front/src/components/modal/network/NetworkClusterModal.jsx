@@ -8,7 +8,10 @@ import { renderStatusClusterIcon } from '../../Icon';
 
 const NetworkClusterModal = ({ isOpen, onRequestClose, networkId }) => {
   const {
-    data: clusters = []
+    data: clusters = [],
+    isLoading: isClustersLoading,
+    isError: isClustersError,
+    isSuccess: isClustersSuccess,
   } = useAllClustersFromNetwork(networkId, (cluster) => ({
     name: cluster?.name,
     connect: cluster?.connected ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />,
@@ -48,8 +51,8 @@ const NetworkClusterModal = ({ isOpen, onRequestClose, networkId }) => {
         </div>
 
         <TablesOuter
-          columns={TableColumnsInfo.CLUSTERS_POPUP}
-          data={clusters || []}
+          isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
+          columns={TableColumnsInfo.CLUSTERS_POPUP} data={clusters || []}
           onRowClick={() => console.log('Row clicked')}
         />
 

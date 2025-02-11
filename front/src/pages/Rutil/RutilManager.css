@@ -12,11 +12,11 @@
 }
 .rutil-general-first-contents>div:first-child{
     display:flex;
-    border-bottom:1px solid gray;
+    border-bottom:var(--border-simple);
     margin-bottom: 0.3rem;
 }
 .type-info-boxs{
-    border:1px solid gray;
+    border:var(--border-simple);
     padding:0.2rem;
 }
 .type-info-box{

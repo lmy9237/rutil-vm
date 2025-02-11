@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { faEarthAmericas } from '@fortawesome/free-solid-svg-icons';
-import NavButton from '../../../components/navigation/NavButton' 
+import NavButton from '../../../components/navigation/NavButton'
 import HeaderButton from '../../../components/button/HeaderButton';
 import Footer from '../../../components/footer/Footer';
 import Path from '../../../components/Header/Path';
@@ -12,27 +12,44 @@ import ClusterVms from './ClusterVms';
 import ClusterNetworks from './ClusterNetworks';
 import ClusterEvents from './ClusterEvents';
 import { useCluster } from '../../../api/RQHook';
-import './css/Cluster.css';
+import './Cluster.css';
 
+/**
+ * @name ClusterInfo
+ * @description 클러스터 종합 페이지
+ * 
+ * @param {string} clusterId 클러스터ID
+ * @returns 
+ * 
+ * @see ClusterGeneral
+ * @see ClusterHosts
+ * @see ClusterVms
+ * @see ClusterNetworks
+ * @see ClusterEvents
+ * @see ClusterModals
+ */
 const ClusterInfo = () => {
   const navigate = useNavigate();
   const { id: clusterId, section } = useParams();
   const {
-    data: cluster, status, isRefetching, refetch, isError, error, isLoading
-  } = useCluster(clusterId, (e) => ({...e,}));
+    data: cluster, 
+    isLoading: isClusterLoading,
+    isError: isClusterError,
+    isSuccess: isClusterSuccess,
+  } = useCluster(clusterId, (e) => ({ ...e, }));
 
   const [activeTab, setActiveTab] = useState('general');
   const [activeModal, setActiveModal] = useState(null);
 
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
-  
+
   useEffect(() => {
-    if (isError || (!isLoading && !cluster)) {
+    if (isClusterError || (!isClusterLoading && !cluster)) {
       navigate('/computing/rutil-manager/clusters');
     }
-  }, [isError, isLoading, cluster, navigate]);
-  
+  }, [isClusterError, isClusterLoading, cluster, navigate]);
+
   const sections = [
     { id: 'general', label: '일반' },
     { id: 'hosts', label: '호스트' },
@@ -65,7 +82,7 @@ const ClusterInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: 'edit', label: '편집', onClick: () => openModal("edit")},
+    { type: 'edit', label: '편집', onClick: () => openModal("edit") },
     { type: 'delete', label: '삭제', onClick: () => openModal("delete") },
   ];
 
@@ -77,12 +94,13 @@ const ClusterInfo = () => {
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
-        <NavButton 
-          sections={sections} 
-          activeSection={activeTab} 
-          handleSectionClick={handleTabClick} 
+        <NavButton
+          sections={sections}
+          activeSection={activeTab}
+          handleSectionClick={handleTabClick}
         />
-        <div className="host-btn-outer">
+        <div className="w-full px-[0.5rem] py-[0.5rem]"
+>
           <Path pathElements={pathData} />
           {renderSectionContent()}
         </div>
@@ -95,7 +113,7 @@ const ClusterInfo = () => {
         selectedClusters={cluster}
         onClose={closeModal}
       />
-      <Footer/>
+      <Footer />
     </div>
   );
 };

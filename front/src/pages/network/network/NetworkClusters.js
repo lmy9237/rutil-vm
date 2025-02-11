@@ -1,4 +1,5 @@
 import React, { Suspense, useState } from 'react'; 
+import Loading from '../../../components/common/Loading';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import { renderStatusClusterIcon } from '../../../components/Icon';
@@ -8,14 +9,19 @@ const NetworkClusterModal = React.lazy(() => import('../../../components/modal/n
 
 // 애플리케이션 섹션
 const NetworkClusters = ({ networkId }) => {
-  const { 
-    data: clusters = []
-  } = useAllClustersFromNetwork(networkId, (e) => ({ ...e }));
+  const {
+    data: clusters = [],
+    isLoading: isClustersLoading, 
+    isError: isClustersError,
+    isSuccess: isClustersSuccess 
+  } = useAllClustersFromNetwork(networkId, (e) => ({ 
+    ...e
+  }));
 
   const [isModalOpen, setIsModalOpen] = useState(false); 
   
   const renderModals = () => (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading/>}>
       {isModalOpen && (
         <NetworkClusterModal
           isOpen={isModalOpen}
@@ -26,6 +32,7 @@ const NetworkClusters = ({ networkId }) => {
     </Suspense>
   );
   
+  console.log("...")
   return (
     <>
       <div className="header-right-btns">
@@ -33,6 +40,7 @@ const NetworkClusters = ({ networkId }) => {
       </div>
     
       <TablesOuter
+        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
         columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}
         data={clusters.map((cluster) => ({
           ...cluster,

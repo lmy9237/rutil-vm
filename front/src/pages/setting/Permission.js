@@ -1,13 +1,12 @@
 import React from 'react';
 import Modal from 'react-modal';
-import Table from '../table/Table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faTimes
 } from '@fortawesome/free-solid-svg-icons'
 import './css/Permission.css';
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
-import TableOuter from '../table/TableOuter';
+import TablesOuter from '../../components/table/TableOuter';
 
 const Permission = ({ isOpen, onRequestClose }) => {
   const permissionData = [
@@ -71,7 +70,7 @@ const Permission = ({ isOpen, onRequestClose }) => {
         </div>
       </div>
       
-      <TableOuter
+      <TablesOuter
         columns={TableColumnsInfo.PERMISSIONS}
         data={permissionData} 
         onRowClick={() => console.log('Row clicked')} 

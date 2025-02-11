@@ -81,7 +81,8 @@ const VnicProfileInfo = () => {
           activeSection={activeTab} 
           handleSectionClick={handleTabClick} 
         />
-        <div className="host-btn-outer">
+        <div className="w-full px-[0.5rem] py-[0.5rem]"
+>
           <Path pathElements={pathData} />
           { renderSectionContent() }
         </div>

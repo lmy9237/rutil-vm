@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import VmActionButtons from "./VmActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import VmModals from "../modal/vm/VmModals";
+import VmActionButtons from "./VmActionButtons";
 import { renderVmStatusIcon } from "../Icon";
 
-const VmDupl = ({ vms = [], columns = [], actionType, status }) => {
+/**
+ * @name VmDupl
+ * @description ...
+ * 
+ * @param {Array} domains,
+ * @returns
+ */
+const VmDupl = ({
+  isLoading, isError, isSuccess,
+  vms = [], columns = [], actionType, status,
+}) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedVms, setSelectedVms] = useState([]);
@@ -32,6 +42,7 @@ const VmDupl = ({ vms = [], columns = [], actionType, status }) => {
         <span>id = {selectedIds || ""}</span>
 
         <TablesOuter
+          isLoading={isLoading} isError={isError} isSuccess={isSuccess}
           columns={columns}
           data={vms.map((vm) => ({
             ...vm,
@@ -84,7 +95,7 @@ const VmDupl = ({ vms = [], columns = [], actionType, status }) => {
           ]}
         />
 
-        {/* vm 모달 */}
+        {/* VM 모달 */}
         <VmModals
           activeModal={activeModal}
           vm={selectedVms[0]}

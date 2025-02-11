@@ -7,11 +7,20 @@ import { renderUpDownStatusIcon, renderVmStatusIcon } from "../../../components/
 import { useAllVmsFromNetwork } from "../../../api/RQHook";
 import { convertBytesToMB } from '../../../util';
 
-// const 
-
+/**
+ * @name NetworkVms
+ * @description 네트워크에 종속 된 가상머신 목록
+ *
+ * @param {string} networkId 네트워크 ID
+ * @returns
+ *
+ */
 const NetworkVms = ({ networkId }) => {
   const { 
-    data: vms = [], isLoading: isVmsLoading,
+    data: vms = [], 
+    isLoading: isVmsLoading,
+    isError: isVmsError,
+    isSuccess: isVmsSuccess,
   } = useAllVmsFromNetwork(networkId, (e) => ({ ...e }));
 
   const [activeFilter, setActiveFilter] = useState("running");
@@ -30,6 +39,7 @@ const NetworkVms = ({ networkId }) => {
 
   const modalData = selectedVms.map(vm => ({ id: vm.id, name: vm.vnic || vm.name || ''}));
 
+  console.log("...")
   return (
     <>
       <div className="header-right-btns">
@@ -50,6 +60,7 @@ const NetworkVms = ({ networkId }) => {
       <span>id = {selectedIds || ''}</span>
 
       <TablesOuter
+        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         columns={
           activeFilter === "running" 
             ? TableColumnsInfo.VMS_NIC 
@@ -67,7 +78,7 @@ const NetworkVms = ({ networkId }) => {
           totalRx: vm?.nicVos?.[0]?.rxTotalSpeed ? vm?.nicVos?.[0]?.rxTotalSpeed.toLocaleString() : '',
           totalTx: vm?.nicVos?.[0]?.txTotalSpeed ? vm?.nicVos?.[0]?.txTotalSpeed.toLocaleString() : '',
         }))}
-          onRowClick={(rows) => {
+        onRowClick={(rows) => {
           console.log('Selected Rows:', rows); // 선택된 데이터 확인
           setSelectedVms(Array.isArray(rows) ? rows : []);
         }}

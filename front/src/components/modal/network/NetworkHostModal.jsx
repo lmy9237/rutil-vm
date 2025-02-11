@@ -25,9 +25,9 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
   const { data: host } = useHost(hostId);
 
   // 클러스터id로 네트워크정보조회
-  const { data: network } = useNetworkFromCluster(
-    host?.clusterVo?.id,
-    (network) => {
+  const { 
+    data: network
+  } = useNetworkFromCluster(host?.clusterVo?.id, (network) => {
       return {
         id: network?.id ?? "",
         name: network?.name ?? "Unknown",
@@ -473,13 +473,13 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
         </div>
       </div>
 
-      {/*네트워크쪽 연필 추가모달 */}
+      {/* 네트워크쪽 연필 추가모달 */}
       <NetworkHostPlusModal
         isOpen={isSecondModalOpen}
         onClose={() => setIsSecondModalOpen(false)}
         initialSelectedTab="ipv4"
       />
-      {/*본딩 */}
+      {/* 본딩 */}
       <NewBondingModal
         isOpen={isBondingModalOpen}
         onClose={closeBondingModal}

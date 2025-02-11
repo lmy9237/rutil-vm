@@ -1,0 +1,400 @@
+/* 기본 모달 스타일 */
+.Modal {
+    z-index: 1000;
+  }
+  
+  .Overlay {
+    z-index: 999;
+  }
+  
+  /* 새 역할 모달 */
+  .Modal.newRolePopup {
+    z-index: 1100;
+  }
+  
+  .Overlay.newRolePopupOverlay {
+    z-index: 1099;
+  }
+  
+  /* 시스템 권한 추가 팝업 */
+  .Modal.addSystemRolePopup {
+    z-index: 1200;
+  }
+  
+  .Overlay.addSystemRolePopupOverlay {
+    z-index: 1199;
+  }
+  
+  /* 스케줄링 정책 팝업 */
+  .Modal.newSchedulePopup {
+    z-index: 1300;
+  }
+  
+  .Overlay.newSchedulePopupOverlay {
+    z-index: 1299;
+  }
+  
+  /* MAC 주소 풀 추가 팝업 */
+  .Modal.macNewPopup {
+    z-index: 1400;
+  }
+  
+  .Overlay.macNewPopupOverlay {
+    z-index: 1399;
+  }
+  
+  /* MAC 주소 풀 편집 팝업 */
+  .Modal.macEditPopup {
+    z-index: 1500;
+  }
+  
+  .Overlay.macEditPopupOverlay {
+    z-index: 1499;
+  }
+  
+  /*계정설정 팝업*/
+  .user_sessionInfo_popup{
+    position: absolute;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background: #fff;
+    top: 50%;
+    height: 63%;
+    width: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); /*x y 번짐 색상*/
+}
+.user_sessionInfo_popup .network_new_nav{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(206, 206, 206);
+    height: 8%;
+}
+.user_sessionInfo_popup .network_new_nav>div{
+    font-weight: 800;
+    text-align: center;
+    font-size: 0.33rem;
+    width: 50%;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-right: 1px solid rgb(206, 206, 206);
+}
+/*계정설정*/
+.setting_name_email,.setting_homepage,.serial_console{
+  padding:0.2rem 0.4rem ;
+  
+}
+.setting_name_email>div{
+  display:flex;
+
+  justify-content: space-between;
+  margin-bottom:0
+}
+.setting_name_email span{
+  text-align: left;
+  width: 40%;
+  display: block;
+}
+.serial_console_text{
+  height:10vh;
+  display:block;
+  width:100%;
+  margin-top:0.2rem
+}
+.set_part_checkboxs{
+  font-size: 0.34rem;
+  padding: 0.1rem 0.4rem;
+}
+
+.set_part_buttons{
+  display: flex;
+  width: 26%;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+.set_part_buttons>div{
+  border: 1px solid black;
+  border-radius: 2px;
+  padding: 0.1rem;
+  cursor: pointer;
+}
+.checkbox_toolbar>div{
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  display:flex;
+}
+  /*설정(설정->시스템권한)*/
+#setting_part_form,
+#setting_system_form,
+#setting_schedule_form,
+#setting_instant_form,
+#setting_mac_form
+{
+  padding: 1rem 0.4rem;
+}
+#setting_system_form tbody td:first-child,
+#setting_schedule_form tbody td:first-child,
+#setting_mac_form tbody td:first-child
+{
+  text-align: center;
+}
+  /*설정(설정->시스템권한->추가 팝업)*/
+.setting_system_new_outer{
+  display: none;
+  position: absolute; /* 시작 지점을 버튼 위, 0픽셀부터 시작하려고 주는 것*/
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.setting_system_new_popup{
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: #fff;
+  top: 50%;
+  height: 77%;
+  width: 60%;
+  z-index: 3;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); /*x y 번짐 색상*/
+}
+  /*설정(설정->스케줄링 정책)*/
+#setting_system_form  .setting_part_nav,
+#setting_schedule_form .setting_part_nav,
+#setting_instant_form .setting_part_nav,
+#setting_mac_form .setting_part_nav
+{
+  display: flex;
+  justify-content: right;
+}
+  /*설정(설정->스케줄링 정책->새로만들기 팝업)*/
+.setting_schedule_new_outer{
+  display: none;
+  position: absolute; /* 시작 지점을 버튼 위, 0픽셀부터 시작하려고 주는 것*/
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.setting_schedule_new_popup{
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: #fff;
+  top: 50%;
+  height: 85%;
+  width: 61%;
+  z-index: 3;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); /*x y 번짐 색상*/
+}
+.set_schedule_contents{
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.4rem;
+  font-size: 0.34rem;
+  height: 57%;
+}
+.set_schedule_contents_left,.set_schedule_contents_right{
+  width: 47%;
+}
+.set_schedule_contents_left>div{
+  height: 50%; 
+}
+.set_schedule_contents_left h1{
+  font-size: 0.4rem;
+}
+.set_schedule_contents_left>div>div:nth-child(3){
+  height: 66%;
+  margin-top: 0.1rem;
+  border-radius: 2px;
+  background-color: #ccc;
+}
+.set_schedule_contents_right>div{
+  padding-top: 0.6rem;
+  height: 45%;
+  width: 100%;
+}
+.set_schedule_contents_right span{
+  text-align: center;
+  display: block;
+  margin-bottom: 0.1rem;
+}
+.schedule_boxs{
+  overflow-y: auto; /* 세로 스크롤 추가 */
+  overflow-x: hidden; /* 가로 스크롤 숨김 */
+  height: 80%;
+}
+.schedule_boxs>div{
+  border: 1px solid black;
+  font-size: 0.3rem;
+  margin-bottom: 0.04rem;
+  padding: 0.1rem;
+}
+.set_schedule_balance{
+  padding: 0 0.4rem;
+}
+.set_schedule_balance label{
+  font-weight: 600;
+  font-size: 0.4rem;
+  display: block;
+}
+.set_schedule_balance select{
+  width: 47%;
+  height: 3.3vh;
+  padding: 0 3px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.29rem;
+  outline: none;
+  border: 1px solid  rgb(206, 206, 206);
+}
+  /*설정(설정->MAC주소 풀)*/
+#setting_mac_form .setting_part_table_outer{
+  height: 27vh;
+  border:var(--border-simple);
+}
+  /*설정(설정->MAC주소 풀->새로만들기)팝업*/
+.setting_mac_new_outer{
+  display: none;
+  position: absolute; /* 시작 지점을 버튼 위, 0픽셀부터 시작하려고 주는 것*/
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.setting_mac_new_popup{
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: #fff;
+  top: 50%;
+  height: 46%;
+  width: 47%;
+  z-index: 3;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); /*x y 번짐 색상*/
+}
+.setting_mac_textboxs{
+  padding: 0.4rem;
+  font-size: 0.36rem;
+}
+.setting_mac_textboxs>div{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+.setting_mac_textboxs input{
+  width: 47%;
+  height: 3.3vh;
+  padding: 0 3px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.29rem;
+  outline: none;
+  border: 1px solid  rgb(206, 206, 206);
+}
+.setting_mac_checkbox{
+  padding: 0 0.4rem;
+  font-size: 0.36rem;
+  margin-bottom: 0.4rem;
+}
+  /*설정(설정->MAC주소 풀->편집)팝업*/
+.setting_mac_edit_outer{
+  display: none;
+  position: absolute; /* 시작 지점을 버튼 위, 0픽셀부터 시작하려고 주는 것*/
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.setting_mac_edit_popup{
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: #fff;
+  top: 50%;
+  height: 55%;
+  width: 70%;
+  z-index: 3;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); /*x y 번짐 색상*/
+}
+
+/*설정(사용자)*/
+.setting_user_buttons{
+  display: flex;
+  font-size: 0.36rem;
+}
+.setting_user_buttons>div{
+  border: 1px solid black;
+  cursor: pointer;
+  margin-left: 0.1rem;
+}
+.setting_user_new_outer{
+  display: none;
+  position: absolute; /* 시작 지점을 버튼 위, 0픽셀부터 시작하려고 주는 것*/
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.setting_user_new_popup{
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: #fff;
+  top: 50%;
+  height: 75%;
+  width: 50%;
+  z-index: 3;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); /*x y 번짐 색상*/
+}
+.setting_part_table_outer>div:first-child{
+
+  margin-bottom: 0;
+}
+/*사용자(태그설정)*/
+.setting_add_tag{
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: #fff;
+  top: 50%;
+  height: 40%;
+  width: 27%;
+  z-index: 3;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); /*x y 번짐 색상*/
+}
+.setting_add_tag_checkbox{
+  display: flex;
+  font-size: 0.35rem;
+  padding: 0.25rem;
+
+}
+  /*설정(설정->역할)*/
+  #setting_part_form>div:first-child{
+    padding: 0.2rem 0;
+    font-weight: 600;
+}
+.setting_part_nav{
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.34rem;
+    margin-bottom: 0.3rem;
+}

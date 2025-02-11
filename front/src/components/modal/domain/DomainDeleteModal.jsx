@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useEffect } from "react";
+import Modal from "react-modal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTimes,
+  faExclamationTriangle,
+} from "@fortawesome/free-solid-svg-icons";
 import {
   useAllHostFromDomain,
   useAllHosts,
   useDeleteDomain,
   useDestroyDomain,
-} from '../../../api/RQHook';
-import toast from 'react-hot-toast';
+} from "../../../api/RQHook";
+import toast from "react-hot-toast";
 
 const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
   const { mutate: deleteDomain } = useDeleteDomain();
   const { mutate: destroyDomain } = useDestroyDomain(); // 파괴를 여기서
 
   const [format, setFormat] = useState(false);
-  const [hostName, setHostName] = useState('');
+  const [hostName, setHostName] = useState("");
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectedNames, setSelectedNames] = useState([]);
 
@@ -23,17 +26,17 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
   useEffect(() => {
     if (Array.isArray(data)) {
       setSelectedIds(data.map((item) => item.id));
-      setSelectedNames(data.map((item) => item.name || item.alias || ''));
+      setSelectedNames(data.map((item) => item.name || item.alias || ""));
     } else if (data) {
       setSelectedIds([data.id]);
-      setSelectedNames([data.name || data.alias || '']);
+      setSelectedNames([data.name || data.alias || ""]);
     }
   }, [data]);
 
-  // 호스트 목록 가져오기
   // 해당 데이터센터가 가진 호스트 목록을 가져와야함
   const {
-    data: hosts = [], isLoading: isHostsLoading,
+    data: hosts = [], 
+    isLoading: isHostsLoading
   } = useAllHostFromDomain();
 
   useEffect(() => {
@@ -44,18 +47,18 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
 
   const handleFormSubmit = () => {
     if (!selectedIds.length) {
-      console.error('ID가 없습니다. 삭제 요청을 취소합니다.');
+      console.error("ID가 없습니다. 삭제 요청을 취소합니다.");
       return;
     }
 
-    if(deleteMode) {
+    if (deleteMode) {
       selectedIds.forEach((id, index) => {
         deleteDomain(
           { domainId: id, format: format, hostName: hostName },
           {
             onSuccess: () => {
               if (index === selectedIds.length - 1) {
-                toast.success('도메인 삭제 완료');
+                toast.success("도메인 삭제 완료");
                 onClose(); // 모든 삭제가 완료되면 모달 닫기
               }
             },
@@ -65,20 +68,20 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
           }
         );
       });
-    }else { // 파괴일때
+    } else {
+      // 파괴일때
       selectedIds.forEach((id, index) => {
         destroyDomain(id, {
-            onSuccess: () => {
-              if (index === selectedIds.length - 1) {
-                toast.success('도메인 파괴 완료');
-                onClose(); // 모든 삭제가 완료되면 모달 닫기
-              }
-            },
-            onError: (error) => {
-              toast.error(`도메인 ${selectedNames[index]} 삭제 오류:`, error);
-            },
-          }
-        );
+          onSuccess: () => {
+            if (index === selectedIds.length - 1) {
+              toast.success("도메인 파괴 완료");
+              onClose(); // 모든 삭제가 완료되면 모달 닫기
+            }
+          },
+          onError: (error) => {
+            toast.error(`도메인 ${selectedNames[index]} 삭제 오류:`, error);
+          },
+        });
       });
     }
   };
@@ -87,14 +90,14 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
-      contentLabel={`스토리지 도메인 ${deleteMode ? '삭제' : '파괴'}`}
+      contentLabel={`스토리지 도메인 ${deleteMode ? "삭제" : "파괴"}`}
       className="Modal"
       overlayClassName="Overlay"
       shouldCloseOnOverlayClick={false}
     >
       <div className="domain-delete-popup modal">
         <div className="popup-header">
-          <h1>{`스토리지 도메인 ${deleteMode ? '삭제' : '파괴'}`}</h1>
+          <h1>{`스토리지 도메인 ${deleteMode ? "삭제" : "파괴"}`}</h1>
           <button onClick={onClose}>
             <FontAwesomeIcon icon={faTimes} fixedWidth />
           </button>
@@ -102,18 +105,21 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
 
         <div className="disk-delete-box">
           <div>
-            <FontAwesomeIcon style={{ marginRight: '0.3rem' }} icon={faExclamationTriangle} />
+            <FontAwesomeIcon
+              style={{ marginRight: "0.3rem" }}
+              icon={faExclamationTriangle}
+            />
             <span>
-              {selectedNames.length > 1 
-                ? `${selectedNames.join(', ')} 를(을) ${deleteMode ? '삭제' : '파괴'}하시겠습니까?`
-                : `${selectedNames[0]} 를(을) ${deleteMode ? '삭제' : '파괴'}하시겠습니까?`}
+              {selectedNames.length > 1
+                ? `${selectedNames.join(", ")} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`
+                : `${selectedNames[0]} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`}
             </span>
           </div>
         </div>
-        
-        {deleteMode === true &&
-          <div className="disk-delete-box" style={{display : 'flex'}}>
-            <div className='flex'>
+
+        {deleteMode === true && (
+          <div className="disk-delete-box" style={{ display: "flex" }}>
+            <div className="flex">
               <input
                 type="checkbox"
                 id="format"
@@ -136,10 +142,10 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
               </select>
             </div>
           </div>
-        }    
+        )}
 
         <div className="edit-footer">
-          <button style={{ display: 'none' }}></button>
+          <button style={{ display: "none" }}></button>
           <button onClick={handleFormSubmit}>OK</button>
           <button onClick={onClose}>취소</button>
         </div>

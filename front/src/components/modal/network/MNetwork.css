@@ -97,7 +97,7 @@
   padding: 15px;
   margin-bottom: 10px;
   background-color: #d1e5eb;
-  border: 1px solid #ddd;
+  border: var(--border-simple);
   border-radius: 5px;
   text-align: center;
   cursor: pointer;

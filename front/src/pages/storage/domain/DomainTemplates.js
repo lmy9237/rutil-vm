@@ -33,6 +33,7 @@ const TemplateRow = ({ template, isExpanded, toggleRow }) => (
   </>
 );
 
+
 const DiskRow = ({ disk }) => (
   <tr className="detail_machine_second">
     <td style={{ paddingLeft: '30px' }}>
@@ -46,19 +47,31 @@ const DiskRow = ({ disk }) => (
   </tr>
 );
 
+/**
+ * @name DomainTemplates
+ * @description 도메인에 종속 된 Template정보
+ * 
+ * @param {string} domainId 도메인ID
+ * @returns 
+ * 
+ * @see DomainGetVms
+ */
 const DomainTemplates = ({ domainId }) => {
   const {
     data: templates = [],
     status: templatesStatus,
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
+    isSuccess: isTemplatesSuccess,
   } = useAllTemplateFromDomain(domainId, (e) => ({
     ...e,
   }));
 
+  console.log("...")
   return (
     <>
       <TablesOuter
+        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         columns={TableColumnsInfo.TEMPLATES_FROM_STORAGE_DOMAIN}
         data={templates.map((t) => ({
           ...t,

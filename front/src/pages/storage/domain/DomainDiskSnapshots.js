@@ -1,8 +1,9 @@
 import React, { Suspense, useState } from 'react'; 
-import { useAllDiskSnapshotFromDomain } from "../../../api/RQHook";
+import Loading from '../../../components/common/Loading';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from '../../../components/table/TablesOuter';
 import { convertBytesToGB } from '../../../util';
+import { useAllDiskSnapshotFromDomain } from "../../../api/RQHook";
 
 const DeleteModal = React.lazy(() => import('../../../utils/DeleteModal'));
 
@@ -42,7 +43,7 @@ const DomainDiskSnapshots = ({ domainId }) => {
         multiSelect={true} 
       />
 
-      {/* <Suspense fallback={<div>Loading...</div>}>
+      {/* <Suspense fallback={<Loading/>}>
         {isModalOpen && (
           <DeleteModal
             isOpen={isModalOpen}

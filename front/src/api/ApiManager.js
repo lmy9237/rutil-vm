@@ -16,7 +16,7 @@ axios.defaults.proxy = {
 axios.defaults.headers.common['Content-Type'] ='application/json;charset=utf-8';
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.interceptors.request.use(config => {
-  console.log('request INTERCEPTED ...')
+  // console.log('request INTERCEPTED ...')
   config.headers['Content-Type'] ='application/json;charset=utf-8';
   config.headers['Access-Control-Allow-Origin'] = '*';
   config.headers['Access-Control-Allow-Headers'] = '*';

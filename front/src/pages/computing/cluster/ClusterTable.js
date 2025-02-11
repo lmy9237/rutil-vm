@@ -3,6 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
 
+/**
+ * @name ClusterTable
+ * @description ...
+ * 
+ * @param {string} datacenterId 데이터센터 ID
+ * @returns 
+ * 
+ * @deprecated 사용안함
+ */
 const ClusterTable = ({ columns, clusters, setSelectedClusters }) => {
   const navigate = useNavigate();
 
@@ -10,6 +19,7 @@ const ClusterTable = ({ columns, clusters, setSelectedClusters }) => {
     navigate(`/computing/clusters/${id}`);
   };
 
+  console.log("...")
   return (
     <>
       <TablesOuter

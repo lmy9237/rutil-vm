@@ -1,4 +1,5 @@
 import React, {Suspense, useState } from 'react';
+import Loading from '../../../components/common/Loading';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useHostdevicesFromVM } from '../../../api/RQHook';
@@ -17,7 +18,7 @@ const VmHostDevices = ({ vmId }) => {
   const closeModal = () => setActiveModal(null);
   
   const renderModals = () => (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading/>}>
       <VmDeviceAddModal
         isOpen={activeModal === 'add'}
         hostDevices={hostDevices}

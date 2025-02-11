@@ -2,14 +2,31 @@ import React from 'react';
 import { useEventsFromDataCenter } from '../../../api/RQHook';
 import EventTable from '../../event/EventTable';
 
-const DataCenterEvents = ({ datacenterId }) => {
+/**
+ * @name DataCenterEvents
+ * @description ...
+ * 
+ * @param {boolean} openModal,
+ * @returns
+ * 
+ */
+const DataCenterEvents = ({ 
+  datacenterId
+}) => {
   const {
-    data: events = [], isLoading: isEventsLoading,
+    data: events = [], 
+    isLoading: isEventsLoading,
+    isError: isEventsError,
+    isSuccess: isEventsSuccess,
   } = useEventsFromDataCenter(datacenterId, (e) => ({ ...e }));
-  
+
   return (
     <>
-      <EventTable events={events}/>
+      <EventTable events={events}
+        isLoading={isEventsLoading}
+        isError={isEventsError}
+        isSuccess={isEventsSuccess}
+      />
     </>
   );
 };
