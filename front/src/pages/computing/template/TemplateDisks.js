@@ -3,10 +3,12 @@ import { faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAllDisksFromTemplate } from '../../../api/RQHook';
 import TableRowClick from '../../../components/table/TableRowClick';
+import DiskActionModal from '../../../components/modal/disk/DiskActionModal';
 
 const TemplateDisks = ({ templateId }) => {
   const [isRowExpanded, setRowExpanded] = useState({});
   const [selectedDiskId, setSelectedDiskId] = useState(null); // 선택된 디스크 ID 상태
+  const [activeModal, setActiveModal] = useState(null);
 
   const toggleRow = (id) => {
     setRowExpanded((prev) => ({
@@ -69,7 +71,7 @@ const TemplateDisks = ({ templateId }) => {
   return (
     <div className="host_empty_outer">
       <div className="header-right-btns">
-        <button disabled={!selectedDiskId}>복제</button>
+      <button disabled={!selectedDiskId} onClick={() => setActiveModal('copy')}>복제</button>
       </div>
       <span>선택된 ID: {selectedDiskId || '없음'}</span>
       <div ref={tableRef} className="section-table-outer">
@@ -145,7 +147,19 @@ const TemplateDisks = ({ templateId }) => {
           </tbody>
         </table>
       </div>
+
+
+      {activeModal === 'copy' && (
+          <DiskActionModal
+            isOpen={true}
+            action="copy"
+            // data={selectedDisk ? [selectedDisk] : []}
+            onClose={() => setActiveModal(null)}
+          />
+        )}
     </div>
+
+    
   );
 };
 

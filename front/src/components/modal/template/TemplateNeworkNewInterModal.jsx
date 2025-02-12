@@ -74,7 +74,7 @@ const TemplateNeworkNewInterModal = ({
       setVnicProfileVoName(nicData.vnicProfileVo.name || "");
       setSelectedInterface(nicData.interface_ || "VIRTIO");
       setLinked(nicData.linked?.toLowerCase() === "up");
-      setPlugged(!!nicData.plugged);
+      setPlugged(nicData.linked?.toLowerCase() === "연결됨");
       setStatus(nicData.status);
       setMacAddress(nicData.macAddress);
     } else {

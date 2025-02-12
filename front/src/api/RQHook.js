@@ -2112,12 +2112,16 @@ export const useAddNicFromTemplate = () => {
  */
 export const useEditNicFromTemplate = () => {
   const queryClient = useQueryClient();
+  
   return useMutation({
-    mutationFn: async ({ templateId, nicData }) => await ApiManager.editNetwork(templateId, nicData),
+    mutationFn: async ({ templateId, nicId, nicData }) => 
+      await ApiManager.editNicFromTemplate(templateId, nicId, nicData), // nicId 추가
+  
     onSuccess: (data, { templateId }) => {
       queryClient.invalidateQueries('AllNicsFromTemplate'); // 전체 네트워크 목록 업데이트
       queryClient.invalidateQueries(['tId', templateId]); // 수정된 네트워크 상세 정보 업데이트
     },
+  
     onError: (error) => {
       console.error('Error editing Template network:', error);
     },

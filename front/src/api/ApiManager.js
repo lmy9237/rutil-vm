@@ -1622,21 +1622,29 @@ migrateHostsFromVM: async (vmId) => {
   },
 
 
-  //   /**
-  //  * @name ApiManager.editNicFromTemplate
-  //  * @description  nic 수정
-  //  * 
-  //  * @param {string} templateId
-  //  * @param {Object} nicData
-  //  * @returns {Promise<Object>}
-  //  */
-  //   addNicFromTemplate: async (templateId, nicData) => {
-  //     return makeAPICall({
-  //       method: "POST",
-  //       url: ENDPOINTS.ADD_NICS_FROM_TEMPLATE(templateId,nicData),
-  //       data: nicData,
-  //     });
-  //   },
+  /**
+   * @name ApiManager.editNicFromTemplate
+   * @description NIC 수정 API 호출
+   * 
+   * @param {string} templateId - 템플릿 ID
+   * @param {string} nicId - NIC ID
+   * @param {Object} nicData - 수정할 NIC 데이터
+   * @returns {Promise<Object>}
+   */
+  editNicFromTemplate: async (templateId, nicId, nicData) => {
+    if (!templateId || !nicId) {
+      console.error("❌ Missing templateId or nicId", { templateId, nicId });
+      throw new Error("템플릿 ID 또는 NIC ID가 없습니다.");
+    }
+
+    console.log(`🔍 Sending PUT request: /api/v1/computing/templates/${templateId}/nics/${nicId}`);
+
+    return makeAPICall({
+      method: "PUT",
+      url: ENDPOINTS.EDIT_NICS_FROM_TEMPLATE(templateId, nicId), // nicId가 올바르게 전달되도록 수정
+      data: nicData,
+    });
+  },
 
     /**
    * @name ApiManager.deleteNicFromVM

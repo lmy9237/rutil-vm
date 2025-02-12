@@ -9,6 +9,8 @@ const VmActionButtons = ({
   isDeleteDisabled,
   status,
   actionType,
+  type = 'default',
+  isContextMenu 
 }) => {
   const navigate = useNavigate();
 
@@ -33,7 +35,7 @@ const VmActionButtons = ({
   const isMaintenance = status === "MAINTENANCE";
   const isPause = status === "PAUSE";
   const isTemplate = status === "SUSPENDED" || status === "UP";
-
+  const wrapperClass = type === 'context' ? 'right-click-menu-box' : 'header-right-btns';
   const basicActions = [
     { type: "create", label: "생성", disabled: false },
     { type: "edit", label: "편집", disabled: isEditDisabled },
@@ -56,36 +58,42 @@ const VmActionButtons = ({
   ];
 
   return (
-    <div className="header-right-btns">
+    <div className={wrapperClass}>
       {basicActions.map(({ type, label, disabled }) => (
-        <button key={type} onClick={() => openModal(type)} disabled={disabled}>
+        <button key={type} onClick={() => openModal(type)} disabled={disabled}  className='right-click-menu-btn'>
           {label}
         </button>
       ))}
-      <button onClick={() => navigate("/computing/templates")}>템플릿</button>
+  
 
-      <div ref={dropdownRef} className="dropdown-container">
-        <button onClick={toggleDropdown} className="manage-button">
-          관리
-          <FontAwesomeIcon
-            icon={activeDropdown ? faChevronUp : faChevronDown}
-          />
-        </button>
-        {activeDropdown && (
-          <div className="dropdown-menu">
-            {manageActions.map(({ type, label, disabled }) => (
-              <button
-                key={type}
-                onClick={() => openModal(type)}
-                disabled={disabled}
-                className="dropdown-item"
-              >
-                {label}
-              </button>
-            ))}
+      {!isContextMenu && ( 
+        <>
+          <button onClick={() => navigate("/computing/templates")}>템플릿</button>
+          <div ref={dropdownRef} className="dropdown-container">
+            <button onClick={toggleDropdown} className="manage-button">
+              관리
+              <FontAwesomeIcon
+                icon={activeDropdown ? faChevronUp : faChevronDown}
+              />
+            </button>
+            {activeDropdown && (
+              <div className="dropdown-menu">
+                {manageActions.map(({ type, label, disabled }) => (
+                  <button
+                    key={type}
+                    onClick={() => openModal(type)}
+                    disabled={disabled}
+                    className="dropdown-item"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
+        
     </div>
   );
 };
