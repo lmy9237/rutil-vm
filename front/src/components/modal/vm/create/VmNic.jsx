@@ -26,15 +26,14 @@ const VmNic = ({ nicsState, setNicsState, nics }) => {
   };
 
   return (
-    <div className="edit_fourth_content" style={{ borderTop: "none" }}>
-      <p>
+    <div className="host-second-content" style={{ borderTop: "none" }}>
+      <p className="mb-0.5">
         vNIC 프로파일을 선택하여 가상 머신 네트워크 인터페이스를 설정하세요.
       </p>
 
       {nicsState.map((nic, index) => (
         <div
           key={index}
-          className="edit_fourth_content_row"
           style={{
             display: "flex",
             alignItems: "center",

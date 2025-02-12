@@ -10,7 +10,7 @@ import { useDeleteNetworkFromTemplate } from "../../../api/RQHook";
 const TemplateNicDeleteModal = ({ isOpen, onClose, data, templateId }) => {
   const [ids, setIds] = useState([]);
   const [names, setNames] = useState([]);
-  const { mutateAsync: deleteNetworkFromTemplate } =
+  const { mutateAsync: deleteNicFromTemplate } =
     useDeleteNetworkFromTemplate(); // 비동기 삭제 훅
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const TemplateNicDeleteModal = ({ isOpen, onClose, data, templateId }) => {
 
     for (const { templateId, nicId } of ids) {
       try {
-        await deleteNetworkFromTemplate({ templateId, nicId }); // NIC 삭제 API 호출
+        await deleteNicFromTemplate({ templateId, nicId }); // NIC 삭제 API 호출
         console.log(
           `NIC ${nicId} deleted successfully from Template ${templateId}.`
         );

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
-
 const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
   useEffect(() => {
     // Keep `isCdDvdChecked` consistent with `cdConn`
@@ -31,7 +30,7 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
   ];
 
   return (
-    <div className="boot_outer_content">
+    <div className="host-second-content">
       <div className="cpu-res">
         <span style={{ fontWeight: 600 }}>부트순서:</span>
 

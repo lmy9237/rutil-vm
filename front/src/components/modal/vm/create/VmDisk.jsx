@@ -55,9 +55,10 @@ const VmDisk = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          padding: "0 0.28rem",
         }}
       >
-        <div className="px-1 font-bold">인스턴스 이미지</div>
+        <div className="font-bold">인스턴스 이미지</div>
         <div style={{ display: "flex", gap: "8px" }}>
           <button onClick={() => setIsConnectionPopupOpen(true)}>연결</button>
           <button onClick={() => setIsCreatePopupOpen(true)}>생성</button>

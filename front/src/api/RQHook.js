@@ -2138,11 +2138,11 @@ export const useEditNicFromTemplate = () => {
 export const useDeleteNetworkFromTemplate = () => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({ templateId,nicId}) => {
+    mutationFn: async ({ templateId,nicId,detachOnly}) => {
       // ID들이 제대로 전달되는지 확인하기 위해 로그 추가
-      console.log('Deleting VnicProfile with templateId:', templateId);
+      console.log('Deleting VnicProfile with templateId:', templateId );
       console.log('Deleting VnicProfile with nicId:', nicId);
-      return await ApiManager.deleteNicFromTemplate(templateId,nicId);
+      return await ApiManager.deleteNicFromTemplate(templateId,nicId, detachOnly);
     },
     onSuccess: () => {
       queryClient.invalidateQueries('AllNicsFromTemplate');

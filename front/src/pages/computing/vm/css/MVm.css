@@ -24,7 +24,13 @@
   width: 100%;
   font-size: 0.33rem;
 }
-
+.checkbox_group{
+  display:flex;
+  align-items: center; 
+}
+.boot-checkboxs>div{
+  display:flex;
+}
 .vm-edit-select-tab {
   font-size: 0.33rem;
   width: 86%;
@@ -45,11 +51,6 @@
 .edit-first-content input[type="text"] {
   width: 47%;
   height: 3.3vh;
-  padding: 0 3px;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 0.29rem;
-  border: 1px solid #a7a6a6;
 }
 .edit-first-content > div {
   display: flex;
@@ -75,7 +76,9 @@
 }
 
 .edit-second-content > div,
-.host-third-content > div {
+.host-third-content > div,
+
+{
   display: flex;
   justify-content: space-between;
   padding: 2.3% 2% 0 2%;
@@ -93,12 +96,11 @@
   color: #1ba4e4;
   cursor: pointer;
 }
-.host-second-content {
+.host-second-content,
+.ha-mode-second-content{
   padding: 2%;
 }
-.ha-mode-second-content {
-  padding: 2%;
-}
+
 .ha-mode-second-content > div:first-child {
   padding-bottom: 2%;
 }
@@ -149,6 +151,7 @@
 
 .form-checks > div {
   padding: 1.8% 0 0 0;
+  display:flex;
 }
 .form-checks > div:nth-child(2) {
   display: flex;

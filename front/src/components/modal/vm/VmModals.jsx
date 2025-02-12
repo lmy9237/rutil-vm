@@ -5,6 +5,7 @@ import VmSnapshotModal from './VmSnapshotModal';
 import VmNewModal from './VmNewModal';
 import VmAddTemplateModal from './VmAddTemplateModal';
 import VmExportOVAModal from './VmExportOVAModal';
+import './MVm.css'
 
 const VmModals = ({ activeModal, vm, selectedVms = [], onClose }) => {
   const modals = {

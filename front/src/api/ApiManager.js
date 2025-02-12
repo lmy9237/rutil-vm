@@ -1648,12 +1648,12 @@ migrateHostsFromVM: async (vmId) => {
    * @param {string} nicId
    * @returns {Promise<Object>}
    */
-    deleteNicFromTemplate: async (templateId, nicId) => {
-      console.log('🚀 DELETE NIC 요청 데이터:', { templateId, nicId });
+    deleteNicFromTemplate: async (templateId, nicId,detachOnly) => {
+      console.log('🚀 DELETE NIC 요청 데이터:', { templateId, nicId,detachOnly });
     
       return makeAPICall({
         method: "DELETE",
-        url: ENDPOINTS.DELETE_NICS_FROM_TEMPLATE(templateId, nicId),
+        url: ENDPOINTS.DELETE_NICS_FROM_TEMPLATE(templateId, nicId,detachOnly),
         data: nicId, 
       });
     },
