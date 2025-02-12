@@ -1,5 +1,5 @@
 import { useTemplate } from '../../../api/RQHook';
-import { formatBytesToGBToFixedZero } from '../../../util';
+import { convertBytesToGB } from '../../../util';
 
 const TemplateGeneral = ({ templateId }) => {
   const { data: template } = useTemplate(templateId);
@@ -15,7 +15,7 @@ const TemplateGeneral = ({ templateId }) => {
     { label: "비디오 유형", value: '' },
     { label: "최적화 옵션", value: template?.optimizeOption },
     { label: "", value: '' },
-    { label: "설정된 메모리", value: formatBytesToGBToFixedZero(template?.memorySize)+' GB' },
+    { label: "설정된 메모리", value: convertBytesToGB(template?.memorySize)+' GB' },
     { label: "CPU 코어 수", value: template?.cpuTopologyCore },
     { label: "모니터 수", value: template?.monitor },
     { label: "고가용성", value: template?.ha ? "예" : "아니오" },

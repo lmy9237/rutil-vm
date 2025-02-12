@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import TablesOuter from '../../../components/table/TablesOuter';
-import { formatBytesToGBToFixedZero, renderDomainStatusIcon } from '../../../util';
+import { convertBytesToGB, renderDomainStatusIcon } from '../../../util';
 
 const DomainTable = ({
   columns,
@@ -31,7 +31,7 @@ const DomainTable = ({
     if (size === 0) {
       return 'N/A';
     } else {
-      return formatBytesToGBToFixedZero(size) + ' GB';
+      return convertBytesToGB(size) + ' GB';
     }
   };
 
@@ -80,7 +80,7 @@ export default DomainTable;
 // import { useNavigate } from 'react-router-dom';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faPlay, faPencil, faWrench } from '@fortawesome/free-solid-svg-icons';
-// import { formatBytesToGBToFixedZero } from '../util';
+// import { convertBytesToGB } from '../util';
 
 // const DomainTable = ({
 //   columns,
@@ -119,7 +119,7 @@ export default DomainTable;
 //     if(size === 0){
 //       return 'N/A';
 //     }else{
-//       return formatBytesToGBToFixedZero(size) + " GB";
+//       return convertBytesToGB(size) + " GB";
 //     }
 //   }
 

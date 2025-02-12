@@ -8,7 +8,7 @@ import {
   useDisconnectedHostsFromNetwork,
   useNetworkInterfaceFromHost
 } from "../../../api/RQHook";
-import { formatBytesToMB } from '../../../util';
+import { convertBytesToMB } from '../../../util';
 
 const NetworkHostModal = React.lazy(() => import('../../../components/modal/network/NetworkHostModal'));
 
@@ -39,8 +39,8 @@ const NetworkHosts = ({ networkId }) => {
       networkDeviceStatus: renderUpDownStatusIcon(host?.hostNicVos?.[0]?.status),
       networkDevice: host?.hostNicVos?.[0]?.name,
       speed: host?.hostNicVos?.[0]?.speed,
-      rx: host?.hostNicVos?.[0]?.rxSpeed ? Math.round(formatBytesToMB(host.hostNicVos[0].rxSpeed)) : "",
-      tx: host?.hostNicVos?.[0]?.txSpeed ? Math.round(formatBytesToMB(host.hostNicVos[0].txSpeed)) : "",
+      rx: host?.hostNicVos?.[0]?.rxSpeed ? Math.round(convertBytesToMB(host.hostNicVos[0].rxSpeed)) : "",
+      tx: host?.hostNicVos?.[0]?.txSpeed ? Math.round(convertBytesToMB(host.hostNicVos[0].txSpeed)) : "",
       totalRx: host?.hostNicVos?.[0]?.rxTotalSpeed ? host.hostNicVos[0].rxTotalSpeed.toLocaleString() : "",
       totalTx: host?.hostNicVos?.[0]?.txTotalSpeed ? host.hostNicVos[0].txTotalSpeed.toLocaleString() : "",
     }));

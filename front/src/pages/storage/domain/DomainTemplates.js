@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import { useAllTemplateFromDomain } from "../../../api/RQHook";
-import { formatBytesToGB, formatBytesToGBToFixedZero } from '../../../util';
+import { convertBytesToGBFixed1 } from '../../../util';
 
 const TemplateRow = ({ template, isExpanded, toggleRow }) => (
   <>
@@ -40,8 +40,8 @@ const DiskRow = ({ disk }) => (
       {disk.diskImageVo?.alias || 'Unnamed Disk'}
     </td>
     <td></td>
-    <td>{formatBytesToGB(disk.diskImageVo?.virtualSize || 0)}</td>
-    <td>{formatBytesToGB(disk.diskImageVo?.actualSize || 0)}</td>
+    <td>{convertBytesToGBFixed1(disk.diskImageVo?.virtualSize || 0)}</td>
+    <td>{convertBytesToGBFixed1(disk.diskImageVo?.actualSize || 0)}</td>
     <td>{disk.diskImageVo?.createDate || ''}</td>
   </tr>
 );
@@ -62,8 +62,8 @@ const DomainTemplates = ({ domainId }) => {
         columns={TableColumnsInfo.TEMPLATES_FROM_STORAGE_DOMAIN}
         data={templates.map((t) => ({
           ...t,
-          virtualSize: formatBytesToGBToFixedZero(t?.virtualSize) + ' GB',
-          actualSize: formatBytesToGBToFixedZero(t?.actualSize) + ' GB'
+          virtualSize: convertBytesToGBFixed1(t?.virtualSize) + ' GB',
+          actualSize: convertBytesToGBFixed1(t?.actualSize) + ' GB'
         }))}
       />
     </>

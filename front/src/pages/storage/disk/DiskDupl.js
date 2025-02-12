@@ -5,7 +5,7 @@ import DiskModals from '../../../components/modal/disk/DiskModals';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
 import { icon } from '../../../components/Icon';
-import { formatBytesToGBToFixedZero } from '../../../util';
+import { checkZeroSize } from '../../../util';
 
 const DiskDupl = ({ disks = [], columns = [], type = 'disk' }) => {
   const navigate = useNavigate();
@@ -47,8 +47,8 @@ const DiskDupl = ({ disks = [], columns = [], type = 'disk' }) => {
                   {d?.connectVm?.name || d?.connectTemplate?.name}
                 </TableRowClick>
               ),
-              virtualSize: formatBytesToGBToFixedZero(d?.virtualSize) + " GiB",
-              actualSize: formatBytesToGBToFixedZero(d?.actualSize),
+              virtualSize: checkZeroSize(d?.virtualSize),
+              actualSize: checkZeroSize(d?.actualSize),
             };
           } else if (type === 'vm') {
             return {
@@ -57,7 +57,6 @@ const DiskDupl = ({ disks = [], columns = [], type = 'disk' }) => {
               icon: icon(d.status),
               storageDomain: <TableRowClick type="domains" id={d?.diskImageVo?.storageDomainVo?.id}>{d?.diskImageVo?.storageDomainVo?.name}</TableRowClick>,
               storageType: d?.diskImageVo?.storageType,
-
             };
           }
         })}

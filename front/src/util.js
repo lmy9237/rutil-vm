@@ -21,35 +21,44 @@ export function formatNumberWithCommas(number) {
 }
 
 /**
- * Converts bytes to megaabytes and formats the result to one decimal place.
+ * byte -> mb
  * @param {number} bytes - The number of bytes to convert.
  * @returns {string} The formatted size in MB.
  */
-export function formatBytesToMB(bytes) {
+export function convertBytesToMB(bytes) {
   return (bytes / (1024 * 1024)).toFixed(0);
 }
 
 /**
- * Converts bytes to gigabytes and formats the result to one decimal place.
+ * byte -> gb
  * @param {number} bytes - The number of bytes to convert.
  * @returns {string} The formatted size in GB.
  */
-export function formatBytesToGB(bytes) {
-  return (bytes / (1024 * 1024 * 1024)).toFixed(1);
-}
-
-export function formatBytesToGBToFixedZero(bytes) {
+export function convertBytesToGB(bytes) {
   return (bytes / (1024 * 1024 * 1024)).toFixed(0);
 }
 
+/**
+ * byte -> gb 소수점 한자리 출력
+ * @param {number} bytes - The number of bytes to convert.
+ * @returns {string} The formatted size in GB.
+ */
+export function convertBytesToGBFixed1(bytes) {
+  return (bytes / (1024 * 1024 * 1024)).toFixed(1);
+}
+
+/**
+ * GB로 받은 값을 byte로 변경
+ * 가상머신 생성, 디스크 생성에서 사용
+ * @param {number} size 
+ * @returns 
+ */
 export function sizeToBytes(size) {
   return parseInt(size, 10) * 1024 * 1024 * 1024
 }
 
-export function zeroValue(size) {
-  return size < 1 ? "< 1 GB" : `${size} GB`;
+
+export function checkZeroSize(size) {
+  return size < 1 ? "< 1 GB" : `${convertBytesToGB(size)} GB`;
 }
 
-
-// const sizeToGB = (data) => (data / Math.pow(1024, 3));
-// const formatSize = (size) => (sizeToGB(size) < 1 ? '< 1 GB' : `${sizeToGB(size).toFixed(0)} GB`);

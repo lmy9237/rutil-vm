@@ -2,7 +2,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
 import { renderDomainStatusIcon } from '../../../components/Icon';
-import { formatBytesToGBToFixedZero } from '../../../util';
+import { convertBytesToGB } from '../../../util';
 import { useAllStorageDomainFromDisk } from "../../../api/RQHook";
 
 const DiskDomains = ({ diskId }) => {
@@ -17,7 +17,7 @@ const DiskDomains = ({ diskId }) => {
     if (size === 0) {
       return 'N/A';
     } else {
-      return formatBytesToGBToFixedZero(size) + ' GB';
+      return convertBytesToGB(size) + ' GB';
     }
   };
 

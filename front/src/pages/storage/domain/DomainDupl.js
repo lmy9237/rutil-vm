@@ -6,7 +6,7 @@ import DomainActionButtons from './button/DomainActionButtons';
 import TablesOuter from '../../../components/table/TablesOuter';
 import DomainModals from '../../../components/modal/domain/DomainModals';
 import { renderDomainStatus, renderDomainStatusIcon } from '../../../components/Icon';
-import { formatBytesToGBToFixedZero } from '../../../util';
+import { convertBytesToGB } from '../../../util';
 
 const DomainDupl = ({ domains = [], columns = [], actionType = 'domain', datacenterId }) => {
   const navigate = useNavigate();
@@ -46,9 +46,9 @@ const DomainDupl = ({ domains = [], columns = [], actionType = 'domain', datacen
             domain?.storageType === 'nfs' ? 'NFS'
               : domain?.storageType === 'iscsi' ? 'iSCSI'
                 : 'Fibre Channel',
-          diskSize: formatBytesToGBToFixedZero(domain?.diskSize) + ' GB',
-          availableSize: formatBytesToGBToFixedZero(domain?.availableSize) + ' GB',
-          usedSize: formatBytesToGBToFixedZero(domain?.usedSize) + ' GB',
+          diskSize: convertBytesToGB(domain?.diskSize) + ' GB',
+          availableSize: convertBytesToGB(domain?.availableSize) + ' GB',
+          usedSize: convertBytesToGB(domain?.usedSize) + ' GB',
         }))}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedDomains(selectedRows)}

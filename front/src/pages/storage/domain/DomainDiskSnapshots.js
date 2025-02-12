@@ -2,7 +2,7 @@ import React, { Suspense, useState } from 'react';
 import { useAllDiskSnapshotFromDomain } from "../../../api/RQHook";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from '../../../components/table/TablesOuter';
-import { formatBytesToGBToFixedZero } from '../../../util';
+import { convertBytesToGB } from '../../../util';
 
 const DeleteModal = React.lazy(() => import('../../../utils/DeleteModal'));
 
@@ -34,7 +34,7 @@ const DomainDiskSnapshots = ({ domainId }) => {
         columns={TableColumnsInfo.DISK_SNAPSHOT_FROM_STORAGE_DOMAIN}
         data={diskSnapshots.map((e) => ({
           ...e,
-          actualSize: formatBytesToGBToFixedZero(e?.actualSize) + ' GB'
+          actualSize: convertBytesToGB(e?.actualSize) + ' GB'
         }))}
         onRowClick={(rows) => {
           setSelectedSnapshots(Array.isArray(rows) ? rows : []);

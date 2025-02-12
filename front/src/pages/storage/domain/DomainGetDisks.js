@@ -4,7 +4,7 @@ import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import DomainGetDiskModal from '../../../components/modal/domain/DomainGetDiskModal';
 import DeleteModal from '../../../utils/DeleteModal';
-import { formatBytesToGBToFixedZero } from '../../../util';
+import { convertBytesToGB } from '../../../util';
 
 const DomainGetDisks = ({ domainId }) => {
   const { data: disks = [], isLoading: isDisksLoading } = useAllUnregisteredDiskFromDomain(domainId, (e) => ({ ...e }));
@@ -28,8 +28,8 @@ const DomainGetDisks = ({ domainId }) => {
             ...d,
             alias: d?.alias,
             sparse: d?.sparse ? '씬 프로비저닝' : '사전 할당',            
-            virtualSize: formatBytesToGBToFixedZero(d?.virtualSize) + " GiB",
-            actualSize: formatBytesToGBToFixedZero(d?.actualSize),
+            virtualSize: convertBytesToGB(d?.virtualSize) + " GiB",
+            actualSize: convertBytesToGB(d?.actualSize),
           }
         })}
         shouldHighlight1stCol={true}

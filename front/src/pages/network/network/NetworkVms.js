@@ -5,7 +5,7 @@ import TableRowClick from "../../../components/table/TableRowClick";
 import VmDeleteModal from '../../../components/modal/vm/VmDeleteModal';
 import { renderUpDownStatusIcon, renderVmStatusIcon } from "../../../components/Icon";
 import { useAllVmsFromNetwork } from "../../../api/RQHook";
-import { formatBytesToMB } from '../../../util';
+import { convertBytesToMB } from '../../../util';
 
 // const 
 
@@ -62,8 +62,8 @@ const NetworkVms = ({ networkId }) => {
           cluster: <TableRowClick type="cluster" id={vm?.clusterVo?.id}>{vm?.clusterVo?.name}</TableRowClick>,
           vnicStatus: renderUpDownStatusIcon(vm?.nicVos[0]?.status),
           vnic: vm?.nicVos?.[0]?.name || '알 수 없음',
-          vnicRx: vm?.nicVos?.[0]?.rxSpeed ? Math.round(formatBytesToMB(vm?.nicVos[0].rxSpeed)): '',
-          vnicTx: vm?.nicVos?.[0]?.txSpeed ? Math.round(formatBytesToMB(vm?.nicVos[0].txSpeed)): '',
+          vnicRx: vm?.nicVos?.[0]?.rxSpeed ? Math.round(convertBytesToMB(vm?.nicVos[0].rxSpeed)): '',
+          vnicTx: vm?.nicVos?.[0]?.txSpeed ? Math.round(convertBytesToMB(vm?.nicVos[0].txSpeed)): '',
           totalRx: vm?.nicVos?.[0]?.rxTotalSpeed ? vm?.nicVos?.[0]?.rxTotalSpeed.toLocaleString() : '',
           totalTx: vm?.nicVos?.[0]?.txTotalSpeed ? vm?.nicVos?.[0]?.txTotalSpeed.toLocaleString() : '',
         }))}

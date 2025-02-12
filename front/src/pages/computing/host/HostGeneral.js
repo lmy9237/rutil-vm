@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHost } from "../../../api/RQHook";
 import './css/Host.css';
-import { formatBytesToMB } from '../../../util';
+import { convertBytesToMB } from '../../../util';
 
 const HostGeneral = ({ hostId }) => {
   const { data: host } = useHost(hostId);
@@ -17,10 +17,10 @@ const HostGeneral = ({ hostId }) => {
     { label: "Hosted Engine HA", value: `(점수: ${host?.hostedScore})` },
     { label: "iSCSI 개시자 이름", value: host?.iscsi },
     { label: "Kdump Integration Status", value: host?.kdump },
-    { label: "물리적 메모리", value: `${formatBytesToMB(host?.memoryTotal)} MB 합계\n${formatBytesToMB(host?.memoryUsed)} MB 사용됨\n${formatBytesToMB(host?.memoryFree)} MB 사용가능` },
-    { label: "Swap 크기", value: `${formatBytesToMB(host?.swapTotal)} MB 합계\n${formatBytesToMB(host?.swapUsed)} MB 사용됨\n${formatBytesToMB(host?.swapFree)} MB 사용가능` },
+    { label: "물리적 메모리", value: `${convertBytesToMB(host?.memoryTotal)} MB 합계\n${convertBytesToMB(host?.memoryUsed)} MB 사용됨\n${convertBytesToMB(host?.memoryFree)} MB 사용가능` },
+    { label: "Swap 크기", value: `${convertBytesToMB(host?.swapTotal)} MB 합계\n${convertBytesToMB(host?.swapUsed)} MB 사용됨\n${convertBytesToMB(host?.swapFree)} MB 사용가능` },
     { label: "장치 통과", value: host?.devicePassThrough },
-    { label: "새로운 가상 머신의 스케줄링을 위한 최대 여유 메모리", value: `${formatBytesToMB(host?.memoryMax)} MB` },
+    { label: "새로운 가상 머신의 스케줄링을 위한 최대 여유 메모리", value: `${convertBytesToMB(host?.memoryMax)} MB` },
     { label: "Huge Pages (size: free/total)", value: `2048: ${host?.hugePage2048Free}/${host?.hugePage2048Total}, 1048576: ${host?.hugePage1048576Free}/${host?.hugePage1048576Total}` },
     { label: "SELinux 모드", value: host?.seLinux },
   ];

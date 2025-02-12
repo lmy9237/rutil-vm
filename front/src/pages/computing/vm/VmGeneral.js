@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComputer, faEarthAmericas, faPlus, faServer, faUser } from "@fortawesome/free-solid-svg-icons";
 import VmGeneralChart from "./VmGeneralChart";
 import { useVmById } from "../../../api/RQHook";
-import { formatBytesToMB } from "../../../util";
+import { convertBytesToMB } from "../../../util";
 
 // 운영 시스템
 const osSystemList = [
@@ -124,7 +124,7 @@ const VmGeneral = ({ vmId }) => {
 
   const hardwareTableRows = [
     { label: "CPU", value: `${vm?.cpuTopologyCnt}(${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` },
-    { label: "메모리", value: formatBytesToMB(vm?.memorySize) +' MB' ?? '0'},
+    { label: "메모리", value: convertBytesToMB(vm?.memorySize) +' MB' ?? '0'},
     { label: "하드 디스크", value: vm?.storageDomainVo?.name },
     { label: "네트워크 어댑터", value: vm?.nicVos?.[0]?.name },
     { label: "칩셋/펌웨어 유형", value: chipsetLabel }

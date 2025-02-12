@@ -4,7 +4,7 @@ import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
 import VmDiskActionButtons from './button/VmDiskActionButtons';
 import { renderTFStatusIcon } from '../../../components/Icon';
-import { formatBytesToGBToFixedZero } from '../../../util';
+import { convertBytesToGB } from '../../../util';
 import VmDiiskModals from '../../../components/modal/vm/VmDiiskModals';
 
 
@@ -54,8 +54,8 @@ const VmDiskDupl = ({ vmDisks = [], columns = [], vmId }) => {
             interface: d?.interface_,
             storageType: d?.diskImageVo?.storageType,
             sparse: d?.diskImageVo?.sparse ? '씬 프로비저닝' : '사전 할당',
-            virtualSize: formatBytesToGBToFixedZero(d?.diskImageVo?.virtualSize) + " GB",
-            actualSize: formatBytesToGBToFixedZero(d?.diskImageVo?.actualSize) + " GB",
+            virtualSize: convertBytesToGB(d?.diskImageVo?.virtualSize) + " GB",
+            actualSize: convertBytesToGB(d?.diskImageVo?.actualSize) + " GB",
             storageDomain: <TableRowClick type="domains" id={d?.diskImageVo?.storageDomainVo?.id}>{d?.diskImageVo?.storageDomainVo?.name}</TableRowClick>,
             storageType: d?.diskImageVo?.storageType,
           };

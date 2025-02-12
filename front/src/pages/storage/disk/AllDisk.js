@@ -20,7 +20,7 @@ const AllDisk = () => {
         />
         </div>
         <div className="host-btn-outer">
-          <DiskDupl 
+          <DiskDupl
             columns={TableColumnsInfo.DISKS}
             disks={disks}          
           />

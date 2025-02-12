@@ -7,7 +7,7 @@ import VmSnapshotModal from '../../../components/modal/vm/VmSnapshotModal';
 import VmSnapshotDeleteModal from '../../../components/modal/vm/VmSnapshotDeleteModal';
 import DeleteModal from '../../../utils/DeleteModal';
 import { useDisksFromVM, useSnapshotDetailFromVM, useSnapshotFromVM } from '../../../api/RQHook';
-import { formatBytesToMB } from '../../../util';
+import { convertBytesToMB } from '../../../util';
 
 const VmSnapshots = ({ vmId }) => {
   const [activePopup, setActivePopup] = useState(null);
@@ -96,10 +96,10 @@ const VmSnapshots = ({ vmId }) => {
     date: e?.date || 'N/A',
     vmName: e?.vmVo?.name || 'N/A',
     memorySize: e?.vmVo?.memorySize
-      ? `${formatBytesToMB(e.vmVo.memorySize)} MB` // 바이트를 MB로 변환
+      ? `${convertBytesToMB(e.vmVo.memorySize)} MB` // 바이트를 MB로 변환
       : 'N/A',
     memoryActual: e?.vmVo?.memoryActual
-      ? `${formatBytesToMB(e.vmVo.memoryActual)} MB` // 바이트를 MB로 변환
+      ? `${convertBytesToMB(e.vmVo.memoryActual)} MB` // 바이트를 MB로 변환
       : 'N/A',
     snapshotDisks: e?.snapshotDiskVos?.map((disk) => ({
       id: disk?.id || 'N/A',

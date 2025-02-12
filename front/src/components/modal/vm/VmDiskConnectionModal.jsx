@@ -6,7 +6,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useFindDiskListFromDataCenter } from "../../../api/RQHook";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import TablesOuter from "../../table/TablesOuter";
-import { formatBytesToGBToFixedZero } from "../../../util";
+import { convertBytesToGB } from "../../../util";
 
 // 연결에서 수정은 vm disk edit 으로 넘어감
 // type이 disk면 vm disk목록에서 연결, 다른건 가상머신 생성에서 디스크연결
@@ -61,7 +61,7 @@ const VmDiskConnectionModal = ({
             interface_: selectedInterfaces[diskId] || "VIRTIO_SCSI",
             readOnly: selectedReadOnly[diskId] || false,
             bootable: selectedBootable[diskId] || false,
-            virtualSize: formatBytesToGBToFixedZero(diskDetails?.virtualSize),
+            virtualSize: convertBytesToGB(diskDetails?.virtualSize),
             storageDomain: diskDetails?.storageDomainVo?.name,
             isCreated: false, // 🚀 연결된 디스크는 isCreated: false
           };
@@ -173,9 +173,9 @@ const VmDiskConnectionModal = ({
                 virtualSize: e?.virtualSize / Math.pow(1024, 3) + " GB",
 
                 actualSize:
-                  formatBytesToGBToFixedZero(e?.actualSize) < 1
+                  convertBytesToGB(e?.actualSize) < 1
                     ? "< 1 GB"
-                    : formatBytesToGBToFixedZero(e?.actualSize) + " GB",
+                    : convertBytesToGB(e?.actualSize) + " GB",
                 storageDomain: e?.storageDomainVo?.name,
                 status:
                   e?.status === "UNINITIALIZED" ? "초기화되지 않음" : "UP",
