@@ -1,49 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import Modal from 'react-modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import '../domain/MDomain.css'
+import { useRegisteredDiskFromDomain } from '../../../api/RQHook';
+import toast from 'react-hot-toast';
+import { xButton } from '../../Icon';
 
-const DomainGetDiskModal = ({ isOpen, action, data = [], onClose }) => {
-  useEffect(() => {
-    if (data.length > 0) {
-      console.log("Received data in DiskActionModal:", data);
-    } else {
-      console.log("No data provided to DiskActionModal.");
-    }
+const DomainGetDiskModal = ({ isOpen, domainId, data, onClose }) => {
+  const { mutate: registerDisk } = useRegisteredDiskFromDomain();
+  
+  console.log("DomainGetDiskModal: ", data);
+  console.log("domainId: ", domainId);
+
+  const { ids } = useMemo(() => {
+    if (!data) return { ids: [] };
+    
+    const dataArray = Array.isArray(data) ? data : [data];
+    return {
+      ids: dataArray.map((item) => item.id),
+    };
   }, [data]);
 
-  // 임시 데이터 (데이터가 없을 경우 기본값 사용)
-  const placeholderData = [
-    {
-      alias: "Disk-001",
-      virtualSize: "100GB",
-      profiles: [{ value: "profile1", label: "Profile A" }, { value: "profile2", label: "Profile B" }],
-    },
-    {
-      alias: "Disk-002",
-      virtualSize: "200GB",
-      profiles: [{ value: "profile3", label: "Profile C" }, { value: "profile4", label: "Profile D" }],
-    }
-  ];
+  // diskprofile 일단 생략
+  const handleFormSubmit = () => {
+    if (ids.length === 0) return toast.error('불러올 디스크가 없습니다.');
 
-  const diskData = Array.isArray(data) && data.length > 0 ? data : placeholderData;
+    ids.forEach((diskId, index) => {
+      console.log(`post domainId: ${domainId}, diskId: ${diskId}`)
 
+      registerDisk({storageDomainId:domainId, diskId}, {
+        onSuccess: () => {
+          if (ids.length === 1 || index === ids.length - 1) {
+            onClose();
+            toast.success("디스크 불러오기 성공")
+          }
+        },
+        onError: (error) => { toast.error(`디스크 불러오기 오류:`, error) },
+      });
+    });
+  };
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel={'디스크 불러오기'}
-      className="Modal"
-      overlayClassName="Overlay newRolePopupOverlay"
-      shouldCloseOnOverlayClick={false}
-    >
+    <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel={'디스크 불러오기'} className="Modal" overlayClassName="Overlay newRolePopupOverlay" shouldCloseOnOverlayClick={false} >
       <div className="disk-move-popup modal">
         <div className="popup-header">
           <h1>디스크 불러오기</h1>
-          <button onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
-          </button>
+          <button onClick={onClose}> { xButton() } </button>
         </div>
 
         <div className="section-table-outer p-0.5">
@@ -53,16 +53,16 @@ const DomainGetDiskModal = ({ isOpen, action, data = [], onClose }) => {
               <tr>
                 <th>별칭</th>
                 <th>가상 크기</th>
-                <th>디스크 프로파일</th>
+                {/* <th>디스크 프로파일</th> */}
               </tr>
             </thead>
             <tbody>
-              {diskData.map((disk, index) => (
+              {data.map((disk, index) => (
                 <tr key={index}>
-                  <td>{disk.alias || "N/A"}</td>
-                  <td>{disk.virtualSize || "N/A"}</td>
+                  <td>{disk.alias}</td>
+                  <td>{disk.virtualSize}</td>
                  
-                  <td>
+                  {/* <td>
                     <select>
                       {Array.isArray(disk.profiles) ? (
                         disk.profiles.map((profile, i) => (
@@ -74,7 +74,7 @@ const DomainGetDiskModal = ({ isOpen, action, data = [], onClose }) => {
                         <option value="">No profiles available</option>
                       )}
                     </select>
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>
@@ -82,9 +82,8 @@ const DomainGetDiskModal = ({ isOpen, action, data = [], onClose }) => {
         </div>
 
         <div className="edit-footer">
-          <button>
-            {action === 'move' ? '이동' : '복사'}
-          </button>
+          <button style={{ display: 'none' }}></button>
+          <button onClick={handleFormSubmit}>OK</button>
           <button onClick={onClose}>취소</button>
         </div>
       </div>

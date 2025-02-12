@@ -209,6 +209,7 @@ const ENDPOINTS = {
   FIND_UNREGISTERD_VMS_FROM_STORAGE_DOMAINS: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/vms/unregistered`,
   FIND_DISKS_FROM_STORAGE_DOMAINS: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/disks`,
   FIND_UNREGISTERD_DISKS_FROM_STORAGE_DOMAINS: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/disks/unregistered`,
+  REGISTERD_DISK_FROM_STORAGE_DOMAINS: (storageDomainId, diskId) => `/api/v1/storages/domains/${storageDomainId}/disks/${diskId}`,
   FIND_TEMPLATES_FROM_STORAGE_DOMAINS: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/templates`,
   FIND_UNREGISTERD_TEMPLATES_FROM_STORAGE_DOMAINS: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/templates/unregistered`,
   FIND_DISK_PROFILES_FROM_STORAGE_DOMAINS: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/diskProfiles`,

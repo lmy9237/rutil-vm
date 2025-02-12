@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.util.ovirt.error.*
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.Connection
+import org.ovirt.engine.sdk4.builders.DiskBuilder
 import org.ovirt.engine.sdk4.builders.HostBuilder
 import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
 import org.ovirt.engine.sdk4.services.*
@@ -250,6 +251,17 @@ fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String
 	Term.STORAGE_DOMAIN.logFailWithin(Term.DISK, "목록조회", it, storageDomainId)
 	throw if (it is Error) it.toItCloudException() else it
 }
+
+fun Connection.registeredDiskFromStorageDomain(storageDomainId: String, diskId: String): Result<Boolean> = runCatching {
+	this.srvDisksFromStorageDomain(storageDomainId).add().unregistered(true).disk(DiskBuilder().id(diskId).build()).send()
+	true
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "디스크 불러오기", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFailWithin(Term.DISK, "디스크 불러오기", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 
 private fun Connection.srvAllDiskSnapshotsFromStorageDomain(storageId: String): DiskSnapshotsService =
 	this.srvStorageDomain(storageId).diskSnapshotsService()

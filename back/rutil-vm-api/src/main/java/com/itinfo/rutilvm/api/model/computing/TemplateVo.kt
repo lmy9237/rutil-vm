@@ -82,7 +82,6 @@ class TemplateVo(
 	val cpuProfileVo: IdentifiedVo = IdentifiedVo(),
 	val nicVos: List<NicVo> = listOf(),
 	val diskAttachmentVos: List<DiskAttachmentVo> = listOf(),
-	val diskSize: Int = 0,
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -137,8 +136,7 @@ class TemplateVo(
 		private var bCpuProfileVo: IdentifiedVo = IdentifiedVo(); fun cpuProfileVo(block: () -> IdentifiedVo?) { bCpuProfileVo = block() ?: IdentifiedVo()}
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
-		private var bDiskSize: Int = 0; fun diskSize(block: () -> Int?) { bDiskSize = block() ?: 0}
-		fun build(): TemplateVo = TemplateVo(bId,bName,bDescription,bComment,bChipsetFirmwareType,bCpuArc,bCpuTopologyCnt,bCpuTopologyCore,bCpuTopologySocket,bCpuTopologyThread,bCpuPinningPolicy,bCpuShare,bCreationTime,bDeleteProtected,bMonitor,bHa,bPriority,bIoThreadCnt,bMemorySize,bMemoryBalloon,bMemoryActual,bMemoryMax,bMigrationMode,bMigrationPolicy,bMigrationEncrypt,bParallelMigration,bMultiQue,bOrigin,bOsSystem,bDeviceList,bFirstDevice,bSecDevice,bPlacement,bStartPaused,bStateless,bTimeZone,bOptimizeOption,bUsb,bVirtSCSIEnable,bStatus,bVersionName,bVersionNum,bBaseTemplate,bClusterVo,bDataCenterVo,bVmVo,bCpuProfileVo,bNicVos,bDiskAttachmentVos,bDiskSize )
+		fun build(): TemplateVo = TemplateVo(bId,bName,bDescription,bComment,bChipsetFirmwareType,bCpuArc,bCpuTopologyCnt,bCpuTopologyCore,bCpuTopologySocket,bCpuTopologyThread,bCpuPinningPolicy,bCpuShare,bCreationTime,bDeleteProtected,bMonitor,bHa,bPriority,bIoThreadCnt,bMemorySize,bMemoryBalloon,bMemoryActual,bMemoryMax,bMigrationMode,bMigrationPolicy,bMigrationEncrypt,bParallelMigration,bMultiQue,bOrigin,bOsSystem,bDeviceList,bFirstDevice,bSecDevice,bPlacement,bStartPaused,bStateless,bTimeZone,bOptimizeOption,bUsb,bVirtSCSIEnable,bStatus,bVersionName,bVersionNum,bBaseTemplate,bClusterVo,bDataCenterVo,bVmVo,bCpuProfileVo,bNicVos,bDiskAttachmentVos,)
 	}
 
 	companion object {
@@ -242,7 +240,6 @@ fun Template.toUnregisterdTemplate(): TemplateVo {
 				template.cpu().topology().socketsAsInteger() *
 				template.cpu().topology().threadsAsInteger()
 		}
-		// diskSize { diskCnt }
 	}
 }
 fun List<Template>.toUnregisterdTemplates() =

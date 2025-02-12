@@ -378,6 +378,7 @@ class StorageController: BaseController() {
 		log.info("/storages/{}/disks ... 스토리지 도메인 밑에 붙어있는 Disk 목록", storageDomainId)
 		return ResponseEntity.ok(iDomain.findAllDisksFromStorageDomain(storageDomainId))
 	}
+
 	@ApiOperation(
 		httpMethod="GET",
 		value="스토리지 도메인 디스크 불러오기 목록",
@@ -398,6 +399,33 @@ class StorageController: BaseController() {
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/disks/unregistered ... 스토리지 도메인 밑에 붙어있는 Disk 불러오기 목록", storageDomainId)
 		return ResponseEntity.ok(iDomain.findAllUnregisteredDisksFromStorageDomain(storageDomainId))
+	}
+
+	@ApiOperation(
+		httpMethod="POST",
+		value="스토리지 도메인 디스크 불러오기",
+		notes="스토리지 도메인 디스크 불러오기"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED")
+	)
+	@PostMapping("/{storageDomainId}/disks/{diskId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun registerDisk(
+		@PathVariable("storageDomainId") storageDomainId: String? = null,
+		@PathVariable("diskId") diskId: String? = null,
+	): ResponseEntity<Boolean?> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		if (diskId == null)
+			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/disks/{} ... 스토리지 도메인 디스크 불러오기", storageDomainId, diskId)
+		return ResponseEntity.ok(iDomain.registeredDiskFromStorageDomain(storageDomainId, diskId))
 	}
 
 	@ApiOperation(

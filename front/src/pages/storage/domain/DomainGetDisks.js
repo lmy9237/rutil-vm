@@ -16,7 +16,7 @@ const DomainGetDisks = ({ domainId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <button onClick={() => setActiveModal('get')}>가져오기</button>
+        <button onClick={() => setActiveModal('get')} disabled={selecteDisks.length === 0}>가져오기</button>
         <button onClick={() => setActiveModal('delete')}>삭제</button>
       </div>
       <span>ID: {selectedIds || ''}</span>
@@ -28,12 +28,12 @@ const DomainGetDisks = ({ domainId }) => {
             ...d,
             alias: d?.alias,
             sparse: d?.sparse ? '씬 프로비저닝' : '사전 할당',            
-            virtualSize: convertBytesToGB(d?.virtualSize) + " GiB",
+            virtualSize: convertBytesToGB(d?.virtualSize) + " GB",
             actualSize: convertBytesToGB(d?.actualSize),
           }
         })}
         shouldHighlight1stCol={true}
-        onRowClick={{ console }}
+        onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
         multiSelect={true}
       />
     
@@ -41,6 +41,7 @@ const DomainGetDisks = ({ domainId }) => {
       {activeModal === 'get' && (
         <DomainGetDiskModal 
           isOpen={true} 
+          domainId={domainId}
           data={selecteDisks} 
           onClose={() => setActiveModal(null)} 
         />

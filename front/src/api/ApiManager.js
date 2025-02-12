@@ -2205,6 +2205,22 @@ migrateHostsFromVM: async (vmId) => {
     // defaultValues: DEFAULT_VALUES.FIND_DISK_FROM_DOMAIN
   }),
   /**
+   * @name ApiManager.registeredDiskFromDomain
+   * @description
+   * 
+   * @param {string} storageDomainId 
+   * @param {string} diskId 
+   * @returns {Promise<Object>}
+   */
+  registeredDiskFromDomain: async (storageDomainId, diskId) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.REGISTERD_DISK_FROM_STORAGE_DOMAINS(storageDomainId, diskId),
+      data: storageDomainId, 
+    });
+  },
+
+  /**
    * @name ApiManager.findAllTemplatesFromDomain
    * @description 템플릿 목록
    *
@@ -2246,8 +2262,6 @@ migrateHostsFromVM: async (vmId) => {
     url: ENDPOINTS.FIND_DISK_PROFILES_FROM_STORAGE_DOMAINS(storageDomainId),
     // defaultValues: DEFAULT_VALUES.FIND_DISK_FROM_DOMAIN
   }),
-
-
   /**
    * @name ApiManager.findAllDiskSnapshotsFromDomain
    * @description 디스크 스냅샷 목록

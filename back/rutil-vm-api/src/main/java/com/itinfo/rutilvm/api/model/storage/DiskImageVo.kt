@@ -328,6 +328,10 @@ fun Disk.toUnregisterdDisk(): DiskImageVo {
 fun List<Disk>.toUnregisterdDisks(): List<DiskImageVo> =
     this@toUnregisterdDisks.map { it.toUnregisterdDisk() }
 
+fun DiskImageVo.toRegisterDiskBuilder(): Disk =
+	this@toRegisterDiskBuilder.toDiskBuilder()
+		.id(this@toRegisterDiskBuilder.id)
+		.build()
 
 /**
  * 스토리지 - 디스크 생성

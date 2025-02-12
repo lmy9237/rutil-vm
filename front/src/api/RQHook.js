@@ -2723,6 +2723,27 @@ export const useAllUnregisteredDiskFromDomain = (storageDomainId, mapPredicate) 
   enabled: !!storageDomainId,
 })
 /**
+ * @name useRegisteredDiskFromDomain
+ * @description 도메인 디스크 불러오기
+ * 
+ * @returns useMutation 훅
+ */
+export const useRegisteredDiskFromDomain = () => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({
+    mutationFn: async ({storageDomainId, diskId}) => {
+      return await ApiManager.registeredDiskFromDomain(storageDomainId, diskId)
+    },
+    onSuccess: () => {
+      console.log(`domain 디스크 불러오기 성공`)
+      queryClient.invalidateQueries('allStorageDomains');
+    },
+    onError: (error) => {
+      console.error('Error register disk to storageDomain:', error);
+    },  
+  });
+};
+/**
  * @name useAllTemplateFromDomain
  * @description 도메인 내 템플릿 목록조회 useQuery훅
  * 

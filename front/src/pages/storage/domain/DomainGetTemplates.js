@@ -36,7 +36,7 @@ const DomainGetTemplates = ({ domainId }) => {
           };
         })}
         shouldHighlight1stCol={true}
-        onRowClick={{ console }}
+        // onRowClick={{ console }}
         multiSelect={true}
       />
     
