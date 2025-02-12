@@ -177,7 +177,16 @@ interface ItStorageService {
 	 */
 	@Throws(Error::class)
 	fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo): Boolean
-
+	/**
+	 * [ItStorageService.removeRegisteredVmFromStorageDomain]
+	 * 스토리지 도메인 가상머신 가져오기 삭제
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @param vmId [String] 가상머신 Id
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class)
+	fun removeRegisteredVmFromStorageDomain(storageDomainId: String, vmId: String): Boolean
 	/**
 	 * [ItStorageService.findAllDisksFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 목록
@@ -206,8 +215,16 @@ interface ItStorageService {
 	 */
 	@Throws(Error::class)
 	fun registeredDiskFromStorageDomain(storageDomainId: String, diskId: String): Boolean
-
-
+	/**
+	 * [ItStorageService.removeRegisteredDiskFromStorageDomain]
+	 * 스토리지 도메인 디스크 가져오기 삭제
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @param diskId [String] 디스크 Id
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class)
+	fun removeRegisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): Boolean
 	/**
 	 * [ItStorageService.findAllDiskSnapshotsFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 스냅샷 목록
@@ -434,10 +451,12 @@ class StorageServiceImpl(
     }
 
 	@Throws(Error::class)
-	override fun registeredVmFromStorageDomain(
-		storageDomainId: String,
-		vmVo: VmVo
-	): Boolean {
+	override fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo): Boolean {
+		TODO("Not yet implemented")
+	}
+
+	@Throws(Error::class)
+	override fun removeRegisteredVmFromStorageDomain(storageDomainId: String, vmId: String): Boolean {
 		TODO("Not yet implemented")
 	}
 
@@ -459,9 +478,15 @@ class StorageServiceImpl(
 
 	@Throws(Error::class)
 	override fun registeredDiskFromStorageDomain(storageDomainId: String, diskId: String): Boolean {
-		log.info("registeredDiskFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		// log.info("diskImageVo: {}", diskImageVo)
+		log.info("registeredDiskFromStorageDomain ... storageDomainId: {}, diskId: {}", storageDomainId, diskId)
 		val res: Result<Boolean> = conn.registeredDiskFromStorageDomain(storageDomainId, diskId)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun removeRegisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): Boolean {
+		log.info("removeRegisteredDiskFromStorageDomain ... storageDomainId: {}, diskId: {}", storageDomainId, diskId)
+		val res: Result<Boolean> = conn.removeRegisteredDiskFromStorageDomain(storageDomainId, diskId)
 		return res.isSuccess
 	}
 
@@ -482,7 +507,6 @@ class StorageServiceImpl(
 		log.info("findAllTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<Template> = conn.findAllTemplatesFromStorageDomain(storageDomainId)
 			.getOrDefault(listOf())
-		// return res.toTemplatesMenu(conn)
 		return res.toStorageTemplates(conn)
 	}
 
@@ -496,6 +520,9 @@ class StorageServiceImpl(
 
 	@Throws(Error::class)
 	override fun registeredTemplateFromStorageDomain(storageDomainId: String, templateVo: TemplateVo): Boolean {
+		// log.info("registeredTemplateFromStorageDomain ... storageDomainId: {}, templateVo: {}", storageDomainId, templateVo)
+		// val res: Result<Boolean> = conn.registeredDiskFromStorageDomain(storageDomainId, diskId)
+		// return res.isSuccess
 		TODO("Not yet implemented")
 	}
 

@@ -2744,6 +2744,24 @@ export const useRegisteredDiskFromDomain = () => {
   });
 };
 /**
+ * @name useDeletRegisteredDiskFromDomain
+ * @description 도메인 디스크 불러오기 삭제
+ * 
+ * @returns useMutation 훅
+ */
+export const useDeletRegisteredDiskFromDomain = () => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({ 
+    mutationFn: async ({storageDomainId, diskId}) => await ApiManager.deleteRegisteredDiskFromDomain(storageDomainId, diskId),
+    onSuccess: () => {
+      queryClient.invalidateQueries('allStorageDomains');
+    },
+    onError: (error) => {
+      console.error('Error deleting disk register:', error);
+    },
+  });
+};
+/**
  * @name useAllTemplateFromDomain
  * @description 도메인 내 템플릿 목록조회 useQuery훅
  * 

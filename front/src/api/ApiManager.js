@@ -2219,6 +2219,21 @@ migrateHostsFromVM: async (vmId) => {
       data: storageDomainId, 
     });
   },
+  /**
+   * @name ApiManager.deleteRegisteredDiskFromDomain
+   * @description
+   * 
+   * @param {string} storageDomainId 
+   * @param {string} diskId 
+   * @returns {Promise<Object>}
+  */
+  deleteRegisteredDiskFromDomain: async (storageDomainId, diskId) => {
+    return makeAPICall({
+      method: "DELETE",
+      url: ENDPOINTS.DELETE_REGISTERD_DISK_FROM_STORAGE_DOMAINS(storageDomainId, diskId),
+      data: storageDomainId, 
+    });
+  },
 
   /**
    * @name ApiManager.findAllTemplatesFromDomain

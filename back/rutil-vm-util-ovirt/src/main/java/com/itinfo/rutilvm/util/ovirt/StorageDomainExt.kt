@@ -262,6 +262,16 @@ fun Connection.registeredDiskFromStorageDomain(storageDomainId: String, diskId: 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun Connection.removeRegisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): Result<Boolean> = runCatching {
+	this.srvDisksFromStorageDomain(storageDomainId).diskService(diskId).remove().send()
+	true
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "디스크 불러오기", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFailWithin(Term.DISK, "디스크 불러오기", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 
 private fun Connection.srvAllDiskSnapshotsFromStorageDomain(storageId: String): DiskSnapshotsService =
 	this.srvStorageDomain(storageId).diskSnapshotsService()
@@ -295,6 +305,16 @@ fun Connection.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: St
 	Term.STORAGE_DOMAIN.logFailWithin(Term.TEMPLATE, "목록조회", it, storageDomainId)
 	throw if (it is Error) it.toItCloudException() else it
 }
+
+// fun Connection.registeredTemplateFromStorageDomain(storageDomainId: String, template: Template): Result<Boolean> = runCatching {
+// 	this.srvTemplatesFromStorageDomain(storageDomainId).
+// 	true
+// }.onSuccess {
+// 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.TEMPLATE, "템플릿 불러오기", storageDomainId)
+// }.onFailure {
+// 	Term.STORAGE_DOMAIN.logFailWithin(Term.TEMPLATE, "템플릿 불러오기", it, storageDomainId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
 
 fun Connection.findAllDiskProfilesFromStorageDomain(storageDomainId: String): Result<List<DiskProfile>> = runCatching {
 	if(this.findStorageDomain(storageDomainId).isFailure){

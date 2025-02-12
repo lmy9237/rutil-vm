@@ -1,9 +1,9 @@
 import React, { useState } from 'react'; 
-import { useAllUnregisteredDiskFromDomain } from "../../../api/RQHook";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import DomainGetDiskModal from '../../../components/modal/domain/DomainGetDiskModal';
 import DeleteModal from '../../../utils/DeleteModal';
+import { useAllUnregisteredDiskFromDomain, useDeleteDisk } from "../../../api/RQHook";
 import { convertBytesToGB } from '../../../util';
 
 const DomainGetDisks = ({ domainId }) => {
@@ -11,7 +11,7 @@ const DomainGetDisks = ({ domainId }) => {
 
   const [activeModal, setActiveModal] = useState(null);
   const [selecteDisks, setSelectedDisks] = useState([]); // 다중 선택된 데이터센터
-  const selectedIds = (Array.isArray(setSelectedDisks) ? setSelectedDisks : []).map((disk) => disk.id).join(', ');
+  const selectedIds = (Array.isArray(selecteDisks) ? selecteDisks : []).map((disk) => disk.id).join(', ');
 
   return (
     <>
@@ -47,15 +47,15 @@ const DomainGetDisks = ({ domainId }) => {
         />
       )}
 
-      {activeModal === 'delete' && (
+      {/* {activeModal === 'delete' && (
         <DeleteModal
           isOpen={true}
-          type="Vm" 
-          onRequestClose={() => setActiveModal(null)} 
-          contentLabel={'디스크'}
+          onClose={() => setActiveModal(null)} 
+          label={"등록되지 않은 디스크"}
           data={selecteDisks}
+          api={useDeleteDisk()}
         />
-      )}
+      )} */}
     </>
   );
 };

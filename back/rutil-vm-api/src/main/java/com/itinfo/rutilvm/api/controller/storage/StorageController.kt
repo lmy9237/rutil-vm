@@ -427,6 +427,32 @@ class StorageController: BaseController() {
 		log.info("/storages/{}/disks/{} ... 스토리지 도메인 디스크 불러오기", storageDomainId, diskId)
 		return ResponseEntity.ok(iDomain.registeredDiskFromStorageDomain(storageDomainId, diskId))
 	}
+	@ApiOperation(
+		httpMethod="DELETE",
+		value="스토리지 도메인 디스크 불러오기 삭제",
+		notes="스토리지 도메인 디스크 불러오기에서 디스크를 삭제한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@DeleteMapping("/{storageDomainId}/disks/{diskId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun deleteStorageDomain(
+		@PathVariable("storageDomainId") storageDomainId: String? = null,
+		@PathVariable("diskId") diskId: String? = null,
+	): ResponseEntity<Boolean> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		if (diskId == null)
+			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/disks/{} ... 스토리지 도메인 디스크 불러오기 삭제", storageDomainId, diskId)
+		return ResponseEntity.ok(iDomain.removeRegisteredDiskFromStorageDomain(storageDomainId, diskId))
+	}
 
 	@ApiOperation(
 		httpMethod="GET",
