@@ -1,5 +1,5 @@
 import React from 'react';
-import { faDesktop, faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faDesktop, faMinusCircle, faPlusCircle, faHdd } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
@@ -36,7 +36,7 @@ const TemplateRow = ({ template, isExpanded, toggleRow }) => (
 const DiskRow = ({ disk }) => (
   <tr className="detail_machine_second">
     <td style={{ paddingLeft: '30px' }}>
-      <FontAwesomeIcon icon={faDesktop} fixedWidth style={{ margin: '0 5px' }} />
+      <FontAwesomeIcon icon={faHdd} fixedWidth style={{ margin: '0 5px' }} />
       {disk.diskImageVo?.alias || 'Unnamed Disk'}
     </td>
     <td></td>

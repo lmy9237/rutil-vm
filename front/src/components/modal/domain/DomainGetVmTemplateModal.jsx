@@ -5,7 +5,7 @@ import TablesOuter from '../../table/TablesOuter';
 import TableColumnsInfo from '../../table/TableColumnsInfo';
 import { xButton } from '../../Icon';
 import { useDataCenter, useTemplate } from '../../../api/RQHook';
-import { CheckKoreanName, CheckName } from '../../../util';
+import { CheckKoreanName } from '../../../util';
 import './MDomain.css';
 
 const initialFormState = {
@@ -80,7 +80,8 @@ const DomainGetVmTemplateModal = ({ isOpen, type = 'vm', dcId, onClose }) => {
   };
 
   const validateForm = () => {
-    if (!CheckKoreanName(formState.name) || !CheckName(formState.name)) return '이름이 유효하지 않습니다.';
+    if (!CheckKoreanName(formState.name)) return '이름이 유효하지 않습니다.';
+    if (!formState.name) return '이름을 입력해주세요.';
     if (!CheckKoreanName(formState.description)) return '영어만 입력가능.';
     return null;
   };

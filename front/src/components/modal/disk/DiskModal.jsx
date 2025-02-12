@@ -15,7 +15,7 @@ import {
   useAllActiveDomainFromDataCenter, 
   useAllDiskProfileFromDomain,
 } from '../../../api/RQHook';
-import { CheckKoreanName, CheckName } from '../../../util';
+import { CheckKoreanName } from '../../../util';
 
 const initialFormState = {
   id: '',
@@ -105,7 +105,8 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   
 
   const validateForm = () => {
-    if (!CheckKoreanName(formState.name) || !CheckName(formState.name)) return '이름이 유효하지 않습니다.';
+    if (!CheckKoreanName(formState.alias)) return '별칭은 영어만 입력가능합니다.';
+    if (!formState.alias) return '별칭를 입력해주세요.';
     if (!formState.size) return '크기를 입력해주세요.';
     if (!dataCenterVoId) return '데이터 센터를 선택해주세요.';
     if (!domainVoId) return '스토리지 도메인을 선택해주세요.';

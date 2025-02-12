@@ -14,20 +14,6 @@ export function CheckKoreanName(name) {
 }
 
 /**
- * @name CheckName
- * @description 이름 입력 되었는지 확인 함수
- * 
- * @param {string} name 문자열
- * @returns 
- */
-export function CheckName(name) {
-  if (!name) {
-    return false;  // 이름이 입력되지 않은경우
-  }
-  return true; // 검사를 통과한 경우 true 반환
-}
-
-/**
  * 숫자 구분
  */
 export function formatNumberWithCommas(number) {

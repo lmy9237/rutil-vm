@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import { xButton } from "../../Icon";
-import { CheckKoreanName, CheckName } from "../../../util";
+import { CheckKoreanName } from "../../../util";
 import {
   useAddDataCenter,
   useEditDataCenter,
@@ -72,8 +72,8 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
 
   // 값 검증
   const validateForm = () => {
-    if (!CheckKoreanName(formState.name) || !CheckName(formState.name))
-      return "이름이 유효하지 않습니다.";
+    if (!CheckKoreanName(formState.name)) return "이름이 유효하지 않습니다.";
+    if (!formState.name) return "이름을 입력해주세요"
     if (!CheckKoreanName(formState.description)) return "영어만 입력가능.";
     return null;
   };

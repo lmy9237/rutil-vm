@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import toast from 'react-hot-toast';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { 
   useAllDataCenters,
   useClustersFromDataCenter,
@@ -15,7 +13,7 @@ import LabelInput from '../../label/LabelInput';
 import LabelCheckbox from '../../label/LabelCheckbox';
 import LabelInputNum from '../../label/LabelInputNum';
 import { xButton } from '../../Icon';
-import { CheckKoreanName, CheckName } from '../../../util';
+import { CheckKoreanName } from '../../../util';
 import './MNetwork.css';
 
 const FormGroup = ({ label, children }) => (
@@ -94,9 +92,10 @@ const NetworkModal = ({ isOpen, editMode = false, networkId, dcId, onClose }) =>
   };
   
   const validateForm = () => {
-    if (!CheckKoreanName(formState.name) || !CheckName(formState.name)) return '이름이 유효하지 않습니다.';
+    if (!CheckKoreanName(formState.name)) return '이름이 유효하지 않습니다.';
+    if (!formState.name) return '이름을 입력해주세요.';
     if (!CheckKoreanName(formState.description)) return '설명이 유효하지 않습니다.';
-    if (!CheckName(dataCenterVoId)) return '데이터센터를 선택해주세요.';
+    if (!dataCenterVoId) return '데이터센터를 선택해주세요.';
     return null;
   };
 

@@ -12,7 +12,7 @@ import {
   useAllDataCenters, 
   useNetworksFromDataCenter
 } from '../../../api/RQHook';
-import { CheckKoreanName, CheckName } from '../../../util';
+import { CheckKoreanName } from '../../../util';
 import './MCluster.css';
 
 const initialFormState = {
@@ -175,10 +175,10 @@ const ClusterModal = ({ isOpen, editMode = false, clusterId, datacenterId, onClo
   };
   
   const validateForm = () => {
-    if (!CheckKoreanName(formState.name) || !CheckName(formState.name)) return '이름이 유효하지 않습니다.';
+    if (!CheckKoreanName(formState.name) || !formState.name) return '이름이 유효하지 않습니다.';
     if (!CheckKoreanName(formState.description)) return '설명이 유효하지 않습니다.';
-    if (!CheckName(dataCenterVoId)) return '데이터센터를 선택해주세요.';
-    if (!CheckName(networkVoId)) return '네트워크를 선택해주세요.';
+    if (!dataCenterVoId) return '데이터센터를 선택해주세요.';
+    if (!networkVoId) return '네트워크를 선택해주세요.';
     return null;
   };
 
