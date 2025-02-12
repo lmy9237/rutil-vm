@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
 import VmDiskActionButtons from './button/VmDiskActionButtons';
-import VmDiskModals from '../../../components/modal/vm/VmDiskModals';
 import { renderTFStatusIcon } from '../../../components/Icon';
 import { formatBytesToGBToFixedZero } from '../../../util';
+import VmDiiskModals from '../../../components/modal/vm/VmDiiskModals';
+
 
 /**
  * @name VmDiskDupl
@@ -73,7 +74,7 @@ const VmDiskDupl = ({ vmDisks = [], columns = [], vmId }) => {
       />
 
       {/* 디스크 모달창 */}
-      <VmDiskModals
+      <VmDiiskModals
         activeModal={activeModal}
         disk={selectedDisks[0]}
         selectedDisks={selectedDisks}
