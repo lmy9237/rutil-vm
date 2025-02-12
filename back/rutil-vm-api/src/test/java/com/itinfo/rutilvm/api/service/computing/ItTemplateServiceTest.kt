@@ -43,7 +43,7 @@ class ItTemplateServiceTest {
 	fun setup() {
 		origin = "00000000-0000-0000-0000-000000000000"
 		clusterId = "d20bd210-89f1-11ef-afa2-00163e2f0226"
-		tempId = "1df08b9b-6a7b-44ee-9c85-0b5b4dfe0eae"
+		tempId = "69feada9-7d26-43a4-8f79-4c04110316dd"
 		vmId = "bf404563-ff9e-4dcc-aa87-61e873de961d"
 	}
 

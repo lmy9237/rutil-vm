@@ -218,7 +218,7 @@ fun Template.toStorageTemplate(conn: Connection): TemplateVo {
 		description { this@toStorageTemplate.description() }
 		creationTime { ovirtDf.format(this@toStorageTemplate.creationTime()) }
 		status { this@toStorageTemplate.status() }
-//		diskAttachmentVos {  }
+		// diskAttachmentVos {  }
 	}
 }
 fun List<Template>.toStorageTemplates(conn: Connection): List<TemplateVo> =

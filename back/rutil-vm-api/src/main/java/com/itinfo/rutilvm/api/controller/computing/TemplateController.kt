@@ -224,6 +224,7 @@ class TemplateController: BaseController() {
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name="templateId", value="템플릿 Id", dataTypeClass= String::class, paramType="path"),
+		ApiImplicitParam(name="nicId", value="nic Id", dataTypeClass= String::class, paramType="path"),
 		ApiImplicitParam(name="nicVo", value="NicVo", dataTypeClass= NicVo::class, paramType="body"),
 	)
 	@ApiResponses(
@@ -235,13 +236,16 @@ class TemplateController: BaseController() {
 	@ResponseStatus(HttpStatus.CREATED)
 	fun updateNic(
 		@PathVariable templateId: String? = null,
+		@PathVariable nicId: String? = null,
 		@RequestBody nicVo: NicVo? = null
 	): ResponseEntity<NicVo?> {
 		if (templateId.isNullOrEmpty())
 			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
+		if (nicId.isNullOrEmpty())
+			throw ErrorPattern.NIC_ID_NOT_FOUND.toException()
 		if (nicVo == null)
 			throw ErrorPattern.NIC_VO_INVALID.toException()
-		log.info("/computing/templates/{}/nics ... 템플릿 Nic 편집", templateId)
+		log.info("/computing/templates/{}/nics/{} ... 템플릿 Nic 편집", templateId, nicId)
 		return ResponseEntity.ok(iTemplate.updateNicFromTemplate(templateId, nicVo))
 	}
 

@@ -168,6 +168,18 @@ interface ItStorageService {
 	@Throws(Error::class)
 	fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmVo>
 	/**
+	//  * [ItStorageService.registeredVmFromStorageDomain]
+	//  * 스토리지도메인 - 가상머신 가져오기
+	//  *
+	//  * @param storageDomainId [String] 스토리지 도메인 Id
+ 	//  * @param vmVo [VmVo] 가상머신
+	//  * @return [Boolean]
+	//  */
+	// @Throws(Error::class)
+	// fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo): Boolean
+
+
+	/**
 	 * [ItStorageService.findAllDisksFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 목록
 	 *
@@ -185,6 +197,17 @@ interface ItStorageService {
 	 */
 	@Throws(Error::class)
 	fun findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo>
+	// /**
+	//  * [ItStorageService.registeredDiskFromStorageDomain]
+	//  * 스토리지 도메인 - 디스크 불러오기 - 가져오기
+	//  *
+	//  * @param storageDomainId [String] 스토리지 도메인 Id
+	//  * @return [Boolean]
+	//  */
+	// @Throws(Error::class)
+	// fun registeredDiskFromStorageDomain(storageDomainId: String): Boolean
+
+
 	/**
 	 * [ItStorageService.findAllDiskSnapshotsFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 스냅샷 목록
@@ -435,7 +458,8 @@ class StorageServiceImpl(
 		log.info("findAllTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<Template> = conn.findAllTemplatesFromStorageDomain(storageDomainId)
 			.getOrDefault(listOf())
-		return res.toTemplatesMenu(conn)
+		// return res.toTemplatesMenu(conn)
+		return res.toStorageTemplates(conn)
 	}
 
 	@Throws(Error::class)
