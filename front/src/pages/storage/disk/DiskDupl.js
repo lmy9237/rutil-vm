@@ -5,7 +5,7 @@ import DiskModals from '../../../components/modal/disk/DiskModals';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
 import { icon } from '../../../components/Icon';
-import { checkZeroSize } from '../../../util';
+import { checkZeroSizeToGB } from '../../../util';
 
 const DiskDupl = ({ disks = [], columns = [], type = 'disk' }) => {
   const navigate = useNavigate();
@@ -47,8 +47,8 @@ const DiskDupl = ({ disks = [], columns = [], type = 'disk' }) => {
                   {d?.connectVm?.name || d?.connectTemplate?.name}
                 </TableRowClick>
               ),
-              virtualSize: checkZeroSize(d?.virtualSize),
-              actualSize: checkZeroSize(d?.actualSize),
+              virtualSize: checkZeroSizeToGB(d?.virtualSize),
+              actualSize: checkZeroSizeToGB(d?.actualSize),
             };
           } else if (type === 'vm') {
             return {

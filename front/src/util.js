@@ -58,7 +58,11 @@ export function sizeToBytes(size) {
 }
 
 
-export function checkZeroSize(size) {
-  return size < 1 ? "< 1 GB" : `${convertBytesToGB(size)} GB`;
+export function checkZeroSizeToGB(size) {
+  return convertBytesToGB(size) < 1 ? "< 1 GB" : `${convertBytesToGB(size)} GB`;
+}
+
+export function checkZeroSizeToMB(size) {
+  return convertBytesToMB(size) < 1 ? "< 1 MB" : `${convertBytesToMB(size)} MB`;
 }
 

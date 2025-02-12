@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDomainById } from '../../../api/RQHook';
-import { checkZeroSize } from '../../../util';
+import { checkZeroSizeToGB } from '../../../util';
 
 function overCommit(commit, disk) {
   return ((commit / disk) * 100).toFixed(0);
@@ -11,10 +11,10 @@ const DomainGeneral = ({ domainId }) => {
 
   const tableRows = [
     { label: "ID", value: domain?.id },
-    { label: "크기", value: checkZeroSize(domain?.diskSize) },
-    { label: "사용 가능", value: checkZeroSize(domain?.availableSize) },
-    { label: "사용됨", value: checkZeroSize(domain?.usedSize) },
-    { label: "할당됨", value: checkZeroSize(domain?.commitedSize) },
+    { label: "크기", value: checkZeroSizeToGB(domain?.diskSize) },
+    { label: "사용 가능", value: checkZeroSizeToGB(domain?.availableSize) },
+    { label: "사용됨", value: checkZeroSizeToGB(domain?.usedSize) },
+    { label: "할당됨", value: checkZeroSizeToGB(domain?.commitedSize) },
     { label: "오버 할당 비율", value: overCommit(domain?.availableSize, domain?.diskSize)+ ' %' },
     { label: "이미지: (약간의 문제)", value: domain?.diskImageVos?.length || 0 },
     { label: "경로", value: domain?.storageAddress }, // nfs 일때만

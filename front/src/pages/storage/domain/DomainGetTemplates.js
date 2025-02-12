@@ -4,6 +4,7 @@ import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
 import DeleteModal from '../../../utils/DeleteModal';
+import { checkZeroSizeToMB } from '../../../util';
 
 const DomainGetTemplates = ({ domainId }) => {
   const { data: templates = [], isLoading: isTemplatesLoading } = useAllUnregisteredTemplateFromDomain(domainId, (e) => ({ ...e }));
@@ -26,12 +27,11 @@ const DomainGetTemplates = ({ domainId }) => {
           return {
             ...t,
             name: t.name,
-            source: t.source,
-            memory: t.memorySize,
-            cpu: t.osSystem,
+            memory: checkZeroSizeToMB(t.memorySize),
+            cpu: t.cpuTopologyCnt,
             cpuArc: t.cpuArc,
             disk: t.disk,
-            createdAt: t.createdAt,
+            createdAt: t.creationTime,
             exportedAt: t.exportedAt,
           };
         })}

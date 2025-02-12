@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { faDesktop, faHdd, faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAllVMFromDomain } from '../../../api/RQHook';
-
-const sizeToGB = (data) => (data / Math.pow(1024, 3));
-const formatSize = (size) => (sizeToGB(size) < 1 ? '< 1 GB' : `${sizeToGB(size).toFixed(0)} GB`);
+import { checkZeroSizeToGB } from '../../../util';
 
 const calculateTotalVirtualSize = (diskAttachments) => {
   return diskAttachments.reduce((total, disk) => total + (disk.diskImageVo?.virtualSize || 0), 0);
@@ -22,27 +20,27 @@ const VMRow = ({ vm, isExpanded, toggleRow }) => (
         <FontAwesomeIcon icon={faDesktop} style={{ margin: '0 5px 0 10px' }} fixedWidth/>
         {vm?.name || ''}
       </td>
-      <td>{vm?.diskAttachments?.length || 0}</td>
-      <td>{vm?.virtualSize || 0}</td>
-      <td>{vm?.actualSize || 0}</td>
+      <td>{vm?.diskAttachments?.length}</td>
+      <td>{vm?.virtualSize}</td>
+      <td>{vm?.actualSize}</td>
       <td>{vm?.creationTime || ''}</td>
     </tr>
     {isExpanded &&
       vm.diskAttachments?.map((disk, index) => (
         <DiskRow key={`${vm.id}-${index}`} disk={disk} />
-      ))}
+    ))}
   </>
 );
 
 const DiskRow = ({ disk }) => (
-  <tr className="detail_machine_second">
+  <tr className="detail-machine-second">
     <td style={{ paddingLeft: '30px' }}>
       <FontAwesomeIcon icon={faHdd} fixedWidth style={{ margin: '0 5px' }} />
       {disk.diskImageVo?.alias || ''}
     </td>
     <td></td>
-    <td>{formatSize(disk.diskImageVo?.virtualSize || 0)}</td>
-    <td>{formatSize(disk.diskImageVo?.actualSize || 0)}</td>
+    <td>{checkZeroSizeToGB(disk.diskImageVo?.virtualSize)}</td>
+    <td>{checkZeroSizeToGB(disk.diskImageVo?.actualSize)}</td>
     <td>{disk.diskImageVo?.createDate || ''}</td>
   </tr>
 );
@@ -58,16 +56,14 @@ const DomainVms = ({ domainId }) => {
   };
 
   const {
-    data: vms = [],
-    isLoading,
-    isError,
+    data: vms = [], isLoading, isError,
   } = useAllVMFromDomain(domainId, (vm) => {
     const totalVirtualSize = calculateTotalVirtualSize(vm?.diskAttachmentVos || []);
     const totalActualSize = calculateTotalActualSize(vm?.diskAttachmentVos || []);
     return {
       ...vm,
-      virtualSize: formatSize(totalVirtualSize),
-      actualSize: formatSize(totalActualSize),
+      virtualSize: checkZeroSizeToGB(totalVirtualSize),
+      actualSize: checkZeroSizeToGB(totalActualSize),
       diskAttachments: vm?.diskAttachmentVos || [],
     };
   });
