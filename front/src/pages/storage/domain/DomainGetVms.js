@@ -1,9 +1,9 @@
 import React, { useState } from 'react'; 
-import { useAllDataCenterFromDomain } from "../../../api/RQHook";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
-import DeleteModal from '../../../components/DeleteModal';
+import DeleteModal from '../../../utils/DeleteModal';
+import { useAllDataCenterFromDomain } from "../../../api/RQHook";
 
 const DomainGetVms = ({ domainId }) => {
   const { data: datacenters = [], isLoading: isDatacentersLoading } = useAllDataCenterFromDomain(domainId, (e) => ({ ...e }));

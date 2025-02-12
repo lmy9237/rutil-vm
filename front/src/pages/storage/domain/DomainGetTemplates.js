@@ -3,7 +3,7 @@ import { useAllUnregisteredTemplateFromDomain } from "../../../api/RQHook";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
-import DeleteModal from '../../../components/DeleteModal';
+import DeleteModal from '../../../utils/DeleteModal';
 
 const DomainGetTemplates = ({ domainId }) => {
   const { data: templates = [], isLoading: isTemplatesLoading } = useAllUnregisteredTemplateFromDomain(domainId, (e) => ({ ...e }));

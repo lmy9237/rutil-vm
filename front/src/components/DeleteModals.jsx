@@ -17,7 +17,7 @@ import {
   useDeleteDiskFromVM
 } from '../api/RQHook';
 
-const DeleteModal = ({ 
+const DeleteModals = ({ 
     isOpen, 
     type,
     onRequestClose, 
@@ -207,5 +207,5 @@ const DeleteModal = ({
   );
 };
 
-export default DeleteModal;
+export default DeleteModals;
 

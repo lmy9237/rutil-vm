@@ -3,7 +3,7 @@ import { useAllUnregisteredDiskFromDomain } from "../../../api/RQHook";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import DomainGetDiskModal from '../../../components/modal/domain/DomainGetDiskModal';
-import DeleteModal from '../../../components/DeleteModal';
+import DeleteModal from '../../../utils/DeleteModal';
 import { formatBytesToGBToFixedZero } from '../../../util';
 
 const DomainGetDisks = ({ domainId }) => {

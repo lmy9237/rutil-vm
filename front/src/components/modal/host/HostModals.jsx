@@ -3,7 +3,7 @@ import HostModal from "./HostModal";
 import HostDeleteModal from "./HostDeleteModal";
 import HostActionModal from "./HostActionModal";
 import { useDeleteHost } from "../../../api/RQHook";
-import DeleteModal from "../../DeleteModal";
+import DeleteModal from "../../../utils/DeleteModal";
 
 const HostModals = ({
   activeModal,

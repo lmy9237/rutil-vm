@@ -1,6 +1,6 @@
 import React from 'react';
 import ClusterModal from "./ClusterModal";
-import DeleteModal from "../../DeleteModal";
+import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteCluster } from "../../../api/RQHook";
 
 const ClusterModals = ({

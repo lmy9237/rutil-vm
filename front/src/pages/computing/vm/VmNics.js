@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleUp, faChevronRight, faGlassWhiskey, faPlug, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { useNetworkInterfaceFromVM } from '../../../api/RQHook';
 import VmNetworkNewInterfaceModal from '../../../components/modal/vm/VmNetworkNewInterfaceModal';
-import DeleteModal from '../../../components/DeleteModal';
+import DeleteModal from '../../../utils/DeleteModal';
 
 const VmNics = ({ vmId }) => {
   const {

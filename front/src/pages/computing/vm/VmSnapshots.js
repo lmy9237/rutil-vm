@@ -5,7 +5,7 @@ import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import VmSnapshotModal from '../../../components/modal/vm/VmSnapshotModal';
 import VmSnapshotDeleteModal from '../../../components/modal/vm/VmSnapshotDeleteModal';
-import DeleteModal from '../../../components/DeleteModal';
+import DeleteModal from '../../../utils/DeleteModal';
 import { useDisksFromVM, useSnapshotDetailFromVM, useSnapshotFromVM } from '../../../api/RQHook';
 import { formatBytesToMB } from '../../../util';
 
