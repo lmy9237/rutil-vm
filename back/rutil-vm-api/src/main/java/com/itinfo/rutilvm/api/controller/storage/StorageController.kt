@@ -191,7 +191,6 @@ class StorageController: BaseController() {
 
 	@ApiOperation(
 		httpMethod="GET",
-
 		value="스토리지 도메인 데이터센터 목록",
 		notes="선택된 스토리지 도메인의 데이터센터 목록을 조회한다"
 	)
@@ -210,6 +209,28 @@ class StorageController: BaseController() {
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/dataCenters ... 스토리지 도메인 밑에 붙어있는 데이터센터 목록", storageDomainId)
 		return ResponseEntity.ok(iDomain.findAllDataCentersFromStorageDomain(storageDomainId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="스토리지 도메인 호스트 목록",
+		notes="선택된 스토리지 도메인의 데이터센터가 가진 호스트 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{storageDomainId}/hosts")
+	@ResponseBody
+	fun hostsFromStorageDomain(
+		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
+	): ResponseEntity<List<HostVo>> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/hosts ... 스토리지 도메인 밑에 붙어있는 데이터센터가 가진 호스트 목록", storageDomainId)
+		return ResponseEntity.ok(iDomain.findAllHostsFromStorageDomain(storageDomainId))
 	}
 
 	@ApiOperation(

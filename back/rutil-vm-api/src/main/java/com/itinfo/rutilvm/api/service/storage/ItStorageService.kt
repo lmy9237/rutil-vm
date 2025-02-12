@@ -106,7 +106,15 @@ interface ItStorageService {
 	 */
 	@Throws(Error::class)
 	fun findAllDataCentersFromStorageDomain(storageDomainId: String): List<DataCenterVo>
-
+	/**
+	 * [ItStorageService.findAllHostsFromStorageDomain]
+	 * 스토리지도메인 - 호스트 목록
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @return List<[HostVo]> 호스트 목록
+	 */
+	@Throws(Error::class)
+	fun findAllHostsFromStorageDomain(storageDomainId: String): List<HostVo>
 	// 데이터센터 연결할 목록 - [ItDataCenterService.findAll] 사용하면 될듯
 	/**
 	 * [ItStorageService.attachFromDataCenter]
@@ -396,13 +404,25 @@ class StorageServiceImpl(
 		return res.isSuccess
 	}
 
-
 	@Throws(Error::class)
 	override fun findAllDataCentersFromStorageDomain(storageDomainId: String): List<DataCenterVo> {
 		log.info("findAllDataCentersFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val storageDomain: StorageDomain = conn.findStorageDomain(storageDomainId)
 			.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		return storageDomain.toStorageDomainDataCenter(conn)
+	}
+
+	@Throws(Error::class)
+	override fun findAllHostsFromStorageDomain(storageDomainId: String): List<HostVo> {
+		log.info("findAllHostsFromStorageDomain ... storageDomainId: {}", storageDomainId)
+		val storageDomain: StorageDomain = conn.findStorageDomain(storageDomainId)
+			.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+
+		val res: List<Host>  = if(storageDomain.dataCentersPresent()){
+			conn.findAllHostsFromDataCenter(storageDomain.dataCenters().first().id()).getOrDefault(listOf())
+		}else listOf()
+
+		return res.toHostsIdName()
 	}
 
 	@Throws(Error::class)

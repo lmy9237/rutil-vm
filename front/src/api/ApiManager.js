@@ -2149,6 +2149,20 @@ migrateHostsFromVM: async (vmId) => {
     // defaultValues: DEFAULT_VALUES.FIND_DATACENTER_FROM_DOMAIN
   }),
   /**
+   * @name ApiManager.findAllHostsFromDomain
+   * @description 호스트 목록
+   *
+   * @param {string} storageDomainId
+   * @returns 
+   * 
+   * @see
+   */
+  findAllHostsFromDomain : async (storageDomainId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_HOSTS_FROM_STORAGE_DOMAINS(storageDomainId),
+    // defaultValues: DEFAULT_VALUES.FIND_DATACENTER_FROM_DOMAIN
+  }),
+  /**
    * @name ApiManager.findAllVMsFromDomain
    * @description 가상머신 목록
    *

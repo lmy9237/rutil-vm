@@ -199,7 +199,8 @@ const ENDPOINTS = {
   FIND_ALL_STORAGE_DOMAINS: () => `/api/v1/storages/domains`,
   FIND_STORAGE_DOMAIN: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}`,
   
-  FIND_DATA_CENTERS_FROM_STORAGE_DOMAINS: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/dataCenters`,    
+  FIND_DATA_CENTERS_FROM_STORAGE_DOMAINS: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/dataCenters`,
+  FIND_HOSTS_FROM_STORAGE_DOMAINS: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/hosts`,
   ACTIVATE_FROM_DATACENTER: (storageDomainId, dataCenterId) => `/api/v1/storages/domains/${storageDomainId}/dataCenters/${dataCenterId}/activate`,
   ATTACH_FROM_DATACENTER: (storageDomainId, dataCenterId) => `/api/v1/storages/domains/${storageDomainId}/dataCenters/${dataCenterId}/attach`,
   DETACH_FROM_DATACENTER: (storageDomainId, dataCenterId) => `/api/v1/storages/domains/${storageDomainId}/dataCenters/${dataCenterId}/detach`,

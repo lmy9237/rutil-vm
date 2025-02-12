@@ -246,8 +246,7 @@ const DomainModal = ({ isOpen, mode='create', domainId, datacenterId, onClose })
     if (formState.storageType !== 'nfs' && lunId) {
       const selectedLogicalUnit =
         formState.storageType === 'iscsi'
-          ? iscsis.find((iLun) => iLun.id === lunId)
-          : fibres.find((fLun) => fLun.id === lunId);
+          ? iscsis.find((iLun) => iLun.id === lunId) : fibres.find((fLun) => fLun.id === lunId);
       if (selectedLogicalUnit?.abled === 'NO') return '선택한 항목은 사용할 수 없습니다.';
     }
     return null;

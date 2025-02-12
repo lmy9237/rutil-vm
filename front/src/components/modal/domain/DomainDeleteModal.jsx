@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import {
+  useAllHostFromDomain,
   useAllHosts,
   useDeleteDomain,
   useDestroyDomain,
@@ -30,9 +31,10 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
   }, [data]);
 
   // 호스트 목록 가져오기
+  // 해당 데이터센터가 가진 호스트 목록을 가져와야함
   const {
     data: hosts = [], isLoading: isHostsLoading,
-  } = useAllHosts();
+  } = useAllHostFromDomain();
 
   useEffect(() => {
     if (hosts && hosts.length > 0) {

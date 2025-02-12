@@ -2636,6 +2636,25 @@ export const useAllDataCenterFromDomain = (storageDomainId) => useQuery({
   },
   enabled: !!storageDomainId,
 })
+/**
+ * @name useAllHostFromDomain
+ * @description 도메인 내 호스트 목록조회 useQuery훅
+ * 
+ * @param {string} storageDomainId 도메인ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllDataCentersFromDomain
+ */
+export const useAllHostFromDomain = (storageDomainId) => useQuery({
+  queryKey: ['useAllHostFromDomain', storageDomainId], 
+  queryFn: async () => {
+    console.log(`Fetching hosts with ID: ${storageDomainId}`);
+    const res = await ApiManager.findAllHostsFromDomain(storageDomainId);
+    return res ?? '';
+  },
+  enabled: !!storageDomainId,
+})
 
 /**
  * @name useAllVMFromDomain
