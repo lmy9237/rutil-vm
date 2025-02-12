@@ -19,7 +19,6 @@ const TemplateNeworkNewInterModal = ({
   editMode = false,
   nicData,
   templateId,
-  nicId,
 }) => {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -98,6 +97,7 @@ const TemplateNeworkNewInterModal = ({
 
   const handleSubmit = () => {
     const dataToSubmit = {
+      id: nicData.id,
       vnicProfileVo: {
         id: vnicProfileVoId || "", // null이면 서버에서 오류가 발생할 가능성 있음
         name: vnicProfileVoName || "", // 빈 문자열 처리 필요

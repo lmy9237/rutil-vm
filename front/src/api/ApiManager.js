@@ -1632,11 +1632,6 @@ migrateHostsFromVM: async (vmId) => {
    * @returns {Promise<Object>}
    */
   editNicFromTemplate: async (templateId, nicId, nicData) => {
-    if (!templateId || !nicId) {
-      console.error("❌ Missing templateId or nicId", { templateId, nicId });
-      throw new Error("템플릿 ID 또는 NIC ID가 없습니다.");
-    }
-
     console.log(`🔍 Sending PUT request: /api/v1/computing/templates/${templateId}/nics/${nicId}`);
 
     return makeAPICall({

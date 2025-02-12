@@ -223,15 +223,15 @@ class TemplateController: BaseController() {
 		notes="템플릿의 Nic를 편집한다"
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name="templateId", value="템플릿 Id", dataTypeClass= String::class, paramType="path"),
-		ApiImplicitParam(name="nicId", value="nic Id", dataTypeClass= String::class, paramType="path"),
+		ApiImplicitParam(name="templateId", value="템플릿 Id", dataTypeClass= String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="nicId", value="nic Id", dataTypeClass= String::class, required=true, paramType="path"),
 		ApiImplicitParam(name="nicVo", value="NicVo", dataTypeClass= NicVo::class, paramType="body"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED"),
 		ApiResponse(code = 404, message = "NOT_FOUND")
 	)
-	@PostMapping("/{templateId}/nics/{nicId}") // TODO 이상함
+	@PutMapping("/{templateId}/nics/{nicId}") // TODO 이상함
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
 	fun updateNic(
