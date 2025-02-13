@@ -87,7 +87,7 @@ const ApiManager = {
    * 
    * @returns 
    * 
-   * @see Dashboard 
+   * @see Dashboard
    */
   findAllTreeNaviations: async (type = "none") => makeAPICall({
     method: "GET", 

@@ -1,9 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "../Input/IconButton";
 import "./HeaderButton.css";
 
+const HeaderButtonContext = createContext();
+
+/**
+ * @name HeaderButton
+ * @description 헤더 버튼
+ * 
+ * @param {string} title 제목
+ * @param {string} status 상태태
+ * @returns 
+ */
 const HeaderButton = ({
   title,
   status,
@@ -12,11 +22,11 @@ const HeaderButton = ({
   titleIcon,
 }) => {
   const [isPopupBoxVisible, setIsPopupBoxVisible] = useState(false);
-
   const togglePopupBox = () => setIsPopupBoxVisible(!isPopupBoxVisible);
-
   const handlePopupBoxItemClick = (item) => {
-    if (item.disabled) return; // disabled 상태면 클릭 이벤트 무시
+    console.log(`HeaderButton > handlePopupBoxItemClick ... item: ${item}`)
+    if (item.disabled) 
+      return; // disabled 상태면 클릭 이벤트 무시
     if (item.onClick)
       item.onClick();
     console.log(`Clicked on ${item.label}`);
@@ -26,6 +36,7 @@ const HeaderButton = ({
   // 팝업 외부 클릭 시 닫히도록 처리
   useEffect(() => {
     const handleClickOutside = (event) => {
+      console.log("HeaderButton > handleClickOutside ...")
       const popupBox = document.querySelector(".popup-box");
       const popupBtn = document.querySelector(".popup-btn");
       if (
@@ -44,6 +55,7 @@ const HeaderButton = ({
     };
   }, []);
 
+  console.log("...")
   return (
     <div className="section-header">
       <div className="flex justify-start align-center text-(--color-primary-h) section-header-left">
@@ -101,5 +113,17 @@ const HeaderButton = ({
     </div>
   );
 };
+
+HeaderButton.CREATE = ({
+
+}) => {
+
+}
+
+HeaderButton.UPDATE = ({
+  
+}) => {
+
+}
 
 export default HeaderButton;

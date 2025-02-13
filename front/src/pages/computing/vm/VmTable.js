@@ -4,23 +4,35 @@ import TableRowClick from '../../../components/table/TableRowClick';
 import { useNavigate } from 'react-router-dom';
 import { renderVmStatusIcon } from '../../../components/Icon';
 
+/**
+ * @name VmTable
+ * @description 테이블 컴포넌트
+ * 
+ * @param {string[]}
+ * @returns 
+ */
 const VmTable = ({
-  columns,
-  vms,
+  isLoading = null, isError = false, isSuccess,
+  columns = [], vms = [],
   setSelectedVms,
 }) => {
   const navigate = useNavigate();
 
   const handleNameClick = (id) => {
+    console.log("VmTable > handleNameClick ...")
     navigate(`/computing/vms/${id}`);
   };
   const handleRowSelection = (selectedRows) => {
+    console.log("VmTable > handleRowSelection ...")
     setSelectedVms(selectedRows);
   };
+  
+  console.log("...")
   return (
     <>
       {/* 테이블 */}
       <TablesOuter
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         columns={columns}
         data={vms.map((vm) => ({
           ...vm,

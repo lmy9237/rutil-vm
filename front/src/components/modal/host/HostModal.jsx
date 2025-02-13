@@ -32,7 +32,7 @@ const hostEngines = [
 
 /**
  * @name HostModal
- * @description ...
+ * @description 호스트 관련 모달
  *
  * @param {boolean} isOpen
  * @returns

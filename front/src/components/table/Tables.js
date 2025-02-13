@@ -13,9 +13,8 @@ import './Table.css';
  */
 const Tables = ({
   isLoading = null, isError = false, isSuccess,
-  columns = [],
-  data = [],
-  onRowClick = () => { },
+  columns = [], data = [],
+  onRowClick = () => {},
   clickableColumnIndex = [],
   onContextMenuItems = false,
   onClickableColumnClick = () => { }
@@ -28,6 +27,7 @@ const Tables = ({
   // 우클릭 메뉴 위치 관리
   const [contextMenu, setContextMenu] = useState(null);
   const handleContextMenu = (e, rowIndex) => {
+    console.log("Tables > handleContextMenu...")
     e.preventDefault();
     const rowData = sortedData[rowIndex];
 
@@ -85,6 +85,7 @@ const Tables = ({
   }, [data]);
 
   const sortData = (key, direction) => {
+    console.log(`PagingTable > sortData ... key: ${key}, direction: ${direction}`);
     const sorted = [...data].sort((a, b) => {
       const aValue = a[key] ?? '';
       const bValue = b[key] ?? '';
@@ -97,8 +98,9 @@ const Tables = ({
     setSortedData(sorted);
   };
 
-  // 내림, 오름차순
   const handleSort = (column) => {
+    // 내림, 오름차순
+    console.log(`PagingTable > handleSort ... column: ${column}`);
     if (column.isIcon) return;
     const { accessor } = column;
     const direction = sortConfig.key === accessor && sortConfig.direction === 'asc' ? 'desc' : 'asc';
@@ -108,6 +110,7 @@ const Tables = ({
 
   // 툴팁 설정
   const handleMouseEnter = (e, rowIndex, colIndex, content) => {
+    console.log(`Tables > handleMouseEnter ... rowIndex: ${rowIndex}, colIndex: ${colIndex}`);
     const element = e.target;
     if (element.scrollWidth > element.clientWidth) {
       setTooltips((prevTooltips) => ({
@@ -123,22 +126,25 @@ const Tables = ({
   };
 
   const handleRowClick = (rowIndex, e) => {
+    console.log(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: ${e}`);
     const clickedRow = sortedData[rowIndex];
-    if (clickedRow) {
-      if (e.ctrlKey) {
-        setSelectedRows((prev) => {
-          const updated = prev.includes(rowIndex)
-            ? prev.filter((index) => index !== rowIndex)
-            : [...prev, rowIndex];
-          const selectedData = updated.map((index) => sortedData[index]);
-          onRowClick(selectedData); // 선택된 데이터 배열 전달
-          return updated;
-        });
-      } else {
-        const selectedData = [clickedRow];
-        setSelectedRows([rowIndex]);
-        onRowClick(selectedData); // 단일 선택된 데이터 전달
-      }
+    if (!clickedRow) {
+      return;
+    }
+
+    if (e.ctrlKey) {
+      setSelectedRows((prev) => {
+        const updated = prev.includes(rowIndex)
+          ? prev.filter((index) => index !== rowIndex)
+          : [...prev, rowIndex];
+        const selectedData = updated.map((index) => sortedData[index]);
+        onRowClick(selectedData); // 선택된 데이터 배열 전달
+        return updated;
+      });
+    } else {
+      const selectedData = [clickedRow];
+      setSelectedRows([rowIndex]);
+      onRowClick(selectedData); // 단일 선택된 데이터 전달
     }
   };
 
@@ -153,6 +159,7 @@ const Tables = ({
 
   // 우클릭 메뉴 외부 클릭 시 메뉴 닫기 + 배경색 초기화
   const menuRef = useRef(null);
+
   useEffect(() => {
     const handleClickOutsideMenu = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -168,7 +175,7 @@ const Tables = ({
 
   const renderTableBody = () => {
     if (isLoading) {
-      console.log("Tables > Loading data into table... ")
+      console.log("Tables > renderTableBody ... ")
       // 로딩중일 때
       return (
         <TableRowLoading colLen={columns.length} />
@@ -251,7 +258,10 @@ const Tables = ({
   return (
     <>
       <div className="w-full max-h-[62.4vh] overflow-y-auto overflow-x-hidden">
-        <table className="custom-table" ref={tableRef} style={{ tableLayout: 'fixed', width: '100%' }}>
+        <table 
+          className="custom-table" 
+          ref={tableRef} 
+          style={{ tableLayout: 'fixed', width: '100%' }}>
           <thead>
             <tr>
               {columns.map((column, index) => (

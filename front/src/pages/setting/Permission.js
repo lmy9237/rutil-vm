@@ -1,9 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faTimes
-} from '@fortawesome/free-solid-svg-icons'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import './css/Permission.css';
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
 import TablesOuter from '../../components/table/TableOuter';
