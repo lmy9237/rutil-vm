@@ -2140,7 +2140,7 @@ export const useDeleteNetworkFromTemplate = () => {
   return useMutation({
     mutationFn: async ({ templateId,nicId,detachOnly}) => {
       // ID들이 제대로 전달되는지 확인하기 위해 로그 추가
-      console.log('Deleting VnicProfile with templateId:', templateId );
+      console.log('삭제할 템플릿id:', templateId );
       console.log('Deleting VnicProfile with nicId:', nicId);
       return await ApiManager.deleteNicFromTemplate(templateId,nicId, detachOnly);
     },

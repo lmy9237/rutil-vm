@@ -11,19 +11,20 @@ html {
   --color-bg: #ececec;                /* 기본 배경색 */
   --color-bg-input: #efefef;          /* Input 배경색 */ 
   --color-gray-1: #dddddd;            /* RutilVM 회색 */
-  --color-gray-2: #d9ebf5;            /* RutilVM 회색 (2) */
+  --color-gray-2:rgb(177, 182, 184);            /* RutilVM 회색 (2) */
   --color-gray-3: #cfe4eb;            /* RutilVM 회색 (3) */
   --color-gray-disabled: #6d6d6d;     /* 비활성화 색 */
   --color-primary-1: #295b9c;         /* 주 border색 */
   --color-primary-h: #0b4db5;         /* header 글자색 */  
   --color-primary-2: #446dbb;         /* 주 색 */
   --color-bg-th: #89b0e3;             /* th 배경색 */
-  --color-bg-modal: #7473738e;        /* 모달 배경색 */
+  --color-header:rgb(211, 232, 243);               /* 모달 header*/
+  /* --color-bg-modal:rgba(90, 40, 40, 0.56);         */
   --color-bg-tooltip: #333333;        /* 툴팁 */
 
   --border-w: 1px; /* 테두리 두깨 */
   --border-btn: var(--border-w) solid var(--color-gray-1);
-  --border-simple: var(--border-w) solid var(--color-gray-1);
+  --border-simple: var(--border-w) solid var(--color-gray-2);
   --border-aa: var(--border-w) solid var(--color-gray-1);
 }
 
@@ -455,7 +456,7 @@ textarea {
   display: flex;
 }
 .popup-header {
-  background-color: var(--color-gray-1);
+  background-color: var(--color-header);
   border-radius: 3px;
   display: flex;
   color: var(--color-primary-2);

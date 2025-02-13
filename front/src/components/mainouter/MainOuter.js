@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { adjustFontSize } from '../../UIEvent';
 import { useAllTreeNavigations, } from '../../api/RQHook';
@@ -15,6 +15,46 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 const MainOuter = ({ children,asideVisible  }) => {
+    const [sidebarWidth, setSidebarWidth] = useState(20); // 초기 사이드바 너비 (%)
+    const resizerRef = useRef(null);
+    const isResizing = useRef(false);
+    const xRef = useRef(0);
+    const leftWidthRef = useRef(0);
+
+    useEffect(() => {
+        // 마우스 이벤트 해제 (Unmount 시)
+        return () => {
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", handleMouseUp);
+        };
+    }, []);
+
+    const handleMouseDown = (e) => {
+        isResizing.current = true;
+        xRef.current = e.clientX;
+        leftWidthRef.current = sidebarWidth;
+        
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+    };
+
+    const handleMouseMove = (e) => {
+        if (!isResizing.current) return;
+
+        const dx = ((e.clientX - xRef.current) / window.innerWidth) * 100;
+        const newWidth = leftWidthRef.current + dx;
+
+        if (newWidth > 15 && newWidth < 40) {
+            setSidebarWidth(newWidth);
+        }
+    };
+
+    const handleMouseUp = () => {
+        isResizing.current = false;
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+    };
+
     const [lastSelected, setLastSelected] = useState(null); // 마지막 선택 항목 저장
     const [selectedDisk, setSelectedDisk] = useState(null);
     const navigate = useNavigate();

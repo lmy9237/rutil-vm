@@ -72,8 +72,8 @@ const TemplateNeworkNewInterModal = ({
       setVnicProfileVoId(nicData.vnicProfileVo?.id || "");
       setVnicProfileVoName(nicData.vnicProfileVo.name || "");
       setSelectedInterface(nicData.interface_ || "VIRTIO");
-      setLinked(nicData.linked?.toLowerCase() === "up");
-      setPlugged(nicData.linked?.toLowerCase() === "연결됨");
+      setLinked(nicData.linked); 
+      setPlugged(nicData.plugged);
       setStatus(nicData.status);
       setMacAddress(nicData.macAddress);
     } else {
@@ -97,7 +97,7 @@ const TemplateNeworkNewInterModal = ({
 
   const handleSubmit = () => {
     const dataToSubmit = {
-      id: nicData.id,
+      id: editMode && nicData ? nicData.id : undefined, 
       vnicProfileVo: {
         id: vnicProfileVoId || "", // null이면 서버에서 오류가 발생할 가능성 있음
         name: vnicProfileVoName || "", // 빈 문자열 처리 필요
@@ -146,6 +146,7 @@ const TemplateNeworkNewInterModal = ({
     }
   };
 
+  console.log("...")
   return (
     <Modal
       isOpen={isOpen}
@@ -216,63 +217,62 @@ const TemplateNeworkNewInterModal = ({
             <span>선택된 유형: {selectedInterface}</span>
           </div>
           <div className="plug-radio-btn">
-            <span>링크 상태</span>
-            <div>
-              <div className="radio-outer">
-                <div>
-                  <input
-                    type="radio"
-                    name="status"
-                    id="status_up"
-                    checked={linked === true} // linked가 true일 때 체크
-                    onChange={() => setLinked(true)} // true로 설정
-                  />
-                  <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
-                  <label htmlFor="status_up">Up</label>
-                </div>
-                <div>
-                  <input
-                    type="radio"
-                    name="status"
-                    id="status_down"
-                    checked={linked === false} // linked가 false일 때 체크
-                    onChange={() => setLinked(false)} // false로 설정
-                  />
-                  <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
-                  <label htmlFor="status_down">Down</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="plug-radio-btn">
-            <span>카드 상태</span>
-            <div>
-              <div className="radio-outer">
-                <div>
-                  <input
-                    type="radio"
-                    name="plugged_status"
-                    id="plugged"
-                    checked={plugged === true} // plugged가 true일 때 선택
-                    onChange={() => setPlugged(true)} // true로 설정
-                  />
-                  <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
-                  <label htmlFor="plugged">연결됨</label>
-                </div>
-                <div>
-                  <input
-                    type="radio"
-                    name="plugged_status"
-                    id="unplugged"
-                    checked={plugged === false} // plugged가 false일 때 선택
-                    onChange={() => setPlugged(false)} // false로 설정
-                  />
-                  <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
-                  <label htmlFor="unplugged">분리</label>
-                </div>
-              </div>
-            </div>
-          </div>
+  <span>링크 상태</span>
+  <div className="radio-outer">
+    <div>
+      <input
+        type="radio"
+        name="status"
+        id="status_up"
+        checked={linked === true} 
+        onChange={() => setLinked(true)}
+      />
+      <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
+      <label htmlFor="status_up">Up</label>
+    </div>
+    <div>
+      <input
+        type="radio"
+        name="status"
+        id="status_down"
+        checked={linked === false}
+        onChange={() => setLinked(false)}
+      />
+      <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
+      <label htmlFor="status_down">Down</label>
+    </div>
+  </div>
+</div>
+
+<div className="plug-radio-btn">
+  <span>카드 상태</span>
+  <div className="radio-outer">
+    <div>
+      <input
+        type="radio"
+        name="plugged_status"
+        id="plugged"
+        checked={plugged === true} 
+        onChange={() => setPlugged(true)}
+      />
+      <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
+      <label htmlFor="plugged">연결됨</label>
+    </div>
+    <div>
+      <input
+        type="radio"
+        name="plugged_status"
+        id="unplugged"
+        checked={plugged === false} 
+        onChange={() => setPlugged(false)}
+      />
+      <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
+      <label htmlFor="unplugged">분리</label>
+    </div>
+  </div>
+</div>
+
+
         </div>
 
         <div className="edit-footer">

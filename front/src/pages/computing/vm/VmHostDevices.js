@@ -8,7 +8,10 @@ const VmDeviceAddModal = React.lazy(() => import('../../../components/modal/vm/V
 
 const VmHostDevices = ({ vmId }) => {
   const { 
-    data: hostDevices = [], isLoading: isHostDevicesLoading
+    data: hostDevices = [], 
+    isLoading: isHostDevicesLoading,
+    isError: isHostDevicesError,
+    isSuccess: isHostDevicesSuccess,
   } = useHostdevicesFromVM(vmId, (e) => ({...e}));  
 
   const [activeModal, setActiveModal] = useState(null);
@@ -44,6 +47,7 @@ const VmHostDevices = ({ vmId }) => {
       <span>ID: {selectedIds || ''}</span>
 
       <TablesOuter 
+        isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
         columns={TableColumnsInfo.HOST_DEVICE_FROM_VM} 
         data={hostDevices.map((hostDevice) => ({
           ...hostDevice,

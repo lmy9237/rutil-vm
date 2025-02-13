@@ -16,7 +16,7 @@ const VmInit = ({
   return (
     <>
       <div className="p-1.5">
-        <div className="checkbox_group mb-1.5">
+        <div className="flex mb-1.5">
           <input
             type="checkbox"
             id="enableBootMenu"

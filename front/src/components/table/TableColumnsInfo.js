@@ -210,10 +210,10 @@ const TableColumnsInfo = {
   NICS_FROM_TEMPLATE: [
     { header: '', accessor: 'status', clickable: false, width: '7%' },
     { header: '이름', accessor: 'name', clickable: false },
-    { header: '연결됨', accessor: 'plugged', clickable: true},
+    { header: '연결됨', accessor: '_plugged', clickable: true},
     { header: '네트워크 이름', accessor: 'network', clickable: false },
     { header: '프로파일 이름', accessor: 'vnicProfile', clickable: false },
-    { header: '링크 상태', accessor: 'linked', clickable: false },
+    { header: '링크 상태', accessor: '_linked', clickable: false },
     { header: '유형', accessor: 'interface_', clickable: false },
   ],
   NETWORKS: [

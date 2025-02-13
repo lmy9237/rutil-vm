@@ -25,6 +25,9 @@
 .popup-box > div:hover {
   background-color: var(--color-gray-1);
 }
+.section-header-left{
+  padding: 0.15rem 0;
+}
 .section-header-left > div {
   margin-right: 10px;
   font-size: 0.6rem;
@@ -41,6 +44,7 @@
 .section-header-left span,
 .section-header-left button {
   margin-right: 10px; /* 요소 간 간격 조정 */
+  padding: 0.19rem 0;
 }
 .section-header-left > span,
 .section-header-left > button {

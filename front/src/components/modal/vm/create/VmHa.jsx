@@ -22,7 +22,7 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
   return (
     <>
       <div className="ha-mode-second-content">
-        <div className="checkbox_group">
+        <div className="flex">
           <input
             className="check_input"
             type="checkbox"

@@ -11,8 +11,16 @@ import { renderTFStatusIcon } from "../../../components/Icon";
 
 const TemplateNics = ({ templateId }) => {
   const { 
-    data: vnicProfiles = [], isLoading: isVnicLoading 
-  } = useAllNicsFromTemplate(templateId, (e) => ({ ...e }));
+    data: vnicProfiles = [], 
+    isLoading: isVnicProfilesLoading,
+    isError: isVnicProfilesError,
+    isSuccess: isVnicProfilesSuccess,
+  } = useAllNicsFromTemplate(templateId, (e) => ({ 
+    ...e
+  }));
+
+  console.log("API Response:", vnicProfiles);
+  console.log("Template ID:", templateId);
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedVnicProfiles, setSelectedVnicProfiles] = useState([]); 
@@ -55,6 +63,7 @@ const TemplateNics = ({ templateId }) => {
     </Suspense>
   );
 
+  console.log("...")
   return (
     <>
       <NicActionButtons
@@ -66,14 +75,15 @@ const TemplateNics = ({ templateId }) => {
       <span>선택된 NIC ID: {selectedIds || '없음'}</span>
 
       <TablesOuter
+        isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
         columns={TableColumnsInfo.NICS_FROM_TEMPLATE}
         data={vnicProfiles.map((nic) => ({
           ...nic,
           status: renderTFStatusIcon(nic?.linked),
           network: <TableRowClick type="network" id={nic?.networkVo?.id}>{nic?.networkVo?.name}</TableRowClick>,
           vnicProfile: <TableRowClick type="vnicProfile" id={nic?.vnicProfileVo?.id}>{nic?.vnicProfileVo?.name}</TableRowClick>,
-          linked: nic?.linked === true ? "Up" : 'Down',
-          plugged: <input type="checkbox" checked={nic?.plugged === true} disabled />,
+          _linked: nic?.linked === true ? "Up" : 'Down',
+          _plugged: <input type="checkbox" checked={nic?.plugged === true} disabled />,
         }))}
         onRowClick={(selectedRows) => setSelectedVnicProfiles(selectedRows)}
         clickableColumnIndex={[3, 4]} // 클릭 가능한 열 인덱스

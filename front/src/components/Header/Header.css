@@ -37,7 +37,7 @@
 .header-left {
   display: flex;
   justify-content: space-between;
-  font-size: 0.5em;
+  font-size: 0.5rem;
   min-width: 6%;
   align-items: center; /* 세로 중앙 정렬 추가 */
 }

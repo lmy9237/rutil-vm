@@ -299,7 +299,7 @@ const NetworkModal = ({ isOpen, editMode = false, networkId, dcId, onClose }) =>
                       <tr>
                         <th>이름</th>
                         <th>
-                          <div className="checkbox_group">
+                          <div className="flex">
                             <input
                               type="checkbox"
                               id="connect_all"
@@ -319,7 +319,7 @@ const NetworkModal = ({ isOpen, editMode = false, networkId, dcId, onClose }) =>
                           </div>
                         </th>
                         <th>
-                          <div className="checkbox_group">
+                          <div className="flex">
                             <input
                               type="checkbox"
                               id="require_all"
@@ -348,8 +348,8 @@ const NetworkModal = ({ isOpen, editMode = false, networkId, dcId, onClose }) =>
                       {clusterVoList.map((cluster, index) => (
                         <tr key={cluster.id}>
                           <td>{cluster.name} / {cluster.id} </td>
-                          <td className="checkbox-group">
-                            <div className="checkbox_group">
+                          <td >
+                            <div className="flex">
                               <input
                                 type="checkbox"
                                 id={`connect_${cluster.id}`}
@@ -368,8 +368,8 @@ const NetworkModal = ({ isOpen, editMode = false, networkId, dcId, onClose }) =>
                               <label htmlFor={`connect_${cluster.id}`}> 연결</label>
                             </div>
                           </td>
-                          <td className="checkbox-group">
-                            <div className="checkbox_group">
+                          <td >
+                            <div className="flex">
                               <input
                                 type="checkbox"
                                 id={`require_${cluster.id}`}

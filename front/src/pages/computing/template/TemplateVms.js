@@ -6,16 +6,21 @@ import { renderVmStatusIcon } from '../../../components/Icon';
 
 const TemplateVms = ({ templateId }) => {
   const {
-    data: vms = [], isLoading: isVmsLoading
+    data: vms = [], 
+    isLoading: isVmsLoading,
+    isError: isVmsError,
+    isSuccess: isVmsSuccess,
   } = useAllVmsFromTemplate(templateId, (e) => ({ 
     ...e,
   icon: renderVmStatusIcon(e.status),
   hostVo:e?.hostVo.name
   }));
 
+  console.log("...")
   return (
     <>
       <TablesOuter
+        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         columns={TableColumnsInfo.VMS_FROM_TEMPLATE} 
         data={vms} 
         clickableColumnIndex={[1]} 

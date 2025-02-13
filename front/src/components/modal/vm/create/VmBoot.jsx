@@ -58,8 +58,8 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
       </div>
 
       <div className="boot-checkboxs">
-        <div>
-          <div className="checkbox_group">
+        <div className="center">
+          <div className="flex">
             <input
               type="checkbox"
               id="connectCdDvd"
@@ -87,7 +87,7 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
             options={isos}
           />
         </div>
-        <div className="checkbox_group mb-1.5">
+        <div className="flex mb-1.5">
           <input
             className="check_input"
             type="checkbox"

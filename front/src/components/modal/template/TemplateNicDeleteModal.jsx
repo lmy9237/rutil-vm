@@ -10,46 +10,43 @@ import { useDeleteNetworkFromTemplate } from "../../../api/RQHook";
 const TemplateNicDeleteModal = ({ isOpen, onClose, data, templateId }) => {
   const [ids, setIds] = useState([]);
   const [names, setNames] = useState([]);
-  const { mutateAsync: deleteNicFromTemplate } =
-    useDeleteNetworkFromTemplate(); // 비동기 삭제 훅
-
+  const { mutateAsync: deleteNicFromTemplate } = useDeleteNetworkFromTemplate(); 
+  
   useEffect(() => {
-    console.log("🚀 Received data in TemplateNicDeleteModal:", data);
-    console.log("--templateId:", templateId);
     if (Array.isArray(data)) {
-      setIds(data.map((item) => ({ templateId, nicId: item.nicId }))); // 템플릿 ID와 NIC ID 설정
+      setIds(data.map((item) => ({ templateId, nicId: item.nicId }))); 
       setNames(data.map((item) => item.name || "Unnamed NIC"));
     } else if (data) {
-      setIds([{ templateId: data.templateId, nicId: data.id }]);
+      setIds([{ templateId, nicId: data.id }]);
       setNames([data.name || "Unnamed NIC"]);
     }
   }, [data]);
 
   const handleFormSubmit = async () => {
     if (!ids.length) {
-      console.error("삭제할 NIC ID가 없습니다.");
+      console.error("❌ 삭제할 NIC ID가 없습니다.");
       return;
-    }
-
-    console.log("Attempting to delete NICs:", ids);
-
+    }  
     for (const { templateId, nicId } of ids) {
+      console.log("➡️ handleFormSubmit - Deleting NIC with templateId:", templateId, "nicId:", nicId);
+
+      if (!templateId || !nicId) {
+        console.error("❌ handleFormSubmit - templateId 또는 nicId가 없습니다.", { templateId, nicId });
+        return;
+      }
       try {
-        await deleteNicFromTemplate({ templateId, nicId }); // NIC 삭제 API 호출
-        console.log(
-          `NIC ${nicId} deleted successfully from Template ${templateId}.`
-        );
+        await deleteNicFromTemplate({ templateId, nicId });
+        console.log(`✅ NIC ${nicId} deleted successfully from Template ${templateId}.`);
       } catch (error) {
-        console.error(
-          `Error deleting NIC ${nicId} from Template ${templateId}:`,
-          error
-        );
+        console.error(`❌ Error deleting NIC ${nicId} from Template ${templateId}:`, error);
       }
     }
-
-    console.log("All NIC deletion attempts completed.");
-    onClose(); // 삭제 완료 후 모달 닫기
+  
+    console.log("✅ All NIC deletion attempts completed.");
+    onClose();
   };
+  
+  
 
   return (
     <Modal

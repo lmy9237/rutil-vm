@@ -47,7 +47,7 @@ const HeaderButton = ({
   return (
     <div className="section-header">
       <div className="flex justify-start align-center text-(--color-primary-h) section-header-left">
-        <div className="my-2 flex justify-center align-center">
+        <div className="flex justify-center align-center">
           {titleIcon && (
             <FontAwesomeIcon
               icon={titleIcon}

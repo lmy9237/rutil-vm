@@ -34,7 +34,7 @@ const VmHost = ({
       <div className="host-second-content">
         <div style={{ fontWeight: 600 }}>실행 호스트:</div>
         <div className="form-checks">
-          <div>
+          <div className="flex">
             <input
               className="form-check-input"
               type="radio"
@@ -49,60 +49,62 @@ const VmHost = ({
           </div>
 
           {/* 특정 호스트 선택 */}
-          <div>
-            <input
-              className="form-check-input"
-              type="radio"
-              name="hostSelection"
-              id="specificHost"
-              checked={!formHostState.hostInCluster}
-              onChange={() => handleHostSelectionChange(false)}
-            />
-            <label className="form-check-label" htmlFor="specificHost">
-              특정 호스트
-            </label>
-          </div>
+          <div className="mb-1">
+            <div className="flex">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="hostSelection"
+                id="specificHost"
+                checked={!formHostState.hostInCluster}
+                onChange={() => handleHostSelectionChange(false)}
+              />
+              <label className="form-check-label" htmlFor="specificHost">
+                특정 호스트
+              </label>
+            </div>
 
-          {/* 호스트 선택 Select Box */}
-          <div>
-            <label>호스트 목록</label>
-            <select
-              multiple
-              id="specific_host_select"
-              value={
-                formHostState.hostInCluster
-                  ? []
-                  : (formHostState.hostVos || []).map((host) => host.id)
-              }
-              onChange={(e) => {
-                const selectedIds = Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value
-                );
-                setFormHostState((prev) => ({
-                  ...prev,
-                  hostVos: hosts.filter((host) =>
-                    selectedIds.includes(host.id)
-                  ),
-                }));
-              }}
-              disabled={formHostState.hostInCluster}
-              style={{ height: "100px" }}
-            >
-              {hosts.map((opt) => (
-                <option key={opt.id} value={opt.id}>
-                  {opt.name}
-                </option>
-              ))}
-            </select>
-            <div style={{ marginTop: "10px" }}>
-              <label>선택된 호스트:</label>
-              <span style={{ marginLeft: "10px", fontWeight: "bold" }}>
-                {formHostState.hostInCluster ||
-                formHostState.hostVos.length === 0
-                  ? "선택된 호스트가 없습니다."
-                  : formHostState.hostVos.map((host) => host.name).join(", ")}
-              </span>
+            {/* 호스트 선택 Select Box */}
+            <div>
+              {/* <label>호스트 목록</label> */}
+              <select
+                multiple
+                id="specific_host_select"
+                value={
+                  formHostState.hostInCluster
+                    ? []
+                    : (formHostState.hostVos || []).map((host) => host.id)
+                }
+                onChange={(e) => {
+                  const selectedIds = Array.from(
+                    e.target.selectedOptions,
+                    (option) => option.value
+                  );
+                  setFormHostState((prev) => ({
+                    ...prev,
+                    hostVos: hosts.filter((host) =>
+                      selectedIds.includes(host.id)
+                    ),
+                  }));
+                }}
+                disabled={formHostState.hostInCluster}
+                style={{ height: "100px" }}
+              >
+                {hosts.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {opt.name}
+                  </option>
+                ))}
+              </select>
+              <div style={{ marginTop: "10px" }}>
+                <label>선택된 호스트:</label>
+                <span style={{ marginLeft: "10px", fontWeight: "bold" }}>
+                  {formHostState.hostInCluster ||
+                  formHostState.hostVos.length === 0
+                    ? "선택된 호스트가 없습니다."
+                    : formHostState.hostVos.map((host) => host.name).join(", ")}
+                </span>
+              </div>
             </div>
           </div>
         </div>
