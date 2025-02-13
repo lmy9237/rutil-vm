@@ -2,21 +2,27 @@ version: "3"
 
 services:
   rutil-vm-api:
-    image: ititcloud/rutil-vm-api:0.2.0-beta2
+    image: ititcloud/rutil-vm-api:latest
     container_name: rutil-vm-api
     ports:
       - "8080:8080"
       - "8443:8443"
     environment:
+      - TZ=Asia/Seoul
+      - LANGUAGE=ko_KR;ko;en_US;en
+      - LC_ALL= ko_KR.UTF-8
+      - LANG=ko_KR.utf8
       - RUTIL_VM_OVIRT_IP=192.168.0.70
       - RUTIL_VM_OVIRT_PORT_HTTPS=443
       - RUTIL_VM_PORT_HTTPS=8443
       - POSTGRES_JDBC_PORT=5432
       - POSTGRES_DATASOURCE_JDBC_ID=rutil
       - POSTGRES_DATASOURCE_JDBC_PW=rutil1!
+    volumes:
+      - ./rutil-vm-api/logs:/app/logs:rw
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - ovirt_network
-
 #  nginx:
 #    image: nginx:stable-alpine3.20-perl
 #    platform: linux/amd64

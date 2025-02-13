@@ -47,6 +47,11 @@ LABEL license="Apache-2.0"
 LABEL environment="production"
 LABEL app-name="rutil-vm-api"
 
+# tzdata for timzone
+RUN apt-get update -y
+RUN apt-get install -y tzdata
+# timezone env with default
+
 ENV RUTIL_VM_VERSION=0.2.0-beta1
 ENV RUTIL_VM_RELEASE_DATE=2025-02-06
 ENV RUTIL_VM_PORT_HTTP=8080
