@@ -25,8 +25,9 @@
 - [DotENV (`mikestead.dotenv`)](https://marketplace.visualstudio.com/items?itemName=mikestead.dotenv)
 - [Elm Emmet (`necinc.elmmet`)](https://marketplace.visualstudio.com/items?itemName=necinc.elmmet)
 - [ES7+ React/Redux/React-Native snippets (`dsznajder.es7-react-js-snippets`)](https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snippets)
+- [ESLint (`dbaeumer.vscode-eslint`)](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 - [IntelliSense for CSS class names in HTML (`Zignd.html-css-class-completion`)](https://marketplace.visualstudio.com/items?itemName=Zignd.html-css-class-completion)
-- [Mithril Emmet (`mithril-emmet`)](https://marketplace.visualstudio.com/items?itemName=mithril-emmet)
+- [Mithril Emmet (`FallenMax.mithril-emmet`)](https://marketplace.visualstudio.com/items?itemName=FallenMax.mithril-emmet)
 - [Path Intellisense (`christian-kohler.path-intellisense`)](https://marketplace.visualstudio.com/items?itemName=christian-kohler.path-intellisense)
 - [Prettier - Code formatter (`esbenp.prettier-vscode`)](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 - [TODO Highlight (`wayou.vscode-todo-highlight`)](https://marketplace.visualstudio.com/items?itemName=wayou.vscode-todo-highlight)
@@ -42,12 +43,13 @@
 > code --install-extension mikestead.dotenv `
 > code --install-extension necinc.elmmet `
 > code --install-extension dsznajder.es7-react-js-snippets `
+> code --install-extension dbaeumer.vscode-eslint `
 > code --install-extension Zignd.html-css-class-completion `
-> code --install-extension mithril-emmet `
+> code --install-extension FallenMax.mithril-emmet `
 > code --install-extension christian-kohler.path-intellisense `
 > code --install-extension esbenp.prettier-vscode `
 > code --install-extension wayou.vscode-todo-highlight `
-> code --install-extension Gruntfuggly.todo-tree
+> code --install-extension Gruntfuggly.todo-tree 
 > ```
 
 ## NPM
