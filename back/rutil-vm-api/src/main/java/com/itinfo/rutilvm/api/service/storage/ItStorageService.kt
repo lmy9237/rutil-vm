@@ -44,11 +44,6 @@ interface ItStorageService {
 	@Throws(Error::class)
 	fun findOne(storageDomainId: String): StorageDomainVo?
 
-	// 도메인 생성 [ItDataCenterService.findAllHostsFromDataCenter]
-	// iscsi 목록  [ItHostService.findAllIscsiFromHost]
-	// fibre 목록  [ItHostService.findAllFibreFromHost]
-	// 도메인 가져오는 목록 iscsi - [ItHostService.findImportIscsiFromHost]
-
 	/**
 	 * [ItStorageService.add]
 	 * 도메인 생성
@@ -107,6 +102,14 @@ interface ItStorageService {
 	@Throws(Error::class)
 	fun findAllDataCentersFromStorageDomain(storageDomainId: String): List<DataCenterVo>
 	/**
+	 * [ItStorageService.findAllDataCenterFromStorageDomain]
+	 * 데이터센터 목록
+	 *
+	 * @return List<[DataCenterVo]> 데이터센터 목록
+	 */
+	@Throws(Error::class)
+	fun findAllDataCenterFromStorageDomain(): List<DataCenterVo>
+	/**
 	 * [ItStorageService.findAllHostsFromStorageDomain]
 	 * 스토리지도메인 - 호스트 목록
 	 *
@@ -115,7 +118,7 @@ interface ItStorageService {
 	 */
 	@Throws(Error::class)
 	fun findAllHostsFromStorageDomain(storageDomainId: String): List<HostVo>
-	// 데이터센터 연결할 목록 - [ItDataCenterService.findAll] 사용하면 될듯
+
 	/**
 	 * [ItStorageService.attachFromDataCenter]
 	 * 스토리지 도메인 - 데이터센터 연결 attach
@@ -168,7 +171,7 @@ interface ItStorageService {
 	fun findAllVmsFromStorageDomain(storageDomainId: String): List<VmVo>
 	/**
 	 * [ItStorageService.findAllUnregisteredVmsFromStorageDomain]
-	 * 스토리지도메인 - 가상머신 불러오기 목록
+	 * 스토리지도메인 - 가상머신 가져오기 목록
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
 	 * @return List<[VmVo]> 가상머신 목록
@@ -181,12 +184,14 @@ interface ItStorageService {
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
  	 * @param vmVo [VmVo] 가상머신
+ 	 * @param allowPart [Boolean] 부분허용
+ 	 * @param badMac [Boolean] 불량 MAC 재배치
 	 * @return [Boolean]
 	 */
 	@Throws(Error::class)
-	fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo): Boolean
+	fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo, allowPart: Boolean, badMac: Boolean): Boolean
 	/**
-	 * [ItStorageService.removeRegisteredVmFromStorageDomain]
+	 * [ItStorageService.removeUnregisteredVmFromStorageDomain]
 	 * 스토리지 도메인 가상머신 가져오기 삭제
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
@@ -194,7 +199,45 @@ interface ItStorageService {
 	 * @return [Boolean]
 	 */
 	@Throws(Error::class)
-	fun removeRegisteredVmFromStorageDomain(storageDomainId: String, vmId: String): Boolean
+	fun removeUnregisteredVmFromStorageDomain(storageDomainId: String, vmId: String): Boolean
+	/**
+	 * [ItStorageService.findAllTemplatesFromStorageDomain]
+	 * 스토리지도메인 - 템플릿 목록
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @return List<[TemplateVo]> 템플릿 목록
+	 */
+	@Throws(Error::class)
+	fun findAllTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo>
+	/**
+	 * [ItStorageService.findAllTemplatesFromStorageDomain]
+	 * 스토리지도메인 - 템플릿 가져오기 목록
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @return List<[TemplateVo]> 템플릿 목록
+	 */
+	@Throws(Error::class)
+	fun findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo>
+	/**
+	 * [ItStorageService.registeredTemplateFromStorageDomain]
+	 * 스토리지도메인 - 템플릿 가져오기
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @param templateVo [TemplateVo] 템플릿
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class)
+	fun registeredTemplateFromStorageDomain(storageDomainId: String, templateVo: TemplateVo): Boolean
+	/**
+	 * [ItStorageService.removeUnregisteredTemplateFromStorageDomain]
+	 * 스토리지 도메인 템플릿 가져오기 삭제
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @param templateId [String] 템플릿 Id
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class)
+	fun removeUnregisteredTemplateFromStorageDomain(storageDomainId: String, templateId: String): Boolean
 	/**
 	 * [ItStorageService.findAllDisksFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 목록
@@ -224,7 +267,7 @@ interface ItStorageService {
 	@Throws(Error::class)
 	fun registeredDiskFromStorageDomain(storageDomainId: String, diskId: String): Boolean
 	/**
-	 * [ItStorageService.removeRegisteredDiskFromStorageDomain]
+	 * [ItStorageService.removeUnregisteredDiskFromStorageDomain]
 	 * 스토리지 도메인 디스크 가져오기 삭제
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
@@ -232,7 +275,7 @@ interface ItStorageService {
 	 * @return [Boolean]
 	 */
 	@Throws(Error::class)
-	fun removeRegisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): Boolean
+	fun removeUnregisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): Boolean
 	/**
 	 * [ItStorageService.findAllDiskSnapshotsFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 스냅샷 목록
@@ -242,34 +285,6 @@ interface ItStorageService {
 	 */
 	@Throws(Error::class)
 	fun findAllDiskSnapshotsFromStorageDomain(storageDomainId: String): List<SnapshotDiskVo>
-	/**
-	 * [ItStorageService.findAllTemplatesFromStorageDomain]
-	 * 스토리지도메인 - 템플릿 목록
-	 *
-	 * @param storageDomainId [String] 스토리지 도메인 Id
-	 * @return List<[TemplateVo]> 템플릿 목록
-	 */
-	@Throws(Error::class)
-	fun findAllTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo>
-    /**
-	 * [ItStorageService.findAllTemplatesFromStorageDomain]
-	 * 스토리지도메인 - 템플릿 불러오기 목록
-	 *
-	 * @param storageDomainId [String] 스토리지 도메인 Id
-	 * @return List<[TemplateVo]> 템플릿 목록
-	 */
-	@Throws(Error::class)
-	fun findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo>
-	/**
-	 * [ItStorageService.registeredTemplateFromStorageDomain]
-	 * 스토리지도메인 - 템플릿 가져오기 - 가져오기
-	 *
-	 * @param storageDomainId [String] 스토리지 도메인 Id
-	 * @param templateVo [TemplateVo] 가상머신
-	 * @return [Boolean]
-	 */
-	@Throws(Error::class)
-	fun registeredTemplateFromStorageDomain(storageDomainId: String, templateVo: TemplateVo): Boolean
 	/**
 	 * [ItStorageService.findAllDiskProfilesFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 프로파일 목록
@@ -327,14 +342,6 @@ interface ItStorageService {
 	@Deprecated("나중구현")
 	fun findAllPermissionsFromStorageDomain(storageDomainId: String): List<PermissionVo>
 
-	/**
-	 * [ItStorageService.findAllDataCenterFromStorageDomain]
-	 * 데이터센터가 가지고 있는 스토리지 도메인 목록
-	 *
-	 * @return List<[StorageDomainVo]> 스토리지 도메인 목록
-	 */
-	@Throws(Error::class)
-	fun findAllDataCenterFromStorageDomain(): List<DataCenterVo>
 }
 
 @Service
@@ -355,8 +362,7 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun findOne(storageDomainId: String): StorageDomainVo? {
 		log.info("findOne... ")
-		val res: StorageDomain? = conn.findStorageDomain(storageDomainId)
-			.getOrNull()
+		val res: StorageDomain? = conn.findStorageDomain(storageDomainId).getOrNull()
 		return res?.toStorageDomainInfoVo(conn)
 	}
 
@@ -413,15 +419,26 @@ class StorageServiceImpl(
 	}
 
 	@Throws(Error::class)
+	override fun findAllDataCenterFromStorageDomain(): List<DataCenterVo> {
+		log.info("findAllDataCenterFromStorageDomain ... ")
+		val res: List<DataCenter> = conn.findAllDataCenters(follow = "storagedomains")
+			.getOrDefault(listOf())
+			.filter { dataCenter -> dataCenter.storageDomainsPresent() &&
+				dataCenter.storageDomains().any { storageDomain ->
+					storageDomain.status() == StorageDomainStatus.ACTIVE
+				}
+			}
+		return res.toDataCenterIdNames()
+	}
+
+	@Throws(Error::class)
 	override fun findAllHostsFromStorageDomain(storageDomainId: String): List<HostVo> {
 		log.info("findAllHostsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val storageDomain: StorageDomain = conn.findStorageDomain(storageDomainId)
 			.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-
 		val res: List<Host>  = if(storageDomain.dataCentersPresent()){
 			conn.findAllHostsFromDataCenter(storageDomain.dataCenters().first().id()).getOrDefault(listOf())
 		}else listOf()
-
 		return res.toHostsIdName()
 	}
 
@@ -471,13 +488,55 @@ class StorageServiceImpl(
     }
 
 	@Throws(Error::class)
-	override fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo): Boolean {
-		TODO("Not yet implemented")
+	override fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo, allowPart: Boolean, badMac: Boolean): Boolean {
+		log.info("registeredVmFromStorageDomain ... storageDomainId: {}, vmId: {}, allowPart: {}, badMac: {}", storageDomainId, vmVo.id, allowPart, badMac)
+		val res: Result<Boolean> = conn.registeredVmFromStorageDomain(
+			storageDomainId,
+			VmBuilder().id(vmVo.id).name(vmVo.name).cluster(ClusterBuilder().id(vmVo.clusterVo.id)).build(),
+			allowPart,
+			badMac
+		)
+		return res.isSuccess
 	}
 
 	@Throws(Error::class)
-	override fun removeRegisteredVmFromStorageDomain(storageDomainId: String, vmId: String): Boolean {
-		TODO("Not yet implemented")
+	override fun removeUnregisteredVmFromStorageDomain(storageDomainId: String, vmId: String): Boolean {
+		log.info("removeUnregisteredVmFromStorageDomain ... storageDomainId: {}, vmId: {}", storageDomainId, vmId)
+		val res: Result<Boolean> = conn.removeRegisteredVmFromStorageDomain(storageDomainId, vmId)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun findAllTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo> {
+		log.info("findAllTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
+		val res: List<Template> = conn.findAllTemplatesFromStorageDomain(storageDomainId)
+			.getOrDefault(listOf())
+		return res.toStorageTemplates(conn)
+	}
+
+	@Throws(Error::class)
+	override fun findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo> {
+		log.info("findAllUnregisteredTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
+		val res: List<Template> = conn.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId)
+			.getOrDefault(listOf())
+		return res.toUnregisterdTemplates()
+	}
+
+	@Throws(Error::class)
+	override fun registeredTemplateFromStorageDomain(storageDomainId: String, templateVo: TemplateVo): Boolean {
+		log.info("registeredTemplateFromStorageDomain ... storageDomainId: {}, templateVo: {}", storageDomainId, templateVo)
+		val res: Result<Boolean> = conn.registeredTemplateFromStorageDomain(
+			storageDomainId,
+			TemplateBuilder().id(templateVo.id).cluster(ClusterBuilder().id(templateVo.clusterVo.id)).build()
+		)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun removeUnregisteredTemplateFromStorageDomain(storageDomainId: String, templateId: String): Boolean {
+		log.info("removeUnregisteredTemplateFromStorageDomain ... storageDomainId: {}, templateId: {}", storageDomainId, templateId)
+		val res: Result<Boolean> = conn.removeRegisteredTemplateFromStorageDomain(storageDomainId, templateId)
+		return res.isSuccess
 	}
 
 	@Throws(Error::class)
@@ -504,8 +563,8 @@ class StorageServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun removeRegisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): Boolean {
-		log.info("removeRegisteredDiskFromStorageDomain ... storageDomainId: {}, diskId: {}", storageDomainId, diskId)
+	override fun removeUnregisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): Boolean {
+		log.info("removeUnregisteredDiskFromStorageDomain ... storageDomainId: {}, diskId: {}", storageDomainId, diskId)
 		val res: Result<Boolean> = conn.removeRegisteredDiskFromStorageDomain(storageDomainId, diskId)
 		return res.isSuccess
 	}
@@ -522,29 +581,7 @@ class StorageServiceImpl(
 		return res.toSnapshotDiskVos()
 	}
 
-	@Throws(Error::class)
-	override fun findAllTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo> {
-		log.info("findAllTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val res: List<Template> = conn.findAllTemplatesFromStorageDomain(storageDomainId)
-			.getOrDefault(listOf())
-		return res.toStorageTemplates(conn)
-	}
 
-	@Throws(Error::class)
-    override fun findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo> {
-        log.info("findAllUnregisteredTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
-        val res: List<Template> = conn.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId)
-            .getOrDefault(listOf())
-        return res.toUnregisterdTemplates()
-    }
-
-	@Throws(Error::class)
-	override fun registeredTemplateFromStorageDomain(storageDomainId: String, templateVo: TemplateVo): Boolean {
-		// log.info("registeredTemplateFromStorageDomain ... storageDomainId: {}, templateVo: {}", storageDomainId, templateVo)
-		// val res: Result<Boolean> = conn.registeredDiskFromStorageDomain(storageDomainId, diskId)
-		// return res.isSuccess
-		TODO("Not yet implemented")
-	}
 
 	@Throws(Error::class)
 	override fun findAllDiskProfilesFromStorageDomain(storageDomainId: String): List<DiskProfileVo> {
@@ -602,19 +639,6 @@ class StorageServiceImpl(
 		val res: List<Permission> = conn.findAllPermissionsFromStorageDomain(storageDomainId)
 			.getOrDefault(listOf())
 		return res.toPermissionVos(conn)
-	}
-
-	@Throws(Error::class)
-	override fun findAllDataCenterFromStorageDomain(): List<DataCenterVo> {
-		log.info("findAllDataCenterFromStorageDomain ... ")
-		val res: List<DataCenter> = conn.findAllDataCenters(follow = "storagedomains")
-			.getOrDefault(listOf())
-			.filter { dataCenter -> dataCenter.storageDomainsPresent() &&
-				dataCenter.storageDomains().any { storageDomain ->
-					storageDomain.status() == StorageDomainStatus.ACTIVE
-				}
-			}
-		return res.toDataCenterIdNames()
 	}
 
 

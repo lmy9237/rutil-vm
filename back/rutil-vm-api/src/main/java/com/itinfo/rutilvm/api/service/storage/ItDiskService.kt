@@ -218,11 +218,7 @@ interface ItDiskService {
 
 @Service
 class DiskServiceImpl(
-    
 ): BaseService(), ItDiskService {
-
-    @Autowired private lateinit var diskVmElementRepository: DiskVmElementRepository
-
     @Throws(Error::class)
     override fun findAll(): List<DiskImageVo> {
         log.info("findAll ... ")
@@ -277,8 +273,7 @@ class DiskServiceImpl(
     @Throws(Error::class)
     override fun remove(diskId: String): Boolean {
         log.info("removeDisk ... diskId: $diskId")
-        val res: Result<Boolean> =
-            conn.removeDisk(diskId)
+        val res: Result<Boolean> = conn.removeDisk(diskId)
         return res.isSuccess
     }
 

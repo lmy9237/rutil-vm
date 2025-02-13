@@ -4,9 +4,12 @@ import com.itinfo.rutilvm.util.ovirt.error.*
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.Connection
+import org.ovirt.engine.sdk4.builders.ClusterBuilder
 import org.ovirt.engine.sdk4.builders.DiskBuilder
 import org.ovirt.engine.sdk4.builders.HostBuilder
 import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
+import org.ovirt.engine.sdk4.builders.TemplateBuilder
+import org.ovirt.engine.sdk4.builders.VmBuilder
 import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
 
@@ -218,9 +221,40 @@ fun Connection.findAllUnregisteredVmsFromStorageDomain(storageDomainId: String):
 	}
 	this.srvVmsFromStorageDomain(storageDomainId).list().unregistered(true).send().vm()
 }.onSuccess {
-	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "목록조회", storageDomainId)
 }.onFailure {
-	Term.STORAGE_DOMAIN.logFailWithin(Term.DISK, "목록조회", it, storageDomainId)
+	Term.STORAGE_DOMAIN.logFailWithin(Term.VM, "목록조회", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.registeredVmFromStorageDomain(storageDomainId: String, vm: Vm, allowPart: Boolean, badMac: Boolean): Result<Boolean> = runCatching {
+	if(this.findStorageDomain(storageDomainId).isFailure) {
+		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+	}
+	this.srvVmsFromStorageDomain(storageDomainId).vmService(vm.id()).register()
+		.vm(vm)
+		.allowPartialImport(allowPart) // 부분 허용 여부
+		.reassignBadMacs(badMac) // 불량 MAC 재배치 여부
+		.cluster(ClusterBuilder().id(vm.cluster().id()).build())
+		.send()
+	true
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "가져오기", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFailWithin(Term.VM, "가져오기", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.removeRegisteredVmFromStorageDomain(storageDomainId: String, vmId: String): Result<Boolean> = runCatching {
+	if(this.findStorageDomain(storageDomainId).isFailure) {
+		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+	}
+	this.srvVmsFromStorageDomain(storageDomainId).vmService(vmId).remove().send()
+	true
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "가져오기 삭제", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFailWithin(Term.VM, "가져오기 삭제", it, storageDomainId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
@@ -266,9 +300,9 @@ fun Connection.removeRegisteredDiskFromStorageDomain(storageDomainId: String, di
 	this.srvDisksFromStorageDomain(storageDomainId).diskService(diskId).remove().send()
 	true
 }.onSuccess {
-	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "디스크 불러오기", storageDomainId)
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "불러오기 삭제", storageDomainId)
 }.onFailure {
-	Term.STORAGE_DOMAIN.logFailWithin(Term.DISK, "디스크 불러오기", it, storageDomainId)
+	Term.STORAGE_DOMAIN.logFailWithin(Term.DISK, "불러오기 삭제", it, storageDomainId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
@@ -306,15 +340,35 @@ fun Connection.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: St
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-// fun Connection.registeredTemplateFromStorageDomain(storageDomainId: String, template: Template): Result<Boolean> = runCatching {
-// 	this.srvTemplatesFromStorageDomain(storageDomainId).
-// 	true
-// }.onSuccess {
-// 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.TEMPLATE, "템플릿 불러오기", storageDomainId)
-// }.onFailure {
-// 	Term.STORAGE_DOMAIN.logFailWithin(Term.TEMPLATE, "템플릿 불러오기", it, storageDomainId)
-// 	throw if (it is Error) it.toItCloudException() else it
-// }
+fun Connection.registeredTemplateFromStorageDomain(storageDomainId: String, template: Template): Result<Boolean> = runCatching {
+	if(this.findStorageDomain(storageDomainId).isFailure) {
+		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+	}
+	this.srvTemplatesFromStorageDomain(storageDomainId).templateService(template.id())
+		.register()
+		.template(template)
+		.cluster(template.cluster()).send()
+	true
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.TEMPLATE, "가져오기", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFailWithin(Term.VM, "가져오기", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.removeRegisteredTemplateFromStorageDomain(storageDomainId: String, templateId: String): Result<Boolean> = runCatching {
+	if(this.findStorageDomain(storageDomainId).isFailure) {
+		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+	}
+	// this.srvTemplatesFromStorageDomain(storageDomainId).templateService(templateId).remove().send()
+	this.srvStorageDomains().storageDomainService(storageDomainId).templatesService().templateService(templateId).remove().send()
+	true
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "가져오기 삭제", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFailWithin(Term.VM, "가져오기 삭제", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
 
 fun Connection.findAllDiskProfilesFromStorageDomain(storageDomainId: String): Result<List<DiskProfile>> = runCatching {
 	if(this.findStorageDomain(storageDomainId).isFailure){

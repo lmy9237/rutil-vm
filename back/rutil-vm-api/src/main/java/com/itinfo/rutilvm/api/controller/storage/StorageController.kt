@@ -34,7 +34,7 @@ class StorageController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping()
+	@GetMapping
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun storageDomains(): ResponseEntity<List<StorageDomainVo>> {
@@ -213,8 +213,25 @@ class StorageController: BaseController() {
 
 	@ApiOperation(
 		httpMethod="GET",
+		value="스토리지 도메인 활성화된 데이터센터 목록",
+		notes="스토리지 도메인 활성화된 데이터센터 목록"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/dataCenters")
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	fun activeDatacenters(
+	): ResponseEntity<List<DataCenterVo>> {
+		log.info("/storages/datacenters ...")
+		return ResponseEntity.ok(iDomain.findAllDataCenterFromStorageDomain())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
 		value="스토리지 도메인 호스트 목록",
-		notes="선택된 스토리지 도메인의 데이터센터가 가진 호스트 목록을 조회한다"
+		notes="선택된 스토리지 도메인의 데이터센터가 가진 호스트 목록을 조회한다(도메인 삭제시 사용)"
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
@@ -369,13 +386,177 @@ class StorageController: BaseController() {
 	)
 	@GetMapping("/{storageDomainId}/vms/unregistered")
 	@ResponseBody
-	fun unregisterdVms(
+	fun unregisteredVms(
 		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
 	): ResponseEntity<List<VmVo>> {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/vms/unregistered ... 스토리지 도메인 밑에 붙어있는 가상머신 가져오기 목록", storageDomainId)
 		return ResponseEntity.ok(iDomain.findAllUnregisteredVmsFromStorageDomain(storageDomainId))
+	}
+
+	@ApiOperation(
+		httpMethod="POST",
+		value="스토리지 도메인 가상머신 가져오기",
+		notes="스토리지 도메인 가상머신 가져오기"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "vmId", value = "가상머신 Id", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "vmVo", value = "가상머신", dataTypeClass=VmVo::class, required=true, paramType="body"),
+		ApiImplicitParam(name = "allowPartialImport", value = "부분허용 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
+		ApiImplicitParam(name = "reassignBadMacs", value = "불량 MAC 재배치 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED")
+	)
+	@PostMapping("/{storageDomainId}/vms/{vmId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun registerVm(
+		@PathVariable("storageDomainId") storageDomainId: String? = null,
+		@PathVariable("vmId") vmId: String? = null,
+		@RequestBody vmVo: VmVo? = null,
+		@RequestParam("allowPartialImport") allowPartialImport: Boolean = false,
+		@RequestParam("reassignBadMacs") reassignBadMacs: Boolean = false,
+	): ResponseEntity<Boolean?> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		if (vmId == null)
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		if (vmVo == null)
+			throw ErrorPattern.VM_VO_INVALID.toException()
+		log.info("/storages/{}/vms/{} ... 스토리지 도메인 가상머신 불러오기", storageDomainId, vmId)
+		return ResponseEntity.ok(iDomain.registeredVmFromStorageDomain(storageDomainId, vmVo, allowPartialImport, reassignBadMacs))
+	}
+
+	@ApiOperation(
+		httpMethod="DELETE",
+		value="스토리지 도메인 가상머신 불러오기 삭제",
+		notes="스토리지 도메인 가상머신 불러오기에서 가상머신를 삭제한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "vmId", value = "가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@DeleteMapping("/{storageDomainId}/vms/{vmId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun deleteUnregisteredVm(
+		@PathVariable("storageDomainId") storageDomainId: String? = null,
+		@PathVariable("vmId") vmId: String? = null,
+	): ResponseEntity<Boolean> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		if (vmId == null)
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/vms/{} ... 스토리지 도메인 가상머신 불러오기 삭제", storageDomainId, vmId)
+		return ResponseEntity.ok(iDomain.removeUnregisteredVmFromStorageDomain(storageDomainId, vmId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="스토리지 도메인 템플릿 목록",
+		notes="선택된 스토리지 도메인의 템플릿 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{storageDomainId}/templates")
+	@ResponseBody
+	fun templates(
+		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
+	): ResponseEntity<List<TemplateVo>> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/templates ... 스토리지 도메인 밑에 붙어있는 템플릿 목록", storageDomainId)
+		return ResponseEntity.ok(iDomain.findAllTemplatesFromStorageDomain(storageDomainId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="스토리지 도메인 템플릿 가져오기 목록",
+		notes="선택된 스토리지 도메인의 템플릿 가져오기 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{storageDomainId}/templates/unregistered")
+	@ResponseBody
+	fun unregisteredTemplates(
+		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
+	): ResponseEntity<List<TemplateVo>> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/templates/unregistered ... 스토리지 도메인 밑에 붙어있는 템플릿 목록", storageDomainId)
+		return ResponseEntity.ok(iDomain.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId))
+	}
+
+	@ApiOperation(
+		httpMethod="POST",
+		value="스토리지 도메인 템플릿 가져오기",
+		notes="스토리지 도메인 템플릿 가져오기"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "templateId", value = "템플릿 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "templateVo", value = "템플릿", dataTypeClass=TemplateVo::class, required=true, paramType="body"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED")
+	)
+	@PostMapping("/{storageDomainId}/templates/{templateId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun registerTemplate(
+		@PathVariable("storageDomainId") storageDomainId: String? = null,
+		@PathVariable("templateId") templateId: String? = null,
+		@RequestBody templateVo: TemplateVo? = null,
+	): ResponseEntity<Boolean?> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		if (templateId == null)
+			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
+		if (templateVo == null)
+			throw ErrorPattern.TEMPLATE_VO_INVALID.toException()
+		log.info("/storages/{}/templates/{} ... 스토리지 도메인 템플릿 불러오기", storageDomainId, templateId)
+		return ResponseEntity.ok(iDomain.registeredTemplateFromStorageDomain(storageDomainId, templateVo))
+	}
+
+	@ApiOperation(
+		httpMethod="DELETE",
+		value="스토리지 도메인 템플릿 불러오기 삭제",
+		notes="스토리지 도메인 템플릿 불러오기에서 템플릿을 삭제한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "templateId", value = "템플릿 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@DeleteMapping("/{storageDomainId}/templates/{templateId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun deleteUnregisteredTemplate(
+		@PathVariable("storageDomainId") storageDomainId: String? = null,
+		@PathVariable("templateId") templateId: String? = null,
+	): ResponseEntity<Boolean> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		if (templateId == null)
+			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/vms/{} ... 스토리지 도메인 템플릿 불러오기 삭제", storageDomainId, templateId)
+		return ResponseEntity.ok(iDomain.removeUnregisteredTemplateFromStorageDomain(storageDomainId, templateId))
 	}
 
 	@ApiOperation(
@@ -448,6 +629,7 @@ class StorageController: BaseController() {
 		log.info("/storages/{}/disks/{} ... 스토리지 도메인 디스크 불러오기", storageDomainId, diskId)
 		return ResponseEntity.ok(iDomain.registeredDiskFromStorageDomain(storageDomainId, diskId))
 	}
+
 	@ApiOperation(
 		httpMethod="DELETE",
 		value="스토리지 도메인 디스크 불러오기 삭제",
@@ -463,7 +645,7 @@ class StorageController: BaseController() {
 	@DeleteMapping("/{storageDomainId}/disks/{diskId}")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	fun deleteStorageDomain(
+	fun deleteUnregisteredDisk(
 		@PathVariable("storageDomainId") storageDomainId: String? = null,
 		@PathVariable("diskId") diskId: String? = null,
 	): ResponseEntity<Boolean> {
@@ -472,7 +654,7 @@ class StorageController: BaseController() {
 		if (diskId == null)
 			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/disks/{} ... 스토리지 도메인 디스크 불러오기 삭제", storageDomainId, diskId)
-		return ResponseEntity.ok(iDomain.removeRegisteredDiskFromStorageDomain(storageDomainId, diskId))
+		return ResponseEntity.ok(iDomain.removeUnregisteredDiskFromStorageDomain(storageDomainId, diskId))
 	}
 
 	@ApiOperation(
@@ -499,51 +681,6 @@ class StorageController: BaseController() {
 
 	@ApiOperation(
 		httpMethod="GET",
-		value="스토리지 도메인 템플릿 목록",
-		notes="선택된 스토리지 도메인의 템플릿 목록을 조회한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/{storageDomainId}/templates")
-	@ResponseBody
-	fun templates(
-		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
-	): ResponseEntity<List<TemplateVo>> {
-		if (storageDomainId == null)
-			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-		log.info("/storages/{}/templates ... 스토리지 도메인 밑에 붙어있는 템플릿 목록", storageDomainId)
-		return ResponseEntity.ok(iDomain.findAllTemplatesFromStorageDomain(storageDomainId))
-	}
-
-	@ApiOperation(
-		httpMethod="GET",
-		value="스토리지 도메인 템플릿 가져오기 목록",
-		notes="선택된 스토리지 도메인의 템플릿 가져오기 목록을 조회한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/{storageDomainId}/templates/unregistered")
-	@ResponseBody
-	fun unregisteredTemplates(
-		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
-	): ResponseEntity<List<TemplateVo>> {
-		if (storageDomainId == null)
-			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-		log.info("/storages/{}/templates/unregistered ... 스토리지 도메인 밑에 붙어있는 템플릿 목록", storageDomainId)
-		return ResponseEntity.ok(iDomain.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId))
-	}
-
-
-	@ApiOperation(
-		httpMethod="GET",
 		value="스토리지 도메인 밑에 붙어있는 디스크 프로파일 목록",
 		notes="선택된 스토리지 도메인의 디스크 프로파일 목록을 조회한다"
 	)
@@ -563,7 +700,6 @@ class StorageController: BaseController() {
 		log.info("/storages/{}/diskProfiles ... 스토리지 도메인 밑에 붙어있는 디스크 프로파일 목록", storageDomainId)
 		return ResponseEntity.ok(iDomain.findAllDiskProfilesFromStorageDomain(storageDomainId))
 	}
-
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -589,46 +725,29 @@ class StorageController: BaseController() {
 	}
 
 
-	@Deprecated("필요없음")
-	@ApiOperation(
-		httpMethod="GET",
-		value="",
-		notes="Permission(s) 목록"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="storageDomainId", value="스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/{storageDomainId}/permissions")
-	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-	fun permissions(
-		@PathVariable storageDomainId: String? = null,
-	): ResponseEntity<List<PermissionVo>> {
-		if (storageDomainId.isNullOrEmpty())
-			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-		log.info("/storages/{}/permissions ... Permission(s) 목록", storageDomainId)
-		return ResponseEntity.ok(iDomain.findAllPermissionsFromStorageDomain(storageDomainId))
-	}
-
-	@ApiOperation(
-		httpMethod="GET",
-		value="",
-		notes="datacenter 목록"
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/dataCenters")
-	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-	fun activeDatacenters(
-	): ResponseEntity<List<DataCenterVo>> {
-		log.info("/storages/datacenters ...")
-		return ResponseEntity.ok(iDomain.findAllDataCenterFromStorageDomain())
-	}
+	// @Deprecated("필요없음")
+	// @ApiOperation(
+	// 	httpMethod="GET",
+	// 	value="",
+	// 	notes="Permission(s) 목록"
+	// )
+	// @ApiImplicitParams(
+	// 	ApiImplicitParam(name="storageDomainId", value="스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 200, message = "OK")
+	// )
+	// @GetMapping("/{storageDomainId}/permissions")
+	// @ResponseStatus(HttpStatus.OK)
+	// @ResponseBody
+	// fun permissions(
+	// 	@PathVariable storageDomainId: String? = null,
+	// ): ResponseEntity<List<PermissionVo>> {
+	// 	if (storageDomainId.isNullOrEmpty())
+	// 		throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+	// 	log.info("/storages/{}/permissions ... Permission(s) 목록", storageDomainId)
+	// 	return ResponseEntity.ok(iDomain.findAllPermissionsFromStorageDomain(storageDomainId))
+	// }
 
 
 	companion object {

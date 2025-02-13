@@ -83,7 +83,6 @@ fun Connection.removeDisk(diskId: String): Result<Boolean> = runCatching {
 	if(this.findDisk(diskId).isFailure) {
 		throw ErrorPattern.DISK_NOT_FOUND.toError()
 	}
-
 	this.srvDisk(diskId).remove().send()
 	this.expectDiskDeleted(diskId)
 }.onSuccess {
