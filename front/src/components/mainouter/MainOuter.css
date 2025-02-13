@@ -149,10 +149,6 @@
 }
 
 /*드레그 크기조절*/
-.main-outer {
-  display: flex;
-  height: 100vh;
-}
 
 /* 🔹 사이드바 스타일 */
 .aside-outer {
