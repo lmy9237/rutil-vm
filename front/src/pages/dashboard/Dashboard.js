@@ -23,13 +23,13 @@ import SuperAreaChart from '../../components/Chart/SuperAreaChart';
 import Grid from '../../components/Chart/Grid';
 
 
-//region: RadialBarChart
+//#region: RadialBarChart
 const CpuApexChart = memo(({ cpu }) => { return (<RadialBarChart percentage={cpu || 0} />) });
 const MemoryApexChart = memo(({ memory }) => { return (<RadialBarChart percentage={memory || 0} />) });
 const StorageApexChart = memo(({ storage }) => { return (<RadialBarChart percentage={storage || 0} />) });
-//endregion: RadialBarChart
+//#endregion: RadialBarChart
 
-//region: BarChart
+//#region: BarChart
 const BarChartWrapper = ({ data, keyName, keyPercent }) => {
   const names = React.useMemo(() => data?.map((e) => e[keyName]) ?? [], [data, keyName]);
   const percentages = React.useMemo(() => data?.map((e) => e[keyPercent]) ?? [], [data, keyPercent]);
@@ -46,9 +46,9 @@ const MemoryBarChart = ({ vmMemory }) => (
 const StorageMemoryBarChart = ({ storageMemory }) => (
   <BarChartWrapper data={storageMemory} keyName="name" keyPercent="memoryPercent" />
 );
-//endregion: BarChart
+//#endregion: BarChart
 
-//region: Dashboard
+//#region: Dashboard
 const Dashboard = () => {
   const {
     data: dashboard,
@@ -258,6 +258,6 @@ const Dashboard = () => {
     </>
   );
 };
-//endregion: Dashboard
+//#endregion: Dashboard
 
 export default Dashboard;

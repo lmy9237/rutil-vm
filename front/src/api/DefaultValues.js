@@ -103,9 +103,9 @@
   
 
   
-//   //endregion: DataCenter
+//   //#endregion: DataCenter
 
-// //region:Cluster------ 클러스터
+// //#region:Cluster------ 클러스터
 //   FIND_ALL_CLUSTERS: [
 //     {
 //       name: 'Cluster1',
@@ -178,7 +178,7 @@
 //     },
 //   ],
 
-// //region: Network------네트워크-----------
+// //#region: Network------네트워크-----------
 //   // 네트워크목록 나열
 //   FIND_ALL_NETWORKS: [
 //     { 
@@ -306,7 +306,7 @@
 //       inheritedFrom: '(시스템)',
 //     }
 //   ],
-// //region: Host------호스트-----------
+// //#region: Host------호스트-----------
 // FIND_ALL_HOSTS:[
 //   {
 //     status: 'Up',
@@ -368,7 +368,7 @@
 //     vnicProfileVos: '',
 //   }
 // ],
-// //region: Vm/Template------가상머신,템플릿-----------
+// //#region: Vm/Template------가상머신,템플릿-----------
 // FIND_ALL_VMS:[
 //   {
 //     icon: '',                              
@@ -395,7 +395,7 @@
 //     vmCount: 7,
 //   },
 // ],
-// //region: Storage ----------------------스토리지      
+// //#region: Storage ----------------------스토리지      
 //     FIND_ALL_STORAGE_DOMAINS: [
 //       {
 //         domainName: '스토리지도메인명', // 여기에 도메인 이름을 설정합니다.
@@ -455,7 +455,7 @@
 //         creationDate: '2024.1.19 AM9:21:57',
 //       },
 //     ],
-// //region: Storage ----------------------디스크
+// //#region: Storage ----------------------디스크
 //   FIND_ALL_DISK:[
 
 //   ],
@@ -465,7 +465,7 @@
 //   VMS_FROM_DISK:[
 
 //   ],
-// //region: ----------------------이벤트
+// //#region: ----------------------이벤트
 //     FIND_EVENT:[
 //       {
 //         icon: <FontAwesomeIcon icon="fa-solid fa-check-circle" style={{ color: 'green' }}fixedWidth/>,  // 상태 아이콘

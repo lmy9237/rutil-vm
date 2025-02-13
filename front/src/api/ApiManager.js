@@ -53,7 +53,7 @@ const makeAPICall = async ({method = "GET", url, data}) => {
 
 const ApiManager = {
 
-  //region: User
+  //#region: User
   /**
    * @name ApiManager.findAllUsers
    * @description User 목록 
@@ -78,25 +78,25 @@ const ApiManager = {
     url: ENDPOINTS.FIND_USER(username), 
     data: { password }
   }),
-  //endregion: User
+  //#endregion: User
 
-  //region: TreeNavigation
+  //#region: TreeNavigation
   /**
    * @name ApiManager.findAllTreeNaviations
    * @description cpu, memory api 불러오는 값
    * 
    * @returns 
    * 
-   * @see Dashboard.js (components)
+   * @see Dashboard 
    */
   findAllTreeNaviations: async (type = "none") => makeAPICall({
     method: "GET", 
     url: ENDPOINTS.FIND_ALL_TREE_NAVIGATIONS(type), 
     // defaultValues: DEFAULT_VALUES.FIND_ALL_TREE_NAVIGATIONS
   }),
-  //endregion: TreeNavigation
+  //#endregion
 
-  //region: Dashboard--------------------------------------------
+  //#region: Dashboard--------------------------------------------
   /**
    * @name ApiManager.getDashboard
    * @description cpu, memory api 불러오는 값
@@ -235,9 +235,9 @@ const ApiManager = {
     method: "GET", 
     url: ENDPOINTS.GET_METRIC_STORAGE()
   }),
-  //endregion: Dashboard
+  //#endregion: Dashboard
 
-  //region: DataCenter
+  //#region: DataCenter
   /**
    * @name ApiManager.findAllDataCenters
    * @description datacenter 목록 
@@ -408,9 +408,9 @@ const ApiManager = {
       data: dataCenterId
     });
   },
-  //endregion: DataCenter
+  //#endregion: DataCenter
 
-  //region : Cluster--------------------------------------------
+  //#region : Cluster--------------------------------------------
   /**
    * @name ApiManager.findAllClusters
    * @description 클러스터 목록 
@@ -599,10 +599,10 @@ const ApiManager = {
       data: clusterId
     });
   },
-  //endregion: Cluster
+  //#endregion: Cluster
 
 
-  //region : Host--------------------------------------------
+  //#region : Host--------------------------------------------
   /**
    * @name ApiManager.findAllHosts
    * @description 호스트 목록 
@@ -820,10 +820,10 @@ const ApiManager = {
   },
 
 
-  //endregion: Host
+  //#endregion: Host
 
 
-  //region : VM --------------------------------------------
+  //#region : VM --------------------------------------------
   /**
    * @name ApiManager.findAllVMs
    * @description 가상머신 목록
@@ -1547,10 +1547,10 @@ migrateHostsFromVM: async (vmId) => {
       data: vmId
     });
   },
-  //endregion : VM ----------------------------------------------
+  //#endregion : VM ----------------------------------------------
 
 
-  //region : Template ---------------------------------------------
+  //#region : Template ---------------------------------------------
   /**
    * @name ApiManager.findAllTemplates
    * @description 템플릿 목록
@@ -1749,10 +1749,10 @@ migrateHostsFromVM: async (vmId) => {
   },
 
 
-  //endregion : Template ---------------------------------------------
+  //#endregion : Template ---------------------------------------------
 
 
-  //region: Network------------------------------------------------
+  //#region: Network------------------------------------------------
   /**
    * @name ApiManager.findAllNetworks
    * @description 네트워크 목록
@@ -1971,7 +1971,7 @@ migrateHostsFromVM: async (vmId) => {
     });
   },
 
-  //endregion: Network
+  //#endregion: Network
   
   // region: vnicprofile
   /**
@@ -2093,7 +2093,7 @@ migrateHostsFromVM: async (vmId) => {
 
 
   
-  //region: Domain
+  //#region: Domain
   /**
    * @name ApiManager.findAllStorageDomains
    * @description storagedomain 목록
@@ -2547,11 +2547,11 @@ migrateHostsFromVM: async (vmId) => {
 
 
 
-  //endregion: Domain
+  //#endregion: Domain
 
 
 
-  //region: Disk
+  //#region: Disk
   /**
    * @name ApiManager.findAllDisks
    * @description disk 목록
@@ -2738,10 +2738,10 @@ migrateHostsFromVM: async (vmId) => {
   },
 
 
-  //endregion: Disk
+  //#endregion: Disk
 
 
-  //region: event
+  //#region: event
   /**
    * @name ApiManager.findAllEvents
    * @description 이벤트 목록
@@ -2753,9 +2753,9 @@ migrateHostsFromVM: async (vmId) => {
     url: ENDPOINTS.FIND_ALL_EVENTS(),
     // defaultValues: DEFAULT_VALUES.FIND_ALL_EVENTS
   }),
-  //endregion: event
+  //#endregion: event
 
-  //region: setting
+  //#region: setting
   /**
    * @name ApiManager.findAllEvents
    * @description 이벤트 목록
@@ -2767,7 +2767,7 @@ migrateHostsFromVM: async (vmId) => {
     url: ENDPOINTS.FIND_USERS(),
     // defaultValues: DEFAULT_VALUES.FIND_ALL_EVENTS
   }),
-  //endregion: setting
+  //#endregion: setting
 
 
 

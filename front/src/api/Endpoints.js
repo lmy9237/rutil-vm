@@ -1,14 +1,14 @@
 const ENDPOINTS = {  
-  //region: User
+  //#region: User
   FIND_ALL_USERS: () => `/api/v1/auth/users`,
   FIND_USER: (username) => `/api/v1/auth/users/${username}`,
-  //endregion: User
+  //#endregion: User
 
-  //region: TreeNavigation
+  //#region: TreeNavigation
   FIND_ALL_TREE_NAVIGATIONS: (type) => `/api/v1/navigation/${type}`,
-  //endregion: TreeNavigation
+  //#endregion: TreeNavigation
 
-  //region: Dashboard
+  //#region: Dashboard
   GET_DASHBOARD: () =>          `/api/v1/dashboard`,
   GET_CPU_MEMORY: () =>         `/api/v1/dashboard/cpumemory`,
   GET_STORAGE: () =>            `/api/v1/dashboard/storage`,
@@ -22,9 +22,9 @@ const ENDPOINTS = {
 
   GET_METRIC_VM: () =>          `/api/v1/dashboard/vmMetricList`,
   GET_METRIC_STORAGE: () =>      `/api/v1/dashboard/storageMetricList`,
-  //endregion: Dashboard
+  //#endregion: Dashboard
   
-  //region: DataCenter
+  //#region: DataCenter
   FIND_ALL_DATA_CENTERS: () =>  `/api/v1/computing/datacenters`,
   FIND_DATA_CENTER: (dataCenterId) =>  `/api/v1/computing/datacenters/${dataCenterId}`, 
   FIND_CLUSTERS_FROM_DATA_CENTER: (dataCenterId) => `/api/v1/computing/datacenters/${dataCenterId}/clusters`, 
@@ -41,7 +41,7 @@ const ENDPOINTS = {
   ADD_DATA_CENTER: () => `/api/v1/computing/datacenters`,
   EDIT_DATA_CENTER: (dataCenterId) => `/api/v1/computing/datacenters/${dataCenterId}`, 
   DELETE_DATA_CENTER: (dataCenterId) => `/api/v1/computing/datacenters/${dataCenterId}`, 
-  //endregion: DataCenter
+  //#endregion: DataCenter
 
   // region: Cluster
   FIND_ALL_CLUSTERS: () =>      `/api/v1/computing/clusters`,
@@ -62,7 +62,7 @@ const ENDPOINTS = {
   DELETE_CLUSTER: (clusterId) => `/api/v1/computing/clusters/${clusterId}`, 
   // endregion: Cluster
 
-  //region: Host
+  //#region: Host
   FIND_ALL_HOSTS: () =>  `/api/v1/computing/hosts`,
   FIND_HOST: (hostId) =>  `/api/v1/computing/hosts/${hostId}`, 
   FIND_VMS_FROM_HOST:(hostId) =>  `/api/v1/computing/hosts/${hostId}/vms`, 
@@ -86,9 +86,9 @@ const ENDPOINTS = {
   ACTIVATE_HOST: (hostId) => `/api/v1/computing/hosts/${hostId}/activate`, 
   DEACTIVATE_HOST: (hostId) => `/api/v1/computing/hosts/${hostId}/deactivate`, 
   RESTART_HOST: (hostId) => `/api/v1/computing/hosts/${hostId}/restart`, 
-  //endregion: Host
+  //#endregion: Host
 
-  //region: Vm
+  //#region: Vm
   FIND_ALL_VMS: () =>  `/api/v1/computing/vms`,
   FIND_VM: (vmId) =>  `/api/v1/computing/vms/${vmId}`, 
   
@@ -142,9 +142,9 @@ const ENDPOINTS = {
   MIGRATE_HOST_LIST_VM: (vmId) => `/api/v1/computing/vms/${vmId}/migrateHosts`, 
   MIGRATE_VM: (vmId, hostId) => `/api/v1/computing/vms/${vmId}/migrate/${hostId}`, 
   
-  //endregion: Vm
+  //#endregion: Vm
 
-  //region: Template
+  //#region: Template
   FIND_ALL_TEMPLATES :() =>  `/api/v1/computing/templates`,
   FIND_TEMPLATE: (templateId) => `/api/v1/computing/templates/${templateId}`, 
   FIND_VMS_FROM_TEMPLATE: (templateId) => `/api/v1/computing/templates/${templateId}/vms`, 
@@ -159,9 +159,9 @@ const ENDPOINTS = {
   ADD_TEMPLATE: (vmId) => `/api/v1/computing/templates/${vmId}`, 
   EDIT_TEMPLATE: (templateId) => `/api/v1/computing/templates/${templateId}`, 
   DELETE_TEMPLATE: (templateId) => `/api/v1/computing/templates/${templateId}`, 
-  //endregion: Template
+  //#endregion: Template
 
-  //region: Network
+  //#region: Network
   FIND_ALL_NETWORKS: () => `/api/v1/networks`,
   FIND_NETWORK: (networkId) => `/api/v1/networks/${networkId}`,
 
@@ -182,9 +182,9 @@ const ENDPOINTS = {
   FIND_VNIC_PROFILES_FROM_NETWORK: (networkId) =>  `/api/v1/networks/${networkId}/vnicProfiles`,
 
 
-  //endregion: Network
+  //#endregion: Network
 
-  //region: VnicProfile
+  //#region: VnicProfile
   FIND_ALL_VNIC_PROFILES: () =>  `/api/v1/vnicProfiles`,
   FIND_VNIC_PROFILE: ( vnicProfileId) =>  `/api/v1/vnicProfiles/${vnicProfileId}`,
   FIND_VMS_VNIC_PROFILE: ( vnicProfileId) =>  `/api/v1/vnicProfiles/${vnicProfileId}/vms`,
@@ -193,9 +193,9 @@ const ENDPOINTS = {
   EDIT_VNIC_PROFILE_FROM_NETWORK: (vnicProfileId) =>  `/api/v1/vnicProfiles/${vnicProfileId}`,
   DELETE_VNIC_PROFILE_FROM_NETWORK: (vnicProfileId) =>  `/api/v1/vnicProfiles/${vnicProfileId}`,
   FIND_ALL_NETWORKFILTERS: () =>  `/api/v1/vnicProfiles/networkFilters`,
-  //endregion: VnicProfile
+  //#endregion: VnicProfile
 
-  //region: StorageDomain
+  //#region: StorageDomain
   FIND_ALL_STORAGE_DOMAINS: () => `/api/v1/storages/domains`,
   FIND_STORAGE_DOMAIN: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}`,
   
@@ -237,9 +237,9 @@ const ENDPOINTS = {
 
   DESTORY_STORAGE_DOMAIN: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/destroy`, 
 
-  //endregion: StorageDomain
+  //#endregion: StorageDomain
 
-  //region: Disk
+  //#region: Disk
   FIND_ALL_DISKS: () =>      `/api/v1/storages/disks`,
   FIND_DISK: (diskId) =>      `/api/v1/storages/disks/${diskId}`,
   FIND_VMS_FROM_DISK: (diskId) =>      `/api/v1/storages/disks/${diskId}/vms`,
@@ -253,17 +253,17 @@ const ENDPOINTS = {
   MOVE_DISK: (diskId) =>      `/api/v1/storages/disks/${diskId}/move`,
   REFRESH_LUN_DISK: (diskId) =>      `/api/v1/storages/disks/${diskId}/refreshLun`,
   UPLOAD_DISK: () =>      `/api/v1/storages/disks/upload`,
-  //endregion: Disk
+  //#endregion: Disk
   
 
-  //region: Event
+  //#region: Event
   FIND_ALL_EVENTS: () => `/api/v1/events`,
-  //endregion: Event
+  //#endregion: Event
 
-  //region: setting
+  //#region: setting
   FIND_USERS: () => `/api/v1/setting/users`,
 
-  //endregion: setting
+  //#endregion: setting
 }
 
 export default ENDPOINTS

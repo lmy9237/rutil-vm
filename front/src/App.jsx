@@ -32,7 +32,7 @@ import './App.css';
 
 
 const App = () => {
-  //region: 웹소켓연결
+  //#region: 웹소켓연결
   const [stompClient, setStompClient] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
@@ -62,7 +62,7 @@ const App = () => {
       }
     };
   }, []);
-  //endregion: 웹소켓연결
+  //#endregion: 웹소켓연결
 
   const showMessage = (message) => {
     console.log(`App > showMessage ...`)

@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ApiManager from "./ApiManager";
 
-//region: User
+//#region: User
 export const useAuthenticate = (username, password, _onSuccess, _onError) => useMutation({
   mutationFn: async () => {
     const res = await ApiManager.authenticate(username, password)
@@ -10,9 +10,9 @@ export const useAuthenticate = (username, password, _onSuccess, _onError) => use
   onSuccess: _onSuccess,
   onError: _onError,
 })
-//endregion: User
+//#endregion: User
 
-//region: Navigation
+//#region: Navigation
 
 
 // Custom hook to fetch tree navigations
@@ -29,9 +29,9 @@ export const useAllTreeNavigations = (type = "none", mapPredicate = null) => {
     }
   });
 };
-//endregion
+//#endregion
 
-//region: Dashboard
+//#region: Dashboard
 export const useDashboard = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboard'],
@@ -151,10 +151,10 @@ export const useDashboardMetricStorage = (mapPredicate) => useQuery({
     return res ?? []
   }
 });
-//endregion
+//#endregion
 
 
-//region: DataCenter ----------------데이터센터----------------
+//#region: DataCenter ----------------데이터센터----------------
 /**
  * @name useAllDataCenters
  * @description 데이터센터 목록조회 useQuery훅
@@ -436,10 +436,10 @@ export const useDeleteDataCenter = () => {
   });
 };
 
-//endregion: DataCenter
+//#endregion: DataCenter
 
 
-//region: Cluster ----------------클러스터---------------------
+//#region: Cluster ----------------클러스터---------------------
 /**
  * @name useAllClusters
  * @description 클러스터 목록조회 useQuery훅
@@ -678,9 +678,9 @@ export const useDeleteCluster = () => {
     },
   });
 };
-//endregion: Cluster
+//#endregion: Cluster
 
-//region: Host ----------------호스트---------------------
+//#region: Host ----------------호스트---------------------
 /**
  * @name useAllHosts
  * @description 호스트 목록조회 useQuery훅
@@ -1075,9 +1075,9 @@ export const useRestartHost = () => {
     },  
   });
 };
-//endregion: Host
+//#endregion: Host
 
-//region: VM ----------------가상머신---------------------
+//#region: VM ----------------가상머신---------------------
 /**
  * @name useAllVMs
  * @description 가상머신 목록조회 useQuery훅
@@ -1872,9 +1872,9 @@ export const useActivateDiskFromVm  = () => {
 // });
 
 
-//endregion: VM
+//#endregion: VM
 
-//region: TEMPLATE ----------------템플릿---------------------
+//#region: TEMPLATE ----------------템플릿---------------------
 /**
  * @name useAllTemplates
  * @description 템플릿 목록조회 useQuery훅
@@ -2153,11 +2153,11 @@ export const useDeleteNetworkFromTemplate = () => {
   });
 };
 
-//endregion: TEMPLATE
+//#endregion: TEMPLATE
 
 
 
-//region: Network -----------------네트워크---------------------
+//#region: Network -----------------네트워크---------------------
 /**
  * @name useAllNetworks
  * @description 네트워크 목록조회 useQuery훅
@@ -2390,7 +2390,7 @@ export const useDeleteNetwork = () => {
 };
 
 
-//region: VnicProfiles -----------------vnic프로파일---------------------
+//#region: VnicProfiles -----------------vnic프로파일---------------------
 /**
  * @name useAllVnicProfiles
  * @description 모든 VNIC 프로파일 목록조회 useQuery훅
@@ -2550,7 +2550,7 @@ export const useNetworkFilters = (mapPredicate) => useQuery({
     return res?.map((e) => mapPredicate(e)) ?? []
   }
 })
-//region: storage -----------------스토리지---------------------
+//#region: storage -----------------스토리지---------------------
 
 /**
  * @name useAllStorageDomains
@@ -3082,7 +3082,7 @@ export const useMaintenanceDomain = () => {
 };
 
 
-//region: storage -----------------디스크---------------------
+//#region: storage -----------------디스크---------------------
 /**
  * @name useAllDisks
  * @description 모든 디스크목록조회 useQuery훅
@@ -3235,7 +3235,7 @@ export const useUploadDisk = () => {
 };
 
 
-//region: event -----------------이벤트---------------------
+//#region: event -----------------이벤트---------------------
 /**
  * @name useAllEvents
  * @description 모든 이벤트 목록조회 useQuery훅
@@ -3253,7 +3253,7 @@ export const useAllEvents = (mapPredicate) => useQuery({
 })
 // endregion: event
 
-//region: setting -----------------설정---------------------
+//#region: setting -----------------설정---------------------
 /**
  * @name useAllUsers
  * @description 모든 사용자 목록조회 useQuery훅
