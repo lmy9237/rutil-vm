@@ -1,0 +1,9 @@
+html {
+  --debug-outline: 1px dashed magenta;
+}
+
+*,
+*::before,
+*::after {
+  outline: var(--debug-outline);
+}
