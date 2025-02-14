@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
-import VmDiiskModals from "../modal/vm/VmDiiskModals";
+import VmDiiskModals from "../modal/vm/VmDiskModals";
 import VmDiskActionButtons from "./VmDiskActionButtons";
 import { renderTFStatusIcon } from "../Icon";
 import { convertBytesToGB } from "../../util";
