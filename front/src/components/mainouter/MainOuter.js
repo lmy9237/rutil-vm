@@ -14,13 +14,14 @@ import {
     faSquare
 } from '@fortawesome/free-solid-svg-icons'
 
-const MainOuter = ({ children,asideVisible  }) => {
-    const [sidebarWidth, setSidebarWidth] = useState(20); // 초기 사이드바 너비 (%)
+const MainOuter = ({ children,asideVisible,setAsideVisible   }) => {
+    const [sidebarWidth, setSidebarWidth] = useState(16.5); // 초기 사이드바 너비 (%)
     const resizerRef = useRef(null);
     const isResizing = useRef(false);
     const xRef = useRef(0);
     const leftWidthRef = useRef(0);
 
+    /* aside-popup화면사이즈드레그 */
     useEffect(() => {
         // 마우스 이벤트 해제 (Unmount 시)
         return () => {
@@ -44,7 +45,7 @@ const MainOuter = ({ children,asideVisible  }) => {
         const dx = ((e.clientX - xRef.current) / window.innerWidth) * 100;
         const newWidth = leftWidthRef.current + dx;
 
-        if (newWidth > 15 && newWidth < 40) {
+        if (newWidth > 17 && newWidth < 30) {
             setSidebarWidth(newWidth);
         }
     };
@@ -54,6 +55,24 @@ const MainOuter = ({ children,asideVisible  }) => {
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
     };
+    /* */
+    const [isResponsive, setIsResponsive] = useState(window.innerWidth <= 1420);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const isNowResponsive = window.innerWidth <= 1420;
+            setIsResponsive(isNowResponsive);
+    
+            if (isNowResponsive) {
+                setAsideVisible(false); // ✅ 1420px 이하일 때 aside 자동 닫기
+            }
+        };
+    
+        window.addEventListener('resize', handleResize);
+        handleResize(); // 초기 렌더링 시 체크
+    
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const [lastSelected, setLastSelected] = useState(null); // 마지막 선택 항목 저장
     const [selectedDisk, setSelectedDisk] = useState(null);
@@ -786,18 +805,18 @@ const MainOuter = ({ children,asideVisible  }) => {
         setContextMenuTarget(null);
     };
 
-
+    const asideClasses = `aside-outer ${asideVisible ? 'open' : 'closed'} ${window.innerWidth <= 1420 ? 'responsive-closed' : ''}`;
     return (
       <div className="main-outer" onClick={handleMainClick}>
-        <div  className={`aside-outer ${asideVisible ? 'open' : 'closed'}`}>
+            <div className={asideClasses} style={{ width: asideVisible ? `${sidebarWidth}%` : '0%' }}>
             <div id="aside">
                 <div className="nav">
-                    {/*대시보드버튼 */}
-                    <Link to='/' className="link-no-underline">
+                    {/* 대시보드 버튼 */}
+                    <Link to="/" className="link-no-underline">
                         <div
-                            className={getClassNames('dashboard')}
+                            className={getClassNames("dashboard")}
                             onClick={() => {
-                                handleClick('dashboard'); // 선택 상태 업데이트
+                                handleClick("dashboard"); // 선택 상태 업데이트
                                 setAsidePopupVisible(true); // 대시보드 클릭 시 열림
                             }}
                             style={{ backgroundColor: asidePopupBackgroundColor.dashboard }}
@@ -805,79 +824,71 @@ const MainOuter = ({ children,asideVisible  }) => {
                             <FontAwesomeIcon icon={faThLarge} fixedWidth />
                         </div>
                     </Link>
-                    {/*가상머신 버튼 */}
-                    <Link to='/computing/vms' className="link-no-underline">
+
+                    {/* 가상머신 버튼 */}
+                    <Link to="/computing/vms" className="link-no-underline">
                         <div
-                            className={getClassNames('computing')}
+                            className={getClassNames("computing")}
                             onClick={() => {
-                                handleClick('computing');
+                                handleClick("computing");
                                 setSelectedDiv(null); // 선택된 div를 null로 설정하여 루틸 매니저가 선택되지 않도록 함
                             }}
                             style={{ backgroundColor: asidePopupBackgroundColor.computing }}
                         >
-                            <FontAwesomeIcon icon={faDesktop} fixedWidth/>
+                            <FontAwesomeIcon icon={faDesktop} fixedWidth />
                         </div>
                     </Link>
-                    {/*네트워크 버튼 */}
-                    <Link to='/networks' className="link-no-underline">
+
+                    {/* 네트워크 버튼 */}
+                    <Link to="/networks" className="link-no-underline">
                         <div
-                            className={getClassNames('network')}
+                            className={getClassNames("network")}
                             onClick={() => {
-                                handleClick('network');
+                                handleClick("network");
                                 setSelectedDiv(null); // 루틸 매니저 선택을 방지하기 위해 selectedDiv를 null로 설정
                             }}
                             style={{ backgroundColor: asidePopupBackgroundColor.network }}
                         >
-                        <FontAwesomeIcon icon={faServer} fixedWidth/>
+                            <FontAwesomeIcon icon={faServer} fixedWidth />
                         </div>
                     </Link>
-                    {/*스토리지 버튼 */}
-                    <Link to='/storages/domains' className="link-no-underline">
+
+                    {/* 스토리지 버튼 */}
+                    <Link to="/storages/domains" className="link-no-underline">
                         <div
-                            className={getClassNames('storage')}
+                            className={getClassNames("storage")}
                             onClick={() => {
-                                handleClick('storage');
+                                handleClick("storage");
                                 setSelectedDiv(null); // 루틸 매니저 선택을 방지하기 위해 selectedDiv를 null로 설정
                             }}
                             style={{ backgroundColor: asidePopupBackgroundColor.storage }}
                         >
-                        <FontAwesomeIcon icon={faDatabase} fixedWidth/>
+                            <FontAwesomeIcon icon={faDatabase} fixedWidth />
                         </div>
                     </Link>
-                    {/*이벤트 버튼 */}
-                    <Link to='/events' className="link-no-underline">
+
+                    {/* 이벤트 버튼 */}
+                    <Link to="/events" className="link-no-underline">
                         <div
-                            className={getClassNames('event')}
-                            onClick={() => handleClick('event')}
+                            className={getClassNames("event")}
+                            onClick={() => handleClick("event")}
                             style={{ backgroundColor: asidePopupBackgroundColor.event }}
                         >
-                           <FontAwesomeIcon icon={faListUl} fixedWidth/>
+                            <FontAwesomeIcon icon={faListUl} fixedWidth />
                         </div>
                     </Link>
-                    {/* <button id='aside_popup_btn' onClick={handleAsidePopupBtnClick}>
-                        <FontAwesomeIcon icon={asidePopupVisible ? faChevronLeft : faChevronRight} fixedWidth />
-                    </button> */}
-                </div>
-                <div>
-                    {/* <Link to='/settings/users' className="link-no-underline">
-                        <div id="setting_icon" 
-                        className={getClassNames('settings')}
-                        onClick={() => {
-                            handleClick('settings');
-                            setSelectedDiv(null); // 루틸 매니저 선택을 방지하기 위해 selectedDiv를 null로 설정
-                        }}
-                        style={{ backgroundColor: asidePopupBackgroundColor.settings }}>
-                        <FontAwesomeIcon icon={faCog} fixedWidth/>
-                        </div>
-                    </Link> */}
-               
-
                 </div>
             </div>
-            <div className="aside-popup" style={{ display: asidePopupVisible ? 'block' : 'none' }}>
+
+            {/* 크기 조절 핸들 */}
+            
+
+            <div className="aside-popup" style={{ display: asidePopupVisible ? "block" : "none" }}>
                 {renderAsidePopupContent()}
+                <div ref={resizerRef} className="resizer" onMouseDown={handleMouseDown} />
             </div>
         </div>
+
 
         
         {React.cloneElement(children, { 

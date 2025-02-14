@@ -39,7 +39,7 @@ const VmDupl = ({
           status={selectedVms[0]?.status}
           selectedVms={selectedVms}
         />
-        <span>id = {selectedIds || ""}</span>
+      
 
         <TablesOuter
           isLoading={isLoading} isError={isError} isSuccess={isSuccess}

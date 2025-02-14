@@ -313,6 +313,7 @@ input[disabled] {
   width: 100%;
   padding: 0.5rem 0.3rem;
 }
+/*페이지 general 설명페이지*/
 .tables {
   display: flex;
   justify-content: space-between;
@@ -2547,14 +2548,29 @@ background-color: #f0f0f0;
 }
 
 /*반응형*/
-@media (max-width: 1390px) {
+@media (max-width: 1990px) {
+
+}
+@media (max-width: 1420px) {
+    html, body {
+        font-size: 3rem !important;
+    }
+    .resizer {
+        display: none !important;
+    }
+    .responsive {
+        position: apsolute; /* 예시: 화면 고정 */
+        left: 0;
+        top: 0;
+        height: 100vh;
+    }
+    #aside{
+        font-size:0.4rem;
+    }
 }
 
 @media screen and (max-width:820px) {
-    html, body {
-        font-size: 2rem !important;
-        background: black !important;
-    }
+
 }
 @media screen and (max-width: 768px) {}
 @media screen and (max-width: 482px) {}

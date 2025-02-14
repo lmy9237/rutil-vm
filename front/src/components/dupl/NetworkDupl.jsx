@@ -36,7 +36,7 @@ const NetworkDupl = ({
         isEditDisabled={selectedNetworks.length !== 1}
         isDeleteDisabled={selectedNetworks.length === 0}
       />
-      <span>ID: {selectedIds}</span>
+      <span style={{fontSize:"20px"}}>ID: {selectedIds}</span>
 
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}

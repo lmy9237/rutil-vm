@@ -104,7 +104,7 @@ const App = () => {
         {authenticated ? (
           <>
           <Header setAuthenticated={setAuthenticated} toggleAside={toggleAside}/>
-          <MainOuter asideVisible={asideVisible}>
+          <MainOuter asideVisible={asideVisible} setAsideVisible={setAsideVisible}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/computing/rutil-manager" element={<RutilManager />} />

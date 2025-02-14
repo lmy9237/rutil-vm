@@ -301,7 +301,7 @@ const TableColumnsInfo = {
   ],
   STORAGE_DOMAINS: [
     { header: '상태', accessor: 'icon', width: '4%' },
-    { header: '', accessor: 'hostedEngine', width: '4%' },
+    { header: '', accessor: 'hostedEngine', width: '3%' },
     { header: '도메인 이름', accessor: 'name', width: '10%' },
     { header: '도메인 유형', accessor: 'domainType' },
     { header: '스토리지 유형', accessor: 'storageType', width: '10%' },

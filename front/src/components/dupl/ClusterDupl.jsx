@@ -43,7 +43,7 @@ const ClusterDupl = ({
         isEditDisabled={selectedClusters.length !== 1}
         status={status}
       />
-      <span>ID: {selectedIds}</span>
+      {/* <span style={{fontSize:"16px"}}>ID: {selectedIds}</span> */}
 
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}

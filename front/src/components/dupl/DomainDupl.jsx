@@ -41,7 +41,7 @@ const DomainDupl = ({
         status={selectedDomains[0]?.status}
         actionType={actionType} // 도메인인지, 데이터센터인지
       />
-      <span>ID: {selectedIds || ""}</span>
+      <span style={{fontSize:"20px"}}>ID: {selectedIds || ""}</span>
 
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
@@ -86,6 +86,13 @@ const DomainDupl = ({
         clickableColumnIndex={[2]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
+        onContextMenuItems={(row) => [
+          <DomainActionButtons
+            openModal={openModal}
+            isEditDisabled={!row}
+            type="context"
+          />,
+        ]}
       />
 
       {/* 도메인 모달창 */}

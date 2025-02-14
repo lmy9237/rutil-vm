@@ -33,16 +33,18 @@
 }
 } */
 .aside-outer {
-  transition: width 0.2s ease; /* 부드러운 열림/닫힘 효과 */
-  overflow: hidden; /* 내부 요소 숨기기 */
+  position: relative;
+  overflow: hidden;
+  transition: width 0.1s ease-in-out; /* 부드러운 크기 변화 */
+  width: 3%;
+  margin-right: 0.07rem;
 }
+
 .aside-outer.closed {
   width: 0;
   overflow: hidden;
 }
-.aside-outer.open {
-  width: 16%;
-}
+
 .aside-popup div {
   white-space: nowrap;
   overflow: hidden;
@@ -54,10 +56,7 @@
   justify-content: space-between;
   width: 100%;
 }
-.aside-outer {
-  width: 3%;
-  margin-right: 0.07rem;
-}
+
 .blue-text {
   color: rgb(43, 43, 43);
   border-radius: 0.3rem;
@@ -92,11 +91,13 @@
 .aside-popup {
   width: 99.4%;
   background-color: white;
-  display: none;
+  display: block;
   overflow-y: auto;
   height: 94.4%;
   max-height: 100%;
+  position: relative;
 }
+
 .aside-popup > div > div {
   color: rgb(145, 150, 155);
   font-size: 0.33rem;
@@ -148,15 +149,6 @@
   padding-left: 0.6rem;
 }
 
-/*드레그 크기조절*/
-
-/* 🔹 사이드바 스타일 */
-.aside-outer {
-  background: #f1f1f1;
-  position: relative;
-  overflow: hidden;
-  transition: width 0.1s ease-out;
-}
 
 /* 🔹 본문 스타일 */
 .section-wrapper {
@@ -168,15 +160,23 @@
 
 /* 🔹 크기 조절 핸들 스타일 */
 .resizer {
-  width: 5px;
-  cursor: ew-resize;
-  background: #888;
-  position: relative;
+  width: 3px;
+  position: absolute;
   top: 0;
   right:0;
   height: 100%;
 }
 
 .resizer:hover {
-  background: #555;
+  cursor: ew-resize;
+}
+.responsive-closed{
+  position: fixed;
+  left: 0;
+  height: 100%;
+  font-size:0.3rem;
+  z-index: 3;
+  width: 25%;
+  border-right: 1px solid rgba(110, 109, 109, 0.2);
+  transition: width 0.1s ease-out;
 }

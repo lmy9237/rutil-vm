@@ -257,11 +257,11 @@ const Tables = ({
   console.log("...")
   return (
     <>
-      <div className="w-full max-h-[62.4vh] overflow-y-auto overflow-x-hidden">
+      <div className="w-full max-h-[62.4vh] overflow-y-auto ">
         <table 
           className="custom-table" 
           ref={tableRef} 
-          style={{ tableLayout: 'fixed', width: '100%' }}>
+       >
           <thead>
             <tr>
               {columns.map((column, index) => (

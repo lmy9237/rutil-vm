@@ -2389,6 +2389,21 @@ export const useDeleteNetwork = () => {
   });
 };
 
+/**
+ * @name useAllNetworkProviders
+ * @description 네트워크 공급자 목록 useQuery훅
+ * 
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ */
+export const useAllNetworkProviders = (mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['allNetworkProviders'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllNetworkProviders()
+    return res?.map((e) => mapPredicate(e)) ?? []
+  }
+});
 
 //#region: VnicProfiles -----------------vnic프로파일---------------------
 /**
