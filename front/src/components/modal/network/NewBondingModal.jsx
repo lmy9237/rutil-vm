@@ -24,7 +24,7 @@ const NewBondingModal = ({ isOpen, onClose, mode = 'edit' }) => {
           </button>
         </div>
 
-        <div className='bonding-content'>
+        <div className='bonding-content modal-content'>
             <div className="select-box">
                 <label htmlFor="ip_address">본딩이름</label>
                 <input type='text'/>

@@ -4,19 +4,8 @@
 }
 
 .cluster-new-content {
-  font-size: 0.32rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  height: 76%;
 }
-
-.cluster-new-content > div {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.23rem 0.27rem;
-  align-items: center;
-}
-
 .cluster-new-content select,
 .cluster-new-content input[type="text"] {
   width: 47%;

@@ -216,7 +216,7 @@ const ClusterModal = ({ isOpen, editMode = false, clusterId, datacenterId, onClo
           <button onClick={onClose}> { xButton() } </button>
         </div>
 
-        <div className="cluster-new-content">
+        <div className="cluster-new-content modal-content">
           <LabelSelectOptionsID
             label="데이터센터"
             value={dataCenterVoId}

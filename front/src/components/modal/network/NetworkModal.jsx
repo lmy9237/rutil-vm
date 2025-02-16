@@ -162,7 +162,7 @@ const NetworkModal = ({ isOpen, editMode = false, networkId, dcId, onClose }) =>
             <div className="network-form-group center">
               <div className='network-new-input flex'>
                 <LabelCheckbox
-                  className='network-checkbox'
+                  className='network-checkbox center'
                   label="VLAN 태깅 활성화"
                   id="vlan"
                   checked={formState.vlan !== null} // 기본적으로 체크 해제
