@@ -1,8 +1,7 @@
 import React from "react";
 import TemplateEditModal from "./TemplateEditModal";
 import TemplateDeleteModal from "./TemplateDeleteModal";
-// import VmModal from "../../modal/vm/VmModal";
-import VmNewModal from "../../modal/vm/VmNewModal";
+import VmModal from "../../modal/vm/VmModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteTemplate } from "../../../api/RQHook";
 
@@ -40,12 +39,10 @@ const TemplateModals = ({
       />
     ),
     addVm: (
-      <VmNewModal isOpen={activeModal === "create"} onClose={onClose} />
-      // <VmModal
-      //   isOpen={activeModal === 'addVm' }
-      //   data={selectedTemplates}
-      //   onClose={onClose}
-      // />
+      <VmModal 
+        isOpen={activeModal === "create"} 
+        onClose={onClose} 
+      />      
     ),
   };
 

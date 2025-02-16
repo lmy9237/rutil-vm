@@ -46,7 +46,7 @@ const sparseList = [
 ];
 
 // type은 vm이면 가상머신 생성할때 디스크 생성하는 창, disk면 가상머신 디스크 목록에서 생성하는
-const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachment, type="disk", onCreateDisk, onClose }) => {
+const VmDiskModal = ({ isOpen, editMode = false, vm, vmName, dataCenterId, diskAttachment, type="disk", onCreateDisk, onClose }) => {
   const dLabel = editMode ? '편집' : '생성';
   const { mutate: addDiskVm } = useAddDiskFromVM();
   const { mutate: editDiskVm } = useEditDiskFromVM();
@@ -104,6 +104,12 @@ const VmDiskModal = ({ isOpen, editMode = false, vm, dataCenterId, diskAttachmen
       setDiskProfileVoId(diskAttachment?.diskImageVo?.diskProfileVo?.id || '');
     }
   }, [isOpen, editMode, diskAttachment]);
+
+  useEffect(() => {
+    if(vmName){
+      setFormState((prev) => ({ ...prev, alias: vmName }));
+    }
+  }, [vmName]);
 
   useEffect(() => {
       if (!editMode && domains.length > 0) {

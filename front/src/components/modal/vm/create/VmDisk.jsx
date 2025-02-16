@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import Loading from "../../../common/Loading";
 // import VmDiskModal from "../VmDiskModal"
 // import VmDiskConnectionModal from "../VmDiskConnectionModal"
@@ -8,6 +8,7 @@ const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
 const VmDisk = ({
   editMode,
   vm,
+  vmName,
   dataCenterId,
   diskListState,
   setDiskListState,
@@ -16,7 +17,8 @@ const VmDisk = ({
   const [isConnectionPopupOpen, setIsConnectionPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
-
+  const newIndex = diskListState.length + 1;
+  
   useEffect(() => {
     if (!editMode) {
       setDiskListState([]);
@@ -25,40 +27,30 @@ const VmDisk = ({
 
   console.log("disk", diskListState);
 
-  // 디스크 편집 핸들러
-  const handleEditDisk = (diskId) => {
-    setDiskListState((prevDisks) =>
-      prevDisks.filter((disk) => disk.id !== diskId)
-    );
-  };
-
-  // 디스크 삭제 핸들러
-  // const handleRemoveDisk = (index) => {
-  //   setDiskListState((prev) => prev.filter((_, i) => i !== index));
-  // };
-
-  const handleRemoveDisk = (index, isExisting) => {
-    if (isExisting) {
-      // 기존 디스크인 경우 삭제 확인 모달 띄우기
-      const isConfirmed = window.confirm(
-        "이 디스크를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다."
-      );
-      if (!isConfirmed) return; // 취소하면 삭제하지 않음
+  const handleRemoveDisk = useCallback((index, isExisting) => {
+    if (isExisting && !window.confirm("이 디스크를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다.")) {
+      return;
     }
-
     setDiskListState((prev) => prev.filter((_, i) => i !== index));
-  };
+  }, [setDiskListState]);
+
+  const handleSelectDisk = useCallback((selectedDisks) => {
+    setDiskListState((prevDisks) => [
+      ...prevDisks,
+      ...selectedDisks.map((disk) => ({ ...disk, isCreated: false })),
+    ]);
+    setIsConnectionPopupOpen(false);
+  }, [setDiskListState]);
+
+  const handleCreateDisk = useCallback((newDisk) => {
+    setDiskListState((prevDisks) => [...prevDisks, { ...newDisk, isCreated: true }]);
+    setIsCreatePopupOpen(false);
+  }, [setDiskListState]);
+
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "0 0.28rem",
-        }}
-      >
+      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 0.28rem", }}>
         <div className="font-bold">인스턴스 이미지</div>
         <div style={{ display: "flex", gap: "8px" }}>
           <button onClick={() => setIsConnectionPopupOpen(true)}>연결</button>
@@ -73,15 +65,7 @@ const VmDisk = ({
               dataCenterId={dataCenterId}
               type="vm"
               existingDisks={diskListState.map((disk) => disk.id)} // 기존 연결된 디스크 전달
-              onSelectDisk={(selectedDisks) => {
-                setDiskListState((prevDisks) => [
-                  ...prevDisks,
-                  ...selectedDisks.map((disk) => ({
-                    ...disk,
-                    isCreated: false,
-                  })), // 연결된 디스크 추가
-                ]);
-              }}
+              onSelectDisk={handleSelectDisk}
               onClose={() => setIsConnectionPopupOpen(false)}
             />
           )}
@@ -91,13 +75,8 @@ const VmDisk = ({
               isOpen={isCreatePopupOpen}
               dataCenterId={dataCenterId}
               type="vm"
-              onCreateDisk={(newDisk) => {
-                setDiskListState((prevDisks) => [
-                  ...prevDisks,
-                  { ...newDisk, isCreated: true }, // 생성된 디스크 추가
-                ]);
-                setIsCreatePopupOpen(false);
-              }}
+              vmName={`${vmName}_disk${newIndex}`}
+              onCreateDisk={handleCreateDisk}
               onClose={() => setIsCreatePopupOpen(false)}
             />
           )}
@@ -118,25 +97,14 @@ const VmDisk = ({
         </Suspense>
       </div>
 
-      <div
-        className="disk-list-container"
-        style={{
-          marginTop: "12px",
-          borderBottom: "1px solid gray",
-          paddingBottom: "8px",
-        }}
-      >
+      <div className="disk-list-container" style={{ marginTop: "12px", borderBottom: "1px solid gray", paddingBottom: "8px", }}>
         {diskListState.length > 0 &&
           diskListState.map((disk, index) => (
             <div key={index} className="disk-item">
               <div style={{ display: "flex", alignItems: "center" }}>
                 <span style={{ marginRight: "10px" }}>
                   <strong>
-                    {disk.isExisting
-                      ? "[기존]"
-                      : disk.isCreated
-                        ? "[생성]"
-                        : "[연결]"}{" "}
+                    {disk.isExisting ? "[기존]" : disk.isCreated ? "[생성]" : "[연결]"}{" "}
                   </strong>
                   이름: {disk?.alias} ({disk?.size || disk?.virtualSize} GB)
                   {disk?.bootable ? " [부팅]" : ""}

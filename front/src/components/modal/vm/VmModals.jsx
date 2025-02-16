@@ -2,7 +2,7 @@ import React from "react";
 import VmDeleteModal from './VmDeleteModal';
 import VmActionModal from './VmActionModal';
 import VmSnapshotModal from './VmSnapshotModal';
-import VmNewModal from './VmNewModal';
+import VmModal from './VmModal';
 import VmAddTemplateModal from './VmAddTemplateModal';
 import VmExportOVAModal from './VmExportOVAModal';
 import './MVm.css'
@@ -10,23 +10,13 @@ import './MVm.css'
 const VmModals = ({ activeModal, vm, selectedVms = [], onClose }) => {
   const modals = {
     create: (
-      // <VmModal 
-      //   isOpen={activeModal === 'create'} 
-      //   onClose={onClose} 
-      // />
-      <VmNewModal
+      <VmModal
         isOpen={activeModal === 'create'} 
         onClose={onClose} 
       />
     ),
     edit: (
-      // <VmModal
-      //   editMode
-      //   isOpen={activeModal === 'edit'}
-      //   vmId={vm?.id}
-      //   onClose={onClose}
-      // />
-      <VmNewModal
+      <VmModal
         editMode
         isOpen={activeModal === 'edit'} 
         vmId={vm?.id}
