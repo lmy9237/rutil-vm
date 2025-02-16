@@ -5,11 +5,6 @@
 .datacenter-new-content {
   height: 73%;
 }
-.datacenter-new-content > div {
-  display: flex;
-  justify-content: space-between;
-  padding: 2% 2%;
-}
 .datacenter-new-content select,
 .datacenter-new-content input {
   width: 47%;

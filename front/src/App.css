@@ -106,12 +106,13 @@ input[disabled] {
   padding: 0.1rem 0;
 }
 /* 인풋감싸는박스 */
-.input-outer {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.2rem;
-  align-items: center;
+.modal-content>div{
+    display: flex;
+    justify-content: space-between;
+    padding: 0.1rem 0.2rem;
+    align-items: center;
 }
+
 .center {
   display: flex; /* Flexbox 설정 추가 */
   justify-content: space-between; /* 수평 가운데 정렬 */
@@ -268,12 +269,13 @@ input[disabled] {
   padding-bottom: 0.3rem;
 }
 
+/*
 .img-input-box span,
 .img-select-box label {
-  display: flex; /* Flexbox 설정 추가 */
-  justify-content: center; /* 수평 가운데 정렬 */
-  align-items: center; /* 수직 가운데 정렬 */
-}
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}*/
 /*대상검색*/
 .target-search-outer {
   border: var(--border-simple);

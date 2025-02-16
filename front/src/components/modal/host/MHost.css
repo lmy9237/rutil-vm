@@ -5,12 +5,6 @@
 .host-new-content {
   height: 76%;
 }
-.host-new-content > div {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.2rem;
-  align-items: center;
-}
 .host-new-content select,
 .host-new-content input[type="text"],
 .host-new-content input[type="number"],

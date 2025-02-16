@@ -210,7 +210,7 @@ const ClusterModal = ({ isOpen, editMode = false, clusterId, datacenterId, onClo
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel={cLabel} className="Modal" overlayClassName="Overlay" shouldCloseOnOverlayClick={false} >
-      <div className="cluster-new-popup">
+      <div className="cluster-new-popup modal">
         <div className="popup-header">
           <h1>클러스터 {cLabel}</h1>
           <button onClick={onClose}> { xButton() } </button>
