@@ -27,11 +27,6 @@ const ClusterModals = ({
       />
     ),
     delete: (
-      // <ClusterDeleteModal
-      //   isOpen={activeModal === 'delete' }
-      //   data={selectedClusters}
-      //   onClose={onClose}
-      // />
       <DeleteModal
         isOpen={activeModal === "delete"}
         onClose={onClose}

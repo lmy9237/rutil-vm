@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Modal from "react-modal";
 import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useAddSnapshotFromVM, useDisksFromVM } from "../../../api/RQHook";
@@ -92,53 +92,34 @@ const VmSnapshotModal = ({ isOpen, data, vmId, onClose }) => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel="스냅샷 생성"
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"스냅샷"}
+      submitTitle={isLoading ? "...스냅샷 생성 중" : "생성"}
+      onSubmit={handleFormSubmit}
     >
-      <div className="snapshot-new-popup modal">
-        <div className="popup-header">
-          <h1>스냅샷 생성</h1>
-          <button onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
-          </button>
+      {/* <div className="snapshot-new-popup modal"> */}
+      <div className="p-1">
+        <div className="host-textbox">
+          <label htmlFor="description">설명</label>
+          <input
+            type="text"
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)} // 사용자 입력 관리
+          />
         </div>
-
-        <div className="p-1">
-          <div className="host-textbox">
-            <label htmlFor="description">설명</label>
-            <input
-              type="text"
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)} // 사용자 입력 관리
+        <div>
+          <div className="font-bold">포함할 디스크 :</div>
+          <div className="snapshot-new-table">
+            <TablesOuter
+              columns={TableColumnsInfo.SNAPSHOT_NEW}
+              data={disks} // 디스크 데이터 삽입
+              onRowClick={() => console.log("Row clicked")}
             />
           </div>
-          <div>
-            <div className="font-bold">포함할 디스크 :</div>
-            <div className="snapshot-new-table">
-              <TablesOuter
-                columns={TableColumnsInfo.SNAPSHOT_NEW}
-                data={disks} // 디스크 데이터 삽입
-                onRowClick={() => console.log("Row clicked")}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="edit-footer">
-          <button style={{ display: "none" }}></button>
-          <button onClick={handleFormSubmit} disabled={isLoading}>
-            {isLoading ? "...스냅샷 생성 중" : "OK"}
-          </button>
-          <button onClick={onClose}>취소</button>
         </div>
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

@@ -78,6 +78,12 @@ const ApiManager = {
     url: ENDPOINTS.FIND_USER(username), 
     data: { password }
   }),
+
+  addUser: async(username, password) => makeAPICall({
+    method: "POST", 
+    url: ENDPOINTS.ADD_USER(), 
+    data: { username, password }
+  }),
   //#endregion: User
 
   //#region: TreeNavigation

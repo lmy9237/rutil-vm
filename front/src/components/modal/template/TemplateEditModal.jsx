@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Modal from "react-modal";
 import toast from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import BaseModal from "../BaseModal";
 import { useEditTemplate, useTemplate } from "../../../api/RQHook";
 import "./MTemplate.css";
 
@@ -101,160 +99,139 @@ const TemplateEditModal = ({
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel={editMode ? "템플릿 수정" : "템플릿 생성"}
-      className="Modal"
-      overlayClassName="Overlay newRolePopupOverlay"
-      shouldCloseOnOverlayClick={false}
+    
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"템플릿"}
+      submitTitle={editMode ? "수정" : "생성"}
+      onSubmit={handleFormSubmit}
     >
-      <div className="template-eidt-popup modal">
-        <div className="popup-header">
-          <h1>{editMode ? "템플릿 수정" : "템플릿 생성"}</h1>
-          <button onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
-          </button>
-        </div>
-
-        <div className="flex">
-          {/* 왼쪽 네비게이션 */}
-          <div className="network-backup-edit-nav">
-            <div
-              id="general_tab"
-              className={
-                selectedModalTab === "general" ? "active-tab" : "inactive-tab"
-              }
-              onClick={() => setSelectedModalTab("general")}
-            >
-              일반
-            </div>
-            <div
-              id="console_tab"
-              className={
-                selectedModalTab === "console" ? "active-tab" : "inactive-tab"
-              }
-              onClick={() => setSelectedModalTab("console")}
-            >
-              콘솔
-            </div>
+      {/* <div className="template-eidt-popup modal"> */}
+      <div className="flex">
+        {/* 왼쪽 네비게이션 */}
+        <div className="network-backup-edit-nav">
+          <div
+            id="general_tab"
+            className={
+              selectedModalTab === "general" ? "active-tab" : "inactive-tab"
+            }
+            onClick={() => setSelectedModalTab("general")}
+          >
+            일반
           </div>
-
-          <div className="backup-edit-content">
-            <div
-              className="template-option-box center"
-              style={{
-                borderBottom: "1px solid #a7a6a6",
-                paddingBottom: "0.3rem",
-              }}
-            >
-              <label htmlFor="optimization">최적화 옵션</label>
-              <select
-                id="optimization"
-                value={selectedOptimizeOption} // 선택된 값과 동기화
-                onChange={(e) => setSelectedOptimizeOption(e.target.value)} // 값 변경 핸들러
-              >
-                {optimizeOption.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label} {/* UI에 표시되는 값 */}
-                  </option>
-                ))}
-              </select>
-              {/* <span>선택된 최적화 옵션: {optimizeOption.find(opt => opt.value === selectedOptimizeOption)?.value || ''}</span> */}
-            </div>
-            {selectedModalTab === "general" && (
-              <>
-                <div className="template-edit-texts">
-                  <div className="host-textbox">
-                    <label htmlFor="template_name">이름</label>
-                    <input
-                      type="text"
-                      id="template_name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                  </div>
-                  <div className="host-textbox">
-                    <label htmlFor="description">설명</label>
-                    <input
-                      type="text"
-                      id="description"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                    />
-                  </div>
-                  <div className="host-textbox">
-                    <label htmlFor="comment">코멘트</label>
-                    <input
-                      type="text"
-                      id="comment"
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex">
-                  <div className="t-new-checkbox">
-                    <input
-                      type="checkbox"
-                      id="stateless"
-                      checked={stateless} // 상태에 따라 체크 상태 설정
-                      onChange={(e) => setStateless(e.target.checked)} // 값 변경 핸들러
-                    />
-                    <label htmlFor="stateless">상태 비저장</label>
-                  </div>
-                  <div className="t-new-checkbox">
-                    <input
-                      type="checkbox"
-                      id="start_in_pause_mode"
-                      checked={startPaused} // 상태에 따라 체크 상태 설정
-                      onChange={(e) => setStartPaused(e.target.checked)} // 값 변경 핸들러
-                    />
-                    <label htmlFor="start_in_pause_mode">
-                      일시정지 모드에서 시작
-                    </label>
-                  </div>
-                  <div className="t-new-checkbox">
-                    <input
-                      type="checkbox"
-                      id="prevent_deletion"
-                      checked={deleteProtected} // 상태에 따라 체크 상태 설정
-                      onChange={(e) => setDeleteProtected(e.target.checked)} // 값 변경 핸들러
-                    />
-                    <label htmlFor="prevent_deletion">삭제 방지</label>
-                  </div>
-                </div>
-              </>
-            )}
-            {selectedModalTab === "console" && (
-              <>
-                <div className="p-1.5">
-                  <div className="font-bold">그래픽 콘솔</div>
-                  <div className="monitor center">
-                    <label htmlFor="monitor-select">모니터</label>
-                    <select id="monitor-select">
-                      <option value="1">1</option>
-                    </select>
-                  </div>
-                </div>
-              </>
-            )}
+          <div
+            id="console_tab"
+            className={
+              selectedModalTab === "console" ? "active-tab" : "inactive-tab"
+            }
+            onClick={() => setSelectedModalTab("console")}
+          >
+            콘솔
           </div>
         </div>
 
-        <div className="edit-footer">
-          <button
-            onClick={() => {
-              handleFormSubmit();
+        <div className="backup-edit-content">
+          <div
+            className="template-option-box center"
+            style={{
+              borderBottom: "1px solid #a7a6a6",
+              paddingBottom: "0.3rem",
             }}
           >
-            OK
-          </button>
-          <button onClick={onClose}>취소</button>
+            <label htmlFor="optimization">최적화 옵션</label>
+            <select
+              id="optimization"
+              value={selectedOptimizeOption} // 선택된 값과 동기화
+              onChange={(e) => setSelectedOptimizeOption(e.target.value)} // 값 변경 핸들러
+            >
+              {optimizeOption.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label} {/* UI에 표시되는 값 */}
+                </option>
+              ))}
+            </select>
+            {/* <span>선택된 최적화 옵션: {optimizeOption.find(opt => opt.value === selectedOptimizeOption)?.value || ''}</span> */}
+          </div>
+          {selectedModalTab === "general" && (
+            <>
+              <div className="template-edit-texts">
+                <div className="host-textbox">
+                  <label htmlFor="template_name">이름</label>
+                  <input
+                    type="text"
+                    id="template_name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div className="host-textbox">
+                  <label htmlFor="description">설명</label>
+                  <input
+                    type="text"
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+                <div className="host-textbox">
+                  <label htmlFor="comment">코멘트</label>
+                  <input
+                    type="text"
+                    id="comment"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="flex">
+                <div className="t-new-checkbox">
+                  <input
+                    type="checkbox"
+                    id="stateless"
+                    checked={stateless} // 상태에 따라 체크 상태 설정
+                    onChange={(e) => setStateless(e.target.checked)} // 값 변경 핸들러
+                  />
+                  <label htmlFor="stateless">상태 비저장</label>
+                </div>
+                <div className="t-new-checkbox">
+                  <input
+                    type="checkbox"
+                    id="start_in_pause_mode"
+                    checked={startPaused} // 상태에 따라 체크 상태 설정
+                    onChange={(e) => setStartPaused(e.target.checked)} // 값 변경 핸들러
+                  />
+                  <label htmlFor="start_in_pause_mode">
+                    일시정지 모드에서 시작
+                  </label>
+                </div>
+                <div className="t-new-checkbox">
+                  <input
+                    type="checkbox"
+                    id="prevent_deletion"
+                    checked={deleteProtected} // 상태에 따라 체크 상태 설정
+                    onChange={(e) => setDeleteProtected(e.target.checked)} // 값 변경 핸들러
+                  />
+                  <label htmlFor="prevent_deletion">삭제 방지</label>
+                </div>
+              </div>
+            </>
+          )}
+          {selectedModalTab === "console" && (
+            <>
+              <div className="p-1.5">
+                <div className="font-bold">그래픽 콘솔</div>
+                <div className="monitor center">
+                  <label htmlFor="monitor-select">모니터</label>
+                  <select id="monitor-select">
+                    <option value="1">1</option>
+                  </select>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

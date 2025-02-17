@@ -10,6 +10,17 @@ export const useAuthenticate = (username, password, _onSuccess, _onError) => use
   onSuccess: _onSuccess,
   onError: _onError,
 })
+
+
+export const useAddUser = (username, password, _onSuccess, _onError) => useMutation({
+  mutationFn: async () => {
+    const res = await ApiManager.addUser(username, password)
+    return res
+  },
+  onSuccess: _onSuccess,
+  onError: _onError,
+})
+
 //#endregion: User
 
 //#region: Navigation

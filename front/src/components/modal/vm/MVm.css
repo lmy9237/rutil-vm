@@ -1,8 +1,4 @@
 /*새로만들기*/
-.vm-edit-popup {
-  height: 84.4vh;
-  width: 50%;
-}
 .cpu-res-box {
   display: flex;
   justify-content: space-between;

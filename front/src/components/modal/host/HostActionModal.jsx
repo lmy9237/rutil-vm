@@ -1,11 +1,8 @@
 import { useMemo } from "react";
-import Modal from "react-modal";
 import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTimes,
-  faExclamationTriangle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faExclamationTriangle, } from "@fortawesome/free-solid-svg-icons";
+import BaseModal from "../BaseModal";
 import {
   useDeactivateHost,
   useActivateHost,
@@ -91,42 +88,25 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel={getContentLabel(action)}
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"호스트"}
+      submitTitle={getContentLabel(action)}
+      onSubmit={handleFormSubmit}
     >
-      <div className="storage-delete-popup modal">
-        <div className="popup-header">
-          <h1>호스트 {getContentLabel(action)}</h1>
-          <button onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
-          </button>
-        </div>
-
-        <div className="disk-delete-box">
-          <div>
-            <FontAwesomeIcon
-              style={{ marginRight: "0.3rem" }}
-              icon={faExclamationTriangle}
-            />
-            <span>
-              {" "}
-              {names.join(", ")} 를(을) {getContentLabel(action)} 하시겠습니까?{" "}
-            </span>
-          </div>
-        </div>
-
-        <div className="edit-footer">
-          <button style={{ display: "none" }}></button>
-          <button onClick={handleFormSubmit}>OK</button>
-          <button onClick={onClose}>취소</button>
+      {/* <div className="storage-delete-popup modal"> */}
+      <div className="disk-delete-box">
+        <div>
+          <FontAwesomeIcon
+            style={{ marginRight: "0.3rem" }}
+            icon={faExclamationTriangle}
+          />
+          <span>
+            {names.join(", ")} 를(을) {getContentLabel(action)} 하시겠습니까?
+          </span>
         </div>
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

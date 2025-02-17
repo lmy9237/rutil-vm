@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react';
-import Modal from 'react-modal';
-import '../domain/MDomain.css'
-import { useRegisteredDiskFromDomain } from '../../../api/RQHook';
 import toast from 'react-hot-toast';
-import { xButton } from '../../Icon';
+import BaseModal from "../BaseModal";
+import { useRegisteredDiskFromDomain } from '../../../api/RQHook';
+import '../domain/MDomain.css'
 
 const DomainGetDiskModal = ({ isOpen, domainId, data, onClose }) => {
   const { mutate: registerDisk } = useRegisteredDiskFromDomain();
@@ -39,55 +38,47 @@ const DomainGetDiskModal = ({ isOpen, domainId, data, onClose }) => {
     });
   };
   return (
-    <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel={'디스크 불러오기'} className="Modal" overlayClassName="Overlay newRolePopupOverlay" shouldCloseOnOverlayClick={false} >
-      <div className="disk-move-popup modal">
-        <div className="popup-header">
-          <h1>디스크 불러오기</h1>
-          <button onClick={onClose}> { xButton() } </button>
-        </div>
-
-        <div className="section-table-outer p-0.5">
-          <span style={{ fontWeight: '800' }}>디스크 할당:</span>
-          <table>
-            <thead>
-              <tr>
-                <th>별칭</th>
-                <th>가상 크기</th>
-                {/* <th>디스크 프로파일</th> */}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"디스크"}
+      submitTitle={"불러오기"}
+      onSubmit={handleFormSubmit}
+    >
+      {/* <div className="disk-move-popup modal"> */}
+      <div className="section-table-outer p-0.5">
+        <span style={{ fontWeight: '800' }}>디스크 할당:</span>
+        <table>
+          <thead>
+            <tr>
+              <th>별칭</th>
+              <th>가상 크기</th>
+              {/* <th>디스크 프로파일</th> */}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((disk, index) => (
+              <tr key={index}>
+                <td>{disk.alias}</td>
+                <td>{disk.virtualSize}</td>
+                
+                {/* <td>
+                  <select>
+                    {Array.isArray(disk.profiles) ? (
+                      disk.profiles.map((profile, i) => (
+                        <option key={i} value={profile.value || ""}>
+                          {profile.label || "Unknown"}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="">No profiles available</option>
+                    )}
+                  </select>
+                </td> */}
               </tr>
-            </thead>
-            <tbody>
-              {data.map((disk, index) => (
-                <tr key={index}>
-                  <td>{disk.alias}</td>
-                  <td>{disk.virtualSize}</td>
-                 
-                  {/* <td>
-                    <select>
-                      {Array.isArray(disk.profiles) ? (
-                        disk.profiles.map((profile, i) => (
-                          <option key={i} value={profile.value || ""}>
-                            {profile.label || "Unknown"}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="">No profiles available</option>
-                      )}
-                    </select>
-                  </td> */}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="edit-footer">
-          <button style={{ display: 'none' }}></button>
-          <button onClick={handleFormSubmit}>OK</button>
-          <button onClick={onClose}>취소</button>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

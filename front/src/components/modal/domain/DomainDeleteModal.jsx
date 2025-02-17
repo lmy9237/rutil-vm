@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
+import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faTimes,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
+import BaseModal from "../BaseModal";
 import {
   useAllHostFromDomain,
   useAllHosts,
   useDeleteDomain,
   useDestroyDomain,
 } from "../../../api/RQHook";
-import toast from "react-hot-toast";
 
 const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
   const { mutate: deleteDomain } = useDeleteDomain();
@@ -87,70 +86,53 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel={`스토리지 도메인 ${deleteMode ? "삭제" : "파괴"}`}
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"스토리지 도메인"}
+      submitTitle={deleteMode ? "삭제" : "파괴"}
+      onSubmit={handleFormSubmit}
     >
-      <div className="domain-delete-popup modal">
-        <div className="popup-header">
-          <h1>{`스토리지 도메인 ${deleteMode ? "삭제" : "파괴"}`}</h1>
-          <button onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
-          </button>
-        </div>
-
-        <div className="disk-delete-box">
-          <div>
-            <FontAwesomeIcon
-              style={{ marginRight: "0.3rem" }}
-              icon={faExclamationTriangle}
-            />
-            <span>
-              {selectedNames.length > 1
-                ? `${selectedNames.join(", ")} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`
-                : `${selectedNames[0]} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`}
-            </span>
-          </div>
-        </div>
-
-        {deleteMode === true && (
-          <div className="disk-delete-box" style={{ display: "flex" }}>
-            <div className="flex">
-              <input
-                type="checkbox"
-                id="format"
-                checked={format}
-                onChange={(e) => setFormat(e.target.checked)} // 체크 여부에 따라 true/false 설정
-              />
-              <label htmlFor="format">포맷 하시겠습니까?</label>
-            </div>
-            <div className="disk-delete-box">
-              <select
-                value={hostName}
-                onChange={(e) => setHostName(e.target.value)}
-                disabled={!format} // format이 false면 비활성화
-              >
-                {hosts.map((host) => (
-                  <option key={host.id} value={host.name}>
-                    {host.name} : {host.id}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        )}
-
-        <div className="edit-footer">
-          <button style={{ display: "none" }}></button>
-          <button onClick={handleFormSubmit}>OK</button>
-          <button onClick={onClose}>취소</button>
+      {/* <div className="domain-delete-popup modal"> */}
+      <div className="disk-delete-box">
+        <div>
+          <FontAwesomeIcon
+            style={{ marginRight: "0.3rem" }}
+            icon={faExclamationTriangle}
+          />
+          <span>
+            {selectedNames.length > 1
+              ? `${selectedNames.join(", ")} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`
+              : `${selectedNames[0]} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`}
+          </span>
         </div>
       </div>
-    </Modal>
+
+      {deleteMode === true && (
+        <div className="disk-delete-box" style={{ display: "flex" }}>
+          <div className="flex">
+            <input
+              type="checkbox"
+              id="format"
+              checked={format}
+              onChange={(e) => setFormat(e.target.checked)} // 체크 여부에 따라 true/false 설정
+            />
+            <label htmlFor="format">포맷 하시겠습니까?</label>
+          </div>
+          <div className="disk-delete-box">
+            <select
+              value={hostName}
+              onChange={(e) => setHostName(e.target.value)}
+              disabled={!format} // format이 false면 비활성화
+            >
+              {hosts.map((host) => (
+                <option key={host.id} value={host.name}>
+                  {host.name} : {host.id}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
+    </BaseModal>
   );
 };
 

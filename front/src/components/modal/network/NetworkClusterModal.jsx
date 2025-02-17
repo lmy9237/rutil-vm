@@ -1,12 +1,13 @@
-import Modal from 'react-modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import BaseModal from "../BaseModal";
 import TablesOuter from '../../table/TablesOuter';
 import TableColumnsInfo from '../../table/TableColumnsInfo';
 import { useAllClustersFromNetwork } from '../../../api/RQHook';
 import { renderStatusClusterIcon } from '../../Icon';
 
-const NetworkClusterModal = ({ isOpen, onRequestClose, networkId }) => {
+const NetworkClusterModal = ({ 
+  isOpen, onClose, networkId
+}) => {
   const {
     data: clusters = [],
     isLoading: isClustersLoading,
@@ -34,35 +35,18 @@ const NetworkClusterModal = ({ isOpen, onRequestClose, networkId }) => {
   }));
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      contentLabel="네트워크 관리"
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"네트워크"}
+      submitTitle={"관리"}
+      onSubmit={() => {}}
     >
-      <div className="manage-network-popup modal">
-        <div className="popup-header">
-          <h1>네트워크 관리</h1>
-          <button onClick={onRequestClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
-          </button>
-        </div>
-
-        <TablesOuter
-          isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
-          columns={TableColumnsInfo.CLUSTERS_POPUP} data={clusters || []}
-          onRowClick={() => console.log('Row clicked')}
-        />
-
-        <div className="edit-footer">
-          <button style={{ display: 'none' }}></button>
-          <button>OK</button>
-          <button onClick={onRequestClose}>취소</button>
-        </div>
-      </div>
-    </Modal>
+      {/* <div className="manage-network-popup modal"> */}
+      <TablesOuter
+        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
+        columns={TableColumnsInfo.CLUSTERS_POPUP} data={clusters || []}
+        onRowClick={() => console.log('Row clicked')}
+      />
+    </BaseModal>
   );
 };
 

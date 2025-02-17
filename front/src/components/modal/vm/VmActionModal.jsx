@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-import toast from 'react-hot-toast';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import BaseModal from "../BaseModal";
 import {
-  useStartVM, 
-  usePauseVM, 
+  useStartVM,
+  usePauseVM,
   usePowerOffVM,
   useShutdownVM,
   useRebootVM,
   useResetVM,
-  selectedVms
-} from '../../../api/RQHook';
+  selectedVms,
+} from "../../../api/RQHook";
 
 const VmActionModal = ({ isOpen, action, data, onClose }) => {
   const { mutate: startVM } = useStartVM();
@@ -41,14 +41,14 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
 
   const getContentLabel = () => {
     const labels = {
-      start: '실행',
-      pause: '일시중지',
-      reboot: '재부팅',
-      reset: '재설정',
-      shutdown: '종료',
-      powerOff: '전원을 Off',
+      start: "실행",
+      pause: "일시중지",
+      reboot: "재부팅",
+      reset: "재설정",
+      shutdown: "종료",
+      powerOff: "전원을 Off",
     };
-    return labels[action] || '';
+    return labels[action] || "";
   };
 
   const handleAction = (actionFn) => {
@@ -58,7 +58,7 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
           if (ids.length === 1 || index === ids.length - 1) {
             toast.success(`가상머신 ${getContentLabel(action)} 완료`);
             onClose();
-            navigate('/computing/vms');
+            navigate("/computing/vms");
           }
         },
         onError: (error) => {
@@ -69,8 +69,11 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
   };
 
   const handleFormSubmit = () => {
+    console.log("VmActionModal > handleFormSubmit ... ");
     if (!ids.length) {
-      console.error('ID가 없습니다.');
+      const msgErr = "ID가 없습니다."
+      toast.error(msgErr);
+      console.error(msgErr);
       return;
     }
 
@@ -84,45 +87,37 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
     };
 
     const actionFn = actionMap[action];
-    if (actionFn) {
-      handleAction(actionFn);
-    } else {
+    if (!actionFn) {
       console.error(`알 수 없는 액션: ${action}`);
+      return;
     }
+    handleAction(actionFn);
   };
 
-
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel={getContentLabel(action)}
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"가상머신"}
+      submitTitle={getContentLabel(action)}
+      onSubmit={handleFormSubmit}
     >
-      <div className="storage-delete-popup modal">
-        <div className="popup-header">
-          <h1>가상머신 {getContentLabel(action)}</h1>
-          <button onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
-          </button>
-        </div>
-
-        <div className="disk-delete-box">
-          <div>
-            <FontAwesomeIcon style={{ marginRight: '0.3rem' }} icon={faExclamationTriangle} />
-            <span> {names.join(', ')} 를(을) {getContentLabel(action)}하시겠습니까? </span>
-          </div>
-        </div>
-
-        <div className="edit-footer">
-          <button style={{ display: 'none' }}></button>
-          <button onClick={handleFormSubmit}>OK</button>
-          <button onClick={onClose}>취소</button>
+      <div className="disk-delete-box">
+        <div>
+          <FontAwesomeIcon
+            style={{ marginRight: "0.3rem" }}
+            icon={faExclamationTriangle}
+          />
+          <span>
+            {names.join(", ")} 를(을) {getContentLabel(action)}하시겠습니까?
+          </span>
         </div>
       </div>
-    </Modal>
+
+      {/*<div className="edit-footer">
+        <button style={{ display: 'none' }}></button>
+        <button onClick={handleFormSubmit}>OK</button>
+        <button onClick={onClose}>취소</button>
+      </div>*/}
+    </BaseModal>
   );
 };
 

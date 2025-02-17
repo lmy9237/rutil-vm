@@ -238,12 +238,14 @@ input[disabled] {
   border-radius: 4px;
   font-weight: 600;
 }
+/*
 .edit-footer button:first-child,
 .edit-footer button:nth-child(3) {
   background-color: rgb(218, 218, 218);
   border: var(--border-simple);
 }
-.edit-footer button:nth-child(2) {
+*/
+.edit-footer button.action {
   background-color: #6e9cd8;
   color: white;
   border: 1px solid var(--color-primary-1);

@@ -1,9 +1,8 @@
 import { useState } from "react";
-import Modal from "react-modal";
 import toast from "react-hot-toast";
+import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
-import { xButton } from "../../Icon";
 import { useAllDataCenters, useAttachDomain } from "../../../api/RQHook";
 
 /**
@@ -56,46 +55,29 @@ const DomainAttachModal = ({ isOpen, data, onClose }) => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel={"attach"}
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"스토리지 도메인"}
+      submitTitle={"연결결"}
+      onSubmit={handleFormSubmit}
     >
-      <div className="get-vm-template modal">
-        <div className="popup-header">
-          <h1> 스토리지 도메인 연결</h1>
-          <button onClick={onClose}> {xButton()} </button>
-        </div>
-
-        <div className="datacenter-new-content modal-content">
-          <div>
-            <TablesOuter
-              isLoading={isDataCentersLoading}
-              isError={isDataCentersError}
-              isSuccess={isDataCentersSuccess}
-              columns={TableColumnsInfo.DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN}
-              data={datacenters.map((datacenter) => ({
-                ...datacenter,
-                name: datacenter?.name,
-                storageType: datacenter?.storageType ? "로컬" : "공유됨",
-              }))}
-              shouldHighlight1stCol={true}
-              onRowClick={(row) => handleRowClick(row)}
-            />
-          </div>
-          <span>id: {selectedId}</span>
-        </div>
-
-        <div className="edit-footer">
-          <button style={{ display: "none" }}></button>
-          <button onClick={handleFormSubmit}>OK</button>
-          <button onClick={onClose}>취소</button>
-        </div>
+      {/* <div className="datacenter-new-content modal-content"> */}
+      <div>
+        <TablesOuter
+          isLoading={isDataCentersLoading}
+          isError={isDataCentersError}
+          isSuccess={isDataCentersSuccess}
+          columns={TableColumnsInfo.DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN}
+          data={datacenters.map((datacenter) => ({
+            ...datacenter,
+            name: datacenter?.name,
+            storageType: datacenter?.storageType ? "로컬" : "공유됨",
+          }))}
+          shouldHighlight1stCol={true}
+          onRowClick={(row) => handleRowClick(row)}
+        />
       </div>
-    </Modal>
+      <span>id: {selectedId}</span>
+    </BaseModal>
   );
 };
 

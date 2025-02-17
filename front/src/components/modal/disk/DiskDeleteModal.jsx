@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import Modal from 'react-modal';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import BaseModal from "../BaseModal";
 import { warnButton, xButton } from '../../Icon';
 import { useDeleteDisk } from '../../../api/RQHook';
 
@@ -38,28 +38,21 @@ const DiskDeleteModal = ({ isOpen, onClose, data }) => {
     });
   };
 
+  console.log("...")
   return (
-    <Modal isOpen={isOpen} onRequestClose={onClose} className="Modal" overlayClassName="Overlay" shouldCloseOnOverlayClick={false} >
-      <div className="storage-delete-popup modal">
-        <div className="popup-header">
-          <h1>디스크 삭제</h1>
-          <button onClick={onClose}>{ xButton() }</button>
-        </div>
-
-        <div className="disk-delete-box">
-          <div>
-            { warnButton() }
-            <span> {aliass.join(', ')} 를(을) 삭제하시겠습니까? </span>
-          </div>
-        </div>
-
-        <div className="edit-footer">
-          <button style={{ display: 'none' }}></button>
-          <button onClick={handleDelete}>OK</button>
-          <button onClick={onClose}>취소</button>
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"디스크"}
+      submitTitle={"삭제"}
+      onSubmit={handleDelete}
+    >
+      {/* <div className="storage-delete-popup modal"> */}
+      <div className="disk-delete-box">
+        <div>
+          { warnButton() }
+          <span> {aliass.join(', ')} 를(을) 삭제하시겠습니까? </span>
         </div>
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

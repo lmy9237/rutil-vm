@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
 import toast from 'react-hot-toast';
+import BaseModal from "../BaseModal";
 import LabelInput from '../../label/LabelInput';
 import LabelInputNum from '../../label/LabelInputNum';
 import LabelSelectOptionsID from '../../label/LabelSelectOptionsID';
@@ -148,124 +148,119 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   };
   
   return (
-    <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel={dLabel} className="Modal" overlayClassName="Overlay newRolePopupOverlay" shouldCloseOnOverlayClick={false} >
-      <div className="storage-disk-new-popup modal">
-        <div className="popup-header">
-          <h1>디스크 {dLabel}</h1>
-          <button onClick={onClose}> { xButton() } </button>
+    <BaseModal
+      isOpen={isOpen}
+      onClose={onClose}
+      targetName={"디스크"}
+      submitTitle={dLabel}
+      onSubmit={handleFormSubmit}
+    >
+      {/* <div className="storage-disk-new-popup modal"> */}
+      <div className="disk-new-nav">
+        <div id="storage_img_btn" onClick={() => handleTabClick('img')} className={activeTab === 'img' ? 'active' : ''} >
+          이미지
         </div>
+        {/* <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
+          직접 LUN
+        </div> */}
+      </div>
 
-        <div className="disk-new-nav">
-          <div id="storage_img_btn" onClick={() => handleTabClick('img')} className={activeTab === 'img' ? 'active' : ''} >
-            이미지
+      {/*이미지*/}
+      {activeTab === 'img' && (
+        <div className="disk-new-img">
+          <div className="disk-new-img-left">
+            <LabelInputNum className="img-input-box" label="크기(GB)" value={formState.size} onChange={handleInputChange('size')} autoFocus={true} disabled={editMode} />
+            {editMode && (
+              <LabelInputNum className="img-input-box" label="추가크기(GB)" value={formState.appendSize} onChange={handleInputChange('appendSize')} />
+            )} 
+            <LabelInput className="img-input-box" label="별칭" value={formState.alias} onChange={handleInputChange('alias')} />
+            <LabelInput className="img-input-box" label="설명" value={formState.description} onChange={handleInputChange('description')} />
+            
+            <LabelSelectOptionsID
+              className="img-input-box"
+              label="데이터 센터"
+              value={dataCenterVoId}
+              onChange={(e) => setDataCenterVoId(e.target.value)}
+              disabled={editMode}
+              loading={isDatacentersLoading}
+              options={datacenters}
+            />
+            <LabelSelectOptionsID
+              className="img-input-box"
+              label="스토리지 도메인"
+              value={domainVoId}
+              onChange={(e) => setDomainVoId(e.target.value)}
+              disabled={editMode}
+              loading={isDomainsLoading}
+              options={domains}
+            />
+            <LabelSelectOptions
+              className="img-input-box"
+              label="할당 정책"
+              value={formState.sparse ? "true" : "false"}
+              onChange={(e) => setFormState((prev) => ({ ...prev, sparse: e.target.value === "true" }))}
+              disabled={editMode}
+              options={sparseList}
+            />
+            <LabelSelectOptionsID
+              className="img-input-box"
+              label="디스크 프로파일"
+              value={diskProfileVoId}
+              onChange={(e) => setDiskProfileVoId(e.target.value)}
+              loading={isDiskProfilesLoading}
+              options={diskProfiles}
+            />
           </div>
-          {/* <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
-            직접 LUN
-          </div> */}
+          <div className="disk-new-img-right">
+            <LabelCheckbox label="삭제 후 초기화" id="wipeAfterDelete" checked={formState.wipeAfterDelete} onChange={handleInputChangeCheck('wipeAfterDelete')} />
+            <LabelCheckbox label="공유 가능" id="sharable" checked={formState.sharable} onChange={handleInputChangeCheck('sharable')} disabled={editMode} />
+            <LabelCheckbox label="증분 백업 사용" id="backup" checked={formState.backup} onChange={handleInputChangeCheck('backup')}/>
+          </div>
         </div>
+      )} 
 
-        {/*이미지*/}
-        {activeTab === 'img' && (
-          <div className="disk-new-img">
+      {/* 직접LUN */}
+      {/* {activeTab === 'directlun' && (
+        <div id="storage-directlun-outer">
+          <div id="storage-lun-first">
             <div className="disk-new-img-left">
-              <LabelInputNum className="img-input-box" label="크기(GB)" value={formState.size} onChange={handleInputChange('size')} autoFocus={true} disabled={editMode} />
-              {editMode && (
-                <LabelInputNum className="img-input-box" label="추가크기(GB)" value={formState.appendSize} onChange={handleInputChange('appendSize')} />
-              )} 
-              <LabelInput className="img-input-box" label="별칭" value={formState.alias} onChange={handleInputChange('alias')} />
-              <LabelInput className="img-input-box" label="설명" value={formState.description} onChange={handleInputChange('description')} />
-              
-              <LabelSelectOptionsID
-                className="img-input-box"
-                label="데이터 센터"
-                value={dataCenterVoId}
-                onChange={(e) => setDataCenterVoId(e.target.value)}
-                disabled={editMode}
-                loading={isDatacentersLoading}
-                options={datacenters}
-              />
-              <LabelSelectOptionsID
-                className="img-input-box"
-                label="스토리지 도메인"
-                value={domainVoId}
-                onChange={(e) => setDomainVoId(e.target.value)}
-                disabled={editMode}
-                loading={isDomainsLoading}
-                options={domains}
-              />
-              <LabelSelectOptions
-                className="img-input-box"
-                label="할당 정책"
-                value={formState.sparse ? "true" : "false"}
-                onChange={(e) => setFormState((prev) => ({ ...prev, sparse: e.target.value === "true" }))}
-                disabled={editMode}
-                options={sparseList}
-              />
-              <LabelSelectOptionsID
-                className="img-input-box"
-                label="디스크 프로파일"
-                value={diskProfileVoId}
-                onChange={(e) => setDiskProfileVoId(e.target.value)}
-                loading={isDiskProfilesLoading}
-                options={diskProfiles}
-              />
+              <div className="img-input-box">
+                <span>별칭</span>
+                <input type="text" />
+              </div>
+              <div className="img-input-box">
+                <span>설명</span>
+                <input type="text" />
+              </div>
+              <div className="img-select-box">
+                <label htmlFor="os">데이터 센터</label>
+                <select id="os">
+                  <option value="linux">Linux</option>
+                </select>
+              </div>
+              <div className="img-select-box">
+                <label htmlFor="os">호스트</label>
+                <select id="os">
+                  <option value="linux">Linux</option>
+                </select>
+              </div>
+              <div className="img-select-box">
+                <label htmlFor="os">스토리지 타입</label>
+                <select id="os">
+                  <option value="linux">Linux</option>
+                </select>
+              </div>
             </div>
             <div className="disk-new-img-right">
-              <LabelCheckbox label="삭제 후 초기화" id="wipeAfterDelete" checked={formState.wipeAfterDelete} onChange={handleInputChangeCheck('wipeAfterDelete')} />
-              <LabelCheckbox label="공유 가능" id="sharable" checked={formState.sharable} onChange={handleInputChangeCheck('sharable')} disabled={editMode} />
-              <LabelCheckbox label="증분 백업 사용" id="backup" checked={formState.backup} onChange={handleInputChangeCheck('backup')}/>
-            </div>
-          </div>
-        )} 
-
-        {/* 직접LUN */}
-        {/* {activeTab === 'directlun' && (
-          <div id="storage-directlun-outer">
-            <div id="storage-lun-first">
-              <div className="disk-new-img-left">
-                <div className="img-input-box">
-                  <span>별칭</span>
-                  <input type="text" />
-                </div>
-                <div className="img-input-box">
-                  <span>설명</span>
-                  <input type="text" />
-                </div>
-                <div className="img-select-box">
-                  <label htmlFor="os">데이터 센터</label>
-                  <select id="os">
-                    <option value="linux">Linux</option>
-                  </select>
-                </div>
-                <div className="img-select-box">
-                  <label htmlFor="os">호스트</label>
-                  <select id="os">
-                    <option value="linux">Linux</option>
-                  </select>
-                </div>
-                <div className="img-select-box">
-                  <label htmlFor="os">스토리지 타입</label>
-                  <select id="os">
-                    <option value="linux">Linux</option>
-                  </select>
-                </div>
-              </div>
-              <div className="disk-new-img-right">
-                <div>
-                  <input type="checkbox" className="shareable" />
-                  <label htmlFor="shareable">공유 가능</label>
-                </div>
+              <div>
+                <input type="checkbox" className="shareable" />
+                <label htmlFor="shareable">공유 가능</label>
               </div>
             </div>
           </div>
-        )} */}
-        <div className="edit-footer">
-          <button style={{ display: 'none' }}></button>
-          <button onClick={handleFormSubmit}>{dLabel}</button>
-          <button onClick={onClose}>취소</button>
         </div>
-      </div>
-    </Modal>
+      )} */}
+    </BaseModal>
   );
 };
 

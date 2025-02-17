@@ -1,8 +1,9 @@
 import React, { useState,useEffect } from 'react';
+import toast from 'react-hot-toast';
 import Modal from 'react-modal';
-import '../css/MDomain.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import BaseModal from "../BaseModal";
 import Tables from '../../../../components/table/Tables';
 import TableColumnsInfo from '../../../../components/table/TableColumnsInfo';
 import { 
@@ -19,7 +20,7 @@ import {
   useImportDomain,
   useLoginIscsiFromHost,
 } from '../../../../api/RQHook';
-import toast from 'react-hot-toast';
+import '../css/MDomain.css'
 
 Modal.setAppElement('#root');
 
@@ -417,24 +418,12 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
 
   
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel="도메인 관리"
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"도메인"}
+      submitTitle={editMode ? '편집' : '완료'}
+      onSubmit={handleFormSubmit}
     >
-      <div className="storage-domain-administer-popup">
-        <div className="popup-header">
-          <h1>
-          {
-          "도메인 가져오기"
-          }
-          </h1>
-          <button onClick={onClose}><FontAwesomeIcon icon={faTimes} fixedWidth/></button>
-        </div>
-
+      {/* <div className="storage-domain-administer-popup"> */}
         <div className="storage-domain-new-first">
           <div className="domain-new-left">
 
@@ -777,13 +766,7 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
           </FormGroup>
         </div>
       </div>
-      <div className="edit-footer">
-        <button style={{ display: 'none' }}></button>
-        <button onClick={handleFormSubmit}>{editMode ? '편집' : '완료'}</button>
-        <button onClick={onClose}>취소</button>
-      </div>
-    </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

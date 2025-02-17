@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Modal from "react-modal";
 import { toast } from "react-hot-toast";
+import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import { xButton } from "../../Icon";
@@ -52,7 +52,9 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
 
   // 모달 열릴때 초기화, 편집 정보넣기
   useEffect(() => {
-    if (!isOpen) return setFormState(initialFormState);
+    if (!isOpen) {
+      return setFormState(initialFormState);
+    }
     if (editMode && datacenter) {
       setFormState({
         id: datacenter.id,
@@ -80,11 +82,16 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
 
   // 제출
   const handleFormSubmit = () => {
+    console.log("DataCenterModal > handleFormSubmit ... ")
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      console.error(error);
+      return toast.error(error);
+    }
 
     const dataToSubmit = { ...formState };
     const onSuccess = () => {
+      console.log("DataCenterModal > handleFormSubmit > onSuccess ... ")
       onClose();
       toast.success(`데이터센터 ${dcLabel} 완료`);
     };
@@ -100,67 +107,52 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel={dcLabel}
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"데이터센터"}
+      submitTitle={dcLabel}
+      onSubmit={handleFormSubmit}
     >
-      <div className="datacenter-new-popup modal">
-        <div className="popup-header">
-          <h1>데이터센터 {dcLabel}</h1>
-          <button onClick={onClose}>{xButton()}</button>
-        </div>
-
-        <div className="datacenter-new-content modal-content">
-          <LabelInput
-            label="이름"
-            id="name"
-            value={formState.name}
-            onChange={handleInputChange("name")}
-            autoFocus
-          />
-          <LabelInput
-            label="설명"
-            id="description"
-            value={formState.description}
-            onChange={handleInputChange("description")}
-          />
-          <LabelInput
-            label="코멘트"
-            id="comment"
-            value={formState.comment}
-            onChange={handleInputChange("comment")}
-          />
-          <LabelSelectOptions
-            label="스토리지 타입"
-            value={String(formState.storageType)}
-            onChange={handleInputChange("storageType")}
-            options={storageTypes}
-          />
-          <LabelSelectOptions
-            label="쿼터 모드"
-            value={formState.quotaMode}
-            onChange={handleInputChange("quotaMode")}
-            options={quotaModes}
-          />
-          <LabelSelectOptions
-            label="호환버전"
-            value={formState.version}
-            onChange={handleInputChange("version")}
-            options={versions}
-          />
-        </div>
-
-        <div className="edit-footer">
-          <button style={{ display: "none" }}></button>
-          <button onClick={handleFormSubmit}>{dcLabel}</button>
-          <button onClick={onClose}>취소</button>
-        </div>
+      {/* <div className="datacenter-new-popup modal"> */}
+      <div className="datacenter-new-content modal-content">
+        <LabelInput
+          label="이름"
+          id="name"
+          value={formState.name}
+          onChange={handleInputChange("name")}
+          autoFocus
+        />
+        <LabelInput
+          label="설명"
+          id="description"
+          value={formState.description}
+          onChange={handleInputChange("description")}
+        />
+        <LabelInput
+          label="코멘트"
+          id="comment"
+          value={formState.comment}
+          onChange={handleInputChange("comment")}
+        />
+        <LabelSelectOptions
+          label="스토리지 타입"
+          value={String(formState.storageType)}
+          onChange={handleInputChange("storageType")}
+          options={storageTypes}
+        />
+        <LabelSelectOptions
+          label="쿼터 모드"
+          value={formState.quotaMode}
+          onChange={handleInputChange("quotaMode")}
+          options={quotaModes}
+        />
+        <LabelSelectOptions
+          label="호환버전"
+          value={formState.version}
+          onChange={handleInputChange("version")}
+          options={versions}
+        />
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

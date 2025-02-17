@@ -21,7 +21,7 @@ const AllVm = () => {
     isSuccess: isVmsSuccess,
   } = useAllVMs((e) => ({ ...e, }));
 
-  console.log("...")
+console.log("...")
   return (
     <div id="section">
       <HeaderButton

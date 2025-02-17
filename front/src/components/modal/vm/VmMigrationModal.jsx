@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import BaseModal from "../BaseModal";
 import { useHostsForMigration, useMigration } from "../../../api/RQHook";
 import "./MVm.css";
 
 const VmMigrationModal = ({
   isOpen,
-  onRequestClose,
+  onClose,
   selectedVm = {},
   selectedVms,
 }) => {
@@ -27,7 +27,7 @@ const VmMigrationModal = ({
   const { mutate: migration } = useMigration();
 
   // 되는지 안되는지모름
-  const handleSave = () => {
+  const handleFormSubmit = () => {
     migration(
       {
         vmId: selectedVm.id,
@@ -36,7 +36,7 @@ const VmMigrationModal = ({
       {
         onSuccess: () => {
           console.log("Migration successful");
-          onRequestClose();
+          onClose();
         },
         onError: (error) => {
           console.error("Migration error:", error);
@@ -46,83 +46,67 @@ const VmMigrationModal = ({
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      contentLabel="마이그레이션"
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"가상머신"}
+      submitTitle={"마이그레이션"}
+      onSubmit={handleFormSubmit}
     >
-      <div className="migration-popup-content modal">
-        <div className="popup-header">
-          <h1>가상머신 마이그레이션</h1>
-          <button onClick={onRequestClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
-          </button>
-        </div>
-        <div className="migration-article-outer">
-          <span>1대의 가상 머신이 마이그레이션되는 호스트를 선택하십시오.</span>
+      {/* <div className="migration-popup-content modal"> */}
+      <div className="migration-article-outer">
+        <span>1대의 가상 머신이 마이그레이션되는 호스트를 선택하십시오.</span>
 
-          <div className="migration-article">
-            <div>
-              <div className="migration-dropdown center">
-                <label htmlFor="host">
-                  대상 호스트 <FontAwesomeIcon icon={faInfoCircle} fixedWidth />
-                </label>
-
-                <select
-                  id="host"
-                  value={selectedHost}
-                  onChange={(e) => setSelectedHost(e.target.value)}
-                  disabled={!ableHost || ableHost.length === 0}
-                >
-                  {ableHost && ableHost.length > 0 ? (
-                    ableHost.map((host) => (
-                      <option key={host.id} value={host.id}>
-                        {host.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="">사용 가능한 호스트가 없습니다</option>
-                  )}
-                </select>
-              </div>
-            </div>
-
-            <div className="checkbox_group mb-2">
-              <input
-                className="check_input"
-                type="checkbox"
-                id="ha_mode_box"
-                checked={isHaMode}
-                onChange={() => setIsHaMode(!isHaMode)}
-              />
-              <label className="check_label" htmlFor="ha_mode_box">
-                선택한 가상 머신을 사용하여 양극 강제 연결 그룹의 모든 가상
-                시스템을 마이그레이션합니다.
+        <div className="migration-article">
+          <div>
+            <div className="migration-dropdown center">
+              <label htmlFor="host">
+                대상 호스트 <FontAwesomeIcon icon={faInfoCircle} fixedWidth />
               </label>
-              <FontAwesomeIcon
-                icon={faInfoCircle}
-                style={{ color: "rgb(83, 163, 255)" }}
-                fixedWidth
-              />
-            </div>
 
-            <div>
-              <div className="font-bold">가상머신</div>
-              <div>{selectedVm?.name || "N/A"}</div>
+              <select
+                id="host"
+                value={selectedHost}
+                onChange={(e) => setSelectedHost(e.target.value)}
+                disabled={!ableHost || ableHost.length === 0}
+              >
+                {ableHost && ableHost.length > 0 ? (
+                  ableHost.map((host) => (
+                    <option key={host.id} value={host.id}>
+                      {host.name}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">사용 가능한 호스트가 없습니다</option>
+                )}
+              </select>
             </div>
           </div>
-        </div>
 
-        <div className="edit-footer">
-          <button style={{ display: "none" }}></button>
-          <button onClick={handleSave}>OK</button>
-          <button onClick={onRequestClose}>취소</button>
+          <div className="checkbox_group mb-2">
+            <input
+              className="check_input"
+              type="checkbox"
+              id="ha_mode_box"
+              checked={isHaMode}
+              onChange={() => setIsHaMode(!isHaMode)}
+            />
+            <label className="check_label" htmlFor="ha_mode_box">
+              선택한 가상 머신을 사용하여 양극 강제 연결 그룹의 모든 가상
+              시스템을 마이그레이션합니다.
+            </label>
+            <FontAwesomeIcon
+              icon={faInfoCircle}
+              style={{ color: "rgb(83, 163, 255)" }}
+              fixedWidth
+            />
+          </div>
+
+          <div>
+            <div className="font-bold">가상머신</div>
+            <div>{selectedVm?.name || "N/A"}</div>
+          </div>
         </div>
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

@@ -1,16 +1,9 @@
-import { useMemo } from "react";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import BaseModal from "./BaseModal";
-import { warnButton, xButton } from "../Icon";
+import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import BaseModal from "../components/modal/BaseModal";
+import { warnButton } from '../components/Icon';
 
-/**
- * @name DeleteModal
- * @description ...
- *
- * @param {boolean} isOpen
- * @returns
- */
 const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
   const navigate = useNavigate();
   const { mutate: deleteApi } = api;
@@ -25,7 +18,7 @@ const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
     };
   }, [data]);
 
-  const handleDelete = () => {
+  const handleFormSubmit = () => {
     if (!ids.length) return console.error(`삭제할 ${label} ID가 없습니다.`);
 
     ids.forEach((id, index) => {
@@ -44,17 +37,18 @@ const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
     });
   };
 
+  console.log("...")
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={label}
       submitTitle={"삭제"}
-      onSubmit={handleDelete}
+      onSubmit={handleFormSubmit}
     >
       {/* <div className="storage-delete-popup modal"> */}
       <div className="disk-delete-box">
         <div>
           {warnButton()}
-          <span> {names.join(", ")} 를(을) 삭제하시겠습니까? </span>
+          <span> {names.join(', ')} 를(을) 삭제하시겠습니까? </span>
         </div>
       </div>
     </BaseModal>
@@ -62,3 +56,4 @@ const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
 };
 
 export default DeleteModal;
+

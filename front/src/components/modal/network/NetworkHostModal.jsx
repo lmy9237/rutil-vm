@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowsAltH,
@@ -13,12 +12,13 @@ import {
   faPlay,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import "./MNetwork.css";
-import { useHost, useNetworkFromCluster } from "../../../api/RQHook";
+import BaseModal from "../BaseModal";
 import NewBondingModal from "./NewBondingModal";
 import NetworkHostPlusModal from "./NetworkHostPlusModal";
+import { useHost, useNetworkFromCluster } from "../../../api/RQHook";
+import "./MNetwork.css";
 
-const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
+const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
   const dragItem = useRef(null);
 
   // 호스트상세정보 조회로 클러스터id 뽑기
@@ -511,72 +511,55 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      contentLabel="호스트 네트워크 설정"
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"호스트 네트워크"}
+      submitTitle={"설정"}
+      onSubmit={() => {}}
     >
-      <div className="host-nework-content-popup modal">
-        <div className="popup-header">
-          <h1>호스트 네트워크 설정</h1>
-          <button onClick={onRequestClose}>
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
-        </div>
+      {/* <div className="host-nework-content-popup modal"> */}
+      <div className="host-network-outer">
+        <div className="py-1 font-bold underline">드래그 하여 변경</div>
+        <div className="host-network-separation">
+          <div className="network-separation-left">
+            <div>
+              <div>인터페이스</div>
+              <div>할당된 논리 네트워크</div>
+            </div>
 
-        <div className="host-network-outer">
-          <div className="py-1 font-bold underline">드래그 하여 변경</div>
-          <div className="host-network-separation">
-            <div className="network-separation-left">
-              <div>
-                <div>인터페이스</div>
-                <div>할당된 논리 네트워크</div>
-              </div>
+            {outer.map((outerItem) => (
+              <div key={outerItem.id} className="separation-left-content">
+                {/* Render Interface */}
+                {renderInterface(outerItem)}
 
-              {outer.map((outerItem) => (
-                <div key={outerItem.id} className="separation-left-content">
-                  {/* Render Interface */}
-                  {renderInterface(outerItem)}
+                <div className="flex items-center justify-center">
+                  <FontAwesomeIcon
+                    icon={faArrowsAltH}
+                    style={{
+                      color: "grey",
+                      width: "5vw",
+                      fontSize: "0.6rem",
+                    }}
+                  />
+                </div>
 
-                  <div className="flex items-center justify-center">
-                    <FontAwesomeIcon
-                      icon={faArrowsAltH}
-                      style={{
-                        color: "grey",
-                        width: "5vw",
-                        fontSize: "0.6rem",
-                      }}
-                    />
-                  </div>
-
-                  {/* Render Networks for Each Interface */}
-                  <div className="assigned-network-outer">
-                    <div className="outer-networks">
-                      {renderNetworkOuter(outerItem)}
-                    </div>
+                {/* Render Networks for Each Interface */}
+                <div className="assigned-network-outer">
+                  <div className="outer-networks">
+                    {renderNetworkOuter(outerItem)}
                   </div>
                 </div>
-              ))}
-            </div>
-
-            {/* Unassigned Networks */}
-            <div
-              className="network_separation_right"
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={() => drop(null, "unassigned")}
-            >
-              {renderUnassignedNetworks()}
-            </div>
+              </div>
+            ))}
           </div>
-        </div>
 
-        <div className="edit-footer">
-          <button style={{ display: "none" }}></button>
-          <button>OK</button>
-          <button onClick={onRequestClose}>취소</button>
+          {/* Unassigned Networks */}
+          <div
+            className="network_separation_right"
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={() => drop(null, "unassigned")}
+          >
+            {renderUnassignedNetworks()}
+          </div>
         </div>
       </div>
 
@@ -592,7 +575,7 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
         onClose={closeBondingModal}
         mode={bondingMode}
       />
-    </Modal>
+    </BaseModal>
   );
 };
 

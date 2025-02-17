@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import toast from "react-hot-toast";
+import BaseModal from "../BaseModal";
+import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
+import LabelInput from "../../label/LabelInput";
+import LabelInputNum from "../../label/LabelInputNum";
+import LabelSelectOptions from "../../label/LabelSelectOptions";
+import { xButton } from "../../Icon";
 import {
   useAddHost,
   useEditHost,
   useHost,
   useAllClusters,
 } from "../../../api/RQHook";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import LabelInput from "../../label/LabelInput";
-import LabelInputNum from "../../label/LabelInputNum";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import { xButton } from "../../Icon";
 import "./MHost.css";
 
 const initialFormState = {
@@ -119,112 +120,97 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel={hLabel}
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"호스트"}
+      submitTitle={hLabel}
+      onSubmit={handleFormSubmit}
     >
-      <div className="host-new-popup modal">
-        <div className="popup-header">
-          <h1>호스트 {hLabel}</h1>
-          <button onClick={onClose}> {xButton()} </button>
-        </div>
+      {/* <div className="host-new-popup modal"> */}
+      <div className="host-new-content modal-content">
+        <LabelSelectOptionsID
+          label="호스트 클러스터"
+          value={clusterVoId}
+          onChange={(e) => setClusterVoId(e.target.value)}
+          disabled={editMode}
+          loading={isClustersLoading}
+          options={clusters}
+        />
+        <hr />
 
-        <div className="host-new-content modal-content">
-          <LabelSelectOptionsID
-            label="호스트 클러스터"
-            value={clusterVoId}
-            onChange={(e) => setClusterVoId(e.target.value)}
-            disabled={editMode}
-            loading={isClustersLoading}
-            options={clusters}
-          />
-          <hr />
+        <LabelInput
+          label="이름"
+          id="name"
+          value={formState.name}
+          onChange={handleInputChange("name")}
+          autoFocus
+        />
+        <LabelInput
+          label="코멘트"
+          id="comment"
+          value={formState.comment}
+          onChange={handleInputChange("comment")}
+        />
+        <LabelInput
+          label="호스트 이름/IP"
+          id="address"
+          value={formState.address}
+          onChange={handleInputChange("address")}
+          disabled={editMode}
+        />
+        <LabelInputNum
+          label="SSH 포트"
+          id="sshPort"
+          value={formState.sshPort}
+          onChange={handleInputChange("sshPort")}
+          disabled={editMode}
+        />
+        <hr />
 
-          <LabelInput
-            label="이름"
-            id="name"
-            value={formState.name}
-            onChange={handleInputChange("name")}
-            autoFocus
-          />
-          <LabelInput
-            label="코멘트"
-            id="comment"
-            value={formState.comment}
-            onChange={handleInputChange("comment")}
-          />
-          <LabelInput
-            label="호스트 이름/IP"
-            id="address"
-            value={formState.address}
-            onChange={handleInputChange("address")}
-            disabled={editMode}
-          />
-          <LabelInputNum
-            label="SSH 포트"
-            id="sshPort"
-            value={formState.sshPort}
-            onChange={handleInputChange("sshPort")}
-            disabled={editMode}
-          />
-          <hr />
-
-          {!editMode && (
-            <>
-              <div className="font-semibold">
-                <label>인증</label>
-              </div>
-              <LabelInput label="사용자 이름" value="root" disabled={true} />
-              <div>
-                <label htmlFor="sshPassWord">암호</label>
-                <input
-                  type="password"
-                  id="sshPassWord"
-                  value={formState.sshPassWord}
-                  onChange={handleInputChange("sshPassWord")}
-                />
-              </div>
-            </>
-          )}
-          <div>
-            <div>vGPU 배치</div>
-            <div className="flex">
-              {["consolidated", "separated"].map((option) => (
-                <label
-                  key={option}
-                  style={{ marginRight: "0.2rem", display: "flex" }}
-                >
-                  <input
-                    type="radio"
-                    name="vgpu"
-                    value={option}
-                    checked={formState.vgpu === option}
-                    onChange={handleInputChange("vgpu")}
-                  />
-                  {option === "consolidated" ? "통합" : "분산"}
-                </label>
-              ))}
+        {!editMode && (
+          <>
+            <div className="font-semibold">
+              <label>인증</label>
             </div>
+            <LabelInput label="사용자 이름" value="root" disabled={true} />
+            <div>
+              <label htmlFor="sshPassWord">암호</label>
+              <input
+                type="password"
+                id="sshPassWord"
+                value={formState.sshPassWord}
+                onChange={handleInputChange("sshPassWord")}
+              />
+            </div>
+          </>
+        )}
+        <div>
+          <div>vGPU 배치</div>
+          <div className="flex">
+            {["consolidated", "separated"].map((option) => (
+              <label
+                key={option}
+                style={{ marginRight: "0.2rem", display: "flex" }}
+              >
+                <input
+                  type="radio"
+                  name="vgpu"
+                  value={option}
+                  checked={formState.vgpu === option}
+                  onChange={handleInputChange("vgpu")}
+                />
+                {option === "consolidated" ? "통합" : "분산"}
+              </label>
+            ))}
           </div>
-          <LabelSelectOptions
-            label="호스트 엔진 배포 작업 선택"
-            value={String(formState.hostedEngine)}
-            onChange={handleInputChange("hostedEngine")}
-            options={hostEngines}
-          />
         </div>
-
-        <div className="edit-footer">
-          <button style={{ display: "none" }}></button>
-          <button onClick={handleFormSubmit}>{hLabel}</button>
-          <button onClick={onClose}>취소</button>
-        </div>
+        <LabelSelectOptions
+          label="호스트 엔진 배포 작업 선택"
+          value={String(formState.hostedEngine)}
+          onChange={handleInputChange("hostedEngine")}
+          options={hostEngines}
+        />
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

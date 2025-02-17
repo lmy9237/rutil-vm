@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
 import toast from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import BaseModal from "../BaseModal";
 import LoadingOption from "../../common/LoadingOption";
 import {
   useAddVnicProfile,
@@ -253,204 +251,185 @@ const VnicProfileModal = ({
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel={editMode ? "vNIC 프로파일 편집" : "새로 만들기"}
-      className="Modal"
-      overlayClassName="Overlay"
-      shouldCloseOnOverlayClick={false}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={"vNic 프로파일"}
+      submitTitle={editMode ? "편집" : "생성"}
+      onSubmit={handleFormSubmit}
     >
-      <div className="vnic-new-content-popup modal">
-        <div className="popup-header">
-          <h1>
-            {editMode
-              ? "가상 머신 인터페이스 프로파일 편집"
-              : "가상 머신 인터페이스 프로파일"}
-          </h1>
-          <button onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
-          </button>
-        </div>
 
-        <div className="vnic-new-content">
-          <div className="vnic-new-contents" style={{ paddingTop: "0.2rem" }}>
-            <FormGroup label="데이터 센터">
+      {/* <div className="vnic-new-content-popup modal"> */}
+      <div className="vnic-new-content">
+        <div className="vnic-new-contents" style={{ paddingTop: "0.2rem" }}>
+          <FormGroup label="데이터 센터">
+            <select
+              value={dataCenterVoId}
+              onChange={(e) => setDataCenterVoId(e.target.value)}
+              disabled={editMode}
+            >
+              {isDataCentersLoading ? (
+                <option>로딩중~</option>
+              ) : (
+                datacenters &&
+                datacenters.map((dc) => (
+                  <option key={dc.id} value={dc.id}>
+                    {dc.name}: {dc.id}
+                  </option>
+                ))
+              )}
+            </select>
+          </FormGroup>
+
+          <FormGroup label="네트워크">
+            <select
+              value={networkVoId}
+              onChange={(e) => setNetworkVoId(e.target.value)}
+              disabled={editMode}
+            >
+              {isNetworksLoading ? (
+                <option>loading ~~</option>
+              ) : (
+                networks &&
+                networks.map((n) => (
+                  <option key={n.id} value={n.id}>
+                    {n.name}: {networkVoId}
+                  </option>
+                ))
+              )}
+            </select>
+          </FormGroup>
+
+          <FormGroup label="별칭">
+            <input
+              type="text"
+              value={formState.name}
+              autoFocus
+              onChange={(e) =>
+                setFormState((prev) => ({ ...prev, name: e.target.value }))
+              }
+            />
+          </FormGroup>
+
+          <FormGroup label="설명">
+            <input
+              type="text"
+              value={formState.description}
+              onChange={(e) =>
+                setFormState((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
+            />
+          </FormGroup>
+
+          <FormGroup label="네트워크 필터">
+            <div style={{ display: "flex", alignItems: "center" }}>
               <select
-                value={dataCenterVoId}
-                onChange={(e) => setDataCenterVoId(e.target.value)}
-                disabled={editMode}
-              >
-                {isDataCentersLoading ? (
-                  <option>로딩중~</option>
-                ) : (
-                  datacenters &&
-                  datacenters.map((dc) => (
-                    <option key={dc.id} value={dc.id}>
-                      {dc.name}: {dc.id}
-                    </option>
-                  ))
-                )}
-              </select>
-            </FormGroup>
-
-            <FormGroup label="네트워크">
-              <select
-                value={networkVoId}
-                onChange={(e) => setNetworkVoId(e.target.value)}
-                disabled={editMode}
-              >
-                {isNetworksLoading ? (
-                  <option>loading ~~</option>
-                ) : (
-                  networks &&
-                  networks.map((n) => (
-                    <option key={n.id} value={n.id}>
-                      {n.name}: {networkVoId}
-                    </option>
-                  ))
-                )}
-              </select>
-            </FormGroup>
-
-            <FormGroup label="별칭">
-              <input
-                type="text"
-                value={formState.name}
-                autoFocus
-                onChange={(e) =>
-                  setFormState((prev) => ({ ...prev, name: e.target.value }))
-                }
-              />
-            </FormGroup>
-
-            <FormGroup label="설명">
-              <input
-                type="text"
-                value={formState.description}
-                onChange={(e) =>
-                  setFormState((prev) => ({
-                    ...prev,
-                    description: e.target.value,
-                  }))
-                }
-              />
-            </FormGroup>
-
-            <FormGroup label="네트워크 필터">
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <select
-                  id="networkFilter"
-                  value={formState.networkFilter?.id || ""}
-                  disabled={formState.passThrough === "ENABLED"} // ✅ Passthrough 체크 시 비활성화
-                  onChange={(e) => {
-                    const selectedFilter = nFilters.find(
-                      (filter) => filter.id === e.target.value
-                    );
-                    setFormState((prev) => ({
-                      ...prev,
-                      networkFilter: selectedFilter || null,
-                    }));
-                  }}
-                >
-                  <option value="">필터 선택 없음</option>
-                  {isNFiltersLoading ? (
-                    <LoadingOption />
-                  ) : (
-                    nFilters.map((filter) => (
-                      <option key={filter.id} value={filter.id}>
-                        {filter.name}
-                      </option>
-                    ))
-                  )}
-                </select>
-                <span style={{ marginLeft: "1rem" }}>
-                  {formState.networkFilter
-                    ? `ID: ${formState.networkFilter.id}, Name: ${formState.networkFilter.name}`
-                    : "필터를 선택해주세요."}
-                </span>
-              </div>
-            </FormGroup>
-
-            <div className="vnic-new-checkbox">
-              <input
-                type="checkbox"
-                id="passThrough"
-                checked={formState.passThrough === "ENABLED"}
-                onChange={handlePassthroughChange}
-              />
-              <label htmlFor="passThrough">통과</label>
-            </div>
-
-            <div className="vnic-new-checkbox">
-              <input
-                type="checkbox"
-                id="migration"
-                checked={formState.migration}
-                disabled={formState.passThrough !== "ENABLED"}
-                onChange={(e) =>
-                  setFormState((prev) => ({
-                    ...prev,
-                    migration: e.target.checked,
-                  }))
-                }
-              />
-              <label htmlFor="migration">마이그레이션 가능</label>
-            </div>
-
-            {/* 페일오버 vNIC 프로파일 */}
-            {/* <div className="vnic-new-box">
-              <label htmlFor="failover_vnic_profile">페일오버 vNIC 프로파일</label>
-              <select
-                id="failover_vnic_profile"
-                disabled={!formState.migration || !formState.passThrough}
-              >
-                <option value="none">없음</option>
-                {!isFailoverNicsLoading &&
-                  failoverNics.map((nic) => (
-                    <option key={nic.id} value={nic.id}>
-                      {nic.name}
-                    </option>
-                  ))}
-              </select>
-            </div> */}
-
-            <div className="vnic-new-checkbox">
-              <input
-                type="checkbox"
-                id="portMirroring"
-                checked={formState.portMirroring}
+                id="networkFilter"
+                value={formState.networkFilter?.id || ""}
                 disabled={formState.passThrough === "ENABLED"} // ✅ Passthrough 체크 시 비활성화
-                onChange={(e) =>
+                onChange={(e) => {
+                  const selectedFilter = nFilters.find(
+                    (filter) => filter.id === e.target.value
+                  );
                   setFormState((prev) => ({
                     ...prev,
-                    portMirroring: e.target.checked,
-                  }))
-                }
-              />
-              <label htmlFor="portMirroring">포트 미러링</label>
+                    networkFilter: selectedFilter || null,
+                  }));
+                }}
+              >
+                <option value="">필터 선택 없음</option>
+                {isNFiltersLoading ? (
+                  <LoadingOption />
+                ) : (
+                  nFilters.map((filter) => (
+                    <option key={filter.id} value={filter.id}>
+                      {filter.name}
+                    </option>
+                  ))
+                )}
+              </select>
+              <span style={{ marginLeft: "1rem" }}>
+                {formState.networkFilter
+                  ? `ID: ${formState.networkFilter.id}, Name: ${formState.networkFilter.name}`
+                  : "필터를 선택해주세요."}
+              </span>
             </div>
+          </FormGroup>
 
-            {/* 모든 사용자 허용 - 편집 모드가 아닌 경우에만 표시 */}
-            {/* {!editMode && (
-              <div className="vnic-new-checkbox">
-                <input 
-                  type="checkbox" 
-                  id="allow_all_users" 
-                  checked
-                />
-                <label htmlFor="allow_all_users">모든 사용자가 이 프로파일을 사용하도록 허용</label>
-              </div>
-            )} */}
+          <div className="vnic-new-checkbox">
+            <input
+              type="checkbox"
+              id="passThrough"
+              checked={formState.passThrough === "ENABLED"}
+              onChange={handlePassthroughChange}
+            />
+            <label htmlFor="passThrough">통과</label>
           </div>
-        </div>
 
-        <div className="edit-footer">
-          <button onClick={handleFormSubmit}>OK</button>
-          <button onClick={onClose}>취소</button>
+          <div className="vnic-new-checkbox">
+            <input
+              type="checkbox"
+              id="migration"
+              checked={formState.migration}
+              disabled={formState.passThrough !== "ENABLED"}
+              onChange={(e) =>
+                setFormState((prev) => ({
+                  ...prev,
+                  migration: e.target.checked,
+                }))
+              }
+            />
+            <label htmlFor="migration">마이그레이션 가능</label>
+          </div>
+
+          {/* 페일오버 vNIC 프로파일 */}
+          {/* <div className="vnic-new-box">
+            <label htmlFor="failover_vnic_profile">페일오버 vNIC 프로파일</label>
+            <select
+              id="failover_vnic_profile"
+              disabled={!formState.migration || !formState.passThrough}
+            >
+              <option value="none">없음</option>
+              {!isFailoverNicsLoading &&
+                failoverNics.map((nic) => (
+                  <option key={nic.id} value={nic.id}>
+                    {nic.name}
+                  </option>
+                ))}
+            </select>
+          </div> */}
+
+          <div className="vnic-new-checkbox">
+            <input
+              type="checkbox"
+              id="portMirroring"
+              checked={formState.portMirroring}
+              disabled={formState.passThrough === "ENABLED"} // ✅ Passthrough 체크 시 비활성화
+              onChange={(e) =>
+                setFormState((prev) => ({
+                  ...prev,
+                  portMirroring: e.target.checked,
+                }))
+              }
+            />
+            <label htmlFor="portMirroring">포트 미러링</label>
+          </div>
+
+          {/* 모든 사용자 허용 - 편집 모드가 아닌 경우에만 표시 */}
+          {/* {!editMode && (
+            <div className="vnic-new-checkbox">
+              <input 
+                type="checkbox" 
+                id="allow_all_users" 
+                checked
+              />
+              <label htmlFor="allow_all_users">모든 사용자가 이 프로파일을 사용하도록 허용</label>
+            </div>
+          )} */}
         </div>
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 
