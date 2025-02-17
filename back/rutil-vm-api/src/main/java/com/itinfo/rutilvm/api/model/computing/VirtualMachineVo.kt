@@ -8,6 +8,7 @@ import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.util.ovirt.*
+import net.bytebuddy.asm.Advice.AssignReturned.ExceptionHandler.Factory.Enabled
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.*
@@ -26,7 +27,6 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property id [String] 가상머신 Id
  * @property name [String]
  * @property status [String]
- * @property upTime [String]
  */
 class VirtualMachineVo (
     val id: String = "",
@@ -34,7 +34,6 @@ class VirtualMachineVo (
 	val description: String = "",
 	val comment: String = "",
     val status: VmStatus = VmStatus.UNKNOWN,
-    val upTime: String = "",
 	val biosBootMenu: Boolean = false,
 	val biosType: String = "",  // chipsetFirmwareType
 	val cpuArc: Architecture = Architecture.UNDEFINED,
@@ -45,7 +44,6 @@ class VirtualMachineVo (
 	val cpuPinningPolicy: String = "",
     val creationTime: String = "",
 	val deleteProtected: Boolean = false,
-	// <display>
 	val monitor: Int = 0,
 	val displayType: DisplayType = DisplayType.VNC,
 	val ha: Boolean = false,
@@ -63,16 +61,25 @@ class VirtualMachineVo (
 	val placementPolicy: VmAffinity = VmAffinity.MIGRATABLE,
     val startPaused: Boolean = false,
 	val storageErrorResumeBehaviour: VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.AUTO_RESUME,
-	val timeZone: String = "Asia/Seoul", // Etc/GMT & Asia/Seoul
-	// val type: Optim
-	// optimizeOption
+	// val timeZone: String = "Asia/Seoul", // Etc/GMT & Asia/Seoul
+	val type: String = "",  //VmType
+	val usb: Boolean = false,
+	val virtioScsiMultiQueueEnabled: Boolean = false,
+
+	val clusterVo: IdentifiedVo = IdentifiedVo(),
+	val hostVo: IdentifiedVo = IdentifiedVo(),
+	val originTemplate: IdentifiedVo = IdentifiedVo(),
+	val template: IdentifiedVo = IdentifiedVo(),
+	val cpuProfileVo: IdentifiedVo = IdentifiedVo(),
+	val upTime: String = "",
+	val startTime: String = "",
+	val stopTime: String = "",
 
 	val diskAttachmentVos: List<IdentifiedVo> = listOf(),
     val cdRomVo: IdentifiedVo = IdentifiedVo(),
 	val snapshotVos: List<IdentifiedVo> = listOf(),
 	val hostDeviceVos: List<IdentifiedVo> = listOf(),
 	val nicVos: List<IdentifiedVo> = listOf(),
-
 ): Serializable {
     override fun toString(): String =
         gson.toJson(this)
