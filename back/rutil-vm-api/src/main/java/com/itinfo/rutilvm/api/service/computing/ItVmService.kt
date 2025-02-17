@@ -138,15 +138,16 @@ class VmServiceImpl(
 
 	@Throws(Error::class)
 	override fun add(vmVo: VmVo): VmVo? {
-		log.info("add ... ")
-//		if(vmVo.diskAttachmentVos.filter { it.bootable }.size != 1){
-//			log.error("디스크 부팅가능은 한개만 가능")
-//			throw ErrorPattern.VM_VO_INVALID.toException()
-//		}
+		log.info("add ... vmVo: {}", vmVo)
+
+		// if(vmVo.diskAttachmentVos.filter { it.bootable }.size != 1){
+		// 	log.error("디스크 부팅가능은 한개만 가능")
+		// 	throw ErrorPattern.VM_VO_INVALID.toException()
+		// }
 
 		val res: Vm? = conn.addVm(
 			vmVo.toAddVmBuilder(),
-			vmVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddDiskAttachmentList(),
+			vmVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
 			vmVo.vnicProfileVos.map { it.id }.takeIf { it.isNotEmpty() }, // NIC가 있는 경우만 전달
 			vmVo.connVo.id.takeIf { it.isNotEmpty() }  // ISO 설정이 있는 경우만 전달
 		).getOrNull()
@@ -156,16 +157,15 @@ class VmServiceImpl(
 	//TODO
 	@Throws(Error::class)
 	override fun update(vmVo: VmVo): VmVo? {
-		log.info("update ... {}", vmVo.name)
-		// 나중에 조건풀기
-//		if(vmVo.diskAttachmentVos.filter { it.bootable }.size != 1){
-//			log.error("디스크 부팅가능은 한개만 가능")
-//			throw ErrorPattern.VM_VO_INVALID.toException()
-//		}
+		log.info("update ... {}", vmVo)
+		if(vmVo.diskAttachmentVos.filter { it.bootable }.size != 1){
+			log.error("디스크 부팅가능은 한개만 가능")
+			throw ErrorPattern.VM_VO_INVALID.toException()
+		}
 
-		val existDiskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmVo.id)
-			.getOrDefault(listOf())
+		val existDiskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmVo.id).getOrDefault(listOf())
 
+		// 기존에 disk에 없는 아이디라면 디스크 생성
 		val diskAttachmentListToAdd: List<DiskAttachment> = vmVo.diskAttachmentVos.filter { diskAttachmentVo ->
 			existDiskAttachments.none { it.id() == diskAttachmentVo.id }
 		}.map {
@@ -200,7 +200,7 @@ class VmServiceImpl(
 			diskAttachmentListToAdd,
 			diskAttachmentListToDelete,
 //				vmVo.diskAttachmentVos.toEditDiskAttachmentList(conn, vmVo.id),
-			vmVo.vnicProfileVos.map { it.id },
+			vmVo.vnicProfileVos.map { it.id }.takeIf { it.isEmpty() },
 			vmVo.connVo?.id
 		).getOrNull()
 

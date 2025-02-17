@@ -193,9 +193,9 @@ fun Connection.addVm(
 
 fun Connection.updateVm(
 	vm: Vm,
-	addDiskAttachments: List<DiskAttachment>,
-	deleteDiskAttachments: List<DiskAttachment>,
-	vnicIds: List<String>,
+	addDiskAttachments: List<DiskAttachment>?,
+	deleteDiskAttachments: List<DiskAttachment>?,
+	vnicIds: List<String>?,
 	connId: String?
 ): Result<Vm?> = runCatching {
 	if (this.findAllVms()
@@ -210,9 +210,13 @@ fun Connection.updateVm(
 	val vmUpdated: Vm = this.srvVm(vm.id()).update().vm(vm).send().vm()
 		?: throw ErrorPattern.VM_NOT_FOUND.toError()
 
-	this.addMultipleDiskAttachmentsToVm(vmUpdated.id(), addDiskAttachments)
+	if (addDiskAttachments != null) {
+		this.addMultipleDiskAttachmentsToVm(vmUpdated.id(), addDiskAttachments)
+	}
 //	this.removeDiskAttachmentToVm(vmUpdated.id(), deleteDiskAttachments)
-	this.addMultipleNicsFromVm(vmUpdated.id(), vnicIds)
+	if (vnicIds != null) {
+		this.addMultipleNicsFromVm(vmUpdated.id(), vnicIds)
+	}
 	if (connId != null) {
 		this.selectCdromFromVm(vmUpdated.id(), connId)
 	}
@@ -225,12 +229,11 @@ fun Connection.updateVm(
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+// diskDelete 디스크 삭제 여부
 fun Connection.removeVm(vmId: String, diskDelete: Boolean = false): Result<Boolean> = runCatching {
 	val vm: Vm = this.findVm(vmId)
 		.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
-
-	if (vm.deleteProtected())
-		throw ErrorPattern.VM_PROTECTED.toError()
+	if (vm.deleteProtected()) throw ErrorPattern.VM_PROTECTED.toError()
 	if(vm.status() == VmStatus.UP) {
 		log.debug("가상머신이 실행중인 상태")
 		throw ErrorPattern.VM_STATUS_UP.toError()
@@ -417,9 +420,7 @@ fun Connection.findNicFromVm(vmId: String, nicId: String): Result<Nic?> = runCat
 }
 
 fun Connection.addNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching {
-	val existingNics =
-		this.findAllNicsFromVm(vmId)
-			.getOrDefault(listOf())
+	val existingNics = this.findAllNicsFromVm(vmId).getOrDefault(listOf())
 	if (existingNics.nameDuplicateVmNic(nic.name())) {
 		return FailureType.DUPLICATE.toResult(Term.NIC.desc)
 	}
@@ -438,9 +439,7 @@ fun Connection.addNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching 
 
 fun Connection.addMultipleNicsFromVm(vmId: String, vnicProfileIds: List<String>): Result<Boolean> = runCatching {
 	val nics = vnicProfileIds.mapIndexed { index, profileId ->
-		NicBuilder()
-			.name("nic${index + 1}")
-			.vnicProfile(VnicProfileBuilder().id(profileId).build())
+		NicBuilder().name("nic${index + 1}").vnicProfile(VnicProfileBuilder().id(profileId).build())
 		.build()
 	}
 

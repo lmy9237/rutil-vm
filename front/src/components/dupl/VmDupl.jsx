@@ -20,9 +20,7 @@ const VmDupl = ({
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedVms, setSelectedVms] = useState([]);
-  const selectedIds = (Array.isArray(selectedVms) ? selectedVms : [])
-    .map((v) => v.id)
-    .join(", ");
+  const selectedIds = (Array.isArray(selectedVms) ? selectedVms : []).map((v) => v.id).join(", ");
 
   const handleNameClick = (id) => navigate(`/computing/vms/${id}`);
 
@@ -49,13 +47,12 @@ const VmDupl = ({
             icon: renderVmStatusIcon(vm.status),
             host: (
               <TableRowClick type="host" id={vm?.hostVo?.id}>
-                {" "}
                 {vm?.hostVo?.name}{" "}
               </TableRowClick>
             ),
             cluster: (
               <TableRowClick type="cluster" id={vm?.clusterVo?.id}>
-                {vm?.clusterVo?.name}
+                {vm?.clusterVo?.name}{" "}
               </TableRowClick>
             ),
             dataCenter: (

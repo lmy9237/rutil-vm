@@ -21,7 +21,7 @@ private val log = LoggerFactory.getLogger(DiskAttachmentVo::class.java)
  * [DiskAttachmentVo]
  * Vm, StorageDomainVmDiskAttachment, TemplateDiskAttachment
  * 가상머신에서만 사용
- * 
+ *
  * @property active [Boolean] 활성 여부
  * @property bootable [Boolean] 부팅가능 (가상머신에서 부팅가능한 디스크는 한개만 지정가능)
  * @property readOnly [Boolean] 읽기전용
@@ -61,7 +61,7 @@ class DiskAttachmentVo(
 		private var bVmVo: IdentifiedVo = IdentifiedVo();fun vmVo(block: () -> IdentifiedVo?) { bVmVo = block() ?: IdentifiedVo() }
 		fun build(): DiskAttachmentVo = DiskAttachmentVo(bId, bActive, bBootable, bReadOnly, bPassDiscard, bInterface_, bLogicalName, bDetachOnly, bDiskImageVo, bVmVo)
 	}
-	
+
 	companion object {
 		inline fun builder(block: DiskAttachmentVo.Builder.() -> Unit): DiskAttachmentVo = DiskAttachmentVo.Builder().apply(block).build()
 	}
@@ -71,7 +71,7 @@ fun DiskAttachment.toDiskAttachMenu(conn: Connection): DiskAttachmentVo {
 	val disk: Disk? =
 		conn.findDisk(this@toDiskAttachMenu.disk().id())
 			.getOrNull()
-	return DiskAttachmentVo.builder { 
+	return DiskAttachmentVo.builder {
 		id { this@toDiskAttachMenu.id() }
 		diskImageVo { disk?.toDiskIdName() }
 	}
@@ -158,14 +158,12 @@ fun DiskAttachmentVo.toEditDiskAttachment(): DiskAttachment=
 /**
  * 생성과 연결될 DiskAttachment 를 목록으로 내보낸다
  */
-fun List<DiskAttachmentVo>.toAddDiskAttachmentList(): List<DiskAttachment> {
+fun List<DiskAttachmentVo>.toAddVmDiskAttachmentList(): List<DiskAttachment> {
 	val diskAttachmentList = mutableListOf<DiskAttachment>()
-	this@toAddDiskAttachmentList.forEach { diskAttachmentVo ->
-		if (diskAttachmentVo.diskImageVo.id.isEmpty()) {
-			// 디스크 생성
+	this@toAddVmDiskAttachmentList.forEach { diskAttachmentVo ->
+		if (diskAttachmentVo.diskImageVo.id.isEmpty()) { // 디스크 생성
 			diskAttachmentList.add(diskAttachmentVo.toAddDiskAttachment())
-		} else {
-			// 디스크 연결
+		} else { // 디스크 연결
 			diskAttachmentList.add(diskAttachmentVo.toAttachDisk())
 		}
 	}

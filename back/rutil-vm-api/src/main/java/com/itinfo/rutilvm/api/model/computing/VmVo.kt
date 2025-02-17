@@ -41,7 +41,7 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property ipv6 List<[String]>
  * @property hostEngineVm [Boolean] 금장/은장 vm().origin() == "managed_hosted_engine"
  * @property placement [String] 호스트에 부착 여부 ( 호스트에 고정, 호스트에서 실행중, 호스트에서 고정 및 실행)
- * @property hostVo [HostVo]  실행 호스트 정보 (현재 실행되고 있는 호스트의 정보)
+ * @property hostVo [IdentifiedVo]  실행 호스트 정보 (현재 실행되고 있는 호스트의 정보)
  * @property snapshotVos List<[IdentifiedVo]>
  * @property nicVos List<[NicVo]>
  *
@@ -174,9 +174,6 @@ class VmVo (
     val cpuTopologyCore: Int = 0,
     val cpuTopologySocket: Int = 0,
     val cpuTopologyThread: Int = 0,
-//    val userEmulation: String = "",
-//    val userCpu: String = "",
-//    val userVersion: String = "",
     val instanceType: String = "",
     val timeOffset: String = "",
     val cloudInit: Boolean = false,
@@ -487,7 +484,6 @@ fun VmVo.toVmBuilder(): VmBuilder {
 //    this@toVmBuilder.toVmResourceBuilder(vmBuilder)
     this@toVmBuilder.toVmHaBuilder(vmBuilder)
     this@toVmBuilder.toVmBootBuilder(vmBuilder)
-    log.info("vmvo: {}", this)
     return vmBuilder
 }
 

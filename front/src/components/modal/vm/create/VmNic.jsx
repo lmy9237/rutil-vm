@@ -32,14 +32,7 @@ const VmNic = ({ nicsState, setNicsState, nics }) => {
       </p>
 
       {nicsState.map((nic, index) => (
-        <div
-          key={index}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "10px",
-          }}
-        >
+        <div key={index} style={{display: "flex",alignItems: "center",marginBottom: "10px",}}>
           <label style={{ marginRight: "10px", width: "100px" }}>
             {nic.name}
           </label>

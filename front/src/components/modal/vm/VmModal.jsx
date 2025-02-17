@@ -1,16 +1,6 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
-import VmCommon from "./create/VmCommon";
-import VmNic from "./create/VmNic";
-import VmDisk from "./create/VmDisk";
-import VmSystem from "./create/VmSystem";
-import VmInit from "./create/VmInit";
-import VmHost from "./create/VmHost";
-import VmHa from "./create/VmHa";
-import VmBoot from "./create/VmBoot";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import {
   useVmById,
   useAddVm,
@@ -21,9 +11,20 @@ import {
   useDisksFromVM,
   useHostFromCluster,
   useAllActiveDomainFromDataCenter,
-  useAllvnicFromDataCenter,
-} from "../../../api/RQHook";
-import "./MVm.css";
+  useAllvnicFromDataCenter,  
+} from '../../../api/RQHook';
+import VmCommon from './create/VmCommon';
+import VmNic from './create/VmNic';
+import VmDisk from './create/VmDisk';
+import VmSystem from './create/VmSystem';
+import VmInit from './create/VmInit';
+import VmHost from './create/VmHost';
+import VmHa from './create/VmHa';
+import VmBoot from './create/VmBoot';
+import LabelSelectOptions from '../../label/LabelSelectOptions';
+import LabelSelectOptionsID from '../../label/LabelSelectOptionsID';
+import './MVm.css';
+
 
 // 탭 메뉴
 const tabs = [
@@ -114,6 +115,7 @@ const optimizeOptionList = [
 ];
 
 const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
+  const vLabel = editMode ? '편집' : '생성';
   const { mutate: addVM } = useAddVm();
   const { mutate: editVM } = useEditVm();
 
@@ -519,6 +521,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   };
 
   return (
+
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"가상머신"}
       submitTitle={editMode ? "편집" : "생성"}
