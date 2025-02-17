@@ -1,18 +1,26 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import './Header.css'; // 스타일을 별도로 관리하고 싶을 경우
+import './Header.css'; // CSS 파일 분리
 
-const Path = ({ pathElements }) => {
+const Path = ({ pathElements, basePath }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className='path'>
+    <div className="path">
       {pathElements.map((element, index) => (
         <React.Fragment key={index}>
-          <span className={index === pathElements.length - 1 ? 'last-path-element' : ''}>
+          <span
+            className={`path-element ${index === 0 ? 'clickable' : ''} ${
+              index === pathElements.length - 1 ? 'last-path-element' : ''
+            }`}
+            onClick={() => index === 0 && navigate(basePath)}
+          >
             {element}
           </span>
           {index !== pathElements.length - 1 && (
-            <FontAwesomeIcon className='path_icon' icon={faChevronRight} fixedWidth />
+            <FontAwesomeIcon className="path_icon" icon={faChevronRight} fixedWidth />
           )}
         </React.Fragment>
       ))}

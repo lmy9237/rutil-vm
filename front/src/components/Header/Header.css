@@ -101,6 +101,13 @@
   font-size: 0.32rem;
   margin-bottom: 0.2rem;
 }
+.clickable {
+  cursor: pointer;
+}
+.clickable:hover {
+  text-decoration: underline;
+  color: var(--color-primary-h);
+}
 .path_icon {
   color: gray;
   font-weight: 800;

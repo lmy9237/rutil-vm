@@ -83,7 +83,7 @@ const VnicProfileInfo = () => {
         />
         <div className="w-full px-[0.5rem] py-[0.5rem]"
 >
-          <Path pathElements={pathData} />
+          <Path pathElements={pathData} basePath={`/vnicProfiles/${vnicProfileId}/vms`}/>
           { renderSectionContent() }
         </div>
       </div>

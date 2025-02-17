@@ -17,6 +17,14 @@ const initialFormState = {
   quotaMode: "DISABLED",
 };
 
+/**
+ * @name DomainGetVmTemplateModal
+ * @description 도메인 - 데이터센터 연결 모달
+ *
+ * @prop {boolean} isOpen
+ *
+ * @returns {JSX.Element} DomainGetVmTemplateModal
+ */
 const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
   const isVmMode = type === "vm"; // true면 "가상머신", false면 "템플릿"
   const [formState, setFormState] = useState(initialFormState);
@@ -109,36 +117,81 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
           <table>
             <thead>
               <tr>
-                <th>별칭</th>
-                <th>가상 크기</th>
-                <th>메모리리</th>
-                <th>CPU</th>
-                <th>아키텍처처</th>
-                <th>디스크</th>
-                <th>클러스터</th>
+                {isVmMode ? (
+                  <>
+                    <th>이름</th>
+                    <th>소스</th>
+                    <th>메모리</th>
+                    <th>CPU</th>
+                    <th>아키텍처</th>
+                    <th>디스크</th>
+                    <th>불량 MAC 재배치</th>
+                    <th>부분 허용</th>
+                    <th>클러스터</th>
+                  </>
+                ) : (
+                  <>
+                    <th>별칭</th>
+                    <th>가상 크기</th>
+                    <th>메모리</th>
+                    <th>CPU</th>
+                    <th>아키텍처</th>
+                    <th>디스크</th>
+                    <th>클러스터</th>
+                  </>
+                )}
               </tr>
             </thead>
             <tbody>
-              {placeholderData.map((disk, index) => (
+              {placeholderData.map((item, index) => (
                 <tr key={index}>
-                  <td>{disk.alias || "N/A"}</td> {/* 별칭 */}
-                  <td>{disk.virtualSize || "N/A"}</td> {/* 가상 크기 */}
-                  <td>4 GB</td> {/* 메모리 (임시값) */}
-                  <td>4</td> {/* CPU (임시값) */}
-                  <td>x86_64</td> {/* 아키텍처 (임시값) */}
-                  <td>{disk.virtualSize || "N/A"}</td>{" "}
-                  {/* 디스크 (일반 텍스트) */}
-                  <td>
-                    <select>
-                      <option value="cluster-01">Cluster-01</option>
-                      <option value="cluster-02">Cluster-02</option>
-                      <option value="cluster-03">Cluster-03</option>
-                    </select>
-                  </td>{" "}
-                  {/* 클러스터 (select) */}
+                  {isVmMode ? (
+                    // ✅ 가상머신 모드일 때 렌더링
+                    <>
+                      <td>{item.alias || "N/A"}</td>  {/* 이름 */}
+                      <td>{item.source || "oVirt"}</td>  {/* 소스 */}
+                      <td>{item.memory || "1024 MB"}</td>  {/* 메모리 */}
+                      <td>{item.cpu || "1"}</td>  {/* CPU */}
+                      <td>{item.architecture || "x86_64"}</td>  {/* 아키텍처 */}
+                      <td>{item.disk || "1"}</td>  {/* 디스크 */}
+                      <td>
+                        <div className="flex">
+                          <input type="checkbox" />  {/* ✅ 불량 MAC 재배치 체크박스 */}
+                          <label>재배치</label>
+                        </div>
+                      </td>
+                      <td>
+                        <input type="checkbox" /> 
+                      </td>  {/* 부분 허용 */}
+                      <td>
+                        <select>
+                          <option value="default">Default</option>
+                          <option value="cluster-01">Cluster-01</option>
+                          <option value="cluster-02">Cluster-02</option>
+                        </select>
+                      </td>  {/* 클러스터 */}
+                    </>
+                  ) : (
+                    // ✅ 템플릿 모드일 때 렌더링
+                    <>
+                      <td>{item.alias || "N/A"}</td>  {/* 별칭 */}
+                      <td>{item.virtualSize || "N/A"}</td>  {/* 가상 크기 */}
+                      <td>4 GB</td>  {/* 메모리 (임시값) */}
+                      <td>4</td>  {/* CPU (임시값) */}
+                      <td>x86_64</td>  {/* 아키텍처 */}
+                      <td>{item.virtualSize || "N/A"}</td>  {/* 디스크 */}
+                      <td>
+                        <select>
+                          <option value="cluster-01">Cluster-01</option>
+                          <option value="cluster-02">Cluster-02</option>
+                          <option value="cluster-03">Cluster-03</option>
+                        </select>
+                      </td>  {/* 클러스터 */}
+                    </>
+                  )}
                 </tr>
               ))}
-            </tbody>
+          </tbody>
           </table>
         </div>
       </div>

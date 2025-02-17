@@ -51,8 +51,11 @@ const NetworkInfo = () => {
     navigate(path);
     setActiveTab(tab);
   };
-
   const pathData = [network?.name, sections.find((section) => section.id === activeTab)?.label];
+
+
+  
+
 
   const renderSectionContent = () => {
     const SectionComponent = {
@@ -85,9 +88,8 @@ const NetworkInfo = () => {
           activeSection={activeTab} 
           handleSectionClick={handleTabClick} 
         />
-        <div className="w-full px-[0.5rem] py-[0.5rem]"
->
-          <Path pathElements={pathData} />
+        <div className="w-full px-[0.5rem] py-[0.5rem]">
+          <Path pathElements={pathData} basePath={`/networks/${networkId}`} />
           {renderSectionContent()}
         </div>
       </div>

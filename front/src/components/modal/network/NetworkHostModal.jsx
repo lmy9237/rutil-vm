@@ -149,69 +149,70 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
   };
 
   const [contextMenu, setContextMenu] = useState(null);
-  const handleContextMenu = (event, containerItem, parentInterface) => {
+  const handleContextMenu = (event, targetItem, parentItem) => {
     event.preventDefault();
-    console.log("✅ 우클릭한 컨테이너:", containerItem.name);
-    
+  
+    // ✅ 네트워크의 경우에도 우클릭 메뉴 활성화
+    if (targetItem.children) {
+      // 컨테이너일 경우(네트워크가 아닌 경우)
+      if (parentItem.children.length < 2) return;
+    } else {
+      // 네트워크일 경우 (1개만 있는 경우 분리 불가)
+      if (parentItem.networks.length < 2) return;
+    }
+  
     setContextMenu({
       x: event.clientX,
       y: event.clientY,
-      containerItem,
-      parentInterface,
-    });
-  
-    console.log("📌 업데이트된 contextMenu 상태:", {
-      x: event.clientX,
-      y: event.clientY,
-      containerItem,
-      parentInterface,
+      containerItem: targetItem,
+      parentInterface: parentItem,
     });
   };
-  const renderContextMenu = () => {
-    if (!contextMenu) return null;
-  
-    // 화면 크기 가져오기
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-  
-    // 기본 위치
-    let menuX = contextMenu.x;
-    let menuY = contextMenu.y;
-  
-    // 우클릭 메뉴 크기 예상값
-    const menuWidth = 120;
-    const menuHeight = 40;
-  
-    // 화면을 넘어가면 조정
-    if (menuX + menuWidth > screenWidth) {
-      menuX = screenWidth - menuWidth - 10;
-    }
-    if (menuY + menuHeight > screenHeight) {
-      menuY = screenHeight - menuHeight - 10;
-    }
-  
-    return (
-      <div
-        className="context-menu"
-        style={{
-          position: "fixed",
-          top: menuY + "px",
-          left: menuX + "px",
-          backgroundColor: "white",
-          border: "1px solid #ccc",
-          padding: "8px 12px",
-          zIndex: 99999,
-          boxShadow: "2px 2px 10px rgba(0,0,0,0.2)",
-          borderRadius: "4px",
-          fontSize: "14px",
-          cursor: "pointer",
-        }}
-        onClick={handleSplitContainer}
-      >
-        🔹 분리
-      </div>
-    );
-  };
+const renderContextMenu = () => {
+  if (!contextMenu) return null;
+
+  // 화면 크기 가져오기
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+
+  // 기본 위치
+  let menuX = contextMenu.x;
+  let menuY = contextMenu.y;
+
+  // 우클릭 메뉴 크기 예상값
+  const menuWidth = 120;
+  const menuHeight = 40;
+
+  // 화면을 넘어가면 위치 조정
+  if (menuX + menuWidth > screenWidth) {
+    menuX = screenWidth - menuWidth - 10;
+  }
+  if (menuY + menuHeight > screenHeight) {
+    menuY = screenHeight - menuHeight - 10;
+  }
+
+  return (
+    <div
+      className="context-menu"
+      style={{
+        position: "fixed",
+        top: menuY + "px",
+        left: menuX + "px",
+        backgroundColor: "white",
+        border: "1px solid #ccc",
+        padding: "8px 12px",
+        zIndex: 99999,
+        boxShadow: "2px 2px 10px rgba(0,0,0,0.2)",
+        borderRadius: "4px",
+        fontSize: "14px",
+        cursor: "pointer",
+      }}
+      onClick={handleSplitContainer}
+    >
+      🔹 분리
+    </div>
+  );
+};
   const handleSplitContainer = () => {
     if (!contextMenu) return;
   
@@ -252,9 +253,8 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
   }, []);
   
 
-
+  /* 옛날
   const drop = (targetId, targetType) => {
-       if (!dragItem.current) return;
     const { item, source, parentId } = dragItem.current;
 
     if (source === "container" && targetType === "interface") {
@@ -386,7 +386,129 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
 
     dragItem.current = null; // Reset drag state
   };
-
+  */
+  const drop = (targetId, targetType) => {
+    if (!dragItem.current) return;
+    const { item, source, parentId } = dragItem.current;
+  
+    if (source === "container" && targetType === "interface") {
+      if (parentId === targetId) {
+        alert("같은 Interface 내에서는 이동할 수 없습니다.");
+        dragItem.current = null;
+        return;
+      }
+  
+      setOuter((prevOuter) => {
+        let validMove = true;
+        let bondRequired = false; // Bonding이 필요한 경우 플래그
+  
+        const updatedOuter = prevOuter.map((outerItem) => {
+          if (outerItem.id === parentId) {
+            if (
+              outerItem.networks.length > 0 &&
+              outerItem.children.length === 1
+            ) {
+              alert(
+                "Container를 이동할 수 없습니다. 연결된 네트워크가 있고 container가 하나뿐입니다."
+              );
+              validMove = false;
+              return outerItem;
+            }
+            return {
+              ...outerItem,
+              children: outerItem.children.filter(
+                (child) => child.id !== item.id
+              ),
+            };
+          }
+  
+          if (outerItem.id === targetId) {
+            if (outerItem.children.length === 1) {
+              bondRequired = true; // Bonding이 필요하므로 플래그 설정
+            }
+            return {
+              ...outerItem,
+              children: [...outerItem.children, item],
+            };
+          }
+          return outerItem;
+        });
+  
+        if (bondRequired) {
+          openBondingModal("create"); // Bonding 모달 띄우기
+        }
+  
+        return validMove ? updatedOuter : prevOuter;
+      });
+    } else if (source === "unassigned" && targetType === "networkOuter") {
+      // 네트워크를 인터페이스에 추가
+      setOuter((prevOuter) =>
+        prevOuter.map((outerItem) => {
+          if (outerItem.id === targetId) {
+            if (outerItem.networks.length > 0) {
+              alert("1개의 네트워크만 걸 수 있습니다.");
+              return outerItem;
+            }
+            return { ...outerItem, networks: [...outerItem.networks, item] };
+          }
+          return outerItem;
+        })
+      );
+      setUnassignedNetworks((prev) => prev.filter((net) => net.id !== item.id));
+    } else if (source === "networkOuter" && targetType === "unassigned") {
+      // 네트워크를 할당 해제 (Unassigned로 이동)
+      setOuter((prevOuter) =>
+        prevOuter
+          .map((outerItem) => {
+            if (outerItem.id === parentId) {
+              return {
+                ...outerItem,
+                networks: outerItem.networks.filter(
+                  (network) => network.id !== item.id
+                ),
+              };
+            }
+            return outerItem;
+          })
+          .filter(
+            (outerItem) =>
+              outerItem.children.length > 0 || outerItem.networks.length > 0
+          ) // Remove empty outer
+      );
+      setUnassignedNetworks((prev) => [...prev, item]); // Unassigned 리스트에 추가
+    } else if (source === "networkOuter" && targetType === "networkOuter") {
+      // 네트워크를 다른 인터페이스로 이동
+      setOuter((prevOuter) =>
+        prevOuter.map((outerItem) => {
+          if (outerItem.id === parentId) {
+            return {
+              ...outerItem,
+              networks: outerItem.networks.filter(
+                (network) => network.id !== item.id
+              ),
+            };
+          }
+          if (outerItem.id === targetId) {
+            if (outerItem.networks.length > 0) {
+              alert("1개의 네트워크만 걸 수 있습니다.");
+              return outerItem;
+            }
+            return {
+              ...outerItem,
+              networks: [...outerItem.networks, item],
+            };
+          }
+          return outerItem;
+        })
+      );
+    }
+  
+    dragItem.current = null; // Reset drag state
+  };
+  
+  
+  
+  
   const renderNetworkOuter = (outerItem) => {
     if (outerItem.networks.length === 0) {
       return (
@@ -409,6 +531,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
         className="outer-networks"
         onDragOver={(e) => e.preventDefault()}
         onDrop={() => drop(outerItem.id, "networkOuter")}
+        onContextMenu={(e) => handleContextMenu(e, network, outerItem)}
       >
         {outerItem.networks.map((network) => (
           <div
@@ -575,6 +698,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
         onClose={closeBondingModal}
         mode={bondingMode}
       />
+      {renderContextMenu()}
     </BaseModal>
   );
 };
