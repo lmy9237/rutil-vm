@@ -402,7 +402,7 @@ select {
   border-radius: 3px;
   padding: 0 0.1rem;
   height: 3.4vh;
-  font-size: 0.29rem;
+  font-size: 16px;
   outline: none;
 }
 
@@ -2554,9 +2554,9 @@ background-color: #f0f0f0;
 
 }
 @media (max-width: 1420px) {
-    html, body {
+    /* html, body {
         font-size: 3rem !important;
-    }
+    } */
     .resizer {
         display: none !important;
     }
@@ -2566,7 +2566,7 @@ background-color: #f0f0f0;
         top: 0;
         height: 100vh;
     }
-    #aside{
+    #aside {
         font-size:0.4rem;
     }
 }

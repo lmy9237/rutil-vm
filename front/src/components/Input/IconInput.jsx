@@ -1,9 +1,14 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import a specific icon or use it as a prop
-import './IconInput.css'; // Import the CSS file
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons"; // Import a specific icon or use it as a prop
+import "./IconInput.css"; // Import the CSS file
 
-const IconInput = ({ icon=faUser, type="text", placeholder='Enter text...', ...props }) => {
+const IconInput = ({
+  icon = faUser,
+  type = "text",
+  placeholder = "Enter text...",
+  ...props
+}) => {
   return (
     <div className="icon-input-container">
       <div className="icon-container">

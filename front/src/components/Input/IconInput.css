@@ -1,5 +1,6 @@
 /* IconInput.css */
 .icon-input-container {
+  max-width:400px;
   display: flex;
   align-items: center;
   border: var(--border-simple);
@@ -24,8 +25,7 @@
 .icon-input {
   flex: 1; /* Take remaining width */
   border: none; /* Remove default border */
-  outline: none; /* Remove outline */
-  font-size: 16px; /* Input text size */
+  outline: none; /* Remove outline */  
   padding: 8px; /* Padding for input text */
 }
   
