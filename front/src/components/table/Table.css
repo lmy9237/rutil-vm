@@ -72,6 +72,10 @@
   border: 1px solid var(--color-gray-1);
 }
 /*tablesOuter*/
+.section-table-outer {
+  font-size: 0.3rem;
+  width: 100%;
+}
 .section-table-outer table {
   width: 100%;
   border-collapse: collapse;
@@ -107,9 +111,7 @@
   padding: 0.07rem 0.1rem;
   margin-bottom: 0.13rem;
 }
-.section-table-outer {
-  font-size: 0.3rem;
-}
+
 /*tablerowclick*/
 .row-click {
   color: blue;

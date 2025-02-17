@@ -148,7 +148,113 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
     dragItem.current = { item, source, parentId };
   };
 
+  const [contextMenu, setContextMenu] = useState(null);
+  const handleContextMenu = (event, containerItem, parentInterface) => {
+    event.preventDefault();
+    console.log("✅ 우클릭한 컨테이너:", containerItem.name);
+    
+    setContextMenu({
+      x: event.clientX,
+      y: event.clientY,
+      containerItem,
+      parentInterface,
+    });
+  
+    console.log("📌 업데이트된 contextMenu 상태:", {
+      x: event.clientX,
+      y: event.clientY,
+      containerItem,
+      parentInterface,
+    });
+  };
+  const renderContextMenu = () => {
+    if (!contextMenu) return null;
+  
+    // 화면 크기 가져오기
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+  
+    // 기본 위치
+    let menuX = contextMenu.x;
+    let menuY = contextMenu.y;
+  
+    // 우클릭 메뉴 크기 예상값
+    const menuWidth = 120;
+    const menuHeight = 40;
+  
+    // 화면을 넘어가면 조정
+    if (menuX + menuWidth > screenWidth) {
+      menuX = screenWidth - menuWidth - 10;
+    }
+    if (menuY + menuHeight > screenHeight) {
+      menuY = screenHeight - menuHeight - 10;
+    }
+  
+    return (
+      <div
+        className="context-menu"
+        style={{
+          position: "fixed",
+          top: menuY + "px",
+          left: menuX + "px",
+          backgroundColor: "white",
+          border: "1px solid #ccc",
+          padding: "8px 12px",
+          zIndex: 99999,
+          boxShadow: "2px 2px 10px rgba(0,0,0,0.2)",
+          borderRadius: "4px",
+          fontSize: "14px",
+          cursor: "pointer",
+        }}
+        onClick={handleSplitContainer}
+      >
+        🔹 분리
+      </div>
+    );
+  };
+  const handleSplitContainer = () => {
+    if (!contextMenu) return;
+  
+    setOuter((prevOuter) => {
+      return prevOuter.flatMap((outerItem) => {
+        if (outerItem.id === contextMenu.parentInterface.id) {
+          // 기존 인터페이스에서 선택된 컨테이너를 제외
+          const updatedChildren = outerItem.children.filter(
+            (child) => child.id !== contextMenu.containerItem.id
+          );
+  
+          // 기존 인터페이스 유지
+          const updatedOuterItem = { ...outerItem, children: updatedChildren };
+  
+          // 새로운 인터페이스 추가
+          const newInterface = {
+            id: contextMenu.containerItem.id,
+            name: contextMenu.containerItem.name,
+            children: [contextMenu.containerItem],
+            networks: [],
+          };
+  
+          return [updatedOuterItem, newInterface].filter(
+            (item) => item.children.length > 0
+          );
+        }
+        return outerItem;
+      });
+    });
+  
+    setContextMenu(null); // 우클릭 메뉴 닫기
+  };
+  useEffect(() => {
+    const handleClickOutside = () => setContextMenu(null);
+  
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+  
+
+
   const drop = (targetId, targetType) => {
+       if (!dragItem.current) return;
     const { item, source, parentId } = dragItem.current;
 
     if (source === "container" && targetType === "interface") {
@@ -349,7 +455,7 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
               icon={faPencilAlt}
               className="icon"
               onClick={() => openBondingModal("edit")} // 편집 모드로 NewBondingModal 열기
-              style={{ marginLeft: "0.5rem", cursor: "pointer" }}
+              style={{ marginLeft: "0.2rem", cursor: "pointer" }}
             />
           )}
         </div>
@@ -363,6 +469,7 @@ const NetworkHostModal = ({ isOpen, onRequestClose, nicData, hostId }) => {
             onDragStart={(e) =>
               dragStart(e, child, "container", interfaceItem.id)
             }
+            onContextMenu={(e) => handleContextMenu(e, child, interfaceItem)} 
           >
             {child.name}
           </div>

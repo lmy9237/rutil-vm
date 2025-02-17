@@ -716,7 +716,7 @@ const TableColumnsInfo = {
 
   EVENTS: [
     { header: '시간', accessor: 'time', clickable: false, width:'14%' },
-    { header: '알림', accessor: 'severity', clickable: false, width:'2%'},    
+    { header: '알림', accessor: 'severity', clickable: false, width:'6%'},    
     { header: '메세지', accessor: 'description', clickable: false},
     // { header: '상관 관계 ID', accessor: 'correlationId', clickable: false },
     // // { header: '소스', accessor: 'source', clickable: false },

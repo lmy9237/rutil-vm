@@ -532,53 +532,7 @@ textarea {
   color: inherit; /* 필요에 따라 색상을 설정하세요 */
 }
 
-.host_hidden_parameter > div:first-child {
-  font-weight: 800;
-  font-size: 0.34rem;
-  margin-top: 0.3rem;
-  margin-bottom: 0.7rem;
-}
-.proxy_content {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.34rem;
-  margin-bottom: 0.3rem;
-}
 
-.proxy_add {
-  padding: 0.3rem 0;
-  border-top: 1px solid rgb(207, 207, 207);
-  font-size: 0.34rem;
-  display: flex;
-  justify-content: space-between;
-}
-.disk_type {
-  display: flex;
-  font-size: 0.35rem;
-  justify-content: space-between;
-}
-.disk_type > div {
-  display: flex;
-  padding: 0.2rem 0;
-}
-.disk_type span {
-  display: block;
-  margin-right: 0.2rem;
-}
-.disk_type .header_right_btns {
-  margin-bottom: 0;
-}
-.content_type > div {
-  padding: 0.1rem;
-  cursor: pointer;
-}
-.content_type > div:hover {
-  background: var(--color-gray-1);
-}
-.icon_tooltip {
-  max-width: 12vw !important;
-  text-align: center;
-}
 /* 스토리지 우클릭 메뉴박스*/
 /* #storage_context_menu {
     position: absolute;
@@ -2526,6 +2480,54 @@ background-color: #f0f0f0;
     height: 15vh;
     padding: 0.1rem;
   }
+
+  .host_hidden_parameter > div:first-child {
+  font-weight: 800;
+  font-size: 0.34rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.7rem;
+}
+.proxy_content {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.34rem;
+  margin-bottom: 0.3rem;
+}
+
+.proxy_add {
+  padding: 0.3rem 0;
+  border-top: 1px solid rgb(207, 207, 207);
+  font-size: 0.34rem;
+  display: flex;
+  justify-content: space-between;
+}
+.disk_type {
+  display: flex;
+  font-size: 0.35rem;
+  justify-content: space-between;
+}
+.disk_type > div {
+  display: flex;
+  padding: 0.2rem 0;
+}
+.disk_type span {
+  display: block;
+  margin-right: 0.2rem;
+}
+.disk_type .header_right_btns {
+  margin-bottom: 0;
+}
+.content_type > div {
+  padding: 0.1rem;
+  cursor: pointer;
+}
+.content_type > div:hover {
+  background: var(--color-gray-1);
+}
+.icon_tooltip {
+  max-width: 12vw !important;
+  text-align: center;
+}
 */
 
 /* Computing.css */
@@ -2560,12 +2562,7 @@ background-color: #f0f0f0;
     .resizer {
         display: none !important;
     }
-    .responsive {
-        position: absolute; /* 예시: 화면 고정 */
-        left: 0;
-        top: 0;
-        height: 100vh;
-    }
+
     #aside {
         font-size:0.4rem;
     }

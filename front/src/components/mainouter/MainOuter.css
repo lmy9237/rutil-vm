@@ -160,18 +160,24 @@
 
 /* 🔹 크기 조절 핸들 스타일 */
 .resizer {
-  width: 3px;
+  width: 5px;
   position: absolute;
   top: 0;
   right:0;
   height: 100%;
+  cursor: col-resize;
+  z-index: 100;
+    user-select: none; /* ✅ 기본적으로 드래그 시 텍스트 선택 방지 */
 }
 
 .resizer:hover {
   cursor: ew-resize;
 }
+.resizer:active {
+  cursor: col-resize;
+}
 .responsive-closed{
-  position: fixed;
+  /*position: fixed;*/
   left: 0;
   height: 100%;
   font-size:0.3rem;

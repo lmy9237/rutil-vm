@@ -215,7 +215,7 @@ const HostNics = ({ hostId }) => {
                 </div>
 
                 <div
-                  className="section_table_outer"
+                  className="section-table-outer"
                 // style={{ marginLeft: "0.4rem" }}
                 >
                   {activeTable[index] === "NETWORK_FROM_HOST" && (

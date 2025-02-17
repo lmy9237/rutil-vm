@@ -34,27 +34,34 @@ const MainOuter = ({ children,asideVisible,setAsideVisible   }) => {
         isResizing.current = true;
         xRef.current = e.clientX;
         leftWidthRef.current = sidebarWidth;
-        
+    
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
+    
+        document.body.style.userSelect = "none"; // ✅ 드래그 중 텍스트 선택 방지
+        document.body.style.cursor = "col-resize"; // ✅ 드래그 중 커서 고정
     };
-
+    
     const handleMouseMove = (e) => {
         if (!isResizing.current) return;
-
-        const dx = ((e.clientX - xRef.current) / window.innerWidth) * 100;
-        const newWidth = leftWidthRef.current + dx;
-
-        if (newWidth > 17 && newWidth < 30) {
-            setSidebarWidth(newWidth);
-        }
+    
+        requestAnimationFrame(() => {
+            const dx = ((e.clientX - xRef.current) / window.innerWidth) * 100;
+            const newWidth = leftWidthRef.current + dx;
+    
+            if (newWidth > 17 && newWidth < 30) {
+                setSidebarWidth(newWidth);
+            }
+        });
     };
-
+    
     const handleMouseUp = () => {
         isResizing.current = false;
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
+        
+        document.body.style.userSelect = "auto"; // ✅ 드래그 끝나면 다시 원래대로
+        document.body.style.cursor = "default"; // ✅ 드래그 끝나면 기본 커서로 복구
     };
+    
     /* */
     const [isResponsive, setIsResponsive] = useState(window.innerWidth <= 1420);
 

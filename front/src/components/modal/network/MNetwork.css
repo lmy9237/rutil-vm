@@ -153,6 +153,7 @@
   align-items: center;
   padding: 0.2rem;
   width: 41%;
+  cursor:pointer;
 }
 .assigned-network {
   display: flex;

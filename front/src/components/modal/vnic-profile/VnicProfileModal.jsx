@@ -131,16 +131,17 @@ const VnicProfileModal = ({
             ? { id: vnic.networkFilterVo.id, name: vnic.networkFilterVo.name }
             : null,
         });
-        setDataCenterVoId(vnic?.dataCenterVo?.id || "");
-        setNetworkVoId(vnic?.networkVo?.id || "");
+        setDataCenterVoId((prev) => vnic?.dataCenterVo?.id || prev || "");
+        setNetworkVoId((prev) => vnic?.networkVo?.id || prev || "");
       } else if (!editMode && datacenters.length > 0) {
-        resetForm();
-        setDataCenterVoId(datacenters[0].id);
-        if (networkId) {
-          setNetworkVoId(networkId);
-        } else if (networks.length > 0) {
-          setNetworkVoId(networks[0].id);
-        }
+        // ✅ 기존 선택값 유지, 없을 경우만 초기화
+        setDataCenterVoId((prev) => prev || datacenters[0].id);
+  
+        // ✅ 네트워크 ID가 있으면 유지, 없으면 첫 번째 네트워크 선택
+        setNetworkVoId((prev) => {
+          if (networkId) return prev || networkId;
+          return prev || (networks.length > 0 ? networks[0].id : "");
+        });
       }
     }
   }, [
