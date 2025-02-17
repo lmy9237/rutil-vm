@@ -402,7 +402,7 @@ select {
   border-radius: 3px;
   padding: 0 0.1rem;
   height: 3.4vh;
-  font-size: 16px;
+  font-size: 13px;
   outline: none;
 }
 
@@ -2554,14 +2554,14 @@ background-color: #f0f0f0;
 
 }
 @media (max-width: 1420px) {
-    /* html, body {
-        font-size: 3rem !important;
-    } */
+    html, body {
+        font-size: 2rem !important;
+    }
     .resizer {
         display: none !important;
     }
     .responsive {
-        position: apsolute; /* 예시: 화면 고정 */
+        position: absolute; /* 예시: 화면 고정 */
         left: 0;
         top: 0;
         height: 100vh;

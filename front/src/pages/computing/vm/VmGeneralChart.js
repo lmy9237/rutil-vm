@@ -42,7 +42,7 @@ const VmGeneralChart = () => {
         options={state.options}
         series={state.series}
         type="bar"
-        height={260}
+        height={215}
       />
     </div>
   );
