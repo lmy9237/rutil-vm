@@ -17,7 +17,7 @@ import Footer from '../../components/footer/Footer';
 import NavButton from '../../components/navigation/NavButton';
 import Path from '../../components/Header/Path';
 import { adjustFontSize } from '../../UIEvent';
-import SettingUsers from './SettingUsers';
+import SettingUsers from "./SettingUsers.jsx";
 import SettingSessions from './SettingSessions';
 import './Setting.css';
 

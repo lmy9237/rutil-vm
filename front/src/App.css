@@ -105,13 +105,6 @@ input[disabled] {
   justify-content: space-between;
   padding: 0.1rem 0;
 }
-/* 인풋감싸는박스 */
-.modal-content>div{
-    display: flex;
-    justify-content: space-between;
-    padding: 0.1rem 0.2rem;
-    align-items: center;
-}
 
 .center {
   display: flex; /* Flexbox 설정 추가 */
@@ -1814,7 +1807,7 @@ display: flex;
     cursor: pointer;
     font-size: 0.3rem;
 }
-    .iscsi_buttons {
+.iscsi_buttons {
   display: flex;
   justify-content: center; 
   align-items: center;

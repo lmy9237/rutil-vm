@@ -11,16 +11,23 @@ export const useAuthenticate = (username, password, _onSuccess, _onError) => use
   onError: _onError,
 })
 
-
-export const useAddUser = (username, password, _onSuccess, _onError) => useMutation({
+export const useAddUser = (username, password, onSuccess, onError) => useMutation({
   mutationFn: async () => {
     const res = await ApiManager.addUser(username, password)
     return res
   },
-  onSuccess: _onSuccess,
-  onError: _onError,
+  onSuccess: onSuccess,
+  onError: onError,
 })
 
+export const useRemoveUser = (username, onSuccess, onError) => useMutation({
+  mutationFn: async () => {
+    const res = await ApiManager.removeUser(username)
+    return res
+  },
+  onSuccess: onSuccess,
+  onError: onError,
+})
 //#endregion: User
 
 //#region: Navigation

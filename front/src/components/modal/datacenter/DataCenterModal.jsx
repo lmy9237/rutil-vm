@@ -3,7 +3,6 @@ import { toast } from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
-import { xButton } from "../../Icon";
 import { CheckKoreanName } from "../../../util";
 import {
   useAddDataCenter,
@@ -113,40 +112,31 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
       onSubmit={handleFormSubmit}
     >
       {/* <div className="datacenter-new-popup modal"> */}
-      <div className="datacenter-new-content modal-content">
-        <LabelInput
-          label="이름"
-          id="name"
+      <div className="h-3/4 max-height-100 flex flex-col justify-center items-center">
+        <LabelInput id="name" label="이름"
           value={formState.name}
           onChange={handleInputChange("name")}
           autoFocus
         />
-        <LabelInput
-          label="설명"
-          id="description"
+        <LabelInput id="description" label="설명"
           value={formState.description}
           onChange={handleInputChange("description")}
         />
-        <LabelInput
-          label="코멘트"
-          id="comment"
+        <LabelInput id="comment" label="코멘트"
           value={formState.comment}
           onChange={handleInputChange("comment")}
         />
-        <LabelSelectOptions
-          label="스토리지 타입"
+        <LabelSelectOptions id="storage-type" label="스토리지 타입"
           value={String(formState.storageType)}
           onChange={handleInputChange("storageType")}
           options={storageTypes}
         />
-        <LabelSelectOptions
-          label="쿼터 모드"
+        <LabelSelectOptions id="quarter-mode" label="쿼터 모드"
           value={formState.quotaMode}
           onChange={handleInputChange("quotaMode")}
           options={quotaModes}
         />
-        <LabelSelectOptions
-          label="호환버전"
+        <LabelSelectOptions id="version-compatible" label="호환버전"
           value={formState.version}
           onChange={handleInputChange("version")}
           options={versions}

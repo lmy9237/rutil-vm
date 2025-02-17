@@ -81,8 +81,14 @@ const ApiManager = {
 
   addUser: async(username, password) => makeAPICall({
     method: "POST", 
-    url: ENDPOINTS.ADD_USER(), 
+    url: ENDPOINTS.FIND_ALL_USERS(), 
     data: { username, password }
+  }),
+  
+  removeUser: async(username) => makeAPICall({
+    method: "DELETE", 
+    url: ENDPOINTS.FIND_ALL_USERS(), 
+    data: { username }
   }),
   //#endregion: User
 

@@ -1,5 +1,6 @@
 import React from "react";
 import SettingUsersModal from './SettingUsersModal'
+import { useRemoveUser } from "../../../api/RQHook";
 import "./MSettingsUser.css";
 
 /**
@@ -22,7 +23,8 @@ const SettingUsersModals = ({
         targetName={"사용자"}
         userId={user?.id} editMode
       />
-    )
+    ),
+    
   }
   
   console.log("...")

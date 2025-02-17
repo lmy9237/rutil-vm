@@ -4,7 +4,6 @@ import BaseModal from "../BaseModal";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
-import { xButton } from "../../Icon";
 import {
   useAddCluster,
   useEditCluster,
@@ -321,7 +320,7 @@ const ClusterModal = ({
       onSubmit={handleFormSubmit}
     >
       {/* <div className="cluster-new-popup modal"></div> */}
-      <div className="cluster-new-content modal-content">
+      <div className="h-3/4 max-height-100 flex flex-col justify-center items-center">
         <LabelSelectOptionsID
           label="데이터센터"
           value={dataCenterVoId}
@@ -351,28 +350,24 @@ const ClusterModal = ({
           onChange={handleInputChange("comment")}
         />
 
-        <LabelSelectOptionsID
-          label="관리 네트워크"
+        <LabelSelectOptionsID id="network-man" label="관리 네트워크"
           value={networkVoId}
           onChange={(e) => setNetworkVoId(e.target.value)}
           disabled={editMode}
           loading={isNetworksLoading}
           options={networks}
         />
-        <LabelSelectOptions
-          label="CPU 아키텍처"
+        <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
           value={formState.cpuArc}
           onChange={handleInputChange("cpuArc")}
           options={cpuArcs}
         />
-        <LabelSelectOptions
-          label="CPU 유형"
+        <LabelSelectOptions id="cpu-type" label="CPU 유형"
           value={formState.cpuType}
           onChange={handleInputChange("cpuType")}
           options={cpuOptions}
         />
-        <LabelSelectOptions
-          label="칩셋/펌웨어 유형"
+        <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"
           value={formState.biosType}
           onChange={handleInputChange("biosType")}
           options={biosTypeOptions}

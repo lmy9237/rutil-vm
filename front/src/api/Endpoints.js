@@ -2,7 +2,6 @@ const ENDPOINTS = {
   //#region: User
   FIND_ALL_USERS: () => `/api/v1/auth/users`,
   FIND_USER: (username) => `/api/v1/auth/users/${username}`,
-  ENDPOINTS: () => `/api/v1/auth/users`,
   //#endregion: User
 
   //#region: TreeNavigation
