@@ -155,6 +155,32 @@ fun Connection.destroyStorageDomain(storageDomainId: String): Result<Boolean> = 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun Connection.updateOvfStorageDomain(storageDomainId: String): Result<Boolean> = runCatching {
+	if(this.findStorageDomain(storageDomainId).isFailure) {
+		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+	}
+	this.srvStorageDomain(storageDomainId).updateOvfStore().send()
+	true
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccess("ovf 업데이트", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFail("ovf 업데이트", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.refreshLunStorageDomain(storageDomainId: String): Result<Boolean> = runCatching {
+	if(this.findStorageDomain(storageDomainId).isFailure) {
+		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+	}
+	this.srvStorageDomain(storageDomainId).refreshLuns().send()
+	true
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccess("디스크 검사", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFail("디스크 검사", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 @Throws(InterruptedException::class)
 fun Connection.expectStorageDomainDeleted(storageDomainId: String, timeout: Long = 60000L, interval: Long = 1000L): Boolean {
 	val startTime = System.currentTimeMillis()

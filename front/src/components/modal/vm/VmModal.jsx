@@ -487,7 +487,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
         // contentType: "DATA",
         // storageType: "IMAGE",
       },
-  })),
+    })),
   };
   // diskAttachmentVos: formInfoState.diskVoList.map((disk) => ({ id: disk.id })),
   

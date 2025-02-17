@@ -166,6 +166,17 @@ class VmServiceImpl(
 		val existDiskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmVo.id)
 			.getOrDefault(listOf())
 
+		val diskAttachmentListToAdd: List<DiskAttachment> = vmVo.diskAttachmentVos.filter { diskAttachmentVo ->
+			existDiskAttachments.none { it.id() == diskAttachmentVo.id }
+		}.map {
+			it.toAddDiskAttachment()
+		}
+		val diskAttachmentListToDelete: List<DiskAttachment> = existDiskAttachments.filter { existingDisk ->
+			// 기존 디스크가 새 목록에 없으면 삭제할 목록에 넣음
+			vmVo.diskAttachmentVos.none { it.id == existingDisk.id() }
+		}
+
+/*
 		val diskAttachmentListToAdd = mutableListOf<DiskAttachment>()
 		val diskAttachmentListToDelete = mutableListOf<DiskAttachment>()
 
@@ -173,13 +184,16 @@ class VmServiceImpl(
 			if (existDiskAttachments.none { it.id() == diskAttachmentVo.id }) {
 				diskAttachmentListToAdd.add(diskAttachmentVo.toAddDiskAttachment())
 			}
+
 		}
+
 		existDiskAttachments.forEach { existingDisk ->
 			if (vmVo.diskAttachmentVos.none { it.id == existingDisk.id() }) {
 				// 기존 디스크가 새 목록에 없으면 삭제할 목록에 넣음
 				diskAttachmentListToDelete.add(existingDisk)
 			}
 		}
+*/
 
 		val res: Vm? = conn.updateVm(
 			vmVo.toEditVmBuilder(),

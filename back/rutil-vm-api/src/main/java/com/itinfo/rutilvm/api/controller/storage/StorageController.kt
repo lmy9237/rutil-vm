@@ -188,6 +188,52 @@ class StorageController: BaseController() {
 		return ResponseEntity.ok(iDomain.destroy(storageDomainId))
 	}
 
+	@ApiOperation(
+		httpMethod="POST",
+		value="스토리지 도메인 ovf 업데이트",
+		notes="선택된 스토리지 도메인을 ovf 업데이트한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@PostMapping("/{storageDomainId}/updateOvf")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun updateOvf(
+		@PathVariable("storageDomainId") storageDomainId: String? = null,
+	): ResponseEntity<Boolean> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		log.info("/storages/domains/{}/updateOvf ... 스토리지 도메인 ovf 업데이트", storageDomainId)
+		return ResponseEntity.ok(iDomain.updateOvfFromStorageDomain(storageDomainId))
+	}
+
+	@ApiOperation(
+		httpMethod="POST",
+		value="스토리지 도메인 디스크 검사",
+		notes="선택된 스토리지 도메인을 디스크 검사한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@PostMapping("/{storageDomainId}/refreshLun")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun refreshLun(
+		@PathVariable("storageDomainId") storageDomainId: String? = null,
+	): ResponseEntity<Boolean> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		log.info("/storages/domains/{}/refreshLun ... 스토리지 도메인 디스크 검사", storageDomainId)
+		return ResponseEntity.ok(iDomain.refreshLunFromStorageDomain(storageDomainId))
+	}
+
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -391,7 +437,7 @@ class StorageController: BaseController() {
 	): ResponseEntity<List<VmVo>> {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-		log.info("/storages/{}/vms/unregistered ... 스토리지 도메인 밑에 붙어있는 가상머신 가져오기 목록", storageDomainId)
+		log.info("/storages/domains/{}/vms/unregistered ... 스토리지 도메인 밑에 붙어있는 가상머신 가져오기 목록", storageDomainId)
 		return ResponseEntity.ok(iDomain.findAllUnregisteredVmsFromStorageDomain(storageDomainId))
 	}
 

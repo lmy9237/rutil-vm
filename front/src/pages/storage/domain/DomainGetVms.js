@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
 import DeleteModal from '../../../utils/DeleteModal';
-import { useAllDataCenterFromDomain } from "../../../api/RQHook";
+import { useAllUnregisteredVMFromDomain } from "../../../api/RQHook";
+import { checkZeroSizeToMB } from '../../../util';
+import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
 
 /**
  * @name DomainGetVms
@@ -14,19 +15,16 @@ import { useAllDataCenterFromDomain } from "../../../api/RQHook";
  */
 const DomainGetVms = ({ domainId }) => {
   const {
-    data: datacenters = [],
-    isLoading: isDataCentersLoading,
-    isError: isDataCentersError,
-    isSuccess: isDataCentersSuccess,
-  } = useAllDataCenterFromDomain(domainId, (e) => ({ 
-    ...e
-  }));
+    data: vms = [],
+    isLoading: isVmsLoading,
+    isError: isVmsError,
+    isSuccess: isVmsSuccess,
+  } = useAllUnregisteredVMFromDomain(domainId, (e) => ({ ...e }));
 
   const [activeModal, setActiveModal] = useState(null);
-  const [selectedDataCenters, setSelectedDataCenters] = useState([]); // 다중 선택된 데이터센터
-  const selectedIds = (Array.isArray(selectedDataCenters) ? selectedDataCenters : []).map((dc) => dc.id).join(', ');
+  const [selectedVms, setSelectedVms] = useState([]); // 다중 선택된 데이터센터
+  const selectedIds = (Array.isArray(selectedVms) ? selectedVms : []).map((vm) => vm.id).join(", ");
 
-  console.log("...")
   return (
     <>
       <div className="header-right-btns">
@@ -35,12 +33,19 @@ const DomainGetVms = ({ domainId }) => {
       </div>
       <span>ID: {selectedIds || ''}</span>
 
-      <TablesOuter date={datacenters} columns={TableColumnsInfo.GET_VMS_TEMPLATES}
-        isLoading={isDataCentersLoading}
-        isError={isDataCentersError}
-        isSuccess={isDataCentersSuccess}
+      <TablesOuter 
+        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+        columns={TableColumnsInfo.GET_VMS_TEMPLATES}
+        data={vms.map((vm) => ({
+          ...vm,
+          name: vm?.name,
+          memory: checkZeroSizeToMB(vm?.memorySize),
+          cpu: vm?.cpuTopologyCnt,
+          cpuArc: vm?.cpuArc,
+          stopTime: vm?.stopTime,
+        }))}
         shouldHighlight1stCol={true}
-        onRowClick={{ console }}
+        onRowClick={(selectedRows) => setSelectedVms(selectedRows)}
         multiSelect={true}
       />
 
@@ -48,7 +53,7 @@ const DomainGetVms = ({ domainId }) => {
       {activeModal === 'get' && (
         <DomainGetVmTemplateModal
           isOpen={true}
-          data={selectedDataCenters}
+          data={selectedVms}
           onClose={() => setActiveModal(null)}
         />
       )}
@@ -59,7 +64,7 @@ const DomainGetVms = ({ domainId }) => {
           type="Vm"
           onRequestClose={() => setActiveModal(null)}
           contentLabel={'가상머신'}
-          data={selectedDataCenters}
+          data={selectedVms}
         />
       )}
     </>

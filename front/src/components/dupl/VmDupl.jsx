@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";

@@ -2482,6 +2482,36 @@ migrateHostsFromVM: async (vmId) => {
 
 
   /**
+   * @name ApiManager.updateOvfDomain
+   * @description 스토리지 도메인 ovf 업데이트
+   * 
+   * @param {String} domainId - 도메인 ID
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  updateOvfDomain: async (domainId) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.OVF_UPDATE_STORAGE_DOMAIN(domainId), 
+      data: {domainId}
+    });
+  },
+
+  /**
+   * @name ApiManager.refreshLunDomain
+   * @description 스토리지 도메인 디스크 검사
+   * 
+   * @param {String} domainId - 도메인 ID
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  refreshLunDomain: async (domainId) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.REFRESH_LUN_STORAGE_DOMAIN(domainId),
+      data: {domainId}
+    });
+  },
+
+  /**
    * @name ApiManager.activateDomain
    * @description 스토리지 도메인 활성
    * 

@@ -21,27 +21,15 @@ const DomainActionButtons = ({
     { type: "create", label: "생성" },
     { type: "import", label: "가져오기" },
     { type: "edit", label: "편집", disabled: isEditDisabled },
-    {
-      type: "delete",
-      label: "삭제",
-      disabled: isDeleteDisabled || isMaintenance || !isUnknown,
-    },
-    {
-      type: "destory",
-      label: "파괴",
-      disabled: isDeleteDisabled || !isMaintenance,
-    },
+    { type: "delete", label: "삭제", disabled: isDeleteDisabled || isMaintenance || !isUnknown, },
+    { type: "destory", label: "파괴", disabled: isDeleteDisabled || !isMaintenance },
   ];
 
   const dcDomainActions = [
     { type: "create", label: "생성" },
     { type: "detach", label: "분리", disabled: isDeleteDisabled || isActive },
     { type: "activate", label: "활성", disabled: isDeleteDisabled || isActive },
-    {
-      type: "maintenance",
-      label: "유지보수",
-      disabled: isDeleteDisabled || isMaintenance,
-    },
+    { type: "maintenance", label: "유지보수", disabled: isDeleteDisabled || isMaintenance,},
   ];
 
   const domainDcActions = [
@@ -49,11 +37,7 @@ const DomainActionButtons = ({
     // { type: 'attach', label: '연결', disabled: isDeleteDisabled || isActive }, // 연결 disabled 조건 구하기
     { type: "detach", label: "분리", disabled: isDeleteDisabled || isActive },
     { type: "activate", label: "활성", disabled: isDeleteDisabled || isActive },
-    {
-      type: "maintenance",
-      label: "유지보수",
-      disabled: isDeleteDisabled || isMaintenance,
-    },
+    { type: "maintenance", label: "유지보수", disabled: isDeleteDisabled || isMaintenance, },
   ];
 
   const renderButtons = (actions) =>

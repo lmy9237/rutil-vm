@@ -2,17 +2,22 @@ import React, { useState } from 'react';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import DomainGetDiskModal from '../../../components/modal/domain/DomainGetDiskModal';
-import DeleteModal from '../../../utils/DeleteModal';
-import { useAllUnregisteredDiskFromDomain, useDeleteDisk } from "../../../api/RQHook";
-import { convertBytesToGB } from '../../../util';
+import { useAllUnregisteredDiskFromDomain } from "../../../api/RQHook";
+import { checkZeroSizeToGB } from '../../../util';
 
 const DomainGetDisks = ({ domainId }) => {
-  const { data: disks = [], isLoading: isDisksLoading } = useAllUnregisteredDiskFromDomain(domainId, (e) => ({ ...e }));
+  const { 
+    data: disks = [], 
+    isLoading: isDisksLoading,
+    isError: isDisksError,
+    isSuccess: isDisksSuccess,
+  } = useAllUnregisteredDiskFromDomain(domainId, (e) => ({ ...e }));
 
   const [activeModal, setActiveModal] = useState(null);
   const [selecteDisks, setSelectedDisks] = useState([]); // 다중 선택된 데이터센터
   const selectedIds = (Array.isArray(selecteDisks) ? selecteDisks : []).map((disk) => disk.id).join(', ');
 
+  console.log("disks:" + disks)
   return (
     <>
       <div className="header-right-btns">
@@ -22,16 +27,15 @@ const DomainGetDisks = ({ domainId }) => {
       <span>ID: {selectedIds || ''}</span>
 
       <TablesOuter 
+        isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
         columns={TableColumnsInfo.GET_DISKS}
-        data={disks.map((d) => {
-          return {
-            ...d,
-            alias: d?.alias,
-            sparse: d?.sparse ? '씬 프로비저닝' : '사전 할당',            
-            virtualSize: convertBytesToGB(d?.virtualSize) + " GB",
-            actualSize: convertBytesToGB(d?.actualSize),
-          }
-        })}
+        data={disks.map((disk) => ({
+            ...disk,
+            alias: disk?.alias,
+            sparse: disk?.sparse ? '씬 프로비저닝' : '사전 할당',            
+            virtualSize: checkZeroSizeToGB(disk?.virtualSize),
+            actualSize: checkZeroSizeToGB(disk?.actualSize),
+        }))}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
         multiSelect={true}

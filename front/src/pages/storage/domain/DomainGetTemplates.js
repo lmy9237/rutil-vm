@@ -37,21 +37,20 @@ const DomainGetTemplates = ({ domainId }) => {
       <span>ID: {selectedIds || ''}</span>
 
       <TablesOuter
+        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         columns={TableColumnsInfo.GET_VMS_TEMPLATES}
-        data={templates.map((t) => {
-          return {
-            ...t,
-            name: t.name,
-            memory: checkZeroSizeToMB(t.memorySize),
-            cpu: t.cpuTopologyCnt,
-            cpuArc: t.cpuArc,
-            disk: t.disk,
-            createdAt: t.creationTime,
-            exportedAt: t.exportedAt,
-          };
-        })}
+        data={templates.map((t) => ({
+          ...t,
+          name: t.name,
+          memory: checkZeroSizeToMB(t.memorySize),
+          cpu: t.cpuTopologyCnt,
+          cpuArc: t.cpuArc,
+          disk: t.disk,
+          createdAt: t.creationTime,
+          exportedAt: t.exportedAt,
+        }))}
         shouldHighlight1stCol={true}
-        // onRowClick={{ console }}
+        onRowClick={(selectedRows) => setSelectedTemplates(selectedRows)}
         multiSelect={true}
       />
 

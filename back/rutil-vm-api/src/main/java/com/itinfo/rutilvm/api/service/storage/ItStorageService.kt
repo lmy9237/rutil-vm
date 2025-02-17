@@ -91,6 +91,24 @@ interface ItStorageService {
 	 */
 	@Throws(Error::class)
 	fun destroy(storageDomainId: String): Boolean
+	/**
+	 * [ItStorageService.updateOvfFromStorageDomain]
+	 * 도메인 ovf 업데이트
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class)
+	fun updateOvfFromStorageDomain(storageDomainId: String): Boolean
+	/**
+	 * [ItStorageService.refreshLunFromStorageDomain]
+	 * 도메인 디스크 검사
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class)
+	fun refreshLunFromStorageDomain(storageDomainId: String): Boolean
 
 	/**
 	 * [ItStorageService.findAllDataCentersFromStorageDomain]
@@ -407,6 +425,20 @@ class StorageServiceImpl(
 	override fun destroy(storageDomainId: String): Boolean {
 		log.info("destroy ... storageDomainId: {}", storageDomainId)
 		val res: Result<Boolean> = conn.destroyStorageDomain(storageDomainId)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun updateOvfFromStorageDomain(storageDomainId: String): Boolean {
+		log.info("updateOvfFromStorageDomain ... storageDomainId: {}", storageDomainId)
+		val res: Result<Boolean> = conn.updateOvfStorageDomain(storageDomainId)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun refreshLunFromStorageDomain(storageDomainId: String): Boolean {
+		log.info("refreshLunFromStorageDomain ... storageDomainId: {}", storageDomainId)
+		val res: Result<Boolean> = conn.refreshLunStorageDomain(storageDomainId)
 		return res.isSuccess
 	}
 

@@ -8,8 +8,6 @@ import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.util.ovirt.*
-import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
-import com.itinfo.rutilvm.util.ovirt.error.toError
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.*
@@ -63,7 +61,6 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property deleteProtected [Boolean]  	삭제 방지
  * @property diskAttachmentVos List<[DiskAttachmentVo]>	인스턴스 이미지 (디스크 연결+생성)  // 전체 출력용 같이
  * @property vnicProfileVos List<[VnicProfileVo]>	vnic 프로파일 (vnic Profile id를 받아서
- * @property diskAttachmentVo [DiskAttachmentVo]  가상머신 디스크 한개만 붙일때
  *
  * <시스템, System>
  * @property memorySize [BigInteger] 		메모리 크기
@@ -133,6 +130,7 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property bootingMenu [Boolean]
  *
  * @property usageDto [UsageDto] cpu, memory, network 사용량
+ * @property stopTime [String] 가상머신 가져오기에서 중단시간
  *
  */
 class VmVo (
@@ -168,7 +166,6 @@ class VmVo (
     val deleteProtected: Boolean = false,
     val diskAttachmentVos: List<DiskAttachmentVo> = listOf(),
     val vnicProfileVos: List<VnicProfileVo> = listOf(),
-    val diskAttachmentVo: DiskAttachmentVo = DiskAttachmentVo(),
     val memorySize: BigInteger = BigInteger.ZERO,
     val memoryMax: BigInteger = BigInteger.ZERO,
     val memoryActual: BigInteger = BigInteger.ZERO,
@@ -214,6 +211,7 @@ class VmVo (
     val connVo: IdentifiedVo = IdentifiedVo(),
     val bootingMenu: Boolean = false,
     val usageDto: UsageDto = UsageDto(),
+	val stopTime: String = "",
 ): Serializable {
     override fun toString(): String =
         gson.toJson(this)
@@ -254,7 +252,6 @@ class VmVo (
         private var bDeleteProtected: Boolean = false; fun deleteProtected(block: () -> Boolean?) { bDeleteProtected = block() ?: false }
         private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
         private var bVnicProfileVos: List<VnicProfileVo> = listOf(); fun vnicProfileVos(block: () -> List<VnicProfileVo>?) { bVnicProfileVos = block() ?: listOf() }
-        private var bDiskAttachmentVo: DiskAttachmentVo = DiskAttachmentVo(); fun diskAttachmentVo(block: () -> DiskAttachmentVo?) { bDiskAttachmentVo = block() ?: DiskAttachmentVo() }
         private var bMemorySize: BigInteger = BigInteger.ZERO; fun memorySize(block: () -> BigInteger?) { bMemorySize = block() ?: BigInteger.ZERO }
         private var bMemoryMax: BigInteger = BigInteger.ZERO; fun memoryMax(block: () -> BigInteger?) { bMemoryMax = block() ?: BigInteger.ZERO }
         private var bMemoryActual: BigInteger = BigInteger.ZERO; fun memoryActual(block: () -> BigInteger?) { bMemoryActual = block() ?: BigInteger.ZERO }
@@ -300,8 +297,9 @@ class VmVo (
         private var bConnVo: IdentifiedVo = IdentifiedVo(); fun connVo(block: () -> IdentifiedVo?) { bConnVo = block() ?: IdentifiedVo() }
         private var bBootingMenu: Boolean = false; fun bootingMenu(block: () -> Boolean?) { bBootingMenu = block() ?: false }
         private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
+        private var bStopTime: String = ""; fun stopTime(block: () -> String?) { bStopTime = block() ?: "" }
 
-        fun build(): VmVo = VmVo(bId, bName, bStatus, bUpTime, bCreationTime, bMemoryInstalled, bMemoryUsed, bMemoryBuffered, bMemoryCached, bMemoryFree, bMemoryUnused, bFqdn, bIpv4, bIpv6, bHostEngineVm, bPlacement, bHostVo, bSnapshotVos, bNicVos, bDataCenterVo, bClusterVo, bTemplateVo, bDescription, bComment, bOsSystem, bChipsetFirmwareType, bOptimizeOption, bStateless, bStartPaused, bDeleteProtected, bDiskAttachmentVos, bVnicProfileVos, bDiskAttachmentVo, bMemorySize, bMemoryMax, bMemoryActual, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, /*bUserEmulation, bUserCpu, bUserVersion,*/ bInstanceType, bTimeOffset, bCloudInit, bHostName, bTimeStandard, bScript, bMonitor, bUsb, bHostInCluster, bHostVos, bMigrationMode, bMigrationPolicy, bMigrationEncrypt, bParallelMigration, bHa, bStorageDomainVo, bResumeOperation, bPriority, bWatchDogModel, bWatchDogAction, bCpuProfileVo, bCpuShare, bCpuPinningPolicy, bMemoryBalloon, bIoThreadCnt, bMultiQue, bVirtSCSIEnable, bVirtIoCnt, bFirstDevice, bSecDevice, bDeviceList, bConnVo, bBootingMenu, bUsageDto)
+        fun build(): VmVo = VmVo(bId, bName, bStatus, bUpTime, bCreationTime, bMemoryInstalled, bMemoryUsed, bMemoryBuffered, bMemoryCached, bMemoryFree, bMemoryUnused, bFqdn, bIpv4, bIpv6, bHostEngineVm, bPlacement, bHostVo, bSnapshotVos, bNicVos, bDataCenterVo, bClusterVo, bTemplateVo, bDescription, bComment, bOsSystem, bChipsetFirmwareType, bOptimizeOption, bStateless, bStartPaused, bDeleteProtected, bDiskAttachmentVos, bVnicProfileVos, bMemorySize, bMemoryMax, bMemoryActual, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, /*bUserEmulation, bUserCpu, bUserVersion,*/ bInstanceType, bTimeOffset, bCloudInit, bHostName, bTimeStandard, bScript, bMonitor, bUsb, bHostInCluster, bHostVos, bMigrationMode, bMigrationPolicy, bMigrationEncrypt, bParallelMigration, bHa, bStorageDomainVo, bResumeOperation, bPriority, bWatchDogModel, bWatchDogAction, bCpuProfileVo, bCpuShare, bCpuPinningPolicy, bMemoryBalloon, bIoThreadCnt, bMultiQue, bVirtSCSIEnable, bVirtIoCnt, bFirstDevice, bSecDevice, bDeviceList, bConnVo, bBootingMenu, bUsageDto, bStopTime)
     }
 
     companion object {
@@ -451,8 +449,8 @@ fun Vm.toNetworkNic(conn: Connection): VmVo {
 }
 
 
-fun Vm.toUnregisterdVm(): VmVo {
-	val vm = this@toUnregisterdVm
+fun Vm.toUnregisteredVm(): VmVo {
+	val vm = this@toUnregisteredVm
 	return VmVo.builder {
 		id { vm.id() }
 		name { vm.name() }
@@ -465,12 +463,13 @@ fun Vm.toUnregisterdVm(): VmVo {
 				vm.cpu().topology().socketsAsInteger() *
 				vm.cpu().topology().threadsAsInteger()
 		}
-		// cpuArc { vm.cpu().architecture() }
+		cpuArc { vm.cpu().architecture() }
+		stopTime { ovirtDf.format(vm.stopTime()) }
 		// diskCnt
 	}
 }
 fun List<Vm>.toUnregisterdVms(): List<VmVo> =
-	this@toUnregisterdVms.map { it.toUnregisterdVm() }
+	this@toUnregisterdVms.map { it.toUnregisteredVm() }
 
 
 
@@ -687,90 +686,6 @@ fun Vm.toVmSystem(): VmVo {
 		timeOffset { this@toVmSystem.timeZone().name() }
 	}
 }
-
-/**
- * 편집 - 초기실행
- */
-fun Vm.toVmInit(): VmVo {
-    return VmVo.builder {
-        cloudInit { this@toVmInit.initializationPresent() }
-        hostName { if (this@toVmInit.initializationPresent()) this@toVmInit.initialization().hostName() else "" }
-    }
-}
-/**
- * 편집 - 호스트
- */
-fun Vm.toVmHost(): VmVo {
-	return VmVo.builder {
-		hostInCluster { !this@toVmHost.placementPolicy().hostsPresent() } // 클러스터내 호스트(t)인지 특정호스트(f)인지
-        //TODO
-//		hostVos {
-//			if (this@toVmHost.placementPolicy().hostsPresent())
-//				this@toVmHost.placementPolicy().hosts().map { host ->
-//					conn.findHost(host.id()).getOrNull()?.fromHostToIdentifiedVo() ?: HostVo.builder {  }
-//				}
-//			else listOf()
-//		}
-		migrationMode { this@toVmHost.placementPolicy().affinity().value() }
-		migrationEncrypt { this@toVmHost.migration().encrypted() }
-	}
-}
-
-
-/**
- * 편집 - 고가용성
- */
-fun Vm.toVmHa(conn: Connection): VmVo {
-	return VmVo.builder {
-		ha { this@toVmHa.highAvailability().enabled() }
-		priority { this@toVmHa.highAvailability().priorityAsInteger() }
-		storageDomainVo {
-            if (this@toVmHa.leasePresent())
-                conn.findStorageDomain(this@toVmHa.lease().storageDomain().id())
-                    .getOrNull()?.fromStorageDomainToIdentifiedVo()
-            else null
-        }
-		resumeOperation { this@toVmHa.storageErrorResumeBehaviour().value() } // 워치독?
-		watchDogAction { WatchdogAction.NONE }
-	}
-}
-
-/**
- * 편집 - 리소스 할당
- */
-fun Vm.toVmResource(conn: Connection): VmVo {
-	return VmVo.builder {
-        cpuProfileVo { conn.findCpuProfile(this@toVmResource.cpuProfile().id()).getOrNull()?.fromCpuProfileToIdentifiedVo() }
-		cpuShare { this@toVmResource.cpuSharesAsInteger() }
-		cpuPinningPolicy { this@toVmResource.cpuPinningPolicy().value() }
-		memoryBalloon { this@toVmResource.memoryPolicy().ballooning() }
-		ioThreadCnt  { if (this@toVmResource.io().threadsPresent()) this@toVmResource.io().threadsAsInteger() else 0 }
-		multiQue { this@toVmResource.multiQueuesEnabled() }
-//		virtSCSIEnable { this@toVmResource.virtioScsiMultiQueuesEnabled() } // TODO:HELP virtio-scsi 활성화
-		// virtio-scsi multi queues
-	}
-}
-
-/**
- * 편집 - 부트 옵션
- */
-fun Vm.toVmBoot(conn: Connection): VmVo {
-	val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(this@toVmBoot.id())
-        .getOrDefault(listOf()).firstOrNull()
-	val cdromFileId: String = cdrom?.file()?.id() ?: ""
-	val disk: Disk? = conn.findDisk(cdromFileId).getOrNull()
-	return VmVo.builder {
-		firstDevice { this@toVmBoot.os().boot().devices().first().value() }
-		secDevice {
-			if (this@toVmBoot.os().boot().devices().size > 1)
-				this@toVmBoot.os().boot().devices()[1].value()
-			else
-				null
-		}
-        connVo { disk?.fromDiskToIdentifiedVo() }
-	}
-}
-
 
 
 fun Vm.toVmVoFromNetwork(conn: Connection): VmVo {

@@ -16,14 +16,14 @@ import DomainDiskSnapshots from './DomainDiskSnapshots';
 import DomainGetVms from './DomainGetVms';
 import DomainGetTemplates from './DomainGetTemplates';
 import DomainGetDisks from './DomainGetDisks';
-import { useDomainById } from '../../../api/RQHook';
+import { useDomainById, useOvfUpdateDomain, useRefreshLunDomain } from '../../../api/RQHook';
 
 const DomainInfo = () => {
   const navigate = useNavigate();
   const { id: domainId, section } = useParams();
-  const {
-    data: domain, isLoading: isDomainLoading
-  } = useDomainById(domainId);
+  const { data: domain } = useDomainById(domainId);
+  const { mutate: refreshDomain } = useRefreshLunDomain();
+  const { mutate: ovfUpdateDomain } = useOvfUpdateDomain();
 
   const [activeTab, setActiveTab] = useState('general');
   const [activeModal, setActiveModal] = useState(null);
@@ -72,11 +72,28 @@ const DomainInfo = () => {
     return SectionComponent ? <SectionComponent domainId={domainId} /> : null;
   };
 
+  const handleUpdateOvf = async () => {
+    if (!domainId) return;
+    ovfUpdateDomain(domainId)
+    console.error("OVF 업데이트");
+  };
+
+  const handleRefresh = async () => {
+    if (!domainId) return;
+    refreshDomain(domainId)
+    console.error("디스크 검사");
+  };
+
   const sectionHeaderButtons = [
     { type: 'edit', label: '도메인 편집', onClick: () => openModal("edit")},
     { type: 'delete', label: '삭제', onClick: () => openModal("delete")},
     { type: 'destroy', label: '파괴', onClick: () => openModal("destroy")},
-  ]
+  ];
+
+  const popupItems = [
+    { type: "updateOvf", label: "OVF 업데이트", onClick: handleUpdateOvf },
+    { type: "refreshlun", label: "디스크 검사", onClick: handleRefresh },
+  ];
 
   return (
     <div id="section">
@@ -84,7 +101,7 @@ const DomainInfo = () => {
         titleIcon={faDatabase}
         title={domain?.name}
         buttons={sectionHeaderButtons}
-        // popupItems={popupItems}
+        popupItems={popupItems}
       />
       <div className="content-outer">
         <NavButton 

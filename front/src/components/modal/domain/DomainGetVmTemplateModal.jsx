@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { xButton } from "../../Icon";
-import { useDataCenter, useTemplate } from "../../../api/RQHook";
+import { useDataCenter } from "../../../api/RQHook";
 import { CheckKoreanName } from "../../../util";
 import "./MDomain.css";
 
@@ -23,8 +23,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
   const [formState, setFormState] = useState(initialFormState);
   const { data: datacenter } = useDataCenter(dcId);
   const [activeFilter, setActiveFilter] = useState("general");
-  const buttonClass = (filter) =>
-    `filter_button ${activeFilter === filter ? "active" : ""}`;
+  const buttonClass = (filter) => `filter_button ${activeFilter === filter ? "active" : ""}`;
 
   // 임시 데이터 (데이터가 없을 경우 기본값 사용)
   const placeholderData = [

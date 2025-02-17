@@ -1,5 +1,4 @@
-import React, { Suspense, useState } from 'react'; 
-import Loading from '../../../components/common/Loading';
+import React, { useState } from 'react'; 
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from '../../../components/table/TablesOuter';
 import { convertBytesToGB } from '../../../util';

@@ -426,7 +426,7 @@ const TableColumnsInfo = {
     { header: 'CPU', accessor: 'cpu', clickable: false },
     { header: '아키텍처', accessor: 'cpuArc', clickable: false },
     { header: '디스크', accessor: 'disk', clickable: false },
-    { header: '생성일자', accessor: 'createdAt', clickable: false },
+    { header: '중지 일자', accessor: 'stopTime', clickable: false },
     // { header: '내보낸 시점', accessor: 'exportedAt', clickable: false },
   ],  
   GET_DISK_TEMPLATES: [

@@ -2706,7 +2706,7 @@ export const useAllVMFromDomain = (storageDomainId, mapPredicate) => useQuery({
  */
 export const useAllUnregisteredVMFromDomain = (storageDomainId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllVMFromDomain', storageDomainId], 
+  // queryKey: ['AllVMFromDomain', storageDomainId], 
   queryFn: async () => {
     console.log(`useAllUnregisteredVMFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllUnregisterdVMsFromDomain(storageDomainId); 
@@ -3016,6 +3016,44 @@ export const useDestroyDomain = () => {
     },
     onError: (error) => {
       console.error('Error destroy domain:', error);
+    },  
+  });
+};
+
+/**
+ * @name useRefreshLunDomain
+ * @description 스토리지 도메인 디스크 검사 useMutation 훅
+ * 
+ * @returns useMutation 훅
+ */
+export const useRefreshLunDomain = () => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({
+    mutationFn: async (domainId) => await ApiManager.refreshLunDomain(domainId),
+    onSuccess: () => {
+      queryClient.invalidateQueries('allStorageDomains');
+    },
+    onError: (error) => {
+      console.error('Error refreshLun domain:', error);
+    },  
+  });
+};
+
+/**
+ * @name useOvfUpdateDomain
+ * @description 스토리지 도메인 ovf 업데이트 useMutation 훅
+ * 
+ * @returns useMutation 훅
+ */
+export const useOvfUpdateDomain = () => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({
+    mutationFn: async (domainId) => await ApiManager.updateOvfDomain(domainId),
+    onSuccess: () => {
+      queryClient.invalidateQueries('allStorageDomains');
+    },
+    onError: (error) => {
+      console.error('Error updateOvf domain:', error);
     },  
   });
 };

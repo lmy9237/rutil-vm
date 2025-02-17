@@ -234,8 +234,9 @@ const ENDPOINTS = {
     console.log('Generated URL:', url); // URL 확인
     return url;
   },  
-
   DESTORY_STORAGE_DOMAIN: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/destroy`, 
+  OVF_UPDATE_STORAGE_DOMAIN: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/updateOvf`,
+  REFRESH_LUN_STORAGE_DOMAIN: (storageDomainId) => `/api/v1/storages/domains/${storageDomainId}/refreshLun`,
 
   //#endregion: StorageDomain
 
