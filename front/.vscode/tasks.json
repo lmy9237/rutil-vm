@@ -4,7 +4,7 @@
     {
       "label": "start-rutil-vm-react (프론트 실행)",
       "type": "shell",
-      "command": "npm start",
+      "command": "npm run dev",
       "isBackground": true,
       "presentation": {
         "echo": true,
@@ -31,10 +31,10 @@
         "command": "taskkill /F /IM node.exe"
       },
       "linux": {
-        "command": "pkill -f 'react-scripts'"
+        "command": "pkill -f 'npm'"
       },
       "osx": {
-        "command": "pkill -f 'react-scripts'"
+        "command": "pkill -f 'npm'"
       },
       "presentation": {
         "echo": true,

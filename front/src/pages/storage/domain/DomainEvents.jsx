@@ -6,8 +6,8 @@ import { useAllEventFromDomain } from "../../../api/RQHook";
  * @description 도메인에 종속 된 이벤트 목록
  * (/computing/domains/<clusterId>/events)
  *
- * @param {string} clusterId 도메인ID
- * @returns
+ * @prop {string} domainId 도메인ID
+ * @returns {JSX.Element} DomainEvents
  */
 const DomainEvents = ({ domainId }) => {
   const {
@@ -21,10 +21,12 @@ const DomainEvents = ({ domainId }) => {
 
   return (
     <>
-    <EventDupl
-      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-      events={events}
-    />
+      <EventDupl
+        isLoading={isEventsLoading}
+        isError={isEventsError}
+        isSuccess={isEventsSuccess}
+        events={events}
+      />
     </>
   );
 };

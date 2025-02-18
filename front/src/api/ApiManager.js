@@ -5,21 +5,19 @@ import { toast } from 'react-hot-toast';
 
 // axios.defaults.withCredentials = true;
 /*
-axios.defaults.baseURL = `https://rutilvm-dev.ititinfo.com:8443`
 axios.defaults.baseURL = process.env.BASE_URL_API_STAGING
 axios.defaults.proxy = {
   host: '192.168.0.70',
   port: 8444,
   protocol: 'https'
 }
+axios.defaults.baseURL = "https://192.168.0.70:8443";
 */
-axios.defaults.headers.common['Content-Type'] ='application/json;charset=utf-8';
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+
+
 axios.interceptors.request.use(config => {
-  // console.log('request INTERCEPTED ...')
-  config.headers['Content-Type'] ='application/json;charset=utf-8';
-  config.headers['Access-Control-Allow-Origin'] = '*';
-  config.headers['Access-Control-Allow-Headers'] = '*';
+  config.headers['Content-Type'] = 'application/json;charset=utf-8';
+  
   return config;
 });
 /**
@@ -35,11 +33,6 @@ const makeAPICall = async ({method = "GET", url, data}) => {
     const res = await axios({
         method: method,
         url: url,
-        headers: {
-          "Content-Type": "application/json",
-          // "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Headers": "*",
-        },
         // TODO: access_token으로 모든 API 처리하기
         data: method === "GET" ? null : data,
     });

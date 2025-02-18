@@ -127,7 +127,7 @@
 > 
 > ```sh
 > # Running on macOS M1
-> docker build -t ititcloud/rutil-vm-api:0.2.0-beta1 .
+> docker build -t ititcloud/rutil-vm-api:0.2.0-beta2 .
 > ```
 
 > [!NOTE]

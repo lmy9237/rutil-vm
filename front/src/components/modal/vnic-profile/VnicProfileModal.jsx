@@ -5,7 +5,6 @@ import LoadingOption from "../../common/LoadingOption";
 import {
   useAddVnicProfile,
   useAllDataCenters,
-  useAllnicFromVM,
   useEditVnicProfile,
   useNetworkFilters,
   useNetworksFromDataCenter,

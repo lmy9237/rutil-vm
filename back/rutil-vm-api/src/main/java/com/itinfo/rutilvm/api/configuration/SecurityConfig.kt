@@ -1,24 +1,16 @@
 package com.itinfo.rutilvm.api.configuration
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-/*
-import com.itinfo.rutilvm.security.CustomAccessDeniedHandler
-import com.itinfo.rutilvm.security.CustomAuthFailureHandler
-import com.itinfo.rutilvm.security.CustomAuthProvider
-import com.itinfo.rutilvm.security.SecurityConnectionService
-*/
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.Customizer
-
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer
 import org.springframework.security.config.http.SessionCreationPolicy
-
 import org.springframework.security.web.SecurityFilterChain
-
-import kotlin.jvm.Throws
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
 
 @Configuration
 @EnableWebSecurity
@@ -56,6 +48,24 @@ class SecurityConfig(
 			.and()
 */
         return http.build()
+	}
+
+	@Bean
+	fun corsFilter(): CorsFilter {
+		log.debug("... corsFilter")
+		val config = CorsConfiguration()
+		config.addAllowedOrigin("https://localhost:3000")
+		// Or, if you want to allow all origins (use with caution):
+		// config.addAllowedOriginPattern("*");
+		config.addAllowedHeader("*")
+		config.addAllowedMethod("*")
+		config.allowCredentials = true
+
+
+		val source: UrlBasedCorsConfigurationSource = UrlBasedCorsConfigurationSource().apply {
+			registerCorsConfiguration("/**", config)
+		}
+		return CorsFilter(source)
 	}
 /*
     @Bean

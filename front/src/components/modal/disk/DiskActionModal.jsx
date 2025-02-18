@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import { useDiskById } from "../../../api/RQHook";
-import { formatBytesToGBToFixedZero } from "../../../util";
 import "../domain/MDomain.css";
 
 const FormGroup = ({ label, children }) => (
@@ -14,7 +13,7 @@ const FormGroup = ({ label, children }) => (
 );
 
 const DiskActionModal = ({ isOpen, action, data = [], onClose }) => {
-  useEffect(() => {
+useEffect(() => {
     if (!data) {
       console.warn("No data provided to DiskActionModal.");
       return;

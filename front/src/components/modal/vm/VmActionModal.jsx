@@ -11,7 +11,6 @@ import {
   useShutdownVM,
   useRebootVM,
   useResetVM,
-  selectedVms,
 } from "../../../api/RQHook";
 
 const VmActionModal = ({ isOpen, action, data, onClose }) => {

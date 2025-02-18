@@ -46,11 +46,12 @@ const Login = ({ setAuthenticated, setUsernameGlobal }) => {
             return;
           }
           if (localStorage[`token`]) {
-            // 토큰 찾아 집어 넣은 후
-            setAuthenticated(true);
-            localStorage.setItem("username", username);
-            navigate("/");
+            
           }
+          // 토큰 찾아 집어 넣은 후
+          setAuthenticated(true);
+          localStorage.setItem("username", username);
+          navigate("/");
         },
         onError: (err) => {
           toast.error("로그인에 실패했습니다. 잠시 후 다시 시도해주세요.");

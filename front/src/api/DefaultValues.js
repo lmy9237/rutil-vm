@@ -2,7 +2,7 @@
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { version } from 'react';
 
-// const DEFAULT_VALUES = {
+const DEFAULT_VALUES = {
 
 //   FIND_ALL_USERS: {
 //       name: '',
@@ -481,6 +481,6 @@
 
 //     ],
 //     }
+}
 
-
-// export default DEFAULT_VALUES
+export default DEFAULT_VALUES

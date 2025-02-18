@@ -84,7 +84,7 @@ const App = () => {
   const queryClient = new QueryClient()
   const isAuthenticated = () => {
     console.log(`App > isAuthenticated ...`);
-    return localStorage.getItem('token') !== null; // Example: check if a token exists
+    return localStorage.getItem('username') !== null; // Example: check if a token exists
   };
   
   const [authenticated, setAuthenticated] = useState(false);
