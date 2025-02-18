@@ -186,7 +186,7 @@ class OvirtUserController: BaseController() {
 		ApiResponse(code = 401, message = "인증 불량"),
 		ApiResponse(code = 404, message = "찾을 수 없는 사용자")
 	)
-	@PutMapping("users/{username}")
+	@PutMapping("{username}")
 	fun changePassword(
 		@PathVariable(required=true) username: String = "",
 		@RequestParam(required=true) currentPassword: String? = null,
@@ -213,7 +213,7 @@ class OvirtUserController: BaseController() {
 		ApiResponse(code = 401, message = "인증 불량"),
 		ApiResponse(code = 404, message = "찾을 수 없는 사용자")
 	)
-	@DeleteMapping("users/{username}")
+	@DeleteMapping("{username}")
 	fun remove(
 		@PathVariable username: String = "",
 	): ResponseEntity<Boolean> {

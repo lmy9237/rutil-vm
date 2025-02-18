@@ -2,19 +2,36 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
-import { useAddUser } from "../../../api/RQHook";
+import { useAllUsers, useAddUser, useEditUser } from "../../../api/RQHook";
 import "./MSettingsUser.css";
 
 const initialFormState = {
   id: "",
+  name: "",
   username: "",
   password: "",
   repassword: "",
-  name: "",
 };
 
-const SettingUsersModal = ({ isOpen, editMode = false, userId, onClose }) => {
+const SettingUsersModal = ({ isOpen, editMode = false, user, onClose }) => {
   const [formState, setFormState] = useState(initialFormState);
+  
+  const { 
+    data: users = [],
+    isLoading: isUsersLoading, 
+    isError: isUsersError,
+    isSuccess: isUsersSuccess,
+    refetch: refetchUsers,
+  } = useAllUsers((e) => {
+    const [username, provider] = e?.username?.split('@') || [];
+    return {
+      ...e,
+      username: username || "", // @ 앞의 값
+      provider: provider || "", // @ 뒤의 값
+    };
+  });
+  const allUsernames = users.map((e) => e.username);
+
   const { 
     isLoading: isAddUserLoading,
     mutate: addUser,
@@ -34,21 +51,11 @@ const SettingUsersModal = ({ isOpen, editMode = false, userId, onClose }) => {
   // } = useEditUser();
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!isOpen || !editMode) {
       return setFormState(initialFormState);
     }
-    if (editMode) {
-      setFormState({
-        // id: datacenter.id,
-        // name: datacenter.name,
-        // comment: datacenter.comment,
-        // description: datacenter.description,
-        // storageType: String(datacenter.storageType),
-        // version: datacenter.version,
-        // quotaMode: datacenter.quotaMode,
-      });
-    }
-  }, [isOpen, editMode, userId])
+    setFormState({ ...user });
+  }, [isOpen, editMode, user])
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -79,7 +86,12 @@ const SettingUsersModal = ({ isOpen, editMode = false, userId, onClose }) => {
   };
 
   const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
+    console.log(`SettingUsersModal > handleInputChange ... field: ${field}`)
+    
+    setFormState((prev) => ({ 
+      ...prev, 
+      [field]: e.target.value,      
+    }));
   };
 
   const validateForm = () => {
@@ -90,15 +102,16 @@ const SettingUsersModal = ({ isOpen, editMode = false, userId, onClose }) => {
     if (formState.username.length < 4)  {
       return "아이디 길이가 짧습니다. (4자 이상)";
     }
+    if (allUsernames.includes(formState.username)) {
+      return "중복된 아이디가 있어 사용할 수 없습니다.";
+    }
     if (!formState.password) {
       return "비밀번호를 입력해주세요.";
     }
     if (formState.password.length < 4)  {
       return "비밀번호 길이가 짧습니다. (4자 이상)";
     }      
-    /*
-    추후 추가예정
-    */
+    /* 추후 추가예정 */
     return null;
   };
 
@@ -119,6 +132,12 @@ const SettingUsersModal = ({ isOpen, editMode = false, userId, onClose }) => {
           value={formState.name}
           onChange={handleInputChange("name")}
         />
+        {editMode && (
+          <LabelInput id="email" label="E-mail"
+            value={formState.email}
+            onChange={handleInputChange("email")}
+          />
+        )}
         <LabelInput id="password" label="비밀번호" type="password"
           value={formState.password}
           onChange={handleInputChange("password")}

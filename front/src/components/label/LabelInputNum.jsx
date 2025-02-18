@@ -1,3 +1,18 @@
+import LabelInput from "./LabelInput";
+/**
+ * @name LabelInputNum
+ * @description 레이블 숫자 입력란
+ * 
+ * @prop {string} className 
+ * @prop {string} label 
+ * @prop {string} id
+ * @prop {string} value
+ * @prop {boolean} autoFocus
+ * @prop {function} onChange
+ * @prop {boolean} disabled
+ *  
+ * @returns {JSX.Element} LabelInputNum
+ */
 const LabelInputNum = ({
   className,
   label,
@@ -7,18 +22,14 @@ const LabelInputNum = ({
   onChange,
   disabled,
 }) => (
-  <div className={className}>
-    <label htmlFor={id}>{label}</label>
-    <input
-      type="number"
-      id={id}
-      value={value}
-      autoFocus={autoFocus}
-      onChange={onChange}
-      disabled={disabled}
-      min="0"
-    />
-  </div>
+  <LabelInput className={className}
+    label={label}
+    id={id}
+    value={value}
+    autoFocus={autoFocus}
+    onChange={onChange}
+    disabled={disabled}
+  />
 );
 
 export default LabelInputNum;

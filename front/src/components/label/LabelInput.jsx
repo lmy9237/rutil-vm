@@ -22,11 +22,11 @@ const LabelInput = ({
   onChange,
   disabled,
 }) => (
-  <div className={`flex justify-center items-center mb-1 w-full  ${className}`}>
-    <label className="flex items-center min-w-[60px] max-w-[100px]" htmlFor={id}>
+  <div className={`flex justify-center items-center mb-1 w-full px-[40px] ${className}`}>
+    <label className="flex justify-end items-center mx-1 min-w-[60px] max-w-[100px] text-end" htmlFor={id}>
       {label}
     </label>
-    <input className="w-full min-w-30"
+    <input className="w-[15vw]"
       id={id} type={type}
       value={value}
       autoFocus={autoFocus}

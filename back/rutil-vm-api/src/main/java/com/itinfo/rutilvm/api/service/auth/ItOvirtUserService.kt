@@ -208,6 +208,7 @@ class OvirtUserServiceImpl(
 			name { username }
 			surname { surname }
 			username { username }
+			email { "${username}@localhost" }
 			createDate { LocalDateTime.now() }
 			externalId { uuid.toString() }
 			/* note { } */

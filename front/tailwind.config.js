@@ -10,7 +10,7 @@ module.exports = {
         ssm : '0.01rem',
         sm: '0.34rem'
       }
-    },
+  },
     
   },
   plugins: [],

@@ -1,5 +1,6 @@
 import React from "react";
 import SettingUsersModal from './SettingUsersModal'
+import DeleteModal from "../../../utils/DeleteModal"
 import { useRemoveUser } from "../../../api/RQHook";
 import "./MSettingsUser.css";
 
@@ -10,7 +11,7 @@ import "./MSettingsUser.css";
  * @returns 
  */
 const SettingUsersModals = ({
-  modalType, user, selectedUsers = [], onClose 
+  modalType, user, onClose 
 }) => {
   const allModals = {
     create:  (
@@ -21,10 +22,19 @@ const SettingUsersModals = ({
     edit: (
       <SettingUsersModal isOpen={modalType==="edit"} onClose={onClose} 
         targetName={"사용자"}
-        userId={user?.id} editMode
+        user={user[0]}
+        editMode
       />
     ),
-    
+    remove: (
+      <DeleteModal
+        isOpen={modalType==="remove"}
+        onClose={onClose}
+        label={"사용자"}
+        data={user[0]}
+        api={useRemoveUser()}
+      />
+    ),
   }
   
   console.log("...")

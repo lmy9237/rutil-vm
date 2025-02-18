@@ -47,9 +47,9 @@
     "@storybook/addon-links": "8.2.9",
     "@storybook/addon-onboarding": "8.2.9",
     "@storybook/blocks": "8.2.9",
-    "@storybook/builder-vite": "8.2.9",
     "@storybook/preset-create-react-app": "8.2.9",
     "@storybook/react": "8.2.9",
+    "@storybook/react-vite": "^8.2.9",
     "@storybook/test": "8.2.9",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint-config-airbnb": "^19.0.4",
@@ -89,6 +89,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "https://localhost:8443"
+  }
 }

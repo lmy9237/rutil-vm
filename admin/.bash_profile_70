@@ -8,7 +8,8 @@ fi
 # User specific environment and startup programs
 
 PATH=$PATH:$HOME/bin
-DOCKER_IMG=ititcloud/rutil-vm-api:0.2.0-beta2
+DOCKER_IMG=ititcloud/rutil-vm-api:latest
+DOCKER_IMG_CURRENT=ititcloud/rutil-vm-api:0.2.0-beta2
 RUTIL_VM_HOME=$HOME/rutil-vm
 DOCKER_COMPOSE_FILENAME=deploy-local-70.yaml
 export RUTIL_VM_HOME
@@ -35,4 +36,10 @@ function startDk() {
 
 function stopDk() {
   docker compose -f "$HOME/rutil-vm/$DOCKER_COMPOSE_FILENAME" down
+}
+
+function loadDk() {
+  docker rmi $DOCKER_IMG $DOCKER_IMG_CURRNET;
+  docker load -i $1;
+  docker tag $DOCKER_IMG_CURRENT $DOCKER_IMG;
 }

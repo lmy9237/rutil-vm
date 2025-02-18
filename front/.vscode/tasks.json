@@ -24,6 +24,26 @@
         }
       }]
     }, {
+      "label": "start-rutil-vm-storybook (스토리북 실행)",
+      "type": "shell",
+      "command": "npm run storybook",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [{
+        "owner": "custom",
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+        }
+      }]
+    }, {
       "label": "stop-rutil-vm-react (프론트 종료)",
       "type": "shell",
       "command": "",

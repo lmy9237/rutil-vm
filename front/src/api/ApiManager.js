@@ -71,17 +71,46 @@ const ApiManager = {
     url: ENDPOINTS.FIND_USER(username), 
     data: { password }
   }),
-
+  /**
+   * @name ApiManager.addUser
+   * @description 사용자 추가
+   * 
+   * @param {string} username 사용자 oVirt ID
+   * @param {string} password 사용자 oVirt 비밀번호
+   *
+   * @returns {Promise<Object>} API 응답 결과
+   */
   addUser: async(username, password) => makeAPICall({
     method: "POST", 
     url: ENDPOINTS.FIND_ALL_USERS(), 
     data: { username, password }
   }),
-  
+  /**
+   * @name ApiManager.editUser
+   * @description 사용자 편집
+   * 
+   * @param {string} username 사용자 oVirt ID
+   * @param {string} currentPassword (기존) 사용자 oVirt 비밀번호
+   * @param {string} newPassword (신규) 사용자 oVirt 비밀번호
+   *
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  editUser: async(username, currentPassword, newPassword) => makeAPICall({
+    method: "PUT", 
+    url: ENDPOINTS.FIND_USER(username), 
+    data: { currentPassword, newPassword }
+  }),
+  /**
+   * @name ApiManager.removeUser
+   * @description 사용자 삭제
+   * 
+   * @param {string} username 사용자 oVirt ID
+   *
+   * @returns {Promise<Object>} API 응답 결과
+   */
   removeUser: async(username) => makeAPICall({
     method: "DELETE", 
-    url: ENDPOINTS.FIND_ALL_USERS(), 
-    data: { username }
+    url: ENDPOINTS.FIND_USER(username), 
   }),
   //#endregion: User
 
@@ -2791,17 +2820,6 @@ migrateHostsFromVM: async (vmId) => {
   //#endregion: event
 
   //#region: setting
-  /**
-   * @name ApiManager.findAllEvents
-   * @description 이벤트 목록
-   * 
-   * @returns 
-   **/
-  findUsers: async () => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_USERS(),
-    // defaultValues: DEFAULT_VALUES.FIND_ALL_EVENTS
-  }),
   //#endregion: setting
 
 

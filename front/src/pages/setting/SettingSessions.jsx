@@ -10,31 +10,41 @@ import { useAllUsers } from "../../api/RQHook";
  * @returns {JSX.Element} SettingSessions
  */
 const SettingSessions = () => {
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const selectedUserIds = (Array.isArray(selectedUsers) ? selectedUsers : [])
+    .map((user) => user.id)
+    .join(", ");
+
   const { 
     data: users = [], 
     isLoading: isUsersLoading, 
     isError: isUsersError,
     isSuccess: isUsersSuccess 
   } = useAllUsers((e) => {
-    const [username, provider] = e?.userName?.split('@') || [];
-    return {
-      ...e,
-      username: username || '', // @ 앞의 값
-      provider: provider || '', // @ 뒤의 값
-    };
+    console.log(`SettingUsers ... ${JSON.stringify(e)}`)
+    // const [username, provider] = e?.userName?.split('@') || [];
+    return { ...e, };
   });
 
   const [selectedUser, setSelectedUser] = useState(null);
 
+  const status = 
+    selectedUsers.length === 0 ? "none"
+      : selectedUsers.length === 1 ? "single"
+      : "multiple";
+      
   console.log("...")
   return (
     <>
-      <span>id = {selectedUser?.id || ''}</span>
+      <span>ID = {selectedUser?.id || ''}</span>
       <TablesOuter
         isLoading={isUsersLoading} isError={isUsersError} isSuccess={isUsersSuccess}
         columns={TableColumnsInfo.SETTING_USER}
         data={users}
-        onRowClick={(row) => setSelectedUser(row)}
+        onRowClick={(row) => {
+          console.log(`SettingUsers > onRowClick ... row: ${JSON.stringify(row)}`)
+          setSelectedUsers(row)
+        }}
       />      
     </>
   );

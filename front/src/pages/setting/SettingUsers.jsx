@@ -1,12 +1,10 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import toast from "react-hot-toast";
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import SettingUsersActionButtons from "./SettingUsersActionButtons";
 import SettingUsersModals from "../../components/modal/settings/SettingUsersModals"
-import HeaderButton from '../../components/button/HeaderButton';
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
 import TablesOuter from '../../components/table/TablesOuter';
-import DeleteModal from "../../utils/DeleteModal"
-import { useAllUsers, useRemoveUser } from "../../api/RQHook";
+import { useAllUsers } from "../../api/RQHook";
+import SettingUsersDeleteModal from '../../components/modal/settings/SettingUsersDeleteModal';
 
 /**
  * @name SettingUsers
@@ -15,10 +13,12 @@ import { useAllUsers, useRemoveUser } from "../../api/RQHook";
  * @returns 
  */
 const SettingUsers = () => {
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [selectedUserId, setSelectedUserId] = useState([]);
-  const [activePopup, setActivePopup] = useState(null);
-
+  const [activeModal, setActiveModal] = useState(null);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const selectedUserIds = (Array.isArray(selectedUsers) ? selectedUsers : [])
+    .map((user) => user.id)
+    .join(", ");
+  
   const { 
     data: users = [],
     isLoading: isUsersLoading, 
@@ -26,26 +26,10 @@ const SettingUsers = () => {
     isSuccess: isUsersSuccess,
     refetch: refetchUsers,
   } = useAllUsers((e) => {
-    const [username, provider] = e?.userName?.split('@') || [];
-    return {
-      ...e,
-      username: username || "", // @ 앞의 값
-      provider: provider || "", // @ 뒤의 값
-    };
+    console.log(`SettingUsers ... ${JSON.stringify(e)}`)
+    // const [username, provider] = e?.userName?.split('@') || [];
+    return { ...e, };
   });
-
-  // const {
-  //   isLoading: isRemoveUserLoading,
-  //   mutate: removeUser,
-  // } = useRemoveUser(selectedUser[0].username, (res) => {
-  //   const msgSuccess = `SettingUsersModal > useRemoveUser > onSuccess ... `;
-  //   console.info(msgSuccess);
-  //   toast.success(`사용자 삭제 완료`);
-  // }, (err) => {
-  //   const msgErr = `SettingUsersModal > useRemoveUser > onError ... ${err}`;
-  //   console.error(msgErr);
-  //   toast.error(msgErr);
-  // });
   
   const [modals, setModals] = useState({
     create: false,
@@ -57,11 +41,9 @@ const SettingUsers = () => {
     setModals((prev) => ({ ...prev, [type]: isOpen }));
   };
 
-  // const [modalTab, setModalTab] = useState('img'); // 모달 창 내 탭 관리
-
-  const openPopup = (popupType) => {
-    console.log("SettingUsers > openPopup ... ")
-    setActivePopup(popupType);
+  const openModal = (popupType) => {
+    console.log(`SettingUsers > openPopup ... popupType: ${popupType}`)
+    setActiveModal(popupType);
     if (popupType === "add") {
       setModals({create: true, edit:false, remove:false})
       return
@@ -75,27 +57,18 @@ const SettingUsers = () => {
       return
     }
   };
-  
-  const closePopup = () => {
-    console.log("SettingUsers > closePopup ... ")
-    setActivePopup(null);
-  }
-
-  const buttons = [
-    { id: 'btn-new', label: '생성', onClick: () => openPopup('add') },
-    { id: 'btn-edit', label: '편집', onClick: () => openPopup('edit') },
-    { id: 'btn-remove', label: '삭제', onClick: () => openPopup('remove') },
-  ];
 
   const renderModals = () => {
     console.log("SettingUsers > renderModals ... ")
     return (
       <Suspense>
       {
-        (modals.create || (modals.edit && selectedUser)) && (
+        (modals.create || (modals.edit && selectedUsers)) && (
           <SettingUsersModals 
-            modalType={modals.create ? "create" : modals.edit ? "edit" : ""}
-            user={selectedUser}
+            modalType={
+              modals.create ? "create" : modals.edit ? "edit" : ""
+            }
+            user={selectedUsers}
             onClose={() => {
               toggleModal(modals.create ? "create" : "edit", false)
               refetchUsers()
@@ -104,48 +77,48 @@ const SettingUsers = () => {
         )
       }
       {
-        modals.remove && selectedUser && (
-          <DeleteModal
+        modals.remove && selectedUsers.length !== 0 && (
+          <SettingUsersDeleteModal 
             isOpen={modals.remove}
             onClose={() => {
               toggleModal("remove", false)
               refetchUsers()
             }}
-            label={"사용자"}
-            data={selectedUser}
-            api={useRemoveUser}
+            data={selectedUsers}
           />
         )
       }
       </Suspense>
     )
   }
+  
+  const status = 
+    selectedUsers.length === 0 ? "none"
+      : selectedUsers.length === 1 ? "single"
+      : "multiple";
 
   console.log("...")
   return (
-    <div id="section">
-      <div>
-        <HeaderButton
-          titleIcon={faUsers}
-          title="사용자"
-          buttons={buttons}
-        />
-      </div>
-      <span>ID = { selectedUserId ?? ""}</span>
+    <>
+      <SettingUsersActionButtons 
+        openModal={openModal}
+        isEditDisabled={selectedUsers.length !== 1}
+        status={status}
+      />
+      <span>ID = { selectedUserIds ?? ""}</span>
       <TablesOuter
         isLoading={isUsersLoading} isError={isUsersError} isSuccess={isUsersSuccess}
         columns={TableColumnsInfo.SETTING_USER}
         data={users}
         onRowClick={(row) => {
-          setSelectedUser(row);
-          setSelectedUserId(row.id);
+          console.log(`SettingUsers > onRowClick ... row: ${JSON.stringify(row)}`)
+          setSelectedUsers(row)
         }}
-        
       />
       
       {/* 모달창 */}
       {renderModals()}
-    </div>
+    </>
   );
 };
   

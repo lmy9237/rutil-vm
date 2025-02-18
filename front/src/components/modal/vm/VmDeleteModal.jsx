@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import BaseModal from "../BaseModal";
 import toast from "react-hot-toast";
+import { useQueries } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { useQueries } from "@tanstack/react-query";
+import BaseModal from "../BaseModal";
 import { useDeleteVm } from "../../../api/RQHook";
 import ApiManager from "../../../api/ApiManager";
 import "./MVm.css";

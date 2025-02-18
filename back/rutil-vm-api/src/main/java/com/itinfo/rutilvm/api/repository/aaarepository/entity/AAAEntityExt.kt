@@ -10,6 +10,7 @@ fun OvirtUser.toUserVo(userDetail: UserDetail?): UserVo = UserVo.builder {
 	password { this@toUserVo.password }
 	firstName { userDetail?.name }
 	lastName { userDetail?.surname }
+	namespace { userDetail?.namespace }
 	email { userDetail?.email }
 	administrative { userDetail?.lastAdminCheckStatus }
 	// principal { this@toUserVo.namespace }
