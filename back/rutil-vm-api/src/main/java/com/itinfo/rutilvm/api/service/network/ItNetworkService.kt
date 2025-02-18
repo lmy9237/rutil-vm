@@ -6,13 +6,12 @@ import com.itinfo.rutilvm.api.error.ItemNotFoundException
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.model.fromNetworkFiltersToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromOpenStackNetworkProviderToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import com.itinfo.rutilvm.api.model.setting.toPermissionVos
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.computing.HostOperationServiceImpl
-import com.itinfo.rutilvm.api.service.computing.HostOperationServiceImpl.Companion
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.builders.*
@@ -161,6 +160,14 @@ interface ItNetworkService {
 	 */
 	@Throws(ItemNotFoundException::class, Error::class)
 	fun findAllTemplatesFromNetwork(networkId: String): List<NetworkTemplateVo>
+	/**
+	 * [ItNetworkService.findAllNetworkFilters]
+	 * vNIC Profile 생성 시 필요한 네트워크 필터 목록
+	 *
+	 * @return List<[IdentifiedVo]>
+	 */
+	@Throws(Error::class)
+	fun findAllNetworkFilters(): List<IdentifiedVo>
 	/**
 	 * [ItNetworkService.findAllPermissionsFromNetwork]
 	 * 네트워크 권한 목록
@@ -361,6 +368,13 @@ class NetworkServiceImpl(
 			.filter { it.nics().any { nic -> nic.vnicProfile().network().id() == networkId }
 		}
 		return res.flatMap { it.nics().map { nic -> it.toNetworkTemplateVo(conn, nic) } }
+	}
+
+	@Throws(Error::class)
+	override fun findAllNetworkFilters(): List<IdentifiedVo> {
+		log.info("findAllNetworkFilters ... ")
+		val res: List<NetworkFilter> = conn.findAllNetworkFilters().getOrDefault(listOf())
+		return res.fromNetworkFiltersToIdentifiedVos()
 	}
 
 	@Deprecated("사용안함")

@@ -257,9 +257,6 @@ class VmVo (
         private var bCpuTopologyCore: Int = 0; fun cpuTopologyCore(block: () -> Int?) { bCpuTopologyCore = block() ?: 0 }
         private var bCpuTopologySocket: Int = 0; fun cpuTopologySocket(block: () -> Int?) { bCpuTopologySocket = block() ?: 0 }
         private var bCpuTopologyThread: Int = 0; fun cpuTopologyThread(block: () -> Int?) { bCpuTopologyThread = block() ?: 0 }
-//        private var bUserEmulation: String = ""; fun userEmulation(block: () -> String?) { bUserEmulation = block() ?: "" }
-//        private var bUserCpu: String = ""; fun userCpu(block: () -> String?) { bUserCpu = block() ?: "" }
-//        private var bUserVersion: String = ""; fun userVersion(block: () -> String?) { bUserVersion = block() ?: "" }
         private var bInstanceType: String = ""; fun instanceType(block: () -> String?) { bInstanceType = block() ?: "" }
         private var bTimeOffset: String = ""; fun timeOffset(block: () -> String?) { bTimeOffset = block() ?: "" }
         private var bCloudInit: Boolean = false; fun cloudInit(block: () -> Boolean?) { bCloudInit = block() ?: false }
@@ -296,7 +293,7 @@ class VmVo (
         private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
         private var bStopTime: String = ""; fun stopTime(block: () -> String?) { bStopTime = block() ?: "" }
 
-        fun build(): VmVo = VmVo(bId, bName, bStatus, bUpTime, bCreationTime, bMemoryInstalled, bMemoryUsed, bMemoryBuffered, bMemoryCached, bMemoryFree, bMemoryUnused, bFqdn, bIpv4, bIpv6, bHostEngineVm, bPlacement, bHostVo, bSnapshotVos, bNicVos, bDataCenterVo, bClusterVo, bTemplateVo, bDescription, bComment, bOsSystem, bChipsetFirmwareType, bOptimizeOption, bStateless, bStartPaused, bDeleteProtected, bDiskAttachmentVos, bVnicProfileVos, bMemorySize, bMemoryMax, bMemoryActual, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, /*bUserEmulation, bUserCpu, bUserVersion,*/ bInstanceType, bTimeOffset, bCloudInit, bHostName, bTimeStandard, bScript, bMonitor, bUsb, bHostInCluster, bHostVos, bMigrationMode, bMigrationPolicy, bMigrationEncrypt, bParallelMigration, bHa, bStorageDomainVo, bResumeOperation, bPriority, bWatchDogModel, bWatchDogAction, bCpuProfileVo, bCpuShare, bCpuPinningPolicy, bMemoryBalloon, bIoThreadCnt, bMultiQue, bVirtSCSIEnable, bVirtIoCnt, bFirstDevice, bSecDevice, bDeviceList, bConnVo, bBootingMenu, bUsageDto, bStopTime)
+        fun build(): VmVo = VmVo(bId, bName, bStatus, bUpTime, bCreationTime, bMemoryInstalled, bMemoryUsed, bMemoryBuffered, bMemoryCached, bMemoryFree, bMemoryUnused, bFqdn, bIpv4, bIpv6, bHostEngineVm, bPlacement, bHostVo, bSnapshotVos, bNicVos, bDataCenterVo, bClusterVo, bTemplateVo, bDescription, bComment, bOsSystem, bChipsetFirmwareType, bOptimizeOption, bStateless, bStartPaused, bDeleteProtected, bDiskAttachmentVos, bVnicProfileVos, bMemorySize, bMemoryMax, bMemoryActual, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bInstanceType, bTimeOffset, bCloudInit, bHostName, bTimeStandard, bScript, bMonitor, bUsb, bHostInCluster, bHostVos, bMigrationMode, bMigrationPolicy, bMigrationEncrypt, bParallelMigration, bHa, bStorageDomainVo, bResumeOperation, bPriority, bWatchDogModel, bWatchDogAction, bCpuProfileVo, bCpuShare, bCpuPinningPolicy, bMemoryBalloon, bIoThreadCnt, bMultiQue, bVirtSCSIEnable, bVirtIoCnt, bFirstDevice, bSecDevice, bDeviceList, bConnVo, bBootingMenu, bUsageDto, bStopTime, )
     }
 
     companion object {
@@ -313,6 +310,7 @@ fun Vm.toVmIdName(): VmVo = VmVo.builder {
 }
 fun List<Vm>.toVmsIdName(): List<VmVo> =
     this@toVmsIdName.map { it.toVmIdName() }
+
 
 fun Vm.toVmMenu(conn: Connection): VmVo {
 	val vm = this@toVmMenu
@@ -370,7 +368,6 @@ fun Vm.toVmVoInfo(conn: Connection): VmVo {
             null
     val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
     val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
-
 
     return VmVo.builder {
         id { vm.id() }
@@ -433,6 +430,7 @@ fun Vm.toStorageDomainVm(conn: Connection, storageDomainId: String): VmVo {
 fun List<Vm>.toStorageDomainVms(conn: Connection, storageDomainId: String): List<VmVo> =
     this@toStorageDomainVms.map { it.toStorageDomainVm(conn, storageDomainId) }
 
+
 fun Vm.toNetworkNic(conn: Connection): VmVo {
     val cluster: Cluster? = conn.findCluster(this@toNetworkNic.cluster().id()).getOrNull()
 
@@ -445,9 +443,12 @@ fun Vm.toNetworkNic(conn: Connection): VmVo {
     }
 }
 
-
-fun Vm.toUnregisteredVm(): VmVo {
+// 스토리지도메인- 가상머신 가져오기
+fun Vm.toUnregisteredVm(conn: Connection): VmVo {
 	val vm = this@toUnregisteredVm
+	val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vm.id())
+		.getOrDefault(listOf())
+
 	return VmVo.builder {
 		id { vm.id() }
 		name { vm.name() }
@@ -462,11 +463,11 @@ fun Vm.toUnregisteredVm(): VmVo {
 		}
 		cpuArc { vm.cpu().architecture() }
 		stopTime { ovirtDf.format(vm.stopTime()) }
-		// diskCnt
+		diskAttachmentVos { diskAttachments.toDiskAttachmentIdNames() }
 	}
 }
-fun List<Vm>.toUnregisterdVms(): List<VmVo> =
-	this@toUnregisterdVms.map { it.toUnregisteredVm() }
+fun List<Vm>.toUnregisteredVms(conn: Connection): List<VmVo> =
+	this@toUnregisteredVms.map { it.toUnregisteredVm(conn) }
 
 
 
@@ -659,8 +660,8 @@ fun VmVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder {
 
 /**
  * [Vm.toVmSystem]
+ * 스냅샷에서 사용
  *
- * @param conn [Connection]
  * @return
  */
 fun Vm.toVmSystem(): VmVo {
@@ -709,7 +710,6 @@ fun List<Vm>.toVmVoFromNetworks(conn: Connection): List<VmVo> =
  * Vm 업타임 구하기
  * 이건 매개변수로 statisticList 안줘도 되는게 vm에서만 사용
  *
- * @param conn
  * @return 일, 시간, 분 형식
  */
 fun List<Statistic>.findVmUptime(): String {
@@ -734,14 +734,14 @@ fun List<Statistic>.findVmUptime(): String {
  * [List<[Nic]>.findVmIpv4]
  * Vm ip 알아내기
  * vms/{id}/nic/{id}/statistic
- * @param conn
+ * @param conn [Connection]
+ * @param vmId [String]
  * @return
  */
 fun List<Nic>.findVmIpv4(conn: Connection, vmId: String): List<String> {
     return this@findVmIpv4.flatMap { nic ->
-        val reports: List<ReportedDevice> =
-            conn.findAllReportedDeviceFromVmNic(vmId, nic.id())
-                .getOrDefault(listOf())
+        val reports: List<ReportedDevice> = conn.findAllReportedDeviceFromVmNic(vmId, nic.id())
+			.getOrDefault(listOf())
         reports.map { it.ips()[0].address() }
     }.distinct()
 }
@@ -754,45 +754,11 @@ fun List<Nic>.findVmIpv4(conn: Connection, vmId: String): List<String> {
  */
 fun List<Nic>.findVmIpv6(conn: Connection, vmId: String): List<String> {
     return this@findVmIpv6.flatMap { nic ->
-        val reports: List<ReportedDevice> =
-            conn.findAllReportedDeviceFromVmNic(vmId, nic.id())
-                .getOrDefault(listOf())
+        val reports: List<ReportedDevice> = conn.findAllReportedDeviceFromVmNic(vmId, nic.id())
+			.getOrDefault(listOf())
         reports.map { it.ips()[1].address() }
     }.distinct()
 }
-
-/**
- * vm cpuPercent 반환
- */
-fun List<Statistic>.findCpuPercent(): Int? {
-    val cpuUsageStatistic = this@findCpuPercent.firstOrNull { it.name() == "cpu.usage.history" }
-    return cpuUsageStatistic?.values()?.firstOrNull()?.datum()?.toInt()
-}
-
-/**
- * vm MemoryPercent 반환
- */
-fun List<Statistic>.findMemoryPercent(): Int? {
-    val memoryUsageStatistic = this@findMemoryPercent.firstOrNull { it.name() == "memory.usage.history" }
-    return memoryUsageStatistic?.values()?.firstOrNull()?.datum()?.toInt()
-}
-
-/**
- * vm NetworkPercent
- */
-fun List<Statistic>.findNetworkPercent(): Int? {
-    val cpuUsageStatistic = this@findNetworkPercent.firstOrNull { it.name() == "network.usage.history" }
-    return cpuUsageStatistic?.values()?.firstOrNull()?.datum()?.toInt()
-}
-
-/**
- * vm NetworkPercent
- */
-fun List<Statistic>.findNetworkListPercent(): List<Int>? {
-    val networkUsageStatistic = this@findNetworkListPercent.firstOrNull { it.name() == "network.usage.history" }
-    return networkUsageStatistic?.values()?.take(10)?.map { it.datum().toInt() }
-}
-
 
 /**
  * vm 전부 모아둔것...
@@ -831,9 +797,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
         ipv4 { nics.findVmIpv4(conn, vm.id()) }
         ipv6 { nics.findVmIpv6(conn, vm.id()) }
         hostEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
-//        placement { vm. }
         hostVo { host?.fromHostToIdentifiedVo() }
-//        snapshotVos { vm. }
         nicVos { nics.toVmNics(conn, vm.id()) }
         diskAttachmentVos { diskAttachments.toDiskAttachmentVos(conn) }
         dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
@@ -860,14 +824,10 @@ fun Vm.toVmVo(conn: Connection): VmVo {
         cpuTopologyCore { vm.cpu().topology().coresAsInteger() }
         cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
         cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
-//        userEmulation { vm. }
-//        userCpu { vm. }
-//        userVersion { vm. }
-//        instanceType { vm. }
         timeOffset { vm.timeZone().name() }
         cloudInit { vm.initializationPresent() }
         hostName { if (vm.initializationPresent()) vm.initialization().hostName() else "" }
-//        timeStandard { vm. }
+       timeStandard { vm.timeZone().toString() }
         script { if (vm.initializationPresent()) vm.initialization().customScript() else "" }
         monitor { vm.display().monitorsAsInteger() }
         usb { vm.usb().enabled() }
@@ -881,14 +841,11 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 //            else listOf()
 //        }
         migrationMode { vm.placementPolicy().affinity().value() }
-//        migrationPolicy { vm. }
         migrationEncrypt { vm.migration().encrypted() }
-//        parallelMigration { vm. }
         ha { vm.highAvailability().enabled() }
         storageDomainVo { if (vm.leasePresent()) conn.findStorageDomain(vm.lease().storageDomain().id()).getOrNull()?.fromStorageDomainToIdentifiedVo() else null }
         resumeOperation { vm.storageErrorResumeBehaviour().value() }
         priority { vm.highAvailability().priorityAsInteger() }
-//        watchDogModel { WatchdogAction.NONE }
         watchDogAction { WatchdogAction.NONE }
         cpuProfileVo { conn.findCpuProfile(vm.cpuProfile().id()).getOrNull()?.fromCpuProfileToIdentifiedVo() }
         cpuShare { vm.cpuSharesAsInteger() }
@@ -896,7 +853,6 @@ fun Vm.toVmVo(conn: Connection): VmVo {
         memoryBalloon { vm.memoryPolicy().ballooning() }
         ioThreadCnt  { if (vm.io().threadsPresent()) vm.io().threadsAsInteger() else 0 }
         multiQue { vm.multiQueuesEnabled() }
-//        virtIoCnt { vm. }
         firstDevice { vm.os().boot().devices().first().value() }
         secDevice {
             if (vm.os().boot().devices().size > 1)
@@ -904,9 +860,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
             else
                 null
         }
-//        deviceList { vm. }
-        connVo { disk?.fromDiskToIdentifiedVo() } //?
-//        bootingMenu { vm. }
+        connVo { disk?.fromDiskToIdentifiedVo() }
     }
 }
 fun List<Vm>.toVmVos(conn: Connection/*, graph: ItGraphService*/): List<VmVo> =

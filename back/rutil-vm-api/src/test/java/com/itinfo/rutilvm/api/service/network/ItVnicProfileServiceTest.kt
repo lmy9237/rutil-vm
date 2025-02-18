@@ -89,23 +89,6 @@ class ItVnicProfileServiceTest {
     }
 
     /**
-     * [should_findAllNetworkFilters]
-     * [ItVnicProfileService.findAllNetworkFilters]에 대한 단위테스트
-     *
-     * @see ItVnicProfileService.findAllNetworkFilters
-     */
-    @Test
-    fun should_findAllNetworkFilters() {
-        log.debug("findAllNetworkFilters ... ")
-        val result: List<IdentifiedVo> =
-            service.findAllNetworkFilters()
-
-        assertThat(result, `is`(not(nullValue())))
-        result.forEach { println(it) }
-//        assertThat(result.size, `is`(9))
-    }
-
-    /**
      * [should_add_update_and_remove_network]
      * [ItVnicProfileService.add]에 대한 단위테스트
      *

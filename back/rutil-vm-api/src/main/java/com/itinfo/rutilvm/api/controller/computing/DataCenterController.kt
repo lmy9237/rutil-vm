@@ -2,8 +2,6 @@ package com.itinfo.rutilvm.api.controller.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.controller.BaseController
-import com.itinfo.rutilvm.api.controller.storage.DiskController
-import com.itinfo.rutilvm.api.controller.storage.DiskController.Companion
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
@@ -379,33 +377,6 @@ class DataCenterController: BaseController() {
 		log.info("/computing/dataCenters/{}/vnicProfiles ... 가상머신 생성창 - vnicProfiles 목록", dataCenterId)
 		return ResponseEntity.ok(iDataCenter.findAllVnicProfilesFromDataCenter(dataCenterId))
 	}
-
-
-
-
-//	@Deprecated("필요없음")
-//	@ApiOperation(
-//		httpMethod="GET",
-//		value="권한 목록 조회",
-//		notes="선택된 데이터센터의 권한 목록울 조회한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name="dataCenterId", value="데이터센터 ID", dataTypeClass=String::class, required=true, paramType="path"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 200, message = "OK")
-//	)
-//	@GetMapping("/{dataCenterId}/permissions")
-//	@ResponseStatus(HttpStatus.OK)
-//	@ResponseBody
-//	fun permissions(
-//		@PathVariable dataCenterId: String? = null,
-//	): ResponseEntity<List<PermissionVo>> {
-//		if (dataCenterId.isNullOrEmpty())
-//			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
-//		log.info("/computing/dataCenters/{}/permissions ... 데이터센터 권한 목록", dataCenterId)
-//		return ResponseEntity.ok(iDataCenter.findAllPermissionsFromDataCenter(dataCenterId))
-//	}
 
 
 	companion object {

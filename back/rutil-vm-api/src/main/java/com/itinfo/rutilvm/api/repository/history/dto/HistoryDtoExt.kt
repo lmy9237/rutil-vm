@@ -5,13 +5,11 @@ import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryEntity
 import com.itinfo.rutilvm.api.repository.history.entity.VmInterfaceSamplesHistoryEntity
 import com.itinfo.rutilvm.api.repository.history.entity.VmSamplesHistoryEntity
 import com.itinfo.rutilvm.api.error.toException
-import com.itinfo.rutilvm.api.model.computing.findNetworkListPercent
 import com.itinfo.rutilvm.api.repository.history.entity.StorageDomainSamplesHistoryEntity
 import com.itinfo.rutilvm.util.ovirt.findAllHosts
 import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromHost
 import com.itinfo.rutilvm.util.ovirt.findAllVms
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
-import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromVm
 import com.itinfo.rutilvm.util.ovirt.findVm
 import com.itinfo.rutilvm.util.ovirt.findHost
 import com.itinfo.rutilvm.util.ovirt.findStorageDomain

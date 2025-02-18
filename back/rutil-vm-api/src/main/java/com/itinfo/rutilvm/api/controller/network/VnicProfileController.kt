@@ -20,7 +20,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
 @Controller
-@Api(tags = ["VnicProfile"])
+@Api(tags = ["Network", "VnicProfile"])
 @RequestMapping("/api/v1/vnicProfiles")
 class VnicProfileController: BaseController() {
     @Autowired private lateinit var iVnic: ItVnicProfileService
@@ -205,22 +205,6 @@ class VnicProfileController: BaseController() {
             throw ErrorPattern.VNIC_PROFILE_ID_NOT_FOUND.toException()
         log.info("/vnicProfiles/{}/vms ... 템플릿 목록", vnicProfileId)
         return ResponseEntity.ok(iVnic.findAllTemplatesFromVnicProfile(vnicProfileId))
-    }
-
-    @ApiOperation(
-        httpMethod="GET",
-        value="네트워크 필터 목록",
-        notes="네트워크 필터 목록을 조회한다"
-    )
-    @ApiResponses(
-        ApiResponse(code = 200, message = "OK")
-    )
-    @GetMapping("/networkFilters")
-    @ResponseBody
-    fun networkFilters(
-    ): ResponseEntity<List<IdentifiedVo>> {
-        log.info("/networkFilters ... 네트워크 필터 목록")
-        return ResponseEntity.ok(iVnic.findAllNetworkFilters())
     }
 
 

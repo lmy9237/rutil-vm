@@ -369,6 +369,23 @@ class NetworkController: BaseController() {
 		return ResponseEntity.ok(iNetwork.findAllTemplatesFromNetwork(networkId))
 	}
 
+	@ApiOperation(
+		httpMethod="GET",
+		value="네트워크 필터 목록",
+		notes="네트워크 필터 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/networkFilters")
+	@ResponseBody
+	fun networkFilters(
+	): ResponseEntity<List<IdentifiedVo>> {
+		log.info("/networkFilters ... 네트워크 필터 목록")
+		return ResponseEntity.ok(iNetwork.findAllNetworkFilters())
+	}
+
+
 //	@ApiOperation(
 //		httpMethod="GET",
 //		value = "네트워크 권한 목록",

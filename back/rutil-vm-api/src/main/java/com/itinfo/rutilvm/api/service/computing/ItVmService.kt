@@ -139,10 +139,10 @@ class VmServiceImpl(
 	override fun add(vmVo: VmVo): VmVo? {
 		log.info("add ... vmVo: {}", vmVo)
 
-		// if(vmVo.diskAttachmentVos.filter { it.bootable }.size != 1){
-		// 	log.error("디스크 부팅가능은 한개만 가능")
-		// 	throw ErrorPattern.VM_VO_INVALID.toException()
-		// }
+		if(vmVo.diskAttachmentVos.filter { it.bootable }.size > 1){
+			log.error("디스크 부팅가능은 한개만 가능")
+			throw ErrorPattern.VM_VO_INVALID.toException()
+		}
 
 		val res: Vm? = conn.addVm(
 			vmVo.toAddVmBuilder(),
@@ -215,20 +215,17 @@ class VmServiceImpl(
 		return res.isSuccess
 	}
 
-
 	@Throws(Error::class)
 	override fun findAllApplicationsFromVm(vmId: String): List<IdentifiedVo> {
 		log.info("findAllApplicationsFromVm ... vmId: {}", vmId)
-		val res: List<Application> = conn.findAllApplicationsFromVm(vmId)
-			.getOrDefault(listOf())
+		val res: List<Application> = conn.findAllApplicationsFromVm(vmId).getOrDefault(listOf())
 		return res.fromApplicationsToIdentifiedVos()
 	}
 
 	@Throws(Error::class)
 	override fun findAllHostDevicesFromVm(vmId: String): List<HostDeviceVo> {
 		log.info("findAllHostDevicesFromVm ... vmId: {}", vmId)
-		val res: List<HostDevice> = conn.findAllHostDevicesFromVm(vmId)
-			.getOrDefault(listOf())
+		val res: List<HostDevice> = conn.findAllHostDevicesFromVm(vmId).getOrDefault(listOf())
 		return res.toHostDeviceVos()
 	}
 

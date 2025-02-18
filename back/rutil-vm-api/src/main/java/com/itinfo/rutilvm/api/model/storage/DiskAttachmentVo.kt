@@ -2,6 +2,7 @@ package com.itinfo.rutilvm.api.model.storage
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromVmToIdentifiedVo
+import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo.Companion
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.*
 
@@ -66,6 +67,13 @@ class DiskAttachmentVo(
 		inline fun builder(block: DiskAttachmentVo.Builder.() -> Unit): DiskAttachmentVo = DiskAttachmentVo.Builder().apply(block).build()
 	}
 }
+
+fun DiskAttachment.toDiskAttachmentIdName(): DiskAttachmentVo = DiskAttachmentVo.builder {
+	id { this@toDiskAttachmentIdName.id() }
+	// name { this@toDiskAttachmentIdName.name() }
+}
+fun List<DiskAttachment>.toDiskAttachmentIdNames(): List<DiskAttachmentVo> =
+	this@toDiskAttachmentIdNames.map { it.toDiskAttachmentIdName() }
 
 fun DiskAttachment.toDiskAttachMenu(conn: Connection): DiskAttachmentVo {
 	val disk: Disk? =

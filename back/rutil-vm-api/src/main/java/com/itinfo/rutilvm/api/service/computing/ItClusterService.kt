@@ -137,16 +137,7 @@ interface ItClusterService {
 	@Throws(Error::class)
 	fun manageNetworksFromCluster(clusterId: String, networkVos: List<NetworkVo>): Boolean
 
-	/**
-	 * [ItClusterService.findAllCpuProfilesFromCluster]
-	 * 클러스터가 가지고있는 CPU 프로파일 목록
-	 * vm 생성시 사용
-	 *
-	 * @param clusterId [String] 클러스터 Id
-	 * @return List<[CpuProfileVo]> cpuProfile 목록
-	 */
-	@Throws(Error::class)
-	fun findAllCpuProfilesFromCluster(clusterId: String): List<CpuProfileVo>
+
 	/**
 	 * [ItClusterService.findAllEventsFromCluster]
 	 * 클러스터가 가지고있는 이벤트 목록
@@ -158,15 +149,24 @@ interface ItClusterService {
 	fun findAllEventsFromCluster(clusterId: String): List<EventVo>
 
 	/**
-	 * [ItClusterService.findAllPermissionsFromCluster]
-	 * 클러스터가 가지고있는 권한 목록
+	 * [ItClusterService.findAllOsSystemFromCluster]
+	 * 가상머신 operation system
+	 *
+	 * @param clusterId [String]
+	 * @return List<[OsVo]>
+	 */
+	@Throws(Error::class)
+	fun findAllOsSystemFromCluster(clusterId: String): List<OsVo>
+	/**
+	 * [ItClusterService.findAllCpuProfilesFromCluster]
+	 * 클러스터가 가지고있는 CPU 프로파일 목록
+	 * vm 생성시 사용
 	 *
 	 * @param clusterId [String] 클러스터 Id
-	 * @return List<[PermissionVo]> 권한 목록
+	 * @return List<[CpuProfileVo]> cpuProfile 목록
 	 */
-	@Deprecated("필요없음")
 	@Throws(Error::class)
-	fun findAllPermissionsFromCluster(clusterId: String): List<PermissionVo>
+	fun findAllCpuProfilesFromCluster(clusterId: String): List<CpuProfileVo>
 }
 
 @Service
@@ -325,14 +325,6 @@ class ClusterServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllCpuProfilesFromCluster(clusterId: String): List<CpuProfileVo> {
-		log.info("findAllCpuProfilesFromCluster ... clusterId: {}", clusterId)
-		val res: List<CpuProfile> = conn.findAllCpuProfilesFromCluster(clusterId)
-			.getOrDefault(listOf())
-		return res.toCpuProfileVos()
-	}
-
-	@Throws(Error::class)
 	override fun findAllEventsFromCluster(clusterId: String): List<EventVo> {
 		log.info("findAllEventsFromCluster ... clusterId: {}", clusterId)
 		val cluster: Cluster = conn.findCluster(clusterId)
@@ -344,13 +336,24 @@ class ClusterServiceImpl(
 		return res.toEventVos()
 	}
 
-	@Deprecated("필요없음")
 	@Throws(Error::class)
-	override fun findAllPermissionsFromCluster(clusterId: String): List<PermissionVo> {
-		log.info("findAllPermissionsFromCluster ... clusterId: {}", clusterId)
-		val res: List<Permission> =
-			conn.findAllPermissionsFromCluster(clusterId).getOrDefault(listOf())
-		return res.toPermissionVos(conn)
+	override fun findAllOsSystemFromCluster(clusterId: String): List<OsVo> {
+		log.info("findAllOsSystemFromCluster ... clusterId:{}", clusterId)
+		val cluster: Cluster? = conn.findCluster(clusterId).getOrNull()
+		log.info("findAllOsSystemFromCluster ... clusterId:{}", cluster?.name())
+
+		val res: List<OperatingSystemInfo> = conn.findAllOperatingSystems()
+			.getOrDefault(listOf())
+			.filter { it.architecture() == cluster?.cpu()?.architecture() }
+		return res.toOsVos()
+	}
+
+	@Throws(Error::class)
+	override fun findAllCpuProfilesFromCluster(clusterId: String): List<CpuProfileVo> {
+		log.info("findAllCpuProfilesFromCluster ... clusterId: {}", clusterId)
+		val res: List<CpuProfile> = conn.findAllCpuProfilesFromCluster(clusterId)
+			.getOrDefault(listOf())
+		return res.toCpuProfileVos()
 	}
 
 

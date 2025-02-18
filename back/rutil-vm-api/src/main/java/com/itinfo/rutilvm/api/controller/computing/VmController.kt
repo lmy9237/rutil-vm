@@ -2,16 +2,13 @@ package com.itinfo.rutilvm.api.controller.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.controller.BaseController
-import com.itinfo.rutilvm.api.controller.computing.ClusterController.Companion
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.NicVo
-import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
-import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.service.computing.*
 
@@ -146,38 +143,6 @@ class VmController: BaseController() {
 		log.info("/computing/vms/{} ... 가상머신 삭제", vmId)
 		return ResponseEntity.ok(iVm.remove(vmId, detachOnly))
 	}
-
-
-
-
-
-
-//	@ApiOperation(
-//		httpMethod="DELETE",
-//		value="가상머신 디스크 삭제(다중)",
-//		notes="선택된 가상머신의 디스크를 삭제한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
-//		ApiImplicitParam(name="diskAttachments", value="디스크 ID 목록", dataTypeClass=Array<DiskAttachmentVo>::class, required=true, paramType="body"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 200, message = "OK")
-//	)
-//	@DeleteMapping("/{vmId}/disks")
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	fun removeDisks(
-//		@PathVariable vmId: String? = null,
-//		@RequestBody diskAttachments: List<DiskAttachmentVo>? = null,
-//	): ResponseEntity<Boolean> {
-//		if (vmId.isNullOrEmpty())
-//			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-//		if (diskAttachments == null)
-//			throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toException()
-//		log.info("/computing/vms/{}/disks ... 가상머신 디스크 삭제(다중) ", vmId)
-//		return ResponseEntity.ok(iVmDisk.removeMultiFromVm(vmId, diskAttachments))
-//	}
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -1105,7 +1070,7 @@ class VmController: BaseController() {
 		log.info("/computing/vms/{}/snapshots ... 가상머신 스냅샷 목록", vmId)
 		return ResponseEntity.ok(iVmSnapshot.findAllFromVm(vmId))
 	}
-	
+
 	@ApiOperation(
 		httpMethod="GET",
 		value="가상머신 스냅샷 상세조회",
@@ -1161,7 +1126,7 @@ class VmController: BaseController() {
 		log.info("/computing/vms/{}/snapshots ... 가상머신 스냅샷 생성", vmId)
 		return ResponseEntity.ok(iVmSnapshot.addFromVm(vmId, snapshot))
 	}
-	
+
 	@ApiOperation(
 		httpMethod="DELETE",
 		value="가상머신 스냅샷 삭제",

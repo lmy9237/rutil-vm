@@ -2,14 +2,11 @@ package com.itinfo.rutilvm.api.controller.storage
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.controller.BaseController
-import com.itinfo.rutilvm.api.controller.storage.DiskController.Companion
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
-import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.DiskProfileVo
-import com.itinfo.rutilvm.api.model.storage.HostStorageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.service.storage.ItStorageService
 
@@ -21,7 +18,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
 @Controller
-@Api(tags = ["Storage"])
+@Api(tags = ["Storage", "Domain"])
 @RequestMapping("/api/v1/storages/domains")
 class StorageController: BaseController() {
 	@Autowired private lateinit var iDomain: ItStorageService
@@ -769,31 +766,6 @@ class StorageController: BaseController() {
 		log.info("/storages/{}/events ... Event(s) 목록", storageDomainId)
 		return ResponseEntity.ok(iDomain.findAllEventsFromStorageDomain(storageDomainId))
 	}
-
-
-	// @Deprecated("필요없음")
-	// @ApiOperation(
-	// 	httpMethod="GET",
-	// 	value="",
-	// 	notes="Permission(s) 목록"
-	// )
-	// @ApiImplicitParams(
-	// 	ApiImplicitParam(name="storageDomainId", value="스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	// )
-	// @ApiResponses(
-	// 	ApiResponse(code = 200, message = "OK")
-	// )
-	// @GetMapping("/{storageDomainId}/permissions")
-	// @ResponseStatus(HttpStatus.OK)
-	// @ResponseBody
-	// fun permissions(
-	// 	@PathVariable storageDomainId: String? = null,
-	// ): ResponseEntity<List<PermissionVo>> {
-	// 	if (storageDomainId.isNullOrEmpty())
-	// 		throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-	// 	log.info("/storages/{}/permissions ... Permission(s) 목록", storageDomainId)
-	// 	return ResponseEntity.ok(iDomain.findAllPermissionsFromStorageDomain(storageDomainId))
-	// }
 
 
 	companion object {

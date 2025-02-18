@@ -516,7 +516,7 @@ class StorageServiceImpl(
         log.info("findAllUnregisteredVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
         val res: List<Vm> = conn.findAllUnregisteredVmsFromStorageDomain(storageDomainId)
             .getOrDefault(listOf())
-        return res.toUnregisterdVms()
+        return res.toUnregisteredVms(conn)
     }
 
 	@Throws(Error::class)

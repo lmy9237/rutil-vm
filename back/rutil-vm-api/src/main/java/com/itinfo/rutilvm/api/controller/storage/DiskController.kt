@@ -2,22 +2,14 @@ package com.itinfo.rutilvm.api.controller.storage
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.controller.BaseController
-import com.itinfo.rutilvm.api.controller.computing.VmController
-import com.itinfo.rutilvm.api.controller.computing.VmController.Companion
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.error.IdNotFoundException
 import com.itinfo.rutilvm.api.error.InvalidRequestException
 import com.itinfo.rutilvm.api.error.toException
-import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.computing.EventVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
-import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
-import com.itinfo.rutilvm.api.model.storage.DiskProfileVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.service.storage.ItDiskService
-import com.itinfo.rutilvm.api.service.storage.ItStorageService
-import com.itinfo.rutilvm.util.ovirt.removeDisk
 
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
 
 @Controller
-@Api(tags = ["Disk"])
+@Api(tags = ["Storage", "Disk"])
 @RequestMapping("/api/v1/storages/disks")
 class DiskController: BaseController() {
 	@Autowired private lateinit var iDisk: ItDiskService
@@ -73,54 +65,6 @@ class DiskController: BaseController() {
 		log.info("/storages/disks/{} ... 디스크", diskId)
 		return ResponseEntity.ok(iDisk.findOne(diskId))
 	}
-
-
-//	@ApiOperation(
-//		httpMethod="GET",
-//		value="데이터센터 스토리지 도메인 목록",
-//		notes="선택된 데이터센터의 스토리지 도메인 목록을 조회한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name = "dataCenterId", value = "데이터센터 ID", dataTypeClass = String::class, required=true, paramType="path"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 200, message = "OK")
-//	)
-//	@GetMapping("/{dataCenterId}")
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	fun storageDomainsFromDataCenter(
-//		@PathVariable dataCenterId: String? = null,
-//	): ResponseEntity<List<StorageDomainVo>> {
-//		if (dataCenterId == null)
-//			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
-//		log.info("/storages/disks/{} ... 스토리지 도메인 목록", dataCenterId)
-//		return ResponseEntity.ok(iDisk.findAllDomainsFromDataCenter(dataCenterId))
-//	}
-
-//	@ApiOperation(
-//		httpMethod="GET",
-//		value="스토리지 도메인 디스크 프로파일 목록",
-//		notes="선택된 스토리지 도메인의 디스크 프로파일 목록을 조회한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass = String::class, required=true, paramType="path"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 200, message = "OK")
-//	)
-//	@GetMapping("/{storageDomainId}")
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	fun diskProfilesFromStorageDomains(
-//		@PathVariable storageDomainId: String? = null,
-//	): ResponseEntity<List<DiskProfileVo>> {
-//		if (storageDomainId == null)
-//			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-//		log.info("/storages/disks/{} ... 디스크 프로파일 목록", storageDomainId)
-//		return ResponseEntity.ok(iDisk.findAllDiskProfilesFromStorageDomain(storageDomainId))
-//	}
-
 
 	@ApiOperation(
 		httpMethod="POST",
@@ -195,29 +139,6 @@ class DiskController: BaseController() {
 		return ResponseEntity.ok(iDisk.remove(diskId))
 	}
 
-//	@ApiOperation(
-//		httpMethod="DELETE",
-//		value="디스크 멀티 삭제",
-//		notes="디스크 이미지를 멀티 삭제한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name = "diskId", value = "디스크이미지 ID", dataTypeClass = String::class, required=true, paramType="path"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 200, message = "OK")
-//	)
-//	@DeleteMapping()
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	fun removeMultiple(
-//		@RequestBody diskIdList: List<String>? = null,
-//	): ResponseEntity<List<Boolean>> {
-//		if (diskIdList.isNullOrEmpty())
-//			throw ErrorPattern.DISK_IMAGE_ID_NOT_FOUND.toException()
-//		log.info("/storages/disks ... 디스크 이미지 삭제")
-//		return ResponseEntity.ok(iDisk.removeMultiple(diskIdList))
-//	}
-
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -258,9 +179,9 @@ class DiskController: BaseController() {
 		@PathVariable diskId: String? = null,
 		@PathVariable storageDomainId: String? = null,
 	): ResponseEntity<Boolean> {
-		if (diskId.isNullOrEmpty()) 
+		if (diskId.isNullOrEmpty())
 			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
-		if (storageDomainId == null)  
+		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/disks/{}/move ... 디스크 - 이동", diskId)
 		return ResponseEntity.ok(iDisk.move(diskId, storageDomainId))
@@ -286,9 +207,9 @@ class DiskController: BaseController() {
 		@PathVariable diskId: String? = null,
 		@RequestBody diskImage: DiskImageVo? = null,
 	): ResponseEntity<Boolean> {
-		if (diskId.isNullOrEmpty()) 
+		if (diskId.isNullOrEmpty())
 			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
-		if (diskImage == null) 
+		if (diskImage == null)
 			throw ErrorPattern.DISK_IMAGE_VO_INVALID.toException()
 		log.info("/storages/disks/{}/copy ... 디스크 - 복사", diskId)
 		return ResponseEntity.ok(iDisk.copy(diskImage))
@@ -348,8 +269,8 @@ class DiskController: BaseController() {
 		log.info("/storages/disks/{}/refreshLun ... refreshLun", diskId)
 		return ResponseEntity.ok(iDisk.refreshLun(diskId, hostId))
 	}
-	
-	
+
+
 	@ApiOperation(
 		httpMethod="GET",
 		value="디스크 가상머신 목록",
@@ -396,7 +317,55 @@ class DiskController: BaseController() {
 		return ResponseEntity.ok(iDisk.findAllStorageDomainsFromDisk(diskId))
 	}
 
-	
+
+
+//	@ApiOperation(
+//		httpMethod="GET",
+//		value="데이터센터 스토리지 도메인 목록",
+//		notes="선택된 데이터센터의 스토리지 도메인 목록을 조회한다"
+//	)
+//	@ApiImplicitParams(
+//		ApiImplicitParam(name = "dataCenterId", value = "데이터센터 ID", dataTypeClass = String::class, required=true, paramType="path"),
+//	)
+//	@ApiResponses(
+//		ApiResponse(code = 200, message = "OK")
+//	)
+//	@GetMapping("/{dataCenterId}")
+//	@ResponseBody
+//	@ResponseStatus(HttpStatus.OK)
+//	fun storageDomainsFromDataCenter(
+//		@PathVariable dataCenterId: String? = null,
+//	): ResponseEntity<List<StorageDomainVo>> {
+//		if (dataCenterId == null)
+//			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
+//		log.info("/storages/disks/{} ... 스토리지 도메인 목록", dataCenterId)
+//		return ResponseEntity.ok(iDisk.findAllDomainsFromDataCenter(dataCenterId))
+//	}
+
+//	@ApiOperation(
+//		httpMethod="GET",
+//		value="스토리지 도메인 디스크 프로파일 목록",
+//		notes="선택된 스토리지 도메인의 디스크 프로파일 목록을 조회한다"
+//	)
+//	@ApiImplicitParams(
+//		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass = String::class, required=true, paramType="path"),
+//	)
+//	@ApiResponses(
+//		ApiResponse(code = 200, message = "OK")
+//	)
+//	@GetMapping("/{storageDomainId}")
+//	@ResponseBody
+//	@ResponseStatus(HttpStatus.OK)
+//	fun diskProfilesFromStorageDomains(
+//		@PathVariable storageDomainId: String? = null,
+//	): ResponseEntity<List<DiskProfileVo>> {
+//		if (storageDomainId == null)
+//			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+//		log.info("/storages/disks/{} ... 디스크 프로파일 목록", storageDomainId)
+//		return ResponseEntity.ok(iDisk.findAllDiskProfilesFromStorageDomain(storageDomainId))
+//	}
+
+
 	companion object {
 		private val log by LoggerDelegate()
 	}

@@ -504,7 +504,9 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
                 loading={isClustersLoading}
                 options={clusters}
               />
-
+              <div>
+                <span>데이터센터: {dataCenterName}</span>
+              </div>
               <LabelSelectOptionsID
                 label="템플릿"
                 value={templateVoId}

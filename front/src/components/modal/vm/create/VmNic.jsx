@@ -1,3 +1,5 @@
+
+
 const VmNic = ({ nicsState, setNicsState, nics }) => {
   // 변경사항 업데이트
   const handleNicChange = (index, value) => {
@@ -45,7 +47,7 @@ const VmNic = ({ nicsState, setNicsState, nics }) => {
             <option value="">항목을 선택하십시오...</option>
             {nics.map((profile) => (
               <option key={profile.id} value={profile.id}>
-                {profile.name} / {profile.networkVo?.name || ""}
+                {profile.name} {`[네트워크: ${profile.networkVo?.name}]`}
               </option>
             ))}
           </select>

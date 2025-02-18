@@ -140,29 +140,6 @@ class HostController {
 		return ResponseEntity.ok(iHost.remove(hostId))
 	}
 
-//	@ApiOperation(
-//		httpMethod="DELETE",
-//		value="호스트 멀티 삭제",
-//		notes="호스트를 멀티 삭제한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name="hostIdList", value="호스트 ID 목록", dataTypeClass=Array<String>::class, required=true, paramType="body"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 200, message = "OK")
-//	)
-//	@DeleteMapping
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	fun removeMultiple(
-//		@RequestBody hostIdList: List<String>? = null,
-//	): ResponseEntity<List<Boolean>> {
-//		if (hostIdList.isNullOrEmpty())
-//			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-//		log.info("/computing/hosts ... 호스트 다중 삭제")
-//		return ResponseEntity.ok(iHost.removeMultiple(hostIdList))
-//	}
-
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -328,32 +305,6 @@ class HostController {
 	}
 
 
-//	@Deprecated("필요없음")
-//	@ApiOperation(
-//		httpMethod="GET",
-//		value="호스트 권한 목록",
-//		notes="선택된 호스트의 권한 목록을 조회한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 200, message = "OK")
-//	)
-//	@GetMapping("/{hostId}/permissions")
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	fun permissions(
-//		@PathVariable hostId: String? = null
-//	): ResponseEntity<List<PermissionVo>> {
-//		log.info("/computing/hosts/{}/permissions ... 호스트 권한 목록", hostId)
-//		if (hostId.isNullOrEmpty())
-//			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-//		return ResponseEntity.ok(iHost.findAllPermissionsFromHost(hostId))
-//	}
-
-
-
 	@Autowired private lateinit var iHostNic: ItHostNicService
 
 	@ApiOperation(
@@ -435,30 +386,6 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="POST",
-		value="호스트 멀티 유지보수 모드전환",
-		notes="호스트를 멀티 유지보수 모드로 전환한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="hostIdList", value="호스트 ID 목록", dataTypeClass=Array<String>::class, required=true, paramType="body"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 201, message = "CREATED"),
-		ApiResponse(code = 404, message = "NOT_FOUND")
-	)
-	@PostMapping("/deactivate")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.CREATED)
-	fun deactivateMultiple(
-		@RequestBody hostIdList: List<String>? = null,
-	): ResponseEntity<Map<String, String>> {
-		if (hostIdList.isNullOrEmpty())
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		log.info("/computing/hosts/deactivate ... 호스트 멀티 유지보수")
-		return ResponseEntity.ok(iHostOp.deactivateMultiple(hostIdList))
-	}
-
-	@ApiOperation(
-		httpMethod="POST",
 		value="호스트 활성화 모드전환",
 		notes="호스트를 활성화 모드로 전환한다"
 	)
@@ -483,56 +410,6 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="POST",
-		value="호스트 멀티 활성 모드전환",
-		notes="호스트를 멀티 활성 모드로 전환한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="hostIdList", value="호스트 ID 목록", dataTypeClass=Array<String>::class, required=true, paramType="body"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 201, message = "CREATED"),
-		ApiResponse(code = 404, message = "NOT_FOUND")
-	)
-	@PostMapping("/activate")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.CREATED)
-	fun activateMultiple(
-		@RequestBody hostIdList: List<String>? = null,
-	): ResponseEntity<Map<String, String>> {
-		if (hostIdList.isNullOrEmpty())
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		log.info("/computing/hosts/activate ... 호스트 멀티 활성")
-		return ResponseEntity.ok(iHostOp.activateMultiple(hostIdList))
-	}
-
-
-//	@ApiOperation(
-//		httpMethod="POST",
-//		value="호스트 새로고침",
-//		notes="호스트를 새로고침 한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 201, message = "CREATED"),
-//		ApiResponse(code = 404, message = "NOT_FOUND")
-//	)
-//	@PostMapping("/{hostId}/refresh")
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.CREATED)
-//	fun refresh(
-//		@PathVariable hostId: String?
-//	): ResponseEntity<Boolean> {
-//		if (hostId.isNullOrEmpty())
-//			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-//		log.info("/computing/hosts/{}/refresh ... 호스트 새로고침", hostId)
-//		return ResponseEntity.ok(iHostOp.refresh(hostId))
-//	}
-
-
-	@ApiOperation(
-		httpMethod="POST",
 		value="호스트 재시작",
 		notes="호스트를 재시작 한다"
 	)
@@ -554,30 +431,6 @@ class HostController {
 		log.info("/computing/hosts/{}/restart ... 호스트 ssh 재시작", hostId)
 		return ResponseEntity.ok(iHostOp.restart(hostId))
 	}
-
-//	@ApiOperation(
-//		httpMethod="POST",
-//		value="호스트 멀티 재시작",
-//		notes="호스트를 멀티 재시작 한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name="hostIdList", value="호스트 ID 목록", dataTypeClass=Array<String>::class, required=true, paramType="body"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 201, message = "CREATED"),
-//		ApiResponse(code = 404, message = "NOT_FOUND")
-//	)
-//	@PostMapping("/restart")
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.CREATED)
-//	fun restartMultiple(
-//		@RequestBody hostIdList: List<String>? = null,
-//	): ResponseEntity<Boolean> {
-//		if (hostIdList.isNullOrEmpty())
-//			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-//		log.info("/computing/hosts/restart ... 호스트 ssh 재시작")
-//		return ResponseEntity.ok(iHostOp.restartMultiple(hostIdList))
-//	}
 
 	@ApiOperation(
 		httpMethod="POST",

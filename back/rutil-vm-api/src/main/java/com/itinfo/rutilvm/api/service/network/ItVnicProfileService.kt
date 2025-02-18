@@ -102,15 +102,6 @@ interface ItVnicProfileService{
      */
     @Throws(Error::class)
     fun findAllTemplatesFromVnicProfile(vnicProfileId: String): List<TemplateVo>
-
-    /**
-     * [ItVnicProfileService.findAllNetworkFilters]
-     * vNIC Profile 생성 시 필요한 네트워크 필터 목록
-     *
-     * @return List<[IdentifiedVo]>
-     */
-    @Throws(Error::class)
-    fun findAllNetworkFilters(): List<IdentifiedVo>
 }
 @Service
 class VnicProfileServiceImpl(
@@ -214,13 +205,6 @@ class VnicProfileServiceImpl(
         return res.toTemplateIdNames()
     }
 
-    @Throws(Error::class)
-    override fun findAllNetworkFilters(): List<IdentifiedVo> {
-        log.info("findAllNetworkFilters ... ")
-        val res: List<NetworkFilter> = conn.findAllNetworkFilters()
-            .getOrDefault(listOf())
-        return res.fromNetworkFiltersToIdentifiedVos()
-    }
 
     companion object {
         private val log by LoggerDelegate()

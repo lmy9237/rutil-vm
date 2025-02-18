@@ -179,18 +179,6 @@ interface ItDataCenterService {
 	@Throws(Error::class)
 	fun findAllVnicProfilesFromDataCenter(dataCenterId: String): List<VnicProfileVo>
 
-
-	/**
-	 * [ItDataCenterService.findAllPermissionsFromDataCenter]
-	 * 데이터센터가 가지고 있는 권한 목록
-	 *
-	 * @param dataCenterId [String] 데이터센터 Id
-	 * @return List<[PermissionVo]> 권한 목록
-	 */
-	@Deprecated("필요없음")
-	@Throws(Error::class)
-	fun findAllPermissionsFromDataCenter(dataCenterId: String): List<PermissionVo>
-
 	/**
 	 * [ItDataCenterService.dashboardComputing]
 	 * 대시보드 컴퓨팅 목록
@@ -384,18 +372,6 @@ class DataCenterServiceImpl(
 			}
 		return res.toVnicProfileToVmVos(conn)
 	}
-
-
-	@Deprecated("필요없음")
-	@Throws(Error::class)
-	override fun findAllPermissionsFromDataCenter(dataCenterId: String): List<PermissionVo> {
-		log.info("findAllPermissionsFromDataCenter ... dataCenterId: {}", dataCenterId)
-		val res: List<Permission> =
-			conn.findAllPermissionsFromDataCenter(dataCenterId)
-				.getOrDefault(listOf())
-		return res.toPermissionVos(conn)
-	}
-
 
 	@Throws(Error::class)
 	override fun dashboardComputing(): List<DataCenterVo> {

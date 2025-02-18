@@ -70,7 +70,6 @@ class ClusterController: BaseController() {
 	fun cluster(
 		@PathVariable(required = true) clusterId: String
 	): ResponseEntity<ClusterVo?> {
-		checkClusterId(clusterId)
 		log.info("/computing/clusters/{} ... 클러스터 상세정보", clusterId)
 		return ResponseEntity.ok(iCluster.findOne(clusterId))
 	}
@@ -259,7 +258,7 @@ class ClusterController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping("/{clusterId}/networks/manageNetworks")
+	@GetMapping("/{clusterId}/manageNetworks")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun manageNetworks(
@@ -267,10 +266,9 @@ class ClusterController: BaseController() {
 	): ResponseEntity<List<NetworkVo>> {
 		if (clusterId.isNullOrEmpty())
 			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
-		log.info("/computing/clusters/{}/networks/manageNetworks ... 클러스터 내 네트워크 관리 목록", clusterId)
+		log.info("/computing/clusters/{}/manageNetworks ... 클러스터 내 네트워크 관리 목록", clusterId)
 		return ResponseEntity.ok(iCluster.findAllManageNetworksFromCluster(clusterId))
 	}
-
 
 	// manageNetworksFromCluster
 //	@ApiOperation(
@@ -296,28 +294,6 @@ class ClusterController: BaseController() {
 //		return ResponseEntity.ok(iCluster.manageNetworksFromCluster(clusterId, networkVos = ))
 //	}
 
-	@ApiOperation(
-		httpMethod="GET",
-		value="가상머신 생성창 - Cpu Profile 목록",
-		notes="선택된 클러스터의 Cpu Profile 목록을 조회한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="clusterId", value="클러스터 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/{clusterId}/cpuProfiles")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun cpuProfiles(
-		@PathVariable clusterId: String? = null
-	): ResponseEntity<List<CpuProfileVo>> {
-		if (clusterId.isNullOrEmpty())
-			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
-		log.info("/computing/clusters/{}/cpuProfiles ... 클러스터 Cpu Profile 목록", clusterId)
-		return ResponseEntity.ok(iCluster.findAllCpuProfilesFromCluster(clusterId))
-	}
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -343,36 +319,51 @@ class ClusterController: BaseController() {
 	}
 
 
-//	@Deprecated("필요없음")
-//	@ApiOperation(
-//		httpMethod="GET",
-//		value="권한 목록",
-//		notes="선택된 클러스터의 권한 목록을 조회한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name="clusterId", value="클러스터 ID", dataTypeClass=String::class, required=true, paramType="path"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 200, message = "OK")
-//	)
-//	@GetMapping("/{clusterId}/permissions")
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	fun permissions(
-//		@PathVariable clusterId: String? = null
-//	): ResponseEntity<List<PermissionVo>> {
-//		if (clusterId.isNullOrEmpty())
-//			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
-//		log.info("/computing/clusters/{}/permissions ... 클러스터 권한", clusterId)
-//		return ResponseEntity.ok(iCluster.findAllPermissionsFromCluster(clusterId))
-//	}
-
-	// 클러스터 아이디 검사 함수
-	private fun checkClusterId(clusterId: String?) {
-		if (clusterId.isNullOrEmpty()) {
-			log.error("Cluster ID is null or empty")
+	@ApiOperation(
+		httpMethod="GET",
+		value="가상머신 생성창 - 운영시스템 목록",
+		notes="선택된 클러스터의 운영시스템 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="clusterId", value="클러스터 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{clusterId}/osSystems")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun osSystem(
+		@PathVariable clusterId: String? = null
+	): ResponseEntity<List<OsVo>> {
+		if (clusterId.isNullOrEmpty())
 			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
-		}
+		log.info("/computing/clusters/{}/osSystems ... 클러스터 운영시스템 목록", clusterId)
+		return ResponseEntity.ok(iCluster.findAllOsSystemFromCluster(clusterId))
+	}
+
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="가상머신 생성창 - Cpu Profile 목록",
+		notes="선택된 클러스터의 Cpu Profile 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="clusterId", value="클러스터 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{clusterId}/cpuProfiles")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun cpuProfiles(
+		@PathVariable clusterId: String? = null
+	): ResponseEntity<List<CpuProfileVo>> {
+		if (clusterId.isNullOrEmpty())
+			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
+		log.info("/computing/clusters/{}/cpuProfiles ... 클러스터 Cpu Profile 목록", clusterId)
+		return ResponseEntity.ok(iCluster.findAllCpuProfilesFromCluster(clusterId))
 	}
 
 

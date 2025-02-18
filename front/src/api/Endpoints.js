@@ -52,7 +52,8 @@ const ENDPOINTS = {
 
   FIND_NETWORKS_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/networks`, 
   ADD_NETWORK_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/networks`,
-  MANAGE_NETWORKS_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/networks/manageNetworks`, 
+  MANAGE_NETWORKS_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/manageNetworks`, 
+  OS_SYSTEM_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/osSystems`, 
 
   FIND_EVENTS_FROM_CLUSTER: (clusterId) => `/api/v1/computing/clusters/${clusterId}/events`,
   FIND_CPU_PROFILES_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/cpuProfiles`, 
@@ -180,7 +181,7 @@ const ENDPOINTS = {
   IMPORT_NETWORK: () => `/api/v1/networks/import`,
   
   FIND_VNIC_PROFILES_FROM_NETWORK: (networkId) =>  `/api/v1/networks/${networkId}/vnicProfiles`,
-
+  FIND_ALL_NETWORKFILTERS: () => `/api/v1/networks/networkFilters`,
 
   //#endregion: Network
 
@@ -192,7 +193,6 @@ const ENDPOINTS = {
   ADD_VNIC_PROFILE_FROM_NETWORK: (networkId) =>  `/api/v1/vnicProfiles`,
   EDIT_VNIC_PROFILE_FROM_NETWORK: (vnicProfileId) =>  `/api/v1/vnicProfiles/${vnicProfileId}`,
   DELETE_VNIC_PROFILE_FROM_NETWORK: (vnicProfileId) =>  `/api/v1/vnicProfiles/${vnicProfileId}`,
-  FIND_ALL_NETWORKFILTERS: () =>  `/api/v1/vnicProfiles/networkFilters`,
   //#endregion: VnicProfile
 
   //#region: StorageDomain
@@ -265,6 +265,7 @@ const ENDPOINTS = {
   FIND_USERS: () => `/api/v1/setting/users`,
 
   //#endregion: setting
+
 }
 
 export default ENDPOINTS
