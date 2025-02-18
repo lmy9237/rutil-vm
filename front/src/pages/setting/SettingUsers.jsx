@@ -16,7 +16,7 @@ import { useAllUsers, useRemoveUser } from "../../api/RQHook";
  */
 const SettingUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null);
-  const [selectedUserId, setSelectedUserId] = useState("");
+  const [selectedUserId, setSelectedUserId] = useState([]);
   const [activePopup, setActivePopup] = useState(null);
 
   const { 
@@ -136,7 +136,11 @@ const SettingUsers = () => {
         isLoading={isUsersLoading} isError={isUsersError} isSuccess={isUsersSuccess}
         columns={TableColumnsInfo.SETTING_USER}
         data={users}
-        onRowClick={(row) => setSelectedUser(row)}
+        onRowClick={(row) => {
+          setSelectedUser(row);
+          setSelectedUserId(row.id);
+        }}
+        
       />
       
       {/* 모달창 */}

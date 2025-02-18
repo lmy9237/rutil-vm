@@ -46,7 +46,7 @@ const MainOuter = ({ children,asideVisible,setAsideVisible   }) => {
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
     
-        document.body.style.userSelect = "none"; // ✅ 드래그 중 텍스트 선택 방지
+        document.body.style.userSelect = "none"; // ✅ 드래그 중 텍스트 선택 방lo지
         document.body.style.cursor = "col-resize"; // ✅ 드래그 중 커서 고정
     };
     
@@ -73,7 +73,7 @@ const MainOuter = ({ children,asideVisible,setAsideVisible   }) => {
     /* */
     const [isResponsive, setIsResponsive] = useState(window.innerWidth <= 1420);
 
-    useEffect(() => {
+    useEffect(() => { 
         const handleResize = () => {
             const isNowResponsive = window.innerWidth <= 1420;
             setIsResponsive(isNowResponsive);

@@ -48,13 +48,13 @@
   padding: 0 0.15rem;
   cursor: pointer;
   color: rgb(0, 0, 0);
+  border-radius: 50%;
 }
 .header-left > div > i {
   font-size: 1.2em;
   cursor: pointer;
 }
 .header-left > div:hover {
-  border-radius: 50%;
   background-color: #ebececd8;
 }
 /* Header 아이콘들 */
@@ -71,7 +71,7 @@
   background-color: #ffffff;
   z-index: 4;
   width: 9vw;
-  left: -55%;
+  right:0;
   font-size: 0.3rem;
   border: 1px solid rgb(204, 204, 204);
   top: 113%;
@@ -88,7 +88,6 @@
   background-color: #ffffff;
   z-index: 3;
   width: 11.65vw;
-  left: -138%;
   right: 0;
   font-size: 0.3rem;
   border: 1px solid rgb(204, 204, 204);

@@ -15,14 +15,11 @@
     background: white;
 }
 .footer>button{
-    height: 4.3vh;
-    width: 2%;
     color: rgb(10, 55, 107);
     cursor: pointer;
     background-color: white;
     border: 1px solid var(--color-primary-1);
     border-radius: 3px;
-    
 }
 .footer>button>i{
     font-size: 0.3rem;

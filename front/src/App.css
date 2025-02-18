@@ -45,7 +45,9 @@ html {
   padding: 0.1rem;
   height: 100vh;
   text-rendering: optimizeLegibility;
+  font-size:0.32rem;
 }
+body{}
 /*-----중복 */
 .content-outer {
   display: flex;
@@ -189,7 +191,9 @@ input[disabled] {
 .right-click-menu-box {
   width: 8.5vw;
 }
-.right-click-menu-box .right-click-menu-btn {
+.right-click-menu-box 
+.right-click-menu-btn 
+{
   width: 100%;
   padding: 0.07rem;
   text-align: left;
@@ -199,9 +203,6 @@ input[disabled] {
   border: 0.3px solid #cbc9c9;
 }
 
-.right-click-menu-box .right-click-menu-btn:hover {
-  background: #ececec;
-}
 
 .empty-nav-outer {
   width: 100%;
@@ -2547,24 +2548,44 @@ background-color: #f0f0f0;
 }
 
 /*반응형*/
-@media (max-width: 1990px) {
-
+@media (max-width: 2000px) {
+    html, body {
+        font-size: 3rem 
+    }
 }
 @media (max-width: 1420px) {
     html, body {
-        font-size: 2rem !important;
+        font-size: 2rem 
     }
     .resizer {
         display: none !important;
     }
-
     #aside {
         font-size:0.4rem;
     }
 }
 
 @media screen and (max-width:820px) {
+    
 
 }
-@media screen and (max-width: 768px) {}
-@media screen and (max-width: 482px) {}
+@media screen and (max-width: 768px) {
+    .responsive-closed{
+        position: fixed;
+    }
+
+}
+@media screen and (max-width: 500px) {
+    html, body {
+        font-size: 2.3rem 
+    }
+    .section-header{
+        display:block;
+    }
+    .section-header>div:nth-child(2){
+        justify-content: right;
+    }
+    .article-nav{
+        margin-bottom:0.2rem;
+    }
+}
