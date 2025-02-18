@@ -82,8 +82,8 @@ class VmController: BaseController() {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
 	fun add(
-		@RequestBody vm: VmVo? = null,
-	): ResponseEntity<VmVo?> {
+		@RequestBody vm: VmCreateVo? = null,
+	): ResponseEntity<VmCreateVo?> {
 		if (vm == null)
 			throw ErrorPattern.VM_VO_INVALID.toException()
 		log.info("/computing/vms ... 가상머신 생성")
