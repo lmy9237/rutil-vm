@@ -8,14 +8,12 @@ import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import com.itinfo.rutilvm.api.model.setting.toPermissionVos
 import com.itinfo.rutilvm.api.model.storage.*
-import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.types.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.Error
@@ -44,11 +42,11 @@ interface ItVmService {
 	 * [ItVmService.add]
 	 * 가상머신 생성
 	 *
-	 * @param vmVo [VmVo]
-	 * @return [VmVo]
+	 * @param vmCreateVo [VmCreateVo]
+	 * @return [VmCreateVo]
 	 */
 	@Throws(Error::class)
-	fun add(vmVo: VmVo): VmVo?
+	fun add(vmCreateVo: VmCreateVo): VmCreateVo?
 	/**
 	 * [ItVmService.update]
 	 * 가상머신 편집
@@ -136,22 +134,40 @@ class VmServiceImpl(
 
 
 	@Throws(Error::class)
-	override fun add(vmVo: VmVo): VmVo? {
-		log.info("add ... vmVo: {}", vmVo)
+	override fun add(vmCreateVo: VmCreateVo): VmCreateVo? {
+		log.info("add ... vmCreateVo: {}", VmCreateVo)
 
-		if(vmVo.diskAttachmentVos.filter { it.bootable }.size > 1){
-			log.error("디스크 부팅가능은 한개만 가능")
+		if(vmCreateVo.diskAttachmentVos.filter { it.bootable }.size > 1){
+			log.error("부팅가능한 디스크는 한개만")
 			throw ErrorPattern.VM_VO_INVALID.toException()
 		}
 
 		val res: Vm? = conn.addVm(
-			vmVo.toAddVmBuilder(),
-			vmVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
-			vmVo.vnicProfileVos.map { it.id }.takeIf { it.isNotEmpty() }, // NIC가 있는 경우만 전달
-			vmVo.connVo.id.takeIf { it.isNotEmpty() }  // ISO 설정이 있는 경우만 전달
+			vmCreateVo.toAddVmBuilder(),
+			vmCreateVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
+			vmCreateVo.nicVos.map { it.toVmNicBuilder() }.takeIf { it.isNotEmpty() }, // NIC가 있는 경우만 전달
+			vmCreateVo.connVo.id.takeIf { it.isNotEmpty() }  // ISO 설정이 있는 경우만 전달
 		).getOrNull()
-		return res?.toVmVo(conn)
+		return res?.toVmCreateVo(conn)
 	}
+	// @Throws(Error::class)
+	// override fun add(vmVo: VmVo): VmVo? {
+	// 	log.info("add ... vmVo: {}", vmVo)
+	//
+	// 	if(vmVo.diskAttachmentVos.filter { it.bootable }.size > 1){
+	// 		log.error("디스크 부팅가능은 한개만 가능")
+	// 		throw ErrorPattern.VM_VO_INVALID.toException()
+	// 	}
+	//
+	// 	val res: Vm? = conn.addVm(
+	// 		vmVo.toAddVmBuilder(),
+	// 		vmVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
+	// 		vmVo.vnicProfileVos.map { it.id }.takeIf { it.isNotEmpty() }, // NIC가 있는 경우만 전달
+	// 		vmVo.connVo.id.takeIf { it.isNotEmpty() }  // ISO 설정이 있는 경우만 전달
+	// 	).getOrNull()
+	// 	return res?.toVmVo(conn)
+	// }
+
 
 	//TODO
 	@Throws(Error::class)

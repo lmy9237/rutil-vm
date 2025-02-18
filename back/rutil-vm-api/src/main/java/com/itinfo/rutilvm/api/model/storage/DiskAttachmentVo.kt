@@ -140,50 +140,60 @@ fun DiskAttachmentVo.toDiskAttachment(): DiskAttachmentBuilder {
  * DiskAttachmentBuilder 에서 생성된 디스크를 연결해서 붙이는 방식
  */
 fun DiskAttachmentVo.toAttachDisk(): DiskAttachment =
-	this@toAttachDisk.toDiskAttachment()
-		.disk(DiskBuilder().id(this@toAttachDisk.diskImageVo.id).build())
+	toDiskAttachment()
+		.disk(DiskBuilder().id(this.diskImageVo.id).build())
 		.build()
 
 /**
  * DiskAttachmentBuilder 에서 디스크를 생성해서 붙이는 방식
  */
 fun DiskAttachmentVo.toAddDiskAttachment(): DiskAttachment {
-	log.info("diskAtt: $this")
-	return this@toAddDiskAttachment.toDiskAttachment()
-		.disk(this@toAddDiskAttachment.diskImageVo.toAddDiskBuilder())
+	log.info("Creating new disk attachment: $this")
+	return toDiskAttachment()
+		.disk(this.diskImageVo.toAddDiskBuilder())
 		.build()
 }
 
 /**
  * DiskAttachmentBuilder 에서 디스크 편집
  */
-fun DiskAttachmentVo.toEditDiskAttachment(): DiskAttachment=
-	this@toEditDiskAttachment.toDiskAttachment()
-		.id(this@toEditDiskAttachment.id)
-		.disk(this@toEditDiskAttachment.diskImageVo.toEditDiskBuilder())
+fun DiskAttachmentVo.toEditDiskAttachment(): DiskAttachment =
+	toDiskAttachment()
+		.id(this.id)
+		.disk(this.diskImageVo.toEditDiskBuilder())
 		.build()
 
-/**
- * 생성과 연결될 DiskAttachment 를 목록으로 내보낸다
- */
-fun List<DiskAttachmentVo>.toAddVmDiskAttachmentList(): List<DiskAttachment> {
-	val diskAttachmentList = mutableListOf<DiskAttachment>()
-	this@toAddVmDiskAttachmentList.forEach { diskAttachmentVo ->
-		if (diskAttachmentVo.diskImageVo.id.isEmpty()) { // 디스크 생성
-			diskAttachmentList.add(diskAttachmentVo.toAddDiskAttachment())
-		} else { // 디스크 연결
-			diskAttachmentList.add(diskAttachmentVo.toAttachDisk())
-		}
-	}
-	log.info("disk: {}", this)
-	return diskAttachmentList
-}
 
-/**
- * 연결될 DiskAttachment 를 목록으로 내보낸다
- */
+fun List<DiskAttachmentVo>.toAddVmDiskAttachmentList(): List<DiskAttachment> =
+	map { it.run { if (diskImageVo.id.isEmpty()) toAddDiskAttachment() else toAttachDisk() } }
+		.also { log.info("Generated disk attachments: $it") }
+
 fun List<DiskAttachmentVo>.toAttachDiskList(): List<DiskAttachment> =
-	this.map { it.toAttachDisk() }
+	map { it.toAttachDisk() }
+
+
+// /**
+//  * 생성과 연결될 DiskAttachment 를 목록으로 내보낸다
+//  */
+// fun List<DiskAttachmentVo>.toAddVmDiskAttachmentList(): List<DiskAttachment> {
+// 	val diskAttachmentList = mutableListOf<DiskAttachment>()
+// 	this@toAddVmDiskAttachmentList.forEach { diskAttachmentVo ->
+// 		if (diskAttachmentVo.diskImageVo.id.isEmpty()) { // 디스크 생성
+// 			diskAttachmentList.add(diskAttachmentVo.toAddDiskAttachment())
+// 		} else { // 디스크 연결
+// 			diskAttachmentList.add(diskAttachmentVo.toAttachDisk())
+// 		}
+// 	}
+// 	log.info("disk: {}", this)
+// 	return diskAttachmentList
+// }
+//
+// /**
+//  * 연결될 DiskAttachment 를 목록으로 내보낸다
+//  */
+// fun List<DiskAttachmentVo>.toAttachDiskList(): List<DiskAttachment> =
+// 	this.map { it.toAttachDisk() }
+
 
 
 fun DiskAttachmentVo.toAddSnapshotDisk(): DiskAttachment {

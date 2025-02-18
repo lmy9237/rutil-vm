@@ -15,15 +15,47 @@ import java.io.Serializable
 import java.math.BigInteger
 import java.util.Date
 
-private val log = LoggerFactory.getLogger(VmVo::class.java)
+private val log = LoggerFactory.getLogger(VmCreateVo::class.java)
 
 /**
  * [VmCreateVo]
  *
- * @property id [String] 가상머신 Id
+ * @property id [String]
  * @property name [String]
- * @property description [String] 설명
+ * @property description [String]
  * @property comment [String]
+ * @property osSystem [String]
+ * @property chipsetFirmwareType [String]
+ * @property optimizeOption [String]
+ * @property memorySize [BigInteger]
+ * @property memoryMax [BigInteger]
+ * @property memoryActual [BigInteger]
+ * @property cpuTopologyCnt [Int]
+ * @property cpuTopologyCore [Int]
+ * @property cpuTopologySocket [Int]
+ * @property cpuTopologyThread [Int]
+ * @property timeOffset [String]
+ * @property cloudInit [Boolean]
+ * @property script [String]
+ * @property migrationMode [String]
+ * @property migrationPolicy [String]
+ * @property migrationEncrypt [InheritableBoolean]
+ * @property parallelMigration [String]
+ * @property ha [Boolean]
+ * @property priority [Int]
+ * @property firstDevice [String]
+ * @property secDevice [String]
+ * @property deviceList List<[String]>
+ * @property hostInCluster [Boolean]
+ * @property hostVos List<[IdentifiedVo]>
+ * @property storageDomainVo [IdentifiedVo]
+ * @property cpuProfileVo [IdentifiedVo]
+ * @property connVo [IdentifiedVo]
+ * @property dataCenterVo [IdentifiedVo]
+ * @property clusterVo [IdentifiedVo]
+ * @property templateVo [IdentifiedVo]
+ * @property diskAttachmentVos List<[DiskAttachmentVo]>
+ * @property nicVos List<[NicVo]>
  */
 class VmCreateVo (
     val id: String = "",
@@ -230,10 +262,8 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
         cpuProfileVo { conn.findCpuProfile(vm.cpuProfile().id()).getOrNull()?.fromCpuProfileToIdentifiedVo() }
         firstDevice { vm.os().boot().devices().first().value() }
         secDevice {
-            if (vm.os().boot().devices().size > 1)
-                vm.os().boot().devices()[1].value()
-            else
-                null
+            if (vm.os().boot().devices().size > 1) vm.os().boot().devices()[1].value()
+            else null
         }
         connVo { disk?.fromDiskToIdentifiedVo() }
     }

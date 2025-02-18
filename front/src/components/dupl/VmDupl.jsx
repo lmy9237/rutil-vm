@@ -38,7 +38,6 @@ const VmDupl = ({
           selectedVms={selectedVms}
         />
       
-
         <TablesOuter
           isLoading={isLoading} isError={isError} isSuccess={isSuccess}
           columns={columns}

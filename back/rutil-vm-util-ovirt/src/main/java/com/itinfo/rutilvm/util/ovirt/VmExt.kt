@@ -155,7 +155,8 @@ fun Connection.resetVm(vmId: String): Result<Boolean> = runCatching {
 fun Connection.addVm(
 	vm: Vm,
 	diskAttachments: List<DiskAttachment>?,
-	vnicIds: List<String>?,
+	nics: List<Nic>?,
+	// vnicIds: List<String>?,
 	connId: String?,
 ): Result<Vm?> = runCatching {
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name())) {
@@ -170,9 +171,11 @@ fun Connection.addVm(
 		this.addMultipleDiskAttachmentsToVm(vmAdded.id(), diskAttachments)
 	}
 	// NIC 추가 조건 확인 및 실행
-	if (!vnicIds.isNullOrEmpty()) {
-		this.addMultipleNicsFromVm(vmAdded.id(), vnicIds)
+	if (!nics.isNullOrEmpty()) {
+		this.addMultipleNicsToVm(vmAdded.id(), nics)
 	}
+	// if (!vnicIds.isNullOrEmpty()) {
+	// 	this.addMultipleNicsFromVm(vmAdded.id(), vnicIds)
 	// ISO 설정 조건 확인 및 실행
 	if (!connId.isNullOrEmpty()) {
 		this.selectCdromFromVm(vmAdded.id(), connId)
@@ -443,6 +446,22 @@ fun Connection.addMultipleNicsFromVm(vmId: String, vnicProfileIds: List<String>)
 		.build()
 	}
 
+	val results = nics.map { addNicFromVm(vmId, it) }
+	val allSuccessful = results.all { it.isSuccess }
+
+	if (!allSuccessful) {
+		val failedResults = results.filter { it.isFailure }
+		log.warn("일부 NIC 생성 실패: ${failedResults.size}개")
+	}
+	allSuccessful
+}.onSuccess {
+	Term.VM.logSuccessWithin(Term.NIC, "생성 여러개", vmId)
+}.onFailure {
+	Term.VM.logFailWithin(Term.NIC, "생성 여러개", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.addMultipleNicsToVm(vmId: String, nics: List<Nic>): Result<Boolean> = runCatching {
 	val results = nics.map { addNicFromVm(vmId, it) }
 	val allSuccessful = results.all { it.isSuccess }
 

@@ -21,9 +21,9 @@ import java.math.BigInteger
  * [NicVo]
  *
  * nic 내부 mac address가 같은거끼리 묶어야될듯
- * 
- * @property id [String]				
- * @property name [String]				
+ *
+ * @property id [String]
+ * @property name [String]
  * @property interface_ [NicInterface]		유형  NicInterface
  * @property macAddress [String]
  * @property linked [Boolean]		링크상태(link state) t(up)/f(down) -> nic 상태도 같이 변함
@@ -63,13 +63,10 @@ class NicVo (
 	val ipv4: String = "",
 	val ipv6: String = "",
 	val guestInterfaceName: String = "",
-
 	val networkVo: IdentifiedVo = IdentifiedVo(),
 	val vnicProfileVo: IdentifiedVo = IdentifiedVo(),
-//	val vmVo: IdentifiedVo = IdentifiedVo(),
 	val vmVo: VmVo = VmVo(),
 	val networkFilterVos: List<NetworkFilterVo> = listOf(),
-
 	val speed: BigInteger = BigInteger.ZERO,
 	val rxSpeed: BigInteger = BigInteger.ZERO,
 	val txSpeed: BigInteger = BigInteger.ZERO,
@@ -96,7 +93,6 @@ class NicVo (
 		private var bNetworkVo: IdentifiedVo = IdentifiedVo();fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
 		private var bVnicProfileVo: IdentifiedVo = IdentifiedVo();fun vnicProfileVo(block: () -> IdentifiedVo?) { bVnicProfileVo = block() ?: IdentifiedVo()}
 		private var bVmVo: VmVo = VmVo(); fun vmVo(block: () -> VmVo?) { bVmVo = block() ?: VmVo() }
-//		private var bVmVo: IdentifiedVo = IdentifiedVo(); fun vmVo(block: () -> IdentifiedVo?) { bVmVo = block() ?: IdentifiedVo() }
 		private var bNetworkFilterVos: List<NetworkFilterVo> = listOf(); fun networkFilterVos(block: () -> List<NetworkFilterVo>?) { bNetworkFilterVos = block() ?: listOf() }
 		private var bSpeed: BigInteger = BigInteger.ZERO;fun speed(block: () -> BigInteger?) { bSpeed = block() ?: BigInteger.ZERO }
 		private var bRxSpeed: BigInteger = BigInteger.ZERO;fun rxSpeed(block: () -> BigInteger?) { bRxSpeed = block() ?: BigInteger.ZERO }
@@ -259,7 +255,6 @@ fun Nic.toNicVoFromTemplate(conn: Connection): NicVo {
 		interface_ { this@toNicVoFromTemplate.interface_() }
 	}
 }
-
 fun List<Nic>.toNicVosFromTemplate(conn: Connection): List<NicVo> =
 	this@toNicVosFromTemplate.map { it.toNicVoFromTemplate(conn) }
 
@@ -343,3 +338,12 @@ fun NicVo.toAddNicBuilder(): Nic =
 fun NicVo.toEditNicBuilder(): Nic =
 	this@toEditNicBuilder.toNicBuilder().id(this@toEditNicBuilder.id).build()
 
+
+// 가상머신 만들때 nic
+fun NicVo.toVmNicBuilder(): Nic {
+	log.info("toVmNic: {}", this)
+	return NicBuilder()
+		.name(this@toVmNicBuilder.name)
+		.vnicProfile(VnicProfileBuilder().id(this@toVmNicBuilder.vnicProfileVo.id))
+		.build()
+}
