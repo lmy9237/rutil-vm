@@ -3,8 +3,10 @@ import react from "@vitejs/plugin-react";
 import mkcert from "vite-plugin-mkcert";
 import fs from "fs";
 import dotenv from 'dotenv';
+// import path from "path";
 
 dotenv.config();
+// const tailwindcss = require('@tailwindcss/vite');
 
 const VITE_CONFIG = ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd())}

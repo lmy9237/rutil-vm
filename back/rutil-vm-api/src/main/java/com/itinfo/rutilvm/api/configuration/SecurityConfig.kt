@@ -17,7 +17,6 @@ import org.springframework.web.filter.CorsFilter
 class SecurityConfig(
 
 ) {
-
 	@Bean
 	@Throws(Exception::class)
 	fun filterChain(http: HttpSecurity): SecurityFilterChain? {
