@@ -128,6 +128,13 @@ fun Disk.fromDiskToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 fun List<Disk>.fromDisksToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromDisksToIdentifiedVos.map { it.fromDiskToIdentifiedVo() }
 
+fun DiskAttachment.fromDiskAttachmentToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
+	id { id() }
+	name { if (namePresent()) name() else "" }
+}
+fun List<DiskAttachment>.fromDiskAttachmentsToIdentifiedVos(): List<IdentifiedVo> =
+	this@fromDiskAttachmentsToIdentifiedVos.map { it.fromDiskAttachmentToIdentifiedVo() }
+
 fun DiskProfile.fromDiskProfileToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }

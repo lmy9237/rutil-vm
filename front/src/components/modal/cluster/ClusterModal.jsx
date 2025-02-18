@@ -14,17 +14,6 @@ import {
 import { CheckKoreanName } from "../../../util";
 import "./MCluster.css";
 
-const initialFormState = {
-  id: "",
-  name: "",
-  description: "",
-  comment: "",
-  cpuArc: "UNDEFINED",
-  cpuType: "",
-  biosType: "CLUSTER_DEFAULT",
-  errorHandling: "migrate",
-};
-
 const cpuArcs = [
   { value: "UNDEFINED", label: "정의되지 않음" },
   { value: "X86_64", label: "x86_64" },
@@ -35,71 +24,29 @@ const cpuArcs = [
 const cpuArcOptions = {
   X86_64: [
     { value: "Intel Nehalem Family", label: "Intel Nehalem Family" },
-    {
-      value: "Secure Intel Nehalem Family",
-      label: "Secure Intel Nehalem Family",
-    },
+    { value: "Secure Intel Nehalem Family", label: "Secure Intel Nehalem Family" },
     { value: "Intel Westmere Family", label: "Intel Westmere Family" },
-    {
-      value: "Secure Intel Westmere Family",
-      label: "Secure Intel Westmere Family",
-    },
+    { value: "Secure Intel Westmere Family", label: "Secure Intel Westmere Family" },
     { value: "Intel SandyBridge Family", label: "Intel SandyBridge Family" },
-    {
-      value: "Secure Intel SandyBridge Family",
-      label: "Secure Intel SandyBridge Family",
-    },
+    { value: "Secure Intel SandyBridge Family", label: "Secure Intel SandyBridge Family" },
     { value: "Intel IvyBridge Family", label: "Intel IvyBridge Family" },
-    {
-      value: "Secure Intel IvyBridge Family",
-      label: "Secure Intel IvyBridge Family",
-    },
+    { value: "Secure Intel IvyBridge Family", label: "Secure Intel IvyBridge Family" },
     { value: "Intel Haswell Family", label: "Intel Haswell Family" },
-    {
-      value: "Secure Intel Haswell Family",
-      label: "Secure Intel Haswell Family",
-    },
+    { value: "Secure Intel Haswell Family", label: "Secure Intel Haswell Family" },
     { value: "Intel Broadwell Family", label: "Intel Broadwell Family" },
-    {
-      value: "Secure Intel Broadwell Family",
-      label: "Secure Intel Broadwell Family",
-    },
-    {
-      value: "Intel Skylake Client Family",
-      label: "Intel Skylake Client Family",
-    },
-    {
-      value: "Secure Intel Skylake Client Family",
-      label: "Secure Intel Skylake Client Family",
-    },
-    {
-      value: "Intel Skylake Server Family",
-      label: "Intel Skylake Server Family",
-    },
-    {
-      value: "Secure Intel Skylake Server Family",
-      label: "Secure Intel Skylake Server Family",
-    },
-    {
-      value: "Intel Cascadelake Server Family",
-      label: "Intel Cascadelake Server Family",
-    },
-    {
-      value: "Secure Intel Cascadelake Server Family",
-      label: "Secure Intel Cascadelake Server Family",
-    },
-    {
-      value: "Intel Icelake Server Family",
-      label: "Intel Icelake Server Family",
-    },
-    {
-      value: "Secure Intel Icelake Server Family",
-      label: "Secure Intel Icelake Server Family",
-    },
+    { value: "Secure Intel Broadwell Family", label: "Secure Intel Broadwell Family" },
+    { value: "Intel Skylake Client Family", label: "Intel Skylake Client Family" },
+    { value: "Secure Intel Skylake Client Family", label: "Secure Intel Skylake Client Family" },
+    { value: "Intel Skylake Server Family", label: "Intel Skylake Server Family" },
+    { value: "Secure Intel Skylake Server Family", label: "Secure Intel Skylake Server Family" },
+    { value: "Intel Cascadelake Server Family", label: "Intel Cascadelake Server Family" },
+    { value: "Secure Intel Cascadelake Server Family", label: "Secure Intel Cascadelake Server Family" },
+    { value: "Intel Icelake Server Family", label: "Intel Icelake Server Family" },
+    { value: "Secure Intel Icelake Server Family", label: "Secure Intel Icelake Server Family" },
     { value: "AMD Opteron G4", label: "AMD Opteron G4" },
     { value: "AMD Opteron G5", label: "AMD Opteron G5" },
     { value: "AMD EPYC", label: "AMD EPYC" },
-    { value: "Secure AMD EPYC", label: "Secure AMD EPYC" },
+    { value: "Secure AMD EPYC", label: "Secure AMD EPYC" }
   ],
   PPC64: [
     { value: "IBM POWER8", label: "IBM POWER8" },
@@ -114,67 +61,25 @@ const cpuArcOptions = {
   UNDEFINED: [
     { value: "자동 감지", label: "자동 감지" },
     { value: "Intel Nehalem Family", label: "Intel Nehalem Family" },
-    {
-      value: "Secure Intel Nehalem Family",
-      label: "Secure Intel Nehalem Family",
-    },
+    { value: "Secure Intel Nehalem Family", label: "Secure Intel Nehalem Family" },
     { value: "Intel Westmere Family", label: "Intel Westmere Family" },
-    {
-      value: "Secure Intel Westmere Family",
-      label: "Secure Intel Westmere Family",
-    },
+    { value: "Secure Intel Westmere Family", label: "Secure Intel Westmere Family" },
     { value: "Intel SandyBridge Family", label: "Intel SandyBridge Family" },
-    {
-      value: "Secure Intel SandyBridge Family",
-      label: "Secure Intel SandyBridge Family",
-    },
+    { value: "Secure Intel SandyBridge Family", label: "Secure Intel SandyBridge Family" },
     { value: "Intel IvyBridge Family", label: "Intel IvyBridge Family" },
-    {
-      value: "Secure Intel IvyBridge Family",
-      label: "Secure Intel IvyBridge Family",
-    },
+    { value: "Secure Intel IvyBridge Family", label: "Secure Intel IvyBridge Family" },
     { value: "Intel Haswell Family", label: "Intel Haswell Family" },
-    {
-      value: "Secure Intel Haswell Family",
-      label: "Secure Intel Haswell Family",
-    },
+    { value: "Secure Intel Haswell Family", label: "Secure Intel Haswell Family" },
     { value: "Intel Broadwell Family", label: "Intel Broadwell Family" },
-    {
-      value: "Secure Intel Broadwell Family",
-      label: "Secure Intel Broadwell Family",
-    },
-    {
-      value: "Intel Skylake Client Family",
-      label: "Intel Skylake Client Family",
-    },
-    {
-      value: "Secure Intel Skylake Client Family",
-      label: "Secure Intel Skylake Client Family",
-    },
-    {
-      value: "Intel Skylake Server Family",
-      label: "Intel Skylake Server Family",
-    },
-    {
-      value: "Secure Intel Skylake Server Family",
-      label: "Secure Intel Skylake Server Family",
-    },
-    {
-      value: "Intel Cascadelake Server Family",
-      label: "Intel Cascadelake Server Family",
-    },
-    {
-      value: "Secure Intel Cascadelake Server Family",
-      label: "Secure Intel Cascadelake Server Family",
-    },
-    {
-      value: "Intel Icelake Server Family",
-      label: "Intel Icelake Server Family",
-    },
-    {
-      value: "Secure Intel Icelake Server Family",
-      label: "Secure Intel Icelake Server Family",
-    },
+    { value: "Secure Intel Broadwell Family", label: "Secure Intel Broadwell Family" },
+    { value: "Intel Skylake Client Family", label: "Intel Skylake Client Family" },
+    { value: "Secure Intel Skylake Client Family", label: "Secure Intel Skylake Client Family" },
+    { value: "Intel Skylake Server Family", label: "Intel Skylake Server Family" },
+    { value: "Secure Intel Skylake Server Family", label: "Secure Intel Skylake Server Family" },
+    { value: "Intel Cascadelake Server Family", label: "Intel Cascadelake Server Family" },
+    { value: "Secure Intel Cascadelake Server Family", label: "Secure Intel Cascadelake Server Family" },
+    { value: "Intel Icelake Server Family", label: "Intel Icelake Server Family" },
+    { value: "Secure Intel Icelake Server Family", label: "Secure Intel Icelake Server Family" },
     { value: "AMD Opteron G4", label: "AMD Opteron G4" },
     { value: "AMD Opteron G5", label: "AMD Opteron G5" },
     { value: "AMD EPYC", label: "AMD EPYC" },
@@ -198,12 +103,20 @@ const biosTypeOptions = [
 
 const errorHandlingOptions = [
   { value: "migrate", label: "가상 머신을 마이그레이션함" },
-  {
-    value: "migrate_highly_available",
-    label: "고가용성 가상 머신만 마이그레이션",
-  },
+  { value: "migrate_highly_available", label: "고가용성 가상 머신만 마이그레이션" },
   { value: "do_not_migrate", label: "가상 머신은 마이그레이션 하지 않음" },
 ];
+
+const initialFormState = {
+  id: "",
+  name: "",
+  description: "",
+  comment: "",
+  cpuArc: "UNDEFINED",
+  cpuType: "",
+  biosType: "CLUSTER_DEFAULT",
+  errorHandling: "migrate",
+};
 
 const ClusterModal = ({
   isOpen,
@@ -222,9 +135,9 @@ const ClusterModal = ({
   const { mutate: editCluster } = useEditCluster();
 
   const { data: cluster } = useCluster(clusterId);
-  const { data: datacenters = [], isLoading: isDataCentersLoading } =
+  const { data: datacenters = [], isLoading: isDataCentersLoading } = 
     useAllDataCenters((e) => ({ ...e }));
-  const { data: networks = [], isLoading: isNetworksLoading } =
+  const { data: networks = [], isLoading: isNetworksLoading } = 
     useNetworksFromDataCenter(dataCenterVoId, (e) => ({ ...e }));
 
   useEffect(() => {
@@ -268,10 +181,8 @@ const ClusterModal = ({
   };
 
   const validateForm = () => {
-    if (!CheckKoreanName(formState.name) || !formState.name)
-      return "이름이 유효하지 않습니다.";
-    if (!CheckKoreanName(formState.description))
-      return "설명이 유효하지 않습니다.";
+    if (!CheckKoreanName(formState.name) || !formState.name) return "이름이 유효하지 않습니다.";
+    if (!CheckKoreanName(formState.description)) return "설명이 유효하지 않습니다.";
     if (!dataCenterVoId) return "데이터센터를 선택해주세요.";
     if (!networkVoId) return "네트워크를 선택해주세요.";
     return null;
@@ -281,9 +192,7 @@ const ClusterModal = ({
     const error = validateForm();
     if (error) return toast.error(error);
 
-    const selectedDataCenter = datacenters.find(
-      (dc) => dc.id === dataCenterVoId
-    );
+    const selectedDataCenter = datacenters.find((dc) => dc.id === dataCenterVoId);
     const selectedNetwork = networks.find((n) => n.id === networkVoId);
 
     const dataToSubmit = {
@@ -304,10 +213,7 @@ const ClusterModal = ({
     console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
 
     editMode
-      ? editCluster(
-          { clusterId: formState.id, clusterData: dataToSubmit },
-          { onSuccess, onError }
-        )
+      ? editCluster({ clusterId: formState.id, clusterData: dataToSubmit },{ onSuccess, onError })
       : addCluster(dataToSubmit, { onSuccess, onError });
   };
 

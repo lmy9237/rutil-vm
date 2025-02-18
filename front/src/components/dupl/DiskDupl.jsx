@@ -33,7 +33,7 @@ const DiskDupl = ({
         isDeleteDisabled={selectedDisks?.length === 0}
         status={selectedDisks[0]?.status}
       />
-      <span>ID: {selectedIds || ""}</span>
+      <span style={{fontSize:"12px"}}>ID: {selectedIds}</span>
       {/* 타입값을 줘서 vmdisk와 disk구분해야할듯  */}
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
