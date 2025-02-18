@@ -150,15 +150,20 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
 
   const [contextMenu, setContextMenu] = useState(null);
   const handleContextMenu = (event, targetItem, parentItem) => {
-    event.preventDefault();
+    event.preventDefault(); // 기본 우클릭 메뉴 차단
   
-    // ✅ 네트워크의 경우에도 우클릭 메뉴 활성화
+    console.log("우클릭 이벤트 발생", targetItem, parentItem);
+  
     if (targetItem.children) {
-      // 컨테이너일 경우(네트워크가 아닌 경우)
-      if (parentItem.children.length < 2) return;
+      if (parentItem.children.length < 2) {
+        console.log("⚠️ parentItem.children.length < 2 → 우클릭 메뉴 차단됨");
+        return;
+      }
     } else {
-      // 네트워크일 경우 (1개만 있는 경우 분리 불가)
-      if (parentItem.networks.length < 2) return;
+      if (parentItem.networks.length < 2) {
+        console.log("⚠️ parentItem.networks.length < 2 → 우클릭 메뉴 차단됨");
+        return;
+      }
     }
   
     setContextMenu({
@@ -167,52 +172,71 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
       containerItem: targetItem,
       parentInterface: parentItem,
     });
+    console.log("✅ 컨텍스트 메뉴 생성됨:", { x: event.clientX, y: event.clientY });
   };
-const renderContextMenu = () => {
-  if (!contextMenu) return null;
+  
+  const renderContextMenu = () => {
+    if (!contextMenu) return null;
+  
+    // 화면 크기 가져오기
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+  
+    // 기본 위치
+    let menuX = contextMenu.x;
+    let menuY = contextMenu.y;
 
-  // 화면 크기 가져오기
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
-
-  // 기본 위치
-  let menuX = contextMenu.x;
-  let menuY = contextMenu.y;
-
-  // 우클릭 메뉴 크기 예상값
-  const menuWidth = 120;
-  const menuHeight = 40;
-
-  // 화면을 넘어가면 위치 조정
-  if (menuX + menuWidth > screenWidth) {
-    menuX = screenWidth - menuWidth - 10;
-  }
-  if (menuY + menuHeight > screenHeight) {
-    menuY = screenHeight - menuHeight - 10;
-  }
-
-  return (
-    <div
-      className="context-menu"
-      style={{
-        position: "fixed",
-        top: menuY + "px",
-        left: menuX + "px",
-        backgroundColor: "white",
-        border: "1px solid #ccc",
-        padding: "8px 12px",
-        zIndex: 99999,
-        boxShadow: "2px 2px 10px rgba(0,0,0,0.2)",
-        borderRadius: "4px",
-        fontSize: "14px",
-        cursor: "pointer",
-      }}
-      onClick={handleSplitContainer}
-    >
-      🔹 분리
-    </div>
-  );
-};
+    // 우클릭 메뉴 크기 예상값
+    const menuWidth = 120;
+    const menuHeight = 40;
+  
+    // 화면을 넘어가면 위치 조정
+    if (menuX + menuWidth > screenWidth) {
+      menuX = screenWidth - menuWidth - 10;
+    }
+    if (menuY + menuHeight > screenHeight) {
+      menuY = screenHeight - menuHeight - 10;
+    }
+  
+    return (
+      <div
+        className="context-menu"
+        style={{
+          position: "fixed",
+          top: menuY + "px",
+          left: menuX + "px",
+          backgroundColor: "white",
+          border: "1px solid #ccc",
+          padding: "8px 12px",
+          zIndex: 99999,
+          boxShadow: "2px 2px 10px rgba(0,0,0,0.2)",
+          borderRadius: "4px",
+          fontSize: "14px",
+          cursor: "pointer",
+        }}
+        onClick={handleSplitContainer}
+      >
+        🔹 분리
+      </div>
+    );
+  };
+  
+  // ✅ `contextMenu` 상태 변화 로그 확인
+  useEffect(() => {
+    console.log("📌 contextMenu 상태 변경됨:", contextMenu);
+  }, [contextMenu]);
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (contextMenu) {
+        setTimeout(() => setContextMenu(null), 100); // 💡 100ms 지연 추가
+      }
+    };
+  
+    document.addEventListener("mouseup", handleClickOutside);
+    return () => document.removeEventListener("mouseup", handleClickOutside);
+  }, [contextMenu]);
+  
   const handleSplitContainer = () => {
     if (!contextMenu) return;
   
@@ -423,14 +447,33 @@ const renderContextMenu = () => {
           }
   
           if (outerItem.id === targetId) {
-            if (outerItem.children.length === 1) {
-              bondRequired = true; // Bonding이 필요하므로 플래그 설정
+            const targetHasBond = outerItem.name.startsWith("bond"); // bond 그룹인지 확인
+            const targetHasMultipleChildren = outerItem.children.length > 1; // 이미 2개 이상 container가 있는지
+            const targetHasNetwork = outerItem.networks.length > 0; // 네트워크가 걸려 있는지
+          
+            if (targetHasBond && targetHasMultipleChildren) {
+              // ✅ Bonding이 이미 있고, 여러 개의 container가 존재하면 그냥 추가
+              return {
+                ...outerItem,
+                children: [...outerItem.children, item],
+              };
+            } else if (targetHasBond && !targetHasMultipleChildren && targetHasNetwork) {
+              // ❌ Bond 내에 하나의 container만 있고 네트워크가 걸려 있다면 이동 불가
+              alert("Container를 이동할 수 없습니다. 연결된 네트워크가 있고 container가 하나뿐입니다.");
+              validMove = false;
+              return outerItem;
+            } else {
+              // 🔹 Bonding이 없는 상태에서 단일 container끼리 합칠 때 본딩 필요
+              bondRequired = true;
             }
+          
+            // ✅ 본딩이 필요하든 아니든, container는 무조건 추가해야 함
             return {
               ...outerItem,
               children: [...outerItem.children, item],
             };
           }
+          
           return outerItem;
         });
   
@@ -649,30 +692,33 @@ const renderContextMenu = () => {
               <div>할당된 논리 네트워크</div>
             </div>
 
-            {outer.map((outerItem) => (
-              <div key={outerItem.id} className="separation-left-content">
-                {/* Render Interface */}
-                {renderInterface(outerItem)}
+            {outer
+              .filter(outerItem => outerItem.children.length > 0 || outerItem.networks.length > 0) // container와 네트워크가 둘 다 없으면 제외
+              .map((outerItem) => (
+                <div key={outerItem.id} className="separation-left-content">
+                  {/* Render Interface */}
+                  {renderInterface(outerItem)}
 
-                <div className="flex items-center justify-center">
-                  <FontAwesomeIcon
-                    icon={faArrowsAltH}
-                    style={{
-                      color: "grey",
-                      width: "5vw",
-                      fontSize: "0.6rem",
-                    }}
-                  />
-                </div>
+                  <div className="flex items-center justify-center">
+                    <FontAwesomeIcon
+                      icon={faArrowsAltH}
+                      style={{
+                        color: "grey",
+                        width: "5vw",
+                        fontSize: "0.6rem",
+                      }}
+                    />
+                  </div>
 
-                {/* Render Networks for Each Interface */}
-                <div className="assigned-network-outer">
-                  <div className="outer-networks">
-                    {renderNetworkOuter(outerItem)}
+                  {/* Render Networks for Each Interface */}
+                  <div className="assigned-network-outer">
+                    <div className="outer-networks">
+                      {renderNetworkOuter(outerItem)}
+                    </div>
                   </div>
                 </div>
-              </div>
             ))}
+
           </div>
 
           {/* Unassigned Networks */}

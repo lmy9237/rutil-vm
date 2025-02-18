@@ -245,7 +245,7 @@ const HostNics = ({ hostId }) => {
       {/*네트워크 모달 추가모달 */}
       <NetworkHostModal
         isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
+        onClose={() => setIsModalOpen(false)}
         nicData={nics}
         hostId={hostId}
       />

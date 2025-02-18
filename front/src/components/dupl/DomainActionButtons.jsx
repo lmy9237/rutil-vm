@@ -6,6 +6,7 @@ const DomainActionButtons = ({
   isEditDisabled,
   isDeleteDisabled,
   status,
+  type = "default",
   actionType,
 }) => {
   // 도메인 생성, 도메인 가져오기, 도메인 관리(편집), 삭제, connection, lun 새로고침, 파괴, 마스터 스토리지 도메인으로 선택
@@ -46,10 +47,44 @@ const DomainActionButtons = ({
         {label}
       </button>
     ));
+  const wrapperClass =
+  type === "context" ? "right-click-menu-box" : "header-right-btns";
+
+  const selectedActions =
+  actionType === "domain"
+    ? basicActions
+    : actionType === "dcDomain"
+    ? dcDomainActions
+    : actionType === "domainDc"
+    ? domainDcActions
+    : [];
 
   return (
-    <div className="header-right-btns">
-      {/* 도메인 액션 버튼 */}
+    <div className={wrapperClass}>
+    {selectedActions.map(({ type: actionType, label, disabled }) => (
+      <button
+        key={actionType}
+        onClick={() => openModal(actionType)}
+        disabled={disabled}
+        className="right-click-menu-btn"
+      >
+        {label}
+      </button>
+    ))}
+
+    <button
+      className="right-click-menu-btn"
+      onClick={() => navigate("/storages/disks")}
+    >
+      디스크
+    </button>
+  </div>
+
+    /*
+    <div className={wrapperClass}>
+ 
+  
+      { 도메인 액션 버튼 }
       {actionType === "domain" && (
         <>
           {renderButtons(basicActions)}
@@ -57,16 +92,17 @@ const DomainActionButtons = ({
         </>
       )}
 
-      {/* 데이터센터-스토리지도메인 액션 버튼 */}
+      {데이터센터-스토리지도메인 액션 버튼 }
       {actionType === "dcDomain" && (
         <>
           {renderButtons(dcDomainActions)}
           <button onClick={() => navigate("/storages/disks")}>디스크</button>
         </>
       )}
-      {/* 스토리지도메인-데이터센터 액션 버튼 */}
+      { 스토리지도메인-데이터센터 액션 버튼 }
       {actionType === "domainDc" && renderButtons(domainDcActions)}
     </div>
+    */
   );
 };
 

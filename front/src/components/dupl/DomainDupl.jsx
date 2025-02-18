@@ -91,6 +91,8 @@ const DomainDupl = ({
             openModal={openModal}
             isEditDisabled={!row}
             type="context"
+            actionType={actionType}
+            isContextMenu={true}
           />,
         ]}
       />

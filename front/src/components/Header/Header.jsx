@@ -69,6 +69,14 @@ const Header = ({ setAuthenticated, toggleAside }) => {
     navigate("/");
   };
 
+    //배경색바꾸기
+    const [selectedIndex, setSelectedIndex] = useState(null);
+    const handleSelect = (index,callback) => {
+      setSelectedIndex(index);
+      if (callback) callback();
+    };
+    
+      
   // .aside-outer 열림 상태 관리(반응형형)
 
   return (
@@ -102,30 +110,54 @@ const Header = ({ setAuthenticated, toggleAside }) => {
         </div>
         {/* 설정 */}
         <div
-          onClick={() => navigate("/settings/users")}
-          style={{ cursor: "pointer" }}
+          onClick={() => {
+            setSelectedIndex(1);
+            navigate('/settings/users'); // 기존 기능 유지
+          }} 
+          style={{ 
+              cursor: 'pointer', 
+              backgroundColor: selectedIndex === 1 ? '#ebececd8' : 'transparent' 
+          }}
         >
           <FontAwesomeIcon icon={faCog} fixedWidth />
         </div>
+
         {/* 알림 */}
-        <div className="fa-bell-wrapper" onClick={toggleBellActive}>
+        <div 
+          className="fa-bell-wrapper" 
+          onClick={() => {
+            setSelectedIndex(2);
+            toggleBellActive(); // 기존 기능 유지
+          }} 
+          style={{ 
+              backgroundColor: selectedIndex === 2 ? '#ebececd8' : 'transparent' 
+          }}
+        >
           <FontAwesomeIcon icon={faBell} fixedWidth />
-          <div
-            className="bell-box"
-            style={{ display: isBellActive ? "block" : "none" }}
+          <div 
+            className='bell-box' 
+            style={{ display: isBellActive ? 'block' : 'none' }} 
             onClick={stopPropagation}
           >
             <div>알림</div>
           </div>
         </div>
 
-        {/*user */}
-        <div className="user-btn" onClick={toggleLoginBox}>
-          <FontAwesomeIcon icon={faUser} fixedWidth />
-          &nbsp;<span>{username}</span>
-          <div
-            className="user-loginbox"
-            style={{ display: isLoginBoxVisible ? "block" : "none" }}
+        {/* 사용자 버튼 */}
+        <div 
+          className='user-btn' 
+          onClick={() => {
+              setSelectedIndex(3);
+              toggleLoginBox(); // 기존 기능 유지
+          }} 
+          style={{ 
+              backgroundColor: selectedIndex === 3 ? '#ebececd8' : 'transparent',
+              cursor: 'pointer' 
+          }}
+        >
+          <FontAwesomeIcon icon={faUser} fixedWidth/>&nbsp;<span>{username}</span>
+          <div className='user-loginbox' 
+            style={{ display: isLoginBoxVisible ? 'block' : 'none' }} 
             onClick={stopPropagation}
           >
             <div>계정설정</div>
