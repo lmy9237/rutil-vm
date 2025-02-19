@@ -183,7 +183,7 @@ const ENDPOINTS = {
   IMPORT_NETWORK: () => `/api/v1/networks/import`,
   
   FIND_VNIC_PROFILES_FROM_NETWORK: (networkId) =>  `/api/v1/networks/${networkId}/vnicProfiles`,
-  FIND_ALL_NETWORKFILTERS: () => `/api/v1/networks/networkFilters`,
+  FIND_ALL_NETWORKFILTERS: () => `/api/v1/vnicProfiles/networkFilters`,
 
   //#endregion: Network
 

@@ -1,3 +1,5 @@
+import "./LabelInput.css"
+
 const LabelCheckbox = ({
   className,
   label,

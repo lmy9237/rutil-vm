@@ -16,6 +16,7 @@ const BaseModal = ({
   submitTitle,
   onSubmit,
   children,
+  contentStyle = {},
 }) => {
   // console.log("...");
   return (
@@ -26,7 +27,8 @@ const BaseModal = ({
       contentLabel={targetName}
       shouldCloseOnOverlayClick={false}
     >
-      <div className="w-1/2 h-[84.4vh] modal">
+      {/*<div className="w-1/2 h-[84.4vh] modal">*/}
+      <div className="modal" style={contentStyle}>
         <div className="popup-header">
           <h1>
             {`${targetName} ${submitTitle}`}

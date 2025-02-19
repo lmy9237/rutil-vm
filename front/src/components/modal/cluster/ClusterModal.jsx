@@ -219,9 +219,10 @@ const ClusterModal = ({isOpen, editMode = false, clusterId, datacenterId, onClos
       targetName={"클러스터"}
       submitTitle={cLabel}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "730px", height: "660px" }} 
     >
       {/* <div className="cluster-new-popup modal"></div> */}
-      <div className="h-3/4 max-height-100 flex flex-col justify-center items-center">
+      <div >
         <LabelSelectOptionsID
           label="데이터센터"
           value={dataCenterVoId}
@@ -277,11 +278,11 @@ const ClusterModal = ({isOpen, editMode = false, clusterId, datacenterId, onClos
           }
         />
 
-        <div className="recovery-policy">
+        <div className="recovery-policy p-1">
           <div className="cluster-form-group">
             <div className="font-bold mb-0.5">복구정책</div>
             {errorHandlingOptions.map((option) => (
-              <div key={option.value} className="host-text-radio-box mb-1">
+              <div key={option.value} className="host-text-radio-box mb-1 flex">
                 <input
                   type="radio"
                   name="recovery_policy"

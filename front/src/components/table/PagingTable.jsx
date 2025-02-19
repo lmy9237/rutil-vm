@@ -147,7 +147,7 @@ const PagingTable = ({
       )}
 
       <div className="pagination">
-        <div className="paging-btns">
+        <div className="paging-btns center">
           <div className="paging-arrows">
             <div className="flex">
               <button

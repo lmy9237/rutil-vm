@@ -1,3 +1,5 @@
+import "./LabelInput.css"
+
 /**
  * @name LabelSelectOptions
  * @description 레이블 선택란
@@ -21,11 +23,15 @@ const LabelSelectOptions = ({
   disabled,
   options,
 }) => (
-  <div className={`flex justify-center items-center mb-1 w-full px-[25px] ${className}`}>
-    <label className="flex justify-end items-center mx-1 w-[60px] max-w-[100px] text-end" htmlFor={id}>
+  <>
+  {/*<div className={`flex justify-center items-center mb-1 w-full px-[25px] ${className}`}>
+    <label className="flex justify-end items-center mx-1 w-[60px] max-w-[100px] text-end" htmlFor={id}>*/}
+   <div className='input-select'>
+    <label htmlFor={id}>
       {label}
     </label>
-    <select className="w-full min-w-30 max-w-xl"
+    {/* <select className="w-full min-w-30 max-w-xl" */}
+    <select
       value={value} onChange={onChange} disabled={disabled}
     >
       {options.map((opt) => (
@@ -35,6 +41,7 @@ const LabelSelectOptions = ({
       ))}
     </select>
   </div>
+  </>
 );
 
 export default LabelSelectOptions;

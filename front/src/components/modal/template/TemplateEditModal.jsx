@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import { useEditTemplate, useTemplate } from "../../../api/RQHook";
 import "./MTemplate.css";
+import ModalNavButton from "../../navigation/ModalNavButton";
 
 const TemplateEditModal = ({
   isOpen,
@@ -24,6 +25,7 @@ const TemplateEditModal = ({
 
   const { mutate: editTemplate } = useEditTemplate();
 
+  
   // 최적화옵션(영어로 값바꿔야됨)
   const [optimizeOption, setOptimizeOption] = useState([
     { value: "desktop", label: "데스크톱" },
@@ -31,8 +33,20 @@ const TemplateEditModal = ({
     { value: "server", label: "서버" },
   ]);
 
-  const [selectedModalTab, setSelectedModalTab] = useState("general");
+  const tabs = [
+    { id: "general", label: "일반" },
+    { id: "console", label: "콘솔" },
+  ];
+  useEffect(() => {
+    if (isOpen) {
+      setActiveTab("general"); // 모달이 열릴 때 기본적으로 "general" 설정
+    }
+  }, [isOpen]);
+  const [activeTab, setActiveTab] = useState("general");
 
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
   //해당데이터 상세정보 가져오기
   const { data: templateData } = useTemplate(templateId);
   const [selectedOptimizeOption, setSelectedOptimizeOption] =
@@ -104,30 +118,12 @@ const TemplateEditModal = ({
       targetName={"템플릿"}
       submitTitle={editMode ? "수정" : "생성"}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "800px", height: "470px" }} 
     >
       {/* <div className="template-eidt-popup modal"> */}
       <div className="flex">
         {/* 왼쪽 네비게이션 */}
-        <div className="network-backup-edit-nav">
-          <div
-            id="general_tab"
-            className={
-              selectedModalTab === "general" ? "active-tab" : "inactive-tab"
-            }
-            onClick={() => setSelectedModalTab("general")}
-          >
-            일반
-          </div>
-          <div
-            id="console_tab"
-            className={
-              selectedModalTab === "console" ? "active-tab" : "inactive-tab"
-            }
-            onClick={() => setSelectedModalTab("console")}
-          >
-            콘솔
-          </div>
-        </div>
+        <ModalNavButton tabs={tabs} activeTab={activeTab} onTabClick={handleTabClick} />
 
         <div className="backup-edit-content">
           <div
@@ -151,7 +147,7 @@ const TemplateEditModal = ({
             </select>
             {/* <span>선택된 최적화 옵션: {optimizeOption.find(opt => opt.value === selectedOptimizeOption)?.value || ''}</span> */}
           </div>
-          {selectedModalTab === "general" && (
+          {activeTab  === "general" && (
             <>
               <div className="template-edit-texts">
                 <div className="host-textbox">
@@ -216,7 +212,7 @@ const TemplateEditModal = ({
               </div>
             </>
           )}
-          {selectedModalTab === "console" && (
+          {activeTab  === "console" && (
             <>
               <div className="p-1.5">
                 <div className="font-bold">그래픽 콘솔</div>

@@ -70,7 +70,7 @@ const VmActionButtons = ({
         <>
           <button onClick={() => navigate("/computing/templates")}>템플릿</button>
           <div ref={dropdownRef} className="dropdown-container">
-            <button onClick={toggleDropdown} className="manage-button">
+            <button onClick={toggleDropdown} className="manage-button mr-0" >
               관리
               <FontAwesomeIcon
                 icon={activeDropdown ? faChevronUp : faChevronDown}

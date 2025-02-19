@@ -26,6 +26,14 @@ html {
   --border-btn: var(--border-w) solid var(--color-gray-1);
   --border-simple: var(--border-w) solid var(--color-gray-2);
   --border-aa: var(--border-w) solid var(--color-gray-1);
+
+  --fs-default-4: 14px;
+  --fs-default: 16px;
+  --fs-default-7: 18px;
+  --fs-big: 24px;
+  --fs-bigger: 36px;
+  --fs-biggest: 47px;
+  --fs-tb-default: 12px;
 }
 
 * {
@@ -45,9 +53,10 @@ html {
   padding: 0.1rem;
   height: 100vh;
   text-rendering: optimizeLegibility;
-  font-size:0.32rem;
 }
-body{}
+html, body {
+    font-size: var(--fs-biggest);
+}
 /*-----중복 */
 .content-outer {
   display: flex;
@@ -98,7 +107,7 @@ input[disabled] {
   position: absolute;
   border-radius: 4px;
   background: white;
-  font-size: 0.32rem;
+  font-size: var(--fs-default);
 }
 /* 스크롤없는모달 */
 .modal-content {
@@ -128,37 +137,38 @@ input[disabled] {
   position: relative;
   display: inline-block;
 }
-.dropdown-container > button {
-  font-size: 0.3rem;
+/* .dropdown-container > button {
   height: 3.3vh;
   font-weight: 600;
   margin-right: 0.2rem;
   padding: 0.1rem 0.1rem;
   border: var(--border-simple);
   border-radius: 2px;
-}
+} */
 .manage-button {
   display: flex;
   align-items: center;
   gap: 5px;
   background-color: white;
   border: var(--border-simple);
-  padding: 5px 10px;
+  font-size: var(--fs-default-4);
   cursor: pointer;
+  padding: 4.5px;
+  font-weight: 600;
 }
 
 .dropdown-menu {
   position: absolute;
   top: 103%;
+  font-size: var(--fs-default-4);
   width: 12vw;
-  right: 12%;
+  right: 0;
   background: white;
   border: var(--border-simple);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 100;
-  font-size: 0.3rem;
+  
 }
-
 .dropdown-item {
   display: block;
   width: 100%;
@@ -166,18 +176,17 @@ input[disabled] {
   border: none;
   text-align: left;
   padding: 0.08rem;
-  font-size: 0.3rem;
 }
 .dropdown-item:hover {
   background-color: var(--color-gray-2);
 }
-.header-right-btns > button {
+.header-right-btns > button
+{
   margin-right: 0.2rem;
-  padding: 0.1rem 0.1rem;
-  font-size: 0.3rem;
+  padding: 4.5px;
+  font-size: var(--fs-default-4);
   font-weight: 600;
   border-radius: 2px;
-  height: 3.3vh;
   display: flex;
   justify-content: left;
   align-items: center;
@@ -199,7 +208,6 @@ input[disabled] {
   text-align: left;
   cursor: pointer;
   opacity: 1;
-  font-size: 0.27rem;
   border: 0.3px solid #cbc9c9;
 }
 
@@ -397,9 +405,10 @@ select {
   border: 1px solid rgb(206, 206, 206);
   border-radius: 3px;
   padding: 0 0.1rem;
-  height: 3.4vh;
+  height: 30px;
   font-size: 13px;
   outline: none;
+  width:50%;
 }
 
 input[type="checkbox"],
@@ -2549,19 +2558,14 @@ background-color: #f0f0f0;
 
 /*반응형*/
 @media (max-width: 2000px) {
-    html, body {
-        font-size: 3rem 
-    }
+
 }
 @media (max-width: 1420px) {
-    html, body {
+    /* html, body {
         font-size: 2rem 
-    }
+    } */
     .resizer {
         display: none !important;
-    }
-    #aside {
-        font-size:0.4rem;
     }
 }
 
@@ -2573,12 +2577,8 @@ background-color: #f0f0f0;
     .responsive-closed{
         position: fixed;
     }
-
 }
 @media screen and (max-width: 500px) {
-    html, body {
-        font-size: 2.3rem 
-    }
     .section-header{
         display:block;
     }

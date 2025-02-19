@@ -1,3 +1,5 @@
+import "./LabelInput.css"
+
 /**
  * @name LabelInput
  * @description 레이블 입력란
@@ -22,11 +24,16 @@ const LabelInput = ({
   onChange,
   disabled,
 }) => (
-  <div className={`flex justify-center items-center mb-1 w-full px-[40px] ${className}`}>
-    <label className="flex justify-end items-center mx-1 min-w-[60px] max-w-[100px] text-end" htmlFor={id}>
+  <>
+  {/*}
+  <div className={`flex justify-center items-center mb-1 w-full  ${className}`}>
+    <label className="flex  items-center mx-1 min-w-[60px] max-w-[100px] text-end" htmlFor={id}>*/}
+  <div className='input-text'>
+    <label htmlFor={id}>
       {label}
     </label>
-    <input className="w-[15vw]"
+    {/*}  <input className="w-[15vw]"*/}
+    <input
       id={id} type={type}
       value={value}
       autoFocus={autoFocus}
@@ -34,6 +41,7 @@ const LabelInput = ({
       disabled={disabled}
     />
   </div>
+ </>
 );
 
 export default LabelInput;

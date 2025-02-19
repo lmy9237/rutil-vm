@@ -23,7 +23,8 @@ import {
  * 
  */
 const MainOuter = ({ children,asideVisible,setAsideVisible   }) => {
-    const [sidebarWidth, setSidebarWidth] = useState(16.5); // 초기 사이드바 너비 (%)
+    const [sidebarWidth, setSidebarWidth] = useState(300); // 초기 사이드바 너비 (%)
+    
     const resizerRef = useRef(null);
     const isResizing = useRef(false);
     const xRef = useRef(0);
@@ -821,9 +822,10 @@ const MainOuter = ({ children,asideVisible,setAsideVisible   }) => {
     };
 
     const asideClasses = `aside-outer ${asideVisible ? 'open' : 'closed'} ${window.innerWidth <= 1420 ? 'responsive-closed' : ''}`;
+
     return (
       <div className="main-outer" onClick={handleMainClick}>
-            <div className={asideClasses} style={{ width: asideVisible ? `${sidebarWidth}%` : '0%' }}>
+            <div className={asideClasses} style={{ width: asideVisible ? `${sidebarWidth}px` : '0%' }}>
             <div id="aside">
                 <div className="nav">
                     {/* 대시보드 버튼 */}

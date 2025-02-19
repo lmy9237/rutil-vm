@@ -341,12 +341,12 @@ const DomainModal = ({
       targetName={"도메인"}
       submitTitle={dLabel}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "60%", height: "90%" }} 
     >
       {/* <div className="storage-domain-administer-popup modal"> */}
       <div className="storage-domain-new-first">
         <div>
           <LabelSelectOptionsID
-            className="domain-new-select center"
             label="데이터센터"
             value={dataCenterVoId}
             onChange={(e) => setDataCenterVoId(e.target.value)}
@@ -360,7 +360,6 @@ const DomainModal = ({
             onChange={handleInputChange("domainType")}
             disabled={editMode}
             options={domainTypes}
-            className="domain-new-select center"
           />
           <LabelSelectOptions
             label="스토리지 유형"
@@ -368,7 +367,6 @@ const DomainModal = ({
             onChange={handleInputChange("storageType")}
             disabled={editMode}
             options={storageTypes}
-            className="domain-new-select center"
           />
           <LabelSelectOptionsID
             label="호스트"
@@ -377,7 +375,6 @@ const DomainModal = ({
             disabled={editMode}
             loading={isHostsLoading}
             options={hosts}
-            className="domain-new-select center"
           />
 
           {/* 호스트 이름이 들어가야함 */}
@@ -409,21 +406,18 @@ const DomainModal = ({
             value={formState.name}
             onChange={handleInputChange("name")}
             autoFocus
-            className="domain-new-select center"
           />
           <LabelInput
             label="설명"
             id="description"
             value={formState.description}
             onChange={handleInputChange("description")}
-            className="domain-new-select center"
           />
           <LabelInput
             label="코멘트"
             id="comment"
             value={formState.comment}
             onChange={handleInputChange("comment")}
-            className="domain-new-select center"
           />
         </div>
       </div>

@@ -46,6 +46,7 @@ const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
       targetName={label}
       submitTitle={"삭제"}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "660px", height: "200px" }} 
     >
       {/* <div className="storage-delete-popup modal"> */}
       <div className="disk-delete-box">

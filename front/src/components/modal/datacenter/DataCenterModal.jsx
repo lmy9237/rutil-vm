@@ -110,9 +110,10 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
       targetName={"데이터센터"}
       submitTitle={dcLabel}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "460px", height: "400px" }} 
     >
       {/* <div className="datacenter-new-popup modal"> */}
-      <div className="h-3/4 max-height-100 flex flex-col justify-center items-center">
+      <div className="max-height-100 flex flex-col py-0.5 justify-center items-center">
         <LabelInput id="name" label="이름"
           value={formState.name}
           onChange={handleInputChange("name")}

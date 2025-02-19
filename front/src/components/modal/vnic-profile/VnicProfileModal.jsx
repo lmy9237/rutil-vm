@@ -254,6 +254,7 @@ const VnicProfileModal = ({
       targetName={"vNic 프로파일"}
       submitTitle={editMode ? "편집" : "생성"}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "730px", height: "550px" }} 
     >
 
       {/* <div className="vnic-new-content-popup modal"> */}

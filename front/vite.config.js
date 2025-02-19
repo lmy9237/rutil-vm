@@ -28,8 +28,8 @@ const VITE_CONFIG = ({ mode }) => {
       port: Number(process.env.SSL_PORT) || 3000,
       proxy: {
         "/api": {
-          // target: "https://192.168.0.70:8443",
-          target: "https://localhost:8443",
+          target: "https://192.168.0.70:8443",
+          // target: "https://localhost:8443",
           changeOrigin: true,
           secure: false, // Set to true if the target uses a valid SSL certificate
           configure: (proxy, options) => {

@@ -36,7 +36,7 @@ const DashboardBox = ({
   console.log("...")
   return (
     <div className="box" onClick={() => navigatePath && navigate(navigatePath)}>
-      <span className="box-icon-title">
+      <span className="box-icon-title center">
         {icon && <FontAwesomeIcon icon={icon} fixedWidth />}
         <p>{title}</p>
       </span>

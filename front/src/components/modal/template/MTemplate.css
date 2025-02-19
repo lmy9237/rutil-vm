@@ -1,7 +1,3 @@
-.template-eidt-popup{
-    width: 55%;
-    height: 55%;             
-}
 .template-edit-texts>div{
     padding: 1.2% 0.3rem;
     display: flex;
@@ -10,7 +6,7 @@
 .template-edit-texts input[type="text"],
 .template-option-box select
 {
-    width: 50%;
+    width: 60%;
 }
 .host-textbox input{
     width: 47%;

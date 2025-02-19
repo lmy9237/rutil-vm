@@ -37,15 +37,15 @@
   margin-bottom: 0.15rem;
 }
 .search-box input {
-  height: 3.1vh;
+  height: 28px !important;
   width: 92%;
   outline: none;
 }
 .search-box > button {
-  height: 3.1vh;
+  height: 28px !important;
   width: 5%;
   cursor: pointer;
-  font-size: 0.3rem;
+  font-size: var(--fs-default-4);
 }
 .paging-btns {
   display: flex;
@@ -55,9 +55,6 @@
 }
 .paging-btns span {
   display: block;
-  display: flex;
-  justify-content: center; /* 수평 가운데 정렬 */
-  align-items: center; /* 수직 가운데 정렬 */
   margin: 0 0.2rem;
 }
 .paging-arrows {
@@ -66,14 +63,14 @@
   right: 0;
 }
 .paging-arrow {
-  font-size: 0.4rem;
+  font-size: var(--fs-default-4);
   font-weight: 800;
   color: gray;
   border: 1px solid var(--color-gray-1);
 }
 /*tablesOuter*/
 .section-table-outer {
-  font-size: 0.3rem;
+  font-size: var(--fs-default-4);
   width: 100%;
 }
 .section-table-outer table {

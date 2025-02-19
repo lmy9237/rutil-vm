@@ -1,4 +1,5 @@
 import LabelInput from "./LabelInput";
+
 /**
  * @name LabelInputNum
  * @description 레이블 숫자 입력란

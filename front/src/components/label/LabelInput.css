@@ -1,0 +1,6 @@
+.input-text,
+.input-select {
+  width: 100%;
+  padding: 0.16rem 0.2rem;
+  display: flex;justify-content: space-between;align-items: center;
+}
