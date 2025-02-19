@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.fromDisksToIdentifiedVos
+import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.network.toNetworkVos
@@ -150,6 +151,15 @@ interface ItDataCenterService {
 	fun findAllEventsFromDataCenter(dataCenterId: String): List<EventVo>
 
 	/**
+	 * [ItDataCenterService.findTemplatesFromDataCenter]
+	 * 가상머신 생성 - 템플릿
+	 *
+	 * @param dataCenterId [String] 데이터센터 Id
+	 * @return List<[IdentifiedVo]> 디스크  목록
+	 */
+	@Throws(Error::class)
+	fun findTemplatesFromDataCenter(dataCenterId: String): List<IdentifiedVo>
+	/**
 	 * [ItDataCenterService.findAttachDiskImageFromDataCenter]
 	 * 가상머신 생성 - 인스턴스 이미지 - 연결 -> 디스크 목록
 	 * 기준: 아무것도 연결되어 있지 않은 디스크
@@ -202,7 +212,6 @@ interface ItDataCenterService {
 @Service
 class DataCenterServiceImpl(
 ): BaseService(), ItDataCenterService {
-	@Autowired private lateinit var diskVmElementRepository: DiskVmElementRepository
 	@Autowired private lateinit var itGraphService: ItGraphService
 
 	@Throws(Error::class)
@@ -330,6 +339,22 @@ class DataCenterServiceImpl(
 		return res.toEventVos()
 	}
 
+	@Throws(Error::class)
+	override fun findTemplatesFromDataCenter(dataCenterId: String): List<IdentifiedVo> {
+		log.info("findTemplatesFromDataCenter ... dataCenterId: {}", dataCenterId)
+
+		val clusters: List<Cluster> = conn.findAllClustersFromDataCenter(dataCenterId)
+			.getOrDefault(listOf())
+		val templates: List<Template> = conn.findAllTemplates()
+			.getOrDefault(listOf())
+
+		val clusterIds = clusters.map { it.id() }.toSet()
+		val filteredTemplates = templates.filter {
+			it.id().equals("00000000-0000-0000-0000-000000000000") || it.cluster().id() in clusterIds
+		}
+
+		return filteredTemplates.map { it.fromTemplateToIdentifiedVo() }
+	}
 
 	@Throws(Error::class)
 	override fun findAttachDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo> {

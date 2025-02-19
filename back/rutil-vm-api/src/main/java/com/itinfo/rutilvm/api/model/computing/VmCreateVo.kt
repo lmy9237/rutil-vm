@@ -25,7 +25,7 @@ private val log = LoggerFactory.getLogger(VmCreateVo::class.java)
  * @property description [String]
  * @property comment [String]
  * @property osSystem [String]
- * @property chipsetFirmwareType [String]
+ * @property osType [String] //chipsetFirmwareType
  * @property optimizeOption [String]
  * @property memorySize [BigInteger]
  * @property memoryMax [BigInteger]
@@ -43,6 +43,7 @@ private val log = LoggerFactory.getLogger(VmCreateVo::class.java)
  * @property parallelMigration [String]
  * @property ha [Boolean]
  * @property priority [Int]
+ * @property bootingMenu [Boolean]
  * @property firstDevice [String]
  * @property secDevice [String]
  * @property deviceList List<[String]>
@@ -63,7 +64,7 @@ class VmCreateVo (
 	val description: String = "",
 	val comment: String = "",
 	val osSystem: String = "",
-	val chipsetFirmwareType: String = "",
+	val osType: String = "",
 	val optimizeOption: String = "",
 	val memorySize: BigInteger = BigInteger.ZERO,
 	val memoryMax: BigInteger = BigInteger.ZERO,
@@ -81,6 +82,7 @@ class VmCreateVo (
     val parallelMigration: String = "",
     val ha: Boolean = false,
     val priority: Int = 0,
+	val bootingMenu: Boolean = false,
     val firstDevice: String = "",
     val secDevice: String = "",
     val deviceList: List<String> = listOf(),
@@ -92,8 +94,8 @@ class VmCreateVo (
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
 	val clusterVo: IdentifiedVo = IdentifiedVo(),
 	val templateVo: IdentifiedVo = IdentifiedVo(),
-	val diskAttachmentVos: List<DiskAttachmentVo> = listOf(),
 	val nicVos: List<NicVo> = listOf(),
+	val diskAttachmentVos: List<DiskAttachmentVo> = listOf(),
 ): Serializable {
     override fun toString(): String =
         gson.toJson(this)
@@ -104,7 +106,7 @@ class VmCreateVo (
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
 		private var bOsSystem: String = ""; fun osSystem(block: () -> String?) { bOsSystem = block() ?: "" }
-		private var bChipsetFirmwareType: String = ""; fun chipsetFirmwareType(block: () -> String?) { bChipsetFirmwareType = block() ?: "" }
+		private var bOsType: String = ""; fun osType(block: () -> String?) { bOsType = block() ?: "" }
 		private var bOptimizeOption: String = ""; fun optimizeOption(block: () -> String?) { bOptimizeOption = block() ?: "" }
 		private var bMemorySize: BigInteger = BigInteger.ZERO; fun memorySize(block: () -> BigInteger?) { bMemorySize = block() ?: BigInteger.ZERO }
 		private var bMemoryMax: BigInteger = BigInteger.ZERO; fun memoryMax(block: () -> BigInteger?) { bMemoryMax = block() ?: BigInteger.ZERO }
@@ -122,6 +124,7 @@ class VmCreateVo (
 		private var bParallelMigration: String = ""; fun parallelMigration(block: () -> String?) { bParallelMigration = block() ?: "" }
 		private var bHa: Boolean = false; fun ha(block: () -> Boolean?) { bHa = block() ?: false }
 		private var bPriority: Int = 0; fun priority(block: () -> Int?) { bPriority = block() ?: 0 }
+		private var bBootingMenu: Boolean = false; fun bootingMenu(block: () -> Boolean?) { bBootingMenu = block() ?: false }
 		private var bFirstDevice: String = ""; fun firstDevice(block: () -> String?) { bFirstDevice = block() ?: "" }
 		private var bSecDevice: String = ""; fun secDevice(block: () -> String?) { bSecDevice = block() ?: "" }
 		private var bDeviceList: List<String> = listOf(); fun deviceList(block: () -> List<String>?) { bDeviceList = block() ?: listOf() }
@@ -133,10 +136,10 @@ class VmCreateVo (
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo(); fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
 		private var bClusterVo: IdentifiedVo = IdentifiedVo(); fun clusterVo(block: () -> IdentifiedVo?) { bClusterVo = block() ?: IdentifiedVo() }
 		private var bTemplateVo: IdentifiedVo = IdentifiedVo(); fun templateVo(block: () -> IdentifiedVo?) { bTemplateVo = block() ?: IdentifiedVo() }
-		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
+		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 
-		fun build(): VmCreateVo = VmCreateVo()
+		fun build(): VmCreateVo = VmCreateVo(bId, bName, bDescription, bComment, bOsSystem, bOsType, bOptimizeOption, bMemorySize, bMemoryMax, bMemoryActual, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationEncrypt, bParallelMigration, bHa, bPriority, bBootingMenu, bFirstDevice, bSecDevice, bDeviceList, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bConnVo, bDataCenterVo, bClusterVo, bTemplateVo, bNicVos, bDiskAttachmentVos)
     }
 
     companion object {
@@ -158,13 +161,13 @@ fun VmCreateVo.toAddVmBuilder(): Vm = toVmBuilder().build()
 fun VmCreateVo.toEditVmBuilder(): Vm = toVmBuilder().id(this.id).build()
 
 fun VmCreateVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
-	cluster(ClusterBuilder().id(clusterVo.id).build())
-	template(TemplateBuilder().id(templateVo.id).build())
-	bios(BiosBuilder().type(BiosType.fromValue(chipsetFirmwareType)))
-	type(VmType.fromValue(optimizeOption))
-	name(this@toVmInfoBuilder.name)
+	name(name)
 	description(description)
 	comment(comment)
+	cluster(ClusterBuilder().id(clusterVo.id).build())
+	template(TemplateBuilder().id(templateVo.id).build())
+	bios(BiosBuilder().type(BiosType.fromValue(osType)))
+	type(VmType.fromValue(optimizeOption))
 	timeZone(TimeZoneBuilder().name(timeOffset))
 }
 
@@ -207,11 +210,10 @@ fun VmCreateVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 	os(OperatingSystemBuilder()
 		.type(osSystem)
 		.boot(BootBuilder().devices(bootDeviceList)))
+	bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(bootingMenu)).build())
 }
 
-/**
- * vm 전부 모아둔것...
- */
+
 fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
     val vm = this@toVmCreateVo
     val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
@@ -221,51 +223,59 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
     val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
     val disk: Disk? = cdrom?.file()?.id()?.let { conn.findDisk(it).getOrNull() }
     val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vm.id()).getOrDefault(listOf())
+	val storageDomain: StorageDomain? = if (vm.leasePresent()) {
+		conn.findStorageDomain(vm.lease().storageDomain().id()).getOrNull()
+	} else null
+	val hosts = if (vm.placementPolicy().hostsPresent()) {
+		vm.placementPolicy().hosts().map { it }.fromHostsToIdentifiedVos()
+	} else listOf()
+	val cpuProfile = conn.findCpuProfile(vm.cpuProfile().id()).getOrNull()
 
     return VmCreateVo.builder {
-        id { vm.id() }
-        name { vm.name() }
+		id { vm.id() }
+		name { vm.name() }
 		description { vm.description() }
 		comment { vm.comment() }
-        nicVos { nics.toVmNics(conn, vm.id()) }
-        diskAttachmentVos { diskAttachments.toDiskAttachmentVos(conn) }
-        dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-        clusterVo { cluster?.fromClusterToIdentifiedVo() }
-        templateVo { template?.fromTemplateToIdentifiedVo() }
-        osSystem { vm.os().type() }
-        chipsetFirmwareType { vm.bios().type().toString() }
-        optimizeOption { vm.type().toString() }
-        memorySize { vm.memory() }
-        memoryMax { vm.memoryPolicy().max() }
-        memoryActual { vm.memoryPolicy().guaranteed() }
-        cpuTopologyCnt {
-            vm.cpu().topology().coresAsInteger() *
-			vm.cpu().topology().socketsAsInteger() *
-			vm.cpu().topology().threadsAsInteger()
-        }
-        cpuTopologyCore { vm.cpu().topology().coresAsInteger() }
-        cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
-        cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
-        timeOffset { vm.timeZone().name() }
-        cloudInit { vm.initializationPresent() }
-        script { if (vm.initializationPresent()) vm.initialization().customScript() else "" }
-        hostInCluster { !vm.placementPolicy().hostsPresent() }
-       	hostVos {
-           if (vm.placementPolicy().hostsPresent()){ vm.placementPolicy().hosts().map {it}.fromHostsToIdentifiedVos() }
-           else listOf()
-       	}
-        migrationMode { vm.placementPolicy().affinity().value() }
-        migrationEncrypt { vm.migration().encrypted() }
-        ha { vm.highAvailability().enabled() }
-        storageDomainVo { if (vm.leasePresent()) conn.findStorageDomain(vm.lease().storageDomain().id()).getOrNull()?.fromStorageDomainToIdentifiedVo() else null }
-        priority { vm.highAvailability().priorityAsInteger() }
-        cpuProfileVo { conn.findCpuProfile(vm.cpuProfile().id()).getOrNull()?.fromCpuProfileToIdentifiedVo() }
-        firstDevice { vm.os().boot().devices().first().value() }
-        secDevice {
-            if (vm.os().boot().devices().size > 1) vm.os().boot().devices()[1].value()
-            else null
-        }
-        connVo { disk?.fromDiskToIdentifiedVo() }
-    }
+		osSystem { vm.os().type() }
+		osType { vm.bios().type().toString() }
+		optimizeOption { vm.type().toString() }
+		memorySize { vm.memory() }
+		memoryMax { vm.memoryPolicy().max() }
+		memoryActual { vm.memoryPolicy().guaranteed() }
+		cpuTopologyCnt {
+			vm.cpu().topology().coresAsInteger() *
+				vm.cpu().topology().socketsAsInteger() *
+				vm.cpu().topology().threadsAsInteger()
+		}
+		cpuTopologyCore { vm.cpu().topology().coresAsInteger() }
+		cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
+		cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
+		timeOffset { vm.timeZone().name() }
+		cloudInit { vm.initializationPresent() }
+		script { if (vm.initializationPresent()) vm.initialization().customScript() else "" }
+		migrationMode { vm.placementPolicy().affinity().value() }
+		migrationEncrypt { vm.migration().encrypted() }
+		// migrationPolicy { vm. }
+		// parallelMigration { vm. }
+		ha { vm.highAvailability().enabled() }
+		priority { vm.highAvailability().priorityAsInteger() }
+		bootingMenu { vm.bios().bootMenu().enabled() }
+		firstDevice { vm.os().boot().devices().first().value() }
+		secDevice {
+			if (vm.os().boot().devices().size > 1) vm.os().boot().devices()[1].value()
+			else null
+		}
+		// deviceList { vm. }
+		hostInCluster { !vm.placementPolicy().hostsPresent() }
+		hostVos { hosts }
+		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
+		cpuProfileVo { cpuProfile?.fromCpuProfileToIdentifiedVo() }
+		connVo { disk?.fromDiskToIdentifiedVo() }
+		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
+		clusterVo { cluster?.fromClusterToIdentifiedVo() }
+		templateVo { template?.fromTemplateToIdentifiedVo() }
+		nicVos { nics.toVmNics(conn, vm.id()) }
+		diskAttachmentVos { diskAttachments.toDiskAttachmentVos(conn) }
+	}
 }
 

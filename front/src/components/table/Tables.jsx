@@ -291,7 +291,7 @@ const Tables = ({
     }
   };
 
-  console.log("...");
+  // console.log("...");
   return (
     <>
       <div className="w-full max-h-[62.4vh] overflow-y-auto ">

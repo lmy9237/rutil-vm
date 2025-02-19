@@ -40,8 +40,7 @@ const TableRowClick = ({
     else
       console.warn(`Unknown navigation type: ${type}`);
   };
-
-  console.log("...");
+  
   return (
     <div style={{textAlign: 'left'}}>
       <span

@@ -34,6 +34,7 @@ const ENDPOINTS = {
   FIND_ACTIVE_STORAGE_DOMAINS_FROM_DATA_CENTER: (dataCenterId) => `/api/v1/computing/datacenters/${dataCenterId}/activeDomains`,
   FIND_NETWORKS_FROM_DATA_CENTER: (dataCenterId) => `/api/v1/computing/datacenters/${dataCenterId}/networks`, 
   FIND_EVENTS_FROM_DATA_CENTER: (dataCenterId) => `/api/v1/computing/datacenters/${dataCenterId}/events`,
+  FIND_TEMPLATES_FROM_DATA_CENTER: (dataCenterId) => `/api/v1/computing/datacenters/${dataCenterId}/templates`,
   FIND_ATTACH_DISK_LIST_FROM_DATA_CENTER:(dataCenterId) =>  `/api/v1/computing/datacenters/${dataCenterId}/attachDisks`, 
   FIND_ISOS_FROM_DATA_CENTER:(dataCenterId) =>  `/api/v1/computing/datacenters/${dataCenterId}/iso`, 
   FIND_VNICPROFILES_FROM_DATA_CENTER:(dataCenterId) =>  `/api/v1/computing/datacenters/${dataCenterId}/vnicProfiles`, 
@@ -92,6 +93,7 @@ const ENDPOINTS = {
   //#region: Vm
   FIND_ALL_VMS: () =>  `/api/v1/computing/vms`,
   FIND_VM: (vmId) =>  `/api/v1/computing/vms/${vmId}`, 
+  FIND_EDIT_VM: (vmId) =>  `/api/v1/computing/vms/${vmId}/edit`, 
   
   FIND_DISKS_FROM_VM: (vmId) =>  `/api/v1/computing/vms/${vmId}/disks`, 
   FIND_DISK_FROM_VM: (vmId, diskAttachmentId) =>  `/api/v1/computing/vms/${vmId}/disks/${diskAttachmentId}`,

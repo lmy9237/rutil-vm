@@ -17,7 +17,7 @@ const BaseModal = ({
   onSubmit,
   children,
 }) => {
-  console.log("...");
+  // console.log("...");
   return (
     <Modal className="Modal" overlayClassName="Overlay"
       // overlayClassName="Overlay newRolePopupOverlay" <-- DiskActionModal, DomainGetDiskModal

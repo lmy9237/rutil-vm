@@ -250,6 +250,24 @@ class ItDataCenterServiceTest {
 	}
 
 
+
+	/**
+	 * [should_findTemplatesFromDataCenter]
+	 * [ItDataCenterService.findTemplatesFromDataCenter]에 대한 단위테스트
+	 *
+	 * @see ItDataCenterService.findTemplatesFromDataCenter
+	 **/
+	@Test
+	fun should_findTemplatesFromDataCenter() {
+		log.debug("should_findTemplatesFromDataCenter ... ")
+		val result: List<IdentifiedVo> =
+			service.findTemplatesFromDataCenter("67634318-c451-11ef-a894-00163e5ae8d1")
+
+		assertThat(result, `is`(not(nullValue())))
+		result.forEach { println(it) }
+		println(result.size)
+	}
+
     /**
      * [should_findAttachDiskImageFromDataCenter]
      * [ItDataCenterService.findAttachDiskImageFromDataCenter]에 대한 단위테스트

@@ -214,8 +214,8 @@ class HostServiceImpl(
 		val res: Host? = conn.addHost(
 			hostVo.toAddHostBuilder(),
 			deployHostedEngine,
-			propConfig.rebootHostId,
-			propConfig.rebootHostPassword
+			// propConfig.rebootHostId,
+			// propConfig.rebootHostPassword
 		).getOrNull()
 		return res?.toHostVo(conn)
 	}

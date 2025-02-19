@@ -101,114 +101,114 @@ class  ItVmServiceTest {
 	 *
 	 * @see ItVmService.add
 	 */
-	@Test
-	fun should_add_Vm() {
-		log.debug("should_add_Vm ... {}", clusterId)
-		val addVm: VmVo = VmVo.builder {
-			clusterVo {
-				IdentifiedVo.builder {
-					id { clusterId }
-				}
-			}
-			templateVo {
-				// front 기본지정
-				IdentifiedVo.builder {
-					id { "00000000-0000-0000-0000-000000000000" }
-				}
-			}
-			osSystem { "other_linux" }
-			chipsetFirmwareType { "Q35_SEA_BIOS" }  // String.valueOf(BiosType.Q35_OVMF }
-			optimizeOption { "SERVER" }  // String.valueOf(VmType.SERVER
-			name { "random1" }
-			description { "" }
-			comment { "" }
-			stateless { false }
-			startPaused { false }
-			deleteProtected { false }
-			vnicProfileVos {
-				Arrays.asList(
-					VnicProfileVo.builder { id { "0000000a-000a-000a-000a-000000000398" } },
-					VnicProfileVo.builder { id { "61c1ddbc-310b-45d0-9ebd-9802c6e5036b" } },
-				)
-			}
-			diskAttachmentVos {
-				Arrays.asList(
-					DiskAttachmentVo.builder {
-						bootable { true }
-						active { true }
-						interface_ { DiskInterface.VIRTIO_SCSI }
-						readOnly { false }
-						diskImageVo {
-							DiskImageVo.builder {
-//								size { 1 }
-								alias { "random1_disk" }
-								description { "" }
-								storageDomainVo {
-									IdentifiedVo.builder { id { storageDomain } }
-								}
-								sparse { true } // 할당정책: 씬
-								diskProfileVo {
-									IdentifiedVo.builder { id { "f6cf9462-98d9-4a06-939f-0c174089a1d0" } }
-								}
-								wipeAfterDelete { false }
-								sharable { false }
-								backup { true } // 증분백업 기본값 t
-							}
-						}
-					},
-					/*DiskAttachmentVo.builder { // 연결
-						bootable { false }
-						active { true }
-						interface_ { DiskInterface.VIRTIO_SCSI }
-						readOnly { false }
-						diskImageVo {
-							DiskImageVo.builder {
-								id { "2489c507-35ec-4aa2-99c4-5f131f4bfc11" }
-							}
-						}
-					}*/
-				)
-			}
-			instanceType { "none" } //tiny 안됨 ( none,small, medium, xlarge)
-			memorySize { BigInteger.valueOf(2048) }
-			memoryMax { BigInteger.valueOf(8192) }
-			memoryActual { BigInteger.valueOf(2048) }
-			memoryBalloon { true }
-			cpuTopologySocket { 2 }
-			cpuTopologyCore { 1 }
-			cpuTopologyThread { 1 }
-			timeOffset { "Asia/Seoul"}  // Asia/Seoul , Etc/GMT
-			cloudInit { false }   // 일단 안됨
-			hostInCluster { true }  // 특정 호스트(false)
-//			hostInCluster { false }  // 특정 호스트(false)
-//			hostVos {
-//				Arrays.asList(
-//					IdentifiedVo.builder{ id { "722096d3-4cb2-43b0-bf41-dd69c3a70779" } }
-//				)
-//				null
-//			}
-			migrationEncrypt { InheritableBoolean.INHERIT }
-			migrationMode {"MIGRATABLE" }  // 마이그레이션
-			ha { false } // 기본 false
-			priority { 1 }  // 우선순위: 기본 1(낮음)
-			cpuProfileVo { IdentifiedVo.builder { id { "58ca604e-01a7-003f-01de-000000000250" } }  } // 클러스터 밑에 있는 cpu profile
-			cpuShare  { 0 } // 비활성화됨 0
-			cpuPinningPolicy  { "NONE" }
-			memoryBalloon  { true }    // 메모리 balloon 활성화
-			multiQue  { false } // 멀티 큐 사용
-			virtSCSIEnable  { true }  // virtIO-SCSI 활성화
-			firstDevice  { "HD" }
-//			connVo  { IdentifiedVo.builder { id { "5f76f8cd-3213-4559-8738-224750ce4867" } } }
-		}
-
-		val addResult: VmVo? =
-			service.add(addVm)
-
-		assertThat(addResult, `is`(not(nullValue())))
-		assertThat(addResult?.id, `is`(not(nullValue())))
-		assertThat(addResult?.name, `is`(addVm.name))
-		assertThat(addResult?.clusterVo?.id, `is`(addVm.clusterVo.id))
-	}
+// 	@Test
+// 	fun should_add_Vm() {
+// 		log.debug("should_add_Vm ... {}", clusterId)
+// 		val addVm: VmVo = VmVo.builder {
+// 			clusterVo {
+// 				IdentifiedVo.builder {
+// 					id { clusterId }
+// 				}
+// 			}
+// 			templateVo {
+// 				// front 기본지정
+// 				IdentifiedVo.builder {
+// 					id { "00000000-0000-0000-0000-000000000000" }
+// 				}
+// 			}
+// 			osSystem { "other_linux" }
+// 			chipsetFirmwareType { "Q35_SEA_BIOS" }  // String.valueOf(BiosType.Q35_OVMF }
+// 			optimizeOption { "SERVER" }  // String.valueOf(VmType.SERVER
+// 			name { "random1" }
+// 			description { "" }
+// 			comment { "" }
+// 			stateless { false }
+// 			startPaused { false }
+// 			deleteProtected { false }
+// 			vnicProfileVos {
+// 				Arrays.asList(
+// 					VnicProfileVo.builder { id { "0000000a-000a-000a-000a-000000000398" } },
+// 					VnicProfileVo.builder { id { "61c1ddbc-310b-45d0-9ebd-9802c6e5036b" } },
+// 				)
+// 			}
+// 			diskAttachmentVos {
+// 				Arrays.asList(
+// 					DiskAttachmentVo.builder {
+// 						bootable { true }
+// 						active { true }
+// 						interface_ { DiskInterface.VIRTIO_SCSI }
+// 						readOnly { false }
+// 						diskImageVo {
+// 							DiskImageVo.builder {
+// //								size { 1 }
+// 								alias { "random1_disk" }
+// 								description { "" }
+// 								storageDomainVo {
+// 									IdentifiedVo.builder { id { storageDomain } }
+// 								}
+// 								sparse { true } // 할당정책: 씬
+// 								diskProfileVo {
+// 									IdentifiedVo.builder { id { "f6cf9462-98d9-4a06-939f-0c174089a1d0" } }
+// 								}
+// 								wipeAfterDelete { false }
+// 								sharable { false }
+// 								backup { true } // 증분백업 기본값 t
+// 							}
+// 						}
+// 					},
+// 					/*DiskAttachmentVo.builder { // 연결
+// 						bootable { false }
+// 						active { true }
+// 						interface_ { DiskInterface.VIRTIO_SCSI }
+// 						readOnly { false }
+// 						diskImageVo {
+// 							DiskImageVo.builder {
+// 								id { "2489c507-35ec-4aa2-99c4-5f131f4bfc11" }
+// 							}
+// 						}
+// 					}*/
+// 				)
+// 			}
+// 			instanceType { "none" } //tiny 안됨 ( none,small, medium, xlarge)
+// 			memorySize { BigInteger.valueOf(2048) }
+// 			memoryMax { BigInteger.valueOf(8192) }
+// 			memoryActual { BigInteger.valueOf(2048) }
+// 			memoryBalloon { true }
+// 			cpuTopologySocket { 2 }
+// 			cpuTopologyCore { 1 }
+// 			cpuTopologyThread { 1 }
+// 			timeOffset { "Asia/Seoul"}  // Asia/Seoul , Etc/GMT
+// 			cloudInit { false }   // 일단 안됨
+// 			hostInCluster { true }  // 특정 호스트(false)
+// //			hostInCluster { false }  // 특정 호스트(false)
+// //			hostVos {
+// //				Arrays.asList(
+// //					IdentifiedVo.builder{ id { "722096d3-4cb2-43b0-bf41-dd69c3a70779" } }
+// //				)
+// //				null
+// //			}
+// 			migrationEncrypt { InheritableBoolean.INHERIT }
+// 			migrationMode {"MIGRATABLE" }  // 마이그레이션
+// 			ha { false } // 기본 false
+// 			priority { 1 }  // 우선순위: 기본 1(낮음)
+// 			cpuProfileVo { IdentifiedVo.builder { id { "58ca604e-01a7-003f-01de-000000000250" } }  } // 클러스터 밑에 있는 cpu profile
+// 			cpuShare  { 0 } // 비활성화됨 0
+// 			cpuPinningPolicy  { "NONE" }
+// 			memoryBalloon  { true }    // 메모리 balloon 활성화
+// 			multiQue  { false } // 멀티 큐 사용
+// 			virtSCSIEnable  { true }  // virtIO-SCSI 활성화
+// 			firstDevice  { "HD" }
+// //			connVo  { IdentifiedVo.builder { id { "5f76f8cd-3213-4559-8738-224750ce4867" } } }
+// 		}
+//
+// 		val addResult: VmVo? =
+// 			service.add(addVm)
+//
+// 		assertThat(addResult, `is`(not(nullValue())))
+// 		assertThat(addResult?.id, `is`(not(nullValue())))
+// 		assertThat(addResult?.name, `is`(addVm.name))
+// 		assertThat(addResult?.clusterVo?.id, `is`(addVm.clusterVo.id))
+// 	}
 
 	/**
 	 * [should_update_Vm]

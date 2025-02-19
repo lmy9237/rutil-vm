@@ -311,6 +311,29 @@ class DataCenterController: BaseController() {
 
 	@ApiOperation(
 		httpMethod="GET",
+		value="가상머신 생성창 - 템플릿(데이터센터Id 기반)",
+		notes="해당 데이터센터 내에 있는 템플릿 연결 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="dataCenterId", value="데이터센터 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{dataCenterId}/templates")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun templates(
+		@PathVariable dataCenterId: String? = null,
+	): ResponseEntity<List<IdentifiedVo>?> {
+		if (dataCenterId.isNullOrEmpty())
+			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
+		log.info("/computing/datacenters/{}/templates ... 가상머신 생성창 - 템플릿 목록", dataCenterId)
+		return ResponseEntity.ok(iDataCenter.findTemplatesFromDataCenter(dataCenterId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
 		value="가상머신 생성창 - 디스크 연결 목록(데이터센터Id 기반)",
 		notes="해당 데이터센터 내에 있는 디스크 연결 목록을 조회한다"
 	)

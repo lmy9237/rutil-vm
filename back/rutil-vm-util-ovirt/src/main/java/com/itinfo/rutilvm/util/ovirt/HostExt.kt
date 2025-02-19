@@ -69,9 +69,12 @@ fun Connection.findAllVmsFromHost(hostId: String, searchQuery: String = ""): Res
 }
 
 
-fun Connection.addHost(host: Host,
-                       deployHostedEngine: Boolean? = false,
-                       name: String, password: String): Result<Host?> = runCatching {
+fun Connection.addHost(
+	host: Host,
+    deployHostedEngine: Boolean? = false,
+    // name: String,
+	// password: String
+): Result<Host?> = runCatching {
 	if (this.findAllHosts()
 			.getOrDefault(listOf())
 			.nameDuplicateHost(host.name())) {
@@ -394,11 +397,11 @@ fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching 
 }
 
 fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
-	val host: Host = this.findHost(hostId).getOrNull()
-		?: throw ErrorPattern.HOST_NOT_FOUND.toError()
+	// val host: Host = this.findHost(hostId).getOrNull()
+	// 	?: throw ErrorPattern.HOST_NOT_FOUND.toError()
 
 	// host 주소
-	val address: InetAddress = InetAddress.getByName(host.address())
+	// val address: InetAddress = InetAddress.getByName(host.address())
 	TODO("ssh 로 구현")
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 ha 활성화")
@@ -408,8 +411,8 @@ fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatc
 }
 
 fun Connection.deactiveGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
-	val host: Host = this.findHost(hostId).getOrNull()
-		?: throw ErrorPattern.HOST_NOT_FOUND.toError()
+	// val host: Host = this.findHost(hostId).getOrNull()
+	// 	?: throw ErrorPattern.HOST_NOT_FOUND.toError()
 	TODO("ssh 로 구현")
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 ha 비활성화")

@@ -1,33 +1,31 @@
 import { useEffect } from "react";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
+
+const firstDeviceOptionList = [
+  { value: "hd", label: "하드 디스크" },
+  { value: "cdrom", label: "CD-ROM" },
+  { value: "network", label: "네트워크(PXE)" },
+];
+
+const secDeviceOptionList = [
+  { value: "", label: "없음" },
+  { value: "cdrom", label: "CD-ROM" },
+  { value: "network", label: "네트워크(PXE)" },
+];
+
 const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
+  const handleInputChange = (field) => (e) => {
+    setFormBootState((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
   useEffect(() => {
-    // Keep `isCdDvdChecked` consistent with `cdConn`
-    if (formBootState.cdConn && !formBootState.isCdDvdChecked) {
-      setFormBootState((prev) => ({
-        ...prev,
-        isCdDvdChecked: true,
-      }));
-    } else if (!formBootState.cdConn && formBootState.isCdDvdChecked) {
-      setFormBootState((prev) => ({
-        ...prev,
-        isCdDvdChecked: false,
-      }));
-    }
-  }, [formBootState.cdConn]);
-
-  const firstDeviceOptionList = [
-    { value: "hd", label: "하드 디스크" },
-    { value: "cdrom", label: "CD-ROM" },
-    { value: "network", label: "네트워크(PXE)" },
-  ];
-
-  const secDeviceOptionList = [
-    { value: "", label: "없음" },
-    { value: "cdrom", label: "CD-ROM" },
-    { value: "network", label: "네트워크(PXE)" },
-  ];
+    // `cdConn.id`가 존재하면 `isCdDvdChecked`를 true, 없으면 false
+    setFormBootState((prev) => ({
+      ...prev,
+      isCdDvdChecked: Boolean(prev.cdConn?.id),
+    }));
+  }, [formBootState.cdConn?.id]);
 
   return (
     <div className="host-second-content">
@@ -38,21 +36,14 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
           className="cpu-res-box"
           label="첫 번째 장치"
           value={formBootState.firstDevice}
-          onChange={(e) =>
-            setFormBootState((prev) => ({
-              ...prev,
-              firstDevice: e.target.value,
-            }))
-          }
+          onChange={handleInputChange("firstDevice")}
           options={firstDeviceOptionList}
         />
         <LabelSelectOptions
           className="cpu-res-box"
           label="두 번째 장치"
           value={formBootState.secDevice}
-          onChange={(e) =>
-            setFormBootState((prev) => ({ ...prev, secDevice: e.target.value }))
-          }
+          onChange={handleInputChange("secDevice")}
           options={secDeviceOptionList}
         />
       </div>
@@ -70,7 +61,7 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
                 setFormBootState((prev) => ({
                   ...prev,
                   isCdDvdChecked: isChecked,
-                  cdConn: isChecked ? prev.cdConn || isos[0]?.id || "" : "",
+                  cdConn: isChecked ? { id: isos[0]?.id || "" } : { id: "" },
                 }));
               }}
             />
@@ -78,11 +69,13 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
           </div>
 
           <LabelSelectOptionsID
-            // className="text_icon_box"
             disabled={!formBootState.isCdDvdChecked || isos.length === 0}
-            value={formBootState.cdConn}
+            value={formBootState.cdConn?.id}
             onChange={(e) =>
-              setFormBootState((prev) => ({ ...prev, cdConn: e.target.value }))
+              setFormBootState((prev) => ({
+                ...prev,
+                cdConn: { id: e.target.value },
+              }))
             }
             options={isos}
           />

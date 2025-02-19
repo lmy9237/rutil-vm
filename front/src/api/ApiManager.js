@@ -374,6 +374,18 @@ const ApiManager = {
   }),
 
   /**
+   * @name ApiManager.findTemplatesFromDataCenter
+   * @description 연결할 수 있는 템플릿 목록
+   * 
+   * @param {string} dataCenterId
+   * @returns 
+   **/
+  findTemplatesFromDataCenter : async (dataCenterId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_TEMPLATES_FROM_DATA_CENTER(dataCenterId), 
+  }),  
+
+  /**
    * @name ApiManager.findDiskListFromDataCenter
    * @description 연결할 수 있는 디스크 목록
    * 
@@ -894,6 +906,19 @@ const ApiManager = {
     method: "GET", 
     url: ENDPOINTS.FIND_VM(vmId), 
     // defaultValues: DEFAULT_VALUES.FIND_VM
+  }),
+  /**
+   * @name ApiManager.findVM
+   * @description 가상머신
+   *
+   * @param {string} vmId
+   * @returns 
+   * 
+   * @see
+   */
+  findEditVM : async (vmId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_EDIT_VM(vmId), 
   }),
 
   /**

@@ -30,13 +30,22 @@ interface ItVmService {
 	fun findAll(): List<VmVo>
 	/**
 	 * [ItVmService.findOne]
-	 * 가상머신 정보, 편집
+	 * 가상머신 정보
 	 *
 	 * @param vmId [String] 가상머신 Id
 	 * @return [VmVo]
 	 */
 	@Throws(Error::class)
 	fun findOne(vmId: String): VmVo?
+	/**
+	 * [ItVmService.findEditOne]
+	 * 가상머신 편집
+	 *
+	 * @param vmId [String] 가상머신 Id
+	 * @return [VmVo]
+	 */
+	@Throws(Error::class)
+	fun findEditOne(vmId: String): VmCreateVo?
 
 	/**
 	 * [ItVmService.add]
@@ -130,6 +139,13 @@ class VmServiceImpl(
 		log.info("findOne ... vmId : {}", vmId)
 		val res: Vm? = conn.findVm(vmId).getOrNull()
 		return res?.toVmVo(conn)
+	}
+
+	@Throws(Error::class)
+	override fun findEditOne(vmId: String): VmCreateVo? {
+		log.info("findEditOne ... vmId : {}", vmId)
+		val res: Vm? = conn.findVm(vmId).getOrNull()
+		return res?.toVmCreateVo(conn)
 	}
 
 

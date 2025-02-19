@@ -379,6 +379,26 @@ export const useEventsFromDataCenter = (dataCenterId, mapPredicate) => useQuery(
 });
 
 /**
+ * @name useFindTemplatesFromDataCenter
+ * @description 가상머신 연결할 수 있는 템플릿 useQuery훅
+ * 
+ * @param {string} dataCenterId 데이터센터ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findDiskListFromDataCenter
+ */
+export const useFindTemplatesFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['findTemplatesFromDataCenter', dataCenterId ], 
+  queryFn: async () => {
+    console.log(`findTemplatesFromDataCenter ...`, dataCenterId);
+    const res = await ApiManager.findTemplatesFromDataCenter(dataCenterId); 
+    return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+  },
+  enabled: !!dataCenterId, 
+});
+/**
  * @name useFindDiskListFromDataCenter
  * @description 가상머신 연결할 수 있는 디스크 useQuery훅
  * 
@@ -1195,6 +1215,24 @@ export const useVmById = (vmId) => useQuery({
     if (!vmId) return {};  
     console.log(`vmId ID: ${vmId}`);
     const res = await ApiManager.findVM(vmId);
+    return res ?? {};
+  },
+  enabled: !!vmId
+});
+/**
+ * @name useEditVmById
+ * @description 가상머신 편집 상세조회 useQuery 훅
+ * 
+ * @param {string} vmId 가상머신 ID
+ * @returns useQuery 훅
+ * @see ApiManager.findVM
+ */
+export const useEditVmById = (vmId) => useQuery({
+  queryKey: ['editVmById', vmId],
+  queryFn: async () => {
+    if (!vmId) return {};  
+    console.log(`vmId ID: ${vmId}`);
+    const res = await ApiManager.findEditVM(vmId);
     return res ?? {};
   },
   enabled: !!vmId
