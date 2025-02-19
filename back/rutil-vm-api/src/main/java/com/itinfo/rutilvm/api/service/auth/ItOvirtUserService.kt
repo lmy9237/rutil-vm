@@ -37,6 +37,14 @@ interface ItOvirtUserService {
 	@Throws(PSQLException::class)
 	fun findAll(): List<UserVo>
 	/**
+	 * [ItOvirtUserService.findOne]
+	 *
+	 * @param username [String]
+	 * @return [UserDetails]
+	 */
+	@Throws(PSQLException::class)
+	fun findOne(username: String): UserVo?
+	/**
 	 * [ItOvirtUserService.findOneAAA]
 	 * 특정 사용자 조회
 	 *
@@ -45,14 +53,6 @@ interface ItOvirtUserService {
 	 */
 	@Throws(PSQLException::class)
 	fun findOneAAA(username: String): OvirtUser
-	/**
-	 * [ItOvirtUserService.findOne]
-	 *
-	 * @param username [String]
-	 * @return [UserDetails]
-	 */
-	@Throws(PSQLException::class)
-	fun findOne(username: String): UserDetails?
 	/**
 	 * [ItOvirtUserService.findFullDetailByName]
 	 *
@@ -162,15 +162,14 @@ class OvirtUserServiceImpl(
 	}
 
 	@Throws(ItCloudException::class)
-	override fun findOne(username: String): UserDetails? {
+	override fun findOne(username: String): UserVo? {
 		val res: OvirtUser = findOneAAA(username)
-		return res.toUserDetails()
+		return res.toUserVo()
 	}
 
 	@Throws(ItCloudException::class)
 	override fun findOneAAA(username: String): OvirtUser =
 		ovirtUsers.findByName(username) ?: throw ErrorPattern.OVIRTUSER_NOT_FOUND.toException()
-
 
 	@Throws(ItCloudException::class, PSQLException::class)
 	override fun findFullDetailByName(username: String): UserVo? {
@@ -200,6 +199,7 @@ class OvirtUserServiceImpl(
 			uuid { uuid.toString() }
 			name { username }
 			password { findEncryptedValue(password) }
+			disabled { 0 }
 		}
 		val resUserAdded: OvirtUser = ovirtUsers.save(user2Add)
 

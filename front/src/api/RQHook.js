@@ -17,7 +17,31 @@ export const useAllUsers = (mapPredicate) => useQuery({
     return res?.map((e) => mapPredicate(e)) ?? []
   }
 })
-
+/**
+ * @name useUser
+ * @description 사용자 상세조회 useQuery훅
+ * 
+ * @param {string} username 사용자 oVirt ID
+ * @returns useQuery훅
+ */
+export const useUser = (username, exposeDetail = false) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['user'],
+  queryFn: async () => {
+    console.log(`useUser ... username: ${username}, exposeDetail: ${exposeDetail}`);
+    const res = await ApiManager.findUser(username, exposeDetail)
+    // setShouldRefresh(prevValue => false)
+    return res
+    // return res?.map((e) => mapPredicate(e)) ?? []
+  }
+})
+/**
+ * @name useAuthenticate
+ * @description 사용자 ID/PW 검증 useQuery훅
+ * 
+ * @param {function} mapPredicate 
+ * @returns useQuery훅
+ */
 export const useAuthenticate = (username, password, _onSuccess, _onError) => useMutation({
   mutationFn: async () => {
     const res = await ApiManager.authenticate(username, password)
@@ -26,7 +50,12 @@ export const useAuthenticate = (username, password, _onSuccess, _onError) => use
   onSuccess: _onSuccess,
   onError: _onError,
 })
-
+/**
+ * @name useAddUser
+ * @description 사용자 추가 useQuery훅
+ * 
+ * @returns useMutation 훅
+ */
 export const useAddUser = (username, password, onSuccess, onError) => useMutation({
   mutationFn: async () => {
     const res = await ApiManager.addUser(username, password)
@@ -35,10 +64,9 @@ export const useAddUser = (username, password, onSuccess, onError) => useMutatio
   onSuccess: onSuccess,
   onError: onError,
 })
-
 /**
  * @name useEditUser
- * @description 사용자 편집
+ * @description 사용자 편집 useQuery훅
  * 
  * @returns useMutation 훅
  */
@@ -56,7 +84,12 @@ export const useEditUser = () => {
     },
   });
 };
-
+/**
+ * @name useRemoveUser
+ * @description 사용자 삭제
+ * 
+ * @returns useMutation 훅
+ */
 export const useRemoveUser = () => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({

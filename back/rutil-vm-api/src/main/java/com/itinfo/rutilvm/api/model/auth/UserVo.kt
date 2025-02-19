@@ -17,6 +17,7 @@ class UserVo(
 	var namespace: String = "",
 	var email: String = "",
 	var authProvider: String = "",
+	var isDisabled: Boolean = false,
 	var principal: String = "",
 	var roleId: String = "",
 //	var loginCount: Int = 0,
@@ -34,11 +35,12 @@ class UserVo(
 		private var bNamespace: String = "";fun namespace(block: () -> String?) { bNamespace = block() ?: "" }
 		private var bEmail: String = "";fun email(block: () -> String?) { bEmail = block() ?: "" }
 		private var bAuthProvider: String = "";fun authProvider(block: () -> String?) { bAuthProvider = block() ?: "" }
+		private var bIsDisabled: Boolean = false;fun isDisabled(block: () -> Boolean?) { bIsDisabled = block() ?: false }
 		private var bPrincipal: String = "";fun principal(block: () -> String?) { bPrincipal = block() ?: "" }
 		private var bRoleId: String = "";fun roleId(block: () -> String?) { bRoleId = block() ?: "" }
 //		private var bLoginCount: Int = 0;fun loginCount(block: () -> Int?) { bLoginCount = block() ?: 0 }
 //		private var bBlockTime: String = "";fun blockTime(block: () -> String?) { bBlockTime = block() ?: "" }
-		fun build(): UserVo = UserVo(bUsername, bPassword, bAdministrative, bFirstName, bLastName, bNamespace, bEmail, bAuthProvider, bPrincipal)
+		fun build(): UserVo = UserVo(bUsername, bPassword, bAdministrative, bFirstName, bLastName, bNamespace, bEmail, bAuthProvider, bIsDisabled, bPrincipal)
 	}
 	companion object {
 		@JvmStatic inline fun builder(block: Builder.() -> Unit): UserVo = Builder().apply(block).build()

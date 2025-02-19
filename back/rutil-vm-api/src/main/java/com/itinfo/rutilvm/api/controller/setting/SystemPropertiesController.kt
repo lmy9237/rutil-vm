@@ -1,11 +1,7 @@
 package com.itinfo.rutilvm.api.controller.setting
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.api.controller.auth.OvirtUserController
-import com.itinfo.rutilvm.api.controller.auth.OvirtUserController.Companion
-import com.itinfo.rutilvm.api.model.auth.UserVo
 import com.itinfo.rutilvm.api.model.setting.UsersVo
-import com.itinfo.rutilvm.api.service.auth.ItOvirtUserService
 import com.itinfo.rutilvm.api.service.setting.ItSettingService
 import com.itinfo.rutilvm.api.service.setting.ItSystemPropertiesService
 import com.itinfo.rutilvm.util.model.SystemPropertiesVo
@@ -79,7 +75,7 @@ class SystemPropertiesController {
 		val res: List<UsersVo> = iUser.findAllUsers()
 		return ResponseEntity.ok(res)
 	}
-	
+
 
 
 	companion object {

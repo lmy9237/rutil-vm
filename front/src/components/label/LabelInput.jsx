@@ -22,7 +22,9 @@ const LabelInput = ({
   value,
   autoFocus = false,
   onChange,
+  onInvalid,
   disabled,
+  required,
 }) => (
   <>
   {/*}
@@ -35,10 +37,13 @@ const LabelInput = ({
     {/*}  <input className="w-[15vw]"*/}
     <input
       id={id} type={type}
+      placeholder={label}
       value={value}
       autoFocus={autoFocus}
       onChange={onChange}
+      onInvalid={onInvalid}
       disabled={disabled}
+      required={required}
     />
   </div>
  </>

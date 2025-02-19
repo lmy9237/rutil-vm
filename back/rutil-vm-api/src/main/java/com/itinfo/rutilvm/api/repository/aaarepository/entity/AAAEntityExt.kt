@@ -5,7 +5,7 @@ import com.itinfo.rutilvm.api.security.UserDetailsImpl
 
 import org.springframework.security.core.userdetails.UserDetails
 
-fun OvirtUser.toUserVo(userDetail: UserDetail?): UserVo = UserVo.builder {
+fun OvirtUser.toUserVo(userDetail: UserDetail? = null): UserVo = UserVo.builder {
 	username { this@toUserVo.name }
 	password { this@toUserVo.password }
 	firstName { userDetail?.name }
@@ -13,6 +13,7 @@ fun OvirtUser.toUserVo(userDetail: UserDetail?): UserVo = UserVo.builder {
 	namespace { userDetail?.namespace }
 	email { userDetail?.email }
 	administrative { userDetail?.lastAdminCheckStatus }
+	isDisabled { this@toUserVo.disabled != 0 }
 	// principal { this@toUserVo.namespace }
 }
 

@@ -17,7 +17,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.*
 
 @Controller
@@ -57,14 +56,29 @@ class OvirtUserController: BaseController() {
 		return ResponseEntity.ok(res)
 	}
 
-
+	@ApiOperation(
+		httpMethod="GET",
+		value="사용자 단일/상세조회 (테스트용)",
+		notes="사용자 단일/상세조회 한다.")
+	@ApiImplicitParams(
+		ApiImplicitParam(name="username", value="ovirt 사용자 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="exposeDetail", value="상세정보 표출여부", dataTypeClass=Boolean::class, required=false, paramType="query", defaultValue="false"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "성공"),
+		ApiResponse(code = 404, message = "찾을 수 없는 사용자")
+	)
 	@GetMapping("/{username}")
 	fun findOne(
 		@PathVariable username: String = "",
+		@RequestParam(required=false, defaultValue="false") exposeDetail: String? = "false",
 	): ResponseEntity<UserVo?> {
-		log.info("findOne ... username: {}", username)
+		log.info("findOne ... username: {}, exposeDetail: {}", username, exposeDetail)
 		// val res: UserVo? = ovirtUser.findOne(username) // 안됨
-		val res: UserVo? = ovirtUser.findFullDetailByName(username)
+		val bExposeDetail: Boolean = exposeDetail?.toBoolean() ?: false
+		val res: UserVo? =
+			if (bExposeDetail) ovirtUser.findFullDetailByName(username)
+			else  ovirtUser.findOne(username)
 		return ResponseEntity.ok(res)
 	}
 
