@@ -34,6 +34,11 @@ class PropertiesConfig {
 
 	@Value("\${server.port}")					lateinit var serverPort: String
 
+	/*@Value("\${management.endpoints.web.exposure.include}")	lateinit var exposureInclude: String
+	@Value("\${management.endpoint.shutdown.enabled}")		lateinit var _shutdownEnabled1: String
+	@Value("\${endpoints.shutdown.enabled}")				lateinit var _shutdownEnabled2: String*/
+
+
 	@Value("\${reboot-host.id}")				lateinit var rebootHostId: String
 	@Value("\${reboot-host.password}")			lateinit var rebootHostPassword: String
 
@@ -48,6 +53,12 @@ class PropertiesConfig {
 		get() = _thresholdMemory.toIntOrNull() ?: 78
 	val loginLimit: Int
 		get() = _loginLimit.toIntOrNull() ?: 5
+
+	/*val shutdownEnabled1: Boolean
+		get() = _shutdownEnabled1.toBooleanStrictOrNull() ?: false
+	val shutdownEnabled2: Boolean
+		get() = _shutdownEnabled2.toBooleanStrictOrNull() ?: false*/
+
 
 	@PostConstruct
 	fun init() {
@@ -69,6 +80,10 @@ class PropertiesConfig {
 		log.debug("  spring.datasource.engine.url: {}", engineJdbcUrl)
 		log.debug("  spring.datasource.aaa.url: {}\n\n", aaaJdbcUrl)
 		log.debug("  server.port: {}\n\n", serverPort)
+		/*log.debug("  management.endpoints.web.exposure.include: {}", exposureInclude)
+		log.debug("  management.endpoint.shutdown.enabled: {}", shutdownEnabled1)
+		log.debug("  endpoints.shutdown.enabled: {}\n\n", shutdownEnabled2)*/
+
 		log.debug("  reboot-host.id: {}", rebootHostId)
 		log.debug("  reboot-host.password: {}\n\n", rebootHostPassword)
 	}

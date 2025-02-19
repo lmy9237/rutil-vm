@@ -6,10 +6,9 @@ object Dependencies {
         "org.apache.tomcat.embed:tomcat-embed-el:${Versions.tomcatEmbedded}",
         "org.apache.tomcat.embed:tomcat-embed-jasper:${Versions.tomcatEmbedded}",
         "org.apache.tomcat.embed:tomcat-embed-websocket:${Versions.tomcatEmbedded}"
-
     )
     val spring = listOf(
-        "org.springframework:spring-aop:${Versions.spring}",
+		"org.springframework:spring-aop:${Versions.spring}",
         "org.springframework:spring-beans:${Versions.spring}",
         "org.springframework:spring-context:${Versions.spring}",
         "org.springframework:spring-core:${Versions.spring}",
@@ -52,10 +51,13 @@ object Dependencies {
         "org.springframework.boot:spring-boot-starter-tomcat:${Versions.springBoot}"
     val springBootDevtools =
         "org.springframework.boot:spring-boot-devtools:${Versions.springBoot}"
+	val springBootActuator =
+		"org.springframework.boot:spring-boot-starter-actuator:${Versions.springBoot}"
     val springBoot = listOf(
         "org.springframework.boot:spring-boot-starter:${Versions.springBoot}",
         "org.springframework.boot:spring-boot-starter-web-services:${Versions.springBoot}",
         "org.springframework.boot:spring-boot-starter-log4j2:${Versions.springBoot}",
+
     ) + springBootJpa + springBootWebsocket
 
     val jackson = listOf(

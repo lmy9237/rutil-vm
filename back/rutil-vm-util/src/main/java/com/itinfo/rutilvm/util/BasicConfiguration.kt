@@ -43,7 +43,7 @@ class BasicConfiguration {
 		}
 		private fun build(): BasicConfiguration {
 			val bc = BasicConfiguration()
-			bc.commonProp = propH.loadProperties(PROP_COMMON_FULL_PATH)
+			// bc.commonProp = propH.loadProperties(PROP_COMMON_FULL_PATH)
 			bc.databaseProp = propH.loadProperties(PROP_DATABASE_FULL_PATH)
 			// bc.appProp = propH.loadProperties(PROP_APP_FULL_PATH)
 			return bc

@@ -9,6 +9,8 @@ import com.itinfo.rutilvm.api.model.auth.UserVo
 import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import com.itinfo.rutilvm.api.service.auth.ItOvirtUserService
 import com.itinfo.rutilvm.api.service.auth.ItPermissionService
+import com.itinfo.rutilvm.api.service.auth.OvirtUserServiceImpl
+import com.itinfo.rutilvm.api.service.auth.OvirtUserServiceImpl.Companion
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import io.swagger.annotations.*

@@ -187,8 +187,9 @@ dependencies {
     implementation(Dependencies.springBootWeb) {
         exclude("org.springframework.boot", "spring-boot-starter-logging")
     }
-    annotationProcessor(Dependencies.springBootAnnotation)
+	annotationProcessor(Dependencies.springBootAnnotation)
     developmentOnly(Dependencies.springBootDevtools)
+	implementation(Dependencies.springBootActuator)
     implementation(Dependencies.spring)
     implementation(Dependencies.springSecurity)
     implementation(Dependencies.jwt)

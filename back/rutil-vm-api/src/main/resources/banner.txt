@@ -17,8 +17,8 @@ ${AnsiColor.BRIGHT_YELLOW}- Trying to run it on Ovirt Environment (${application
 ${AnsiColor.BRIGHT_YELLOW}- Swagger 3 (https://${application.ovirt.ip}:${server.port}/swagger-ui/)
 
 ${AnsiColor.RED}- PostgresDB Environment (${application.ovirt.ip}:5432)
-${AnsiColor.RED}- /ovirt_engine_history (${spring.datasource.history.username} / ${spring.datasource.history.password})
-${AnsiColor.RED}- /engine (${spring.datasource.engine.username} / ${spring.datasource.engine.password})
-${AnsiColor.RED}- /aaa (${spring.datasource.aaa.username} / ${spring.datasource.aaa.password})
+${AnsiColor.RED}- <ovirt_engine_history> (${spring.datasource.history.username} / ${spring.datasource.history.password})
+${AnsiColor.RED}- <engine> (${spring.datasource.engine.username} / ${spring.datasource.engine.password})
+${AnsiColor.RED}- <aaa> (${spring.datasource.aaa.username} / ${spring.datasource.aaa.password})
 
 ${AnsiColor.DEFAULT}

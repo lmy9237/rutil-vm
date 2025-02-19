@@ -1,11 +1,16 @@
 package com.itinfo.rutilvm.api
 
+// import kotlinx.coroutines.CoroutineScope
+// import kotlinx.coroutines.newSingleThreadContext
+// import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
+import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.runApplication
 import org.springframework.boot.web.servlet.ServletComponentScan
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.core.SpringVersion
 import java.text.SimpleDateFormat
@@ -22,13 +27,39 @@ private val log = LoggerFactory.getLogger(RutilVmApplication::class.java)
 @ServletComponentScan
 class RutilVmApplication: SpringBootServletInitializer() {
 	override fun configure(builder: SpringApplicationBuilder?): SpringApplicationBuilder {
+		log.info("configure ...")
 		return builder!!.sources(RutilVmApplication::class.java)
 	}
-}
 
-fun main(args: Array<String>) {
-	log.info("SPRING VERSION: ${SpringVersion.getVersion()}")
-	runApplication<RutilVmApplication>(*args)
+	companion object {
+		@JvmStatic lateinit var ctx: ConfigurableApplicationContext
+
+		@JvmStatic
+		fun main(args: Array<String>) {
+			log.info("SPRING VERSION: ${SpringVersion.getVersion()}")
+			ctx = runApplication<RutilVmApplication>(*args)
+		}
+
+		@JvmStatic
+		fun shutdown() {
+			log.info("shutdown ...")
+			ctx.close()
+		}
+
+		@JvmStatic
+		fun reboot() {
+			log.info("reboot ...")
+			val t = Thread {
+				val args: ApplicationArguments = ctx.getBean(ApplicationArguments::class.java)
+				log.info("reboot ... separate thread launched")
+				ctx.close()
+				ctx = runApplication<RutilVmApplication>(*args.sourceArgs)
+			}
+			t.isDaemon = false
+			t.start()
+			log.info("reboot ... STARTED")
+		}
+	}
 }
 
 const val GB = 1073741824.0 // gb 변환
