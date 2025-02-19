@@ -89,17 +89,7 @@ interface ItOvirtUserService {
 	 * @return [UserVo]
 	 */
 	@Throws(PSQLException::class)
-	fun add(username: String, password: String, surname: String = ""): UserVo?
-	/**
-	 * [ItOvirtUserService.update]
-	 * 사용자 변경
-	 *
-	 * @param username [String]
-	 * @param password [String]
-	 * @param surname [String]
-	@Throws(PSQLException::class)
-	fun update(username: String, password: String, surname: String = ""): UserVo?
-	*/
+	fun add(userVo: UserVo): UserVo?
 	/**
 	 * [ItOvirtUserService.changePassword]
 	 * 사용자 비밀변호 변경
@@ -112,6 +102,16 @@ interface ItOvirtUserService {
 	@Throws(PSQLException::class)
 	fun changePassword(username: String, currentPassword: String, newPassword: String): OvirtUser
 	/**
+	 * [ItOvirtUserService.update]
+	 * 사용자 변경
+	 *
+	 * @param username [String]
+	 * @param userVo [UserVo]
+	 * @return [UserVo]
+	 */
+	@Throws(PSQLException::class)
+	fun update(username: String, userVo: UserVo?): UserVo?
+	/**
 	 * [ItOvirtUserService.remove]
 	 * 사용자 삭제
 	 *
@@ -120,7 +120,6 @@ interface ItOvirtUserService {
 	 */
 	@Throws(PSQLException::class)
 	fun remove(username: String, shouldDeleteAdminByForce: Boolean = false): Boolean
-
 	/**
 	 * [ItSettingService.findAllUser]
 	 * 활성 사용자 세션 목록
@@ -179,17 +178,20 @@ class OvirtUserServiceImpl(
 		val oUserDetail: UserDetail =
 			userDetails.findByName(username) ?: throw ErrorPattern.OVIRTUSER_NOT_FOUND.toException()
 		log.debug("detailFound: {}", oUserDetail)
-		return oUser.toUserVo(oUserDetail) // USERS.retrieveUser
+		return oUser.toUserVo(oUserDetail, true) // USERS.retrieveUser
 	}
 
 	override fun findEncryptedValue(input: String): String =
 		input.hashPassword()
 
 	@Transactional("aaaTransactionManager")
-	override fun add(username: String, password: String, surname: String): UserVo? {
-		log.info("add ... username: {}", username)
-		log.debug("add ... password: {}", password)
+	override fun add(userVo: UserVo): UserVo? {
+		log.info("add ... userVo: {}", userVo)
 		// STEP 1: 중복 사용자 존재유무
+		val username = userVo.username
+		val firstName = userVo.firstName
+		val surName = userVo.surName
+		val password = userVo.password
 		if (ovirtUsers.findByName(username) != null)
 			throw ErrorPattern.OVIRTUSER_DUPLICATE.toException()
 
@@ -199,14 +201,14 @@ class OvirtUserServiceImpl(
 			uuid { uuid.toString() }
 			name { username }
 			password { findEncryptedValue(password) }
-			disabled { 0 }
+			disabled { if (userVo.disabled) 1 else 0 }
 		}
 		val resUserAdded: OvirtUser = ovirtUsers.save(user2Add)
 
 		// STEP 3: 사용자 상세정보 생성
 		val resUserDetail2Add = UserDetail.builder {
-			name { username }
-			surname { surname }
+			name { firstName }
+			surname { surName }
 			username { username }
 			email { "${username}@localhost" }
 			createDate { LocalDateTime.now() }
@@ -217,7 +219,7 @@ class OvirtUserServiceImpl(
 
 		// STEP 4: 권한 등록
 		// addPermission(uuid.toString())
-		return resUserAdded.toUserVo(resUserDetailAdded)
+		return resUserAdded.toUserVo(resUserDetailAdded, true)
 	}
 
 	@Throws(PSQLException::class)
@@ -272,13 +274,21 @@ class OvirtUserServiceImpl(
 	}
 
 	@Transactional("aaaTransactionManager")
+	override fun update(username: String, userVo: UserVo?): UserVo? {
+		TODO("Not yet implemented")
+	}
+
+	@Transactional("aaaTransactionManager")
 	override fun remove(username: String, shouldDeleteAdminByForce: Boolean): Boolean {
 		log.info("remove ... username: {}", username)
 		val user2Remove: OvirtUser = findOneAAA(username)
 		ovirtUsers.delete(user2Remove)
-		val userDetail2Remove: UserDetail =
-			userDetails.findByExternalId(user2Remove.uuid.toString()) ?: throw ErrorPattern.OVIRTUSER_NOT_FOUND.toException()
-		userDetails.delete(userDetail2Remove)
+		val userDetail2Remove: UserDetail? = userDetails.findByExternalId(user2Remove.uuid) ?: run {
+			log.warn("remove ... no UserDetail FOUND for username: {}", username)
+			return@run null
+			// throw ErrorPattern.OVIRTUSER_NOT_FOUND.toException()
+		}
+		userDetail2Remove?.let { userDetails.delete(it) }
 		return true
 	}
 

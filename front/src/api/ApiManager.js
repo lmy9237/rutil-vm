@@ -45,6 +45,7 @@ const makeAPICall = async ({method = "GET", url, data}) => {
 }
 
 const ApiManager = {
+
   //#region: User
   /**
    * @name ApiManager.findAllUsers
@@ -68,7 +69,7 @@ const ApiManager = {
    */
   findUser: async(username, exposeDetail) => makeAPICall({
     method: "GET", 
-    url: `${ENDPOINTS.FIND_USER(username)}/?exposeDetail=${exposeDetail}`,
+    url: `${ENDPOINTS.FIND_USER(username)}/?exposeDetail=${exposeDetail}`, 
   }),
   /**
    * @name ApiManager.authenticate
@@ -87,15 +88,14 @@ const ApiManager = {
    * @name ApiManager.addUser
    * @description 사용자 추가
    * 
-   * @param {string} username 사용자 oVirt ID
-   * @param {string} password 사용자 oVirt 비밀번호
+   * @param {Object} user 추가할 oVirt 사용자  정보
    *
    * @returns {Promise<Object>} API 응답 결과
    */
-  addUser: async(username, password) => makeAPICall({
+  addUser: async(user) => makeAPICall({
     method: "POST", 
     url: ENDPOINTS.FIND_ALL_USERS(), 
-    data: { username, password }
+    data: user
   }),
   /**
    * @name ApiManager.editUser

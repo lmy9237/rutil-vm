@@ -9,8 +9,6 @@ import com.itinfo.rutilvm.api.model.auth.UserVo
 import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import com.itinfo.rutilvm.api.service.auth.ItOvirtUserService
 import com.itinfo.rutilvm.api.service.auth.ItPermissionService
-import com.itinfo.rutilvm.api.service.auth.OvirtUserServiceImpl
-import com.itinfo.rutilvm.api.service.auth.OvirtUserServiceImpl.Companion
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import io.swagger.annotations.*
@@ -119,7 +117,7 @@ class OvirtUserController: BaseController() {
 		notes="사용자의 계정정보를 생성한다."
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name="userCreatePrompt", value="ovirt 사용자 정보", dataTypeClass=UserCreatePrompt::class, required=true, paramType="body"),
+		ApiImplicitParam(name="userVo", value="ovirt 사용자 정보", dataTypeClass=UserVo::class, required=true, paramType="body"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "성공"),
@@ -128,15 +126,16 @@ class OvirtUserController: BaseController() {
 	)
 	@PostMapping
 	fun add(
-		@RequestBody(required=true) userCreatePrompt: UserCreatePrompt,
+		@RequestBody(required=true) userVo: UserVo,
 	):  ResponseEntity<UserVo?> {
-		log.info("add ... username: {}", userCreatePrompt.username)
-		if (userCreatePrompt.username.isEmpty())			throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
-		if (userCreatePrompt.password.isEmpty())	        throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
-		val res: UserVo? = ovirtUser.add(userCreatePrompt.username, userCreatePrompt.password)
+		log.info("add ... userVo: {}", userVo)
+		if (userVo.username.isEmpty())			throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
+		if (userVo.password.isEmpty())	        throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
+		if (userVo.firstName.isEmpty())	        throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
+		if (userVo.surName.isEmpty())	        throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
+		val res: UserVo? = ovirtUser.add(userVo)
 		return ResponseEntity.ok(res)
 	}
-	data class UserCreatePrompt(val username: String = "", val password: String = "")
 
 
 	@ApiOperation(
@@ -202,7 +201,7 @@ class OvirtUserController: BaseController() {
 		ApiResponse(code = 401, message = "인증 불량"),
 		ApiResponse(code = 404, message = "찾을 수 없는 사용자")
 	)
-	@PutMapping("{username}")
+	@PutMapping("{username}/changePassword")
 	fun changePassword(
 		@PathVariable(required=true) username: String = "",
 		@RequestParam(required=true) currentPassword: String? = null,
@@ -213,6 +212,32 @@ class OvirtUserController: BaseController() {
 		if (currentPassword.isNullOrEmpty())	throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
 		if (newPassword.isNullOrEmpty())		throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
 		val res: OvirtUser = ovirtUser.changePassword(username, currentPassword, newPassword)
+		return ResponseEntity.ok(res)
+	}
+
+	@ApiOperation(
+		httpMethod="PUT",
+		value="사용자 상세정보 변경",
+		notes="사용자 상세정보 변경"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="username", value="ovirt 사용자 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="userVo", value="사용자 정보", dataTypeClass=UserVo::class, required=true, paramType="body"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "성공"),
+		ApiResponse(code = 401, message = "인증 불량"),
+		ApiResponse(code = 404, message = "찾을 수 없는 사용자")
+	)
+	@PutMapping("{username}")
+	fun update(
+		@PathVariable(required=true) username: String = "",
+		@RequestBody(required=true) userVo: UserVo? = null,
+	):  ResponseEntity<UserVo?> {
+		log.info("update ... username: {}", username)
+		if (username.isEmpty())					throw ErrorPattern.OVIRTUSER_ID_NOT_FOUND.toException()
+		if (userVo == null)						throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
+		val res: UserVo? = ovirtUser.update(username, userVo)
 		return ResponseEntity.ok(res)
 	}
 

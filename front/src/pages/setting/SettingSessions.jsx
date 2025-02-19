@@ -23,7 +23,10 @@ const SettingSessions = () => {
   } = useAllUsers((e) => {
     console.log(`SettingUsers ... ${JSON.stringify(e)}`)
     // const [username, provider] = e?.userName?.split('@') || [];
-    return { ...e, };
+    return { 
+      ...e, 
+      isDisabled: (e.disabled) ? 'DISABLED' : 'AVAILABLE'
+    };
   });
 
   const [selectedUser, setSelectedUser] = useState(null);

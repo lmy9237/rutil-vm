@@ -56,9 +56,9 @@ export const useAuthenticate = (username, password, _onSuccess, _onError) => use
  * 
  * @returns useMutation 훅
  */
-export const useAddUser = (username, password, onSuccess, onError) => useMutation({
+export const useAddUser = (user, onSuccess, onError) => useMutation({
   mutationFn: async () => {
-    const res = await ApiManager.addUser(username, password)
+    const res = await ApiManager.addUser(user)
     return res
   },
   onSuccess: onSuccess,

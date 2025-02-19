@@ -24,10 +24,10 @@ const LabelInput = ({
   onChange,
   onInvalid,
   disabled,
-  required,
+  required = false,
 }) => (
   <>
-  {/*}
+  {/*
   <div className={`flex justify-center items-center mb-1 w-full  ${className}`}>
     <label className="flex  items-center mx-1 min-w-[60px] max-w-[100px] text-end" htmlFor={id}>*/}
   <div className='input-text'>

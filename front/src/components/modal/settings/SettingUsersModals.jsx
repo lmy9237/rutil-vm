@@ -2,7 +2,6 @@ import React from "react";
 import SettingUsersModal from './SettingUsersModal'
 import DeleteModal from "../../../utils/DeleteModal"
 import { useRemoveUser } from "../../../api/RQHook";
-import "./MSettingsUser.css";
 
 /**
  * @name SettingUsersModals
