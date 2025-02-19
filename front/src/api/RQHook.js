@@ -664,6 +664,29 @@ export const useCpuProfilesFromCluster = (clusterId, mapPredicate) => useQuery({
 })
 
 /**
+ * @name useOsSystemsFromCluster
+ * @description 클러스터 내 운영시스템 목록조회 useQuery훅
+ * 
+ * @param {string} clusterId 클러스터ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findOsSystemsFromCluster
+ */
+export const useOsSystemsFromCluster = (clusterId, mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['osSystemsFromCluster', clusterId], 
+  queryFn: async () => {
+    console.log(`useOsSystemsFromCluster ... ${clusterId}`);
+    const res = await ApiManager.findOsSystemsFromCluster(clusterId); 
+    return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+  },
+  enabled: !!clusterId, 
+  staleTime: 0,
+  cacheTime: 0,
+})
+
+/**
  * @name useEventFromCluster
  * @description 클러스터 내 이벤트 목록조회 useQuery훅
  * 

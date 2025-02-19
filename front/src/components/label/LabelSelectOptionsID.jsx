@@ -35,8 +35,8 @@ const LabelSelectOptionsID = ({
       ) : (
         options.map((opt) => (
           <option key={opt.id} value={opt.id}>
-            {opt.name}
-            {/* {opt.name}: {opt.id} */}
+            {/* {opt.name} */}
+            {opt.name}: {opt.id}
           </option>
         ))
       )}

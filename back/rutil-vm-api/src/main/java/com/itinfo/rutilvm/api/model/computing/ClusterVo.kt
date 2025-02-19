@@ -159,6 +159,7 @@ fun Cluster.toClusterMenu(conn: Connection): ClusterVo {
 		id { cluster.id() }
 		name { cluster.name() }
 		comment { cluster.comment() }
+		cpuArc { if(cluster.cpuPresent()) cluster.cpu().architecture() else null}
 		version { cluster.version().major().toString() + "." + cluster.version().minor() }
 		description { cluster.description() }
 		cpuType { if(cluster.cpuPresent()) cluster.cpu().type().toString() else null }

@@ -21,6 +21,7 @@ const cpuArcs = [
   { value: "S390X", label: "s390x" },
 ];
 
+// name이 value고, description이 label
 const cpuArcOptions = {
   X86_64: [
     { value: "Intel Nehalem Family", label: "Intel Nehalem Family" },

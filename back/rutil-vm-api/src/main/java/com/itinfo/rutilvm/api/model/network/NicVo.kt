@@ -344,6 +344,6 @@ fun NicVo.toVmNicBuilder(): Nic {
 	log.info("toVmNic: {}", this)
 	return NicBuilder()
 		.name(this@toVmNicBuilder.name)
-		.vnicProfile(VnicProfileBuilder().id(this@toVmNicBuilder.vnicProfileVo.id))
+		.vnicProfile(VnicProfileBuilder().id(this@toVmNicBuilder.vnicProfileVo.id).build())
 		.build()
 }

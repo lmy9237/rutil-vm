@@ -354,7 +354,7 @@ const VmDiskModal = ({
               id="bootable"
               checked={formState.bootable}
               onChange={handleInputChangeCheck("bootable")}
-              disabled={!formState.bootable}
+              // disabled={!formState.bootable}
             />
             <LabelCheckbox
               label="공유 가능"

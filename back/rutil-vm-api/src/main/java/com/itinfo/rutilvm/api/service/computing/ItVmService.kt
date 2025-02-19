@@ -136,7 +136,6 @@ class VmServiceImpl(
 	@Throws(Error::class)
 	override fun add(vmCreateVo: VmCreateVo): VmCreateVo? {
 		log.info("add ... vmCreateVo: {}", VmCreateVo)
-
 		if(vmCreateVo.diskAttachmentVos.filter { it.bootable }.size > 1){
 			log.error("부팅가능한 디스크는 한개만")
 			throw ErrorPattern.VM_VO_INVALID.toException()

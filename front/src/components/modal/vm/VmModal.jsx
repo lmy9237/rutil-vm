@@ -11,7 +11,9 @@ import {
   useDisksFromVM,
   useHostFromCluster,
   useAllActiveDomainFromDataCenter,
-  useAllvnicFromDataCenter,  
+  useAllvnicFromDataCenter,
+  useOsSystemsFromCluster,
+  useCluster,  
 } from '../../../api/RQHook';
 import VmCommon from './create/VmCommon';
 import VmNic from './create/VmNic';
@@ -25,7 +27,6 @@ import LabelSelectOptions from '../../label/LabelSelectOptions';
 import LabelSelectOptionsID from '../../label/LabelSelectOptionsID';
 import './MVm.css';
 
-
 // 탭 메뉴
 const tabs = [
   { id: "common_tab", value: "common", label: "일반" },
@@ -34,69 +35,6 @@ const tabs = [
   { id: "host_tab", value: "host", label: "호스트" },
   { id: "ha_mode_tab", value: "ha_mode", label: "고가용성" },
   { id: "boot_option_tab", value: "boot_outer", label: "부트 옵션" },
-];
-
-// 운영 시스템
-const osSystemList = [
-  { value: "debian_7", label: "Debian 7+" },
-  { value: "debian_9", label: "Debian 9+" },
-  { value: "freebsd", label: "FreeBSD 9.2" },
-  { value: "freebsdx64", label: "FreeBSD 9.2 x64" },
-  { value: "other_linux", label: "Linux" },
-  // { value: 'other_linux_s390x', label: 'Linux' },
-  // { value: 'other_linux_ppc64', label: 'Linux' },
-  { value: "other", label: "Other OS" },
-  // { value: 'other_s390x', label: 'Other OS' },
-  // { value: 'other_ppc64', label: 'Other OS' },
-  { value: "other_linux_kernel_4", label: "Other Linux (kernel 4.x)" },
-  { value: "windows_xp", label: "Windows XP" },
-  { value: "windows_2003", label: "Windows 2003" },
-  { value: "windows_2003x64", label: "Windows 2003 x64" },
-  { value: "windows_2008x64", label: "Windows 2008 x64" },
-  { value: "windows_2008R2x64", label: "Windows 2008 R2 x64" },
-  { value: "windows_2008", label: "Windows 2008" },
-  { value: "windows_2012x64", label: "Windows 2012 x64" },
-  { value: "windows_2012R2x64", label: "Windows 2012R2 x64" },
-  { value: "windows_2016x64", label: "Windows 2016 x64" },
-  { value: "windows_2019x64", label: "Windows 2019 x64" },
-  { value: "windows_2022", label: "Windows 2022" },
-  { value: "windows_7", label: "Windows 7" },
-  { value: "windows_7x64", label: "Windows 7 x64" },
-  { value: "windows_8", label: "Windows 8" },
-  { value: "windows_8x64", label: "Windows 8 x64" },
-  { value: "windows_10", label: "Windows 10" },
-  { value: "windows_10x64", label: "Windows 10 x64" },
-  { value: "windows_11", label: "Windows 11" },
-  { value: "rhel_atomic7x64", label: "Red Hat Atomic 7.x x64" },
-  { value: "rhel_3", label: "Red Hat Enterprise Linux 3.x" },
-  { value: "rhel_3x64", label: "Red Hat Enterprise Linux 3.x x64" },
-  { value: "rhel_4", label: "Red Hat Enterprise Linux 4.x" },
-  { value: "rhel_4x64", label: "Red Hat Enterprise Linux 4.x x64" },
-  { value: "rhel_5", label: "Red Hat Enterprise Linux 5.x" },
-  { value: "rhel_5x64", label: "Red Hat Enterprise Linux 5.x x64" },
-  { value: "rhel_6", label: "Red Hat Enterprise Linux 6.x" },
-  { value: "rhel_6x64", label: "Red Hat Enterprise Linux 6.x x64" },
-  { value: "rhel_6_ppc64", label: "Red Hat Enterprise Linux up to 6.8" },
-  { value: "rhel_6_9_plus_ppc64", label: "Red Hat Enterprise Linux 6.9+" },
-  { value: "rhel_7_s390x", label: "Red Hat Enterprise Linux 7.x" },
-  { value: "rhel_7x64", label: "Red Hat Enterprise Linux 7.x x64" },
-  { value: "rhel_7_ppc64", label: "Red Hat Enterprise Linux 7.x" },
-  { value: "rhel_8x64", label: "Red Hat Enterprise Linux 8.x x64" },
-  { value: "rhel_8_ppc64", label: "Red Hat Enterprise Linux 8.x" },
-  { value: "rhel_9x64", label: "Red Hat Enterprise Linux 9.x x64" },
-  { value: "rhel_9_ppc64", label: "Red Hat Enterprise Linux 9.x" },
-  { value: "rhcos_x64", label: "Red Hat Enterprise Linux CoreOS" },
-  { value: "sles_11", label: "SUSE Linux Enterprise Server 11+" },
-  { value: "sles_11_ppc64", label: "SUSE Linux Enterprise Server 11" },
-  { value: "sles_12_s390x", label: "SUSE Linux Enterprise Server 12" },
-  { value: "ubuntu_12_04", label: "Ubuntu Precise Pangolin LTS" },
-  { value: "ubuntu_12_10", label: "Ubuntu Quantal Quetzal" },
-  { value: "ubuntu_13_04", label: "Ubuntu Raring Ringtails" },
-  { value: "ubuntu_13_10", label: "Ubuntu Saucy Salamander" },
-  { value: "ubuntu_14_04", label: "Ubuntu Trusty Tahr LTS+" },
-  { value: "ubuntu_14_04_ppc64", label: "Ubuntu Trusty Tahr LTS+" },
-  { value: "ubuntu_16_04_s390x", label: "Ubuntu Xenial Xerus LTS+" },
-  { value: "ubuntu_18_04", label: "Ubuntu Bionic Beaver LTS+" },
 ];
 
 // 칩셋 옵션
@@ -169,6 +107,7 @@ const bootForm = {
 };
 
 const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
+  const vLabel = editMode ? "편집" : "생성";
   const [selectedModalTab, setSelectedModalTab] = useState("common");
 
   const [formInfoState, setFormInfoState] = useState(infoform);
@@ -177,12 +116,13 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   const [formHostState, setFormHostState] = useState(hostForm);
   const [formHaState, setFormHaState] = useState(haForm);
   const [formBootState, setFormBootState] = useState(bootForm);
-  const [dataCenterName, setDataCenterName] = useState(""); // 단순 dc 이름출력용
+  const [dataCenterName, setDataCenterName] = useState(""); // dc 이름출력용
   const [dataCenterId, setDataCenterId] = useState(""); // 데이터센터 id
   const [clusterVoId, setClusterVoId] = useState(""); // 클러스터 id
   const [templateVoId, setTemplateVoId] = useState(""); // 템플릿 id
-  const [osSystem, setOsSystem] = useState("other_linux"); // 운영 시스템
-  const [chipsetOption, setChipsetOption] = useState("Q35_OVMF"); // 칩셋
+  const [architecture, setArchitecture] = useState(""); // cluster arc
+  const [osSystem, setOsSystem] = useState(""); // 운영 시스템
+  const [chipsetOption, setChipsetOption] = useState("I440FX_SEA_BIOS"); // 칩셋
   const [optimizeOption, setOptimizeOption] = useState("SERVER"); // 최적화옵션
 
   // 초기 vnicprofile 세팅 (배열)
@@ -196,7 +136,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   const { mutate: editVM } = useEditVm();
 
   // 가상머신 상세데이터 가져오기
-  const { data: vm, refetch: refetchvms } = useVmById(vmId);
+  const { data: vm } = useVmById(vmId);
 
   // 클러스터 목록 가져오기
   const { data: clusters = [], isLoading: isClustersLoading } =
@@ -212,10 +152,13 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
 
   // 편집: 가상머신이 가지고 있는 디스크 목록 가져오기
   const { data: disks = [], isLoading: isDisksLoading } = 
-    useDisksFromVM( vmId, (e) => ({ ...e }));
+    useDisksFromVM(vmId, (e) => ({ ...e }));
 
   const { data: hosts = [], isLoading: isHostsLoading } = 
     useHostFromCluster(clusterVoId, (e) => ({ ...e }));
+
+  const { data: osList = [], isLoading: isOssLoading } = 
+    useOsSystemsFromCluster(clusterVoId, (e) => ({ ...e }));
 
   const { data: domains = [], isLoading: isDomainsLoading } =
     useAllActiveDomainFromDataCenter(dataCenterId, (e) => ({ ...e }));
@@ -237,8 +180,8 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       setDataCenterId("");
       setClusterVoId("");
       setTemplateVoId("");
-      setOsSystem("other_linux");
-      setChipsetOption("Q35_OVMF");
+      setOsSystem("");
+      setChipsetOption("I440FX_SEA_BIOS");
       setOptimizeOption("SERVER");
       setNicListState([{ id: "", name: "nic1", vnicProfileVo: { id: "" } }]);
       setDiskListState([]);
@@ -338,6 +281,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       if (selectedCluster) {
         setDataCenterId(selectedCluster.dataCenterVo?.id || "");
         setDataCenterName(selectedCluster.dataCenterVo?.name || "");
+        setArchitecture(selectedCluster.cpuArc || "");
       }
     }
   }, [clusterVoId, clusters]);
@@ -349,14 +293,23 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       setClusterVoId(firstCluster.id);
       setDataCenterId(firstCluster.dataCenterVo?.id || "");
       setDataCenterName(firstCluster.dataCenterVo?.name || "");
+      setArchitecture(firstCluster.cpuArc);
     }
   }, [isOpen, clusters, editMode]);
+
+  useEffect(() => {
+    if (osList && osList.length > 0) {
+      setOsSystem(osList[0].name);
+    }
+  }, [osList]);  
 
   useEffect(() => {
     if (!editMode && templates.length > 0) {
       setTemplateVoId("00000000-0000-0000-0000-000000000000"); // 기본 템플릿으로
     }
   }, [isOpen, templates, editMode]);
+
+
 
   const dataToSubmit = {
     // VmInfo
@@ -402,8 +355,11 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     osSystem: osSystem,
     connVo: { id: formBootState.cdConn },
 
-    // vnicProfile 목록
-    vnicProfileVos: nicListState.map((vnic) => ({ id: vnic.vnicProfileVo.id })),
+    // nic 목록
+    nicVos: nicListState.map((nic) => ({ 
+      name: nic.name,
+      vnicProfileVo: {id: nic.vnicProfileVo.id }
+    })),
 
     // 디스크 데이터 (객체 형태 배열로 변환)
     diskAttachmentVos: diskListState.map((disk) => ({
@@ -434,54 +390,35 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       },
     })),
   };
-  // diskAttachmentVos: formInfoState.diskVoList.map((disk) => ({ id: disk.id })),
 
   const validateForm = () => {
     if (!formInfoState.name) return "이름을 입력해주세요.";
     if (!clusterVoId) return "클러스터를 선택해주세요.";
-    if (formSystemState.memorySize > "9223372036854775807")
-      return "메모리 크기가 너무 큽니다.";
+    if (formSystemState.memorySize > "9223372036854775807") return "메모리 크기가 너무 큽니다.";
     return null;
   };
 
   const handleFormSubmit = () => {
     // 디스크  연결은 id값 보내기 생성은 객체로 보내기
     const error = validateForm();
-    if (error) {
-      toast.error(error);
-      return;
-    }
+    if (error) return toast.error(error);
+
+    const onSuccess = () => {
+      onClose();
+      toast.success(`가상머신 ${vLabel} 완료`);
+    };
+    const onError = (err) => toast.error(`Error ${vLabel} vm: ${err}`);
+    
     console.log("가상머신 데이터 확인:", dataToSubmit);
 
-    if (editMode) {
-      editVM(
-        { vmId: vmId, vmdata: dataToSubmit },
-        {
-          onSuccess: () => {
-            onClose();
-            toast.success("가상머신 편집 완료");
-          },
-          onError: (error) => toast.error("Error editing vm:", error),
-        }
-      );
-    } else {
-      addVM(dataToSubmit, {
-        onSuccess: () => {
-          onClose();
-          toast.success("가상머신 생성 완료");
-        },
-        onError: (error) => toast.error("Error adding vm:", error),
-      });
-    }
+    editMode
+      ? editVM({ vmId: vmId, vmdata: dataToSubmit },{ onSuccess, onError })
+      : addVM(dataToSubmit, { onSuccess, onError });
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"가상머신"}
-      submitTitle={editMode ? "편집" : "생성"}
-      onSubmit={handleFormSubmit}
-    >
-      <div className="vm_edit_popup_content flex">
+    <BaseModal isOpen={isOpen} onClose={onClose} targetName={"가상머신"} submitTitle={vLabel} onSubmit={handleFormSubmit}>
+      <div className="vm-edit-popup-content flex">
         <div className="vm-new-nav"style={{height: "71vh",width: "30%",}}>
             {tabs.map((tab) => (
               <div
@@ -514,19 +451,28 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
                 disabled={editMode} // 편집 모드일 경우 비활성화
                 loading={isTemplatesLoading}
                 options={templates}
-              />
-
-              <LabelSelectOptions
-                label="운영 시스템"
-                value={osSystem}
-                onChange={(e) => setOsSystem(e.target.value)}
-                options={osSystemList}
-              />
+              />      
+              <div className={`flex justify-center items-center mb-1 w-full px-[25px]`}>
+                <label className="flex justify-end items-center mx-1 w-[60px] max-w-[100px] text-end" >
+                  운영 시스템
+                </label>
+                <select className="w-full min-w-30 max-w-xl"
+                  value={osSystem}
+                  onChange={(e) => setOsSystem(e.target.value)}
+                >
+                  {osList.map((opt) => (
+                    <option key={opt.name} value={opt.description}>
+                      {opt.description}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <LabelSelectOptions
                 label="칩셋/펌웨어 유형"
                 value={chipsetOption}
                 onChange={(e) => setChipsetOption(e.target.value)}
                 options={chipsetOptionList}
+                disabled={architecture === "PPC64" || architecture === "S390X"}
               />
               <LabelSelectOptions
                 label="최적화 옵션"

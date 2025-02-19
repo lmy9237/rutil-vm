@@ -99,8 +99,7 @@ const VmHost = ({
               <div style={{ marginTop: "10px" }}>
                 <label>선택된 호스트:</label>
                 <span style={{ marginLeft: "10px", fontWeight: "bold" }}>
-                  {formHostState.hostInCluster ||
-                  formHostState.hostVos.length === 0
+                  {formHostState.hostInCluster || formHostState.hostVos.length === 0
                     ? "선택된 호스트가 없습니다."
                     : formHostState.hostVos.map((host) => host.name).join(", ")}
                 </span>
@@ -114,12 +113,10 @@ const VmHost = ({
           <LabelSelectOptions
             label={"마이그레이션 모드"}
             value={formHostState.migrationMode}
-            onChange={(e) =>
-              setFormHostState((prev) => ({
-                ...prev,
-                migrationMode: e.target.value,
-              }))
-            }
+            onChange={(e) => setFormHostState((prev) => ({
+              ...prev,
+              migrationMode: e.target.value,
+            }))}
             options={migrationModeOptionList}
           />
 

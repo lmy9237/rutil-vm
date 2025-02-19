@@ -53,7 +53,7 @@ const ENDPOINTS = {
   FIND_NETWORKS_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/networks`, 
   ADD_NETWORK_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/networks`,
   MANAGE_NETWORKS_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/manageNetworks`, 
-  OS_SYSTEM_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/osSystems`, 
+  FIND_OS_SYSTEM_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/osSystems`, 
 
   FIND_EVENTS_FROM_CLUSTER: (clusterId) => `/api/v1/computing/clusters/${clusterId}/events`,
   FIND_CPU_PROFILES_FROM_CLUSTER:(clusterId) =>  `/api/v1/computing/clusters/${clusterId}/cpuProfiles`, 

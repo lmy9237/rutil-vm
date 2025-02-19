@@ -240,8 +240,8 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
         memoryActual { vm.memoryPolicy().guaranteed() }
         cpuTopologyCnt {
             vm.cpu().topology().coresAsInteger() *
-                    vm.cpu().topology().socketsAsInteger() *
-                    vm.cpu().topology().threadsAsInteger()
+			vm.cpu().topology().socketsAsInteger() *
+			vm.cpu().topology().threadsAsInteger()
         }
         cpuTopologyCore { vm.cpu().topology().coresAsInteger() }
         cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
