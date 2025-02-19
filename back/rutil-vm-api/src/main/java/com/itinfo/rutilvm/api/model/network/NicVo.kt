@@ -340,10 +340,8 @@ fun NicVo.toEditNicBuilder(): Nic =
 
 
 // 가상머신 만들때 nic
-fun NicVo.toVmNicBuilder(): Nic {
-	log.info("toVmNic: {}", this)
-	return NicBuilder()
+fun NicVo.toVmNicBuilder(): Nic = NicBuilder()
 		.name(this@toVmNicBuilder.name)
 		.vnicProfile(VnicProfileBuilder().id(this@toVmNicBuilder.vnicProfileVo.id).build())
 		.build()
-}
+

@@ -46,9 +46,9 @@ const chipsetOptionList = [
 
 // 최적화옵션
 const optimizeOptionList = [
-  { value: "DESKTOP", label: "데스크톱" },
-  { value: "HIGH_PERFORMANCE", label: "고성능" },
   { value: "SERVER", label: "서버" },
+  { value: "HIGH_PERFORMANCE", label: "고성능" },
+  { value: "DESKTOP", label: "데스크톱" },
 ];
 
 
@@ -204,7 +204,6 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
           return { id: host.id, name: host.name}}),
         migrationMode: vm?.migrationMode || "migratable",
       });
-      
       setFormHaState({
         ha: vm?.ha || false,
         priority: vm?.priority || 1,
@@ -216,10 +215,10 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
         cdConn: {id: vm?.connVo?.id || ""},
         bootingMenu: vm?.bootingMenu || false, 
       });
+      setArchitecture("");
       setDataCenterVo({ id: vm?.dataCenterVo?.id, name: vm?.dataCenterVo?.name })
       setClusterVo({ id: vm?.clusterVo?.id, name: vm?.clusterVo?.name })
       setTemplateVo({ id: vm?.templateVo?.id, name: vm?.templateVo?.name })
-      setArchitecture("");
       
       const initialNicState = vm?.nicVos?.length? 
         vm?.nicVos?.map((nic, index) => ({
@@ -292,21 +291,6 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       setTemplateVo({id: "00000000-0000-0000-0000-000000000000"});
     }
   }, [isOpen, templates, editMode]);
-
-  useEffect(() => {
-    if (editMode && vm?.hostVos.length > 0 && hosts.length > 0) {
-      setFormHostState((prev) => ({
-        ...prev,
-        hostVos: prev.hostVos.map((host) => {
-          const foundHost = hosts.find((h) => h.id === host.id);
-          return {
-            ...host,
-            name: foundHost ? foundHost.name : "(이름 없음)", // name이 없으면 기본값 설정
-          };
-        }),
-      }));
-    }
-  }, [hosts, editMode, vm?.hostVos]);  
 
   useEffect(() => {
     if (vm?.osSystem) {
@@ -465,6 +449,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
                 options={chipsetOptionList}
                 disabled={architecture === "PPC64" || architecture === "S390X"}
               />
+              <div><span>{formInfoState.osType}</span></div>
               <LabelSelectOptions
                 label="최적화 옵션"
                 value={formInfoState.optimizeOption}

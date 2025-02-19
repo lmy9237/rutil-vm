@@ -14,7 +14,10 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
     if (formHostState.hostVos.length > 0) {
       setFormHostState((prev) => ({ ...prev, hostInCluster: false }));
     } else {
-      setFormHostState((prev) => ({ ...prev, hostInCluster: true }));
+      setFormHostState((prev) => ({ 
+        ...prev, 
+        hostInCluster: true,
+      }));
     }
   }, [formHostState.hostVos, setFormHostState]);
 
@@ -22,7 +25,6 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
     <div className="host-second-content">
       <div style={{ fontWeight: 600 }}>실행 호스트:</div>
       <div className="form-checks">
-        {/* 클러스터 내 호스트 선택 */}
         <div className="flex">
           <input
             className="form-check-input"
@@ -89,7 +91,7 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
               <label>선택된 호스트:</label>
               <span style={{ marginLeft: "10px", fontWeight: "bold" }}>
                 {formHostState.hostVos && formHostState.hostVos.length > 0
-                  ? formHostState.hostVos.map((host) => host.name).join(", ")
+                  ? formHostState.hostVos.map((host) => host.id).join(", ")
                   : "선택된 호스트가 없습니다."}
               </span>
             </div>

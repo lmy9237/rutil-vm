@@ -147,13 +147,16 @@ class VmCreateVo (
     }
 }
 
-fun VmCreateVo.toVmBuilder(): VmBuilder = VmBuilder().apply {
-	toVmInfoBuilder(this)
-	toVmSystemBuilder(this)
-	toVmInitBuilder(this)
-	toVmHostBuilder(this)
-	toVmHaBuilder(this)
-	toVmBootBuilder(this)
+fun VmCreateVo.toVmBuilder(): VmBuilder {
+	log.info("vmCreateVo: {}", this)
+	return VmBuilder().apply {
+		toVmInfoBuilder(this)
+		toVmSystemBuilder(this)
+		toVmInitBuilder(this)
+		toVmHostBuilder(this)
+		toVmHaBuilder(this)
+		toVmBootBuilder(this)
+	}
 }
 
 fun VmCreateVo.toAddVmBuilder(): Vm = toVmBuilder().build()

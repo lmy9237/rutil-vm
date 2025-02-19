@@ -1,6 +1,8 @@
 
 
 const VmNic = ({ nicsState, setNicsState, nics }) => {
+
+
   // 변경사항 업데이트
   const handleNicChange = (index, value) => {
     const updatedNics = [...nicsState];
@@ -13,6 +15,11 @@ const VmNic = ({ nicsState, setNicsState, nics }) => {
 
   // vnic 추가
   const handleAddNic = () => {
+    if (nicsState.length > 0 && !nicsState[nicsState.length - 1].vnicProfileVo.id) {
+      alert("이전 vNIC의 프로파일을 먼저 선택하세요.");
+      return;
+    }
+
     const newNicNumber = nicsState.length + 1;
     const updatedNics = [
       ...nicsState,
@@ -20,7 +27,7 @@ const VmNic = ({ nicsState, setNicsState, nics }) => {
     ];
     setNicsState(updatedNics);
   };
-
+  
   // vnic 삭제
   const handleRemoveNic = (index) => {
     const updatedNics = nicsState.filter((_, i) => i !== index);
