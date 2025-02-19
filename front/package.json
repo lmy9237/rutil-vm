@@ -65,7 +65,8 @@
     "vite-plugin-mkcert": "^1.17.6"
   },
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite",
+    "dev:b70": "vite --mode b70",
     "build": "vite build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
@@ -90,4 +91,5 @@
       "last 1 safari version"
     ]
   }
+
 }

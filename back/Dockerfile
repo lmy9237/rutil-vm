@@ -56,7 +56,10 @@ ENV RUTIL_VM_VERSION=0.2.0-beta2
 ENV RUTIL_VM_RELEASE_DATE=2025-02-06
 ENV RUTIL_VM_PORT_HTTP=8080
 ENV RUTIL_VM_PORT_HTTPS=8443
+ENV RUTIL_VM_OVIRT_PORT_HTTPS=443
 ENV RUTIL_VM_OVIRT_IP=192.168.0.70
+ENV RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm
+ENV RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443
 RUN echo "================== common.properties =================="
 RUN echo ""
 RUN echo "version: $RUTIL_VM_VERSION"
@@ -115,6 +118,8 @@ ENTRYPOINT [ "java", "-jar", "app.jar", \
   # "-Dspring-boot.run.arguments=", \
   "--application.ovirt.ip=${RUTIL_VM_OVIRT_IP}", \
   "--application.ovirt.port.ssl=${RUTIL_VM_OVIRT_PORT_HTTPS}", \
+  "--application.api.cors.allowed-origins=${RUTIL_VM_CORS_ALLOWED_ORIGINS}", \
+  "--application.api.cors.allowed-origins.port=${RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT}", \
   "--server.port=${RUTIL_VM_PORT_HTTPS}", \
   # "--spring.datasource.engine.url=${RUTIL_VM_OVIRT_IP}", \
   "--spring.datasource.engine.username=${POSTGRES_DATASOURCE_JDBC_ID}", \

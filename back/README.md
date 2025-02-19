@@ -145,6 +145,8 @@
 > -e POSTGRES_JDBC_PORT=5432 \             # PostgresDB 포트번호
 > -e POSTGRES_DATASOURCE_JDBC_ID=rutil \   # 테이블스페이스접근 ID
 > -e POSTGRES_DATASOURCE_JDBC_PW=rutil1! \ # 테이블스페이스접근 PW
+> -e RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm \  # CORS 예외대상 호스트명
+> -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 \  # CORS 예외대상 호스트의 포트
 > -p 8080:8080 -p 8443:8443 \              # Port Mapping
 > ititcloud/rutil-vm-api:0.2.0-beta2
 > 

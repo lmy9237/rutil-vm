@@ -12,8 +12,15 @@ RUN npm audit fix;exit 0
 RUN npm i
 
 COPY src /home/node/src
-COPY public /home/node/public
 COPY tailwind.config.js /home/node/
+COPY postcss.config.js /home/node/
+COPY vite.config.js /home/node/
+COPY index.html /home/node/
+COPY logo*.png /home/node/
+COPY favicon.ico /home/node/
+COPY manifest.json /home/node/
+COPY robots.txt /home/node/
+
 RUN npm run build
 
 # ------------------------------
@@ -22,7 +29,7 @@ RUN npm run build
 FROM nginx:alpine
 LABEL maintainer="Chan Hee Lee <chlee@ititinfo.com>"
 LABEL description="RutilVM"
-LABEL version="0.2.0-beta"
+LABEL version="0.2.0-beta2"
 LABEL vcs-url="https://github.com/ititcloud/rutil-vm"
 LABEL build-date="2025-02-06"
 LABEL commit-hash="05f9e12ee27c1532623112d1df92004226d0d347"
@@ -30,14 +37,20 @@ LABEL license="Apache-2.0"
 LABEL environment="production"
 LABEL app-name="rutil-vm"
 
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Assuming you have a "certs" directory with your SSL certificate and key
+COPY certs /etc/nginx/certs
+
 # Remove default nginx static assets
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the build output from the previous stage to the nginx html directory
-COPY --from=build-fe /home/node/build /usr/share/nginx/html
+COPY --from=build-fe /home/node/dist /usr/share/nginx/html
 
 # Expose port 80 to the outside world
-EXPOSE 80
+EXPOSE 80 443
 
 # Start Nginx when the container launches
 CMD ["nginx", "-g", "daemon off;"]

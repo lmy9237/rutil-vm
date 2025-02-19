@@ -1,15 +1,14 @@
-
 ### react ###
-build
-dist
+build/
+dist/
 *.log
 **/*.backup.*
 **/*.back.*
 
-node_modules
-bower_components
+node_modules/
+bower_components/
 
-### VisualStudioCode ###
+
 .vscode/*
 .vscode/settings.json
 !.vscode/tasks.json

@@ -2,9 +2,31 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "start-rutil-vm-react (프론트 실행)",
+      "label": "start-rutil-vm-react (프론트 실행 - 로컬 Backend)",
       "type": "shell",
       "command": "npm run dev",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [{
+        "owner": "custom",
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Starting the development server...",
+          "endsPattern": "Compiled successfully!"
+        }
+      }]
+    }, {
+      "label": "start-rutil-vm-react (프론트 실행 - 70번 Backend)",
+      "type": "shell",
+      "command": "npm run dev:b70",
       "isBackground": true,
       "presentation": {
         "echo": true,

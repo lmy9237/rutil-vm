@@ -13,6 +13,8 @@ services:
       - LC_ALL= ko_KR.UTF-8
       - LANG=ko_KR.utf8
       - RUTIL_VM_OVIRT_IP=192.168.0.20
+      - RUTIL_VM_CORS_ALLOWED_ORIGINS=192.168.0.20;localhost;rutil-vm
+      - RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443
       - RUTIL_VM_OVIRT_PORT_HTTPS=443
       - RUTIL_VM_PORT_HTTPS=8443
       - POSTGRES_JDBC_PORT=5432
@@ -23,6 +25,20 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - ovirt_network
+
+  rutil-vm:
+    image: ititcloud/rutil-vm:latest
+    container_name: rutil-vm
+    ports:
+      - "3433:443"
+    environment:
+      - TZ=Asia/Seoul
+      - LANGUAGE=ko_KR;ko;en_US;en
+      - LC_ALL= ko_KR.UTF-8
+      - LANG=ko_KR.utf8
+    networks:
+      - ovirt_network
+
 #  nginx:
 #    image: nginx:stable-alpine3.20-perl
 #    platform: linux/amd64

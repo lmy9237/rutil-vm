@@ -1,18 +1,15 @@
-import { ConfigEnv, defineConfig, loadEnv } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import mkcert from "vite-plugin-mkcert";
-import fs, { watch } from "fs";
-import dotenv from 'dotenv';
 // import path from "path";
 
-dotenv.config();
-// const tailwindcss = require('@tailwindcss/vite');
-
 const VITE_CONFIG = ({ mode }) => {
+  console.log(`mode: ${mode}`)
   process.env = { ...process.env, ...loadEnv(mode, process.cwd())}
+  console.log(`process.env.NODE_ENV: ${process.env.NODE_ENV}`)
+  console.log(`process.env.VITE_RUTIL_VM_OVIRT_IP: ${process.env.VITE_RUTIL_VM_OVIRT_IP}`)
 
-  const isDevelop = process.env.VITE_DEVELOP === "true";
-
+  const apiUrl = process.env.VITE_RUTIL_VM_OVIRT_IP ?? "localhost";
   return defineConfig({
     // root: path.resolve(__dirname, 'public'),
     plugins: [react(), mkcert()],
@@ -21,15 +18,10 @@ const VITE_CONFIG = ({ mode }) => {
     },
     server: {
       https: true,
-      // {
-      //   key: fs.readFileSync(".cert/localhost-key.pem"),
-      //   cert: fs.readFileSync(".cert/localhost.pem"),
-      // },
-      port: Number(process.env.SSL_PORT) || 3000,
+      port: Number(process.env.SSL_PORT) || 3443,
       proxy: {
         "/api": {
-          target: "https://192.168.0.70:8443",
-          // target: "https://localhost:8443",
+          target: `https://${apiUrl}:8443`,
           changeOrigin: true,
           secure: false, // Set to true if the target uses a valid SSL certificate
           configure: (proxy, options) => {
