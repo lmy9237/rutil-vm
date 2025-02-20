@@ -41,7 +41,7 @@ const DashboardBox = ({
         <p>{title}</p>
       </span>
       <h1>{cntTotal}</h1>
-      <div className="arrows">
+      <div className="arrows flex center">
         {cntUp && (
           <>
             <FontAwesomeIcon icon={faArrowUp} fixedWidth /> {cntUp}&nbsp;

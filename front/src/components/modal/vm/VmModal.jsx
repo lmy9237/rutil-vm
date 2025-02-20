@@ -379,7 +379,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose} targetName={"가상머신"} submitTitle={vLabel} onSubmit={handleFormSubmit}>
+    <BaseModal isOpen={isOpen} onClose={onClose} targetName={"가상머신"} submitTitle={vLabel}  contentStyle={{ width: "850px", height: "790px" }}  onSubmit={handleFormSubmit}>
       <div className="vm-edit-popup-content flex">
         <div className="vm-new-nav"style={{height: "71vh",width: "30%",}}>
             {tabs.map((tab) => (
