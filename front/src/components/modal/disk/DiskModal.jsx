@@ -6,7 +6,6 @@ import LabelInputNum from '../../label/LabelInputNum';
 import LabelSelectOptionsID from '../../label/LabelSelectOptionsID';
 import LabelSelectOptions from '../../label/LabelSelectOptions';
 import LabelCheckbox from '../../label/LabelCheckbox';
-import { xButton } from '../../Icon';
 import { 
   useDiskById,
   useAddDisk,
@@ -15,7 +14,7 @@ import {
   useAllActiveDomainFromDataCenter, 
   useAllDiskProfileFromDomain,
 } from '../../../api/RQHook';
-import { CheckKoreanName } from '../../../util';
+import { checkKoreanName } from '../../../util';
 
 const initialFormState = {
   id: '',
@@ -105,7 +104,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   
 
   const validateForm = () => {
-    if (!CheckKoreanName(formState.alias)) return '별칭은 영어만 입력가능합니다.';
+    if (!checkKoreanName(formState.alias)) return '별칭은 영어만 입력가능합니다.';
     if (!formState.alias) return '별칭를 입력해주세요.';
     if (!formState.size) return '크기를 입력해주세요.';
     if (!dataCenterVoId) return '데이터 센터를 선택해주세요.';

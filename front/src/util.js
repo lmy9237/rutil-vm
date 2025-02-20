@@ -5,12 +5,8 @@
  * @param {string} name 문자열
  * @returns 
  */
-export function CheckKoreanName(name) {
-  const hasKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(name);
-  if (hasKorean) {
-    return false; // 한글이 포함된 경우 false 반환
-  }
-  return true; // 검사를 통과한 경우 true 반환
+export function checkKoreanName(name) {
+  return /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(name); // 한글이 포함되면 true 반환
 }
 
 /**

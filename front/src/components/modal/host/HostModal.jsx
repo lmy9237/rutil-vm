@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import Modal from "react-modal";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelInputNum from "../../label/LabelInputNum";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
-import { xButton } from "../../Icon";
 import {
   useAddHost,
   useEditHost,
@@ -111,10 +109,7 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
           { onSuccess, onError }
         )
       : addHost(
-          {
-            hostData: dataToSubmit,
-            deploy_hosted_engine: formState.hostedEngine,
-          },
+          { hostData: dataToSubmit, deploy_hosted_engine: formState.hostedEngine,},
           { onSuccess, onError }
         );
   };

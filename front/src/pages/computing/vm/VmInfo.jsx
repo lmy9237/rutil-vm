@@ -31,7 +31,6 @@ import "./Vm.css";
  * @see VmApplications
  * @see VmHostDevices
  * @see VmEvents
- * @see VmEvents
  *
  * @returns
  */
@@ -186,8 +185,7 @@ const VmInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full px-[0.5rem] py-[0.5rem]"
->
+        <div className="w-full px-[0.5rem] py-[0.5rem]">
           <Path pathElements={pathData} />
           {renderSectionContent()}
         </div>

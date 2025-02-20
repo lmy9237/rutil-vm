@@ -14,6 +14,7 @@ import {
   useEditDisk,
   useDiskAttachmentFromVm,
 } from "../../../api/RQHook";
+import { checkKoreanName, convertBytesToMB } from "../../../util";
 
 const initialFormState = {
   id: "",
@@ -96,10 +97,8 @@ const VmDiskModal = ({
     if (editMode && diskAttachment) {
       setFormState({
         id: diskAttachment?.id || "",
-        size: (
-          diskAttachment?.diskImageVo?.virtualSize /
-          (1024 * 1024 * 1024)
-        ).toFixed(0),
+        size: convertBytesToMB (diskAttachment?.diskImageVo?.virtualSize),
+        // size: (diskAttachment?.diskImageVo?.virtualSize /(1024 * 1024 * 1024)).toFixed(0),
         appendSize: 0,
         alias: diskAttachment?.diskImageVo?.alias || "",
         description: diskAttachment?.diskImageVo?.description || "",
@@ -152,6 +151,7 @@ const VmDiskModal = ({
 
   const validateForm = () => {
     if (!formState.alias) return "별칭을 입력해주세요.";
+    if (checkKoreanName(formState.alias)) return "별칭을 입력해주세요.";
     if (!formState.size) return "크기를 입력해주세요.";
     if (!domainVoId) return "스토리지 도메인을 선택해주세요.";
     if (!diskProfileVoId) return "디스크 프로파일을 선택해주세요.";
@@ -160,15 +160,9 @@ const VmDiskModal = ({
 
   // vm disk에서 생성 (가상머신 생성x)
   const handleOkClick = () => {
-    if (
-      !formState.alias ||
-      !formState.size ||
-      !domainVoId ||
-      !diskProfileVoId
-    ) {
-      return toast.error("필수 값을 입력하세요.");
-    }
-
+    const error = validateForm();
+    if (error) return toast.error(error);
+    
     const newDisk = {
       alias: formState.alias,
       size: formState.size,

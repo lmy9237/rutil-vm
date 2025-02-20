@@ -7,7 +7,6 @@ import TableRowClick from "../table/TableRowClick";
 import HostModals from "../modal/host/HostModals";
 import { renderHostStatusIcon } from "../Icon";
 import HostActionButtons from "./HostActionButtons";
-import NetworkActionButtons from "./NetworkActionButtons";
 
 const HostDupl = ({
   isLoading, isError, isSuccess,
@@ -16,9 +15,7 @@ const HostDupl = ({
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedHosts, setSelectedHosts] = useState([]);
-  const selectedIds = (Array.isArray(selectedHosts) ? selectedHosts : [])
-    .map((host) => host.id)
-    .join(", ");
+  const selectedIds = (Array.isArray(selectedHosts) ? selectedHosts : []).map((host) => host.id).join(", ");
 
   const handleNameClick = (id) => navigate(`/computing/hosts/${id}`);
 

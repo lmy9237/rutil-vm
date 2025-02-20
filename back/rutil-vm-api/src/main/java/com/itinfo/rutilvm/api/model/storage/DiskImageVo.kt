@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
+import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.repository.engine.entity.DiskVmElementEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmId
 import com.itinfo.rutilvm.util.ovirt.*
@@ -194,6 +195,24 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 }
 fun List<Disk>.toDisksInfo(conn: Connection): List<DiskImageVo> =
 	this@toDisksInfo.map { it.toDiskInfo(conn) }
+
+fun Disk.toVmDisk(conn: Connection): DiskImageVo {
+	val disk = this@toVmDisk
+	val storageDomain: StorageDomain? = conn.findStorageDomain(this.storageDomains().first().id()).getOrNull()
+
+	return DiskImageVo.builder {
+		id { disk.id() }
+		alias { disk.alias() }
+		description { disk.description() }
+		status { disk.status() }
+		sparse { disk.sparse() } // 할당정책
+		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
+		virtualSize { disk.provisionedSize() }
+		actualSize { disk.totalSize() }
+	}
+}
+fun List<Disk>.toVmDisks(conn: Connection): List<DiskImageVo> =
+	this@toVmDisks.map { it.toVmDisk(conn) }
 
 
 fun Disk.toDiskImageVo(conn: Connection): DiskImageVo {

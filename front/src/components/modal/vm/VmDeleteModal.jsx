@@ -72,8 +72,8 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
         {
           onSuccess: () => {
             if (index === ids.length - 1) {
-              onClose();
               toast.success("가상머신 삭제 성공");
+              onClose();
             }
           },
           onError: (error) => {

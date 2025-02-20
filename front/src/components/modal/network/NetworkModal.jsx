@@ -5,7 +5,7 @@ import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelInputNum from "../../label/LabelInputNum";
-import { CheckKoreanName } from "../../../util";
+import { checkKoreanName } from "../../../util";
 import {
   useAllDataCenters,
   useClustersFromDataCenter,
@@ -97,9 +97,9 @@ const NetworkModal = ({
   };
 
   const validateForm = () => {
-    if (!CheckKoreanName(formState.name)) return "이름이 유효하지 않습니다.";
+    if (!checkKoreanName(formState.name)) return "이름이 유효하지 않습니다.";
     if (!formState.name) return "이름을 입력해주세요.";
-    if (!CheckKoreanName(formState.description))
+    if (!checkKoreanName(formState.description))
       return "설명이 유효하지 않습니다.";
     if (!dataCenterVoId) return "데이터센터를 선택해주세요.";
     return null;

@@ -31,8 +31,16 @@ const VmNic = ({ nicsState, setNicsState, nics }) => {
   // vnic 삭제
   const handleRemoveNic = (index) => {
     const updatedNics = nicsState.filter((_, i) => i !== index);
-    setNicsState(updatedNics);
+  
+    // NIC 이름을 nic1, nic2, ... 형태로 재정렬
+    const renamedNics = updatedNics.map((nic, i) => ({
+      ...nic,
+      name: `nic${i + 1}`,
+    }));
+  
+    setNicsState(renamedNics);
   };
+  
 
   return (
     <div className="host-second-content p-1" >

@@ -32,21 +32,8 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
     <div className="host-second-content">
       <div className="cpu-res">
         <div className="p-0.5 font-bold">부트순서:</div>
-
-        <LabelSelectOptions
-          className="cpu-res-box"
-          label="첫 번째 장치"
-          value={formBootState.firstDevice}
-          onChange={handleInputChange("firstDevice")}
-          options={firstDeviceOptionList}
-        />
-        <LabelSelectOptions
-          className="cpu-res-box"
-          label="두 번째 장치"
-          value={formBootState.secDevice}
-          onChange={handleInputChange("secDevice")}
-          options={secDeviceOptionList}
-        />
+          <LabelSelectOptions className="cpu-res-box" label="첫 번째 장치" value={formBootState.firstDevice} onChange={handleInputChange("firstDevice")} options={firstDeviceOptionList} />
+          <LabelSelectOptions className="cpu-res-box" label="두 번째 장치" value={formBootState.secDevice} onChange={handleInputChange("secDevice")} options={secDeviceOptionList}/>
       </div>
 
       <div className="boot-checkboxs">
@@ -67,12 +54,7 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
           <LabelSelectOptionsID
             disabled={!formBootState.isCdDvdChecked || isos.length === 0}
             value={formBootState.cdConn?.id}
-            onChange={(e) =>
-              setFormBootState((prev) => ({
-                ...prev,
-                cdConn: { id: e.target.value },
-              }))
-            }
+            onChange={(e) => setFormBootState((prev) => ({ ...prev, cdConn: { id: e.target.value },})) }
             options={isos}
           />
         </div>
@@ -87,7 +69,6 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
             }))
           }
         />
-
       </div>
     </div>
   );

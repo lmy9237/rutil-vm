@@ -33,15 +33,15 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
   const [forceRender, setForceRender] = useState(false); // 선택된 대상
   const [selectedCpuProfile, setSelectedCpuProfile] = useState(""); // 선택된 CPU 프로파일 ID
 
-  useEffect(() => {
-    console.log("VM ID아아아:", vmId);
-  }, [vmId]);
-  console.log("vmIdddggg:", vmId);
-  console.log("vmVogggggg:", {
-    id: selectedVm?.id || "",
-    name: selectedVm?.name || "",
-    dataCenterId: selectedVm?.dataCenterVo.id || "",
-  });
+  // useEffect(() => {
+  //   console.log("VM ID아아아:", vmId);
+  // }, [vmId]);
+  // console.log("vmIdddggg:", vmId);
+  // console.log("vmVogggggg:", {
+  //   id: selectedVm?.id || "",
+  //   name: selectedVm?.name || "",
+  //   dataCenterId: selectedVm?.dataCenterVo.id || "",
+  // });
 
   useEffect(() => {
     if (isOpen && selectedVm?.dataCenterVo.id) {
@@ -79,12 +79,12 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
   const { data: disks } = useDisksFromVM(selectedVm?.id || "", (e) => ({
     ...e,
   }));
-  useEffect(() => {
-    if (disks) {
-      console.log("가상머신에 연결된 디스크 데이터:", disks);
-      console.log("가상머신 id:", selectedVm.id);
-    }
-  }, [disks]);
+  // useEffect(() => {
+  //   if (disks) {
+  //     console.log("가상머신에 연결된 디스크 데이터:", disks);
+  //     console.log("가상머신 id:", selectedVm.id);
+  //   }
+  // }, [disks]);
 
   // 데이터센터 ID 기반으로 스토리지목록 가져오기
   const { data: storageFromDataCenter } = useDomainsFromDataCenter(
@@ -93,10 +93,10 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
       ...e,
     })
   );
-  useEffect(() => {
-    console.log("Storage from Data Center:", storageFromDataCenter);
-    console.log("Data Center ID:", dataCenterId);
-  }, [storageFromDataCenter]);
+  // useEffect(() => {
+  //   console.log("Storage from Data Center:", storageFromDataCenter);
+  //   console.log("Data Center ID:", dataCenterId);
+  // }, [storageFromDataCenter]);
 
   // 선택한 스토리지 ID에 따라 디스크 프로파일 가져오기
   const [selectedStorageId, setSelectedStorageId] = useState("");
@@ -106,8 +106,8 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
     }));
   useEffect(() => {
     if (selectedStorageId) {
-      console.log("Fetching disk profiles for storage ID:", selectedStorageId);
-      console.log("diskProfiles정보:", diskProfiles);
+      // console.log("Fetching disk profiles for storage ID:", selectedStorageId);
+      // console.log("diskProfiles정보:", diskProfiles);
       fetchDiskProfiles(); // 선택된 스토리지 ID에 따라 훅 실행
     }
   }, [selectedStorageId]);

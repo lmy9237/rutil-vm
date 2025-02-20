@@ -423,10 +423,12 @@ fun Connection.findNicFromVm(vmId: String, nicId: String): Result<Nic?> = runCat
 }
 
 fun Connection.addNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching {
+	// 기존 nic와 이름 중복 검사
 	val existingNics = this.findAllNicsFromVm(vmId).getOrDefault(listOf())
 	if (existingNics.nameDuplicateVmNic(nic.name())) {
 		return FailureType.DUPLICATE.toResult(Term.NIC.desc)
 	}
+
 	if (nic.macPresent() && nic.mac().addressPresent() && nic.mac().address().isNotEmpty()) {
 		if (existingNics.any { it.mac().address() == nic.mac().address() })
 			return FailureType.DUPLICATE.toResult("mac 주소")
@@ -440,10 +442,31 @@ fun Connection.addNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun Connection.addMultipleNicsToVm(vmId: String, nics: List<Nic>): Result<Boolean> = runCatching {
+	// nic 에 vnicprofile 아이디가 있는 경우만
+	val validNics = nics.filter { it.vnicProfile().id().isNotEmpty() }
+	validNics.forEach { println(it.name()) }
+	if (validNics.isEmpty()) return@runCatching true
+
+	val results = validNics.map { addNicFromVm(vmId, it) }
+	val allSuccessful = results.all { it.isSuccess }
+
+	if (!allSuccessful) {
+		val failedResults = results.filter { it.isFailure }
+		log.warn("일부 NIC 생성 실패: ${failedResults.size}개")
+	}
+	allSuccessful
+}.onSuccess {
+	Term.VM.logSuccessWithin(Term.NIC, "생성 여러개", vmId)
+}.onFailure {
+	Term.VM.logFailWithin(Term.NIC, "생성 여러개", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 fun Connection.addMultipleNicsFromVm(vmId: String, vnicProfileIds: List<String>): Result<Boolean> = runCatching {
 	val nics = vnicProfileIds.mapIndexed { index, profileId ->
 		NicBuilder().name("nic${index + 1}").vnicProfile(VnicProfileBuilder().id(profileId).build())
-		.build()
+			.build()
 	}
 
 	val results = nics.map { addNicFromVm(vmId, it) }
@@ -461,21 +484,6 @@ fun Connection.addMultipleNicsFromVm(vmId: String, vnicProfileIds: List<String>)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.addMultipleNicsToVm(vmId: String, nics: List<Nic>): Result<Boolean> = runCatching {
-	val results = nics.map { addNicFromVm(vmId, it) }
-	val allSuccessful = results.all { it.isSuccess }
-
-	if (!allSuccessful) {
-		val failedResults = results.filter { it.isFailure }
-		log.warn("일부 NIC 생성 실패: ${failedResults.size}개")
-	}
-	allSuccessful
-}.onSuccess {
-	Term.VM.logSuccessWithin(Term.NIC, "생성 여러개", vmId)
-}.onFailure {
-	Term.VM.logFailWithin(Term.NIC, "생성 여러개", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
-}
 
 fun Connection.updateNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching {
 	if (this.findAllNicsFromVm(vmId)
@@ -497,8 +505,6 @@ fun Connection.updateMultipleNicsFromVm(vmId: String, vnicProfileIds: List<Strin
 		this.findAllNicsFromVm(vmId).getOrDefault(listOf())
 
 	val nicsCnt = existNics.size
-
-
 
 	val nics =
 		vnicProfileIds.mapIndexed { index, profileId ->

@@ -31,9 +31,7 @@ const LabelSelectOptions = ({
       {label}
     </label>
     {/* <select className="w-full min-w-30 max-w-xl" */}
-    <select
-      value={value} onChange={onChange} disabled={disabled}
-    >
+    <select value={value} onChange={onChange} disabled={disabled}>
       {options.map((opt) => (
         <option key={opt.value} value={opt.value}>
           {opt.label}

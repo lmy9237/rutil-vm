@@ -19,6 +19,7 @@ const AllVm = () => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
+    refetch: vmsRefetch,
   } = useAllVMs((e) => ({ ...e, }));
 
 console.log("...")
@@ -32,7 +33,9 @@ console.log("...")
         <VmDupl
           isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
           columns={TableColumnsInfo.VMS}
-          vms={vms} />
+          vms={vms}
+          onCloseModal={vmsRefetch}
+        />
       </div>
       <Footer />
     </div>

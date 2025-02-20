@@ -1,28 +1,21 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { Tooltip } from "react-tooltip";
 import LabelInputNum from "../../../label/LabelInputNum";
 import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 
-const InfoTooltip = ({ tooltipId, message }) => (
-  <>
-    <FontAwesomeIcon
-      icon={faInfoCircle}
-      style={{ color: "rgb(83, 163, 255)", marginLeft: "5px" }}
-      data-tooltip-id={tooltipId}
-    />
-    <Tooltip id={tooltipId} className="icon_tooltip" place="top" effect="solid">
-      {message}
-    </Tooltip>
-  </>
-);
+// const InfoTooltip = ({ tooltipId, message }) => (
+//   <>
+//     <FontAwesomeIcon
+//       icon={faInfoCircle}
+//       style={{ color: "rgb(83, 163, 255)", marginLeft: "5px" }}
+//       data-tooltip-id={tooltipId}
+//     />
+//     <Tooltip id={tooltipId} className="icon_tooltip" place="top" effect="solid">
+//       {message}
+//     </Tooltip>
+//   </>
+// );
 
-const VmSystem = ({
-  editMode,
-  formSystemState,
-  setFormSystemState,
-}) => {
+const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
   // 총 cpu 계산
   const calculateFactors = (num) => {
     const factors = [];
@@ -70,42 +63,16 @@ const VmSystem = ({
     }));
   };
 
+  const handleInputChange = (field) => (e) => {
+    setFormSystemState((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
   return (
     <>
       <div className="edit-second-content">
-        <LabelInputNum
-          label="메모리 크기(MB)"
-          id="memory_size"
-          value={formSystemState.memorySize}
-          onChange={(e) =>
-            setFormSystemState((prev) => ({
-              ...prev,
-              memorySize: e.target.value,
-            }))
-          }
-        />
-        <LabelInputNum
-          label="최대 메모리(MB)"
-          id="max_memory"
-          value={formSystemState.memoryMax}
-          onChange={(e) =>
-            setFormSystemState((prev) => ({
-              ...prev,
-              memoryMax: e.target.value,
-            }))
-          }
-        />
-        <LabelInputNum
-          label="할당할 실제 메모리(MB)"
-          id="actual_memory"
-          value={formSystemState.memoryActual}
-          onChange={(e) =>
-            setFormSystemState((prev) => ({
-              ...prev,
-              memoryActual: e.target.value,
-            }))
-          }
-        />
+        <LabelInputNum label="메모리 크기(MB)" id="memory_size" value={formSystemState.memorySize} onChange={ handleInputChange("memorySize") }/>
+        <LabelInputNum label="최대 메모리(MB)" id="max_memory" value={formSystemState.memoryMax} onChange={ handleInputChange("memoryMax") }/>
+        <LabelInputNum label="할당할 실제 메모리(MB)" id="actual_memory" value={formSystemState.memoryActual} onChange={ handleInputChange("memoryActual") }/>
 
         <LabelInputNum
           label="총 가상 CPU"
@@ -167,7 +134,7 @@ const VmSystem = ({
             onChange={handleSocketChange}
           >
             {calculateFactors(formSystemState.cpuTopologyCnt).map((factor) => (
-              <option key={factor.value} value={factor}>
+              <option key={factor} value={factor}>
                 {factor}
               </option>
             ))}
@@ -180,9 +147,7 @@ const VmSystem = ({
             value={formSystemState.cpuTopologyCore}
             onChange={handleCoreChange}
           >
-            {calculateFactors(
-              formSystemState.cpuTopologyCnt / formSystemState.cpuTopologySocket
-            ).map((factor) => (
+            {calculateFactors(formSystemState.cpuTopologyCnt / formSystemState.cpuTopologySocket).map((factor) => (
               <option key={factor} value={factor}>
                 {factor}
               </option>
@@ -202,9 +167,7 @@ const VmSystem = ({
             }
           >
             {calculateFactors(
-              formSystemState.cpuTopologyCnt /
-                (formSystemState.cpuTopologySocket *
-                  formSystemState.cpuTopologyCore)
+              formSystemState.cpuTopologyCnt /(formSystemState.cpuTopologySocket * formSystemState.cpuTopologyCore)
             ).map((factor) => (
               <option key={factor} value={factor}>
                 {factor}

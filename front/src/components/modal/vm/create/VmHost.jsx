@@ -14,10 +14,7 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
     if (formHostState.hostVos.length > 0) {
       setFormHostState((prev) => ({ ...prev, hostInCluster: false }));
     } else {
-      setFormHostState((prev) => ({ 
-        ...prev, 
-        hostInCluster: true,
-      }));
+      setFormHostState((prev) => ({ ...prev, hostInCluster: true }));
     }
   }, [formHostState.hostVos, setFormHostState]);
 
@@ -107,12 +104,7 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
         <LabelSelectOptions
           label={"마이그레이션 모드"}
           value={formHostState.migrationMode}
-          onChange={(e) =>
-            setFormHostState((prev) => ({
-              ...prev,
-              migrationMode: e.target.value,
-            }))
-          }
+          onChange={(e) => setFormHostState((prev) => ({ ...prev, migrationMode: e.target.value, }))}
           options={migrationModeOptionList}
         />
       </div>

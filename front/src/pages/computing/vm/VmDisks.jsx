@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VmDiskDupl from "../../../components/dupl/VmDiskDupl";
-import { useDisksFromVM } from "../../../api/RQHook";
+import { useDisksFromVM, useVmById } from "../../../api/RQHook";
 
 /**
- * @name VmApplications
+ * @name VmDisks
  * @description 가상머신에 종속 된 디스크 목록
  *
  * @prop {string} vmId 가상머신 ID
- * @returns {JSX.Element} VmApplications
+ * @returns {JSX.Element} VmDisks
  */
 const VmDisks = ({ vmId }) => {
+  const [activeDiskType, setActiveDiskType] = useState("all"); // 필터링된 디스크 유형
+  const { data: vm }  = useVmById(vmId);
+
   const {
     data: disks = [],
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
   } = useDisksFromVM(vmId);
-  const [activeDiskType, setActiveDiskType] = useState("all"); // 필터링된 디스크 유형
 
   const diskTypes = [
     { type: "all", label: "모두" },
@@ -45,10 +47,8 @@ const VmDisks = ({ vmId }) => {
           activeDiskType === "all"
             ? disks
             : disks.filter(
-                (disk) =>
-                  disk.diskImageVo?.storageType?.toLowerCase() ===
-                  activeDiskType
-              )
+              (disk) => disk.diskImageVo?.storageType?.toLowerCase() === activeDiskType
+            )
         }
         columns={
           activeDiskType === "all"
@@ -57,7 +57,10 @@ const VmDisks = ({ vmId }) => {
               ? TableColumnsInfo.DISK_IMAGES_FROM_VM
               : TableColumnsInfo.DISK_LUN_FROM_VM
         }
-        vmId={vmId}
+        vm={vm}
+        isLoading={isDisksLoading}
+        isError={isDisksError}
+        isSuccess={isDisksSuccess}
       />
     </>
   );

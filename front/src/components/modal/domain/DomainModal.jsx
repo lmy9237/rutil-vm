@@ -22,7 +22,7 @@ import {
   useImportDomain,
   useLoginIscsiFromHost,
 } from "../../../api/RQHook";
-import { CheckKoreanName } from "../../../util";
+import { checkKoreanName } from "../../../util";
 
 // 일반 정보
 const initialFormState = {
@@ -259,7 +259,7 @@ const DomainModal = ({
   };
 
   const validateForm = () => {
-    if (!CheckKoreanName(formState.name)) return "이름이 유효하지 않습니다.";
+    if (!checkKoreanName(formState.name)) return "이름이 유효하지 않습니다.";
     if (!formState.name) return "이름을 입력해주세요.";
     if (!dataCenterVoId) return "데이터 센터를 선택해주세요.";
     if (!hostVoName) return "호스트를 선택해주세요.";

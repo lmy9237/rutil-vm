@@ -38,7 +38,6 @@ const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
     });
   };
 
-  console.log("...");
   return (
     <BaseModal
       isOpen={isOpen}

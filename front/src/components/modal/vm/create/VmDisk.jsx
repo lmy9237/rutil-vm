@@ -1,7 +1,5 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useState } from "react";
 import Loading from "../../../common/Loading";
-// import VmDiskModal from "../VmDiskModal"
-// import VmDiskConnectionModal from "../VmDiskConnectionModal"
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
 
@@ -19,14 +17,6 @@ const VmDisk = ({
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const newIndex = diskListState.length + 1;
   
-  useEffect(() => {
-    if (!editMode) {
-      setDiskListState([]);
-    }
-  }, [editMode, setDiskListState]);
-
-  console.log("disk", diskListState);
-
   const handleRemoveDisk = useCallback((index, isExisting) => {
     if (isExisting && !window.confirm("이 디스크를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다.")) {
       return;
@@ -103,18 +93,13 @@ const VmDisk = ({
             <>
             <div key={index} className="disk-item">
               <div style={{ display: "flex", alignItems: "center" }}>
-                <span style={{ marginRight: "10px" }}>
-                  <strong>
-                    {disk.isExisting ? "[기존]" : disk.isCreated ? "[생성]" : "[연결]"}{" "}
-                  </strong>
-                  이름: {disk?.alias} ({disk?.size || disk?.virtualSize} GB)
-                  {disk?.bootable ? " [부팅]" : ""}
+                <span style={{ marginRight: "25px" }}>
+                  <strong>{disk.isExisting ? "[기존]" : disk.isCreated ? "[생성]" : "[연결]"}{" "}</strong>
+                    이름: {disk?.alias} ({disk?.size || disk?.virtualSize} GB) {disk?.bootable ? "[부팅]" : ""}
                 </span>
               </div>
             </div>
-            <button
-              onClick={() => handleRemoveDisk(index, disk.isExisting)}
-            >
+            <button onClick={() => handleRemoveDisk(index, disk.isExisting)}>
               삭제
             </button>
           </>

@@ -11,11 +11,11 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
   ];
 
   useEffect(() => {
-    // 도메인 기본값 설정
+    // 편집 모드가 아니고, domains가 있을 경우 기본값 설정
     if (!editMode && domains.length > 0) {
       setFormHaState((prev) => ({
         ...prev,
-        storageDomainVo: domains[0].id, // 첫 번째 도메인 ID 선택
+        storageDomainVo: prev.ha ? { id: domains[0].id, name: domains[0].name } : { id: "", name: "" },
       }));
     }
   }, [domains, editMode, setFormHaState]);
@@ -23,6 +23,7 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
   return (
     <>
       <div className="ha-mode-second-content">
+{/* <<<<<<< HEAD */}
       <LabelCheckbox
           id="ha_mode_box"
           label="고가용성"
@@ -32,24 +33,46 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
             setFormHaState((prev) => ({
               ...prev,
               ha: isChecked,
-              storageDomainVo:
-                isChecked && domains.length > 0 ? domains[0].id : "", // 체크 시 첫 번째 도메인 선택
+              storageDomainVo: isChecked && domains.length > 0 ? { id: domains[0].id, name: domains[0].name } : { id: "", name: "" },
             }));
           }}
         />
+{/* =======
+        <div className="flex">
+          <input
+            className="check_input"
+            type="checkbox"
+            id="ha_mode_box"
+            checked={formHaState.ha}
+            onChange={(e) => {
+              const isChecked = e.target.checked;
+              setFormHaState((prev) => ({
+                ...prev,
+                ha: isChecked,
+                storageDomainVo: isChecked && domains.length > 0 ? { id: domains[0].id, name: domains[0].name } : { id: "", name: "" },
+              }));
+            }}
+          />
+          <label className="check_label" htmlFor="ha_mode_box">
+            고가용성
+          </label>
+        </div>
+>>>>>>> 94a1835 ([fix] vm modal) */}
 
         <LabelSelectOptionsID
           label="가상 머신 임대 대상 스토리지 도메인"
-          value={formHaState.storageDomainVo}
-          disabled={!formHaState.ha}
-          onChange={(e) =>
+          value={formHaState.storageDomainVo.id}
+          disabled={!formHaState.ha}  // ha가 체크되어야만 활성화됨
+          onChange={(e) => {
+            const selectedDomain = domains.find((domain) => domain.id === e.target.value);
             setFormHaState((prev) => ({
               ...prev,
-              storageDomainVo: e.target.value,
-            }))
-          }
+              storageDomainVo: { id: selectedDomain.id, name: selectedDomain.name },
+            }));
+          }}
           options={domains}
         />
+        <div><span>{formHaState.storageDomainVo.id}</span></div>
         {/* <div>
         <div>
           <span>재개 동작</span>
@@ -69,9 +92,7 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
           <LabelSelectOptions
             label="우선 순위"
             value={formHaState.priority}
-            onChange={(e) =>
-              setFormHaState((prev) => ({ ...prev, priority: e.target.value }))
-            }
+            onChange={(e) =>setFormHaState((prev) => ({ ...prev, priority: e.target.value }))}
             options={priorityList}
           />
         </div>

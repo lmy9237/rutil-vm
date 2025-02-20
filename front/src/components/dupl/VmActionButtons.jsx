@@ -8,7 +8,6 @@ const VmActionButtons = ({
   isEditDisabled,
   isDeleteDisabled,
   status,
-  actionType,
   type = 'default',
   isContextMenu 
 }) => {
