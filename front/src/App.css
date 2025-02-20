@@ -8,6 +8,10 @@
 @tailwind components;
 @tailwind utilities;
 html {
+  --h-modal-header: 55px;                /* 모달 헤더 부분 높이 */
+  --h-modal-footer: 65px;                /* 모달 푸터 부분 높이 */
+  --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
+  /* --h-modal-content: 83%;  모달 내용 부분 높이 */
   --color-bg: #ececec;                /* 기본 배경색 */
   --color-bg-input: #efefef;          /* Input 배경색 */ 
   --color-gray-1: #dddddd;            /* RutilVM 회색 */
@@ -100,7 +104,6 @@ input[disabled] {
   align-items: center;
 }
 .modal {
-  left: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
   border: var(--border-simple);
@@ -108,15 +111,14 @@ input[disabled] {
   border-radius: 4px;
   background: white;
   font-size: var(--fs-default);
-}
-/* 스크롤없는모달 */
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0.1rem 0;
+  
 }
 
+.popup-content-outer {
+    height: var(--h-modal-content);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 .center {
   display: flex; /* Flexbox 설정 추가 */
   justify-content: space-between; /* 수평 가운데 정렬 */
@@ -144,6 +146,14 @@ input[disabled] {
   padding: 0.1rem 0.1rem;
   border: var(--border-simple);
   border-radius: 2px;
+
+   스크롤없는모달 
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.1rem 0;
+}
 } */
 .manage-button {
   display: flex;
@@ -219,16 +229,15 @@ input[disabled] {
 
 /*footer*/
 .edit-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: white;
-  border-top: var(--border-simple);
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 1.3%;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: var(--h-modal-footer);
+    background-color: white;
+    border-top: var(--border-simple);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1.3%;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1)
 }
 .edit-footer button {
   padding: 1% 2%;
@@ -464,15 +473,16 @@ textarea {
   display: flex;
 }
 .popup-header {
+  display:flex;justify-content:space-between;align-items:center;
   background-color: var(--color-header);
   border-radius: 3px;
-  display: flex;
+  border-bottom: 1px solid #6e9cd8;
   color: var(--color-primary-2);
   padding: 0.2rem;
-  justify-content: space-between;
   font-size: 0.35rem;
   font-weight: 600;
-  border-bottom: 1px solid #6e9cd8;
+  width: 100%;height: var(--h-modal-header);
+  height: var(--h-modal-header);
 }
 .popup-header > h1 {
   display: flex;
@@ -597,7 +607,7 @@ textarea {
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 75%;
     width: 48%;
@@ -811,7 +821,7 @@ textarea {
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 54.4vh;
     width: 30%;
@@ -869,7 +879,7 @@ textarea {
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     width: 35%;
     left: 50%;
@@ -912,7 +922,7 @@ textarea {
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     width: 35%;
     height: 35%;             
     font-size:0.33rem; 
@@ -1009,7 +1019,7 @@ textarea {
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 75%;
     width: 45%;
@@ -1061,7 +1071,7 @@ textarea {
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 74%;
     width: 32%;
@@ -1128,7 +1138,7 @@ textarea {
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 69%;
     width: 43%;
@@ -1852,7 +1862,7 @@ display: flex;
 .network_popup{
     position: absolute;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 43%;
     width: 44%;
@@ -1936,7 +1946,7 @@ display: flex;
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 65%;
     width: 51%;
@@ -2267,7 +2277,7 @@ background-color: #f0f0f0;
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 48.4vh;
     width: 42%;
@@ -2312,7 +2322,7 @@ background-color: #f0f0f0;
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 56%;
     width: 42%;
@@ -2331,7 +2341,7 @@ background-color: #f0f0f0;
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 70%;
     width: 38%;
@@ -2376,7 +2386,7 @@ background-color: #f0f0f0;
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     font-size: 0.34rem;
     height: 49%;
@@ -2401,7 +2411,7 @@ background-color: #f0f0f0;
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 78%;
     width: 41%;
@@ -2451,7 +2461,7 @@ background-color: #f0f0f0;
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
-    background: #fff;
+    background: white;
     top: 50%;
     height: 41%;
     width: 28%;

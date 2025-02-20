@@ -1,41 +1,7 @@
 /*새로만들기*/
-.network-new-popup {
-  height: 75.4%;
-  width: 42%;
-}
-.network-new-popup.edit-mode {
-  height: 75%;
-}
-.network-new-content {
-  height: 66vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
 
-.network-checkbox-only {
-  display: flex;
-  width: 100%;
-  justify-content: left;
-  align-items: center;
-  padding:0.2rem;
-}
-
-.mtu-radio-input {
-  width: 100%;
-}
-.mtu-text-input input {
-  width: 100%;
-}
 .network-form-group {
-  padding: 1.2% 1.2%;
-}
-.network-form-group input[type="text"],
-.network-form-group [type="number"],
-.network-form-group select {
-  width: 47%;
-}
-.mtu-form input[type="text"] {
-  width: 57%;
+  padding: 0.2rem;
 }
 .network-new-cluster-table {
   border-collapse: collapse;
@@ -49,7 +15,7 @@
 
 .network-new-cluster-table th,
 .network-new-cluster-table td {
-  border: 1px solid rgb(209, 209, 209);
+  border: var(--border-simple);
   padding: 0.05rem;
 }
 
@@ -57,27 +23,17 @@
   padding: 0.2rem 0.4rem;
   margin-bottom: 1rem;
 }
-.network-new-cluster-form > span,
-#network_new_vnic_form > span {
+.network-new-cluster-form > span {
   font-weight: 600;
 }
 .network-new-cluster-form > div {
-  border: 1px solid rgb(209, 209, 209);
+  border: var(--border-simple);
   height: 37vh;
   overflow-y: auto; /* 세로 스크롤 추가 */
   overflow-x: hidden; /* 가로 스크롤 숨김 */
 }
 
-/*클러스터(네트워크 관리)*/
-.manage-network-popup {
-  height: 60.4vh;
-  width: 58%;
-}
 /*호스트 네트워크 설정 */
-.host-nework-content-popup {
-  height: 67%;
-  width: 48%;
-}
 .host-network-separation {
   display: flex;
   justify-content: space-between;
@@ -124,7 +80,6 @@
 }
 .host-network-outer {
   padding: 0.2rem;
-  font-size: 0.33rem;
   height: 53.5vh;
   overflow-y: auto; /* 세로 스크롤 추가 */
   overflow-x: hidden; /* 가로 스크롤 숨김 */
@@ -175,11 +130,6 @@
   display: flex;
   gap: 5px;
 }
-/*본딩모달*/
-.network-bonding-modal {
-  height: 30%;
-  width: 30%;
-}
 
 /*연필추가모달(outer는 app.css에있음)*/
 .backup-edit-content {
@@ -197,16 +147,7 @@
   height: 16vh;
 }
 
-
-
 /*네트워크(가져오기)*/
-.network-bring-popup {
-  height: 87%;
-  width: 48%;
-}
-.network-form-group {
-  padding: 0.2rem;
-}
 .network-bring-table-outer {
   padding: 0 0.4rem 0.4rem 0.4rem;
 }
@@ -216,7 +157,7 @@
   display: block;
 }
 .network-bring-table-outer > div {
-  border: 1px solid #c9c9c9;
+  border:var(--border-simple);
   height: 27vh;
   overflow-y: auto; /* 세로 스크롤 추가 */
   overflow-x: hidden; /* 가로 스크롤 숨김 */
@@ -230,7 +171,6 @@
   padding: 0.04rem;
 }
 .network-bring-table-outer th {
-  background-color: #d1e2eb;
   text-align: left;
   border-collapse: collapse;
 }

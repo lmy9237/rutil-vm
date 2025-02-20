@@ -681,9 +681,10 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
       targetName={"호스트 네트워크"}
       submitTitle={"설정"}
       onSubmit={() => {}}
+      contentStyle={{ width: "880px", height: "620px" }} 
     >
       {/* <div className="host-nework-content-popup modal"> */}
-      <div className="host-network-outer">
+      <div className="popup-content-outer px-2">
         <div className="py-1 font-bold underline">드래그 하여 변경</div>
         <div className="host-network-separation">
           <div className="network-separation-left">

@@ -22,9 +22,10 @@ const NetworkHostPlusModal = ({
       targetName={"관리 네트워크 인터페이스 수정: ovirtmgmt"}
       submitTitle={"추가"}
       onSubmit={() => {}}
+      contentStyle={{ width: "880px", height: "500px" }} 
     >
       {/* <div className="network-backup-edit modal"> */}
-      <div className="flex">
+      <div className="popup-content-outer flex">
         <div className="network-backup-edit-nav">
           <div
             id="ipv4_tab"

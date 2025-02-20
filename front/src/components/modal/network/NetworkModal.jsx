@@ -153,12 +153,12 @@ const NetworkModal = ({
       targetName={"논리 네트워크"}
       submitTitle={editMode ? "편집" : "생성"}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "700px", height: "600px" }}
     >
       {/* <div className={`network-new-popup modal ${editMode ? "edit-mode" : ""}`}> */}
-      <div className="network-new-content">
+      <div className="popup-content-outer">
         <div className="network-first-contents">
           <LabelSelectOptionsID
-            className="network-form-group center"
             label="데이터센터"
             value={dataCenterVoId}
             onChange={(e) => setDataCenterVoId(e.target.value)}
@@ -172,52 +172,48 @@ const NetworkModal = ({
             value={formState.name}
             onChange={handleInputChange("name")}
             autoFocus
-            className="network-form-group center"
           />
           <LabelInput
             label="설명"
             id="description"
             value={formState.description}
             onChange={handleInputChange("description")}
-            className="network-form-group center"
           />
           <LabelInput
             label="코멘트"
             id="comment"
             value={formState.comment}
             onChange={handleInputChange("comment")}
-            className="network-form-group center"
           />
           <hr />
 
-          <div className="network-form-group center">
-            <div className="network-new-input flex">
-              <LabelCheckbox
-                className="network-checkbox center"
-                label="VLAN 태깅 활성화"
-                id="vlan"
-                checked={formState.vlan !== null} // 기본적으로 체크 해제
-                onChange={(e) => {
-                  const isChecked = e.target.checked;
-                  setFormState((prev) => ({
-                    ...prev,
-                    vlan: isChecked ? "" : null, // 체크하면 빈 문자열, 해제하면 null
-                  }));
-                }}
-              />
+          <div className=" center">
+            <LabelCheckbox
+              label="VLAN 태깅 활성화"
+              id="vlan"
+              checked={formState.vlan !== null} // 기본적으로 체크 해제
+              onChange={(e) => {
+                const isChecked = e.target.checked;
+                setFormState((prev) => ({
+                  ...prev,
+                  vlan: isChecked ? "" : null, // 체크하면 빈 문자열, 해제하면 null
+                }));
+              }}
+            />
 
-              <LabelInputNum
-                id="vlan"
-                value={formState.vlan === null ? "" : formState.vlan}
-                onChange={(e) => {
-                  setFormState((prev) => ({
-                    ...prev,
-                    vlan: e.target.value, //  입력값 그대로 반영
-                  }));
-                }}
-                disabled={formState.vlan === null} // 체크되지 않으면 비활성화
+         
+            <LabelInputNum
+              id="vlan"
+              value={formState.vlan === null ? "" : formState.vlan}
+              onChange={(e) => {
+                setFormState((prev) => ({
+                  ...prev,
+                  vlan: e.target.value, //  입력값 그대로 반영
+                }));
+              }}
+              disabled={formState.vlan === null} // 체크되지 않으면 비활성화
               />
-            </div>
+            
           </div>
 
           <LabelCheckbox

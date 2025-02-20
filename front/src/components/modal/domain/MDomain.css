@@ -1,4 +1,7 @@
 /*도메인(새로만들기, 편집, 가져오기)*/
+.storage-domain-new-outer{
+  width:100%;height:var(--h-modal-content);
+}
 .storage-domain-new-first{
   display: flex;
   padding: 0.2rem;

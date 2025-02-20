@@ -381,7 +381,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   return (
     <BaseModal isOpen={isOpen} onClose={onClose} targetName={"가상머신"} submitTitle={vLabel}  contentStyle={{ width: "850px", height: "790px" }}  onSubmit={handleFormSubmit}>
       <div className="vm-edit-popup-content flex">
-        <div className="vm-new-nav"style={{height: "71vh",width: "30%",}}>
+        <div className="vm-new-nav"style={{height: "100%",width: "30%",}}>
             {tabs.map((tab) => (
               <div
                 key={tab.id} id={tab.id}
@@ -425,23 +425,24 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
                 disabled={editMode} // 편집 모드일 경우 비활성화
                 loading={isTemplatesLoading}
                 options={templates}
-              />      
-              <div className={`flex justify-center items-center mb-1 w-full px-[25px]`}>
-                <label className="flex justify-end items-center mx-1 w-[60px] max-w-[100px] text-end">
-                  운영 시스템
-                </label>
-                <select
-                  className="w-full min-w-30 max-w-xl"
-                  value={formInfoState.osSystem}
-                  onChange={(e) => { setFormInfoState((prev) => ({ ...prev, osSystem: e.target.value }))} }
-                >
-                  {osList.map((opt) => (
-                    <option key={opt.name} value={opt.name}>
-                      {opt.description}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              />    
+
+              <LabelSelectOptionsID
+                label="운영 시스템"
+                id="os_system"
+                value={formInfoState.osSystem}
+                onChange={(e) =>
+                  setFormInfoState((prev) => ({
+                    ...prev,
+                    osSystem: e.target.value,
+                  }))
+                }
+                options={osList.map((opt) => ({
+                  id: opt.name,
+                  name: opt.description,
+                }))}
+              />
+
               <LabelSelectOptions
                 label="칩셋/펌웨어 유형"
                 value={formInfoState.osType}
@@ -449,7 +450,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
                 options={chipsetOptionList}
                 disabled={architecture === "PPC64" || architecture === "S390X"}
               />
-              <div><span>{formInfoState.osType}</span></div>
+              
               <LabelSelectOptions
                 label="최적화 옵션"
                 value={formInfoState.optimizeOption}

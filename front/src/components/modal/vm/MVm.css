@@ -20,13 +20,17 @@
   width: 100%;
   font-size: 0.33rem;
 }
-
+.vm-edit-popup-content {
+  width:100%;height:var(--h-modal-content);
+  display:flex;justify-content:flex-start;align-items:center;flex-direction:row;
+}
 .vm-edit-select-tab {
   font-size: 0.33rem;
   width: 86%;
-  height: 71vh;
-  overflow-y: auto; /* 세로 스크롤 추가 */
-  overflow-x: hidden; /* 가로 스크롤 숨김 */
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: white;
 }
 
 .vm-plus-btn-outer {
@@ -39,7 +43,6 @@
 }
 .edit-first-content select,
 .edit-first-content input[type="text"] {
-  width: 47%;
   height: 3.3vh;
   padding: 0 3px;
   border-radius: 3px;
@@ -57,18 +60,11 @@
 }
 .edit-first-content {
   border-bottom: var(--border-simple);
-  font-size: 0.32rem;
 }
 .new-template-popup .edit-first-content {
   border-bottom: none;
 }
-.edit-second-content input,
-.edit-second-content select,
-.host-third-content > div:nth-child(n + 2) select,
-.cpu-res-box select,
-.cpu-res input {
-  width: 47%;
-}
+
 
 .edit-second-content > div,
 .host-third-content > div {
@@ -79,7 +75,6 @@
 
 .host-third-content > div:nth-child(n + 2) select {
   font-weight: 600;
-  font-size: 0.27rem;
 }
 
 .edit-second-content > div > div > i,
@@ -89,12 +84,7 @@
   color: #1ba4e4;
   cursor: pointer;
 }
-.host-second-content {
-  padding: 2%;
-}
-.ha-mode-second-content {
-  padding: 2%;
-}
+
 .ha-mode-second-content > div:first-child {
   padding-bottom: 2%;
 }
@@ -119,10 +109,7 @@
 .boot-checkboxs > div > div:nth-child(2) {
   width: 47%;
 }
-#threads input[type="text"],
-.boot-checkboxs input[type="text"] {
-  width: 94%;
-}
+
 .edit-third-content {
   padding: 2.3% 2% 2% 2%;
   margin-bottom: 0.4rem;
@@ -223,9 +210,7 @@
   height: 45%;
   width: 40%;
 }
-.network_content_detail {
-  font-size: 0.3rem;
-}
+
 .radio-outer > div {
   width: 100%;
   display: flex;
@@ -301,8 +286,4 @@
   display: flex;
   justify-content: space-between;
   padding: 0.2rem;
-}
-.ova-new-box select,
-.ova-new-box input {
-  width: 47%;
 }

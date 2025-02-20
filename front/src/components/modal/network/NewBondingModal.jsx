@@ -1,5 +1,7 @@
 import React from "react";
 import BaseModal from "../BaseModal";
+import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
+import LabelInput from "../../label/LabelInput";
 
 const NewBondingModal = ({ isOpen, onClose, mode = "edit" }) => {
   // 제목을 모드에 따라 설정
@@ -10,23 +12,23 @@ const NewBondingModal = ({ isOpen, onClose, mode = "edit" }) => {
       targetName={modalTitle}
       submitTitle={"추가"}
       onSubmit={() => {}}
+      contentStyle={{ width: "480px", height: "270px" }} 
     >
-      {/* <div className="network-bonding-modal modal"> */}
-      <div className="bonding-content modal-content">
-        <div className="select-box">
-          <label htmlFor="ip_address">본딩이름</label>
-          <input type="text" />
-        </div>
-        <div className="select-box">
-          <label htmlFor="ip_address">본딩모드</label>
-          <select id="ip_address" disabled>
-            <option value="#">#</option>
-          </select>
-        </div>
-        <div className="select-box">
-          <label htmlFor="ip_address">사용자 정의 모드</label>
-          <input type="text" />
-        </div>
+      <div className="popup-content-outer">
+        <LabelInput
+          label="본딩이름"
+          id="bonding_name"
+        />
+        <LabelSelectOptionsID
+          label="본딩모드"
+          id="bonding_mode"
+          disabled
+          options={[{ id: "#", name: "#" }]}
+        />
+        <LabelInput
+          label="사용자 정의 모드"
+          id="custom_mode"
+        />
       </div>
     </BaseModal>
   );

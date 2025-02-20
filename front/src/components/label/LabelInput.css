@@ -4,3 +4,11 @@
   padding: 0.16rem 0.2rem;
   display: flex;justify-content: space-between;align-items: center;
 }
+.input-checkbox{
+  display: flex;
+  padding: 0.16rem 0.2rem;
+  width:100%;
+}
+.input-checkbox input{
+  margin-left:0.1rem;
+}

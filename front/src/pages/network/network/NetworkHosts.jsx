@@ -120,7 +120,7 @@ const NetworkHosts = ({ networkId }) => {
         <NetworkHostModal
           nicData={nics}
           isOpen={isModalOpen}
-          onRequestClose={() => setIsModalOpen(false)}
+          onClose={() => setIsModalOpen(false)}
           hostId={selectedHostId}
         />
       </Suspense>

@@ -344,150 +344,152 @@ const DomainModal = ({
       contentStyle={{ width: "60%", height: "90%" }} 
     >
       {/* <div className="storage-domain-administer-popup modal"> */}
-      <div className="storage-domain-new-first">
-        <div>
-          <LabelSelectOptionsID
-            label="데이터센터"
-            value={dataCenterVoId}
-            onChange={(e) => setDataCenterVoId(e.target.value)}
-            disabled={editMode}
-            loading={isDatacentersLoading}
-            options={dataCenters}
-          />
-          <LabelSelectOptions
-            label="도메인 기능"
-            value={formState.domainType}
-            onChange={handleInputChange("domainType")}
-            disabled={editMode}
-            options={domainTypes}
-          />
-          <LabelSelectOptions
-            label="스토리지 유형"
-            value={formState.storageType}
-            onChange={handleInputChange("storageType")}
-            disabled={editMode}
-            options={storageTypes}
-          />
-          <LabelSelectOptionsID
-            label="호스트"
-            value={hostVoId}
-            onChange={(e) => setHostVoId(e.target.value)}
-            disabled={editMode}
-            loading={isHostsLoading}
-            options={hosts}
-          />
-
-          {/* 호스트 이름이 들어가야함 */}
-          {/* <div className="domain-new-select center">
-            <label>호스트</label>
-            <select
-              label="호스트"
-              value={hostVoName}
-              onChange={(e) => setHostVoName(e.target.value)}
+      <div className="storage-domain-new-outer">
+        <div className="storage-domain-new-first">
+          <div>
+            <LabelSelectOptionsID
+              label="데이터센터"
+              value={dataCenterVoId}
+              onChange={(e) => setDataCenterVoId(e.target.value)}
               disabled={editMode}
-            >
-              {isHostsLoading ? (
-                <option key="loading">호스트를 불러오는 중...</option>
-              ) : (
-                hosts.map((h) => (
-                  <option key={h.name} value={h.name}>
-                    {h.name} : {h.id}
-                  </option>
-                ))
-              )}
-            </select>
-          </div> */}
+              loading={isDatacentersLoading}
+              options={dataCenters}
+            />
+            <LabelSelectOptions
+              label="도메인 기능"
+              value={formState.domainType}
+              onChange={handleInputChange("domainType")}
+              disabled={editMode}
+              options={domainTypes}
+            />
+            <LabelSelectOptions
+              label="스토리지 유형"
+              value={formState.storageType}
+              onChange={handleInputChange("storageType")}
+              disabled={editMode}
+              options={storageTypes}
+            />
+            <LabelSelectOptionsID
+              label="호스트"
+              value={hostVoId}
+              onChange={(e) => setHostVoId(e.target.value)}
+              disabled={editMode}
+              loading={isHostsLoading}
+              options={hosts}
+            />
+
+            {/* 호스트 이름이 들어가야함 */}
+            {/* <div className="domain-new-select center">
+              <label>호스트</label>
+              <select
+                label="호스트"
+                value={hostVoName}
+                onChange={(e) => setHostVoName(e.target.value)}
+                disabled={editMode}
+              >
+                {isHostsLoading ? (
+                  <option key="loading">호스트를 불러오는 중...</option>
+                ) : (
+                  hosts.map((h) => (
+                    <option key={h.name} value={h.name}>
+                      {h.name} : {h.id}
+                    </option>
+                  ))
+                )}
+              </select>
+            </div> */}
+          </div>
+
+          <div className="domain-new-right">
+            <LabelInput
+              label="이름"
+              id="name"
+              value={formState.name}
+              onChange={handleInputChange("name")}
+              autoFocus
+            />
+            <LabelInput
+              label="설명"
+              id="description"
+              value={formState.description}
+              onChange={handleInputChange("description")}
+            />
+            <LabelInput
+              label="코멘트"
+              id="comment"
+              value={formState.comment}
+              onChange={handleInputChange("comment")}
+            />
+          </div>
         </div>
+     
+        {/* NFS 의 경우 */}
+        {isNfs && (
+          <DomainNfs
+            mode={mode}
+            nfsAddress={nfsAddress}
+            setNfsAddress={setNfsAddress}
+            domain={domain}
+          />
+        )}
 
-        <div className="domain-new-right">
-          <LabelInput
-            label="이름"
-            id="name"
-            value={formState.name}
-            onChange={handleInputChange("name")}
-            autoFocus
+        {/* ISCSI 의 경우 */}
+        {isIscsi && (
+          <DomainIscsi
+            mode={mode}
+            domain={domain}
+            iscsis={iscsis}
+            iscsiSearchResults={iscsiSearchResults}
+            setIscsiSearchResults={setIscsiSearchResults}
+            lunId={lunId}
+            setLunId={setLunId}
+            hostVoId={hostVoId}
+            hostVoName={hostVoName}
+            setHostVoName={setHostVoName}
+            isIscsisLoading={isIscsisLoading}
+            importIscsiFromHost={importIscsiFromHost}
+            loginIscsiFromHost={loginIscsiFromHost}
+            formImportState={formImportState} // ✅ formImportState 전달
+            setFormImportState={setFormImportState} // ✅ 상태 업데이트 함수 전달
+            refetchIscsis={refetchIscsis}
           />
-          <LabelInput
-            label="설명"
-            id="description"
-            value={formState.description}
-            onChange={handleInputChange("description")}
-          />
-          <LabelInput
-            label="코멘트"
-            id="comment"
-            value={formState.comment}
-            onChange={handleInputChange("comment")}
-          />
-        </div>
-      </div>
+        )}
 
-      {/* NFS 의 경우 */}
-      {isNfs && (
-        <DomainNfs
-          mode={mode}
-          nfsAddress={nfsAddress}
-          setNfsAddress={setNfsAddress}
-          domain={domain}
-        />
-      )}
-
-      {/* ISCSI 의 경우 */}
-      {isIscsi && (
-        <DomainIscsi
-          mode={mode}
-          domain={domain}
-          iscsis={iscsis}
-          iscsiSearchResults={iscsiSearchResults}
-          setIscsiSearchResults={setIscsiSearchResults}
-          lunId={lunId}
-          setLunId={setLunId}
-          hostVoId={hostVoId}
-          hostVoName={hostVoName}
-          setHostVoName={setHostVoName}
-          isIscsisLoading={isIscsisLoading}
-          importIscsiFromHost={importIscsiFromHost}
-          loginIscsiFromHost={loginIscsiFromHost}
-          formImportState={formImportState} // ✅ formImportState 전달
-          setFormImportState={setFormImportState} // ✅ 상태 업데이트 함수 전달
-          refetchIscsis={refetchIscsis}
-        />
-      )}
-
-      {/* Firbre 의 경우 */}
-      {isFibre && (
-        <DomainFibre
-          mode={mode}
-          domain={domain}
-          fibres={fibres}
-          fcpSearchResults={fcpSearchResults}
-          setFcpSearchResults={setFcpSearchResults}
-          lunId={lunId}
-          setLunId={setLunId}
-          hostVoId={hostVoId}
-          importFcpFromHost={importFcpFromHost}
-          // handleRowClick={handleRowClick}
-          formImportState={formImportState}
-          setFormImportState={setFormImportState}
-        />
-      )}
-      <hr />
-      <div className="tab-content">
-        <div className="storage-specific-content">
-          <LabelInputNum
-            label="디스크 공간 부족 경고 표시(%)"
-            id="warning"
-            value={formState.warning}
-            onChange={handleInputChange("warning")}
-            className="domain-num-box center"
+        {/* Firbre 의 경우 */}
+        {isFibre && (
+          <DomainFibre
+            mode={mode}
+            domain={domain}
+            fibres={fibres}
+            fcpSearchResults={fcpSearchResults}
+            setFcpSearchResults={setFcpSearchResults}
+            lunId={lunId}
+            setLunId={setLunId}
+            hostVoId={hostVoId}
+            importFcpFromHost={importFcpFromHost}
+            // handleRowClick={handleRowClick}
+            formImportState={formImportState}
+            setFormImportState={setFormImportState}
           />
-          <LabelInputNum
-            label="심각히 부족한 디스크 공간의 동작 차단(GB)"
-            id="spaceBlocker"
-            value={formState.spaceBlocker}
-            onChange={handleInputChange("spaceBlocker")}
-            className="domain-num-box center"
-          />
+        )}
+        <hr />
+        <div className="tab-content">
+          <div className="storage-specific-content">
+            <LabelInputNum
+              label="디스크 공간 부족 경고 표시(%)"
+              id="warning"
+              value={formState.warning}
+              onChange={handleInputChange("warning")}
+              className="domain-num-box center"
+            />
+            <LabelInputNum
+              label="심각히 부족한 디스크 공간의 동작 차단(GB)"
+              id="spaceBlocker"
+              value={formState.spaceBlocker}
+              onChange={handleInputChange("spaceBlocker")}
+              className="domain-num-box center"
+            />
+          </div>
         </div>
       </div>
     </BaseModal>
