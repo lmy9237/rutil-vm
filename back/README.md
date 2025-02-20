@@ -145,13 +145,7 @@ cat ~/.ssh/id_rsa.pub
 > # - staging: 스테이징 (도커용)
 > # - prd: 운영 (도커용)
 > #
-> # 스프링부트 프로젝트 실행 (개발)
-> ./gradlew rutil-vm-api:bootRun -Pprofile=local --parallel
-> ./gradlew rutil-vm-api:bootRun -Pprofile=local20 --parallel
-> ./gradlew rutil-vm-api:bootRun -Pprofile=local70 --parallel
-> ./gradlew rutil-vm-api:bootRun -Pprofile=staging --parallel
-> ./gradlew rutil-vm-api:bootRun -Pprofile=prd --parallel
-> #
+> 
 > # 아티팩트 생성 (운영)
 > ./gradlew rutil-vm-api:bootJar -Pprofile=local --parallel
 > ./gradlew rutil-vm-api:bootJar -Pprofile=local20 --parallel
@@ -175,11 +169,8 @@ cat ~/.ssh/id_rsa.pub
 > 🛠Build
 > 
 > ```sh
-> # Running on macOS M1
 > docker build -t ititcloud/rutil-vm-api:0.2.0-beta2 .
 > ```
-
-> [!NOTE]
 > 
 > ▶️Run
 > 
@@ -226,7 +217,7 @@ cat ~/.ssh/id_rsa.pub
 > -e POSTGRES_DATASOURCE_JDBC_PW=rutil1! ^
 > -e RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm ^
 > -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 ^
-> -e RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED=false \
+> -e RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED=false ^
 > -e RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION= ^
 > -e RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS=root@192.168.0.20:22 ^
 > -e RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY= ^
