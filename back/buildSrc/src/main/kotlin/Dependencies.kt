@@ -82,9 +82,12 @@ object Dependencies {
         "io.springfox:springfox-boot-starter:${Versions.swagger3}",
         "io.springfox:springfox-swagger-ui:${Versions.swagger3}"
     )
-    var ovirt = listOf(
+    val ovirt = listOf(
         "org.ovirt.engine.api:sdk:${Versions.ovirt}",
     )
+	val jsch = listOf(
+		"com.jcraft:jsch:${Versions.jsch}"
+	)
     val qemu = listOf(
         "org.anarres.qemu:qemu-examples:${Versions.qemu}",
         "org.anarres.qemu:qemu-exec:${Versions.qemu}",

@@ -1,130 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ApiManager from "./ApiManager";
 
-//#region: User
-/**
- * @name useAllUsers
- * @description 모든 사용자 목록조회 useQuery훅
- * 
- * @param {function} mapPredicate 
- * @returns useQuery훅
- */
-export const useAllUsers = (mapPredicate) => useQuery({
-  refetchOnWindowFocus: true,
-  queryKey: ['allUsers'],
-  queryFn: async () => {
-    const res = await ApiManager.findAllUsers()
-    return res?.map((e) => mapPredicate(e)) ?? []
-  }
-})
-/**
- * @name useUser
- * @description 사용자 상세조회 useQuery훅
- * 
- * @param {string} username 사용자 oVirt ID
- * @returns useQuery훅
- */
-export const useUser = (username, exposeDetail = false) => useQuery({
-  refetchOnWindowFocus: true,
-  queryKey: ['user'],
-  queryFn: async () => {
-    console.log(`useUser ... username: ${username}, exposeDetail: ${exposeDetail}`);
-    const res = await ApiManager.findUser(username, exposeDetail)
-    // setShouldRefresh(prevValue => false)
-    return res
-    // return res?.map((e) => mapPredicate(e)) ?? []
-  }
-})
-/**
- * @name useAuthenticate
- * @description 사용자 ID/PW 검증 useQuery훅
- * 
- * @param {function} mapPredicate 
- * @returns useQuery훅
- */
-export const useAuthenticate = (username, password, _onSuccess, _onError) => useMutation({
-  mutationFn: async () => {
-    const res = await ApiManager.authenticate(username, password)
-    return res
-  },
-  onSuccess: _onSuccess,
-  onError: _onError,
-})
-/**
- * @name useAddUser
- * @description 사용자 추가 useQuery훅
- * 
- * @returns useMutation 훅
- */
-export const useAddUser = (user, onSuccess, onError) => useMutation({
-  mutationFn: async () => {
-    const res = await ApiManager.addUser(user)
-    return res
-  },
-  onSuccess: onSuccess,
-  onError: onError,
-})
-/**
- * @name useEditUser
- * @description 사용자 편집 useQuery훅
- * 
- * @returns useMutation 훅
- */
-export const useEditUser = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (username, currentPassword, newPassword) => await ApiManager.editUser(username, currentPassword, newPassword),
-    onSuccess: (data, { username }) => {
-      console.log('사용자 편집한 데이터:', data);
-      queryClient.invalidateQueries('allUsers');
-      queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
-    },
-    onError: (error) => {
-      console.error('Error editing VM:', error);
-    },
-  });
-};
-/**
- * @name useRemoveUser
- * @description 사용자 삭제
- * 
- * @returns useMutation 훅
- */
-export const useRemoveUser = () => {
-  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
-  return useMutation({
-    mutationFn: async (username) => {
-      console.log(`Deleting user with username: ${username}`);
-      const res = await ApiManager.removeUser(username)
-      return res
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries('allUsers');
-    },
-    onError: (error) => {
-      console.error('Error deleting users:', error);
-    },
-  })
-};
-//#endregion: User
-//#region: UserSession
-/**
- * @name useAllUserSessions
- * @description 모든 활성 사용자 세션션 목록조회 useQuery훅
- * 
- * @param {function} mapPredicate 
- * @returns useQuery훅
- */
-export const useAllUserSessions = (username = "", mapPredicate = null) => useQuery({
-  refetchOnWindowFocus: true,
-  queryKey: ['allUserSessions'],
-  queryFn: async () => {
-    const res = await ApiManager.findAllUserSessions(username)
-    return res?.map((e) => mapPredicate(e)) ?? []
-  }
-})
-//#endregion: UserSession
-
 //#region: Navigation
 // Custom hook to fetch tree navigations
 export const useAllTreeNavigations = (type = "none", mapPredicate = null) => {
@@ -3478,5 +3354,151 @@ export const useAllEvents = (mapPredicate) => useQuery({
     return res?.map((e) => mapPredicate(e)) ?? []
   }
 })
-// endregion: event
+//#endregion: event
+
+
+//#region: User
+/**
+ * @name useAllUsers
+ * @description 모든 사용자 목록조회 useQuery훅
+ * 
+ * @param {function} mapPredicate 
+ * @returns useQuery훅
+ */
+export const useAllUsers = (mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['allUsers'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllUsers()
+    return res?.map((e) => mapPredicate(e)) ?? []
+  }
+})
+/**
+ * @name useUser
+ * @description 사용자 상세조회 useQuery훅
+ * 
+ * @param {string} username 사용자 oVirt ID
+ * @returns useQuery훅
+ */
+export const useUser = (username, exposeDetail = false) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['user'],
+  queryFn: async () => {
+    console.log(`useUser ... username: ${username}, exposeDetail: ${exposeDetail}`);
+    const res = await ApiManager.findUser(username, exposeDetail)
+    // setShouldRefresh(prevValue => false)
+    return res
+    // return res?.map((e) => mapPredicate(e)) ?? []
+  }
+})
+/**
+ * @name useAuthenticate
+ * @description 사용자 ID/PW 검증 useQuery훅
+ * 
+ * @param {function} mapPredicate 
+ * @returns useQuery훅
+ */
+export const useAuthenticate = (username, password, _onSuccess, _onError) => useMutation({
+  mutationFn: async () => {
+    const res = await ApiManager.authenticate(username, password)
+    return res
+  },
+  onSuccess: _onSuccess,
+  onError: _onError,
+})
+/**
+ * @name useAddUser
+ * @description 사용자 추가 useQuery훅
+ * 
+ * @returns useMutation 훅
+ */
+export const useAddUser = (user, onSuccess, onError) => useMutation({
+  mutationFn: async () => {
+    const res = await ApiManager.addUser(user)
+    return res
+  },
+  onSuccess: onSuccess,
+  onError: onError,
+})
+/**
+ * @name useEditUser
+ * @description 사용자 편집 useQuery훅
+ * 
+ * @returns useMutation 훅
+ */
+export const useEditUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (username, currentPassword, newPassword) => await ApiManager.editUser(username, currentPassword, newPassword),
+    onSuccess: (data, { username }) => {
+      console.log('사용자 편집한 데이터:', data);
+      queryClient.invalidateQueries('allUsers');
+      queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
+    },
+    onError: (error) => {
+      console.error('Error editing VM:', error);
+    },
+  });
+};
+/**
+ * @name useRemoveUser
+ * @description 사용자 삭제
+ * 
+ * @returns useMutation 훅
+ */
+export const useRemoveUser = () => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({
+    mutationFn: async (username) => {
+      console.log(`Deleting user with username: ${username}`);
+      const res = await ApiManager.removeUser(username)
+      return res
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('allUsers');
+    },
+    onError: (error) => {
+      console.error('Error deleting users:', error);
+    },
+  })
+};
+//#endregion: User
+//#region: UserSession
+/**
+ * @name useAllUserSessions
+ * @description 모든 활성 사용자 세션션 목록조회 useQuery훅
+ * 
+ * @param {function} mapPredicate 
+ * @returns useQuery훅
+ */
+export const useAllUserSessions = (username = "", mapPredicate = null) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['allUserSessions'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllUserSessions(username)
+    return res?.map((e) => mapPredicate(e)) ?? []
+  }
+})
+//#endregion: UserSession
+//#region: Certificate(s)
+export const useAllCerts = (mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['allCerts'],
+  queryFn: async () => {
+    console.log(`useUser ...`);
+    const res = await ApiManager.findAllCerts()
+    return res?.map((e) => mapPredicate(e)) ?? []
+  }
+})
+export const useCert = (id) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['cert'],
+  queryFn: async () => {
+    console.log(`useCert ... id: ${id}`);
+    const res = await ApiManager.findCert(id)
+    return res
+  }
+})
+//#endregion: Certificate(s)
+
 

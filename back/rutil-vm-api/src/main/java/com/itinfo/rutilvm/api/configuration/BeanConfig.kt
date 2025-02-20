@@ -13,17 +13,11 @@ import org.springframework.web.filter.HiddenHttpMethodFilter
 @Configuration
 class BeanConfig: HikariConfig() {
 
-	// @Autowired private lateinit var applicationContext: ApplicationContext
 	@Bean
 	fun entityManagerFactoryBuilder(): EntityManagerFactoryBuilder {
 		log.info("... entityManagerFactoryBuilder")
 		return EntityManagerFactoryBuilder(HibernateJpaVendorAdapter(), hashMapOf<String,Any>(), null)
 	}
-
-//	@Bean
-//	fun hiddenHttpMethodFilter(): HiddenHttpMethodFilter {
-//		return HiddenHttpMethodFilter()
-//	}
 
 	companion object {
 		private val log by LoggerDelegate()

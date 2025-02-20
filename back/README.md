@@ -139,15 +139,19 @@
 > ```sh
 > # rutil-vm-api
 > docker run -d -it --name rutil-vm-api \
-> -e RUTIL_VM_OVIRT_IP=192.168.0.20 \      # ovirt 주소 
-> -e RUTIL_VM_OVIRT_PORT_HTTPS=443 \       # ovirt 포트 번호
-> -e RUTIL_VM_PORT_HTTPS=8443 \            # rutilVM 호스팅 포트번호
-> -e POSTGRES_JDBC_PORT=5432 \             # PostgresDB 포트번호
-> -e POSTGRES_DATASOURCE_JDBC_ID=rutil \   # 테이블스페이스접근 ID
-> -e POSTGRES_DATASOURCE_JDBC_PW=rutil1! \ # 테이블스페이스접근 PW
+> -e RUTIL_VM_OVIRT_IP=192.168.0.20 \          # ovirt 주소 
+> -e RUTIL_VM_OVIRT_PORT_HTTPS=443 \           # ovirt 포트 번호
+> -e RUTIL_VM_PORT_HTTPS=8443 \                # rutilVM 호스팅 포트번호
+> -e POSTGRES_JDBC_PORT=5432 \                 # PostgresDB 포트번호
+> -e POSTGRES_DATASOURCE_JDBC_ID=rutil \       # 테이블스페이스접근 ID
+> -e POSTGRES_DATASOURCE_JDBC_PW=rutil1! \     # 테이블스페이스접근 PW
 > -e RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm \  # CORS 예외대상 호스트명
 > -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 \  # CORS 예외대상 호스트의 포트
-> -p 8080:8080 -p 8443:8443 \              # Port Mapping
+> -e RUTIL_VM_OVIRT_HOST_SSH_IP=192.168.0.21 \  # oVirt의 host주소
+> -e RUTIL_VM_OVIRT_HOST_SSH_PORT=22 \          # oVirt의 host주소 포트번호
+> -e RUTIL_VM_OVIRT_HOST_SSH_ID=admin \         # oVirt의 host SSH 접근가능 ID
+> -e RUTIL_VM_OVIRT_HOST_SSH_PW=rootAdmin!@#  \ # oVirt의 host SSH 접근가능 ID
+> -p 8080:8080 -p 8443:8443 \                   # Port Mapping
 > ititcloud/rutil-vm-api:0.2.0-beta2
 > 
 > # postgres

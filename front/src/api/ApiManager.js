@@ -45,99 +45,6 @@ const makeAPICall = async ({method = "GET", url, data}) => {
 }
 
 const ApiManager = {
-
-  //#region: User
-  /**
-   * @name ApiManager.findAllUsers
-   * @description User 목록 
-   *
-   * @returns 
-   */
-  findAllUsers: async () => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_ALL_USERS(), 
-    // defaultValues: DEFAULT_VALUES.FIND_ALL_USERS
-  }),
-  /**
-   * @name ApiManager.findUser
-   * @description User 상세조회 
-   *
-   * @param {string} username 사용자 oVirt ID
-   * @param {boolean} exposeDetail 상세정보 표출여부
-   * 
-   * @returns 
-   */
-  findUser: async(username, exposeDetail) => makeAPICall({
-    method: "GET", 
-    url: `${ENDPOINTS.FIND_USER(username)}/?exposeDetail=${exposeDetail}`, 
-  }),
-  /**
-   * @name ApiManager.authenticate
-   * @description 로그인
-   * 
-   * @returns 
-   * 
-   * @see Login.js (page)
-   */
-  authenticate: async(username, password) => makeAPICall({
-    method: "POST", 
-    url: ENDPOINTS.FIND_USER(username), 
-    data: { password }
-  }),
-  /**
-   * @name ApiManager.addUser
-   * @description 사용자 추가
-   * 
-   * @param {Object} user 추가할 oVirt 사용자  정보
-   *
-   * @returns {Promise<Object>} API 응답 결과
-   */
-  addUser: async(user) => makeAPICall({
-    method: "POST", 
-    url: ENDPOINTS.FIND_ALL_USERS(), 
-    data: user
-  }),
-  /**
-   * @name ApiManager.editUser
-   * @description 사용자 편집
-   * 
-   * @param {string} username 사용자 oVirt ID
-   * @param {string} currentPassword (기존) 사용자 oVirt 비밀번호
-   * @param {string} newPassword (신규) 사용자 oVirt 비밀번호
-   *
-   * @returns {Promise<Object>} API 응답 결과
-   */
-  editUser: async(username, currentPassword, newPassword) => makeAPICall({
-    method: "PUT", 
-    url: ENDPOINTS.FIND_USER(username), 
-    data: { currentPassword, newPassword }
-  }),
-  /**
-   * @name ApiManager.removeUser
-   * @description 사용자 삭제
-   * 
-   * @param {string} username 사용자 oVirt ID
-   *
-   * @returns {Promise<Object>} API 응답 결과
-   */
-  removeUser: async(username) => makeAPICall({
-    method: "DELETE", 
-    url: ENDPOINTS.FIND_USER(username), 
-  }),
-  //#endregion: User
-  //#region: UserSession
-  /**
-   * @name ApiManager.findAllUserSessions
-   * @description 활성 사용자 세션션 목록 
-   *
-   * @returns 
-   */
-  findAllUserSessions: async (username = "") => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_ALL_USER_SESSIONS(username),
-  }),
-  //#endregion: UserSession
-
   //#region: TreeNavigation
   /**
    * @name ApiManager.findAllTreeNaviations
@@ -2881,13 +2788,120 @@ migrateHostsFromVM: async (vmId) => {
   }),
   //#endregion: event
 
-  //#region: setting
-  //#endregion: setting
 
-
-
-
-
+  //#region: User
+  /**
+   * @name ApiManager.findAllUsers
+   * @description User 목록 
+   *
+   * @returns 
+   */
+  findAllUsers: async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_USERS(), 
+    // defaultValues: DEFAULT_VALUES.FIND_ALL_USERS
+  }),
+  /**
+   * @name ApiManager.findUser
+   * @description User 상세조회 
+   *
+   * @param {string} username 사용자 oVirt ID
+   * @param {boolean} exposeDetail 상세정보 표출여부
+   * 
+   * @returns 
+   */
+  findUser: async(username, exposeDetail) => makeAPICall({
+    method: "GET", 
+    url: `${ENDPOINTS.FIND_USER(username)}/?exposeDetail=${exposeDetail}`, 
+  }),
+  /**
+   * @name ApiManager.authenticate
+   * @description 로그인
+   * 
+   * @returns 
+   * 
+   * @see Login.js (page)
+   */
+  authenticate: async(username, password) => makeAPICall({
+    method: "POST", 
+    url: ENDPOINTS.FIND_USER(username), 
+    data: { password }
+  }),
+  /**
+   * @name ApiManager.addUser
+   * @description 사용자 추가
+   * 
+   * @param {Object} user 추가할 oVirt 사용자  정보
+   *
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  addUser: async(user) => makeAPICall({
+    method: "POST", 
+    url: ENDPOINTS.FIND_ALL_USERS(), 
+    data: user
+  }),
+  /**
+   * @name ApiManager.editUser
+   * @description 사용자 편집
+   * 
+   * @param {string} username 사용자 oVirt ID
+   * @param {string} currentPassword (기존) 사용자 oVirt 비밀번호
+   * @param {string} newPassword (신규) 사용자 oVirt 비밀번호
+   *
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  editUser: async(username, currentPassword, newPassword) => makeAPICall({
+    method: "PUT", 
+    url: ENDPOINTS.FIND_USER(username), 
+    data: { currentPassword, newPassword }
+  }),
+  /**
+   * @name ApiManager.removeUser
+   * @description 사용자 삭제
+   * 
+   * @param {string} username 사용자 oVirt ID
+   *
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  removeUser: async(username) => makeAPICall({
+    method: "DELETE", 
+    url: ENDPOINTS.FIND_USER(username), 
+  }),
+  //#endregion: User
+  //#region: UserSession
+  /**
+   * @name ApiManager.findAllUserSessions
+   * @description 활성 사용자 세션션 목록 
+   *
+   * @returns 
+   */
+  findAllUserSessions: async (username = "") => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_USER_SESSIONS(username),
+  }),
+  //#endregion: UserSession
+  //#region: Certificate(s)
+  /**
+   * @name ApiManager.findAllCerts
+   * @description oVirt 인증서 목록
+   * 
+   * @returns 
+   **/
+  findAllCerts: async () => makeAPICall({
+    method: "GET",
+    url: ENDPOINTS.FIND_ALL_CERTS(),
+  }),
+  /**
+   * @name ApiManager.findCert
+   * @description oVirt 인증서 목록
+   * 
+   * @returns 
+   **/
+  findCert: async (id) => makeAPICall({
+    method: "GET",
+    url: ENDPOINTS.FIND_CERT(id),
+  })
+  //#endregion: Certificate(s)
 }
 
 export default ApiManager

@@ -80,6 +80,8 @@ enum class ErrorPattern(
 	TICKET_ID_NOT_FOUND("TICKET-E001", Term.TICKET, FailureType.ID_NOT_FOUND),
 	TICKET_NOT_FOUND("TICKET-E002", Term.TICKET, FailureType.NOT_FOUND),
 	TICKET_VO_INVALID("TICKET-E003", Term.TICKET, FailureType.BAD_REQUEST),
+	CERT_ID_NOT_FOUND("CERT-E001", Term.CERT, FailureType.ID_NOT_FOUND),
+	CERT_NOT_FOUND("CERT-E003", Term.CERT, FailureType.NOT_FOUND),
 	UNKNOWN("UNKNOWN-E001", Term.UNKNOWN, FailureType.UNKNOWN),
 	FILE_NOT_FOUND("FILE_NOT_FOUND", Term.DISK, FailureType.UNKNOWN)
 	;
@@ -111,7 +113,8 @@ fun ErrorPattern.toError(): Error {
 		ErrorPattern.VNIC_PROFILE_ID_NOT_FOUND,
 		ErrorPattern.TEMPLATE_ID_NOT_FOUND,
 		ErrorPattern.CONSOLE_ID_NOT_FOUND,
-		ErrorPattern.TICKET_ID_NOT_FOUND, -> Error("[${code}] ${term.desc} ${failureType.message}")
+		ErrorPattern.TICKET_ID_NOT_FOUND,
+		ErrorPattern.CERT_ID_NOT_FOUND, -> Error("[${code}] ${term.desc} ${failureType.message}")
 		ErrorPattern.OVIRTUSER_NOT_FOUND,
 		ErrorPattern.ROLE_NOT_FOUND,
 		ErrorPattern.DATACENTER_NOT_FOUND,
@@ -127,7 +130,8 @@ fun ErrorPattern.toError(): Error {
 		ErrorPattern.VNIC_PROFILE_NOT_FOUND,
 		ErrorPattern.TEMPLATE_NOT_FOUND,
 		ErrorPattern.CONSOLE_NOT_FOUND,
-		ErrorPattern.TICKET_NOT_FOUND,-> Error("[${code}] ${failureType.message} ${term.desc}")
+		ErrorPattern.TICKET_NOT_FOUND,
+		ErrorPattern.CERT_NOT_FOUND, -> Error("[${code}] ${failureType.message} ${term.desc}")
 		ErrorPattern.OVIRTUSER_VO_INVALID,
 		ErrorPattern.OVIRTUSER_AUTH_INVALID,
 		ErrorPattern.ROLE_VO_INVALID,

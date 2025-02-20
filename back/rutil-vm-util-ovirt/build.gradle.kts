@@ -9,6 +9,5 @@ dependencies {
     compileOnly(Dependencies.log4j)
     compileOnly(Dependencies.gson)
     compileOnly(Dependencies.ovirt)
-
-    compileOnly("com.jcraft:jsch:0.1.55")
+	compileOnly(Dependencies.jsch)
 }

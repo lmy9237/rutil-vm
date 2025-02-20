@@ -20,18 +20,22 @@ RUN chmod +x gradlew
 # Copy the rest of the application source code
 COPY buildSrc /home/gradle/project/buildSrc
 COPY rutil-vm-api /home/gradle/project/rutil-vm-api
+COPY rutil-vm-api-cert /home/gradle/project/rutil-vm-api-cert
 COPY rutil-vm-api-repository /home/gradle/project/rutil-vm-api-repository
 COPY rutil-vm-api-socket /home/gradle/project/rutil-vm-api-socket
 COPY rutil-vm-common /home/gradle/project/rutil-vm-common
 COPY rutil-vm-util /home/gradle/project/rutil-vm-util
+COPY rutil-vm-util-cert /home/gradle/project/rutil-vm-util-cert
 COPY rutil-vm-util-ovirt /home/gradle/project/rutil-vm-util-ovirt
+COPY rutil-vm-util-ssh /home/gradle/project/rutil-vm-util-ssh
+
 
 # Copy the node build results to path (ONLY when skipNpm=true)
 # COPY --from=build-fe /usr/src/app/build /home/gradle/project/rutil-vm-api/src/main/resources/static
 # RUN ls /home/gradle/project/rutil-vm-api/src/main/resources/static
 
 # Build the application
-RUN ./gradlew rutil-vm-api:bootJar -Pprofile=staging -PskipNpm=true
+RUN ./gradlew rutil-vm-api:bootJar -Pprofile=staging --parallel
 
 # ------------------------------
 # Stage 2: Run the application
@@ -41,7 +45,7 @@ LABEL maintainer="Chan Hee Lee <chanhi2000@gmail.com>"
 LABEL description="RutilVM (API)"
 LABEL version="0.2.0-beta2"
 LABEL vcs-url="https://github.com/ititcloud/rutil-vm"
-LABEL build-date="2025-02-06"
+LABEL build-date="2025-02-21"
 LABEL commit-hash="05f9e12ee27c1532623112d1df92004226d0d347"
 LABEL license="Apache-2.0"
 LABEL environment="production"
@@ -53,21 +57,17 @@ RUN apt-get install -y tzdata
 # timezone env with default
 
 ENV RUTIL_VM_VERSION=0.2.0-beta2
-ENV RUTIL_VM_RELEASE_DATE=2025-02-06
+ENV RUTIL_VM_RELEASE_DATE=2025-02-21
 ENV RUTIL_VM_PORT_HTTP=8080
 ENV RUTIL_VM_PORT_HTTPS=8443
 ENV RUTIL_VM_OVIRT_PORT_HTTPS=443
 ENV RUTIL_VM_OVIRT_IP=192.168.0.70
 ENV RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm
 ENV RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443
-RUN echo "================== common.properties =================="
-RUN echo ""
-RUN echo "version: $RUTIL_VM_VERSION"
-RUN echo "release-date: $RUTIL_VM_RELEASE_DATE"
-RUN echo "http-port: $RUTIL_VM_PORT_HTTP"
-RUN echo "http-ports: $RUTIL_VM_PORT_HTTPS"
-RUN echo "ovirt-ip: $RUTIL_VM_OVIRT_IP"
-RUN echo ""
+ENV RUTIL_VM_OVIRT_HOST_SSH_IP=192.168.0.71
+ENV RUTIL_VM_OVIRT_HOST_SSH_PORT=22
+ENV RUTIL_VM_OVIRT_HOST_SSH_ID=root
+ENV RUTIL_VM_OVIRT_HOST_SSH_PW=adminRoot!@#
 
 ENV POSTGRES_JDBC_PORT=5432
 ENV POSTGRES_DATASOURCE_JDBC_ID=rutil
@@ -120,6 +120,10 @@ ENTRYPOINT [ "java", "-jar", "app.jar", \
   "--application.ovirt.port.ssl=${RUTIL_VM_OVIRT_PORT_HTTPS}", \
   "--application.api.cors.allowed-origins=${RUTIL_VM_CORS_ALLOWED_ORIGINS}", \
   "--application.api.cors.allowed-origins.port=${RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT}", \
+  "--application.ovirt.host.ssh.ip=${RUTIL_VM_OVIRT_HOST_SSH_IP}", \
+  "--application.ovirt.host.ssh.port=${RUTIL_VM_OVIRT_HOST_SSH_PORT}", \
+  "--application.ovirt.host.ssh.id=${RUTIL_VM_OVIRT_HOST_SSH_ID}", \
+  "--application.ovirt.host.ssh.pw=${RUTIL_VM_OVIRT_HOST_SSH_PW}", \
   "--server.port=${RUTIL_VM_PORT_HTTPS}", \
   # "--spring.datasource.engine.url=${RUTIL_VM_OVIRT_IP}", \
   "--spring.datasource.engine.username=${POSTGRES_DATASOURCE_JDBC_ID}", \

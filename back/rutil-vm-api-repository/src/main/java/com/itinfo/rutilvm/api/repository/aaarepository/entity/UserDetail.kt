@@ -13,6 +13,13 @@ import javax.persistence.Id
 /**
  * [OvirtUser]
  * engine 엔티티: USERS
+ * @property userId [String] oVirt 사용자 고유 UUID
+ * @property name [String] 이름
+ * @property surname [String] 성
+ * @property domain [String] 인증공급자
+ * @property username [String] oVirt 사용자 로그인 ID
+ * @property department [String] 부서
+ * @property email [String] 이메일
  *
  * @see com.itinfo.dao.aaa.OvirtUser
  */

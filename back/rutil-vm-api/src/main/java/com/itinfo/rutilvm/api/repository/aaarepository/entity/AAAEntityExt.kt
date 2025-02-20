@@ -15,6 +15,7 @@ fun OvirtUser.toUserVo(userDetail: UserDetail? = null, exposeDetail: Boolean = f
 	administrative { if (exposeDetail) userDetail?.lastAdminCheckStatus else false }
 	disabled { this@toUserVo.disabled != 0 }
 	createDate { if (exposeDetail) userDetail?.createDate else null }
+	authProvider { if (exposeDetail) userDetail?.domain else "" }
 	// principal { this@toUserVo.namespace }
 }
 

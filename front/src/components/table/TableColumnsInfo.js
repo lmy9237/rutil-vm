@@ -729,7 +729,7 @@ const TableColumnsInfo = {
     { header: '성', accessor: 'surName', clickable: false },
     { header: '사용자 이름', accessor: 'username', clickable: false },
     { header: '비활성화 여부', accessor: 'isDisabled', clickable: false, width:'4%' },
-    { header: '인증 공급자', accessor: 'provider', clickable: false },
+    { header: '인증 공급자', accessor: 'authProvider', clickable: false },
     { header: '네임스페이스', accessor: 'namespace', clickable: false, width:'8%'  },
     { header: '이메일', accessor: 'email', clickable: false },
     { header: '가입일자', accessor: 'createDate', clickable: false },
@@ -777,6 +777,13 @@ const TableColumnsInfo = {
     { header: '상태', accessor: 'status', clickable: false },
     { header: '만료', accessor: 'expiration', clickable: false }
   ],
+  SETTING_CERTIFICATES: [
+    { header: 'ID', accessor: 'id', clickable: false },
+    { header: '이름', accessor: 'alias', clickable: true },
+    { header: 'D-Day', accessor: 'dday', clickable: false },
+    { header: '만료일자', accessor: 'notAfter', clickable: false },
+    { header: '버전', accessor: 'version', clickable: false },
+  ]
 }
 
 export default TableColumnsInfo;

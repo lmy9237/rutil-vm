@@ -18,7 +18,6 @@ dependencies {
     compileOnly(Dependencies.kotlinStdlib)
     compileOnly(Dependencies.log4j)
     compileOnly(Dependencies.gson)
-
     runtimeOnly(Dependencies.jdbc)
 
     testImplementation(project(":rutil-vm-common"))

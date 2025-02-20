@@ -2,7 +2,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import SettingUsersActionButtons from "./SettingUsersActionButtons";
 import SettingUsersModals from "../../components/modal/settings/SettingUsersModals"
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
-import TablesOuter from '../../components/table/TablesOuter';
+import TablesOuter from "../../components/table/TablesOuter";
 import { useAllUsers } from "../../api/RQHook";
 import SettingUsersDeleteModal from '../../components/modal/settings/SettingUsersDeleteModal';
 

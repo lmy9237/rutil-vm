@@ -36,9 +36,11 @@ class PropertiesConfig {
 
 	@Value("\${server.port}")							lateinit var serverPort: String
 
-	/*@Value("\${management.endpoints.web.exposure.include}")	lateinit var exposureInclude: String
+	/*
+	@Value("\${management.endpoints.web.exposure.include}")	lateinit var exposureInclude: String
 	@Value("\${management.endpoint.shutdown.enabled}")		lateinit var _shutdownEnabled1: String
-	@Value("\${endpoints.shutdown.enabled}")				lateinit var _shutdownEnabled2: String*/
+	@Value("\${endpoints.shutdown.enabled}")				lateinit var _shutdownEnabled2: String
+	*/
 
 
 	@Value("\${reboot-host.id}")				lateinit var rebootHostId: String

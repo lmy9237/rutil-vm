@@ -60,6 +60,7 @@ enum class Term(
 	QOS("통신 서비스 품질"),
 	QUOTA("할당량"),
 	CLUSTER_QUOTA_LIMIT("클러스터 제한 할당량"),
+	CERT("인증서"),
 	UNKNOWN("알 수 없음")
 	;
 }
