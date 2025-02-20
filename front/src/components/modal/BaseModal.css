@@ -1,0 +1,28 @@
+.popup-header {
+  background-color: var(--color-header);
+  border-radius: 3px;
+  border-bottom: 1px solid #6e9cd8;
+  color: var(--color-primary-2);
+  padding: 0.2rem;
+  font-weight: 600;
+  width: 100%;
+  height: var(--h-modal-header);
+}
+.popup-header > h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.popup-header > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1px;
+  border: none;
+  padding: 11px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.popup-header > button:hover {
+  background-color: #add0e1;
+}
