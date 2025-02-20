@@ -46,6 +46,28 @@
         }
       }]
     }, {
+      "label": "start-rutil-vm-react (프론트 실행 - 20번 Backend)",
+      "type": "shell",
+      "command": "npm run dev:b20",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [{
+        "owner": "custom",
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Starting the development server...",
+          "endsPattern": "Compiled successfully!"
+        }
+      }]
+    }, {
       "label": "start-rutil-vm-storybook (스토리북 실행)",
       "type": "shell",
       "command": "npm run storybook",
