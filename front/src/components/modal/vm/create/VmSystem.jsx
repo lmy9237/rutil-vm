@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "react-tooltip";
 import LabelInputNum from "../../../label/LabelInputNum";
+import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
+import LabelSelectOptions from "../../../label/LabelSelectOptions";
 
 const InfoTooltip = ({ tooltipId, message }) => (
   <>
@@ -111,7 +113,53 @@ const VmSystem = ({
           value={formSystemState.cpuTopologyCnt}
           onChange={handleCpuChange}
         />
-        <div className="network_form_group">
+
+        <LabelSelectOptions
+          label="가상 소켓"
+          id="virtual_socket"
+          value={formSystemState.cpuTopologySocket}
+          onChange={handleSocketChange}
+          options={calculateFactors(formSystemState.cpuTopologyCnt).map((factor) => ({
+            value: factor,
+            label: factor,
+          }))}
+        />
+
+        <LabelSelectOptions
+          label="가상 소켓 당 코어"
+          id="core_per_socket"
+          value={formSystemState.cpuTopologyCore}
+          onChange={handleCoreChange}
+          options={calculateFactors(
+            formSystemState.cpuTopologyCnt / formSystemState.cpuTopologySocket
+          ).map((factor) => ({
+            value: factor,
+            label: factor,
+          }))}
+        />
+
+        <LabelSelectOptions
+          label="코어당 스레드"
+          id="thread_per_core"
+          value={formSystemState.cpuTopologyThread}
+          onChange={(e) =>
+            setFormSystemState((prev) => ({
+              ...prev,
+              cpuTopologyThread: parseInt(e.target.value, 10),
+            }))
+          }
+          options={calculateFactors(
+            formSystemState.cpuTopologyCnt /
+              (formSystemState.cpuTopologySocket * formSystemState.cpuTopologyCore)
+          ).map((factor) => ({
+            value: factor,
+            label: factor,
+          }))}
+        />
+
+
+        {/* 삭제예정 */}
+        {/* <div className="network_form_group">
           <label htmlFor="virtual_socket">가상 소켓</label>
           <select
             id="virtual_socket"
@@ -163,7 +211,7 @@ const VmSystem = ({
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
       </div>
     </>
   );

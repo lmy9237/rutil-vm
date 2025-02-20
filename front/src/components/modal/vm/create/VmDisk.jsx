@@ -50,7 +50,7 @@ const VmDisk = ({
 
   return (
     <>
-      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 0.28rem", }}>
+      <div className="instance-image center">
         <div className="font-bold">인스턴스 이미지</div>
         <div style={{ display: "flex", gap: "8px" }}>
           <button onClick={() => setIsConnectionPopupOpen(true)}>연결</button>
@@ -97,9 +97,10 @@ const VmDisk = ({
         </Suspense>
       </div>
 
-      <div className="disk-list-container" style={{ marginTop: "12px", borderBottom: "1px solid gray", paddingBottom: "8px", }}>
+      <div className="disk-list-container center">
         {diskListState.length > 0 &&
           diskListState.map((disk, index) => (
+            <>
             <div key={index} className="disk-item">
               <div style={{ display: "flex", alignItems: "center" }}>
                 <span style={{ marginRight: "10px" }}>
@@ -109,13 +110,14 @@ const VmDisk = ({
                   이름: {disk?.alias} ({disk?.size || disk?.virtualSize} GB)
                   {disk?.bootable ? " [부팅]" : ""}
                 </span>
-                <button
-                  onClick={() => handleRemoveDisk(index, disk.isExisting)}
-                >
-                  삭제
-                </button>
               </div>
             </div>
+            <button
+              onClick={() => handleRemoveDisk(index, disk.isExisting)}
+            >
+              삭제
+            </button>
+          </>
           ))}
       </div>
     </>

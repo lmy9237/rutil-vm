@@ -72,7 +72,7 @@ const HeaderButton = ({
       </div>
       <div className="flex justify-space-between ml-auto">
         <div className="flex justify-end article-nav">
-          <p className="text-sm flex justify-center align-center">{status}</p>
+          <p className="text-[14px] flex justify-center align-center mr-1">{status}</p>
           {buttons.map((button, index) => (
             <IconButton
               id={button.id}

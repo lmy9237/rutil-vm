@@ -1,4 +1,6 @@
-/*새로만들기*/
+/* 
+안씀!!!!!!!!!!!!!!
+새로만들기
 .vm-edit-popup {
   height: 84.4vh;
   width: 50%;
@@ -8,7 +10,7 @@
   justify-content: space-between;
   padding-bottom: 2%;
 }
-/* 새로만들기(수정해야됨) */
+ 새로만들기(수정해야됨) 
 .vm-new-nav {
   font-size: 0.33rem;
   height: 48vh;
@@ -35,8 +37,8 @@
   font-size: 0.33rem;
   width: 86%;
   height: 71vh;
-  overflow-y: auto; /* 세로 스크롤 추가 */
-  overflow-x: hidden; /* 가로 스크롤 숨김 */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .vm-plus-btn-outer {
@@ -163,7 +165,7 @@
   font-size: 0.29rem;
 }
 
-/*가상머신 ... 버튼 새템플릿 생성*/
+가상머신 ... 버튼 새템플릿 생성
 .new-template-popup {
   width: 45%;
 }
@@ -173,7 +175,7 @@
   overflow-x: hidden;
 }
 
-/*스냅샷 생성*/
+스냅샷 생성
 .snapshot-new-popup {
   height: 52%;
   width: 32%;
@@ -187,7 +189,7 @@
   margin-bottom: 0.14rem;
   display: flex;
 }
-/*..버튼 가져오기 팝업*/
+..버튼 가져오기 팝업
 .vm-bring-popup {
   height: 85%;
   width: 69%;
@@ -208,7 +210,7 @@
 .vm-bring-table > div {
   width: 44%;
 }
-/*호스트 장치(장치추가 팝업)*/
+호스트 장치(장치추가 팝업)
 .device-add-popup-outer {
   height: 92%;
   width: 74%;
@@ -216,11 +218,11 @@
 
 .able-host-device-table {
   height: 26vh;
-  overflow-y: auto; /* 세로 스크롤 추가 */
-  overflow-x: hidden; /* 가로 스크롤 숨김 */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-/*네트워크 인터페이스 */
+네트워크 인터페이스 
 .network_content_detail {
   font-size: 0.3rem;
 }
@@ -248,11 +250,7 @@
   justify-content: center;
   align-items: center;
 }
-.network-popup-content input[type="text"],
-.network-popup-content select {
-  width: 47%;
-}
-/*마이그레이션 팝업*/
+마이그레이션 팝업
 .migration-popup-content {
   height: 42%;
   width: 70%;
@@ -278,7 +276,7 @@
   background-color: #ebebeb;
   border-radius: 3px;
 }
-/* 삭제모달창 */
+삭제모달창 
 .vm-delete-popup {
   max-height: 90%;
   width: 38%;
@@ -290,7 +288,7 @@
 .disk-delete-checkbox {
   display: flex;
 }
-/*ova내보내기*/
+ova내보내기
 .vm-ova-popup {
   height: 34.4vh;
   width: 33%;
@@ -303,4 +301,4 @@
 .ova-new-box select,
 .ova-new-box input {
   width: 47%;
-}
+} */

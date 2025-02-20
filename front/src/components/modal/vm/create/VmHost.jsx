@@ -23,77 +23,79 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
 
   return (
     <div className="host-second-content">
-      <div style={{ fontWeight: 600 }}>실행 호스트:</div>
-      <div className="form-checks">
-        <div className="flex">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="hostSelection"
-            id="clusterHost"
-            checked={formHostState.hostInCluster}
-            onChange={() =>
-              setFormHostState((prev) => ({
-                ...prev,
-                hostInCluster: true,
-                hostVos: [],
-              }))
-            }
-          />
-          <label className="form-check-label" htmlFor="clusterHost">
-            클러스터 내의 호스트
-          </label>
-        </div>
-
-        {/* 특정 호스트 선택 */}
-        <div className="mb-1">
+      <div className="p-0.5">
+        <div style={{ fontWeight: 600 }}>실행 호스트:</div>
+        <div className="form-checks">
           <div className="flex">
             <input
               className="form-check-input"
               type="radio"
               name="hostSelection"
-              id="specificHost"
-              checked={!formHostState.hostInCluster}
+              id="clusterHost"
+              checked={formHostState.hostInCluster}
               onChange={() =>
                 setFormHostState((prev) => ({
                   ...prev,
-                  hostInCluster: false,
+                  hostInCluster: true,
+                  hostVos: [],
                 }))
               }
             />
-            <label className="form-check-label" htmlFor="specificHost">
-              특정 호스트
+            <label className="form-check-label" htmlFor="clusterHost">
+              클러스터 내의 호스트
             </label>
           </div>
-          <div>
-            <select
-              multiple
-              id="specific_host_select"
-              value={formHostState.hostVos.map((host) => host.id)}
-              onChange={(e) => {
-                const selectedIds = Array.from(e.target.selectedOptions, (option) => option.value);
-                console.log("선택된 호스트 ID 목록:", selectedIds);
-                setFormHostState((prev) => ({
-                  ...prev,
-                  hostVos: hosts.filter((host) => selectedIds.includes(host.id)),
-                }));
-              }}
-              disabled={formHostState.hostInCluster}
-            >
-              {hosts.map((opt) => (
-                <option key={opt.id} value={opt.id}>
-                  {opt.name}
-                </option>
-              ))}
-            </select>
 
-            <div style={{ marginTop: "10px" }}>
-              <label>선택된 호스트:</label>
-              <span style={{ marginLeft: "10px", fontWeight: "bold" }}>
-                {formHostState.hostVos && formHostState.hostVos.length > 0
-                  ? formHostState.hostVos.map((host) => host.id).join(", ")
-                  : "선택된 호스트가 없습니다."}
-              </span>
+          {/* 특정 호스트 선택 */}
+          <div >
+            <div className="flex">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="hostSelection"
+                id="specificHost"
+                checked={!formHostState.hostInCluster}
+                onChange={() =>
+                  setFormHostState((prev) => ({
+                    ...prev,
+                    hostInCluster: false,
+                  }))
+                }
+              />
+              <label className="form-check-label" htmlFor="specificHost">
+                특정 호스트
+              </label>
+            </div>
+            <div>
+              <select
+                multiple
+                id="specific_host_select"
+                value={formHostState.hostVos.map((host) => host.id)}
+                onChange={(e) => {
+                  const selectedIds = Array.from(e.target.selectedOptions, (option) => option.value);
+                  console.log("선택된 호스트 ID 목록:", selectedIds);
+                  setFormHostState((prev) => ({
+                    ...prev,
+                    hostVos: hosts.filter((host) => selectedIds.includes(host.id)),
+                  }));
+                }}
+                disabled={formHostState.hostInCluster}
+              >
+                {hosts.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {opt.name}
+                  </option>
+                ))}
+              </select>
+
+              <div style={{ marginTop: "10px" }}>
+                <label>선택된 호스트:</label>
+                <span style={{ marginLeft: "10px", fontWeight: "bold" }}>
+                  {formHostState.hostVos && formHostState.hostVos.length > 0
+                    ? formHostState.hostVos.map((host) => host.id).join(", ")
+                    : "선택된 호스트가 없습니다."}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -101,7 +103,7 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
 
       {/* 마이그레이션 옵션 */}
       <div className="host-third-content">
-        <div style={{ fontWeight: 600 }}>마이그레이션 옵션:</div>
+        <div className="px-0.5" style={{ fontWeight: 600 }}>마이그레이션 옵션:</div>
         <LabelSelectOptions
           label={"마이그레이션 모드"}
           value={formHostState.migrationMode}

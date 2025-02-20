@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
+import LabelCheckbox from "../../../label/LabelCheckbox";
 
 const firstDeviceOptionList = [
   { value: "hd", label: "하드 디스크" },
@@ -30,7 +31,7 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
   return (
     <div className="host-second-content">
       <div className="cpu-res">
-        <span style={{ fontWeight: 600 }}>부트순서:</span>
+        <div className="p-0.5 font-bold">부트순서:</div>
 
         <LabelSelectOptions
           className="cpu-res-box"
@@ -50,24 +51,19 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
 
       <div className="boot-checkboxs">
         <div className="center">
-          <div className="flex">
-            <input
-              type="checkbox"
-              id="connectCdDvd"
-              name="connectCdDvd"
-              checked={formBootState.isCdDvdChecked}
-              onChange={(e) => {
-                const isChecked = e.target.checked;
-                setFormBootState((prev) => ({
-                  ...prev,
-                  isCdDvdChecked: isChecked,
-                  cdConn: isChecked ? { id: isos[0]?.id || "" } : { id: "" },
-                }));
-              }}
-            />
-            <label htmlFor="connectCdDvd">CD/DVD 연결</label>
-          </div>
-
+          <LabelCheckbox
+            id="connectCdDvd"
+            label="CD/DVD 연결"
+            checked={formBootState.isCdDvdChecked}
+            onChange={(e) => {
+              const isChecked = e.target.checked;
+              setFormBootState((prev) => ({
+                ...prev,
+                isCdDvdChecked: isChecked,
+                cdConn: isChecked ? { id: isos[0]?.id || "" } : { id: "" },
+              }));
+            }}
+          />
           <LabelSelectOptionsID
             disabled={!formBootState.isCdDvdChecked || isos.length === 0}
             value={formBootState.cdConn?.id}
@@ -80,23 +76,18 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
             options={isos}
           />
         </div>
-        <div className="flex mb-1.5">
-          <input
-            className="check_input"
-            type="checkbox"
-            id="enableBootMenu"
-            checked={formBootState.bootingMenu}
-            onChange={(e) =>
-              setFormBootState((prev) => ({
-                ...prev,
-                bootingMenu: e.target.checked,
-              }))
-            }
-          />
-          <label className="check_label" htmlFor="enableBootMenu">
-            부팅 메뉴를 활성화
-          </label>
-        </div>
+        <LabelCheckbox
+          id="enableBootMenu"
+          label="부팅 메뉴를 활성화"
+          checked={formBootState.bootingMenu}
+          onChange={(e) =>
+            setFormBootState((prev) => ({
+              ...prev,
+              bootingMenu: e.target.checked,
+            }))
+          }
+        />
+
       </div>
     </div>
   );

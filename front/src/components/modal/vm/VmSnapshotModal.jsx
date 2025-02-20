@@ -96,26 +96,29 @@ const VmSnapshotModal = ({ isOpen, data, vmId, onClose }) => {
       targetName={"스냅샷"}
       submitTitle={isLoading ? "...스냅샷 생성 중" : "생성"}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "500px", height: "500px" }} 
     >
       {/* <div className="snapshot-new-popup modal"> */}
-      <div className="p-1">
-        <div className="host-textbox">
-          <label htmlFor="description">설명</label>
-          <input
-            type="text"
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)} // 사용자 입력 관리
-          />
-        </div>
-        <div>
-          <div className="font-bold">포함할 디스크 :</div>
-          <div className="snapshot-new-table">
-            <TablesOuter
-              columns={TableColumnsInfo.SNAPSHOT_NEW}
-              data={disks} // 디스크 데이터 삽입
-              onRowClick={() => console.log("Row clicked")}
+      <div className="popup-content-outer">
+        <div className="p-1">
+          <div className="host-textbox flex mb-1">
+            <label htmlFor="description">설명</label>
+            <input
+              type="text"
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)} // 사용자 입력 관리
             />
+          </div>
+          <div>
+            <div className="font-bold">포함할 디스크 :</div>
+            <div className="snapshot-new-table">
+              <TablesOuter
+                columns={TableColumnsInfo.SNAPSHOT_NEW}
+                data={disks} // 디스크 데이터 삽입
+                onRowClick={() => console.log("Row clicked")}
+              />
+            </div>
           </div>
         </div>
       </div>

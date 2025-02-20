@@ -9,7 +9,7 @@
 @tailwind utilities;
 html {
   --h-modal-header: 55px;                /* 모달 헤더 부분 높이 */
-  --h-modal-footer: 65px;                /* 모달 푸터 부분 높이 */
+  --h-modal-footer: 60px;                /* 모달 푸터 부분 높이 */
   --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
   /* --h-modal-content: 83%;  모달 내용 부분 높이 */
   --color-bg: #ececec;                /* 기본 배경색 */
@@ -72,6 +72,7 @@ button {
   cursor: pointer;
   padding: 0 0.1rem;
   display: flex;
+  border-radius: 2px;
   align-items: center;
 }
 button[disabled],
@@ -457,53 +458,13 @@ textarea {
   z-index: 1000;
 }
 /*삭제모달*/
-.storage-delete-popup {
-  height: 22.4vh;
-  width: 38%;
-}
 .disk-delete-box {
   padding: 0.2rem;
-  font-size: 0.4rem;
 }
 .disk-delete-box > div {
   padding: 0.4rem;
   color: #3737ba;
 }
-.disk_delete_checkbox {
-  display: flex;
-}
-.popup-header {
-  display:flex;justify-content:space-between;align-items:center;
-  background-color: var(--color-header);
-  border-radius: 3px;
-  border-bottom: 1px solid #6e9cd8;
-  color: var(--color-primary-2);
-  padding: 0.2rem;
-  font-size: 0.35rem;
-  font-weight: 600;
-  width: 100%;height: var(--h-modal-header);
-  height: var(--h-modal-header);
-}
-.popup-header > h1 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.popup-header > button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1px;
-  border: none;
-  padding: 11px;
-  border-radius: 50%;
-  font-size: 0.38rem;
-  cursor: pointer;
-}
-.popup-header > button:hover {
-  background-color: #add0e1;
-}
-
 .network_new_nav div.active {
   background: #e4e4e4;
   color: #449bff;

@@ -94,7 +94,7 @@ const VmNics = ({ vmId }) => {
       {(modals.create || (modals.edit && selectedNics)) && (
         <VmNetworkNewInterfaceModal
           isOpen={modals.create || modals.edit}
-          onRequestClose={() =>
+          onClose={() =>
             toggleModal(modals.create ? "create" : "edit", false)
           }
           editMode={modals.edit}

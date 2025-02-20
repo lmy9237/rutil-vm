@@ -12,9 +12,9 @@ const VmModals = ({ activeModal, vm, selectedVms = [], onClose }) => {
     create:    (<VmModal            isOpen={activeModal === "create"}    onClose={onClose} />),
     edit:      (<VmModal            isOpen={activeModal === "edit"}      onClose={onClose} vmId={vm?.id}  editMode/>),
     delete:    (<VmDeleteModal      isOpen={activeModal === "delete"}    onClose={onClose} data={selectedVms} />),
-    templates: (<VmAddTemplateModal isOpen={activeModal === "templates"} onRequestClose={onClose} selectedVm={vm} vmId={vm?.id}/>),
+    templates: (<VmAddTemplateModal isOpen={activeModal === "templates"} onClose={onClose} selectedVm={vm} vmId={vm?.id}/>),
     snapshot:  (<VmSnapshotModal    isOpen={activeModal === "snapshot"}  onClose={onClose} vmId={vm?.id} data={selectedVms}  />),
-    ova:       (<VmExportOVAModal   isOpen={activeModal === "ova"}       onRequestClose={onClose} selectedVm={vm} vmId={vm?.id} />),
+    ova:       (<VmExportOVAModal   isOpen={activeModal === "ova"}       onClose={onClose} selectedVm={vm} vmId={vm?.id} />),
     action: (
       <VmActionModal
         isOpen={[

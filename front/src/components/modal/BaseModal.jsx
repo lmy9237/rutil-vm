@@ -2,7 +2,7 @@ import React from "react";
 import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-
+import "./BaseModal.css";
 /**
  * @name BaseModal
  * @description 기본 모달 테두리
@@ -29,7 +29,7 @@ const BaseModal = ({
     >
       {/*<div className="w-1/2 h-[84.4vh] modal">*/}
       <div className="modal" style={contentStyle}>
-        <div className="popup-header">
+        <div className="popup-header center">
           <h1>
             {`${targetName} ${submitTitle}`}
           </h1>

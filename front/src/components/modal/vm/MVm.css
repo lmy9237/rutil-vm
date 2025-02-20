@@ -4,9 +4,7 @@
   justify-content: space-between;
   padding-bottom: 2%;
 }
-/* 새로만들기(수정해야됨) */
 .vm-new-nav {
-  font-size: 0.33rem;
   height: 48vh;
   width: 60%;
   background-color: #fafafa;
@@ -18,45 +16,22 @@
   padding: 0.4rem 0.2rem;
   cursor: pointer;
   width: 100%;
-  font-size: 0.33rem;
 }
 .vm-edit-popup-content {
   width:100%;height:var(--h-modal-content);
   display:flex;justify-content:flex-start;align-items:center;flex-direction:row;
 }
 .vm-edit-select-tab {
-  font-size: 0.33rem;
   width: 86%;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   background-color: white;
 }
-
-.vm-plus-btn-outer {
-  width: 100%;
-}
-.vm-plus-btn {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.2rem;
-}
-.edit-first-content select,
-.edit-first-content input[type="text"] {
-  height: 3.3vh;
-  padding: 0 3px;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 0.29rem;
-  border: 1px solid #a7a6a6;
-}
 .edit-first-content > div {
   display: flex;
   justify-content: space-between;
-  padding: 0.2rem 0.29rem;
-}
-.edit-first-content > div:first-child {
-  padding-top: 0.3rem;
+  padding: 0.2rem;
 }
 .edit-first-content {
   border-bottom: var(--border-simple);
@@ -65,29 +40,6 @@
   border-bottom: none;
 }
 
-
-.edit-second-content > div,
-.host-third-content > div {
-  display: flex;
-  justify-content: space-between;
-  padding: 2.3% 2% 0 2%;
-}
-
-.host-third-content > div:nth-child(n + 2) select {
-  font-weight: 600;
-}
-
-.edit-second-content > div > div > i,
-.host-third-content > div > div > i,
-.ha-mode-second-content > div > div > i,
-.res_second_content i {
-  color: #1ba4e4;
-  cursor: pointer;
-}
-
-.ha-mode-second-content > div:first-child {
-  padding-bottom: 2%;
-}
 .ha-mode-second-content > div:nth-child(n + 2):nth-child(-n + 3),
 .ha-mode-article > div {
   display: flex;
@@ -95,41 +47,23 @@
   padding-bottom: 2%;
 }
 
-.ha-mode-second-content > div:nth-child(n + 2) select {
-  width: 47%;
-}
-
 .ha-mode-article > span {
   font-weight: 600;
   margin-bottom: 0.7%;
   display: block;
 }
-
-#threads > div:nth-child(2),
 .boot-checkboxs > div > div:nth-child(2) {
   width: 47%;
 }
 
-.edit-third-content {
-  padding: 2.3% 2% 2% 2%;
-  margin-bottom: 0.4rem;
-  display: flex;
-  justify-content: space-between;
-}
-.edit-third-content > div:nth-child(2) {
-  display: flex;
-  justify-content: right;
-}
 .edit-third-content > div:nth-child(2) > button {
   margin-right: 0.2rem;
 }
 .edit-third-content button {
   padding: 0.08rem 0.15rem;
-  font-size: 0.3rem;
   font-weight: 600;
   cursor: pointer;
 }
-
 .form-checks > div {
   padding: 1.8% 0 0 0;
 }
@@ -137,21 +71,16 @@
   display: flex;
   justify-content: space-between;
 }
-.form-checks > div:nth-child(2) > div:nth-child(2) {
-  width: 47%;
+.instance-image{
+  padding: 0 0.22rem;
 }
-.form-checks > div:nth-child(2) select {
-  width: 100%;
-  height: 3.3vh;
-  padding: 0 3px;
-  cursor: pointer;
-  font-size: 0.29rem;
+.disk-list-container{
+  padding: 0 0.22rem;
+  margin-top: 12px;
+  border-bottom: 1px solid gray;
+  padding-bottom: 10px;
 }
-
 /*가상머신 ... 버튼 새템플릿 생성*/
-.new-template-popup {
-  width: 45%;
-}
 .new-template-popup .section-table-outer {
   height: 15vh;
   overflow-y: auto;
@@ -159,18 +88,10 @@
 }
 
 /*스냅샷 생성*/
-.snapshot-new-popup {
-  height: 52%;
-  width: 32%;
-}
 .snapshot-new-table {
   max-height: 21vh;
   overflow-y: auto;
   overflow-x: hidden;
-}
-.host-textbox {
-  margin-bottom: 0.14rem;
-  display: flex;
 }
 /*..버튼 가져오기 팝업*/
 .vm-bring-popup {
@@ -206,11 +127,6 @@
 }
 
 /*네트워크 인터페이스 새로만들기*/
-.new-network-interface {
-  height: 45%;
-  width: 40%;
-}
-
 .radio-outer > div {
   width: 100%;
   display: flex;
@@ -260,7 +176,6 @@
 }
 .migration-article > div:last-child > div:last-child {
   width: 87.5%;
-  font-size: 0.36rem;
   height: 5vh;
   background-color: #ebebeb;
   border-radius: 3px;
@@ -278,10 +193,6 @@
   display: flex;
 }
 /*ova내보내기*/
-.vm-ova-popup {
-  height: 34.4vh;
-  width: 33%;
-}
 .ova-new-box {
   display: flex;
   justify-content: space-between;
