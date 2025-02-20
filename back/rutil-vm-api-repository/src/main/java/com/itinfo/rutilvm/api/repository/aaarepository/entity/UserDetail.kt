@@ -40,11 +40,7 @@ class UserDetail(
 	var updateDate: LocalDateTime?,
     @Column(nullable=true)
 	var namespace: String? = DEFAULT_NAMESPACE,
-    @Column(
-	name = "user_and_domain",
-	insertable=false,
-	updatable=false
-	)
+    @Column(name = "user_and_domain", insertable=false, updatable=false)
 	val userAndDomain: String? = "",
 	// 불가능... 다른 데이터소스에서 찾을수 있는 엔티티
     /*

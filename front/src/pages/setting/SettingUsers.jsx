@@ -13,7 +13,6 @@ import SettingUsersDeleteModal from '../../components/modal/settings/SettingUser
  * @returns 
  */
 const SettingUsers = () => {
-  const [activeModal, setActiveModal] = useState(null);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const selectedUserIds = (Array.isArray(selectedUsers) ? selectedUsers : [])
     .map((user) => user.id)
@@ -34,6 +33,7 @@ const SettingUsers = () => {
     };
   });
   
+  const [activeModal, setActiveModal] = useState(null);
   const [modals, setModals] = useState({
     create: false,
     edit: false,

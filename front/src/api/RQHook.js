@@ -107,10 +107,25 @@ export const useRemoveUser = () => {
   })
 };
 //#endregion: User
+//#region: UserSession
+/**
+ * @name useAllUserSessions
+ * @description 모든 활성 사용자 세션션 목록조회 useQuery훅
+ * 
+ * @param {function} mapPredicate 
+ * @returns useQuery훅
+ */
+export const useAllUserSessions = (username = "", mapPredicate = null) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['allUserSessions'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllUserSessions(username)
+    return res?.map((e) => mapPredicate(e)) ?? []
+  }
+})
+//#endregion: UserSession
 
 //#region: Navigation
-
-
 // Custom hook to fetch tree navigations
 export const useAllTreeNavigations = (type = "none", mapPredicate = null) => {
   return useQuery({

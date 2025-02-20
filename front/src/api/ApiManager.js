@@ -125,6 +125,18 @@ const ApiManager = {
     url: ENDPOINTS.FIND_USER(username), 
   }),
   //#endregion: User
+  //#region: UserSession
+  /**
+   * @name ApiManager.findAllUserSessions
+   * @description 활성 사용자 세션션 목록 
+   *
+   * @returns 
+   */
+  findAllUserSessions: async (username = "") => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_USER_SESSIONS(username),
+  }),
+  //#endregion: UserSession
 
   //#region: TreeNavigation
   /**

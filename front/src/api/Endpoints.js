@@ -3,6 +3,9 @@ const ENDPOINTS = {
   FIND_ALL_USERS: () => `/api/v1/auth/users`,
   FIND_USER: (username) => `/api/v1/auth/users/${username}`,
   //#endregion: User
+  //#region: UserSession
+  FIND_ALL_USER_SESSIONS: (username) => `/api/v1/auth/user-sessions?username=${username}`,
+  //#endregion: UserSession
 
   //#region: TreeNavigation
   FIND_ALL_TREE_NAVIGATIONS: (type) => `/api/v1/navigation/${type}`,

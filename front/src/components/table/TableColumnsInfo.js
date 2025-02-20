@@ -722,17 +722,6 @@ const TableColumnsInfo = {
     // // { header: '소스', accessor: 'source', clickable: false },
     // { header: '사용자 지정 이벤트 ID', accessor: 'customEventId', clickable: false }
   ],
-
-  // 활성사용사세션
-  ACTIVE_USER_SESSION: [
-    { header: '세션 DB ID', accessor: 'sessionId', clickable: false },
-    { header: '사용자 이름', accessor: 'username', clickable: false },
-    { header: '인증 공급자', accessor: 'authProvider', clickable: false },
-    { header: '사용자 ID', accessor: 'userId', clickable: false },
-    { header: '소스 IP', accessor: 'sourceIp', clickable: false },
-    { header: '세션 시작 시간', accessor: 'sessionStartTime', clickable: false },
-    { header: '마지막 세션 활성', accessor: 'lastSessionActive', clickable: false },
-  ],
   // 사용자
   SETTING_USER: [
     { header: '', accessor: 'icon', clickable: false, width:'16px' },
@@ -745,7 +734,17 @@ const TableColumnsInfo = {
     { header: '이메일', accessor: 'email', clickable: false },
     { header: '가입일자', accessor: 'createDate', clickable: false },
   ],
-  
+  // 활성사용사세션
+  ACTIVE_USER_SESSION: [
+    { header: '세션 DB ID', accessor: 'id', clickable: false },
+    { header: '사용자 이름', accessor: 'userName', clickable: false },
+    { header: '인증 공급자', accessor: 'authzName', clickable: false },
+    { header: '사용자 ID', accessor: 'userId', clickable: false },
+    { header: '소스 IP', accessor: 'sourceIp', clickable: false },
+    { header: '세션 시작 시간', accessor: 'sessionStartTime', clickable: false },
+    { header: '마지막 세션 활성', accessor: 'lastSessionActive', clickable: false },
+  ],
+
   //설정 (역할)
   SETTING_ROLE:[
     { header: '', accessor: 'icon', clickable: false },
