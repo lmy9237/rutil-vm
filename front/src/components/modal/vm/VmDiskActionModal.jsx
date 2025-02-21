@@ -20,7 +20,7 @@ import {
  * 
  * @returns 
  */
-const VmDiskActionModal = ({ isOpen, action, onClose, vm, data }) => {
+const VmDiskActionModal = ({ isOpen, action, onClose, vmId, data }) => {
   const { mutate: activateDisk } = useActivateDiskFromVm();
   const { mutate: deactivateDisk } = useDeactivateDiskFromVm();
 
@@ -49,9 +49,9 @@ const VmDiskActionModal = ({ isOpen, action, onClose, vm, data }) => {
 
   const handleAction = (actionFn) => {
     ids.forEach((diskAttachId, index) => {
-      console.log(`vmID: ${vm?.id}, diskId: ${diskAttachId}}`);
+      console.log(`vmID: ${vmId}, diskId: ${diskAttachId}}`);
       actionFn(
-        { vmId: vm?.id, diskAttachmentId: diskAttachId }, // 수정된 부분
+        { vmId: vmId, diskAttachmentId: diskAttachId }, // 수정된 부분
         {
           onSuccess: () => {
             if (ids.length === 1 || index === ids.length - 1) {

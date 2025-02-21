@@ -24,16 +24,28 @@ const LabelCheckbox = ({
   disabled,
   required,
 }) => (
-  <LabelInput className={className}
-    id={id} type={"checkbox"}
-    value={checked}
-    label={label}
-    autoFocus={autoFocus}
-    checked={checked}
-    onChange={onChange}
-    disabled={disabled}
-    required={required}
-  />
+  <div className={`checkbox-container ${className}`}>
+    <input
+      id={id}
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      disabled={disabled}
+      required={required}
+      autoFocus={autoFocus}
+    />
+    <label htmlFor={id}>{label}</label>
+  </div>
+  // <LabelInput className={className}
+  //   id={id} type={"checkbox"}
+  //   value={checked}
+  //   label={label}
+  //   autoFocus={autoFocus}
+  //   checked={checked}
+  //   onChange={onChange}
+  //   disabled={disabled}
+  //   required={required}
+  // />
 );
 
 

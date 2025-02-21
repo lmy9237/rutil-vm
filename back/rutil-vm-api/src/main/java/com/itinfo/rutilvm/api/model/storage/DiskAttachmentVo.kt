@@ -89,7 +89,7 @@ fun DiskAttachment.toDiskAttachMenu(conn: Connection): DiskAttachmentVo {
 fun DiskAttachment.toDiskAttachmentVo(conn: Connection): DiskAttachmentVo {
 	val disk: Disk? = conn.findDisk(this@toDiskAttachmentVo.disk().id()).getOrNull()
 	val vm: Vm? = conn.findVm(this@toDiskAttachmentVo.vm().id()).getOrNull()
-	log.info("toDiskAttachmentVo: {}", this)
+	// log.info("toDiskAttachmentVo: {}", this@toDiskAttachmentVo.toDiskAttachmentVo(conn))
 	return DiskAttachmentVo.builder {
 		id { this@toDiskAttachmentVo.id() }
 		active { this@toDiskAttachmentVo.active() }
@@ -116,7 +116,7 @@ fun DiskAttachment.toDiskAttachmentToTemplate(conn: Connection): DiskAttachmentV
 		passDiscard { this@toDiskAttachmentToTemplate.passDiscard() }
 		interface_ { this@toDiskAttachmentToTemplate.interface_() }
 		logicalName { this@toDiskAttachmentToTemplate.logicalName() }
-		 diskImageVo { disk?.toTemplateDiskInfo(conn) }
+		diskImageVo { disk?.toTemplateDiskInfo(conn) }
 	}
 }
 fun List<DiskAttachment>.toDiskAttachmentsToTemplate(conn: Connection): List<DiskAttachmentVo> =
@@ -148,12 +148,11 @@ fun DiskAttachmentVo.toAttachDisk(): DiskAttachment =
 /**
  * DiskAttachmentBuilder 에서 디스크를 생성해서 붙이는 방식
  */
-fun DiskAttachmentVo.toAddDiskAttachment(): DiskAttachment {
-	// log.info("Creating new disk attachment: $this")
-	return toDiskAttachment()
+fun DiskAttachmentVo.toAddDiskAttachment(): DiskAttachment =
+	toDiskAttachment()
 		.disk(this.diskImageVo.toAddDiskBuilder())
 		.build()
-}
+
 
 /**
  * DiskAttachmentBuilder 에서 디스크 편집

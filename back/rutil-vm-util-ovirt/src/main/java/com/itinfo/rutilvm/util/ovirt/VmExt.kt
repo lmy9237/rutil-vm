@@ -591,10 +591,10 @@ fun Connection.addDiskAttachmentToVm(vmId: String, diskAttachment: DiskAttachmen
 	val diskAttachAdded: DiskAttachment? =
 		this.srvAllDiskAttachmentsFromVm(vmId).add().attachment(diskAttachment).send().attachment()
 
-	// 생성되고 자동 활성화
-//	if (diskAttachAdded != null) {
-//		this.activeDiskAttachmentToVm(vmId, diskAttachAdded.id())
-//	}
+	// 가상머신 생성되고 자동 활성화
+	// if (diskAttachAdded != null && diskAttachAdded.idPresent()) {
+	// 	this.activeDiskAttachmentToVm(vmId, diskAttachAdded.id())
+	// }
 
 	diskAttachAdded ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
 }.onSuccess {
@@ -732,7 +732,6 @@ fun Connection.activeDiskAttachmentToVm(vmId: String, diskAttachmentId: String):
 	if(this.findVm(vmId).isFailure) {
 		throw ErrorPattern.VM_NOT_FOUND.toError()
 	}
-
 	val diskStatus: DiskAttachment = this.findDiskAttachmentFromVm(vmId, diskAttachmentId)
 		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND.toError()
 
@@ -741,11 +740,10 @@ fun Connection.activeDiskAttachmentToVm(vmId: String, diskAttachmentId: String):
 		throw ErrorPattern.DISK_ATTACHMENT_ACTIVE_INVALID.toError()
 	}
 
-	val diskAttachment =
-		DiskAttachmentBuilder().id(diskAttachmentId).active(true).build()
+	val diskAttachment = DiskAttachmentBuilder().id(diskAttachmentId).active(true).build()
 
-	this.updateDiskAttachmentToVm(vmId, diskAttachment)
-		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
+	// this.updateDiskAttachmentToVm(vmId, diskAttachment)
+	// 	.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
 
 	true
 }.onSuccess {
@@ -756,34 +754,34 @@ fun Connection.activeDiskAttachmentToVm(vmId: String, diskAttachmentId: String):
 }
 
 
-fun Connection.activeDiskAttachmentsToVm(vmId: String, diskAttachmentIds: List<String>): Result<Boolean> = runCatching {
-	if(this.findVm(vmId).isFailure) {
-		throw ErrorPattern.VM_NOT_FOUND.toError()
-	}
-
-	diskAttachmentIds.map { diskAttachmentId ->
-		val diskStatus: DiskAttachment =
-			this.findDiskAttachmentFromVm(vmId, diskAttachmentId)
-				.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND.toError()
-
-		if (diskStatus.active()) {
-			log.error("이미 활성화 상태: $diskAttachmentId")
-			throw ErrorPattern.DISK_ATTACHMENT_ACTIVE_INVALID.toError()
-		}
-
-		val diskAttachment =
-			DiskAttachmentBuilder().id(diskAttachmentId).active(true).build()
-
-		this.updateDiskAttachmentToVm(vmId, diskAttachment)
-			.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
-	}
-	true
-}.onSuccess {
-	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "활성화", vmId)
-}.onFailure {
-	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "활성화 실패", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
-}
+// fun Connection.activeDiskAttachmentsToVm(vmId: String, diskAttachmentIds: List<String>): Result<Boolean> = runCatching {
+// 	if(this.findVm(vmId).isFailure) {
+// 		throw ErrorPattern.VM_NOT_FOUND.toError()
+// 	}
+//
+// 	diskAttachmentIds.map { diskAttachmentId ->
+// 		val diskStatus: DiskAttachment =
+// 			this.findDiskAttachmentFromVm(vmId, diskAttachmentId)
+// 				.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND.toError()
+//
+// 		if (diskStatus.active()) {
+// 			log.error("이미 활성화 상태: $diskAttachmentId")
+// 			throw ErrorPattern.DISK_ATTACHMENT_ACTIVE_INVALID.toError()
+// 		}
+//
+// 		val diskAttachment =
+// 			DiskAttachmentBuilder().id(diskAttachmentId).active(true).build()
+//
+// 		this.updateDiskAttachmentToVm(vmId, diskAttachment)
+// 			.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
+// 	}
+// 	true
+// }.onSuccess {
+// 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "활성화", vmId)
+// }.onFailure {
+// 	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "활성화 실패", it, vmId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
 
 
 fun Connection.deactivateDiskAttachmentToVm(vmId: String, diskAttachmentId: String): Result<Boolean> = runCatching {
@@ -803,8 +801,8 @@ fun Connection.deactivateDiskAttachmentToVm(vmId: String, diskAttachmentId: Stri
 	val diskAttachment =
 		DiskAttachmentBuilder().id(diskAttachmentId).active(false).build()
 
-	this.updateDiskAttachmentToVm(vmId, diskAttachment)
-		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
+	// this.updateDiskAttachmentToVm(vmId, diskAttachment)
+	// 	.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
 
 	true
 }.onSuccess {

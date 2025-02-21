@@ -1,11 +1,10 @@
 import React from "react";
-import { useVmById } from "../../../api/RQHook";
 import VmDiskConnectionModal from "./VmDiskConnectionModal";
 import VmDiskModal from "./VmDiskModal";
 import VmDiskActionModal from "./VmDiskActionModal";
 import VmDiskDeleteModal from "./VmDiskDeleteModal";
+import { useVmById } from "../../../api/RQHook";
 
-  
 /**
  * @name VmDiskModals
  * @description ...
@@ -15,19 +14,19 @@ import VmDiskDeleteModal from "./VmDiskDeleteModal";
  */
 const VmDiskModals = ({
   activeModal,
-  vmId,
   disk,
   selectedDisks = [],
+  vmId,
   onClose,
 }) => {
-  const { data: vm } = useVmById(vmId);
+  const { data: vm }  = useVmById(vmId);
 
   const modals = {
     create: (
       <VmDiskModal
         isOpen={activeModal === "create"}
-        vm={vm}
-        dataCenterId={vm?.dataCenterVo?.id}
+        vmId={vmId || ""}
+        dataCenterId={vm?.dataCenterVo?.id || ""}
         onClose={onClose}
       />
     ),
@@ -35,15 +34,15 @@ const VmDiskModals = ({
       <VmDiskModal
         editMode
         isOpen={activeModal === "edit"}
-        vm={vm}
-        diskAttachment={disk}
+        vmId={vmId}
+        diskAttachmentId={disk?.id}
         onClose={onClose}
       />
     ),
     delete: (
       <VmDiskDeleteModal
         isOpen={activeModal === "delete"}
-        vmId={vmId}
+        vmId={vmId || ""}
         data={selectedDisks}
         onClose={onClose}
       />
@@ -51,8 +50,8 @@ const VmDiskModals = ({
     connect: (
       <VmDiskConnectionModal
         isOpen={activeModal === "connect"}
-        vm={vm}
-        dataCenterId={vm?.dataCenterVo?.id}
+        vmId={vmId}
+        dataCenterId={vm?.dataCenterVo?.id || ""}
         onClose={onClose}
       />
     ),
@@ -61,7 +60,7 @@ const VmDiskModals = ({
         isOpen={activeModal === "activate"}
         action={"activate"}
         onClose={onClose}
-        vm={vm}
+        vmId={vmId}
         data={selectedDisks}
       />
     ),
@@ -70,11 +69,12 @@ const VmDiskModals = ({
         isOpen={activeModal === "deactivate"}
         action={"deactivate"}
         onClose={onClose}
-        vm={vm}
+        vmId={vmId}
         data={selectedDisks}
       />
     ),
-    move: <></>,
+    move: 
+      <></>,
   };
 
   return (
@@ -82,6 +82,7 @@ const VmDiskModals = ({
       {Object.keys(modals).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
+      {/* <span>dc: {vm?.dataCenterVo?.id} vm:{vmId}</span> */}
     </>
   );
 };

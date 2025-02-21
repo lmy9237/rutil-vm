@@ -11,7 +11,7 @@ import "./IconButton.css";
  * @returns
  */
 const IconButton = ({ id, key, label, icon, onClick, disabled }) => {
-  console.log("...")
+  // console.log("...")
   return (
     <button
       id={id}

@@ -6,6 +6,7 @@ import VmDiskModals from "../modal/vm/VmDiskModals";
 import VmDiskActionButtons from "./VmDiskActionButtons";
 import { renderTFStatusIcon } from "../Icon";
 import { checkZeroSizeToGB } from "../../util";
+import { useVmById } from "../../api/RQHook";
 
 /**
  * @name VmDiskDupl
@@ -16,10 +17,11 @@ import { checkZeroSizeToGB } from "../../util";
  */
 const VmDiskDupl = ({ 
   isLoading, isError, isSuccess,
-  vmDisks = [], columns = [], vm,
+  vmDisks = [], columns = [], vmId,
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
+  const { data: vm }  = useVmById(vmId);
   const [selectedDisks, setSelectedDisks] = useState([]); // 다중 선택된 디스크
   const selectedIds = (Array.isArray(selectedDisks) ? selectedDisks : []).map((disk) => disk.id).join(", ");
 
@@ -37,7 +39,7 @@ const VmDiskDupl = ({
         status={selectedDisks[0]?.active ? "active" : "deactive"}
         selectedDisks={selectedDisks}
       />
-      <span>ID: {selectedIds || ""}</span>
+      <span style={{fontSize:"16px"}}>ID: {selectedIds || ""}</span>
       
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
@@ -87,7 +89,7 @@ const VmDiskDupl = ({
           activeModal={activeModal}
           disk={selectedDisks[0]}
           selectedDisks={selectedDisks}
-          vmId={vm?.id}
+          vmId={vmId}
           onClose={closeModal}
         />
       </Suspense>

@@ -11,10 +11,22 @@ import {
   useAllDiskProfileFromDomain,
   useAddDiskFromVM,
   useEditDiskFromVM,
-  useEditDisk,
   useDiskAttachmentFromVm,
+  useVmById,
 } from "../../../api/RQHook";
-import { checkKoreanName, convertBytesToMB } from "../../../util";
+import { checkKoreanName, convertBytesToGB } from "../../../util";
+
+
+const interfaceList = [
+  { value: "VIRTIO_SCSI", label: "VirtIO-SCSI" },
+  { value: "VIRTIO", label: "VirtIO" },
+  { value: "SATA", label: "SATA" },
+];
+
+const sparseList = [
+  { value: "true", label: "씬 프로비저닝" },
+  { value: "false", label: "사전 할당" },
+];
 
 const initialFormState = {
   id: "",
@@ -29,91 +41,72 @@ const initialFormState = {
   bootable: false, // 부팅가능
   sharable: false, // 공유가능
   readOnly: false, // 읽기전용
-  cancelActive: false, // 취소 활성화
+  // cancelActive: false, // 취소 활성화
   backup: true, // 증분 백업사용
 };
-
-// eslint-disable-next-line react-hooks/exhaustive-deps
-const interfaceList = [
-  { value: "VIRTIO_SCSI", label: "VirtIO-SCSI" },
-  { value: "VIRTIO", label: "VirtIO" },
-  { value: "SATA", label: "SATA" },
-];
-
-const sparseList = [
-  { value: "true", label: "씬 프로비저닝" },
-  { value: "false", label: "사전 할당" },
-];
 
 // type은 vm이면 가상머신 생성할때 디스크 생성하는 창, disk면 가상머신 디스크 목록에서 생성하는
 const VmDiskModal = ({
   isOpen,
   editMode = false,
-  vm,
-  vmName,
+  vmId,
+  diskAttachmentId,
   dataCenterId,
-  diskAttachment,
-  type = "disk",
-  onCreateDisk,
+  diskType = true,  // t=disk페이지에서 생성 f=vm만들때 같이 생성
   onClose,
+
+  vmName, //가상머신 생성 디스크 이름
+  onCreateDisk,
 }) => {
   const dLabel = editMode ? "편집" : "생성";
-  const { mutate: addDiskVm } = useAddDiskFromVM();
-  const { mutate: editDiskVm } = useEditDiskFromVM();
-  const { mutate: editDisk } = useEditDisk();
-
   const [activeTab, setActiveTab] = useState("img");
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+  const handleTabClick = (tab) => { setActiveTab(tab) };
 
   const [formState, setFormState] = useState(initialFormState);
-  const [domainVoId, setDomainVoId] = useState("");
-  const [diskProfileVoId, setDiskProfileVoId] = useState("");
+  const [storageDomainVo, setStorageDomainVo] = useState({ id: "", name: "" });
+  const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
+
+  const { mutate: addDiskVm } = useAddDiskFromVM();
+  const { mutate: editDiskVm } = useEditDiskFromVM();
+  const { data: vm }  = useVmById(vmId);
 
   // 디스크 데이터 가져오기
-  const {
-    data: diskAtt,
-    refetch: refetchDisk,
-    isLoading: isDiskLoading,
-  } = useDiskAttachmentFromVm(vm?.id, diskAttachment?.id);
+  const { data: diskAttachment } = 
+    useDiskAttachmentFromVm(vmId, diskAttachmentId);
 
   // 선택한 데이터센터가 가진 도메인 가져오기
-  const {
-    data: domains = [],
-    refetch: refetchDomains,
-    isLoading: isDomainsLoading,
-  } = useAllActiveDomainFromDataCenter(dataCenterId, (e) => ({ ...e }));
+  const { data: domains = [], isLoading: isDomainsLoading } = 
+    useAllActiveDomainFromDataCenter(vm?.dataCenterVo?.id || dataCenterId, (e) => ({ ...e }));
 
   // 선택한 도메인이 가진 디스크 프로파일 가져오기
-  const {
-    data: diskProfiles = [],
-    refetch: diskProfilesRefetch,
-    isLoading: isDiskProfilesLoading,
-  } = useAllDiskProfileFromDomain(domainVoId, (e) => ({ ...e }));
+  const { data: diskProfiles = [], isLoading: isDiskProfilesLoading, } = 
+    useAllDiskProfileFromDomain(storageDomainVo.id, (e) => ({ ...e }));
 
   useEffect(() => {
-    if (!isOpen) return setFormState(initialFormState);
+    if (!isOpen) {
+      setFormState(initialFormState);
+      setStorageDomainVo({ id: "", name: "" });
+      setDiskProfileVo({ id: "", name: "" });
+    } 
     if (editMode && diskAttachment) {
       setFormState({
         id: diskAttachment?.id || "",
-        size: convertBytesToMB (diskAttachment?.diskImageVo?.virtualSize),
-        // size: (diskAttachment?.diskImageVo?.virtualSize /(1024 * 1024 * 1024)).toFixed(0),
+        size: convertBytesToGB (diskAttachment?.diskImageVo?.virtualSize),
         appendSize: 0,
         alias: diskAttachment?.diskImageVo?.alias || "",
         description: diskAttachment?.diskImageVo?.description || "",
         interface_: diskAttachment?.interface_ || "VIRTIO_SCSI",
-        sparse: diskAttachment?.sparse || false,
+        sparse: diskAttachment?.diskImageVo?.sparse || false,
         active: diskAttachment?.active || false,
         wipeAfterDelete: diskAttachment?.diskImageVo?.wipeAfterDelete || false,
         bootable: diskAttachment?.bootable || false,
         sharable: diskAttachment?.diskImageVo?.sharable || false,
         readOnly: diskAttachment?.readOnly || false,
-        cancelActive: diskAttachment?.cancelActive || false,
+        // cancelActive: diskAttachment?.cancelActive || false,
         backup: diskAttachment?.diskImageVo?.backup || false,
       });
-      setDomainVoId(diskAttachment?.diskImageVo?.storageDomainVo?.id);
-      setDiskProfileVoId(diskAttachment?.diskImageVo?.diskProfileVo?.id || "");
+      setStorageDomainVo({ id: diskAttachment?.diskImageVo?.storageDomainVo?.id || "", name: diskAttachment?.diskImageVo?.storageDomainVo?.name || "" });
+      setDiskProfileVo({ id: diskAttachment?.diskImageVo?.diskProfileVo?.id || "", name: diskAttachment?.diskImageVo?.diskProfileVo?.name || "" });
     }
   }, [isOpen, editMode, diskAttachment]);
 
@@ -124,14 +117,16 @@ const VmDiskModal = ({
   }, [vmName]);
 
   useEffect(() => {
-    if (!editMode && domains.length > 0) {
-      setDomainVoId(domains[0].id);
+    if (!editMode && domains && domains.length > 0) {
+      const firstDomain = domains[0];
+      setStorageDomainVo({id: firstDomain.id, name: firstDomain.name});
     }
   }, [domains, editMode]);
+  
 
   useEffect(() => {
-    if (!editMode && diskProfiles.length > 0) {
-      setDiskProfileVoId(diskProfiles[0].id);
+    if (!editMode && diskProfiles && diskProfiles.length > 0) {
+      setDiskProfileVo({id: diskProfiles[0].id});
     }
   }, [diskProfiles, editMode]);
 
@@ -153,8 +148,8 @@ const VmDiskModal = ({
     if (!formState.alias) return "별칭을 입력해주세요.";
     if (checkKoreanName(formState.alias)) return "별칭을 입력해주세요.";
     if (!formState.size) return "크기를 입력해주세요.";
-    if (!domainVoId) return "스토리지 도메인을 선택해주세요.";
-    if (!diskProfileVoId) return "디스크 프로파일을 선택해주세요.";
+    if (!storageDomainVo.id) return "스토리지 도메인을 선택해주세요.";
+    if (!diskProfileVo.id) return "디스크 프로파일을 선택해주세요.";
     return null;
   };
 
@@ -170,8 +165,8 @@ const VmDiskModal = ({
       sparse: formState.sparse,
       bootable: formState.bootable,
       readOnly: formState.readOnly,
-      storageDomainVo: { id: domainVoId },
-      diskProfileVo: { id: diskProfileVoId },
+      storageDomainVo: { id: storageDomainVo.id },
+      diskProfileVo: { id: diskProfileVo.id },
       isCreated: true, // 🚀 생성된 디스크는 isCreated: true
     };
     onCreateDisk(newDisk);
@@ -186,19 +181,20 @@ const VmDiskModal = ({
     const appendSizeToBytes =
       parseInt(formState.appendSize || 0, 10) * 1024 * 1024 * 1024; // GB -> Bytes 변환 (기본값 0)
 
-    const selectedDomain = domains.find((dm) => dm.id === domainVoId);
-    const selectedDiskProfile = diskProfiles.find(
-      (dp) => dp.id === diskProfileVoId
-    );
+    const selectedDomain = domains.find((dm) => dm.id === storageDomainVo.id);
+    const selectedDiskProfile = diskProfiles.find((dp) => dp.id === diskProfileVo.id);
+    console.log("Form Data: ", selectedDomain);
 
     // 전송 객체
     const dataToSubmit = {
-      id: diskAttachment?.id,
-      bootable: formState.bootable,
-      readOnly: formState.readOnly,
-      passDiscard: formState.passDiscard,
-      interface_: formState.interface_,
+      // id: disk?.id,
+      ...formState,
+      // bootable: formState.bootable,
+      // readOnly: formState.readOnly,
+      // passDiscard: formState.passDiscard,
+      // interface_: formState.interface_,
       diskImageVo: {
+        id:formState?.id,
         alias: formState.alias,
         size: sizeToBytes,
         appendSize: appendSizeToBytes,
@@ -207,10 +203,7 @@ const VmDiskModal = ({
         backup: formState.backup,
         sparse: Boolean(formState.sparse),
         storageDomainVo: { id: selectedDomain?.id, name: selectedDomain?.name },
-        diskProfileVo: {
-          id: selectedDiskProfile?.id,
-          name: selectedDiskProfile?.name,
-        },
+        diskProfileVo: { id: selectedDiskProfile?.id, name: selectedDiskProfile?.name },
       },
     };
 
@@ -225,14 +218,14 @@ const VmDiskModal = ({
     editMode
       ? editDiskVm(
           {
-            vmId: vm?.id,
-            diskAttachmentId: diskAttachment?.id,
+            vmId,
+            diskAttachmentId: formState?.id,
             diskAttachment: dataToSubmit,
           },
           { onSuccess, onError }
         )
       : addDiskVm(
-          { vmId: vm?.id, diskData: dataToSubmit },
+          { vmId, diskData: dataToSubmit },
           { onSuccess, onError }
         );
   };
@@ -243,9 +236,8 @@ const VmDiskModal = ({
       onClose={onClose}
       targetName={"디스크"}
       submitTitle={dLabel}
-      onSubmit={type === "disk" ? handleFormSubmit : handleOkClick}
+      onSubmit={diskType? handleFormSubmit : handleOkClick}
       contentStyle={{ width: "780px", height: "570px" }} 
-      
     >
       {/* <div className="storage-disk-new-popup modal"> */}
       <div className="popup-content-outer">
@@ -281,37 +273,28 @@ const VmDiskModal = ({
                   onChange={handleInputChange("appendSize")}
                 />
               )}
-              <LabelInput
-                className="img-input-box"
-                label="별칭"
-                value={formState.alias}
-                onChange={handleInputChange("alias")}
-              />
-              <LabelInput
-                className="img-input-box"
-                label="설명"
-                value={formState.description}
-                onChange={handleInputChange("description")}
-              />
+              <LabelInput className="img-input-box" label="별칭" value={formState.alias} onChange={handleInputChange("alias")}/>
+              <LabelInput className="img-input-box" label="설명" value={formState.description} onChange={handleInputChange("description")}/>
 
               <LabelSelectOptions
                 className="img-input-box"
                 label="인터페이스"
                 value={formState.interface_}
-                onChange={(e) =>
-                  setFormState((prev) => ({
-                    ...prev,
-                    interface_: e.target.value,
-                  }))
-                }
+                onChange={handleInputChange("interface_")}
                 disabled={editMode}
                 options={interfaceList}
               />
               <LabelSelectOptionsID
                 className="img-input-box"
                 label="스토리지 도메인"
-                value={domainVoId}
-                onChange={(e) => setDomainVoId(e.target.value)}
+                value={storageDomainVo.id}
+                onChange={(e) => {
+                  const selectedDomain = domains.find((domain) => domain.id === e.target.value);
+                  setStorageDomainVo({
+                    id: e.target.value,
+                    name: selectedDomain ? selectedDomain.name : "",
+                  });
+                }}
                 disabled={editMode}
                 loading={isDomainsLoading}
                 options={domains}
@@ -319,7 +302,8 @@ const VmDiskModal = ({
               <LabelSelectOptions
                 className="img-input-box"
                 label="할당 정책"
-                value={formState.sparse ? "true" : "false"}
+                value={String(formState.sparse)}
+                // value={formState.sparse ? "true" : "false"}
                 onChange={(e) =>
                   setFormState((prev) => ({
                     ...prev,
@@ -332,51 +316,27 @@ const VmDiskModal = ({
               <LabelSelectOptionsID
                 className="img-input-box"
                 label="디스크 프로파일"
-                value={diskProfileVoId}
-                onChange={(e) => setDiskProfileVoId(e.target.value)}
+                value={diskProfileVo.id}
+                onChange={(e) => {
+                  const selectedDiskProfile = domains.find((dp) => dp.id === e.target.value);
+                  setDiskProfileVo({
+                    id: e.target.value,
+                    name: selectedDiskProfile ? selectedDiskProfile.name : "",
+                  });
+                }}
                 loading={isDiskProfilesLoading}
                 options={diskProfiles}
               />
             </div>
 
             <div className="disk-new-img-right">
-              <LabelCheckbox
-                label="삭제 후 초기화"
-                id="wipeAfterDelete"
-                checked={formState.wipeAfterDelete}
-                onChange={handleInputChangeCheck("wipeAfterDelete")}
-              />
-              <LabelCheckbox
-                label="부팅 가능"
-                id="bootable"
-                checked={formState.bootable}
-                onChange={handleInputChangeCheck("bootable")}
-                // disabled={!formState.bootable}
-              />
-              <LabelCheckbox
-                label="공유 가능"
-                id="sharable"
-                checked={formState.sharable}
-                onChange={handleInputChangeCheck("sharable")}
-              />
-              <LabelCheckbox
-                label="읽기 전용"
-                id="readOnly"
-                checked={formState.readOnly}
-                onChange={handleInputChangeCheck("readOnly")}
-              />
-              <LabelCheckbox
-                label="취소 활성화"
-                id="cancelActive"
-                checked={formState.cancelActive}
-                onChange={handleInputChangeCheck("cancelActive")}
-              />
-              <LabelCheckbox
-                label="증분 백업 사용"
-                id="backup"
-                checked={formState.backup}
-                onChange={handleInputChangeCheck("backup")}
-              />
+              <LabelCheckbox label="삭제 후 초기화" id="wipeAfterDelete" checked={Boolean(formState.wipeAfterDelete)} onChange={handleInputChangeCheck("wipeAfterDelete")}/>
+              <LabelCheckbox label="부팅 가능" id="bootable" checked={Boolean(formState.bootable)} onChange={handleInputChangeCheck("bootable")} />
+              {/* disabled={!formState.bootable}  */}
+              <LabelCheckbox label="공유 가능" id="sharable" checked={Boolean(formState.sharable)} onChange={handleInputChangeCheck("sharable")} disabled={editMode} />
+              <LabelCheckbox label="읽기 전용" id="readOnly" checked={Boolean(formState.readOnly)} onChange={handleInputChangeCheck("readOnly")} disabled={editMode}/>
+              {/* <LabelCheckbox label="취소 활성화" id="cancelActive" checked={Boolean(formState.cancelActive)} onChange={handleInputChangeCheck("cancelActive")} disabled={editMode}/> */}
+              <LabelCheckbox label="증분 백업 사용" id="backup" checked={Boolean(formState.backup)} onChange={handleInputChangeCheck("backup")} />
             </div>
           </div>
         )}

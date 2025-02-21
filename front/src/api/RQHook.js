@@ -1878,13 +1878,15 @@ export const useDeleteNetworkInterface = () => {
  * * @see ApiManager.findDiskattachmentFromVM
  */
 export const useDiskAttachmentFromVm = (vmId, diskAttachmentId) => useQuery({
-  queryKey: ['DiskAttachmentFromVm', vmId],
+  refetchOnWindowFocus: true,
+  queryKey: ['DiskAttachmentFromVm', vmId, diskAttachmentId],
   queryFn: async () => {
     const res = await ApiManager.findDiskattachmentFromVM(vmId, diskAttachmentId);
     return res ?? {};
   },
-  enabled: !!vmId
+  enabled: !!vmId && !!diskAttachmentId,
 });
+
 
 
 /**

@@ -171,7 +171,7 @@ class VmDiskService(
 
 	@Throws(Error::class)
 	override fun findOneFromVm(vmId: String, diskAttachmentId: String): DiskAttachmentVo? {
-		log.info("findOneFromVm ... vmId: {}", vmId)
+		log.info("findDiskFromVm ... vmId: {}, diskAttachmentId: {}", vmId, diskAttachmentId)
 		val res: DiskAttachment? = conn.findDiskAttachmentFromVm(vmId, diskAttachmentId)
 			.getOrNull()
 		return res?.toDiskAttachmentVo(conn)
@@ -180,6 +180,8 @@ class VmDiskService(
 	@Throws(Error::class)
 	override fun addFromVm(vmId: String, diskAttachmentVo: DiskAttachmentVo): DiskAttachmentVo? {
 		log.info("addFromVm ... vmId: {}", vmId)
+		log.info("addDiskAttach ...diskAttachmentVo {}", diskAttachmentVo.toAddDiskAttachment())
+
 		val res: DiskAttachment? = conn.addDiskAttachmentToVm(
 			vmId,
 			diskAttachmentVo.toAddDiskAttachment()
@@ -187,8 +189,8 @@ class VmDiskService(
 		return res?.toDiskAttachmentVo(conn)
 	}
 
-	@Throws(Error::class)
 	// 연결
+	@Throws(Error::class)
 	override fun attachFromVm(vmId: String, diskAttachmentVo: DiskAttachmentVo): DiskAttachmentVo? {
 		log.info("attachFromVm ... vmId: {}, diskAttachmentVo: {}", vmId, diskAttachmentVo)
 		val res: DiskAttachment? = conn.addDiskAttachmentToVm(
@@ -197,8 +199,8 @@ class VmDiskService(
 		).getOrNull()
 		return res?.toDiskAttachmentVo(conn)
 	}
-	@Throws(Error::class)
 	// 연결
+	@Throws(Error::class)
 	override fun attachMultiFromVm(vmId: String, diskAttachmentVos: List<DiskAttachmentVo>): Boolean {
 		log.info("attachMultiFromVm ... vmId: {}", vmId)
 		val res: Result<Boolean> = conn.addMultipleDiskAttachmentsToVm(

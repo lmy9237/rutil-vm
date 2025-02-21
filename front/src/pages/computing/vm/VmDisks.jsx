@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VmDiskDupl from "../../../components/dupl/VmDiskDupl";
-import { useDisksFromVM, useVmById } from "../../../api/RQHook";
+import { useDisksFromVM } from "../../../api/RQHook";
 
 /**
  * @name VmDisks
@@ -12,14 +12,13 @@ import { useDisksFromVM, useVmById } from "../../../api/RQHook";
  */
 const VmDisks = ({ vmId }) => {
   const [activeDiskType, setActiveDiskType] = useState("all"); // 필터링된 디스크 유형
-  const { data: vm }  = useVmById(vmId);
-
+  
   const {
     data: disks = [],
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
-  } = useDisksFromVM(vmId);
+  } = useDisksFromVM(vmId, (e) => ({ ...e }));
 
   const diskTypes = [
     { type: "all", label: "모두" },
@@ -43,6 +42,9 @@ const VmDisks = ({ vmId }) => {
       </div>
 
       <VmDiskDupl
+        isLoading={isDisksLoading}
+        isError={isDisksError}
+        isSuccess={isDisksSuccess}
         vmDisks={
           activeDiskType === "all"
             ? disks
@@ -57,10 +59,7 @@ const VmDisks = ({ vmId }) => {
               ? TableColumnsInfo.DISK_IMAGES_FROM_VM
               : TableColumnsInfo.DISK_LUN_FROM_VM
         }
-        vm={vm}
-        isLoading={isDisksLoading}
-        isError={isDisksError}
-        isSuccess={isDisksSuccess}
+        vmId={vmId}
       />
     </>
   );

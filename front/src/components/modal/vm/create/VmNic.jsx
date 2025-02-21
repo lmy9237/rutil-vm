@@ -1,5 +1,4 @@
 
-
 const VmNic = ({ nicsState, setNicsState, nics }) => {
 
 

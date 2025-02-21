@@ -53,7 +53,7 @@ const VmDisk = ({
               isOpen={isConnectionPopupOpen}
               vm={vm}
               dataCenterId={dataCenterId}
-              type="vm"
+              diskType={false}
               existingDisks={diskListState.map((disk) => disk.id)} // 기존 연결된 디스크 전달
               onSelectDisk={handleSelectDisk}
               onClose={() => setIsConnectionPopupOpen(false)}
@@ -64,7 +64,7 @@ const VmDisk = ({
               // editMode={editMode}
               isOpen={isCreatePopupOpen}
               dataCenterId={dataCenterId}
-              type="vm"
+              diskType={false}
               vmName={`${vmName}_disk${newIndex}`}
               onCreateDisk={handleCreateDisk}
               onClose={() => setIsCreatePopupOpen(false)}
@@ -75,7 +75,7 @@ const VmDisk = ({
               editMode={true}
               isOpen={isEditPopupOpen}
               dataCenterId={dataCenterId}
-              type="vm"
+              diskType={false}
               onCreateDisk={(newDisk) => {
                 // 새로 생성된 디스크를 기존 목록에 추가
                 setDiskListState((prevDisks) => [...prevDisks, newDisk]);

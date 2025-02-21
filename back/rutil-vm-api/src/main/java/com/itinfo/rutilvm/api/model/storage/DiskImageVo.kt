@@ -68,7 +68,7 @@ class DiskImageVo(
 	val createDate: String = "",
 	val connectVm: IdentifiedVo = IdentifiedVo(),
 	val connectTemplate: IdentifiedVo = IdentifiedVo(),
-	val diskProfileVos: List<IdentifiedVo> = listOf()
+	// val diskProfileVos: List<IdentifiedVo> = listOf()
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -96,9 +96,9 @@ class DiskImageVo(
 		private var bCreateDate: String = "";fun createDate(block: () -> String?) { bCreateDate = block() ?: "" }
 		private var bConnectVm: IdentifiedVo = IdentifiedVo();fun connectVm(block: () -> IdentifiedVo?) { bConnectVm = block() ?: IdentifiedVo() }
 		private var bConnectTemplate: IdentifiedVo = IdentifiedVo();fun connectTemplate(block: () -> IdentifiedVo?) { bConnectTemplate = block() ?: IdentifiedVo() }
-		private var bDiskProfileVos: List<IdentifiedVo> = listOf();fun diskProfileVos(block: () -> List<IdentifiedVo>?) { bDiskProfileVos = block() ?: listOf() }
+		// private var bDiskProfileVos: List<IdentifiedVo> = listOf();fun diskProfileVos(block: () -> List<IdentifiedVo>?) { bDiskProfileVos = block() ?: listOf() }
 
-        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bDataCenterVo, bStorageDomainVo, bSparse, bDiskProfileVo, bWipeAfterDelete, bSharable, bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bCreateDate, bConnectVm, bConnectTemplate, bDiskProfileVos)
+        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bDataCenterVo, bStorageDomainVo, bSparse, bDiskProfileVo, bWipeAfterDelete, bSharable, bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bCreateDate, bConnectVm, bConnectTemplate/*, bDiskProfileVos*/)
 	}
 	companion object {
 		private val log by LoggerDelegate()
@@ -193,12 +193,13 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
 	}
 }
-fun List<Disk>.toDisksInfo(conn: Connection): List<DiskImageVo> =
-	this@toDisksInfo.map { it.toDiskInfo(conn) }
 
 fun Disk.toVmDisk(conn: Connection): DiskImageVo {
 	val disk = this@toVmDisk
 	val storageDomain: StorageDomain? = conn.findStorageDomain(this.storageDomains().first().id()).getOrNull()
+	val diskProfile: DiskProfile? =
+		if(disk.diskProfilePresent()) conn.findDiskProfile(disk.diskProfile().id()).getOrNull()
+		else null
 
 	return DiskImageVo.builder {
 		id { disk.id() }
@@ -206,9 +207,13 @@ fun Disk.toVmDisk(conn: Connection): DiskImageVo {
 		description { disk.description() }
 		status { disk.status() }
 		sparse { disk.sparse() } // 할당정책
-		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
+		wipeAfterDelete { disk.wipeAfterDelete() }
+		sharable { disk.shareable() }
+		backup { disk.backup() == DiskBackup.INCREMENTAL }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
+		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
+		diskProfileVo { diskProfile?.fromDiskProfileToIdentifiedVo() }
 	}
 }
 fun List<Disk>.toVmDisks(conn: Connection): List<DiskImageVo> =

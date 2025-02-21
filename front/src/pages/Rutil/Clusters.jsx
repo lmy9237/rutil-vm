@@ -20,11 +20,11 @@ const Clusters = () => {
   return (
     <>
       <ClusterDupl
-        clusters={clusters}
-        columns={TableColumnsInfo.CLUSTERS}
         isLoading={isClustersLoading}
         isError={isClustersError}
         isSuccess={isClustersSuccess}
+        clusters={clusters}
+        columns={TableColumnsInfo.CLUSTERS}
       />
     </>
   );

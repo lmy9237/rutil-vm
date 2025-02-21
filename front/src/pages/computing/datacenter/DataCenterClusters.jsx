@@ -16,11 +16,8 @@ const DataCenterClusters = ({ datacenterId }) => {
     isLoading: isDataCentersLoading,
     isError: isDataCentersError,
     isSuccess: isDataCentersSuccess,
-  } = useClustersFromDataCenter(datacenterId, (e) => ({
-    ...e,
-  }));
+  } = useClustersFromDataCenter(datacenterId, (e) => ({...e,}));
 
-  console.log("...");
   return (
     <>
       <ClusterDupl

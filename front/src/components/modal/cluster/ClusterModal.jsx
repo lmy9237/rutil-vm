@@ -119,7 +119,13 @@ const initialFormState = {
   errorHandling: "migrate",
 };
 
-const ClusterModal = ({isOpen, editMode = false, clusterId, datacenterId, onClose,}) => {
+const ClusterModal = ({
+  isOpen, 
+  editMode = false, 
+  clusterId, 
+  datacenterId, 
+  onClose
+}) => {
   const cLabel = editMode ? "편집" : "생성";
   const [formState, setFormState] = useState(initialFormState);
   const [dataCenterVoId, setDataCenterVoId] = useState("");

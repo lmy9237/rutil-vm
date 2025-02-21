@@ -22,9 +22,7 @@ const ClusterDupl = ({
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedClusters, setSelectedClusters] = useState([]);
-  const selectedIds = (Array.isArray(selectedClusters) ? selectedClusters : [])
-    .map((cluster) => cluster.id)
-    .join(", ");
+  const selectedIds = (Array.isArray(selectedClusters) ? selectedClusters : []).map((cluster) => cluster.id).join(", ");
 
   const handleNameClick = (id) => navigate(`/computing/clusters/${id}`);
 
@@ -50,7 +48,6 @@ const ClusterDupl = ({
         columns={columns}
         data={clusters.map((cluster) => ({
           ...cluster,
-          // name:<TableRowClick type="datacenter" id={cluster?.id}>{cluster?.name}</TableRowClick>,
           hostCnt: cluster?.hostSize?.allCnt,
           vmCnt: cluster?.vmSize?.allCnt,
           dataCenter: (

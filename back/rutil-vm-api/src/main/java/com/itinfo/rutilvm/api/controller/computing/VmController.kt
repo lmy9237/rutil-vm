@@ -721,7 +721,8 @@ class VmController: BaseController() {
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		if (diskAttachmentId.isNullOrEmpty())
 			throw ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND.toException()
-		log.info("/computing/vms/{}/disks/{} ... 가상머신 disk 목록", vmId, diskAttachmentId)
+		log.info("/computing/vms/{}/disks/{} ... 가상머신 disk", vmId, diskAttachmentId)
+		// log.info("vo: {}", iVmDisk.findOneFromVm(vmId, diskAttachmentId))
 		return ResponseEntity.ok(iVmDisk.findOneFromVm(vmId, diskAttachmentId))
 	}
 
