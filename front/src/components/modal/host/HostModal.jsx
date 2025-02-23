@@ -119,9 +119,10 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
       targetName={"호스트"}
       submitTitle={hLabel}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "730px", height: "560px" }} 
     >
       {/* <div className="host-new-popup modal"> */}
-      <div className="host-new-content modal-content">
+      <div className="popup-content-outer">
         <LabelSelectOptionsID
           label="호스트 클러스터"
           value={clusterVoId}
@@ -164,22 +165,21 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
         {!editMode && (
           <>
             <div className="font-semibold">
-              <label>인증</label>
+              <label className="p-1">인증</label>
             </div>
             <LabelInput label="사용자 이름" value="root" disabled={true} />
-            <div>
-              <label htmlFor="sshPassWord">암호</label>
-              <input
-                type="password"
-                id="sshPassWord"
-                value={formState.sshPassWord}
-                onChange={handleInputChange("sshPassWord")}
-              />
-            </div>
+            <LabelInputNum
+              label="암호"
+              id="sshPassWord"
+              value={formState.sshPassWord}
+              onChange={handleInputChange("sshPassWord")}
+              type="password" 
+            />
+
           </>
         )}
         <div>
-          <div>vGPU 배치</div>
+          <div className="p-1">vGPU 배치</div>
           <div className="flex">
             {["consolidated", "separated"].map((option) => (
               <label

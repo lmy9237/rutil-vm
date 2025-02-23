@@ -10,16 +10,17 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.13);
+  position: relative;
 }
 
 .header-right {
-  font-size: 0.4rem;
+  font-size: var(--fs-default-7);
   display: flex;
   align-items: center; /* 세로 중앙 정렬 추가 */
 }
 .menu-icon {
   margin-right: 0.24rem;
-  font-size: 0.44rem;
+  font-size: var(--fs-default-7);
   color: rgb(145, 150, 155);
   cursor: pointer;
 }
@@ -37,12 +38,12 @@
 .header-left {
   display: flex;
   justify-content: space-between;
-  font-size: 0.5rem;
+  font-size: var(--fs-big);
   min-width: 6%;
   align-items: center; /* 세로 중앙 정렬 추가 */
 }
 .header-left span {
-  font-size: 0.4rem;
+  font-size: var(--fs-default-7);
 }
 .header-left > div {
   padding: 0 0.15rem;
@@ -50,18 +51,12 @@
   color: rgb(0, 0, 0);
   border-radius: 50%;
 }
-.header-left > div > i {
-  font-size: 1.2em;
-  cursor: pointer;
-}
+
 .header-left > div:hover {
   background-color: #ebececd8;
 }
 /* Header 아이콘들 */
-.user-btn,
-.fa-bell-wrapper {
-  position: relative;
-}
+
 .user-btn {
   display: flex;
   align-items: center;
@@ -72,9 +67,9 @@
   z-index: 4;
   width: 9vw;
   right:0;
-  font-size: 0.3rem;
+  font-size: var(--fs-default-4);
   border: 1px solid rgb(204, 204, 204);
-  top: 113%;
+  top: 47px;
   border-radius: 3px;
 }
 .user-loginbox > div {
@@ -89,15 +84,15 @@
   z-index: 3;
   width: 11.65vw;
   right: 0;
-  font-size: 0.3rem;
+  font-size: var(--fs-default-4);
   border: 1px solid rgb(204, 204, 204);
-  top: 121%;
+  top: 47px;
   height: 89.6vh;
   border-radius: 2px;
 }
 
 .path {
-  font-size: 0.32rem;
+  font-size: var(--fs-default-4);
   margin-bottom: 0.2rem;
 }
 .clickable {
@@ -116,7 +111,7 @@
 .last-path-element {
   color: var(--color-primary-h);
   font-weight: bold;
-  font-size: 0.4rem;
+  font-size: var(--fs-default-7);
 }
 .logo {
   height: 4vh;

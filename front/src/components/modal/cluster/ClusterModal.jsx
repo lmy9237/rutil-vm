@@ -228,7 +228,7 @@ const ClusterModal = ({
       contentStyle={{ width: "730px", height: "660px" }} 
     >
       {/* <div className="cluster-new-popup modal"></div> */}
-      <div >
+      <div className="popup-content-outer">
         <LabelSelectOptionsID
           label="데이터센터"
           value={dataCenterVoId}

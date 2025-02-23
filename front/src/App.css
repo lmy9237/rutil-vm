@@ -34,8 +34,9 @@ html {
   --fs-default-4: 14px;
   --fs-default: 16px;
   --fs-default-7: 18px;
+  --fs-21: 21px;
   --fs-big: 24px;
-  --fs-bigger: 36px;
+  --fs-bigger: 30px;
   --fs-biggest: 47px;
   --fs-tb-default: 12px;
 }
@@ -2550,9 +2551,9 @@ background-color: #f0f0f0;
     }
 }
 @media screen and (max-width: 500px) {
-    .section-header{
+    /* .section-header{
         display:block;
-    }
+    } */
     .section-header>div:nth-child(2){
         justify-content: right;
     }

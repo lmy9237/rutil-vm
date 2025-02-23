@@ -23,7 +23,7 @@ import {
  * 
  */
 const MainOuter = ({ children,asideVisible,setAsideVisible   }) => {
-    const [sidebarWidth, setSidebarWidth] = useState(300); // 초기 사이드바 너비 (%)
+    const [sidebarWidth, setSidebarWidth] = useState(240); // 초기 사이드바 너비 (%)
     
     const resizerRef = useRef(null);
     const isResizing = useRef(false);

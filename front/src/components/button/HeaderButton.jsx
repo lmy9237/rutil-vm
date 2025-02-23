@@ -58,7 +58,7 @@ const HeaderButton = ({
   console.log("...")
   return (
     <div className="section-header">
-      <div className="flex justify-start align-center text-(--color-primary-h) section-header-left">
+      <div className="flex text-(--color-primary-h) section-header-left">
         <div className="flex justify-center align-center">
           {titleIcon && (
             <FontAwesomeIcon

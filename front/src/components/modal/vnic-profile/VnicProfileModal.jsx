@@ -258,7 +258,7 @@ const VnicProfileModal = ({
     >
 
       {/* <div className="vnic-new-content-popup modal"> */}
-      <div className="vnic-new-content">
+      <div className="popup-content-outer">
         <div className="vnic-new-contents" style={{ paddingTop: "0.2rem" }}>
           <FormGroup label="데이터 센터">
             <select

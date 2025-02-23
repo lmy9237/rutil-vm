@@ -1,6 +1,5 @@
 .content-header {
     border-right: var(--border-simple);
-    width: 12%;
 }
 .active {
     transition: all 0.3s ease;
@@ -9,6 +8,7 @@
 .content-header-left {
     font-size: 0.65rem;
     border-radius: 3px;
+    width: 160px;
 }
 
 .content-header-left div {
