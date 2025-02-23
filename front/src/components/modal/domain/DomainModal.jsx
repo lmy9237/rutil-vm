@@ -179,7 +179,7 @@ const DomainModal = ({
         setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id);
       }
     }
-  }, [isOpen, editMode, domain]);
+  }, [, editMode, domain]);
 
   useEffect(() => {
     if (datacenterId) {

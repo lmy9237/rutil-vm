@@ -1144,14 +1144,14 @@ export const useVmById = (vmId) => useQuery({
   enabled: !!vmId
 });
 /**
- * @name useEditVmById
+ * @name useFindEditVmById
  * @description 가상머신 편집 상세조회 useQuery 훅
  * 
  * @param {string} vmId 가상머신 ID
  * @returns useQuery 훅
  * @see ApiManager.findVM
  */
-export const useEditVmById = (vmId) => useQuery({
+export const useFindEditVmById = (vmId) => useQuery({
   queryKey: ['editVmById', vmId],
   queryFn: async () => {
     if (!vmId) return {};  

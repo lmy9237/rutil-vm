@@ -138,14 +138,6 @@ fun DiskAttachmentVo.toDiskAttachment(): DiskAttachmentBuilder {
 }
 
 /**
- * DiskAttachmentBuilder 에서 생성된 디스크를 연결해서 붙이는 방식
- */
-fun DiskAttachmentVo.toAttachDisk(): DiskAttachment =
-	toDiskAttachment()
-		.disk(DiskBuilder().id(this.diskImageVo.id).build())
-		.build()
-
-/**
  * DiskAttachmentBuilder 에서 디스크를 생성해서 붙이는 방식
  */
 fun DiskAttachmentVo.toAddDiskAttachment(): DiskAttachment =
@@ -153,6 +145,13 @@ fun DiskAttachmentVo.toAddDiskAttachment(): DiskAttachment =
 		.disk(this.diskImageVo.toAddDiskBuilder())
 		.build()
 
+/**
+ * DiskAttachmentBuilder 에서 생성된 디스크를 연결해서 붙이는 방식
+ */
+fun DiskAttachmentVo.toAttachDisk(): DiskAttachment =
+	toDiskAttachment()
+		.disk(DiskBuilder().id(this.diskImageVo.id).build())
+		.build()
 
 /**
  * DiskAttachmentBuilder 에서 디스크 편집
@@ -165,8 +164,12 @@ fun DiskAttachmentVo.toEditDiskAttachment(): DiskAttachment =
 
 
 fun List<DiskAttachmentVo>.toAddVmDiskAttachmentList(): List<DiskAttachment> =
-	map { it.run { if (diskImageVo.id.isEmpty()) toAddDiskAttachment() else toAttachDisk() } }
+	map { it.run {
+		if (diskImageVo.id.isEmpty()) toAddDiskAttachment()
+		else toAttachDisk() }
+	}
 		.also { log.info("Generated disk attachments: $it") }
+
 
 fun List<DiskAttachmentVo>.toAttachDiskList(): List<DiskAttachment> =
 	map { it.toAttachDisk() }
@@ -187,13 +190,6 @@ fun List<DiskAttachmentVo>.toAttachDiskList(): List<DiskAttachment> =
 // 	log.info("disk: {}", this)
 // 	return diskAttachmentList
 // }
-//
-// /**
-//  * 연결될 DiskAttachment 를 목록으로 내보낸다
-//  */
-// fun List<DiskAttachmentVo>.toAttachDiskList(): List<DiskAttachment> =
-// 	this.map { it.toAttachDisk() }
-
 
 
 fun DiskAttachmentVo.toAddSnapshotDisk(): DiskAttachment {

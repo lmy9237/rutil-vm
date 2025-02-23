@@ -2,17 +2,16 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import {
+  useFindEditVmById,  
   useAddVm,
   useEditVm,
   useAllUpClusters,
   useCDFromDataCenter,
-  useDisksFromVM,
   useHostFromCluster,
   useAllActiveDomainFromDataCenter,
   useAllvnicFromDataCenter,
   useOsSystemsFromCluster,
   useFindTemplatesFromDataCenter,
-  useEditVmById,  
 } from '../../../api/RQHook';
 import VmCommon from './create/VmCommon';
 import VmNic from './create/VmNic';
@@ -24,8 +23,8 @@ import VmHa from './create/VmHa';
 import VmBoot from './create/VmBoot';
 import LabelSelectOptions from '../../label/LabelSelectOptions';
 import LabelSelectOptionsID from '../../label/LabelSelectOptionsID';
-import './MVm.css';
 import { checkKoreanName } from "../../../util";
+import './MVm.css';
 
 // 탭 메뉴
 const tabs = [
@@ -130,7 +129,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   const { mutate: editVM } = useEditVm();
 
   // 가상머신 상세데이터 가져오기
-  const { data: vm } = useEditVmById(vmId);
+  const { data: vm } = useFindEditVmById(vmId);
 
   // 클러스터 목록 가져오기
   const { data: clusters = [], isLoading: isClustersLoading } =
@@ -432,25 +431,19 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
                 disabled={editMode} // 편집 모드일 경우 비활성화
                 loading={isTemplatesLoading}
                 options={templates}
-              />    
+              />
 
               {/* <LabelSelectOptionsID
                 label="운영 시스템"
                 id="os_system"
                 value={formInfoState.osSystem}
-                onChange={(e) =>
-                  setFormInfoState((prev) => ({
-                    ...prev,
-                    osSystem: e.target.value,
-                  }))
-                }
+                onChange={ handleInputChange("osSystem") }
                 options={osList.map((opt) => ({
                   id: opt.name,
                   name: opt.description,
                 }))}
-              /> 
-              TODO: options에 대한 별도 소형 컴포넌트 생성 필요
-              */}
+              />  */}
+             {/* TODO: options에 대한 별도 소형 컴포넌트 생성 필요 */}
               <div className='input-select'>
                 <label>운영 시스템</label>
                 <select

@@ -119,7 +119,7 @@ class VmController: BaseController() {
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="vm", value="가상머신", dataTypeClass=VmVo::class, paramType="body"),
+		ApiImplicitParam(name="vm", value="가상머신", dataTypeClass=VmCreateVo::class, paramType="body"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
@@ -129,8 +129,8 @@ class VmController: BaseController() {
 	@ResponseStatus(HttpStatus.CREATED)
 	fun update(
 		@PathVariable vmId: String?,
-		@RequestBody vm: VmVo?
-	): ResponseEntity<VmVo?> {
+		@RequestBody vm: VmCreateVo?
+	): ResponseEntity<VmCreateVo?> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		if (vm == null)

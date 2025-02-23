@@ -60,11 +60,11 @@ interface ItVmService {
 	 * [ItVmService.update]
 	 * 가상머신 편집
 	 *
-	 * @param vmVo [VmVo]
+	 * @param vmCreateVo [VmCreateVo]
 	 * @return [VmVo]
 	 */
 	@Throws(Error::class)
-	fun update(vmVo: VmVo): VmVo?
+	fun update(vmCreateVo: VmCreateVo): VmCreateVo?
 	/**
 	 * [ItVmService.remove]
 	 * 가상머신 삭제
@@ -165,76 +165,61 @@ class VmServiceImpl(
 		).getOrNull()
 		return res?.toVmCreateVo(conn)
 	}
-	// @Throws(Error::class)
-	// override fun add(vmVo: VmVo): VmVo? {
-	// 	log.info("add ... vmVo: {}", vmVo)
-	//
-	// 	if(vmVo.diskAttachmentVos.filter { it.bootable }.size > 1){
-	// 		log.error("디스크 부팅가능은 한개만 가능")
-	// 		throw ErrorPattern.VM_VO_INVALID.toException()
-	// 	}
-	//
-	// 	val res: Vm? = conn.addVm(
-	// 		vmVo.toAddVmBuilder(),
-	// 		vmVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
-	// 		vmVo.vnicProfileVos.map { it.id }.takeIf { it.isNotEmpty() }, // NIC가 있는 경우만 전달
-	// 		vmVo.connVo.id.takeIf { it.isNotEmpty() }  // ISO 설정이 있는 경우만 전달
-	// 	).getOrNull()
-	// 	return res?.toVmVo(conn)
-	// }
 
-
-	//TODO
 	@Throws(Error::class)
-	override fun update(vmVo: VmVo): VmVo? {
-		log.info("update ... {}", vmVo)
-		if(vmVo.diskAttachmentVos.filter { it.bootable }.size != 1){
+	override fun update(vmCreateVo: VmCreateVo): VmCreateVo? {
+		log.info("update ... vmCreateVo: {}", vmCreateVo)
+		if(vmCreateVo.diskAttachmentVos.filter { it.bootable }.size != 1){
 			log.error("디스크 부팅가능은 한개만 가능")
 			throw ErrorPattern.VM_VO_INVALID.toException()
 		}
 
-		val existDiskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmVo.id).getOrDefault(listOf())
+		// 가상머신이 가지고 있는 디스크 목록
+		val existDiskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmCreateVo.id).getOrDefault(listOf())
 
-		// 기존에 disk에 없는 아이디라면 디스크 생성
-		val diskAttachmentListToAdd: List<DiskAttachment> = vmVo.diskAttachmentVos.filter { diskAttachmentVo ->
-			existDiskAttachments.none { it.id() == diskAttachmentVo.id }
-		}.map {
-			it.toAddDiskAttachment()
-		}
-		val diskAttachmentListToDelete: List<DiskAttachment> = existDiskAttachments.filter { existingDisk ->
-			// 기존 디스크가 새 목록에 없으면 삭제할 목록에 넣음
-			vmVo.diskAttachmentVos.none { it.id == existingDisk.id() }
+		// 기존 디스크가 새 목록에 없으면 삭제
+		existDiskAttachments.filter { existingDisk ->
+			vmCreateVo.diskAttachmentVos.none { it.id == existingDisk.id() }
+		}.map { diskAttachment ->
+			log.info("디스크 삭제: {}", diskAttachment.id())
+			conn.removeDiskAttachmentToVm(vmCreateVo.id, diskAttachment.id(), true)
 		}
 
-/*
-		val diskAttachmentListToAdd = mutableListOf<DiskAttachment>()
-		val diskAttachmentListToDelete = mutableListOf<DiskAttachment>()
-
-		vmVo.diskAttachmentVos.forEach { diskAttachmentVo ->
-			if (existDiskAttachments.none { it.id() == diskAttachmentVo.id }) {
-				diskAttachmentListToAdd.add(diskAttachmentVo.toAddDiskAttachment())
+		// 기존 디스크에 존재하는데 id와 alias가 있다면 편집
+		vmCreateVo.diskAttachmentVos.filter { diskAttachmentVo ->
+			existDiskAttachments.any {
+				it.id() == diskAttachmentVo.id && (
+					it.bootable() != diskAttachmentVo.bootable ||
+					it.readOnly() != diskAttachmentVo.readOnly ||
+					it.interface_() != diskAttachmentVo.interface_ ||
+					it.disk().alias() != diskAttachmentVo.diskImageVo.alias ||
+					it.disk().description() != diskAttachmentVo.diskImageVo.description ||
+					it.disk().diskProfile().id() != diskAttachmentVo.diskImageVo.diskProfileVo.id
+				)
 			}
-
+		}.map { diskAttachmentVo ->
+			log.info("디스크 편집: {} {}", diskAttachmentVo.diskImageVo.id, diskAttachmentVo.diskImageVo.alias)
+			diskAttachmentVo.toEditDiskAttachment()
 		}
 
-		existDiskAttachments.forEach { existingDisk ->
-			if (vmVo.diskAttachmentVos.none { it.id == existingDisk.id() }) {
-				// 기존 디스크가 새 목록에 없으면 삭제할 목록에 넣음
-				diskAttachmentListToDelete.add(existingDisk)
-			}
+		// 기존 nic목록
+		val existNics: List<Nic> = conn.findAllNicsFromVm(vmCreateVo.id).getOrDefault(listOf())
+
+		// 기존 nic에 존재하지 않는다면 삭제 (편집은 x)
+		existNics.filter { existNic ->
+			vmCreateVo.nicVos.none { it.id == existNic.id() }
+		}.map { nic ->
+			log.info("nic 삭제: {}", nic.name())
+			conn.removeNicFromVm(vmCreateVo.id, nic.id())
 		}
-*/
 
 		val res: Vm? = conn.updateVm(
-			vmVo.toEditVmBuilder(),
-			diskAttachmentListToAdd,
-			diskAttachmentListToDelete,
-//				vmVo.diskAttachmentVos.toEditDiskAttachmentList(conn, vmVo.id),
-			vmVo.vnicProfileVos.map { it.id }.takeIf { it.isEmpty() },
-			vmVo.connVo?.id
+			vmCreateVo.toEditVmBuilder(),
+			vmCreateVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
+			vmCreateVo.nicVos.map { it.toVmNicBuilder() }.takeIf { it.isNotEmpty() },
+			vmCreateVo.connVo.id.takeIf { it.isNotEmpty() }
 		).getOrNull()
-
-		return res?.toVmVo(conn)
+		return res?.toVmCreateVo(conn)
 	}
 
 	// diskDelete가 detachOnly

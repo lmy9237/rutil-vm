@@ -34,7 +34,7 @@ private val log = LoggerFactory.getLogger(VmCreateVo::class.java)
  * @property cpuTopologyCore [Int]
  * @property cpuTopologySocket [Int]
  * @property cpuTopologyThread [Int]
- * @property timeOffset [String]
+ // * @property timeOffset [String]
  * @property cloudInit [Boolean]
  * @property script [String]
  * @property migrationMode [String]

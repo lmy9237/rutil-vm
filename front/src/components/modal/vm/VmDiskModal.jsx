@@ -318,7 +318,7 @@ const VmDiskModal = ({
                 label="디스크 프로파일"
                 value={diskProfileVo.id}
                 onChange={(e) => {
-                  const selectedDiskProfile = domains.find((dp) => dp.id === e.target.value);
+                  const selectedDiskProfile = diskProfiles.find((dp) => dp.id === e.target.value);
                   setDiskProfileVo({
                     id: e.target.value,
                     name: selectedDiskProfile ? selectedDiskProfile.name : "",
