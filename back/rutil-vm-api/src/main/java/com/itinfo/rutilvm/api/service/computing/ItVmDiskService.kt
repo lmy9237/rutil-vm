@@ -246,20 +246,6 @@ class VmDiskService(
 		return res.isSuccess
 	}
 
-//	@Throws(Error::class)
-//	override fun activeMultiFromVm(vmId: String, diskAttachmentIds: List<String>): Boolean {
-//		log.info("activeMultiFromVm ... vmId: {}", vmId)
-//		val res: Result<Boolean> = conn.activeDiskAttachmentsToVm(vmId, diskAttachmentIds)
-//		return res.isSuccess
-//	}
-//
-//	@Throws(Error::class)
-//	override fun deactivateMultiFromVm(vmId: String, diskAttachmentIds: List<String>): Boolean {
-//		log.info("deactivateMultiFromVm ... vmId: {}", vmId)
-//		val res: Result<Boolean> = conn.deactivateDiskAttachmentsToVm(vmId, diskAttachmentIds)
-//		return res.isSuccess
-//	}
-
 	@Throws(Error::class)
 	override fun findAllStorageDomains(vmId: String, diskAttachmentId: String): List<StorageDomainVo> {
 		log.info("findAllStorageDomains ... diskAttachmentId: {}", diskAttachmentId)

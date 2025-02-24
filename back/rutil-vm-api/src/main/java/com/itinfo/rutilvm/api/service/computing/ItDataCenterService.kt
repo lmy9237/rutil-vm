@@ -367,7 +367,8 @@ class DataCenterServiceImpl(
 			.flatMap {
 				conn.findAllDisksFromStorageDomain(it.id())
 					.getOrDefault(listOf())
-					.filter { disk ->  disk.format() == DiskFormat.COW && disk.quotaPresent() }
+					.filter { disk ->  disk.format() == DiskFormat.COW }
+					// .filter { disk ->  disk.format() == DiskFormat.COW && disk.quotaPresent() }
 					.map { disk ->  disk.toDiskInfo(conn) }
 					.filter { disk ->  disk.connectVm.id == "" && disk.connectTemplate.id == "" }
 			}

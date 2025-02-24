@@ -39,13 +39,11 @@ fun Connection.findDisk(diskId: String): Result<Disk?> = runCatching {
 }
 
 fun Connection.findAllStorageDomainsFromDisk(diskId: String): Result<List<StorageDomain>> = runCatching {
-	val disk: Disk =
-		this.findDisk(diskId)
-			.getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
-	val storageDomains: List<StorageDomain> =
-		disk.storageDomains().mapNotNull { storageDomain ->
-			this.findStorageDomain(storageDomain.id()).getOrNull()
-		}
+	val disk: Disk = this.findDisk(diskId)
+		.getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
+	val storageDomains: List<StorageDomain> = disk.storageDomains().mapNotNull { storageDomain ->
+		this.findStorageDomain(storageDomain.id()).getOrNull()
+	}
 
 	storageDomains
 }.onSuccess {

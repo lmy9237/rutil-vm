@@ -186,21 +186,21 @@ class VmServiceImpl(
 		}
 
 		// 기존 디스크에 존재하는데 id와 alias가 있다면 편집
-		vmCreateVo.diskAttachmentVos.filter { diskAttachmentVo ->
-			existDiskAttachments.any {
-				it.id() == diskAttachmentVo.id && (
-					it.bootable() != diskAttachmentVo.bootable ||
-					it.readOnly() != diskAttachmentVo.readOnly ||
-					it.interface_() != diskAttachmentVo.interface_ ||
-					it.disk().alias() != diskAttachmentVo.diskImageVo.alias ||
-					it.disk().description() != diskAttachmentVo.diskImageVo.description ||
-					it.disk().diskProfile().id() != diskAttachmentVo.diskImageVo.diskProfileVo.id
-				)
-			}
-		}.map { diskAttachmentVo ->
-			log.info("디스크 편집: {} {}", diskAttachmentVo.diskImageVo.id, diskAttachmentVo.diskImageVo.alias)
-			diskAttachmentVo.toEditDiskAttachment()
-		}
+		// vmCreateVo.diskAttachmentVos.filter { diskAttachmentVo ->
+		// 	existDiskAttachments.any {
+		// 		it.id() == diskAttachmentVo.id && (
+		// 			it.bootable() != diskAttachmentVo.bootable ||
+		// 			it.readOnly() != diskAttachmentVo.readOnly ||
+		// 			it.interface_() != diskAttachmentVo.interface_ ||
+		// 			it.disk().alias() != diskAttachmentVo.diskImageVo.alias ||
+		// 			it.disk().description() != diskAttachmentVo.diskImageVo.description ||
+		// 			it.disk().diskProfile().id() != diskAttachmentVo.diskImageVo.diskProfileVo.id
+		// 		)
+		// 	}
+		// }.map { diskAttachmentVo ->
+		// 	log.info("디스크 편집: {} {}", diskAttachmentVo.diskImageVo.id, diskAttachmentVo.diskImageVo.alias)
+		// 	diskAttachmentVo.toEditDiskAttachment()
+		// }
 
 		// 기존 nic목록
 		val existNics: List<Nic> = conn.findAllNicsFromVm(vmCreateVo.id).getOrDefault(listOf())
