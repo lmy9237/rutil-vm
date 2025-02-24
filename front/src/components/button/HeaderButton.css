@@ -34,9 +34,9 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center; /* 수직 가운데 정렬 추가 */
+  align-items: center; 
   border-bottom: 1px solid #6999d9;
-  padding: 19px 16px;
+  padding: 19.5px 16px;
 }
 .section-header-left span,
 .section-header-left button {

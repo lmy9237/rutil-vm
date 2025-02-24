@@ -386,7 +386,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose} targetName={"가상머신"} submitTitle={vLabel}  contentStyle={{ width: "850px", height: "770px" }}  onSubmit={handleFormSubmit}>
+    <BaseModal isOpen={isOpen} onClose={onClose} targetName={"가상머신"} submitTitle={vLabel}  contentStyle={{ width: "850px", height: "730px" }}  onSubmit={handleFormSubmit}>
       <div className="vm-edit-popup-content flex">
         <div className="vm-new-nav"style={{height: "100%",width: "30%",}}>
             {tabs.map((tab) => (
@@ -400,7 +400,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
           </div>
 
           <div className="vm-edit-select-tab">
-            <div className="edit-first-content">
+            <div className="edit-first-content pb-0.5">
               <LabelSelectOptionsID
                 label="클러스터"
                 value={clusterVo.id}

@@ -1,5 +1,5 @@
 .header {
-  min-height: 47px;
+  height:  var(--h-rutil-header);
   margin: 0 auto;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -65,7 +65,7 @@
   position: absolute;
   background-color: #ffffff;
   z-index: 4;
-  width: 9vw;
+  width: 170px;
   right:0;
   font-size: var(--fs-default-4);
   border: 1px solid rgb(204, 204, 204);
@@ -82,7 +82,7 @@
   position: absolute;
   background-color: #ffffff;
   z-index: 3;
-  width: 11.65vw;
+  width: 210px;
   right: 0;
   font-size: var(--fs-default-4);
   border: 1px solid rgb(204, 204, 204);

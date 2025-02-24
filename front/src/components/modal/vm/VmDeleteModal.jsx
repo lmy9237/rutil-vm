@@ -91,29 +91,32 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
       targetName={"가상머신"}
       submitTitle={"삭제"}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "690px", height: "260px" }} 
     >
-      <div className="disk-delete-box">
-        <div>
-          <FontAwesomeIcon
-            style={{ marginRight: "0.3rem" }}
-            icon={faExclamationTriangle}
-          />
-          <span>선택한 가상머신을 삭제하시겠습니까?</span>
-        </div>
-
-        {ids.map((vmId, index) => (
-          <div key={vmId} className="disk-delete-checkbox">
-            <strong className="mr-2">{names[index]}</strong>
-            <input
-              type="checkbox"
-              id={`diskDelete-${vmId}`}
-              checked={detachOnlyList[vmId] || false}
-              onChange={() => handleCheckboxChange(vmId)}
-              disabled={!diskQueries[index]?.data?.length} // 디스크가 존재하지 않으면 disabled
+      <div className="popup-content-outer">
+        <div className="disk-delete-box">
+          <div>
+            <FontAwesomeIcon
+              style={{ marginRight: "0.3rem" }}
+              icon={faExclamationTriangle}
             />
-            <label htmlFor={`diskDelete-${vmId}`}>디스크 삭제</label>
+            <span>선택한 가상머신을 삭제하시겠습니까?</span>
           </div>
-        ))}
+
+          {ids.map((vmId, index) => (
+            <div key={vmId} className="disk-delete-checkbox">
+              <strong className="mr-2">{names[index]}</strong>
+              <input
+                type="checkbox"
+                id={`diskDelete-${vmId}`}
+                checked={detachOnlyList[vmId] || false}
+                onChange={() => handleCheckboxChange(vmId)}
+                disabled={!diskQueries[index]?.data?.length} // 디스크가 존재하지 않으면 disabled
+              />
+              <label htmlFor={`diskDelete-${vmId}`}>디스크 삭제</label>
+            </div>
+          ))}
+        </div>
       </div>
     </BaseModal>
   );

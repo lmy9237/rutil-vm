@@ -8,10 +8,16 @@
 @tailwind components;
 @tailwind utilities;
 html {
+  --h-rutil-header:47px;
+  --h-section-header: 70px; /*section-header 높이 */
   --h-modal-header: 55px;                /* 모달 헤더 부분 높이 */
   --h-modal-footer: 60px;                /* 모달 푸터 부분 높이 */
+  --h-right-btn: 30px;  
   --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
-  /* --h-modal-content: 83%;  모달 내용 부분 높이 */
+  --w-aside-menu:240px;     
+  --w-nav:160px; /*nav넓이이*/   
+  
+
   --color-bg: #ececec;                /* 기본 배경색 */
   --color-bg-input: #efefef;          /* Input 배경색 */ 
   --color-gray-1: #dddddd;            /* RutilVM 회색 */
@@ -45,14 +51,9 @@ html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-#root,
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
   font-family: "GowunDodum-Regular";
 }
+
 #root {
   background-color: #ebeeee;
   padding: 0.1rem;
@@ -66,7 +67,7 @@ html, body {
 .content-outer {
   display: flex;
   width: 100%;
-  height: 88%;
+  height: calc(100% - var(--h-section-header));
 }
 button {
   border: var(--border-simple);
@@ -128,15 +129,42 @@ input[disabled] {
 }
 #section {
   background-color: white;
-  width: 100%;
+  width:    calc(100% - var(--w-aside-menu));
   position: relative;
+}
+.aside-outer.closed + #section {
+  width: 100%; 
+}
+.section-content{
+    height: calc(100% - var(--h-section-header));
+    width: calc(100% - var(--w-nav));
 }
 .header-right-btns {
   display: flex;
-  margin-bottom: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: var(--h-right-btn);
+  margin-bottom: 10px;
   justify-content: right;
 }
-
+.header-right-btns > button,
+.manage-button
+{
+  margin: 0 8px 3px 0;
+  padding: 4.5px;
+  font-size: var(--fs-default-4);
+  font-weight: 600;
+  border-radius: 2px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  border: var(--border-simple);
+  cursor: pointer;
+}
+.header-right-btns > button:last-child {
+  margin-right: 0 !important;
+}
 .dropdown-container {
   position: relative;
   display: inline-block;
@@ -157,18 +185,6 @@ input[disabled] {
   padding: 0.1rem 0;
 }
 } */
-.manage-button {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background-color: white;
-  border: var(--border-simple);
-  font-size: var(--fs-default-4);
-  cursor: pointer;
-  padding: 4.5px;
-  font-weight: 600;
-}
-
 .dropdown-menu {
   position: absolute;
   top: 103%;
@@ -192,22 +208,7 @@ input[disabled] {
 .dropdown-item:hover {
   background-color: var(--color-gray-2);
 }
-.header-right-btns > button
-{
-  margin-right: 0.2rem;
-  padding: 4.5px;
-  font-size: var(--fs-default-4);
-  font-weight: 600;
-  border-radius: 2px;
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  border: var(--border-simple);
-  cursor: pointer;
-}
-.header-right-btns > button:last-child {
-  margin-right: 0 !important;
-}
+
 /*우클릭 메뉴박스*/
 .right-click-menu-box {
   width: 8.5vw;
@@ -2529,33 +2530,39 @@ background-color: #f0f0f0;
 }
 
 /*반응형*/
-@media (max-width: 2000px) {
-
-}
 @media (max-width: 1420px) {
-    /* html, body {
-        font-size: 2rem 
-    } */
     .resizer {
         display: none !important;
     }
 }
 
-@media screen and (max-width:820px) {
-    
-
+@media screen and (max-width:1100px) {
+    .box {
+        width: calc(50% - 0.11rem); /* 2열 */
+    }
 }
 @media screen and (max-width: 768px) {
     .responsive-closed{
-        position: fixed;
+        position: absolute;
+    }
+    #section{
+        width: 100%;
+    }
+    .box {
+        width: calc(100% - 0.5rem); /* 1열 */
+        border-right: none;
+        padding: 10px 0;
+        border-bottom: 1px solid #5e95a745;
     }
 }
 @media screen and (max-width: 500px) {
-    /* .section-header{
+    .section-header{
         display:block;
-    } */
+        padding: 10px;
+    }
     .section-header>div:nth-child(2){
         justify-content: right;
+        margin-top: 5px;
     }
     .article-nav{
         margin-bottom:0.2rem;

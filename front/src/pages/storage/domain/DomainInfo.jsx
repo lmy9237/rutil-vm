@@ -116,9 +116,8 @@ const DomainInfo = () => {
           activeSection={activeTab} 
           handleSectionClick={handleTabClick} 
         />
-        <div className="w-full px-[0.5rem] py-[0.5rem]"
->
-          <Path pathElements={pathData} />
+        <div className="w-full px-[0.5rem] py-[0.5rem]">
+          <Path pathElements={pathData} basePath={`/storages/domains/${domainId}`}/>
           {renderSectionContent()}
         </div>
       </div>
@@ -130,7 +129,7 @@ const DomainInfo = () => {
         selectedClusters={domain}
         onClose={closeModal}
       />
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   );
 };

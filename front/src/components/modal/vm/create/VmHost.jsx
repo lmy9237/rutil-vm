@@ -44,8 +44,8 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
           </div>
 
           {/* 특정 호스트 선택 */}
-          <div >
-            <div className="flex">
+          <div id="select-host" >
+            <div className="flex center">
               <input
                 className="form-check-input"
                 type="radio"
@@ -66,7 +66,6 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
             <div>
               <select
                 multiple
-                id="specific_host_select"
                 value={formHostState.hostVos.map((host) => host.id)}
                 onChange={(e) => {
                   const selectedIds = Array.from(e.target.selectedOptions, (option) => option.value);
@@ -95,6 +94,7 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
               </div>
             </div>
           </div>
+
         </div>
       </div>
 

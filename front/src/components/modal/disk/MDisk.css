@@ -1,8 +1,3 @@
-.disk-move-popup {
-  height: 37%;
-  width: 39%;
-}
-
 /*새로만들기*/
 .disk-new-img {
   display: flex;
@@ -14,7 +9,7 @@
   padding-bottom:0.02rem !important;
 }
 .disk-new-img-left {
-  width: 60%;
+  width: 65%;
 }
 /*이미지,직접lun버튼*/
 .storage-disk-new-popup {
@@ -38,10 +33,6 @@
 }
 
 /*디스크(업로드)*/
-.storage-disk-upload-popup {
-  height: 78.4vh;
-  width: 58%;
-}
 .storage-upload-first {
   padding: 0.4rem;
   display: flex;

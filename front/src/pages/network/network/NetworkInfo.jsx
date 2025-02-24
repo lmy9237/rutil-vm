@@ -107,7 +107,7 @@ const NetworkInfo = () => {
         selectedNetworks={network}
         onClose={closeModal}
       />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

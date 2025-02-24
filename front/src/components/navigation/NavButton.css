@@ -8,7 +8,7 @@
 .content-header-left {
     font-size: 0.65rem;
     border-radius: 3px;
-    width: 160px;
+    width: var(--w-nav);
 }
 
 .content-header-left div {

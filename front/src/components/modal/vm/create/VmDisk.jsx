@@ -87,21 +87,22 @@ const VmDisk = ({
         </Suspense>
       </div>
 
-      <div className="disk-list-container center">
+      <div className="disk-list-container">
         {diskListState.length > 0 &&
           diskListState.map((disk, index) => (
             <>
-            <div key={index} className="disk-item">
+            <div key={index} className="disk-item center mb-0.5">
               <div style={{ display: "flex", alignItems: "center" }}>
                 <span style={{ marginRight: "25px" }}>
                   <strong>{disk.isExisting ? "[기존]" : disk.isCreated ? "[생성]" : "[연결]"}{" "}</strong>
                     이름: {disk?.alias} ({disk?.size || disk?.virtualSize} GB) {disk?.bootable ? "[부팅]" : ""}
                 </span>
               </div>
+              <button onClick={() => handleRemoveDisk(index, disk.isExisting)}>
+                삭제
+              </button>
             </div>
-            <button onClick={() => handleRemoveDisk(index, disk.isExisting)}>
-              삭제
-            </button>
+           
           </>
           ))}
       </div>

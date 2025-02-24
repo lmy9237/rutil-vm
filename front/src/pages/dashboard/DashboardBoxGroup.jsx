@@ -38,7 +38,7 @@ const DashboardBox = ({
     <div className="box" onClick={() => navigatePath && navigate(navigatePath)}>
       <span className="box-icon-title center">
         {icon && <FontAwesomeIcon icon={icon} fixedWidth />}
-        <p>{title}</p>
+        <p className="ml-0.5">{title}</p>
       </span>
       <h1>{cntTotal}</h1>
       <div className="arrows flex center">

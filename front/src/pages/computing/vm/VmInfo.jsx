@@ -186,7 +186,7 @@ const VmInfo = () => {
           handleSectionClick={handleTabClick}
         />
         <div className="w-full px-[0.5rem] py-[0.5rem]">
-          <Path pathElements={pathData} />
+          <Path pathElements={pathData}  basePath={`/computing/vms/${vmId}`}/>
           {renderSectionContent()}
         </div>
       </div>

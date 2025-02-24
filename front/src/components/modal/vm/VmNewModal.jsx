@@ -1,3 +1,5 @@
+// 안씀!
+
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -551,7 +553,7 @@ const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
         </div>
 
         <div className="vm-edit-select-tab">
-          <div className="edit-first-content">
+          <div className="edit-first-content pb-0.5">
             <LabelSelectOptionsID
               label="클러스터"
               value={clusterVoId}

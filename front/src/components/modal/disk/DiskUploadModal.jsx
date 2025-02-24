@@ -12,6 +12,9 @@ import {
   useUploadDisk,
 } from "../../../api/RQHook";
 import "../domain/MDomain.css";
+import LabelInput from "../../label/LabelInput";
+import LabelSelectOptions from "../../label/LabelSelectOptions";
+import LabelCheckbox from "../../label/LabelCheckbox";
 
 const FormGroup = ({ label, children }) => (
   <div className="img-input-box">
@@ -167,147 +170,231 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
       targetName={"디스크"}
       submitTitle={"업로드"}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "790px", height: "640px" }} 
     >
       {/* <div className="storage-disk-upload-popup modal"> */}
-      <div className="popup-header">
-        <h1>이미지 업로드</h1>
-        <button onClick={onClose}>
-          <FontAwesomeIcon icon={faTimes} fixedWidth />
-        </button>
-      </div>
-      <div className="storage-upload-first">
-        <input
-          type="file"
-          id="file"
-          accept=".iso"
-          onChange={(e) => {
-            const uploadedFile = e.target.files[0];
-            if (uploadedFile) {
-              setFile(uploadedFile); // 파일 저장
-              setAlias(uploadedFile.name);
-              setDescription(uploadedFile.name);
-              setSize(Math.ceil(uploadedFile.size));
-            }
-          }}
-        />
-      </div>
+      <div className="popup-content-outer">
+        <div className="storage-upload-first">
+          <input
+            type="file"
+            id="file"
+            accept=".iso"
+            onChange={(e) => {
+              const uploadedFile = e.target.files[0];
+              if (uploadedFile) {
+                setFile(uploadedFile); // 파일 저장
+                setAlias(uploadedFile.name);
+                setDescription(uploadedFile.name);
+                setSize(Math.ceil(uploadedFile.size));
+              }
+            }}
+          />
+        </div>
 
-      <div>
-        <div className="disk-option">디스크 옵션</div>
-        <div className="disk-new-img" style={{ paddingTop: "0.4rem" }}>
-          <div className="disk-new-img-left">
-            <FormGroup label="크기(GB)">
-              <input
-                type="number"
-                min="0"
-                value={sizeToGB(size)}
-                onChange={(e) => setSize(e.target.value)}
-                disabled
-              />
-            </FormGroup>
+        <div>
+          <div className="disk-option">디스크 옵션</div>
+            <div className="disk-new-img" style={{ paddingTop: "0.4rem" }}>
+              <div className="disk-new-img-left">
+                <LabelInput
+                    label="크기(GB)"
+                    id="size"
+                    type="number"
+                    value={sizeToGB(size)}
+                    onChange={(e) => setSize(e.target.value)}
+                    disabled
+                  />
 
-            <FormGroup label="별칭">
-              <input
-                type="text"
-                value={onlyFileName(alias)}
-                onChange={(e) => {
-                  setAlias(e.target.value);
-                }}
-              />
-            </FormGroup>
+                <LabelInput
+                    label="별칭"
+                    id="alias"
+                    type="text"
+                    value={onlyFileName(alias)}
+                    onChange={(e) => setAlias(e.target.value)}
+                  />
 
-            <FormGroup label="설명">
-              <input
-                type="text"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </FormGroup>
+                <LabelInput
+                  label="설명"
+                  id="description"
+                  type="text"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
 
-            <FormGroup label="데이터 센터">
-              {isDatacentersLoading ? (
-                <p>데이터 센터를 불러오는 중...</p>
-              ) : datacenters.length === 0 ? (
-                <p>사용 가능한 데이터 센터가 없습니다.</p>
-              ) : (
-                <select
-                  value={dataCenterVoId}
-                  onChange={(e) => setDataCenterVoId(e.target.value)}
-                >
-                  {datacenters &&
-                    datacenters.map((dc) => (
-                      <option key={dc.id} value={dc.id}>
-                        {dc.name}
-                      </option>
-                    ))}
-                </select>
-              )}
-            </FormGroup>
+                {isDatacentersLoading ? (
+                  <p>데이터 센터를 불러오는 중...</p>
+                ) : datacenters.length === 0 ? (
+                  <p>사용 가능한 데이터 센터가 없습니다.</p>
+                ) : (
+                  <LabelSelectOptions
+                    label="데이터 센터"
+                    id="datacenter"
+                    value={dataCenterVoId}
+                    onChange={(e) => setDataCenterVoId(e.target.value)}
+                    options={datacenters.map((dc) => ({ value: dc.id, label: dc.name }))}
+                  />
+                )}
 
-            <FormGroup label="스토리지 도메인">
-              <select
-                value={domainVoId}
-                onChange={(e) => setDomainVoId(e.target.value)}
-              >
-                {domains &&
-                  domains.map((dm) => (
-                    <option key={dm.id} value={dm.id}>
-                      {dm.name} (USED {sizeToGB(dm.availableSize)}/ TOTAL{" "}
-                      {sizeToGB(dm.diskSize)})
-                    </option>
-                  ))}
-              </select>
-            </FormGroup>
+                <LabelSelectOptions
+                  label="스토리지 도메인"
+                  id="storageDomain"
+                  value={domainVoId}
+                  onChange={(e) => setDomainVoId(e.target.value)}
+                  options={domains.map((dm) => ({
+                    value: dm.id,
+                    label: `${dm.name} (USED ${sizeToGB(dm.availableSize)}/ TOTAL ${sizeToGB(dm.diskSize)})`,
+                  }))}
+                />
 
-            <FormGroup label="디스크 프로파일">
-              <select
-                value={diskProfileVoId}
-                onChange={(e) => setDiskProfileVoId(e.target.value)}
-              >
-                {diskProfiles &&
-                  diskProfiles.map((dp) => (
-                    <option key={dp.id} value={dp.id}>
-                      {dp.name}
-                    </option>
-                  ))}
-              </select>
-            </FormGroup>
+                <LabelSelectOptions
+                  label="디스크 프로파일"
+                  id="diskProfile"
+                  value={diskProfileVoId}
+                  onChange={(e) => setDiskProfileVoId(e.target.value)}
+                  options={diskProfiles.map((dp) => ({ value: dp.id, label: dp.name }))}
+                />
 
-            <FormGroup label="호스트">
-              <select
-                value={hostVoId}
-                onChange={(e) => setHostVoId(e.target.value)}
-              >
-                {hosts &&
-                  hosts.map((h) => (
-                    <option key={h.id} value={h.id}>
-                      {h.name}
-                    </option>
-                  ))}
-              </select>
-            </FormGroup>
-          </div>
+                <LabelSelectOptions
+                  label="호스트"
+                  id="host"
+                  value={hostVoId}
+                  onChange={(e) => setHostVoId(e.target.value)}
+                  options={hosts.map((h) => ({ value: h.id, label: h.name }))}
+                />
+              </div>
+              
+              {/* -삭제예정
+              <div className="disk-new-img-left">
+                <FormGroup label="크기(GB)">
+                  <input
+                    type="number"
+                    min="0"
+                    value={sizeToGB(size)}
+                    onChange={(e) => setSize(e.target.value)}
+                    disabled
+                  />
+                </FormGroup>
 
-          <div className="disk-new-img-right">
-            <div>
-              <input
-                type="checkbox"
-                id="wipeAfterDelete"
-                checked={wipeAfterDelete}
-                onChange={(e) => setWipeAfterDelete(e.target.checked)}
-              />
-              <label htmlFor="wipeAfterDelete">삭제 후 초기화</label>
+                <FormGroup label="별칭">
+                  <input
+                    type="text"
+                    value={onlyFileName(alias)}
+                    onChange={(e) => {
+                      setAlias(e.target.value);
+                    }}
+                  />
+                </FormGroup>
+
+                <FormGroup label="설명">
+                  <input
+                    type="text"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </FormGroup>
+
+                <FormGroup label="데이터 센터">
+                  {isDatacentersLoading ? (
+                    <p>데이터 센터를 불러오는 중...</p>
+                  ) : datacenters.length === 0 ? (
+                    <p>사용 가능한 데이터 센터가 없습니다.</p>
+                  ) : (
+                    <select
+                      value={dataCenterVoId}
+                      onChange={(e) => setDataCenterVoId(e.target.value)}
+                    >
+                      {datacenters &&
+                        datacenters.map((dc) => (
+                          <option key={dc.id} value={dc.id}>
+                            {dc.name}
+                          </option>
+                        ))}
+                    </select>
+                  )}
+                </FormGroup>
+
+                <FormGroup label="스토리지 도메인">
+                  <select
+                    value={domainVoId}
+                    onChange={(e) => setDomainVoId(e.target.value)}
+                  >
+                    {domains &&
+                      domains.map((dm) => (
+                        <option key={dm.id} value={dm.id}>
+                          {dm.name} (USED {sizeToGB(dm.availableSize)}/ TOTAL{" "}
+                          {sizeToGB(dm.diskSize)})
+                        </option>
+                      ))}
+                  </select>
+                </FormGroup>
+
+                <FormGroup label="디스크 프로파일">
+                  <select
+                    value={diskProfileVoId}
+                    onChange={(e) => setDiskProfileVoId(e.target.value)}
+                  >
+                    {diskProfiles &&
+                      diskProfiles.map((dp) => (
+                        <option key={dp.id} value={dp.id}>
+                          {dp.name}
+                        </option>
+                      ))}
+                  </select>
+                </FormGroup>
+
+                <FormGroup label="호스트">
+                  <select
+                    value={hostVoId}
+                    onChange={(e) => setHostVoId(e.target.value)}
+                  >
+                    {hosts &&
+                      hosts.map((h) => (
+                        <option key={h.id} value={h.id}>
+                          {h.name}
+                        </option>
+                      ))}
+                  </select>
+                </FormGroup>
+              </div> 
+              
+              <div className="disk-new-img-right">
+                <div>
+                  <input
+                    type="checkbox"
+                    id="wipeAfterDelete"
+                    checked={wipeAfterDelete}
+                    onChange={(e) => setWipeAfterDelete(e.target.checked)}
+                  />
+                  <label htmlFor="wipeAfterDelete">삭제 후 초기화</label>
+                </div>
+                <div>
+                  <input
+                    type="checkbox"
+                    className="sharable"
+                    checked={sharable}
+                    onChange={(e) => setSharable(e.target.checked)}
+                  />
+                  <label htmlFor="sharable">공유 가능</label>
+                </div>
+              </div>
+              */}
+
+              <div className="disk-new-img-right">
+                <LabelCheckbox
+                  label="삭제 후 초기화"
+                  id="wipeAfterDelete"
+                  checked={wipeAfterDelete}
+                  onChange={(e) => setWipeAfterDelete(e.target.checked)}
+                />
+
+                <LabelCheckbox
+                  label="공유 가능"
+                  id="sharable"
+                  className="sharable"
+                  checked={sharable}
+                  onChange={(e) => setSharable(e.target.checked)}
+                />
+              </div>
             </div>
-            <div>
-              <input
-                type="checkbox"
-                className="sharable"
-                checked={sharable}
-                onChange={(e) => setSharable(e.target.checked)}
-              />
-              <label htmlFor="sharable">공유 가능</label>
-            </div>
-          </div>
         </div>
       </div>
     </BaseModal>
