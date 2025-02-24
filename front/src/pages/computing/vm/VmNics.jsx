@@ -3,9 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowCircleUp,
   faChevronRight,
-  faGlassWhiskey,
   faPlug,
-  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNetworkInterfaceFromVM } from "../../../api/RQHook";
 import VmNetworkNewInterfaceModal from "../../../components/modal/vm/VmNetworkNewInterfaceModal";
@@ -24,9 +22,7 @@ const VmNics = ({ vmId }) => {
     isLoading: isNicsLoading,
     isError: isNicsError,
     Success: isNicsSuccess,
-  } = useNetworkInterfaceFromVM(vmId, (e) => ({
-    ...e,
-  }));
+  } = useNetworkInterfaceFromVM(vmId, (e) => ({...e,}));
 
   const [modals, setModals] = useState({
     create: false,

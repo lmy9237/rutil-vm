@@ -3,7 +3,7 @@ import VmDiskConnectionModal from "./VmDiskConnectionModal";
 import VmDiskModal from "./VmDiskModal";
 import VmDiskActionModal from "./VmDiskActionModal";
 import VmDiskDeleteModal from "./VmDiskDeleteModal";
-import { useVmById } from "../../../api/RQHook";
+import { useDisksFromVM, useVmById } from "../../../api/RQHook";
 
 /**
  * @name VmDiskModals
@@ -20,14 +20,25 @@ const VmDiskModals = ({
   onClose,
 }) => {
   const { data: vm }  = useVmById(vmId);
+  const { data: diskAttachments = [] } = useDisksFromVM(vmId);
+
+  // 부팅가능한 디스크 있는지 검색
+  const hasBootableDisk = diskAttachments?.some((diskAttachment) => diskAttachment?.bootable === true);
+  
+  // 디스크 이름 뒤에 숫자 붙이기
+  const diskCount = diskAttachments.filter((da) => {
+    return da && da?.diskImageVo?.alias?.includes(`${vm?.name}_D`)
+  })?.length+1 || 1;
 
   const modals = {
     create: (
       <VmDiskModal
         isOpen={activeModal === "create"}
         vmId={vmId || ""}
+        vmName={`${vm?.name}_Disk${diskCount}`}
         dataCenterId={vm?.dataCenterVo?.id || ""}
         onClose={onClose}
+        hasBootableDisk={hasBootableDisk}
       />
     ),
     edit: (
@@ -37,6 +48,7 @@ const VmDiskModals = ({
         vmId={vmId}
         diskAttachmentId={disk?.id}
         onClose={onClose}
+        hasBootableDisk={hasBootableDisk}
       />
     ),
     delete: (
@@ -53,6 +65,7 @@ const VmDiskModals = ({
         vmId={vmId}
         dataCenterId={vm?.dataCenterVo?.id || ""}
         onClose={onClose}
+        hasBootableDisk={hasBootableDisk}
       />
     ),
     activate: (

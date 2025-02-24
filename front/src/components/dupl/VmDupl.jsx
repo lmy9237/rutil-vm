@@ -15,7 +15,8 @@ import { renderVmStatusIcon } from "../Icon";
  */
 const VmDupl = ({
   isLoading, isError, isSuccess,
-  vms = [], columns = [], actionType, status, onCloseModal
+  vms = [], columns = [], actionType, status, 
+  onCloseModal = () => {},
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
@@ -98,7 +99,7 @@ const VmDupl = ({
           selectedVms={selectedVms}
           onClose={() => {
             closeModal()
-            onCloseModal()
+            onCloseModal && onCloseModal()
           }}
         />
       </Suspense>

@@ -17,11 +17,8 @@ const HostVms = ({ hostId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-  } = useVmFromHost(hostId, (e) => ({ 
-    ...e
-  }));
+  } = useVmFromHost(hostId, (e) => ({ ...e }));
 
-  console.log("...")
   return (
     <>
       <VmDupl

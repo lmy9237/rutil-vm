@@ -19,9 +19,10 @@ const VmDiskDupl = ({
   isLoading, isError, isSuccess,
   vmDisks = [], columns = [], vmId,
 }) => {
+  const { data: vm }  = useVmById(vmId);
+  
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
-  const { data: vm }  = useVmById(vmId);
   const [selectedDisks, setSelectedDisks] = useState([]); // 다중 선택된 디스크
   const selectedIds = (Array.isArray(selectedDisks) ? selectedDisks : []).map((disk) => disk.id).join(", ");
 
@@ -45,28 +46,29 @@ const VmDiskDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         columns={columns}
         data={vmDisks.map((d) => {
+          const diskImage = d?.diskImageVo
           return {
             ...d,
             icon: renderTFStatusIcon(d?.active),
             alias: (
-              <TableRowClick type="disks" id={d?.diskImageVo?.id}>
-                {d?.diskImageVo?.alias}
+              <TableRowClick type="disks" id={diskImage?.id}>
+                {diskImage?.alias}
               </TableRowClick>
             ),
             connectionvm: vm?.name || "",
-            description: d?.diskImageVo?.description,
+            description: diskImage?.description,
             bootable: d?.bootable ? "예" : "",
             readOnly: d?.readOnly ? "예" : "",
-            sharable: d?.diskImageVo?.sharable ? "예" : "",
-            status: d?.diskImageVo?.status,
+            sharable: diskImage?.sharable ? "예" : "",
+            status: diskImage?.status,
             interface: d?.interface_,
-            storageType: d?.diskImageVo?.storageType,
-            sparse: d?.diskImageVo?.sparse ? "씬 프로비저닝" : "사전 할당",
-            virtualSize: checkZeroSizeToGB(d?.diskImageVo?.virtualSize),
-            actualSize: checkZeroSizeToGB(d?.diskImageVo?.actualSize),
+            storageType: diskImage?.storageType,
+            sparse: diskImage?.sparse ? "씬 프로비저닝" : "사전 할당",
+            virtualSize: checkZeroSizeToGB(diskImage?.virtualSize),
+            actualSize: checkZeroSizeToGB(diskImage?.actualSize),
             storageDomain: (
-              <TableRowClick type="domains" id={d?.diskImageVo?.storageDomainVo?.id}>
-                {d?.diskImageVo?.storageDomainVo?.name}
+              <TableRowClick type="domains" id={diskImage?.storageDomainVo?.id}>
+                {diskImage?.storageDomainVo?.name}
               </TableRowClick>
             ),
           };

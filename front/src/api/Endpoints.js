@@ -31,7 +31,7 @@ const ENDPOINTS = {
   FIND_NETWORKS_FROM_DATA_CENTER: (dataCenterId) =>                        `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/networks`, 
   FIND_EVENTS_FROM_DATA_CENTER: (dataCenterId) =>                          `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/events`,
   FIND_TEMPLATES_FROM_DATA_CENTER: (dataCenterId) =>                       `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/templates`,
-  FIND_ATTACH_DISK_LIST_FROM_DATA_CENTER:(dataCenterId) =>                 `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/attachDisks`, 
+  FIND_ATTACH_DISK_LIST_FROM_DATA_CENTER:(dataCenterId) =>                 `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/attachDisks`,
   FIND_ISOS_FROM_DATA_CENTER:(dataCenterId) =>                             `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/iso`, 
   FIND_VNICPROFILES_FROM_DATA_CENTER:(dataCenterId) =>                     `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/vnicProfiles`, 
 
@@ -176,7 +176,7 @@ const ENDPOINTS = {
   IMPORT_NETWORK: () =>                                                    `${ENDPOINT_API_V1}/networks/import`,
   
   FIND_VNIC_PROFILES_FROM_NETWORK: (networkId) =>                          `${ENDPOINT_API_V1}/networks/${networkId}/vnicProfiles`,
-  FIND_ALL_NETWORKFILTERS: () =>                                           `${ENDPOINT_API_V1}/vnicProfiles/networkFilters`,
+  FIND_ALL_NETWORKFILTERS: () =>                                           `${ENDPOINT_API_V1}/networks/networkFilters`,
   //#endregion: Network
 
   //#region: VnicProfile

@@ -310,7 +310,7 @@ export const useEventsFromDataCenter = (dataCenterId, mapPredicate) => useQuery(
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
- * @see ApiManager.findDiskListFromDataCenter
+ * @see ApiManager.findTemplatesFromDataCenter
  */
 export const useFindTemplatesFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
@@ -342,6 +342,7 @@ export const useFindDiskListFromDataCenter = (dataCenterId, mapPredicate) => use
   },
   enabled: !!dataCenterId, 
 });
+
 /**
  * @name useCDFromDataCenter
  * @description 가상머신 생성창 - CD/DVD 연결할 ISO 목록 useQuery훅
@@ -1203,7 +1204,6 @@ export const useDisksFromVM = (vmId, mapPredicate) => useQuery({
   },
   enabled: !!vmId, 
 });
-
 /**
  * @name useSnapshotFromVM
  * @description 가상머신 내 스냅샷 목록조회 useQuery훅
@@ -3200,7 +3200,7 @@ export const useAllDisks = (mapPredicate) => useQuery({
     const res = await ApiManager.findAllDisks()
     return res?.map((e) => mapPredicate(e)) ?? [];
   },
-  staleTime: 2000, // 2초 동안 데이터 재요청 방지
+  // staleTime: 2000, // 2초 동안 데이터 재요청 방지
 })
 /**
  * @name useDiskById

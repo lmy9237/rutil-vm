@@ -14,7 +14,7 @@ import {
   useDiskAttachmentFromVm,
   useVmById,
 } from "../../../api/RQHook";
-import { checkKoreanName, convertBytesToGB } from "../../../util";
+import { checkKoreanName, convertBytesToGB, convertGBToBytes } from "../../../util";
 
 
 const interfaceList = [
@@ -54,7 +54,9 @@ const VmDiskModal = ({
   dataCenterId,
   diskType = true,  // t=disk페이지에서 생성 f=vm만들때 같이 생성
   onClose,
-
+  
+  diskCount,
+  hasBootableDisk,
   vmName, //가상머신 생성 디스크 이름
   onCreateDisk,
 }) => {
@@ -69,7 +71,7 @@ const VmDiskModal = ({
   const { mutate: addDiskVm } = useAddDiskFromVM();
   const { mutate: editDiskVm } = useEditDiskFromVM();
   const { data: vm }  = useVmById(vmId);
-
+  
   // 디스크 데이터 가져오기
   const { data: diskAttachment } = 
     useDiskAttachmentFromVm(vmId, diskAttachmentId);
@@ -176,10 +178,11 @@ const VmDiskModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) return toast.error(error);
-
-    const sizeToBytes = parseInt(formState.size, 10) * 1024 * 1024 * 1024; // GB -> Bytes 변환
-    const appendSizeToBytes =
-      parseInt(formState.appendSize || 0, 10) * 1024 * 1024 * 1024; // GB -> Bytes 변환 (기본값 0)
+ 
+    // GB -> Bytes 변환
+    const sizeToBytes = convertGBToBytes(parseInt(formState.size, 10));
+    // GB -> Bytes 변환 (기본값 0)
+    const appendSizeToBytes = convertGBToBytes(parseInt(formState.appendSize || 0, 10)); 
 
     const selectedDomain = domains.find((dm) => dm.id === storageDomainVo.id);
     const selectedDiskProfile = diskProfiles.find((dp) => dp.id === diskProfileVo.id);
@@ -187,7 +190,7 @@ const VmDiskModal = ({
 
     // 전송 객체
     const dataToSubmit = {
-      // id: disk?.id,
+      id: formState?.id,
       ...formState,
       // bootable: formState.bootable,
       // readOnly: formState.readOnly,
@@ -257,6 +260,8 @@ const VmDiskModal = ({
         {activeTab === "img" && (
           <div className="disk-new-img">
             <div className="disk-new-img-left">
+              
+              <span>Bootable Disk: {hasBootableDisk ? "true" : "false"}</span>
               <LabelInputNum
                 className="img-input-box"
                 label="크기(GB)"
@@ -273,8 +278,18 @@ const VmDiskModal = ({
                   onChange={handleInputChange("appendSize")}
                 />
               )}
-              <LabelInput className="img-input-box" label="별칭" value={formState.alias} onChange={handleInputChange("alias")}/>
-              <LabelInput className="img-input-box" label="설명" value={formState.description} onChange={handleInputChange("description")}/>
+              <LabelInput 
+                className="img-input-box" 
+                label="별칭" 
+                value={formState.alias} 
+                onChange={handleInputChange("alias")}
+              />
+              <LabelInput 
+                className="img-input-box" 
+                label="설명" 
+                value={formState.description} 
+                onChange={handleInputChange("description")}
+              />
 
               <LabelSelectOptions
                 className="img-input-box"
@@ -330,13 +345,50 @@ const VmDiskModal = ({
             </div>
 
             <div className="disk-new-img-right">
-              <LabelCheckbox label="삭제 후 초기화" id="wipeAfterDelete" checked={Boolean(formState.wipeAfterDelete)} onChange={handleInputChangeCheck("wipeAfterDelete")}/>
-              <LabelCheckbox label="부팅 가능" id="bootable" checked={Boolean(formState.bootable)} onChange={handleInputChangeCheck("bootable")} />
-              {/* disabled={!formState.bootable}  */}
-              <LabelCheckbox label="공유 가능" id="sharable" checked={Boolean(formState.sharable)} onChange={handleInputChangeCheck("sharable")} disabled={editMode} />
-              <LabelCheckbox label="읽기 전용" id="readOnly" checked={Boolean(formState.readOnly)} onChange={handleInputChangeCheck("readOnly")} disabled={editMode}/>
-              {/* <LabelCheckbox label="취소 활성화" id="cancelActive" checked={Boolean(formState.cancelActive)} onChange={handleInputChangeCheck("cancelActive")} disabled={editMode}/> */}
-              <LabelCheckbox label="증분 백업 사용" id="backup" checked={Boolean(formState.backup)} onChange={handleInputChangeCheck("backup")} />
+              <LabelCheckbox 
+                label="삭제 후 초기화" 
+                id="wipeAfterDelete" 
+                checked={Boolean(formState.wipeAfterDelete)} 
+                onChange={handleInputChangeCheck("wipeAfterDelete")}
+              />
+              <LabelCheckbox 
+                label="부팅 가능" 
+                id="bootable" 
+                checked={Boolean(formState.bootable)} 
+                onChange={handleInputChangeCheck("bootable")}
+                disabled={!formState.bootable} 
+                // TODO: bootable처리 
+              />
+
+              <LabelCheckbox 
+                label="공유 가능" 
+                id="sharable" 
+                checked={Boolean(formState.sharable)} 
+                onChange={handleInputChangeCheck("sharable")} 
+                disabled={editMode} 
+              />
+              <LabelCheckbox 
+                label="읽기 전용" 
+                id="readOnly" 
+                checked={Boolean(formState.readOnly)} 
+                onChange={handleInputChangeCheck("readOnly")} 
+                disabled={editMode}
+              />
+              {/* 
+              <LabelCheckbox 
+                label="취소 활성화" 
+                id="cancelActive" 
+                checked={Boolean(formState.cancelActive)} 
+                onChange={handleInputChangeCheck("cancelActive")}
+                disabled={editMode}
+              /> 
+              */}
+              <LabelCheckbox 
+                label="증분 백업 사용" 
+                id="backup" 
+                checked={Boolean(formState.backup)} 
+                onChange={handleInputChangeCheck("backup")}
+              />
             </div>
           </div>
         )}

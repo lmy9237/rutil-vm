@@ -21,6 +21,7 @@ const TablesOuter = ({
   onContextMenuItems,
   onClickableColumnClick
 }) => {
+  console.log(`넘어오는 데이터: ${data}`)
   return (
     <>
       <div className="section-table-outer">

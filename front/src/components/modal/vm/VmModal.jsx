@@ -281,8 +281,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       }
     }
   }, [clusterVo.id, clusters, osList.length]); // osList 전체가 아닌 length만 의존성에 포함
-  
-  
+    
 
   // 초기화 작업
   useEffect(() => {
@@ -386,7 +385,14 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose} targetName={"가상머신"} submitTitle={vLabel}  contentStyle={{ width: "850px", height: "730px" }}  onSubmit={handleFormSubmit}>
+    <BaseModal 
+      isOpen={isOpen} 
+      onClose={onClose} 
+      targetName={"가상머신"} 
+      submitTitle={vLabel}  
+      contentStyle={{ width: "850px", height: "730px" }}  
+      onSubmit={handleFormSubmit}
+    >
       <div className="vm-edit-popup-content flex">
         <div className="vm-new-nav"style={{height: "100%",width: "30%",}}>
             {tabs.map((tab) => (
@@ -414,10 +420,9 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
                 disabled={editMode} // 편집 모드일 경우 비활성화
                 loading={isClustersLoading}
                 options={clusters}
+                etcLabel={dataCenterVo.name}
               />
-              <div>
-                <span>데이터센터: {dataCenterVo.name}</span>
-              </div>
+              <div><span>데이터센터: {dataCenterVo.name}</span></div>
               <LabelSelectOptionsID
                 label="템플릿"
                 value={templateVo.id}
@@ -480,6 +485,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
                 />
                 <VmDisk
                   // editMode={editMode}
+                  vm={vm}
                   vmName={formInfoState.name}
                   dataCenterId={dataCenterVo.id}
                   diskListState={diskListState}

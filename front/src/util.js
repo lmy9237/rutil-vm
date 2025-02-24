@@ -44,6 +44,15 @@ export function convertBytesToGBFixed1(bytes) {
 }
 
 /**
+ * gb -> byte
+ * @param {number} gb - The number of bytes to convert.
+ * @returns {string} The formatted size in btye
+ */
+export function convertGBToBytes(gb) {
+  return gb * (1024 * 1024 * 1024);
+}
+
+/**
  * GB로 받은 값을 byte로 변경
  * 가상머신 생성, 디스크 생성에서 사용
  * @param {number} size 

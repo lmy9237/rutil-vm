@@ -10,6 +10,13 @@ import { useDisksFromVM } from "../../../api/RQHook";
  * @prop {string} vmId 가상머신 ID
  * @returns {JSX.Element} VmDisks
  */
+
+const diskTypes = [
+  { type: "all", label: "모두" },
+  { type: "image", label: "이미지" },
+  { type: "lun", label: "직접 LUN" },
+];
+
 const VmDisks = ({ vmId }) => {
   const [activeDiskType, setActiveDiskType] = useState("all"); // 필터링된 디스크 유형
   
@@ -19,12 +26,6 @@ const VmDisks = ({ vmId }) => {
     isError: isDisksError,
     isSuccess: isDisksSuccess,
   } = useDisksFromVM(vmId, (e) => ({ ...e }));
-
-  const diskTypes = [
-    { type: "all", label: "모두" },
-    { type: "image", label: "이미지" },
-    { type: "lun", label: "직접 LUN" },
-  ];
 
   return (
     <>
