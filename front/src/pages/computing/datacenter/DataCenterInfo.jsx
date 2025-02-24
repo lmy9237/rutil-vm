@@ -120,7 +120,7 @@ const DataCenterInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="px-[0.5rem] py-[0.5rem] section-content">
+        <div className="px-[0.5rem] py-[0.5rem] info-content">
           <Path pathElements={pathData} />
           <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
         </div>
