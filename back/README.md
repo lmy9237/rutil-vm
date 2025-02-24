@@ -109,8 +109,6 @@
 > ./gradlew rutil-vm-api:bootJar -Pprofile=staging --parallel
 > ```
 
-![itcloud:bootRun](../imgs/gradle-rutil-vm-api-bootRun.png)
-
 ### Run in VSCode
 
 - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>입력

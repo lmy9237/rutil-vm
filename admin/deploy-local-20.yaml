@@ -29,7 +29,12 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - ovirt_network
-
+#    healthcheck:
+#      test: ["CMD-SHELL", "curl --silent --fail localhost:9600 || exit 1"]
+#      interval: 10s
+#      timeout: 10s
+#      retries: 3
+    restart: on-failure
   rutil-vm:
     image: ititcloud/rutil-vm:latest
     container_name: rutil-vm
@@ -42,7 +47,13 @@ services:
       - LANG=ko_KR.utf8
     networks:
       - ovirt_network
-
+#    healthcheck:
+#      test: ["CMD-SHELL", "curl --silent --fail localhost:9600 || exit 1"]
+#      interval: 10s
+#      timeout: 10s
+#      retries: 3
+    restart: on-failure
+    
 #  nginx:
 #    image: nginx:stable-alpine3.20-perl
 #    platform: linux/amd64
