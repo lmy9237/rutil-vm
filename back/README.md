@@ -19,6 +19,7 @@
   - `postgres:10.12-alpine` (jdbc port: `5432`)
   - `gradle:7.4.2-jdk11-focal`
   - `eclipse-temurin:11-jdk-focal`
+- OpenSSH
 
 ---
 
@@ -39,7 +40,7 @@
 > 
 > 일괄 설치
 > 
-> ```bat
+> ```batchfile
 > code --install-extension vscjava.vscode-java-debug `
 > code --install-extension ms-azuretools.vscode-docker `
 > code --install-extension vscjava.vscode-gradle `
@@ -90,6 +91,48 @@
 
 ---
 
+## OpenSSH
+
+- 인증서 조회 기능에 필요한 선처리 작업
+
+### SSH 접근 인증서 생성 및 각 Host에 주입
+
+```sh
+#
+# 1. RutilVM이 있는 곳에서 인증서 생성 (개발환경도 포함)
+# 
+# - 통상적으로 ovirt-engine이 있는 곳 (예: 192.168.0.70)
+# - 결과물 ~/.ssh/id_rsa, ~/.ssh/id_rsa.pub
+#   - id_rsa: 개인키
+#   - id_rsa.pub: 공개키
+ssh-keygen -t rsa -b 4096 -m PKCS8 -N ""
+#
+# 2. 공개 인증서 주입
+# 
+# - 대상: ovirt-engine에서 접근할 host (예: 192.168.0.71 또는 192.168.0.72)
+# - 결과: host의 ~/.ssh/authorized_keys파일에 ovirt-engine의 공개키 주입
+#
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.71
+```
+
+### 예외 상황에 대한 대처
+
+> `id_rsa.*`파일 생성 후 `ssh-copy-id`가 안될 경우
+
+```sh
+# 
+# 1. RutilVM이 있는 곳에서 공개키 값 출력
+# 
+# - 편집 또는 `cat`을 이용하여 값 출력 후 관련 key 추출하여 복사 (1줄)
+#
+cat ~/.ssh/id_rsa.pub
+#
+# ssh-rsa <해시값> root@rutilvm-dev.ititinfo.com
+
+```
+
+---
+
 ## 🐘Gradle
 
 > [!IMPORTANT]
@@ -99,14 +142,22 @@
 > # 프로퍼티 `profile` 유형
 > # - local: 로컬 (개발환경 192.168.0.20)
 > # - local: 로컬 (개발환경 192.168.0.70)
-> # - staging
+> # - staging: 스테이징 (도커용)
+> # - prd: 운영 (도커용)
 > #
 > # 스프링부트 프로젝트 실행 (개발)
 > ./gradlew rutil-vm-api:bootRun -Pprofile=local --parallel
+> ./gradlew rutil-vm-api:bootRun -Pprofile=local20 --parallel
 > ./gradlew rutil-vm-api:bootRun -Pprofile=local70 --parallel
-> 
+> ./gradlew rutil-vm-api:bootRun -Pprofile=staging --parallel
+> ./gradlew rutil-vm-api:bootRun -Pprofile=prd --parallel
+> #
 > # 아티팩트 생성 (운영)
+> ./gradlew rutil-vm-api:bootJar -Pprofile=local --parallel
+> ./gradlew rutil-vm-api:bootJar -Pprofile=local20 --parallel
+> ./gradlew rutil-vm-api:bootJar -Pprofile=local70 --parallel
 > ./gradlew rutil-vm-api:bootJar -Pprofile=staging --parallel
+> ./gradlew rutil-vm-api:bootJar -Pprofile=prd --parallel
 > ```
 
 ### Run in VSCode
@@ -137,19 +188,20 @@
 > ```sh
 > # rutil-vm-api
 > docker run -d -it --name rutil-vm-api \
-> -e RUTIL_VM_OVIRT_IP=192.168.0.20 \          # ovirt 주소 
-> -e RUTIL_VM_OVIRT_PORT_HTTPS=443 \           # ovirt 포트 번호
-> -e RUTIL_VM_PORT_HTTPS=8443 \                # rutilVM 호스팅 포트번호
-> -e POSTGRES_JDBC_PORT=5432 \                 # PostgresDB 포트번호
-> -e POSTGRES_DATASOURCE_JDBC_ID=rutil \       # 테이블스페이스접근 ID
-> -e POSTGRES_DATASOURCE_JDBC_PW=rutil1! \     # 테이블스페이스접근 PW
-> -e RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm \  # CORS 예외대상 호스트명
-> -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 \  # CORS 예외대상 호스트의 포트
-> -e RUTIL_VM_OVIRT_HOST_SSH_IP=192.168.0.21 \  # oVirt의 host주소
-> -e RUTIL_VM_OVIRT_HOST_SSH_PORT=22 \          # oVirt의 host주소 포트번호
-> -e RUTIL_VM_OVIRT_HOST_SSH_ID=admin \         # oVirt의 host SSH 접근가능 ID
-> -e RUTIL_VM_OVIRT_HOST_SSH_PW=rootAdmin!@#  \ # oVirt의 host SSH 접근가능 ID
-> -p 8080:8080 -p 8443:8443 \                   # Port Mapping
+> -e RUTIL_VM_OVIRT_IP=192.168.0.20 \                         # ovirt 주소 
+> -e RUTIL_VM_OVIRT_PORT_HTTPS=443 \                          # ovirt 포트 번호
+> -e RUTIL_VM_PORT_HTTPS=8443 \                               # rutilVM 호스팅 포트번호
+> -e POSTGRES_JDBC_PORT=5432 \                                # PostgresDB 포트번호
+> -e POSTGRES_DATASOURCE_JDBC_ID=rutil \                      # 테이블스페이스접근 ID
+> -e POSTGRES_DATASOURCE_JDBC_PW=rutil1! \                    # 테이블스페이스접근 PW
+> -e RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm \       # CORS 예외대상 호스트명
+> -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 \       # CORS 예외대상 호스트의 포트
+> -e RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED=false \              # JSch 디버깅 활성화 여부 (목적: SSH연결)
+> -e RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION= \                    # SSH private key 위치 (기본: ${user.home}/.ssh/id_rsa)
+> -e RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS=root@192.168.0.20:22 \ # oVirt Engine의 SSH 접근주소
+> -e RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY= \                      # oVirt Engine의 SSH Private Key 위치
+> -e RUTIL_VM_OVIRT_SSH_HOSTS_ADDRESS=root@192.168.0.21:22|root@192.168.0.22:22 \ # oVirt Host의 SSH 접근주소 ('|'로 구분)
+> -p 8080:8080 -p 8443:8443 \                                 # Port Mapping
 > ititcloud/rutil-vm-api:0.2.0-beta2
 > 
 > # postgres
@@ -158,22 +210,28 @@
 >   -e POSTGRES_PASSWORD=mysecretpassword \
 >   -e PGDATA=/var/lib/postgresql/data/pgdata \
 >   -v where/to/mount:/var/lib/postgresql/data \
->   postgres:10.12-alpine
+>   postgres:12.12-alpine
 > ```
 
 > *On Windows*
 > 
 > ```batch
-> :: iotcloud
-> docker run -d -it --name rutil-vm-back ^
+> :: rutil-vm-api
+> docker run -d -it --name rutil-vm-api ^
 > -e RUTIL_VM_OVIRT_IP=192.168.0.20 ^
 > -e RUTIL_VM_OVIRT_PORT_HTTPS=443 ^
 > -e RUTIL_VM_PORT_HTTPS=8443 ^
 > -e POSTGRES_JDBC_PORT=5432 ^
 > -e POSTGRES_DATASOURCE_JDBC_ID=rutil ^
 > -e POSTGRES_DATASOURCE_JDBC_PW=rutil1! ^
-> -p 8080:8080 -p 8443:8443 ^
-> ititcloud/rutil-vm-back:0.1.0
+> -e RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm ^
+> -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 ^
+> -e RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED=false \
+> -e RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION= ^
+> -e RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS=root@192.168.0.20:22 ^
+> -e RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY= ^
+> -e RUTIL_VM_OVIRT_SSH_HOSTS_ADDRESS=root@192.168.0.21:22|root@192.168.0.22:22 ^
+> ititcloud/rutil-vm-back:0.2.0-beta2
 > 
 > :: postgres
 > docker run -d -it ^

@@ -41,9 +41,9 @@ class SSHFileFetcherTest {
 		log.debug("should_fetchSSLCertificates ... ")
 		assertThat(sshCertFetcher, `is`(notNullValue()))
 
+		/*
 		val connVDSM: RemoteConnMgmt = RemoteConnMgmt.forVDSM("192.168.0.71", 22, "root", "adminRoot!@#")
 		val sessionVDSM: Session? = connVDSM.toInsecureSession()
-		/*
 		val certVDSMData: ByteArray? = sessionVDSM?.fetchFile(CertType.VDSM.path)
 		assertThat(certVDSMData, `is`(notNullValue()))
 		val certificateVDSM = certParser.parseCertificate(certVDSMData)

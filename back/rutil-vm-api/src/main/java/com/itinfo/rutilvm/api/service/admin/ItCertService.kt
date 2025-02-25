@@ -1,17 +1,13 @@
 package com.itinfo.rutilvm.api.service.admin
 
 import com.itinfo.rutilvm.api.cert.CertManager
-import com.itinfo.rutilvm.api.cert.toCertManager
 import com.itinfo.rutilvm.api.configuration.CertConfig
+import com.itinfo.rutilvm.api.configuration.PkiServiceClient
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.util.cert.model.CertType
-import com.itinfo.rutilvm.util.cert.model.CertType.ENGINE_CA
-import com.itinfo.rutilvm.util.cert.model.CertType.ENGINE_SERVER
-import com.itinfo.rutilvm.util.cert.model.CertType.VDSM
-import com.itinfo.rutilvm.util.cert.model.CertType.VDSM_CA
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.jvm.Throws
 
 interface ItCertService {
 	/**
@@ -23,7 +19,10 @@ interface ItCertService {
 	 * [ItCertService.findOne]
 	 * oVirt 관련 인증서 상세 조회
 	 */
-	fun findOne(id: Int): CertManager?
+	fun findOne(alias: String, address: String): CertManager?
+
+	@Throws(Exception::class)
+	fun findEngineSshPublicKey(): String
 }
 
 
@@ -32,6 +31,7 @@ class CertServiceImpl(
 
 ): BaseService(), ItCertService {
 	@Autowired private lateinit var certConfig: CertConfig
+	@Autowired private lateinit var pkiServiceClient: PkiServiceClient
 
 	override fun findAll(): List<CertManager> {
 		log.info("findAll ...")
@@ -39,9 +39,9 @@ class CertServiceImpl(
 		return certs
 	}
 
-	override fun findOne(id: Int): CertManager? {
-		log.info("findOne ... id: {}", id)
-		val cert: CertManager? = findAll().firstOrNull { it.id == id }
+	override fun findOne(alias: String, address: String): CertManager? {
+		log.info("findOne ... alias: {}, address: {}", alias, address)
+		val cert: CertManager? = findAll().firstOrNull { it.alias == alias && it.address == address }
 		/*
 		val cert: CertManager? = when(val certType: CertType = CertType.findById(id)) {
 			VDSM, VDSM_CA -> certType.toCertManager(certConfig.conn4VDSM())
@@ -50,6 +50,11 @@ class CertServiceImpl(
 		}
 		*/
 		return cert
+	}
+
+	override fun findEngineSshPublicKey(): String {
+		log.info("findEngineSshPublicKey ... ")
+		return pkiServiceClient.fetchEngineSshPublicKey()
 	}
 
 	companion object {

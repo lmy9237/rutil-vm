@@ -20,7 +20,9 @@ object Versions {
     const val swagger2 = "2.9.2"
     const val swagger3 = "3.0.0"
     const val ovirt = "4.5.1" // latest: 4.5.1  before: 4.4.0
-	const val jsch = "0.1.55"
+	const val jsch = "0.2.23"
+	const val okhttp3 = "4.9.1"
+	const val retrofit2 = "2.9.0"
     const val qemu = "1.0.6"
     const val tiles = "3.0.5"
     const val mybatis = "3.2.8"

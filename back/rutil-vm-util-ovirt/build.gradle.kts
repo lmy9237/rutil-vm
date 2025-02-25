@@ -9,5 +9,8 @@ dependencies {
     compileOnly(Dependencies.log4j)
     compileOnly(Dependencies.gson)
     compileOnly(Dependencies.ovirt)
+	compileOnly(Dependencies.retrofit2)
 	compileOnly(Dependencies.jsch)
+
+	testImplementation(Dependencies.retrofit2)
 }

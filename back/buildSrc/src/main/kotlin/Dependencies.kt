@@ -86,8 +86,18 @@ object Dependencies {
         "org.ovirt.engine.api:sdk:${Versions.ovirt}",
     )
 	val jsch = listOf(
-		"com.jcraft:jsch:${Versions.jsch}"
+		"com.github.mwiede:jsch:${Versions.jsch}",
+		"org.bouncycastle:bcprov-jdk15on:1.70"
 	)
+	val okhttp3 = listOf(
+		"com.squareup.okhttp3:okhttp:${Versions.okhttp3}",
+		"com.squareup.okhttp3:okhttp-urlconnection:${Versions.okhttp3}",
+		"com.squareup.okhttp3:logging-interceptor:${Versions.okhttp3}",
+	)
+	val retrofit2 = listOf(
+		"com.squareup.retrofit2:retrofit:${Versions.retrofit2}",
+		"com.squareup.retrofit2:converter-scalars:${Versions.retrofit2}",
+	) + okhttp3
     val qemu = listOf(
         "org.anarres.qemu:qemu-examples:${Versions.qemu}",
         "org.anarres.qemu:qemu-exec:${Versions.qemu}",

@@ -16,6 +16,7 @@ dependencies {
 	testImplementation(project(":rutil-vm-common"))
 	testImplementation(project(":rutil-vm-util"))
 	testImplementation(Dependencies.log4j)
+	testImplementation(Dependencies.gson)
 	testImplementation(Dependencies.jsch)
 	testImplementation(Dependencies.junit)
 	testImplementation(Dependencies.hamcrest)

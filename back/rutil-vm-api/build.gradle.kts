@@ -198,6 +198,8 @@ dependencies {
     implementation(Dependencies.jwt)
     runtimeOnly(Dependencies.jwtRuntime)
     implementation(Dependencies.swagger3)
+	implementation(Dependencies.jsch)
+	implementation(Dependencies.retrofit2)
     implementation(Dependencies.qemu)
     implementation(Dependencies.tiles)
     implementation(Dependencies.mybatis)
@@ -220,6 +222,5 @@ dependencies {
     testImplementation(Dependencies.springTest)
     testImplementation(Dependencies.springBootTest)
     testImplementation(Dependencies.hamcrest)
-    implementation("com.jcraft:jsch:0.1.55")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 }

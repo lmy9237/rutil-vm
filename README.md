@@ -27,10 +27,6 @@ Powershell 실행 후 아래 명령어 실행
 NOTEPAD $profile
 ```
 
-```sh
-cd /etc/pki/ovirt-engine/certs
-```
-
 ---
 
 > [!TIP] 

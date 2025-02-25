@@ -58,12 +58,12 @@ class CertManagementController : BaseController() {
 	)
 	@GetMapping("/{id}")
 	fun findOne(
-		@PathVariable id: String = "",
+
 	): ResponseEntity<CertManager?> {
-		log.debug("findOne ... id: {}", id)
-		val idInt: Int = id.toIntOrNull() ?: throw ErrorPattern.CERT_ID_NOT_FOUND.toException()
-		val certs: CertManager? = cert.findOne(idInt)
-		return ResponseEntity.ok(certs)
+		// log.debug("findOne ... id: {}", id)
+		// val idInt: Int = id.toIntOrNull() ?: throw ErrorPattern.CERT_ID_NOT_FOUND.toException()
+		// val certs: CertManager? = cert.findOne(idInt)
+		return ResponseEntity.ok(null)
 	}
 
 	companion object {

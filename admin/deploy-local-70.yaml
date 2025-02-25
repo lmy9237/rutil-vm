@@ -7,25 +7,59 @@ services:
     ports:
       - "8080:8080"
       - "8443:8443"
+    # env_file: ".env_70"
     environment:
-      - TZ=Asia/Seoul
-      - LANGUAGE=ko_KR;ko;en_US;en
-      - LC_ALL= ko_KR.UTF-8
-      - LANG=ko_KR.utf8
-      - RUTIL_VM_OVIRT_IP=192.168.0.70
-      - RUTIL_VM_OVIRT_PORT_HTTPS=443
-      - RUTIL_VM_PORT_HTTPS=8443
-      - RUTIL_VM_OVIRT_HOST_SSH_IP=192.168.0.71
-      - RUTIL_VM_OVIRT_HOST_SSH_PORT=22
-      - RUTIL_VM_OVIRT_HOST_SSH_ID=root
-      - RUTIL_VM_OVIRT_HOST_SSH_PW=adminRoot!@#
-      - RUTIL_VM_CORS_ALLOWED_ORIGINS=192.168.0.70;localhost;rutil-vm
-      - RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443
-      - POSTGRES_JDBC_PORT=5432
-      - POSTGRES_DATASOURCE_JDBC_ID=rutil
-      - POSTGRES_DATASOURCE_JDBC_PW=rutil1!
+      TZ: Asia/Seoul
+      LANGUAGE: ko_KR;ko;en_US;en
+      LC_ALL: ko_KR.UTF-8
+      LANG: ko_KR.utf8
+      RUTIL_VM_OVIRT_IP: 192.168.0.70
+      RUTIL_VM_OVIRT_PORT_HTTPS: 443
+      RUTIL_VM_PORT_HTTPS: 8443
+      RUTIL_VM_CORS_ALLOWED_ORIGINS: 192.168.0.70;localhost;rutil-vm
+      RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT: 3000;3443;443
+      RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED: true
+      RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION: /root/.ssh/id_rsa
+      RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS: root@192.168.0.70:22
+      RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY: |
+        Bag Attributes
+            localKeyID: 6D F8 D7 A1 01 70 31 78 1E 7B FA 56 CB 1D 9A 59 E2 28 CF B1
+        Key Attributes: <No Attributes>
+        -----BEGIN PRIVATE KEY-----
+        MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDQ0cNriXz0gpre
+        UW0C4vUPVeQBr3Z5/sB34W8KBO1D4gZ2G91FzT3kmLw6pcsEE0kIIX6hMnPXHD0/
+        ipazEOwvgmglkqq12lx5+KrA/zf1niI0hmoIJadxmk5EbX8qeacscXHPPKJoNKxc
+        slmZ+q1hQzNlLNGjylSQWnBZAGKpzqbI11jT3puKfJIF7lgRm1zWU4o6O4TU7S5/
+        TqvPjx/kpXZkQbNggJcUKnDN9trYFVKQ5fKMMYFottoaHRDf5LODa1Nz9lKuPDt8
+        EV8vT9bB4HiKBs9ofm8jTCroGmh8LeLHQGGKkLl0cPzHOw0dj0vTe+Ta2YhjbSdi
+        dUcOP6XtAgMBAAECggEAHpXKuLJ/kdSbWFq2y8hwOlnLNo/7m2y7xhNHz0Dfe6Tc
+        a2ozY6jnGtdgInrsHGGyvbUiNfwMyYICWo8y+XFOFrtUA8TSqiYci2TnpbL8AEa0
+        HdteJmlVeCcwtYcQLCl7WeAX2lG4O+kTIdShmRMFWAyet3/0CLh24FnOwMp0qQgu
+        jsDpxPrDw1+C7vTMaGlXOEeeV2X2PfhIgJfCvfWnLTM5Ricl4vr9QHmuF3Z+iDIW
+        hG7WxCXKSVVzhddIXxY0FgkEY3pvHmP+KZPGAyHTMDss7M7rr30PXq1A6v2RRyjf
+        kJ1tncNBtXw/Hq9/Fcbr25EK6ioEZv5qEWUf1qX+pQKBgQD+Mgxo6bmMHpedRkBm
+        Dmw8Q1Pb2+dgyurAcCxk8ADJ/zbHRHwXxcM5zA5UswoZV+OpBrYZ9Fkt+ZXtghcV
+        Xu9q9mAwHta4vUM5F1kZ6p85/ijRoDTle5uaht54OYcaqo+OIjlRhnhXIJlTrANJ
+        P6OFgyusgyTm+Tb1tNsw9LRunwKBgQDSTUCkY75Bouf2JlZaau9YAOGU2GnOU0h6
+        W2bIHvBQwMBOfZxE5g66Bo7hRMDpU5YNv+qUiHf1J4BgwhYVyjr+IwebOaHJH80f
+        lM54cxKItSVrVZGS6y+dmVhLEIvGqlSR/32TTfkWl9nHKiLjmKI0Eng2H58erlSR
+        o88gKQQ78wKBgEo8y6sIN4xYkub30W7831dqQl9/hb+bA5xYJl8ESPa1doYT1joL
+        I80Jb1YFQ/nK1U5UC3LhDfqDXeoTiDJRm5KdidID76ncfHl7/CW5g+8n7zvpkglD
+        ZFpo8SgjhPWgwnQ8QokwwIyRlLX/Eqad01/2wxaK5ogeWJLB0xIlJVz5AoGAU8zq
+        3FbOopMKwcBnGqKP+05mlYxjJQ90yyUO4OHLOzKDrwNIuP+/kIs6djOSd6eSHKqE
+        DGoQ+wShmGzephIuzcQhrM4bVOyyLUp7t+2KziT44zt2xcen8rH/R/Iw8JpBFuhr
+        Hr6saj9aTY3R10WkJQHTGyYgnvYyxtIyoAsYH9cCgYBTc+9v/ND+crQIUDD0hPA1
+        HDZMBxOmzZg7BuVqPWEvsEEG8oqf1Oy7hWd2xfhpN7tn17uje/JjJjTnyn8ajoAK
+        ipvhV0xU/ByB2lXLwj3WDN7BcGRxJtcU+yZmB8rATDSrs5Y8GfJkfB/BgMZPNPdm
+        PUc+B4CsVFpbybj8iBf+RQ==
+        -----END PRIVATE KEY-----
+      RUTIL_VM_OVIRT_SSH_HOSTS_ADDRESS: root@192.168.0.71:22|root@192.168.0.72:22
+      POSTGRES_JDBC_PORT: 5432
+      POSTGRES_DATASOURCE_JDBC_ID: rutil
+      POSTGRES_DATASOURCE_JDBC_PW: rutil1!
     volumes:
       - ./rutil-vm-api/logs:/app/logs:rw
+      - /root/.ssh:/root/.ssh:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       - ovirt_network
