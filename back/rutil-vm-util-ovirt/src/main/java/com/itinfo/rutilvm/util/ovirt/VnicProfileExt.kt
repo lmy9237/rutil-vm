@@ -35,26 +35,21 @@ fun Connection.findVnicProfile(vnicProfileId: String): Result<VnicProfile?> = ru
 fun List<VnicProfile>.nameDuplicateVnicProfileName(vnicProfileName: String, vnicProfileId: String? = null): Boolean =
 	this.filter { it.id() != vnicProfileId }.any { it.name() == vnicProfileName }
 
-
 fun Connection.addVnicProfileFromNetwork(networkId: String, vnicProfile: VnicProfile): Result<VnicProfile?> = runCatching {
-	if(this.findNetwork(networkId).isFailure) {
-		throw ErrorPattern.NETWORK_NOT_FOUND.toError()
-	}
+	checkNetworkExists(networkId)
+
 	if (this.findAllVnicProfiles()
 			.getOrDefault(listOf())
 			.nameDuplicateVnicProfileName(vnicProfile.name())) {
 		return FailureType.DUPLICATE.toResult(Term.VNIC_PROFILE.desc)
 	}
 	this.srvVnicProfilesFromNetwork(networkId).add().profile(vnicProfile).send().profile()
-
 }.onSuccess {
 	Term.VNIC_PROFILE.logSuccess("생성")
 }.onFailure {
 	Term.VNIC_PROFILE.logFail("생성", it)
 	throw if (it is Error) it.toItCloudException() else it
 }
-
-
 
 fun Connection.updateVnicProfile(vnicProfile: VnicProfile): Result<VnicProfile?> = runCatching {
 	this.srvVnicProfile(vnicProfile.id()).update().profile(vnicProfile).send().profile()

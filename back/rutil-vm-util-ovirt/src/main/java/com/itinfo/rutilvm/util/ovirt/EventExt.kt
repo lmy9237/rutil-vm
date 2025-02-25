@@ -12,16 +12,22 @@ private fun Connection.srvEvents(): EventsService =
 	systemService.eventsService()
 
 fun Connection.findAllEvents(searchQuery: String = "", follow: String = "", max: String = ""): Result<List<Event>> = runCatching {
-	if (searchQuery.isNotEmpty() && follow.isNotEmpty() && max.isNotEmpty())
-		this.srvEvents().list().max(max.toInt()).search(searchQuery).follow(follow).caseSensitive(false).send().events()
-	else if (searchQuery.isNotEmpty())
-		this.srvEvents().list().search(searchQuery).caseSensitive(false).send().events()
-	else if (follow.isNotEmpty())
-		this.srvEvents().list().follow(follow).caseSensitive(false).send().events()
-	else if (max.isNotEmpty())
-		this.srvEvents().list().max(max.toInt()).send().events()
-	else
-		this.srvEvents().list().send().events()
+	this.srvEvents().list().apply {
+		if (max.isNotEmpty()) max(max.toInt())
+		if (searchQuery.isNotEmpty()) search(searchQuery)
+		if (follow.isNotEmpty()) follow(follow)
+	}.caseSensitive(false).send().events()
+
+	// if (searchQuery.isNotEmpty() && follow.isNotEmpty() && max.isNotEmpty())
+	// 	this.srvEvents().list().max(max.toInt()).search(searchQuery).follow(follow).caseSensitive(false).send().events()
+	// else if (searchQuery.isNotEmpty())
+	// 	this.srvEvents().list().search(searchQuery).caseSensitive(false).send().events()
+	// else if (follow.isNotEmpty())
+	// 	this.srvEvents().list().follow(follow).caseSensitive(false).send().events()
+	// else if (max.isNotEmpty())
+	// 	this.srvEvents().list().max(max.toInt()).send().events()
+	// else
+	// 	this.srvEvents().list().send().events()
 }.onSuccess {
 	Term.EVENT.logSuccess("목록조회")
 }.onFailure {

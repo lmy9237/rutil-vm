@@ -8,11 +8,6 @@ import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
-import org.ovirt.engine.sdk4.builders.HostBuilder
-import org.ovirt.engine.sdk4.builders.HostedEngineBuilder
-import org.ovirt.engine.sdk4.builders.IscsiDetailsBuilder
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.net.InetAddress
 
 
@@ -22,23 +17,27 @@ fun Connection.srvHosts(): HostsService =
 fun Connection.srvHost(hostId: String): HostService =
 	this.srvHosts().hostService(hostId)
 
+// https://192.168.0.70/ovirt-engine/api/hosts?all_content=true
 fun Connection.findAllHosts(searchQuery: String = "", follow: String = ""): Result<List<Host>> = runCatching {
-	// https://192.168.0.70/ovirt-engine/api/hosts?all_content=true
-	if (searchQuery.isNotEmpty() && follow.isNotEmpty())
-		this.srvHosts().list().search(searchQuery).follow(follow).caseSensitive(false).send().hosts()
-	else if (searchQuery.isNotEmpty())
-		this.srvHosts().list().search(searchQuery).caseSensitive(false).send().hosts()
-	else if (follow.isNotEmpty())
-		this.srvHosts().list().follow(follow).caseSensitive(false).send().hosts()
-	else
-		this.srvHosts().list().allContent(true).send().hosts()
+	this.srvHosts().list().allContent(true).apply {
+		if (searchQuery.isNotEmpty()) search(searchQuery)
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().hosts()
+
+	// if (searchQuery.isNotEmpty() && follow.isNotEmpty())
+	// 	this.srvHosts().list().search(searchQuery).follow(follow).caseSensitive(false).send().hosts()
+	// else if (searchQuery.isNotEmpty())
+	// 	this.srvHosts().list().search(searchQuery).caseSensitive(false).send().hosts()
+	// else if (follow.isNotEmpty())
+	// 	this.srvHosts().list().follow(follow).caseSensitive(false).send().hosts()
+	// else
+	// 	this.srvHosts().list().allContent(true).send().hosts()
 }.onSuccess {
 	Term.HOST.logSuccess("목록조회")
 }.onFailure {
 	Term.HOST.logFail("목록조회", it)
 	throw if (it is Error) it.toItCloudException() else it
 }
-
 
 fun Connection.findHost(hostId: String): Result<Host?> = runCatching {
 	srvHost(hostId).get().allContent(true).send().host()
@@ -52,27 +51,10 @@ fun Connection.findHost(hostId: String): Result<Host?> = runCatching {
 fun List<Host>.nameDuplicateHost(hostName: String, hostId: String? = null): Boolean =
 	this.filter { it.id() != hostId }.any { it.name() == hostName }
 
-
-fun Connection.findAllVmsFromHost(hostId: String, searchQuery: String = ""): Result<List<Vm>> = runCatching {
-	if(this.findHost(hostId).isFailure){
-		throw ErrorPattern.CLUSTER_NOT_FOUND.toError()
-	}
-	if (searchQuery.isNotEmpty())
-		this.srvVms().list().search(searchQuery).send().vms().filter { it.host()?.id() == hostId }
-	else
-		this.srvVms().list().send().vms().filter { it.host()?.id() == hostId }
-}.onSuccess {
-	Term.HOST.logSuccess("vms 조회", hostId)
-}.onFailure {
-	Term.HOST.logFail("vms 조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-
 fun Connection.addHost(
 	host: Host,
-    deployHostedEngine: Boolean? = false,
-    // name: String,
+	deployHostedEngine: Boolean? = false,
+	// name: String,
 	// password: String
 ): Result<Host?> = runCatching {
 	if (this.findAllHosts()
@@ -80,14 +62,14 @@ fun Connection.addHost(
 			.nameDuplicateHost(host.name())) {
 		return FailureType.DUPLICATE.toResult(Term.HOST.desc)
 	}
-/*
-	val address: InetAddress = InetAddress.getByName(host.address())
-	log.info("Resolved address: {}", address)
-	if (address.makeUserHostViaSSH(host.rootPassword(), 22, name, password).isFailure) {
-		log.info("계정생성 실패")
-		return Result.failure(Error("계정생성 실패"))
-	}
-*/
+	/*
+		val address: InetAddress = InetAddress.getByName(host.address())
+		log.info("Resolved address: {}", address)
+		if (address.makeUserHostViaSSH(host.rootPassword(), 22, name, password).isFailure) {
+			log.info("계정생성 실패")
+			return Result.failure(Error("계정생성 실패"))
+		}
+	*/
 	// reboot, activate = 바로 활성화
 	log.info("배포작업: {}", deployHostedEngine)
 	val hostAdded: Host =
@@ -107,8 +89,6 @@ fun Connection.addHost(
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
-
 fun Connection.updateHost(host: Host): Result<Host?> = runCatching {
 	if(this.findAllHosts()
 			.getOrDefault(listOf())
@@ -127,15 +107,14 @@ fun Connection.updateHost(host: Host): Result<Host?> = runCatching {
 }
 
 fun Connection.removeHost(hostId: String): Result<Boolean> = runCatching {
-	val host: Host = this.findHost(hostId)
-		.getOrNull() ?: throw ErrorPattern.HOST_NOT_FOUND.toError()
+	val host = checkHost(hostId)
 
 	if(this.findAllVmsFromHost("", hostId)
 			.getOrDefault(listOf())
 			.any { it.status() == VmStatus.UP }){
+		log.error("가상머신이 돌아가고 있는게 있음")
 		throw ErrorPattern.HOST_HAS_RUNNING_VMS.toError()
 	}
-
 	if (host.status() != HostStatus.MAINTENANCE) {
 		log.warn("{} 삭제 실패... {} 가 유지관리 상태가 아님 ", Term.HOST.desc, hostId)
 		throw throw ErrorPattern.HOST_NOT_MAINTENANCE.toError()
@@ -152,8 +131,6 @@ fun Connection.removeHost(hostId: String): Result<Boolean> = runCatching {
 	Term.HOST.logFail("삭제", it, hostId)
 	throw if (it is Error) it.toItCloudException() else it
 }
-
-
 
 @Throws(InterruptedException::class)
 fun Connection.expectHostDeleted(hostId: String, timeout: Long = 60000L, interval: Long = 1000L): Boolean {
@@ -174,9 +151,27 @@ fun Connection.expectHostDeleted(hostId: String, timeout: Long = 60000L, interva
 	}
 }
 
+
+fun Connection.findAllVmsFromHost(hostId: String, searchQuery: String = ""): Result<List<Vm>> = runCatching {
+	checkHostExists(hostId)
+
+	this.srvVms().list().apply {
+		if(searchQuery.isNotEmpty()) search(searchQuery)
+	}.send().vms().filter { it.host()?.id() == hostId }
+
+	// if (searchQuery.isNotEmpty())
+	// 	this.srvVms().list().search(searchQuery).send().vms().filter { it.host()?.id() == hostId }
+	// else
+	// 	this.srvVms().list().send().vms().filter { it.host()?.id() == hostId }
+}.onSuccess {
+	Term.HOST.logSuccess("vms 조회", hostId)
+}.onFailure {
+	Term.HOST.logFail("vms 조회", it, hostId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 fun Connection.deactivateHost(hostId: String): Result<Boolean> = runCatching {
-	val host: Host =
-		this.findHost(hostId).getOrNull() ?: throw ErrorPattern.HOST_NOT_FOUND.toError()
+	val host = checkHost(hostId)
 
 	if (host.status() == HostStatus.MAINTENANCE) {
 		throw Error("deactivateHost 실패 ... $hostId 가 이미 유지관리 상태") // return 대신 throw
@@ -196,9 +191,7 @@ fun Connection.deactivateHost(hostId: String): Result<Boolean> = runCatching {
 
 
 fun Connection.activateHost(hostId: String): Result<Boolean> = runCatching {
-	val host: Host =
-		this.findHost(hostId)
-			.getOrNull() ?: throw ErrorPattern.HOST_NOT_FOUND.toError()
+	val host = checkHost(hostId)
 
 	if (host.status() == HostStatus.UP) {
 		return Result.failure(Error("activateHost 실패 ... ${host.name()}가 이미 활성 상태 "))
@@ -218,9 +211,8 @@ fun Connection.activateHost(hostId: String): Result<Boolean> = runCatching {
 
 
 fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
-	if(this.findHost(hostId).isFailure){
-		throw ErrorPattern.HOST_NOT_FOUND.toError()
-	}
+	checkHostExists(hostId)
+
 	this.srvHost(hostId).refresh().send()
 
 	if (!this.expectHostStatus(hostId, HostStatus.UP)) {
@@ -235,8 +227,7 @@ fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 }
 
 fun Connection.restartHost(hostId: String, hostName: String, hostPw: String): Result<Boolean> = runCatching {
-	val host: Host = this.findHost(hostId).getOrNull()
-			?: throw ErrorPattern.HOST_NOT_FOUND.toError()
+	val host = checkHost(hostId)
 
 	val address: InetAddress = InetAddress.getByName(host.address())
 	if (address.rebootHostViaSSH(hostName, hostPw, 22).isFailure)
@@ -252,8 +243,6 @@ fun Connection.restartHost(hostId: String, hostName: String, hostPw: String): Re
 	Term.HOST.logFail("재부팅", it, hostId)
 	throw if (it is Error) it.toItCloudException() else it
 }
-
-
 
 /**
  * [makeUserHostViaSSH]
@@ -384,9 +373,8 @@ fun InetAddress.rebootHostViaSSH(hostName: String, hostPw: String, port: Int): R
 //}
 
 fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching {
-	if(this.findHost(hostId).isFailure){
-		throw ErrorPattern.HOST_NOT_FOUND.toError()
-	}
+	checkHostExists(hostId)
+
 	this.srvHost(hostId).enrollCertificate().send()
 	true
 }.onSuccess {
@@ -397,8 +385,7 @@ fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching 
 }
 
 fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
-	// val host: Host = this.findHost(hostId).getOrNull()
-	// 	?: throw ErrorPattern.HOST_NOT_FOUND.toError()
+	val host = checkHost(hostId)
 
 	// host 주소
 	// val address: InetAddress = InetAddress.getByName(host.address())
@@ -411,8 +398,7 @@ fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatc
 }
 
 fun Connection.deactiveGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
-	// val host: Host = this.findHost(hostId).getOrNull()
-	// 	?: throw ErrorPattern.HOST_NOT_FOUND.toError()
+	val host = checkHost(hostId)
 	TODO("ssh 로 구현")
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 ha 비활성화")
@@ -423,9 +409,7 @@ fun Connection.deactiveGlobalHaFromHost(hostId: String): Result<Boolean> = runCa
 
 
 fun Connection.findPowerManagementFromHost(hostId: String, fenceType: FenceType): Result<PowerManagement?> = runCatching {
-	val res = srvHost(hostId).fence().fenceType(fenceType.name).send().powerManagement()
-	log.info("powerManagementFromHost result: $res")
-	res
+	srvHost(hostId).fence().fenceType(fenceType.name).send().powerManagement()
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.POWER_MANAGEMENT,"상세조회", hostId)
 }.onFailure {
@@ -472,14 +456,13 @@ fun Connection.expectHostStatus(hostId: String, expectStatus: HostStatus, interv
 	}
 }
 
-private fun Connection.srvAllNicsFromHost(hostId: String): HostNicsService =
+private fun Connection.srvAllHostNicsFromHost(hostId: String): HostNicsService =
 	this.srvHost(hostId).nicsService()
 
-fun Connection.findAllNicsFromHost(hostId: String): Result<List<HostNic>> = runCatching {
-	if(this.findHost(hostId).isFailure){
-		throw ErrorPattern.HOST_NOT_FOUND.toError()
-	}
-	this.srvAllNicsFromHost(hostId).list().send().nics() ?: listOf()
+fun Connection.findAllHostNicsFromHost(hostId: String): Result<List<HostNic>> = runCatching {
+	checkHostExists(hostId)
+
+	this.srvAllHostNicsFromHost(hostId).list().send().nics()
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST_NIC,"목록조회", hostId)
 }.onFailure {
@@ -487,11 +470,11 @@ fun Connection.findAllNicsFromHost(hostId: String): Result<List<HostNic>> = runC
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-private fun Connection.srvNicFromHost(hostId: String, hostNicId: String): HostNicService =
-	this.srvAllNicsFromHost(hostId).nicService(hostNicId)
+private fun Connection.srvHostNicFromHost(hostId: String, hostNicId: String): HostNicService =
+	this.srvAllHostNicsFromHost(hostId).nicService(hostNicId)
 
 fun Connection.findNicFromHost(hostId: String, hostNicId: String): Result<HostNic?> = runCatching {
-	this.srvNicFromHost(hostId, hostNicId).get().send().nic()
+	this.srvHostNicFromHost(hostId, hostNicId).get().send().nic()
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST_NIC,"상세조회", hostId)
 }.onFailure {
@@ -499,10 +482,8 @@ fun Connection.findNicFromHost(hostId: String, hostNicId: String): Result<HostNi
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
-
 fun Connection.findAllStatisticsFromHostNic(hostId: String, hostNicId: String): Result<List<Statistic>> = runCatching {
-	this.srvNicFromHost(hostId, hostNicId).statisticsService().list().send().statistics()
+	this.srvHostNicFromHost(hostId, hostNicId).statisticsService().list().send().statistics()
 }.onSuccess {
 	Term.HOST_NIC.logSuccessWithin(Term.STATISTIC,"목록조회", hostId)
 }.onFailure {
@@ -522,11 +503,11 @@ fun Connection.findAllStatisticsFromHost(hostId: String): Result<List<Statistic>
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.srvStoragesFromHost(hostId: String): HostStorageService =
+fun Connection.srvHostStoragesFromHost(hostId: String): HostStorageService =
 	this.srvHost(hostId).storageService()
 
-fun Connection.findAllStoragesFromHost(hostId: String): Result<List<HostStorage>> = runCatching {
-	this.srvStoragesFromHost(hostId).list().send().storages()
+fun Connection.findAllHostStoragesFromHost(hostId: String): Result<List<HostStorage>> = runCatching {
+	this.srvHostStoragesFromHost(hostId).list().send().storages()
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.STORAGE,"목록조회", hostId)
 }.onFailure {
@@ -553,9 +534,8 @@ fun Connection.unRegisteredStorageDomainsFromHost(hostId: String): Result<List<S
 }
 
 fun Connection.loginIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): Result<Boolean> = runCatching {
-	if(this.findHost(hostId).isFailure){
-		throw ErrorPattern.HOST_NOT_FOUND.toError()
-	}
+	checkHostExists(hostId)
+
 	this.srvHost(hostId).iscsiLogin().iscsi(iscsiDetails).send()
 	true
 }.onSuccess {
@@ -564,7 +544,6 @@ fun Connection.loginIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): R
 	Term.HOST.logFailWithin(Term.STORAGE,"iscsi 로그인 실패", it, hostId)
 	throw if (it is Error) it.toItCloudException() else it
 }
-
 
 private fun Connection.srvNetworkAttachmentsFromHost(hostId: String): NetworkAttachmentsService =
 	this.srvHost(hostId).networkAttachmentsService()
@@ -652,12 +631,17 @@ fun Connection.setupNetworksFromHost(
 	hostNics: List<HostNic> = listOf(),
 	networkAttachments: List<NetworkAttachment> = listOf()
 ): Result<Boolean> = runCatching {
-	if (hostNics.isEmpty())
-		this.srvHost(hostId).setupNetworks().modifiedNetworkAttachments(networkAttachments).send()
-	else if (networkAttachments.isEmpty())
-		this.srvHost(hostId).setupNetworks().modifiedBonds(hostNics).send()
-	else
-		this.srvHost(hostId).setupNetworks().modifiedBonds(hostNics).modifiedNetworkAttachments(networkAttachments).send()
+	this.srvHost(hostId).setupNetworks().apply {
+		if (networkAttachments.isEmpty())modifiedBonds(hostNics)
+		if (hostNics.isEmpty()) modifiedNetworkAttachments(networkAttachments)
+	}.send()
+
+	// if (hostNics.isEmpty())
+	// 	this.srvHost(hostId).setupNetworks().modifiedNetworkAttachments(networkAttachments).send()
+	// else if (networkAttachments.isEmpty())
+	// 	this.srvHost(hostId).setupNetworks().modifiedBonds(hostNics).send()
+	// else
+	// 	this.srvHost(hostId).setupNetworks().modifiedBonds(hostNics).modifiedNetworkAttachments(networkAttachments).send()
 
 	this.srvHost(hostId).commitNetConfig().send()
 	true
@@ -711,10 +695,9 @@ fun Connection.findAllCpuUnitFromHost(hostId: String): Result<List<HostCpuUnit>>
 }
 
 fun Connection.findAllHostDeviceFromHost(hostId: String): Result<List<HostDevice>> = runCatching {
-	if(this.findHost(hostId).isFailure){
-		throw ErrorPattern.HOST_NOT_FOUND.toError()
-	}
-	this.srvHost(hostId).devicesService().list().send().devices() ?: listOf()
+	checkHostExists(hostId)
+
+	this.srvHost(hostId).devicesService().list().send().devices()
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST_DEVICES, "목록조회", hostId)
 }.onFailure {
@@ -723,10 +706,9 @@ fun Connection.findAllHostDeviceFromHost(hostId: String): Result<List<HostDevice
 }
 
 fun Connection.findAllPermissionFromHost(hostId: String): Result<List<Permission>> = runCatching {
-	if(this.findHost(hostId).isFailure){
-		throw ErrorPattern.HOST_NOT_FOUND.toError()
-	}
-	this.srvHost(hostId).permissionsService().list().send().permissions() ?: listOf()
+	checkHostExists(hostId)
+
+	this.srvHost(hostId).permissionsService().list().send().permissions()
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.PERMISSION, "목록조회", hostId)
 }.onFailure {

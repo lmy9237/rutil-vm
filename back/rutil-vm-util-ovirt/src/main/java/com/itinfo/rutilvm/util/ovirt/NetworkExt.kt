@@ -12,10 +12,14 @@ private fun Connection.srvNetworks(): NetworksService =
 	this.systemService.networksService()
 
 fun Connection.findAllNetworks(follow: String = ""): Result<List<Network>> = runCatching {
-	if (follow.isNotEmpty())
-		this.srvNetworks().list().follow(follow).send().networks()
-	else
-		this.srvNetworks().list().send().networks()
+	this.srvNetworks().list().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().networks()
+
+	// if (follow.isNotEmpty())
+	// 	this.srvNetworks().list().follow(follow).send().networks()
+	// else
+	// 	this.srvNetworks().list().send().networks()
 }.onSuccess {
 	Term.NETWORK.logSuccess("목록조회")
 }.onFailure {
@@ -27,19 +31,22 @@ fun Connection.srvNetwork(networkId: String): NetworkService =
 	this.srvNetworks().networkService(networkId)
 
 fun Connection.findNetwork(networkId: String, follow: String = ""): Result<Network?> = runCatching {
-	val network = if (follow.isNotEmpty()) {
-		this.srvNetwork(networkId).get().follow(follow)
-	} else {
-		this.srvNetwork(networkId).get()
-	}
-	network.send().network()
+	this.srvNetwork(networkId).get().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().network()
+
+	// val network = if (follow.isNotEmpty()) {
+	// 	this.srvNetwork(networkId).get().follow(follow)
+	// } else {
+	// 	this.srvNetwork(networkId).get()
+	// }
+	// network.send().network()
 }.onSuccess {
 	Term.NETWORK.logSuccess("상세조회", networkId)
 }.onFailure {
 	Term.NETWORK.logFail("상세조회", it, networkId)
 	throw if (it is Error) it.toItCloudException() else it
 }
-
 
 fun Connection.addNetwork(network: Network): Result<Network?> = runCatching {
 	val networkAdded: Network? =
@@ -52,9 +59,6 @@ fun Connection.addNetwork(network: Network): Result<Network?> = runCatching {
 	Term.NETWORK.logFail("생성", it)
 	throw if (it is Error) it.toItCloudException() else it
 }
-
-
-
 
 fun Connection.updateNetwork(network: Network): Result<Network?> = runCatching {
 	val networkUpdated: Network? =
@@ -69,15 +73,10 @@ fun Connection.updateNetwork(network: Network): Result<Network?> = runCatching {
 }
 
 fun Connection.removeNetwork(networkId: String): Result<Boolean> = runCatching {
-	if(this.findNetwork(networkId).isFailure) {
-		throw ErrorPattern.NETWORK_NOT_FOUND.toError()
-	}
+	checkNetworkExists(networkId)
+
 	this.srvNetwork(networkId).remove().send()
 	true
-// 단순 네트워크에서 네트워크 삭제할때는 네트워크 상태 필요없음
-//	if(network.status() == NetworkStatus.NON_OPERATIONAL){
-//		this.srvNetwork(networkId).remove().send()
-//		true
 }.onSuccess {
 	Term.NETWORK.logSuccess("삭제", networkId)
 }.onFailure {
@@ -122,15 +121,18 @@ fun Connection.srvVnicProfilesFromNetwork(networkId: String): AssignedVnicProfil
 	this.srvNetwork(networkId).vnicProfilesService()
 
 fun Connection.findAllVnicProfilesFromNetwork(networkId: String, follow: String = ""): Result<List<VnicProfile>> = runCatching {
-	if(this.findNetwork(networkId).isFailure) {
-		throw ErrorPattern.NETWORK_NOT_FOUND.toError()
-	}
-	val vnicProfile = if (follow.isNotEmpty()) {
-		this.srvVnicProfilesFromNetwork(networkId).list().follow(follow)
-	} else {
-		this.srvVnicProfilesFromNetwork(networkId).list()
-	}
-	vnicProfile.send().profiles() ?: listOf()
+	checkNetworkExists(networkId)
+
+	this.srvVnicProfilesFromNetwork(networkId).list().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().profiles()
+
+	// val vnicProfile = if (follow.isNotEmpty()) {
+	// 	this.srvVnicProfilesFromNetwork(networkId).list().follow(follow)
+	// } else {
+	// 	this.srvVnicProfilesFromNetwork(networkId).list()
+	// }
+	// vnicProfile.send().profiles() ?: listOf()
 }.onSuccess {
 	Term.NETWORK.logSuccessWithin(Term.VNIC_PROFILE, "목록조회", networkId)
 }.onFailure {
@@ -142,9 +144,7 @@ fun Connection.srvVnicProfileFromNetwork(networkId: String, vnicProfileId: Strin
 	this.srvVnicProfilesFromNetwork(networkId).profileService(vnicProfileId)
 
 fun Connection.findVnicProfileFromNetwork(networkId: String, vnicProfileId: String): Result<VnicProfile?> = runCatching {
-	if(this.findNetwork(networkId).isFailure) {
-		throw ErrorPattern.NETWORK_NOT_FOUND.toError()
-	}
+	checkNetworkExists(networkId)
 
 	this.srvVnicProfileFromNetwork(networkId, vnicProfileId).get().send().profile()
 }.onSuccess {
@@ -158,16 +158,18 @@ private fun Connection.srvPermissionsFromNetwork(networkId: String): AssignedPer
 	this.srvNetwork(networkId).permissionsService()
 
 fun Connection.findAllPermissionsFromNetwork(networkId: String, follow: String = ""): Result<List<Permission>> = runCatching {
-	if(this.findNetwork(networkId).isFailure) {
-		throw ErrorPattern.NETWORK_NOT_FOUND.toError()
-	}
-	val permission = if (follow.isNotEmpty()) {
-		this.srvPermissionsFromNetwork(networkId).list().follow(follow)
-	} else {
-		this.srvPermissionsFromNetwork(networkId).list()
-	}
+	checkNetworkExists(networkId)
 
-	permission.send().permissions() ?: listOf()
+	this.srvPermissionsFromNetwork(networkId).list().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().permissions()
+
+	// val permission = if (follow.isNotEmpty()) {
+	// 	this.srvPermissionsFromNetwork(networkId).list().follow(follow)
+	// } else {
+	// 	this.srvPermissionsFromNetwork(networkId).list()
+	// }
+	// permission.send().permissions() ?: listOf()
 }.onSuccess {
 	Term.NETWORK.logSuccessWithin(Term.PERMISSION, "목록조회", networkId)
 }.onFailure {

@@ -233,7 +233,7 @@ class ClusterServiceImpl(
 			.getOrDefault(listOf())
 
 		return res.map { host ->
-			val hostNic: HostNic? = conn.findAllNicsFromHost(host.id())
+			val hostNic: HostNic? = conn.findAllHostNicsFromHost(host.id())
 				.getOrDefault(listOf()).firstOrNull()
 			val usageDto: UsageDto? = calculateUsage(host, hostNic)
 			host.toHostMenu(conn, usageDto)

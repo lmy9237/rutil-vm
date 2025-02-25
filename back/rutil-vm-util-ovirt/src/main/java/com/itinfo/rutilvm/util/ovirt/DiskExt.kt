@@ -14,17 +14,20 @@ private fun Connection.srvAllDisks(): DisksService =
 	systemService.disksService()
 
 fun Connection.findAllDisks(searchQuery: String = ""): Result<List<Disk>> = runCatching {
-	if (searchQuery.isNotEmpty())
-		this.srvAllDisks().list().search(searchQuery).caseSensitive(false).send().disks()
-	else
-		this.srvAllDisks().list().send().disks()
+	this.srvAllDisks().list().apply {
+		if (searchQuery.isNotEmpty()) search(searchQuery).caseSensitive(false)
+	}.send().disks()
+
+	// if (searchQuery.isNotEmpty())
+	// 	this.srvAllDisks().list().search(searchQuery).caseSensitive(false).send().disks()
+	// else
+	// 	this.srvAllDisks().list().send().disks()
 }.onSuccess {
 	Term.DISK.logSuccess("목록조회")
 }.onFailure {
 	Term.DISK.logFail("목록조회")
 	throw if (it is Error) it.toItCloudException() else it
 }
-
 
 fun Connection.srvDisk(diskId: String): DiskService =
 	srvAllDisks().diskService(diskId)
@@ -39,10 +42,10 @@ fun Connection.findDisk(diskId: String): Result<Disk?> = runCatching {
 }
 
 fun Connection.findAllStorageDomainsFromDisk(diskId: String): Result<List<StorageDomain>> = runCatching {
-	val disk: Disk = this.findDisk(diskId)
-		.getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
-	val storageDomains: List<StorageDomain> = disk.storageDomains().mapNotNull { storageDomain ->
-		this.findStorageDomain(storageDomain.id()).getOrNull()
+	val disk = checkDisk(diskId)
+
+	val storageDomains: List<StorageDomain> = disk.storageDomains().mapNotNull {
+		this.findStorageDomain(it.id()).getOrNull()
 	}
 
 	storageDomains
@@ -78,9 +81,8 @@ fun Connection.updateDisk(disk: Disk): Result<Disk?> = runCatching {
 }
 
 fun Connection.removeDisk(diskId: String): Result<Boolean> = runCatching {
-	if(this.findDisk(diskId).isFailure) {
-		throw ErrorPattern.DISK_NOT_FOUND.toError()
-	}
+	checkDiskExists(diskId)
+
 	this.srvDisk(diskId).remove().send()
 	this.expectDiskDeleted(diskId)
 }.onSuccess {
@@ -110,11 +112,8 @@ fun Connection.expectDiskDeleted(diskId: String, interval: Long = 1000L, timeout
 
 
 fun Connection.moveDisk(diskId: String, domainId: String): Result<Boolean> = runCatching {
-	this@moveDisk.findDisk(diskId)
-		.getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
-
-	val storageDomain: StorageDomain = this@moveDisk.findStorageDomain(domainId)
-		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+	checkDiskExists(diskId)
+	val storageDomain = checkStorageDomain(domainId)
 
 	this.srvDisk(diskId).move().storageDomain(storageDomain).send()
 
@@ -130,14 +129,12 @@ fun Connection.moveDisk(diskId: String, domainId: String): Result<Boolean> = run
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+// 근데 복사시 복사대상이 되는 디스크도 같이 Lock 걸리고 같이 잠김
 fun Connection.copyDisk(diskId: String, diskAlias: String, domainId: String): Result<Boolean> = runCatching {
-	val disk: Disk = this.findDisk(diskId)
-		.getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
-	val storageDomain: StorageDomain = this.findStorageDomain(domainId)
-		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+	val disk = checkDisk(diskId)
+	val storageDomain = checkStorageDomain(domainId)
 
 	this.srvDisk(diskId).copy().disk(DiskBuilder().id(diskId).alias(diskAlias)).storageDomain(storageDomain).send()
-	// 근데 복사시 복사대상이 되는 디스크도 같이 Lock 걸리고 같이 잠김
 
 	if (!expectDiskStatus(disk.id())) {
 		log.error("디스크 복사 실패 ... 시간 초과")
@@ -152,12 +149,8 @@ fun Connection.copyDisk(diskId: String, diskAlias: String, domainId: String): Re
 }
 
 fun Connection.refreshLunDisk(diskId: String, hostId: String): Result<Boolean> = runCatching {
-	this@refreshLunDisk.findDisk(diskId)
-		.getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
-
-	val host: Host =
-		this@refreshLunDisk.findHost(hostId)
-			.getOrNull() ?: throw ErrorPattern.HOST_NOT_FOUND.toError()
+	checkDiskExists(diskId)
+	val host = checkHost(hostId)
 
 	this.srvDisk(diskId).refreshLun().host(host).send()
 	true
@@ -188,13 +181,11 @@ fun Connection.uploadSetDisk(disk: Disk): Result<String> = runCatching {
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
 private fun Connection.preparedImageTransfer(diskId: String): ImageTransfer {
 	val imageTransferContainer = ImageTransferContainer().apply {
 		direction(ImageTransferDirection.UPLOAD)
 		image(ImageContainer().apply { id(diskId) })
 	}
-
 	return addImageTransfer(imageTransferContainer)
 		.getOrNull() ?: throw ErrorPattern.IMAGE_TRANSFER_NOT_FOUND.toError()
 }
@@ -215,7 +206,6 @@ private fun checkImageTransferReady(imageTransfer: ImageTransfer) {
 		throw ErrorPattern.TRANSFER_URL_EMPTY.toError()
 	}
 }
-
 
 private fun Connection.srvAllImageTransfer(): ImageTransfersService =
 	systemService.imageTransfersService()
@@ -250,7 +240,6 @@ private fun Connection.findImageTransfer(imageId: String): Result<ImageTransfer?
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
 /**
  * [Connection.expectDiskStatus]
  * 가상머신 생성 - 디스크 생성 상태확인
@@ -282,9 +271,8 @@ private fun Connection.srvPermissionsFromDisk(diskId: String): AssignedPermissio
 	this.srvDisk(diskId).permissionsService()
 
 fun Connection.findAllPermissionsFromDisk(diskId: String): Result<List<Permission>> = runCatching {
-	if(this.findDisk(diskId).isFailure){
-		throw ErrorPattern.DISK_NOT_FOUND.toError()
-	}
+	checkDiskExists(diskId)
+
 	this.srvPermissionsFromDisk(diskId).list().send().permissions()
 }.onSuccess {
 	Term.DISK.logSuccessWithin(Term.PERMISSION, "목록조회", diskId)
@@ -295,15 +283,9 @@ fun Connection.findAllPermissionsFromDisk(diskId: String): Result<List<Permissio
 
 
 fun Connection.findAllVmsFromDisk(diskId: String): Result<List<Vm>> = runCatching {
-	val vms: List<Vm> =
-		this.findAllVms(follow = "diskattachments")
-			.getOrDefault(listOf())
-			.filter { vm ->
-				vm.diskAttachments().any { diskAttachment ->
-					diskAttachment.disk().id() == diskId
-				}
-			}
-	vms
+	this.findAllVms(follow = "diskattachments")
+		.getOrDefault(listOf())
+		.filter { vm -> vm.diskAttachments().any { it.disk().id() == diskId } }
 }.onSuccess {
 	Term.DISK.logSuccessWithin(Term.VM, "목록조회", diskId)
 }.onFailure {

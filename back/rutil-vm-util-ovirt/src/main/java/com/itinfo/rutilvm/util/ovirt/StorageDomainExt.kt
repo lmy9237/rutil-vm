@@ -6,25 +6,22 @@ import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.ClusterBuilder
 import org.ovirt.engine.sdk4.builders.DiskBuilder
-import org.ovirt.engine.sdk4.builders.HostBuilder
 import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
-import org.ovirt.engine.sdk4.builders.TemplateBuilder
-import org.ovirt.engine.sdk4.builders.VmBuilder
 import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
 
 private fun Connection.srvStorageDomains(): StorageDomainsService =
 	this.systemService.storageDomainsService()
 
-//private fun Connection.srvAttachStorageDomains(): AttachedStorageDomainsService =
-//	this.systemService.storageDomainsService()
-
-
 fun Connection.findAllStorageDomains(searchQuery: String = ""): Result<List<StorageDomain>> = runCatching {
-	if (searchQuery.isNotEmpty())
-		srvStorageDomains().list().search(searchQuery).send().storageDomains().filter { it.storage().type() != StorageType.GLANCE }
-	else
-		srvStorageDomains().list().send().storageDomains().filter { it.storage().type() != StorageType.GLANCE }
+	this.srvStorageDomains().list().apply {
+		if (searchQuery.isNotEmpty()) search(searchQuery)
+	}.send().storageDomains().filter { it.storage().type() != StorageType.GLANCE }
+
+	// if (searchQuery.isNotEmpty())
+	// 	srvStorageDomains().list().search(searchQuery).send().storageDomains().filter { it.storage().type() != StorageType.GLANCE }
+	// else
+	// 	srvStorageDomains().list().send().storageDomains().filter { it.storage().type() != StorageType.GLANCE }
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccess("목록조회")
 }.onFailure {
@@ -44,10 +41,10 @@ fun Connection.findStorageDomain(storageDomainId: String): Result<StorageDomain>
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
 fun Connection.attachStorageDomainsToDataCenter(storageDomainId: String, dataCenterId: String): Result<Boolean> = runCatching {
 	this.srvDataCenter(dataCenterId).storageDomainsService().add()
-		.storageDomain(StorageDomainBuilder().id(storageDomainId).build()).send()
+		.storageDomain(StorageDomainBuilder().id(storageDomainId).build())
+		.send()
 	true
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"연결", storageDomainId)
@@ -66,7 +63,6 @@ fun Connection.detachStorageDomainsToDataCenter(storageDomainId: String, dataCen
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
 fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: String): Result<StorageDomain?> = runCatching {
 	val storageAdded: StorageDomain? =
 		this.srvStorageDomains().add().storageDomain(storageDomain).send().storageDomain()
@@ -75,8 +71,7 @@ fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: Stri
 	storageAdded ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
 	// 스토리지 도메인을 데이터센터에 붙이는 작업
-	this.attachStorageDomainsToDataCenter(storageAdded.id(), dataCenterId)
-		.onFailure { throw it }
+	this.attachStorageDomainsToDataCenter(storageAdded.id(), dataCenterId).onFailure { throw it }
 
 	storageAdded
 }.onSuccess {
@@ -105,7 +100,6 @@ fun Connection.importFcpStorageDomain(storageDomain: StorageDomain): Result<Stor
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
 // 도메인 관리(편집)
 fun Connection.updateStorageDomain(storageDomainId: String, storageDomain: StorageDomain): Result<StorageDomain?> = runCatching {
 	val storageDomainUpdated: StorageDomain? =
@@ -119,16 +113,12 @@ fun Connection.updateStorageDomain(storageDomainId: String, storageDomain: Stora
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
 fun Connection.removeStorageDomain(storageDomainId: String, format: Boolean, hostName: String?): Result<Boolean> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	log.info("hostName: $hostName")
 	if (format) {
-		if (hostName == null) {
-			throw ErrorPattern.STORAGE_DOMAIN_DELETE_INVALID.toError()
-		}
+		if (hostName == null) { throw ErrorPattern.STORAGE_DOMAIN_DELETE_INVALID.toError() }
 		this.srvStorageDomain(storageDomainId).remove().destroy(false).format(true).host(hostName).send()
 	} else {
 		this.srvStorageDomain(storageDomainId).remove().destroy(false).format(false).host(hostName).send()
@@ -142,9 +132,7 @@ fun Connection.removeStorageDomain(storageDomainId: String, format: Boolean, hos
 }
 
 fun Connection.destroyStorageDomain(storageDomainId: String): Result<Boolean> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
 
 	this.srvStorageDomain(storageDomainId).remove().destroy(true).send()
 	this.expectStorageDomainDeleted(storageDomainId)
@@ -156,9 +144,8 @@ fun Connection.destroyStorageDomain(storageDomainId: String): Result<Boolean> = 
 }
 
 fun Connection.updateOvfStorageDomain(storageDomainId: String): Result<Boolean> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	this.srvStorageDomain(storageDomainId).updateOvfStore().send()
 	true
 }.onSuccess {
@@ -169,9 +156,8 @@ fun Connection.updateOvfStorageDomain(storageDomainId: String): Result<Boolean> 
 }
 
 fun Connection.refreshLunStorageDomain(storageDomainId: String): Result<Boolean> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	this.srvStorageDomain(storageDomainId).refreshLuns().send()
 	true
 }.onSuccess {
@@ -200,7 +186,6 @@ fun Connection.expectStorageDomainDeleted(storageDomainId: String, timeout: Long
 	}
 }
 
-
 private fun Connection.srvAllFilesFromStorageDomain(sdId: String): FilesService =
 	this.srvStorageDomain(sdId).filesService()
 
@@ -225,14 +210,12 @@ fun Connection.findFileFromStorageDomain(storageDomainId: String, fileId: String
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
 private fun Connection.srvVmsFromStorageDomain(storageId: String): StorageDomainVmsService =
 	this.srvStorageDomain(storageId).vmsService()
 
 fun Connection.findAllVmsFromStorageDomain(storageDomainId: String): Result<List<Vm>> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	this.srvVmsFromStorageDomain(storageDomainId).list().send().vm()
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
@@ -242,9 +225,8 @@ fun Connection.findAllVmsFromStorageDomain(storageDomainId: String): Result<List
 }
 
 fun Connection.findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): Result<List<Vm>> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	this.srvVmsFromStorageDomain(storageDomainId).list().unregistered(true).send().vm()
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "목록조회", storageDomainId)
@@ -254,9 +236,8 @@ fun Connection.findAllUnregisteredVmsFromStorageDomain(storageDomainId: String):
 }
 
 fun Connection.registeredVmFromStorageDomain(storageDomainId: String, vm: Vm, allowPart: Boolean, badMac: Boolean): Result<Boolean> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	this.srvVmsFromStorageDomain(storageDomainId).vmService(vm.id()).register()
 		.vm(vm)
 		.allowPartialImport(allowPart) // 부분 허용 여부
@@ -272,9 +253,8 @@ fun Connection.registeredVmFromStorageDomain(storageDomainId: String, vm: Vm, al
 }
 
 fun Connection.removeRegisteredVmFromStorageDomain(storageDomainId: String, vmId: String): Result<Boolean> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	this.srvVmsFromStorageDomain(storageDomainId).vmService(vmId).remove().send()
 	true
 }.onSuccess {
@@ -284,14 +264,12 @@ fun Connection.removeRegisteredVmFromStorageDomain(storageDomainId: String, vmId
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
 private fun Connection.srvDisksFromStorageDomain(storageId: String): StorageDomainDisksService =
 	this.srvStorageDomain(storageId).disksService()
 
 fun Connection.findAllDisksFromStorageDomain(storageDomainId: String): Result<List<Disk>> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	this.srvDisksFromStorageDomain(storageDomainId).list().send().disks() ?: listOf()
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
@@ -301,9 +279,8 @@ fun Connection.findAllDisksFromStorageDomain(storageDomainId: String): Result<Li
 }
 
 fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): Result<List<Disk>> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	this.srvDisksFromStorageDomain(storageDomainId).list().unregistered(true).send().disks() ?: listOf()
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
@@ -367,9 +344,8 @@ fun Connection.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: St
 }
 
 fun Connection.registeredTemplateFromStorageDomain(storageDomainId: String, template: Template): Result<Boolean> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	this.srvTemplatesFromStorageDomain(storageDomainId).templateService(template.id())
 		.register()
 		.template(template)
@@ -383,9 +359,8 @@ fun Connection.registeredTemplateFromStorageDomain(storageDomainId: String, temp
 }
 
 fun Connection.removeRegisteredTemplateFromStorageDomain(storageDomainId: String, templateId: String): Result<Boolean> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	// this.srvTemplatesFromStorageDomain(storageDomainId).templateService(templateId).remove().send()
 	this.srvStorageDomains().storageDomainService(storageDomainId).templatesService().templateService(templateId).remove().send()
 	true
@@ -397,9 +372,8 @@ fun Connection.removeRegisteredTemplateFromStorageDomain(storageDomainId: String
 }
 
 fun Connection.findAllDiskProfilesFromStorageDomain(storageDomainId: String): Result<List<DiskProfile>> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure){
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	this.srvStorageDomain(storageDomainId).diskProfilesService().list().send().profiles() ?: listOf()
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK_PROFILE, "목록조회", storageDomainId)
@@ -412,9 +386,8 @@ private fun Connection.srvPermissionsFromStorageDomain(sdId: String): AssignedPe
 	this.srvStorageDomain(sdId).permissionsService()
 
 fun Connection.findAllPermissionsFromStorageDomain(storageDomainId: String): Result<List<Permission>> = runCatching {
-	if(this.findStorageDomain(storageDomainId).isFailure) {
-		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	}
+	checkStorageDomainExists(storageDomainId)
+
 	this.srvPermissionsFromStorageDomain(storageDomainId).list().send().permissions() ?: listOf()
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.PERMISSION, "목록조회", storageDomainId)

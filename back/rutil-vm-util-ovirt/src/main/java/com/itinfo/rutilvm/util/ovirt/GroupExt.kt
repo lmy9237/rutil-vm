@@ -12,10 +12,13 @@ private fun Connection.srvGroups(): GroupsService =
 	this.systemService.groupsService()
 
 fun Connection.findAllGroups(follow: String): Result<List<Group>> = runCatching {
-	if (follow.isNotEmpty())
-		this.srvGroups().list().follow(follow).send().groups()
-	else
-		this.srvGroups().list().send().groups()
+	this.srvGroups().list().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().groups()
+	// if (follow.isNotEmpty())
+	// 	this.srvGroups().list().follow(follow).send().groups()
+	// else
+	// 	this.srvGroups().list().send().groups()
 }.onSuccess {
 	Term.GROUP.logSuccess("목록조회")
 }.onFailure {

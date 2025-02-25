@@ -55,8 +55,8 @@ private val log = LoggerFactory.getLogger(VmCreateVo::class.java)
  * @property dataCenterVo [IdentifiedVo]
  * @property clusterVo [IdentifiedVo]
  * @property templateVo [IdentifiedVo]
- * @property diskAttachmentVos List<[DiskAttachmentVo]>
  * @property nicVos List<[NicVo]>
+ * @property diskAttachmentVos List<[DiskAttachmentVo]>
  */
 class VmCreateVo (
     val id: String = "",
@@ -139,7 +139,7 @@ class VmCreateVo (
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 
-		fun build(): VmCreateVo = VmCreateVo(bId, bName, bDescription, bComment, bOsSystem, bOsType, bOptimizeOption, bMemorySize, bMemoryMax, bMemoryActual, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, /*bTimeOffset,*/ bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationEncrypt, bParallelMigration, bHa, bPriority, bBootingMenu, bFirstDevice, bSecDevice, bDeviceList, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bConnVo, bDataCenterVo, bClusterVo, bTemplateVo, bNicVos, bDiskAttachmentVos)
+		fun build(): VmCreateVo = VmCreateVo(bId, bName, bDescription, bComment, bOsSystem, bOsType, bOptimizeOption, bMemorySize, bMemoryMax, bMemoryActual, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, /*bTimeOffset,*/ bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationEncrypt, bParallelMigration, bHa, bPriority, bBootingMenu, bFirstDevice, bSecDevice, bDeviceList, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bConnVo, bDataCenterVo, bClusterVo, bTemplateVo, bNicVos, bDiskAttachmentVos, )
     }
 
     companion object {

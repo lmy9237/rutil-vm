@@ -25,9 +25,7 @@ private fun Connection.srvCpuProfilesFromCluster(clusterId: String): AssignedCpu
 	this.srvCluster(clusterId).cpuProfilesService()
 
 fun Connection.findAllCpuProfilesFromCluster(clusterId: String): Result<List<CpuProfile>> = runCatching {
-	if(this.findCluster(clusterId).isFailure){
-		throw ErrorPattern.HOST_NOT_FOUND.toError()
-	}
+	checkClusterExists(clusterId)
 	this.srvCluster(clusterId).cpuProfilesService().list().send().profiles()
 }.onSuccess {
 	Term.CPU_PROFILE.logSuccess("목록조회")

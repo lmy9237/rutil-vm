@@ -463,7 +463,7 @@ fun Vm.toUnregisteredVm(conn: Connection): VmVo {
 		}
 		cpuArc { vm.cpu().architecture() }
 		stopTime { ovirtDf.format(vm.stopTime()) }
-		diskAttachmentVos { diskAttachments.toDiskAttachmentIdNames() }
+		diskAttachmentVos { diskAttachments.toDiskAttachmentIdList() }
 	}
 }
 fun List<Vm>.toUnregisteredVms(conn: Connection): List<VmVo> =

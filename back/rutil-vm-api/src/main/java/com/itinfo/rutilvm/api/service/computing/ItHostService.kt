@@ -186,7 +186,7 @@ class HostServiceImpl(
 			.getOrDefault(listOf())
 
 		return res.map { host ->
-			val hostNic: HostNic? = conn.findAllNicsFromHost(host.id())
+			val hostNic: HostNic? = conn.findAllHostNicsFromHost(host.id())
 				.getOrDefault(listOf()).firstOrNull()
 			val usageDto: UsageDto? = calculateUsage(host, hostNic)
 			host.toHostMenu(conn, usageDto)
@@ -282,7 +282,7 @@ class HostServiceImpl(
 	override fun findAllIscsiFromHost(hostId: String): List<HostStorageVo> {
 		log.info("findAllIscsiFromHost... hostId: {}", hostId)
 		conn.findHost(hostId).getOrNull() ?: return listOf()
-		val res: List<HostStorage> = conn.findAllStoragesFromHost(hostId)
+		val res: List<HostStorage> = conn.findAllHostStoragesFromHost(hostId)
 			.getOrDefault(listOf())
 			.filter { it.type() == StorageType.ISCSI }
 		return res.toIscsiHostStorageVos()
@@ -291,7 +291,7 @@ class HostServiceImpl(
 	@Throws(Error::class)
 	override fun findAllFibreFromHost(hostId: String): List<HostStorageVo> {
 		log.info("findAllFibreFromHost... hostId: {}", hostId)
-		val res: List<HostStorage> = conn.findAllStoragesFromHost(hostId)
+		val res: List<HostStorage> = conn.findAllHostStoragesFromHost(hostId)
 			.getOrDefault(listOf())
 			.filter { it.type() == StorageType.FCP }
 		return res.toFibreHostStorageVos()

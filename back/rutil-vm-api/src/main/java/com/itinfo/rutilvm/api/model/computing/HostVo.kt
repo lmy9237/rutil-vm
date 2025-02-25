@@ -276,7 +276,7 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
 fun Host.toNetworkHostVo(conn: Connection): HostVo {
     val cluster: Cluster? = conn.findCluster(this@toNetworkHostVo.cluster().id()).getOrNull()
     val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
-    val hostNics: List<HostNic> = conn.findAllNicsFromHost(this@toNetworkHostVo.id()).getOrDefault(listOf())
+    val hostNics: List<HostNic> = conn.findAllHostNicsFromHost(this@toNetworkHostVo.id()).getOrDefault(listOf())
 
     return HostVo.builder {
         id { this@toNetworkHostVo.id() }
@@ -337,7 +337,7 @@ fun Host.toHostVo(conn: Connection): HostVo {
     val vms: List<Vm> = conn.findAllVms()
         .getOrDefault(listOf())
         .filter { it.hostPresent() && it.host().id() == this@toHostVo.id() }
-    val hostNics: List<HostNic> = conn.findAllNicsFromHost(this@toHostVo.id()).getOrDefault(listOf())
+    val hostNics: List<HostNic> = conn.findAllHostNicsFromHost(this@toHostVo.id()).getOrDefault(listOf())
     val statistics: List<Statistic> = conn.findAllStatisticsFromHost(host.id()).getOrDefault(listOf())
 
     return HostVo.builder {

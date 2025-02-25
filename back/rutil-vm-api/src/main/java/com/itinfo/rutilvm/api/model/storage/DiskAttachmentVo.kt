@@ -30,9 +30,9 @@ private val log = LoggerFactory.getLogger(DiskAttachmentVo::class.java)
  * @property interface_ [DiskInterface]  인터페이스
  * @property logicalName [String]  논리적 이름 (보통 없음)
  * @property detachOnly [Boolean] 완전삭제 여부 (기본 false=분리, true=완전삭제)
- *
  * @property diskImageVo [DiskImageVo] 디스크 이미지 생성
  * @property vmVo [IdentifiedVo] 가상머신
+ * @property shouldUpdateDisk [Boolean] 편집처리대상 여부
  */
 class DiskAttachmentVo(
 	val id: String = "", // 지정된 디스크와 아이디가 같음
@@ -44,7 +44,8 @@ class DiskAttachmentVo(
 	val logicalName: String = "",
 	val detachOnly: Boolean = false,
 	val diskImageVo: DiskImageVo = DiskImageVo(),
-	val vmVo: IdentifiedVo = IdentifiedVo()
+	val vmVo: IdentifiedVo = IdentifiedVo(),
+	val shouldUpdateDisk: Boolean = false,
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -60,7 +61,9 @@ class DiskAttachmentVo(
 		private var bDetachOnly: Boolean = false;fun detachOnly(block: () -> Boolean?) { bDetachOnly = block() ?: false }
 		private var bDiskImageVo: DiskImageVo = DiskImageVo();fun diskImageVo(block: () -> DiskImageVo?) { bDiskImageVo = block() ?: DiskImageVo() }
 		private var bVmVo: IdentifiedVo = IdentifiedVo();fun vmVo(block: () -> IdentifiedVo?) { bVmVo = block() ?: IdentifiedVo() }
-		fun build(): DiskAttachmentVo = DiskAttachmentVo(bId, bActive, bBootable, bReadOnly, bPassDiscard, bInterface_, bLogicalName, bDetachOnly, bDiskImageVo, bVmVo)
+		private var bShouldUpdateDisk: Boolean = false; fun shouldUpdateDisk(block: () -> Boolean?) { bShouldUpdateDisk = block() ?: false }
+
+		fun build(): DiskAttachmentVo = DiskAttachmentVo(bId, bActive, bBootable, bReadOnly, bPassDiscard, bInterface_, bLogicalName, bDetachOnly, bDiskImageVo, bVmVo, bShouldUpdateDisk)
 	}
 
 	companion object {
@@ -68,19 +71,16 @@ class DiskAttachmentVo(
 	}
 }
 
-fun DiskAttachment.toDiskAttachmentIdName(): DiskAttachmentVo = DiskAttachmentVo.builder {
-	id { this@toDiskAttachmentIdName.id() }
-	// name { this@toDiskAttachmentIdName.name() }
+fun DiskAttachment.toDiskAttachmentId(): DiskAttachmentVo = DiskAttachmentVo.builder {
+	id { this@toDiskAttachmentId.id() }
 }
-fun List<DiskAttachment>.toDiskAttachmentIdNames(): List<DiskAttachmentVo> =
-	this@toDiskAttachmentIdNames.map { it.toDiskAttachmentIdName() }
+fun List<DiskAttachment>.toDiskAttachmentIdList(): List<DiskAttachmentVo> =
+	this@toDiskAttachmentIdList.map { it.toDiskAttachmentId() }
 
-fun DiskAttachment.toDiskAttachMenu(conn: Connection): DiskAttachmentVo {
-	val disk: Disk? =
-		conn.findDisk(this@toDiskAttachMenu.disk().id())
-			.getOrNull()
+fun DiskAttachment.toDiskAttachmentIdName(conn: Connection): DiskAttachmentVo {
+	val disk: Disk? = conn.findDisk(this@toDiskAttachmentIdName.disk().id()).getOrNull()
 	return DiskAttachmentVo.builder {
-		id { this@toDiskAttachMenu.id() }
+		id { this@toDiskAttachmentIdName.id() }
 		diskImageVo { disk?.toDiskIdName() }
 	}
 }
@@ -152,6 +152,8 @@ fun DiskAttachmentVo.toAttachDisk(): DiskAttachment =
 	toDiskAttachment()
 		.disk(DiskBuilder().id(this.diskImageVo.id).build())
 		.build()
+fun List<DiskAttachmentVo>.toAttachDiskList(): List<DiskAttachment> =
+	map { it.toAttachDisk() }
 
 /**
  * DiskAttachmentBuilder 에서 디스크 편집
@@ -163,16 +165,12 @@ fun DiskAttachmentVo.toEditDiskAttachment(): DiskAttachment =
 		.build()
 
 
+// 생성과 연결을 한번에 리스트 형식으로
 fun List<DiskAttachmentVo>.toAddVmDiskAttachmentList(): List<DiskAttachment> =
 	map { it.run {
 		if (diskImageVo.id.isEmpty()) toAddDiskAttachment()
 		else toAttachDisk() }
-	}
-		.also { log.info("Generated disk attachments: $it") }
-
-
-fun List<DiskAttachmentVo>.toAttachDiskList(): List<DiskAttachment> =
-	map { it.toAttachDisk() }
+	}.also { log.info("Generated disk attachments: $it") }
 
 
 // /**
@@ -198,5 +196,8 @@ fun DiskAttachmentVo.toAddSnapshotDisk(): DiskAttachment {
 		.disk(this@toAddSnapshotDisk.diskImageVo.toAddSnapshotDisk())
 		.build()
 }
+
 fun List<DiskAttachmentVo>.toAddSnapshotDisks(): List<DiskAttachment> =
 	this@toAddSnapshotDisks.map { it.toAddSnapshotDisk() }
+
+

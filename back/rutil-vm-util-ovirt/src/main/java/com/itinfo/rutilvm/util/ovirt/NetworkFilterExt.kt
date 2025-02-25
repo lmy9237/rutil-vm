@@ -12,10 +12,14 @@ private fun Connection.srvNetworkFilters(): NetworkFiltersService =
 	this.systemService.networkFiltersService()
 
 fun Connection.findAllNetworkFilters(follow: String = ""): Result<List<NetworkFilter>> = runCatching {
-	if (follow.isNotEmpty())
-		this@findAllNetworkFilters.srvNetworkFilters().list().follow(follow).send().filters()
-	else
-		this@findAllNetworkFilters.srvNetworkFilters().list().send().filters()
+	this.srvNetworkFilters().list().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().filters()
+
+	// if (follow.isNotEmpty())
+	// 	this.srvNetworkFilters().list().follow(follow).send().filters()
+	// else
+	// 	this.srvNetworkFilters().list().send().filters()
 }.onSuccess {
 	Term.NETWORK_FILTER.logSuccess("목록조회")
 }.onFailure {
@@ -24,10 +28,10 @@ fun Connection.findAllNetworkFilters(follow: String = ""): Result<List<NetworkFi
 }
 
 private fun Connection.srvNetworkFilter(networkFilterId: String): NetworkFilterService =
-	this@srvNetworkFilter.srvNetworkFilters().networkFilterService(networkFilterId)
+	this.srvNetworkFilters().networkFilterService(networkFilterId)
 
 fun Connection.findNetworkFilter(networkFilterId: String): Result<NetworkFilter?> = runCatching {
-	this@findNetworkFilter.srvNetworkFilter(networkFilterId).get().send().networkFilter()
+	this.srvNetworkFilter(networkFilterId).get().send().networkFilter()
 }.onSuccess {
 	Term.NETWORK_FILTER.logSuccess("상세조회", networkFilterId)
 }.onFailure {

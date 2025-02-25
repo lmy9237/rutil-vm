@@ -151,16 +151,16 @@ interface ItTemplateService {
 	  */
 	 @Throws(Error::class)
 	fun findAllEventsFromTemplate(templateId: String): List<EventVo>
-	/**
-	 * [ItTemplateService.findAllPermissionsFromTemplate]
-	 * 템플릿 권한 목록
-	 *
-	 * @param templateId [String] 템플릿 id
-	 * @return 권한 목록
-	 */
-	@Deprecated("사용안함")
-	@Throws(Error::class)
-	fun findAllPermissionsFromTemplate(templateId: String): List<PermissionVo>
+	// /**
+	//  * [ItTemplateService.findAllPermissionsFromTemplate]
+	//  * 템플릿 권한 목록
+	//  *
+	//  * @param templateId [String] 템플릿 id
+	//  * @return 권한 목록
+	//  */
+	// @Deprecated("사용안함")
+	// @Throws(Error::class)
+	// fun findAllPermissionsFromTemplate(templateId: String): List<PermissionVo>
 }
 
 @Service
@@ -298,14 +298,14 @@ class TemplateServiceImpl(
 	}
 
 
-	@Deprecated("사용안함")
-	@Throws(Error::class)
-	override fun findAllPermissionsFromTemplate(templateId: String): List<PermissionVo> {
-		log.info("findAllPermissionsFromTemplate ... ")
-		val res: List<Permission> =
-			conn.findAllPermissionsFromCluster(templateId).getOrDefault(listOf())
-		return res.toPermissionVos(conn)
-	}
+	// @Deprecated("사용안함")
+	// @Throws(Error::class)
+	// override fun findAllPermissionsFromTemplate(templateId: String): List<PermissionVo> {
+	// 	log.info("findAllPermissionsFromTemplate ... ")
+	// 	val res: List<Permission> =
+	// 		conn.findAllPermissionsFromCluster(templateId).getOrDefault(listOf())
+	// 	return res.toPermissionVos(conn)
+	// }
 
 	companion object {
 		private val log by LoggerDelegate()

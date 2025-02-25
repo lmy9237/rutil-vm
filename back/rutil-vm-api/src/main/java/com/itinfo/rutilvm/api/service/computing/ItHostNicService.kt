@@ -71,7 +71,7 @@ class ItHostNicServiceImpl(
     @Throws(Error::class)
     override fun findAllFromHost(hostId: String): List<HostNicVo> {
         log.info("findAllFromHost ... hostId: {}", hostId)
-        val res: List<HostNic> = conn.findAllNicsFromHost(hostId)
+        val res: List<HostNic> = conn.findAllHostNicsFromHost(hostId)
             .getOrDefault(listOf())
 
         val bondingSlaveIds = res.flatMap { it.bonding()?.slaves()?.map { slave -> slave.id() } ?: emptyList() }.toSet()
