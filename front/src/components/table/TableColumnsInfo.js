@@ -780,6 +780,7 @@ const TableColumnsInfo = {
   SETTING_CERTIFICATES: [
     { header: 'ID', accessor: 'id', clickable: false },
     { header: '이름', accessor: 'alias', clickable: true },
+    { header: '주소', accessor: 'address', clickable: false },
     { header: 'D-Day', accessor: 'dday', clickable: false },
     { header: '만료일자', accessor: 'notAfter', clickable: false },
     { header: '버전', accessor: 'version', clickable: false },

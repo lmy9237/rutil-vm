@@ -2,6 +2,7 @@ import { useState } from "react"
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import TablesOuter from "../../components/table/TablesOuter";
 import { useAllCerts } from "../../api/RQHook";
+import SettingCertificatesRenewalPolicies from "./SettingCertificatesRenewalPolicies";
 /**
  * @name SettingCertificates
  * @description 관리 > 인증서
@@ -36,7 +37,6 @@ const SettingCertificates = () => {
           isEditDisabled={setSelectedCerts.length !== 1}
           status={status}
         /> */}
-  
         <span>ID = {selectedCerts?.id || ""}</span>
         <TablesOuter
           isLoading={isCertsLoading}
@@ -54,6 +54,8 @@ const SettingCertificates = () => {
         />
   
         {/* 모달창 renderModals() */}
+        <br/>
+        <SettingCertificatesRenewalPolicies />
       </>
     );
 }

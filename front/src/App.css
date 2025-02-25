@@ -36,6 +36,7 @@ html {
 
   --border-w: 1px; /* 테두리 두깨 */
   --border-btn: var(--border-w) solid var(--color-gray-1);
+  --border-detail: var(--border-w) solid var(--color-gray-1);
   --border-simple: var(--border-w) solid var(--color-gray-2);
   --border-aa: var(--border-w) solid var(--color-gray-1);
 
@@ -67,8 +68,8 @@ html {
   display:flex;justify-content:center;align-items:center;flex-direction:column;
 }
 
-html, body {
-  height:100%;
+details>summary {
+  font-size: var(--fs-big);
 }
 /*-----중복 */
 .content-outer {
@@ -76,6 +77,10 @@ html, body {
   width: 100%;
   height: calc(100% - var(--h-section-header));
 }
+p, ul>li {
+  font-size: var(--fs-default-4);
+}
+ul { list-style-type: circle; }
 button {
   border: var(--border-simple);
   cursor: pointer;
@@ -807,7 +812,6 @@ textarea {
   .dropdown-menu {
     position: absolute;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    list-style: none;
     z-index: 1;
     width: 200px;
     background: white;

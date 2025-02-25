@@ -1,0 +1,11 @@
+ul { margin: 0 30px !important; }
+li { color: var(--color-gray-2); }
+details {
+  border: var(--border-detail);
+  border-radius: 4px;
+  padding: 0.5em;
+}
+details[open] summary {
+  border-bottom: var(--border-detail);
+}
+  
