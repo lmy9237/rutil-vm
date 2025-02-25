@@ -55,7 +55,6 @@ const VmDiskModal = ({
   diskType = true,  // t=disk페이지에서 생성 f=vm만들때 같이 생성
   onClose,
   
-  diskCount,
   hasBootableDisk,
   vmName, //가상머신 생성 디스크 이름
   onCreateDisk,
@@ -219,18 +218,8 @@ const VmDiskModal = ({
     console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
 
     editMode
-      ? editDiskVm(
-          {
-            vmId,
-            diskAttachmentId: formState?.id,
-            diskAttachment: dataToSubmit,
-          },
-          { onSuccess, onError }
-        )
-      : addDiskVm(
-          { vmId, diskData: dataToSubmit },
-          { onSuccess, onError }
-        );
+    ? editDiskVm({vmId, diskAttachmentId: formState?.id, diskAttachment: dataToSubmit },{ onSuccess, onError })
+    : addDiskVm({ vmId, diskData: dataToSubmit },{ onSuccess, onError });
   };
 
   return (

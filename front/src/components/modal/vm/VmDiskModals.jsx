@@ -45,8 +45,8 @@ const VmDiskModals = ({
       <VmDiskModal
         editMode
         isOpen={activeModal === "edit"}
-        vmId={vmId}
-        diskAttachmentId={disk?.id}
+        vmId={vmId || ""}
+        diskAttachmentId={disk?.id || ""}
         onClose={onClose}
         hasBootableDisk={hasBootableDisk}
       />
@@ -66,6 +66,7 @@ const VmDiskModals = ({
         dataCenterId={vm?.dataCenterVo?.id || ""}
         onClose={onClose}
         hasBootableDisk={hasBootableDisk}
+        diskType={true}
       />
     ),
     activate: (

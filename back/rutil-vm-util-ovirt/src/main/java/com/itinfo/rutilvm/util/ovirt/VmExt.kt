@@ -193,10 +193,7 @@ fun Connection.addVm(
 fun Connection.updateVm(
 	vm: Vm,
 	addDiskAttachments: List<DiskAttachment>?,
-	deleteDiskAttachments: List<DiskAttachment>?,
-	updateDiskAttachments: List<DiskAttachment>?,
 	addNics: List<Nic>?,
-	deleteNics: List<Nic>?,
 	connId: String?
 ): Result<Vm?> = runCatching {
 	if (this.findAllVms()
@@ -211,13 +208,6 @@ fun Connection.updateVm(
 
 	if (!addDiskAttachments.isNullOrEmpty()) {
 		this.addMultipleDiskAttachmentsToVm(vmUpdated.id(), addDiskAttachments)
-	}
-	// if (!deleteDiskAttachments.isNullOrEmpty()) {
-	// 	this.addMultipleDiskAttachmentsToVm(vmUpdated.id(), addDiskAttachments)
-	// }
-
-	if (!deleteNics.isNullOrEmpty()) {
-		this.removeMultipleNicsFromVm(vmUpdated.id(), deleteNics)
 	}
 
 	if (!addNics.isNullOrEmpty()) {
@@ -556,7 +546,7 @@ fun Connection.addDiskAttachmentToVm(vmId: String, diskAttachment: DiskAttachmen
 	val diskAttachAdded: DiskAttachment? =
 		this.srvAllDiskAttachmentsFromVm(vmId).add().attachment(diskAttachment).send().attachment()
 
-	// 가상머신 생성되고 자동 활성화
+	// 가상머신 생성되고 자동 활성화`
 	// if (diskAttachAdded != null && diskAttachAdded.idPresent()) {
 	// 	this.activeDiskAttachmentToVm(vmId, diskAttachAdded.id())
 	// }

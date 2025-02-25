@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
-import { useFindDiskListFromDataCenter } from "../../../api/RQHook";
+import { useConnDiskFromVM, useFindDiskListFromDataCenter } from "../../../api/RQHook";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { checkZeroSizeToGB, convertBytesToGB } from "../../../util";
 import TablesOuter from "../../table/TablesOuter";
@@ -26,6 +26,8 @@ const VmDiskConnectionModal = ({
   existingDisks = [],
   onSelectDisk,
 }) => {
+  const { mutate: connDiskVm } = useConnDiskFromVM();
+  // const { } = useConnDiskFromVM(vmId, )
   // 데이터센터 밑에 잇는 디스크 목록 검색
   const { 
     data: attDisks=[],
@@ -66,9 +68,15 @@ const VmDiskConnectionModal = ({
           isCreated: false, // 🚀 연결된 디스크는 isCreated: false
         };
       })
-      .filter(Boolean);
+      const onSuccess = () => {
+        onClose();
+        toast.success(`가상머신 디스크 연결 완료`);
+      };
+      const onError = (err) => toast.error(`Error 연결 disk: ${err}`);
+  
+      console.log("Form Data: ", selectedDiskLists);
 
-      onSelectDisk(selectedDisks);
+      // connDiskVm({ vmId: vmId, diskAttachment: }, { onSuccess, onError })
       onClose();
     } else {
       toast.error("디스크를 선택하세요!");
@@ -94,6 +102,9 @@ const VmDiskConnectionModal = ({
         };
       })
       .filter(Boolean);
+
+      onSelectDisk(selectedDisks);
+      onClose();
     } else {
       toast.error("디스크를 선택하세요!");
     }
@@ -172,8 +183,7 @@ const VmDiskConnectionModal = ({
           </div> */}
         </div>
         <span> vm: {vmId}<br/>size: {attDisks.length}<br/> dc: {dataCenterId}<br/></span>
-
-        <>
+          <>
             <TablesOuter
               columns={activeTab === "img" ? TableColumnsInfo.VIRTUAL_DISK : TableColumnsInfo.VMS_STOP}
               isLoading={isAttDisksLoading} isError={isAttDisksError} isSuccess={isAttDisksSuccess}
@@ -237,7 +247,6 @@ const VmDiskConnectionModal = ({
             }
             />
           </>
-
         <span>선택된 디스크 ID: {selectedDisks.join(", ") || ""}</span>
       </div>
     </BaseModal>

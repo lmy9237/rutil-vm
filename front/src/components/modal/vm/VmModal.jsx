@@ -484,7 +484,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
                   setFormInfoState={setFormInfoState}
                 />
                 <VmDisk
-                  // editMode={editMode}
+                  editMode={editMode}
                   vm={vm}
                   vmName={formInfoState.name}
                   dataCenterId={dataCenterVo.id}
