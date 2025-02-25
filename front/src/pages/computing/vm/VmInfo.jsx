@@ -185,7 +185,7 @@ const VmInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full px-[0.5rem] py-[0.5rem]">
+        <div className="w-full px-[0.5rem] py-[0.5rem] info-content">
           <Path pathElements={pathData}  basePath={`/computing/vms/${vmId}`}/>
           {renderSectionContent()}
         </div>
@@ -198,7 +198,7 @@ const VmInfo = () => {
         selectedVms={vm}
         onClose={closeModal}
       />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

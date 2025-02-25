@@ -26,7 +26,7 @@
 
 .box > span {
   width: 100%;
-  font-size: var(--fs-default-7);
+  font-size: var(--fs-18);
   color: black;
   overflow: hidden;
   text-overflow: ellipsis;

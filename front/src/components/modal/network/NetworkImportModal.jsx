@@ -59,7 +59,7 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
       targetName={"네트워크"}
       submitTitle={"가져오기"}
       onSubmit={onSubmit}
-      contentStyle={{ width: "880px", height: "690px" }} 
+      contentStyle={{ width: "880px", height: "700px" }} 
     >
       {/* <div className="network-bring-popup modal"> */}
       <div className="popup-content-outer">

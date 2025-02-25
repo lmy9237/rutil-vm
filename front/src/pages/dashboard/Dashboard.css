@@ -1,6 +1,7 @@
 /*dashboard.css*/
 .dash-section {
   width: 100%;
+  display: flex;
   flex-wrap: wrap;
   background-color: #ffffff;
   padding: 0 0.2rem;
@@ -9,11 +10,12 @@
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 .dash-section-contents {
-  width: 33.3%;
+  min-width: 350px; /* 화면이 줄어들면 최소 크기를 유지 */
+    flex: 0.5; 
 }
 .dash-section-contents > h1 {
   padding: 0.1rem;
-  font-size: 0.4rem;
+  font-size: var(--fs-21);
   margin-top: 5px;
   color: black;
   font-weight: 800;
@@ -32,7 +34,7 @@
   display: flex;
   height: 22.4%;
   border-radius: 3px;
-  font-size: 0.34rem;
+  font-size: var(--fs-18);
   justify-content: space-between;
   background-color: rgb(255, 255, 255);
   width: 100%;

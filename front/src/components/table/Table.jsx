@@ -1,3 +1,5 @@
+// 안씀 tables에서 씀
+
 import React, { useState, useRef, useEffect } from "react";
 import { Tooltip } from "react-tooltip";
 import "./Table.css";
@@ -154,7 +156,7 @@ const Table = ({
 
   console.log("...");
   return (
-    <div className="w-full max-h-[62.4vh] overflow-y-auto overflow-x-hidden">
+    <div className="w-full overflow-y-auto overflow-x-hidden">
       <table
         className="custom-table"
         ref={tableRef}

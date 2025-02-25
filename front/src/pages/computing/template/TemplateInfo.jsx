@@ -97,8 +97,8 @@ const TemplateInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full px-[0.5rem] py-[0.5rem]">
-          <Path pathElements={pathData} />
+        <div className="w-full px-[0.5rem] py-[0.5rem] info-content">
+          <Path pathElements={pathData} basePath={`/computing/templates/${templateId}`}/>
           {renderSectionContent()}
         </div>
       </div>

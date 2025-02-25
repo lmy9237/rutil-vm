@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 // import ReactDOM from 'react-dom';
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import "./main.css";
+// import "./main.css";
 
 if (typeof global === 'undefined') {
   window.global = window;

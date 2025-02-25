@@ -34,13 +34,13 @@ const VmHostDevices = ({ vmId }) => {
       <VmDeviceAddModal
         isOpen={activeModal === 'add'}
         hostDevices={hostDevices}
-        onRequestClose={closeModal}
+        onClose={closeModal}
       />
       {/* 장치 삭제 */}
       {/*View CPU Pinning 팝업 */}
       {/* <VmCPUPinningModal
         isOpen={activePopup === 'view_cpu'}
-        onRequestClose={closePopup}
+        onClose={closePopup}
       /> */}
     </Suspense>
   );

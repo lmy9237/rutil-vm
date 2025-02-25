@@ -686,9 +686,9 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
       {/* <div className="host-nework-content-popup modal"> */}
       <div className="popup-content-outer px-2">
         <div className="py-1 font-bold underline">드래그 하여 변경</div>
-        <div className="host-network-separation">
+        <div className="host-network-separation f-btw">
           <div className="network-separation-left">
-            <div>
+            <div className ="f-btw">
               <div>인터페이스</div>
               <div>할당된 논리 네트워크</div>
             </div>

@@ -93,7 +93,7 @@ function RutilManager() {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full px-[0.5rem] py-[0.5rem]">
+        <div className="w-full px-[0.5rem] py-[0.5rem] info-content">
           <Path pathElements={pathData} />
           {renderSectionContent()}
         </div>

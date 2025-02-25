@@ -163,7 +163,7 @@ const VmDiskConnectionModal = ({
       targetName={"가상 디스크"}
       submitTitle={"연결"}
       onSubmit={diskType? handleFormSubmit : handleOkClick}
-      contentStyle={{ width: "780px", height: "570px" }} 
+      contentStyle={{ width: "850px", height: "590px" }} 
     >
       <div className="popup-content-outer">
         <div className="disk-new-nav">

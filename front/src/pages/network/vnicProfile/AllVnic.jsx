@@ -31,7 +31,7 @@ const AllVnic = () => {
       <div>
         <HeaderButton titleIcon={faLaptop} title="VNIC 프로파일" />
       </div>
-      <div className="w-full px-[0.5rem] py-[0.5rem]">
+      <div className="w-full px-[0.5rem] py-[0.5rem] section-content">
         <VnicProfileDupl
           isLoading={isVnicProfilesLoading}
           isError={isVnicProfilesError}

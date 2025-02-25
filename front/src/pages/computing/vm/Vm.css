@@ -104,27 +104,24 @@
   color: #757575;
   padding: 0.05rem;
 }
-.network-content i:first-child {
-  padding-right: 0.3rem;
-  border-right: 1px solid #757575;
-  font-size: 0.2rem;
-}
 .network-content > div:nth-child(n + 2) {
   text-align: center;
   padding-top: 0.4rem;
 }
 .network-content > div > div:nth-child(2) {
-  font-size: 0.27rem;
+  font-size: var(--fs-default-4);
   color: #4f4f4f;
 }
 
 .network-content-detail > div {
   width: 50%;
   padding: 0.2rem;
+  font-size: var(--fs-default-4);
 }
 .network-content-detail-box > div {
-  font-size: 0.4rem;
+  font-size: var(--fs-default);
   margin-bottom: 0.2rem;
+ 
 }
 .network-content-detail-box .snap-table th {
   margin-right: 0.6rem;

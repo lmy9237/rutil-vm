@@ -178,7 +178,7 @@ const VmNics = ({ vmId }) => {
                 style={{ display: visibleDetails[nic.id] ? "flex" : "none" }}
               >
                 <div className="network-content-detail-box">
-                  <div>일반</div>
+                  <div className="font-bold">일반</div>
                   <table className="snap-table">
                     <tbody>
                       <tr>
@@ -221,7 +221,7 @@ const VmNics = ({ vmId }) => {
                   </table>
                 </div>
                 <div className="network-content-detail-box">
-                  <div>통계</div>
+                  <div className="font-bold">통계</div>
                   <table className="snap-table">
                     <tbody>
                       <tr>
@@ -248,7 +248,7 @@ const VmNics = ({ vmId }) => {
                   </table>
                 </div>
                 <div className="network-content-detail-box">
-                  <div>네트워크 필터 매개변수</div>
+                  <div className="font-bold">네트워크 필터 매개변수</div>
                   <table className="snap-table">
                     <tbody></tbody>
                   </table>

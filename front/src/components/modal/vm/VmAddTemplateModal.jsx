@@ -236,7 +236,7 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
       targetName={"템플릿"}
       submitTitle={"생성"}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "690px", height: "665px" }} 
+      contentStyle={{ width: "690px", height: "700px" }} 
     >
       {/* <div className="new-template-popup modal" style={{ height: isSubtemplate ? '88vh' : '79vh' }}> */}
 

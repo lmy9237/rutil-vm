@@ -25,7 +25,7 @@ const AllDomain = () => {
       <div>
         <HeaderButton titleIcon={faDatabase} title="스토리지 도메인" />
       </div>
-      <div className="w-full px-[0.5rem] py-[0.5rem]">
+      <div className="w-full px-[0.5rem] py-[0.5rem] section-content">
         <DomainDupl
           domains={storageDomains || []}
           columns={TableColumnsInfo.STORAGE_DOMAINS}

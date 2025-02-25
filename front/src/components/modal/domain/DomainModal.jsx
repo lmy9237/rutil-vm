@@ -341,7 +341,7 @@ const DomainModal = ({
       targetName={"도메인"}
       submitTitle={dLabel}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "60%", height: "90%" }} 
+      contentStyle={{ width: "1000px", height: "800px" }}
     >
       {/* <div className="storage-domain-administer-popup modal"> */}
       <div className="storage-domain-new-outer">

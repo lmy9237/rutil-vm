@@ -122,11 +122,6 @@
   width: 44%;
 }
 /*호스트 장치(장치추가 팝업)*/
-.device-add-popup-outer {
-  height: 92%;
-  width: 74%;
-}
-
 .able-host-device-table {
   height: 26vh;
   overflow-y: auto; /* 세로 스크롤 추가 */

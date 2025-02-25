@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Tooltip } from "react-tooltip"; // react-tooltip의 Tooltip 컴포넌트 사용
 import TableRowLoading from "./TableRowLoading";
 import TableRowNoData from "./TableRowNoData";
 import "./Table.css";
+import { Tooltip } from "react-tooltip";
 
 /**
  * @name Tables
@@ -221,6 +221,7 @@ const Tables = ({
                 key={colIndex}
                 data-tooltip-id={`tooltip-${rowIndex}-${colIndex}`}
                 data-tooltip-content={row[column.accessor]}
+                onMouseEnter={(e) => handleMouseEnter(e, rowIndex, colIndex, row[column.accessor])}
                 style={{
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -294,7 +295,7 @@ const Tables = ({
   // console.log("...");
   return (
     <>
-      <div className="w-full max-h-[62.4vh] overflow-y-auto ">
+      <div className="w-full max-h-[63vh] overflow-y-auto ">
         <table className="custom-table" ref={tableRef}>
           <thead>
             <tr>

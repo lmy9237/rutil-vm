@@ -27,7 +27,7 @@ const AllNetwork = () => {
       <div>
         <HeaderButton titleIcon={faServer} title="네트워크" />
       </div>
-      <div className="w-full px-[0.5rem] py-[0.5rem]">
+      <div className="w-full px-[0.5rem] py-[0.5rem] section-content">
         <NetworkDupl
           networks={networks}
           columns={TableColumnsInfo.NETWORKS}

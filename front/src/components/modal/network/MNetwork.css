@@ -31,18 +31,17 @@
   overflow-y: auto; /* 세로 스크롤 추가 */
   overflow-x: hidden; /* 가로 스크롤 숨김 */
 }
-
-/*호스트 네트워크 설정 */
-.host-network-separation {
+.plusbtns {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  border-radius: 2px;
 }
+.plusbtns > button {
+  height: 100%;
+}
+/*호스트 네트워크 설정 */
 .network-separation-left {
   width: 78%;
-}
-.network-separation-left > div:first-child {
-  display: flex;
-  justify-content: space-between;
 }
 .network-item {
   padding: 15px;

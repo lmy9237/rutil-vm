@@ -1,80 +1,75 @@
-
 .footer-outer {
-    font-size: 0.34rem;
-    width: 100%;
-    left: 0;
-    max-height: 30%;
-    position: absolute;
-    bottom: 0;
-
+  font-size: 0.34rem;
+  width: 100%;
+  max-height: 30%;
 }
-.footer{
-    min-height: 35px;
-    display: flex;
-    border-top: 1px solid #ebebeb;
-    background: white;
+.footer {
+  min-height: var(--h-rutil-footer);
+  display: flex;
+  border-top: 1px solid #ebebeb;
+  background: white;
 }
-.footer>button{
-    color: rgb(10, 55, 107);
-    cursor: pointer;
-    background-color: white;
-    border: 1px solid var(--color-primary-1);
-    border-radius: 3px;
+.footer > button {
+  color: rgb(10, 55, 107);
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid var(--color-primary-1);
+  border-radius: 3px;
 }
-.footer>button>i{
-    font-size: 0.3rem;
-    display: block; 
-    margin: 0 auto; 
-    text-align: center;
+.footer > button > i {
+  font-size: 0.3rem;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
 }
-.footer>div{
-    display: flex;
+.footer > div {
+  display: flex;
 }
-.footer>div>div{
-    font-weight: 600;
-    display: block;
-    cursor: pointer;
-    margin-top: 8px;
+.footer > div > div {
+  font-weight: 600;
+  display: block;
+  cursor: pointer;
+  margin-top: 8px;
 }
-.footer>div>div:first-child{
-    margin: 8px 30px 0 15px;
-    border-bottom: 2px solid #6999D9;
-    color: black;
+.footer > div > div:first-child {
+  margin: 8px 30px 0 15px;
+  border-bottom: 2px solid #6999d9;
+  color: black;
 }
-.footer>div>div:nth-child(2){
-    color: #4F4F4F;
+.footer > div > div:nth-child(2) {
+  color: #4f4f4f;
 }
-.footer-content{
-    height: 100%;
-    display: none;
-    background: white;
+.footer-content {
+  height: 100%;
+  display: none;
+  background: white;
 }
-.footer-nav{
-    display: flex;
-    width: 100%;
-    padding: 5px 3px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
-    margin-bottom: 18px;
+.footer-nav {
+  display: flex;
+  width: 100%;
+  padding: 5px 3px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  margin-bottom: 18px;
 }
-.footer-nav>div{
-    display: flex;
-    width: 15%;
-    justify-content: space-between;
-    border-right: 1px solid #4F4F4F;
-    padding: 2px 5px;
-    color: #4F4F4F;
+.footer-nav > div {
+  display: flex;
+  width: 15%;
+  justify-content: space-between;
+  border-right: 1px solid #4f4f4f;
+  padding: 2px 5px;
+  color: #4f4f4f;
 }
-.footer-img{
-    width: 11%;
-    margin: 0 auto;
+.footer-img {
+  width: 11%;
+  margin: 0 auto;
 }
-.footer-img>img{
-    margin: 0 auto;
-    display: block;
+.footer-img > img {
+  margin: 0 auto;
+  display: block;
 }
-.footer-img>span{
-    text-align: center;
-    display: block;
-    font-size: 0.33rem;
-    margin-top: 3px;
+.footer-img > span {
+  text-align: center;
+  display: block;
+  font-size: 0.33rem;
+  margin-top: 3px;
 }

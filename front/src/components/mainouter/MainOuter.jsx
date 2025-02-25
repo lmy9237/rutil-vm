@@ -24,7 +24,10 @@ import {
  */
 const MainOuter = ({ children,asideVisible,setAsideVisible   }) => {
     const [sidebarWidth, setSidebarWidth] = useState(240); // 초기 사이드바 너비 (%)
-    
+    const asideStyles = {
+        width: asideVisible ? `${sidebarWidth}px` : "0px", // 닫힐 때 0px
+        minWidth: asideVisible ? "240px" : "0px", // 최소 크기 설정
+    };
     const resizerRef = useRef(null);
     const isResizing = useRef(false);
     const xRef = useRef(0);
@@ -55,11 +58,11 @@ const MainOuter = ({ children,asideVisible,setAsideVisible   }) => {
         if (!isResizing.current) return;
     
         requestAnimationFrame(() => {
-            const dx = ((e.clientX - xRef.current) / window.innerWidth) * 100;
-            const newWidth = leftWidthRef.current + dx;
-    
-            if (newWidth > 17 && newWidth < 30) {
-                setSidebarWidth(newWidth);
+                const dx = e.clientX - xRef.current; // 이동한 거리 (픽셀)
+                const newWidth = leftWidthRef.current + dx; // 기존 너비에 이동 거리 더하기
+
+                if (newWidth > 240 && newWidth < 400) { // 사이드바 최소/최대 너비 설정
+                    setSidebarWidth(newWidth);
             }
         });
     };
@@ -825,7 +828,7 @@ const MainOuter = ({ children,asideVisible,setAsideVisible   }) => {
 
     return (
       <div className="main-outer" onClick={handleMainClick}>
-            <div className={asideClasses} style={{ width: asideVisible ? `${sidebarWidth}px` : '0%' }}>
+            <div className={asideClasses} style={asideStyles}>
             <div id="aside">
                 <div className="nav">
                     {/* 대시보드 버튼 */}

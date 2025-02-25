@@ -4,6 +4,9 @@ import BaseModal from "../BaseModal";
 import { useEditTemplate, useTemplate } from "../../../api/RQHook";
 import "./MTemplate.css";
 import ModalNavButton from "../../navigation/ModalNavButton";
+import LabelInput from "../../label/LabelInput";
+import LabelCheckbox from "../../label/LabelCheckbox";
+import LabelSelectOptions from "../../label/LabelSelectOptions";
 
 const TemplateEditModal = ({
   isOpen,
@@ -127,94 +130,74 @@ const TemplateEditModal = ({
 
         <div className="backup-edit-content">
           <div
-            className="template-option-box center"
-            style={{
-              borderBottom: "1px solid #a7a6a6",
-              paddingBottom: "0.3rem",
-            }}
-          >
-            <label htmlFor="optimization">최적화 옵션</label>
-            <select
-              id="optimization"
-              value={selectedOptimizeOption} // 선택된 값과 동기화
-              onChange={(e) => setSelectedOptimizeOption(e.target.value)} // 값 변경 핸들러
+              className="template-option-box center"
+              style={{
+                borderBottom: "1px solid #a7a6a6",
+                padding: "0.1rem 0",
+              }}
             >
-              {optimizeOption.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label} {/* UI에 표시되는 값 */}
-                </option>
-              ))}
-            </select>
-            {/* <span>선택된 최적화 옵션: {optimizeOption.find(opt => opt.value === selectedOptimizeOption)?.value || ''}</span> */}
-          </div>
+              <LabelSelectOptions
+                id="optimization"
+                label="최적화 옵션"
+                value={selectedOptimizeOption}
+                onChange={(e) => setSelectedOptimizeOption(e.target.value)}
+                options={optimizeOption}
+              />
+            </div>
           {activeTab  === "general" && (
             <>
-              <div className="template-edit-texts">
-                <div className="host-textbox">
-                  <label htmlFor="template_name">이름</label>
-                  <input
-                    type="text"
-                    id="template_name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div className="host-textbox">
-                  <label htmlFor="description">설명</label>
-                  <input
-                    type="text"
-                    id="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </div>
-                <div className="host-textbox">
-                  <label htmlFor="comment">코멘트</label>
-                  <input
-                    type="text"
-                    id="comment"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                  />
-                </div>
-              </div>
+            <div className="template-edit-texts">
+              <LabelInput
+                label="이름"
+                id="template_name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                autoFocus
+              />
+              <LabelInput
+                label="설명"
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <LabelInput
+                label="코멘트"
+                id="comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+            </div>
 
-              <div className="flex">
-                <div className="t-new-checkbox">
-                  <input
-                    type="checkbox"
-                    id="stateless"
-                    checked={stateless} // 상태에 따라 체크 상태 설정
-                    onChange={(e) => setStateless(e.target.checked)} // 값 변경 핸들러
-                  />
-                  <label htmlFor="stateless">상태 비저장</label>
-                </div>
-                <div className="t-new-checkbox">
-                  <input
-                    type="checkbox"
-                    id="start_in_pause_mode"
-                    checked={startPaused} // 상태에 따라 체크 상태 설정
-                    onChange={(e) => setStartPaused(e.target.checked)} // 값 변경 핸들러
-                  />
-                  <label htmlFor="start_in_pause_mode">
-                    일시정지 모드에서 시작
-                  </label>
-                </div>
-                <div className="t-new-checkbox">
-                  <input
-                    type="checkbox"
-                    id="prevent_deletion"
-                    checked={deleteProtected} // 상태에 따라 체크 상태 설정
-                    onChange={(e) => setDeleteProtected(e.target.checked)} // 값 변경 핸들러
-                  />
-                  <label htmlFor="prevent_deletion">삭제 방지</label>
-                </div>
-              </div>
+            <div >
+              <LabelCheckbox
+                className="t-new-checkbox"
+                id="stateless"
+                label="상태 비저장"
+                checked={stateless}
+                onChange={(e) => setStateless(e.target.checked)}
+              />
+              
+              <LabelCheckbox
+                className="t-new-checkbox"
+                id="start_in_pause_mode"
+                label="일시정지 모드에서 시작"
+                checked={startPaused}
+                onChange={(e) => setStartPaused(e.target.checked)}
+              />
+
+              <LabelCheckbox
+                className="t-new-checkbox"
+                id="prevent_deletion"
+                label="삭제 방지"
+                checked={deleteProtected}
+                onChange={(e) => setDeleteProtected(e.target.checked)}
+              />
+            </div>
             </>
           )}
           {activeTab  === "console" && (
             <>
-              <div className="p-1.5">
+              <div className="p-1">
                 <div className="font-bold">그래픽 콘솔</div>
                 <div className="monitor center">
                   <label htmlFor="monitor-select">모니터</label>

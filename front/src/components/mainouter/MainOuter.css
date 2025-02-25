@@ -46,10 +46,9 @@
   text-overflow: ellipsis;
 }
 .main-outer {
-  height:  calc(99.2% - var(--h-rutil-header));
-  display: flex;
-  justify-content: space-between;
+  height: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer));
   width: 100%;
+  display: flex;justify-content: space-between;
 }
 
 .blue-text {
@@ -95,7 +94,7 @@
 
 .aside-popup > div > div {
   color: rgb(145, 150, 155);
-  font-size: 0.33rem;
+  font-size: var(--fs-default);
   cursor: pointer;
   padding-top: 0.1rem;
 }
@@ -104,7 +103,7 @@
 .aside-popup-second-content i:first-child,
 .aside-popup-third-content i:first-child,
 .aside-popup-fourth-content i:first-child {
-  font-size: 0.24rem;
+  font-size: var(--fs-default);
   margin-right: 0.27rem;
 }
 .aside-popup-content > span,
@@ -131,7 +130,7 @@
   border-radius: 3px;
 }
 .context-menu div {
-  font-size: 0.3rem;
+  font-size: var(--fs-default);
   cursor: pointer;
   text-align: left;
   padding: 0.03rem 0.2rem 0.03rem 0.2rem;
@@ -177,6 +176,7 @@
   height: 100%;
   font-size:0.3rem;
   z-index: 3;
+  background: white;
   width: 25%;
   border-right: 1px solid rgba(110, 109, 109, 0.2);
   transition: width 0.1s ease-out;
