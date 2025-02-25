@@ -1,46 +1,35 @@
 .header {
-  height:  var(--h-rutil-header);
-  margin: 0 auto;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  padding: 0 0.3rem;
-  background-color: #ffffff;
-  position: relative;
-  width:100%;
   display:flex;justify-content:space-between;align-items:center;
-  margin-bottom: 0.1rem;
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.13);
-  
+  position:relative;width:100%;height:var(--h-rutil-header);
+  padding:0 5px;
+  background-color:#ffffff;
+  border-bottom: 1px solid #aaa;
 }
-
 .header-right {
   font-size: var(--fs-18);
-  display: flex;
-  align-items: center; /* 세로 중앙 정렬 추가 */
+  display:flex;justify-content:flex-end;align-items:center; /* 세로 중앙 정렬 추가 */
 }
 .menu-icon {
-  margin-right: 0.24rem;
+  padding: 8px;
   font-size: var(--fs-18);
   color: rgb(145, 150, 155);
   cursor: pointer;
 }
 .menu-icon:hover {
-  color: black;
+  color: #5dcbf7;
 }
 .header-right > span {
-  color: rgb(0, 0, 0);
-  font-weight: 600;
-  cursor: pointer;
+  color: rgb(145, 150, 155);cursor: pointer;
+  font-size:15px;line-height:0.5;font-weight: 600;
+  padding-right: 10px;
 }
 .header-right > span:hover {
   color: #5dcbf7;
 }
 .header-left {
-  display: flex;
-  justify-content: space-between;
+  display:flex;justify-content:space-between;align-items: center;
   font-size: var(--fs-big);
   min-width: 6%;
-  align-items: center; /* 세로 중앙 정렬 추가 */
 }
 .header-left span {
   font-size: var(--fs-18);
@@ -112,6 +101,9 @@
   color: var(--color-primary-h);
   font-weight: bold;
   font-size: var(--fs-18);
+}
+.logo-outer {
+  cursor: pointer
 }
 .logo {
   height: 4vh;

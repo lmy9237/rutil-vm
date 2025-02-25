@@ -2,7 +2,6 @@ import React from "react";
 import Modal from "react-modal";
 import { useAllVnicProfiles } from "../../../api/RQHook";
 import { faLaptop } from "@fortawesome/free-solid-svg-icons";
-import Footer from "../../../components/footer/Footer";
 import HeaderButton from "../../../components/button/HeaderButton";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VnicProfileDupl from "../../../components/dupl/VnicProfileDupl";
@@ -40,7 +39,6 @@ const AllVnic = () => {
           vnicProfiles={vnicProfiles || []}
         />
       </div>
-      <Footer />
     </div>
   );
 };

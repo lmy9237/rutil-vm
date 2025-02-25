@@ -3,7 +3,6 @@ import Modal from 'react-modal';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import NavButton from '../navigation/NavButton';
 import HeaderButton from '../button/HeaderButton';
-import Footer from '../footer/Footer';
 import TableColumnsInfo from '../table/TableColumnsInfo';
 import Permission from '../Modal/Permission';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -289,8 +288,6 @@ useEffect(() => {
         </div>
         
       </div>
-      <Footer/>
-
         {/* 데이터 센터 편집 모달 */}
         {/* <Modal
           isOpen={isModalOpen.edit}

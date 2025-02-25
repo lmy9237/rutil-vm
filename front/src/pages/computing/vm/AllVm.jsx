@@ -1,7 +1,6 @@
 import React from 'react';
 import { faDesktop } from '@fortawesome/free-solid-svg-icons';
 import HeaderButton from '../../../components/button/HeaderButton';
-import Footer from '../../../components/footer/Footer';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import VmDupl from '../../../components/dupl/VmDupl';
 import { useAllVMs } from '../../../api/RQHook';

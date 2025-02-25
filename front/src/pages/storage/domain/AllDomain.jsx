@@ -2,7 +2,6 @@ import React from "react";
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import HeaderButton from "../../../components/button/HeaderButton";
-import Footer from "../../../components/footer/Footer";
 import DomainDupl from "../../../components/dupl/DomainDupl";
 import { useAllStorageDomains } from "../../../api/RQHook";
 
@@ -35,7 +34,6 @@ const AllDomain = () => {
           isSuccess={isStorageDomainsSuccess}
         />
       </div>
-      <Footer />
     </div>
   );
 };

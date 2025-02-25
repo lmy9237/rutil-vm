@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { faHdd } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
-import Footer from "../../../components/footer/Footer";
 import Path from "../../../components/Header/Path";
 import DiskGeneral from "./DiskGeneral";
 import DiskVms from "./DiskVms";
@@ -108,7 +107,6 @@ const DiskInfo = () => {
         selectedDisks={disk}
         onClose={closeModal}
       />
-      <Footer />
     </div>
   );
 };

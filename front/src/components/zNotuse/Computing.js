@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import HeaderButton from '../button/HeaderButton';
-import Table from '../table/Table';
 import TableColumnsInfo from '../table/TableColumnsInfo';
-import Footer from '../footer/Footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAllDataCenters } from '../../api/RQHook';
 import { useDataCenter } from '../../api/RQHook';
@@ -119,8 +117,6 @@ const Computing = () => {
                     />
                 </div>
             </div>
-
-           <Footer/>
 
             {/*새로 만들기 */}
             <Modal

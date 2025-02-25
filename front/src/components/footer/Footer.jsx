@@ -5,16 +5,15 @@ import "./Footer.css";
 
 /**
  * @name Footer
- * @description Foopter
+ * @description Footer
  *
- * @returns {JSX.Element} Foopter
+ * @returns {JSX.Element} Footer
  */
 const Footer = () => {
   const [isFooterContentVisible, setIsFooterContentVisible] = useState(false);
   const [selectedFooterTab, setSelectedFooterTab] = useState("recent");
 
-  const toggleFooterContent = () =>
-    setIsFooterContentVisible(!isFooterContentVisible);
+  const toggleFooterContent = () => setIsFooterContentVisible(!isFooterContentVisible);
   const handleFooterTabClick = (tab) => setSelectedFooterTab(tab);
 
   return (

@@ -1,6 +1,5 @@
 import { faListUl } from "@fortawesome/free-solid-svg-icons";
 import HeaderButton from "../../components/button/HeaderButton";
-import Footer from "../../components/footer/Footer";
 import EventDupl from "../../components/dupl/EventDupl";
 import { useAllEvents } from "../../api/RQHook";
 
@@ -41,7 +40,6 @@ const Event = () => {
           />
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

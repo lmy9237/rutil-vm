@@ -1,6 +1,5 @@
 import React from "react";
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
-import Footer from "../../../components/footer/Footer";
 import HeaderButton from "../../../components/button/HeaderButton";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DiskDupl from "../../../components/dupl/DiskDupl";
@@ -28,7 +27,6 @@ const AllDisk = () => {
           disks={disks} columns={TableColumnsInfo.DISKS}
         />
       </div>
-      <Footer />
     </div>
   );
 };

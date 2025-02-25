@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 import NavButton from '../../../components/navigation/NavButton';
 import HeaderButton from '../../../components/button/HeaderButton';
-import Footer from '../../../components/footer/Footer';
 import Path from '../../../components/Header/Path';
 import DomainModals from '../../../components/modal/domain/DomainModals';
 import DomainGeneral from './DomainGeneral';

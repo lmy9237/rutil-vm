@@ -3,7 +3,6 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
-import Footer from "../../../components/footer/Footer";
 import Path from "../../../components/Header/Path";
 import DataCenterModals from "../../../components/modal/datacenter/DataCenterModals";
 import DataCenterClusters from "./DataCenterClusters";
@@ -133,7 +132,6 @@ const DataCenterInfo = () => {
         selectedDataCenters={dataCenter}
         onClose={closeModal}
       />
-      <Footer />
     </div>
   );
 };

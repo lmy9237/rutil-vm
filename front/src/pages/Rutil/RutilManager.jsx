@@ -9,7 +9,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./RutilManager.css";
 import Path from "../../components/Header/Path";
-import Footer from "../../components/footer/Footer";
 import Info from "./Info";
 import DataCenters from "./DataCenters";
 import Clusters from "./Clusters";
@@ -98,7 +97,6 @@ function RutilManager() {
           {renderSectionContent()}
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

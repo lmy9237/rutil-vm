@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { faServer } from "@fortawesome/free-solid-svg-icons";
 import HeaderButton from "../../../components/button/HeaderButton";
-import Footer from "../../../components/footer/Footer";
 import NetworkDupl from "../../../components/dupl/NetworkDupl";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { useAllNetworks } from "../../../api/RQHook";
@@ -36,7 +35,6 @@ const AllNetwork = () => {
           isSuccess={isNetworksSuccess}
         />
       </div>
-      <Footer />
     </div>
   );
 };

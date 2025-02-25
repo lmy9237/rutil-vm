@@ -67,7 +67,7 @@ const HeaderButton = ({
               style={{ marginRight: "0.34rem" }}
             />
           )}
-          <p className="h-fit leading-none">{title}</p>
+          <p>{title}</p>
         </div>
       </div>
       <div className="flex justify-space-between ml-auto">

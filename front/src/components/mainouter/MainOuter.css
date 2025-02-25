@@ -114,11 +114,10 @@
 }
 
 .aside-popup-content {
-  padding-left: 0.2rem;
 }
 
 .aside-popup-second-content {
-  padding-left: 0.4rem;
+  padding-left: 1rem;
 }
 .context-menu {
   position: absolute;
@@ -140,7 +139,7 @@
   background-color: #e6eefa;
 }
 .aside-popup-third-content {
-  padding-left: 0.6rem;
+  padding-left: 3rem;
 }
 
 
@@ -161,7 +160,7 @@
   height: 100%;
   cursor: col-resize;
   z-index: 100;
-    user-select: none; /* ✅ 기본적으로 드래그 시 텍스트 선택 방지 */
+  /* user-select: none;  ✅ 기본적으로 드래그 시 텍스트 선택 방지 */
 }
 
 .resizer:hover {

@@ -5,7 +5,6 @@
 // import Table from '../../table/Table';
 // import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 // import './css/Host.css';
-// import Footer from '../../footer/Footer';
 // import { useAllTemplates, useAllVMs } from '../../../api/RQHook';
 // import Templates from './Templates';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

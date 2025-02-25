@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { faMicrochip } from "@fortawesome/free-solid-svg-icons";
-import Footer from "../../../components/footer/Footer";
 import HeaderButton from "../../../components/button/HeaderButton";
 import NavButton from "../../../components/navigation/NavButton";
 import Path from "../../../components/Header/Path";

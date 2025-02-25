@@ -4,7 +4,6 @@ import Modal from 'react-modal';
 import HeaderButton from '../button/HeaderButton';
 import TableOuter from '../table/TableOuter';
 import TableColumnsInfo from '../table/TableColumnsInfo';
-import Footer from '../footer/Footer';
 import { useAllClusters } from '../../api/RQHook';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -376,7 +375,6 @@ const AllCluster = () => {
                     </div>
                 </div>
             </Modal>
-      <Footer />
     </div>
   );
 };

@@ -29,6 +29,7 @@ import SettingInfo from './pages/setting/SettingInfo';
 import Login from './pages/login/Login';
 import Error from './pages/Error';
 import './App.css';
+import Footer from './components/footer/Footer';
 
 
 const App = () => {
@@ -103,58 +104,59 @@ const App = () => {
       <Router>
         {authenticated ? (
           <>
-          <Header setAuthenticated={setAuthenticated} toggleAside={toggleAside}/>
-          <MainOuter asideVisible={asideVisible} setAsideVisible={setAsideVisible}>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/computing/rutil-manager" element={<RutilManager />} />
-              <Route path="/computing/rutil-manager/:section" element={<RutilManager />} />
+            <Header setAuthenticated={setAuthenticated} toggleAside={toggleAside}/>
+            <MainOuter asideVisible={asideVisible} setAsideVisible={setAsideVisible}>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/computing/rutil-manager" element={<RutilManager />} />
+                <Route path="/computing/rutil-manager/:section" element={<RutilManager />} />
 
-              <Route path="/computing/datacenters/:id/:section" element={<DataCenterInfo />} />
+                <Route path="/computing/datacenters/:id/:section" element={<DataCenterInfo />} />
 
-              <Route path="/computing/clusters/:id" element={<ClusterInfo />} />
-              <Route path="/computing/clusters/:id/:section" element={<ClusterInfo />} />  
-              
-              <Route path="/computing/hosts/:id" element={<HostInfo />}/>
-              <Route path="/computing/hosts/:id/:section" element={<HostInfo />}/>
+                <Route path="/computing/clusters/:id" element={<ClusterInfo />} />
+                <Route path="/computing/clusters/:id/:section" element={<ClusterInfo />} />  
+                
+                <Route path="/computing/hosts/:id" element={<HostInfo />}/>
+                <Route path="/computing/hosts/:id/:section" element={<HostInfo />}/>
 
-              <Route path="/computing/vms" element={<AllVm />} />
-              <Route path="/computing/vms/:id" element={<VmInfo />} />
-              <Route path="/computing/vms/:id/:section" element={<VmInfo />} />
-              
-              <Route path="/computing/vms/templates" element={<AllTemplates />} />
-              <Route path="/computing/templates" element={<AllTemplates />} />
-              <Route path="/computing/templates/:id" element={<TemplateInfo />} />
-              <Route path="/computing/templates/:id/:section" element={<TemplateInfo />} />
-                            
-              <Route path="/networks/rutil-manager" element={<RutilManager />} />
-              <Route path="/networks/rutil-manager/:section" element={<RutilManager />} />
+                <Route path="/computing/vms" element={<AllVm />} />
+                <Route path="/computing/vms/:id" element={<VmInfo />} />
+                <Route path="/computing/vms/:id/:section" element={<VmInfo />} />
+                
+                <Route path="/computing/vms/templates" element={<AllTemplates />} />
+                <Route path="/computing/templates" element={<AllTemplates />} />
+                <Route path="/computing/templates/:id" element={<TemplateInfo />} />
+                <Route path="/computing/templates/:id/:section" element={<TemplateInfo />} />
+                              
+                <Route path="/networks/rutil-manager" element={<RutilManager />} />
+                <Route path="/networks/rutil-manager/:section" element={<RutilManager />} />
 
-              <Route path="/networks" element={<AllNetwork />} />
-              <Route path="/networks/datacenters/:id/:section" element={<DataCenterInfo />} />
-              <Route path="/networks/:id" element={<NetworkInfo />} /> 
-              <Route path="/networks/:id/:section" element={<NetworkInfo />} /> 
+                <Route path="/networks" element={<AllNetwork />} />
+                <Route path="/networks/datacenters/:id/:section" element={<DataCenterInfo />} />
+                <Route path="/networks/:id" element={<NetworkInfo />} /> 
+                <Route path="/networks/:id/:section" element={<NetworkInfo />} /> 
 
-              <Route path="/vnicProfiles" element={<AllVnic />} />
-              <Route path="/vnicProfiles/:id/:section" element={<VnicProfileInfo />} />
+                <Route path="/vnicProfiles" element={<AllVnic />} />
+                <Route path="/vnicProfiles/:id/:section" element={<VnicProfileInfo />} />
 
-              <Route path="/storages/rutil-manager" element={<RutilManager />} />
-              <Route path="/storages/rutil-manager/:section" element={<RutilManager />} />
+                <Route path="/storages/rutil-manager" element={<RutilManager />} />
+                <Route path="/storages/rutil-manager/:section" element={<RutilManager />} />
 
-              <Route path="/storages/domains" element={<AllDomain />} />
-              <Route path="/storages/datacenters/:id/:section" element={<DataCenterInfo />} />
-              <Route path="/storages/domains/:id" element={<DomainInfo />} /> 
-              <Route path="/storages/domains/:id/:section" element={<DomainInfo />} /> 
-        
-              <Route path="/storages/disks" element={<AllDisk />} />
-              <Route path="/storages/disks/:id" element={<DiskInfo />} />
-              <Route path="/storages/disks/:id/:section" element={<DiskInfo />} />
+                <Route path="/storages/domains" element={<AllDomain />} />
+                <Route path="/storages/datacenters/:id/:section" element={<DataCenterInfo />} />
+                <Route path="/storages/domains/:id" element={<DomainInfo />} /> 
+                <Route path="/storages/domains/:id/:section" element={<DomainInfo />} /> 
+          
+                <Route path="/storages/disks" element={<AllDisk />} />
+                <Route path="/storages/disks/:id" element={<DiskInfo />} />
+                <Route path="/storages/disks/:id/:section" element={<DiskInfo />} />
 
-              <Route path="/events" element={<Event />} />
-              <Route path="/settings/:section" element={<SettingInfo />} />
-              <Route path="/error" element={<Error />} />
-            </Routes>
-          </MainOuter>
+                <Route path="/events" element={<Event />} />
+                <Route path="/settings/:section" element={<SettingInfo />} />
+                <Route path="/error" element={<Error />} />
+              </Routes>
+            </MainOuter>
+            <Footer />
           </>
           ) :
           (<Routes>

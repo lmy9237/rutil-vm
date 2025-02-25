@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { faDesktop } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
-import Footer from "../../../components/footer/Footer";
 import { useTemplate } from "../../../api/RQHook";
 import Path from "../../../components/Header/Path";
 import TemplateModals from "../../../components/modal/template/TemplateModals";
@@ -110,7 +109,6 @@ const TemplateInfo = () => {
         selectedTemplates={template}
         onClose={closeModal}
       />
-      <Footer />
     </div>
   );
 };

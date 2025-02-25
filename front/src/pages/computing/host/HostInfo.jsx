@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
-import Footer from "../../../components/footer/Footer";
 import Path from "../../../components/Header/Path";
 import HostGeneral from "./HostGeneral";
 import HostVms from "./HostVms";
@@ -136,7 +135,6 @@ const HostInfo = () => {
         selectedHosts={host}
         onClose={closeModal}
       />
-      <Footer />
     </div>
   );
 };

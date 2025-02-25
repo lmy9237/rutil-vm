@@ -1,6 +1,5 @@
 import React from "react";
 import { faDesktop } from "@fortawesome/free-solid-svg-icons";
-import Footer from "../../../components/footer/Footer";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TemplateDupl from "../../../components/dupl/TemplateDupl";
 import HeaderButton from "../../../components/button/HeaderButton";
@@ -34,7 +33,6 @@ const AllTemplates = () => {
           isSuccess={isTemplatesSuccess}
         />
       </div>
-      <Footer />
     </div>
   );
 };

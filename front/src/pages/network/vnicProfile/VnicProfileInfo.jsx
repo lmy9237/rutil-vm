@@ -1,7 +1,6 @@
 import React, { useEffect, useState} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import HeaderButton from '../../../components/button/HeaderButton';
-import Footer from '../../../components/footer/Footer';
 import Path from '../../../components/Header/Path';
 import { faLaptop, } from '@fortawesome/free-solid-svg-icons'
 import NavButton from '../../../components/navigation/NavButton';
@@ -101,7 +100,6 @@ const VnicProfileInfo = () => {
         selectedVnicProfiles={vnic}
         onClose={closeModal}
       />
-      <Footer/>
     </div>
   );
 };

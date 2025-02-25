@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 import HeaderButton from "../../components/button/HeaderButton";
-import Footer from "../../components/footer/Footer";
 import NavButton from "../../components/navigation/NavButton";
 import Path from "../../components/Header/Path";
 import SettingUsers from "./SettingUsers";
@@ -81,7 +80,6 @@ const SettingInfo = () => {
           {renderSectionContent()}
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
