@@ -156,7 +156,7 @@ const App = () => {
                 <Route path="/error" element={<Error />} />
               </Routes>
             </MainOuter>
-            <Footer />
+            {/* <Footer /> */}
           </>
           ) :
           (<Routes>

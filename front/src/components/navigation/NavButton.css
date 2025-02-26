@@ -13,10 +13,10 @@
 
 .content-header-left div {
     position: relative;
-    font-size: var(--fs-18);
+    font-size: var(--fs-15);
     cursor: pointer;
     color: black;
-    padding: 0.3rem 0.1rem 0.3rem 0.2rem;
+    padding:13px 7px;
 }
 
 .content-header-left div.active {

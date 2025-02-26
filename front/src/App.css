@@ -9,7 +9,7 @@
 @tailwind utilities;
 html {
   height: 100%;
-  --h-rutil-header: 55px;
+  --h-rutil-header: 51px;
   --h-rutil-footer: 35px; /*section-footer 높이 */
   --h-section-header: 70px; /*section-header 높이 */
   
@@ -43,6 +43,7 @@ html {
 
   --fs-13: 13px;
   --fs-default-4: 14px;
+  --fs-15: 15px;
   --fs-default: 16px;
   --fs-18: 18px;
   --fs-21: 21px;
@@ -60,8 +61,10 @@ html {
 }
 body { width:100%;height:100%;}
 #root {
-  background-color: #ebeeee;
+  /* background-color: #ebeeee; */
+  background-color: #20acac;/*임시시*/
   text-rendering: optimizeLegibility;
+  padding: 3px;
   width:100%;height:100%;display:flex;justify-content:flex-start;align-items:center;flex-direction:column;
 }
 
@@ -74,9 +77,9 @@ details>summary {
   width: 100%;
   height: calc(100% - var(--h-section-header));
 }
-p, ul>li {
+/* ul>li {
   font-size: var(--fs-default-4);
-}
+} */
 ul { list-style-type: circle; }
 button {
   border: var(--border-simple);
@@ -124,6 +127,7 @@ input[disabled] {
 }
 .info-content{
     width: calc(100% - var(--w-nav));
+    padding: 14px 20px;
 }
 .header-right-btns {
   display: flex;
@@ -190,7 +194,7 @@ input[disabled] {
   background: none;
   border: none;
   text-align: left;
-  padding: 0.08rem;
+  padding: 4px;
 }
 .dropdown-item:hover {
   background-color: var(--color-gray-2);
@@ -376,8 +380,8 @@ select {
 
 input[type="checkbox"],
 input[type="radio"] {
-  margin-right: 0.15rem;
-  width: 0.3rem;
+  margin-right: 6px;
+  width: 12px;
   display: flex;
   justify-content: center;
   align-items: center;

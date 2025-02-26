@@ -26,9 +26,9 @@
   min-height:var(--h-section-header);
   display:flex;justify-content:space-between;align-items:center;
   border-bottom: 1px solid #6999d9;
-  padding: 19px 16px;
+  padding: 13px 16px;
 }
-.section-header p { font-size: var(--fs-bigger); }
+
 .section-header-left > div {
   margin-right: 10px;
   align-items:center;

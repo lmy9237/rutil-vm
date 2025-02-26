@@ -54,7 +54,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
   // .aside-outer 열림 상태 관리(반응형형)
 
   return (
-    <div className="header">
+    <div className="header center">
       <div className="header-left">
         <FontAwesomeIcon icon={faBars} className="menu-icon" fixedWidth
           onClick={toggleAside} // aside-outer 토글

@@ -37,7 +37,7 @@ export function icon(status) {
         icon: faPlay,
         style: {
           color: "lime",
-          fontSize: "0.3rem",
+          fontSize: "12px",
           transform: "rotate(270deg)",
         },
       };
@@ -47,7 +47,7 @@ export function icon(status) {
         icon: faPlay,
         style: {
           color: "green",
-          fontSize: "0.3rem",
+          fontSize: "12px",
           transform: "rotate(120deg)",
         },
       };
@@ -58,7 +58,7 @@ export function icon(status) {
     case "UNINITIALIZED":
       iconProps = {
         icon: faPlay,
-        style: { color: "red", fontSize: "0.3rem", transform: "rotate(90deg)" },
+        style: { color: "red", fontSize: "12px", transform: "rotate(90deg)" },
       };
       break;
     case "POWERING_DOWN":
@@ -66,7 +66,7 @@ export function icon(status) {
         icon: faArrowsUpToLine,
         style: {
           color: "red",
-          fontSize: "0.3rem",
+          fontSize: "12px",
           transform: "rotate(180deg)",
         },
       };
@@ -76,7 +76,7 @@ export function icon(status) {
         icon: faSpinner,
         style: {
           color: "orange",
-          fontSize: "0.3rem",
+          fontSize: "12px",
           transform: "rotate(180deg)",
         },
       };
@@ -84,19 +84,19 @@ export function icon(status) {
     case "MAINTENANCE":
       iconProps = {
         icon: faWrench,
-        style: { color: "black", fontSize: "0.3rem" },
+        style: { color: "black", fontSize: "12px" },
       };
       break;
     case "REBOOT":
       iconProps = {
         icon: faRefresh,
-        style: { color: "black", fontSize: "0.3rem" },
+        style: { color: "black", fontSize: "12px" },
       };
       break;
     case "SUSPENDED":
       iconProps = {
         icon: faMoon,
-        style: { color: "blue", fontSize: "0.3rem" },
+        style: { color: "blue", fontSize: "12px" },
       };
       break;
     default:
@@ -167,7 +167,7 @@ export function renderDataCenterStatusIcon(status) {
         fixedWidth
         style={{
           color: "lime",
-          fontSize: "0.3rem",
+          fontSize: "12px",
           transform: "rotate(270deg)",
         }}
       />
@@ -177,7 +177,7 @@ export function renderDataCenterStatusIcon(status) {
       <FontAwesomeIcon
         icon={faPlay}
         fixedWidth
-        style={{ color: "red", fontSize: "0.3rem", transform: "rotate(90deg)" }}
+        style={{ color: "red", fontSize: "12px", transform: "rotate(90deg)" }}
       />
     );
   } else if (status === "MAINTENANCE") {
@@ -185,7 +185,7 @@ export function renderDataCenterStatusIcon(status) {
       <FontAwesomeIcon
         icon={faWrench}
         fixedWidth
-        style={{ color: "black", fontSize: "0.3rem" }}
+        style={{ color: "black", fontSize: "12px" }}
       />
     );
   }
@@ -200,7 +200,7 @@ export function renderStatusClusterIcon(connect, status) {
         fixedWidth
         style={{
           color: "lime",
-          fontSize: "0.3rem",
+          fontSize: "12px",
           transform: "rotate(270deg)",
         }}
       />
@@ -210,7 +210,7 @@ export function renderStatusClusterIcon(connect, status) {
       <FontAwesomeIcon
         icon={faPlay}
         fixedWidth
-        style={{ color: "red", fontSize: "0.3rem", transform: "rotate(90deg)" }}
+        style={{ color: "red", fontSize: "12px", transform: "rotate(90deg)" }}
       />
     );
   } else if (!connect) {
@@ -227,7 +227,7 @@ export const renderUpDownStatusIcon = (status) => {
         fixedWidth
         style={{
           color: "green",
-          fontSize: "0.3rem",
+          fontSize: "12px",
           transform: "rotate(270deg)",
         }}
       />
@@ -237,7 +237,7 @@ export const renderUpDownStatusIcon = (status) => {
       <FontAwesomeIcon
         icon={faPlay}
         fixedWidth
-        style={{ color: "red", fontSize: "0.3rem", transform: "rotate(90deg)" }}
+        style={{ color: "red", fontSize: "12px", transform: "rotate(90deg)" }}
       />
     );
   }
@@ -252,7 +252,7 @@ export const renderTFStatusIcon = (status) => {
         fixedWidth
         style={{
           color: "green",
-          fontSize: "0.3rem",
+          fontSize: "12px",
           transform: "rotate(270deg)",
         }}
       />
@@ -262,7 +262,7 @@ export const renderTFStatusIcon = (status) => {
       <FontAwesomeIcon
         icon={faPlay}
         fixedWidth
-        style={{ color: "red", fontSize: "0.3rem", transform: "rotate(90deg)" }}
+        style={{ color: "red", fontSize: "12px", transform: "rotate(90deg)" }}
       />
     );
   }
@@ -296,7 +296,7 @@ export const renderSeverityIcon = (severity) => {
         <FontAwesomeIcon
           icon={faCheckCircle}
           fixedWidth
-          style={{ color: "green", fontSize: "0.3rem" }}
+          style={{ color: "green", fontSize: "12px" }}
         />
       );
     case "ERROR":
@@ -305,7 +305,7 @@ export const renderSeverityIcon = (severity) => {
           <FontAwesomeIcon
             icon={faTimesCircle}
             fixedWidth
-            style={{ color: "purple", fontSize: "0.3rem" }}
+            style={{ color: "purple", fontSize: "12px" }}
           />
         </>
       );
@@ -314,7 +314,7 @@ export const renderSeverityIcon = (severity) => {
         <FontAwesomeIcon
           icon={faWarning}
           fixedWidth
-          style={{ color: "red", fontSize: "0.3rem" }}
+          style={{ color: "red", fontSize: "12px" }}
         />
       );
     default:

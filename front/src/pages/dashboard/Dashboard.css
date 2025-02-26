@@ -43,7 +43,7 @@
   width: 33.3%;
 }
 .bar span {
-  font-size: 0.36rem;
+  font-size: var(--fs-default);
   text-align: center;
   font-weight: 600;
   display: block;
@@ -60,7 +60,7 @@
   margin-top: 0.2rem;
 }
 .wave-graph > h2 {
-  font-size: 0.37rem;
+  font-size: var(--fs-default);
   margin-left: 9px;
   margin-bottom: 5px;
   color: #000000;

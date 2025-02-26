@@ -1,17 +1,17 @@
 .header {
-  display:flex;justify-content:space-between;align-items:center;
   position:relative;width:100%;height:var(--h-rutil-header);
-  padding:0 5px;
   background-color:#ffffff;
   border-bottom: 1px solid #aaa;
+  border-radius: 3px 3px 0 0;
+  margin-bottom:1px;
+  padding:0 5px;
 }
 .header-right {
-  font-size: var(--fs-18);
   display:flex;justify-content:flex-end;align-items:center; /* 세로 중앙 정렬 추가 */
 }
 .menu-icon {
   padding: 8px;
-  font-size: var(--fs-18);
+  font-size: var(--fs-21);
   color: rgb(145, 150, 155);
   cursor: pointer;
 }
@@ -29,7 +29,7 @@
 .header-left {
   display:flex;justify-content:space-between;align-items: center;
   font-size: var(--fs-big);
-  min-width: 6%;
+  width: 130px;
 }
 .header-left span {
   font-size: var(--fs-18);
@@ -58,7 +58,7 @@
   right:0;
   font-size: var(--fs-default-4);
   border: 1px solid rgb(204, 204, 204);
-  top: 47px;
+  top: 51px;
   border-radius: 3px;
 }
 .user-loginbox > div {
@@ -75,7 +75,7 @@
   right: 0;
   font-size: var(--fs-default-4);
   border: 1px solid rgb(204, 204, 204);
-  top: 47px;
+  top: 51px;
   height: 89.6vh;
   border-radius: 2px;
 }

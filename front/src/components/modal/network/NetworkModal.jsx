@@ -296,13 +296,7 @@ const NetworkModal = ({
           />
           {/* <label style={{fontSize: "0.32rem" }}>DNS 설정</label> */}
 
-          <div
-            style={{
-              fontSize: "0.32rem",
-              padding: "0 1em",
-              fontWeight: "800",
-            }}
-          >
+          <div className="text-[15px] p-1 font-bold">
             DNS 서버
           </div>
 

@@ -15,7 +15,7 @@
 .network-new-cluster-table th,
 .network-new-cluster-table td {
   border: var(--border-simple);
-  padding: 0.05rem;
+  padding: 1px 3px;
 }
 
 .network-new-cluster-form {

@@ -522,7 +522,7 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                                       {hasVMs && (
                                         <FontAwesomeIcon
                                           style={{
-                                            fontSize: "0.3rem",
+                                            fontSize: "12px",
                                             marginRight: "0.04rem",
                                           }}
                                           icon={
@@ -944,7 +944,7 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                 className={getClassNames("computing")}
                 onClick={() => {
                   handleClick("computing");
-                  setSelectedDiv(null); // 선택된 div를 null로 설정하여 루틸 매니저가 선택되지 않도록 함
+                  setSelectedDiv(null); 
                 }}
                 style={{ backgroundColor: asidePopupBackgroundColor.computing }}
               >
@@ -958,7 +958,7 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                 className={getClassNames("network")}
                 onClick={() => {
                   handleClick("network");
-                  setSelectedDiv(null); // 루틸 매니저 선택을 방지하기 위해 selectedDiv를 null로 설정
+                  setSelectedDiv(null);
                 }}
                 style={{ backgroundColor: asidePopupBackgroundColor.network }}
               >

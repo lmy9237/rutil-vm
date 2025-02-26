@@ -30,9 +30,9 @@
 .aside-outer {
   position: relative;
   overflow: hidden;
-  transition: width 0.1s ease-in-out; /* 부드러운 크기 변화 */
   margin-right: 0.07rem;
   width: var(--w-aside-menu);
+  background:white;
 }
 
 .aside-outer.closed {
@@ -44,16 +44,18 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 1px;
 }
 .main-outer {
-  height: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer));
+  height: calc(100% - var(--h-rutil-header));
   width: 100%;
   display: flex;justify-content: space-between;
 }
 
 .blue-text {
   color: rgb(43, 43, 43);
-  border-radius: 0.3rem;
+  border-radius: 50%;
+  padding: 0px 5px;
 }
 
 #aside {
@@ -72,7 +74,7 @@
   display: flex;
   width: 100%;
   color: rgb(105, 105, 105);
-  padding: 11px 2px;
+  padding: 16px 2px;
 }
 .nav > a {
   margin-right: 17px;
@@ -83,10 +85,10 @@
 }
 
 .aside-popup {
-  width: 99.4%;
   background-color: white;
   display: block;
   overflow-y: auto;
+  font-size: var(--fs-15);
   height: 94.4%;
   max-height: 100%;
   position: relative;
@@ -94,9 +96,8 @@
 
 .aside-popup > div > div {
   color: rgb(145, 150, 155);
-  font-size: var(--fs-default);
   cursor: pointer;
-  padding-top: 0.1rem;
+  padding: 3px 5px;
 }
 
 .aside-popup-content i:first-child,

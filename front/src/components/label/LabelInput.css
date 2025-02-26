@@ -2,7 +2,7 @@
 .input-select, 
 .input-number{
   width: 100%;
-  padding: 0.16rem 0.2rem;
+  padding: 8px;
   display: flex;justify-content: space-between;align-items: center;
 }
 .input-checkbox{
