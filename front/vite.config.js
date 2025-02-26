@@ -13,6 +13,9 @@ const VITE_CONFIG = ({ mode }) => {
   return defineConfig({
     // root: path.resolve(__dirname, 'public'),
     plugins: [react(), mkcert()],
+    css: {
+      devSourcemap: true,
+    },
     define: {
       global: 'window'
     },
