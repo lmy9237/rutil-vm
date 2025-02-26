@@ -665,9 +665,9 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
             icon={net.status === "UP" ? faPlay : faPlay}
             style={{
               color: net.status === "UP" ? "red" : "green",
-              fontSize: "0.3rem",
+              fontSize: "13px",
               transform: "rotate(270deg)",
-              marginRight: "0.3rem",
+              marginRight: "9px",
             }}
           />
           {net.name}
@@ -685,7 +685,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
     >
       {/* <div className="host-nework-content-popup modal"> */}
       <div className="popup-content-outer px-2">
-        <div className="py-1 font-bold underline">드래그 하여 변경</div>
+        <div className="py-3 font-bold underline">드래그 하여 변경</div>
         <div className="host-network-separation f-btw">
           <div className="network-separation-left">
             <div className ="f-btw">
@@ -706,7 +706,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
                       style={{
                         color: "grey",
                         width: "5vw",
-                        fontSize: "0.6rem",
+                        fontSize: "20px",
                       }}
                     />
                   </div>
@@ -724,7 +724,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
 
           {/* Unassigned Networks */}
           <div
-            className="network_separation_right"
+            className="network-separation-right"
             onDragOver={(e) => e.preventDefault()}
             onDrop={() => drop(null, "unassigned")}
           >

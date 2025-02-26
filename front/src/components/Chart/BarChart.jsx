@@ -29,7 +29,7 @@ const BarChart = ({ names, percentages }) => {
       textAnchor: "start",
       style: {
         colors: ["#fff"],
-        fontSize: "0.25rem", // 텍스트 크기를 rem 단위로 설정합니다.
+        fontSize: "12px", // 텍스트 크기를 rem 단위로 설정합니다.
         fontWeight: "400",
       },
       formatter: function (val, opt) {
@@ -94,18 +94,18 @@ const BarChart = ({ names, percentages }) => {
   // 반응형
   const [chartWidth, setChartWidth] = useState(window.innerWidth * 0.15);
   const [chartHeight, setChartHeight] = useState(window.innerHeight * 0.2);
-  useEffect(() => {
-    const handleResize = () => {
-      setChartWidth(window.innerWidth * 0.15); // 창 너비의 50%
-      setChartHeight(window.innerHeight * 0.2); // 창 높이의 30%
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setChartWidth(window.innerWidth * 0.15); 
+  //     setChartHeight(window.innerHeight * 0.2); 
+  //   };
 
-    window.addEventListener("resize", handleResize); // 창 크기 변경 감지
+  //   window.addEventListener("resize", handleResize); 
 
-    return () => {
-      window.removeEventListener("resize", handleResize); // 컴포넌트 언마운트 시 이벤트 리스너 제거
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize); 
+  //   };
+  // }, []);
   useEffect(() => {
     setSeries([{ data: percentages }]);
     setChartOptions((prevOptions) => ({
@@ -124,8 +124,7 @@ const BarChart = ({ names, percentages }) => {
           options={chartOptions}
           series={series}
           type="bar"
-          width={chartWidth}
-          height={chartHeight}
+        
         />
       </div>
       <div id="html-dist"></div>

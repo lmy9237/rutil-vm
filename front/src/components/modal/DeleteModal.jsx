@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import BaseModal from "./BaseModal";
 import { warnButton, xButton } from "../Icon";
 
-/* 쓰는곳거의없음 */
+/*안씀 쓰는곳거의없음 */
 /**
  * @name DeleteModal
  * @description ...

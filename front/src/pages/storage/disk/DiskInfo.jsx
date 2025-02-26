@@ -94,7 +94,7 @@ const DiskInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full px-[0.5rem] py-[0.5rem] info-content">
+        <div className="w-full info-content">
           <Path pathElements={pathData} basePath={`/storages/disks/${diskId}`}/>
           {renderSectionContent()}
         </div>

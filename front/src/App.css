@@ -17,7 +17,7 @@ html {
   --h-modal-footer: 60px;                /* 모달 푸터 부분 높이 */
   --h-right-btn: 30px;  
   --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
-  --w-aside-menu:240px;     
+  --w-aside-menu:243px;     
   --w-nav:160px; /*nav넓이이*/   
   
 
@@ -61,8 +61,8 @@ html {
 }
 body { width:100%;height:100%;}
 #root {
-  /* background-color: #ebeeee; */
-  background-color: #20acac;/*임시시*/
+  background-color: #ebeeee;
+  /* background-color: #20acac; */
   text-rendering: optimizeLegibility;
   padding: 3px;
   width:100%;height:100%;display:flex;justify-content:flex-start;align-items:center;flex-direction:column;
@@ -123,7 +123,7 @@ input[disabled] {
 }
 .section-content{
   height: calc(100% - var(--h-section-header));
-
+  padding: 15px;
 }
 .info-content{
     width: calc(100% - var(--w-nav));
@@ -207,6 +207,7 @@ input[disabled] {
 .right-click-menu-box 
 .right-click-menu-btn 
 {
+  font-size: var(--fs-13);
   width: 100%;
   padding: 0.07rem;
   text-align: left;
@@ -214,12 +215,6 @@ input[disabled] {
   opacity: 1;
   border: 0.3px solid #cbc9c9;
 }
-
-.empty-nav-outer {
-  width: 100%;
-  padding: 0.6rem 0.3rem;
-}
-
 .select-box-outer {
   width: 100%;
   padding: 1% 0.3rem;
@@ -300,14 +295,13 @@ input[disabled] {
 .table {
   border-collapse: collapse;
   width: 100%;
-  font-size: 0.33rem;
 }
 .table th,
 .table td {
-  padding: 4.6px;
+  padding: 4.5px;
   vertical-align: top;
   border: none;
-  font-size: 0.32rem;
+  font-size: var(--fs-default-4);
 }
 
 .table th {
@@ -371,9 +365,9 @@ input[type="password"],
 select {
   border: 1px solid rgb(206, 206, 206);
   border-radius: 3px;
-  padding: 0 0.1rem;
+  padding: 0 4px;
   height: 30px;
-  font-size: 13px;
+  font-size: var(--fs-13);
   outline: none;
   width:50%;
 }
@@ -416,10 +410,12 @@ textarea {
 }
 /*삭제모달*/
 .disk-delete-box {
-  padding: 0.2rem;
+    display: flex;
+    height: 100%;
+    padding: 0 25px;
+    align-items: center;
 }
 .disk-delete-box > div {
-  padding: 0.4rem;
   color: #3737ba;
 }
 .network_new_nav div.active {
@@ -433,20 +429,20 @@ textarea {
   width: 48%;
 }
 .network-backup-edit-nav {
-  font-size: 0.33rem;
+  font-size: var(--fs-default);
   height: 41vh;
-  width: 30%;
+  width: 27%;
   background-color: #fafafa;
   border-right: var(--border-simple);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   font-weight: 800;
 }
 .network-backup-edit-nav > div {
-  padding: 0.4rem 0.2rem;
+  padding: 14px 6px;
   cursor: pointer;
 }
 .backup-edit-content {
-  font-size: 0.33rem;
+  font-size: var(--fs-default);
   width: 86%;
 }
 

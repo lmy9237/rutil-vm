@@ -65,15 +65,15 @@
   border: 1px solid #a3a3a3;
   display: flex;
   justify-content: space-between;
-  padding: 0.15rem;
-  margin-bottom: 0.16rem;
+  padding: 8px;
+  margin-bottom: 7px;
 }
 .separation-left-content:last-child {
   margin-bottom: 1rem;
 }
 .interface {
   border: 1px solid #a3a3a3;
-  padding: 0.1rem;
+  padding: 5px;
   width: 39%;
 }
 .host-network-outer {
@@ -120,9 +120,9 @@
   align-items: center;
   margin-right: 10px;
 }
-.network_separation_right {
+.network-separation-right {
   width: 33%;
-  padding: 0 0.5rem;
+  padding: 0 11px;
 }
 .right-section {
   display: flex;

@@ -55,7 +55,7 @@ const VmDisk = ({
 
   return (
     <>
-      <div className="instance-image center">
+      <div className="instance-image center px-2">
         <div className="font-bold">인스턴스 이미지</div>
         <div style={{ display: "flex", gap: "8px" }}>
           <button onClick={() => setIsConnectionPopupOpen(true)}>연결</button>

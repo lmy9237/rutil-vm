@@ -33,7 +33,7 @@ const Event = () => {
         togglePopup={() => {}}
       />
       <div className="content-outer">
-        <div className="empty-nav-outer">
+        <div className="section-content w-full">
           <EventDupl
             isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
             events={events}

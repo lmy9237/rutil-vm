@@ -28,7 +28,7 @@ console.log("...")
         titleIcon={faDesktop}
         title="가상머신"
       />
-      <div className="w-full px-[0.5rem] py-[0.5rem] section-content">
+      <div className="w-full section-content">
         <VmDupl
           isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
           columns={TableColumnsInfo.VMS}

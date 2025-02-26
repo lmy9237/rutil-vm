@@ -21,7 +21,7 @@ const AllDisk = () => {
       <div>
         <HeaderButton titleIcon={faDatabase} title="디스크" />
       </div>
-      <div className="w-full px-[0.5rem] py-[0.5rem] section-content">
+      <div className="w-full section-content">
         <DiskDupl
           isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
           disks={disks} columns={TableColumnsInfo.DISKS}

@@ -34,18 +34,17 @@
 
 /*디스크(업로드)*/
 .storage-upload-first {
-  padding: 0.4rem;
+  padding: 12px;
   display: flex;
-  margin-bottom: 1rem;
+  margin-bottom: 20px;
 }
 .storage-upload-first > button {
   font-weight: 600;
-  margin-right: 0.4rem;
-  padding: 0.1rem;
+  margin-right: 16px;
 }
 
 .disk-option {
   background-color: #e6e6e6;
   font-weight: 600;
-  padding: 0.35rem 0.4rem;
+  padding: 10px;
 }

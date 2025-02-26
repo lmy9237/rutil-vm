@@ -26,7 +26,7 @@ const RadialBarChart = ({ percentage }) => {
           },
           value: {
             show: true,
-            fontSize: "0.6rem", // 값 크기를 rem 단위로 설정합니다.
+            fontSize: "30px", // 값 크기를 rem 단위로 설정합니다.
             fontWeight: "bold",
             color: "#111",
             offsetY: 10, // 텍스트를 아래로 이동
@@ -37,8 +37,8 @@ const RadialBarChart = ({ percentage }) => {
         },
         track: {
           background: "#f0f0f0",
-          strokeWidth: "100%", // 선 두께 설정
-          margin: -3, // 차트 간격 설정
+          strokeWidth: "100%", 
+          margin: -3,// 선 두께 설정
         },
         stroke: {
           lineCap: "round", // 선의 끝 모양 설정

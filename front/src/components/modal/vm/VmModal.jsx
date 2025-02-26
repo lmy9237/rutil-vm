@@ -422,7 +422,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
                 options={clusters}
                 etcLabel={dataCenterVo.name}
               />
-              <div><span>데이터센터: {dataCenterVo.name}</span></div>
+              <div className="pl-2"><span>데이터센터: {dataCenterVo.name}</span></div>
               <LabelSelectOptionsID
                 label="템플릿"
                 value={templateVo.id}

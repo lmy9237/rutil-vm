@@ -47,11 +47,12 @@ const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "660px", height: "200px" }} 
     >
-      {/* <div className="storage-delete-popup modal"> */}
-      <div className="disk-delete-box">
-        <div>
-          {warnButton()}
-          <span> {names.join(", ")} 를(을) 삭제하시겠습니까? </span>
+      <div className="popup-content-outer">
+        <div className="disk-delete-box">
+          <div>
+            {warnButton()}
+            <span> {names.join(", ")} 를(을) 삭제하시겠습니까? </span>
+          </div>
         </div>
       </div>
     </BaseModal>

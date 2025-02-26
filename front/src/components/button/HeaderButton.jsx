@@ -64,7 +64,7 @@ const HeaderButton = ({
             <FontAwesomeIcon
               icon={titleIcon}
               className="title_icon"
-              style={{ marginRight: "0.34rem" }}
+              style={{ marginRight: "12px" }}
             />
           )}
           <p>{title}</p>

@@ -62,7 +62,7 @@
   width: 100%;
   background-color: #ffffff;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.13);
-  border-right: 1px solid rgb(219 219 219);
+  /* border-right: 1px solid rgb(219 219 219); */
   font-size: var(--fs-big);
   margin-bottom: 0.04rem;
   padding: 0.1rem;
@@ -74,10 +74,13 @@
   display: flex;
   width: 100%;
   color: rgb(105, 105, 105);
-  padding: 16px 2px;
+  padding: 15px 2px;
 }
 .nav > a {
   margin-right: 17px;
+}
+.nav > a:last-child{
+  margin-right: 0 !important;
 }
 .link-no-underline {
   text-decoration: none;
@@ -97,16 +100,10 @@
 .aside-popup > div > div {
   color: rgb(145, 150, 155);
   cursor: pointer;
-  padding: 3px 5px;
+  /* padding: 3px 5px; */
 }
 
-.aside-popup-content i:first-child,
-.aside-popup-second-content i:first-child,
-.aside-popup-third-content i:first-child,
-.aside-popup-fourth-content i:first-child {
-  font-size: var(--fs-default);
-  margin-right: 0.27rem;
-}
+
 .aside-popup-content > span,
 .aside-popup-second-content > span,
 .aside-popup-third-content > span,
@@ -140,7 +137,7 @@
   background-color: #e6eefa;
 }
 .aside-popup-third-content {
-  padding-left: 3rem;
+  padding-left: 54px;
 }
 
 
@@ -161,7 +158,6 @@
   height: 100%;
   cursor: col-resize;
   z-index: 100;
-  /* user-select: none;  ✅ 기본적으로 드래그 시 텍스트 선택 방지 */
 }
 
 .resizer:hover {

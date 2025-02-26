@@ -57,7 +57,7 @@ const DomainDupl = ({
                 fixedWidth
                 style={{
                   color: "gold",
-                  fontSize: "0.3rem",
+                  fontSize: "12px",
                   transform: "rotate(90deg)",
                 }}
               />

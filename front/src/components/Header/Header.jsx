@@ -108,7 +108,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
           <div className="user-loginbox" 
             onClick={stopPropagation}
           >
-          <div>계정설정</div>
+            <div>계정설정</div>
             <div onClick={(e) => handleLogout(e)}>로그아웃</div>
           </div>
         )}

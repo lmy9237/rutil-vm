@@ -245,7 +245,9 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
   const [openNetworkDataCenters, setOpenNetworkDataCenters] = useState(
     () => JSON.parse(localStorage.getItem("openNetworkDataCenters")) || {}
   );
-
+  const getPaddingLeft = (hasChildren, basePadding = "1rem", extraPadding = "0.6rem") => {
+    return hasChildren ? extraPadding : basePadding;
+  };
   // 상태가 변경될 때마다 localStorage에 저장
   useEffect(() => {
     localStorage.setItem("isSecondVisible", JSON.stringify(isSecondVisible));
@@ -399,6 +401,10 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
               }}
             >
               <FontAwesomeIcon
+                style={{
+                  fontSize: "12px",
+                  marginRight: "0.04rem",
+                }}
                 icon={isSecondVisible ? faChevronDown : faChevronRight}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -416,204 +422,127 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
               navClusters.map((dataCenter) => {
                 const isDataCenterOpen =
                   openComputingDataCenters[dataCenter.id] || false;
-                const hasClusters =
-                  Array.isArray(dataCenter.clusters) &&
-                  dataCenter.clusters.length > 0;
-                return (
-                  <div key={dataCenter.id}>
-                    <div
-                      className="aside-popup-second-content"
-                      style={{
-                        backgroundColor: getBackgroundColor(dataCenter.id),
-                      }}
-                      onClick={() => {
-                        setSelectedDiv(dataCenter.id);
-                        navigate(
-                          `/computing/datacenters/${dataCenter.id}/clusters`
-                        );
-                      }}
-                    >
-                      {hasClusters && (
-                        <FontAwesomeIcon
-                          icon={
-                            isDataCenterOpen ? faChevronDown : faChevronRight
-                          }
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleComputingDataCenter(dataCenter.id);
-                          }}
-                          fixedWidth
-                        />
-                      )}
-                      <FontAwesomeIcon icon={faLayerGroup} fixedWidth />
-                      <span>{dataCenter.name}</span>
-                    </div>
+                  const hasClusters =
+                    Array.isArray(dataCenter.clusters) &&
+                    dataCenter.clusters.length > 0;
+                  return (
+                    <div key={dataCenter.id}>
+                      <div
+                        className="aside-popup-second-content"
+                        style={{
+                          backgroundColor: getBackgroundColor(dataCenter.id),
+                          paddingLeft: getPaddingLeft(hasClusters, "33px", "17px"), // ✅ 적용
+                        }}
+                        onClick={() => {
+                          setSelectedDiv(dataCenter.id);
+                          navigate(`/computing/datacenters/${dataCenter.id}/clusters`);
+                        }}
+                      >
+                        {hasClusters && (
+                          <FontAwesomeIcon
+                            style={{
+                              fontSize: "12px",
+                              marginRight: "0.04rem",
+                            }}
+                            icon={isDataCenterOpen ? faChevronDown : faChevronRight}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleComputingDataCenter(dataCenter.id);
+                            }}
+                            fixedWidth
+                          />
+                        )}
+                        <FontAwesomeIcon icon={faLayerGroup} fixedWidth />
+                        <span>{dataCenter.name}</span>
+                      </div>
 
                     {/* 세 번째 레벨 (Clusters) */}
-                    {isDataCenterOpen &&
-                      Array.isArray(dataCenter.clusters) &&
-                      dataCenter.clusters.map((cluster) => {
-                        const isClusterOpen = openClusters[cluster.id] || false;
-                        const hasHosts =
-                          Array.isArray(cluster.hosts) &&
-                          cluster.hosts.length > 0;
-                        return (
+                    {isDataCenterOpen && Array.isArray(dataCenter.clusters) && dataCenter.clusters.map((cluster) => {
+                      const isClusterOpen = openClusters[cluster.id] || false;
+                      const hasHosts = Array.isArray(cluster.hosts) && cluster.hosts.length > 0;
+                      return (
                           <div key={cluster.id}>
-                            <div
-                              className="aside-popup-third-content"
-                              style={{
-                                backgroundColor: getBackgroundColor(cluster.id),
-                              }}
-                              onClick={() => {
-                                setSelectedDiv(cluster.id);
-                                navigate(`/computing/clusters/${cluster.id}`);
-                              }}
-                            >
-                              {hasHosts && (
-                                <FontAwesomeIcon
+                              <div
+                                  className="aside-popup-third-content"
                                   style={{
-                                    fontSize: "0.3rem",
-                                    marginRight: "0.04rem",
-                                  }}
-                                  icon={
-                                    isClusterOpen
-                                      ? faChevronDown
-                                      : faChevronRight
-                                  }
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleCluster(cluster.id); // Only toggles on icon click
-                                  }}
-                                  fixedWidth
-                                />
-                              )}
-                              <FontAwesomeIcon
-                                icon={faEarthAmericas}
-                                fixedWidth
-                              />
-                              <span>{cluster.name}</span>
-                            </div>
-
-                            {/* 네 번째 레벨 (Hosts) */}
-                            {isClusterOpen &&
-                              Array.isArray(cluster.hosts) &&
-                              cluster.hosts.map((host) => {
-                                const isHostOpen = openHosts[host.id] || false;
-                                const hasVMs =
-                                  Array.isArray(host.vms) &&
-                                  host.vms.length > 0;
-                                return (
-                                  <div key={host.id}>
-                                    <div
-                                      className="aside-popup-fourth-content"
-                                      style={{
-                                        backgroundColor: getBackgroundColor(
-                                          host.id
-                                        ),
-                                        paddingLeft: hasVMs
-                                          ? "0.8rem"
-                                          : "1.2rem",
-                                      }}
-                                      onClick={() => {
-                                        setSelectedDiv(host.id);
-                                        navigate(`/computing/hosts/${host.id}`);
-                                      }}
-                                    >
-                                      {hasVMs && (
-                                        <FontAwesomeIcon
-                                          style={{
-                                            fontSize: "12px",
-                                            marginRight: "0.04rem",
-                                          }}
-                                          icon={
-                                            isHostOpen
-                                              ? faChevronDown
-                                              : faChevronRight
-                                          }
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            toggleHost(host.id); // Only toggles on icon click
-                                          }}
-                                          fixedWidth
-                                        />
-                                      )}
-                                      <FontAwesomeIcon
-                                        icon={faUser}
-                                        fixedWidth
-                                      />
-                                      <span>{host.name}</span>
-                                    </div>
-
-                                    {/* 다섯 번째 레벨 (VMs) */}
-                                    {isHostOpen &&
-                                      Array.isArray(host.vms) &&
-                                      host.vms.map((vm) => (
-                                        <div
-                                          key={vm.id}
-                                          className="aside_popup_last_content"
-                                          style={{
-                                            backgroundColor: getBackgroundColor(vm.id),
-                                          }}
-                                          onClick={() => {
-                                            setSelectedDiv(vm.id);
-                                            navigate(`/computing/vms/${vm.id}`);
-                                          }}
-                                        >
-                                          <FontAwesomeIcon
-                                            icon={faMicrochip}
-                                            fixedWidth
-                                          />
-                                          <span>{vm.name}</span>
-                                        </div>
-                                      ))}
-                                  </div>
-                                );
-                              })}
-
-                            {/* vmDowns 정보 추가 */}
-                            {isClusterOpen &&
-                              Array.isArray(cluster.vmDowns) &&
-                              cluster.vmDowns.map((vmDown) => (
-                                <div
-                                  key={vmDown.id}
-                                  className="aside-popup-fourth-content"
-                                  style={{
-                                    backgroundColor: getBackgroundColor(
-                                      vmDown.id
-                                    ),
+                                      backgroundColor: getBackgroundColor(cluster.id),
+                                      paddingLeft: getPaddingLeft(hasHosts, "51px", "35px"),
                                   }}
                                   onClick={() => {
-                                    setSelectedDiv(vmDown.id);
-                                    navigate(`/computing/vms/${vmDown.id}`);
+                                      setSelectedDiv(cluster.id);
+                                      navigate(`/computing/clusters/${cluster.id}`);
                                   }}
-                                >
-                                  <div
-                                    style={{
-                                      position: "relative",
-                                      display: "inline-block",
-                                    }}
-                                  >
-                                    <FontAwesomeIcon
-                                      icon={faMicrochip}
-                                      fixedWidth
-                                    />
-                                    <FontAwesomeIcon
-                                      icon={faSquare}
-                                      fixedWidth
-                                      style={{
-                                        position: "absolute",
-                                        bottom: "4",
-                                        right: "0",
-                                        fontSize: "0.5em",
-                                        color: "rgb(200 0 0)",
-                                      }}
-                                    />
-                                  </div>
-                                  <span>{vmDown.name}</span>
-                                </div>
-                              ))}
-                          </div>
-                        );
+                              >
+                                  {hasHosts && (
+                                      <FontAwesomeIcon
+                                          style={{ fontSize: '12px', marginRight: '0.04rem' }}
+                                          icon={isClusterOpen ? faChevronDown : faChevronRight}
+                                          onClick={(e) => {
+                                              e.stopPropagation();
+                                              toggleCluster(cluster.id);
+                                          }}
+                                          fixedWidth
+                                      />
+                                  )}
+                                  <FontAwesomeIcon icon={faEarthAmericas} fixedWidth />
+                                  <span>{cluster.name}</span>
+                              </div>
+
+                              {/* 네 번째 레벨 (Hosts) */}
+                              {isClusterOpen && Array.isArray(cluster.hosts) && cluster.hosts.map((host) => {
+                                  const isHostOpen = openHosts[host.id] || false;
+                                  const hasVMs = Array.isArray(host.vms) && host.vms.length > 0;
+                                  return (
+                                      <div key={host.id}>
+                                          <div
+                                              className="aside-popup-fourth-content"
+                                              style={{
+                                                  backgroundColor: getBackgroundColor(host.id),
+                                                  paddingLeft: getPaddingLeft(hasVMs, "66px", "50px"),
+                                              }}
+                                              onClick={() => {
+                                                  setSelectedDiv(host.id);
+                                                  navigate(`/computing/hosts/${host.id}`);
+                                              }}
+                                          >
+                                              {hasVMs && (
+                                                  <FontAwesomeIcon
+                                                      style={{ fontSize: '12px', marginRight: '0.04rem'}}
+                                                      icon={isHostOpen ? faChevronDown : faChevronRight}
+                                                      onClick={(e) => {
+                                                          e.stopPropagation();
+                                                          toggleHost(host.id);
+                                                      }}
+                                                      fixedWidth
+                                                  />
+                                              )}
+                                              <FontAwesomeIcon icon={faUser} fixedWidth />
+                                              <span>{host.name}</span>
+                                          </div>
+
+                                          {/* 다섯 번째 레벨 (VMs) */}
+                                          {isHostOpen && Array.isArray(host.vms) && host.vms.map((vm) => (
+                                              <div
+                                                  key={vm.id}
+                                                  className="aside_popup_last_content"
+                                                  style={{
+                                                      backgroundColor: getBackgroundColor(vm.id),
+                                                      paddingLeft: "80px", 
+                                                  }}
+                                                  onClick={() => {
+                                                      setSelectedDiv(vm.id);
+                                                      navigate(`/computing/vms/${vm.id}`);
+                                                  }}
+                                              >
+                                                  <FontAwesomeIcon icon={faMicrochip} fixedWidth />
+                                                  <span>{vm.name}</span>
+                                              </div>
+                                          ))}
+                    </div>
+                );
+            })}
+        </div>
+                          );
                       })}
                   </div>
                 );
@@ -630,18 +559,24 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
               id="aside_popup_first"
               style={{ backgroundColor: getBackgroundColor("rutil-manager") }}
               onClick={() => {
+                if (selectedDiv !== "rutil-manager") {
                 setSelectedDiv("rutil-manager");
                 navigate("/networks/rutil-manager");
+                }
               }}
             >
               <FontAwesomeIcon
+                style={{
+                  fontSize: "12px",
+                  marginRight: "0.04rem",
+                }}
                 icon={openDataCenters.network ? faChevronDown : faChevronRight}
                 onClick={(e) => {
                   e.stopPropagation();
                   setOpenDataCenters((prev) => ({
                     ...prev,
                     network: !prev.network,
-                  })); // Toggle only on icon click
+                  })); 
                 }}
                 fixedWidth
               />
@@ -664,6 +599,8 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                       className="aside-popup-second-content"
                       style={{
                         backgroundColor: getBackgroundColor(dataCenter.id),
+                        paddingLeft: getPaddingLeft(hasNetworks, "33px", "17px"), 
+                        
                       }}
                       onClick={() => {
                         setSelectedDiv(dataCenter.id);
@@ -674,6 +611,10 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                     >
                       {hasNetworks && (
                         <FontAwesomeIcon
+                          style={{
+                            fontSize: "12px",
+                            marginRight: "0.04rem",
+                          }}
                           icon={
                             isDataCenterOpen ? faChevronDown : faChevronRight
                           }
@@ -728,6 +669,10 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
               }}
             >
               <FontAwesomeIcon
+                style={{
+                  fontSize: "12px",
+                  marginRight: "0.04rem",
+                }}
                 icon={isSecondVisible ? faChevronDown : faChevronRight}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -754,6 +699,7 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                       className="aside-popup-second-content"
                       style={{
                         backgroundColor: getBackgroundColor(dataCenter.id),
+                        paddingLeft: getPaddingLeft(hasDomains, "33px", "17px"), 
                       }}
                       onClick={() => {
                         setSelectedDiv(dataCenter.id);
@@ -764,6 +710,10 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                     >
                       {hasDomains && (
                         <FontAwesomeIcon
+                          style={{
+                            fontSize: "12px",
+                            marginRight: "0.04rem",
+                          }}
                           icon={
                             isDataCenterOpen ? faChevronDown : faChevronRight
                           }
