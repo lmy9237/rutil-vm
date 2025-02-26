@@ -51,8 +51,11 @@ open class CertManager(
 	open val address: String
 		get() = connInfo?.host ?: ""
 
-	open val notAfter: Date?
+	private val _notAfter: Date?
 		get() = cert?.notAfter
+
+	open val notAfter: String
+		get() = "${_notAfter ?: "N/A"}"
 
 	open val serialNumber: BigInteger?
 		get() = cert?.serialNumber ?: BigInteger.ZERO
@@ -60,13 +63,13 @@ open class CertManager(
 	private val _daysRemaining: Long?
 		get() {
 			val currentDate = Date()
-			val diffInMillis: Long = (notAfter?.time?.minus(currentDate.time)) ?: -1L
+			val diffInMillis: Long = (_notAfter?.time?.minus(currentDate.time)) ?: -1L
 			return if (diffInMillis == -1L) diffInMillis
 			else diffInMillis / (24*60*60*1000)
 		}
 	open val daysRemaining: String
 		get() = "${_daysRemaining ?: "N/A"}"
-	
+
 	class Builder {
 		private var bAlias:String = "";fun alias(block: () -> String?) { bAlias = block() ?: "" }
 		private var bPath:String = "";fun path(block: () -> String?) { bPath = block() ?: "" }

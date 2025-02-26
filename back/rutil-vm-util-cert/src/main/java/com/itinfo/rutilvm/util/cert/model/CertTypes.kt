@@ -17,6 +17,7 @@ enum class HostCertType(override val alias: String, override val path: String) :
 }
 
 enum class EngineCertType(override val alias: String, override val path: String) : CertType {
+	ENGINE("Engine Certificate", "/etc/pki/ovirt-engine/certs/apache.cer"),
 	ENGINE_SERVER("Engine Server Certificate",  "/etc/pki/ovirt-engine/certs/engine.cer"),
 	ENGINE_CA("Engine CA Certificate", "/etc/pki/ovirt-engine/ca.pem"),
 	UNKNOWN("", "");
