@@ -1834,7 +1834,7 @@ export const useDeleteDiskFromVM = () => {
 
 
 /**
- * @name useConnDisksFromVM
+ * @name useConnDiskFromVM
  * @description 가상머신 디스크 연결 useMutation 훅
  * 
  * @returns useMutation 훅
@@ -1849,7 +1849,28 @@ export const useConnDiskFromVM = () => {
       queryClient.invalidateQueries(['DisksFromVM']); 
     },
     onError: (error) => {
-      console.error('Error attaching disks to VM:', error);
+      console.error('Error attaching disk to VM:', error);
+    },  
+  });
+};
+
+/**
+ * @name useConnDiskListFromVM
+ * @description 가상머신 디스크 연결 복수 useMutation 훅
+ * 
+ * @returns useMutation 훅
+ */
+export const useConnDiskListFromVM = () => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({
+    mutationFn: async ({ vmId, diskAttachmentList }) => {
+      return await ApiManager.attachDisksFromVM(vmId, diskAttachmentList);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['DisksFromVM']); 
+    },
+    onError: (error) => {
+      console.error('Error attaching diskList to VM:', error);
     },  
   });
 };

@@ -648,8 +648,8 @@ fun Connection.activeDiskAttachmentToVm(vmId: String, diskAttachmentId: String):
 
 	val diskAttachment = DiskAttachmentBuilder().id(diskAttachmentId).active(true).build()
 
-	// this.updateDiskAttachmentToVm(vmId, diskAttachment)
-	// 	.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
+	this.updateDiskAttachmentToVm(vmId, diskAttachment)
+		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
 	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "활성화", vmId)
@@ -669,12 +669,10 @@ fun Connection.deactivateDiskAttachmentToVm(vmId: String, diskAttachmentId: Stri
 		throw ErrorPattern.DISK_ATTACHMENT_ACTIVE_INVALID.toError()
 	}
 
-	val diskAttachment =
-		DiskAttachmentBuilder().id(diskAttachmentId).active(false).build()
+	val diskAttachment = DiskAttachmentBuilder().id(diskAttachmentId).active(false).build()
 
-	// this.updateDiskAttachmentToVm(vmId, diskAttachment)
-	// 	.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
-
+	this.updateDiskAttachmentToVm(vmId, diskAttachment)
+		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
 	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "비활성화", vmId)

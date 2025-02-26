@@ -281,6 +281,9 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       }
     }
   }, [clusterVo.id, clusters, osList.length]); // osList 전체가 아닌 length만 의존성에 포함
+
+  
+  console.log("전체 디스크 데이터: ", diskListState)
     
 
   // 초기화 작업
@@ -342,6 +345,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       readOnly: disk?.readOnly,
       passDiscard: false,
       interface_: disk?.interface_,
+      shouldUpdateDisk: disk?.shouldUpdateDisk,
       diskImageVo: {
         id: disk?.id || "", // 기존 디스크 ID (새 디스크일 경우 빈 문자열)
         size: disk?.size * 1024 * 1024 * 1024, // GB → Bytes 변환

@@ -16,6 +16,8 @@ import {
 } from "../../../api/RQHook";
 import { checkKoreanName, convertBytesToGB, convertGBToBytes } from "../../../util";
 
+// 이 모달은 가상머신 생성에서 디스크 생성, 편집에서 사용될 예정
+// 또한 가상머신-디스크 에서 디스크 생성, 편집에서 사용될 예정
 
 const interfaceList = [
   { value: "VIRTIO_SCSI", label: "VirtIO-SCSI" },
@@ -43,21 +45,22 @@ const initialFormState = {
   readOnly: false, // 읽기전용
   // cancelActive: false, // 취소 활성화
   backup: true, // 증분 백업사용
+  shouldUpdateDisk: false,
 };
 
 // type은 vm이면 가상머신 생성할때 디스크 생성하는 창, disk면 가상머신 디스크 목록에서 생성하는
 const VmDiskModal = ({
   isOpen,
   editMode = false,
+  diskType = true,  // t=disk페이지에서 생성 f=vm만들때 같이 생성
   vmId,
+  vmName, //가상머신 생성 디스크 이름
   diskAttachmentId,
   dataCenterId,
-  diskType = true,  // t=disk페이지에서 생성 f=vm만들때 같이 생성
-  onClose,
-  
-  hasBootableDisk,
-  vmName, //가상머신 생성 디스크 이름
+  hasBootableDisk=false, // 부팅가능한 디스크 여부
+  initialDisk,
   onCreateDisk,
+  onClose,  
 }) => {
   const dLabel = editMode ? "편집" : "생성";
   const [activeTab, setActiveTab] = useState("img");
@@ -77,11 +80,36 @@ const VmDiskModal = ({
 
   // 선택한 데이터센터가 가진 도메인 가져오기
   const { data: domains = [], isLoading: isDomainsLoading } = 
-    useAllActiveDomainFromDataCenter(vm?.dataCenterVo?.id || dataCenterId, (e) => ({ ...e }));
+    useAllActiveDomainFromDataCenter(dataCenterId || vm?.dataCenterVo?.id, (e) => ({ ...e }));
 
   // 선택한 도메인이 가진 디스크 프로파일 가져오기
   const { data: diskProfiles = [], isLoading: isDiskProfilesLoading, } = 
     useAllDiskProfileFromDomain(storageDomainVo.id, (e) => ({ ...e }));
+
+  useEffect(() => {
+    if (vmName) {
+      setFormState((prev) => ({ ...prev, alias: vmName }));
+    }
+  }, [vmName]);
+
+  useEffect(() => {
+    if (!editMode && domains && domains.length > 0) {
+      const firstDomain = domains[0];
+      setStorageDomainVo({id: firstDomain.id, name: firstDomain.name});
+    }
+  }, [domains, editMode]);
+  
+  useEffect(() => {
+    if (!editMode && diskProfiles && diskProfiles.length > 0) {
+      setDiskProfileVo({id: diskProfiles[0].id});
+    }
+  }, [diskProfiles, editMode]);
+
+  useEffect(() => {
+    if (!editMode && interfaceList.length > 0 && !formState.interface_) {
+      setFormState((prev) => ({ ...prev, interface_: interfaceList[0].value }));
+    }
+  }, [interfaceList, editMode, formState.interface_]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -105,6 +133,7 @@ const VmDiskModal = ({
         readOnly: diskAttachment?.readOnly || false,
         // cancelActive: diskAttachment?.cancelActive || false,
         backup: diskAttachment?.diskImageVo?.backup || false,
+        // shouldUpdateDisk: true
       });
       setStorageDomainVo({ id: diskAttachment?.diskImageVo?.storageDomainVo?.id || "", name: diskAttachment?.diskImageVo?.storageDomainVo?.name || "" });
       setDiskProfileVo({ id: diskAttachment?.diskImageVo?.diskProfileVo?.id || "", name: diskAttachment?.diskImageVo?.diskProfileVo?.name || "" });
@@ -112,30 +141,29 @@ const VmDiskModal = ({
   }, [isOpen, editMode, diskAttachment]);
 
   useEffect(() => {
-    if (vmName) {
-      setFormState((prev) => ({ ...prev, alias: vmName }));
+    if (!editMode && initialDisk) {
+      setFormState({
+        id: initialDisk?.id || "",
+        size: initialDisk?.size || "",
+        appendSize: 0,
+        alias: initialDisk?.alias || "",
+        description: initialDisk?.description || "",
+        interface_: initialDisk?.interface_ || "VIRTIO_SCSI",
+        sparse: initialDisk?.sparse || false,
+        active: initialDisk?.active || false,
+        wipeAfterDelete: initialDisk?.wipeAfterDelete || false,
+        bootable: initialDisk?.bootable || false,
+        sharable: initialDisk?.sharable || false,
+        readOnly: initialDisk?.readOnly || false,
+        backup: initialDisk?.backup || false,
+        // shouldUpdateDisk: true
+      });
+      setStorageDomainVo({ id: initialDisk?.diskImageVo?.storageDomainVo?.id || "" });
+      setDiskProfileVo({ id: initialDisk?.diskImageVo?.diskProfileVo?.id || ""});
     }
-  }, [vmName]);
-
-  useEffect(() => {
-    if (!editMode && domains && domains.length > 0) {
-      const firstDomain = domains[0];
-      setStorageDomainVo({id: firstDomain.id, name: firstDomain.name});
-    }
-  }, [domains, editMode]);
+  }, [editMode, initialDisk]);
   
 
-  useEffect(() => {
-    if (!editMode && diskProfiles && diskProfiles.length > 0) {
-      setDiskProfileVo({id: diskProfiles[0].id});
-    }
-  }, [diskProfiles, editMode]);
-
-  useEffect(() => {
-    if (!editMode && interfaceList.length > 0 && !formState.interface_) {
-      setFormState((prev) => ({ ...prev, interface_: interfaceList[0].value }));
-    }
-  }, [interfaceList, editMode, formState.interface_]);
 
   const handleInputChange = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
@@ -155,22 +183,39 @@ const VmDiskModal = ({
   };
 
   // vm disk에서 생성 (가상머신 생성x)
-  const handleOkClick = () => {
+  const handleOkClick = () => {    
     const error = validateForm();
     if (error) return toast.error(error);
-    
-    const newDisk = {
-      alias: formState.alias,
-      size: formState.size,
-      interface_: formState.interface_,
-      sparse: formState.sparse,
-      bootable: formState.bootable,
-      readOnly: formState.readOnly,
-      storageDomainVo: { id: storageDomainVo.id },
-      diskProfileVo: { id: diskProfileVo.id },
-      isCreated: true, // 🚀 생성된 디스크는 isCreated: true
+ 
+    // GB -> Bytes 변환
+    const sizeToBytes = convertGBToBytes(parseInt(formState.size, 10));
+    // GB -> Bytes 변환 (기본값 0)
+    const appendSizeToBytes = convertGBToBytes(parseInt(formState.appendSize || 0, 10)); 
+
+    const selectedDomain = domains.find((dm) => dm.id === storageDomainVo.id);
+    const selectedDiskProfile = diskProfiles.find((dp) => dp.id === diskProfileVo.id);
+
+    // 전송 객체
+    const dataToSubmit = {
+      ...formState,
+      diskImageVo: {
+        // id:formState?.id,
+        alias: formState.alias,
+        size: sizeToBytes,
+        appendSize: appendSizeToBytes,
+        description: formState.description,
+        wipeAfterDelete: formState.wipeAfterDelete,
+        backup: formState.backup,
+        sparse: Boolean(formState.sparse),
+        storageDomainVo: { id: selectedDomain?.id },
+        diskProfileVo: { id: selectedDiskProfile?.id },
+      },
+      shouldUpdateDisk: true,
+      isCreated: true,
     };
-    onCreateDisk(newDisk);
+    console.log("생성: ", dataToSubmit)
+
+    onCreateDisk(dataToSubmit);
     onClose();
   };
 
@@ -345,7 +390,7 @@ const VmDiskModal = ({
                 id="bootable" 
                 checked={Boolean(formState.bootable)} 
                 onChange={handleInputChangeCheck("bootable")}
-                disabled={!formState.bootable} 
+                disabled={hasBootableDisk} 
                 // TODO: bootable처리 
               />
 

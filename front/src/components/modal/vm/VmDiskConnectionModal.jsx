@@ -1,7 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
-import { useConnDiskFromVM, useFindDiskListFromDataCenter } from "../../../api/RQHook";
+import { useConnDiskListFromVM, useFindDiskListFromDataCenter } from "../../../api/RQHook";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { checkZeroSizeToGB, convertBytesToGB } from "../../../util";
 import TablesOuter from "../../table/TablesOuter";
@@ -17,16 +17,15 @@ const interfaceList = [
 // type이 disk면 vm disk목록에서 연결, 다른건 가상머신 생성에서 디스크연결
 const VmDiskConnectionModal = ({
   isOpen,
+  diskType = true,  // t=disk페이지에서 생성 f=vm만들때 같이 생성
   vmId,
   dataCenterId,
-  onClose,
-  hasBootableDisk,
-  diskType = true,  // t=disk페이지에서 생성 f=vm만들때 같이 생성
-
-  existingDisks = [],
+  hasBootableDisk, // 부팅가능한 디스크 여부
   onSelectDisk,
+  existingDisks,
+  onClose,
 }) => {
-  const { mutate: connDiskVm } = useConnDiskFromVM();
+  const { mutate: connDiskListVm } = useConnDiskListFromVM();
   // const { } = useConnDiskFromVM(vmId, )
   // 데이터센터 밑에 잇는 디스크 목록 검색
   const { 
@@ -42,6 +41,9 @@ const VmDiskConnectionModal = ({
   const [selectedReadOnly, setSelectedReadOnly] = useState({}); // 읽기전용
   const [selectedBootable, setSelectedBootable] = useState({}); // 부팅가능
 
+  // 기존에 연결된 디스크 ID 목록 생성
+  const existingDiskIds = new Set(existingDisks?.map(disk => disk.id));
+
   // 인터페이스 변경
   const handleInterfaceChange = (diskId, newInterface) => {
     setSelectedInterfaces((prev) => ({
@@ -49,105 +51,63 @@ const VmDiskConnectionModal = ({
       [diskId]: newInterface, // diskId를 키로 새로운 인터페이스 값 저장
     }));
   };
+  
+  // 가상머신 생성 - 디스크 연결
+  const handleOkClick = () => {
+    if (selectedDisks.length > 0) {
+      const selectedDiskLists = selectedDisks.map((diskId) => {
+        const diskDetails = attDisks.find((disk) => disk?.id === diskId);
+        if (!diskDetails) return null;
+  
+        return {
+          id: diskId,
+          alias: diskDetails.alias,  // 디스크 이름 추가
+          size: convertBytesToGB(diskDetails.virtualSize), // GB 변환
+          interface_: selectedInterfaces[diskId] || "VIRTIO_SCSI",
+          readOnly: selectedReadOnly[diskId] || false,
+          bootable: selectedBootable[diskId] || false,
+          isCreated: false, // 🚀 연결된 디스크 표시
+        };
+      }).filter(Boolean);
+  
+      onSelectDisk(selectedDiskLists); // 선택된 디스크를 VmDisk에 전달
+      onClose();
+    } else {
+      toast.error("디스크를 선택하세요!");
+    }
+  };
+  
 
-  // 가상머신 생성&편집 - 디스크 연결하기
+  // 가상머신 - 디스크 연결하기
   const handleFormSubmit = () => {
     if (selectedDisks.length > 0) {
       const selectedDiskLists = selectedDisks.map((diskId) => {
         const diskDetails = attDisks.find((disk) => disk?.id === diskId);
         if (!diskDetails) return null; // 선택된 디스크가 존재할 경우에만 추가
-
         return {
-          id: diskId,
-          alias: diskDetails?.alias,
           interface_: selectedInterfaces[diskId] || "VIRTIO_SCSI",
           readOnly: selectedReadOnly[diskId] || false,
           bootable: selectedBootable[diskId] || false,
-          virtualSize: convertBytesToGB(diskDetails?.virtualSize),
-          storageDomain: diskDetails?.storageDomainVo?.name,
+          diskImageVo: {
+            id:diskId,
+          },
           isCreated: false, // 🚀 연결된 디스크는 isCreated: false
         };
       })
+
+      console.log("Form Data: ", selectedDiskLists);
       const onSuccess = () => {
         onClose();
         toast.success(`가상머신 디스크 연결 완료`);
       };
       const onError = (err) => toast.error(`Error 연결 disk: ${err}`);
   
-      console.log("Form Data: ", selectedDiskLists);
-
-      // connDiskVm({ vmId: vmId, diskAttachment: }, { onSuccess, onError })
+      connDiskListVm({ vmId, diskAttachmentList: selectedDiskLists}, { onSuccess, onError })
       onClose();
     } else {
       toast.error("디스크를 선택하세요!");
     }
   };
-
-  
-  const handleOkClick = () => {
-    if (selectedDisks.length > 0) {
-      const selectedDiskLists = selectedDisks.map((diskId) => {
-        const diskDetails = attDisks.find((disk) => disk?.id === diskId);
-        if (!diskDetails) return null; // 선택된 디스크가 존재할 경우에만 추가
-
-        return {
-          id: diskId,
-          alias: diskDetails?.alias,
-          interface_: selectedInterfaces[diskId] || "VIRTIO_SCSI",
-          readOnly: selectedReadOnly[diskId] || false,
-          bootable: selectedBootable[diskId] || false,
-          virtualSize: convertBytesToGB(diskDetails?.virtualSize),
-          storageDomain: diskDetails?.storageDomainVo?.name,
-          isCreated: false, // 🚀 연결된 디스크는 isCreated: false
-        };
-      })
-      .filter(Boolean);
-
-      onSelectDisk(selectedDisks);
-      onClose();
-    } else {
-      toast.error("디스크를 선택하세요!");
-    }
-  };
-
-  // useEffect(() => {
-  //   if (isOpen && attDisks.length > 0) {
-  //     // 기존 선택된 디스크 적용 (기존 데이터와 다를 경우만 설정)
-  //     setSelectedDisks((prev) => {
-  //       return JSON.stringify(prev) !== JSON.stringify(existingDisks)
-  //         ? existingDisks
-  //         : prev;
-  //     });
-  //     // 기존 디스크의 인터페이스 및 설정 유지 (초기 상태와 다를 경우만 설정)
-  //     setSelectedInterfaces((prev) => {
-  //       const newInterfaces = {};
-  //       attDisks.forEach((disk) => {
-  //         newInterfaces[disk.id] = "VIRTIO_SCSI";
-  //       });
-  //       return JSON.stringify(prev) !== JSON.stringify(newInterfaces)
-  //         ? newInterfaces
-  //         : prev;
-  //     });
-  //     setSelectedReadOnly((prev) => {
-  //       const newReadOnly = {};
-  //       attDisks.forEach((disk) => {
-  //         newReadOnly[disk.id] = false;
-  //       });
-  //       return JSON.stringify(prev) !== JSON.stringify(newReadOnly)
-  //         ? newReadOnly
-  //         : prev;
-  //     });
-  //     setSelectedBootable((prev) => {
-  //       const newBootable = {};
-  //       attDisks.forEach((disk) => {
-  //         newBootable[disk.id] = false;
-  //       });
-  //       return JSON.stringify(prev) !== JSON.stringify(newBootable)
-  //         ? newBootable
-  //         : prev;
-  //     });
-  //   }
-  // }, [isOpen, attDisks, existingDisks]);
 
   const handleCheckboxChange = (diskId) => {
     setSelectedDisks((prev) =>
@@ -159,7 +119,8 @@ const VmDiskConnectionModal = ({
 
   return (
     <BaseModal 
-      isOpen={isOpen} onClose={onClose}
+      isOpen={isOpen} 
+      onClose={onClose}
       targetName={"가상 디스크"}
       submitTitle={"연결"}
       onSubmit={diskType? handleFormSubmit : handleOkClick}
@@ -190,7 +151,7 @@ const VmDiskConnectionModal = ({
               data={attDisks.length > 0 ? attDisks.map((attDisk) => ({
                 ...attDisk,
                 alias: attDisk?.alias,  // alias 추가
-                virtualSize: checkZeroSizeToGB(attDisk?.virtualSize),
+                virtualSize: convertBytesToGB(attDisk?.virtualSize) + ' GB',
                 actualSize: checkZeroSizeToGB(attDisk?.actualSize),
                 storageDomain: attDisk?.storageDomainVo?.name,
                 status: attDisk?.status === "UNINITIALIZED" ? "초기화되지 않음" : "UP",
@@ -200,6 +161,7 @@ const VmDiskConnectionModal = ({
                     type="checkbox"
                     checked={selectedDisks.includes(attDisk.id)}
                     onChange={() => handleCheckboxChange(attDisk.id)}
+                    disabled={existingDiskIds.has(attDisk.id)}
                   />
                 ),
                 interface: (

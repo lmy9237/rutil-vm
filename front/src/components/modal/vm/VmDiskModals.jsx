@@ -34,21 +34,23 @@ const VmDiskModals = ({
     create: (
       <VmDiskModal
         isOpen={activeModal === "create"}
+        diskType={true}
         vmId={vmId || ""}
         vmName={`${vm?.name}_Disk${diskCount}`}
         dataCenterId={vm?.dataCenterVo?.id || ""}
-        onClose={onClose}
         hasBootableDisk={hasBootableDisk}
+        onClose={onClose}
       />
     ),
     edit: (
       <VmDiskModal
-        editMode
         isOpen={activeModal === "edit"}
+        diskType={true}
+        editMode
         vmId={vmId || ""}
         diskAttachmentId={disk?.id || ""}
-        onClose={onClose}
         hasBootableDisk={hasBootableDisk}
+        onClose={onClose}
       />
     ),
     delete: (
@@ -62,11 +64,11 @@ const VmDiskModals = ({
     connect: (
       <VmDiskConnectionModal
         isOpen={activeModal === "connect"}
+        diskType={true}
         vmId={vmId}
         dataCenterId={vm?.dataCenterVo?.id || ""}
-        onClose={onClose}
         hasBootableDisk={hasBootableDisk}
-        diskType={true}
+        onClose={onClose}
       />
     ),
     activate: (
@@ -96,7 +98,6 @@ const VmDiskModals = ({
       {Object.keys(modals).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
-      {/* <span>dc: {vm?.dataCenterVo?.id} vm:{vmId}</span> */}
     </>
   );
 };
