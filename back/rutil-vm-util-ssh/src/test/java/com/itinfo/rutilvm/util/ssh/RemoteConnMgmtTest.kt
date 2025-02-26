@@ -94,7 +94,7 @@ PUc+B4CsVFpbybj8iBf+RQ==
 			}
 		}
 		private val DEFAULT_REMOTE_CONN_HOST01 = RemoteConnMgmt.builder {
-			host { "192.168.0.71" }
+			host { "rutilvm-dev.host02" }
 			port { 22 }
 			id { "root" }
 			prvKey { """-----BEGIN PRIVATE KEY-----

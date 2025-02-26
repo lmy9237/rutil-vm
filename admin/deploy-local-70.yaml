@@ -60,6 +60,7 @@ services:
     volumes:
       - ./rutil-vm-api/logs:/app/logs:rw
       - /root/.ssh:/root/.ssh:rw
+      - /etc/hosts:/etc/hosts:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
       - ovirt_network

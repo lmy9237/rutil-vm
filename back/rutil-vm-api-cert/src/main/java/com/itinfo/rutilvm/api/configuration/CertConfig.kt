@@ -78,12 +78,6 @@ open class CertConfig(
 	}
 
 	@Bean
-	open fun allCertManagers(): List<CertManager> {
-		log.info("parseCerts ...")
-		return vdsmCertManagers() + engineCertManagers()
-	}
-
-	@Bean
 	open fun engineCertManagers(): List<CertManager> {
 		log.info("engineCertManagers ... ")
 		val certs = EngineCertType.values().filter {
@@ -92,25 +86,6 @@ open class CertConfig(
 			it.toCertManager(conn4Engine())
 		}
 		return certs
-	}
-
-	@Bean
-	open fun vdsmCertManagers(): List<CertManager> {
-		log.info("vdsmCertManagers ...")
-		val certs: List<CertManager> = conn4VDSM().map { c ->
-			 HostCertType.values().filter {
-				 it != HostCertType.UNKNOWN
-			 }.map {
-				it.toCertManager(c)
-			}
-		}.flatten()
-		return certs
-	}
-
-	@Bean
-	open fun conn4VDSM(): List<RemoteConnMgmt> {
-		log.info("conn4VDSM ...")
-		return ovirtHostSSHs
 	}
 
 	@Bean

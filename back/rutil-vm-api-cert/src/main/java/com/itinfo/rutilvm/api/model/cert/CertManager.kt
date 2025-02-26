@@ -29,7 +29,7 @@ open class CertManager(
 	override fun toString(): String = gson.toJson(this)
 
 	private val certFileData: ByteArray?
-		get() =  try {
+		get() = try {
 			log.info("certFileData ... path: {}", path)
 			connInfo?.toInsecureSession()?.fetchFile(path)
 		} catch (e: JSchException) {
@@ -38,10 +38,15 @@ open class CertManager(
 		}
 
 	private val cert: X509Certificate?
-		get() = certP.parseCertificate(certFileData)
+		get() = try {
+			certP.parseCertificate(certFileData)
+		} catch (e: NullPointerException) {
+			log.error("something went WRONG ... reason: {}", e.localizedMessage)
+			null
+		}
 
 	open val version: String
-		get() = "v${cert?.version ?: 0}"
+		get() = if (cert == null) "N/A" else "v${cert?.version}"
 
 	open val address: String
 		get() = connInfo?.host ?: ""
@@ -49,16 +54,19 @@ open class CertManager(
 	open val notAfter: Date?
 		get() = cert?.notAfter
 
-	open val serialNumber: BigInteger
+	open val serialNumber: BigInteger?
 		get() = cert?.serialNumber ?: BigInteger.ZERO
 
-	open val daysRemaining: Long
+	private val _daysRemaining: Long?
 		get() {
 			val currentDate = Date()
-			val diffInMillis: Long = (notAfter?.time?.minus(currentDate.time)) ?: 0L
-			return diffInMillis / (24*60*60*1000)
+			val diffInMillis: Long = (notAfter?.time?.minus(currentDate.time)) ?: -1L
+			return if (diffInMillis == -1L) diffInMillis
+			else diffInMillis / (24*60*60*1000)
 		}
-
+	open val daysRemaining: String
+		get() = "${_daysRemaining ?: "N/A"}"
+	
 	class Builder {
 		private var bAlias:String = "";fun alias(block: () -> String?) { bAlias = block() ?: "" }
 		private var bPath:String = "";fun path(block: () -> String?) { bPath = block() ?: "" }

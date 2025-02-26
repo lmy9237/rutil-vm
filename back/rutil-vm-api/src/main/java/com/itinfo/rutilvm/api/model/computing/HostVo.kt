@@ -389,8 +389,6 @@ fun List<Host>.toHostVos(conn: Connection): List<HostVo> =
 
 
 
-
-
 /**
  * 해당 호스트가 hosted_engine 가상머신을 가졌는 지 여부
  * @param hostId [String]

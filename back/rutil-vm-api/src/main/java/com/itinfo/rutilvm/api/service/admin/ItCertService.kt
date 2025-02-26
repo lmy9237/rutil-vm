@@ -3,7 +3,10 @@ package com.itinfo.rutilvm.api.service.admin
 import com.itinfo.rutilvm.api.cert.CertManager
 import com.itinfo.rutilvm.api.configuration.CertConfig
 import com.itinfo.rutilvm.api.configuration.PkiServiceClient
+import com.itinfo.rutilvm.api.model.cert.toCertManagers
+import com.itinfo.rutilvm.api.model.computing.HostVo
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.api.service.computing.ItHostService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -30,12 +33,14 @@ interface ItCertService {
 class CertServiceImpl(
 
 ): BaseService(), ItCertService {
+	@Autowired private lateinit var iHost: ItHostService
 	@Autowired private lateinit var certConfig: CertConfig
 	@Autowired private lateinit var pkiServiceClient: PkiServiceClient
 
 	override fun findAll(): List<CertManager> {
 		log.info("findAll ...")
-		val certs: List<CertManager> = certConfig.allCertManagers()
+		val hosts: List<HostVo> = iHost.findAll()
+		val certs: List<CertManager> = hosts.toCertManagers(certConfig.ovirtSSHPrvKey) + certConfig.engineCertManagers()
 		return certs
 	}
 

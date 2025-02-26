@@ -73,17 +73,10 @@ ENV RUTIL_VM_OVIRT_SSH_HOSTS_ADDRESS="root@192.168.0.71:22|root@192.168.0.72:22"
 ENV POSTGRES_JDBC_PORT=5432
 ENV POSTGRES_DATASOURCE_JDBC_ID=rutil
 ENV POSTGRES_DATASOURCE_JDBC_PW=rutil1!
-# ENV POSTGRES_JDBC_URL_HISTORY="jdbc:postgresql://$RUTIL_VM_OVIRT_IP:$POSTGRES_JDBC_PORT/ovirt_engine_history?currentSchema=public"
-# ENV POSTGRES_JDBC_URL_ENGINE="jdbc:postgresql://$RUTIL_VM_OVIRT_IP:$POSTGRES_JDBC_PORT/engine?currentSchema=public"
-# ENV POSTGRES_JDBC_URL_AAA="jdbc:postgresql://$RUTIL_VM_OVIRT_IP:$POSTGRES_JDBC_PORT/engine?currentSchema=aaa_jdbc"
 RUN echo "================== database.properties =================="
 RUN echo ""
 RUN echo ""
 
-#ENV RUTIL_VM_SSL_ENABLED=${RUTIL_VM_SSL_ENABLED}
-#ENV RUTIL_VM_SSL_FILE=${RUTIL_VM_SSL_FILE}
-#ENV RUTIL_VM_SSL_PASSWORD=${RUTIL_VM_SSL_PASSWORD}
-#ENV RUTIL_VM_SSL_ALIAS=${RUTIL_VM_SSL_ALIAS}
 RUN echo "================== application.properties =================="
 RUN echo ""
 RUN echo "application.version: $RUTIL_VM_VERSION"

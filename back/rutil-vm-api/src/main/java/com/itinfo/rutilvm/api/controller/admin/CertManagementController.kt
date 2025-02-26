@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.controller.BaseController
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.service.admin.ItCertService
 import com.itinfo.rutilvm.api.cert.CertManager
+import com.itinfo.rutilvm.api.service.computing.ItHostService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import io.swagger.annotations.Api
