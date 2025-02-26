@@ -47,7 +47,7 @@ const VmDisk = ({
   // 디스크 생성시 DiskListState에 들어갈 값(isCreated true)
   const handleCreateDisk = useCallback((newDisk) => {
     console.log("handleCreateDisk - 전달된 새 디스크 데이터:", newDisk);
-    setDiskListState((prevDisks) => [...prevDisks, { ...newDisk, isCreated: true, shouldUpdateDisk: true }]);
+    setDiskListState((prevDisks) => [...prevDisks, { ...newDisk, isCreated: true, shouldUpdateDisk: false }]);
     setIsCreatePopupOpen(false);
   }, [setDiskListState]);
   
@@ -78,7 +78,7 @@ const VmDisk = ({
 
   // 디스크 연결시 DiskListState에 들어갈 값(isCreate false)
   const handleConnDisk = useCallback((connDisks) => {
-    setDiskListState((prevDisks) => [...prevDisks, ...connDisks]); // 여러 개의 디스크 추가 가능
+    setDiskListState((prevDisks) => [...prevDisks, {...connDisks, shouldUpdateDisk: true }]); // 여러 개의 디스크 추가 가능
     setIsConnectionPopupOpen(false);
   }, [setDiskListState]);
   

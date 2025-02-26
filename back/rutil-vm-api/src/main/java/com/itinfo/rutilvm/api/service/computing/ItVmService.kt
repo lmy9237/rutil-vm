@@ -169,6 +169,7 @@ class VmServiceImpl(
 	// 서비스에서 디스크 목록과 nic 목록을 분류(분류만)
 	@Throws(Error::class)
 	override fun update(vmCreateVo: VmCreateVo): VmCreateVo? {
+		// 가상머신이 down 상태가 아니라면 편집 불가능
 		log.info("update ... vmCreateVo: {}", vmCreateVo)
 		if(vmCreateVo.diskAttachmentVos.filter { it.bootable }.size > 1){
 			log.error("디스크 부팅가능은 한개만 가능")
@@ -178,6 +179,12 @@ class VmServiceImpl(
 		// 기존 디스크 목록 조회
 		val existDiskAttachments: List<DiskAttachment> =
 			conn.findAllDiskAttachmentsFromVm(vmCreateVo.id).getOrDefault(listOf())
+		existDiskAttachments.forEach {
+			println("기존: " + it.disk().alias() + ", " + it.disk().id() + ", ")
+		}
+		vmCreateVo.diskAttachmentVos.forEach {
+			println("들어오는: " + it.diskImageVo.alias + ", " + it.diskImageVo.id + ", " + it.shouldUpdateDisk)
+		}
 
 		val addDisks = mutableListOf<DiskAttachment>()
 		val updateDisks = mutableListOf<DiskAttachment>()
@@ -185,16 +192,16 @@ class VmServiceImpl(
 		// 1. 업데이트 및 추가할 디스크 처리
 		vmCreateVo.diskAttachmentVos.forEach { diskAttachmentVo ->
 			when {
-				// 기존 디스크이고 업데이트가 필요하면 업데이트 수행
-				diskAttachmentVo.diskImageVo.id.isNotEmpty() && diskAttachmentVo.shouldUpdateDisk -> {
-					log.info("디스크 업데이트: {}", diskAttachmentVo.diskImageVo.alias)
-					conn.updateDiskAttachmentToVm(vmCreateVo.id, diskAttachmentVo.toEditDiskAttachment())
-				}
 				// 새로운 디스크이고 shouldUpdateDisk가 true라면 추가
-				diskAttachmentVo.diskImageVo.id.isEmpty() && diskAttachmentVo.shouldUpdateDisk -> {
+				diskAttachmentVo.diskImageVo.id.isEmpty() && !diskAttachmentVo.shouldUpdateDisk -> {
 					log.info("새로운 디스크 생성: {}", diskAttachmentVo.diskImageVo.alias)
 					addDisks.add(diskAttachmentVo.toAddDiskAttachment())
 				}
+				// // 기존 디스크이고 업데이트가 필요하면 업데이트 수행
+				// diskAttachmentVo.diskImageVo.id.isNotEmpty() && diskAttachmentVo.shouldUpdateDisk -> {
+				// 	log.info("디스크 업데이트: {}", diskAttachmentVo.diskImageVo.alias)
+				// 	conn.updateDiskAttachmentToVm(vmCreateVo.id, diskAttachmentVo.toEditDiskAttachment())
+				// }
 				// 기존에 없던 디스크를 VM에 연결
 				existDiskAttachments.none { it.id() == diskAttachmentVo.diskImageVo.id && !diskAttachmentVo.shouldUpdateDisk } -> {
 					log.info("기존 디스크 연결: {}", diskAttachmentVo.diskImageVo.alias)
@@ -207,7 +214,12 @@ class VmServiceImpl(
 		existDiskAttachments.filter { existDisk ->
 			vmCreateVo.diskAttachmentVos.none { it.diskImageVo.id == existDisk.id() }
 		}.forEach { existDisk ->
-			log.info("디스크 삭제: {}", existDisk.id())
+			log.info("디스크 삭제: {} ", existDisk.id())
+			// 디스크가 활성화 상태라면 삭제가 되지않음. 비활성화 처리
+			// 비활성화 처리 기다리고 삭제
+
+			// [2025-02-27 00:45:16] -ERROR 4280 --- com.itinfo.rutilvm.util.ovirt.SystemServiceHelper           .logFailWithin(Term.kt:89) : 실패: 가상머신 내 디스크 결합 삭제 ... 4883e4be-bf83-45b5-8260-956e7ab0824c, 이유: Fault reason is "Operation Failed". Fault detail is "[Cannot remove Virtual Disk: The following disks are locked: ${diskAliases}. Please try again in a few minutes.]". HTTP response code is "409". HTTP response message is "Conflict".
+			conn.deactivateDiskAttachmentToVm(vmCreateVo.id, existDisk.id())
 			conn.removeDiskAttachmentToVm(vmCreateVo.id, existDisk.id(), detachOnly = false)
 		}
 
