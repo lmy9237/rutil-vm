@@ -9,6 +9,7 @@ import "./LabelInput.css";
  * @prop {string} id
  * @prop {string} value
  * @prop {boolean} autoFocus
+ * @prop {boolean} isEnglishOnly
  * @prop {function} onChange
  * @prop {boolean} disabled
  *
@@ -21,6 +22,7 @@ const LabelInput = ({
   id,
   value,
   autoFocus = false,
+  isEnglishOnly = false,
   onChange,
   onInvalid,
   disabled,

@@ -107,18 +107,18 @@ export const validateUsername = (username, oneUser) => {
  * 
  * @returns {*} (문제있을 경우) 메시지
  */
-export const validatePw = (pasword, repassword) => {
+export const validatePw = (password, repassword) => {
   console.log("SettingUsersModal > validatePw ... ");
-  if (!pasword) {
+  if (!password) {
     console.error("SettingUsersModal > validateForm ... password EMPTY ");
     return "비밀번호를 입력해주세요.";
   }
-  if (pasword.length < 4)  {
-    console.error(`SettingUsersModal > validateForm ... pasword.length: ${pasword.length}`);
+  if (password.length < 4)  {
+    console.error(`SettingUsersModal > validateForm ... password.length: ${password.length}`);
     return "비밀번호 길이가 짧습니다. (4자 이상)";
   }
-  if (pasword !== repassword)  {
-    console.error(`SettingUsersModal > validateForm ... pasword: ${pasword}, repasword: ${repassword}`);
+  if (password !== repassword)  {
+    console.error(`SettingUsersModal > validateForm ... password: ${password}, repasword: ${repassword}`);
     return "비밀번호가 같지 않습니다.";
   }
   return null;

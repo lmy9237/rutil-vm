@@ -25,7 +25,8 @@ const SettingCertificates = () => {
       console.log(`SettingCertificates ... ${JSON.stringify(e)}`);
       return {
         ...e,
-        dday: `${e.daysRemaining} 일 남음`
+        notAfter: e.notAfter ?? 'N/A',
+        dday: (e.daysRemaining > 0) ? `${e.daysRemaining} 일 남음` : 'N/A'
       };
     });
 

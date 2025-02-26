@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
-import { useUser, useAddUser, useEditUser } from "../../../api/RQHook";
+import { useAddUser, useEditUser, useChangePasswordUser } from "../../../api/RQHook";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import { validateUsername, validatePw } from "../../../util";
 import "./SettingsUserModal.css";
@@ -14,93 +14,82 @@ const initialFormState = {
   username: "",
   password: "",
   repassword: "",
+  passwordCurrent: "",
   isDisabled: false,
 };
 
 const SettingUsersModal = ({ 
   isOpen,
   editMode = false,
+  changePassword = false,
   user,
   onClose
 }) => {
   const [formState, setFormState] = useState(initialFormState);
-  
-  const { 
-    data: oneUser = [],
-    isLoading: isOneUserLoading, 
-    isError: isOneUserError,
-    isSuccess: isOneUserSuccess,
-    refetch: refetchOneUser,
-  } = useUser(formState.username);
-
   const { 
     isLoading: isAddUserLoading,
     mutate: addUser,
-  } = useAddUser({ ...formState }, (res) => { // 사용자 추가 API
-    const msgSuccess = `SettingUsersModal > useAddUser > onSuccess ... `;
-    console.info(msgSuccess);
-    toast.success(`사용자 생성 완료`);
+  } = useAddUser({ ...formState }, (res) => {
     onClose();
-  }, (err) => {
-    const msgErr = `SettingUsersModal > useAddUser > onError ... ${err}`;
-    console.error(msgErr);
-    toast.error(msgErr);
+  } , (err) => {
+    onClose();
   });
 
-  // const {
-  //   mutate: editUser
-  // } = useEditUser();
+  const {
+    isLoading: isEditUserLoading, 
+    mutate: editUser,
+  } = useEditUser({ ...formState }, (res) => {
+    onClose();
+  } , (err) => {
+    onClose();
+  });
+
+  const {
+    isLoading: isChangePasswordLoading,
+    mutate: changePasswordUser,
+  } = useChangePasswordUser(formState.username, formState.passwordCurrent, formState.password, (res) => {
+    onClose();
+  } , (err) => {
+  });
 
   useEffect(() => {
-    if (!isOpen || !editMode) {
+    if (!isOpen || !(editMode || changePassword)) {
       return setFormState(initialFormState);
     }
     setFormState({ ...user });
-  }, [isOpen, editMode, user])
+  }, [isOpen, editMode, changePassword, user])
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    // 디스크  연결은 id값 보내기 생성은 객체로 보내기
+    // 디스크 연결은 id값 보내기 생성은 객체로 보내기
     console.log("SettingUsersModal > handleFormSubmit ... ");
-    const error = validateForm();
+    const error = validateForm(editMode);
     if (error) {
       toast.error(error);
       return;
     }
 
-    if (editMode) {
-      /*
-      editUser(
-        { userId: userId, vmdata: userData2Submit },
-        {
-          onSuccess: () => {
-            onClose();
-            toast.success("가상머신 편집 완료");
-          },
-          onError: (error) => toast.error("Error editing vm:", error),
-        }
-      );
-      */
-    } else {
-      addUser();
-    }
+    if (editMode) editUser();
+    else if (changePassword) changePasswordUser();
+    else addUser();
   };
 
-  const handleInputChange = (field) => (e) => {
-    console.log(`SettingUsersModal > handleInputChange ... field: ${field}`)
-    
-    setFormState((prev) => ({ 
-      ...prev, 
-      [field]: e.target.value,      
-    }));
+  const updateInput = (field) => (e) => {
+    console.log(`SettingUsersModal > updateInput ... field: ${field}`)
+    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  const validateForm = () => {
-    console.log("SettingUsersModal > validateForm ... ");
+  const updateInputCheck = (field) => (e) => {
+    console.log(`SettingUsersModal > updateInputCheck ... field: ${field}`)
+    setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
+  };
+
+  const validateForm = (editMode) => {
+    console.log(`SettingUsersModal > validateForm ... editMode: ${editMode}`);
     let vUsername = validateUsername(formState.username);
     if (vUsername) return vUsername;
     let vPassword = validatePw(formState.password, formState.repassword);
-    if (vPassword) return vPassword;
+    if (!editMode && vPassword) return vPassword;
     /* 추후 추가예정 */
     return null;
   };
@@ -109,45 +98,55 @@ const SettingUsersModal = ({
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"사용자"}
-      submitTitle={editMode ? "편집" : "생성"}
+      submitTitle={editMode ? "편집" : changePassword ? "비밀번호 변경" : "생성"}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "730px", height: "560px" }}
     >
       <div className="h-3/4 max-height-100 flex flex-col justify-center items-center">
         <LabelInput id="username" label="아이디(영문)"
           value={formState.username}
-          onChange={handleInputChange("username")}
-          disabled={editMode}
+          onChange={updateInput("username", true)}
+          disabled={editMode || changePassword}
           autoFocus
         />
-        <LabelInput id="surName" label="성"
+        {!changePassword && (<LabelInput id="surName" label="성"
           value={formState.surName}
-          onChange={handleInputChange("surName")}
+          onChange={updateInput("surName")}
           required={true}
-        />
-        <LabelInput id="firstName" label="이름"
-          value={formState.firstName}
-          onChange={handleInputChange("firstName")}
-          required={true}
-        />
-        <LabelCheckbox id="isDisabled" label="비활성화 여부"
-          onChange={handleInputChange("isDisabled")}
-          checked={formState.isDisabled}
-        />
-        {editMode && (
-          <LabelInput id="email" label="E-mail"
-            value={formState.email}
-            onChange={handleInputChange("email")}
-          />
-        )}
-        {!editMode && (
-          <LabelInput id="password" label="비밀번호" type="password"
-            onChange={handleInputChange("password")}
+        />)}
+        {!changePassword && (
+          <LabelInput id="firstName" label="이름"
+            value={formState.firstName}
+            onChange={updateInput("firstName")}
             required={true}
           />
         )}
-        {!editMode && (
+        {!changePassword && (
+          <LabelCheckbox id="isDisabled" label="비활성화 여부"
+            onChange={updateInputCheck("isDisabled")}
+            checked={formState.isDisabled}
+          />
+        )}
+        {editMode && (
+          <LabelInput id="email" label="E-mail"
+            value={formState.email}
+            onChange={updateInput("email")}
+          />)}
+        {changePassword && (
+          <LabelInput id="passwordCurrent" label="기존 비밀번호" type="password"
+            onChange={updateInput("passwordCurrent")}
+            required={true}
+          />
+        )}
+        {(!editMode || changePassword) && (
+          <LabelInput id="password" label="비밀번호" type="password"
+            onChange={updateInput("password")}
+            required={true}
+          />
+        )}
+        {(!editMode || changePassword) && (
           <LabelInput id="repassword" label="비밀번호 (다시)" type="password"
-            onChange={handleInputChange("repassword")}
+            onChange={updateInput("repassword")}
             required={true}
           />
         )}

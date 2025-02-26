@@ -37,6 +37,7 @@ const SettingUsers = () => {
   const [modals, setModals] = useState({
     create: false,
     edit: false,
+    changePassword: false,
     remove: false,
   });
   const toggleModal = (type, isOpen) => {
@@ -48,15 +49,19 @@ const SettingUsers = () => {
     console.log(`SettingUsers > openPopup ... popupType: ${popupType}`)
     setActiveModal(popupType);
     if (popupType === "add") {
-      setModals({create: true, edit:false, remove:false})
+      setModals({create: true, edit:false, changePassword:false, remove:false})
       return
     }
     if (popupType === "edit") {
-      setModals({create: false, edit:true, remove:false})
+      setModals({create: false, edit:true, changePassword:false, remove:false})
+      return
+    }
+    if (popupType === "changePassword") {
+      setModals({create: false, edit:false, changePassword:true, remove:false})
       return
     }
     if (popupType === "remove") {
-      setModals({create: false, edit:false, remove:true})
+      setModals({create: false, edit:false, changePassword:false, remove:true})
       return
     }
   };
@@ -66,14 +71,14 @@ const SettingUsers = () => {
     return (
       <Suspense>
       {
-        (modals.create || (modals.edit && selectedUsers)) && (
+        (modals.create || (modals.edit && selectedUsers) || (modals.changePassword && selectedUsers)) && (
           <SettingUsersModals 
             modalType={
-              modals.create ? "create" : modals.edit ? "edit" : ""
+              modals.create ? "create" : modals.edit ? "edit" : modals.changePassword ? "changePassword" : ""
             }
             user={selectedUsers}
             onClose={() => {
-              toggleModal(modals.create ? "create" : "edit", false)
+              toggleModal(modals.create ? "create" : modals.edit ? "edit" : "changePassword", false)
               refetchUsers()
             }}
           />

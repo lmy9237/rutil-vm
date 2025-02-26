@@ -22,12 +22,15 @@ html {
   
 
   --color-bg: #ececec;                /* 기본 배경색 */
-  --color-bg-input: #efefef;          /* Input 배경색 */ 
+  
+  --color-bg-input: #efefef;            /* Input 배경색 */ 
   --color-gray-1: #dddddd;            /* RutilVM 회색 */
-  --color-gray-2:rgb(177, 182, 184);            /* RutilVM 회색 (2) */
+  --color-gray-2:rgb(177, 182, 184);  /* RutilVM 회색 (2) */
   --color-gray-3: #cfe4eb;            /* RutilVM 회색 (3) */
   --color-gray-disabled: #6d6d6d;     /* 비활성화 색 */
-  --color-primary-1: #295b9c;         /* 주 border색 */
+  --color-primary: #8ec452;           /* 메인색 */
+  --color-primary-hover: #76a314;       /* 메인색:hover*/
+  --color-primary-1: #295b9c;           /* 주 border색 */
   --color-primary-h: #0b4db5;         /* header 글자색 */  
   --color-primary-2: #446dbb;         /* 주 색 */
   --color-bg-th: #89b0e3;             /* th 배경색 */
@@ -363,13 +366,11 @@ input[type="text"],
 input[type="number"],
 input[type="password"],
 select {
-  border: 1px solid rgb(206, 206, 206);
-  border-radius: 3px;
-  padding: 0 4px;
-  height: 30px;
+  width:50%;height:40px;
+  border: 1px solid rgb(206, 206, 206);border-radius: 3px;
   font-size: var(--fs-13);
+  padding: 0 4px;
   outline: none;
-  width:50%;
 }
 
 input[type="checkbox"],
@@ -2464,18 +2465,19 @@ background-color: #f0f0f0;
 .table_storage_domain_detail {
   width: 58%;
 }
+*/
 .color-primary {
-  color: #76a314;
+  color: var(--color-primary);
 }
 .color-primary:hover {
-  color: #76a314;
+  color: var(--color-primary-hover);
 }
 .bgcolor-primary {
-  background: #8ec452;
+  background: var(--color-primary);
 }
 .bgcolor-primary:hover {
-  background: #76a314;
-} */
+  background: var(--color-primary-hover);
+}
 
 /*반응형*/
 @media (max-width: 1420px) {

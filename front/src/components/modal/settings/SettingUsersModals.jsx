@@ -25,6 +25,13 @@ const SettingUsersModals = ({
         editMode
       />
     ),
+    changePassword: (
+      <SettingUsersModal isOpen={modalType==="changePassword"} onClose={onClose} 
+        targetName={"사용자"}
+        user={user[0]}
+        changePassword
+      />
+    ),
     remove: (
       <DeleteModal
         isOpen={modalType==="remove"}

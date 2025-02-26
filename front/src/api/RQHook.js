@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ApiManager from "./ApiManager";
+import toast from "react-hot-toast";
 
 //#region: Navigation
 // Custom hook to fetch tree navigations
@@ -3429,38 +3430,82 @@ export const useAuthenticate = (username, password, _onSuccess, _onError) => use
 })
 /**
  * @name useAddUser
- * @description 사용자 추가 useQuery훅
+ * @description 사용자 생성 useQuery훅
  * 
  * @returns useMutation 훅
  */
-export const useAddUser = (user, onSuccess, onError) => useMutation({
-  mutationFn: async () => {
-    const res = await ApiManager.addUser(user)
-    return res
-  },
-  onSuccess: onSuccess,
-  onError: onError,
-})
+export const useAddUser = (user, onSuccess, onError) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => await ApiManager.addUser(user),
+    onSuccess: (res) => {
+      const msgSuccess = `useAddUser > onSuccess ... res: ${res}`
+      console.info(msgSuccess);
+      toast.success(`사용자 생성 완료`);
+      queryClient.invalidateQueries('allUsers');
+      queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
+      onSuccess(res)
+    },
+    onError: (err) => {
+      const msgErr = `useAddUser > onError ... err: ${err}`  
+      console.error(msgErr);
+      toast.error(`사용자 생성 실패 ... 이유: ${err}`);
+      onError(err)
+    },
+  })
+}
 /**
  * @name useEditUser
  * @description 사용자 편집 useQuery훅
  * 
  * @returns useMutation 훅
  */
-export const useEditUser = () => {
+export const useEditUser = (user, onSuccess, onError) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (username, currentPassword, newPassword) => await ApiManager.editUser(username, currentPassword, newPassword),
-    onSuccess: (data, { username }) => {
-      console.log('사용자 편집한 데이터:', data);
+    mutationFn: async () => await ApiManager.editUser(user),
+    onSuccess: (res) => {
+      const _res = res ?? {}
+      console.info(`useEditUser > onSuccess ... res: ${JSON.stringify(_res, null ,2)}`);
+      if (_res?.code && _res?.code !== 200)  {
+        toast.error(`사용자 편집 실패 ... 이유: ${res.head.message}`);
+        return;
+      }
+      toast.success(`사용자 편집 완료`);
       queryClient.invalidateQueries('allUsers');
-      queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
+      queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
+      onSuccess(res)
     },
-    onError: (error) => {
-      console.error('Error editing VM:', error);
+    onError: (err) => {
+      console.error(`useEditUser > onError ... err: ${err}`);
+      toast.error(`사용자 편집 실패 ... 이유: ${err}`);
+      onError(err)
     },
   });
 };
+export const useChangePasswordUser = (username, currentPassword, newPassword, onSuccess, onError) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => await ApiManager.changePassword(username, currentPassword, newPassword),
+    onSuccess: (res) => {
+      const _res = res ?? {}
+      console.log(`useChangePasswordUser > onSuccess ... res: ${JSON.stringify(_res, null ,2)}`);
+      if (_res?.code && _res?.code !== 200)  {
+        toast.error(`사용자 비밀번호변경 실패 ... 이유: ${res.message}`);
+        return;
+      }
+      toast.success(`사용자 비밀번호변경 완료`);
+      queryClient.invalidateQueries('allUsers');
+      queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
+      onSuccess(res)
+    },
+    onError: (err) => {
+      console.error(`useChangePasswordUser > onError ... err: ${err}`);
+      toast.error(`사용자 비밀번호변경 실패 ... 이유: ${err}`);
+      onError(err)
+    },
+  });
+}
 /**
  * @name useRemoveUser
  * @description 사용자 삭제

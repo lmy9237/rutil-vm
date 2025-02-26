@@ -39,8 +39,9 @@ const makeAPICall = async ({method = "GET", url, data}) => {
     res.headers.get(`access_token`) && localStorage.setItem('token', res.headers.get(`access_token`)) // 로그인이 처음으로 성공했을 때 진행
     return res.data?.body
   } catch(e) {
-    console.error(`Error fetching '${url}':`, e);
-    toast.error(`Error fetching '${url}'\n${e.message}`)
+    console.error(`Error handling endpoint '${url}':`, e);
+    toast.error(`Error handling endpoint '${url}'\n${e.message}`)
+    return e?.response?.data?.head
   }
 }
 
@@ -2844,16 +2845,29 @@ migrateHostsFromVM: async (vmId) => {
    * @name ApiManager.editUser
    * @description 사용자 편집
    * 
+   * @param {string} data 사용자 oVirt 상세정보
+   *
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  editUser: async(data) => makeAPICall({
+    method: "PUT", 
+    url: ENDPOINTS.FIND_USER(data.username), 
+    data: data,
+  }),
+  /**
+   * @name ApiManager.changePassword
+   * @description 사용자 비밀번호 변경경
+   * 
    * @param {string} username 사용자 oVirt ID
-   * @param {string} currentPassword (기존) 사용자 oVirt 비밀번호
+   * @param {string} currentPasword (기존) 사용자 oVirt 비밀번호
    * @param {string} newPassword (신규) 사용자 oVirt 비밀번호
    *
    * @returns {Promise<Object>} API 응답 결과
    */
-  editUser: async(username, currentPassword, newPassword) => makeAPICall({
+  changePassword: async(username, currentPasword, newPassword) => makeAPICall({
     method: "PUT", 
-    url: ENDPOINTS.FIND_USER(username), 
-    data: { currentPassword, newPassword }
+    url: ENDPOINTS.CHANGE_PASSWORD_USER(username, currentPasword, newPassword), 
+    // data: { currentPasword, newPassword },
   }),
   /**
    * @name ApiManager.removeUser

@@ -1,15 +1,21 @@
 .input-text,
-.input-select, 
-.input-number{
+.input-select,
+.input-password,
+.input-number {
   width: 100%;
   padding: 8px;
   display: flex;justify-content: space-between;align-items: center;
 }
-.input-checkbox{
-  display: flex;
-  padding: 0.16rem 0.2rem;
-  width:100%;
+.input-text > input,
+.input-password > input,
+.input-number > input {
+  padding: 10px
 }
-.input-checkbox input{
-  margin-left:0.1rem;
+.input-checkbox {
+  width: 100%;
+  padding: 8px;
+  display: flex;
+}
+.input-checkbox input {
+  margin: 0 8px;
 }

@@ -27,7 +27,6 @@ const BaseModal = ({
       contentLabel={targetName}
       shouldCloseOnOverlayClick={false}
     >
-      {/*<div className="w-1/2 h-[84.4vh] modal">*/}
       <div className="modal" style={contentStyle}>
         <div className="popup-header center">
           <h1>
@@ -37,7 +36,7 @@ const BaseModal = ({
             <FontAwesomeIcon icon={faTimes} fixedWidth />
           </button>
         </div>
-
+        
         {children}
 
         {/* 하단 버튼 */}

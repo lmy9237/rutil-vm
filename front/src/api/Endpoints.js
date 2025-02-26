@@ -257,6 +257,7 @@ const ENDPOINTS = {
   //#region: User
   FIND_ALL_USERS: () =>                                                    `${ENDPOINT_API_V1}/auth/users`,
   FIND_USER: (username) =>                                                 `${ENDPOINT_API_V1}/auth/users/${username}`,
+  CHANGE_PASSWORD_USER: (username, currentPassword, newPassword) =>        `${ENDPOINT_API_V1}/auth/users/${username}/changePassword?currentPassword=${currentPassword}&newPassword=${newPassword}`,
   //#endregion: User
   
   //#region: UserSession

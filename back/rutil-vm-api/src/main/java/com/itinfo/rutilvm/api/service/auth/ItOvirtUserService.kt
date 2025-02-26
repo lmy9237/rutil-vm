@@ -176,7 +176,7 @@ class OvirtUserServiceImpl(
 		val oUser: OvirtUser = findOneAAA(username)
 		log.debug("itemFound: {}", oUser)
 		val oUserDetail: UserDetail =
-			userDetails.findByName(username) ?: throw ErrorPattern.OVIRTUSER_NOT_FOUND.toException()
+			userDetails.findByExternalId(oUser.uuid) ?: throw ErrorPattern.OVIRTUSER_NOT_FOUND.toException()
 		log.debug("detailFound: {}", oUserDetail)
 		return oUser.toUserVo(oUserDetail, true) // USERS.retrieveUser
 	}
@@ -275,7 +275,20 @@ class OvirtUserServiceImpl(
 
 	@Transactional("aaaTransactionManager")
 	override fun update(username: String, userVo: UserVo?): UserVo? {
-		TODO("Not yet implemented")
+		log.info("update ... username: {}, userVo: {}", username, userVo)
+		val user2Update: OvirtUser = findOneAAA(username).apply {
+			disabled = if (userVo?.disabled == true) 1 else 0
+		}
+		val resUserUpdated: OvirtUser = ovirtUsers.save(user2Update)
+
+		val userDetail2Update: UserDetail = userDetails.findByExternalId(user2Update.uuid)?.apply {
+			name = userVo?.firstName ?: ""
+			surname = userVo?.surName ?: ""
+			email = userVo?.email
+		} ?: throw ErrorPattern.OVIRTUSER_NOT_FOUND.toException()
+
+		val resUserDetailUpdated: UserDetail = userDetails.save(userDetail2Update)
+		return resUserUpdated.toUserVo(resUserDetailUpdated, true)
 	}
 
 	@Transactional("aaaTransactionManager")

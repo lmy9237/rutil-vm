@@ -38,34 +38,32 @@ const Login = ({ setAuthenticated, setUsernameGlobal }) => {
   const doLogin = (e) => {
     e.preventDefault();
     authMutate({ username, password }, {
-        onSuccess: (res) => {
-          console.log(res);
-          if (!res) {
-            // 로그인 실패
-            toast.error("실패: 로그인 정보가 일지하지 않습니다.");
-            return;
-          }
-          if (localStorage[`token`]) {
-            
-          }
-          // 토큰 찾아 집어 넣은 후
-          setAuthenticated(true);
-          localStorage.setItem("username", username);
-          navigate("/");
-        },
-        onError: (err) => {
-          toast.error("로그인에 실패했습니다. 잠시 후 다시 시도해주세요.");
-        },
-      }
-    );
-  };
+      onSuccess: (res) => {
+        console.log(res);
+        if (!res) {
+          // 로그인 실패
+          toast.error("실패: 로그인 정보가 일지하지 않습니다.");
+          return;
+        }
+        if (localStorage[`token`]) {
+          
+        }
+        // 토큰 찾아 집어 넣은 후
+        setAuthenticated(true);
+        localStorage.setItem("username", username);
+        navigate("/");
+      },
+      onError: (err) => {
+        toast.error("로그인에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      },
+    }
+  )};
 
   return (
     <Background id="login" children={
       <div className="login-container">
         <RutilLogo/>
-        <form 
-          className="flex flex-col justify-center items-center" 
+        <form className="flex flex-col justify-center items-center" 
           onSubmit={doLogin}>
           <IconInput
             className="login-input text-lg"
