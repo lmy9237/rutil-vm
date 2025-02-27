@@ -14,15 +14,14 @@
     flex: 0.5; 
 }
 .dash-section-contents > h1 {
-  padding: 0.1rem;
   font-size: var(--fs-21);
-  margin-top: 5px;
   color: black;
+  margin: 4px 0;
   font-weight: 800;
 }
 .dash-section-contents > span {
   display: block;
-   font-size: var(--fs-default-4);
+  font-size: var(--fs-default-4);
   width: 48%;
   color: #000000;
   text-align: center;

@@ -13,7 +13,7 @@
 }
 .input-checkbox {
   width: 100%;
-  padding: 8px;
+  padding:7px 0;
   display: flex;
 }
 .input-checkbox input {

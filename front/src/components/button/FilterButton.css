@@ -1,0 +1,23 @@
+.host-filter-btns {
+  display: flex;
+  font-size: var(--fs-default-4);
+  margin-bottom: 8px;
+}
+.host-filter-btns > div {
+  display: flex;
+  justify-content: space-between;
+}
+.host-filter-btns button {
+  padding: 2px 6px;
+  cursor: pointer;
+  border: 1px solid #14417c;
+  border-radius: 3px;
+  color: rgb(10, 55, 107);
+  font-weight: 600;
+}
+.host-filter-btns button:hover {
+  background-color: #eceaea;
+}
+.host-filter-btns button.active {
+  background-color: #dbdbdb;
+}

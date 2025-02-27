@@ -18,8 +18,7 @@ html {
   --h-right-btn: 30px;  
   --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
   --w-aside-menu:243px;     
-  --w-nav:160px; /*nav넓이이*/   
-  
+  --w-nav:160px; /*nav넓이*/   
 
   --color-bg: #ececec;                /* 기본 배경색 */
   
@@ -87,7 +86,7 @@ ul { list-style-type: circle; }
 button {
   border: var(--border-simple);
   cursor: pointer;
-  padding: 0 0.1rem;
+  padding: 0 5px;
   display: flex;
   border-radius: 2px;
   align-items: center;
@@ -100,7 +99,6 @@ input[disabled] {
   cursor: no-drop !important;
   border: var(--border-simple);
 }
-
 
 .popup-content-outer {
     height: var(--h-modal-content);
@@ -170,14 +168,6 @@ input[disabled] {
   padding: 0.1rem 0.1rem;
   border: var(--border-simple);
   border-radius: 2px;
-
-   스크롤없는모달 
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0.1rem 0;
-}
 } */
 .dropdown-menu {
   position: absolute;
@@ -317,37 +307,6 @@ input[disabled] {
   color: #757575;
 }
 
-.host-filter-btns {
-  display: flex;
-  font-size: var(--fs-13);
-  margin-bottom: 0.3rem;
-  height: 3.3vh;
-}
-.host-filter-btns > span {
-  margin-right: 0.2rem;
-  display: flex; /* Flexbox 설정 추가 */
-  justify-content: center; /* 수평 가운데 정렬 */
-  align-items: center; /* 수직 가운데 정렬 */
-}
-.host-filter-btns > div {
-  display: flex;
-  justify-content: space-between;
-}
-.host-filter-btns button {
-  padding: 0 0.13rem;
-  cursor: pointer;
-  border: 1px solid #14417c;
-  border-radius: 3px;
-  color: rgb(10, 55, 107);
-  font-weight: 600;
-}
-.host-filter-btns button:hover {
-  background-color: #eceaea;
-}
-.host-filter-btns button.active {
-  background-color: #dbdbdb;
-}
-
 .active {
   color: #449bff;
 }
@@ -366,7 +325,7 @@ input[type="text"],
 input[type="number"],
 input[type="password"],
 select {
-  width:50%;height:40px;
+  width:50%;height:31px;
   border: 1px solid rgb(206, 206, 206);border-radius: 3px;
   font-size: var(--fs-13);
   padding: 0 4px;
@@ -422,29 +381,6 @@ textarea {
 .network_new_nav div.active {
   background: #e4e4e4;
   color: #449bff;
-}
-
-/*팝업 왼쪽nav*/
-.network-backup-edit {
-  height: 57.4vh;
-  width: 48%;
-}
-.network-backup-edit-nav {
-  font-size: var(--fs-default);
-  height: 41vh;
-  width: 27%;
-  background-color: #fafafa;
-  border-right: var(--border-simple);
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  font-weight: 800;
-}
-.network-backup-edit-nav > div {
-  padding: 14px 6px;
-  cursor: pointer;
-}
-.backup-edit-content {
-  font-size: var(--fs-default);
-  width: 86%;
 }
 
 /* 중복끝 */

@@ -15,12 +15,12 @@
   color: rgb(145, 150, 155);
   cursor: pointer;
 }
-.menu-icon:hover {
+.menu-icon:hover, .menu-icon > span:hover  {
   color: #5dcbf7;
 }
-.header-right > span {
+.menu-icon > span {
   color: rgb(145, 150, 155);cursor: pointer;
-  font-size:15px;line-height:0.5;font-weight: 600;
+  font-size:15px;font-weight: 600;
   padding-right: 10px;
 }
 .header-right > span:hover {
@@ -75,7 +75,7 @@
   right: 0;
   font-size: var(--fs-default-4);
   border: 1px solid rgb(204, 204, 204);
-  top: 51px;
+  top: 49px;
   height: 89.6vh;
   border-radius: 2px;
 }

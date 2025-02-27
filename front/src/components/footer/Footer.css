@@ -1,5 +1,5 @@
 .footer-outer {
-  font-size: 0.34rem;
+  font-size: var(--fs-default);
   width: 100%;
   max-height: 30%;
 }
@@ -70,6 +70,6 @@
 .footer-img > span {
   text-align: center;
   display: block;
-  font-size: 0.33rem;
+  font-size: var(--fs-default);
   margin-top: 3px;
 }

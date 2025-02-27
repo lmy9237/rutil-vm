@@ -14,10 +14,11 @@ import {
   useNetworkById,
 } from "../../../api/RQHook";
 import "./MNetwork.css";
+import DynamicInputList from "../../label/DynamicInputList";
 
 const FormGroup = ({ label, children }) => (
   <div className="network-form-group center">
-    <label style={{ "font-size": "0.32rem" }}>{label}</label>
+    <label style={{ "font-size": "15px" }}>{label}</label>
     {children}
   </div>
 );
@@ -67,6 +68,7 @@ const NetworkModal = ({
         mtu: network.mtu,
         vlan: network.vlan,
         usageVm: network.usage?.vm,
+        portIsolation: network.portIsolation, 
       });
       setDataCenterVoId(network?.datacenterVo?.id);
     }
@@ -97,10 +99,10 @@ const NetworkModal = ({
   };
 
   const validateForm = () => {
-    if (!checkKoreanName(formState.name)) return "이름이 유효하지 않습니다.";
+    if (checkKoreanName(formState.name)) return "이름이 유효하지 않습니다.";
     if (!formState.name) return "이름을 입력해주세요.";
-    if (!checkKoreanName(formState.description))
-      return "설명이 유효하지 않습니다.";
+    // if (!checkKoreanName(formState.description))
+    //   return "설명이 유효하지 않습니다.";
     if (!dataCenterVoId) return "데이터센터를 선택해주세요.";
     return null;
   };
@@ -294,13 +296,12 @@ const NetworkModal = ({
             checked={dnsEnabled}
             onChange={(e) => setDnsEnabled(e.target.checked)}
           />
-          {/* <label style={{fontSize: "0.32rem" }}>DNS 설정</label> */}
 
           <div className="text-[15px] p-1 font-bold">
             DNS 서버
           </div>
-
-          <FormGroup>
+        
+          {/* <FormGroup>
             <div
               className="network-form-group center"
               style={{ width: "100%", padding: 0 }}
@@ -320,6 +321,7 @@ const NetworkModal = ({
                 </button>
                 <button
                   type="button"
+                  className="border-r border-gray-500"
                   onClick={() => console.log("Remove DNS Server")}
                   disabled={!dnsEnabled}
                 >
@@ -327,7 +329,8 @@ const NetworkModal = ({
                 </button>
               </div>
             </div>
-          </FormGroup>
+          </FormGroup> */}
+          <DynamicInputList maxCount={3}  inputType="text"  disabled={!dnsEnabled} />
 
           {!editMode && (
             <div className="network-new-cluster-form">

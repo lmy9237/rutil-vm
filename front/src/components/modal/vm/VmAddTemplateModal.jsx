@@ -15,6 +15,8 @@ import {
 } from "../../../api/RQHook"; // 클러스터 가져오는 훅
 import "./MVm.css";
 import LabelCheckbox from "../../label/LabelCheckbox";
+import LabelInput from "../../label/LabelInput";
+import LabelSelectOptions from "../../label/LabelSelectOptions";
 
 const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
   const [name, setName] = useState("");
@@ -242,65 +244,43 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
 
       <div className="popup-content-outer">
         <div className="edit-first-content">
-          <div className="host_textbox">
-            <label htmlFor="user_name">이름</label>
-            <input
-              type="text"
-              id="user_name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="host_textbox">
-            <label htmlFor="description">설명</label>
-            <input
-              type="text"
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
-          <div className="host_textbox">
-            <label htmlFor="comment">코멘트</label>
-            <input
-              type="text"
-              id="comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-          </div>
-          <div className="edit_fourth_content_select flex">
-            <label htmlFor="cluster_select">클러스터</label>
-            <select
-              id="cluster_select"
-              value={selectedCluster}
-              onChange={(e) => setSelectedCluster(e.target.value)}
-            >
-              {clusters.length > 0 ? (
-                clusters.map((cluster) => (
-                  <option key={cluster.id} value={cluster.id}>
-                    {cluster.name}
-                  </option>
-                ))
-              ) : (
-                <option value="">클러스터 없음</option>
-              )}
-            </select>
-          </div>
-          <div className="edit_fourth_content_select flex">
-            <label htmlFor="cpu_profile_select">CPU 프로파일</label>
-            <select
-              id="cpu_profile_select"
-              value={selectedCpuProfile}
-              onChange={(e) => setSelectedCpuProfile(e.target.value)}
-            >
-              {cpuProfiles?.map((profile) => (
-                <option key={profile.id} value={profile.id}>
-                  {profile.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <LabelInput
+            className="host_textbox"
+            label="이름"
+            id="user_name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <LabelInput
+            className="host_textbox"
+            label="설명"
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <LabelInput
+            className="host_textbox"
+            label="코멘트"
+            id="comment"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <LabelSelectOptions
+            className="edit_fourth_content_select flex"
+            label="클러스터"
+            id="cluster_select"
+            value={selectedCluster}
+            onChange={(e) => setSelectedCluster(e.target.value)}
+            options={clusters.length > 0 ? clusters.map(cluster => ({ value: cluster.id, label: cluster.name })) : [{ value: "", label: "클러스터 없음" }]}
+          />
+          <LabelSelectOptions
+            className="edit_fourth_content_select flex"
+            label="CPU 프로파일"
+            id="cpu_profile_select"
+            value={selectedCpuProfile}
+            onChange={(e) => setSelectedCpuProfile(e.target.value)}
+            options={cpuProfiles?.map(profile => ({ value: profile.id, label: profile.name })) || []}
+          />
         </div>
 
         <LabelCheckbox

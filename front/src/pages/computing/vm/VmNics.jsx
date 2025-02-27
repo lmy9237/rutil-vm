@@ -262,7 +262,7 @@ const VmNics = ({ vmId }) => {
               textAlign: "center",
               color: "gray",
               padding: "20px",
-              fontSize: "0.4rem",
+              fontSize: "14px",
             }}
           >
             표시할 네트워크 인터페이스가 없습니다.

@@ -190,7 +190,7 @@ const HostNics = ({ hostId }) => {
                     <FontAwesomeIcon
                       icon={faCrown}
                       fixedWidth
-                      style={{ fontSize: "0.3rem" }}
+                      style={{ fontSize: "15px" }}
                     />
                   </button>
 
@@ -208,7 +208,7 @@ const HostNics = ({ hostId }) => {
                       <FontAwesomeIcon
                         icon={faTimes}
                         fixedWidth
-                        style={{ fontSize: "0.3rem" }}
+                        style={{ fontSize: "15px" }}
                       />
                     </button>
                   )}

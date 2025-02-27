@@ -1,0 +1,22 @@
+/*팝업 왼쪽nav*/
+.network-backup-edit {
+    height: 57.4vh;
+    width: 48%;
+  }
+  .network-backup-edit-nav {
+    font-size: var(--fs-default);
+    height: 41vh;
+    width: 27%;
+    background-color: #fafafa;
+    border-right: var(--border-simple);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    font-weight: 800;
+  }
+  .network-backup-edit-nav > div {
+    padding: 14px 6px;
+    cursor: pointer;
+  }
+  .backup-edit-content {
+    font-size: var(--fs-default);
+    width: 86%;
+  }

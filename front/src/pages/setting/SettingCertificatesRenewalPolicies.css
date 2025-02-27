@@ -3,7 +3,7 @@ li { color: var(--color-gray-2); }
 details {
   border: var(--border-detail);
   border-radius: 4px;
-  padding: 0.5em;
+  padding: 8px;
 }
 details[open] summary {
   border-bottom: var(--border-detail);

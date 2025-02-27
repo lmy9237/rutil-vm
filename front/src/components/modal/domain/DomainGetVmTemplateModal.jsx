@@ -1,3 +1,4 @@
+/* 가상머신/템플릿 가져오기모달 */
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import BaseModal from "../BaseModal";

@@ -119,7 +119,7 @@
     margin-left: 0.1rem;
 }
 #aside_popup_first,#aside_popup_first2 {
- 
+    padding:10px;
 }
 .aside_popup_content{
     padding-left: 0.2rem;

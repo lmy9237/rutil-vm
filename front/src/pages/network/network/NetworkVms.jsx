@@ -9,6 +9,7 @@ import {
 } from "../../../components/Icon";
 import { useAllVmsFromNetwork } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
+import FilterButton from "../../../components/button/FilterButton";
 
 /**
  * @name NetworkVms
@@ -47,7 +48,10 @@ const NetworkVms = ({ networkId }) => {
     id: vm.id,
     name: vm.vnic || vm.name || "",
   }));
-
+  const statusFilters = [
+    { key: "running", label: "실행중" },
+    { key: "stopped", label: "정지중" },
+  ];
   console.log("...");
   return (
     <>
@@ -60,7 +64,7 @@ const NetworkVms = ({ networkId }) => {
         </button>
       </div>
 
-      <div className="host-filter-btns">
+      {/* <div className="host-filter-btns">
         <button
           className={buttonClass("running")}
           onClick={() => setActiveFilter("running")}
@@ -73,8 +77,8 @@ const NetworkVms = ({ networkId }) => {
         >
           정지중
         </button>
-      </div>
-
+      </div> */}
+      <FilterButton options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
       <span>id = {selectedIds || ""}</span>
 
       <TablesOuter

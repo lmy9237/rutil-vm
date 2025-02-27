@@ -13,6 +13,7 @@ import {
   useNetworkInterfaceFromHost,
 } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
+import FilterButton from "../../../components/button/FilterButton";
 
 const NetworkHostModal = React.lazy(
   () => import("../../../components/modal/network/NetworkHostModal")
@@ -109,6 +110,11 @@ const NetworkHosts = ({ networkId }) => {
       nics.length == 0 ? "NIC 데이터가 없습니다." : `NIC 데이터: ${nics}`
     );
   }, [nics, isModalOpen]);
+  
+  const connectionFilters = [
+    { key: "connected", label: "연결됨" },
+    { key: "disconnected", label: "연결 해제" },
+  ];
 
   const renderModals = () => {
     if (!isModalOpen) {
@@ -139,7 +145,7 @@ const NetworkHosts = ({ networkId }) => {
         </button>
       </div>
 
-      <div className="host-filter-btns">
+      {/* <div className="host-filter-btns">
         <button
           className={buttonClass("connected")}
           onClick={() => setActiveFilter("connected")}
@@ -152,7 +158,8 @@ const NetworkHosts = ({ networkId }) => {
         >
           연결 해제
         </button>
-      </div>
+      </div> */}
+      <FilterButton options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
 
       <span>id = {selectedHostId || ""}</span>
 

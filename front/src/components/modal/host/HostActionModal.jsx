@@ -93,17 +93,19 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
       targetName={"호스트"}
       submitTitle={getContentLabel(action)}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "630px", height: "200px" }} 
     >
-      {/* <div className="storage-delete-popup modal"> */}
-      <div className="disk-delete-box">
-        <div>
-          <FontAwesomeIcon
-            style={{ marginRight: "0.3rem" }}
-            icon={faExclamationTriangle}
-          />
-          <span>
-            {names.join(", ")} 를(을) {getContentLabel(action)} 하시겠습니까?
-          </span>
+      <div className="popup-content-outer">
+        <div className="disk-delete-box">
+          <div>
+            <FontAwesomeIcon
+              style={{ marginRight: "0.3rem" }}
+              icon={faExclamationTriangle}
+            />
+            <span>
+              {names.join(", ")} 를(을) {getContentLabel(action)} 하시겠습니까?
+            </span>
+          </div>
         </div>
       </div>
     </BaseModal>

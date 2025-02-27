@@ -24,7 +24,6 @@
 .section-header {
   width: 100%;
   min-height:var(--h-section-header);
-  display:flex;justify-content:space-between;align-items:center;
   border-bottom: 1px solid #6999d9;
   padding: 12px 16px;
 }

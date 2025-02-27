@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VmDiskDupl from "../../../components/dupl/VmDiskDupl";
 import { useDisksFromVM } from "../../../api/RQHook";
+import FilterButton from "../../../components/button/FilterButton";
 
 /**
  * @name VmDisks
@@ -11,10 +12,10 @@ import { useDisksFromVM } from "../../../api/RQHook";
  * @returns {JSX.Element} VmDisks
  */
 
-const diskTypes = [
-  { type: "all", label: "모두" },
-  { type: "image", label: "이미지" },
-  { type: "lun", label: "직접 LUN" },
+const diskFilters = [
+  { key: "all", label: "모두" },
+  { key: "image", label: "이미지" },
+  { key: "lun", label: "직접 LUN" },
 ];
 
 const VmDisks = ({ vmId }) => {
@@ -29,7 +30,7 @@ const VmDisks = ({ vmId }) => {
 
   return (
     <>
-      <div className="host-filter-btns" style={{ marginBottom: 0 }}>
+      {/* <div className="host-filter-btns" style={{ marginBottom: 0 }}>
         <span>디스크 유형: </span>
         {diskTypes.map(({ type, label }) => (
           <button
@@ -40,8 +41,12 @@ const VmDisks = ({ vmId }) => {
             {label}
           </button>
         ))}
-      </div>
-
+      </div> */}
+     <FilterButton
+        options={diskFilters}
+        activeOption={activeDiskType}
+        onClick={setActiveDiskType}
+      />
       <VmDiskDupl
         isLoading={isDisksLoading}
         isError={isDisksError}

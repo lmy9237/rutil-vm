@@ -72,7 +72,9 @@ const DomainActionModal = ({ isOpen, onClose, action, data, datacenterId }) => {
       targetName={"스토리지 도메인"}
       submitTitle={getContentLabel(action)}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "630px", height: "200px" }} 
     >
+    <div className="popup-content-outer">
       <div className="disk-delete-box">
         <div>
           {warnButton()}
@@ -82,6 +84,7 @@ const DomainActionModal = ({ isOpen, onClose, action, data, datacenterId }) => {
           </span>
         </div>
       </div>
+    </div>
     </BaseModal>
   );
 };

@@ -24,7 +24,7 @@ const AllTemplates = () => {
       <div>
         <HeaderButton titleIcon={faDesktop} title={"템플릿"} />
       </div>
-      <div className="w-full px-[0.5rem] py-[0.5rem]">
+      <div className="w-full section-content">
         <TemplateDupl
           templates={templates || []}
           columns={TableColumnsInfo.TEMPLATES}

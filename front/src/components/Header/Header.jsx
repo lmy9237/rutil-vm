@@ -94,16 +94,18 @@ const Header = ({ setAuthenticated, toggleAside }) => {
           </div>
         )}
         {/* 사용자 버튼 */}
-        <FontAwesomeIcon icon={faUser} className="menu-icon" fixedWidth
-          onClick={() => {
-            setSelectedIndex(3);toggleLoginBox();
-          }}
-        />
-        <span
-          onClick={() => {
-            setSelectedIndex(3);toggleLoginBox(); // 기존 기능 유지
-          }}
-        >{username}</span>
+        <div  className="menu-icon" >
+          <FontAwesomeIcon icon={faUser}fixedWidth
+            onClick={() => {
+              setSelectedIndex(3);toggleLoginBox();
+            }}
+          />
+          <span
+            onClick={() => {
+              setSelectedIndex(3);toggleLoginBox(); // 기존 기능 유지
+            }}
+          >{username}</span>
+        </div>
         {isLoginBoxVisible && (
           <div className="user-loginbox" 
             onClick={stopPropagation}

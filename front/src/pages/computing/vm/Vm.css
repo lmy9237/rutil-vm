@@ -15,12 +15,12 @@
 }
 .detail-general-mini-box > div:first-child,
 .detail-general-box > div:first-child {
-  font-size: 0.4rem;
+  font-size: var(--fs-defult);
   font-weight: 600;
   padding: 0.18rem;
 }
 .capacity {
-  font-size: 0.35rem;
+  font-size: var(--fs-default-4);
   padding: 0.2rem;
 }
 .capacity > div:first-child {
@@ -52,7 +52,7 @@
 }
 .vm-general-box {
   display: flex;
-  font-size: 0.36rem;
+  font-size: var(--fs-defult);
   align-items: center;
   font-weight: 600;
   border-bottom: 1px solid #dedede;
@@ -65,7 +65,7 @@
 }
 .vm-add-snapshot-btn {
   display: flex;
-  font-size: 0.32rem;
+  font-size: var(--fs-defult);
   align-items: center;
   background: #d7e8ef;
   padding: 0.1rem;
@@ -90,15 +90,16 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  font-size: 0.34rem;
+  font-size: var(--fs-default);
   border-bottom: 1px solid rgb(226, 226, 226);
   cursor: pointer;
+  align-items:center;
 }
 .network-content:hover {
   background-color: #ebececd8;
 }
 .network-content > div:first-child {
-  padding: 0.5rem 0.3rem;
+  padding: 10px;
 }
 .network-content i {
   color: #757575;
@@ -115,16 +116,15 @@
 
 .network-content-detail > div {
   width: 50%;
-  padding: 0.2rem;
+  padding: 10px;
   font-size: var(--fs-default-4);
 }
 .network-content-detail-box > div {
   font-size: var(--fs-default);
-  margin-bottom: 0.2rem;
- 
+  margin-bottom: 3px;
 }
 .network-content-detail-box .snap-table th {
-  margin-right: 0.6rem;
+  margin-right: 20px;
   display: block;
 }
 
@@ -133,9 +133,10 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  font-size: 0.34rem;
+  font-size: var(--fs-default);
   border-bottom: 1px solid rgb(226, 226, 226);
-  padding: 1% 0;
+  padding: 10px 0;
+  align-items: center;
   cursor: pointer;
 }
 .snapshot-content:hover {
@@ -185,7 +186,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0.3rem;
-  font-size: 0.34rem;
+  font-size: var(--fs-default);
 }
 .snap-table {
   height: 100%;

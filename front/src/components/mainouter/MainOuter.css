@@ -111,9 +111,9 @@
   margin-left: 0.1rem;
 }
 
-.aside-popup-content {
+#aside_popup_first{
+  padding:2px 8px;
 }
-
 .aside-popup-second-content {
   padding-left: 1rem;
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import "./ModalNavButton.css";
 
 const ModalNavButton = ({ tabs, activeTab, onTabClick }) => {
   return (

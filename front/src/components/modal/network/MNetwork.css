@@ -1,6 +1,6 @@
 /*새로만들기*/
 .network-form-group {
-  padding: 0.2rem 0.26rem;
+  padding: 9px;
 }
 .network-new-cluster-table {
   border-collapse: collapse;
@@ -19,8 +19,8 @@
 }
 
 .network-new-cluster-form {
-  padding: 0.2rem 0.4rem;
-  margin-bottom: 1rem;
+  padding: 0 10px; 
+  margin-bottom: 20px;
 }
 .network-new-cluster-form > span {
   font-weight: 600;
