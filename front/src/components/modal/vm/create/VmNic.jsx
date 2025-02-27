@@ -69,10 +69,7 @@ const VmNic = ({ nicsState, setNicsState, nics }) => {
             +
           </button>
           {nicsState.length > 1 && (
-            <button
-              onClick={() => handleRemoveNic(index)}
-              style={{ marginLeft: "5px" }}
-            >
+            <button onClick={() => handleRemoveNic(index)} style={{ marginLeft: "5px" }}>
               -
             </button>
           )}

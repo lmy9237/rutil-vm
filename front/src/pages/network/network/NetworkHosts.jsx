@@ -15,8 +15,8 @@ import {
 import { convertBytesToMB } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
 
-const NetworkHostModal = React.lazy(
-  () => import("../../../components/modal/network/NetworkHostModal")
+const HostNetworkModal = React.lazy(
+  () => import("../../../components/modal/network/HostNetworkModal")
 );
 
 /**
@@ -123,7 +123,7 @@ const NetworkHosts = ({ networkId }) => {
     }
     return (
       <Suspense fallback={<Loading />}>
-        <NetworkHostModal
+        <HostNetworkModal
           nicData={nics}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
