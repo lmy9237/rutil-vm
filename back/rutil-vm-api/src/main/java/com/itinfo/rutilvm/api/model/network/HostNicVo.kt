@@ -45,7 +45,7 @@ private val log = LoggerFactory.getLogger(HostNicVo::class.java)
 class HostNicVo(
 	val id: String = "",
 	val name: String = "",
-	val bondingVo: BondingVo = BondingVo(),
+	val bondingVo: BondingVo = BondingVo(), // 본딩
 	val bootProtocol: BootProtocol = BootProtocol.NONE,
 	val bridged: Boolean = false,
 	val customConfiguration: Boolean = false,
@@ -69,7 +69,7 @@ class HostNicVo(
 		gson.toJson(this)
 
 	class Builder {
-		private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: "" } 
+		private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bBondingVo: BondingVo = BondingVo(); fun bondingVo(block: () -> BondingVo?) { bBondingVo = block() ?: BondingVo() }
 		private var bBootProtocol: BootProtocol = BootProtocol.NONE; fun bootProtocol(block: () -> BootProtocol?) { bBootProtocol = block() ?: BootProtocol.NONE }
@@ -79,17 +79,17 @@ class HostNicVo(
 		private var bIpv6: IpVo = IpVo(); fun ipv6(block: () -> IpVo?) { bIpv6 = block() ?: IpVo() }
 		private var bIpv6BootProtocol: BootProtocol = BootProtocol.NONE; fun ipv6BootProtocol(block: () -> BootProtocol?) { bIpv6BootProtocol = block() ?: BootProtocol.NONE }
 		private var bMacAddress: String = ""; fun macAddress(block: () -> String?) { bMacAddress = block() ?: "" }
-		private var bMtu: Int = 0; fun mtu(block: () -> Int?) { bMtu = block() ?: 0 } 
-		private var bStatus: NicStatus = NicStatus.DOWN; fun status(block: () -> NicStatus?) { bStatus = block() ?: NicStatus.DOWN } 
+		private var bMtu: Int = 0; fun mtu(block: () -> Int?) { bMtu = block() ?: 0 }
+		private var bStatus: NicStatus = NicStatus.DOWN; fun status(block: () -> NicStatus?) { bStatus = block() ?: NicStatus.DOWN }
 		private var bHostVo: IdentifiedVo = IdentifiedVo(); fun hostVo(block: () -> IdentifiedVo?) { bHostVo = block() ?: IdentifiedVo() }
 		private var bNetworkVo: IdentifiedVo = IdentifiedVo(); fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
 		private var bSpeed: BigInteger = BigInteger.ZERO; fun speed(block: () -> BigInteger?) { bSpeed = block() ?: BigInteger.ZERO }
 		private var bRxSpeed: BigInteger = BigInteger.ZERO; fun rxSpeed(block: () -> BigInteger?) { bRxSpeed = block() ?: BigInteger.ZERO }
 		private var bTxSpeed: BigInteger = BigInteger.ZERO; fun txSpeed(block: () -> BigInteger?) { bTxSpeed = block() ?: BigInteger.ZERO }
-		private var bRxTotalSpeed: BigInteger = BigInteger.ZERO; fun rxTotalSpeed(block: () -> BigInteger?) { bRxTotalSpeed = block() ?: BigInteger.ZERO } 
-		private var bTxTotalSpeed: BigInteger = BigInteger.ZERO; fun txTotalSpeed(block: () -> BigInteger?) { bTxTotalSpeed = block() ?: BigInteger.ZERO } 
-		private var bRxTotalError: BigInteger = BigInteger.ZERO; fun rxTotalError(block: () -> BigInteger?) { bRxTotalError = block() ?: BigInteger.ZERO } 
-		private var bTxTotalError: BigInteger = BigInteger.ZERO; fun txTotalError(block: () -> BigInteger?) { bTxTotalError = block() ?: BigInteger.ZERO } 
+		private var bRxTotalSpeed: BigInteger = BigInteger.ZERO; fun rxTotalSpeed(block: () -> BigInteger?) { bRxTotalSpeed = block() ?: BigInteger.ZERO }
+		private var bTxTotalSpeed: BigInteger = BigInteger.ZERO; fun txTotalSpeed(block: () -> BigInteger?) { bTxTotalSpeed = block() ?: BigInteger.ZERO }
+		private var bRxTotalError: BigInteger = BigInteger.ZERO; fun rxTotalError(block: () -> BigInteger?) { bRxTotalError = block() ?: BigInteger.ZERO }
+		private var bTxTotalError: BigInteger = BigInteger.ZERO; fun txTotalError(block: () -> BigInteger?) { bTxTotalError = block() ?: BigInteger.ZERO }
 
 		fun build(): HostNicVo = HostNicVo(bId, bName, bBondingVo, bBootProtocol, bBridged, bCustomConfiguration, bIp, bIpv6, bIpv6BootProtocol, bMacAddress, bMtu, bStatus, bHostVo, bNetworkVo, bSpeed, bRxSpeed, bTxSpeed, bRxTotalSpeed, bTxTotalSpeed, bRxTotalError, bTxTotalError )
 	}
@@ -193,19 +193,15 @@ fun List<HostNic>.toSetHostNicVos(conn: Connection): List<HostNicVo> =
  * 호스트 네트워크 modified_bonds
  * host_nic 빌더
  */
-fun HostNicVo.toModifiedBondBuilder(): HostNicBuilder {
-	return HostNicBuilder()
-		.name(this@toModifiedBondBuilder.name) // bonding 이름
-		.bonding( this@toModifiedBondBuilder.bondingVo.toBonding() )
-}
-
-fun HostNicVo.toModifiedBond(): HostNic =
-	this@toModifiedBond.toModifiedBondBuilder().build()
-
+fun HostNicVo.toModifiedBondBuilder(): HostNic = HostNicBuilder()
+	.name(this@toModifiedBondBuilder.name) // bonding 이름
+	.bonding( this@toModifiedBondBuilder.bondingVo.toBonding() )
+	.build()
 
 fun List<HostNicVo>.toModifiedBonds(): List<HostNic> =
-	this@toModifiedBonds.map { it.toModifiedBond() }
+	this@toModifiedBonds.map { it.toModifiedBondBuilder() }
 
 
 
-
+// fun HostNicVo.toModifiedBond(): HostNic =
+// 	this@toModifiedBond.toModifiedBondBuilder().build()

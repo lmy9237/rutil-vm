@@ -35,12 +35,11 @@ interface ItHostNicService {
      * 호스트 네트워크 설정
      *
      * @param hostId [String] 호스트 Id
-     * @param bonds List<[HostNic]> bonding 옵션
-     * @param networkAttachments List<[NetworkAttachmentVo]> 네트워크 연결 옵션
+     * @param hostNetworkVo [HostNetworkVo] 호스트 네트워크
      * @return [Boolean] 아직미정
      */
     @Throws(Error::class)
-    fun setUpNetworksFromHost(hostId: String, bonds: List<HostNicVo>, networkAttachments: List<NetworkAttachmentVo>): Boolean
+    fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean
     /**
      * [ItHostNicService.removeBondsFromHost]
      * 호스트 네트워크 본딩 삭제
@@ -89,12 +88,12 @@ class ItHostNicServiceImpl(
     }
 
     @Throws(Error::class)
-    override fun setUpNetworksFromHost(hostId: String, bonds: List<HostNicVo>, networkAttachments: List<NetworkAttachmentVo>): Boolean {
-        log.info("setUpNetworksFromHost ... hostId: {}", hostId)
+    override fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean {
+        log.info("setUpNetworksFromHost ... hostId: {}, hostNetworkVo: {}", hostId, hostNetworkVo)
         val res: Result<Boolean> = conn.setupNetworksFromHost(
             hostId,
-            bonds.toModifiedBonds(),
-            networkAttachments.toModifiedNetworkAttachments()
+			hostNetworkVo.bonds.toModifiedBonds(),
+			hostNetworkVo.networkAttachments.toModifiedNetworkAttachments()
         )
         return res.isSuccess
     }

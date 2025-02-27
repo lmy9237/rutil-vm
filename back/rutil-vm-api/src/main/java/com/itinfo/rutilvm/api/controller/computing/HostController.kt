@@ -4,7 +4,10 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.model.network.HostNetworkVo
 import com.itinfo.rutilvm.api.model.network.HostNicVo
+import com.itinfo.rutilvm.api.model.network.NetworkAttachmentVo
+import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.storage.HostStorageVo
 import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
 import com.itinfo.rutilvm.api.service.computing.ItHostNicService
@@ -331,30 +334,32 @@ class HostController {
 	}
 
 
-//	@ApiOperation(
-//		httpMethod="POST",
-//		value="호스트 네트워크 설정",
-//		notes="선택된 호스트의 네트워크를 설정한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-//		ApiImplicitParam(name="network", value="네트워크", dataTypeClass=NetworkVo::class, required=true, paramType="body"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 200, message = "OK")
-//	)
-//	@PostMapping("/{hostId}/nics/setup")
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	fun setupNetwork(
-//		@PathVariable hostId: String? = null,
-//		@RequestBody network: NetworkVo
-//	): ResponseEntity<Boolean> {
-//		if (hostId.isNullOrEmpty())
-//			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-//		log.info("/computing/hosts/{}/nics/setup ... 호스트 네트워크 생성", hostId)
-//		return ResponseEntity.ok(iHostNic.setUpNetworksFromHost(hostId, network))
-//	}
+	@ApiOperation(
+		httpMethod="POST",
+		value="호스트 네트워크 설정",
+		notes="선택된 호스트의 네트워크를 설정한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="hostNetworkVo", value="네트워크", dataTypeClass=HostNetworkVo::class, required=true, paramType="body"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@PostMapping("/{hostId}/nics/setup")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun setupNetwork(
+		@PathVariable hostId: String? = null,
+		@RequestBody hostNetworkVo: HostNetworkVo? = null,
+	): ResponseEntity<Boolean> {
+		if (hostId.isNullOrEmpty())
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		if (hostNetworkVo == null)
+			throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/nics/setup ... 호스트 네트워크 생성", hostId)
+		return ResponseEntity.ok(iHostNic.setUpNetworksFromHost(hostId, hostNetworkVo))
+	}
 
 
 

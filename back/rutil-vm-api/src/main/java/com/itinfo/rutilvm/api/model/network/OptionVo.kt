@@ -2,7 +2,6 @@ package com.itinfo.rutilvm.api.model.network
 
 import com.itinfo.rutilvm.common.gson
 
-import org.ovirt.engine.sdk4.builders.BondingBuilder
 import org.ovirt.engine.sdk4.builders.OptionBuilder
 import org.ovirt.engine.sdk4.types.Option
 import org.slf4j.LoggerFactory
@@ -41,6 +40,7 @@ fun List<Option>.toOptionVos(): List<OptionVo> =
     this@toOptionVos.map { it.toOptionVo() }
 
 
+// https://192.168.0.70/ovirt-engine/api/hosts/{id}/nics
 fun toDefaultModeOptionBuilder(): Option {
     return OptionBuilder()
         .name("mode")

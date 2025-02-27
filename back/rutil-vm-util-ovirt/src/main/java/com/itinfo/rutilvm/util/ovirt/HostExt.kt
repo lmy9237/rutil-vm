@@ -632,16 +632,9 @@ fun Connection.setupNetworksFromHost(
 	networkAttachments: List<NetworkAttachment> = listOf()
 ): Result<Boolean> = runCatching {
 	this.srvHost(hostId).setupNetworks().apply {
-		if (networkAttachments.isEmpty())modifiedBonds(hostNics)
-		if (hostNics.isEmpty()) modifiedNetworkAttachments(networkAttachments)
+		if (networkAttachments.isNotEmpty()) modifiedBonds(hostNics)
+		if (hostNics.isNotEmpty()) modifiedNetworkAttachments(networkAttachments)
 	}.send()
-
-	// if (hostNics.isEmpty())
-	// 	this.srvHost(hostId).setupNetworks().modifiedNetworkAttachments(networkAttachments).send()
-	// else if (networkAttachments.isEmpty())
-	// 	this.srvHost(hostId).setupNetworks().modifiedBonds(hostNics).send()
-	// else
-	// 	this.srvHost(hostId).setupNetworks().modifiedBonds(hostNics).modifiedNetworkAttachments(networkAttachments).send()
 
 	this.srvHost(hostId).commitNetConfig().send()
 	true

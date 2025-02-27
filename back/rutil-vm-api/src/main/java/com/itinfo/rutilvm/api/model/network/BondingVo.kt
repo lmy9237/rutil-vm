@@ -22,7 +22,6 @@ class BondingVo (
     val activeSlave: IdentifiedVo = IdentifiedVo(),  // hostNicvo
     val optionVos: List<OptionVo> = listOf(),
     val slaves: List<IdentifiedVo> = listOf(),  // hostNic
-//    val slaves: List<HostNicVo> = listOf(),  // hostNic
 ): Serializable {
     override fun toString(): String = gson.toJson(this)
 
@@ -31,7 +30,6 @@ class BondingVo (
         private var bActiveSlave: IdentifiedVo = IdentifiedVo(); fun activeSlave(block: () -> IdentifiedVo?) { bActiveSlave = block() ?: IdentifiedVo() }
         private var bOptionVos: List<OptionVo> = listOf(); fun optionVos(block: () -> List<OptionVo>?) { bOptionVos = block() ?: listOf() }
         private var bSlaves: List<IdentifiedVo> = listOf(); fun slaves(block: () -> List<IdentifiedVo>?) { bSlaves = block() ?: listOf() }
-//        private var bSlaves: List<HostNicVo> = listOf(); fun slaves(block: () -> List<HostNicVo>?) { bSlaves = block() ?: listOf() }
 
         fun build(): BondingVo = BondingVo(bAdPartnerMacAddress, bActiveSlave, bOptionVos, bSlaves)
     }
@@ -46,7 +44,6 @@ fun Bonding.toBondingVo(conn: Connection, hostId: String): BondingVo {
         this@toBondingVo.slaves().mapNotNull { hostNic ->
             val slaveId = hostNic.id()
             val nic: HostNic? = conn.findNicFromHost(hostId, slaveId).getOrNull()
-//            nic?.toSlaveHostNicVo(conn)
             nic?.fromHostNicToIdentifiedVo()
         }
     } else listOf()
@@ -72,12 +69,7 @@ fun Bonding.toBondingVo(conn: Connection, hostId: String): BondingVo {
 fun BondingVo.toBondingBuilder(): BondingBuilder {
     return BondingBuilder()
         .options(toDefaultOption()) // 기본 옵션지정 mode1
-        .slaves(this@toBondingBuilder.slaves.map { slave ->
-            HostNicBuilder()
-//                .id(slave.id)
-                .name(slave.name)
-                .build()
-        })
+        .slaves(this@toBondingBuilder.slaves.map { HostNicBuilder().name(it.name).build() })
 }
 
 // 호스트 네트워크 설정 - 본딩 인터페이스 생성

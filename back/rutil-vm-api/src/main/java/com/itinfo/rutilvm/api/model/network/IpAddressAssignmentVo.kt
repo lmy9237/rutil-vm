@@ -32,7 +32,7 @@ class IpAddressAssignmentVo (
 fun IpAddressAssignmentVo.toIpAddressAssignment(): IpAddressAssignment {
     return IpAddressAssignmentBuilder()
         .assignmentMethod(BootProtocol.fromValue(this@toIpAddressAssignment.assignmentMethod))
-        .ip(this@toIpAddressAssignment.ipVo.toIpBuilder())
+        .ip(this.ipVo.toIpBuilder())
         .build()
 }
 fun List<IpAddressAssignmentVo>.toIpAddressAssignments(): List<IpAddressAssignment> =

@@ -2,6 +2,7 @@ package com.itinfo.rutilvm.api.model.network
 
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.IdentifiedVo
+import org.ovirt.engine.sdk4.builders.DnsResolverConfigurationBuilder
 import org.ovirt.engine.sdk4.builders.HostNicBuilder
 import org.ovirt.engine.sdk4.builders.NetworkAttachmentBuilder
 import org.ovirt.engine.sdk4.builders.NetworkBuilder
@@ -17,6 +18,7 @@ import java.io.Serializable
  * @property hostVo [IdentifiedVo]
  * @property hostNicVo [IdentifiedVo]
  * @property networkVo [IdentifiedVo]
+ * @property nameServerList List<[String]>
  */
 class NetworkAttachmentVo (
     val id: String = "",
@@ -25,6 +27,7 @@ class NetworkAttachmentVo (
     val hostVo: IdentifiedVo = IdentifiedVo(),
     val hostNicVo: IdentifiedVo = IdentifiedVo(),
     val networkVo: IdentifiedVo = IdentifiedVo(),
+	val nameServerList: List<String> = listOf()
     // reported_configurations
 ) : Serializable {
     override fun toString(): String =
@@ -37,8 +40,9 @@ class NetworkAttachmentVo (
         private var bHostVo: IdentifiedVo = IdentifiedVo(); fun hostVo(block: () -> IdentifiedVo?) { bHostVo = block() ?: IdentifiedVo() }
         private var bHostNicVo: IdentifiedVo = IdentifiedVo(); fun hostNicVo(block: () -> IdentifiedVo?) { bHostNicVo = block() ?: IdentifiedVo() }
         private var bNetworkVo: IdentifiedVo = IdentifiedVo(); fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
+		private var bNameServerList: List<String> = listOf(); fun nameServerList(block: () -> List<String>?) { bNameServerList = block() ?: listOf() }
 
-        fun build(): NetworkAttachmentVo = NetworkAttachmentVo(bId, bInSync, bIpAddressAssignments, bHostVo, bHostNicVo, bNetworkVo)
+        fun build(): NetworkAttachmentVo = NetworkAttachmentVo(bId, bInSync, bIpAddressAssignments, bHostVo, bHostNicVo, bNetworkVo, bNameServerList)
     }
 
     companion object {
@@ -51,20 +55,21 @@ class NetworkAttachmentVo (
  * 호스트 네트워크 modified_network_attachments
  * host_nic 빌더
  */
-fun NetworkAttachmentVo.toModifiedNetworkAttachmentBuilder(): NetworkAttachmentBuilder {
+fun NetworkAttachmentVo.toModifiedNetworkAttachmentBuilder(): NetworkAttachment {
     return NetworkAttachmentBuilder()
-        .network(NetworkBuilder().id(this@toModifiedNetworkAttachmentBuilder.networkVo.id).build())
-        .hostNic(HostNicBuilder().name(this@toModifiedNetworkAttachmentBuilder.hostNicVo.name).build())
-        .ipAddressAssignments(this@toModifiedNetworkAttachmentBuilder.ipAddressAssignments.toIpAddressAssignments())
-//        .dnsResolverConfiguration()
+        .network(NetworkBuilder().id(this.networkVo.id).build())
+        .hostNic(HostNicBuilder().name(this.hostNicVo.name).build())
+        .ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
+       	.dnsResolverConfiguration(DnsResolverConfigurationBuilder().nameServers(this.nameServerList).build())
+		.build()
 }
-
-fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment =
-    this@toModifiedNetworkAttachment.toModifiedNetworkAttachmentBuilder().build()
 
 
 // 여러개
 fun List<NetworkAttachmentVo>.toModifiedNetworkAttachments(): List<NetworkAttachment> =
-    this@toModifiedNetworkAttachments.map { it.toModifiedNetworkAttachment() }
+    this@toModifiedNetworkAttachments.map { it.toModifiedNetworkAttachmentBuilder() }
 
+
+// fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment =
+//     this@toModifiedNetworkAttachment.toModifiedNetworkAttachmentBuilder().build()
 
