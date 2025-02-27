@@ -197,7 +197,6 @@ const VmInfo = () => {
         selectedVms={vm}
         onClose={closeModal}
       />
-      {/* <Footer /> */}
     </div>
   );
 };

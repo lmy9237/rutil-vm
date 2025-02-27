@@ -128,7 +128,6 @@ const DomainInfo = () => {
         selectedClusters={domain}
         onClose={closeModal}
       />
-      {/* <Footer/> */}
     </div>
   );
 };

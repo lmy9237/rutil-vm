@@ -36,7 +36,6 @@ console.log("...")
           onCloseModal={vmsRefetch}
         />
       </div>
-      {/* <Footer /> */}
     </div>
   );
 };
