@@ -647,10 +647,10 @@ fun Connection.activeDiskAttachmentToVm(vmId: String, diskAttachmentId: String):
 	}
 
 	val diskAttachment = DiskAttachmentBuilder().id(diskAttachmentId).active(true).build()
-
 	this.updateDiskAttachmentToVm(vmId, diskAttachment)
 		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
-	true
+
+	expectDiskStatus(vmId, diskAttachmentId, true)
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "활성화", vmId)
 }.onFailure {
@@ -670,16 +670,37 @@ fun Connection.deactivateDiskAttachmentToVm(vmId: String, diskAttachmentId: Stri
 	}
 
 	val diskAttachment = DiskAttachmentBuilder().id(diskAttachmentId).active(false).build()
-
 	this.updateDiskAttachmentToVm(vmId, diskAttachment)
 		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
-	true
+
+	expectDiskStatus(vmId, diskAttachmentId, false)
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "비활성화", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "비활성화 실패", it, vmId)
 	throw if (it is Error) it.toItCloudException() else it
 }
+
+// acitve가 true면 활성화, false면 비활성화를 요구
+@Throws(InterruptedException::class)
+fun Connection.expectDiskStatus(vmId: String, diskAttachmentId: String, activeStatus: Boolean, interval: Long = 1000L, timeout: Long = 90000L): Boolean {
+	val startTime = System.currentTimeMillis()
+	while(true){
+		val diskAttachment: DiskAttachment = this.findDiskAttachmentFromVm(vmId, diskAttachmentId)
+			.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND.toError()
+		val status = diskAttachment.active()
+		if (status == activeStatus) {
+			log.error("디스크 {} {} 완료", diskAttachmentId, status)
+			throw ErrorPattern.DISK_ATTACHMENT_ACTIVE_INVALID.toError()
+		} else if (System.currentTimeMillis() - startTime > timeout) {
+			log.error("디스크 {} 상태 시간 초과", activeStatus)
+			return false
+		}
+		log.info("디스크 상태: {}", status)
+		Thread.sleep(interval)
+	}
+}
+
 
 private fun Connection.srvSnapshotsFromVm(vmId: String): SnapshotsService =
 	this.srvVm(vmId).snapshotsService()
