@@ -193,25 +193,27 @@ class OvirtUserController: BaseController() {
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name="username", value="ovirt 사용자 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="currentPassword", value="ovirt 사용자 기존 비밀번호", dataTypeClass=String::class, required=true, paramType="query"),
-		ApiImplicitParam(name="newPassword", value="ovirt 사용자 신규 비밀번호", dataTypeClass=String::class, required=true, paramType="query"),
+		ApiImplicitParam(name="currentPassword", value="ovirt 사용자 기존 비밀번호", dataTypeClass=String::class, required=true, paramType="body"),
+		ApiImplicitParam(name="newPassword", value="ovirt 사용자 신규 비밀번호", dataTypeClass=String::class, required=true, paramType="body"),
+		ApiImplicitParam(name="force", value="비밀번호 강제변경여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "성공"),
 		ApiResponse(code = 401, message = "인증 불량"),
 		ApiResponse(code = 404, message = "찾을 수 없는 사용자")
 	)
-	@PutMapping("{username}/changePassword")
-	fun changePassword(
+	@PutMapping("{username}/password")
+	fun password(
 		@PathVariable(required=true) username: String = "",
-		@RequestParam(required=true) currentPassword: String? = null,
-		@RequestParam(required=true) newPassword: String? = null,
+		@RequestBody(required=true) currentPassword: String? = null,
+		@RequestBody(required=true) newPassword: String? = null,
+		@RequestParam(required=false) force: Boolean = false,
 	):  ResponseEntity<OvirtUser> {
-		log.info("changePassword ... username: {}", username)
+		log.info("password ... username: {}", username)
 		if (username.isEmpty())					throw ErrorPattern.OVIRTUSER_ID_NOT_FOUND.toException()
-		if (currentPassword.isNullOrEmpty())	throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
 		if (newPassword.isNullOrEmpty())		throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
-		val res: OvirtUser = ovirtUser.changePassword(username, currentPassword, newPassword)
+		if (!force && currentPassword.isNullOrEmpty())	throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
+		val res: OvirtUser = ovirtUser.updatePassword(username, currentPassword, newPassword, force)
 		return ResponseEntity.ok(res)
 	}
 

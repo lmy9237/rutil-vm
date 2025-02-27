@@ -21,11 +21,15 @@ dependencies {
     runtimeOnly(Dependencies.jdbc)
 
     testImplementation(project(":rutil-vm-common"))
+	testImplementation(Dependencies.springTest)
+	testImplementation(Dependencies.springBootTest)
     testImplementation(Dependencies.springBootJpa)
+	testImplementation(Dependencies.kotlinStdlib)
     // testImplementation(Dependencies.springBootWeb)
     testImplementation(Dependencies.log4j)
     testImplementation(Dependencies.junit)
     testImplementation(Dependencies.hamcrest)
+	testRuntimeOnly(Dependencies.jdbc)
 }
 
 configurations {

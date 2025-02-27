@@ -91,7 +91,7 @@ interface ItOvirtUserService {
 	@Throws(PSQLException::class)
 	fun add(userVo: UserVo): UserVo?
 	/**
-	 * [ItOvirtUserService.changePassword]
+	 * [ItOvirtUserService.updatePassword]
 	 * 사용자 비밀변호 변경
 	 *
 	 * @param username [String]
@@ -100,7 +100,7 @@ interface ItOvirtUserService {
 	 * @return [OvirtUser]
 	 */
 	@Throws(PSQLException::class)
-	fun changePassword(username: String, currentPassword: String, newPassword: String): OvirtUser
+	fun updatePassword(username: String, currentPassword: String?, newPassword: String, force: Boolean): OvirtUser
 	/**
 	 * [ItOvirtUserService.update]
 	 * 사용자 변경
@@ -261,11 +261,11 @@ class OvirtUserServiceImpl(
 	}
 
 	@Transactional("aaaTransactionManager")
-	override fun changePassword(username: String, currentPassword: String, newPassword: String): OvirtUser {
-		log.info("changePassword ... username: {}", username)
+	override fun updatePassword(username: String, currentPassword: String?, newPassword: String, force: Boolean): OvirtUser {
+		log.info("updatePassword ... username: {}", username)
 		val user: OvirtUser = findOneAAA(username)
 
-		if (authenticate(username, currentPassword).isEmpty())
+		if (!force && authenticate(username, currentPassword ?: "").isEmpty())
 			throw ErrorPattern.OVIRTUSER_AUTH_INVALID.toException()
 
 		user.password = newPassword.hashPassword()
