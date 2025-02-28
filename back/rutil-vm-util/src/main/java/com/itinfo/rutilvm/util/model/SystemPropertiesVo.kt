@@ -18,7 +18,7 @@ class SystemPropertiesVo(
 	var id: String = "",
 	var password: String = "",
 	var ovirtIp: String = "",
-	var ovirtPort: Int = 443,
+	var ovirtPort: Int = 2443,
 	var vncIp: String = "",
 	var vncPort: String = "",
 	var cpuThreshold: Int = basicConf.ovirtThresholdCpu,
@@ -29,7 +29,7 @@ class SystemPropertiesVo(
 	var loginLimit: Int = 5,
 ): Serializable {
 	val ovirtEngineApiUrl: String
-		get() = "https://${ovirtIp}:${ovirtPort}/ovirt-engine/api"
+		get() = "https://${ovirtIp}${if(ovirtPort == 443) "" else ":${ovirtPort}"}/ovirt-engine/api"
 	val ovirtUserId: String
 		get() = "${id}@internal"
 

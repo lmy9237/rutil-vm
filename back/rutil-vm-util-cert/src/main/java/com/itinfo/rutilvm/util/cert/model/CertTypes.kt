@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 enum class HostCertType(override val alias: String, override val path: String) : CertType {
 	VDSM("VDSM Certificate", "/etc/pki/vdsm/certs/vdsmcert.pem"),
-	VDSM_CA("VDSM CA Certificate", "/etc/pki/vdsm/certs/cacert.pem"),
+	/*VDSM_CA("VDSM CA Certificate", "/etc/pki/vdsm/certs/cacert.pem"),*/
 	UNKNOWN("", "");
 
 	companion object {
@@ -31,6 +31,7 @@ enum class EngineCertType(override val alias: String, override val path: String)
 	}
 }
 
+// 참고: VDSM_CA의 값과 ENGINE_CA 값이 출력기준으로 같다
 interface CertType {
 	val alias: String
 	val path: String

@@ -4,7 +4,6 @@ import com.itinfo.rutilvm.api.cert.CertManager
 import com.itinfo.rutilvm.api.cert.toCertManager
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.util.cert.model.EngineCertType
-import com.itinfo.rutilvm.util.cert.model.HostCertType
 import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Logger
@@ -33,20 +32,15 @@ open class CertConfig(
 	@Value("\${application.ovirt.ssh.prvkey.location}")		private lateinit var _ovirtSSHPrivateKeyLocation: String
 	@Value("\${application.ovirt.ssh.engine.address}")		private lateinit var _ovirtSSHEngineAddress: String
 	@Value("\${application.ovirt.ssh.engine.prvkey}")		lateinit var ovirtSSHEnginePrvKey: String
-	@Value("\${application.ovirt.ssh.hosts.address}")		private lateinit var _ovirtSSHHostsAddress: String
 
 	val jschLogEnabled: Boolean
 		get() = _jschLogEnabled.toBooleanStrictOrNull() ?: false
 	val ovirtEngineSSH: RemoteConnMgmt
 		get() = RemoteConnMgmt.asRemoteConnMgmt(_ovirtSSHEngineAddress, ovirtSSHEnginePrvKey)
-	val ovirtHostSSHAddresses: List<String>
-		get() = _ovirtSSHHostsAddress.split(DEFAULT_SPLIT)
+
 	val ovirtSSHPrvKey: String?
 		get() = (try {  File(_ovirtSSHPrivateKeyLocation) } catch (e: IOException) { null })?.readText(Charsets.UTF_8)
-	val ovirtHostSSHs: List<RemoteConnMgmt>
-		get() = ovirtHostSSHAddresses.map { fullAddress ->
-			RemoteConnMgmt.asRemoteConnMgmt(fullAddress, ovirtSSHPrvKey)
-		}
+
 
 	@PostConstruct
 	fun init() {
@@ -55,11 +49,10 @@ open class CertConfig(
 		log.debug("  application.ovirt.ssh.prvkeypath: {}", _ovirtSSHPrivateKeyLocation)
 		log.debug("  application.ovirt.ssh.engine.address: {}", pkiServiceClient.fetchEngineSshPublicKey())
 		log.debug("  application.ovirt.ssh.engine.prvkey: {}", ovirtSSHEnginePrvKey)
-		log.debug("  application.ovirt.ssh.hosts.address: {}\n", ovirtHostSSHAddresses)
 
 		log.debug("  ovirtSSHPrvKey ... {}", ovirtSSHPrvKey)
 		log.debug("  ovirtEngineSSH ... {}", ovirtEngineSSH)
-		log.debug("  ovirtHostSSHs ... {}\n\n", ovirtHostSSHs)
+		// log.debug("  ovirtHostSSHs ... {}\n\n", ovirtHostSSHs)
 
 		if (!jschLogEnabled) return
 		JSch.setLogger(object : Logger {

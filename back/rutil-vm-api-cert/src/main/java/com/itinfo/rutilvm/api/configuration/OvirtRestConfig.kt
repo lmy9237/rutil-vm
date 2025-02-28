@@ -28,7 +28,7 @@ open class OvirtRestConfig {
 	@Bean
 	open fun retrofit(): Retrofit {
 		log.info("retrofit ...")
-		val baseUrl = "https:${ovirtIp}/ovirt-engine/services/"
+		val baseUrl = "${ovirtBaseURL}/ovirt-engine/services/"
 		return Retrofit.Builder()
 				.baseUrl(baseUrl)
 				.client(okHttpClient())
@@ -36,7 +36,12 @@ open class OvirtRestConfig {
 				.build()
 	}
 
-	@Value("\${application.ovirt.ip}")		private lateinit var ovirtIp: String
+	@Value("\${application.ovirt.ip}")			private lateinit var ovirtIp: String
+	@Value("\${application.ovirt.port.ssl}")	private lateinit var _ovirtPortSsl: String
+	private val ovirtPortSsl: Int
+		get() = _ovirtPortSsl.toIntOrNull() ?: 2443
+	private val ovirtBaseURL: String
+		get() = "https://${ovirtIp}${if (ovirtPortSsl == 443) "" else ":${ovirtPortSsl}"}"
 
 	@Bean
 	open fun okHttpClient(): OkHttpClient {
