@@ -50,20 +50,20 @@ const RadialBarChart = ({ percentage }) => {
   });
 
   // 창 크기가 변경될 때 차트 크기 업데이트
-  const [chartWidth, setChartWidth] = useState(window.innerWidth * 0.12);
-  const [chartHeight, setChartHeight] = useState(window.innerHeight * 0.23);
-  useEffect(() => {
-    const handleResize = () => {
-      setChartWidth(window.innerWidth * 0.12);
-      setChartHeight(window.innerHeight * 0.23);
-    };
+  // const [chartWidth, setChartWidth] = useState(window.innerWidth * 0.12);
+  // const [chartHeight, setChartHeight] = useState(window.innerHeight * 0.23);
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setChartWidth(window.innerWidth * 0.12);
+  //     setChartHeight(window.innerHeight * 0.23);
+  //   };
 
-    window.addEventListener("resize", handleResize);
+  //   window.addEventListener("resize", handleResize);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //   };
+  // }, []);
 
   useEffect(() => {
     setSeries([percentage]);
@@ -102,8 +102,8 @@ const RadialBarChart = ({ percentage }) => {
         <ReactApexChart
           options={chartOptions}
           series={series}
-          width={chartWidth}
-          height={chartHeight}
+          width={200}
+          height={200}
           type="radialBar"
         />
       </div>

@@ -1,0 +1,31 @@
+.tables {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.1rem 0.3rem;
+  }
+  .table_container_center,
+  .table_container_right {
+    width: 39%;
+  }
+  .table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .table th,
+  .table td {
+    padding: 4.5px;
+    vertical-align: top;
+    border: none;
+    font-size: var(--fs-default-4);
+  }
+  
+  .table th {
+    text-align: left;
+    font-weight: bold;
+    width: 38%;
+  }
+  .table td {
+    text-align: left;
+    color: #757575;
+  }

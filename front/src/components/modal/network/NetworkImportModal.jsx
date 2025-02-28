@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import BaseModal from "../BaseModal";
 import { useAllNetworkProviders } from "../../../api/RQHook";
 import "./MNetwork.css";
+import LabelSelectOptions from "../../label/LabelSelectOptions";
 
 const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
   const { data: networkProvider = [], isLoading: isDatacentersLoading } =
@@ -31,7 +32,7 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
     { id: "provider_1", name: "공급자 네트워크 A", networkId: "예시시" },
     { id: "provider_2", name: "공급자 네트워크 B", networkId: "예시시" },
   ]);
-
+  const [selectedProvider, setSelectedProvider] = useState("");
   const [selectAll, setSelectAll] = useState(false);
 
   // 전체 선택 체크박스 핸들러
@@ -61,30 +62,27 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
       onSubmit={onSubmit}
       contentStyle={{ width: "880px", height: "700px" }} 
     >
-      {/* <div className="network-bring-popup modal"> */}
+      
       <div className="popup-content-outer">
         {/* 네트워크 공급자 목록 */}
-        <div className="network-form-group center">
-          <label
-            htmlFor="cluster"
-            style={{ fontSize: "0.33rem", fontWeight: "600" }}
-          >
-            네트워크 공급자
-          </label>
-          <select id="cluster">
-            {isDatacentersLoading ? (
-              <option>로딩 중...</option>
-            ) : networkProvider.length > 0 ? (
-              networkProvider.map((provider) => (
-                <option key={provider.id} value={provider.name}>
-                  {provider.name}
-                </option>
-              ))
-            ) : (
-              <option>공급자 없음</option>
-            )}
-          </select>
-        </div>
+        <LabelSelectOptions
+          id="cluster"
+          label="네트워크 공급자"
+          className="network-form-group center"
+          value={selectedProvider}
+          onChange={(e) => setSelectedProvider(e.target.value)}
+          disabled={isDatacentersLoading}
+          options={
+            isDatacentersLoading
+              ? [{ value: "", label: "로딩 중..." }]
+              : networkProvider.length > 0
+              ? networkProvider.map((provider) => ({
+                  value: provider.name,
+                  label: provider.name,
+                }))
+              : [{ value: "", label: "공급자 없음" }]
+          }
+        />
 
         {/* 공급자 네트워크 테이블 */}
         <div className="network-bring-table-outer">

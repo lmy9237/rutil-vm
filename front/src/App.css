@@ -79,9 +79,7 @@ details>summary {
   width: 100%;
   height: calc(100% - var(--h-section-header));
 }
-/* ul>li {
-  font-size: var(--fs-default-4);
-} */
+
 ul { list-style-type: circle; }
 button {
   border: var(--border-simple);
@@ -99,7 +97,15 @@ input[disabled] {
   cursor: no-drop !important;
   border: var(--border-simple);
 }
-
+/* svg.svg-inline--fa { 
+  cursor: pointer;
+} */
+.hover-icon{
+  cursor: pointer;
+}
+.hover-icon:hover{
+    color: var(--color-gray-disabled);
+}
 .popup-content-outer {
     height: var(--h-modal-content);
     overflow-y: auto;
@@ -128,7 +134,7 @@ input[disabled] {
 }
 .info-content{
     width: calc(100% - var(--w-nav));
-    padding: 14px 20px;
+    padding: 14px 15px;
 }
 .header-right-btns {
   display: flex;
@@ -274,38 +280,7 @@ input[disabled] {
   width: 100%;
   padding: 0.5rem 0.3rem;
 }
-/*페이지 general 설명페이지*/
-.tables {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0.1rem 0.3rem;
-}
-.table_container_center,
-.table_container_right {
-  width: 39%;
-}
-.table {
-  border-collapse: collapse;
-  width: 100%;
-}
-.table th,
-.table td {
-  padding: 4.5px;
-  vertical-align: top;
-  border: none;
-  font-size: var(--fs-default-4);
-}
 
-.table th {
-  text-align: left;
-  font-weight: bold;
-  width: 38%;
-}
-.table td {
-  text-align: left;
-  color: #757575;
-}
 
 .active {
   color: #449bff;
@@ -392,7 +367,26 @@ textarea {
   color: #b52a2a;
   font-size: 0.7rem;
 }
+/*토스트*/
+.toast {
+    font-size: var(--fs-default);
+    width: 30%;
+    padding: 12px 9px;
+    border-radius: 2%;
+    text-align: left;
+    color: black;
+    border: var(--border-simple);
+}
 
+/* 성공 토스트 */
+.toast-success {
+  border-left: 4px solid limegreen;
+}
+
+/* 오류 토스트 */
+.toast-error {
+  border-left: 4px solid crimson;
+}
 /* 스토리지 우클릭 메뉴박스*/
 /* #storage_context_menu {
     position: absolute;

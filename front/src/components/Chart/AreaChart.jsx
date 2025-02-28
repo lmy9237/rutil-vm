@@ -8,7 +8,7 @@ const AreaChart = ({ series, datetimes }) => {
       type: "area",
       offsetX: 15,
     },
-    colors: ["#1597E5", "#69DADB", "rgb(231, 190, 231)"],
+    colors: ["#1597E5", "#69DADB", "rgb(177, 143, 216)"],
     dataLabels: {
       enabled: false,
     },
@@ -31,21 +31,21 @@ const AreaChart = ({ series, datetimes }) => {
   });
 
   //반응형
-  const [chartWidth, setChartWidth] = useState(window.innerWidth * 0.24); // 초기 너비를 화면의 70%로 설정
-  const [chartHeight, setChartHeight] = useState(window.innerHeight * 0.18); // 초기 높이를 화면의 30%로 설정
+  // const [chartWidth, setChartWidth] = useState(window.innerWidth * 0.24);
+  // const [chartHeight, setChartHeight] = useState(window.innerHeight * 0.18); 
 
-  useEffect(() => {
-    const handleResize = () => {
-      setChartWidth(window.innerWidth * 0.26); // 화면 너비의 70%로 설정
-      setChartHeight(window.innerHeight * 0.18); // 화면 높이의 30%로 설정
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setChartWidth(window.innerWidth * 0.26);
+  //     setChartHeight(window.innerHeight * 0.18); 
+  //   };
 
-    window.addEventListener("resize", handleResize); // 창 크기 변경 시 이벤트 감지
+  //   window.addEventListener("resize", handleResize);
 
-    return () => {
-      window.removeEventListener("resize", handleResize); // 컴포넌트 언마운트 시 이벤트 리스너 제거
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize); 
+  //   };
+  // }, []);
   return (
     <div>
       <div id="chart">
@@ -53,8 +53,8 @@ const AreaChart = ({ series, datetimes }) => {
           options={options}
           series={series}
           type="area"
-          width={chartWidth}
-          height={chartHeight}
+          width={470}
+          height={150}
         />
       </div>
       <div id="html-dist"></div>

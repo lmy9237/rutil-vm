@@ -1,4 +1,5 @@
 import { useDiskById } from "../../../api/RQHook";
+import InfoTable from "../../../components/table/InfoTable";
 import { convertBytesToGB } from "../../../util";
 
 /**
@@ -26,23 +27,7 @@ const DiskGeneral = ({ diskId }) => {
     { label: "실제 크기", value: `${convertBytesToGB(disk?.actualSize)} GB` },
   ];
 
-  console.log("...");
-  return (
-    <div className="tables">
-      <div className="table_container_center">
-        <table className="table">
-          <tbody>
-            {tableRows.map((row, index) => (
-              <tr key={index}>
-                <th>{row.label}:</th>
-                <td>{row.value}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+  return <InfoTable tableRows={tableRows} />;
 };
 
 export default DiskGeneral;

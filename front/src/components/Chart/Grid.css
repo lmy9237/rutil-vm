@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   width: 100%;
-  gap: 0.1rem;
+  gap: 2px;
   width: 80%;
 }
 
@@ -26,8 +26,7 @@
 
 .percent placeholder{
   margin-top: 5px;
-  font-size: 12px;
+  font-size: var(--fs-default-4);
   color: #000000;
   z-index: 1;
-
 }

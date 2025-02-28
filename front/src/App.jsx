@@ -164,29 +164,19 @@ const App = () => {
           </Routes>)
         }
       </Router>
-      <Toaster 
-        position="top-center"
-        reverseOrder={false}    
-        gutter={4} 
+      <Toaster
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={4}
         toastOptions={{
-          style: {
-            fontSize: '10px', // 글씨 크기를 작게 설정
-            background: '#333', // 배경색 (선택)
-            color: '#fff', // 글자색 (선택)
-          },
+          // duration: Infinity,
+          duration: 400, // 지속시간
+          className: "toast", 
           success: {
-            style: {
-              fontSize: '10px', // 성공 알림의 글씨 크기
-              background: 'green',
-              color: '#fff',
-            },
+            className: "toast toast-success",
           },
           error: {
-            style: {
-              fontSize: '12px', // 오류 알림의 글씨 크기
-              background: 'red',
-              color: '#fff',
-            },
+            className: "toast toast-error",
           },
         }}
       />

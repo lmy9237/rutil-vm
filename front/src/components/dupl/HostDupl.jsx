@@ -46,7 +46,6 @@ const HostDupl = ({
                 fixedWidth
                 style={{
                   color: "gold",
-                  fontSize: "0.3rem",
                   transform: "rotate(90deg)",
                 }}
               />
@@ -56,7 +55,6 @@ const HostDupl = ({
                 fixedWidth
                 style={{
                   color: "grey",
-                  fontSize: "0.3rem",
                   transform: "rotate(90deg)",
                 }}
               />

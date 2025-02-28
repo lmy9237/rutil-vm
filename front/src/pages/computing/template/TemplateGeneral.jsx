@@ -1,4 +1,5 @@
 import { useTemplate } from "../../../api/RQHook";
+import InfoTable from "../../../components/table/InfoTable";
 import { convertBytesToGB } from "../../../util";
 
 /**
@@ -21,7 +22,6 @@ const TemplateGeneral = ({ templateId }) => {
     { label: "그래픽 프로토콜", value: "" },
     { label: "비디오 유형", value: "" },
     { label: "최적화 옵션", value: template?.optimizeOption },
-    { label: "", value: "" },
     {
       label: "설정된 메모리",
       value: convertBytesToGB(template?.memorySize) + " GB",
@@ -35,20 +35,7 @@ const TemplateGeneral = ({ templateId }) => {
     { label: "상태 비저장", value: template?.stateless ? "예" : "아니오" },
   ];
 
-  return (
-    <>
-      <table className="table">
-        <tbody>
-          {tableRows.map((row, index) => (
-            <tr key={index}>
-              <th>{row.label}</th>
-              <td>{row.value}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
-  );
+  return <InfoTable tableRows={tableRows} />;
 };
 
 export default TemplateGeneral;

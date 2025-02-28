@@ -124,7 +124,8 @@ const BarChart = ({ names, percentages }) => {
           options={chartOptions}
           series={series}
           type="bar"
-        
+          width={350}
+          height={180}
         />
       </div>
       <div id="html-dist"></div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { useDomainById } from "../../../api/RQHook";
 import { checkZeroSizeToGB } from "../../../util";
+import InfoTable from "../../../components/table/InfoTable";
 
 const overCommit = (commit, disk) => ((commit / disk) * 100).toFixed(0);
 
@@ -37,20 +38,7 @@ const DomainGeneral = ({ domainId }) => {
     },
   ];
 
-  return (
-    <div>
-      <table className="table">
-        <tbody>
-          {tableRows.map((row, index) => (
-            <tr key={index}>
-              <th>{row.label}:</th>
-              <td>{row.value}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+  return <InfoTable tableRows={tableRows} />;
 };
 
 export default DomainGeneral;

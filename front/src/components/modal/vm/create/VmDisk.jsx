@@ -112,8 +112,10 @@ const VmDisk = ({
                   {disk?.alias} ({(disk?.size || disk?.virtualSize) + ' GB'}) {disk?.bootable ? "[부팅]" : ""} 
               </span>
             </div>
-            {(disk.isCreated || disk.isExisting) && <button onClick={() => openEditModal(disk)}>편집</button>}
-            <button onClick={() => handleRemoveDisk(index, disk.isExisting)}>삭제</button>
+            <div className="flex">
+              {(disk.isCreated || disk.isExisting) && <button onClick={() => openEditModal(disk)}>편집</button>}
+              <button onClick={() => handleRemoveDisk(index, disk.isExisting)}>삭제</button>
+            </div>
           </div>          
         ))}
       </div>

@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { useCluster } from "../../../api/RQHook";
+import InfoTable from "../../../components/table/InfoTable";
 
 /**
  * @name ClusterGeneral
@@ -33,19 +34,7 @@ const ClusterGeneral = ({ clusterId }) => {
     { label: "데이터센터", value: cluster?.dataCenterVo?.name },
     { label: "호환버전", value: cluster?.version },
     { label: "클러스터 ID", value: cluster?.id },
-    {
-      label: "클러스터 CPU 유형",
-      value: (
-        <>
-          {cluster?.cpuType}
-          <FontAwesomeIcon
-            icon={faInfoCircle}
-            style={{ color: "rgb(83, 163, 255)", marginLeft: "3px" }}
-            fixedWidth
-          />
-        </>
-      ),
-    },
+    { label: "클러스터 CPU 유형", value: cluster?.cpuType },
     { label: "최대 메모리 오버 커밋", value: `${cluster?.memoryOverCommit}%` },
     { label: "칩셋/펌웨어 유형", value: renderBiosType(cluster?.biosType) },
     { label: "가상 머신 수", value: cluster?.vmSize?.allCnt },
@@ -54,21 +43,7 @@ const ClusterGeneral = ({ clusterId }) => {
     { label: "Down 상태의 볼륨 수", value: "해당 없음" },
   ];
 
-  console.log("...");
-  return (
-    <>
-      <table className="table">
-        <tbody>
-          {tableRows.map((row, index) => (
-            <tr key={index}>
-              <th>{row.label}:</th>
-              <td>{row.value}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
-  );
+  return <InfoTable tableRows={tableRows} />;
 };
 
 export default ClusterGeneral;

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHost } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import "./Host.css";
+import InfoTable from "../../../components/table/InfoTable";
 
 /**
  * @name HostGeneral
@@ -92,18 +93,7 @@ const HostGeneral = ({ hostId }) => {
       </div>
 
       <div className="host-table-outer">
-        <table className="host-table">
-          <tbody>
-            {tabs
-              .find(({ tab }) => tab === activeTab)
-              ?.tableRows.map((row, index) => (
-                <tr key={index}>
-                  <th>{row.label}:</th>
-                  <td>{row.value}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+        <InfoTable tableRows={tabs.find(({ tab }) => tab === activeTab)?.tableRows || []} />
       </div>
     </div>
   );

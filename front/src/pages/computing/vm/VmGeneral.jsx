@@ -9,6 +9,7 @@ import {
 import VmGeneralChart from "./VmGeneralChart";
 import { useVmById } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
+import InfoTable from "../../../components/table/InfoTable";
 
 // 운영 시스템
 const osSystemList = [
@@ -179,30 +180,12 @@ const VmGeneral = ({ vmId }) => {
     <>
       <div className="vm-detail-general-boxs">
         <div className="detail-general-box">
-          <table className="table">
-            <tbody>
-              {generalTableRows.map((row, index) => (
-                <tr key={index}>
-                  <th>{row.label}</th>
-                  <td>{row.value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <InfoTable tableRows={generalTableRows} />
         </div>
 
         <div className="detail-general-box">
           <div>VM 하드웨어</div>
-          <table className="table">
-            <tbody>
-              {hardwareTableRows.map((row, index) => (
-                <tr key={index}>
-                  <th>{row.label}</th>
-                  <td>{row.value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <InfoTable tableRows={hardwareTableRows} />
         </div>
 
         <div className="detail-general-mini-box">
@@ -239,18 +222,7 @@ const VmGeneral = ({ vmId }) => {
 
       <div className="detail-general-boxs-bottom">
         <div className="vm-general-bottom-box">
-          <div className="vm-table-container">
-            <table className="table">
-              <tbody>
-                {typeTableRows.map((row, index) => (
-                  <tr key={index}>
-                    <th>{row.label}:</th>
-                    <td>{row.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <InfoTable tableRows={typeTableRows} />
         </div>
 
         <div className="vm-general-bottom-box">

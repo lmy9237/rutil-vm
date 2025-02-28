@@ -431,7 +431,7 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                         className="aside-popup-second-content"
                         style={{
                           backgroundColor: getBackgroundColor(dataCenter.id),
-                          paddingLeft: getPaddingLeft(hasClusters, "33px", "17px"), // ✅ 적용
+                          paddingLeft: getPaddingLeft(hasClusters, "42px", "26px"), // ✅ 적용
                         }}
                         onClick={() => {
                           setSelectedDiv(dataCenter.id);
@@ -466,7 +466,7 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                                   className="aside-popup-third-content"
                                   style={{
                                       backgroundColor: getBackgroundColor(cluster.id),
-                                      paddingLeft: getPaddingLeft(hasHosts, "51px", "35px"),
+                                      paddingLeft: getPaddingLeft(hasHosts, "59px", "43px"),
                                   }}
                                   onClick={() => {
                                       setSelectedDiv(cluster.id);
@@ -498,7 +498,7 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                                               className="aside-popup-fourth-content"
                                               style={{
                                                   backgroundColor: getBackgroundColor(host.id),
-                                                  paddingLeft: getPaddingLeft(hasVMs, "66px", "50px"),
+                                                  paddingLeft: getPaddingLeft(hasVMs, "75px", "59px"),
                                               }}
                                               onClick={() => {
                                                   setSelectedDiv(host.id);
@@ -527,7 +527,7 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                                                   className="aside_popup_last_content"
                                                   style={{
                                                       backgroundColor: getBackgroundColor(vm.id),
-                                                      paddingLeft: "80px", 
+                                                      paddingLeft: "90px", 
                                                   }}
                                                   onClick={() => {
                                                       setSelectedDiv(vm.id);
@@ -599,7 +599,7 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                       className="aside-popup-second-content"
                       style={{
                         backgroundColor: getBackgroundColor(dataCenter.id),
-                        paddingLeft: getPaddingLeft(hasNetworks, "33px", "17px"), 
+                        paddingLeft: getPaddingLeft(hasNetworks, "42px", "26px"), 
                         
                       }}
                       onClick={() => {
@@ -699,7 +699,7 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
                       className="aside-popup-second-content"
                       style={{
                         backgroundColor: getBackgroundColor(dataCenter.id),
-                        paddingLeft: getPaddingLeft(hasDomains, "33px", "17px"), 
+                        paddingLeft: getPaddingLeft(hasDomains, "42px", "26px"), 
                       }}
                       onClick={() => {
                         setSelectedDiv(dataCenter.id);

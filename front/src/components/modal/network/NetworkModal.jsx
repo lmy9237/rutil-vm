@@ -68,7 +68,7 @@ const NetworkModal = ({
         mtu: network.mtu,
         vlan: network.vlan,
         usageVm: network.usage?.vm,
-        portIsolation: network.portIsolation, 
+        portIsolation: network.portIsolation || false, 
       });
       setDataCenterVoId(network?.datacenterVo?.id);
     }
@@ -243,7 +243,7 @@ const NetworkModal = ({
                 portIsolation: e.target.checked,
               }))
             }
-            disabled={!formState.usageVm} // 가상 머신 네트워크가 비활성화되면 비활성화
+            disabled={editMode || !formState.usageVm} // 가상 머신 네트워크가 비활성화되면 비활성화(??)
           />
 
           <FormGroup label="MTU" className="mtu-form">
