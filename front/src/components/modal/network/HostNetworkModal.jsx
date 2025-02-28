@@ -7,6 +7,7 @@ import HostNetworkEditModal from "./HostNetworkEditModal";
 import { useHost, useNetworkFromCluster } from "../../../api/RQHook";
 import "./MNetwork.css";
 import Loading from "../../common/Loading";
+import { renderTFStatusIcon, renderUpDownStatusIcon } from "../../Icon";
 
 const HostNetworkModal = ({ 
   isOpen, 
@@ -18,21 +19,17 @@ const HostNetworkModal = ({
   const { data: host } = useHost(hostId);
   
   // 클러스터id로 네트워크정보조회
-  const { 
-    data: network
-  } = useNetworkFromCluster(host?.clusterVo?.id, (network) => {
-      return {
-        id: network?.id ?? "",
-        name: network?.name ?? "Unknown",
-        status: network?.status ?? "",
-        role: network?.role ? (<FontAwesomeIcon icon={faCrown} fixedWidth />) : (""),
-        description: network?.description ?? "No description",
-      };
-    }
-  );
+  const { data: network } = useNetworkFromCluster(host?.clusterVo?.id, (network) => ({
+    id: network?.id ?? "",
+    name: network?.name ?? "Unknown",
+    status: network?.status ?? "",
+    // role: network?.usage?.vm ? <FontAwesomeIcon icon={faCrown} className="icon" style={{ marginLeft: "0.2rem", cursor: "pointer" }} fixedWidth />: null, 
+    description: network?.description ?? "No description",
+  }));
 
-  const dragItem = useRef(null);
-
+  // 네트워크 인터페이스 및 Bonding 정보를 저장하는 배열
+  const [outer, setOuter] = useState([]);
+  
   const [isNetworkEditPopupOpen, setIsNetworkEditPopupOpen] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState(null);
   const openNetworkEditPopup = (network) => {
@@ -43,193 +40,16 @@ const HostNetworkModal = ({
   const [isBondingPopupOpen, setIsBondingPopupOpen] = useState(false);
   const [selectedBonding, setSelectedBonding] = useState(null);
   const openBondingPopup = (bond) => {
-    selectedBonding(bond)
+    setSelectedBonding(bond); // 선택한 본딩 정보 저장
     setIsBondingPopupOpen(true);
-  };
+  }; 
 
-  const [outer, setOuter] = useState([]);
 
-  useEffect(() => {
-    if (nicData && nicData.length > 0) {
-      let bondCounter = 0;
-      setOuter(
-        nicData.map((nic) => ({
-          id: nic.id || `outer${bondCounter + 1}`,
-          name: nic.bondingVo?.slaves?.length > 1 ? `bond${bondCounter++}` : "",
-          children:
-            nic.bondingVo?.slaves?.length > 0
-              ? nic.bondingVo.slaves.map((slave) => ({
-                  id: slave.id,
-                  name: slave.name,
-                }))
-              : [{ id: nic.id, name: nic.name }],
-          networks: nic.networkVo?.id
-            ? [{ id: nic.networkVo.id, name: nic.networkVo.name }]
-            : [],
-        }))
-      );
-    }
-  }, [nicData]);
-
-  // Interfaces 생성
-  const [unassignedInterface, setUnassignedInterface] = useState(
-    nicData?.map((nic) => ({
-      id: nic.id,
-      name: nic.name,
-      children:
-        nic.bondingVo?.slaves?.length > 0
-          ? nic.bondingVo.slaves.map((slave) => ({
-              id: slave.id,
-              name: slave.name,
-            }))
-          : [{ id: nic.id, name: nic.name }], // slaves가 없으면 nic의 name 사용
-    })) || []
-  );
-
-  // Networks in Outer 생성
-  const [unassignedNetworksOuter, setUnassignedNetworksOuter] = useState(
-    nicData?.map((nic) => ({
-      id: nic.networkVo?.id || `network${nic.id}`,
-      name: nic.networkVo?.name || `Unassigned Network for ${nic.name}`,
-      children: [],
-    })) || []
-  );
-
-  // Networks 설정 (기존 데이터 유지)
-  const [unassignedNetworks, setUnassignedNetworks] = useState([{ id: "", name: "" },]);
-  
+  // 드래그하는 요소를 추적
+  const dragItem = useRef(null);  
   const dragStart = (e, item, source, parentId = null) => {
     dragItem.current = { item, source, parentId };
   };
-
-  const [contextMenu, setContextMenu] = useState(null);
-  const handleContextMenu = (event, targetItem, parentItem) => {
-    event.preventDefault(); // 기본 우클릭 메뉴 차단
-  
-    console.log("우클릭 이벤트 발생", targetItem, parentItem);
-  
-    if (targetItem.children) {
-      if (parentItem.children.length < 2) {
-        console.log("⚠️ parentItem.children.length < 2 → 우클릭 메뉴 차단됨");
-        return;
-      }
-    } else {
-      if (parentItem.networks.length < 2) {
-        console.log("⚠️ parentItem.networks.length < 2 → 우클릭 메뉴 차단됨");
-        return;
-      }
-    }
-  
-    setContextMenu({
-      x: event.clientX,
-      y: event.clientY,
-      containerItem: targetItem,
-      parentInterface: parentItem,
-    });
-    console.log("✅ 컨텍스트 메뉴 생성됨:", { x: event.clientX, y: event.clientY });
-  };
-  
-  const renderContextMenu = () => {
-    if (!contextMenu) return null;
-  
-    // 화면 크기 가져오기
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-  
-    // 기본 위치
-    let menuX = contextMenu.x;
-    let menuY = contextMenu.y;
-
-    // 우클릭 메뉴 크기 예상값
-    const menuWidth = 120;
-    const menuHeight = 40;
-  
-    // 화면을 넘어가면 위치 조정
-    if (menuX + menuWidth > screenWidth) {
-      menuX = screenWidth - menuWidth - 10;
-    }
-    if (menuY + menuHeight > screenHeight) {
-      menuY = screenHeight - menuHeight - 10;
-    }
-  
-    return (
-      <div
-        className="context-menu"
-        style={{
-          position: "fixed",
-          top: menuY + "px",
-          left: menuX + "px",
-          backgroundColor: "white",
-          border: "1px solid #ccc",
-          padding: "8px 12px",
-          zIndex: 99999,
-          boxShadow: "2px 2px 10px rgba(0,0,0,0.2)",
-          borderRadius: "4px",
-          fontSize: "14px",
-          cursor: "pointer",
-        }}
-        onClick={handleSplitContainer}
-      >
-        🔹 분리
-      </div>
-    );
-  };
-  
-  // ✅ `contextMenu` 상태 변화 로그 확인
-  useEffect(() => {
-    console.log("📌 contextMenu 상태 변경됨:", contextMenu);
-  }, [contextMenu]);
-  
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (contextMenu) {
-        setTimeout(() => setContextMenu(null), 100); // 💡 100ms 지연 추가
-      }
-    };
-  
-    document.addEventListener("mouseup", handleClickOutside);
-    return () => document.removeEventListener("mouseup", handleClickOutside);
-  }, [contextMenu]);
-  
-  const handleSplitContainer = () => {
-    if (!contextMenu) return;
-  
-    setOuter((prevOuter) => {
-      return prevOuter.flatMap((outerItem) => {
-        if (outerItem.id === contextMenu.parentInterface.id) {
-          // 기존 인터페이스에서 선택된 컨테이너를 제외
-          const updatedChildren = outerItem.children.filter(
-            (child) => child.id !== contextMenu.containerItem.id
-          );
-  
-          // 기존 인터페이스 유지
-          const updatedOuterItem = { ...outerItem, children: updatedChildren };
-  
-          // 새로운 인터페이스 추가
-          const newInterface = {
-            id: contextMenu.containerItem.id,
-            name: contextMenu.containerItem.name,
-            children: [contextMenu.containerItem],
-            networks: [],
-          };
-  
-          return [updatedOuterItem, newInterface].filter(
-            (item) => item.children.length > 0
-          );
-        }
-        return outerItem;
-      });
-    });
-  
-    setContextMenu(null); // 우클릭 메뉴 닫기
-  };
-  useEffect(() => {
-    const handleClickOutside = () => setContextMenu(null);
-  
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
-  
   const drop = (targetId, targetType) => {
     if (!dragItem.current) return;
     const { item, source, parentId } = dragItem.current;
@@ -364,11 +184,173 @@ const HostNetworkModal = ({
         })
       );
     }
-  
     dragItem.current = null; // Reset drag state
   };
 
 
+  useEffect(() => {
+    if (nicData && nicData.length > 0) {
+      let bondCounter = 0;
+      setOuter(
+        nicData.map((nic) => ({
+          id: nic.id || `outer${bondCounter + 1}`,
+          name: nic.bondingVo?.slaves?.length > 1 ? `bond${bondCounter++}` : "",
+          children: nic.bondingVo?.slaves?.length > 0
+              ? nic.bondingVo.slaves.map((slave) => ({ id: slave.id, name: slave.name,})) 
+              : [{ id: nic.id, name: nic.name }],
+          networks: nic.networkVo?.id 
+              ? [{ id: nic.networkVo.id, name: nic.networkVo.name }] 
+              : [],
+        }))
+      );
+    }
+  }, [nicData]);
+
+  // Interfaces 생성
+  const [unassignedInterface, setUnassignedInterface] = useState(
+    nicData?.map((nic) => ({
+      id: nic.id,
+      name: nic.name,
+      children: nic.bondingVo?.slaves?.length > 0
+          ? nic.bondingVo.slaves.map((slave) => ({ id: slave.id, name: slave.name }))
+          : [{ id: nic.id, name: nic.name }], // slaves가 없으면 nic의 name 사용
+    })) || []
+  );
+
+  // Networks in Outer 생성
+  const [unassignedNetworksOuter, setUnassignedNetworksOuter] = useState(
+    nicData?.map((nic) => ({
+      id: nic.networkVo?.id || `network${nic.id}`,
+      name: nic.networkVo?.name || `Unassigned Network for ${nic.name}`,
+      children: [],
+    })) || []
+  );
+
+  // Networks 설정 (기존 데이터 유지)
+  const [unassignedNetworks, setUnassignedNetworks] = useState([{ id: "", name: "" },]);
+  
+  const handleContextMenu = (event, targetItem, parentItem) => {
+    event.preventDefault(); // 기본 우클릭 메뉴 차단
+    console.log("우클릭 이벤트 발생", targetItem, parentItem);
+  
+    if (targetItem.children) {
+      if (parentItem.children.length < 2) {
+        console.log("⚠️ parentItem.children.length < 2 → 우클릭 메뉴 차단됨");
+        return;
+      }
+    } else {
+      if (parentItem.networks.length < 2) {
+        console.log("⚠️ parentItem.networks.length < 2 → 우클릭 메뉴 차단됨");
+        return;
+      }
+    }
+  
+    setContextMenu({
+      x: event.clientX,
+      y: event.clientY,
+      containerItem: targetItem,
+      parentInterface: parentItem,
+    });
+    console.log("✅ 컨텍스트 메뉴 생성됨:", { x: event.clientX, y: event.clientY });
+  };
+  
+  const [contextMenu, setContextMenu] = useState(null);
+  const renderContextMenu = () => {
+    if (!contextMenu) return null;
+  
+    // 화면 크기 가져오기
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+  
+    // 기본 위치
+    let menuX = contextMenu.x;
+    let menuY = contextMenu.y;
+
+    // 우클릭 메뉴 크기 예상값
+    const menuWidth = 120;
+    const menuHeight = 40;
+  
+    // 화면을 넘어가면 위치 조정
+    if (menuX + menuWidth > screenWidth) {
+      menuX = screenWidth - menuWidth - 10;
+    }
+    if (menuY + menuHeight > screenHeight) {
+      menuY = screenHeight - menuHeight - 10;
+    }
+  
+    return (
+      <div
+        className="context-menu"
+        style={{
+          position: "fixed",
+          top: menuY + "px",
+          left: menuX + "px",
+          backgroundColor: "white",
+          border: "1px solid #ccc",
+          padding: "8px 12px",
+          zIndex: 99999,
+          boxShadow: "2px 2px 10px rgba(0,0,0,0.2)",
+          borderRadius: "4px",
+          fontSize: "14px",
+          cursor: "pointer",
+        }}
+        onClick={handleSplitContainer}
+      >
+        🔹 분리
+      </div>
+    );
+  };
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (contextMenu) {
+        setTimeout(() => setContextMenu(null), 100); // 💡 100ms 지연 추가
+      }
+    };
+  
+    document.addEventListener("mouseup", handleClickOutside);
+    return () => document.removeEventListener("mouseup", handleClickOutside);
+  }, [contextMenu]);
+  
+  const handleSplitContainer = () => {
+    if (!contextMenu) return;
+  
+    setOuter((prevOuter) => {
+      return prevOuter.flatMap((outerItem) => {
+        if (outerItem.id === contextMenu.parentInterface.id) {
+          // 기존 인터페이스에서 선택된 컨테이너를 제외
+          const updatedChildren = outerItem.children.filter(
+            (child) => child.id !== contextMenu.containerItem.id
+          );
+  
+          // 기존 인터페이스 유지
+          const updatedOuterItem = { ...outerItem, children: updatedChildren };
+  
+          // 새로운 인터페이스 추가
+          const newInterface = {
+            id: contextMenu.containerItem.id,
+            name: contextMenu.containerItem.name,
+            children: [contextMenu.containerItem],
+            networks: [],
+          };
+  
+          return [updatedOuterItem, newInterface].filter(
+            (item) => item.children.length > 0
+          );
+        }
+        return outerItem;
+      });
+    });
+  
+    setContextMenu(null); // 우클릭 메뉴 닫기
+  };
+  useEffect(() => {
+    const handleClickOutside = () => setContextMenu(null);
+  
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+  
   const renderInterface = (interfaceItem) => (
     <div
       key={interfaceItem.id}
@@ -442,6 +424,7 @@ const HostNetworkModal = ({
             <div className="left-section">{network.name}</div>
             <div className="right-section">
               {/* 네트워크 설정에 관한 항목은 정리 필요 */}
+              {network?.usage?.vm === true ? <FontAwesomeIcon icon={faCrown} className="icon" style={{ marginLeft: "0.2rem", cursor: "pointer" }} />: "a"}, 
               <FontAwesomeIcon icon={faDesktop} className="icon" />
               <FontAwesomeIcon
                 onClick={() => openNetworkEditPopup(network)} // 네트워크 정보와 함께 모달 열기
@@ -473,16 +456,7 @@ const HostNetworkModal = ({
         onDragStart={(e) => dragStart(e, net, "unassigned")}
       >
         <div className="flex items-center justify-center">
-          <FontAwesomeIcon
-            icon={net.status === "UP" ? faPlay : faPlay}
-            style={{
-              color: net.status === "UP" ? "red" : "green",
-              fontSize: "13px",
-              transform: "rotate(270deg)",
-              marginRight: "9px",
-            }}
-          />
-          {net.name}
+          {renderTFStatusIcon(net?.status==="OPERATIONAL")}{net.name}
         </div>
       </div>
     ));

@@ -71,6 +71,15 @@ export function checkZeroSizeToMB(size) {
   return convertBytesToMB(size) < 1 ? "< 1 MB" : `${convertBytesToMB(size)} MB`;
 }
 
+
+export function convertBpsToMbps(bytes) {
+  return bytes / 1_000_000;
+}
+
+export function checkZeroSizeToMbps(size) {
+  return convertBpsToMbps(size) < 1 ? "< 1" : `${convertBpsToMbps(size).toLocaleString()}` 
+}
+
 /**
  * @name validateUsername
  * oVirt 사용자 ID 값 유효 검증

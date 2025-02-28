@@ -6,6 +6,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import HostNetworkModal from "../../../components/modal/network/HostNetworkModal";
 import { useNetworkInterfaceFromHost } from "../../../api/RQHook";
 import { renderUpDownStatusIcon } from "../../../components/Icon";
+import { checkZeroSizeToMbps } from "../../../util";
 
 /**
  * @name HostNics
@@ -25,7 +26,12 @@ const HostNics = ({ hostId }) => {
     ipv6: e?.ipv6?.address || "없음",
     macAddress: e?.macAddress || "정보없음",
     mtu: e?.mtu || "정보없음",
-    speed: e?.speed ? `${e.speed / 1_000_000} Mbps` : "정보없음",
+    speed: checkZeroSizeToMbps(e?.speed),
+    rxSpeed: checkZeroSizeToMbps(e?.rxSpeed),
+    txSpeed: checkZeroSizeToMbps(e?.txSpeed),
+    rxTotalSpeed: e?.rxTotalSpeed.toLocaleString(),
+    txTotalSpeed: e?.txTotalSpeed.toLocaleString(),
+    pkts: `${e?.rxTotalError} Pkts` || "1 Pkts",
     status: e?.status || "UNKNOWN",
     bondingVo: {
       ...e?.bondingVo,
@@ -36,11 +42,16 @@ const HostNics = ({ hostId }) => {
     },
   }));
 
+  function convertBpsToMbps(bytes) {
+    return (bytes / (1024 * 1024 * 1024)).toFixed(0);
+  }
+
   const [visibleBoxes, setVisibleBoxes] = useState([]);
   const [activeTable, setActiveTable] = useState({});
   const [activeButton, setActiveButton] = useState({});
   const [isExpandedAll, setIsExpandedAll] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   useEffect(() => {
     setActiveTable(nics.reduce((acc, _, index) => ({ ...acc, [index]: "NETWORK_FROM_HOST" }), {}));
@@ -76,8 +87,8 @@ const HostNics = ({ hostId }) => {
           {isExpandedAll ? "모두 숨기기" : "모두 확장"}
         </button>
         <button onClick={() => setIsModalOpen(true)}>호스트 네트워크 설정</button>
-        <button>네트워크 설정 저장</button>
-        <button>모든 네트워크 동기화</button>
+        {/* <button>네트워크 설정 저장</button>
+        <button>모든 네트워크 동기화</button> */}
       </div>
 
       <div className="host-nic-table-outer">
@@ -109,11 +120,7 @@ const HostNics = ({ hostId }) => {
                       onClick={() => switchTable(index, "NETWORK_FROM_HOST_SLAVE")}
                       className={`h-icon-btn ${activeButton[index] === "NETWORK_FROM_HOST_SLAVE" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
                     >
-                      <FontAwesomeIcon
-                        icon={faTimes}
-                        fixedWidth
-                        style={{ fontSize: "15px" }}
-                      />
+                      <FontAwesomeIcon icon={faTimes} fixedWidth style={{ fontSize: "15px" }} />
                     </button>
                   )}
                 </div>
@@ -127,7 +134,6 @@ const HostNics = ({ hostId }) => {
                       onRowClick={() => console.log("Row clicked")}
                     />
                   )}
-
                   {activeTable[index] === "NETWORK_FROM_HOST_SLAVE" && data.bondingVo?.slaves && (
                     <TablesOuter
                       isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
@@ -145,9 +151,9 @@ const HostNics = ({ hostId }) => {
 
       <HostNetworkModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
         nicData={nics} 
         hostId={hostId} 
+        onClose={() => setIsModalOpen(false)} 
       />
     </>
   );

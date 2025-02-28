@@ -459,10 +459,11 @@ fun Connection.expectHostStatus(hostId: String, expectStatus: HostStatus, interv
 private fun Connection.srvAllHostNicsFromHost(hostId: String): HostNicsService =
 	this.srvHost(hostId).nicsService()
 
-fun Connection.findAllHostNicsFromHost(hostId: String): Result<List<HostNic>> = runCatching {
-	checkHostExists(hostId)
+fun Connection.findAllHostNicsFromHost(hostId: String, follow: String = ""): Result<List<HostNic>> = runCatching {
+	this.srvAllHostNicsFromHost(hostId).list().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().nics()
 
-	this.srvAllHostNicsFromHost(hostId).list().send().nics()
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST_NIC,"목록조회", hostId)
 }.onFailure {
