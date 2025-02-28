@@ -42,16 +42,11 @@ const HostNics = ({ hostId }) => {
     },
   }));
 
-  function convertBpsToMbps(bytes) {
-    return (bytes / (1024 * 1024 * 1024)).toFixed(0);
-  }
-
   const [visibleBoxes, setVisibleBoxes] = useState([]);
   const [activeTable, setActiveTable] = useState({});
   const [activeButton, setActiveButton] = useState({});
   const [isExpandedAll, setIsExpandedAll] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
 
   useEffect(() => {
     setActiveTable(nics.reduce((acc, _, index) => ({ ...acc, [index]: "NETWORK_FROM_HOST" }), {}));

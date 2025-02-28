@@ -177,21 +177,23 @@ fun List<Network>.toNetworkVos(conn: Connection): List<NetworkVo> =
 	this@toNetworkVos.map { it.toNetworkVo(conn) }
 
 
-fun Network.toClusterNetworkVo(conn: Connection): NetworkVo {
-	val usages: List<NetworkUsage> = this@toClusterNetworkVo.usages()
+fun Network.toClusterNetworkVo(): NetworkVo {
+	val network = this@toClusterNetworkVo
+	val usages: List<NetworkUsage> = network.usages()
 	// TODO 할당을 어떻게 나타낼거냐
 	return NetworkVo.builder {
-		id { this@toClusterNetworkVo.id() }
-		name { this@toClusterNetworkVo.name() }
-		description { this@toClusterNetworkVo.description() }
-		portIsolation { this@toClusterNetworkVo.portIsolation() }
-		status { this@toClusterNetworkVo.status() }
+		id { network.id() }
+		name { network.name() }
+		description { network.description() }
+		portIsolation { network.portIsolation() }
+		status { network.status() }
 		usage { usages.toUsagesVo() }
-		required { if(this@toClusterNetworkVo.requiredPresent()) this@toClusterNetworkVo.required() else false }
+		vlan { if(network.vlanPresent()) network.vlan().idAsInteger() else null }
+		required { if(network.requiredPresent()) network.required() else false }
 	}
 }
-fun List<Network>.toClusterNetworkVos(conn: Connection): List<NetworkVo> =
-	this@toClusterNetworkVos.map { it.toClusterNetworkVo(conn) }
+fun List<Network>.toClusterNetworkVos(): List<NetworkVo> =
+	this@toClusterNetworkVos.map { it.toClusterNetworkVo() }
 
 
 /**

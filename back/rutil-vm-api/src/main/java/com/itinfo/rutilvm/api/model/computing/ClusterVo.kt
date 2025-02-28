@@ -213,7 +213,7 @@ fun Cluster.toNetworkClusterVo(conn: Connection, networkId: String): ClusterVo{
 		name { this@toNetworkClusterVo.name() }
 		description {this@toNetworkClusterVo.description() }
 		isConnected { network != null }
-		networkVo { network?.toClusterNetworkVo(conn) }
+		networkVo { network?.toClusterNetworkVo() }
 	}
 }
 fun List<Cluster>.toNetworkClusterVos(conn: Connection, networkId: String): List<ClusterVo> =

@@ -259,7 +259,7 @@ class ClusterServiceImpl(
 		log.info("findAllNetworksFromCluster ... clusterId: {}", clusterId)
 		val res: List<Network> = conn.findAllNetworksFromCluster(clusterId)
 			.getOrDefault(listOf())
-		return res.toClusterNetworkVos(conn)
+		return res.toClusterNetworkVos()
 	}
 
 	@Throws(Error::class)
@@ -294,7 +294,7 @@ class ClusterServiceImpl(
 			.filter { clusterNetworks.none { clusterNetwork -> clusterNetwork.id() == it.id() } }
 
 		val mergedNetworks = clusterNetworks + networks
-		return mergedNetworks.toClusterNetworkVos(conn)
+		return mergedNetworks.toClusterNetworkVos()
 	}
 
 	@Throws(Error::class)

@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowsAltH,faCrown,faDesktop,faPencilAlt,faPlay,} from "@fortawesome/free-solid-svg-icons";
+import { faArrowsAltH,faCrown,faDesktop,faPencilAlt,} from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import HostNetworkBondingModal from "./HostNetworkBondingModal";
 import HostNetworkEditModal from "./HostNetworkEditModal";
 import { useHost, useNetworkFromCluster } from "../../../api/RQHook";
 import "./MNetwork.css";
 import Loading from "../../common/Loading";
-import { renderTFStatusIcon, renderUpDownStatusIcon } from "../../Icon";
+import { renderTFStatusIcon } from "../../Icon";
 
 const HostNetworkModal = ({ 
   isOpen, 
@@ -23,7 +23,8 @@ const HostNetworkModal = ({
     id: network?.id ?? "",
     name: network?.name ?? "Unknown",
     status: network?.status ?? "",
-    // role: network?.usage?.vm ? <FontAwesomeIcon icon={faCrown} className="icon" style={{ marginLeft: "0.2rem", cursor: "pointer" }} fixedWidth />: null, 
+    vlan: network?.vlan,
+    role: network?.usage?.vm, 
     description: network?.description ?? "No description",
   }));
 
@@ -206,53 +207,54 @@ const HostNetworkModal = ({
     }
   }, [nicData]);
 
-  // Interfaces 생성
-  const [unassignedInterface, setUnassignedInterface] = useState(
-    nicData?.map((nic) => ({
-      id: nic.id,
-      name: nic.name,
-      children: nic.bondingVo?.slaves?.length > 0
-          ? nic.bondingVo.slaves.map((slave) => ({ id: slave.id, name: slave.name }))
-          : [{ id: nic.id, name: nic.name }], // slaves가 없으면 nic의 name 사용
-    })) || []
-  );
+  // // Interfaces 생성
+  // const [unassignedInterface, setUnassignedInterface] = useState(
+  //   nicData?.map((nic) => ({
+  //     id: nic.id,
+  //     name: nic.name,
+  //     children: nic.bondingVo?.slaves?.length > 0
+  //         ? nic.bondingVo.slaves.map((slave) => ({ id: slave.id, name: slave.name }))
+  //         : [{ id: nic.id, name: nic.name }], // slaves가 없으면 nic의 name 사용
+  //   })) || []
+  // );
 
-  // Networks in Outer 생성
-  const [unassignedNetworksOuter, setUnassignedNetworksOuter] = useState(
-    nicData?.map((nic) => ({
-      id: nic.networkVo?.id || `network${nic.id}`,
-      name: nic.networkVo?.name || `Unassigned Network for ${nic.name}`,
-      children: [],
-    })) || []
-  );
+  // // Networks in Outer 생성
+  // const [unassignedNetworksOuter, setUnassignedNetworksOuter] = useState(
+  //   nicData?.map((nic) => ({
+  //     id: nic.networkVo?.id || `network${nic.id}`,
+  //     name: nic.networkVo?.name || `Unassigned Network for ${nic.name}`,
+  //     children: [],
+  //   })) || []
+  // );
 
   // Networks 설정 (기존 데이터 유지)
   const [unassignedNetworks, setUnassignedNetworks] = useState([{ id: "", name: "" },]);
   
-  const handleContextMenu = (event, targetItem, parentItem) => {
-    event.preventDefault(); // 기본 우클릭 메뉴 차단
-    console.log("우클릭 이벤트 발생", targetItem, parentItem);
+  // 우클릭 분리 버튼을 위해서
+  // const handleContextMenu = (event, targetItem, parentItem) => {
+  //   event.preventDefault(); // 기본 우클릭 메뉴 차단
+  //   console.log("우클릭 이벤트 발생", targetItem, parentItem);
   
-    if (targetItem.children) {
-      if (parentItem.children.length < 2) {
-        console.log("⚠️ parentItem.children.length < 2 → 우클릭 메뉴 차단됨");
-        return;
-      }
-    } else {
-      if (parentItem.networks.length < 2) {
-        console.log("⚠️ parentItem.networks.length < 2 → 우클릭 메뉴 차단됨");
-        return;
-      }
-    }
+  //   if (targetItem.children) {
+  //     if (parentItem.children.length < 2) {
+  //       console.log("⚠️ parentItem.children.length < 2 → 우클릭 메뉴 차단됨");
+  //       return;
+  //     }
+  //   } else {
+  //     if (parentItem.networks.length < 2) {
+  //       console.log("⚠️ parentItem.networks.length < 2 → 우클릭 메뉴 차단됨");
+  //       return;
+  //     }
+  //   }
   
-    setContextMenu({
-      x: event.clientX,
-      y: event.clientY,
-      containerItem: targetItem,
-      parentInterface: parentItem,
-    });
-    console.log("✅ 컨텍스트 메뉴 생성됨:", { x: event.clientX, y: event.clientY });
-  };
+  //   setContextMenu({
+  //     x: event.clientX,
+  //     y: event.clientY,
+  //     containerItem: targetItem,
+  //     parentInterface: parentItem,
+  //   });
+  //   console.log("✅ 컨텍스트 메뉴 생성됨:", { x: event.clientX, y: event.clientY });
+  // };
   
   const [contextMenu, setContextMenu] = useState(null);
   const renderContextMenu = () => {
@@ -424,8 +426,8 @@ const HostNetworkModal = ({
             <div className="left-section">{network.name}</div>
             <div className="right-section">
               {/* 네트워크 설정에 관한 항목은 정리 필요 */}
-              {network?.usage?.vm === true ? <FontAwesomeIcon icon={faCrown} className="icon" style={{ marginLeft: "0.2rem", cursor: "pointer" }} />: "a"}, 
-              <FontAwesomeIcon icon={faDesktop} className="icon" />
+              {network?.role === true ? <FontAwesomeIcon icon={faDesktop} className="icon" style={{ marginLeft: "0.2rem", cursor: "pointer" }} />: "a"}
+              {/* <FontAwesomeIcon icon={faDesktop} className="icon" /> */}
               <FontAwesomeIcon
                 onClick={() => openNetworkEditPopup(network)} // 네트워크 정보와 함께 모달 열기
                 icon={faPencilAlt}
@@ -456,7 +458,8 @@ const HostNetworkModal = ({
         onDragStart={(e) => dragStart(e, net, "unassigned")}
       >
         <div className="flex items-center justify-center">
-          {renderTFStatusIcon(net?.status==="OPERATIONAL")}{net.name}
+          {renderTFStatusIcon(net?.status==="OPERATIONAL")}{net?.name}<br/>
+          {net?.vlan === 0 ? "":`(VLAN ${net?.vlan})` }
         </div>
       </div>
     ));
