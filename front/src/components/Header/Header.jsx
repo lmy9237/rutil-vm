@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
+  faAngleRight,
   faBars,
   faBell,
   faChevronDown,
@@ -84,6 +85,12 @@ const Header = ({ setAuthenticated, toggleAside }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   // .aside-outer 열림 상태 관리(반응형형)
 
+  // 알림칸 넓이 늘어나게하기
+  const [isExpanded, setIsExpanded] = useState(false);
+  const handleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <div className="header center">
       <div className="header-left">
@@ -119,11 +126,13 @@ const Header = ({ setAuthenticated, toggleAside }) => {
           }}/>
 
         {isBellActive && (
-          <div className="bell-box" onClick={stopPropagation}>
+          <div className={`bell-box ${isExpanded ? "expanded" : ""}`} onClick={stopPropagation}>
             <div className="f-btw py-0.5 px-1.5">
-              <FontAwesomeIcon icon={faAngleLeft} fixedWidth
+              <FontAwesomeIcon
+                icon={isExpanded ? faAngleRight : faAngleLeft} // 방향 변경
+                fixedWidth
                 className="hover-icon"
-              
+                onClick={handleExpand}
               />
               통지함
               <FontAwesomeIcon icon={faTimes} fixedWidth

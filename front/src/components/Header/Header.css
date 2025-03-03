@@ -79,6 +79,9 @@
   height: 89.6vh;
   border-radius: 2px;
 }
+.bell-box.expanded {
+  width: 700px; /* 확장 시 */
+}
 .bell-box>div{
   font-size: var(--fs-default-4);
   border-bottom: var(--border-btn);
