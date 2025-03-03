@@ -33,7 +33,7 @@ const Footer = () => {
           >
             최근 작업
           </div>
-          <div
+          {/* <div
             style={{
               color: selectedFooterTab === "alerts" ? "black" : "#4F4F4F",
               borderBottom:
@@ -42,32 +42,51 @@ const Footer = () => {
             onClick={() => handleFooterTabClick("alerts")}
           >
             경보
-          </div>
+          </div> */}
         </div>
       </div>
-      {isFooterContentVisible && (
-        <div className="footer-content" style={{ display: "block" }}>
+  
+      <div className="footer-content" style={{ display: isFooterContentVisible ? "block" : "none" }}>
           <div className="footer-nav">
-            {[...Array(8)].map((_, index) => (
-              <div
-                key={index}
-                style={index === 7 ? { borderRight: "none" } : {}}
-              >
-                <div>작업이름</div>
-                <div>
-                  <FontAwesomeIcon icon={faFilter} fixedWidth />
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="footer-img">
-            <img src="img/화면 캡처 2024-04-30 164511.png" alt="스크린샷" />
-            <span>항목을 찾지 못했습니다</span>
+            <table>
+              <thead>
+                <tr >
+                  <th>작업 이름 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>대상 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>상태 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>세부 정보 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>시작 시간 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>대기 시간 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>시작 시간 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>가상 시스템 전원 켜기</td>
+                  <td>CentOS 7.9 Shell Script 테스트 - MYK</td>
+                  <td>완료 시간</td>
+                  <td></td>
+                  <td>2025.02.28</td>
+                  <td>2ms</td>
+                  <td>2025.02.28. 오전</td>
+                </tr>
+                <tr>
+                  <td>전원 켜기 초기화</td>
+                  <td>Datacenter</td>
+                  <td>완료 시간</td>
+                  <td></td>
+                  <td>2025.02.28</td>
+                  <td>3ms</td>
+                  <td>2025.02.28. 오전</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
+        
+        </div>
       )}
-    </div>
-  );
-};
+   
+
 
 export default Footer;

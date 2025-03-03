@@ -2,12 +2,15 @@
   font-size: var(--fs-default);
   width: 100%;
   max-height: 30%;
+  z-index: 3;
+  position: absolute;
+  bottom: 0;
 }
 .footer {
   min-height: var(--h-rutil-footer);
   display: flex;
-  border-top: 1px solid #ebebeb;
-  background: white;
+  border-top: 1px solid #7c7c7c;
+  background:#f7f7f7
 }
 .footer > button {
   color: rgb(10, 55, 107);
@@ -40,36 +43,32 @@
   color: #4f4f4f;
 }
 .footer-content {
-  height: 100%;
   display: none;
-  background: white;
+  height: 20vh;
+  background:#f7f7f7
 }
 .footer-nav {
-  display: flex;
+  font-size: var(--fs-default-4);
   width: 100%;
-  padding: 5px 3px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
-  margin-bottom: 18px;
+ 
 }
-.footer-nav > div {
-  display: flex;
-  width: 15%;
-  justify-content: space-between;
-  border-right: 1px solid #4f4f4f;
-  padding: 2px 5px;
-  color: #4f4f4f;
+.footer-nav table{
+  width: 100%;
+  border: var(--border-simple);
+  background:white;
 }
-.footer-img {
-  width: 11%;
-  margin: 0 auto;
+.footer-nav table tr{
+  border-bottom:var(--border-simple);
 }
-.footer-img > img {
-  margin: 0 auto;
-  display: block;
+.footer-nav table th{
+  border-right:var(--border-simple);
+  text-align:left;
+  padding:2px;
 }
-.footer-img > span {
-  text-align: center;
-  display: block;
-  font-size: var(--fs-default);
-  margin-top: 3px;
+.footer-nav table th:last-child{
+  border-right:none;
+}
+.footer-nav table td{
+  padding:2px;
+  border-bottom:var(--border-simple);
 }

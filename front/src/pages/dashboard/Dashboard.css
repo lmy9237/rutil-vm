@@ -39,7 +39,7 @@
   width: 100%;
 }
 .bar > div {
-  min-width: 441px;
+  min-width: 371px;
   flex: 0.5; 
 }
 .bar span {
