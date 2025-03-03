@@ -140,8 +140,9 @@ cat ~/.ssh/id_rsa.pub
 > ```sh
 > #
 > # 프로퍼티 `profile` 유형
-> # - local: 로컬 (개발환경 192.168.0.20)
-> # - local: 로컬 (개발환경 192.168.0.70)
+> # - local20: 로컬 (개발환경 192.168.0.20)
+> # - local70: 로컬 (개발환경 192.168.0.70)
+> # - local180: 로컬 (개발환경 192.168.0.180)
 > # - staging: 스테이징 (도커용)
 > # - prd: 운영 (도커용)
 > #
@@ -150,6 +151,7 @@ cat ~/.ssh/id_rsa.pub
 > ./gradlew rutil-vm-api:bootJar -Pprofile=local --parallel
 > ./gradlew rutil-vm-api:bootJar -Pprofile=local20 --parallel
 > ./gradlew rutil-vm-api:bootJar -Pprofile=local70 --parallel
+> ./gradlew rutil-vm-api:bootJar -Pprofile=local180 --parallel
 > ./gradlew rutil-vm-api:bootJar -Pprofile=staging --parallel
 > ./gradlew rutil-vm-api:bootJar -Pprofile=prd --parallel
 > ```

@@ -68,6 +68,7 @@
     "dev": "vite",
     "dev:b70": "vite --mode b70",
     "dev:b20": "vite --mode b20",
+    "dev:b180": "vite --mode b180",
     "build": "vite build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",

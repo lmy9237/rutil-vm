@@ -32,7 +32,7 @@ println("explodedWarPath  : $explodedWarPath")
 
 sourceSets {
     main {
-        if (profile == "prd" || profile == "staging" || profile == "local70") {
+        if (profile == "prd" || profile == "staging" || profile == "local20" || profile == "local70"  || profile == "local180") {
             resources.srcDir("src/main/resources-$profile")
         }
     }

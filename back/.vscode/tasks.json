@@ -66,6 +66,38 @@
         }
       }]
     }, {
+      "label": "bootRun-rutil-vm-api-180 (백앤드 실행 180번)",
+      "type": "shell",
+      "command": "./gradlew",
+      "args":[
+        ":rutil-vm-api:bootRun",
+        "-Pprofile=local180",
+        "--parallel",
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [{
+        "pattern": [
+          {
+            "regexp": "\\b\\B",
+            "file": 1,
+            "location": 2,
+            "message": 3
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Listening for",
+          "endsPattern": "^.*transport dt_socket at address.*"
+        }
+      }]
+    }, {
       "label": "bootJar-rutil-vm-api (백앤드 생성 STAGE)",
       "type": "shell",
       "command": "./gradlew",
