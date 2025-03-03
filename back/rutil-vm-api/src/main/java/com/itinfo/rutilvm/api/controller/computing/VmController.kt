@@ -166,6 +166,32 @@ class VmController: BaseController() {
 		return ResponseEntity.ok(iVm.remove(vmId, detachOnly))
 	}
 
+
+	@ApiOperation(
+		httpMethod="POST",
+		value="가상머신 가져오기 - vmware 주닙",
+		notes="가상머신을 생성한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="externalVo", value="계정정보", dataTypeClass=ExternalVo::class, paramType="body"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@PostMapping("/vmware")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun addVmware(
+		@RequestBody externalVo: ExternalVo? = null,
+	): ResponseEntity<ExternalVo?> {
+		if (externalVo == null)
+			throw ErrorPattern.EXTERNAL_HOST_PROVIDER_NOT_FOUND.toException()
+		log.info("/computing/vms/vmware ... vmware 계정등록")
+		return ResponseEntity.ok(iVm.addVmwareInfo(externalVo))
+	}
+
+
 	@ApiOperation(
 		httpMethod="GET",
 		value="가상머신 내 어플리케이션 목록",

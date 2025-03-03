@@ -20,6 +20,7 @@ enum class Term(
 	BOND("(네트워크) 본드"),
 	NIC("네트워크 인터페이스 컨트롤러"),
 	VM("가상머신"),
+	EXTERNAL_VM("외부 가상머신"),
 	CONSOLE("콘솔"),
 	TICKET("티켓"),
 	SNAPSHOT("스냅샷"),

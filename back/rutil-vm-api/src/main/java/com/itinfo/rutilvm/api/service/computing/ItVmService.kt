@@ -78,6 +78,44 @@ interface ItVmService {
 	fun remove(vmId: String, diskDelete: Boolean): Boolean
 
 	/**
+	 * [ItVmService.addVmwareInfo]
+	 * 가상머신 가져오기- vmware 정보등록
+	 *
+	 * @param
+	 * @return
+	 */
+	@Throws(Error::class)
+	fun addVmwareInfo(externalVo: ExternalVo): ExternalVo?
+	/**
+	 * [ItVmService.importExternalVm]
+	 * 가상머신 가져오기 (Vmware)
+	 *
+	 * @param externalVmVo [ExternalVmVo]
+	 * @return [ExternalVmVo]
+	 *
+	 * ExternalHostProviders
+	 * ExternalHostProvider 를 이용해 외부 공급자를 추가하고 조회하는 방식같음
+	 *
+	 * POST /externalvmimports
+	 * <external_vm_import>
+	 *   <vm>
+	 *     <name>my_vm</name>
+	 *   </vm>
+	 *   <cluster id="360014051136c20574f743bdbd28177fd" />
+	 *   <storage_domain id="8bb5ade5-e988-4000-8b93-dbfc6717fe50" />
+	 *   <name>vm_name_as_is_in_vmware</name>
+	 *   <sparse>true</sparse>
+	 *   <username>vmware_user</username>
+	 *   <password>123456</password>
+	 *   <provider>VMWARE</provider>
+	 *   <url>vpx://wmware_user@vcenter-host/DataCenter/Cluster/esxi-host?no_verify=1</url>
+	 *   <drivers_iso id="virtio-win-1.6.7.iso" />
+	 * </external_vm_import>
+	 */
+	@Throws(Error::class)
+	fun importExternalVm(externalVo: ExternalVo): ExternalVo?
+
+	/**
 	 * [ItVmService.findAllApplicationsFromVm]
 	 * 가상머신 어플리케이션
 	 *
@@ -260,6 +298,23 @@ class VmServiceImpl(
 		log.info("remove ...  vmId: {}", vmId)
 		val res: Result<Boolean> = conn.removeVm(vmId, diskDelete)
 		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun addVmwareInfo(externalVo: ExternalVo): ExternalVo? {
+		log.info("addVmwareInfo ...  externalVo: {}", externalVo)
+		val res: ExternalHostProvider? = conn.addExternalHostProvider(
+			externalVo.toExternalHostProviderBuilder()
+		).getOrNull()
+		return res?.toExternalHostProvider()
+	}
+
+	@Throws(Error::class)
+	override fun importExternalVm(externalVo: ExternalVo): ExternalVo? {
+		log.info("importExternalVm ...  externalVmVo: {}", externalVo)
+		// val res: Result<Boolean> = conn.addExternalVmImport()
+		// return res.isSuccess
+		TODO("tsta")
 	}
 
 	@Throws(Error::class)

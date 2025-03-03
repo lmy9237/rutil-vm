@@ -31,3 +31,14 @@ fun Connection.findExternalHostProvider(externalHostProviderId: String): Result<
 	Term.EXTERNAL_HOST_PROVIDER.logFail("상세조회")
 	throw if (it is Error) it.toItCloudException() else it
 }
+
+fun Connection.addExternalHostProvider(externalHostProvider: ExternalHostProvider): Result<ExternalHostProvider?> = runCatching {
+	val externalAdd = this.srvExternalHostProviders().add().provider(externalHostProvider).send().provider()
+
+	externalAdd ?: throw ErrorPattern.EXTERNAL_HOST_PROVIDER_NOT_FOUND.toError()
+}.onSuccess {
+	Term.EXTERNAL_HOST_PROVIDER.logSuccess("생성", it.id())
+}.onFailure {
+	Term.EXTERNAL_HOST_PROVIDER.logFail("생성", it)
+	throw if (it is Error) it.toItCloudException() else it
+}

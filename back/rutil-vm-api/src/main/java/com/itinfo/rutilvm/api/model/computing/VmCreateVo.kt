@@ -4,7 +4,6 @@ import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.model.storage.*
-import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.Connection
 
@@ -13,7 +12,6 @@ import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
-import java.util.Date
 
 private val log = LoggerFactory.getLogger(VmCreateVo::class.java)
 
