@@ -5,7 +5,7 @@ import BaseModal from "../BaseModal";
 import HostNetworkBondingModal from "./HostNetworkBondingModal";
 import HostNetworkEditModal from "./HostNetworkEditModal";
 import { useHost, useNetworkFromCluster } from "../../../api/RQHook";
-import "./MNetwork.css";
+import "../network/MNetwork.css";
 import Loading from "../../common/Loading";
 import { renderTFStatusIcon } from "../../Icon";
 

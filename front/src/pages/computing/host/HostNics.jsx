@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCrown, faTimes } from "@fortawesome/free-solid-svg-icons";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import HostNetworkModal from "../../../components/modal/network/HostNetworkModal";
+import HostNetworkModal from "../../../components/modal/host/HostNetworkModal";
 import { useNetworkInterfaceFromHost } from "../../../api/RQHook";
 import { renderUpDownStatusIcon } from "../../../components/Icon";
 import { checkZeroSizeToMbps } from "../../../util";

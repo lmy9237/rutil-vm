@@ -16,7 +16,7 @@ import { convertBytesToMB } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
 
 const HostNetworkModal = React.lazy(
-  () => import("../../../components/modal/network/HostNetworkModal")
+  () => import("../../../components/modal/host/HostNetworkModal")
 );
 
 /**
