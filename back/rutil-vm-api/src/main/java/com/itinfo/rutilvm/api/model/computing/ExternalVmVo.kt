@@ -47,7 +47,7 @@ class ExternalVo (
 	val password: String = "",
 	val provider: ExternalVmProviderType = ExternalVmProviderType.VMWARE,
 	val url: String = "",
-	val iso: IdentifiedVo = IdentifiedVo(),
+	// val iso: IdentifiedVo = IdentifiedVo(),
 ): Serializable {
     override fun toString(): String =
         gson.toJson(this)
@@ -67,9 +67,9 @@ class ExternalVo (
 		private var bPassword: String = ""; fun password(block: () -> String?) { bPassword = block() ?: "" }
 		private var bProvider: ExternalVmProviderType = VMWARE; fun provider(block: () -> ExternalVmProviderType?) { bProvider = block() ?: VMWARE }
 		private var bUrl: String = ""; fun url(block: () -> String?) { bUrl = block() ?: "" }
-		private var bIso: IdentifiedVo = IdentifiedVo(); fun iso(block: () -> IdentifiedVo?) { bIso = block() ?: IdentifiedVo() }
+		// private var bIso: IdentifiedVo = IdentifiedVo(); fun iso(block: () -> IdentifiedVo?) { bIso = block() ?: IdentifiedVo() }
 
-        fun build(): ExternalVo = ExternalVo(bDataCenterVo, bVCenter, bDataCenter, bCluster, bEsxi, bName, bVmVo, bClusterVo, bStorageDomainVo, bSparse, bUserName, bPassword, bProvider, bUrl, bIso, )
+        fun build(): ExternalVo = ExternalVo(bDataCenterVo, bVCenter, bDataCenter, bCluster, bEsxi, bName, bVmVo, bClusterVo, bStorageDomainVo, bSparse, bUserName, bPassword, bProvider, bUrl, /*bIso,*/ )
     }
 
     companion object {
@@ -89,7 +89,7 @@ fun ExternalVmImport.toExternalVmImport(): ExternalVo {
 		password { ehp.password() }
 		provider { ehp.provider() }
 		url { ehp.url() }
-		iso { IdentifiedVo.builder { id { ehp.driversIso().id() } } }
+		// iso { IdentifiedVo.builder { id { ehp.driversIso().id() } } }
 	}
 }
 
@@ -125,7 +125,7 @@ fun ExternalVo.toExternalBuilder(): ExternalVmImport {
 		.username(eVm.userName)
 		.password(eVm.password)
 		.provider(eVm.provider) // vmware 로 기본지정
-		.url(eVm.url)
-		.driversIso(FileBuilder().id(eVm.iso.id).build())
+		.url(eVm.url+"?no_verify=1") // ?no_verify=1 검증무시
+		// .driversIso(FileBuilder().id(eVm.iso.id).build())
 		.build()
 }
