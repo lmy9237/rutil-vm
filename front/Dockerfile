@@ -6,8 +6,7 @@ LABEL build-stage="npm"
 
 WORKDIR /home/node
 
-COPY package.json /home/node/
-COPY package-lock.json /home/node/
+COPY package*.json /home/node/
 RUN npm audit fix;exit 0
 RUN npm i
 
@@ -31,14 +30,11 @@ LABEL maintainer="Chan Hee Lee <chlee@ititinfo.com>"
 LABEL description="RutilVM"
 LABEL version="0.2.0-beta2"
 LABEL vcs-url="https://github.com/ititcloud/rutil-vm"
-LABEL build-date="2025-02-06"
+LABEL build-date="2025-03-04"
 LABEL commit-hash="05f9e12ee27c1532623112d1df92004226d0d347"
 LABEL license="Apache-2.0"
 LABEL environment="production"
 LABEL app-name="rutil-vm"
-
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Assuming you have a "certs" directory with your SSL certificate and key
 COPY certs /etc/nginx/certs
@@ -48,9 +44,15 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the build output from the previous stage to the nginx html directory
 COPY --from=build-fe /home/node/dist /usr/share/nginx/html
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80 to the outside world
 EXPOSE 80 443
 
+COPY env.sh /docker-entrypoint.d/env.sh
+RUN chmod +x /docker-entrypoint.d/env.sh
+
 # Start Nginx when the container launches
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["nginx", "-g", "daemon off;"]
+# ENTRYPOINT ["/docker-entrypoint.d/env.sh"]

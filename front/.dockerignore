@@ -20,3 +20,21 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *storybook.log
+
+# Versioning and metadata
+.git
+.gitignore
+.dockerignore
+
+# Build dependencies
+dist
+build
+node_modules
+coverage
+
+# Files not required for production
+.editorconfig
+Dockerfile
+README.md
+tslint.json
+nodemon.json

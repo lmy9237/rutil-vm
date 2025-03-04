@@ -6,51 +6,51 @@ services:
     container_name: rutil-vm-api
     ports:
       # - "8080:8080"
-      - "6690:6690"    
+      - "6690:6690"
     environment:
       TZ: Asia/Seoul
       LANGUAGE: ko_KR;ko;en_US;en
       LC_ALL: ko_KR.UTF-8
       LANG: ko_KR.utf8
-      RUTIL_VM_OVIRT_IP: 192.168.0.70
+      RUTIL_VM_OVIRT_IP: 192.168.0.180
       RUTIL_VM_OVIRT_PORT_HTTPS: 8443
       RUTIL_VM_PORT_HTTPS: 6690
-      RUTIL_VM_CORS_ALLOWED_ORIGINS: 192.168.0.70;localhost;rutil-vm
+      RUTIL_VM_CORS_ALLOWED_ORIGINS: 192.168.0.180;localhost;rutil-vm
       RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT: 3000;3443;443
       RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED: true
       RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION: /root/.ssh/id_rsa
-      RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS: root@192.168.0.70:22
+      RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS: root@192.168.0.180:22
       RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY: |
         Bag Attributes
-            localKeyID: 21 5C D7 7D 5B 08 FA 33 3C 93 AF ED C9 41 DC 61 52 A3 08 0B 
+            localKeyID: 89 F1 F6 B8 51 E7 3B AD 1F C6 06 20 3E A9 4E 47 EF 33 9A 8F 
         Key Attributes: <No Attributes>
         -----BEGIN PRIVATE KEY-----
-        MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCk8nEc5c7E18MV
-        ykOUqm4qPT7ewo5MFxpGviPvfONrnL7/vH6EMCBeCYTeWJsrbHfpzsAQ5Ijqlkv1
-        I4WLun1htXjJNAZMNPGIRfGEv6mupG4rQ1bo73hPGWugzF07k8DHWtj5cRjvulDQ
-        Q/jTkcwBw1csfDcHhN9umtcwEDUv8hufjUovlKT7pTNLkJBo7DXAgp6Dhbd9lHjh
-        Mk5fpQlIlyPRZJN0oOz8nqBviPfrC4ZTG3ltd89f3UbaVgofmnZTSBDwM36oRTuB
-        6Pmw7XcfLhSfDph6l+xno4CEIkD3rNytRt9eh2Rtgs9EnZt7hhA+3EVLpp5an2+9
-        EZ4cW7QJAgMBAAECggEAEMJ9kcUb7E5MCTPDCCEFDo+oirPUB5E1X0jEl/nllbKY
-        iZ2acU3+i++Fq53vLktYJ86VH2JJMyTQVPkmAZuST9JDkpYRqb6baBBLSQS8df1J
-        IGY4N3TVkZvwnqcFNh9+MANgFoBSW1FgErlFWCHxS6CQg/mfEcmDdlaPVNfgv509
-        PEb1ndSPKYrtfU5Limc62aKV0W3Yv/PsbxIMg6G7P5JjYJ2PoLJBHvQ/ZahdxpUG
-        76ZmRybx+zeWKlTJ/WP5PwrwCDE8YifZ+oY1V9ZG/GT06PT368y+UVIg3eFy54oX
-        B0g/LtdhAr9J12m6OL/EiPBmV9IfPA5ytjIHB9X/zQKBgQDV8FPSedR1ViGDjEd/
-        yMA7Ssf7PDviUUN8GhTC8ipNxDzzaMM9wv1wLMoolOIOM4afN6wmzmIlcEqGX8z3
-        HkEo+b1mKtCCQJClLwiYjsk5N40Jm6/0ydCFfxMQ9qSjnJuaX9w3kJVachvw9KJZ
-        zflQIEj2xUC5laWA2QHBR7LRGwKBgQDFYFRYHe2DGuGQ5+3hlODFkNqbILQMFENJ
-        UgjDJUWRmeUg4IpCRQnLbBdsq6TR/6+/haSvopznyUynQy1zCDF855YBV6gWJc2S
-        Hm5vli5IVfdWrLiaguOxQdCD2dQpLYLg1P+vkRrpLyy311wwPo/QqWZknzcRAwmW
-        wILXL0WFqwKBgHtk6nPzoP8sdpgRSQwDFh0cvMvDqiaXCH2D7YWjd5LzJNSgEDyH
-        QvZ4XwGZHeli/rrGuZyIXUOKyPFIQEgoQx0HLp7HAwydgNBFmIelk5pU2Bw6l/pw
-        jLzy1mRqXfugUH9x2uqRkhNgzYzlDN8PVkVI2cy7aOGh1pvCjqiUWicRAoGAaP11
-        wC2jQsMQy5Djk8Qq0EzeS/hYbbh1llHhwVRZLjsri5KFWPz6Wc/UogSntuEIbps7
-        YAXi6tTERpDQY0kvcd6Kh4pGKgnP0PMJEahUVDwORne39tC7J3X34bsERSclYE1M
-        +On546Ipal1Pd4Y/3+HMSqf6lb0E48DhmG9XzuMCgYBaRzWHfQOnnjs9QvE4nbeg
-        pK00XaerMsCWm67FSyIKGjQijOspMa5BOI6u65oaG9UqxbnirUfV73RAdkioP3sC
-        HP2wf/KwFONXvZ13Sp7WkzmZnfkM9/ZKA+XWsg2zxiPR8CUusKKfcc1dRCKeCAJJ
-        qnZNThC7ozLpqq/tYGlO5A==
+        MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC61lAtrEkfkLI5
+        m+AHlWSRJ0Rr0qHwEAQSu9IXzTcxmH7N7L3AdepOK29UzOSRZKznBW9CR49y4j24
+        AV9eUKgz3X4B+tOdR3VLpHr1xN9MQKgWhBMB15173cw1B7gSy6gBR6mQBuKN+Wo/
+        N4kkZbd823ly4RcvACdZtlBNJTXpKVYLZIRRft6q+gNiYLqdfLcz3KgatzZFcF7C
+        n0Q/MRroG+1E2tmLJz0NzKh8Sp2bQTTm6bKEaunloQAETaCqkmeLdWK7X6TB7xSN
+        miRpfmla8DV55fCiPS6EIFrHxhkkHvWipI87UHT+eLO+RhIYFIP0ti2vzZWGPUJh
+        gNk8O5kbAgMBAAECggEAdNwdNCQBbJPVVcEQI84mI7/6xLHvBbcOxSTi6G476nJm
+        RaigmqNmFNSIAvNQtzvQBYNZrowRxhqJ3fBF1Tj/q8kKynQ3LbWHQPO00Mn9nLUI
+        LWUYeluBLftxgW29jUwCXiKThPk5dPGeqcGzrqdMV/Tyho8RMB2ZfzxQB6CRkq5t
+        GMT1KkeEt0HVwaJwqFi1EwSeIQHhjWk7IF1jNrtpzTuOAg89nmsV5X9U3H5JNY8n
+        k1clKO0MoNMQQ8SueQwenOhdD/nEudVm36mcasBMruk3AzVp6hLyF8xLsF4Y0A5A
+        s2Vn1cxYoiwFqtdW9Eg8lwTo/eHss3QmrrATD2a+yQKBgQDnLyO+U1vGd67qMVFD
+        qxzYGM9rMKgCL5o8PIMbGmTK3aHOw0X1qt8B7ORLlacns01iOwCNOiNIYSDcaO43
+        ddEIA1PYf7JExctsHvz87ZCSgZ2gecXGZruK/zxVrqXrCG63871ltcL1Hh/sOYHg
+        krBkoNdvGrjRe5CreCdl5JlZ5QKBgQDO5IiukLJnpEK6yplm9DbuXVWwPeoj+H3E
+        YpiegRFumFLdufMruU6nx7lHDMCj7a7uNC8whMpcGibWXc6gEo8NBnkZUQMcpp84
+        9bVndVrEP8oXkVm+4SAsiSdfRP5sXC7XJO6GIBWrM+xWYueK/9wWsFWhIYTjyLgB
+        SDKpqSX2/wKBgDsF0f5ZkejNzZ6FENZR7X9OdkZLmdlVBe+zE1XsGyegBhufx1C9
+        W0pGjNKvVonQQUV/AtkLqs5j3dvn/kmyjreZAeMYVw8v4IuuLbD1hh+hb/j0ngXV
+        XLRUDbdia4HiGUJlvEknaqriEgxhckM/sEFAvz/idqUlAv6EIqrk/jHxAoGBAJLg
+        j2BOfTky1eTB/BGpAm5KeJC8A8MxoCeRT4QHYRbAsOOUJVw/G+Xk1lXoacJ29J9L
+        EM1DGF42eqfoxM3DHydCFyqv5qOqbpMDbJtcJun310LP/4SRUkQLwpXR50WKU/6M
+        y4EQuhFmtTvGz1ZQujCpUsEniK4lSuwuEzl7SeaFAoGBAKyasjepgyH3dK+sigVu
+        Gp0X34N+Gszbs2qGMw6AYc5nCbp/bX2JfgiR2wzAm8d4QP8Fonk5/cdnC1HWZOyB
+        0Jo9cyI6oAHlzRf0HABNQ8Ith9SvsWT1i43xEcgd3gCTNnS0jo9JJ9wwPpoDcQ7a
+        4axM7iTqF6hQ8O5RWY8AFkaB
         -----END PRIVATE KEY-----
       POSTGRES_JDBC_PORT: 5432
       POSTGRES_DATASOURCE_JDBC_ID: rutil
@@ -73,13 +73,12 @@ services:
     image: ititcloud/rutil-vm:latest
     container_name: rutil-vm
     ports:
-      - "443:443"
+      - "3433:443"
     environment:
-      TZ: Asia/Seoul
-      LANGUAGE: ko_KR;ko;en_US;en
-      LC_ALL: ko_KR.UTF-8
-      LANG: ko_KR.utf8
-      RUTIL_VM_OVIRT_IP: 192.168.0.70
+      - TZ=Asia/Seoul
+      - LANGUAGE=ko_KR;ko;en_US;en
+      - LC_ALL= ko_KR.UTF-8
+      - LANG=ko_KR.utf8
     networks:
       - ovirt_network
 #    healthcheck:
@@ -88,7 +87,7 @@ services:
 #      timeout: 10s
 #      retries: 3
     restart: on-failure
-      
+    
 #  httpd:
 #    image: httpd:2.4.37-alpine
 #    platform: linux/amd64

@@ -1,3 +1,4 @@
+// const ENDPOINT_API_V1 = (process.env.NODE_ENV === 'development') ? `/api/v1` : `https://rutil-vm:443/api/v1`
 const ENDPOINT_API_V1 = `/api/v1`
 const ENDPOINTS = {
   //#region: TreeNavigation
