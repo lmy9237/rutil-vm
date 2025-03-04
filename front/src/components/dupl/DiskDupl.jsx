@@ -9,7 +9,7 @@ import { checkZeroSizeToGB } from "../../util";
 
 const DiskDupl = ({
   isLoading, isError, isSuccess,
-  disks = [], columns = [], type = "disk",
+  disks = [], columns = [], type = "disk",  showSearchBox = false,
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
@@ -81,6 +81,7 @@ const DiskDupl = ({
           }
         })}
         shouldHighlight1stCol={true}
+        showSearchBox={showSearchBox}
         onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
         clickableColumnIndex={[0]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}

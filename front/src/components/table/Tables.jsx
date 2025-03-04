@@ -3,6 +3,8 @@ import TableRowLoading from "./TableRowLoading";
 import TableRowNoData from "./TableRowNoData";
 import "./Table.css";
 import { Tooltip } from "react-tooltip";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * @name Tables
@@ -22,12 +24,15 @@ const Tables = ({
   clickableColumnIndex = [],
   onContextMenuItems = false,
   onClickableColumnClick = () => {},
+  showSearchBox = false,
 }) => {
   const [selectedRowIndex, setSelectedRowIndex] = useState(null); // 선택된 행의 인덱스를 관리
   const [tooltips, setTooltips] = useState({}); // 툴팁 상태 관리
   const [contextRowIndex, setContextRowIndex] = useState(null); // 우클릭한 행의 인덱스 관리
   const [selectedRows, setSelectedRows] = useState([]); // ctrl다중선택택
 
+  // 검색박스
+  const [searchQuery, setSearchQuery] = useState("");
   // 우클릭 메뉴 위치 관리
   const [contextMenu, setContextMenu] = useState(null);
   const handleContextMenu = (e, rowIndex) => {
@@ -46,7 +51,7 @@ const Tables = ({
       const menuItems = onContextMenuItems(rowData);
       setContextMenu({
         mouseX: e.clientX - 260,
-        mouseY: e.clientY - 50,
+        mouseY: e.clientY - 200,
         menuItems,
       });
     } else {
@@ -295,6 +300,19 @@ const Tables = ({
   // console.log("...");
   return (
     <>
+        {showSearchBox && (
+          <div className="nomal-search-box">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button onClick={() => setSearchQuery("")}>
+              <FontAwesomeIcon icon={faRefresh} fixedWidth />
+            </button>
+          </div>
+        )}
       <div className="w-full max-h-[63vh] overflow-y-auto ">
         <table className="custom-table" ref={tableRef}>
           <thead>

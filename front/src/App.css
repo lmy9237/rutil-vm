@@ -16,6 +16,7 @@ html {
   --h-modal-header: 55px;                /* 모달 헤더 부분 높이 */
   --h-modal-footer: 60px;                /* 모달 푸터 부분 높이 */
   --h-right-btn: 30px;  
+  --h-dash-boxs-bar:380px;/*대시보드 section 안에 박스와bar 높이를 합친것*/
   --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
   --w-aside-menu:243px;     
   --w-nav:160px; /*nav넓이*/   
@@ -125,6 +126,9 @@ input[disabled] {
   width:    calc(100% - var(--w-aside-menu));
   position: relative;
 }
+/* .dash-boxs+.bar+.dash-section{
+    height: 100%;
+} */
 .aside-outer.closed + #section {
   width: 100%; 
 }
@@ -182,18 +186,18 @@ input[disabled] {
   width: 230px;
   right: 0;
   background: white;
-  border: var(--border-simple);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 100;
-  
+  border: var(--color-gray-1);
 }
 .dropdown-item {
   display: block;
   width: 100%;
   background: none;
-  border: none;
   text-align: left;
   padding: 4px;
+  border-radius:0 !important;
+  border-bottom: var(--color-gray-1);
 }
 .dropdown-item:hover {
   background-color: var(--color-gray-2);
@@ -213,6 +217,7 @@ input[disabled] {
   cursor: pointer;
   opacity: 1;
   border: 0.3px solid #cbc9c9;
+  border-radius:0 !important;
 }
 .select-box-outer {
   width: 100%;

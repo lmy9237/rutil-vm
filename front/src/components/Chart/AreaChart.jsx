@@ -53,8 +53,8 @@ const AreaChart = ({ series, datetimes }) => {
           options={options}
           series={series}
           type="area"
-          width={470}
-          height={150}
+          width="80%"
+          height="180px"
         />
       </div>
       <div id="html-dist"></div>

@@ -17,26 +17,19 @@ const TablesOuter = ({
   shouldHighlight1stCol = false,
   onRowClick,
   clickableColumnIndex, 
-  showSearchBox = false, 
   onContextMenuItems,
-  onClickableColumnClick
+  onClickableColumnClick,
+  showSearchBox=false
 }) => {
   console.log(`넘어오는 데이터: ${data}`)
   return (
     <>
       <div className="section-table-outer">
-        {showSearchBox && ( 
-          <div className="search-box">
-            <input type="text" />
-            <button><FontAwesomeIcon icon={faSearch} fixedWidth /></button>
-            <button><FontAwesomeIcon icon={faRefresh} fixedWidth /></button>
-          </div>
-        )}
-        
         <Tables
           isLoading={isLoading} isError={isError} isSuccess={isSuccess}
           columns={columns}  
           data={data}
+          showSearchBox={showSearchBox}
           onRowClick={onRowClick} 
           clickableColumnIndex={clickableColumnIndex} 
           shouldHighlight1stCol={shouldHighlight1stCol} 

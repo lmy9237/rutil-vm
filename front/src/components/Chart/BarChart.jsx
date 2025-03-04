@@ -50,22 +50,22 @@ const BarChart = ({ names, percentages }) => {
       max: 100,
       lineWidth: 0,
       labels: {
-        show: false, // Hide x-axis labels
+        show: false,
       },
-      gridLineWidth: 0, // Remove x-axis grid lines
-      tickWidth: 0, // Remove x-axis tick marks
+      gridLineWidth: 0, 
+      tickWidth: 0, 
       axisBorder: {
-        show: false, // Hide x-axis line
+        show: false, 
       },
       axisTicks: {
-        show: false, // Hide x-axis ticks
+        show: false,
       },
     },
     yaxis: {
       labels: {
         show: false, // y축 레이블을 제거합니다.
       },
-      gridLineWidth: 0, // Remove y-axis grid lines
+      gridLineWidth: 0,
     },
     title: {
       text: "", // 제목을 제거합니다.
@@ -91,21 +91,7 @@ const BarChart = ({ names, percentages }) => {
     },
   });
 
-  // 반응형
-  const [chartWidth, setChartWidth] = useState(window.innerWidth * 0.15);
-  const [chartHeight, setChartHeight] = useState(window.innerHeight * 0.2);
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setChartWidth(window.innerWidth * 0.15); 
-  //     setChartHeight(window.innerHeight * 0.2); 
-  //   };
 
-  //   window.addEventListener("resize", handleResize); 
-
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize); 
-  //   };
-  // }, []);
   useEffect(() => {
     setSeries([{ data: percentages }]);
     setChartOptions((prevOptions) => ({
@@ -124,8 +110,8 @@ const BarChart = ({ names, percentages }) => {
           options={chartOptions}
           series={series}
           type="bar"
-          width={350}
-          height={180}
+          width="300px"
+          height="180px"
         />
       </div>
       <div id="html-dist"></div>

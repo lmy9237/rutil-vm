@@ -156,7 +156,7 @@ const App = () => {
                 <Route path="/error" element={<Error />} />
               </Routes>
             </MainOuter>
-            <Footer />
+            {/* <Footer /> */}
           </>
           ) :
           (<Routes>
@@ -170,7 +170,7 @@ const App = () => {
         gutter={4}
         toastOptions={{
           // duration: Infinity,
-          duration: 400, // 지속시간
+          duration: 5000, // 지속시간
           className: "toast", 
           success: {
             className: "toast toast-success",

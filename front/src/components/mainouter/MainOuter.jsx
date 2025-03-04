@@ -72,7 +72,7 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
       const dx = e.clientX - xRef.current; // 이동한 거리 (픽셀)
       const newWidth = leftWidthRef.current + dx; // 기존 너비에 이동 거리 더하기
 
-      if (newWidth > 240 && newWidth < 400) {
+      if (newWidth > 240 && newWidth < 700) {
         // 사이드바 최소/최대 너비 설정
         setSidebarWidth(newWidth);
       }

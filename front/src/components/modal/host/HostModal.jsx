@@ -178,7 +178,7 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
 
           </>
         )}
-        <div>
+        <div className="p-1.5">
           <div className="p-1">vGPU 배치</div>
           <div className="flex">
             {["consolidated", "separated"].map((option) => (

@@ -16,6 +16,7 @@ import NetworkModals from "../modal/network/NetworkModals";
 const NetworkDupl = ({
   isLoading, isError, isSuccess,
   networks = [], columns = [],
+  showSearchBox = false, 
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
@@ -36,7 +37,7 @@ const NetworkDupl = ({
         isEditDisabled={selectedNetworks.length !== 1}
         isDeleteDisabled={selectedNetworks.length === 0}
       />
-      <span style={{fontSize:"20px"}}>ID: {selectedIds}</span>
+      {/* <span style={{fontSize:"20px"}}>ID: {selectedIds}</span> */}
 
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
@@ -52,6 +53,7 @@ const NetworkDupl = ({
             </TableRowClick>
           ),
         }))}
+        showSearchBox={showSearchBox}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedNetworks(selectedRows)}
         clickableColumnIndex={[0]}

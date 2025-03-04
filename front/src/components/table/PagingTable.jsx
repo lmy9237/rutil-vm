@@ -132,22 +132,24 @@ const PagingTable = ({
   console.log("...");
   return (
     <>
-      {showSearchBox && (
-        <div className="search-box">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button onClick={() => setSearchQuery("")}>
-            <FontAwesomeIcon icon={faRefresh} fixedWidth />
-          </button>
-        </div>
-      )}
+    
 
       <div className="pagination">
-        <div className="paging-btns center">
+      
+        <div className="paging-btns center mb-1">
+          {showSearchBox && (
+            <div className="search-box">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button onClick={() => setSearchQuery("")}>
+                <FontAwesomeIcon icon={faRefresh} fixedWidth />
+              </button>
+            </div>
+          )}
           <div className="paging-arrows">
             <div className="flex">
               <button

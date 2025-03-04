@@ -184,33 +184,33 @@ const Header = ({ setAuthenticated, toggleAside }) => {
 
               {/* 이벤트 내용 (알림 아래로 깔리도록 설정) */}
               {activeSection === "이벤트" && (
-  <div className="bell-content-outer event-section">
-    {events.map((event) => (
-      <div key={event.id} className="bell-content">
-        <div>
-          <FontAwesomeIcon 
-            icon={faInfoCircle} 
-            fixedWidth
-            style={{ fontSize: "17px", paddingTop: "4px" }}
-          />
-        </div>
-        <div className="bell-mid">
-          {event.message}
-          <div className="mt-0.5">{event.date}</div>
-        </div>
-        <div>
-          <FontAwesomeIcon 
-            icon={faTrash} 
-            fixedWidth 
-            className="hover-icon"
-            style={{ fontSize: "15px", paddingTop: "7px", cursor: "pointer" }}
-            onClick={() => handleDelete(event.id, "이벤트")}
-          />
-        </div>
-      </div>
-    ))}
-  </div>
-)}
+                <div className="bell-content-outer event-section">
+                  {events.map((event) => (
+                    <div key={event.id} className="bell-content">
+                      <div>
+                        <FontAwesomeIcon 
+                          icon={faInfoCircle} 
+                          fixedWidth
+                          style={{ fontSize: "17px", paddingTop: "4px" }}
+                        />
+                      </div>
+                      <div className="bell-mid">
+                        {event.message}
+                        <div className="mt-0.5">{event.date}</div>
+                      </div>
+                      <div>
+                        <FontAwesomeIcon 
+                          icon={faTrash} 
+                          fixedWidth 
+                          className="hover-icon"
+                          style={{ fontSize: "15px", paddingTop: "7px", cursor: "pointer" }}
+                          onClick={() => handleDelete(event.id, "이벤트")}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
 
                 </div>

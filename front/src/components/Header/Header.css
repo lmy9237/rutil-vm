@@ -125,7 +125,7 @@
   background:#e3f7f9;
 }
 .bell-mid {
-  width: 73%;
+  width: 76%;
   word-wrap: break-word; /* 긴 단어 자동 줄바꿈 */
   overflow-wrap: break-word;
   white-space: normal; /* 자동 줄바꿈 */
@@ -134,8 +134,6 @@
 .bell-content.open {
   max-height: 1000px; /* 충분히 큰 값 설정 */
 }
-
-
 
 .path {
   font-size: var(--fs-default-4);

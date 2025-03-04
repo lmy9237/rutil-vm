@@ -69,10 +69,17 @@
   color: gray;
   border: 1px solid var(--color-gray-1);
 }
+.nomal-search-box{
+  width: 40%;
+  display: flex;
+  position:absolute;
+  top:-46px;
+}
 /*tablesOuter*/
 .section-table-outer {
   font-size: var(--fs-default-4);
   width: 100%;
+  position:relative;
 }
 .section-table-outer table {
   width: 100%;

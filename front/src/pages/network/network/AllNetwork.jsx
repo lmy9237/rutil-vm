@@ -33,6 +33,7 @@ const AllNetwork = () => {
           isLoading={isNetworksLoading}
           isError={isNetworksError}
           isSuccess={isNetworksSuccess}
+          showSearchBox={true}
         />
       </div>
     </div>

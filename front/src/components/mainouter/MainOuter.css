@@ -37,6 +37,7 @@
 
 .aside-outer.closed {
   width: 0;
+  margin-right: 0;
   overflow: hidden;
 }
 
