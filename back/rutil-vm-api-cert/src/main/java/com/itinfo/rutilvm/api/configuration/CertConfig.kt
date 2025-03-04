@@ -39,7 +39,7 @@ open class CertConfig(
 		get() = RemoteConnMgmt.asRemoteConnMgmt(_ovirtSSHEngineAddress, ovirtSSHEnginePrvKey)
 
 	val ovirtSSHPrvKey: String?
-		get() = (try {  File(_ovirtSSHPrivateKeyLocation) } catch (e: IOException) { null })?.readText(Charsets.UTF_8)
+		get() = (try {  File(_ovirtSSHPrivateKeyLocation) } catch (e: IOException) { log.error("something went WRONG! ... reason: {}", e.localizedMessage);null })?.readText(Charsets.UTF_8)
 
 
 	@PostConstruct

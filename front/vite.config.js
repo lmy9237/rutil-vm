@@ -24,7 +24,7 @@ const VITE_CONFIG = ({ mode }) => {
       port: Number(process.env.SSL_PORT) || 3443,
       proxy: {
         "/api": {
-          target: `https://${apiUrl}:8443`,
+          target: `https://${apiUrl}:6690`,
           changeOrigin: true,
           secure: false, // Set to true if the target uses a valid SSL certificate
           configure: (proxy, options) => {

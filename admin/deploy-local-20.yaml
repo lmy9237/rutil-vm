@@ -6,16 +6,16 @@ services:
     container_name: rutil-vm-api
     ports:
       # - "8080:8080"
-      - "8443:8443"
+      - "6690:6690"
     environment:
       TZ: Asia/Seoul
       LANGUAGE: ko_KR;ko;en_US;en
       LC_ALL: ko_KR.UTF-8
       LANG: ko_KR.utf8
       RUTIL_VM_OVIRT_IP: 192.168.0.20
-      RUTIL_VM_OVIRT_PORT_HTTPS: 2443
-      RUTIL_VM_PORT_HTTPS: 8443
-      RUTIL_VM_CORS_ALLOWED_ORIGINS: 192.168.0.70;localhost;rutil-vm
+      RUTIL_VM_OVIRT_PORT_HTTPS: 8443
+      RUTIL_VM_PORT_HTTPS: 6690
+      RUTIL_VM_CORS_ALLOWED_ORIGINS: 192.168.0.20;localhost;rutil-vm
       RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT: 3000;3443;443
       RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED: true
       RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION: /root/.ssh/id_rsa
