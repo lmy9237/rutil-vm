@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.util.*
+
 private const val QUERY_FIND_VM_CPU_CHART = "a"
 @Repository
 interface VmSamplesHistoryRepository: JpaRepository<VmSamplesHistoryEntity, Int> {
@@ -17,7 +18,7 @@ interface VmSamplesHistoryRepository: JpaRepository<VmSamplesHistoryEntity, Int>
 SELECT DISTINCT
   v.vm_id
   , v.*
-FROM 
+FROM
   vm_samples_history v
   JOIN vm_configuration c ON v.vm_id = c.vm_id
 WHERE 1=1
@@ -29,7 +30,7 @@ and v.history_datetime = (
 AND NOT EXISTS (
   SELECT 1 FROM vm_configuration c2 WHERE 1=1
   AND c2.vm_id = v.vm_id
-  AND c2.vm_name = 'external-hostedenginelocal'
+  AND c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
 )
 ORDER BY v.cpu_usage_percent DESC
 	""", nativeQuery = true
@@ -53,7 +54,7 @@ AND v.history_datetime = (
 AND NOT EXISTS (
   SELECT 1 FROM vm_configuration c2 WHERE 1=1
   AND c2.vm_id = v.vm_id
-  AND c2.vm_name = 'external-hostedenginelocal'
+  AND c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
 )
 order by v.memory_usage_percent desc
 		""", nativeQuery = true
@@ -66,26 +67,26 @@ order by v.memory_usage_percent desc
 
 	@Query(	value = """
 WITH rankedvms AS (
-  SELECT 
+  SELECT
     *, ROW_NUMBER() OVER (
       PARTITION BY vm_id
       ORDER BY history_datetime DESC
     ) AS rn
-  FROM 
+  FROM
     vm_samples_history
-  WHERE 1=1 
+  WHERE 1=1
   AND cpu_usage_percent IS NOT NULL
   AND vm_id NOT IN (
-    SELECT vm_id FROM vm_samples_history WHERE 1=1 
+    SELECT vm_id FROM vm_samples_history WHERE 1=1
 	AND history_id = 1
   )
   AND CAST(EXTRACT(minute FROM history_datetime) AS INTEGER) % 10 = 0
 ),
 latestvmstatus AS (
-  SELECT 
+  SELECT
     vm_id
 	, vm_status
-  FROM 
+  FROM
     vm_samples_history
   WHERE 1=1
   AND history_datetime = (
@@ -97,9 +98,9 @@ latestvmstatus AS (
 	AND history_id = 1
   )
 )
-SELECT 
-  * 
-FROM 
+SELECT
+  *
+FROM
   rankedvms
   JOIN latestvmstatus ON rankedvms.vm_id = latestvmstatus.vm_id
 WHERE 1=1
@@ -116,19 +117,19 @@ ORDER BY rankedvms.vm_id, rankedvms.history_datetime DESC
 SELECT DISTINCT
   v.vm_id,
   v.*
-FROM 
+FROM
   vm_samples_history v
   JOIN vm_configuration c ON v.vm_id = c.vm_id
 WHERE 1=1
 AND v.vm_status = 1
 AND v.history_datetime = (
-  SELECT MAX(v2.history_datetime) FROM vm_samples_history v2 WHERE 1=1 
+  SELECT MAX(v2.history_datetime) FROM vm_samples_history v2 WHERE 1=1
   AND v2.vm_id = v.vm_id
 )
 AND NOT EXISTS (
   SELECT 1 FROM vm_configuration c2 WHERE 1=1
   AND c2.vm_id = v.vm_id
-  AND c2.vm_name LIKE '%hostedenginelocal%'
+  AND c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
 )
 ORDER BY history_datetime DESC
 	""", nativeQuery = true
