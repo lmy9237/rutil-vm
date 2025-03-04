@@ -146,7 +146,7 @@ class VmCreateVo (
 }
 
 fun VmCreateVo.toVmBuilder(): VmBuilder {
-	log.info("vmCreateVo: {}", this)
+	// log.info("vmCreateVo: {}", this)
 	return VmBuilder().apply {
 		toVmInfoBuilder(this)
 		toVmSystemBuilder(this)
@@ -157,16 +157,22 @@ fun VmCreateVo.toVmBuilder(): VmBuilder {
 	}
 }
 
-fun VmCreateVo.toAddVmBuilder(): Vm = toVmBuilder().build()
+fun VmCreateVo.toAddVmBuilder(): Vm =
+	toVmBuilder()
+		.template(TemplateBuilder().id(templateVo.id))
+		.build()
 
-fun VmCreateVo.toEditVmBuilder(): Vm = toVmBuilder().id(this.id).build()
+fun VmCreateVo.toEditVmBuilder(): Vm =
+	toVmBuilder()
+		.id(this.id)
+		.build()
 
 fun VmCreateVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	name(name)
 	description(description)
 	comment(comment)
-	cluster(ClusterBuilder().id(clusterVo.id).build())
-	template(TemplateBuilder().id(templateVo.id).build())
+	cluster(ClusterBuilder().id(clusterVo.id))
+	// template(TemplateBuilder().id(templateVo.id))
 	bios(BiosBuilder().type(BiosType.fromValue(osType)))
 	type(VmType.fromValue(optimizeOption))
 	// timeZone(TimeZoneBuilder().name(timeOffset))

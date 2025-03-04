@@ -192,8 +192,8 @@ fun Connection.addVm(
 
 fun Connection.updateVm(
 	vm: Vm,
-	addDiskAttachments: List<DiskAttachment>?,
-	addNics: List<Nic>?,
+	diskAttachments: List<DiskAttachment>?,
+	nics: List<Nic>?,
 	connId: String?
 ): Result<Vm?> = runCatching {
 	if (this.findAllVms()
@@ -206,12 +206,12 @@ fun Connection.updateVm(
 	val vmUpdated: Vm = this.srvVm(vm.id()).update().vm(vm).send().vm()
 		?: throw ErrorPattern.VM_NOT_FOUND.toError()
 
-	if (!addDiskAttachments.isNullOrEmpty()) {
-		this.addMultipleDiskAttachmentsToVm(vmUpdated.id(), addDiskAttachments)
+	if (!diskAttachments.isNullOrEmpty()) {
+		this.addMultipleDiskAttachmentsToVm(vmUpdated.id(), diskAttachments)
 	}
 
-	if (!addNics.isNullOrEmpty()) {
-		this.addMultipleNicsToVm(vmUpdated.id(), addNics)
+	if (!nics.isNullOrEmpty()) {
+		this.addMultipleNicsToVm(vmUpdated.id(), nics)
 	}
 	if (connId != null) {
 		this.selectCdromFromVm(vmUpdated.id(), connId)

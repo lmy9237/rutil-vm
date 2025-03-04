@@ -31,7 +31,7 @@ const Tables = ({
   // 우클릭 메뉴 위치 관리
   const [contextMenu, setContextMenu] = useState(null);
   const handleContextMenu = (e, rowIndex) => {
-    console.log("Tables > handleContextMenu...");
+    // console.log("Tables > handleContextMenu...");
     e.preventDefault();
     const rowData = sortedData[rowIndex];
 
@@ -189,12 +189,12 @@ const Tables = ({
 
   const renderTableBody = () => {
     if (isLoading) {
-      console.log("Tables > renderTableBody ... ");
+      // console.log("Tables > renderTableBody ... ");
       // 로딩중일 때
       return <TableRowLoading colLen={columns.length} />;
     } else if (!isLoading && isSuccess) {
       // 데이터 가져오기 성공 후
-      console.log("Tables > data fetched successfully ... ");
+      // console.log("Tables > data fetched successfully ... ");
       return sortedData.length === 0 ? ( // 데이터 0건일 때
         <TableRowNoData colLen={columns.length} />
       ) : (

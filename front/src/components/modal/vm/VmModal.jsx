@@ -246,12 +246,12 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
         vm?.diskAttachmentVos?.map((d) => ({
           id: d?.id,
           alias: d?.diskImageVo?.alias,
-          virtualSize: d?.diskImageVo?.virtualSize
-            ? d?.diskImageVo?.virtualSize / (1024 * 1024 * 1024): 0,
+          virtualSize: d?.diskImageVo?.virtualSize? d?.diskImageVo?.virtualSize / (1024 * 1024 * 1024): 0,
           interface_: d?.interface_ || "VIRTIO_SCSI",
           readOnly: d?.readOnly || false,
           bootable: d?.bootable || false,
           storageDomainVo: { id: d?.diskImageVo?.storageDomainVo?.id || "" },
+          diskProfileVo: { id: d?.diskImageVo?.diskProfileVo?.id || "" },
           isExisting: true,
         })) || [];
       setDiskListState(initialDiskState);
@@ -274,17 +274,12 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
         const newOsSystem = osList.length > 0 ? osList[0].name : "other_linux";
         if (formInfoState.osSystem !== newOsSystem) {
           setFormInfoState((prev) => ({
-            ...prev,
-            osSystem: newOsSystem,
-          }));
+            ...prev, osSystem: newOsSystem }));
         }
       }
     }
   }, [clusterVo.id, clusters, osList.length]); // osList 전체가 아닌 length만 의존성에 포함
-
   
-  console.log("전체 디스크 데이터: ", diskListState)
-    
 
   // 초기화 작업
   useEffect(() => {
@@ -332,9 +327,10 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     ...formBootState,
 
     // nic 목록
-    nicVos: nicListState.map((nic) => ({ 
-      name: nic.name,
-      vnicProfileVo: { id: nic.vnicProfileVo.id }
+    nicVos: nicListState.map((nic) => ({
+      id: nic?.id || "",
+      name: nic?.name,
+      vnicProfileVo: { id: nic?.vnicProfileVo?.id }
     })),
 
     // 디스크 데이터 (객체 형태 배열로 변환)
@@ -345,11 +341,9 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       readOnly: disk?.readOnly,
       passDiscard: false,
       interface_: disk?.interface_,
-      shouldUpdateDisk: disk?.shouldUpdateDisk,
       diskImageVo: {
         id: disk?.id || "", // 기존 디스크 ID (새 디스크일 경우 빈 문자열)
         size: disk?.size * 1024 * 1024 * 1024, // GB → Bytes 변환
-        appendSize: 0,
         alias: disk?.alias,
         description: disk?.description || "",
         storageDomainVo: { id: disk?.storageDomainVo?.id || "" },
@@ -359,7 +353,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
         sharable: disk?.sharable || false,
         backup: disk?.backup || false,
       },
-    })),
+    })),    
   };
 
   const validateForm = () => {
@@ -369,6 +363,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     // if (formSystemState.memorySize > "9223372036854775807") return "메모리 크기가 너무 큽니다.";
     return null;
   };
+
 
   const handleFormSubmit = () => {
     // 디스크  연결은 id값 보내기 생성은 객체로 보내기

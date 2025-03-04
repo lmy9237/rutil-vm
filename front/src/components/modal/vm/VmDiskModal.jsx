@@ -93,11 +93,12 @@ const VmDiskModal = ({
   }, [vmName]);
 
   useEffect(() => {
-    if (!editMode && domains && domains.length > 0) {
-      const firstDomain = domains[0];
-      setStorageDomainVo({id: firstDomain.id, name: firstDomain.name});
+    if (!editMode && domains.length > 0 && !storageDomainVo.id) {
+      const firstDomain = domains[0]; // 첫 번째 스토리지 도메인 선택
+      setStorageDomainVo({ id: firstDomain.id, name: firstDomain.name });
     }
-  }, [domains, editMode]);
+  }, [domains, editMode, storageDomainVo.id]);
+  
   
   useEffect(() => {
     if (!editMode && diskProfiles && diskProfiles.length > 0) {
@@ -114,8 +115,8 @@ const VmDiskModal = ({
   useEffect(() => {
     if (!isOpen) {
       setFormState(initialFormState);
-      setStorageDomainVo({ id: "", name: "" });
-      setDiskProfileVo({ id: "", name: "" });
+      setStorageDomainVo({ id: domains[0]?.id, name: domains[0]?.name });
+      setDiskProfileVo({ id: diskProfiles[0]?.id, name: diskProfiles[0]?.name });
     } 
     if (editMode && diskAttachment) {
       setFormState({
@@ -158,12 +159,11 @@ const VmDiskModal = ({
         backup: initialDisk?.backup || false,
         // shouldUpdateDisk: true
       });
-      setStorageDomainVo({ id: initialDisk?.diskImageVo?.storageDomainVo?.id || "" });
+      setStorageDomainVo({ id: initialDisk?.diskImageVo?.storageDomainVo?.id || "", name: initialDisk?.diskImageVo?.storageDomainVo?.name || ""  });
       setDiskProfileVo({ id: initialDisk?.diskImageVo?.diskProfileVo?.id || ""});
     }
   }, [editMode, initialDisk]);
   
-
 
   const handleInputChange = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
@@ -182,42 +182,32 @@ const VmDiskModal = ({
     return null;
   };
 
-  // vm disk에서 생성 (가상머신 생성x)
-  const handleOkClick = () => {    
+  const handleOkClick = () => {
     const error = validateForm();
     if (error) return toast.error(error);
  
     // GB -> Bytes 변환
     const sizeToBytes = convertGBToBytes(parseInt(formState.size, 10));
-    // GB -> Bytes 변환 (기본값 0)
-    const appendSizeToBytes = convertGBToBytes(parseInt(formState.appendSize || 0, 10)); 
 
     const selectedDomain = domains.find((dm) => dm.id === storageDomainVo.id);
     const selectedDiskProfile = diskProfiles.find((dp) => dp.id === diskProfileVo.id);
-
-    // 전송 객체
-    const dataToSubmit = {
-      ...formState,
-      diskImageVo: {
-        // id:formState?.id,
-        alias: formState.alias,
-        size: sizeToBytes,
-        appendSize: appendSizeToBytes,
-        description: formState.description,
-        wipeAfterDelete: formState.wipeAfterDelete,
-        backup: formState.backup,
-        sparse: Boolean(formState.sparse),
-        storageDomainVo: { id: selectedDomain?.id },
-        diskProfileVo: { id: selectedDiskProfile?.id },
-      },
-      shouldUpdateDisk: true,
-      isCreated: true,
+    
+    const newDisk = {
+      alias: formState.alias,
+      size: formState.size,
+      interface_: formState.interface_,
+      sparse: formState.sparse,
+      bootable: formState.bootable,
+      readOnly: formState.readOnly,
+      storageDomainVo: { id: selectedDomain.id },
+      diskProfileVo: { id: selectedDiskProfile.id },
+      isCreated: true, // 🚀 생성된 디스크는 isCreated: true
     };
-    console.log("생성: ", dataToSubmit)
-
-    onCreateDisk(dataToSubmit);
+    console.log("Form Data: ", newDisk);
+    onCreateDisk(newDisk);
     onClose();
-  };
+  };    
+
 
   const handleFormSubmit = () => {
     const error = validateForm();

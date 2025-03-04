@@ -40,7 +40,7 @@ class DiskAttachmentVo(
 	val bootable: Boolean = false,
 	val readOnly: Boolean = false,
 	val passDiscard: Boolean = false,
-	val interface_: DiskInterface = DiskInterface.VIRTIO,
+	val interface_: DiskInterface = DiskInterface.VIRTIO_SCSI,
 	val logicalName: String = "",
 	val detachOnly: Boolean = false,
 	val diskImageVo: DiskImageVo = DiskImageVo(),
@@ -56,7 +56,7 @@ class DiskAttachmentVo(
 		private var bBootable: Boolean = false;fun bootable(block: () -> Boolean?) { bBootable = block() ?: false }
 		private var bReadOnly: Boolean = false;fun readOnly(block: () -> Boolean?) { bReadOnly = block() ?: false }
 		private var bPassDiscard: Boolean = false;fun passDiscard(block: () -> Boolean?) { bPassDiscard = block() ?: false }
-		private var bInterface_: DiskInterface = DiskInterface.VIRTIO;fun interface_(block: () -> DiskInterface?) { bInterface_ = (block() ?: DiskInterface.VIRTIO) }
+		private var bInterface_: DiskInterface = DiskInterface.VIRTIO_SCSI;fun interface_(block: () -> DiskInterface?) { bInterface_ = (block() ?: DiskInterface.VIRTIO_SCSI) }
 		private var bLogicalName: String = "";fun logicalName(block: () -> String?) { bLogicalName = block() ?: "" }
 		private var bDetachOnly: Boolean = false;fun detachOnly(block: () -> Boolean?) { bDetachOnly = block() ?: false }
 		private var bDiskImageVo: DiskImageVo = DiskImageVo();fun diskImageVo(block: () -> DiskImageVo?) { bDiskImageVo = block() ?: DiskImageVo() }
@@ -166,28 +166,29 @@ fun DiskAttachmentVo.toEditDiskAttachment(): DiskAttachment =
 
 
 // 생성과 연결을 한번에 리스트 형식으로
-fun List<DiskAttachmentVo>.toAddVmDiskAttachmentList(): List<DiskAttachment> =
-	map { it.run {
-		if (diskImageVo.id.isEmpty()) toAddDiskAttachment()
-		else toAttachDisk() }
-	}.also { log.info("Generated disk attachments: $it") }
+// fun List<DiskAttachmentVo>.toAddVmDiskAttachmentList(): List<DiskAttachment> =
+// 	map { it.run {
+// 		if (diskImageVo.id.isEmpty()) toAddDiskAttachment()
+// 		else toAttachDisk() }
+// 	}.also { log.info("Generated disk attachments: ${it.toDiskAttachmentIdList()}") }
 
 
 // /**
 //  * 생성과 연결될 DiskAttachment 를 목록으로 내보낸다
 //  */
-// fun List<DiskAttachmentVo>.toAddVmDiskAttachmentList(): List<DiskAttachment> {
-// 	val diskAttachmentList = mutableListOf<DiskAttachment>()
-// 	this@toAddVmDiskAttachmentList.forEach { diskAttachmentVo ->
-// 		if (diskAttachmentVo.diskImageVo.id.isEmpty()) { // 디스크 생성
-// 			diskAttachmentList.add(diskAttachmentVo.toAddDiskAttachment())
-// 		} else { // 디스크 연결
-// 			diskAttachmentList.add(diskAttachmentVo.toAttachDisk())
-// 		}
-// 	}
-// 	log.info("disk: {}", this)
-// 	return diskAttachmentList
-// }
+fun List<DiskAttachmentVo>.toAddVmDiskAttachmentList(): List<DiskAttachment> {
+	val diskAttachmentList = mutableListOf<DiskAttachment>()
+	this@toAddVmDiskAttachmentList.forEach { diskAttachmentVo ->
+		if (diskAttachmentVo.diskImageVo.id.isEmpty()) { // 디스크 생성
+			diskAttachmentList.add(diskAttachmentVo.toAddDiskAttachment())
+			println("disk 생성: "+diskAttachmentVo.diskImageVo.alias)
+		} else { // 디스크 연결
+			diskAttachmentList.add(diskAttachmentVo.toAttachDisk())
+			println("disk 연결: "+diskAttachmentVo.diskImageVo.alias)
+		}
+	}
+	return diskAttachmentList
+}
 
 
 fun DiskAttachmentVo.toAddSnapshotDisk(): DiskAttachment {

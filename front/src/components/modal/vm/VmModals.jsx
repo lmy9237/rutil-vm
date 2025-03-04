@@ -32,7 +32,6 @@ const VmModals = ({ activeModal, vm, selectedVms = [], onClose }) => {
     ),
   };
 
-  console.log("...")
   return (
     <>
       {Object.keys(allModals).map((key) => (
