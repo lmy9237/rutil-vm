@@ -6,7 +6,8 @@ LABEL build-stage="npm"
 
 WORKDIR /home/node
 
-COPY package*.json /home/node/
+COPY package.json /home/node/
+COPY package-lock.json /home/node/
 RUN npm audit fix;exit 0
 RUN npm i
 
@@ -50,9 +51,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Expose port 80 to the outside world
 EXPOSE 80 443
 
-COPY env.sh /docker-entrypoint.d/env.sh
-RUN chmod +x /docker-entrypoint.d/env.sh
+COPY entrypoint.sh /home/node/entrypoint.sh
+RUN chmod +x /home/node/entrypoint.sh
 
 # Start Nginx when the container launches
-# CMD ["nginx", "-g", "daemon off;"]
-# ENTRYPOINT ["/docker-entrypoint.d/env.sh"]
+ENTRYPOINT [ "/home/node/entrypoint.sh" ]

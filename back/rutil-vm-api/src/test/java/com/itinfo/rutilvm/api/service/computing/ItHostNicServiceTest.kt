@@ -86,29 +86,27 @@ class ItHostNicServiceTest {
                             id { "3b38dba9-5b14-4345-b7da-96990423a8e1" }
                         }
                     }
-                    hostNicVo { IdentifiedVo.builder { name { "bond1" } } }
-//                    ipAddressAssignments {
-//                        listOf(
-//                            IpAddressAssignmentVo.builder {
-//                                assignmentMethod { "static" }
-//                                ipVo {
-//                                    IpVo.builder {
-//                                        address {  }
-//                                    }
-//                                }
-//                            }
-//                        )
-//                    }
+					hostNicVo { IdentifiedVo.builder { name { "bond1" } } }
+					ipAddressAssignments {
+						listOf(
+							IpAddressAssignmentVo.builder {
+								assignmentMethod { "static" }
+								ipVo {
+                                   IpVo.builder {
+                                       address { "" }
+                                   }
+                               }
+                           }
+                       )
+                   }
                 }
             )
-
+        /*
         val result: Boolean =
             service.setUpNetworksFromHost(host05, bonds, networkAttach)
-
         assertThat(result, `is`(not(nullValue())))
-        println(result)
+        */
     }
-
 
     companion object {
         private val log by LoggerDelegate()

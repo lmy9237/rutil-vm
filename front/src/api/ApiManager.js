@@ -2,10 +2,9 @@ import ENDPOINTS from "./Endpoints"
 import DEFAULT_VALUES from "./DefaultValues"
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-
+// import { RUTIL_VM_ENV } from "../../vite.config";
 // axios.defaults.withCredentials = true;
 /*
-axios.defaults.baseURL = process.env.BASE_URL_API_STAGING
 axios.defaults.proxy = {
   host: '192.168.0.70',
   port: 8444,
@@ -13,7 +12,11 @@ axios.defaults.proxy = {
 }
 axios.defaults.baseURL = "https://192.168.0.70:8443";
 */
-
+if (process.env.NODE_ENV === 'production') {
+  console.log("THIS IS PRODUCTION !!!")
+  console.log(`ApiManager.js ... process.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`)
+  axios.defaults.baseURL = 'https://__RUTIL_VM_OVIRT_IP_ADDRESS__:6690';
+}
 
 axios.interceptors.request.use(config => {
   config.headers['Content-Type'] = 'application/json;charset=utf-8';

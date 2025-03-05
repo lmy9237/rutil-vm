@@ -3,13 +3,14 @@ import react from "@vitejs/plugin-react";
 import mkcert from "vite-plugin-mkcert";
 // import path from "path";
 
+let RUTIL_VM_ENV = {}
 const VITE_CONFIG = ({ mode }) => {
-  console.log(`mode: ${mode}`)
-  process.env = { ...process.env, ...loadEnv(mode, process.cwd())}
-  console.log(`process.env.NODE_ENV: ${process.env.NODE_ENV}`)
-  console.log(`process.env.VITE_RUTIL_VM_OVIRT_IP: ${process.env.VITE_RUTIL_VM_OVIRT_IP}`)
+  RUTIL_VM_ENV = { ...process.env, ...loadEnv(mode, process.cwd())}
+  console.log(`vite.config.js ... mode: ${mode}`)
+  console.log(`vite.config.js ... process.env.NODE_ENV: ${RUTIL_VM_ENV.NODE_ENV}`)
+  console.log(`vite.config.js ... process.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: ${RUTIL_VM_ENV.VITE_RUTIL_VM_OVIRT_IP_ADDRESS}`)
 
-  const apiUrl = process.env.VITE_RUTIL_VM_OVIRT_IP ?? "localhost";
+  RUTIL_VM_ENV.__API_URL__ = `https://${RUTIL_VM_ENV.VITE_RUTIL_VM_OVIRT_IP_ADDRESS}:6690`;
   return defineConfig({
     // root: path.resolve(__dirname, 'public'),
     plugins: [react(), mkcert()],
@@ -17,14 +18,14 @@ const VITE_CONFIG = ({ mode }) => {
       devSourcemap: true,
     },
     define: {
-      global: 'window'
+      global: 'window',
     },
     server: {
       https: true,
       port: Number(process.env.SSL_PORT) || 3443,
       proxy: {
         "/api": {
-          target: `https://${apiUrl}:6690`,
+          target: RUTIL_VM_ENV.__API_URL__,
           changeOrigin: true,
           secure: false, // Set to true if the target uses a valid SSL certificate
           configure: (proxy, options) => {
@@ -50,7 +51,13 @@ const VITE_CONFIG = ({ mode }) => {
         "@": "/src",
       },
     },
+    build: {
+      minify: true, 
+    }
   });
 }
 
+export { RUTIL_VM_ENV } ;
+
 export default VITE_CONFIG
+

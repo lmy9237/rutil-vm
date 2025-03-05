@@ -73,13 +73,14 @@ services:
     image: ititcloud/rutil-vm:latest
     container_name: rutil-vm
     ports:
-      - "443:443"
+      - "3443:443"
     environment:
       TZ: Asia/Seoul
       LANGUAGE: ko_KR;ko;en_US;en
       LC_ALL: ko_KR.UTF-8
       LANG: ko_KR.utf8
-      RUTIL_VM_OVIRT_IP: 192.168.0.70
+      NODE_ENV: production
+      __RUTIL_VM_OVIRT_IP_ADDRESS__: 192.168.0.70
     networks:
       - ovirt_network
 #    healthcheck:

@@ -1,5 +1,5 @@
 #!/bin/sh
-for i in $(env | grep RUTIL_VM_)
+for i in $(env | grep __RUTIL_VM)
 do
     key=$(echo $i | cut -d '=' -f 1)
     value=$(echo $i | cut -d '=' -f 2-)
@@ -12,4 +12,4 @@ do
 done
 echo 'done'
 
-nginx -g 'daemon off;'
+exec nginx -g 'daemon off;'
