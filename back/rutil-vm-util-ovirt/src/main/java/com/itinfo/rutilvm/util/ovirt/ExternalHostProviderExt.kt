@@ -7,6 +7,7 @@ import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.services.ExternalHostProviderService
 import org.ovirt.engine.sdk4.services.ExternalHostProvidersService
 import org.ovirt.engine.sdk4.types.ExternalHostProvider
+import org.ovirt.engine.sdk4.types.ExternalProvider
 
 private fun Connection.srvExternalHostProviders(): ExternalHostProvidersService =
 	systemService.externalHostProvidersService()
@@ -42,3 +43,25 @@ fun Connection.addExternalHostProvider(externalHostProvider: ExternalHostProvide
 	Term.EXTERNAL_HOST_PROVIDER.logFail("생성", it)
 	throw if (it is Error) it.toItCloudException() else it
 }
+
+fun Connection.testConnectivityExternalHostProvider(externalHostProviderId: String): Result<Boolean> = runCatching {
+	this.srvExternalHostProvider(externalHostProviderId).testConnectivity().send().toString()
+	log.info("host test {}", this.srvExternalHostProvider(externalHostProviderId).testConnectivity().send().toString())
+	true
+}.onSuccess {
+	Term.EXTERNAL_HOST_PROVIDER.logSuccess("상세조회")
+}.onFailure {
+	Term.EXTERNAL_HOST_PROVIDER.logFail("상세조회")
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+
+fun Connection.findAllExternalHostProvider(): Result<List<ExternalProvider>> = runCatching {
+	this.srvExternalHostProviders().list().send().providers()
+}.onSuccess {
+	Term.EXTERNAL_HOST_PROVIDER.logSuccess("목록조회")
+}.onFailure {
+	Term.EXTERNAL_HOST_PROVIDER.logFail("목록조회")
+	throw if (it is Error) it.toItCloudException() else it
+}
+
