@@ -5,10 +5,10 @@ import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.builders.ClusterBuilder
 import org.ovirt.engine.sdk4.builders.ExternalHostProviderBuilder
 import org.ovirt.engine.sdk4.builders.ExternalVmImportBuilder
-import org.ovirt.engine.sdk4.builders.FileBuilder
 import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
 import org.ovirt.engine.sdk4.builders.VmBuilder
 import org.ovirt.engine.sdk4.types.ExternalHostProvider
+import org.ovirt.engine.sdk4.types.ExternalProvider
 import org.ovirt.engine.sdk4.types.ExternalVmImport
 import org.ovirt.engine.sdk4.types.ExternalVmProviderType
 import org.ovirt.engine.sdk4.types.ExternalVmProviderType.VMWARE
@@ -47,7 +47,7 @@ class ExternalVo (
 	val password: String = "",
 	val provider: ExternalVmProviderType = ExternalVmProviderType.VMWARE,
 	val url: String = "",
-	val iso: IdentifiedVo = IdentifiedVo(),
+	// val iso: IdentifiedVo = IdentifiedVo(),
 ): Serializable {
     override fun toString(): String =
         gson.toJson(this)
@@ -67,9 +67,9 @@ class ExternalVo (
 		private var bPassword: String = ""; fun password(block: () -> String?) { bPassword = block() ?: "" }
 		private var bProvider: ExternalVmProviderType = VMWARE; fun provider(block: () -> ExternalVmProviderType?) { bProvider = block() ?: VMWARE }
 		private var bUrl: String = ""; fun url(block: () -> String?) { bUrl = block() ?: "" }
-		private var bIso: IdentifiedVo = IdentifiedVo(); fun iso(block: () -> IdentifiedVo?) { bIso = block() ?: IdentifiedVo() }
+		// private var bIso: IdentifiedVo = IdentifiedVo(); fun iso(block: () -> IdentifiedVo?) { bIso = block() ?: IdentifiedVo() }
 
-        fun build(): ExternalVo = ExternalVo(bDataCenterVo, bVCenter, bDataCenter, bCluster, bEsxi, bName, bVmVo, bClusterVo, bStorageDomainVo, bSparse, bUserName, bPassword, bProvider, bUrl, bIso, )
+        fun build(): ExternalVo = ExternalVo(bDataCenterVo, bVCenter, bDataCenter, bCluster, bEsxi, bName, bVmVo, bClusterVo, bStorageDomainVo, bSparse, bUserName, bPassword, bProvider, bUrl, /*bIso,*/ )
     }
 
     companion object {
@@ -89,7 +89,7 @@ fun ExternalVmImport.toExternalVmImport(): ExternalVo {
 		password { ehp.password() }
 		provider { ehp.provider() }
 		url { ehp.url() }
-		iso { IdentifiedVo.builder { id { ehp.driversIso().id() } } }
+		// iso { IdentifiedVo.builder { id { ehp.driversIso().id() } } }
 	}
 }
 
@@ -100,22 +100,37 @@ fun ExternalHostProvider.toExternalHostProvider(): ExternalVo {
 		url { ehp.url() }
 	}
 }
+fun List<ExternalHostProvider>.toExternalHostProviders(): List<ExternalVo> =
+	this@toExternalHostProviders.map { it.toExternalHostProvider() }
+
+
+fun ExternalProvider.toExternalProvider(): ExternalVo {
+	val ehp = this@toExternalProvider
+	return ExternalVo.builder {
+		userName { ehp.username() }
+		url { ehp.url() }
+		name { ehp.name() }
+	}
+}
+fun List<ExternalProvider>.toExternalProviders(): List<ExternalVo> =
+	this@toExternalProviders.map { it.toExternalProvider() }
 
 fun ExternalVo.toExternalHostProviderBuilder(): ExternalHostProvider {
 	val ehp = this@toExternalHostProviderBuilder
+	log.info("externalHost: {}", this)
 	return ExternalHostProviderBuilder()
+		.name("VmWare") // 해결필요
 		.username(ehp.userName)
 		.password(ehp.password)
-		.url(ehp.url)
-		// <url>vpx://wmware_user@vcenter-host/DataCenter/Cluster/esxi-host?no_verify=1</url>
+		.url("vpx://"+ehp.userName+"/"+ehp.dataCenter+"/"+cluster+"/"+esxi)
+		// .url(ehp.url)
 		// https://administrator@vsphere.local/Datacenter/ITITINFO/192.168.0.4
-		.name("VMWARE")
 		.build()
 }
 
 
-fun ExternalVo.toExternalBuilder(): ExternalVmImport {
-	val eVm = this@toExternalBuilder
+fun ExternalVo.toExternalVmImportBuilder(): ExternalVmImport {
+	val eVm = this@toExternalVmImportBuilder
 	return ExternalVmImportBuilder()
 		.vm(VmBuilder().name(eVm.vmVo.name).build())
 		.cluster(ClusterBuilder().id(eVm.clusterVo.id).build())
@@ -125,7 +140,8 @@ fun ExternalVo.toExternalBuilder(): ExternalVmImport {
 		.username(eVm.userName)
 		.password(eVm.password)
 		.provider(eVm.provider) // vmware 로 기본지정
-		.url(eVm.url)
-		.driversIso(FileBuilder().id(eVm.iso.id).build())
+		.url(eVm.url+"?no_verify=1") // ?no_verify=1 검증무시
+		// <url>vpx://wmware_user@vcenter-host/DataCenter/Cluster/esxi-host?no_verify=1</url>
+		// .driversIso(FileBuilder().id(eVm.iso.id).build())
 		.build()
 }

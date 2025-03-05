@@ -169,7 +169,7 @@ class VmController: BaseController() {
 
 	@ApiOperation(
 		httpMethod="POST",
-		value="가상머신 가져오기 - vmware 주닙",
+		value="가상머신 가져오기 - vmware 계정 host 공급자에 생성",
 		notes="가상머신을 생성한다"
 	)
 	@ApiImplicitParams(
