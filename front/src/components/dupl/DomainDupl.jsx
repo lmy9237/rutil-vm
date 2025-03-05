@@ -18,7 +18,7 @@ import { convertBytesToGB } from "../../util";
  */
 const DomainDupl = ({
   isLoading, isError, isSuccess,
-  domains = [], columns = [], actionType = "domain", datacenterId,
+  domains = [], columns = [], actionType = "domain", datacenterId,showSearchBox = false
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
@@ -41,7 +41,7 @@ const DomainDupl = ({
         status={selectedDomains[0]?.status}
         actionType={actionType} // 도메인인지, 데이터센터인지
       />
-      <span style={{fontSize:"20px"}}>ID: {selectedIds || ""}</span>
+      {/* <span style={{fontSize:"20px"}}>ID: {selectedIds || ""}</span> */}
 
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
@@ -82,6 +82,7 @@ const DomainDupl = ({
           usedSize: convertBytesToGB(domain?.usedSize) + " GB",
         }))}
         shouldHighlight1stCol={true}
+        showSearchBox={showSearchBox}
         onRowClick={(selectedRows) => setSelectedDomains(selectedRows)}
         clickableColumnIndex={[2]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}

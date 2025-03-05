@@ -34,6 +34,7 @@ console.log("...")
           columns={TableColumnsInfo.VMS}
           vms={vms}
           onCloseModal={vmsRefetch}
+          showSearchBox={true}
         />
       </div>
     </div>

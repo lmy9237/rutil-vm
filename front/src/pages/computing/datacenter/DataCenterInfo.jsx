@@ -120,7 +120,7 @@ const DataCenterInfo = () => {
           handleSectionClick={handleTabClick}
         />
         <div className="px-[0.5rem] py-[0.5rem] info-content">
-          <Path pathElements={pathData} />
+          <Path pathElements={pathData}  basePath={`/computing/datacenters/${dataCenterId}/clusters`}/>
           <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
         </div>
       </div>

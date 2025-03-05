@@ -10,7 +10,7 @@ import {
   faServer,
   faDatabase,
   faCog,
-  faBuilding,
+faBuilding,
   faUser,
   faMicrochip,
   faChevronLeft,
@@ -32,7 +32,12 @@ import {
  * @returns {JSX.Element} MainOuter
  *
  */
-const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
+const MainOuter = ({ 
+  children, 
+  asideVisible, 
+  setAsideVisible,
+  isFooterContentVisible
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarWidth, setSidebarWidth] = useState(240); // 초기 사이드바 너비 (%)
@@ -870,7 +875,10 @@ const MainOuter = ({ children, asideVisible, setAsideVisible }) => {
   const asideClasses = `aside-outer ${asideVisible ? "open" : "closed"} ${window.innerWidth <= 1420 ? "responsive-closed" : ""}`;
 
   return (
-    <div className="main-outer" onClick={handleMainClick}>
+    <div
+      className={`main-outer${isFooterContentVisible ? " open" : ""}`}  
+      onClick={handleMainClick}
+    >
       <div className={asideClasses} style={asideStyles}>
         <div id="aside">
           <div className="nav">

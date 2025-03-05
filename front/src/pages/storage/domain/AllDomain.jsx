@@ -32,6 +32,7 @@ const AllDomain = () => {
           isLoading={isStorageDomainsLoading}
           isError={isStorageDomainsError}
           isSuccess={isStorageDomainsSuccess}
+          showSearchBox={true}
         />
       </div>
     </div>

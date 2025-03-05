@@ -12,9 +12,10 @@
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 .dash-section-contents {
-  min-width: 350px; /* 화면이 줄어들면 최소 크기를 유지 */
+  min-width: 450px; 
   flex: 0.5; 
   height: 63vh;
+  border:1px solid blue;
 }
 .dash-section-contents > h1 {
   font-size: var(--fs-21);
@@ -34,7 +35,7 @@
 .bar {
   display: flex;
   flex-wrap: wrap;
-  height: 227px;
+  min-height: 227px;
   border-radius: 3px;
   font-size: var(--fs-18);
   justify-content: space-between;

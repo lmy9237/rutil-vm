@@ -85,31 +85,55 @@ const Tables = ({
   // 테이블 정렬기능
   const [sortedData, setSortedData] = useState(data);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-  useEffect(() => {
-    if (sortConfig.key) {
-      sortData(data, sortConfig.key, sortConfig.direction);
-    } else {
-      setSortedData(data);
-    }
-  }, [data]);
-
   const sortData = (key, direction) => {
-    console.log(
-      `PagingTable > sortData ... key: ${key}, direction: ${direction}`
-    );
-    const sorted = [...data].sort((a, b) => {
-      const aValue = a[key] ?? "";
-      const bValue = b[key] ?? "";
+  console.log(`PagingTable > sortData ... key: ${key}, direction: ${direction}`);
 
-      // 문자열 비교: 대소문자 무시 및 로케일별 정렬 (A-Z, ㄱ-ㅎ)
-      const result = String(aValue).localeCompare(String(bValue), "ko", {
-        sensitivity: "base",
-      });
+  const sorted = [...data].sort((a, b) => {
+    const aValue = a[key] ?? "";
+    const bValue = b[key] ?? "";
 
-      return direction === "asc" ? result : -result;
+    // 문자열 비교: 대소문자 무시 및 로케일별 정렬 (A-Z, ㄱ-ㅎ)
+    const result = String(aValue).localeCompare(String(bValue), "ko", {
+      sensitivity: "base",
     });
-    setSortedData(sorted);
-  };
+
+    return direction === "asc" ? result : -result;
+  });
+
+  setSortedData(sorted);
+};
+
+  useEffect(() => {
+    let filteredData = data;
+  
+    // 검색 기능 추가
+    if (searchQuery.trim() !== "") {
+      filteredData = data.filter((row) =>
+        columns.some((column) =>
+          String(row[column.accessor] ?? "")
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
+        )
+      );
+    }
+  
+    // 정렬 기능 유지
+    if (sortConfig.key) {
+      filteredData = [...filteredData].sort((a, b) => {
+        const aValue = a[sortConfig.key] ?? "";
+        const bValue = b[sortConfig.key] ?? "";
+  
+        const result = String(aValue).localeCompare(String(bValue), "ko", {
+          sensitivity: "base",
+        });
+  
+        return sortConfig.direction === "asc" ? result : -result;
+      });
+    }
+  
+    setSortedData(filteredData);
+  }, [data, searchQuery, sortConfig]);
+  
 
   const handleSort = (column) => {
     // 내림, 오름차순

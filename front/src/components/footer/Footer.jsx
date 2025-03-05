@@ -9,17 +9,19 @@ import "./Footer.css";
  *
  * @returns {JSX.Element} Footer
  */
-const Footer = () => {
-  const [isFooterContentVisible, setIsFooterContentVisible] = useState(false);
+const Footer = ({
+  isFooterContentVisible = false,
+  setIsFooterContentVisible
+}) => {
   const [selectedFooterTab, setSelectedFooterTab] = useState("recent");
-
-  const toggleFooterContent = () => setIsFooterContentVisible(!isFooterContentVisible);
   const handleFooterTabClick = (tab) => setSelectedFooterTab(tab);
 
   return (
-    <div className="footer-outer">
+    <div className={`footer-outer${isFooterContentVisible ? " open" : ""}`}>
       <div className="footer">
-        <button onClick={toggleFooterContent}>
+        <button onClick={() => {
+          setIsFooterContentVisible(!isFooterContentVisible)
+        }}>
           <FontAwesomeIcon icon={faChevronDown} fixedWidth />
         </button>
         <div>
@@ -46,7 +48,7 @@ const Footer = () => {
         </div>
       </div>
   
-      <div className="footer-content" style={{ display: isFooterContentVisible ? "block" : "none" }}>
+      <div className={`footer-content${isFooterContentVisible ? " open" : ""}`}>
           <div className="footer-nav">
             <table>
               <thead>

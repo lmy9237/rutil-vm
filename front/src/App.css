@@ -9,9 +9,14 @@
 @tailwind utilities;
 html {
   height: 100%;
+  background-color: #0b4db5;
   --h-rutil-header: 51px;
   --h-rutil-footer: 35px; /*section-footer 높이 */
-  --h-section-header: 70px; /*section-header 높이 */
+  --h-rutil-footer-content: 190px;
+  --h-rutil-footer-open: calc(var(--h-rutil-footer) + var(--h-rutil-footer-content));
+  --h-rutil-content: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer));
+  --h-rutil-content-footer-open: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer-open));
+  --h-section-header: 72px; /*section-header 높이 */
   
   --h-modal-header: 55px;                /* 모달 헤더 부분 높이 */
   --h-modal-footer: 60px;                /* 모달 푸터 부분 높이 */
@@ -64,11 +69,11 @@ html {
 }
 body { width:100%;height:100%;}
 #root {
+  width:100%;height:100%;position: absolute;left:0;top:0;
   background-color: #ebeeee;
   /* background-color: #20acac; */
   text-rendering: optimizeLegibility;
-  padding: 3px;
-  width:100%;height:100%;display:flex;justify-content:flex-start;align-items:center;flex-direction:column;
+  display:flex;justify-content:flex-start;align-items:center;flex-direction:column;
 }
 
 details>summary {
@@ -123,8 +128,8 @@ input[disabled] {
 }
 #section {
   background-color: white;
-  width:    calc(100% - var(--w-aside-menu));
-  position: relative;
+  width: calc(100% - var(--w-aside-menu));height:100%;
+  overflow-y: auto;
 }
 /* .dash-boxs+.bar+.dash-section{
     height: 100%;
@@ -375,7 +380,7 @@ textarea {
 /*토스트*/
 .toast {
     font-size: var(--fs-default);
-    width: 30%;
+    width: 400px;
     padding: 12px 9px;
     border-radius: 2%;
     text-align: left;
@@ -2425,17 +2430,18 @@ background-color: #f0f0f0;
     .box {
         width: calc(50% - 0.11rem); /* 2열 */
     }
+    .modal {
+        max-width: 100%;
+        min-height: auto;
+        max-height: 90vh;
+    }
 }
 @media screen and (max-width: 768px) {
-    .responsive-closed{
-        position: absolute;
-        background: white;
+    .responsive-closed {
+      background: white;
     }
     .header-right-btns > button:last-child,.manage-button {
         margin-right: 8px !important;
-    }
-    #section{
-        width: 100%;
     }
     .box {
         width: calc(100% - 0.5rem); /* 1열 */
@@ -2443,7 +2449,8 @@ background-color: #f0f0f0;
         padding: 10px 0;
         border-bottom: 1px solid #5e95a745;
     }
-    /* .section-header{
+    /* 
+    .section-header{
         display:block;
         padding: 9px;
         align-items: center;

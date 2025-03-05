@@ -99,13 +99,21 @@ const App = () => {
     console.log(`App > toggleAside ...`);
     setAsideVisible((prev) => !prev); // 열림/닫힘 상태만 변경
   };
+
+  const [isFooterContentVisible, setIsFooterContentVisible] = useState(false);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
         {authenticated ? (
           <>
             <Header setAuthenticated={setAuthenticated} toggleAside={toggleAside}/>
-            <MainOuter asideVisible={asideVisible} setAsideVisible={setAsideVisible}>
+            <MainOuter
+              asideVisible={asideVisible} 
+              setAsideVisible={setAsideVisible}
+              isFooterContentVisible={isFooterContentVisible}
+              // TODO: 
+            >
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/computing/rutil-manager" element={<RutilManager />} />
@@ -156,7 +164,10 @@ const App = () => {
                 <Route path="/error" element={<Error />} />
               </Routes>
             </MainOuter>
-            {/* <Footer /> */}
+            <Footer 
+              isFooterContentVisible={isFooterContentVisible}
+              setIsFooterContentVisible={setIsFooterContentVisible}
+            />
           </>
           ) :
           (<Routes>

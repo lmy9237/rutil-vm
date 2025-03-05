@@ -17,6 +17,7 @@ const VmDupl = ({
   isLoading, isError, isSuccess,
   vms = [], columns = [], actionType, status, 
   onCloseModal = () => {},
+  showSearchBox = false
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
@@ -77,6 +78,7 @@ const VmDupl = ({
               : `${vm.usageDto.networkPercent}%`,
         }))}
         shouldHighlight1stCol={true}
+        showSearchBox={showSearchBox}
         onRowClick={(selectedRows) => setSelectedVms(selectedRows)}
         clickableColumnIndex={[1]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}

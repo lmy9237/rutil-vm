@@ -3,12 +3,30 @@ import ReactApexChart from "react-apexcharts";
 import "./BarChart.css";
 
 const BarChart = ({ names, percentages }) => {
+  const [chartSize, setChartSize] = useState({
+    width: window.innerWidth * 0.12, // 초기 width (뷰포트 기준)
+    height: window.innerHeight * 0.23, // 초기 height (뷰포트 기준)
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setChartSize({
+        width: window.innerWidth * 0.12,
+        height: window.innerHeight * 0.23,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [series, setSeries] = useState([{ data: [] /* 막대 값 */ }]);
   const [chartOptions, setChartOptions] = useState({
     chart: {
       offsetY: -15,
       offsetX: -55,
       type: "bar",
+       background:"green"
     },
     grid: {
       show: false, // Hide grid lines
@@ -31,6 +49,7 @@ const BarChart = ({ names, percentages }) => {
         colors: ["#fff"],
         fontSize: "12px", // 텍스트 크기를 rem 단위로 설정합니다.
         fontWeight: "400",
+       
       },
       formatter: function (val, opt) {
         return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
@@ -110,8 +129,8 @@ const BarChart = ({ names, percentages }) => {
           options={chartOptions}
           series={series}
           type="bar"
-          width="300px"
-          height="180px"
+          width={`${chartSize.width}px`}
+          height={`${chartSize.height}px`}
         />
       </div>
       <div id="html-dist"></div>

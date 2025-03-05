@@ -225,11 +225,11 @@ const Header = ({ setAuthenticated, toggleAside }) => {
               setSelectedIndex(3);toggleLoginBox();
             }}
           />
-          <span
+          {/* <span
             onClick={() => {
-              setSelectedIndex(3);toggleLoginBox(); // 기존 기능 유지
+              setSelectedIndex(3);toggleLoginBox(); 
             }}
-          >{username}</span>
+          >{username}</span> */}
         </div>
         {isLoginBoxVisible && (
           <div className="user-loginbox" 

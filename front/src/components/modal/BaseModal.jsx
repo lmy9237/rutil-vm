@@ -18,6 +18,7 @@ const BaseModal = ({
   children,
   contentStyle = {},
 }) => {
+  
   // console.log("...");
   return (
     <Modal className="Modal" overlayClassName="Overlay"
