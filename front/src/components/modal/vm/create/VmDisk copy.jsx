@@ -4,6 +4,8 @@ import { useDisksFromVM } from "../../../../api/RQHook";
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
 
+// 편집기능이 있는 컴포넌트
+
 const VmDisk = ({
   editMode=false,
   vm,
