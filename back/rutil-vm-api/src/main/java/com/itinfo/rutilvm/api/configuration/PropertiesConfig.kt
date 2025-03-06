@@ -14,19 +14,19 @@ import javax.annotation.PostConstruct
  */
 @Component
 class PropertiesConfig {
-	@Value("\${application.title}")				lateinit var title: String
-	@Value("\${application.version}")			lateinit var version: String
-	@Value("\${application.release-date}")		lateinit var releaseDate: String
-	@Value("\${application.ovirt.ip}")			lateinit var ovirtIp: String
-	@Value("\${application.ovirt.port}")		lateinit var _ovirtPort: String
-	@Value("\${application.ovirt.port.ssl}")	lateinit var _ovirtPortSsl: String
-	@Value("\${application.ovirt.vnc.ip}")		lateinit var ovirtVncIp: String
-	@Value("\${application.ovirt.vnc.port}")	lateinit var ovirtVncPort: String
-	@Value("\${application.ovirt.admin.id}")	lateinit var ovirtAdminId: String
-	@Value("\${application.ovirt.admin.pw}")	lateinit var ovirtAdminPw: String
-	@Value("\${application.ovirt.threshold.cpu") 	private lateinit var _thresholdCpu: String
-	@Value("\${application.ovirt.threshold.memory") private lateinit var _thresholdMemory: String
-	@Value("\${application.ovirt.login.limit")		private lateinit var _loginLimit: String
+	@Value("\${application.title}")						lateinit var title: String
+	@Value("\${application.version}")					lateinit var version: String
+	@Value("\${application.release-date}")				lateinit var releaseDate: String
+	@Value("\${application.ovirt.ip}")					lateinit var ovirtIp: String
+	@Value("\${application.ovirt.port}")				lateinit var _ovirtPort: String
+	@Value("\${application.ovirt.port.ssl}")			lateinit var _ovirtPortSsl: String
+	@Value("\${application.ovirt.vnc.ip}")				lateinit var ovirtVncIp: String
+	@Value("\${application.ovirt.vnc.port}")			lateinit var ovirtVncPort: String
+	@Value("\${application.ovirt.admin.id}")			lateinit var ovirtAdminId: String
+	@Value("\${application.ovirt.admin.pw}")			lateinit var ovirtAdminPw: String
+	@Value("\${application.ovirt.threshold.cpu") 		private lateinit var _thresholdCpu: String
+	@Value("\${application.ovirt.threshold.memory") 	private lateinit var _thresholdMemory: String
+	@Value("\${application.ovirt.login.limit")			private lateinit var _loginLimit: String
 	@Value("\${application.api.cors.allowed-origins}")	private lateinit var _corsAllowedOrigins: String
 	@Value("\${application.api.cors.allowed-origins.port}")	private lateinit var _corsAllowedOriginsPort: String
 
@@ -35,7 +35,9 @@ class PropertiesConfig {
 	@Value("\${spring.datasource.aaa.url}")				lateinit var aaaJdbcUrl: String
 
 	@Value("\${server.port}")							lateinit var serverPort: String
-
+	@Value("\${server.ssl.key-store}")					lateinit var sslKeyStore: String
+	@Value("\${server.ssl.key-store-password}")			lateinit var sslKeyStorePassword: String
+	@Value("\${server.ssl.key-alias}")					lateinit var sslKeyAlias: String
 	/*
 	@Value("\${management.endpoints.web.exposure.include}")	lateinit var exposureInclude: String
 	@Value("\${management.endpoint.shutdown.enabled}")		lateinit var _shutdownEnabled1: String
@@ -63,11 +65,17 @@ class PropertiesConfig {
 	val corsAllowedOriginsPort: List<String>
 		get() = _corsAllowedOriginsPort.split(";")
 	val corsAllowedOriginsFull: List<String>
-		get() = corsAllowedOrigins.flatMap { o -> corsAllowedOriginsPort.map { p -> "https://${o}:${p}" } }
-	/*val shutdownEnabled1: Boolean
+		get() = corsAllowedOrigins.flatMap { o ->
+			corsAllowedOriginsPort.map { p ->
+				"https://${o}${if (p != "443") ":$p" else ""}"
+			}
+		}
+	/*
+	val shutdownEnabled1: Boolean
 		get() = _shutdownEnabled1.toBooleanStrictOrNull() ?: false
 	val shutdownEnabled2: Boolean
-		get() = _shutdownEnabled2.toBooleanStrictOrNull() ?: false*/
+		get() = _shutdownEnabled2.toBooleanStrictOrNull() ?: false
+	*/
 
 
 	@PostConstruct
@@ -89,7 +97,10 @@ class PropertiesConfig {
 		log.debug("  application.api.cors.allowed-origins.port: {}", corsAllowedOriginsPort)
 		log.debug("  application.api.cors.allowed-origins (FULL): {}", corsAllowedOriginsFull)
 		log.debug("  application.ovirt.login.limit: {}\n\n", loginLimit)
-		log.debug("  server.port: {}\n\n", serverPort)
+		log.debug("  server.port: {}", serverPort)
+		log.debug("  server.ssl.key-store: {}", sslKeyStore)
+		log.debug("  server.ssl.key-store-password: {}", sslKeyStorePassword)
+		log.debug("  server.ssl.key-alias: {}\n\n", sslKeyAlias)
 		log.debug("  spring.datasource.history.url: {}", historyJdbcUrl)
 		log.debug("  spring.datasource.engine.url: {}", engineJdbcUrl)
 		log.debug("  spring.datasource.aaa.url: {}\n\n", aaaJdbcUrl)

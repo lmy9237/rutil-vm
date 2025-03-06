@@ -20,19 +20,20 @@ export DOCKER_IMG_RUTIL_VM=ititcloud/rutil-vm
 export DOCKER_IMG_RUTIL_VM_CURRENT=$DOCKER_IMG_RUTIL_VM:$DOCKER_IMG_RUTIL_VM_API_VERSION
 export DOCKER_IMG_RUTIL_VM_LATEST=$DOCKER_IMG_RUTIL_VM:latest
 
+function dp() {
+  docker ps -a
+}
 #
 # docker logs -f <컨테이너명>
 #
 function dl() {
   docker logs -f $1
 }
-
 function di() {
   docker images
 }
-
-function de() {
-  docker exec -it $1 /bin/bash
+function dx() {
+  docker exec -it $1 /bin/sh
 }
 #
 # docker rmi <이미지>

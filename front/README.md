@@ -1,8 +1,8 @@
 # rutil-vm-front
 
-![favicon](public/favicon.ico)
+![favicon](favicon.ico)
   
-루틸 VM 프론트앤드
+Rutil VM 프론트앤드
 
 ![Node.js (`11.0.23`)][shield-nodejs]
 ![React.js (`18.3.x`)][shield-reactjs]
@@ -13,6 +13,10 @@
 ## 🚀Quickstart
 
 ### 🧰Prerequisite(s)
+
+- 🐳Docker
+  - `node:18.12.1-alpine`
+  - `nginx:alpine`
 
 ---
 
@@ -63,13 +67,62 @@
 > npm build	 # React 앱 빌드
 > ```
 
-
 ### Run in VSCode
 
 - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>입력
 - 프롬트 창에 `Tasks: Run Task` 입력
 - (실행대상 ovirt서버에 따라) `start-rutil-vm-react` 선택
 
-[shield-nodejs]: https://img.shields.io/badge/Node.js-11.0.23-5FA04E?logo=nodedotjs&logoColor=5FA04E&style=flat-square
+
+---
+
+## 🐳Docker
+
+> [!IMPORTANT]
+> 
+> 🛠Build
+> 
+> ```sh
+> docker build -t ititcloud/rutil-vm:0.2.1 .
+> docker tag ititcloud/rutil-vm:0.2.1 ititcloud/rutil-vm:latest
+> ```
+> 
+> ▶️Run
+> 
+> *On Linux*
+> 
+> ```sh
+> # rutil-vm
+> docker run -d -it --name rutil-vm \
+> -e TZ=Asia/Seoul \
+> -e LANGUAGE=ko_KR;ko;en_US;en \
+> -e LC_ALL=ko_KR.UTF-8 \
+> -e LANG=ko_KR.utf8 \
+> -e NODE_ENV=production \                                    
+> -e __RUTIL_VM_OVIRT_IP_ADDRESS__=192.168.0.70 \             # 백엔드 주소
+> -v ./rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro # SSL 인증서 마운트
+> -v /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro # SSL관련 인증서 마운트
+> -p 443:443 \                                                # Port Mapping
+> ititcloud/rutil-vm:latest
+> ```
+
+> *On Windows*
+> 
+> ```batch
+> :: rutil-vm-api
+> docker run -d -it --name rutil-vm ^
+> -e TZ=Asia/Seoul ^
+> -e LANGUAGE=ko_KR;ko;en_US;en ^
+> -e LC_ALL=ko_KR.UTF-8 ^
+> -e LANG=ko_KR.utf8 ^
+> -e NODE_ENV=production ^
+> -e __RUTIL_VM_OVIRT_IP_ADDRESS__=192.168.0.70 ^
+> -v ./rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro ^
+> -v /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro ^
+> -p 443:443 ^
+> ititcloud/rutil-vm:latest
+> ```
+
+[shield-nodejs]: https://img.shields.io/badge/Node.js-18.12.1-5FA04E?logo=nodedotjs&logoColor=5FA04E&style=flat-square
 [shield-reactjs]: https://img.shields.io/badge/React.js-18.3.x-61DAFB?logo=react&logoColor=61DAFB&style=flat-square
 [shield-storybook]: https://img.shields.io/badge/Storybook-8.2.x-FF4785?logo=storybook&logoColor=FF4785&style=flat-square

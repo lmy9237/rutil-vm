@@ -1,8 +1,8 @@
 # rutil-vm-back
 
-![favicon](../front/public/favicon.ico)
+![favicon](../front/favicon.ico)
   
-루틸 VM 백앤드
+Rutil VM 백앤드
 
 ![Java (`11`)][shield-java]
 ![Spring (`5.3.20`) / Boot (`2.7.0`)][shield-spring]
@@ -94,6 +94,7 @@
 ## OpenSSH
 
 - 인증서 조회 기능에 필요한 선처리 작업
+- 백앤드 기동에 꼭 필요
 
 ### SSH 접근 인증서 생성 및 각 Host에 주입
 
@@ -128,7 +129,6 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.71
 cat ~/.ssh/id_rsa.pub
 #
 # ssh-rsa <해시값> root@rutilvm-dev.ititinfo.com
-
 ```
 
 ---
@@ -171,7 +171,8 @@ cat ~/.ssh/id_rsa.pub
 > 🛠Build
 > 
 > ```sh
-> docker build -t ititcloud/rutil-vm-api:0.2.0-beta2 .
+> docker build -t ititcloud/rutil-vm-api:0.2.1 .
+> docker tag ititcloud/rutil-vm-api:0.2.1 ititcloud/rutil-vm-api:latest
 > ```
 > 
 > ▶️Run
@@ -181,21 +182,32 @@ cat ~/.ssh/id_rsa.pub
 > ```sh
 > # rutil-vm-api
 > docker run -d -it --name rutil-vm-api \
+> -e TZ=Asia/Seoul \
+> -e LANGUAGE=ko_KR;ko;en_US;en \
+> -e LC_ALL=ko_KR.UTF-8 \
+> -e LANG=ko_KR.utf8 \
 > -e RUTIL_VM_OVIRT_IP=192.168.0.20 \                         # ovirt 주소 
-> -e RUTIL_VM_OVIRT_PORT_HTTPS=443 \                          # ovirt 포트 번호
-> -e RUTIL_VM_PORT_HTTPS=8443 \                               # rutilVM 호스팅 포트번호
+> -e RUTIL_VM_OVIRT_PORT_HTTPS=8443 \                         # ovirt 포트 번호
+> -e RUTIL_VM_PORT_HTTPS=6690 \                               # rutilVM 호스팅 포트번호
+> -e RUTIL_VM_SSL_KEY_STORE=/app/certs/keystore.p12 \         # SSL 인증서 파일 (fullchain.pem으로 만든 keystore.p12)
+> -e RUTIL_VM_SSL_KEY_STORE_PASSWORD=rutil-vm-api \           # SSL 인증서 비밀번호
+> -e RUTIL_VM_SSL_KEY_ALIAS=rutil-vm-api \                    # SSL 인증서 alias
+> -e RUTIL_VM_CORS_ALLOWED_ORIGINS=192.168.0.20;localhost;rutil-vm;rutilvm-ititinfo.com \       # CORS 예외대상 호스트명
+> -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 \       # CORS 예외대상 호스트의 포트
+> -e RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED=false \              # JSch 디버깅 활성화 여부 (목적: SSH연결)
+> -e RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION=/root/.ssh/id_rsa \   # SSH private key 위치 (기본: ${user.home}/.ssh/id_rsa)
+> -e RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS=root@192.168.0.20:22 \ # oVirt Engine의 SSH 접근주소
+> -e RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY= \                      # oVirt Engine의 SSH Private Key 위치
 > -e POSTGRES_JDBC_PORT=5432 \                                # PostgresDB 포트번호
 > -e POSTGRES_DATASOURCE_JDBC_ID=rutil \                      # 테이블스페이스접근 ID
 > -e POSTGRES_DATASOURCE_JDBC_PW=rutil1! \                    # 테이블스페이스접근 PW
-> -e RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm \       # CORS 예외대상 호스트명
-> -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 \       # CORS 예외대상 호스트의 포트
-> -e RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED=false \              # JSch 디버깅 활성화 여부 (목적: SSH연결)
-> -e RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION= \                    # SSH private key 위치 (기본: ${user.home}/.ssh/id_rsa)
-> -e RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS=root@192.168.0.20:22 \ # oVirt Engine의 SSH 접근주소
-> -e RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY= \                      # oVirt Engine의 SSH Private Key 위치
-> -e RUTIL_VM_OVIRT_SSH_HOSTS_ADDRESS=root@192.168.0.21:22|root@192.168.0.22:22 \ # oVirt Host의 SSH 접근주소 ('|'로 구분)
-> -p 8080:8080 -p 8443:8443 \                                 # Port Mapping
-> ititcloud/rutil-vm-api:0.2.0-beta2
+> -v ./rutil-vm-api/logs:/app/logs:rw \                       # 로그경로 마운트
+> -v ./rutil-vm-api/certs:/app/certs:rw \                     # SSL인증서 마운트 (keystore.p12)
+> -v /root/.ssh:/root/.ssh:rw \                               # SSH 접근 인증서 경로 공유
+> -v /etc/hosts:/etc/hosts:ro \                               # 시스템 호스트 정보
+> -v /etc/localtime:/etc/localtime:ro \                       # 시스템 시간날짜
+> -p 6690:6690 \                                              # Port Maping
+> ititcloud/rutil-vm-api:latest
 > 
 > # postgres
 > docker run -d -it \
@@ -211,20 +223,32 @@ cat ~/.ssh/id_rsa.pub
 > ```batch
 > :: rutil-vm-api
 > docker run -d -it --name rutil-vm-api ^
+> -e TZ=Asia/Seoul ^
+> -e LANGUAGE=ko_KR;ko;en_US;en ^
+> -e LC_ALL=ko_KR.UTF-8 ^
+> -e LANG=ko_KR.utf8 ^
 > -e RUTIL_VM_OVIRT_IP=192.168.0.20 ^
-> -e RUTIL_VM_OVIRT_PORT_HTTPS=443 ^
-> -e RUTIL_VM_PORT_HTTPS=8443 ^
+> -e RUTIL_VM_OVIRT_PORT_HTTPS=8443 ^
+> -e RUTIL_VM_PORT_HTTPS=6690 ^
+> -e RUTIL_VM_SSL_KEY_STORE=/app/certs/keystore.p12 ^keystore.p12)
+> -e RUTIL_VM_SSL_KEY_STORE_PASSWORD=rutil-vm-api ^
+> -e RUTIL_VM_SSL_KEY_ALIAS=rutil-vm-api ^
+> -e RUTIL_VM_CORS_ALLOWED_ORIGINS=192.168.0.20;localhost;rutil-vm;rutilvm-ititinfo.com ^
+> -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 ^
+> -e RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED=false ^
+> -e RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION=/root/.ssh/id_rsa ^
+> -e RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS=root@192.168.0.20:22 ^
+> -e RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY= ^
 > -e POSTGRES_JDBC_PORT=5432 ^
 > -e POSTGRES_DATASOURCE_JDBC_ID=rutil ^
 > -e POSTGRES_DATASOURCE_JDBC_PW=rutil1! ^
-> -e RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm ^
-> -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 ^
-> -e RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED=false ^
-> -e RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION= ^
-> -e RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS=root@192.168.0.20:22 ^
-> -e RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY= ^
-> -e RUTIL_VM_OVIRT_SSH_HOSTS_ADDRESS=root@192.168.0.21:22|root@192.168.0.22:22 ^
-> ititcloud/rutil-vm-back:0.2.0-beta2
+> -v ./rutil-vm-api/logs:/app/logs:rw ^
+> -v ./rutil-vm-api/certs:/app/certs:rw ^
+> -v /root/.ssh:/root/.ssh:rw ^
+> -v /etc/hosts:/etc/hosts:ro ^
+> -v /etc/localtime:/etc/localtime:ro ^
+> -p 6690:6690 ^
+> ititcloud/rutil-vm-api:latest
 > 
 > :: postgres
 > docker run -d -it ^

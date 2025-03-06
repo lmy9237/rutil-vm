@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface EngineSessionsRepository : JpaRepository<EngineSessionsEntity, Int> {
-	fun findAllByUserName(userName: String): List<EngineSessionsEntity>
+	fun findAllByUserNameOrderByIdDesc(userName: String): List<EngineSessionsEntity>
 }

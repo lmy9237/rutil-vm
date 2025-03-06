@@ -38,7 +38,7 @@ LABEL environment="production"
 LABEL app-name="rutil-vm"
 
 # Assuming you have a "certs" directory with your SSL certificate and key
-COPY certs /etc/nginx/certs
+# COPY certs /etc/nginx/certs
 
 # Remove default nginx static assets
 RUN rm -rf /usr/share/nginx/html/*

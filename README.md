@@ -1,8 +1,8 @@
 # rutil-vm
 
-![favicon](front/public/favicon.ico)
+![favicon](front/favicon.ico)
   
-루틸 VM
+Rutil VM
 
 ![Java (`11`)][shield-java]
 ![Spring (`5.3.20`) / Boot (`2.7.0`)][shield-spring]
@@ -21,21 +21,38 @@
 
 ### 🧰개발환경 구성
 
-Powershell 실행 후 아래 명령어 실행
+#### 인증서 생성
 
-```powershell
-NOTEPAD $profile
-```
+oVirt Engine에서 docker로 올리기 전 SSL 호환 인증서 파일 구성하기
+
+- `/root/rutil-vm/rutil-vm/certs/fullchain.pem`: `apache.cer`과 `apache-ca.pem`으로 만든 파일
+- `/root/rutil-vm/rutil-vm-api/certs/keystore.p12`: `fullchain.pem`으로 만든 파일
+
+> [!IMPORTANT]
+> 
+> 프론트앤드 `rutil-vm`
+>
+> ```sh
+> # fullchain.pem 인증서 만들기
+> #
+> cat /etc/pki/ovirt-engine/certs/apache.cer /etc/pki/ovirt-engine/apache-ca.pem > /root/rutil-vm/rutil-vm/certs/fullchain.pem
+> ```
+> 
+> 백앤드 `rutil-vm-api`
+> 
+> ```sh
+> #
+> # fullchain.pem 을 사용하여 keystore.p12 만들기
+> #
+> openssl pkcs12 -export \
+> -in /root/rutil-vm/rutil-vm/certs/fullchain.pem \
+> -inkey /etc/pki/ovirt-engine/keys/apache.key.nopass \
+> -out /root/rutil-vm/rutil-vm-api/certs/keystore.p12 \
+> -name rutil-vm-api \                # RUTIL_VM_SSL_KEY_ALIAS
+> -passout pass:rutil-vm-api          # RUTIL_VM_SSL_KEY_STORE_PASSWORD
+> ```
 
 ---
-
-> [!TIP] 
-> 
-> Dependencies 주입
-> 
-> https://medium.com/@tericcabrel/implement-jwt-authentication-in-a-spring-boot-3-application-5839e4fd8fac
-https://hoestory.tistory.com/70
-
 
 [shield-java]: https://img.shields.io/badge/Temurin-11-f3812a?logo=openjdk&logoColor=f3812a&style=flat-square
 [shield-spring]: https://img.shields.io/badge/Spring-4.3.14.RELEASE-6DB33F?logo=spring&logoColor=6DB33F&style=flat-square

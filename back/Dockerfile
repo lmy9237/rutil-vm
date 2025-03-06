@@ -61,6 +61,9 @@ ENV RUTIL_VM_RELEASE_DATE=2025-02-21
 ENV RUTIL_VM_PORT_HTTP=8080
 ENV RUTIL_VM_PORT_HTTPS=8443
 ENV RUTIL_VM_OVIRT_PORT_HTTPS=2443
+ENV RUTIL_VM_SSL_KEY_STORE=/root/rutil-vm/rutil-vm-api/certs/keystore.p12
+ENV RUTIL_VM_SSL_KEY_STORE_PASSWORD=rutil-vm-api
+ENV RUTIL_VM_SSL_KEY_ALIAS=rutil-vm-api
 ENV RUTIL_VM_OVIRT_IP=192.168.0.70
 ENV RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm
 ENV RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443
@@ -81,9 +84,9 @@ RUN echo ""
 RUN echo "application.version: $RUTIL_VM_VERSION"
 RUN echo ""
 RUN echo "server.ssl.enabled: $RUTIL_VM_SSL_ENABLED"
-RUN echo "server.ssl.key-store:"
-RUN echo "server.ssl.key-store-password: $RUTIL_VM_SSL_PASSWORD"
-RUN echo "server.ssl.key-alias: $RUTIL_VM_SSL_ALIAS"
+RUN echo "server.ssl.key-store: $RUTIL_VM_SSL_KEY_STORE"
+RUN echo "server.ssl.key-store-password: $RUTIL_VM_SSL_KEY_STORE_PASSWORD"
+RUN echo "server.ssl.key-alias: $RUTIL_VM_SSL_KEY_ALIAS"
 RUN echo ""
 RUN echo "spring.datasource.engine.url: $POSTGRES_JDBC_URL_ENGINE"
 RUN echo "spring.datasource.engine.username: $POSTGRES_DATASOURCE_JDBC_ID"
@@ -118,6 +121,9 @@ ENTRYPOINT [ "java", "-jar", "app.jar", \
   "--application.ovirt.ssh.engine.address=${RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS}", \
   "--application.ovirt.ssh.engine.prvkey=${RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY}", \
   "--server.port=${RUTIL_VM_PORT_HTTPS}", \
+  "--server.ssl.key-store=${RUTIL_VM_SSL_KEY_STORE}", \
+  "--server.ssl.key-store-password=${RUTIL_VM_SSL_KEY_STORE_PASSWORD}", \
+  "--server.ssl.key-alias=${RUTIL_VM_SSL_KEY_ALIAS}", \
   # "--spring.datasource.engine.url=${RUTIL_VM_OVIRT_IP}", \
   "--spring.datasource.engine.username=${POSTGRES_DATASOURCE_JDBC_ID}", \
   "--spring.datasource.engine.password=${POSTGRES_DATASOURCE_JDBC_PW}", \

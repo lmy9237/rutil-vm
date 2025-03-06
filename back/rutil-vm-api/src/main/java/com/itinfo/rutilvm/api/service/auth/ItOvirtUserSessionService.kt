@@ -31,7 +31,7 @@ class OvirtUserSessionServiceImpl(
 		log.info("findAll ... username: {}", username)
 		val res: List<EngineSessionsEntity> =
 			if (username.isNullOrEmpty()) engineSessions.findAll()
-			else engineSessions.findAllByUserName(username)
+			else engineSessions.findAllByUserNameOrderByIdDesc(username)
 		return res.toUserSessions()
 	}
 
