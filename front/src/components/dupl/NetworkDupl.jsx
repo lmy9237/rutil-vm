@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import "./Dupl.css";
 import SearchBox from "../button/SearchBox";
-import useSearch from "../button/UseSearch";
+import useSearch from "../button/useSearch";
 
 /**
  * @name NetworkDupl

@@ -13,12 +13,105 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-<!-- ### Added
+<!-- 
+### Added
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
 ### Changed
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
 ### Fixed
-### Removed -->
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+### Removed 
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+-->
 
-## [0.2.0-beta2] - 2025-02-28
+## 0.2.1 - 2025-03-07
+
+### [`api-v0.2.1`][api-v0.2.1]: 백엔드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - 180번 서버 배포 및 접근정보에 대한 구성 ([`ccec77cd`](https://github.com/ititcloud/rutil-vm/commit/ccec77cd7d764230938cd862c3af26c6bb048632))
+  - 배포환경에 맞는 프론트 Docker 빌드 구성 ([`423fa0d9`](https://github.com/ititcloud/rutil-vm/commit/423fa0d9dfd1e46dc45c3357c0954cf8fee99054))
+  - 공급자 정보 조회 API ([`33a39dd6`](https://github.com/ititcloud/rutil-vm/commit/33a39dd6691867148833e465eebc485a75fe6ca4))
+- [@dhj27][dhj27]
+  - 가상머신 가져오기 API (vmware)
+
+### Changed
+
+- [@chanhi2000][chanhi2000]
+  - 프론트 + 백앤드 배포환경 구성 완료 ([`c2e2dc10`](https://github.com/ititcloud/rutil-vm/commit/c2e2dc1054a11ddb2e132b1b085ed32c9420bf49))
+- [@dhj27][dhj27]
+  - 가상머신 편집
+
+### Fixed
+
+- [@chanhi2000][chanhi2000]
+  - SSH 접근을 이용하여 호스트 재기동 기능 복구 ([`50640e2f`](https://github.com/ititcloud/rutil-vm/commit/50640e2ff6f0382247e62a72a6df23c7c4e419df))
+- [@dhj27][dhj27]
+  - 호스트 네트워크 모달 수정 및 기능 수정
+  - 가상머신 스냅샷 수정
+
+### Removed
+
+<!-- 
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237] 
+-->
+
+### [`web-v0.2.1`][web-v0.2.1]: 프론트
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `rutil-vm` github action 자동 Docker Image 생성 ([`44afb86e`](https://github.com/ititcloud/rutil-vm/commit/44afb86e42fee46c186f955e66bb61740a5ec6a4))
+<!-- - [@dhj27][dhj27] -->
+- [@lmy9237][lmy9237]
+  - 검색창 추가(새 컴포넌트추가)
+  - 컴포넌트분리(모달nav , 검색창 , mainouter)
+
+### Changed
+
+- [@chanhi2000][chanhi2000]
+  - 프론트 + 백앤드 배포환경 구성 완료 ([`c2e2dc10`](https://github.com/ititcloud/rutil-vm/commit/c2e2dc1054a11ddb2e132b1b085ed32c9420bf49))
+- [@dhj27][dhj27]
+  - 가상머신 편집
+<!-- - [@lmy9237][lmy9237] -->
+
+### Fixed
+
+- [@chanhi2000][chanhi2000]
+  - 프론트 Docker 배포에 쓰이는 `entrypoint.sh` 파일 EOF 문제 개선 ([`d5765291`](https://github.com/ititcloud/rutil-vm/commit/d57652910a58b5df48c0be08c8a8c15f86f005b2))
+  - **QUICK-FIX**: 프론트 빌드에러 수정 (`useSearch` 파일 경로참조 오타)
+- [@dhj27][dhj27]
+  - 호스트 네트워크 모달 수정 및 기능 수정
+  - 가상머신 스냅샷 수정
+- [@lmy9237][lmy9237]
+  - css 깨진것 수정
+  - 반응형
+  - 대시보드 수정(차트크기,비율)
+  - 모달창 크기수정
+
+### Removed
+
+<!--
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+-->
+
+---
+
+## [0.2.0-beta2][api-v0.2.0-beta2] - 2025-03-07
 
 ### Added
 
@@ -105,8 +198,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
-[0.2.0-beta3]: https://github.com/ititcloud/rutil-vm/compare/v0.2.0-beta2...v0.2.0-beta3
-[0.2.0-beta2]: https://github.com/ititcloud/rutil-vm/releases/tag/v0.2.0-beta2
+[web-v0.2.1]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.0-beta2...web-v0.2.1
+[api-v0.2.1]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.0-beta2...api-v0.2.1
+[api-v0.2.0-beta2]: https://github.com/ititcloud/rutil-vm/tree/api-v0.2.0-beta2
 
 [chanhi2000]: https://github.com/chanhi2000
 [dhj27]: https://github.com/dhj27

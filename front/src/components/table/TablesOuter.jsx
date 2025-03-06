@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRefresh, faSearch } from '@fortawesome/free-solid-svg-icons';
 import Tables from './Tables';
 import './Table.css';
-import useSearch from "../button/UseSearch"; // ✅ 검색 기능 추가
+import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 
 /**
  * @name TablesOuter

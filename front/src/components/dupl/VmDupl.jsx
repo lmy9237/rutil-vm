@@ -6,7 +6,7 @@ import VmModals from "../modal/vm/VmModals";
 import VmActionButtons from "./VmActionButtons";
 import { renderVmStatusIcon } from "../Icon";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
-import useSearch from "../button/UseSearch"; // ✅ 검색 기능 추가
+import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 
 /**
  * @name VmDupl

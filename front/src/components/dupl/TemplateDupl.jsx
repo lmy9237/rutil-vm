@@ -5,7 +5,7 @@ import TemplateModals from "../modal/template/TemplateModals";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
-import useSearch from "../button/UseSearch"; // ✅ 검색 기능 추가
+import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 
 const TemplateDupl = ({
   isLoading, isError, isSuccess,

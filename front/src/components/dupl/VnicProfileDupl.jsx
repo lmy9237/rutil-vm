@@ -5,7 +5,7 @@ import TableRowClick from "../table/TableRowClick";
 import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
 import VnicProfileActionButtons from "./VnicProfileActionButtons";
 import SearchBox from "../button/SearchBox";  
-import useSearch from "../button/UseSearch"; 
+import useSearch from "../button/useSearch"; 
 
 /**
  * @name VnicProfileDupl

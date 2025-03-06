@@ -46,7 +46,7 @@ LABEL maintainer="Chan Hee Lee <chanhi2000@gmail.com>"
 LABEL description="RutilVM (API)"
 LABEL version="0.2.1"
 LABEL vcs-url="https://github.com/ititcloud/rutil-vm"
-LABEL build-date="2025-02-21"
+LABEL build-date="2025-03-07"
 LABEL commit-hash="05f9e12ee27c1532623112d1df92004226d0d347"
 LABEL license="Apache-2.0"
 LABEL environment="production"
@@ -58,7 +58,7 @@ RUN apt-get install -y tzdata
 # timezone env with default
 
 ENV RUTIL_VM_VERSION=0.2.1
-ENV RUTIL_VM_RELEASE_DATE=2025-02-21
+ENV RUTIL_VM_RELEASE_DATE=2025-03-07
 ENV RUTIL_VM_PORT_HTTP=8080
 ENV RUTIL_VM_PORT_HTTPS=8443
 ENV RUTIL_VM_OVIRT_PORT_HTTPS=2443
