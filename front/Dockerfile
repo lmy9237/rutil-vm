@@ -53,6 +53,9 @@ EXPOSE 80 443
 
 COPY entrypoint.sh /home/node/entrypoint.sh
 RUN chmod +x /home/node/entrypoint.sh
+# entrypoint.sh EOL 처리: DOS (CRLF) -> UNIX (LF)
+RUN sed -i -e 's/\r$//' /home/node/entrypoint.sh
+RUN sed -i -e 's/^M$//' /home/node/entrypoint.sh
 
 # Start Nginx when the container launches
 ENTRYPOINT [ "/home/node/entrypoint.sh" ]

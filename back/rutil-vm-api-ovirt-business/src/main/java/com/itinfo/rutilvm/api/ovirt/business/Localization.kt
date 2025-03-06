@@ -91,6 +91,3 @@ class Localization {
 			KUBEVIRT ->				if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
 		}
 }
-
-val loc: Localization
-	get() = Localization.getInstance()
