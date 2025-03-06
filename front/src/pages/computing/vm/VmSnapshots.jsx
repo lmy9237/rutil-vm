@@ -1,11 +1,10 @@
 import React, { Suspense, useEffect, useState } from 'react';
-import { faCamera, faChevronDown, faChevronRight, faExclamationTriangle, faEye, faNewspaper, faServer, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faChevronDown, faChevronRight, faEye, faNewspaper, faServer, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import VmSnapshotModal from '../../../components/modal/vm/VmSnapshotModal';
 import VmSnapshotDeleteModal from '../../../components/modal/vm/VmSnapshotDeleteModal';
-import DeleteModal from '../../../utils/DeleteModal';
 import { useDisksFromVM, useSnapshotDetailFromVM, useSnapshotFromVM } from '../../../api/RQHook';
 import { convertBytesToMB } from '../../../util';
 
@@ -141,8 +140,6 @@ const VmSnapshots = ({ vmId }) => {
       document.removeEventListener('click', handleOutsideClick);
     };
   }, []);
-
-
 
 
 
@@ -416,7 +413,7 @@ const VmSnapshots = ({ vmId }) => {
           isOpen={activePopup === 'new'}
           onClose={closePopup}
           vmId={vmId}
-          diskData={disks}
+          // diskData={disks}
         />
 
         {modals.delete && selectedSnapshots.length > 0 && (

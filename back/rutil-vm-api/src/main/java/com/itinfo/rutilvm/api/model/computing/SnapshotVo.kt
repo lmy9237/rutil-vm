@@ -102,14 +102,12 @@ fun List<Snapshot>.toSnapshotVos(conn: Connection, vmId: String): List<SnapshotV
     this@toSnapshotVos.map { it.toSnapshotVo(conn, vmId) }
 
 
-fun SnapshotVo.toSnapshotBuilder(): SnapshotBuilder {
+fun SnapshotVo.toSnapshotBuilder(): Snapshot {
     log.info("toSnapshotBuilder: {}", this)
     return SnapshotBuilder()
         .description(this@toSnapshotBuilder.description)
         .persistMemorystate(this@toSnapshotBuilder.persistMemory) // 메모리 저장 t/f
         .diskAttachments(this@toSnapshotBuilder.diskAttachmentVos.toAddSnapshotDisks())
+		.build()
 }
-
-fun SnapshotVo.toAddSnapshot(): Snapshot =
-    this@toAddSnapshot.toSnapshotBuilder().build()
 

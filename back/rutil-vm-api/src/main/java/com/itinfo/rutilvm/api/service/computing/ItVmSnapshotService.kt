@@ -39,7 +39,7 @@ interface ItVmSnapshotService {
 	/**
 	 * [ItVmSnapshotService.addFromVm]
 	 * 스냅샷 생성 (생성 중에는 다른기능(삭제, 커밋)같은 기능 구현 x)
-	 * 
+	 *
 	 * @param vmId
 	 * @param snapshotVo
 	 * @return [SnapshotVo]
@@ -134,7 +134,8 @@ class VmSnapshotServiceImpl(
 	override fun addFromVm(vmId: String, snapshotVo: SnapshotVo): SnapshotVo? {
 		log.info("addFromVm ... ")
 		val res: Snapshot? = conn.addSnapshotFromVm(
-			vmId, snapshotVo.toAddSnapshot()
+			vmId,
+			snapshotVo.toSnapshotBuilder()
 		).getOrNull()
 		return res?.toSnapshotVo(conn, vmId)
 	}
