@@ -120,7 +120,9 @@ fun HostNic.toHostNicVo(conn: Connection): HostNicVo {
 		id { hostNic.id() }
 		name { hostNic.name() }
 		bridged { hostNic.bridged() }
+		bootProtocol { hostNic.bootProtocol() }
 		ip { if(hostNic.ipPresent()) hostNic.ip().toIp() else null }
+		ipv6BootProtocol { hostNic.ipv6BootProtocol() }
 		ipv6 { if(hostNic.ipv6Present()) hostNic.ipv6().toIp() else null }
 		macAddress { hostNic.mac().address() }
 		mtu { hostNic.mtuAsInteger() }

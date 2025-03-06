@@ -840,27 +840,6 @@ export const useEventFromHost = (hostId, mapPredicate) => useQuery({
   enabled: !!hostId
 })
 
-// /**
-//  * @name usePermissionFromHost
-//  * @description 클러스터 내 권한 목록조회 useQuery훅
-//  * 
-//  * @param {string} clusterId 클러스터ID
-//  * @param {function} mapPredicate 목록객체 변형 처리
-//  * @returns useQuery훅
-//  * 
-//  * @see ApiManager.usePermissionFromHost
-//  */
-// export const usePermissionFromHost = (hostId, mapPredicate) => useQuery({
-//   refetchOnWindowFocus: true,
-//   queryKey: ['PermissionFromHost', hostId], 
-//   queryFn: async () => {
-//     console.log(`usePermissionFromHost ... ${hostId}`);
-//     const res = await ApiManager.findPermissionsFromHost(hostId); 
-//     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
-//   }
-// })
-
-
 /**
  * @name useIscsiFromHost
  * @description 호스트 내 iscsi (생성) 목록조회 useQuery훅

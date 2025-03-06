@@ -4,47 +4,61 @@ import { faArrowsAltH, faDesktop, faPencilAlt,} from "@fortawesome/free-solid-sv
 import BaseModal from "../BaseModal";
 import HostNetworkBondingModal from "./HostNetworkBondingModal";
 import HostNetworkEditModal from "./HostNetworkEditModal";
-import { useHost, useNetworkFromCluster } from "../../../api/RQHook";
+import { useHost, useNetworkFromCluster, useNetworkInterfaceFromHost } from "../../../api/RQHook";
 import "../network/MNetwork.css";
 import Loading from "../../common/Loading";
 import { renderTFStatusIcon } from "../../Icon";
+import toast from "react-hot-toast";
 
-const HostNetworkModal = ({ 
-  isOpen, 
-  onClose, 
-  nicData, 
-  hostId 
-}) => {
-  // 호스트상세정보 조회로 클러스터id 뽑기
+const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
+  // 호스트 상세정보 조회로 클러스터id 뽑기
   const { data: host } = useHost(hostId);
   
-  // 클러스터id로 네트워크정보조회
+  const { data: hostNics } = useNetworkInterfaceFromHost(hostId, (e) => ({
+    ...e,
+    name: e?.name,
+    ipv4BootProtocol: e?.bootProtocol,
+    ipv4Address: e?.ip?.address,
+    ipv4Gateway: e?.ip?.gateway,
+    ipv4Netmask: e?.ip?.netmask,
+    ipv6BootProtocol: e?.ipv6BootProtocol,
+    ipv6Address: e?.ipv6?.address,
+    ipv6Gateway: e?.ipv6?.gateway,
+    ipv6Netmask: e?.ipv6?.netmask,
+    status: e?.status || "",
+    bondingVo: {
+      ...e?.bondingVo,
+      slaves: e?.bondingVo?.slaves?.map((slave) => ({
+        id: slave.id,
+        name: slave.name,
+      })),
+    },
+  }));
+  
+  // 할당되지 않은 논리 네트워크 조회
   const { data: network } = useNetworkFromCluster(host?.clusterVo?.id, (network) => ({
     id: network?.id ?? "",
-    name: network?.name ?? "Unknown",
+    name: network?.name ?? "",
     status: network?.status ?? "",
     vlan: network?.vlan,
     role: network?.usage?.vm, 
-    description: network?.description ?? "",
   }));
 
-  
-  const [bondList, setBondList] = useState([]);
-  const [networkList, setNetworkList] = useState([]);
+  // 본딩 리스트 (본딩 설정되면 이곳에 본딩정보가 담김)
+  const [modifiedBondList, setModifiedBondList] = useState([]);
+
+  // 네트워크 연결 리스트
+  const [modifiedNetworkList, setModifiedNetworkList] = useState([]);
 
   // 네트워크 인터페이스 및 Bonding 정보를 저장하는 배열
   const [outer, setOuter] = useState([]);
-
-  // Networks 설정 (기존 데이터 유지)
-  const [unassignedNetworks, setUnassignedNetworks] = useState([{ id: "", name: "" },]);
   
   const [selectedBonding, setSelectedBonding] = useState(null);
   const [selectedNetwork, setSelectedNetwork] = useState(null);
 
+  // const [contextMenu, setContextMenu] = useState(null);
   const [isBondingPopupOpen, setIsBondingPopupOpen] = useState(false);
   const [isNetworkEditPopupOpen, setIsNetworkEditPopupOpen] = useState(false);
-  
-  const [contextMenu, setContextMenu] = useState(null);
   
   // 본딩 모달 열기
   const openBondingPopup = (bond) => {
@@ -57,28 +71,28 @@ const HostNetworkModal = ({
     setSelectedNetwork(network); // 선택한 네트워크 정보 저장
     setIsNetworkEditPopupOpen(true);
   };
-  
+
   useEffect(() => {
-    if (nicData) {
-      let bondCounter = 0;
+    if (hostNics) {
       setOuter(
-        nicData.map((nic) => ({
+        hostNics.map((nic) => ({
           id: nic.id,
-          name: nic.bondingVo?.slaves?.length > 1 ? `bond${bondCounter++}` : "",
+          name: nic.bondingVo?.slaves?.length > 1 ? nic?.name : "",
           children: nic.bondingVo?.slaves?.length > 0 ? nic.bondingVo.slaves : [{ id: nic.id, name: nic.name }],
           networks: nic.networkVo?.id ? [{ id: nic.networkVo.id, name: nic.networkVo.name }] : [],
         }))
       );
     }
-  }, [nicData]);
+  }, [hostNics]);
 
+  const assignedNetworkIds = outer.flatMap((outerItem) =>outerItem.networks.map((net) => net.id));
+  const availableNetworks = network?.filter((net) => !assignedNetworkIds.includes(net.id));
+  
   // 드래그하는 요소를 추적
   const dragItem = useRef(null);  
 
   // 드래그 시작할 때 선택된 아이템과 출처 저장.
-  const dragStart = (e, item, source, parentId = null) => {
-    dragItem.current = { item, source, parentId };
-  };
+  const dragStart = (e, item, source, parentId = null) => { dragItem.current = { item, source, parentId } };
 
   // 드롭된 대상에 따라 네트워크 할당, 본딩 생성 등의 처리
   const drop = (targetId, targetType) => {
@@ -128,8 +142,7 @@ const HostNetworkModal = ({
             } else {
               // Bonding이 없는 상태에서 단일 container끼리 합칠 때 본딩 필요
               bondRequired = true;
-            }
-          
+            }          
             // 본딩이 필요하든 아니든, container는 무조건 추가해야 함
             return {
               ...outerItem,
@@ -160,7 +173,7 @@ const HostNetworkModal = ({
           return outerItem;
         })
       );
-      setUnassignedNetworks((prev) => prev.filter((net) => net.id !== item.id));
+      
     } else if (source === "networkOuter" && targetType === "unassigned") {
       // 네트워크를 할당 해제 (Unassigned로 이동)
       setOuter((prevOuter) => prevOuter.map((outerItem) => {
@@ -174,7 +187,7 @@ const HostNetworkModal = ({
       }).filter(
         (outerItem) => outerItem.children.length > 0 || outerItem.networks.length > 0) // Remove empty outer
       );
-      setUnassignedNetworks((prev) => [...prev, item]); // Unassigned 리스트에 추가
+      
     } else if (source === "networkOuter" && targetType === "networkOuter") {
       // 네트워크를 다른 인터페이스로 이동
       setOuter((prevOuter) => prevOuter.map((outerItem) => {
@@ -197,270 +210,54 @@ const HostNetworkModal = ({
       return outerItem;
       }));
     }
-
     dragItem.current = null; // Reset drag state
   };
 
-
-  // // Interfaces 생성
-  const [unassignedInterface, setUnassignedInterface] = useState(
-    nicData?.map((nic) => ({
-      id: nic.id,
-      name: nic.name,
-      children: nic.bondingVo?.slaves?.length > 0
-          ? nic.bondingVo.slaves.map((slave) => ({ id: slave.id, name: slave.name }))
-          : [{ id: nic.id, name: nic.name }], // slaves가 없으면 nic의 name 사용
-    })) || []
-  );
-
-  // Networks in Outer 생성
-  const [unassignedNetworksOuter, setUnassignedNetworksOuter] = useState(
-    nicData?.map((nic) => ({
-      id: nic.networkVo?.id || `network${nic.id}`,
-      name: nic.networkVo?.name || `Unassigned Network for ${nic.name}`,
-      children: [],
-    })) || []
-  );
-
-  
-  // 우클릭 시 메뉴 위치 및 해당 항목 관리.
-  const handleContextMenu = (event, targetItem, parentItem) => {
-    event.preventDefault(); // 기본 우클릭 메뉴 차단
-    console.log("우클릭 이벤트 발생", targetItem, parentItem);
-  
-    if (targetItem.children) {
-      if (parentItem.children.length < 2) {
-        console.log("⚠️ parentItem.children.length < 2 → 우클릭 메뉴 차단됨");
-        return;
-      }
-    } else {
-      if (parentItem.networks.length < 2) {
-        console.log("⚠️ parentItem.networks.length < 2 → 우클릭 메뉴 차단됨");
-        return;
-      }
-    }
-  
-    setContextMenu({
-      x: event.clientX,
-      y: event.clientY,
-      containerItem: targetItem,
-      parentInterface: parentItem,
-    });
-    console.log("✅ 컨텍스트 메뉴 생성됨:", { x: event.clientX, y: event.clientY });
-  };
+  const handleFormSubmit = () => {
     
-  const renderContextMenu = () => {
-    if (!contextMenu) return null;
-  
-    // 화면 크기 가져오기
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-  
-    // 기본 위치
-    let menuX = contextMenu.x;
-    let menuY = contextMenu.y;
-
-    // 우클릭 메뉴 크기 예상값
-    const menuWidth = 120;
-    const menuHeight = 40;
-  
-    // 화면을 넘어가면 위치 조정
-    if (menuX + menuWidth > screenWidth) {
-      menuX = screenWidth - menuWidth - 10;
-    }
-    if (menuY + menuHeight > screenHeight) {
-      menuY = screenHeight - menuHeight - 10;
-    }
-  
-    return (
-      <div
-        className="context-menu"
-        style={{
-          position: "fixed",
-          top: menuY + "px",
-          left: menuX + "px",
-          backgroundColor: "white",
-          border: "1px solid #ccc",
-          padding: "8px 12px",
-          zIndex: 99999,
-          boxShadow: "2px 2px 10px rgba(0,0,0,0.2)",
-          borderRadius: "4px",
-          fontSize: "14px",
-          cursor: "pointer",
-        }}
-        onClick={handleSplitContainer}
-      >
-        🔹 분리
-      </div>
-    );
-  };
-  
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (contextMenu) {
-        setTimeout(() => setContextMenu(null), 100); // 💡 100ms 지연 추가
-      }
+    const dataToSubmit = {
+      // 본딩과 네트워크 정보가 들어갈 예정
+      // diskAttachmentVos: diskListState.map((disk) => ({
+      //   id: disk?.id || "",
+      //   active: true,
+      //   bootable: disk?.bootable,
+      //   readOnly: disk?.readOnly,
+      //   passDiscard: false,
+      //   interface_: disk?.interface_,
+      //   diskImageVo: {
+      //     id: disk?.id || "", // 기존 디스크 ID (새 디스크일 경우 빈 문자열)
+      //     size: disk?.size * 1024 * 1024 * 1024, // GB → Bytes 변환
+      //     alias: disk?.alias,
+      //     description: disk?.description || "",
+      //     storageDomainVo: { id: disk?.storageDomainVo?.id || "" },
+      //     diskProfileVo: { id: disk?.diskProfileVo?.id || "" },
+      //     sparse: disk?.sparse,
+      //     wipeAfterDelete: disk?.wipeAfterDelete || false,
+      //     sharable: disk?.sharable || false,
+      //     backup: disk?.backup || false,
+      //   },
+      // })),
     };
-  
-    document.addEventListener("mouseup", handleClickOutside);
-    return () => document.removeEventListener("mouseup", handleClickOutside);
-  }, [contextMenu]);
-  
-  // 본딩 해제 로직을 실행하여 본딩을 해제하고 분리.
-  const handleSplitContainer = () => {
-    if (!contextMenu) return;
-  
-    setOuter((prevOuter) => {
-      return prevOuter.flatMap((outerItem) => {
-        if (outerItem.id === contextMenu.parentInterface.id) {
-          // 기존 인터페이스에서 선택된 컨테이너를 제외
-          const updatedChildren = outerItem.children.filter(
-            (child) => child.id !== contextMenu.containerItem.id
-          );
-  
-          // 기존 인터페이스 유지
-          const updatedOuterItem = { ...outerItem, children: updatedChildren };
-  
-          // 새로운 인터페이스 추가
-          const newInterface = {
-            id: contextMenu.containerItem.id,
-            name: contextMenu.containerItem.name,
-            children: [contextMenu.containerItem],
-            networks: [],
-          };
-  
-          return [updatedOuterItem, newInterface].filter(
-            (item) => item.children.length > 0
-          );
-        }
-        return outerItem;
-      });
-    });
-  
-    setContextMenu(null); // 우클릭 메뉴 닫기
-  };
-  useEffect(() => {
-    const handleClickOutside = () => setContextMenu(null);
-  
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
-  
 
-  const renderInterface = (interfaceItem) => (
-    <div
-      key={interfaceItem.id}
-      className="interface"
-      onDragOver={(e) => e.preventDefault()}
-      onDrop={() => drop(interfaceItem.id, "interface")}
-    >
-      {/* Bond 이름 표시 및 연필 아이콘 추가 */}
-      {interfaceItem.name && (
-        <div className="interface-header">
-          {interfaceItem.name} {interfaceItem.name.startsWith("bond") && (
-            <FontAwesomeIcon
-              icon={faPencilAlt}
-              className="icon"
-              onClick={() => openBondingPopup("edit")} // 편집 모드로 NewBondingModal 열기
-              style={{ marginLeft: "0.2rem", cursor: "pointer" }}
-            />
-          )}
-        </div>
-      )}
-      <div className="children">
-        {interfaceItem.children.map((child) => (
-          <div
-            key={child.id}
-            className="container"
-            draggable
-            onDragStart={(e) => dragStart(e, child, "container", interfaceItem.id) }
-            onContextMenu={(e) => handleContextMenu(e, child, interfaceItem)} 
-          >
-            {child.name}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-  
-  const renderNetworkOuter = (outerItem) => {
-    if (outerItem.networks.length === 0) {
-      return (
-        <div
-          className="outer-networks"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={() => drop(outerItem.id, "networkOuter")}
-        >
-          <div className="assigned-network">
-            <div className="left-section">
-              <span className="text">할당된 네트워크가 없음</span>
-            </div>
-          </div>
-        </div>
-      );
-    }
+    // const onSuccess = () => {
+    //   onClose();
+    //   toast.success(`호스트 네트워크 설정 완료`);
+    // };
+    // const onError = (err) => toast.error(`Error 호스트 네트워크: ${err}`);
 
-    return (
-      <div
-        className="outer-networks"
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={() => drop(outerItem.id, "networkOuter")}
-        onContextMenu={(e) => handleContextMenu(e, network, outerItem)}
-      >
-        {outerItem.networks.map((network) => (
-          <div
-            key={network.id}
-            className="center"
-            draggable
-            onDragStart={(e) => dragStart(e, network, "networkOuter", outerItem.id)}
-          >
-            <div className="left-section">{network.name}</div>
-            <div className="right-section">
-              {/* 네트워크 설정에 관한 항목은 정리 필요 */}
-              {network?.role === true ? <FontAwesomeIcon icon={faDesktop} className="icon" style={{ marginLeft: "0.2rem", cursor: "pointer" }} />: "a"}
-              {/* <FontAwesomeIcon icon={faDesktop} className="icon" /> */}
-              <FontAwesomeIcon
-                onClick={() => openNetworkEditPopup(network)} // 네트워크 정보와 함께 모달 열기
-                icon={faPencilAlt}
-                className="icon"
-                style={{ cursor: "pointer" }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
+    // console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
 
-  const renderUnassignedNetworks = () => {
-    const assignedNetworkIds = outer.flatMap((outerItem) =>
-      outerItem.networks.map((net) => net.id)
-    );
-
-    const availableNetworks = network?.filter(
-      (net) => !assignedNetworkIds.includes(net.id)
-    );
-
-    return availableNetworks?.map((net) => (
-      <div
-        key={net.id}
-        className="network-item"
-        draggable
-        onDragStart={(e) => dragStart(e, net, "unassigned")}
-      >
-        <div className="flex items-center justify-center">
-          {renderTFStatusIcon(net?.status==="OPERATIONAL")}{net?.name}<br/>
-          {net?.vlan === 0 ? "":`(VLAN ${net?.vlan})` }
-        </div>
-      </div>
-    ));
+    // editHost(
+    //   { hostId: formState.id, hostData: dataToSubmit },
+    //   { onSuccess, onError }
+    // )
   };
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"호스트 네트워크"}
       submitTitle={"설정"}
-      onSubmit={() => {}}
+      onSubmit={handleFormSubmit}
       contentStyle={{ width: "880px", height: "620px" }} 
     >
       <div className="popup-content-outer px-2">
@@ -472,20 +269,68 @@ const HostNetworkModal = ({
               <div>할당된 논리 네트워크</div>
             </div>
 
-            {/* container와 네트워크가 둘 다 없으면 제외 */}
             {outer
               .filter(outerItem => outerItem.children.length > 0 || outerItem.networks.length > 0)
               .map((outerItem) => (
                 <div key={outerItem.id} className="separation-left-content">
-                  {renderInterface(outerItem)}
+                  <div 
+                    key={outerItem.id} 
+                    className="interface" 
+                    onDragOver={(e) => e.preventDefault()} 
+                    onDrop={() => drop(outerItem.id, "interface")}
+                  > 
+                    {outerItem.name && (
+                      <div className="interface-header">
+                        {outerItem.name} {outerItem.name.startsWith("bond") && (
+                          <FontAwesomeIcon icon={faPencilAlt} className="icon" onClick={() => openBondingPopup("edit")} />
+                        )}
+                      </div>
+                    )}
+                    <div className="children">
+                      {outerItem.children.map((child) => (
+                        <div 
+                          key={child.id} 
+                          className="container" 
+                          draggable 
+                          onDragStart={(e) => dragStart(e, child, "container", outerItem.id)}
+                        >
+                          {child.name}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
+                  {/* 화살표 */}
                   <div className="flex items-center justify-center">
                     <FontAwesomeIcon icon={faArrowsAltH} style={{color: "grey", width: "5vw", fontSize: "20px", }} />
                   </div>
 
                   <div className="assigned-network-outer">
-                    <div className="outer-networks">
-                      {renderNetworkOuter(outerItem)}
+                    <div 
+                      className="outer-networks" 
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={() => drop(outerItem.id, "networkOuter")}
+                    >
+                      {outerItem.networks.length === 0 ? (
+                        <div className="assigned-network"><span>할당된 네트워크 없음</span></div>
+                      ) : (
+                        outerItem.networks.map(network => (
+                          <div 
+                            key={network.id} 
+                            className="center" 
+                            draggable 
+                            onDragStart={(e) => dragStart(e, network, "networkOuter", outerItem.id)}
+                          >
+                            <div className="left-section">
+                              {renderTFStatusIcon(network?.status==="OPERATIONAL")}{network.name}
+                            </div>
+                            <div className="right-section">
+                              {network?.role && <FontAwesomeIcon icon={faDesktop} className="icon" />}
+                              <FontAwesomeIcon icon={faPencilAlt} className="icon" onClick={() => openNetworkEditPopup(network)} />
+                            </div>
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
                 </div>
@@ -493,17 +338,31 @@ const HostNetworkModal = ({
             }
           </div>
 
-          {/* Unassigned Networks */}
           <div
             className="network-separation-right"
             onDragOver={(e) => e.preventDefault()}
             onDrop={() => drop(null, "unassigned")}
           >
-            {renderUnassignedNetworks()}
+            <div className ="f-btw">
+              <div>할당되지 않은 논리 네트워크</div>
+            </div>
+          
+            {availableNetworks?.map((net) => (
+              <div
+                key={net.id}
+                className="network-item"
+                draggable
+                onDragStart={(e) => dragStart(e, net, "unassigned")}
+              >
+                <div className="flex items-center justify-center">
+                  {renderTFStatusIcon(net?.status==="OPERATIONAL")}{net?.name}<br/>
+                  {net?.vlan === 0 ? "":`(VLAN ${net?.vlan})` }
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-
 
       <Suspense fallback={<Loading/>}>
         {/* 네트워크쪽 연필 추가모달 */}
@@ -519,13 +378,11 @@ const HostNetworkModal = ({
           <HostNetworkBondingModal
             isOpen={isBondingPopupOpen}
             editmode
-            // bonding={}
             onClose={() => setIsBondingPopupOpen(false)}
           />
         )}
       </Suspense>
 
-      {renderContextMenu()}
     </BaseModal>
   );
 };

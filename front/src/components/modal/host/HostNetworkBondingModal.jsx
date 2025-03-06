@@ -31,6 +31,7 @@ const HostNetworkBondingModal = ({
         <LabelSelectOptions
           label="본딩모드" id="bonding_mode"
           options={[{ label: "(Mode 1) Active-Backup", value: "#" }]}
+          disabled={true}
         />
       </div>
     </BaseModal>

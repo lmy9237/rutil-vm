@@ -123,6 +123,8 @@
 .network-separation-right {
   width: 33%;
   padding: 0 11px;
+  height: 45vh;
+  border: 1px solid #a3a3a3;
 }
 .right-section {
   display: flex;
