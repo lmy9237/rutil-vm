@@ -9,7 +9,6 @@
 @tailwind utilities;
 html {
   height: 100%;
-  background-color: #0b4db5;
   --h-rutil-header: 51px;
   --h-rutil-footer: 35px; /*section-footer 높이 */
   --h-rutil-footer-content: 190px;
@@ -146,19 +145,14 @@ input[disabled] {
     padding: 14px 15px;
 }
 .header-right-btns {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
+  display: flex;justify-content:flex-end;align-items:center;flex-wrap: wrap;
   min-height: var(--h-right-btn);
-  margin-bottom: 17px;
-  justify-content: right;
 }
 .header-right-btns > button,
 .manage-button
 {
-  margin: 5px 8px 0 0;
-  padding: 4.5px;
+  margin-right: 8px;
+  padding: 5px;
   font-size: var(--fs-default-4);
   font-weight: 600;
   border-radius: 2px;
@@ -2420,6 +2414,11 @@ background-color: #f0f0f0;
 }
 
 /*반응형*/
+@media (min-width: 2000px) {
+    .dash-section {
+        padding: 0 0 0 46px;
+    }
+}
 @media (max-width: 1420px) {
     .resizer {
         display: none !important;

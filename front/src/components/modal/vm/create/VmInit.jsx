@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LabelCheckbox from "../../../label/LabelCheckbox";
 
 const VmInit = ({ editMode, formCloudState, setFormCloudState }) => {
   // 새로만들기->초기실행 화살표 누르면 밑에열리기
@@ -11,30 +12,28 @@ const VmInit = ({ editMode, formCloudState, setFormCloudState }) => {
 
   return (
     <>
-      <div className="p-1.5">
+      <div>
         <div className="flex mb-1.5">
-          <input
-            type="checkbox"
-            id="enableBootMenu"
-            name="enableBootMenu"
-            checked={formCloudState.cloudInit} // cloudInit 상태를 checked 속성에 바인딩
-            onChange={(e) => {
-              const isChecked = e.target.checked;
-              setFormCloudState((prev) => ({
-                ...prev,
-                cloudInit: isChecked, // cloudInit 상태 업데이트
-                script: isChecked ? prev.script : "", // 체크 해제 시 script 초기화
-              }));
-              if (!isChecked) {
-                setDomainHiddenBoxVisible(false); // 체크 해제 시 숨김 박스도 닫기
-              }
-            }}
-          />
-          <label htmlFor="enableBootMenu">Cloud-lnit</label>
+        <LabelCheckbox
+          id="enableBootMenu"
+          label="Cloud-lnit"
+          checked={formCloudState.cloudInit} // cloudInit 상태를 checked 속성에 바인딩
+          onChange={(e) => {
+            const isChecked = e.target.checked;
+            setFormCloudState((prev) => ({
+              ...prev,
+              cloudInit: isChecked, // cloudInit 상태 업데이트
+              script: isChecked ? prev.script : "", // 체크 해제 시 script 초기화
+            }));
+            if (!isChecked) {
+              setDomainHiddenBoxVisible(false); // 체크 해제 시 숨김 박스도 닫기
+            }
+          }}
+        />
         </div>
 
         {formCloudState.cloudInit && (
-          <div>
+          <div className="px-2">
             <FontAwesomeIcon
               icon={faChevronCircleRight}
               id="domain_hidden_box_btn2"

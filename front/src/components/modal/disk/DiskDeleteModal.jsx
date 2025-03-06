@@ -44,12 +44,14 @@ const DiskDeleteModal = ({ isOpen, onClose, data }) => {
       targetName={"디스크"}
       submitTitle={"삭제"}
       onSubmit={handleDelete}
+      contentStyle={{ width: "600px", height: "190px" }}
     >
-      {/* <div className="storage-delete-popup modal"> */}
-      <div className="disk-delete-box">
-        <div>
-          { warnButton() }
-          <span> {aliass.join(', ')} 를(을) 삭제하시겠습니까? </span>
+      <div className="popup-content-outer">
+        <div className="disk-delete-box">
+          <div>
+            { warnButton() }
+            <span> {aliass.join(', ')} 를(을) 삭제하시겠습니까? </span>
+          </div>
         </div>
       </div>
     </BaseModal>

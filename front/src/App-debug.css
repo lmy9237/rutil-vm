@@ -1,5 +1,6 @@
 html {
   --debug-outline: 1px dashed magenta;
+  background-color: #0b4db5;
 }
 
 *,

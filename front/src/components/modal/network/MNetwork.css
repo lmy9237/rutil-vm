@@ -141,8 +141,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0.2rem;
-  height: 16vh;
+  padding: 5px 10px;
 }
 
 /*네트워크(가져오기)*/

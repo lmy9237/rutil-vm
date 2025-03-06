@@ -56,15 +56,24 @@ const Header = ({ setAuthenticated, toggleAside }) => {
       setEvents(events.filter((item) => item.id !== id));
     }
   };
-  const [notifications, setNotifications] = useState([
-    { id: 1, type: "알림", message: "첫 번째 알림 메시지", date: "25. 2. 24. | PM 8:54:04" },
-    { id: 2, type: "알림", message: "두 번째 알림 메시지", date: "25. 2. 24. | PM 8:51:22" },
-  ]);
+  const [notifications, setNotifications] = useState(
+    Array.from({ length: 20 }).map((_, index) => ({
+      id: index + 1,
+      type: "알림",
+      message: `알림 메시지 ${index + 1}`,
+      date: new Date().toLocaleString("ko-KR", { hour12: false }),
+    }))
+  );
   
-  const [events, setEvents] = useState([
-    { id: 1, type: "이벤트", message: "첫 번째 이벤트 메시지", date: "25. 2. 28. | PM 3:44:21" },
-    { id: 2, type: "이벤트", message: "두 번째 이벤트 메시지", date: "25. 2. 28. | PM 3:46:14" },
-  ]);
+  
+  const [events, setEvents] = useState(
+    Array.from({ length: 20 }).map((_, index) => ({
+      id: index,
+      message: `이벤트 메시지 ${index + 1}`,
+      date: new Date().toLocaleDateString(),
+    }))
+  );
+
   
 
 
@@ -149,31 +158,41 @@ const Header = ({ setAuthenticated, toggleAside }) => {
 
               {/* 알림 내용 */}
               {activeSection === "알림" && (
+                <>
                 <div className="bell-content-outer">
-                  <div className="bell-content">
-
-                    <div>
-                      <FontAwesomeIcon 
-                        icon={faExclamationTriangle} fixedWidt
-                        style={{ color: "orange", fontSize: "20px"  , paddingTop:'7px'}}
-                      />
-                    </div>
-                    <div className="bell-mid">
-                      afdssssssssssssssssssssssssssssssssssssssssdsafsdfdsfasafdsfasdfsa
-                      <div className="mt-0.5">
-                        날짜 | 시간
+                  {notifications.map((notification) => (
+                    <div key={notification.id} className="bell-content">
+                      <div>
+                        <FontAwesomeIcon 
+                          icon={faExclamationTriangle} 
+                          fixedWidth
+                          style={{ color: "orange", fontSize: "20px", paddingTop: "7px" }}
+                        />
+                      </div>
+                      <div className="bell-mid">
+                        {notification.message}
+                        <div className="mt-0.5">
+                          {notification.date}
+                        </div>
+                      </div>
+                      <div>
+                        <FontAwesomeIcon 
+                          icon={faTrash} 
+                          fixedWidth 
+                          className="hover-icon"
+                          style={{ fontSize: "15px", paddingTop: "7px", cursor: "pointer" }}
+                          onClick={() => handleDelete(notification.id, "알림")}
+                        />
                       </div>
                     </div>
-                    <div>
-                      <FontAwesomeIcon icon={faTrash} fixedWidth 
-                        className="hover-icon"
-                        style={{fontSize: "15px" , paddingTop:'7px'}}
-                      />
-                    </div>
-                  </div>
-                
-                
+                  ))}
                 </div>
+
+                <div className="bell-btns center">
+                  <div>모두 삭제</div>
+                  <div>모두 출력</div>
+                </div>
+              </>
               )}
 
               {/* 이벤트 탭 */}
@@ -184,32 +203,38 @@ const Header = ({ setAuthenticated, toggleAside }) => {
 
               {/* 이벤트 내용 (알림 아래로 깔리도록 설정) */}
               {activeSection === "이벤트" && (
-                <div className="bell-content-outer event-section">
-                  {events.map((event) => (
-                    <div key={event.id} className="bell-content">
-                      <div>
-                        <FontAwesomeIcon 
-                          icon={faInfoCircle} 
-                          fixedWidth
-                          style={{ fontSize: "17px", paddingTop: "4px" }}
-                        />
+                <>
+                  <div className="bell-content-outer event-section">
+                    {events.map((event) => (
+                      <div key={event.id} className="bell-content">
+                        <div>
+                          <FontAwesomeIcon 
+                            icon={faInfoCircle} 
+                            fixedWidth
+                            style={{ fontSize: "17px", paddingTop: "4px" }}
+                          />
+                        </div>
+                        <div className="bell-mid">
+                          {event.message}
+                          <div className="mt-0.5">{event.date}</div>
+                        </div>
+                        <div>
+                          <FontAwesomeIcon 
+                            icon={faTrash} 
+                            fixedWidth 
+                            className="hover-icon"
+                            style={{ fontSize: "15px", paddingTop: "7px", cursor: "pointer" }}
+                            onClick={() => handleDelete(event.id, "이벤트")}
+                          />
+                        </div>
                       </div>
-                      <div className="bell-mid">
-                        {event.message}
-                        <div className="mt-0.5">{event.date}</div>
-                      </div>
-                      <div>
-                        <FontAwesomeIcon 
-                          icon={faTrash} 
-                          fixedWidth 
-                          className="hover-icon"
-                          style={{ fontSize: "15px", paddingTop: "7px", cursor: "pointer" }}
-                          onClick={() => handleDelete(event.id, "이벤트")}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                  <div className="bell-btns center">
+                    <div>모두 삭제</div>
+                    <div>모두 출력</div>
+                  </div>
+                </>
               )}
 
 

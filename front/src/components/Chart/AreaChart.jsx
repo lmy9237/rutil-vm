@@ -43,12 +43,18 @@ const AreaChart = ({ series, datetimes }) => {
     if (chartContainerRef.current) {
       const containerWidth = chartContainerRef.current.clientWidth;
 
-      setChartSize({
-        width: `${Math.max(containerWidth * 0.95, 300)}px`, // 부모 div의 90%, 최소 300px 보장
-        height: `${Math.max(window.innerHeight * 0.25, 200)}px`, // 화면 높이의 30%, 최소 200px 유지
-      });
+      let width = Math.max(containerWidth * 0.8, 300); // 기본 너비
+      let height = Math.max(window.innerHeight * 0.25, 200); // 기본 높이
+
+      if (window.innerWidth >= 2000) {
+        width = Math.max(containerWidth * 1, 600); // 🔥 2000px 이상일 때 더 크게
+        height = Math.max(window.innerHeight * 0.25, 330);
+      }
+
+      setChartSize({ width: `${width}px`, height: `${height}px` });
     }
   };
+
 
   // 창 크기 변경 시 차트 크기 업데이트
   useEffect(() => {

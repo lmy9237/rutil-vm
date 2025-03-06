@@ -4,6 +4,9 @@ import NetworkActionButtons from "./NetworkActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import NetworkModals from "../modal/network/NetworkModals";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRefresh } from "@fortawesome/free-solid-svg-icons";
+import "./Dupl.css"
 
 /**
  * @name NetworkDupl
@@ -32,11 +35,23 @@ const NetworkDupl = ({
 
   return (
     <>
-      <NetworkActionButtons
-        openModal={openModal}
-        isEditDisabled={selectedNetworks.length !== 1}
-        isDeleteDisabled={selectedNetworks.length === 0}
-      />
+      <div className="dupl-header-group">
+        <div className="nomal-search-box">
+          <input
+            type="text"
+            placeholder="Search..."
+          />
+          <button>
+            <FontAwesomeIcon icon={faRefresh} fixedWidth />
+          </button>
+        </div>
+        <NetworkActionButtons className="dupl-header-action-buttons"
+          openModal={openModal}
+          isEditDisabled={selectedNetworks.length !== 1}
+          isDeleteDisabled={selectedNetworks.length === 0}
+        />
+      </div>
+      
       {/* <span style={{fontSize:"20px"}}>ID: {selectedIds}</span> */}
 
       <TablesOuter

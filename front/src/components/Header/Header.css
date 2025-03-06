@@ -62,7 +62,8 @@
   border-radius: 3px;
 }
 .user-loginbox > div {
-  padding: 0.09rem 0.12rem;
+  padding: 2px 5px;
+  cursor:pointer;
 }
 .user-loginbox > div:hover {
   background-color: #ebececd8;
@@ -78,6 +79,7 @@
   top: 49px;
   height: 89.6vh;
   border-radius: 2px;
+  box-shadow: -3px 3px 10px rgba(0, 0, 0, 0.2); 
 }
 .bell-box.expanded {
   width: 700px; /* 확장 시 */
@@ -106,11 +108,21 @@
   padding: 10px;
 }
 .bell-content-outer {
-  max-height: 717px;
+  max-height: 671px;
   display: flex;
   flex-direction: column;
 }
-
+.bell-btns>div{
+  width:50%;
+  padding:12px;
+  text-align:center;
+  color:blue;
+  cursor:pointer;
+  
+}
+.bell-btns>div:hover{
+  text-decoration: underline;
+}
 .bell-content {
   display: flex;
   font-size: var(--fs-default-4);

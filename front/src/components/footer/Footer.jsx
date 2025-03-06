@@ -16,6 +16,17 @@ const Footer = ({
   const [selectedFooterTab, setSelectedFooterTab] = useState("recent");
   const handleFooterTabClick = (tab) => setSelectedFooterTab(tab);
 
+  // 임시 데이터
+  const tableData = Array.from({ length: 20 }).map((_, index) => ({
+    id: index + 1,
+    taskName: `작업 ${index + 1}`,
+    target: index % 2 === 0 ? "CentOS 7.9 Shell Script 테스트 - MYK" : "Datacenter",
+    status: "완료 시간",
+    details: "",
+    startTime: "2025.02.28",
+    waitTime: `${index + 1}ms`,
+    morningTime: "2025.02.28. 오전"
+  }));
   return (
     <div className={`footer-outer${isFooterContentVisible ? " open" : ""}`}>
       <div className="footer">
@@ -52,7 +63,7 @@ const Footer = ({
           <div className="footer-nav">
             <table>
               <thead>
-                <tr >
+                <tr>
                   <th>작업 이름 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
                   <th>대상 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
                   <th>상태 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
@@ -63,26 +74,20 @@ const Footer = ({
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>가상 시스템 전원 켜기</td>
-                  <td>CentOS 7.9 Shell Script 테스트 - MYK</td>
-                  <td>완료 시간</td>
-                  <td></td>
-                  <td>2025.02.28</td>
-                  <td>2ms</td>
-                  <td>2025.02.28. 오전</td>
-                </tr>
-                <tr>
-                  <td>전원 켜기 초기화</td>
-                  <td>Datacenter</td>
-                  <td>완료 시간</td>
-                  <td></td>
-                  <td>2025.02.28</td>
-                  <td>3ms</td>
-                  <td>2025.02.28. 오전</td>
-                </tr>
+                {tableData.map((row) => (
+                  <tr key={row.id}>
+                    <td>{row.taskName}</td>
+                    <td>{row.target}</td>
+                    <td>{row.status}</td>
+                    <td>{row.details}</td>
+                    <td>{row.startTime}</td>
+                    <td>{row.waitTime}</td>
+                    <td>{row.morningTime}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
+
           </div>
         </div>
         

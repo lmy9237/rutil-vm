@@ -22,6 +22,7 @@
   display: flex;
   align-items: center;
 }
+/*search-box*/
 .search-box button {
   padding: 5px 10px;
   background-color: #f0f0f0;
@@ -72,8 +73,8 @@
 .nomal-search-box{
   width: 40%;
   display: flex;
-  position:absolute;
-  top: -49px;
+  /* position:absolute;
+  top: -49px; */
 }
 /*tablesOuter*/
 .section-table-outer {
@@ -85,25 +86,22 @@
   width: 100%;
   border-collapse: collapse;
 }
-.section-table-outer table tbody tr {
-  cursor: pointer;
-}
+
 .section-table-outer table tbody tr:hover {
-  background-color: #ebececd8;
+  background-color:rgb(218, 236, 245) !important; 
 }
 .section-table-outer th,
 .section-table-outer td {
   border: 1px solid rgb(204, 204, 204);
 }
 .section-table-outer th {
-  padding: 0.04rem;
+  padding: 2px;
   text-align: center;
   background-color: #d1e2eb;
 }
 .section-table-outer td {
   padding: 1.3px 3.5px;
 }
-
 .section-table-outer input[type="checkbox"] {
   text-align: center;
 }
@@ -113,8 +111,9 @@
 .section-table-outer > button {
   display: flex;
   cursor: pointer;
-  padding: 0.07rem 0.1rem;
-  margin-bottom: 0.13rem;
+  padding: 5px;
+  font-size: var(--fs-default-4);
+  margin-bottom: 5px;
 }
 
 /*tablerowclick*/

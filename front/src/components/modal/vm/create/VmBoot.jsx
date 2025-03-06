@@ -31,7 +31,7 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
   return (
     <div className="host-second-content">
       <div className="cpu-res">
-        <div className="p-0.5 font-bold">부트순서:</div>
+        <div className="p-2 font-bold">부트순서:</div>
           <LabelSelectOptions className="cpu-res-box" label="첫 번째 장치" value={formBootState.firstDevice} onChange={handleInputChange("firstDevice")} options={firstDeviceOptionList} />
           <LabelSelectOptions className="cpu-res-box" label="두 번째 장치" value={formBootState.secDevice} onChange={handleInputChange("secDevice")} options={secDeviceOptionList}/>
       </div>

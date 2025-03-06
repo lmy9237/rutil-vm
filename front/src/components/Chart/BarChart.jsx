@@ -1,35 +1,50 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
 import "./BarChart.css";
 
 const BarChart = ({ names, percentages }) => {
+  const chartContainerRef = useRef(null);
+
   const [chartSize, setChartSize] = useState({
-    width: window.innerWidth * 0.12, // 초기 width (뷰포트 기준)
-    height: window.innerHeight * 0.23, // 초기 height (뷰포트 기준)
+    width: "100%", // 부모 div의 100% 사용
+    height: "30vh", // 뷰포트 높이의 30% 사용
   });
 
-  useEffect(() => {
-    const handleResize = () => {
-      setChartSize({
-        width: window.innerWidth * 0.12,
-        height: window.innerHeight * 0.23,
-      });
-    };
+  const updateChartSize = () => {
+    if (chartContainerRef.current) {
+      const containerWidth = chartContainerRef.current.clientWidth;
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+      let width = Math.max(containerWidth * 0.66, 265); // 기본 너비
+      let height = Math.max(window.innerHeight * 0.25, 200); // 기본 높이
+
+      if (window.innerWidth >= 2000) {
+        width = Math.max(containerWidth *  1.4, 750); // 🔥 2000px 이상일 때 더 크게
+        height = Math.max(window.innerHeight * 0.25, 300);
+      }
+
+      setChartSize({ width: `${width}px`, height: `${height}px` });
+    }
+  };
+
+  useEffect(() => {
+    updateChartSize();
+    window.addEventListener("resize", updateChartSize);
+
+    return () => {
+      window.removeEventListener("resize", updateChartSize);
+    };
   }, []);
 
-  const [series, setSeries] = useState([{ data: [] /* 막대 값 */ }]);
+  const [series, setSeries] = useState([{ data: percentages }]);
   const [chartOptions, setChartOptions] = useState({
     chart: {
       offsetY: -15,
       offsetX: -55,
       type: "bar",
-       background:"green"
+  
     },
     grid: {
-      show: false, // Hide grid lines
+      show: false,
     },
     plotOptions: {
       bar: {
@@ -47,9 +62,8 @@ const BarChart = ({ names, percentages }) => {
       textAnchor: "start",
       style: {
         colors: ["#fff"],
-        fontSize: "12px", // 텍스트 크기를 rem 단위로 설정합니다.
+        fontSize: "12px",
         fontWeight: "400",
-       
       },
       formatter: function (val, opt) {
         return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
@@ -64,17 +78,14 @@ const BarChart = ({ names, percentages }) => {
       colors: ["#fff"],
     },
     xaxis: {
-      categories: [],
+      categories: names,
       min: 0,
       max: 100,
-      lineWidth: 0,
       labels: {
         show: false,
       },
-      gridLineWidth: 0, 
-      tickWidth: 0, 
       axisBorder: {
-        show: false, 
+        show: false,
       },
       axisTicks: {
         show: false,
@@ -82,23 +93,13 @@ const BarChart = ({ names, percentages }) => {
     },
     yaxis: {
       labels: {
-        show: false, // y축 레이블을 제거합니다.
+        show: false,
       },
-      gridLineWidth: 0,
-    },
-    title: {
-      text: "", // 제목을 제거합니다.
-      align: "center",
-      floating: true,
-    },
-    subtitle: {
-      text: "", // 부제목을 제거합니다.
-      align: "center",
     },
     tooltip: {
       theme: "dark",
       x: {
-        show: false, // x축 제목을 제거합니다.
+        show: false,
       },
       y: {
         title: {
@@ -109,7 +110,6 @@ const BarChart = ({ names, percentages }) => {
       },
     },
   });
-
 
   useEffect(() => {
     setSeries([{ data: percentages }]);
@@ -123,17 +123,16 @@ const BarChart = ({ names, percentages }) => {
   }, [names, percentages]);
 
   return (
-    <div>
+    <div ref={chartContainerRef} style={{ width: "100%", maxWidth: "900px", minWidth: "100px" }}>
       <div id="bar_chart">
         <ReactApexChart
           options={chartOptions}
           series={series}
           type="bar"
-          width={`${chartSize.width}px`}
-          height={`${chartSize.height}px`}
+          width={chartSize.width}
+          height={chartSize.height}
         />
       </div>
-      <div id="html-dist"></div>
     </div>
   );
 };

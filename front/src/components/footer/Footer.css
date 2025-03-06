@@ -61,7 +61,8 @@
 .footer-nav {
   font-size: var(--fs-default-4);
   width: 100%;
- 
+  max-height: 190px; /* 원하는 높이 설정 */
+  overflow-y: auto; /* 세로 스크롤 추가 */
 }
 .footer-nav table{
   width: 100%;

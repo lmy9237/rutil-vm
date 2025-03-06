@@ -107,7 +107,7 @@ const HostNics = ({ hostId }) => {
                     onClick={() => switchTable(index, "NETWORK_FROM_HOST")}
                     className={`h-icon-btn ${activeButton[index] === "NETWORK_FROM_HOST" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
                   >
-                    <FontAwesomeIcon icon={faCrown} fixedWidth style={{ fontSize: "0.3rem" }} />
+                    <FontAwesomeIcon icon={faCrown} fixedWidth style={{ fontSize: "15px" }} />
                   </button>
 
                   {data.bondingVo?.slaves?.length > 0 && (
