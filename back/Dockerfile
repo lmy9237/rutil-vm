@@ -20,6 +20,7 @@ RUN chmod +x gradlew
 # Copy the rest of the application source code
 COPY buildSrc /home/gradle/project/buildSrc
 COPY rutil-vm-api /home/gradle/project/rutil-vm-api
+COPY rutil-vm-api-ovirt-business /home/gradle/project/rutil-vm-api-ovirt-business
 COPY rutil-vm-api-cert /home/gradle/project/rutil-vm-api-cert
 COPY rutil-vm-api-repository /home/gradle/project/rutil-vm-api-repository
 COPY rutil-vm-api-socket /home/gradle/project/rutil-vm-api-socket

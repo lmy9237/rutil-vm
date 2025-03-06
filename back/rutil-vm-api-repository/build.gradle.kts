@@ -1,5 +1,5 @@
 group = "com.itinfo.rutilvm.api"
-description = "RutilVM 백엔드 (Repository) 모듈"
+description = "RutilVM 백엔드 (Repository)"
 version = Versions.Project.RUTIL_VM
 
 val jar: Jar by tasks
@@ -13,6 +13,7 @@ plugins {
 
 dependencies {
     compileOnly(project(":rutil-vm-common"))
+    compileOnly(project(":rutil-vm-api-ovirt-business"))
     compileOnly(Dependencies.springBootJpa)
     compileOnly(Dependencies.springBootWeb)
     compileOnly(Dependencies.kotlinStdlib)
@@ -21,6 +22,7 @@ dependencies {
     runtimeOnly(Dependencies.jdbc)
 
     testImplementation(project(":rutil-vm-common"))
+    testImplementation(project(":rutil-vm-api-ovirt-business"))
 	testImplementation(Dependencies.springTest)
 	testImplementation(Dependencies.springBootTest)
     testImplementation(Dependencies.springBootJpa)

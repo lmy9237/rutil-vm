@@ -24,7 +24,7 @@
 #  b. 환경변수 VERSION에 저장
 # 3. rutil-vm-api-*.tar 업로드
 #
-name: Build and Publish RutilVM API Docker Image
+name: [BACK] Build and Publish RutilVM API Docker Image
 
 on:
   push:
