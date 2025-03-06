@@ -35,8 +35,6 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
           : prev.filter((d) => d.id !== disk.id) // 체크 해제되면 제외
     );
   };
-  console.log("d " + disks[0].id)
-
 
   const handleFormSubmit = () => {
 
@@ -91,7 +89,7 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
             onChange={(e) => setFormState((prev) => ({ ...prev, description: e.target.value }))}
           />
           <div>
-            <div className="font-bold">포함할 디스크 : {disks[0]?.interface_} {disks[0]?.diskImageVo?.alias}</div>
+            <div className="font-bold">포함할 디스크 :</div>
             <div className="snapshot-new-table">
               <TablesOuter
                 isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
@@ -103,8 +101,8 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
                   snapshot_check: (
                     <input
                       type="checkbox"
-                      checked={selectedDisks.some((disk) => disk.id === e?.diskImageVo?.id)} // id 비교 수정
-                      onChange={(event) => handleDiskSelection(e.diskImageVo, event.target.checked)} // diskImageVo를 직접 전달
+                      checked={selectedDisks.some((disk) => disk.id === d?.diskImageVo?.id)} // id 비교 수정
+                      onChange={(event) => handleDiskSelection(d.diskImageVo, event.target.checked)} // diskImageVo를 직접 전달
                     />
                   ),
                 })) || []}
