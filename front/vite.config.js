@@ -10,7 +10,7 @@ const VITE_CONFIG = ({ mode }) => {
   console.log(`vite.config.js ... process.env.NODE_ENV: ${RUTIL_VM_ENV.NODE_ENV}`)
   console.log(`vite.config.js ... process.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: ${RUTIL_VM_ENV.VITE_RUTIL_VM_OVIRT_IP_ADDRESS}`)
 
-  RUTIL_VM_ENV.__API_URL__ = `https://${RUTIL_VM_ENV.VITE_RUTIL_VM_OVIRT_IP_ADDRESS}:6690`;
+  RUTIL_VM_ENV.__API_URL__ = `https://${RUTIL_VM_ENV.VITE_RUTIL_VM_OVIRT_IP_ADDRESS ?? "localhost"}:6690`;
   return defineConfig({
     // root: path.resolve(__dirname, 'public'),
     plugins: [react(), mkcert()],
