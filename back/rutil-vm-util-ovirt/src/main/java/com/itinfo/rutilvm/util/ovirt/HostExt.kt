@@ -226,24 +226,6 @@ fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.restartHost(hostId: String, hostName: String, hostPw: String): Result<Boolean> = runCatching {
-	val host = checkHost(hostId)
-
-	val address: InetAddress = InetAddress.getByName(host.address())
-	if (address.rebootHostViaSSH(hostName, hostPw, 22).isFailure)
-		return Result.failure(Error("SSH를 통한 호스트 재부팅 실패"))
-
-	if (!this.expectHostStatus(hostId, HostStatus.UP)) {
-		throw Error("호스트 재부팅 실패했습니다 ...")
-	}
-	true
-}.onSuccess {
-	Term.HOST.logSuccess("재부팅", hostId)
-}.onFailure {
-	Term.HOST.logFail("재부팅", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
 /**
  * [makeUserHostViaSSH]
  * host 생성할때 같이 실행되며 재시작만을 위한 계정생성
@@ -288,93 +270,8 @@ fun InetAddress.makeUserHostViaSSH(password: String, port: Int, userName: String
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
-/**
- * [InetAddress.rebootHostViaSSH]
- * host SSH 관리 - 재시작 부분
- * @param hostName [String] 생성한 계정
- * @param hostPw [String] 생성한 계정
- * @param port [Int]
- */
-fun InetAddress.rebootHostViaSSH(hostName: String, hostPw: String, port: Int): Result<Boolean> = runCatching {
-	log.info("SSH 시작: hostName={}, hostPw={}, hostAddress={}, port={}", hostName, hostPw, this.hostAddress, port)
-
-	val session: com.jcraft.jsch.Session = JSch().getSession(hostName, this.hostAddress, port)
-	session.setPassword(hostPw)
-
-	// 보안 경고 무시 설정
-	session.setConfig("StrictHostKeyChecking", "no")
-	session.setConfig("PreferredAuthentications", "password")
-
-	log.info("SSH 세션 연결 시도")
-	session.connect()
-	log.info("SSH 세션 연결 성공 {}", this.hostAddress)
-
-	val channel: ChannelExec = session.openChannel("exec") as ChannelExec
-	log.info("---------------------5")
-	channel.setCommand("sudo -S reboot")
-	channel.setCommand(hostPw)
-	log.info("---------------------6")
-	channel.connect()
-
-	val startTime = System.currentTimeMillis()
-	while (!channel.isClosed && System.currentTimeMillis() - startTime < 30000) {
-		Thread.sleep(100)
-	}
-
-	val exitStatus = channel.exitStatus
-	channel.disconnect()
-	session.disconnect()
-
-	if (exitStatus != 0) {
-		throw Error("명령 실행 실패: exitStatus=$exitStatus")
-	}
-
-	log.info("재부팅 명령 성공")
-	true
-}.onSuccess {
-	log.info("SSH 재부팅 성공 여부: {}", it)
-}.onFailure {
-	log.error("SSH 재부팅 실패: {}", it.localizedMessage)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-
-//fun InetAddress.rebootHostViaSSH(hostName: String, hostPw: String, port: Int): Result<Boolean> = runCatching {
-//	log.info("ssh 시작")
-//	log.info("hostName: {}, hostAddress: {}, post: {}, {}", hostName, this@rebootHostViaSSH.hostAddress, port, hostPw)
-//
-//	val session: com.jcraft.jsch.Session = JSch().getSession(hostName, this.hostAddress, port)
-//	session.setPassword(hostPw)
-//	session.setConfig("StrictHostKeyChecking", "no") // 호스트 키 확인을 건너뛰기 위해 설정
-//	session.connect()
-//
-//	val channel: ChannelExec = session.openChannel("exec") as ChannelExec // SSH 채널 열기
-//	Thread.sleep(300)
-//	channel.setCommand("sudo reboot") // 재부팅 명령 실행
-//	channel.setCommand(hostPw) // 재부팅 명령 실행
-//	channel.connect()
-//
-//	// 명령 실행 완료 대기
-//	while (!channel.isClosed) {
-//		Thread.sleep(100)
-//	}
-//
-//	channel.disconnect()
-//	session.disconnect()
-//	val exitStatus = channel.exitStatus
-//	log.info("rebootHostViaSSH")
-//	return Result.success(exitStatus == 0)
-//}.onSuccess {
-//	log.info("재부팅 성공")
-//}.onFailure {
-//	log.error(it.localizedMessage)
-//	throw if (it is Error) it.toItCloudException() else it
-//}
-
 fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
-
 	this.srvHost(hostId).enrollCertificate().send()
 	true
 }.onSuccess {

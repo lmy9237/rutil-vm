@@ -2,6 +2,8 @@ package com.itinfo.rutilvm.util.ssh.model
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.itinfo.rutilvm.util.ssh.util.SSHHelper
+import com.itinfo.rutilvm.util.ssh.util.executeAll
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Session
 import org.slf4j.LoggerFactory
@@ -54,6 +56,22 @@ open class RemoteConnMgmt(
 		}
 		inline fun builder(block: Builder.() -> Unit): RemoteConnMgmt = Builder().apply(block).build()
 	}
+}
+
+/**
+ * [RemoteConnMgmt.rebootHostViaSSH]
+ * SSH로 재시작
+ */
+fun RemoteConnMgmt.rebootSystem(): Result<Boolean> = runCatching {
+	log.info("rebootSystem ... ")
+	val session: Session? = toInsecureSession()
+	return session?.executeAll(listOf(SSHHelper.SSH_COMMAND_RESTART)) ?: throw Error("UNKNOWN ERROR!")
+}.onSuccess {
+	log.info("SSH 재부팅 성공: {}", it)
+}.onFailure {
+	log.error("SSH 재부팅 실패: {}", it.localizedMessage)
+	// throw if (it is Error) it.toItCloudException() else it
+	throw it
 }
 
 fun RemoteConnMgmt.toInsecureSession(): Session? {
