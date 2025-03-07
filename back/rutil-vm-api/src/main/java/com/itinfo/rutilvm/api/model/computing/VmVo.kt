@@ -829,8 +829,8 @@ fun Vm.toVmVo(conn: Connection): VmVo {
         hostName { if (vm.initializationPresent()) vm.initialization().hostName() else "" }
        timeStandard { vm.timeZone().toString() }
         script { if (vm.initializationPresent()) vm.initialization().customScript() else "" }
-        monitor { vm.display().monitorsAsInteger() }
-        usb { vm.usb().enabled() }
+        monitor { if(vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
+        usb { if(vm.usbPresent()) vm.usb().enabled() else false }
         hostInCluster { !vm.placementPolicy().hostsPresent() }
 //        hostVos {
 //            if (vm.placementPolicy().hostsPresent()){

@@ -1185,7 +1185,7 @@ export const useDisksFromVM = (vmId, mapPredicate) => useQuery({
   enabled: !!vmId, 
 });
 /**
- * @name useSnapshotFromVM
+ * @name useSnapshotsFromVM
  * @description 가상머신 내 스냅샷 목록조회 useQuery훅
  * 
  * @param {string} vmId 가상머신ID
@@ -1194,7 +1194,7 @@ export const useDisksFromVM = (vmId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findSnapshotsFromVM
  */
-export const useSnapshotFromVM = (vmId, mapPredicate) => useQuery({
+export const useSnapshotsFromVM = (vmId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['SnapshotFromVM', vmId], 
   queryFn: async () => {

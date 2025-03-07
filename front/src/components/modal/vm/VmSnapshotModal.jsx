@@ -6,7 +6,6 @@ import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useAddSnapshotFromVM, useDisksFromVM } from "../../../api/RQHook";
 import "./MVm.css";
 import LabelInput from "../../label/LabelInput";
-import Tables from "../../table/Tables";
 
 const initialFormState = {
   id: "",

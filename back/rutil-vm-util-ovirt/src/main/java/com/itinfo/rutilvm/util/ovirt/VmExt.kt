@@ -386,10 +386,12 @@ fun Connection.findAllNicsFromVm(vmId: String, follow: String = ""): Result<List
 fun Connection.srvNicFromVm(vmId: String, nicId: String): VmNicService =
 	this.srvNicsFromVm(vmId).nicService(nicId)
 
-fun Connection.findNicFromVm(vmId: String, nicId: String): Result<Nic?> = runCatching {
+fun Connection.findNicFromVm(vmId: String, nicId: String, follow: String = ""): Result<Nic?> = runCatching {
 	checkVmExists(vmId)
 
-	this.srvNicFromVm(vmId, nicId).get().send().nic()
+	this.srvNicFromVm(vmId, nicId).get().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().nic()
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.NIC, "목록조회", vmId)
 }.onFailure {

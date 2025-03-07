@@ -1,12 +1,12 @@
 import React, { Suspense, useEffect, useState } from 'react';
-import { faCamera, faChevronDown, faChevronRight, faEye, faNewspaper, faServer, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faChevronDown, faChevronRight, faEye, faNewspaper, faServer, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import VmSnapshotModal from '../../../components/modal/vm/VmSnapshotModal';
 import VmSnapshotDeleteModal from '../../../components/modal/vm/VmSnapshotDeleteModal';
-import { useDisksFromVM, useSnapshotDetailFromVM, useSnapshotFromVM } from '../../../api/RQHook';
-import { convertBytesToMB } from '../../../util';
+import { useSnapshotDetailFromVM, useSnapshotsFromVM } from '../../../api/RQHook';
+import { convertBytesToGB, convertBytesToMB } from '../../../util';
 
 /**
  * @name VmSnapshots
@@ -20,78 +20,49 @@ const VmSnapshots = ({ vmId }) => {
   const [modals, setModals] = useState({ create: false, edit: false, delete: false });
   const [selectedSnapshots, setSelectedSnapshots] = useState([]);
   const [activeSection, setActiveSection] = useState(null);
-  const [bootable, setBootable] = useState(true);
+  // const [bootable, setBootable] = useState(true);
+
   const toggleModal = (type, isOpen) => {
     setModals((prev) => ({ ...prev, [type]: isOpen }));
   };
-  const openPopup = (popupType) => {
-    setActivePopup(popupType);
-  };
-  const closePopup = () => {
-    setActivePopup(null);
-  };
-
-  const toggleSnapshotSelection = (snapshot, event) => {
-    if (event.ctrlKey) {
-      setSelectedSnapshots((prev) =>
-        prev.some((item) => item.id === snapshot.id)
-          ? prev.filter((item) => item.id !== snapshot.id) // 선택 해제
-          : [...prev, snapshot] // 객체 추가
-      );
-    } else {
-      setSelectedSnapshots([snapshot]); // 단일 선택 (객체)
-    }
-  };
-
-
-  const toggleSection = (snapshotId, section) => {
-    if (activeSection?.snapshotId === snapshotId && activeSection?.section === section) {
-      setActiveSection(null); // 현재 열려있다면 닫음
-    } else {
-      setActiveSection({ snapshotId, section }); // 새로운 섹션 열기
-    }
-  };
-
+  const openPopup = (popupType) => { setActivePopup(popupType) };
+  const closePopup = () => { setActivePopup(null) };
 
   const {
     data: snapshots,
-  } = useSnapshotFromVM(vmId, toTableItemPredicateSnapshots);
-  function toTableItemPredicateSnapshots(snapshot) {
-    return {
-      id: snapshot?.id ?? '',
-      vmId: snapshot?.vmVo?.id ?? '',
-      name: snapshot?.description ?? '',
-      status: snapshot?.status ?? '',
-      fqdn: snapshot?.fqdn ?? '',
-      created: snapshot?.creationDate ?? 'N/A',
-      vmStatus: snapshot?.vmVo?.status ?? 'N/A',
+    isLoading: isSnapshotsLoading ,
+    isError: isSnapshotsError,
+    isSuccess: isSnapshotsSuccess,
+  } = useSnapshotsFromVM(vmId, (snapshot) => ({
+    ...snapshot,
+    id: snapshot?.id,
+    description: snapshot?.description,
+    status: snapshot?.status,
+    created: snapshot?.date ?? "현재",
+    persistMemory: snapshot?.persistMemory ?? "",
+    cpuCore: `${snapshot?.vmVo?.cpuTopologyCnt} (${snapshot?.vmVo?.cpuTopologyCore}:${snapshot?.vmVo?.cpuTopologySocket}:${snapshot?.vmVo?.cpuTopologyThread})`,
+    memorySize: convertBytesToMB(snapshot?.vmVo?.memorySize) ?? "",
+    memoryActual: convertBytesToMB(snapshot?.vmVo?.actualSize) ?? "",
 
-      memorySize: snapshot?.vmVo?.memorySize ?? 'N/A',
-      memoryActual: snapshot?.vmVo?.actualSize
-        ? `${(snapshot.vmVo?.actualSize / (1024 ** 3)).toFixed(2)} GB`
-        : 'N/A', // 크기
-      creationDate: snapshot?.date ?? 'N/A', // 생성 일자
-      snapshotCreationDate: snapshot?.snapshotDiskVos?.[0]?.createDate ?? 'N/A', // 스냅샷 생성일
-      alias: snapshot?.snapshotDiskVos?.[0]?.alias || '없음', // 디스크 별칭
-      description: snapshot?.snapshotDiskVos?.[0]?.description || '없음', // 스냅샷 설명
-      target: snapshot?.vmVo?.name || '없음', // 연결 대상
-      diskSnapshotId: snapshot?.snapshotDiskVos?.[0]?.id || '', // 디스크 스냅샷 ID
-    };
-  }
+    snapshotDisks: snapshot?.snapshotDiskVos?.map((disk) => ({
+      id: disk?.id || '',
+      alias: disk?.alias || '',
+      description: disk?.description || '',
+      provisionedSize: convertBytesToGB(disk?.provisionedSize),
+      actualSize: convertBytesToGB(disk?.actualSize),
+      sparse: disk?.sparse ? '씬' : '사전 할당',
+      format: disk?.format || '',
+      status: disk?.status || '',
+    })) || [],
 
-  const { data: disks } = useDisksFromVM(vmId, (e) => ({
-    ...e,
-    snapshot_check: (
-      <input
-        type="checkbox"
-        name="diskSelection"
-        onChange={(e) => setBootable(e.target.checked)}
-      />
-    ),
-    alias: e?.diskImageVo?.alias,
-    description: e?.diskImageVo?.description,
+    nicVos: snapshot?.nicVos?.map((nic) => ({
+      id: nic?.id,
+      name: nic?.name,
+      network: nic?.networkVo?.name,
+      vnicProfile: nic?.vnicProfileVo?.name,
+    })) || [],
   }));
-
+  
   const {
     data: snapshotdetail,
   } = useSnapshotDetailFromVM(vmId, selectedSnapshots[0]?.id, (e) => ({
@@ -122,39 +93,42 @@ const VmSnapshots = ({ vmId }) => {
       status: disk?.status || 'N/A',
     })) || [],
   }));
+
+  const toggleSnapshotSelection = (snapshot, event) => {
+    setSelectedSnapshots((prev) =>
+      event.ctrlKey
+        ? prev.some((item) => item.id === snapshot.id)
+          ? prev.filter((item) => item.id !== snapshot.id)
+          : [...prev, snapshot]
+        : [snapshot]
+    );
+  };
+
+  const toggleSection = (snapshotId, section) => {
+    setActiveSection((prev) =>
+      prev?.snapshotId === snapshotId && prev?.section === section ? null : { snapshotId, section }
+    );
+  };
+
   // 외부클릭
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      const snapshotList = document.querySelector('.snapshot_list');
-      const excludeElements = document.querySelectorAll('.header-right-btns, .snap_create_btn'); // 제외할 영역들
-      const isExcluded = Array.from(excludeElements).some((el) => el.contains(event.target));
-
-      if (!isExcluded && snapshotList && !snapshotList.contains(event.target)) {
-        setSelectedSnapshots([]); // 선택 해제
-        setActiveSection(null); // 모든 섹션 닫기
+      if (!event.target.closest('.snapshot_list, .header-right-btns, .snap_create_btn')) {
+        setSelectedSnapshots([]);
+        setActiveSection(null);
       }
     };
 
     document.addEventListener('click', handleOutsideClick);
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
-    };
+    return () => document.removeEventListener('click', handleOutsideClick);
   }, []);
 
 
 
-  useEffect(() => {
-    if (snapshotdetail) {
-      console.log(' 유유스냅샷데이터:', snapshotdetail);
-    }
-  }, [snapshotdetail]);
-
   return (
     <>
       <div className="header-right-btns">
-        <button className="snap_create_btn" onClick={() => openPopup('new')}>
-          생성
-        </button>
+        <button className="snap_create_btn" onClick={() => openPopup('new')}>생성</button>
         <button className='disabled'>미리보기</button>
         <button className='disabled'>커밋</button>
         <button className='disabled'>되돌리기</button>
@@ -162,11 +136,8 @@ const VmSnapshots = ({ vmId }) => {
           className="snap_delete_btn"
           onClick={(e) => {
             e.stopPropagation(); // 이벤트 전파 방지
-            if (selectedSnapshots.length) {
-              toggleModal('delete', true); // 모달 열기
-            } else {
-              console.error('No snapshots selected for deletion.');
-            }
+            if (selectedSnapshots.length) {toggleModal('delete', true); } 
+            else {console.error('No snapshots selected for deletion.');}
           }}
           disabled={!selectedSnapshots.length} // 선택된 항목이 없으면 비활성화
         >
@@ -174,25 +145,24 @@ const VmSnapshots = ({ vmId }) => {
         </button>
         <button className='disabled'>복제</button>
       </div>
-      <span>선택된 ID: {selectedSnapshots.map((snap) => snap.id).join(', ') || '없음'}</span>
+      <span>ID: {selectedSnapshots.map((snap) => snap.id).join(', ') || '없음'}</span>
+
       <div className="snapshot_list " onClick={(e) => e.stopPropagation()}>
         {snapshots && snapshots.length > 0 ? (
           snapshots.map((snapshot) => (
+            
             <div>
               <div
                 onClick={(event) => toggleSnapshotSelection(snapshot, event)} // snapshot-content의 클릭 이벤트
                 className="snapshot-content"
-                style={{
-                  border: selectedSnapshots.some((item) => item.id === snapshot.id) ? '1px solid #b9b9b9' : 'none',
-                }}
+                style={{border: selectedSnapshots.some((item) => item.id === snapshot.id) ? '1px solid #b9b9b9' : 'none',}}
               >
                 <div className="snapshot-content-left">
                   <div><FontAwesomeIcon icon={faCamera} fixedWidth /></div>
-                  <span>{snapshot.name || 'Unnamed Snapshot'}</span>
+                  <span>{snapshot?.description || 'Unnamed'}</span>
                 </div>
 
                 <div className="snapshot-content-right">
-                  {/* 일반 섹션 */}
                   <div
                     onClick={() => toggleSection(snapshot.id, 'general')}
                     style={{
@@ -202,11 +172,7 @@ const VmSnapshots = ({ vmId }) => {
                     }}
                   >
                     <FontAwesomeIcon
-                      icon={
-                        activeSection?.snapshotId === snapshot.id && activeSection?.section === 'general'
-                          ? faChevronDown
-                          : faChevronRight
-                      }
+                      icon={activeSection?.snapshotId === snapshot.id && activeSection?.section === 'general'? faChevronDown: faChevronRight}
                       fixedWidth
                     />
                     <span>일반</span>
