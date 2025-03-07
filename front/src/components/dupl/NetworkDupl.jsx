@@ -6,15 +6,17 @@ import TableRowClick from "../table/TableRowClick";
 import NetworkModals from "../modal/network/NetworkModals";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
-import "./Dupl.css"
+import "./Dupl.css";
+import SearchBox from "../button/SearchBox";
+import useSearch from "../button/UseSearch";
 
 /**
  * @name NetworkDupl
- * @description ...
+ * @description 네트워크 목록을 표시하는 컴포넌트 (검색 및 테이블 포함)
  *
- * @param {Array} networks
- * @param {string[]} columns
- * @returns
+ * @param {Array} networks - 네트워크 데이터 배열
+ * @param {string[]} columns - 테이블 컬럼 정보
+ * @returns {JSX.Element}
  */
 const NetworkDupl = ({
   isLoading, isError, isSuccess,
@@ -24,56 +26,58 @@ const NetworkDupl = ({
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedNetworks, setSelectedNetworks] = useState([]);
-  const selectedIds = (Array.isArray(selectedNetworks) ? selectedNetworks : [])
-    .map((network) => network.id)
-    .join(", ");
 
+  // 데이터를 변환 (검색 가능하도록 `searchText` 필드 추가)
+  const transformedData = networks.map((network) => ({
+    ...network,
+    vlan: network?.vlan === 0 ? "-" : network?.vlan,
+    mtu: network?.mtu === 0 ? "기본값(1500)" : network?.mtu,
+    datacenter: (
+      <TableRowClick type="datacenter" id={network?.datacenterVo?.id}>
+        {network?.datacenterVo?.name}
+      </TableRowClick>
+    ),
+    searchText: `${network?.name} ${network?.vlan} ${network?.mtu} ${network?.datacenterVo?.name || ""}`
+  }));
+
+  // 변환된 데이터에서 검색 적용
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
+
+  const selectedIds = selectedNetworks.map((network) => network.id).join(", ");
   const handleNameClick = (id) => navigate(`/networks/${id}`);
 
+  // 모달 열기 / 닫기
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
 
   return (
     <>
       <div className="dupl-header-group">
-        <div className="nomal-search-box">
-          <input
-            type="text"
-            placeholder="Search..."
-          />
-          <button>
-            <FontAwesomeIcon icon={faRefresh} fixedWidth />
-          </button>
-        </div>
-        <NetworkActionButtons className="dupl-header-action-buttons"
+        {showSearchBox && (
+          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        )}
+        <NetworkActionButtons 
+          className="dupl-header-action-buttons"
           openModal={openModal}
           isEditDisabled={selectedNetworks.length !== 1}
           isDeleteDisabled={selectedNetworks.length === 0}
         />
       </div>
-      
-      {/* <span style={{fontSize:"20px"}}>ID: {selectedIds}</span> */}
 
+      {/* 테이블 컴포넌트 */}
       <TablesOuter
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        isLoading={isLoading} 
+        isError={isError} 
+        isSuccess={isSuccess}
         columns={columns}
-        data={networks.map((network) => ({
-          ...network,
-          // name: <TableRowClick type="network" id={network?.id}>{network?.name}</TableRowClick>,
-          vlan: network?.vlan === 0 ? "-" : network?.vlan,
-          mtu: network?.mtu === 0 ? "기본값(1500)" : network?.mtu,
-          datacenter: (
-            <TableRowClick type="datacenter" id={network?.datacenterVo?.id}>
-              {network?.datacenterVo?.name}
-            </TableRowClick>
-          ),
-        }))}
-        showSearchBox={showSearchBox}
+        data={filteredData} 
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedNetworks(selectedRows)}
         clickableColumnIndex={[0]}
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        multiSelect={true} // 다중 선택 활성화
+        multiSelect={true} 
         onContextMenuItems={(row) => [
           <NetworkActionButtons
             openModal={openModal}

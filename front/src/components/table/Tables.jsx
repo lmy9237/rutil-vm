@@ -25,6 +25,8 @@ const Tables = ({
   onContextMenuItems = false,
   onClickableColumnClick = () => {},
   showSearchBox = false,
+  searchQuery = "",  // ✅ 기본값 추가
+  setSearchQuery = () => {}, // ✅ 기본값 추가
 }) => {
   const [selectedRowIndex, setSelectedRowIndex] = useState(null); // 선택된 행의 인덱스를 관리
   const [tooltips, setTooltips] = useState({}); // 툴팁 상태 관리
@@ -32,7 +34,7 @@ const Tables = ({
   const [selectedRows, setSelectedRows] = useState([]); // ctrl다중선택택
 
   // 검색박스
-  const [searchQuery, setSearchQuery] = useState("");
+
   // 우클릭 메뉴 위치 관리
   const [contextMenu, setContextMenu] = useState(null);
   const handleContextMenu = (e, rowIndex) => {
@@ -83,6 +85,7 @@ const Tables = ({
   }, [onRowClick]);
 
   // 테이블 정렬기능
+  
   const [sortedData, setSortedData] = useState(data);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const sortData = (key, direction) => {
@@ -107,7 +110,7 @@ const Tables = ({
     let filteredData = data;
   
     // 검색 기능 추가
-    if (searchQuery.trim() !== "") {
+    if (searchQuery?.trim() !== "") { 
       filteredData = data.filter((row) =>
         columns.some((column) =>
           String(row[column.accessor] ?? "")

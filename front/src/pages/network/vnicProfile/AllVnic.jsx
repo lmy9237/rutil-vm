@@ -37,6 +37,7 @@ const AllVnic = () => {
           isSuccess={isVnicProfilesSuccess}
           columns={TableColumnsInfo.VNIC_PROFILES}
           vnicProfiles={vnicProfiles || []}
+          showSearchBox={true}
         />
       </div>
     </div>

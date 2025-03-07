@@ -57,7 +57,7 @@ const VmActionButtons = ({
   ];
 
   return (
-    <div className={wrapperClass} style={wrapperClass === "header-right-btns" ? { marginLeft: "230px" } : {}}>
+    <div className={wrapperClass}>
       {basicActions.map(({ type, label, disabled }) => (
         <button key={type} onClick={() => openModal(type)} disabled={disabled}  className='right-click-menu-btn'>
           {label}

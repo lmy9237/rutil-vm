@@ -31,6 +31,7 @@ const AllTemplates = () => {
           isLoading={isTemplatesLoading}
           isError={isTemplatesError}
           isSuccess={isTemplatesSuccess}
+          showSearchBox={true}
         />
       </div>
     </div>
