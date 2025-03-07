@@ -77,24 +77,23 @@ interface ItVmService {
 	@Throws(Error::class)
 	fun remove(vmId: String, diskDelete: Boolean): Boolean
 
-	/**
-	 * [ItVmService.addVmwareInfo]
-	 * 가상머신 가져오기- vmware 정보등록
-	 *
-	 * @param
-	 * @return
-	 */
-	@Throws(Error::class)
-	fun addVmwareInfo(externalVo: ExternalVo): ExternalVo?
+	// /**
+	//  * [ItVmService.addVmwareInfo]
+	//  * 가상머신 가져오기- vmware 정보등록
+	//  *
+	//  * @param
+	//  * @return
+	//  */
+	// @Throws(Error::class)
+	// fun addVmwareInfo(externalVo: ExternalVo): ExternalVo?
 	/**
 	 * [ItVmService.importExternalVm]
 	 * 가상머신 가져오기 (Vmware)
 	 *
-	 * @param externalVmVo [ExternalVmVo]
-	 * @return [ExternalVmVo]
+	 * @param externalVo [ExternalVo]
+	 * @return [ExternalVo]
 	 *
-	 * ExternalHostProviders
-	 * ExternalHostProvider 를 이용해 외부 공급자를 추가하고 조회하는 방식같음
+	 * ExternalHostProviders 를 이용해 외부 공급자를 추가하고 조회하는 방식같음
 	 *
 	 * POST /externalvmimports
 	 * <external_vm_import>
@@ -113,7 +112,7 @@ interface ItVmService {
 	 * </external_vm_import>
 	 */
 	@Throws(Error::class)
-	fun importExternalVm(externalVo: ExternalVo): ExternalVo?
+	fun importExternalVm(externalVmVo: ExternalVmVo): ExternalVmVo?
 
 	/**
 	 * [ItVmService.findAllApplicationsFromVm]
@@ -263,21 +262,22 @@ class VmServiceImpl(
 		return res.isSuccess
 	}
 
-	@Throws(Error::class)
-	override fun addVmwareInfo(externalVo: ExternalVo): ExternalVo? {
-		log.info("addVmwareInfo ...  externalVo: {}", externalVo)
-		val res: ExternalHostProvider? = conn.addExternalHostProvider(
-			externalVo.toExternalHostProviderBuilder()
-		).getOrNull()
-		return res?.toExternalHostProvider()
-	}
+	// @Throws(Error::class)
+	// override fun addVmwareInfo(externalVo: ExternalVo): ExternalVo? {
+	// 	log.info("addVmwareInfo ...  externalVo: {}", externalVo)
+	// 	val res: ExternalHostProvider? = conn.addExternalHostProvider(
+	// 		externalVo.toExternalHostProviderBuilder()
+	// 	).getOrNull()
+	// 	return res?.toExternalHostProvider()
+	// }
 
 	@Throws(Error::class)
-	override fun importExternalVm(externalVo: ExternalVo): ExternalVo? {
-		log.info("importExternalVm ...  externalVmVo: {}", externalVo)
-		// val res: Result<Boolean> = conn.addExternalVmImport()
-		// return res.isSuccess
-		TODO("tsta")
+	override fun importExternalVm(externalVmVo: ExternalVmVo): ExternalVmVo? {
+		log.info("importExternalVm ...  externalVmVo: {}", externalVmVo)
+		val res: ExternalVmImport? = conn.addExternalVmImport(
+			externalVmVo.toExternalVmImportBuilder()
+		).getOrNull()
+		return res?.toExternalVmImport()
 	}
 
 	@Throws(Error::class)

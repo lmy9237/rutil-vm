@@ -169,11 +169,11 @@ class VmController: BaseController() {
 
 	@ApiOperation(
 		httpMethod="POST",
-		value="가상머신 가져오기 - vmware 계정 host 공급자에 생성",
-		notes="가상머신을 생성한다"
+		value="가상머신 가져오기 - Vmware vm 가져오기",
+		notes="Vmware 에 있는 가상머신을 가져온다"
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name="externalVo", value="계정정보", dataTypeClass=ExternalVo::class, paramType="body"),
+		ApiImplicitParam(name="externalVmVo", value="vmware", dataTypeClass=ExternalVmVo::class, paramType="body"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED"),
@@ -182,13 +182,13 @@ class VmController: BaseController() {
 	@PostMapping("/vmware")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
-	fun addVmware(
-		@RequestBody externalVo: ExternalVo? = null,
-	): ResponseEntity<ExternalVo?> {
-		if (externalVo == null)
+	fun exportVmware(
+		@RequestBody externalVmVo: ExternalVmVo? = null,
+	): ResponseEntity<ExternalVmVo?> {
+		if (externalVmVo == null)
 			throw ErrorPattern.EXTERNAL_HOST_PROVIDER_NOT_FOUND.toException()
-		log.info("/computing/vms/vmware ... vmware 계정등록")
-		return ResponseEntity.ok(iVm.addVmwareInfo(externalVo))
+		log.info("/computing/vms/vmware ... vmware 계정등록 {}", externalVmVo)
+		return ResponseEntity.ok(iVm.importExternalVm(externalVmVo))
 	}
 
 
