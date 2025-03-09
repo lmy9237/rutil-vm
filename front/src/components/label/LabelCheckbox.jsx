@@ -1,4 +1,3 @@
-import LabelInput from "./LabelInput";
 
 /**
  * @name LabelCheckbox

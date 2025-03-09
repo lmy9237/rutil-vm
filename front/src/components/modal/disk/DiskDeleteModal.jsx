@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import BaseModal from "../BaseModal";
-import { warnButton, xButton } from '../../Icon';
+import { warnButton } from '../../Icon';
 import { useDeleteDisk } from '../../../api/RQHook';
 
 const DiskDeleteModal = ({ isOpen, onClose, data }) => {
@@ -38,7 +38,6 @@ const DiskDeleteModal = ({ isOpen, onClose, data }) => {
     });
   };
 
-  console.log("...")
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"디스크"}

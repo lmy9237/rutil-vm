@@ -6,6 +6,7 @@ import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useAddSnapshotFromVM, useDisksFromVM } from "../../../api/RQHook";
 import "./MVm.css";
 import LabelInput from "../../label/LabelInput";
+import LabelCheckbox from "../../label/LabelCheckbox";
 
 const initialFormState = {
   id: "",
@@ -27,34 +28,31 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
   const [selectedDisks, setSelectedDisks] = useState([]); // 체크된 디스크 목록
 
   const handleDiskSelection = (disk, isChecked) => {
-    setSelectedDisks(
-      (prev) =>
-        isChecked
-          ? [...prev, disk] // 체크되면 추가
-          : prev.filter((d) => d.id !== disk.id) // 체크 해제되면 제외
+    setSelectedDisks((prev) =>
+      isChecked
+        ? [...prev, disk]
+        : prev.filter((d) => d.id !== disk.id)
     );
   };
 
   const handleFormSubmit = () => {
-
     const dataToSubmit = {
       ...formState,
-      diskAttachmentVos:
-        selectedDisks.length > 0
-          ? selectedDisks.map((disk) => ({
-              id: disk.id,
-              interface_: "IDE",
-              logicalName: disk.alias,
-              diskImageVo: {
-                id: disk.id,
-                alias: disk.alias,
-                description: disk.description,
-                format: "COW",
-                imageId: disk.imageId,
-                storageDomainVo: disk.storageDomainVo,
-              },
-            }))
-          : [], // 체크된 디스크가 없으면 빈 배열
+      diskAttachmentVos: selectedDisks.length > 0 
+      ? selectedDisks.map((disk) => ({
+          id: disk.id,
+          interface_: "IDE",
+          logicalName: disk.alias,
+          diskImageVo: {
+            id: disk.id,
+            alias: disk.alias,
+            description: disk.description,
+            format: "COW",
+            imageId: disk.imageId,
+            storageDomainVo: disk.storageDomainVo,
+          },
+        }))
+      : [],
     };
 
     addSnapshotFromVM(
@@ -105,6 +103,14 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
                     />
                   ),
                 })) || []}
+              />
+            </div>
+            <div>
+              <LabelCheckbox 
+                label={"메모리 저장"}
+                value={formState.persistMemory}
+                checked
+                onChange={(e) => setFormState((prev) => ({ ...prev, persistMemory: e.target.value }))}
               />
             </div>
           </div>

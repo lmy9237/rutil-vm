@@ -408,6 +408,16 @@ const TableColumnsInfo = {
     { header: '디스크 스냅샷 ID', accessor: 'id', clickable: false },
   ],
   
+  SNAPSHOT_INFO_FROM_VM: [
+    { header: '날짜', accessor: 'date', clickable: false, width: '5%' },
+    { header: '상태', accessor: 'status', clickable: false, width: '5%' },
+    { header: '메모리', accessor: 'memorySize', clickable: false },
+    { header: '설명', accessor: 'description', clickable: false },
+    { header: '설정된 메모리', accessor: 'memorySize', clickable: false },
+    { header: '할당할 실제 메모리', accessor: 'memoryActual', clickable: false },
+    { header: 'CPU 코어 수', accessor: 'cpuCore', clickable: false },
+  ],
+  
   SNAPSHOT_DISK_FROM_VM: [
     { header: '상태', accessor: 'status', clickable: false, width: '5%' },
     { header: '별칭', accessor: 'alias', clickable: false, width: '17%' },
@@ -418,6 +428,23 @@ const TableColumnsInfo = {
     { header: '인터페이스', accessor: 'interface', clickable: false },
     { header: '설명', accessor: 'description', clickable: false },
     { header: '디스크 스냅샷 ID', accessor: 'id', clickable: false, width: '16%' },
+  ],
+  
+  SNAPSHOT_NIC_FROM_VM: [
+    { header: '이름', accessor: 'name', clickable: false, width: '10%' },
+    { header: '네트워크 이름', accessor: 'networkName', clickable: false, width: '15%' },
+    { header: '프로파일 이름', accessor: 'profileName', clickable: false, width: '15%' },
+    { header: '유형', accessor: 'interface', clickable: false, width: '10%' },
+    { header: 'MAC', accessor: 'macAddress', clickable: false, width: '15%' },
+    { header: 'Rx 속도 (Mbps)', accessor: 'rxSpeed', clickable: false, width: '10%' },
+    { header: 'Tx 속도 (Mbps)', accessor: 'txSpeed', clickable: false, width: '10%' },
+    { header: '중단 (Pkts)', accessor: 'rxTotalError', clickable: false, width: '10%' },
+  ],
+  
+  SNAPSHOT_APPLICATION_FROM_VM: [
+    { header: '애플리케이션 이름', accessor: 'name', clickable: false, width: '10%' },
+    { header: '버전', accessor: 'version', clickable: false, width: '15%' },
+    { header: '설명', accessor: 'description', clickable: false, width: '15%' },
   ],
 
   GET_VMS_TEMPLATES: [
