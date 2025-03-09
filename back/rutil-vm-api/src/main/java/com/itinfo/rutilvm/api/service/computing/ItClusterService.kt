@@ -340,8 +340,6 @@ class ClusterServiceImpl(
 	override fun findAllOsSystemFromCluster(clusterId: String): List<OsVo> {
 		log.info("findAllOsSystemFromCluster ... clusterId:{}", clusterId)
 		val cluster: Cluster? = conn.findCluster(clusterId).getOrNull()
-		log.info("findAllOsSystemFromCluster ... clusterId:{}", cluster?.name())
-
 		val res: List<OperatingSystemInfo> = conn.findAllOperatingSystems()
 			.getOrDefault(listOf())
 			.filter { it.architecture() == cluster?.cpu()?.architecture() }

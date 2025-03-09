@@ -62,6 +62,13 @@ fun Vm.fromVmToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 fun List<Vm>.fromVmsToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromVmsToIdentifiedVos.map { it.fromVmToIdentifiedVo() }
 
+fun Snapshot.fromSnapshotToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
+	id { id() }
+	name { if (descriptionPresent()) description() else "" }
+}
+fun List<Snapshot>.fromSnapshotsToIdentifiedVos(): List<IdentifiedVo> =
+	this@fromSnapshotsToIdentifiedVos.map { it.fromSnapshotToIdentifiedVo() }
+
 fun Template.fromTemplateToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }
@@ -99,7 +106,7 @@ fun VnicProfile.fromVnicProfileToIdentifiedVo(): IdentifiedVo = IdentifiedVo.bui
 fun List<VnicProfile>.fromVnicProfilesToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromVnicProfilesToIdentifiedVos.map { it.fromVnicProfileToIdentifiedVo() }
 
-fun OpenStackNetworkProvider.fromOpenStackNetworkProviderToIdentifiedVo() = IdentifiedVo.builder { 
+fun OpenStackNetworkProvider.fromOpenStackNetworkProviderToIdentifiedVo() = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }
 }

@@ -11,10 +11,14 @@ import ReactApexChart from 'react-apexcharts';
  * 
  * @todo 값 부여
  */
-const VmGeneralChart = () => {
+const VmGeneralChart = ({diskData}) => {
+  const categories = diskData.map((disk) => disk.alias);
+  const seriesData = diskData.map((disk) => disk.virtualSize / (1024 ** 3)); // GB 단위 변환
+
   const [state, setState] = React.useState({
     series: [
-      { data: [540, 580, 690, 1100, 1200, 1380], },
+      { data: seriesData, },
+      // { data: [540, 580, 690, 1100, 1200, 1380], },
     ],
     options: {
       chart: {
@@ -30,7 +34,8 @@ const VmGeneralChart = () => {
       },
       dataLabels: { enabled: false },
       xaxis: {
-        categories: ['ex1', 'ex1', 'ex1', 'ex1', 'ex1', 'ex1',],
+        categories: categories,
+        // categories: ['ex1', 'ex1', 'ex1', 'ex1', 'ex1', 'ex1',],
       },
     },
   });

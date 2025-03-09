@@ -1,6 +1,5 @@
 package com.itinfo.controller
 
-import com.itinfo.ItInfoConstant
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.model.DataCenterVo
 import com.itinfo.service.DataCenterService
@@ -41,7 +40,7 @@ class DataCenterController {
 			dataCenterService.retrieveDataCenters()
 		return asJsonResponse(dataCenters)
 	}
-	
+
 	companion object {
 		private val log by LoggerDelegate()
 	}

@@ -780,12 +780,12 @@ fun Vm.toVmVo(conn: Connection): VmVo {
     val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
     val disk: Disk? = cdrom?.file()?.id()?.let { conn.findDisk(it).getOrNull() }
     val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vm.id()).getOrDefault(listOf())
+	val snapshots: List<Snapshot> = conn.findAllSnapshotsFromVm(vm.id()).getOrDefault(listOf())
 
     return VmVo.builder {
         id { vm.id() }
         name { vm.name() }
         status { vm.status() }
-        upTime { statistics.findVmUptime() }
         creationTime { ovirtDf.format(vm.creationTime()) }
         memoryInstalled { statistics.findMemory("memory.installed") }
         memoryUsed { statistics.findMemory("memory.used") }
@@ -793,11 +793,25 @@ fun Vm.toVmVo(conn: Connection): VmVo {
         memoryCached { statistics.findMemory("memory.cached") }
         memoryFree { statistics.findMemory("memory.free") }
         memoryUnused { statistics.findMemory("memory.unused") }
-        fqdn { vm.fqdn() }
-        ipv4 { nics.findVmIpv4(conn, vm.id()) }
-        ipv6 { nics.findVmIpv6(conn, vm.id()) }
+		if (vm.status() == VmStatus.UP) {
+			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
+			val nics: List<Nic> = conn.findAllNicsFromVm(vm.id()).getOrDefault(listOf())
+			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
+			fqdn { vm.fqdn() }
+			upTime { statistics.findVmUptime() }
+			hostVo { host?.fromHostToIdentifiedVo() }
+			ipv4 { nics.findVmIpv4(conn, vm.id()) }
+			ipv6 { nics.findVmIpv6(conn, vm.id()) }
+			usageDto { statistics.toVmUsage() }
+		} else {
+			fqdn { null }
+			upTime { null }
+			hostVo { null }
+			ipv4 { null }
+			ipv6 { null }
+			usageDto { null }
+		}
         hostEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
-        hostVo { host?.fromHostToIdentifiedVo() }
         nicVos { nics.toVmNics(conn, vm.id()) }
         diskAttachmentVos { diskAttachments.toDiskAttachmentVos(conn) }
         dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
@@ -827,7 +841,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
         timeOffset { vm.timeZone().name() }
         cloudInit { vm.initializationPresent() }
         hostName { if (vm.initializationPresent()) vm.initialization().hostName() else "" }
-       timeStandard { vm.timeZone().toString() }
+        timeStandard { vm.timeZone().toString() }
         script { if (vm.initializationPresent()) vm.initialization().customScript() else "" }
         monitor { if(vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
         usb { if(vm.usbPresent()) vm.usb().enabled() else false }
@@ -840,6 +854,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 //            }
 //            else listOf()
 //        }
+		snapshotVos { snapshots.fromSnapshotsToIdentifiedVos() }
         migrationMode { vm.placementPolicy().affinity().value() }
         migrationEncrypt { vm.migration().encrypted() }
         ha { vm.highAvailability().enabled() }

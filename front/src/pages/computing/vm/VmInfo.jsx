@@ -75,9 +75,7 @@ const VmInfo = () => {
   const handleTabClick = (tab) => {
     console.log(`VmInfo > handleTabClick ... vmId: ${vmId}`)
     const path =
-      tab === "general"
-        ? `/computing/vms/${vmId}`
-        : `/computing/vms/${vmId}/${tab}`;
+      tab === "general"? `/computing/vms/${vmId}` : `/computing/vms/${vmId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
   };
@@ -144,12 +142,23 @@ const VmInfo = () => {
       disabled: !isUp,
       onClick: () => openModal("powerOff"),
     },
-    { type: "snapshots", label: "스냅샷 생성" },
-    { type: "migration", label: "마이그레이션" },
+    { type: "snapshots", 
+      label: "스냅샷 생성",
+      disabled: !isUp,
+      onClick: () => openModal("snapshot")
+    },
+    { 
+      type: "migration", 
+      label: "마이그레이션" 
+    },
   ];
 
   const popupItems = [
-    { type: "import", label: "가져오기", onClick: () => openModal("import") },
+    { 
+      type: "import", 
+      label: "가져오기", 
+      onClick: () => openModal("import") 
+    },
     {
       type: "copyVm",
       label: "가상 머신 복제",
@@ -166,7 +175,11 @@ const VmInfo = () => {
       label: "템플릿 생성",
       onClick: () => openModal("templates"),
     },
-    { type: "ova", label: "OVA로 내보내기", onClick: () => openModal("ova") },
+    { 
+      type: "ova", 
+      label: "OVA로 내보내기", 
+      onClick: () => openModal("ova") 
+    },
   ];
 
   return (

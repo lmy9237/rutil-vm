@@ -7,7 +7,7 @@ const InfoTable = ({ tableRows }) => {
       <tbody>
         {tableRows.map((row, index) => (
           <tr key={index}>
-            <th>{row.label}:</th>
+            <th>{row.label}</th>
             <td>{row.value}</td>
           </tr>
         ))}
