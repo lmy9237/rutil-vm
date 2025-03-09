@@ -99,16 +99,16 @@
   background: linear-gradient(to bottom, rgba(200, 200, 200, 0.1), rgba(200, 200, 200, 0.3)); 
 }
 .event-section {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+  max-height: 78%;
+  display: flex;
+  flex-direction: column;
 }
 .event-section.open {
   max-height: 400px;
   padding: 10px;
 }
 .bell-content-outer {
-  max-height: 671px;
+  max-height: 78%;
   display: flex;
   flex-direction: column;
 }

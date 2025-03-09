@@ -14,7 +14,7 @@ const BarChart = ({ names, percentages }) => {
     if (chartContainerRef.current) {
       const containerWidth = chartContainerRef.current.clientWidth;
 
-      let width = Math.max(containerWidth * 0.66, 265); // 기본 너비
+      let width = Math.max(containerWidth * 0.66, 200); // 기본 너비
       let height = Math.max(window.innerHeight * 0.25, 200); // 기본 높이
 
       if (window.innerWidth >= 2000) {
