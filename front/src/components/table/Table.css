@@ -83,7 +83,7 @@
 }
 
 .section-table-outer table tbody tr:nth-child(even) {
-  background-color:rgb(248, 248, 248)!important;/* 원하는 배경색 지정 */
+  background-color:rgb(238, 238, 238)!important;/* 원하는 배경색 지정 */
 }
 
 .section-table-outer table tbody tr:hover {
@@ -124,4 +124,12 @@
 }
 .row-click:hover {
   text-decoration: underline;
+}
+/*우클릭메뉴박스*/
+.my-context-menu{
+    position: absolute;
+    background-color: white;
+    z-index: 3;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
+    min-width: 150px;
 }

@@ -77,7 +77,7 @@
   font-size: var(--fs-default-4);
   border: 1px solid rgb(204, 204, 204);
   top: 49px;
-  height: 89.6vh;
+  height: 800px;
   border-radius: 2px;
   box-shadow: -3px 3px 10px rgba(0, 0, 0, 0.2); 
 }
@@ -108,7 +108,7 @@
   padding: 10px;
 }
 .bell-content-outer {
-  max-height: 78%;
+  max-height: 656px;
   display: flex;
   flex-direction: column;
 }

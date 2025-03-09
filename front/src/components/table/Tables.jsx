@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import TableRowLoading from "./TableRowLoading";
 import TableRowNoData from "./TableRowNoData";
@@ -38,22 +39,39 @@ const Tables = ({
   // 우클릭 메뉴 위치 관리
   const [contextMenu, setContextMenu] = useState(null);
   const handleContextMenu = (e, rowIndex) => {
-    // console.log("Tables > handleContextMenu...");
     e.preventDefault();
     const rowData = sortedData[rowIndex];
-
-    // 우클릭 시 해당 행을 선택된 행으로 설정
+  
     setSelectedRows([rowIndex]);
     setSelectedRowIndex(rowIndex);
     if (typeof onRowClick === "function") {
-      onRowClick([rowData]); // 선택된 행 데이터를 전달
+      onRowClick([rowData]);
     }
-
+  
     if (onContextMenuItems) {
       const menuItems = onContextMenuItems(rowData);
+  
+      // 📌 테이블의 위치 계산
+      const tableRect = tableRef.current?.getBoundingClientRect();
+      const menuWidth = 150; // 예상 메뉴 너비
+      const menuHeight = 120; // 예상 메뉴 높이
+      const padding = 10; // 여백을 위한 패딩
+  
+      // 📌 마우스 클릭 위치 (테이블 기준 상대 좌표)
+      let mouseX = e.clientX - (tableRect?.left ?? 0);
+      let mouseY = e.clientY - (tableRect?.top ?? 0);
+  
+      // 📌 화면 바깥으로 나가는 경우 위치 조정
+      if (mouseX + menuWidth > window.innerWidth) {
+        mouseX -= menuWidth + padding;
+      }
+      if (mouseY + menuHeight > window.innerHeight) {
+        mouseY -= menuHeight + padding;
+      }
+  
       setContextMenu({
-        mouseX: e.clientX - 260,
-        mouseY: e.clientY - 200,
+        mouseX,
+        mouseY,
         menuItems,
       });
     } else {
@@ -61,6 +79,8 @@ const Tables = ({
     }
     setContextRowIndex(rowIndex);
   };
+  
+  
 
   const tableRef = useRef(null);
   // 테이블 외부 클릭 시 선택된 행 초기화, 단 메뉴 박스,모달,headerbutton 제외
@@ -368,25 +388,20 @@ const Tables = ({
       </div>
       {/* 우클릭 메뉴 박스 */}
       {contextMenu && (
-        <div
-          ref={menuRef}
-          className="my-context-menu"
-          style={{
-            position: "absolute",
-            top: `${contextMenu.mouseY}px`,
-            left: `${contextMenu.mouseX}px`,
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.16)",
-            fontSize: "0.3rem",
-            backgroundColor: "white",
-            zIndex: "3",
-            borderRadius: "1px",
-          }}
-        >
-          {contextMenu.menuItems.map((item, index) => (
-            <div key={index}>{item}</div>
-          ))}
-        </div>
+      <div
+        ref={menuRef}
+        className="my-context-menu"
+        style={{
+          top: `${contextMenu.mouseY}px`,
+          left: `${contextMenu.mouseX}px`,
+        }}
+      >
+        {contextMenu.menuItems.map((item, index) => (
+          <div className="context-menu-item" key={index}>{item}</div>
+        ))}
+      </div>
       )}
+
       {/* Tooltip */}
       {data &&
         data.map((row, rowIndex) =>

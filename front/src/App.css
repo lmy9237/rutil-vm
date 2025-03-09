@@ -218,6 +218,9 @@ input[disabled] {
   border: 0.3px solid #cbc9c9;
   border-radius:0 !important;
 }
+.right-click-menu-btn:hover{
+    background-color: rgb(238, 238, 238);
+}
 .select-box-outer {
   width: 100%;
   padding: 1% 0.3rem;
