@@ -38,11 +38,14 @@ object Versions {
     const val h2 = "1.4.197"
     const val postgresql = "42.6.0"
 
+	const val commonsCli = "1.4"
     const val commonsDbcp = "1.4"
     const val commonsConf = "1.9"
     const val commonsFileUpload = "1.4"
 
     const val jasypt = "1.9.2"
+	const val jaxwsRi = "2.3.6"
+	const val jaxbRi = "2.3.8"
 
     const val gson = "2.8.0"
     const val jsonSimple = "1.1.1"

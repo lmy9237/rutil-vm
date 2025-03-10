@@ -129,11 +129,22 @@ object Dependencies {
         "org.postgresql:postgresql:${Versions.postgresql}"
 
     val commons = listOf(
+		"commons-cli:commons-cli:${Versions.commonsCli}",
         "commons-dbcp:commons-dbcp:${Versions.commonsDbcp}",
         "commons-configuration:commons-configuration:${Versions.commonsConf}",
         "commons-fileupload:commons-fileupload:${Versions.commonsFileUpload}",
         "org.apache.commons:commons-lang3:3.4",
     )
+	val commonsVMWare = listOf(
+		"commons-cli:commons-cli:${Versions.commonsCli}",
+		"commons-configuration:commons-configuration:${Versions.commonsConf}",
+	)
+	val wsVMWare = listOf(
+		"com.sun.xml.ws:jaxws-ri:${Versions.jaxwsRi}",
+	)
+	val bindVMWare = listOf(
+		"com.sun.xml.bind:jaxb-ri:${Versions.jaxbRi}",
+	)
     val jasypt = listOf(
         "org.jasypt:jasypt:${Versions.jasypt}",
         "org.jasypt:jasypt-spring3:${Versions.jasypt}",
