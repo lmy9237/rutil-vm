@@ -2,20 +2,17 @@ package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.api.configuration.PropertiesConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.repository.history.*
 import com.itinfo.rutilvm.api.repository.history.dto.*
 import com.itinfo.rutilvm.api.repository.history.entity.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
-import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import org.ovirt.engine.sdk4.types.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import java.math.BigDecimal
 import java.util.*
 
 interface ItGraphService {
@@ -68,13 +65,19 @@ interface ItGraphService {
 	 * 선그래프
 	 * @return List<[LineDto]>
 	 */
-	fun hostPerChart(): List<HostUsageDto>
+	fun hostsPerChart(): List<HostUsageDto>
 	/**
 	 * 호스트 memory 사용량 (전체 호스트 평균값)
 	 * 선그래프
 	 * @return List<[LineDto]>
 	 */
 	fun domainPerChart(): List<StorageUsageDto>
+	/**
+	 * 호스트 cpu, memory 사용량 (전체 호스트 평균값)
+	 * 선그래프
+	 * @return List<[LineDto]>
+	 */
+	fun hostPerChart(hostId: String): List<HostUsageDto>
 	/**
 	 * 가상머신 cpu 사용량 top3
 	 * 선그래프
@@ -111,7 +114,7 @@ interface ItGraphService {
 	 * @param hostId 호스트 id
 	 * @return 10분마다 그래프에 찍히게?
 	 */
-	fun totalHostCpuMemoryList(hostId: UUID, limit: Int): List<HostUsageDto>
+	fun totalHostCpuMemoryList(hostId: String, limit: Int): List<HostUsageDto>
 
 	// 호스트 사용량 top3
 	fun hostCpuChart(): List<UsageDto>
@@ -180,8 +183,8 @@ class GraphServiceImpl(
 		return storageDomainSampleHistoryEntities.toStorageCharts(conn)
 	}
 
-	override fun hostPerChart(): List<HostUsageDto> {
-		log.info("hostPerChart ... ")
+	override fun hostsPerChart(): List<HostUsageDto> {
+		log.info("hostsPerChart ... ")
 		val rawData: List<Array<Any>> = hostSamplesHistoryRepository.findHostUsageListChart()
 
 		return rawData.map {
@@ -201,6 +204,19 @@ class GraphServiceImpl(
 			StorageUsageDto(
 				historyDatetime = (it[0] as java.sql.Timestamp).toLocalDateTime(),
 				avgDomainUsagePercent = (it[1] as Number).toDouble(),
+			)
+		}
+	}
+
+	override fun hostPerChart(hostId: String): List<HostUsageDto> {
+		log.info("hostPerChart ... ")
+		val rawData: List<Array<Any>> = hostSamplesHistoryRepository.findHostUsageById(UUID.fromString(hostId))
+
+		return rawData.map {
+			HostUsageDto(
+				historyDatetime = (it[0] as java.sql.Timestamp).toLocalDateTime(),
+				avgCpuUsage = (it[1] as Number).toDouble(),
+				avgMemoryUsage = (it[2] as Number).toDouble()
 			)
 		}
 	}
@@ -235,13 +251,12 @@ class GraphServiceImpl(
 		return storageDomainSampleHistoryEntities.toStorageCharts(conn)
 	}
 
-
 	// 일단 쓰는 곳 없음
-	override fun totalHostCpuMemoryList(hostId: UUID, limit: Int): List<HostUsageDto> {
+	override fun totalHostCpuMemoryList(hostId: String, limit: Int): List<HostUsageDto> {
 		log.info("totalHostCpuMemoryList ... ")
 		val page: Pageable = PageRequest.of(0, limit)
 		val hostSamplesHistoryEntities: List<HostSamplesHistoryEntity> =
-			hostSamplesHistoryRepository.findByHostIdOrderByHistoryDatetimeDesc(hostId, page)
+			hostSamplesHistoryRepository.findByHostIdOrderByHistoryDatetimeDesc(UUID.fromString(hostId), page)
 		val host: Host =
 			conn.findAllHosts("id=$hostId").getOrDefault(listOf())
 				.firstOrNull() ?: run {
@@ -250,7 +265,6 @@ class GraphServiceImpl(
 			}
 		return hostSamplesHistoryEntities.toTotalCpuMemoryUsages(conn, host)
 	}
-
 
 	override fun hostCpuChart(): List<UsageDto> {
 		log.info("hostCpuChart ... ")

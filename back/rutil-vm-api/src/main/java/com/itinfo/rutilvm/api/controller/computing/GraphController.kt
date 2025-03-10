@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.controller.computing
 
+import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.DashBoardVo
 import com.itinfo.rutilvm.api.repository.history.dto.HostUsageDto
@@ -7,6 +8,7 @@ import com.itinfo.rutilvm.api.repository.history.dto.LineDto
 import com.itinfo.rutilvm.api.repository.history.dto.StorageUsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.service.computing.ItGraphService
+import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -107,14 +109,14 @@ class GraphController {
 
 	@ApiOperation(
 		httpMethod="GET",
-		value="Host Per 그래프",
-		notes="Host의 Per 그래프"
+		value="Hosts Per 그래프",
+		notes="Hosts의 Per 그래프"
 	)
-	@GetMapping("/hostPerList")
+	@GetMapping("/hostsPerList")
 	@ResponseBody
-	fun hostPerChart(): ResponseEntity<List<HostUsageDto>> {
-		log.info("----- hostPerChart")
-		return ResponseEntity.ok(graph.hostPerChart())
+	fun hostsPerChart(): ResponseEntity<List<HostUsageDto>> {
+		log.info("----- hostsPerChart")
+		return ResponseEntity.ok(graph.hostsPerChart())
 	}
 
 	@ApiOperation(
@@ -122,11 +124,27 @@ class GraphController {
 		value="StorageDomain Per 그래프",
 		notes="StorageDomain Per 그래프"
 	)
-	@GetMapping("/storageDomainPerList")
+	@GetMapping("/storagesDomainPerList")
 	@ResponseBody
 	fun storageDomainPerList(): ResponseEntity<List<StorageUsageDto>> {
 		log.info("----- storageDomainPerList")
 		return ResponseEntity.ok(graph.domainPerChart())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="Host Per 그래프",
+		notes="Host의 Per 그래프"
+	)
+	@GetMapping("/hostPerList/{hostId}")
+	@ResponseBody
+	fun hostPerChart(
+		@PathVariable hostId: String? = null
+	): ResponseEntity<List<HostUsageDto>> {
+		log.info("----- hostPerChart")
+		if (hostId.isNullOrEmpty())
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		return ResponseEntity.ok(graph.hostPerChart(hostId))
 	}
 
 	@ApiOperation(

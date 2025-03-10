@@ -56,9 +56,30 @@ GROUP BY
     history_datetime
 ORDER BY
     history_datetime DESC
-	LIMIT 10
+LIMIT 10
 	""", nativeQuery = true
 	)
 	fun findHostUsageListChart(): List<Array<Any>>
+
+	@Query(
+		value = """
+        SELECT
+            history_datetime,
+            cpu_usage_percent,
+            memory_usage_percent
+        FROM
+            host_samples_history
+        WHERE
+            host_status = 1
+            AND host_id = :hostId
+            AND CAST(EXTRACT(MINUTE FROM history_datetime) AS INTEGER) % 60 = 0
+        ORDER BY
+            history_datetime DESC
+        LIMIT 14
+    """, nativeQuery = true
+	)
+	fun findHostUsageById(@org.springframework.data.repository.query.Param("hostId") hostId: UUID): List<Array<Any>>
+
+
 
 }
