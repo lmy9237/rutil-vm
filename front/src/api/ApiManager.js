@@ -118,6 +118,18 @@ const ApiManager = {
     url: ENDPOINTS.GET_PER_HOST(),
   }),
   /**
+   * @name ApiManager.getDomain
+   * @description storagedomain size 평균값 불러오는 값
+   * 
+   * @returns 
+   * 
+   * @see Dashboard.js (components)
+   */
+  getDomain: async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.GET_PER_DOMAIN(),
+  }),
+  /**
    * @name ApiManager.getVmCpu
    * @description vmCpu 불러오는 값
    * 

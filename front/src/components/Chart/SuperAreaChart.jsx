@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AreaChart from "./AreaChart";
 
-const SuperAreaChart = ({ vmPer, type }) => {
+const SuperAreaChart = ({ per, type }) => {
   const [series, setSeries] = useState([]);
   const [datetimes, setDatetimes] = useState([]);
 
@@ -15,9 +15,9 @@ const SuperAreaChart = ({ vmPer, type }) => {
   };
 
   useEffect(() => {
-    if (Array.isArray(vmPer) && vmPer.length > 0) {
+    if (Array.isArray(per) && per.length > 0) {
       // `historyDatetime`을 정확히 Date 객체로 변환하여 **오름차순** 정렬
-      const sortedData = [...vmPer].sort(
+      const sortedData = [...per].sort(
         (a, b) => new Date(a.historyDatetime).getTime() - new Date(b.historyDatetime).getTime()
       );
 
@@ -33,6 +33,11 @@ const SuperAreaChart = ({ vmPer, type }) => {
         selectedData = sortedData.map((item) => ({
           x: formatDate(item.historyDatetime),
           y: Math.floor(item.avgMemoryUsage), // 소수점 아래 버림
+        }));
+      } else if (type === "domain") {
+        selectedData = sortedData.map((item) => ({
+          x: formatDate(item.historyDatetime),
+          y: Math.floor(item.avgDomainUsagePercent), // 소수점 아래 버림
         }));
       }
 
@@ -51,7 +56,7 @@ const SuperAreaChart = ({ vmPer, type }) => {
       setSeries([]);
       setDatetimes([]);
     }
-  }, [vmPer, type]);
+  }, [per, type]);
 
   return <AreaChart series={series} datetimes={datetimes} />;
 };

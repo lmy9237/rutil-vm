@@ -13,6 +13,7 @@ const ENDPOINTS = {
   GET_STORAGE_MEMORY: () =>                                                `${ENDPOINT_API_V1}/dashboard/storageMemory`,
 
   GET_PER_HOST: () =>                                                      `${ENDPOINT_API_V1}/dashboard/hostPerList`,
+  GET_PER_DOMAIN: () =>                                                    `${ENDPOINT_API_V1}/dashboard/storageDomainPerList`,
   GET_PER_VM_CPU: () =>                                                    `${ENDPOINT_API_V1}/dashboard/vmCpuPerList`,
   GET_PER_VM_MEMORY: () =>                                                 `${ENDPOINT_API_V1}/dashboard/vmMemoryPerList`,
   GET_PER_VM_NETWORK: () =>                                                `${ENDPOINT_API_V1}/dashboard/vmNetworkPerList`,

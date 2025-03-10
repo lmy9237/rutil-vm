@@ -22,6 +22,7 @@ import {
   useDashboardVmMemory,
   useDashboardMetricStorage,
   useDashboardHost,
+  useDashboardDomain,
 } from "../../api/RQHook";
 import DashboardBoxGroup from "./DashboardBoxGroup";
 import RadialBarChart from "../../components/Chart/RadialBarChart";
@@ -104,6 +105,16 @@ const Dashboard = () => {
     error: hostError,
     isLoading: isHostLoading,
   } = useDashboardHost();
+
+  const {
+    data: domain,
+    status: domainStatus,
+    isRefetching: isDomainRefetching,
+    refetch: domainRefetch,
+    isError: isDomainError,
+    error: domainError,
+    isLoading: isDomainLoading,
+  } = useDashboardDomain();
 
   const {
     data: vmCpu,
@@ -282,7 +293,7 @@ const Dashboard = () => {
             <div className="wave-graph">
               {/* <h2>Per CPU</h2> */}
               <div>
-                <SuperAreaChart vmPer={host} type="cpu"/>
+                <SuperAreaChart per={host} type="cpu"/>
               </div>
             </div>
           </div>
@@ -311,7 +322,7 @@ const Dashboard = () => {
             <div className="wave-graph">
               {/* <h2>Per MEMORY</h2> */}
               <div>
-                <SuperAreaChart vmPer={host} type="memory"/>
+                <SuperAreaChart per={host} type="memory"/>
               </div>
             </div>
           </div>
@@ -344,7 +355,8 @@ const Dashboard = () => {
             <div className="wave-graph">
               {/* <h2>Per Network</h2> */}
               <div>
-                <SuperAreaChart vmPer={host} />
+                {/* <SuperAreaChart per={host} /> */}
+                <SuperAreaChart per={domain} type="domain"/>
               </div>
             </div>
           </div>
