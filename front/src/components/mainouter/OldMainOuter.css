@@ -1,3 +1,4 @@
+/*삭제예정*/
 .apexcharts-menu-icon,
 .apexcharts-toolbar > div {
   display: none;
@@ -152,10 +153,7 @@
   overflow: hidden;
   transition: width 0.1s ease-out;
 }
-.nav .active{
-  background:rgb(218, 236, 245) !important;
-  border-radius:5px;
-}
+
 /* 🔹 크기 조절 핸들 스타일 */
 .resizer {
   width: 5px;

@@ -7,6 +7,7 @@ import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useDataCenter, useTemplate } from "../../../api/RQHook";
 import { checkKoreanName } from "../../../util";
 import "./MDomain.css";
+import FilterButton from "../../button/FilterButton";
 
 const initialFormState = {
   id: "",
@@ -71,7 +72,12 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
     { label: "소스", value: "N/A" },
     { label: "상태 비저장", value: "아니오" },
   ];
-
+  const filterOptions = [
+    { key: "general", label: "일반 정보" },
+    { key: "disk", label: "디스크" },
+    { key: "network", label: "네트워크 인터페이스" },
+  ];
+  
   useEffect(() => {
     if (!isOpen) return setFormState(initialFormState);
     if (datacenter) {
@@ -87,9 +93,6 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
     }
   }, [isOpen, datacenter]);
 
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
 
   const validateForm = () => {
     if (!checkKoreanName(formState.name)) return '이름이 유효하지 않습니다.';
@@ -111,153 +114,140 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
       targetName={isVmMode ? "가상머신" : "템플릿"}
       submitTitle={"가져오기"}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "880px", height: "700px" }} 
     >
-      {/* <div className="get-vm-template modal"> */}
-      <div className="get-modal-content mb-1">
-        <div className="section-table-outer p-0.5">
-          <table>
-            <thead>
-              <tr>
-                {isVmMode ? (
-                  <>
-                    <th>이름</th>
-                    <th>소스</th>
-                    <th>메모리</th>
-                    <th>CPU</th>
-                    <th>아키텍처</th>
-                    <th>디스크</th>
-                    <th>불량 MAC 재배치</th>
-                    <th>부분 허용</th>
-                    <th>클러스터</th>
-                  </>
-                ) : (
-                  <>
-                    <th>별칭</th>
-                    <th>가상 크기</th>
-                    <th>메모리</th>
-                    <th>CPU</th>
-                    <th>아키텍처</th>
-                    <th>디스크</th>
-                    <th>클러스터</th>
-                  </>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {placeholderData.map((item, index) => (
-                <tr key={index}>
+      <div className="popup-content-outer">
+        <div className="get-modal-content mb-1">
+          <div className="section-table-outer p-0.5">
+            <table>
+              <thead>
+                <tr>
                   {isVmMode ? (
-                    // ✅ 가상머신 모드일 때 렌더링
                     <>
-                      <td>{item.alias || "N/A"}</td>  {/* 이름 */}
-                      <td>{item.source || "oVirt"}</td>  {/* 소스 */}
-                      <td>{item.memory || "1024 MB"}</td>  {/* 메모리 */}
-                      <td>{item.cpu || "1"}</td>  {/* CPU */}
-                      <td>{item.architecture || "x86_64"}</td>  {/* 아키텍처 */}
-                      <td>{item.disk || "1"}</td>  {/* 디스크 */}
-                      <td>
-                        <div className="flex">
-                          <input type="checkbox" />  {/* ✅ 불량 MAC 재배치 체크박스 */}
-                          <label>재배치</label>
-                        </div>
-                      </td>
-                      <td>
-                        <input type="checkbox" /> 
-                      </td>  {/* 부분 허용 */}
-                      <td>
-                        <select>
-                          <option value="default">Default</option>
-                          <option value="cluster-01">Cluster-01</option>
-                          <option value="cluster-02">Cluster-02</option>
-                        </select>
-                      </td>  {/* 클러스터 */}
+                      <th>이름</th>
+                      <th>소스</th>
+                      <th>메모리</th>
+                      <th>CPU</th>
+                      <th>아키텍처</th>
+                      <th>디스크</th>
+                      <th>불량 MAC 재배치</th>
+                      <th>부분 허용</th>
+                      <th>클러스터</th>
                     </>
                   ) : (
-                    // ✅ 템플릿 모드일 때 렌더링
                     <>
-                      <td>{item.alias || "N/A"}</td>  {/* 별칭 */}
-                      <td>{item.virtualSize || "N/A"}</td>  {/* 가상 크기 */}
-                      <td>4 GB</td>  {/* 메모리 (임시값) */}
-                      <td>4</td>  {/* CPU (임시값) */}
-                      <td>x86_64</td>  {/* 아키텍처 */}
-                      <td>{item.virtualSize || "N/A"}</td>  {/* 디스크 */}
-                      <td>
-                        <select>
-                          <option value="cluster-01">Cluster-01</option>
-                          <option value="cluster-02">Cluster-02</option>
-                          <option value="cluster-03">Cluster-03</option>
-                        </select>
-                      </td>  {/* 클러스터 */}
+                      <th>별칭</th>
+                      <th>가상 크기</th>
+                      <th>메모리</th>
+                      <th>CPU</th>
+                      <th>아키텍처</th>
+                      <th>디스크</th>
+                      <th>클러스터</th>
                     </>
                   )}
                 </tr>
-              ))}
-          </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div className="get-modal-content">
-        {/* 필터 버튼 */}
-        <div className="host-filter-btns" style={{ marginBottom: "0" }}>
-          <button
-            className={buttonClass("general")}
-            onClick={() => setActiveFilter("general")}
-          >
-            일반 정보
-          </button>
-          <button
-            className={buttonClass("disk")}
-            onClick={() => setActiveFilter("disk")}
-          >
-            디스크
-          </button>
-          <button
-            className={buttonClass("network")}
-            onClick={() => setActiveFilter("network")}
-          >
-            네트워크 인터페이스
-          </button>
-        </div>
-
-        {/* 섹션 변경 */}
-        {activeFilter === "general" && (
-          <div className="get-template-info">
-            {Array.from({ length: 3 }, (_, groupIndex) => (
-              <div key={groupIndex}>
-                {tableRows
-                  .filter((_, index) => index % 3 === groupIndex) // 3등분하여 그룹화
-                  .map(
-                    (row, index) =>
-                      row.label && (
-                        <div key={index}>
-                          <div>{row.label}</div>
-                          <div>{row.value}</div>
-                        </div>
-                      )
-                  )}
-              </div>
-            ))}
+              </thead>
+              <tbody>
+                {placeholderData.map((item, index) => (
+                  <tr key={index}>
+                    {isVmMode ? (
+                      // ✅ 가상머신 모드일 때 렌더링
+                      <>
+                        <td>{item.alias || "N/A"}</td>  {/* 이름 */}
+                        <td>{item.source || "oVirt"}</td>  {/* 소스 */}
+                        <td>{item.memory || "1024 MB"}</td>  {/* 메모리 */}
+                        <td>{item.cpu || "1"}</td>  {/* CPU */}
+                        <td>{item.architecture || "x86_64"}</td>  {/* 아키텍처 */}
+                        <td>{item.disk || "1"}</td>  {/* 디스크 */}
+                        <td>
+                          <div className="flex">
+                            <input type="checkbox" />  {/* ✅ 불량 MAC 재배치 체크박스 */}
+                            <label>재배치</label>
+                          </div>
+                        </td>
+                        <td>
+                          <input type="checkbox" /> 
+                        </td>  {/* 부분 허용 */}
+                        <td>
+                          <select>
+                            <option value="default">Default</option>
+                            <option value="cluster-01">Cluster-01</option>
+                            <option value="cluster-02">Cluster-02</option>
+                          </select>
+                        </td>  {/* 클러스터 */}
+                      </>
+                    ) : (
+                      // ✅ 템플릿 모드일 때 렌더링
+                      <>
+                        <td>{item.alias || "N/A"}</td>  {/* 별칭 */}
+                        <td>{item.virtualSize || "N/A"}</td>  {/* 가상 크기 */}
+                        <td>4 GB</td>  {/* 메모리 (임시값) */}
+                        <td>4</td>  {/* CPU (임시값) */}
+                        <td>x86_64</td>  {/* 아키텍처 */}
+                        <td>{item.virtualSize || "N/A"}</td>  {/* 디스크 */}
+                        <td>
+                          <select>
+                            <option value="cluster-01">Cluster-01</option>
+                            <option value="cluster-02">Cluster-02</option>
+                            <option value="cluster-03">Cluster-03</option>
+                          </select>
+                        </td>  {/* 클러스터 */}
+                      </>
+                    )}
+                  </tr>
+                ))}
+            </tbody>
+            </table>
           </div>
-        )}
+        </div>
 
-        {activeFilter === "disk" && (
-          <TablesOuter
-            columns={TableColumnsInfo.GET_DISK_TEMPLATES}
-            shouldHighlight1stCol={true}
-            onRowClick={{ console }}
-            multiSelect={true}
+        <div className="get-modal-content">
+          {/* 필터 버튼 */}
+          <FilterButton
+            options={filterOptions}
+            activeOption={activeFilter}
+            onClick={setActiveFilter}
           />
-        )}
 
-        {activeFilter === "network" && (
-          <TablesOuter
-            columns={TableColumnsInfo.NETWORK_INTERFACE_FROM_HOST}
-            shouldHighlight1stCol={true}
-            onRowClick={{ console }}
-            multiSelect={true}
-          />
-        )}
+          {/* 섹션 변경 */}
+          {activeFilter === "general" && (
+            <div className="get-template-info">
+              {Array.from({ length: 3 }, (_, groupIndex) => (
+                <div key={groupIndex}>
+                  {tableRows
+                    .filter((_, index) => index % 3 === groupIndex) // 3등분하여 그룹화
+                    .map(
+                      (row, index) =>
+                        row.label && (
+                          <div key={index}>
+                            <div>{row.label}</div>
+                            <div>{row.value}</div>
+                          </div>
+                        )
+                    )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeFilter === "disk" && (
+            <TablesOuter
+              columns={TableColumnsInfo.GET_DISK_TEMPLATES}
+              shouldHighlight1stCol={true}
+              onRowClick={{ console }}
+              multiSelect={true}
+            />
+          )}
+
+          {activeFilter === "network" && (
+            <TablesOuter
+              columns={TableColumnsInfo.NETWORK_INTERFACE_FROM_HOST}
+              shouldHighlight1stCol={true}
+              onRowClick={{ console }}
+              multiSelect={true}
+            />
+          )}
+        </div>
       </div>
     </BaseModal>
   );

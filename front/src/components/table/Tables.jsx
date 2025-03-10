@@ -261,12 +261,11 @@ const Tables = ({
               handleRowClick(rowIndex, e); // 다중 선택 핸들러
             }}
             onContextMenu={(e) => handleContextMenu(e, rowIndex)} // 우클릭 시 메뉴 표시
-            style={{
-              backgroundColor:
-                selectedRows.includes(rowIndex) || contextRowIndex === rowIndex
-                  ? "rgb(218, 236, 245)" // 선택된 행 및 우클릭된 행 색상
-                  : "transparent", // 초기화 색상
-            }}
+            className={`${
+              selectedRows.includes(rowIndex) || contextRowIndex === rowIndex
+                ? "selected-row" // ✅ 추가된 클래스
+                : ""
+            }`}
           >
             {columns.map((column, colIndex) => (
               <td
