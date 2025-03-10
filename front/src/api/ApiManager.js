@@ -106,16 +106,16 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.GET_STORAGE
   }),
   /**
-   * @name ApiManager.getHost
+   * @name ApiManager.getHosts
    * @description host 전체 cpu,memory 평균값 불러오는 값
    * 
    * @returns 
    * 
    * @see Dashboard.js (components)
    */
-  getHost: async () => makeAPICall({
+  getHosts: async () => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.GET_PER_HOST(),
+    url: ENDPOINTS.GET_PER_HOSTS(),
   }),
   /**
    * @name ApiManager.getDomain
@@ -128,6 +128,18 @@ const ApiManager = {
   getDomain: async () => makeAPICall({
     method: "GET", 
     url: ENDPOINTS.GET_PER_DOMAIN(),
+  }),
+  /**
+   * @name ApiManager.getHost
+   * @description host 전체 cpu,memory 평균값 불러오는 값
+   * 
+   * @returns 
+   * 
+   * @see Dashboard.js (components)
+   */
+  getHost: async (hostId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.GET_PER_HOST(hostId),
   }),
   /**
    * @name ApiManager.getVmCpu

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useHost } from "../../../api/RQHook";
+import { useDashboardHost, useHost } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import "./Host.css";
 import InfoTable from "../../../components/table/InfoTable";
+import SuperAreaChart from "../../../components/Chart/SuperAreaChart";
 
 /**
  * @name HostGeneral
@@ -19,6 +20,16 @@ const HostGeneral = ({ hostId }) => {
     isError: isHostError,
     isSuccess: isHostSuccess,
   } = useHost(hostId);
+
+  const {
+    data: hostPer,
+    status: hostPerStatus,
+    isRefetching: isHostPerRefetching,
+    refetch: hostPerRefetch,
+    isError: isHostPerError,
+    error: hostPerError,
+    isLoading: isHostPerLoading,
+  } = useDashboardHost(hostId);
 
   const [activeTab, setActiveTab] = useState("general");
 
@@ -77,7 +88,6 @@ const HostGeneral = ({ hostId }) => {
     { tab: "software", label: "소프트웨어", tableRows: renderSoftwareTab },
   ];
 
-  console.log("...");
   return (
     <div className="host-content-outer">
       <div className="host-tabs">
@@ -90,6 +100,10 @@ const HostGeneral = ({ hostId }) => {
             {label}
           </button>
         ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
+        cpu <SuperAreaChart per={hostPer} type="cpu"/>
+        memory <SuperAreaChart per={hostPer} type="memory"/>
       </div>
 
       <div className="host-table-outer">

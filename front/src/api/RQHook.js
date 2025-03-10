@@ -53,12 +53,12 @@ export const useDashboardStorage = (mapPredicate) => useQuery({
     // return res?.map((e) => mapPredicate(e)) ?? []
   }
 });
-export const useDashboardHost = (mapPredicate) => useQuery({
+export const useDashboardHosts = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['dashboardHost'],
+  queryKey: ['dashboardHosts'],
   queryFn: async () => {
-    console.log(`useDashboardHost ...`);
-    const res = await ApiManager.getHost()
+    console.log(`useDashboardHosts ...`);
+    const res = await ApiManager.getHosts()
     // setShouldRefresh(prevValue => false)
     return res ?? []
     // return res?.map((e) => mapPredicate(e)) ?? []
@@ -70,6 +70,17 @@ export const useDashboardDomain = (mapPredicate) => useQuery({
   queryFn: async () => {
     console.log(`useDashboardDomain ...`);
     const res = await ApiManager.getDomain()
+    // setShouldRefresh(prevValue => false)
+    return res ?? []
+    // return res?.map((e) => mapPredicate(e)) ?? []
+  }
+});
+export const useDashboardHost = (hostId, mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['dashboardHost'],
+  queryFn: async () => {
+    console.log(`useDashboardHost ...`, hostId);
+    const res = await ApiManager.getHost(hostId)
     // setShouldRefresh(prevValue => false)
     return res ?? []
     // return res?.map((e) => mapPredicate(e)) ?? []

@@ -23,6 +23,7 @@ import {
   useDashboardMetricStorage,
   useDashboardHost,
   useDashboardDomain,
+  useDashboardHosts,
 } from "../../api/RQHook";
 import DashboardBoxGroup from "./DashboardBoxGroup";
 import RadialBarChart from "../../components/Chart/RadialBarChart";
@@ -100,11 +101,11 @@ const Dashboard = () => {
     data: host,
     status: hostStatus,
     isRefetching: isHostRefetching,
-    refetch: hostRefetch,
+    refetch: hossRefetch,
     isError: isHostError,
     error: hostError,
     isLoading: isHostLoading,
-  } = useDashboardHost();
+  } = useDashboardHosts();
 
   const {
     data: domain,
@@ -146,35 +147,25 @@ const Dashboard = () => {
     isLoading: isStorageMemoryeLoading,
   } = useDashboardStorageMemory();
 
-  const {
-    data: vmCpuPer,
-    status: vmCpuPerStatus,
-    isRefetching: isVmCpuPerRefetching,
-    refetch: vmCpuPerRefetch,
-    isError: isVmCpuPerError,
-    error: vmCpuPerError,
-    isLoading: isVmCpuPeroading,
-  } = useDashboardPerVmCpu();
-
-  const {
-    data: vmMemoryPer,
-    status: vmMemoryPerStatus,
-    isRefetching: isVmMemoryPerRefetching,
-    refetch: vmMemoryPerRefetch,
-    isError: isVmMemoryPerError,
-    error: vmMemoryPerError,
-    isLoading: isVmMemoryPeroading,
-  } = useDashboardPerVmMemory();
+  // const {
+  //   data: vmCpuPer,
+  //   status: vmCpuPerStatus,
+  //   isRefetching: isVmCpuPerRefetching,
+  //   refetch: vmCpuPerRefetch,
+  //   isError: isVmCpuPerError,
+  //   error: vmCpuPerError,
+  //   isLoading: isVmCpuPeroading,
+  // } = useDashboardPerVmCpu();
 
   // const {
-  //   data: vmNetworkPer,
-  //   status: vmNetworkPerStatus,
-  //   isRefetching: isVmNetworkPerRefetching,
-  //   refetch: vmNetworkPerRefetch,
-  //   isError: isVmNetworkPerError,
-  //   error: vmNetworkPerError,
-  //   isLoading: isVmvPeroading,
-  // } = useDashboardPerVmNetwork();
+  //   data: vmMemoryPer,
+  //   status: vmMemoryPerStatus,
+  //   isRefetching: isVmMemoryPerRefetching,
+  //   refetch: vmMemoryPerRefetch,
+  //   isError: isVmMemoryPerError,
+  //   error: vmMemoryPerError,
+  //   isLoading: isVmMemoryPeroading,
+  // } = useDashboardPerVmMemory();
 
   const {
     data: vmMetric,
