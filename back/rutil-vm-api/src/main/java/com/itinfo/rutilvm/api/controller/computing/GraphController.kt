@@ -107,6 +107,18 @@ class GraphController {
 
 	@ApiOperation(
 		httpMethod="GET",
+		value="Host Per 그래프",
+		notes="Host의 Per 그래프"
+	)
+	@GetMapping("/hostPerList")
+	@ResponseBody
+	fun hostPerChart(): ResponseEntity<List<HostUsageDto>> {
+		log.info("----- hostPerChart")
+		return ResponseEntity.ok(graph.hostPerChart())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
 		value="VM cpu Per 그래프",
 		notes="VM의 cpu Per 그래프"
 	)

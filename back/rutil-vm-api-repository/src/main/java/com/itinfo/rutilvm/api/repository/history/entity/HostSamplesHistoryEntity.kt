@@ -48,8 +48,8 @@ class HostSamplesHistoryEntity(
 	val hostId: UUID? = null,
 
 	val historyDatetime: LocalDateTime = LocalDateTime.MIN,
-	val memoryUsagePercent: Int? = null,
-	val cpuUsagePercent: Int? = null,
+	val memoryUsagePercent: Int = -1,
+	val cpuUsagePercent: Int = -1,
 
 	val ksmCpuPercent: Int? = null,
 	val activeVms: Int? = null,
@@ -129,4 +129,4 @@ fun HostSamplesHistoryEntity.getUsage(): UsageDto {
 		cpuPercent { cpuUsagePercent }
 		memoryPercent { memoryUsagePercent }
 	}
-}	
+}

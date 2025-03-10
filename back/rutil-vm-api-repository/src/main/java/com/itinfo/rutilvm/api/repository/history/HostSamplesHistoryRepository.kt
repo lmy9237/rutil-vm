@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.repository.history
 
 import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryEntity
+import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryStatusEntity
 
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -41,5 +42,24 @@ ORDER BY h.memory_usage_percent DESC
 	)
 	fun findHostMemoryChart(page: Pageable?): List<HostSamplesHistoryEntity>
 
-	
+
+	@Query(	value = """
+SELECT
+    history_datetime,
+    AVG(cpu_usage_percent) AS avg_cpu_usage,
+    AVG(memory_usage_percent) AS avg_memory_usage
+FROM
+    host_samples_history
+WHERE
+    host_status = 1
+    AND CAST(EXTRACT(MINUTE FROM history_datetime) AS INTEGER) % 10 = 0
+GROUP BY
+    history_datetime
+ORDER BY
+    history_datetime DESC
+	LIMIT 10
+	""", nativeQuery = true
+	)
+	fun findHostUsageListChart(): List<Array<Any>>
+
 }

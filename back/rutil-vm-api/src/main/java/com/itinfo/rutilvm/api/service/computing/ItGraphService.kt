@@ -64,6 +64,18 @@ interface ItGraphService {
 	fun storageChart(): List<UsageDto>
 
 	/**
+	 * 호스트 cpu, memory 사용량 (전체 호스트 평균값)
+	 * 선그래프
+	 * @return List<[LineDto]>
+	 */
+	fun hostPerChart(): List<HostUsageDto>
+	/**
+	 * 호스트 memory 사용량 (전체 호스트 평균값)
+	 * 선그래프
+	 * @return List<[LineDto]>
+	 */
+	// fun hostMemoryPerChart(): List<LineDto>
+	/**
 	 * 가상머신 cpu 사용량 top3
 	 * 선그래프
 	 * @return List<[LineDto]>
@@ -144,7 +156,7 @@ class GraphServiceImpl(
 	override fun totalStorage(): StorageUsageDto {
 		log.info("totalStorage ... ")
 		val storageDomains: List<StorageDomain> = conn.findAllStorageDomains().getOrDefault(listOf())
-		return storageDomains.toStorageUsageDto(conn)
+		return storageDomains.toStorageUsageDto()
 	}
 
 	override fun vmCpuChart(): List<UsageDto> {
@@ -166,6 +178,19 @@ class GraphServiceImpl(
 		val page: Pageable = PageRequest.of(0, 3)
 		val storageDomainSampleHistoryEntities: List<StorageDomainSamplesHistoryEntity> = storageDomainSamplesHistoryRepository.findStorageChart(page)
 		return storageDomainSampleHistoryEntities.toStorageCharts(conn)
+	}
+
+	override fun hostPerChart(): List<HostUsageDto> {
+		log.info("hostPerChart ... ")
+		val rawData: List<Array<Any>> = hostSamplesHistoryRepository.findHostUsageListChart()
+
+		return rawData.map {
+			HostUsageDto(
+				historyDatetime = (it[0] as java.sql.Timestamp).toLocalDateTime(),
+				avgCpuUsage = (it[1] as Number).toDouble(),
+				avgMemoryUsage = (it[2] as Number).toDouble()
+			)
+		}
 	}
 
 	override fun vmCpuPerChart(): List<LineDto> {

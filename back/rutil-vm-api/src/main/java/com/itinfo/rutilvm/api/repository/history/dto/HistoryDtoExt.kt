@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryEntity
 import com.itinfo.rutilvm.api.repository.history.entity.VmInterfaceSamplesHistoryEntity
 import com.itinfo.rutilvm.api.repository.history.entity.VmSamplesHistoryEntity
 import com.itinfo.rutilvm.api.error.toException
+import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryStatusEntity
 import com.itinfo.rutilvm.api.repository.history.entity.StorageDomainSamplesHistoryEntity
 import com.itinfo.rutilvm.util.ovirt.findAllHosts
 import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromHost
@@ -29,8 +30,8 @@ fun HostSamplesHistoryEntity.toHostUsageDto(): HostUsageDto {
     return HostUsageDto.builder {
         hostId { "${this@toHostUsageDto.hostId}" }
         historyDatetime { this@toHostUsageDto.historyDatetime }
-        totalCpuUsagePercent { this@toHostUsageDto.cpuUsagePercent?.toDouble() }
-        totalMemoryUsagePercent { this@toHostUsageDto.memoryUsagePercent?.toDouble() }
+        totalCpuUsagePercent { this@toHostUsageDto.cpuUsagePercent.toDouble() }
+        totalMemoryUsagePercent { this@toHostUsageDto.memoryUsagePercent.toDouble() }
     }
 }
 
@@ -101,15 +102,52 @@ fun List<HostSamplesHistoryEntity>.toTotalCpuMemoryUsages(conn: Connection, host
         HostUsageDto.builder {
             hostName { hostName }
             historyDatetime { it.historyDatetime }
-            totalCpuUsagePercent { it.cpuUsagePercent?.toDouble() }
-            totalMemoryUsagePercent { it.memoryUsagePercent?.toDouble() }
+            totalCpuUsagePercent { it.cpuUsagePercent.toDouble() }
+            totalMemoryUsagePercent { it.memoryUsagePercent.toDouble() }
         }
     }
 }
+
+
 //endregion
 
 
 //region: LineDto
+
+fun List<HostSamplesHistoryStatusEntity>.toHostCpuLineDtos(): List<LineDto> {
+	val hostDataList = mutableListOf<Int>()
+	val hostTimeList = mutableListOf<LocalDateTime>()
+
+	this.forEach {
+		hostDataList.add(it.avgCpuUsage)
+		hostTimeList.add(it.historyDatetime)
+	}
+
+	return listOf(
+		LineDto.builder {
+			dataList { hostDataList.map { it } } // 소수점 제거하여 정수 변환
+			time { hostTimeList }
+		}
+	)
+}
+
+fun List<HostSamplesHistoryStatusEntity>.toHostMemoryLineDtos(): List<LineDto> {
+	val hostDataList = mutableListOf<Int>()
+	val hostTimeList = mutableListOf<LocalDateTime>()
+
+	this.forEach {
+		hostDataList.add(it.avgMemoryUsage)
+		hostTimeList.add(it.historyDatetime)
+	}
+
+	return listOf(
+		LineDto.builder {
+			dataList { hostDataList.map { it } } // 소수점 제거하여 정수 변환
+			time { hostTimeList }
+		}
+	)
+}
+
 fun List<VmSamplesHistoryEntity>.toVmCpuLineDtos(conn: Connection): List<LineDto> {
     val vmDataMap = mutableMapOf<String, MutableList<Int>>()
     val vmTimeMap = mutableMapOf<String, MutableList<LocalDateTime>>()
@@ -193,7 +231,7 @@ fun List<StorageDomain>.toStorageDto(conn: Connection): StorageUsageDto {
 
 
 //region: StorageUsageDto
-fun List<StorageDomain>.toStorageUsageDto(conn: Connection): StorageUsageDto {
+fun List<StorageDomain>.toStorageUsageDto(): StorageUsageDto {
     val storageDomains: List<StorageDomain> = this@toStorageUsageDto.filter { it.availablePresent() }
     val free: Double = storageDomains.sumOf { it.availableAsLong()?.toDouble() ?: 0.0 } / GB
     val used: Double = storageDomains.sumOf { it.usedAsLong()?.toDouble() ?: 0.0 } / GB

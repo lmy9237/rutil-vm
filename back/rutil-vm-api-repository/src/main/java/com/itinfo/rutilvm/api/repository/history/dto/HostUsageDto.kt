@@ -12,18 +12,18 @@ private val log = LoggerFactory.getLogger(HostUsageDto::class.java)
 /**
  * [HostUsageDto]
  * 전체 사용량 용도
- * 
- * @property hostId [String] 
- * @property hostName [String] 
- * @property historyDatetime [LocalDateTime] 
- * @property totalCpuUsagePercent [Double] 
+ *
+ * @property hostId [String]
+ * @property hostName [String]
+ * @property historyDatetime [LocalDateTime]
+ * @property totalCpuUsagePercent [Double]
  * @property totalMemoryUsagePercent [Double]
  * @property totalCpuCore [Int]
  * @property usedCpuCore [Int]
  * @property commitCpuCore [Int]
  * @property totalMemoryGB [Double]
- * @property usedMemoryGB [Double] 
- * @property freeMemoryGB [Double] 
+ * @property usedMemoryGB [Double]
+ * @property freeMemoryGB [Double]
  */
 class HostUsageDto(
     val hostId: String = "",
@@ -37,6 +37,8 @@ class HostUsageDto(
     val totalMemoryGB: Double = 0.0,
     val usedMemoryGB: Double = 0.0,
     val freeMemoryGB: Double = 0.0,
+	val avgCpuUsage: Double = 0.0,
+	val avgMemoryUsage: Double = 0.0,
 ): Serializable {
     override fun toString(): String = gson.toJson(this)
 
@@ -52,7 +54,9 @@ class HostUsageDto(
     	private var bTotalMemoryGB: Double = 0.0;fun totalMemoryGB(block: () -> Double?) { bTotalMemoryGB = block() ?: 0.0 }
     	private var bUsedMemoryGB: Double = 0.0;fun usedMemoryGB(block: () -> Double?) { bUsedMemoryGB = block() ?: 0.0 }
     	private var bFreeMemoryGB: Double = 0.0;fun freeMemoryGB(block: () -> Double?) { bFreeMemoryGB = block() ?: 0.0 }
-        fun build(): HostUsageDto = HostUsageDto(bHostId, bHostName, bHistoryDatetime, bTotalCpuUsagePercent, bTotalMemoryUsagePercent, bTotalCpuCore, bUsedCpuCore, bCommitCpuCore, bTotalMemoryGB, bUsedMemoryGB, bFreeMemoryGB)
+    	private var bAvgCpuUsage: Double = 0.0;fun avgCpuUsage(block: () -> Double?) { bAvgCpuUsage = block() ?: 0.0 }
+    	private var bAvgMemoryUsage: Double = 0.0;fun avgMemoryUsage(block: () -> Double?) { bAvgMemoryUsage = block() ?: 0.0 }
+        fun build(): HostUsageDto = HostUsageDto(bHostId, bHostName, bHistoryDatetime, bTotalCpuUsagePercent, bTotalMemoryUsagePercent, bTotalCpuCore, bUsedCpuCore, bCommitCpuCore, bTotalMemoryGB, bUsedMemoryGB, bFreeMemoryGB, bAvgCpuUsage, bAvgMemoryUsage)
     }
 
     companion object {
@@ -64,8 +68,8 @@ fun HostSamplesHistoryEntity.toHostUsageDto(): HostUsageDto {
     return HostUsageDto.builder {
         hostId { "${this@toHostUsageDto.hostId}" }
         historyDatetime { this@toHostUsageDto.historyDatetime }
-        totalCpuUsagePercent { this@toHostUsageDto.cpuUsagePercent?.toDouble() }
-        totalMemoryUsagePercent { this@toHostUsageDto.memoryUsagePercent?.toDouble() }
+        totalCpuUsagePercent { this@toHostUsageDto.cpuUsagePercent.toDouble() }
+        totalMemoryUsagePercent { this@toHostUsageDto.memoryUsagePercent.toDouble() }
     }
 }
 
