@@ -1,7 +1,7 @@
 package com.itinfo.rutilvm.api.configuration
 
-import com.itinfo.rutilvm.api.cert.CertManager
-import com.itinfo.rutilvm.api.cert.toCertManager
+import com.itinfo.rutilvm.api.model.cert.CertManager
+import com.itinfo.rutilvm.api.model.cert.toCertManager
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.util.cert.model.EngineCertType
 import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
@@ -29,14 +29,17 @@ open class CertConfig(
 	@Autowired private lateinit var pkiServiceClient: PkiServiceClient
 
 	@Value("\${application.ovirt.ssh.jsch.log.enabled}")	private lateinit var _jschLogEnabled: String
+	@Value("\${application.ovirt.ssh.jsch.connection-timeout}")	private lateinit var _jschConnectionTimeout: String
 	@Value("\${application.ovirt.ssh.prvkey.location}")		private lateinit var _ovirtSSHPrivateKeyLocation: String
 	@Value("\${application.ovirt.ssh.engine.address}")		private lateinit var _ovirtSSHEngineAddress: String
 	@Value("\${application.ovirt.ssh.engine.prvkey}")		lateinit var ovirtSSHEnginePrvKey: String
 
 	val jschLogEnabled: Boolean
 		get() = _jschLogEnabled.toBooleanStrictOrNull() ?: false
+	val jschConnectionTimeout: Int
+		get() = _jschConnectionTimeout.toIntOrNull() ?: RemoteConnMgmt.DEFAULT_CONNECTION_TIMEOUT
 	val ovirtEngineSSH: RemoteConnMgmt
-		get() = RemoteConnMgmt.asRemoteConnMgmt(_ovirtSSHEngineAddress, ovirtSSHEnginePrvKey)
+		get() = RemoteConnMgmt.asRemoteConnMgmt(_ovirtSSHEngineAddress, ovirtSSHEnginePrvKey, jschConnectionTimeout)
 
 	val ovirtSSHPrvKey: String?
 		get() = (try {  File(_ovirtSSHPrivateKeyLocation) } catch (e: IOException) { log.error("something went WRONG! ... reason: {}", e.localizedMessage);null })?.readText(Charsets.UTF_8)
@@ -46,6 +49,7 @@ open class CertConfig(
 	fun init() {
 		log.info("init ... ")
 		log.debug("  application.ovirt.ssh.jsch.log.enabled: {}", jschLogEnabled)
+		log.debug("  application.ovirt.ssh.jsch.connection-timeout: {}", jschLogEnabled)
 		log.debug("  application.ovirt.ssh.prvkeypath: {}", _ovirtSSHPrivateKeyLocation)
 		log.debug("  application.ovirt.ssh.engine.address: {}", pkiServiceClient.fetchEngineSshPublicKey())
 		log.debug("  application.ovirt.ssh.engine.prvkey: {}", ovirtSSHEnginePrvKey)

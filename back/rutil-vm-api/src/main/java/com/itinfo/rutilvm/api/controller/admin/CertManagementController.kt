@@ -2,12 +2,9 @@ package com.itinfo.rutilvm.api.controller.admin
 
 
 import com.itinfo.rutilvm.api.controller.BaseController
-import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.service.admin.ItCertService
-import com.itinfo.rutilvm.api.cert.CertManager
-import com.itinfo.rutilvm.api.service.computing.ItHostService
+import com.itinfo.rutilvm.api.model.cert.CertManager
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiImplicitParam
 import io.swagger.annotations.ApiImplicitParams
@@ -18,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller

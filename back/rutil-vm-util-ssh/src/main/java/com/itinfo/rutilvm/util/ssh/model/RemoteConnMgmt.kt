@@ -28,6 +28,7 @@ open class RemoteConnMgmt(
 	val host: String = "",
 	val port: Int = 0,
 	val id: String = "",
+	val connectionTimeout: Int? = DEFAULT_CONNECTION_TIMEOUT,
 	val prvKey: String? = null,
 ): Serializable {
 	override fun toString(): String =
@@ -37,13 +38,15 @@ open class RemoteConnMgmt(
 		private var bHost: String = "";fun host(block: () -> String?) { bHost = block() ?: "" }
 		private var bPort: Int = 0;fun port(block: () -> Int?) { bPort = block() ?: 0 }
 		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
+		private var bConnectionTimeout: Int? = DEFAULT_CONNECTION_TIMEOUT;fun connectionTimeout(block: () -> Int?) { bConnectionTimeout = block() ?:DEFAULT_CONNECTION_TIMEOUT }
 		private var bPrvKey: String? = null;fun prvKey(block: () -> String?) { bPrvKey = block() }
-		fun build(): RemoteConnMgmt = RemoteConnMgmt(bHost, bPort, bId, bPrvKey)
+		fun build(): RemoteConnMgmt = RemoteConnMgmt(bHost, bPort, bId, bConnectionTimeout, bPrvKey)
 	}
 
 	companion object {
+		const val DEFAULT_CONNECTION_TIMEOUT = 60000
 		private val MATCHER_ADDRESS = "(?<=@)[^:]+(?=:)".toRegex()
-		fun asRemoteConnMgmt(fullAddress: String, prvKey: String? = null): RemoteConnMgmt {
+		fun asRemoteConnMgmt(fullAddress: String, prvKey: String? = null, connectionTimeout: Int = DEFAULT_CONNECTION_TIMEOUT): RemoteConnMgmt {
 			val id: String = fullAddress.split("@").first()
 			val host: String = MATCHER_ADDRESS.find(fullAddress)?.value ?: ""
 			val port: Int = fullAddress.split(":").last().toIntOrNull() ?: 22
@@ -51,6 +54,7 @@ open class RemoteConnMgmt(
 				host { host }
 				port { port }
 				id { id }
+				connectionTimeout { connectionTimeout }
 				prvKey { prvKey }
 			}
 		}
@@ -74,7 +78,7 @@ fun RemoteConnMgmt.rebootSystem(): Result<Boolean> = runCatching {
 	throw it
 }
 
-fun RemoteConnMgmt.toInsecureSession(): Session? {
+fun RemoteConnMgmt.toInsecureSession(connectionTimeout: Int = 60000): Session? {
 	log.debug("toInsecureSession... fullAddress: {}, prvKey: {}", "${id}@${host}:${port}", prvKey)
 	val jsch = JSch()
 	val session: Session? = jsch.getSession(id, host, port)
@@ -84,6 +88,6 @@ fun RemoteConnMgmt.toInsecureSession(): Session? {
 		put("PreferredAuthentications", "publickey")
 	})
 	return session?.also {
-		it.connect(5000)
+		it.connect(connectionTimeout)
 	}
 }

@@ -69,6 +69,7 @@ ENV RUTIL_VM_OVIRT_IP=192.168.0.70
 ENV RUTIL_VM_CORS_ALLOWED_ORIGINS=localhost;rutil-vm
 ENV RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443
 ENV RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED=false
+ENV RUTIL_VM_OVIRT_SSH_JSCH_CONNECTION_TIMEOUT=60000
 ENV RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION=/root/.ssh/id_rsa
 ENV RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS=root@192.168.0.70:22
 ENV RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY=
@@ -118,6 +119,7 @@ ENTRYPOINT [ "java", "-jar", "app.jar", \
   "--application.api.cors.allowed-origins=${RUTIL_VM_CORS_ALLOWED_ORIGINS}", \
   "--application.api.cors.allowed-origins.port=${RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT}", \
   "--application.ovirt.ssh.jsch.log.enabled=${RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED}", \
+  "--application.ovirt.ssh.jsch.connection-timeout=${RUTIL_VM_OVIRT_SSH_JSCH_CONNECTION_TIMEOUT}", \
   "--application.ovirt.ssh.prvkey.location=${RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION}", \
   "--application.ovirt.ssh.engine.address=${RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS}", \
   "--application.ovirt.ssh.engine.prvkey=${RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY}", \

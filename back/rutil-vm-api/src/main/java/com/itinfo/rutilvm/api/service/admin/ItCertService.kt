@@ -1,10 +1,10 @@
 package com.itinfo.rutilvm.api.service.admin
 
-import com.itinfo.rutilvm.api.cert.CertManager
-import com.itinfo.rutilvm.api.configuration.CertConfig
-import com.itinfo.rutilvm.api.configuration.PkiServiceClient
+import com.itinfo.rutilvm.api.model.cert.CertManager
 import com.itinfo.rutilvm.api.model.cert.toCertManagers
 import com.itinfo.rutilvm.api.model.computing.HostVo
+import com.itinfo.rutilvm.api.configuration.CertConfig
+import com.itinfo.rutilvm.api.configuration.PkiServiceClient
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.computing.ItHostService
 import com.itinfo.rutilvm.common.LoggerDelegate
@@ -40,7 +40,10 @@ class CertServiceImpl(
 	override fun findAll(): List<CertManager> {
 		log.info("findAll ...")
 		val hosts: List<HostVo> = iHost.findAll()
-		val certs: List<CertManager> = hosts.toCertManagers(certConfig.ovirtSSHPrvKey) + certConfig.engineCertManagers()
+		val certs: List<CertManager> = hosts.toCertManagers(
+			certConfig.jschConnectionTimeout,
+			certConfig.ovirtSSHPrvKey
+		) + certConfig.engineCertManagers()
 		return certs
 	}
 

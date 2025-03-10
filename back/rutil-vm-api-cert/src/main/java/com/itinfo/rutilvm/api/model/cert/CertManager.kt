@@ -1,4 +1,4 @@
-package com.itinfo.rutilvm.api.cert
+package com.itinfo.rutilvm.api.model.cert
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.common.gson
