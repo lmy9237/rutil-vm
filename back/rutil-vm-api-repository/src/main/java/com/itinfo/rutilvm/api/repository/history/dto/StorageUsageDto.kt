@@ -10,7 +10,7 @@ private val log = LoggerFactory.getLogger(StorageUsageDto::class.java)
 
 /**
  * [StorageUsageDto]
- * 
+ *
  * @property storageDomainId [String]
  * @property storageDomainName [String]
  * @property historyDatetime [LocalDateTime]
@@ -28,6 +28,8 @@ class StorageUsageDto(
 	val totalGB: Double = 0.0,
 	val usedGB: Double = 0.0,
 	val freeGB: Double = 0.0,
+	val avgDomainUsagePercent: Double = 0.0,
+
 ): Serializable {
     override fun toString(): String = gson.toJson(this)
 
@@ -39,7 +41,8 @@ class StorageUsageDto(
 		private var bTotalGB: Double = 0.0;fun totalGB(block: () -> Double?) { bTotalGB = block() ?: 0.0 }
 		private var bUsedGB: Double = 0.0;fun usedGB(block: () -> Double?) { bUsedGB = block() ?: 0.0 }
 		private var bFreeGB: Double = 0.0;fun freeGB(block: () -> Double?) { bFreeGB = block() ?: 0.0 }
-        fun build(): StorageUsageDto = StorageUsageDto(bStorageDomainId, bStorageDomainName, bHistoryDatetime, bUsedPercent, bTotalGB, bUsedGB, bFreeGB)
+		private var bAvgDomainUsagePercent: Double = 0.0;fun avgDomainUsagePercent(block: () -> Double?) { bAvgDomainUsagePercent = block() ?: 0.0 }
+        fun build(): StorageUsageDto = StorageUsageDto(bStorageDomainId, bStorageDomainName, bHistoryDatetime, bUsedPercent, bTotalGB, bUsedGB, bFreeGB, bAvgDomainUsagePercent)
     }
 
     companion object {

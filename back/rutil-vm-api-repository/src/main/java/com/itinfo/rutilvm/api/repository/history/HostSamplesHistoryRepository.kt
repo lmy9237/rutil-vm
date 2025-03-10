@@ -1,7 +1,6 @@
 package com.itinfo.rutilvm.api.repository.history
 
 import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryEntity
-import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryStatusEntity
 
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository

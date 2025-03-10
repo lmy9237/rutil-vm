@@ -74,7 +74,7 @@ interface ItGraphService {
 	 * 선그래프
 	 * @return List<[LineDto]>
 	 */
-	// fun hostMemoryPerChart(): List<LineDto>
+	fun domainPerChart(): List<StorageUsageDto>
 	/**
 	 * 가상머신 cpu 사용량 top3
 	 * 선그래프
@@ -189,6 +189,18 @@ class GraphServiceImpl(
 				historyDatetime = (it[0] as java.sql.Timestamp).toLocalDateTime(),
 				avgCpuUsage = (it[1] as Number).toDouble(),
 				avgMemoryUsage = (it[2] as Number).toDouble()
+			)
+		}
+	}
+
+	override fun domainPerChart(): List<StorageUsageDto> {
+		log.info("domainPerChart ... ")
+		val rawData: List<Array<Any>> = storageDomainSamplesHistoryRepository.findDomainUsageListChart()
+
+		return rawData.map {
+			StorageUsageDto(
+				historyDatetime = (it[0] as java.sql.Timestamp).toLocalDateTime(),
+				avgDomainUsagePercent = (it[1] as Number).toDouble(),
 			)
 		}
 	}

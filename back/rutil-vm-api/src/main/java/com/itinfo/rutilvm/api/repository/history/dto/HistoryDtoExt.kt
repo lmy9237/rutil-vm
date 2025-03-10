@@ -5,7 +5,6 @@ import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryEntity
 import com.itinfo.rutilvm.api.repository.history.entity.VmInterfaceSamplesHistoryEntity
 import com.itinfo.rutilvm.api.repository.history.entity.VmSamplesHistoryEntity
 import com.itinfo.rutilvm.api.error.toException
-import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryStatusEntity
 import com.itinfo.rutilvm.api.repository.history.entity.StorageDomainSamplesHistoryEntity
 import com.itinfo.rutilvm.util.ovirt.findAllHosts
 import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromHost
@@ -113,41 +112,6 @@ fun List<HostSamplesHistoryEntity>.toTotalCpuMemoryUsages(conn: Connection, host
 
 
 //region: LineDto
-
-fun List<HostSamplesHistoryStatusEntity>.toHostCpuLineDtos(): List<LineDto> {
-	val hostDataList = mutableListOf<Int>()
-	val hostTimeList = mutableListOf<LocalDateTime>()
-
-	this.forEach {
-		hostDataList.add(it.avgCpuUsage)
-		hostTimeList.add(it.historyDatetime)
-	}
-
-	return listOf(
-		LineDto.builder {
-			dataList { hostDataList.map { it } } // 소수점 제거하여 정수 변환
-			time { hostTimeList }
-		}
-	)
-}
-
-fun List<HostSamplesHistoryStatusEntity>.toHostMemoryLineDtos(): List<LineDto> {
-	val hostDataList = mutableListOf<Int>()
-	val hostTimeList = mutableListOf<LocalDateTime>()
-
-	this.forEach {
-		hostDataList.add(it.avgMemoryUsage)
-		hostTimeList.add(it.historyDatetime)
-	}
-
-	return listOf(
-		LineDto.builder {
-			dataList { hostDataList.map { it } } // 소수점 제거하여 정수 변환
-			time { hostTimeList }
-		}
-	)
-}
-
 fun List<VmSamplesHistoryEntity>.toVmCpuLineDtos(conn: Connection): List<LineDto> {
     val vmDataMap = mutableMapOf<String, MutableList<Int>>()
     val vmTimeMap = mutableMapOf<String, MutableList<LocalDateTime>>()

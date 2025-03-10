@@ -119,6 +119,18 @@ class GraphController {
 
 	@ApiOperation(
 		httpMethod="GET",
+		value="StorageDomain Per 그래프",
+		notes="StorageDomain Per 그래프"
+	)
+	@GetMapping("/storageDomainPerList")
+	@ResponseBody
+	fun storageDomainPerList(): ResponseEntity<List<StorageUsageDto>> {
+		log.info("----- storageDomainPerList")
+		return ResponseEntity.ok(graph.domainPerChart())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
 		value="VM cpu Per 그래프",
 		notes="VM의 cpu Per 그래프"
 	)
