@@ -53,6 +53,17 @@ export const useDashboardStorage = (mapPredicate) => useQuery({
     // return res?.map((e) => mapPredicate(e)) ?? []
   }
 });
+export const useDashboardHost = (mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['dashboardHost'],
+  queryFn: async () => {
+    console.log(`useDashboardHost ...`);
+    const res = await ApiManager.getHost()
+    // setShouldRefresh(prevValue => false)
+    return res ?? []
+    // return res?.map((e) => mapPredicate(e)) ?? []
+  }
+});
 export const useDashboardVmCpu = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardVmCpu'],

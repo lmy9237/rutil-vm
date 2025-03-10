@@ -16,11 +16,12 @@ import {
   useDashboardStorageMemory,
   useDashboardPerVmCpu,
   useDashboardPerVmMemory,
-  useDashboardPerVmNetwork,
+  // useDashboardPerVmNetwork,
   useDashboardMetricVm,
   useDashboardVmCpu,
   useDashboardVmMemory,
   useDashboardMetricStorage,
+  useDashboardHost,
 } from "../../api/RQHook";
 import DashboardBoxGroup from "./DashboardBoxGroup";
 import RadialBarChart from "../../components/Chart/RadialBarChart";
@@ -95,6 +96,16 @@ const Dashboard = () => {
   } = useDashboardStorage();
 
   const {
+    data: host,
+    status: hostStatus,
+    isRefetching: isHostRefetching,
+    refetch: hostRefetch,
+    isError: isHostError,
+    error: hostError,
+    isLoading: isHostLoading,
+  } = useDashboardHost();
+
+  const {
     data: vmCpu,
     status: vmCpuStatus,
     isRefetching: isVmCpuRefetching,
@@ -144,15 +155,15 @@ const Dashboard = () => {
     isLoading: isVmMemoryPeroading,
   } = useDashboardPerVmMemory();
 
-  const {
-    data: vmNetworkPer,
-    status: vmNetworkPerStatus,
-    isRefetching: isVmNetworkPerRefetching,
-    refetch: vmNetworkPerRefetch,
-    isError: isVmNetworkPerError,
-    error: vmNetworkPerError,
-    isLoading: isVmvPeroading,
-  } = useDashboardPerVmNetwork();
+  // const {
+  //   data: vmNetworkPer,
+  //   status: vmNetworkPerStatus,
+  //   isRefetching: isVmNetworkPerRefetching,
+  //   refetch: vmNetworkPerRefetch,
+  //   isError: isVmNetworkPerError,
+  //   error: vmNetworkPerError,
+  //   isLoading: isVmvPeroading,
+  // } = useDashboardPerVmNetwork();
 
   const {
     data: vmMetric,
@@ -269,9 +280,9 @@ const Dashboard = () => {
             </span>
             {/*COMMIT { Math.floor((cpuMemory?.commitCpuCore)/(cpuMemory?.totalCpuCore)*100 )} % <br/> */}
             <div className="wave-graph">
-              <h2>Per CPU</h2>
+              {/* <h2>Per CPU</h2> */}
               <div>
-                <SuperAreaChart vmPer={vmCpuPer} />
+                <SuperAreaChart vmPer={host} type="cpu"/>
               </div>
             </div>
           </div>
@@ -298,9 +309,9 @@ const Dashboard = () => {
               {cpuMemory?.totalMemoryGB?.toFixed(1)} GB
             </span>
             <div className="wave-graph">
-              <h2>Per MEMORY</h2>
+              {/* <h2>Per MEMORY</h2> */}
               <div>
-                <SuperAreaChart vmPer={vmMemoryPer} />
+                <SuperAreaChart vmPer={host} type="memory"/>
               </div>
             </div>
           </div>
@@ -331,9 +342,9 @@ const Dashboard = () => {
               USED {storage?.usedGB} GB / Total {storage?.freeGB} GB
             </span>
             <div className="wave-graph">
-              <h2>Per Network</h2>
+              {/* <h2>Per Network</h2> */}
               <div>
-                <SuperAreaChart vmPer={vmNetworkPer} />
+                <SuperAreaChart vmPer={host} />
               </div>
             </div>
           </div>

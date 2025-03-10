@@ -106,6 +106,18 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.GET_STORAGE
   }),
   /**
+   * @name ApiManager.getHost
+   * @description host 전체 cpu,memory 평균값 불러오는 값
+   * 
+   * @returns 
+   * 
+   * @see Dashboard.js (components)
+   */
+  getHost: async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.GET_PER_HOST(),
+  }),
+  /**
    * @name ApiManager.getVmCpu
    * @description vmCpu 불러오는 값
    * 

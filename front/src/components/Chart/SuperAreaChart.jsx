@@ -1,61 +1,57 @@
 import React, { useEffect, useState } from "react";
 import AreaChart from "./AreaChart";
 
-const SuperAreaChart = ({ vmPer }) => {
+const SuperAreaChart = ({ vmPer, type }) => {
   const [series, setSeries] = useState([]);
   const [datetimes, setDatetimes] = useState([]);
 
-  // 날짜 변환 함수
+  // 날짜 변환 함수 (HH:mm 형식)
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${hours}:${minutes}`;
+    return `${date.getHours().toString().padStart(2, "0")}:${date
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   useEffect(() => {
     if (Array.isArray(vmPer) && vmPer.length > 0) {
-      const defaultItem = { name: "Unknown", time: [], dataList: [] };
+      // `historyDatetime`을 정확히 Date 객체로 변환하여 **오름차순** 정렬
+      const sortedData = [...vmPer].sort(
+        (a, b) => new Date(a.historyDatetime).getTime() - new Date(b.historyDatetime).getTime()
+      );
 
-      // 각 항목의 dataList 합계를 기준으로 정렬하여 상위 3개 선택
-      const topThree = vmPer
-        .map((item) => ({ ...defaultItem, ...item }))
-        .sort((a, b) => {
-          const sumA = a.dataList.reduce((sum, value) => sum + value, 0);
-          const sumB = b.dataList.reduce((sum, value) => sum + value, 0);
-          return sumB - sumA;
-        })
-        .slice(0, 3);
+      let selectedData = [];
 
-      const sortedData = topThree.map((item) => {
-        const combined = item.time
-          .map((time, index) => ({
-            time,
-            value: item.dataList[index] || 0,
-          }))
-          .sort((a, b) => new Date(a.time) - new Date(b.time));
+      // type에 따라 CPU 또는 Memory 데이터만 선택
+      if (type === "cpu") {
+        selectedData = sortedData.map((item) => ({
+          x: formatDate(item.historyDatetime),
+          y: Math.floor(item.avgCpuUsage), // 소수점 아래 버림
+        }));
+      } else if (type === "memory") {
+        selectedData = sortedData.map((item) => ({
+          x: formatDate(item.historyDatetime),
+          y: Math.floor(item.avgMemoryUsage), // 소수점 아래 버림
+        }));
+      }
 
-        return {
-          name: item.name,
-          data: combined.map(({ time, value }) => ({
-            x: formatDate(time),
-            y: value,
-          })),
-        };
-      });
+      // 차트 시리즈 업데이트
+      setSeries([
+        {
+          name: type === "cpu" ? "CPU 사용률 (%)" : "메모리 사용률 (%)",
+          data: selectedData,
+        },
+      ]);
 
-      // Remove duplicate times
-      const uniqueTimes = [...new Set(vmPer[0]?.time.map(formatDate))];
-
-      setSeries(sortedData);
+      // 중복 없는 시간 리스트 생성 (오름차순 반영)
+      const uniqueTimes = [...new Set(sortedData.map((item) => formatDate(item.historyDatetime)))];
       setDatetimes(uniqueTimes);
     } else {
       setSeries([]);
       setDatetimes([]);
     }
-  }, [vmPer]);
+  }, [vmPer, type]);
 
   return <AreaChart series={series} datetimes={datetimes} />;
 };
