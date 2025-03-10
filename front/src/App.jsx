@@ -28,7 +28,12 @@ import Event from './pages/event/Event';
 import SettingInfo from './pages/setting/SettingInfo';
 import Login from './pages/login/Login';
 import Error from './pages/Error';
+import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+import "pretendard/dist/web/static/pretendard.css";
+// import '@orioncactus/pretendard/dist/web/static/pretendard.css';
+
 import './App.css';
+
 // import './App-debug.css';
 import Footer from './components/footer/Footer';
 

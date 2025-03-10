@@ -1,9 +1,3 @@
-@font-face {
-  font-family: "Gothic";
-  src: local("Noto Sans KR"), local("Malgun Gothic"), local("Apple SD Gothic Neo"), local("Segoe UI"), local("Roboto"), sans-serif;
-  font-weight: normal;
-  font-style: normal;
-}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -61,10 +55,8 @@ html {
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "GowunDodum-Regular";
+  margin: 0;padding: 0;box-sizing: border-box;
+  font-family: "Pretendard", sans-serif;
 }
 body { width:100%;height:100%;}
 #root {
