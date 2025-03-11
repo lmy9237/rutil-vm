@@ -92,10 +92,10 @@ interface ItClusterService {
 	 * 클러스터가 가지고있는 가상머신 목록
 	 *
 	 * @param clusterId [String] 클러스터 Id
-	 * @return List<[VmVo]> 가상머신 목록
+	 * @return List<[VmViewVo]> 가상머신 목록
 	 */
 	@Throws(Error::class)
-	fun findAllVmsFromCluster(clusterId: String): List<VmVo>
+	fun findAllVmsFromCluster(clusterId: String): List<VmViewVo>
 
 	/**
 	 * [ItClusterService.findAllNetworksFromCluster]
@@ -246,7 +246,7 @@ class ClusterServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllVmsFromCluster(clusterId: String): List<VmVo> {
+	override fun findAllVmsFromCluster(clusterId: String): List<VmViewVo> {
 		log.info("findAllVmsFromCluster ... clusterId: {}", clusterId)
 		val res: List<Vm> = conn.findAllVmsFromCluster(clusterId)
 			.getOrDefault(listOf())

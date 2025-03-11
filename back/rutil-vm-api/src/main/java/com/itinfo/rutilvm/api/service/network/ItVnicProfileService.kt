@@ -1,19 +1,14 @@
 package com.itinfo.rutilvm.api.service.network
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
-import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.computing.toTemplateIdNames
 import com.itinfo.rutilvm.api.model.computing.toVmsIdName
-import com.itinfo.rutilvm.api.model.fromNetworkFiltersToIdentifiedVos
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.computing.HostOperationServiceImpl
-import com.itinfo.rutilvm.api.service.computing.HostOperationServiceImpl.Companion
 import com.itinfo.rutilvm.util.ovirt.*
 
-import org.ovirt.engine.sdk4.types.NetworkFilter
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.types.VnicProfile
@@ -89,10 +84,10 @@ interface ItVnicProfileService{
      * vNIC Profile가 가지고있는 가상머신 목록
      *
      * @param vnicProfileId [String] vnicProfile id
-     * @return List<[VmVo]>
+     * @return List<[VmViewVo]>
      */
     @Throws(Error::class)
-    fun findAllVmsFromVnicProfile(vnicProfileId: String): List<VmVo>
+    fun findAllVmsFromVnicProfile(vnicProfileId: String): List<VmViewVo>
     /**
      * [ItVnicProfileService.findAllTemplatesFromVnicProfile]
      * 네트워크 - 템플릿 목록
@@ -180,7 +175,7 @@ class VnicProfileServiceImpl(
     }
 
     @Throws(Error::class)
-    override fun findAllVmsFromVnicProfile(vnicProfileId: String): List<VmVo> {
+    override fun findAllVmsFromVnicProfile(vnicProfileId: String): List<VmViewVo> {
         log.info("findAllVmsFromVnicProfile ... vnicProfileId: {}", vnicProfileId)
         val res: List<Vm> = conn.findAllVms(follow = "nics")
             .getOrDefault(listOf())

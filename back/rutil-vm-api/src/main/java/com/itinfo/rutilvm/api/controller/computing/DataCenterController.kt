@@ -206,7 +206,7 @@ class DataCenterController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	fun vms(
 		@PathVariable dataCenterId: String? = null
-	): ResponseEntity<List<VmVo>> {
+	): ResponseEntity<List<VmViewVo>> {
 		if (dataCenterId.isNullOrEmpty())
 			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
 		log.info("/computing/datacenters/{}/vms ... 데이터센터 가상머신 목록", dataCenterId)

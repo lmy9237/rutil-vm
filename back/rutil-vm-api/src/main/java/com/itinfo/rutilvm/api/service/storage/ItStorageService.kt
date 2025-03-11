@@ -186,7 +186,7 @@ interface ItStorageService {
 	 * @return List<[VmVo]> 가상머신 목록
 	 */
 	@Throws(Error::class)
-	fun findAllVmsFromStorageDomain(storageDomainId: String): List<VmVo>
+	fun findAllVmsFromStorageDomain(storageDomainId: String): List<VmViewVo>
 	/**
 	 * [ItStorageService.findAllUnregisteredVmsFromStorageDomain]
 	 * 스토리지도메인 - 가상머신 가져오기 목록
@@ -195,19 +195,19 @@ interface ItStorageService {
 	 * @return List<[VmVo]> 가상머신 목록
 	 */
 	@Throws(Error::class)
-	fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmVo>
+	fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmViewVo>
 	/**
 	 * [ItStorageService.registeredVmFromStorageDomain]
 	 * 스토리지도메인 - 가상머신 가져오기
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
- 	 * @param vmVo [VmVo] 가상머신
+ 	 * @param vmViewVo [VmViewVo] 가상머신
  	 * @param allowPart [Boolean] 부분허용
  	 * @param badMac [Boolean] 불량 MAC 재배치
 	 * @return [Boolean]
 	 */
 	@Throws(Error::class)
-	fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo, allowPart: Boolean, badMac: Boolean): Boolean
+	fun registeredVmFromStorageDomain(storageDomainId: String, vmViewVo: VmViewVo, allowPart: Boolean, badMac: Boolean): Boolean
 	/**
 	 * [ItStorageService.removeUnregisteredVmFromStorageDomain]
 	 * 스토리지 도메인 가상머신 가져오기 삭제
@@ -504,7 +504,7 @@ class StorageServiceImpl(
 
 
 	@Throws(Error::class)
-	override fun findAllVmsFromStorageDomain(storageDomainId: String): List<VmVo> {
+	override fun findAllVmsFromStorageDomain(storageDomainId: String): List<VmViewVo> {
 		log.info("findAllVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<Vm> = conn.findAllVmsFromStorageDomain(storageDomainId)
 			.getOrDefault(listOf())
@@ -512,19 +512,19 @@ class StorageServiceImpl(
 	}
 
     @Throws(Error::class)
-    override fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmVo> {
+    override fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmViewVo> {
         log.info("findAllUnregisteredVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
         val res: List<Vm> = conn.findAllUnregisteredVmsFromStorageDomain(storageDomainId)
             .getOrDefault(listOf())
-        return res.toUnregisteredVms(conn)
+        return res.toUnregisterdVms()
     }
 
 	@Throws(Error::class)
-	override fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo, allowPart: Boolean, badMac: Boolean): Boolean {
-		log.info("registeredVmFromStorageDomain ... storageDomainId: {}, vmId: {}, allowPart: {}, badMac: {}", storageDomainId, vmVo.id, allowPart, badMac)
+	override fun registeredVmFromStorageDomain(storageDomainId: String, vmViewVo: VmViewVo, allowPart: Boolean, badMac: Boolean): Boolean {
+		log.info("registeredVmFromStorageDomain ... storageDomainId: {}, vmId: {}, allowPart: {}, badMac: {}", storageDomainId, vmViewVo.id, allowPart, badMac)
 		val res: Result<Boolean> = conn.registeredVmFromStorageDomain(
 			storageDomainId,
-			VmBuilder().id(vmVo.id).name(vmVo.name).cluster(ClusterBuilder().id(vmVo.clusterVo.id)).build(),
+			VmBuilder().id(vmViewVo.id).name(vmViewVo.name).cluster(ClusterBuilder().id(vmViewVo.clusterVo.id)).build(),
 			allowPart,
 			badMac
 		)

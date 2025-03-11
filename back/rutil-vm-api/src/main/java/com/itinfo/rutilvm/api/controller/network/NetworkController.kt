@@ -2,15 +2,13 @@ package com.itinfo.rutilvm.api.controller.network
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.controller.BaseController
-import com.itinfo.rutilvm.api.controller.network.VnicProfileController.Companion
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.model.computing.ClusterVo
 import com.itinfo.rutilvm.api.model.computing.DataCenterVo
 import com.itinfo.rutilvm.api.model.computing.HostVo
-import com.itinfo.rutilvm.api.model.computing.VmVo
-import com.itinfo.rutilvm.api.model.setting.PermissionVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.network.NetworkTemplateVo
@@ -339,7 +337,7 @@ class NetworkController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	fun vms(
 		@PathVariable networkId: String? = null,
-	): ResponseEntity<List<VmVo>> {
+	): ResponseEntity<List<VmViewVo>> {
 		if (networkId.isNullOrEmpty())
 			throw ErrorPattern.NETWORK_ID_NOT_FOUND.toException()
 		log.info("/networks/{}/vms ... 네트워크 가상머신 목록", networkId)

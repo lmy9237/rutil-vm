@@ -6,7 +6,7 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.error.IdNotFoundException
 import com.itinfo.rutilvm.api.error.InvalidRequestException
 import com.itinfo.rutilvm.api.error.toException
-import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.service.storage.ItDiskService
@@ -287,7 +287,7 @@ class DiskController: BaseController() {
 	@ResponseBody
 	fun vms(
 		@PathVariable diskId: String? = null,
-	): ResponseEntity<List<VmVo>> {
+	): ResponseEntity<List<VmViewVo>> {
 		if (diskId.isNullOrEmpty())
 			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
 		log.info("/storages/disks/{}/vms ... ", diskId)

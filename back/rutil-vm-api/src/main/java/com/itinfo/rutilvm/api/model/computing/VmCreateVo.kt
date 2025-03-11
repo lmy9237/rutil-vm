@@ -286,3 +286,25 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
 	}
 }
 
+/**
+ * [Vm.toVmSystem]
+ * 스냅샷에서 사용
+ *
+ * @return
+ */
+fun Vm.toVmSystem(): VmCreateVo {
+	return VmCreateVo.builder {
+		memorySize { this@toVmSystem.memory() }
+		memoryActual { this@toVmSystem.memoryPolicy().guaranteed() }
+		memoryMax { this@toVmSystem.memoryPolicy().max() }
+		cpuTopologyCnt {
+			this@toVmSystem.cpu().topology().coresAsInteger() *
+				this@toVmSystem.cpu().topology().socketsAsInteger() *
+				this@toVmSystem.cpu().topology().threadsAsInteger()
+		}
+		cpuTopologySocket { this@toVmSystem.cpu().topology().socketsAsInteger() }
+		cpuTopologyCore { this@toVmSystem.cpu().topology().coresAsInteger() }
+		cpuTopologyThread { this@toVmSystem.cpu().topology().threadsAsInteger() }
+		// timeOffset { this@toVmSystem.timeZone().name() }
+	}
+}

@@ -1,6 +1,10 @@
 package com.itinfo.rutilvm.api.model
 
+import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentIdName
 import com.itinfo.rutilvm.common.gson
+import com.itinfo.rutilvm.util.ovirt.findDisk
+import com.itinfo.rutilvm.util.ovirt.findVm
+import org.ovirt.engine.sdk4.Connection
 
 import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
@@ -90,6 +94,12 @@ fun NetworkFilter.fromNetworkFilterToIdentifiedVo(): IdentifiedVo = IdentifiedVo
 fun List<NetworkFilter>.fromNetworkFiltersToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromNetworkFiltersToIdentifiedVos.map { it.fromNetworkFilterToIdentifiedVo() }
 
+fun Nic.fromNicToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
+	id { id() }
+	name { if (namePresent()) name() else "" }
+}
+fun List<Nic>.fromNicsToIdentifiedVos(): List<IdentifiedVo> =
+	this@fromNicsToIdentifiedVos.map { it.fromNicToIdentifiedVo() }
 
 fun HostNic.fromHostNicToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
@@ -135,9 +145,12 @@ fun Disk.fromDiskToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 fun List<Disk>.fromDisksToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromDisksToIdentifiedVos.map { it.fromDiskToIdentifiedVo() }
 
-fun DiskAttachment.fromDiskAttachmentToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
-	id { id() }
-	name { if (namePresent()) name() else "" }
+fun DiskAttachment.fromDiskAttachmentToIdentifiedVo(): IdentifiedVo {
+	// val disk: Disk? = conn.findDisk(this@fromDiskAttachmentToIdentifiedVo.disk().id()).getOrNull()
+	return IdentifiedVo.builder {
+		id { id() }
+		name { disk().alias() }
+	}
 }
 fun List<DiskAttachment>.fromDiskAttachmentsToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromDiskAttachmentsToIdentifiedVos.map { it.fromDiskAttachmentToIdentifiedVo() }

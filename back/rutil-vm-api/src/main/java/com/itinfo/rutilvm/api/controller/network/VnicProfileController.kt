@@ -2,12 +2,9 @@ package com.itinfo.rutilvm.api.controller.network
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.controller.BaseController
-import com.itinfo.rutilvm.api.controller.network.NetworkController.Companion
 import com.itinfo.rutilvm.api.error.toException
-import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
-import com.itinfo.rutilvm.api.model.computing.VmVo
-import com.itinfo.rutilvm.api.model.network.NetworkVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.service.network.ItVnicProfileService
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
@@ -178,7 +175,7 @@ class VnicProfileController: BaseController() {
     @ResponseBody
     fun vms(
         @PathVariable vnicProfileId: String? = null,
-    ): ResponseEntity<List<VmVo>> {
+    ): ResponseEntity<List<VmViewVo>> {
         if (vnicProfileId.isNullOrEmpty())
             throw ErrorPattern.VNIC_PROFILE_ID_NOT_FOUND.toException()
         log.info("/vnicProfiles/{}/vms ... 가상머신 목록", vnicProfileId)

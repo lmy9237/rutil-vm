@@ -150,7 +150,7 @@ interface ItNetworkService {
 	 * @return List<[VmVo]>
 	 */
 	@Throws(Error::class)
-	fun findAllVmsFromNetwork(networkId: String): List<VmVo>
+	fun findAllVmsFromNetwork(networkId: String): List<VmViewVo>
 	/**
 	 * [ItNetworkService.findAllTemplatesFromNetwork]
 	 * 네트워크 템플릿 목록
@@ -343,10 +343,10 @@ class NetworkServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllVmsFromNetwork(networkId: String): List<VmVo> {
+	override fun findAllVmsFromNetwork(networkId: String): List<VmViewVo> {
 		log.info("findAllVmsFromNetwork ... networkId: {}", networkId)
-		val network: Network = conn.findNetwork(networkId)
-			.getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		// val network: Network = conn.findNetwork(networkId)
+		// 	.getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
 		// 따지고보면 nic를 출력하느너
 
 		// VM의 NIC 중 networkId와 매칭되는 NIC이 있는지 확인
@@ -355,7 +355,7 @@ class NetworkServiceImpl(
 			.filter { vm -> vm.nics().any { nic -> nic.vnicProfile().network().id() == networkId } }
 
 		// 모든 VM에 대해 NIC 정보를 포함하여 VmVo 변환
-		return res.toVmVoFromNetworks(conn)
+		return res.toVmViewVoFromNetworks(conn)
 	}
 
 	@Throws(Error::class)

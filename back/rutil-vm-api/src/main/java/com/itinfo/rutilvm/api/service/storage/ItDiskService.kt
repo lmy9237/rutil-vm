@@ -2,26 +2,18 @@ package com.itinfo.rutilvm.api.service.storage
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
-import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.computing.toVmsMenu
-import com.itinfo.rutilvm.api.model.fromDisksToIdentifiedVos
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import com.itinfo.rutilvm.api.model.setting.toPermissionVos
 import com.itinfo.rutilvm.api.model.storage.*
-import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
-import com.itinfo.rutilvm.api.repository.engine.entity.toVmId
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.computing.HostOperationServiceImpl
-import com.itinfo.rutilvm.api.service.computing.HostServiceImpl
-import com.itinfo.rutilvm.api.service.computing.HostServiceImpl.Companion
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import org.ovirt.engine.sdk4.services.ImageTransferService
 import org.ovirt.engine.sdk4.types.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.BufferedInputStream
@@ -36,7 +28,6 @@ import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
-import kotlin.streams.toList
 
 
 interface ItDiskService {
@@ -189,10 +180,10 @@ interface ItDiskService {
      * 스토리지도메인 - 가상머신
      *
      * @param diskId [String] 도메인 ID
-     * @return List<[VmVo]> 가상머신
+     * @return List<[VmViewVo]> 가상머신
      */
     @Throws(Error::class)
-    fun findAllVmsFromDisk(diskId: String): List<VmVo>
+    fun findAllVmsFromDisk(diskId: String): List<VmViewVo>
     /**
      * [ItDiskService.findAllStorageDomainsFromDisk]
      * 스토리지도메인 - 스토리지
@@ -509,7 +500,7 @@ class DiskServiceImpl(
 
 
     @Throws(Error::class)
-    override fun findAllVmsFromDisk(diskId: String): List<VmVo> {
+    override fun findAllVmsFromDisk(diskId: String): List<VmViewVo> {
         log.info("findAllVmsFromDisk ... ")
         val res: List<Vm> =
             conn.findAllVmsFromDisk(diskId).getOrDefault(listOf())

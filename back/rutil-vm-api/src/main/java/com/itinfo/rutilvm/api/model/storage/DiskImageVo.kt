@@ -4,12 +4,8 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
-import com.itinfo.rutilvm.api.model.computing.VmVo
-import com.itinfo.rutilvm.api.repository.engine.entity.DiskVmElementEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.toVmId
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
-import com.itinfo.rutilvm.util.ovirt.error.toError
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.DiskBuilder

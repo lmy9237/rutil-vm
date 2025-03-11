@@ -103,7 +103,7 @@ interface ItDataCenterService {
 	 * @return List<[VmVo]> 가상머신 목록
 	 */
 	@Throws(Error::class)
-	fun findAllVmsFromDataCenter(dataCenterId: String): List<VmVo>
+	fun findAllVmsFromDataCenter(dataCenterId: String): List<VmViewVo>
 	/**
 	 * [ItDataCenterService.findAllStorageDomainsFromDataCenter]
 	 * 데이터센터가 가지고있는 스토리지 도메인 목록
@@ -285,7 +285,7 @@ class DataCenterServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllVmsFromDataCenter(dataCenterId: String): List<VmVo> {
+	override fun findAllVmsFromDataCenter(dataCenterId: String): List<VmViewVo> {
 		log.debug("findAllVmsFromDataCenter ... dataCenterId: {}", dataCenterId)
 		val res: List<Vm> = conn.findAllVmsFromDataCenter(dataCenterId)
 			.getOrDefault(listOf())

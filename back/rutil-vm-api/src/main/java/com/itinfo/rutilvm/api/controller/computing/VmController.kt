@@ -36,7 +36,7 @@ class VmController: BaseController() {
 	@GetMapping
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	fun vms(): ResponseEntity<List<VmVo>> {
+	fun vms(): ResponseEntity<List<VmViewVo>> {
 		log.info("/computing/vms ... 가상머신 목록")
 		return ResponseEntity.ok(iVm.findAll())
 	}
@@ -57,7 +57,7 @@ class VmController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	fun vm(
 		@PathVariable vmId: String? = null,
-	): ResponseEntity<VmVo?> {
+	): ResponseEntity<VmViewVo?> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		log.info("/computing/vms/{} ... 가상머신 상세정보", vmId)
@@ -94,7 +94,7 @@ class VmController: BaseController() {
 		notes="가상머신을 생성한다"
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name="vm", value="가상머신", dataTypeClass=VmVo::class, paramType="body"),
+		ApiImplicitParam(name="vm", value="가상머신", dataTypeClass=VmCreateVo::class, paramType="body"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED"),

@@ -24,19 +24,19 @@ interface ItVmService {
 	 * [ItVmService.findAll]
 	 * 가상머신 목록
 	 *
-	 * @return List<[VmVo]> 가상머신 목록
+	 * @return List<[VmViewVo]> 가상머신 목록
 	 */
 	@Throws(Error::class)
-	fun findAll(): List<VmVo>
+	fun findAll(): List<VmViewVo>
 	/**
 	 * [ItVmService.findOne]
 	 * 가상머신 정보
 	 *
 	 * @param vmId [String] 가상머신 Id
-	 * @return [VmVo]
+	 * @return [VmViewVo]
 	 */
 	@Throws(Error::class)
-	fun findOne(vmId: String): VmVo?
+	fun findOne(vmId: String): VmViewVo?
 	/**
 	 * [ItVmService.findEditOne]
 	 * 가상머신 편집
@@ -165,17 +165,17 @@ class VmServiceImpl(
 ) : BaseService(), ItVmService {
 
 	@Throws(Error::class)
-	override fun findAll(): List<VmVo> {
+	override fun findAll(): List<VmViewVo> {
 		log.info("findAll ... ")
 		val res: List<Vm> = conn.findVms()
 		return res.toVmsMenu(conn)
 	}
 
 	@Throws(Error::class)
-	override fun findOne(vmId: String): VmVo? {
+	override fun findOne(vmId: String): VmViewVo? {
 		log.info("findOne ... vmId : {}", vmId)
 		val res: Vm? = conn.findVm(vmId).getOrNull()
-		return res?.toVmVo(conn)
+		return res?.toVmViewVo(conn)
 	}
 
 	@Throws(Error::class)

@@ -232,7 +232,7 @@ class ItGraphServiceTest {
         log.debug("should_totalCpuMemoryList ... ")
         val result: List<HostUsageDto> =
             service.totalHostCpuMemoryList(
-                UUID.fromString("e33e7f72-a2a5-4152-962a-a7ef804acbb4"),
+                "e33e7f72-a2a5-4152-962a-a7ef804acbb4",
                 5
             )
 

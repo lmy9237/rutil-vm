@@ -4,11 +4,8 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromApplicationsToIdentifiedVos
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.network.NicVo
-import com.itinfo.rutilvm.api.model.network.toNicVoFromSnapshot
 import com.itinfo.rutilvm.api.model.network.toNicVosFromSnapshot
-import com.itinfo.rutilvm.api.model.network.toNicVosFromVm
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
-import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.toAddSnapshotDisks
 import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.util.ovirt.*
@@ -20,7 +17,6 @@ import org.ovirt.engine.sdk4.builders.SnapshotBuilder
 import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
 import java.io.Serializable
-import java.math.BigInteger
 
 private val log = LoggerFactory.getLogger(SnapshotVo::class.java)
 
@@ -44,7 +40,7 @@ class SnapshotVo (
     val status: String = "",
     val date: String = "",
     val persistMemory: Boolean = false,
-    val vmVo: VmVo = VmVo(),
+    val vmVo: VmCreateVo = VmCreateVo(),
     val snapshotDiskVos: List<SnapshotDiskVo> = listOf(),
     val nicVos: List<NicVo> = listOf(),
     val applicationVos: List<IdentifiedVo> = listOf(),
@@ -58,7 +54,7 @@ class SnapshotVo (
         private var bStatus: String = ""; fun status(block: () -> String?) { bStatus= block() ?: "" }
         private var bDate: String = ""; fun date(block: () -> String?) { bDate= block() ?: "" }
         private var bPersistMemory: Boolean = false; fun persistMemory(block: () -> Boolean?) { bPersistMemory= block() ?: false }
-        private var bVmVo: VmVo = VmVo(); fun vmVo(block: () -> VmVo?) { bVmVo = block() ?: VmVo()  }
+        private var bVmVo: VmCreateVo = VmCreateVo(); fun vmVo(block: () -> VmCreateVo?) { bVmVo = block() ?: VmCreateVo()  }
         private var bSnapshotDiskVos: List<SnapshotDiskVo> = listOf(); fun snapshotDiskVos(block: () -> List<SnapshotDiskVo>?) { bSnapshotDiskVos = block() ?: listOf() }
         private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
         private var bApplicationVos: List<IdentifiedVo> = listOf(); fun applicationVos(block: () -> List<IdentifiedVo>?) { bApplicationVos = block() ?: listOf() }
