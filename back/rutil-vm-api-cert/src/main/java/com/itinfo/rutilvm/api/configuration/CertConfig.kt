@@ -30,6 +30,7 @@ open class CertConfig(
 
 	@Value("\${application.ovirt.ssh.jsch.log.enabled}")	private lateinit var _jschLogEnabled: String
 	@Value("\${application.ovirt.ssh.jsch.connection-timeout}")	private lateinit var _jschConnectionTimeout: String
+	@Value("\${application.ovirt.ssh.cert.location}")		lateinit var ovirtSSHCertLocation: String
 	@Value("\${application.ovirt.ssh.prvkey.location}")		private lateinit var _ovirtSSHPrivateKeyLocation: String
 	@Value("\${application.ovirt.ssh.engine.address}")		private lateinit var _ovirtSSHEngineAddress: String
 	@Value("\${application.ovirt.ssh.engine.prvkey}")		lateinit var ovirtSSHEnginePrvKey: String
@@ -49,7 +50,8 @@ open class CertConfig(
 	fun init() {
 		log.info("init ... ")
 		log.debug("  application.ovirt.ssh.jsch.log.enabled: {}", jschLogEnabled)
-		log.debug("  application.ovirt.ssh.jsch.connection-timeout: {}", jschLogEnabled)
+		log.debug("  application.ovirt.ssh.jsch.connection-timeout: {}", jschConnectionTimeout)
+		log.debug("  application.ovirt.ssh.cert.location: {}", ovirtSSHCertLocation)
 		log.debug("  application.ovirt.ssh.prvkeypath: {}", _ovirtSSHPrivateKeyLocation)
 		log.debug("  application.ovirt.ssh.engine.address: {}", pkiServiceClient.fetchEngineSshPublicKey())
 		log.debug("  application.ovirt.ssh.engine.prvkey: {}", ovirtSSHEnginePrvKey)
@@ -80,9 +82,13 @@ open class CertConfig(
 		val certs = EngineCertType.values().filter {
 			it != EngineCertType.UNKNOWN
 		}.map {
-			it.toCertManager(conn4Engine())
+			it.toCertManager(conn4Engine(), ovirtSSHCertLocation)
 		}
-		return certs
+		return certs.onEach {
+			// 반환 전에 한번 임시저장
+			val res: Boolean = it.save2Tmp().getOrNull() ?: false
+			if (res) log.info("engineCertManagers ... SUCCESS") else log.warn("downloadEngineCerts ... FAILURE for {}", it.alias)
+		}
 	}
 
 	@Bean
@@ -90,20 +96,6 @@ open class CertConfig(
 		log.info("conn4Engine ...")
 		return ovirtEngineSSH
 	}
-
-	/*
-	@Bean
-	open fun sshFileFetcher(): SSHFileFetcher {
-		log.info("sshFileFetcher ...")
-		return SSHFileFetcher.getInstance()
-	}
-
-	@Bean
-	open fun sshHelper(): SSHHelper {
-		log.info("sshHelper ...")
-		return SSHHelper.getInstance()
-	}
-	*/
 
 	companion object {
 		private val log by LoggerDelegate()

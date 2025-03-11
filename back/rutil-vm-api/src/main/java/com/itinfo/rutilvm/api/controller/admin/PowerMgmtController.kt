@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @Api(tags = ["Power Management"])
 @RequestMapping("/api/v1/admin")
-class PowerManagementController : BaseController() {
+class PowerMgmtController : BaseController() {
 	@ApiOperation(
 		httpMethod="POST",
 		value="백엔드 (안전하게) 종료",

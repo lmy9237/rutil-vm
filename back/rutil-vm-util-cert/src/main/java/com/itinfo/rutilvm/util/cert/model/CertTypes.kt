@@ -2,6 +2,13 @@ package com.itinfo.rutilvm.util.cert.model
 
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * [HostCertType]
+ * 호스트 관련 인증서 유형
+ *
+ * @author 이찬희 (@chanhi2000)
+ * @since 2025-03-11
+ */
 enum class HostCertType(override val alias: String, override val path: String) : CertType {
 	VDSM("VDSM Certificate", "/etc/pki/vdsm/certs/vdsmcert.pem"),
 	/*VDSM_CA("VDSM CA Certificate", "/etc/pki/vdsm/certs/cacert.pem"),*/
@@ -16,6 +23,13 @@ enum class HostCertType(override val alias: String, override val path: String) :
 	}
 }
 
+/**
+ * [EngineCertType]
+ * ovirt-engine 관련 인증서 유형
+ *
+ * @author 이찬희 (@chanhi2000)
+ * @since 2025-03-11
+ */
 enum class EngineCertType(override val alias: String, override val path: String) : CertType {
 	ENGINE("Engine Certificate", "/etc/pki/ovirt-engine/certs/apache.cer"),
 	ENGINE_SERVER("Engine Server Certificate",  "/etc/pki/ovirt-engine/certs/engine.cer"),

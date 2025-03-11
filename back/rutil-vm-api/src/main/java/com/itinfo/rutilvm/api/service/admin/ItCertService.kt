@@ -41,8 +41,9 @@ class CertServiceImpl(
 		log.info("findAll ...")
 		val hosts: List<HostVo> = iHost.findAll()
 		val certs: List<CertManager> = hosts.toCertManagers(
+			certConfig.ovirtSSHPrvKey,
+			certConfig.ovirtSSHCertLocation,
 			certConfig.jschConnectionTimeout,
-			certConfig.ovirtSSHPrvKey
 		) + certConfig.engineCertManagers()
 		return certs
 	}

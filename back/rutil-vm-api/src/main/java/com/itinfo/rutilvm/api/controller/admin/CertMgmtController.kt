@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @Api(tags = ["Certificate(s) Management"])
 @RequestMapping("/api/v1/admin/certs")
-class CertManagementController : BaseController() {
+class CertMgmtController : BaseController() {
 	@Autowired private lateinit var cert: ItCertService
 
 	@ApiOperation(

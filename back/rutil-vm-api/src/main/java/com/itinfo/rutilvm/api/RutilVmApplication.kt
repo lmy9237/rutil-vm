@@ -13,6 +13,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.core.SpringVersion
+import org.springframework.scheduling.annotation.EnableScheduling
 import java.text.SimpleDateFormat
 
 private val log = LoggerFactory.getLogger(RutilVmApplication::class.java)
@@ -25,6 +26,7 @@ private val log = LoggerFactory.getLogger(RutilVmApplication::class.java)
 	"com.itinfo.rutilvm.api.repository",
 ])
 @ServletComponentScan
+@EnableScheduling
 class RutilVmApplication: SpringBootServletInitializer() {
 	override fun configure(builder: SpringApplicationBuilder?): SpringApplicationBuilder {
 		log.info("configure ...")
