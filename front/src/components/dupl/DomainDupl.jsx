@@ -18,7 +18,7 @@ import { convertBytesToGB } from "../../util";
  */
 const DomainDupl = ({
   isLoading, isError, isSuccess,
-  domains = [], columns = [], actionType = "domain", datacenterId, showSearchBox = false
+  domains = [], columns = [], actionType = "domain", datacenterId, showSearchBox = true
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);

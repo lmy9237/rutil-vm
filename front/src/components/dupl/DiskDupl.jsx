@@ -11,7 +11,7 @@ import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 
 const DiskDupl = ({
   isLoading, isError, isSuccess,
-  disks = [], columns = [], type = "disk", showSearchBox = false
+  disks = [], columns = [], type = "disk", showSearchBox = true
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);

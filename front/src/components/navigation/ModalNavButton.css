@@ -9,7 +9,7 @@
     background-color: #fafafa;
     border-right: var(--border-simple);
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    font-weight: 800;
+    font-weight: 500;
   }
   .network-backup-edit-nav > div {
     padding: 14px 6px;

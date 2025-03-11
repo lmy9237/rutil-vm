@@ -1,4 +1,3 @@
-/* +, - 버튼 누르면 밑으로 요소가 하나 더생기는것 */
 import React, { useState } from "react";
 
 const DynamicInputList = ({
@@ -31,14 +30,14 @@ const DynamicInputList = ({
   };
 
   return (
-    <div className="dynamic-Input-outer p-2 ">
-      {inputs.map((input, index) => ( 
-        <div key={index} className="dynamic-Input f-btw mb-1.5">
+    <div className="dynamic-input-outer p-2">
+      {inputs.map((input, index) => (
+        <div key={index} className="dynamic-input f-btw mb-1.5">
           {inputType === "select" ? (
             <select
               value={input}
               onChange={(e) => handleChange(index, e.target.value)}
-              disabled={disabled} // 🔥 DNS 설정이 비활성화되면 선택 불가능
+              disabled={disabled} // DNS 설정이 비활성화되면 선택 불가능
             >
               <option value="">항목을 선택하세요...</option>
               {options.map((option, i) => (
@@ -53,43 +52,31 @@ const DynamicInputList = ({
               value={input}
               onChange={(e) => handleChange(index, e.target.value)}
               placeholder={placeholder}
-              disabled={disabled} // 🔥 DNS 설정이 비활성화되면 입력 불가능
-            
+              disabled={disabled} // DNS 설정이 비활성화되면 입력 불가능
             />
           )}
-          {index === inputs.length - 1 ? (
-            <div className="dynamic-btns flex">
-              {inputs.length < maxCount && (
-                <button
-                  type="button"
-                  onClick={handleAdd}
-                  disabled={disabled} // 🔥 DNS 설정이 비활성화되면 버튼도 비활성화
-         
-                >
-                  +
-                </button>
-              )}
-              {inputs.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => handleRemove(index)}
-                  disabled={disabled} // 🔥 DNS 설정이 비활성화되면 버튼도 비활성화
-          
-                >
-                  -
-                </button>
-              )}
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => handleRemove(index)}
-              disabled={disabled} // 🔥 DNS 설정이 비활성화되면 버튼도 비활성화
-     
-            >
-              -
-            </button>
-          )}
+
+          {/* 버튼 렌더링 */}
+          <div className="dynamic-btns flex">
+            {index === inputs.length - 1 && inputs.length < maxCount && (
+              <button
+                type="button"
+                onClick={handleAdd}
+                disabled={disabled}
+              >
+                +
+              </button>
+            )}
+            {inputs.length > 1 && (
+              <button
+                type="button"
+                onClick={() => handleRemove(index)}
+                disabled={disabled} 
+              >
+                -
+              </button>
+            )}
+          </div>
         </div>
       ))}
     </div>
@@ -97,4 +84,3 @@ const DynamicInputList = ({
 };
 
 export default DynamicInputList;
-

@@ -21,7 +21,7 @@ import useSearch from "../button/useSearch";
 const NetworkDupl = ({
   isLoading, isError, isSuccess,
   networks = [], columns = [],
-  showSearchBox = false, 
+  showSearchBox = true, 
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
@@ -43,7 +43,10 @@ const NetworkDupl = ({
   // 변환된 데이터에서 검색 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
 
-  const selectedIds = selectedNetworks.map((network) => network.id).join(", ");
+  const selectedIds = (Array.isArray(selectedNetworks) ? selectedNetworks : [])
+    .map((network) => network.id)
+    .join(", ");
+  
   const handleNameClick = (id) => navigate(`/networks/${id}`);
 
   // 모달 열기 / 닫기
@@ -51,7 +54,8 @@ const NetworkDupl = ({
   const closeModal = () => setActiveModal(null);
 
   return (
-    <>
+
+    <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group">
         {showSearchBox && (
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -94,7 +98,7 @@ const NetworkDupl = ({
         selectedNetworks={selectedNetworks}
         onClose={closeModal}
       />
-    </>
+    </div>
   );
 };
 

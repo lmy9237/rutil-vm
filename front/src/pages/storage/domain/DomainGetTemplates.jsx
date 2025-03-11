@@ -5,6 +5,8 @@ import DomainGetVmTemplateModal from "../../../components/modal/domain/DomainGet
 import DeleteModal from "../../../utils/DeleteModal";
 import { useAllUnregisteredTemplateFromDomain } from "../../../api/RQHook";
 import { checkZeroSizeToMB } from "../../../util";
+import SearchBox from "../../../components/button/SearchBox";
+import useSearch from "../../../components/button/useSearch";
 
 /**
  * @name DomainGetTemplates
@@ -31,12 +33,30 @@ const DomainGetTemplates = ({ domainId }) => {
     .map((t) => t.id)
     .join(", ");
 
-  console.log("...");
+  const transformedData = templates.map((t) => ({
+    ...t,
+    name: t.name,
+    memory: checkZeroSizeToMB(t.memorySize),
+    cpu: t.cpuTopologyCnt,
+    cpuArc: t.cpuArc,
+    disk: t.disk,
+    createdAt: t.creationTime,
+    exportedAt: t.exportedAt,
+    // ✅ 검색 필드 추가
+    searchText: `${t.name} ${checkZeroSizeToMB(t.memorySize)} ${t.cpuTopologyCnt} ${t.cpuArc} ${t.disk} ${t.creationTime} ${t.exportedAt}`.toLowerCase(),
+  }));
+
+  // ✅ 검색 기능 적용
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  
   return (
     <>
-      <div className="header-right-btns">
-        <button onClick={() => setActiveModal("get")}>가져오기</button>
-        <button onClick={() => setActiveModal("delete")}>삭제</button>
+      <div className="dupl-header-group">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <div className="header-right-btns">
+          <button onClick={() => setActiveModal("get")}>가져오기</button>
+          <button onClick={() => setActiveModal("delete")}>삭제</button>
+        </div>
       </div>
       <span>ID: {selectedIds || ""}</span>
 
@@ -45,16 +65,7 @@ const DomainGetTemplates = ({ domainId }) => {
         isError={isTemplatesError}
         isSuccess={isTemplatesSuccess}
         columns={TableColumnsInfo.GET_VMS_TEMPLATES}
-        data={templates.map((t) => ({
-          ...t,
-          name: t.name,
-          memory: checkZeroSizeToMB(t.memorySize),
-          cpu: t.cpuTopologyCnt,
-          cpuArc: t.cpuArc,
-          disk: t.disk,
-          createdAt: t.creationTime,
-          exportedAt: t.exportedAt,
-        }))}
+        data={filteredData}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedTemplates(selectedRows)}
         multiSelect={true}

@@ -19,7 +19,10 @@ const HostNics = ({ hostId }) => {
     isLoading: isNicsLoading,
     isError: isNicsError,
     isSuccess: isNicsSuccess,
-  } = useNetworkInterfaceFromHost(hostId, (e) => ({
+  } = useNetworkInterfaceFromHost(hostId);
+
+  // NIC 데이터 변환
+  const transformedData = nics.map((e) => ({
     ...e,
     icon: renderUpDownStatusIcon(e?.status),
     ipv4: e?.ip?.address || "없음",
@@ -29,8 +32,8 @@ const HostNics = ({ hostId }) => {
     speed: checkZeroSizeToMbps(e?.speed),
     rxSpeed: checkZeroSizeToMbps(e?.rxSpeed),
     txSpeed: checkZeroSizeToMbps(e?.txSpeed),
-    rxTotalSpeed: e?.rxTotalSpeed.toLocaleString(),
-    txTotalSpeed: e?.txTotalSpeed.toLocaleString(),
+    rxTotalSpeed: e?.rxTotalSpeed?.toLocaleString() || "0",
+    txTotalSpeed: e?.txTotalSpeed?.toLocaleString() || "0",
     pkts: `${e?.rxTotalError} Pkts` || "1 Pkts",
     status: e?.status,
     bondingVo: {
@@ -42,14 +45,18 @@ const HostNics = ({ hostId }) => {
     },
   }));
 
+  useEffect(() => {
+    console.log("NIC 데이터 확인:", transformedData);
+  }, [transformedData]);
+
   const [visibleBoxes, setVisibleBoxes] = useState([]);
   const [activeTable, setActiveTable] = useState({});
   const [activeButton, setActiveButton] = useState({});
   const [isExpandedAll, setIsExpandedAll] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const initializeTableState = (nics) => {
-    const defaultState = nics.reduce((acc, _, index) => ({
+  const initializeTableState = (data) => {
+    const defaultState = data.reduce((acc, _, index) => ({
       ...acc,
       [index]: "NETWORK_FROM_HOST",
     }), {});
@@ -58,9 +65,8 @@ const HostNics = ({ hostId }) => {
   };
 
   useEffect(() => {
-    initializeTableState(nics);
-  }, [nics]);
-
+    initializeTableState(transformedData);
+  }, [transformedData]);
 
   const toggleHiddenBox = (index) => {
     setVisibleBoxes((prev) =>
@@ -69,7 +75,7 @@ const HostNics = ({ hostId }) => {
   };
 
   const toggleAllBoxes = () => {
-    setVisibleBoxes(isExpandedAll ? [] : nics.map((_, index) => index));
+    setVisibleBoxes(isExpandedAll ? [] : transformedData.map((_, index) => index));
     setIsExpandedAll(!isExpandedAll);
   };
 
@@ -81,22 +87,21 @@ const HostNics = ({ hostId }) => {
   return (
     <>
       <div className="header-right-btns">
-        {/* <button>VF 보기</button> */}
         <button onClick={toggleAllBoxes}>{isExpandedAll ? "모두 숨기기" : "모두 확장"}</button>
         <button onClick={() => setIsModalOpen(true)}>호스트 네트워크 설정</button>
-        {/* <button>네트워크 설정 저장</button>
-        <button>모든 네트워크 동기화</button> */}
       </div>
 
       <div className="host-nic-table-outer">
-        {nics.map((data, index) => (
+        {transformedData.map((data, index) => (
           <div key={index} className="host-network-boxs" style={{ marginBottom: "0.2rem" }}>
             <div className="host_network_firstbox" onClick={() => toggleHiddenBox(index)}>
               <div className="section-table-outer">
                 <TablesOuter
-                  isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
+                  isLoading={isNicsLoading}
+                  isError={isNicsError}
+                  isSuccess={isNicsSuccess}
                   data={[data]}
-                  columns={[{ header: "", accessor: "icon", width: "5%" }, ...TableColumnsInfo.NETWORK_INTERFACE_FROM_HOST]}
+                  columns={TableColumnsInfo.NETWORK_INTERFACE_FROM_HOST}
                 />
               </div>
             </div>
@@ -124,14 +129,18 @@ const HostNics = ({ hostId }) => {
                 <div className="section-table-outer">
                   {activeTable[index] === "NETWORK_FROM_HOST" && (
                     <TablesOuter
-                      isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
+                      isLoading={isNicsLoading}
+                      isError={isNicsError}
+                      isSuccess={isNicsSuccess}
                       data={[data]}
                       columns={TableColumnsInfo.NETWORK_FROM_HOST}
                     />
                   )}
                   {activeTable[index] === "NETWORK_FROM_HOST_SLAVE" && data.bondingVo?.slaves && (
                     <TablesOuter
-                      isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
+                      isLoading={isNicsLoading}
+                      isError={isNicsError}
+                      isSuccess={isNicsSuccess}
                       data={data.bondingVo.slaves}
                       columns={TableColumnsInfo.NETWORK_FROM_HOST_SLAVE}
                     />
@@ -143,10 +152,10 @@ const HostNics = ({ hostId }) => {
         ))}
       </div>
 
-      <HostNetworkModal 
-        isOpen={isModalOpen} 
-        hostId={hostId} 
-        onClose={() => setIsModalOpen(false)} 
+      <HostNetworkModal
+        isOpen={isModalOpen}
+        hostId={hostId}
+        onClose={() => setIsModalOpen(false)}
       />
     </>
   );

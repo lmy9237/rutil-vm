@@ -77,6 +77,7 @@ const TableColumnsInfo = {
     { header: '업타임', accessor: 'upTime', clickable: false, width: '20%' },
   ],
   NETWORK_INTERFACE_FROM_HOST:[
+    { header: "", accessor: "icon", width: "5%" },
     { header: '이름', accessor: 'name' }, // 인터페이스 이름
     { header: 'MAC', accessor: 'macAddress' }, // MAC 주소
     { header: 'Rx 속도 (Mbps)', accessor: 'rxSpeed' }, // Rx 속도

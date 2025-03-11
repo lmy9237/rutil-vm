@@ -18,6 +18,7 @@ const AllNetwork = () => {
     isLoading: isNetworksLoading,
     isError: isNetworksError,
     isSuccess: isNetworksSuccess,
+    refetch: neworksRefetch,
   } = useAllNetworks((e) => ({ ...e }));
 
   console.log("...");
@@ -32,6 +33,7 @@ const AllNetwork = () => {
           columns={TableColumnsInfo.NETWORKS}
           isLoading={isNetworksLoading}
           isError={isNetworksError}
+          onCloseModal={neworksRefetch}
           isSuccess={isNetworksSuccess}
           showSearchBox={true}
         />

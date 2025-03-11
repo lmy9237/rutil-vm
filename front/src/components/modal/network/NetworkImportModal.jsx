@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import BaseModal from "../BaseModal";
 import { useAllNetworkProviders } from "../../../api/RQHook";
-import "./MNetwork.css";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
+import "./MNetwork.css";
 
 const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
-  const { data: networkProvider = [], isLoading: isDatacentersLoading } =
-    useAllNetworkProviders();
+  const {
+    data: networkProvider = [],
+    isLoading: isDatacentersLoading
+  } = useAllNetworkProviders();
+
   useEffect(() => {
     console.log("📢 네트워크 공급자 데이터:", networkProvider);
   }, [networkProvider]);

@@ -6,6 +6,8 @@ import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { renderDataCenterStatusIcon } from "../../../components/Icon";
 import { useAllDataCenterFromDomain, useDomainById } from "../../../api/RQHook";
+import SearchBox from "../../../components/button/SearchBox";
+import useSearch from "../../../components/button/useSearch";
 
 const DomainActionModal = React.lazy(() => import("../../../components/modal/domain/DomainActionModal"));
 const DomainAttachModal = React.lazy(() => import("../../../components/modal/domain/DomainAttachModal"));
@@ -37,6 +39,19 @@ const DomainDatacenters = ({ domainId }) => {
 
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
+  const transformedData = datacenters.map((datacenter) => ({
+    ...datacenter,
+    icon: renderDataCenterStatusIcon(datacenter?.domainStatus),
+    name: (
+      <TableRowClick type="datacenter" id={datacenter?.id}>
+        {datacenter?.name}
+      </TableRowClick>
+    ),
+    searchText: `${datacenter?.name} ${datacenter?.domainStatus}`.toLowerCase(),
+  }));
+
+  // ✅ 검색 기능 적용
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   const renderModals = () => (
     <Suspense fallback={<Loading />}>
@@ -62,13 +77,16 @@ const DomainDatacenters = ({ domainId }) => {
   console.log("...");
   return (
     <>
-      <DomainActionButtons
-        openModal={openModal}
-        isEditDisabled={selectedDataCenters.length !== 1}
-        isDeleteDisabled={selectedDataCenters.length === 0}
-        status={selectedDataCenters[0]?.domainStatus}
-        actionType="domainDc" // 도메인인지, 데이터센터인지
-      />
+      <div className="dupl-header-group">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <DomainActionButtons
+          openModal={openModal}
+          isEditDisabled={selectedDataCenters.length !== 1}
+          isDeleteDisabled={selectedDataCenters.length === 0}
+          status={selectedDataCenters[0]?.domainStatus}
+          actionType="domainDc" // 도메인인지, 데이터센터인지
+        />
+      </div>
       <span>ID: {selectedIds || ""}</span>
 
       <TablesOuter
@@ -76,15 +94,7 @@ const DomainDatacenters = ({ domainId }) => {
         isError={isDataCentersError}
         isSuccess={isDataCentersSuccess}
         columns={TableColumnsInfo.DATACENTERS_FROM_STORAGE_DOMAIN}
-        data={datacenters.map((datacenter) => ({
-          ...datacenter,
-          icon: renderDataCenterStatusIcon(datacenter?.domainStatus),
-          name: (
-            <TableRowClick type="datacenter" id={datacenter?.id}>
-              {datacenter?.name}
-            </TableRowClick>
-          ),
-        }))}
+        data={filteredData}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedDataCenters(selectedRows)}
       />

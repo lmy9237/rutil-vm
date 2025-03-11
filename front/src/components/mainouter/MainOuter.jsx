@@ -1,30 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { adjustFontSize } from "../../UIEvent";
-import { useAllTreeNavigations } from "../../api/RQHook";
 import "./MainOuter.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faThLarge,
-  faDesktop,
-  faServer,
-  faDatabase,
-  faCog,
-faBuilding,
-  faUser,
-  faMicrochip,
-  faChevronLeft,
-  faChevronRight,
-  faChevronDown,
-  faListUl,
-  faFileEdit,
-  faEarthAmericas,
-  faLayerGroup,
-  faCloud,
-  faSquare,
-} from "@fortawesome/free-solid-svg-icons";
 import SideNavbar from "./SideNavbar";
-import SidebarPopup from "./SidebarTree";
 import SidebarTree from "./SidebarTree";
 
 /**
@@ -43,6 +21,8 @@ const MainOuter = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  /* aside-popup화면사이즈드레그 */
   const [sidebarWidth, setSidebarWidth] = useState(240); // 초기 사이드바 너비 (%)
   const asideStyles = {
     width: asideVisible ? `${sidebarWidth}px` : "0px", // 닫힐 때 0px
@@ -52,10 +32,7 @@ const MainOuter = ({
   const isResizing = useRef(false);
   const xRef = useRef(0);
   const leftWidthRef = useRef(0);
-
-  /* aside-popup화면사이즈드레그 */
   useEffect(() => {
-    // 마우스 이벤트 해제 (Unmount 시)
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
@@ -86,7 +63,6 @@ const MainOuter = ({
       }
     });
   };
-
   const handleMouseUp = () => {
     isResizing.current = false;
 
@@ -170,17 +146,7 @@ const MainOuter = ({
     setSelectedDiv(lastId);
   }, [location.pathname]);
 
-  // 클러스터(컴퓨팅)api
-  const { data: navClusters, refetch: navClustersRefetch } =
-    useAllTreeNavigations("cluster");
 
-  // 네트워크 api
-  const { data: navNetworks, refetch: navNetworksRefetch } =
-    useAllTreeNavigations("network");
-
-  // 스토리지 도메인 api
-  const { data: navStorageDomains, refetch: navStorageDomainsRefetch } =
-    useAllTreeNavigations("storagedomain");
 
   useEffect(() => {
     const waveGraph = document.querySelector(".wave_graph");
@@ -259,42 +225,6 @@ const MainOuter = ({
     );
   }, [openNetworkDataCenters]);
 
-  const toggleComputingDataCenter = (dataCenterId) => {
-    setOpenComputingDataCenters((prevState) => ({
-      ...prevState,
-      [dataCenterId]: !prevState[dataCenterId],
-    }));
-  };
-
-  const toggleNetworkDataCenter = (dataCenterId) => {
-    setOpenNetworkDataCenters((prevState) => ({
-      ...prevState,
-      [dataCenterId]: !prevState[dataCenterId],
-    }));
-  };
-
-  // 열림/닫힘 상태 변경 함수
-  const toggleDataCenter = (dataCenterId) => {
-    setOpenDataCenters((prevState) => ({
-      ...prevState,
-      [dataCenterId]: !prevState[dataCenterId],
-    }));
-  };
-
-  const toggleCluster = (clusterId) => {
-    setOpenClusters((prevState) => ({
-      ...prevState,
-      [clusterId]: !prevState[clusterId],
-    }));
-  };
-
-  const toggleHost = (hostId) => {
-    setOpenHosts((prevState) => ({
-      ...prevState,
-      [hostId]: !prevState[hostId],
-    }));
-  };
-
   useEffect(() => {
     window.addEventListener("resize", adjustFontSize);
     adjustFontSize();
@@ -325,25 +255,6 @@ const MainOuter = ({
     }
   };
 
-  // const renderAsidePopupContent = () => {
-  //   if (isInitialLoad && selected === "dashboard") {
-  //     return renderAsidePopup("computing");
-  //   }
-  //   // 이벤트와 설정에서는 이전에 선택한 섹션의 콘텐츠를 표시
-  //   if (
-  //     selected === "event" ||
-  //     selected === "settings" ||
-  //     selected === "dashboard"
-  //   ) {
-  //     return lastSelected ? (
-  //       renderAsidePopup(lastSelected)
-  //     ) : (
-  //       <div>선택된 내용이 없습니다.</div>
-  //     );
-  //   }
-  //   return renderAsidePopup(selected); // 현재 선택된 항목의 콘텐츠를 표시
-  // };
-
   // 초기에는 가상머신 섹션을 마지막 섹션으로 설정
   useEffect(() => {
     if (isInitialLoad && selected === "dashboard") {
@@ -352,412 +263,6 @@ const MainOuter = ({
     setIsInitialLoad(false);
   }, [isInitialLoad, selected]);
 
-  // const renderAsidePopup = (selected) => {
-  //   return (
-  //     <>
-  //       {/*가상머신 섹션*/}
-  //       {selected === "computing" && (
-  //         <div id="virtual_machine_chart">
-  //           {/* 첫 번째 레벨 (Rutil Manager) */}
-  //           <div className="aside-popup-content"
-  //             id="aside_popup_first"
-  //             style={{ backgroundColor: getBackgroundColor("rutil-manager") }}
-  //             onClick={() => {
-  //               if (selectedDiv !== "rutil-manager") {
-  //                 setSelectedDiv("rutil-manager");
-  //                 navigate("/computing/rutil-manager");
-  //               }
-  //             }}
-  //           >
-  //             <FontAwesomeIcon
-  //               style={{
-  //                 fontSize: "12px",
-  //                 marginRight: "0.04rem",
-  //               }}
-  //               icon={isSecondVisible ? faChevronDown : faChevronRight}
-  //               onClick={(e) => {
-  //                 e.stopPropagation();
-  //                 setIsSecondVisible(!isSecondVisible); // Only toggles on icon click
-  //               }}
-  //               fixedWidth
-  //             />
-  //             <FontAwesomeIcon icon={faBuilding} fixedWidth />
-  //             <span>Rutil manager</span>
-  //           </div>
-
-  //           {/* 두 번째 레벨 (Data Center) */}
-  //           {isSecondVisible &&
-  //             navClusters &&
-  //             navClusters.map((dataCenter) => {
-  //               const isDataCenterOpen =
-  //                 openComputingDataCenters[dataCenter.id] || false;
-  //                 const hasClusters =
-  //                   Array.isArray(dataCenter.clusters) &&
-  //                   dataCenter.clusters.length > 0;
-  //                 return (
-  //                   <div key={dataCenter.id}>
-  //                     <div
-  //                       className="aside-popup-second-content"
-  //                       style={{
-  //                         backgroundColor: getBackgroundColor(dataCenter.id),
-  //                         paddingLeft: getPaddingLeft(hasClusters, "42px", "26px"), // ✅ 적용
-  //                       }}
-  //                       onClick={() => {
-  //                         setSelectedDiv(dataCenter.id);
-  //                         navigate(`/computing/datacenters/${dataCenter.id}/clusters`);
-  //                       }}
-  //                     >
-  //                       {hasClusters && (
-  //                         <FontAwesomeIcon
-  //                           style={{
-  //                             fontSize: "12px",
-  //                             marginRight: "0.04rem",
-  //                           }}
-  //                           icon={isDataCenterOpen ? faChevronDown : faChevronRight}
-  //                           onClick={(e) => {
-  //                             e.stopPropagation();
-  //                             toggleComputingDataCenter(dataCenter.id);
-  //                           }}
-  //                           fixedWidth
-  //                         />
-  //                       )}
-  //                       <FontAwesomeIcon icon={faLayerGroup} fixedWidth />
-  //                       <span>{dataCenter.name}</span>
-  //                     </div>
-
-  //                   {/* 세 번째 레벨 (Clusters) */}
-  //                   {isDataCenterOpen && Array.isArray(dataCenter.clusters) && dataCenter.clusters.map((cluster) => {
-  //                     const isClusterOpen = openClusters[cluster.id] || false;
-  //                     const hasHosts = Array.isArray(cluster.hosts) && cluster.hosts.length > 0;
-  //                     return (
-  //                         <div key={cluster.id}>
-  //                             <div
-  //                                 className="aside-popup-third-content"
-  //                                 style={{
-  //                                     backgroundColor: getBackgroundColor(cluster.id),
-  //                                     paddingLeft: getPaddingLeft(hasHosts, "59px", "43px"),
-  //                                 }}
-  //                                 onClick={() => {
-  //                                     setSelectedDiv(cluster.id);
-  //                                     navigate(`/computing/clusters/${cluster.id}`);
-  //                                 }}
-  //                             >
-  //                                 {hasHosts && (
-  //                                     <FontAwesomeIcon
-  //                                         style={{ fontSize: '12px', marginRight: '0.04rem' }}
-  //                                         icon={isClusterOpen ? faChevronDown : faChevronRight}
-  //                                         onClick={(e) => {
-  //                                             e.stopPropagation();
-  //                                             toggleCluster(cluster.id);
-  //                                         }}
-  //                                         fixedWidth
-  //                                     />
-  //                                 )}
-  //                                 <FontAwesomeIcon icon={faEarthAmericas} fixedWidth />
-  //                                 <span>{cluster.name}</span>
-  //                             </div>
-
-  //                             {/* 네 번째 레벨 (Hosts) */}
-  //                             {isClusterOpen && Array.isArray(cluster.hosts) && cluster.hosts.map((host) => {
-  //                                 const isHostOpen = openHosts[host.id] || false;
-  //                                 const hasVMs = Array.isArray(host.vms) && host.vms.length > 0;
-  //                                 return (
-  //                                     <div key={host.id}>
-  //                                         <div
-  //                                             className="aside-popup-fourth-content"
-  //                                             style={{
-  //                                                 backgroundColor: getBackgroundColor(host.id),
-  //                                                 paddingLeft: getPaddingLeft(hasVMs, "75px", "59px"),
-  //                                             }}
-  //                                             onClick={() => {
-  //                                                 setSelectedDiv(host.id);
-  //                                                 navigate(`/computing/hosts/${host.id}`);
-  //                                             }}
-  //                                         >
-  //                                             {hasVMs && (
-  //                                                 <FontAwesomeIcon
-  //                                                     style={{ fontSize: '12px', marginRight: '0.04rem'}}
-  //                                                     icon={isHostOpen ? faChevronDown : faChevronRight}
-  //                                                     onClick={(e) => {
-  //                                                         e.stopPropagation();
-  //                                                         toggleHost(host.id);
-  //                                                     }}
-  //                                                     fixedWidth
-  //                                                 />
-  //                                             )}
-  //                                             <FontAwesomeIcon icon={faUser} fixedWidth />
-  //                                             <span>{host.name}</span>
-  //                                         </div>
-
-  //                                         {/* 다섯 번째 레벨 (VMs) */}
-  //                                         {isHostOpen && Array.isArray(host.vms) && host.vms.map((vm) => (
-  //                                             <div
-  //                                                 key={vm.id}
-  //                                                 className="aside_popup_last_content"
-  //                                                 style={{
-  //                                                     backgroundColor: getBackgroundColor(vm.id),
-  //                                                     paddingLeft: "90px", 
-  //                                                 }}
-  //                                                 onClick={() => {
-  //                                                     setSelectedDiv(vm.id);
-  //                                                     navigate(`/computing/vms/${vm.id}`);
-  //                                                 }}
-  //                                             >
-  //                                                 <FontAwesomeIcon icon={faMicrochip} fixedWidth />
-  //                                                 <span>{vm.name}</span>
-  //                                             </div>
-  //                                         ))}
-  //                   </div>
-  //               );
-  //           })}
-  //       </div>
-  //                         );
-  //                     })}
-  //                 </div>
-  //               );
-  //             })}
-  //         </div>
-  //       )}
-
-  //       {/* 네트워크 섹션 */}
-  //       {selected === "network" && (
-  //         <div id="network_chart">
-  //           {/* 첫 번째 레벨 (Rutil Manager) */}
-  //           <div
-  //             className="aside-popup-content"
-  //             id="aside_popup_first"
-  //             style={{ backgroundColor: getBackgroundColor("rutil-manager") }}
-  //             onClick={() => {
-  //               if (selectedDiv !== "rutil-manager") {
-  //               setSelectedDiv("rutil-manager");
-  //               navigate("/networks/rutil-manager");
-  //               }
-  //             }}
-  //           >
-  //             <FontAwesomeIcon
-  //               style={{
-  //                 fontSize: "12px",
-  //                 marginRight: "0.04rem",
-  //               }}
-  //               icon={openDataCenters.network ? faChevronDown : faChevronRight}
-  //               onClick={(e) => {
-  //                 e.stopPropagation();
-  //                 setOpenDataCenters((prev) => ({
-  //                   ...prev,
-  //                   network: !prev.network,
-  //                 })); 
-  //               }}
-  //               fixedWidth
-  //             />
-  //             <FontAwesomeIcon icon={faBuilding} fixedWidth />
-  //             <span>Rutil manager</span>
-  //           </div>
-
-  //           {/* 두 번째 레벨 (Data Center) */}
-  //           {navNetworks &&
-  //             navNetworks.map((dataCenter) => {
-  //               const isDataCenterOpen =
-  //                 openNetworkDataCenters[dataCenter.id] || false;
-  //               const hasNetworks =
-  //                 Array.isArray(dataCenter.networks) &&
-  //                 dataCenter.networks.length > 0;
-
-  //               return (
-  //                 <div key={dataCenter.id}>
-  //                   <div
-  //                     className="aside-popup-second-content"
-  //                     style={{
-  //                       backgroundColor: getBackgroundColor(dataCenter.id),
-  //                       paddingLeft: getPaddingLeft(hasNetworks, "42px", "26px"), 
-                        
-  //                     }}
-  //                     onClick={() => {
-  //                       setSelectedDiv(dataCenter.id);
-  //                       navigate(
-  //                         `/networks/datacenters/${dataCenter.id}/clusters`
-  //                       );
-  //                     }}
-  //                   >
-  //                     {hasNetworks && (
-  //                       <FontAwesomeIcon
-  //                         style={{
-  //                           fontSize: "12px",
-  //                           marginRight: "0.04rem",
-  //                         }}
-  //                         icon={
-  //                           isDataCenterOpen ? faChevronDown : faChevronRight
-  //                         }
-  //                         onClick={(e) => {
-  //                           e.stopPropagation();
-  //                           toggleNetworkDataCenter(dataCenter.id);
-  //                         }}
-  //                         fixedWidth
-  //                       />
-  //                     )}
-  //                     <FontAwesomeIcon icon={faLayerGroup} fixedWidth />
-  //                     <span>{dataCenter.name}</span>
-  //                   </div>
-
-  //                   {/* 세 번째 레벨 */}
-  //                   {isDataCenterOpen &&
-  //                     dataCenter.networks.map((network) => (
-  //                       <div
-  //                         key={network.id}
-  //                         className="aside-popup-third-content"
-  //                         style={{
-  //                           backgroundColor: getBackgroundColor(network.id),
-  //                         }}
-  //                         onClick={() => {
-  //                           setSelectedDiv(network.id);
-  //                           navigate(`/networks/${network.id}`);
-  //                         }}
-  //                       >
-  //                         <FontAwesomeIcon icon={faFileEdit} fixedWidth/>
-  //                         <span>{network.name}</span>
-  //                       </div>
-  //                     ))}
-  //                 </div>
-  //               );
-  //             })}
-  //         </div>
-  //       )}
-
-  //       {/* 스토리지 섹션 */}
-  //       {selected === "storage" && (
-  //         <div id="storage_chart">
-  //           {/* 첫 번째 레벨 (Rutil Manager) */}
-  //           <div
-  //             className="aside-popup-content"
-  //             id="aside_popup_first"
-  //             style={{ backgroundColor: getBackgroundColor("rutil-manager") }}
-  //             onClick={() => {
-  //               if (selectedDiv !== "rutil-manager") {
-  //                 setSelectedDiv("rutil-manager");
-  //                 navigate("/storages/rutil-manager");
-  //               }
-  //             }}
-  //           >
-  //             <FontAwesomeIcon
-  //               style={{
-  //                 fontSize: "12px",
-  //                 marginRight: "0.04rem",
-  //               }}
-  //               icon={isSecondVisible ? faChevronDown : faChevronRight}
-  //               onClick={(e) => {
-  //                 e.stopPropagation();
-  //                 setIsSecondVisible(!isSecondVisible); // Toggle only on icon click
-  //               }}
-  //               fixedWidth
-  //             />
-  //             <FontAwesomeIcon icon={faBuilding} fixedWidth />
-  //             <span>Rutil manager</span>
-  //           </div>
-
-  //           {/* 두 번째 레벨 (Data Center) */}
-  //           {isSecondVisible &&
-  //             navStorageDomains &&
-  //             navStorageDomains.map((dataCenter) => {
-  //               const isDataCenterOpen =
-  //                 openDataCenters[dataCenter.id] || false;
-  //               const hasDomains =
-  //                 Array.isArray(dataCenter.storageDomains) &&
-  //                 dataCenter.storageDomains.length > 0;
-  //               return (
-  //                 <div key={dataCenter.id}>
-  //                   <div
-  //                     className="aside-popup-second-content"
-  //                     style={{
-  //                       backgroundColor: getBackgroundColor(dataCenter.id),
-  //                       paddingLeft: getPaddingLeft(hasDomains, "42px", "26px"), 
-  //                     }}
-  //                     onClick={() => {
-  //                       setSelectedDiv(dataCenter.id);
-  //                       navigate(
-  //                         `/storages/datacenters/${dataCenter.id}/clusters`
-  //                       );
-  //                     }}
-  //                   >
-  //                     {hasDomains && (
-  //                       <FontAwesomeIcon
-  //                         style={{
-  //                           fontSize: "12px",
-  //                           marginRight: "0.04rem",
-  //                         }}
-  //                         icon={
-  //                           isDataCenterOpen ? faChevronDown : faChevronRight
-  //                         }
-  //                         onClick={(e) => {
-  //                           e.stopPropagation();
-  //                           toggleDataCenter(dataCenter.id);
-  //                         }}
-  //                         fixedWidth
-  //                       />
-  //                     )}
-  //                     <FontAwesomeIcon icon={faLayerGroup} fixedWidth />
-  //                     <span>{dataCenter.name}</span>
-  //                   </div>
-
-  //                   {/* 세 번째 레벨 (Storage Domains) */}
-  //                   {isDataCenterOpen &&
-  //                     Array.isArray(dataCenter.storageDomains) &&
-  //                     dataCenter.storageDomains.map((domain) => {
-  //                       const isDomainOpen = openDomains[domain.id] || false;
-  //                       const hasDisks =
-  //                         Array.isArray(domain.disks) &&
-  //                         domain.disks.length > 0;
-  //                       return (
-  //                         <div key={domain.id}>
-  //                           <div
-  //                             className="aside-popup-third-content"
-  //                             style={{
-  //                               backgroundColor: getBackgroundColor(domain.id),
-  //                             }}
-  //                             onClick={() => {
-  //                               setSelectedDiv(domain.id);
-  //                               navigate(`/storages/domains/${domain.id}`);
-  //                             }}
-  //                             onContextMenu={(e) => {
-  //                               e.preventDefault(); // 기본 컨텍스트 메뉴 비활성화
-  //                               setContextMenuVisible(true);
-  //                               setContextMenuPosition({
-  //                                 x: e.pageX,
-  //                                 y: e.pageY,
-  //                               });
-  //                               setContextMenuTarget(domain.id); // 우클릭한 요소의 ID 저장
-  //                             }}
-  //                           >
-  //                             {hasDisks && (
-  //                               <FontAwesomeIcon
-  //                                 style={{
-  //                                   fontSize: "0.3rem",
-  //                                   marginRight: "0.04rem",
-  //                                 }}
-  //                                 icon={
-  //                                   isDomainOpen
-  //                                     ? faChevronDown
-  //                                     : faChevronRight
-  //                                 }
-  //                                 onClick={(e) => {
-  //                                   e.stopPropagation();
-  //                                   toggleDomain(domain.id);
-  //                                 }}
-  //                                 fixedWidth
-  //                               />
-  //                             )}
-  //                             <FontAwesomeIcon icon={faCloud} fixedWidth />
-  //                             <span>{domain.name}</span>
-  //                           </div>
-  //                         </div>
-  //                       );
-  //                     })}
-  //                 </div>
-  //               );
-  //             })}
-  //         </div>
-  //       )}
-  //     </>
-  //   );
-  // };
 
   useEffect(() => {
     // 페이지가 처음 로드될 때 기본적으로 dashboard가 선택되도록 설정
@@ -771,17 +276,6 @@ const MainOuter = ({
     toggleAsidePopup("computing");
     setSelectedDiv(null); // 루틸매니저가 선택되지 않도록 초기화
   }, []);
-
-  useEffect(() => {
-    navNetworksRefetch();
-  }, [navNetworksRefetch]);
-
-  const toggleDomain = (domainId) => {
-    setOpenDomains((prevState) => ({
-      ...prevState,
-      [domainId]: !prevState[domainId],
-    }));
-  };
 
   const toggleAsidePopup = (id) => {
     const newBackgroundColor = {

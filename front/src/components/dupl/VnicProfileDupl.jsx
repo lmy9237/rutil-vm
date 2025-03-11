@@ -17,7 +17,7 @@ import useSearch from "../button/useSearch";
 const VnicProfileDupl = ({
   isLoading, isError, isSuccess,
   vnicProfiles = [], columns = [], networkId,
-  showSearchBox = false,
+  showSearchBox = true,
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);

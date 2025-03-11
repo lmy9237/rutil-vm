@@ -25,7 +25,7 @@ const Tables = ({
   clickableColumnIndex = [],
   onContextMenuItems = false,
   onClickableColumnClick = () => {},
-  showSearchBox = false,
+  showSearchBox = true,
   searchQuery = "",  // ✅ 기본값 추가
   setSearchQuery = () => {}, // ✅ 기본값 추가
 }) => {

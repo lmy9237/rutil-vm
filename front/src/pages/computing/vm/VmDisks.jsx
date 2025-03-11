@@ -30,18 +30,6 @@ const VmDisks = ({ vmId }) => {
 
   return (
     <>
-      {/* <div className="host-filter-btns" style={{ marginBottom: 0 }}>
-        <span>디스크 유형: </span>
-        {diskTypes.map(({ type, label }) => (
-          <button
-            key={type}
-            onClick={() => setActiveDiskType(type)}
-            className={activeDiskType === type ? "active" : ""}
-          >
-            {label}
-          </button>
-        ))}
-      </div> */}
      <FilterButton
         options={diskFilters}
         activeOption={activeDiskType}
