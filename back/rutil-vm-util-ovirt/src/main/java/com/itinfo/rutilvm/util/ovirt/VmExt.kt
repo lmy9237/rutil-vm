@@ -371,11 +371,6 @@ fun Connection.findAllNicsFromVm(vmId: String, follow: String = ""): Result<List
 	this.srvNicsFromVm(vmId).list().apply {
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().nics()
-
-	// if (follow.isNotEmpty())
-	// 	this.srvNicsFromVm(vmId).list().follow(follow).send().nics()
-	// else
-	// 	this.srvNicsFromVm(vmId).list().send().nics()
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.NIC, "목록조회", vmId)
 }.onFailure {
@@ -947,11 +942,6 @@ fun Connection.findAllReportedDeviceFromVmNic(vmId: String, nicId: String, follo
 	this.srvReportedDevicesFromVmNics(vmId, nicId).list().apply {
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().reportedDevice()
-
-	// if (follow.isNotEmpty())
-	// 	this.srvReportedDevicesFromVmNics(vmId, nicId).list().follow(follow).send().reportedDevice()
-	// else
-	// 	this.srvReportedDevicesFromVmNics(vmId, nicId).list().send().reportedDevice()
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.NIC, "보고된 디바이스 목록조회", vmId)
 }.onFailure {

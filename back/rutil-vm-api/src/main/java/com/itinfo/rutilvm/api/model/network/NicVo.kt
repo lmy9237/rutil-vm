@@ -170,15 +170,15 @@ fun Nic.toNicVoFromVm(conn: Connection, vmId: String): NicVo {
 		status { if(this@toNicVoFromVm.linked()) NicStatus.UP else NicStatus.DOWN }
         interface_ { this@toNicVoFromVm.interface_() }
         macAddress { if (this@toNicVoFromVm.macPresent()) this@toNicVoFromVm.mac().address() else null }
-//        ipv4 { vm. }
-//        ipv6 { vm.findVmIpv6(conn) }
+        ipv4 { reportedDevices[0].ips().first().address() }
+       // ipv6 { reportedDevices[0].ips(). }
 //				.speed()
         rxSpeed { statistics.findSpeed("data.current.rx.bps") }
         txSpeed { statistics.findSpeed("data.current.tx.bps") }
         rxTotalSpeed { statistics.findSpeed("data.total.rx") }
         txTotalSpeed { statistics.findSpeed("data.total.tx") }
         rxTotalError { statistics.findSpeed("errors.total.rx") } // 이게 중단 스피드
-        guestInterfaceName { if(reportedDevicesPresent()) reportedDevices.first().name() else ""}
+        guestInterfaceName { if(reportedDevicesPresent()) reportedDevices[0].name() else ""}
     }
 }
 fun List<Nic>.toNicVosFromVm(conn: Connection, vmId: String): List<NicVo> =

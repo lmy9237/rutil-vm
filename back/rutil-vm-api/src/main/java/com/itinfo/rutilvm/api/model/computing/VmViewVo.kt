@@ -322,9 +322,8 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
     val vm = this@toVmViewVo
     val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
     val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
-    val nics: List<Nic> = conn.findAllNicsFromVm(vm.id()).getOrDefault(listOf())
     val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
-    val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
+
     val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
     val disk: Disk? = cdrom?.file()?.id()?.let { conn.findDisk(it).getOrNull() }
     val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vm.id()).getOrDefault(listOf())
@@ -388,6 +387,8 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" }
 		timeZone { vm.timeZone().name() }
 		if (vm.status() == VmStatus.UP) {
+			val nics: List<Nic> = conn.findAllNicsFromVm(vm.id()).getOrDefault(listOf())
+			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
 			upTime { statistics.findVmUptime() }
@@ -414,7 +415,7 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
 		cdRomVo { disk?.fromDiskToIdentifiedVo() }
 		// snapshotVos { vm.snapshotVos() }
 		// hostDeviceVos { vm.hostDeviceVos() }
-		nicVos { nics.fromNicsToIdentifiedVos() }
+		// nicVos { nics.fromNicsToIdentifiedVos() }
 	}
 }
 fun List<Vm>.toVmViewVos(conn: Connection) =

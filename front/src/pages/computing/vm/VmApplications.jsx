@@ -17,7 +17,6 @@ const VmApplications = ({ vmId }) => {
     isSuccess: isApplicationsSuccess,
   } = useApplicationFromVM(vmId, (e) => ({ ...e }));
 
-  console.log("...");
   return (
     <div className="host-empty-outer">
       <TablesOuter

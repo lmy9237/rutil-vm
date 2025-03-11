@@ -255,7 +255,7 @@ class NetworkServiceImpl(
 	@Throws(Error::class)
 	override fun findNetworkProviderFromNetwork(): IdentifiedVo {
 		log.info("findNetworkProviderFromNetwork ... ")
-		val res: OpenStackNetworkProvider = conn.findAllOpenStackNetworkProviders("networks")
+		val res: OpenStackNetworkProvider = conn.findAllOpenStackNetworkProviders()
 			.getOrDefault(listOf())
 			.first()
 		return res.fromOpenStackNetworkProviderToIdentifiedVo()

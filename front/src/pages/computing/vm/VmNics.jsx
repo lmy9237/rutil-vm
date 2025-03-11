@@ -154,7 +154,7 @@ const VmNics = ({ vmId }) => {
                     fixedWidth
                   />
                   <FontAwesomeIcon icon={faPlug} fixedWidth />
-                  <span>{nic?.name || `NIC ${index + 1}`}</span>
+                  <span>{nic?.name}</span>
                 </div>
                 <div>
                   <div>네트워크 이름</div>
@@ -194,16 +194,12 @@ const VmNics = ({ vmId }) => {
                         <td>{nic?.vnicProfileVo?.name || ""}</td>
                       </tr>
                       <tr>
-                        <th>QoS 이름</th>
-                        <td>{nic?.qosName || "해당 없음"}</td>
-                      </tr>
-                      <tr>
                         <th>링크 상태</th>
                         <td>{nic?.status || ""}</td>
                       </tr>
                       <tr>
                         <th>유형</th>
-                        <td>{nic?.interfaceType}</td>
+                        <td>{nic?.interface_}</td>
                       </tr>
                       <tr>
                         <th>속도 (Mbps)</th>

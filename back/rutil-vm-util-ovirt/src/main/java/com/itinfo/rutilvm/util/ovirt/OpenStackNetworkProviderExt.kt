@@ -17,11 +17,8 @@ import org.ovirt.engine.sdk4.types.OpenStackNetworkProvider
 private fun Connection.srvOpenStackNetworkProviders(): OpenstackNetworkProvidersService =
 	systemService.openstackNetworkProvidersService()
 
-fun Connection.findAllOpenStackNetworkProviders(follow: String = ""): Result<List<OpenStackNetworkProvider>> = runCatching {
-	if (follow.isNotEmpty())
-		this.srvOpenStackNetworkProviders().list().follow(follow).send().providers()
-	else
-		this.srvOpenStackNetworkProviders().list().send().providers()
+fun Connection.findAllOpenStackNetworkProviders(): Result<List<OpenStackNetworkProvider>> = runCatching {
+	this.srvOpenStackNetworkProviders().list().send().providers()
 }.onSuccess {
 	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccess("목록조회")
 }.onFailure {
