@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDashboardHost, useHost } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import "./Host.css";
@@ -32,6 +32,20 @@ const HostGeneral = ({ hostId }) => {
   } = useDashboardHost(hostId);
 
   const [activeTab, setActiveTab] = useState("general");
+  const [chartData, setChartData] = useState(null);
+  
+  // hostId 변경 시 hostPerRefetch 호출 & 기존 데이터 지우기
+  useEffect(() => {
+    setChartData(null); // 데이터 초기화
+    hostPerRefetch();
+  }, [hostId]); // hostId가 변경될 때마다 실행
+  
+  // 최신 데이터를 반영
+  useEffect(() => {
+    if (!isHostPerLoading && !isHostPerRefetching && hostPer) {
+      setChartData(hostPer); // 데이터 업데이트
+    }
+  }, [hostPer, isHostPerLoading, isHostPerRefetching]);
 
   const renderGeneralTab = [
     { label: "호스트이름/IP", value: host?.name },
@@ -63,7 +77,7 @@ const HostGeneral = ({ hostId }) => {
     { label: "제품 이름", value: host?.hostHwVo?.productName },
     { label: "일련 번호", value: host?.hostHwVo?.serialNum },
     { label: "CPU 소켓", value: host?.hostHwVo?.cpuTopologySocket },
-    { label: "TSC 주파수", value: host?.hostHwVo?.name },
+    
   ];
 
   const renderSoftwareTab = [
@@ -101,9 +115,10 @@ const HostGeneral = ({ hostId }) => {
           </button>
         ))}
       </div>
+      
       <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
-        cpu <SuperAreaChart per={hostPer} type="cpu"/>
-        memory <SuperAreaChart per={hostPer} type="memory"/>
+        cpu <SuperAreaChart key={`${hostId}-cpu`} per={chartData} type="cpu" />
+        memory <SuperAreaChart key={`${hostId}-memory`} per={chartData} type="memory" />
       </div>
 
       <div className="host-table-outer">
