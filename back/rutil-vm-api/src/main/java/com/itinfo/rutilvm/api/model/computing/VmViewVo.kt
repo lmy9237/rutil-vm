@@ -47,7 +47,7 @@ private val log = LoggerFactory.getLogger(VmViewVo::class.java)
  * @property creationTime [String]
  * @property deleteProtected [Boolean]
  * @property monitor [Int]
- * @property displayType [DisplayType]
+ * @property displayType [DisplayType] 그래픽 프로토콜
  * @property ha [Boolean]
  * @property haPriority [Int]
  * @property ioThreadCnt [Int]
@@ -77,8 +77,8 @@ private val log = LoggerFactory.getLogger(VmViewVo::class.java)
  * @property usageDto [UsageDto]
  * @property clusterVo [IdentifiedVo]
  * @property hostVo [IdentifiedVo]
- * @property originTemplate [IdentifiedVo]
- * @property template [IdentifiedVo]
+ * @property originTemplateVo [IdentifiedVo]
+ * @property templateVo [IdentifiedVo]
  * @property cpuProfileVo [IdentifiedVo]
  * @property diskAttachmentVos List<[IdentifiedVo]>
  * @property cdRomVo [IdentifiedVo]
@@ -117,6 +117,11 @@ class VmViewVo (
 	val firstDevice: String = "",
 	val secDevice: String = "",
 	val osType: String = "",
+	val guestArc: String = "",
+	val guestOsType: String = "",
+	val guestDistribution: String = "",
+	val guestKernelVer: String = "",
+	val guestTimeZone: String = "",
 	val placementPolicy: VmAffinity = VmAffinity.MIGRATABLE,
     val startPaused: Boolean = false,
 	val storageErrorResumeBehaviour: VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.AUTO_RESUME,
@@ -178,6 +183,11 @@ class VmViewVo (
 		private var bFirstDevice: String = ""; fun firstDevice(block: () -> String?) { bFirstDevice = block() ?: "" }
 		private var bSecDevice: String = ""; fun secDevice(block: () -> String?) { bSecDevice = block() ?: "" }
 		private var bOsType: String = ""; fun osType(block: () -> String?) { bOsType = block() ?: "" }
+		private var bGuestArc: String = ""; fun guestArc(block: () -> String?) { bGuestArc = block() ?: "" }
+		private var bGuestOsType: String = ""; fun guestOsType(block: () -> String?) { bGuestOsType = block() ?: "" }
+		private var bGuestDistribution: String = ""; fun guestDistribution(block: () -> String?) { bGuestDistribution = block() ?: "" }
+		private var bGuestKernelVer: String = ""; fun guestKernelVer(block: () -> String?) { bGuestKernelVer = block() ?: "" }
+		private var bGuestTimeZone: String = ""; fun guestTimeZone(block: () -> String?) { bGuestTimeZone = block() ?: "" }
 		private var bPlacementPolicy: VmAffinity = VmAffinity.MIGRATABLE; fun placementPolicy(block: () -> VmAffinity?) { bPlacementPolicy = block() ?: VmAffinity.MIGRATABLE }
 		private var bStartPaused: Boolean = false; fun startPaused(block: () -> Boolean?) { bStartPaused = block() ?: false }
 		private var bStorageErrorResumeBehaviour: VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.AUTO_RESUME; fun storageErrorResumeBehaviour(block: () -> VmStorageErrorResumeBehaviour?) { bStorageErrorResumeBehaviour = block() ?: VmStorageErrorResumeBehaviour.AUTO_RESUME }
@@ -205,7 +215,7 @@ class VmViewVo (
 		private var bNicVos: List<IdentifiedVo> = listOf(); fun nicVos(block: () -> List<IdentifiedVo>?) { bNicVos = block() ?: listOf() }
 		private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
 
-        fun build(): VmViewVo = VmViewVo(bId, bName, bDescription, bComment, bStatus, bBiosBootMenu, bBiosType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bCreationTime, bDeleteProtected, bMonitor, bDisplayType, bHa, bHaPriority, bIoThreadCnt, bMemorySize, bMemoryGuaranteed, bMemoryMax, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bFirstDevice, bSecDevice, bOsType, bPlacementPolicy, bStartPaused, bStorageErrorResumeBehaviour, bType, bUsb, bVirtioScsiMultiQueueEnabled, bHostedEngineVm, bTimeZone, bFqdn, bUpTime, bStartTime, bStopTime, bIpv4, bIpv6, bDataCenterVo, bClusterVo, bHostVo, bOriginTemplateVo, bTemplateVo, bCpuProfileVo, bDiskAttachmentVos, bCdRomVo, bSnapshotVos, bHostDeviceVos, bNicVos, bUsageDto,)
+        fun build(): VmViewVo = VmViewVo(bId, bName, bDescription, bComment, bStatus, bBiosBootMenu, bBiosType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bCreationTime, bDeleteProtected, bMonitor, bDisplayType, bHa, bHaPriority, bIoThreadCnt, bMemorySize, bMemoryGuaranteed, bMemoryMax, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bFirstDevice, bSecDevice, bOsType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bPlacementPolicy, bStartPaused, bStorageErrorResumeBehaviour, bType, bUsb, bVirtioScsiMultiQueueEnabled, bHostedEngineVm, bTimeZone, bFqdn, bUpTime, bStartTime, bStopTime, bIpv4, bIpv6, bDataCenterVo, bClusterVo, bHostVo, bOriginTemplateVo, bTemplateVo, bCpuProfileVo, bDiskAttachmentVos, bCdRomVo, bSnapshotVos, bHostDeviceVos, bNicVos, bUsageDto,)
     }
 
     companion object {
@@ -313,13 +323,6 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
     val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
     val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
     val nics: List<Nic> = conn.findAllNicsFromVm(vm.id()).getOrDefault(listOf())
-    val host: Host? =
-        if (vm.hostPresent())
-            conn.findHost(vm.host().id()).getOrNull()
-        else if (!vm.hostPresent() && vm.placementPolicy().hostsPresent())
-            conn.findHost(vm.placementPolicy().hosts().first().id()).getOrNull()
-        else
-            null
     val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
     val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
     val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
@@ -363,6 +366,19 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
 				null
 		}
 		osType { vm.os().type() }
+		if(vm.guestOperatingSystemPresent()){
+			guestArc { vm.guestOperatingSystem().architecture() }
+			guestOsType { vm.guestOperatingSystem().family() }
+			guestDistribution { vm.guestOperatingSystem().distribution() }
+			guestKernelVer { vm.guestOperatingSystem().kernel().version().fullVersion() }
+			guestTimeZone { vm.guestTimeZone().name() + " " + vm.guestTimeZone().utcOffset() }
+		}else{
+			guestArc { "" }
+			guestOsType { "" }
+			guestDistribution { "" }
+			guestKernelVer { "" }
+			guestTimeZone { "" }
+		}
 		placementPolicy { vm.placementPolicy().affinity() } //migrationMode
 		startPaused { vm.startPaused() }
 		storageErrorResumeBehaviour { vm.storageErrorResumeBehaviour() }
@@ -370,27 +386,27 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
 		usb { if(vm.usbPresent()) vm.usb().enabled() else false }
 		virtioScsiMultiQueueEnabled { vm.virtioScsiMultiQueuesEnabled() }
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" }
-		timeZone { vm.timeZone().toString() }
+		timeZone { vm.timeZone().name() }
 		if (vm.status() == VmStatus.UP) {
+			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
 			upTime { statistics.findVmUptime() }
-			hostVo { host?.fromHostToIdentifiedVo() }
 			ipv4 { nics.findVmIpv4(conn, vm.id()) }
 			ipv6 { nics.findVmIpv6(conn, vm.id()) }
+			hostVo { host?.fromHostToIdentifiedVo() }
 			usageDto { statistics.toVmUsage() }
 		} else {
 			fqdn { null }
 			upTime { null }
-			hostVo { null }
 			ipv4 { null }
 			ipv6 { null }
+			hostVo { null }
 			usageDto { null }
 		}
 		// startTime { vm.startTime() }
 		// stopTime { vm.stopTime() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
-		// hostVo { vm.hostVo() }
 		originTemplateVo { vm.originalTemplate().fromTemplateToIdentifiedVo() }
 		templateVo { vm.template().fromTemplateToIdentifiedVo() }
 		cpuProfileVo { vm.cpuProfile().fromCpuProfileToIdentifiedVo() }

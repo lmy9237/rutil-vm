@@ -124,7 +124,7 @@ fun HostNic.toHostNicVo(conn: Connection): HostNicVo {
 		ip { if(hostNic.ipPresent()) hostNic.ip().toIp() else null }
 		ipv6BootProtocol { hostNic.ipv6BootProtocol() }
 		ipv6 { if(hostNic.ipv6Present()) hostNic.ipv6().toIp() else null }
-		macAddress { hostNic.mac().address() }
+		macAddress { if(hostNic.macPresent()) hostNic.mac().address() else "" }
 		mtu { hostNic.mtuAsInteger() }
 		status { hostNic.status() }
 		hostVo { host?.fromHostToIdentifiedVo() }

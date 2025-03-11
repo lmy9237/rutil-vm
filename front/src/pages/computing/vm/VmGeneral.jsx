@@ -6,12 +6,10 @@ import {
   faPlus,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import VmGeneralChart from "./VmGeneralChart";
 import { useVmById } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import InfoTable from "../../../components/table/InfoTable";
-import { useState } from "react";
-import VmSnapshotModal from "../../../components/modal/vm/VmSnapshotModal";
+import SemiCircleChart from "../../../components/Chart/SemiCircleChart";
 
 // 운영 시스템
 const osSystemList = [
@@ -20,11 +18,11 @@ const osSystemList = [
   { value: "freebsd", label: "FreeBSD 9.2" },
   { value: "freebsdx64", label: "FreeBSD 9.2 x64" },
   { value: "other_linux", label: "Linux" },
-  // { value: 'other_linux_s390x', label: 'Linux' },
-  // { value: 'other_linux_ppc64', label: 'Linux' },
+  { value: 'other_linux_s390x', label: 'Linux' },// x
+  { value: 'other_linux_ppc64', label: 'Linux' },// x
   { value: "other", label: "Other OS" },
-  // { value: 'other_s390x', label: 'Other OS' },
-  // { value: 'other_ppc64', label: 'Other OS' },
+  { value: 'other_s390x', label: 'Other OS' },// x
+  { value: 'other_ppc64', label: 'Other OS' },// x
   { value: "other_linux_kernel_4", label: "Other Linux (kernel 4.x)" },
   { value: "windows_xp", label: "Windows XP" },
   { value: "windows_2003", label: "Windows 2003" },
@@ -99,36 +97,22 @@ const VmGeneral = ({ vmId }) => {
     isError: isVmError,
     isSuccess: isVmSuccess,
   } = useVmById(vmId);
-  const diskData = vm?.diskAttachmentVos?.map((disk) => ({
-    alias: disk?.diskImageVo?.alias,
-    virtualSize: disk?.diskImageVo?.virtualSize,
-  })) || [];
 
-  const [activeModal, setActiveModal] = useState(null);
-  
-  const openModal = (modalType) => {
-    setActiveModal(modalType);
-    setSelectedVms(vm); // 선택한 VM 정보 저장
-  };
-  const closeModal = () => {
-    setActiveModal(null);
-  };
   const osLabel =
-    osSystemList.find((option) => option.value === vm?.osSystem)?.label ||
+    osSystemList.find((option) => option.value === vm?.osType)?.label ||
     vm?.osSystem;
   const chipsetLabel =
-    chipsetOptionList.find((option) => option.value === vm?.chipsetFirmwareType)
+    chipsetOptionList.find((option) => option.value === vm?.biosType)
       ?.label || vm?.chipsetFirmwareType;
 
   const generalTableRows = [
     { label: "전원상태", value: vm?.status },
-    { label: "IP 주소", value: vm?.ipv4 },
-    { label: "게스트 운영 체제", value: osLabel },
-    { label: "게스트 에이전트", value: vm?.guestInterfaceName },
+    { label: "설명", value: vm?.description },
     { label: "업타임", value: vm?.upTime },
+    { label: "IP 주소", value: vm?.ipv4 },
     { label: "FQDN", value: vm?.fqdn },
-    // { label: "실행 호스트", value: vm?.hostVo?.name || "" },
-    { label: "  ", value: " " },
+    { label: "최적화 옵션", value: vm?.type },
+    { label: "시간대", value: vm?.timeZone },
     {
       label: "클러스터",
       value: (
@@ -147,37 +131,22 @@ const VmGeneral = ({ vmId }) => {
         </div>
       ),
     },
-    // {
-    //   label: "네트워크",
-    //   value: (
-    //     <div className="related-object">
-    //       <FontAwesomeIcon icon={faServer} fixedWidth className="mr-0.5" />
-    //       <span className="text-blue-500 font-bold"> {vm?.networkVo?.name}</span>
-    //     </div>
-    //   ),
-    // },
   ];
 
   const hardwareTableRows = [
-    {
-      label: "CPU",
-      value: `${vm?.cpuTopologyCnt}(${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})`,
-    },
-    { label: "메모리", value: convertBytesToMB(vm?.memorySize) + " MB" ?? "0" },
-    // { label: "하드 디스크", value: vm?.storageDomainVo?.name },
-    { label: "네트워크 어댑터", value: vm?.nicVos[0]?.name },
-    { label: "칩셋/펌웨어 유형", value: chipsetLabel },
-  ];
-
-  const typeTableRows = [
-    { label: "유형", value: osLabel },
+    { label: "운영 체제", value: osLabel },
     { label: "아키텍처", value: vm?.cpuArc },
-    { label: "운영체제", value: osLabel },
-    { label: "커널 버전", value: vm?.kernelVersion },
-    { label: "시간대", value: vm?.timeOffset },
-    { label: "로그인된 사용자", value: vm?.loggedInUser },
-    { label: "콘솔 사용자", value: vm?.consoleUser },
-    { label: "콘솔 클라이언트 IP", value: vm?.consoleClientIp },
+    { label: "칩셋/펌웨어 유형", value: chipsetLabel },
+    { label: "CPU", value: `${vm?.cpuTopologyCnt} (${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` },
+    { label: "메모리", value: convertBytesToMB(vm?.memorySize) + " MB" ?? "0" },
+    { label: " 할당할 실제 메모리", value: convertBytesToMB(vm?.memoryGuaranteed) + " MB" ?? "0" },
+    { label: "", value: "" },
+    { label: "게스트", value: "" },
+    { label: "- 에이전트", value: "" },
+    { label: "- 아키텍처", value: vm?.guestArc },
+    { label: "- 운영 시스템", value: vm?.guestOsType },
+    { label: "- 커널 버전", value: vm?.guestKernelVer },
+    { label: "- 시간대", value: vm?.guestTimeZone },
   ];
 
   return (
@@ -197,86 +166,19 @@ const VmGeneral = ({ vmId }) => {
           <div className="capacity-outer">
             <div className="capacity">
               <div>CPU</div>
-              <div className="capacity-box">
-                {vm?.usageDto?.cpuPercent > 0 &&
-                  <div>
-                    {vm?.usageDto?.cpuPercent}% 사용됨
-                  </div>
-                }
-                <div>{vm?.cpuTopologyCnt} CPU 할당됨</div>
-              </div>
+                <SemiCircleChart percentage={vm?.usageDto?.cpuPercent || 0} />
             </div>
             <div className="capacity">
               <div>메모리</div>
-              <div className="capacity-box">
-                {vm?.usageDto?.memoryPercent > 0 &&
-                  <div>
-                    {vm?.usageDto?.memoryPercent}% 사용됨
-                  </div>
-                }                
-                <div>
-                  {convertBytesToMB(vm?.memoryActual) + " MB" ?? "0"} 할당됨
-                </div>
-              </div>
+              <SemiCircleChart percentage={vm?.usageDto?.memoryPercent || 0} />
             </div>
-            {/* <div className="capacity">
-              <div>스토리지</div>
-              <div className="capacity-box">
-                <div></div>
-                <div></div>
-              </div>
-            </div> */}
+            <div className="capacity">
+              <div>네트워크</div>
+              <SemiCircleChart percentage={vm?.usageDto?.networkPercent || 0} />
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="detail-general-boxs-bottom">
-        <div className="vm-general-bottom-box">
-          <InfoTable tableRows={typeTableRows} />
-        </div>
-
-        <div className="vm-general-bottom-box">
-          <div className="vm-general-box">
-            <FontAwesomeIcon icon={faComputer} className="mr-0.5" />
-            <div className="mr-0.5">스냅샷</div>
-          </div>
-          <div className="vm-add-snapshot-btn">
-            <button onClick={() => openModal("snapshot")}>
-              <FontAwesomeIcon icon={faPlus} className="mr-0.5"/>스냅샷 생성
-            </button>
-          </div>
-          <br/>
-          <div className="snapshot-list">
-            {vm?.snapshotVos && vm.snapshotVos.length > 0 ? (
-              vm.snapshotVos.map((snap) => (
-                <button className="snapshot-item">
-                 <FontAwesomeIcon icon={faCamera} className="mr-0.5"/>{snap.name}
-                </button>
-              ))
-            ) : (
-              <div className="no-snapshot">스냅샷이 없습니다.</div>
-            )}
-          </div>
-        </div>
-        <div className="vm-general-bottom-box">
-          <div className="vm-general-box">
-            <FontAwesomeIcon icon={faComputer} className="mr-0.5" />
-            <div>디스크</div>
-          </div>
-          <div className="disk-bar">
-          <VmGeneralChart diskData={diskData} />
-          </div>
-        </div>
-
-        {activeModal === "snapshot" && (
-          <VmSnapshotModal
-            isOpen={activeModal === "snapshot"}
-            onClose={closeModal}
-            vmId={vm?.id}
-            // data={selectedVms}
-          />
-        )}
-      </div>
+      </div>      
     </>
   );
 };
