@@ -259,6 +259,18 @@ const Dashboard = () => {
         <div className="dash-section center">
           <div className="dash-section-contents">
             <h1>CPU</h1>
+            <div className="status-value flex">
+              <h1>0.3Tib</h1>
+              <div>사용가능(총0.4Tib)</div>
+            </div>
+            <span>
+              USED{" "}
+              {Math.floor(
+                (cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100
+              )}{" "}
+              % / Total {cpuMemory?.totalCpuCore} Core
+            </span>
+
             <div className="graphs flex">
               <div
                 className="graph-wrap active-on-visible"
@@ -273,13 +285,7 @@ const Dashboard = () => {
               <div>{vmCpu && <CpuBarChart vmCpu={vmCpu} />}</div>
             </div>
 
-            <span>
-              USED{" "}
-              {Math.floor(
-                (cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100
-              )}{" "}
-              % / Total {cpuMemory?.totalCpuCore} Core
-            </span>
+         
             {/*COMMIT { Math.floor((cpuMemory?.commitCpuCore)/(cpuMemory?.totalCpuCore)*100 )} % <br/> */}
             <div className="wave-graph">
               {/* <h2>Per CPU</h2> */}
@@ -291,6 +297,14 @@ const Dashboard = () => {
 
           <div className="dash-section-contents">
             <h1>MEMORY</h1>
+            <div className="status-value flex">
+              <h1>0.3Tib</h1>
+              <div>사용가능(총0.4Tib)</div>
+            </div>
+            <span>
+              USED {cpuMemory?.usedMemoryGB?.toFixed(1)} GB / Total{" "}
+              {cpuMemory?.totalMemoryGB?.toFixed(1)} GB
+            </span>
             <div className="graphs flex">
               <div
                 className="graph-wrap active-on-visible"
@@ -306,10 +320,7 @@ const Dashboard = () => {
               </div>
               <div>{vmMemory && <MemoryBarChart vmMemory={vmMemory} />}</div>
             </div>
-            <span>
-              USED {cpuMemory?.usedMemoryGB?.toFixed(1)} GB / Total{" "}
-              {cpuMemory?.totalMemoryGB?.toFixed(1)} GB
-            </span>
+            
             <div className="wave-graph">
               {/* <h2>Per MEMORY</h2> */}
               <div>
@@ -323,6 +334,13 @@ const Dashboard = () => {
             style={{ borderRight: "none" }}
           >
             <h1>STORAGE</h1>
+            <div className="status-value flex">
+              <h1>0.3Tib</h1>
+              <div>사용가능(총0.4Tib)</div>
+            </div>
+            <span>
+              USED {storage?.usedGB} GB / Total {storage?.freeGB} GB
+            </span>
             <div className="graphs flex">
               <div
                 className="graph-wrap active-on-visible"
@@ -340,9 +358,7 @@ const Dashboard = () => {
                 )}
               </div>
             </div>
-            <span>
-              USED {storage?.usedGB} GB / Total {storage?.freeGB} GB
-            </span>
+         
             <div className="wave-graph">
               {/* <h2>Per Network</h2> */}
               <div>

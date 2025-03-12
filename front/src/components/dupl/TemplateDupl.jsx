@@ -10,7 +10,7 @@ import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 const TemplateDupl = ({
   isLoading, isError, isSuccess,
   templates = [], columns = [], type,
-  showSearchBox = false,  // ✅ 검색 여부 추가
+  showSearchBox = true,  // ✅ 검색 여부 추가
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);

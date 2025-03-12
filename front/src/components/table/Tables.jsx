@@ -189,6 +189,26 @@ const Tables = ({
       }));
     }
   };
+  // 페이징처리
+  // ✅ 현재 페이지 상태 및 페이지당 항목 개수 추가
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
+  // 시작/끝 인덱스 계산
+  const indexOfFirstItem = (currentPage - 1) * itemsPerPage;
+  const indexOfLastItem = Math.min(currentPage * itemsPerPage, sortedData.length);
+  // 현재 페이지에 표시할 데이터 슬라이스
+  const paginatedData = sortedData.slice(indexOfFirstItem, indexOfLastItem);
+
+  // 시작번호 & 끝번호 (1부터 시작하도록 설정)
+  const startNumber = indexOfFirstItem + 1;
+  const endNumber = indexOfLastItem;
+
+  // 페이지 변경 핸들러 수정
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= Math.ceil(sortedData.length / itemsPerPage)) {
+      setCurrentPage(newPage);
+    }
+  };
 
   const handleRowClick = (rowIndex, e) => {
     console.log(
@@ -251,7 +271,7 @@ const Tables = ({
         <TableRowNoData colLen={columns.length} />
       ) : (
         // 데이터 있을 경우
-        sortedData.map((row, rowIndex) => (
+        paginatedData.map((row, rowIndex) => (
           <tr
             key={rowIndex}
             onClick={(e) => {
@@ -266,7 +286,9 @@ const Tables = ({
                 ? "selected-row" // ✅ 추가된 클래스
                 : ""
             }`}
+            
           >
+            
             {columns.map((column, colIndex) => (
               <td
                 key={colIndex}
@@ -359,7 +381,8 @@ const Tables = ({
             </button>
           </div>
         )}
-      <div className="w-full max-h-[63vh] overflow-y-auto ">
+        
+      <div className="w-full  overflow-y-hidden ">
         <table className="custom-table" ref={tableRef}>
           <thead>
             <tr>
@@ -384,6 +407,20 @@ const Tables = ({
           </thead>
           <tbody>{renderTableBody()}</tbody>
         </table>
+
+        {/*페이지버튼 */}
+        {sortedData.length > itemsPerPage && (
+          <div className="paging-arrows flex"style={{ paddingTop: "20px", paddingBottom: "10px" }}>
+            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} >
+              {"<"}
+            </button>
+            <span className="px-1.5">{`${startNumber} - ${endNumber}`}</span> {/* ✅ 범위 표시 */}
+            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= Math.ceil(sortedData.length / itemsPerPage)}>
+              {">"}
+            </button>
+          </div>
+        )} 
+
       </div>
       {/* 우클릭 메뉴 박스 */}
       {contextMenu && (

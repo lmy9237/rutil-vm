@@ -134,9 +134,6 @@ const MainOuter = ({
     }
   }, [location.pathname]);
 
-  const getClassNames = (id) => {
-    return selected === id ? "selected blue-text" : "";
-  };
 
   useEffect(() => {
     const path = location.pathname;

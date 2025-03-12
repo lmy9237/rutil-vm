@@ -86,7 +86,7 @@ const HostNics = ({ hostId }) => {
 
   return (
     <>
-      <div className="header-right-btns">
+      <div className="header-right-btns mb-2">
         <button onClick={toggleAllBoxes}>{isExpandedAll ? "모두 숨기기" : "모두 확장"}</button>
         <button onClick={() => setIsModalOpen(true)}>호스트 네트워크 설정</button>
       </div>

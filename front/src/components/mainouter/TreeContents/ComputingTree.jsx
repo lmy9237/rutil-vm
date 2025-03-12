@@ -9,7 +9,8 @@ import {
   faLayerGroup,
   faUser,
   faEarthAmericas,
-  faMicrochip
+  faMicrochip,
+  faCircle
 } from "@fortawesome/free-solid-svg-icons";
 
 const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
@@ -140,89 +141,120 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
                   const isClusterOpen = openClusters[cluster.id] || false;
                   const hasHosts = Array.isArray(cluster.hosts) && cluster.hosts.length > 0;
                   return (
-                      <div key={cluster.id}>
-                          <div
-                              className="aside-popup-third-content"
-                              style={{
-                                  backgroundColor: getBackgroundColor(cluster.id),
-                                  paddingLeft: getPaddingLeft(hasHosts, "59px", "43px"),
-                              }}
-                              onClick={() => {
-                                  setSelectedDiv(cluster.id);
-                                  navigate(`/computing/clusters/${cluster.id}`);
-                              }}
-                          >
-                              {hasHosts && (
-                                  <FontAwesomeIcon
-                                      style={{ fontSize: '12px', marginRight: '0.04rem' }}
-                                      icon={isClusterOpen ? faChevronDown : faChevronRight}
+                    <div key={cluster.id}>
+                      <div
+                          className="aside-popup-third-content"
+                          style={{
+                              backgroundColor: getBackgroundColor(cluster.id),
+                              paddingLeft: getPaddingLeft(hasHosts, "59px", "43px"),
+                          }}
+                          onClick={() => {
+                              setSelectedDiv(cluster.id);
+                              navigate(`/computing/clusters/${cluster.id}`);
+                          }}
+                      >
+                          {hasHosts && (
+                              <FontAwesomeIcon
+                                  style={{ fontSize: '12px', marginRight: '0.04rem' }}
+                                  icon={isClusterOpen ? faChevronDown : faChevronRight}
+                                  onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleCluster(cluster.id);
+                                  }}
+                                  fixedWidth
+                              />
+                          )}
+                          <FontAwesomeIcon icon={faEarthAmericas} fixedWidth />
+                          <span>{cluster.name}</span>
+                      </div>
+                      {/* 네 번째 레벨 (Hosts & VM Downs) */}
+                      {isClusterOpen && (
+                        <>
+                          {/* Hosts */}
+                          {Array.isArray(cluster.hosts) && cluster.hosts.map((host) => {
+                            const isHostOpen = openHosts[host.id] || false;
+                            const hasVMs = Array.isArray(host.vms) && host.vms.length > 0;
+                            return (
+                              <div key={host.id}>
+                                <div
+                                  className="aside-popup-fourth-content"
+                                  style={{
+                                    backgroundColor: getBackgroundColor(host.id),
+                                    paddingLeft: getPaddingLeft(hasVMs, "75px", "59px"),
+                                  }}
+                                  onClick={() => {
+                                    setSelectedDiv(host.id);
+                                    navigate(`/computing/hosts/${host.id}`);
+                                  }}
+                                >
+                                  {hasVMs && (
+                                    <FontAwesomeIcon
+                                      style={{ fontSize: '12px', marginRight: '0.04rem'}}
+                                      icon={isHostOpen ? faChevronDown : faChevronRight}
                                       onClick={(e) => {
-                                          e.stopPropagation();
-                                          toggleCluster(cluster.id);
+                                        e.stopPropagation();
+                                        toggleHost(host.id);
                                       }}
                                       fixedWidth
-                                  />
-                              )}
-                              <FontAwesomeIcon icon={faEarthAmericas} fixedWidth />
-                              <span>{cluster.name}</span>
-                          </div>
+                                    />
+                                  )}
+                                  <FontAwesomeIcon icon={faUser} fixedWidth />
+                                  <span>{host.name}</span>
+                                </div>
 
-                          {/* 네 번째 레벨 (Hosts) */}
-                          {isClusterOpen && Array.isArray(cluster.hosts) && cluster.hosts.map((host) => {
-                              const isHostOpen = openHosts[host.id] || false;
-                              const hasVMs = Array.isArray(host.vms) && host.vms.length > 0;
-                              return (
-                                  <div key={host.id}>
-                                      <div
-                                          className="aside-popup-fourth-content"
-                                          style={{
-                                              backgroundColor: getBackgroundColor(host.id),
-                                              paddingLeft: getPaddingLeft(hasVMs, "75px", "59px"),
-                                          }}
-                                          onClick={() => {
-                                              setSelectedDiv(host.id);
-                                              navigate(`/computing/hosts/${host.id}`);
-                                          }}
-                                      >
-                                          {hasVMs && (
-                                              <FontAwesomeIcon
-                                                  style={{ fontSize: '12px', marginRight: '0.04rem'}}
-                                                  icon={isHostOpen ? faChevronDown : faChevronRight}
-                                                  onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      toggleHost(host.id);
-                                                  }}
-                                                  fixedWidth
-                                              />
-                                          )}
-                                          <FontAwesomeIcon icon={faUser} fixedWidth />
-                                          <span>{host.name}</span>
-                                      </div>
+                                {/* 다섯 번째 레벨 (VMs under Host) */}
+                                {isHostOpen && Array.isArray(host.vms) && host.vms.map((vm) => (
+                                  <div
+                                    key={vm.id}
+                                    className="aside_popup_last_content"
+                                    style={{
+                                      backgroundColor: getBackgroundColor(vm.id),
+                                      paddingLeft: "90px",
+                                    }}
+                                    onClick={() => {
+                                      setSelectedDiv(vm.id);
+                                      navigate(`/computing/vms/${vm.id}`);
+                                    }}
+                                  >
+                                    <FontAwesomeIcon icon={faMicrochip} fixedWidth />
+                                    <span>{vm.name}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            );
+                          })}
 
-                                      {/* 다섯 번째 레벨 (VMs) */}
-                                      {isHostOpen && Array.isArray(host.vms) && host.vms.map((vm) => (
-                                          <div
-                                              key={vm.id}
-                                              className="aside_popup_last_content"
-                                              style={{
-                                                  backgroundColor: getBackgroundColor(vm.id),
-                                                  paddingLeft: "90px", 
-                                              }}
-                                              onClick={() => {
-                                                  setSelectedDiv(vm.id);
-                                                  navigate(`/computing/vms/${vm.id}`);
-                                              }}
-                                          >
-                                              <FontAwesomeIcon icon={faMicrochip} fixedWidth />
-                                              <span>{vm.name}</span>
-                                          </div>
-                                      ))}
-                </div>
-            );
-        })}
-    </div>
-                      );
-                  })}
+                          {/* VM(중지) */}
+                          {Array.isArray(cluster.vmDowns) && cluster.vmDowns.map((vm) => (
+                            <div
+                              key={vm.id}
+                              className="aside-popup-fourth-content"
+                              style={{
+                                backgroundColor: getBackgroundColor(vm.id),
+                                paddingLeft: "75px",
+                              }}
+                              onClick={() => {
+                                setSelectedDiv(vm.id);
+                                navigate(`/computing/vms/${vm.id}`);
+                              }}
+                            >
+                             <div className="flex items-center">
+                              <span className="vm-icon">
+                                <FontAwesomeIcon icon={faMicrochip} fixedWidth />
+                                <div className="vm-down-icon-container">
+                                  <FontAwesomeIcon icon={faCircle} fixedWidth className="vm-down-icon" />
+                                </div>
+                              </span>
+                              <span>{vm.name}</span>
+                            </div>
+
+                            </div>
+                          ))}
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             );
           })}

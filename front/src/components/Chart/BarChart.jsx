@@ -14,11 +14,11 @@ const BarChart = ({ names, percentages }) => {
     if (chartContainerRef.current) {
       const containerWidth = chartContainerRef.current.clientWidth;
 
-      let width = Math.max(containerWidth * 0.66, 200); // 기본 너비
-      let height = Math.max(window.innerHeight * 0.25, 200); // 기본 높이
+      let width = Math.max(containerWidth * 0.8, 280); // 기본 너비
+      let height = Math.max(window.innerHeight * 0.23, 200); // 기본 높이
 
-      if (window.innerWidth >= 2000) {
-        width = Math.max(containerWidth *  1.4, 750); // 🔥 2000px 이상일 때 더 크게
+      if (window.innerWidth >= 2600) {
+        width = Math.max(containerWidth *  0.9, 650); // 🔥 2000px 이상일 때 더 크게
         height = Math.max(window.innerHeight * 0.25, 300);
       }
 
@@ -51,6 +51,7 @@ const BarChart = ({ names, percentages }) => {
         barHeight: "100%",
         distributed: true,
         horizontal: true,
+        borderRadius: 3,
         dataLabels: {
           position: "bottom",
         },

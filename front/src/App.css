@@ -26,7 +26,9 @@ html {
   --color-gray-2:rgb(177, 182, 184);  /* RutilVM 회색 (2) */
   --color-gray-3: #cfe4eb;            /* RutilVM 회색 (3) */
   --color-gray-disabled: #6d6d6d;     /* 비활성화 색 */
-  --color-primary: #8ec452;           /* 메인색 */
+
+  --color-primary: #150e50;           /* 메인색 */
+  --color-primary-white: rgb(255,255,255); /* 메인 아이콘버튼 색 */ 
   --color-primary-hover: #76a314;       /* 메인색:hover*/
   --color-primary-1: #295b9c;           /* 주 border색 */
   --color-primary-h: #0b4db5;         /* header 글자색 */  
@@ -121,6 +123,7 @@ input[disabled] {
   background-color: white;
   width: calc(100% - var(--w-aside-menu));height:100%;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 /* .dash-boxs+.bar+.dash-section{
     height: 100%;

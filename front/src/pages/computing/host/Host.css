@@ -8,7 +8,6 @@
 }
 
 .host-table-outer{
-    padding: 0.2rem;
     height: 64vh;
     overflow-y: auto; /* 세로 스크롤 추가 */
     overflow-x: hidden; /* 가로 스크롤 숨김 */
@@ -40,7 +39,7 @@
     display: flex; /* 가로 정렬 */
     justify-content: flex-start; /* 왼쪽 정렬 (필요에 따라 center, space-around로 변경 가능) */
     gap: 10px; /* 버튼 간격 */
-    margin-bottom: 20px; /* 아래 여백 */
+    margin-bottom: 15px; /* 아래 여백 */
     font-size: var(--fs-default);
   }
   

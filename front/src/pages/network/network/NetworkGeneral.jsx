@@ -1,4 +1,6 @@
+import React from "react";
 import { useNetworkById } from "../../../api/RQHook";
+import InfoTable from "../../../components/table/InfoTable";
 
 /**
  * @name NetworkGeneral
@@ -15,29 +17,12 @@ const NetworkGeneral = ({ networkId }) => {
     { label: "ID", value: network?.id },
     { label: "설명", value: network?.description },
     { label: "VDSM 이름", value: network?.vdsmName },
-    {
-      label: "가상 머신 네트워크",
-      value: network?.usage?.vm ? "예" : "아니요",
-    },
+    { label: "가상 머신 네트워크", value: network?.usage?.vm ? "예" : "아니요" },
     { label: "VLAN 태그", value: network?.vlan === 0 ? "없음" : network?.vlan },
-    {
-      label: "MTU",
-      value: network?.mtu === 0 ? "기본값 (1500)" : network?.mtu,
-    },
+    { label: "MTU", value: network?.mtu === 0 ? "기본값 (1500)" : network?.mtu },
   ];
 
-  return (
-    <table className="table">
-      <tbody>
-        {tableRows.map((row, index) => (
-          <tr key={index}>
-            <th>{row.label}:</th>
-            <td>{row.value}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+  return <InfoTable tableRows={tableRows} />;
 };
 
 export default NetworkGeneral;

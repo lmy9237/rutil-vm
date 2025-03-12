@@ -189,9 +189,16 @@
 }
 .snap-table {
   height: 100%;
+  width: 63%;
   text-align: left;
   color: gray;
   margin-bottom: 1rem;
+}
+.snap-table tr{
+  align-items: center;
+  display: flex;
+  width: 100%;
+    justify-content: space-between;
 }
 .snap-table:last-child {
   margin-bottom: 0;

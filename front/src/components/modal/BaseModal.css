@@ -21,7 +21,7 @@
   
 }
 .popup-header {
-  background-color: var(--color-header);
+  font-size: var(--fs-18);
   border-radius: 3px;
   border-bottom: 1px solid #6e9cd8;
   color: var(--color-primary-2);

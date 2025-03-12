@@ -1,33 +1,37 @@
 /* DashboardBox.css */
 .dash-boxs {
   width: 100%;
-  padding: 16px 6px;
   margin-bottom: 0.14rem;
-  background-color: #fafaff;
+  background:rgb(237 237 237);
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.13);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 0;
   min-height: 108px;
+  padding:0 10px;
 }
 
 .box {
-  width: calc(16.66% - 0rem); /* 기본 6열 */
+  /* width: calc(16.66% - 0rem); */
+  width:16%;
   cursor: pointer;
+  background:white;
   display: flex;
   justify-content: center;
-  align-items: centerc;
+  align-items: center;
   flex-direction: column;
-  padding: 0 10px;
-  border-right: 1px solid #5e95a745;
   text-align: center;
+  padding: 13px;
+  border-radius:7px;
 }
-
+.box:hover{
+  border:1px solid var(--color-primary);
+}
 .box > span {
   width: 100%;
-  font-size: var(--fs-18);
+  font-size: var(--fs-default);
   color: black;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -37,31 +41,28 @@
   align-items: center;
   flex-direction: row;
 }
-.box > h1 {
-  font-size: var(--fs-big);
+.box-text{
+  justify-content: right;
+  width: 100%;
+  padding-top: 15px;
+}
+.box-text > h1 {
+  font-size: var(--fs-bigger);
   line-height: 27px;
   font-weight: 600;
   color: black;
 }
-.box > h1,
-.box > .arrows {
-  margin-left: auto;
-}
-.arrows > svg {
-  margin-left: 0.1rem;
-}
 .arrows {
-  height: 24px;
-  margin-top: 0.1rem;
-  text-align: right;
-  font-size: var(--fs-default);
+  margin: 6px 10px 0 0;
+  font-size: var(--fs-default-4);
+  font-weight: 600;
 }
 .box:last-child {
   border-right: none;
   border-bottom: none;
 }
 .arrows > svg:first-child {
-  color: #ff8417;
+  color:rgb(255, 0, 0);
 }
 .arrows > svg:last-child {
   color: #4d4d4d;

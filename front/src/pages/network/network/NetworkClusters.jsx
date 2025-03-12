@@ -43,7 +43,7 @@ const NetworkClusters = ({ networkId }) => {
   console.log("...");
   return (
     <>
-      <div className="header-right-btns">
+      <div className="header-right-btns mb-2">
         <button onClick={() => setIsModalOpen(true)}>네트워크 관리</button>
       </div>
 

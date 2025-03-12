@@ -40,33 +40,35 @@ const DashboardBox = ({
         {icon && <FontAwesomeIcon icon={icon} fixedWidth />}
         <p className="ml-0.5">{title}</p>
       </span>
-      <h1>{cntTotal}</h1>
-      <div className="arrows flex center">
-        {cntUp && (
-          <>
-            <FontAwesomeIcon icon={faArrowUp} fixedWidth /> {cntUp}&nbsp;
-          </>
-        )}
-        {cntDown && (
-          <>
-            <FontAwesomeIcon icon={faArrowDown} fixedWidth /> {cntDown}&nbsp;
-          </>
-        )}
-        {alert && (
-          <>
-            <FontAwesomeIcon icon={faMessage} fixedWidth /> {alert}&nbsp;
-          </>
-        )}
-        {error && (
-          <>
-            <FontAwesomeIcon icon={faEraser} fixedWidth /> {error}&nbsp;
-          </>
-        )}
-        {warning && (
-          <>
-            <FontAwesomeIcon icon={faWarning} fixedWidth /> {warning}&nbsp;
-          </>
-        )}
+      <div className="box-text flex">
+        <div className="arrows flex center mr-2">
+          {cntUp && (
+            <>
+              <FontAwesomeIcon icon={faArrowUp} fixedWidth /> {cntUp}&nbsp;
+            </>
+          )}
+          {cntDown && (
+            <>
+              <FontAwesomeIcon icon={faArrowDown} fixedWidth /> {cntDown}&nbsp;
+            </>
+          )}
+          {alert && (
+            <>
+              <FontAwesomeIcon icon={faMessage} fixedWidth /> {alert}&nbsp;
+            </>
+          )}
+          {error && (
+            <>
+              <FontAwesomeIcon icon={faEraser} fixedWidth /> {error}&nbsp;
+            </>
+          )}
+          {warning && (
+            <>
+              <FontAwesomeIcon icon={faWarning} fixedWidth /> {warning}&nbsp;
+            </>
+          )}
+        </div>
+        <h1>{cntTotal}</h1>
       </div>
     </div>
   );

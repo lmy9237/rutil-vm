@@ -166,7 +166,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
                         <FontAwesomeIcon 
                           icon={faExclamationTriangle} 
                           fixedWidth
-                          style={{ color: "orange", fontSize: "20px", paddingTop: "7px" }}
+                          style={{ color: "red", fontSize: "14px", paddingTop: "4px"}}
                         />
                       </div>
                       <div className="bell-mid">
@@ -188,8 +188,8 @@ const Header = ({ setAuthenticated, toggleAside }) => {
                   ))}
                 </div>
 
-                <div className="bell-btns center">
-                  <div>모두 삭제</div>
+                <div className="bell-btns">
+                  <div className="mr-3">모두 삭제</div>
                   <div>모두 출력</div>
                 </div>
               </>
@@ -230,8 +230,8 @@ const Header = ({ setAuthenticated, toggleAside }) => {
                       </div>
                     ))}
                   </div>
-                  <div className="bell-btns center">
-                    <div>모두 삭제</div>
+                  <div className="bell-btns">
+                    <div className="mr-3">모두 삭제</div>
                     <div>모두 출력</div>
                   </div>
                 </>

@@ -1,6 +1,6 @@
 .header {
   position:relative;width:100%;height:var(--h-rutil-header);
-  background-color:#ffffff;
+  background-color:var(--color-primary);
   border-bottom: 1px solid #dfdfdf;
   border-radius: 3px 3px 0 0;
   margin-bottom:1px;
@@ -11,8 +11,8 @@
 }
 .menu-icon {
   padding: 8px;
-  font-size: var(--fs-21);
-  color: rgb(145, 150, 155);
+  font-size: var(--fs-18);
+  color: var(--color-primary-white);
   cursor: pointer;
 }
 .menu-icon:hover, .menu-icon > span:hover  {
@@ -108,17 +108,23 @@
   padding: 10px;
 }
 .bell-content-outer {
-  max-height: 656px;
+  max-height: 652px;
   display: flex;
   flex-direction: column;
 }
+.bell-btns{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px;
+  font-size: var(--fs-default-4);
+}
 .bell-btns>div{
-  width:50%;
-  padding:12px;
+  padding:2px 10px;
   text-align:center;
-  color:blue;
+  border-radius:3px;
   cursor:pointer;
-  
+  border:1px solid black;
 }
 .bell-btns>div:hover{
   text-decoration: underline;

@@ -2,6 +2,9 @@
 .apexcharts-xaxistooltip{
     display:none;
 }
+.apexcharts-yaxis-texts-g{
+    display:none;
+}
 /* .wave_graph{
     margin-left:0.5rem;
     width:100px;

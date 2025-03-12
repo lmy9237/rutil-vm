@@ -17,7 +17,7 @@ const TablesRow = ({
 
   return (
     <>
-      <div className="w-full max-h-[63vh] overflow-y-auto ">
+      <div className="w-full overflow-y-hidden ">
         <table className="snap-table">
           <tbody>
             {columns.map((column, index) => (
