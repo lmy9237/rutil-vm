@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { Route, HashRouter as Router, Routes } from 'react-router-dom';
+import { scan } from "react-scan";
 import STOMP from './Socket';
 
 import Header from './components/Header/Header';
@@ -30,10 +31,8 @@ import Login from './pages/login/Login';
 import Error from './pages/Error';
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "pretendard/dist/web/static/pretendard.css";
-// import '@orioncactus/pretendard/dist/web/static/pretendard.css';
 
 import './App.css';
-
 // import './App-debug.css';
 import Footer from './components/footer/Footer';
 
@@ -107,6 +106,13 @@ const App = () => {
   };
 
   const [isFooterContentVisible, setIsFooterContentVisible] = useState(false);
+
+  // react-scan 설정
+  scan({
+    enabled: true,
+    log: true,
+    trackUnnecessaryRenders: true,
+  })
 
   return (
     <QueryClientProvider client={queryClient}>
