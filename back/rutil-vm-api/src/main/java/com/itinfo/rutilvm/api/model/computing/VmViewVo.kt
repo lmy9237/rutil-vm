@@ -2,13 +2,12 @@ package com.itinfo.rutilvm.api.model.computing
 
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
-import com.itinfo.rutilvm.api.model.network.toNetworkFromVms
 import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.util.ovirt.findAllDiskAttachmentsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllNicsFromVm
-import com.itinfo.rutilvm.util.ovirt.findAllReportedDeviceFromVmNic
+import com.itinfo.rutilvm.util.ovirt.findAllReportedDevicesFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllVmCdromsFromVm
 import com.itinfo.rutilvm.util.ovirt.findCluster
@@ -19,6 +18,8 @@ import com.itinfo.rutilvm.util.ovirt.findTemplate
 import org.ovirt.engine.sdk4.Connection
 
 import org.ovirt.engine.sdk4.types.*
+import org.ovirt.engine.sdk4.types.IpVersion.V4
+import org.ovirt.engine.sdk4.types.IpVersion.V6
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
@@ -235,6 +236,7 @@ fun Vm.toVmMenu(conn: Connection): VmViewVo {
 	val vm = this@toVmMenu
 	val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
 	val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
+	val reports: List<ReportedDevice> = conn.findAllReportedDevicesFromVm(vm.id()).getOrDefault(listOf())
 
 	return VmViewVo.builder {
 		id { vm.id() }
@@ -248,13 +250,12 @@ fun Vm.toVmMenu(conn: Connection): VmViewVo {
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		if (vm.status() == VmStatus.UP) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
-			val nics: List<Nic> = conn.findAllNicsFromVm(vm.id()).getOrDefault(listOf())
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
 			upTime { statistics.findVmUptime() }
 			hostVo { host?.fromHostToIdentifiedVo() }
-			// ipv4 { nics.findVmIpv4(conn, vm.id()) }
-			// ipv6 { nics.findVmIpv6(conn, vm.id()) }
+			ipv4 { reports.findVmIpv4() }
+			ipv6 { reports.findVmIpv6() }
 			usageDto { statistics.toVmUsage() }
 		} else {
 			fqdn { null }
@@ -532,31 +533,36 @@ fun List<Statistic>.findVmUptime(): String {
  * [List<[Nic]>.findVmIpv4]
  * Vm ip 알아내기
  * vms/{id}/nic/{id}/statistic
- * @param conn [Connection]
- * @param vmId [String]
  * @return
  */
-fun List<Nic>.findVmIpv4(conn: Connection, vmId: String): List<String> {
-	return this@findVmIpv4.flatMap { nic ->
-		val reports: List<ReportedDevice> = conn.findAllReportedDeviceFromVmNic(vmId, nic.id())
-			.getOrDefault(listOf())
-		reports.map { it.ips()[0].address() }
+fun List<ReportedDevice>.findVmIpv4(): List<String> {
+	return this@findVmIpv4.flatMap { report ->
+		report.ips()?.filter { it.version() == V4 }?.map { it.address() } ?: emptyList()
 	}.distinct()
 }
+
 /**
- * [List<[Nic]>.findVmIpv6]
+ * [List<[ReportedDevice]>.findVmIpv6]
  * Vm ip 알아내기
  * vms/{id}/nic/{id}/statistic
  * @param conn
  * @return
  */
-fun List<Nic>.findVmIpv6(conn: Connection, vmId: String): List<String> {
-	return this@findVmIpv6.flatMap { nic ->
-		val reports: List<ReportedDevice> = conn.findAllReportedDeviceFromVmNic(vmId, nic.id())
-			.getOrDefault(listOf())
-		reports.map { it.ips()[1].address() }
+fun List<ReportedDevice>.findVmIpv6(): List<String> {
+	return this@findVmIpv6.flatMap { report ->
+		report.ips()?.filter { it.version() == V6 }?.map { it.address() } ?: emptyList()
 	}.distinct()
 }
+
+// fun List<Nic>.findVmIpv6(conn: Connection, vmId: String): List<String> {
+// 	return this@findVmIpv6.flatMap { nic ->
+// 		val reports: List<ReportedDevice> = conn.findAllReportedDevicesFromVm(vmId).getOrDefault(listOf())
+// 		reports.flatMap { report ->
+// 			report.ips()?.filter { it.version() == V6 }?.map { it.address() } ?: emptyList()
+// 		}
+// 	}.distinct()
+// }
+
 
 // CPU Topology 계산 최적화
 fun calculateCpuTopology(vm: Vm): Int {

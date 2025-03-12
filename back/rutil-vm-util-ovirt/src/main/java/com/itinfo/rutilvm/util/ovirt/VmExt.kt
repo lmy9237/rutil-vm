@@ -509,6 +509,45 @@ fun Connection.removeMultipleNicsFromVm(vmId: String, nics: List<Nic>): Result<B
 fun List<Nic>.nameDuplicateVmNic(name: String, id: String? = null): Boolean =
 	this.filter { it.id() != id }.any { it.name() == name }
 
+
+fun Connection.srvReportedDevicesFromVm(vmId: String): VmReportedDevicesService =
+	this.srvVm(vmId).reportedDevicesService()
+
+fun Connection.findAllReportedDevicesFromVm(vmId: String): Result<List<ReportedDevice>> = runCatching {
+	this.srvReportedDevicesFromVm(vmId).list().send().reportedDevice()
+}.onSuccess {
+	Term.VM.logSuccessWithin(Term.VM, "보고된 디바이스 목록조회", vmId)
+}.onFailure {
+	Term.VM.logFailWithin(Term.VM, "보고된 디바이스 목록조회", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+
+fun Connection.srvReportedDevicesFromVmNics(vmId: String, nicId: String): VmReportedDevicesService =
+	this.srvNicFromVm(vmId, nicId).reportedDevicesService()
+
+fun Connection.findAllReportedDevicesFromVmNic(vmId: String, nicId: String): Result<List<ReportedDevice>> = runCatching {
+	this.srvReportedDevicesFromVmNics(vmId, nicId).list().send().reportedDevice()
+}.onSuccess {
+	Term.VM.logSuccessWithin(Term.NIC, "보고된 디바이스 목록조회", vmId)
+}.onFailure {
+	Term.VM.logFailWithin(Term.NIC, "보고된 디바이스 목록조회", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.srvReportedDeviceFromVmNic(vmId: String, nicId: String, rpId: String): VmReportedDeviceService =
+	this.srvReportedDevicesFromVmNics(vmId, nicId).reportedDeviceService(rpId)
+
+fun Connection.findReportedDeviceFromVmNic(vmId: String, nicId: String, rpId: String): Result<ReportedDevice?> = runCatching {
+	this.srvReportedDeviceFromVmNic(vmId, nicId, rpId).get().send().reportedDevice()
+}.onSuccess {
+	Term.VM.logSuccessWithin(Term.NIC, "상세조회", vmId)
+}.onFailure {
+	Term.VM.logFailWithin(Term.NIC, "상세조회", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+
 private fun Connection.srvAllDiskAttachmentsFromVm(vmId: String): DiskAttachmentsService =
 	this.srvVm(vmId).diskAttachmentsService()
 
@@ -922,32 +961,6 @@ fun Connection.addNicNetworkFilterParameterFromVm(vmId: String, nicId: String, n
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.srvReportedDevicesFromVm(vmId: String): VmReportedDevicesService =
-	this.srvVm(vmId).reportedDevicesService()
-
-fun Connection.findAllReportedDevicesFromVm(vmId: String): Result<List<ReportedDevice>> = runCatching {
-	this.srvReportedDevicesFromVm(vmId).list().send().reportedDevice()
-}.onSuccess {
-	Term.VM.logSuccessWithin(Term.NIC, "NFP 생성", vmId)
-}.onFailure {
-	Term.VM.logFailWithin(Term.NIC, "NFP 생성", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
-
-}
-
-fun Connection.srvReportedDevicesFromVmNics(vmId: String, nicId: String): VmReportedDevicesService =
-	this.srvNicFromVm(vmId, nicId).reportedDevicesService()
-
-fun Connection.findAllReportedDeviceFromVmNic(vmId: String, nicId: String, follow: String = ""): Result<List<ReportedDevice>> = runCatching {
-	this.srvReportedDevicesFromVmNics(vmId, nicId).list().apply {
-		if (follow.isNotEmpty()) follow(follow)
-	}.send().reportedDevice()
-}.onSuccess {
-	Term.VM.logSuccessWithin(Term.NIC, "보고된 디바이스 목록조회", vmId)
-}.onFailure {
-	Term.VM.logFailWithin(Term.NIC, "보고된 디바이스 목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
-}
 
 private fun Connection.srvApplicationsFromVm(vmId: String): VmApplicationsService =
 	this.srvVm(vmId).applicationsService()

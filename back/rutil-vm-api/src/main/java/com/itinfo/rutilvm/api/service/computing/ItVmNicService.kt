@@ -76,38 +76,37 @@ class VmNicServiceImpl(
 	@Throws(Error::class)
 	override fun findAllFromVm(vmId: String): List<NicVo> {
 		log.info("findAllFromVm ... vmId: {}", vmId)
-		val res: List<Nic> =
-			conn.findAllNicsFromVm(vmId).getOrDefault(listOf())
-		return res.toNicVosFromVm(conn, vmId)
+		val res: List<Nic> = conn.findAllNicsFromVm(vmId, follow = "statistics,reporteddevices")
+			.getOrDefault(listOf())
+		return res.toNicVosFromVm(conn)
 	}
 
 	@Throws(Error::class)
 	override fun findOneFromVm(vmId: String, nicId: String): NicVo? {
 		log.info("findOneFromVm ... vmId: {}, nicId: {}", vmId, nicId)
-		val res: Nic? =
-			conn.findNicFromVm(vmId, nicId).getOrNull()
+		val res: Nic? = conn.findNicFromVm(vmId, nicId)
+			.getOrNull()
 		return res?.toEditNicVoFromVm(conn)
 	}
 
 	@Throws(Error::class)
 	override fun addFromVm(vmId: String, nicVo: NicVo): NicVo? {
-		log.info("addFromVm ... ")
-		val res: Nic? =
-			conn.addNicFromVm(
-				vmId, nicVo.toAddNicBuilder()
-			).getOrNull()
-		return res?.toNicVoFromVm(conn, vmId)
-
+		log.info("addFromVm ... vmId: {}", vmId)
+		val res: Nic? = conn.addNicFromVm(
+			vmId,
+			nicVo.toAddNicBuilder()
+		).getOrNull()
+		return res?.toNicVoFromVm(conn)
 	}
 
 	@Throws(Error::class)
 	override fun updateFromVm(vmId: String, nicVo: NicVo): NicVo? {
 		log.info("updateFromVm ... ")
-		val res: Nic? =
-			conn.updateNicFromVm(
-				vmId, nicVo.toEditNicBuilder()
-			).getOrNull()
-		return res?.toNicVoFromVm(conn, vmId)
+		val res: Nic? = conn.updateNicFromVm(
+			vmId,
+			nicVo.toEditNicBuilder()
+		).getOrNull()
+		return res?.toNicVoFromVm(conn)
 	}
 
 	@Throws(Error::class)

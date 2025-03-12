@@ -14,6 +14,8 @@ import org.ovirt.engine.sdk4.builders.MacBuilder
 import org.ovirt.engine.sdk4.builders.NicBuilder
 import org.ovirt.engine.sdk4.builders.VnicProfileBuilder
 import org.ovirt.engine.sdk4.types.*
+import org.ovirt.engine.sdk4.types.IpVersion.V4
+import org.ovirt.engine.sdk4.types.IpVersion.V6
 import java.io.Serializable
 import java.math.BigInteger
 
@@ -123,66 +125,56 @@ fun List<Nic>.toNicIdNames(): List<NicVo> =
 	this@toNicIdNames.map { it.toNicIdName() }
 
 
-fun Nic.toVmNic(conn: Connection, vmId: String): NicVo {
+fun Nic.toVmNic(conn: Connection): NicVo {
 	val nic = this@toVmNic
-	val vm: Vm? = conn.findVm(vmId).getOrNull()
 	val vnicProfile: VnicProfile? = conn.findVnicProfile(nic.vnicProfile().id()).getOrNull()
 	val network: Network? = vnicProfile?.network()?.let { conn.findNetwork(it.id()).getOrNull() }
 
 	return NicVo.builder {
 		id { nic.id() }
 		name { nic.name() }
-		if (network != null) {
-			networkVo { network.fromNetworkToIdentifiedVo() }
-		}
-		if (vnicProfile != null) {
-			vnicProfileVo { vnicProfile.fromVnicProfileToIdentifiedVo() }
-		}
+		networkVo { network?.fromNetworkToIdentifiedVo() }
+		vnicProfileVo { vnicProfile?.fromVnicProfileToIdentifiedVo() }
 	}
 }
-fun List<Nic>.toVmNics(conn: Connection, vmId: String): List<NicVo> =
-	this@toVmNics.map { it.toVmNic(conn, vmId) }
+fun List<Nic>.toVmNics(conn: Connection): List<NicVo> =
+	this@toVmNics.map { it.toVmNic(conn) }
 
 
-fun Nic.toNicVoFromVm(conn: Connection, vmId: String): NicVo {
-	val vm :Vm = conn.findVm(vmId)
-		.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
-	val statistics: List<Statistic> = conn.findAllStatisticsFromVmNic(vmId, this@toNicVoFromVm.id())
-		.getOrDefault(listOf())
-	val vnicProfile: VnicProfile = conn.findVnicProfile(this@toNicVoFromVm.vnicProfile().id())
-		.getOrNull() ?: throw ErrorPattern.VNIC_PROFILE_NOT_FOUND.toException()
-	val network: Network = conn.findNetwork(vnicProfile.network().id())
-		.getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
-	val reportedDevices: List<ReportedDevice> = conn.findAllReportedDeviceFromVmNic(vmId, this@toNicVoFromVm.id())
-		.getOrDefault(listOf())
-//	val networkFilterParameters: List<NetworkFilterParameter> =
-//		conn.findAllNicNetworkFilterParametersFromVm(vmId, vmNicId)
+fun Nic.toNicVoFromVm(conn: Connection): NicVo {
+	val nic = this@toNicVoFromVm
+	val vnicProfile: VnicProfile? = conn.findVnicProfile(nic.vnicProfile().id()).getOrNull()
+	val network: Network? = vnicProfile?.network()?.let { conn.findNetwork(it.id()).getOrNull() }
+	val rd: ReportedDevice? = nic.reportedDevices().firstOrNull { reportedDevice ->
+		nic.macPresent() && reportedDevice.mac()?.address() == nic.mac().address()
+	}
+//	val networkFilterParameters: List<NetworkFilterParameter> = conn.findAllNicNetworkFilterParametersFromVm(vmId, vmNicId)
 //			.getOrDefault(listOf())
 
 	return NicVo.builder {
-        id { this@toNicVoFromVm.id() }
-        name { this@toNicVoFromVm.name() }
-        networkVo { network.fromNetworkToIdentifiedVo() }
-        vnicProfileVo { vnicProfile.fromVnicProfileToIdentifiedVo() }
-        plugged { this@toNicVoFromVm.plugged() }
-        synced { this@toNicVoFromVm.synced() }
-        linked { this@toNicVoFromVm.linked() }
-		status { if(this@toNicVoFromVm.linked()) NicStatus.UP else NicStatus.DOWN }
-        interface_ { this@toNicVoFromVm.interface_() }
-        macAddress { if (this@toNicVoFromVm.macPresent()) this@toNicVoFromVm.mac().address() else null }
-        // ipv4 { reportedDevices[0].ips().first().address() }
-       // ipv6 { reportedDevices[0].ips(). }
-//				.speed()
-        rxSpeed { statistics.findSpeed("data.current.rx.bps") }
-        txSpeed { statistics.findSpeed("data.current.tx.bps") }
-        rxTotalSpeed { statistics.findSpeed("data.total.rx") }
-        txTotalSpeed { statistics.findSpeed("data.total.tx") }
-        rxTotalError { statistics.findSpeed("errors.total.rx") } // 이게 중단 스피드
-        guestInterfaceName { if(reportedDevicesPresent()) reportedDevices[0].name() else ""}
+        id { nic.id() }
+        name { nic.name() }
+        networkVo { network?.fromNetworkToIdentifiedVo() }
+        vnicProfileVo { vnicProfile?.fromVnicProfileToIdentifiedVo() }
+        plugged { nic.plugged() }
+        synced { nic.synced() }
+        linked { nic.linked() }
+		status { if(nic.linked()) NicStatus.UP else NicStatus.DOWN }
+        interface_ { nic.interface_() }
+        macAddress { if (nic.macPresent()) nic.mac().address() else null }
+        ipv4 { rd?.findVmIpv4() }
+        ipv6 { rd?.findVmIpv6() }
+		// speed { nic. }
+        rxSpeed { nic.statistics().findSpeed("data.current.rx.bps") }
+        txSpeed { nic.statistics().findSpeed("data.current.tx.bps") }
+        rxTotalSpeed { nic.statistics().findSpeed("data.total.rx") }
+        txTotalSpeed { nic.statistics().findSpeed("data.total.tx") }
+        rxTotalError { nic.statistics().findSpeed("errors.total.rx") } // 이게 중단 스피드
+        guestInterfaceName { rd?.name() }
     }
 }
-fun List<Nic>.toNicVosFromVm(conn: Connection, vmId: String): List<NicVo> =
-	this@toNicVosFromVm.map { it.toNicVoFromVm(conn, vmId) }
+fun List<Nic>.toNicVosFromVm(conn: Connection): List<NicVo> =
+	this@toNicVosFromVm.map { it.toNicVoFromVm(conn) }
 
 fun Nic.toEditNicVoFromVm(conn: Connection): NicVo {
 	val vnicProfile: VnicProfile? = conn.findVnicProfile(this@toEditNicVoFromVm.vnicProfile().id()).getOrNull()
@@ -201,6 +193,22 @@ fun Nic.toEditNicVoFromVm(conn: Connection): NicVo {
 	}
 }
 
+/**
+ * [ReportedDevice].findVmIpv4
+ * Vm ip 알아내기
+ * @return
+ */
+fun ReportedDevice.findVmIpv4(): String? {
+	return this@findVmIpv4.ips()?.firstOrNull { it.version() == V4 }?.address()
+}
+/**
+ * [ReportedDevice].findVmIpv6]
+ * Vm ip 알아내기
+ * @return
+ */
+fun ReportedDevice.findVmIpv6(): String? {
+	return this@findVmIpv6.ips()?.firstOrNull { it.version() == V6 }?.address()
+}
 
 //fun Nic.toNicVoFromSnapshot(conn: Connection, vmId: String): NicVo {
 //	conn.findVm(vmId).getOrNull() ?: throw ErrorPattern.VM_ID_NOT_FOUND.toException()
@@ -292,8 +300,9 @@ fun Nic.toNetworkFromVm(conn: Connection, vmId: String): NicVo {
 		txTotalSpeed { statistics.findSpeed("data.total.tx") }
 	}
 }
-fun List<Nic>.toNetworkFromVms(conn: Connection, vmId: String): List<NicVo> =
-	this@toNetworkFromVms.map { it.toNicVoFromVm(conn, vmId) }
+fun List<Nic>.toNetworkFromVms(conn: Connection): List<NicVo> =
+	this@toNetworkFromVms.map { it.toNicVoFromVm(conn) }
+
 
 //fun Nic.toNetworkFromVm(conn: Connection, vmId: String): NicVo {
 //	val vm :Vm = conn.findVm(vmId)
