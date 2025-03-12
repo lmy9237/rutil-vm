@@ -253,8 +253,8 @@ fun Vm.toVmMenu(conn: Connection): VmViewVo {
 			fqdn { vm.fqdn() }
 			upTime { statistics.findVmUptime() }
 			hostVo { host?.fromHostToIdentifiedVo() }
-			ipv4 { nics.findVmIpv4(conn, vm.id()) }
-			ipv6 { nics.findVmIpv6(conn, vm.id()) }
+			// ipv4 { nics.findVmIpv4(conn, vm.id()) }
+			// ipv6 { nics.findVmIpv6(conn, vm.id()) }
 			usageDto { statistics.toVmUsage() }
 		} else {
 			fqdn { null }
