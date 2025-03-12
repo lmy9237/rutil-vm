@@ -170,7 +170,7 @@ fun Nic.toNicVoFromVm(conn: Connection, vmId: String): NicVo {
 		status { if(this@toNicVoFromVm.linked()) NicStatus.UP else NicStatus.DOWN }
         interface_ { this@toNicVoFromVm.interface_() }
         macAddress { if (this@toNicVoFromVm.macPresent()) this@toNicVoFromVm.mac().address() else null }
-        ipv4 { reportedDevices[0].ips().first().address() }
+        // ipv4 { reportedDevices[0].ips().first().address() }
        // ipv6 { reportedDevices[0].ips(). }
 //				.speed()
         rxSpeed { statistics.findSpeed("data.current.rx.bps") }

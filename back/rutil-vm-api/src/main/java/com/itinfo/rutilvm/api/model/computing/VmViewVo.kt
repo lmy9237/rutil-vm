@@ -307,8 +307,8 @@ fun Vm.toVmVoInfo(conn: Connection): VmViewVo {
 		status { vm.status() }
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" }
 		upTime { statistics.findVmUptime() }
-		ipv4 { nics.findVmIpv4(conn, vm.id()) }
-		ipv6 { nics.findVmIpv6(conn, vm.id()) }
+		// ipv4 { nics.findVmIpv4(conn, vm.id()) }
+		// ipv6 { nics.findVmIpv6(conn, vm.id()) }
 		fqdn { vm.fqdn() }
 		hostVo { host?.fromHostToIdentifiedVo() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
@@ -392,8 +392,8 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
 			upTime { statistics.findVmUptime() }
-			ipv4 { nics.findVmIpv4(conn, vm.id()) }
-			ipv6 { nics.findVmIpv6(conn, vm.id()) }
+			// ipv4 { nics.findVmIpv4(conn, vm.id()) }
+			// ipv6 { nics.findVmIpv6(conn, vm.id()) }
 			hostVo { host?.fromHostToIdentifiedVo() }
 			usageDto { statistics.toVmUsage() }
 		} else {
