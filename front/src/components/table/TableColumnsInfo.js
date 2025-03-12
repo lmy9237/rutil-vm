@@ -112,6 +112,7 @@ const TableColumnsInfo = {
     { header: '제품', accessor: 'productName', clickable: false },
     { header: '드라이버', accessor: 'driver', clickable: false },
   ],
+
   VMS: [
     { header: '', accessor: 'icon', clickable: false, width: '8%' },
     { header: '이름', accessor: 'name', clickable: true, width: '20%' },
@@ -128,6 +129,25 @@ const TableColumnsInfo = {
     { header: '업타임', accessor: 'upTime', clickable: false, width: '12%' },
     { header: '설명', accessor: 'description', clickable: false, width: '25%' }
   ],
+  NICS_FROM_VMS: [
+    { header: '연결됨', accessor: 'linked', clickable: false, width: '7%' },
+    { header: '네트워크 이름', accessor: 'networkName', clickable: false },
+    { header: '프로파일 이름', accessor: 'vnicProfileName', clickable: false },
+    { header: '링크 상태', accessor: 'status', clickable: false },
+    { header: '유형', accessor: 'interface_', clickable: false },
+    { header: '속도 (Mbps)', accessor: 'speed', clickable: false },
+    { header: '포트 미러링', accessor: 'portMirroring', clickable: false },
+    { header: '게스트 인터페이스 이름', accessor: 'guestInterfaceName', clickable: false },
+  ],
+  NICS_CALC_FROM_VMS: [
+    { header: 'Rx 속도 (Mbps)', accessor: 'rxSpeed', clickable: false, width: '7%' },
+    { header: 'Tx 속도 (Mbps)', accessor: 'txSpeed', clickable: false },
+    { header: '총 Rx', accessor: 'rxTotalSpeed', clickable: false },
+    { header: '총 Tx', accessor: 'txTotalSpeed', clickable: false },
+    { header: '중단 (Pkts)', accessor: 'pkts', clickable: false },
+  ],
+
+
   DISKS_FROM_VM: [
     { header: '', accessor: 'icon', clickable: false,width:'4%' },
     { header: '별칭', accessor: 'alias', clickable: true ,width:'10%'},
@@ -217,6 +237,8 @@ const TableColumnsInfo = {
     { header: '링크 상태', accessor: '_linked', clickable: false },
     { header: '유형', accessor: 'interface_', clickable: false },
   ],
+
+
   NETWORKS: [
     { header: '이름', accessor: 'name', clickable: true },
     { header: '코멘트', accessor: 'comment', clickable: false },

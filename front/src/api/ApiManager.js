@@ -2028,7 +2028,7 @@ migrateHostsFromVM: async (vmId) => {
   findAllVnicProfiles : async () => makeAPICall({
     method: "GET", 
     url: ENDPOINTS.FIND_ALL_VNIC_PROFILES(),
-    defaultValues: DEFAULT_VALUES.FIND_ALL_VNIC_PROFILES
+    // defaultValues: DEFAULT_VALUES.FIND_ALL_VNIC_PROFILES
   }),
 
   /**

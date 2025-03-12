@@ -25,18 +25,6 @@ const SnapshotSection = ({ snapshot, sectionKey, label, icon, activeSection, tog
 );
 
 const VmSnapshots = ({ vmId }) => {
-  const [activePopup, setActivePopup] = useState(null);
-  const [modals, setModals] = useState({ create: false, edit: false, delete: false });
-  const [activeSection, setActiveSection] = useState(null);
-  const [selectedSnapshots, setSelectedSnapshots] = useState([]);
-
-  const toggleModal = (type, isOpen) => {
-    setModals((prev) => ({ ...prev, [type]: isOpen }));
-  };
-
-  const openPopup = (popupType) => { setActivePopup(popupType) };
-  const closePopup = () => { setActivePopup(null) };
-
   const {
     data: snapshots,
     isLoading: isSnapshotsLoading ,
@@ -78,6 +66,15 @@ const VmSnapshots = ({ vmId }) => {
     }))
   }));
   
+  const [activePopup, setActivePopup] = useState(null);
+  const [modals, setModals] = useState({ create: false, edit: false, delete: false });
+  const [activeSection, setActiveSection] = useState(null);
+  const [selectedSnapshots, setSelectedSnapshots] = useState([]);
+
+  const toggleModal = (type, isOpen) => setModals((prev) => ({ ...prev, [type]: isOpen }));
+  const openPopup = (popupType) => { setActivePopup(popupType) };
+  const closePopup = () => { setActivePopup(null) };
+
   const toggleSnapshotSelection = (snapshot, event) => {
     setSelectedSnapshots((prev) =>
       event.ctrlKey
@@ -227,7 +224,6 @@ const VmSnapshots = ({ vmId }) => {
             onClose={() => toggleModal('delete', false)}
           />
         )}
-
       </Suspense>
     </>
   );

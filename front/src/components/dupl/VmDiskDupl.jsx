@@ -63,52 +63,54 @@ const VmDiskDupl = ({
       searchText: `${diskImage?.alias} ${diskImage?.storageDomainVo?.name || ""} ${vm?.name || ""}`.toLowerCase(),
     };
   });
-    // ✅ 검색 기능 적용
-    const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-    return (
-      <div onClick={(e) => e.stopPropagation()}>
-        <div className="dupl-header-group">
-          {showSearchBox && (
-            <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          )}
-          <VmDiskActionButtons
-            openModal={openModal}
-            isEditDisabled={selectedDisks?.length !== 1}
-            isDeleteDisabled={selectedDisks?.length === 0}
-            status={selectedDisks[0]?.active ? "active" : "deactive"}
-            selectedDisks={selectedDisks}
-          />
-        </div>
-        <span style={{fontSize:"16px"}}>ID: {selectedIds || ""}</span>
-        
-        <TablesOuter
-          isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-          columns={columns}
-          data={filteredData}
-          shouldHighlight1stCol={true}
-          onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
-          onClickableColumnClick={(row) => handleNameClick(row.id)}
-          multiSelect={true}
-          // onContextMenuItems={(row) => [ // 마우스 버튼
-          //   <VmDiskActionButtons
-          //     openModal={openModal}
-          //     isEditDisabled={!row}
-          //     type='context'
-          //   />
-          // ]}
+
+  // ✅ 검색 기능 적용
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  
+  return (
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group">
+        {showSearchBox && (
+          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        )}
+        <VmDiskActionButtons
+          openModal={openModal}
+          isEditDisabled={selectedDisks?.length !== 1}
+          isDeleteDisabled={selectedDisks?.length === 0}
+          status={selectedDisks[0]?.active ? "active" : "deactive"}
+          selectedDisks={selectedDisks}
         />
-        {/* 디스크 모달창 */}
-        <Suspense>
-          <VmDiskModals
-            activeModal={activeModal}
-            disk={selectedDisks[0]}
-            selectedDisks={selectedDisks}
-            vmId={vmId}
-            onClose={closeModal}
-          />
-        </Suspense>
       </div>
-    );
-  };
+      <span style={{fontSize:"16px"}}>ID: {selectedIds || ""}</span>
+      
+      <TablesOuter
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        columns={columns}
+        data={filteredData}
+        shouldHighlight1stCol={true}
+        onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
+        onClickableColumnClick={(row) => handleNameClick(row.id)}
+        multiSelect={true}
+        // onContextMenuItems={(row) => [ // 마우스 버튼
+        //   <VmDiskActionButtons
+        //     openModal={openModal}
+        //     isEditDisabled={!row}
+        //     type='context'
+        //   />
+        // ]}
+      />
+      {/* 디스크 모달창 */}
+      <Suspense>
+        <VmDiskModals
+          activeModal={activeModal}
+          disk={selectedDisks[0]}
+          selectedDisks={selectedDisks}
+          vmId={vmId}
+          onClose={closeModal}
+        />
+      </Suspense>
+    </div>
+  );
+};
 
 export default VmDiskDupl;

@@ -142,7 +142,7 @@ const VmGeneral = ({ vmId }) => {
     { label: " 할당할 실제 메모리", value: convertBytesToMB(vm?.memoryGuaranteed) + " MB" ?? "0" },
     { label: "", value: "" },
     { label: "게스트", value: "" },
-    { label: "- 에이전트", value: "" },
+    // { label: "- 에이전트", value: "" },
     { label: "- 아키텍처", value: vm?.guestArc },
     { label: "- 운영 시스템", value: vm?.guestOsType },
     { label: "- 커널 버전", value: vm?.guestKernelVer },

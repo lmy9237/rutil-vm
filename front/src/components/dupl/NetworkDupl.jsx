@@ -4,8 +4,6 @@ import NetworkActionButtons from "./NetworkActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import NetworkModals from "../modal/network/NetworkModals";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import "./Dupl.css";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";

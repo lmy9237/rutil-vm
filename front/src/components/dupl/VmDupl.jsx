@@ -30,7 +30,7 @@ const VmDupl = ({
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
   const transformedData = vms.map((vm) => ({
     ...vm,
-    icon: renderVmStatusIcon(vm.status),
+    icon: renderVmStatusIcon(vm?.status),
     host: (
       <TableRowClick type="host" id={vm?.hostVo?.id}>
         {vm?.hostVo?.name}
@@ -46,22 +46,22 @@ const VmDupl = ({
         {vm?.dataCenterVo?.name}
       </TableRowClick>
     ),
-    ipv4: vm.ipv4 + " " + vm.ipv6,
+    ipv4: vm?.ipv4 + " " + vm?.ipv6,
     memoryUsage:
-      vm.usageDto?.memoryPercent === null ||
-      vm.usageDto?.memoryPercent === undefined
+      vm?.usageDto?.memoryPercent === null ||
+      vm?.usageDto?.memoryPercent === undefined
         ? ""
-        : `${vm.usageDto.memoryPercent}%`,
+        : `${vm?.usageDto?.memoryPercent}%`,
     cpuUsage:
-      vm.usageDto?.cpuPercent === null ||
-      vm.usageDto?.cpuPercent === undefined
+      vm?.usageDto?.cpuPercent === null ||
+      vm?.usageDto?.cpuPercent === undefined
         ? ""
-        : `${vm.usageDto.cpuPercent}%`,
+        : `${vm?.usageDto?.cpuPercent}%`,
     networkUsage:
       vm.usageDto?.networkPercent === null ||
       vm.usageDto?.networkPercent === undefined
         ? ""
-        : `${vm.usageDto.networkPercent}%`,
+        : `${vm?.usageDto?.networkPercent}%`,
     // ✅ 검색 필드 추가 (한글 포함)
     searchText: `${vm?.name} ${vm?.hostVo?.name || ""} ${vm?.clusterVo?.name || ""} ${vm?.dataCenterVo?.name || ""} ${vm?.ipv4} ${vm?.ipv6}`.toLowerCase(),
   }));
