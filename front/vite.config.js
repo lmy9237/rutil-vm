@@ -1,7 +1,15 @@
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig, createLogger, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import mkcert from "vite-plugin-mkcert";
 // import path from "path";
+
+const logger = createLogger();
+const loggerWarn = logger.warn
+logger.warn = (msg, options) => {
+  // Ignore empty CSS files warning
+  if (msg.includes('vite:css') && msg.includes(' is empty')) return
+  loggerWarn(msg, options)
+}
 
 let RUTIL_VM_ENV = {}
 const VITE_CONFIG = ({ mode }) => {
@@ -14,6 +22,7 @@ const VITE_CONFIG = ({ mode }) => {
   return defineConfig({
     // root: path.resolve(__dirname, 'public'),
     plugins: [react(), mkcert()],
+    customLogger: logger,
     css: {
       devSourcemap: true,
     },
@@ -22,7 +31,7 @@ const VITE_CONFIG = ({ mode }) => {
     },
     server: {
       https: true,
-      port: Number(process.env.SSL_PORT) || 3443,
+      port: Number(process.env.SSL_PORT) || 443,
       proxy: {
         "/api": {
           target: RUTIL_VM_ENV.__API_URL__,
@@ -38,6 +47,11 @@ const VITE_CONFIG = ({ mode }) => {
             proxy.on("error", (err, req, res) => {
               console.error("Proxy error:", err);
             });
+          },
+          "/ws": {
+            target: RUTIL_VM_ENV.__API_URL__,
+            changeOrigin: true,
+            secure: false, // Set to true if the target uses a valid SSL certificate
           }
         },
         watch: {

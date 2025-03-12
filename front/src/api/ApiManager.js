@@ -3,15 +3,7 @@ import DEFAULT_VALUES from "./DefaultValues"
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 // import { RUTIL_VM_ENV } from "../../vite.config";
-// axios.defaults.withCredentials = true;
-/*
-axios.defaults.proxy = {
-  host: '192.168.0.70',
-  port: 8444,
-  protocol: 'https'
-}
-axios.defaults.baseURL = "https://192.168.0.70:8443";
-*/
+
 if (process.env.NODE_ENV === 'production') {
   console.log("THIS IS PRODUCTION !!!")
   console.log(`ApiManager.js ... process.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`)
@@ -20,9 +12,9 @@ if (process.env.NODE_ENV === 'production') {
 
 axios.interceptors.request.use(config => {
   config.headers['Content-Type'] = 'application/json;charset=utf-8';
-  
   return config;
 });
+
 /**
  * @name makeAPICall
  * @description axios API 호출

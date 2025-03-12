@@ -32,14 +32,14 @@ import javax.servlet.http.HttpServletRequest
 	]
 )
 class WebMvcConfig : WebMvcConfigurer {
-	/*
-		override fun configureViewResolvers(registry: ViewResolverRegistry) {
-			log.info("... configureViewResolvers")
-			registry.viewResolver(jspViewResolver())
-			registry.jsp("/WEB-INF/views/", ".jsp")
-			// super.configureViewResolvers(registry)
-		}
-	*/
+/*
+	override fun configureViewResolvers(registry: ViewResolverRegistry) {
+		log.info("... configureViewResolvers")
+		registry.viewResolver(jspViewResolver())
+		registry.jsp("/WEB-INF/views/", ".jsp")
+		// super.configureViewResolvers(registry)
+	}
+*/
 
 	@Bean(name = ["jsonView"])
 	fun jsonView(): MappingJackson2JsonView {
@@ -49,29 +49,13 @@ class WebMvcConfig : WebMvcConfigurer {
 		}
 	}
 
-	@Bean
-	fun corsConfigurationSource(): CorsConfigurationSource {
-		// 요거 작동 안됨
-		log.info("... corsConfigurationSource")
-		val config = CorsConfiguration().apply {
-			allowCredentials = true
-			addAllowedOrigin(URL_REACT_DEV) // 리엑트 돌릴 때
-			allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
-			allowedHeaders = listOf("*")
-		}
-		return UrlBasedCorsConfigurationSource().apply {
-			registerCorsConfiguration("/**", config)
-		}
-	}
-
+	// TODO: 의존도 파악 후 제거 여부 확인
 	override fun addCorsMappings(registry: CorsRegistry) {
 		registry.addMapping("/**")
 			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 			.allowedOrigins("*")
-//			.allowedOrigins(URL_REACT_DEV, URL_REACT_DEV_SSL)
 			.allowedHeaders("*")
 			.maxAge(3000)
-
 		super.addCorsMappings(registry)
 	}
 
@@ -162,8 +146,6 @@ class WebMvcConfig : WebMvcConfigurer {
 	}
 
 	companion object {
-		const val URL_REACT_DEV = "http://localhost:3000"
-		const val URL_REACT_DEV_SSL = "https://localhost:3000"
 		private val log by LoggerDelegate()
 	}
 }

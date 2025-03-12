@@ -1,6 +1,5 @@
 import EventDupl from "../../../components/dupl/EventDupl";
 import { useEventFromCluster } from "../../../api/RQHook";
-import toast from "react-hot-toast";
 
 /**
  * @name ClusterEvents
@@ -20,7 +19,6 @@ const ClusterEvents = ({ clusterId }) => {
     ...e
   }));
 
-  toast()
   console.log("...");
   return (
     <>

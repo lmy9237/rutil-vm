@@ -45,7 +45,7 @@ class SecurityConfig(
 				.successForwardUrl("/loginSuccess")
 				// .successHandler(customAuthenticationProvider())
 				.failureUrl("/login")
-//				.failureHandler(customAuthFailureHandler())
+				// .failureHandler(customAuthFailureHandler())
 				.permitAll()
 			.and()
 */

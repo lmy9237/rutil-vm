@@ -109,7 +109,7 @@ const App = () => {
 
   // react-scan 설정
   scan({
-    enabled: true,
+    enabled: false,
     log: true,
     trackUnnecessaryRenders: true,
   })
