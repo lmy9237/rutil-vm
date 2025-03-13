@@ -1,0 +1,37 @@
+.rvi {
+  /* a.k.a rutil-vm-icon */
+  width: var(--w-icon);
+  height: var(--h-icon);
+}
+.rvi.rvi-menu {
+  color: var(--color-primary-white);
+}
+.rvi-outer {
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.rvi-outer:hover {
+  color: rgb(113, 149, 163);
+  background-color: var(--color-primary-hover);
+}
+
+.rvi.rvi-nav {
+  display: flex;flex-direction:row;align-items:center;justify-content:center;
+  width:var(--h-icon-nav);height:var(--w-icon-nav);
+  color: var(--color-black);
+  text-decoration:none;
+}
+.rvi.rvi-nav:hover {
+  background: var(--color-bg);
+  border-radius: 20px;
+}
+.rvi.rvi-nav.active {
+  background: var(--color-primary);
+  border-radius: 20px;
+}
+.rvi.rvi-nav.active svg {
+  color: var(--color-primary-white);
+}

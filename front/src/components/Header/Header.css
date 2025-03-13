@@ -6,26 +6,11 @@
   margin-bottom:1px;
 }
 .header-right {
-  display:flex;justify-content:flex-end;align-items:center;   height:100%;/* 세로 중앙 정렬 추가 */
+  height:100%;
+  display:flex;justify-content:flex-end;align-items:center;/* 세로 중앙 정렬 추가 */
 }
-
 .header-left {
-  display:flex;justify-content:space-between;align-items: center;
-  font-size: var(--fs-big);
-  width: 130px;
-}
-.header-left span {
-  font-size: var(--fs-18);
-}
-.header-left > div {
-  padding: 0 0.15rem;
-  cursor: pointer;
-  color: rgb(0, 0, 0);
-  border-radius: 50%;
-}
-
-.header-left > div:hover {
-  background-color: #ebececd8;
+  display:flex;justify-content:flex-start;align-items:center;
 }
 /* Header 아이콘들 */
 

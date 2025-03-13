@@ -103,7 +103,6 @@ open class PropertiesConfig {
 		log.debug("  spring.datasource.history.url: {}", historyJdbcUrl)
 		log.debug("  spring.datasource.engine.url: {}", engineJdbcUrl)
 		log.debug("  spring.datasource.aaa.url: {}\n\n", aaaJdbcUrl)
-		log.debug("  server.port: {}\n\n", serverPort)
 		/*log.debug("  management.endpoints.web.exposure.include: {}", exposureInclude)
 		log.debug("  management.endpoint.shutdown.enabled: {}", shutdownEnabled1)
 		log.debug("  endpoints.shutdown.enabled: {}\n\n", shutdownEnabled2)*/

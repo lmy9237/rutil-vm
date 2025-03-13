@@ -17,13 +17,20 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
-import rutil_logo from "../../assets/images/rutil_logo.png";
-import { HamburgerIcon, LogoIcon, NotificationIcon, RefreshIcon, SettingsIcon, TopMenuIcon, UserIcon } from "../icons/icons";
+import {
+  HamburgerIcon,
+  LogoIcon,
+  NotificationIcon,
+  RefreshIcon,
+  SettingsIcon,
+  TopMenuIcon,
+  UserIcon,
+} from "../icons/RutilVmIcons";
 
 /**
  * @name Header
  * @description 헤더
- * 
+ *
  * @prop {JSX.useState} setAuthenticated
  * @returns {JSX.Element} Header
  */
@@ -33,7 +40,6 @@ const Header = ({ setAuthenticated, toggleAside }) => {
   const [isLoginBoxVisible, setLoginBoxVisible] = useState(false);
   const [isBellActive, setBellActive] = useState(false);
   // const [username, setUsername] = useState(localStorage["username"]);
-
 
   const toggleLoginBox = () => {
     setLoginBoxVisible(!isLoginBoxVisible);
@@ -48,7 +54,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
   // '알림' 또는 '이벤트' 저장
   const [activeSection, setActiveSection] = useState(""); // 기본값 '알림'
   const handleSectionClick = (section) => {
-    setActiveSection(activeSection === section ? "" : section); 
+    setActiveSection(activeSection === section ? "" : section);
   };
   const handleDelete = (id, type) => {
     if (type === "알림") {
@@ -65,8 +71,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
       date: new Date().toLocaleString("ko-KR", { hour12: false }),
     }))
   );
-  
-  
+
   const [events, setEvents] = useState(
     Array.from({ length: 20 }).map((_, index) => ({
       id: index,
@@ -75,14 +80,9 @@ const Header = ({ setAuthenticated, toggleAside }) => {
     }))
   );
 
-  
-
-
   const stopPropagation = (e) => e.stopPropagation();
 
-  useEffect(() => {
-    
-  }, [isLoginBoxVisible, isBellActive]);
+  useEffect(() => {}, [isLoginBoxVisible, isBellActive]);
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -103,7 +103,6 @@ const Header = ({ setAuthenticated, toggleAside }) => {
 
   return (
     <div className="header center">
-    
       <div className="header-right">
         <TopMenuIcon onClick={toggleAside}>
           <HamburgerIcon className="rvi rvi-menu" />
@@ -115,33 +114,34 @@ const Header = ({ setAuthenticated, toggleAside }) => {
       </div>
 
       <div className="header-right">
-        <TopMenuIcon 
-          onClick={() => window.location.reload()}
-        >
+        <TopMenuIcon onClick={() => window.location.reload()}>
           {/* 새로고침 */}
-          <RefreshIcon className="rvi rvi-menu"  />
+          <RefreshIcon className="rvi rvi-menu" />
         </TopMenuIcon>
-        <TopMenuIcon 
+        <TopMenuIcon
           onClick={() => {
             setSelectedIndex(1);
-            navigate('/settings/users'); // 기존 기능 유지
+            navigate("/settings/users"); // 기존 기능 유지
           }}
         >
           {/* 설정 */}
-          <SettingsIcon className="rvi rvi-menu"/>
+          <SettingsIcon className="rvi rvi-menu" />
         </TopMenuIcon>
         <TopMenuIcon
           onClick={() => {
             setSelectedIndex(2);
             toggleBellActive(); // 기존 기능 유지
-          }} 
+          }}
         >
           {/* 알림 */}
-          <NotificationIcon className="rvi rvi-menu"/>
+          <NotificationIcon className="rvi rvi-menu" />
         </TopMenuIcon>
 
         {isBellActive && (
-          <div className={`bell-box ${isExpanded ? "expanded" : ""}`} onClick={stopPropagation}>
+          <div
+            className={`bell-box ${isExpanded ? "expanded" : ""}`}
+            onClick={stopPropagation}
+          >
             <div className="f-btw py-0.5 px-1.5">
               <FontAwesomeIcon
                 icon={isExpanded ? faAngleRight : faAngleLeft} // 방향 변경
@@ -150,43 +150,57 @@ const Header = ({ setAuthenticated, toggleAside }) => {
                 onClick={handleExpand}
               />
               통지함
-              <FontAwesomeIcon icon={faTimes} fixedWidth
+              <FontAwesomeIcon
+                icon={faTimes}
+                fixedWidth
                 className="hover-icon"
                 onClick={() => setBellActive(false)}
               />
             </div>
 
-              {/* 알림 탭 */}
-              <div className={`bell-cate ${activeSection === "알림" ? "active" : ""}`} onClick={() => handleSectionClick("알림")}>
-                <FontAwesomeIcon icon={activeSection === "알림" ? faChevronDown : faChevronRight} fixedWidth />
-                <span className="ml-1">알림</span>
-              </div>
+            {/* 알림 탭 */}
+            <div
+              className={`bell-cate ${activeSection === "알림" ? "active" : ""}`}
+              onClick={() => handleSectionClick("알림")}
+            >
+              <FontAwesomeIcon
+                icon={activeSection === "알림" ? faChevronDown : faChevronRight}
+                fixedWidth
+              />
+              <span className="ml-1">알림</span>
+            </div>
 
-              {/* 알림 내용 */}
-              {activeSection === "알림" && (
-                <>
+            {/* 알림 내용 */}
+            {activeSection === "알림" && (
+              <>
                 <div className="bell-content-outer">
                   {notifications.map((notification) => (
                     <div key={notification.id} className="bell-content">
                       <div>
-                        <FontAwesomeIcon 
-                          icon={faExclamationTriangle} 
+                        <FontAwesomeIcon
+                          icon={faExclamationTriangle}
                           fixedWidth
-                          style={{ color: "red", fontSize: "14px", paddingTop: "4px"}}
+                          style={{
+                            color: "red",
+                            fontSize: "14px",
+                            paddingTop: "4px",
+                          }}
                         />
                       </div>
                       <div className="bell-mid">
                         {notification.message}
-                        <div className="mt-0.5">
-                          {notification.date}
-                        </div>
+                        <div className="mt-0.5">{notification.date}</div>
                       </div>
                       <div>
-                        <FontAwesomeIcon 
-                          icon={faTrash} 
-                          fixedWidth 
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          fixedWidth
                           className="hover-icon"
-                          style={{ fontSize: "15px", paddingTop: "7px", cursor: "pointer" }}
+                          style={{
+                            fontSize: "15px",
+                            paddingTop: "7px",
+                            cursor: "pointer",
+                          }}
                           onClick={() => handleDelete(notification.id, "알림")}
                         />
                       </div>
@@ -199,50 +213,62 @@ const Header = ({ setAuthenticated, toggleAside }) => {
                   <div>모두 출력</div>
                 </div>
               </>
-              )}
+            )}
 
-              {/* 이벤트 탭 */}
-              <div className={`bell-cate ${activeSection === "이벤트" ? "active" : ""}`} onClick={() => handleSectionClick("이벤트")}>
-                <FontAwesomeIcon icon={activeSection === "이벤트" ? faChevronDown : faChevronRight} fixedWidth />
-                <span className="ml-1">이벤트</span>
-              </div>
+            {/* 이벤트 탭 */}
+            <div
+              className={`bell-cate ${activeSection === "이벤트" ? "active" : ""}`}
+              onClick={() => handleSectionClick("이벤트")}
+            >
+              <FontAwesomeIcon
+                icon={
+                  activeSection === "이벤트" ? faChevronDown : faChevronRight
+                }
+                fixedWidth
+              />
+              <span className="ml-1">이벤트</span>
+            </div>
 
-              {/* 이벤트 내용 (알림 아래로 깔리도록 설정) */}
-              {activeSection === "이벤트" && (
-                <>
-                  <div className="bell-content-outer event-section">
-                    {events.map((event) => (
-                      <div key={event.id} className="bell-content">
-                        <div>
-                          <FontAwesomeIcon 
-                            icon={faInfoCircle} 
-                            fixedWidth
-                            style={{ fontSize: "17px", paddingTop: "4px" }}
-                          />
-                        </div>
-                        <div className="bell-mid">
-                          {event.message}
-                          <div className="mt-0.5">{event.date}</div>
-                        </div>
-                        <div>
-                          <FontAwesomeIcon 
-                            icon={faTrash} 
-                            fixedWidth 
-                            className="hover-icon"
-                            style={{ fontSize: "15px", paddingTop: "7px", cursor: "pointer" }}
-                            onClick={() => handleDelete(event.id, "이벤트")}
-                          />
-                        </div>
+            {/* 이벤트 내용 (알림 아래로 깔리도록 설정) */}
+            {activeSection === "이벤트" && (
+              <>
+                <div className="bell-content-outer event-section">
+                  {events.map((event) => (
+                    <div key={event.id} className="bell-content">
+                      <div>
+                        <FontAwesomeIcon
+                          icon={faInfoCircle}
+                          fixedWidth
+                          style={{ fontSize: "17px", paddingTop: "4px" }}
+                        />
                       </div>
-                    ))}
-                  </div>
-                  <div className="bell-btns">
-                    <div className="mr-3">모두 삭제</div>
-                    <div>모두 출력</div>
-                  </div>
-                </>
-              )}
+                      <div className="bell-mid">
+                        {event.message}
+                        <div className="mt-0.5">{event.date}</div>
+                      </div>
+                      <div>
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          fixedWidth
+                          className="hover-icon"
+                          style={{
+                            fontSize: "15px",
+                            paddingTop: "7px",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handleDelete(event.id, "이벤트")}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
+                <div className="bell-btns">
+                  <div className="mr-3">모두 삭제</div>
+                  <div>모두 출력</div>
+                </div>
+              </>
+            )}
+          </div>
         )}
         <TopMenuIcon
           onClick={() => {
@@ -254,9 +280,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
           <UserIcon className="rvi rvi-menu" />
         </TopMenuIcon>
         {isLoginBoxVisible && (
-          <div className="user-loginbox" 
-            onClick={stopPropagation}
-          >
+          <div className="user-loginbox" onClick={stopPropagation}>
             <div>계정설정</div>
             <div onClick={(e) => handleLogout(e)}>로그아웃</div>
           </div>
@@ -267,5 +291,3 @@ const Header = ({ setAuthenticated, toggleAside }) => {
 };
 
 export default Header;
-
-

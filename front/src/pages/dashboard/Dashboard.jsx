@@ -28,7 +28,7 @@ import BarChart from "../../components/Chart/BarChart";
 import SuperAreaChart from "../../components/Chart/SuperAreaChart";
 import Grid from "../../components/Chart/Grid";
 import "./Dashboard.css";
-import { ClusterIcon, DataCenterIcon, EventIcon, HostIcon, StorageDomainIcon, VmIcon } from "../../components/icons/icons";
+import { ClusterIcon, DataCenterIcon, EventIcon, HostIcon, StorageDomainIcon, VmIcon } from "../../components/icons/RutilVmIcons";
 
 //#region: RadialBarChart
 const CpuApexChart = memo(({ cpu }) => { return <RadialBarChart percentage={cpu || 0} />; });

@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./DashboardBoxGroup.css";
 import React from "react";
-import { AlertIcon, ArrowDownBoxIcon, ArrowUpBoxIcon, BoxErrorIcon } from "../../components/icons/icons";
+import { AlertIcon, ArrowDownBoxIcon, ArrowUpBoxIcon, BoxErrorIcon } from "../../components/icons/RutilVmIcons";
 
 /**
  * @name DashboardBox

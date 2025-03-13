@@ -4,6 +4,7 @@
 html {
   height: 100%;
   --h-icon: 24px;
+  --h-icon-nav: 40px;
   --h-rutil-header: 64px;
   --h-rutil-footer: 35px; /*section-footer 높이 */
   --h-rutil-footer-content: 190px;
@@ -19,6 +20,7 @@ html {
   --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
   --w-aside-menu:243px;     
   --w-icon: var(--h-icon);
+  --w-icon-nav: var(--h-icon-nav);
   --w-nav:160px; /*nav넓이*/   
 
   --color-bg: #EFF1F5;                /* 기본 배경색 */

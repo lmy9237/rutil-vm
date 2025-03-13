@@ -26,7 +26,7 @@ const MainOuter = ({
   const [sidebarWidth, setSidebarWidth] = useState(240); // 초기 사이드바 너비 (%)
   const asideStyles = {
     width: asideVisible ? `${sidebarWidth}px` : "0px", // 닫힐 때 0px
-    minWidth: asideVisible ? "240px" : "0px", // 최소 크기 설정
+    minWidth: asideVisible ? "300px" : "0px", // 최소 크기 설정
   };
   const resizerRef = useRef(null);
   const isResizing = useRef(false);
