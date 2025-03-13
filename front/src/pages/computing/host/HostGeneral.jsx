@@ -123,8 +123,6 @@ const HostGeneral = ({ hostId }) => {
         cpu <SuperAreaChart key={`${hostId}-cpu`} per={chartData} type="cpu" />
         memory <SuperAreaChart key={`${hostId}-memory`} per={chartData} type="memory" />
       </div>
-
-   
     </div>
   );
 };

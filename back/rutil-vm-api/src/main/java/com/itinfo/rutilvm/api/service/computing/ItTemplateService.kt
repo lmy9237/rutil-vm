@@ -224,7 +224,7 @@ class TemplateServiceImpl(
 		val res: List<Vm> = conn.findAllVms()
 			.getOrDefault(listOf())
 			.filter { it.templatePresent() && it.template().id() == templateId }
-		return res.toVmViewVos(conn)
+		return res.toTemplateVmVos(conn)
 	}
 
 	@Throws(Error::class)

@@ -22,10 +22,7 @@ const TemplateGeneral = ({ templateId }) => {
     { label: "그래픽 프로토콜", value: "" },
     { label: "비디오 유형", value: "" },
     { label: "최적화 옵션", value: template?.optimizeOption },
-    {
-      label: "설정된 메모리",
-      value: convertBytesToGB(template?.memorySize) + " GB",
-    },
+    { label: "설정된 메모리", value: convertBytesToGB(template?.memorySize) + " GB" },
     { label: "CPU 코어 수", value: template?.cpuTopologyCore },
     { label: "모니터 수", value: template?.monitor },
     { label: "고가용성", value: template?.ha ? "예" : "아니오" },
@@ -35,7 +32,11 @@ const TemplateGeneral = ({ templateId }) => {
     { label: "상태 비저장", value: template?.stateless ? "예" : "아니오" },
   ];
 
-  return <InfoTable tableRows={tableRows} />;
+  return (
+   <div className="host-table-outer">
+    <InfoTable tableRows={tableRows} />
+  </div>
+  )
 };
 
 export default TemplateGeneral;

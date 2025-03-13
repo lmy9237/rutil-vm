@@ -347,7 +347,7 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
 		creationTime { ovirtDf.format(vm.creationTime()) }
 		deleteProtected { vm.deleteProtected() }
 		monitor { if(vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
-		displayType { vm.display().type() }
+		displayType { if(vm.displayPresent()) vm.display().type() else DisplayType.VNC }
 		ha { vm.highAvailability().enabled() }
 		haPriority { vm.highAvailability().priorityAsInteger() }
 		ioThreadCnt  { if (vm.io().threadsPresent()) vm.io().threadsAsInteger() else 0 }
@@ -409,7 +409,7 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
 		// stopTime { vm.stopTime() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
-		originTemplateVo { vm.originalTemplate().fromTemplateToIdentifiedVo() }
+		originTemplateVo { if(vm.originalTemplatePresent()) vm.originalTemplate().fromTemplateToIdentifiedVo() else null }
 		templateVo { vm.template().fromTemplateToIdentifiedVo() }
 		cpuProfileVo { vm.cpuProfile().fromCpuProfileToIdentifiedVo() }
 		diskAttachmentVos { diskAttachments.fromDiskAttachmentsToIdentifiedVos() }
@@ -421,6 +421,33 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
 }
 fun List<Vm>.toVmViewVos(conn: Connection) =
 	this@toVmViewVos.map { it.toVmViewVo(conn) }
+
+fun Vm.toTemplateVmVo(conn: Connection): VmViewVo {
+	val vm = this@toTemplateVmVo
+	val reports: List<ReportedDevice> = conn.findAllReportedDevicesFromVm(vm.id()).getOrDefault(listOf())
+	return VmViewVo.builder {
+		id { vm.id() }
+		name { vm.name() }
+		status { vm.status() }
+		if (vm.status() == VmStatus.UP) {
+			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
+			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
+			fqdn { vm.fqdn() }
+			upTime { statistics.findVmUptime() }
+			ipv4 { reports.findVmIpv4() }
+			ipv6 { reports.findVmIpv6() }
+			hostVo { host?.fromHostToIdentifiedVo() }
+		} else {
+			fqdn { null }
+			upTime { null }
+			ipv4 { null }
+			ipv6 { null }
+			hostVo { null }
+		}
+	}
+}
+fun List<Vm>.toTemplateVmVos(conn: Connection) =
+	this@toTemplateVmVos.map { it.toTemplateVmVo(conn) }
 
 // fun Nic.toVmNic(conn: Connection, vmId: String): NicVo {
 // 	val nic = this@toVmNic
