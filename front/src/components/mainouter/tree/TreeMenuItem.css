@@ -1,0 +1,8 @@
+.aside-popup-item {
+  display:flex;justify-content:flex-start;align-items:center;gap:4px;
+  color:var(--color-nav) !important;
+}
+.aside-popup-item svg {
+  aspect-ratio:1/1;width:var(--w-icon-tree) !important;
+  /* height:var(--h-icon-tree) !important; */
+}

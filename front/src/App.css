@@ -5,6 +5,7 @@ html {
   height: 100%;
   --h-icon: 24px;
   --h-icon-nav: 40px;
+  --h-icon-tree: 16px;
   --h-rutil-header: 64px;
   --h-rutil-footer: 35px; /*section-footer 높이 */
   --h-rutil-footer-content: 190px;
@@ -21,11 +22,13 @@ html {
   --w-aside-menu:243px;     
   --w-icon: var(--h-icon);
   --w-icon-nav: var(--h-icon-nav);
+  --w-icon-tree: var(--h-icon-tree);
   --w-nav:160px; /*nav넓이*/   
 
   --color-bg: #EFF1F5;                /* 기본 배경색 */
   --color-black:#1D1D1D;
   --color-bg-input: #efefef;            /* Input 배경색 */ 
+  --color-nav: #555;
   --color-gray-1: #dddddd;            /* RutilVM 회색 */
   --color-gray-2:rgb(177, 182, 184);  /* RutilVM 회색 (2) */
   --color-gray-3: #cfe4eb;            /* RutilVM 회색 (3) */

@@ -344,7 +344,6 @@ const MainOuter = ({
         />
 
         {/* 크기 조절 핸들 */}
-
         <SidebarTree
           selected={selectedSection}
           getBackgroundColor={(id) =>

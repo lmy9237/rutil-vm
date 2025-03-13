@@ -21,7 +21,7 @@
 .rvi.rvi-nav {
   display: flex;flex-direction:row;align-items:center;justify-content:center;
   width:var(--h-icon-nav);height:var(--w-icon-nav);
-  color: var(--color-black);
+  color:var(--color-black);
   text-decoration:none;
 }
 .rvi.rvi-nav:hover {

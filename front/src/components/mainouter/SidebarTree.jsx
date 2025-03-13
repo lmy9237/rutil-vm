@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import ComputingTree from "./TreeContents/ComputingTree";
-import NetworkTree from "./TreeContents/NetworkTree";
-import StorageTree from "./TreeContents/StorageTree";
+import ComputingTree from "./tree/ComputingTree";
+import NetworkTree from "./tree/NetworkTree";
+import StorageTree from "./tree/StorageTree";
 
 const SidebarTree = ({ selected }) => {
   const navigate = useNavigate();
@@ -108,7 +108,7 @@ const SidebarTree = ({ selected }) => {
 
       {/* ✅ 네트워크 섹션 */}
       {sectionToRender === "network" && (
-         <NetworkTree 
+        <NetworkTree 
           selectedDiv={selectedDiv} 
           setSelectedDiv={setSelectedDiv} 
           getBackgroundColor={getBackgroundColor}
