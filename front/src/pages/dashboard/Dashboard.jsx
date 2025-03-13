@@ -14,14 +14,10 @@ import {
   useDashboardCpuMemory,
   useDashboardStorage,
   useDashboardStorageMemory,
-  useDashboardPerVmCpu,
-  useDashboardPerVmMemory,
-  // useDashboardPerVmNetwork,
   useDashboardMetricVm,
   useDashboardVmCpu,
   useDashboardVmMemory,
   useDashboardMetricStorage,
-  useDashboardHost,
   useDashboardDomain,
   useDashboardHosts,
 } from "../../api/RQHook";
@@ -261,15 +257,12 @@ const Dashboard = () => {
           <div className="dash-section-contents">
             <h1>CPU</h1>
             <div className="status-value flex">
-              <h1>0.3Tib</h1>
-              <div>사용가능(총0.4Tib)</div>
+              <h1>{100 - Math.floor((cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100)}{"% "} </h1>
+              <div>사용가능 (총 {cpuMemory?.totalCpuCore} Core)</div>
             </div>
             <span>
               USED{" "}
-              {Math.floor(
-                (cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100
-              )}{" "}
-              % / Total {cpuMemory?.totalCpuCore} Core
+              {Math.floor((cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100)}{"% "} / Total {cpuMemory?.totalCpuCore} Core
             </span>
 
             <div className="graphs flex">
@@ -299,8 +292,8 @@ const Dashboard = () => {
           <div className="dash-section-contents">
             <h1>MEMORY</h1>
             <div className="status-value flex">
-              <h1>0.3Tib</h1>
-              <div>사용가능(총0.4Tib)</div>
+              <h1>{cpuMemory?.freeMemoryGB?.toFixed(0)} GB</h1>
+              <div>사용가능(총 {cpuMemory?.totalMemoryGB?.toFixed(0)} GB)</div>
             </div>
             <span>
               USED {cpuMemory?.usedMemoryGB?.toFixed(1)} GB / Total{" "}
@@ -336,15 +329,15 @@ const Dashboard = () => {
           >
             <h1>STORAGE</h1>
             <div className="status-value flex">
-              <h1>0.3Tib</h1>
-              <div>사용가능(총0.4Tib)</div>
+              <h1>{storage?.freeGB} GB</h1>
+              <div>사용가능(총 {storage?.totalGB} GB)</div>
             </div>
             <span>
               USED {storage?.usedGB} GB / Total {storage?.freeGB} GB
             </span>
             <div className="graphs flex">
               <div
-                className="graph-wrap active-on-visible"
+                className="graph-wrap active-on-visible" 
                 data-active-on-visible-callback-func-name="CircleRun"
               >
                 {
