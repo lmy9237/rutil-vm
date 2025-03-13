@@ -20,6 +20,7 @@ private val log = LoggerFactory.getLogger(SnapshotDiskVo::class.java)
  * @property backup [String]
  * @property contentType [DiskContentType]
  * @property format [DiskFormat]
+ * @property interface_ [String]
  * @property imageId [String] disk snapshot id
  * @property propagateErrors [Boolean]
  * @property actualSize [BigInteger] 실제크기
@@ -41,6 +42,7 @@ class SnapshotDiskVo (
     val backup: DiskBackup = DiskBackup.NONE,
     val contentType: DiskContentType = DiskContentType.DATA,
     val format: DiskFormat = DiskFormat.RAW,
+    val interface_: String = "",
     val imageId: String = "",
     val propagateErrors: Boolean = false,
     val actualSize: BigInteger = BigInteger.ZERO,
@@ -64,6 +66,7 @@ class SnapshotDiskVo (
         private var bBackup: DiskBackup = DiskBackup.NONE; fun backup(block: () -> DiskBackup?) { bBackup = block() ?: DiskBackup.NONE }
         private var bContentType: DiskContentType = DiskContentType.DATA; fun contentType(block: () -> DiskContentType?) { bContentType = block() ?: DiskContentType.DATA }
         private var bFormat: DiskFormat = DiskFormat.RAW; fun format(block: () -> DiskFormat?) { bFormat = block() ?: DiskFormat.RAW }
+        private var bInterface_: String = ""; fun interface_(block: () -> String?) { bInterface_ = block() ?: "" }
         private var bImageId: String = ""; fun imageId(block: () -> String?) { bImageId = block() ?: "" }
         private var bPropagateErrors: Boolean = false; fun propagateErrors(block: () -> Boolean?) { bPropagateErrors = block() ?: false }
         private var bActualSize: BigInteger = BigInteger.ZERO; fun actualSize(block: () -> BigInteger?) { bActualSize = block() ?: BigInteger.ZERO }
@@ -76,7 +79,7 @@ class SnapshotDiskVo (
         private var bSnapshotVo: IdentifiedVo =  IdentifiedVo(); fun snapshotVo(block: () -> IdentifiedVo?) { bSnapshotVo = block() ?: IdentifiedVo() }
         private var bStorageDomainVo: IdentifiedVo = IdentifiedVo(); fun storageDomainVo(block: () -> IdentifiedVo?) { bStorageDomainVo = block() ?: IdentifiedVo() }
 
-        fun build(): SnapshotDiskVo = SnapshotDiskVo(bId, bName, bDescription, bAlias, bBackup, bContentType, bFormat, bImageId, bPropagateErrors, bActualSize, bProvisionedSize, bShareable, bSparse, bStatus, bStorageType, bWipeAfterDelete, bSnapshotVo, bStorageDomainVo,)
+        fun build(): SnapshotDiskVo = SnapshotDiskVo(bId, bName, bDescription, bAlias, bBackup, bContentType, bFormat, bInterface_, bImageId, bPropagateErrors, bActualSize, bProvisionedSize, bShareable, bSparse, bStatus, bStorageType, bWipeAfterDelete, bSnapshotVo, bStorageDomainVo,)
     }
 
     companion object {

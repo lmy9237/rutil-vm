@@ -505,6 +505,26 @@ fun List<Vm>.toVmViewVoFromNetworks(conn: Connection): List<VmViewVo> =
 
 
 /**
+ * [Vm.toVmSystem]
+ * 스냅샷에서 사용
+ *
+ * @return
+ */
+fun Vm.toVmSystem(): VmViewVo {
+	return VmViewVo.builder {
+		memorySize { this@toVmSystem.memory() }
+		memoryGuaranteed { this@toVmSystem.memoryPolicy().guaranteed() }
+		memoryMax { this@toVmSystem.memoryPolicy().max() }
+		cpuTopologyCnt { calculateCpuTopology(this@toVmSystem) }
+		cpuTopologySocket { this@toVmSystem.cpu().topology().socketsAsInteger() }
+		cpuTopologyCore { this@toVmSystem.cpu().topology().coresAsInteger() }
+		cpuTopologyThread { this@toVmSystem.cpu().topology().threadsAsInteger() }
+		// timeOffset { this@toVmSystem.timeZone().name() }
+	}
+}
+
+
+/**
  * [List<[Statistic]>.findVmUptime]
  * Vm 업타임 구하기
  * 이건 매개변수로 statisticList 안줘도 되는게 vm에서만 사용

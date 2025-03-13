@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
@@ -11,7 +11,7 @@ import LabelCheckbox from "../../label/LabelCheckbox";
 const initialFormState = {
   id: "",
   description: "",
-  persistMemory: false, // 메모리 저장 
+  persistMemory: true, // 메모리 저장 
 };
 
 const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
@@ -27,6 +27,13 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
   const [formState, setFormState] = useState(initialFormState);
   const [selectedDisks, setSelectedDisks] = useState([]); // 체크된 디스크 목록
 
+  // 모달이 열릴 때 디스크를 초기 선택된 상태로 설정
+  useEffect(() => {
+    if (isOpen && disks.length > 0) {
+      setSelectedDisks(disks.map((disk) => disk.diskImageVo)); // 모든 디스크를 선택된 상태로 설정
+    }
+  }, [isOpen, disks]); 
+
   const handleDiskSelection = (disk, isChecked) => {
     setSelectedDisks((prev) =>
       isChecked
@@ -34,29 +41,23 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
         : prev.filter((d) => d.id !== disk.id)
     );
   };
-
+  
   const handleFormSubmit = () => {
     const dataToSubmit = {
       ...formState,
-      diskAttachmentVos: selectedDisks.length > 0 
-      ? selectedDisks.map((disk) => ({
-          id: disk.id,
-          interface_: "IDE",
-          logicalName: disk.alias,
-          diskImageVo: {
-            id: disk.id,
-            alias: disk.alias,
-            description: disk.description,
-            format: "COW",
-            imageId: disk.imageId,
-            storageDomainVo: disk.storageDomainVo,
-          },
-        }))
-      : [],
+      diskAttachmentVos: selectedDisks.map((disk) => ({
+        id: disk?.id,
+        interface_: "IDE",
+        logicalName: disk?.alias,
+        diskImageVo: {
+          id: disk?.id,
+          imageId: disk?.imageId,
+      }})),
     };
 
-    addSnapshotFromVM(
-      { vmId, snapshotData: dataToSubmit },
+    console.log("snap: ", dataToSubmit);
+
+    addSnapshotFromVM({ vmId, snapshotData: dataToSubmit },
       {
         onSuccess: () => {
           setSelectedDisks([]); // ✅ 선택된 디스크 초기화
@@ -95,11 +96,11 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
                   id: d?.diskImageVo?.id, // `diskImageVo`에서 `id` 추출
                   alias: d?.diskImageVo?.alias, // `alias` 추출
                   description: d?.diskImageVo?.description, // `description` 추출
-                  snapshot_check: (
+                  check: (
                     <input
                       type="checkbox"
-                      checked={selectedDisks.some((disk) => disk.id === d?.diskImageVo?.id)} // id 비교 수정
-                      onChange={(event) => handleDiskSelection(d.diskImageVo, event.target.checked)} // diskImageVo를 직접 전달
+                      checked={selectedDisks.some((disk) => disk.id === d?.diskImageVo?.id)} // 선택된 디스크에 포함 여부 확인
+                      onChange={(event) => handleDiskSelection(d?.diskImageVo, event.target.checked)} // `diskImageVo` 객체를 전달
                     />
                   ),
                 })) || []}
@@ -108,12 +109,12 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
             <div>
               <LabelCheckbox 
                 label={"메모리 저장"}
-                value={formState.persistMemory}
-                checked
-                onChange={(e) => setFormState((prev) => ({ ...prev, persistMemory: e.target.value }))}
+                checked={formState.persistMemory} // ✅ persistMemory 값을 checked 상태에 반영
+                onChange={() => setFormState((prev) => ({ ...prev, persistMemory: !prev.persistMemory }))} // ✅ true/false로 변경
               />
             </div>
           </div>
+          <span>! 메모리를 저장하는 도중 가상 머신이 중지됨</span>
         </div>
       </div>
     </BaseModal>

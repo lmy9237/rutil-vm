@@ -432,13 +432,12 @@ const TableColumnsInfo = {
   ],
   
   SNAPSHOT_INFO_FROM_VM: [
+    { header: '이름', accessor: 'description', clickable: false },
     { header: '날짜', accessor: 'date', clickable: false, width: '5%' },
     { header: '상태', accessor: 'status', clickable: false, width: '5%' },
-    { header: '메모리', accessor: 'memorySize', clickable: false },
-    { header: '설명', accessor: 'description', clickable: false },
+    { header: '가상 시스템 메모리 스냅샷 생성', accessor: 'persistMemory', clickable: false },
     { header: '설정된 메모리', accessor: 'memorySize', clickable: false },
     { header: '할당할 실제 메모리', accessor: 'memoryActual', clickable: false },
-    { header: 'CPU 코어 수', accessor: 'cpuCore', clickable: false },
   ],
   
   SNAPSHOT_DISK_FROM_VM: [
@@ -448,20 +447,20 @@ const TableColumnsInfo = {
     { header: '가상 크기', accessor: 'provisionedSize', clickable: false },
     { header: '실제 크기', accessor: 'actualSize', clickable: false },
     { header: '할당 정책', accessor: 'sparse', clickable: false },
-    { header: '인터페이스', accessor: 'interface', clickable: false },
+    { header: '인터페이스', accessor: 'interface_', clickable: false },
     { header: '설명', accessor: 'description', clickable: false },
-    { header: '디스크 스냅샷 ID', accessor: 'id', clickable: false, width: '16%' },
+    { header: '디스크 스냅샷 ID', accessor: 'imageId', clickable: false, width: '16%' },
   ],
   
   SNAPSHOT_NIC_FROM_VM: [
     { header: '이름', accessor: 'name', clickable: false, width: '10%' },
     { header: '네트워크 이름', accessor: 'networkName', clickable: false, width: '15%' },
     { header: '프로파일 이름', accessor: 'profileName', clickable: false, width: '15%' },
-    { header: '유형', accessor: 'interface', clickable: false, width: '10%' },
+    { header: '유형', accessor: 'interface_', clickable: false, width: '10%' },
     { header: 'MAC', accessor: 'macAddress', clickable: false, width: '15%' },
     { header: 'Rx 속도 (Mbps)', accessor: 'rxSpeed', clickable: false, width: '10%' },
     { header: 'Tx 속도 (Mbps)', accessor: 'txSpeed', clickable: false, width: '10%' },
-    { header: '중단 (Pkts)', accessor: 'rxTotalError', clickable: false, width: '10%' },
+    { header: '중단 (Pkts)', accessor: 'txTotalError', clickable: false, width: '10%' },
   ],
   
   SNAPSHOT_APPLICATION_FROM_VM: [
@@ -731,7 +730,7 @@ const TableColumnsInfo = {
   ],
   
   SNAPSHOT_NEW:[
-    { header: '', accessor: 'snapshot_check', clickable: false, width:'6%'},
+    { header: '', accessor: 'check', clickable: false, width:'6%'},
     { header: '이름', accessor: 'alias', clickable: false },
     { header: '설명', accessor: 'description', clickable: false }
   ],

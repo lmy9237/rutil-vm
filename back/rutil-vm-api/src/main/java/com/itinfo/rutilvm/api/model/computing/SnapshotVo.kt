@@ -28,7 +28,7 @@ private val log = LoggerFactory.getLogger(SnapshotVo::class.java)
  * @property date [String]
  * @property persistMemory [Boolean] 메모리 저장 여부 f/t
  * @property status [String]
- * @property vmVo [VmVo]
+ * @property vmViewVo [VmViewVo]
  * @property snapshotDiskVos List<[SnapshotDiskVo]>
  * @property nicVos List<[NicVo]>
  * @property applicationVos List<[IdentifiedVo]>
@@ -40,7 +40,7 @@ class SnapshotVo (
     val status: String = "",
     val date: String = "",
     val persistMemory: Boolean = false,
-    val vmVo: VmCreateVo = VmCreateVo(),
+    val vmViewVo: VmViewVo = VmViewVo(),
     val snapshotDiskVos: List<SnapshotDiskVo> = listOf(),
     val nicVos: List<NicVo> = listOf(),
     val applicationVos: List<IdentifiedVo> = listOf(),
@@ -54,13 +54,13 @@ class SnapshotVo (
         private var bStatus: String = ""; fun status(block: () -> String?) { bStatus= block() ?: "" }
         private var bDate: String = ""; fun date(block: () -> String?) { bDate= block() ?: "" }
         private var bPersistMemory: Boolean = false; fun persistMemory(block: () -> Boolean?) { bPersistMemory= block() ?: false }
-        private var bVmVo: VmCreateVo = VmCreateVo(); fun vmVo(block: () -> VmCreateVo?) { bVmVo = block() ?: VmCreateVo()  }
+        private var bVmViewVo: VmViewVo = VmViewVo(); fun vmViewVo(block: () -> VmViewVo?) { bVmViewVo = block() ?: VmViewVo()  }
         private var bSnapshotDiskVos: List<SnapshotDiskVo> = listOf(); fun snapshotDiskVos(block: () -> List<SnapshotDiskVo>?) { bSnapshotDiskVos = block() ?: listOf() }
         private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
         private var bApplicationVos: List<IdentifiedVo> = listOf(); fun applicationVos(block: () -> List<IdentifiedVo>?) { bApplicationVos = block() ?: listOf() }
         private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 
-        fun build(): SnapshotVo = SnapshotVo(bId, bDescription, bStatus, bDate, bPersistMemory, bVmVo, bSnapshotDiskVos, bNicVos, bApplicationVos, bDiskAttachmentVos )
+        fun build(): SnapshotVo = SnapshotVo(bId, bDescription, bStatus, bDate, bPersistMemory, bVmViewVo, bSnapshotDiskVos, bNicVos, bApplicationVos, bDiskAttachmentVos )
     }
     companion object {
         inline fun builder(block: SnapshotVo.Builder.() -> Unit): SnapshotVo = SnapshotVo.Builder().apply(block).build()
@@ -75,12 +75,30 @@ fun List<Snapshot>.toSnapshotsIdName(): List<SnapshotVo> =
     this@toSnapshotsIdName.map { it.toSnapshotIdName() }
 
 
+fun Snapshot.toSnapshotMenuVo(conn: Connection, vmId: String): SnapshotVo {
+	val snapshot = this@toSnapshotMenuVo
+    val vm: Vm = conn.findVm(snapshot.vm().id()).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
+    // val disks: List<Disk> = conn.findAllSnapshotDisksFromVm(vmId, snapshot.id()).getOrDefault(listOf())
+
+    return SnapshotVo.builder {
+        id { snapshot.id() }
+        description { snapshot.description() }
+        date { if (snapshot.vmPresent()) ovirtDf.format(snapshot.date().time) else "현재" }
+        status { snapshot.snapshotStatus().value() }
+        persistMemory { snapshot.persistMemorystate() }
+		vmViewVo { vm.toVmSystem() }
+        // snapshotDiskVos { disks.toSnapshotDiskVoFromVms() }
+    }
+}
+fun List<Snapshot>.toSnapshotMenuVos(conn: Connection, vmId: String): List<SnapshotVo> =
+    this@toSnapshotMenuVos.map { it.toSnapshotMenuVo(conn, vmId) }
+
 fun Snapshot.toSnapshotVo(conn: Connection, vmId: String): SnapshotVo {
     val vm: Vm = conn.findVm(vmId)
         .getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
     val disks: List<Disk> = conn.findAllSnapshotDisksFromVm(vmId, this@toSnapshotVo.id()).getOrDefault(listOf())
     val nics: List<Nic> = conn.findAllSnapshotNicsFromVm(vmId, this@toSnapshotVo.id()).getOrDefault(listOf())
-    val applications: List<Application> = conn.findAllApplicationsFromVm(vmId).getOrDefault(listOf())
+    // val applications: List<Application> = conn.findAllApplicationsFromVm(vmId).getOrDefault(listOf())
 
     return SnapshotVo.builder {
         id { this@toSnapshotVo.id() }
@@ -88,10 +106,10 @@ fun Snapshot.toSnapshotVo(conn: Connection, vmId: String): SnapshotVo {
         date { if (this@toSnapshotVo.vmPresent()) ovirtDf.format(this@toSnapshotVo.date().time) else "현재" }
         status { this@toSnapshotVo.snapshotStatus().value() }
         persistMemory { this@toSnapshotVo.persistMemorystate() }
-        vmVo { vm.toVmSystem() }
+		vmViewVo { vm.toVmSystem() }
         snapshotDiskVos { disks.toSnapshotDiskVoFromVms() }
         nicVos { nics.toNicVosFromSnapshot(conn, vmId) }
-        applicationVos { applications.fromApplicationsToIdentifiedVos() }
+        // applicationVos { applications.fromApplicationsToIdentifiedVos() }
     }
 }
 fun List<Snapshot>.toSnapshotVos(conn: Connection, vmId: String): List<SnapshotVo> =
@@ -103,7 +121,6 @@ fun SnapshotVo.toSnapshotBuilder(): Snapshot {
     return SnapshotBuilder()
         .description(this@toSnapshotBuilder.description)
         .persistMemorystate(this@toSnapshotBuilder.persistMemory) // 메모리 저장 t/f
-        .diskAttachments(this@toSnapshotBuilder.diskAttachmentVos.toAddSnapshotDisks())
 		.build()
 }
 

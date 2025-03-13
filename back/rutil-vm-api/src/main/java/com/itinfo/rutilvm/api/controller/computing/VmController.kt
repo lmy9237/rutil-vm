@@ -1305,33 +1305,33 @@ class VmController: BaseController() {
 		return ResponseEntity.ok(iVmSnapshot.undoFromVm(vmId))
 	}
 
-	@ApiOperation(
-		httpMethod="POST",
-		value="가상머신 스냅샷 복제",
-		notes="선택된 가상머신의 스냅샷 복제 기능을 실행한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="name", value="가상머신 이름", dataTypeClass=String::class, required=true, paramType="body"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 201, message = "CREATED"),
-		ApiResponse(code = 404, message = "NOT_FOUND")
-	)
-	@PostMapping("/{vmId}/snapshots/clone")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.CREATED)
-	fun clone(
-		@PathVariable vmId: String? = null,
-		@RequestBody name: String? = null,
-	): ResponseEntity<Boolean> {
-		if (vmId.isNullOrEmpty())
-			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		if (name.isNullOrEmpty())
-			throw ErrorPattern.VM_NOT_FOUND.toException()
-		log.info("/computing/vms/{}/snapshots/clone ... 가상머신 복제", vmId)
-		return ResponseEntity.ok(iVmSnapshot.cloneFromVm(vmId, name))
-	}
+	// @ApiOperation(
+	// 	httpMethod="POST",
+	// 	value="가상머신 스냅샷 복제",
+	// 	notes="선택된 가상머신의 스냅샷 복제 기능을 실행한다"
+	// )
+	// @ApiImplicitParams(
+	// 	ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// 	ApiImplicitParam(name="name", value="가상머신 이름", dataTypeClass=String::class, required=true, paramType="body"),
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 201, message = "CREATED"),
+	// 	ApiResponse(code = 404, message = "NOT_FOUND")
+	// )
+	// @PostMapping("/{vmId}/snapshots/clone")
+	// @ResponseBody
+	// @ResponseStatus(HttpStatus.CREATED)
+	// fun clone(
+	// 	@PathVariable vmId: String? = null,
+	// 	@RequestBody name: String? = null,
+	// ): ResponseEntity<Boolean> {
+	// 	if (vmId.isNullOrEmpty())
+	// 		throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+	// 	if (name.isNullOrEmpty())
+	// 		throw ErrorPattern.VM_NOT_FOUND.toException()
+	// 	log.info("/computing/vms/{}/snapshots/clone ... 가상머신 복제", vmId)
+	// 	return ResponseEntity.ok(iVmSnapshot.cloneFromVm(vmId, name))
+	// }
 
 
 	// endregion

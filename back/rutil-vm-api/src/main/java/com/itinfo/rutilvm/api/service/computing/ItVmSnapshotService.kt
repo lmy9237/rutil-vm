@@ -34,8 +34,6 @@ interface ItVmSnapshotService {
 	@Throws(Error::class)
 	fun findOneFromVm(vmId: String, snapshotId: String): SnapshotVo?
 
-	// 가상머신 스냅샷 생성 창 - [ItVmDiskService.findAllDisksFromVm]
-
 	/**
 	 * [ItVmSnapshotService.addFromVm]
 	 * 스냅샷 생성 (생성 중에는 다른기능(삭제, 커밋)같은 기능 구현 x)
@@ -97,16 +95,16 @@ interface ItVmSnapshotService {
 	 */
 	@Throws(Error::class)
 	fun undoFromVm(vmId: String): Boolean
-	/**
-	 * [ItVmSnapshotService.cloneFromVm]
-	 * 스냅샷 복제
-	 *
-	 * @param vmId [String] 가상머신 Id
-	 * @param name [String]  가상머신 이름
-	 * @return [SnapshotVo]
-	 */
-	@Throws(Error::class)
-	fun cloneFromVm(vmId: String, name: String): Boolean
+	// /**
+	//  * [ItVmSnapshotService.cloneFromVm]
+	//  * 스냅샷 복제
+	//  *
+	//  * @param vmId [String] 가상머신 Id
+	//  * @param name [String]  가상머신 이름
+	//  * @return [SnapshotVo]
+	//  */
+	// @Throws(Error::class)
+	// fun cloneFromVm(vmId: String, name: String): Boolean
 }
 
 @Service
@@ -119,7 +117,8 @@ class VmSnapshotServiceImpl(
 		log.info("findAllFromVm ... ")
 		val res: List<Snapshot> = conn.findAllSnapshotsFromVm(vmId)
 			.getOrDefault(listOf())
-		return res.toSnapshotVos(conn, vmId)
+			.filter { it.snapshotType() != SnapshotType.ACTIVE }
+		return res.toSnapshotMenuVos(conn, vmId)
 	}
 
 	@Throws(Error::class)
@@ -178,16 +177,15 @@ class VmSnapshotServiceImpl(
 		return res.isSuccess
 	}
 
-	@Throws(Error::class)
-	override fun cloneFromVm(vmId: String, name: String): Boolean {
-		log.info("cloneFromVm ... vmId: {}, name: {}", vmId, name)
-		val res: Result<Boolean> = conn.cloneSnapshotFromVm(
-			vmId,
-			VmBuilder().id(vmId).name(name).build()
-		)
-		return res.isSuccess
-	}
-
+	// @Throws(Error::class)
+	// override fun cloneFromVm(vmId: String, name: String): Boolean {
+	// 	log.info("cloneFromVm ... vmId: {}, name: {}", vmId, name)
+	// 	val res: Result<Boolean> = conn.cloneSnapshotFromVm(
+	// 		vmId,
+	// 		VmBuilder().id(vmId).name(name).build()
+	// 	)
+	// 	return res.isSuccess
+	// }
 
 	companion object {
 		private val log by LoggerDelegate()

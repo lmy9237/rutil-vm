@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowCircleDown,
@@ -32,7 +32,8 @@ const VmNics = ({ vmId }) => {
     id: nic?.id,
     name: nic?.name,
     status: nic?.status,
-    linked: nic?.linked ? "true" : "false",
+    linked: nic?.linked,
+    plugged: nic?.plugged,
     ipv4: nic?.ipv4,
     ipv6: nic?.ipv6,
     macAddress : nic?.macAddress,
@@ -49,50 +50,42 @@ const VmNics = ({ vmId }) => {
     pkts: `${nic?.rxTotalError}` || "1",
   }));
 
-  const [selectedNics, setSelectedNics] = useState(null);
+  const [selectedNic, setSelectedNic] = useState(null);
   const [visibleDetails, setVisibleDetails] = useState({});
-
-  const [activePopup, setActivePopup] = useState(null);
-  const openPopup = (type, nic = null) => {
-    setActivePopup(type);
-    setSelectedNics(nic);
-  };
-  const closePopup = () => {
-    setActivePopup(null);
-    setSelectedNics(null);
-  };
-  // TODO: 편집문제 잇음
-
   const toggleDetails = (id) => setVisibleDetails((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  const [activeModal, setActiveModal] = useState(null);
+  const openModal = (action) => setActiveModal(action);
+  const closeModal = () => setActiveModal(null);
 
   return (
     <>
       <div className="header-right-btns">
-        <button onClick={() => openPopup('create')}>새로 만들기</button>
-        <button onClick={() => openPopup('edit')} disabled={!selectedNics}>편집</button>
-        <button onClick={() => openPopup("delete")} disabled={!selectedNics}>제거</button>
+        <button onClick={() => openModal('create')}>새로 만들기</button>
+        <button onClick={() => openModal('edit')} disabled={!selectedNic}>편집</button>
+        <button onClick={() => openModal("delete")} disabled={!selectedNic}>제거</button>
       </div>
-      <span>id = {selectedNics?.id || ""}</span>
+      <span>id = {selectedNic?.id || ""}</span>
 
       <div className="network-interface-outer">
         {nics.length > 0 ? ( // NIC가 하나라도 있을 때 실행
           nics?.map((nic, index) => (
             <div
-              className={`network_content2 ${selectedNics?.id === nic.id ? "selected" : ""}`}
-              onClick={() => setSelectedNics(nic)} // NIC 선택 시 상태 업데이트
-              key={nic.id}
+              className={`network_content2 ${selectedNic?.id === nic.id ? "selected" : ""}`}
+              onClick={() => setSelectedNic(nic)} // NIC 선택 시 상태 업데이트
+              key={nic?.id}
             >
               <div className="network-content">
                 <div>
                   <FontAwesomeIcon icon={faChevronRight}onClick={() => toggleDetails(nic.id)} fixedWidth/>
                   <FontAwesomeIcon
-                    icon={nic?.status === "UP" ? faArrowCircleUp : faArrowCircleDown}
-                    style={{ color: nic?.status === "UP" ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
+                    icon={Boolean(nic?.linked) ? faArrowCircleUp : faArrowCircleDown}
+                    style={{ color: Boolean(nic?.linked) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
                     fixedWidth
                   />
                   <FontAwesomeIcon
-                    icon={nic?.linked === "true" ? faPlug : faPlugCircleXmark}
-                    style={{ color: nic?.linked === "true" ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
+                    icon={Boolean(nic?.plugged) ? faPlug : faPlugCircleXmark}
+                    style={{ color: Boolean(nic?.plugged) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
                     fixedWidth
                   />
                   <span>{nic?.name}</span>
@@ -156,21 +149,20 @@ const VmNics = ({ vmId }) => {
         )}
       </div>
       <Suspense>
-        {activePopup === "create" && (
+        {activeModal === "create" && (
           <NicModal
             isOpen
-            onClose={closePopup}            
+            onClose={closeModal}            
             vmId={vmId}
           />
         )}
-        {activePopup === "edit" && selectedNics && (
+        {activeModal === "edit" && (
           <NicModal
             isOpen
             editMode
-            onClose={closePopup}
-            // nicData={selectedNics}
+            onClose={closeModal}
             vmId={vmId}
-            nicId={selectedNics.id}
+            nicId={selectedNic?.id}
           />
         )}
         {/* {activePopup === "delete" && selectedNics && (

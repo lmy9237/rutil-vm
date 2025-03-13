@@ -789,9 +789,9 @@ fun Connection.removeSnapshotFromVm(vmId: String, snapshotId: String): Result<Bo
 		return Result.failure(Error("스냅샷 삭제 시간 초과"))
 	true
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.SNAPSHOT, "삭제", vmId)
+	Term.VM.logSuccessWithin(Term.SNAPSHOT, "삭제", snapshotId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.SNAPSHOT, "삭제", it, vmId)
+	Term.VM.logFailWithin(Term.SNAPSHOT, "삭제", it, snapshotId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
