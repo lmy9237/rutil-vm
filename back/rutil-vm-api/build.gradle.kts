@@ -176,6 +176,7 @@ val copyReactBuildFiles by tasks.register<Copy>("copyReactBuildFiles") {
 dependencies {
 	// implementation(fileTree(mapOf("dir" to "../lib-vsphere", "include" to listOf("*.jar"))))
 	implementation(project(":rutil-vm-api-cert"))
+	implementation(project(":rutil-vm-api-common"))
     implementation(project(":rutil-vm-api-ovirt-business"))
     implementation(project(":rutil-vm-api-repository"))
     implementation(project(":rutil-vm-api-socket"))

@@ -18,15 +18,17 @@ private val log = LoggerFactory.getLogger(ConsoleVo::class.java)
 /**
  * [ConsoleVo]
  * 콘솔
- * 
- * @property hostAddress [String] 
+ *
+ * @property hostAddress [String]
  * @property hostPort [String]
- * @property address [String] 
- * @property port [String] 
- * @property tlsPort [String] 
+ * @property address [String]
+ * @property port [String]
+ * @property tlsPort [String]
  * @property type [GraphicsType]
 // * @property vmName [String]   ?
- * @property password [String] 
+ * @property password [String]
+ *
+ * @deprecated 사용안할 예정
  **/
 class ConsoleVo(
 	val hostAddress: String = "",
@@ -39,7 +41,7 @@ class ConsoleVo(
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
-		
+
 	class Builder {
 		private var bHostAddress: String = "";fun hostAddress(block: () -> String?) { bHostAddress = block() ?: "" }
 		private var bHostPort: String = "";fun hostPort(block: () -> String?) { bHostPort = block() ?: "" }
@@ -64,8 +66,7 @@ fun Vm.toConsoleVo(conn: Connection, systemPropertiesVo: SystemPropertiesVo): Co
 	}
 
 	val console: GraphicsConsole =
-		conn.findAllVmGraphicsConsolesFromVm(this@toConsoleVo.id())
-			.firstOrNull() ?: throw ErrorPattern.CONSOLE_NOT_FOUND.toException()
+		conn.findAllVmGraphicsConsolesFromVm(this@toConsoleVo.id()).getOrDefault(listOf()).firstOrNull() ?: throw ErrorPattern.CONSOLE_NOT_FOUND.toException()
 	val graphicsConsoleId: String = console.id()
 	val ticket: Ticket =
 		conn.findTicketFromVmGraphicsConsole(this@toConsoleVo.id(), graphicsConsoleId)
@@ -81,3 +82,6 @@ fun Vm.toConsoleVo(conn: Connection, systemPropertiesVo: SystemPropertiesVo): Co
 		type { GraphicsType.VNC }
 	}
 }
+
+fun List<Vm>.toConsoleVos(conn: Connection, systemPropertiesVo: SystemPropertiesVo): List<ConsoleVo> =
+	this.map { it.toConsoleVo(conn, systemPropertiesVo) }

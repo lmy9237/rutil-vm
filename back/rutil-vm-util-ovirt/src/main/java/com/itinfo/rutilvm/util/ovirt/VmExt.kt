@@ -7,6 +7,7 @@ import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
+import java.math.BigInteger
 
 fun Connection.srvVms(): VmsService =
 	this.systemService.vmsService()
@@ -878,18 +879,37 @@ fun Connection.findAllSnapshotNicsFromVm(vmId: String, snapshotId: String): Resu
 private fun Connection.srvVmGraphicsConsolesFromVm(vmId: String): VmGraphicsConsolesService =
 	this.srvVm(vmId).graphicsConsolesService()
 
-fun Connection.findAllVmGraphicsConsolesFromVm(vmId: String): List<GraphicsConsole> =
+fun Connection.findAllVmGraphicsConsolesFromVm(vmId: String): Result<List<GraphicsConsole>> = runCatching {
 	this.srvVmGraphicsConsolesFromVm(vmId).list().current(true).send().consoles()
+}.onSuccess {
+	Term.VM.logSuccessWithin(Term.CONSOLE, "목록조회", vmId)
+}.onFailure {
+	Term.VM.logFailWithin(Term.CONSOLE, "목록조회", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
 
 private fun Connection.srvVmGraphicsConsoleFromVm(vmId: String, graphicsConsoleId: String): VmGraphicsConsoleService =
 	this.srvVmGraphicsConsolesFromVm(vmId).consoleService(graphicsConsoleId)
 
-fun Connection.findTicketFromVmGraphicsConsole(vmId: String, graphicsConsoleId: String): Result<Ticket?> = runCatching {
-	this.srvVmGraphicsConsoleFromVm(vmId, graphicsConsoleId).ticket().send().ticket()
+fun Connection.findVmGraphicsConsoleFromVm(vmId: String, graphicsConsoleId: String): Result<GraphicsConsole?> = runCatching {
+	this.srvVmGraphicsConsoleFromVm(vmId, graphicsConsoleId).get().send().console()
 }.onSuccess {
-	Term.CONSOLE.logSuccessWithin(Term.TICKET, "상세조회", vmId)
+	Term.VM.logSuccessWithin(Term.CONSOLE, "상세조회", vmId)
 }.onFailure {
-	Term.CONSOLE.logFailWithin(Term.TICKET, "상세조회", it, vmId)
+	Term.VM.logFailWithin(Term.CONSOLE, "상세조회", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.findTicketFromVmGraphicsConsole(vmId: String, graphicsConsoleId: String, expiry: BigInteger? = null): Result<Ticket?> = runCatching {
+	this.srvVmGraphicsConsoleFromVm(vmId, graphicsConsoleId).ticket().apply {
+		if (expiry!=null) ticket(TicketBuilder()
+			.expiry(expiry)
+			.build())
+	}.send().ticket()
+}.onSuccess {
+	Term.CONSOLE.logSuccessWithin(Term.TICKET, "발행", vmId)
+}.onFailure {
+	Term.CONSOLE.logFailWithin(Term.TICKET, "발행", it, vmId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 

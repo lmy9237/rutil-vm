@@ -1304,38 +1304,121 @@ class VmController: BaseController() {
 		log.info("/computing/vms/{}/snapshots/undo ... 가상머신 커밋", vmId)
 		return ResponseEntity.ok(iVmSnapshot.undoFromVm(vmId))
 	}
-
-	// @ApiOperation(
-	// 	httpMethod="POST",
-	// 	value="가상머신 스냅샷 복제",
-	// 	notes="선택된 가상머신의 스냅샷 복제 기능을 실행한다"
-	// )
-	// @ApiImplicitParams(
-	// 	ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	// 	ApiImplicitParam(name="name", value="가상머신 이름", dataTypeClass=String::class, required=true, paramType="body"),
-	// )
-	// @ApiResponses(
-	// 	ApiResponse(code = 201, message = "CREATED"),
-	// 	ApiResponse(code = 404, message = "NOT_FOUND")
-	// )
-	// @PostMapping("/{vmId}/snapshots/clone")
-	// @ResponseBody
-	// @ResponseStatus(HttpStatus.CREATED)
-	// fun clone(
-	// 	@PathVariable vmId: String? = null,
-	// 	@RequestBody name: String? = null,
-	// ): ResponseEntity<Boolean> {
-	// 	if (vmId.isNullOrEmpty())
-	// 		throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-	// 	if (name.isNullOrEmpty())
-	// 		throw ErrorPattern.VM_NOT_FOUND.toException()
-	// 	log.info("/computing/vms/{}/snapshots/clone ... 가상머신 복제", vmId)
-	// 	return ResponseEntity.ok(iVmSnapshot.cloneFromVm(vmId, name))
-	// }
-
-
+/*
+	@ApiOperation(
+	 	httpMethod="POST",
+	 	value="가상머신 스냅샷 복제",
+	 	notes="선택된 가상머신의 스냅샷 복제 기능을 실행한다"
+	)
+	@ApiImplicitParams(
+	 	ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	 	ApiImplicitParam(name="name", value="가상머신 이름", dataTypeClass=String::class, required=true, paramType="body"),
+	)
+	@ApiResponses(
+	 	ApiResponse(code = 201, message = "CREATED"),
+	 	ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@PostMapping("/{vmId}/snapshots/clone")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun clone(
+		@PathVariable vmId: String? = null,
+	 	@RequestBody name: String? = null,
+	): ResponseEntity<Boolean> {
+		if (vmId.isNullOrEmpty())
+	 		throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		if (name.isNullOrEmpty())
+	 		throw ErrorPattern.VM_NOT_FOUND.toException()
+	 	log.info("/computing/vms/{}/snapshots/clone ... 가상머신 복제", vmId)
+	 	return ResponseEntity.ok(iVmSnapshot.cloneFromVm(vmId, name))
+	}
+*/
 	// endregion
 
+	//region: console
+	@Autowired private lateinit var iVmGraphicsConsoles: ItVmGraphicsConsolesService
+	@ApiOperation(
+		httpMethod="GET",
+		value="가상머신 콘솔 목록",
+		notes="선택된 가상머신의 가상머신 콘솔 목록 조회한다."
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@GetMapping("/{vmId}/graphicsconsoles")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun findAllGraphicsConsoles(
+		@PathVariable vmId: String? = null,
+	): ResponseEntity<List<GraphicsConsoleVo>> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		log.info("/computing/vms/{}/graphicsconsoles ... 가상머신 콘솔 목록", vmId)
+		return ResponseEntity.ok(iVmGraphicsConsoles.findAllFromVm(vmId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="가상머신 콘솔 목록",
+		notes="선택된 가상머신의 가상머신 콘솔 목록 조회한다."
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="graphicConsoleId", value="그래픽 콘솔 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@GetMapping("/{vmId}/graphicsconsoles/{graphicConsoleId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun findGraphicsConsole(
+		@PathVariable vmId: String? = null,
+		@PathVariable graphicConsoleId: String? = null,
+	): ResponseEntity<GraphicsConsoleVo> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		if (graphicConsoleId.isNullOrEmpty())
+			throw ErrorPattern.CONSOLE_ID_NOT_FOUND.toException()
+		log.info("/computing/vms/{}/graphicsconsoles/{} ... 가상머신 콘솔 상세", vmId, graphicConsoleId)
+		return ResponseEntity.ok(iVmGraphicsConsoles.findOneFromVm(vmId, graphicConsoleId))
+	}
+
+	@ApiOperation(
+		httpMethod="POST",
+		value="가상머신 콘솔 접근 티켓 생성",
+		notes="선택된 가상머신의 가상머신 콘솔 접근 티켓을 발행한다."
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="graphicConsoleId", value="그래픽 콘솔 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="expiry", value="콘솔 접근 만료시간 (초)", dataTypeClass=Int::class, required=true, paramType="query"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@PostMapping("/{vmId}/graphicsconsoles/{graphicConsoleId}/ticket")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun publishTicket(
+		@PathVariable vmId: String? = null,
+		@PathVariable graphicConsoleId: String? = null,
+		@RequestParam expiry: Int? = 7200,
+	): ResponseEntity<TicketVo> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		if (graphicConsoleId.isNullOrEmpty())
+			throw ErrorPattern.CONSOLE_ID_NOT_FOUND.toException()
+		log.info("/computing/vms/{}/graphicsconsoles/{}/ticket ... 가상머신 콘솔 접근 티켓발행", vmId, graphicConsoleId)
+		return ResponseEntity.ok(iVmGraphicsConsoles.publishTicket(vmId, graphicConsoleId, expiry))
+	}
+	//region: console
 
 	companion object {
 		private val log by LoggerDelegate()

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.util.*
 
-private val log = LoggerFactory.getLogger("com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmtKt")
+private val log = LoggerFactory.getLogger(RemoteConnMgmt::class.java.canonicalName)
 
 private val gson: Gson =
 	GsonBuilder()
@@ -45,11 +45,12 @@ open class RemoteConnMgmt(
 
 	companion object {
 		const val DEFAULT_CONNECTION_TIMEOUT = 60000
+		private const val DELIMITER_ADDRESS = ";"
 		private val MATCHER_ADDRESS = "(?<=@)[^:]+(?=:)".toRegex()
 		fun asRemoteConnMgmt(fullAddress: String, prvKey: String? = null, connectionTimeout: Int = DEFAULT_CONNECTION_TIMEOUT): RemoteConnMgmt {
 			val id: String = fullAddress.split("@").first()
 			val host: String = MATCHER_ADDRESS.find(fullAddress)?.value ?: ""
-			val port: Int = fullAddress.split(":").last().toIntOrNull() ?: 22
+			val port: Int = fullAddress.split(DELIMITER_ADDRESS).last().toIntOrNull() ?: 22
 			return builder {
 				host { host }
 				port { port }

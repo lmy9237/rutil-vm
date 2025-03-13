@@ -20,6 +20,10 @@ export DOCKER_IMG_RUTIL_VM=ititcloud/rutil-vm
 export DOCKER_IMG_RUTIL_VM_CURRENT=$DOCKER_IMG_RUTIL_VM:$DOCKER_IMG_RUTIL_VM_API_VERSION
 export DOCKER_IMG_RUTIL_VM_LATEST=$DOCKER_IMG_RUTIL_VM:latest
 
+# Engine
+export OVIRT_ENGINE_LOG=/var/log/ovirt-engine/engine.log
+export OVIRT_ENGINE_LOG_CONFIG=/usr/share/ovirt-engine/services/ovirt-engine/ovirt-engine.xml.in
+
 function dp() {
   docker ps -a
 }
@@ -64,4 +68,12 @@ function loadDkf() {
 
 function enginePrivateKey() {
   cat /etc/pki/ovirt-engine/keys/engine_id_rsa
+}
+
+function engineLog() {
+  tail -200f $OVIRT_ENGINE_LOG
+}
+
+function engineLogConfig() {
+  vi $OVIRT_ENGINE_LOG_CONFIG
 }

@@ -2,10 +2,12 @@ import React from "react";
 import VmDeleteModal from "./VmDeleteModal";
 import VmActionModal from "./VmActionModal";
 import VmSnapshotModal from "./VmSnapshotModal";
+import VmConsoleModal from "./VmConsoleModal";
 import VmModal from "./VmModal";
 import VmAddTemplateModal from "./VmAddTemplateModal";
 import VmExportOVAModal from "./VmExportOVAModal";
 import "./MVm.css";
+
 
 const VmModals = ({ activeModal, vm, selectedVms = [], onClose }) => {
   const allModals = {
@@ -14,6 +16,7 @@ const VmModals = ({ activeModal, vm, selectedVms = [], onClose }) => {
     delete:    (<VmDeleteModal      isOpen={activeModal === "delete"}    onClose={onClose} data={selectedVms} />),
     templates: (<VmAddTemplateModal isOpen={activeModal === "templates"} onClose={onClose} selectedVm={vm} vmId={vm?.id}/>),
     snapshot:  (<VmSnapshotModal    isOpen={activeModal === "snapshot"}  onClose={onClose} vmId={vm?.id} data={selectedVms}  />),
+    console:   (<VmConsoleModal     isOpen={activeModal === "console"}   onClose={onClose} />),
     import:    (<></>),
     copy:      (<></>),
     migration: (<></>),    

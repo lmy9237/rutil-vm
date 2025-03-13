@@ -13,58 +13,57 @@ import javax.annotation.PostConstruct
  * @since 2025.02.11
  */
 @Component
-class PropertiesConfig {
-	@Value("\${application.title}")						lateinit var title: String
-	@Value("\${application.version}")					lateinit var version: String
-	@Value("\${application.release-date}")				lateinit var releaseDate: String
-	@Value("\${application.ovirt.ip}")					lateinit var ovirtIp: String
+open class PropertiesConfig {
+	@Value("\${application.title}")						open lateinit var title: String
+	@Value("\${application.version}")					open lateinit var version: String
+	@Value("\${application.release-date}")				open lateinit var releaseDate: String
+	@Value("\${application.ovirt.ip}")					open lateinit var ovirtIp: String
 	@Value("\${application.ovirt.port}")				lateinit var _ovirtPort: String
 	@Value("\${application.ovirt.port.ssl}")			lateinit var _ovirtPortSsl: String
-	@Value("\${application.ovirt.vnc.ip}")				lateinit var ovirtVncIp: String
-	@Value("\${application.ovirt.vnc.port}")			lateinit var ovirtVncPort: String
-	@Value("\${application.ovirt.admin.id}")			lateinit var ovirtAdminId: String
-	@Value("\${application.ovirt.admin.pw}")			lateinit var ovirtAdminPw: String
+	@Value("\${application.ovirt.vnc.ip}")				open lateinit var ovirtVncIp: String
+	@Value("\${application.ovirt.vnc.port}")			open lateinit var ovirtVncPort: String
+	@Value("\${application.ovirt.admin.id}")			open lateinit var ovirtAdminId: String
+	@Value("\${application.ovirt.admin.pw}")			open lateinit var ovirtAdminPw: String
 	@Value("\${application.ovirt.threshold.cpu") 		private lateinit var _thresholdCpu: String
 	@Value("\${application.ovirt.threshold.memory") 	private lateinit var _thresholdMemory: String
 	@Value("\${application.ovirt.login.limit")			private lateinit var _loginLimit: String
 	@Value("\${application.api.cors.allowed-origins}")	private lateinit var _corsAllowedOrigins: String
 	@Value("\${application.api.cors.allowed-origins.port}")	private lateinit var _corsAllowedOriginsPort: String
 
-	@Value("\${spring.datasource.history.url}")			lateinit var historyJdbcUrl: String
-	@Value("\${spring.datasource.engine.url}")			lateinit var engineJdbcUrl: String
-	@Value("\${spring.datasource.aaa.url}")				lateinit var aaaJdbcUrl: String
+	@Value("\${spring.datasource.history.url}")			open lateinit var historyJdbcUrl: String
+	@Value("\${spring.datasource.engine.url}")			open lateinit var engineJdbcUrl: String
+	@Value("\${spring.datasource.aaa.url}")				open lateinit var aaaJdbcUrl: String
 
-	@Value("\${server.port}")							lateinit var serverPort: String
-	@Value("\${server.ssl.key-store}")					lateinit var sslKeyStore: String
-	@Value("\${server.ssl.key-store-password}")			lateinit var sslKeyStorePassword: String
-	@Value("\${server.ssl.key-alias}")					lateinit var sslKeyAlias: String
+	@Value("\${server.port}")							open lateinit var serverPort: String
+	@Value("\${server.ssl.key-store}")					open lateinit var sslKeyStore: String
+	@Value("\${server.ssl.key-store-password}")			open lateinit var sslKeyStorePassword: String
+	@Value("\${server.ssl.key-alias}")					open lateinit var sslKeyAlias: String
 	/*
 	@Value("\${management.endpoints.web.exposure.include}")	lateinit var exposureInclude: String
 	@Value("\${management.endpoint.shutdown.enabled}")		lateinit var _shutdownEnabled1: String
 	@Value("\${endpoints.shutdown.enabled}")				lateinit var _shutdownEnabled2: String
 	*/
 
-
 	@Value("\${reboot-host.id}")				lateinit var rebootHostId: String
 	@Value("\${reboot-host.password}")			lateinit var rebootHostPassword: String
 
-	val ovirtPort: Int
+	open val ovirtPort: Int
 		get() = _ovirtPort.toIntOrNull() ?: 80
-	val ovirtPortSsl: Int
+	open val ovirtPortSsl: Int
 		get() = _ovirtPortSsl.toIntOrNull() ?: 443
 
-	val thresholdCpu: Int
+	open val thresholdCpu: Int
 		get() = _thresholdCpu.toIntOrNull() ?: 80
-	val thresholdMemory: Int
+	open val thresholdMemory: Int
 		get() = _thresholdMemory.toIntOrNull() ?: 78
-	val loginLimit: Int
+	open val loginLimit: Int
 		get() = _loginLimit.toIntOrNull() ?: 5
 
-	val corsAllowedOrigins: List<String>
+	open val corsAllowedOrigins: List<String>
 		get() = _corsAllowedOrigins.split(";")
-	val corsAllowedOriginsPort: List<String>
+	open val corsAllowedOriginsPort: List<String>
 		get() = _corsAllowedOriginsPort.split(";")
-	val corsAllowedOriginsFull: List<String>
+	open val corsAllowedOriginsFull: List<String>
 		get() = corsAllowedOrigins.flatMap { o ->
 			corsAllowedOriginsPort.map { p ->
 				"https://${o}${if (p != "443") ":$p" else ""}"

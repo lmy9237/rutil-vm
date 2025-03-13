@@ -6,6 +6,7 @@ val jar: Jar by tasks
 jar.enabled = true
 dependencies {
     compileOnly(project(":rutil-vm-common"))
+	compileOnly(project(":rutil-vm-api-common"))
     compileOnly(Dependencies.springBootWebsocket)
     compileOnly(Dependencies.springBootWeb)
     compileOnly(Dependencies.kotlinStdlib)

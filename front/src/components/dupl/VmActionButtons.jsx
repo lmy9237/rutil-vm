@@ -44,6 +44,7 @@ const VmActionButtons = ({
     { type: "reset", label: "재설정", disabled: !isUp },
     { type: "shutdown", label: "종료", disabled: !isUp },
     { type: "powerOff", label: "전원끔", disabled: !isUp },
+    { type: "console", label: "콘솔", disabled: !isUp },
     { type: "snapshot", label: "스냅샷 생성", disabled: isEditDisabled },
     { type: "migration", label: "마이그레이션", disabled: !isPause },
   ];
