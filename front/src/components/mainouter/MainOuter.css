@@ -79,12 +79,20 @@
   width: 100%;
   color: rgb(105, 105, 105);
   padding: 15px 7px;
+  height: 64px;
 }
-.nav > a {
+.nav>div{
+  border-radius:50%;
+  padding:10px;
+}
+/* .nav > a {
   margin-right: 17px;
 }
 .nav > a:last-child{
   margin-right: 0 !important;
+} */
+.nav .active{
+  background:rgb(218, 236, 245) !important;
 }
 .link-no-underline {
   text-decoration: none;
@@ -152,10 +160,7 @@
   overflow: hidden;
   transition: width 0.1s ease-out;
 }
-.nav .active{
-  background:rgb(218, 236, 245) !important;
-  border-radius:5px;
-}
+
 /* 🔹 크기 조절 핸들 스타일 */
 .resizer {
   width: 5px;

@@ -83,11 +83,11 @@ const RadialBarChart = ({ percentage }) => {
   useEffect(() => {
     setSeries([percentage]);
 
-    let color = "#FF4560";
+    let color = "#E71825";
     if (percentage < 30) {
-      color = "#00E396";
+      color = "#8FC855";
     } else if (percentage < 70) {
-      color = "#FEB019";
+      color = "orange";
     }
 
     setChartOptions((prevOptions) => ({

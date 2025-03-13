@@ -18,6 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import rutil_logo from "../../assets/images/rutil_logo.png";
+import { HamburgerIcon, LogoIcon, NotificationIcon, RefreshIcon, SettingsIcon, TopMenuIcon, UserIcon } from "../icons/icons";
 
 /**
  * @name Header
@@ -31,7 +32,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
   const navigate = useNavigate();
   const [isLoginBoxVisible, setLoginBoxVisible] = useState(false);
   const [isBellActive, setBellActive] = useState(false);
-  const [username, setUsername] = useState(localStorage["username"]);
+  // const [username, setUsername] = useState(localStorage["username"]);
 
 
   const toggleLoginBox = () => {
@@ -102,37 +103,42 @@ const Header = ({ setAuthenticated, toggleAside }) => {
 
   return (
     <div className="header center">
-      <div className="header-left">
-        <FontAwesomeIcon icon={faBars} className="menu-icon" fixedWidth
-          onClick={toggleAside} // aside-outer 토글
-        />
-        <div className="logo-outer"
-          onClick={handleTitleClick}
-        >
-          <img className="rutil-logo" src={rutil_logo} alt="logo Image" />
-        </div>
+    
+      <div className="header-right">
+        <TopMenuIcon onClick={toggleAside}>
+          <HamburgerIcon className="rvi rvi-menu" />
+        </TopMenuIcon>
+
+        <TopMenuIcon onClick={handleTitleClick}>
+          <LogoIcon />
+        </TopMenuIcon>
       </div>
 
       <div className="header-right">
-        {/* 새로고침 */}
-        <FontAwesomeIcon className="menu-icon" fixedWidth 
-          icon={faRotate}
+        <TopMenuIcon 
           onClick={() => window.location.reload()}
-        />
-        {/* 설정 */}
-        <FontAwesomeIcon className="menu-icon" fixedWidth 
-          icon={faCog}
+        >
+          {/* 새로고침 */}
+          <RefreshIcon className="rvi rvi-menu"  />
+        </TopMenuIcon>
+        <TopMenuIcon 
           onClick={() => {
             setSelectedIndex(1);
             navigate('/settings/users'); // 기존 기능 유지
-          }} 
-        />
-        {/* 알림 */}
-        <FontAwesomeIcon className="menu-icon" fixedWidth 
-          icon={faBell}
+          }}
+        >
+          {/* 설정 */}
+          <SettingsIcon className="rvi rvi-menu"/>
+        </TopMenuIcon>
+        <TopMenuIcon
           onClick={() => {
-            setSelectedIndex(2);toggleBellActive(); // 기존 기능 유지
-          }}/>
+            setSelectedIndex(2);
+            toggleBellActive(); // 기존 기능 유지
+          }} 
+        >
+          {/* 알림 */}
+          <NotificationIcon className="rvi rvi-menu"/>
+        </TopMenuIcon>
 
         {isBellActive && (
           <div className={`bell-box ${isExpanded ? "expanded" : ""}`} onClick={stopPropagation}>
@@ -236,26 +242,17 @@ const Header = ({ setAuthenticated, toggleAside }) => {
                   </div>
                 </>
               )}
-
-
                 </div>
         )}
-
-
-
-        {/* 사용자 버튼 */}
-        <div  className="menu-icon" >
-          <FontAwesomeIcon icon={faUser}fixedWidth
-            onClick={() => {
-              setSelectedIndex(3);toggleLoginBox();
-            }}
-          />
-          {/* <span
-            onClick={() => {
-              setSelectedIndex(3);toggleLoginBox(); 
-            }}
-          >{username}</span> */}
-        </div>
+        <TopMenuIcon
+          onClick={() => {
+            setSelectedIndex(3);
+            toggleLoginBox(); // 기존 기능 유지
+          }}
+        >
+          {/* 사용자 버튼 */}
+          <UserIcon className="rvi rvi-menu" />
+        </TopMenuIcon>
         {isLoginBoxVisible && (
           <div className="user-loginbox" 
             onClick={stopPropagation}
@@ -270,3 +267,5 @@ const Header = ({ setAuthenticated, toggleAside }) => {
 };
 
 export default Header;
+
+

@@ -31,6 +31,7 @@ import BarChart from "../../components/Chart/BarChart";
 import SuperAreaChart from "../../components/Chart/SuperAreaChart";
 import Grid from "../../components/Chart/Grid";
 import "./Dashboard.css";
+import { ClusterIcon, DataCenterIcon, EventIcon, HostIcon, StorageDomainIcon, VmIcon } from "../../components/icons/icons";
 
 //#region: RadialBarChart
 const CpuApexChart = memo(({ cpu }) => { return <RadialBarChart percentage={cpu || 0} />; });
@@ -204,7 +205,7 @@ const Dashboard = () => {
         <DashboardBoxGroup
           boxItems={[
             {
-              icon: faLayerGroup,
+              icon: <DataCenterIcon className="box-icon"/>,
               title: "데이터센터",
               cntTotal: dashboard?.datacenters ?? 0,
               cntUp:
@@ -216,13 +217,13 @@ const Dashboard = () => {
               navigatePath: "/computing/rutil-manager/datacenters",
             },
             {
-              icon: faEarthAmericas,
+              icon: <ClusterIcon className="box-icon" />,
               title: "클러스터",
               cntTotal: dashboard?.clusters ?? 0,
               navigatePath: "/computing/rutil-manager/clusters",
             },
             {
-              icon: faUser,
+              icon: <HostIcon className="box-icon" />,
               title: "호스트",
               cntTotal: dashboard?.hosts ?? 0,
               cntUp: dashboard?.hostsUp === 0 ? "" : dashboard?.hostsUp,
@@ -230,13 +231,13 @@ const Dashboard = () => {
               navigatePath: "/computing/rutil-manager/hosts",
             },
             {
-              icon: faCloud,
+              icon: <StorageDomainIcon className="box-icon" />,
               title: "스토리지 도메인",
               cntTotal: dashboard?.storageDomains ?? 0,
               navigatePath: "/computing/rutil-manager/storageDomains",
             },
             {
-              icon: faMicrochip,
+              icon:  <VmIcon className="box-icon" />,
               title: "가상머신",
               cntTotal: dashboard?.vms ?? 0,
               cntUp: dashboard?.vmsUp === 0 ? "" : dashboard?.vmsUp,
@@ -244,7 +245,7 @@ const Dashboard = () => {
               navigatePath: "/computing/rutil-manager/vms",
             },
             {
-              icon: faListUl,
+              icon: <EventIcon className="box-icon" />,
               title: "이벤트",
               cntTotal: dashboard?.events ?? 0,
               alert: dashboard?.eventsAlert === 0 ? "" : dashboard?.eventsAlert,

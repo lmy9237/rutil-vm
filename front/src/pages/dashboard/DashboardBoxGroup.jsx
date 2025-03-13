@@ -11,6 +11,8 @@ import {
   faMessage,
 } from "@fortawesome/free-solid-svg-icons";
 import "./DashboardBoxGroup.css";
+import React from "react";
+import { AlertIcon, ArrowDownBoxIcon, ArrowUpBoxIcon, BoxErrorIcon } from "../../components/icons/icons";
 
 /**
  * @name DashboardBox
@@ -37,24 +39,30 @@ const DashboardBox = ({
   return (
     <div className="box" onClick={() => navigatePath && navigate(navigatePath)}>
       <span className="box-icon-title center">
-        {icon && <FontAwesomeIcon icon={icon} fixedWidth />}
+        {/* FontAwesome 아이콘인지, SVG 아이콘인지 체크 후 렌더링 */}
+        {React.isValidElement(icon) ? (
+          icon // ✅ SVG 아이콘 렌더링
+        ) : (
+          <FontAwesomeIcon icon={icon} fixedWidth /> // ✅ FontAwesome 아이콘 렌더링
+        )}
         <p className="ml-0.5">{title}</p>
       </span>
+
       <div className="box-text flex">
         <div className="arrows flex center mr-2">
           {cntUp && (
             <>
-              <FontAwesomeIcon icon={faArrowUp} fixedWidth /> {cntUp}&nbsp;
+              <ArrowUpBoxIcon width={18} height={18} /> {cntUp}&nbsp;
             </>
           )}
           {cntDown && (
             <>
-              <FontAwesomeIcon icon={faArrowDown} fixedWidth /> {cntDown}&nbsp;
+              <ArrowDownBoxIcon width={18} height={18} /> {cntDown}&nbsp;
             </>
           )}
           {alert && (
             <>
-              <FontAwesomeIcon icon={faMessage} fixedWidth /> {alert}&nbsp;
+              <AlertIcon width={18} height={18} /> {alert}&nbsp;
             </>
           )}
           {error && (
@@ -64,7 +72,7 @@ const DashboardBox = ({
           )}
           {warning && (
             <>
-              <FontAwesomeIcon icon={faWarning} fixedWidth /> {warning}&nbsp;
+              <BoxErrorIcon width={18} height={18} /> {warning}&nbsp;
             </>
           )}
         </div>

@@ -57,7 +57,7 @@ const BarChart = ({ names, percentages }) => {
         },
       },
     },
-    colors: ["#1597E5", "#69DADB", "#7C7DEA"],
+    colors: ["#BBD8FF", "#FFDE6A", "#FFAABF"],
     dataLabels: {
       enabled: true,
       textAnchor: "start",

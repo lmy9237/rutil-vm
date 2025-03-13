@@ -3,7 +3,8 @@
 @tailwind utilities;
 html {
   height: 100%;
-  --h-rutil-header: 51px;
+  --h-icon: 24px;
+  --h-rutil-header: 64px;
   --h-rutil-footer: 35px; /*section-footer 높이 */
   --h-rutil-footer-content: 190px;
   --h-rutil-footer-open: calc(var(--h-rutil-footer) + var(--h-rutil-footer-content));
@@ -17,19 +18,20 @@ html {
   --h-dash-boxs-bar:380px;/*대시보드 section 안에 박스와bar 높이를 합친것*/
   --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
   --w-aside-menu:243px;     
+  --w-icon: var(--h-icon);
   --w-nav:160px; /*nav넓이*/   
 
-  --color-bg: #ececec;                /* 기본 배경색 */
-  
+  --color-bg: #EFF1F5;                /* 기본 배경색 */
+  --color-black:#1D1D1D;
   --color-bg-input: #efefef;            /* Input 배경색 */ 
   --color-gray-1: #dddddd;            /* RutilVM 회색 */
   --color-gray-2:rgb(177, 182, 184);  /* RutilVM 회색 (2) */
   --color-gray-3: #cfe4eb;            /* RutilVM 회색 (3) */
   --color-gray-disabled: #6d6d6d;     /* 비활성화 색 */
 
-  --color-primary: #150e50;           /* 메인색 */
+  --color-primary: #020B79;;           /* 메인색 */
+  --color-primary-hover: #2E379D;;           /* 메인:hover */
   --color-primary-white: rgb(255,255,255); /* 메인 아이콘버튼 색 */ 
-  --color-primary-hover: #76a314;       /* 메인색:hover*/
   --color-primary-1: #295b9c;           /* 주 border색 */
   --color-primary-h: #0b4db5;         /* header 글자색 */  
   --color-primary-2: #446dbb;         /* 주 색 */
@@ -39,6 +41,7 @@ html {
   --color-bg-tooltip: #333333;        /* 툴팁 */
 
   --border-w: 1px; /* 테두리 두깨 */
+  --border-box: var(--border-w) solid var(--color-black);
   --border-btn: var(--border-w) solid var(--color-gray-1);
   --border-detail: var(--border-w) solid var(--color-gray-1);
   --border-simple: var(--border-w) solid var(--color-gray-2);
@@ -52,6 +55,7 @@ html {
   --fs-21: 21px;
   --fs-big: 24px;
   --fs-bigger: 30px;
+  --fs-40: 40px;
   --fs-biggest: 47px;
   --fs-tb-default: 12px;
 }
@@ -63,7 +67,7 @@ html {
 body { width:100%;height:100%;}
 #root {
   width:100%;height:100%;position: absolute;left:0;top:0;
-  background-color: #ebeeee;
+  background-color: #EFF1F5;
   /* background-color: #20acac; */
   text-rendering: optimizeLegibility;
   display:flex;justify-content:flex-start;align-items:center;flex-direction:column;
@@ -120,9 +124,9 @@ input[disabled] {
   justify-content: space-between;
 }
 #section {
-  background-color: white;
   width: calc(100% - var(--w-aside-menu));height:100%;
   overflow-y: auto;
+  background-color: white;
   overflow-x: hidden;
 }
 /* .dash-boxs+.bar+.dash-section{
@@ -2443,7 +2447,6 @@ background-color: #f0f0f0;
     .box {
         width: calc(100% - 0.5rem); /* 1열 */
         border-right: none;
-        padding: 10px 0;
         border-bottom: 1px solid #5e95a745;
     }
     /* 

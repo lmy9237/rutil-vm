@@ -4,28 +4,11 @@
   border-bottom: 1px solid #dfdfdf;
   border-radius: 3px 3px 0 0;
   margin-bottom:1px;
-  padding:0 5px;
 }
 .header-right {
-  display:flex;justify-content:flex-end;align-items:center; /* 세로 중앙 정렬 추가 */
+  display:flex;justify-content:flex-end;align-items:center;   height:100%;/* 세로 중앙 정렬 추가 */
 }
-.menu-icon {
-  padding: 8px;
-  font-size: var(--fs-18);
-  color: var(--color-primary-white);
-  cursor: pointer;
-}
-.menu-icon:hover, .menu-icon > span:hover  {
-  color: #5dcbf7;
-}
-.menu-icon > span {
-  color: rgb(145, 150, 155);cursor: pointer;
-  font-size:15px;font-weight: 600;
-  padding-right: 10px;
-}
-.header-right > span:hover {
-  color: #5dcbf7;
-}
+
 .header-left {
   display:flex;justify-content:space-between;align-items: center;
   font-size: var(--fs-big);
@@ -177,14 +160,4 @@
 }
 .logo-outer {
   cursor: pointer
-}
-.logo {
-  height: 4vh;
-  margin-right: 0.25rem;
-}
-
-.rutil-logo {
-  width: 82px;
-  height: 33px;
-  display: block;
 }

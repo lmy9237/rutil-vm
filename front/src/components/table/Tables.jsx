@@ -410,7 +410,7 @@ const Tables = ({
 
         {/*페이지버튼 */}
         {sortedData.length > itemsPerPage && (
-          <div className="paging-arrows flex"style={{ paddingTop: "20px", paddingBottom: "10px" }}>
+          <div className="paging-arrows flex"style={{ paddingTop: "18px", paddingBottom: "10px" }}>
             <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} >
               {"<"}
             </button>

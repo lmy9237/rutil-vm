@@ -9,6 +9,7 @@ import {
   faListUl,
 } from "@fortawesome/free-solid-svg-icons";
 import "./MainOuter.css"; // 기존 스타일 유지
+import { NavDashIcon, NavEvent, NavNetwork, NavStorage, NavVirtualMachine } from "../icons/icons";
 
 const SideNavbar = ({ asideVisible, selectedSection, setSelectedSection,getBackgroundColor }) => {
   const location = useLocation();
@@ -76,11 +77,11 @@ const SideNavbar = ({ asideVisible, selectedSection, setSelectedSection,getBackg
 
   // 📌 버튼 UI 설정
   const sections = [
-    { id: "dashboard", icon: faThLarge, link: "/" },
-    { id: "computing", icon: faDesktop, link: "/computing/vms" },
-    { id: "network", icon: faServer, link: "/networks" },
-    { id: "storage", icon: faDatabase, link: "/storages/domains" },
-    { id: "event", icon: faListUl, link: "/events" },
+    { id: "dashboard",  icon: <NavDashIcon />, link: "/" },
+    { id: "computing", icon: <NavVirtualMachine />, link: "/computing/vms" },
+    { id: "network", icon: <NavNetwork />, link: "/networks" },
+    { id: "storage", icon: <NavStorage />, link: "/storages/domains" },
+    { id: "event", icon: <NavEvent />, link: "/events" },
   ];
 
   return (
@@ -88,16 +89,16 @@ const SideNavbar = ({ asideVisible, selectedSection, setSelectedSection,getBackg
         <div className="nav">
             {sections.map(({ id, icon, link }) => (
                 <Link 
-                key={id} 
-                to={link} 
-                className="link-no-underline"
+                  key={id} 
+                  to={link} 
+                  className="link-no-underline"
                 >
                 <div
-                    className={`sidebar-item ${selectedSection === id ? "active" : ""}`} 
-                    onClick={() => handleClick(id)}
-                    style={{ backgroundColor: getBackgroundColor(id) }}
+                  className={`sidebar-item ${selectedSection === id ? "active" : ""}`} 
+                  onClick={() => handleClick(id)}
+                  style={{ backgroundColor: getBackgroundColor(id) }}
                 >
-                    <FontAwesomeIcon icon={icon} fixedWidth />
+                  {icon}
                 </div>
                 </Link>
             ))}

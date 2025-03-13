@@ -1,0 +1,19 @@
+.rvi {
+  /* a.k.a rutil-vm-icon */
+  width: var(--w-icon);
+  height: var(--h-icon);
+}
+.rvi.rvi-menu {
+  color: var(--color-primary-white);
+}
+.rvi-outer {
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.rvi-outer:hover {
+  color: rgb(113, 149, 163);
+  background-color: var(--color-primary-hover);
+}
