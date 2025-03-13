@@ -14,12 +14,13 @@ import {
   useDashboardCpuMemory,
   useDashboardStorage,
   useDashboardStorageMemory,
-  useDashboardMetricVm,
   useDashboardVmCpu,
   useDashboardVmMemory,
   useDashboardMetricStorage,
   useDashboardDomain,
   useDashboardHosts,
+  useDashboardMetricVmCpu,
+  useDashboardMetricVmMemory,
 } from "../../api/RQHook";
 import DashboardBoxGroup from "./DashboardBoxGroup";
 import RadialBarChart from "../../components/Chart/RadialBarChart";
@@ -165,14 +166,24 @@ const Dashboard = () => {
   // } = useDashboardPerVmMemory();
 
   const {
-    data: vmMetric,
-    status: vmMetricStatus,
-    isRefetching: isVmMetricRefetching,
-    refetch: vmMetricRefetch,
-    isError: isVmMetricError,
-    error: vmMetricError,
-    isLoading: isVmMetricoading,
-  } = useDashboardMetricVm();
+    data: vmMetricCpu,
+    status: vmMetricCpuStatus,
+    isRefetching: isvmMetricCpuRefetching,
+    refetch: vmMetricCpuRefetch,
+    isError: isvmMetricCpuError,
+    error: vmMetricCpuError,
+    isLoading: isvmMetricCpuoading,
+  } = useDashboardMetricVmCpu();
+
+  const {
+    data: vmMetricMemory,
+    status: vmMetricMemoryStatus,
+    isRefetching: isVmMetricMemoryRefetching,
+    refetch: vmMetricMemoryRefetch,
+    isError: isVmMetricMemoryError,
+    error: vmMetricMemoryError,
+    isLoading: isVmMetricMemoryoading,
+  } = useDashboardMetricVmMemory();
 
   const {
     data: storageMetric,
@@ -367,13 +378,13 @@ const Dashboard = () => {
           <div>
             <span>CPU</span>
             <div className="grid-outer">
-              <Grid type={"cpu"} data={vmMetric} />
+              <Grid type={"cpu"} data={vmMetricCpu} />
             </div>
           </div>
           <div>
             <span>MEMORY</span>
             <div className="grid-outer">
-              <Grid type={"memory"} data={vmMetric} />
+              <Grid type={"memory"} data={vmMetricMemory} />
             </div>
           </div>
           <div>

@@ -16,21 +16,24 @@ interface VmSamplesHistoryRepository: JpaRepository<VmSamplesHistoryEntity, Int>
 
 	@Query(value = """
 SELECT DISTINCT
-  v.vm_id
-  , v.*
+  v.vm_id,
+  v.*
 FROM
   vm_samples_history v
   JOIN vm_configuration c ON v.vm_id = c.vm_id
 WHERE 1=1
 AND v.vm_status = 1
-and v.history_datetime = (
-  SELECT MAX(v2.history_datetime) FROM vm_samples_history v2 WHERE 1=1
-  AND v2.vm_id = v.vm_id
+AND v.history_datetime = (
+  SELECT MAX(v2.history_datetime)
+  FROM vm_samples_history v2
+  WHERE v2.vm_id = v.vm_id
 )
 AND NOT EXISTS (
-  SELECT 1 FROM vm_configuration c2 WHERE 1=1
-  AND c2.vm_id = v.vm_id
-  AND c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
+  SELECT 1
+  FROM vm_configuration c2
+  WHERE c2.vm_id = v.vm_id
+  AND (c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
+       or c2.vm_name = 'HostedEngine')  -- hosted_engine 제외 조건 추가
 )
 ORDER BY v.cpu_usage_percent DESC
 	""", nativeQuery = true
@@ -54,7 +57,8 @@ AND v.history_datetime = (
 AND NOT EXISTS (
   SELECT 1 FROM vm_configuration c2 WHERE 1=1
   AND c2.vm_id = v.vm_id
-  AND c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
+  AND (c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
+       or c2.vm_name = 'HostedEngine')  -- hosted_engine 제외 조건 추가
 )
 order by v.memory_usage_percent desc
 		""", nativeQuery = true
@@ -78,24 +82,24 @@ WITH rankedvms AS (
   AND cpu_usage_percent IS NOT NULL
   AND vm_id NOT IN (
     SELECT vm_id FROM vm_samples_history WHERE 1=1
-	AND history_id = 1
+    AND history_id = 1
   )
   AND CAST(EXTRACT(minute FROM history_datetime) AS INTEGER) % 10 = 0
 ),
 latestvmstatus AS (
   SELECT
-    vm_id
-	, vm_status
+    vm_id,
+    vm_status
   FROM
     vm_samples_history
   WHERE 1=1
   AND history_datetime = (
     SELECT MAX(history_datetime) FROM vm_samples_history AS sub WHERE 1=1
-	AND sub.vm_id = vm_samples_history.vm_id
+    AND sub.vm_id = vm_samples_history.vm_id
   )
   AND vm_id NOT IN (
     SELECT vm_id FROM vm_samples_history WHERE 1=1
-	AND history_id = 1
+    AND history_id = 1
   )
 )
 SELECT
@@ -103,6 +107,7 @@ SELECT
 FROM
   rankedvms
   JOIN latestvmstatus ON rankedvms.vm_id = latestvmstatus.vm_id
+  JOIN vm_configuration vc ON rankedvms.vm_id = vc.vm_id -- vm_name을 조회하기 위해 vm_configuration 테이블 조인
 WHERE 1=1
 AND rankedvms.rn <= 10
 AND latestvmstatus.vm_status = 1
@@ -129,13 +134,36 @@ AND v.history_datetime = (
 AND NOT EXISTS (
   SELECT 1 FROM vm_configuration c2 WHERE 1=1
   AND c2.vm_id = v.vm_id
-  AND c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
+  AND (c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
+       or c2.vm_name = 'HostedEngine')  -- hosted_engine 제외 조건 추가
 )
-ORDER BY history_datetime DESC
+ORDER BY cpu_usage_percent DESC
 	""", nativeQuery = true
 	)
-	fun findVmMetricListChart(): List<VmSamplesHistoryEntity>
+	fun findVmCpuMetricListChart(): List<VmSamplesHistoryEntity>
 
-
+	@Query(value = """
+SELECT DISTINCT
+  v.vm_id,
+  v.*
+FROM
+  vm_samples_history v
+  JOIN vm_configuration c ON v.vm_id = c.vm_id
+WHERE 1=1
+AND v.vm_status = 1
+AND v.history_datetime = (
+  SELECT MAX(v2.history_datetime) FROM vm_samples_history v2 WHERE 1=1
+  AND v2.vm_id = v.vm_id
+)
+AND NOT EXISTS (
+  SELECT 1 FROM vm_configuration c2 WHERE 1=1
+  AND c2.vm_id = v.vm_id
+  AND (c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
+       or c2.vm_name = 'HostedEngine')  -- hosted_engine 제외 조건 추가
+)
+ORDER BY memory_usage_percent DESC
+	""", nativeQuery = true
+	)
+	fun findVmMemoryMetricListChart(): List<VmSamplesHistoryEntity>
 
 }

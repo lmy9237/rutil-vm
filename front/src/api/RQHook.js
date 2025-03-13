@@ -154,12 +154,21 @@ export const useDashboardPerVmNetwork = (mapPredicate) => useQuery({
   }
 });
 
-export const useDashboardMetricVm = (mapPredicate) => useQuery({
+export const useDashboardMetricVmCpu = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['dashboardMetricVm'],
+  queryKey: ['dashboardMetricVmCpu'],
   queryFn: async () => {
-    console.log(`useDashboardMetricVm ...`);
-    const res = await ApiManager.getMetricVm()
+    console.log(`useDashboardMetricVmCpu ...`);
+    const res = await ApiManager.getMetricVmCpu()
+    return res ?? []
+  }
+});
+export const useDashboardMetricVmMemory = (mapPredicate) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['dashboardMetricVmMemory'],
+  queryFn: async () => {
+    console.log(`useDashboardMetricVmMemory ...`);
+    const res = await ApiManager.getMetricVmMemory()
     return res ?? []
   }
 });

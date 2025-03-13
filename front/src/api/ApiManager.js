@@ -1,5 +1,4 @@
 import ENDPOINTS from "./Endpoints"
-import DEFAULT_VALUES from "./DefaultValues"
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 // import { RUTIL_VM_ENV } from "../../vite.config";
@@ -208,16 +207,29 @@ const ApiManager = {
  }),
 
    /**
-   * @name ApiManager.getMetricVm
+   * @name ApiManager.getMetricVmCpu
    * @description vm 불러오는 값
    * 
    * @returns 
    * 
    * @see Dashboard.js (components)
    */
-   getMetricVm: async () => makeAPICall({
+   getMetricVmCpu: async () => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.GET_METRIC_VM()
+    url: ENDPOINTS.GET_METRIC_VM_CPU()
+  }),
+
+   /**
+   * @name ApiManager.getMetricVmMemory
+   * @description vm 불러오는 값
+   * 
+   * @returns 
+   * 
+   * @see Dashboard.js (components)
+   */
+   getMetricVmMemory: async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.GET_METRIC_VM_MEMORY()
   }),
   
    /**

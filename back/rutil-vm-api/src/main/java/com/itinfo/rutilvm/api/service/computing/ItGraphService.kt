@@ -97,11 +97,17 @@ interface ItGraphService {
 	 */
 	fun vmNetworkPerChart(): List<LineDto>
 	/**
-	 * 전체 가상머신 cpu/memory 사용량
+	 * 전체 가상머신 cpu 사용량
 	 * 매트릭
 	 * @return List<[UsageDto]>
 	 */
-	fun vmMetricChart(): List<UsageDto>
+	fun vmCpuMetricChart(): List<UsageDto>
+	/**
+	 * 전체 가상머신 memory 사용량
+	 * 매트릭
+	 * @return List<[UsageDto]>
+	 */
+	fun vmMemoryMetricChart(): List<UsageDto>
 	/**
 	 * 스토리지 도메인 사용량
 	 * 매트릭
@@ -239,9 +245,15 @@ class GraphServiceImpl(
 		return vmInterfaceSampleHistoryEntities.toVmNetworkLineDtos(conn)
 	}
 
-	override fun vmMetricChart(): List<UsageDto> {
-		log.info("vmMetricChart ... ")
-		val vmSampleHistoryEntities: List<VmSamplesHistoryEntity> = vmSamplesHistoryRepository.findVmMetricListChart()
+	override fun vmCpuMetricChart(): List<UsageDto> {
+		log.info("vmCpuMetricChart ... ")
+		val vmSampleHistoryEntities: List<VmSamplesHistoryEntity> = vmSamplesHistoryRepository.findVmCpuMetricListChart()
+		return vmSampleHistoryEntities.toVmUsageDtos(conn)
+	}
+
+	override fun vmMemoryMetricChart(): List<UsageDto> {
+		log.info("vmMemoryMetricChart ... ")
+		val vmSampleHistoryEntities: List<VmSamplesHistoryEntity> = vmSamplesHistoryRepository.findVmMemoryMetricListChart()
 		return vmSampleHistoryEntities.toVmUsageDtos(conn)
 	}
 

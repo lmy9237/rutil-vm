@@ -37,7 +37,7 @@ class GraphController {
 
 	@ApiOperation(
 		httpMethod="GET",
-		value="호스트 사용정보",
+		value="호스트 총 사용량 정보",
 		notes="호스트 cpu, memory 사용정보를 조회한다"
 	)
 	@GetMapping("/cpumemory")
@@ -183,17 +183,28 @@ class GraphController {
 //		return ResponseEntity.ok(graph.vmNetworkPerChart())
 //	}
 
+	@ApiOperation(
+		httpMethod="GET",
+		value="VM의 CPU Metric 그래프",
+		notes="VM의 CPU Metric 그래프"
+	)
+	@GetMapping("/vmCpuMetricChart")
+	@ResponseBody
+	fun vmCpuMetricChart(): ResponseEntity<List<UsageDto>> {
+		log.info("----- vmCpuMetricChart")
+		return ResponseEntity.ok(graph.vmCpuMetricChart())
+	}
 
 	@ApiOperation(
 		httpMethod="GET",
-		value="VM의 Metric 그래프",
-		notes="VM의 Metric 그래프"
+		value="VM의 Memory Metric 그래프",
+		notes="VM의 Memory Metric 그래프"
 	)
-	@GetMapping("/vmMetricList")
+	@GetMapping("/vmMemoryMetricChart")
 	@ResponseBody
-	fun vmMetricList(): ResponseEntity<List<UsageDto>> {
-		log.info("----- vmMetricList")
-		return ResponseEntity.ok(graph.vmMetricChart())
+	fun vmMemoryMetricChart(): ResponseEntity<List<UsageDto>> {
+		log.info("----- vmMemoryMetricChart")
+		return ResponseEntity.ok(graph.vmMemoryMetricChart())
 	}
 
 	@ApiOperation(

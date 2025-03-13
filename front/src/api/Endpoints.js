@@ -19,7 +19,8 @@ const ENDPOINTS = {
   GET_PER_VM_MEMORY: () =>                                                 `${ENDPOINT_API_V1}/dashboard/vmMemoryPerList`,
   GET_PER_VM_NETWORK: () =>                                                `${ENDPOINT_API_V1}/dashboard/vmNetworkPerList`,
          
-  GET_METRIC_VM: () =>                                                     `${ENDPOINT_API_V1}/dashboard/vmMetricList`,
+  GET_METRIC_VM_CPU: () =>                                                     `${ENDPOINT_API_V1}/dashboard/vmCpuMetricChart`,
+  GET_METRIC_VM_MEMORY: () =>                                                     `${ENDPOINT_API_V1}/dashboard/vmMemoryMetricChart`,
   GET_METRIC_STORAGE: () =>                                                `${ENDPOINT_API_V1}/dashboard/storageMetricList`,
   //#endregion: Dashboard
   
