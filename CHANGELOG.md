@@ -32,6 +32,90 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@lmy9237][lmy9237]
 -->
 
+---
+
+## 0.2.2 - 2025-03-14
+
+### [`api-v0.2.2`][api-v0.2.2]: 백엔드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - 인증서 파일 임시보관 처리 ([`7ad2ad84`](https://github.com/ititcloud/rutil-vm/commit/7ad2ad84c3acc571c8ebfdf844df8cdf6c1c7bf7))
+  - spring-actuator 활성화 (health모니터링 및 시스템정보 관리)
+  - vSphere 관련 API 기초 구성 ([`f1d993cc8`](https://github.com/ititcloud/rutil-vm/commit/f1d993cc8ad93cf30de4f4f655a03964e4bed076))
+  - 그래픽콘솔 관련 API 기초 구성 ([`10ead1e6`](https://github.com/ititcloud/rutil-vm/commit/10ead1e6354f5fe2bac0f1f105dc60f62094a137))
+<!-- - [@dhj27][dhj27] -->
+- [@lmy9237][lmy9237]
+  - 가상머신 > 다운된 가상머신 추가
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - 인증서목록 조회 속도 개선 ([`7ad2ad84`](https://github.com/ititcloud/rutil-vm/commit/7ad2ad84c3acc571c8ebfdf844df8cdf6c1c7bf7))
+    - 인증서파일 임시보관처리 스캐쥴링
+    - SSH/SFTP 파일 처리 시, 통신이 양호하지 않은 환경에 대비한 connectionTimeout설정 옵션 추가 ([`f917113f`](https://github.com/ititcloud/rutil-vm/commit/f917113f8e105bcecacde1903c114f2f3aa7190f))
+  - Figma 디자인 적용 
+    - 네비게이션메뉴 아이콘 ([`ac934cb3`](https://github.com/ititcloud/rutil-vm/commit/ac934cb3d30b17077035091ada6550c487cfcf2c))
+    - 트리 네비게이션 ([`6408d33c`](https://github.com/ititcloud/rutil-vm/commit/6408d33c2c77908db1c688c92b2817612c1d240f))
+- [@dhj27][dhj27]
+  - 대시보드 - host 사용량 선 그래프 값 추가 ([`6a987059`](https://github.com/ititcloud/rutil-vm/commit/6a987059a226943d3296d2d2783696fb0158bf62))
+  - 대시보드 - 스토리지 도메인 사용량 선 그래프 값 추가 ([`211cb8b3`](https://github.com/ititcloud/rutil-vm/commit/211cb8b3212869f21014b02443e85198148622e1))
+  - 대시보드 - 그래프에서 가상머신 'hostedEngine' 표시 제외 ([`0ca1aa82c`](https://github.com/ititcloud/rutil-vm/commit/0ca1aa82cc681e124ce3c53cff9fca9123d1daca))
+  - 호스트 - 하루 사용량에 대한 선 그래프 값 추가 ([`ae57efd0`](https://github.com/ititcloud/rutil-vm/commit/ae57efd02151e2cc43aba760e7915db20fda63b4))
+  - 가상머신- 사용량에 대한 반원 그래프 값 추가 ([`e970f0bf`](https://github.com/ititcloud/rutil-vm/commit/e970f0bf42c6f598705c2dac282cc6814034b349))
+  - 가상머신 모델 변경 (`VmVo` -> `VmViewVo`)
+  - 가상머신 - 네트워크 인터페이스 수정 (기능)
+  - 가상머신 - 스냅샷 수정 (기능)
+- [@lmy9237][lmy9237]
+  - +,-버튼 컴포넌트적용
+  - 모든 테이블 페이징처리
+  - 디자인반영
+  - 대시보드 그래프 수정
+  - 테이블선택오류 수정
+
+### Removed 
+
+- [@chanhi2000][chanhi2000]
+  - 불필요한 CORS처리 부분 제거 ([`bf760e05`](https://github.com/ititcloud/rutil-vm/commit/bf760e05482caed2d32ce348fdc8763ff69d357c))
+<!-- - [@dhj27][dhj27] -->
+- [@lmy9237][lmy9237]
+  - 대시보드 - 그래프 숫자제거
+
+### [`web-v0.2.2`][web-v0.2.2]: 프론트
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `react-scan` 추가: 렌더링 성능 측정 ([`acaf854c`](https://github.com/ititcloud/rutil-vm/commit/acaf854c7fd5a8ab4f3ea0e310698e66f01c85e0))
+  - 그래픽콘솔 화면 기초 구성 ([`10ead1e6`](https://github.com/ititcloud/rutil-vm/commit/10ead1e6354f5fe2bac0f1f105dc60f62094a137))
+<!-- - [@dhj27][dhj27]
+- [@lmy9237][lmy9237] -->
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - socket 통신 정상화 ([`bf760e05`](https://github.com/ititcloud/rutil-vm/commit/bf760e05482caed2d32ce348fdc8763ff69d357c))
+- [@dhj27][dhj27]
+  - 대시보드 - host 사용량 선 그래프 추가 ([`6a987059`](https://github.com/ititcloud/rutil-vm/commit/6a987059a226943d3296d2d2783696fb0158bf62))
+  - 대시보드 - 스토리지 도메인 사용량 선 그래프 추가 ([`211cb8b3`](https://github.com/ititcloud/rutil-vm/commit/211cb8b3212869f21014b02443e85198148622e1))
+  - 대시보드 - 그래프에서 가상머신 'hostedEngine' 표시 제외 ([`0ca1aa82c`](https://github.com/ititcloud/rutil-vm/commit/0ca1aa82cc681e124ce3c53cff9fca9123d1daca))
+  - 호스트 - 하루 사용량에 대한 선 그래프 추가 ([`ae57efd0`](https://github.com/ititcloud/rutil-vm/commit/ae57efd02151e2cc43aba760e7915db20fda63b4))
+  - 가상머신- 사용량에 대한 반원 그래프 추가 ([`e970f0bf`](https://github.com/ititcloud/rutil-vm/commit/e970f0bf42c6f598705c2dac282cc6814034b349))
+  - 가상머신 - 네트워크 인터페이스 디자인 및 기능 수정
+  - 가상머신 - 스냅샷 기능 및 디자인 수정
+  - 템플릿 - 디스크 페이지 디자인 수정
+  - 템플릿 - 가상머신 페이지 디자인  수정
+<!-- - [@lmy9237][lmy9237] -->
+
+### Removed 
+
+<!-- - [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237] -->
+
+---
+
 ## 0.2.1 - 2025-03-07
 
 ### [`api-v0.2.1`][api-v0.2.1]: 백엔드
@@ -198,6 +282,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[web-v0.2.2]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.1...web-v0.2.2
+[api-v0.2.2]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.1...api-v0.2.2
 [web-v0.2.1]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.0-beta2...web-v0.2.1
 [api-v0.2.1]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.0-beta2...api-v0.2.1
 [api-v0.2.0-beta2]: https://github.com/ititcloud/rutil-vm/tree/api-v0.2.0-beta2
