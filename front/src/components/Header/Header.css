@@ -26,7 +26,7 @@
   right:0;
   font-size: var(--fs-default-4);
   border: 1px solid rgb(204, 204, 204);
-  top: 51px;
+  top: 63px;
   border-radius: 3px;
 }
 .user-loginbox > div {
@@ -44,7 +44,7 @@
   right: 0;
   font-size: var(--fs-default-4);
   border: 1px solid rgb(204, 204, 204);
-  top: 49px;
+  top: 63px;
   height: 800px;
   border-radius: 2px;
   box-shadow: -3px 3px 10px rgba(0, 0, 0, 0.2); 

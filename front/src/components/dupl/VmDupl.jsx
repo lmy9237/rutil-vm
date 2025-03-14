@@ -31,6 +31,11 @@ const VmDupl = ({
   const transformedData = vms.map((vm) => ({
     ...vm,
     icon: renderVmStatusIcon(vm?.status),
+    name: (
+      <TableRowClick type="vms" id={vm?.id}>
+        {vm?.name}
+      </TableRowClick>
+    ),
     host: (
       <TableRowClick type="host" id={vm?.hostVo?.id}>
         {vm?.hostVo?.name}
@@ -99,7 +104,7 @@ const VmDupl = ({
         data={filteredData} // ✅ 검색 필터링된 데이터 사용
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedVms(selectedRows)}
-        clickableColumnIndex={[1]}
+        // clickableColumnIndex={[1]}
         searchQuery={searchQuery} // ✅ 검색어 전달
         setSearchQuery={setSearchQuery} // ✅ 검색어 변경 가능하도록 추가
         onClickableColumnClick={(row) => handleNameClick(row.id)}

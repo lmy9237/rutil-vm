@@ -587,3 +587,14 @@ export const NavIconEvent = ({ width = 24, height = 24, ...props }) => (
   </svg>
 );
 //#endregion
+
+//#region: 타이틀 아이콘
+export const TitleIconHardDrive = ({ width = 24, height = 24, ...props }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height}
+    fill="currentColor"
+   {...props}
+  >
+    
+  </svg>
+);
+//#endregion

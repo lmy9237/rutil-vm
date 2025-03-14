@@ -4,10 +4,10 @@
   display: flex;
   justify-content: space-between;
 }
-.vnic-new-box > input,
+/* .vnic-new-box > input,
 .vnic-new-box > select {
   width: 50%;
-}
+} */
 .vnic-new-checkbox {
   padding: 1.2% 0.3rem;
   display: flex;

@@ -5,15 +5,19 @@
   }
   .network-backup-edit-nav {
     font-size: var(--fs-default);
-    width: 27%;
+    width: 23%;
     background-color: #fafafa;
-    border-right: var(--border-simple);
+    /* border-right: var(--border-simple);  <- 이게 더 이쁜것같음*/
+    border-right: var(--border-box);
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     font-weight: 500;
   }
   .network-backup-edit-nav > div {
-    padding: 14px 6px;
+    height: 48px;
+    align-items: center;
     cursor: pointer;
+    display: flex;
+    font-weight: 300;
   }
   .backup-edit-content {
     font-size: var(--fs-default);

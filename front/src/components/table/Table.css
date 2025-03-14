@@ -8,6 +8,8 @@
 }
 .custom-table tbody tr {
   cursor: pointer;
+  color: var(--color-nav);
+  letter-spacing:var(--letter-28);
 }
 
 /* pagingtable.css */
@@ -82,27 +84,27 @@
   border-collapse: collapse;
 }
 
-.section-table-outer table tbody tr:nth-child(even) {
+/* .section-table-outer table tbody tr:nth-child(even) {
   background-color:rgb(238, 238, 238);
-}
+} */
 .selected-row {
-  background-color: rgb(218, 236, 245) !important;
+  background-color: var(--color-hover) !important;
 }
 .section-table-outer table tbody tr:hover {
-  background-color:rgb(218, 236, 245) !important; 
+  background-color: var(--color-hover) !important;
 }
 .section-table-outer th,
 .section-table-outer td {
   border: 1px solid rgb(204, 204, 204);
+  height: 36px;
+  padding: 0 8px;
 }
 .section-table-outer th {
-  padding: 2px;
+  
   text-align: center;
-  background-color: #d1e2eb;
+  background-color: var(--color-table);
 }
-.section-table-outer td {
-  padding: 1.3px 3.5px;
-}
+
 .section-table-outer input[type="checkbox"] {
   text-align: center;
 }
@@ -119,10 +121,9 @@
 
 /*tablerowclick*/
 .row-click {
-  color: blue;
+  color: var(--color-primary);
   cursor: pointer;
-  font-weight: 600;
-  textalign: left;
+
 }
 .row-click:hover {
   text-decoration: underline;

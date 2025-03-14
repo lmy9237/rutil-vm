@@ -33,21 +33,21 @@ const TreeMenuItem = ({
   }
 
   return (
-    <div id="aside_popup_first"
-      className="aside-popup-item"
+    <div id="tmi-1"
+      className="tmi active"
       // style={{ backgroundColor: getBackgroundColor("rutil-manager") }}
       onClick={onClick}
       style={style}
     >
-      <FontAwesomeIcon
+      {/* <FontAwesomeIcon
         icon={isNextLevelVisible ? faChevronDown : faChevronRight}
         onClick={(e) => {
           e.stopPropagation();
           setNextLevelVisible(!isNextLevelVisible);
         }}
         fixedWidth
-      />
-      {/* {renderChevron()} */}
+      /> */}
+      {renderChevron()}
       {icon}
       <span>{title}</span>
     </div>

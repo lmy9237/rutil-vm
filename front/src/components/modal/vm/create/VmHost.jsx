@@ -20,7 +20,7 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
 
   return (
     <div className="host-second-content">
-      <div className="p-2">
+      <div className="py-2">
         <div style={{ fontWeight: 600 }}>실행 호스트:</div>
         <div className="form-checks">
           <div className="flex">
@@ -100,7 +100,7 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
 
       {/* 마이그레이션 옵션 */}
       <div className="host-third-content">
-        <div className="px-2" style={{ fontWeight: 600 }}>마이그레이션 옵션:</div>
+        <div className="py-2" style={{ fontWeight: 600 }}>마이그레이션 옵션:</div>
         <LabelSelectOptions
           label={"마이그레이션 모드"}
           value={formHostState.migrationMode}

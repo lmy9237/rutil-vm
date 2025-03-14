@@ -37,11 +37,6 @@ const Footer = ({
         </button>
         <div>
           <div
-            style={{
-              color: selectedFooterTab === "recent" ? "black" : "#4F4F4F",
-              borderBottom:
-                selectedFooterTab === "recent" ? "1px solid blue" : "none",
-            }}
             onClick={() => handleFooterTabClick("recent")}
           >
             최근 작업
@@ -61,6 +56,7 @@ const Footer = ({
   
       <div className={`footer-content${isFooterContentVisible ? " open" : ""}`}>
           <div className="footer-nav">
+            <div className="section-table-outer p-0.5">
             <table>
               <thead>
                 <tr>
@@ -87,7 +83,7 @@ const Footer = ({
                 ))}
               </tbody>
             </table>
-
+            </div>
           </div>
         </div>
         

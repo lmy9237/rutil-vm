@@ -29,28 +29,37 @@ html {
   --color-black:#1D1D1D;
   --color-bg-input: #efefef;            /* Input 배경색 */ 
   --color-nav: #555;
-  --color-gray-1: #dddddd;            /* RutilVM 회색 */
-  --color-gray-2:rgb(177, 182, 184);  /* RutilVM 회색 (2) */
-  --color-gray-3: #cfe4eb;            /* RutilVM 회색 (3) */
+  --color-gray:#717171;
+  --color-gray-1: #dddddd;         
+  --color-gray-2:rgb(177, 182, 184);
+  --color-gray-3: #cfe4eb;  
+  --color-gray-4: #C6C6C6;         
+  --color-gray-5: #888;    
   --color-gray-disabled: #6d6d6d;     /* 비활성화 색 */
+  --color-input-disabled:#EDEDED;
+  --color-white:#F8F8F8; 
+  --color-blue:#1D56BC;
+  --color-blue-1:#0A7CFF;
+  --color-table:#E2E5EB;
 
   --color-primary: #020B79;;           /* 메인색 */
   --color-primary-hover: #2E379D;;           /* 메인:hover */
-  --color-primary-white: rgb(255,255,255); /* 메인 아이콘버튼 색 */ 
+  --color-primary-white: #FFFFFF; /* 메인 아이콘버튼 색 */ 
   --color-primary-1: #295b9c;           /* 주 border색 */
   --color-primary-h: #0b4db5;         /* header 글자색 */  
   --color-primary-2: #446dbb;         /* 주 색 */
-  --color-bg-th: #89b0e3;             /* th 배경색 */
   --color-header:rgb(211, 232, 243);               /* 모달 header*/
-  /* --color-bg-modal:rgba(90, 40, 40, 0.56);         */
   --color-bg-tooltip: #333333;        /* 툴팁 */
-
+  --color-hover:#E7F2FF;
+  
   --border-w: 1px; /* 테두리 두깨 */
   --border-box: var(--border-w) solid var(--color-black);
-  --border-btn: var(--border-w) solid var(--color-gray-1);
+  --border-btn: var(--border-w) solid var(--color-gray);
+  --border-modal-btn:var(--border-w) solid var(--color-primary-hover);
   --border-detail: var(--border-w) solid var(--color-gray-1);
   --border-simple: var(--border-w) solid var(--color-gray-2);
   --border-aa: var(--border-w) solid var(--color-gray-1);
+
 
   --fs-13: 13px;
   --fs-default-4: 14px;
@@ -63,6 +72,8 @@ html {
   --fs-40: 40px;
   --fs-biggest: 47px;
   --fs-tb-default: 12px;
+
+  --letter-28: -0.28px;
 }
 
 * {
@@ -100,10 +111,10 @@ button {
 button[disabled],
 select[disabled],
 input[disabled] {
-  background-color: var(--color-bg-input);
-  color: var(--color-gray-disabled);
+  background-color: var(--color-input-disabled);
+  color: var(--color-gray-5);
   cursor: no-drop !important;
-  border: var(--border-simple);
+  border: 1px solid var(--color-gray-4);
 }
 /* svg.svg-inline--fa { 
   cursor: pointer;
@@ -156,15 +167,15 @@ input[disabled] {
 .manage-button
 {
   margin-right: 8px;
-  padding: 5px;
+  padding: 0 5px;
+  height: 36px;
   font-size: var(--fs-default-4);
-  font-weight: 600;
-  border-radius: 2px;
+  border-radius: 4px;
   display: flex;
   justify-content: left;
   align-items: center;
-  border: var(--border-simple);
-  cursor: pointer;
+  border: var(--border-btn);
+  letter-spacing: var(--letter-28);
 }
 
 .header-right-btns > button:last-child,.manage-button {
@@ -297,8 +308,10 @@ input[disabled] {
   color: #449bff;
 }
 .active-tab {
-  background: #e4e4e4;
-  color: #449bff;
+  background: var(--color-hover);
+  font-weight: 600 !important;
+  color: var(--color-primary);
+  border-right:  2px solid var(--color-primary-hover);
 }
 
 .inactive-tab {
@@ -311,11 +324,12 @@ input[type="text"],
 input[type="number"],
 input[type="password"],
 select {
-  width:50%;height:31px;
-  border: 1px solid rgb(206, 206, 206);border-radius: 3px;
-  font-size: var(--fs-13);
-  padding: 0 4px;
+  width:55%;height: 36px;
+  border: var(--border-btn);border-radius: 4px;
+  font-size: var(--fs-default-4);
+  padding: 0 12px;
   outline: none;
+  letter-spacing: -0.28px;
 }
 
 input[type="checkbox"],

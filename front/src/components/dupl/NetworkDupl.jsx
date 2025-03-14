@@ -28,6 +28,11 @@ const NetworkDupl = ({
   // 데이터를 변환 (검색 가능하도록 `searchText` 필드 추가)
   const transformedData = networks.map((network) => ({
     ...network,
+    name: (
+      <TableRowClick type="network" id={network?.id}>
+        {network?.name}
+      </TableRowClick>
+    ),
     vlan: network?.vlan === 0 ? "-" : network?.vlan,
     mtu: network?.mtu === 0 ? "기본값(1500)" : network?.mtu,
     datacenter: (
@@ -75,7 +80,7 @@ const NetworkDupl = ({
         data={filteredData} 
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedNetworks(selectedRows)}
-        clickableColumnIndex={[0]}
+        // clickableColumnIndex={[0]}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}

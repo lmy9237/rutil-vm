@@ -33,7 +33,7 @@ const VmInit = ({ editMode, formCloudState, setFormCloudState }) => {
         </div>
 
         {formCloudState.cloudInit && (
-          <div className="px-2">
+          <div className="py-2">
             <FontAwesomeIcon
               icon={faChevronCircleRight}
               id="domain_hidden_box_btn2"

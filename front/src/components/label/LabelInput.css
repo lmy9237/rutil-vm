@@ -3,7 +3,7 @@
 .input-password,
 .input-number {
   width: 100%;
-  padding: 8px;
+  padding: 10px 0;
   display: flex;justify-content: space-between;align-items: center;
 }
 .input-text > input,
@@ -16,6 +16,4 @@
   padding:7px 0;
   display: flex;
 }
-.input-checkbox input {
-  margin: 0 8px;
-}
+
