@@ -1,9 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCamera,
-  faComputer,
   faEarthAmericas,
-  faPlus,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { useVmById } from "../../../api/RQHook";
