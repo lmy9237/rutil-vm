@@ -237,6 +237,18 @@ const TableColumnsInfo = {
     { header: '링크 상태', accessor: '_linked', clickable: false },
     { header: '유형', accessor: 'interface_', clickable: false },
   ],
+  DISKS_FROM_TEMPLATE: [
+    { header: '별칭', accessor: 'alias', clickable: false, width: '7%' },
+    { header: 'R/O', accessor: 'name', clickable: false },
+    { header: '가상 크기', accessor: 'virtualSize', clickable: true},
+    { header: '실제 크기', accessor: 'actualSize', clickable: false },
+    { header: '상태', accessor: 'status', clickable: false },
+    { header: '스토리지 도메인', accessor: 'storageDomainName', clickable: false },
+    { header: '할당 정책', accessor: 'policy', clickable: false },
+    { header: '인터페이스', accessor: 'interfaceType', clickable: false },
+    { header: '유형', accessor: 'storageType', clickable: false },
+    { header: '생성 일자', accessor: 'creationTime', clickable: false },
+  ],
 
 
   NETWORKS: [

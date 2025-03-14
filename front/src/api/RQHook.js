@@ -2067,8 +2067,6 @@ export const useAllDisksFromTemplate = (tId, mapPredicate) => useQuery({
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
   enabled: !!tId,
-  staleTime: 0,
-  cacheTime: 0,
 })
 
 /**
@@ -3376,6 +3374,42 @@ export const useUploadDisk = () => {
     },
     onError: (error) => {
       console.error('Error uploading disk:', error);
+    },  
+  });
+};
+/**
+ * @name useMoveDisk
+ * @description Disk 이동 useMutation 훅
+ * 
+ * @returns useMutation 훅
+ */
+export const useMoveDisk = () => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({
+    mutationFn: async (diskData) => await ApiManager.moveDisk(diskData),
+    onSuccess: () => {
+      queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
+    },
+    onError: (error) => {
+      console.error('Error moveing disk:', error);
+    },  
+  });
+};
+/**
+ * @name useCopyDisk
+ * @description Disk 복사 useMutation 훅
+ * 
+ * @returns useMutation 훅
+ */
+export const useCopyDisk = () => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({
+    mutationFn: async (diskData) => await ApiManager.copyDisk(diskData),
+    onSuccess: () => {
+      queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
+    },
+    onError: (error) => {
+      console.error('Error copy disk:', error);
     },  
   });
 };

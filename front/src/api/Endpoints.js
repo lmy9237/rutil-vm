@@ -107,6 +107,7 @@ const ENDPOINTS = {
   ACTIVATE_DISK_FROM_VM: (vmId, diskAttachmentId) =>                       `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks/${diskAttachmentId}/activate`, 
   DEACTIVATE_DISK_FROM_VM: (vmId, diskAttachmentId) =>                     `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks/${diskAttachmentId}/deactivate`, 
   MOVE_DISK_FROM_VM: (vmId) =>                                             `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks/move`, 
+  COPY_DISK_FROM_VM: (vmId) =>                                             `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks/copy`, 
 
   FIND_SNAPSHOTS_FROM_VM: (vmId) =>                                        `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots`, 
   FIND_SNAPSHOT_FROM_VM: (vmId, snapshotId) =>                             `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots/${snapshotId}`, 

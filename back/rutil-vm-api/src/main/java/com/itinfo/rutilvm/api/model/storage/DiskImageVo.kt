@@ -64,7 +64,7 @@ class DiskImageVo(
 	val createDate: String = "",
 	val connectVm: IdentifiedVo = IdentifiedVo(),
 	val connectTemplate: IdentifiedVo = IdentifiedVo(),
-	// val diskProfileVos: List<IdentifiedVo> = listOf()
+	// val diskProfileVos: List<\IdentifiedVo> = listOf()
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -324,10 +324,12 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
 		wipeAfterDelete { disk.wipeAfterDelete() }
+		storageType { disk.storageType() }
 		sharable { disk.shareable() }
 		backup { disk.backup() == DiskBackup.INCREMENTAL }
 		connectVm { vmConn?.fromVmToIdentifiedVo() } // 연결된 가상머신
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
+		// createDate { disk.c }
 	}
 }
 

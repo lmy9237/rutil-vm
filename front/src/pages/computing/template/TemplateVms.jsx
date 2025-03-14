@@ -20,16 +20,14 @@ const TemplateVms = ({ templateId }) => {
   } = useAllVmsFromTemplate(templateId, (e) => ({
     ...e,
     icon: renderVmStatusIcon(e.status),
-    hostVo: e?.hostVo.name,
+    host: e?.hostVo?.name,
   }));
 
   console.log("...");
   return (
     <>
       <TablesOuter
-        isLoading={isVmsLoading}
-        isError={isVmsError}
-        isSuccess={isVmsSuccess}
+        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         columns={TableColumnsInfo.VMS_FROM_TEMPLATE}
         data={vms}
         clickableColumnIndex={[1]}

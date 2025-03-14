@@ -1100,6 +1100,22 @@ const ApiManager = {
     });
   },
   /**
+   * @name ApiManager.copyDisksFromVM
+   * @description 가상머신 디스크 복사
+   * 
+   * @param {String} vmId
+   * @param {Object} diskData
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  copyDisksFromVM: async (vmId, diskData) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.COPY_DISK_FROM_VM(vmId), 
+      data: diskData,
+      // defaultValues: DEFAULT_VALUES.MOVE_DISK_FROM_VM
+    });
+  },
+  /**
    * @name ApiManager.findHostdevicesFromVM
    * @description 가상머신 호스트 장치 목록
    *
