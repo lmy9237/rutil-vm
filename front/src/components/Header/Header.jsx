@@ -18,13 +18,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import {
-  HamburgerIcon,
+  RVI24,
   LogoIcon,
+  rvi24Hamburger,
   NotificationIcon,
   RefreshIcon,
   SettingsIcon,
   TopMenuIcon,
   UserIcon,
+  rvi24Refresh,
+  rvi24Gear,
+  rvi24Bell,
+  rvi24PersonCircle,
 } from "../icons/RutilVmIcons";
 
 /**
@@ -104,38 +109,27 @@ const Header = ({ setAuthenticated, toggleAside }) => {
   return (
     <div className="header center">
       <div className="header-right">
-        <TopMenuIcon onClick={toggleAside}>
-          <HamburgerIcon className="rvi rvi-menu" />
-        </TopMenuIcon>
-
+        <TopMenuIcon iconDef={rvi24Hamburger} onClick={toggleAside} />
         <TopMenuIcon onClick={handleTitleClick}>
           <LogoIcon />
         </TopMenuIcon>
       </div>
 
       <div className="header-right">
-        <TopMenuIcon onClick={() => window.location.reload()}>
-          {/* 새로고침 */}
-          <RefreshIcon className="rvi rvi-menu" />
-        </TopMenuIcon>
-        <TopMenuIcon
-          onClick={() => {
+        {/* 새로고침 */}
+        <TopMenuIcon iconDef={rvi24Refresh} onClick={() => window.location.reload()} />
+        {/* 설정 */}
+        <TopMenuIcon iconDef={rvi24Gear} onClick={() => {
             setSelectedIndex(1);
             navigate("/settings/users"); // 기존 기능 유지
           }}
-        >
-          {/* 설정 */}
-          <SettingsIcon className="rvi rvi-menu" />
-        </TopMenuIcon>
-        <TopMenuIcon
-          onClick={() => {
+        />
+        {/* 알림 */}
+        <TopMenuIcon iconDef={rvi24Bell} onClick={() => {
             setSelectedIndex(2);
             toggleBellActive(); // 기존 기능 유지
           }}
-        >
-          {/* 알림 */}
-          <NotificationIcon className="rvi rvi-menu" />
-        </TopMenuIcon>
+        />
 
         {isBellActive && (
           <div
@@ -270,15 +264,12 @@ const Header = ({ setAuthenticated, toggleAside }) => {
             )}
           </div>
         )}
-        <TopMenuIcon
-          onClick={() => {
+        {/* 사용자 버튼 */}
+        <TopMenuIcon iconDef={rvi24PersonCircle} onClick={() => {
             setSelectedIndex(3);
             toggleLoginBox(); // 기존 기능 유지
           }}
-        >
-          {/* 사용자 버튼 */}
-          <UserIcon className="rvi rvi-menu" />
-        </TopMenuIcon>
+        />
         {isLoginBoxVisible && (
           <div className="user-loginbox" onClick={stopPropagation}>
             <div>계정설정</div>

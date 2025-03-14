@@ -24,6 +24,16 @@ html {
   --w-icon-nav: var(--h-icon-nav);
   --w-icon-tree: var(--h-icon-tree);
   --w-nav:160px; /*nav넓이*/   
+  
+  --p-tmi-1:    8px;
+  --p-tmi-2:    calc(8px + 40px);
+  --p-tmi-2-wc: calc(8px + 20px);
+  --p-tmi-3:    calc(48px + 20px);
+  --p-tmi-3-wc: calc(28px + 20px);
+  --p-tmi-4:    calc(68px + 20px);
+  --p-tmi-4-wc: calc(48px + 20px);
+  --p-tmi-5:    calc(88px + 20px);
+  --p-tmi-5-wc: calc(68px + 20px);
 
   --color-bg: #EFF1F5;                /* 기본 배경색 */
   --color-black:#1D1D1D;

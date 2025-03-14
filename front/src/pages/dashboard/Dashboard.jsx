@@ -1,14 +1,22 @@
 import React, { useEffect, memo } from "react";
 import { adjustFontSize } from "../../UIEvent";
 import { debounce } from "lodash"; // 리스너의 호출 빈도를 줄이기 위해 디바운싱을 사용
+import DashboardBoxGroup from "./DashboardBoxGroup";
+import RadialBarChart from "../../components/Chart/RadialBarChart";
+import BarChart from "../../components/Chart/BarChart";
+import SuperAreaChart from "../../components/Chart/SuperAreaChart";
+import Grid from "../../components/Chart/Grid";
+import "./Dashboard.css";
 import {
-  faCloud,
-  faEarthAmericas,
-  faLayerGroup,
-  faListUl,
-  faMicrochip,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+  RVI24,
+  rvi24Cluster,
+  rvi24Datacenter,
+  rvi24Host,
+  rvi24Storage,
+  rvi24Desktop,
+  rvi24Event,
+} from "../../components/icons/RutilVmIcons";
+
 import {
   useDashboard,
   useDashboardCpuMemory,
@@ -22,18 +30,16 @@ import {
   useDashboardMetricVmCpu,
   useDashboardMetricVmMemory,
 } from "../../api/RQHook";
-import DashboardBoxGroup from "./DashboardBoxGroup";
-import RadialBarChart from "../../components/Chart/RadialBarChart";
-import BarChart from "../../components/Chart/BarChart";
-import SuperAreaChart from "../../components/Chart/SuperAreaChart";
-import Grid from "../../components/Chart/Grid";
-import "./Dashboard.css";
-import { ClusterIcon, DataCenterIcon, EventIcon, HostIcon, StorageDomainIcon, VmIcon } from "../../components/icons/RutilVmIcons";
-
 //#region: RadialBarChart
-const CpuApexChart = memo(({ cpu }) => { return <RadialBarChart percentage={cpu || 0} />; });
-const MemoryApexChart = memo(({ memory }) => { return <RadialBarChart percentage={memory || 0} />; });
-const StorageApexChart = memo(({ storage }) => { return <RadialBarChart percentage={storage || 0} />; });
+const CpuApexChart = memo(({ cpu }) => {
+  return <RadialBarChart percentage={cpu || 0} />;
+});
+const MemoryApexChart = memo(({ memory }) => {
+  return <RadialBarChart percentage={memory || 0} />;
+});
+const StorageApexChart = memo(({ storage }) => {
+  return <RadialBarChart percentage={storage || 0} />;
+});
 //#endregion: RadialBarChart
 
 //#region: BarChart
@@ -50,7 +56,9 @@ const BarChartWrapper = ({ data, keyName, keyPercent }) => {
   return <BarChart names={names} percentages={percentages} />;
 };
 
-const CpuBarChart = ({ vmCpu }) => (<BarChartWrapper data={vmCpu} keyName="name" keyPercent="cpuPercent" />);
+const CpuBarChart = ({ vmCpu }) => (
+  <BarChartWrapper data={vmCpu} keyName="name" keyPercent="cpuPercent" />
+);
 const MemoryBarChart = ({ vmMemory }) => (
   <BarChartWrapper data={vmMemory} keyName="name" keyPercent="memoryPercent" />
 );
@@ -212,53 +220,43 @@ const Dashboard = () => {
         <DashboardBoxGroup
           boxItems={[
             {
-              icon: <DataCenterIcon className="box-icon"/>,
+              iconDef: rvi24Datacenter,
               title: "데이터센터",
               cntTotal: dashboard?.datacenters ?? 0,
-              cntUp:
-                dashboard?.datacentersUp === 0 ? "" : dashboard?.datacentersUp,
-              cntDown:
-                dashboard?.datacentersDown === 0
-                  ? ""
-                  : dashboard?.datacentersDown,
+              cntUp: dashboard?.datacentersUp === 0 ? "" : dashboard?.datacentersUp,
+              cntDown: dashboard?.datacentersDown === 0 ? "" : dashboard?.datacentersDown,
               navigatePath: "/computing/rutil-manager/datacenters",
-            },
-            {
-              icon: <ClusterIcon className="box-icon" />,
+            }, {
+              iconDef: rvi24Cluster,
               title: "클러스터",
               cntTotal: dashboard?.clusters ?? 0,
               navigatePath: "/computing/rutil-manager/clusters",
-            },
-            {
-              icon: <HostIcon className="box-icon" />,
+            }, {
+              iconDef: rvi24Host,
               title: "호스트",
               cntTotal: dashboard?.hosts ?? 0,
               cntUp: dashboard?.hostsUp === 0 ? "" : dashboard?.hostsUp,
               cntDown: dashboard?.hostsDown === 0 ? "" : dashboard?.hostsDown,
               navigatePath: "/computing/rutil-manager/hosts",
-            },
-            {
-              icon: <StorageDomainIcon className="box-icon" />,
+            }, {
+              iconDef: rvi24Storage,
               title: "스토리지 도메인",
               cntTotal: dashboard?.storageDomains ?? 0,
               navigatePath: "/computing/rutil-manager/storageDomains",
-            },
-            {
-              icon:  <VmIcon className="box-icon" />,
+            }, {
+              iconDef: rvi24Desktop,
               title: "가상머신",
               cntTotal: dashboard?.vms ?? 0,
               cntUp: dashboard?.vmsUp === 0 ? "" : dashboard?.vmsUp,
               cntDown: dashboard?.vmsDown === 0 ? "" : dashboard?.vmsDown,
               navigatePath: "/computing/rutil-manager/vms",
-            },
-            {
-              icon: <EventIcon className="box-icon" />,
+            }, {
+              iconDef: rvi24Event,
               title: "이벤트",
               cntTotal: dashboard?.events ?? 0,
               alert: dashboard?.eventsAlert === 0 ? "" : dashboard?.eventsAlert,
               error: dashboard?.eventsError === 0 ? "" : dashboard?.eventsError,
-              warning:
-                dashboard?.eventsWarning === 0 ? "" : dashboard?.eventsWarning,
+              warning: dashboard?.eventsWarning === 0 ? "" : dashboard?.eventsWarning,
               navigatePath: "/events",
             },
           ]}
@@ -268,12 +266,21 @@ const Dashboard = () => {
           <div className="dash-section-contents">
             <h1>CPU</h1>
             <div className="status-value flex">
-              <h1>{100 - Math.floor((cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100)}{"% "} </h1>
+              <h1>
+                {100 -
+                  Math.floor(
+                    (cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100
+                  )}
+                {"% "}{" "}
+              </h1>
               <div>사용가능 (총 {cpuMemory?.totalCpuCore} Core)</div>
             </div>
             <span>
               USED{" "}
-              {Math.floor((cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100)}{"% "} / Total {cpuMemory?.totalCpuCore} Core
+              {Math.floor(
+                (cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100
+              )}
+              {"% "} / Total {cpuMemory?.totalCpuCore} Core
             </span>
 
             <div className="graphs flex">
@@ -290,12 +297,11 @@ const Dashboard = () => {
               <div>{vmCpu && <CpuBarChart vmCpu={vmCpu} />}</div>
             </div>
 
-         
             {/*COMMIT { Math.floor((cpuMemory?.commitCpuCore)/(cpuMemory?.totalCpuCore)*100 )} % <br/> */}
             <div className="wave-graph">
               {/* <h2>Per CPU</h2> */}
               <div>
-                <SuperAreaChart per={host} type="cpu"/>
+                <SuperAreaChart per={host} type="cpu" />
               </div>
             </div>
           </div>
@@ -325,11 +331,11 @@ const Dashboard = () => {
               </div>
               <div>{vmMemory && <MemoryBarChart vmMemory={vmMemory} />}</div>
             </div>
-            
+
             <div className="wave-graph">
               {/* <h2>Per MEMORY</h2> */}
               <div>
-                <SuperAreaChart per={host} type="memory"/>
+                <SuperAreaChart per={host} type="memory" />
               </div>
             </div>
           </div>
@@ -348,7 +354,7 @@ const Dashboard = () => {
             </span>
             <div className="graphs flex">
               <div
-                className="graph-wrap active-on-visible" 
+                className="graph-wrap active-on-visible"
                 data-active-on-visible-callback-func-name="CircleRun"
               >
                 {
@@ -363,12 +369,12 @@ const Dashboard = () => {
                 )}
               </div>
             </div>
-         
+
             <div className="wave-graph">
               {/* <h2>Per Network</h2> */}
               <div>
                 {/* <SuperAreaChart per={host} /> */}
-                <SuperAreaChart per={domain} type="domain"/>
+                <SuperAreaChart per={domain} type="domain" />
               </div>
             </div>
           </div>

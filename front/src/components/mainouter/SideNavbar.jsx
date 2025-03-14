@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./MainOuter.css"; // 기존 스타일 유지
 import {
-  NavIconDash,
-  NavIconVM,
-  NavIconNetwork,
-  NavIconStorage,
-  NavIconEvent,
+  RVI24,
+  rvi24Dashboard,
+  rvi24Desktop,
+  rvi24Network,
+  rvi24Storage,
+  rvi24Event,
 } from "../icons/RutilVmIcons";
 
 const SideNavbar = ({
@@ -16,7 +17,6 @@ const SideNavbar = ({
   getBackgroundColor,
 }) => {
   const location = useLocation();
-  const [asidePopupVisible, setAsidePopupVisible] = useState(true);
   const [lastSelected, setLastSelected] = useState(
     () => localStorage.getItem("lastSelected") || "computing"
   );
@@ -36,8 +36,6 @@ const SideNavbar = ({
   const handleClick = (id) => {
     if (id !== selectedSection) {
       setSelectedSection(id);
-      toggleAsidePopup(id);
-      setAsidePopupVisible(true);
       localStorage.setItem("selected", id);
     }
 
@@ -48,29 +46,24 @@ const SideNavbar = ({
     }
   };
 
-  // 📌 배경색 토글
-  const toggleAsidePopup = (id) => {
-    
-  };
-
   // 📌 버튼 UI 설정
   const sections = [
-    { icon: <NavIconDash />,    id: "dashboard", link: "/",  },
-    { icon: <NavIconVM />,      id: "computing", link: "/computing/vms",  },
-    { icon: <NavIconNetwork />, id: "network",   link: "/networks",  },
-    { icon: <NavIconStorage />, id: "storage",   link: "/storages/domains",  },
-    { icon: <NavIconEvent />,   id: "event",     link: "/events",  },
+    { iconDef: rvi24Dashboard,    id: "dashboard", link: "/",  },
+    { iconDef: rvi24Desktop,      id: "computing", link: "/computing/vms",  },
+    { iconDef: rvi24Network,      id: "network",   link: "/networks",  },
+    { iconDef: rvi24Storage,      id: "storage",   link: "/storages/domains",  },
+    { iconDef: rvi24Event,        id: "event",     link: "/events",  },
   ];
 
   return (
     <div id="aside">
       <div className="nav">
-        {sections.map(({ icon, id, link }) => (
+        {sections.map(({ iconDef, id, link }) => (
           <Link key={id} to={link} 
             className={`rvi rvi-nav ${selectedSection === id ? "active" : ""}`}
             onClick={() => handleClick(id)}
           >
-            {icon}
+            <RVI24 iconDef={iconDef} />
           </Link>
         ))}
       </div>

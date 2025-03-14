@@ -1,3 +1,4 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,70 +12,68 @@ import {
   faMessage,
 } from "@fortawesome/free-solid-svg-icons";
 import "./DashboardBoxGroup.css";
-import React from "react";
-import { AlertIcon, ArrowDownBoxIcon, ArrowUpBoxIcon, BoxErrorIcon } from "../../components/icons/RutilVmIcons";
+import {
+  RVI24,
+  ArrowUpBoxIcon,
+  BoxErrorIcon,
+  rvi24DiagonalUp,
+  rvi24DiagonalDown,
+  rvi24Bell,
+  rvi24Error,
+  rvi24Warning,
+} from "../../components/icons/RutilVmIcons";
 
 /**
  * @name DashboardBox
  * @description 단위 대시보드 박스
- * 
- * @param {string} icon fontawesome 아이콘 
+ *
+ * @param {string} iconDef rutilVM 아이콘
  * @param {string} title 명칭
  * @param {number} cntTotal 총 개수
  * @param {number} cntUp 기동 개수
  * @param {number} cntDown 중지 개수
- * 
- * @returns 
+ *
+ * @returns
  */
 const DashboardBox = ({
-  icon,
+  iconDef,
   title,
-  cntTotal, cntUp, cntDown,
-  alert, error, warning, 
+  cntTotal,
+  cntUp,
+  cntDown,
+  alert,
+  error,
+  warning,
   navigatePath,
 }) => {
   const navigate = useNavigate();
 
-  console.log("...")
+  console.log("...");
   return (
     <div className="box" onClick={() => navigatePath && navigate(navigatePath)}>
-      <span className="box-icon-title center">
+      <span className="box-icon-title">
         {/* FontAwesome 아이콘인지, SVG 아이콘인지 체크 후 렌더링 */}
-        {React.isValidElement(icon) ? (
-          icon // ✅ SVG 아이콘 렌더링
-        ) : (
-          <FontAwesomeIcon icon={icon} fixedWidth /> // ✅ FontAwesome 아이콘 렌더링
-        )}
+        <RVI24 className="box-icon" iconDef={iconDef} />
         <p className="ml-0.5">{title}</p>
       </span>
 
       <div className="box-text flex">
         <div className="arrows flex center mr-2">
-          {cntUp && (
-            <>
-              <ArrowUpBoxIcon width={18} height={18} /> {cntUp}&nbsp;
-            </>
-          )}
-          {cntDown && (
-            <>
-              <ArrowDownBoxIcon width={18} height={18} /> {cntDown}&nbsp;
-            </>
-          )}
-          {alert && (
-            <>
-              <AlertIcon width={18} height={18} /> {alert}&nbsp;
-            </>
-          )}
-          {error && (
-            <>
-              <FontAwesomeIcon icon={faEraser} fixedWidth /> {error}&nbsp;
-            </>
-          )}
-          {warning && (
-            <>
-              <BoxErrorIcon width={18} height={18} /> {warning}&nbsp;
-            </>
-          )}
+          {cntUp && (<>
+            <RVI24 className="box-icon" iconDef={rvi24DiagonalUp} />{cntUp}&nbsp;
+          </>)}
+          {cntDown && (<>
+            <RVI24 className="box-icon" iconDef={rvi24DiagonalDown} />{cntUp}&nbsp;
+          </>)}
+          {alert && (<>
+            <RVI24 className="box-icon" iconDef={rvi24Bell} />{alert}&nbsp;
+          </>)}
+          {error && (<>
+            <RVI24 className="box-icon" iconDef={rvi24Error} />{error}&nbsp;
+          </>)}
+          {warning && (<>
+            <RVI24 className="box-icon" iconDef={rvi24Warning} />{warning}&nbsp;
+          </>)}
         </div>
         <h1>{cntTotal}</h1>
       </div>
@@ -85,23 +84,20 @@ const DashboardBox = ({
 /**
  * @name DashboardBoxGroup
  * @description 대시보드 박스 그룹
- * 
+ *
  * @param {Array} boxItems 박스정보 목록
- * @returns 
+ * @returns
  */
 const DashboardBoxGroup = ({ boxItems }) => {
-  console.log("...")
+  console.log("...");
   return (
     <div className="dash-boxs">
       {boxItems &&
         boxItems.map((e, i) => (
-          <DashboardBox
-            key={i}
-            icon={e.icon}
+          <DashboardBox key={i}
+            iconDef={e.iconDef}
             title={e.title}
-            cntTotal={e.cntTotal}
-            cntUp={e.cntUp}
-            cntDown={e.cntDown}
+            cntTotal={e.cntTotal} cntUp={e.cntUp} cntDown={e.cntDown}
             alert={e.alert}
             error={e.error}
             warning={e.warning}

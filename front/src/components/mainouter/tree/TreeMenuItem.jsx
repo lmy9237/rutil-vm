@@ -1,54 +1,41 @@
 import React from 'react'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronDown,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { TreeMenuIconChevronDown, TreeMenuIconChevronRight } from '../../icons/RutilVmIcons';
+import { 
+  RVI16,
+  rvi16ChevronDown,
+  rvi16ChevronRight,
+} from '../../icons/RutilVmIcons';
 import "./TreeMenuItem.css";
 
 const TreeMenuItem = ({
+  level=1,
   title="",
-  icon,
-  onClick,
+  iconDef,
   isNextLevelVisible=false,
   setNextLevelVisible,
-  style,
+  isSelected,
+  isChevronVisible=true,
+  onChevronClick = () => {},
+  ...props
 }) => {
-  const renderChevron =() => (
-    isNextLevelVisible 
-    ? <TreeMenuIconChevronDown onClick={(e) => {
-      e.stopPropagation();
-      setNextLevelVisible(!isNextLevelVisible);
-    }}/> 
-    : <TreeMenuIconChevronRight onClick={(e) => {
-      e.stopPropagation();
-      setNextLevelVisible(!isNextLevelVisible);
-    }}/>
+  const renderChevron = () => (
+    isNextLevelVisible
+    ? <RVI16 iconDef={rvi16ChevronDown} onClick={(e) => _onChevronClick(e)}/> 
+    : <RVI16 iconDef={rvi16ChevronRight} onClick={(e) => _onChevronClick(e)}/>
   )
 
-  const onChevronClick = (e) => {
+  const _onChevronClick = (e) => {
     e.stopPropagation();
-    setNextLevelVisible(!isNextLevelVisible);
+    onChevronClick();
   }
 
   return (
-    <div id="tmi-1"
-      className="tmi active"
+    <div id={`tmi-${level}`}
+      className={`tmi${isSelected() ? " active" : ""}${isChevronVisible ? " wc" : ""}`}
       // style={{ backgroundColor: getBackgroundColor("rutil-manager") }}
-      onClick={onClick}
-      style={style}
+      {...props}
     >
-      {/* <FontAwesomeIcon
-        icon={isNextLevelVisible ? faChevronDown : faChevronRight}
-        onClick={(e) => {
-          e.stopPropagation();
-          setNextLevelVisible(!isNextLevelVisible);
-        }}
-        fixedWidth
-      /> */}
-      {renderChevron()}
-      {icon}
+      {isChevronVisible && renderChevron()}
+      <RVI16 iconDef={iconDef} />
       <span>{title}</span>
     </div>
   )

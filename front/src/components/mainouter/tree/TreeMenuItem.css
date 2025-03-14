@@ -2,12 +2,23 @@
   /* a.k.a. tree menu item */
   display:flex;justify-content:flex-start;align-items:center;gap:4px;
   color:var(--color-nav) !important;
+  margin-left: 3px;
 }
 .tmi svg {
   aspect-ratio:1/1;width:var(--w-icon-tree) !important;
   /* height:var(--h-icon-tree) !important; */
 }
-
 .tmi.active {
-
+  background: rgb(218,236,245) !important;
 }
+.tmi#tmi-1 { padding: 2px var(--p-tmi-1); }
+.tmi#tmi-2 { padding-left: var(--p-tmi-2); }
+.tmi#tmi-3 { padding-left: var(--p-tmi-3); }
+.tmi#tmi-4 { padding-left: var(--p-tmi-4); }
+.tmi#tmi-5 { padding-left: var(--p-tmi-5); }
+.tmi#tmi-2.wc { padding-left: var(--p-tmi-2-wc); }
+.tmi#tmi-3.wc { padding-left: var(--p-tmi-3-wc); }
+.tmi#tmi-4.wc { padding-left: var(--p-tmi-4-wc); }
+.tmi#tmi-5.wc { padding-left: var(--p-tmi-5-wc); }
+
+                            
