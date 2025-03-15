@@ -153,7 +153,6 @@ fun List<Cluster>.toClustersIdName(): List<ClusterVo> =
 // 클러스터 목록
 fun Cluster.toClusterMenu(conn: Connection): ClusterVo {
 	val cluster = this@toClusterMenu
-	val dataCenter = cluster.resolveDataCenter(conn)
 	return ClusterVo.builder {
 		id { cluster.id() }
 		name { cluster.name() }
@@ -162,7 +161,7 @@ fun Cluster.toClusterMenu(conn: Connection): ClusterVo {
 		version { cluster.version().major().toString() + "." + cluster.version().minor() }
 		description { cluster.description() }
 		cpuType { if(cluster.cpuPresent()) cluster.cpu().type().toString() else null }
-		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
+		dataCenterVo { cluster.dataCenter().fromDataCenterToIdentifiedVo() }
 		hostSize { cluster.findHostCntFromCluster(conn) }
 		vmSize { cluster.findVmCntFromCluster(conn) }
 	}
@@ -170,28 +169,20 @@ fun Cluster.toClusterMenu(conn: Connection): ClusterVo {
 fun List<Cluster>.toClustersMenu(conn: Connection): List<ClusterVo> =
 	this@toClustersMenu.map { it.toClusterMenu(conn) }
 
+
 // 데이터센터에서 뜰 클러스터 목록
-fun Cluster.toDcClusterMenu(): ClusterVo {
-	val cluster = this@toDcClusterMenu
-	return ClusterVo.builder {
-		id { cluster.id() }
-		name { cluster.name() }
-		version { cluster.version().major().toString() + "." + cluster.version().minor() }
-		description { cluster.description() }
-	}
+fun Cluster.toDcClusterMenu(): ClusterVo = ClusterVo.builder {
+	id { this@toDcClusterMenu.id() }
+	name { this@toDcClusterMenu.name() }
+	version { this@toDcClusterMenu.version().major().toString() + "." + this@toDcClusterMenu.version().minor() }
+	description { this@toDcClusterMenu.description() }
 }
 fun List<Cluster>.toDcClustersMenu(): List<ClusterVo> =
 	this@toDcClustersMenu.map { it.toDcClusterMenu() }
 
 
-
 fun Cluster.toClusterInfo(conn: Connection): ClusterVo {
 	val cluster = this@toClusterInfo
-	val dataCenter = cluster.resolveDataCenter(conn)
-	val network: Network = conn.findAllNetworksFromCluster(cluster.id())
-		.getOrDefault(listOf())
-		.first { it.display() }
-
 	return ClusterVo.builder {
 		id { cluster.id() }
 		name { cluster.name() }
@@ -208,9 +199,9 @@ fun Cluster.toClusterInfo(conn: Connection): ClusterVo {
 		migrationPolicy { cluster.migration().autoConverge() }
 		errorHandling { cluster.errorHandling().onError().value() }
 		bandwidth { cluster.migration().bandwidth().assignmentMethod() }
-		networkVo { network.toNetworkIdName() }
+		networkVo { cluster.networks().firstOrNull() { it.display() }?.toNetworkIdName() }
 		version { cluster.version().major().toString() + "." + cluster.version().minor() }
-		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
+		dataCenterVo { if(cluster.descriptionPresent()) cluster.dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo()}
 		vmSize { cluster.findVmCntFromCluster(conn) }
 	}
 }
@@ -226,7 +217,7 @@ fun Cluster.toNetworkClusterVo(conn: Connection, networkId: String): ClusterVo{
 		name { this@toNetworkClusterVo.name() }
 		description {this@toNetworkClusterVo.description() }
 		isConnected { network != null }
-		networkVo { network?.toClusterNetworkVo() }
+		networkVo { network?.toClusterNetworkMenu() }
 	}
 }
 fun List<Cluster>.toNetworkClusterVos(conn: Connection, networkId: String): List<ClusterVo> =

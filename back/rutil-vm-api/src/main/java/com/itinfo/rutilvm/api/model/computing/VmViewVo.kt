@@ -273,7 +273,7 @@ fun List<Vm>.toVmsMenu(conn: Connection): List<VmViewVo> =
 
 fun Vm.toDcVmMenu(conn: Connection): VmViewVo {
 	val vm = this@toDcVmMenu
-	
+
 	return VmViewVo.builder {
 		id { vm.id() }
 		name { vm.name() }

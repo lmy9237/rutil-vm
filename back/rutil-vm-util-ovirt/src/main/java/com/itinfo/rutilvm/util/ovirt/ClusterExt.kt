@@ -18,21 +18,12 @@ import org.ovirt.engine.sdk4.types.Network
 private fun Connection.srvClusters(): ClustersService =
 	this.systemService.clustersService()
 
-
 fun Connection.findAllClusters(searchQuery: String = "", follow: String = ""): Result<List<Cluster>> = runCatching {
 	this.srvClusters().list().apply {
 		if(searchQuery.isNotEmpty()) search(searchQuery)
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().clusters()
 
-	// if (searchQuery.isNotEmpty() && follow.isNotEmpty())
-	// 	this.srvClusters().list().search(searchQuery).follow(follow).caseSensitive(false).send().clusters() ?: listOf()
-	// else if (searchQuery.isNotEmpty())
-	// 	this.srvClusters().list().search(searchQuery).caseSensitive(false).send().clusters() ?: listOf()
-	// else if (follow.isNotEmpty())
-	// 	this.srvClusters().list().follow(follow).caseSensitive(false).send().clusters() ?: listOf()
-	// else
-	// 	this.srvClusters().list().send().clusters() ?: listOf()
 }.onSuccess {
 	Term.CLUSTER.logSuccess("목록조회")
 }.onFailure {
@@ -43,8 +34,11 @@ fun Connection.findAllClusters(searchQuery: String = "", follow: String = ""): R
 fun Connection.srvCluster(id: String): ClusterService =
 	this.srvClusters().clusterService(id)
 
-fun Connection.findCluster(clusterId: String): Result<Cluster?> = runCatching {
-	this.srvCluster(clusterId).get().send().cluster()
+fun Connection.findCluster(clusterId: String, follow: String = ""): Result<Cluster?> = runCatching {
+	this.srvCluster(clusterId).get().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().cluster()
+
 }.onSuccess {
 	Term.CLUSTER.logSuccess("상세조회")
 }.onFailure {
@@ -57,8 +51,7 @@ fun List<Cluster>.nameDuplicateCluster(clusterName: String, clusterId: String? =
 
 
 fun Connection.addCluster(cluster: Cluster): Result<Cluster?> = runCatching {
-	if (this.findAllClusters()
-			.getOrDefault(listOf())
+	if (this.findAllClusters().getOrDefault(emptyList())
 			.nameDuplicateCluster(cluster.name())) {
 		return FailureType.DUPLICATE.toResult(Term.CLUSTER.desc)
 	}
@@ -74,8 +67,7 @@ fun Connection.addCluster(cluster: Cluster): Result<Cluster?> = runCatching {
 }
 
 fun Connection.updateCluster(cluster: Cluster): Result<Cluster?> = runCatching {
-	if (this.findAllClusters()
-			.getOrDefault(listOf())
+	if (this.findAllClusters().getOrDefault(emptyList())
 			.nameDuplicateCluster(cluster.name(), cluster.id())) {
 		return FailureType.DUPLICATE.toResult(Term.CLUSTER.desc)
 	}
@@ -106,7 +98,7 @@ fun Connection.removeCluster(clusterId: String): Result<Boolean> = runCatching {
 fun Connection.expectClusterDeleted(clusterId: String, interval: Long = 1000L, timeout: Long = 60000L): Boolean {
 	val startTime = System.currentTimeMillis()
 	while (true) {
-		val clusters: List<Cluster> = this.findAllClusters().getOrDefault(listOf())
+		val clusters: List<Cluster> = this.findAllClusters().getOrDefault(emptyList())
 		val clusterToRemove: Cluster? = clusters.firstOrNull() { it.id() == clusterId } // cluster 어느것이라도 매치되는것이 있다면
 		if (clusterToRemove == null) { // !(매치되는것이 있다)
 			Term.CLUSTER.logSuccess("삭제")
@@ -120,11 +112,10 @@ fun Connection.expectClusterDeleted(clusterId: String, interval: Long = 1000L, t
 	}
 }
 
-fun Connection.findAllHostsFromCluster(clusterId: String): Result<List<Host>> = runCatching {
+fun Connection.findAllHostsFromCluster(clusterId: String, follow: String = ""): Result<List<Host>> = runCatching {
 	checkClusterExists(clusterId)
 
-	this.findAllHosts()
-		.getOrDefault(listOf())
+	this.findAllHosts(follow = follow).getOrDefault(emptyList())
 		.filter { it.cluster().id() == clusterId }
 }.onSuccess {
 	Term.CLUSTER.logSuccessWithin(Term.HOST, "목록조회")
@@ -133,17 +124,14 @@ fun Connection.findAllHostsFromCluster(clusterId: String): Result<List<Host>> = 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.findAllVmsFromCluster(clusterId: String, searchQuery: String = ""): Result<List<Vm>> = runCatching {
+fun Connection.findAllVmsFromCluster(clusterId: String, searchQuery: String = "", follow: String = ""): Result<List<Vm>> = runCatching {
 	checkClusterExists(clusterId)
 
 	this.srvVms().list().apply {
 		if(searchQuery.isNotEmpty()) search(searchQuery)
+		if (follow.isNotEmpty()) follow(follow)
 	}.send().vms().filter { it.cluster().id() == clusterId }
 
-	// if (searchQuery.isNotEmpty())
-	// 	this.srvVms().list().search(searchQuery).send().vms().filter { it.cluster().id() == clusterId }
-	// else
-	// 	srvVms().list().send().vms().filter { it.cluster().id() == clusterId }
 }.onSuccess {
 	Term.CLUSTER.logSuccessWithin(Term.VM, "목록조회")
 }.onFailure {
@@ -154,10 +142,13 @@ fun Connection.findAllVmsFromCluster(clusterId: String, searchQuery: String = ""
 private fun Connection.srvClusterNetworks(clusterId: String): ClusterNetworksService =
 	this.srvCluster(clusterId).networksService()
 
-fun Connection.findAllNetworksFromCluster(clusterId: String): Result<List<Network>> = runCatching {
+fun Connection.findAllNetworksFromCluster(clusterId: String, follow: String = ""): Result<List<Network>> = runCatching {
 	checkClusterExists(clusterId)
 
-	this.srvClusterNetworks(clusterId).list().send().networks()
+	this.srvClusterNetworks(clusterId).list().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().networks()
+
 }.onSuccess {
 	Term.CLUSTER.logSuccessWithin(Term.NETWORK, "목록조회")
 }.onFailure {
@@ -169,7 +160,10 @@ private fun Connection.srvNetworkFromCluster(clusterId: String, networkId: Strin
 	this.srvClusterNetworks(clusterId).networkService(networkId)
 
 fun Connection.findNetworkFromCluster(clusterId: String, networkId: String): Result<Network?> = runCatching {
+	checkClusterExists(clusterId)
+
 	this.srvNetworkFromCluster(clusterId, networkId).get().send().network()
+	
 }.onSuccess {
 	Term.CLUSTER.logSuccessWithin(Term.NETWORK, "상세조회")
 }.onFailure {
@@ -183,25 +177,6 @@ fun Connection.addNetworkFromCluster(clusterId: String, network: Network): Resul
 	Term.CLUSTER.logSuccessWithin(Term.NETWORK, "생성")
 }.onFailure {
 	Term.CLUSTER.logFailWithin(Term.NETWORK, "생성", it)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-fun Connection.updateNetworkFromCluster(clusterId: String, network: Network): Result<Network?> = runCatching {
-	this.srvNetworkFromCluster(clusterId, network.id()).update().network(network).send().network()
-}.onSuccess {
-	Term.CLUSTER.logSuccessWithin(Term.NETWORK, "편집")
-}.onFailure {
-	Term.CLUSTER.logFailWithin(Term.NETWORK, "편집", it)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-fun Connection.removeNetworkFromCluster(clusterId: String, networkId: String): Result<Boolean> = runCatching {
-	this.srvNetworkFromCluster(clusterId, networkId).remove().send()
-	false
-}.onSuccess {
-	Term.CLUSTER.logSuccessWithin(Term.NETWORK, "삭제")
-}.onFailure {
-	Term.CLUSTER.logFailWithin(Term.NETWORK, "삭제", it)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
@@ -259,7 +234,7 @@ fun Connection.findAllExternalNetworkProviders(clusterId: String): Result<List<E
 // ): Result<AffinityGroup> = runCatching {
 // 	val affinityGroups: List<AffinityGroup> =
 // 		this@addAffinityGroupFromCluster.findAllAffinityGroupsFromCluster(clusterId)
-// 			.getOrDefault(listOf())
+// 			.getOrDefault(emptyList())
 // 			.filter { it.id() != affinityGroupId }
 // 	// 선호도 그룹 이름 중복검사
 // 	if (affinityGroups.any { it.name() == affinityGroupName }) {
@@ -281,7 +256,7 @@ fun Connection.findAllExternalNetworkProviders(clusterId: String): Result<List<E
 // ): Result<AffinityGroup> = runCatching {
 // 	val affinityGroups: List<AffinityGroup> =
 // 		this@updateAffinityGroupFromCluster.findAllAffinityGroupsFromCluster(clusterId)
-// 			.getOrDefault(listOf())
+// 			.getOrDefault(emptyList())
 // 			.filter { it.id() != affinityGroup.id() }
 // 	// 선호도 그룹 이름 중복검사
 // 	if (affinityGroups.any { it.name() == affinityGroupName }) {
@@ -362,7 +337,7 @@ fun Connection.findAllExternalNetworkProviders(clusterId: String): Result<List<E
 // 	if (this.findCluster(clusterId).isFailure) {
 // 		throw ErrorPattern.CLUSTER_NOT_FOUND.toError()
 // 	}
-// 	this.srvCluster(clusterId).permissionsService().list().send().permissions() ?: listOf()
+// 	this.srvCluster(clusterId).permissionsService().list().send().permissions() ?: emptyList()
 // }.onSuccess {
 // 	Term.CLUSTER.logSuccessWithin(Term.PERMISSION, "목록조회")
 // }.onFailure {

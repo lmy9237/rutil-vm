@@ -200,9 +200,8 @@ fun List<Network>.toDcNetworkMenus(): List<NetworkVo> =
 	this@toDcNetworkMenus.map { it.toDcNetworkMenu() }
 
 
-fun Network.toClusterNetworkVo(): NetworkVo {
-	val network = this@toClusterNetworkVo
-	val usages: List<NetworkUsage> = network.usages()
+fun Network.toClusterNetworkMenu(): NetworkVo {
+	val network = this@toClusterNetworkMenu
 	// TODO 할당을 어떻게 나타낼거냐
 	return NetworkVo.builder {
 		id { network.id() }
@@ -210,13 +209,13 @@ fun Network.toClusterNetworkVo(): NetworkVo {
 		description { network.description() }
 		portIsolation { network.portIsolation() }
 		status { network.status() }
-		usage { usages.toUsagesVo() }
+		usage { network.usages().toUsagesVo() }
 		vlan { if(network.vlanPresent()) network.vlan().idAsInteger() else null }
 		required { if(network.requiredPresent()) network.required() else false }
 	}
 }
-fun List<Network>.toClusterNetworkVos(): List<NetworkVo> =
-	this@toClusterNetworkVos.map { it.toClusterNetworkVo() }
+fun List<Network>.toClusterNetworkMenus(): List<NetworkVo> =
+	this@toClusterNetworkMenus.map { it.toClusterNetworkMenu() }
 
 
 /**

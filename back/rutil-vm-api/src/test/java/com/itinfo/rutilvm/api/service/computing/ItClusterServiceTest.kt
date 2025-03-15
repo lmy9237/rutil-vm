@@ -37,11 +37,10 @@ class ItClusterServiceTest {
 
 	@BeforeEach
 	fun setup() {
-		dataCenterId = "d20a47ec-89f1-11ef-833c-00163e2f0226"
-		clusterId = "d20bd210-89f1-11ef-afa2-00163e2f0226"
+		dataCenterId = "94267b0e-f8b3-11ef-93e1-00163e4b783e"
+		clusterId = "94283714-f8b3-11ef-ba3a-00163e4b783e"
 		networkId = "00000000-0000-0000-0000-000000000009"
 	}
-
 
 	/**
 	 * [should_findAll]
@@ -52,16 +51,11 @@ class ItClusterServiceTest {
 	@Test
 	fun should_findAll() {
 		log.debug("should_findAll ... ")
-		val start = System.currentTimeMillis()
 		val result: List<ClusterVo> =
 			service.findAll()
-		val end = System.currentTimeMillis()
-
-		log.info("수행시간: {}", end-start)
 
 		assertThat(result, `is`(not(nullValue())))
 		result.forEach { println(it) }
-//		assertThat(result.size, `is`(1))
 	}
 
 	/**
@@ -77,150 +71,8 @@ class ItClusterServiceTest {
 			service.findOne(clusterId)
 
 		assertThat(result, `is`(not(nullValue())))
-		assertThat(result?.name, `is`("Default"))
 		println(result)
 	}
-
-	/**
-	 * [should_add_update_and_remove_Cluster]
-	 * [ItClusterService.add], [ItClusterService.update], [ItClusterService.remove]에 대한 단위테스트
-	 * 외부공급자 생성x
-	 *
-	 * @see ItClusterService.add
-	 * @see ItClusterService.update
-	 * @see ItClusterService.remove
-	 **/
-	@Test
-	fun should_add_update_and_remove_Cluster() {
-		log.debug("should_addCluster ... ")
-		val addCluster: ClusterVo = ClusterVo.builder {
-			dataCenterVo { IdentifiedVo.builder { id { dataCenterId } } }
-			name { "testCluster" }
-			cpuArc { Architecture.X86_64 }
-			cpuType { "Intel Nehalem Family" }
-			description { "testDescription" }
-			comment { "testComment" }
-			networkVo { NetworkVo.builder { id { networkId } } }
-			biosType { BiosType.Q35_SEA_BIOS }
-			logMaxMemory { 90 }
-			logMaxMemoryType { LogMaxMemoryUsedThresholdType.PERCENTAGE }
-			errorHandling { MigrateOnError.MIGRATE.toString() }
-			bandwidth { MigrationBandwidthAssignmentMethod.AUTO }
-			encrypted { InheritableBoolean.INHERIT }
-		}
-
-		val addResult: ClusterVo? =
-			service.add(addCluster)
-
-		assertThat(addResult, `is`(not(nullValue())))
-		assertThat(addResult?.id, `is`(not(nullValue())))
-		assertThat(addResult?.dataCenterVo?.id, `is`(addCluster.dataCenterVo.id))
-		assertThat(addResult?.name, `is`(addCluster.name))
-		assertThat(addResult?.description, `is`(addCluster.description))
-		assertThat(addResult?.comment, `is`(addCluster.comment))
-		assertThat(addResult?.networkVo?.id, `is`(addCluster.networkVo.id))
-		assertThat(addResult?.biosType, `is`(addCluster.biosType))
-
-		log.debug("should_updateCluster ... ")
-		val updateCluster: ClusterVo = ClusterVo.builder {
-			id { addResult?.id }
-			dataCenterVo { IdentifiedVo.builder { id { dataCenterId } } }
-			name { "testCluster1" }
-			cpuArc { Architecture.X86_64 }
-			cpuType { "Intel Nehalem Family" }
-			description { "testDescription" }
-			comment { "testComment" }
-			networkVo { NetworkVo.builder { id { networkId } } }
-			biosType { BiosType.Q35_SEA_BIOS }
-			logMaxMemory { 90 }
-			logMaxMemoryType { LogMaxMemoryUsedThresholdType.PERCENTAGE }
-			errorHandling { MigrateOnError.MIGRATE.toString() }
-			bandwidth { MigrationBandwidthAssignmentMethod.AUTO }
-			encrypted { InheritableBoolean.INHERIT }
-		}
-
-		val updateResult: ClusterVo? =
-			service.update(updateCluster)
-
-		assertThat(updateResult, `is`(not(nullValue())))
-		assertThat(updateResult?.id, `is`(updateCluster.id))
-		assertThat(updateResult?.dataCenterVo?.id, `is`(updateCluster.dataCenterVo.id))
-		assertThat(updateResult?.name, `is`(updateCluster.name))
-		assertThat(updateResult?.description, `is`(updateCluster.description))
-		assertThat(updateResult?.comment, `is`(updateCluster.comment))
-		assertThat(updateResult?.networkVo?.id, `is`(updateCluster.networkVo.id))
-		assertThat(updateResult?.biosType, `is`(updateCluster.biosType))
-
-		log.debug("should_removeCluster ... ")
-		val removeResult =
-			updateResult?.let { service.remove(it.id) }
-
-		assertThat(removeResult, `is`(true))
-	}
-
-	/**
-	 * [should_add_networkProvider_Cluster]
-	 * [ItClusterService.add]에 대한 단위테스트
-	 * 외부공급자 생성o
-	 *
-	 * @see ItClusterService.add
-	 **/
-	@Test
-	fun should_add_networkProvider_Cluster() {
-		log.debug("should_add_networkProvider_Cluster ... ")
-		val addCluster: ClusterVo = ClusterVo.builder {
-            dataCenterVo { IdentifiedVo.builder { id { dataCenterId } } }
-			name { "testCluster2" }
-			cpuArc { Architecture.X86_64 }
-			cpuType { "Intel Nehalem Family" }
-			description { "networkProvider" }
-			comment { "testComment" }
-			networkVo { NetworkVo.builder { id { networkId } } }// 관리 네트워크 ovirtmgmt
-			biosType { BiosType.Q35_SEA_BIOS }
-			fipsMode { FipsMode.ENABLED }
-			version { "4.7" }
-			switchType { SwitchType.LEGACY }
-			firewallType { FirewallType.FIREWALLD }
-			logMaxMemory { 90 }
-			logMaxMemoryType { LogMaxMemoryUsedThresholdType.PERCENTAGE }
-			virtService { true }
-			glusterService { false }
-			errorHandling { MigrateOnError.MIGRATE.toString() }
-			bandwidth { MigrationBandwidthAssignmentMethod.AUTO }
-			encrypted { InheritableBoolean.INHERIT }
-			networkProvider { true }
-		}
-
-		val result: ClusterVo? =
-			service.add(addCluster)
-
-		log.debug(result?.networkProvider.toString() + ", " + addCluster.networkProvider)
-
-		assertThat(result, `is`(not(nullValue())))
-		assertThat(result?.id, `is`(not(nullValue())))
-		assertThat(result?.dataCenterVo?.id, `is`(addCluster.dataCenterVo.id))
-		assertThat(result?.name, `is`(addCluster.name))
-		assertThat(result?.description, `is`(addCluster.description))
-		assertThat(result?.comment, `is`(addCluster.comment))
-		assertThat(result?.networkVo?.id, `is`(addCluster.networkVo.id))
-		assertThat(result?.biosType, `is`(addCluster.biosType))
-		assertThat(result?.fipsMode, `is`(addCluster.fipsMode))
-		assertThat(result?.version, `is`(addCluster.version))
-		assertThat(result?.switchType, `is`(addCluster.switchType))
-		assertThat(result?.firewallType, `is`(addCluster.firewallType))
-		assertThat(result?.logMaxMemory, `is`(addCluster.logMaxMemory))
-		assertThat(result?.logMaxMemoryType, `is`(addCluster.logMaxMemoryType))
-		assertThat(result?.virtService, `is`(addCluster.virtService))
-		assertThat(result?.glusterService, `is`(addCluster.glusterService))
-		assertThat(result?.errorHandling, `is`(addCluster.errorHandling))
-		assertThat(result?.bandwidth, `is`(addCluster.bandwidth))
-		assertThat(result?.encrypted, `is`(addCluster.encrypted))
-
-		val removeResult =
-			result?.let { service.remove(it.id) }
-		assertThat(removeResult, `is`(true))
-	}
-
 
 	/**
 	 * [should_findAllHostsFromCluster]
@@ -338,6 +190,150 @@ class ItClusterServiceTest {
 		assertThat(result, `is`(not(nullValue())))
 		assertThat(result.size, `is`(1252))
 	}
+
+	// region: behavior
+
+	/**
+	 * [should_add_update_and_remove_Cluster]
+	 * [ItClusterService.add], [ItClusterService.update], [ItClusterService.remove]에 대한 단위테스트
+	 * 외부공급자 생성x
+	 *
+	 * @see ItClusterService.add
+	 * @see ItClusterService.update
+	 * @see ItClusterService.remove
+	 **/
+	@Test
+	fun should_add_update_and_remove_Cluster() {
+		log.debug("should_addCluster ... ")
+		val addCluster: ClusterVo = ClusterVo.builder {
+			dataCenterVo { IdentifiedVo.builder { id { dataCenterId } } }
+			name { "testCluster" }
+			cpuArc { Architecture.X86_64 }
+			cpuType { "Intel Nehalem Family" }
+			description { "testDescription" }
+			comment { "testComment" }
+			networkVo { NetworkVo.builder { id { networkId } } }
+			biosType { BiosType.Q35_SEA_BIOS }
+			logMaxMemory { 90 }
+			logMaxMemoryType { LogMaxMemoryUsedThresholdType.PERCENTAGE }
+			errorHandling { MigrateOnError.MIGRATE.toString() }
+			bandwidth { MigrationBandwidthAssignmentMethod.AUTO }
+			encrypted { InheritableBoolean.INHERIT }
+		}
+
+		val addResult: ClusterVo? =
+			service.add(addCluster)
+
+		assertThat(addResult, `is`(not(nullValue())))
+		assertThat(addResult?.id, `is`(not(nullValue())))
+		assertThat(addResult?.dataCenterVo?.id, `is`(addCluster.dataCenterVo.id))
+		assertThat(addResult?.name, `is`(addCluster.name))
+		assertThat(addResult?.description, `is`(addCluster.description))
+		assertThat(addResult?.comment, `is`(addCluster.comment))
+		assertThat(addResult?.networkVo?.id, `is`(addCluster.networkVo.id))
+		assertThat(addResult?.biosType, `is`(addCluster.biosType))
+
+		log.debug("should_updateCluster ... ")
+		val updateCluster: ClusterVo = ClusterVo.builder {
+			id { addResult?.id }
+			dataCenterVo { IdentifiedVo.builder { id { dataCenterId } } }
+			name { "testCluster1" }
+			cpuArc { Architecture.X86_64 }
+			cpuType { "Intel Nehalem Family" }
+			description { "testDescription" }
+			comment { "testComment" }
+			networkVo { NetworkVo.builder { id { networkId } } }
+			biosType { BiosType.Q35_SEA_BIOS }
+			logMaxMemory { 90 }
+			logMaxMemoryType { LogMaxMemoryUsedThresholdType.PERCENTAGE }
+			errorHandling { MigrateOnError.MIGRATE.toString() }
+			bandwidth { MigrationBandwidthAssignmentMethod.AUTO }
+			encrypted { InheritableBoolean.INHERIT }
+		}
+
+		val updateResult: ClusterVo? =
+			service.update(updateCluster)
+
+		assertThat(updateResult, `is`(not(nullValue())))
+		assertThat(updateResult?.id, `is`(updateCluster.id))
+		assertThat(updateResult?.dataCenterVo?.id, `is`(updateCluster.dataCenterVo.id))
+		assertThat(updateResult?.name, `is`(updateCluster.name))
+		assertThat(updateResult?.description, `is`(updateCluster.description))
+		assertThat(updateResult?.comment, `is`(updateCluster.comment))
+		assertThat(updateResult?.networkVo?.id, `is`(updateCluster.networkVo.id))
+		assertThat(updateResult?.biosType, `is`(updateCluster.biosType))
+
+		log.debug("should_removeCluster ... ")
+		val removeResult =
+			updateResult?.let { service.remove(it.id) }
+
+		assertThat(removeResult, `is`(true))
+	}
+
+	/**
+	 * [should_add_networkProvider_Cluster]
+	 * [ItClusterService.add]에 대한 단위테스트
+	 * 외부공급자 생성o
+	 *
+	 * @see ItClusterService.add
+	 **/
+	@Test
+	fun should_add_networkProvider_Cluster() {
+		log.debug("should_add_networkProvider_Cluster ... ")
+		val addCluster: ClusterVo = ClusterVo.builder {
+			dataCenterVo { IdentifiedVo.builder { id { dataCenterId } } }
+			name { "testCluster2" }
+			cpuArc { Architecture.X86_64 }
+			cpuType { "Intel Nehalem Family" }
+			description { "networkProvider" }
+			comment { "testComment" }
+			networkVo { NetworkVo.builder { id { networkId } } }// 관리 네트워크 ovirtmgmt
+			biosType { BiosType.Q35_SEA_BIOS }
+			fipsMode { FipsMode.ENABLED }
+			version { "4.7" }
+			switchType { SwitchType.LEGACY }
+			firewallType { FirewallType.FIREWALLD }
+			logMaxMemory { 90 }
+			logMaxMemoryType { LogMaxMemoryUsedThresholdType.PERCENTAGE }
+			virtService { true }
+			glusterService { false }
+			errorHandling { MigrateOnError.MIGRATE.toString() }
+			bandwidth { MigrationBandwidthAssignmentMethod.AUTO }
+			encrypted { InheritableBoolean.INHERIT }
+			networkProvider { true }
+		}
+
+		val result: ClusterVo? =
+			service.add(addCluster)
+
+		log.debug(result?.networkProvider.toString() + ", " + addCluster.networkProvider)
+
+		assertThat(result, `is`(not(nullValue())))
+		assertThat(result?.id, `is`(not(nullValue())))
+		assertThat(result?.dataCenterVo?.id, `is`(addCluster.dataCenterVo.id))
+		assertThat(result?.name, `is`(addCluster.name))
+		assertThat(result?.description, `is`(addCluster.description))
+		assertThat(result?.comment, `is`(addCluster.comment))
+		assertThat(result?.networkVo?.id, `is`(addCluster.networkVo.id))
+		assertThat(result?.biosType, `is`(addCluster.biosType))
+		assertThat(result?.fipsMode, `is`(addCluster.fipsMode))
+		assertThat(result?.version, `is`(addCluster.version))
+		assertThat(result?.switchType, `is`(addCluster.switchType))
+		assertThat(result?.firewallType, `is`(addCluster.firewallType))
+		assertThat(result?.logMaxMemory, `is`(addCluster.logMaxMemory))
+		assertThat(result?.logMaxMemoryType, `is`(addCluster.logMaxMemoryType))
+		assertThat(result?.virtService, `is`(addCluster.virtService))
+		assertThat(result?.glusterService, `is`(addCluster.glusterService))
+		assertThat(result?.errorHandling, `is`(addCluster.errorHandling))
+		assertThat(result?.bandwidth, `is`(addCluster.bandwidth))
+		assertThat(result?.encrypted, `is`(addCluster.encrypted))
+
+		val removeResult =
+			result?.let { service.remove(it.id) }
+		assertThat(removeResult, `is`(true))
+	}
+
+	// endreigion
 
 
 	companion object {

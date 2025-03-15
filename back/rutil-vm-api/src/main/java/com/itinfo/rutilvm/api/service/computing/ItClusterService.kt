@@ -3,20 +3,16 @@ package com.itinfo.rutilvm.api.service.computing
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
-import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromClustersToIdentifiedVos
 import com.itinfo.rutilvm.api.model.network.*
-import com.itinfo.rutilvm.api.model.setting.PermissionVo
-import com.itinfo.rutilvm.api.model.setting.toPermissionVos
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.computing.VmServiceImpl.Companion
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.builders.NetworkBuilder
 import org.ovirt.engine.sdk4.types.*
+import org.ovirt.engine.sdk4.types.DataCenterStatus.UP
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import kotlin.Throws
@@ -47,9 +43,7 @@ interface ItClusterService {
 	 */
 	@Throws(Error::class)
 	fun findOne(clusterId: String): ClusterVo?
-	// 클러스터 생성창
-	// 		데이터센터 목록	[ItDataCenterService.findAll]
-	//		네트워크 목록	[ItDataCenterService.findAllNetworksFromDataCenter]
+
 	/**
 	 * [ItClusterService.add]
 	 * 클러스터 생성
@@ -96,7 +90,6 @@ interface ItClusterService {
 	 */
 	@Throws(Error::class)
 	fun findAllVmsFromCluster(clusterId: String): List<VmViewVo>
-
 	/**
 	 * [ItClusterService.findAllNetworksFromCluster]
 	 * 클러스터가 가지고있는 네트워크 목록
@@ -106,6 +99,7 @@ interface ItClusterService {
 	 */
 	@Throws(Error::class)
 	fun findAllNetworksFromCluster(clusterId: String): List<NetworkVo>
+
 	/**
 	 * [ItClusterService.addNetworkFromCluster]
 	 * 클러스터 네트워크 추가
@@ -136,7 +130,6 @@ interface ItClusterService {
 	 */
 	@Throws(Error::class)
 	fun manageNetworksFromCluster(clusterId: String, networkVos: List<NetworkVo>): Boolean
-
 
 	/**
 	 * [ItClusterService.findAllEventsFromCluster]
@@ -177,28 +170,29 @@ class ClusterServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<ClusterVo> {
 		log.info("findAll ... ")
-		val res: List<Cluster> = conn.findAllClusters()
-			.getOrDefault(listOf())
+		val res: List<Cluster> = conn.findAllClusters(follow = "datacenter").getOrDefault(emptyList())
 		return res.toClustersMenu(conn)
 	}
 
 	@Throws(Error::class)
 	override fun findAllUp(): List<ClusterVo> {
 		log.info("findAllUp ... ")
-		val res: List<DataCenter> = conn.findAllDataCenters(follow = "clusters")
-			.getOrDefault(listOf())
-			.filter { it.status() == DataCenterStatus.UP }
+		val res: List<Cluster> = conn.findAllClusters(follow = "datacenter").getOrDefault(emptyList())
+			.filter { cluster -> cluster.dataCenter().status() == UP }
 
-		return res.flatMap { it.clusters().orEmpty() }
-			.map { it.toClusterMenu(conn) }
+		// val res: List<DataCenter> = conn.findAllDataCenters(follow = "clusters")
+		// 	.getOrDefault(listOf())
+		// 	.filter { it.status() == DataCenterStatus.UP }
+		// return res.flatMap { it.clusters().orEmpty() }
+		// 	.map { it.toClusterMenu(conn) }  //1.01
+		return res.toClustersMenu(conn) // 986
 	}
 
 	@Throws(Error::class)
 	override fun findOne(clusterId: String): ClusterVo? {
 		log.info("findOne ... clusterId: {}", clusterId)
-		val res: Cluster? = conn.findCluster(clusterId)
-			.getOrNull()
-		return res?.toClusterInfo(conn)
+		val res: Cluster? = conn.findCluster(clusterId, follow = "datacenter,networks").getOrNull()
+		return res?.toClusterInfo(conn) // 1 vo 수정전, 수정후 0.91
 	}
 
 	@Throws(Error::class)
@@ -207,7 +201,7 @@ class ClusterServiceImpl(
 		val res: Cluster? = conn.addCluster(
 			clusterVo.toAddClusterBuilder(conn)
 		).getOrNull()
-		return res?.toClusterInfo(conn)
+		return res?.toClusterIdName()
 	}
 
 	@Throws(Error::class)
@@ -216,7 +210,7 @@ class ClusterServiceImpl(
 		val res: Cluster? = conn.updateCluster(
 			clusterVo.toEditClusterBuilder(conn)
 		).getOrNull()
-		return res?.toClusterInfo(conn)
+		return res?.toClusterIdName()
 	}
 
 	@Throws(Error::class)
@@ -229,27 +223,19 @@ class ClusterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllHostsFromCluster(clusterId: String): List<HostVo> {
 		log.info("findAllHostsFromCluster ... clusterId: {}", clusterId)
-		val res: List<Host> = conn.findAllHostsFromCluster(clusterId)
-			.getOrDefault(listOf())
+		val res: List<Host> = conn.findAllHostsFromCluster(clusterId, follow = "cluster").getOrDefault(emptyList())
 
 		return res.map { host ->
-			val hostNic: HostNic? = conn.findAllHostNicsFromHost(host.id())
-				.getOrDefault(listOf()).firstOrNull()
+			val hostNic: HostNic? = conn.findAllHostNicsFromHost(host.id()).getOrDefault(emptyList()).firstOrNull()
 			val usageDto: UsageDto? = calculateUsage(host, hostNic)
 			host.toHostMenu(conn, usageDto)
 		}
-	}
-	private fun calculateUsage(host: Host, hostNic: HostNic?): UsageDto? {
-		return if (host.status() == HostStatus.UP && hostNic != null) {
-			itGraphService.hostPercent(host.id(), hostNic.id())
-		} else null
 	}
 
 	@Throws(Error::class)
 	override fun findAllVmsFromCluster(clusterId: String): List<VmViewVo> {
 		log.info("findAllVmsFromCluster ... clusterId: {}", clusterId)
-		val res: List<Vm> = conn.findAllVmsFromCluster(clusterId)
-			.getOrDefault(listOf())
+		val res: List<Vm> = conn.findAllVmsFromCluster(clusterId).getOrDefault(emptyList())
 		return res.toVmsMenu(conn)
 	}
 
@@ -257,9 +243,8 @@ class ClusterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllNetworksFromCluster(clusterId: String): List<NetworkVo> {
 		log.info("findAllNetworksFromCluster ... clusterId: {}", clusterId)
-		val res: List<Network> = conn.findAllNetworksFromCluster(clusterId)
-			.getOrDefault(listOf())
-		return res.toClusterNetworkVos()
+		val res: List<Network> = conn.findAllNetworksFromCluster(clusterId).getOrDefault(emptyList())
+		return res.toClusterNetworkMenus()
 	}
 
 	@Throws(Error::class)
@@ -274,7 +259,7 @@ class ClusterServiceImpl(
 			clusterId,
 			NetworkBuilder().id(network.id()).build()
 		).getOrNull()
-		return res?.toNetworkVo(conn)
+		return res?.toNetworkIdName()
 	}
 
 	// 클러스터 네트워크 - 네트워크 관리창
@@ -286,15 +271,14 @@ class ClusterServiceImpl(
 			.getOrNull() ?: throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
 
 		// 클러스터가 가지고 있는 네트워크
-		val clusterNetworks: List<Network> = conn.findAllNetworksFromCluster(clusterId)
-			.getOrDefault(listOf())
+		val clusterNetworks: List<Network> = conn.findAllNetworksFromCluster(clusterId).getOrDefault(emptyList())
 
 		val networks: List<Network> = conn.findAllNetworksFromDataCenter(cluster.dataCenter().id())
-			.getOrDefault(listOf())
+			.getOrDefault(emptyList())
 			.filter { clusterNetworks.none { clusterNetwork -> clusterNetwork.id() == it.id() } }
 
 		val mergedNetworks = clusterNetworks + networks
-		return mergedNetworks.toClusterNetworkVos()
+		return mergedNetworks.toClusterNetworkMenus()
 	}
 
 	@Throws(Error::class)
@@ -330,8 +314,7 @@ class ClusterServiceImpl(
 		val cluster: Cluster = conn.findCluster(clusterId)
 			.getOrNull() ?: throw ErrorPattern.CLUSTER_NOT_FOUND.toException()
 
-		val res: List<Event> = conn.findAllEvents("cluster.name=${cluster.name()}")
-			.getOrDefault(listOf())
+		val res: List<Event> = conn.findAllEvents("cluster.name=${cluster.name()}").getOrDefault(emptyList())
 			.filter { it.clusterPresent() && it.cluster().idPresent() && it.cluster().id().equals(clusterId) }
 		return res.toEventVos()
 	}
@@ -340,8 +323,7 @@ class ClusterServiceImpl(
 	override fun findAllOsSystemFromCluster(clusterId: String): List<OsVo> {
 		log.info("findAllOsSystemFromCluster ... clusterId:{}", clusterId)
 		val cluster: Cluster? = conn.findCluster(clusterId).getOrNull()
-		val res: List<OperatingSystemInfo> = conn.findAllOperatingSystems()
-			.getOrDefault(listOf())
+		val res: List<OperatingSystemInfo> = conn.findAllOperatingSystems().getOrDefault(emptyList())
 			.filter { it.architecture() == cluster?.cpu()?.architecture() }
 		return res.toOsVos()
 	}
@@ -349,10 +331,17 @@ class ClusterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllCpuProfilesFromCluster(clusterId: String): List<CpuProfileVo> {
 		log.info("findAllCpuProfilesFromCluster ... clusterId: {}", clusterId)
-		val res: List<CpuProfile> = conn.findAllCpuProfilesFromCluster(clusterId)
-			.getOrDefault(listOf())
+		val res: List<CpuProfile> = conn.findAllCpuProfilesFromCluster(clusterId).getOrDefault(emptyList())
 		return res.toCpuProfileVos()
 	}
+
+	// 사용량 계산
+	private fun calculateUsage(host: Host, hostNic: HostNic?): UsageDto? {
+		return if (host.status() == HostStatus.UP && hostNic != null) {
+			itGraphService.hostPercent(host.id(), hostNic.id())
+		} else null
+	}
+
 
 
 	companion object {
