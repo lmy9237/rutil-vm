@@ -271,6 +271,40 @@ fun List<Vm>.toVmsMenu(conn: Connection): List<VmViewVo> =
 	this@toVmsMenu.map { it.toVmMenu(conn) }
 
 
+fun Vm.toDcVmMenu(conn: Connection): VmViewVo {
+	val vm = this@toDcVmMenu
+	
+	return VmViewVo.builder {
+		id { vm.id() }
+		name { vm.name() }
+		comment { vm.comment() }
+		creationTime {  ovirtDf.format(vm.creationTime()) }
+		status { vm.status() }
+		description { vm.description() }
+		hostedEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
+		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo()}
+		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo()}
+		if (vm.status() == VmStatus.UP) {
+			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
+			hostVo { host?.fromHostToIdentifiedVo()}
+			fqdn { vm.fqdn() }
+			upTime { vm.statistics().findVmUptime() }
+			ipv4 { vm.reportedDevices().findVmIpv4() }
+			ipv6 { vm.reportedDevices().findVmIpv6() }
+			usageDto { vm.statistics().toVmUsage() }
+		} else {
+			fqdn { null }
+			upTime { null }
+			ipv4 { null }
+			ipv6 { null }
+			usageDto { null }
+		}
+	}
+}
+fun List<Vm>.toDcVmsMenu(conn: Connection): List<VmViewVo> =
+	this@toDcVmsMenu.map { it.toDcVmMenu(conn) }
+
+
 fun Vm.toVmVoInfo(conn: Connection): VmViewVo {
 	val vm = this@toVmVoInfo
 	val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()

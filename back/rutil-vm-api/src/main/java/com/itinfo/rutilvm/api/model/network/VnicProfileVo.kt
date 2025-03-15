@@ -90,6 +90,15 @@ fun List<VnicProfile>.toVnicProfileToVmVos(conn: Connection): List<VnicProfileVo
 	this@toVnicProfileToVmVos.map { it.toVnicProfileToVmVo(conn) }
 
 
+fun VnicProfile.toDcVnicProfileMenu(): VnicProfileVo = VnicProfileVo.builder {
+	id { this@toDcVnicProfileMenu.id() }
+	name { this@toDcVnicProfileMenu.name() }
+	networkVo { this@toDcVnicProfileMenu.network().fromNetworkToIdentifiedVo() }
+}
+fun List<VnicProfile>.toDcVnicProfileMenus(): List<VnicProfileVo> =
+	this@toDcVnicProfileMenus.map { it.toDcVnicProfileMenu() }
+
+
 
 fun VnicProfile.toVnicProfileVo(conn: Connection): VnicProfileVo {
     val network: Network? =

@@ -16,10 +16,6 @@ fun Connection.findAllNetworks(follow: String = ""): Result<List<Network>> = run
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().networks()
 
-	// if (follow.isNotEmpty())
-	// 	this.srvNetworks().list().follow(follow).send().networks()
-	// else
-	// 	this.srvNetworks().list().send().networks()
 }.onSuccess {
 	Term.NETWORK.logSuccess("목록조회")
 }.onFailure {

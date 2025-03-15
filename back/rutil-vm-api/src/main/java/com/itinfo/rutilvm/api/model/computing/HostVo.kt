@@ -199,8 +199,7 @@ fun List<Host>.toHostsIdName(): List<HostVo> =
  */
 fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
     val host = this@toHostMenu
-    val cluster: Cluster? = if(host.clusterPresent()) conn.findCluster(host.cluster().id()).getOrNull() else null
-    val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
+    val dataCenter: DataCenter? = host.cluster().resolveDataCenter(conn)
     val hostedVm = conn.isHostedEngineVm(host.id())
 
     return HostVo.builder {
@@ -212,13 +211,14 @@ fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
         hostedEngine { host.hostedEnginePresent() }
         hostedEngineVM { hostedVm }
         address { host.address() }
-        clusterVo { cluster?.fromClusterToIdentifiedVo() }
+        clusterVo { host.cluster()?.fromClusterToIdentifiedVo() }
         dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
         vmSizeVo { host.findVmCntFromHost() }
         usageDto { usageDto }
         spmStatus { host.spm().status() }
     }
 }
+
 
 /**
  * 호스트 상세정보

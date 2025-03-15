@@ -2,7 +2,7 @@ package com.itinfo.rutilvm.api.service.storage
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.DiskProfileVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
@@ -344,7 +344,7 @@ class ItDiskServiceTest {
     fun should_findAllVmsFromDisk() {
         log.info("should_findAllVmsFromDisk ... ")
         val diskId = "6ebde818-0b00-425d-b1c2-8a6c066140c8"
-        val result: List<VmVo> =
+        val result: List<VmViewVo> =
             service.findAllVmsFromDisk(diskId)
 
         assertThat(result, `is`(not(nullValue())))

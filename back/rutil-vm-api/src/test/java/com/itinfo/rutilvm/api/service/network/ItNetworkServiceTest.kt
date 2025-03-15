@@ -5,7 +5,7 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.ClusterVo
 import com.itinfo.rutilvm.api.model.computing.DataCenterVo
 import com.itinfo.rutilvm.api.model.computing.HostVo
-import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import org.junit.jupiter.api.Test
@@ -281,7 +281,7 @@ class ItNetworkServiceTest {
 	@Test
 	fun should_findAllVmsFromNetwork() {
 		log.debug("should_findAllVmsFromNetwork ... ")
-		val result: List<VmVo> =
+		val result: List<VmViewVo> =
 			service.findAllVmsFromNetwork(networkId)
 
 		assertThat(result, `is`(not(nullValue())))

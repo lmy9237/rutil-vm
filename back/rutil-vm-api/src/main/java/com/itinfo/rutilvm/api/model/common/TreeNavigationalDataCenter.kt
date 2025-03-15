@@ -63,7 +63,7 @@ fun List<DataCenter>.totoNavigationalsWithNetworks(conn: Connection): List<TreeN
 
 fun DataCenter.toNavigationalWithStorageDomains(conn: Connection): TreeNavigationalDataCenter {
     val storageDomains: List<StorageDomain> =
-        conn.findAllAttachedStorageDomainsFromDataCenter(this@toNavigationalWithStorageDomains.id())
+        conn.findAllAttachedStorageDomainsFromDataCenter(this@toNavigationalWithStorageDomains.id(), follow = "disks")
             .getOrDefault(listOf())
 
     return TreeNavigationalDataCenter.builder {

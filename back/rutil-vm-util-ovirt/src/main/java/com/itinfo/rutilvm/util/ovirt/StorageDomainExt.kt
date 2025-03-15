@@ -267,10 +267,12 @@ fun Connection.removeRegisteredVmFromStorageDomain(storageDomainId: String, vmId
 private fun Connection.srvDisksFromStorageDomain(storageId: String): StorageDomainDisksService =
 	this.srvStorageDomain(storageId).disksService()
 
-fun Connection.findAllDisksFromStorageDomain(storageDomainId: String): Result<List<Disk>> = runCatching {
+fun Connection.findAllDisksFromStorageDomain(storageDomainId: String, follow: String = ""): Result<List<Disk>> = runCatching {
 	checkStorageDomainExists(storageDomainId)
 
-	this.srvDisksFromStorageDomain(storageDomainId).list().send().disks() ?: listOf()
+	this.srvDisksFromStorageDomain(storageDomainId).list().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().disks()
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
 }.onFailure {

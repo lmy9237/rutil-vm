@@ -2,14 +2,11 @@ package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.computing.ClusterVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
-import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.computing.EventVo
-import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
-import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 //import com.itinfo.itcloud.service.computing.ItClusterServiceTest.Companion
 import org.junit.jupiter.api.Test
@@ -183,7 +180,7 @@ class ItTemplateServiceTest {
 	@Test
 	fun should_findAllVmsFromTemplate(){
 		log.debug("should_findAllVmsFromTemplate")
-		val result: List<VmVo> =
+		val result: List<VmViewVo> =
 			service.findAllVmsFromTemplate(tempId)
 
 		assertThat(result, `is`(not(nullValue())))

@@ -107,14 +107,3 @@ fun Host.findVmCntFromHost(): SizeVo = SizeVo.builder {
     upCnt { if (summary.activePresent()) summary.activeAsInteger() else 0 }
     downCnt { if (summary.activePresent() && summary.totalPresent()) summary.totalAsInteger() - summary.activeAsInteger() else 0 }
 }
-
-//fun Host.findVmCntFromHost(conn: Connection): SizeVo {
-//    val allVms: List<Vm> = conn.findAllVmsFromHost(this@findVmCntFromHost.id()).getOrDefault(listOf())
-//    val allCnt: Int = allVms.size
-//    val upCnt: Int = allVms.count { it.status() == VmStatus.UP }
-//    return SizeVo.builder {
-//        allCnt { allCnt }
-//        upCnt { upCnt }
-//        downCnt { allCnt - upCnt }
-//    }
-//}

@@ -196,7 +196,7 @@ class ItGraphServiceTest {
     fun should_vmMetricChart() {
         log.debug("should_vmMetricChart ... ")
         val result: List<UsageDto> =
-            service.vmMetricChart()
+            service.vmCpuMetricChart()
 
         assertThat(result, `is`(not(nullValue())))
         println(result)

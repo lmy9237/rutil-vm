@@ -26,10 +26,10 @@ private val log = LoggerFactory.getLogger(StorageDomainVo::class.java)
  * @property description [String]
  * @property comment [String]
  * @property status [StorageDomainStatus] 상태
- * @property domainType [StorageDomainType] 도메인 유형
+ * @property domainType [String] 도메인 유형  /*StorageDomainType.IMAGE*/
  * @property domainTypeMaster [Boolean] 마스터 여부
  * @property hostedEngine [Boolean] 호스트 엔진 가상머신 데이터 포함
- * @property storageType [StorageType] 스토리지 유형
+ * @property storageType [String] 스토리지 유형  /*StorageType.NFS*/
  * @property format [StorageFormat] 포맷
  * @property active [Boolean] 데이터 센터간 상태: 활성화
  * @property diskSize [BigInteger] 전체공간
@@ -57,10 +57,10 @@ class StorageDomainVo(
 	val description: String = "",
 	val comment: String = "",
 	val status: StorageDomainStatus = StorageDomainStatus.LOCKED,
-	val domainType: String = "", /*StorageDomainType.IMAGE*/
+	val domainType: String = "",
 	val domainTypeMaster: Boolean = false,
 	val hostedEngine: Boolean = false,
-	val storageType: String = "", /*StorageType.NFS*/
+	val storageType: String = "",
 	val format: StorageFormat = StorageFormat.V5,
 	val active: Boolean = false,
 	val diskSize: BigInteger = BigInteger.ZERO,
@@ -74,11 +74,11 @@ class StorageDomainVo(
 	val logicalUnits: List<String> = listOf(),
 	val warning: Int = 0,
 	val spaceBlocker: Int = 0,
+	val nfsVersion: String = "",
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
 	val hostVo: IdentifiedVo = IdentifiedVo(),
 	val diskImageVos: List<DiskImageVo> = listOf(),
 	val profileVos: List<IdentifiedVo> = listOf(),
-	val nfsVersion: String = "",
 	val hostStorageVo: HostStorageVo = HostStorageVo(),
 ): Serializable {
 	override fun toString(): String =
@@ -106,16 +106,16 @@ class StorageDomainVo(
 		private var bLogicalUnits: List<String> = listOf();fun logicalUnits(block: () -> List<String>?) { bLogicalUnits = block() ?: listOf() }
 		private var bWarning: Int = 0;fun warning(block: () -> Int?) { bWarning = block() ?: 0 }
 		private var bSpaceBlocker: Int = 0;fun spaceBlocker(block: () -> Int?) { bSpaceBlocker = block() ?: 0 }
+		private var bNfsVersion: String = "";fun nfsVersion(block: () -> String?) { bNfsVersion = block() ?: ""}
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo();fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
 		private var bHostVo: IdentifiedVo = IdentifiedVo();fun hostVo(block: () -> IdentifiedVo?) { bHostVo = block() ?: IdentifiedVo() }
 		private var bDiskImageVos: List<DiskImageVo> = listOf();fun diskImageVos(block: () -> List<DiskImageVo>?) { bDiskImageVos = block() ?: listOf() }
 		private var bProfileVos: List<IdentifiedVo> = listOf();fun profileVos(block: () -> List<IdentifiedVo>?) { bProfileVos = block() ?: listOf() }
-		private var bNfsVersion: String = "";fun nfsVersion(block: () -> String?) { bNfsVersion = block() ?: ""}
 		private var bHostStorageVo: HostStorageVo = HostStorageVo(); fun hostStorageVo(block: () -> HostStorageVo?) { bHostStorageVo = block() ?: HostStorageVo() }
 
-		fun build(): StorageDomainVo = StorageDomainVo(bId, bName, bDescription, bComment, bStatus, bDomainType, bDomainTypeMaster, bHostedEngine, bStorageType, bFormat, bActive, bDiskSize, bAvailableSize, bUsedSize, bCommitedSize, bOverCommit, bImage, bStoragePath, bStorageAddress, bLogicalUnits, bWarning, bSpaceBlocker, bDataCenterVo, bHostVo, bDiskImageVos, bProfileVos, bNfsVersion, bHostStorageVo)
+		fun build(): StorageDomainVo = StorageDomainVo(bId, bName, bDescription, bComment, bStatus, bDomainType, bDomainTypeMaster, bHostedEngine, bStorageType, bFormat, bActive, bDiskSize, bAvailableSize, bUsedSize, bCommitedSize, bOverCommit, bImage, bStoragePath, bStorageAddress, bLogicalUnits, bWarning, bSpaceBlocker, bNfsVersion, bDataCenterVo, bHostVo, bDiskImageVos, bProfileVos, bHostStorageVo)
 	}
-	
+
 	companion object {
 		inline fun builder(block: StorageDomainVo.Builder.() -> Unit): StorageDomainVo = StorageDomainVo.Builder().apply(block).build()
 	}
@@ -135,7 +135,6 @@ fun StorageDomain.toDomainStatus(): StorageDomainVo {
 }
 fun List<StorageDomain>.toDomainStatuss(): List<StorageDomainVo> =
 	this@toDomainStatuss.map { it.toDomainStatus() }
-
 
 
 fun StorageDomain.toStorageDomainMenu(conn: Connection): StorageDomainVo {
@@ -169,14 +168,38 @@ fun StorageDomain.toStorageDomainMenu(conn: Connection): StorageDomainVo {
 fun List<StorageDomain>.toStorageDomainsMenu(conn: Connection): List<StorageDomainVo> =
 	this@toStorageDomainsMenu.map { it.toStorageDomainMenu(conn) }
 
-fun StorageDomain.toActiveDomain(): StorageDomainVo {
+
+fun StorageDomain.toDcDomainMenu(conn: Connection): StorageDomainVo {
+	val domain = this@toDcDomainMenu
+	val hostedVm = conn.findAllVmsFromStorageDomain(domain.id()).getOrDefault(listOf())
+		.any { it.origin() == "managed_hosted_engine" }
+
 	return StorageDomainVo.builder {
-		id { this@toActiveDomain.id() }
-		name { this@toActiveDomain.name() }
-		usedSize { this@toActiveDomain.used() }
-		availableSize { this@toActiveDomain.available() }
-		diskSize { this@toActiveDomain.toDiskSize() }
+		id { domain.id() }
+		name { domain.name() }
+		description { domain.description() }
+		status { domain.status() }
+		hostedEngine { hostedVm }
+		comment { domain.comment() }
+		domainType { domain.type().value() }
+		domainTypeMaster { domain.masterPresent() && domain.master() }
+		storageType { domain.storagePresent().let { domain.storage().type().value() } }
+		format { domain.storageFormat() }
+		usedSize { domain.used() }
+		availableSize { domain.available() }
+		diskSize { domain.toDiskSize() }
+		dataCenterVo { if(domain.dataCenterPresent()) domain.dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo()}
 	}
+}
+fun List<StorageDomain>.toDcDomainMenus(conn: Connection): List<StorageDomainVo> =
+	this@toDcDomainMenus.map { it.toDcDomainMenu(conn) }
+
+fun StorageDomain.toActiveDomain(): StorageDomainVo = StorageDomainVo.builder {
+	id { this@toActiveDomain.id() }
+	name { this@toActiveDomain.name() }
+	usedSize { this@toActiveDomain.used() }
+	availableSize { this@toActiveDomain.available() }
+	diskSize { this@toActiveDomain.toDiskSize() }
 }
 fun List<StorageDomain>.toActiveDomains(): List<StorageDomainVo> =
 	this@toActiveDomains.map { it.toActiveDomain()}

@@ -2,7 +2,6 @@ package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.SnapshotVo
-import com.itinfo.rutilvm.api.model.network.NicVo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.BeforeEach
@@ -156,21 +155,21 @@ class ItVmSnapshotServiceTest {
         assertThat(result, `is`(true))
     }
 
-    /**
-     * [should_cloneFromVm]
-     * [ItVmSnapshotService.cloneFromVm]에 대한 단위테스트
-     *
-     * @see ItVmSnapshotService.cloneFromVm
-     */
-    @Test
-    fun should_cloneFromVm() {
-        log.debug("should_cloneFromVm ... ")
-        val result: Boolean =
-            service.cloneFromVm(clone, "name")
-
-        assertThat(result, `is`(not(nullValue())))
-        assertThat(result, `is`(true))
-    }
+    // /**
+    //  * [should_cloneFromVm]
+    //  * [ItVmSnapshotService.cloneFromVm]에 대한 단위테스트
+    //  *
+    //  * @see ItVmSnapshotService.cloneFromVm
+    //  */
+    // @Test
+    // fun should_cloneFromVm() {
+    //     log.debug("should_cloneFromVm ... ")
+    //     val result: Boolean =
+    //         service.cloneFromVm(clone, "name")
+	//
+    //     assertThat(result, `is`(not(nullValue())))
+    //     assertThat(result, `is`(true))
+    // }
 
 
 

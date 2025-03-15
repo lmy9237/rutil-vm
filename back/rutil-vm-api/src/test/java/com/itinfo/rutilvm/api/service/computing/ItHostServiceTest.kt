@@ -155,7 +155,7 @@ class ItHostServiceTest {
 	@Test
 	fun should_findAllVmsFromHost() {
 		log.debug("should_findAllVmsFromHost ...")
-		val result: List<VmVo> =
+		val result: List<VmViewVo> =
 			service.findAllVmsFromHost(host01)
 
 		assertThat(result, `is`(not(nullValue())))

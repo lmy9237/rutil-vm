@@ -4,7 +4,7 @@ import com.itinfo.rutilvm.api.model.computing.DataCenterVo
 import com.itinfo.rutilvm.api.model.computing.EventVo
 import com.itinfo.rutilvm.api.model.computing.SnapshotDiskVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
-import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.common.LoggerDelegate
@@ -254,7 +254,7 @@ class ItStorageServiceTest {
 	@Test
 	fun should_findAllVmsFromStorageDomain() {
 		log.debug("should_findAllVmsFromStorageDomain ... ")
-		val result: List<VmVo> =
+		val result: List<VmViewVo> =
 			service.findAllVmsFromStorageDomain(domainId)
 
 		assertThat(result, `is`(not(nullValue())))

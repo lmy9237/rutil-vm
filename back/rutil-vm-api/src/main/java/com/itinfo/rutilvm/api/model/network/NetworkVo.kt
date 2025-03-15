@@ -165,16 +165,39 @@ fun Network.toNetworkVo(conn: Connection): NetworkVo {
 		openStackNetworkVo {
 			if(network.externalProviderPresent())
 				conn.findOpenStackNetworkProvider(network.externalProvider().id())
-					.getOrNull()?.toOpenStackNetworkVo(conn)
+					.getOrNull()?.toOpenStackNetworkVo()
 			else null
 		}
 		vlan { if (network.vlanPresent()) network.vlan().idAsInteger() else 0}
 		vnicProfileVos { vnicProfileVos.fromVnicProfilesToIdentifiedVos() }
 	}
 }
-
 fun List<Network>.toNetworkVos(conn: Connection): List<NetworkVo> =
 	this@toNetworkVos.map { it.toNetworkVo(conn) }
+
+fun Network.toDcNetworkMenu(): NetworkVo {
+	val network = this@toDcNetworkMenu
+	return NetworkVo.builder {
+		id { network.id() }
+		name { network.name() }
+		description { network.description() }
+		comment { network.comment() }
+		mtu { network.mtu().toInt() }
+		portIsolation { network.portIsolation() }
+		stp { network.stp() }
+		usage { network.usages().toUsagesVo() }
+		vdsmName { network.vdsmName() }
+		datacenterVo { network.dataCenter().fromDataCenterToIdentifiedVo() }
+		openStackNetworkVo {
+			if(network.externalProviderPresent()) network.externalProvider().toOpenStackNetworkVo()
+			else null
+		}
+		vlan { if (network.vlanPresent()) network.vlan().idAsInteger() else 0}
+		vnicProfileVos { network.vnicProfiles().fromVnicProfilesToIdentifiedVos() }
+	}
+}
+fun List<Network>.toDcNetworkMenus(): List<NetworkVo> =
+	this@toDcNetworkMenus.map { it.toDcNetworkMenu() }
 
 
 fun Network.toClusterNetworkVo(): NetworkVo {

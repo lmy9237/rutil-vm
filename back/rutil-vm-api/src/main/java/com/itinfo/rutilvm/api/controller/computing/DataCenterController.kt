@@ -329,7 +329,7 @@ class DataCenterController: BaseController() {
 		if (dataCenterId.isNullOrEmpty())
 			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
 		log.info("/computing/datacenters/{}/templates ... 가상머신 생성창 - 템플릿 목록", dataCenterId)
-		return ResponseEntity.ok(iDataCenter.findTemplatesFromDataCenter(dataCenterId))
+		return ResponseEntity.ok(iDataCenter.findAllTemplatesFromDataCenter(dataCenterId))
 	}
 
 	@ApiOperation(

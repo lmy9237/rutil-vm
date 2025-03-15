@@ -86,9 +86,8 @@ fun Connection.removeDataCenter(dataCenterId: String): Result<Boolean> = runCatc
 fun Connection.srvClustersFromDataCenter(dataCenterId: String): ClustersService =
 	this.srvDataCenter(dataCenterId).clustersService()
 
-fun Connection.findAllClustersFromDataCenter(dataCenterId: String, searchQuery: String = "", follow: String = ""): Result<List<Cluster>> = runCatching {
+fun Connection.findAllClustersFromDataCenter(dataCenterId: String, follow: String = ""): Result<List<Cluster>> = runCatching {
 	this.srvClustersFromDataCenter(dataCenterId).list().apply {
-		if(searchQuery.isNotEmpty()) search(searchQuery)
 		if(follow.isNotEmpty()) follow(follow)
 	}.send().clusters()
 
@@ -100,8 +99,8 @@ fun Connection.findAllClustersFromDataCenter(dataCenterId: String, searchQuery: 
 }
 
 fun Connection.findAllHostsFromDataCenter(dataCenterId: String): Result<List<Host>> = runCatching {
-	this.findAllHosts().getOrDefault(emptyList())
-		.filter { this.findCluster(it.cluster().id()).getOrNull()?.dataCenter()?.id() == dataCenterId }
+	this.findAllHosts(follow = "cluster").getOrDefault(emptyList())
+		.filter { it.clusterPresent() && it.cluster().dataCenter().id() == dataCenterId }
 
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.HOST,"목록조회", dataCenterId)
@@ -111,10 +110,9 @@ fun Connection.findAllHostsFromDataCenter(dataCenterId: String): Result<List<Hos
 }
 
 fun Connection.findAllVmsFromDataCenter(dataCenterId: String): Result<List<Vm>> = runCatching {
-	val clusters: List<Cluster> = this.findAllClustersFromDataCenter(dataCenterId).getOrDefault(emptyList())
+	this.findAllVms(follow = "cluster.datacenter,statistics").getOrDefault(emptyList())
+		.filter { it.cluster().dataCenter().id() == dataCenterId }
 
-	this.findAllVms().getOrDefault(emptyList())
-		.filter { vm -> vm.cluster().id() in clusters.map { it.id() } }
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.VM,"목록조회", dataCenterId)
 }.onFailure {
@@ -122,14 +120,12 @@ fun Connection.findAllVmsFromDataCenter(dataCenterId: String): Result<List<Vm>> 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
 fun Connection.srvNetworksFromFromDataCenter(dataCenterId: String): DataCenterNetworksService =
 	this.srvDataCenter(dataCenterId).networksService()
 
 fun Connection.findAllNetworksFromDataCenter(dataCenterId: String): Result<List<Network>> = runCatching {
-	checkDataCenterExists(dataCenterId)
-
 	this.srvNetworksFromFromDataCenter(dataCenterId).list().send().networks()
+
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.NETWORK,"목록조회", dataCenterId)
 }.onFailure {
@@ -141,10 +137,11 @@ fun Connection.findAllNetworksFromDataCenter(dataCenterId: String): Result<List<
 fun Connection.srvAllAttachedStorageDomainsFromDataCenter(dataCenterId: String): AttachedStorageDomainsService =
 	this.srvDataCenter(dataCenterId).storageDomainsService()
 
-fun Connection.findAllAttachedStorageDomainsFromDataCenter(dataCenterId: String): Result<List<StorageDomain>> = runCatching {
-	checkDataCenterExists(dataCenterId)
+fun Connection.findAllAttachedStorageDomainsFromDataCenter(dataCenterId: String, follow: String = ""): Result<List<StorageDomain>> = runCatching {
+	this.srvAllAttachedStorageDomainsFromDataCenter(dataCenterId).list().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().storageDomains()
 
-	this.srvAllAttachedStorageDomainsFromDataCenter(dataCenterId).list().follow("disks").send().storageDomains()
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"목록조회", dataCenterId)
 }.onFailure {
@@ -156,9 +153,8 @@ fun Connection.srvAttachedStorageDomainFromDataCenter(dataCenterId: String, stor
 	this.srvAllAttachedStorageDomainsFromDataCenter(dataCenterId).storageDomainService(storageDomainId)
 
 fun Connection.findAllAttachedStorageDomainDisksFromDataCenter(dataCenterId: String, storageDomainId: String): Result<List<Disk>> = runCatching {
-	checkDataCenterExists(dataCenterId)
-
 	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).disksService().list().send().disks()
+
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.DISK,"목록조회", dataCenterId)
 }.onFailure {
@@ -167,9 +163,8 @@ fun Connection.findAllAttachedStorageDomainDisksFromDataCenter(dataCenterId: Str
 }
 
 fun Connection.findAttachedStorageDomainFromDataCenter(dataCenterId: String, storageDomainId: String): Result<StorageDomain?> = runCatching {
-	checkDataCenterExists(dataCenterId)
-
 	srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).get().send().storageDomain()
+
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"목록조회", dataCenterId)
 }.onFailure {
@@ -178,8 +173,6 @@ fun Connection.findAttachedStorageDomainFromDataCenter(dataCenterId: String, sto
 }
 
 fun Connection.activateAttachedStorageDomainFromDataCenter(dataCenterId: String, storageDomainId: String): Result<Boolean> = runCatching {
-	checkDataCenterExists(dataCenterId)
-
 	val storageDomain: StorageDomain = this.findAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId)
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
@@ -197,8 +190,6 @@ fun Connection.activateAttachedStorageDomainFromDataCenter(dataCenterId: String,
 }
 
 fun Connection.deactivateAttachedStorageDomainFromDataCenter(dataCenterId: String, storageDomainId: String): Result<Boolean> = runCatching {
-	checkDataCenterExists(dataCenterId)
-
 	val storageDomain: StorageDomain = this.findAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId)
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
@@ -233,6 +224,7 @@ fun Connection.removeAttachedStorageDomainFromDataCenter(dataCenterId: String, s
 
 
 // region: 유틸
+
 fun List<DataCenter>.nameDuplicateDataCenter(dataCenterName: String, dataCenterId: String? = null): Boolean =
 	this.filter { it.id() != dataCenterId }.any { it.name() == dataCenterName }
 
@@ -254,6 +246,7 @@ fun Connection.expectDataCenterDeleted(dataCenterId: String, timeout: Long = 600
 		Thread.sleep(interval)
 	}
 }
+
 // endregion
 
 

@@ -3,7 +3,7 @@ package com.itinfo.rutilvm.api.service.network
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
-import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
@@ -146,7 +146,7 @@ class ItVnicProfileServiceTest {
     @Test
     fun should_findAllVmsFromVnicProfile() {
         log.debug("findAllVmsFromVnicProfile ... ")
-        val result: List<VmVo> =
+        val result: List<VmViewVo> =
             service.findAllVmsFromVnicProfile(vnic)
 
         assertThat(result, `is`(not(nullValue())))

@@ -67,7 +67,7 @@ class  ItVmServiceTest {
 	fun should_findAll() {
 		log.debug("should_findAll ...")
 		val start = System.currentTimeMillis()
-		val result: List<VmVo> =
+		val result: List<VmViewVo> =
 			service.findAll()
 		val end = System.currentTimeMillis()
 
@@ -87,7 +87,7 @@ class  ItVmServiceTest {
 	@Test
 	fun  should_findOne() {
 		log.debug("should_findOne ... ")
-		val result: VmVo? =
+		val result: VmViewVo? =
 			service.findOne(vmid)
 		assertThat(result, `is`(not(nullValue())))
 		assertThat(result?.id, `is`(not(nullValue())))

@@ -4,7 +4,7 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.ClusterVo
 import com.itinfo.rutilvm.api.model.computing.EventVo
 import com.itinfo.rutilvm.api.model.computing.HostVo
-import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.UsageVo
 import com.itinfo.rutilvm.common.LoggerDelegate
@@ -248,7 +248,7 @@ class ItClusterServiceTest {
 	@Test
 	fun should_findAllVmsFromCluster() {
 		log.debug("should_findAllVmsFromCluster ... ")
-		val result: List<VmVo> =
+		val result: List<VmViewVo> =
 			service.findAllVmsFromCluster(clusterId)
 
 		assertThat(result, `is`(not(nullValue())))
