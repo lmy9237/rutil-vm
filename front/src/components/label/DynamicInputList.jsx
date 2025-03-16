@@ -30,7 +30,7 @@ const DynamicInputList = ({
   };
 
   return (
-    <div className="dynamic-input-outer p-2">
+    <div className="dynamic-input-outer py-2">
       {inputs.map((input, index) => (
         <div key={index} className="dynamic-input f-btw mb-1.5">
           {inputType === "select" ? (

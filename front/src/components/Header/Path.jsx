@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css"; // CSS 파일 분리
+import { RVI16, rvil16ArrowRight } from "../icons/RutilVmIcons";
 
 /**
  * @name Path
@@ -26,11 +27,7 @@ const Path = ({ pathElements, basePath }) => {
             {element}
           </span>
           {index !== pathElements.length - 1 && (
-            <FontAwesomeIcon
-              className="path_icon"
-              icon={faChevronRight}
-              fixedWidth
-            />
+            <RVI16 iconDef={rvil16ArrowRight} className="path_icon" />
           )}
         </React.Fragment>
       ))}

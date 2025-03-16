@@ -24,21 +24,15 @@
 .footer > button {
   color: rgb(10, 55, 107);
   cursor: pointer;
+  border: none;
   background-color: white;
-  border: 1px solid var(--color-primary-1);
   border-radius: 3px;
-}
-.footer > button > i {
-  font-size: 0.3rem;
-  display: block;
-  margin: 0 auto;
-  text-align: center;
 }
 .footer > div {
   display: flex;
 }
 .footer > div > div {
-  font-weight: 600;
+  font-weight: 500;
   display: block;
   cursor: pointer;
   margin-top: 8px;

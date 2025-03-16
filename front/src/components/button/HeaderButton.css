@@ -98,4 +98,25 @@
   padding: 4px 10px;
   border-left: none;
 }
+.status-label{
+  height: 24px;
+  font-size: var(--fs-default-4);
+  padding: 0px 12px;
+  border-radius: 18px;
+  font-weight: 500;
+  align-items: center;
+}
+.status-label.running {
+  color: #006E18;
+  background-color: #E3F3E6;
+  font-weight: bold;
+}
 
+.status-label.stopped {
+  color: #E3722B;
+  background-color: #FFEBD7;
+}
+
+.status-label.default {
+  color: gray;
+}

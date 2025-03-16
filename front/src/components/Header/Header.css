@@ -125,7 +125,12 @@
 .path {
   font-size: var(--fs-default-4);
   margin-bottom: 10px;
+  display: flex;
+  font-weight: 400;
+  color: var(--color-nav);
+  letter-spacing: var(--letter-28);
 }
+
 .clickable {
   cursor: pointer;
 }
@@ -134,15 +139,15 @@
   color: var(--color-primary-h);
 }
 .path_icon {
-  color: gray;
-  font-weight: 800;
-  font-size: var(--fs-13);
-  margin: 0 0.14rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px; /* 아이콘과 텍스트 간 여백 */
+  height: 100%;
 }
 .last-path-element {
   color: var(--color-primary-h);
-  font-weight: bold;
-  font-size: var(--fs-18);
+  font-weight: 600;
 }
 .logo-outer {
   cursor: pointer

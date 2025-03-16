@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faFilter } from "@fortawesome/free-solid-svg-icons";
 import "./Footer.css";
+import { RVI24, rvi24ChevronUp } from "../icons/RutilVmIcons";
 
 /**
  * @name Footer
@@ -33,7 +34,7 @@ const Footer = ({
         <button onClick={() => {
           setIsFooterContentVisible(!isFooterContentVisible)
         }}>
-          <FontAwesomeIcon icon={faChevronDown} fixedWidth />
+          <RVI24 iconDef={rvi24ChevronUp} fixedWidth/>
         </button>
         <div>
           <div

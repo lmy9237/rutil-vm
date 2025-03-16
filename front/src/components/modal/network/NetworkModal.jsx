@@ -297,7 +297,7 @@ const NetworkModal = ({
             onChange={(e) => setDnsEnabled(e.target.checked)}
           />
 
-          <div className="text-[15px] p-1 font-bold">
+          <div className="text-[15px] font-bold">
             DNS 서버
           </div>
         

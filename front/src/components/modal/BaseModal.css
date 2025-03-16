@@ -40,11 +40,8 @@
   align-items: center;
   margin-top: 1px;
   border: none;
-  border-radius: 50%;
+  padding: 0 !important;
   cursor: pointer;
-}
-.popup-header > button:hover {
-  background-color: #add0e1;
 }
 /*footer*/
 .edit-footer {

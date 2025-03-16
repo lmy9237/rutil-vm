@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import "./BaseModal.css";
+import { RVI24, rvi24Close } from "../icons/RutilVmIcons";
 /**
  * @name BaseModal
  * @description 기본 모달 테두리
@@ -34,7 +35,7 @@ const BaseModal = ({
             {`${targetName} ${submitTitle}`}
           </h1>
           <button onClick={onClose}>
-            <FontAwesomeIcon icon={faTimes} fixedWidth />
+            <RVI24 iconDef={rvi24Close} />
           </button>
         </div>
         

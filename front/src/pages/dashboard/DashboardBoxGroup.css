@@ -62,10 +62,6 @@
   font-size: var(--fs-default-4);
   font-weight: 600;
 }
-.box:last-child {
-  border-right: none;
-  border-bottom: none;
-}
 .arrows > svg:first-child {
   color: rgb(255, 0, 0);
 }
