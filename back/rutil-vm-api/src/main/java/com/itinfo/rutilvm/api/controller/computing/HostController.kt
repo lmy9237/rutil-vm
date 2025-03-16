@@ -6,8 +6,6 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.HostNetworkVo
 import com.itinfo.rutilvm.api.model.network.HostNicVo
-import com.itinfo.rutilvm.api.model.network.NetworkAttachmentVo
-import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.storage.HostStorageVo
 import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
 import com.itinfo.rutilvm.api.service.computing.ItHostNicService

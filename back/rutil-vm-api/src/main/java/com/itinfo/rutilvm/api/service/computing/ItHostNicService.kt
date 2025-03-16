@@ -64,14 +64,12 @@ interface ItHostNicService {
 
 @Service
 class ItHostNicServiceImpl(
-
 ): BaseService(), ItHostNicService {
 
     @Throws(Error::class)
     override fun findAllFromHost(hostId: String): List<HostNicVo> {
         log.info("findAllFromHost ... hostId: {}", hostId)
-        val res: List<HostNic> = conn.findAllHostNicsFromHost(hostId)
-            .getOrDefault(listOf())
+        val res: List<HostNic> = conn.findAllHostNicsFromHost(hostId, follow = "host,statistics").getOrDefault(emptyList())
 
         val bondingSlaveIds = res.flatMap { it.bonding()?.slaves()?.map { slave -> slave.id() } ?: emptyList() }.toSet()
         val filteredNics = res.filterNot { it.id() in bondingSlaveIds }
@@ -82,8 +80,7 @@ class ItHostNicServiceImpl(
     @Throws(Error::class)
     override fun findOneFromHost(hostId: String, hostNicId: String): HostNicVo? {
         log.info("findOneFromHost ... hostId: {}, hostNicId: {}", hostId, hostNicId)
-        val res: HostNic? = conn.findNicFromHost(hostId, hostNicId)
-            .getOrNull()
+        val res: HostNic? = conn.findNicFromHost(hostId, hostNicId, follow = "host,statistics").getOrNull()
         return res?.toHostNicVo(conn)
     }
 

@@ -52,16 +52,13 @@ class HostDeviceVo (
     }
 }
 
-fun HostDevice.toHostDeviceVo(): HostDeviceVo {
-    return HostDeviceVo.builder {
-        id { this@toHostDeviceVo.id() }
-        name { this@toHostDeviceVo.name() }
-        capability { this@toHostDeviceVo.capability() }
-        vendorName { if(this@toHostDeviceVo.vendorPresent()) "${this@toHostDeviceVo.vendor().name()} (${this@toHostDeviceVo.vendor().id()})" else ""}
-        productName { if(this@toHostDeviceVo.productPresent())  "${this@toHostDeviceVo.product().name()} (${this@toHostDeviceVo.product().id()})" else "" }
-        driver { this@toHostDeviceVo.driver() }
-    }
+fun HostDevice.toHostDeviceVo(): HostDeviceVo = HostDeviceVo.builder {
+	id { this@toHostDeviceVo.id() }
+	name { this@toHostDeviceVo.name() }
+	capability { this@toHostDeviceVo.capability() }
+	vendorName { if (this@toHostDeviceVo.vendorPresent()) "${this@toHostDeviceVo.vendor().name()} (${this@toHostDeviceVo.vendor().id()})" else "" }
+	productName { if (this@toHostDeviceVo.productPresent()) "${this@toHostDeviceVo.product().name()} (${this@toHostDeviceVo.product().id()})" else "" }
+	driver { this@toHostDeviceVo.driver() }
 }
-
 fun List<HostDevice>.toHostDeviceVos(): List<HostDeviceVo> =
     this@toHostDeviceVos.map { it.toHostDeviceVo() }

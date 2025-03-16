@@ -109,11 +109,9 @@ fun List<HostNic>.toHostNicIdNames(): List<HostNicVo> =
 
 fun HostNic.toHostNicVo(conn: Connection): HostNicVo {
 	val hostNic = this@toHostNicVo
-	val host: Host? = conn.findHost(this@toHostNicVo.host().id()).getOrNull()
 	val network: Network? =
 		if (hostNic.networkPresent() && hostNic.network().idPresent()) conn.findNetwork(hostNic.network().id()).getOrNull()
 		else null
-	val statistics: List<Statistic> =conn.findAllStatisticsFromHostNic(hostNic.host().id(), hostNic.id()).getOrDefault(listOf())
 	val bond: Bonding? = if(hostNic.bondingPresent()) hostNic.bonding() else null
 
 	return HostNicVo.builder {
@@ -127,21 +125,20 @@ fun HostNic.toHostNicVo(conn: Connection): HostNicVo {
 		macAddress { if(hostNic.macPresent()) hostNic.mac().address() else "" }
 		mtu { hostNic.mtuAsInteger() }
 		status { hostNic.status() }
-		hostVo { host?.fromHostToIdentifiedVo() }
+		hostVo { hostNic.host().fromHostToIdentifiedVo() }
 		networkVo { network?.fromNetworkToIdentifiedVo() }
 		bondingVo { bond?.toBondingVo(conn, hostNic.host().id()) }
 		speed { hostNic.speed() }
-		rxSpeed { statistics.findSpeed("data.current.rx.bps") }
-		txSpeed { statistics.findSpeed("data.current.tx.bps") }
-		rxTotalSpeed { statistics.findSpeed("data.total.rx") }
-		txTotalSpeed { statistics.findSpeed("data.total.tx") }
-		rxTotalError { statistics.findSpeed("errors.total.rx") }
-		txTotalError { statistics.findSpeed("errors.total.tx") }
+		rxSpeed { hostNic.statistics().findSpeed("data.current.rx.bps") }
+		txSpeed { hostNic.statistics().findSpeed("data.current.tx.bps") }
+		rxTotalSpeed { hostNic.statistics().findSpeed("data.total.rx") }
+		txTotalSpeed { hostNic.statistics().findSpeed("data.total.tx") }
+		rxTotalError { hostNic.statistics().findSpeed("errors.total.rx") }
+		txTotalError { hostNic.statistics().findSpeed("errors.total.tx") }
 	}
 }
 fun List<HostNic>.toHostNicVos(conn: Connection): List<HostNicVo> =
 	this@toHostNicVos.map { it.toHostNicVo(conn) }
-
 
 
 fun HostNic.toSlaveHostNicVo(conn: Connection): HostNicVo {
@@ -166,30 +163,29 @@ fun List<HostNic>.toSlaveHostNicVos(conn: Connection): List<HostNicVo> =
 	this@toSlaveHostNicVos.map { it.toSlaveHostNicVo(conn) }
 
 
-
-fun HostNic.toSetHostNicVo(conn: Connection): HostNicVo {
-	val host: Host? = conn.findHost(this@toSetHostNicVo.host().id())
-		.getOrNull()
-	val network: Network? =
-		if (this@toSetHostNicVo.networkPresent()) conn.findNetwork(this@toSetHostNicVo.network().id()).getOrNull()
-		else null
-
-	return HostNicVo.builder {
-		id { this@toSetHostNicVo.id() }
-		name { this@toSetHostNicVo.name() }
-		bridged { this@toSetHostNicVo.bridged() }
-		status { this@toSetHostNicVo.status() }
-		hostVo { host?.fromHostToIdentifiedVo() }
-		networkVo { network?.fromNetworkToIdentifiedVo() }
-		bondingVo {
-			if(this@toSetHostNicVo.bondingPresent())
-				this@toSetHostNicVo.bonding().toBondingVo(conn, this@toSetHostNicVo.host().id())
-			else null
-		}
-	}
-}
-fun List<HostNic>.toSetHostNicVos(conn: Connection): List<HostNicVo> =
-	this@toSetHostNicVos.map { it.toSetHostNicVo(conn) }
+// fun HostNic.toSetHostNicVo(conn: Connection): HostNicVo {
+// 	val host: Host? = conn.findHost(this@toSetHostNicVo.host().id())
+// 		.getOrNull()
+// 	val network: Network? =
+// 		if (this@toSetHostNicVo.networkPresent()) conn.findNetwork(this@toSetHostNicVo.network().id()).getOrNull()
+// 		else null
+//
+// 	return HostNicVo.builder {
+// 		id { this@toSetHostNicVo.id() }
+// 		name { this@toSetHostNicVo.name() }
+// 		bridged { this@toSetHostNicVo.bridged() }
+// 		status { this@toSetHostNicVo.status() }
+// 		hostVo { host?.fromHostToIdentifiedVo() }
+// 		networkVo { network?.fromNetworkToIdentifiedVo() }
+// 		bondingVo {
+// 			if(this@toSetHostNicVo.bondingPresent())
+// 				this@toSetHostNicVo.bonding().toBondingVo(conn, this@toSetHostNicVo.host().id())
+// 			else null
+// 		}
+// 	}
+// }
+// fun List<HostNic>.toSetHostNicVos(conn: Connection): List<HostNicVo> =
+// 	this@toSetHostNicVos.map { it.toSetHostNicVo(conn) }
 
 /**
  * 호스트 네트워크 modified_bonds

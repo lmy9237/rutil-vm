@@ -17,21 +17,12 @@ fun Connection.srvHosts(): HostsService =
 fun Connection.srvHost(hostId: String): HostService =
 	this.srvHosts().hostService(hostId)
 
-// https://192.168.0.70/ovirt-engine/api/hosts?all_content=true
 fun Connection.findAllHosts(searchQuery: String = "", follow: String = ""): Result<List<Host>> = runCatching {
 	this.srvHosts().list().allContent(true).apply {
 		if (searchQuery.isNotEmpty()) search(searchQuery)
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().hosts()
 
-	// if (searchQuery.isNotEmpty() && follow.isNotEmpty())
-	// 	this.srvHosts().list().search(searchQuery).follow(follow).caseSensitive(false).send().hosts()
-	// else if (searchQuery.isNotEmpty())
-	// 	this.srvHosts().list().search(searchQuery).caseSensitive(false).send().hosts()
-	// else if (follow.isNotEmpty())
-	// 	this.srvHosts().list().follow(follow).caseSensitive(false).send().hosts()
-	// else
-	// 	this.srvHosts().list().allContent(true).send().hosts()
 }.onSuccess {
 	Term.HOST.logSuccess("목록조회")
 }.onFailure {
@@ -39,8 +30,11 @@ fun Connection.findAllHosts(searchQuery: String = "", follow: String = ""): Resu
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.findHost(hostId: String): Result<Host?> = runCatching {
-	srvHost(hostId).get().allContent(true).send().host()
+fun Connection.findHost(hostId: String, follow: String = ""): Result<Host?> = runCatching {
+	srvHost(hostId).get().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.allContent(true).send().host()
+
 }.onSuccess {
 	Term.HOST.logSuccess("상세조회", hostId)
 }.onFailure {
@@ -54,23 +48,12 @@ fun List<Host>.nameDuplicateHost(hostName: String, hostId: String? = null): Bool
 fun Connection.addHost(
 	host: Host,
 	deployHostedEngine: Boolean? = false,
-	// name: String,
-	// password: String
 ): Result<Host?> = runCatching {
-	if (this.findAllHosts()
-			.getOrDefault(listOf())
+	if (this.findAllHosts().getOrDefault(emptyList())
 			.nameDuplicateHost(host.name())) {
 		return FailureType.DUPLICATE.toResult(Term.HOST.desc)
 	}
-	/*
-		val address: InetAddress = InetAddress.getByName(host.address())
-		log.info("Resolved address: {}", address)
-		if (address.makeUserHostViaSSH(host.rootPassword(), 22, name, password).isFailure) {
-			log.info("계정생성 실패")
-			return Result.failure(Error("계정생성 실패"))
-		}
-	*/
-	// reboot, activate = 바로 활성화
+
 	log.info("배포작업: {}", deployHostedEngine)
 	val hostAdded: Host =
 		srvHosts().add().deployHostedEngine(deployHostedEngine).reboot(true).activate(true).host(host).send().host()
@@ -90,8 +73,7 @@ fun Connection.addHost(
 }
 
 fun Connection.updateHost(host: Host): Result<Host?> = runCatching {
-	if(this.findAllHosts()
-			.getOrDefault(listOf())
+	if(this.findAllHosts().getOrDefault(emptyList())
 			.nameDuplicateHost(host.name(), host.id())) {
 		return FailureType.DUPLICATE.toResult(Term.HOST.desc)
 	}
@@ -109,8 +91,7 @@ fun Connection.updateHost(host: Host): Result<Host?> = runCatching {
 fun Connection.removeHost(hostId: String): Result<Boolean> = runCatching {
 	val host = checkHost(hostId)
 
-	if(this.findAllVmsFromHost("", hostId)
-			.getOrDefault(listOf())
+	if(this.findAllVmsFromHost(hostId).getOrDefault(emptyList())
 			.any { it.status() == VmStatus.UP }){
 		log.error("가상머신이 돌아가고 있는게 있음")
 		throw ErrorPattern.HOST_HAS_RUNNING_VMS.toError()
@@ -137,7 +118,7 @@ fun Connection.expectHostDeleted(hostId: String, timeout: Long = 60000L, interva
 	val startTime = System.currentTimeMillis()
 	while (true) {
 		val hosts: List<Host> =
-			this.findAllHosts().getOrDefault(listOf())
+			this.findAllHosts().getOrDefault(emptyList())
 		val hostToRemove: Host? = hosts.firstOrNull() {it.id() == hostId}
 		if (hostToRemove == null) {// !(매치되는것이 있다)
 			Term.HOST.logSuccess("삭제")
@@ -152,17 +133,14 @@ fun Connection.expectHostDeleted(hostId: String, timeout: Long = 60000L, interva
 }
 
 
-fun Connection.findAllVmsFromHost(hostId: String, searchQuery: String = ""): Result<List<Vm>> = runCatching {
+fun Connection.findAllVmsFromHost(hostId: String, searchQuery: String = "", follow: String = ""): Result<List<Vm>> = runCatching {
 	checkHostExists(hostId)
 
 	this.srvVms().list().apply {
 		if(searchQuery.isNotEmpty()) search(searchQuery)
+		if (follow.isNotEmpty()) follow(follow)
 	}.send().vms().filter { it.host()?.id() == hostId }
 
-	// if (searchQuery.isNotEmpty())
-	// 	this.srvVms().list().search(searchQuery).send().vms().filter { it.host()?.id() == hostId }
-	// else
-	// 	this.srvVms().list().send().vms().filter { it.host()?.id() == hostId }
 }.onSuccess {
 	Term.HOST.logSuccess("vms 조회", hostId)
 }.onFailure {
@@ -226,52 +204,10 @@ fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-/**
- * [makeUserHostViaSSH]
- * host 생성할때 같이 실행되며 재시작만을 위한 계정생성
- * @param password [String] root 비밀번호
- * @param port [Int]  포트번호
- * @param userName [String] 재시작 계정 아이디 (application.properties, host.rutil.id)
- * @param userPw [String] 재시작 계정 비밀번호 (application.properties, host.rutil.password)
- *
- */
-fun InetAddress.makeUserHostViaSSH(password: String, port: Int, userName: String, userPw: String): Result<Boolean> = runCatching {
-	log.info("SSH 시작 + 계정 생성 및 sudo 권한 부여")
-	val session: com.jcraft.jsch.Session = JSch().getSession("root", this.hostAddress, port)
-	session.setPassword(password)
-	session.setConfig("StrictHostKeyChecking", "no")
-	session.connect()
-
-
-	val channel: ChannelExec = session.openChannel("exec") as ChannelExec // SSH 채널 열기
-
-	// 1. 사용자 계정 생성
-	channel.setCommand("useradd $userName && echo \"$userPw\" | /usr/bin/passwd --stdin $userName")
-	channel.connect()
-	Thread.sleep(300)
-
-	channel.setCommand("echo \"$userName ALL=(ALL)   NOPASSWD: /usr/sbin/reboot\" | tee -a /etc/sudoers")
-	channel.connect()
-	Thread.sleep(300)
-
-//	channel.setCommand("sed -i 's/#PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config")
-//	channel.connect()
-//	Thread.sleep(300)
-
-	channel.disconnect()
-	session.disconnect()
-
-	log.info("계정 생성 및 sudo 권한 부여 성공: {}", userName)
-	true
-}.onSuccess {
-	log.info("계정 생성 성공 여부: $it")
-}.onFailure {
-	log.error(it.localizedMessage, it)
-	throw if (it is Error) it.toItCloudException() else it
-}
 
 fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
+
 	this.srvHost(hostId).enrollCertificate().send()
 	true
 }.onSuccess {
@@ -284,8 +220,6 @@ fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching 
 fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
 	val host = checkHost(hostId)
 
-	// host 주소
-	// val address: InetAddress = InetAddress.getByName(host.address())
 	TODO("ssh 로 구현")
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 ha 활성화")
@@ -296,6 +230,7 @@ fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatc
 
 fun Connection.deactiveGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
 	val host = checkHost(hostId)
+
 	TODO("ssh 로 구현")
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 ha 비활성화")
@@ -307,6 +242,7 @@ fun Connection.deactiveGlobalHaFromHost(hostId: String): Result<Boolean> = runCa
 
 fun Connection.findPowerManagementFromHost(hostId: String, fenceType: FenceType): Result<PowerManagement?> = runCatching {
 	srvHost(hostId).fence().fenceType(fenceType.name).send().powerManagement()
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.POWER_MANAGEMENT,"상세조회", hostId)
 }.onFailure {
@@ -371,8 +307,11 @@ fun Connection.findAllHostNicsFromHost(hostId: String, follow: String = ""): Res
 private fun Connection.srvHostNicFromHost(hostId: String, hostNicId: String): HostNicService =
 	this.srvAllHostNicsFromHost(hostId).nicService(hostNicId)
 
-fun Connection.findNicFromHost(hostId: String, hostNicId: String): Result<HostNic?> = runCatching {
-	this.srvHostNicFromHost(hostId, hostNicId).get().send().nic()
+fun Connection.findNicFromHost(hostId: String, hostNicId: String, follow: String = ""): Result<HostNic?> = runCatching {
+	this.srvHostNicFromHost(hostId, hostNicId).get().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().nic()
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST_NIC,"상세조회", hostId)
 }.onFailure {
@@ -393,7 +332,10 @@ private fun Connection.srvStatisticsFromHost(hostId: String): StatisticsService 
 	this.srvHost(hostId).statisticsService()
 
 fun Connection.findAllStatisticsFromHost(hostId: String): Result<List<Statistic>> = runCatching {
+	checkHostExists(hostId)
+
 	this.srvStatisticsFromHost(hostId).list().send().statistics()
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.STATISTIC,"목록조회", hostId)
 }.onFailure {
@@ -405,7 +347,10 @@ fun Connection.srvHostStoragesFromHost(hostId: String): HostStorageService =
 	this.srvHost(hostId).storageService()
 
 fun Connection.findAllHostStoragesFromHost(hostId: String): Result<List<HostStorage>> = runCatching {
+	checkHostExists(hostId)
+
 	this.srvHostStoragesFromHost(hostId).list().send().storages()
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.STORAGE,"목록조회", hostId)
 }.onFailure {
@@ -414,7 +359,10 @@ fun Connection.findAllHostStoragesFromHost(hostId: String): Result<List<HostStor
 }
 
 fun Connection.discoverIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): Result<List<IscsiDetails>> = runCatching {
+	checkHostExists(hostId)
+
 	this.srvHost(hostId).discoverIscsi().iscsi(iscsiDetails).send().discoveredTargets()
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.STORAGE,"목록조회", hostId)
 }.onFailure {
@@ -423,7 +371,10 @@ fun Connection.discoverIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails)
 }
 
 fun Connection.unRegisteredStorageDomainsFromHost(hostId: String): Result<List<StorageDomain>> = runCatching {
+	checkHostExists(hostId)
+
 	this.srvHost(hostId).unregisteredStorageDomainsDiscover().send().storageDomains()
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.STORAGE,"목록조회", hostId)
 }.onFailure {
@@ -447,7 +398,9 @@ private fun Connection.srvNetworkAttachmentsFromHost(hostId: String): NetworkAtt
 	this.srvHost(hostId).networkAttachmentsService()
 
 fun Connection.findAllNetworkAttachmentsFromHost(hostId: String): Result<List<NetworkAttachment>> = runCatching {
+	checkHostExists(hostId)
 	this.srvNetworkAttachmentsFromHost(hostId).list().send().attachments()
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT,"목록조회", hostId)
 }.onFailure {
@@ -502,7 +455,10 @@ fun Connection.removeNetworkAttachmentFromHost(hostId: String, networkAttachment
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.removeNetworkAttachmentsFromHost(hostId: String, networkAttachments: List<NetworkAttachment>): Result<Boolean> = runCatching {
+fun Connection.removeNetworkAttachmentsFromHost(
+	hostId: String,
+	networkAttachments: List<NetworkAttachment> = listOf()
+): Result<Boolean> = runCatching {
 	this.srvHost(hostId).setupNetworks().removedNetworkAttachments(networkAttachments).send()
 	this.srvHost(hostId).commitNetConfig().send()
 	true
@@ -513,7 +469,10 @@ fun Connection.removeNetworkAttachmentsFromHost(hostId: String, networkAttachmen
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.removeBondsFromHost(hostId: String, hostNics: List<HostNic> = listOf()): Result<Boolean> = runCatching {
+fun Connection.removeBondsFromHost(
+	hostId: String,
+	hostNics: List<HostNic> = listOf()
+): Result<Boolean> = runCatching {
 	this.srvHost(hostId).setupNetworks().removedBonds(hostNics).send()
 	this.srvHost(hostId).commitNetConfig().send()
 	true

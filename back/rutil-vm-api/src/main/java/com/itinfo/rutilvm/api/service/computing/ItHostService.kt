@@ -1,14 +1,11 @@
 package com.itinfo.rutilvm.api.service.computing
 
-import com.itinfo.rutilvm.api.configuration.PropertiesConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.fromStorageDomainsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.network.*
-import com.itinfo.rutilvm.api.model.setting.PermissionVo
-import com.itinfo.rutilvm.api.model.setting.toPermissionVos
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.repository.*
 import com.itinfo.rutilvm.api.repository.history.*
@@ -70,16 +67,6 @@ interface ItHostService {
 	 */
 	@Throws(Error::class)
 	fun remove(hostId: String): Boolean
-	/**
-	 * [ItHostService.removeMultiple]
-	 * 호스트 삭제
-	 * 가상머신 돌아가는게 있는지 -> 유지보수 상태인지 -> 삭제
-	 *
-	 * @param hostIdList List<[String]> 호스트 아이디 리스트
-	 * @return [Boolean]
-	 */
-	@Throws(Error::class)
-	fun removeMultiple(hostIdList: List<String>): List<Boolean>
 
 	/**
 	 * [ItHostService.findAllVmsFromHost]
@@ -158,51 +145,31 @@ interface ItHostService {
 	 */
 	@Throws(Error::class)
 	fun loginIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): Boolean
-
-	/**
-	 * [ItHostService.findAllPermissionsFromHost]
-	 * 호스트 권한 목록
-	 *
-	 *  @param hostId [String] 호스트 Id
-	 *  @return List<[PermissionVo]> 권한 목록
-	 */
-	@Deprecated("필요없음")
-	@Throws(Error::class)
-	fun findAllPermissionsFromHost(hostId: String): List<PermissionVo>
 }
 
 @Service
 class HostServiceImpl(
-
 ): BaseService(), ItHostService {
-	@Autowired private lateinit var propConfig: PropertiesConfig
 	@Autowired private lateinit var hostConfigurationRepository: HostConfigurationRepository
 	@Autowired private lateinit var itGraphService: ItGraphService
 
 	@Throws(Error::class)
 	override fun findAll(): List<HostVo> {
 		log.info("findAll ... ")
-		val res: List<Host> = conn.findAllHosts()
-			.getOrDefault(listOf())
+		val res: List<Host> = conn.findAllHosts(follow = "cluster").getOrDefault(emptyList())
 
 		return res.map { host ->
-			val hostNic: HostNic? = conn.findAllHostNicsFromHost(host.id())
-				.getOrDefault(listOf()).firstOrNull()
+			val hostNic: HostNic? = conn.findAllHostNicsFromHost(host.id()).getOrDefault(emptyList())
+				.firstOrNull()
 			val usageDto: UsageDto? = calculateUsage(host, hostNic)
 			host.toHostMenu(conn, usageDto)
 		}
-	}
-	private fun calculateUsage(host: Host, hostNic: HostNic?): UsageDto? {
-		return if (host.status() == HostStatus.UP && hostNic != null) {
-			itGraphService.hostPercent(host.id(), hostNic.id())
-		} else null
 	}
 
 	@Throws(Error::class)
 	override fun findOne(hostId: String): HostVo? {
 		log.info("findOne ... hostId: {}", hostId)
-		val res: Host? = conn.findHost(hostId)
-			.getOrNull()
+		val res: Host? = conn.findHost(hostId).getOrNull()
 		val sw: HostConfigurationEntity = hostConfigurationRepository.findFirstByHostIdOrderByUpdateDateDesc(UUID.fromString(hostId))
 		return res?.toHostInfo(conn, sw)
 	}
@@ -214,8 +181,6 @@ class HostServiceImpl(
 		val res: Host? = conn.addHost(
 			hostVo.toAddHostBuilder(),
 			deployHostedEngine,
-			// propConfig.rebootHostId,
-			// propConfig.rebootHostPassword
 		).getOrNull()
 		return res?.toHostVo(conn)
 	}
@@ -223,13 +188,9 @@ class HostServiceImpl(
 	@Throws(Error::class)
 	override fun update(hostVo: HostVo): HostVo? {
 		log.info("update ... hostName: {}", hostVo.name)
-		// TODO
-		//  com.itinfo.util.ovirt.error.ItCloudException: Fault reason is 'Operation Failed'. Fault detail is '[Cannot edit Host. Host parameters cannot be modified while Host is operational.
-		//  Please switch Host to Maintenance mode first.]'. HTTP response code is '409'. HTTP response message is 'Conflict'.
-		//  Host.Ext 에서 async(true) 사용해서 일단 편집기능은 되지않고 테스트는 가능
 		val res: Host? = conn.updateHost(
-				hostVo.toEditHostBuilder()
-			).getOrNull()
+			hostVo.toEditHostBuilder()
+		).getOrNull()
 		return res?.toHostVo(conn)
 	}
 
@@ -240,31 +201,18 @@ class HostServiceImpl(
 		return res.isSuccess
 	}
 
-	@Throws(Error::class)
-	override fun removeMultiple(hostIdList: List<String>): List<Boolean> {
-		// TODO not yet
-		log.info("removeMultiple ... hostIdList ... {}", hostIdList)
-		val res: List<Result<Boolean>> = hostIdList.map { hostId ->
-			conn.removeHost(hostId)
-		}
-		return res.map { it.isSuccess }
-	}
-
 
 	@Throws(Error::class)
 	override fun findAllVmsFromHost(hostId: String): List<VmViewVo> {
 		log.info("findAllVmsFromHost ... hostId: {}", hostId)
-		val res: List<Vm> = conn.findAllVmsFromHost(hostId)
-			.getOrDefault(listOf())
+		val res: List<Vm> = conn.findAllVmsFromHost(hostId).getOrDefault(emptyList())
 		return res.toVmsMenu(conn)
 	}
-
 
 	@Throws(Error::class)
 	override fun findAllHostDevicesFromHost(hostId: String): List<HostDeviceVo> {
 		log.info("findAllHostDevicesFromHost ... hostId: {}", hostId)
-		val res: List<HostDevice> = conn.findAllHostDeviceFromHost(hostId)
-			.getOrDefault(listOf())
+		val res: List<HostDevice> = conn.findAllHostDeviceFromHost(hostId).getOrDefault(emptyList())
 		return res.toHostDeviceVos()
 	}
 
@@ -273,45 +221,41 @@ class HostServiceImpl(
 		log.info("findAllEventsFromHost ... ")
 		val host: Host = conn.findHost(hostId)
 			.getOrNull() ?: throw ErrorPattern.HOST_NOT_FOUND.toException()
-		val res: List<Event> = conn.findAllEvents("host.name= ${host.name()}")
-			.getOrDefault(listOf())
+		val res: List<Event> = conn.findAllEvents("host.name= ${host.name()}").getOrDefault(emptyList())
 		return res.toEventVos()
 	}
 
 	@Throws(Error::class)
 	override fun findAllIscsiFromHost(hostId: String): List<HostStorageVo> {
+		// TODO 확인필요
 		log.info("findAllIscsiFromHost... hostId: {}", hostId)
-		conn.findHost(hostId).getOrNull() ?: return listOf()
-		val res: List<HostStorage> = conn.findAllHostStoragesFromHost(hostId)
-			.getOrDefault(listOf())
+		val res: List<HostStorage> = conn.findAllHostStoragesFromHost(hostId).getOrDefault(emptyList())
 			.filter { it.type() == StorageType.ISCSI }
-		return res.toIscsiHostStorageVos()
+		return res.toHostStorageVos()
 	}
 
 	@Throws(Error::class)
 	override fun findAllFibreFromHost(hostId: String): List<HostStorageVo> {
 		log.info("findAllFibreFromHost... hostId: {}", hostId)
-		val res: List<HostStorage> = conn.findAllHostStoragesFromHost(hostId)
-			.getOrDefault(listOf())
+		val res: List<HostStorage> = conn.findAllHostStoragesFromHost(hostId).getOrDefault(emptyList())
 			.filter { it.type() == StorageType.FCP }
-		return res.toFibreHostStorageVos()
+		return res.toHostStorageVos()
 	}
 
 	@Throws(Error::class)
 	override fun findImportIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): List<IscsiDetailVo> {
 		log.info("findImportIscsiFromHost... hostId: {}", hostId)
-		conn.findHost(hostId).getOrNull() ?: return listOf()
-		val res: List<IscsiDetails> = conn.discoverIscsiFromHost(hostId, iscsiDetailVo.toDiscoverIscsiDetailVo())
-			.getOrDefault(listOf())
+		val res: List<IscsiDetails> = conn.discoverIscsiFromHost(
+			hostId,
+			iscsiDetailVo.toDiscoverIscsiDetailVo()
+		).getOrDefault(emptyList())
 		return res.toIscsiDetailVos()
 	}
 
 	@Throws(Error::class)
 	override fun findUnregisterDomainFromHost(hostId: String): List<IdentifiedVo> {
 		log.info("findUnregisterDomainFromHost... hostId: {}", hostId)
-		conn.findHost(hostId).getOrNull() ?: return listOf()
-		val res: List<StorageDomain> = conn.unRegisteredStorageDomainsFromHost(hostId)
-			.getOrDefault(listOf())
+		val res: List<StorageDomain> = conn.unRegisteredStorageDomainsFromHost(hostId).getOrDefault(emptyList())
 		return res.fromStorageDomainsToIdentifiedVos()
 	}
 
@@ -322,15 +266,11 @@ class HostServiceImpl(
 		return res.isSuccess
 	}
 
-	@Deprecated("필요없음")
-	@Throws(Error::class)
-	override fun findAllPermissionsFromHost(hostId: String): List<PermissionVo> {
-		log.info("findAllPermissionsFromHost ... hostId: {}", hostId)
-		val res: List<Permission> = conn.findAllPermissionFromHost(hostId)
-			.getOrDefault(listOf())
-		return res.toPermissionVos(conn)
+	private fun calculateUsage(host: Host, hostNic: HostNic?): UsageDto? {
+		return if (host.status() == HostStatus.UP && hostNic != null) {
+			itGraphService.hostPercent(host.id(), hostNic.id())
+		} else null
 	}
-
 
 	companion object {
 		private val log by LoggerDelegate()
