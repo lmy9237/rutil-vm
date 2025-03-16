@@ -98,14 +98,15 @@
   text-decoration: underline;
 }
 .bell-content {
+  min-height: 88px;
   display: flex;
   font-size: var(--fs-default-4);
   width: 100%;
   justify-content: space-between;
-  padding: 11px;
+  padding: 0 8px;
   color:#8d8686;
-  border-bottom: 1px solid #ddd;
-  transition: height 0.3s ease-in-out; /* 부드러운 높이 변화 효과 */
+  border-bottom: 1px solid var(--color-table);
+  transition: height 0.3s ease-in-out;
 }
 .bell-content:hover{
   background:#e3f7f9;
