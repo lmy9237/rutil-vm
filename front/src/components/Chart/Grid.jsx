@@ -22,7 +22,7 @@ const Grid = ({ type, data = [] }) => {
   }, [data, gridData]);
 
   const getBackgroundColor = (value) => {
-    if (value === null) return "rgb(245, 245, 245)";
+    if (value === null) return "#F8F8F8";
     if (value >= 0 && value <= 10) return "#E7F2FF";
     if (value > 10 && value <= 30) return "#FFF3C9";
     if (value > 30 && value <= 60) return "#FFC58A";

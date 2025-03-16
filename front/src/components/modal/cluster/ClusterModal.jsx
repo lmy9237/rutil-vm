@@ -284,7 +284,7 @@ const ClusterModal = ({
           }
         />
 
-        <div className="p-2">
+        <div>
           <div className="cluster-form-group">
             <div className="font-bold mb-0.5">복구정책</div>
             {errorHandlingOptions.map((option) => (

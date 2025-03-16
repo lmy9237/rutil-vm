@@ -3,7 +3,7 @@
   grid-template-columns: repeat(5, 1fr);
   width: 100%;
   gap: 2px;
-  width: 80%;
+  width: 90%;
 }
 
 .grid-item {
@@ -15,11 +15,12 @@
   align-items: center;
   position: relative;
   height: 44px;
-  border-radius: 2px;
+  border-radius: 4px;
   background-color: inherit; /* 기본 배경색 제거 또는 상속 */
   transition: opacity 0.1s ease-in-out;
   overflow: hidden; 
-  
+  font-size: var(--fs-18);
+  font-weight: 700;
 }
 .grid-item:hover {
   opacity: 0.7;

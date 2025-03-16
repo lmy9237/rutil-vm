@@ -165,7 +165,7 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
         {!editMode && (
           <>
             <div className="font-semibold">
-              <label className="p-1">인증</label>
+              <label className="py-1">인증</label>
             </div>
             <LabelInput label="사용자 이름" value="root" disabled={true} />
             <LabelInputNum

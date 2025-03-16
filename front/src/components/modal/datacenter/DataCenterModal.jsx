@@ -110,7 +110,7 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
       targetName={"데이터센터"}
       submitTitle={dcLabel}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "460px", height: "400px" }} 
+      contentStyle={{ width: "473px", height: "490px" }} 
     >
       {/* <div className="datacenter-new-popup modal"> */}
       <div className="datacenter-new-popup-outer">

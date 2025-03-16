@@ -2,15 +2,13 @@
 .dash-boxs {
   width: 100%;
   margin-bottom: 0.14rem;
-  background-color: #eff1f5;
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.13);
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 0;
   min-height: 108px;
-  padding: 0 10px;
+  margin-bottom: 10px;
 }
 .box {
   /* width: calc(16.66% - 0rem); */
@@ -62,10 +60,9 @@
   font-size: var(--fs-default-4);
   font-weight: 600;
 }
-.arrows > svg:first-child {
-  color: rgb(255, 0, 0);
+.up-icon, .up-text {
+  color: red;
 }
-.arrows > svg:last-child {
-  color: #4d4d4d;
-  margin-top: 2px;
+.down-icon, .down-text {
+  color: gray;
 }

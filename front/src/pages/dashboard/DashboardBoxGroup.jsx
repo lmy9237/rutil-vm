@@ -59,12 +59,18 @@ const DashboardBox = ({
 
       <div className="box-text flex">
         <div className="arrows flex center mr-2">
-          {cntUp && (<>
-            <RVI24 className="box-icon" iconDef={rvi24DiagonalUp} />{cntUp}&nbsp;
-          </>)}
-          {cntDown && (<>
-            <RVI24 className="box-icon" iconDef={rvi24DiagonalDown} />{cntUp}&nbsp;
-          </>)}
+        {cntUp && (
+            <>
+              <RVI24 className="box-icon up-icon" iconDef={rvi24DiagonalUp} />
+              <span className="up-text">{cntUp}</span>&nbsp;
+            </>
+          )}
+          {cntDown && (
+            <>
+              <RVI24 className="box-icon down-icon" iconDef={rvi24DiagonalDown} />
+              <span className="down-text">{cntDown}</span>&nbsp;
+            </>
+          )}
           {alert && (<>
             <RVI24 className="box-icon" iconDef={rvi24Bell} />{alert}&nbsp;
           </>)}

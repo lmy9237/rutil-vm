@@ -152,7 +152,7 @@ input[disabled] {
 #section {
   width: calc(100% - var(--w-aside-menu));height:100%;
   overflow-y: auto;
-  background-color: var(--color-bg);
+  background-color: white;
   overflow-x: hidden;
 }
 /* .dash-boxs+.bar+.dash-section{
@@ -337,7 +337,7 @@ select {
   width:55%;height: 36px;
   border: var(--border-btn);border-radius: 4px;
   font-size: var(--fs-default-4);
-  padding: 0 12px;
+  padding: 0 7px;
   outline: none;
   letter-spacing: -0.28px;
 }
@@ -2446,9 +2446,7 @@ background-color: #f0f0f0;
 
 /*반응형*/
 @media (min-width: 2000px) {
-    .dash-section {
-        padding: 0 0 0 46px;
-    }
+
 }
 @media (max-width: 1420px) {
     .resizer {

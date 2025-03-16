@@ -216,7 +216,7 @@ const Dashboard = () => {
   return (
     <>
       {/* 대시보드 section */}
-      <div id="section">
+      <div id="section" style={{ backgroundColor: "#EFF1F5",padding:"10px" }}>
         <DashboardBoxGroup
           boxItems={[
             {
@@ -264,7 +264,7 @@ const Dashboard = () => {
 
         <div className="dash-section center">
           <div className="dash-section-contents">
-            <h1>CPU</h1>
+            <h1 className="dash-con-title">CPU</h1>
             <div className="status-value flex">
               <h1>
                 {100 -
@@ -307,7 +307,7 @@ const Dashboard = () => {
           </div>
 
           <div className="dash-section-contents">
-            <h1>MEMORY</h1>
+            <h1 className="dash-con-title">MEMORY</h1>
             <div className="status-value flex">
               <h1>{cpuMemory?.freeMemoryGB?.toFixed(0)} GB</h1>
               <div>사용가능(총 {cpuMemory?.totalMemoryGB?.toFixed(0)} GB)</div>
@@ -344,7 +344,7 @@ const Dashboard = () => {
             className="dash-section-contents"
             style={{ borderRight: "none" }}
           >
-            <h1>STORAGE</h1>
+            <h1 className="dash-con-title">STORAGE</h1>
             <div className="status-value flex">
               <h1>{storage?.freeGB} GB</h1>
               <div>사용가능(총 {storage?.totalGB} GB)</div>
