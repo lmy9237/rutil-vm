@@ -167,14 +167,17 @@ class VmServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<VmViewVo> {
 		log.info("findAll ... ")
-		val res: List<Vm> = conn.findVms()
-		return res.toVmsMenu(conn)
+		// cluster.datacenter,statistics,reporteddevices
+		val res: List<Vm> = conn.findAllVms(follow = "cluster.datacenter,reporteddevices").getOrDefault(emptyList())
+		// val res: List<Vm> = conn.findVms()
+		// return res.toVmsMenu(conn) // 3.92
+		return res.toVmMenus(conn) // 3.86
 	}
 
 	@Throws(Error::class)
 	override fun findOne(vmId: String): VmViewVo? {
 		log.info("findOne ... vmId : {}", vmId)
-		val res: Vm? = conn.findVm(vmId).getOrNull()
+		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,reporteddevices,diskattachments,cdroms,statistics").getOrNull()
 		return res?.toVmViewVo(conn)
 	}
 
@@ -214,7 +217,7 @@ class VmServiceImpl(
 		}
 
 		// 기존 디스크 목록 조회
-		val existDiskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmUpdateVo.id).getOrDefault(listOf())
+		val existDiskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmUpdateVo.id).getOrDefault(emptyList())
 
 		// 기존 디스크 ID 목록 생성
 		val existDiskIds = existDiskAttachments.map { it.disk().id() }.toSet()
@@ -227,7 +230,7 @@ class VmServiceImpl(
 		}
 
 		// 기존 nic 목록 조회
-		val existNics: List<Nic> = conn.findAllNicsFromVm(vmUpdateVo.id).getOrDefault(listOf())
+		val existNics: List<Nic> = conn.findAllNicsFromVm(vmUpdateVo.id).getOrDefault(emptyList())
 
 		// 기존 nic ID 목록 생성
 		val existNicIds = existNics.map { it.id() }.toSet()
@@ -283,14 +286,14 @@ class VmServiceImpl(
 	@Throws(Error::class)
 	override fun findAllApplicationsFromVm(vmId: String): List<IdentifiedVo> {
 		log.info("findAllApplicationsFromVm ... vmId: {}", vmId)
-		val res: List<Application> = conn.findAllApplicationsFromVm(vmId).getOrDefault(listOf())
+		val res: List<Application> = conn.findAllApplicationsFromVm(vmId).getOrDefault(emptyList())
 		return res.fromApplicationsToIdentifiedVos()
 	}
 
 	@Throws(Error::class)
 	override fun findAllHostDevicesFromVm(vmId: String): List<HostDeviceVo> {
 		log.info("findAllHostDevicesFromVm ... vmId: {}", vmId)
-		val res: List<HostDevice> = conn.findAllHostDevicesFromVm(vmId).getOrDefault(listOf())
+		val res: List<HostDevice> = conn.findAllHostDevicesFromVm(vmId).getOrDefault(emptyList())
 		return res.toHostDeviceVos()
 	}
 
@@ -300,7 +303,7 @@ class VmServiceImpl(
 		val vm: Vm = conn.findVm(vmId)
 			.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
 		val res: List<Event> = conn.findAllEvents()
-			.getOrDefault(listOf())
+			.getOrDefault(emptyList())
 			.filter { it.vmPresent() && it.vm().name() == vm.name() }
 		return res.toEventVos()
 	}
@@ -322,7 +325,7 @@ class VmServiceImpl(
 	@Throws(Error::class)
 	override fun findAllPermissionsFromVm(vmId: String): List<PermissionVo> {
 		log.info("findAllPermissionsFromVm ... vmId: {}", vmId)
-		val res: List<Permission> = conn.findAllAssignedPermissionsFromVm(vmId).getOrDefault(listOf())
+		val res: List<Permission> = conn.findAllAssignedPermissionsFromVm(vmId).getOrDefault(emptyList())
 		return res.toPermissionVos(conn)
 	}
 

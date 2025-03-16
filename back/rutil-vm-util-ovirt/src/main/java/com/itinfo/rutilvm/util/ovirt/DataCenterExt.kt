@@ -110,7 +110,7 @@ fun Connection.findAllHostsFromDataCenter(dataCenterId: String): Result<List<Hos
 }
 
 fun Connection.findAllVmsFromDataCenter(dataCenterId: String): Result<List<Vm>> = runCatching {
-	this.findAllVms(follow = "cluster.datacenter,statistics").getOrDefault(emptyList())
+	this.findAllVms(follow = "cluster.datacenter,reporteddevices").getOrDefault(emptyList())
 		.filter { it.cluster().dataCenter().id() == dataCenterId }
 
 }.onSuccess {

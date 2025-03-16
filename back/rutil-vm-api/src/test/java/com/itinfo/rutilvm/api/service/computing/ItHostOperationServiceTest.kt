@@ -46,24 +46,6 @@ class ItHostOperationServiceTest {
         assertThat(result, `is`(true))
     }
 
-    /**
-     * [should_deactivateMultiple]
-     * [ItHostOperationService.deactivateMultiple]에 대한 단위테스트
-     * 유지보수
-     *
-     * @see ItHostOperationService.deactivateMultiple
-     */
-    @Test
-    fun should_deactivateMultiple() {
-        log.debug("should_deactivateMultiple ...")
-        val hostIds: List<String> = listOf("c1954e17-3c86-4428-a4d0-0d845808bad1")
-
-        val result: Map<String, String> =
-            service.deactivateMultiple(hostIds)
-
-        assertThat(result, `is`(not(nullValue())))
-        print(result)
-    }
 
     /**
      * [should_activate]

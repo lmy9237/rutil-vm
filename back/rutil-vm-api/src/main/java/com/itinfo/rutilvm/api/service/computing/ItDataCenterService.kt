@@ -269,7 +269,7 @@ class DataCenterServiceImpl(
 	override fun findAllVmsFromDataCenter(dataCenterId: String): List<VmViewVo> {
 		log.debug("findAllVmsFromDataCenter ... dataCenterId: {}", dataCenterId)
 		val res: List<Vm> = conn.findAllVmsFromDataCenter(dataCenterId).getOrDefault(emptyList())
-		return res.toDcVmsMenu(conn) // 3.21
+		return res.toVmMenus(conn) // 3.21
 		// return res.toVmsMenu(conn) // 4.55
 	}
 

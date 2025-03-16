@@ -3,7 +3,7 @@ package com.itinfo.rutilvm.api.service.storage
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.VmViewVo
-import com.itinfo.rutilvm.api.model.computing.toVmsMenu
+import com.itinfo.rutilvm.api.model.computing.toVmMenus
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import com.itinfo.rutilvm.api.model.setting.toPermissionVos
@@ -503,7 +503,7 @@ class DiskServiceImpl(
         log.info("findAllVmsFromDisk ... ")
         val res: List<Vm> =
             conn.findAllVmsFromDisk(diskId).getOrDefault(listOf())
-        return res.toVmsMenu(conn)
+        return res.toVmMenus(conn)
     }
 
     @Throws(Error::class)

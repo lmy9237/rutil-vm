@@ -133,11 +133,11 @@ fun Connection.expectHostDeleted(hostId: String, timeout: Long = 60000L, interva
 }
 
 
-fun Connection.findAllVmsFromHost(hostId: String, searchQuery: String = "", follow: String = ""): Result<List<Vm>> = runCatching {
+fun Connection.findAllVmsFromHost(hostId: String, searchQuery: String = "",follow: String = ""): Result<List<Vm>> = runCatching {
 	checkHostExists(hostId)
 
 	this.srvVms().list().apply {
-		if(searchQuery.isNotEmpty()) search(searchQuery)
+		if (searchQuery.isNotEmpty()) follow(searchQuery)
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().vms().filter { it.host()?.id() == hostId }
 

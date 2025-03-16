@@ -53,7 +53,7 @@ class  ItVmServiceTest {
 		hostVm = "d427e182-cfd7-44a8-8b63-ce3841fe7c47"
 //		apm = "fceb0fe4-2927-4340-a970-401fe55781e6"
 		storageDomain = "789b0566-39da-42c5-b5d2-bf6a6e3662cf"
-        vmid="b0773990-844c-45d1-895d-7bcd1c42f6f8"
+        vmid="097ca683-1477-4af3-9595-6bb34451bcb2"
 	}
 
 
@@ -73,8 +73,6 @@ class  ItVmServiceTest {
 
 		log.info("수행시간: {}", end-start)
 		assertThat(result, `is`(not(nullValue())))
-//		assertThat(result.size, `is`(4))
-
 		result.forEach { println(it) }
 	}
 

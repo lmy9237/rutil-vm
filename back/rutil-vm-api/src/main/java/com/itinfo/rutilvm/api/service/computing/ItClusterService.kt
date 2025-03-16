@@ -235,8 +235,8 @@ class ClusterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllVmsFromCluster(clusterId: String): List<VmViewVo> {
 		log.info("findAllVmsFromCluster ... clusterId: {}", clusterId)
-		val res: List<Vm> = conn.findAllVmsFromCluster(clusterId).getOrDefault(emptyList())
-		return res.toVmsMenu(conn)
+		val res: List<Vm> = conn.findAllVmsFromCluster(clusterId, follow = "cluster.datacenter,reporteddevices").getOrDefault(emptyList())
+		return res.toVmMenus(conn)
 	}
 
 

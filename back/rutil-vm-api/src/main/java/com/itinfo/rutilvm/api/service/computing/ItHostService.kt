@@ -205,8 +205,8 @@ class HostServiceImpl(
 	@Throws(Error::class)
 	override fun findAllVmsFromHost(hostId: String): List<VmViewVo> {
 		log.info("findAllVmsFromHost ... hostId: {}", hostId)
-		val res: List<Vm> = conn.findAllVmsFromHost(hostId).getOrDefault(emptyList())
-		return res.toVmsMenu(conn)
+		val res: List<Vm> = conn.findAllVmsFromHost(hostId, follow = "cluster.datacenter,statistics,reporteddevices").getOrDefault(emptyList())
+		return res.toVmMenus(conn)
 	}
 
 	@Throws(Error::class)

@@ -38,6 +38,7 @@ fun Connection.findAllVms(searchQuery: String = "", follow: String = ""): Result
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+
 fun Connection.findVms(): List<Vm> =
 	systemService.vmsService().list().send().vms()
 
@@ -49,12 +50,6 @@ fun Connection.findVm(vmId: String, follow: String = ""): Result<Vm?> = runCatch
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().vm()
 
-	// val vm = if (follow.isNotEmpty()) {
-	// 	this.srvVm(vmId).get().follow(follow)
-	// }else{
-	// 	this.srvVm(vmId).get()
-	// }
-	// vm.send().vm()
 }.onSuccess {
 	Term.VM.logSuccess("상세조회", vmId)
 }.onFailure {

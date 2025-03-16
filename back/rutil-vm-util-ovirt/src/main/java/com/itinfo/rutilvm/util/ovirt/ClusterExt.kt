@@ -124,11 +124,11 @@ fun Connection.findAllHostsFromCluster(clusterId: String, follow: String = ""): 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.findAllVmsFromCluster(clusterId: String, searchQuery: String = "", follow: String = ""): Result<List<Vm>> = runCatching {
+fun Connection.findAllVmsFromCluster(clusterId: String, searchQuery: String = "",follow: String = ""): Result<List<Vm>> = runCatching {
 	checkClusterExists(clusterId)
 
 	this.srvVms().list().apply {
-		if(searchQuery.isNotEmpty()) search(searchQuery)
+		if (searchQuery.isNotEmpty()) follow(searchQuery)
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().vms().filter { it.cluster().id() == clusterId }
 
@@ -163,7 +163,7 @@ fun Connection.findNetworkFromCluster(clusterId: String, networkId: String): Res
 	checkClusterExists(clusterId)
 
 	this.srvNetworkFromCluster(clusterId, networkId).get().send().network()
-	
+
 }.onSuccess {
 	Term.CLUSTER.logSuccessWithin(Term.NETWORK, "상세조회")
 }.onFailure {
