@@ -43,7 +43,7 @@ const AreaChart = ({ series, datetimes }) => {
     if (chartContainerRef.current) {
       const containerWidth = chartContainerRef.current.clientWidth;
 
-      let width = Math.max(containerWidth * 0.91, 240); // 기본 너비
+      let width = Math.max(containerWidth * 0.91, 245); // 기본 너비
       let height = Math.max(window.innerHeight * 0.2, 200); // 기본 높이
 
       if (window.innerWidth >= 2000) {

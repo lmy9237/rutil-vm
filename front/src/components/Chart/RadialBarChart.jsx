@@ -14,8 +14,8 @@ const RadialBarChart = ({ percentage }) => {
     if (chartContainerRef.current) {
       const containerWidth = chartContainerRef.current.clientWidth;
 
-      let width = Math.max(containerWidth * 0.9, 300); // 기본 너비
-      let height = Math.max(window.innerHeight * 0.27, 200); // 기본 높이
+      let width = Math.max(containerWidth * 0.8, 200); // 기본 너비
+      let height = Math.max(window.innerHeight * 0.3, 250); // 기본 높이
 
       if (window.innerWidth >= 2000) {
         width = Math.max(containerWidth * 1, 280); 
