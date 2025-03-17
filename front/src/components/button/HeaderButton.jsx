@@ -67,18 +67,18 @@ const HeaderButton = ({
               style={{ marginRight: "12px" }}
             />
           )} */}
-          <p>{title}</p>
+          <p className="mr-2">{title}</p>
+          <div
+            className={`flex justify-center mr-1 status-label ${
+              status === "실행중" ? "running" : status === "중지" ? "stopped" : "default"
+            }`}
+          >
+            {status}
+          </div>
         </div>
       </div>
-      <div className="flex justify-space-between ml-auto">
+      <div className="section-header-buttons">
         <div className="flex justify-end article-nav">
-        <p 
-          className={`flex justify-center mr-1 status-label ${
-            status === "실행중" ? "running" : status === "중지" ? "stopped" : "default"
-          }`}
-        >
-          {status}
-        </p>
           {buttons.map((button, index) => (
             <IconButton
               id={button.id}

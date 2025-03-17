@@ -45,7 +45,7 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
 
           {/* 특정 호스트 선택 */}
           <div id="select-host" >
-            <div className="flex center">
+            <div className="center  h-4">
               <input
                 className="form-check-input"
                 type="radio"

@@ -1,7 +1,7 @@
 .rutil-general{
     display:flex;
     justify-content: space-between;
-    font-size: var(--fs-default);
+    font-size: var(--fs-16);
 }
 .logo-general{
     width:60px;

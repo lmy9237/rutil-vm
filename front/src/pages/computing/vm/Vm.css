@@ -20,7 +20,7 @@
   padding: 0.18rem;
 }
 .capacity {
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   padding: 0.2rem;
 }
 .capacity > div:first-child {
@@ -84,7 +84,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  font-size: var(--fs-default);
+  font-size: var(--fs-16);
   border-bottom: 1px solid rgb(226, 226, 226);
   cursor: pointer;
   align-items:center;
@@ -103,7 +103,7 @@
   padding-top: 0.4rem;
 }
 .network-content > div > div:nth-child(2) {
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   color: #4f4f4f;
 }
 .network-content-detail > div {
@@ -121,7 +121,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  font-size: var(--fs-default);
+  font-size: var(--fs-16);
   border-bottom: 1px solid rgb(226, 226, 226);
   padding: 10px 0;
   align-items: center;
@@ -174,7 +174,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0.3rem;
-  font-size: var(--fs-default);
+  font-size: var(--fs-16);
 }
 .snap-table {
   height: 100%;

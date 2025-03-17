@@ -30,7 +30,7 @@
 }
 .box > span {
   width: 100%;
-  font-size: var(--fs-default);
+  font-size: var(--fs-16);
   color: black;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -57,7 +57,7 @@
 }
 .arrows {
   margin: 6px 10px 0 0;
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   font-weight: 600;
 }
 .up-icon, .up-text {
@@ -65,4 +65,18 @@
 }
 .down-icon, .down-text {
   color: gray;
+}
+
+@media screen and (max-width:1100px) {
+  .box {
+    width: calc(50% - 0.11rem); /* 2열 */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .box {
+    width: calc(100% - 0.5rem); /* 1열 */
+    border-right: none;
+    border-bottom: 1px solid #5e95a745;
+  }
 }

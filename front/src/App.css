@@ -12,11 +12,13 @@ html {
   --h-rutil-footer-open: calc(var(--h-rutil-footer) + var(--h-rutil-footer-content));
   --h-rutil-content: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer));
   --h-rutil-content-footer-open: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer-open));
-  --h-section-header: 72px; /*section-header 높이 */
+  --h-section-header: 69px; /*section-header 높이 */
+  --h-primary:26px;
+  --h-32:32px;
   
   --h-modal-header: 55px;                /* 모달 헤더 부분 높이 */
   --h-modal-footer: 60px;                /* 모달 푸터 부분 높이 */
-  --h-right-btn: 30px;  
+  --h-right-btn: 30px;
   --h-dash-boxs-bar:380px;/*대시보드 section 안에 박스와bar 높이를 합친것*/
   --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
   --w-aside-menu:243px;     
@@ -54,7 +56,7 @@ html {
 
   --color-primary: #020B79;;           /* 메인색 */
   --color-primary-hover: #2E379D;;           /* 메인:hover */
-  --color-primary-white: #FFFFFF; /* 메인 아이콘버튼 색 */ 
+  --color-primary-white: #FFF; /* 메인 아이콘버튼 색 */ 
   --color-primary-1: #295b9c;           /* 주 border색 */
   --color-primary-h: #0b4db5;         /* header 글자색 */  
   --color-primary-2: #446dbb;         /* 주 색 */
@@ -70,11 +72,11 @@ html {
   --border-simple: var(--border-w) solid var(--color-gray-2);
   --border-aa: var(--border-w) solid var(--color-gray-1);
 
-
+  --fs-default: 12px;
   --fs-13: 13px;
-  --fs-default-4: 12px;
+  --fs-14: 14px;
   --fs-15: 15px;
-  --fs-default: 16px;
+  --fs-16: 16px;
   --fs-18: 18px;
   --fs-21: 21px;
   --fs-big: 24px;
@@ -111,10 +113,12 @@ details>summary {
 
 ul { list-style-type: circle; }
 button {
-  border: var(--border-simple);
+  border: 1px solid var(--color-gray-4);
   cursor: pointer;
-  padding: 0 5px;
+  padding: 0 4px;
   display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 2px;
   align-items: center;
 }
@@ -177,9 +181,9 @@ input[disabled] {
 .manage-button
 {
   margin-right: 8px;
-  padding: 0 5px;
-  height: 36px;
-  font-size: var(--fs-default-4);
+  padding: 0 12px;
+  height: var(--h-primary);
+  font-size: var(--fs-default);
   border-radius: 4px;
   display: flex;
   justify-content: left;
@@ -206,7 +210,7 @@ input[disabled] {
 .dropdown-menu {
   position: absolute;
   top: 103%;
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   width: 230px;
   right: 0;
   background: white;
@@ -334,10 +338,10 @@ input[type="text"],
 input[type="number"],
 input[type="password"],
 select {
-  width:55%;height: 36px;
+  width:55%;height: var(--h-primary);
   border: var(--border-btn);border-radius: 4px;
-  font-size: var(--fs-default-4);
-  padding: 0 7px;
+  font-size: var(--fs-default);
+  padding: 0 8px;
   outline: none;
   letter-spacing: -0.28px;
 }
@@ -404,7 +408,7 @@ textarea {
 }
 /*토스트*/
 .toast {
-    font-size: var(--fs-default);
+    font-size: var(--fs-16);
     width: 400px;
     padding: 12px 9px;
     border-radius: 2%;
@@ -2455,9 +2459,6 @@ background-color: #f0f0f0;
 }
 
 @media screen and (max-width:1100px) {
-    .box {
-        width: calc(50% - 0.11rem); /* 2열 */
-    }
     .modal {
         max-width: 100%;
         min-height: auto;
@@ -2470,11 +2471,6 @@ background-color: #f0f0f0;
     }
     .header-right-btns > button:last-child,.manage-button {
         margin-right: 8px !important;
-    }
-    .box {
-        width: calc(100% - 0.5rem); /* 1열 */
-        border-right: none;
-        border-bottom: 1px solid #5e95a745;
     }
     /* 
     .section-header{

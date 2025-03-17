@@ -118,7 +118,7 @@ const NicModal = ({
       targetName={"네트워크 인터페이스"}
       submitTitle={nLabel}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "690px", height: "400px" }} 
+      contentStyle={{ width: "690px", height: "450px" }} 
     >
       <div className="popup-content-outer">
         <div className="network-popup-content">

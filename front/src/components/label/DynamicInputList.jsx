@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import "./DynamicInputList.css";
+import { RVI12, rvi12Minus, rvi12Plus } from "../icons/RutilVmIcons";
 
 const DynamicInputList = ({
   maxCount = 3,
@@ -64,7 +66,7 @@ const DynamicInputList = ({
                 onClick={handleAdd}
                 disabled={disabled}
               >
-                +
+                <RVI12 iconDef={rvi12Plus} />
               </button>
             )}
             {inputs.length > 1 && (
@@ -73,7 +75,7 @@ const DynamicInputList = ({
                 onClick={() => handleRemove(index)}
                 disabled={disabled} 
               >
-                -
+                <RVI12 iconDef={rvi12Minus} />
               </button>
             )}
           </div>

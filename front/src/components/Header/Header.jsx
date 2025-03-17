@@ -30,6 +30,16 @@ import {
   rvi24Gear,
   rvi24Bell,
   rvi24PersonCircle,
+  rvi16Warning,
+  RVI16,
+  rvi16Trash,
+  rvi16Event,
+  rvi16ArrowLeft,
+  rvi16Host,
+  rvi16CloseMenu,
+  rvi24RightArrow,
+  rvi24DownArrow,
+  rvil16Right,
 } from "../icons/RutilVmIcons";
 
 /**
@@ -80,7 +90,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
   const [events, setEvents] = useState(
     Array.from({ length: 20 }).map((_, index) => ({
       id: index,
-      message: `이벤트 메시지 ${index + 1}`,
+      message: `이벤트 내용입니다. 이벤트 내용입니다. 이벤트 내용입니다. 이벤트 내용입니다.`,
       date: new Date().toLocaleDateString(),
     }))
   );
@@ -136,17 +146,21 @@ const Header = ({ setAuthenticated, toggleAside }) => {
             className={`bell-box ${isExpanded ? "expanded" : ""}`}
             onClick={stopPropagation}
           >
-            <div className="f-btw py-0.5 px-1.5">
-              <FontAwesomeIcon
-                icon={isExpanded ? faAngleRight : faAngleLeft} // 방향 변경
-                fixedWidth
+            <div className="f-btw py-0.5 px-1.5 bell-cate">
+              <RVI16 
+                iconDef={isExpanded ? rvil16Right:rvi16ArrowLeft} 
                 className="hover-icon"
                 onClick={handleExpand}
               />
-              통지함
-              <FontAwesomeIcon
-                icon={faTimes}
+              {/* <FontAwesomeIcon
+                icon={isExpanded ? faAngleRight : faAngleLeft} 
                 fixedWidth
+                className="hover-icon"
+                onClick={handleExpand}
+              /> */}
+              통지함
+              <RVI16
+                iconDef={rvi16CloseMenu}
                 className="hover-icon"
                 onClick={() => setBellActive(false)}
               />
@@ -157,9 +171,8 @@ const Header = ({ setAuthenticated, toggleAside }) => {
               className={`bell-cate ${activeSection === "알림" ? "active" : ""}`}
               onClick={() => handleSectionClick("알림")}
             >
-              <FontAwesomeIcon
-                icon={activeSection === "알림" ? faChevronDown : faChevronRight}
-                fixedWidth
+              <RVI24
+                iconDef={activeSection  === "알림" ? rvi24DownArrow : rvi24RightArrow}
               />
               <span className="ml-1">알림</span>
             </div>
@@ -171,30 +184,16 @@ const Header = ({ setAuthenticated, toggleAside }) => {
                   {notifications.map((notification) => (
                     <div key={notification.id} className="bell-content">
                       <div>
-                        <FontAwesomeIcon
-                          icon={faExclamationTriangle}
-                          fixedWidth
-                          style={{
-                            color: "red",
-                            fontSize: "14px",
-                            paddingTop: "4px",
-                          }}
-                        />
+                        <RVI16 iconDef={rvi16Warning} />
                       </div>
                       <div className="bell-mid">
                         {notification.message}
                         <div className="mt-0.5">{notification.date}</div>
                       </div>
                       <div>
-                        <FontAwesomeIcon
-                          icon={faTrash}
-                          fixedWidth
-                          className="hover-icon"
-                          style={{
-                            fontSize: "15px",
-                            paddingTop: "7px",
-                            cursor: "pointer",
-                          }}
+                        <RVI16 
+                          iconDef={rvi16Trash} 
+                          className="trash-icon"
                           onClick={() => handleDelete(notification.id, "알림")}
                         />
                       </div>
@@ -214,11 +213,8 @@ const Header = ({ setAuthenticated, toggleAside }) => {
               className={`bell-cate ${activeSection === "이벤트" ? "active" : ""}`}
               onClick={() => handleSectionClick("이벤트")}
             >
-              <FontAwesomeIcon
-                icon={
-                  activeSection === "이벤트" ? faChevronDown : faChevronRight
-                }
-                fixedWidth
+              <RVI24
+                iconDef={activeSection  === "이벤트" ? rvi24DownArrow : rvi24RightArrow}
               />
               <span className="ml-1">이벤트</span>
             </div>
@@ -230,26 +226,16 @@ const Header = ({ setAuthenticated, toggleAside }) => {
                   {events.map((event) => (
                     <div key={event.id} className="bell-content">
                       <div>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          fixedWidth
-                          style={{ fontSize: "17px", paddingTop: "4px" }}
-                        />
+                        <RVI16 iconDef={rvi16Event} />
                       </div>
                       <div className="bell-mid">
                         {event.message}
                         <div className="mt-0.5">{event.date}</div>
                       </div>
                       <div>
-                        <FontAwesomeIcon
-                          icon={faTrash}
-                          fixedWidth
-                          className="hover-icon"
-                          style={{
-                            fontSize: "15px",
-                            paddingTop: "7px",
-                            cursor: "pointer",
-                          }}
+                        <RVI16 
+                          iconDef={rvi16Trash} 
+                          className="trash-icon"
                           onClick={() => handleDelete(event.id, "이벤트")}
                         />
                       </div>

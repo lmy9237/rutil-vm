@@ -62,17 +62,15 @@ const BarChart = ({ names, percentages }) => {
       enabled: true,
       textAnchor: "start",
       style: {
-        colors: ["#fff"],
-        fontSize: "12px",
-        fontWeight: "400",
+        colors: ["black"],
+        fontSize: "13px",
+        fontWeight: "600",
       },
       formatter: function (val, opt) {
         return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
       },
       offsetX: 0,
-      dropShadow: {
-        enabled: true,
-      },
+ 
     },
     stroke: {
       width: 1,

@@ -3,7 +3,6 @@
   background-color:var(--color-primary);
   border-bottom: 1px solid #dfdfdf;
   border-radius: 3px 3px 0 0;
-  margin-bottom:1px;
 }
 .header-right {
   height:100%;
@@ -26,11 +25,12 @@
   height: 58px;
   right:0;
   border-radius: 4px;
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   border: 1px solid rgb(204, 204, 204);
   top: 63px;
   border-radius: 3px;
 }
+
 .user-loginbox > div {
   padding: 0px 12px;
   height: 28px;
@@ -47,10 +47,10 @@
   z-index: 3;
   width: 300px;
   right: 0;
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   border: 1px solid rgb(204, 204, 204);
   top: 63px;
-  height: 800px;
+  height: 804px;
   border-radius: 2px;
   box-shadow: -3px 3px 10px rgba(0, 0, 0, 0.2); 
 }
@@ -58,8 +58,8 @@
   width: 700px; /* 확장 시 */
 }
 .bell-box>div{
-  font-size: var(--fs-default-4);
-  border-bottom: var(--border-btn);
+  font-size: var(--fs-16);
+  border-bottom:1px solid var(--color-table);
   display:flex;
   overflow: overlay;
   align-items: center;
@@ -67,9 +67,10 @@
 .bell-cate{
   padding:7px;
   cursor:pointer;
-  font-weight:600;
-  font-size: var(--fs-default);
-  background: linear-gradient(to bottom, rgba(200, 200, 200, 0.1), rgba(200, 200, 200, 0.3)); 
+  height: 40px;
+  font-weight:500;
+  font-size: var(--fs-16);
+  /* background: linear-gradient(to bottom, rgba(200, 200, 200, 0.1), rgba(200, 200, 200, 0.3));  */
 }
 .event-section {
   max-height: 78%;
@@ -81,7 +82,7 @@
   padding: 10px;
 }
 .bell-content-outer {
-  max-height: 652px;
+  max-height: 634px;
   display: flex;
   flex-direction: column;
 }
@@ -89,27 +90,32 @@
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:10px;
-  font-size: var(--fs-default-4);
+  padding:0 10px;
+  height: 48px;
+  font-size: var(--fs-default);
 }
 .bell-btns>div{
-  padding:2px 10px;
+  padding: 0px 10px;
+  height: 24px;
   text-align:center;
   border-radius:3px;
   cursor:pointer;
-  border:1px solid black;
+  background: var(--color-primary-white);
+  color: var(--color-nav);
+  border:var(--border-btn);
 }
 .bell-btns>div:hover{
   text-decoration: underline;
+  background: var(--color-white);
 }
 .bell-content {
   min-height: 88px;
   display: flex;
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-13);
   width: 100%;
   justify-content: space-between;
-  padding: 0 8px;
-  color:#8d8686;
+  padding: 12px 8px;
+  color:var(--color-nav);
   border-bottom: 1px solid var(--color-table);
   transition: height 0.3s ease-in-out;
 }
@@ -126,16 +132,6 @@
 .bell-content.open {
   max-height: 1000px; /* 충분히 큰 값 설정 */
 }
-
-.path {
-  font-size: var(--fs-default-4);
-  margin-bottom: 10px;
-  display: flex;
-  font-weight: 400;
-  color: var(--color-nav);
-  letter-spacing: var(--letter-28);
-}
-
 .clickable {
   cursor: pointer;
 }
@@ -143,16 +139,11 @@
   text-decoration: underline;
   color: var(--color-primary-h);
 }
-.path_icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 5px; /* 아이콘과 텍스트 간 여백 */
-  height: 100%;
+.trash-icon{
+  color: #999999 !important;
 }
-.last-path-element {
-  color: var(--color-primary-h);
-  font-weight: 600;
+.trash-icon:hover{
+  color: #1D1D1D !important;
 }
 .logo-outer {
   cursor: pointer

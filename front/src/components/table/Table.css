@@ -49,7 +49,7 @@
   height: 30px !important;
   width: 5%;
   cursor: pointer;
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
 }
 .paging-btns {
   display: flex;
@@ -67,7 +67,7 @@
   right: 0;
 }
 .paging-arrow {
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   font-weight: 800;
   color: gray;
   border: 1px solid var(--color-gray-1);
@@ -75,7 +75,7 @@
 
 /*tablesOuter*/
 .section-table-outer {
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   width: 100%;
   position:relative;
 }
@@ -96,7 +96,7 @@
 .section-table-outer th,
 .section-table-outer td {
   border: 1px solid rgb(204, 204, 204);
-  height: 27px;
+  height: var(--h-primary);
   padding: 0 6px;
 }
 .section-table-outer th {
@@ -114,7 +114,7 @@
   display: flex;
   cursor: pointer;
   padding: 5px;
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   margin-bottom: 5px;
 }
 

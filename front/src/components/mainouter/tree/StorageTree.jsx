@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAllTreeNavigations } from "../../../api/RQHook";
 import TreeMenuItem from "./TreeMenuItem";
@@ -17,14 +17,18 @@ const StorageTree = ({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [isSecondVisible, setIsSecondVisible] = useState(
-    JSON.parse(localStorage.getItem("isSecondVisible")) || false
-  );
+  const [isSecondVisible, setIsSecondVisible] = useState(JSON.parse(localStorage.getItem("isSecondVisible")) || false);
+  const [openDataCenters, setOpenDataCenters] = useState(JSON.parse(localStorage.getItem("openDataCenters")) || {});
+  const [openDomains, setOpenDomains] = useState(JSON.parse(localStorage.getItem("openDomains")) || {});
+  useEffect(() => {
+    localStorage.setItem("isSecondVisible", JSON.stringify(isSecondVisible));
+    localStorage.setItem("openDataCenters", JSON.stringify(openDataCenters));
+    localStorage.setItem("openDomains", JSON.stringify(openDomains));
+  }, [isSecondVisible, openDataCenters, openDomains]);
+  
   const { 
     data: navStorageDomains
   } = useAllTreeNavigations("storagedomain");
-  
-  const [openDomains, setOpenDomains] = useState(JSON.parse(localStorage.getItem("openDomains")) || {});
   
   const toggleDomain = (domainId) => {
     setOpenDomains((prevState) => ({
@@ -40,7 +44,7 @@ const StorageTree = ({
     }));
   };
 
-  const [openDataCenters, setOpenDataCenters] = useState(JSON.parse(localStorage.getItem("openDataCenters")) || {});
+
 
   return (
     <div id="storage_chart">
@@ -66,11 +70,11 @@ const StorageTree = ({
               title={dataCenter.name}
               iconDef={rvi16DataCenter}
               isSelected={() => location.pathname.includes(dataCenter.id)}
-              isNextLevelVisible={hasDomains}
+              isNextLevelVisible={openDataCenters[dataCenter.id]}
               onChevronClick={() => toggleDataCenter(dataCenter.id)}
               onClick={() => {
                 setSelectedDiv(dataCenter.id);
-                navigate(`/networks/datacenters/${dataCenter.id}/clusters`);
+                navigate(`/storages/datacenters/${dataCenter.id}/clusters`);
               }}
             />
             {/* 세 번째 레벨 (Storage Domains) */}
@@ -91,7 +95,7 @@ const StorageTree = ({
                       navigate(`/storages/domains/${domain.id}`);
                     }}
                   />
-                  {hasDisks && (
+                  {/* {hasDisks && (
                     <TreeMenuItem level={4}
                       title={domain.name}
                       iconDef={rvi16Cloud}
@@ -103,7 +107,7 @@ const StorageTree = ({
                         toggleDomain(domain.id);
                       }}
                     />
-                  )}
+                  )} */}
                 </div>
               );
             })}

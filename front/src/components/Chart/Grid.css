@@ -28,7 +28,7 @@
 
 .percent placeholder{
   margin-top: 5px;
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   color: #000000;
   z-index: 1;
 }

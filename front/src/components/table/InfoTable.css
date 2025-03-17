@@ -12,7 +12,7 @@
     padding: 10px;
     vertical-align: top;
     border: none;
-    font-size: var(--fs-default-4);
+    font-size: var(--fs-default);
   }
 
   .table th {

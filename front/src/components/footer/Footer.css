@@ -1,5 +1,5 @@
 .footer-outer {
-  font-size: var(--fs-default);
+  font-size: var(--fs-16);
   width: 100%;height: var(--h-rutil-footer);
   display:flex;flex-direction:column;justify-content:flex-start;align-items:center;
   /* position: absolute;bottom: 0;z-index: 3; */
@@ -34,7 +34,7 @@
   margin-top: 8px;
 }
 .footer > div > div:first-child {
-  font-size: var(--fs-default);
+  font-size: var(--fs-16);
 }
 .footer > div > div:nth-child(2) {
   color: #4f4f4f;
@@ -48,7 +48,7 @@
   display:flex;
 }
 .footer-nav {
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   width: 100%;
   max-height: 190px; /* 원하는 높이 설정 */
   overflow-y: auto; /* 세로 스크롤 추가 */

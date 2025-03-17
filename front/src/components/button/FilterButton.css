@@ -1,23 +1,32 @@
 .host-filter-btns {
   display: flex;
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   margin-bottom: 8px;
+  width: 240px;
+  border-radius: 4px;
+  border: 1px solid var(--color-gray-4);
+  height: var(--h-primary);
 }
 .host-filter-btns > div {
   display: flex;
   justify-content: space-between;
 }
 .host-filter-btns button {
-  padding: 2px 6px;
+  width: 80px;
   cursor: pointer;
-  border: 1px solid #14417c;
-  border-radius: 3px;
-  color: rgb(10, 55, 107);
-  font-weight: 600;
+  border-radius: 0;
+  border:none;
+  border-right: 1px solid var(--color-gray-4);
+  color: var(--color-nav);
+  font-weight: 500;
+}
+.host-filter-btns button:last-child{
+  border-right: none;
 }
 .host-filter-btns button:hover {
   background-color: #eceaea;
 }
 .host-filter-btns button.active {
-  background-color: #dbdbdb;
+  font-weight: 700;
+  color: var(--color-black);
 }

@@ -117,7 +117,7 @@
   border-radius: 3px;
 }
 .context-menu div {
-  font-size: var(--fs-default-4);
+  font-size: var(--fs-default);
   cursor: pointer;
   text-align: left;
   padding: 2px 5px;

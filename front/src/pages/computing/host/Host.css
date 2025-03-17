@@ -2,7 +2,7 @@
 .host-content-outer{
     width: 100%;
     padding: 0.2rem 0;
-    font-size: var(--fs-default);
+    font-size: var(--fs-16);
     height: 100%;
     overflow-y: auto; /* 세로 스크롤바를 필요할 때 표시합니다 */
 }
@@ -20,7 +20,7 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    font-size: var(--fs-default-4);
+    font-size: var(--fs-default);
 }
 
 .host-table th{
@@ -40,7 +40,7 @@
     justify-content: flex-start; /* 왼쪽 정렬 (필요에 따라 center, space-around로 변경 가능) */
     gap: 10px; /* 버튼 간격 */
     margin-bottom: 15px; /* 아래 여백 */
-    font-size: var(--fs-default);
+    font-size: var(--fs-16);
   }
   
   .host-tabs .tab-button{

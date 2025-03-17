@@ -15,7 +15,7 @@
   min-width: 450px; 
   flex: 0.5; 
   min-height: 450px;
-  font-size: var(--fs-default);
+  font-size: var(--fs-16);
 }
 .dash-con-title{
   font-weight: 600;
@@ -52,7 +52,7 @@
   flex: 0.5; 
 }
 .bar span {
-  font-size: var(--fs-default);
+  font-size: var(--fs-16);
   font-weight: 600;
   display: block;
   margin: 11px 0;
@@ -64,7 +64,7 @@
   margin-top: 0.2rem;
 }
 .wave-graph > h2 {
-  font-size: var(--fs-default);
+  font-size: var(--fs-16);
   margin-left: 9px;
   margin-bottom: 5px;
   color: #000000;

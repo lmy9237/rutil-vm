@@ -4,22 +4,22 @@
     width: 48%;
   }
   .network-backup-edit-nav {
-    font-size: var(--fs-default);
+    font-size: var(--fs-14);
     width: 23%;
-    background-color: #fafafa;
     /* border-right: var(--border-simple);  <- 이게 더 이쁜것같음*/
     border-right: var(--border-box);
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     font-weight: 500;
+    color: var(--color-nav);
   }
   .network-backup-edit-nav > div {
-    height: 48px;
+    height: 36px;
     align-items: center;
     cursor: pointer;
     display: flex;
     font-weight: 300;
   }
   .backup-edit-content {
-    font-size: var(--fs-default);
+    font-size: var(--fs-16);
     width: 86%;
   }

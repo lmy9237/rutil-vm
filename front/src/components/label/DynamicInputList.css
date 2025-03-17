@@ -1,3 +1,9 @@
-.dynamic-Input{
-    width:100%;
+.dynamic-btns>button{
+    width: 26px;
+    height: var(--h-primary);
+    color: var(--color-gray);
+}
+.dynamic-btns>button:hover{
+    color: var(--color-black);
+    border: var(--border-btn);
 }

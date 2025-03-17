@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TreeMenuItem from "./TreeMenuItem";
 import {
@@ -24,7 +24,11 @@ const NetworkTree = ({
 
   const [openDataCenters, setOpenDataCenters] = useState(JSON.parse(localStorage.getItem("openDataCenters")) || {});
   const [openNetworkDataCenters, setOpenNetworkDataCenters] = useState(() => JSON.parse(localStorage.getItem("openNetworkDataCenters")) || {});
-
+  useEffect(() => {
+    localStorage.setItem("openDataCenters", JSON.stringify(openDataCenters));
+    localStorage.setItem("openNetworkDataCenters", JSON.stringify(openNetworkDataCenters));
+  }, [openDataCenters, openNetworkDataCenters]);
+  
   const toggleNetworkDataCenter = (dataCenterId) => {
     setOpenNetworkDataCenters((prevState) => ({
       ...prevState,
