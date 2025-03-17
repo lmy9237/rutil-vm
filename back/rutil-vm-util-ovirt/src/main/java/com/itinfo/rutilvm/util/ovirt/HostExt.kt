@@ -137,7 +137,7 @@ fun Connection.findAllVmsFromHost(hostId: String, searchQuery: String = "",follo
 	checkHostExists(hostId)
 
 	this.srvVms().list().apply {
-		if (searchQuery.isNotEmpty()) follow(searchQuery)
+		if (searchQuery.isNotEmpty()) search(searchQuery)
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().vms().filter { it.host()?.id() == hostId }
 

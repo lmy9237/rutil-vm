@@ -128,7 +128,7 @@ fun Connection.findAllVmsFromCluster(clusterId: String, searchQuery: String = ""
 	checkClusterExists(clusterId)
 
 	this.srvVms().list().apply {
-		if (searchQuery.isNotEmpty()) follow(searchQuery)
+		if (searchQuery.isNotEmpty()) search(searchQuery)
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().vms().filter { it.cluster().id() == clusterId }
 
