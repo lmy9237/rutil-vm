@@ -34,7 +34,7 @@
 
 /*디스크(업로드)*/
 .storage-upload-first {
-  padding: 12px;
+  padding: 12px 0;
   display: flex;
   margin-bottom: 20px;
 }

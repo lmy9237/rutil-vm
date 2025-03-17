@@ -8,6 +8,7 @@ import DomainModals from "../modal/domain/DomainModals";
 import SearchBox from "../button/SearchBox"; // ✅ 검색 UI 추가
 import { renderDomainStatus, renderDomainStatusIcon } from "../Icon";
 import { convertBytesToGB } from "../../util";
+import TableRowClick from "../table/TableRowClick";
 
 /**
  * @name DomainDupl
@@ -32,6 +33,11 @@ const DomainDupl = ({
   // 검색어
   const transformedData = domains.map((domain) => ({
     ...domain,
+    name: (
+      <TableRowClick type="domains" id={domain?.id}>
+        {domain?.name}
+      </TableRowClick>
+    ),
     icon: renderDomainStatusIcon(domain.status),
     status: renderDomainStatus(domain?.status),
     hostedEngine:
@@ -102,7 +108,7 @@ const DomainDupl = ({
         data={filteredData} // ✅ 검색 필터링된 데이터 전달
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedDomains(selectedRows)}
-        clickableColumnIndex={[2]}
+        // clickableColumnIndex={[2]}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}

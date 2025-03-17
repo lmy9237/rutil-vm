@@ -1,0 +1,17 @@
+.nomal-search-box{
+    border:var(--border-btn) ;
+    width: 360px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+}
+.nomal-search-box input{
+    width: 94%;
+    border: none !important;
+}
+.search-box-btn{
+    cursor: pointer;
+}
+.search-box-btn:hover{
+    color: black;
+}

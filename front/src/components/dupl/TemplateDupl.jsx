@@ -19,6 +19,11 @@ const TemplateDupl = ({
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
   const transformedData = templates.map((temp) => ({
     ...temp,
+    name: (
+      <TableRowClick type="templates" id={temp?.id}>
+        {temp?.name}
+      </TableRowClick>
+    ),
     cluster: (
       <TableRowClick type="cluster" id={temp?.clusterVo?.id}>
         {temp?.clusterVo?.name}
@@ -64,7 +69,7 @@ const TemplateDupl = ({
         data={filteredData} // ✅ 검색 필터링된 데이터 사용
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedTemplates(selectedRows)}
-        clickableColumnIndex={[0]}
+        // clickableColumnIndex={[0]}
         searchQuery={searchQuery} // ✅ 검색어 전달
         setSearchQuery={setSearchQuery} // ✅ 검색어 변경 가능하도록 추가
         onClickableColumnClick={(row) => handleNameClick(row.id)}

@@ -21,7 +21,11 @@ const DiskDupl = ({
   const transformedData = disks.map((d) => {
     let diskData = {
       ...d,
-      alias: d?.alias || d?.diskImageVo?.alias,
+      alias: (
+        <TableRowClick type="disks" id={d?.id}>
+          {d?.alias || d?.diskImageVo?.alias}
+        </TableRowClick>
+      ),
       icon: icon(d.status),
       storageDomain: (
         <TableRowClick type="domains" id={d?.storageDomainVo?.id}>
@@ -82,7 +86,7 @@ const DiskDupl = ({
         shouldHighlight1stCol={true}
     
         onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
-        clickableColumnIndex={[0]}
+        // clickableColumnIndex={[0]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
         onContextMenuItems={(row) => [
