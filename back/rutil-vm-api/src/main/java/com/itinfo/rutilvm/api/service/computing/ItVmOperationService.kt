@@ -65,7 +65,7 @@ interface ItVmOperationService {
 	/**
 	 * [ItVmOperationService.reset]
 	 * 가상머신 - 재설정
-	 * 
+	 *
 	 * @param vmId [String] 가상머신 Id
 	 * @return [Boolean]
 	 */
@@ -166,8 +166,8 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 		log.info("migrateHostList ... vmId: {}", vmId)
 		val vm: Vm = conn.findVm(vmId)
 			.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
-		val res: List<Host> = conn.findAllHosts()
-			.getOrDefault(listOf()).filter { it.cluster().id() == vm.cluster().id() && it.id() != vm.host().id() }
+		val res: List<Host> = conn.findAllHosts().getOrDefault(emptyList())
+			.filter { it.cluster().id() == vm.cluster().id() && it.id() != vm.host().id() }
 		return res.fromHostsToIdentifiedVos()
 	}
 
@@ -181,22 +181,19 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 	@Throws(Error::class)
 	override fun exportOva(vmId: String, vmExportVo: VmExportVo): Boolean {
 		log.info("exportOva ... ")
-		val res: Result<Boolean> =
-			conn.exportVm(
-				vmId,
-				vmExportVo.hostVo.name,
-				vmExportVo.directory,
-				vmExportVo.fileName
-			)
+		val res: Result<Boolean> = conn.exportVm(
+			vmId,
+			vmExportVo.hostVo.name,
+			vmExportVo.directory,
+			vmExportVo.fileName
+		)
 		return res.isSuccess
 	}
 
 	@Throws(Error::class)
 	override fun console(vmId: String): ConsoleVo? {
 		log.info("console ... vmId: {}", vmId)
-		val res: Vm =
-			conn.findVm(vmId).getOrNull()
-				?: throw ErrorPattern.VM_NOT_FOUND.toException()
+		val res: Vm = conn.findVm(vmId).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
 		return res.toConsoleVo(conn, systemPropertiesVo)
 	}
 

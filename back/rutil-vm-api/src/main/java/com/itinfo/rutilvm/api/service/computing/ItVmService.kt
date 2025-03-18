@@ -274,6 +274,7 @@ class VmServiceImpl(
 	// 	return res?.toExternalHostProvider()
 	// }
 
+	// 외부 가상머신 가져오기 (vmware)
 	@Throws(Error::class)
 	override fun importExternalVm(externalVmVo: ExternalVmVo): ExternalVmVo? {
 		log.info("importExternalVm ...  externalVmVo: {}", externalVmVo)
@@ -297,13 +298,14 @@ class VmServiceImpl(
 		return res.toHostDeviceVos()
 	}
 
+	// 호스트 장치 추가
+
 	@Throws(Error::class)
 	override fun findAllEventsFromVm(vmId: String): List<EventVo> {
 		log.info("findAllEventsFromVm ... vmId: {}", vmId)
 		val vm: Vm = conn.findVm(vmId)
 			.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
-		val res: List<Event> = conn.findAllEvents()
-			.getOrDefault(emptyList())
+		val res: List<Event> = conn.findAllEvents().getOrDefault(emptyList())
 			.filter { it.vmPresent() && it.vm().name() == vm.name() }
 		return res.toEventVos()
 	}

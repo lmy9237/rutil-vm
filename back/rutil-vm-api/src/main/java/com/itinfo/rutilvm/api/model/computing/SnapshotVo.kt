@@ -75,45 +75,38 @@ fun List<Snapshot>.toSnapshotsIdName(): List<SnapshotVo> =
     this@toSnapshotsIdName.map { it.toSnapshotIdName() }
 
 
-fun Snapshot.toSnapshotMenuVo(conn: Connection, vmId: String): SnapshotVo {
-	val snapshot = this@toSnapshotMenuVo
-    val vm: Vm = conn.findVm(snapshot.vm().id()).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
-    // val disks: List<Disk> = conn.findAllSnapshotDisksFromVm(vmId, snapshot.id()).getOrDefault(listOf())
-
+fun Snapshot.toSnapshotMenu(): SnapshotVo {
+	val snapshot = this@toSnapshotMenu
     return SnapshotVo.builder {
         id { snapshot.id() }
         description { snapshot.description() }
         date { if (snapshot.vmPresent()) ovirtDf.format(snapshot.date().time) else "현재" }
         status { snapshot.snapshotStatus().value() }
         persistMemory { snapshot.persistMemorystate() }
-		vmViewVo { vm.toVmSystem() }
-        // snapshotDiskVos { disks.toSnapshotDiskVoFromVms() }
+		vmViewVo { snapshot.vm().toVmSystem() }
     }
 }
-fun List<Snapshot>.toSnapshotMenuVos(conn: Connection, vmId: String): List<SnapshotVo> =
-    this@toSnapshotMenuVos.map { it.toSnapshotMenuVo(conn, vmId) }
+fun List<Snapshot>.toSnapshotMenus(): List<SnapshotVo> =
+    this@toSnapshotMenus.map { it.toSnapshotMenu() }
 
-fun Snapshot.toSnapshotVo(conn: Connection, vmId: String): SnapshotVo {
-    val vm: Vm = conn.findVm(vmId)
-        .getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
-    val disks: List<Disk> = conn.findAllSnapshotDisksFromVm(vmId, this@toSnapshotVo.id()).getOrDefault(listOf())
-    val nics: List<Nic> = conn.findAllSnapshotNicsFromVm(vmId, this@toSnapshotVo.id()).getOrDefault(listOf())
+fun Snapshot.toSnapshotVo(): SnapshotVo {
+	val snapshot = this@toSnapshotVo
+    // val disks: List<Disk> = conn.findAllSnapshotDisksFromVm(vmId, this@toSnapshotVo.id()).getOrDefault(listOf())
+    // val nics: List<Nic> = conn.findAllSnapshotNicsFromVm(vmId, this@toSnapshotVo.id()).getOrDefault(listOf())
     // val applications: List<Application> = conn.findAllApplicationsFromVm(vmId).getOrDefault(listOf())
 
     return SnapshotVo.builder {
-        id { this@toSnapshotVo.id() }
-        description { this@toSnapshotVo.description() }
-        date { if (this@toSnapshotVo.vmPresent()) ovirtDf.format(this@toSnapshotVo.date().time) else "현재" }
-        status { this@toSnapshotVo.snapshotStatus().value() }
-        persistMemory { this@toSnapshotVo.persistMemorystate() }
-		vmViewVo { vm.toVmSystem() }
-        snapshotDiskVos { disks.toSnapshotDiskVoFromVms() }
-        nicVos { nics.toNicVosFromSnapshot(conn, vmId) }
+        id { snapshot.id() }
+        description { snapshot.description() }
+        date { if (snapshot.vmPresent()) ovirtDf.format(this@toSnapshotVo.date().time) else "현재" }
+        status { snapshot.snapshotStatus().value() }
+        persistMemory { snapshot.persistMemorystate() }
+		vmViewVo { snapshot.vm().toVmSystem() }
+        // snapshotDiskVos { disks.toSnapshotDiskVoFromVms() }
+        // nicVos { nics.toNicVosFromSnapshot(conn, vmId) }
         // applicationVos { applications.fromApplicationsToIdentifiedVos() }
     }
 }
-fun List<Snapshot>.toSnapshotVos(conn: Connection, vmId: String): List<SnapshotVo> =
-    this@toSnapshotVos.map { it.toSnapshotVo(conn, vmId) }
 
 
 fun SnapshotVo.toSnapshotBuilder(): Snapshot {

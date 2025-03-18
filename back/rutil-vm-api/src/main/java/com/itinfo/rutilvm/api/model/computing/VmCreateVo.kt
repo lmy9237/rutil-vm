@@ -281,7 +281,7 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		templateVo { template?.fromTemplateToIdentifiedVo() }
-		nicVos { nics.toVmNics(conn) }
+		nicVos { nics.toVmNics() } // TODO
 		diskAttachmentVos { diskAttachments.toDiskAttachmentVos(conn) }
 	}
 }

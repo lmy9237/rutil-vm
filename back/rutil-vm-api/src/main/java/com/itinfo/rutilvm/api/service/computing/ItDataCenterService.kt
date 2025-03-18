@@ -328,7 +328,7 @@ class DataCenterServiceImpl(
 
 		val clusterIds = clusters.map { it.id() }.toSet()
 		val res = templates.filter {
-			it.id().equals("00000000-0000-0000-0000-000000000000") || it.cluster().id() in clusterIds
+			it.id().equals(TemplateVo.DEFAULT_BLANK_TEMPLATE_ID) || it.cluster().id() in clusterIds
 		}
 		return res.map { it.fromTemplateToIdentifiedVo() }
 	}

@@ -16,14 +16,6 @@ fun Connection.findAllTemplates(searchQuery: String = "", follow: String = ""): 
 		if (follow.isNotEmpty()) follow(follow)
 	}.caseSensitive(false).send().templates()
 
-	// if (searchQuery.isNotEmpty() && follow.isNotEmpty())
-	// 	this.srvTemplates().list().search(searchQuery).follow(follow).caseSensitive(false).send().templates()
-	// else if (searchQuery.isNotEmpty())
-	// 	this.srvTemplates().list().search(searchQuery).caseSensitive(false).send().templates()
-	// else if (follow.isNotEmpty())
-	// 	this.srvTemplates().list().follow(follow).caseSensitive(false).send().templates()
-	// else
-	// 	this.srvTemplates().list().send().templates()
 }.onSuccess {
 	Term.TEMPLATE.logSuccess("목록조회")
 }.onFailure {
@@ -39,10 +31,6 @@ fun Connection.findTemplate(templateId: String, follow: String = ""): Result<Tem
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().template()
 
-	// if (follow.isNotEmpty())
-	// 	this.srvTemplate(templateId).get().follow(follow).send().template()
-	// else
-	// 	this.srvTemplate(templateId).get().send().template()
 }.onSuccess {
 	Term.TEMPLATE.logSuccess("상세조회", templateId)
 }.onFailure {
@@ -158,10 +146,6 @@ fun Connection.findAllDiskAttachmentsFromTemplate(templateId: String, follow: St
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().attachments()
 
-	// if (follow.isNotEmpty())
-	// 	this.srvDiskAttachmentsFromTemplate(templateId).list().follow(follow).send().attachments()
-	// else
-	// 	this.srvDiskAttachmentsFromTemplate(templateId).list().send().attachments()
 }.onSuccess {
 	Term.TEMPLATE.logSuccessWithin(Term.DISK_ATTACHMENT, "목록조회", templateId)
 }.onFailure {

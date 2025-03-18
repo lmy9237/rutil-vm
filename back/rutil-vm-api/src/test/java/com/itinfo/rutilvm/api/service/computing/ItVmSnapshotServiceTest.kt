@@ -22,12 +22,10 @@ class ItVmSnapshotServiceTest {
     @Autowired private lateinit var service: ItVmSnapshotService
 
     private lateinit var hostVm: String // hostVm
-    private lateinit var clone: String // apm
 
     @BeforeEach
     fun setup() {
-        hostVm = "a57c99eb-b786-4420-b7e9-23e6503cacd9" // HostedEngine
-        clone = "2d958f7b-0b0e-40a1-b542-11be90e89ac1"
+        hostVm = "097ca683-1477-4af3-9595-6bb34451bcb2" // HostedEngine
     }
 
     /**
@@ -40,7 +38,7 @@ class ItVmSnapshotServiceTest {
     fun should_findAllFromVm(){
         log.debug("should_findAllFromVm")
         val result: List<SnapshotVo> =
-            service.findAllFromVm(clone)
+            service.findAllFromVm(hostVm)
 
         assertThat(result, `is`(not(nullValue())))
         result.forEach { println(it) }
@@ -57,7 +55,7 @@ class ItVmSnapshotServiceTest {
     fun should_findOneFromVm(){
         log.debug("should_findOneFromVm")
         val result: SnapshotVo? =
-            service.findOneFromVm(clone, "58264ac4-768b-4867-aa50-e88bb4587a02")
+            service.findOneFromVm(hostVm, "e552a401-f82b-4136-9af7-8ca2c4936092")
 
         assertThat(result, `is`(not(nullValue())))
         println(result)
@@ -79,7 +77,7 @@ class ItVmSnapshotServiceTest {
         }
 
         val addResult: SnapshotVo? =
-            service.addFromVm(clone, addSnapshot)
+            service.addFromVm(hostVm, addSnapshot)
 
         assertThat(addResult?.id, `is`(not(nullValue())))
         assertThat(addResult?.description, `is`(addSnapshot.description))
@@ -117,7 +115,7 @@ class ItVmSnapshotServiceTest {
     fun should_previewFromVm() {
         log.debug("should_previewFromVm ... ")
         val result: Boolean =
-            service.previewFromVm(clone, "ae6daa9c-20b0-451c-864a-8186f3dbc542")
+            service.previewFromVm(hostVm, "ae6daa9c-20b0-451c-864a-8186f3dbc542")
 
         assertThat(result, `is`(not(nullValue())))
         assertThat(result, `is`(true))
@@ -133,7 +131,7 @@ class ItVmSnapshotServiceTest {
     fun should_commitFromVm() {
         log.debug("should_commitFromVm ... ")
         val result: Boolean =
-            service.commitFromVm(clone)
+            service.commitFromVm(hostVm)
 
         assertThat(result, `is`(not(nullValue())))
         assertThat(result, `is`(true))
@@ -149,7 +147,7 @@ class ItVmSnapshotServiceTest {
     fun should_undoFromVm() {
         log.debug("should_undoFromVm ... ")
         val result: Boolean =
-            service.undoFromVm(clone)
+            service.undoFromVm(hostVm)
 
         assertThat(result, `is`(not(nullValue())))
         assertThat(result, `is`(true))

@@ -452,7 +452,6 @@ fun List<Vm>.toVmViewVos(conn: Connection) =
 
 fun Vm.toTemplateVmVo(conn: Connection): VmViewVo {
 	val vm = this@toTemplateVmVo
-	val reports: List<ReportedDevice> = conn.findAllReportedDevicesFromVm(vm.id()).getOrDefault(listOf())
 	return VmViewVo.builder {
 		id { vm.id() }
 		name { vm.name() }
@@ -462,8 +461,8 @@ fun Vm.toTemplateVmVo(conn: Connection): VmViewVo {
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
 			upTime { statistics.findVmUptime() }
-			ipv4 { reports.findVmIpv4() }
-			ipv6 { reports.findVmIpv6() }
+			ipv4 { vm.reportedDevices().findVmIpv4() }
+			ipv6 { vm.reportedDevices().findVmIpv6() }
 			hostVo { host?.fromHostToIdentifiedVo() }
 		} else {
 			fqdn { null }
@@ -477,23 +476,7 @@ fun Vm.toTemplateVmVo(conn: Connection): VmViewVo {
 fun List<Vm>.toTemplateVmVos(conn: Connection) =
 	this@toTemplateVmVos.map { it.toTemplateVmVo(conn) }
 
-// fun Nic.toVmNic(conn: Connection, vmId: String): NicVo {
-// 	val nic = this@toVmNic
-// 	val vm: Vm? = conn.findVm(vmId).getOrNull()
-// 	val vnicProfile: VnicProfile? = conn.findVnicProfile(nic.vnicProfile().id()).getOrNull()
-// 	val network: Network? = vnicProfile?.network()?.let { conn.findNetwork(it.id()).getOrNull() }
-//
-// 	return NicVo.builder {
-// 		id { nic.id() }
-// 		name { nic.name() }
-// 		if (network != null) {
-// 			networkVo { network.fromNetworkToIdentifiedVo() }
-// 		}
-// 		if (vnicProfile != null) {
-// 			vnicProfileVo { vnicProfile.fromVnicProfileToIdentifiedVo() }
-// 		}
-// 	}
-// }
+
 fun Vm.toStorageDomainVm(conn: Connection, storageDomainId: String): VmViewVo {
 	val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(this@toStorageDomainVm.id())
 		.getOrDefault(listOf())

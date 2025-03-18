@@ -3,20 +3,15 @@ package com.itinfo.rutilvm.api.service.computing
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.*
-import com.itinfo.rutilvm.api.model.setting.PermissionVo
-import com.itinfo.rutilvm.api.model.setting.toPermissionVos
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.Template
-import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.types.Nic
 import org.ovirt.engine.sdk4.types.DiskAttachment
 import org.ovirt.engine.sdk4.types.Event
-import org.ovirt.engine.sdk4.types.Permission
-import org.ovirt.engine.sdk4.types.StorageDomain
 import org.springframework.stereotype.Service
 
 interface ItTemplateService {
@@ -38,16 +33,15 @@ interface ItTemplateService {
 	fun findOne(templateId: String): TemplateVo?
 	/**
 	 * [ItTemplateService.findAllDiskAttachmentsFromVm]
-	 * 디스크 목록(가상머신) [ItVmDiskService.findAllFromVm] 약간 다름
+	 * 디스크 목록(가상머신) 템플릿 생성시 밑에 보여질 디스크 보여주기
+	 *  [ItVmDiskService.findAllFromVm] 약간 다름
 	 *
 	 * @param vmId [String] 가상머신 Id
 	 * @return List<[DiskAttachmentVo]>
 	 */
 	@Throws(Error::class)
 	fun findAllDiskAttachmentsFromVm(vmId: String): List<DiskAttachmentVo>
-	// 템플릿 생성창
-	// 		스토리지 목록(가상머신) [ItStorageService.findAllFromDataCenter]
-	// 		디스크 프로파일 목록(가상머신) [ItStorageService.findAllDiskProfilesFromStorageDomain]
+
 	/**
 	 * [ItTemplateService.add]
 	 * 템플릿 생성 (Vm Status != up)
@@ -88,6 +82,7 @@ interface ItTemplateService {
 	 */
 	@Throws(Error::class)
 	fun findAllVmsFromTemplate(templateId: String): List<VmViewVo>
+
 	/**
 	 * [ItTemplateService.findAllNicsFromTemplate]
 	 * 템플릿 네트워크 인터페이스 목록
@@ -125,23 +120,25 @@ interface ItTemplateService {
 	 */
 	@Throws(Error::class)
 	fun removeNicFromTemplate(templateId: String, nicId: String): Boolean
+
 	/**
+	 * [ItTemplateService.findAllDisksFromTemplate]
 	 * 템플릿 디스크 목록
+	 *
 	 * @param templateId [String] 템플릿 id
 	 * @return List<[DiskAttachmentVo]> 디스크 목록
 	 */
 	@Throws(Error::class)
 	fun findAllDisksFromTemplate(templateId: String): List<DiskAttachmentVo>
-	/**
-	 * [ItTemplateService.findAllStorageDomainsFromTemplate]
-	 * 템플릿 스토리지 도메인 목록
-	 *
-	 * @param templateId [String] 템플릿 id
-	 * @return List<[StorageDomainVo]> 스토리지 도메인 목록
-	 */
-	@Throws(Error::class)
-	fun findAllStorageDomainsFromTemplate(templateId: String): List<StorageDomainVo>
-
+	// /**
+	//  * [ItTemplateService.findAllStorageDomainsFromTemplate]
+	//  * 템플릿 스토리지 도메인 목록
+	//  *
+	//  * @param templateId [String] 템플릿 id
+	//  * @return List<[StorageDomainVo]> 스토리지 도메인 목록
+	//  */
+	// @Throws(Error::class)
+	// fun findAllStorageDomainsFromTemplate(templateId: String): List<StorageDomainVo>
 	 /**
 	  * [ItTemplateService.findAllEventsFromTemplate]
 	  * 템플릿 이벤트 목록
@@ -151,16 +148,6 @@ interface ItTemplateService {
 	  */
 	 @Throws(Error::class)
 	fun findAllEventsFromTemplate(templateId: String): List<EventVo>
-	// /**
-	//  * [ItTemplateService.findAllPermissionsFromTemplate]
-	//  * 템플릿 권한 목록
-	//  *
-	//  * @param templateId [String] 템플릿 id
-	//  * @return 권한 목록
-	//  */
-	// @Deprecated("사용안함")
-	// @Throws(Error::class)
-	// fun findAllPermissionsFromTemplate(templateId: String): List<PermissionVo>
 }
 
 @Service
@@ -170,25 +157,22 @@ class TemplateServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<TemplateVo> {
 		log.info("findAll ... ")
-		val res: List<Template> = conn.findAllTemplates()
-			.getOrDefault(listOf())
-		return res.toTemplatesMenu(conn)
+		val res: List<Template> = conn.findAllTemplates().getOrDefault(emptyList())
+		return res.toTemplateMenus(conn)
 	}
 
 	@Throws(Error::class)
 	override fun findOne(templateId: String): TemplateVo? {
 		log.info("findOne ... templateId: {}", templateId)
-		val res: Template? = conn.findTemplate(templateId)
-			.getOrNull()
+		val res: Template? = conn.findTemplate(templateId).getOrNull()
 		return res?.toTemplateInfo(conn)
 	}
 
 	@Throws(Error::class)
 	override fun findAllDiskAttachmentsFromVm(vmId: String): List<DiskAttachmentVo> {
 		log.info("findAllDisksFromVm ... vmId: {}", vmId)
-		val res: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmId)
-			.getOrDefault(listOf())
-		return res.toDiskAttachmentsToTemplate(conn)
+		val res: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmId, follow = "disk").getOrDefault(emptyList())
+		return res.toDiskAttachmentsToTemplate(conn) //1.88
 	}
 
 	@Throws(Error::class)
@@ -203,7 +187,7 @@ class TemplateServiceImpl(
 
 	@Throws(Error::class)
 	override fun update(templateVo: TemplateVo): TemplateVo? {
-		log.info("update ... templateId: {}", templateVo.id)
+		log.info("update ... templateId: {}", templateVo)
 		val res: Template? = conn.updateTemplate(
 			templateVo.id,
 			templateVo.toEditTemplateBuilder()
@@ -221,8 +205,7 @@ class TemplateServiceImpl(
 	@Throws(Error::class)
 	override fun findAllVmsFromTemplate(templateId: String): List<VmViewVo> {
 		log.info("findAllVmsFromTemplate ... templateId: {}", templateId)
-		val res: List<Vm> = conn.findAllVms()
-			.getOrDefault(listOf())
+		val res: List<Vm> = conn.findAllVms(follow = "reporteddevices").getOrDefault(emptyList())
 			.filter { it.templatePresent() && it.template().id() == templateId }
 		return res.toTemplateVmVos(conn)
 	}
@@ -230,8 +213,7 @@ class TemplateServiceImpl(
 	@Throws(Error::class)
 	override fun findAllNicsFromTemplate(templateId: String): List<NicVo> {
 		log.info("findAllNicsFromTemplate ... templateId: {}", templateId)
-		val res: List<Nic> = conn.findAllNicsFromTemplate(templateId)
-			.getOrDefault(listOf())
+		val res: List<Nic> = conn.findAllNicsFromTemplate(templateId).getOrDefault(emptyList())
 		return res.toNicVosFromTemplate(conn)
 	}
 
@@ -265,47 +247,38 @@ class TemplateServiceImpl(
 	@Throws(Error::class)
 	override fun findAllDisksFromTemplate(templateId: String): List<DiskAttachmentVo> {
 		log.info("findAllDisksFromTemplate ... templateId: {}", templateId)
-		val res: List<DiskAttachment> = conn.findAllDiskAttachmentsFromTemplate(templateId)
-			.getOrDefault(listOf())
-			.filter { it.diskPresent() }
-		return res.toDiskAttachmentsToTemplate(conn)
+		val res: List<DiskAttachment> = conn.findAllDiskAttachmentsFromTemplate(templateId, follow = "disk").getOrDefault(emptyList())
+		// val res: List<DiskAttachment> = conn.findAllDiskAttachmentsFromTemplate(templateId)
+		// 	.getOrDefault(emptyList())
+		// 	.filter { it.diskPresent() }
+		// return res.toDiskAttachmentsToTemplate(conn) // 1.15
+		return res.toDiskAttachmentsToTemplate(conn) // 0.98
 	}
 
-	@Throws(Error::class)
-	override fun findAllStorageDomainsFromTemplate(templateId: String): List<StorageDomainVo> {
-		log.info("findAllStorageDomainsFromTemplate ... ")
-		val res: List<StorageDomain> = conn.findAllDiskAttachmentsFromTemplate(templateId)
-			.getOrDefault(listOf())
-			.mapNotNull { diskAttachment ->
-				val disk: Disk? = conn.findDisk(diskAttachment.disk().id()).getOrNull()
-				disk?.storageDomains()?.first()?.let {
-					conn.findStorageDomain(it.id()).getOrNull()
-				}
-			}
-			.distinctBy { it.id() } // ID를 기준으로 중복 제거
-		return res.toStorageDomainSizes()
-	}
+	// @Throws(Error::class)
+	// override fun findAllStorageDomainsFromTemplate(templateId: String): List<StorageDomainVo> {
+	// 	log.info("findAllStorageDomainsFromTemplate ... ")
+	// 	val res: List<StorageDomain> = conn.findAllDiskAttachmentsFromTemplate(templateId)
+	// 		.getOrDefault(emptyList())
+	// 		.mapNotNull { diskAttachment ->
+	// 			val disk: Disk? = conn.findDisk(diskAttachment.disk().id()).getOrNull()
+	// 			disk?.storageDomains()?.first()?.let {
+	// 				conn.findStorageDomain(it.id()).getOrNull()
+	// 			}
+	// 		}
+	// 		.distinctBy { it.id() } // ID를 기준으로 중복 제거
+	// 	return res.toStorageDomainSizes()
+	// }
 
 	@Throws(Error::class)
 	override fun findAllEventsFromTemplate(templateId: String): List<EventVo> {
 		log.info("findAllEventsFromTemplate ... ")
-		val template: Template? = conn.findTemplate(templateId)
-			.getOrNull()
-		val res: List<Event> = conn.findAllEvents()
-			.getOrDefault(listOf())
+		val template: Template? = conn.findTemplate(templateId).getOrNull()
+		val res: List<Event> = conn.findAllEvents().getOrDefault(emptyList())
 			.filter { it.templatePresent() && it.template().name() == template?.name() }
 		return res.toEventVos()
 	}
 
-
-	// @Deprecated("사용안함")
-	// @Throws(Error::class)
-	// override fun findAllPermissionsFromTemplate(templateId: String): List<PermissionVo> {
-	// 	log.info("findAllPermissionsFromTemplate ... ")
-	// 	val res: List<Permission> =
-	// 		conn.findAllPermissionsFromCluster(templateId).getOrDefault(listOf())
-	// 	return res.toPermissionVos(conn)
-	// }
 
 	companion object {
 		private val log by LoggerDelegate()

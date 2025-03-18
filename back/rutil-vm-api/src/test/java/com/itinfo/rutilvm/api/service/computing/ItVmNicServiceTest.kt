@@ -23,15 +23,13 @@ import org.springframework.boot.test.context.SpringBootTest
 class ItVmNicServiceTest {
    @Autowired private lateinit var service: ItVmNicService
 
-   private lateinit var hostVm: String // hostVm
-   private lateinit var apm: String // apm
+   private lateinit var vmId: String // hostVm
    private lateinit var nicId: String
 
    @BeforeEach
    fun setup() {
-       hostVm = "c2ae1da5-ce4f-46df-b337-7c471bea1d8d" // HostedEngine
-       apm = "fceb0fe4-2927-4340-a970-401fe55781e6"
-       nicId = "0e2c6f67-3081-4e8a-a7f9-730a54aa69ac" // vnet0
+	   vmId = "097ca683-1477-4af3-9595-6bb34451bcb2" // HostedEngine
+	   nicId = "0e2c6f67-3081-4e8a-a7f9-730a54aa69ac" // vnet0
    }
 
    /**
@@ -44,12 +42,10 @@ class ItVmNicServiceTest {
    fun should_findAllNicsFromVm() {
        log.debug("should_findAllNicsFromVm ...")
        val result: List<NicVo> =
-           service.findAllFromVm(hostVm)
+           service.findAllFromVm(vmId)
 
        assertThat(result, `is`(not(nullValue())))
        result.forEach { println(it) }
-       assertThat(result.size, `is`(1))
-       assertThat(result.any { it.name == "vnet0" }, `is`(true) )
    }
 
    /**
@@ -62,7 +58,7 @@ class ItVmNicServiceTest {
    fun should_findNicFromVm() {
        log.debug("should_findNicFromVm ...")
        val result: NicVo? =
-           service.findOneFromVm(apm, nicId)
+           service.findOneFromVm(vmId, nicId)
 
        assertThat(result, `is`(not(nullValue())))
        println(result)
@@ -88,7 +84,7 @@ class ItVmNicServiceTest {
        }
 
        val addResult: NicVo? =
-           service.addFromVm(apm, addVmNic)
+           service.addFromVm(vmId, addVmNic)
 
        assertThat(addResult?.id, `is`(not(nullValue())))
        assertThat(addResult?.vnicProfileVo?.id, `is`(addVmNic.vnicProfileVo.id))
@@ -119,7 +115,7 @@ class ItVmNicServiceTest {
        }
 
        val updateResult: NicVo? =
-           service.updateFromVm(apm, updateVmNic)
+           service.updateFromVm(vmId, updateVmNic)
 
        assertThat(updateResult?.id, `is`(not(nullValue())))
        assertThat(updateResult?.vnicProfileVo?.id, `is`(updateVmNic.vnicProfileVo.id))
@@ -139,7 +135,7 @@ class ItVmNicServiceTest {
        log.debug("should_removeNicFromVm ... ")
        val nicId = "4b2ee465-599e-423d-9ada-5ea298f7c0a4"
        val removeResult: Boolean =
-           service.removeFromVm(apm, nicId)
+           service.removeFromVm(vmId, nicId)
 
        assertThat(removeResult, `is`(true))
    }

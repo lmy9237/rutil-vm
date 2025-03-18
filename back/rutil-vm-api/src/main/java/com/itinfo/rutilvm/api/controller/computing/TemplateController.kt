@@ -9,7 +9,6 @@ import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
-import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.service.computing.ItTemplateService
 
 import io.swagger.annotations.*
@@ -304,28 +303,28 @@ class TemplateController: BaseController() {
 	}
 
 
-	@ApiOperation(
-		httpMethod="GET",
-		value="템플릿 스토리지 도메인 목록",
-		notes="선택된 템플릿의 스토리지 도메인 목록을 조회한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="templateId", value="템플릿 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/{templateId}/storageDomains")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun findAllStorageDomainsFromTemplate(
-		@PathVariable templateId: String? = null,
-	): ResponseEntity<List<StorageDomainVo>> {
-		if (templateId.isNullOrEmpty())
-			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
-		log.info("/computing/templates/{}/storageDomains 스토리지 도메인", templateId)
-		return ResponseEntity.ok(iTemplate.findAllStorageDomainsFromTemplate(templateId))
-	}
+	// @ApiOperation(
+	// 	httpMethod="GET",
+	// 	value="템플릿 스토리지 도메인 목록",
+	// 	notes="선택된 템플릿의 스토리지 도메인 목록을 조회한다"
+	// )
+	// @ApiImplicitParams(
+	// 	ApiImplicitParam(name="templateId", value="템플릿 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 200, message = "OK")
+	// )
+	// @GetMapping("/{templateId}/storageDomains")
+	// @ResponseBody
+	// @ResponseStatus(HttpStatus.OK)
+	// fun findAllStorageDomainsFromTemplate(
+	// 	@PathVariable templateId: String? = null,
+	// ): ResponseEntity<List<StorageDomainVo>> {
+	// 	if (templateId.isNullOrEmpty())
+	// 		throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
+	// 	log.info("/computing/templates/{}/storageDomains 스토리지 도메인", templateId)
+	// 	return ResponseEntity.ok(iTemplate.findAllStorageDomainsFromTemplate(templateId))
+	// }
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -350,29 +349,6 @@ class TemplateController: BaseController() {
 		return ResponseEntity.ok(iTemplate.findAllEventsFromTemplate(templateId))
 	}
 
-
-//	@ApiOperation(
-//		httpMethod="GET",
-//		value="템플릿 권한 목록",
-//		notes="선택된 템플릿의 권한 목록을 조회한다"
-//	)
-//	@ApiImplicitParams(
-//		ApiImplicitParam(name="templateId", value="템플릿 ID", dataTypeClass=String::class, required=true, paramType="path"),
-//	)
-//	@ApiResponses(
-//		ApiResponse(code = 200, message = "OK")
-//	)
-//	@GetMapping("/{templateId}/permissions")
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	fun findAllPermissions(
-//		@PathVariable templateId: String? = null,
-//	): ResponseEntity<List<PermissionVo>> {
-//		if (templateId.isNullOrEmpty())
-//			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
-//		log.info("--- template 권한")
-//		return ResponseEntity.ok(iTemplate.findAllPermissionsFromTemplate(templateId))
-//	}
 
 	companion object {
 		private val log by LoggerDelegate()

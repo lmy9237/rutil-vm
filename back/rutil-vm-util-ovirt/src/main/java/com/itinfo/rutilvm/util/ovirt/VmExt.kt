@@ -547,10 +547,13 @@ fun Connection.findReportedDeviceFromVmNic(vmId: String, nicId: String, rpId: St
 private fun Connection.srvAllDiskAttachmentsFromVm(vmId: String): DiskAttachmentsService =
 	this.srvVm(vmId).diskAttachmentsService()
 
-fun Connection.findAllDiskAttachmentsFromVm(vmId: String): Result<List<DiskAttachment>> = runCatching {
+fun Connection.findAllDiskAttachmentsFromVm(vmId: String, follow: String = ""): Result<List<DiskAttachment>> = runCatching {
 	checkVmExists(vmId)
 
-	this.srvAllDiskAttachmentsFromVm(vmId).list().follow("disk").send().attachments() ?: listOf()
+	this.srvAllDiskAttachmentsFromVm(vmId).list().apply {
+		if(follow.isNotEmpty()) follow(follow)
+	}.send().attachments()
+
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "목록조회", vmId)
 }.onFailure {
@@ -561,10 +564,13 @@ fun Connection.findAllDiskAttachmentsFromVm(vmId: String): Result<List<DiskAttac
 fun Connection.srvDiskAttachmentFromVm(vmId: String, diskAttachmentId: String): DiskAttachmentService =
 	this.srvVm(vmId).diskAttachmentsService().attachmentService(diskAttachmentId)
 
-fun Connection.findDiskAttachmentFromVm(vmId: String, diskAttachmentId: String): Result<DiskAttachment?> = runCatching {
+fun Connection.findDiskAttachmentFromVm(vmId: String, diskAttachmentId: String, follow: String = ""): Result<DiskAttachment?> = runCatching {
 	checkVmExists(vmId)
 
-	this.srvDiskAttachmentFromVm(vmId, diskAttachmentId).get().send().attachment()
+	this.srvDiskAttachmentFromVm(vmId, diskAttachmentId).get().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().attachment()
+
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "상세조회", vmId)
 }.onFailure {
@@ -737,10 +743,13 @@ fun Connection.expectDiskStatus(vmId: String, diskAttachmentId: String, activeSt
 private fun Connection.srvSnapshotsFromVm(vmId: String): SnapshotsService =
 	this.srvVm(vmId).snapshotsService()
 
-fun Connection.findAllSnapshotsFromVm(vmId: String): Result<List<Snapshot>> = runCatching {
+fun Connection.findAllSnapshotsFromVm(vmId: String, follow: String = ""): Result<List<Snapshot>> = runCatching {
 	checkVmExists(vmId)
 
-	srvSnapshotsFromVm(vmId).list().send().snapshots()
+	srvSnapshotsFromVm(vmId).list().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().snapshots()
+
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "목록조회", vmId)
 }.onFailure {
@@ -752,10 +761,12 @@ fun Connection.findAllSnapshotsFromVm(vmId: String): Result<List<Snapshot>> = ru
 private fun Connection.srvSnapshotFromVm(vmId: String, snapshotId: String): SnapshotService =
 	this.srvSnapshotsFromVm(vmId).snapshotService(snapshotId)
 
-fun Connection.findSnapshotFromVm(vmId: String, snapshotId: String): Result<Snapshot?> = runCatching {
+fun Connection.findSnapshotFromVm(vmId: String, snapshotId: String, follow: String = ""): Result<Snapshot?> = runCatching {
 	checkVmExists(vmId)
 
-	this.srvSnapshotFromVm(vmId, snapshotId).get().send().snapshot()
+	this.srvSnapshotFromVm(vmId, snapshotId).get().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().snapshot()
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "상세조회", vmId)
 }.onFailure {

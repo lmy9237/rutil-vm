@@ -141,19 +141,15 @@ fun StorageDomain.toStorageDomainMenu(conn: Connection): StorageDomainVo {
 	val storageDomain = this@toStorageDomainMenu
 	val dataCenter: DataCenter? = resolveDataCenter(conn)
 	val storageDomainStatus = dataCenter?.let {
-		conn.findAttachedStorageDomainFromDataCenter(it.id(), storageDomain.id())
-			.getOrNull()?.status()
+		conn.findAttachedStorageDomainFromDataCenter(it.id(), storageDomain.id()).getOrNull()?.status()
 	}
-	val hostedVm = conn.findAllVmsFromStorageDomain(storageDomain.id())
-		.getOrDefault(listOf())
-		.any { it.origin() == "managed_hosted_engine" }
 
 	return StorageDomainVo.builder {
 		id { storageDomain.id() }
 		name { storageDomain.name() }
 		description { storageDomain.description() }
 		status { storageDomainStatus }
-		hostedEngine { hostedVm }
+		hostedEngine { storageDomain.vms().any { it.origin() == "managed_hosted_engine" } }
 		comment { storageDomain.comment() }
 		domainType { storageDomain.type().value() }
 		domainTypeMaster { storageDomain.masterPresent() && storageDomain.master() }

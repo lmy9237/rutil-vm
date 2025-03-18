@@ -32,8 +32,11 @@ fun Connection.findAllDisks(searchQuery: String = ""): Result<List<Disk>> = runC
 fun Connection.srvDisk(diskId: String): DiskService =
 	srvAllDisks().diskService(diskId)
 
-fun Connection.findDisk(diskId: String): Result<Disk?> = runCatching {
-	this.srvDisk(diskId).get().allContent(true).send().disk()
+fun Connection.findDisk(diskId: String, follow: String = ""): Result<Disk?> = runCatching {
+	this.srvDisk(diskId).get().allContent(true).apply {
+		if(follow.isNotEmpty()) follow(follow)
+	}.send().disk()
+
 }.onSuccess {
 	Term.DISK.logSuccess("상세조회")
 }.onFailure {

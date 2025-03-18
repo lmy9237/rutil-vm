@@ -7,9 +7,6 @@ import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.builders.SnapshotBuilder
-import org.ovirt.engine.sdk4.builders.VmBuilder
-import org.ovirt.engine.sdk4.services.SystemService
-import org.ovirt.engine.sdk4.services.VmService
 import org.ovirt.engine.sdk4.types.*
 import org.springframework.stereotype.Service
 
@@ -115,18 +112,16 @@ class VmSnapshotServiceImpl(
 	@Throws(Error::class)
 	override fun findAllFromVm(vmId: String): List<SnapshotVo> {
 		log.info("findAllFromVm ... ")
-		val res: List<Snapshot> = conn.findAllSnapshotsFromVm(vmId)
-			.getOrDefault(listOf())
+		val res: List<Snapshot> = conn.findAllSnapshotsFromVm(vmId).getOrDefault(emptyList())
 			.filter { it.snapshotType() != SnapshotType.ACTIVE }
-		return res.toSnapshotMenuVos(conn, vmId)
+		return res.toSnapshotMenus() // 2.35
 	}
 
 	@Throws(Error::class)
 	override fun findOneFromVm(vmId: String, snapshotId: String): SnapshotVo? {
 		log.info("findOneFromVm ... vmId: {}, snapshotId: {}", vmId, snapshotId)
-		val res: Snapshot? = conn.findSnapshotFromVm(vmId, snapshotId)
-			.getOrNull()
-		return res?.toSnapshotVo(conn, vmId)
+		val res: Snapshot? = conn.findSnapshotFromVm(vmId, snapshotId).getOrNull()
+		return res?.toSnapshotVo()  // 1.14
 	}
 
 	@Throws(Error::class)
@@ -136,7 +131,7 @@ class VmSnapshotServiceImpl(
 			vmId,
 			snapshotVo.toSnapshotBuilder()
 		).getOrNull()
-		return res?.toSnapshotVo(conn, vmId)
+		return res?.toSnapshotVo()
 	}
 
 	@Throws(Error::class)

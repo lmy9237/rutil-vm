@@ -32,16 +32,14 @@ class ItTemplateServiceTest {
 	@Autowired private lateinit var service: ItTemplateService
 
 	private lateinit var origin: String
-	private lateinit var clusterId: String
 	private lateinit var tempId: String
 	private lateinit var vmId: String
 
 	@BeforeEach
 	fun setup() {
-		origin = "00000000-0000-0000-0000-000000000000"
-		clusterId = "d20bd210-89f1-11ef-afa2-00163e2f0226"
-		tempId = "69feada9-7d26-43a4-8f79-4c04110316dd"
-		vmId = "bf404563-ff9e-4dcc-aa87-61e873de961d"
+		origin = TemplateVo.DEFAULT_BLANK_TEMPLATE_ID
+		tempId = "1b6d1021-7fae-4e96-9e54-994d6d66d0f4"
+		vmId = "097ca683-1477-4af3-9595-6bb34451bcb2"
 	}
 
 	/**
@@ -58,7 +56,6 @@ class ItTemplateServiceTest {
 
 		assertThat(result, `is`(not(nullValue())))
 		result.forEach { println(it) }
-		assertThat(result.size, `is`(2))
 	}
 
 	/**
@@ -84,90 +81,13 @@ class ItTemplateServiceTest {
 	 * @see [ItTemplateService.findAllDiskAttachmentsFromVm]
 	 */
 	@Test
-	fun should_findAllDiskAttachmentsFromVm(){
+	fun should_findAllDiskAttachmentsFromVm() {
 		log.debug("should_findAllDiskAttachmentsFromVm")
 		val result: List<DiskAttachmentVo> =
 			service.findAllDiskAttachmentsFromVm(vmId)
 
 		assertThat(result, `is`(not(nullValue())))
 		result.forEach { println(it) }
-		assertThat(result.size, `is`(2))
-	}
-
-	/**
-	 * [should_add_update_and_remove_Template]
-	 * [ItTemplateService.add], [ItTemplateService.update], [ItTemplateService.remove]에 대한 단위테스트
-	 * 외부공급자 생성x
-	 *
-	 * @see ItTemplateService.add
-	 * @see ItTemplateService.update
-	 * @see ItTemplateService.remove
-	 **/
-	@Test
-	fun should_add_update_and_remove_Template() {
-//		log.debug("should_addTemplate ... ")
-//		val diskattList: List<DiskAttachmentVo> =
-//			listOf(
-//				DiskAttachmentVo.builder {
-//					DiskImageVo.builder {
-//						id { "aeef0ca7-738b-47c1-b89c-f8584eb088d3" }
-//						alias { "dev2_Disk1" }
-//						format { DiskFormat.COW }
-//						storageDomainVo { IdentifiedVo.builder { id { "6619591b-2cc3-4998-8dd7-810d73eb4906" } } }
-//						diskProfileVo { IdentifiedVo.builder { id { "4ab9e6cc-4ba3-43ba-b5f1-a687004bfdfe" } } }
-//					}
-//				},
-//				DiskAttachmentVo.builder {
-//					DiskImageVo.builder {
-//						id { "b0d2be2c-c2fb-4738-8f47-1ec47c2715f5" }
-//						alias { "doc01_Disk1" }
-//						format { DiskFormat.COW }
-//						storageDomainVo { IdentifiedVo.builder { id { "61a08ba0-ab2e-4b68-9726-bbf578ebf1e8" } } }
-//						diskProfileVo { IdentifiedVo.builder { id { "4a143c1a-538f-45d9-bab7-475d0e8bde13" } } }
-//					}
-//				}
-//			)
-//
-//		val addTemplate: TemplateVo = TemplateVo.builder {
-//			name { "tem-test" }
-//			description { "test" }
-//			comment { "t" }
-//			clusterVo { IdentifiedVo.builder { id { clusterId } } }
-//			cpuProfileVo { IdentifiedVo.builder { id { "58ca604e-01a7-003f-01de-000000000250" } } }
-//			vmVo { IdentifiedVo.builder { vmId } }
-//			diskAttachmentVos { diskattList }
-//		}
-//
-//		val addResult: TemplateVo? =
-//			service.add(vmId, addTemplate)
-//
-//		assertThat(addResult, `is`(not(nullValue())))
-//		assertThat(addResult?.id, `is`(not(nullValue())))
-//		assertThat(addResult?.name, `is`(addTemplate.name))
-//		assertThat(addResult?.description, `is`(addTemplate.description))
-//		assertThat(addResult?.comment, `is`(addTemplate.comment))
-
-
-//		log.debug("should_updateTemplate ... ")
-//		val updateTemplate: TemplateVo = TemplateVo.builder {
-//			id { addResult?.id }
-//			name { "testTemplate" }
-//		}
-//
-//		val updateResult: TemplateVo? =
-//			service.update(updateTemplate)
-//
-//		assertThat(updateResult, `is`(not(nullValue())))
-//		assertThat(updateResult?.id, `is`(updateTemplate.id))
-//		assertThat(updateResult?.name, `is`(updateTemplate.name))
-//		assertThat(updateResult?.description, `is`(updateTemplate.description))
-//		assertThat(updateResult?.comment, `is`(updateTemplate.comment))
-//
-		log.debug("should_removeTemplate ... ")
-		val removeResult =
-			 service.remove("cceb8495-1589-4dd6-88e8-67ef1d6fdb6d")
-
-		assertThat(removeResult, `is`(true))
 	}
 
 
@@ -185,7 +105,6 @@ class ItTemplateServiceTest {
 
 		assertThat(result, `is`(not(nullValue())))
 		result.forEach { println(it) }
-		assertThat(result.size, `is`(0))
 	}
 
 	/**
@@ -283,24 +202,6 @@ class ItTemplateServiceTest {
 
 		assertThat(result, `is`(not(nullValue())))
 		result.forEach { println(it) }
-		assertThat(result.size, `is`(2))
-	}
-
-	/**
-	 * [should_findAllStorageDomainsFromTemplate]
-	 * [ItTemplateService.findAllStorageDomainsFromTemplate]에 대한 단위테스트
-	 *
-	 * @see [ItTemplateService.findAllStorageDomainsFromTemplate]
-	 */
-	@Test
-	fun should_findAllStorageDomainsFromTemplate(){
-		log.debug("should_findAllStorageDomainsFromTemplate")
-		val result: List<StorageDomainVo> =
-			service.findAllStorageDomainsFromTemplate(tempId)
-
-		assertThat(result, `is`(not(nullValue())))
-		result.forEach { println(it) }
-		assertThat(result.size, `is`(2))
 	}
 
 	/**

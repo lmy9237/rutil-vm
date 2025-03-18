@@ -319,17 +319,13 @@ fun Disk.toDiskVo(conn: Connection, vmId: String): DiskImageVo {
 
 fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 	val disk = this@toTemplateDiskInfo
-	val diskProfile: DiskProfile? =
-		if(disk.diskProfilePresent()) conn.findDiskProfile(disk.diskProfile().id()).getOrNull()
-		else null
 	val storageDomain: StorageDomain? = conn.findStorageDomain(this.storageDomains().first().id()).getOrNull()
 	val dataCenter: DataCenter? = storageDomain?.dataCenters()?.first()?.let {
 		conn.findDataCenter(it.id()).getOrNull()
 	}
-	val diskLink: Disk? = conn.findDisk(disk.id()).getOrNull()
-	val vmConn: Vm? = if(diskLink?.vmsPresent() == true){
-		conn.findVm(diskLink.vms().first().id()).getOrNull()
-	} else { null }
+	val vmConn: Vm? =
+		if(disk.vmsPresent()){ conn.findVm(disk.vms().first().id()).getOrNull() }
+		else { null }
 	val templateId: String? = conn.findAllTemplates(follow = "diskattachments")
 		.getOrDefault(listOf())
 		.firstOrNull { template ->
@@ -346,7 +342,7 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 		sparse { disk.sparse() } // 할당정책
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
-		diskProfileVo { diskProfile?.fromDiskProfileToIdentifiedVo() }
+		diskProfileVo { disk.diskProfile().fromDiskProfileToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
 		wipeAfterDelete { disk.wipeAfterDelete() }

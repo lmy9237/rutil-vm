@@ -1,14 +1,12 @@
 package com.itinfo.rutilvm.api.model.computing;
 
 import com.itinfo.rutilvm.util.ovirt.findBios
-import com.itinfo.rutilvm.util.ovirt.findVmType
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.Os
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NicVo
-import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.util.ovirt.findCluster
@@ -17,11 +15,9 @@ import com.itinfo.rutilvm.util.ovirt.findDataCenter
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.types.*
-import org.ovirt.engine.sdk4.types.TimeZone
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
-import java.util.*
 
 private val log = LoggerFactory.getLogger(TemplateVo::class.java)
 
@@ -140,6 +136,7 @@ class TemplateVo(
 	}
 
 	companion object {
+		const val DEFAULT_BLANK_TEMPLATE_ID = "00000000-0000-0000-0000-000000000000" /* Blank 탬플릿 (기본적으로 생성 됨) */
 		inline fun builder(block: TemplateVo.Builder.() -> Unit): TemplateVo = TemplateVo.Builder().apply(block).build()
 	}
 }
@@ -169,15 +166,14 @@ fun Template.toTemplateMenu(conn: Connection): TemplateVo {
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 	}
 }
-fun List<Template>.toTemplatesMenu(conn: Connection): List<TemplateVo> =
-	this@toTemplatesMenu.map { it.toTemplateMenu(conn) }
+fun List<Template>.toTemplateMenus(conn: Connection): List<TemplateVo> =
+	this@toTemplateMenus.map { it.toTemplateMenu(conn) }
 
 
 fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 	val cluster: Cluster? =
-		if(this@toTemplateInfo.clusterPresent()) {
-			conn.findCluster(this@toTemplateInfo.cluster().id()).getOrNull()
-		}else{ null }
+		if(this@toTemplateInfo.clusterPresent()) { conn.findCluster(this@toTemplateInfo.cluster().id()).getOrNull() }
+		else { null }
 
 	return TemplateVo.builder {
 		id { this@toTemplateInfo.id() }
@@ -197,8 +193,8 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 		cpuTopologyThread { this@toTemplateInfo.cpu().topology().threadsAsInteger() }
 		cpuTopologyCnt {
 			this@toTemplateInfo.cpu().topology().coresAsInteger() *
-					this@toTemplateInfo.cpu().topology().socketsAsInteger() *
-					this@toTemplateInfo.cpu().topology().threadsAsInteger()
+			this@toTemplateInfo.cpu().topology().socketsAsInteger() *
+			this@toTemplateInfo.cpu().topology().threadsAsInteger()
 		}
 		monitor { if(this@toTemplateInfo.displayPresent()) this@toTemplateInfo.display().monitorsAsInteger() else 0 }
 		ha { this@toTemplateInfo.highAvailability().enabled() }

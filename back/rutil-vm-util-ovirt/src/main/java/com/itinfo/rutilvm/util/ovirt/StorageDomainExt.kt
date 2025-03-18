@@ -13,15 +13,12 @@ import org.ovirt.engine.sdk4.types.*
 private fun Connection.srvStorageDomains(): StorageDomainsService =
 	this.systemService.storageDomainsService()
 
-fun Connection.findAllStorageDomains(searchQuery: String = ""): Result<List<StorageDomain>> = runCatching {
+fun Connection.findAllStorageDomains(searchQuery: String = "", follow: String = ""): Result<List<StorageDomain>> = runCatching {
 	this.srvStorageDomains().list().apply {
 		if (searchQuery.isNotEmpty()) search(searchQuery)
+		if (follow.isNotEmpty()) follow(follow)
 	}.send().storageDomains().filter { it.storage().type() != StorageType.GLANCE }
 
-	// if (searchQuery.isNotEmpty())
-	// 	srvStorageDomains().list().search(searchQuery).send().storageDomains().filter { it.storage().type() != StorageType.GLANCE }
-	// else
-	// 	srvStorageDomains().list().send().storageDomains().filter { it.storage().type() != StorageType.GLANCE }
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccess("목록조회")
 }.onFailure {

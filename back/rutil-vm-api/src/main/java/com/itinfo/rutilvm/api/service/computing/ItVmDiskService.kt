@@ -164,23 +164,20 @@ class VmDiskService(
 	@Throws(Error::class)
 	override fun findAllFromVm(vmId: String): List<DiskAttachmentVo> {
 		log.info("findAllFromVm ... vmId: {}", vmId)
-		val res: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmId)
-			.getOrDefault(listOf())
+		val res: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmId).getOrDefault(emptyList())
 		return res.toDiskAttachmentVos(conn)
 	}
 
 	@Throws(Error::class)
 	override fun findOneFromVm(vmId: String, diskAttachmentId: String): DiskAttachmentVo? {
 		log.info("findDiskFromVm ... vmId: {}, diskAttachmentId: {}", vmId, diskAttachmentId)
-		val res: DiskAttachment? = conn.findDiskAttachmentFromVm(vmId, diskAttachmentId)
-			.getOrNull()
+		val res: DiskAttachment? = conn.findDiskAttachmentFromVm(vmId, diskAttachmentId).getOrNull()
 		return res?.toDiskAttachmentVo(conn)
 	}
 
 	@Throws(Error::class)
 	override fun addFromVm(vmId: String, diskAttachmentVo: DiskAttachmentVo): DiskAttachmentVo? {
-		log.info("addFromVm ... vmId: {}", vmId)
-		log.info("addDiskAttach ...diskAttachmentVo {}", diskAttachmentVo.toAddDiskAttachment())
+		log.info("addFromVm ... vmId: {}, diskAttachmentVo {}", vmId, diskAttachmentVo)
 
 		val res: DiskAttachment? = conn.addDiskAttachmentToVm(
 			vmId,
@@ -214,8 +211,7 @@ class VmDiskService(
 
 	@Throws(Error::class)
 	override fun updateFromVm(vmId: String, diskAttachmentVo: DiskAttachmentVo): DiskAttachmentVo? {
-		log.info("updateFromVm ... vmId: {}", vmId)
-		log.info("diskAttachmentVo: {}", diskAttachmentVo)
+		log.info("updateFromVm ... vmId: {}, diskAttachmentVo: {}", vmId, diskAttachmentVo)
 
 		// 실패: 가상머신 내 디스크 붙이기 ... 3faeda93-8ab9-4bce-9651-dc7651c45a78,
 		// 이유: Fault reason is "Operation Failed". Fault detail is "[User is not authorized to perform this action.]". HTTP response code is "403". HTTP response message is "Forbidden".
@@ -250,21 +246,18 @@ class VmDiskService(
 
 	@Throws(Error::class)
 	override fun findAllStorageDomains(vmId: String, diskAttachmentId: String): List<StorageDomainVo> {
-		log.info("findAllStorageDomains ... diskAttachmentId: {}", diskAttachmentId)
-		val diskAttachment: DiskAttachment = conn.findDiskAttachmentFromVm(vmId, diskAttachmentId)
+		log.info("findAllStorageDomains ... vmId: {}, diskAttachmentId: {}", vmId, diskAttachmentId)
+		val diskAttachment: DiskAttachment = conn.findDiskAttachmentFromVm(vmId, diskAttachmentId, follow = "disk")
 			.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND.toException()
-		val disk: Disk = conn.findDisk(diskAttachment.disk().id())
-			.getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
 
-		val res: List<StorageDomain> = conn.findAllStorageDomains()
-			.getOrDefault(listOf())
-			.filter { it.id() != disk.storageDomains().first().id() && it.status() != StorageDomainStatus.UNATTACHED }
+		val res: List<StorageDomain> = conn.findAllStorageDomains(follow = "vms").getOrDefault(emptyList())
+			.filter { it.id() != diskAttachment.disk().storageDomains().first().id() && it.status() != StorageDomainStatus.UNATTACHED }
 		return res.toStorageDomainsMenu(conn)
 	}
 
 	@Throws(Error::class)
 	override fun moveFromVm(vmId: String, diskAttachmentVo: DiskAttachmentVo): Boolean {
-		log.info("moveFromVm ... diskAttachmentVo: {}", diskAttachmentVo.id)
+		log.info("moveFromVm ... vmId: {}, diskAttachmentVo: {}", diskAttachmentVo.id, diskAttachmentVo)
 		val res: Result<Boolean> = conn.moveDisk(
 			diskAttachmentVo.diskImageVo.id,
 			diskAttachmentVo.diskImageVo.storageDomainVo.id
