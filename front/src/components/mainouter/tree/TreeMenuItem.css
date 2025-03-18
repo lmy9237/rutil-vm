@@ -9,7 +9,7 @@
   /* height:var(--h-icon-tree) !important; */
 }
 .tmi.active {
-  background: rgb(218,236,245) !important;
+  background: var(--color-table) !important;
 }
 .tmi#tmi-1 { padding: 2px var(--p-tmi-1); }
 .tmi#tmi-2 { padding-left: var(--p-tmi-2); }

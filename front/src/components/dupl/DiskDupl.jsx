@@ -93,7 +93,7 @@ const DiskDupl = ({
           <DiskActionButtons
             openModal={openModal}
             isEditDisabled={!row}
-            type="context"
+            actionType="context"
           />,
         ]}
       />

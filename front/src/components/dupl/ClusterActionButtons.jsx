@@ -1,3 +1,5 @@
+import ActionButtonGroup from "../button/ActionButtonGroup";
+
 /**
  * @name ClusterActionButtons
  * @description ...
@@ -10,28 +12,18 @@ const ClusterActionButtons = ({
   openModal,
   isEditDisabled,
   status,
-  type = "default",
+  actionType = 'default',
 }) => {
   const basicActions = [
-    { type: "create", label: "생성", disabled: false },
-    { type: "edit", label: "편집", disabled: isEditDisabled },
-    { type: "delete", label: "삭제", disabled: status === "none" },
+    { type: "create", label: "생성", disabled: false, onBtnClick: () => openModal("create") },
+    { type: "edit", label: "편집", disabled: isEditDisabled , onBtnClick: () => openModal("edit")},
+    { type: "delete", label: "삭제", disabled: status === "none", onBtnClick: () => openModal("delete") },
   ];
-  const wrapperClass =
-    type === "context" ? "right-click-menu-box" : "header-right-btns";
   return (
-    <div className={wrapperClass}>
-      {basicActions.map(({ type, label, disabled }) => (
-        <button
-          key={type}
-          onClick={() => openModal(type)}
-          disabled={disabled}
-          className="right-click-menu-btn"
-        >
-          {label}
-        </button>
-      ))}
-    </div>
+    <ActionButtonGroup
+      actionType={actionType}
+      actions={basicActions}
+    />
   );
 };
 

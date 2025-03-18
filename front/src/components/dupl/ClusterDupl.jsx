@@ -78,7 +78,7 @@ const ClusterDupl = ({
           <ClusterActionButtons
             openModal={openModal}
             isEditDisabled={!row}
-            type="context"
+            actionType="context"
           />,
         ]}
       />

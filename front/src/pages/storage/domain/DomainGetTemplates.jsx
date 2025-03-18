@@ -7,6 +7,7 @@ import { useAllUnregisteredTemplateFromDomain } from "../../../api/RQHook";
 import { checkZeroSizeToMB } from "../../../util";
 import SearchBox from "../../../components/button/SearchBox";
 import useSearch from "../../../components/button/useSearch";
+import ActionButton from "../../../components/button/ActionButton";
 
 /**
  * @name DomainGetTemplates
@@ -54,8 +55,16 @@ const DomainGetTemplates = ({ domainId }) => {
       <div className="dupl-header-group">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <div className="header-right-btns">
-          <button onClick={() => setActiveModal("get")}>가져오기</button>
-          <button onClick={() => setActiveModal("delete")}>삭제</button>
+          <ActionButton 
+            label="가져오기" 
+            actionType="default" 
+            onClick={() => setActiveModal('get')}
+          />
+          <ActionButton
+            label="삭제" 
+            actionType="default" 
+            onClick={() => setActiveModal('delete')}
+          />
         </div>
       </div>
       <span>ID: {selectedIds || ""}</span>

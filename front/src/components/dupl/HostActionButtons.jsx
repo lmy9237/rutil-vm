@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import ActionButtonGroup from "../button/ActionButtonGroup";
+import { rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
+import ActionButton from "../button/ActionButton";
 
 const HostActionButtons = ({
   openModal,
@@ -8,8 +11,8 @@ const HostActionButtons = ({
   isDeleteDisabled,
   status,
   selectedHosts,
-  type = "default",
   isContextMenu,
+  actionType = "default"
 }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const dropdownRef = useRef(null);
@@ -32,9 +35,9 @@ const HostActionButtons = ({
   const isMaintenance = status === "MAINTENANCE";
 
   const basicActions = [
-    { type: "create", label: "생성", disabled: false },
-    { type: "edit", label: "편집", disabled: isEditDisabled },
-    { type: "delete", label: "삭제", disabled: isDeleteDisabled },
+    { type: "create", label: "생성", disabled: false, onBtnClick: () => openModal("create")  },
+    { type: "edit", label: "편집", disabled: isEditDisabled , onBtnClick: () => openModal("edit") },
+    { type: "delete", label: "삭제", disabled: isDeleteDisabled, onBtnClick: () => openModal("delete")  },
   ];
 
   const manageActions = [
@@ -46,29 +49,15 @@ const HostActionButtons = ({
     { type: "haOn", label: "글로벌 HA 유지 관리를 활성화", disabled: isEditDisabled || !isUp, },
     { type: "haOff", label: "글로벌 HA 유지 관리를 비활성화", disabled: isEditDisabled || !isUp, },
   ];
-  const wrapperClass =
-    type === "context" ? "right-click-menu-box" : "header-right-btns";
-  return (
-    <div className={wrapperClass}>
-      {basicActions.map(({ type, label, disabled }) => (
-        <button
-          key={type}
-          onClick={() => openModal(type)}
-          disabled={disabled}
-          className="right-click-menu-btn"
-        >
-          {label}
-        </button>
-      ))}
 
-      {!isContextMenu && ( // 우클릭 메뉴일 때는 드롭다운 제외
+  return (
+    <ActionButtonGroup
+      actionType={actionType}
+      actions={basicActions}
+    >
+      {!isContextMenu && (
         <div ref={dropdownRef} className="dropdown-container">
-          <button onClick={toggleDropdown} className="manage-button">
-            관리
-            <FontAwesomeIcon
-              icon={activeDropdown ? faChevronUp : faChevronDown}
-            />
-          </button>
+          <ActionButton onClick={toggleDropdown} label="관리" iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown} />
           {activeDropdown && (
             <div className="dropdown-menu">
               {manageActions.map(({ type, label, disabled }) => (
@@ -85,7 +74,7 @@ const HostActionButtons = ({
           )}
         </div>
       )}
-    </div>
+   </ActionButtonGroup>
   );
 };
 

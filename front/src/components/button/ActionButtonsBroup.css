@@ -1,0 +1,21 @@
+.header-right-btns {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: var(--h-right-btn);
+}
+.header-right-btns > button:last-child,
+.manage-button {
+  margin-right: 0 !important;
+}
+
+@media screen and (max-width: 768px) {
+  .header-right-btns > button:last-child,
+  .manage-button {
+    margin-right: 8px !important;
+  }
+}
+.right-click-menu-box {
+  width: 8.5vw;
+}

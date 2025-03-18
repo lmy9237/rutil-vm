@@ -113,7 +113,7 @@ const VmDupl = ({
           <VmActionButtons
             openModal={openModal}
             isEditDisabled={!row} 
-            type='context'
+            actionType='context'
             isContextMenu={true} 
           />
         ]}

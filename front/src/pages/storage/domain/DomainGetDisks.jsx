@@ -6,6 +6,7 @@ import { useAllUnregisteredDiskFromDomain } from "../../../api/RQHook";
 import { checkZeroSizeToGB } from "../../../util";
 import SearchBox from "../../../components/button/SearchBox";
 import useSearch from "../../../components/button/useSearch";
+import ActionButton from "../../../components/button/ActionButton";
 
 /**
  * @name DomainGetDisks
@@ -45,13 +46,17 @@ const DomainGetDisks = ({ domainId }) => {
       <div className="dupl-header-group">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <div className="header-right-btns">
-          <button
+          <ActionButton 
+            label="가져오기" 
+            actionType="default" 
             onClick={() => setActiveModal("get")}
-            disabled={selecteDisks.length === 0}
-          >
-            가져오기
-          </button>
-          <button onClick={() => setActiveModal("delete")}>삭제</button>
+            disabled={selecteDisks.length === 0} 
+          />
+          <ActionButton 
+            label="삭제" 
+            actionType="default" 
+            onClick={() => setActiveModal("delete")}
+          />
         </div>
       </div>
       

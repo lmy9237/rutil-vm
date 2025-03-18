@@ -1,41 +1,34 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import ActionButtonGroup from "../button/ActionButtonGroup";
+import ActionButton from "../button/ActionButton";
 
 const NetworkActionButtons = ({
   openModal,
   isEditDisabled,
   isDeleteDisabled,
-  type = "default",
+  actionType = "default",
+  isContextMenu
 }) => {
   const navigate = useNavigate();
   const basicActions = [
-    { type: "create", label: "생성", disabled: false },
-    { type: "edit", label: "편집", disabled: isEditDisabled },
-    { type: "delete", label: "삭제", disabled: isDeleteDisabled },
-    { type: "import", label: "가져오기", disabled: false },
+    { type: "create", label: "생성", disabled: false, onBtnClick: () => openModal("create") },
+    { type: "edit", label: "편집", disabled: isEditDisabled, onBtnClick: () => openModal("edit") },
+    { type: "delete", label: "삭제", disabled: isDeleteDisabled, onBtnClick: () => openModal("delete") },
+    { type: "import", label: "가져오기", disabled: false, onBtnClick: () => openModal("import") },
   ];
 
-  const wrapperClass =
-    type === "context" ? "right-click-menu-box" : "header-right-btns";
   return (
-    <div className={wrapperClass}>
-      {basicActions.map(({ type: actionType, label, disabled }) => (
-        <button
-          key={actionType}
-          onClick={() => openModal(actionType)}
-          disabled={disabled}
-          className="right-click-menu-btn"
-        >
-          {label}
-        </button>
-      ))}
-      <button
-        className="right-click-menu-btn"
-        onClick={() => navigate("/vnicProfiles")}
+    <>
+      <ActionButtonGroup
+        actionType={actionType}
+        actions={basicActions}
       >
-        vNICProfile
-      </button>
-    </div>
+        {!isContextMenu && (
+          <ActionButton label={"vNICProfile"}  onClick={() => navigate("/vnicProfiles")} actionType={actionType}/>
+        )}
+      </ActionButtonGroup>
+    </>
   );
 };
 

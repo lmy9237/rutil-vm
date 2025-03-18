@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NetworkModal from "./NetworkModal";
 import NetworkDeleteModal from "./NetworkDeleteModal";
 import NetworkImportModal from "./NetworkImportModal";
@@ -6,6 +6,9 @@ import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteNetwork } from "../../../api/RQHook";
 
 const NetworkModals = ({ activeModal, network, selectedNetworks = [], dcId, onClose }) => {
+  useEffect(() => {
+    console.log("selectedNetworks뿌부:", selectedNetworks);
+  }, [selectedNetworks]);
   const modals = {
     create: 
       <NetworkModal 

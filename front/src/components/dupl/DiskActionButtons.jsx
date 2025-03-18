@@ -1,38 +1,26 @@
 import React from "react";
+import ActionButtonGroup from "../button/ActionButtonGroup";
 
 const DiskActionButtons = ({
   openModal,
   isEditDisabled,
   isDeleteDisabled,
   status,
-  type = "default",
+  actionType = "default",
 }) => {
-  const isOk = status === "OK";
-
   const basicActions = [
-    { type: "create", label: "생성", disabled: false },
-    { type: "edit", label: "편집", disabled: isEditDisabled },
-    { type: "delete", label: "삭제", disabled: isDeleteDisabled },
-    { type: "move", label: "이동", disabled: isEditDisabled },
-    { type: "copy", label: "복사", disabled: isEditDisabled },
-    { type: "upload", label: "업로드" },
+    { type: "create", label: "생성", disabled: false, onBtnClick: () => openModal("create") },
+    { type: "edit", label: "편집", disabled: isEditDisabled, onBtnClick: () => openModal("edit") },
+    { type: "delete", label: "삭제", disabled: isDeleteDisabled , onBtnClick: () => openModal("delete")},
+    { type: "move", label: "이동", disabled: isEditDisabled , onBtnClick: () => openModal("move")},
+    { type: "copy", label: "복사", disabled: isEditDisabled , onBtnClick: () => openModal("copy")},
+    { type: "upload", label: "업로드", onBtnClick: () => openModal("upload") },
   ];
-
-  const wrapperClass =
-    type === "context" ? "right-click-menu-box" : "header-right-btns";
   return (
-    <div className={wrapperClass}>
-      {basicActions.map(({ type, label, disabled }) => (
-        <button
-          key={type}
-          className="right-click-menu-btn"
-          onClick={() => openModal(type)}
-          disabled={disabled}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
+    <ActionButtonGroup
+      actionType={actionType}
+      actions={basicActions}
+    />
   );
 };
 

@@ -78,7 +78,7 @@ const TemplateDupl = ({
           <TemplateActionButtons
             openModal={openModal}
             isEditDisabled={!row}
-            type="context"
+            actionType="context"
           />,
         ]}
       />

@@ -318,7 +318,7 @@ const Tables = ({
                   fontWeight:
                     row[column.accessor] &&
                     clickableColumnIndex.includes(colIndex)
-                      ? "800"
+                      ? "500"
                       : "normal",
                 }}
                 onClick={(e) => {

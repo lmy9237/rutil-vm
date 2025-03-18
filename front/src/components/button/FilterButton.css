@@ -2,8 +2,8 @@
   display: flex;
   font-size: var(--fs-default);
   margin-bottom: 8px;
-  width: 240px;
   border-radius: 4px;
+  width: 160px;
   border: 1px solid var(--color-gray-4);
   height: var(--h-primary);
 }

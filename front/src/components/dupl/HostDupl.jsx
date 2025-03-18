@@ -28,6 +28,11 @@ const HostDupl = ({
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
   const transformedData = hosts.map((host) => ({
     ...host,
+    name: (
+      <TableRowClick type="host" id={host?.id}>
+        {host?.name}
+      </TableRowClick>
+    ),
     icon: renderHostStatusIcon(host?.status),
     hostedEngine:
       host?.hostedEngine && host?.hostedEngineVM ? (
@@ -74,14 +79,13 @@ const HostDupl = ({
         data={filteredData} 
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedHosts(selectedRows)}
-        clickableColumnIndex={[2]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
         onContextMenuItems={(row) => [
           <HostActionButtons
             openModal={openModal}
             isEditDisabled={!row}
-            type="context"
+            actionType="context"
             isContextMenu={true}
           />,
         ]}

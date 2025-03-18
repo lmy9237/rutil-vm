@@ -1,21 +1,15 @@
 import LabelInputNum from "../../../label/LabelInputNum";
-import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
-
-// const InfoTooltip = ({ tooltipId, message }) => (
-//   <>
-//     <FontAwesomeIcon
-//       icon={faInfoCircle}
-//       style={{ color: "rgb(83, 163, 255)", marginLeft: "5px" }}
-//       data-tooltip-id={tooltipId}
-//     />
-//     <Tooltip id={tooltipId} className="icon_tooltip" place="top" effect="solid">
-//       {message}
-//     </Tooltip>
-//   </>
-// );
+import { useState } from "react";
 
 const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
+
+  // 소켓 보이기/숨기기 토글 함수
+  const [isSocketVisible, setSocketVisible] = useState(false);
+  const toggleSocketVisibility = () => {
+    setSocketVisible((prev) => !prev);
+  };
+
   // 총 cpu 계산
   const calculateFactors = (num) => {
     const factors = [];
@@ -31,7 +25,15 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
       setFormSystemState((prev) => ({
         ...prev, // 기존 상태 유지
         cpuTopologyCnt: totalCpu,
-        cpuTopologySocket: totalCpu, // 기본적으로 소켓을 총 CPU로 설정
+        cpuTopologySocket: null,
+        cpuTopologyCore: 1,
+        cpuTopologyThread: 1,
+      }));
+    }else {
+      setFormSystemState((prev) => ({
+        ...prev,
+        cpuTopologyCnt: null,
+        cpuTopologySocket: null,
         cpuTopologyCore: 1,
         cpuTopologyThread: 1,
       }));
@@ -45,8 +47,8 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
     setFormSystemState((prev) => ({
       ...prev,
       cpuTopologySocket: socket,
-      cpuTopologyCore: remaining, // 나머지 값은 코어로 설정
-      cpuTopologyThread: 1, // 스레드는 기본적으로 1
+      cpuTopologyCore: remaining,
+      cpuTopologyThread: 1, 
     }));
   };
 
@@ -77,54 +79,59 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
         <LabelInputNum
           label="총 가상 CPU"
           id="total_cpu"
-          value={formSystemState.cpuTopologyCnt}
+          value={formSystemState.cpuTopologyCnt || ""}
           onChange={handleCpuChange}
         />
 
-        <LabelSelectOptions
-          label="가상 소켓"
-          id="virtual_socket"
-          value={formSystemState.cpuTopologySocket}
-          onChange={handleSocketChange}
-          options={calculateFactors(formSystemState.cpuTopologyCnt).map((factor) => ({
-            value: factor,
-            label: factor,
-          }))}
-        />
+        {/* 소켓 보이기/숨기기 버튼 */}
+        <button onClick={toggleSocketVisibility}>가상 소켓 설정</button>
 
-        <LabelSelectOptions
-          label="가상 소켓 당 코어"
-          id="core_per_socket"
-          value={formSystemState.cpuTopologyCore}
-          onChange={handleCoreChange}
-          options={calculateFactors(
-            formSystemState.cpuTopologyCnt / formSystemState.cpuTopologySocket
-          ).map((factor) => ({
-            value: factor,
-            label: factor,
-          }))}
-        />
+        {isSocketVisible && (
+          <>
+          <LabelSelectOptions
+            label="가상 소켓"
+            id="virtual_socket"
+            value={formSystemState.cpuTopologySocket}
+            onChange={handleSocketChange}
+            options={calculateFactors(formSystemState.cpuTopologyCnt).map((factor) => ({
+              value: factor,
+              label: factor,
+            }))}
+          />   
+      
+          <LabelSelectOptions
+            label="가상 소켓 당 코어"
+            id="core_per_socket"
+            value={formSystemState.cpuTopologyCore}
+            onChange={handleCoreChange}
+            options={calculateFactors(
+              formSystemState.cpuTopologyCnt / formSystemState.cpuTopologySocket
+            ).map((factor) => ({
+              value: factor,
+              label: factor,
+            }))}
+          />
 
-        <LabelSelectOptions
-          label="코어당 스레드"
-          id="thread_per_core"
-          value={formSystemState.cpuTopologyThread}
-          onChange={(e) =>
-            setFormSystemState((prev) => ({
-              ...prev,
-              cpuTopologyThread: parseInt(e.target.value, 10),
-            }))
-          }
-          options={calculateFactors(
-            formSystemState.cpuTopologyCnt /
-              (formSystemState.cpuTopologySocket * formSystemState.cpuTopologyCore)
-          ).map((factor) => ({
-            value: factor,
-            label: factor,
-          }))}
-        />
-
-
+          <LabelSelectOptions
+            label="코어당 스레드"
+            id="thread_per_core"
+            value={formSystemState.cpuTopologyThread}
+            onChange={(e) =>
+              setFormSystemState((prev) => ({
+                ...prev,
+                cpuTopologyThread: parseInt(e.target.value, 10),
+              }))
+            }
+            options={calculateFactors(
+              formSystemState.cpuTopologyCnt /
+                (formSystemState.cpuTopologySocket * formSystemState.cpuTopologyCore)
+            ).map((factor) => ({
+              value: factor,
+              label: factor,
+            }))}
+          />
+          </>
+        )}
         {/* 삭제예정 */}
         {/* <div className="network_form_group">
           <label htmlFor="virtual_socket">가상 소켓</label>

@@ -40,7 +40,7 @@ const SideNavbar = ({
     }
 
     // 이벤트/설정 제외, 마지막 선택 항목 저장
-    if (id !== "event" && id !== "settings" && id !== "dashboard") {
+    if (id !== "event" && id !== "settings") {
       setLastSelected(id);
       localStorage.setItem("lastSelected", id);
     }
@@ -48,7 +48,7 @@ const SideNavbar = ({
 
   // 📌 버튼 UI 설정
   const sections = [
-    { iconDef: rvi24Dashboard,    id: "dashboard", link: "/",  },
+    // { iconDef: rvi24Dashboard,    id: "dashboard", link: "/",  },
     { iconDef: rvi24Desktop,      id: "computing", link: "/computing/vms",  },
     { iconDef: rvi24Network,      id: "network",   link: "/networks",  },
     { iconDef: rvi24Storage,      id: "storage",   link: "/storages/domains",  },

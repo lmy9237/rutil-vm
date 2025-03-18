@@ -95,7 +95,7 @@ const DomainDupl = ({
           isEditDisabled={selectedDomains.length !== 1}
           isDeleteDisabled={selectedDomains.length === 0}
           status={selectedDomains[0]?.status}
-          actionType={actionType}
+          // actionType={actionType}
         />
       </div>
 
@@ -108,7 +108,6 @@ const DomainDupl = ({
         data={filteredData} // ✅ 검색 필터링된 데이터 전달
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedDomains(selectedRows)}
-        // clickableColumnIndex={[2]}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}
@@ -117,8 +116,8 @@ const DomainDupl = ({
           <DomainActionButtons
             openModal={openModal}
             isEditDisabled={!row}
-            type="context"
-            actionType={actionType}
+            actionType="context"
+            // actionType={actionType}
             isContextMenu={true}
           />,
         ]}

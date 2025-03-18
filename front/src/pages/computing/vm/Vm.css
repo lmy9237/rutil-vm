@@ -111,7 +111,7 @@
   padding: 10px;
 }
 .network-content-detail-box > div {
-  font-size: var(--fs-13);
+  font-size: var(--fs-default);
   margin-bottom: 3px;
 }
 

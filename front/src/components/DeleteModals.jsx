@@ -16,6 +16,7 @@ import {
   useDeleteSnapshot,
   useDeleteDiskFromVM,
 } from "../api/RQHook";
+import { RVI24, rvi24ErrorRed } from "./icons/RutilVmIcons";
 
 const DeleteModals = ({
   isOpen,
@@ -179,9 +180,9 @@ const DeleteModals = ({
     >
       <div className="disk-delete-box">
         <div>
-          <FontAwesomeIcon
-            style={{ marginRight: "0.3rem" }}
-            icon={faExclamationTriangle}
+          <RVI24
+            className="error-icon"
+            iconDef={rvi24ErrorRed}
           />
           <span>&nbsp;{name} 를(을) 삭제하시겠습니까?&nbsp;</span>
         </div>

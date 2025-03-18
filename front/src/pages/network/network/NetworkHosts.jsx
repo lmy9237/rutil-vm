@@ -14,6 +14,7 @@ import {
 } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
+import ActionButton from "../../../components/button/ActionButton";
 
 const HostNetworkModal = React.lazy(
   () => import("../../../components/modal/host/HostNetworkModal")
@@ -137,12 +138,12 @@ const NetworkHosts = ({ networkId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <button
-          disabled={!selectedHostId} // selectedHost가 없으면 버튼 비활성화
+        <ActionButton
+          label="호스트 네트워크 설정"
+          actionType="default"
           onClick={() => setIsModalOpen(true)}
-        >
-          호스트 네트워크 설정
-        </button>
+          disabled={!selectedHostId}  // selectedHostId가 없으면 비활성화
+        />
       </div>
 
       {/* <div className="host-filter-btns">

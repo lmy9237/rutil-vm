@@ -2,6 +2,8 @@
     width: 26px;
     height: var(--h-primary);
     color: var(--color-gray);
+    align-items: center !important;
+    display: flex;
 }
 .dynamic-btns>button:hover{
     color: var(--color-black);

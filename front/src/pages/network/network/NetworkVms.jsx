@@ -10,6 +10,7 @@ import {
 import { useAllVmsFromNetwork } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
+import ActionButton from "../../../components/button/ActionButton";
 
 /**
  * @name NetworkVms
@@ -56,12 +57,12 @@ const NetworkVms = ({ networkId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <button
+        <ActionButton
+          label="제거"
+          actionType="default"
           onClick={() => toggleDeleteModal(true)}
-          disabled={activeFilter !== "stopped" || !selectedVms.length}
-        >
-          제거
-        </button>
+          disabled={activeFilter !== "stopped" || !selectedVms.length} 
+        />
       </div>
 
       {/* <div className="host-filter-btns">

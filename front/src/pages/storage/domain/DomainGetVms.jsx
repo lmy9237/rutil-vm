@@ -5,6 +5,7 @@ import DeleteModal from '../../../utils/DeleteModal';
 import { useAllUnregisteredVMFromDomain } from "../../../api/RQHook";
 import { checkZeroSizeToMB } from '../../../util';
 import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
+import ActionButton from '../../../components/button/ActionButton';
 
 /**
  * @name DomainGetVms
@@ -28,8 +29,16 @@ const DomainGetVms = ({ domainId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <button onClick={() => setActiveModal('get')}>가져오기</button>
-        <button onClick={() => setActiveModal('delete')}>삭제</button>
+        <ActionButton 
+          label="가져오기" 
+          actionType="default" 
+          onClick={() => setActiveModal('get')}
+        />
+        <ActionButton 
+          label="삭제" 
+          actionType="default" 
+          onClick={() => setActiveModal('delete')}
+        />
       </div>
       <span>ID: {selectedIds || ''}</span>
 

@@ -16,6 +16,7 @@ import {
   faTimes,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
+import { RVI24, rvi24ErrorRed } from "./icons/RutilVmIcons";
 
 /**
  * @name icon
@@ -328,9 +329,9 @@ export const xButton = () => {
 
 export const warnButton = () => {
   return (
-    <FontAwesomeIcon
-      style={{ marginRight: "0.3rem" }}
-      icon={faExclamationTriangle}
+    <RVI24
+      className="error-icon"
+      iconDef={rvi24ErrorRed}
     />
   );
 };

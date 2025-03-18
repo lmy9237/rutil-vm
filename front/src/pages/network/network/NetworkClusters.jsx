@@ -4,6 +4,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import { renderStatusClusterIcon } from "../../../components/Icon";
 import { useAllClustersFromNetwork } from "../../../api/RQHook";
+import ActionButton from "../../../components/button/ActionButton";
 
 const NetworkClusterModal = React.lazy(
   () => import("../../../components/modal/network/NetworkClusterModal")
@@ -44,7 +45,11 @@ const NetworkClusters = ({ networkId }) => {
   return (
     <>
       <div className="header-right-btns mb-2">
-        <button onClick={() => setIsModalOpen(true)}>네트워크 관리</button>
+        <ActionButton
+          label="네트워크 관리"
+          actionType="default"
+          onClick={() => setIsModalOpen(true)}
+        />
       </div>
 
       <TablesOuter

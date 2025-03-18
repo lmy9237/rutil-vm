@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { RVI16, rvi16ChevronUp, rvi16ChevronDown } from "../icons/RutilVmIcons";
+import ActionButton from "../button/ActionButton";
+import ActionButtonGroup from "../button/ActionButtonGroup";
 
 const VmActionButtons = ({
   openModal,
   isEditDisabled,
   isDeleteDisabled,
   status,
-  type = 'default',
+  // type = 'default',
+  actionType = 'default',
   isContextMenu 
 }) => {
   const navigate = useNavigate();
@@ -34,19 +36,19 @@ const VmActionButtons = ({
   const isMaintenance = status === "MAINTENANCE";
   const isPause = status === "PAUSE";
   const isTemplate = status === "SUSPENDED" || status === "UP";
-  const wrapperClass = type === 'context' ? 'right-click-menu-box' : 'header-right-btns';
+
   const basicActions = [
-    { type: "create", label: "생성", disabled: false },
-    { type: "edit", label: "편집", disabled: isEditDisabled },
-    { type: "start", label: "실행", disabled: isDeleteDisabled || isUp },
-    { type: "pause", label: "일시중지", disabled: !isUp || isDeleteDisabled },
-    { type: "reboot", label: "재부팅", disabled: !isUp || isDeleteDisabled },
-    { type: "reset", label: "재설정", disabled: !isUp },
-    { type: "shutdown", label: "종료", disabled: !isUp },
-    { type: "powerOff", label: "전원끔", disabled: !isUp },
-    { type: "console", label: "콘솔", disabled: !isUp },
-    { type: "snapshot", label: "스냅샷 생성", disabled: isEditDisabled },
-    { type: "migration", label: "마이그레이션", disabled: !isPause },
+    { type: "create", label: "생성", disabled: false, onBtnClick: () => openModal("create") },
+    { type: "edit", label: "편집", disabled: isEditDisabled, onBtnClick: () => openModal("edit") },
+    { type: "start", label: "실행", disabled: isDeleteDisabled || isUp, onBtnClick: () => openModal("start") },
+    { type: "pause", label: "일시중지", disabled: !isUp || isDeleteDisabled, onBtnClick: () => openModal("pause") },
+    { type: "reboot", label: "재부팅", disabled: !isUp || isDeleteDisabled, onBtnClick: () => openModal("reboot") },
+    { type: "reset", label: "재설정", disabled: !isUp, onBtnClick: () => openModal("reset") },
+    { type: "shutdown", label: "종료", disabled: !isUp, onBtnClick: () => openModal("shutdown") },
+    { type: "powerOff", label: "전원끔", disabled: !isUp, onBtnClick: () => openModal("powerOff") },
+    { type: "console", label: "콘솔", disabled: !isUp, onBtnClick: () => openModal("console") },
+    { type: "snapshot", label: "스냅샷 생성", disabled: isEditDisabled, onBtnClick: () => openModal("snapshot") },
+    { type: "migration", label: "마이그레이션", disabled: !isPause, onBtnClick: () => openModal("migration") },
   ];
 
   const manageActions = [
@@ -58,29 +60,19 @@ const VmActionButtons = ({
   ];
 
   return (
-    <div className={wrapperClass}>
-      {basicActions.map(({ type, label, disabled }) => (
-        <button key={type} onClick={() => openModal(type)} disabled={disabled}  className='right-click-menu-btn'>
-          {label}
-        </button>
-      ))}
-  
-
-      {!isContextMenu && ( 
+    <ActionButtonGroup
+      actionType={actionType}
+      actions={basicActions}
+    >
+      {!isContextMenu && (
         <>
-          <button onClick={() => navigate("/computing/templates")}>템플릿</button>
+          <ActionButton label={"템플릿"} onClick={() => navigate("/computing/templates")} actionType={actionType}/>
           <div ref={dropdownRef} className="dropdown-container">
-            <button onClick={toggleDropdown} className="manage-button mr-0" >
-              관리
-              <FontAwesomeIcon
-                icon={activeDropdown ? faChevronUp : faChevronDown}
-              />
-            </button>
+            <ActionButton onClick={toggleDropdown} label="관리" iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown} />
             {activeDropdown && (
               <div className="dropdown-menu">
                 {manageActions.map(({ type, label, disabled }) => (
-                  <button
-                    key={type}
+                  <button key={type}
                     onClick={() => openModal(type)}
                     disabled={disabled}
                     className="dropdown-item"
@@ -93,8 +85,7 @@ const VmActionButtons = ({
           </div>
         </>
       )}
-        
-    </div>
+    </ActionButtonGroup>
   );
 };
 

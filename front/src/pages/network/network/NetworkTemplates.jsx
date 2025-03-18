@@ -6,6 +6,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DeleteModal from "../../../utils/DeleteModal";
 import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
 import { useAllTemplatesFromNetwork } from "../../../api/RQHook";
+import ActionButton from "../../../components/button/ActionButton";
 
 /**
  * @name NetworkTemplates
@@ -72,7 +73,12 @@ const NetworkTemplates = ({ networkId }) => {
     <>
       <div className="header-right-btns">
         {/* 제거 버튼에 openDeleteModal 핸들러 연결 */}
-        <button onClick={openDeleteModal} disabled={!selectedNicIds}>제거</button>
+          <ActionButton
+            label="제거"
+            actionType="default"
+            onClick={openDeleteModal}
+            disabled={!selectedNicIds}  // selectedNicIds가 없으면 비활성화
+          />
       </div>
       
       {/* 선택된 Template ID와 NIC ID 표시 */}

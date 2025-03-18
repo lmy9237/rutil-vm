@@ -1,3 +1,4 @@
+import { RVI12, rvi12Minus } from "../icons/RutilVmIcons";
 import "./LabelInput.css"
 
 /**
@@ -32,11 +33,13 @@ const LabelSelectOptions = ({
     </label>
     {/* <select className="w-full min-w-30 max-w-xl" */}
     <select value={value} onChange={onChange} disabled={disabled}>
-      {options.map((opt) => (
-        <option key={opt.value} value={opt.value}>
-          {opt.label}
-        </option>
-      ))}
+      <div className="option-box ">
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </div>
     </select>
   </div>
   </>

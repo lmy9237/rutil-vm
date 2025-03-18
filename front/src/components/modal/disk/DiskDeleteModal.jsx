@@ -43,7 +43,7 @@ const DiskDeleteModal = ({ isOpen, onClose, data }) => {
       targetName={"디스크"}
       submitTitle={"삭제"}
       onSubmit={handleDelete}
-      contentStyle={{ width: "600px", height: "190px" }}
+      contentStyle={{ width: "600px", height: "200px" }}
     >
       <div className="popup-content-outer">
         <div className="disk-delete-box">

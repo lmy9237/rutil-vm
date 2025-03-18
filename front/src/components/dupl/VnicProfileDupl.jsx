@@ -26,6 +26,11 @@ const VnicProfileDupl = ({
   // ✅ 데이터 변환 (검색 가능하도록 `searchText` 필드 추가)
   const transformedData = vnicProfiles.map((vnic) => ({
     ...vnic,
+    name: (
+      <TableRowClick type="vnicProfile" id={vnic?.id}>
+        {vnic?.name}
+      </TableRowClick>
+    ),
     network: (
       <TableRowClick type="network" id={vnic?.networkVo?.id}>
         {vnic?.networkVo?.name}
@@ -69,7 +74,7 @@ const VnicProfileDupl = ({
         data={filteredData} 
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedVnicProfiles(selectedRows)}
-        clickableColumnIndex={[0]}
+        // clickableColumnIndex={[0]}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}

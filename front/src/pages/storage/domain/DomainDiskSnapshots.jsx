@@ -3,6 +3,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import { convertBytesToGB } from "../../../util";
 import { useAllDiskSnapshotFromDomain } from "../../../api/RQHook";
+import ActionButton from "../../../components/button/ActionButton";
 
 /**
  * @name DomainDiskSnapshots
@@ -25,12 +26,12 @@ const DomainDiskSnapshots = ({ domainId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <button
+        <ActionButton
+          label="제거"
+          actionType="default"
           onClick={() => setIsModalOpen(true)}
-          disabled={!selectedSnapshots.length} // 선택된 항목이 없으면 비활성화
-        >
-          제거
-        </button>
+          disabled={!selectedSnapshots.length}  // 선택된 항목이 없으면 비활성화
+        />
       </div>
 
       <span>ID: {selectedIds || "선택된 ID가 없습니다."}</span>
