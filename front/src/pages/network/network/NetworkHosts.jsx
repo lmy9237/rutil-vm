@@ -145,21 +145,6 @@ const NetworkHosts = ({ networkId }) => {
           disabled={!selectedHostId}  // selectedHostId가 없으면 비활성화
         />
       </div>
-
-      {/* <div className="host-filter-btns">
-        <button
-          className={buttonClass("connected")}
-          onClick={() => setActiveFilter("connected")}
-        >
-          연결됨
-        </button>
-        <button
-          className={buttonClass("disconnected")}
-          onClick={() => setActiveFilter("disconnected")}
-        >
-          연결 해제
-        </button>
-      </div> */}
       <FilterButton options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
 
       <span>id = {selectedHostId || ""}</span>

@@ -68,15 +68,6 @@ interface ItNetworkService {
 	 */
 	@Throws(Error::class)
 	fun remove(networkId: String): Boolean
-	/**
-	 * [ItNetworkService.removeMultiple]
-	 * 네트워크 다중 삭제
-	 *
-	 * @param networkIdList [String] 네트워크 Id list
-	 * @return Map<[String], [String]>
-	 */
-	@Throws(Error::class)
-	fun removeMultiple(networkIdList: List<String>): Map<String, String>
 
 	/**
 	 * [ItNetworkService.findNetworkProviderFromNetwork]
@@ -126,7 +117,7 @@ interface ItNetworkService {
 	fun findAllClustersFromNetwork(networkId: String): List<ClusterVo>
 	/**
 	 * [ItNetworkService.findConnectedHostsFromNetwork]
-	 * 네트워크 호스트 목록 - 연결됨
+	 * 네트워크 호스트 연결 목록
 	 *
 	 * @param networkId [String] 네트워크 아이디
 	 * @return List<[HostVo]>
@@ -134,23 +125,23 @@ interface ItNetworkService {
 	@Throws(Error::class)
 	fun findConnectedHostsFromNetwork(networkId: String): List<HostVo>
 	/**
-	 * [ItNetworkService.findDisconnectedHostsFromNetwork]
-	 * 네트워크 호스트 목록 - 연결해제
+	 * [ItNetworkService.findDisConnectedHostsFromNetwork]
+	 * 네트워크 호스트 연결 해제목록
 	 *
 	 * @param networkId [String] 네트워크 아이디
 	 * @return List<[HostVo]>
 	 */
 	@Throws(Error::class)
-	fun findDisconnectedHostsFromNetwork(networkId: String): List<HostVo>
+	fun findDisConnectedHostsFromNetwork(networkId: String): List<HostVo>
 	/**
-	 * [ItNetworkService.findAllVmsFromNetwork]
+	 * [ItNetworkService.findAllVmsNicFromNetwork]
 	 * 네트워크 가상머신 목록
 	 *
 	 * @param networkId [String] 네트워크 아이디
-	 * @return List<[VmVo]>
+	 * @return List<[NicVo]>
 	 */
 	@Throws(Error::class)
-	fun findAllVmsFromNetwork(networkId: String): List<VmViewVo>
+	fun findAllVmsNicFromNetwork(networkId: String): List<NicVo>
 	/**
 	 * [ItNetworkService.findAllTemplatesFromNetwork]
 	 * 네트워크 템플릿 목록
@@ -168,16 +159,6 @@ interface ItNetworkService {
 	 */
 	@Throws(Error::class)
 	fun findAllNetworkFilters(): List<IdentifiedVo>
-	/**
-	 * [ItNetworkService.findAllPermissionsFromNetwork]
-	 * 네트워크 권한 목록
-	 *
-	 * @param networkId [String] 네트워크 아이디
-	 * @return List<[PermissionVo]>
-	 */
-	@Deprecated("사용안함")
-	@Throws(Error::class)
-	fun findAllPermissionsFromNetwork(networkId: String): List<PermissionVo>
 }
 
 @Service
@@ -188,22 +169,20 @@ class NetworkServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<NetworkVo> {
 		log.info("findAll ... ")
-		val networks: List<Network> = conn.findAllNetworks()
-			.getOrDefault(listOf())
-		return networks.toNetworksMenu(conn)
+		val networks: List<Network> = conn.findAllNetworks(follow = "datacenter").getOrDefault(emptyList())
+		return networks.toNetworkMenus()
 	}
 
 	@Throws(Error::class)
 	override fun findOne(networkId: String): NetworkVo? {
 		log.info("findOne ... networkId: {}", networkId)
-		val res: Network? = conn.findNetwork(networkId, "networklabels")
-			.getOrNull()
+		val res: Network? = conn.findNetwork(networkId, "datacenter,vnicprofiles,networklabels").getOrNull()
 		return res?.toNetworkVo(conn)
 	}
 
+	// dc 다르면 중복명 가능
 	@Throws(Error::class)
 	override fun add(networkVo: NetworkVo): NetworkVo? {
-		// dc 다르면 중복명 가능
 		log.info("addNetwork ... ")
 		val res: Network = conn.addNetwork(
 			networkVo.toAddNetworkBuilder()
@@ -212,7 +191,7 @@ class NetworkServiceImpl(
 		// 생성 후에 나온 network Id로 클러스터 네트워크 생성 및 레이블 생성 가능
 		networkVo.toAddClusterAttach(conn, res.id())	// 클러스터 연결, 필수 선택
 //		networkVo.toAddNetworkLabel(conn, res.id()) // 네트워크 레이블
-		return res.toNetworkVo(conn)
+		return res.toNetworkIdName()
 	}
 
 	@Throws(Error::class)
@@ -221,7 +200,7 @@ class NetworkServiceImpl(
 		val res: Network? = conn.updateNetwork(
 			networkVo.toEditNetworkBuilder()
 		).getOrNull()
-		return res?.toNetworkVo(conn)
+		return res?.toNetworkIdName()
 	}
 
 	@Throws(Error::class)
@@ -232,40 +211,16 @@ class NetworkServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun removeMultiple(networkIdList: List<String>): Map<String, String> {
-		val result = mutableMapOf<String, String>() // 성공/실패 결과를 저장할 Map
-
-		networkIdList.forEach { networkId ->
-			val networkName: String = conn.findNetwork(networkId).getOrNull()?.name().toString()
-			try {
-				log.info("removeMultiple ... networkId: {}", networkId)
-				val isSuccess = conn.removeNetwork(networkId).isSuccess
-
-				if (isSuccess) {
-					result[networkName] = "Success"
-				}
-			} catch (ex: Exception) {
-				log.error("Failed to remove network: $networkName", ex)
-				result[networkName] = "Failure: ${ex.message}" // 실패한 경우 메시지 추가
-			}
-		}
-		return result
-	}
-
-	@Throws(Error::class)
 	override fun findNetworkProviderFromNetwork(): IdentifiedVo {
 		log.info("findNetworkProviderFromNetwork ... ")
-		val res: OpenStackNetworkProvider = conn.findAllOpenStackNetworkProviders()
-			.getOrDefault(listOf())
-			.first()
+		val res: OpenStackNetworkProvider = conn.findAllOpenStackNetworkProviders().getOrDefault(emptyList()).first()
 		return res.fromOpenStackNetworkProviderToIdentifiedVo()
 	}
 
 	@Throws(Error::class)
 	override fun findAllOpenStackNetworkFromNetworkProvider(providerId: String): List<OpenStackNetworkVo> {
 		log.info("findAllOpenStackNetworkFromNetworkProvider ... providerId: {}", providerId)
-		val res: List<OpenStackNetwork> = conn.findAllOpenStackNetworksFromNetworkProvider(providerId)
-			.getOrDefault(listOf())
+		val res: List<OpenStackNetwork> = conn.findAllOpenStackNetworksFromNetworkProvider(providerId).getOrDefault(emptyList())
 		return res.toOpenStackNetworkVosIdName()
 	}
 
@@ -277,113 +232,91 @@ class NetworkServiceImpl(
 		val openstack: OpenStackNetwork = conn.findOpenStackNetworkFromNetworkProvider(provider.id(), openstackNetworkId)
 			.getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
 
-		val res: List<DataCenter> = conn.findAllDataCenters()
-			.getOrDefault(listOf())
+		val res: List<DataCenter> = conn.findAllDataCenters().getOrDefault(emptyList())
 			.filter { dataCenter ->
-				conn.findAllNetworksFromDataCenter(dataCenter.id())
-					.getOrDefault(listOf())
+				conn.findAllNetworksFromDataCenter(dataCenter.id()).getOrDefault(emptyList())
 					.none { it.externalProviderPresent() && it.name() != openstack.name() }
 			}
 		return res.toDataCenterIdNames()
 	}
 
+	// TODO 되긴하는데 리턴값이 애매함
 	@Throws(Error::class)
 	override fun importNetwork(openStackNetworkVos: List<OpenStackNetworkVo>): Boolean {
 		log.info("importNetwork ... ")
-		// TODO 되긴하는데 리턴값이 애매함
-		openStackNetworkVos.forEach{
-			conn.importOpenStackNetwork(it.id, it.dataCenterVo.id)
-		}
-		return true
+		TODO()
+		// openStackNetworkVos.forEach{
+		// 	conn.importOpenStackNetwork(it.id, it.dataCenterVo.id)
+		// }
+		// return true
 	}
 
 
 	@Throws(Error::class)
 	override fun findAllClustersFromNetwork(networkId: String): List<ClusterVo> {
 		log.info("findAllClustersFromNetwork ... networkId: {}", networkId)
-		val network: Network = conn.findNetwork(networkId)
-			.getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		val network: Network = conn.findNetwork(networkId).getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
 		val dcId = network.dataCenter().id()
-		val res: List<Cluster> = conn.findAllClustersFromDataCenter(dcId, follow = "networks")
-			.getOrDefault(listOf())
+		val res: List<Cluster> = conn.findAllClustersFromDataCenter(dcId, follow = "networks").getOrDefault(emptyList())
 		return res.toNetworkClusterVos(conn, networkId)
 	}
 
 	@Throws(Error::class)
 	override fun findConnectedHostsFromNetwork(networkId: String): List<HostVo> {
 		log.info("findConnectedHostsFromNetwork ... ")
-		conn.findNetwork(networkId)
-			.getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
-		val res: List<Host> = conn.findAllHosts(follow = "networkattachments")
-			.getOrDefault(listOf())
-			.filter { it.networkAttachments().any { networkAttachment -> networkAttachment.network().id() == networkId } }
-		return res.toNetworkHostVos(conn) //TODO
-	}
-
-	@Throws(Error::class)
-	override fun findDisconnectedHostsFromNetwork(networkId: String): List<HostVo> {
-		log.info("findDisconnectedHostsFromNetwork ... ")
-		val network = conn.findNetwork(networkId)
-			.getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
-
-		val allHostsInDataCenter = conn.findAllHostsFromDataCenter(network.dataCenter().id())
-			.getOrDefault(listOf())
-
-		val connectedHostIds = conn.findAllHosts(follow = "networkattachments")
-			.getOrDefault(listOf())
+		val network: Network = conn.findNetwork(networkId).getOrNull()?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		val res: List<Host> = conn.findAllHosts(follow = "cluster.datacenter,networkattachments,nics").getOrDefault(emptyList())
 			.filter { host ->
-				host.networkAttachments().any { attachment ->
-					attachment.network().id() == networkId
-				}
+				host.cluster().dataCenter().id() == network.dataCenter().id() &&
+					host.networkAttachments().any { networkAttachment -> networkAttachment.network().id() == networkId }
 			}
-			.map { it.id() } // 연결된 호스트 ID 추출
-
-		val res = allHostsInDataCenter.filter { it.id() !in connectedHostIds }
-		return res.toNetworkHostVos(conn) //TODO
+		return res.toNetworkHostMenus(conn) //TODO
 	}
 
 	@Throws(Error::class)
-	override fun findAllVmsFromNetwork(networkId: String): List<VmViewVo> {
-		log.info("findAllVmsFromNetwork ... networkId: {}", networkId)
-		// val network: Network = conn.findNetwork(networkId)
-		// 	.getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
-		// 따지고보면 nic를 출력하느너
+	override fun findDisConnectedHostsFromNetwork(networkId: String): List<HostVo> {
+		log.info("findDisConnectedHostsFromNetwork ... networkId: {}", networkId)
 
-		// VM의 NIC 중 networkId와 매칭되는 NIC이 있는지 확인
-		val res: List<Vm> = conn.findAllVms(follow = "reporteddevices,nics.vnicprofile")
-			.getOrDefault(listOf())
+		val network: Network = conn.findNetwork(networkId).getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+
+		val hosts: List<Host> = conn.findAllHosts(follow = "cluster.datacenter,networkattachments.network,nics").getOrDefault(emptyList())
+			.filter { host ->
+				// 동일한 데이터센터에 속하지만, networkId에 연결된 NetworkAttachment가 없는 경우
+				host.cluster().dataCenter().id() == network.dataCenter().id() &&
+					host.networkAttachments().none { it.network().id() == networkId }
+			}
+
+		return hosts.toNetworkHostMenus(conn)
+	}
+
+	@Throws(Error::class)
+	override fun findAllVmsNicFromNetwork(networkId: String): List<NicVo> {
+		log.info("findAllVmsFromNetwork ... networkId: {}", networkId)
+		val res: List<Vm> = conn.findAllVms(follow = "nics.vnicprofile,nics.statistics").getOrDefault(emptyList())
 			.filter { vm -> vm.nics().any { nic -> nic.vnicProfile().network().id() == networkId } }
 
-		// 모든 VM에 대해 NIC 정보를 포함하여 VmVo 변환
-		return res.toVmViewVoFromNetworks(conn)
+		return res.flatMap { vm ->
+			vm.nics().map { nic -> nic.toNetworkVmMenu(conn) } // NicVo로 변환
+		}
 	}
 
 	@Throws(Error::class)
 	override fun findAllTemplatesFromNetwork(networkId: String): List<NetworkTemplateVo> {
+		// TODO
 		log.info("findAllTemplatesFromNetwork ... networkId: {}", networkId)
-		conn.findNetwork(networkId)
-			.getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
-		val res: List<Template> = conn.findAllTemplates(follow = "nics.vnicprofile")
-			.getOrDefault(listOf())
+		val res: List<Template> = conn.findAllTemplates(follow = "nics.vnicprofile").getOrDefault(emptyList())
 			.filter { it.nics().any { nic -> nic.vnicProfile().network().id() == networkId }
 		}
-		return res.flatMap { it.nics().map { nic -> it.toNetworkTemplateVo(conn, nic) } }
+		return res.flatMap {
+			it.nics().map { nic -> it.toNetworkTemplateVo(conn, nic) }
+		}
 	}
 
 	@Throws(Error::class)
 	override fun findAllNetworkFilters(): List<IdentifiedVo> {
 		log.info("findAllNetworkFilters ... ")
-		val res: List<NetworkFilter> = conn.findAllNetworkFilters().getOrDefault(listOf())
+		val res: List<NetworkFilter> = conn.findAllNetworkFilters().getOrDefault(emptyList())
 		return res.fromNetworkFiltersToIdentifiedVos()
-	}
-
-	@Deprecated("사용안함")
-	@Throws(Error::class)
-	override fun findAllPermissionsFromNetwork(networkId: String): List<PermissionVo> {
-		log.info("findAllPermissionsFromNetwork ... ")
-		val permissions: List<Permission> = conn.findAllPermissionsFromNetwork(networkId)
-			.getOrDefault(listOf())
-		return permissions.toPermissionVos(conn)
 	}
 
 

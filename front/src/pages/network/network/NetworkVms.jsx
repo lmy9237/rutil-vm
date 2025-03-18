@@ -8,7 +8,7 @@ import {
   renderVmStatusIcon,
 } from "../../../components/Icon";
 import { useAllVmsFromNetwork } from "../../../api/RQHook";
-import { convertBytesToMB } from "../../../util";
+import { convertBpsToMbps, convertBytesToMB } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
 import ActionButton from "../../../components/button/ActionButton";
 
@@ -21,38 +21,54 @@ import ActionButton from "../../../components/button/ActionButton";
  */
 const NetworkVms = ({ networkId }) => {
   const {
-    data: vms = [],
-    isLoading: isVmsLoading,
-    isError: isVmsError,
-    isSuccess: isVmsSuccess,
+    data: nics = [],
+    isLoading: isNicsLoading,
+    isError: isNicsError,
+    isSuccess: isNicsSuccess,
   } = useAllVmsFromNetwork(networkId, (e) => ({ ...e }));
 
   const [activeFilter, setActiveFilter] = useState("running");
-  const [selectedVms, setSelectedVms] = useState([]);
+  const [selectedNics, setSelectedNics] = useState([]);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const buttonClass = (filter) =>
-    `filter_button ${activeFilter === filter ? "active" : ""}`;
-
-  const selectedIds = (Array.isArray(selectedVms) ? selectedVms : [])
-    .map((vm) => vm.id)
+  const selectedIds = (Array.isArray(selectedNics) ? selectedNics : [])
+    .map((nic) => nic.id)
     .join(", ");
-  const toggleDeleteModal = (isOpen) => setDeleteModalOpen(isOpen);
 
   // 필터링된 VM 데이터 계산
-  const filteredVms =
-    activeFilter === "running"
-      ? vms.filter((vm) => vm.status !== "DOWN")
-      : vms.filter((vm) => vm.status === "DOWN");
+  const filteredVms = activeFilter === "running"
+    ? nics.filter((nic) => nic?.vmViewVo?.status === "UP")
+    : nics.filter((nic) => nic?.vmViewVo?.status !== "UP");
 
-  const modalData = selectedVms.map((vm) => ({
-    id: vm.id,
-    name: vm.vnic || vm.name || "",
-  }));
+  const transformedFilteredData = filteredVms.map((nic) => {
+    const vm = nic?.vmViewVo;
+    return {
+      ...nic,
+      icon: renderVmStatusIcon(vm?.status),
+      name: (
+        <TableRowClick type="vms" id={vm?.id}>
+          {vm?.name}
+        </TableRowClick>
+      ),
+      fqdn: vm?.fqdn,
+      ipAddress: vm?.ipv4 + "" + vm?.ipv6,
+      vnicStatus: renderUpDownStatusIcon(nic?.status),
+      vnic: nic?.name || "",
+      vnicRx: (convertBpsToMbps(nic?.rxSpeed)),
+      vnicTx: (convertBpsToMbps(nic?.txSpeed)),
+      totalRx: nic?.rxTotalSpeed.toLocaleString(),
+      totalTx: nic?.txTotalSpeed.toLocaleString(),
+      Description: nic?.discription,
+    };
+  });
+
+  const toggleDeleteModal = (isOpen) => setDeleteModalOpen(isOpen);
+
   const statusFilters = [
     { key: "running", label: "실행중" },
     { key: "stopped", label: "정지중" },
   ];
+
   console.log("...");
   return (
     <>
@@ -61,72 +77,29 @@ const NetworkVms = ({ networkId }) => {
           label="제거"
           actionType="default"
           onClick={() => toggleDeleteModal(true)}
-          disabled={activeFilter !== "stopped" || !selectedVms.length} 
+          disabled={activeFilter !== "stopped" || !selectedNics.length} 
         />
       </div>
 
-      {/* <div className="host-filter-btns">
-        <button
-          className={buttonClass("running")}
-          onClick={() => setActiveFilter("running")}
-        >
-          실행중
-        </button>
-        <button
-          className={buttonClass("stopped")}
-          onClick={() => setActiveFilter("stopped")}
-        >
-          정지중
-        </button>
-      </div> */}
       <FilterButton options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
       <span>id = {selectedIds || ""}</span>
 
       <TablesOuter
-        isLoading={isVmsLoading}
-        isError={isVmsError}
-        isSuccess={isVmsSuccess}
+        isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
         columns={
           activeFilter === "running"
-            ? TableColumnsInfo.VMS_NIC
-            : TableColumnsInfo.VMS_STOP
+            ? TableColumnsInfo.VMS_UP_FROM_NETWORK
+            : TableColumnsInfo.VMS_STOP_FROM_NETWORK
         }
-        data={filteredVms.map((vm) => ({
-          ...vm,
-          icon: renderVmStatusIcon(vm?.status),
-          name: (
-            <TableRowClick type="vms" id={vm?.id}>
-              {vm?.name}
-            </TableRowClick>
-          ),
-          cluster: (
-            <TableRowClick type="cluster" id={vm?.clusterVo?.id}>
-              {vm?.clusterVo?.name}
-            </TableRowClick>
-          ),
-          vnicStatus: renderUpDownStatusIcon(vm?.nicVos[0]?.status),
-          vnic: vm?.nicVos?.[0]?.name || "알 수 없음",
-          vnicRx: vm?.nicVos?.[0]?.rxSpeed
-            ? Math.round(convertBytesToMB(vm?.nicVos[0].rxSpeed))
-            : "",
-          vnicTx: vm?.nicVos?.[0]?.txSpeed
-            ? Math.round(convertBytesToMB(vm?.nicVos[0].txSpeed))
-            : "",
-          totalRx: vm?.nicVos?.[0]?.rxTotalSpeed
-            ? vm?.nicVos?.[0]?.rxTotalSpeed.toLocaleString()
-            : "",
-          totalTx: vm?.nicVos?.[0]?.txTotalSpeed
-            ? vm?.nicVos?.[0]?.txTotalSpeed.toLocaleString()
-            : "",
-        }))}
+        data={ transformedFilteredData }
         onRowClick={(rows) => {
           console.log("Selected Rows:", rows); // 선택된 데이터 확인
-          setSelectedVms(Array.isArray(rows) ? rows : []);
+          setSelectedNics(Array.isArray(rows) ? rows : []);
         }}
       />
 
       {/* nic 를 삭제하는 코드를 넣어야함 */}
-      <Suspense>
+      {/* <Suspense>
         {isDeleteModalOpen && (
           <VmDeleteModal
             isOpen={isDeleteModalOpen}
@@ -135,7 +108,7 @@ const NetworkVms = ({ networkId }) => {
             onClose={() => toggleDeleteModal(false)}
           />
         )}
-      </Suspense>
+      </Suspense> */}
     </>
   );
 };

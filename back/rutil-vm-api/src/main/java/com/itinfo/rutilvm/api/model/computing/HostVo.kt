@@ -273,22 +273,20 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
 /**
  * 네트워크에서 호스트 볼때
  */
-fun Host.toNetworkHostVo(conn: Connection): HostVo {
-    val cluster: Cluster? = conn.findCluster(this@toNetworkHostVo.cluster().id()).getOrNull()
-    val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
-    val hostNics: List<HostNic> = conn.findAllHostNicsFromHost(this@toNetworkHostVo.id()).getOrDefault(listOf())
+fun Host.toNetworkHostMenu(conn: Connection): HostVo {
+	val host = this@toNetworkHostMenu
 
     return HostVo.builder {
-        id { this@toNetworkHostVo.id() }
-        name { this@toNetworkHostVo.name() }
-        status { this@toNetworkHostVo.status() }
-        clusterVo { cluster?.fromClusterToIdentifiedVo() }
-        dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-        hostNicVos { hostNics.toSlaveHostNicVos(conn) }
+        id { host.id() }
+        name { host.name() }
+        status { host.status() }
+        clusterVo { if(host.clusterPresent()) host.cluster().fromClusterToIdentifiedVo() else IdentifiedVo()}
+        dataCenterVo { if(host.clusterPresent() && host.cluster().dataCenterPresent()) host.cluster().dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo() }
+        hostNicVos { host.nics().toSlaveHostNicVos(conn) }
     }
 }
-fun List<Host>.toNetworkHostVos(conn: Connection): List<HostVo> =
-    this@toNetworkHostVos.map { it.toNetworkHostVo(conn) }
+fun List<Host>.toNetworkHostMenus(conn: Connection): List<HostVo> =
+    this@toNetworkHostMenus.map { it.toNetworkHostMenu(conn) }
 
 
 

@@ -232,6 +232,15 @@ fun List<Vm>.toVmsIdName(): List<VmViewVo> =
 	this@toVmsIdName.map { it.toVmIdName() }
 
 
+fun Vm.toVmStatus(): VmViewVo = VmViewVo.builder {
+	id { this@toVmStatus.id() }
+	name { this@toVmStatus.name() }
+	status { this@toVmStatus.status() }
+}
+fun List<Vm>.toVmStatusList(): List<VmViewVo> =
+	this@toVmStatusList.map { it.toVmStatus() }
+
+
 fun Vm.toVmMenu(conn: Connection): VmViewVo {
 	val vm = this@toVmMenu
 	return VmViewVo.builder {
@@ -494,16 +503,31 @@ fun Vm.toStorageDomainVm(conn: Connection, storageDomainId: String): VmViewVo {
 fun List<Vm>.toStorageDomainVms(conn: Connection, storageDomainId: String): List<VmViewVo> =
 	this@toStorageDomainVms.map { it.toStorageDomainVm(conn, storageDomainId) }
 
-fun Vm.toNetworkNic(conn: Connection): VmViewVo {
-	val cluster: Cluster? = conn.findCluster(this@toNetworkNic.cluster().id()).getOrNull()
+fun Vm.toNetworkVm(conn: Connection): VmViewVo {
+	val cluster: Cluster? = conn.findCluster(this@toNetworkVm.cluster().id()).getOrNull()
 	return VmViewVo.builder {
-		id { this@toNetworkNic.id() }
-		name { this@toNetworkNic.name() }
-		description { this@toNetworkNic.description() }
-		status { this@toNetworkNic.status() }
+		id { this@toNetworkVm.id() }
+		name { this@toNetworkVm.name() }
+		description { this@toNetworkVm.description() }
+		status { this@toNetworkVm.status() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
+		if (this@toNetworkVm.status() == VmStatus.UP) {
+			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toNetworkVm.id())
+			fqdn { this@toNetworkVm.fqdn() }
+			upTime { statistics.findVmUptime() }
+			ipv4 { this@toNetworkVm.reportedDevices().findVmIpv4() }
+			ipv6 { this@toNetworkVm.reportedDevices().findVmIpv6() }
+		} else {
+			fqdn { null }
+			upTime { null }
+			ipv4 { null }
+			ipv6 { null }
+		}
 	}
 }
+fun List<Vm>.toNetworkVms(conn: Connection): List<VmViewVo> =
+	this@toNetworkVms.map { it.toNetworkVm(conn) }
+
 fun Vm.toUnregisteredVm(): VmViewVo {
 	val vm = this@toUnregisteredVm
 	return VmViewVo.builder {
@@ -519,27 +543,6 @@ fun Vm.toUnregisteredVm(): VmViewVo {
 }
 fun List<Vm>.toUnregisterdVms(): List<VmViewVo> =
 	this@toUnregisterdVms.map { it.toUnregisteredVm() }
-
-
-
-fun Vm.toVmViewVoFromNetwork(conn: Connection): VmViewVo {
-	val vm = this@toVmViewVoFromNetwork
-	val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
-	val vmNic: List<Nic> = conn.findAllNicsFromVm(vm.id()).getOrDefault(listOf())
-
-	return VmViewVo.builder {
-		id { vm.id() }
-		name { vm.name() }
-		status { vm.status() }
-		fqdn { vm.fqdn() }
-		description { vm.description() }
-		clusterVo { cluster?.fromClusterToIdentifiedVo() }
-		nicVos { vmNic.fromNicsToIdentifiedVos() }
-	}
-}
-fun List<Vm>.toVmViewVoFromNetworks(conn: Connection): List<VmViewVo> =
-	this@toVmViewVoFromNetworks.map { it.toVmViewVoFromNetwork(conn) }
-
 
 
 /**

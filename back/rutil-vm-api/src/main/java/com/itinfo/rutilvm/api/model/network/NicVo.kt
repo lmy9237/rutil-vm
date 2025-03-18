@@ -7,6 +7,9 @@ import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromVnicProfileToIdentifiedVo
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
+import com.itinfo.rutilvm.api.model.fromNicsToIdentifiedVos
+import com.itinfo.rutilvm.api.model.fromVmToIdentifiedVo
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import org.ovirt.engine.sdk4.Connection
@@ -308,30 +311,46 @@ fun List<Nic>.toNetworkFromVms(conn: Connection): List<NicVo> =
 	this@toNetworkFromVms.map { it.toNicVoFromVm(conn) }
 
 
-//fun Nic.toNetworkFromVm(conn: Connection, vmId: String): NicVo {
-//	val vm :Vm = conn.findVm(vmId)
-//		.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
-//	val statistics: List<Statistic> = conn.findAllStatisticsFromVmNic(vmId, this@toNetworkFromVm.id()).getOrDefault(listOf())
-//	val vnicProfile: VnicProfile = conn.findVnicProfile(this@toNetworkFromVm.vnicProfile().id())
-//		.getOrNull() ?: throw ErrorPattern.VNIC_PROFILE_NOT_FOUND.toException()
+
+
+// fun Vm.toVmViewVoFromNetwork(conn: Connection): VmViewVo {
+// 	val vm = this@toVmViewVoFromNetwork
+// 	val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
+// 	val vmNic: List<Nic> = conn.findAllNicsFromVm(vm.id()).getOrDefault(listOf())
 //
-//	return NicVo.builder {
-//		id { this@toNetworkFromVm.id() }
-//		name { this@toNetworkFromVm.name() }
-//		vnicProfileVo { vnicProfile.fromVnicProfileToIdentifiedVo() }
-//		linked { this@toNetworkFromVm.linked() }
-//		status { if(this@toNetworkFromVm.linked()) NicStatus.UP else NicStatus.DOWN }
-//		rxSpeed { statistics.findSpeed("data.current.rx.bps") }
-//		txSpeed { statistics.findSpeed("data.current.tx.bps") }
-//		rxTotalSpeed { statistics.findSpeed("data.total.rx") }
-//		txTotalSpeed { statistics.findSpeed("data.total.tx") }
-//		vmVo { vm.toNetworkNic(conn) }
-//	}
-//}
-//fun List<Nic>.toNetworkFromVms(conn: Connection, vmId: String): List<NicVo> =
-//	this@toNetworkFromVms.map { it.toNicVoFromVm(conn, vmId) }
+// 	return VmViewVo.builder {
+// 		id { vm.id() }
+// 		name { vm.name() }
+// 		status { vm.status() }
+// 		fqdn { vm.fqdn() }
+// 		description { vm.description() }
+// 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
+// 		nicVos { vmNic.fromNicsToIdentifiedVos() }
+// 	}
+// }
+// fun List<Vm>.toVmViewVoFromNetworks(conn: Connection): List<VmViewVo> =
+// 	this@toVmViewVoFromNetworks.map { it.toVmViewVoFromNetwork(conn) }
+
+fun Nic.toNetworkVmMenu(conn: Connection): NicVo {
+	val nic = this@toNetworkVmMenu
+	val vm = conn.findVm(nic.vm().id(), follow = "reporteddevices").getOrNull()
+
+	return NicVo.builder {
+		id { nic.id() }
+		name { nic.name() }
+		vnicProfileVo { nic.vnicProfile().fromVnicProfileToIdentifiedVo() }
+		linked { nic.linked() }
+		status { if(nic.linked()) NicStatus.UP else NicStatus.DOWN }
+		rxSpeed { nic.statistics().findSpeed("data.current.rx.bps") }
+		txSpeed { nic.statistics().findSpeed("data.current.tx.bps") }
+		rxTotalSpeed { nic.statistics().findSpeed("data.total.rx") }
+		txTotalSpeed { nic.statistics().findSpeed("data.total.tx") }
+		vmVo { vm?.toNetworkVm(conn) }
+	}
+}
 
 
+// region: builder
 
 /**
  * Nic 빌더
@@ -370,4 +389,6 @@ fun NicVo.toVmNicBuilder(): Nic = NicBuilder()
 	.vnicProfile(VnicProfileBuilder().id(this.vnicProfileVo.id).build())
 	.build()
 
+
+// endregion
 

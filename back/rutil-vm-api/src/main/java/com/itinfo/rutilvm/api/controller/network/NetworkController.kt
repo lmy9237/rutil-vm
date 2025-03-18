@@ -12,6 +12,7 @@ import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.network.NetworkTemplateVo
+import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.network.OpenStackNetworkVo
 import com.itinfo.rutilvm.api.service.network.ItNetworkService
 import com.itinfo.rutilvm.api.service.network.ItVnicProfileService
@@ -286,13 +287,13 @@ class NetworkController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping("/{networkId}/connectedHosts")
+	@GetMapping("/{networkId}/connectHosts")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun connectedhosts(
 		@PathVariable networkId: String? = null,
 	): ResponseEntity<List<HostVo>> {
-		log.info("/networks/{}/connectedHosts ... 네트워크 호스트 목록(연결된)", networkId)
+		log.info("/networks/{}/connectHosts ... 네트워크 호스트 목록", networkId)
 		if (networkId.isNullOrEmpty())
 			throw ErrorPattern.NETWORK_ID_NOT_FOUND.toException()
 		return ResponseEntity.ok(iNetwork.findConnectedHostsFromNetwork(networkId))
@@ -301,7 +302,7 @@ class NetworkController: BaseController() {
 	@ApiOperation(
 		httpMethod="GET",
 		value="네트워크 호스트 연결해제 목록",
-		notes="선택된 네트워크의 호스트 연결해제 목록을 조회한다"
+		notes="선택된 네트워크의 호스트 연결해제 된 목록을 조회한다"
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name="networkId", value="네트워크 ID", dataTypeClass=String::class, required=true, paramType="path"),
@@ -309,17 +310,18 @@ class NetworkController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping("/{networkId}/disconnectedHosts")
+	@GetMapping("/{networkId}/disconnectHosts")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	fun disconnectedHosts(
+	fun disconnectHosts(
 		@PathVariable networkId: String? = null,
 	): ResponseEntity<List<HostVo>> {
-		log.info("/networks/{}/disconnectedHosts ... 네트워크 호스트 목록(연결해제)", networkId)
+		log.info("/networks/{}/disconnectHosts ... 네트워크 호스트 목록", networkId)
 		if (networkId.isNullOrEmpty())
 			throw ErrorPattern.NETWORK_ID_NOT_FOUND.toException()
-		return ResponseEntity.ok(iNetwork.findDisconnectedHostsFromNetwork(networkId))
+		return ResponseEntity.ok(iNetwork.findDisConnectedHostsFromNetwork(networkId))
 	}
+
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -337,11 +339,11 @@ class NetworkController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	fun vms(
 		@PathVariable networkId: String? = null,
-	): ResponseEntity<List<VmViewVo>> {
+	): ResponseEntity<List<NicVo>> {
 		if (networkId.isNullOrEmpty())
 			throw ErrorPattern.NETWORK_ID_NOT_FOUND.toException()
 		log.info("/networks/{}/vms ... 네트워크 가상머신 목록", networkId)
-		return ResponseEntity.ok(iNetwork.findAllVmsFromNetwork(networkId))
+		return ResponseEntity.ok(iNetwork.findAllVmsNicFromNetwork(networkId))
 	}
 
 	@ApiOperation(

@@ -16,12 +16,12 @@ private val log = LoggerFactory.getLogger(NetworkTemplateVo::class.java)
 /**
  * [NetworkTemplateVo]
  *
- * @property name [String] 
- * // @property version [Int] 
- * @property status [TemplateStatus] 
- * @property clusterName [String] 
- * @property nicId [String] 
- * @property nicName [String] 
+ * @property name [String]
+ * // @property version [Int]
+ * @property status [TemplateStatus]
+ * @property clusterName [String]
+ * @property nicId [String]
+ * @property nicName [String]
  */
 class NetworkTemplateVo(
 	val id: String = "",
@@ -53,9 +53,7 @@ class NetworkTemplateVo(
 }
 
 fun Template.toNetworkTemplateVo(conn: Connection, nic: Nic): NetworkTemplateVo {
-	val cluster: Cluster? =
-		conn.findCluster(this@toNetworkTemplateVo.cluster().id())
-			.getOrNull()
+	val cluster: Cluster? = conn.findCluster(this@toNetworkTemplateVo.cluster().id()).getOrNull()
 	return NetworkTemplateVo.builder {
 		id { this@toNetworkTemplateVo.id() }
 		name { this@toNetworkTemplateVo.name() }

@@ -11,8 +11,9 @@ import org.ovirt.engine.sdk4.types.*
 private fun Connection.srvNetworks(): NetworksService =
 	this.systemService.networksService()
 
-fun Connection.findAllNetworks(follow: String = ""): Result<List<Network>> = runCatching {
+fun Connection.findAllNetworks(searchQuery: String = "", follow: String = ""): Result<List<Network>> = runCatching {
 	this.srvNetworks().list().apply {
+		if(searchQuery.isNotEmpty()) search(searchQuery)
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().networks()
 
@@ -31,12 +32,6 @@ fun Connection.findNetwork(networkId: String, follow: String = ""): Result<Netwo
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().network()
 
-	// val network = if (follow.isNotEmpty()) {
-	// 	this.srvNetwork(networkId).get().follow(follow)
-	// } else {
-	// 	this.srvNetwork(networkId).get()
-	// }
-	// network.send().network()
 }.onSuccess {
 	Term.NETWORK.logSuccess("상세조회", networkId)
 }.onFailure {

@@ -223,20 +223,20 @@ fun VmCreateVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 
 fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
     val vm = this@toVmCreateVo
-    val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
-    val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
-    val nics: List<Nic> = conn.findAllNicsFromVm(vm.id()).getOrDefault(listOf())
+    // val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
+    // val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
+    // val nics: List<Nic> = conn.findAllNicsFromVm(vm.id(), follow = "nics.vnicprofile").getOrDefault(listOf())
     val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
-    val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
-    val disk: Disk? = cdrom?.file()?.id()?.let { conn.findDisk(it).getOrNull() }
-    val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vm.id()).getOrDefault(listOf())
+    // val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
+	val disk: Disk? = vm.cdroms().firstOrNull()?.file()?.id()?.let { conn.findDisk(it).getOrNull() }
+    // val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vm.id()).getOrDefault(listOf())
 	val storageDomain: StorageDomain? = if (vm.leasePresent()) {
 		conn.findStorageDomain(vm.lease().storageDomain().id()).getOrNull()
 	} else null
 	val hosts = if (vm.placementPolicy().hostsPresent()) {
 		vm.placementPolicy().hosts().map { it }.fromHostsToIdentifiedVos()
 	} else listOf()
-	val cpuProfile = conn.findCpuProfile(vm.cpuProfile().id()).getOrNull()
+	// val cpuProfile = conn.findCpuProfile(vm.cpuProfile().id()).getOrNull()
 
     return VmCreateVo.builder {
 		id { vm.id() }
@@ -249,11 +249,7 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
 		memorySize { vm.memory() }
 		memoryMax { vm.memoryPolicy().max() }
 		memoryActual { vm.memoryPolicy().guaranteed() }
-		cpuTopologyCnt {
-			vm.cpu().topology().coresAsInteger() *
-				vm.cpu().topology().socketsAsInteger() *
-				vm.cpu().topology().threadsAsInteger()
-		}
+		cpuTopologyCnt { calculateCpuTopology(vm) }
 		cpuTopologyCore { vm.cpu().topology().coresAsInteger() }
 		cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
 		cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
@@ -276,13 +272,13 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
 		hostInCluster { !vm.placementPolicy().hostsPresent() }
 		hostVos { hosts }
 		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
-		cpuProfileVo { cpuProfile?.fromCpuProfileToIdentifiedVo() }
+		cpuProfileVo { vm.cpuProfile().fromCpuProfileToIdentifiedVo() }
+		diskAttachmentVos { vm.diskAttachments().toDiskAttachmentVos(conn) }
 		connVo { disk?.fromDiskToIdentifiedVo() }
-		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-		clusterVo { cluster?.fromClusterToIdentifiedVo() }
+		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
+		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
 		templateVo { template?.fromTemplateToIdentifiedVo() }
-		nicVos { nics.toVmNics() } // TODO
-		diskAttachmentVos { diskAttachments.toDiskAttachmentVos(conn) }
+		nicVos { vm.nics().toVmNics() } // TODO
 	}
 }
 

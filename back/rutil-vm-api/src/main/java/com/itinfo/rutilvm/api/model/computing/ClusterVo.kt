@@ -225,56 +225,56 @@ fun List<Cluster>.toNetworkClusterVos(conn: Connection, networkId: String): List
 
 
 // 전체 Cluster 정보 출력
-fun Cluster.toClusterVo(conn: Connection): ClusterVo {
-	val cluster = this@toClusterVo
-	val dataCenter = cluster.resolveDataCenter(conn)
-	val hosts: List<Host> = conn.findAllHostsFromCluster(cluster.id()).getOrDefault(listOf())
-	val networks: List<Network> = conn.findAllNetworksFromCluster(cluster.id()).getOrDefault(listOf())
-	val manageNetworkVo: NetworkVo = networks.first { it.usages().contains(NetworkUsage.MANAGEMENT) }.toNetworkMenu(conn)
-//	val templates: List<Template> = conn.findAllTemplates()
-//		.getOrDefault(listOf())
-//		.filter { !it.clusterPresent() || it.cluster().id() == cluster.id() }
-	val templates: List<Template> = lazy {
-		conn.findAllTemplates().getOrDefault(listOf())
-	}.value.filter { !it.clusterPresent() || it.cluster().id() == cluster.id() }
-
-	return ClusterVo.builder {
-		id { cluster.id() }
-		name { cluster.name() }
-		description {cluster.description() }
-		comment { cluster.comment() }
-//		isConnected { cluster. }
-		ballooningEnabled { cluster.ballooningEnabled() }
-		biosType { if(cluster.biosTypePresent()) cluster.biosType() else null }
-		cpuArc { cluster.cpu().architecture() }
-		cpuType { if (cluster.cpuPresent()) cluster.cpu().type() else null }
-		errorHandling { cluster.errorHandling().onError().toString() }
-		fipsMode { cluster.fipsMode() }
-		firewallType { cluster.firewallType() }
-		glusterService { cluster.glusterService() }
-		haReservation { cluster.haReservation() }
-		logMaxMemory { cluster.logMaxMemoryUsedThresholdAsLong() }
-		logMaxMemoryType { cluster.logMaxMemoryUsedThresholdType() }
-		memoryOverCommit { cluster.memoryPolicy().overCommit().percentAsInteger() }
-		migrationPolicy { cluster.migration().autoConverge() }
-		bandwidth { cluster.migration().bandwidth().assignmentMethod() }
-		encrypted { cluster.migration().encrypted() }
-		switchType { cluster.switchType() }
-		threadsAsCores { cluster.threadsAsCores() }
-		version { cluster.version().major().toString() + "." + cluster.version().minor() }
-		virtService { cluster.virtService() }
-		networkProvider { cluster.externalNetworkProviders().size != 0 } // 0이 아니라면 네트워크 공급자 존재
-		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-		networkVo { manageNetworkVo }
-		hostSize { cluster.findHostCntFromCluster(conn) }
-		vmSize { cluster.findVmCntFromCluster(conn) }
-		hostVos { hosts.fromHostsToIdentifiedVos() }
-		networkVos { networks.fromNetworksToIdentifiedVos() }
-		templateVos { templates.fromTemplatesToIdentifiedVos() }
-	}
-}
-fun List<Cluster>.toClusterVos(conn: Connection): List<ClusterVo> =
-	this@toClusterVos.map { it.toClusterVo(conn) }
+// fun Cluster.toClusterVo(conn: Connection): ClusterVo {
+// 	val cluster = this@toClusterVo
+// 	val dataCenter = cluster.resolveDataCenter(conn)
+// 	val hosts: List<Host> = conn.findAllHostsFromCluster(cluster.id()).getOrDefault(listOf())
+// 	val networks: List<Network> = conn.findAllNetworksFromCluster(cluster.id()).getOrDefault(listOf())
+// 	val manageNetworkVo: NetworkVo = networks.first { it.usages().contains(NetworkUsage.MANAGEMENT) }.toNetworkMenu()
+// //	val templates: List<Template> = conn.findAllTemplates()
+// //		.getOrDefault(listOf())
+// //		.filter { !it.clusterPresent() || it.cluster().id() == cluster.id() }
+// 	val templates: List<Template> = lazy {
+// 		conn.findAllTemplates().getOrDefault(listOf())
+// 	}.value.filter { !it.clusterPresent() || it.cluster().id() == cluster.id() }
+//
+// 	return ClusterVo.builder {
+// 		id { cluster.id() }
+// 		name { cluster.name() }
+// 		description {cluster.description() }
+// 		comment { cluster.comment() }
+// //		isConnected { cluster. }
+// 		ballooningEnabled { cluster.ballooningEnabled() }
+// 		biosType { if(cluster.biosTypePresent()) cluster.biosType() else null }
+// 		cpuArc { cluster.cpu().architecture() }
+// 		cpuType { if (cluster.cpuPresent()) cluster.cpu().type() else null }
+// 		errorHandling { cluster.errorHandling().onError().toString() }
+// 		fipsMode { cluster.fipsMode() }
+// 		firewallType { cluster.firewallType() }
+// 		glusterService { cluster.glusterService() }
+// 		haReservation { cluster.haReservation() }
+// 		logMaxMemory { cluster.logMaxMemoryUsedThresholdAsLong() }
+// 		logMaxMemoryType { cluster.logMaxMemoryUsedThresholdType() }
+// 		memoryOverCommit { cluster.memoryPolicy().overCommit().percentAsInteger() }
+// 		migrationPolicy { cluster.migration().autoConverge() }
+// 		bandwidth { cluster.migration().bandwidth().assignmentMethod() }
+// 		encrypted { cluster.migration().encrypted() }
+// 		switchType { cluster.switchType() }
+// 		threadsAsCores { cluster.threadsAsCores() }
+// 		version { cluster.version().major().toString() + "." + cluster.version().minor() }
+// 		virtService { cluster.virtService() }
+// 		networkProvider { cluster.externalNetworkProviders().size != 0 } // 0이 아니라면 네트워크 공급자 존재
+// 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
+// 		networkVo { manageNetworkVo }
+// 		hostSize { cluster.findHostCntFromCluster(conn) }
+// 		vmSize { cluster.findVmCntFromCluster(conn) }
+// 		hostVos { hosts.fromHostsToIdentifiedVos() }
+// 		networkVos { networks.fromNetworksToIdentifiedVos() }
+// 		templateVos { templates.fromTemplatesToIdentifiedVos() }
+// 	}
+// }
+// fun List<Cluster>.toClusterVos(conn: Connection): List<ClusterVo> =
+// 	this@toClusterVos.map { it.toClusterVo(conn) }
 
 // 클러스터가 가진 데이터센터를 구하기(데이터센터가 없는경우도 있긴함)
 fun Cluster.resolveDataCenter(conn: Connection): DataCenter? {

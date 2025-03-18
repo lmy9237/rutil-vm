@@ -150,7 +150,7 @@ fun HostNic.toSlaveHostNicVo(conn: Connection): HostNicVo {
 		name { hostNic.name() }
 		status { hostNic.status() }
 		speed { hostNic.speed() }
-		macAddress { hostNic.mac().address() }
+		macAddress { if(hostNic.macPresent()) hostNic.mac().address() else "" }
 		rxSpeed { statistics.findSpeed("data.current.rx.bps") }
 		txSpeed { statistics.findSpeed("data.current.tx.bps") }
 		rxTotalSpeed { statistics.findSpeed("data.total.rx") }

@@ -42,7 +42,7 @@ interface ItVmService {
 	 * 가상머신 편집
 	 *
 	 * @param vmId [String] 가상머신 Id
-	 * @return [VmVo]
+	 * @return [VmCreateVo]
 	 */
 	@Throws(Error::class)
 	fun findEditOne(vmId: String): VmCreateVo?
@@ -184,7 +184,7 @@ class VmServiceImpl(
 	@Throws(Error::class)
 	override fun findEditOne(vmId: String): VmCreateVo? {
 		log.info("findEditOne ... vmId : {}", vmId)
-		val res: Vm? = conn.findVm(vmId).getOrNull()
+		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,nics.vnicprofile,diskattachments,cdroms,statistics").getOrNull()
 		return res?.toVmCreateVo(conn)
 	}
 

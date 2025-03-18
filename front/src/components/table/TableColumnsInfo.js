@@ -292,12 +292,14 @@ const TableColumnsInfo = {
     { header: '총 Tx(byte)', accessor: 'totalTx', clickable: false },
   ],
   HOSTS_DISCONNECT_FROM_NETWORK: [
+    { header: '', accessor: 'icon', clickable: false, width: '5%' },
     { header: '이름', accessor: 'name', clickable: false },
     { header: '클러스터', accessor: 'cluster', clickable: false },
     { header: '데이터 센터', accessor: 'dataCenter', clickable: false },
   ],
 
   VMS_FROM_NETWORK: [
+    { header: '', accessor: 'icon', clickable: false , width:'3%' },
     { header: '이름', accessor: 'name', clickable: false },
     { header: '클러스터', accessor: 'cluster', clickable: false },
     { header: 'IP 주소', accessor: 'ipAddress', clickable: false },
@@ -308,6 +310,31 @@ const TableColumnsInfo = {
     { header: 'vNIC Tx', accessor: 'vnicTx', clickable: false },
     { header: '총 Rx', accessor: 'totalRx', clickable: false },
     { header: '총 Tx', accessor: 'totalTx', clickable: false },
+    { header: '설명', accessor: 'description', clickable: false }
+  ],
+  
+  VMS_UP_FROM_NETWORK: [
+    { header: '', accessor: 'icon', clickable: false , width:'3%' },
+    { header: '이름', accessor: 'name', clickable: false },
+    // { header: '클러스터', accessor: 'cluster', clickable: false },
+    { header: 'IP 주소', accessor: 'ipAddress', clickable: false }, // 스웨거 정보없음
+    { header: 'FQDN', accessor: 'fqdn', clickable: false },
+    { header: 'vNIC 상태', accessor: 'vnicStatus', clickable: false , width:'7%' },
+    { header: 'vNIC', accessor: 'vnic', clickable: false },
+    { header: 'vNIC Rx', accessor: 'vnicRx', clickable: false },
+    { header: 'vNIC Tx', accessor: 'vnicTx', clickable: false },
+    { header: '총 Rx', accessor: 'totalRx', clickable: false },
+    { header: '총 Tx', accessor: 'totalTx', clickable: false },
+    { header: '설명', accessor: 'description', clickable: false }
+  ],
+  VMS_STOP_FROM_NETWORK: [
+    { header: '', accessor: 'icon', clickable: false, width:'3%' },
+    { header: '이름', accessor: 'name', clickable: false },
+    // { header: '클러스터', accessor: 'cluster', clickable: false },
+    { header: 'IP 주소', accessor: 'ipAddress', clickable: false },
+    { header: 'FQDN', accessor: 'fqdn', clickable: false },
+    { header: 'vNIC 상태', accessor: 'vnicStatus', clickable: false , width:'7%'},
+    { header: 'vNIC', accessor: 'vnic', clickable: false },
     { header: '설명', accessor: 'description', clickable: false }
   ],
   TEMPLATES_FROM_NETWORK: [
@@ -712,34 +739,10 @@ const TableColumnsInfo = {
   ],
   
 
-  
-  VMS_NIC: [
-    { header: '', accessor: 'icon', clickable: false , width:'3%' },
-    { header: '이름', accessor: 'name', clickable: false },
-    { header: '클러스터', accessor: 'cluster', clickable: false },
-    { header: 'IP 주소', accessor: 'ipAddress', clickable: false }, // 스웨거 정보없음
-    { header: 'FQDN', accessor: 'fqdn', clickable: false },
-    { header: 'vNIC 상태', accessor: 'vnicStatus', clickable: false , width:'7%' },
-    { header: 'vNIC', accessor: 'vnic', clickable: false },
-    { header: 'vNIC Rx', accessor: 'vnicRx', clickable: false },
-    { header: 'vNIC Tx', accessor: 'vnicTx', clickable: false },
-    { header: '총 Rx', accessor: 'totalRx', clickable: false },
-    { header: '총 Tx', accessor: 'totalTx', clickable: false },
-    { header: '설명', accessor: 'description', clickable: false }
-  ],
   VM_BRING_POPUP:[
     { header: '이름', accessor: 'name', clickable: false },
   ],
-  VMS_STOP: [
-    { header: '', accessor: 'icon', clickable: false, width:'3%' },
-    { header: '이름', accessor: 'name', clickable: false },
-    { header: '클러스터', accessor: 'cluster', clickable: false },
-    { header: 'IP 주소', accessor: 'ipAddress', clickable: false },
-    { header: 'FQDN', accessor: 'fqdn', clickable: false },
-    { header: 'vNIC 상태', accessor: 'vnicStatus', clickable: false , width:'7%'},
-    { header: 'vNIC', accessor: 'vnic', clickable: false },
-    { header: '설명', accessor: 'description', clickable: false }
-  ],
+  
   
   SNAPSHOT_NEW:[
     { header: '', accessor: 'check', clickable: false, width:'6%'},
