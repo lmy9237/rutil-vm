@@ -9,5 +9,5 @@ import java.util.*
 @Repository
 interface HostInterfaceSampleHistoryRepository : JpaRepository<HostInterfaceSamplesHistoryEntity, Int> {
 	// 호스트 - 네트워크
-	fun findFirstByHostInterfaceIdOrderByHistoryDatetimeDesc(hostInterfaceId: UUID): Optional<HostInterfaceSamplesHistoryEntity>
+	fun findFirstByHostInterfaceIdOrderByHistoryDatetimeDesc(hostInterfaceId: UUID): HostInterfaceSamplesHistoryEntity?
 }

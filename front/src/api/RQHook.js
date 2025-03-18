@@ -1019,7 +1019,7 @@ export const useLoginIscsiFromHost = () => {
 export const useAddHost = () => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({hostData, deploy_hosted_engine}) => await ApiManager.addHost(hostData, deploy_hosted_engine),
+    mutationFn: async ({hostData, deployHostedEngine}) => await ApiManager.addHost(hostData, deployHostedEngine),
     onSuccess: () => {
       queryClient.invalidateQueries('allHosts'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
     },

@@ -52,7 +52,7 @@ const TableColumnsInfo = {
   HOSTS: [
     { header: '', accessor: 'icon', clickable: false, width: '3%' },
     { header: '', accessor: 'hostedEngine', clickable: false, width: '4%' },
-    { header: '이름', accessor: 'name', clickable: true, width: '12%' },
+    { header: '이름', accessor: '_name', clickable: true, width: '12%' },
     { header: '코멘트', accessor: 'comment', clickable: false, width: '12%' },
     { header: '호스트 이름/IP', accessor: 'address', clickable: false, width: '12%' },
     { header: '클러스터', accessor: 'cluster', clickable: true, width: '12%' },

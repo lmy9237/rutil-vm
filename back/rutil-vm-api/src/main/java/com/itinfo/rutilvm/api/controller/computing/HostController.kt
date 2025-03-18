@@ -71,7 +71,8 @@ class HostController {
 		notes="호스트를 생성한다"
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name="host", value="호스트", dataTypeClass=HostVo::class, paramType="body")
+		ApiImplicitParam(name="host", value="호스트", dataTypeClass=HostVo::class, paramType="body"),
+		ApiImplicitParam(name="deployHostedEngine", value="호스트 엔진 배포 작업 여부", dataTypeClass=Boolean::class, paramType="query", defaultValue="false")
 	)
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED"),
@@ -87,7 +88,7 @@ class HostController {
 	): ResponseEntity<HostVo?> {
 		if (host == null)
 			throw ErrorPattern.HOST_VO_INVALID.toException()
-		log.info("/computing/hosts ... 호스트 생성\n{}", host)
+		log.info("/computing/hosts?deployHostedEngine={} ... 호스트 생성\n{}", deployHostedEngine, host)
 		return ResponseEntity.ok(iHost.add(host, deployHostedEngine))
 	}
 

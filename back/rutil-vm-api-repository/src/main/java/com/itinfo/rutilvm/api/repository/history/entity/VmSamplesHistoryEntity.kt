@@ -52,8 +52,8 @@ class VmSamplesHistoryEntity(
 	val vmId: UUID? = null,
 
 	val vmStatus: Int = -1,
-	val cpuUsagePercent: Int = -1,
-	val memoryUsagePercent: Int = -1,
+	val cpuUsagePercent: Int? = -1,
+	val memoryUsagePercent: Int? = -1,
 	val vmIp: String = "",
 	val currentUserName: String = "",
 
@@ -64,8 +64,8 @@ class VmSamplesHistoryEntity(
 	val currentHostConfigurationVersion: Int = -1,
 	val vmClientIp: String = "",
 	val userLoggedInToGuest: Boolean = false,
-	val userCpuUsagePercent: Int = -1,
-	val systemCpuUsagePercent: Int = -1,
+	val userCpuUsagePercent: Int? = -1,
+	val systemCpuUsagePercent: Int? = -1,
 
 	@Type(type="org.hibernate.type.PostgresUUIDType")
 	val currentUserId: UUID? = null,
@@ -81,8 +81,8 @@ class VmSamplesHistoryEntity(
 		private var bHistoryDatetime: LocalDateTime = LocalDateTime.MIN;fun historyDatetime(block: () -> LocalDateTime?) { bHistoryDatetime = block() ?: LocalDateTime.MIN}
 		private var bVmId: UUID? = null;fun vmId(block: () -> UUID?) { bVmId = block() }
 		private var bVmStatus: Int = -1;fun vmStatus(block: () -> Int?) { bVmStatus = block() ?: -1 }
-		private var bCpuUsagePercent: Int = -1;fun cpuUsagePercent(block: () -> Int?) { bCpuUsagePercent = block() ?: -1 }
-		private var bMemoryUsagePercent: Int = -1;fun memoryUsagePercent(block: () -> Int?) { bMemoryUsagePercent = block() ?: -1 }
+		private var bCpuUsagePercent: Int? = -1;fun cpuUsagePercent(block: () -> Int?) { bCpuUsagePercent = block() ?: -1 }
+		private var bMemoryUsagePercent: Int? = -1;fun memoryUsagePercent(block: () -> Int?) { bMemoryUsagePercent = block() ?: -1 }
 		private var bVmIp: String = "";fun vmIp(block: () -> String?) { bVmIp = block() ?: "" }
 		private var bCurrentUserName: String = "";fun currentUserName(block: () -> String?) { bCurrentUserName = block() ?: "" }
 		private var bCurrentlyRunningOnHost: UUID? = null;fun currentlyRunningOnHost(block: () -> UUID?) { bCurrentlyRunningOnHost = block() }
@@ -90,8 +90,8 @@ class VmSamplesHistoryEntity(
 		private var bCurrentHostConfigurationVersion: Int = -1;fun currentHostConfigurationVersion(block: () -> Int?) { bCurrentHostConfigurationVersion = block() ?: -1 }
 		private var bVmClientIp: String = "";fun vmClientIp(block: () -> String?) { bVmClientIp = block() ?: "" }
 		private var bUserLoggedInToGuest: Boolean = false;fun userLoggedInToGuest(block: () -> Boolean?) { bUserLoggedInToGuest = block() ?: false }
-		private var bUserCpuUsagePercent: Int = -1;fun userCpuUsagePercent(block: () -> Int?) { bUserCpuUsagePercent = block() ?: -1 }
-		private var bSystemCpuUsagePercent: Int = -1;fun systemCpuUsagePercent(block: () -> Int?) { bSystemCpuUsagePercent = block() ?: -1 }
+		private var bUserCpuUsagePercent: Int? = -1;fun userCpuUsagePercent(block: () -> Int?) { bUserCpuUsagePercent = block() ?: -1 }
+		private var bSystemCpuUsagePercent: Int? = -1;fun systemCpuUsagePercent(block: () -> Int?) { bSystemCpuUsagePercent = block() ?: -1 }
 		private var bCurrentUserId: UUID? = null;fun currentUserId(block: () -> UUID?) { bCurrentUserId = block() }
 		private var bMemoryBufferedKb: BigInteger = BigInteger.ZERO;fun memoryBufferedKb(block: () -> BigInteger?) { bMemoryBufferedKb = block() ?: BigInteger.ZERO }
 		private var bMemoryCachedKb: BigInteger = BigInteger.ZERO;fun memoryCachedKb(block: () -> BigInteger?) { bMemoryCachedKb = block() ?: BigInteger.ZERO }

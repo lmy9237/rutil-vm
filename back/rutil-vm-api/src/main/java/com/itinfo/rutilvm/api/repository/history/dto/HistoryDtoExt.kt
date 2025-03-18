@@ -29,8 +29,8 @@ fun HostSamplesHistoryEntity.toHostUsageDto(): HostUsageDto {
     return HostUsageDto.builder {
         hostId { "${this@toHostUsageDto.hostId}" }
         historyDatetime { this@toHostUsageDto.historyDatetime }
-        totalCpuUsagePercent { this@toHostUsageDto.cpuUsagePercent.toDouble() }
-        totalMemoryUsagePercent { this@toHostUsageDto.memoryUsagePercent.toDouble() }
+        totalCpuUsagePercent { this@toHostUsageDto.cpuUsagePercent?.toDouble() }
+        totalMemoryUsagePercent { this@toHostUsageDto.memoryUsagePercent?.toDouble() }
     }
 }
 
@@ -95,14 +95,14 @@ fun List<Host>.toHostUsageDto(conn: Connection, hostSamplesHistoryEntities: List
     }
 }
 
-fun List<HostSamplesHistoryEntity>.toTotalCpuMemoryUsages(conn: Connection, host: Host): List<HostUsageDto>  {
+fun List<HostSamplesHistoryEntity>.toTotalCpuMemoryUsages(host: Host): List<HostUsageDto>  {
     val hostName = host.name()
     return this@toTotalCpuMemoryUsages.map {
         HostUsageDto.builder {
             hostName { hostName }
             historyDatetime { it.historyDatetime }
-            totalCpuUsagePercent { it.cpuUsagePercent.toDouble() }
-            totalMemoryUsagePercent { it.memoryUsagePercent.toDouble() }
+            totalCpuUsagePercent { it.cpuUsagePercent?.toDouble() }
+            totalMemoryUsagePercent { it.memoryUsagePercent?.toDouble() }
         }
     }
 }
@@ -117,7 +117,7 @@ fun List<VmSamplesHistoryEntity>.toVmCpuLineDtos(conn: Connection): List<LineDto
     val vmTimeMap = mutableMapOf<String, MutableList<LocalDateTime>>()
 
     this@toVmCpuLineDtos.forEach {
-        vmDataMap.computeIfAbsent(it.vmId.toString()) { mutableListOf() }.add(it.cpuUsagePercent)
+		vmDataMap.computeIfAbsent(it.vmId.toString()) { mutableListOf() }.add(it.cpuUsagePercent ?: 0)
         vmTimeMap.computeIfAbsent(it.vmId.toString()) { mutableListOf() }.add(it.historyDatetime)
     }
 
@@ -137,8 +137,8 @@ fun List<VmSamplesHistoryEntity>.toVmMemoryLineDtos(conn: Connection): List<Line
     val vmTimeMap = mutableMapOf<String, MutableList<LocalDateTime>>()
 
     this@toVmMemoryLineDtos.forEach {
-        vmDataMap.computeIfAbsent(it.vmId.toString()) { mutableListOf() }.add(it.memoryUsagePercent)
-        vmTimeMap.computeIfAbsent(it.vmId.toString()) { mutableListOf() }.add(it.historyDatetime)
+		vmDataMap.computeIfAbsent(it.vmId.toString()) { mutableListOf() }.add(it.memoryUsagePercent ?: 0)
+		vmTimeMap.computeIfAbsent(it.vmId.toString()) { mutableListOf() }.add(it.historyDatetime)
     }
 
     return vmDataMap.map { (vmId, dataList) ->

@@ -51,7 +51,7 @@ const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
         <div className="disk-delete-box">
           <div>
             {warnButton()}
-            <span> {names.join(", ")} 를(을) 삭제하시겠습니까? </span>
+            <span> {JSON.stringify(names.join(", "), null, 2)} 를(을) 삭제하시겠습니까? </span>
           </div>
         </div>
       </div>

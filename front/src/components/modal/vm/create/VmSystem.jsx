@@ -20,6 +20,7 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
   };
 
   const handleCpuChange = (e) => {
+    console.log("VmSystem > handleCpuChange ... ")
     const totalCpu = parseInt(e.target.value, 10);
     if (!isNaN(totalCpu) && totalCpu > 0) {
       setFormSystemState((prev) => ({
@@ -41,6 +42,7 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
   };
 
   const handleSocketChange = (e) => {
+    console.log("VmSystem > handleSocketChange ... ")
     const socket = parseInt(e.target.value, 10);
     const remaining = formSystemState.cpuTopologyCnt / socket;
 
@@ -72,24 +74,25 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
   return (
     <>
       <div className="edit-second-content">
-        <LabelInputNum label="메모리 크기(MB)" id="memory_size" value={formSystemState.memorySize} onChange={ handleInputChange("memorySize") }/>
-        <LabelInputNum label="최대 메모리(MB)" id="max_memory" value={formSystemState.memoryMax} onChange={ handleInputChange("memoryMax") }/>
-        <LabelInputNum label="할당할 실제 메모리(MB)" id="actual_memory" value={formSystemState.memoryActual} onChange={ handleInputChange("memoryActual") }/>
+        <LabelInputNum id="memory_size"
+          label="메모리 크기(MB)" value={formSystemState.memorySize} onChange={ handleInputChange("memorySize") }/>
+        <LabelInputNum id="max_memory"
+          label="최대 메모리(MB)" value={formSystemState.memoryMax} onChange={ handleInputChange("memoryMax") }/>
+        <LabelInputNum id="actual_memory"
+          label="할당할 실제 메모리(MB)" value={formSystemState.memoryActual} onChange={ handleInputChange("memoryActual") }/>
 
-        <LabelInputNum
+        <LabelInputNum id="total_cpu"
           label="총 가상 CPU"
-          id="total_cpu"
           value={formSystemState.cpuTopologyCnt || ""}
           onChange={handleCpuChange}
         />
 
         {/* 소켓 보이기/숨기기 버튼 */}
-        <button onClick={toggleSocketVisibility}>가상 소켓 설정</button>
+        {/* <button onClick={toggleSocketVisibility}>가상 소켓 설정</button>
 
         {isSocketVisible && (
           <>
-          <LabelSelectOptions
-            label="가상 소켓"
+          <LabelSelectOptions label="가상 소켓"
             id="virtual_socket"
             value={formSystemState.cpuTopologySocket}
             onChange={handleSocketChange}
@@ -99,8 +102,7 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
             }))}
           />   
       
-          <LabelSelectOptions
-            label="가상 소켓 당 코어"
+          <LabelSelectOptions label="가상 소켓 당 코어"
             id="core_per_socket"
             value={formSystemState.cpuTopologyCore}
             onChange={handleCoreChange}
@@ -112,8 +114,7 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
             }))}
           />
 
-          <LabelSelectOptions
-            label="코어당 스레드"
+          <LabelSelectOptions label="코어당 스레드"
             id="thread_per_core"
             value={formSystemState.cpuTopologyThread}
             onChange={(e) =>
@@ -131,9 +132,9 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
             }))}
           />
           </>
-        )}
+        )} */}
         {/* 삭제예정 */}
-        {/* <div className="network_form_group">
+        <div className="network_form_group">
           <label htmlFor="virtual_socket">가상 소켓</label>
           <select
             id="virtual_socket"
@@ -181,7 +182,7 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
               </option>
             ))}
           </select>
-        </div> */}
+        </div>
       </div>
     </>
   );

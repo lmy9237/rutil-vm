@@ -33,9 +33,7 @@ const TemplateGeneral = ({ templateId }) => {
   ];
 
   return (
-   <div className="host-table-outer">
     <InfoTable tableRows={tableRows} />
-  </div>
   )
 };
 

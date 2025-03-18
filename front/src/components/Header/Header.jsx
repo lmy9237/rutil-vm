@@ -1,31 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleLeft,
-  faAngleRight,
-  faBars,
-  faBell,
-  faChevronDown,
-  faChevronRight,
-  faCog,
-  faExclamationTriangle,
-  faInfoCircle,
-  faRotate,
-  faTimes,
-  faTrash,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import {
   RVI24,
   LogoIcon,
-  rvi24Hamburger,
-  NotificationIcon,
-  RefreshIcon,
-  SettingsIcon,
   TopMenuIcon,
-  UserIcon,
+  rvi24Hamburger,
   rvi24Refresh,
   rvi24Gear,
   rvi24Bell,
@@ -35,11 +15,11 @@ import {
   rvi16Trash,
   rvi16Event,
   rvi16ArrowLeft,
+  rvi16ArrowRight,
   rvi16Host,
   rvi16CloseMenu,
   rvi24RightArrow,
   rvi24DownArrow,
-  rvil16Right,
 } from "../icons/RutilVmIcons";
 
 /**
@@ -129,7 +109,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
         {/* 새로고침 */}
         <TopMenuIcon iconDef={rvi24Refresh} onClick={() => window.location.reload()} />
         {/* 설정 */}
-        <TopMenuIcon iconDef={rvi24Gear} onClick={() => {
+        <TopMenuIcon iconDef={rvi24Gear()} onClick={() => {
             setSelectedIndex(1);
             navigate("/settings/users"); // 기존 기능 유지
           }}
@@ -148,7 +128,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
           >
             <div className="f-btw py-0.5 px-1.5 bell-cate">
               <RVI16 
-                iconDef={isExpanded ? rvil16Right:rvi16ArrowLeft} 
+                iconDef={isExpanded ? rvi16ArrowRight : rvi16ArrowLeft} 
                 className="hover-icon"
                 onClick={handleExpand}
               />

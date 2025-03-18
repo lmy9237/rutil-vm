@@ -48,8 +48,8 @@ class HostSamplesHistoryEntity(
 	val hostId: UUID? = null,
 
 	val historyDatetime: LocalDateTime = LocalDateTime.MIN,
-	val memoryUsagePercent: Int = -1,
-	val cpuUsagePercent: Int = -1,
+	val memoryUsagePercent: Int? = -1,
+	val cpuUsagePercent: Int? = -1,
 
 	val ksmCpuPercent: Int? = null,
 	val activeVms: Int? = null,
@@ -70,15 +70,15 @@ class HostSamplesHistoryEntity(
 		private var bHistoryId: Int = -1;fun historyId(block: () -> Int?) { bHistoryId = block() ?: -1 }
 		private var bHostId: UUID? = null;fun hostId(block: () -> UUID?) { bHostId = block() }
 		private var bHistoryDatetime: LocalDateTime = LocalDateTime.MIN;fun historyDatetime(block: () -> LocalDateTime?) { bHistoryDatetime = block() ?: LocalDateTime.MIN }
-		private var bMemoryUsagePercent: Int = 0;fun memoryUsagePercent(block: () -> Int?) { bMemoryUsagePercent = block() ?: 0 }
-		private var bCpuUsagePercent: Int = 0;fun cpuUsagePercent(block: () -> Int?) { bCpuUsagePercent = block() ?: 0 }
-		private var bKsmCpuPercent: Int = 0;fun ksmCpuPercent(block: () -> Int?) { bKsmCpuPercent = block() ?: 0 }
+		private var bMemoryUsagePercent: Int? = 0;fun memoryUsagePercent(block: () -> Int?) { bMemoryUsagePercent = block() ?: 0 }
+		private var bCpuUsagePercent: Int? = 0;fun cpuUsagePercent(block: () -> Int?) { bCpuUsagePercent = block() ?: 0 }
+		private var bKsmCpuPercent: Int? = 0;fun ksmCpuPercent(block: () -> Int?) { bKsmCpuPercent = block() ?: 0 }
 		private var bActiveVms: Int = 0;fun activeVms(block: () -> Int?) { bActiveVms = block() ?: 0 }
 		private var bTotalVms: Int = 0;fun totalVms(block: () -> Int?) { bTotalVms = block() ?: 0 }
 		private var bTotalVmsVcpus: Int = 0;fun totalVmsVcpus(block: () -> Int?) { bTotalVmsVcpus = block() ?: 0 }
 		private var bCpuLoad: Int = 0;fun cpuLoad(block: () -> Int?) { bCpuLoad = block() ?: 0 }
-		private var bSystemCpuUsagePercent: Int = 0;fun systemCpuUsagePercent(block: () -> Int?) { bSystemCpuUsagePercent = block() ?: 0 }
-		private var bUserCpuUsagePercent: Int = 0;fun userCpuUsagePercent(block: () -> Int?) { bUserCpuUsagePercent = block() ?: 0 }
+		private var bSystemCpuUsagePercent: Int? = 0;fun systemCpuUsagePercent(block: () -> Int?) { bSystemCpuUsagePercent = block() ?: 0 }
+		private var bUserCpuUsagePercent: Int? = 0;fun userCpuUsagePercent(block: () -> Int?) { bUserCpuUsagePercent = block() ?: 0 }
 		private var bHostStatus: Int = 0;fun hostStatus(block: () -> Int?) { bHostStatus = block() ?: 0 }
 		private var bSwapUsedMb: Int = 0;fun swapUsedMb(block: () -> Int?) { bSwapUsedMb = block() ?: 0 }
 		private var bHostConfigurationVersion: Int = 0;fun hostConfigurationVersion(block: () -> Int?) { bHostConfigurationVersion = block() ?: 0 }

@@ -60,7 +60,7 @@ const NetworkDupl = ({
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         )}
         <NetworkActionButtons 
-          className="dupl-header-action-buttons"
+          className=""
           openModal={openModal}
           isEditDisabled={selectedNetworks.length !== 1}
           isDeleteDisabled={selectedNetworks.length === 0}

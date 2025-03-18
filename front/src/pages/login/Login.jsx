@@ -8,7 +8,7 @@ import {
   faRightToBracket,
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
-import RutilLogo from "../../components/common/RutilLogo";
+import RutilVmLogo from "../../components/common/RutilVmLogo";
 import Background from "../../components/common/Background";
 import IconInput from "../../components/Input/IconInput";
 import { useAuthenticate } from "../../api/RQHook";
@@ -62,7 +62,7 @@ const Login = ({ setAuthenticated, setUsernameGlobal }) => {
   return (
     <Background id="login" children={
       <div className="login-container">
-        <RutilLogo/>
+        <RutilVmLogo className="bigger" description="RutilVM에 오신걸 환영합니다." />
         <form className="flex flex-col justify-center items-center" 
           onSubmit={doLogin}>
           <IconInput

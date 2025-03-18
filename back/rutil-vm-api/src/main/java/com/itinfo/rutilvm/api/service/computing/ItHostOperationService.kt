@@ -8,9 +8,11 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
+import com.itinfo.rutilvm.util.ssh.model.enableGlobalHA
 import com.itinfo.rutilvm.util.ssh.model.rebootSystem
 
 import org.ovirt.engine.sdk4.Error
+import org.ovirt.engine.sdk4.types.HostStatus
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.net.UnknownHostException
@@ -130,8 +132,14 @@ class HostOperationServiceImpl(
     @Throws(Error::class)
     override fun globalHaActivate(hostId: String): Boolean {
         log.info("globalHaActivate ... hostId: {}", hostId)
-        val res: Result<Boolean> = conn.activeGlobalHaFromHost(hostId)
-        return res.isSuccess
+		val resHost2EnableGobalHA: HostVo? = iHost.findOne(hostId)
+		if (resHost2EnableGobalHA?.status !== HostStatus.UP) {
+			return false
+			// throw Result.failure(Error("resHost2EnableGobalHA 실패 ... ${resHost2EnableGobalHA.name()}가 비활성화 된 상태"))
+		}
+		val remoteConnMgmt: RemoteConnMgmt = resHost2EnableGobalHA.toRemoteConnMgmt(certConfig.ovirtSSHPrvKey)
+		val res: Result<Boolean> = remoteConnMgmt.enableGlobalHA()
+		return res.isSuccess
     }
 
     @Throws(Error::class)

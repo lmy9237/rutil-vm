@@ -116,9 +116,7 @@ const HostGeneral = ({ hostId }) => {
           </button>
         ))}
       </div>
-      <div className="host-table-outer">
-        <InfoTable tableRows={tabs.find(({ tab }) => tab === activeTab)?.tableRows || []} />
-      </div>
+      <InfoTable tableRows={tabs.find(({ tab }) => tab === activeTab)?.tableRows || []} />
       <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
         cpu <SuperAreaChart key={`${hostId}-cpu`} per={chartData} type="cpu" />
         memory <SuperAreaChart key={`${hostId}-memory`} per={chartData} type="memory" />

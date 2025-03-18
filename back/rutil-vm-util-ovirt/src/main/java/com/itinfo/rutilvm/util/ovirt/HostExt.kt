@@ -170,7 +170,6 @@ fun Connection.deactivateHost(hostId: String): Result<Boolean> = runCatching {
 
 fun Connection.activateHost(hostId: String): Result<Boolean> = runCatching {
 	val host = checkHost(hostId)
-
 	if (host.status() == HostStatus.UP) {
 		return Result.failure(Error("activateHost 실패 ... ${host.name()}가 이미 활성 상태 "))
 	}
@@ -190,7 +189,6 @@ fun Connection.activateHost(hostId: String): Result<Boolean> = runCatching {
 
 fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
-
 	this.srvHost(hostId).refresh().send()
 
 	if (!this.expectHostStatus(hostId, HostStatus.UP)) {
@@ -207,7 +205,6 @@ fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 
 fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
-
 	this.srvHost(hostId).enrollCertificate().send()
 	true
 }.onSuccess {
@@ -218,9 +215,14 @@ fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching 
 }
 
 fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
-	val host = checkHost(hostId)
-
-	TODO("ssh 로 구현")
+	val host: Host = checkHost(hostId)
+	if (host.status() !== HostStatus.UP) {
+		return Result.failure(Error("activeGlobalHaFromHost 실패 ... ${host.name()}가 비활성화 된 상태"))
+	}
+	if (host.hostedEnginePresent() && host.hostedEngine().globalMaintenancePresent() && host.hostedEngine().globalMaintenance()) {
+		return Result.failure(Error("activeGlobalHaFromHost 실패 ... ${host.name()}가 이미 글로벌 HA 된 상태"))
+	}
+	true
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 ha 활성화")
 }.onFailure {

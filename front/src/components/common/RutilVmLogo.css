@@ -1,0 +1,19 @@
+/* components/common/RutilVmLogo.css */
+.rutil-vm-logo {
+  display:flex;justify-content:center;align-items:center;flex-direction:column;
+  width:140px;aspect-ratio:134/36;margin:10px;
+}
+.rutil-vm-logo.big {
+  width: 240px !important;
+}
+.rutil-vm-logo.bigger {
+  width: 400px !important;
+}
+.rutil-vm-logo svg {
+  width:inherit;height:inherit;
+}
+.rutil-vm-logo figcaption { 
+  display:flex;flex-direction:row;justify-content:flex-end;align-items:center;
+  width:100%;font-size: 0.65rem; 
+}
+.rutil-vm-logo p { color: var(--color-primary); }

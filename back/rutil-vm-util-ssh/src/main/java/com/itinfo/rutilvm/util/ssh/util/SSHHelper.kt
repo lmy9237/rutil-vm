@@ -18,6 +18,7 @@ class SSHHelper {
 		}
 		private fun build(): SSHHelper = SSHHelper()
 		const val SSH_COMMAND_RESTART = "sudo -S reboot"
+		const val SSH_COMMAND_SET_MAINTENANCE_ACTIVE = "sudo hosted-engine --set-maintenance --mode=global"
 	}
 
 	fun getInsecureSession(

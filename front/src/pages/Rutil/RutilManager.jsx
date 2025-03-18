@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import NavButton from "../../components/navigation/NavButton";
 import HeaderButton from "../../components/button/HeaderButton";
-import {
-  faBuilding,
-  faTimes,
-  faEllipsisV,
-} from "@fortawesome/free-solid-svg-icons";
-import "./RutilManager.css";
+
 import Path from "../../components/Header/Path";
 import Info from "./Info";
 import DataCenters from "./DataCenters";
@@ -19,6 +14,7 @@ import StorageDomains from "./StorageDomains";
 import Disks from "./Disks";
 import Networks from "./Networks";
 import VnicProfiles from "./VnicProfiles";
+import "./RutilManager.css";
 
 function RutilManager() {
   const { section } = useParams();
@@ -85,7 +81,7 @@ function RutilManager() {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={faBuilding} title="Rutil Manager" />
+      <HeaderButton title="Rutil Manager" />
       <div className="content-outer">
         <NavButton
           sections={sections}

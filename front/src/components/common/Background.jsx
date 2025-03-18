@@ -1,4 +1,3 @@
-import { background } from "storybook/internal/theming";
 import favIcon from "../../assets/images/favicon.ico";
 import "./Background.css"
 

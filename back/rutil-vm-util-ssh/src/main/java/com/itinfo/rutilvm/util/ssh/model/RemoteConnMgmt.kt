@@ -64,6 +64,23 @@ open class RemoteConnMgmt(
 }
 
 /**
+ * [RemoteConnMgmt.enableGlobalHA]
+ * SSH로 global HA 활성화
+ *
+ */
+fun RemoteConnMgmt.enableGlobalHA(): Result<Boolean> = runCatching {
+	log.info("enableGlobalHA ... ")
+	val session: Session? = toInsecureSession()
+	return session?.executeAll(listOf(SSHHelper.SSH_COMMAND_SET_MAINTENANCE_ACTIVE)) ?: throw Error("UNKNOWN ERROR!")
+}.onSuccess {
+	log.info("SSH '글로벌 HA 활성화' 성공: {}", it)
+}.onFailure {
+	log.error("SSH '글로벌 HA 활성화' 실패: {}", it.localizedMessage)
+	// throw if (it is Error) it.toItCloudException() else it
+	throw it
+}
+
+/**
  * [RemoteConnMgmt.rebootHostViaSSH]
  * SSH로 재시작
  */

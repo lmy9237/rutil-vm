@@ -28,7 +28,7 @@ const HostDupl = ({
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
   const transformedData = hosts.map((host) => ({
     ...host,
-    name: (
+    _name: (
       <TableRowClick type="host" id={host?.id}>
         {host?.name}
       </TableRowClick>

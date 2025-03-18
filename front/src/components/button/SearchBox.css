@@ -1,17 +1,17 @@
-.nomal-search-box{
-    border:var(--border-btn) ;
-    width: 300px;
-    display: flex;
-    align-items: center;
-    border-radius: 1px;
+.nomal-search-box {
+  border: var(--border-btn);
+  width:  var(--w-text-input);height: var(--h-text-input);
+  display:flex;align-items:center;flex-direction:row;justify-content:flex-start;
+  border-radius: 4px;
 }
-.nomal-search-box input{
-    width: 94% !important;
-    border: none !important;
+.nomal-search-box input {
+  width: calc(100% - var(--h-text-input)) !important; border:none !important;
+  height: 100%;
 }
-.search-box-btn{
-    cursor: pointer;
+.search-box-btn {
+  width: var(--h-text-input);height: 100%;cursor: pointer;
+  display:flex;align-items:center;justify-content:center;
 }
-.search-box-btn:hover{
-    color: black;
+.search-box-btn:hover {
+  color: black;
 }

@@ -47,8 +47,8 @@ class VmInterfaceSamplesHistoryEntity(
 
 	val historyDatetime: LocalDateTime = LocalDateTime.MIN,
 
-	val receiveRatePercent: BigDecimal = BigDecimal.ZERO,
-	val transmitRatePercent: BigDecimal = BigDecimal.ZERO,
+	val receiveRatePercent: BigDecimal? = BigDecimal.ZERO,
+	val transmitRatePercent: BigDecimal? = BigDecimal.ZERO,
 
 	val vmInterfaceConfigurationVersion: Int = -1,
 
@@ -65,8 +65,8 @@ class VmInterfaceSamplesHistoryEntity(
 		private var bVmInterfaceId: UUID? = null;fun vmInterfaceId(block: () -> UUID?) { bVmInterfaceId = block() }
 		private var bNetworkUsagePer: Int = -1;fun networkUsagePer(block: () -> Int?) { bNetworkUsagePer = block() ?: -1 }
 		private var bHistoryDatetime: LocalDateTime = LocalDateTime.MIN;fun historyDatetime(block: () -> LocalDateTime?) { bHistoryDatetime = block() ?: LocalDateTime.MIN }
-		private var bReceiveRatePercent: BigDecimal = BigDecimal.ZERO;fun receiveRatePercent(block: () -> BigDecimal?) { bReceiveRatePercent = block() ?: BigDecimal.ZERO }
-		private var bTransmitRatePercent: BigDecimal = BigDecimal.ZERO;fun transmitRatePercent(block: () -> BigDecimal?) { bTransmitRatePercent = block() ?: BigDecimal.ZERO }
+		private var bReceiveRatePercent: BigDecimal? = BigDecimal.ZERO;fun receiveRatePercent(block: () -> BigDecimal?) { bReceiveRatePercent = block() ?: BigDecimal.ZERO }
+		private var bTransmitRatePercent: BigDecimal? = BigDecimal.ZERO;fun transmitRatePercent(block: () -> BigDecimal?) { bTransmitRatePercent = block() ?: BigDecimal.ZERO }
 		private var bVmInterfaceConfigurationVersion: Int = -1;fun vmInterfaceConfigurationVersion(block: () -> Int?) { bVmInterfaceConfigurationVersion = block() ?: -1 }
 		private var bReceivedTotalByte: BigDecimal = BigDecimal.ZERO;fun receivedTotalByte(block: () -> BigDecimal?) { bReceivedTotalByte = block() ?: BigDecimal.ZERO }
 		private var bTransmittedTotalByte: BigDecimal = BigDecimal.ZERO;fun transmittedTotalByte(block: () -> BigDecimal?) { bTransmittedTotalByte = block() ?: BigDecimal.ZERO }

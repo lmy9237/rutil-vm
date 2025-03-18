@@ -8,6 +8,7 @@ import {
   rvi24Network,
   rvi24Storage,
   rvi24Event,
+  rvi24Gear,
 } from "../icons/RutilVmIcons";
 
 const SideNavbar = ({
@@ -52,6 +53,8 @@ const SideNavbar = ({
     { iconDef: rvi24Desktop,      id: "computing", link: "/computing/vms",  },
     { iconDef: rvi24Network,      id: "network",   link: "/networks",  },
     { iconDef: rvi24Storage,      id: "storage",   link: "/storages/domains",  },
+    // 추가가 필요할 시 주석 해제
+    // { iconDef: rvi24Gear("#9999999"),       id: "settings",  link: "/settings/session",  },
     { iconDef: rvi24Event,        id: "event",     link: "/events",  },
   ];
 

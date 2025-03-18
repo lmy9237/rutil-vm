@@ -21,7 +21,7 @@ const initialFormState = {
   sshPort: "22",
   sshPassWord: "",
   vgpu: "consolidated",
-  hostedEngine: false,
+  deployHostedEngine: false,
 };
 
 const hostEngines = [
@@ -109,7 +109,7 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
           { onSuccess, onError }
         )
       : addHost(
-          { hostData: dataToSubmit, deploy_hosted_engine: formState.hostedEngine,},
+          { hostData: dataToSubmit, deployHostedEngine: formState.deployHostedEngine, },
           { onSuccess, onError }
         );
   };
@@ -168,12 +168,10 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
               <label className="py-1">인증</label>
             </div>
             <LabelInput label="사용자 이름" value="root" disabled={true} />
-            <LabelInputNum
-              label="암호"
+            <LabelInput label="암호" type="password" 
               id="sshPassWord"
               value={formState.sshPassWord}
               onChange={handleInputChange("sshPassWord")}
-              type="password" 
             />
 
           </>
@@ -198,11 +196,11 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
             ))}
           </div>
         </div>
-        <LabelSelectOptions
-          label="호스트 엔진 배포 작업 선택"
-          value={String(formState.hostedEngine)}
-          onChange={handleInputChange("hostedEngine")}
+        <LabelSelectOptions  label="호스트 엔진 배포 작업 선택"
+          value={String(formState.deployHostedEngine)}
+          onChange={handleInputChange("deployHostedEngine")}
           options={hostEngines}
+          disabled={editMode}
         />
       </div>
     </BaseModal>

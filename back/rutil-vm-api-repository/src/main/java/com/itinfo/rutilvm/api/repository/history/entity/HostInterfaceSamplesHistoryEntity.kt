@@ -17,7 +17,7 @@ private val log = LoggerFactory.getLogger(HostInterfaceSamplesHistoryEntity::cla
 
 /**
  * [HostInterfaceSamplesHistoryEntity]
- * 
+ *
  * @property historyId [Int]
  * @property hostInterfaceId [UUID]
  * @property historyDatetime [LocalDateTime]
@@ -41,8 +41,8 @@ class HostInterfaceSamplesHistoryEntity(
 
 	val historyDatetime: LocalDateTime = LocalDateTime.MIN,
 
-	val receiveRatePercent: BigDecimal = BigDecimal.ZERO,
-	val transmitRatePercent: BigDecimal = BigDecimal.ZERO,
+	val receiveRatePercent: BigDecimal? = null,
+	val transmitRatePercent: BigDecimal? = null,
 
 	val hostInterfaceConfigurationVersion: Int = -1,
 
@@ -57,8 +57,8 @@ class HostInterfaceSamplesHistoryEntity(
 		private var bHistoryId: Int = -1;fun historyId(block: () -> Int?) { bHistoryId = block() ?: -1 }
 		private var bHostInterfaceId: UUID? = null;fun hostInterfaceId(block: () -> UUID?) { bHostInterfaceId = block() }
 		private var bHistoryDatetime: LocalDateTime = LocalDateTime.MIN;fun historyDatetime(block: () -> LocalDateTime?) { bHistoryDatetime = block() ?: LocalDateTime.MIN }
-		private var bReceiveRatePercent: BigDecimal = BigDecimal.ZERO;fun receiveRatePercent(block: () -> BigDecimal?) { bReceiveRatePercent = block() ?: BigDecimal.ZERO }
-		private var bTransmitRatePercent: BigDecimal = BigDecimal.ZERO;fun transmitRatePercent(block: () -> BigDecimal?) { bTransmitRatePercent = block() ?: BigDecimal.ZERO }
+		private var bReceiveRatePercent: BigDecimal? = BigDecimal.ZERO;fun receiveRatePercent(block: () -> BigDecimal?) { bReceiveRatePercent = block() ?: BigDecimal.ZERO }
+		private var bTransmitRatePercent: BigDecimal? = BigDecimal.ZERO;fun transmitRatePercent(block: () -> BigDecimal?) { bTransmitRatePercent = block() ?: BigDecimal.ZERO }
 		private var bHostInterfaceConfigurationVersion: Int = -1;fun hostInterfaceConfigurationVersion(block: () -> Int?) { bHostInterfaceConfigurationVersion = block() ?: -1 }
 		private var bReceivedTotalByte: BigDecimal = BigDecimal.ZERO;fun receivedTotalByte(block: () -> BigDecimal?) { bReceivedTotalByte = block() ?: BigDecimal.ZERO }
 		private var bTransmittedTotalByte: BigDecimal = BigDecimal.ZERO;fun transmittedTotalByte(block: () -> BigDecimal?) { bTransmittedTotalByte = block() ?: BigDecimal.ZERO }

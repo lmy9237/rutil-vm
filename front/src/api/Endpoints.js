@@ -82,7 +82,7 @@ const ENDPOINTS = {
   FIND_IMPORT_FCPS_FROM_HOST: (hostId) =>                                  `${ENDPOINT_API_V1}/computing/hosts/${hostId}/fcpToImport`,
   FIND_LOGIN_ISCSIS_FROM_HOST: (hostId) =>                                 `${ENDPOINT_API_V1}/computing/hosts/${hostId}/iscsiToLogin`,
 
-  ADD_HOST: (deploy_hosted_engine) =>                                      `${ENDPOINT_API_V1}/computing/hosts?deploy_hosted_engine=${deploy_hosted_engine}`,
+  ADD_HOST: (deployHostedEngine) =>                                        `${ENDPOINT_API_V1}/computing/hosts?deployHostedEngine=${deployHostedEngine}`,
   EDIT_HOST: (hostId) =>                                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}`, 
   DELETE_HOST: (hostId) =>                                                 `${ENDPOINT_API_V1}/computing/hosts/${hostId}`, 
   ACTIVATE_HOST: (hostId) =>                                               `${ENDPOINT_API_V1}/computing/hosts/${hostId}/activate`, 

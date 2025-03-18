@@ -114,7 +114,6 @@ interface ItGraphService {
 	 * @return List<[UsageDto]>
 	 */
 	fun storageMetricChart(): List<UsageDto>
-
 	/**
 	 * 전체 사용량(CPU, Memory %) 선 그래프
 	 * @param hostId 호스트 id
@@ -275,7 +274,7 @@ class GraphServiceImpl(
 				log.warn("totalCpuMemoryList ... no host FOUND!")
 				return listOf()
 			}
-		return hostSamplesHistoryEntities.toTotalCpuMemoryUsages(conn, host)
+		return hostSamplesHistoryEntities.toTotalCpuMemoryUsages(host)
 	}
 
 	override fun hostCpuChart(): List<UsageDto> {
@@ -297,11 +296,9 @@ class GraphServiceImpl(
 		val hostSampleHistoryEntity: HostSamplesHistoryEntity =
 			hostSamplesHistoryRepository.findFirstByHostIdOrderByHistoryDatetimeDesc(UUID.fromString(hostId))
 		val usageDto = hostSampleHistoryEntity.getUsage()
-		val hostInterfaceSamplesHistoryEntity: Optional<HostInterfaceSamplesHistoryEntity> =
+		val hostInterfaceSamplesHistoryEntity: HostInterfaceSamplesHistoryEntity? =
 			hostInterfaceSampleHistoryRepository.findFirstByHostInterfaceIdOrderByHistoryDatetimeDesc(UUID.fromString(hostNicId))
-		val networkRate = hostInterfaceSamplesHistoryEntity
-			.map { it.receiveRatePercent.toInt() } // Optional에서 값이 있으면 처리
-			.orElse(0) // 값이 없으면 기본값으로 0 사용
+		val networkRate = hostInterfaceSamplesHistoryEntity?.receiveRatePercent?.toInt() ?: 0
 		usageDto.networkPercent = networkRate
 		return usageDto
 	}
@@ -313,7 +310,7 @@ class GraphServiceImpl(
 		val usageDto = vmSamplesHistoryEntity.getUsage()
 		val vmInterfaceSamplesHistoryEntity: VmInterfaceSamplesHistoryEntity =
 			vmInterfaceSamplesHistoryRepository.findFirstByVmInterfaceIdOrderByHistoryDatetimeDesc(UUID.fromString(vmNicId))
-		val networkRate = vmInterfaceSamplesHistoryEntity.receiveRatePercent.toInt()
+		val networkRate = vmInterfaceSamplesHistoryEntity.receiveRatePercent?.toInt() ?: 0
 		usageDto.networkPercent = networkRate
 		return usageDto
 	}

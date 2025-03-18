@@ -15,6 +15,7 @@ html {
   --h-section-header: 69px; /*section-header 높이 */
   --h-primary:26px;
   --h-32:32px;
+  --h-text-input: 28px;
   
   --h-modal-header: 55px;                /* 모달 헤더 부분 높이 */
   --h-modal-footer: 60px;                /* 모달 푸터 부분 높이 */
@@ -25,8 +26,10 @@ html {
   --w-icon: var(--h-icon);
   --w-icon-nav: var(--h-icon-nav);
   --w-icon-tree: var(--h-icon-tree);
-  --w-nav:160px; /*nav넓이*/   
-  
+  --w-nav: 160px; /* nav넓이*/
+  --w-text-input: 280px;
+
+
   --p-tmi-1:    8px;
   --p-tmi-2:    calc(8px + 40px);
   --p-tmi-2-wc: calc(8px + 20px);

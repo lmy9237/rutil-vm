@@ -56,7 +56,6 @@
 //     <div onClick={(e) => e.stopPropagation()}>
 //       <div className="dupl-header-group">
 //         <NicActionButtons
-//           className="dupl-header-action-buttons"
 //           openModal={openModal}
 //           isEditDisabled={selectedNics.length !== 1}
 //           isDeleteDisabled={selectedNics.length === 0}

@@ -1,4 +1,4 @@
-import logo from "../../assets/images/logo.png";
+import RutilVmLogo from "../../components/common/RutilVmLogo";
 import {
   useDashboard,
   useDashboardCpuMemory,
@@ -7,7 +7,7 @@ import {
 
 /**
  * @name Info
- * @description Rutil Manager 정보
+ * @description RutilManager > 일반
  *
  * @returns {JSX.Element} Info
  */
@@ -21,12 +21,10 @@ const Info = () => {
     <div className="rutil-general">
       <div className="rutil-general-first-contents">
         <div>
-          <img className="logo-general" src={logo} alt="logo" />
-          <span>
-            버전: {dashboard?.version}
-            <br />
-            빌드날짜: {dashboard?.releaseDate}
-          </span>
+          <RutilVmLogo
+            className="big" 
+            details={`v${dashboard?.version} (${dashboard?.releaseDate})`}
+          />
         </div>
         <div>
           <div>
