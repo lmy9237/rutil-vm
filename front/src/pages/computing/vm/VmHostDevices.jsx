@@ -1,10 +1,9 @@
-import React, {Suspense, useState } from 'react';
-import Loading from '../../../components/common/Loading';
+import React, { useState } from 'react';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useHostdevicesFromVM } from '../../../api/RQHook';
 
-const VmDeviceAddModal = React.lazy(() => import('../../../components/modal/vm/VmDeviceAddModal'));
+// const VmDeviceAddModal = React.lazy(() => import('../../../components/modal/vm/VmDeviceAddModal'));
 
 
 /**
@@ -23,33 +22,33 @@ const VmHostDevices = ({ vmId }) => {
     isSuccess: isHostDevicesSuccess,
   } = useHostdevicesFromVM(vmId, (e) => ({...e}));  
 
-  const [activeModal, setActiveModal] = useState(null);
+  // const [activeModal, setActiveModal] = useState(null);
   const [selectedDevices, setSelectedDevices] = useState([]);
   const selectedIds = (Array.isArray(selectedDevices) ? selectedDevices : []).map(d => d.id).join(', ');
 
-  const closeModal = () => setActiveModal(null);
+  // const closeModal = () => setActiveModal(null);
   
-  const renderModals = () => (
-    <Suspense fallback={<Loading/>}>
-      <VmDeviceAddModal
-        isOpen={activeModal === 'add'}
-        hostDevices={hostDevices}
-        onClose={closeModal}
-      />
-      {/* 장치 삭제 */}
-      {/*View CPU Pinning 팝업 */}
-      {/* <VmCPUPinningModal
-        isOpen={activePopup === 'view_cpu'}
-        onClose={closePopup}
-      /> */}
-    </Suspense>
-  );
+  // const renderModals = () => (
+  //   <Suspense fallback={<Loading/>}>
+  //     <VmDeviceAddModal
+  //       isOpen={activeModal === 'add'}
+  //       hostDevices={hostDevices}
+  //       onClose={closeModal}
+  //     />
+  //     {/* 장치 삭제 */}
+  //     {/*View CPU Pinning 팝업 */}
+  //     {/* <VmCPUPinningModal
+  //       isOpen={activePopup === 'view_cpu'}
+  //       onClose={closePopup}
+  //     /> */}
+  //   </Suspense>
+  // );
   
   return (
     <>
       <div className="header-right-btns">
-        <button onClick={() => setActiveModal('add')}>장치 추가</button>
-        <button onClick={() => setActiveModal('delete')} className='disabled'>장치 삭제</button>
+        {/* <button onClick={() => setActiveModal('add')}>장치 추가</button>
+        <button onClick={() => setActiveModal('delete')} className='disabled'>장치 삭제</button> */}
         {/* <button className='disabled'>vGPU 관리</button> */}
         {/* <button onClick={() => openPopup('view_cpu')}>View CPU Pinning</button> */}
       </div>
@@ -76,7 +75,7 @@ const VmHostDevices = ({ vmId }) => {
       />
     
       {/* 모달창 */}
-      { renderModals() }
+      {/* { renderModals() } */}
         
     </>
   );
