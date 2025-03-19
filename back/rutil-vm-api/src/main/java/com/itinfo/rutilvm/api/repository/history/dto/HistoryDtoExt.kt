@@ -246,7 +246,6 @@ fun VmSamplesHistoryEntity.toVmUsageDto(conn: Connection): UsageDto {
         cpuPercent { this@toVmUsageDto.cpuUsagePercent }
         memoryPercent { this@toVmUsageDto.memoryUsagePercent }
         time { this@toVmUsageDto.historyDatetime }
-//        time { ovirtDf.format(date) }
     }
 }
 fun List<VmSamplesHistoryEntity>.toVmUsageDtos(conn: Connection): List<UsageDto> =
