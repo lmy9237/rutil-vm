@@ -257,7 +257,7 @@ fun Vm.toVmMenu(conn: Connection): VmViewVo {
 		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
 		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
 		if (vm.status() == VmStatus.UP) {
-			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
+			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id()).getOrDefault(emptyList())
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
 			hostVo { host?.fromHostToIdentifiedVo() }
