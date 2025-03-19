@@ -331,7 +331,7 @@ fun Vm.toVmVoInfo(conn: Connection): VmViewVo {
 		else
 			null
 	val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
-	val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
+	val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id()).getOrDefault(emptyList())
 
 	return VmViewVo.builder {
 		id { vm.id() }
@@ -469,7 +469,7 @@ fun Vm.toTemplateVmVo(conn: Connection): VmViewVo {
 		name { vm.name() }
 		status { vm.status() }
 		if (vm.status() == VmStatus.UP) {
-			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
+			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id()).getOrDefault(emptyList())
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
 			upTime { statistics.findVmUptime() }
@@ -525,7 +525,7 @@ fun Vm.toNetworkVm(conn: Connection): VmViewVo {
 		status { this@toNetworkVm.status() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		if (this@toNetworkVm.status() == VmStatus.UP) {
-			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toNetworkVm.id())
+			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toNetworkVm.id()).getOrDefault(emptyList())
 			fqdn { this@toNetworkVm.fqdn() }
 			upTime { statistics.findVmUptime() }
 			ipv4 { this@toNetworkVm.reportedDevices().findVmIpv4() }
@@ -550,7 +550,7 @@ fun Vm.toDiskVm(conn: Connection): VmViewVo {
 		status { this@toDiskVm.status() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		if (this@toDiskVm.status() == VmStatus.UP) {
-			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toDiskVm.id())
+			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toDiskVm.id()).getOrDefault(emptyList())
 			fqdn { this@toDiskVm.fqdn() }
 			upTime { statistics.findVmUptime() }
 			ipv4 { this@toDiskVm.reportedDevices().findVmIpv4() }

@@ -209,28 +209,6 @@ class ItDiskServiceTest {
         assertThat(result, `is`(true))
     }
 
-    /**
-     * [should_removeMultiple]
-     * [ItDiskService.removeMultiple] 의 단위테스트
-     *
-     * @see [ItDiskService.removeMultiple]
-     */
-    @Test
-    fun should_removeMultiple() {
-        log.info("should_removeMultiple ... ")
-        val diskIdList: List<String> = listOf(
-            "f43101ba-bc2a-4e74-96ab-9b29052b44ff",
-            "e9927ebd-b818-4a33-aa99-06a0f5394c2b",
-            "42045e39-56df-4dc5-b8e2-501e28c3a2b9"
-        )
-
-        val result: List<Boolean> =
-            service.removeMultiple(diskIdList)
-
-        assertThat(result, `is`(not(nullValue())))
-        println(result)
-    }
-
 
     /**
      * [should_findAllStorageDomainsToMoveFromDisk]

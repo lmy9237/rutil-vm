@@ -922,8 +922,16 @@ fun Connection.findTicketFromVmGraphicsConsole(vmId: String, graphicsConsoleId: 
 private fun Connection.srvStatisticsFromVm(vmId: String): StatisticsService =
 	this.srvVm(vmId).statisticsService()
 
-fun Connection.findAllStatisticsFromVm(vmId: String): List<Statistic> =
+fun Connection.findAllStatisticsFromVm(vmId: String): Result<List<Statistic>> = runCatching {
 	this.srvStatisticsFromVm(vmId).list().send().statistics()
+
+}.onSuccess {
+	Term.VM.logSuccessWithin(Term.STATISTIC, "STATISTIC 목록조회", vmId)
+}.onFailure {
+	Term.VM.logFailWithin(Term.VM, "STATISTIC 목록조회", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 
 private fun Connection.srvAllAssignedPermissionsFromVm(vmId: String): AssignedPermissionsService =
 	this.srvVm(vmId).permissionsService()
