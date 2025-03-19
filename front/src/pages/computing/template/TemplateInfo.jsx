@@ -41,7 +41,7 @@ const TemplateInfo = () => {
     { id: "vms", label: "가상머신" },
     { id: "nics", label: "네트워크 인터페이스" },
     { id: "disks", label: "디스크" },
-    { id: "storageDomains", label: "스토리지" },
+    // { id: "storageDomains", label: "스토리지" },
     { id: "events", label: "이벤트" },
   ];
 
@@ -69,7 +69,7 @@ const TemplateInfo = () => {
       vms: TemplateVms,
       nics: TemplateNics,
       disks: TemplateDisks,
-      storageDomains: TemplateStorage,
+      // storageDomains: TemplateStorage,
       events: TemplateEvents,
     }[activeTab];
     return SectionComponent ? (

@@ -1,52 +1,11 @@
-import React, { useState } from 'react';
-import { faDesktop, faHdd, faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 import Loading from '../../../components/common/Loading';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useAllVMFromDomain } from '../../../api/RQHook';
 import { checkZeroSizeToGB } from '../../../util';
-
-const calculateTotalVirtualSize = (diskAttachments) => {
-  return diskAttachments.reduce((total, disk) => total + (disk.diskImageVo?.virtualSize || 0), 0);
-};
-
-const calculateTotalActualSize = (diskAttachments) => {
-  return diskAttachments.reduce((total, disk) => total + (disk.diskImageVo?.actualSize || 0), 0);
-};
-
-const VMRow = ({ vm, isExpanded, toggleRow }) => (
-  <>
-    <tr>
-      <td onClick={() => toggleRow(vm?.id)} style={{ cursor: 'pointer' }}>
-        <FontAwesomeIcon icon={isExpanded ? faMinusCircle : faPlusCircle} fixedWidth />
-        <FontAwesomeIcon icon={faDesktop} style={{ margin: '0 5px 0 10px' }} fixedWidth />
-        {vm?.name || ''}
-      </td>
-      <td>{vm?.diskAttachments?.length}</td>
-      <td>{vm?.virtualSize}</td>
-      <td>{vm?.actualSize}</td>
-      <td>{vm?.creationTime || ''}</td>
-    </tr>
-    {isExpanded &&
-      vm.diskAttachments?.map((disk, index) => (
-        <DiskRow key={`${vm.id}-${index}`} disk={disk} />
-      ))}
-  </>
-);
-
-const DiskRow = ({ disk }) => (
-  <tr className="detail-machine-second">
-    <td style={{ paddingLeft: '30px' }}>
-      <FontAwesomeIcon icon={faHdd} fixedWidth style={{ margin: '0 5px' }} />
-      {disk.diskImageVo?.alias || ''}
-    </td>
-    <td></td>
-    <td>{checkZeroSizeToGB(disk.diskImageVo?.virtualSize)}</td>
-    <td>{checkZeroSizeToGB(disk.diskImageVo?.actualSize)}</td>
-    <td>{disk.diskImageVo?.createDate || ''}</td>
-  </tr>
-);
+import TableRowClick from '../../../components/table/TableRowClick';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * @name DomainVms
@@ -58,30 +17,38 @@ const DiskRow = ({ disk }) => (
  * @see DomainGetVms
  */
 const DomainVms = ({ domainId }) => {
-  const [isRowExpanded, setRowExpanded] = useState({});
-
-  const toggleRow = (id) => {
-    setRowExpanded((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
+  const navigate = useNavigate();
 
   const {
     data: vms = [],
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-  } = useAllVMFromDomain(domainId, (vm) => {
-   
-    return {
-      ...vm,
-      virtualSize: checkZeroSizeToGB(vm?.memoryGuaranteed),
-      actualSize: checkZeroSizeToGB(vm?.memorySize),
-      disk: vm?.diskAttachmentVos?.length || [],
-      snapshot: vm?.snapshotVos?.length || [],
-    };
-  });
+  } = useAllVMFromDomain(domainId, (e) => ({ ...e, }));
+
+  const transformedData = vms.map((vm) => ({
+    _name: (
+      <TableRowClick type="vms" id={vm?.id}>
+        {vm?.name}
+      </TableRowClick>
+    ),
+    virtualSize: checkZeroSizeToGB(vm?.memoryGuaranteed),
+    actualSize: checkZeroSizeToGB(vm?.memorySize),
+    disk: (
+      <span 
+        onClick={() => navigate(`/computing/vms/${vm?.id}/disks`)} 
+        style={{ color: 'rgb(9, 83, 153)' }}
+      > {vm?.diskAttachmentVos?.length} 
+      </span>
+    ),
+    snapshot: (
+      <span 
+        onClick={() => navigate(`/computing/vms/${vm?.id}/snapshots`)} 
+        style={{ color: 'rgb(9, 83, 153)' }}
+      > {vm?.snapshotVos?.length} 
+      </span>
+    ),
+  }));
 
   if (isVmsLoading)
     return (<Loading />);
@@ -95,39 +62,8 @@ const DomainVms = ({ domainId }) => {
       <TablesOuter
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}
-        data={vms}
+        data={transformedData}
       />
-      {/*<div className="host-empty-outer">
-      <div className="section-table-outer">
-        <table>
-          <thead>
-            <tr>
-              <th>별칭</th>
-              <th>디스크</th>
-              <th>가상 크기</th>
-              <th>실제 크기</th>
-              <th>생성 일자</th>
-            </tr>
-          </thead>
-          <tbody>
-            {vms.length === 0 ? (
-              <>
-                <tr>
-                  <td colSpan={'5'}>없음</td>
-                </tr>
-              </>
-            ) : (vms.map((vm) => (
-              <VMRow
-                key={vm.id}
-                vm={vm}
-                isExpanded={isRowExpanded[vm.id]}
-                toggleRow={toggleRow}
-              />
-            )))}
-          </tbody>
-        </table>
-      </div>
-    </div>*/}
     </>
     
   );

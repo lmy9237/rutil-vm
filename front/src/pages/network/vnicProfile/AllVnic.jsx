@@ -28,7 +28,7 @@ const AllVnic = () => {
   return (
     <div id="section">
       <div>
-        <HeaderButton titleIcon={faLaptop} title="VNIC 프로파일" />
+        <HeaderButton titleIcon={faLaptop} title="VNic 프로파일" />
       </div>
       <div className="w-full section-content">
         <VnicProfileDupl

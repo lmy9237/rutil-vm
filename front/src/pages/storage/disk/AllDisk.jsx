@@ -23,9 +23,7 @@ const AllDisk = () => {
       </div>
       <div className="w-full section-content">
         <DiskDupl
-          isLoading={isDisksLoading} 
-          isError={isDisksError} 
-          isSuccess={isDisksSuccess}
+          isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
           disks={disks} 
           columns={TableColumnsInfo.DISKS}
           showSearchBox={true}

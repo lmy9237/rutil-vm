@@ -53,20 +53,19 @@ const VmDupl = ({
     ),
     ipv4: vm?.ipv4 + " " + vm?.ipv6,
     memoryUsage:
-      vm?.usageDto?.memoryPercent === null ||
-      vm?.usageDto?.memoryPercent === undefined
+      vm?.usageDto?.memoryPercent === null || vm?.usageDto?.memoryPercent === undefined
         ? ""
         : `${vm?.usageDto?.memoryPercent}%`,
     cpuUsage:
-      vm?.usageDto?.cpuPercent === null ||
-      vm?.usageDto?.cpuPercent === undefined
+      vm?.usageDto?.cpuPercent === null || vm?.usageDto?.cpuPercent === undefined
         ? ""
         : `${vm?.usageDto?.cpuPercent}%`,
-    networkUsage:
-      vm.usageDto?.networkPercent === null ||
-      vm.usageDto?.networkPercent === undefined
-        ? ""
-        : `${vm?.usageDto?.networkPercent}%`,
+        networkUsage:
+      vm.usageDto?.networkPercent !== null && vm.usageDto?.networkPercent !== undefined
+        ? `${vm.usageDto.networkPercent}%`
+        : vm.status === "UP"
+        ? "0%"
+        : "",      
     // ✅ 검색 필드 추가 (한글 포함)
     searchText: `${vm?.name} ${vm?.hostVo?.name || ""} ${vm?.clusterVo?.name || ""} ${vm?.dataCenterVo?.name || ""} ${vm?.ipv4} ${vm?.ipv6}`.toLowerCase(),
   }));

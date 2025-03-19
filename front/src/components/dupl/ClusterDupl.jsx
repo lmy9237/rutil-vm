@@ -33,6 +33,11 @@ const ClusterDupl = ({
 
   const transformedData = clusters.map((cluster) => ({
     ...cluster,
+    _name: (
+      <TableRowClick type="cluster" id={cluster?.id}>
+        {cluster?.name}
+      </TableRowClick>
+    ),
     hostCnt: cluster?.hostSize?.allCnt,
     vmCnt: cluster?.vmSize?.allCnt,
     dataCenter: (
@@ -71,7 +76,7 @@ const ClusterDupl = ({
         data={filteredData}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedClusters(selectedRows)}
-        clickableColumnIndex={[0]}
+        // clickableColumnIndex={[0]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true} // 다중 선택 활성화
         onContextMenuItems={(row) => [

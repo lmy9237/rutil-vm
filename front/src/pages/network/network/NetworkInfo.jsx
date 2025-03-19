@@ -39,7 +39,7 @@ const NetworkInfo = () => {
 
   const sections = [
     { id: "general", label: "일반" },
-    { id: "vnicProfiles", label: "vNIC 프로파일" },
+    { id: "vnicProfiles", label: "VNic 프로파일" },
     { id: "clusters", label: "클러스터" },
     { id: "hosts", label: "호스트" },
     { id: "vms", label: "가상머신" },

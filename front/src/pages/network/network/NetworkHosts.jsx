@@ -12,7 +12,7 @@ import {
   useDisconnectedHostsFromNetwork,
   useNetworkInterfaceFromHost,
 } from "../../../api/RQHook";
-import { convertBytesToMB } from "../../../util";
+import { convertBpsToMbps, convertBytesToMB } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
 import ActionButton from "../../../components/button/ActionButton";
 
@@ -82,10 +82,10 @@ const NetworkHosts = ({ networkId }) => {
       networkDevice: host?.hostNicVos?.[0]?.name,
       speed: host?.hostNicVos?.[0]?.speed,
       rx: host?.hostNicVos?.[0]?.rxSpeed
-        ? Math.round(convertBytesToMB(host.hostNicVos[0].rxSpeed))
+        ? convertBpsToMbps(host.hostNicVos[0].rxSpeed)
         : "",
       tx: host?.hostNicVos?.[0]?.txSpeed
-        ? Math.round(convertBytesToMB(host.hostNicVos[0].txSpeed))
+        ? convertBpsToMbps(host.hostNicVos[0].txSpeed)
         : "",
       totalRx: host?.hostNicVos?.[0]?.rxTotalSpeed
         ? host.hostNicVos[0].rxTotalSpeed.toLocaleString()

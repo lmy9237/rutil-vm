@@ -5,11 +5,9 @@ import { checkZeroSizeToGB, convertBytesToGB } from '../../../util';
 import { Tooltip } from 'react-tooltip';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import TablesOuter from '../../../components/table/TablesOuter';
-import DiskActionModal from '../../../components/modal/disk/DiskActionModal'
 
 const StorageDomainWithTooltip = ({ domainId }) => {
   const { data: storageDomain, isLoading } = useDomainById(domainId);
-
   return (
     <>
       <span data-tooltip-id={`storage-domain-tooltip-${domainId}`}>
@@ -31,7 +29,6 @@ const StorageDomainWithTooltip = ({ domainId }) => {
     </>
   );
 };
-
 
 /**
  * @name TemplateDisks
@@ -68,16 +65,12 @@ const TemplateDisks = ({ templateId }) => {
   });
 
   const [selectedDisks, setSelectedDisks] = useState([]); // 선택된 디스크 ID 상태
-  const [activeModal, setActiveModal] = useState(null);
 
   const selectedDiskIds = (Array.isArray(selectedDisks) ? selectedDisks : []).map(d => d.id).join(', ');
   console.log("a " + selectedDisks)
 
   return (
     <>
-      <div className="header-right-btns">
-        <button disabled={selectedDisks.length === 0} onClick={() => setActiveModal('copy')}>복사</button>
-      </div>
       <span>id: {selectedDiskIds || ""}</span>
 
       <TablesOuter
@@ -87,15 +80,7 @@ const TemplateDisks = ({ templateId }) => {
         onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
       />
       
-      {activeModal === 'copy' && (
-        <DiskActionModal
-          isOpen
-          action="copy"
-          data={selectedDisks[0]}
-          onClose={() => setActiveModal(null)}
-        />
-      )}
-    </>
+      </>
   );
 };
 

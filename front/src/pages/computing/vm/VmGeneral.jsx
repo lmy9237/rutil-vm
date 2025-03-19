@@ -7,6 +7,7 @@ import { useVmById } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import InfoTable from "../../../components/table/InfoTable";
 import SemiCircleChart from "../../../components/Chart/SemiCircleChart";
+import TableRowClick from "../../../components/table/TableRowClick";
 
 // 운영 시스템
 const osSystemList = [
@@ -115,7 +116,9 @@ const VmGeneral = ({ vmId }) => {
       value: (
         <div className="related-object">
           <FontAwesomeIcon icon={faEarthAmericas} fixedWidth className="mr-0.5" />
-          <span className="text-blue-500 font-bold">{vm?.clusterVo?.name}</span>
+          <TableRowClick type="cluster" id={vm?.clusterVo?.id}>
+            {vm?.clusterVo?.name}
+          </TableRowClick>
         </div>
       ),
     },
@@ -124,7 +127,9 @@ const VmGeneral = ({ vmId }) => {
       value: (
         <div className="related-object">
           <FontAwesomeIcon icon={faUser} fixedWidth className="mr-0.5" />
-          <span className="text-blue-500 font-bold"> {vm?.hostVo?.name}</span>
+          <TableRowClick type="host" id={vm?.hostVo?.id}>
+            {vm?.hostVo?.name}
+          </TableRowClick>
         </div>
       ),
     },

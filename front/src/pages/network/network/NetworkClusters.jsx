@@ -5,6 +5,7 @@ import TablesOuter from "../../../components/table/TablesOuter";
 import { renderStatusClusterIcon } from "../../../components/Icon";
 import { useAllClustersFromNetwork } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
+import TableRowClick from "../../../components/table/TableRowClick";
 
 const NetworkClusterModal = React.lazy(
   () => import("../../../components/modal/network/NetworkClusterModal")
@@ -59,7 +60,11 @@ const NetworkClusters = ({ networkId }) => {
         columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}
         data={clusters.map((cluster) => ({
           ...cluster,
-          name: cluster?.name,
+          _name: (
+            <TableRowClick type="cluster" id={cluster?.id}>
+              {cluster?.name}
+            </TableRowClick>
+          ),
           connect: cluster?.connected ? (
             <input type="checkbox" checked disabled />
           ) : (
@@ -82,7 +87,7 @@ const NetworkClusters = ({ networkId }) => {
             cluster?.networkVo?.usage?.defaultRoute ? "기본라우팅" : null,
           ]
             .filter(Boolean)
-            .join("/"),
+            .join(" / "),
         }))}
         shouldHighlight1stCol={true}
         multiSelect={false}

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { faServer } from "@fortawesome/free-solid-svg-icons";
 import HeaderButton from "../../../components/button/HeaderButton";
 import NetworkDupl from "../../../components/dupl/NetworkDupl";
@@ -29,12 +29,9 @@ const AllNetwork = () => {
       </div>
       <div className="w-full section-content">
         <NetworkDupl
+          isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
           networks={networks}
           columns={TableColumnsInfo.NETWORKS}
-          isLoading={isNetworksLoading}
-          isError={isNetworksError}
-          onCloseModal={neworksRefetch}
-          isSuccess={isNetworksSuccess}
           showSearchBox={true}
         />
       </div>

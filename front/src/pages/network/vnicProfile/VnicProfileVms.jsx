@@ -12,13 +12,18 @@ import TableRowClick from "../../../components/table/TableRowClick";
  */
 const VnicProfileVms = ({ vnicProfileId }) => {
   const {
+    isLoading: isVmsLoading,
+    isError: isVmsError,
+    isSuccess: isVmsSuccess,
     data: vms = [],
   } = useAllVmsFromVnicProfiles(vnicProfileId, (e) => ({
     ...e,
   }));
 
+
   return (
     <TablesOuter
+      isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       columns={TableColumnsInfo.VMS_FROM_VNIC_PROFILES}
       data={vms.map((vm) => ({
         ...vm,

@@ -15,7 +15,7 @@ const TableColumnsInfo = {
     { header: '설명', accessor: 'description', clickable: false },
   ],
   CLUSTERS_FROM_DATACENTER: [
-    { header: '이름', accessor: 'name' },
+    { header: '이름', accessor: '_name' },
     { header: '호환 버전', accessor: 'version' },
     { header: '설명', accessor: 'description' }
   ],
@@ -247,7 +247,7 @@ const TableColumnsInfo = {
     { header: '할당 정책', accessor: 'policy', clickable: false },
     { header: '인터페이스', accessor: 'interfaceType', clickable: false },
     { header: '유형', accessor: 'storageType', clickable: false },
-    { header: '생성 일자', accessor: 'creationTime', clickable: false },
+    // { header: '생성 일자', accessor: 'creationTime', clickable: false },
   ],
 
 
@@ -270,7 +270,7 @@ const TableColumnsInfo = {
     { header: '설명', accessor: 'description', clickable: false },
   ],
   CLUSTERS_FRON_NETWORK: [
-    { header: '이름', accessor: 'name', clickable: true, width: '15%' },
+    { header: '이름', accessor: '_name', clickable: true, width: '15%' },
     { header: '연결된 네트워크', accessor: 'connect', clickable: false, width: '9%' },
     { header: '네트워크 상태', accessor: 'status', clickable: false , width: '10%'},
     { header: '필수 네트워크', accessor: 'required', clickable: false, width: '9%' },
@@ -386,14 +386,14 @@ const TableColumnsInfo = {
     { header: '스토리지 유형', accessor: 'storageType', clickable: false },    
   ],
   TEMPLATES_FROM_STORAGE_DOMAIN: [
-    { header: '별칭', accessor: 'name', clickable: false },
+    { header: '별칭', accessor: '_name', clickable: false },
     { header: '디스크', accessor: 'disk', clickable: false },
     { header: '가상 크기', accessor: 'virtualSize', clickable: false },
     { header: '실제 크기', accessor: 'actualSize', clickable: false },
     { header: '생성 일자', accessor: 'creationTime', clickable: false },
   ],
   VMS_FROM_STORAGE_DOMAIN: [
-    { header: '별칭', accessor: 'name', clickable: false },
+    { header: '별칭', accessor: '_name', clickable: false },
     { header: '디스크', accessor: 'disk', clickable: false },
     { header: '스냅샷', accessor: 'snapshot', clickable: false },
     { header: '가상 크기', accessor: 'virtualSize', clickable: false },
