@@ -2,12 +2,9 @@ import { Tooltip } from "react-tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
-  faPencil,
   faWrench,
-  faQuestionCircle,
   faRefresh,
   faArrowsUpToLine,
-  faFaceSmileBeam,
   faSpinner,
   faCheckCircle,
   faTimesCircle,
@@ -285,38 +282,4 @@ export const renderDatacenterStatusIcon = (status) => {
 };
 export const renderHostStatusIcon = (status) => {
   return icon(status);
-};
-
-export const renderSeverityIcon = (severity) => {
-  switch (severity) {
-    case "ALERT": return "알림";
-    case "NORMAL":
-      return (
-        <FontAwesomeIcon
-          icon={faCheckCircle}
-          fixedWidth
-          style={{ color: "green", fontSize: "12px" }}
-        />
-      );
-    case "ERROR":
-      return (
-        <>
-          <FontAwesomeIcon
-            icon={faTimesCircle}
-            fixedWidth
-            style={{ color: "purple", fontSize: "12px" }}
-          />
-        </>
-      );
-    case "WARNING":
-      return (
-        <FontAwesomeIcon
-          icon={faWarning}
-          fixedWidth
-          style={{ color: "red", fontSize: "12px" }}
-        />
-      );
-    default:
-      return severity;
-  }
 };

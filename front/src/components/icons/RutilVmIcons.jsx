@@ -326,14 +326,13 @@ export const RVI24 = ({iconDef, width = 24, height = 24, onClick, currentColor="
 }
 
 export const EventSeverityIcon = (severity) => {
-  // TODO: 아이콘 생기면 기능 생성 후 (Icon.jsx > renderSeverityIcon 리팩토링 진행)
-  // switch (severity) {
-  // case "ALERT":
-  // case "ERROR": return ();
-  // case "WARNING": return ();
-  // case "NORMAL": return ();
-  // default: return "?";
-  // }
+  switch (severity) {
+  case "ALERT": return (<RVI16 iconDef={rvi16Wrench("red")} />);
+  case "ERROR": return (<RVI16 iconDef={rvi16NonOperational} />);
+  case "WARNING": return (<RVI16 iconDef={rvi16SeverityWarning} />);
+  case "NORMAL": return (<RVI16 iconDef={rvi16SeverityGood} />);
+  default: return (<RVI16 iconDef={rvi16QuestionMark} />);
+  }
 }
 //#endregion
 

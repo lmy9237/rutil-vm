@@ -1,6 +1,6 @@
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
 import PagingTableOuter from '../../components/table/PagingTableOuter';
-import { renderSeverityIcon } from '../../components/Icon';
+import { EventSeverityIcon } from '../icons/RutilVmIcons';
 
 /**
  * @name HostEvents
@@ -22,7 +22,7 @@ const EventDupl = ({
         columns={TableColumnsInfo.EVENTS}
         data={events.map((e) => ({
           ...e,
-          severity: renderSeverityIcon(e?.severity),
+          _severity: EventSeverityIcon(e?.severity),
         }))}
         onRowClick={handleRowClick}
         showSearchBox={showSearchBox} // 검색 박스 표시 여부 제어
