@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faFilter } from "@fortawesome/free-solid-svg-icons";
 import "./Footer.css";
-import { RVI24, rvi24ChevronUp } from "../icons/RutilVmIcons";
+import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
 
 /**
  * @name Footer
@@ -16,6 +16,9 @@ const Footer = ({
 }) => {
   const [selectedFooterTab, setSelectedFooterTab] = useState("recent");
   const handleFooterTabClick = (tab) => setSelectedFooterTab(tab);
+
+  // 아이콘변경
+  const toggleIcon = isFooterContentVisible ? rvi24DownArrow: rvi24ChevronUp;
 
   // 임시 데이터
   const tableData = Array.from({ length: 20 }).map((_, index) => ({
@@ -34,7 +37,7 @@ const Footer = ({
         <button onClick={() => {
           setIsFooterContentVisible(!isFooterContentVisible)
         }}>
-          <RVI24 iconDef={rvi24ChevronUp} fixedWidth/>
+          <RVI24 iconDef={toggleIcon} fixedWidth/>
         </button>
         <div>
           <div

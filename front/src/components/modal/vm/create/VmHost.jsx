@@ -23,7 +23,7 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
       <div className="py-2">
         <div style={{ fontWeight: 600 }}>실행 호스트:</div>
         <div className="form-checks">
-          <div className="flex">
+          <div className="f-center">
             <input
               className="form-check-input"
               type="radio"

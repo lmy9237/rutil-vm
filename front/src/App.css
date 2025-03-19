@@ -146,6 +146,10 @@ input[disabled] {
     overflow-y: auto;
     overflow-x: hidden;
 }
+.f-center{
+  display: flex;
+  align-items: center;
+}
 .center {
   display: flex; /* Flexbox 설정 추가 */
   justify-content: space-between; /* 수평 가운데 정렬 */

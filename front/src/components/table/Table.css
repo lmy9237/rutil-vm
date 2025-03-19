@@ -84,9 +84,9 @@
   border-collapse: collapse;
 }
 
-/* .section-table-outer table tbody tr:nth-child(even) {
-  background-color:rgb(238, 238, 238);
-} */
+.section-table-outer table tbody tr:nth-child(even) {
+  background-color:var(--color-white);
+}
 .selected-row {
   background-color: var(--color-hover) !important;
 }

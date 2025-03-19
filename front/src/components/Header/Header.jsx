@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
 import {
@@ -96,6 +96,28 @@ const Header = ({ setAuthenticated, toggleAside }) => {
     setIsExpanded(!isExpanded);
   };
 
+  // 박스를 제외한 배경누르면 닫히게하기
+  const loginBoxRef = useRef(null);
+  const bellBoxRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        (loginBoxRef.current && loginBoxRef.current.contains(event.target)) ||
+        (bellBoxRef.current && bellBoxRef.current.contains(event.target))
+      ) {
+        return; // 내부 클릭 시 닫히지 않음
+      }
+      setLoginBoxVisible(false);
+      setBellActive(false);
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  
+  
   return (
     <div className="header center">
       <div className="header-right">
@@ -123,6 +145,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
 
         {isBellActive && (
           <div
+            ref={bellBoxRef} 
             className={`bell-box ${isExpanded ? "expanded" : ""}`}
             onClick={stopPropagation}
           >
@@ -231,13 +254,13 @@ const Header = ({ setAuthenticated, toggleAside }) => {
           </div>
         )}
         {/* 사용자 버튼 */}
-        <TopMenuIcon iconDef={rvi24PersonCircle} onClick={() => {
+        <TopMenuIcon  iconDef={rvi24PersonCircle} onClick={() => {
             setSelectedIndex(3);
             toggleLoginBox(); // 기존 기능 유지
           }}
         />
         {isLoginBoxVisible && (
-          <div className="user-loginbox" onClick={stopPropagation}>
+          <div ref={loginBoxRef}  className="user-loginbox" onClick={stopPropagation}>
             <div>계정설정</div>
             <div onClick={(e) => handleLogout(e)}>로그아웃</div>
           </div>
