@@ -21,9 +21,6 @@ SELECT DISTINCT
 FROM
   vm_samples_history v
   JOIN vm_configuration c ON v.vm_id = c.vm_id
-  JOIN (
-    SELECT d.vm_id, max(d.history_id) FROM vm_configuration d WHERE 1=1 AND d.delete_date IS NOT NULL GROUP BY d.vm_id
-  ) m on v.vm_id = m.vm_id -- 지워진 기록이 있는 VM목록
 WHERE 1=1
 AND v.vm_status = 1
 AND v.history_datetime = (
@@ -38,7 +35,9 @@ AND NOT EXISTS (
   AND (c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
        or c2.vm_name = 'HostedEngine')  -- hosted_engine 제외 조건 추가
 )
-AND v.vm_id != m.vm_id -- 지워진 VM은 조회대상에서 제외
+AND NOT EXISTS (
+  SELECT d.vm_id, max(d.history_id) as max FROM vm_configuration d WHERE 1=1 AND d.delete_date IS NOT NULL and v.vm_id = d.vm_id GROUP BY d.vm_id
+) -- 지워진 VM은 조회대상에서 제외
 ORDER BY v.cpu_usage_percent DESC
 	""", nativeQuery = true
 	)
@@ -52,9 +51,6 @@ SELECT DISTINCT
 FROM
   vm_samples_history v
   JOIN vm_configuration c ON v.vm_id = c.vm_id
-  JOIN (
-    SELECT d.vm_id, max(d.history_id) FROM vm_configuration d WHERE 1=1 AND d.delete_date IS NOT NULL GROUP BY d.vm_id
-  ) m on v.vm_id = m.vm_id -- 지워진 기록이 있는 VM목록
 WHERE 1=1
 AND v.vm_status = 1
 AND v.history_datetime = (
@@ -67,7 +63,9 @@ AND NOT EXISTS (
   AND (c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
        or c2.vm_name = 'HostedEngine')  -- hosted_engine 제외 조건 추가
 )
-AND v.vm_id != m.vm_id -- 지워진 VM은 조회대상에서 제외
+AND NOT EXISTS (
+  SELECT d.vm_id, max(d.history_id) as max FROM vm_configuration d WHERE 1=1 AND d.delete_date IS NOT NULL and v.vm_id = d.vm_id GROUP BY d.vm_id
+) -- 지워진 VM은 조회대상에서 제외
 ORDER BY v.memory_usage_percent DESC
 		""", nativeQuery = true
 	)
@@ -133,9 +131,6 @@ SELECT DISTINCT
 FROM
   vm_samples_history v
   JOIN vm_configuration c ON v.vm_id = c.vm_id
-  JOIN (
-    SELECT d.vm_id, max(d.history_id) FROM vm_configuration d WHERE 1=1 AND d.delete_date IS NOT NULL GROUP BY d.vm_id
-  ) m on v.vm_id = m.vm_id -- 지워진 기록이 있는 VM목록
 WHERE 1=1
 AND v.vm_status = 1
 AND v.history_datetime = (
@@ -148,7 +143,9 @@ AND NOT EXISTS (
   AND (c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
        or c2.vm_name = 'HostedEngine')  -- hosted_engine 제외 조건 추가
 )
-AND v.vm_id != m.vm_id
+AND NOT EXISTS (
+  SELECT d.vm_id, max(d.history_id) as max FROM vm_configuration d WHERE 1=1 AND d.delete_date IS NOT NULL and v.vm_id = d.vm_id GROUP BY d.vm_id
+) -- 지워진 VM은 조회대상에서 제외
 ORDER BY cpu_usage_percent DESC
 	""", nativeQuery = true
 	)
@@ -161,9 +158,6 @@ SELECT DISTINCT
 FROM
   vm_samples_history v
   JOIN vm_configuration c ON v.vm_id = c.vm_id
-  JOIN (
-    SELECT d.vm_id, max(d.history_id) FROM vm_configuration d WHERE 1=1 AND d.delete_date IS NOT NULL GROUP BY d.vm_id
-  ) m on v.vm_id = m.vm_id -- 지워진 기록이 있는 VM목록
 WHERE 1=1
 AND v.vm_status = 1
 AND v.history_datetime = (
@@ -176,7 +170,9 @@ AND NOT EXISTS (
   AND (c2.vm_name ~* 'external\-.*ocal' -- 정규식 external-HostedEngineLocal
        or c2.vm_name = 'HostedEngine')  -- hosted_engine 제외 조건 추가
 )
-AND v.vm_id != m.vm_id -- 지워진 VM은 조회대상에서 제외
+AND NOT EXISTS (
+  SELECT d.vm_id, max(d.history_id) as max FROM vm_configuration d WHERE 1=1 AND d.delete_date IS NOT NULL and v.vm_id = d.vm_id GROUP BY d.vm_id
+) -- 지워진 VM은 조회대상에서 제외
 ORDER BY memory_usage_percent DESC
 	""", nativeQuery = true
 	)
