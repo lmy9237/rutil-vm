@@ -18,10 +18,6 @@ fun Connection.findAllDisks(searchQuery: String = ""): Result<List<Disk>> = runC
 		if (searchQuery.isNotEmpty()) search(searchQuery).caseSensitive(false)
 	}.send().disks()
 
-	// if (searchQuery.isNotEmpty())
-	// 	this.srvAllDisks().list().search(searchQuery).caseSensitive(false).send().disks()
-	// else
-	// 	this.srvAllDisks().list().send().disks()
 }.onSuccess {
 	Term.DISK.logSuccess("목록조회")
 }.onFailure {
@@ -277,6 +273,7 @@ fun Connection.findAllPermissionsFromDisk(diskId: String): Result<List<Permissio
 	checkDiskExists(diskId)
 
 	this.srvPermissionsFromDisk(diskId).list().send().permissions()
+
 }.onSuccess {
 	Term.DISK.logSuccessWithin(Term.PERMISSION, "목록조회", diskId)
 }.onFailure {
@@ -286,9 +283,9 @@ fun Connection.findAllPermissionsFromDisk(diskId: String): Result<List<Permissio
 
 
 fun Connection.findAllVmsFromDisk(diskId: String): Result<List<Vm>> = runCatching {
-	this.findAllVms(follow = "diskattachments")
-		.getOrDefault(listOf())
+	this.findAllVms(follow = "diskattachments").getOrDefault(listOf())
 		.filter { vm -> vm.diskAttachments().any { it.disk().id() == diskId } }
+
 }.onSuccess {
 	Term.DISK.logSuccessWithin(Term.VM, "목록조회", diskId)
 }.onFailure {

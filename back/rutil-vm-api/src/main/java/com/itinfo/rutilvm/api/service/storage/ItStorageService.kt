@@ -565,8 +565,8 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun findAllDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo> {
 		log.info("findAllDisksFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val res: List<Disk> = conn.findAllDisksFromStorageDomain(storageDomainId).getOrDefault(emptyList())
-		return res.toDiskMenus(conn)
+		val res: List<Disk> = conn.findAllDisksFromStorageDomain(storageDomainId, follow = "storagedomain").getOrDefault(emptyList())
+		return res.toDomainDiskMenus(conn)
 	}
 
     @Throws(Error::class)

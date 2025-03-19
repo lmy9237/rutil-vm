@@ -541,6 +541,27 @@ fun Vm.toNetworkVm(conn: Connection): VmViewVo {
 fun List<Vm>.toNetworkVms(conn: Connection): List<VmViewVo> =
 	this@toNetworkVms.map { it.toNetworkVm(conn) }
 
+fun Vm.toDiskVm(conn: Connection): VmViewVo {
+	val cluster: Cluster? = conn.findCluster(this@toDiskVm.cluster().id()).getOrNull()
+	return VmViewVo.builder {
+		id { this@toDiskVm.id() }
+		name { this@toDiskVm.name() }
+		description { this@toDiskVm.description() }
+		status { this@toDiskVm.status() }
+		clusterVo { cluster?.fromClusterToIdentifiedVo() }
+		if (this@toDiskVm.status() == VmStatus.UP) {
+			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toDiskVm.id())
+			fqdn { this@toDiskVm.fqdn() }
+			upTime { statistics.findVmUptime() }
+			ipv4 { this@toDiskVm.reportedDevices().findVmIpv4() }
+			ipv6 { this@toDiskVm.reportedDevices().findVmIpv6() }
+			usageDto { this@toDiskVm.statistics().toVmUsage() }
+		}
+	}
+}
+fun List<Vm>.toDiskVms(conn: Connection): List<VmViewVo> =
+	this@toDiskVms.map { it.toDiskVm(conn) }
+
 fun Vm.toUnregisteredVm(): VmViewVo {
 	val vm = this@toUnregisteredVm
 	return VmViewVo.builder {

@@ -126,8 +126,7 @@ fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 		conn.findVm(diskLink.vms().first().id()).getOrNull()
 	} else { null }
 
-	val templateId: String? = conn.findAllTemplates(follow = "diskattachments")
-		.getOrDefault(listOf())
+	val templateId: String? = conn.findAllTemplates(follow = "diskattachments").getOrDefault(emptyList())
 		.firstOrNull { template ->
 			template.diskAttachmentsPresent() &&
 					template.diskAttachments().any { diskAttachment -> diskAttachment.id() == disk.id() }
@@ -173,23 +172,49 @@ fun Disk.toDcDiskMenu(): DiskImageVo {
 fun List<Disk>.toDcDiskMenus(): List<DiskImageVo> =
 	this@toDcDiskMenus.map { it.toDcDiskMenu() }
 
+fun Disk.toDomainDiskMenu(conn: Connection): DiskImageVo {
+	val disk = this@toDomainDiskMenu
+	val diskLink: Disk? = conn.findDisk(disk.id()).getOrNull()
+	val vmConn: Vm? = if(diskLink?.vmsPresent() == true){
+		conn.findVm(diskLink.vms().first().id()).getOrNull()
+	} else { null }
+
+	val templateId: String? = conn.findAllTemplates(follow = "diskattachments").getOrDefault(emptyList())
+		.firstOrNull { template ->
+			template.diskAttachmentsPresent() &&
+				template.diskAttachments().any { diskAttachment -> diskAttachment.id() == disk.id() }
+		}?.id()
+	val tmp: Template? = templateId?.let { conn.findTemplate(it).getOrNull() }
+
+	return DiskImageVo.builder {
+		id { disk.id() }
+		alias { disk.alias() }
+		sharable { disk.shareable() }
+		storageDomainVo { disk.storageDomain().fromStorageDomainToIdentifiedVo() }
+		virtualSize { disk.provisionedSize() }
+		actualSize { disk.actualSize() }
+		status { disk.status() }
+		sparse { disk.sparse() }
+		storageType { disk.storageType() }
+		description { disk.description() }
+		connectVm { vmConn?.fromVmToIdentifiedVo() }
+		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
+	}
+}
+fun List<Disk>.toDomainDiskMenus(conn: Connection): List<DiskImageVo> =
+	this@toDomainDiskMenus.map { it.toDomainDiskMenu(conn) }
 
 
 fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 	val disk = this@toDiskInfo
-	val diskProfile: DiskProfile? =
-		if(disk.diskProfilePresent()) conn.findDiskProfile(disk.diskProfile().id()).getOrNull()
-		else null
-	val storageDomain: StorageDomain? = conn.findStorageDomain(this.storageDomains().first().id()).getOrNull()
-	val dataCenter: DataCenter? = storageDomain?.dataCenters()?.first()?.let {
+	val dataCenter: DataCenter? = disk.diskProfile().storageDomain().dataCenters()?.first()?.let {
 		conn.findDataCenter(it.id()).getOrNull()
 	}
-	val diskLink: Disk? = conn.findDisk(this@toDiskInfo.id()).getOrNull()
-	val vmConn: Vm? = if(diskLink?.vmsPresent() == true){
-		conn.findVm(diskLink.vms().first().id()).getOrNull()
-	} else { null }
-	val templateId: String? = conn.findAllTemplates(follow = "diskattachments")
-		.getOrDefault(listOf())
+	val vmConn: Vm? =
+		if(disk.vmsPresent()){ conn.findVm(disk.vms().first().id()).getOrNull() }
+		else { null }
+
+	val templateId: String? = conn.findAllTemplates(follow = "diskattachments").getOrDefault(emptyList())
 		.firstOrNull { template ->
 			template.diskAttachmentsPresent() &&
 					template.diskAttachments().any { diskAttachment -> diskAttachment.id() == disk.id() }
@@ -203,9 +228,8 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 		status { disk.status() }
 		sparse { disk.sparse() } // 할당정책
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-		// storageDomainVo { storageDomain?.toStorageDomainIdName() }
-		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
-		diskProfileVo { diskProfile?.fromDiskProfileToIdentifiedVo() }
+		storageDomainVo { disk.diskProfile().storageDomain().fromStorageDomainToIdentifiedVo() }
+		diskProfileVo { disk.diskProfile().fromDiskProfileToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
 		wipeAfterDelete { disk.wipeAfterDelete() }
@@ -283,10 +307,7 @@ fun List<Disk>.toDiskImageVos(conn: Connection): List<DiskImageVo> =
 
 
 fun Disk.toDiskVo(conn: Connection, vmId: String): DiskImageVo {
-	val storageDomain: StorageDomain? =
-		conn.findStorageDomain(this@toDiskVo.storageDomains().first().id())
-			.getOrNull()
-
+	val storageDomain: StorageDomain? = conn.findStorageDomain(this@toDiskVo.storageDomains().first().id()).getOrNull()
 	val dataCenter: DataCenter? =
 		if(storageDomain?.dataCentersPresent() == true) conn.findDataCenter(storageDomain.dataCenters().first().id()).getOrNull()
 		else null
@@ -326,8 +347,7 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 	val vmConn: Vm? =
 		if(disk.vmsPresent()){ conn.findVm(disk.vms().first().id()).getOrNull() }
 		else { null }
-	val templateId: String? = conn.findAllTemplates(follow = "diskattachments")
-		.getOrDefault(listOf())
+	val templateId: String? = conn.findAllTemplates(follow = "diskattachments").getOrDefault(emptyList())
 		.firstOrNull { template ->
 			template.diskAttachmentsPresent() &&
 					template.diskAttachments().any { diskAttachment -> diskAttachment.id() == disk.id() }
