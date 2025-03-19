@@ -100,8 +100,8 @@ const Header = ({ setAuthenticated, toggleAside }) => {
     <div className="header center">
       <div className="header-right">
         <TopMenuIcon iconDef={rvi24Hamburger} onClick={toggleAside} />
-        <TopMenuIcon onClick={handleTitleClick}>
-          <LogoIcon />
+        <TopMenuIcon onClick={handleTitleClick} className="no-hover">
+          <LogoIcon/>
         </TopMenuIcon>
       </div>
 

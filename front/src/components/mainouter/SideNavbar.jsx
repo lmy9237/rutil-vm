@@ -41,7 +41,7 @@ const SideNavbar = ({
     }
 
     // 이벤트/설정 제외, 마지막 선택 항목 저장
-    if (id !== "event" && id !== "settings") {
+    if (id !== "event" && id !== "settings" && id !=="dashboard") {
       setLastSelected(id);
       localStorage.setItem("lastSelected", id);
     }
