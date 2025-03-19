@@ -395,6 +395,7 @@ const TableColumnsInfo = {
   VMS_FROM_STORAGE_DOMAIN: [
     { header: '별칭', accessor: 'name', clickable: false },
     { header: '디스크', accessor: 'disk', clickable: false },
+    { header: '스냅샷', accessor: 'snapshot', clickable: false },
     { header: '가상 크기', accessor: 'virtualSize', clickable: false },
     { header: '실제 크기', accessor: 'actualSize', clickable: false },
     { header: '생성 일자', accessor: 'creationTime', clickable: false },

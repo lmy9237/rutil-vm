@@ -761,13 +761,30 @@ class StorageController: BaseController() {
 	fun events(
 		@PathVariable("storageDomainId") storageDomainId: String? = null
 	): ResponseEntity<List<EventVo>> {
-		if (storageDomainId.isNullOrEmpty())
-			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		checkDomain(storageDomainId)
+		// if (storageDomainId == null)
+		// 	throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+
 		log.info("/storages/{}/events ... Event(s) 목록", storageDomainId)
-		return ResponseEntity.ok(iDomain.findAllEventsFromStorageDomain(storageDomainId))
+		return ResponseEntity.ok(iDomain.findAllEventsFromStorageDomain(storageDomainId!!))
 	}
 
 
+	private fun checkDomain(id: String?) {
+		if (id.isNullOrEmpty()) throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+	}
+
+
+	private fun <T> respond(logMessage: String, action: () -> T): ResponseEntity<T> {
+		log.info(logMessage)
+		return ResponseEntity.ok(action())
+	}
+
+	private fun <T> validateAndRespond(value: String, logMessage: String, action: (String) -> T): ResponseEntity<T> {
+		require(value.isNotEmpty()) { throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException() }
+		log.info(logMessage)
+		return ResponseEntity.ok(action(value))
+	}
 	companion object {
 		private val log by LoggerDelegate()
 	}

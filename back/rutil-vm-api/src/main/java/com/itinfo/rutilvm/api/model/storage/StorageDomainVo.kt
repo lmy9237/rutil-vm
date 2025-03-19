@@ -207,11 +207,6 @@ fun List<StorageDomain>.toActiveDomains(): List<StorageDomainVo> =
 fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 	val storageDomain = this@toStorageDomainInfoVo
 	val dataCenter: DataCenter? = resolveDataCenter(conn)
-	val hostStorage: HostStorage = storageDomain.storage()
-	val disks: List<Disk> = conn.findAllDisks()
-		.getOrDefault(listOf())
-		.filter { it.storageDomainsPresent() && it.storageDomains().first().id() == storageDomain.id() }
-	val diskProfiles: List<DiskProfile> = conn.findAllDiskProfilesFromStorageDomain(storageDomain.id()).getOrDefault(listOf())
 
 	return StorageDomainVo.builder {
 		id { storageDomain.id() }
@@ -225,15 +220,15 @@ fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 		usedSize { storageDomain.used() }
 		availableSize { storageDomain.available() }
 		commitedSize { storageDomain.committed() }
-		profileVos { diskProfiles.fromDiskProfilesToIdentifiedVos()  }
+		profileVos { storageDomain.diskProfiles().fromDiskProfilesToIdentifiedVos() }
 		diskSize { storageDomain.toDiskSize() }
-		diskImageVos { disks.toDiskImageVos(conn) }
+		diskImageVos { storageDomain.disks().toDiskImageVos(conn) }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		warning { storageDomain.warningLowSpaceIndicatorAsInteger() }
 		spaceBlocker { storageDomain.criticalSpaceActionBlockerAsInteger() }
 		storageAddress { storageDomain.storage().address() + storageDomain.storage().path() } // 경로
 //		nfsVersion { storageDomain.storage().nfsVersion().value() }
-		hostStorageVo { hostStorage.toHostStorageVoByType() }
+		hostStorageVo { storageDomain.storage().toHostStorageVoByType() }
 	}
 }
 fun List<StorageDomain>.toStorageDomainInfoVos(conn: Connection): List<StorageDomainVo> =
@@ -259,8 +254,7 @@ fun StorageDomainVo.toStorageDomainBuilder(): StorageDomainBuilder {
 
 fun StorageDomainVo.toAddStorageDomainBuilder(): StorageDomain {
 	log.info("toAddStorageDomainBuilder: {}", this)
-	return this@toAddStorageDomainBuilder
-		.toStorageDomainBuilder()
+	return this@toAddStorageDomainBuilder.toStorageDomainBuilder()
 		.storage(
 			when (StorageType.fromValue(this@toAddStorageDomainBuilder.storageType)) {
 				StorageType.NFS -> this@toAddStorageDomainBuilder.toAddNFSBuilder()

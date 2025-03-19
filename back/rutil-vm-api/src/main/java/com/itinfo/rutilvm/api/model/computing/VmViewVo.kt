@@ -8,6 +8,8 @@ import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.util.ovirt.findAllDiskAttachmentsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllNicsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllReportedDevicesFromVm
+import com.itinfo.rutilvm.util.ovirt.findAllSnapshotDisksFromVm
+import com.itinfo.rutilvm.util.ovirt.findAllSnapshotsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllVmCdromsFromVm
 import com.itinfo.rutilvm.util.ovirt.findCluster
@@ -15,6 +17,7 @@ import com.itinfo.rutilvm.util.ovirt.findDataCenter
 import com.itinfo.rutilvm.util.ovirt.findDisk
 import com.itinfo.rutilvm.util.ovirt.findHost
 import com.itinfo.rutilvm.util.ovirt.findTemplate
+import com.itinfo.rutilvm.util.ovirt.findVm
 import org.ovirt.engine.sdk4.Connection
 
 import org.ovirt.engine.sdk4.types.*
@@ -486,22 +489,32 @@ fun List<Vm>.toTemplateVmVos(conn: Connection) =
 	this@toTemplateVmVos.map { it.toTemplateVmVo(conn) }
 
 
-fun Vm.toStorageDomainVm(conn: Connection, storageDomainId: String): VmViewVo {
-	val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(this@toStorageDomainVm.id())
-		.getOrDefault(listOf())
-		.filter { diskAttachment ->
-			val disk = conn.findDisk(diskAttachment.disk().id()).getOrNull()
-			disk?.storageDomains()?.any { it.id() == storageDomainId } == true
-		}
+fun Vm.toVmStorageDomainMenu(conn: Connection, storageDomainId: String): VmViewVo {
+	val vm: Vm? = conn.findVm(this@toVmStorageDomainMenu.id(), follow = "diskattachments.disk,snapshots").getOrNull()
+	val snapshots: List<Snapshot> = vm?.snapshots()?.filter { snapshot ->
+		snapshot.snapshotType() != SnapshotType.ACTIVE
+	} ?: emptyList()
+
+	val diskAttachments: List<DiskAttachment> = vm?.diskAttachments()?.filter { diskAttachment ->
+		diskAttachment.disk().storageDomains()?.any { it.id() == storageDomainId } == true
+	} ?: emptyList()
+
+	val virtualSize = diskAttachments.sumOf { it.disk().provisionedSize() }
+	val actualSize = diskAttachments.sumOf { it.disk().totalSize() }
+
 	return VmViewVo.builder {
-		id { this@toStorageDomainVm.id() }
-		name { this@toStorageDomainVm.name() }
-		status { this@toStorageDomainVm.status() }
+		id { this@toVmStorageDomainMenu.id() }
+		name { this@toVmStorageDomainMenu.name() }
+		status { this@toVmStorageDomainMenu.status() }
+		creationTime { ovirtDf.format(this@toVmStorageDomainMenu.creationTime()) }
+		memoryGuaranteed { virtualSize }  // 원래 디스크의 가상크기 합친값
+		memorySize { actualSize }		// 디스크 실제 값 합친값
 		diskAttachmentVos { diskAttachments.fromDiskAttachmentsToIdentifiedVos() }
+		snapshotVos { snapshots.fromSnapshotsToIdentifiedVos() }
 	}
 }
-fun List<Vm>.toStorageDomainVms(conn: Connection, storageDomainId: String): List<VmViewVo> =
-	this@toStorageDomainVms.map { it.toStorageDomainVm(conn, storageDomainId) }
+fun List<Vm>.toVmStorageDomainMenus(conn: Connection, storageDomainId: String): List<VmViewVo> =
+	this@toVmStorageDomainMenus.map { it.toVmStorageDomainMenu(conn, storageDomainId) }
 
 fun Vm.toNetworkVm(conn: Connection): VmViewVo {
 	val cluster: Cluster? = conn.findCluster(this@toNetworkVm.cluster().id()).getOrNull()

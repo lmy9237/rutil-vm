@@ -17,7 +17,7 @@ fun Connection.findAllStorageDomains(searchQuery: String = "", follow: String = 
 	this.srvStorageDomains().list().apply {
 		if (searchQuery.isNotEmpty()) search(searchQuery)
 		if (follow.isNotEmpty()) follow(follow)
-	}.send().storageDomains().filter { it.storage().type() != StorageType.GLANCE }
+	}.send().storageDomains()
 
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccess("목록조회")
@@ -26,11 +26,14 @@ fun Connection.findAllStorageDomains(searchQuery: String = "", follow: String = 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-private fun Connection.srvStorageDomain(storageDomainId: String): StorageDomainService =
+private fun Connection.srvStorageDomain(storageDomainId: String, follow: String = ""): StorageDomainService =
 	this.srvStorageDomains().storageDomainService(storageDomainId)
 
-fun Connection.findStorageDomain(storageDomainId: String): Result<StorageDomain> = runCatching {
-	this.srvStorageDomain(storageDomainId).get().send().storageDomain()
+fun Connection.findStorageDomain(storageDomainId: String, follow: String = ""): Result<StorageDomain> = runCatching {
+	this.srvStorageDomain(storageDomainId).get().apply{
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().storageDomain()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccess("상세조회")
 }.onFailure {
@@ -43,6 +46,7 @@ fun Connection.attachStorageDomainsToDataCenter(storageDomainId: String, dataCen
 		.storageDomain(StorageDomainBuilder().id(storageDomainId).build())
 		.send()
 	true
+
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"연결", storageDomainId)
 }.onFailure {
@@ -53,6 +57,7 @@ fun Connection.attachStorageDomainsToDataCenter(storageDomainId: String, dataCen
 fun Connection.detachStorageDomainsToDataCenter(storageDomainId: String, dataCenterId: String): Result<Boolean> = runCatching {
 	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).remove().send()
 	true
+
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"분리", storageDomainId)
 }.onFailure {
@@ -103,6 +108,7 @@ fun Connection.updateStorageDomain(storageDomainId: String, storageDomain: Stora
 		this.srvStorageDomain(storageDomainId).update().storageDomain(storageDomain).send().storageDomain()
 
 	storageDomainUpdated ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccess("편집", storageDomainId)
 }.onFailure {
@@ -121,6 +127,7 @@ fun Connection.removeStorageDomain(storageDomainId: String, format: Boolean, hos
 		this.srvStorageDomain(storageDomainId).remove().destroy(false).format(false).host(hostName).send()
 	}
 	this.expectStorageDomainDeleted(storageDomainId)
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccess("삭제", storageDomainId)
 }.onFailure {
@@ -133,6 +140,7 @@ fun Connection.destroyStorageDomain(storageDomainId: String): Result<Boolean> = 
 
 	this.srvStorageDomain(storageDomainId).remove().destroy(true).send()
 	this.expectStorageDomainDeleted(storageDomainId)
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccess("파괴", storageDomainId)
 }.onFailure {
@@ -145,6 +153,7 @@ fun Connection.updateOvfStorageDomain(storageDomainId: String): Result<Boolean> 
 
 	this.srvStorageDomain(storageDomainId).updateOvfStore().send()
 	true
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccess("ovf 업데이트", storageDomainId)
 }.onFailure {
@@ -157,6 +166,7 @@ fun Connection.refreshLunStorageDomain(storageDomainId: String): Result<Boolean>
 
 	this.srvStorageDomain(storageDomainId).refreshLuns().send()
 	true
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccess("디스크 검사", storageDomainId)
 }.onFailure {
@@ -188,6 +198,7 @@ private fun Connection.srvAllFilesFromStorageDomain(sdId: String): FilesService 
 
 fun Connection.findAllFilesFromStorageDomain(storageDomainId: String): Result<List<File>> = runCatching {
 	this.srvAllFilesFromStorageDomain(storageDomainId).list().send().file()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.FILE, "목록조회", storageDomainId)
 }.onFailure {
@@ -200,6 +211,7 @@ private fun Connection.srvFileFromStorageDomain(storageId: String, fileId: Strin
 
 fun Connection.findFileFromStorageDomain(storageDomainId: String, fileId: String): Result<File?> = runCatching {
 	this.srvFileFromStorageDomain(storageDomainId, fileId).get().send().file()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.FILE, "상세조회", storageDomainId)
 }.onFailure {
@@ -210,10 +222,13 @@ fun Connection.findFileFromStorageDomain(storageDomainId: String, fileId: String
 private fun Connection.srvVmsFromStorageDomain(storageId: String): StorageDomainVmsService =
 	this.srvStorageDomain(storageId).vmsService()
 
-fun Connection.findAllVmsFromStorageDomain(storageDomainId: String): Result<List<Vm>> = runCatching {
+fun Connection.findAllVmsFromStorageDomain(storageDomainId: String, follow: String = ""): Result<List<Vm>> = runCatching {
 	checkStorageDomainExists(storageDomainId)
 
-	this.srvVmsFromStorageDomain(storageDomainId).list().send().vm()
+	this.srvVmsFromStorageDomain(storageDomainId).list().apply {
+		if(follow.isNotEmpty()) follow(follow)
+	}.send().vm()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
 }.onFailure {
@@ -225,6 +240,7 @@ fun Connection.findAllUnregisteredVmsFromStorageDomain(storageDomainId: String):
 	checkStorageDomainExists(storageDomainId)
 
 	this.srvVmsFromStorageDomain(storageDomainId).list().unregistered(true).send().vm()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "목록조회", storageDomainId)
 }.onFailure {
@@ -254,6 +270,7 @@ fun Connection.removeRegisteredVmFromStorageDomain(storageDomainId: String, vmId
 
 	this.srvVmsFromStorageDomain(storageDomainId).vmService(vmId).remove().send()
 	true
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "가져오기 삭제", storageDomainId)
 }.onFailure {
@@ -270,6 +287,7 @@ fun Connection.findAllDisksFromStorageDomain(storageDomainId: String, follow: St
 	this.srvDisksFromStorageDomain(storageDomainId).list().apply {
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().disks()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
 }.onFailure {
@@ -280,7 +298,8 @@ fun Connection.findAllDisksFromStorageDomain(storageDomainId: String, follow: St
 fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): Result<List<Disk>> = runCatching {
 	checkStorageDomainExists(storageDomainId)
 
-	this.srvDisksFromStorageDomain(storageDomainId).list().unregistered(true).send().disks() ?: listOf()
+	this.srvDisksFromStorageDomain(storageDomainId).list().unregistered(true).send().disks()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
 }.onFailure {
@@ -291,6 +310,7 @@ fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String
 fun Connection.registeredDiskFromStorageDomain(storageDomainId: String, diskId: String): Result<Boolean> = runCatching {
 	this.srvDisksFromStorageDomain(storageDomainId).add().unregistered(true).disk(DiskBuilder().id(diskId).build()).send()
 	true
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "디스크 불러오기", storageDomainId)
 }.onFailure {
@@ -301,6 +321,7 @@ fun Connection.registeredDiskFromStorageDomain(storageDomainId: String, diskId: 
 fun Connection.removeRegisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): Result<Boolean> = runCatching {
 	this.srvDisksFromStorageDomain(storageDomainId).diskService(diskId).remove().send()
 	true
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "불러오기 삭제", storageDomainId)
 }.onFailure {
@@ -314,6 +335,7 @@ private fun Connection.srvAllDiskSnapshotsFromStorageDomain(storageId: String): 
 
 fun Connection.findAllDiskSnapshotsFromStorageDomain(storageDomainId: String): Result<List<DiskSnapshot>> = runCatching {
 	this.srvAllDiskSnapshotsFromStorageDomain(storageDomainId).list().send().snapshots()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK_SNAPSHOT, "목록조회", storageDomainId)
 }.onFailure {
@@ -326,6 +348,7 @@ private fun Connection.srvTemplatesFromStorageDomain(storageId: String): Storage
 
 fun Connection.findAllTemplatesFromStorageDomain(storageDomainId: String): Result<List<Template>> = runCatching {
 	this.srvTemplatesFromStorageDomain(storageDomainId).list().send().templates()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.TEMPLATE, "목록조회", storageDomainId)
 }.onFailure {
@@ -335,6 +358,7 @@ fun Connection.findAllTemplatesFromStorageDomain(storageDomainId: String): Resul
 
 fun Connection.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: String): Result<List<Template>> = runCatching {
 	this.srvTemplatesFromStorageDomain(storageDomainId).list().unregistered(true).send().templates()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.TEMPLATE, "목록조회", storageDomainId)
 }.onFailure {
@@ -350,6 +374,7 @@ fun Connection.registeredTemplateFromStorageDomain(storageDomainId: String, temp
 		.template(template)
 		.cluster(template.cluster()).send()
 	true
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.TEMPLATE, "가져오기", storageDomainId)
 }.onFailure {
@@ -363,6 +388,7 @@ fun Connection.removeRegisteredTemplateFromStorageDomain(storageDomainId: String
 	// this.srvTemplatesFromStorageDomain(storageDomainId).templateService(templateId).remove().send()
 	this.srvStorageDomains().storageDomainService(storageDomainId).templatesService().templateService(templateId).remove().send()
 	true
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "가져오기 삭제", storageDomainId)
 }.onFailure {
@@ -373,7 +399,8 @@ fun Connection.removeRegisteredTemplateFromStorageDomain(storageDomainId: String
 fun Connection.findAllDiskProfilesFromStorageDomain(storageDomainId: String): Result<List<DiskProfile>> = runCatching {
 	checkStorageDomainExists(storageDomainId)
 
-	this.srvStorageDomain(storageDomainId).diskProfilesService().list().send().profiles() ?: listOf()
+	this.srvStorageDomain(storageDomainId).diskProfilesService().list().send().profiles()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK_PROFILE, "목록조회", storageDomainId)
 }.onFailure {
@@ -387,7 +414,8 @@ private fun Connection.srvPermissionsFromStorageDomain(sdId: String): AssignedPe
 fun Connection.findAllPermissionsFromStorageDomain(storageDomainId: String): Result<List<Permission>> = runCatching {
 	checkStorageDomainExists(storageDomainId)
 
-	this.srvPermissionsFromStorageDomain(storageDomainId).list().send().permissions() ?: listOf()
+	this.srvPermissionsFromStorageDomain(storageDomainId).list().send().permissions()
+
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.PERMISSION, "목록조회", storageDomainId)
 }.onFailure {

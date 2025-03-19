@@ -8,10 +8,7 @@ import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import com.itinfo.rutilvm.api.model.setting.toPermissionVos
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
-import com.itinfo.rutilvm.api.repository.engine.entity.DiskVmElementEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.toVmId
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.storage.DiskServiceImpl.Companion
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
@@ -371,8 +368,7 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<StorageDomainVo> {
 		log.info("findAll ...")
-		val res: List<StorageDomain> = conn.findAllStorageDomains()
-			.getOrDefault(listOf())
+		val res: List<StorageDomain> = conn.findAllStorageDomains().getOrDefault(emptyList())
 			.filter { it.storage().type() != StorageType.GLANCE }
 		return res.toStorageDomainsMenu(conn)
 	}
@@ -380,7 +376,7 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun findOne(storageDomainId: String): StorageDomainVo? {
 		log.info("findOne... ")
-		val res: StorageDomain? = conn.findStorageDomain(storageDomainId).getOrNull()
+		val res: StorageDomain? = conn.findStorageDomain(storageDomainId, follow = "disks,diskprofiles").getOrNull()
 		return res?.toStorageDomainInfoVo(conn)
 	}
 
@@ -453,8 +449,7 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun findAllDataCenterFromStorageDomain(): List<DataCenterVo> {
 		log.info("findAllDataCenterFromStorageDomain ... ")
-		val res: List<DataCenter> = conn.findAllDataCenters(follow = "storagedomains")
-			.getOrDefault(listOf())
+		val res: List<DataCenter> = conn.findAllDataCenters(follow = "storagedomains").getOrDefault(emptyList())
 			.filter { dataCenter -> dataCenter.storageDomainsPresent() &&
 				dataCenter.storageDomains().any { storageDomain ->
 					storageDomain.status() == StorageDomainStatus.ACTIVE
@@ -469,8 +464,8 @@ class StorageServiceImpl(
 		val storageDomain: StorageDomain = conn.findStorageDomain(storageDomainId)
 			.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		val res: List<Host>  = if(storageDomain.dataCentersPresent()){
-			conn.findAllHostsFromDataCenter(storageDomain.dataCenters().first().id()).getOrDefault(listOf())
-		}else listOf()
+			conn.findAllHostsFromDataCenter(storageDomain.dataCenters().first().id()).getOrDefault(emptyList())
+		}else emptyList()
 		return res.toHostsIdName()
 	}
 
@@ -506,16 +501,14 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun findAllVmsFromStorageDomain(storageDomainId: String): List<VmViewVo> {
 		log.info("findAllVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val res: List<Vm> = conn.findAllVmsFromStorageDomain(storageDomainId)
-			.getOrDefault(listOf())
-		return res.toStorageDomainVms(conn, storageDomainId)
+		val res: List<Vm> = conn.findAllVmsFromStorageDomain(storageDomainId).getOrDefault(emptyList())
+		return res.toVmStorageDomainMenus(conn, storageDomainId)
 	}
 
     @Throws(Error::class)
     override fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmViewVo> {
         log.info("findAllUnregisteredVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
-        val res: List<Vm> = conn.findAllUnregisteredVmsFromStorageDomain(storageDomainId)
-            .getOrDefault(listOf())
+        val res: List<Vm> = conn.findAllUnregisteredVmsFromStorageDomain(storageDomainId).getOrDefault(emptyList())
         return res.toUnregisterdVms()
     }
 
@@ -541,16 +534,14 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun findAllTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo> {
 		log.info("findAllTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val res: List<Template> = conn.findAllTemplatesFromStorageDomain(storageDomainId)
-			.getOrDefault(listOf())
+		val res: List<Template> = conn.findAllTemplatesFromStorageDomain(storageDomainId).getOrDefault(emptyList())
 		return res.toStorageTemplates(conn)
 	}
 
 	@Throws(Error::class)
 	override fun findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo> {
 		log.info("findAllUnregisteredTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val res: List<Template> = conn.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId)
-			.getOrDefault(listOf())
+		val res: List<Template> = conn.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId).getOrDefault(emptyList())
 		return res.toUnregisterdTemplates()
 	}
 
@@ -574,8 +565,7 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun findAllDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo> {
 		log.info("findAllDisksFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val res: List<Disk> = conn.findAllDisksFromStorageDomain(storageDomainId)
-			.getOrDefault(listOf())
+		val res: List<Disk> = conn.findAllDisksFromStorageDomain(storageDomainId).getOrDefault(emptyList())
 		return res.toDiskMenus(conn)
 	}
 
@@ -583,7 +573,7 @@ class StorageServiceImpl(
     override fun findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo> {
         log.info("findAllUnregisteredDisksFromStorageDomain ... storageDomainId: {}", storageDomainId)
         val res: List<Disk> = conn.findAllUnregisteredDisksFromStorageDomain(storageDomainId)
-            .getOrDefault(listOf())
+            .getOrDefault(emptyList())
         return res.toUnregisterdDisks()
     }
 
@@ -605,8 +595,8 @@ class StorageServiceImpl(
 	override fun findAllDiskSnapshotsFromStorageDomain(storageDomainId: String): List<SnapshotDiskVo> {
 		log.info("findAllDiskSnapshotsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val diskSnapshots: List<DiskSnapshot> = conn.findAllDiskSnapshotsFromStorageDomain(storageDomainId)
-			.getOrDefault(listOf())
-		val allVms: List<Vm> = conn.findAllVms(follow = "snapshots").getOrDefault(listOf())
+			.getOrDefault(emptyList())
+		val allVms: List<Vm> = conn.findAllVms(follow = "snapshots").getOrDefault(emptyList())
 		val res = diskSnapshots.filter { diskSnapshot ->
 			allVms.any { vm -> conn.findSnapshotFromVm(vm.id(), diskSnapshot.snapshot().id()).getOrNull() != null }
 		}
@@ -619,7 +609,7 @@ class StorageServiceImpl(
 	override fun findAllDiskProfilesFromStorageDomain(storageDomainId: String): List<DiskProfileVo> {
 		log.info("findAllDiskProfilesFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<DiskProfile> = conn.findAllDiskProfilesFromStorageDomain(storageDomainId)
-			.getOrDefault(listOf())
+			.getOrDefault(emptyList())
 		return res.toDiskProfileVos()
 	}
 
@@ -654,8 +644,7 @@ class StorageServiceImpl(
 		log.info("findAllEventsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val storageDomain: StorageDomain = conn.findStorageDomain(storageDomainId)
 			.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-		val res: List<Event> = conn.findAllEvents()
-			.getOrDefault(listOf())
+		val res: List<Event> = conn.findAllEvents().getOrDefault(emptyList())
 			.filter {event ->
 				event.storageDomainPresent() &&
 				(event.storageDomain().idPresent() && event.storageDomain().id().equals(storageDomainId) || (event.storageDomain().namePresent() && event.storageDomain().name().equals(storageDomain.name())) )
@@ -669,7 +658,7 @@ class StorageServiceImpl(
 	override fun findAllPermissionsFromStorageDomain(storageDomainId: String): List<PermissionVo> {
 		log.info("findAllPermissionsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<Permission> = conn.findAllPermissionsFromStorageDomain(storageDomainId)
-			.getOrDefault(listOf())
+			.getOrDefault(emptyList())
 		return res.toPermissionVos(conn)
 	}
 

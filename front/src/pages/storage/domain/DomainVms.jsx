@@ -73,13 +73,13 @@ const DomainVms = ({ domainId }) => {
     isError: isVmsError,
     isSuccess: isVmsSuccess,
   } = useAllVMFromDomain(domainId, (vm) => {
-    const totalVirtualSize = calculateTotalVirtualSize(vm?.diskAttachmentVos || []);
-    const totalActualSize = calculateTotalActualSize(vm?.diskAttachmentVos || []);
+   
     return {
       ...vm,
-      virtualSize: checkZeroSizeToGB(totalVirtualSize),
-      actualSize: checkZeroSizeToGB(totalActualSize),
-      diskAttachments: vm?.diskAttachmentVos || [],
+      virtualSize: checkZeroSizeToGB(vm?.memoryGuaranteed),
+      actualSize: checkZeroSizeToGB(vm?.memorySize),
+      disk: vm?.diskAttachmentVos?.length || [],
+      snapshot: vm?.snapshotVos?.length || [],
     };
   });
 
