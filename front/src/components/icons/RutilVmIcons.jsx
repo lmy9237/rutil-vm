@@ -324,6 +324,17 @@ export const RVI24 = ({iconDef, width = 24, height = 24, onClick, currentColor="
     </svg>
   )
 }
+
+export const EventSeverityIcon = (severity) => {
+  // TODO: 아이콘 생기면 기능 생성 후 (Icon.jsx > renderSeverityIcon 리팩토링 진행)
+  // switch (severity) {
+  // case "ALERT":
+  // case "ERROR": return ();
+  // case "WARNING": return ();
+  // case "NORMAL": return ();
+  // default: return "?";
+  // }
+}
 //#endregion
 
 //#region: 아이콘36px 

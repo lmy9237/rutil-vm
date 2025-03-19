@@ -19,7 +19,7 @@ const TemplateDupl = ({
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
   const transformedData = templates.map((temp) => ({
     ...temp,
-    name: (
+    _name: (
       <TableRowClick type="templates" id={temp?.id}>
         {temp?.name}
       </TableRowClick>

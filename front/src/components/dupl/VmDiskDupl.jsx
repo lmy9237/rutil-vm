@@ -38,7 +38,7 @@ const VmDiskDupl = ({
     return {
       ...d,
       icon: renderTFStatusIcon(d?.active),
-      alias: (
+      _alias: (
         <TableRowClick type="disks" id={diskImage?.id}>
           {diskImage?.alias}
         </TableRowClick>

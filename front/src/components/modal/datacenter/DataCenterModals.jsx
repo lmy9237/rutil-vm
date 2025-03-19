@@ -1,10 +1,14 @@
 import React from "react";
 import DataCenterModal from "./DataCenterModal";
-import DataCenterDeleteModal from "./DataCenterDeleteModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteDataCenter } from "../../../api/RQHook";
 
-const DataCenterModals = ({ activeModal, dataCenter, selectedDataCenters = [], onClose }) => {
+const DataCenterModals = ({ 
+  activeModal, 
+  dataCenter, 
+  selectedDataCenters = [], 
+  onClose
+}) => {
   const modals = {
     create: 
       <DataCenterModal 
@@ -20,15 +24,10 @@ const DataCenterModals = ({ activeModal, dataCenter, selectedDataCenters = [], o
       />
     ),
     delete: (
-      // <DataCenterDeleteModal
-      //   isOpen={activeModal === 'delete' }
-      //   data={selectedDataCenters}
-      //   onClose={onClose}
-      // />
       <DeleteModal
-        isOpen={activeModal === 'delete' }
+        isOpen={activeModal === "delete"}
         onClose={onClose}
-        label={'데이터센터'}
+        label={"데이터센터"}
         data={selectedDataCenters}
         api={useDeleteDataCenter()}
         navigation={'/computing/rutil-manager/datacenters'}
@@ -39,7 +38,7 @@ const DataCenterModals = ({ activeModal, dataCenter, selectedDataCenters = [], o
   return (
     <>
       {Object.keys(modals).map((key) => (
-          <React.Fragment key={key}>{modals[key]}</React.Fragment>
+        <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>
   );

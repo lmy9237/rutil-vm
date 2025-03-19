@@ -1,6 +1,5 @@
 import React from "react";
 import TemplateEditModal from "./TemplateEditModal";
-import TemplateDeleteModal from "./TemplateDeleteModal";
 import VmModal from "../../modal/vm/VmModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteTemplate } from "../../../api/RQHook";
@@ -12,9 +11,6 @@ const TemplateModals = ({
   onClose,
 }) => {
   const modals = {
-    // create: (
-    //   <span>..</span>
-    // ),
     edit: (
       <TemplateEditModal
         editMode
@@ -24,13 +20,7 @@ const TemplateModals = ({
       />
     ),
     delete: (
-      // <TemplateDeleteModal
-      //   isOpen={activeModal === 'delete' }
-      //   data={selectedTemplates}
-      //   onClose={onClose}
-      // />
-      <DeleteModal
-        isOpen={activeModal === "delete"}
+      <DeleteModal isOpen={activeModal === "delete"}
         onClose={onClose}
         label={"템플릿"}
         data={selectedTemplates}

@@ -35,15 +35,14 @@ const SettingUsersModals = ({
     remove: (
       <DeleteModal
         isOpen={modalType==="remove"}
-        onClose={onClose}
         label={"사용자"}
+        onClose={onClose}
         data={user[0]}
         api={useRemoveUser()}
       />
     ),
   }
   
-  console.log("...")
   return (
     <>
       {Object.keys(allModals).map((key) => (

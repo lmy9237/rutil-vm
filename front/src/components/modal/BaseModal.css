@@ -44,6 +44,14 @@
   cursor: pointer;
 }
 /*footer*/
+.popup-contents {
+  padding: 10px 0px;
+}
+.popup-contents-prompt {
+  display:flex;flex-direction:row;align-items:center;justify-content:flex-start;
+  height: auto;
+}
+/*footer*/
 .edit-footer {
   width: 100%;
   height: var(--h-modal-footer);

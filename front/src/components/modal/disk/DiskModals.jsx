@@ -1,52 +1,56 @@
 import React from "react";
 import DiskModal from "./DiskModal";
-import DiskDeleteModal from "./DiskDeleteModal";
+import DeleteModal from "../../../utils/DeleteModal";
 import DiskUploadModal from "./DiskUploadModal";
 import DiskActionModal from "./DiskActionModal";
-import './MDisk.css'
+import { useDeleteDisk } from "../../../api/RQHook";
+import "./MDisk.css";
 
-const DiskModals = ({ activeModal, disk, selectedDisks = [], onClose }) => {
+const DiskModals = ({ 
+  activeModal, 
+  disk,
+  selectedDisks = [], 
+  onClose
+}) => {
   const modals = {
-    create: 
-      <DiskModal
-        isOpen={activeModal === 'create'} 
+    create: (
+      <DiskModal isOpen={activeModal === "create"} 
         onClose={onClose} 
-      />,
+      />
+    ),
     edit: (
-      <DiskModal
+      <DiskModal isOpen={activeModal === "edit"}
         editMode
-        isOpen={activeModal === 'edit'}
         diskId={disk?.id}
         onClose={onClose}
-    />
-    ),    
+      />
+    ),
     delete: (
-      <DiskDeleteModal
-        isOpen={activeModal === 'delete' }
+      <DeleteModal
+        isOpen={activeModal === "delete"}
+        label={"디스크"}
         data={selectedDisks}
         onClose={onClose}
+        api={useDeleteDisk()}
       />
-    ), 
+    ),
     upload: (
-      <DiskUploadModal
-        isOpen={activeModal === 'upload'}
-        onClose={onClose}
-      />
-    ), 
-    action :(
+      <DiskUploadModal isOpen={activeModal === "upload"} onClose={onClose} />
+    ),
+    action: (
       <DiskActionModal
-        isOpen={['copy', 'move'].includes(activeModal)}
+        isOpen={["copy", "move"].includes(activeModal)}
         action={activeModal}
         data={selectedDisks}
         onClose={onClose}
       />
-    )
+    ),
   };
 
   return (
     <>
       {Object.keys(modals).map((key) => (
-          <React.Fragment key={key}>{modals[key]}</React.Fragment>
+        <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>
   );

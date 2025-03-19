@@ -356,12 +356,11 @@ textarea {
   position: absolute;
   z-index: 1000;
 }
-/*삭제모달*/
+/* 삭제모달 */
 .disk-delete-box {
-    display: flex;
-    min-height: 56px;
-    align-items: center;
-    font-weight: 500;
+  display:flex;justify-content:center;align-items: center;
+  min-height: 56px;
+  font-weight: 500;
 }
 .disk-delete-box > div {
   display: flex;

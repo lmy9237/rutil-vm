@@ -7,6 +7,7 @@ import VmSnapshotDeleteModal from '../../../components/modal/vm/VmSnapshotDelete
 import { useSnapshotsFromVM, useVmById } from '../../../api/RQHook';
 import { convertBytesToMB } from '../../../util';
 import TablesRow from '../../../components/table/TablesRow';
+import DeleteModal from '../../../utils/DeleteModal';
 
 const VmSnapshots = ({ vmId }) => {
   const {
@@ -84,8 +85,8 @@ const VmSnapshots = ({ vmId }) => {
           />
         )}
         {activeModal === "delete" && (
-          <VmSnapshotDeleteModal
-            isOpen
+          <DeleteModal isOpen={activeModal === "delete"}
+            label={"스냅샷"}
             data={selectedSnapshot}
             vmId={vmId}
             onClose={closeModal}

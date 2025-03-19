@@ -21,7 +21,7 @@ const DiskDupl = ({
   const transformedData = disks.map((d) => {
     let diskData = {
       ...d,
-      alias: (
+      _alias: (
         <TableRowClick type="disks" id={d?.id}>
           {d?.alias || d?.diskImageVo?.alias}
         </TableRowClick>

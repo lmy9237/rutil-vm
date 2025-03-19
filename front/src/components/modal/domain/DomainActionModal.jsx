@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
-import { warnButton, xButton } from "../../Icon";
 import {
   useActivateDomain,
   useDetachDomain,
@@ -72,20 +71,10 @@ const DomainActionModal = ({ isOpen, onClose, action, data, datacenterId }) => {
       targetName={"스토리지 도메인"}
       submitTitle={getContentLabel(action)}
       onSubmit={handleFormSubmit}
+      shouldWarn={false}
+      promptText={`${names.join(", ")} 를(을) ${getContentLabel(action)} 하시겠습니까?`}
       contentStyle={{ width: "630px", height: "200px" }} 
-    >
-    <div className="popup-content-outer">
-      <div className="disk-delete-box">
-        <div>
-          {warnButton()}
-          <span>
-            {" "}
-            {names.join(", ")} 를(을) {getContentLabel(action)} 하시겠습니까?
-          </span>
-        </div>
-      </div>
-    </div>
-    </BaseModal>
+    />
   );
 };
 

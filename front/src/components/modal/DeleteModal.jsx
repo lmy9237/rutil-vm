@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import BaseModal from "./BaseModal";
-import { warnButton, xButton } from "../Icon";
+import { WarnIcon } from "./icons/RutilVmIcons";
 
 /*안씀 쓰는곳거의없음 */
 /**
@@ -54,7 +54,7 @@ const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
       {/* <div className="storage-delete-popup modal"> */}
       <div className="disk-delete-box">
         <div>
-          {warnButton()}
+          <WarnIcon />
           <span> {names.join(", ")} 를(을) 삭제하시겠습니까? </span>
         </div>
       </div>

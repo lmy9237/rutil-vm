@@ -29,9 +29,9 @@ const ClusterModals = ({
     delete: (
       <DeleteModal
         isOpen={activeModal === "delete"}
-        onClose={onClose}
         label={"클러스터"}
         data={selectedClusters}
+        onClose={onClose}
         api={useDeleteCluster()}
         // navigation={''}
       />

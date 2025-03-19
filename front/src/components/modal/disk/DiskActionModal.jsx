@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
-import { useCopyDisk, useDiskById } from "../../../api/RQHook";
 import "../domain/MDomain.css";
 
 const DiskActionModal = ({ isOpen, action, data = [], onClose }) => {

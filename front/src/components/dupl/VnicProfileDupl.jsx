@@ -26,7 +26,7 @@ const VnicProfileDupl = ({
   // ✅ 데이터 변환 (검색 가능하도록 `searchText` 필드 추가)
   const transformedData = vnicProfiles.map((vnic) => ({
     ...vnic,
-    name: (
+    _name: (
       <TableRowClick type="vnicProfile" id={vnic?.id}>
         {vnic?.name}
       </TableRowClick>

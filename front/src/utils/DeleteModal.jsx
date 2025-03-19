@@ -2,9 +2,15 @@ import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import BaseModal from "../components/modal/BaseModal";
-import { warnButton } from "../components/Icon";
 
-const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
+const DeleteModal = ({
+  isOpen=false, 
+  onClose, 
+  label, 
+  data, 
+  api, 
+  navigation
+}) => {
   const navigate = useNavigate();
   const { mutate: deleteApi } = api;
 
@@ -14,13 +20,14 @@ const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
     const dataArray = Array.isArray(data) ? data : [data];
     return {
       ids: dataArray.map((item) => item.id),
-      names: dataArray.map((item) => item.name),
+      names: dataArray.map((item) => {
+        return item?.name || item?.alias || item?.description /* 디스크일 때 */
+      }),
     };
   }, [data]);
 
   const handleFormSubmit = () => {
-    if (!ids.length) 
-      return console.error(`삭제할 ${label} ID가 없습니다.`);
+    if (!ids.length) return console.error(`삭제할 ${label} ID가 없습니다.`);
 
     ids.forEach((id, index) => {
       deleteApi(id, {
@@ -38,24 +45,19 @@ const DeleteModal = ({ isOpen, onClose, label, data, api, navigation }) => {
     });
   };
 
+  console.log("...");
+
   return (
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
       targetName={label}
+      shouldWarn={true}
       submitTitle={"삭제"}
+      promptText={`${JSON.stringify(names.join(", "), null, 2)} 를(을) 삭제하시겠습니까?`}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "660px", height: "200px" }} 
-    >
-      <div className="popup-content-outer">
-        <div className="disk-delete-box">
-          <div>
-            {warnButton()}
-            <span> {JSON.stringify(names.join(", "), null, 2)} 를(을) 삭제하시겠습니까? </span>
-          </div>
-        </div>
-      </div>
-    </BaseModal>
+      contentStyle={{ width: "660px", height: "200px" }}
+    />
   );
 };
 

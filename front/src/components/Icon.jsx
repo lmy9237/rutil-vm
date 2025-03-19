@@ -16,7 +16,6 @@ import {
   faTimes,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
-import { RVI24, rvi24ErrorRed } from "./icons/RutilVmIcons";
 
 /**
  * @name icon
@@ -290,8 +289,7 @@ export const renderHostStatusIcon = (status) => {
 
 export const renderSeverityIcon = (severity) => {
   switch (severity) {
-    case "ALERT":
-      return "알림";
+    case "ALERT": return "알림";
     case "NORMAL":
       return (
         <FontAwesomeIcon
@@ -321,17 +319,4 @@ export const renderSeverityIcon = (severity) => {
     default:
       return severity;
   }
-};
-
-export const xButton = () => {
-  return <FontAwesomeIcon icon={faTimes} fixedWidth />;
-};
-
-export const warnButton = () => {
-  return (
-    <RVI24
-      className="error-icon"
-      iconDef={rvi24ErrorRed}
-    />
-  );
 };

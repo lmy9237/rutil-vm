@@ -208,7 +208,7 @@ const TableColumnsInfo = {
     { header: '현재 사용중', accessor: 'used', clickable: false },
   ],
   TEMPLATES: [
-    { header: '이름', accessor: 'name', clickable: true },
+    { header: '이름', accessor: '_name', clickable: true },
     { header: '생성일자', accessor: 'creationTime', clickable: false },
     { header: '상태', accessor: 'status', clickable: false },
     { header: '버전', accessor: 'version', clickable: false },
@@ -346,7 +346,7 @@ const TableColumnsInfo = {
   ],
 
   VNIC_PROFILES: [
-    { header: '이름', accessor: 'name', clickable: false },
+    { header: '이름', accessor: '_name', clickable: false },
     { header: '네트워크', accessor: 'network', clickable: true },
     { header: '데이터 센터', accessor: 'dataCenter', clickable: true },
     { header: '네트워크 필터', accessor: 'networkFilter', clickable: false },
@@ -444,7 +444,7 @@ const TableColumnsInfo = {
     
 //------------------------------------------
   DISKS_FROM_STORAGE_DOMAIN: [
-    { header: '별칭', accessor: 'alias', clickable: false , width: '16%' },
+    { header: '별칭', accessor: '_alias', clickable: false , width: '16%' },
     { header: '부팅가능', accessor: 'icon1', clickable: false },
     { header: '공유가능', accessor: 'sharable', clickable: false },
     { header: '가상 크기', accessor: 'virtualSize', clickable: false },

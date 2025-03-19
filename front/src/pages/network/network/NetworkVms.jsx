@@ -1,8 +1,7 @@
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
-import VmDeleteModal from "../../../components/modal/vm/VmDeleteModal";
 import {
   renderUpDownStatusIcon,
   renderVmStatusIcon,

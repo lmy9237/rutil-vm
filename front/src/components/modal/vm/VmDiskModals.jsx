@@ -2,8 +2,8 @@ import React from "react";
 import VmDiskConnectionModal from "./VmDiskConnectionModal";
 import VmDiskModal from "./VmDiskModal";
 import VmDiskActionModal from "./VmDiskActionModal";
-import VmDiskDeleteModal from "./VmDiskDeleteModal";
 import { useDisksFromVM, useVmById } from "../../../api/RQHook";
+import DeleteModal from "../../../utils/DeleteModal";
 
 /**
  * @name VmDiskModals
@@ -54,8 +54,9 @@ const VmDiskModals = ({
       />
     ),
     delete: (
-      <VmDiskDeleteModal
+      <DeleteModal
         isOpen={activeModal === "delete"}
+        label={"가상머신 디스크"}
         vmId={vmId || ""}
         data={selectedDisks}
         onClose={onClose}
