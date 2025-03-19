@@ -5,12 +5,12 @@ import {
   rvi16Globe,
   rvi16Host,
   rvi16Desktop,
+  rvi16DesktopFlag,
   rvi16DataCenter,
   rvi16Cluster,
   rvi16DesktopSleep,
 } from "../../icons/RutilVmIcons";
 import { useAllTreeNavigations } from "../../../api/RQHook";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
   const navigate = useNavigate();
@@ -136,6 +136,8 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
                                 <TreeMenuItem level={5}
                                   title={vm.name}
                                   iconDef={rvi16Desktop}
+                                  // TODO: host에 붙어있지만 상태가 이상한 경우에 대한 조건처리
+                                  // iconDef={rvi16DesktopFlag()}
                                   isSelected={() => location.pathname.includes(vm.id)}
                                   isNextLevelVisible={isHostOpen}
                                   isChevronVisible={false}

@@ -37,6 +37,7 @@ const HostInfo = () => {
 
   const isUp = host?.status === "UP";
   const isMaintenance = host?.status === "MAINTENANCE";
+  const isNonOperational = host?.status === "NON_OPERATIONAL"
 
   const [activeTab, setActiveTab] = useState("general");
   const [activeModal, setActiveModal] = useState(null);
@@ -63,9 +64,8 @@ const HostInfo = () => {
   }, [section]);
 
   const handleTabClick = (tab) => {
-    console.log(`HostInfo > handleTabClick ... tab: ${tab}`)
-    const path =
-      tab === "general"
+    console.log(`HostInfo > handleTabClick ... tab: ${tab}`);
+    const path = tab === "general"
         ? `/computing/hosts/${hostId}`
         : `/computing/hosts/${hostId}/${tab}`;
     navigate(path);
@@ -79,7 +79,7 @@ const HostInfo = () => {
 
   // 탭 메뉴 관리
   const renderSectionContent = () => {
-    console.log(`HostInfo > renderSectionContent ... `)
+    console.log(`HostInfo > renderSectionContent ... `);
     const SectionComponent = {
       general: HostGeneral,
       vms: HostVms,
@@ -92,18 +92,63 @@ const HostInfo = () => {
 
   // 편집, 삭제 버튼들
   const sectionHeaderButtons = [
-    { type: "edit", label: "편집", disabled: !isUp, onClick: () => openModal("edit"), },
-    { type: "delete", label: "삭제", disabled: !isMaintenance, onClick: () => openModal("delete"), },
+    {
+      type: "edit",
+      label: "편집",
+      disabled: !isUp,
+      onClick: () => openModal("edit"),
+    },
+    {
+      type: "delete",
+      label: "삭제",
+      disabled: !isMaintenance,
+      onClick: () => openModal("delete"),
+    },
   ];
 
   const popupItems = [
-    { type: "deactivate", label: "유지보수", disabled: !isUp, onClick: () => openModal("deactivate"), },
-    { type: "activate", label: "활성화", disabled: !isMaintenance, onClick: () => openModal("activate"), },
-    { type: "restart", label: "재시작", disabled: !isUp, onClick: () => openModal("restart"), },
-    { type: "reInstall", label: "다시 설치", disabled: isUp, onClick: () => openModal("reInstall"), },
-    { type: "register", label: "인증서 등록", disabled: isUp, onClick: () => openModal("register"), },
-    { type: "haOn", label: "글로벌 HA 유지 관리를 활성화", disabled: !isUp, onClick: () => openModal("haOn"), },
-    { type: "haOff", label: "글로벌 HA 유지 관리를 비활성화", disabled: !isUp, onClick: () => openModal("haOff"), },
+    {
+      type: "deactivate",
+      label: "유지보수",
+      disabled: !isUp && isNonOperational,
+      onClick: () => openModal("deactivate"),
+    },
+    {
+      type: "activate",
+      label: "활성화",
+      disabled: isMaintenance ,
+      onClick: () => openModal("activate"),
+    },
+    {
+      type: "restart",
+      label: "재시작",
+      disabled: !isUp,
+      onClick: () => openModal("restart"),
+    },
+    {
+      type: "reInstall",
+      label: "다시 설치",
+      disabled: isUp,
+      onClick: () => openModal("reInstall"),
+    },
+    {
+      type: "register",
+      label: "인증서 등록",
+      disabled: isUp,
+      onClick: () => openModal("register"),
+    },
+    {
+      type: "haOn",
+      label: "글로벌 HA 유지 관리를 활성화",
+      disabled: !isUp,
+      onClick: () => openModal("haOn"),
+    },
+    {
+      type: "haOff",
+      label: "글로벌 HA 유지 관리를 비활성화",
+      disabled: !isUp,
+      onClick: () => openModal("haOff"),
+    },
   ];
 
   console.log("...");
@@ -123,7 +168,10 @@ const HostInfo = () => {
           handleSectionClick={handleTabClick}
         />
         <div className="w-full info-content">
-          <Path pathElements={pathData} basePath={`/computing/hosts/${hostId}`}/>
+          <Path
+            pathElements={pathData}
+            basePath={`/computing/hosts/${hostId}`}
+          />
           {renderSectionContent()}
         </div>
       </div>
