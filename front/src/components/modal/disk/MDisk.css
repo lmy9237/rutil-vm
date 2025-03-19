@@ -3,14 +3,15 @@
   display: flex;
   justify-content: right;
   width: 100%;
-  border: 1px solid gray;
 }
 .disk-new-img-right>.input-checkbox{
   display: flex;
-  justify-content: right;
 }
 .disk-new-img-left {
   width: 100%;
+}
+.img-checkbox-outer{
+  margin-left: 24px;
 }
 /*이미지,직접lun버튼*/
 .storage-disk-new-popup {
@@ -34,17 +35,25 @@
 
 /*디스크(업로드)*/
 .storage-upload-first {
-  padding: 12px 0;
   display: flex;
-  margin-bottom: 20px;
+  height: 62px;
+  border-bottom: 1px solid var(--color-table);
 }
 .storage-upload-first > button {
   font-weight: 600;
   margin-right: 16px;
 }
-
+.storage-upload-first>p{
+  font-size: var(--fs-16);
+}
+.storage-upload-first>div{
+  width: 55%;
+}
+.storage-upload-first input{
+  
+}
 .disk-option {
-  background-color: #e6e6e6;
-  font-weight: 600;
-  padding: 10px;
+  font-size: var(--fs-18);
+  padding-top: 16px;
+  font-weight: 700;
 }

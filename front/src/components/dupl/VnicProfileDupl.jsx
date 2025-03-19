@@ -83,7 +83,7 @@ const VnicProfileDupl = ({
           <VnicProfileActionButtons
             openModal={openModal}
             isEditDisabled={!row}
-            type="context"
+            actionType="context"
           />,
         ]}
       />

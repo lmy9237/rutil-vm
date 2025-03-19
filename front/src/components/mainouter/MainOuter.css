@@ -38,7 +38,6 @@
 .aside-outer {
   position: relative;
   overflow: hidden;
-  margin-right: 5px;
   width: var(--w-aside-menu);height: 100%;
   background:white;
 

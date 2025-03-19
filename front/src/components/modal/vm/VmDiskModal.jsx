@@ -369,35 +369,42 @@ const VmDiskModal = ({
             </div>
 
             <div className="disk-new-img-right">
-              <LabelCheckbox 
-                label="삭제 후 초기화" 
-                id="wipeAfterDelete" 
-                checked={Boolean(formState.wipeAfterDelete)} 
-                onChange={handleInputChangeCheck("wipeAfterDelete")}
-              />
-              <LabelCheckbox 
-                label="부팅 가능" 
-                id="bootable" 
-                checked={Boolean(formState.bootable)} 
-                onChange={handleInputChangeCheck("bootable")}
-                disabled={hasBootableDisk} 
-                // TODO: bootable처리 
-              />
-
-              <LabelCheckbox 
-                label="공유 가능" 
-                id="sharable" 
-                checked={Boolean(formState.sharable)} 
-                onChange={handleInputChangeCheck("sharable")} 
-                disabled={editMode} 
-              />
-              <LabelCheckbox 
-                label="읽기 전용" 
-                id="readOnly" 
-                checked={Boolean(formState.readOnly)} 
-                onChange={handleInputChangeCheck("readOnly")} 
-                disabled={editMode}
-              />
+              <div className='img-checkbox-outer'>
+                <LabelCheckbox 
+                  label="삭제 후 초기화" 
+                  id="wipeAfterDelete" 
+                  checked={Boolean(formState.wipeAfterDelete)} 
+                  onChange={handleInputChangeCheck("wipeAfterDelete")}
+                />
+              </div>
+              <div className='img-checkbox-outer'>
+                <LabelCheckbox 
+                  label="부팅 가능" 
+                  id="bootable" 
+                  checked={Boolean(formState.bootable)} 
+                  onChange={handleInputChangeCheck("bootable")}
+                  disabled={hasBootableDisk} 
+                  // TODO: bootable처리 
+                />
+              </div>
+              <div className='img-checkbox-outer'>
+                <LabelCheckbox 
+                  label="공유 가능" 
+                  id="sharable" 
+                  checked={Boolean(formState.sharable)} 
+                  onChange={handleInputChangeCheck("sharable")} 
+                  disabled={editMode} 
+                />
+              </div>
+              <div className='img-checkbox-outer'>
+                <LabelCheckbox 
+                  label="읽기 전용" 
+                  id="readOnly" 
+                  checked={Boolean(formState.readOnly)} 
+                  onChange={handleInputChangeCheck("readOnly")} 
+                  disabled={editMode}
+                />
+              </div>
               {/* 
               <LabelCheckbox 
                 label="취소 활성화" 
@@ -407,12 +414,14 @@ const VmDiskModal = ({
                 disabled={editMode}
               /> 
               */}
-              <LabelCheckbox 
-                label="증분 백업 사용" 
-                id="backup" 
-                checked={Boolean(formState.backup)} 
-                onChange={handleInputChangeCheck("backup")}
-              />
+              <div className='img-checkbox-outer'>
+                <LabelCheckbox 
+                  label="증분 백업 사용" 
+                  id="backup" 
+                  checked={Boolean(formState.backup)} 
+                  onChange={handleInputChangeCheck("backup")}
+                />
+               </div>
             </div>
           </div>
         )}

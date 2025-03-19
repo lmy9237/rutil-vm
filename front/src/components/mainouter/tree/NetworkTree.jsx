@@ -8,90 +8,102 @@ import {
 } from "../../icons/RutilVmIcons";
 
 import { useAllTreeNavigations } from "../../../api/RQHook";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
-const NetworkTree = ({
-  selectedDiv,
-  setSelectedDiv,
-  getBackgroundColor,
-  getPaddingLeft,
-}) => {
+const NetworkTree = ({ selectedDiv, setSelectedDiv }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ API 호출 (네트워크 트리리 데이터)
+  // API 호출 (네트워크 트리 데이터)
   const { data: navNetworks } = useAllTreeNavigations("network");
 
-  const [openDataCenters, setOpenDataCenters] = useState(JSON.parse(localStorage.getItem("openDataCenters")) || {});
-  const [openNetworkDataCenters, setOpenNetworkDataCenters] = useState(() => JSON.parse(localStorage.getItem("openNetworkDataCenters")) || {});
+  // 트리 상태 (초기값: localStorage에서 가져오기)
+  const [openDataCenters, setOpenDataCenters] = useState(() => {
+    return JSON.parse(localStorage.getItem("openDataCenters")) || { network: false };
+  });
+  const [openNetworkDataCenters, setOpenNetworkDataCenters] = useState(() => {
+    return JSON.parse(localStorage.getItem("openNetworkDataCenters")) || {};
+  });
+
+  // localStorage 반영
   useEffect(() => {
     localStorage.setItem("openDataCenters", JSON.stringify(openDataCenters));
     localStorage.setItem("openNetworkDataCenters", JSON.stringify(openNetworkDataCenters));
   }, [openDataCenters, openNetworkDataCenters]);
-  
+
+  // 데이터센터 토글 (펼침/접기)
   const toggleNetworkDataCenter = (dataCenterId) => {
-    setOpenNetworkDataCenters((prevState) => ({
-      ...prevState,
-      [dataCenterId]: !prevState[dataCenterId],
-    }));
+    setOpenNetworkDataCenters((prevState) => {
+      const newState = { ...prevState, [dataCenterId]: !prevState[dataCenterId] };
+      localStorage.setItem("openNetworkDataCenters", JSON.stringify(newState));
+      return newState;
+    });
   };
 
   return (
     <div id="network_chart">
       {/* 첫 번째 레벨 (Rutil Manager) */}
-      <TreeMenuItem level={1}
+      <TreeMenuItem
+        level={1}
         title="Rutil Manager"
         iconDef={rvi16Globe}
         isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
         isNextLevelVisible={openDataCenters.network}
+        isChevronVisible={true} 
         onChevronClick={() =>
-          setOpenDataCenters((prev) => ({
-            ...prev,
-            network: !prev.network,
-          }))
+          setOpenDataCenters((prev) => {
+            const newState = { ...prev, network: !prev.network };
+            localStorage.setItem("openDataCenters", JSON.stringify(newState));
+            return newState;
+          })
         }
         onClick={() => {
           setSelectedDiv("rutil-manager");
           navigate("/networks/rutil-manager");
         }}
       />
+
       {/* 두 번째 레벨 (Data Center) */}
-      {navNetworks && navNetworks.map((dataCenter) => {
-        const isDataCenterOpen = openNetworkDataCenters[dataCenter.id] || false;
-        const hasNetworks = Array.isArray(dataCenter.networks) && dataCenter.networks.length > 0;
-        return (
-          <div key={dataCenter.id}>
-            <TreeMenuItem level={2}
-              title={dataCenter.name}
-              iconDef={rvi16DataCenter}
-              isSelected={() => location.pathname.includes(dataCenter.id)}
-              isNextLevelVisible={isDataCenterOpen}
-              isChevronVisible={hasNetworks}
-              onChevronClick={() => toggleNetworkDataCenter(dataCenter.id)}
-              onClick={() => {
-                setSelectedDiv(dataCenter.id);
-                navigate(`/networks/datacenters/${dataCenter.id}/clusters`);
-              }}
-            />
-            {/* 세 번째 레벨 */}
-            {isDataCenterOpen && dataCenter.networks.map((network) => (
-              <TreeMenuItem level={3}
-                key={network.id}
-                title={network.name}
-                iconDef={rvi16Network}
-                isSelected={() => location.pathname.includes(network.id)}
-                isNextLevelVisible={false}
-                isChevronVisible={false}
-                onChevronClick={() => {}}
+      {openDataCenters.network &&
+        navNetworks &&
+        navNetworks.map((dataCenter) => {
+          const isDataCenterOpen = openNetworkDataCenters[dataCenter.id] || false;
+          const hasNetworks = Array.isArray(dataCenter.networks) && dataCenter.networks.length > 0;
+          return (
+            <div key={dataCenter.id}>
+              <TreeMenuItem
+                level={2}
+                title={dataCenter.name}
+                iconDef={rvi16DataCenter}
+                isSelected={() => location.pathname.includes(dataCenter.id)}
+                isNextLevelVisible={isDataCenterOpen}
+                isChevronVisible={hasNetworks}
+                onChevronClick={() => toggleNetworkDataCenter(dataCenter.id)}
                 onClick={() => {
-                  setSelectedDiv(network.id);
-                  navigate(`/networks/${network.id}`);
+                  setSelectedDiv(dataCenter.id);
+                  navigate(`/networks/datacenters/${dataCenter.id}/clusters`);
                 }}
               />
-            ))}
-          </div>
-        );
-      })}
+
+              {/* 세 번째 레벨 (네트워크) */}
+              {isDataCenterOpen &&
+                dataCenter.networks.map((network) => (
+                  <TreeMenuItem
+                    level={3}
+                    key={network.id}
+                    title={network.name}
+                    iconDef={rvi16Network}
+                    isSelected={() => location.pathname.includes(network.id)}
+                    isNextLevelVisible={false}
+                    isChevronVisible={false}
+                    onClick={() => {
+                      setSelectedDiv(network.id);
+                      navigate(`/networks/${network.id}`);
+                    }}
+                  />
+                ))}
+            </div>
+          );
+        })}
     </div>
   );
 };

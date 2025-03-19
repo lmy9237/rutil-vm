@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import Loading from "../../../common/Loading";
 import { useDisksFromVM } from "../../../../api/RQHook";
+import ActionButton from "../../../button/ActionButton";
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
 
@@ -67,8 +68,16 @@ const VmDisk = ({
       <div className="instance-image center py-2">
         <div className="font-bold">인스턴스 이미지</div>
         <div style={{ display: "flex", gap: "8px" }}>
-          <button onClick={() => setIsConnectionPopupOpen(true)}>연결</button>
-          <button onClick={() => setIsCreatePopupOpen(true)}>생성</button>
+          <ActionButton
+            label="연결"
+            actionType="default"
+            onClick={() => setIsConnectionPopupOpen(true)}
+          />
+          <ActionButton
+            label="생성"
+            actionType="default"
+            onClick={() => setIsCreatePopupOpen(true)}
+          />
         </div>
       </div>
 

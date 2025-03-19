@@ -212,9 +212,9 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
               />
             </div>
             <div className="disk-new-img-right">
-              <div><LabelCheckbox label="삭제 후 초기화" id="wipeAfterDelete" checked={formState.wipeAfterDelete} onChange={handleInputChangeCheck('wipeAfterDelete')} /></div>
-              <LabelCheckbox label="공유 가능" id="sharable" checked={formState.sharable} onChange={handleInputChangeCheck('sharable')} disabled={editMode} />
-              <LabelCheckbox label="증분 백업 사용" id="backup" checked={formState.backup} onChange={handleInputChangeCheck('backup')}/>
+              <div className='img-checkbox-outer'><LabelCheckbox label="삭제 후 초기화" id="wipeAfterDelete" checked={formState.wipeAfterDelete} onChange={handleInputChangeCheck('wipeAfterDelete')} /></div>
+              <div className='img-checkbox-outer'><LabelCheckbox label="공유 가능" id="sharable" checked={formState.sharable} onChange={handleInputChangeCheck('sharable')} disabled={editMode} /></div>
+              <div className='img-checkbox-outer'><LabelCheckbox label="증분 백업 사용" id="backup" checked={formState.backup} onChange={handleInputChangeCheck('backup')}/></div>
             </div>
           </div>
         )} 

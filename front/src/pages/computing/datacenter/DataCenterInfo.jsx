@@ -57,7 +57,7 @@ const DataCenterInfo = () => {
     { id: "hosts", label: "호스트" },
     { id: "vms", label: "가상머신" },
     { id: "storageDomains", label: "스토리지" },
-    { id: "networks", label: "논리 네트워크" },
+    { id: "network", label: "논리 네트워크" },
     { id: "events", label: "이벤트" },
   ];
 
@@ -92,7 +92,7 @@ const DataCenterInfo = () => {
       hosts: DataCenterHosts,
       vms: DataCenterVms,
       storageDomains: DataCenterDomains,
-      networks: DataCenterNetworks,
+      network: DataCenterNetworks,
       events: DataCenterEvents,
     }[activeTab];
     return SectionComponent ? (

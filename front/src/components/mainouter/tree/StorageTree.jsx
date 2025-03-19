@@ -8,112 +8,122 @@ import {
   rvi16Cloud,
 } from "../../icons/RutilVmIcons";
 
-const StorageTree = ({
-  selectedDiv,
-  setSelectedDiv,
-  getBackgroundColor,
-  getPaddingLeft,
-}) => {
+const StorageTree = ({ selectedDiv, setSelectedDiv }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [isSecondVisible, setIsSecondVisible] = useState(JSON.parse(localStorage.getItem("isSecondVisible")) || false);
-  const [openDataCenters, setOpenDataCenters] = useState(JSON.parse(localStorage.getItem("openDataCenters")) || {});
-  const [openDomains, setOpenDomains] = useState(JSON.parse(localStorage.getItem("openDomains")) || {});
+  // 로컬 스토리지에서 상태 불러오기
+  const [isSecondVisible, setIsSecondVisible] = useState(() => {
+    return JSON.parse(localStorage.getItem("isSecondVisible")) || false;
+  });
+
+  const [openDataCenters, setOpenDataCenters] = useState(() => {
+    return JSON.parse(localStorage.getItem("openDataCenters")) || {};
+  });
+
+  const [openDomains, setOpenDomains] = useState(() => {
+    return JSON.parse(localStorage.getItem("openDomains")) || {};
+  });
+
+  // 상태 변경 시 로컬 스토리지 업데이트
   useEffect(() => {
     localStorage.setItem("isSecondVisible", JSON.stringify(isSecondVisible));
     localStorage.setItem("openDataCenters", JSON.stringify(openDataCenters));
     localStorage.setItem("openDomains", JSON.stringify(openDomains));
   }, [isSecondVisible, openDataCenters, openDomains]);
-  
-  const { 
-    data: navStorageDomains
-  } = useAllTreeNavigations("storagedomain");
-  
-  const toggleDomain = (domainId) => {
-    setOpenDomains((prevState) => ({
-      ...prevState,
-      [domainId]: !prevState[domainId],
-    }));
-  };
 
+  // API 호출 (스토리지 트리 데이터)
+  const { data: navStorageDomains } = useAllTreeNavigations("storagedomain");
+
+  // 데이터센터 접기/펼치기 토글
   const toggleDataCenter = (dataCenterId) => {
-    setOpenDataCenters((prevState) => ({
-      ...prevState,
-      [dataCenterId]: !prevState[dataCenterId],
-    }));
+    setOpenDataCenters((prevState) => {
+      const newState = { ...prevState, [dataCenterId]: !prevState[dataCenterId] };
+      localStorage.setItem("openDataCenters", JSON.stringify(newState));
+      return newState;
+    });
   };
 
-
+  // 도메인 접기/펼치기 토글
+  const toggleDomain = (domainId) => {
+    setOpenDomains((prevState) => {
+      const newState = { ...prevState, [domainId]: !prevState[domainId] };
+      localStorage.setItem("openDomains", JSON.stringify(newState));
+      return newState;
+    });
+  };
 
   return (
     <div id="storage_chart">
       {/* 첫 번째 레벨 (Rutil Manager) */}
-      <TreeMenuItem level={1}
+      <TreeMenuItem
+        level={1}
         title="Rutil Manager"
         iconDef={rvi16Globe}
         isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
-        isNextLevelVisible={openDataCenters.network}
-        onChevronClick={() => setIsSecondVisible(!isSecondVisible)}
+        isNextLevelVisible={isSecondVisible}
+        isChevronVisible={true}
+        onChevronClick={() => setIsSecondVisible((prev) => !prev)}
         onClick={() => {
           setSelectedDiv("rutil-manager");
           navigate("/storages/rutil-manager");
         }}
       />
+
       {/* 두 번째 레벨 (Data Center) */}
-      {isSecondVisible && navStorageDomains && navStorageDomains.map((dataCenter) => {
-        const isDataCenterOpen = openDataCenters[dataCenter.id] || false;
-        const hasDomains = Array.isArray(dataCenter.storageDomains) && dataCenter.storageDomains.length > 0;
-        return (
-          <div key={dataCenter.id}>
-            <TreeMenuItem level={2}
-              title={dataCenter.name}
-              iconDef={rvi16DataCenter}
-              isSelected={() => location.pathname.includes(dataCenter.id)}
-              isNextLevelVisible={openDataCenters[dataCenter.id]}
-              onChevronClick={() => toggleDataCenter(dataCenter.id)}
-              onClick={() => {
-                setSelectedDiv(dataCenter.id);
-                navigate(`/storages/datacenters/${dataCenter.id}/clusters`);
-              }}
-            />
-            {/* 세 번째 레벨 (Storage Domains) */}
-            {isDataCenterOpen && Array.isArray(dataCenter.storageDomains) && dataCenter.storageDomains.map((domain) => {
-              const isDomainOpen = openDomains[domain.id] || false;
-              const hasDisks = Array.isArray(domain.disks) && domain.disks.length > 0;
-              return (
-                <div key={domain.id}>
-                  <TreeMenuItem level={3}
-                    title={domain.name}
-                    iconDef={rvi16Cloud}
-                    isSelected={() => location.pathname.includes(domain.id)}
-                    isNextLevelVisible={isDomainOpen}
-                    isChevronVisible={hasDisks}
-                    onChevronClick={() => toggleDomain(domain.id)}
-                    onClick={() => {
-                      setSelectedDiv(domain.id);
-                      navigate(`/storages/domains/${domain.id}`);
-                    }}
-                  />
-                  {/* {hasDisks && (
-                    <TreeMenuItem level={4}
-                      title={domain.name}
-                      iconDef={rvi16Cloud}
-                      isSelected={() => location.pathname.includes(domain.id)}
-                      isNextLevelVisible={isDomainOpen}
-                      isChevronVisible={hasDisks}
-                      onChevronClick={() => toggleDomain(domain.id)}
-                      onClick={() => {
-                        toggleDomain(domain.id);
-                      }}
-                    />
-                  )} */}
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
+      {isSecondVisible &&
+        navStorageDomains &&
+        navStorageDomains.map((dataCenter) => {
+          const isDataCenterOpen = openDataCenters[dataCenter.id] || false;
+          const hasDomains =
+            Array.isArray(dataCenter.storageDomains) &&
+            dataCenter.storageDomains.length > 0;
+
+          return (
+            <div key={dataCenter.id}>
+              <TreeMenuItem
+                level={2}
+                title={dataCenter.name}
+                iconDef={rvi16DataCenter}
+                isSelected={() => location.pathname.includes(dataCenter.id)}
+                isNextLevelVisible={isDataCenterOpen}
+                isChevronVisible={hasDomains}
+                onChevronClick={() => toggleDataCenter(dataCenter.id)}
+                onClick={() => {
+                  setSelectedDiv(dataCenter.id);
+                  navigate(`/storages/datacenters/${dataCenter.id}/clusters`);
+                }}
+              />
+
+              {/* 세 번째 레벨 (Storage Domains) */}
+              {isDataCenterOpen &&
+                Array.isArray(dataCenter.storageDomains) &&
+                dataCenter.storageDomains.map((domain) => {
+                  const isDomainOpen = openDomains[domain.id] || false;
+                  const hasDisks =
+                    Array.isArray(domain.disks) && domain.disks.length > 0;
+
+                  return (
+                    <div key={domain.id}>
+                      <TreeMenuItem
+                        level={3}
+                        title={domain.name}
+                        iconDef={rvi16Cloud}
+                        isSelected={() => location.pathname.includes(domain.id)}
+                        isNextLevelVisible={isDomainOpen}
+                        isChevronVisible={hasDisks}
+                        onChevronClick={() => toggleDomain(domain.id)}
+                        onClick={() => {
+                          setSelectedDiv(domain.id);
+                          navigate(`/storages/domains/${domain.id}`);
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+            </div>
+          );
+        })}
     </div>
   );
 };

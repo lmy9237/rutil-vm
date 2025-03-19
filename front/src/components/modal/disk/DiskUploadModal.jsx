@@ -174,21 +174,24 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
     >
       {/* <div className="storage-disk-upload-popup modal"> */}
       <div className="popup-content-outer">
-        <div className="storage-upload-first">
-          <input
-            type="file"
-            id="file"
-            accept=".iso"
-            onChange={(e) => {
-              const uploadedFile = e.target.files[0];
-              if (uploadedFile) {
-                setFile(uploadedFile); // 파일 저장
-                setAlias(uploadedFile.name);
-                setDescription(uploadedFile.name);
-                setSize(Math.ceil(uploadedFile.size));
-              }
-            }}
-          />
+        <div className="storage-upload-first center">
+          <p>파일 선택</p>
+          <div>
+            <input
+              type="file"
+              id="file"
+              accept=".iso"
+              onChange={(e) => {
+                const uploadedFile = e.target.files[0];
+                if (uploadedFile) {
+                  setFile(uploadedFile); // 파일 저장
+                  setAlias(uploadedFile.name);
+                  setDescription(uploadedFile.name);
+                  setSize(Math.ceil(uploadedFile.size));
+                }
+              }}
+            />
+          </div>
         </div>
 
         <div>
@@ -379,21 +382,26 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
               */}
 
               <div className="disk-new-img-right">
-                <LabelCheckbox
-                  label="삭제 후 초기화"
-                  id="wipeAfterDelete"
-                  checked={wipeAfterDelete}
-                  onChange={(e) => setWipeAfterDelete(e.target.checked)}
-                />
+                <div className='img-checkbox-outer'>
+                  <LabelCheckbox
+                    label="삭제 후 초기화"
+                    id="wipeAfterDelete"
+                    checked={wipeAfterDelete}
+                    onChange={(e) => setWipeAfterDelete(e.target.checked)}
+                  />
+                </div>
 
-                <LabelCheckbox
-                  label="공유 가능"
-                  id="sharable"
-                  className="sharable"
-                  checked={sharable}
-                  onChange={(e) => setSharable(e.target.checked)}
-                />
+                <div className='img-checkbox-outer'>
+                  <LabelCheckbox
+                    label="공유 가능"
+                    id="sharable"
+                    className="sharable"
+                    checked={sharable}
+                    onChange={(e) => setSharable(e.target.checked)}
+                  />
+                 </div>
               </div>
+
             </div>
         </div>
       </div>

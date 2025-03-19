@@ -165,6 +165,7 @@ input[disabled] {
   overflow-y: auto;
   background-color: white;
   overflow-x: hidden;
+  border-left: var(--border-box);
 }
 /* .dash-boxs+.bar+.dash-section{
     height: 100%;
