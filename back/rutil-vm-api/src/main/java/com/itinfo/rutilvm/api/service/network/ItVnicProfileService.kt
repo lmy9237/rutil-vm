@@ -69,15 +69,6 @@ interface ItVnicProfileService{
      */
     @Throws(Error::class)
     fun remove(vnicProfileId: String): Boolean
-    /**
-     * [ItVnicProfileService.removeMultiple]
-     * 네트워크 - vNIC Profile 다중 삭제
-     *
-     * @param vnicProfileIdList List<[String]> vnicProfile Id 리스트
-     * @return Map<[String], [String]>
-     */
-    @Throws(Error::class)
-    fun removeMultiple(vnicProfileIdList: List<String>): Map<String, String>
 
     /**
      * [ItVnicProfileService.findAllVmsFromVnicProfile]
@@ -100,31 +91,27 @@ interface ItVnicProfileService{
 }
 @Service
 class VnicProfileServiceImpl(
-
 ): BaseService(), ItVnicProfileService {
 
     @Throws(Error::class)
     override fun findAll(): List<VnicProfileVo> {
         log.info("findAll ... ")
-        val res: List<VnicProfile> =
-            conn.findAllVnicProfiles().getOrDefault(listOf())
-        return res.toVnicProfileVos(conn)
+        val res: List<VnicProfile> = conn.findAllVnicProfiles(follow = "network.datacenter").getOrDefault(emptyList())
+        return res.toVnicProfileMenus(conn)
     }
 
     @Throws(Error::class)
     override fun findAllFromNetwork(networkId: String): List<VnicProfileVo> {
         log.info("findAllFromNetwork ... networkId: {}", networkId)
-        val res: List<VnicProfile> = conn.findAllVnicProfilesFromNetwork(networkId)
-            .getOrDefault(listOf())
-        return res.toVnicProfileVos(conn)
+        val res: List<VnicProfile> = conn.findAllVnicProfilesFromNetwork(networkId, follow = "network.datacenter").getOrDefault(emptyList())
+        return res.toVnicProfileMenus(conn)
     }
 
     @Throws(Error::class)
     override fun findOne(vnicProfileId: String): VnicProfileVo? {
         log.info("findOne ... vcId: {}", vnicProfileId)
-        val res: VnicProfile? = conn.findVnicProfile(vnicProfileId)
-            .getOrNull()
-        return res?.toVnicProfileVo(conn)
+        val res: VnicProfile? = conn.findVnicProfile(vnicProfileId, follow = "network.datacenter").getOrNull()
+        return res?.toVnicProfileMenu(conn)
     }
 
 
@@ -135,15 +122,16 @@ class VnicProfileServiceImpl(
             vnicProfileVo.networkVo.id,
             vnicProfileVo.toAddVnicProfileBuilder()
         ).getOrNull()
-        return res?.toVnicProfileVo(conn)
+        return res?.toVnicProfileIdName()
     }
 
     @Throws(Error::class)
     override fun update(vnicProfileVo: VnicProfileVo): VnicProfileVo? {
         log.info("update ... ")
-        val res: VnicProfile? = conn.updateVnicProfile(vnicProfileVo.toEditVnicProfileBuilder())
-            .getOrNull()
-        return res?.toVnicProfileVo(conn)
+        val res: VnicProfile? = conn.updateVnicProfile(
+			vnicProfileVo.toEditVnicProfileBuilder()
+		).getOrNull()
+        return res?.toVnicProfileIdName()
     }
 
     @Throws(Error::class)
@@ -154,31 +142,9 @@ class VnicProfileServiceImpl(
     }
 
     @Throws(Error::class)
-    override fun removeMultiple(vnicProfileIdList: List<String>): Map<String, String> {
-        val result = mutableMapOf<String, String>() // 성공/실패 결과를 저장할 Map
-
-        vnicProfileIdList.forEach { vnicId ->
-            val vnicName: String = conn.findVnicProfile(vnicId).getOrNull()?.name().toString()
-            try {
-                log.info("removeMultiple ... vnicId: {}", vnicId)
-                val isSuccess = conn.removeVnicProfile(vnicId).isSuccess
-
-                if (isSuccess) {
-                    result[vnicName] = "Success"
-                }
-            } catch (ex: Exception) {
-                log.error("Failed to remove vnic: $vnicName", ex)
-                result[vnicName] = "Failure: ${ex.message}" // 실패한 경우 메시지 추가
-            }
-        }
-        return result
-    }
-
-    @Throws(Error::class)
     override fun findAllVmsFromVnicProfile(vnicProfileId: String): List<VmViewVo> {
         log.info("findAllVmsFromVnicProfile ... vnicProfileId: {}", vnicProfileId)
-        val res: List<Vm> = conn.findAllVms(follow = "nics")
-            .getOrDefault(listOf())
+        val res: List<Vm> = conn.findAllVms(follow = "nics").getOrDefault(emptyList())
             .filter { vm ->
                 vm.nicsPresent() && vm.nics().any { nic ->
                     nic.vnicProfilePresent() && nic.vnicProfile().id() == vnicProfileId
@@ -190,8 +156,7 @@ class VnicProfileServiceImpl(
     @Throws(Error::class)
     override fun findAllTemplatesFromVnicProfile(vnicProfileId: String): List<TemplateVo> {
         log.info("findAllTemplatesFromVnicProfile ... vnicProfileId: {}", vnicProfileId)
-        val res: List<Template> = conn.findAllTemplates(follow = "nics")
-            .getOrDefault(listOf())
+        val res: List<Template> = conn.findAllTemplates(follow = "nics").getOrDefault(emptyList())
             .filter { template ->
                 template.nicsPresent() && template.nics().any { nic ->
                     nic.vnicProfilePresent() && nic.vnicProfile().id() == vnicProfileId

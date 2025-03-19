@@ -137,29 +137,6 @@ class VnicProfileController: BaseController() {
         return ResponseEntity.ok(iVnic.remove(vnicProfileId))
     }
 
-//    @ApiOperation(
-//        httpMethod="DELETE",
-//        value="vnic 프로파일 다중 삭제",
-//        notes="vnic 프로파일을 다중 삭제한다"
-//    )
-//    @ApiImplicitParams(
-//        ApiImplicitParam(name="vnicProfileIdList", value="Vnic Profile ID 리스트", dataTypeClass=Array<String>::class, required=true, paramType="body"),
-//    )
-//    @ApiResponses(
-//        ApiResponse(code = 200, message = "OK")
-//    )
-//    @DeleteMapping
-//    @ResponseBody
-//    @ResponseStatus(HttpStatus.OK)
-//    fun removeVnicList(
-//        @RequestBody vnicProfileIdList: List<String>? = null,
-//    ): ResponseEntity<Map<String, String>> {
-//        if (vnicProfileIdList.isNullOrEmpty())
-//            throw ErrorPattern.VNIC_PROFILE_ID_NOT_FOUND.toException()
-//        log.info("/vnicProfiles ... vnic 프로파일 다중 삭제")
-//        return ResponseEntity.ok(iVnic.removeMultiple(vnicProfileIdList))
-//    }
-
     @ApiOperation(
         httpMethod="GET",
         value="가상머신 목록",

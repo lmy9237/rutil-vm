@@ -78,8 +78,7 @@ fun List<VnicProfile>.toVnicProfilesIdName(): List<VnicProfileVo> =
 
 
 fun VnicProfile.toVnicProfileToVmVo(conn: Connection): VnicProfileVo {
-	val network: Network? = conn.findNetwork(this@toVnicProfileToVmVo.network().id())
-		.getOrNull()
+	val network: Network? = conn.findNetwork(this@toVnicProfileToVmVo.network().id()).getOrNull()
 	return VnicProfileVo.builder {
 		id { this@toVnicProfileToVmVo.id() }
 		name { this@toVnicProfileToVmVo.name() }
@@ -100,34 +99,30 @@ fun List<VnicProfile>.toDcVnicProfileMenus(): List<VnicProfileVo> =
 
 
 
-fun VnicProfile.toVnicProfileVo(conn: Connection): VnicProfileVo {
-    val network: Network? =
-        conn.findNetwork(this@toVnicProfileVo.network().id())
-            .getOrNull()
-    val dataCenter: DataCenter? =
-        network?.dataCenter()?.let { conn.findDataCenter(it.id())
-            .getOrNull() }
+fun VnicProfile.toVnicProfileMenu(conn: Connection): VnicProfileVo {
+	val vnic = this@toVnicProfileMenu
     val networkFilter: NetworkFilter? =
-        if(this@toVnicProfileVo.networkFilterPresent())
-            conn.findNetworkFilter(this@toVnicProfileVo.networkFilter().id()).getOrNull()
-        else null
+		if(vnic.networkFilterPresent()) { conn.findNetworkFilter(vnic.networkFilter().id()).getOrNull() }
+        else { null }
 
     return VnicProfileVo.builder {
-        id { this@toVnicProfileVo.id() }
-        name { this@toVnicProfileVo.name() }
-        description { this@toVnicProfileVo.description() }
-        passThrough { this@toVnicProfileVo.passThrough().mode() }
-        portMirroring { this@toVnicProfileVo.portMirroring() }
-        migration { if(this@toVnicProfileVo.migratablePresent()) this@toVnicProfileVo.migratable() else null }
+        id { vnic.id() }
+        name { vnic.name() }
+        description { vnic.description() }
+        passThrough { vnic.passThrough().mode() }
+        portMirroring { vnic.portMirroring() }
+        migration { if(vnic.migratablePresent()) vnic.migratable() else null }
         networkFilterVo { networkFilter?.fromNetworkFilterToIdentifiedVo() }
-        dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-        networkVo { network?.fromNetworkToIdentifiedVo() }
+        dataCenterVo { vnic.network().dataCenter().fromDataCenterToIdentifiedVo() }
+        networkVo { vnic.network().fromNetworkToIdentifiedVo() }
     }
 }
-fun List<VnicProfile>.toVnicProfileVos(conn: Connection): List<VnicProfileVo> =
-	this@toVnicProfileVos.map { it.toVnicProfileVo(conn) }
+fun List<VnicProfile>.toVnicProfileMenus(conn: Connection): List<VnicProfileVo> =
+	this@toVnicProfileMenus.map { it.toVnicProfileMenu(conn) }
 
 
+
+// region: builder
 /**
  * vnicProfile 빌더
  */
@@ -191,3 +186,4 @@ fun Nic.toVnicProfileVoFromNic(conn: Connection): VnicProfileVo {
 fun List<Nic>.toVnicProfileVosFromNic(conn: Connection): List<VnicProfileVo> =
 	this.map { it.toVnicProfileVoFromNic(conn) }
 
+// endregion

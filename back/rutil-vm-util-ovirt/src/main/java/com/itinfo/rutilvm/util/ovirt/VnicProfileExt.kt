@@ -11,8 +11,11 @@ import org.ovirt.engine.sdk4.types.VnicProfile
 private fun Connection.srvVnicProfiles(): VnicProfilesService =
 	this.systemService.vnicProfilesService()
 
-fun Connection.findAllVnicProfiles(): Result<List<VnicProfile>> = runCatching {
-	this.srvVnicProfiles().list().follow("network").send().profiles()
+fun Connection.findAllVnicProfiles(follow: String = ""): Result<List<VnicProfile>> = runCatching {
+	this.srvVnicProfiles().list().apply {
+		if(follow.isNotEmpty()) follow(follow)
+	}.send().profiles()
+
 }.onSuccess {
 	Term.VNIC_PROFILE.logSuccess("목록조회")
 }.onFailure {
@@ -23,8 +26,11 @@ fun Connection.findAllVnicProfiles(): Result<List<VnicProfile>> = runCatching {
 private fun Connection.srvVnicProfile(vnicProfileId: String): VnicProfileService =
 	this.srvVnicProfiles().profileService(vnicProfileId)
 
-fun Connection.findVnicProfile(vnicProfileId: String): Result<VnicProfile?> = runCatching {
-	this.srvVnicProfile(vnicProfileId).get().follow("network").send().profile()
+fun Connection.findVnicProfile(vnicProfileId: String, follow: String = ""): Result<VnicProfile?> = runCatching {
+	this.srvVnicProfile(vnicProfileId).get().apply {
+		if(follow.isNotEmpty()) follow(follow)
+	}.send().profile()
+
 }.onSuccess {
 	Term.VNIC_PROFILE.logSuccess("상세조회", vnicProfileId)
 }.onFailure {
@@ -38,12 +44,12 @@ fun List<VnicProfile>.nameDuplicateVnicProfileName(vnicProfileName: String, vnic
 fun Connection.addVnicProfileFromNetwork(networkId: String, vnicProfile: VnicProfile): Result<VnicProfile?> = runCatching {
 	checkNetworkExists(networkId)
 
-	if (this.findAllVnicProfiles()
-			.getOrDefault(listOf())
+	if (this.findAllVnicProfiles().getOrDefault(listOf())
 			.nameDuplicateVnicProfileName(vnicProfile.name())) {
 		return FailureType.DUPLICATE.toResult(Term.VNIC_PROFILE.desc)
 	}
 	this.srvVnicProfilesFromNetwork(networkId).add().profile(vnicProfile).send().profile()
+
 }.onSuccess {
 	Term.VNIC_PROFILE.logSuccess("생성")
 }.onFailure {
@@ -53,6 +59,7 @@ fun Connection.addVnicProfileFromNetwork(networkId: String, vnicProfile: VnicPro
 
 fun Connection.updateVnicProfile(vnicProfile: VnicProfile): Result<VnicProfile?> = runCatching {
 	this.srvVnicProfile(vnicProfile.id()).update().profile(vnicProfile).send().profile()
+
 }.onSuccess {
 	Term.VNIC_PROFILE.logSuccess("편집", vnicProfile.id())
 }.onFailure {
@@ -63,6 +70,7 @@ fun Connection.updateVnicProfile(vnicProfile: VnicProfile): Result<VnicProfile?>
 fun Connection.removeVnicProfile(vnicProfileId: String): Result<Boolean> = runCatching {
 	this.srvVnicProfile(vnicProfileId).remove().send()
 	true
+
 }.onSuccess {
 	Term.VNIC_PROFILE.logSuccess("삭제", vnicProfileId)
 }.onFailure {
