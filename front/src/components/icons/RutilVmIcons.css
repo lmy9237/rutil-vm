@@ -39,6 +39,10 @@
 .rvi.rvi-nav.active svg {
   color: var(--color-primary-white);
 }
+.rvi.rvi-nav.no-active {
+  background-color: transparent !important; /* 배경 제거 */
+  border-radius: 20px;
+}
 .logo-icon:hover{
   background-color: red !important;
 }

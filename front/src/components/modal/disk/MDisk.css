@@ -1,15 +1,16 @@
 /*새로만들기*/
-.disk-new-img {
-  display: flex;
-}
 .disk-new-img-right {
-  padding-left: 0.2rem;
+  display: flex;
+  justify-content: right;
+  width: 100%;
+  border: 1px solid gray;
 }
-.disk-new-img-right div {
-  padding-bottom:0.02rem !important;
+.disk-new-img-right>.input-checkbox{
+  display: flex;
+  justify-content: right;
 }
 .disk-new-img-left {
-  width: 65%;
+  width: 100%;
 }
 /*이미지,직접lun버튼*/
 .storage-disk-new-popup {
@@ -17,12 +18,11 @@
   width: 50%;
 }
 .disk-new-nav {
-  padding: 0.1rem 0.2rem 0.2rem 0.2rem;
   width: 50%;
   display: flex;
 }
 .disk-new-nav > div {
-  padding: 10px;
+  padding: 8px;
   margin-right: 2%;
   cursor: pointer;
 }

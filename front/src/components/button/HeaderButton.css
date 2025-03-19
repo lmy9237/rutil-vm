@@ -24,7 +24,7 @@
 .section-header {
   width: 100%;
   min-height: var(--h-section-header);
-  border-bottom: 1px solid #6999d9;
+  border-bottom: var(--border-box);
   padding: 0 16px;
 }
 

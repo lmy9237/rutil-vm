@@ -27,7 +27,7 @@ const NetworkDupl = ({
   // 데이터를 변환 (검색 가능하도록 `searchText` 필드 추가)
   const transformedData = networks.map((network) => ({
     ...network,
-    name: (
+    _name: (
       <TableRowClick type="network" id={network?.id}>
         {network?.name}
       </TableRowClick>

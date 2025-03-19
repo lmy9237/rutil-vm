@@ -58,6 +58,14 @@ const SideNavbar = ({
     { iconDef: rvi24Event,        id: "event",     link: "/events",  },
   ];
 
+  const [isFirstRender, setIsFirstRender] = useState(true);
+  useEffect(() => {
+  if (isFirstRender) {
+    setSelectedSection("computing");
+    setIsFirstRender(false);
+  }
+}, [isFirstRender]);
+
   return (
     <div id="aside">
       <div className="nav">

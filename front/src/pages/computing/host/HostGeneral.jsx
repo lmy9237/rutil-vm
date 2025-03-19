@@ -106,7 +106,7 @@ const HostGeneral = ({ hostId }) => {
     // <div className="host-content-outer">
     <div>
       <div className="host-tabs">
-        {tabs.map(({ tab, label }) => (
+        {tabs.map(({ tab, label }, index) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}

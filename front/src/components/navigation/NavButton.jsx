@@ -33,7 +33,7 @@ const NavButton = React.memo(({ sections, handleSectionClick }) => {
         {sections.map((section) => (
           <div
             key={section.id}
-            className={activeSection === section.id ? "active" : ""}
+            className={`f-center ${activeSection === section.id ? "active" : ""}`}
             onClick={() => handleClick(section.id)}
           >
             {section.label}

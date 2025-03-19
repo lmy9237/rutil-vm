@@ -5,7 +5,7 @@
 const TableColumnsInfo = {
   DATACENTERS: [
     { header: '', accessor: 'icon', clickable: false, width: '3%'  },
-    { header: '이름', accessor: 'name', clickable: true }, 
+    { header: '이름', accessor: '_name', clickable: true }, 
     { header: '코멘트', accessor: 'comment', clickable: false },
     { header: '스토리지 유형', accessor: 'storageType', clickable: false },    
     { header: '상태', accessor: 'status', clickable: false },
@@ -252,7 +252,7 @@ const TableColumnsInfo = {
 
 
   NETWORKS: [
-    { header: '이름', accessor: 'name', clickable: true },
+    { header: '이름', accessor: '_name', clickable: true },
     { header: '코멘트', accessor: 'comment', clickable: false },
     { header: '데이터센터', accessor: 'datacenter', clickable: false },
     { header: '설명', accessor: 'description', clickable: false, width: '20%' },

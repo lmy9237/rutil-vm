@@ -1,36 +1,36 @@
 .content-header {
     border-right: var(--border-simple);
+    /* border-right: var(--border-box);*/
 }
 .active {
     transition: all 0.3s ease;
 }
 
 .content-header-left {
-   
     border-radius: 3px;
     width: var(--w-nav);
 }
 
 .content-header-left div {
     position: relative;
-    font-size: var(--fs-15);
+    font-size: var(--fs-14);
     cursor: pointer;
-    color: black;
-    padding:13px 7px;
+    color: var(--color-nav);
+    padding-left:20px;
+    height: 36px;
 }
-
 .content-header-left div.active {
-    color: #6999D9;
+    color: var(--color-primary);
     font-weight: 600;
-    background-color: #e6eefa;
+    background-color: var(--color-active);
 }
 
 .content-header-left div.active::after {
     content: '';
     position: absolute;
-    left: 0;
-    bottom: 1px;
-    width: 100%;
-    height: 2px;
-    background-color: #6999D9;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background-color: var(--color-primary-hover);
 }

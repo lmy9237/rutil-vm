@@ -8,20 +8,20 @@ const SidebarTree = ({ selected }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-    // 📌 마지막 선택한 섹션 유지
-    const [lastSelected, setLastSelected] = useState(
-      () => localStorage.getItem("lastSelected") || "computing"
-    );
-  
-    useEffect(() => {
-      const savedLastSelected = localStorage.getItem("lastSelected");
-      if (savedLastSelected) {
-        setLastSelected(savedLastSelected);
-      }
-    }, [selected]);
-  
-    // 📌 대시보드, 이벤트, 설정이면 lastSelected 값으로 변경
-    const sectionToRender = ["dashboard", "event", "settings"].includes(selected) ? lastSelected : selected;
+  // 📌 마지막 선택한 섹션 유지
+  const [lastSelected, setLastSelected] = useState(
+    () => localStorage.getItem("lastSelected") || "computing"
+  );
+
+  useEffect(() => {
+    const savedLastSelected = localStorage.getItem("lastSelected");
+    if (savedLastSelected) {
+      setLastSelected(savedLastSelected);
+    }
+  }, [selected]);
+
+  // 📌 대시보드, 이벤트, 설정이면 lastSelected 값으로 변경
+  const sectionToRender = ["dashboard", "event", "settings"].includes(selected) ? lastSelected : selected;
 
   // ✅ 상태 관리
   const [selectedDiv, setSelectedDiv] = useState(null);

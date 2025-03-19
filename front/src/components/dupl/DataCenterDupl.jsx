@@ -4,14 +4,33 @@ import TablesOuter from "../table/TablesOuter";
 import DataCenterActionButtons from "./DataCenterActionButtons";
 import DataCenterModals from "../modal/datacenter/DataCenterModals";
 import { renderDataCenterStatus, renderDatacenterStatusIcon } from "../Icon";
+import TableRowClick from "../table/TableRowClick";
+import useSearch from "../button/useSearch";
 
 const DataCenterDupl = ({
   isLoading, isError, isSuccess,
-  datacenters = [], columns = [],
+  datacenters = [], columns = [],  showSearchBox = true,
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDataCenters, setSelectedDataCenters] = useState([]);
+
+
+  const transformedData = datacenters.map((dc) => ({
+    ...dc,
+    _name: (
+      <TableRowClick type="datacenter" id={dc?.id}>
+        {dc?.name}
+      </TableRowClick>
+    ),
+    icon: renderDatacenterStatusIcon(dc?.status),
+    status: renderDataCenterStatus(dc?.status),
+    storageType: dc?.storageType ? "로컬" : "공유됨",
+    searchText: `${dc?.name} ${dc?.status} ${dc?.storageType ? "로컬" : "공유됨"}`,
+  }));
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
+
+
   const selectedIds = (
     Array.isArray(selectedDataCenters) ? selectedDataCenters : []
   )
@@ -39,17 +58,21 @@ const DataCenterDupl = ({
 
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        columns={columns} data={datacenters.map((dc) => ({
-          ...dc,
-          // name: <TableRowClick type="datacenter" id={dc?.id}>{dc?.name}</TableRowClick>,
-          icon: renderDatacenterStatusIcon(dc?.status),
-          status: renderDataCenterStatus(dc?.status),
-          storageType: dc?.storageType ? "로컬" : "공유됨",
-        }))}
+        data={filteredData} 
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery} 
         onRowClick={(selectedRows) => setSelectedDataCenters(selectedRows)}
-        clickableColumnIndex={[1]}
+        // clickableColumnIndex={[1]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
+        columns={columns}
+        onContextMenuItems={(row) => [
+          <DataCenterActionButtons
+            openModal={openModal}
+            isEditDisabled={!row}
+            actionType="context"
+          />,
+        ]}
       />
 
       {/* 데이터센터 모달창 */}

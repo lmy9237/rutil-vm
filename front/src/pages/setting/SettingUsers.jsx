@@ -122,6 +122,13 @@ const SettingUsers = () => {
           console.log(`SettingUsers > onRowClick ... row: ${JSON.stringify(row)}`)
           setSelectedUsers(row)
         }}
+        onContextMenuItems={(row) => [
+          <SettingUsersActionButtons
+            openModal={openModal}
+            isEditDisabled={!row}
+            actionType="context"
+          />,
+        ]}
       />
       
       {/* 모달창 */}
