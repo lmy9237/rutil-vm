@@ -1,16 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowUp,
-  faArrowDown,
-  faBatteryEmpty,
-  faStarOfLife,
-  faLink,
-  faWarning,
-  faEraser,
-  faMessage,
-} from "@fortawesome/free-solid-svg-icons";
 import "./DashboardBoxGroup.css";
 import {
   RVI24,
@@ -46,7 +35,6 @@ const DashboardBox = ({
 }) => {
   const navigate = useNavigate();
 
-  console.log("...");
   return (
     <div className="box" onClick={() => navigatePath && navigate(navigatePath)}>
       <span className="box-icon-title">

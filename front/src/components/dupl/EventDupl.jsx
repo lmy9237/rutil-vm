@@ -16,18 +16,16 @@ const EventDupl = ({
 }) => {
   console.log("...")
   return (
-    <>
-      <PagingTableOuter
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        columns={TableColumnsInfo.EVENTS}
-        data={events.map((e) => ({
-          ...e,
-          _severity: EventSeverityIcon(e?.severity),
-        }))}
-        onRowClick={handleRowClick}
-        showSearchBox={showSearchBox} // 검색 박스 표시 여부 제어
-      />
-    </>
+    <PagingTableOuter
+      isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+      columns={TableColumnsInfo.EVENTS}
+      data={events.map((e) => ({
+        ...e,
+        _severity: EventSeverityIcon(e?.severity),
+      }))}
+      onRowClick={handleRowClick}
+      showSearchBox={showSearchBox} // 검색 박스 표시 여부 제어
+    />
   );
 };
 

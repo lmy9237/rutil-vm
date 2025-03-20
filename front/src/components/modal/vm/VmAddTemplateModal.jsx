@@ -17,6 +17,7 @@ import "./MVm.css";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
+import Localization from "../../../utils/Localization";
 
 const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
   const [name, setName] = useState("");
@@ -61,7 +62,7 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
   );
 
   useEffect(() => {
-    console.log("클러스터 데이터 조회 결과:", clustersFromDataCenter);
+    console.log(`${Localization.kr.CLUSTER} 데이터 조회 결과: ${clustersFromDataCenter}`);
   }, [clustersFromDataCenter]);
 
   useEffect(() => {
@@ -169,11 +170,11 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
 
   const handleFormSubmit = () => {
     if (!name) {
-      toast.error("이름을 입력하세요.");
+      toast.error(`${Localization.kr.NAME}을 입력하세요.`);
       return;
     }
     if (!selectedCluster) {
-      toast.error("클러스터를 선택하세요.");
+      toast.error(`${Localization.kr.CLUSTER}를 선택하세요.`);
       return;
     }
 
@@ -244,34 +245,29 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
 
    
         <div className="edit-first-content">
-          <LabelInput
+          <LabelInput id="user_name"
             className="host_textbox"
-            label="이름"
-            id="user_name"
+            label={Localization.kr.NAME}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <LabelInput
+          <LabelInput id="description"
             className="host_textbox"
-            label="설명"
-            id="description"
+            label={Localization.kr.DESCRIPTION}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          <LabelInput
+          <LabelInput id="comment"
             className="host_textbox"
-            label="코멘트"
-            id="comment"
+            label={Localization.kr.COMMENT}
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           />
-          <LabelSelectOptions
+          <LabelSelectOptions id="cluster_select"
             className="edit_fourth_content_select flex"
-            label="클러스터"
-            id="cluster_select"
             value={selectedCluster}
             onChange={(e) => setSelectedCluster(e.target.value)}
-            options={clusters.length > 0 ? clusters.map(cluster => ({ value: cluster.id, label: cluster.name })) : [{ value: "", label: "클러스터 없음" }]}
+            options={clusters.length > 0 ? clusters.map(cluster => ({ value: cluster.id, label: cluster.name })) : [{ value: "", label: `${Localization.kr.CLUSTER} 없음` }]}
           />
           <LabelSelectOptions
             className="edit_fourth_content_select flex"
@@ -434,7 +430,7 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
 
         <LabelCheckbox
           id="copy_vm_permissions"
-          label="가상 머신 권한 복사"
+          label={`${Localization.kr.VM} 권한 복사`}
           checked={copyVmPermissions}
           onChange={() => setCopyVmPermissions(!copyVmPermissions)}
         />

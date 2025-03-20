@@ -7,6 +7,7 @@ import VmActionButtons from "./VmActionButtons";
 import { renderVmStatusIcon } from "../Icon";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
+import { RVI16, rvi16StarGold } from "../icons/RutilVmIcons";
 
 /**
  * @name VmDupl
@@ -31,7 +32,7 @@ const VmDupl = ({
   const transformedData = vms.map((vm) => ({
     ...vm,
     icon: renderVmStatusIcon(vm?.status),
-    engine: vm?.hostedEngineVm === true ? "ㅇ":"",
+    engine: (vm?.hostedEngineVm === true ? <RVI16 iconDef={rvi16StarGold} /> : ""),
     _name: (
       <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}

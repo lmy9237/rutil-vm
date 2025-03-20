@@ -61,7 +61,7 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"네트워크"}
+      targetName={Localization.kr.NETWORK}
       submitTitle={"가져오기"}
       onSubmit={onSubmit}
       contentStyle={{ width: "880px" }} 

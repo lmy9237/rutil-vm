@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import LabelCheckbox from "../../../label/LabelCheckbox";
+import Localization from "../../../../utils/Localization";
 
 const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
   const priorityList = [
@@ -23,10 +24,8 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
   return (
     <>
       <div className="ha-mode-second-content">
-{/* <<<<<<< HEAD */}
-      <LabelCheckbox
-          id="ha_mode_box"
-          label="고가용성"
+        <LabelCheckbox id="ha_mode_box"
+          label={Localization.kr.HA}
           checked={formHaState.ha}
           onChange={(e) => {
             const isChecked = e.target.checked;
@@ -37,7 +36,7 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
             }));
           }}
         />
-{/* =======
+{/*
         <div className="flex">
           <input
             className="check_input"
@@ -54,13 +53,13 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
             }}
           />
           <label className="check_label" htmlFor="ha_mode_box">
-            고가용성
+            {Localization.kr.HA}
           </label>
         </div>
->>>>>>> 94a1835 ([fix] vm modal) */}
+*/}
 
         <LabelSelectOptionsID
-          label="가상 머신 임대 대상 스토리지 도메인"
+          label={`${Localization.kr.VM} 임대 대상 스토리지 도메인`}
           value={formHaState.storageDomainVo.id}
           disabled={!formHaState.ha}  // ha가 체크되어야만 활성화됨
           onChange={(e) => {

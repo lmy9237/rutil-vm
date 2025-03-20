@@ -12,6 +12,7 @@ import {
   useAllClusters,
 } from "../../../api/RQHook";
 import "./MHost.css";
+import Localization from "../../../utils/Localization";
 
 const initialFormState = {
   id: "",
@@ -79,9 +80,12 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
   };
 
   const validateForm = () => {
-    if (!formState.name) return "이름을 입력해주세요.";
-    if (!editMode && !formState.sshPassWord) return "비밀번호를 입력해주세요.";
-    if (!clusterVoId) return "클러스터를 선택해주세요.";
+    if (!formState.name)
+      return `${Localization.kr.NAME}을 입력해주세요.`;
+    if (!editMode && !formState.sshPassWord) 
+      return "비밀번호를 입력해주세요.";
+    if (!clusterVoId)
+      return `${Localization.kr.CLUSTER}를 선택해주세요.`;
     return null;
   };
 
@@ -116,15 +120,13 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"호스트"}
+      targetName={Localization.kr.HOST}
       submitTitle={hLabel}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px", height: "560px" }} 
     >
-     
-      
       <LabelSelectOptionsID
-        label="호스트 클러스터"
+        label={`${Localization.kr.HOST} ${Localization.kr.CLUSTER}`}
         value={clusterVoId}
         onChange={(e) => setClusterVoId(e.target.value)}
         disabled={editMode}
@@ -133,29 +135,21 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
       />
       <hr />
 
-      <LabelInput
-        label="이름"
-        id="name"
+      <LabelInput id="name" label={Localization.kr.NAME}
         value={formState.name}
         onChange={handleInputChange("name")}
         autoFocus
       />
-      <LabelInput
-        label="코멘트"
-        id="comment"
+      <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
         onChange={handleInputChange("comment")}
       />
-      <LabelInput
-        label="호스트 이름/IP"
-        id="address"
+      <LabelInput id="address" label={`${Localization.kr.HOST} 이름/IP`}
         value={formState.address}
         onChange={handleInputChange("address")}
         disabled={editMode}
       />
-      <LabelInputNum
-        label="SSH 포트"
-        id="sshPort"
+      <LabelInputNum id="sshPort" label="SSH 포트"
         value={formState.sshPort}
         onChange={handleInputChange("sshPort")}
         disabled={editMode}
@@ -195,14 +189,14 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
             </label>
           ))}
         </div>
-      </div>
-      <LabelSelectOptions  label="호스트 엔진 배포 작업 선택"
-        value={String(formState.deployHostedEngine)}
-        onChange={handleInputChange("deployHostedEngine")}
-        options={hostEngines}
-        disabled={editMode}
-      />
 
+        <LabelSelectOptions label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
+          value={String(formState.deployHostedEngine)}
+          onChange={handleInputChange("deployHostedEngine")}
+          options={hostEngines}
+          disabled={editMode}
+        />
+      </div>
     </BaseModal>
   );
 };

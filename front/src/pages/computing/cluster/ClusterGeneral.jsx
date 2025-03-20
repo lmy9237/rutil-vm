@@ -1,6 +1,6 @@
-import { useCluster } from "../../../api/RQHook";
 import InfoTable from "../../../components/table/InfoTable";
 import Localization from "../../../utils/Localization";
+import { useCluster } from "../../../api/RQHook";
 
 /**
  * @name ClusterGeneral
@@ -28,18 +28,19 @@ const ClusterGeneral = ({ clusterId }) => {
   const renderBiosType = (biosType) => biosTypeLabels[biosType] || biosType;
 
   const tableRows = [
-    { label: "이름", value: cluster?.name },
-    { label: "설명", value: cluster?.description },
+    { label: Localization.kr.NAME, value: cluster?.name },
+    { label: Localization.kr.DESCRIPTION, value: cluster?.description },
     { label: Localization.kr.DATA_CENTER, value: cluster?.dataCenterVo?.name },
     { label: "호환버전", value: cluster?.version },
-    { label: "클러스터 ID", value: cluster?.id },
-    { label: "클러스터 CPU 유형", value: cluster?.cpuType },
+    { label: `${Localization.kr.CLUSTER} ID`, value: cluster?.id },
+    { label: `${Localization.kr.CLUSTER} CPU 유형`, value: cluster?.cpuType },
     { label: "최대 메모리 오버 커밋", value: `${cluster?.memoryOverCommit}%` },
     { label: "칩셋/펌웨어 유형", value: renderBiosType(cluster?.biosType) },
     { label: "가상 머신 수", value: cluster?.vmSize?.allCnt },
     // { label: "총 볼륨 수", value: "해당 없음" },
     // { label: "Up 상태의 볼륨 수", value: "해당 없음" },
     // { label: "Down 상태의 볼륨 수", value: "해당 없음" },
+    { label: `${Localization.kr.VM} 수`, value: cluster?.vmSize?.allCnt },
   ];
 
   return <InfoTable tableRows={tableRows} />;

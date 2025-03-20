@@ -7,15 +7,16 @@ import {
   renderHostStatusIcon,
   renderUpDownStatusIcon,
 } from "../../../components/Icon";
+import { checkZeroSizeToMbps } from "../../../util";
+import FilterButton from "../../../components/button/FilterButton";
+import ActionButton from "../../../components/button/ActionButton";
+import Localization from "../../../utils/Localization";
+import HostNetworkModal from "../../../components/modal/host/HostNetworkModal";
 import {
   useConnectedHostsFromNetwork,
   useDisconnectedHostsFromNetwork,
   useNetworkInterfaceFromHost,
 } from "../../../api/RQHook";
-import { checkZeroSizeToMbps, convertBpsToMbps } from "../../../util";
-import FilterButton from "../../../components/button/FilterButton";
-import ActionButton from "../../../components/button/ActionButton";
-import HostNetworkModal from "../../../components/modal/host/HostNetworkModal";
 
 /**
  * @name NetworkHosts
@@ -96,7 +97,7 @@ const NetworkHosts = ({ networkId }) => {
     <>
       <div className="header-right-btns">
         <ActionButton
-          label="호스트 네트워크 설정"
+          label={`${Localization.kr.HOST} 네트워크 설정`}
           actionType="default"
           onClick={() => setIsModalOpen(true)}
           disabled={!selectedHostId}  // selectedHostId가 없으면 비활성화

@@ -38,11 +38,11 @@ const TemplateInfo = () => {
 
   const sections = [
     { id: "general", label: Localization.kr.GENERAL },
-    { id: "vms", label: "가상머신" },
-    { id: "nics", label: "네트워크 인터페이스" },
+    { id: "vms", label: Localization.kr.VM },
+    { id: "nics", label: Localization.kr.NICS },
     { id: "disks", label: "디스크" },
     // { id: "storageDomains", label: "스토리지" },
-    { id: "events", label: "이벤트" },
+    { id: "events", label: Localization.kr.EVENT },
   ];
 
   useEffect(() => {

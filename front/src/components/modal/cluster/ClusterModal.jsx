@@ -104,9 +104,9 @@ const biosTypeOptions = [
 ];
 
 const errorHandlingOptions = [
-  { value: "migrate", label: "가상 머신을 마이그레이션함" },
-  { value: "migrate_highly_available", label: "고가용성 가상 머신만 마이그레이션" },
-  { value: "do_not_migrate", label: "가상 머신은 마이그레이션 하지 않음" },
+  { value: "migrate", label: `${Localization.kr.VM}을 마이그레이션함` },
+  { value: "migrate_highly_available", label: `${Localization.kr.HOST} ${Localization.kr.VM}만 마이그레이션` },
+  { value: "do_not_migrate", label: `${Localization.kr.VM}은 마이그레이션 하지 않음` },
 ];
 
 const initialFormState = {
@@ -184,13 +184,13 @@ const ClusterModal = ({
 
   const validateForm = () => {
     if (!checkKoreanName(formState.name) || !formState.name)
-      return "이름이 유효하지 않습니다.";
+      return `${Localization.kr.NAME}이 유효하지 않습니다.`;
     if (!checkKoreanName(formState.description))
-      return "설명이 유효하지 않습니다.";
+      return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
     if (!dataCenterVoId) 
       return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     if (!networkVoId)
-      return "네트워크를 선택해주세요.";
+      return `${Localization.kr.NETWORK}를 선택해주세요.`;
     return null;
   };
 
@@ -212,7 +212,7 @@ const ClusterModal = ({
 
     const onSuccess = () => {
       onClose();
-      toast.success(`클러스터 ${cLabel} 완료`);
+      toast.success(`${Localization.kr.CLUSTER} ${cLabel} 완료`);
     };
     const onError = (err) => toast.error(`Error ${cLabel} cluster: ${err}`);
 
@@ -227,11 +227,12 @@ const ClusterModal = ({
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
-      targetName={"클러스터"}
+      targetName={Localization.kr.CLUSTER}
       submitTitle={cLabel}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px" }} 
     >
+
       <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
         value={dataCenterVoId}
         onChange={(e) => setDataCenterVoId(e.target.value)}
@@ -240,37 +241,33 @@ const ClusterModal = ({
         options={datacenters}
       />
       <hr />
-      <LabelInput
-        label="이름"
-        id="name"
+      <LabelInput id="name"
+        label={Localization.kr.NAME}
         value={formState.name}
         onChange={handleInputChange("name")}
         autoFocus
       />
-      <LabelInput
-        label="설명"
-        id="description"
+      <LabelInput id="description"
+        label={Localization.kr.DESCRIPTION}
         value={formState.description}
         onChange={handleInputChange("description")}
       />
-      <LabelInput
-        label="코멘트"
-        id="comment"
+      <LabelInput id="comment"
+        label={Localization.kr.COMMENT}
         value={formState.comment}
         onChange={handleInputChange("comment")}
       />
-
       <LabelSelectOptionsID id="network-man" label="관리 네트워크"
         value={networkVoId}
-        onChange={(e) => setNetworkVoId(e.target.value)}
         disabled={editMode}
         loading={isNetworksLoading}
         options={networks}
+        onChange={(e) => setNetworkVoId(e.target.value)}
       />
       <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
         value={formState.cpuArc}
-        onChange={handleInputChange("cpuArc")}
         options={cpuArcs}
+        onChange={handleInputChange("cpuArc")}
       />
       <LabelSelectOptions id="cpu-type" label="CPU 유형"
         value={formState.cpuType}
@@ -279,11 +276,11 @@ const ClusterModal = ({
       />
       <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"
         value={formState.biosType}
-        onChange={handleInputChange("biosType")}
         options={biosTypeOptions}
         disabled={
           formState.cpuArc === "PPC64" || formState.cpuArc === "S390X"
         }
+        onChange={handleInputChange("biosType")}
       />
 
       <div>

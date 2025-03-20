@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowsAltH, faDesktop, faPencilAlt,} from "@fortawesome/free-solid-svg-icons";
+import { faArrowsAltH, faDesktop } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import HostNetworkBondingModal from "./HostNetworkBondingModal";
 import HostNetworkEditModal from "./HostNetworkEditModal";
 import { useHost, useNetworkFromCluster, useNetworkInterfaceFromHost } from "../../../api/RQHook";
-import "../network/MNetwork.css";
 import Loading from "../../common/Loading";
 import { renderTFStatusIcon } from "../../Icon";
+import Localization from "../../../utils/Localization";
+import "../network/MNetwork.css";
+import { RVI16, rvi16Star } from "../../icons/RutilVmIcons";
 
 const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
   // 호스트 상세정보 조회로 클러스터id 뽑기
@@ -254,7 +256,7 @@ const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"호스트 네트워크"}
+      targetName={`${Localization.kr.HOST} 네트워크`}
       submitTitle={"설정"}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "880px"}} 
@@ -280,7 +282,7 @@ const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
                   {outerItem.name && (
                     <div className="interface-header">
                       {outerItem.name} {outerItem.name.startsWith("bond") && (
-                        <FontAwesomeIcon icon={faPencilAlt} className="icon" onClick={() => openBondingPopup("edit")} />
+                        <RVI16 iconDef={rvi16Star} className="icon" onClick={() => openBondingPopup("edit")} />
                       )}
                     </div>
                   )}
@@ -324,7 +326,7 @@ const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
                           </div>
                           <div className="right-section">
                             {network?.role && <FontAwesomeIcon icon={faDesktop} className="icon" />}
-                            <FontAwesomeIcon icon={faPencilAlt} className="icon" onClick={() => openNetworkEditPopup(network)} />
+                            <RVI16 iconDef={rvi16Star} className="icon" onClick={() => openNetworkEditPopup(network)} />
                           </div>
                         </div>
                       ))

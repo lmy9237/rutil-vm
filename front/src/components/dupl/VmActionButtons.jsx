@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { RVI16, rvi16ChevronUp, rvi16ChevronDown } from "../icons/RutilVmIcons";
 import ActionButton from "../button/ActionButton";
 import ActionButtonGroup from "../button/ActionButtonGroup";
+import Localization from "../../utils/Localization";
 
 const VmActionButtons = ({
   openModal,
@@ -53,7 +54,7 @@ const VmActionButtons = ({
 
   const manageActions = [
     { type: "import", label: "가져오기" },
-    { type: "copyVm", label: "가상머신 복제", disabled: isEditDisabled || !isPause },
+    { type: "copyVm", label: `${Localization.kr.VM} 복제`, disabled: isEditDisabled || !isPause },
     { type: "delete", label: "삭제", disabled: isDeleteDisabled || isMaintenance },
     { type: "templates", label: "템플릿 생성", disabled: isEditDisabled || isTemplate },
     { type: "ova", label: "ova로 내보내기", disabled: isEditDisabled },
@@ -66,16 +67,23 @@ const VmActionButtons = ({
     >
       {!isContextMenu && (
         <>
-          <ActionButton label={"템플릿"} onClick={() => navigate("/computing/templates")} actionType={actionType}/>
+          <ActionButton actionType={actionType}
+            label={"템플릿"}
+            onClick={() => navigate("/computing/templates")}
+          />
           <div ref={dropdownRef} className="dropdown-container">
-            <ActionButton onClick={toggleDropdown} label="관리" iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown} />
+            <ActionButton 
+              label="관리"
+              iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown} 
+              onClick={toggleDropdown}
+            />
             {activeDropdown && (
               <div className="dropdown-menu">
                 {manageActions.map(({ type, label, disabled }) => (
                   <button key={type}
-                    onClick={() => openModal(type)}
                     disabled={disabled}
                     className="dropdown-item"
+                    onClick={() => openModal(type)}
                   >
                     {label}
                   </button>

@@ -1,9 +1,8 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import { useAllHosts } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
   const [host, setHost] = useState("#");
@@ -13,12 +12,12 @@ const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
   const vmNames =
     Array.isArray(selectedVms) && selectedVms.length > 0
       ? selectedVms.map((vm) => vm.name).join(", ")
-      : "선택된 가상 머신 없음";
+      : `선택된 ${Localization.kr.VM} 없음`;
   const [name, setName] = useState(vmNames);
 
   const handleFormSubmit = () => {
     if (!host || host === "#") {
-      toast.error("호스트를 선택하세요.");
+      toast.error(`${Localization.kr.HOST}를 선택하세요.`);
       return;
     }
     if (!directory || directory === "#") {
@@ -26,7 +25,7 @@ const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
       return;
     }
     if (!name) {
-      toast.error("이름을 입력하세요.");
+      toast.error(`${Localization.kr.NAME}을 입력하세요.`);
       return;
     }
 

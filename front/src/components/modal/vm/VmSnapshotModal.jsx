@@ -4,9 +4,10 @@ import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useAddSnapshotFromVM, useDisksFromVM } from "../../../api/RQHook";
-import "./MVm.css";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
+import Localization from "../../../utils/Localization";
+import "./MVm.css";
 
 const initialFormState = {
   id: "",
@@ -79,9 +80,8 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
       contentStyle={{ width: "500px"}} 
     >
       <div className="p-1">
-        <LabelInput
+        <LabelInput id="description" label={Localization.kr.DESCRIPTION}
           className="host-textbox flex mb-1" 
-          label="설명" 
           value={formState.description} 
           onChange={(e) => setFormState((prev) => ({ ...prev, description: e.target.value }))}
         />
@@ -107,7 +107,7 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
           </div>
           <div>
             <LabelCheckbox 
-              label={"메모리 저장"}
+              label={`${Localization.kr.MEMORY} 저장`}
               checked={formState.persistMemory} // ✅ persistMemory 값을 checked 상태에 반영
               onChange={() => setFormState((prev) => ({ ...prev, persistMemory: !prev.persistMemory }))} // ✅ true/false로 변경
             />

@@ -1,5 +1,5 @@
+import Localization from "../../../../utils/Localization";
 import LabelInputNum from "../../../label/LabelInputNum";
-import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import { useState } from "react";
 
 const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
@@ -75,12 +75,17 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
     <>
       <div className="edit-second-content">
         <LabelInputNum id="memory_size"
-          label="메모리 크기(MB)" value={formSystemState.memorySize} onChange={ handleInputChange("memorySize") }/>
+          label={`${Localization.kr.MEMORY} 크기(MB)`} value={formSystemState.memorySize}
+          onChange={ handleInputChange("memorySize") }
+        />
         <LabelInputNum id="max_memory"
-          label="최대 메모리(MB)" value={formSystemState.memoryMax} onChange={ handleInputChange("memoryMax") }/>
+          label="최대 메모리(MB)" value={formSystemState.memoryMax}
+          onChange={ handleInputChange("memoryMax") }
+        />
         <LabelInputNum id="actual_memory"
-          label="할당할 실제 메모리(MB)" value={formSystemState.memoryActual} onChange={ handleInputChange("memoryActual") }/>
-
+          label="할당할 실제 메모리(MB)" value={formSystemState.memoryActual}
+          onChange={ handleInputChange("memoryActual") }
+        />
         <LabelInputNum id="total_cpu"
           label="총 가상 CPU"
           value={formSystemState.cpuTopologyCnt || ""}

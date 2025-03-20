@@ -10,8 +10,8 @@ import {
   useNetworksFromDataCenter,
   useVnicProfile,
 } from "../../../api/RQHook";
-import "./MVnic.css";
 import Localization from "../../../utils/Localization";
+import "./MVnic.css";
 
 const FormGroup = ({ label, children }) => (
   <div className="vnic-new-box">
@@ -195,7 +195,7 @@ const VnicProfileModal = ({
   const handleFormSubmit = () => {
     // 이름 유효성 검사
     if (!formState.name) {
-      return toast.error("이름을 입력해주세요.");
+      return toast.error(`${Localization.kr.NAME}을 입력해주세요.`);
     }
 
     // 네트워크 유효성 검사
@@ -280,7 +280,7 @@ const VnicProfileModal = ({
             </select>
           </FormGroup>
 
-          <FormGroup label="네트워크">
+          <FormGroup label={Localization.kr.NETWORK}>
             <select
               value={networkVoId}
               onChange={(e) => setNetworkVoId(e.target.value)}
@@ -299,7 +299,7 @@ const VnicProfileModal = ({
             </select>
           </FormGroup>
 
-          <FormGroup label="별칭">
+          <FormGroup label={Localization.kr.ALIAS}>
             <input
               type="text"
               value={formState.name}
@@ -310,7 +310,7 @@ const VnicProfileModal = ({
             />
           </FormGroup>
 
-          <FormGroup label="설명">
+          <FormGroup label={Localization.kr.DESCRIPTION}>
             <input
               type="text"
               value={formState.description}
@@ -323,7 +323,7 @@ const VnicProfileModal = ({
             />
           </FormGroup>
 
-          <FormGroup label="네트워크 필터">
+          <FormGroup label={Localization.kr.NETWORK_FILTER}>
             <div style={{ display: "flex", alignItems: "center" }}>
               <select
                 id="networkFilter"
@@ -339,7 +339,7 @@ const VnicProfileModal = ({
                   }));
                 }}
               >
-                <option value="">필터 선택 없음</option>
+                <option value="">{Localization.kr.NETWORK_FILTER} 없음</option>
                 {isNFiltersLoading ? (
                   <LoadingOption />
                 ) : (
@@ -353,7 +353,7 @@ const VnicProfileModal = ({
               <span style={{ marginLeft: "1rem" }}>
                 {formState.networkFilter
                   ? `ID: ${formState.networkFilter.id}, Name: ${formState.networkFilter.name}`
-                  : "필터를 선택해주세요."}
+                  : `${Localization.kr.NETWORK_FILTER}를 선택해주세요.`}
               </span>
             </div>
           </FormGroup>

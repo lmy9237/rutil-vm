@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import DomainActionButtons from "./DomainActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import DomainModals from "../modal/domain/DomainModals";
@@ -9,6 +7,7 @@ import SearchBox from "../button/SearchBox"; // ✅ 검색 UI 추가
 import { renderDomainStatus, renderDomainStatusIcon } from "../Icon";
 import { convertBytesToGB } from "../../util";
 import TableRowClick from "../table/TableRowClick";
+import { RVI16, rvi16StarGold } from "../icons/RutilVmIcons";
 
 /**
  * @name DomainDupl
@@ -40,20 +39,7 @@ const DomainDupl = ({
     ),
     icon: renderDomainStatusIcon(domain.status),
     status: renderDomainStatus(domain?.status),
-    hostedEngine:
-      domain?.hostedEngine === true ? (
-        <FontAwesomeIcon
-          icon={faPencil}
-          fixedWidth
-          style={{
-            color: "gold",
-            fontSize: "12px",
-            transform: "rotate(90deg)",
-          }}
-        />
-      ) : (
-        ""
-      ),
+    hostedEngine: domain?.hostedEngine ? (<RVI16 iconDef={rvi16StarGold} />) : (""),
     domainType:
       domain?.domainType === "data"
         ? "데이터"

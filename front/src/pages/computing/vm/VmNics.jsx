@@ -1,12 +1,14 @@
 import React, { useState, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowCircleDown, faArrowCircleUp, faChevronRight, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
+import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import { useNetworkInterfaceFromVM } from "../../../api/RQHook";
 import NicModal from "../../../components/modal/vm/NicModal";
 import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { checkZeroSizeToMbps } from "../../../util";
 import ActionButton from "../../../components/button/ActionButton";
+import Localization from "../../../utils/Localization";
+import { RVI24, rvi24ChevronDown, rvi24ChevronRight } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name VmNics
@@ -15,7 +17,7 @@ import ActionButton from "../../../components/button/ActionButton";
  * @param {string} vmId 가상머신 ID
  * @returns
  */
-const VmNics = ({ vmId }) => {  
+const VmNics = ({ vmId }) => {
   const {
     data: nics = [],
     isLoading: isNicsLoading,
@@ -43,12 +45,15 @@ const VmNics = ({ vmId }) => {
     txSpeed: checkZeroSizeToMbps(nic?.txSpeed),
     rxTotalSpeed: nic?.rxTotalSpeed?.toLocaleString() || "0",
     txTotalSpeed: nic?.txTotalSpeed?.toLocaleString() || "0",
-    pkts: `${nic?.rxTotalError}` || "1",
+    pkts: `${nic?.rxTotalError}` || "1",    
   }));
 
   const [selectedNic, setSelectedNic] = useState(null);
   const [visibleDetails, setVisibleDetails] = useState({});
-  const toggleDetails = (id) => setVisibleDetails((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleDetails = (id) => setVisibleDetails((prev) => ({ 
+    ...prev, 
+    [id]: !prev[id]
+  }));
 
   const [activeModal, setActiveModal] = useState(null);
   const openModal = (action) => setActiveModal(action);
@@ -57,37 +62,36 @@ const VmNics = ({ vmId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <ActionButton
+        <ActionButton actionType="default"
           label="새로 만들기"
-          actionType="default"
           onClick={() => openModal("create")}
         />
-        <ActionButton
+        <ActionButton actionType="default"
           label="편집"
-          actionType="default"
-          onClick={() => openModal("edit")}
           disabled={!selectedNic} 
+          onClick={() => openModal("edit")}
         />
-        <ActionButton
+        <ActionButton actionType="default"
           label="제거"
-          actionType="default"
-          onClick={() => openModal("delete")}
           disabled={!selectedNic}
+          onClick={() => openModal("delete")}
         />
       </div>
       <span>id = {selectedNic?.id || ""}</span>
 
       <div className="network-interface-outer">
         {transformedData.length > 0 ? ( // NIC가 하나라도 있을 때 실행
-          transformedData?.map((nic, index) => (
+          transformedData?.map((nic, i) => (
             <div
               className={`network_content2 ${selectedNic?.id === nic.id ? "selected" : ""}`}
               onClick={() => setSelectedNic(nic)} // NIC 선택 시 상태 업데이트
               key={nic?.id}
             >
               <div className="network-content">
-                <div>
-                  <FontAwesomeIcon icon={faChevronRight}onClick={() => toggleDetails(nic.id)} fixedWidth/>
+                <div className="network-status">
+                  <RVI24 iconDef={visibleDetails[nic.id] ? rvi24ChevronDown : rvi24ChevronRight}
+                    onClick={() => toggleDetails(nic.id)}
+                  />
                   <FontAwesomeIcon
                     icon={Boolean(nic?.linked) ? faArrowCircleUp : faArrowCircleDown}
                     style={{ color: Boolean(nic?.linked) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
@@ -106,11 +110,11 @@ const VmNics = ({ vmId }) => {
                 </div>
                 <div>
                   <div>IPv4</div>
-                  <div>{nic?.ipv4 || "해당 없음"}</div>
+                  <div>{nic?.ipv4 || Localization.kr.NOT_ASSOCIATED}</div>
                 </div>
                 <div>
                   <div>IPv6</div>
-                  <div>{nic?.ipv6 || "해당 없음"}</div>
+                  <div>{nic?.ipv6 || Localization.kr.NOT_ASSOCIATED}</div>
                 </div>
                 <div style={{ paddingRight: "3%" }}>
                   <div>MAC</div>
@@ -181,7 +185,7 @@ const VmNics = ({ vmId }) => {
             isOpen
             type="NetworkInterface"
             onRequestClose={closePopup}
-            contentLabel={"네트워크 인터페이스"}
+            contentLabel={Localization.kr.NICS}
             data={selectedNics}
             vmId={vmId}
           />

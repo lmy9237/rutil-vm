@@ -285,7 +285,7 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
 
   const handleSearchIscsi = () => {
     if (!hostVoId) {
-      toast.error('호스트를 선택해주세요.');
+      toast.error(`${Localization.kr.HOST}를 선택해주세요.`);
       return;
     }
     if (!address || !port) {
@@ -310,7 +310,7 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
 
   const handleSearchFcp = () => {
     if (!hostVoId) {
-      toast.error('호스트를 선택해주세요.');
+      toast.error(`${Localization.kr.HOST}를 선택해주세요.`);
       return;
     }  
     importFcpFromHost(
@@ -486,7 +486,7 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
             </select>
           </FormGroup>
 
-          <FormGroup label="호스트">
+          <FormGroup label={Localization.kr.HOST}>
             <select
               value={hostVoName}
               onChange={(e) => setHostVoName(e.target.value)}
@@ -508,16 +508,15 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
         </div>
 
         <div className="domain-new-right">
-          <FormGroup label="이름">
-            <input
-              type="text"
+          <FormGroup label={Localization.kr.NAME}>
+            <input type="text"
               value={formState.name}
               autoFocus
               onChange={(e) => setFormState((prev) => ({ ...prev, name: e.target.value }))}
             />
           </FormGroup>
           
-          <FormGroup label="설명">
+          <FormGroup label={Localization.kr.DESCRIPTION}>
             <input
               type="text"
               value={formState.description}
@@ -525,7 +524,7 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
             />
           </FormGroup>
 
-          <FormGroup label="코멘트">
+          <FormGroup label={Localization.kr.COMMENT}>
             <input
               type="text"
               value={formState.comment}

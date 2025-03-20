@@ -7,6 +7,7 @@ import { checkZeroSizeToMB } from '../../../util';
 import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
 import ActionButton from '../../../components/button/ActionButton';
 import Loading from '../../../components/common/Loading';
+import Localization from '../../../utils/Localization';
 
 /**
  * @name DomainGetVms
@@ -75,7 +76,7 @@ const DomainImportVms = ({ domainId }) => {
             isOpen={true}
             type="Vm"
             onRequestClose={() => setActiveModal(null)}
-            contentLabel={'가상머신'}
+            contentLabel={Localization.kr.VM}
             data={selectedVms}
           />
         )}

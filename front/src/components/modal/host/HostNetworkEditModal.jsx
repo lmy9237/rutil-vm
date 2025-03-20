@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import ModalNavButton from "../../navigation/ModalNavButton";
+import Localization from "../../../utils/Localization";
 
 // 탭 메뉴
 const tabs = [
@@ -21,8 +22,8 @@ const ipv4Options = [
 const ipv6Options = [
   { id: "default_mtu", value: "default", label: "없음" },
   { id: "dhcp_mtu", value: "dhcp", label: "DHCP" },
-  { id: "slaac_mtu", value: "slaac", label: "상태 비저장 주소 자동 설정" },
-  { id: "dhcp_slaac_mtu", value: "dhcp_slaac", label: "DHCP 및 상태 비저장 주소 자동 설정" },
+  { id: "slaac_mtu", value: "slaac", label: `${Localization.kr.STATELESS} 주소 자동 설정` },
+  { id: "dhcp_slaac_mtu", value: "dhcp_slaac", label: `DHCP 및 ${Localization.kr.STATELESS} 주소 자동 설정` },
   { id: "static_mtu", value: "static", label: "정적" },
 ];
 

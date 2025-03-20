@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -10,9 +9,9 @@ import HostNics from "./HostNics";
 import HostDevices from "./HostDevices";
 import HostEvents from "./HostEvents";
 import HostModals from "../../../components/modal/host/HostModals";
-import { renderHostStatus } from "../../../components/Icon";
-import { useHost } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import { rvi24Host } from "../../../components/icons/RutilVmIcons";
+import { useHost } from "../../../api/RQHook";
 import "./Host.css";
 
 /**
@@ -54,10 +53,10 @@ const HostInfo = () => {
 
   const sections = [
     { id: "general", label: Localization.kr.GENERAL },
-    { id: "vms", label: "가상머신" },
-    { id: "nics", label: "네트워크 인터페이스" },
-    { id: "devices", label: "호스트 장치" },
-    { id: "events", label: "이벤트" },
+    { id: "vms", label: Localization.kr.VM },
+    { id: "nics", label: Localization.kr.NICS },
+    { id: "devices", label: `${Localization.kr.HOST} 장치` },
+    { id: "events", label: Localization.kr.EVENT },
   ];
 
   useEffect(() => {
@@ -98,8 +97,7 @@ const HostInfo = () => {
       label: "편집",
       disabled: !isUp,
       onClick: () => openModal("edit"),
-    },
-    {
+    }, {
       type: "delete",
       label: "삭제",
       disabled: !isMaintenance,
@@ -113,38 +111,32 @@ const HostInfo = () => {
       label: "유지보수",
       disabled: !isUp && isNonOperational,
       onClick: () => openModal("deactivate"),
-    },
-    {
+    }, {
       type: "activate",
       label: "활성화",
       disabled: isMaintenance ,
       onClick: () => openModal("activate"),
-    },
-    {
+    }, {
       type: "restart",
       label: "재시작",
       disabled: !isUp,
       onClick: () => openModal("restart"),
-    },
-    {
+    }, {
       type: "reInstall",
       label: "다시 설치",
       disabled: isUp,
       onClick: () => openModal("reInstall"),
-    },
-    {
+    }, {
       type: "register",
       label: "인증서 등록",
       disabled: isUp,
       onClick: () => openModal("register"),
-    },
-    {
+    }, {
       type: "haOn",
       label: "글로벌 HA 유지 관리를 활성화",
       disabled: !isUp,
       onClick: () => openModal("haOn"),
-    },
-    {
+    }, {
       type: "haOff",
       label: "글로벌 HA 유지 관리를 비활성화",
       disabled: !isUp,
@@ -152,13 +144,11 @@ const HostInfo = () => {
     },
   ];
 
-  console.log("...");
   return (
     <div id="section">
-      <HeaderButton
-        titleIcon={faUser}
+      <HeaderButton titleIcon={rvi24Host}
         title={host?.name}
-        status={renderHostStatus(host?.status)}
+        status={Localization.kr.renderStatus(host?.status)}
         buttons={sectionHeaderButtons}
         popupItems={popupItems}
       />

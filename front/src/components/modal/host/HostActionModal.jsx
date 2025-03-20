@@ -8,6 +8,7 @@ import {
   useActivateHost,
   useRestartHost,
 } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name HostActionModal
@@ -90,7 +91,7 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
   return (
     
     <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"호스트"}
+      targetName={Localization.kr.HOST}
       submitTitle={getContentLabel(action)}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "630px" }} 

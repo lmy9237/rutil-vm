@@ -6,6 +6,7 @@ import { useAddUser, useEditUser, useChangePasswordUser } from "../../../api/RQH
 import LabelCheckbox from "../../label/LabelCheckbox";
 import { validateUsername, validatePw } from "../../../util";
 import "./SettingsUserModal.css";
+import Localization from "../../../utils/Localization";
 
 const initialFormState = {
   id: "",
@@ -115,7 +116,8 @@ const SettingUsersModal = ({
           required={true}
         />)}
         {!changePassword && (
-          <LabelInput id="firstName" label="이름"
+          <LabelInput id="firstName" 
+            label={Localization.kr.NAME}
             value={formState.firstName}
             onChange={updateInput("firstName")}
             required={true}

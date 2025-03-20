@@ -2,21 +2,21 @@ import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import "./MVm.css";
+import Localization from "../../../utils/Localization";
 
 const VmDeviceAddModal = ({ isOpen, onClose, hostDevices }) => {
   console.log("...")
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"호스트 장치"}
+      targetName={`${Localization.kr.HOST} 장치`}
       submitTitle={"장치추가"}
       onSubmit={() => {}}
       contentStyle={{ width: "1000px"}} 
     >
-
       <div className="p-1">
         <div className="select-box mb-1">
           <label className="mr-1" htmlFor="fixed_host">
-            고정된 호스트
+            고정된 {Localization.kr.HOST}
           </label>
           <select id="fixed_host">
             <option value="host01.ititinfo.com">host01.ititinfo.com</option>

@@ -1,15 +1,55 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Tooltip } from "react-tooltip";
-import "./Table.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRefresh, faSearch } from "@fortawesome/free-solid-svg-icons";
-import TableRowLoading from "./TableRowLoading"
+import { faRefresh } from "@fortawesome/free-solid-svg-icons";
+import TableRowLoading from "./TableRowLoading";
 import TableRowNoData from "./TableRowNoData";
 import Localization from "../../utils/Localization";
+import {
+  RVI24,
+  rvi24ChevronLeftRect,
+  rvi24ChevronLeftRectDisabled,
+  rvi24ChevronRightRect,
+  rvi24ChevronRightRectDisabled,
+} from "../icons/RutilVmIcons";
+import "./Table.css";
+
+const PagingButton = ({ 
+  type = "prev", 
+  ...props
+}) => {
+  const [isHovering, setIsHovering] = useState(false);
+  const handleMouseOver = () => setIsHovering(true);
+  const handleMouseOut = () => setIsHovering(false);
+  
+  return (
+    <button
+      className={`paging-arrow${isHovering ? ` on` : ""}`}
+      {...props}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+    >
+      <RVI24
+        iconDef={
+          type === "prev"
+            ? props.disabled
+              ? rvi24ChevronLeftRectDisabled
+              : rvi24ChevronLeftRect(isHovering)
+            : props.disabled
+              ? rvi24ChevronRightRectDisabled
+              : rvi24ChevronRightRect(isHovering)
+        }
+      />
+    </button>
+  );
+};
 
 const PagingTable = ({
-  isLoading = null, isError = false, isSuccess,
-  columns = [], data = [],
+  isLoading = null,
+  isError = false,
+  isSuccess,
+  columns = [],
+  data = [],
   onRowClick = () => {},
   clickableColumnIndex = [],
   itemsPerPage = 20,
@@ -31,7 +71,7 @@ const PagingTable = ({
         value &&
         value.toString().toLowerCase().includes(searchQuery.toLowerCase())
       );
-    })
+    });
   });
 
   // 현재 페이지의 데이터를 계산
@@ -55,7 +95,9 @@ const PagingTable = ({
 
   // 툴팁 관리 함수
   const handleMouseEnter = (e, rowIndex, colIndex, content) => {
-    console.log(`PagingTable > handleMouseEnter ... rowIndex: ${rowIndex}, colIndex: ${colIndex}`);
+    console.log(
+      `PagingTable > handleMouseEnter ... rowIndex: ${rowIndex}, colIndex: ${colIndex}`
+    );
     const element = e.target;
     if (element.scrollWidth > element.clientWidth) {
       setTooltips((prevTooltips) => ({
@@ -89,17 +131,22 @@ const PagingTable = ({
                 key={colIndex}
                 data-tooltip-id={`tooltip-${rowIndex}-${colIndex}`}
                 data-tooltip-content={row[column.accessor]}
-                onMouseEnter={(e) => handleMouseEnter(e, rowIndex, colIndex, row[column.accessor])}
+                onMouseEnter={(e) =>
+                  handleMouseEnter(e, rowIndex, colIndex, row[column.accessor])
+                }
                 style={{
                   maxWidth: "200px",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   textAlign:
-                    typeof row[column.accessor] === "string" || typeof row[column.accessor] === "number"
+                    typeof row[column.accessor] === "string" ||
+                    typeof row[column.accessor] === "number"
                       ? "left"
                       : "center",
-                  cursor: clickableColumnIndex.includes(colIndex) ? "pointer" : "default",
+                  cursor: clickableColumnIndex.includes(colIndex)
+                    ? "pointer"
+                    : "default",
                 }}
               >
                 {typeof row[column.accessor] === "object" ? (
@@ -116,19 +163,16 @@ const PagingTable = ({
       );
     }
   };
-  
 
   console.log("...");
   return (
     <>
-    
-    
       <div className="pagination">
-      
         <div className="paging-btns center mb-1">
           {showSearchBox && (
             <div className="search-box">
-              <input type="text"
+              <input
+                type="text"
                 placeholder={Localization.kr.PLACEHOLDER_SEARCH}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -139,28 +183,19 @@ const PagingTable = ({
             </div>
           )}
           <div className="paging-arrows">
-            <div className="flex">
-              <button
-                className="paging-arrow"
-                onClick={() => handlePageChange("prev")}
-                disabled={currentPage === 1}
-              >
-                {"<"}
-              </button>
-              <span>{`${indexOfFirstItem + 1} - ${Math.min(indexOfLastItem, validData.length)}`}</span>
-              <button
-                className="paging-arrow"
-                onClick={() => handlePageChange("next")}
-                disabled={currentPage === totalPages}
-              >
-                {">"}
-              </button>
-            </div>
+            <PagingButton type="prev"
+              onClick={() => handlePageChange("prev")}
+              disabled={currentPage === 1}
+            />
+            <span>{`${indexOfFirstItem + 1} - ${Math.min(indexOfLastItem, validData.length)}`}</span>
+            <PagingButton type="next"
+              onClick={() => handlePageChange("next")}
+              disabled={currentPage === totalPages}
+            />
           </div>
         </div>
 
-        <table className="custom-table"
-          ref={tableRef}>
+        <table className="custom-table" ref={tableRef}>
           <thead>
             <tr>
               {columns.map((column, index) => (
@@ -176,27 +211,27 @@ const PagingTable = ({
               ))}
             </tr>
           </thead>
-          <tbody>
-            {renderTableBody()}
-          </tbody>
+          <tbody>{renderTableBody()}</tbody>
         </table>
       </div>
-      
+
       {/* Tooltip */}
-      {data && data.map((row, rowIndex) =>
-        columns.map((column, colIndex) => (
-          tooltips[`${rowIndex}-${colIndex}`] && (
-            <Tooltip
-              key={`tooltip-${rowIndex}-${colIndex}`}
-              id={`tooltip-${rowIndex}-${colIndex}`}
-              place="right"
-              effect="solid"
-              delayShow={400}
-              content={tooltips[`${rowIndex}-${colIndex}`]}
-            />
+      {data &&
+        data.map((row, rowIndex) =>
+          columns.map(
+            (column, colIndex) =>
+              tooltips[`${rowIndex}-${colIndex}`] && (
+                <Tooltip
+                  key={`tooltip-${rowIndex}-${colIndex}`}
+                  id={`tooltip-${rowIndex}-${colIndex}`}
+                  place="right"
+                  effect="solid"
+                  delayShow={400}
+                  content={tooltips[`${rowIndex}-${colIndex}`]}
+                />
+              )
           )
-        ))
-      )}
+        )}
     </>
   );
 };

@@ -101,11 +101,11 @@ const NetworkModal = ({
 
   const validateForm = () => {
     if (checkKoreanName(formState.name))
-      return "이름이 유효하지 않습니다.";
+      return `${Localization.kr.NAME}이 유효하지 않습니다.`;
     if (!formState.name)
-      return "이름을 입력해주세요.";
-    // if (!checkKoreanName(formState.description))
-    //   return "설명이 유효하지 않습니다.";
+      return `${Localization.kr.NAME}을 입력해주세요.`;
+    if (!checkKoreanName(formState.description))
+      return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
     if (!dataCenterVoId) 
       return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     return null;
@@ -170,32 +170,25 @@ const NetworkModal = ({
           loading={isDatacentersLoading}
           options={datacenters}
         />
-        <LabelInput
-          label="이름"
-          id="name"
+        <LabelInput id="name" label={Localization.kr.NAME}
           value={formState.name}
           onChange={handleInputChange("name")}
           autoFocus
         />
-        <LabelInput
-          label="설명"
-          id="description"
+        <LabelInput id="description" label={Localization.kr.DESCRIPTION}
           value={formState.description}
           onChange={handleInputChange("description")}
         />
-        <LabelInput
-          label="코멘트"
-          id="comment"
+        <LabelInput id="comment" label={Localization.kr.COMMENT}
           value={formState.comment}
           onChange={handleInputChange("comment")}
         />
         <hr />
 
         <div className=" center">
-          <LabelCheckbox
-            label="VLAN 태깅 활성화"
-            id="vlan"
-            checked={formState.vlan !== null} // 기본적으로 체크 해제
+          <LabelCheckbox id="usageVm" label={`${Localization.kr.VM} 네트워크`}
+            className="network-checkbox-only"
+            checked={formState.usageVm}
             onChange={(e) => {
               const isChecked = e.target.checked;
               setFormState((prev) => ({
@@ -216,8 +209,7 @@ const NetworkModal = ({
               }));
             }}
             disabled={formState.vlan === null} // 체크되지 않으면 비활성화
-            />
-          
+          />
         </div>
 
         <LabelCheckbox

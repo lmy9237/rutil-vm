@@ -84,7 +84,7 @@
 .disk-bar {
   height: 90%;
 }
-/*네트워크 인터페이스*/
+/* 네트워크 인터페이스 */
 .network-content {
   width: 100%;
   display: flex;
@@ -96,6 +96,9 @@
 }
 .network-content:hover {
   background-color: #ebececd8;
+}
+.network-status {
+  display:flex;align-items:center;justify-content:flex-start;flex-direction: row;
 }
 .network-content > div:first-child {
   padding: 10px;

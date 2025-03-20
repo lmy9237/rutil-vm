@@ -1,6 +1,7 @@
 import { fn } from '@storybook/test';
 import HeaderButton from './HeaderButton';
 import { Subtitle } from '@storybook/blocks';
+import Localization from '../../utils/Localization';
 
 export default {
   title: 'Example/HeaderButton',
@@ -25,7 +26,7 @@ export default {
 
 export const ClusterHeaderButton = {
   args: {
-    title: "클러스터",
+    title: Localization.kr.CLUSTER,
     subtitle: '??????????',
     additionalText: '목록이름',
     buttons: [

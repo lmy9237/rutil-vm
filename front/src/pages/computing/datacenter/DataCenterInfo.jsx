@@ -13,6 +13,8 @@ import DataCenterNetworks from "./DataCenterNetworks";
 import DataCenterEvents from "./DataCenterEvents";
 import { useDataCenter } from "../../../api/RQHook";
 import Loading from "../../../components/common/Loading";
+import Localization from "../../../utils/Localization";
+import { rvi24Cluster, rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name DataCenterInfo
@@ -53,12 +55,12 @@ const DataCenterInfo = () => {
   }, [isDataCenterError, isDataCenterLoading, dataCenter, navigate]);
 
   const sections = [
-    { id: "clusters", label: "클러스터" },
-    { id: "hosts", label: "호스트" },
-    { id: "vms", label: "가상머신" },
+    { id: "clusters", label: Localization.kr.CLUSTER },
+    { id: "hosts", label: Localization.kr.HOST },
+    { id: "vms", label: Localization.kr.VM },
     { id: "storageDomains", label: "스토리지" },
     { id: "network", label: "논리 네트워크" },
-    { id: "events", label: "이벤트" },
+    { id: "events", label: Localization.kr.EVENT },
   ];
 
   useEffect(() => {
@@ -109,7 +111,7 @@ const DataCenterInfo = () => {
   return (
     <div id="section">
       <HeaderButton
-        titleIcon={faLayerGroup}
+        titleIcon={rvi24Datacenter}
         title={dataCenter?.name}
         buttons={sectionHeaderButtons}
       />

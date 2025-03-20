@@ -13,6 +13,7 @@ import ClusterEvents from "./ClusterEvents";
 import { useCluster } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import "./Cluster.css";
+import { rvi16Globe, rvi24Cluster } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name ClusterInfo
@@ -52,10 +53,10 @@ const ClusterInfo = () => {
 
   const sections = [
     { id: "general", label: Localization.kr.GENERAL },
-    { id: "hosts", label: "호스트" },
-    { id: "vms", label: "가상머신" },
+    { id: "hosts", label: Localization.kr.HOST },
+    { id: "vms", label: Localization.kr.VM },
     { id: "networks", label: "논리 네트워크" },
-    { id: "events", label: "이벤트" },
+    { id: "events", label: Localization.kr.EVENT },
   ];
 
   useEffect(() => {
@@ -95,8 +96,7 @@ const ClusterInfo = () => {
   console.log("...");
   return (
     <div id="section">
-      <HeaderButton
-        titleIcon={faEarthAmericas}
+      <HeaderButton titleIcon={rvi24Cluster}
         title={cluster?.name}
         buttons={sectionHeaderButtons}
       />

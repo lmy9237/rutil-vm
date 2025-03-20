@@ -102,8 +102,10 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
   }, [hosts]);
 
   const validateForm = () => {
-    if (!alias) return "별칭을 입력해주세요.";
-    if (!size) return "크기를 입력해주세요.";
+    if (!alias) 
+      return `${Localization.kr.ALIAS}을 입력해주세요.`;
+    if (!size)
+      return "크기를 입력해주세요.";
     if (!dataCenterVoId) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     if (!domainVoId) return "스토리지 도메인을 선택해주세요.";
     if (!diskProfileVoId) return "디스크 프로파일을 선택해주세요.";
@@ -205,17 +207,15 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                     disabled
                   />
 
-                <LabelInput
-                    label="별칭"
-                    id="alias"
-                    type="text"
-                    value={onlyFileName(alias)}
-                    onChange={(e) => setAlias(e.target.value)}
-                  />
+                <LabelInput id="alias"
+                  label={Localization.kr.ALIAS}
+                  type="text"
+                  value={onlyFileName(alias)}
+                  onChange={(e) => setAlias(e.target.value)}
+                />
 
-                <LabelInput
-                  label="설명"
-                  id="description"
+                <LabelInput id="description"
+                  label={Localization.kr.DESCRIPTION}
                   type="text"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -245,17 +245,15 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                   }))}
                 />
 
-                <LabelSelectOptions
+                <LabelSelectOptions id="diskProfile"
                   label="디스크 프로파일"
-                  id="diskProfile"
                   value={diskProfileVoId}
                   onChange={(e) => setDiskProfileVoId(e.target.value)}
                   options={diskProfiles.map((dp) => ({ value: dp.id, label: dp.name }))}
                 />
 
-                <LabelSelectOptions
-                  label="호스트"
-                  id="host"
+                <LabelSelectOptions id="host"
+                  label={Localization.kr.HOST}
                   value={hostVoId}
                   onChange={(e) => setHostVoId(e.target.value)}
                   options={hosts.map((h) => ({ value: h.id, label: h.name }))}
@@ -274,7 +272,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                   />
                 </FormGroup>
 
-                <FormGroup label="별칭">
+                <FormGroup label={Localization.kr.ALIAS}>
                   <input
                     type="text"
                     value={onlyFileName(alias)}
@@ -284,7 +282,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                   />
                 </FormGroup>
 
-                <FormGroup label="설명">
+                <FormGroup label={Localization.kr.DESCRIPTION}>
                   <input
                     type="text"
                     value={description}
@@ -321,7 +319,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                   </select>
                 </FormGroup>
 
-                <FormGroup label="호스트">
+                <FormGroup label={Localization.kr.HOST}>
                   <select
                     value={hostVoId}
                     onChange={(e) => setHostVoId(e.target.value)}

@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import HostModals from "../modal/host/HostModals";
@@ -9,6 +7,7 @@ import { renderHostStatusIcon } from "../Icon";
 import HostActionButtons from "./HostActionButtons";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
+import { RVI16, rvi16Star, rvi16StarGold } from "../icons/RutilVmIcons";
 
 const HostDupl = ({
   isLoading, isError, isSuccess,
@@ -35,13 +34,11 @@ const HostDupl = ({
     ),
     icon: renderHostStatusIcon(host?.status),
     hostedEngine:
-      host?.hostedEngine && host?.hostedEngineVM ? (
-        <FontAwesomeIcon icon={faPencil} fixedWidth style={{ color: "gold", transform: "rotate(90deg)" }} />
-      ) : host?.hostedEngine ? (
-        <FontAwesomeIcon icon={faPencil} fixedWidth style={{ color: "grey", transform: "rotate(90deg)" }} />
-      ) : (
-        ""
-      ),
+      host?.hostedEngine && host?.hostedEngineVM 
+        ? (<RVI16 iconDef={rvi16StarGold} />)
+        : host?.hostedEngine 
+          ? (<RVI16 iconDef={rvi16Star} />) 
+          : (""),
     status: host?.status,
     spmStatus: host?.spmStatus === "NONE" ? "보통" : host?.spmStatus,
     vmCnt: host?.vmSizeVo?.allCnt ?? "0",

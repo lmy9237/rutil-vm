@@ -4,6 +4,7 @@ import VmDiskModal from "./VmDiskModal";
 import VmDiskActionModal from "./VmDiskActionModal";
 import { useDeleteDisk, useDisksFromVM, useVmById } from "../../../api/RQHook";
 import DeleteModal from "../../../utils/DeleteModal";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name VmDiskModals
@@ -55,7 +56,7 @@ const VmDiskModals = ({
     ),
     delete: (
       <DeleteModal isOpen={activeModal === "delete"}
-        label={"가상머신 디스크"}
+        label={`${Localization.kr.VM} 디스크`}
         vmId={vmId || ""}
         data={selectedDisks}
         api={useDeleteDisk}

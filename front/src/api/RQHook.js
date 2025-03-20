@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ApiManager from "./ApiManager";
 import toast from "react-hot-toast";
+import Localization from "../utils/Localization";
 
 //#region: Navigation
 // Custom hook to fetch tree navigations
@@ -1797,7 +1798,7 @@ export const useAddDiskFromVM = () => {
   const queryClient = useQueryClient(); // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, diskData }) => {
-      console.log('가상머신 생성 디스크데이터 diskData:', diskData); // nicData 출력
+      console.log(`${Localization.kr.VM} 생성 디스크데이터 diskData: ${diskData}`); // nicData 출력
       return await ApiManager.addDiskFromVM(vmId, diskData);
     },
     onSuccess: () => {
@@ -1819,7 +1820,7 @@ export const useEditDiskFromVM = () => {
   const queryClient = useQueryClient(); // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId, diskAttachment }) => {
-      console.log('가상머신 수정 디스크데이터:', diskAttachment);
+      console.log(`${Localization.kr.VM} 수정 디스크데이터: ${diskAttachment}`, );
       return await ApiManager.editDiskFromVM(vmId, diskAttachmentId, diskAttachment);
     },
     onSuccess: () => {
@@ -2415,7 +2416,7 @@ export const useAllVnicProfilesFromNetwork = (networkId, mapPredicate) => useQue
       console.warn('networkId가 존재하지 않습니다.');
       return [];
     }
-    console.log(`useAllVnicProfilesFromNetwork모든목록조회 ... ${networkId}`);
+    console.log(`useAllVnicProfilesFromNetwork ... ${networkId}`);
     const res = await ApiManager.findAllVnicProfilesFromNetwork(networkId);
     return res?.map((e) => mapPredicate(e)) ?? [];
   },

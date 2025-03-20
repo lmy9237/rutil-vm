@@ -281,9 +281,8 @@ input[disabled] {
   align-content: center;
   justify-content: center;
 }
-/*네트워크 인터페이스 팝업창들*/
-/*새로만들기*/
-
+/* 네트워크 인터페이스 팝업창들 */
+/* 새로만들기 */
 .network-popup-content {
   padding: 1% 2%;
 }

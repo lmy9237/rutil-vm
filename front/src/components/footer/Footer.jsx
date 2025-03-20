@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faFilter } from "@fortawesome/free-solid-svg-icons";
 import "./Footer.css";
 import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
+import Localization from "../../utils/Localization";
 
 /**
  * @name Footer
@@ -25,7 +26,7 @@ const Footer = ({
     id: index + 1,
     taskName: `작업 ${index + 1}`,
     target: index % 2 === 0 ? "CentOS 7.9 Shell Script 테스트 - MYK" : "Datacenter",
-    status: "완료 시간",
+    status: `완료 ${Localization.kr.TIME}`,
     details: "",
     startTime: "2025.02.28",
     waitTime: `${index + 1}ms`,
@@ -68,9 +69,9 @@ const Footer = ({
                   <th>대상 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
                   <th>상태 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
                   <th>세부 정보 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>시작 시간 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>대기 시간 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>시작 시간 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>시작 {Localization.kr.TIME} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>대기 {Localization.kr.TIME} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>시작 {Localization.kr.TIME} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
                 </tr>
               </thead>
               <tbody>

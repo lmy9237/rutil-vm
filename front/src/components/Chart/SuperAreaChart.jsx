@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AreaChart from "./AreaChart";
+import Localization from "../../utils/Localization";
 
 const SuperAreaChart = ({ per, type }) => {
   const [series, setSeries] = useState([]);
@@ -44,7 +45,7 @@ const SuperAreaChart = ({ per, type }) => {
       // 차트 시리즈 업데이트
       setSeries([
         {
-          name: type === "cpu" ? "CPU 사용률 (%)" : "메모리 사용률 (%)",
+          name: type === "cpu" ? "CPU 사용률 (%)" : `${Localization.kr.MEMORY} 사용률 (%)`,
           data: selectedData,
         },
       ]);

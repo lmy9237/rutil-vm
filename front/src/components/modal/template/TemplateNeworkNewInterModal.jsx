@@ -9,6 +9,7 @@ import {
   useAllVnicProfiles,
   useEditNicFromTemplate,
 } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 const TemplateNeworkNewInterModal = ({
   isOpen,
@@ -148,19 +149,18 @@ const TemplateNeworkNewInterModal = ({
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
-      targetName={"네트워크 인터페이스"}
+      targetName={Localization.kr.NICS}
       submitTitle={editMode ? "편집" : "생성"}
       onSubmit={handleFormSubmit}
     >
       {/* <div className="new-network-interface modal"> */}
       <div className="network-popup-content">
         <div className="input_box pt-1">
-          <span>이름</span>
-          <input
-            type="text"
+          <span>{Localization.kr.NAME}</span>
+          <input type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="이름을 입력하세요"
+            placeholder={Localization.kr.NAME}
           />
         </div>
         <div className="select_box">

@@ -4,18 +4,19 @@
   border-bottom: var(--border-box);
   padding: 0 16px;
 }
+.section-header-left {
+  display:flex;align-items:center;justify-content:flex-start;flex-direction:row;
+  gap:5px;
+}
 .section-header-left > div {
-  margin-right: 10px;
-  align-items: center;
+  display:flex;align-items:center;justify-content:center;flex-direction:row;
 }
 .section-header-left p {
   font-size: var(--fs-big);
   font-weight: 700;
 }
 .section-header-right {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display:flex;align-items:center;justify-content: space-between;
 }
 .article-nav {
   display: flex;

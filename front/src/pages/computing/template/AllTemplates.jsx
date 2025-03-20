@@ -1,9 +1,9 @@
 import React from "react";
-import { faDesktop } from "@fortawesome/free-solid-svg-icons";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TemplateDupl from "../../../components/dupl/TemplateDupl";
 import HeaderButton from "../../../components/button/HeaderButton";
 import { useAllTemplates } from "../../../api/RQHook";
+import { rvi24Template } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name AllTemplates
@@ -21,15 +21,15 @@ const AllTemplates = () => {
 
   return (
     <div id="section">
-      <div>
-        <HeaderButton titleIcon={faDesktop} title={"템플릿"} />
-      </div>
+      <HeaderButton titleIcon={rvi24Template}
+        title={"템플릿"}
+      />
       <div className="w-full section-content">
         <TemplateDupl
-          isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
           columns={TableColumnsInfo.TEMPLATES}
           templates={templates}
           showSearchBox={true}
+          isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         />
       </div>
     </div>

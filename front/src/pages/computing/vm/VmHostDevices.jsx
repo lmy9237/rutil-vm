@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useHostdevicesFromVM } from '../../../api/RQHook';
-
 // const VmDeviceAddModal = React.lazy(() => import('../../../components/modal/vm/VmDeviceAddModal'));
 
 
@@ -20,29 +19,11 @@ const VmHostDevices = ({ vmId }) => {
     isLoading: isHostDevicesLoading,
     isError: isHostDevicesError,
     isSuccess: isHostDevicesSuccess,
-  } = useHostdevicesFromVM(vmId, (e) => ({...e}));  
+  } = useHostdevicesFromVM(vmId, (e) => ({ ...e }));  
 
   // const [activeModal, setActiveModal] = useState(null);
   const [selectedDevices, setSelectedDevices] = useState([]);
   const selectedIds = (Array.isArray(selectedDevices) ? selectedDevices : []).map(d => d.id).join(', ');
-
-  // const closeModal = () => setActiveModal(null);
-  
-  // const renderModals = () => (
-  //   <Suspense fallback={<Loading/>}>
-  //     <VmDeviceAddModal
-  //       isOpen={activeModal === 'add'}
-  //       hostDevices={hostDevices}
-  //       onClose={closeModal}
-  //     />
-  //     {/* 장치 삭제 */}
-  //     {/*View CPU Pinning 팝업 */}
-  //     {/* <VmCPUPinningModal
-  //       isOpen={activePopup === 'view_cpu'}
-  //       onClose={closePopup}
-  //     /> */}
-  //   </Suspense>
-  // );
   
   return (
     <>
@@ -66,8 +47,8 @@ const VmHostDevices = ({ vmId }) => {
           driver: hostDevice?.driver ?? 'Unknown',
           // currentlyUsed: hostDevice?.currentlyUsed ?? 'Unknown',
           // connectedToVM: hostDevice?.connectedToVM ?? 'Unknown',
-          // iommuGroup: hostDevice?.iommuGroup ?? '해당 없음',
-          // mdevType: hostDevice?.mdevType ?? '해당 없음',
+          // iommuGroup: hostDevice?.iommuGroup ?? Localization.kr.NOT_ASSOCIATED,
+          // mdevType: hostDevice?.mdevType ?? Localization.kr.NOT_ASSOCIATED,
         }))} 
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedDevices(selectedRows)}

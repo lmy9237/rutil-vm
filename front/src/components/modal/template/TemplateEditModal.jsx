@@ -80,7 +80,7 @@ const TemplateEditModal = ({
 
   const handleFormSubmit = () => {
     if (name === "") {
-      toast.error("이름을 입력해주세요.");
+      toast.error(`${Localization.kr.NAME}을 입력해주세요.`);
       return;
     }
     const dataToSubmit = {
@@ -148,32 +148,28 @@ const TemplateEditModal = ({
           {activeTab  === "general" && (
             <>
             <div className="template-edit-texts">
-              <LabelInput
-                label="이름"
-                id="template_name"
+              <LabelInput id="template_name"
+                label={Localization.kr.NAME}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 autoFocus
               />
-              <LabelInput
-                label="설명"
-                id="description"
+              <LabelInput id="description"
+                label={Localization.kr.DESCRIPTION}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <LabelInput
-                label="코멘트"
-                id="comment"
+              <LabelInput id="comment"
+                label={Localization.kr.COMMENT}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               />
             </div>
 
             <div >
-              <LabelCheckbox
+              <LabelCheckbox id="stateless"
                 className="t-new-checkbox"
-                id="stateless"
-                label="상태 비저장"
+                label={Localization.kr.STATELESS}
                 checked={stateless}
                 onChange={(e) => setStateless(e.target.checked)}
               />

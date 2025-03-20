@@ -1,8 +1,9 @@
 import React from "react";
-import { faServer } from "@fortawesome/free-solid-svg-icons";
 import HeaderButton from "../../../components/button/HeaderButton";
 import NetworkDupl from "../../../components/dupl/NetworkDupl";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
+import { rvi24Network } from "../../../components/icons/RutilVmIcons";
+import Localization from "../../../utils/Localization";
 import { useAllNetworks } from "../../../api/RQHook";
 import "./Network.css";
 
@@ -25,7 +26,9 @@ const AllNetwork = () => {
   return (
     <div id="section">
       <div>
-        <HeaderButton titleIcon={faServer} title="네트워크" />
+        <HeaderButton titleIcon={rvi24Network} 
+          title={Localization.kr.NETWORK}
+        />
       </div>
       <div className="w-full section-content">
         <NetworkDupl

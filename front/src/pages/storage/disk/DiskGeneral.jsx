@@ -1,6 +1,7 @@
 import { useDiskById } from "../../../api/RQHook";
 import InfoTable from "../../../components/table/InfoTable";
 import { checkZeroSizeToGB, convertBytesToGB } from "../../../util";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name DiskGeneral
@@ -19,9 +20,9 @@ const DiskGeneral = ({ diskId }) => {
   } = useDiskById(diskId);
 
   const tableRows = [
-    { label: "별칭", value: disk?.alias },
+    { label: Localization.kr.ALIAS, value: disk?.alias },
     { label: "ID", value: disk?.id },
-    { label: "설명", value: disk?.description },
+    { label: Localization.kr.DESCRIPTION, value: disk?.description },
     { label: "디스크 프로파일", value: disk?.storageDomainVo?.name },
     { label: "가상 크기", value: `${convertBytesToGB(disk?.virtualSize)} GB` },
     { label: "실제 크기", value: checkZeroSizeToGB(disk?.actualSize) },

@@ -261,13 +261,13 @@ const DomainModal = ({
 
   const validateForm = () => {
     if (!checkKoreanName(formState.name))
-      return "이름이 유효하지 않습니다.";
+      return `${Localization.kr.NAME}이 유효하지 않습니다.`;
     if (!formState.name)
-      return "이름을 입력해주세요.";
+      return `${Localization.kr.NAME}을 입력해주세요.`;
     if (!dataCenterVoId) 
       return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     if (!hostVoName)
-      return "호스트를 선택해주세요.";
+      return `${Localization.kr.HOST}를 선택해주세요.`;
     if (formState.storageType === "NFS" && !nfsAddress)
       return "경로를 입력해주세요.";
     if (formState.storageType !== "nfs" && lunId) {
@@ -357,22 +357,22 @@ const DomainModal = ({
             loading={isDatacentersLoading}
             options={dataCenters}
           />
-          <LabelSelectOptions
+          <LabelSelectOptions id="domain-type"
             label="도메인 기능"
             value={formState.domainType}
             onChange={handleInputChange("domainType")}
             disabled={editMode}
             options={domainTypes}
           />
-          <LabelSelectOptions
+          <LabelSelectOptions id="storage-type"
             label="스토리지 유형"
             value={formState.storageType}
             onChange={handleInputChange("storageType")}
             disabled={editMode}
             options={storageTypes}
           />
-          <LabelSelectOptionsID
-            label="호스트"
+          <LabelSelectOptionsID id="host"
+            label={Localization.kr.HOST}
             value={hostVoId}
             onChange={(e) => setHostVoId(e.target.value)}
             disabled={editMode}

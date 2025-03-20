@@ -5,6 +5,8 @@ import { convertBytesToMB } from "../../../util";
 import InfoTable from "../../../components/table/InfoTable";
 import SemiCircleChart from "../../../components/Chart/SemiCircleChart";
 import TableRowClick from "../../../components/table/TableRowClick";
+import Localization from "../../../utils/Localization";
+import { RVI16, rvi16Cluster, rvi16Globe, rvi16Host } from "../../../components/icons/RutilVmIcons";
 
 // 운영 시스템
 const osSystemList = [
@@ -99,29 +101,35 @@ const VmGeneral = ({ vmId }) => {
     chipsetOptionList.find((option) => option.value === vm?.biosType)?.label || vm?.chipsetFirmwareType;
 
   const generalTableRows = [
-    { label: "전원상태", value: vm?.status },
-    { label: "설명", value: vm?.description },
-    { label: "업타임", value: vm?.upTime },
-    { label: "IP 주소", value: vm?.ipv4 },
-    { label: "FQDN", value: vm?.fqdn },
-    { label: "최적화 옵션", value: vm?.type },
-    { label: "시간대", value: vm?.timeZone },
-    {
-      label: "클러스터",
+    { 
+      label: "전원상태", value: vm?.status 
+    }, {
+      label: Localization.kr.DESCRIPTION, value: vm?.description
+    }, {
+      label: "업타임", value: vm?.upTime
+    }, {
+      label: "IP 주소", value: vm?.ipv4
+    }, {
+      label: "FQDN", value: vm?.fqdn
+    }, {
+      label: "최적화 옵션", value: vm?.type
+    }, {
+      label: Localization.kr.TIMEZONE, value: vm?.timeZone
+    }, {
+      label: Localization.kr.CLUSTER,
       value: (
         <div className="related-object f-center">
-          <FontAwesomeIcon icon={faEarthAmericas} fixedWidth className="mr-0.5" />
+          <RVI16 iconDef={rvi16Cluster} />
           <TableRowClick type="cluster" id={vm?.clusterVo?.id}>
             {vm?.clusterVo?.name}
           </TableRowClick>
         </div>
       ),
-    },
-    {
-      label: "호스트",
+    }, {
+      label: Localization.kr.HOST,
       value: (
         <div className="related-object f-center">
-          <FontAwesomeIcon icon={faUser} fixedWidth className="mr-0.5" />
+          <RVI16 iconDef={rvi16Host} />
           <TableRowClick type="host" id={vm?.hostVo?.id}>
             {vm?.hostVo?.name}
           </TableRowClick>
@@ -135,7 +143,7 @@ const VmGeneral = ({ vmId }) => {
     { label: "아키텍처", value: vm?.cpuArc },
     { label: "칩셋/펌웨어 유형", value: chipsetLabel },
     { label: "CPU", value: `${vm?.cpuTopologyCnt} (${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` },
-    { label: "메모리", value: convertBytesToMB(vm?.memorySize) + " MB" ?? "0" },
+    { label: Localization.kr.MEMORY, value: convertBytesToMB(vm?.memorySize) + " MB" ?? "0" },
     { label: " 할당할 실제 메모리", value: convertBytesToMB(vm?.memoryGuaranteed) + " MB" ?? "0" },
     { label: "", value: "" },
     { label: "게스트", value: "" },
@@ -143,14 +151,14 @@ const VmGeneral = ({ vmId }) => {
     { label: "- 아키텍처", value: vm?.guestArc },
     { label: "- 운영 시스템", value: vm?.guestOsType },
     { label: "- 커널 버전", value: vm?.guestKernelVer },
-    { label: "- 시간대", value: vm?.guestTimeZone },
+    { label: `- ${Localization.kr.TIMEZONE}`, value: vm?.guestTimeZone },
   ];
 
   return (
     <>
       <div className="vm-detail-general-boxs">
         <div className="detail-general-box">
-          <div>일반 정보</div>
+          <div>{Localization.kr.GENERAL}</div>
           <InfoTable tableRows={generalTableRows} />
         </div>
 

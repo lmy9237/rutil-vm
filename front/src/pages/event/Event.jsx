@@ -1,6 +1,7 @@
-import { faListUl } from "@fortawesome/free-solid-svg-icons";
 import HeaderButton from "../../components/button/HeaderButton";
 import EventDupl from "../../components/dupl/EventDupl";
+import { rvi24Event } from "../../components/icons/RutilVmIcons";
+import Localization from "../../utils/Localization";
 import { useAllEvents } from "../../api/RQHook";
 
 /**
@@ -20,12 +21,10 @@ const Event = () => {
     ...e,
   }));
 
-  console.log("...");
   return (
     <div id="section">
-      <HeaderButton
-        titleIcon={faListUl}
-        title="Event"
+      <HeaderButton titleIcon={rvi24Event}
+        title={Localization.kr.EVENT}
         subtitle="Chart"
         buttons={[]}
         popupItems={[]}

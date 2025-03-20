@@ -25,8 +25,8 @@ const LabelInput = ({
   isEnglishOnly = false,
   onChange,
   onInvalid,
-  disabled,
   required = false,
+  ...props
 }) => {
   /**
    * @name cNameByType
@@ -50,7 +50,7 @@ const LabelInput = ({
           autoFocus={autoFocus}
           onChange={onChange}
           onInvalid={onInvalid}
-          disabled={disabled}
+          disabled={props.disabled}
           required={required}
         />
       </div>

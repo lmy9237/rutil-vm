@@ -15,6 +15,7 @@ import {
   useVmById,
 } from "../../../api/RQHook";
 import { checkKoreanName, convertBytesToGB, convertGBToBytes } from "../../../util";
+import Localization from "../../../utils/Localization";
 
 // 이 모달은 가상머신 생성에서 디스크 생성, 편집에서 사용될 예정
 // 또한 가상머신-디스크 에서 디스크 생성, 편집에서 사용될 예정
@@ -174,8 +175,10 @@ const VmDiskModal = ({
   };
 
   const validateForm = () => {
-    if (!formState.alias) return "별칭을 입력해주세요.";
-    if (checkKoreanName(formState.alias)) return "별칭을 입력해주세요.";
+    if (!formState.alias)
+      return `${Localization.kr.ALIAS}을 입력해주세요.`;
+    if (checkKoreanName(formState.alias))
+      return `${Localization.kr.ALIAS}을 입력해주세요.`;
     if (!formState.size) return "크기를 입력해주세요.";
     if (!storageDomainVo.id) return "스토리지 도메인을 선택해주세요.";
     if (!diskProfileVo.id) return "디스크 프로파일을 선택해주세요.";
@@ -302,19 +305,18 @@ const VmDiskModal = ({
                   onChange={handleInputChange("appendSize")}
                 />
               )}
-              <LabelInput 
+              <LabelInput id="alias"
                 className="img-input-box" 
-                label="별칭" 
+                label={Localization.kr.ALIAS}
                 value={formState.alias} 
                 onChange={handleInputChange("alias")}
               />
-              <LabelInput 
+              <LabelInput id="description"
                 className="img-input-box" 
-                label="설명" 
+                label={Localization.kr.DESCRIPTION}
                 value={formState.description} 
                 onChange={handleInputChange("description")}
               />
-
               <LabelSelectOptions
                 className="img-input-box"
                 label="인터페이스"

@@ -100,10 +100,6 @@ const DEFAULT_VALUES = {
 //       name: '', 
 //     }
 //   ],
-  
-
-  
-//   //#endregion: DataCenter
 
 // //#region:Cluster------ 클러스터
 //   FIND_ALL_CLUSTERS: [
@@ -201,7 +197,6 @@ const DEFAULT_VALUES = {
 //     vnicProfileVos: [
 //       {
 //         id: '531162db-c6c3-40b2-a9a7-c9d91d7200fc',
-//         name: 'VNIC 가짜',
 //         network: 'ovirtmgmt',
 //         dataCenter: 'Default',
 //         compatVersion: '4.7',

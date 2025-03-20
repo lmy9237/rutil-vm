@@ -10,6 +10,7 @@ import DiskDomains from "./DiskDomains";
 import DiskModals from "../../../components/modal/disk/DiskModals";
 import Localization from "../../../utils/Localization";
 import { useDiskById } from "../../../api/RQHook";
+import { rvi16HardDrive } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name DiskDomains
@@ -84,8 +85,7 @@ const DiskInfo = () => {
   console.log("...")
   return (
     <div id="section">
-      <HeaderButton
-        titleIcon={faHdd}
+      <HeaderButton titleIcon={rvi16HardDrive}
         title={disk?.alias}
         buttons={sectionHeaderButtons}
       />

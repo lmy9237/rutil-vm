@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import VmCommon from "./create/VmCommon";
 import VmNic from "./create/VmNic";
@@ -196,8 +194,8 @@ const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     { id: "common_tab", value: "common", label: Localization.kr.GENERAL },
     { id: "system_tab", value: "system", label: "시스템" },
     { id: "beginning_tab", value: "beginning", label: "초기 실행" },
-    { id: "host_tab", value: "host", label: "호스트" },
-    { id: "ha_mode_tab", value: "ha_mode", label: "고가용성" },
+    { id: "host_tab", value: "host", label: Localization.kr.HOST },
+    { id: "ha_mode_tab", value: "ha_mode", label: Localization.kr.HA },
     { id: "boot_option_tab", value: "boot_outer", label: "부트 옵션" },
   ];
 
@@ -485,10 +483,12 @@ const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   // diskAttachmentVos: formInfoState.diskVoList.map((disk) => ({ id: disk.id })),
 
   const validateForm = () => {
-    if (!formInfoState.name) return "이름을 입력해주세요.";
-    if (!clusterVoId) return "클러스터를 선택해주세요.";
+    if (!formInfoState.name) 
+      return `${Localization.kr.NAME}을 입력해주세요.`;
+    if (!clusterVoId) 
+      return `${Localization.kr.CLUSTER}를 선택해주세요.`;
     if (formSystemState.memorySize > "9223372036854775807")
-      return "메모리 크기가 너무 큽니다.";
+      return `${Localization.kr.MEMORY} 크기가 너무 큽니다.`;
     return null;
   };
 
@@ -555,8 +555,8 @@ const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
 
         <div className="vm-edit-select-tab">
           <div className="edit-first-content pb-0.5">
-            <LabelSelectOptionsID
-              label="클러스터"
+            <LabelSelectOptionsID id="cluster"
+              label={Localization.kr.CLUSTER}
               value={clusterVoId}
               onChange={(e) => setClusterVoId(e.target.value)}
               disabled={editMode} // 편집 모드일 경우 비활성화

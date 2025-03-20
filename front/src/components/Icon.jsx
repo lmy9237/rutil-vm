@@ -112,32 +112,6 @@ export function renderDataCenterStatus(status) {
   return status;
 }
 
-export function renderHostStatus(status) {
-  if (status === "UP") {
-    return "실행중";
-  } else if (status === "DOWN") {
-    return "중지";
-  } else if (status === "MAINTENANCE") {
-    return "유지보수";
-  } else if (status === "REBOOT") {
-    return "재부팅중";
-  }
-  return status;
-}
-
-export function renderVmStatus(status) {
-  if (status === "UP") {
-    return "실행중";
-  } else if (status === "DOWN") {
-    return "중지";
-  } else if (status === "MAINTENANCE") {
-    return "유지보수";
-  } else if (status === "REBOOT") {
-    return "재부팅중";
-  }
-  return status;
-}
-
 export function renderDomainStatus(status) {
   if (status === "ACTIVE") {
     return "활성화";

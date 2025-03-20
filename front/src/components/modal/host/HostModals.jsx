@@ -3,6 +3,7 @@ import HostModal from "./HostModal";
 import HostActionModal from "./HostActionModal";
 import { useDeleteHost } from "../../../api/RQHook";
 import DeleteModal from "../../../utils/DeleteModal";
+import Localization from "../../../utils/Localization";
 
 const HostModals = ({
   activeModal,
@@ -32,7 +33,7 @@ const HostModals = ({
       <DeleteModal
         isOpen={activeModal === "delete"}
         onClose={onClose}
-        label={"호스트"}
+        label={Localization.kr.HOST}
         data={selectedHosts}
         api={useDeleteHost()}
         // navigation={''}

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
+import Localization from "../../../../utils/Localization";
 
 // 마이그레이션 모드
 const migrationModeOptionList = [
@@ -39,7 +40,7 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
               }
             />
             <label className="form-check-label" htmlFor="clusterHost">
-              클러스터 내의 호스트
+              {Localization.kr.CLUSTER} 내의 호스트
             </label>
           </div>
 

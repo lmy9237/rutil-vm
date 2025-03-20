@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowCircleDown,
-  faArrowCircleUp,
   faArrowsAltH,
   faBan,
   faCheck,
@@ -12,15 +10,14 @@ import {
   faExclamationTriangle,
   faFan,
   faNetworkWired,
-  faPencilAlt,
-  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
-import HostPlusModal from "./NetworkHostPlusModal";
 import NetworkHostPlusModal from "./NetworkHostPlusModal";
 import NewBondingModal from "./NewBondingModal";
 import { useHost, useNetworkFromCluster } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import "./MNetwork.css";
+import { RVI16, rvi16Star, rvi16StarGold } from "../../icons/RutilVmIcons";
 
 const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
   // State for managing the second modal
@@ -65,7 +62,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
   };
   useEffect(() => {
     if (network) {
-      console.log("클러스터에대한 네트워크 정보:", network);
+      console.log(`${Localization.kr.CLUSTER}에 대한 ${Localization.kr.NETWORK} 정보: ${network}`, );
     }
   }, [network]);
 
@@ -91,7 +88,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
-      targetName={"호스트 네트워크"}
+      targetName={`${Localization.kr.HOST} ${Localization.kr.NETWORK}`}
       submitTitle={"설정"}
       onSubmit={() => {}}
     >
@@ -103,7 +100,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
           <div className="network-separation-left">
             <div>
               <div>인터페이스</div>
-              <div>할당된 논리 네트워크</div>
+              <div>할당된 논리 {Localization.kr.NETWORK}</div>
             </div>
             {Array.isArray(nicData) ? (
               nicData.map((nic, index) => (
@@ -113,12 +110,9 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
                       <>
                         <div className="bond-title flex gap-4">
                           Bond {index + 1}
-                          <div>
-                            <FontAwesomeIcon
-                              icon={faPencilAlt}
-                              onClick={() => openBondingModal("edit")} // 편집 모드로 모달 열기
-                            />
-                          </div>
+                          <RVI16 iconDef={rvi16StarGold}
+                            onClick={() => openBondingModal("edit")} // 편집 모드로 모달 열기
+                          />
                         </div>
                         {nic.bondingVo.slaves.map((slave, idx) => (
                           <div
@@ -181,7 +175,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
                             <span className="text">{nic.networkVo.name}</span>
                           </>
                         ) : (
-                          <span className="text">할당된 네트워크가 없음</span>
+                          <span className="text">할당된 {Localization.kr.NETWORK}가 없음</span>
                         )}
                       </div>
                       {nic.networkVo?.name && (
@@ -194,9 +188,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
                             icon={faExclamationTriangle}
                             className="icon"
                           />
-                          <FontAwesomeIcon
-                            icon={faPencilAlt}
-                            className="icon"
+                          <RVI16 iconDef={rvi16Star}
                             onClick={openSecondModal}
                           />
                         </div>
@@ -239,11 +231,11 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
                       icon={faNetworkWired}
                       style={{ color: "#007bff", marginRight: "10px" }}
                     />
-                    {net.name || "네트워크 이름 없음"}
+                    {net.name || `${Localization.kr.NETWORK} 이름 없음`}
                   </div>
                 ))
             ) : (
-              <div>네트워크 데이터가 없습니다</div>
+              <div>{Localization.kr.NETWORK} 데이터가 없습니다</div>
             )}
           </div>
         </div>

@@ -12,6 +12,7 @@ import {
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
+import Localization from "../../../utils/Localization";
  
 // 유형
 const interfaceOptions = [
@@ -92,7 +93,8 @@ const NicModal = ({
   }
 
   const validateForm = () => {
-    if (!formInfoState.name) return "이름을 입력해주세요.";
+    if (!formInfoState.name)
+      return `${Localization.kr.NAME}을 입력해주세요.`;
     return null;
   };
 
@@ -115,13 +117,16 @@ const NicModal = ({
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"네트워크 인터페이스"}
+      targetName={Localization.kr.NICS}
       submitTitle={nLabel}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px" }} 
     >
       <div className="network-popup-content">
-        <LabelInput label="이름" id="name" value={formInfoState.name} onChange={ handleInputChange("name") }/>
+        <LabelInput id="name"
+          label={Localization.kr.NAME}
+          value={formInfoState.name}
+          onChange={ handleInputChange("name") }/>
         
         <LabelSelectOptionsID
           label="프로파일"

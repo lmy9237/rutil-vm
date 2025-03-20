@@ -21,6 +21,7 @@ import {
   rvi24RightArrow,
   rvi24DownArrow,
 } from "../icons/RutilVmIcons";
+import Localization from "../../utils/Localization";
 
 /**
  * @name Header
@@ -46,7 +47,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
     setLoginBoxVisible(false);
   };
 
-  // '알림' 또는 '이벤트' 저장
+  // 알림 또는 이벤트 저장
   const [activeSection, setActiveSection] = useState(""); // 기본값 '알림'
   const handleSectionClick = (section) => {
     setActiveSection(activeSection === section ? "" : section);
@@ -70,7 +71,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
   const [events, setEvents] = useState(
     Array.from({ length: 20 }).map((_, index) => ({
       id: index,
-      message: `이벤트 내용입니다. 이벤트 내용입니다. 이벤트 내용입니다. 이벤트 내용입니다.`,
+      message: `${Localization.kr.EVENT} 내용입니다. ${Localization.kr.EVENT} 내용입니다. ${Localization.kr.EVENT} 내용입니다. ${Localization.kr.EVENT} 내용입니다.`,
       date: new Date().toLocaleDateString(),
     }))
   );

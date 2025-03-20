@@ -16,7 +16,14 @@ import Networks from "./Networks";
 import VnicProfiles from "./VnicProfiles";
 import Localization from "../../utils/Localization";
 import "./RutilManager.css";
+import { rvi16Globe } from "../../components/icons/RutilVmIcons";
 
+/**
+ * @name RutilManager
+ * @description Rutil Manager 창
+ * 
+ * @returns {JSX.Element} Rutil Manager 창
+ */
 const RutilManager = () => {
   const { section } = useParams();
   const navigate = useNavigate();
@@ -29,13 +36,13 @@ const RutilManager = () => {
   const sections = [
     { id: "info", label: Localization.kr.GENERAL },
     { id: "datacenters", label: Localization.kr.DATA_CENTER },
-    { id: "clusters", label: "클러스터" },
-    { id: "hosts", label: "호스트" },
-    { id: "vms", label: "가상머신" },
+    { id: "clusters", label: Localization.kr.CLUSTER },
+    { id: "hosts", label: Localization.kr.HOST },
+    { id: "vms", label: Localization.kr.VM },
     { id: "templates", label: "템플릿" },
     { id: "storageDomains", label: "스토리지 도메인" },
     { id: "disks", label: "디스크" },
-    { id: "networks", label: "네트워크" },
+    { id: "networks", label: Localization.kr.NETWORK },
     { id: "vnicProfiles", label: Localization.kr.VNIC_PROFILE },
   ];
 
@@ -77,7 +84,9 @@ const RutilManager = () => {
 
   return (
     <div id="section">
-      <HeaderButton title="Rutil Manager" />
+      <HeaderButton title="Rutil Manager"
+        titleIcon={rvi16Globe}
+      />
       <div className="content-outer">
         <NavButton
           sections={sections}

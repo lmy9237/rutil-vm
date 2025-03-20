@@ -2,6 +2,7 @@ import React from "react";
 import VnicProfileModal from "./VnicProfileModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteVnicProfile } from "../../../api/RQHook.js";
+import Localization from "../../../utils/Localization.js";
 
 const VnicProfileModals = ({ activeModal, vnicProfile, selectedVnicProfiles = [], networkId, onClose }) => {
   const modals = {
@@ -21,10 +22,9 @@ const VnicProfileModals = ({ activeModal, vnicProfile, selectedVnicProfiles = []
       />
     ),
     delete: (
-      <DeleteModal
+      <DeleteModal label={Localization.kr.VNIC_PROFILE}
         isOpen={activeModal === 'delete'}
         onClose={onClose}
-        label={'vNic Profile'}
         data={selectedVnicProfiles}
         api={useDeleteVnicProfile()}
         // navigation={''}

@@ -4,11 +4,11 @@ import { toast } from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
-import { useDataCenter, useTemplate } from "../../../api/RQHook";
+import { useDataCenter } from "../../../api/RQHook";
 import { checkKoreanName } from "../../../util";
-import "./MDomain.css";
 import FilterButton from "../../button/FilterButton";
 import Localization from "../../../utils/Localization";
+import "./MDomain.css";
 
 const initialFormState = {
   id: "",
@@ -55,28 +55,28 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
   ];
   const tableRows = [
     { label: "템플릿 ID", value: "TMP-12345" },
-    { label: "이름", value: "기본 템플릿" },
-    { label: "설명", value: "예시" },
-    { label: "호스트 클러스터", value: "Cluster-01" },
+    { label: Localization.kr.NAME, value: "기본 템플릿" },
+    { label: Localization.kr.DESCRIPTION, value: "예시" },
+    { label: `${Localization.kr.HOST} ${Localization.kr.DESCRIPTION}`, value: "Cluster-01" },
     { label: "운영 시스템", value: "Linux" },
     { label: "칩셋/펌웨어 유형", value: "UEFI" },
     { label: "그래픽 프로토콜", value: "SPICE" },
     { label: "비디오 유형", value: "QXL" },
     { label: "최적화 옵션", value: "고성능" },
     { label: "", value: "" },
-    { label: "설정된 메모리", value: "4 GB" },
+    { label: `설정된 ${Localization.kr.MEMORY}`, value: "4 GB" },
     { label: "CPU 코어 수", value: "4" },
     { label: "모니터 수", value: "1" },
-    { label: "고가용성", value: "예" },
+    { label: Localization.kr.HA, value: "예" },
     { label: "우선 순위", value: "중간" },
     { label: "USB", value: "사용" },
     { label: "소스", value: "N/A" },
-    { label: "상태 비저장", value: "아니오" },
+    { label: Localization.kr.STATELESS, value: "아니오" },
   ];
   const filterOptions = [
-    { key: "general", label: "일반 정보" },
+    { key: "general", label: Localization.kr.GENERAL },
     { key: "disk", label: "디스크" },
-    { key: "network", label: "네트워크 인터페이스" },
+    { key: "network", label: Localization.kr.NICS },
   ];
   
   useEffect(() => {
@@ -126,25 +126,25 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
               <tr>
                 {isVmMode ? (
                   <>
-                    <th>이름</th>
+                    <th>{Localization.kr.NAME}</th>
                     <th>소스</th>
-                    <th>메모리</th>
+                    <th>{Localization.kr.MEMORY}</th>
                     <th>CPU</th>
                     <th>아키텍처</th>
                     <th>디스크</th>
                     <th>불량 MAC 재배치</th>
                     <th>부분 허용</th>
-                    <th>클러스터</th>
+                    <th>{Localization.kr.CLUSTER}</th>
                   </>
                 ) : (
                   <>
-                    <th>별칭</th>
+                    <th>{Localization.kr.ALIAS}</th>
                     <th>가상 크기</th>
-                    <th>메모리</th>
+                    <th>{Localization.kr.MEMORY}</th>
                     <th>CPU</th>
                     <th>아키텍처</th>
                     <th>디스크</th>
-                    <th>클러스터</th>
+                    <th>{Localization.kr.CLUSTER}</th>
                   </>
                 )}
               </tr>

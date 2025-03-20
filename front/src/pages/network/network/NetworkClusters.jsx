@@ -3,10 +3,11 @@ import Loading from "../../../components/common/Loading";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import { renderStatusClusterIcon } from "../../../components/Icon";
-import { useAllClustersFromNetwork } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
 import TableRowClick from "../../../components/table/TableRowClick";
 import NetworkClusterModal from "../../../components/modal/network/NetworkClusterModal";
+import { useAllClustersFromNetwork } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name NetworkClusters
@@ -60,9 +61,8 @@ const NetworkClusters = ({ networkId }) => {
   return (
     <>
       <div className="header-right-btns mb-2">
-        <ActionButton
-          label="네트워크 관리"
-          actionType="default"
+        <ActionButton actionType="default"
+          label={`${Localization.kr.NETWORK} 관리`}
           onClick={() => setIsModalOpen(true)}
         />
       </div>

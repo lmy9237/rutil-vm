@@ -74,9 +74,12 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
 
   // 값 검증
   const validateForm = () => {
-    if (!checkKoreanName(formState.name)) return "이름이 유효하지 않습니다.";
-    if (!formState.name) return "이름을 입력해주세요"
-    if (!checkKoreanName(formState.description)) return "영어만 입력가능.";
+    if (!checkKoreanName(formState.name)) 
+      return `${Localization.kr.NAME}이 유효하지 않습니다.`;
+    if (!formState.name) 
+      return `${Localization.kr.NAME}이름을 입력해주세요`
+    if (!checkKoreanName(formState.description))
+      return "영어만 입력가능.";
     return null;
   };
 
@@ -113,16 +116,16 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "473px" }} 
     >
-      <LabelInput id="name" label="이름"
+      <LabelInput id="name" label={Localization.kr.NAME}
         value={formState.name}
         onChange={handleInputChange("name")}
         autoFocus
       />
-      <LabelInput id="description" label="설명"
+      <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
         onChange={handleInputChange("description")}
       />
-      <LabelInput id="comment" label="코멘트"
+      <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
         onChange={handleInputChange("comment")}
       />

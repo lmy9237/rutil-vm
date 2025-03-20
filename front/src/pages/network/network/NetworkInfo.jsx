@@ -13,6 +13,7 @@ import NetworkTemplates from "./NetworkTemplates";
 import NetworkClusters from "./NetworkClusters";
 import Localization from "../../../utils/Localization";
 import { useNetworkById } from "../../../api/RQHook";
+import { rvi24Network } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name NetworkInfo
@@ -41,9 +42,9 @@ const NetworkInfo = () => {
   const sections = [
     { id: "general", label: Localization.kr.GENERAL },
     { id: "vnicProfiles", label: Localization.kr.VNIC_PROFILE },
-    { id: "clusters", label: "클러스터" },
-    { id: "hosts", label: "호스트" },
-    { id: "vms", label: "가상머신" },
+    { id: "clusters", label: Localization.kr.CLUSTER },
+    { id: "hosts", label: Localization.kr.HOST },
+    { id: "vms", label: Localization.kr.VM },
     { id: "templates", label: "템플릿" },
   ];
 
@@ -83,8 +84,7 @@ const NetworkInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton
-        titleIcon={faServer}
+      <HeaderButton titleIcon={rvi24Network}
         title={network?.name}
         buttons={sectionHeaderButtons}
       />

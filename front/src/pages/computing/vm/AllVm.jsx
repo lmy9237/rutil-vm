@@ -1,10 +1,11 @@
-import React from 'react';
-import { faDesktop } from '@fortawesome/free-solid-svg-icons';
-import HeaderButton from '../../../components/button/HeaderButton';
-import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import VmDupl from '../../../components/dupl/VmDupl';
-import { useAllVMs } from '../../../api/RQHook';
-import './Vm.css';
+import React from "react";
+import HeaderButton from "../../../components/button/HeaderButton";
+import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
+import VmDupl from "../../../components/dupl/VmDupl";
+import { useAllVMs } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
+import "./Vm.css";
+import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name AllVm
@@ -19,18 +20,17 @@ const AllVm = () => {
     isError: isVmsError,
     isSuccess: isVmsSuccess,
     refetch: vmsRefetch,
-  } = useAllVMs((e) => ({ ...e, }));
+  } = useAllVMs((e) => ({ ...e }));
 
-console.log("...")
+  console.log("...");
   return (
     <div id="section">
-      <HeaderButton
-        titleIcon={faDesktop}
-        title="가상머신"
-      />
+      <HeaderButton titleIcon={rvi24Desktop} title={Localization.kr.VM} />
       <div className="w-full section-content">
         <VmDupl
-          isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+          isLoading={isVmsLoading}
+          isError={isVmsError}
+          isSuccess={isVmsSuccess}
           columns={TableColumnsInfo.VMS}
           vms={vms}
           onCloseModal={vmsRefetch}

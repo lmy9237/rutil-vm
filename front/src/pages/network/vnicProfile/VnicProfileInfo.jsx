@@ -1,14 +1,14 @@
 import React, { useEffect, useState} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import HeaderButton from '../../../components/button/HeaderButton';
 import Path from '../../../components/Header/Path';
-import { faLaptop, } from '@fortawesome/free-solid-svg-icons'
 import NavButton from '../../../components/navigation/NavButton';
 import VnicProfileVms from './VnicProfileVms';
 import VnicProfileTemplates from './VnicProfileTemplates';
 import VnicProfileModals from '../../../components/modal/vnic-profile/VnicProfileModals';
+import Localization from '../../../utils/Localization';
 import { useVnicProfile } from '../../../api/RQHook';
-import { adjustFontSize } from '../../../UIEvent';
+import { rvi24Flag } from '../../../components/icons/RutilVmIcons';
+import HeaderButton from '../../../components/button/HeaderButton';
 
 /**
  * @name VnicProfileInfo
@@ -22,8 +22,6 @@ const VnicProfileInfo = () => {
   const {
     data: vnic, status, isRefetching, refetch, isError, error, isLoading
   } = useVnicProfile(vnicProfileId, (e) => ({...e,}));
-
-  // const [modals, setModals] = useState({ edit: false, delete: false });
   
   const [activeTab, setActiveTab] = useState('vms');
   const [activeModal, setActiveModal] = useState(null);
@@ -38,7 +36,7 @@ const VnicProfileInfo = () => {
   }, [isError, isLoading, vnic, navigate]);
 
   const sections = [  
-    { id: 'vms', label: '가상머신' },
+    { id: 'vms', label: Localization.kr.VM },
     { id: 'templates', label: '템플릿' },
   ];
 
@@ -63,20 +61,13 @@ const VnicProfileInfo = () => {
   };
 
   const sectionHeaderButtons = [
-      { type: 'edit', label: '편집', onClick: () => openModal('edit'),},
-      { type: 'delete', label: '삭제', onClick: () => openModal('delete'), },
+    { type: 'edit', label: '편집', onClick: () => openModal('edit'),},
+    { type: 'delete', label: '삭제', onClick: () => openModal('delete'), },
   ]
-
-  useEffect(() => {
-      window.addEventListener('resize', adjustFontSize);
-      adjustFontSize();
-      return () => { window.removeEventListener('resize', adjustFontSize); };
-  }, []);
 
   return (
     <div id="section">
-      <HeaderButton
-        titleIcon={faLaptop}
+      <HeaderButton titleIcon={rvi24Flag}
         title={vnic?.name}
         buttons={sectionHeaderButtons}
       />
@@ -86,8 +77,7 @@ const VnicProfileInfo = () => {
           activeSection={activeTab} 
           handleSectionClick={handleTabClick} 
         />
-        <div className="w-full info-content"
->
+        <div className="w-full info-content">
           <Path pathElements={pathData} basePath={`/vnicProfiles/${vnicProfileId}/vms`}/>
           { renderSectionContent() }
         </div>

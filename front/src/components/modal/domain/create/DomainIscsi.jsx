@@ -5,6 +5,7 @@ import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import LabelInput from '../../../label/LabelInput';
 import LabelInputNum from '../../../label/LabelInputNum';
 import LabelCheckbox from '../../../label/LabelCheckbox';
+import Localization from '../../../../utils/Localization';
 
 const DomainIscsi = ({
   mode,
@@ -27,7 +28,8 @@ const DomainIscsi = ({
 
   // iscsi 생성
   const handleSearchIscsi = () => {
-    if (!hostVoId) return toast.error('호스트를 선택해주세요.');      
+    if (!hostVoId) 
+      return toast.error(`${Localization.kr.HOST}를 선택해주세요.`);
     if (!formImportState.address || !formImportState.port) return toast.error('주소와 포트를 입력해주세요.');   
     
     importIscsiFromHost({ hostId: hostVoId, iscsiData: formImportState }, {

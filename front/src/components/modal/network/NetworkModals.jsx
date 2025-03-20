@@ -1,14 +1,21 @@
 import React, { useEffect } from "react";
 import NetworkModal from "./NetworkModal";
-import NetworkDeleteModal from "./NetworkDeleteModal";
 import NetworkImportModal from "./NetworkImportModal";
 import DeleteModal from "../../../utils/DeleteModal";
+import Localization from "../../../utils/Localization";
 import { useDeleteNetwork } from "../../../api/RQHook";
 
-const NetworkModals = ({ activeModal, network, selectedNetworks = [], dcId, onClose }) => {
+const NetworkModals = ({ 
+  activeModal, 
+  network, 
+  selectedNetworks = [], 
+  dcId, 
+  onClose
+}) => {
   useEffect(() => {
-    console.log("selectedNetworks뿌부:", selectedNetworks);
+    console.log("selectedNetworks:", selectedNetworks);
   }, [selectedNetworks]);
+  
   const modals = {
     create: 
       <NetworkModal 
@@ -25,15 +32,10 @@ const NetworkModals = ({ activeModal, network, selectedNetworks = [], dcId, onCl
     />
     ),
     delete: (
-      // <NetworkDeleteModal
-      //   isOpen={activeModal === 'delete' }
-      //   data={selectedNetworks}
-      //   onClose={onClose}
-      // />
       <DeleteModal
         isOpen={activeModal === 'delete' }
         onClose={onClose}
-        label={'네트워크'}
+        label={Localization.kr.NETWORK}
         data={selectedNetworks}
         api={useDeleteNetwork()}
         // navigation={''}

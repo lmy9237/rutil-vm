@@ -33,8 +33,8 @@ const tabs = [
   { id: "common", label: Localization.kr.GENERAL },
   { id: "system", label: "시스템" },
   { id: "beginning", label: "초기 실행" },
-  { id: "host", label: "호스트" },
-  { id: "ha_mode", label: "고가용성" },
+  { id: "host", label: Localization.kr.HOST },
+  { id: "ha_mode", label: Localization.kr.HA },
   { id: "boot_outer", label: "부트 옵션" },
 ];
 
@@ -359,10 +359,14 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   };
 
   const validateForm = () => {
-    if (!formInfoState.name) return "이름을 입력해주세요.";
-    if (checkKoreanName(formInfoState.name)) return "이름을 입력해주세요.";
-    if (!clusterVo.id) return "클러스터를 선택해주세요.";
-    // if (formSystemState.memorySize > "9223372036854775807") return "메모리 크기가 너무 큽니다.";
+    if (!formInfoState.name)
+      return `${Localization.kr.NAME}을 입력해주세요.`;
+    if (checkKoreanName(formInfoState.name))
+      return `${Localization.kr.NAME}을 입력해주세요.`;
+    if (!clusterVo.id) 
+      return `${Localization.kr.CLUSTER}를 선택해주세요.`;
+//  if (formSystemState.memorySize > "9223372036854775807") 
+//    return `${Localization.kr.MEMORY} 크기가 너무 큽니다.`;
     return null;
   };
 
@@ -404,7 +408,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       <div className="vm-edit-select-tab">
         <div className="edit-first-content pb-0.5">
           <LabelSelectOptionsID
-            label="클러스터"
+            label={Localization.kr.CLUSTER}
             value={clusterVo.id}
             onChange={(e) => {
               const selectedCluster = clusters.find((cluster) => cluster.id === e.target.value);
@@ -433,8 +437,8 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
             loading={isTemplatesLoading}
             options={templates}
           />
-
-          {/* <LabelSelectOptionsID
+          {/*
+          <LabelSelectOptionsID
             label="운영 시스템"
             id="os_system"
             value={formInfoState.osSystem}
@@ -443,7 +447,8 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
               id: opt.name,
               name: opt.description,
             }))}
-          />  */}
+          />
+          */}
           {/* TODO: options에 대한 별도 소형 컴포넌트 생성 필요 */}
           <div className='input-select'>
             <label>운영 시스템</label>

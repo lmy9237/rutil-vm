@@ -1,11 +1,10 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "../Input/IconButton";
+import { RVI24 } from "../icons/RutilVmIcons";
 import "./HeaderButton.css";
 import PopupBox from "../common/PopupBox";
-
-const HeaderButtonContext = createContext();
 
 /**
  * @name HeaderButton
@@ -59,23 +58,17 @@ const HeaderButton = ({
   console.log("...")
   return (
     <div className="section-header center">
-      <div className="flex text-(--color-primary-h) section-header-left">
-        <div className="flex justify-center align-center">
-          {/* {titleIcon && (
-            <FontAwesomeIcon
-              icon={titleIcon}
-              className="title_icon"
-              style={{ marginRight: "12px" }}
-            />
-          )} */}
-          <p className="mr-2">{title}</p>
-          <div
-            className={`flex justify-center mr-1 status-label ${
-              status === "실행중" ? "running" : status === "중지" ? "stopped" : "default"
-            }`}
-          >
-            {status}
-          </div>
+      <div className="section-header-left">
+        {titleIcon && (
+          <RVI24 iconDef={titleIcon} />
+        )}
+        <p className="mr-2">{title}</p>
+        <div
+          className={`flex justify-center mr-1 status-label ${
+            status === "실행중" ? "running" : status === "중지" ? "stopped" : "default"
+          }`}
+        >
+          {status}
         </div>
       </div>
       <div className="section-header-buttons">

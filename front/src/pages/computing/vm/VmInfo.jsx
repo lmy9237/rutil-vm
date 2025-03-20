@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { faMicrochip } from "@fortawesome/free-solid-svg-icons";
 import HeaderButton from "../../../components/button/HeaderButton";
 import NavButton from "../../../components/navigation/NavButton";
 import Path from "../../../components/Header/Path";
@@ -12,9 +11,9 @@ import VmSnapshots from "./VmSnapshots";
 import VmApplications from "./VmApplications";
 import VmHostDevices from "./VmHostDevices";
 import VmEvents from "./VmEvents";
-import { renderVmStatus } from "../../../components/Icon";
-import { useVmById } from "../../../api/RQHook";
+import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
+import { useVmById } from "../../../api/RQHook";
 import "./Vm.css";
 
 /**
@@ -61,12 +60,12 @@ const VmInfo = () => {
 
   const sections = [
     { id: "general", label: Localization.kr.GENERAL },
-    { id: "nics", label: "네트워크 인터페이스" },
+    { id: "nics", label: Localization.kr.NICS },
     { id: "disks", label: "디스크" },
     { id: "snapshots", label: "스냅샷" },
     { id: "applications", label: "애플리케이션" },
-    { id: "hostDevices", label: "호스트 장치" },
-    { id: "events", label: "이벤트" },
+    { id: "hostDevices", label: `${Localization.kr.HOST} 장치` },
+    { id: "events", label: Localization.kr.EVENT },
   ];
 
   useEffect(() => {
@@ -106,49 +105,42 @@ const VmInfo = () => {
       label: "편집",
       disabled: !isUp,
       onClick: () => openModal("edit"),
-    },
-    {
+    }, {
       type: "start",
       label: "실행",
       disabled: !isMaintenance,
       onClick: () => openModal("start"),
-    },
-    {
+    }, {
       type: "pause",
       label: "일시중지",
       disabled: !isUp,
       onClick: () => openModal("pause"),
-    },
-    {
+    }, {
       type: "reboot",
       label: "재부팅",
       disabled: !isUp,
       onClick: () => openModal("reboot"),
-    },
-    {
+    }, {
       type: "reset",
       label: "재설정",
       disabled: !isUp,
       onClick: () => openModal("reset"),
-    },
-    {
+    }, {
       type: "stop",
       label: "종료",
       disabled: !isUp,
       onClick: () => openModal("stop"),
-    },
-    {
+    }, {
       type: "powerOff",
       label: "전원 끔",
       disabled: !isUp,
       onClick: () => openModal("powerOff"),
-    },
-    { type: "snapshots", 
+    }, {
+      type: "snapshots", 
       label: "스냅샷 생성",
       disabled: !isUp,
       onClick: () => openModal("snapshot")
-    },
-    { 
+    }, { 
       type: "migration", 
       label: "마이그레이션" 
     },
@@ -159,24 +151,20 @@ const VmInfo = () => {
       type: "import", 
       label: "가져오기", 
       onClick: () => openModal("import") 
-    },
-    {
+    }, {
       type: "copyVm",
-      label: "가상 머신 복제",
+      label: `${Localization.kr.VM} 복제`,
       onClick: () => openModal("copyVm"),
-    },
-    {
+    }, {
       type: "delete",
       label: "삭제",
       disabled: !isMaintenance,
       onClick: () => openModal("delete"),
-    },
-    {
+    }, {
       type: "templates",
       label: "템플릿 생성",
       onClick: () => openModal("templates"),
-    },
-    { 
+    }, { 
       type: "ova", 
       label: "OVA로 내보내기", 
       onClick: () => openModal("ova") 
@@ -185,10 +173,9 @@ const VmInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton
-        titleIcon={faMicrochip}
+      <HeaderButton titleIcon={rvi24Desktop}
         title={vm?.name}
-        status={renderVmStatus(vm?.status)}
+        status={Localization.kr.renderStatus(vm?.status)}
         buttons={sectionHeaderButtons}
         popupItems={popupItems}
       />

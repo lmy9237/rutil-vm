@@ -2,6 +2,7 @@ import React from 'react';
 import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import Tables from '../../../table/Tables';
 import toast from 'react-hot-toast';
+import Localization from '../../../../utils/Localization';
 
 const DomainFibre = ({ 
   mode, 
@@ -20,7 +21,8 @@ const DomainFibre = ({
 }) => {  
 
   const handleSearchFcp = () => {
-    if (!hostVoId) return toast.error('호스트를 선택해주세요.');
+    if (!hostVoId) 
+      return toast.error(`${Localization.kr.HOST}를 선택해주세요.`);
       
     importFcpFromHost({ hostId: hostVoId }, {
       onSuccess: (data) => { setFcpSearchResults(data)},

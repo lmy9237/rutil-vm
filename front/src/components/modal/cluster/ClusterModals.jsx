@@ -2,6 +2,7 @@ import React from 'react';
 import ClusterModal from "./ClusterModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteCluster } from "../../../api/RQHook";
+import Localization from '../../../utils/Localization';
 
 const ClusterModals = ({
   activeModal,
@@ -29,11 +30,10 @@ const ClusterModals = ({
     delete: (
       <DeleteModal
         isOpen={activeModal === "delete"}
-        label={"클러스터"}
+        label={Localization.kr.CLUSTER}
         data={selectedClusters}
         onClose={onClose}
         api={useDeleteCluster()}
-        // navigation={''}
       />
     ),
   };

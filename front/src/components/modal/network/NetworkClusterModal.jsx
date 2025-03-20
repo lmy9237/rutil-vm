@@ -1,12 +1,14 @@
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import BaseModal from "../BaseModal";
 import TablesOuter from '../../table/TablesOuter';
 import TableColumnsInfo from '../../table/TableColumnsInfo';
 import { useAllClustersFromNetwork } from '../../../api/RQHook';
 import { renderStatusClusterIcon } from '../../Icon';
+import Localization from "../../../utils/Localization";
 
 const NetworkClusterModal = ({ 
-  isOpen, onClose, networkId
+  isOpen, 
+  onClose,
+  networkId
 }) => {
   const {
     data: clusters = [],
@@ -36,7 +38,7 @@ const NetworkClusterModal = ({
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"네트워크"}
+      targetName={Localization.kr.NETWORK}
       submitTitle={"관리"}
       onSubmit={() => {}}
       contentStyle={{ width: "900px"}}
