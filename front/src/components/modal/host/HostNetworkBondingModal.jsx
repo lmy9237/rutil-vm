@@ -20,20 +20,19 @@ const HostNetworkBondingModal = ({
       targetName={!editmode ? "새 본딩 생성" : "본딩 편집"}
       submitTitle={""}
       onSubmit={() => {}}
-      contentStyle={{ width: "480px", height: "270px" }} 
+      contentStyle={{ width: "480px"}} 
     >
-      <div className="popup-content-outer">
-        <LabelInput label="본딩이름" id="bonding_name" />
-        {/* <LabelInput id="description" label="설명"
-          value={formState.description}
-          onChange={handleInputChange("description")}
-        /> */}
-        <LabelSelectOptions
-          label="본딩모드" id="bonding_mode"
-          options={[{ label: "(Mode 1) Active-Backup", value: "#" }]}
-          disabled={true}
-        />
-      </div>
+      <LabelInput label="본딩이름" id="bonding_name" />
+      {/* <LabelInput id="description" label="설명"
+        value={formState.description}
+        onChange={handleInputChange("description")}
+      /> */}
+      <LabelSelectOptions
+        label="본딩모드" id="bonding_mode"
+        options={[{ label: "(Mode 1) Active-Backup", value: "#" }]}
+        disabled={true}
+      />
+
     </BaseModal>
   );
 };

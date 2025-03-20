@@ -118,88 +118,86 @@ const NicModal = ({
       targetName={"네트워크 인터페이스"}
       submitTitle={nLabel}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "690px", height: "450px" }} 
+      contentStyle={{ width: "690px" }} 
     >
-      <div className="popup-content-outer">
-        <div className="network-popup-content">
-          <LabelInput label="이름" id="name" value={formInfoState.name} onChange={ handleInputChange("name") }/>
-          
-          <LabelSelectOptionsID
-            label="프로파일"
-            value={vnicProfileVo?.id}
-            onChange={(e) => setVnicProfileVo({ id: e.target.value })}
-            loading={vnicLoading}
-            options={vnics || []}
-          />
-          <LabelSelectOptions
-            label="유형"
-            value={formInfoState.interface_}
-            onChange={ handleInputChange("interface_") }
-            options={interfaceOptions}
-            disabled={editMode}
-          />
-          <span>사용자 지정 MAC 주소</span>
+      <div className="network-popup-content">
+        <LabelInput label="이름" id="name" value={formInfoState.name} onChange={ handleInputChange("name") }/>
+        
+        <LabelSelectOptionsID
+          label="프로파일"
+          value={vnicProfileVo?.id}
+          onChange={(e) => setVnicProfileVo({ id: e.target.value })}
+          loading={vnicLoading}
+          options={vnics || []}
+        />
+        <LabelSelectOptions
+          label="유형"
+          value={formInfoState.interface_}
+          onChange={ handleInputChange("interface_") }
+          options={interfaceOptions}
+          disabled={editMode}
+        />
+        <span>사용자 지정 MAC 주소</span>
 
-          <div className="plug-radio-btn">
-            <span>링크 상태</span>
-            <div>
-              <div className="radio-outer">
-                <div>
-                  <input
-                    type="radio"
-                    name="status"
-                    id="status_up"
-                    checked={formInfoState.linked === true} // linked가 true일 때 체크
-                    onChange={() => handleRadioChange("linked", true)}
-                  />
-                  <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
-                  <label htmlFor="status_up">Up</label>
-                </div>
-                <div>
-                  <input
-                    type="radio"
-                    name="status"
-                    id="status_down"
-                    checked={formInfoState.linked === false} // linked가 false일 때 체크
-                    onChange={() => handleRadioChange("linked", false)}
-                  />
-                  <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
-                  <label htmlFor="status_down">Down</label>
-                </div>
+        <div className="plug-radio-btn">
+          <span>링크 상태</span>
+          <div>
+            <div className="radio-outer">
+              <div>
+                <input
+                  type="radio"
+                  name="status"
+                  id="status_up"
+                  checked={formInfoState.linked === true} // linked가 true일 때 체크
+                  onChange={() => handleRadioChange("linked", true)}
+                />
+                <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
+                <label htmlFor="status_up">Up</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="status"
+                  id="status_down"
+                  checked={formInfoState.linked === false} // linked가 false일 때 체크
+                  onChange={() => handleRadioChange("linked", false)}
+                />
+                <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
+                <label htmlFor="status_down">Down</label>
               </div>
             </div>
           </div>
-          <div className="plug-radio-btn">
-            <span>카드 상태</span>
-            <div>
-              <div className="radio-outer">
-                <div>
-                  <input
-                    type="radio"
-                    name="plugged_status"
-                    id="plugged"
-                    checked={formInfoState.plugged === true}
-                    onChange={() => handleRadioChange("plugged", true)}
-                  />
-                  <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
-                  <label htmlFor="plugged">연결됨</label>
-                </div>
-                <div>
-                  <input
-                    type="radio"
-                    name="plugged_status"
-                    id="unplugged"
-                    checked={formInfoState.plugged === false}
-                    onChange={() => handleRadioChange("plugged", false)}
-                  />
-                  <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
-                  <label htmlFor="unplugged">분리</label>
-                </div>
+        </div>
+        <div className="plug-radio-btn">
+          <span>카드 상태</span>
+          <div>
+            <div className="radio-outer">
+              <div>
+                <input
+                  type="radio"
+                  name="plugged_status"
+                  id="plugged"
+                  checked={formInfoState.plugged === true}
+                  onChange={() => handleRadioChange("plugged", true)}
+                />
+                <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
+                <label htmlFor="plugged">연결됨</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="plugged_status"
+                  id="unplugged"
+                  checked={formInfoState.plugged === false}
+                  onChange={() => handleRadioChange("plugged", false)}
+                />
+                <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
+                <label htmlFor="unplugged">분리</label>
               </div>
             </div>
           </div>
-        </div> 
-      </div>
+        </div>
+      </div> 
     </BaseModal>
   );
 };

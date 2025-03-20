@@ -64,10 +64,10 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
       targetName={"네트워크"}
       submitTitle={"가져오기"}
       onSubmit={onSubmit}
-      contentStyle={{ width: "880px", height: "700px" }} 
+      contentStyle={{ width: "880px" }} 
     >
       
-      <div className="popup-content-outer">
+
         {/* 네트워크 공급자 목록 */}
         <LabelSelectOptions
           id="cluster"
@@ -206,7 +206,7 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
             </table>
           </div>
         </div>
-      </div>
+ 
     </BaseModal>
   );
 };

@@ -48,10 +48,9 @@ const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
       targetName={"가상 어플라이언스로 가상 머신 내보내기"}
       submitTitle={"내보내기"}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "600px", height: "288px" }} 
+      contentStyle={{ width: "600px"}} 
     >
       {/* <div className="vm-ova-popup modal"> */}
-      <div className="popup-content-outer py-0.5">
         <div className="ova-new-box">
           <label htmlFor="host_select">호스트</label>
           <select
@@ -88,7 +87,7 @@ const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
             rows={3} // 이름이 길 경우를 대비해 textarea로 변경
           />
         </div>
-      </div>
+
     </BaseModal>
   );
 };

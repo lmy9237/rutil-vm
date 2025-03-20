@@ -45,7 +45,7 @@ const HostNetworkEditModal = ({
       targetName={`네트워크 수정: ${network?.name}`}
       submitTitle={""}
       onSubmit={() => {}}
-      contentStyle={{ width: "880px", height: "500px" }} 
+      contentStyle={{ width: "880px" }} 
     >
       <div className="popup-content-outer flex">
         <ModalNavButton

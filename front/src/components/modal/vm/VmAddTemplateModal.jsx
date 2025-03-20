@@ -238,11 +238,11 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
       targetName={"템플릿"}
       submitTitle={"생성"}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "690px", height: "700px" }} 
+      contentStyle={{ width: "690px"}} 
     >
       {/* <div className="new-template-popup modal" style={{ height: isSubtemplate ? '88vh' : '79vh' }}> */}
 
-      <div className="popup-content-outer">
+   
         <div className="edit-first-content">
           <LabelInput
             className="host_textbox"
@@ -445,7 +445,7 @@ const VmAddTemplateModal = ({ isOpen, onClose, selectedVm, vmId }) => {
           checked={sealTemplate}
           onChange={() => setSealTemplate(!sealTemplate)}
         />
-      </div>
+
     </BaseModal>
   );
 };

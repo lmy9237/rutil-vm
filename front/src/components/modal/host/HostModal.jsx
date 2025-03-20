@@ -121,88 +121,88 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px", height: "560px" }} 
     >
-      {/* <div className="host-new-popup modal"> */}
-      <div className="popup-content-outer">
-        <LabelSelectOptionsID
-          label="호스트 클러스터"
-          value={clusterVoId}
-          onChange={(e) => setClusterVoId(e.target.value)}
-          disabled={editMode}
-          loading={isClustersLoading}
-          options={clusters}
-        />
-        <hr />
+     
+      
+      <LabelSelectOptionsID
+        label="호스트 클러스터"
+        value={clusterVoId}
+        onChange={(e) => setClusterVoId(e.target.value)}
+        disabled={editMode}
+        loading={isClustersLoading}
+        options={clusters}
+      />
+      <hr />
 
-        <LabelInput
-          label="이름"
-          id="name"
-          value={formState.name}
-          onChange={handleInputChange("name")}
-          autoFocus
-        />
-        <LabelInput
-          label="코멘트"
-          id="comment"
-          value={formState.comment}
-          onChange={handleInputChange("comment")}
-        />
-        <LabelInput
-          label="호스트 이름/IP"
-          id="address"
-          value={formState.address}
-          onChange={handleInputChange("address")}
-          disabled={editMode}
-        />
-        <LabelInputNum
-          label="SSH 포트"
-          id="sshPort"
-          value={formState.sshPort}
-          onChange={handleInputChange("sshPort")}
-          disabled={editMode}
-        />
-        <hr />
+      <LabelInput
+        label="이름"
+        id="name"
+        value={formState.name}
+        onChange={handleInputChange("name")}
+        autoFocus
+      />
+      <LabelInput
+        label="코멘트"
+        id="comment"
+        value={formState.comment}
+        onChange={handleInputChange("comment")}
+      />
+      <LabelInput
+        label="호스트 이름/IP"
+        id="address"
+        value={formState.address}
+        onChange={handleInputChange("address")}
+        disabled={editMode}
+      />
+      <LabelInputNum
+        label="SSH 포트"
+        id="sshPort"
+        value={formState.sshPort}
+        onChange={handleInputChange("sshPort")}
+        disabled={editMode}
+      />
+      <hr />
 
-        {!editMode && (
-          <>
-            <div className="font-semibold">
-              <label className="py-1">인증</label>
-            </div>
-            <LabelInput label="사용자 이름" value="root" disabled={true} />
-            <LabelInput label="암호" type="password" 
-              id="sshPassWord"
-              value={formState.sshPassWord}
-              onChange={handleInputChange("sshPassWord")}
-            />
-
-          </>
-        )}
-        <div className="p-1.5">
-          <div className="p-1">vGPU 배치</div>
-          <div className="flex">
-            {["consolidated", "separated"].map((option) => (
-              <label
-                key={option}
-                style={{ marginRight: "0.2rem", display: "flex" }}
-              >
-                <input
-                  type="radio"
-                  name="vgpu"
-                  value={option}
-                  checked={formState.vgpu === option}
-                  onChange={handleInputChange("vgpu")}
-                />
-                {option === "consolidated" ? "통합" : "분산"}
-              </label>
-            ))}
+      {!editMode && (
+        <>
+          <div className="font-semibold">
+            <label className="py-1">인증</label>
           </div>
+          <LabelInput label="사용자 이름" value="root" disabled={true} />
+          <LabelInput label="암호" type="password" 
+            id="sshPassWord"
+            value={formState.sshPassWord}
+            onChange={handleInputChange("sshPassWord")}
+          />
+
+        </>
+      )}
+      <div>
+        <div>vGPU 배치</div>
+        <div className="f-center">
+          {["consolidated", "separated"].map((option) => (
+            <label
+              key={option}
+              style={{ marginRight: "0.2rem", display: "flex" }}
+            >
+              <input
+                type="radio"
+                name="vgpu"
+                value={option}
+                checked={formState.vgpu === option}
+                onChange={handleInputChange("vgpu")}
+              />
+              {option === "consolidated" ? "통합" : "분산"}
+            </label>
+          ))}
         </div>
-        <LabelSelectOptions  label="호스트 엔진 배포 작업 선택"
-          value={String(formState.deployHostedEngine)}
-          onChange={handleInputChange("deployHostedEngine")}
-          options={hostEngines}
-          disabled={editMode}
-        />
       </div>
+      <LabelSelectOptions  label="호스트 엔진 배포 작업 선택"
+        value={String(formState.deployHostedEngine)}
+        onChange={handleInputChange("deployHostedEngine")}
+        options={hostEngines}
+        disabled={editMode}
+      />
+
     </BaseModal>
   );
 };

@@ -49,14 +49,14 @@ const VmSnapshotDeleteModal = ({ isOpen, onClose, data, vmId }) => {
       targetName={"스냅샷"}
       submitTitle={"삭제"}
       onSubmit={handleDelete}
-      contentStyle={{ width: "600px", height: "190px" }}
+      contentStyle={{ width: "600px" }}
     >
-      <div className="popup-content-outer">
-        <div className="disk-delete-box">
-          <FontAwesomeIcon style={{ marginRight: "0.3rem" }}icon={faExclamationTriangle}/>
-          <span> {descriptions.join(", ")} 를(을) 삭제하시겠습니까? </span>
-        </div>
+
+      <div className="disk-delete-box">
+        <FontAwesomeIcon style={{ marginRight: "0.3rem" }}icon={faExclamationTriangle}/>
+        <span> {descriptions.join(", ")} 를(을) 삭제하시겠습니까? </span>
       </div>
+     
     </BaseModal>
   );
 };

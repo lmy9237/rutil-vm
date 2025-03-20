@@ -255,11 +255,11 @@ const VnicProfileModal = ({
       targetName={Localization.kr.VNIC_PROFILE}
       submitTitle={editMode ? "편집" : "생성"}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "730px", height: "550px" }} 
+      contentStyle={{ width: "730px" }} 
     >
 
       {/* <div className="vnic-new-content-popup modal"> */}
-      <div className="popup-content-outer">
+
         <div className="vnic-new-contents" style={{ paddingTop: "0.2rem" }}>
           <FormGroup label={Localization.kr.DATA_CENTER}>
             <select
@@ -429,7 +429,7 @@ const VnicProfileModal = ({
             </div>
           )} */}
         </div>
-      </div>
+
     </BaseModal>
   );
 };

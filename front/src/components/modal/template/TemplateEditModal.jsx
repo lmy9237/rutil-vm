@@ -124,7 +124,7 @@ const TemplateEditModal = ({
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "800px", height: "470px" }} 
     >
-      {/* <div className="template-eidt-popup modal"> */}
+  
       <div className="popup-content-outer flex">
         {/* 왼쪽 네비게이션 */}
         <ModalNavButton tabs={tabs} activeTab={activeTab} onTabClick={handleTabClick} />

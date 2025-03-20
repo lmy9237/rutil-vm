@@ -8,6 +8,7 @@
     right: 0;
     width: 150px;
     background-color: #f0f0f0;
+    z-index: 3;
   }
     
   .popup-box .btn-right-click:not(:disabled):hover {

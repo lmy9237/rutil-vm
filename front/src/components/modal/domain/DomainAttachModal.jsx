@@ -60,26 +60,24 @@ const DomainAttachModal = ({ isOpen, data, onClose }) => {
       targetName={"스토리지 도메인"}
       submitTitle={"연결결"}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "730px", height: "450px" }} 
+      contentStyle={{ width: "730px"}} 
     >
-      <div className="popup-content-outer">
-        <div>
-          <TablesOuter
-            isLoading={isDataCentersLoading}
-            isError={isDataCentersError}
-            isSuccess={isDataCentersSuccess}
-            columns={TableColumnsInfo.DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN}
-            data={datacenters.map((datacenter) => ({
-              ...datacenter,
-              name: datacenter?.name,
-              storageType: datacenter?.storageType ? "로컬" : "공유됨",
-            }))}
-            shouldHighlight1stCol={true}
-            onRowClick={(row) => handleRowClick(row)}
-          />
-        </div>
-        <span>id: {selectedId}</span>
+      <div>
+        <TablesOuter
+          isLoading={isDataCentersLoading}
+          isError={isDataCentersError}
+          isSuccess={isDataCentersSuccess}
+          columns={TableColumnsInfo.DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN}
+          data={datacenters.map((datacenter) => ({
+            ...datacenter,
+            name: datacenter?.name,
+            storageType: datacenter?.storageType ? "로컬" : "공유됨",
+          }))}
+          shouldHighlight1stCol={true}
+          onRowClick={(row) => handleRowClick(row)}
+        />
       </div>
+      <span>id: {selectedId}</span>
     </BaseModal>
   );
 };

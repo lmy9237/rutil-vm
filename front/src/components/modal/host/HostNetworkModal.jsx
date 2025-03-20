@@ -257,112 +257,109 @@ const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
       targetName={"호스트 네트워크"}
       submitTitle={"설정"}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "880px", height: "620px" }} 
+      contentStyle={{ width: "880px"}} 
     >
-      <div className="popup-content-outer px-2">
-        <div className="py-3 font-bold underline"></div>
-        <div className="host-network-separation f-btw">
-          <div className="network-separation-left">
-            <div className ="f-btw">
-              <div>인터페이스</div>
-              <div>할당된 논리 네트워크</div>
-            </div>
+      <div className="py-3 font-bold underline"></div>
+      <div className="host-network-separation f-btw">
+        <div className="network-separation-left">
+          <div className ="f-btw">
+            <div>인터페이스</div>
+            <div>할당된 논리 네트워크</div>
+          </div>
 
-            {outer
-              .filter(outerItem => outerItem.children.length > 0 || outerItem.networks.length > 0)
-              .map((outerItem) => (
-                <div key={outerItem.id} className="separation-left-content">
-                  <div 
-                    key={outerItem.id} 
-                    className="interface" 
-                    onDragOver={(e) => e.preventDefault()} 
-                    onDrop={() => drop(outerItem.id, "interface")}
-                  > 
-                    {outerItem.name && (
-                      <div className="interface-header">
-                        {outerItem.name} {outerItem.name.startsWith("bond") && (
-                          <FontAwesomeIcon icon={faPencilAlt} className="icon" onClick={() => openBondingPopup("edit")} />
-                        )}
-                      </div>
-                    )}
-                    <div className="children">
-                      {outerItem.children.map((child) => (
-                        <div 
-                          key={child.id} 
-                          className="container" 
-                          draggable 
-                          onDragStart={(e) => dragStart(e, child, "container", outerItem.id)}
-                        >
-                          {child.name}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 화살표 */}
-                  <div className="flex items-center justify-center">
-                    <FontAwesomeIcon icon={faArrowsAltH} style={{color: "grey", width: "5vw", fontSize: "20px", }} />
-                  </div>
-
-                  <div className="assigned-network-outer">
-                    <div 
-                      className="outer-networks" 
-                      onDragOver={(e) => e.preventDefault()} 
-                      onDrop={() => drop(outerItem.id, "networkOuter")}
-                    >
-                      {outerItem.networks.length === 0 ? (
-                        <div className="assigned-network"><span>할당된 네트워크 없음</span></div>
-                      ) : (
-                        outerItem.networks.map(network => (
-                          <div 
-                            key={network.id} 
-                            className="center" 
-                            draggable 
-                            onDragStart={(e) => dragStart(e, network, "networkOuter", outerItem.id)}
-                          >
-                            <div className="left-section">
-                              {renderTFStatusIcon(network?.status==="OPERATIONAL")}{network.name}
-                            </div>
-                            <div className="right-section">
-                              {network?.role && <FontAwesomeIcon icon={faDesktop} className="icon" />}
-                              <FontAwesomeIcon icon={faPencilAlt} className="icon" onClick={() => openNetworkEditPopup(network)} />
-                            </div>
-                          </div>
-                        ))
+          {outer
+            .filter(outerItem => outerItem.children.length > 0 || outerItem.networks.length > 0)
+            .map((outerItem) => (
+              <div key={outerItem.id} className="separation-left-content">
+                <div 
+                  key={outerItem.id} 
+                  className="interface" 
+                  onDragOver={(e) => e.preventDefault()} 
+                  onDrop={() => drop(outerItem.id, "interface")}
+                > 
+                  {outerItem.name && (
+                    <div className="interface-header">
+                      {outerItem.name} {outerItem.name.startsWith("bond") && (
+                        <FontAwesomeIcon icon={faPencilAlt} className="icon" onClick={() => openBondingPopup("edit")} />
                       )}
                     </div>
+                  )}
+                  <div className="children">
+                    {outerItem.children.map((child) => (
+                      <div 
+                        key={child.id} 
+                        className="container" 
+                        draggable 
+                        onDragStart={(e) => dragStart(e, child, "container", outerItem.id)}
+                      >
+                        {child.name}
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))
-            }
-          </div>
 
-          <div
-            className="network-separation-right"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={() => drop(null, "unassigned")}
-          >
-            <div className ="f-btw">
-              <div>할당되지 않은 논리 네트워크</div>
-            </div>
-          
-            {availableNetworks?.map((net) => (
-              <div
-                key={net.id}
-                className="network-item"
-                draggable
-                onDragStart={(e) => dragStart(e, net, "unassigned")}
-              >
+                {/* 화살표 */}
                 <div className="flex items-center justify-center">
-                  {renderTFStatusIcon(net?.status==="OPERATIONAL")}{net?.name}<br/>
-                  {net?.vlan === 0 ? "":`(VLAN ${net?.vlan})` }
+                  <FontAwesomeIcon icon={faArrowsAltH} style={{color: "grey", width: "5vw", fontSize: "20px", }} />
+                </div>
+
+                <div className="assigned-network-outer">
+                  <div 
+                    className="outer-networks" 
+                    onDragOver={(e) => e.preventDefault()} 
+                    onDrop={() => drop(outerItem.id, "networkOuter")}
+                  >
+                    {outerItem.networks.length === 0 ? (
+                      <div className="assigned-network"><span>할당된 네트워크 없음</span></div>
+                    ) : (
+                      outerItem.networks.map(network => (
+                        <div 
+                          key={network.id} 
+                          className="center" 
+                          draggable 
+                          onDragStart={(e) => dragStart(e, network, "networkOuter", outerItem.id)}
+                        >
+                          <div className="left-section">
+                            {renderTFStatusIcon(network?.status==="OPERATIONAL")}{network.name}
+                          </div>
+                          <div className="right-section">
+                            {network?.role && <FontAwesomeIcon icon={faDesktop} className="icon" />}
+                            <FontAwesomeIcon icon={faPencilAlt} className="icon" onClick={() => openNetworkEditPopup(network)} />
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
               </div>
-            ))}
+            ))
+          }
+        </div>
+
+        <div
+          className="network-separation-right"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={() => drop(null, "unassigned")}
+        >
+          <div className ="f-btw">
+            <div>할당되지 않은 논리 네트워크</div>
           </div>
+        
+          {availableNetworks?.map((net) => (
+            <div
+              key={net.id}
+              className="network-item"
+              draggable
+              onDragStart={(e) => dragStart(e, net, "unassigned")}
+            >
+              <div className="flex items-center justify-center">
+                {renderTFStatusIcon(net?.status==="OPERATIONAL")}{net?.name}<br/>
+                {net?.vlan === 0 ? "":`(VLAN ${net?.vlan})` }
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-
       <Suspense fallback={<Loading/>}>
         {/* 네트워크쪽 연필 추가모달 */}
         {isNetworkEditPopupOpen && selectedNetwork && (

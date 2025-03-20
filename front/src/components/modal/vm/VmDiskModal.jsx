@@ -264,10 +264,10 @@ const VmDiskModal = ({
       targetName={"디스크"}
       submitTitle={dLabel}
       onSubmit={diskType? handleFormSubmit : handleOkClick}
-      contentStyle={{ width: "780px", height: "570px" }} 
+      contentStyle={{ width: "780px" }} 
     >
       {/* <div className="storage-disk-new-popup modal"> */}
-      <div className="popup-content-outer">
+
         <div className="disk-new-nav">
           <div
             id="storage_img_btn"
@@ -466,7 +466,7 @@ const VmDiskModal = ({
             </div>
           </div>
         )} */}
-      </div>
+
     </BaseModal>
   );
 };

@@ -95,7 +95,7 @@ const DomainDupl = ({
           isEditDisabled={selectedDomains.length !== 1}
           isDeleteDisabled={selectedDomains.length === 0}
           status={selectedDomains[0]?.status}
-          // actionType={actionType}
+          actionType={actionType}
         />
       </div>
 
@@ -116,8 +116,7 @@ const DomainDupl = ({
           <DomainActionButtons
             openModal={openModal}
             isEditDisabled={!row}
-            actionType="context"
-            // actionType={actionType}
+            actionType={actionType}
             isContextMenu={true}
           />,
         ]}
