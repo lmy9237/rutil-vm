@@ -29,9 +29,9 @@ RUN npm run build
 FROM nginx:alpine
 LABEL maintainer="Chan Hee Lee <chlee@ititinfo.com>"
 LABEL description="RutilVM"
-LABEL version="0.2.2"
+LABEL version="0.2.3"
 LABEL vcs-url="https://github.com/ititcloud/rutil-vm"
-LABEL build-date="2025-03-14"
+LABEL build-date="2025-03-21"
 LABEL commit-hash="05f9e12ee27c1532623112d1df92004226d0d347"
 LABEL license="Apache-2.0"
 LABEL environment="production"

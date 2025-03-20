@@ -18,11 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@chanhi2000][chanhi2000]
 - [@dhj27][dhj27]
 - [@lmy9237][lmy9237]
-### Changed
-- [@chanhi2000][chanhi2000]
-- [@dhj27][dhj27]
-- [@lmy9237][lmy9237]
-### Fixed
+### Changed/Fixed
 - [@chanhi2000][chanhi2000]
 - [@dhj27][dhj27]
 - [@lmy9237][lmy9237]
@@ -33,6 +29,80 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 ---
+
+## 0.2.2 - 2025-03-21
+
+### [`api-v0.2.3`][api-v0.2.3]: 백엔드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - Dashboard VM 메모리/CPU 통계 기능 조회 오류 예외처리
+- [@dhj27][dhj27]
+  - 전체적인 리팩토링 (속도개선)
+  - navigation vm status 추가 
+<!-- - [@lmy9237][lmy9237] -->
+
+<!-- ### Removed
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237] -->
+
+### [`web-v0.2.3`][web-v0.2.3]: 프론트
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - RutilVM 로고 적용 (로고 컴포넌트)
+  - Localization 처리
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+  - input 테두리 px줄이기 , 네비케이션과 세부페이지 카테고리 hover기능추가
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - 디자인 된 아이콘으로 교체 (상태, 메뉴, etc.)
+  - 컴포넌트 정리
+- [@dhj27][dhj27]
+  - 템플릿 페이지 정리
+  - 페이지 리팩토링(formdata 정리)
+  - 필요없는 테이블 삭제
+- [@lmy9237][lmy9237]
+  - 상단 헤더 메뉴버튼: 로고버튼 호버 효과 비활성화
+  - 네비게이션 버튼 그룹 왼쪽으로 정렬
+  - Path의 Font Size: 13 -> 14
+  - 테이블 짝홀에 따른 열 색 Toggle (회색 / 흰색 교차)  
+  - 하단 "최근작업" 활성화 버튼에 대한 아이콘 스타일 변경 
+    - 닫혔을 때: ChevronArrowDown
+    - 열렸을 때: ChevronArrowUp
+  - Radio버튼, Checkbox버튼과 텍스트와의 수직 Center나열 
+  -  상단 헤더 버튼 > 사용자 팝업박스 생성 후, 다른메뉴 또는 UI 변경 시, 사라지도록
+  - 상단 헤더 버튼 > 이벤트 팝업박스 생성 후, 다른메뉴 또는 UI 변경 시, 사라지도록
+  - Dashboard 그리드박스 수치에 따른 색깔표현 적용 
+  - ActionButton 적용 (VM생성모달, etc.)
+  - Dashboard 박스 스타일 틀어지는 현상수정(창이 거의 2줄 이상으로 바뀌기 직전에 메뉴버튼을 눌러주면 글자가 다 틀어짐)
+  - 상세화면 popup_box에 대한 컴포넌트(disabled/hover에 대한 css처리 포함)
+  - 폰트,높이,넓이 줄이기 + 버튼사이즈 수정
+  - 네비게이션 트리구조 안열리는것 , 아이콘 오류 수정
+  - 디자인 수정
+
+### Removed 
+
+- [@chanhi2000][chanhi2000]
+  - 불필요한 의존 컴포넌트 제거
+<!-- - [@dhj27][dhj27]
+- [@lmy9237][lmy9237] -->
+
+---
+
 
 ## 0.2.2 - 2025-03-14
 
@@ -282,6 +352,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[web-v0.2.3]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.3...web-v0.2.3
+[api-v0.2.3]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.3...api-v0.2.3
 [web-v0.2.2]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.1...web-v0.2.2
 [api-v0.2.2]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.1...api-v0.2.2
 [web-v0.2.1]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.0-beta2...web-v0.2.1
