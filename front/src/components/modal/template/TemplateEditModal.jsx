@@ -7,6 +7,7 @@ import ModalNavButton from "../../navigation/ModalNavButton";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
+import Localization from "../../../utils/Localization";
 
 const TemplateEditModal = ({
   isOpen,
@@ -37,7 +38,7 @@ const TemplateEditModal = ({
   ]);
 
   const tabs = [
-    { id: "general", label: "일반" },
+    { id: "general", label: Localization.kr.GENERAL },
     { id: "console", label: "콘솔" },
   ];
   useEffect(() => {

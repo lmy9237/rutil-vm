@@ -14,8 +14,6 @@ import {
 import "./DashboardBoxGroup.css";
 import {
   RVI24,
-  ArrowUpBoxIcon,
-  BoxErrorIcon,
   rvi24DiagonalUp,
   rvi24DiagonalDown,
   rvi24Bell,

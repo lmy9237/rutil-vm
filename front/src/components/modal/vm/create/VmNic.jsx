@@ -1,5 +1,6 @@
 import React from "react";
 import DynamicInputList from "../../../label/DynamicInputList";
+import Localization from "../../../../utils/Localization";
 
 
 const VmNic = ({ nicsState, setNicsState, nics }) => {
@@ -16,7 +17,7 @@ const VmNic = ({ nicsState, setNicsState, nics }) => {
   return (
     <div className="host-second-content py-2">
       <p className="mb-0.5">
-        vNIC 프로파일을 선택하여 가상 머신 네트워크 인터페이스를 설정하세요.
+        {Localization.kr.VNIC_PROFILE} 을 선택하여 가상 머신 네트워크 인터페이스를 설정하세요.
       </p>
       
       <DynamicInputList

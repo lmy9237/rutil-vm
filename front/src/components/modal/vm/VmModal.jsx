@@ -26,10 +26,11 @@ import LabelSelectOptionsID from '../../label/LabelSelectOptionsID';
 import { checkKoreanName } from "../../../util";
 import './MVm.css';
 import ModalNavButton from "../../navigation/ModalNavButton";
+import Localization from "../../../utils/Localization";
 
 // 탭 메뉴
 const tabs = [
-  { id: "common", label: "일반" },
+  { id: "common", label: Localization.kr.GENERAL },
   { id: "system", label: "시스템" },
   { id: "beginning", label: "초기 실행" },
   { id: "host", label: "호스트" },

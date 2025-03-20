@@ -28,6 +28,7 @@ import {
   useAllvnicFromDataCenter,
 } from "../../../api/RQHook";
 import "./MVm.css";
+import Localization from "../../../utils/Localization";
 
 const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   const { mutate: addVM } = useAddVm();
@@ -192,7 +193,7 @@ const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
 
   // 탭 메뉴
   const tabs = [
-    { id: "common_tab", value: "common", label: "일반" },
+    { id: "common_tab", value: "common", label: Localization.kr.GENERAL },
     { id: "system_tab", value: "system", label: "시스템" },
     { id: "beginning_tab", value: "beginning", label: "초기 실행" },
     { id: "host_tab", value: "host", label: "호스트" },

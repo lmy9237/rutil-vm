@@ -11,6 +11,7 @@ import NetworkHosts from "./NetworkHosts";
 import NetworkVms from "./NetworkVms";
 import NetworkTemplates from "./NetworkTemplates";
 import NetworkClusters from "./NetworkClusters";
+import Localization from "../../../utils/Localization";
 import { useNetworkById } from "../../../api/RQHook";
 
 /**
@@ -39,7 +40,7 @@ const NetworkInfo = () => {
 
   const sections = [
     { id: "general", label: "일반" },
-    { id: "vnicProfiles", label: "VNic 프로파일" },
+    { id: "vnicProfiles", label: Localization.kr.VNIC_PROFILE },
     { id: "clusters", label: "클러스터" },
     { id: "hosts", label: "호스트" },
     { id: "vms", label: "가상머신" },

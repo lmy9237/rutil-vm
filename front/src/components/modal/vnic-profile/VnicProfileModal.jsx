@@ -11,6 +11,7 @@ import {
   useVnicProfile,
 } from "../../../api/RQHook";
 import "./MVnic.css";
+import Localization from "../../../utils/Localization";
 
 const FormGroup = ({ label, children }) => (
   <div className="vnic-new-box">
@@ -235,14 +236,14 @@ const VnicProfileModal = ({
         onSuccess: () => {
           toast.success(
             editMode
-              ? "vNIC 프로파일이 성공적으로 편집되었습니다."
-              : "vNIC 프로파일이 성공적으로 추가되었습니다."
+              ? `${Localization.kr.VNIC_PROFILE}이 성공적으로 편집되었습니다.`
+              : `${Localization.kr.VNIC_PROFILE}이 성공적으로 추가되었습니다.`
           );
           onClose();
         },
         onError: (error) => {
           toast.error(
-            `vNIC 프로파일 ${editMode ? "편집" : "추가"} 중 오류 발생: ${error}`
+            `${Localization.kr.VNIC_PROFILE} ${editMode ? "편집" : "추가"} 중 오류 발생: ${error}`
           );
         },
       }
@@ -251,7 +252,7 @@ const VnicProfileModal = ({
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"vNic 프로파일"}
+      targetName={Localization.kr.VNIC_PROFILE}
       submitTitle={editMode ? "편집" : "생성"}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px", height: "550px" }} 

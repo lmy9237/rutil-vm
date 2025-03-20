@@ -14,6 +14,7 @@ import StorageDomains from "./StorageDomains";
 import Disks from "./Disks";
 import Networks from "./Networks";
 import VnicProfiles from "./VnicProfiles";
+import Localization from "../../utils/Localization";
 import "./RutilManager.css";
 
 function RutilManager() {
@@ -35,21 +36,16 @@ function RutilManager() {
     { id: "storageDomains", label: "스토리지 도메인" },
     { id: "disks", label: "디스크" },
     { id: "networks", label: "네트워크" },
-    { id: "vnicProfiles", label: "vNIC 프로파일" },
+    { id: "vnicProfiles", label: Localization.kr.VNIC_PROFILE },
   ];
 
   // section이 변경될때 tab도 같이 변경
   useEffect(() => {
-    if (!section) {
-      setActiveTab("info");
-    } else {
-      setActiveTab(section);
-    }
+    setActiveTab(!section ? "info" : section);
   }, [section]);
 
   const handleTabClick = (tab) => {
-    const path =
-      tab === "info"
+    const path = tab === "info"
         ? `${rootPath}/rutil-manager`
         : `${rootPath}/rutil-manager/${tab}`;
     navigate(path);

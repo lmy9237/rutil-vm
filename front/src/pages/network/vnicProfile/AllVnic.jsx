@@ -5,6 +5,7 @@ import { faLaptop } from "@fortawesome/free-solid-svg-icons";
 import HeaderButton from "../../../components/button/HeaderButton";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VnicProfileDupl from "../../../components/dupl/VnicProfileDupl";
+import Localization from "../../../utils/Localization";
 
 // React Modal 설정
 Modal.setAppElement("#root");
@@ -28,7 +29,7 @@ const AllVnic = () => {
   return (
     <div id="section">
       <div>
-        <HeaderButton titleIcon={faLaptop} title="VNic 프로파일" />
+        <HeaderButton titleIcon={faLaptop} title={Localization.kr.VNIC_PROFILE} />
       </div>
       <div className="w-full section-content">
         <VnicProfileDupl

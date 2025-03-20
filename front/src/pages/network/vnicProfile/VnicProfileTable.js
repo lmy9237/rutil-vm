@@ -6,7 +6,7 @@ import TableRowClick from '../../../components/table/TableRowClick';
 const VnicProfileTable = ({
   columns,
   vnicProfiles,
-  setSelectedVnicProfiles, // 다중 선택된 vNIC 프로파일을 관리하기 위한 함수
+  setSelectedVnicProfiles, // 다중 선택된 vNic 프로파일을 관리하기 위한 함수
 }) => {
 
   const navigate = useNavigate();

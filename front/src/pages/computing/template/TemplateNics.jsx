@@ -40,8 +40,7 @@ const TemplateNics = ({ templateId }) => {
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
 
-  // 템플릿에 연결된 vNIC 프로파일 데이터 가져오기
-
+  // 템플릿에 연결된 vNic 프로파일 데이터 가져오기
   const renderModals = () => (
     <Suspense fallback={<Loading />}>
       {activeModal === "create" && (

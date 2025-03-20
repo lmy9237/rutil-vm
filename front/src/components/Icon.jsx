@@ -6,12 +6,7 @@ import {
   faRefresh,
   faArrowsUpToLine,
   faSpinner,
-  faCheckCircle,
-  faTimesCircle,
-  faWarning,
   faMoon,
-  faTimes,
-  faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 
 /**
@@ -110,8 +105,6 @@ export function icon(status) {
   );
 }
 
-// const sizeToGB = (data) => (data / Math.pow(1024, 3));
-// const formatSize = (size) => (sizeToGB(size) < 1 ? '< 1 GB' : `${sizeToGB(size).toFixed(0)} GB`);
 export function renderDataCenterStatus(status) {
   if (status === "UNINITIALIZED") {
     return "초기화되지 않음";
