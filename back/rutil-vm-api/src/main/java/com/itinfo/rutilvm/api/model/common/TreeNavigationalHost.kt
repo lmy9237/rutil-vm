@@ -31,9 +31,7 @@ class TreeNavigationalHost (
 }
 
 fun Host.toNavigationalWithStorageDomains(conn: Connection): TreeNavigationalHost {
-    val vms: List<Vm> =
-        conn.findAllVmsFromHost(this@toNavigationalWithStorageDomains.id(), "status=up").getOrDefault(listOf())
-		// TODO: restart (재시작중), powering up (기동 중), powering down (종료 중)
+    val vms: List<Vm> = conn.findAllVmsFromHost(this@toNavigationalWithStorageDomains.id(), " status = poweringup or status = up or status = savingstate or status = restoringstate or status = poweringdown").getOrDefault(listOf())
 
     return TreeNavigationalHost.builder {
         id { this@toNavigationalWithStorageDomains.id() }

@@ -35,8 +35,7 @@ class TreeNavigationalCluster (
 
 fun Cluster.toNavigational(conn: Connection): TreeNavigationalCluster {
     val hosts: List<Host> = conn.findAllHostsFromCluster(this@toNavigational.id()).getOrDefault(listOf())
-    val vmDowns: List<Vm> = conn.findAllVmsFromCluster(this@toNavigational.id(), "status=down").getOrDefault(listOf())
-	// TODO: pause (일시정지), unknown (알수 없음) 도 포함
+    val vmDowns: List<Vm> = conn.findAllVmsFromCluster(this@toNavigational.id(), "status=down or status=notresponding or status=rebootinprogress or status=imagelocked or status=suspended").getOrDefault(listOf())
 
     return TreeNavigationalCluster.builder {
         id { this@toNavigational.id() }

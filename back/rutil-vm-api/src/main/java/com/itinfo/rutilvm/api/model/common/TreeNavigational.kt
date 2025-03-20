@@ -7,12 +7,14 @@ import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.Network
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
+import org.ovirt.engine.sdk4.types.VmStatus
 import java.io.Serializable
 
 open class TreeNavigational(
 	val type: TreeNavigationalType? = TreeNavigationalType.UNKNOWN,
 	val id: String? = "",
-	val name: String? = ""
+	val name: String? = "",
+	val status: VmStatus = VmStatus.UNKNOWN,
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -21,7 +23,8 @@ open class TreeNavigational(
 		private var bType: TreeNavigationalType? = TreeNavigationalType.UNKNOWN;fun type(block: () -> TreeNavigationalType?) { bType = block() ?: TreeNavigationalType.UNKNOWN }
 		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
-		fun build(): TreeNavigational = TreeNavigational(bType, bId, bName)
+		private var bStatus: VmStatus = VmStatus.UNKNOWN; fun status(block: () -> VmStatus?) { bStatus = block() ?: VmStatus.UNKNOWN }
+		fun build(): TreeNavigational = TreeNavigational(bType, bId, bName, bStatus)
 	}
 	companion object {
 		inline fun builder(block: TreeNavigational.Builder.() -> Unit): TreeNavigational = TreeNavigational.Builder().apply(block).build()
@@ -57,6 +60,7 @@ fun Vm.toNavigationalWithStorageDomains(): TreeNavigational = TreeNavigational.b
 	type { TreeNavigationalType.VM }
 	id { this@toNavigationalWithStorageDomains.id() }
 	name { this@toNavigationalWithStorageDomains.name() }
+	status { this@toNavigationalWithStorageDomains.status() }
 }
 fun List<Vm>.fromVmsToTreeNavigationals(): List<TreeNavigational> =
 	this@fromVmsToTreeNavigationals.map { it.toNavigationalWithStorageDomains() }
