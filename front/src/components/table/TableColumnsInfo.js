@@ -117,6 +117,7 @@ const TableColumnsInfo = {
 
   VMS: [
     { header: '', accessor: 'icon', clickable: false, width: '8%' },
+    { header: '', accessor: 'engine', clickable: false, width: '8%' },
     { header: '이름', accessor: '_name', clickable: true, width: '20%' },
     { header: '코멘트', accessor: 'comment', clickable: false, width: '20%' },
     { header: 'IP주소', accessor: 'ipv4', clickable: false, width: '20%' },

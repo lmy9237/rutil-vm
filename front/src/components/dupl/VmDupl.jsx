@@ -31,6 +31,7 @@ const VmDupl = ({
   const transformedData = vms.map((vm) => ({
     ...vm,
     icon: renderVmStatusIcon(vm?.status),
+    engine: vm?.hostedEngineVm === true ? "ㅇ":"",
     _name: (
       <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}
