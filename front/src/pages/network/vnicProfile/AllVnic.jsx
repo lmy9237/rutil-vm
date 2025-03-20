@@ -22,9 +22,7 @@ const AllVnic = () => {
     isLoading: isVnicProfilesLoading,
     isError: isVnicProfilesError,
     isSuccess: isVnicProfilesSuccess,
-  } = useAllVnicProfiles((e) => ({
-    ...e,
-  }));
+  } = useAllVnicProfiles((e) => ({ ...e }));
 
   return (
     <div id="section">
@@ -33,9 +31,7 @@ const AllVnic = () => {
       </div>
       <div className="w-full section-content">
         <VnicProfileDupl
-          isLoading={isVnicProfilesLoading}
-          isError={isVnicProfilesError}
-          isSuccess={isVnicProfilesSuccess}
+          isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
           columns={TableColumnsInfo.VNIC_PROFILES}
           vnicProfiles={vnicProfiles || []}
           showSearchBox={true}

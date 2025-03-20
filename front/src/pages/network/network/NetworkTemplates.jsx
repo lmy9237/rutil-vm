@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../../../components/common/Loading";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import DeleteModal from "../../../utils/DeleteModal";
 import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
 import { useAllTemplatesFromNetwork } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
@@ -22,9 +21,7 @@ const NetworkTemplates = ({ networkId }) => {
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
-  } = useAllTemplatesFromNetwork(networkId, (e) => ({ 
-    ...e
-  }));
+  } = useAllTemplatesFromNetwork(networkId, (e) => ({ ...e }));
 
   const [selectedNics, setSelectedNics] = useState([]); // 선택된 항목
   const [modalData, setModalData] = useState(null); // 모달에 전달할 데이터
@@ -33,9 +30,6 @@ const NetworkTemplates = ({ networkId }) => {
   // 선택된 Template ID와 NIC ID 추출
   const selectedTemplateIds = (Array.isArray(selectedNics) ? selectedNics : []).map(template => template.id).join(', ');
   const selectedNicIds = (Array.isArray(selectedNics) ? selectedNics : []).map(template => template.nicId).join(', ');
-
-  // 이름 클릭 시 이동
-  const handleNameClick = (id) => navigate(`/computing/templates/${id}`);
 
   const openDeleteModal = () => {
     // 제거 버튼 클릭 시 모달 열기
@@ -53,21 +47,6 @@ const NetworkTemplates = ({ networkId }) => {
     setModalData(null); // 모달 데이터 초기화
   };
 
-  // 모달 렌더링
-  const renderModals = () => (
-    <Suspense fallback={<Loading/>}>
-      {isModalOpen && (
-        <TemplateNicDeleteModal
-          isOpen={isModalOpen}
-          onClose={closeDeleteModal}
-          data={modalData} // 선택된 NIC 데이터 전달
-          templateId={selectedTemplateIds}
-        />
-      )}
-    </Suspense>
-  );
-  
-
   console.log("...")
   return (
     <>
@@ -80,14 +59,12 @@ const NetworkTemplates = ({ networkId }) => {
             disabled={!selectedNicIds}  // selectedNicIds가 없으면 비활성화
           />
       </div>
-      
-      {/* 선택된 Template ID와 NIC ID 표시 */}
-      <span>선택된 Template ID: {selectedTemplateIds || '없음'}</span>
-      <br />
       <span>선택된 NIC ID: {selectedNicIds || '없음'}</span>
 
-      <TablesOuter data={templates} columns={TableColumnsInfo.TEMPLATES_FROM_NETWORK}
+      <TablesOuter 
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
+        columns={TableColumnsInfo.TEMPLATES_FROM_NETWORK}
+        data={templates} 
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedNics(selectedRows)} // 선택된 항목 업데이트
         multiSelect={true}
@@ -99,7 +76,16 @@ const NetworkTemplates = ({ networkId }) => {
       />
 
       {/* 모달 렌더링 */}
-      {renderModals()}
+      <Suspense fallback={<Loading/>}>
+        {isModalOpen && (
+          <TemplateNicDeleteModal
+            isOpen={isModalOpen}
+            onClose={closeDeleteModal}
+            data={modalData} // 선택된 NIC 데이터 전달
+            templateId={selectedTemplateIds}
+          />
+        )}
+      </Suspense>
     </>
   );
 };

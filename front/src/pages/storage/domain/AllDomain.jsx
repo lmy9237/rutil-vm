@@ -26,12 +26,10 @@ const AllDomain = () => {
       </div>
       <div className="w-full section-content">
         <DomainDupl
-          domains={storageDomains || []}
+          isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
           columns={TableColumnsInfo.STORAGE_DOMAINS}
+          domains={storageDomains || []}
           actionType={"domain"}
-          isLoading={isStorageDomainsLoading}
-          isError={isStorageDomainsError}
-          isSuccess={isStorageDomainsSuccess}
           showSearchBox={true}
         />
       </div>

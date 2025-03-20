@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAllVmsFromDisk } from "../../../api/RQHook";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import VmTable from "../../computing/vm/VmTable";
+import TableRowClick from "../../../components/table/TableRowClick";
+import { renderVmStatusIcon } from "../../../components/Icon";
+import TablesOuter from "../../../components/table/TablesOuter";
 
 /**
  * @name DiskVms
@@ -13,27 +15,38 @@ import VmTable from "../../computing/vm/VmTable";
  */
 const DiskVms = ({ diskId }) => {
   const { 
-    data: vms,
+    data: vms = [],
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-  } = useAllVmsFromDisk(diskId, (e) => ({
-    ...e,
-    status: e.status === "DOWN" ? "내려감" : e.status === "UP" ? "실행중" : e.status,
-  }));
+  } = useAllVmsFromDisk(diskId, (e) => ({ ...e }));
 
-  const [selectedVms, setSelectedVms] = useState([]); // 선택된 VM
+  const transformedData = vms.map((vm) => ({
+    ...vm,
+    icon: renderVmStatusIcon(vm?.status),
+    _name: (
+      <TableRowClick type="vm" id={vm?.id}>
+        {vm?.name}
+      </TableRowClick>
+    ),
+    host: (
+      <TableRowClick type="host" id={vm?.hostVo?.id}>
+        {vm?.hostVo?.name}
+      </TableRowClick>
+    ),
+    ipv4: vm?.ipv4 + " " + vm?.ipv6,
+  }));
 
   console.log("...")
   return (
-    <VmTable
-      isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
-      columns={TableColumnsInfo.VMS_FROM_DISK}
-      vms={vms || []}
-      setSelectedVms={(selected) => {
-        if (Array.isArray(selected)) setSelectedVms(selected); // 유효한 선택만 반영
-      }}
-    />
+    <>
+      <TablesOuter
+        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+        columns={TableColumnsInfo.VMS_FROM_DISK}
+        data={transformedData} // ✅ 검색 필터링된 데이터 사용
+        shouldHighlight1stCol={true}
+      />
+    </>
   );
 };
 

@@ -20,11 +20,9 @@ const Vms = () => {
   return (
     <>
       <VmDupl
-        vms={vms}
+        isLoading={isVmsLoading}isError={isVmsError} isSuccess={isVmsSuccess}
         columns={TableColumnsInfo.VMS}
-        isLoading={isVmsLoading}
-        isError={isVmsError}
-        isSuccess={isVmsSuccess}
+        vms={vms}
       />
     </>
   );

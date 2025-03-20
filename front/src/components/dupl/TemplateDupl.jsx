@@ -20,7 +20,7 @@ const TemplateDupl = ({
   const transformedData = templates.map((temp) => ({
     ...temp,
     _name: (
-      <TableRowClick type="templates" id={temp?.id}>
+      <TableRowClick type="template" id={temp?.id}>
         {temp?.name}
       </TableRowClick>
     ),

@@ -16,17 +16,15 @@ const ClusterHosts = ({ clusterId }) => {
     isLoading: isHostsLoading,
     isError: isHostsError,
     isSuccess: isHostsSuccess,
-  } = useHostFromCluster(clusterId, (e) => ({...e,}));
+  } = useHostFromCluster(clusterId, (e) => ({ ...e }));
 
   console.log("...");
   return (
     <>
       <HostDupl
-        isLoading={isHostsLoading}
-        isError={isHostsError}
-        isSuccess={isHostsSuccess}
-        hosts={hosts}
+        isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
         columns={TableColumnsInfo.HOSTS}
+        hosts={hosts}
         clusterId={clusterId}
       />
     </>

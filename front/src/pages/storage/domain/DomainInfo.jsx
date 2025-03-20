@@ -12,11 +12,11 @@ import DomainEvents from './DomainEvents';
 import DomainDisks from './DomainDisks';
 import DomainTemplates from './DomainTemplates';
 import DomainDiskSnapshots from './DomainDiskSnapshots';
-import DomainGetVms from './DomainGetVms';
-import DomainGetTemplates from './DomainGetTemplates';
-import DomainGetDisks from './DomainGetDisks';
 import { useDomainById, useOvfUpdateDomain, useRefreshLunDomain } from '../../../api/RQHook';
 import Localization from '../../../utils/Localization';
+import DomainImportVms from './DomainImportVms';
+import DomainImportTemplates from './DomainImportTemplates';
+import DomainImportDisks from './DomainImportDisks';
 
 /**
  * @name DomainInfo
@@ -42,11 +42,11 @@ const DomainInfo = () => {
     { id: 'general', label: Localization.kr.GENERAL },
     { id: 'datacenters', label: Localization.kr.DATA_CENTER },
     { id: 'vms', label: '가상머신' },
-    { id: 'getVms', label: '가상머신 가져오기' },
+    { id: 'importVms', label: '가상머신 가져오기' },
     { id: 'templates', label: '템플릿' },
-    { id: 'getTemplates', label: '템플릿 가져오기' },
+    { id: 'importTemplates', label: '템플릿 가져오기' },
     { id: 'disks', label: '디스크' },
-    { id: 'getDisks', label: '디스크 불러오기' },
+    { id: 'importDisks', label: '디스크 불러오기' },
     { id: 'diskSnapshots', label: '디스크 스냅샷' },
     { id: 'events', label: '이벤트' },
   ];
@@ -68,11 +68,11 @@ const DomainInfo = () => {
       general: DomainGeneral,
       datacenters: DomainDatacenters,
       vms: DomainVms,
-      getVms: DomainGetVms,
+      importVms: DomainImportVms,
       templates: DomainTemplates,
-      getTemplates: DomainGetTemplates,
+      importTemplates: DomainImportTemplates,
       disks: DomainDisks,
-      getDisks: DomainGetDisks,
+      importDisks: DomainImportDisks,
       diskSnapshots: DomainDiskSnapshots,
       events: DomainEvents,
     }[activeTab];

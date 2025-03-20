@@ -67,9 +67,7 @@ const VnicProfileDupl = ({
 
       {/* 테이블 컴포넌트 */}
       <TablesOuter
-        isLoading={isLoading} 
-        isError={isError} 
-        isSuccess={isSuccess}
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         columns={columns}
         data={filteredData} 
         shouldHighlight1stCol={true}

@@ -20,11 +20,9 @@ const Hosts = () => {
   return (
     <>
       <HostDupl
-        hosts={hosts}
+        isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
         columns={TableColumnsInfo.HOSTS}
-        isLoading={isHostsLoading}
-        isError={isHostsError}
-        isSuccess={isHostsSuccess}
+        hosts={hosts}
       />
     </>
   );

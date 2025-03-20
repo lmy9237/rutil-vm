@@ -42,7 +42,7 @@ const VmDiskDupl = ({
       ...d,
       icon: renderTFStatusIcon(d?.active),
       _alias: (
-        <TableRowClick type="disks" id={diskImage?.id}>
+        <TableRowClick type="disk" id={diskImage?.id}>
           {diskImage?.alias}
         </TableRowClick>
       ),
@@ -58,7 +58,7 @@ const VmDiskDupl = ({
       virtualSize: checkZeroSizeToGB(diskImage?.virtualSize),
       actualSize: checkZeroSizeToGB(diskImage?.actualSize),
       storageDomain: (
-        <TableRowClick type="domains" id={diskImage?.storageDomainVo?.id}>
+        <TableRowClick type="domain" id={diskImage?.storageDomainVo?.id}>
           {diskImage?.storageDomainVo?.name}
         </TableRowClick>
       ),

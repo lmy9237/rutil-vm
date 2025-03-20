@@ -1,8 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEarthAmericas,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEarthAmericas, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useVmById } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import InfoTable from "../../../components/table/InfoTable";
@@ -97,11 +94,9 @@ const VmGeneral = ({ vmId }) => {
   } = useVmById(vmId);
 
   const osLabel =
-    osSystemList.find((option) => option.value === vm?.osType)?.label ||
-    vm?.osSystem;
+    osSystemList.find((option) => option.value === vm?.osType)?.label || vm?.osSystem;
   const chipsetLabel =
-    chipsetOptionList.find((option) => option.value === vm?.biosType)
-      ?.label || vm?.chipsetFirmwareType;
+    chipsetOptionList.find((option) => option.value === vm?.biosType)?.label || vm?.chipsetFirmwareType;
 
   const generalTableRows = [
     { label: "전원상태", value: vm?.status },
@@ -155,6 +150,7 @@ const VmGeneral = ({ vmId }) => {
     <>
       <div className="vm-detail-general-boxs">
         <div className="detail-general-box">
+          <div>일반 정보</div>
           <InfoTable tableRows={generalTableRows} />
         </div>
 

@@ -11,7 +11,7 @@ const StorageDomainWithTooltip = ({ domainId }) => {
   return (
     <>
       <span data-tooltip-id={`storage-domain-tooltip-${domainId}`}>
-        <TableRowClick type="domains" id={domainId}>
+        <TableRowClick type="domain" id={domainId}>
           {storageDomain?.name || '불러오는 중...'}
         </TableRowClick>
       </span>
@@ -50,9 +50,13 @@ const TemplateDisks = ({ templateId }) => {
     return {
       id: e?.id,
       interfaceType: e?.interface_ || 'N/A',
-      alias: disk?.alias || 'Unnamed Disk',
+      _alias: (
+        <TableRowClick type="disk" id={disk?.id}>
+          {disk?.alias}
+        </TableRowClick>
+      ),
       virtualSize: convertBytesToGB(disk?.virtualSize) + " GB",
-      actualSize: convertBytesToGB(disk?.actualSize) + " GB",
+      actualSize: checkZeroSizeToGB(disk?.actualSize),
       creationTime: disk?.createDate || 'N/A',
       storageDomainId: disk?.storageDomainVo?.id,
       storageDomainName: disk?.storageDomainVo ? (
@@ -60,14 +64,12 @@ const TemplateDisks = ({ templateId }) => {
       ) : 'N/A',
       storageType: disk?.storageType || 'Unknown',
       status: disk?.status || 'Unknown',
-      policy: disk?.sparse ? '씬 프로비저닝' : '두꺼운 프로비저닝',
+      policy: disk?.sparse ? '씬 프로비저닝' : '사전 할당',
     };
   });
 
   const [selectedDisks, setSelectedDisks] = useState([]); // 선택된 디스크 ID 상태
-
   const selectedDiskIds = (Array.isArray(selectedDisks) ? selectedDisks : []).map(d => d.id).join(', ');
-  console.log("a " + selectedDisks)
 
   return (
     <>
@@ -79,8 +81,7 @@ const TemplateDisks = ({ templateId }) => {
         data={transformedData}
         onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
       />
-      
-      </>
+    </>
   );
 };
 

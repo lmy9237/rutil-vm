@@ -28,7 +28,7 @@ const DomainVms = ({ domainId }) => {
 
   const transformedData = vms.map((vm) => ({
     _name: (
-      <TableRowClick type="vms" id={vm?.id}>
+      <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}
       </TableRowClick>
     ),
@@ -48,6 +48,7 @@ const DomainVms = ({ domainId }) => {
       > {vm?.snapshotVos?.length} 
       </span>
     ),
+    creationTime: vm?.creationTime
   }));
 
   if (isVmsLoading)

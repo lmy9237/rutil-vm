@@ -26,11 +26,9 @@ const AllTemplates = () => {
       </div>
       <div className="w-full section-content">
         <TemplateDupl
-          templates={templates || []}
+          isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
           columns={TableColumnsInfo.TEMPLATES}
-          isLoading={isTemplatesLoading}
-          isError={isTemplatesError}
-          isSuccess={isTemplatesSuccess}
+          templates={templates}
           showSearchBox={true}
         />
       </div>

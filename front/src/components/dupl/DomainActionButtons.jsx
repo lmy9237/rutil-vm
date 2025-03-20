@@ -53,20 +53,20 @@ const DomainActionButtons = ({
   const wrapperClass =
   type === "context" ? "right-click-menu-box" : "header-right-btns";
 
-  // const selectedActions =
-  // actionType === "domain"
-  //   ? basicActions
-  //   : actionType === "dcDomain"
-  //   ? dcDomainActions
-  //   : actionType === "domainDc"
-  //   ? domainDcActions
-  //   : [];
+  const selectedActions =
+  actionType === "domain"
+    ? basicActions
+    : actionType === "dcDomain"
+    ? dcDomainActions
+    : actionType === "domainDc"
+    ? domainDcActions
+    : [];
 
   return (
  
     <ActionButtonGroup
       actionType={actionType}
-      actions={basicActions}
+      actions={selectedActions}
     >
       {!isContextMenu && (
         <ActionButton label={"디스크"} onClick={() => navigate("/storages/disks")} actionType={actionType}/>

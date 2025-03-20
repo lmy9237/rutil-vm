@@ -21,11 +21,9 @@ const Templates = () => {
   return (
     <>
       <TemplateDupl
-        templates={templates}
+        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         columns={TableColumnsInfo.TEMPLATES}
-        isLoading={isTemplatesLoading}
-        isError={isTemplatesError}
-        isSuccess={isTemplatesSuccess}
+        templates={templates}
       />
     </>
   );

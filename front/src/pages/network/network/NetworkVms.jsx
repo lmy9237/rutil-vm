@@ -7,7 +7,7 @@ import {
   renderVmStatusIcon,
 } from "../../../components/Icon";
 import { useAllVmsFromNetwork } from "../../../api/RQHook";
-import { convertBpsToMbps, convertBytesToMB } from "../../../util";
+import { checkZeroSizeToMbps } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
 import ActionButton from "../../../components/button/ActionButton";
 
@@ -44,8 +44,8 @@ const NetworkVms = ({ networkId }) => {
     return {
       ...nic,
       icon: renderVmStatusIcon(vm?.status),
-      name: (
-        <TableRowClick type="vms" id={vm?.id}>
+      _name: (
+        <TableRowClick type="vm" id={vm?.id}>
           {vm?.name}
         </TableRowClick>
       ),
@@ -53,8 +53,8 @@ const NetworkVms = ({ networkId }) => {
       ipAddress: vm?.ipv4 + "" + vm?.ipv6,
       vnicStatus: renderUpDownStatusIcon(nic?.status),
       vnic: nic?.name || "",
-      vnicRx: (convertBpsToMbps(nic?.rxSpeed)),
-      vnicTx: (convertBpsToMbps(nic?.txSpeed)),
+      vnicRx: checkZeroSizeToMbps(nic?.rxSpeed),
+      vnicTx: checkZeroSizeToMbps(nic?.txSpeed),
       totalRx: nic?.rxTotalSpeed.toLocaleString(),
       totalTx: nic?.txTotalSpeed.toLocaleString(),
       Description: nic?.discription,

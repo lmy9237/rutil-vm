@@ -11,9 +11,7 @@ const AllDisk = () => {
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
-  } = useAllDisks((e) => ({
-    ...e,
-  }));
+  } = useAllDisks((e) => ({ ...e }));
 
   console.log("...");
   return (
@@ -24,8 +22,8 @@ const AllDisk = () => {
       <div className="w-full section-content">
         <DiskDupl
           isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
-          disks={disks} 
           columns={TableColumnsInfo.DISKS}
+          disks={disks} 
           showSearchBox={true}
         />
       </div>

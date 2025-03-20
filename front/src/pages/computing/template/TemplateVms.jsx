@@ -3,6 +3,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { useAllVmsFromTemplate } from "../../../api/RQHook";
 import TablesOuter from "../../../components/table/TablesOuter";
 import { renderVmStatusIcon } from "../../../components/Icon";
+import TableRowClick from "../../../components/table/TableRowClick";
 
 /**
  * @name TemplateVms
@@ -17,10 +18,22 @@ const TemplateVms = ({ templateId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-  } = useAllVmsFromTemplate(templateId, (e) => ({
+  } = useAllVmsFromTemplate(templateId, (e) => ({ ...e }));
+
+  const transformedData = vms.map((e) => ({
     ...e,
     icon: renderVmStatusIcon(e.status),
-    host: e?.hostVo?.name,
+    _name: (
+      <TableRowClick type="vm" id={e?.id}>
+        {e?.name}
+      </TableRowClick>
+    ),
+    host: (
+      <TableRowClick type="host" id={e?.hostVo?.id}>
+        {e?.hostVo?.name}
+      </TableRowClick>
+    ),
+    ipv4: e?.ipv4 + " " + e?.ipv6,
   }));
 
   console.log("...");
@@ -29,8 +42,7 @@ const TemplateVms = ({ templateId }) => {
       <TablesOuter
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         columns={TableColumnsInfo.VMS_FROM_TEMPLATE}
-        data={vms}
-        clickableColumnIndex={[1]}
+        data={transformedData}
       />
     </>
   );

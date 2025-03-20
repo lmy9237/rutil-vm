@@ -16,20 +16,16 @@ const HostDevices = ({ hostId }) => {
     isLoading: isHostDevicesLoading,
     isError: isHostDevicesError,
     isSuccess: isHostDevicesSuccess,
-  } = useHostdeviceFromHost(hostId, (e) => ({
-    ...e,
-  }));
+  } = useHostdeviceFromHost(hostId, (e) => ({ ...e }));
 
   console.log("...");
   return (
     <>
       <div className="section-table-outer">
         <PagingTable
-          data={hostDevices}
+          isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
           columns={TableColumnsInfo.DEVICE_FROM_HOST}
-          isLoading={isHostDevicesLoading}
-          isError={isHostDevicesError}
-          isSuccess={isHostDevicesSuccess}
+          data={hostDevices}
         />
       </div>
     </>

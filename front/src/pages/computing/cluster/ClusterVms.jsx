@@ -16,19 +16,15 @@ const ClusterVms = ({ clusterId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-  } = useVMFromCluster(clusterId, (e) => ({
-    ...e,
-  }));
+  } = useVMFromCluster(clusterId, (e) => ({ ...e }));
 
   console.log("...");
   return (
     <>
       <VmDupl
-        vms={vms}
+        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         columns={TableColumnsInfo.VMS}
-        isLoading={isVmsLoading}
-        isError={isVmsError}
-        isSuccess={isVmsSuccess}
+        vms={vms}
       />
     </>
   );

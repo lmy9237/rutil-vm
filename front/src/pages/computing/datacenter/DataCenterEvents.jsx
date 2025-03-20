@@ -16,9 +16,7 @@ const DataCenterEvents = ({ datacenterId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
-  } = useEventsFromDataCenter(datacenterId, (e) => ({
-    ...e,
-  }));
+  } = useEventsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
   console.log("...");
   return (

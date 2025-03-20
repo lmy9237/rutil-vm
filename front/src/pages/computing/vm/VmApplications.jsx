@@ -20,9 +20,7 @@ const VmApplications = ({ vmId }) => {
   return (
     <div className="host-empty-outer">
       <TablesOuter
-        isLoading={isApplicationsLoading}
-        isError={isApplicationsError}
-        isSuccess={isApplicationsSuccess}
+        isLoading={isApplicationsLoading} isError={isApplicationsError} isSuccess={isApplicationsSuccess}
         columns={TableColumnsInfo.APPLICATIONS_FROM_VM}
         data={applications.map((e) => ({
           name: e?.name,

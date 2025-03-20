@@ -21,11 +21,9 @@ const DataCenters = () => {
   return (
     <>
       <DataCenterDupl
-        datacenters={datacenters}
+        isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
         columns={TableColumnsInfo.DATACENTERS}
-        isLoading={isDataCentersLoading}
-        isError={isDataCentersError}
-        isSuccess={isDataCentersSuccess}
+        datacenters={datacenters}
       />
     </>
   );

@@ -26,11 +26,11 @@ const TableRowClick = ({
       datacenter: `/computing/datacenters/${id}/clusters`,
       cluster: `/computing/clusters/${id}`,
       host: `/computing/hosts/${id}`,
-      vms: `/computing/vms/${id}`,
-      domains: `/storages/domains/${id}`,
-      disks: `/storages/disks/${id}`,
+      vm: `/computing/vms/${id}`,
+      template: `/computing/templates/${id}`,
+      domain: `/storages/domains/${id}`,
+      disk: `/storages/disks/${id}`,
       network: `/networks/${id}`,
-      templates: `/computing/templates/${id}`,
       vnicProfile: `/vnicProfiles/${id}/vms`,
     };
 

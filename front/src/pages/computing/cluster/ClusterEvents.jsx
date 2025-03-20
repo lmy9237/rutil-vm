@@ -15,9 +15,7 @@ const ClusterEvents = ({ clusterId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
-  } = useEventFromCluster(clusterId, (e) => ({
-    ...e
-  }));
+  } = useEventFromCluster(clusterId, (e) => ({ ...e }));
 
   console.log("...");
   return (

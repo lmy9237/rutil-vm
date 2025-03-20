@@ -32,6 +32,7 @@ const NetworkDupl = ({
         {network?.name}
       </TableRowClick>
     ),
+    status: network?.status === "OPERATIONAL" ? "가동 중" : "비 가동 중",
     vlan: network?.vlan === 0 ? "-" : network?.vlan,
     mtu: network?.mtu === 0 ? "기본값(1500)" : network?.mtu,
     datacenter: (
@@ -39,6 +40,13 @@ const NetworkDupl = ({
         {network?.datacenterVo?.name}
       </TableRowClick>
     ),
+    role: [
+      network?.usage?.management ? "관리" : null,
+      network?.usage?.display ? "출력" : null,
+      network?.usage?.migration ? "마이그레이션" : null,
+      network?.usage?.gluster ? "글러스터" : null,
+      network?.usage?.defaultRoute ? "기본라우팅" : null,
+    ].filter(Boolean).join(" / "),
     searchText: `${network?.name} ${network?.vlan} ${network?.mtu} ${network?.datacenterVo?.name || ""}`
   }));
 

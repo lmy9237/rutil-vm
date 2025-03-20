@@ -1,5 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { useCluster } from "../../../api/RQHook";
 import InfoTable from "../../../components/table/InfoTable";
 import Localization from "../../../utils/Localization";
@@ -39,9 +37,9 @@ const ClusterGeneral = ({ clusterId }) => {
     { label: "최대 메모리 오버 커밋", value: `${cluster?.memoryOverCommit}%` },
     { label: "칩셋/펌웨어 유형", value: renderBiosType(cluster?.biosType) },
     { label: "가상 머신 수", value: cluster?.vmSize?.allCnt },
-    { label: "총 볼륨 수", value: "해당 없음" },
-    { label: "Up 상태의 볼륨 수", value: "해당 없음" },
-    { label: "Down 상태의 볼륨 수", value: "해당 없음" },
+    // { label: "총 볼륨 수", value: "해당 없음" },
+    // { label: "Up 상태의 볼륨 수", value: "해당 없음" },
+    // { label: "Down 상태의 볼륨 수", value: "해당 없음" },
   ];
 
   return <InfoTable tableRows={tableRows} />;

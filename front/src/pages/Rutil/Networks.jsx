@@ -20,11 +20,9 @@ const Networks = () => {
   return (
     <>
       <NetworkDupl
-        networks={networks}
+        isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
         columns={TableColumnsInfo.NETWORKS}
-        isLoading={isNetworksLoading}
-        isError={isNetworksError}
-        isSuccess={isNetworksSuccess}
+        networks={networks}
       />
     </>
   );

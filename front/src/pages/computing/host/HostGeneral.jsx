@@ -78,7 +78,6 @@ const HostGeneral = ({ hostId }) => {
     { label: "제품 이름", value: host?.hostHwVo?.productName },
     { label: "일련 번호", value: host?.hostHwVo?.serialNum },
     { label: "CPU 소켓", value: host?.hostHwVo?.cpuTopologySocket },
-    
   ];
 
   const renderSoftwareTab = [

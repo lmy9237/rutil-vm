@@ -6,10 +6,7 @@ import { renderStatusClusterIcon } from "../../../components/Icon";
 import { useAllClustersFromNetwork } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
 import TableRowClick from "../../../components/table/TableRowClick";
-
-const NetworkClusterModal = React.lazy(
-  () => import("../../../components/modal/network/NetworkClusterModal")
-);
+import NetworkClusterModal from "../../../components/modal/network/NetworkClusterModal";
 
 /**
  * @name NetworkClusters
@@ -24,23 +21,40 @@ const NetworkClusters = ({ networkId }) => {
     isLoading: isClustersLoading,
     isError: isClustersError,
     isSuccess: isClustersSuccess,
-  } = useAllClustersFromNetwork(networkId, (e) => ({
-    ...e,
+  } = useAllClustersFromNetwork(networkId, (e) => ({ ...e }));
+
+  const transformedData = clusters.map((cluster) => ({
+    ...cluster,
+    _name: (
+      <TableRowClick type="cluster" id={cluster?.id}>
+        {cluster?.name}
+      </TableRowClick>
+    ),
+    connect: cluster?.connected ? (
+      <input type="checkbox" checked disabled />
+    ) : (
+      <input type="checkbox" disabled />
+    ),
+    status: renderStatusClusterIcon(
+      cluster?.connected,
+      cluster?.networkVo?.status
+    ),
+    required: cluster?.networkVo?.required ? (
+      <input type="checkbox" checked disabled />
+    ) : (
+      <input type="checkbox" disabled />
+    ),
+    networkRole: [
+      cluster?.networkVo?.usage?.management ? "관리" : null,
+      cluster?.networkVo?.usage?.display ? "출력" : null,
+      cluster?.networkVo?.usage?.migration ? "마이그레이션" : null,
+      cluster?.networkVo?.usage?.gluster ? "글러스터" : null,
+      cluster?.networkVo?.usage?.defaultRoute ? "기본라우팅" : null,
+    ].filter(Boolean).join(" / "),
   }));
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const renderModals = () => (
-    <Suspense fallback={<Loading />}>
-      {isModalOpen && (
-        <NetworkClusterModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          networkId={networkId}
-        />
-      )}
-    </Suspense>
-  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   console.log("...");
   return (
@@ -54,41 +68,9 @@ const NetworkClusters = ({ networkId }) => {
       </div>
 
       <TablesOuter
-        isLoading={isClustersLoading}
-        isError={isClustersError}
-        isSuccess={isClustersSuccess}
+        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
         columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}
-        data={clusters.map((cluster) => ({
-          ...cluster,
-          _name: (
-            <TableRowClick type="cluster" id={cluster?.id}>
-              {cluster?.name}
-            </TableRowClick>
-          ),
-          connect: cluster?.connected ? (
-            <input type="checkbox" checked disabled />
-          ) : (
-            <input type="checkbox" disabled />
-          ),
-          status: renderStatusClusterIcon(
-            cluster?.connected,
-            cluster?.networkVo?.status
-          ),
-          required: cluster?.networkVo?.required ? (
-            <input type="checkbox" checked disabled />
-          ) : (
-            <input type="checkbox" disabled />
-          ),
-          networkRole: [
-            cluster?.networkVo?.usage?.management ? "관리" : null,
-            cluster?.networkVo?.usage?.display ? "출력" : null,
-            cluster?.networkVo?.usage?.migration ? "마이그레이션" : null,
-            cluster?.networkVo?.usage?.gluster ? "글러스터" : null,
-            cluster?.networkVo?.usage?.defaultRoute ? "기본라우팅" : null,
-          ]
-            .filter(Boolean)
-            .join(" / "),
-        }))}
+        data={transformedData}
         shouldHighlight1stCol={true}
         multiSelect={false}
         onContextMenuItems={(row) => [
@@ -104,7 +86,15 @@ const NetworkClusters = ({ networkId }) => {
       />
 
       {/* 네트워크 관리창 */}
-      {renderModals()}
+      <Suspense fallback={<Loading />}>
+        {isModalOpen && (
+          <NetworkClusterModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            networkId={networkId}
+          />
+        )}
+      </Suspense>
     </>
   );
 };

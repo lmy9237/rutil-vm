@@ -1,6 +1,6 @@
 import { useDiskById } from "../../../api/RQHook";
 import InfoTable from "../../../components/table/InfoTable";
-import { convertBytesToGB } from "../../../util";
+import { checkZeroSizeToGB, convertBytesToGB } from "../../../util";
 
 /**
  * @name DiskGeneral
@@ -24,7 +24,7 @@ const DiskGeneral = ({ diskId }) => {
     { label: "설명", value: disk?.description },
     { label: "디스크 프로파일", value: disk?.storageDomainVo?.name },
     { label: "가상 크기", value: `${convertBytesToGB(disk?.virtualSize)} GB` },
-    { label: "실제 크기", value: `${convertBytesToGB(disk?.actualSize)} GB` },
+    { label: "실제 크기", value: checkZeroSizeToGB(disk?.actualSize) },
   ];
 
   return <InfoTable tableRows={tableRows} />;

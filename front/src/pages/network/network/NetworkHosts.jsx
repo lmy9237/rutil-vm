@@ -12,13 +12,10 @@ import {
   useDisconnectedHostsFromNetwork,
   useNetworkInterfaceFromHost,
 } from "../../../api/RQHook";
-import { convertBpsToMbps, convertBytesToMB } from "../../../util";
+import { checkZeroSizeToMbps, convertBpsToMbps } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
 import ActionButton from "../../../components/button/ActionButton";
-
-const HostNetworkModal = React.lazy(
-  () => import("../../../components/modal/host/HostNetworkModal")
-);
+import HostNetworkModal from "../../../components/modal/host/HostNetworkModal";
 
 /**
  * @name NetworkHosts
@@ -34,28 +31,22 @@ const NetworkHosts = ({ networkId }) => {
     isLoading: isConnectedHostsLoading,
     isError: isConnectedHostsError,
     isSuccess: isConnectedHostsSuccess,
-  } = useConnectedHostsFromNetwork(networkId, (e) => ({
-    ...e,
-  }));
+  } = useConnectedHostsFromNetwork(networkId, (e) => ({ ...e }));
 
   const {
     data: disconnectedHosts = [],
     isLoading: isDisconnectedHostsLoading,
     isError: isDisconnectedHostsError,
     isSuccess: isDisconnectedHostsSuccess,
-  } = useDisconnectedHostsFromNetwork(networkId, (e) => ({
-    ...e,
-  }));
+  } = useDisconnectedHostsFromNetwork(networkId, (e) => ({ ...e }));
 
   const [activeFilter, setActiveFilter] = useState("connected");
   const [selectedHost, setSelectedHost] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const selectedHostId = (Array.isArray(selectedHost) ? selectedHost : [])
-    .map((host) => host.id)
-    .join(", ");
-  const buttonClass = (filter) =>
-    `filter_button ${activeFilter === filter ? "active" : ""}`;
+  const selectedHostId = (Array.isArray(selectedHost) ? selectedHost : []).map((host) => host.id).join(", ");
+  // const buttonClass = (filter) =>
+  //   `filter_button ${activeFilter === filter ? "active" : ""}`;
 
   const transformHostData = (hosts) => {
     return hosts.map((host) => ({
@@ -81,18 +72,10 @@ const NetworkHosts = ({ networkId }) => {
       ),
       networkDevice: host?.hostNicVos?.[0]?.name,
       speed: host?.hostNicVos?.[0]?.speed,
-      rx: host?.hostNicVos?.[0]?.rxSpeed
-        ? convertBpsToMbps(host.hostNicVos[0].rxSpeed)
-        : "",
-      tx: host?.hostNicVos?.[0]?.txSpeed
-        ? convertBpsToMbps(host.hostNicVos[0].txSpeed)
-        : "",
-      totalRx: host?.hostNicVos?.[0]?.rxTotalSpeed
-        ? host.hostNicVos[0].rxTotalSpeed.toLocaleString()
-        : "",
-      totalTx: host?.hostNicVos?.[0]?.txTotalSpeed
-        ? host.hostNicVos[0].txTotalSpeed.toLocaleString()
-        : "",
+      rx: checkZeroSizeToMbps(host?.hostNicVos?.[0]?.rxSpeed),
+      tx: checkZeroSizeToMbps(host?.hostNicVos?.[0]?.txSpeed),
+      totalRx: host?.hostNicVos?.[0]?.rxTotalSpeed.toLocaleString(),
+      totalTx: host.hostNicVos[0].txTotalSpeed.toLocaleString(),
     }));
   };
 
@@ -101,38 +84,12 @@ const NetworkHosts = ({ networkId }) => {
     isLoading: isNicsLoading,
     isError: isNicsError,
     isSuccess: isNicsSuccess,
-  } = useNetworkInterfaceFromHost(selectedHostId, (e) => ({
-    ...e,
-  }));
+  } = useNetworkInterfaceFromHost(selectedHostId, (e) => ({ ...e }));
 
-  useEffect(() => {
-    if (!isModalOpen) return;
-    console.log(
-      nics.length == 0 ? "NIC 데이터가 없습니다." : `NIC 데이터: ${nics}`
-    );
-  }, [nics, isModalOpen]);
-  
   const connectionFilters = [
     { key: "connected", label: "연결됨" },
     { key: "disconnected", label: "연결 해제" },
   ];
-
-  const renderModals = () => {
-    if (!isModalOpen) {
-      // 모달이 없음
-      return null;
-    }
-    return (
-      <Suspense fallback={<Loading />}>
-        <HostNetworkModal
-          nicData={nics}
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          hostId={selectedHostId}
-        />
-      </Suspense>
-    );
-  };
 
   console.log("...");
   return (
@@ -150,21 +107,9 @@ const NetworkHosts = ({ networkId }) => {
       <span>id = {selectedHostId || ""}</span>
 
       <TablesOuter
-        isLoading={
-          activeFilter === "connected"
-            ? isConnectedHostsLoading
-            : isDisconnectedHostsLoading
-        }
-        isError={
-          activeFilter === "connected"
-            ? isConnectedHostsError
-            : isDisconnectedHostsError
-        }
-        isSuccess={
-          activeFilter === "connected"
-            ? isConnectedHostsSuccess
-            : isDisconnectedHostsSuccess
-        }
+        isLoading={activeFilter === "connected" ? isConnectedHostsLoading: isDisconnectedHostsLoading}
+        isError={ activeFilter === "connected" ? isConnectedHostsError : isDisconnectedHostsError }
+        isSuccess={ activeFilter === "connected" ? isConnectedHostsSuccess : isDisconnectedHostsSuccess }
         columns={
           activeFilter === "connected"
             ? TableColumnsInfo.HOSTS_FROM_NETWORK
@@ -190,7 +135,14 @@ const NetworkHosts = ({ networkId }) => {
       />
 
       {/* 호스트 네트워크 모달창 */}
-      {renderModals()}
+      <Suspense fallback={<Loading />}>
+        <HostNetworkModal
+          nicData={nics}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          hostId={selectedHostId}
+        />
+      </Suspense>
     </>
   );
 };

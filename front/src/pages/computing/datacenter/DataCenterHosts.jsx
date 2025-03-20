@@ -16,19 +16,15 @@ const DataCenterHosts = ({ datacenterId }) => {
     isLoading: isHostsLoading,
     isError: isHostsError,
     isSuccess: isHostsSuccess,
-  } = useHostsFromDataCenter(datacenterId, (e) => ({
-    ...e,
-  }));
+  } = useHostsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
   console.log("...");
   return (
     <>
       <HostDupl
-        hosts={hosts}
+        isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
         columns={TableColumnsInfo.HOSTS}
-        isLoading={isHostsLoading}
-        isError={isHostsError}
-        isSuccess={isHostsSuccess}
+        hosts={hosts}
       />
     </>
   );

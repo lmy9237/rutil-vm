@@ -10,29 +10,23 @@ import useSearch from "../../../components/button/useSearch";
 import ActionButton from "../../../components/button/ActionButton";
 
 /**
- * @name DomainGetTemplates
+ * @name DomainImportTemplates
  * @description 도메인으로 탬플릿 가져오기
  *
  * @prop {string} domainId 도메인ID
  * @returns {JSX.Element} DomainGetTemplates
  */
-const DomainGetTemplates = ({ domainId }) => {
+const DomainImportTemplates = ({ domainId }) => {
   const {
     data: templates = [],
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
-  } = useAllUnregisteredTemplateFromDomain(domainId, (e) => ({
-    ...e,
-  }));
+  } = useAllUnregisteredTemplateFromDomain(domainId, (e) => ({ ...e }));
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedTemplates, setSelectedTemplates] = useState([]); // 다중 선택된 데이터센터
-  const selectedIds = (
-    Array.isArray(selectedTemplates) ? selectedTemplates : []
-  )
-    .map((t) => t.id)
-    .join(", ");
+  const selectedIds = (Array.isArray(selectedTemplates) ? selectedTemplates : []).map((t) => t.id).join(", ");
 
   const transformedData = templates.map((t) => ({
     ...t,
@@ -103,4 +97,4 @@ const DomainGetTemplates = ({ domainId }) => {
   );
 };
 
-export default DomainGetTemplates;
+export default DomainImportTemplates;

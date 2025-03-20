@@ -15,19 +15,14 @@ const Disks = () => {
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
-  } = useAllDisks((e) => ({
-    ...e,
-    connected: e?.connectVm?.name || e?.connectTemplate?.name,
-  }));
+  } = useAllDisks((e) => ({ ...e }));
 
   return (
     <>
       <DiskDupl
-        disks={disks}
+        isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
         columns={TableColumnsInfo.DISKS}
-        isLoading={isDisksLoading}
-        isError={isDisksError}
-        isSuccess={isDisksSuccess}
+        disks={disks}
       />
     </>
   );

@@ -18,18 +18,15 @@ import TableRowClick from "../../../components/table/TableRowClick";
 const DomainTemplates = ({ domainId }) => {
   const {
     data: templates = [],
-    status: templatesStatus,
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
-  } = useAllTemplateFromDomain(domainId, (e) => ({
-    ...e,
-  }));
+  } = useAllTemplateFromDomain(domainId, (e) => ({ ...e }));
 
   const transformedData = templates.map((t) => ({
     ...t,
     _name: (
-      <TableRowClick type="templates" id={t?.id}>
+      <TableRowClick type="template" id={t?.id}>
         {t?.name}
       </TableRowClick>
     ),
@@ -48,9 +45,7 @@ const DomainTemplates = ({ domainId }) => {
   return (
     <>
       <TablesOuter
-        isLoading={isTemplatesLoading}
-        isError={isTemplatesError}
-        isSuccess={isTemplatesSuccess}
+        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         columns={TableColumnsInfo.TEMPLATES_FROM_STORAGE_DOMAIN}
         data={transformedData}
       />

@@ -9,13 +9,13 @@ import useSearch from "../../../components/button/useSearch";
 import ActionButton from "../../../components/button/ActionButton";
 
 /**
- * @name DomainGetDisks
+ * @name DomainImportDisks
  * @description 도메인에 디스크 가져오기 목록
  *
  * @prop {string} domainId 도메인ID
  * @returns {JSX.Element} DomainGetDisks
  */
-const DomainGetDisks = ({ domainId }) => {
+const DomainImportDisks = ({ domainId }) => {
   const {
     data: disks = [],
     isLoading: isDisksLoading,
@@ -96,4 +96,4 @@ const DomainGetDisks = ({ domainId }) => {
   );
 };
 
-export default DomainGetDisks;
+export default DomainImportDisks;

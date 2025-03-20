@@ -16,19 +16,15 @@ const ClusterNetworks = ({ clusterId }) => {
     isLoading: isNetworksLoading,
     isError: isNetworksError,
     isSuccess: isNetworksSuccess,
-  } = useNetworkFromCluster(clusterId, (e) => ({
-    ...e,
-  }));
+  } = useNetworkFromCluster(clusterId, (e) => ({ ...e }));
 
   console.log("...");
   return (
     <>
       <NetworkDupl
-        networks={networks}
+        isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
         columns={TableColumnsInfo.NETWORK_FROM_CLUSTER}
-        isLoading={isNetworksLoading}
-        isError={isNetworksError}
-        isSuccess={isNetworksSuccess}
+        networks={networks}
       />
     </>
   );

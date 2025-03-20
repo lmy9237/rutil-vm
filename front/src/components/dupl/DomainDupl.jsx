@@ -33,8 +33,8 @@ const DomainDupl = ({
   // 검색어
   const transformedData = domains.map((domain) => ({
     ...domain,
-    name: (
-      <TableRowClick type="domains" id={domain?.id}>
+    _name: (
+      <TableRowClick type="domain" id={domain?.id}>
         {domain?.name}
       </TableRowClick>
     ),

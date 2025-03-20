@@ -15,9 +15,7 @@ const TemplateEvents = ({ templateId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
-  } = useAllEventFromTemplate(templateId, (e) => ({
-    ...e,
-  }));
+  } = useAllEventFromTemplate(templateId, (e) => ({ ...e }));
 
   console.log("...");
   return (

@@ -31,8 +31,8 @@ const VmDupl = ({
   const transformedData = vms.map((vm) => ({
     ...vm,
     icon: renderVmStatusIcon(vm?.status),
-    name: (
-      <TableRowClick type="vms" id={vm?.id}>
+    _name: (
+      <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}
       </TableRowClick>
     ),

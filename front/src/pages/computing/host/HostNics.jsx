@@ -97,11 +97,9 @@ const HostNics = ({ hostId }) => {
             <div className="host_network_firstbox" onClick={() => toggleHiddenBox(index)}>
               <div className="section-table-outer">
                 <TablesOuter
-                  isLoading={isNicsLoading}
-                  isError={isNicsError}
-                  isSuccess={isNicsSuccess}
-                  data={[data]}
+                  isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
                   columns={TableColumnsInfo.NETWORK_INTERFACE_FROM_HOST}
+                  data={[data]}
                 />
               </div>
             </div>
@@ -129,20 +127,16 @@ const HostNics = ({ hostId }) => {
                 <div className="section-table-outer">
                   {activeTable[index] === "NETWORK_FROM_HOST" && (
                     <TablesOuter
-                      isLoading={isNicsLoading}
-                      isError={isNicsError}
-                      isSuccess={isNicsSuccess}
-                      data={[data]}
+                      isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
                       columns={TableColumnsInfo.NETWORK_FROM_HOST}
+                      data={[data]}
                     />
                   )}
-                  {activeTable[index] === "NETWORK_FROM_HOST_SLAVE" && data.bondingVo?.slaves && (
+                  {activeTable[index] === "NETWORK_FROM_HOST_SLAVE" && data?.bondingVo?.slaves && (
                     <TablesOuter
-                      isLoading={isNicsLoading}
-                      isError={isNicsError}
-                      isSuccess={isNicsSuccess}
-                      data={data.bondingVo.slaves}
+                      isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
                       columns={TableColumnsInfo.NETWORK_FROM_HOST_SLAVE}
+                      data={data?.bondingVo?.slaves}
                     />
                   )}
                 </div>

@@ -16,21 +16,17 @@ const DataCenterDomains = ({ datacenterId }) => {
     isLoading: isStorageDomainsLoading,
     isError: isStorageDomainsError,
     isSuccess: isStorageDomainsSuccess,
-  } = useDomainsFromDataCenter(datacenterId, (e) => ({ 
-    ...e
-  }));
+  } = useDomainsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
   console.log("...");
   return (
     <>
       <DomainDupl
-        domains={storageDomains}
+        isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
         columns={TableColumnsInfo.STORAGE_DOMAINS}
         actionType={"dcDomain"}
+        domains={storageDomains}
         datacenterId={datacenterId}
-        isLoading={isStorageDomainsLoading}
-        isError={isStorageDomainsError}
-        isSuccess={isStorageDomainsSuccess}
       />
     </>
   );

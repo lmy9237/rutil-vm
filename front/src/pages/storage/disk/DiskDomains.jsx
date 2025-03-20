@@ -38,7 +38,7 @@ const DiskDomains = ({ diskId }) => {
         data={(domains).map((domain) => ({
           ...domain,
           icon: renderDomainStatusIcon(domain.status),
-          storageDomain: <TableRowClick type="domains" id={domain?.id}>{domain?.name}</TableRowClick>,
+          storageDomain: <TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>,
           domainType:
             domain?.domainType === 'data' ? '데이터'
               : domain?.domainType === 'iso' ? 'ISO'

@@ -8,7 +8,6 @@ import { useHost, useNetworkFromCluster, useNetworkInterfaceFromHost } from "../
 import "../network/MNetwork.css";
 import Loading from "../../common/Loading";
 import { renderTFStatusIcon } from "../../Icon";
-import toast from "react-hot-toast";
 
 const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
   // 호스트 상세정보 조회로 클러스터id 뽑기

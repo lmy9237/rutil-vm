@@ -16,18 +16,14 @@ const NetworkVnicProfiles = ({ networkId }) => {
     isLoading: isVnicProfilesLoading,
     isError: isVnicProfilesError,
     isSuccess: isVnicProfilesSuccess,
-  } = useAllVnicProfilesFromNetwork(networkId, (e) => ({
-    ...e,
-  }));
+  } = useAllVnicProfilesFromNetwork(networkId, (e) => ({ ...e }));
 
   return (
     <>
       <VnicProfileDupl
-        isLoading={isVnicProfilesLoading}
-        isError={isVnicProfilesError}
-        isSuccess={isVnicProfilesSuccess}
-        vnicProfiles={vnicProfiles}
+        isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
         columns={TableColumnsInfo.VNIC_PROFILES_FROM_NETWORK}
+        vnicProfiles={vnicProfiles}
         networkId={networkId}
       />
     </>

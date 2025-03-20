@@ -16,23 +16,22 @@ const VnicProfileVms = ({ vnicProfileId }) => {
     isError: isVmsError,
     isSuccess: isVmsSuccess,
     data: vms = [],
-  } = useAllVmsFromVnicProfiles(vnicProfileId, (e) => ({
-    ...e,
-  }));
+  } = useAllVmsFromVnicProfiles(vnicProfileId, (e) => ({ ...e }));
 
+  const transformedData = vms.map((vm) => ({
+    ...vm,
+    name: (
+      <TableRowClick type="vm" id={vm?.id}>
+        {vm?.name}
+      </TableRowClick>
+    ),
+  }))
 
   return (
     <TablesOuter
       isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       columns={TableColumnsInfo.VMS_FROM_VNIC_PROFILES}
-      data={vms.map((vm) => ({
-        ...vm,
-        name: (
-          <TableRowClick type="vms" id={vm?.id}>
-            {vm?.name}
-          </TableRowClick>
-        ),
-      }))}
+      data={transformedData}
     />
   );
 };

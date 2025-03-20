@@ -22,13 +22,13 @@ const DiskDupl = ({
     let diskData = {
       ...d,
       _alias: (
-        <TableRowClick type="disks" id={d?.id}>
+        <TableRowClick type="disk" id={d?.id}>
           {d?.alias || d?.diskImageVo?.alias}
         </TableRowClick>
       ),
       icon: icon(d.status),
       storageDomain: (
-        <TableRowClick type="domains" id={d?.storageDomainVo?.id}>
+        <TableRowClick type="domain" id={d?.storageDomainVo?.id}>
           {d?.storageDomainVo?.name}
         </TableRowClick>
       ),

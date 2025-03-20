@@ -15,9 +15,7 @@ const HostEvents = ({ hostId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
-  } = useEventFromHost(hostId, (e) => ({ 
-    ...e
-  }));
+  } = useEventFromHost(hostId, (e) => ({ ...e }));
 
   console.log("...");
   return (

@@ -30,8 +30,8 @@ const AllNetwork = () => {
       <div className="w-full section-content">
         <NetworkDupl
           isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
-          networks={networks}
           columns={TableColumnsInfo.NETWORKS}
+          networks={networks}
           showSearchBox={true}
         />
       </div>

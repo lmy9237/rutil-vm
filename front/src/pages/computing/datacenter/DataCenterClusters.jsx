@@ -22,8 +22,8 @@ const DataCenterClusters = ({ datacenterId }) => {
     <>
       <ClusterDupl
         isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
-        clusters={clusters}
         columns={TableColumnsInfo.CLUSTERS_FROM_DATACENTER}
+        clusters={clusters}
         datacenterId={datacenterId}
       />
     </>

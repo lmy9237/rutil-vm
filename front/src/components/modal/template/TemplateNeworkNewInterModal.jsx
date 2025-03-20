@@ -5,12 +5,9 @@ import { faGlassWhiskey } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import {
   useAddNicFromTemplate,
-  useAddNicFromVM,
   useAllNicsFromTemplate,
   useAllVnicProfiles,
   useEditNicFromTemplate,
-  useEditNicFromVM,
-  useNetworkInterfaceFromVM,
 } from "../../../api/RQHook";
 
 const TemplateNeworkNewInterModal = ({

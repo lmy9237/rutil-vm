@@ -551,11 +551,13 @@ fun Vm.toDiskVm(conn: Connection): VmViewVo {
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		if (this@toDiskVm.status() == VmStatus.UP) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toDiskVm.id()).getOrDefault(emptyList())
+			val host: Host? = conn.findHost(this@toDiskVm.host().id()).getOrNull()
 			fqdn { this@toDiskVm.fqdn() }
 			upTime { statistics.findVmUptime() }
 			ipv4 { this@toDiskVm.reportedDevices().findVmIpv4() }
 			ipv6 { this@toDiskVm.reportedDevices().findVmIpv6() }
 			usageDto { this@toDiskVm.statistics().toVmUsage() }
+			hostVo { host?.fromHostToIdentifiedVo() }
 		}
 	}
 }

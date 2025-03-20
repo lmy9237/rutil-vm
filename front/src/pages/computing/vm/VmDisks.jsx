@@ -19,14 +19,17 @@ const diskFilters = [
 ];
 
 const VmDisks = ({ vmId }) => {
-  const [activeDiskType, setActiveDiskType] = useState("all"); // 필터링된 디스크 유형
-  
   const {
     data: disks = [],
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
   } = useDisksFromVM(vmId, (e) => ({ ...e }));
+
+  const [activeDiskType, setActiveDiskType] = useState("all"); // 필터링된 디스크 유형
+  const vmDisks = activeDiskType === "all" 
+    ? disks 
+    : disks.filter((disk) => disk.diskImageVo?.storageType?.toLowerCase() === activeDiskType)
 
   return (
     <>
@@ -39,14 +42,13 @@ const VmDisks = ({ vmId }) => {
         isLoading={isDisksLoading}
         isError={isDisksError}
         isSuccess={isDisksSuccess}
-        vmDisks={
-          activeDiskType === "all" ? disks 
-          : disks.filter((disk) => disk.diskImageVo?.storageType?.toLowerCase() === activeDiskType)
-        }
+        vmDisks={ vmDisks }
         columns={
-          activeDiskType === "all" ? TableColumnsInfo.DISKS_FROM_VM 
-          : activeDiskType === "image" ? TableColumnsInfo.DISK_IMAGES_FROM_VM 
-          : TableColumnsInfo.DISK_LUN_FROM_VM
+          activeDiskType === "all" 
+            ? TableColumnsInfo.DISKS_FROM_VM 
+            : activeDiskType === "image" 
+              ? TableColumnsInfo.DISK_IMAGES_FROM_VM 
+              : TableColumnsInfo.DISK_LUN_FROM_VM
         }
         vmId={vmId}
       />

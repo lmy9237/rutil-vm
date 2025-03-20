@@ -13,15 +13,22 @@ import ActionButton from "../../../components/button/ActionButton";
  * @returns {JSX.Element} DomainDiskSnapshots
  */
 const DomainDiskSnapshots = ({ domainId }) => {
-  const { data: diskSnapshots = [], isLoading: isDiskSnapshotsLoading } =
-    useAllDiskSnapshotFromDomain(domainId, (e) => ({ ...e }));
+  const { 
+    data: diskSnapshots = [], 
+    isLoading: isDiskSnapshotsLoading,
+    isSuccess: isDiskSnapshotsSuccess,
+    isError: isDiskSnapshotsError
+  } = useAllDiskSnapshotFromDomain(domainId, (e) => ({ ...e }));
+
+  const transformedData = diskSnapshots.map((e) => ({
+    ...e,
+    actualSize: convertBytesToGB(e?.actualSize) + " GB",
+  }))
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSnapshots, setSelectedSnapshots] = useState([]);
 
-  const selectedIds = selectedSnapshots
-    .map((snapshot) => snapshot.id)
-    .join(", ");
+  const selectedIds = selectedSnapshots.map((snapshot) => snapshot.id).join(", ");
 
   return (
     <>
@@ -37,15 +44,10 @@ const DomainDiskSnapshots = ({ domainId }) => {
       <span>ID: {selectedIds || "선택된 ID가 없습니다."}</span>
 
       <TablesOuter
+        isLoading={isDiskSnapshotsLoading} isError={isDiskSnapshotsError} isSuccess={isDiskSnapshotsSuccess}
         columns={TableColumnsInfo.DISK_SNAPSHOT_FROM_STORAGE_DOMAIN}
-        data={diskSnapshots.map((e) => ({
-          ...e,
-          actualSize: convertBytesToGB(e?.actualSize) + " GB",
-        }))}
-        onRowClick={(rows) => {
-          setSelectedSnapshots(Array.isArray(rows) ? rows : []);
-        }}
-        multiSelect={true}
+        data={transformedData}
+        onRowClick={(selectedRows) => setSelectedSnapshots(selectedRows)}
       />
 
       {/* <Suspense fallback={<Loading/>}>

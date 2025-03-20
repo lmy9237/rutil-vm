@@ -1,15 +1,8 @@
 import React, { useState, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowCircleDown,
-  faArrowCircleUp,
-  faChevronRight,
-  faPlug,
-  faPlugCircleXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowCircleDown, faArrowCircleUp, faChevronRight, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import { useNetworkInterfaceFromVM } from "../../../api/RQHook";
 import NicModal from "../../../components/modal/vm/NicModal";
-import DeleteModal from "../../../utils/DeleteModal";
 import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { checkZeroSizeToMbps } from "../../../util";
@@ -27,7 +20,9 @@ const VmNics = ({ vmId }) => {
     isLoading: isNicsLoading,
     isError: isNicsError,
     Success: isNicsSuccess,
-  } = useNetworkInterfaceFromVM(vmId, (nic) => ({
+  } = useNetworkInterfaceFromVM(vmId, (e) => ({ ...e }));
+  
+  const transformedData = nics.map((nic) => ({
     ...nic,
     id: nic?.id,
     name: nic?.name,
@@ -68,8 +63,8 @@ const VmNics = ({ vmId }) => {
       <span>id = {selectedNic?.id || ""}</span>
 
       <div className="network-interface-outer">
-        {nics.length > 0 ? ( // NIC가 하나라도 있을 때 실행
-          nics?.map((nic, index) => (
+        {transformedData.length > 0 ? ( // NIC가 하나라도 있을 때 실행
+          transformedData?.map((nic, index) => (
             <div
               className={`network_content2 ${selectedNic?.id === nic.id ? "selected" : ""}`}
               onClick={() => setSelectedNic(nic)} // NIC 선택 시 상태 업데이트
@@ -148,6 +143,7 @@ const VmNics = ({ vmId }) => {
           </p>
         )}
       </div>
+      
       <Suspense>
         {activeModal === "create" && (
           <NicModal

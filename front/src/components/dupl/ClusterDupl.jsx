@@ -76,7 +76,6 @@ const ClusterDupl = ({
         data={filteredData}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedClusters(selectedRows)}
-        // clickableColumnIndex={[0]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true} // 다중 선택 활성화
         onContextMenuItems={(row) => [

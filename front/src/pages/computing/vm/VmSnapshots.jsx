@@ -1,19 +1,22 @@
-import React, { Suspense, useEffect, useState } from 'react';
-import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import React, { Suspense, useState } from 'react';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import VmSnapshotModal from '../../../components/modal/vm/VmSnapshotModal';
-import VmSnapshotDeleteModal from '../../../components/modal/vm/VmSnapshotDeleteModal';
-import { useSnapshotsFromVM, useVmById } from '../../../api/RQHook';
+import { useSnapshotsFromVM } from '../../../api/RQHook';
 import { convertBytesToMB } from '../../../util';
 import TablesRow from '../../../components/table/TablesRow';
 import DeleteModal from '../../../utils/DeleteModal';
 
 const VmSnapshots = ({ vmId }) => {
   const {
-    data: snapshots,
+    data: snapshots = [],
     isLoading: isSnapshotsLoading,
-  } = useSnapshotsFromVM(vmId, (snapshot) => ({
+    isError: isSnapshotsError,
+    isSuccess: isSnapshotsSuccess
+  } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
+  
+  const transformedData = snapshots.map((snapshot) => ({
     ...snapshot,
     id: snapshot?.id,
     description: snapshot?.description,
@@ -38,16 +41,15 @@ const VmSnapshots = ({ vmId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <button className="snap_create_btn">생성</button>
-        <button className="snap_create_btn">미리보기</button>
-        <button className="snap_create_btn">삭제</button>
-        <button className="snap_create_btn">이동</button>
+        <button className="snap_create_btn" onClick={() => openModal('create')}>생성</button>
+        {/* <button className="snap_create_btn">미리보기</button> */}
+        <button className="snap_create_btn" onClick={() => openModal('delete')}>삭제</button>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
         <div className="info-table-outer">
           {isSnapshotsLoading && <div className="no_snapshots">로딩중...</div>}
-          {snapshots?.length > 0 && snapshots?.map((snapshot) => (
+          {transformedData?.length > 0 && transformedData?.map((snapshot) => (
             <div
               key={snapshot.id}
               className="snapshot-item"
@@ -55,23 +57,22 @@ const VmSnapshots = ({ vmId }) => {
               style={{ cursor: 'pointer', padding: '5px', border: selectedSnapshot?.id === snapshot.id ? '1px solid blue' : 'none' }}
             >
               <FontAwesomeIcon icon={faChevronRight} />
-              {" " + snapshot?.description + "  |  " + snapshot?.date}
+              {" " + snapshot?.description + "  /  " + snapshot?.date}
             </div>
           ))}
         </div>
 
           {selectedSnapshot ? (
-          <div className="abc" style={{ padding: '10px', width: '40%' }}>
-            <TablesRow
-              columns={TableColumnsInfo.SNAPSHOT_INFO_FROM_VM}
-              data={selectedSnapshot}
-            />
+            <div className="abc" style={{ padding: '10px', width: '40%' }}>
+              <TablesRow
+                columns={TableColumnsInfo.SNAPSHOT_INFO_FROM_VM}
+                data={selectedSnapshot}
+              />
             </div>
           ) : (
             <div className="abc" style={{ padding: '10px', width: '40%' }}>
-            <span></span>
+              <span></span>
             </div>
-        
           )}
       </div>
 
@@ -85,7 +86,8 @@ const VmSnapshots = ({ vmId }) => {
           />
         )}
         {activeModal === "delete" && (
-          <DeleteModal isOpen={activeModal === "delete"}
+          <DeleteModal 
+            isOpen
             label={"스냅샷"}
             data={selectedSnapshot}
             vmId={vmId}

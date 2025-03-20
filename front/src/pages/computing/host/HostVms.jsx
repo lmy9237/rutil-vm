@@ -22,11 +22,9 @@ const HostVms = ({ hostId }) => {
   return (
     <>
       <VmDupl
-        isLoading={isVmsLoading}
-        isError={isVmsError}
-        isSuccess={isVmsSuccess}
-        vms={vms}
+        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         columns={TableColumnsInfo.VMS_FROM_HOST}
+        vms={vms}
       />
     </>
   );
