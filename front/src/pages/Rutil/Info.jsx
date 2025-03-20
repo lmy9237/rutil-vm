@@ -4,6 +4,7 @@ import {
   useDashboardCpuMemory,
   useDashboardStorage,
 } from "../../api/RQHook";
+import Localization from "../../utils/Localization";
 
 /**
  * @name Info
@@ -28,7 +29,7 @@ const Info = () => {
         </div>
         <div>
           <div>
-            <span>데이터센터: {dashboard?.datacenters ?? 0}</span>
+            <span>{Localization.kr.DATA_CENTER}: {dashboard?.datacenters ?? 0}</span>
             <br />
             <span>클러스터: {dashboard?.clusters ?? 0}</span>
             <br />

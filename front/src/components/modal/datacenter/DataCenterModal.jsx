@@ -10,6 +10,7 @@ import {
   useDataCenter,
 } from "../../../api/RQHook";
 import "./MDatacenter.css";
+import Localization from "../../../utils/Localization";
 
 const initialFormState = {
   id: "",
@@ -106,8 +107,8 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"데이터센터"}
+    <BaseModal targetName={Localization.kr.DATA_CENTER}
+      isOpen={isOpen} onClose={onClose}
       submitTitle={dcLabel}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "473px", height: "490px" }} 

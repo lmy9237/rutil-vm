@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh, faSearch } from "@fortawesome/free-solid-svg-icons";
 import TableRowLoading from "./TableRowLoading"
 import TableRowNoData from "./TableRowNoData";
+import Localization from "../../utils/Localization";
 
 const PagingTable = ({
   isLoading = null, isError = false, isSuccess,
@@ -139,9 +140,8 @@ const PagingTable = ({
         <div className="paging-btns center mb-1">
           {showSearchBox && (
             <div className="search-box">
-              <input
-                type="text"
-                placeholder="Search..."
+              <input type="text"
+                placeholder={Localization.kr.PLACEHOLDER_SEARCH}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />

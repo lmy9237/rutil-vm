@@ -17,7 +17,7 @@ import VnicProfiles from "./VnicProfiles";
 import Localization from "../../utils/Localization";
 import "./RutilManager.css";
 
-function RutilManager() {
+const RutilManager = () => {
   const { section } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,8 +27,8 @@ function RutilManager() {
 
   // Header와 Sidebar에 쓰일 섹션과 버튼 정보
   const sections = [
-    { id: "info", label: "일반" },
-    { id: "datacenters", label: "데이터센터" },
+    { id: "info", label: Localization.kr.GENERAL },
+    { id: "datacenters", label: Localization.kr.DATA_CENTER },
     { id: "clusters", label: "클러스터" },
     { id: "hosts", label: "호스트" },
     { id: "vms", label: "가상머신" },

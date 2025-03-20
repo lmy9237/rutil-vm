@@ -21,6 +21,7 @@ import {
   useLoginIscsiFromHost,
 } from '../../../../api/RQHook';
 import '../css/MDomain.css'
+import Localization from '../../../utils/Localization';
 
 Modal.setAppElement('#root');
 
@@ -263,8 +264,10 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
   };
 
   const validateForm = () => {
-    if (!formState.name) return '이름을 입력해주세요.';
-    if (!dataCenterVoId) return '데이터 센터를 선택해주세요.';
+    if (!formState.name)
+      return `${Localization.kr.NAME}을 입력해주세요.`;
+    if (!dataCenterVoId) 
+      return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     if (formState.storageType === 'NFS' && !nfsAddress) return '경로를 입력해주세요.';
     if (formState.storageType !== 'nfs' && lunId) {
       const selectedLogicalUnit =
@@ -427,16 +430,16 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
         <div className="storage-domain-new-first">
           <div className="domain-new-left">
 
-          <FormGroup label="데이터 센터">
+          <FormGroup label={Localization.kr.DATA_CENTER}>
             <select
               value={dataCenterVoId}
               onChange={(e) => setDataCenterVoId(e.target.value)}
               disabled={editMode}
             >
             {isDatacentersLoading ? (
-              <p>데이터 센터를 불러오는 중...</p>
+              <p>{Localization.kr.DATA_CENTER}를 불러오는 중...</p>
             ) : dataCenters.length === 0 ? (
-              <p>사용 가능한 데이터 센터가 없습니다.</p>
+              <p>사용 가능한 {Localization.kr.DATA_CENTER}가 없습니다.</p>
             ) : datacenterId ? (
               <input 
                 type="text" 

@@ -8,6 +8,7 @@ import { useDataCenter, useTemplate } from "../../../api/RQHook";
 import { checkKoreanName } from "../../../util";
 import "./MDomain.css";
 import FilterButton from "../../button/FilterButton";
+import Localization from "../../../utils/Localization";
 
 const initialFormState = {
   id: "",
@@ -95,8 +96,10 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
 
 
   const validateForm = () => {
-    if (!checkKoreanName(formState.name)) return '이름이 유효하지 않습니다.';
-    if (!formState.name) return '이름을 입력해주세요.';
+    if (!formState.name) 
+      return `${Localization.kr.NAME}을 입력해주세요.`;
+    if (!checkKoreanName(formState.name)) 
+      return `${Localization.kr.NAME}이 유효하지 않습니다.`;
     if (!checkKoreanName(formState.description)) return "영어만 입력가능.";
     return null;
   };

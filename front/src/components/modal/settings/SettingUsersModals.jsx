@@ -33,8 +33,7 @@ const SettingUsersModals = ({
       />
     ),
     remove: (
-      <DeleteModal
-        isOpen={modalType==="remove"}
+      <DeleteModal isOpen={modalType==="remove"}
         label={"사용자"}
         onClose={onClose}
         data={user[0]}

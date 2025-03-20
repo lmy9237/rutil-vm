@@ -30,6 +30,7 @@ import {
   useDashboardMetricVmCpu,
   useDashboardMetricVmMemory,
 } from "../../api/RQHook";
+import Localization from "../../utils/Localization";
 //#region: RadialBarChart
 const CpuApexChart = memo(({ cpu }) => {
   return <RadialBarChart percentage={cpu || 0} />;
@@ -221,7 +222,7 @@ const Dashboard = () => {
           boxItems={[
             {
               iconDef: rvi24Datacenter,
-              title: "데이터센터",
+              title: Localization.kr.DATA_CENTER,
               cntTotal: dashboard?.datacenters ?? 0,
               cntUp: dashboard?.datacentersUp === 0 ? "" : dashboard?.datacentersUp,
               cntDown: dashboard?.datacentersDown === 0 ? "" : dashboard?.datacentersDown,

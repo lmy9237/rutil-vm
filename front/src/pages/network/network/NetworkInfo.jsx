@@ -39,7 +39,7 @@ const NetworkInfo = () => {
   }, [isError, isLoading, network, navigate]);
 
   const sections = [
-    { id: "general", label: "일반" },
+    { id: "general", label: Localization.kr.GENERAL },
     { id: "vnicProfiles", label: Localization.kr.VNIC_PROFILE },
     { id: "clusters", label: "클러스터" },
     { id: "hosts", label: "호스트" },

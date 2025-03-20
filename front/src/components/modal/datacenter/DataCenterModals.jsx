@@ -2,6 +2,7 @@ import React from "react";
 import DataCenterModal from "./DataCenterModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteDataCenter } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 const DataCenterModals = ({ 
   activeModal, 
@@ -24,10 +25,9 @@ const DataCenterModals = ({
       />
     ),
     delete: (
-      <DeleteModal
+      <DeleteModal label={Localization.kr.DATA_CENTER}
         isOpen={activeModal === "delete"}
         onClose={onClose}
-        label={"데이터센터"}
         data={selectedDataCenters}
         api={useDeleteDataCenter()}
         navigation={'/computing/rutil-manager/datacenters'}

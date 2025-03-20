@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
 import toast from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import {
   useAllActiveDataCenters,
@@ -15,6 +12,7 @@ import "../domain/MDomain.css";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import LabelCheckbox from "../../label/LabelCheckbox";
+import Localization from "../../../utils/Localization";
 
 const FormGroup = ({ label, children }) => (
   <div className="img-input-box">
@@ -106,7 +104,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
   const validateForm = () => {
     if (!alias) return "별칭을 입력해주세요.";
     if (!size) return "크기를 입력해주세요.";
-    if (!dataCenterVoId) return "데이터 센터를 선택해주세요.";
+    if (!dataCenterVoId) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     if (!domainVoId) return "스토리지 도메인을 선택해주세요.";
     if (!diskProfileVoId) return "디스크 프로파일을 선택해주세요.";
     return null;
@@ -224,12 +222,11 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                 />
 
                 {isDatacentersLoading ? (
-                  <p>데이터 센터를 불러오는 중...</p>
+                  <p>{Localization.kr.DATA_CENTER} 를 불러오는 중...</p>
                 ) : datacenters.length === 0 ? (
-                  <p>사용 가능한 데이터 센터가 없습니다.</p>
+                  <p>사용 가능한 {Localization.kr.DATA_CENTER}가 없습니다.</p>
                 ) : (
-                  <LabelSelectOptions
-                    label="데이터 센터"
+                  <LabelSelectOptions label={Localization.kr.DATA_CENTER}
                     id="datacenter"
                     value={dataCenterVoId}
                     onChange={(e) => setDataCenterVoId(e.target.value)}
@@ -293,26 +290,6 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
-                </FormGroup>
-
-                <FormGroup label="데이터 센터">
-                  {isDatacentersLoading ? (
-                    <p>데이터 센터를 불러오는 중...</p>
-                  ) : datacenters.length === 0 ? (
-                    <p>사용 가능한 데이터 센터가 없습니다.</p>
-                  ) : (
-                    <select
-                      value={dataCenterVoId}
-                      onChange={(e) => setDataCenterVoId(e.target.value)}
-                    >
-                      {datacenters &&
-                        datacenters.map((dc) => (
-                          <option key={dc.id} value={dc.id}>
-                            {dc.name}
-                          </option>
-                        ))}
-                    </select>
-                  )}
                 </FormGroup>
 
                 <FormGroup label="스토리지 도메인">

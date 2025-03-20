@@ -1,11 +1,11 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import TableRowLoading from "./TableRowLoading";
 import TableRowNoData from "./TableRowNoData";
-import "./Table.css";
 import { Tooltip } from "react-tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
+import Localization from "../../utils/Localization";
+import "./Table.css";
 
 /**
  * @name Tables
@@ -372,7 +372,7 @@ const Tables = ({
           <div className="nomal-search-box">
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={Localization.kr.PLACEHOLDER_SEARCH}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />

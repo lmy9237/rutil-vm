@@ -2,7 +2,7 @@ import React from "react";
 import VmDiskConnectionModal from "./VmDiskConnectionModal";
 import VmDiskModal from "./VmDiskModal";
 import VmDiskActionModal from "./VmDiskActionModal";
-import { useDisksFromVM, useVmById } from "../../../api/RQHook";
+import { useDeleteDisk, useDisksFromVM, useVmById } from "../../../api/RQHook";
 import DeleteModal from "../../../utils/DeleteModal";
 
 /**
@@ -54,17 +54,16 @@ const VmDiskModals = ({
       />
     ),
     delete: (
-      <DeleteModal
-        isOpen={activeModal === "delete"}
+      <DeleteModal isOpen={activeModal === "delete"}
         label={"가상머신 디스크"}
         vmId={vmId || ""}
         data={selectedDisks}
+        api={useDeleteDisk}
         onClose={onClose}
       />
     ),
     connect: (
-      <VmDiskConnectionModal
-        isOpen={activeModal === "connect"}
+      <VmDiskConnectionModal isOpen={activeModal === "connect"}
         diskType={true}
         vmId={vmId}
         dataCenterId={vm?.dataCenterVo?.id || ""}

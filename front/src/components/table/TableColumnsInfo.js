@@ -1,3 +1,5 @@
+import Localization from "../../utils/Localization";
+
 /**
  * @name TableColumnsInfo
  * @description 테이블 컬럼 정보
@@ -56,7 +58,7 @@ const TableColumnsInfo = {
     { header: '코멘트', accessor: 'comment', clickable: false, width: '12%' },
     { header: '호스트 이름/IP', accessor: 'address', clickable: false, width: '12%' },
     { header: '클러스터', accessor: 'cluster', clickable: true, width: '12%' },
-    { header: '데이터 센터', accessor: 'dataCenter', clickable: false, width: '10%' },
+    { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: false, width: '10%' },
     { header: '가상 머신 개수', accessor: 'vmCnt', clickable: false, width: '10%' },
     { header: '상태', accessor: 'status', clickable: false },
     { header: '메모리', accessor: 'memoryUsage', clickable: false },
@@ -122,7 +124,7 @@ const TableColumnsInfo = {
     { header: '상태', accessor: 'status', clickable: false, width: '10%' },
     { header: '호스트', accessor: 'host', clickable: true, width: '25%' },
     { header: '클러스터', accessor: 'cluster', clickable: true, width: '20%' },
-    { header: '데이터센터', accessor: 'dataCenter', clickable: true, width: '20%' },
+    { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: true, width: '20%' },
     { header: 'Memory', accessor: 'memoryUsage', clickable: false, width: '12%' },
     { header: 'CPU', accessor: 'cpuUsage', clickable: false, width: '12%' },
     { header: 'Network', accessor: 'networkUsage', clickable: false, width: '12%' },
@@ -146,7 +148,6 @@ const TableColumnsInfo = {
     { header: '총 Tx', accessor: 'txTotalSpeed', clickable: false },
     { header: '중단 (Pkts)', accessor: 'pkts', clickable: false },
   ],
-
 
   DISKS_FROM_VM: [
     { header: '', accessor: 'icon', clickable: false,width:'4%' },
@@ -215,7 +216,7 @@ const TableColumnsInfo = {
     { header: '코멘트', accessor: 'comment', clickable: false },
     { header: '보관', accessor: 'status', clickable: false },
     { header: '클러스터', accessor: 'cluster', clickable: true },
-    { header: '데이터센터', accessor: 'dataCenter', clickable: true },
+    { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: true },
     { header: '설명', accessor: 'description', clickable: false },
   ],
   VMS_FROM_TEMPLATE:[
@@ -254,7 +255,7 @@ const TableColumnsInfo = {
   NETWORKS: [
     { header: '이름', accessor: '_name', clickable: true },
     { header: '코멘트', accessor: 'comment', clickable: false },
-    { header: '데이터센터', accessor: 'datacenter', clickable: false },
+    { header: Localization.kr.DATA_CENTER, accessor: 'datacenter', clickable: false },
     { header: '설명', accessor: 'description', clickable: false, width: '20%' },
     { header: 'VLAN 태그', accessor: 'vlan' ,clickable: false },
     { header: '레이블', accessor: 'label', clickable: false },
@@ -263,7 +264,7 @@ const TableColumnsInfo = {
   VNIC_PROFILES_FROM_NETWORK: [
     { header: '이름', accessor: 'name', clickable: false },
     { header: '네트워크', accessor: 'network', clickable: false },
-    { header: '데이터 센터', accessor: 'dataCenter', clickable: true },
+    { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: true },
     { header: '네트워크 필터', accessor: 'networkFilter', clickable: false },
     { header: '포트 미러링', accessor: 'portMirroring', clickable: false },
     { header: '통과', accessor: 'passThrough', clickable: false },
@@ -281,7 +282,7 @@ const TableColumnsInfo = {
     { header: '', accessor: 'icon', clickable: false, width: '5%' },
     { header: '이름', accessor: 'host', clickable: false, width: '10%' },
     { header: '클러스터', accessor: 'cluster', clickable: true , width: '10%'},
-    { header: '데이터 센터', accessor: 'dataCenter', clickable: true },
+    { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: true },
     { header: '네트워크 장치 상태', accessor: 'networkDeviceStatus', clickable: false, width: '10%'},
     { header: '비동기', accessor: 'async', clickable: false },
     { header: '네트워크 장치', accessor: 'networkDevice', clickable: false },
@@ -295,7 +296,7 @@ const TableColumnsInfo = {
     { header: '', accessor: 'icon', clickable: false, width: '5%' },
     { header: '이름', accessor: 'name', clickable: false },
     { header: '클러스터', accessor: 'cluster', clickable: false },
-    { header: '데이터 센터', accessor: 'dataCenter', clickable: false },
+    { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: false },
   ],
 
   VMS_FROM_NETWORK: [
@@ -348,7 +349,7 @@ const TableColumnsInfo = {
   VNIC_PROFILES: [
     { header: '이름', accessor: '_name', clickable: false },
     { header: '네트워크', accessor: 'network', clickable: true },
-    { header: '데이터 센터', accessor: 'dataCenter', clickable: true },
+    { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: true },
     { header: '네트워크 필터', accessor: 'networkFilter', clickable: false },
     { header: '포트 미러링', accessor: 'portMirroring', clickable: false },
     { header: '통과', accessor: 'passThrough', clickable: false },
@@ -684,7 +685,7 @@ const TableColumnsInfo = {
     { header: '', accessor: 'icon', clickable: false },
     { header: '이름', accessor: 'name', clickable: false },
     { header: '클러스터', accessor: 'cluster', clickable: false },
-    { header: '데이터 센터', accessor: 'dataCenter', clickable: false },
+    { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: false },
   ],
   HOSTS_ALT: [
     { header: '상태', accessor: 'status', clickable: false },
@@ -694,7 +695,7 @@ const TableColumnsInfo = {
     { header: '코멘트', accessor: 'comment', clickable: false },
     { header: '호스트 이름/IP', accessor: 'address', clickable: false },
     { header: '클러스터', accessor: 'cluster', clickable: true }, // 클러스터 컬럼에 clickable 추가
-    { header: '데이터 센터', accessor: 'dataCenter', clickable: false },
+    { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: false },
     { header: '가상 머신', accessor: 'vmCount', clickable: false },
     { header: '메모리', accessor: 'memoryUsage', clickable: false },
     { header: 'CPU', accessor: 'cpuUsage', clickable: false },
@@ -714,7 +715,7 @@ const TableColumnsInfo = {
     { header: '코멘트', accessor: 'comment', clickable: false },
     { header: '호스트이름/IP', accessor: 'hostNameIP', clickable: false },
     { header: '클러스터', accessor: 'clusterVo', clickable: true },
-    { header: '데이터센터', accessor: 'dataCenterVo', clickable: true },
+    { header: Localization.kr.DATA_CENTER, accessor: 'dataCenterVo', clickable: true },
     { header: '상태', accessor: 'status', clickable: false },
     { header: '가상머신', accessor: 'vm', clickable: false },
     { header: '메모리', accessor: 'memory', clickable: false },
@@ -731,7 +732,7 @@ const TableColumnsInfo = {
     { header: 'FQDN', accessor: 'fqdn', clickable: false },
     { header: '클러스터', accessor: 'clusterVo', clickable: true },
     { header: '상태', accessor: 'status', clickable: false },
-    { header: '데이터센터', accessor: 'dataCenterVo', clickable: true },
+    { header: Localization.kr.DATA_CENTER, accessor: 'dataCenterVo', clickable: true },
     { header: '메모리', accessor: 'memory', clickable: false },
     { header: 'CPU', accessor: 'cpu', clickable: false },
     { header: '네트워크', accessor: 'network', clickable: false },

@@ -8,6 +8,7 @@ import DiskGeneral from "./DiskGeneral";
 import DiskVms from "./DiskVms";
 import DiskDomains from "./DiskDomains";
 import DiskModals from "../../../components/modal/disk/DiskModals";
+import Localization from "../../../utils/Localization";
 import { useDiskById } from "../../../api/RQHook";
 
 /**
@@ -40,7 +41,7 @@ const DiskInfo = () => {
   }, [isDiskError, isDiskLoading, disk, navigate]);
 
   const sections = [
-    { id: "general", label: "일반" },
+    { id: "general", label: Localization.kr.GENERAL },
     { id: "vms", label: "가상머신" },
     { id: "domains", label: "스토리지" },
   ];

@@ -15,6 +15,7 @@ import {
   useAllDiskProfileFromDomain,
 } from '../../../api/RQHook';
 import { checkKoreanName } from '../../../util';
+import Localization from '../../../utils/Localization';
 
 const initialFormState = {
   id: '',
@@ -107,7 +108,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
     if (checkKoreanName(formState.alias)) return '별칭은 영어만 입력가능합니다.';
     if (!formState.alias) return '별칭를 입력해주세요.';
     if (!formState.size) return '크기를 입력해주세요.';
-    if (!dataCenterVoId) return '데이터 센터를 선택해주세요.';
+    if (!dataCenterVoId) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     if (!domainVoId) return '스토리지 도메인을 선택해주세요.';
     if (!diskProfileVoId) return '디스크 프로파일을 선택해주세요.';
     return null;
@@ -176,9 +177,8 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
               <LabelInput className="img-input-box" label="별칭" value={formState.alias} onChange={handleInputChange('alias')} />
               <LabelInput className="img-input-box" label="설명" value={formState.description} onChange={handleInputChange('description')} />
               
-              <LabelSelectOptionsID
+              <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
                 className="img-input-box"
-                label="데이터 센터"
                 value={dataCenterVoId}
                 onChange={(e) => setDataCenterVoId(e.target.value)}
                 disabled={editMode}
@@ -233,7 +233,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
                   <input type="text" />
                 </div>
                 <div className="img-select-box">
-                  <label htmlFor="os">데이터 센터</label>
+                  <label htmlFor="os">{Localization.kr.DATA_CENTER}</label>
                   <select id="os">
                     <option value="linux">Linux</option>
                   </select>

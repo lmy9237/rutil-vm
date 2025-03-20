@@ -3,6 +3,7 @@ import BaseModal from "../BaseModal";
 import TablesOuter from "../../../table/TablesOuter";
 import TableColumnsInfo from "../../../table/TableColumnsInfo";
 import { useAllDataCenters, useAllHosts } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name VmOnExportModal
@@ -47,9 +48,8 @@ const VmOnExportModal = ({ isOpen, onClose, selectedVm }) => {
       {/* <div className="vm-bring-popup modal"> */}
       <div className="border-b border-gray-400">
         <div className="vm_select_box">
-          <label htmlFor="datacenter">데이터 센터</label>
-          <select
-            id="datacenter"
+          <label htmlFor="datacenter">{Localization.kr.DATA_CENTER}</label>
+          <select id="datacenter"
             value={selectedDatacenter}
             onChange={(e) => setSelectedDatacenter(e.target.value)}
           >

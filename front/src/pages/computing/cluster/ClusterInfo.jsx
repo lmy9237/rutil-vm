@@ -11,6 +11,7 @@ import ClusterVms from "./ClusterVms";
 import ClusterNetworks from "./ClusterNetworks";
 import ClusterEvents from "./ClusterEvents";
 import { useCluster } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import "./Cluster.css";
 
 /**
@@ -50,7 +51,7 @@ const ClusterInfo = () => {
   }, [isClusterError, isClusterLoading, cluster, navigate]);
 
   const sections = [
-    { id: "general", label: "일반" },
+    { id: "general", label: Localization.kr.GENERAL },
     { id: "hosts", label: "호스트" },
     { id: "vms", label: "가상머신" },
     { id: "networks", label: "논리 네트워크" },

@@ -15,6 +15,7 @@ import {
 } from "../../../api/RQHook";
 import "./MNetwork.css";
 import DynamicInputList from "../../label/DynamicInputList";
+import Localization from "../../../utils/Localization";
 
 const FormGroup = ({ label, children }) => (
   <div className="network-form-group center">
@@ -99,11 +100,14 @@ const NetworkModal = ({
   };
 
   const validateForm = () => {
-    if (checkKoreanName(formState.name)) return "이름이 유효하지 않습니다.";
-    if (!formState.name) return "이름을 입력해주세요.";
+    if (checkKoreanName(formState.name))
+      return "이름이 유효하지 않습니다.";
+    if (!formState.name)
+      return "이름을 입력해주세요.";
     // if (!checkKoreanName(formState.description))
     //   return "설명이 유효하지 않습니다.";
-    if (!dataCenterVoId) return "데이터센터를 선택해주세요.";
+    if (!dataCenterVoId) 
+      return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     return null;
   };
 
@@ -160,8 +164,7 @@ const NetworkModal = ({
       {/* <div className={`network-new-popup modal ${editMode ? "edit-mode" : ""}`}> */}
       <div className="popup-content-outer">
         <div className="network-first-contents">
-          <LabelSelectOptionsID
-            label="데이터센터"
+          <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
             value={dataCenterVoId}
             onChange={(e) => setDataCenterVoId(e.target.value)}
             disabled={editMode}

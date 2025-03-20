@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import BaseModal from "../BaseModal";
 import { useAllNetworkProviders } from "../../../api/RQHook";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
+import Localization from "../../../utils/Localization";
 import "./MNetwork.css";
 
 const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
@@ -19,14 +20,14 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
       id: "network_1",
       name: "네트워크 A",
       networkId: "ID-1234",
-      dataCenter: "예시 데이터센터",
+      dataCenter: `예시 ${Localization.kr.DATA_CENTER}`,
       allowAll: false,
     },
     {
       id: "network_2",
       name: "네트워크 B",
       networkId: "ID-5678",
-      dataCenter: "예시 데이터센터",
+      dataCenter: `예시 ${Localization.kr.DATA_CENTER}`,
       allowAll: false,
     },
   ]);
@@ -162,7 +163,7 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
                   </th>
                   <th>이름</th>
                   <th>공급자의 네트워크 ID</th>
-                  <th>데이터 센터</th>
+                  <th>${Localization.kr.DATA_CENTER}</th>
                   <th>
                     <div className="flex">
                       <input

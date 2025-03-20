@@ -10,10 +10,10 @@ import {
     faArrowUp,
     faInfoCircle,
     faPencil,
-    faRefresh,
     faTimes
 } from '@fortawesome/free-solid-svg-icons'
 import './css/Cluster.css';
+import Localization from '../../utils/Localization';
 
 Modal.setAppElement('#root');
 
@@ -146,7 +146,7 @@ const AllCluster = () => {
                     {selectedTab === 'cluster_common_btn' && (
                         <form className="cluster_common_form py-1">
                             <div className="network_form_group">
-                            <label htmlFor="data_center">데이터 센터</label>
+                            <label htmlFor="data_center">{Localization.kr.DATA_CENTER}</label>
                             <select id="data_center">
                                 <option value="default">Default</option>
                             </select>

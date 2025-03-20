@@ -11,7 +11,7 @@ import TemplateVms from "./TemplateVms";
 import TemplateEvents from "./TemplateEvents";
 import TemplateNics from "./TemplateNics";
 import TemplateDisks from "./TemplateDisks";
-import TemplateStorage from "./TemplateStorage";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name TemplateInfo
@@ -37,7 +37,7 @@ const TemplateInfo = () => {
   }, [isError, isLoading, template, navigate]);
 
   const sections = [
-    { id: "general", label: "일반" },
+    { id: "general", label: Localization.kr.GENERAL },
     { id: "vms", label: "가상머신" },
     { id: "nics", label: "네트워크 인터페이스" },
     { id: "disks", label: "디스크" },

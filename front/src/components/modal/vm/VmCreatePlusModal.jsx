@@ -2,6 +2,7 @@ import { useState } from "react";
 import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name VmCreatePlusModal
@@ -66,7 +67,7 @@ const VmCreatePlusModal = ({ isOpen, onRequestClose }) => {
                 <input type="text" />
               </div>
               <div className="img_select_box">
-                <label htmlFor="os">데이터 센터</label>
+                <label htmlFor="os">{Localization.kr.DATA_CENTER}</label>
                 <select id="os">
                   <option value="linux">Linux</option>
                 </select>
@@ -119,7 +120,7 @@ const VmCreatePlusModal = ({ isOpen, onRequestClose }) => {
                   <input type="text" />
                 </div>
                 <div className="img_select_box">
-                  <label htmlFor="os">데이터 센터</label>
+                  <label htmlFor="os">{Localization.kr.DATA_CENTER}</label>
                   <select id="os">
                     <option value="linux">Linux</option>
                   </select>

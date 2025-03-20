@@ -439,7 +439,7 @@ const VmDiskModal = ({
                   <input type="text" />
                 </div>
                 <div className="img-select-box">
-                  <label htmlFor="os">데이터 센터</label>
+                  <label htmlFor="os">{Localization.kr.DATA_CENTER}</label>
                   <select id="os">
                     <option value="linux">Linux</option>
                   </select>

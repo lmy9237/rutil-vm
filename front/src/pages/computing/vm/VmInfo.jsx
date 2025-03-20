@@ -14,6 +14,7 @@ import VmHostDevices from "./VmHostDevices";
 import VmEvents from "./VmEvents";
 import { renderVmStatus } from "../../../components/Icon";
 import { useVmById } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import "./Vm.css";
 
 /**
@@ -59,7 +60,7 @@ const VmInfo = () => {
   }, [isVmError, isVmLoading, vm, navigate]);
 
   const sections = [
-    { id: "general", label: "일반" },
+    { id: "general", label: Localization.kr.GENERAL },
     { id: "nics", label: "네트워크 인터페이스" },
     { id: "disks", label: "디스크" },
     { id: "snapshots", label: "스냅샷" },

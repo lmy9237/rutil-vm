@@ -13,6 +13,7 @@ import {
 } from "../../../api/RQHook";
 import { checkKoreanName } from "../../../util";
 import "./MCluster.css";
+import Localization from "../../../utils/Localization";
 
 const cpuArcs = [
   { value: "UNDEFINED", label: "정의되지 않음" },
@@ -182,10 +183,14 @@ const ClusterModal = ({
   };
 
   const validateForm = () => {
-    if (!checkKoreanName(formState.name) || !formState.name) return "이름이 유효하지 않습니다.";
-    if (!checkKoreanName(formState.description)) return "설명이 유효하지 않습니다.";
-    if (!dataCenterVoId) return "데이터센터를 선택해주세요.";
-    if (!networkVoId) return "네트워크를 선택해주세요.";
+    if (!checkKoreanName(formState.name) || !formState.name)
+      return "이름이 유효하지 않습니다.";
+    if (!checkKoreanName(formState.description))
+      return "설명이 유효하지 않습니다.";
+    if (!dataCenterVoId) 
+      return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
+    if (!networkVoId)
+      return "네트워크를 선택해주세요.";
     return null;
   };
 
@@ -229,8 +234,7 @@ const ClusterModal = ({
     >
       {/* <div className="cluster-new-popup modal"></div> */}
       <div className="popup-content-outer">
-        <LabelSelectOptionsID
-          label="데이터센터"
+        <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
           value={dataCenterVoId}
           onChange={(e) => setDataCenterVoId(e.target.value)}
           disabled={editMode}

@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { useCluster } from "../../../api/RQHook";
 import InfoTable from "../../../components/table/InfoTable";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name ClusterGeneral
@@ -31,7 +32,7 @@ const ClusterGeneral = ({ clusterId }) => {
   const tableRows = [
     { label: "이름", value: cluster?.name },
     { label: "설명", value: cluster?.description },
-    { label: "데이터센터", value: cluster?.dataCenterVo?.name },
+    { label: Localization.kr.DATA_CENTER, value: cluster?.dataCenterVo?.name },
     { label: "호환버전", value: cluster?.version },
     { label: "클러스터 ID", value: cluster?.id },
     { label: "클러스터 CPU 유형", value: cluster?.cpuType },

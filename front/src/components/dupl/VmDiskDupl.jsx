@@ -21,7 +21,10 @@ const VmDiskDupl = ({
   isLoading, isError, isSuccess,
   vmDisks = [], columns = [], vmId,  showSearchBox =true
 }) => {
-  const { data: vm }  = useVmById(vmId);
+  const { 
+    data: vm
+    
+  }  = useVmById(vmId);
   
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);

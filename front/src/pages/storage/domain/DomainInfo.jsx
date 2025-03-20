@@ -16,6 +16,7 @@ import DomainGetVms from './DomainGetVms';
 import DomainGetTemplates from './DomainGetTemplates';
 import DomainGetDisks from './DomainGetDisks';
 import { useDomainById, useOvfUpdateDomain, useRefreshLunDomain } from '../../../api/RQHook';
+import Localization from '../../../utils/Localization';
 
 /**
  * @name DomainInfo
@@ -38,8 +39,8 @@ const DomainInfo = () => {
   const closeModal = () => setActiveModal(null);
 
   const sections = [
-    { id: 'general', label: '일반' },
-    { id: 'datacenters', label: '데이터 센터' },
+    { id: 'general', label: Localization.kr.GENERAL },
+    { id: 'datacenters', label: Localization.kr.DATA_CENTER },
     { id: 'vms', label: '가상머신' },
     { id: 'getVms', label: '가상머신 가져오기' },
     { id: 'templates', label: '템플릿' },

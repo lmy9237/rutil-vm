@@ -4,6 +4,7 @@ import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useAllDataCenters, useAttachDomain } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name DomainAttachModal
@@ -35,7 +36,7 @@ const DomainAttachModal = ({ isOpen, data, onClose }) => {
   };
 
   const handleFormSubmit = () => {
-    if (!selectedId) return toast.error("데이터센터를 선택하세요.");
+    if (!selectedId) return toast.error(`${Localization.kr.DATA_CENTER}를 선택하세요.`);
 
     console.log(`domain: ${data?.id}, dc: ${selectedId}`);
     attachDomain(
@@ -43,11 +44,11 @@ const DomainAttachModal = ({ isOpen, data, onClose }) => {
       {
         onSuccess: () => {
           onClose();
-          toast.success(`도메인 데이터센터 ${selectedName} 연결 완료`);
+          toast.success(`도메인 ${Localization.kr.DATA_CENTER} ${selectedName} 연결 완료`);
         },
         onError: (error) => {
           toast.error(
-            `도메인 데이터센터 ${selectedName} 연결 실패: ${error.message}`
+            `도메인 ${Localization.kr.DATA_CENTER} ${selectedName} 연결 실패: ${error.message}`
           );
         },
       }

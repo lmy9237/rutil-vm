@@ -12,6 +12,7 @@ import HostEvents from "./HostEvents";
 import HostModals from "../../../components/modal/host/HostModals";
 import { renderHostStatus } from "../../../components/Icon";
 import { useHost } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import "./Host.css";
 
 /**
@@ -52,7 +53,7 @@ const HostInfo = () => {
   }, [isError, isLoading, host, navigate]);
 
   const sections = [
-    { id: "general", label: "일반" },
+    { id: "general", label: Localization.kr.GENERAL },
     { id: "vms", label: "가상머신" },
     { id: "nics", label: "네트워크 인터페이스" },
     { id: "devices", label: "호스트 장치" },

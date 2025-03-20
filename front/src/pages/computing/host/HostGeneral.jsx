@@ -4,6 +4,7 @@ import { convertBytesToMB } from "../../../util";
 import "./Host.css";
 import InfoTable from "../../../components/table/InfoTable";
 import SuperAreaChart from "../../../components/Chart/SuperAreaChart";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name HostGeneral
@@ -97,7 +98,7 @@ const HostGeneral = ({ hostId }) => {
   ];
 
   const tabs = [
-    { tab: "general", label: "일반", tableRows: renderGeneralTab },
+    { tab: "general", label: Localization.kr.GENERAL, tableRows: renderGeneralTab },
     { tab: "hardware", label: "하드웨어", tableRows: renderHardwareTab },
     { tab: "software", label: "소프트웨어", tableRows: renderSoftwareTab },
   ];

@@ -1,8 +1,8 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { RVI16, rvi16Close } from "../icons/RutilVmIcons";
+import Localization from "../../utils/Localization";
 import "./SearchBox.css";
+
 /**
  * @name SearchBox
  * @description 테이블 검색 기능을 위한 입력창 컴포넌트
@@ -13,9 +13,8 @@ import "./SearchBox.css";
 const SearchBox = ({ searchQuery, setSearchQuery }) => {
   return (
     <div className="nomal-search-box">
-      <input
-        type="text"
-        placeholder="검색어를 입력하세요."
+      <input type="text"
+        placeholder={Localization.kr.PLACEHOLDER_SEARCH}
         value={searchQuery || ""}
         onChange={(e) => setSearchQuery(e.target.value)}
       />

@@ -261,7 +261,7 @@ const VnicProfileModal = ({
       {/* <div className="vnic-new-content-popup modal"> */}
       <div className="popup-content-outer">
         <div className="vnic-new-contents" style={{ paddingTop: "0.2rem" }}>
-          <FormGroup label="데이터 센터">
+          <FormGroup label={Localization.kr.DATA_CENTER}>
             <select
               value={dataCenterVoId}
               onChange={(e) => setDataCenterVoId(e.target.value)}

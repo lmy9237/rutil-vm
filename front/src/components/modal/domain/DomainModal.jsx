@@ -23,6 +23,7 @@ import {
   useLoginIscsiFromHost,
 } from "../../../api/RQHook";
 import { checkKoreanName } from "../../../util";
+import Localization from "../../../utils/Localization";
 
 // 일반 정보
 const initialFormState = {
@@ -259,10 +260,14 @@ const DomainModal = ({
   };
 
   const validateForm = () => {
-    if (!checkKoreanName(formState.name)) return "이름이 유효하지 않습니다.";
-    if (!formState.name) return "이름을 입력해주세요.";
-    if (!dataCenterVoId) return "데이터 센터를 선택해주세요.";
-    if (!hostVoName) return "호스트를 선택해주세요.";
+    if (!checkKoreanName(formState.name))
+      return "이름이 유효하지 않습니다.";
+    if (!formState.name)
+      return "이름을 입력해주세요.";
+    if (!dataCenterVoId) 
+      return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
+    if (!hostVoName)
+      return "호스트를 선택해주세요.";
     if (formState.storageType === "NFS" && !nfsAddress)
       return "경로를 입력해주세요.";
     if (formState.storageType !== "nfs" && lunId) {
@@ -347,8 +352,7 @@ const DomainModal = ({
         <div className="popup-content-outer">
           <div className="storage-domain-new-first">
             <div>
-              <LabelSelectOptionsID
-                label="데이터센터"
+              <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
                 value={dataCenterVoId}
                 onChange={(e) => setDataCenterVoId(e.target.value)}
                 disabled={editMode}
