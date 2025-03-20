@@ -15,10 +15,6 @@ button.btn-action[disabled]{
     color: #888888;
 }
 
-.btn-action svg {
-  /* '관리' 버튼 같은 아이콘이 있는 버튼일 경우 */
-}
-
 .btn-right-click { /* .right-click-menu-box */
   height: 26px;
   font-size: var(--fs-default);

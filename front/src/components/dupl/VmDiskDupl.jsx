@@ -62,12 +62,10 @@ const VmDiskDupl = ({
           {diskImage?.storageDomainVo?.name}
         </TableRowClick>
       ),
-      // ✅ 검색을 위한 text 필드 추가
       searchText: `${diskImage?.alias} ${diskImage?.storageDomainVo?.name || ""} ${vm?.name || ""}`.toLowerCase(),
     };
   });
 
-  // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   
   return (
@@ -94,13 +92,14 @@ const VmDiskDupl = ({
         onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
-        // onContextMenuItems={(row) => [ // 마우스 버튼
-        //   <VmDiskActionButtons
-        //     openModal={openModal}
-        //     isEditDisabled={!row}
-        //     type='context'
-        //   />
-        // ]}
+        onContextMenuItems={(row) => [ // 마우스 버튼
+          <VmDiskActionButtons
+            openModal={openModal}
+            isEditDisabled={!row}
+            actionType='context'
+            isContextMenu={true}
+          />
+        ]}
       />
       {/* 디스크 모달창 */}
       <Suspense>

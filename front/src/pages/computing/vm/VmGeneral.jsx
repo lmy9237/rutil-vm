@@ -109,7 +109,7 @@ const VmGeneral = ({ vmId }) => {
     {
       label: "클러스터",
       value: (
-        <div className="related-object">
+        <div className="related-object f-center">
           <FontAwesomeIcon icon={faEarthAmericas} fixedWidth className="mr-0.5" />
           <TableRowClick type="cluster" id={vm?.clusterVo?.id}>
             {vm?.clusterVo?.name}
@@ -120,7 +120,7 @@ const VmGeneral = ({ vmId }) => {
     {
       label: "호스트",
       value: (
-        <div className="related-object">
+        <div className="related-object f-center">
           <FontAwesomeIcon icon={faUser} fixedWidth className="mr-0.5" />
           <TableRowClick type="host" id={vm?.hostVo?.id}>
             {vm?.hostVo?.name}
@@ -155,12 +155,12 @@ const VmGeneral = ({ vmId }) => {
         </div>
 
         <div className="detail-general-box">
-          <div>VM 하드웨어</div>
+          <h1>VM 하드웨어</h1>
           <InfoTable tableRows={hardwareTableRows} />
         </div>
 
-        <div className="detail-general-mini-box">
-          <div>용량 및 사용량</div>
+        <div className="detail-general-box">
+          <h1>용량 및 사용량</h1>
           <div className="capacity-outer">
             <div className="capacity">
               <div>CPU</div>

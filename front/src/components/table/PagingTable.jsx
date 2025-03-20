@@ -70,28 +70,19 @@ const PagingTable = ({
     }
   };
   const renderTableBody = () => {
-    console.log("Tables > renderTableBody ... ")
+    console.log("Tables > renderTableBody ... ");
     if (isLoading) {
-      // 로딩중일 때
-      return (
-        <TableRowLoading colLen={columns.length} />
-      )
+      return <TableRowLoading colLen={columns.length} />;
     } else if (!isLoading && isSuccess) {
-      // 데이터 가져오기 성공 후
-      console.log("Tables > data fetched successfully ... ")
-      return (currentItems.length === 0) ? (
+      console.log("Tables > data fetched successfully ... ");
+      return currentItems.length === 0 ? (
         <TableRowNoData colLen={columns.length} />
-      ) : ( // 데이터 있을 경우
+      ) : (
         currentItems.map((row, rowIndex) => (
           <tr
             key={rowIndex}
             onClick={() => setSelectedRowIndex(rowIndex)}
-            style={{
-              backgroundColor:
-                selectedRowIndex === rowIndex
-                  ? "rgb(218, 236, 245)"
-                  : "transparent",
-            }}
+            className={selectedRowIndex === rowIndex ? "selected-row" : ""}
           >
             {columns.map((column, colIndex) => (
               <td
@@ -108,15 +99,11 @@ const PagingTable = ({
                     typeof row[column.accessor] === "string" || typeof row[column.accessor] === "number"
                       ? "left"
                       : "center",
-                  cursor: clickableColumnIndex.includes(colIndex)
-                    ? "pointer"
-                    : "default",
+                  cursor: clickableColumnIndex.includes(colIndex) ? "pointer" : "default",
                 }}
               >
                 {typeof row[column.accessor] === "object" ? (
-                  <div
-                    style={{ display: "flex", justifyContent: "center" }}
-                  >
+                  <div style={{ display: "flex", justifyContent: "center" }}>
                     {row[column.accessor]}
                   </div>
                 ) : (
@@ -126,15 +113,16 @@ const PagingTable = ({
             ))}
           </tr>
         ))
-      )
+      );
     }
-  }
+  };
+  
 
   console.log("...");
   return (
     <>
     
-
+    
       <div className="pagination">
       
         <div className="paging-btns center mb-1">

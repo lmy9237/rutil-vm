@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "../Input/IconButton";
 import "./HeaderButton.css";
+import PopupBox from "../common/PopupBox";
 
 const HeaderButtonContext = createContext();
 
@@ -89,33 +90,21 @@ const HeaderButton = ({
               disabled={button.disabled}
             />
           ))}
-          {popupItems && popupItems.length > 0 && (
-            <button className="popup-btn" onClick={togglePopupBox}>
-              <FontAwesomeIcon icon={faEllipsisV} fixedWidth />
-              <div
-                className="popup-box"
-                style={{ display: isPopupBoxVisible ? "block" : "none" }}
-              >
-                {popupItems.map((item, index) => (
-                  <div
-                    key={index}
-                    className={`popup_item ${item.disabled ? "disabled" : ""}`}
-                    onClick={(e) => {
-                      if (!item.disabled) {
-                        e.stopPropagation();
-                        handlePopupBoxItemClick(item);
-                      }
-                    }}
-                    disabled={item.disabled} // 실제 disabled 속성 반영
-                  >
-                    {item.label}
-                  </div>
-                ))}
-              </div>
-            </button>
+          {popupItems.length > 0 && (
+            <div className="popup-container">
+              <button className="popup-btn" onClick={togglePopupBox}>
+                <FontAwesomeIcon icon={faEllipsisV} fixedWidth />
+              </button>
+              <PopupBox
+                isVisible={isPopupBoxVisible}
+                items={popupItems}
+                onClose={() => setIsPopupBoxVisible(false)}
+              />
+            </div>
           )}
         </div>
       </div>
+
     </div>
   );
 };

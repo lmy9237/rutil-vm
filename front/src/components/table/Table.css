@@ -84,7 +84,7 @@
   border-collapse: collapse;
 }
 
-.section-table-outer table tbody tr:nth-child(even) {
+.section-table-outer table tbody tr:nth-child(even){
   background-color:var(--color-white);
 }
 .selected-row {

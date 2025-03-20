@@ -124,9 +124,8 @@ const VmDiskConnectionModal = ({
       targetName={"가상 디스크"}
       submitTitle={"연결"}
       onSubmit={diskType? handleFormSubmit : handleOkClick}
-      contentStyle={{ width: "850px", height: "590px" }} 
+      contentStyle={{ width: "850px"}} 
     >
-      <div className="popup-content-outer">
         <div className="disk-new-nav">
           <div
             id="storage-img-btn"
@@ -210,7 +209,7 @@ const VmDiskConnectionModal = ({
             />
           </>
         <span>선택된 디스크 ID: {selectedDisks.join(", ") || ""}</span>
-      </div>
+      
     </BaseModal>
   );
 };

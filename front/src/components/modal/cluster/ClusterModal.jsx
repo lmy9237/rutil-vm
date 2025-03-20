@@ -230,80 +230,77 @@ const ClusterModal = ({
       targetName={"클러스터"}
       submitTitle={cLabel}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "730px", height: "660px" }} 
+      contentStyle={{ width: "730px" }} 
     >
-      {/* <div className="cluster-new-popup modal"></div> */}
-      <div className="popup-content-outer">
-        <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
-          value={dataCenterVoId}
-          onChange={(e) => setDataCenterVoId(e.target.value)}
-          disabled={editMode}
-          loading={isDataCentersLoading}
-          options={datacenters}
-        />
-        <hr />
-        <LabelInput
-          label="이름"
-          id="name"
-          value={formState.name}
-          onChange={handleInputChange("name")}
-          autoFocus
-        />
-        <LabelInput
-          label="설명"
-          id="description"
-          value={formState.description}
-          onChange={handleInputChange("description")}
-        />
-        <LabelInput
-          label="코멘트"
-          id="comment"
-          value={formState.comment}
-          onChange={handleInputChange("comment")}
-        />
+      <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
+        value={dataCenterVoId}
+        onChange={(e) => setDataCenterVoId(e.target.value)}
+        disabled={editMode}
+        loading={isDataCentersLoading}
+        options={datacenters}
+      />
+      <hr />
+      <LabelInput
+        label="이름"
+        id="name"
+        value={formState.name}
+        onChange={handleInputChange("name")}
+        autoFocus
+      />
+      <LabelInput
+        label="설명"
+        id="description"
+        value={formState.description}
+        onChange={handleInputChange("description")}
+      />
+      <LabelInput
+        label="코멘트"
+        id="comment"
+        value={formState.comment}
+        onChange={handleInputChange("comment")}
+      />
 
-        <LabelSelectOptionsID id="network-man" label="관리 네트워크"
-          value={networkVoId}
-          onChange={(e) => setNetworkVoId(e.target.value)}
-          disabled={editMode}
-          loading={isNetworksLoading}
-          options={networks}
-        />
-        <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
-          value={formState.cpuArc}
-          onChange={handleInputChange("cpuArc")}
-          options={cpuArcs}
-        />
-        <LabelSelectOptions id="cpu-type" label="CPU 유형"
-          value={formState.cpuType}
-          onChange={handleInputChange("cpuType")}
-          options={cpuOptions}
-        />
-        <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"
-          value={formState.biosType}
-          onChange={handleInputChange("biosType")}
-          options={biosTypeOptions}
-          disabled={
-            formState.cpuArc === "PPC64" || formState.cpuArc === "S390X"
-          }
-        />
+      <LabelSelectOptionsID id="network-man" label="관리 네트워크"
+        value={networkVoId}
+        onChange={(e) => setNetworkVoId(e.target.value)}
+        disabled={editMode}
+        loading={isNetworksLoading}
+        options={networks}
+      />
+      <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
+        value={formState.cpuArc}
+        onChange={handleInputChange("cpuArc")}
+        options={cpuArcs}
+      />
+      <LabelSelectOptions id="cpu-type" label="CPU 유형"
+        value={formState.cpuType}
+        onChange={handleInputChange("cpuType")}
+        options={cpuOptions}
+      />
+      <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"
+        value={formState.biosType}
+        onChange={handleInputChange("biosType")}
+        options={biosTypeOptions}
+        disabled={
+          formState.cpuArc === "PPC64" || formState.cpuArc === "S390X"
+        }
+      />
 
-        <div>
-          <div className="cluster-form-group">
-            <div className="font-bold mb-0.5">복구정책</div>
-            {errorHandlingOptions.map((option) => (
-              <div key={option.value} className="host-text-radio-box mb-1 flex">
-                <input
-                  type="radio"
-                  name="recovery_policy"
-                  value={option.value}
-                  checked={formState.errorHandling === option.value}
-                  onChange={handleInputChange("errorHandling")}
-                />
-                <label htmlFor={option.value}>{option.label}</label>
-              </div>
-            ))}
-          </div>
+      <div>
+        <div className="cluster-form-group">
+          <div className="font-bold mb-0.5">복구정책</div>
+          {errorHandlingOptions.map((option) => (
+            <div key={option.value} className="host-text-radio-box mb-1 flex">
+              <input
+                type="radio"
+                name="recovery_policy"
+                value={option.value}
+                checked={formState.errorHandling === option.value}
+                onChange={handleInputChange("errorHandling")}
+              />
+              <label htmlFor={option.value}>{option.label}</label>
+            </div>
+          ))}
         </div>
       </div>
     </BaseModal>

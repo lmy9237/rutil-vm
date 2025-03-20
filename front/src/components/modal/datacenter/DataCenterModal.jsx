@@ -111,39 +111,36 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
       isOpen={isOpen} onClose={onClose}
       submitTitle={dcLabel}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "473px", height: "490px" }} 
+      contentStyle={{ width: "473px" }} 
     >
-      {/* <div className="datacenter-new-popup modal"> */}
-      <div className="datacenter-new-popup-outer">
-        <LabelInput id="name" label="이름"
-          value={formState.name}
-          onChange={handleInputChange("name")}
-          autoFocus
-        />
-        <LabelInput id="description" label="설명"
-          value={formState.description}
-          onChange={handleInputChange("description")}
-        />
-        <LabelInput id="comment" label="코멘트"
-          value={formState.comment}
-          onChange={handleInputChange("comment")}
-        />
-        <LabelSelectOptions id="storage-type" label="스토리지 타입"
-          value={String(formState.storageType)}
-          onChange={handleInputChange("storageType")}
-          options={storageTypes}
-        />
-        <LabelSelectOptions id="quarter-mode" label="쿼터 모드"
-          value={formState.quotaMode}
-          onChange={handleInputChange("quotaMode")}
-          options={quotaModes}
-        />
-        <LabelSelectOptions id="version-compatible" label="호환버전"
-          value={formState.version}
-          onChange={handleInputChange("version")}
-          options={versions}
-        />
-      </div>
+      <LabelInput id="name" label="이름"
+        value={formState.name}
+        onChange={handleInputChange("name")}
+        autoFocus
+      />
+      <LabelInput id="description" label="설명"
+        value={formState.description}
+        onChange={handleInputChange("description")}
+      />
+      <LabelInput id="comment" label="코멘트"
+        value={formState.comment}
+        onChange={handleInputChange("comment")}
+      />
+      <LabelSelectOptions id="storage-type" label="스토리지 타입"
+        value={String(formState.storageType)}
+        onChange={handleInputChange("storageType")}
+        options={storageTypes}
+      />
+      <LabelSelectOptions id="quarter-mode" label="쿼터 모드"
+        value={formState.quotaMode}
+        onChange={handleInputChange("quotaMode")}
+        options={quotaModes}
+      />
+      <LabelSelectOptions id="version-compatible" label="호환버전"
+        value={formState.version}
+        onChange={handleInputChange("version")}
+        options={versions}
+      />
     </BaseModal>
   );
 };

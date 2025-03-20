@@ -168,10 +168,10 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
       targetName={"디스크"}
       submitTitle={"업로드"}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "790px", height: "640px" }} 
+      contentStyle={{ width: "790px" }} 
     >
       {/* <div className="storage-disk-upload-popup modal"> */}
-      <div className="popup-content-outer">
+      
         <div className="storage-upload-first center">
           <p>파일 선택</p>
           <div>
@@ -381,7 +381,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
 
             </div>
         </div>
-      </div>
+      
     </BaseModal>
   );
 };

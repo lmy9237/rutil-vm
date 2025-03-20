@@ -1,0 +1,20 @@
+  .popup-container {
+    position: relative; 
+  }
+  
+  .popup-box {
+    position: absolute;
+    top: 27px;
+    right: 0;
+    width: 150px;
+    background-color: #f0f0f0;
+  }
+    
+  .popup-box .btn-right-click:not(:disabled):hover {
+    background: #f0f0f0;
+  }
+  
+  .popup-box .disabled {
+    color: gray;
+    cursor: not-allowed;
+  }

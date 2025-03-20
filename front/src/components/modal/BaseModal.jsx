@@ -44,9 +44,8 @@ const BaseModal = ({
             />}
             {promptText}
           </div>
+          {props.children}
         </div>
-
-        {props.children}
 
         {/* 하단 버튼 */}
         <div className="edit-footer">

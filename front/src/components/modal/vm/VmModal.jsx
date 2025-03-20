@@ -395,143 +395,143 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       onSubmit={handleFormSubmit}
     >
       <div className="popup-content-outer flex">
-        <ModalNavButton
-          tabs={tabs}
-          activeTab={selectedModalTab}
-          onTabClick={setSelectedModalTab}
-        />
+      <ModalNavButton
+        tabs={tabs}
+        activeTab={selectedModalTab}
+        onTabClick={setSelectedModalTab}
+      />
 
-        <div className="vm-edit-select-tab">
-          <div className="edit-first-content pb-0.5">
-            <LabelSelectOptionsID
-              label="클러스터"
-              value={clusterVo.id}
-              onChange={(e) => {
-                const selectedCluster = clusters.find((cluster) => cluster.id === e.target.value);
-                setClusterVo({
-                  id: e.target.value,
-                  name: selectedCluster ? selectedCluster.name : "",
-                });
-              }}
-              disabled={editMode} // 편집 모드일 경우 비활성화
-              loading={isClustersLoading}
-              options={clusters}
-              etcLabel={dataCenterVo.name}
-            />
-            <div><span>{Localization.kr.DATA_CENTER}: {dataCenterVo.name}</span></div>
-            <LabelSelectOptionsID
-              label="템플릿"
-              value={templateVo.id}
-              onChange={(e) => {
-                const selectedTemplate = templates.find((template) => template.id === e.target.value);
-                setClusterVo({
-                  id: e.target.value,
-                  name: selectedTemplate ? selectedTemplate.name : "",
-                });
-              }}
-              disabled={editMode} // 편집 모드일 경우 비활성화
-              loading={isTemplatesLoading}
-              options={templates}
-            />
+      <div className="vm-edit-select-tab">
+        <div className="edit-first-content pb-0.5">
+          <LabelSelectOptionsID
+            label="클러스터"
+            value={clusterVo.id}
+            onChange={(e) => {
+              const selectedCluster = clusters.find((cluster) => cluster.id === e.target.value);
+              setClusterVo({
+                id: e.target.value,
+                name: selectedCluster ? selectedCluster.name : "",
+              });
+            }}
+            disabled={editMode} // 편집 모드일 경우 비활성화
+            loading={isClustersLoading}
+            options={clusters}
+            etcLabel={dataCenterVo.name}
+          />
+          <div><span>{Localization.kr.DATA_CENTER}: {dataCenterVo.name}</span></div>
+          <LabelSelectOptionsID
+            label="템플릿"
+            value={templateVo.id}
+            onChange={(e) => {
+              const selectedTemplate = templates.find((template) => template.id === e.target.value);
+              setClusterVo({
+                id: e.target.value,
+                name: selectedTemplate ? selectedTemplate.name : "",
+              });
+            }}
+            disabled={editMode} // 편집 모드일 경우 비활성화
+            loading={isTemplatesLoading}
+            options={templates}
+          />
 
-            {/* <LabelSelectOptionsID
-              label="운영 시스템"
-              id="os_system"
+          {/* <LabelSelectOptionsID
+            label="운영 시스템"
+            id="os_system"
+            value={formInfoState.osSystem}
+            onChange={ handleInputChange("osSystem") }
+            options={osList.map((opt) => ({
+              id: opt.name,
+              name: opt.description,
+            }))}
+          />  */}
+          {/* TODO: options에 대한 별도 소형 컴포넌트 생성 필요 */}
+          <div className='input-select'>
+            <label>운영 시스템</label>
+            <select
               value={formInfoState.osSystem}
               onChange={ handleInputChange("osSystem") }
-              options={osList.map((opt) => ({
-                id: opt.name,
-                name: opt.description,
-              }))}
-            />  */}
-            {/* TODO: options에 대한 별도 소형 컴포넌트 생성 필요 */}
-            <div className='input-select'>
-              <label>운영 시스템</label>
-              <select
-                value={formInfoState.osSystem}
-                onChange={ handleInputChange("osSystem") }
-              >
-                {osList.map((opt) => (
-                  <option key={opt.name} value={opt.name}>
-                    {opt.description}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <LabelSelectOptions
-              label="칩셋/펌웨어 유형"
-              value={formInfoState.osType}
-              onChange={ handleInputChange("osType") }
-              options={chipsetOptionList}
-              disabled={architecture === "PPC64" || architecture === "S390X"}
-            />
-            <LabelSelectOptions
-              label="최적화 옵션"
-              value={formInfoState.optimizeOption}
-              onChange={ handleInputChange("optimizeOption") }
-              options={optimizeOptionList}
-            />
+            >
+              {osList.map((opt) => (
+                <option key={opt.name} value={opt.name}>
+                  {opt.description}
+                </option>
+              ))}
+            </select>
           </div>
-
-          {selectedModalTab === "common" && (
-            <>
-              <VmCommon
-                formInfoState={formInfoState}
-                setFormInfoState={setFormInfoState}
-              />
-              <VmDisk
-                editMode={editMode}
-                vm={vm}
-                vmName={formInfoState.name}
-                dataCenterId={dataCenterVo.id}
-                diskListState={diskListState}
-                setDiskListState={setDiskListState}
-              />
-              <VmNic
-                nicsState={nicListState}
-                setNicsState={setNicListState}
-                nics={nics}
-              />
-            </>
-          )}
-          {selectedModalTab === "system" && (
-            <VmSystem
-              formSystemState={formSystemState}
-              setFormSystemState={setFormSystemState}
-            />
-          )}
-          {selectedModalTab === "beginning" && (
-            <VmInit
-              // editMode={editMode}
-              formCloudState={formCloudState}
-              setFormCloudState={setFormCloudState}
-            />
-          )}
-          {selectedModalTab === "host" && (
-            <VmHost
-              // editMode={editMode}
-              hosts={hosts}
-              formHostState={formHostState}
-              setFormHostState={setFormHostState}
-            />
-          )}
-          {selectedModalTab === "ha_mode" && (
-            <VmHa
-              // editMode={editMode}
-              domains={domains}
-              formHaState={formHaState}
-              setFormHaState={setFormHaState}
-            />
-          )}
-          {selectedModalTab === "boot_outer" && (
-            <VmBoot
-              // editMode={editMode}
-              isos={isos}
-              formBootState={formBootState}
-              setFormBootState={setFormBootState}
-            />
-          )}
+          <LabelSelectOptions
+            label="칩셋/펌웨어 유형"
+            value={formInfoState.osType}
+            onChange={ handleInputChange("osType") }
+            options={chipsetOptionList}
+            disabled={architecture === "PPC64" || architecture === "S390X"}
+          />
+          <LabelSelectOptions
+            label="최적화 옵션"
+            value={formInfoState.optimizeOption}
+            onChange={ handleInputChange("optimizeOption") }
+            options={optimizeOptionList}
+          />
         </div>
+
+        {selectedModalTab === "common" && (
+          <>
+            <VmCommon
+              formInfoState={formInfoState}
+              setFormInfoState={setFormInfoState}
+            />
+            <VmDisk
+              editMode={editMode}
+              vm={vm}
+              vmName={formInfoState.name}
+              dataCenterId={dataCenterVo.id}
+              diskListState={diskListState}
+              setDiskListState={setDiskListState}
+            />
+            <VmNic
+              nicsState={nicListState}
+              setNicsState={setNicListState}
+              nics={nics}
+            />
+          </>
+        )}
+        {selectedModalTab === "system" && (
+          <VmSystem
+            formSystemState={formSystemState}
+            setFormSystemState={setFormSystemState}
+          />
+        )}
+        {selectedModalTab === "beginning" && (
+          <VmInit
+            // editMode={editMode}
+            formCloudState={formCloudState}
+            setFormCloudState={setFormCloudState}
+          />
+        )}
+        {selectedModalTab === "host" && (
+          <VmHost
+            // editMode={editMode}
+            hosts={hosts}
+            formHostState={formHostState}
+            setFormHostState={setFormHostState}
+          />
+        )}
+        {selectedModalTab === "ha_mode" && (
+          <VmHa
+            // editMode={editMode}
+            domains={domains}
+            formHaState={formHaState}
+            setFormHaState={setFormHaState}
+          />
+        )}
+        {selectedModalTab === "boot_outer" && (
+          <VmBoot
+            // editMode={editMode}
+            isos={isos}
+            formBootState={formBootState}
+            setFormBootState={setFormBootState}
+          />
+        )}
+      </div>
       </div>
     </BaseModal>
   );

@@ -30,7 +30,9 @@ import {
   useDashboardMetricVmCpu,
   useDashboardMetricVmMemory,
 } from "../../api/RQHook";
+import GridStatus from "../../components/Chart/GridStatus";
 import Localization from "../../utils/Localization";
+
 //#region: RadialBarChart
 const CpuApexChart = memo(({ cpu }) => {
   return <RadialBarChart percentage={cpu || 0} />;
@@ -401,6 +403,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+        <GridStatus />
       </div>{" "}
       {/* 대시보드 section끝 */}
     </>

@@ -7,6 +7,7 @@ import { useSnapshotsFromVM } from '../../../api/RQHook';
 import { convertBytesToMB } from '../../../util';
 import TablesRow from '../../../components/table/TablesRow';
 import DeleteModal from '../../../utils/DeleteModal';
+import ActionButton from '../../../components/button/ActionButton';
 
 const VmSnapshots = ({ vmId }) => {
   const {
@@ -41,9 +42,22 @@ const VmSnapshots = ({ vmId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <button className="snap_create_btn" onClick={() => openModal('create')}>생성</button>
-        {/* <button className="snap_create_btn">미리보기</button> */}
-        <button className="snap_create_btn" onClick={() => openModal('delete')}>삭제</button>
+
+        <ActionButton actionType="default"
+          label="생성"
+          onClick={() => openModal("create")}
+        />
+        <ActionButton actionType="default"
+          label="미리보기"
+          onClick={() => openModal("preview")}
+        />
+        <ActionButton actionType="default"
+          label="삭제"
+          onClick={() => openModal("delete")}
+        />
+        <ActionButton actionType="default"
+          label="이동"
+        />
       </div>
 
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>

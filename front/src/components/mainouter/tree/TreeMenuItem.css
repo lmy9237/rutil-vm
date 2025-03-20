@@ -8,6 +8,9 @@
   aspect-ratio:1/1;width:var(--w-icon-tree) !important;
   /* height:var(--h-icon-tree) !important; */
 }
+.tmi:hover{
+  background: var(--color-table);
+}
 .tmi.active {
   background: var(--color-table) !important;
 }

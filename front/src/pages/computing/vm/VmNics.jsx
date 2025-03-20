@@ -6,6 +6,7 @@ import NicModal from "../../../components/modal/vm/NicModal";
 import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { checkZeroSizeToMbps } from "../../../util";
+import ActionButton from "../../../components/button/ActionButton";
 
 /**
  * @name VmNics
@@ -56,9 +57,23 @@ const VmNics = ({ vmId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <button onClick={() => openModal('create')}>새로 만들기</button>
-        <button onClick={() => openModal('edit')} disabled={!selectedNic}>편집</button>
-        <button onClick={() => openModal("delete")} disabled={!selectedNic}>제거</button>
+        <ActionButton
+          label="새로 만들기"
+          actionType="default"
+          onClick={() => openModal("create")}
+        />
+        <ActionButton
+          label="편집"
+          actionType="default"
+          onClick={() => openModal("edit")}
+          disabled={!selectedNic} 
+        />
+        <ActionButton
+          label="제거"
+          actionType="default"
+          onClick={() => openModal("delete")}
+          disabled={!selectedNic}
+        />
       </div>
       <span>id = {selectedNic?.id || ""}</span>
 

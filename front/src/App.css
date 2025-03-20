@@ -17,10 +17,14 @@ html {
   --h-32:32px;
   --h-text-input: 28px;
   
+  --h-modal: 600px;                      /* 모달 전체 높이 */
+  --h-modal-min: 400px;
+  --h-modal-max: 730px;                  /* 모달 전체 최고 높이 */
   --h-modal-header: 55px;                /* 모달 헤더 부분 높이 */
   --h-modal-footer: 60px;                /* 모달 푸터 부분 높이 */
   --h-right-btn: 30px;
-  --h-dash-boxs-bar:380px;/*대시보드 section 안에 박스와bar 높이를 합친것*/
+  --h-dash-boxs-bar:380px;               /* 대시보드 section 안에 박스와bar 높이를 합친것*/
+  --h-modal-content: calc(var(--h-modal) - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
   --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
   --w-aside-menu:243px;     
   --w-icon: var(--h-icon);
@@ -51,6 +55,7 @@ html {
   --color-gray-4: #C6C6C6;         
   --color-gray-5: #888;     
   --color-gray-disabled: #6d6d6d;     /* 비활성화 색 */
+  --color-disabled-2: #888;;
   --color-input-disabled:#EDEDED;
   --color-white:#F8F8F8; 
   --color-blue:#1D56BC;
@@ -133,6 +138,7 @@ input[disabled] {
   cursor: no-drop !important;
   border: 1px solid var(--color-gray-4) !important;
 }
+
 /* svg.svg-inline--fa { 
   cursor: pointer;
 } */
@@ -143,9 +149,9 @@ input[disabled] {
     color: var(--color-gray-disabled);
 }
 .popup-content-outer {
-    height: var(--h-modal-content);
-    overflow-y: auto;
-    overflow-x: hidden;
+  /* height: var(--h-modal-content); */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .f-center{
   display: flex;

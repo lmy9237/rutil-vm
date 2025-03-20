@@ -76,47 +76,46 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
       targetName={"스냅샷"}
       submitTitle={"생성"}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "500px", height: "500px" }} 
+      contentStyle={{ width: "500px"}} 
     >
-      <div className="popup-content-outer">
-        <div className="p-1">
-          <LabelInput
-            className="host-textbox flex mb-1" 
-            label="설명" 
-            value={formState.description} 
-            onChange={(e) => setFormState((prev) => ({ ...prev, description: e.target.value }))}
-          />
-          <div>
-            <div className="font-bold">포함할 디스크 :</div>
-            <div className="snapshot-new-table">
-              <TablesOuter
-                isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
-                columns={TableColumnsInfo.SNAPSHOT_NEW}
-                data={disks?.map((d) => ({
-                  id: d?.diskImageVo?.id, // `diskImageVo`에서 `id` 추출
-                  alias: d?.diskImageVo?.alias, // `alias` 추출
-                  description: d?.diskImageVo?.description, // `description` 추출
-                  check: (
-                    <input
-                      type="checkbox"
-                      checked={selectedDisks.some((disk) => disk.id === d?.diskImageVo?.id)} // 선택된 디스크에 포함 여부 확인
-                      onChange={(event) => handleDiskSelection(d?.diskImageVo, event.target.checked)} // `diskImageVo` 객체를 전달
-                    />
-                  ),
-                })) || []}
-              />
-            </div>
-            <div>
-              <LabelCheckbox 
-                label={"메모리 저장"}
-                checked={formState.persistMemory} // ✅ persistMemory 값을 checked 상태에 반영
-                onChange={() => setFormState((prev) => ({ ...prev, persistMemory: !prev.persistMemory }))} // ✅ true/false로 변경
-              />
-            </div>
+      <div className="p-1">
+        <LabelInput
+          className="host-textbox flex mb-1" 
+          label="설명" 
+          value={formState.description} 
+          onChange={(e) => setFormState((prev) => ({ ...prev, description: e.target.value }))}
+        />
+        <div>
+          <div className="font-bold">포함할 디스크 :</div>
+          <div className="snapshot-new-table">
+            <TablesOuter
+              isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
+              columns={TableColumnsInfo.SNAPSHOT_NEW}
+              data={disks?.map((d) => ({
+                id: d?.diskImageVo?.id, // `diskImageVo`에서 `id` 추출
+                alias: d?.diskImageVo?.alias, // `alias` 추출
+                description: d?.diskImageVo?.description, // `description` 추출
+                check: (
+                  <input
+                    type="checkbox"
+                    checked={selectedDisks.some((disk) => disk.id === d?.diskImageVo?.id)} // 선택된 디스크에 포함 여부 확인
+                    onChange={(event) => handleDiskSelection(d?.diskImageVo, event.target.checked)} // `diskImageVo` 객체를 전달
+                  />
+                ),
+              })) || []}
+            />
           </div>
-          <span>! 메모리를 저장하는 도중 가상 머신이 중지됨</span>
+          <div>
+            <LabelCheckbox 
+              label={"메모리 저장"}
+              checked={formState.persistMemory} // ✅ persistMemory 값을 checked 상태에 반영
+              onChange={() => setFormState((prev) => ({ ...prev, persistMemory: !prev.persistMemory }))} // ✅ true/false로 변경
+            />
+          </div>
         </div>
+        <span>! 메모리를 저장하는 도중 가상 머신이 중지됨</span>
       </div>
+      
     </BaseModal>
   );
 };

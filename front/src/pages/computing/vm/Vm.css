@@ -1,23 +1,28 @@
 /*일반파트*/
 .vm-detail-general-boxs {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 0.2rem;
-  border: 1px solid #dedede;
+  gap: 16px;
 }
 .detail-general-box {
-  width: 35%;
+  flex: 1;
+  padding: 24px;
+  border-radius: 8px;
+  background:var(--color-white);
+  max-width: 45%; /* ✅ 더 빨리 떨어지도록 조정 */
+  min-width: 500px; /* ✅ 너무 작아지는 것 방지 */
 
 }
-.detail-general-mini-box {
-  width: 25%;
-
+.detail-general-box > h1 {
+  font-size: var(--fs-16);
+  font-weight: 700;
+  border-bottom: 1px solid #C6C6C6;
+  padding-bottom: 12px;
 }
-.detail-general-mini-box > div:first-child,
-.detail-general-box > div:first-child {
-  font-size: var(--fs-defult);
-  font-weight: 600;
-  padding: 0.18rem;
+.detail-general-box .info-table-outer{
+  padding: 0 !important;
 }
 .capacity {
   font-size: var(--fs-default);
@@ -114,8 +119,6 @@
   font-size: var(--fs-default);
   margin-bottom: 3px;
 }
-
-
 /*스냅샷*/
 .snapshot-content {
   width: 100%;
@@ -191,4 +194,9 @@
 }
 .snap-table:last-child {
   margin-bottom: 0;
+}
+@media (max-width: 1600px) {
+  .detail-general-box {
+    max-width: 100%; /* ✅ 한 줄로 배치 */
+  }
 }

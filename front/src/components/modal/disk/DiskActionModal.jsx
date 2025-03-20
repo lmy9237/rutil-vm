@@ -17,10 +17,9 @@ const DiskActionModal = ({ isOpen, action, data = [], onClose }) => {
       targetName={"디스크"}
       submitTitle={daLabel}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "650px", height: "340px" }} 
+      contentStyle={{ width: "650px" }} 
     >
-      <div className="popup-content-outer">
-        <div className="section-table-outer p-0.5">
+      <div className="section-table-outer p-0.5">
           <span style={{ fontWeight: "800" }}>디스크 할당:</span>
           
           <table>
@@ -78,7 +77,6 @@ const DiskActionModal = ({ isOpen, action, data = [], onClose }) => {
             </tbody>
           </table>
         </div>
-      </div>
     </BaseModal>
   );
 };

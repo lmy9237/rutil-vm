@@ -39,16 +39,13 @@ const NetworkClusterModal = ({
       targetName={"네트워크"}
       submitTitle={"관리"}
       onSubmit={() => {}}
-      contentStyle={{ width: "900px", height: "400px" }}
+      contentStyle={{ width: "900px"}}
     >
-      {/* <div className="manage-network-popup modal"> */}
-      <div className='popup-content-outer'>
-        <TablesOuter
-          isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
-          columns={TableColumnsInfo.CLUSTERS_POPUP} data={clusters || []}
-          onRowClick={() => console.log('Row clicked')}
-        />
-      </div>
+      <TablesOuter
+        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
+        columns={TableColumnsInfo.CLUSTERS_POPUP} data={clusters || []}
+        onRowClick={() => console.log('Row clicked')}
+      />
     </BaseModal>
   );
 };
