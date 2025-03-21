@@ -12,7 +12,7 @@ import "./SearchBox.css";
  */
 const SearchBox = ({ searchQuery, setSearchQuery }) => {
   return (
-    <div className="nomal-search-box">
+    <div className="normal-search-box">
       <input type="text"
         placeholder={Localization.kr.PLACEHOLDER_SEARCH}
         value={searchQuery || ""}

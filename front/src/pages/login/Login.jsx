@@ -13,6 +13,7 @@ import Background from "../../components/common/Background";
 import IconInput from "../../components/Input/IconInput";
 import { useAuthenticate } from "../../api/RQHook";
 import "./Login.css";
+import Localization from "../../utils/Localization";
 
 const Login = ({ setAuthenticated, setUsernameGlobal }) => {
   // 모달 관련 상태 및 함수
@@ -70,7 +71,7 @@ const Login = ({ setAuthenticated, setUsernameGlobal }) => {
             required
             icon={faUser}
             type="text"
-            placeholder="사용자명"
+            placeholder={Localization.kr.PLACEHOLDER_USERNAME}
             value={username ?? ""}
             onChange={(e) => {
               console.log("Username:", e.target.value); // 확인용 로그
@@ -82,7 +83,7 @@ const Login = ({ setAuthenticated, setUsernameGlobal }) => {
             required
             icon={faKey}
             type="password"
-            placeholder="비밀번호"
+            placeholder={Localization.kr.PLACEHOLDER_PASSWORD}
             value={password ?? ""}
             onChange={(e) => setPassword(e.target.value)}
           />

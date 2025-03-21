@@ -16,4 +16,7 @@
   display:flex;flex-direction:row;justify-content:flex-end;align-items:center;
   width:100%;font-size: 0.65rem; 
 }
-.rutil-vm-logo p { color: var(--color-primary); }
+.rutil-vm-logo p {
+  width:100%;display:flex;align-items:center;justify-content:flex-end;
+  color: var(--color-logo-text);font-size:15px;font-weight:500;line-height:150%; 
+}

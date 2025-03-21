@@ -142,19 +142,6 @@ const PagingTable = ({
     <>
       <div className="pagination">
         <div className="paging-btns center mb-1">
-          {showSearchBox && (
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder={Localization.kr.PLACEHOLDER_SEARCH}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button onClick={() => setSearchQuery("")}>
-                <FontAwesomeIcon icon={faRefresh} fixedWidth />
-              </button>
-            </div>
-          )}
           <div className="paging-arrows">
             <PagingButton type="prev"
               onClick={() => handlePageChange("prev")}

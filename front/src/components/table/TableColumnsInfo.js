@@ -780,7 +780,7 @@ const TableColumnsInfo = {
   ],
   // 사용자
   SETTING_USER: [
-    { header: '', accessor: 'icon', clickable: false, width:'16px' },
+    { header: '', accessor: 'icon', clickable: false, width: "40px" },
     { header: Localization.kr.NAME, accessor: 'firstName', clickable: false },
     { header: '성', accessor: 'surName', clickable: false },
     { header: '사용자ID', accessor: 'username', clickable: false },

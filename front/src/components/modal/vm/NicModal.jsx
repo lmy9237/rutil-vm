@@ -3,17 +3,18 @@ import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  faGlassWhiskey } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
+import LabelInput from "../../label/LabelInput";
+import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
+import LabelSelectOptions from "../../label/LabelSelectOptions";
+import Localization from "../../../utils/Localization";
+import { RVI16, rvi16Connected, rvi16Disconnected, rvi16Plugged, rvi16Unplugged } from "../../icons/RutilVmIcons";
 import {
   useAddNicFromVM,
   useAllVnicProfiles,
   useEditNicFromVM,
   useNetworkInterfaceByVMId,
 } from "../../../api/RQHook";
-import LabelInput from "../../label/LabelInput";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import Localization from "../../../utils/Localization";
- 
+
 // 유형
 const interfaceOptions = [
   { value: "E1000", label: "e1000" },
@@ -156,18 +157,17 @@ const NicModal = ({
                   checked={formInfoState.linked === true} // linked가 true일 때 체크
                   onChange={() => handleRadioChange("linked", true)}
                 />
-                <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
+                <RVI16 iconDef={rvi16Connected} />
                 <label htmlFor="status_up">Up</label>
               </div>
               <div>
-                <input
+                <input id="status_down"
                   type="radio"
                   name="status"
-                  id="status_down"
                   checked={formInfoState.linked === false} // linked가 false일 때 체크
                   onChange={() => handleRadioChange("linked", false)}
                 />
-                <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
+                <RVI16 iconDef={rvi16Disconnected} />
                 <label htmlFor="status_down">Down</label>
               </div>
             </div>
@@ -185,7 +185,7 @@ const NicModal = ({
                   checked={formInfoState.plugged === true}
                   onChange={() => handleRadioChange("plugged", true)}
                 />
-                <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
+                <RVI16 iconDef={rvi16Plugged} />
                 <label htmlFor="plugged">연결됨</label>
               </div>
               <div>
@@ -196,7 +196,7 @@ const NicModal = ({
                   checked={formInfoState.plugged === false}
                   onChange={() => handleRadioChange("plugged", false)}
                 />
-                <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth style={{ marginRight: "0.1rem" }} />
+                <RVI16 iconDef={rvi16Unplugged} />
                 <label htmlFor="unplugged">분리</label>
               </div>
             </div>

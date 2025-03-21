@@ -19,7 +19,7 @@ import useSearch from "../button/useSearch";
  */
 const ClusterDupl = ({
   isLoading, isError, isSuccess,
-  clusters = [], columns = [], datacenterId,  showSearchBox =true
+  clusters = [], columns = [], datacenterId,  showSearchBox = true
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);

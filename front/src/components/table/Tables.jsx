@@ -2,9 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import TableRowLoading from "./TableRowLoading";
 import TableRowNoData from "./TableRowNoData";
 import { Tooltip } from "react-tooltip";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRefresh } from "@fortawesome/free-solid-svg-icons";
-import Localization from "../../utils/Localization";
 import "./Table.css";
 import { RVI24, rvi24ChevronLeftRect, rvi24ChevronLeftRectDisabled, rvi24ChevronRightRect, rvi24ChevronRightRectDisabled } from "../icons/RutilVmIcons";
 import PagingButton from "./PagingButton";
@@ -369,24 +366,9 @@ const Tables = ({
     }
   };
 
-  // console.log("...");
   return (
     <>
-        {showSearchBox && (
-          <div className="nomal-search-box">
-            <input
-              type="text"
-              placeholder={Localization.kr.PLACEHOLDER_SEARCH}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button onClick={() => setSearchQuery("")}>
-              <FontAwesomeIcon icon={faRefresh} fixedWidth />
-            </button>
-          </div>
-        )}
-        
-      <div className="w-full  overflow-y-hidden ">
+      <div className="w-full overflow-y-hidden ">
         <table className="custom-table" ref={tableRef}>
           <thead>
             <tr>
@@ -432,18 +414,17 @@ const Tables = ({
       </div>
       {/* 우클릭 메뉴 박스 */}
       {contextMenu && (
-      <div
-        ref={menuRef}
-        className="my-context-menu"
-        style={{
-          top: `${contextMenu.mouseY}px`,
-          left: `${contextMenu.mouseX}px`,
-        }}
-      >
-        {contextMenu.menuItems.map((item, index) => (
-          <div className="context-menu-item" key={index}>{item}</div>
-        ))}
-      </div>
+        <div ref={menuRef}
+          className="my-context-menu"
+          style={{
+            top: `${contextMenu.mouseY}px`,
+            left: `${contextMenu.mouseX}px`,
+          }}
+        >
+          {contextMenu.menuItems.map((item, index) => (
+            <div className="context-menu-item" key={index}>{item}</div>
+          ))}
+        </div>
       )}
 
       {/* Tooltip */}

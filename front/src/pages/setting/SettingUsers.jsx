@@ -1,10 +1,11 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 import SettingUsersActionButtons from "./SettingUsersActionButtons";
 import SettingUsersModals from "../../components/modal/settings/SettingUsersModals"
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
 import TablesOuter from "../../components/table/TablesOuter";
 import { useAllUsers } from "../../api/RQHook";
 import SettingUsersDeleteModal from '../../components/modal/settings/SettingUsersDeleteModal';
+import { RVI16, rvi16User, rvi16Superuser } from '../../components/icons/RutilVmIcons';
 
 /**
  * @name SettingUsers
@@ -27,12 +28,17 @@ const SettingUsers = () => {
   } = useAllUsers((e) => {
     console.log(`SettingUsers ... ${JSON.stringify(e)}`)
     // const [username, provider] = e?.userName?.split('@') || [];
-    return { 
-      ...e, 
-      isDisabled: (e.disabled) ? 'DISABLED' : 'AVAILABLE'
-    };
+    return { ...e };
   });
   
+  const transformedData = users.map((e) => {
+    return {
+      ...e,
+      icon: (<RVI16 iconDef={rvi16Superuser}/>),
+      isDisabled: (e.disabled) ? 'DISABLED' : 'AVAILABLE',
+    }
+  })
+
   const [activeModal, setActiveModal] = useState(null);
   const [modals, setModals] = useState({
     create: false,
@@ -70,8 +76,7 @@ const SettingUsers = () => {
     console.log("SettingUsers > renderModals ... ")
     return (
       <Suspense>
-      {
-        (modals.create || (modals.edit && selectedUsers) || (modals.changePassword && selectedUsers)) && (
+      {(modals.create || (modals.edit && selectedUsers) || (modals.changePassword && selectedUsers)) && (
           <SettingUsersModals 
             modalType={
               modals.create ? "create" : modals.edit ? "edit" : modals.changePassword ? "changePassword" : ""
@@ -82,10 +87,8 @@ const SettingUsers = () => {
               refetchUsers()
             }}
           />
-        )
-      }
-      {
-        modals.remove && selectedUsers.length !== 0 && (
+      )}
+      {modals.remove && selectedUsers.length !== 0 && (
           <SettingUsersDeleteModal 
             isOpen={modals.remove}
             onClose={() => {
@@ -94,8 +97,7 @@ const SettingUsers = () => {
             }}
             data={selectedUsers}
           />
-        )
-      }
+      )}
       </Suspense>
     )
   }
@@ -117,7 +119,7 @@ const SettingUsers = () => {
       <TablesOuter
         isLoading={isUsersLoading} isError={isUsersError} isSuccess={isUsersSuccess}
         columns={TableColumnsInfo.SETTING_USER}
-        data={users}
+        data={transformedData}
         onRowClick={(row) => {
           console.log(`SettingUsers > onRowClick ... row: ${JSON.stringify(row)}`)
           setSelectedUsers(row)

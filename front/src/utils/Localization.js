@@ -31,6 +31,9 @@ export const Localization = {
     TIMEZONE: "시간대",
     PLACEHOLDER_SEARCH: "검색어를 입력하세요.",
 
+    PLACEHOLDER_USERNAME: "사용자명을 입력하세요.",
+    PLACEHOLDER_PASSWORD: "비밀번호를 입력하세요.",
+
     renderStatus(status) {
       if (status === "UP")               return "실행중";
       else if (status === "DOWN")        return "중지";

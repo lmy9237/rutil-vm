@@ -1,6 +1,8 @@
-import TableColumnsInfo from '../../components/table/TableColumnsInfo';
-import PagingTableOuter from '../../components/table/PagingTableOuter';
-import { EventSeverityIcon } from '../icons/RutilVmIcons';
+import TableColumnsInfo from "../../components/table/TableColumnsInfo";
+import PagingTableOuter from "../../components/table/PagingTableOuter";
+import { EventSeverityIcon } from "../icons/RutilVmIcons";
+import SearchBox from "../button/SearchBox";
+import useSearch from "../button/useSearch";
 
 /**
  * @name HostEvents
@@ -10,22 +12,38 @@ import { EventSeverityIcon } from '../icons/RutilVmIcons';
  * @param {string} hostId 호스트 ID
  * @returns
  */
-const EventDupl = ({ 
-  isLoading, isError, isSuccess,
-  events=[], handleRowClick, showSearchBox = true
+const EventDupl = ({
+  isLoading,
+  isError,
+  isSuccess,
+  events = [],
+  handleRowClick,
+  showSearchBox = true,
 }) => {
-  console.log("...")
+  const transformedData = events.map((e) => ({
+    ...e,
+    _severity: EventSeverityIcon(e?.severity),
+  }))
+
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  
+  console.log("...");
   return (
-    <PagingTableOuter
-      isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-      columns={TableColumnsInfo.EVENTS}
-      data={events.map((e) => ({
-        ...e,
-        _severity: EventSeverityIcon(e?.severity),
-      }))}
-      onRowClick={handleRowClick}
-      showSearchBox={showSearchBox} // 검색 박스 표시 여부 제어
-    />
+    <>
+      <div className="dupl-header-group">
+        {showSearchBox && (
+          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        )}
+      </div>
+
+      <PagingTableOuter
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        columns={TableColumnsInfo.EVENTS}
+        data={filteredData}
+        onRowClick={handleRowClick}
+        showSearchBox={showSearchBox} // 검색 박스 표시 여부 제어
+      />
+    </>
   );
 };
 

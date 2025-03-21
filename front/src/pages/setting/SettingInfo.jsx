@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { faCog } from "@fortawesome/free-solid-svg-icons";
 import HeaderButton from "../../components/button/HeaderButton";
 import NavButton from "../../components/navigation/NavButton";
 import Path from "../../components/Header/Path";
@@ -8,6 +7,7 @@ import SettingUsers from "./SettingUsers";
 import SettingSessions from "./SettingSessions";
 import SettingCertificates from "./SettingCertificates";
 import "./Setting.css";
+import { rvi24Gear } from "../../components/icons/RutilVmIcons";
 
 /**
  * @name SettingInfo
@@ -31,11 +31,7 @@ const SettingInfo = () => {
   ];
 
   useEffect(() => {
-    if (!section) {
-      setActiveTab("users");
-    } else {
-      setActiveTab(section);
-    }
+    setActiveTab(!section ? "users" : section);
   }, [section]);
 
   const handleTabClick = (tab) => {
@@ -63,11 +59,8 @@ const SettingInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton
-        titleIcon={faCog}
-        title="관리"
-        // subtitle=" > 사용자 세션"
-        additionalText="목록이름"
+      <HeaderButton titleIcon={rvi24Gear("#222222")}
+        title="관리" additionalText="목록이름"
       />
       <div className="content-outer">
         <NavButton

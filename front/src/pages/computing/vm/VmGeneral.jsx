@@ -1,5 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEarthAmericas, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useVmById } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import InfoTable from "../../../components/table/InfoTable";
@@ -143,8 +141,8 @@ const VmGeneral = ({ vmId }) => {
     { label: "아키텍처", value: vm?.cpuArc },
     { label: "칩셋/펌웨어 유형", value: chipsetLabel },
     { label: "CPU", value: `${vm?.cpuTopologyCnt} (${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` },
-    { label: Localization.kr.MEMORY, value: convertBytesToMB(vm?.memorySize) + " MB" ?? "0" },
-    { label: " 할당할 실제 메모리", value: convertBytesToMB(vm?.memoryGuaranteed) + " MB" ?? "0" },
+    { label: Localization.kr.MEMORY, value: `${convertBytesToMB(vm?.memorySize ?? 0)} MB` },
+    { label: " 할당할 실제 메모리", value: `${convertBytesToMB(vm?.memoryGuaranteed ?? 0)}  MB` },
     { label: "", value: "" },
     { label: "게스트", value: "" },
     // { label: "- 에이전트", value: "" },
@@ -163,7 +161,7 @@ const VmGeneral = ({ vmId }) => {
         </div>
 
         <div className="detail-general-box">
-          <h1>VM 하드웨어</h1>
+          <h1>{Localization.kr.VM} 하드웨어</h1>
           <InfoTable tableRows={hardwareTableRows} />
         </div>
 
@@ -175,7 +173,7 @@ const VmGeneral = ({ vmId }) => {
                 <SemiCircleChart percentage={vm?.usageDto?.cpuPercent || 0} />
             </div>
             <div className="capacity">
-              <div>메모리</div>
+              <div>{Localization.kr.MEMORY}</div>
               <SemiCircleChart percentage={vm?.usageDto?.memoryPercent || 0} />
             </div>
             <div className="capacity">
