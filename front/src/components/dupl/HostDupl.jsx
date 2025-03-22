@@ -81,7 +81,8 @@ const HostDupl = ({
         onContextMenuItems={(row) => [
           <HostActionButtons
             openModal={openModal}
-            isEditDisabled={!row}
+            status={row?.status}
+            selectedHosts={[row]}
             actionType="context"
             isContextMenu={true}
           />,

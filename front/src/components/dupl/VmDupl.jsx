@@ -112,10 +112,11 @@ const VmDupl = ({
         multiSelect={true}
         onContextMenuItems={(row) => [
           <VmActionButtons
-            openModal={openModal}
-            isEditDisabled={!row} 
-            actionType='context'
-            isContextMenu={true} 
+          openModal={openModal}
+          status={row?.status} 
+          selectedVms={[row]}
+          actionType="context"
+          isContextMenu={true}
           />
         ]}
       />

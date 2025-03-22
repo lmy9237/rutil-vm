@@ -158,7 +158,7 @@ const VmGeneral = ({ vmId }) => {
     <>
       <div className="vm-detail-general-boxs">
         <div className="detail-general-box">
-          <div>{Localization.kr.GENERAL}</div>
+          <h1>{Localization.kr.GENERAL}</h1>
           <InfoTable tableRows={generalTableRows} />
         </div>
 

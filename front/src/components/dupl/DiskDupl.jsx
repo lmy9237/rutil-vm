@@ -92,7 +92,8 @@ const DiskDupl = ({
         onContextMenuItems={(row) => [
           <DiskActionButtons
             openModal={openModal}
-            isEditDisabled={!row}
+            status={row?.status}
+            selectedDisks={[row]}
             actionType="context"
           />,
         ]}

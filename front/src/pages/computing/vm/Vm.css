@@ -198,7 +198,7 @@
 .snap-table:last-child {
   margin-bottom: 0;
 }
-@media (max-width: 1600px) {
+@media (max-width: 1400px) {
   .detail-general-box {
     max-width: 100%; /* ✅ 한 줄로 배치 */
   }

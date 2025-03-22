@@ -13,36 +13,9 @@ import {
   rvi24ChevronRightRectDisabled,
 } from "../icons/RutilVmIcons";
 import "./Table.css";
+import PagingButton from "./PagingButton";
 
-const PagingButton = ({ 
-  type = "prev", 
-  ...props
-}) => {
-  const [isHovering, setIsHovering] = useState(false);
-  const handleMouseOver = () => setIsHovering(true);
-  const handleMouseOut = () => setIsHovering(false);
-  
-  return (
-    <button
-      className={`paging-arrow${isHovering ? ` on` : ""}`}
-      {...props}
-      onMouseOver={handleMouseOver}
-      onMouseOut={handleMouseOut}
-    >
-      <RVI24
-        iconDef={
-          type === "prev"
-            ? props.disabled
-              ? rvi24ChevronLeftRectDisabled
-              : rvi24ChevronLeftRect(isHovering)
-            : props.disabled
-              ? rvi24ChevronRightRectDisabled
-              : rvi24ChevronRightRect(isHovering)
-        }
-      />
-    </button>
-  );
-};
+
 
 const PagingTable = ({
   isLoading = null,

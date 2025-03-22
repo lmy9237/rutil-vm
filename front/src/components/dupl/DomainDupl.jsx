@@ -101,7 +101,8 @@ const DomainDupl = ({
         onContextMenuItems={(row) => [
           <DomainActionButtons
             openModal={openModal}
-            isEditDisabled={!row}
+            status={row?.status}
+            selectedDomains={[row]}
             actionType={actionType}
             isContextMenu={true}
           />,

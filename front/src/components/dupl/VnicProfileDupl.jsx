@@ -80,7 +80,8 @@ const VnicProfileDupl = ({
         onContextMenuItems={(row) => [
           <VnicProfileActionButtons
             openModal={openModal}
-            isEditDisabled={!row}
+            status={row?.status}
+            selectedVnicProfiles={[row]}
             actionType="context"
           />,
         ]}

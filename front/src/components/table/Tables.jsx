@@ -6,6 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import Localization from "../../utils/Localization";
 import "./Table.css";
+import { RVI24, rvi24ChevronLeftRect, rvi24ChevronLeftRectDisabled, rvi24ChevronRightRect, rvi24ChevronRightRectDisabled } from "../icons/RutilVmIcons";
+import PagingButton from "./PagingButton";
+
 
 /**
  * @name Tables
@@ -15,6 +18,7 @@ import "./Table.css";
  * @returns {JSX.Element} 테이블 컴포넌트
  * 
  */
+
 const Tables = ({
   isLoading = null,
   isError = false,
@@ -410,16 +414,20 @@ const Tables = ({
 
         {/*페이지버튼 */}
         {sortedData.length > itemsPerPage && (
-          <div className="paging-arrows flex"style={{ paddingTop: "18px", paddingBottom: "10px" }}>
-            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} >
-              {"<"}
-            </button>
-            <span className="px-1.5">{`${startNumber} - ${endNumber}`}</span> {/* ✅ 범위 표시 */}
-            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= Math.ceil(sortedData.length / itemsPerPage)}>
-              {">"}
-            </button>
+          <div className="paging-arrows my-2">
+            <PagingButton
+              type="prev"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            />
+            <span className="px-1.5">{`${startNumber} - ${endNumber}`}</span>
+            <PagingButton
+              type="next"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage >= Math.ceil(sortedData.length / itemsPerPage)}
+            />
           </div>
-        )} 
+      )}
 
       </div>
       {/* 우클릭 메뉴 박스 */}

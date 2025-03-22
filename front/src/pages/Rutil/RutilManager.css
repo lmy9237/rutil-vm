@@ -1,24 +1,26 @@
-.rutil-general{
+
+.rutil-general-contents{
+   background:var(--color-white);
+   display:flex;
+   width: 100%;
+   padding: 0 30px;
+   padding: 24px 36px;
+}
+.rutil-general-contents>div:first-child{
     display:flex;
-    justify-content: space-between;
-    font-size: var(--fs-16);
-}
-.logo-general{
-    width:60px;
-    margin: 0 10px 6px 0;
-}
-.rutil-general-first-contents{
-    width:600px;
-}
-.rutil-general-first-contents>div:first-child{
-    display:flex;
-    border-bottom:var(--border-simple);
     margin-bottom: 9px;
+    border-right:var(--border-simple);
+    padding-right: 36px;
 }
-.type-info-boxs{
+.rutil-general-contents .info-table-outer{
+    width: 100% !important;
+    padding: 0  ;
+    padding-left: 16px;
+}
+/* .type-info-boxs{
     border:var(--border-simple);
     padding:8px;
 }
 .type-info-box{
     margin-bottom:0.2rem;
-}
+} */

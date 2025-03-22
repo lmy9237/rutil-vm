@@ -123,7 +123,7 @@ ul { list-style-type: circle; }
 button {
   border: 1px solid var(--color-gray-4);
   cursor: pointer;
-  padding: 0 4px;
+  /* padding: 0 4px; */
   display: flex;
   align-items: center;
   justify-content: center;

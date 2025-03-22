@@ -94,8 +94,10 @@ const NetworkDupl = ({
         onContextMenuItems={(row) => [
           <NetworkActionButtons
             openModal={openModal}
-            isEditDisabled={!row}
+            status={row?.status}
+            selectedNetworks={[row]}
             actionType="context"
+            isContextMenu={true}
           />,
         ]}
       />

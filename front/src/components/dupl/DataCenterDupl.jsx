@@ -69,7 +69,8 @@ const DataCenterDupl = ({
         onContextMenuItems={(row) => [
           <DataCenterActionButtons
             openModal={openModal}
-            isEditDisabled={!row}
+            status={row?.status}
+            selectedDataCenters={[row]}
             actionType="context"
           />,
         ]}

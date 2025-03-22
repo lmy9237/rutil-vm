@@ -159,7 +159,7 @@ const NetworkModal = ({
       targetName={"논리 네트워크"}
       submitTitle={editMode ? "편집" : "생성"}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "700px"}}
+      contentStyle={{ width: "770px"}}
     >
       {/* <div className={`network-new-popup modal ${editMode ? "edit-mode" : ""}`}> */}
       <div className="network-first-contents">

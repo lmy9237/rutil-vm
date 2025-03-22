@@ -77,7 +77,8 @@ const TemplateDupl = ({
         onContextMenuItems={(row) => [
           <TemplateActionButtons
             openModal={openModal}
-            isEditDisabled={!row}
+            status={row?.status}
+            selectedTemplates={[row]}
             actionType="context"
           />,
         ]}

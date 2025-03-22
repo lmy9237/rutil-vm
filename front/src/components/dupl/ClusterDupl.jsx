@@ -81,7 +81,8 @@ const ClusterDupl = ({
         onContextMenuItems={(row) => [
           <ClusterActionButtons
             openModal={openModal}
-            isEditDisabled={!row}
+            status={row?.status}
+            selectedClusters={[row]}
             actionType="context"
           />,
         ]}
