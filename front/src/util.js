@@ -1,3 +1,5 @@
+import Localization from "./utils/Localization";
+
 /**
  * @name CheckKoreanName
  * @description 한글이 들어갔는지 확인
@@ -7,6 +9,29 @@
  */
 export function checkKoreanName(name) {
   return /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(name); // 한글이 포함되면 true 반환
+}
+
+/**
+ * @name checkSpaceName
+ * @description 띄어쓰기 들어갔는지 확인
+ * @param {string} name 
+ * @returns 
+ */
+export function checkSpaceName(name) {
+  return /\s/.test(name);
+}
+
+/**
+ * 
+ * @param {*} formState 
+ * @returns 
+ */
+export function checkName(name) {
+  if (!name) return `${Localization.kr.NAME}을 입력해주세요`;  
+  if (checkKoreanName(name)) return `${Localization.kr.NAME}이 유효하지 않습니다.`;
+  if (checkSpaceName(name)) return `${Localization.kr.NAME}에 공백은 허용되지 않습니다.`;
+
+  return null; // 유효성 문제 없음
 }
 
 /**

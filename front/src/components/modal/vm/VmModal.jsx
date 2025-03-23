@@ -359,10 +359,8 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   };
 
   const validateForm = () => {
-    if (!formInfoState.name)
-      return `${Localization.kr.NAME}을 입력해주세요.`;
-    if (checkKoreanName(formInfoState.name))
-      return `${Localization.kr.NAME}을 입력해주세요.`;
+    checkName(formInfoState.name);// 이름 검증
+
     if (!clusterVo.id) 
       return `${Localization.kr.CLUSTER}를 선택해주세요.`;
 //  if (formSystemState.memorySize > "9223372036854775807") 

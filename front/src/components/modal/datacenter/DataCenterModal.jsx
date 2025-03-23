@@ -74,12 +74,10 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
 
   // 값 검증
   const validateForm = () => {
-    if (!checkKoreanName(formState.name)) 
-      return `${Localization.kr.NAME}이 유효하지 않습니다.`;
-    if (!formState.name) 
-      return `${Localization.kr.NAME}이름을 입력해주세요`
-    if (!checkKoreanName(formState.description))
-      return "영어만 입력가능.";
+    checkName(formState.name);// 이름 검증
+
+    if (checkKoreanName(formState.description))
+      return "설명은 영어만 입력가능합니다.";
     return null;
   };
 

@@ -11,7 +11,7 @@ import {
   useAllDataCenters,
   useNetworksFromDataCenter,
 } from "../../../api/RQHook";
-import { checkKoreanName } from "../../../util";
+import { checkKoreanName, checkName } from "../../../util";
 import "./MCluster.css";
 import Localization from "../../../utils/Localization";
 
@@ -129,48 +129,53 @@ const ClusterModal = ({
 }) => {
   const cLabel = editMode ? "편집" : "생성";
   const [formState, setFormState] = useState(initialFormState);
-  const [dataCenterVoId, setDataCenterVoId] = useState("");
-  const [networkVoId, setNetworkVoId] = useState("");
+
+  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
+  const [networkVo, setNetworkVo] = useState({ id: "", name: "" });
   const [cpuOptions, setCpuOptions] = useState([]);
 
   const { mutate: addCluster } = useAddCluster();
   const { mutate: editCluster } = useEditCluster();
 
   const { data: cluster } = useCluster(clusterId);
-  const { data: datacenters = [], isLoading: isDataCentersLoading } = 
-    useAllDataCenters((e) => ({ ...e }));
-  const { data: networks = [], isLoading: isNetworksLoading } = 
-    useNetworksFromDataCenter(dataCenterVoId, (e) => ({ ...e }));
+  const { 
+    data: datacenters = [], 
+    isLoading: isDataCentersLoading 
+  } = useAllDataCenters((e) => ({ ...e }));
+  const { 
+    data: networks = [], 
+    isLoading: isNetworksLoading 
+  } = useNetworksFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
 
   useEffect(() => {
     if (!isOpen) return setFormState(initialFormState);
     if (editMode && cluster) {
       setFormState({
-        id: cluster.id,
-        name: cluster.name,
+        id: cluster?.id,
+        name: cluster?.name,
         description: cluster?.description,
-        comment: cluster.comment,
-        cpuArc: cluster.cpuArc,
-        cpuType: cluster.cpuType,
-        biosType: cluster.biosType,
-        errorHandling: cluster.errorHandling,
+        comment: cluster?.comment,
+        cpuArc: cluster?.cpuArc,
+        cpuType: cluster?.cpuType,
+        biosType: cluster?.biosType,
+        errorHandling: cluster?.errorHandling,
       });
-      setDataCenterVoId(cluster?.dataCenterVo?.id);
-      setNetworkVoId(cluster?.networkVo?.id);
+      setDataCenterVo({id: cluster?.dataCenterVo?.id, name: cluster?.dataCenterVo?.name});
+      setNetworkVo({id: cluster?.networkVo?.id, name: cluster?.networkVo?.name});
     }
   }, [isOpen, editMode, cluster]);
 
   useEffect(() => {
     if (datacenterId) {
-      setDataCenterVoId(datacenterId);
+      setDataCenterVo({id: datacenterId});
     } else if (!editMode && datacenters && datacenters.length > 0) {
-      setDataCenterVoId(datacenters[0].id);
+      setDataCenterVo({id: datacenters[0].id});
     }
   }, [datacenters, datacenterId, editMode]);
 
   useEffect(() => {
-    if (!editMode && networks.length > 0) {
-      setNetworkVoId(networks[0].id);
+    if (!editMode && networks && networks.length > 0) {
+      setNetworkVo({id: networks[0].id});
     }
   }, [networks, editMode]);
 
@@ -183,13 +188,13 @@ const ClusterModal = ({
   };
 
   const validateForm = () => {
-    if (!checkKoreanName(formState.name) || !formState.name)
-      return `${Localization.kr.NAME}이 유효하지 않습니다.`;
-    if (!checkKoreanName(formState.description))
+    checkName(formState.name);// 이름 검증
+
+    if (checkKoreanName(formState.description)) 
       return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
-    if (!dataCenterVoId) 
+    if (!dataCenterVo.id) 
       return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    if (!networkVoId)
+    if (!networkVo.id)
       return `${Localization.kr.NETWORK}를 선택해주세요.`;
     return null;
   };
@@ -198,16 +203,10 @@ const ClusterModal = ({
     const error = validateForm();
     if (error) return toast.error(error);
 
-    const selectedDataCenter = datacenters.find((dc) => dc.id === dataCenterVoId);
-    const selectedNetwork = networks.find((n) => n.id === networkVoId);
-
     const dataToSubmit = {
       ...formState,
-      dataCenterVo: {
-        id: selectedDataCenter.id,
-        name: selectedDataCenter.name,
-      },
-      networkVo: { id: selectedNetwork.id, name: selectedNetwork.name },
+      dataCenterVo,
+      networkVo,
     };
 
     const onSuccess = () => {
@@ -225,20 +224,21 @@ const ClusterModal = ({
 
   return (
     <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
+      isOpen={isOpen} onClose={onClose}
       targetName={Localization.kr.CLUSTER}
       submitTitle={cLabel}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px" }} 
     >
-
       <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
-        value={dataCenterVoId}
-        onChange={(e) => setDataCenterVoId(e.target.value)}
+        value={dataCenterVo.id}
         disabled={editMode}
         loading={isDataCentersLoading}
         options={datacenters}
+        onChange={(e) => {
+          const selected = datacenters.find(dc => dc.id === e.target.value);
+          if (selected) setDataCenterVo({ id: selected.id, name: selected.name });
+        }}
       />
       <hr />
       <LabelInput id="name"
@@ -258,20 +258,25 @@ const ClusterModal = ({
         onChange={handleInputChange("comment")}
       />
       <LabelSelectOptionsID id="network-man" label="관리 네트워크"
-        value={networkVoId}
+        value={networkVo.id}
         disabled={editMode}
         loading={isNetworksLoading}
         options={networks}
-        onChange={(e) => setNetworkVoId(e.target.value)}
+        onChange={(e) => {
+          const selected = networks.find(n => n.id === e.target.value);
+          if (selected) setNetworkVo({ id: selected.id, name: selected.name });
+        }}
       />
       <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
         value={formState.cpuArc}
         options={cpuArcs}
+        disabled={editMode}
         onChange={handleInputChange("cpuArc")}
       />
       <LabelSelectOptions id="cpu-type" label="CPU 유형"
         value={formState.cpuType}
         onChange={handleInputChange("cpuType")}
+        disabled={editMode}
         options={cpuOptions}
       />
       <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"

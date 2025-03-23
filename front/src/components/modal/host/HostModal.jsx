@@ -40,7 +40,7 @@ const hostEngines = [
 const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
   const hLabel = editMode ? "편집" : "생성";
   const [formState, setFormState] = useState(initialFormState);
-  const [clusterVoId, setClusterVoId] = useState("");
+  const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
 
   const { mutate: addHost } = useAddHost();
   const { mutate: editHost } = useEditHost();
@@ -54,24 +54,24 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
     if (editMode && host) {
       console.log("hostModal", host);
       setFormState({
-        id: host.id,
-        name: host.name,
-        comment: host.comment,
-        address: host.address,
-        sshPort: host.sshPort,
-        sshPassWord: host.sshPassWord,
-        vgpu: host.vgpu,
-        hostedEngine: host.hostedEngine,
+        id: host?.id,
+        name: host?.name,
+        comment: host?.comment,
+        address: host?.address,
+        sshPort: host?.sshPort,
+        sshPassWord: host?.sshPassWord,
+        vgpu: host?.vgpu,
+        hostedEngine: host?.hostedEngine,
       });
-      setClusterVoId(host?.clusterVo?.id);
+      setClusterVo({id: host?.clusterVo?.id, name: host?.clusterVo?.name});
     }
   }, [isOpen, editMode, host]);
 
   useEffect(() => {
     if (clusterId) {
-      setClusterVoId(clusterId);
+      setClusterVo({id: clusterId});
     } else if (!editMode && clusters && clusters.length > 0) {
-      setClusterVoId(clusters[0].id);
+      setClusterVo({id: clusters[0].id});
     }
   }, [clusters, clusterId, editMode]);
 
@@ -80,11 +80,10 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
   };
 
   const validateForm = () => {
-    if (!formState.name)
-      return `${Localization.kr.NAME}을 입력해주세요.`;
+    checkName(formState.name);// 이름 검증
     if (!editMode && !formState.sshPassWord) 
       return "비밀번호를 입력해주세요.";
-    if (!clusterVoId)
+    if (!clusterVo.id)
       return `${Localization.kr.CLUSTER}를 선택해주세요.`;
     return null;
   };
@@ -93,10 +92,9 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
     const error = validateForm();
     if (error) return toast.error(error);
 
-    const selectedCluster = clusters.find((c) => c.id === clusterVoId);
     const dataToSubmit = {
       ...formState,
-      clusterVo: { id: selectedCluster.id },
+      clusterVo,
     };
 
     const onSuccess = () => {
@@ -127,11 +125,14 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
     >
       <LabelSelectOptionsID
         label={`${Localization.kr.HOST} ${Localization.kr.CLUSTER}`}
-        value={clusterVoId}
-        onChange={(e) => setClusterVoId(e.target.value)}
+        value={clusterVo.id}
         disabled={editMode}
         loading={isClustersLoading}
         options={clusters}
+        onChange={(e) => {
+          const selected = clusters.find(c => c.id === e.target.value);
+          if (selected) setClusterVo({ id: selected.id, name: selected.name });
+        }}
       />
       <hr />
 
