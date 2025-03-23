@@ -1,11 +1,12 @@
 import toast from 'react-hot-toast';
-
+import React, { useState } from 'react';
 import Tables from '../../../table/Tables';
 import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import LabelInput from '../../../label/LabelInput';
 import LabelInputNum from '../../../label/LabelInputNum';
 import LabelCheckbox from '../../../label/LabelCheckbox';
 import Localization from '../../../../utils/Localization';
+import { RVI24, rvi24ChevronUp, rvi24DownArrow } from '../../../icons/RutilVmIcons';
 
 const DomainIscsi = ({
   mode,
@@ -63,7 +64,10 @@ const DomainIscsi = ({
       setLunId(selectedRow.id);
     }
   }; 
-
+  const [isFooterContentVisible, setIsFooterContentVisible] = useState(false);
+  const toggleFooterContent = () => {
+    setIsFooterContentVisible((prev) => !prev);
+  };
   return (
     <div className="storage-popup-iSCSI">
       <div className="section-table-outer">
@@ -92,20 +96,54 @@ const DomainIscsi = ({
             {/* {iscsiSearchResults?.length === 0 ? ( */}
               <div className="target-search-outer">
                 <label className="label-font-name">대상 검색</label>
-                <div className="target-search">
-                  <LabelInput label="주소" id="address" value={formImportState.address} onChange={handleInputChange('address')} />
-                  <LabelInput label="포트" id="port" value={formImportState.port} onChange={handleInputChange('port')} />
-                  <LabelCheckbox label="사용자 인증" id="useChap" value={formImportState.useChap} onChange={handleInputChangeCheck('useChap')} />
-                  <LabelInput label="CHAP 사용자 이름" id='chapName' value={formImportState.chapName} onChange={handleInputChangeCheck('chapName')} disabled={!formImportState.useChap} />
-                  <div>
-                    <label>CHAP 암호</label>
-                    <input type="password" value={formImportState.chapPassword} onChange={handleInputChangeCheck('chapPassword')} disabled={!formImportState.useChap} />
+
+                <div className='target-address-port f-btw'>
+                  <div className='w-full mr-2'>
+                    <LabelInput label="주소" id="address" value={formImportState.address} onChange={handleInputChange('address')} />
                   </div>
+                  <LabelInput label="포트" id="port" value={formImportState.port} onChange={handleInputChange('port')} />
+                </div> 
+
+                <div className='use-chap-outer'>
+                  <div className='use-chap-arrow' onClick={toggleFooterContent}>
+                    <RVI24 iconDef={isFooterContentVisible ? rvi24DownArrow : rvi24ChevronUp} fixedWidth />
+                    <span>사용자 인증</span>
+                  </div>
+                  {isFooterContentVisible && (
+                  <div className='use-chap-content'>
+                    <LabelCheckbox label="사용자 인증" id="useChap" value={formImportState.useChap} onChange={handleInputChangeCheck('useChap')} />
+                    <div>
+                      <div className='target-address-port f-btw'>
+                        <div className='w-full mr-2'>
+                          <LabelInput
+                            label="CHAP 사용자 이름"
+                            id='chapName'
+                            value={formImportState.chapName}
+                            onChange={handleInputChange('chapName')}
+                            disabled={!formImportState.useChap}
+                          />
+                        </div>
+                        <LabelInput
+                          type="password"
+                          label="CHAP 암호"
+                          id="chapPassword"
+                          value={formImportState.chapPassword}
+                          onChange={handleInputChange('chapPassword')}
+                          disabled={!formImportState.useChap}
+                        />
+                      </div>
+                      <div className='target-btn'>
+                        <button className="all-login-button" onClick={handleLoginIscsi}>전체 로그인</button>
+                      </div>
+                    </div>
+                  </div>
+                  )}
                 </div>
-                <button className="search-button" onClick={handleSearchIscsi}>검색</button>
+
               </div>
+
+              <div className='target-btn'><button className="search-button" onClick={handleSearchIscsi}>검색</button></div>
               <div>
-                <button className="search-button" onClick={handleLoginIscsi} >로그인</button>
                 <Tables
                   columns={TableColumnsInfo.TARGETS_LUNS}
                   data={iscsiSearchResults}

@@ -36,9 +36,7 @@
   padding: 0.18rem 0.04rem;
   margin-bottom: 16px;
 }
-.bar {
-  display: flex;
-  flex-wrap: wrap;
+.bar-outer{
   min-height: 227px;
   border-radius: 3px;
   font-size: var(--fs-18);
@@ -46,6 +44,11 @@
   justify-content: space-between;
   background-color: rgb(255, 255, 255);
   width: 100%;
+}
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+
 }
 .bar > div {
   min-width: 371px;

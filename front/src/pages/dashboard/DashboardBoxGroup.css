@@ -69,7 +69,8 @@
 
 @media screen and (max-width:1300px) {
   .box {
-    width: calc(50% - 0.11rem); /* 2열 */
+    width: calc(50% - 0.11rem);
+    margin-bottom: 3px;
   }
 }
 

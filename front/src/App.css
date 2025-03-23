@@ -259,29 +259,40 @@ input[disabled] {
   align-items: center; 
 }*/
 /*대상검색*/
-.target-search-outer {
-  border: var(--border-simple);
-  padding: 0.2rem;
-  margin: 0.2rem;
-  border-radius: 0.1rem;
+.target-search-outer{
+    padding: 12px 0;
 }
-.target-search {
-  display: flex;
+.label-font-name{
+  font-size: var(--fs-16);
+  font-weight: 700;
 }
-.target-search > div {
-  width: 48%;
-  margin-right: 0.34rem;
+.use-chap-outer{
+    background: var(--color-white);
+    border-radius: 1px;
+    border: 1px solid var(--color-table);
 }
-.search-button {
-  padding: 0.1rem;
-  font-size: 0.32rem;
-  font-weight: bold;
-  text-align: center;
-  align-items: center;
-  cursor: pointer;
-  align-content: center;
-  justify-content: center;
+.use-chap-arrow{
+    height: 32px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
 }
+.use-chap-content{
+    padding: 0 5px;
+}
+.target-btn{
+    width: 100%;
+    justify-content: right;
+    display: flex;
+    padding-bottom: 15px;
+}
+.target-btn>button{
+    height: 28px;
+    padding: 0 12px;
+    border: var(--border-btn);
+ 
+}
+
 /* 네트워크 인터페이스 팝업창들 */
 /* 새로만들기 */
 .network-popup-content {

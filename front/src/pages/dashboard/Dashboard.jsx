@@ -376,28 +376,32 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
-        <div className="bar">
-          <div>
-            <span>CPU</span>
-            <div className="grid-outer">
-              <Grid type={"cpu"} data={vmMetricCpu} />
+        
+        <div className="bar-outer">
+          <div className="bar">
+            <div>
+              <span>CPU</span>
+              <div className="grid-outer">
+                <Grid type={"cpu"} data={vmMetricCpu} />
+              </div>
             </div>
-          </div>
-          <div>
-            <span>MEMORY</span>
-            <div className="grid-outer">
-              <Grid type={"memory"} data={vmMetricMemory} />
+            <div>
+              <span>MEMORY</span>
+              <div className="grid-outer">
+                <Grid type={"memory"} data={vmMetricMemory} />
+              </div>
             </div>
-          </div>
-          <div>
-            <span>StorageDomain</span>
-            <div className="grid-outer">
-              <Grid type={"domain"} data={storageMetric} />
+            <div>
+              <span>StorageDomain</span>
+              <div className="grid-outer">
+                <Grid type={"domain"} data={storageMetric} />
+              </div>
             </div>
+            
           </div>
+          <GridStatus />
         </div>
-        <GridStatus />
+  
       </div>{" "}
       {/* 대시보드 section끝 */}
     </>

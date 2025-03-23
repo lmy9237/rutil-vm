@@ -346,7 +346,7 @@ const DomainModal = ({
       targetName={"도메인"}
       submitTitle={dLabel}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "1000px"}}
+      contentStyle={{ width: "700px"}}
     >
       <div className="storage-domain-new-first">
         <div>

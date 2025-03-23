@@ -3,13 +3,10 @@
   width:100%;height:var(--h-modal-content);
 }
 .storage-domain-new-first{
-  display: flex;
-  padding: 0.2rem;
-  justify-content: space-between;
-  border-bottom: 1px solid #dfdddd;
+  border-bottom: 1px solid var(--color-table);
 }
-.storage-domain-new-first>div{
-  width: 48%;
+.storage-domain-new-first>div:first-child{
+  border-bottom: 1px solid var(--color-table);
 }
 
 .domain-new-select{
@@ -17,8 +14,8 @@
   margin-bottom: 0.3rem;
 }
 .domain-num-box{
-  padding: 6px 5px;
-  width: 100%;
+  padding: 14px 0;
+  font-size: var(--fs-14);
 }
 
 /*도메인 삭제*/
@@ -31,10 +28,7 @@
   height: 70%;
   width: 48%;
 }
-.get-modal-content{
-  border:var(--border-simple);
-  height: 27vh;
-}
+
 .get-template-info{
   overflow-y: auto;
   height: 26vh;
@@ -43,8 +37,7 @@
   justify-content:space-between;
 }
 .get-template-info>div{
-  width:27%;
-  margin-right:0.2rem;
+  width:44%;
 }
 .get-template-info>div>div{
   display:flex;

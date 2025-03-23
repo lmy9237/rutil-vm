@@ -9,6 +9,7 @@ import { checkKoreanName } from "../../../util";
 import FilterButton from "../../button/FilterButton";
 import Localization from "../../../utils/Localization";
 import "./MDomain.css";
+import InfoTable from "../../table/InfoTable";
 
 const initialFormState = {
   id: "",
@@ -213,24 +214,17 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
 
         {/* 섹션 변경 */}
         {activeFilter === "general" && (
-          <div className="get-template-info">
-            {Array.from({ length: 3 }, (_, groupIndex) => (
-              <div key={groupIndex}>
-                {tableRows
-                  .filter((_, index) => index % 3 === groupIndex) // 3등분하여 그룹화
-                  .map(
-                    (row, index) =>
-                      row.label && (
-                        <div key={index}>
-                          <div>{row.label}</div>
-                          <div>{row.value}</div>
-                        </div>
-                      )
-                  )}
-              </div>
-            ))}
-          </div>
-        )}
+  <div className="get-template-info three-columns">
+    {Array.from({ length: 3 }, (_, groupIndex) => {
+      const splitRows = tableRows.filter((_, index) => index % 3 === groupIndex);
+      return (
+        <div key={groupIndex} className="info-table-wrapper">
+          <InfoTable tableRows={splitRows} />
+        </div>
+      );
+    })}
+  </div>
+)}
 
         {activeFilter === "disk" && (
           <TablesOuter
