@@ -214,17 +214,17 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
 
         {/* 섹션 변경 */}
         {activeFilter === "general" && (
-  <div className="get-template-info three-columns">
-    {Array.from({ length: 3 }, (_, groupIndex) => {
-      const splitRows = tableRows.filter((_, index) => index % 3 === groupIndex);
-      return (
-        <div key={groupIndex} className="info-table-wrapper">
-          <InfoTable tableRows={splitRows} />
-        </div>
-      );
-    })}
-  </div>
-)}
+          <div className="get-template-info three-columns">
+            {Array.from({ length: 3 }, (_, groupIndex) => {
+              const splitRows = tableRows.filter((_, index) => index % 3 === groupIndex);
+              return (
+                <div key={groupIndex} className="info-table-wrapper">
+                  <InfoTable tableRows={splitRows} />
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {activeFilter === "disk" && (
           <TablesOuter

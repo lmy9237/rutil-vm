@@ -3,12 +3,13 @@ import ActionButtonGroup from "../button/ActionButtonGroup";
 const VnicProfileActionButtons = ({
   openModal,
   isEditDisabled,
+  isDeleteDisabled,
   actionType = 'default'
 }) => {
   const basicActions = [
     { type: "create", label: "생성", disabled: false, onBtnClick: () => openModal("create")  },
     { type: "edit", label: "편집", disabled: isEditDisabled, onBtnClick: () => openModal("edit")  },
-    { type: "delete", label: "삭제", disabled: false, onBtnClick: () => openModal("delete")  },
+    { type: "delete", label: "삭제", disabled: isDeleteDisabled, onBtnClick: () => openModal("delete")  },
   ];
 
   return (

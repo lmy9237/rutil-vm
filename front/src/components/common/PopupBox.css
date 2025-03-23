@@ -6,7 +6,7 @@
     position: absolute;
     top: 27px;
     right: 0;
-    width: 150px;
+    min-width: 195px;
     background: white;
     z-index: 3;
   }

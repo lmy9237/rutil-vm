@@ -106,7 +106,7 @@ const DomainIscsi = ({
 
                 <div className='use-chap-outer'>
                   <div className='use-chap-arrow' onClick={toggleFooterContent}>
-                    <RVI24 iconDef={isFooterContentVisible ? rvi24DownArrow : rvi24ChevronUp} fixedWidth />
+                    <RVI24 iconDef={isFooterContentVisible ? rvi24ChevronUp : rvi24DownArrow} fixedWidth />
                     <span>사용자 인증</span>
                   </div>
                   {isFooterContentVisible && (

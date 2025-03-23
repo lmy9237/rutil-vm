@@ -12,7 +12,7 @@
   border-radius: 8px;
   background:var(--color-white);
   max-width: 45%; /* ✅ 더 빨리 떨어지도록 조정 */
-  min-width: 500px; /* ✅ 너무 작아지는 것 방지 */
+  min-width: 463px;
 
 }
 .detail-general-box > h1 {
@@ -23,6 +23,8 @@
 }
 .detail-general-box .info-table-outer{
   padding: 0 !important;
+}.detail-general-box .table{
+  width: 100%;
 }
 .capacity {
   font-size: var(--fs-default);

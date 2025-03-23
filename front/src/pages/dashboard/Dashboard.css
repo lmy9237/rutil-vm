@@ -48,7 +48,6 @@
 .bar {
   display: flex;
   flex-wrap: wrap;
-
 }
 .bar > div {
   min-width: 371px;

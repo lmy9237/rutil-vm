@@ -79,7 +79,7 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "500px"}} 
     >
-      <div className="p-1">
+      <div>
         <LabelInput id="description" label={Localization.kr.DESCRIPTION}
           className="host-textbox flex mb-1" 
           value={formState.description} 
