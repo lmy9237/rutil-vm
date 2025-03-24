@@ -14,7 +14,7 @@ import {
   useAllActiveDomainFromDataCenter,
   useAllDiskProfileFromDomain,
 } from "../../../api/RQHook";
-import { checkKoreanName } from "../../../util";
+import { checkName, convertBytesToGB } from "../../../util";
 import Localization from "../../../utils/Localization";
 
 const initialFormState = {
@@ -40,62 +40,73 @@ const sparseList = [
 
 const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   const dLabel = editMode ? "편집" : "생성";
+  const [formState, setFormState] = useState(initialFormState);
+
+  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
+  const [domainVo, setDomainVo] = useState({ id: "", name: "" });
+  const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
+
   const { mutate: addDisk } = useAddDisk();
   const { mutate: editDisk } = useEditDisk();
+
+  const { data: disk } = useDiskById(diskId);
+  
+  console.log("diskId: ", diskId);
+  const { 
+    data: datacenters = [], 
+    isLoading: isDatacentersLoading 
+  } = useAllActiveDataCenters((e) => ({ ...e }));
+  const { 
+    data: domains = [], 
+    isLoading: isDomainsLoading 
+  } = useAllActiveDomainFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
+
+  const { 
+    data: diskProfiles = [], 
+    isLoading: isDiskProfilesLoading 
+  } = useAllDiskProfileFromDomain(domainVo?.id || undefined, (e) => ({ ...e }));
+
 
   const [activeTab, setActiveTab] = useState("img");
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
 
-  const [formState, setFormState] = useState(initialFormState);
-  const [dataCenterVoId, setDataCenterVoId] = useState("");
-  const [domainVoId, setDomainVoId] = useState("");
-  const [diskProfileVoId, setDiskProfileVoId] = useState("");
-
-  const { data: disk } = useDiskById(diskId);
-  const { data: datacenters = [], isLoading: isDatacentersLoading } =
-    useAllActiveDataCenters((e) => ({ ...e }));
-  const { data: domains = [], isLoading: isDomainsLoading } =
-    useAllActiveDomainFromDataCenter(dataCenterVoId, (e) => ({ ...e }));
-  const { data: diskProfiles = [], isLoading: isDiskProfilesLoading } =
-    useAllDiskProfileFromDomain(domainVoId, (e) => ({ ...e }));
-
   useEffect(() => {
     if (!isOpen) return setFormState(initialFormState);
     if (editMode && disk) {
       setFormState({
-        id: disk?.id || "",
-        size: (disk?.virtualSize / (1024 * 1024 * 1024)).toFixed(0),
+        id: disk?.id,
+        size: convertBytesToGB(disk?.virtualSize),
         appendSize: 0,
-        alias: disk?.alias || "",
-        description: disk?.description || "",
-        wipeAfterDelete: disk?.wipeAfterDelete || false,
-        sharable: disk?.sharable || false,
-        backup: disk?.backup || false,
-        sparse: disk?.sparse || false,
+        alias: disk?.alias,
+        description: disk?.description,
+        wipeAfterDelete: Boolean(disk?.wipeAfterDelete),
+        sharable: Boolean(disk?.sharable),
+        backup: Boolean(disk?.backup),
+        sparse: Boolean(disk?.sparse),
       });
-      setDataCenterVoId(disk?.dataCenterVo?.id || "");
-      setDomainVoId(disk?.storageDomainVo?.id || "");
-      setDiskProfileVoId(disk?.diskProfileVo?.id || "");
+      setDataCenterVo({id: disk?.dataCenterVo?.id, name: disk?.dataCenterVo?.name});
+      setDomainVo({id: disk?.storageDomainVo?.id, name: disk?.storageDomainVo?.name});
+      setDiskProfileVo({id: disk?.diskProfileVo?.id, name: disk?.diskProfileVo?.name});
     }
   }, [isOpen, editMode, disk]);
 
   useEffect(() => {
     if (!editMode && datacenters && datacenters.length > 0) {
-      setDataCenterVoId(datacenters[0].id);
+      setDataCenterVo({id: datacenters[0].id});
     }
   }, [datacenters, editMode]);
 
   useEffect(() => {
     if (!editMode && domains.length > 0) {
-      setDomainVoId(domains[0].id);
+      setDomainVo({id: domains[0].id});
     }
   }, [domains, editMode]);
 
   useEffect(() => {
     if (!editMode && diskProfiles.length > 0) {
-      setDiskProfileVoId(diskProfiles[0].id);
+      setDiskProfileVo({id: diskProfiles[0].id});
     }
   }, [diskProfiles, editMode]);
 
@@ -108,14 +119,12 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   };
 
   const validateForm = () => {
-    if (checkKoreanName(formState.alias))
-      return `${Localization.kr.ALIAS}은 영어만 입력가능합니다.`;
-    if (!formState.alias) return `${Localization.kr.ALIAS}를 입력해주세요.`;
+    checkName(formState.alias);
+
     if (!formState.size) return "크기를 입력해주세요.";
-    if (!dataCenterVoId)
-      return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    if (!domainVoId) return "스토리지 도메인을 선택해주세요.";
-    if (!diskProfileVoId) return "디스크 프로파일을 선택해주세요.";
+    if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
+    if (!domainVo.id) return "스토리지 도메인을 선택해주세요.";
+    if (!diskProfileVo.id) return "디스크 프로파일을 선택해주세요.";
     return null;
   };
 
@@ -123,31 +132,18 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
     const error = validateForm();
     if (error) return toast.error(error);
 
-    const selectedDataCenter = datacenters.find(
-      (dc) => dc?.id === dataCenterVoId
-    );
-    const selectedDomain = domains.find((dm) => dm?.id === domainVoId);
-    const selectedDiskProfile = diskProfiles.find(
-      (dp) => dp?.id === diskProfileVoId
-    );
-
-    const sizeToBytes = parseInt(formState.size, 10) * 1024 * 1024 * 1024; // GB -> Bytes 변환
-    const appendSizeToBytes =
-      parseInt(formState.appendSize || 0, 10) * 1024 * 1024 * 1024; // GB -> Bytes 변환 (기본값 0)
+    // GB -> Bytes 변환
+    const sizeToBytes =  parseInt(formState.size, 10) * 1024 * 1024 * 1024;
+    // GB -> Bytes 변환 (기본값 0)
+    const appendSizeToBytes = parseInt(formState.appendSize || 0, 10) * 1024 * 1024 * 1024; 
 
     const dataToSubmit = {
       ...formState,
       size: sizeToBytes,
       appendSize: appendSizeToBytes,
-      dataCenterVo: {
-        id: selectedDataCenter?.id,
-        name: selectedDataCenter?.name,
-      },
-      storageDomainVo: { id: selectedDomain?.id, name: selectedDomain?.name },
-      diskProfileVo: {
-        id: selectedDiskProfile?.id,
-        name: selectedDiskProfile?.name,
-      },
+      dataCenterVo,
+      storageDomainVo: domainVo,
+      diskProfileVo,
     };
 
     const onSuccess = () => {
@@ -193,7 +189,6 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
         <div className="disk-new-img">
           <div className="disk-new-img-left">
             <LabelInputNum
-              className="img-input-box"
               label="크기(GB)"
               value={formState.size}
               onChange={handleInputChange("size")}
@@ -202,63 +197,59 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
             />
             {editMode && (
               <LabelInputNum
-                className="img-input-box"
                 label="추가크기(GB)"
                 value={formState.appendSize}
                 onChange={handleInputChange("appendSize")}
               />
             )}
             <LabelInput
-              className="img-input-box"
               label="별칭"
               value={formState.alias}
               onChange={handleInputChange("alias")}
             />
             <LabelInput
-              className="img-input-box"
               label="설명"
               value={formState.description}
               onChange={handleInputChange("description")}
             />
-
-            <LabelSelectOptionsID
+            <LabelSelectOptionsID 
               label={Localization.kr.DATA_CENTER}
-              className="img-input-box"
-              value={dataCenterVoId}
-              onChange={(e) => setDataCenterVoId(e.target.value)}
+              value={dataCenterVo.id}
               disabled={editMode}
               loading={isDatacentersLoading}
               options={datacenters}
+              onChange={(e) => {
+                const selected = datacenters.find(dc => dc.id === e.target.value);
+                if (selected) setDataCenterVo({ id: selected.id, name: selected.name });
+              }}
             />
             <LabelSelectOptionsID
               label="스토리지 도메인"
-              className="img-input-box"
-              value={domainVoId}
-              onChange={(e) => setDomainVoId(e.target.value)}
+              value={domainVo.id}
               disabled={editMode}
               loading={isDomainsLoading}
               options={domains}
+              onChange={(e) => {
+                const selected = domains.find(d => d.id === e.target.value);
+                if (selected) setDomainVo({ id: selected.id, name: selected.name });
+              }}
             />
             <LabelSelectOptions
               label="할당 정책"
-              className="img-input-box"
-              value={formState.sparse ? "true" : "false"}
-              onChange={(e) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  sparse: e.target.value === "true",
-                }))
-              }
+              value={String(formState.sparse)}
+              onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true"}))}
               disabled={editMode}
               options={sparseList}
             />
             <LabelSelectOptionsID
               label="디스크 프로파일"
-              className="img-input-box"
-              value={diskProfileVoId}
-              onChange={(e) => setDiskProfileVoId(e.target.value)}
+              value={diskProfileVo.id}
               loading={isDiskProfilesLoading}
               options={diskProfiles}
+              onChange={(e) => {
+                const selected = diskProfiles.find(dp => dp.id === e.target.value);
+                if (selected) setDiskProfileVo({ id: selected.id, name: selected.name });
+              }}
             />
           </div>
           <div className="disk-new-img-right">
@@ -270,7 +261,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
                 onChange={handleInputChangeCheck("wipeAfterDelete")}
               />
             </div>
-            <div className="img-checkbox-outer">
+            {/* <div className="img-checkbox-outer">
               <LabelCheckbox
                 label="공유 가능"
                 id="sharable"
@@ -278,7 +269,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
                 onChange={handleInputChangeCheck("sharable")}
                 disabled={editMode}
               />
-            </div>
+            </div> */}
             <div className="img-checkbox-outer">
               <LabelCheckbox
                 label="증분 백업 사용"

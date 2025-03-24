@@ -324,7 +324,7 @@ export const useNetworksFromDataCenter = (dataCenterId, mapPredicate) => useQuer
     const res = await ApiManager.findAllNetworksFromDataCenter(dataCenterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
-  enabled: !!dataCenterId, 
+  enabled: !!dataCenterId
 });
 /**
  * @name useEventsFromDataCenter

@@ -5,7 +5,7 @@ import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelInputNum from "../../label/LabelInputNum";
-import { checkKoreanName } from "../../../util";
+import { checkKoreanName, checkName } from "../../../util";
 import {
   useAllDataCenters,
   useClustersFromDataCenter,
@@ -30,9 +30,11 @@ const initialFormState = {
   description: "",
   comment: "",
   mtu: "0",
+  vlanEnabled: false,
   vlan: "0",
   usageVm: true,
   portIsolation: false,
+  dnsEnabled: false,
 };
 
 //  Fault reason is "Operation Failed". Fault detail is "[Cannot edit Network. This logical network is used by host: rutilvm-dev.host04
@@ -45,43 +47,49 @@ const NetworkModal = ({
 }) => {
   const nLabel = editMode ? "편집" : "생성";
   const [formState, setFormState] = useState(initialFormState);
-  const [dataCenterVoId, setDataCenterVoId] = useState("");
+
+  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [clusterVoList, setClusterVoList] = useState([]);
-  const [dnsEnabled, setDnsEnabled] = useState(false);
+  // const [dnsEnabled, setDnsEnabled] = useState(false);
 
   const { mutate: addNetwork } = useAddNetwork();
   const { mutate: editNetwork } = useEditNetwork();
 
   const { data: network } = useNetworkById(networkId);
-  const { data: datacenters = [], isLoading: isDatacentersLoading } =
-    useAllDataCenters((e) => ({ ...e }));
-  const { data: clusters = [], isLoading: isNetworksLoading } =
-    useClustersFromDataCenter(dataCenterVoId, (e) => ({ ...e }));
+  const { 
+    data: datacenters = [], 
+    isLoading: isDatacentersLoading 
+  } = useAllDataCenters((e) => ({ ...e }));
+  const { 
+    data: clusters = [], 
+    isLoading: isClustersLoading 
+  } = useClustersFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
 
   useEffect(() => {
     if (!isOpen) setFormState(initialFormState);
     if (editMode && network) {
       setFormState({
-        id: network.id,
-        name: network.name,
-        description: network.description,
-        comment: network.comment,
-        mtu: network.mtu,
-        vlan: network.vlan,
-        usageVm: network.usage?.vm,
-        portIsolation: network.portIsolation || false, 
+        id: network?.id,
+        name: network?.name,
+        description: network?.description,
+        comment: network?.comment,
+        mtu: network?.mtu,
+        vlan: network?.vlan,
+        usageVm: network?.usage?.vm,
+        portIsolation: network?.portIsolation || false, 
+        dnsEnabled: network?.dnsEnabled || false,
       });
-      setDataCenterVoId(network?.datacenterVo?.id);
+      setDataCenterVo({id: network?.datacenterVo?.id});
     }
   }, [isOpen, editMode, network]);
 
   useEffect(() => {
     if (dcId) {
-      setDataCenterVoId(dcId);
+      setDataCenterVo({id: dcId});
     } else if (!editMode && datacenters && datacenters.length > 0) {
-      setDataCenterVoId(datacenters[0].id);
+      setDataCenterVo({id: datacenters[0].id});
     }
-  }, [datacenters, dcId, editMode]);
+  }, [isOpen, datacenters, dcId, editMode]);
 
   useEffect(() => {
     if (clusters && clusters.length > 0) {
@@ -100,13 +108,8 @@ const NetworkModal = ({
   };
 
   const validateForm = () => {
-    if (checkKoreanName(formState.name))
-      return `${Localization.kr.NAME}이 유효하지 않습니다.`;
-    if (!formState.name)
-      return `${Localization.kr.NAME}을 입력해주세요.`;
-    if (!checkKoreanName(formState.description))
-      return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
-    if (!dataCenterVoId) 
+    checkName(formState.name);
+    if (!dataCenterVo.id) 
       return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     return null;
   };
@@ -115,25 +118,18 @@ const NetworkModal = ({
     const error = validateForm();
     if (error) return toast.error(error);
 
-    const selectedDataCenter = datacenters.find(
-      (dc) => dc.id === dataCenterVoId
-    );
-
     const dataToSubmit = {
       ...formState,
-      datacenterVo: {
-        id: selectedDataCenter.id,
-        name: selectedDataCenter.name,
-      },
-      clusterVos: clusterVoList
-        .filter((cluster) => cluster.isConnected) // 🔥 연결된 클러스터만 필터링
-        .map((cluster) => ({
-          id: cluster.id,
-          name: cluster.name,
-          required: cluster.isRequired,
-        })),
+      dataCenterVo,
+      clusterVos: 
+        clusterVoList.filter((cluster) => cluster.isConnected) // 🔥 연결된 클러스터만 필터링
+          .map((cluster) => ({
+            id: cluster.id,
+            name: cluster.name,
+            required: cluster.isRequired,
+          })),
       mtu: formState.mtu ? parseInt(formState.mtu, 10) : 0, // mtu가 빈 값이면 1500 설/정
-      vlan: formState.vlan !== 0 ? parseInt(formState.vlan, 10) : 0, // 빈 문자열을 null로 설정
+      vlan: formState.vlanEnabled && formState.vlan? parseInt(formState.vlan, 10): 0,      
       portIsolation: formState.portIsolation,
       usage: { vm: formState.usageVm },
     };
@@ -147,28 +143,27 @@ const NetworkModal = ({
     console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
 
     editMode
-      ? editNetwork(
-          { networkId: formState.id, networkData: dataToSubmit },
-          { onSuccess, onError }
-        )
+      ? editNetwork({ networkId: formState.id, networkData: dataToSubmit },{ onSuccess, onError })
       : addNetwork(dataToSubmit, { onSuccess, onError });
   };
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"논리 네트워크"}
-      submitTitle={editMode ? "편집" : "생성"}
+      submitTitle={nLabel}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "770px"}}
     >
-      {/* <div className={`network-new-popup modal ${editMode ? "edit-mode" : ""}`}> */}
       <div className="network-first-contents">
         <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
-          value={dataCenterVoId}
-          onChange={(e) => setDataCenterVoId(e.target.value)}
+          value={dataCenterVo.id}
           disabled={editMode}
           loading={isDatacentersLoading}
           options={datacenters}
+          onChange={(e) => {
+            const selected = datacenters.find(dc => dc.id === e.target.value);
+            if (selected) setDataCenterVo({ id: selected.id, name: selected.name });
+          }}
         />
         <LabelInput id="name" label={Localization.kr.NAME}
           value={formState.name}
@@ -185,30 +180,26 @@ const NetworkModal = ({
         />
         <hr />
 
-        <div className=" center">
-          <LabelCheckbox id="usageVm" label={`${Localization.kr.VM} 네트워크`}
+        <div className="center">
+          <LabelCheckbox
+            id="vlanEnabled"
+            label="VLAN 태깅 활성화"
             className="network-checkbox-only"
-            checked={formState.usageVm}
-            onChange={(e) => {
-              const isChecked = e.target.checked;
+            checked={formState.vlanEnabled}
+            onChange={(e) =>
               setFormState((prev) => ({
                 ...prev,
-                vlan: isChecked ? "" : null, // 체크하면 빈 문자열, 해제하면 null
-              }));
-            }}
+                vlanEnabled: e.target.checked,
+                vlan: e.target.checked ? prev.vlan : ""
+              }))
+            }
           />
-
-        
           <LabelInputNum
             id="vlan"
-            value={formState.vlan === null ? "" : formState.vlan}
-            onChange={(e) => {
-              setFormState((prev) => ({
-                ...prev,
-                vlan: e.target.value, //  입력값 그대로 반영
-              }));
-            }}
-            disabled={formState.vlan === null} // 체크되지 않으면 비활성화
+            placeholder="VLAN ID"
+            value={formState.vlan}
+            disabled={!formState.vlanEnabled}
+            onChange={(e) => setFormState((prev) => ({ ...prev, vlan: e.target.value }))}
           />
         </div>
 
@@ -231,12 +222,7 @@ const NetworkModal = ({
           label="포트 분리"
           id="portIsolation"
           checked={formState.portIsolation}
-          onChange={(e) =>
-            setFormState((prev) => ({
-              ...prev,
-              portIsolation: e.target.checked,
-            }))
-          }
+          onChange={(e) => setFormState((prev) => ({...prev, portIsolation: e.target.checked }))}
           disabled={editMode || !formState.usageVm} // 가상 머신 네트워크가 비활성화되면 비활성화(??)
         />
 
@@ -247,9 +233,7 @@ const NetworkModal = ({
                 <input
                   type="radio"
                   checked={formState.mtu === "0"} // 기본값 1500 선택됨
-                  onChange={() =>
-                    setFormState((prev) => ({ ...prev, mtu: "0" }))
-                  }
+                  onChange={() => setFormState((prev) => ({ ...prev, mtu: "0" }))}
                 />
                 <label>기본값 (1500)</label>
               </div>
@@ -283,17 +267,19 @@ const NetworkModal = ({
             </div>
           </div>
         </FormGroup>
+
         <LabelCheckbox
           className="network-checkbox-only"
           label="DNS 설정"
           id="dns_settings"
-          checked={dnsEnabled}
-          onChange={(e) => setDnsEnabled(e.target.checked)}
+          checked={formState.dnsEnabled}
+          // onChange={(e) => setDnsEnabled(e.target.checked)}
         />
-
+        
+{/* 
         <div className="text-[15px] font-bold">
           DNS 서버
-        </div>
+        </div> */}
       
         {/* <FormGroup>
           <div
@@ -324,7 +310,7 @@ const NetworkModal = ({
             </div>
           </div>
         </FormGroup> */}
-        <DynamicInputList maxCount={3}  inputType="text"  disabled={!dnsEnabled} />
+        {/* <DynamicInputList maxCount={3}  inputType="text"  disabled={!dnsEnabled} /> */}
 
         {!editMode && (
           <div className="network-new-cluster-form">
@@ -460,7 +446,6 @@ const NetworkModal = ({
           </div>
         )}
       </div>
-    
     </BaseModal>
   );
 };

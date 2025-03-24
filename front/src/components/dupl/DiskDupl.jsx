@@ -57,6 +57,10 @@ const DiskDupl = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
+  const selectedIds = (
+    Array.isArray(selectedDisks) ? selectedDisks : []
+  ).map((d) => d.id).join(", ");
+
   const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
 
   const openModal = (action) => setActiveModal(action);
@@ -76,19 +80,19 @@ const DiskDupl = ({
           isDeleteDisabled={selectedDisks.length === 0}
           status={selectedDisks[0]?.status}
         />
+        <span>ID: {selectedIds}</span>
+        <span>{selectedDisks[0]?.contentType}</span>
       </div>
       <TablesOuter
-        isLoading={isLoading} 
-        isError={isError} 
-        isSuccess={isSuccess}
-        columns={columns} 
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         data={filteredData} // ✅ 검색된 데이터만 표시
-        shouldHighlight1stCol={true}
-    
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
         // clickableColumnIndex={[0]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
+        columns={columns}
         onContextMenuItems={(row) => [
           <DiskActionButtons
             openModal={openModal}

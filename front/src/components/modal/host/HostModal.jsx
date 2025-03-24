@@ -4,7 +4,6 @@ import BaseModal from "../BaseModal";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelInputNum from "../../label/LabelInputNum";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
 import {
   useAddHost,
   useEditHost,
@@ -13,6 +12,8 @@ import {
 } from "../../../api/RQHook";
 import "./MHost.css";
 import Localization from "../../../utils/Localization";
+import { checkName } from "../../../util";
+import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 
 const initialFormState = {
   id: "",
@@ -22,13 +23,8 @@ const initialFormState = {
   sshPort: "22",
   sshPassWord: "",
   vgpu: "consolidated",
-  deployHostedEngine: false,
+  hostedEngine: false,
 };
-
-const hostEngines = [
-  { value: "false", label: "없음" },
-  { value: "true", label: "배포" },
-];
 
 /**
  * @name HostModal
@@ -61,7 +57,7 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
         sshPort: host?.sshPort,
         sshPassWord: host?.sshPassWord,
         vgpu: host?.vgpu,
-        hostedEngine: host?.hostedEngine,
+        hostedEngine: Boolean(host?.hostedEngine),
       });
       setClusterVo({id: host?.clusterVo?.id, name: host?.clusterVo?.name});
     }
@@ -111,7 +107,7 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
           { onSuccess, onError }
         )
       : addHost(
-          { hostData: dataToSubmit, deployHostedEngine: formState.deployHostedEngine, },
+          { hostData: dataToSubmit, deployHostedEngine: String(formState.hostedEngine), },
           { onSuccess, onError }
         );
   };
@@ -168,10 +164,32 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
             value={formState.sshPassWord}
             onChange={handleInputChange("sshPassWord")}
           />
-
         </>
       )}
-      <div>
+
+      <ToggleSwitchButton
+        label="vGPU 배치"
+        checked={formState.vgpu === "consolidated"}
+        onChange={(checked) => setFormState((prev) => ({...prev, vgpu: checked ? "consolidated" : "separated" }))}
+        tType={"통합"}
+        fType={"분산"}
+      />
+
+      <ToggleSwitchButton
+        label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
+        checked={formState.hostedEngine}
+        onChange={(checked) => setFormState((prev) => ({...prev, hostedEngine: checked }))}
+        disabled={editMode}
+        tType={"배포"}
+        fType={"없음"}
+      />
+      
+{/* const hostEngines = [
+  { value: "false", label: "없음" },
+  { value: "true", label: "배포" },
+]; */}
+
+        {/* <div>
         <div>vGPU 배치</div>
         <div className="f-center">
           {["consolidated", "separated"].map((option) => (
@@ -189,15 +207,14 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
               {option === "consolidated" ? "통합" : "분산"}
             </label>
           ))}
-        </div>
-
-        <LabelSelectOptions label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
-          value={String(formState.deployHostedEngine)}
-          onChange={handleInputChange("deployHostedEngine")}
-          options={hostEngines}
-          disabled={editMode}
-        />
-      </div>
+        </div> 
+      </div>}*/}
+      {/* <LabelSelectOptions label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
+        value={String(formState.deployHostedEngine)}
+        onChange={handleInputChange("deployHostedEngine")}
+        options={hostEngines}
+        disabled={editMode}
+      /> */}
     </BaseModal>
   );
 };

@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
-import { checkKoreanName } from "../../../util";
+import { checkKoreanName, checkName } from "../../../util";
 import {
   useAddDataCenter,
   useEditDataCenter,
@@ -11,21 +11,17 @@ import {
 } from "../../../api/RQHook";
 import "./MDatacenter.css";
 import Localization from "../../../utils/Localization";
+import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 
 const initialFormState = {
   id: "",
   name: "",
   comment: "",
   description: "",
-  storageType: false,
+  storageType: false, // 공유됨이 false
   version: "4.7",
   quotaMode: "DISABLED",
 };
-
-const storageTypes = [
-  { value: "false", label: "공유됨" },
-  { value: "true", label: "로컬" },
-];
 
 const quotaModes = [
   { value: "DISABLED", label: "비활성화됨" },
@@ -61,7 +57,7 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
         name: datacenter.name,
         comment: datacenter.comment,
         description: datacenter.description,
-        storageType: String(datacenter.storageType),
+        storageType: Boolean(datacenter.storageType),
         version: datacenter.version,
         quotaMode: datacenter.quotaMode,
       });
@@ -127,10 +123,13 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
         value={formState.comment}
         onChange={handleInputChange("comment")}
       />
-      <LabelSelectOptions id="storage-type" label="스토리지 타입"
-        value={String(formState.storageType)}
-        onChange={handleInputChange("storageType")}
-        options={storageTypes}
+      <ToggleSwitchButton
+        id="storage-type"
+        label="스토리지 타입"
+        checked={formState.storageType}
+        onChange={(checked) => setFormState((prev) => ({ ...prev, storageType: checked }))}
+        tType="로컬"
+        fType="공유됨"
       />
       <LabelSelectOptions id="quarter-mode" label="쿼터 모드"
         value={formState.quotaMode}

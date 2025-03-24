@@ -224,8 +224,9 @@ class DiskServiceImpl(
 
     @Throws(Error::class)
     override fun findOne(diskId: String): DiskImageVo? {
-        log.info("findOne ... diskId: $diskId")
-        val res: Disk? = conn.findDisk(diskId, follow = "diskprofile.storagedomain").getOrNull()
+        log.info("findOne ... diskId: $diskId, disk: $this")
+        val res: Disk? = conn.findDisk(diskId).getOrNull()
+        // val res: Disk? = conn.findDisk(diskId, follow = "diskprofile.storagedomain").getOrNull()
         return res?.toDiskInfo(conn)
     }
 
@@ -329,7 +330,7 @@ class DiskServiceImpl(
 
     @Throws(Error::class, IOException::class)
     override fun upload(file: MultipartFile, image: DiskImageVo): Boolean {
-        log.info("uploadDisk ... ")
+        log.info("uploadDisk ... file: {}, image:{}", file.name, image)
         // 파일이 없으면 에러
         if (file.isEmpty) throw ErrorPattern.FILE_NOT_FOUND.toException()
 

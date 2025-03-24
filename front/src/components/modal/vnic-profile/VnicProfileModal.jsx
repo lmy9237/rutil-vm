@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
-import LoadingOption from "../../common/LoadingOption";
 import {
   useAddVnicProfile,
   useAllDataCenters,
@@ -21,7 +20,7 @@ const initialFormState = {
   id: "",
   name: "",
   description: "",
-  // passThrough: '',
+  passThrough: "DISABLED",
   portMirroring: false,
   migration: true,
 };
@@ -51,8 +50,8 @@ const VnicProfileModal = ({
   const { 
     data: networks = [], 
     isLoading: isNetworksLoading 
-  } = useNetworksFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
-
+  } = useNetworksFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
+  
   const { 
     data: nFilters = [], 
     isLoading: isNFiltersLoading 
@@ -68,26 +67,26 @@ const VnicProfileModal = ({
       passThrough: vnic?.passThrough || "DISABLED",
       portMirroring: vnic?.portMirroring || false,
     });
-    setNetworkFilterVo: ({ id: vnic?.networkFilterVo?.id, name: vnic?.networkFilterVo?.name })
-    setDataCenterVo({id: vnic?.dataCenterVo?.id, naem: vnic?.dataCenterVo?.name});
+    setNetworkFilterVo({ id: vnic?.networkFilterVo?.id, name: vnic?.networkFilterVo?.name });
+    setDataCenterVo({id: vnic?.dataCenterVo?.id, name: vnic?.dataCenterVo?.name});
     setNetworkVo({id: vnic?.networkVo?.id, name: vnic?.networkVo?.name});
 
   }, [isOpen, editMode, vnic]);
 
   useEffect(() => {
     if (!editMode && datacenters && datacenters.length > 0) {
-      setDataCenterVo({id: datacenters[0].id});
+      setDataCenterVo({id: datacenters[0]?.id, name: datacenters[0]?.name});
     }
-  }, [datacenters, editMode]);
-
+  }, [isOpen, datacenters, editMode]);
+  
   useEffect(() => {
-    if (networkId) {
+    if(networkId) {
       setNetworkVo({id: networkId});
     } else if (!editMode && networks && networks.length > 0) {
-      setNetworkVo({id: networks[0].id});
+      setNetworkVo({ id: networks[0]?.id, name: networks[0]?.name });
     }
-  }, [editMode, networkId, networks]);
-
+  }, [isOpen, networks, networkId, editMode]);
+  
   useEffect(() => {
     if (!editMode && nFilters.length > 0) {
       setNetworkFilterVo({id: nFilters[0].id});
@@ -179,7 +178,7 @@ const VnicProfileModal = ({
       />
       <LabelSelectOptionsID id="network-man" label={Localization.kr.NETWORK_FILTER}
         value={networkFilterVo.id}
-        disabled={formState.passThrough === "ENABLED"}
+        disabled={formState.passThrough !== "DISABLED"}
         loading={isNFiltersLoading}
         options={nFilters}
         onChange={(e) => {
@@ -206,8 +205,8 @@ const VnicProfileModal = ({
       <LabelCheckbox
         id="migration"
         label="마이그레이션 가능"
-        checked={formState.migration}
-        disabled={formState.passThrough !== "ENABLED"}
+        checked={formState.passThrough !== "DISABLED" || formState.migration}
+        disabled={formState.passThrough === "DISABLED"}
         onChange={(e) => {
           setFormState((prev) => ({...prev, migration: e.target.checked}));
         }}

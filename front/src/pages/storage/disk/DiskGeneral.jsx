@@ -23,7 +23,7 @@ const DiskGeneral = ({ diskId }) => {
     { label: Localization.kr.ALIAS, value: disk?.alias },
     { label: "ID", value: disk?.id },
     { label: Localization.kr.DESCRIPTION, value: disk?.description },
-    { label: "디스크 프로파일", value: disk?.storageDomainVo?.name },
+    { label: "디스크 프로파일", value: disk?.diskProfileVo?.name },
     { label: "가상 크기", value: `${convertBytesToGB(disk?.virtualSize)} GB` },
     { label: "실제 크기", value: checkZeroSizeToGB(disk?.actualSize) },
   ];

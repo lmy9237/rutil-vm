@@ -14,12 +14,14 @@ const DiskModals = ({
 }) => {
   const modals = {
     create: (
-      <DiskModal isOpen={activeModal === "create"} 
+      <DiskModal 
+        isOpen={activeModal === "create"} 
         onClose={onClose} 
       />
     ),
     edit: (
-      <DiskModal isOpen={activeModal === "edit"}
+      <DiskModal 
+        isOpen={activeModal === "edit"}
         editMode
         diskId={disk?.id}
         onClose={onClose}

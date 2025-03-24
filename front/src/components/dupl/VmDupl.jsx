@@ -75,6 +75,10 @@ const VmDupl = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
+  const selectedIds = (
+    Array.isArray(selectedVms) ? selectedVms : []
+  ).map((dc) => dc.id).join(", ");
+
   const handleNameClick = (id) => navigate(`/computing/vms/${id}`);
 
   // 모달 열기 / 닫기
@@ -95,6 +99,7 @@ const VmDupl = ({
           status={selectedVms[0]?.status}
           selectedVms={selectedVms}
         />
+        <span>ID: {selectedIds}</span>
       </div>
 
       {/* 테이블 컴포넌트 */}

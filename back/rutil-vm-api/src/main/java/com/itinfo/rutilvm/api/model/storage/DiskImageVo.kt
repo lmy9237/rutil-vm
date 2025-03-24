@@ -142,6 +142,7 @@ fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 		actualSize { disk.actualSize() }
 		status { disk.status() }
 		sparse { disk.sparse() }
+		contentType { disk.contentType() }
 		storageType { disk.storageType() }
 		description { disk.description() }
 		connectVm { vmConn?.fromVmToIdentifiedVo() }
@@ -207,9 +208,8 @@ fun List<Disk>.toDomainDiskMenus(conn: Connection): List<DiskImageVo> =
 
 fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 	val disk = this@toDiskInfo
-	val dataCenter: DataCenter? = disk.diskProfile().storageDomain().dataCenters()?.first()?.let {
-		conn.findDataCenter(it.id()).getOrNull()
-	}
+	val storageDomain: StorageDomain? = conn.findStorageDomain(disk.storageDomains().first().id(), follow = "diskprofiles").getOrNull()
+
 	val vmConn: Vm? =
 		if(disk.vmsPresent()){ conn.findVm(disk.vms().first().id()).getOrNull() }
 		else { null }
@@ -227,9 +227,12 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 		description { disk.description() }
 		status { disk.status() }
 		sparse { disk.sparse() } // 할당정책
-		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-		storageDomainVo { disk.diskProfile().storageDomain().fromStorageDomainToIdentifiedVo() }
-		diskProfileVo { disk.diskProfile().fromDiskProfileToIdentifiedVo() }
+		if (storageDomain != null) {
+			dataCenterVo { storageDomain.dataCenters().first()?.fromDataCenterToIdentifiedVo() }
+			storageDomainVo { storageDomain.fromStorageDomainToIdentifiedVo() }
+		}
+		diskProfileVo { if(disk.diskProfilePresent()) disk.diskProfile().fromDiskProfileToIdentifiedVo() else null }
+		contentType { disk.contentType() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
 		wipeAfterDelete { disk.wipeAfterDelete() }

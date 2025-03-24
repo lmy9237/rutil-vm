@@ -23,7 +23,7 @@ import VmHa from './create/VmHa';
 import VmBoot from './create/VmBoot';
 import LabelSelectOptions from '../../label/LabelSelectOptions';
 import LabelSelectOptionsID from '../../label/LabelSelectOptionsID';
-import { checkKoreanName } from "../../../util";
+import { checkName } from "../../../util";
 import './MVm.css';
 import ModalNavButton from "../../navigation/ModalNavButton";
 import Localization from "../../../utils/Localization";

@@ -2817,9 +2817,9 @@ migrateHostsFromVM: async (vmId) => {
       const res = await axios({
           method: "POST",
           url: ENDPOINTS.UPLOAD_DISK(),
-          headers: {
-            "Content-Type": "multipart/form-data"
-          },
+          // headers: {
+          //   "Content-Type": "multipart/form-data"
+          // },
           data: diskData
       }); 
       res.headers.get(`access_token`) && localStorage.setItem('token', res.headers.get(`access_token`)) // 로그인이 처음으로 성공했을 때 진행
@@ -2829,7 +2829,6 @@ migrateHostsFromVM: async (vmId) => {
       toast.error(`Error fetching '\n${e.message}`)
     }
   },
-
 
   //#endregion: Disk
 
