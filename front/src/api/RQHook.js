@@ -2124,9 +2124,9 @@ export const useAllEventFromTemplate = (tId, mapPredicate) => useQuery({
 export const useAddTemplate = () => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({vmId,templateData} ) =>{
+    mutationFn: async ({vmId, templateData} ) =>{
       console.log(`Hook vm: ${vmId}....  ${templateData}`)
-      return await ApiManager.addTemplate(vmId,templateData)
+      return await ApiManager.addTemplate(vmId, templateData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries('allTemplates');

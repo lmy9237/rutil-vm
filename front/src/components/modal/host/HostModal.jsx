@@ -41,9 +41,10 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
   const { mutate: addHost } = useAddHost();
   const { mutate: editHost } = useEditHost();
   const { data: host } = useHost(hId);
-  const { data: clusters = [], isLoading: isClustersLoading } = useAllClusters(
-    (e) => ({ ...e })
-  );
+  const { 
+    data: clusters = [], 
+    isLoading: isClustersLoading 
+  } = useAllClusters( (e) => ({ ...e }));
 
   useEffect(() => {
     if (!isOpen) return setFormState(initialFormState);

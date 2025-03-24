@@ -271,12 +271,7 @@ fun TemplateVo.toAddTemplateBuilder(): Template {
 				).build()
 		}
 	return this@toAddTemplateBuilder.toTemplateBuilder()
-		.vm(
-			VmBuilder()
-				.id(this@toAddTemplateBuilder.vmVo.id)
-				.diskAttachments(diskAttachments)
-				.build()
-		)
+		.vm(VmBuilder().id(this@toAddTemplateBuilder.vmVo.id).diskAttachments(diskAttachments).build())
 		.cpuProfile(CpuProfileBuilder().id(this@toAddTemplateBuilder.cpuProfileVo.id))
 		.build()
 }
