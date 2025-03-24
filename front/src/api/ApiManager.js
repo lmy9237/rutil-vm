@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 axios.interceptors.request.use(config => {
-  config.headers['Content-Type'] = 'application/json;charset=utf-8';
+  // config.headers['Content-Type'] = 'application/json;charset=utf-8';
   return config;
 });
 
@@ -2801,7 +2801,7 @@ migrateHostsFromVM: async (vmId) => {
    * @name ApiManager.uploadDisk
    * @description 디스크 업로드
    * 
-   * @param {Object} diskData 
+   * @param {FormData} diskData 
    * @returns {Promise<Object>}
    */
   // uploadDisk: async (diskData) => {
@@ -2817,9 +2817,9 @@ migrateHostsFromVM: async (vmId) => {
       const res = await axios({
           method: "POST",
           url: ENDPOINTS.UPLOAD_DISK(),
-          // headers: {
-          //   "Content-Type": "multipart/form-data"
-          // },
+          headers: {
+            "Content-Type": "multipart/form-data"
+          },
           data: diskData
       }); 
       res.headers.get(`access_token`) && localStorage.setItem('token', res.headers.get(`access_token`)) // 로그인이 처음으로 성공했을 때 진행

@@ -244,13 +244,13 @@ class DiskController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@PostMapping("/upload")
+	@PostMapping("/upload", consumes = ["multipart/form-data"])
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@Throws(IdNotFoundException::class, InvalidRequestException::class, IOException::class)
 	fun uploadDisk(
+		@RequestPart diskImage: DiskImageVo?,
 		@RequestPart file: MultipartFile,
-		@RequestPart diskImage: DiskImageVo?
 	): ResponseEntity<Boolean> {
 		log.info("/storages/disks/upload ... 업로드")
 		if (diskImage == null)

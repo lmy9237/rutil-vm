@@ -331,12 +331,12 @@ class DiskServiceImpl(
     @Throws(Error::class, IOException::class)
     override fun upload(file: MultipartFile, image: DiskImageVo): Boolean {
         log.info("uploadDisk ... file: {}, image:{}", file.name, image)
-        // 파일이 없으면 에러
-        if (file.isEmpty) throw ErrorPattern.FILE_NOT_FOUND.toException()
+        if (file.isEmpty) throw ErrorPattern.FILE_NOT_FOUND.toException() // 파일이 없으면 에러
 
         // 이미지 업로드해서 imageTransfer.id()를 알아낸다
-		val imageTransferId: String = conn.uploadSetDisk(image.toUploadDiskBuilder(conn, file.size))
-            .getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
+		val imageTransferId: String = conn.uploadSetDisk(
+			image.toUploadDiskBuilder(conn, file.size)
+		).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
 
         return uploadFileToTransferUrl(file, imageTransferId)
     }
@@ -409,87 +409,6 @@ class DiskServiceImpl(
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.socketFactory)
     }
 
-
-
-    @Throws(Error::class)
-    fun upload3(file: MultipartFile, imageTransferId: String): Boolean{
-        log.debug("imageSend")
-        val httpsConn: HttpsURLConnection?
-        val imageTransferService: ImageTransferService = conn.srvImageTransfer(imageTransferId)
-//            disableSSLVerification()
-//        log.info("transferUrl: ${imageTransferService.get().send().imageTransfer().transferUrl()}")
-
-        System.setProperty("sun.net.http.allowRestrictedHeaders", "true")
-        val url = URL(imageTransferService.get().send().imageTransfer().transferUrl())
-        httpsConn = url.openConnection() as HttpsURLConnection
-
-        val bufferSize = 131072  // 128KB 버퍼
-        httpsConn.connectTimeout = 30_000
-        httpsConn.readTimeout = 30_000
-        httpsConn.setFixedLengthStreamingMode(file.size)
-        httpsConn.doOutput = true
-        httpsConn.requestMethod = "PUT"
-
-        file.inputStream.use { inputStream ->
-            BufferedInputStream(inputStream, bufferSize).use { bis ->
-                httpsConn.outputStream.use { outputStream ->
-                    BufferedOutputStream(outputStream, bufferSize).use { bos ->
-                        val buffer = ByteArray(bufferSize)
-                        var bytesRead: Int
-                        while (bis.read(buffer).also { bytesRead = it } != -1) {
-                            bos.write(buffer, 0, bytesRead)
-                        }
-                        bos.flush()
-                    }
-                }
-            }
-        }
-
-        val responseCode = httpsConn.responseCode
-        log.debug("Response Code: $responseCode")
-        if (responseCode == HttpsURLConnection.HTTP_OK || responseCode == HttpsURLConnection.HTTP_CREATED) {
-            imageTransferService.finalize_().send()
-            log.debug("Image transfer finalized.")
-        } else {
-            log.error("File upload failed. Response code: $responseCode")
-            throw IOException("Upload failed")
-        }
-        httpsConn.disconnect()
-
-//        httpsConn.connectTimeout = 30_000  // 연결 타임아웃: 30초
-//        httpsConn.readTimeout = 30_000     // 읽기 타임아웃: 30초
-//        httpsConn.doOutput = true
-//        httpsConn.requestMethod = "PUT"
-//        log.info("File size: ${file.size}")
-////        httpsConn.setRequestProperty("Content-Length", file.size.toString())
-////        httpsConn.setFixedLengthStreamingMode(file.size.toInt())
-//        httpsConn.setFixedLengthStreamingMode(file.size)
-//        httpsConn.setRequestProperty("Content-Length", file.size.toString())
-//
-//        httpsConn.doOutput = true
-//        httpsConn.connect()
-//        log.debug("HTTP Response Code: {}", httpsConn.responseCode)
-//        log.debug("HTTP Response Message: {}", httpsConn.responseMessage)
-//
-//        val bufferSize = 131072
-//        file.inputStream.use { inputStream ->
-//            BufferedInputStream(inputStream, bufferSize).use { bis ->
-//                BufferedOutputStream(httpsConn.outputStream, bufferSize).use { bos ->
-//                    val buffer = ByteArray(bufferSize)
-//                    var bytesRead: Int
-//                    while (bis.read(buffer).also { bytesRead = it } != -1) {
-//                        bos.write(buffer, 0, bytesRead)
-//                    }
-//                    bos.flush()
-//                }
-//            }
-//        }
-//        imageTransferService.finalize_().send()
-//        httpsConn.disconnect()
-//
-        return true
-    }
-
     @Throws(Error::class)
     override fun refreshLun(diskId: String, hostId: String): Boolean {
         log.info("refreshLun ... ")
@@ -497,7 +416,6 @@ class DiskServiceImpl(
         val res: Result<Boolean> = conn.refreshLunDisk(diskId, hostId)
         return res.isSuccess
     }
-
 
     @Throws(Error::class)
     override fun findAllVmsFromDisk(diskId: String): List<VmViewVo> {

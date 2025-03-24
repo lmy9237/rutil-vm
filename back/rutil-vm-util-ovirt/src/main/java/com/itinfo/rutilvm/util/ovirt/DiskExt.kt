@@ -163,14 +163,18 @@ fun Connection.refreshLunDisk(diskId: String, hostId: String): Result<Boolean> =
 // 디스크 이미지 업로드하기 위해 하는 세팅
 fun Connection.uploadSetDisk(disk: Disk): Result<String> = runCatching {
 	// 디스크 생성
-	val diskUpload: Disk = this.addDisk(disk)
-		.getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
+	val diskUpload: Disk = this.addDisk(disk).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
 
+	log.info("diskupload1")
 	// 디스크 ok 상태여야 이미지 업로드 가능
 	this.expectDiskStatus(diskUpload.id())
 
+	log.info("imageTransfer")
 	val imageTransfer = preparedImageTransfer(diskUpload.id())
+	log.info("imageTransfer1")
 	checkImageTransferReady(imageTransfer)
+	log.info("imageTransfer2")
+	log.info("imageTransfer.id {}", imageTransfer.id())
 
 	imageTransfer.id()
 }.onSuccess {

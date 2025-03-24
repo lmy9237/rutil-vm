@@ -450,17 +450,15 @@ fun DiskImageVo.toAddSnapshotDisk(): Disk {
 fun DiskImageVo.toUploadDiskBuilder(conn: Connection, fileSize: Long): Disk {
 	val storageDomain: StorageDomain = conn.findStorageDomain(this@toUploadDiskBuilder.storageDomainVo.id)
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toException()
-	// storage가 nfs 면 씬, iscsi면 사전할당
-	val allocation: Boolean = storageDomain.storage().type() == StorageType.NFS
 
 	return DiskBuilder()
 		.contentType(DiskContentType.ISO)
 		.provisionedSize(fileSize)
-		.sparse(allocation)
+		.sparse(storageDomain.storage().type() == StorageType.NFS)// storage가 nfs 면 씬, iscsi면 사전할당
 		.alias(this@toUploadDiskBuilder.alias)
 		.description(this@toUploadDiskBuilder.description)
-		.storageDomains(*arrayOf(StorageDomainBuilder().id(this@toUploadDiskBuilder.storageDomainVo.id)))
-		.diskProfile(DiskProfileBuilder().id(this@toUploadDiskBuilder.diskProfileVo.id))
+		.storageDomains(*arrayOf(StorageDomainBuilder().id(this@toUploadDiskBuilder.storageDomainVo.id).build()))
+		.diskProfile(DiskProfileBuilder().id(this@toUploadDiskBuilder.diskProfileVo.id).build())
 		.shareable(this@toUploadDiskBuilder.sharable)
 		.wipeAfterDelete(this@toUploadDiskBuilder.wipeAfterDelete)
 		.backup(DiskBackup.NONE) // 증분백업 되지 않음

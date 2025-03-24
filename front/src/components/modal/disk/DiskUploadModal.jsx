@@ -27,7 +27,6 @@ const initialFormState = {
   alias: "",
   description: "",
   wipeAfterDelete: false,
-  backup: true,
   // sharable: false,
 };
 
@@ -132,7 +131,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
       new Blob([JSON.stringify(dataToSubmit)], { type: "application/json" })
     ); // JSON 데이터 추가
 
-    console.log(`디스크 업로드 데이터 ${dataToSubmit}`);
+    console.log(`디스크 업로드 데이터 ${diskData}`);
 
     uploadDisk(diskData, {
       onSuccess: () => {
@@ -270,15 +269,6 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                   onChange={handleInputChangeCheck("wipeAfterDelete")}
                 />
               </div>
-              <div className="img-checkbox-outer">
-                <LabelCheckbox
-                  label="증분 백업 사용"
-                  id="backup"
-                  checked={formState.backup}
-                  onChange={handleInputChangeCheck("backup")}
-                />
-              </div>
-
               {/* <div className='img-checkbox-outer'>
                 <LabelCheckbox
                   label="공유 가능"

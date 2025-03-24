@@ -99,7 +99,6 @@ const VmDupl = ({
           status={selectedVms[0]?.status}
           selectedVms={selectedVms}
         />
-        <span>ID: {selectedIds}</span>
       </div>
 
       {/* 테이블 컴포넌트 */}

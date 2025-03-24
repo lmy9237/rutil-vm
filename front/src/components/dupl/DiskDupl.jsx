@@ -74,14 +74,13 @@ const DiskDupl = ({
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         )}
 
+        <span>ID: {selectedIds}</span>
         <DiskActionButtons
           openModal={openModal}
           isEditDisabled={selectedDisks.length !== 1}
           isDeleteDisabled={selectedDisks.length === 0}
           status={selectedDisks[0]?.status}
         />
-        <span>ID: {selectedIds}</span>
-        <span>{selectedDisks[0]?.contentType}</span>
       </div>
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
