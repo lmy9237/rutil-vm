@@ -72,7 +72,7 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
         <LabelSelectOptions
           id="cluster"
           label="네트워크 공급자"
-          className="network-form-group center"
+          className="network-form-group f-btw"
           value={selectedProvider}
           onChange={(e) => setSelectedProvider(e.target.value)}
           disabled={isDatacentersLoading}

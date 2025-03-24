@@ -1,6 +1,6 @@
 /* components/common/RutilVmLogo.css */
 .rutil-vm-logo {
-  display:flex;justify-content:center;align-items:center;flex-direction:column;
+  flex-direction:column;
   width:140px;aspect-ratio:134/36;margin:10px;
 }
 .rutil-vm-logo.big {
@@ -13,10 +13,10 @@
   width:inherit;height:inherit;
 }
 .rutil-vm-logo figcaption { 
-  display:flex;flex-direction:row;justify-content:flex-end;align-items:center;
-  width:100%;font-size: 0.65rem; 
+  width:100%;
+  font-size: 0.65rem; 
 }
 .rutil-vm-logo p {
-  width:100%;display:flex;align-items:center;justify-content:flex-end;
+  width:100%;
   color: var(--color-logo-text);font-size:15px;font-weight:500;line-height:150%; 
 }

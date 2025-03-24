@@ -4,10 +4,10 @@ import DomainActionButtons from "./DomainActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import DomainModals from "../modal/domain/DomainModals";
 import SearchBox from "../button/SearchBox"; // ✅ 검색 UI 추가
-import { renderDomainStatus, renderDomainStatusIcon } from "../Icon";
 import { convertBytesToGB } from "../../util";
+import Localization from "../../utils/Localization";
 import TableRowClick from "../table/TableRowClick";
-import { RVI16, rvi16StarGold } from "../icons/RutilVmIcons";
+import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 
 /**
  * @name DomainDupl
@@ -37,9 +37,9 @@ const DomainDupl = ({
         {domain?.name}
       </TableRowClick>
     ),
-    icon: renderDomainStatusIcon(domain.status),
-    status: renderDomainStatus(domain?.status),
-    hostedEngine: domain?.hostedEngine ? (<RVI16 iconDef={rvi16StarGold} />) : (""),
+    icon: status2Icon(domain.status),
+    status: Localization.kr.renderStatus(domain?.status),
+    hostedEngine: hostedEngineStatus2Icon(domain?.hostedEngine),
     domainType:
       domain?.domainType === "data"
         ? "데이터"
@@ -59,8 +59,10 @@ const DomainDupl = ({
   }));
 
   // 검색 기능 적용 (부분 검색 가능)
-  const filteredData = transformedData.filter(domain =>
-    domain.searchText.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredData = transformedData.filter((domain) =>
+    domain.searchText
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
   );
 
   const handleNameClick = (id) => navigate(`/storages/domains/${id}`);
@@ -72,10 +74,7 @@ const DomainDupl = ({
     <>
       <div className="dupl-header-group">
         {/* ✅ 검색 UI 추가 */}
-        {showSearchBox && (
-          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        )}
-
+        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />)}
         <DomainActionButtons
           openModal={openModal}
           isEditDisabled={selectedDomains.length !== 1}

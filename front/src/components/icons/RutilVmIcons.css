@@ -6,20 +6,20 @@
 .rvi.rvi-menu {
   color: var(--color-primary-white);
 }
-.rvi-outer,.no-hover {
+.rvi-outer {
   height: 100%;
-  padding: 20px;
-  display: flex;
-  align-items: center;
+  padding: 20px;  
   cursor: pointer;
 }
 .rvi-outer:hover {
   color: rgb(113, 149, 163);
   background-color: var(--color-primary-hover);
 }
-.no-hover:hover {
-  background-color: none !important; 
-  cursor: pointer;
+.rv-logo {
+  margin: 0 10px ;
+}
+.rv-logo.no-hover:hover {
+  background-color: none !important;cursor:pointer;
 }
 .rvi.rvi-nav {
   display: flex;flex-direction:row;align-items:center;justify-content:center;

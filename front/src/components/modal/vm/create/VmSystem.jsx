@@ -1,19 +1,6 @@
 import LabelInputNum from "../../../label/LabelInputNum";
-import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 
-// const InfoTooltip = ({ tooltipId, message }) => (
-//   <>
-//     <FontAwesomeIcon
-//       icon={faInfoCircle}
-//       style={{ color: "rgb(83, 163, 255)", marginLeft: "5px" }}
-//       data-tooltip-id={tooltipId}
-//     />
-//     <Tooltip id={tooltipId} className="icon_tooltip" place="top" effect="solid">
-//       {message}
-//     </Tooltip>
-//   </>
-// );
 
 const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
   // 총 cpu 계산

@@ -1,9 +1,9 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
-import { renderDomainStatusIcon } from '../../../components/Icon';
 import { convertBytesToGB } from '../../../util';
 import { useAllStorageDomainFromDisk } from "../../../api/RQHook";
+import { status2Icon } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name DiskDomains
@@ -37,7 +37,7 @@ const DiskDomains = ({ diskId }) => {
         columns={TableColumnsInfo.STORAGE_DOMAINS_FROM_DISK}
         data={(domains).map((domain) => ({
           ...domain,
-          icon: renderDomainStatusIcon(domain.status),
+          icon: status2Icon(domain.status),
           storageDomain: <TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>,
           domainType:
             domain?.domainType === 'data' ? '데이터'

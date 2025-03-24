@@ -1,7 +1,6 @@
 .normal-search-box {
   border: var(--border-btn);
   width:  var(--w-text-input);height: var(--h-text-input);
-  display:flex;align-items:center;flex-direction:row;justify-content:flex-start;
   border-radius: 1px;
 }
 .normal-search-box input {
@@ -10,7 +9,6 @@
 }
 .search-box-btn {
   width: var(--h-text-input);height: 100%;cursor: pointer;
-  display:flex;align-items:center;justify-content:center;
 }
 .search-box-btn:hover {
   color: black;

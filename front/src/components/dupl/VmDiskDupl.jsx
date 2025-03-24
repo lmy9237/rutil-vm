@@ -4,11 +4,11 @@ import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import VmDiskModals from "../modal/vm/VmDiskModals";
 import VmDiskActionButtons from "./VmDiskActionButtons";
-import { renderTFStatusIcon } from "../Icon";
 import { checkZeroSizeToGB } from "../../util";
 import { useVmById } from "../../api/RQHook";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
+import { status2Icon } from "../icons/RutilVmIcons";
 
 /**
  * @name VmDiskDupl
@@ -40,7 +40,7 @@ const VmDiskDupl = ({
     const diskImage = d?.diskImageVo;
     return {
       ...d,
-      icon: renderTFStatusIcon(d?.active),
+      icon: status2Icon(d?.active ? "UP" : "DOWN"),
       _alias: (
         <TableRowClick type="disk" id={diskImage?.id}>
           {diskImage?.alias}

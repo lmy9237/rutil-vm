@@ -2,8 +2,8 @@ import React from "react";
 import { useAllVmsFromDisk } from "../../../api/RQHook";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
-import { renderVmStatusIcon } from "../../../components/Icon";
 import TablesOuter from "../../../components/table/TablesOuter";
+import { status2Icon } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name DiskVms
@@ -19,11 +19,13 @@ const DiskVms = ({ diskId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-  } = useAllVmsFromDisk(diskId, (e) => ({ ...e }));
+  } = useAllVmsFromDisk(diskId, (e) => ({ 
+    ...e
+  }));
 
   const transformedData = vms.map((vm) => ({
     ...vm,
-    icon: renderVmStatusIcon(vm?.status),
+    icon: status2Icon(vm?.status),
     _name: (
       <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}

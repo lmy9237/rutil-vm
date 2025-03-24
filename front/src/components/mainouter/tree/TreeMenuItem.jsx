@@ -30,7 +30,7 @@ const TreeMenuItem = ({
 
   return (
     <div id={`tmi-${level}`}
-      className={`tmi${isSelected() ? " active" : ""}${isChevronVisible ? " wc" : ""}`}
+      className={`tmi f-start${isSelected() ? " active" : ""}${isChevronVisible ? " wc" : ""}`}
       // style={{ backgroundColor: getBackgroundColor("rutil-manager") }}
       {...props}
     >

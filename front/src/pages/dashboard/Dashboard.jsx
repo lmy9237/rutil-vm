@@ -259,7 +259,7 @@ const Dashboard = () => {
           ]}
         />
 
-        <div className="dash-section center">
+        <div className="dash-section f-btw">
           <div className="dash-section-contents">
             <h1 className="dash-con-title">CPU</h1>
             <div className="status-value flex">

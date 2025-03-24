@@ -105,56 +105,6 @@ export function icon(status) {
   );
 }
 
-export function renderDataCenterStatus(status) {
-  if (status === "UNINITIALIZED") {
-    return "초기화되지 않음";
-  }
-  return status;
-}
-
-export function renderDomainStatus(status) {
-  if (status === "ACTIVE") {
-    return "활성화";
-  } else if (status === "DOWN") {
-    return "중지";
-  } else if (status === "INACTIVE") {
-    return "비활성화";
-  }
-  return status;
-}
-
-export function renderDataCenterStatusIcon(status) {
-  if (status === "ACTIVE") {
-    return (
-      <FontAwesomeIcon
-        icon={faPlay}
-        fixedWidth
-        style={{
-          color: "lime",
-          fontSize: "12px",
-          transform: "rotate(270deg)",
-        }}
-      />
-    );
-  } else if (status === "DOWN") {
-    return (
-      <FontAwesomeIcon
-        icon={faPlay}
-        fixedWidth
-        style={{ color: "red", fontSize: "12px", transform: "rotate(90deg)" }}
-      />
-    );
-  } else if (status === "MAINTENANCE") {
-    return (
-      <FontAwesomeIcon
-        icon={faWrench}
-        fixedWidth
-        style={{ color: "black", fontSize: "12px" }}
-      />
-    );
-  }
-  return status;
-}
 
 export function renderStatusClusterIcon(connect, status) {
   if (connect && status === "OPERATIONAL") {
@@ -232,21 +182,3 @@ export const renderTFStatusIcon = (status) => {
   }
 };
 
-export const renderVmStatusIcon = (status) => {
-  return icon(status);
-};
-
-export const renderDomainStatusIcon = (status) => {
-  return icon(status);
-};
-
-export const renderEventStatusIcon = (status) => {
-  return icon(status);
-};
-
-export const renderDatacenterStatusIcon = (status) => {
-  return icon(status);
-};
-export const renderHostStatusIcon = (status) => {
-  return icon(status);
-};

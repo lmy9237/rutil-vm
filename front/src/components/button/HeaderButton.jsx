@@ -57,25 +57,24 @@ const HeaderButton = ({
 
   console.log("...")
   return (
-    <div className="section-header center">
-      <div className="section-header-left">
+    <div className="section-header f-btw">
+      <div className="section-header-left f-btw">
         {titleIcon && (
           <RVI24 iconDef={titleIcon} />
         )}
-        <p className="mr-2">{title}</p>
-        <div
-          className={`flex justify-center mr-1 status-label ${
+        <p>{title}</p>
+        {status && <span
+          className={`status-label f-center ${
             status === "실행중" ? "running" : status === "중지" ? "stopped" : "default"
           }`}
         >
           {status}
-        </div>
+        </span>}
       </div>
-      <div className="section-header-buttons">
+      <div className="section-header-right f-btw">
         <div className="flex justify-end article-nav">
           {buttons.map((button, index) => (
-            <IconButton
-              id={button.id}
+            <IconButton id={button.id}
               key={index}
               label={button.label}
               icon={button.icon}
@@ -97,7 +96,6 @@ const HeaderButton = ({
           )}
         </div>
       </div>
-
     </div>
   );
 };

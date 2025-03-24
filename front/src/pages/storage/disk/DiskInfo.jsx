@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { faHdd } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -10,7 +9,7 @@ import DiskDomains from "./DiskDomains";
 import DiskModals from "../../../components/modal/disk/DiskModals";
 import Localization from "../../../utils/Localization";
 import { useDiskById } from "../../../api/RQHook";
-import { rvi16HardDrive } from "../../../components/icons/RutilVmIcons";
+import { rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name DiskDomains
@@ -85,7 +84,7 @@ const DiskInfo = () => {
   console.log("...")
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi16HardDrive}
+      <HeaderButton titleIcon={rvi24HardDrive}
         title={disk?.alias}
         buttons={sectionHeaderButtons}
       />

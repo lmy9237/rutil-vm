@@ -82,6 +82,7 @@ html {
   --border-simple: var(--border-w) solid var(--color-gray-2);
   --border-aa: var(--border-w) solid var(--color-gray-1);
 
+  --fs-12: 12px;
   --fs-default: 13px;
   --fs-14: 14px;
   --fs-15: 15px;
@@ -147,26 +148,19 @@ input[disabled] {
   cursor: pointer;
 }
 .hover-icon:hover{
-    color: var(--color-gray-disabled);
+  color: var(--color-gray-disabled);
 }
 .popup-content-outer {
   /* height: var(--h-modal-content); */
   overflow-y: auto;
   overflow-x: hidden;
 }
-.f-center{
-  display: flex;
-  align-items: center;
-}
-.center {
-  display: flex; /* Flexbox 설정 추가 */
-  justify-content: space-between; /* 수평 가운데 정렬 */
-  align-items: center; /* 수직 가운데 정렬 */
-}
-.f-btw{
-  display: flex;
-  justify-content: space-between;
-}
+.f-center { display:flex;align-items:center;justify-content:center; }
+.f-start  { display:flex;align-items:center;justify-content:flex-start; }
+.f-end    { display:flex;align-items:center;justify-content:flex-end; }
+.center   { display:flex;align-items:center;justify-content:space-between; }
+.f-btw    { display:flex;align-items:center;justify-content:space-between; }
+.v-start  { display:flex;align-items:flex-start;justify-content:center;flex-direction:column;}
 #section {
   width: calc(100% - var(--w-aside-menu));height:100%;
   overflow-y: auto;

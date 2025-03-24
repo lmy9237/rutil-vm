@@ -131,7 +131,7 @@ const TemplateEditModal = ({
 
         <div className="backup-edit-content">
           <div
-              className="template-option-box center"
+              className="template-option-box f-btw"
               style={{
                 borderBottom: "1px solid #a7a6a6",
                 padding: "0.1rem 0",
@@ -196,7 +196,7 @@ const TemplateEditModal = ({
             <>
               <div className="p-1">
                 <div className="font-bold">그래픽 콘솔</div>
-                <div className="monitor center">
+                <div className="monitor f-btw">
                   <label htmlFor="monitor-select">모니터</label>
                   <select id="monitor-select">
                     <option value="1">1</option>

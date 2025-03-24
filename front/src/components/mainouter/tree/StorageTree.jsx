@@ -54,7 +54,7 @@ const StorageTree = ({ selectedDiv, setSelectedDiv }) => {
   };
 
   return (
-    <div id="storage_chart">
+    <div id="storage_chart" className="tmi-g">
       {/* 첫 번째 레벨 (Rutil Manager) */}
       <TreeMenuItem
         level={1}
@@ -83,7 +83,7 @@ const StorageTree = ({ selectedDiv, setSelectedDiv }) => {
             dataCenter.storageDomains.length > 0;
 
           return (
-            <div key={dataCenter.id}>
+            <div key={dataCenter.id} className="tmi-g">
               <TreeMenuItem
                 level={2}
                 title={dataCenter.name}
@@ -107,7 +107,7 @@ const StorageTree = ({ selectedDiv, setSelectedDiv }) => {
                     Array.isArray(domain.disks) && domain.disks.length > 0;
 
                   return (
-                    <div key={domain.id}>
+                    <div key={domain.id} className="tmi-g">
                       <TreeMenuItem
                         level={3}
                         title={domain.name}

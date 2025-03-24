@@ -4,10 +4,10 @@ import DiskModals from "../modal/disk/DiskModals";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import DiskActionButtons from "./DiskActionButtons";
-import { icon } from "../Icon";
 import { checkZeroSizeToGB } from "../../util";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
+import { status2Icon } from "../icons/RutilVmIcons";
 
 const DiskDupl = ({
   isLoading, isError, isSuccess,
@@ -26,7 +26,7 @@ const DiskDupl = ({
           {d?.alias || d?.diskImageVo?.alias}
         </TableRowClick>
       ),
-      icon: icon(d.status),
+      icon: status2Icon(d.status),
       storageDomain: (
         <TableRowClick type="domain" id={d?.storageDomainVo?.id}>
           {d?.storageDomainVo?.name}

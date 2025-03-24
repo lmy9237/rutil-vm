@@ -57,7 +57,7 @@ const VmMigrationModal = ({
 
         <div className="migration-article">
           <div>
-            <div className="migration-dropdown center">
+            <div className="migration-dropdown f-btw">
               <label htmlFor="host">
                 대상 호스트 <FontAwesomeIcon icon={faInfoCircle} fixedWidth />
               </label>

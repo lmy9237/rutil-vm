@@ -12,13 +12,13 @@ import "./SearchBox.css";
  */
 const SearchBox = ({ searchQuery, setSearchQuery }) => {
   return (
-    <div className="normal-search-box">
+    <div className="normal-search-box f-start">
       <input type="text"
         placeholder={Localization.kr.PLACEHOLDER_SEARCH}
         value={searchQuery || ""}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <div className="search-box-btn" onClick={() => setSearchQuery("")}>
+      <div className="search-box-btn f-center" onClick={() => setSearchQuery("")}>
         <RVI16 iconDef={rvi16Close} />
       </div>
     </div>

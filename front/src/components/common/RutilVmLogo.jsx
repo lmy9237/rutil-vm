@@ -8,10 +8,10 @@ import "./RutilVmLogo.css"
  * @returns {JSX.Element} RutilVmLogo
  */
 const RutilVmLogo = ({description = "", details = "", ...props}) => (
-  <figure className={`rutil-vm-logo ${props.className}`}>
+  <figure className={`rutil-vm-logo f-center ${props.className}`}>
     <LogoIcon textColor="#4679BC" />
-    {description && <p>{description}</p>}
-    {details && <figcaption>{details}</figcaption>}
+    {description && <p className="f-end">{description}</p>}
+    {details && <figcaption className="f-end">{details}</figcaption>}
   </figure>
 );
 

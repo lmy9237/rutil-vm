@@ -16,7 +16,6 @@ import {
   rvi16Event,
   rvi16ArrowLeft,
   rvi16ArrowRight,
-  rvi16Host,
   rvi16CloseMenu,
   rvi24RightArrow,
   rvi24DownArrow,
@@ -111,34 +110,38 @@ const Header = ({ setAuthenticated, toggleAside }) => {
       setLoginBoxVisible(false);
       setBellActive(false);
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
-  
+
   return (
-    <div className="header center">
-      <div className="header-right">
-        <TopMenuIcon iconDef={rvi24Hamburger} onClick={toggleAside} />
-        <TopMenuIcon onClick={handleTitleClick} className="no-hover">
-          <LogoIcon/>
-        </TopMenuIcon>
+    <div className="header f-btw">
+      <div className="header-left">
+        <TopMenuIcon iconDef={rvi24Hamburger("white")} onClick={toggleAside} />
+        <LogoIcon disableHover={true} onClick={handleTitleClick}/>
       </div>
 
       <div className="header-right">
         {/* 새로고침 */}
-        <TopMenuIcon iconDef={rvi24Refresh} onClick={() => window.location.reload()} />
+        <TopMenuIcon
+          iconDef={rvi24Refresh("white")}
+          onClick={() => window.location.reload()}
+        />
         {/* 설정 */}
-        <TopMenuIcon iconDef={rvi24Gear()} onClick={() => {
+        <TopMenuIcon
+          iconDef={rvi24Gear("white")}
+          onClick={() => {
             setSelectedIndex(1);
             navigate("/settings/users"); // 기존 기능 유지
           }}
         />
         {/* 알림 */}
-        <TopMenuIcon iconDef={rvi24Bell} onClick={() => {
+        <TopMenuIcon
+          iconDef={rvi24Bell("white")}
+          onClick={() => {
             setSelectedIndex(2);
             toggleBellActive(); // 기존 기능 유지
           }}
@@ -146,13 +149,13 @@ const Header = ({ setAuthenticated, toggleAside }) => {
 
         {isBellActive && (
           <div
-            ref={bellBoxRef} 
+            ref={bellBoxRef}
             className={`bell-box ${isExpanded ? "expanded" : ""}`}
             onClick={stopPropagation}
           >
             <div className="f-btw py-0.5 px-1.5 bell-cate">
-              <RVI16 
-                iconDef={isExpanded ? rvi16ArrowRight : rvi16ArrowLeft} 
+              <RVI16
+                iconDef={isExpanded ? rvi16ArrowRight : rvi16ArrowLeft}
                 className="hover-icon"
                 onClick={handleExpand}
               />
@@ -176,7 +179,9 @@ const Header = ({ setAuthenticated, toggleAside }) => {
               onClick={() => handleSectionClick("알림")}
             >
               <RVI24
-                iconDef={activeSection  === "알림" ? rvi24DownArrow : rvi24RightArrow}
+                iconDef={
+                  activeSection === "알림" ? rvi24DownArrow : rvi24RightArrow
+                }
               />
               <span className="ml-1">알림</span>
             </div>
@@ -195,8 +200,8 @@ const Header = ({ setAuthenticated, toggleAside }) => {
                         <div className="mt-0.5">{notification.date}</div>
                       </div>
                       <div>
-                        <RVI16 
-                          iconDef={rvi16Trash} 
+                        <RVI16
+                          iconDef={rvi16Trash}
                           className="trash-icon"
                           onClick={() => handleDelete(notification.id, "알림")}
                         />
@@ -218,7 +223,9 @@ const Header = ({ setAuthenticated, toggleAside }) => {
               onClick={() => handleSectionClick("이벤트")}
             >
               <RVI24
-                iconDef={activeSection  === "이벤트" ? rvi24DownArrow : rvi24RightArrow}
+                iconDef={
+                  activeSection === "이벤트" ? rvi24DownArrow : rvi24RightArrow
+                }
               />
               <span className="ml-1">이벤트</span>
             </div>
@@ -237,8 +244,8 @@ const Header = ({ setAuthenticated, toggleAside }) => {
                         <div className="mt-0.5">{event.date}</div>
                       </div>
                       <div>
-                        <RVI16 
-                          iconDef={rvi16Trash} 
+                        <RVI16
+                          iconDef={rvi16Trash}
                           className="trash-icon"
                           onClick={() => handleDelete(event.id, "이벤트")}
                         />
@@ -255,13 +262,19 @@ const Header = ({ setAuthenticated, toggleAside }) => {
           </div>
         )}
         {/* 사용자 버튼 */}
-        <TopMenuIcon  iconDef={rvi24PersonCircle} onClick={() => {
+        <TopMenuIcon
+          iconDef={rvi24PersonCircle("white")}
+          onClick={() => {
             setSelectedIndex(3);
             toggleLoginBox(); // 기존 기능 유지
           }}
         />
         {isLoginBoxVisible && (
-          <div ref={loginBoxRef}  className="user-loginbox" onClick={stopPropagation}>
+          <div
+            ref={loginBoxRef}
+            className="user-loginbox"
+            onClick={stopPropagation}
+          >
             <div>계정설정</div>
             <div onClick={(e) => handleLogout(e)}>로그아웃</div>
           </div>

@@ -4,12 +4,12 @@ import DomainActionButtons from "../../../components/dupl/DomainActionButtons";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { renderDataCenterStatusIcon } from "../../../components/Icon";
 import { useAllDataCenterFromDomain, useDomainById } from "../../../api/RQHook";
 import SearchBox from "../../../components/button/SearchBox";
 import useSearch from "../../../components/button/useSearch";
 import DomainActionModal from "../../../components/modal/domain/DomainActionModal";
 import DomainAttachModal from "../../../components/modal/domain/DomainAttachModal";
+import { status2Icon } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name DomainDatacenters
@@ -28,7 +28,7 @@ const DomainDatacenters = ({ domainId }) => {
 
   const transformedData = datacenters.map((datacenter) => ({
     ...datacenter,
-    icon: renderDataCenterStatusIcon(datacenter?.domainStatus),
+    icon: status2Icon(datacenter?.domainStatus),
     _name: (
       <TableRowClick type="datacenter" id={datacenter?.id}>
         {datacenter?.name}

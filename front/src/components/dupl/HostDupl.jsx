@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import HostModals from "../modal/host/HostModals";
-import { renderHostStatusIcon } from "../Icon";
 import HostActionButtons from "./HostActionButtons";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
-import { RVI16, rvi16Star, rvi16StarGold } from "../icons/RutilVmIcons";
+import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 
 const HostDupl = ({
   isLoading, isError, isSuccess,
@@ -32,13 +31,8 @@ const HostDupl = ({
         {host?.name}
       </TableRowClick>
     ),
-    icon: renderHostStatusIcon(host?.status),
-    hostedEngine:
-      host?.hostedEngine && host?.hostedEngineVM 
-        ? (<RVI16 iconDef={rvi16StarGold} />)
-        : host?.hostedEngine 
-          ? (<RVI16 iconDef={rvi16Star} />) 
-          : (""),
+    icon: status2Icon(host?.status),
+    hostedEngine: hostedEngineStatus2Icon(host?.hostedEngineVM, host?.hostedEngine),
     status: host?.status,
     spmStatus: host?.spmStatus === "NONE" ? "보통" : host?.spmStatus,
     vmCnt: host?.vmSizeVo?.allCnt ?? "0",

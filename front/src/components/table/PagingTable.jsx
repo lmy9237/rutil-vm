@@ -163,7 +163,7 @@
 //           </thead>
 //           <tbody>{renderTableBody()}</tbody>
 //         </table>
-//         <div className="paging-btns center">
+//         <div className="paging-btns f-btw">
 //           <div className="paging-arrows my-2">
 //             <PagingButton type="prev"
 //               onClick={() => handlePageChange("prev")}

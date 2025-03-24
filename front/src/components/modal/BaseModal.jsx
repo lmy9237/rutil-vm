@@ -28,7 +28,7 @@ const BaseModal = ({
       shouldCloseOnOverlayClick={false}
     >
       <div className="modal" style={contentStyle}>
-        <div className="popup-header center">
+        <div className="popup-header f-btw">
           <h1>
             {`${targetName} ${submitTitle}`}
           </h1>

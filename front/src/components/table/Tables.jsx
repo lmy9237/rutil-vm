@@ -324,6 +324,7 @@ const Tables = ({
                       clickableColumnIndex.includes(colIndex)
                         ? "500"
                         : "normal",
+                    width: column?.width ?? "",
                   }}
                   onClick={(e) => {
                     if (

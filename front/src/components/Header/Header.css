@@ -4,8 +4,8 @@
   border-bottom: 1px solid #dfdfdf;
   border-radius: 3px 3px 0 0;
 }
+.header-left,.header-right { height:100%;}
 .header-right {
-  height:100%;
   display:flex;justify-content:flex-end;align-items:center;/* 세로 중앙 정렬 추가 */
 }
 .header-left {

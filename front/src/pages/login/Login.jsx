@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
   faKey,
-  faRightToBracket,
-  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import RutilVmLogo from "../../components/common/RutilVmLogo";
-import Background from "../../components/common/Background";
 import IconInput from "../../components/Input/IconInput";
 import { useAuthenticate } from "../../api/RQHook";
 import "./Login.css";
 import Localization from "../../utils/Localization";
+import FooterCompany from "../../components/footer/FooterCompany";
 
 const Login = ({ setAuthenticated, setUsernameGlobal }) => {
   // 모달 관련 상태 및 함수
@@ -61,13 +58,13 @@ const Login = ({ setAuthenticated, setUsernameGlobal }) => {
   )};
 
   return (
-    <Background id="login" children={
+    <>
       <div className="login-container">
         <RutilVmLogo className="bigger" description="RutilVM에 오신걸 환영합니다." />
         <form className="flex flex-col justify-center items-center" 
-          onSubmit={doLogin}>
-          <IconInput
-            className="login-input text-lg"
+          onSubmit={doLogin}
+        >
+          <IconInput className="login-input text-lg"
             required
             icon={faUser}
             type="text"
@@ -78,8 +75,7 @@ const Login = ({ setAuthenticated, setUsernameGlobal }) => {
               setUsername(e.target.value);
             }}
           />
-          <IconInput
-            className="login-input text-lg"
+          <IconInput className="login-input text-lg"
             required
             icon={faKey}
             type="password"
@@ -89,25 +85,23 @@ const Login = ({ setAuthenticated, setUsernameGlobal }) => {
           />
           <button
             type="submit"
-            className="login-button bgcolor-primary"
+            className="login-button f-center bgcolor-primary"
             disabled={isAuthLoading}
           >
             {isAuthLoading ? (
               <>
-                <FontAwesomeIcon icon={faSpinner} fixedWidth />
-                &nbsp;로그인 중...
+                로그인 중...
               </>
             ) : (
               <>
-                <FontAwesomeIcon icon={faRightToBracket} fixedWidth />
-                &nbsp;로그인
+                로그인
               </>
             )}
           </button>
         </form>
       </div>
-      }>
-    </Background>
+      <FooterCompany />
+    </>
   );
 };
 

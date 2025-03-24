@@ -381,7 +381,7 @@ const DomainModal = ({
           />
 
           {/* 호스트 이름이 들어가야함 */}
-          {/* <div className="domain-new-select center">
+          {/* <div className="domain-new-select f-btw">
             <label>호스트</label>
             <select
               label="호스트"
@@ -482,14 +482,14 @@ const DomainModal = ({
             id="warning"
             value={formState.warning}
             onChange={handleInputChange("warning")}
-            className="domain-num-box center"
+            className="domain-num-box f-btw"
           />
           <LabelInputNum
             label="심각히 부족한 디스크 공간의 동작 차단(GB)"
             id="spaceBlocker"
             value={formState.spaceBlocker}
             onChange={handleInputChange("spaceBlocker")}
-            className="domain-num-box center"
+            className="domain-num-box f-btw"
           />
         </div>
       </div>

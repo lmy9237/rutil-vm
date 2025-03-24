@@ -1,22 +1,28 @@
-import React from 'react';
-import './ToggleSwitchButton.css';
+import React from "react";
+import "./ToggleSwitchButton.css";
 
-const ToggleSwitchButton = ({ id, label, checked, onChange, disabled, tType, fType }) => {
+const ToggleSwitchButton = ({
+  id,
+  label,
+  checked,
+  disabled,
+  tType, fType,
+  ...props
+}) => {
   return (
     <div className="input-select">
       <label htmlFor={id}>{label}</label>
       <label className="switch">
-        <input
-          type="checkbox"
+        <input type="checkbox"
           checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
+          onChange={props.onChange}
           disabled={disabled}
         />
-        <span className="slider small"></span>
+        <span className="slider round"></span>
       </label>
       <span className="toggle-status">{checked ? tType : fType}</span>
     </div>
-  );
-};
+  )
+}
 
 export default ToggleSwitchButton;

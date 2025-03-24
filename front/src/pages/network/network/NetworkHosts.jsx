@@ -4,7 +4,6 @@ import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import {
-  renderHostStatusIcon,
   renderUpDownStatusIcon,
 } from "../../../components/Icon";
 import { checkZeroSizeToMbps } from "../../../util";
@@ -17,6 +16,7 @@ import {
   useDisconnectedHostsFromNetwork,
   useNetworkInterfaceFromHost,
 } from "../../../api/RQHook";
+import { status2Icon } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name NetworkHosts
@@ -52,7 +52,7 @@ const NetworkHosts = ({ networkId }) => {
   const transformHostData = (hosts) => {
     return hosts.map((host) => ({
       ...host,
-      icon: renderHostStatusIcon(host?.status),
+      icon: status2Icon(host?.status),
       host: (
         <TableRowClick type="host" id={host?.id}>
           {host?.name}

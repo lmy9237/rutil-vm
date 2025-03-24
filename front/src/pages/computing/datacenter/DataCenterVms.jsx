@@ -21,13 +21,11 @@ const DataCenterVms = ({ datacenterId }) => {
 
   console.log("...");
   return (
-    <>
-      <VmDupl
-        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
-        columns={TableColumnsInfo.VMS}
-        vms={vms}
-      />
-    </>
+    <VmDupl
+      isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+      columns={TableColumnsInfo.VMS}
+      vms={vms}
+    />
   );
 };
 

@@ -34,12 +34,18 @@ export const Localization = {
     PLACEHOLDER_USERNAME: "사용자명을 입력하세요.",
     PLACEHOLDER_PASSWORD: "비밀번호를 입력하세요.",
 
-    renderStatus(status) {
-      if (status === "UP")               return "실행중";
-      else if (status === "DOWN")        return "중지";
-      else if (status === "MAINTENANCE") return "유지보수";
-      else if (status === "REBOOT")      return "재부팅중";
-      return status;
+    renderStatus(status = "") {
+      const _status = status?.toUpperCase() ?? "";
+      if (_status === "UP")               return "실행중";
+      else if (_status === "ACTIVE")      return "활성화";
+      else if (_status === "DOWN")        return "중지";
+      else if (_status === "INACTIVE")    return "비활성화";
+      else if (_status === "UNINITIALIZED") return "초기화되지 않음";
+      else if (_status === "REBOOT")      return "재부팅중";
+      else if (_status === "SUSPENDED")   return "일시중지";
+      else if (_status === "MAINTENANCE") return "유지보수";
+      else if (_status === "NON_OPERATIONAL") return "작동하지 않음";
+      return _status;
     },
   }
 }

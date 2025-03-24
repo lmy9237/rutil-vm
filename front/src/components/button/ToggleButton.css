@@ -1,0 +1,4 @@
+.btn-toggle {
+  gap:2px;border:none;background:transparent;
+}
+.btn-toggle > svg { width:32px; }

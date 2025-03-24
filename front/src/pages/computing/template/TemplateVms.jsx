@@ -2,8 +2,8 @@ import React from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { useAllVmsFromTemplate } from "../../../api/RQHook";
 import TablesOuter from "../../../components/table/TablesOuter";
-import { renderVmStatusIcon } from "../../../components/Icon";
 import TableRowClick from "../../../components/table/TableRowClick";
+import { status2Icon } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name TemplateVms
@@ -22,7 +22,7 @@ const TemplateVms = ({ templateId }) => {
 
   const transformedData = vms.map((e) => ({
     ...e,
-    icon: renderVmStatusIcon(e.status),
+    icon: status2Icon(e.status),
     _name: (
       <TableRowClick type="vm" id={e?.id}>
         {e?.name}

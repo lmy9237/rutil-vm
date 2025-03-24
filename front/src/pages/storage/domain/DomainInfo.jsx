@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -21,7 +20,7 @@ import {
   useOvfUpdateDomain,
   useRefreshLunDomain,
 } from "../../../api/RQHook";
-import { rvi16Cloud, rvi24Storage } from "../../../components/icons/RutilVmIcons";
+import { rvi24Cloud, rvi24Storage } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name DomainInfo
@@ -115,7 +114,7 @@ const DomainInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi16Cloud}
+      <HeaderButton titleIcon={rvi24Cloud}
         title={domain?.name}
         buttons={sectionHeaderButtons}
         popupItems={popupItems}

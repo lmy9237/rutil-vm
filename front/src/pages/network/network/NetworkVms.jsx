@@ -4,12 +4,12 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
 import {
   renderUpDownStatusIcon,
-  renderVmStatusIcon,
 } from "../../../components/Icon";
 import { useAllVmsFromNetwork } from "../../../api/RQHook";
 import { checkZeroSizeToMbps } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
 import ActionButton from "../../../components/button/ActionButton";
+import { status2Icon } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name NetworkVms
@@ -43,7 +43,7 @@ const NetworkVms = ({ networkId }) => {
     const vm = nic?.vmViewVo;
     return {
       ...nic,
-      icon: renderVmStatusIcon(vm?.status),
+      icon: status2Icon(vm?.status),
       _name: (
         <TableRowClick type="vm" id={vm?.id}>
           {vm?.name}

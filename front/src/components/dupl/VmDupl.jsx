@@ -4,10 +4,9 @@ import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import VmModals from "../modal/vm/VmModals";
 import VmActionButtons from "./VmActionButtons";
-import { renderVmStatusIcon } from "../Icon";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
-import { RVI16, rvi16StarGold } from "../icons/RutilVmIcons";
+import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 
 /**
  * @name VmDupl
@@ -31,8 +30,8 @@ const VmDupl = ({
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
   const transformedData = vms.map((vm) => ({
     ...vm,
-    icon: renderVmStatusIcon(vm?.status),
-    engine: (vm?.hostedEngineVm === true ? <RVI16 iconDef={rvi16StarGold} /> : ""),
+    icon: status2Icon(vm?.status),
+    engine: hostedEngineStatus2Icon(vm?.hostedEngineVm),
     _name: (
       <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}

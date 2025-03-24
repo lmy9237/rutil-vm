@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { faDesktop } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import { useTemplate } from "../../../api/RQHook";
@@ -12,6 +11,7 @@ import TemplateEvents from "./TemplateEvents";
 import TemplateNics from "./TemplateNics";
 import TemplateDisks from "./TemplateDisks";
 import Localization from "../../../utils/Localization";
+import { rvi24Template } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name TemplateInfo
@@ -85,8 +85,7 @@ const TemplateInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton
-        titleIcon={faDesktop}
+      <HeaderButton titleIcon={rvi24Template}
         title={template?.name}
         buttons={sectionHeaderButtons}
       />

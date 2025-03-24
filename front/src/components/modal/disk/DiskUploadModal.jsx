@@ -152,7 +152,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "790px" }} 
     >      
-      <div className="storage-upload-first center">
+      <div className="storage-upload-first f-btw">
         <p>파일 선택</p>
         <div>
           <input

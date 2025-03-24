@@ -40,7 +40,7 @@ const NetworkTree = ({ selectedDiv, setSelectedDiv }) => {
   };
 
   return (
-    <div id="network_chart">
+    <div id="network_chart" className="tmi-g">
       {/* 첫 번째 레벨 (Rutil Manager) */}
       <TreeMenuItem
         level={1}
@@ -72,7 +72,7 @@ const NetworkTree = ({ selectedDiv, setSelectedDiv }) => {
           const isDataCenterOpen = openNetworkDataCenters[dataCenter.id] || false;
           const hasNetworks = Array.isArray(dataCenter.networks) && dataCenter.networks.length > 0;
           return (
-            <div key={dataCenter.id}>
+            <div key={dataCenter.id} className="tmi-g">
               <TreeMenuItem
                 level={2}
                 title={dataCenter.name}

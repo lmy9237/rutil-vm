@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import "./MainOuter.css"; // 기존 스타일 유지
 import {
   RVI24,
-  rvi24Dashboard,
   rvi24Desktop,
   rvi24Network,
   rvi24Storage,
   rvi24Event,
-  rvi24Gear,
 } from "../icons/RutilVmIcons";
+import "./MainOuter.css"; // 기존 스타일 유지
 
 const SideNavbar = ({
   asideVisible,
@@ -52,10 +50,10 @@ const SideNavbar = ({
     // { iconDef: rvi24Dashboard,    id: "dashboard", link: "/",  },
     { iconDef: rvi24Desktop,      id: "computing", link: "/computing/vms",  },
     { iconDef: rvi24Network,      id: "network",   link: "/networks",  },
-    { iconDef: rvi24Storage,      id: "storage",   link: "/storages/domains",  },
+    { iconDef: rvi24Storage("currentColor"),      id: "storage",   link: "/storages/domains",  },
     // 추가가 필요할 시 주석 해제
     // { iconDef: rvi24Gear("#9999999"),       id: "settings",  link: "/settings/session",  },
-    { iconDef: rvi24Event,        id: "event",     link: "/events",  },
+    { iconDef: rvi24Event("currentColor"),        id: "event",     link: "/events",  },
   ];
 
   const [isFirstRender, setIsFirstRender] = useState(true);

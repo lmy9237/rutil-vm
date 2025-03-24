@@ -10,10 +10,10 @@ import {
   useHost,
   useAllClusters,
 } from "../../../api/RQHook";
-import "./MHost.css";
-import Localization from "../../../utils/Localization";
 import { checkName } from "../../../util";
+import Localization from "../../../utils/Localization";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
+import "./MHost.css";
 
 const initialFormState = {
   id: "",

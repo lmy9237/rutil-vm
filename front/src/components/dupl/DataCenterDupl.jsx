@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import TablesOuter from "../table/TablesOuter";
 import DataCenterActionButtons from "./DataCenterActionButtons";
 import DataCenterModals from "../modal/datacenter/DataCenterModals";
-import { renderDataCenterStatus, renderDatacenterStatusIcon } from "../Icon";
-import TableRowClick from "../table/TableRowClick";
 import useSearch from "../button/useSearch";
+import TableRowClick from "../table/TableRowClick";
+import { status2Icon } from "../icons/RutilVmIcons";
+import Localization from "../../utils/Localization";
 
 const DataCenterDupl = ({
   isLoading, isError, isSuccess,
@@ -23,8 +24,8 @@ const DataCenterDupl = ({
         {dc?.name}
       </TableRowClick>
     ),
-    icon: renderDatacenterStatusIcon(dc?.status),
-    status: renderDataCenterStatus(dc?.status),
+    icon: status2Icon(dc?.status),
+    status: Localization.kr.renderStatus(dc?.status),
     storageType: dc?.storageType ? "로컬" : "공유됨",
     searchText: `${dc?.name} ${dc?.status} ${dc?.storageType ? "로컬" : "공유됨"}`,
   }));

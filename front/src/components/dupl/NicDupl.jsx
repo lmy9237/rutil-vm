@@ -1,11 +1,13 @@
-// import { Suspense, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import TablesOuter from "../table/TablesOuter";
-// import TableRowClick from "../table/TableRowClick";
-// import { renderTFStatusIcon } from "../Icon";
-// import { useVmById } from "../../api/RQHook";
-// import NicModals from "../modal/nic/NicModals";
-// import NicActionButtons from "./NicActionButtons";
+/*
+import { Suspense, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import TablesOuter from "../table/TablesOuter";
+import TableRowClick from "../table/TableRowClick";
+import { renderTFStatusIcon } from "../Icon";
+import { useVmById } from "../../api/RQHook";
+import NicModals from "../modal/nic/NicModals";
+import NicActionButtons from "./NicActionButtons";
+*/
 
 // /**
 //  * @name NicDupl

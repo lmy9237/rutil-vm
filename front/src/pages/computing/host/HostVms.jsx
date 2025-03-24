@@ -20,13 +20,11 @@ const HostVms = ({ hostId }) => {
   } = useVmFromHost(hostId, (e) => ({ ...e }));
 
   return (
-    <>
-      <VmDupl
-        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
-        columns={TableColumnsInfo.VMS_FROM_HOST}
-        vms={vms}
-      />
-    </>
+    <VmDupl
+      isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+      columns={TableColumnsInfo.VMS_FROM_HOST}
+      vms={vms}
+    />
   );
 };
 

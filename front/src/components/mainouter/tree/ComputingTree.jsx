@@ -59,7 +59,7 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
   };
 
   return (
-    <div id="virtual_machine_chart">
+    <div id="virtual_machine_chart" className="tmi-g">
       {/* 첫 번째 레벨 (Rutil Manager) */}
       <TreeMenuItem level={1}
         title="Rutil Manager"
@@ -81,7 +81,7 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
         const isDataCenterOpen = openComputingDataCenters[dataCenter.id] || false;
         const hasClusters = Array.isArray(dataCenter.clusters) && dataCenter.clusters.length > 0;
         return (
-          <div key={dataCenter.id}>
+          <div key={dataCenter.id} className="tmi-g">
             <TreeMenuItem level={2}
               title={dataCenter.name}
               iconDef={rvi16DataCenter}
@@ -99,7 +99,7 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
               const isClusterOpen = openClusters[cluster.id] || false;
               const hasHosts = Array.isArray(cluster.hosts) && cluster.hosts.length > 0;
               return (
-                <div key={cluster.id}>
+                <div key={cluster.id} className="tmi-g">
                   <TreeMenuItem level={3}
                     title={cluster.name}
                     iconDef={rvi16Cluster}
@@ -120,7 +120,7 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
                         const isHostOpen = openHosts[host.id] || false;
                         const hasVMs = Array.isArray(host.vms) && host.vms.length > 0;
                         return (
-                          <div key={host.id}>
+                          <div key={host.id} className="tmi-g">
                             <TreeMenuItem level={4}
                               title={host.name}
                               iconDef={rvi16Host}
@@ -135,7 +135,7 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
                             />
                             {/* 다섯 번째 레벨 (VMs under Host) */}
                             {isHostOpen && Array.isArray(host.vms) && host.vms.map((vm) => (
-                              <div key={vm.id}>
+                              <div key={vm.id} className="tmi-g">
                                 <TreeMenuItem level={5}
                                   title={vm.name}
                                   iconDef={rvi16Desktop}
@@ -157,7 +157,7 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
                       )}
                       {/* VM(중지) */}
                       {Array.isArray(cluster.vmDowns) && cluster.vmDowns.map((vm) => (
-                        <div key={vm.id}>
+                        <div key={vm.id} className="tmi-g">
                           <TreeMenuItem level={4}
                             title={vm.name}
                             iconDef={rvi16DesktopSleep}

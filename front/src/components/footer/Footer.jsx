@@ -38,7 +38,7 @@ const Footer = ({
             setIsFooterContentVisible(!isFooterContentVisible);
           }}
         >
-          <RVI24 iconDef={isFooterContentVisible ? rvi24DownArrow : rvi24ChevronUp} fixedWidth />
+          <RVI24 iconDef={isFooterContentVisible ? rvi24DownArrow : rvi24ChevronUp} />
         </button>
         <div>
           <div onClick={() => handleFooterTabClick("recent")}>최근 작업</div>

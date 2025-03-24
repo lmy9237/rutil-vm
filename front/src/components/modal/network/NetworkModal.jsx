@@ -14,11 +14,10 @@ import {
   useNetworkById,
 } from "../../../api/RQHook";
 import "./MNetwork.css";
-import DynamicInputList from "../../label/DynamicInputList";
 import Localization from "../../../utils/Localization";
 
 const FormGroup = ({ label, children }) => (
-  <div className="network-form-group center">
+  <div className="network-form-group f-btw">
     <label style={{ "font-size": "15px" }}>{label}</label>
     {children}
   </div>
@@ -283,7 +282,7 @@ const NetworkModal = ({
       
         {/* <FormGroup>
           <div
-            className="network-form-group center"
+            className="network-form-group f-btw"
             style={{ width: "100%", padding: 0 }}
           >
             <input type="text" id="dns_server" disabled={!dnsEnabled} />
