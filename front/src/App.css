@@ -12,7 +12,7 @@ html {
   --h-rutil-footer-open: calc(var(--h-rutil-footer) + var(--h-rutil-footer-content));
   --h-rutil-content: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer));
   --h-rutil-content-footer-open: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer-open));
-  --h-section-header: 69px; /*section-header 높이 */
+  --h-section-header: 68.3px; /*section-header 높이 */
   --h-primary:26px;
   --h-32:32px;
   --h-text-input: 28px;
@@ -187,6 +187,8 @@ input[disabled] {
 .info-content{
     width: calc(100% - var(--w-nav));
     padding: 14px 15px;
+    height: 100%;
+    overflow-y: auto;
 }
 
 .dropdown-container {

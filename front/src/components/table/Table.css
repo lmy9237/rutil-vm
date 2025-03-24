@@ -24,6 +24,10 @@
   display: flex;
   align-items: center;
 }
+.paging-btns center{
+  display: flex;
+  justify-content: right;
+}
 /*search-box*/
 .search-box button {
   padding: 5px 10px;

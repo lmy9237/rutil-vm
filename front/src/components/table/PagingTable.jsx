@@ -141,19 +141,7 @@ const PagingTable = ({
   return (
     <>
       <div className="pagination">
-        <div className="paging-btns center mb-1">
-          <div className="paging-arrows">
-            <PagingButton type="prev"
-              onClick={() => handlePageChange("prev")}
-              disabled={currentPage === 1}
-            />
-            <span>{`${indexOfFirstItem + 1} - ${Math.min(indexOfLastItem, validData.length)}`}</span>
-            <PagingButton type="next"
-              onClick={() => handlePageChange("next")}
-              disabled={currentPage === totalPages}
-            />
-          </div>
-        </div>
+  
 
         <table className="custom-table" ref={tableRef}>
           <thead>
@@ -173,6 +161,19 @@ const PagingTable = ({
           </thead>
           <tbody>{renderTableBody()}</tbody>
         </table>
+        <div className="paging-btns center">
+          <div className="paging-arrows my-2">
+            <PagingButton type="prev"
+              onClick={() => handlePageChange("prev")}
+              disabled={currentPage === 1}
+            />
+            <span>{`${indexOfFirstItem + 1} - ${Math.min(indexOfLastItem, validData.length)}`}</span>
+            <PagingButton type="next"
+              onClick={() => handlePageChange("next")}
+              disabled={currentPage === totalPages}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Tooltip */}
