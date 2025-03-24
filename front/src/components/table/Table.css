@@ -11,23 +11,6 @@
   color: var(--color-nav);
   letter-spacing:var(--letter-28);
 }
-
-/* pagingtable.css */
-.pagination {
-  margin-bottom: 10px;
-}
-.pagination button.active {
-  background-color: rgb(218, 236, 245);
-}
-.pagination span {
-  margin-right: auto;
-  display: flex;
-  align-items: center;
-}
-.paging-btns center{
-  display: flex;
-  justify-content: right;
-}
 /*search-box*/
 .search-box button {
   padding: 5px 10px;

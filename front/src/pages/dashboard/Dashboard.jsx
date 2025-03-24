@@ -268,8 +268,8 @@ const Dashboard = () => {
                   Math.floor(
                     (cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100
                   )}
-                {"% "}{" "}
               </h1>
+              <span>{"% "}{" "}</span>
               <div>{Localization.kr.AVAILABLE} (총 {cpuMemory?.totalCpuCore} Core)</div>
             </div>
             <span>
@@ -306,7 +306,8 @@ const Dashboard = () => {
           <div className="dash-section-contents">
             <h1 className="dash-con-title">MEMORY</h1>
             <div className="status-value flex">
-              <h1>{cpuMemory?.freeMemoryGB?.toFixed(0)} GB</h1>
+              <h1>{cpuMemory?.freeMemoryGB?.toFixed(0)}</h1>
+              <span>GB</span>
               <div>{Localization.kr.AVAILABLE} (총 {cpuMemory?.totalMemoryGB?.toFixed(0)} GB)</div>
             </div>
             <span>
@@ -343,7 +344,8 @@ const Dashboard = () => {
           >
             <h1 className="dash-con-title">STORAGE</h1>
             <div className="status-value flex">
-              <h1>{storage?.freeGB} GB</h1>
+              <h1>{storage?.freeGB} </h1>
+              <span>GB</span>
               <div>{Localization.kr.AVAILABLE} (총 {storage?.totalGB} GB)</div>
             </div>
             <span>

@@ -9,7 +9,7 @@
   /* height:var(--h-icon-tree) !important; */
 }
 .tmi:hover{
-  background: var(--color-table);
+  background: var(--color-white);
 }
 .tmi.active {
   background: var(--color-table) !important;

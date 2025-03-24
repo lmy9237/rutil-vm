@@ -272,96 +272,102 @@ const Tables = ({
         <TableRowNoData colLen={columns.length} />
       ) : (
         // 데이터 있을 경우
-        paginatedData.map((row, rowIndex) => (
-          <tr
-            key={rowIndex}
-            onClick={(e) => {
-              setSelectedRowIndex(rowIndex);
-              setContextRowIndex(null); // 다른 우클릭된 행을 초기화
-              onRowClick(row); // 클릭한 행의 전체 데이터를 onRowClick에 전달
-              handleRowClick(rowIndex, e); // 다중 선택 핸들러
-            }}
-            onContextMenu={(e) => handleContextMenu(e, rowIndex)} // 우클릭 시 메뉴 표시
-            className={`${
-              selectedRows.includes(rowIndex) || contextRowIndex === rowIndex
-                ? "selected-row" // ✅ 추가된 클래스
-                : ""
-            }`}
-            
-          >
-            
-            {columns.map((column, colIndex) => (
-              <td
-                key={colIndex}
-                data-tooltip-id={`tooltip-${rowIndex}-${colIndex}`}
-                data-tooltip-content={row[column.accessor]}
-                onMouseEnter={(e) => handleMouseEnter(e, rowIndex, colIndex, row[column.accessor])}
-                style={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  textAlign:
-                    typeof row[column.accessor] === "string" ||
-                    typeof row[column.accessor] === "number"
-                      ? "left"
-                      : "center",
-                  verticalAlign: "middle",
-                  cursor:
-                    row[column.accessor] &&
-                    clickableColumnIndex.includes(colIndex)
-                      ? "pointer"
-                      : "default",
-                  color:
-                    row[column.accessor] &&
-                    clickableColumnIndex.includes(colIndex)
-                      ? "blue"
-                      : "inherit",
-                  fontWeight:
-                    row[column.accessor] &&
-                    clickableColumnIndex.includes(colIndex)
-                      ? "500"
-                      : "normal",
-                }}
-                onClick={(e) => {
-                  if (
-                    row[column.accessor] &&
-                    clickableColumnIndex.includes(colIndex)
-                  ) {
-                    e.stopPropagation();
-                    if (onClickableColumnClick) {
-                      onClickableColumnClick(row);
+        paginatedData.map((row, rowIndex) => {
+          const globalIndex = indexOfFirstItem + rowIndex; // ✅ 전체 데이터 기준 인덱스
+        
+          return (
+            <tr
+              key={globalIndex}
+              onClick={(e) => {
+                setSelectedRowIndex(globalIndex);
+                setContextRowIndex(null);
+                onRowClick([row]); // ✅ 배열로 전달
+                handleRowClick(globalIndex, e);
+              }}
+              onContextMenu={(e) => handleContextMenu(e, globalIndex)}
+              className={
+                selectedRows.includes(globalIndex) || contextRowIndex === globalIndex
+                  ? "selected-row"
+                  : ""
+              }
+            >
+              {columns.map((column, colIndex) => (
+                <td
+                  key={colIndex}
+                  data-tooltip-id={`tooltip-${globalIndex}-${colIndex}`}
+                  data-tooltip-content={row[column.accessor]}
+                  onMouseEnter={(e) =>
+                    handleMouseEnter(e, globalIndex, colIndex, row[column.accessor])
+                  }
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    textAlign:
+                      typeof row[column.accessor] === "string" ||
+                      typeof row[column.accessor] === "number"
+                        ? "left"
+                        : "center",
+                    verticalAlign: "middle",
+                    cursor:
+                      row[column.accessor] &&
+                      clickableColumnIndex.includes(colIndex)
+                        ? "pointer"
+                        : "default",
+                    color:
+                      row[column.accessor] &&
+                      clickableColumnIndex.includes(colIndex)
+                        ? "blue"
+                        : "inherit",
+                    fontWeight:
+                      row[column.accessor] &&
+                      clickableColumnIndex.includes(colIndex)
+                        ? "500"
+                        : "normal",
+                  }}
+                  onClick={(e) => {
+                    if (
+                      row[column.accessor] &&
+                      clickableColumnIndex.includes(colIndex)
+                    ) {
+                      e.stopPropagation();
+                      if (onClickableColumnClick) {
+                        onClickableColumnClick(row);
+                      }
                     }
-                  }
-                }}
-                onMouseOver={(e) => {
-                  if (
-                    row[column.accessor] &&
-                    clickableColumnIndex.includes(colIndex)
-                  ) {
-                    e.target.style.textDecoration = "underline";
-                  }
-                }}
-                onMouseOut={(e) => {
-                  if (
-                    row[column.accessor] &&
-                    clickableColumnIndex.includes(colIndex)
-                  ) {
-                    e.target.style.textDecoration = "none";
-                  }
-                }}
-              >
-                {typeof row[column.accessor] === "object" &&
-                column.header === "icon" ? (
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    {row[column.accessor]}
-                  </div>
-                ) : (
-                  row[column.accessor]
-                )}
-              </td>
-            ))}
-          </tr>
-        ))
+                  }}
+                  onMouseOver={(e) => {
+                    if (
+                      row[column.accessor] &&
+                      clickableColumnIndex.includes(colIndex)
+                    ) {
+                      e.target.style.textDecoration = "underline";
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (
+                      row[column.accessor] &&
+                      clickableColumnIndex.includes(colIndex)
+                    ) {
+                      e.target.style.textDecoration = "none";
+                    }
+                  }}
+                >
+                  {typeof row[column.accessor] !== "string" &&
+                  typeof row[column.accessor] !== "number" &&
+                  row[column.accessor]?.type?.name !== "TableRowClick" ? (
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      {row[column.accessor]}
+                    </div>
+                  ) : (
+                    row[column.accessor]
+                  )}
+                </td>
+              ))}
+            </tr>
+          );
+        })
+        
       );
     }
   };

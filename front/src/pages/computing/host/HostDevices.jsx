@@ -1,6 +1,6 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import PagingTable from "../../../components/table/PagingTable";
 import { useHostdeviceFromHost } from "../../../api/RQHook";
+import Tables from "../../../components/table/Tables";
 
 /**
  * @name HostDevices
@@ -22,7 +22,7 @@ const HostDevices = ({ hostId }) => {
   return (
     <>
       <div className="section-table-outer">
-        <PagingTable
+        <Tables
           isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
           columns={TableColumnsInfo.DEVICE_FROM_HOST}
           data={hostDevices}

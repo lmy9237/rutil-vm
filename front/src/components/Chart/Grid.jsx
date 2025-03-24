@@ -55,15 +55,19 @@ const Grid = ({ type, data = [] }) => {
           }}
         >
           {item.cpuPercent !== null || item.memoryPercent !== null ? (
-            <div className="percent">
-              {type === "cpu" ? item.cpuPercent : item.memoryPercent}%
+          <div>
+            <div className="percent f-center">
+              <h1>{type === "cpu" ? item.cpuPercent : item.memoryPercent}</h1>
+              <div>%</div>
             </div>
+            <div className="grid-item-name">( {item.name} )</div>
+          </div>
           ) : (
             <div
               className="percent placeholder"
               style={{ color: "rgb(0 0 0)" }}
             >
-              -
+              
             </div>
           )}
         </div>

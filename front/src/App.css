@@ -1000,7 +1000,41 @@ textarea {
     font-size: 0.34rem;
     padding: 2.5%;
 }
-
+.capacity_outer {
+  flex-direction: column;
+  display: flex;
+  height: 70%;
+  justify-content: space-between;
+}
+.capacity_box {
+  display: flex;
+  height: 48%;
+  justify-content: space-between;
+  align-items: center;
+}
+  .related_object {
+  display: flex;
+  align-items: center;
+}
+.vm_table_container {
+  width: 100%;
+}
+-- pagingtable.css 
+.pagination {
+    margin-bottom: 10px;
+  }
+  .pagination button.active {
+    background-color: rgb(218, 236, 245);
+  }
+  .pagination span {
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+  }
+  .paging-btns center{
+    display: flex;
+    justify-content: right;
+  }
 .pregroup_create_outer{
     position: fixed;
     top: 0;

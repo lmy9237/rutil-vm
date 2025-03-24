@@ -33,9 +33,7 @@ const DataCenterDupl = ({
 
   const selectedIds = (
     Array.isArray(selectedDataCenters) ? selectedDataCenters : []
-  )
-    .map((dc) => dc.id)
-    .join(", ");
+  ).map((dc) => dc.id).join(", ");
 
   const handleNameClick = (id) =>
     navigate(`/computing/datacenters/${id}/clusters`);

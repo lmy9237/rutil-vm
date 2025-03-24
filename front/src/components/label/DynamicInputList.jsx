@@ -8,6 +8,7 @@ const DynamicInputList = ({
   inputType = "text",
   options = [],
   disabled = false, // 🔥 DNS 설정이 비활성화되면 모든 기능을 막기 위한 속성 추가
+  getLabel = null, //추가: 각 항목 라벨 커스터마이징용
 }) => {
   const [inputs, setInputs] = useState([""]);
 
@@ -35,6 +36,9 @@ const DynamicInputList = ({
     <div className="dynamic-input-outer py-2">
       {inputs.map((input, index) => (
         <div key={index} className="dynamic-input f-btw mb-1.5">
+
+          {getLabel && <div className="nic-label mr-2">{getLabel(index)}</div>} {/*nic만 붙음*/}
+
           {inputType === "select" ? (
             <select
               value={input}

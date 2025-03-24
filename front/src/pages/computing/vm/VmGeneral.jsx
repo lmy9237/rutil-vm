@@ -170,7 +170,7 @@ const VmGeneral = ({ vmId }) => {
           <div className="capacity-outer">
             <div className="capacity">
               <div>CPU</div>
-                <SemiCircleChart percentage={vm?.usageDto?.cpuPercent || 0} />
+              <SemiCircleChart percentage={vm?.usageDto?.cpuPercent || 0} />
             </div>
             <div className="capacity">
               <div>{Localization.kr.MEMORY}</div>

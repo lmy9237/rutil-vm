@@ -1,3 +1,7 @@
+.dynamic-btns{
+    min-width: 52px;
+    justify-content: right;
+}
 .dynamic-btns>button{
     width: 26px;
     height: var(--h-primary);

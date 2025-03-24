@@ -3,6 +3,7 @@ import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import ModalNavButton from "../../navigation/ModalNavButton";
 import Localization from "../../../utils/Localization";
+import LabelSelectOptions from "../../label/LabelSelectOptions";
 
 // 탭 메뉴
 const tabs = [
@@ -84,20 +85,14 @@ const HostNetworkEditModal = ({
 
           {selectedModalTab === "ipv6" && (
             <>
-              <div className="backup-edit-radiobox">
-                <div className="font-bold mb-0.5">부트 프로토콜</div>
-                  {ipv6Options.map(({ id, value, label }, index) => (
-                    <div className="flex mb-0.5" key={id}>
-                      <input 
-                        type="radio" name="ipv6_mtu" 
-                        id={id} value={value} 
-                        checked={selectedIpv6Protocol === value}
-                        onChange={() => setSelectedIpv6Protocol(value)}
-                      />
-                      <label htmlFor={id}>{label}</label>
-                    </div>
-                  ))}
-              </div>
+             <LabelSelectOptions
+                label="부트 프로토콜"
+                id="ipv6_protocol"
+                value={selectedIpv6Protocol}
+                onChange={(e) => setSelectedIpv6Protocol(e.target.value)}
+                disabled={false}
+                options={ipv6Options}
+              />
               <div className="select-box-outer mt-1">
                 <LabelInput id="ip_address" label="IP" disabled={selectedIpv6Protocol !== "static"} />
                 <LabelInput id="netmask" label="넷마스크 / 라우팅 접두사" disabled={selectedIpv6Protocol !== "static"} />

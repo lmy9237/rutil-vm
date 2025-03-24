@@ -25,9 +25,13 @@
   align-items: center;
 }
 .status-value > h1 {
-  font-size: var(--fs-40);
-  color: black;
+  font-size: var(--fs-big);
   font-weight: 700;
+}
+.status-value > span{
+  font-size: var(--fs-18);
+  font-weight: 700;
+  margin-right: 8px;
 }
 .dash-section-contents > span {
   display: block;

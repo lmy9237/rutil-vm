@@ -64,7 +64,10 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
       <TreeMenuItem level={1}
         title="Rutil Manager"
         iconDef={rvi16Globe}
-        isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
+        // isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
+        isSelected={() =>
+          location.pathname.includes("rutil")
+        }
         isNextLevelVisible={isSecondVisible}
         onChevronClick={() => setIsSecondVisible(!isSecondVisible)}
         onClick={() => {

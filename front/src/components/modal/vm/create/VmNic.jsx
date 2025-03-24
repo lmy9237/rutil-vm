@@ -28,6 +28,7 @@ const VmNic = ({
         inputType="select"
         options={nics.map((profile) => profile.name)} // ✅ vNIC 드롭다운 옵션
         disabled={false} // 비활성화 X
+        getLabel={(index) => `nic${index + 1}`}
         onChange={handleNicChange} // ✅ vNIC 변경 핸들러 적용
       />
     </div>

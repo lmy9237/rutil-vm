@@ -1,9 +1,8 @@
 import React, { Suspense, useState } from "react";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
-import PagingTableOuter from "../../components/table/PagingTableOuter";
 import SettingUserSessionsActionButtons from "./SettingUserSessionsActionButtons";
-import SettingUserSessionsModals from "../../components/modal/settings/SettingUserSessionsModals"
 import { useAllUserSessions } from "../../api/RQHook";
+import TablesOuter from "../../components/table/TablesOuter";
 
 /**
  * @name SettingSessions
@@ -88,7 +87,7 @@ const SettingSessions = () => {
       />
 
       <span>ID = {selectedUserSessions?.id || ""}</span>
-      <PagingTableOuter
+      <TablesOuter
         isLoading={isUserSessionsLoading}
         isError={isUserSessionsError}
         isSuccess={isUserSessionsSuccess}

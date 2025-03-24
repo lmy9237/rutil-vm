@@ -28,30 +28,14 @@
 }
 .capacity {
   font-size: var(--fs-default);
-  padding: 0.2rem;
+  padding-top: 10px;
+  display: flex;
 }
 .capacity > div:first-child {
-  font-weight: 600;
+  font-weight: 700;
+  font-size: var(--fs-14);
 }
-.capacity_outer {
-  flex-direction: column;
-  display: flex;
-  height: 70%;
-  justify-content: space-between;
-}
-.capacity_box {
-  display: flex;
-  height: 48%;
-  justify-content: space-between;
-  align-items: center;
-}
-.related_object {
-  display: flex;
-  align-items: center;
-}
-.vm_table_container {
-  width: 100%;
-}
+
 .detail-general-boxs-bottom {
   width: 100%;
   display: flex;

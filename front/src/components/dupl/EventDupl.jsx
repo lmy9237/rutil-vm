@@ -1,8 +1,9 @@
+import { useState } from "react";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
-import PagingTableOuter from "../../components/table/PagingTableOuter";
 import { EventSeverityIcon } from "../icons/RutilVmIcons";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
+import TablesOuter from "../table/TablesOuter";
 
 /**
  * @name HostEvents
@@ -20,27 +21,35 @@ const EventDupl = ({
   handleRowClick,
   showSearchBox = true,
 }) => {
+  const [selectedEvents, setSelectedEvents] = useState([]);
+
   const transformedData = events.map((e) => ({
     ...e,
     _severity: EventSeverityIcon(e?.severity),
   }))
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+
+  const selectedIds = (
+    Array.isArray(selectedEvents) ? selectedEvents : []
+  ).map((e) => e.id).join(", ");
   
   console.log("...");
   return (
     <>
+      <span>ID: {selectedIds}</span>
       <div className="dupl-header-group">
         {showSearchBox && (
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         )}
       </div>
 
-      <PagingTableOuter
+      <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         columns={TableColumnsInfo.EVENTS}
         data={filteredData}
-        onRowClick={handleRowClick}
+        onRowClick={(selectedRows) => setSelectedEvents(selectedRows)}
+        multiSelect={true}
         showSearchBox={showSearchBox} // 검색 박스 표시 여부 제어
       />
     </>

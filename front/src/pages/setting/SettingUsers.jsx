@@ -121,8 +121,7 @@ const SettingUsers = () => {
         columns={TableColumnsInfo.SETTING_USER}
         data={transformedData}
         onRowClick={(row) => {
-          console.log(`SettingUsers > onRowClick ... row: ${JSON.stringify(row)}`)
-          setSelectedUsers(row)
+          setSelectedUsers(Array.isArray(row) ? row : [row]);
         }}
         onContextMenuItems={(row) => [
           <SettingUsersActionButtons

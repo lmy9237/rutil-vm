@@ -46,7 +46,10 @@ const NetworkTree = ({ selectedDiv, setSelectedDiv }) => {
         level={1}
         title="Rutil Manager"
         iconDef={rvi16Globe}
-        isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
+        // isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
+        isSelected={() =>
+          location.pathname.includes("rutil")
+        }
         isNextLevelVisible={openDataCenters.network}
         isChevronVisible={true} 
         onChevronClick={() =>

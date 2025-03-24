@@ -67,7 +67,7 @@ const RadialBarChart = ({ percentage }) => {
           },
         },
         track: {
-          background: "#f0f0f0",
+          background: "#e7e7e7",
           strokeWidth: "100%",
           margin: -3,
         },
