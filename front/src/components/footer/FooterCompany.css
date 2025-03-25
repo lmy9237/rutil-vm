@@ -1,0 +1,19 @@
+.footer-company {
+  gap:40px;
+  padding: 20px 0;border-top:1px #E2E5EB solid;
+}
+.footer-company-group {
+  gap:8px;
+}
+.footer-company-detail {
+  margin:0 !important;padding:0 !important;
+  font-size:var(--fs-12);line-height:150%;
+}
+.footer-company-detail li,
+.footer-company-detail.detail-item {
+  list-style-type:none;display:inline;color:#717171;
+}
+.footer-company-detail li:not(:first-child):before {
+  content: "   |   ";
+  color:#C6C6C6;
+}
