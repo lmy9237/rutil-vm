@@ -153,6 +153,9 @@ fun List<Cluster>.toClustersIdName(): List<ClusterVo> =
 // 클러스터 목록
 fun Cluster.toClusterMenu(conn: Connection): ClusterVo {
 	val cluster = this@toClusterMenu
+	val dataCenter =
+		if(cluster.dataCenterPresent()) { conn.findDataCenter(cluster.dataCenter().id()).getOrNull() }
+		else { null }
 	return ClusterVo.builder {
 		id { cluster.id() }
 		name { cluster.name() }
@@ -161,7 +164,7 @@ fun Cluster.toClusterMenu(conn: Connection): ClusterVo {
 		version { cluster.version().major().toString() + "." + cluster.version().minor() }
 		description { cluster.description() }
 		cpuType { if(cluster.cpuPresent()) cluster.cpu().type().toString() else null }
-		dataCenterVo { cluster.dataCenter().fromDataCenterToIdentifiedVo() }
+		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		hostSize { cluster.findHostCntFromCluster(conn) }
 		vmSize { cluster.findVmCntFromCluster(conn) }
 	}
@@ -183,6 +186,9 @@ fun List<Cluster>.toDcClustersMenu(): List<ClusterVo> =
 
 fun Cluster.toClusterInfo(conn: Connection): ClusterVo {
 	val cluster = this@toClusterInfo
+	val dataCenter =
+		if(cluster.dataCenterPresent()) { conn.findDataCenter(cluster.dataCenter().id()).getOrNull() }
+		else { null }
 	return ClusterVo.builder {
 		id { cluster.id() }
 		name { cluster.name() }
@@ -201,7 +207,7 @@ fun Cluster.toClusterInfo(conn: Connection): ClusterVo {
 		bandwidth { cluster.migration().bandwidth().assignmentMethod() }
 		networkVo { cluster.networks().firstOrNull() { it.display() }?.toNetworkIdName() }
 		version { cluster.version().major().toString() + "." + cluster.version().minor() }
-		dataCenterVo { if(cluster.descriptionPresent()) cluster.dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo()}
+		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		vmSize { cluster.findVmCntFromCluster(conn) }
 	}
 }

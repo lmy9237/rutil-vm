@@ -77,42 +77,36 @@ class LogicalUnitVo (
     }
 }
 
-// TODO 밑의 두개가 거의 같음 수정필요
+// logicalunit 공통 빌더
+fun LogicalUnit.toLogicalUnitVoBuilder(): LogicalUnitVo.Builder.() -> Unit = {
+	id { this@toLogicalUnitVoBuilder.id() }
+	discardMaxSize { this@toLogicalUnitVoBuilder.discardMaxSizeAsInteger() }
+	discardZeroesData { this@toLogicalUnitVoBuilder.discardZeroesData() }
+	paths { this@toLogicalUnitVoBuilder.pathsAsInteger() }
+	productId { this@toLogicalUnitVoBuilder.productId() }
+	size { this@toLogicalUnitVoBuilder.size() }
+	status { this@toLogicalUnitVoBuilder.status() }
+	storageDomainId { this@toLogicalUnitVoBuilder.storageDomainId() }
+	vendorId { this@toLogicalUnitVoBuilder.vendorId() }
+	serial { this@toLogicalUnitVoBuilder.serial() }
+	volumeGroup { this@toLogicalUnitVoBuilder.volumeGroupId() }
+}
+
+// iSCSI
 fun LogicalUnit.toIscsiLogicalUnitVo(): LogicalUnitVo = LogicalUnitVo.builder {
-    id { this@toIscsiLogicalUnitVo.id() }
-    address { this@toIscsiLogicalUnitVo.address() }//
-    discardMaxSize { this@toIscsiLogicalUnitVo.discardMaxSizeAsInteger() }
-    discardZeroesData { this@toIscsiLogicalUnitVo.discardZeroesData() }
-    paths { this@toIscsiLogicalUnitVo.pathsAsInteger() }
-    port { this@toIscsiLogicalUnitVo.portAsInteger() }//
-    portal { this@toIscsiLogicalUnitVo.portal() }//
-    productId { this@toIscsiLogicalUnitVo.productId() }
-    size { this@toIscsiLogicalUnitVo.size() }
-    status { this@toIscsiLogicalUnitVo.status() }
-    storageDomainId { this@toIscsiLogicalUnitVo.storageDomainId() }
-    target { this@toIscsiLogicalUnitVo.target() }//
-    vendorId { this@toIscsiLogicalUnitVo.vendorId() }
-    serial { this@toIscsiLogicalUnitVo.serial() }
-    volumeGroup { this@toIscsiLogicalUnitVo.volumeGroupId() }
+	this@toIscsiLogicalUnitVo.toLogicalUnitVoBuilder().invoke(this)
+	address { this@toIscsiLogicalUnitVo.address() }
+	port { this@toIscsiLogicalUnitVo.portAsInteger() }
+	portal { this@toIscsiLogicalUnitVo.portal() }
+	target { this@toIscsiLogicalUnitVo.target() }
 }
 fun List<LogicalUnit>.toIscsiLogicalUnitVos(): List<LogicalUnitVo> =
-    this@toIscsiLogicalUnitVos.map { it.toIscsiLogicalUnitVo() }
+	map { it.toIscsiLogicalUnitVo() }
 
-
+// Fibre
 fun LogicalUnit.toFibreLogicalUnitVo(): LogicalUnitVo = LogicalUnitVo.builder {
-    id { this@toFibreLogicalUnitVo.id() }
-    discardMaxSize { this@toFibreLogicalUnitVo.discardMaxSizeAsInteger() }
-    discardZeroesData { this@toFibreLogicalUnitVo.discardZeroesData() }
-    diskId { this@toFibreLogicalUnitVo.diskId() } //
-    paths { this@toFibreLogicalUnitVo.pathsAsInteger() }
-    productId { this@toFibreLogicalUnitVo.productId() }
-    size { this@toFibreLogicalUnitVo.size() }
-    status { this@toFibreLogicalUnitVo.status() }
-    storageDomainId { this@toFibreLogicalUnitVo.storageDomainId() }
-    vendorId { this@toFibreLogicalUnitVo.vendorId() }
-    serial { this@toFibreLogicalUnitVo.serial() }
-    volumeGroup { this@toFibreLogicalUnitVo.volumeGroupId() }
+	this@toFibreLogicalUnitVo.toLogicalUnitVoBuilder().invoke(this)
+	diskId { this@toFibreLogicalUnitVo.diskId() }
 }
 fun List<LogicalUnit>.toFibreLogicalUnitVos(): List<LogicalUnitVo> =
-    this@toFibreLogicalUnitVos.map { it.toFibreLogicalUnitVo() }
-
+	map { it.toFibreLogicalUnitVo() }

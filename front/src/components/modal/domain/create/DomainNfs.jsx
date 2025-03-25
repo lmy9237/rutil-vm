@@ -2,6 +2,7 @@ import React from 'react';
 
 const DomainNfs = ({ mode, nfsAddress, setNfsAddress, domain }) => {
   const editMode = mode === 'edit';
+
   return (
     <>
       <div className="storage-popup-iSCSI">
@@ -12,7 +13,7 @@ const DomainNfs = ({ mode, nfsAddress, setNfsAddress, domain }) => {
           ): (          
             <input 
               type="text" 
-              value={nfsAddress || ''}  
+              value={nfsAddress}  
               onChange={(e) => { setNfsAddress(e.target.value) }} 
               placeholder="예: myserver.mydomain.com:/my/local/path" 
             />

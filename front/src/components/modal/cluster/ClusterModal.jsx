@@ -210,8 +210,8 @@ const ClusterModal = ({
     };
 
     const onSuccess = () => {
-      onClose();
       toast.success(`${Localization.kr.CLUSTER} ${cLabel} 완료`);
+      onClose();
     };
     const onError = (err) => toast.error(`Error ${cLabel} cluster: ${err}`);
 
@@ -231,7 +231,7 @@ const ClusterModal = ({
       contentStyle={{ width: "730px" }} 
     >
       <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
-        value={dataCenterVo.id}
+        value={dataCenterVo}
         disabled={editMode}
         loading={isDataCentersLoading}
         options={datacenters}
@@ -241,19 +241,16 @@ const ClusterModal = ({
         }}
       />
       <hr />
-      <LabelInput id="name"
-        label={Localization.kr.NAME}
+      <LabelInput id="name" label={Localization.kr.NAME}
         value={formState.name}
         onChange={handleInputChange("name")}
         autoFocus
       />
-      <LabelInput id="description"
-        label={Localization.kr.DESCRIPTION}
+      <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
         onChange={handleInputChange("description")}
       />
-      <LabelInput id="comment"
-        label={Localization.kr.COMMENT}
+      <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
         onChange={handleInputChange("comment")}
       />
@@ -282,13 +279,15 @@ const ClusterModal = ({
       <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"
         value={formState.biosType}
         options={biosTypeOptions}
-        disabled={
-          formState.cpuArc === "PPC64" || formState.cpuArc === "S390X"
-        }
+        disabled={["PPC64", "S390X"].includes(formState.cpuArc)}
         onChange={handleInputChange("biosType")}
       />
-
-      <div>
+      <LabelSelectOptions id="recovery_policy-type" label="복구정책"
+        value={formState.errorHandling}
+        options={errorHandlingOptions}
+        onChange={handleInputChange("errorHandling")}
+      />
+      {/* <div>
         <div className="cluster-form-group">
           <div className="font-bold mb-0.5">복구정책</div>
           {errorHandlingOptions.map((option) => (
@@ -304,7 +303,7 @@ const ClusterModal = ({
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </BaseModal>
   );
 };

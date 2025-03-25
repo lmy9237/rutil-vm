@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import Tables from '../../../table/Tables';
 import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import LabelInput from '../../../label/LabelInput';
-import LabelInputNum from '../../../label/LabelInputNum';
 import LabelCheckbox from '../../../label/LabelCheckbox';
 import Localization from '../../../../utils/Localization';
 import { RVI24, rvi24ChevronUp, rvi24DownArrow } from '../../../icons/RutilVmIcons';
@@ -16,24 +15,24 @@ const DomainIscsi = ({
   setIscsiSearchResults,
   lunId,
   setLunId,
-  hostVoId,
-  hostVoName,
-  setHostVoName,
+  hostVo,
+  setHostVo,
   isIscsisLoading,
   importIscsiFromHost,
   loginIscsiFromHost,
   formImportState,
   setFormImportState,
+  refetchIscsis
 }) => {
-  console.log(`lungId: + ${lunId}, hostVoId: ${hostVoId}, hostVoName: ${hostVoName}`);
+  console.log(`lungId: + ${lunId}, hostVo: ${hostVo}`);
 
   // iscsi 생성
   const handleSearchIscsi = () => {
-    if (!hostVoId) 
+    if (!hostVo.id) 
       return toast.error(`${Localization.kr.HOST}를 선택해주세요.`);
     if (!formImportState.address || !formImportState.port) return toast.error('주소와 포트를 입력해주세요.');   
     
-    importIscsiFromHost({ hostId: hostVoId, iscsiData: formImportState }, {
+    importIscsiFromHost({ hostId: hostVo?.id, iscsiData: formImportState }, {
       onSuccess: (data) => { setIscsiSearchResults(data) },
       onError: (error) => { toast.error('iSCSI 가져오기 실패:', error) }
     });
@@ -43,7 +42,7 @@ const DomainIscsi = ({
   const handleLoginIscsi = () => {
     if (!formImportState.target) return toast.error('항목을 선택해주세요.');
 
-    loginIscsiFromHost({ hostId: hostVoId, iscsiData: formImportState }, {
+    loginIscsiFromHost({ hostId: hostVo?.id, iscsiData: formImportState }, {
       onSuccess: (data) => { setIscsiSearchResults(data) },
       onError: (error) => { toast.error('iSCSI 로그인 실패:', error) },
     });
@@ -73,7 +72,7 @@ const DomainIscsi = ({
       <div className="section-table-outer">
       {isIscsisLoading ? (
           <div className="label-font-body">로딩 중...</div>
-        ) :  mode === "edit" ? ( // 편집일때
+        ): mode === "edit" ? ( // 편집일때
           <Tables
             columns={TableColumnsInfo.LUNS_TARGETS}
             data={domain?.hostStorageVo?.logicalUnits?.map((logicalUnit) => ({
@@ -91,7 +90,7 @@ const DomainIscsi = ({
             })) || []}
             // onRowClick={handleRowClick}
           />
-        ) : (
+        ): (
           <>
             {/* {iscsiSearchResults?.length === 0 ? ( */}
               <div className="target-search-outer">

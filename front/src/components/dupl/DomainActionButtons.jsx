@@ -30,10 +30,10 @@ const DomainActionButtons = ({
   ];
 
   const dcDomainActions = [
-    { type: "create", label: "생성" },
-    { type: "detach", label: "분리", disabled: isDeleteDisabled || isActive },
-    { type: "activate", label: "활성", disabled: isDeleteDisabled || isActive },
-    { type: "maintenance", label: "유지보수", disabled: isDeleteDisabled || isMaintenance,},
+    { type: "create", label: "생성", onBtnClick: () => openModal("create")},
+    { type: "detach", label: "분리", disabled: isDeleteDisabled || isActive, onBtnClick: () => openModal("detach") },
+    { type: "activate", label: "활성", disabled: isDeleteDisabled || isActive, onBtnClick: () => openModal("activate") },
+    { type: "maintenance", label: "유지보수", disabled: isDeleteDisabled || isMaintenance, onBtnClick: () => openModal("maintenance")},
   ];
 
   const domainDcActions = [
@@ -57,10 +57,10 @@ const DomainActionButtons = ({
   actionType === "domain"
     ? basicActions
     : actionType === "dcDomain"
-    ? dcDomainActions
-    : actionType === "domainDc"
-    ? domainDcActions
-    : [];
+      ? dcDomainActions
+      : actionType === "domainDc"
+        ? domainDcActions
+        : [];
 
   return (
  

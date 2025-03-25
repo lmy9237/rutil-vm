@@ -94,7 +94,11 @@ const ClusterDupl = ({
         cluster={selectedClusters[0]}
         selectedClusters={selectedClusters}
         datacenterId={datacenterId}
-        onClose={closeModal}
+        onClose={() => {
+          console.log("ClusterDupl > onClose ... ")
+          closeModal()
+          
+        }}
       />
     </>
   );

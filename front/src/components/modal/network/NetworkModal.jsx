@@ -5,7 +5,7 @@ import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelInputNum from "../../label/LabelInputNum";
-import { checkKoreanName, checkName } from "../../../util";
+import { checkName } from "../../../util";
 import {
   useAllDataCenters,
   useClustersFromDataCenter,
@@ -180,10 +180,7 @@ const NetworkModal = ({
         <hr />
 
         <div className="center">
-          <LabelCheckbox
-            id="vlanEnabled"
-            label="VLAN 태깅 활성화"
-            className="network-checkbox-only"
+          <LabelCheckbox id="vlanEnabled" label="VLAN 태깅 활성화"
             checked={formState.vlanEnabled}
             onChange={(e) =>
               setFormState((prev) => ({
@@ -193,8 +190,7 @@ const NetworkModal = ({
               }))
             }
           />
-          <LabelInputNum
-            id="vlan"
+          <LabelInputNum id="vlan"
             placeholder="VLAN ID"
             value={formState.vlan}
             disabled={!formState.vlanEnabled}
@@ -203,7 +199,6 @@ const NetworkModal = ({
         </div>
 
         <LabelCheckbox
-          className="network-checkbox-only"
           label="가상 머신 네트워크"
           id="usageVm"
           checked={formState.usageVm}
@@ -217,7 +212,6 @@ const NetworkModal = ({
           }}
         />
         <LabelCheckbox
-          className="network-checkbox-only"
           label="포트 분리"
           id="portIsolation"
           checked={formState.portIsolation}
@@ -268,7 +262,6 @@ const NetworkModal = ({
         </FormGroup>
 
         <LabelCheckbox
-          className="network-checkbox-only"
           label="DNS 설정"
           id="dns_settings"
           checked={formState.dnsEnabled}

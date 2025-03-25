@@ -24,14 +24,13 @@ const LabelSelectOptionsID = ({
   options,
 }) => (
   <>
-  {/*
-   <div className={`flex justify-center items-center mb-1 w-full px-[10px] ${className}`}>
-     <label className="flex justify-end items-center mx-1 min-w-[60px] max-w-[100px] text-end" htmlFor={id}>*/}
   <div className='input-select'>
     <label className="" htmlFor={id}>{label} </label>
     <select value={value} onChange={onChange} disabled={disabled}>
       {loading ? (
         <option>로딩중~</option>
+      ) : options.length === 0 ? (
+        <option>항목 없음</option>
       ) : (
         options.map((opt) => (
           <option key={opt.id} value={opt.id}>

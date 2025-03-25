@@ -170,28 +170,21 @@ class ClusterServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<ClusterVo> {
 		log.info("findAll ... ")
-		val res: List<Cluster> = conn.findAllClusters(follow = "datacenter").getOrDefault(emptyList())
+		val res: List<Cluster> = conn.findAllClusters().getOrDefault(emptyList())
 		return res.toClustersMenu(conn)
 	}
 
 	@Throws(Error::class)
 	override fun findAllUp(): List<ClusterVo> {
 		log.info("findAllUp ... ")
-		val res: List<Cluster> = conn.findAllClusters(follow = "datacenter").getOrDefault(emptyList())
-			.filter { cluster -> cluster.dataCenter().status() == UP }
-
-		// val res: List<DataCenter> = conn.findAllDataCenters(follow = "clusters")
-		// 	.getOrDefault(listOf())
-		// 	.filter { it.status() == DataCenterStatus.UP }
-		// return res.flatMap { it.clusters().orEmpty() }
-		// 	.map { it.toClusterMenu(conn) }  //1.01
-		return res.toClustersMenu(conn) // 986
+		val res: List<DataCenter> = conn.findAllDataCenters(searchQuery = "status=up", follow = "clusters").getOrDefault(emptyList())
+		return res.flatMap { it.clusters().orEmpty() }.map { it.toClusterMenu(conn) }
 	}
 
 	@Throws(Error::class)
 	override fun findOne(clusterId: String): ClusterVo? {
 		log.info("findOne ... clusterId: {}", clusterId)
-		val res: Cluster? = conn.findCluster(clusterId, follow = "datacenter,networks").getOrNull()
+		val res: Cluster? = conn.findCluster(clusterId, follow = "networks").getOrNull()
 		return res?.toClusterInfo(conn) // 1 vo 수정전, 수정후 0.91
 	}
 

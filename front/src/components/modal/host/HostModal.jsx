@@ -120,8 +120,7 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px", height: "560px" }} 
     >
-      <LabelSelectOptionsID
-        label={`${Localization.kr.HOST} ${Localization.kr.CLUSTER}`}
+      <LabelSelectOptionsID label={`${Localization.kr.HOST} ${Localization.kr.CLUSTER}`}
         value={clusterVo.id}
         disabled={editMode}
         loading={isClustersLoading}
@@ -160,23 +159,21 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
             <label className="py-1">인증</label>
           </div>
           <LabelInput label="사용자 이름" value="root" disabled={true} />
-          <LabelInput label="암호" type="password" 
-            id="sshPassWord"
+          <LabelInput id="sshPassWord" label="암호" 
+            type="password"           
             value={formState.sshPassWord}
             onChange={handleInputChange("sshPassWord")}
           />
         </>
       )}
 
-      <ToggleSwitchButton
-        label="vGPU 배치"
+      <ToggleSwitchButton label="vGPU 배치"
         checked={formState.vgpu === "consolidated"}
         onChange={() => setFormState((prev) => ({ ...prev, vgpu: formState.vgpu === "consolidated" ? "separated" : "consolidated" }))}
         tType={"통합"} fType={"분산"}
       />
 
-      <ToggleSwitchButton
-        label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
+      <ToggleSwitchButton label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
         checked={formState.hostedEngine}
         onChange={() => setFormState((prev) => ({ ...prev, hostedEngine: !formState.hostedEngine }))}
         disabled={editMode}

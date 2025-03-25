@@ -708,7 +708,7 @@ export const useAddCluster = () => {
   return useMutation({
     mutationFn: async (clusterData) => await ApiManager.addCluster(clusterData),
     onSuccess: () => {
-      queryClient.invalidateQueries('allClusters'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
+      queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
     },
     onError: (error) => {
       console.error('Error adding cluster:', error);
@@ -727,7 +727,7 @@ export const useEditCluster = () => {
   return useMutation({
     mutationFn: async ({ clusterId, clusterData }) => await ApiManager.editCluster(clusterId, clusterData),
     onSuccess: () => {
-      queryClient.invalidateQueries('allClusters');
+      queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
     },
     onError: (error) => {
       console.error('Error editing cluster:', error);
@@ -746,7 +746,7 @@ export const useDeleteCluster = () => {
   return useMutation({ 
     mutationFn: async (clusterId) => await ApiManager.deleteCluster(clusterId),
     onSuccess: () => {
-      queryClient.invalidateQueries('allClusters');
+      queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
     },
     onError: (error) => {
       console.error('Error deleting cluster:', error);
