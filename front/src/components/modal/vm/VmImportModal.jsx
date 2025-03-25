@@ -3,7 +3,7 @@ import BaseModal from "../BaseModal";
 import { useAllNetworkProviders } from "../../../api/RQHook";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
-import "./MNetwork.css";
+import "./MVm.css";
 
 const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
   const {
@@ -22,8 +22,7 @@ const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
       networkId: "ID-1234",
       dataCenter: `예시 ${Localization.kr.DATA_CENTER}`,
       allowAll: false,
-    },
-    {
+    }, {
       id: "network_2",
       name: "네트워크 B",
       networkId: "ID-5678",

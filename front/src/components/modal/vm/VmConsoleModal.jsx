@@ -6,18 +6,22 @@ const VmConsoleModal = ({
   isOpen,
   onClose,
   vmId,
-  wsUrl = '',
-  autoConnect = false,
+  // wsUrl = `wss://localhost:6690/vnc`,
+  wsUrl = `ws://localhost:7000`,
+  autoConnect = true,
 }) => {
+  console.log(`... wsUrl: ${wsUrl}`)
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"가상머신 그래픽콘솔"}
       submitTitle={"연결"}
+      contentStyle={{ 
+        width: "850px",
+      }} 
     >
-    <Vnc
-        wsUrl={wsUrl}
-        autoConnect={autoConnect}
-      />
+    <Vnc wsUrl={wsUrl}
+      autoConnect={autoConnect}
+    />
     </BaseModal>
   )
 }
