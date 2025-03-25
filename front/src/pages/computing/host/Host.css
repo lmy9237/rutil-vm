@@ -81,3 +81,22 @@
     background-color: white;
     padding: 0.2rem;
 }
+
+
+.host-network-contents{
+  background:var(--color-white);
+  display:flex;
+  width: 100%;
+  padding: 0 30px;
+  padding: 24px 36px;
+}
+.host-network-contents>div:first-child{
+   display:flex;
+   margin-bottom: 9px;
+   padding-right: 36px;
+}
+.host-network-contents .info-table-outer{
+   width: 100% !important;
+   padding: 0  ;
+   padding-left: 16px;
+}
