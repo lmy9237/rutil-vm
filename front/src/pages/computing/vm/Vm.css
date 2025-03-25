@@ -109,50 +109,15 @@
   margin-bottom: 3px;
 }
 /*스냅샷*/
-.snapshot-content {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--fs-16);
-  border-bottom: 1px solid rgb(226, 226, 226);
-  padding: 10px 0;
-  align-items: center;
-  cursor: pointer;
+.vm-snap-item{
+  width: 49%;
+  padding: 24px 40px;
+  border-radius: 8px;
 }
-.snapshot-content:hover {
-  background-color: #ebececd8;
-  border-left: 2px solid rgb(161, 161, 161);
+.snapshot-label{
+  font-size: var(--fs-14);
+  color: var(--color-nav);
 }
-.snapshot-content-left {
-  color: #4f4f4f;
-  width: 20%;
-  display: flex;
-}
-.snapshot-content-left > div {
-  border-radius: 50%;
-  padding: 3%;
-  background-color: #dbdbdb;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 10%;
-}
-.snapshot-content-left span {
-  font-weight: 600;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.snapshot-content-left i {
-  margin-top: 1px;
-}
-.snapshot-content-right {
-  color: #4f4f4f;
-  display: flex;
-  justify-content: right;
-  width: 60%;
-}
-
 .snap-hidden-content {
   display: none;
   overflow: hidden;
@@ -172,18 +137,23 @@
   height: 100%;
   width: 63%;
   text-align: left;
-  color: gray;
-  margin-bottom: 1rem;
 }
 .snap-table tr{
   align-items: center;
   display: flex;
+  margin-bottom: 16px;
   width: 100%;
-    justify-content: space-between;
+}
+.snap-table th{
+  font-size: var(--fs-14);
+  font-weight: 700;
+  line-height: 22.5px;
+  width: 56%;
 }
 .snap-table:last-child {
   margin-bottom: 0;
 }
+
 @media (max-width: 1400px) {
   .detail-general-box {
     max-width: 100%; /* ✅ 한 줄로 배치 */

@@ -60,7 +60,7 @@ const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={Localization.kr.NETWORK}
+      targetName={Localization.kr.VM}
       submitTitle={"가져오기"}
       onSubmit={onSubmit}
       contentStyle={{ width: "880px" }} 

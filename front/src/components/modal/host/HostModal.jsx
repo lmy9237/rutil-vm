@@ -155,8 +155,8 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
 
       {!editMode && (
         <>
-          <div className="font-semibold">
-            <label className="py-1">인증</label>
+          <div className="font-semibold py-1.5">
+            <label>인증</label>
           </div>
           <LabelInput label="사용자 이름" value="root" disabled={true} />
           <LabelInput id="sshPassWord" label="암호" 

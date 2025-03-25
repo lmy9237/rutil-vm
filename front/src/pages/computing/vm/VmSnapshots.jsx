@@ -8,6 +8,7 @@ import { convertBytesToMB } from '../../../util';
 import TablesRow from '../../../components/table/TablesRow';
 import DeleteModal from '../../../utils/DeleteModal';
 import ActionButton from '../../../components/button/ActionButton';
+import { RVI16, rvi16ChevronDown, rvi16ChevronRight, RVI24 } from '../../../components/icons/RutilVmIcons';
 
 const VmSnapshots = ({ vmId }) => {
   const {
@@ -42,7 +43,6 @@ const VmSnapshots = ({ vmId }) => {
   return (
     <>
       <div className="header-right-btns">
-
         <ActionButton actionType="default"
           label="생성"
           onClick={() => openModal("create")}
@@ -60,24 +60,33 @@ const VmSnapshots = ({ vmId }) => {
         />
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
-        <div className="info-table-outer">
+      <div className='center'>
+        <div className=" vm-snap-item">
           {isSnapshotsLoading && <div className="no_snapshots">로딩중...</div>}
           {transformedData?.length > 0 && transformedData?.map((snapshot) => (
             <div
               key={snapshot.id}
-              className="snapshot-item"
+              className="snapshot-item f-start"
               onClick={() => toggleSnapshotSelection(snapshot)}
-              style={{ cursor: 'pointer', padding: '5px', border: selectedSnapshot?.id === snapshot.id ? '1px solid blue' : 'none' }}
+              style={{ cursor: 'pointer', padding: '4px 50px', background: selectedSnapshot?.id === snapshot.id ? '#E2E5EB' : 'none' }}
             >
-              <FontAwesomeIcon icon={faChevronRight} />
-              {" " + snapshot?.description + "  /  " + snapshot?.date}
+               {/* 선택된 스냅샷이면 아래, 아니면 오른쪽 화살표 */}
+              <RVI16
+                iconDef={
+                  selectedSnapshot?.id === snapshot.id
+                    ? rvi16ChevronDown
+                    : rvi16ChevronRight
+                }
+              />
+              <div className='snapshot-label'>{" " + snapshot?.description + "  /  " + snapshot?.date}</div>
+
+          
             </div>
           ))}
         </div>
 
           {selectedSnapshot ? (
-            <div className="abc" style={{ padding: '10px', width: '40%' }}>
+            <div className=" vm-snap-item">
               <TablesRow
                 columns={TableColumnsInfo.SNAPSHOT_INFO_FROM_VM}
                 data={selectedSnapshot}
