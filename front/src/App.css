@@ -7,7 +7,7 @@ html {
   --h-icon-nav: 40px;
   --h-icon-tree: 16px;
   --h-rutil-header: 64px;
-  --h-rutil-footer: 35px; /*section-footer 높이 */
+  --h-rutil-footer: 48px; /*section-footer 높이 */
   --h-rutil-footer-content: 190px;
   --h-rutil-footer-open: calc(var(--h-rutil-footer) + var(--h-rutil-footer-content));
   --h-rutil-content: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer));

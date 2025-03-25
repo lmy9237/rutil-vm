@@ -6,9 +6,7 @@ import RadialBarChart from "../../components/Chart/RadialBarChart";
 import BarChart from "../../components/Chart/BarChart";
 import SuperAreaChart from "../../components/Chart/SuperAreaChart";
 import Grid from "../../components/Chart/Grid";
-import "./Dashboard.css";
 import {
-  RVI24,
   rvi24Cluster,
   rvi24Datacenter,
   rvi24Host,
@@ -32,6 +30,7 @@ import {
 } from "../../api/RQHook";
 import GridStatus from "../../components/Chart/GridStatus";
 import Localization from "../../utils/Localization";
+import "./Dashboard.css";
 
 //#region: RadialBarChart
 const CpuApexChart = memo(({ cpu }) => (<RadialBarChart percentage={cpu || 0} />));
@@ -217,38 +216,38 @@ const Dashboard = () => {
         <DashboardBoxGroup
           boxItems={[
             {
-              iconDef: rvi24Datacenter,
+              iconDef: rvi24Datacenter(),
               title: Localization.kr.DATA_CENTER,
               cntTotal: dashboard?.datacenters ?? 0,
               cntUp: dashboard?.datacentersUp === 0 ? "" : dashboard?.datacentersUp,
               cntDown: dashboard?.datacentersDown === 0 ? "" : dashboard?.datacentersDown,
               navigatePath: "/computing/rutil-manager/datacenters",
             }, {
-              iconDef: rvi24Cluster,
+              iconDef: rvi24Cluster(),
               title: Localization.kr.CLUSTER,
               cntTotal: dashboard?.clusters ?? 0,
               navigatePath: "/computing/rutil-manager/clusters",
             }, {
-              iconDef: rvi24Host,
+              iconDef: rvi24Host(),
               title: Localization.kr.HOST,
               cntTotal: dashboard?.hosts ?? 0,
               cntUp: dashboard?.hostsUp === 0 ? "" : dashboard?.hostsUp,
               cntDown: dashboard?.hostsDown === 0 ? "" : dashboard?.hostsDown,
               navigatePath: "/computing/rutil-manager/hosts",
             }, {
-              iconDef: rvi24Storage,
+              iconDef: rvi24Storage(),
               title: "스토리지 도메인",
               cntTotal: dashboard?.storageDomains ?? 0,
               navigatePath: "/computing/rutil-manager/storageDomains",
             }, {
-              iconDef: rvi24Desktop,
+              iconDef: rvi24Desktop(),
               title: Localization.kr.VM,
               cntTotal: dashboard?.vms ?? 0,
               cntUp: dashboard?.vmsUp === 0 ? "" : dashboard?.vmsUp,
               cntDown: dashboard?.vmsDown === 0 ? "" : dashboard?.vmsDown,
               navigatePath: "/computing/rutil-manager/vms",
             }, {
-              iconDef: rvi24Event,
+              iconDef: rvi24Event(),
               title: Localization.kr.EVENT,
               cntTotal: dashboard?.events ?? 0,
               alert: dashboard?.eventsAlert === 0 ? "" : dashboard?.eventsAlert,

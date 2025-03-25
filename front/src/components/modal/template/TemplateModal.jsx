@@ -334,17 +334,15 @@ const TemplateModal = ({
       <ToggleSwitchButton
         label="모든 사용자에게 이 템플릿 접근을 허용"
         checked={formState.allowAllAccess}
-        onChange={(checked) => setFormState((prev) => ({...prev, allowAllAccess: checked }))}
-        tType={"네"}
-        fType={"아니요"}
+        onChange={() => setFormState((prev) => ({...prev, allowAllAccess: !formState.allowAllAccess }))}
+        tType={"네"} fType={"아니요"}
       />
       
       <ToggleSwitchButton
         label={`${Localization.kr.VM} 권한 복사`}
         checked={formState.copyVmPermissions}
-        onChange={(checked) => setFormState((prev) => ({...prev, copyVmPermissions: checked }))}
-        tType={"네"}
-        fType={"아니요"}
+        onChange={() => setFormState((prev) => ({...prev, copyVmPermissions: !formState.copyVmPermissions }))}
+        tType={"네"} fType={"아니요"}
       />
 
       {/* <LabelCheckbox

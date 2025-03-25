@@ -12,6 +12,9 @@
 .grid-item:hover {
   opacity: 0.7;
 }
+.grid-item.disabled {
+  cursor: not-allowed;
+}
 .percent h1 {
   font-size: var(--fs-16);
   font-weight: 700;

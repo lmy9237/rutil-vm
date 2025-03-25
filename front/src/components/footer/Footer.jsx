@@ -32,27 +32,11 @@ const Footer = ({
   }));
   return (
     <div className={`footer-outer${isFooterContentVisible ? " open" : ""}`}>
-      <div className="footer">
-        <button
-          onClick={() => {
-            setIsFooterContentVisible(!isFooterContentVisible);
-          }}
-        >
-          <RVI24 iconDef={isFooterContentVisible ? rvi24DownArrow : rvi24ChevronUp} />
-        </button>
-        <div>
-          <div onClick={() => handleFooterTabClick("recent")}>최근 작업</div>
-          {/* <div
-            style={{
-              color: selectedFooterTab === "alerts" ? "black" : "#4F4F4F",
-              borderBottom:
-                selectedFooterTab === "alerts" ? "1px solid blue" : "none",
-            }}
-            onClick={() => handleFooterTabClick("alerts")}
-          >
-            경보
-          </div> */}
-        </div>
+      <div className="footer f-start">
+        <RVI24 iconDef={isFooterContentVisible ? rvi24DownArrow() : rvi24ChevronUp()}
+          onClick={() => setIsFooterContentVisible(!isFooterContentVisible)}
+        />
+        <div onClick={() => setIsFooterContentVisible(!isFooterContentVisible)}>최근 작업</div>
       </div>
 
       <div className={`footer-content${isFooterContentVisible ? " open" : ""}`}>
@@ -61,30 +45,13 @@ const Footer = ({
             <table>
               <thead>
                 <tr>
-                  <th>
-                    작업 이름 <FontAwesomeIcon icon={faFilter} fixedWidth />
-                  </th>
-                  <th>
-                    대상 <FontAwesomeIcon icon={faFilter} fixedWidth />
-                  </th>
-                  <th>
-                    상태 <FontAwesomeIcon icon={faFilter} fixedWidth />
-                  </th>
-                  <th>
-                    세부 정보 <FontAwesomeIcon icon={faFilter} fixedWidth />
-                  </th>
-                  <th>
-                    시작 {Localization.kr.TIME}{" "}
-                    <FontAwesomeIcon icon={faFilter} fixedWidth />
-                  </th>
-                  <th>
-                    대기 {Localization.kr.TIME}{" "}
-                    <FontAwesomeIcon icon={faFilter} fixedWidth />
-                  </th>
-                  <th>
-                    시작 {Localization.kr.TIME}{" "}
-                    <FontAwesomeIcon icon={faFilter} fixedWidth />
-                  </th>
+                  <th>작업 이름 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>대상 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>상태 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>세부 정보 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>시작 {Localization.kr.TIME}<FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>대기 {Localization.kr.TIME}<FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>시작 {Localization.kr.TIME}<FontAwesomeIcon icon={faFilter} fixedWidth /></th>
                 </tr>
               </thead>
               <tbody>

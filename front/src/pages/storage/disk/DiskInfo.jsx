@@ -84,7 +84,7 @@ const DiskInfo = () => {
   console.log("...")
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24HardDrive}
+      <HeaderButton titleIcon={rvi24HardDrive()}
         title={disk?.alias}
         buttons={sectionHeaderButtons}
       />

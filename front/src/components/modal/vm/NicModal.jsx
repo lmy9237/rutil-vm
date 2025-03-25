@@ -149,9 +149,9 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
           <div>
             <div className="radio-outer">
               <ToggleSwitchButton id="plugged" 
-                tType="Up" fType="Down"
                 checked={formInfoState.linked}
                 onChange={() => handleRadioChange("linked", !formInfoState.linked)}
+                tType="Up" fType="Down"
               />
               {/* <div>
                 <input

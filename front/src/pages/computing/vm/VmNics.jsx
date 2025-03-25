@@ -89,7 +89,7 @@ const VmNics = ({ vmId }) => {
             >
               <div className="network-content">
                 <div className="network-status">
-                  <RVI24 iconDef={visibleDetails[nic.id] ? rvi24ChevronDown : rvi24ChevronRight}
+                  <RVI24 iconDef={visibleDetails[nic.id] ? rvi24ChevronDown() : rvi24ChevronRight()}
                     onClick={() => toggleDetails(nic.id)}
                   />
                   <FontAwesomeIcon

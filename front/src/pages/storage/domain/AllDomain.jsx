@@ -21,7 +21,7 @@ const AllDomain = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Storage} 
+      <HeaderButton titleIcon={rvi24Storage()} 
         title="스토리지 도메인"
       />
       <div className="w-full section-content">

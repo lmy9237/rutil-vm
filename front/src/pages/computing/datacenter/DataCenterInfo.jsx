@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -14,7 +13,7 @@ import DataCenterEvents from "./DataCenterEvents";
 import { useDataCenter } from "../../../api/RQHook";
 import Loading from "../../../components/common/Loading";
 import Localization from "../../../utils/Localization";
-import { rvi24Cluster, rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
+import { rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name DataCenterInfo
@@ -110,8 +109,7 @@ const DataCenterInfo = () => {
   console.log("...");
   return (
     <div id="section">
-      <HeaderButton
-        titleIcon={rvi24Datacenter}
+      <HeaderButton titleIcon={rvi24Datacenter()}
         title={dataCenter?.name}
         buttons={sectionHeaderButtons}
       />

@@ -20,7 +20,7 @@ import {
   useOvfUpdateDomain,
   useRefreshLunDomain,
 } from "../../../api/RQHook";
-import { rvi24Cloud, rvi24Storage } from "../../../components/icons/RutilVmIcons";
+import { rvi24Cloud } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name DomainInfo
@@ -114,7 +114,7 @@ const DomainInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Cloud}
+      <HeaderButton titleIcon={rvi24Cloud()} 
         title={domain?.name}
         buttons={sectionHeaderButtons}
         popupItems={popupItems}

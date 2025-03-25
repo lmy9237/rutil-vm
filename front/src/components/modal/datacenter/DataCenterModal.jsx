@@ -127,9 +127,8 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
         id="storage-type"
         label="스토리지 타입"
         checked={formState.storageType}
-        onChange={(checked) => setFormState((prev) => ({ ...prev, storageType: checked }))}
-        tType="로컬"
-        fType="공유됨"
+        onChange={() => setFormState((prev) => ({ ...prev, storageType: !formState.storageType }))}
+        tType="로컬" fType="공유됨"
       />
       <LabelSelectOptions id="quarter-mode" label="쿼터 모드"
         value={formState.quotaMode}

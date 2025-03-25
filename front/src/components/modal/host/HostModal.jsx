@@ -171,18 +171,16 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
       <ToggleSwitchButton
         label="vGPU 배치"
         checked={formState.vgpu === "consolidated"}
-        onChange={(checked) => setFormState((prev) => ({...prev, vgpu: checked ? "consolidated" : "separated" }))}
-        tType={"통합"}
-        fType={"분산"}
+        onChange={() => setFormState((prev) => ({ ...prev, vgpu: formState.vgpu === "consolidated" ? "separated" : "consolidated" }))}
+        tType={"통합"} fType={"분산"}
       />
 
       <ToggleSwitchButton
         label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
         checked={formState.hostedEngine}
-        onChange={(checked) => setFormState((prev) => ({...prev, hostedEngine: checked }))}
+        onChange={() => setFormState((prev) => ({ ...prev, hostedEngine: !formState.hostedEngine }))}
         disabled={editMode}
-        tType={"배포"}
-        fType={"없음"}
+        tType={"배포"} fType={"없음"}
       />
       
 {/* const hostEngines = [

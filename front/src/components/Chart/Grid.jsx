@@ -41,36 +41,39 @@ const Grid = ({ type, data = [] }) => {
 
   return (
     <div className="grid-container">
-      {gridData.map((item, index) => (
-        <div
-          key={item.id || index}
-          className="grid-item"
-          onClick={() => handleClick(item.id)}
-          title={item.name}
-          style={{
-            backgroundColor:
-              type === "cpu"
-                ? getBackgroundColor(item.cpuPercent)
-                : getBackgroundColor(item.memoryPercent),
-          }}
-        >
-          {item.cpuPercent !== null || item.memoryPercent !== null ? (
-            <>
-              <div className="percent f-center">
-                <h1>{type === "cpu" ? item.cpuPercent : item.memoryPercent}</h1>
-                <div className="percent unit">%</div>
+      {gridData.map((item, index) => {
+        const hasAnyData = item.cpuPercent !== null || item.memoryPercent !== null
+        return (
+          <div
+            key={item.id || index}
+            className={`grid-item${hasAnyData ? `` : ` disabled`}`}
+            onClick={() => hasAnyData && handleClick(item.id)}
+            title={item.name}
+            style={{
+              backgroundColor:
+                type === "cpu"
+                  ? getBackgroundColor(item.cpuPercent)
+                  : getBackgroundColor(item.memoryPercent),
+            }}
+          >
+            {hasAnyData ? (
+              <>
+                <div className="percent f-center">
+                  <h1>{type === "cpu" ? item.cpuPercent : item.memoryPercent}</h1>
+                  <div className="percent unit">%</div>
+                </div>
+                <div className="grid-item-name">( {item.name} )</div>
+              </>
+            ) : (
+              <div
+                className="percent"
+                style={{ color: "rgb(0 0 0)" }}
+              >
               </div>
-              <div className="grid-item-name">( {item.name} )</div>
-            </>
-          ) : (
-            <div
-              className="percent placeholder"
-              style={{ color: "rgb(0 0 0)" }}
-            >
-            </div>
-          )}
-        </div>
-      ))}
+            )}
+          </div>
+        )
+      })}
     </div>
   );
 };

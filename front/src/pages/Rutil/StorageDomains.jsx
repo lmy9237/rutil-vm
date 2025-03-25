@@ -19,11 +19,10 @@ const StorageDomains = () => {
 
   return (
     <>
-      <DomainDupl
-        isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
-        columns={TableColumnsInfo.STORAGE_DOMAINS}
+      <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
         domains={storageDomains}
         type={"rutil"}
+        isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
       />
     </>
   );

@@ -86,8 +86,8 @@ const VmDupl = ({
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group">
       <span>ID: {selectedVms.map(vm => vm.id).join(", ")}</span>
+      <div className="dupl-header-group">
         {showSearchBox && (
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         )}

@@ -23,7 +23,7 @@ const Event = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Event}
+      <HeaderButton titleIcon={rvi24Event()}
         title={Localization.kr.EVENT}
         subtitle="Chart"
         buttons={[]}

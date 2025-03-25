@@ -85,7 +85,7 @@ const TemplateInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Template}
+      <HeaderButton titleIcon={rvi24Template()}
         title={template?.name}
         buttons={sectionHeaderButtons}
       />

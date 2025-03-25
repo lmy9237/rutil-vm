@@ -21,7 +21,7 @@ const AllTemplates = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Template}
+      <HeaderButton titleIcon={rvi24Template()}
         title={"템플릿"}
       />
       <div className="w-full section-content">

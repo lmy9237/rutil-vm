@@ -59,7 +59,7 @@ const SettingInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Gear("#222222")}
+      <HeaderButton titleIcon={rvi24Gear()}
         title="관리" additionalText="목록이름"
       />
       <div className="content-outer">

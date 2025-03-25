@@ -48,8 +48,8 @@ const SideNavbar = ({
   // 📌 버튼 UI 설정
   const sections = [
     // { iconDef: rvi24Dashboard,    id: "dashboard", link: "/",  },
-    { iconDef: rvi24Desktop,      id: "computing", link: "/computing/vms",  },
-    { iconDef: rvi24Network,      id: "network",   link: "/networks",  },
+    { iconDef: rvi24Desktop("currentColor"),      id: "computing", link: "/computing/vms",  },
+    { iconDef: rvi24Network("currentColor"),      id: "network",   link: "/networks",  },
     { iconDef: rvi24Storage("currentColor"),      id: "storage",   link: "/storages/domains",  },
     // 추가가 필요할 시 주석 해제
     // { iconDef: rvi24Gear("#9999999"),       id: "settings",  link: "/settings/session",  },

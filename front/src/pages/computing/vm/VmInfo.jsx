@@ -173,7 +173,7 @@ const VmInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Desktop}
+      <HeaderButton titleIcon={rvi24Desktop()}
         title={vm?.name}
         status={Localization.kr.renderStatus(vm?.status)}
         buttons={sectionHeaderButtons}

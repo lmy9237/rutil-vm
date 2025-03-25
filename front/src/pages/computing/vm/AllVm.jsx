@@ -25,7 +25,9 @@ const AllVm = () => {
   console.log("...");
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Desktop} title={Localization.kr.VM} />
+      <HeaderButton titleIcon={rvi24Desktop()}
+        title={Localization.kr.VM}
+      />
       <div className="w-full section-content">
         <VmDupl
           isLoading={isVmsLoading}

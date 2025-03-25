@@ -146,7 +146,7 @@ const HostInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Host}
+      <HeaderButton titleIcon={rvi24Host()}
         title={host?.name}
         status={Localization.kr.renderStatus(host?.status)}
         buttons={sectionHeaderButtons}

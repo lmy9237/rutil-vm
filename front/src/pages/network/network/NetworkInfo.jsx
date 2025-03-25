@@ -84,7 +84,7 @@ const NetworkInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Network}
+      <HeaderButton titleIcon={rvi24Network()}
         title={network?.name}
         buttons={sectionHeaderButtons}
       />

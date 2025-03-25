@@ -37,10 +37,10 @@ const DashboardBox = ({
 
   return (
     <div className="box" onClick={() => navigatePath && navigate(navigatePath)}>
-      <span className="box-icon-title">
+      <span className="box-icon-title f-start">
         {/* FontAwesome 아이콘인지, SVG 아이콘인지 체크 후 렌더링 */}
         <RVI24 className="box-icon" iconDef={iconDef} />
-        <p className="ml-0.5">{title}</p>
+        <p className="box-icon-name">{title}</p>
       </span>
 
       <div className="box-text flex">

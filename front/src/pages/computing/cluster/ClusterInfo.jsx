@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { faEarthAmericas } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -12,8 +11,8 @@ import ClusterNetworks from "./ClusterNetworks";
 import ClusterEvents from "./ClusterEvents";
 import { useCluster } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import { rvi24Cluster } from "../../../components/icons/RutilVmIcons";
 import "./Cluster.css";
-import { rvi16Globe, rvi24Cluster } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name ClusterInfo
@@ -96,7 +95,7 @@ const ClusterInfo = () => {
   console.log("...");
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Cluster}
+      <HeaderButton titleIcon={rvi24Cluster()}
         title={cluster?.name}
         buttons={sectionHeaderButtons}
       />

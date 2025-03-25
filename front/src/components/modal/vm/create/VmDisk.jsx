@@ -94,8 +94,11 @@ const VmDisk = ({
             </div>
             {/*{disk?.storageDomainVo?.id} <- 연결되어있는 디스크아이디*/}
             <div className="flex">
-              <button><RVI24 iconDef={rvi24ChevronDown} /></button>
-              <button onClick={() => handleRemoveDisk(index, disk.isExisting)}><RVI24 iconDef={rvi24Error} /></button>
+              <button><RVI24 iconDef={rvi24ChevronDown()} /></button>
+              <button onClick={() => handleRemoveDisk(index, disk.isExisting)}
+              >
+                <RVI24 iconDef={rvi24Error} />
+              </button>
             </div>
             {/* 기존 디스크가 아닌 경우에만 삭제 버튼 표시(삭제예정정) */}
             {/* <div className="flex">

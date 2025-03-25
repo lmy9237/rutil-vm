@@ -26,7 +26,7 @@ const AllNetwork = () => {
   return (
     <div id="section">
       <div>
-        <HeaderButton titleIcon={rvi24Network} 
+        <HeaderButton titleIcon={rvi24Network()} 
           title={Localization.kr.NETWORK}
         />
       </div>

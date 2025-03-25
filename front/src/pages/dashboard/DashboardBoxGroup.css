@@ -40,9 +40,7 @@
 .box-icon {
   width:var(--w-icon);height:var(--h-icon);color:var(--color-black);
 }
-.box-icon-title {
-  gap: 2px;
-}
+.box-icon-title { gap: 2px; }
 
 .box-text {
   justify-content: right;
