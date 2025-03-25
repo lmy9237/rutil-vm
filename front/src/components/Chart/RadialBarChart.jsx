@@ -7,7 +7,6 @@ const RadialBarChart = ({ percentage }) => {
 
   const [chartSize, setChartSize] = useState({
     width: "100%",
-    height: "30vh",
   });
 
   const updateChartSize = () => {
@@ -118,7 +117,7 @@ const RadialBarChart = ({ percentage }) => {
           options={chartOptions}
           series={series}
           width={chartSize.width}
-          height={chartSize.height}
+          height={chartSize.height || "250px"}
           type="radialBar"
         />
       </div>

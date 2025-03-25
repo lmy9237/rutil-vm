@@ -8,8 +8,7 @@ const DomainActionButtons = ({
   isEditDisabled,
   isDeleteDisabled,
   status,
-  type = "default",
-  actionType,
+  actionType = "default",
   isContextMenu
 }) => {
   // 도메인 생성, 도메인 가져오기, 도메인 관리(편집), 삭제, connection, lun 새로고침, 파괴, 마스터 스토리지 도메인으로 선택
@@ -50,8 +49,7 @@ const DomainActionButtons = ({
         {label}
       </button>
     ));
-  const wrapperClass =
-  type === "context" ? "right-click-menu-box" : "header-right-btns";
+
 
   const selectedActions =
   actionType === "domain"
@@ -66,7 +64,7 @@ const DomainActionButtons = ({
  
     <ActionButtonGroup
       actionType={actionType}
-      actions={selectedActions}
+      actions={basicActions}
     >
       {!isContextMenu && (
         <ActionButton label={"디스크"} onClick={() => navigate("/storages/disks")} actionType={actionType}/>

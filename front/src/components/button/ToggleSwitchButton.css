@@ -1,7 +1,12 @@
 /* ToggleSwitch.css */
 .switch {
   position:relative;display:inline-block;
-  width:36px;height:20px;
+  width:38px;height:23px;
+  margin-right: 9px;
+}
+.switch-outer{
+  display: flex;
+  width: 55%;
 }
 .switch input {
   opacity:0;
@@ -19,8 +24,10 @@
 .slider.round:before {
   position: absolute;
   content: "";
-  height:14px;width:14px;
-  left: 3px;bottom: 3px;
+  height: 17px;
+  width: 17px;
+  left: 3px;
+  bottom: 3px;
   background-color: white;
   transition: 0.3s;
   border-radius: 50%;

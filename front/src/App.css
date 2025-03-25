@@ -291,9 +291,7 @@ input[disabled] {
 
 /* 네트워크 인터페이스 팝업창들 */
 /* 새로만들기 */
-.network-popup-content {
-  padding: 1% 2%;
-}
+
 .network-popup-content > div {
   display: flex;
   justify-content: space-between;
@@ -386,7 +384,10 @@ textarea {
   background: #e4e4e4;
   color: #449bff;
 }
-
+/*툴팁*/
+.custom-tooltip {
+    transform: translateY(-6px); 
+}
 /* 중복끝 */
 .error-text {
   display: flex;
@@ -838,7 +839,30 @@ textarea {
     justify-content: flex-end;
     padding-right: 10px;
 }
-
+.plug-radio-btn > div {
+  width: 47%;
+}
+  .radio-outer{
+  width: 60%;
+}
+.radio-outer > div {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.radio-outer input {
+  cursor: pointer;
+}
+.radio-outer input,
+.radio-outer img {
+  margin-right: 0.3rem;
+}
+.plug-radio-btn span {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
 #template_footer button {
     padding: 0.7% 1.1%;
     border-radius: 2px;

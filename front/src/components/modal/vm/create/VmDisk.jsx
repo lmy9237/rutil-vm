@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import Loading from "../../../common/Loading";
 import { useDisksFromVM } from "../../../../api/RQHook";
 import ActionButton from "../../../button/ActionButton";
-import { RVI24, rvi24ChevronDown, rvi24Error } from "../../../icons/RutilVmIcons";
+import { RVI12, rvi12Minus, rvi12Plus, RVI24, rvi24ChevronDown, rvi24Error } from "../../../icons/RutilVmIcons";
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
 
@@ -94,10 +94,10 @@ const VmDisk = ({
             </div>
             {/*{disk?.storageDomainVo?.id} <- 연결되어있는 디스크아이디*/}
             <div className="flex">
-              <button><RVI24 iconDef={rvi24ChevronDown()} /></button>
-              <button onClick={() => handleRemoveDisk(index, disk.isExisting)}
+              <button className="px-1"><RVI24 iconDef={rvi24ChevronDown()} /></button>
+              <button className="px-1" onClick={() => handleRemoveDisk(index, disk.isExisting)}
               >
-                <RVI24 iconDef={rvi24Error} />
+                <RVI12 iconDef={rvi12Minus()} />
               </button>
             </div>
             {/* 기존 디스크가 아닌 경우에만 삭제 버튼 표시(삭제예정정) */}

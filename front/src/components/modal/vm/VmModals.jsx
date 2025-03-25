@@ -7,6 +7,8 @@ import VmModal from "./VmModal";
 import TemplateModal from "../template/TemplateModal";
 import VmExportOVAModal from "./VmExportOVAModal";
 import "./MVm.css";
+import VmMigrationModal from "./VmMigrationModal";
+import VmImportModal from "./VmImportModal";
 
 
 const VmModals = ({ activeModal, vm, selectedVms = [], onClose }) => {
@@ -17,9 +19,9 @@ const VmModals = ({ activeModal, vm, selectedVms = [], onClose }) => {
     templates: (<TemplateModal      isOpen={activeModal === "templates"} onClose={onClose} selectedVm={vm} />),
     snapshot:  (<VmSnapshotModal    isOpen={activeModal === "snapshot"}  onClose={onClose} vmId={vm?.id} data={selectedVms}  />),
     console:   (<VmConsoleModal     isOpen={activeModal === "console"}   onClose={onClose} />),
-    import:    (<></>),
-    copy:      (<></>),
-    migration: (<></>),    
+    import:    (<VmImportModal      isOpen={activeModal === "import"}   onClose={onClose}/>),  // 설정바꿔야함
+    copy:      (<></>),  
+    migration: (<VmMigrationModal     isOpen={activeModal === "migration"}   onClose={onClose}/>),    // 설정바꿔야함
     ova:       (<VmExportOVAModal   isOpen={activeModal === "ova"}       onClose={onClose} selectedVm={vm} vmId={vm?.id} />),
     action: (
       <VmActionModal

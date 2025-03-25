@@ -67,7 +67,8 @@
   background-color: #ffebd7;
 }
 .status-label.default {
-  color: gray;
+  color: var(--color-nav);
+  background-color: var(--color-input-disabled);
 }
 /* 
 .article-nav > div {

@@ -140,41 +140,19 @@
 }
 
 /*네트워크 인터페이스 새로만들기*/
-.radio-outer > div {
-  width: 100%;
-  display: flex;
-  justify-content: left;
-  align-items: center;
+
+.mac-address{
+  font-weight: 700;
+  font-size: var(--fs-17);
+  padding: 6px 0;
 }
-.radio-outer input {
-  cursor: pointer;
-}
-.radio-outer input,
-.radio-outer img {
-  margin-right: 0.3rem;
-}
-.plug-radio-btn {
-  width: 100%;
-}
-.plug-radio-btn > div {
-  width: 20%;
-}
-.plug-radio-btn span {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.network-popup-content input[type="text"],
-.network-popup-content select {
-  width: 47%;
-}
+
+
 /*마이그레이션 팝업*/
-.migration-popup-content {
-  height: 42%;
-  width: 70%;
-}
-.migration-article-outer {
-  padding: 0.4rem;
+.migration-article-outer > h1{
+  font-weight: 700;
+  font-size: var(--fs-17);
+  padding-top: 16px;
 }
 .migration-dropdown {
   margin-bottom: 0.2rem;
@@ -184,15 +162,11 @@
   display: flex;
   justify-content: space-between;
 }
-.migration-article > div:last-child > div {
+.migration-article > div{
   padding: 10px 0;
+  font-size: var(--fs-14);
 }
-.migration-article > div:last-child > div:last-child {
-  width: 87.5%;
-  height: 5vh;
-  background-color: #ebebeb;
-  border-radius: 3px;
-}
+
 /* 삭제모달창 */
 .vm-delete-popup {
   max-height: 90%;

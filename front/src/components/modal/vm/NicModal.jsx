@@ -142,13 +142,14 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
           options={interfaceOptions}
           disabled={editMode}
         />
-        <span>사용자 지정 MAC 주소</span>
+        <div className="mac-address">사용자 지정 MAC 주소</div>
 
-        <div className="plug-radio-btn">
-          <span>링크 상태</span>
-          <div>
-            <div className="radio-outer">
+       
+             
+          </div>
+        
               <ToggleSwitchButton id="plugged" 
+                label="링크 상태"
                 checked={formInfoState.linked}
                 onChange={() => handleRadioChange("linked", !formInfoState.linked)}
                 tType="Up" fType="Down"
@@ -175,22 +176,16 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
                 <RVI16 iconDef={rvi16Disconnected} />
                 <label htmlFor="status_down">Down</label>
               </div>*/}
-            </div> 
-          </div>
-        </div>
-        <div className="plug-radio-btn">
-          <span>카드 상태</span>
-          <div>
-            <div className="radio-outer">
-              <ToggleSwitchButton id="plugged" 
-                tType="연결됨" fType="분리"
-                checked={formInfoState.plugged === true}
-                onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+       
+       
+            <ToggleSwitchButton id="plugged" 
+              label="카드 상태"
+              tType="연결됨" fType="분리"
+              checked={formInfoState.plugged === true}
+              onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}
+            />
+
+ 
     </BaseModal>
   );
 };

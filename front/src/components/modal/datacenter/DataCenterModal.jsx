@@ -123,11 +123,13 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
         value={formState.comment}
         onChange={handleInputChange("comment")}
       />
+
       <ToggleSwitchButton id="storage-type" label="스토리지 타입"
         checked={formState.storageType}
         onChange={() => setFormState((prev) => ({ ...prev, storageType: !formState.storageType }))}
         tType="로컬" fType="공유됨"
       />
+
       <LabelSelectOptions id="quarter-mode" label="쿼터 모드"
         value={formState.quotaMode}
         onChange={handleInputChange("quotaMode")}

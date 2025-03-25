@@ -102,7 +102,7 @@ const DomainDupl = ({
             openModal={openModal}
             status={row?.status}
             selectedDomains={[row]}
-            actionType={actionType}
+            actionType="context"    
             isContextMenu={true}
           />,
         ]}

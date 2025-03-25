@@ -49,7 +49,7 @@ const VmActionButtons = ({
     { type: "powerOff", label: "전원끔", disabled: !isUp, onBtnClick: () => openModal("powerOff") },
     { type: "console", label: "콘솔", disabled: !isUp, onBtnClick: () => openModal("console") },
     { type: "snapshot", label: "스냅샷 생성", disabled: isEditDisabled, onBtnClick: () => openModal("snapshot") },
-    { type: "migration", label: "마이그레이션", disabled: !isPause, onBtnClick: () => openModal("migration") },
+    { type: "migration", label: "마이그레이션",  onBtnClick: () => openModal("migration") },
   ];
 
   const manageActions = [

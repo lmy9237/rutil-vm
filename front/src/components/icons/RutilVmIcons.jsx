@@ -93,7 +93,18 @@ export const TopMenuIcon = ({
 //#region: 아이콘 12px
 export const rvi12ArrowRight = (<path d="M4.5 2.5L7.5 6L4.5 9.5" stroke="currentColor" strokeLinecap="square" strokeLinejoin="round"/>)
 export const rvi12Plus = (<path d="M5.14286 6.85714H0V5.14286H5.14286V0H6.85714V5.14286H12V6.85714H6.85714V12H5.14286V6.85714Z"/>)
-export const rvi12Minus = (<path d="M0 2V0H12V2H0Z"/>)
+export const rvi12Minus = (isHovering = false) => (
+  <>
+    <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" fill="white" />
+    <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" stroke={isHovering ? "#717171" : "#C6C6C6"} />
+    <path
+      d="M8 12H16"
+      stroke={isHovering ? "#1D1D1D" : "#888888"}
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+  </>
+);
 export const RVI12 = ({iconDef, onClick, currentColor='#999999', ...props}) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
@@ -561,7 +572,7 @@ export const status2Icon = (status = "") => {
   return (
     <>
       <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}/>
-      <Tooltip id={tooltipId} place="top" effect="solid">
+      <Tooltip id={tooltipId} effect="solid" middlewares={[]} className="custom-tooltip">
         {Localization.kr.renderStatus(status)}
       </Tooltip>
     </>
@@ -580,13 +591,15 @@ export const hostedEngineStatus2Icon = (isHostedEngineVm=false, isHostedEngine=f
   const tag = isHostedEngineVm ? "hosted-engine-vm" : isHostedEngine ? "hosted-engine" : "";
   const iconDef = isHostedEngineVm ? rvi16StarGold : isHostedEngine ? rvi16Star : null;
   const tooltipMessage = isHostedEngineVm ? "호스트 엔진 가상머신 실행 중" : isHostedEngine ? "호스트 엔진 가상머신 실행 가능" : null
+  //const tooltipMessage = isHostedEngineVm ? "호스트 엔진 가상머신|실행 중" : isHostedEngine ? "호스트 엔진 가상머신|실행 가능" : null
   const tooltipId = `status-tooltip-${tag}`
   return (
     <>
       {iconDef && <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}/>}
       {tooltipMessage && (
-        <Tooltip id={tooltipId} place="top" effect="solid">
+        <Tooltip id={tooltipId} effect="solid" /*middlewares={[]}*/>
           {tooltipMessage}
+          {/* {tooltipMessage.split("|").join((<br/>))} */}
         </Tooltip>
       )}
     </>
