@@ -1,9 +1,7 @@
 package com.itinfo.rutilvm.api.socket
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-// import com.itinfo.rutilvm.api.service.common.ItWsNotifyService
 
-// import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
@@ -12,7 +10,7 @@ import java.awt.AWTException
 import java.io.IOException
 
 @Component
-class ItWebSocketNotifyHandler : TextWebSocketHandler() {
+open class ItWebSocketNotifyHandler : TextWebSocketHandler() {
 	// @Autowired private lateinit var wsNotify: ItWsNotifyService
 
 	override fun handleTextMessage(session: WebSocketSession, message: TextMessage) = try {

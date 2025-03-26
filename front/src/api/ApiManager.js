@@ -1597,17 +1597,16 @@ migrateHostsFromVM: async (vmId) => {
     });
   },
   /**
-   * @name ApiManager.consoleVM
-   * @description 가상머신 console
+   * @name ApiManager.findVmConsoleAccessInfo
+   * @description 가상머신의 그래픽 콘솔의 모든 정보를 구성
    * 
    * @param {String} vmId
    * @returns {Promise<Object>} 
    */
-  consoleVM: async (vmId) => {
+  findVmConsoleAccessInfo: async (vmId) => {
     return makeAPICall({
-      method: "POST",
+      method: "GET",
       url: ENDPOINTS.CONSOLE_VM(vmId),  // ID를 URL에 포함
-      data: vmId
     });
   },
   //#endregion : VM ----------------------------------------------

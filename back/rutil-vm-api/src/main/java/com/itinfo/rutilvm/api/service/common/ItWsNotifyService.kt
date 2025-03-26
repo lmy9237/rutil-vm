@@ -17,7 +17,7 @@ interface ItWsNotifyService {
 class NotifyServiceImpl(
 
 ): BaseService(), ItWsNotifyService {
-	@Autowired private lateinit var msgTemplate: SimpMessagingTemplate
+	// @Autowired private lateinit var msgTemplate: SimpMessagingTemplate
 
 	override fun notify(wsMessage: WSMessage) {
 		sendMessage(wsMessage)
@@ -25,11 +25,13 @@ class NotifyServiceImpl(
 
 	private fun sendMessage(msg: WSMessage, destination: String = "/topic/public") {
 		log.debug("sendMessage('{}', '{}') ...",msg, destination)
+		/*
 		if (destination.contains("reload")) {
 			msgTemplate.convertAndSend(destination, "")
 			return
 		}
 		msgTemplate.convertAndSend(destination, msg)
+		*/
 	}
 
 	companion object {

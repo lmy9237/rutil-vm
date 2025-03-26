@@ -1418,7 +1418,7 @@ export const useApplicationFromVM = (vmId, mapPredicate) => useQuery({
 });
 /**
  * @name useAllEventFromVM
- * @description  가상머신 내  이벤트 목록조회 useQuery훅
+ * @description 가상머신 내 이벤트 목록조회 useQuery훅
  * 
  * @param {string} vmId 가상머신ID
  * @param {function} mapPredicate 목록객체 변형 처리
@@ -1428,7 +1428,7 @@ export const useApplicationFromVM = (vmId, mapPredicate) => useQuery({
  */
 export const useAllEventFromVM = (vmId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllEventFromVM', vmId], 
+  queryKey: ['allEventFromVM', vmId], 
   queryFn: async () => {
     console.log(`useAllEventFromDomain ... ${vmId}`);
     const res = await ApiManager.findEventsFromVM(vmId); 
@@ -1439,23 +1439,21 @@ export const useAllEventFromVM = (vmId, mapPredicate) => useQuery({
 
 
 /**
- * @name useVmConsole
+ * @name useVmConsoleAccessInfo
  * @description 가상머신 콘솔 useMutation 훅
  * 
  * @returns useMutation 훅
  */
-export const useVmConsole = () => {
-  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
-  return useMutation({
-    mutationFn: async (vmId) => await ApiManager.consoleVM(vmId),
-    onSuccess: () => {
-      queryClient.invalidateQueries('allVMs'); 
-    },
-    onError: (error) => {
-      console.error('Error console vm:', error);
-    },      
-  });
-};
+export const useVmConsoleAccessInfo = (vmId) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['vmConsoleAccessInfo', vmId], 
+  queryFn: async () => {
+    console.log(`useAggregateVmConsole ... ${vmId}`);
+    const res = await ApiManager.findVmConsoleAccessInfo(vmId);
+    return res;
+  },
+  enabled: !!vmId
+})
 
 /**
  * @name useAddVm

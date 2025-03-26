@@ -2,17 +2,16 @@ import React, { useRef } from 'react'
 import { VncScreen } from 'react-vnc'
 
 const Vnc = ({
-  wsUrl = '',
+  wsUrl, host, port, ticket,
   autoConnect = false,
 }) => {
   const isValid = (vncUrl) => {
     if (!vncUrl.startsWith('ws://') && !vncUrl.startsWith('wss://')) {
       return false;
     }
-
     return true;
   };
-
+  const fullAccessUrl = () => `${wsUrl}/${host}:${port}`
   const Spacer = () => <div style={{ width: '2rem', display: 'inline-block' }} />;
 
   const ref = useRef()
@@ -21,21 +20,14 @@ const Vnc = ({
   return (
     <>
     <div style={{ margin: '1rem' }}>
-      <label htmlFor="url">URL for VNC Stream</label>
+      <label htmlFor="url">RutilVM 접속시도</label>
       <Spacer />
-
       {/*<input type="text" onChange={({ target: { value } }) => {
         setInputUrl(value);
       }} name="url" placeholder="wss://your-vnc-url" />
 
       <Spacer />
        <button onClick={() => setVncUrl(inputUrl)}>Go!</button> */}
-    </div>
-
-    <div style={{ opacity: 0.5, margin: '1rem' }}>
-      Since the site is loaded over HTTPS, only `wss://` URLs (SSL encrypted websockets URLs) are supported.
-      <br />
-      To test a `ws://` URL, clone the application and run it on http://localhost:3000, or <a href="https://experienceleague.adobe.com/docs/target/using/experiences/vec/troubleshoot-composer/mixed-content.html?lang=en#task_5448763B8DC941FD80F84041AEF0A14D">enable Mixed Content on your browser</a>.
     </div>
 
     <div style={{ margin: '1rem' }}>
@@ -57,21 +49,31 @@ const Vnc = ({
     <div style={{ margin: '1rem' }}>
       {
         isValid(wsUrl)
-          ?
-          (
+          ? (
             <VncScreen
-              url={wsUrl}
+              url={fullAccessUrl()}
+              autoConnect={true}
               scaleViewport
               background="#000000"
               style={{
-                width: '75vw',
+                width: '100%',
                 height: '75vh',
               }}
               debug
+              onConnect={(rfb) => {
+                console.log("Vnc > onConnect ... ");
+              }}
+              onDisconnect={(rfb) => {
+                console.log("Vnc > onDisconnect ... ");
+              }}
+              onCredentialsRequired={(rfb) => {
+                console.log("Vnc > onCredentialsRequired ... ")
+                rfb.sendCredentials({
+                  "password": ticket,
+                })
+              }}
               ref={ref}
             />
-            
-  
             // <VncScreen 
             //   url={wsUrl}
             //   scaleViewport

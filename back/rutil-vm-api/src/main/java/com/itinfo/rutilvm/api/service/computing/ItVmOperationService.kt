@@ -3,9 +3,7 @@ package com.itinfo.rutilvm.api.service.computing
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.computing.ConsoleVo
 import com.itinfo.rutilvm.api.model.computing.VmExportVo
-import com.itinfo.rutilvm.api.model.computing.toConsoleVo
 import com.itinfo.rutilvm.api.model.fromHostsToIdentifiedVos
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
@@ -105,15 +103,6 @@ interface ItVmOperationService {
 	 */
 	@Throws(Error::class)
 	fun exportOva(vmId: String, vmExportVo: VmExportVo): Boolean
-
-	/**
-	 * [ItVmOperationService.console]
-	 * 가상머신 콘솔
-	 *
-	 * @param vmId [String] 가상머신 Id
-	 */
-	@Throws(Error::class)
-	fun console(vmId: String): ConsoleVo?
 }
 
 @Service
@@ -188,13 +177,6 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 			vmExportVo.fileName
 		)
 		return res.isSuccess
-	}
-
-	@Throws(Error::class)
-	override fun console(vmId: String): ConsoleVo? {
-		log.info("console ... vmId: {}", vmId)
-		val res: Vm = conn.findVm(vmId).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
-		return res.toConsoleVo(conn, systemPropertiesVo)
 	}
 
 

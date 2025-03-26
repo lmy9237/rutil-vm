@@ -536,30 +536,6 @@ class VmController: BaseController() {
 		log.info("/computing/vms/{}/export ... 가상머신 생성", vmId)
 		return ResponseEntity.ok(iVmOp.exportOva(vmId, vmExport))
 	}
-
-	@ApiOperation(
-		value="가상머신 콘솔",
-		notes="선택된 가상머신의 콘솔을 출력한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		// ApiImplicitParam(name="console", value="콘솔", dataTypeClass=ConsoleVo::class, paramType="body"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 201, message = "CREATED"),
-		ApiResponse(code = 404, message = "NOT_FOUND")
-	)
-	@PostMapping("/{vmId}/console")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.CREATED)
-	fun console(
-		@PathVariable vmId: String? = null,
-	): ResponseEntity<ConsoleVo?> {
-		if (vmId.isNullOrEmpty())
-			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		log.info("/computing/vms/{}/console ... 가상머신 콘솔", vmId)
-		return ResponseEntity.ok(iVmOp.console(vmId))
-	}
 	//endregion
 
 
@@ -1339,6 +1315,30 @@ class VmController: BaseController() {
 	@Autowired private lateinit var iVmGraphicsConsoles: ItVmGraphicsConsolesService
 	@ApiOperation(
 		httpMethod="GET",
+		value="가상머신 그래픽 콘솔 구성",
+		notes="선택된 가상머신의 그래픽 콘솔의 모든 정보를 구성"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@GetMapping("/{vmId}/console")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun findConsoleAccessInfo(
+		@PathVariable vmId: String? = null,
+	): ResponseEntity<AggregateConsoleVo?> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		log.info("/computing/vms/{}/console ... 가상머신 그래픽 콘솔", vmId)
+		return ResponseEntity.ok(iVmGraphicsConsoles.earnGCTicketFromVm(vmId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
 		value="가상머신 콘솔 목록",
 		notes="선택된 가상머신의 가상머신 콘솔 목록 조회한다."
 	)
@@ -1397,7 +1397,7 @@ class VmController: BaseController() {
 	@ApiImplicitParams(
 		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
 		ApiImplicitParam(name="graphicConsoleId", value="그래픽 콘솔 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="expiry", value="콘솔 접근 만료시간 (초)", dataTypeClass=Int::class, required=true, paramType="query"),
+		ApiImplicitParam(name="expiry", value="콘솔 접근 만료시간 (초)", dataTypeClass=Int::class, defaultValue="7200", required=true, paramType="query"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED"),

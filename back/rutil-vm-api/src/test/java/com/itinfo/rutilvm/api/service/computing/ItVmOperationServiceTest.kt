@@ -2,7 +2,7 @@ package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.computing.ConsoleVo
+import com.itinfo.rutilvm.api.model.computing.UltimateConsoleVo
 import com.itinfo.rutilvm.api.model.computing.VmExportVo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
@@ -196,7 +196,7 @@ class ItVmOperationServiceTest {
    @Test
    fun should_findConsole() {
        log.debug("should_findConsole ... ")
-       val result: ConsoleVo? =
+       val result: UltimateConsoleVo? =
            service.console("9181fa0b-d031-4dbd-a031-6de2e2913eb6")
 
        assertThat(result, `is`(not(nullValue())))
