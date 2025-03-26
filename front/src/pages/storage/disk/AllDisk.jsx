@@ -4,6 +4,7 @@ import HeaderButton from "../../../components/button/HeaderButton";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DiskDupl from "../../../components/dupl/DiskDupl";
 import { useAllDisks } from "../../../api/RQHook";
+import { rvi24Desktop, rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
 
 const AllDisk = () => {
   const {
@@ -16,9 +17,10 @@ const AllDisk = () => {
   console.log("...");
   return (
     <div id="section">
-      <div>
-        <HeaderButton titleIcon={faDatabase} title="디스크" />
-      </div>
+        {/* <HeaderButton titleIcon={faDatabase} title="디스크" /> */}
+        <HeaderButton titleIcon={rvi24HardDrive()}
+          title="디스크"
+        />
       <div className="w-full section-content">
         <DiskDupl
           isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}

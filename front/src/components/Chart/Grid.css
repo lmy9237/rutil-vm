@@ -1,11 +1,11 @@
 .grid-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 2px;
+  gap: 6px;
   width: 90%;
 }
 .grid-item {
-  border-radius: 4px;
+  border-radius: var(--br-default);
   cursor: pointer;
   height: 44px;
 }
@@ -30,7 +30,6 @@
 }
 .grid-item-name {
   font-size: 9px;
-  max-width: 93px;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;

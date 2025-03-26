@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./DynamicInputList.css";
-import { RVI12, rvi12Minus, rvi12Plus } from "../icons/RutilVmIcons";
+import { RVI36, rvi36Add, rvi36AddHover, rvi36Remove, rvi36Trash } from "../icons/RutilVmIcons";
 
 const DynamicInputList = ({
   maxCount = 3,
@@ -63,24 +63,22 @@ const DynamicInputList = ({
           )}
 
           {/* 버튼 렌더링 */}
-          <div className="dynamic-btns flex">
+          <div className="dynamic-btns f-end">
             {index === inputs.length - 1 && inputs.length < maxCount && (
-              <button
-                type="button"
+              <RVI36 iconDef={rvi36Add(false)} 
+                className="btn-icon"
+                currentColor="transparent" 
                 onClick={handleAdd}
                 disabled={disabled}
-              >
-                <RVI12 iconDef={rvi12Plus} />
-              </button>
+              />
             )}
             {inputs.length > 1 && (
-              <button
-                type="button"
+              <RVI36 iconDef={rvi36Remove}
+                className="btn-icon"
+                currentColor="transparent"
                 onClick={() => handleRemove(index)}
                 disabled={disabled} 
-              >
-                <RVI12 iconDef={rvi12Minus} />
-              </button>
+              />
             )}
           </div>
         </div>

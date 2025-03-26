@@ -4,7 +4,7 @@ import { useAllVnicProfiles } from "../../../api/RQHook";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VnicProfileDupl from "../../../components/dupl/VnicProfileDupl";
 import Localization from "../../../utils/Localization";
-import { rvi24Flag } from "../../../components/icons/RutilVmIcons";
+import { rvi24Flag, rvi24Lan } from "../../../components/icons/RutilVmIcons";
 import HeaderButton from "../../../components/button/HeaderButton";
 
 // React Modal 설정
@@ -26,7 +26,7 @@ const AllVnic = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Flag}
+      <HeaderButton titleIcon={rvi24Lan()}
         title={Localization.kr.VNIC_PROFILE}
       />
       <div className="w-full section-content">

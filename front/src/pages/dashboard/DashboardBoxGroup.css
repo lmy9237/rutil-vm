@@ -23,7 +23,7 @@
   text-align: center;
   padding: 22px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.08);
-  border-radius: 7px;
+  border-radius: var(--br-default);
 }
 .box:hover {
   border: var(--border-box);
@@ -48,9 +48,9 @@
   padding-top: 15px;
 }
 .box-text > h1 {
-  font-size: var(--fs-40);
+  font-size: var(--fs-big);
   line-height: 27px;
-  font-weight: 600;
+  font-weight: 700;
   color: black;
 }
 .arrows {

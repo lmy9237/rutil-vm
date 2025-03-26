@@ -1,15 +1,16 @@
-.dynamic-btns{
-    min-width: 52px;
-    justify-content: right;
+.dynamic-btns {
+  min-width: 52px;
 }
-.dynamic-btns>button{
-    width: 26px;
-    height: var(--h-primary);
-    color: var(--color-gray);
-    align-items: center !important;
-    display: flex;
+/*
+.dynamic-btns > svg {
+  width: 26px;
+  height: var(--h-primary);
+  color: var(--color-gray);
+  align-items: center !important;
+  display: flex;
 }
-.dynamic-btns>button:hover{
-    color: var(--color-black);
-    border: var(--border-btn);
+.dynamic-btns > svg:hover {
+  color: var(--color-black);
+  border: var(--border-btn);
 }
+*/

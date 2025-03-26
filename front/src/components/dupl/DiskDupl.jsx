@@ -38,7 +38,7 @@ const DiskDupl = ({
       sparse: d?.sparse ? "씬 프로비저닝" : "사전 할당",
       connect: (
         <TableRowClick
-          type={d?.connectVm?.id ? "vms" : "templates"}
+          type={d?.connectVm?.id ? "vm" : "template"}
           id={d?.connectVm?.id || d?.connectTemplate?.id}
         >
           {d?.connectVm?.name || d?.connectTemplate?.name}

@@ -93,18 +93,6 @@ export const TopMenuIcon = ({
 //#region: 아이콘 12px
 export const rvi12ArrowRight = (<path d="M4.5 2.5L7.5 6L4.5 9.5" stroke="currentColor" strokeLinecap="square" strokeLinejoin="round"/>)
 export const rvi12Plus = (<path d="M5.14286 6.85714H0V5.14286H5.14286V0H6.85714V5.14286H12V6.85714H6.85714V12H5.14286V6.85714Z"/>)
-export const rvi12Minus = (isHovering = false) => (
-  <>
-    <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" fill="white" />
-    <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" stroke={isHovering ? "#717171" : "#C6C6C6"} />
-    <path
-      d="M8 12H16"
-      stroke={isHovering ? "#1D1D1D" : "#888888"}
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-  </>
-);
 export const RVI12 = ({iconDef, onClick, currentColor='#999999', ...props}) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
@@ -413,11 +401,11 @@ export const EventSeverityIcon = (severity) => {
 //#endregion
 
 //#region: 아이콘36px 
-export const rvi36Add = (
+export const rvi36Add = (isHovering = false) => (
   <>
     <rect x="25.5" y="0.5" width="25" height="25" rx="3.5" transform="rotate(90 25.5 0.5)" fill="white"/>
-    <rect x="25.5" y="0.5" width="25" height="25" rx="3.5" transform="rotate(90 25.5 0.5)" stroke="#C6C6C6"/>
-    <path d="M12.1429 13.8571H7V12.1429H12.1429V7H13.8571V12.1429H19V13.8571H13.8571V19H12.1429V13.8571Z" fill="#717171"/>
+    <rect x="25.5" y="0.5" width="25" height="25" rx="3.5" transform="rotate(90 25.5 0.5)" stroke={isHovering ? "#717171" : "#C6C6C6"}/>
+    <path d="M12.1429 13.8571H7V12.1429H12.1429V7H13.8571V12.1429H19V13.8571H13.8571V19H12.1429V13.8571Z" fill={isHovering ? "1D1D1D" : "#717171"}/>
   </>
 )
 export const rvi36AddHover = (
@@ -525,7 +513,7 @@ export const rvi36Disabled = (
     <circle cx="30" cy="13" r="2" fill="#888888"/>  
   </>
 )
-export const RVI36 = ({iconDef, width = 24, height = 24, onClick, currentColor='#999999', ...props }) => {
+export const RVI36 = ({iconDef, width = 30, height = 30, onClick, currentColor='white', ...props }) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox={`0 0 ${width} ${height}`}
       fill={currentColor}

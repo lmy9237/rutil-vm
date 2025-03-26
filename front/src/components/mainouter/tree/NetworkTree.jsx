@@ -9,7 +9,7 @@ import {
 
 import { useAllTreeNavigations } from "../../../api/RQHook";
 
-const NetworkTree = ({ selectedDiv, setSelectedDiv }) => {
+const NetworkTree = ({ selectedDiv, setSelectedDiv,onContextMenu  }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -84,6 +84,15 @@ const NetworkTree = ({ selectedDiv, setSelectedDiv }) => {
                 onClick={() => {
                   setSelectedDiv(dataCenter.id);
                   navigate(`/networks/datacenters/${dataCenter.id}/clusters`);
+                }}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  oncontextmenu?.(e, {
+                    id: dataCenter.id,
+                    name: dataCenter.name,
+                    level: 2,
+                    type: "dataCenter",
+                  }, "network");
                 }}
               />
 

@@ -17,6 +17,7 @@
 }
 .rv-logo {
   margin: 0 10px ;
+  width: 120px;
 }
 .rv-logo.no-hover:hover {
   background-color: none !important;cursor:pointer;

@@ -1,4 +1,3 @@
-import { RVI12, rvi12Minus } from "../icons/RutilVmIcons";
 import "./LabelInput.css"
 
 /**

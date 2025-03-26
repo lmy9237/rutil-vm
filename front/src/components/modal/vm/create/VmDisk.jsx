@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import Loading from "../../../common/Loading";
 import { useDisksFromVM } from "../../../../api/RQHook";
 import ActionButton from "../../../button/ActionButton";
-import { RVI12, rvi12Minus, rvi12Plus, RVI24, rvi24ChevronDown, rvi24Error } from "../../../icons/RutilVmIcons";
+import { RVI24, rvi24ChevronDown, rvi24Error, RVI36, rvi36Edit, rvi36Trash } from "../../../icons/RutilVmIcons";
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
 
@@ -68,7 +68,7 @@ const VmDisk = ({
     <>
       <div className="instance-image center py-2">
         <div className="font-bold">인스턴스 이미지</div>
-        <div style={{ display: "flex", gap: "8px" }}>
+        <div className="f-end" style={{ gap: "6px" }}>
           <ActionButton
             label="연결"
             actionType="default"
@@ -85,7 +85,7 @@ const VmDisk = ({
       <div className="disk-list-container">
         {diskListState.length > 0 && diskListState.map((disk, index) => (
           <div key={index} className="disk-item center mb-0.5">
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div className="f-start">
               <span style={{ marginRight: "25px" }}>
                 <strong>{disk.isExisting ? "[기존] " : disk.isCreated ? "[생성] " : "[연결] "}</strong>
                   {disk?.alias} ({(disk?.size || disk?.virtualSize) + ' GB'}) {disk?.bootable ? "[부팅]" : ""} 
@@ -93,12 +93,18 @@ const VmDisk = ({
               </span>
             </div>
             {/*{disk?.storageDomainVo?.id} <- 연결되어있는 디스크아이디*/}
-            <div className="flex">
-              <button className="px-1"><RVI24 iconDef={rvi24ChevronDown()} /></button>
-              <button className="px-1" onClick={() => handleRemoveDisk(index, disk.isExisting)}
-              >
-                <RVI12 iconDef={rvi12Minus()} />
-              </button>
+            <div className="f-end">
+              <RVI36 
+                iconDef={rvi36Edit} 
+                className="btn-icon"
+                currentColor="transparent"
+              />
+              <RVI36 
+                iconDef={rvi36Trash}
+                className="btn-icon"
+                currentColor="transparent"
+                onClick={() => handleRemoveDisk(index, disk.isExisting)}
+              />
             </div>
             {/* 기존 디스크가 아닌 경우에만 삭제 버튼 표시(삭제예정정) */}
             {/* <div className="flex">
