@@ -13,10 +13,33 @@ const Vnc = ({
   };
   const fullAccessUrl = () => `${wsUrl}/${host}:${port}`
   const Spacer = () => <div style={{ width: '2rem', display: 'inline-block' }} />;
-
   const ref = useRef()
 
-  console.log(`... wsUrl: ${wsUrl} autoConnect: ${autoConnect}`)
+  console.log(`... fullAccessUrl: ${fullAccessUrl()}`)
+  /*
+  useEffect(() => {
+    if (!ref.current) {
+      console.error('Container ref is not assigned');
+      return;
+    }
+
+    const rfb = new RFB(ref.current, fullAccessUrl(), {
+      credentials: { password: ticket },
+      wsProtocols: ['binary']
+    })
+    rfb.addEventListener('connect', () => {
+      console.log("Vnc > Connected to VNC")
+    })
+
+    rfb.addEventListener('disconnect', (evt) => {
+      console.log("Vnc > Disconnected from VNC", evt)
+    })
+
+    return () => {
+      rfb.disconnect();
+    };
+  }, [host, ticket])*/
+
   return (
     <>
     <div style={{ margin: '1rem' }}>
@@ -53,11 +76,15 @@ const Vnc = ({
             <VncScreen
               url={fullAccessUrl()}
               autoConnect={true}
+              rfbOptions={{
+                "wsProtocols": ['binary']
+              }}
               scaleViewport
               background="#000000"
               style={{
                 width: '100%',
-                height: '75vh',
+                height: '60vh',
+                // aspectRatio: '1024/'
               }}
               debug
               onConnect={(rfb) => {
@@ -72,6 +99,12 @@ const Vnc = ({
                   "password": ticket,
                 })
               }}
+              onSecurityFailure={(e) => {
+                console.error(`Vnc > onSecurityFailure (${e?.detail?.status}): ${e?.detail?.reason}`)
+              }}
+              onClipboard={(e) => {
+                console.log(`Vnc > onClipboard ${e.detail}`)
+              }} 
               ref={ref}
             />
             // <VncScreen 

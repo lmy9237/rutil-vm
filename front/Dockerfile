@@ -2,7 +2,7 @@
 # Stage 1: Build the application using Node
 FROM node:18.12.1-alpine AS build-fe
 LABEL maintainer="Chan Hee Lee <chlee@ititinfo.com>"
-LABEL build-stage="npm"
+LABEL build-stage="front"
 
 WORKDIR /home/node
 

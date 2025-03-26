@@ -19,6 +19,10 @@ const VITE_CONFIG = ({ mode }) => {
   console.log(`vite.config.js ... process.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: ${RUTIL_VM_ENV.VITE_RUTIL_VM_OVIRT_IP_ADDRESS}`)
 
   RUTIL_VM_ENV.__API_URL__ = `https://${RUTIL_VM_ENV.VITE_RUTIL_VM_OVIRT_IP_ADDRESS ?? "localhost"}:6690`;
+  RUTIL_VM_ENV.__WSPROXY_URL__ = `http://${RUTIL_VM_ENV.VITE_RUTIL_VM_OVIRT_IP_ADDRESS ?? "localhost"}:9999`; // 사용불가능
+  console.log(`vite.config.js ... RUTIL_VM_ENV.__API_URL__: ${RUTIL_VM_ENV.__API_URL__}`)
+  console.log(`vite.config.js ... RUTIL_VM_ENV.__WSPROXY_URL__: ${RUTIL_VM_ENV.__WSPROXY_URL__}`)
+
   return defineConfig({
     // root: path.resolve(__dirname, 'public'),
     plugins: [react(), mkcert()],
@@ -48,16 +52,21 @@ const VITE_CONFIG = ({ mode }) => {
               console.error("Proxy error:", err);
             });
           },
-          "/ws": {
-            target: RUTIL_VM_ENV.__API_URL__,
-            changeOrigin: true,
-            secure: false, // Set to true if the target uses a valid SSL certificate
-          }
+        },
+        "/ws": {
+          target: RUTIL_VM_ENV.__WSPROXY_URL__,
+          ws: true,
+          changeOrigin: true,
+          // Remove the '/ws' prefix before forwarding the request
+          rewrite: (path) => {
+            console.info(`on rewrite ... path: ${path}`);
+            return path.replace(/^\/ws/, '')
+          },
         },
         watch: {
           usePolling: true
-        }
-      }
+        },
+      },
     },
     resolve: {
       alias: {

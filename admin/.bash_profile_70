@@ -20,6 +20,10 @@ export DOCKER_IMG_RUTIL_VM=ititcloud/rutil-vm
 export DOCKER_IMG_RUTIL_VM_CURRENT=$DOCKER_IMG_RUTIL_VM:$DOCKER_IMG_RUTIL_VM_API_VERSION
 export DOCKER_IMG_RUTIL_VM_LATEST=$DOCKER_IMG_RUTIL_VM:latest
 
+export DOCKER_IMG_RUTIL_VM_WSPROXY=ititcloud/rutil-vm-wsproxy
+export DOCKER_IMG_RUTIL_VM_WSPROXY_CURRENT=$DOCKER_IMG_RUTIL_VM_WSPROXY:$DOCKER_IMG_RUTIL_VM_API_VERSION
+export DOCKER_IMG_RUTIL_VM_WSPROXY_LATEST=$DOCKER_IMG_RUTIL_VM_WSPROXY:latest
+
 # Engine
 export OVIRT_ENGINE_LOG=/var/log/ovirt-engine/engine.log
 export OVIRT_ENGINE_LOG_CONFIG=/usr/share/ovirt-engine/services/ovirt-engine/ovirt-engine.xml.in
@@ -64,6 +68,12 @@ function loadDkf() {
   docker rmi $DOCKER_IMG_RUTIL_VM $DOCKER_IMG_RUTIL_VM_CURRNET;
   docker load -i $1;
   docker tag $DOCKER_IMG_RUTIL_VM_CURRENT $DOCKER_IMG_RUTIL_VM_LATEST;
+}
+
+function loadDkw() {
+  docker rmi $DOCKER_IMG_RUTIL_VM_WSPROXY $DOCKER_IMG_RUTIL_VM_WSPROXY_CURRENT;
+  docker load -i $1;
+  docker tag $DOCKER_IMG_RUTIL_VM_WSPROXY_CURRENT $DOCKER_IMG_RUTIL_VM_WSPROXY_LATEST;
 }
 
 function enginePrivateKey() {

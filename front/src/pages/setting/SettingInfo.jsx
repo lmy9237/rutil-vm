@@ -6,8 +6,8 @@ import Path from "../../components/Header/Path";
 import SettingUsers from "./SettingUsers";
 import SettingSessions from "./SettingSessions";
 import SettingCertificates from "./SettingCertificates";
-import "./Setting.css";
 import { rvi24Gear } from "../../components/icons/RutilVmIcons";
+import "./Setting.css";
 
 /**
  * @name SettingInfo

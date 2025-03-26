@@ -7,13 +7,18 @@ const VmConsoleModal = ({
   isOpen,
   onClose,
   vmId,
-  wsUrl=`ws://localhost:9999`,
   autoConnect=true,
 }) => {
-
   const {
     data: vmConsoleAccessInfo,
   } = useVmConsoleAccessInfo(vmId)
+
+  let wsUrl = `wss://localhost/ws`
+  if (import.meta.env.PROD) {
+    console.log("THIS IS PRODUCTION !!!")
+    console.log(`VmConsoleModal ... import.meta.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`)
+    wsUrl = 'wss://__RUTIL_VM_OVIRT_IP_ADDRESS__/ws';
+  }
 
   console.log(`... wsUrl: ${wsUrl}, address: ${vmConsoleAccessInfo?.address}, port: ${vmConsoleAccessInfo?.port}, ticket: ${vmConsoleAccessInfo?.token}`)
   return (

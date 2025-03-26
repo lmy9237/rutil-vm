@@ -36,7 +36,9 @@
     "react-vnc": "^2.0.2",
     "sockjs-client": "1.6.1",
     "url": "^0.11.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "optimist": "0.6.0",
+    "ws": "^2.3.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "1.9.0",
@@ -71,6 +73,7 @@
     "build:tmp": "vite build",
     "build": "export NODE_ENV=production; vite build",
     "build:win": "set NODE_ENV=production && vite build",
+    "wsproxy": "node ../wsproxy/index.js -p 9999",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
