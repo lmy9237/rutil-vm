@@ -70,7 +70,7 @@ class ItHostNicServiceImpl(
     override fun findAllFromHost(hostId: String): List<HostNicVo> {
         log.info("findAllFromHost ... hostId: {}", hostId)
         val hostNics: List<HostNic> = conn.findAllHostNicsFromHost(hostId, follow = "host,statistics").getOrDefault(emptyList())
-			.filter { !it.baseInterfacePresent() }
+			// .filter { !it.baseInterfacePresent() }
 
 		val bondingSlaveIds = hostNics.flatMap { it.bonding()?.slaves()?.map { slave -> slave.id() } ?: emptyList() }.toSet()
 		val filteredNics = hostNics.filterNot { it.id() in bondingSlaveIds }

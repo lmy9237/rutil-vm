@@ -2,6 +2,7 @@ package com.itinfo.rutilvm.api.model.network
 
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.fromHostNicToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
 import com.itinfo.rutilvm.util.ovirt.*
@@ -39,6 +40,7 @@ private val log = LoggerFactory.getLogger(HostNicVo::class.java)
  * @property ipv6BootProtocol [BootProtocol]
  * @property ip [IpVo]
  * @property ipv6 [IpVo]]
+ * @property baseInterface [IdentifiedVo]
  * @property bondingVo [bondingVo]
  * @property hostVo [IdentifiedVo]
  * @property networkVo [IdentifiedVo]
@@ -46,7 +48,6 @@ private val log = LoggerFactory.getLogger(HostNicVo::class.java)
 class HostNicVo(
 	val id: String = "",
 	val name: String = "",
-	val baseInterface: String = "",
 	val macAddress: String = "",
 	val mtu: Int = 0,
 	val bridged: Boolean = false,
@@ -64,6 +65,7 @@ class HostNicVo(
 	val ipv6BootProtocol: BootProtocol = BootProtocol.NONE,
 	val ip: IpVo = IpVo(),
 	val ipv6: IpVo = IpVo(),
+	val baseInterface: IdentifiedVo = IdentifiedVo(),
 	val bondingVo: BondingVo = BondingVo(), // 본딩
 	val hostVo: IdentifiedVo = IdentifiedVo(),
 	val networkVo: IdentifiedVo = IdentifiedVo(), // null 일수도 잇음
@@ -74,7 +76,6 @@ class HostNicVo(
 	class Builder {
 		private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
-		private var bBaseInterface: String = ""; fun baseInterface(block: () -> String?) { bBaseInterface = block() ?: "" }
 		private var bMacAddress: String = ""; fun macAddress(block: () -> String?) { bMacAddress = block() ?: "" }
 		private var bMtu: Int = 0; fun mtu(block: () -> Int?) { bMtu = block() ?: 0 }
 		private var bBridged: Boolean = false; fun bridged(block: () -> Boolean?) { bBridged = block() ?: false }
@@ -92,11 +93,12 @@ class HostNicVo(
 		private var bIpv6BootProtocol: BootProtocol = BootProtocol.NONE; fun ipv6BootProtocol(block: () -> BootProtocol?) { bIpv6BootProtocol = block() ?: BootProtocol.NONE }
 		private var bIp: IpVo = IpVo(); fun ip(block: () -> IpVo?) { bIp = block() ?: IpVo() }
 		private var bIpv6: IpVo = IpVo(); fun ipv6(block: () -> IpVo?) { bIpv6 = block() ?: IpVo() }
+		private var bBaseInterface: IdentifiedVo = IdentifiedVo(); fun baseInterface(block: () -> IdentifiedVo?) { bBaseInterface = block() ?: IdentifiedVo() }
 		private var bBondingVo: BondingVo = BondingVo(); fun bondingVo(block: () -> BondingVo?) { bBondingVo = block() ?: BondingVo() }
 		private var bHostVo: IdentifiedVo = IdentifiedVo(); fun hostVo(block: () -> IdentifiedVo?) { bHostVo = block() ?: IdentifiedVo() }
 		private var bNetworkVo: IdentifiedVo = IdentifiedVo(); fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
 
-		fun build(): HostNicVo = HostNicVo( bId,  bName,  bBaseInterface,  bMacAddress,  bMtu,  bBridged,  bStatus,  bSpeed,  bRxSpeed,  bTxSpeed,  bRxTotalSpeed,  bTxTotalSpeed,  bRxTotalError,  bTxTotalError,  bVlan,  bBootProtocol,  bIpv6BootProtocol,  bIp,  bIpv6,  bBondingVo,  bHostVo,  bNetworkVo, )
+		fun build(): HostNicVo = HostNicVo( bId,  bName,  bMacAddress,  bMtu,  bBridged,  bStatus,  bSpeed,  bRxSpeed,  bTxSpeed,  bRxTotalSpeed,  bTxTotalSpeed,  bRxTotalError,  bTxTotalError,  bVlan,  bBootProtocol,  bIpv6BootProtocol,  bIp,  bIpv6, bBaseInterface, bBondingVo,  bHostVo,  bNetworkVo, )
 	}
 
 	companion object {
@@ -119,10 +121,16 @@ fun HostNic.toHostNicVo(conn: Connection): HostNicVo {
 		else null
 	val bond: Bonding? = if(hostNic.bondingPresent()) hostNic.bonding() else null
 
+	val base: HostNic? =
+		if(hostNic.baseInterfacePresent()) {
+			conn.findAllHostNicsFromHost(hostNic.host().id()).getOrDefault(emptyList())
+				.firstOrNull { it.name() == hostNic.baseInterface() }
+		} else { null }
+
 	return HostNicVo.builder {
 		id { hostNic.id() }
 		name { hostNic.name() }
-		baseInterface { if(hostNic.baseInterfacePresent()) hostNic.baseInterface() else ""  }
+		baseInterface { base?.fromHostNicToIdentifiedVo()  }
 		bridged { hostNic.bridged() }
 		macAddress { if(hostNic.macPresent()) hostNic.mac().address() else "" }
 		mtu { hostNic.mtuAsInteger() }
