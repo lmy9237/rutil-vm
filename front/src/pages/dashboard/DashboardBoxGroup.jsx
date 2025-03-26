@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import "./DashboardBoxGroup.css";
 import {
   RVI24,
-  rvi24DiagonalUp,
-  rvi24DiagonalDown,
-  rvi24Bell,
-  rvi24Error,
-  rvi24Warning,
+  rvi16DiagonalUp,
+  rvi16DiagonalDown,
+  RVI16,
+  severity2Icon,
 } from "../../components/icons/RutilVmIcons";
 
 /**
@@ -36,38 +35,37 @@ const DashboardBox = ({
   const navigate = useNavigate();
 
   return (
-    <div className="box" onClick={() => navigatePath && navigate(navigatePath)}>
+    <div className="box v-btw" onClick={() => navigatePath && navigate(navigatePath)}>
       <span className="box-icon-title f-start">
         {/* FontAwesome 아이콘인지, SVG 아이콘인지 체크 후 렌더링 */}
         <RVI24 className="box-icon" iconDef={iconDef} />
         <p className="box-icon-name">{title}</p>
       </span>
 
-      <div className="box-text flex">
-        <div className="arrows flex center mr-2">
-        {cntUp && (
-            <>
-              <RVI24 className="box-icon up-icon" iconDef={rvi24DiagonalUp} />
-              <span className="up-text">{cntUp}</span>&nbsp;
-            </>
-          )}
-          {cntDown && (
-            <>
-              <RVI24 className="box-icon down-icon" iconDef={rvi24DiagonalDown} />
-              <span className="down-text">{cntDown}</span>&nbsp;
-            </>
-          )}
-          {alert && (<>
-            <RVI24 className="box-icon" iconDef={rvi24Bell} />{alert}&nbsp;
-          </>)}
-          {error && (<>
-            <RVI24 className="box-icon" iconDef={rvi24Error} />{error}&nbsp;
-          </>)}
-          {warning && (<>
-            <RVI24 className="box-icon" iconDef={rvi24Warning} />{warning}&nbsp;
-          </>)}
+      <div className="box-detail f-end">
+        <div className="box-detail-icons f-end">
+          {cntUp && (<div className="box-detail-icon f-end">
+            <RVI16 className="box-icon sml" iconDef={rvi16DiagonalUp()} />
+            <span className="txt up v-end">{cntUp}</span>
+          </div>)}
+          {cntDown && (<div className="box-detail-icon f-end">
+            <RVI16 className="box-icon sml" iconDef={rvi16DiagonalDown()} />
+            <span className="txt down v-end">{cntDown}</span>
+          </div>)}
+          {alert && (<div className="box-detail-icon f-end">
+            <RVI16 className="box-icon sml" iconDef={severity2Icon("ALERT", true)} />
+            <span className="txt alert v-end">{alert}</span>
+          </div>)}
+          {error && (<div className="box-detail-icon f-end">
+            <RVI16 className="box-icon sml" iconDef={severity2Icon("ERROR", true)} />
+            <span className="txt error v-end">{error}</span>
+          </div>)}
+          {warning && (<div className="box-detail-icon f-end">
+            <RVI16 className="box-icon sml" iconDef={severity2Icon("WARNING", true)} />
+            <span className="txt warning f-start">{warning}</span>
+          </div>)}
         </div>
-        <h1>{cntTotal}</h1>
+        <h1 className="f-center">{cntTotal}</h1>
       </div>
     </div>
   );

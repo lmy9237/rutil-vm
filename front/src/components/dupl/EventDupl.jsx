@@ -1,6 +1,6 @@
 import { useState } from "react";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
-import { EventSeverityIcon } from "../icons/RutilVmIcons";
+import { severity2Icon } from "../icons/RutilVmIcons";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
 import TablesOuter from "../table/TablesOuter";
@@ -25,7 +25,7 @@ const EventDupl = ({
 
   const transformedData = events.map((e) => ({
     ...e,
-    _severity: EventSeverityIcon(e?.severity),
+    _severity: severity2Icon(e?.severity),
   }))
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);

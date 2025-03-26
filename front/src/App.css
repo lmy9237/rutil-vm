@@ -146,7 +146,7 @@ input[disabled] {
 /* svg.svg-inline--fa { 
   cursor: pointer;
 } */
-.hover-icon{
+.hover-icon {
   cursor: pointer;
 }
 .hover-icon:hover{
@@ -163,7 +163,10 @@ input[disabled] {
 .f-end    { display:flex;align-items:center;justify-content:flex-end; }
 .center   { display:flex;align-items:center;justify-content:space-between; }
 .f-btw    { display:flex;align-items:center;justify-content:space-between; }
-.v-start  { display:flex;align-items:flex-start;justify-content:center;flex-direction:column;}
+.v-start  { display:flex;align-items:flex-start;justify-content:center;flex-direction:column; }
+.v-end    { display:flex;align-items:flex-end;justify-content:center;flex-direction:column; }
+.v-btw    { display:flex;align-items:space-between;justify-content:center;flex-direction:column; } 
+
 #section {
   width: calc(100% - var(--w-aside-menu));height:100%;
   overflow-y: auto;

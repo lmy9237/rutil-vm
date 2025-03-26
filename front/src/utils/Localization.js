@@ -47,6 +47,15 @@ export const Localization = {
       else if (_status === "NON_OPERATIONAL") return "작동하지 않음";
       return _status;
     },
+
+    renderSeverity(severity="NORMAL") {
+      const _severity = severity?.toUpperCase() ?? "";
+      if (_severity === "ALERT")            return "알림";
+      else if (_severity === "ERROR")       return "실패";
+      else if (_severity === "WARNING")     return "경고";
+      else if (_severity === "NORMAL")      return "정상";
+      return _severity;
+    }
   }
 }
 
