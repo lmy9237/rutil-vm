@@ -58,7 +58,6 @@ fun List<HostStorage>.toHostStorageVos(): List<HostStorageVo> =
 
 
 fun HostStorage.toIscsiStorageVo() : HostStorageVo {
-
     return HostStorageVo.builder {
         id { this@toIscsiStorageVo.id() }
         volumeGroup { this@toIscsiStorageVo.volumeGroup().id() }
@@ -72,7 +71,6 @@ fun List<HostStorage>.toIscsiStorageVos(): List<HostStorageVo> =
 
 
 fun HostStorage.toFibreStorageVo() : HostStorageVo {
-
     return HostStorageVo.builder {
         id { this@toFibreStorageVo.id() }
         volumeGroup { this@toFibreStorageVo.volumeGroup().id() }

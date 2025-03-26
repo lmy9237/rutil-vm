@@ -300,16 +300,22 @@ fun StorageDomainVo.toAddISCSIBuilder(): HostStorage {
 fun StorageDomainVo.toAddFCPBuilder(): HostStorage {
 	return HostStorageBuilder()
 		.type(StorageType.fromValue(this@toAddFCPBuilder.storageType))
-//		.logicalUnits(this@toAddFCPBuilder.logicalUnits.map {
-//			LogicalUnitBuilder().id(it).build()
-//		})
-		.volumeGroup(
-			VolumeGroupBuilder().logicalUnits(
-				this@toAddFCPBuilder.logicalUnits.map {
-					LogicalUnitBuilder().id(it).build()
-				}
-			)
-		)
+		.logicalUnits(this@toAddFCPBuilder.logicalUnits.map {
+			LogicalUnitBuilder().id(it).build()
+		})
+		.overrideLuns(true)
+		// overrideLuns = 생성기능 강제 처리
+		// This operation might be unrecoverable and destructive.
+		// the following luns are alread in use,"
+		// 버튼 "approve operation"
+
+		// .volumeGroup(
+		// 	VolumeGroupBuilder().logicalUnits(
+		// 		this@toAddFCPBuilder.logicalUnits.map {
+		// 			LogicalUnitBuilder().id(it).build()
+		// 		}
+		// 	)
+		// )
 	.build()
 }
 

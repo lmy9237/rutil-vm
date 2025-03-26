@@ -138,7 +138,7 @@ const DomainInfo = () => {
       <DomainModals
         activeModal={activeModal}
         domain={domain}
-        selectedClusters={domain}
+        selectedDomains={domain}
         onClose={closeModal}
       />
     </div>

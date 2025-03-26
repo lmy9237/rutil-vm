@@ -3045,7 +3045,7 @@ export const useImportDomain = () => {
     mutationFn: async (domainData) => await ApiManager.importDomain(domainData),
     onSuccess: () => {
       console.log('domain 가져오기 성공')
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
       console.error('Error adding storageDomain:', error);
@@ -3063,7 +3063,7 @@ export const useEditDomain = () => {
   return useMutation({
     mutationFn: async ({ domainId, domainData }) => await ApiManager.editDomain(domainId, domainData),
     onSuccess: () => {
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
       console.error('Error editing domain:', error);
@@ -3085,7 +3085,7 @@ export const useDeleteDomain = () => {
       await ApiManager.deleteDomain(domainId, format, hostName)
     },
     onSuccess: () => {      
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
       console.error('Error deleting domain:', error);
@@ -3104,7 +3104,7 @@ export const useDestroyDomain = () => {
   return useMutation({
     mutationFn: async (domainId) => await ApiManager.destroyDomain(domainId),
     onSuccess: () => {
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
       console.error('Error destroy domain:', error);
@@ -3152,7 +3152,7 @@ export const useOvfUpdateDomain = () => {
 
 /**
  * @name useActivateDomain
- * @description 호스트 활성 useMutation 훅
+ * @description 도메인 활성 useMutation 훅
  * 
  * @returns useMutation 훅
  */
@@ -3161,7 +3161,7 @@ export const useActivateDomain = () => {
   return useMutation({
     mutationFn: async ({domainId, dataCenterId}) => await ApiManager.activateDomain(domainId, dataCenterId),
     onSuccess: () => {
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
       console.error('Error activate domain:', error);
@@ -3171,7 +3171,7 @@ export const useActivateDomain = () => {
 
 /**
  * @name useAttachDomain
- * @description 호스트 연결 useMutation 훅
+ * @description 도메인 연결 useMutation 훅
  * 
  * @returns useMutation 훅
  */
@@ -3180,7 +3180,7 @@ export const useAttachDomain = () => {
   return useMutation({
     mutationFn: async ({storageDomainId, dataCenterId}) => await ApiManager.attachDomain(storageDomainId, dataCenterId),
     onSuccess: () => {
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
       console.error('Error attach Domain:', error);
@@ -3190,7 +3190,7 @@ export const useAttachDomain = () => {
 
 /**
  * @name useDetachDomain
- * @description 호스트 분리 useMutation 훅
+ * @description 도메인 분리 useMutation 훅
  * 
  * @returns useMutation 훅
  */
@@ -3199,7 +3199,7 @@ export const useDetachDomain = () => {
   return useMutation({
     mutationFn: async ({domainId, dataCenterId}) => await ApiManager.detachDomain(domainId, dataCenterId),
     onSuccess: () => {
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
       console.error('Error detach Domain:', error);
@@ -3209,7 +3209,7 @@ export const useDetachDomain = () => {
 
 /**
  * @name useMaintenanceDomain
- * @description 호스트 유지보수 useMutation 훅
+ * @description 도메인 유지보수 useMutation 훅
  * 
  * @returns useMutation 훅
  */
@@ -3218,7 +3218,7 @@ export const useMaintenanceDomain = () => {
   return useMutation({
     mutationFn: async ({domainId, dataCenterId}) => await ApiManager.maintenanceDomain(domainId, dataCenterId),
     onSuccess: () => {
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
       console.error('Error maintenance Domain:', error);

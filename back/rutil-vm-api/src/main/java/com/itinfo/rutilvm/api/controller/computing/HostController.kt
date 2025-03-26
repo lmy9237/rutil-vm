@@ -214,7 +214,7 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="GET",
-		value="도메인 생성시 필요한 iSCSI 목록",
+		value="도메인 생성 - iSCSI 목록",
 		notes="도메인 생성 - iSCSI 유형 대상 LUN 목록"
 	)
 	@ApiImplicitParams(
@@ -236,7 +236,7 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="GET",
-		value="도메인 생성시 필요한 Fibre Channel ",
+		value="도메인 생성시 - Fibre Channel ",
 		notes="도메인 생성 - Fibre Channel 유형 대상 LUN 목록"
 	)
 	@ApiImplicitParams(

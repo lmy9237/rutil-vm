@@ -62,10 +62,12 @@ const DomainDatacenters = ({ domainId }) => {
           isEditDisabled={selectedDataCenters.length !== 1}
           isDeleteDisabled={selectedDataCenters.length === 0}
           status={selectedDataCenters[0]?.domainStatus}
-          actionType="domainDc" // 도메인인지, 데이터센터인지
+          actionType={"domainDc"}
         />
       </div>
       <span>ID: {selectedIds || ""}</span>
+      <br/>
+      <span>DC: {selectedDataCenters[0]?.name}</span>
 
       <TablesOuter
         isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}

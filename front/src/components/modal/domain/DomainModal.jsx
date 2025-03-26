@@ -22,8 +22,14 @@ import {
   useImportDomain,
   useLoginIscsiFromHost,
 } from "../../../api/RQHook";
-import { checkKoreanName, checkName, convertBytesToGB } from "../../../util";
+import { checkName, convertBytesToGB } from "../../../util";
 import Localization from "../../../utils/Localization";
+
+const domainTypes = [
+  { value: "data", label: "데이터" },
+  { value: "iso", label: "ISO" },
+  { value: "export", label: "내보내기" },
+];
 
 // 일반 정보
 const initialFormState = {
@@ -48,11 +54,6 @@ const importFormState = {
   useChap: false,
 };
 
-const domainTypes = [
-  { value: "data", label: "데이터" },
-  { value: "iso", label: "ISO" },
-  { value: "export", label: "내보내기" },
-];
 
 const storageTypeOptions = (dType) => {
   switch (dType) {
@@ -81,20 +82,21 @@ const DomainModal = ({
 
   const [formState, setFormState] = useState(initialFormState); // 일반정보
   const [formImportState, setFormImportState] = useState(importFormState); // 가져오기
-
+  
+  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
+  const [hostVo, setHostVo] = useState({ id: "", name: "" });
   const [storageTypes, setStorageTypes] = useState([]);
   const [nfsAddress, setNfsAddress] = useState("");
   const [lunId, setLunId] = useState(""); // iscsi, fibre 생성시 사용
+
   const [iscsiSearchResults, setIscsiSearchResults] = useState([]); // 검색결과
   const [fcpSearchResults, setFcpSearchResults] = useState([]); // 검색결과
-  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
-  const [hostVo, setHostVo] = useState({ id: "", name: "" });
 
   const { mutate: addDomain } = useAddDomain();
   const { mutate: editDomain } = useEditDomain(); // 편집은 단순 이름, 설명 변경정도
   const { mutate: importDomain } = useImportDomain(); // 가져오기
 
-  const { mutate: loginIscsiFromHost } = useLoginIscsiFromHost(); // 가져오기 iscsi 로그인
+  // const { mutate: loginIscsiFromHost } = useLoginIscsiFromHost(); // 가져오기 iscsi 로그인
   const { mutate: importIscsiFromHost } = useImportIscsiFromHost(); // 가져오기 iscsi
   const { mutate: importFcpFromHost } = useImportFcpFromHost(); // 가져오기 fibre
 
@@ -111,11 +113,15 @@ const DomainModal = ({
     data: iscsis = [],
     refetch: refetchIscsis,
     isLoading: isIscsisLoading,
+    isError: isIscsisError,
+    isSuccess: isIscsisSuccess,
   } = useIscsiFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
   const {
     data: fibres = [],
     refetch: refetchFibres,
     isLoading: isFibresLoading,
+    isError: isFibresError, 
+    isSuccess: isFibresSuccess
   } = useFibreFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
 
   const transIscsiData = iscsis.map((i) => ({
@@ -151,32 +157,30 @@ const DomainModal = ({
     if (!isOpen) {
       setFormState(initialFormState);
       setFormImportState(formImportState);
+      setNfsAddress("");
     }
     if (editMode && domain) {
       setFormState({
-        id: domain.id,
-        domainType: domain.domainType,
-        storageType: domain.storageType,
-        name: domain.name,
-        comment: domain.comment,
-        description: domain.description,
-        warning: domain.warning,
-        spaceBlocker: domain.spaceBlocker,
+        id: domain?.id,
+        domainType: domain?.domainType,
+        storageType: domain?.storageType,
+        name: domain?.name,
+        comment: domain?.comment,
+        description: domain?.description,
+        warning: domain?.warning,
+        spaceBlocker: domain?.spaceBlocker,
       });
 
-      if (setFormState.storageType === "nfs") {
+      if (domain?.storageType === "nfs") {
         setNfsAddress(domain?.storageAddress);
       } else if (
-        setFormState.storageType === "iscsi" ||
-        setFormState.storageType === "fcp"
+        domain?.storageType === "iscsi" ||
+        domain?.storageType === "fcp"
       ) {
         setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id);
-      }
-      setDataCenterVo({id: domain?.dataCenterVo?.id});
+      }      
+      setDataCenterVo({id: domain?.dataCenterVo?.id, name: domain?.dataCenterVo?.name});
       setHostVo({id: domain?.hostVo?.id, name: domain?.hostVo?.name});
-
-      // setNfsAddress(domain?.storageAddress);
-      // setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id);
     }
   }, [isOpen, editMode, domain]);
 
@@ -189,12 +193,11 @@ const DomainModal = ({
   }, [dataCenters, datacenterId, editMode]);
 
   useEffect(() => {
-    if (dataCenterVo.id) {
+    if (!editMode && dataCenterVo.id) {
       setFormState((prev) => ({
-        ...initialFormState, // 초기 상태로 리셋
-        domainType: prev.domainType, // 유지할 값 (원래 설정된 데이터 유지)
+        ...initialFormState,
+        domainType: prev.domainType,
       }));
-      // 관련된 상태 초기화
       setStorageTypes(storageTypeOptions(initialFormState.domainType));
       setNfsAddress("");
       setLunId("");
@@ -202,7 +205,8 @@ const DomainModal = ({
       setFcpSearchResults([]);
       setFormImportState(importFormState);
     }
-  }, [dataCenterVo]);
+  }, [dataCenterVo, editMode]);
+  
 
   useEffect(() => {
     if (!editMode && hosts && hosts.length > 0) {
@@ -348,15 +352,15 @@ const DomainModal = ({
           />
           <LabelSelectOptions id="domain-type" label="도메인 기능"
             value={formState.domainType}
-            onChange={handleInputChange("domainType")}
             disabled={editMode}
             options={domainTypes}
+            onChange={handleInputChange("domainType")}
           />
           <LabelSelectOptions id="storage-type" label="스토리지 유형"
             value={formState.storageType}
-            onChange={handleInputChange("storageType")}
             disabled={editMode}
             options={storageTypes}
+            onChange={handleInputChange("storageType")}
           />
           <LabelSelectOptionsID id="host" label={Localization.kr.HOST}
             value={hostVo}
@@ -398,7 +402,7 @@ const DomainModal = ({
       )}
 
       {/* ISCSI 의 경우 */}
-      {isIscsi && (
+      {/* {isIscsi && (
         <DomainIscsi
           mode={mode}
           domain={domain}
@@ -409,14 +413,16 @@ const DomainModal = ({
           setLunId={setLunId}
           hostVo={hostVo}
           setHostVo={setHostVo}
-          isIscsisLoading={isIscsisLoading}
           importIscsiFromHost={importIscsiFromHost}
-          loginIscsiFromHost={loginIscsiFromHost}
+          // loginIscsiFromHost={loginIscsiFromHost}
           formImportState={formImportState} // ✅ formImportState 전달
           setFormImportState={setFormImportState} // ✅ 상태 업데이트 함수 전달
           refetchIscsis={refetchIscsis}
+          isIscsisLoading={isIscsisLoading}
+          isIscsisError={isIscsisError}
+          isIscsisSuccess={isIscsisSuccess}
         />
-      )}
+      )} */}
 
       {/* Firbre 의 경우 */}
       {isFibre && (
@@ -433,6 +439,9 @@ const DomainModal = ({
           importFcpFromHost={importFcpFromHost}
           formImportState={formImportState}
           setFormImportState={setFormImportState}
+          isFibresLoading={isFibresLoading}
+          isFibresError={isFibresError}
+          isFibresSuccess={isFibresSuccess}
         />
       )}
       <hr />

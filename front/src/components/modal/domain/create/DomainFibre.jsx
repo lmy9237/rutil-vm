@@ -12,23 +12,34 @@ const DomainFibre = ({
   setFcpSearchResults,
   lunId,
   setLunId,
-  hostVoId,
+  hostVo,
+  setHostVo,
   importFcpFromHost,
-  isFibresLoading, 
-  handleRowClick,
   formImportState,
-  setFormImportState
+  setFormImportState,
+  isFibresLoading,
+  isFibresError,
+  isFibresSuccess
 }) => {  
+  console.log("domainfibre ")
 
   const handleSearchFcp = () => {
-    if (!hostVoId) 
+    if (!hostVo.id) 
       return toast.error(`${Localization.kr.HOST}를 선택해주세요.`);
       
-    importFcpFromHost({ hostId: hostVoId }, {
+    importFcpFromHost({ hostId: hostVo.id }, {
       onSuccess: (data) => { setFcpSearchResults(data)},
       onError: (error) => { toast.error('fcp 가져오기 실패:', error)},
     });
   };
+
+  const handleRowClick = (row) => {
+    const selectedRow = Array.isArray(row) ? row[0] : row;
+    if (selectedRow && selectedRow.id) {
+      console.log('선택한 LUN ID:', selectedRow.id);
+      setLunId(selectedRow.id);
+    }
+  }; 
 
   return (
     <div className="storage-popup-iSCSI">
@@ -37,6 +48,7 @@ const DomainFibre = ({
           <div className="label-font-body">로딩 중...</div>
         ) : mode === "edit" ? (
           <Tables
+            isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
             columns={TableColumnsInfo.FIBRE}
             data={
               domain?.hostStorageVo?.logicalUnits?.map((logicalUnit) => ({
@@ -54,22 +66,22 @@ const DomainFibre = ({
               })) || []
             }
             onRowClick={handleRowClick}
-            // shouldHighlight1stCol={true}
           />
         ): mode === "import" ? (
           <>
             <button className='search-button' onClick={handleSearchFcp}>검색</button>
             {fcpSearchResults?.length > 0 && (
               <Tables
+                isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
                 columns={TableColumnsInfo.FIBRE_IMPORT}
                 data={fcpSearchResults}
                 onRowClick={handleRowClick}
-                // shouldHighlight1stCol={true}
               />
             )}
           </>
         ): (
           <Tables
+            isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
             columns={TableColumnsInfo.FIBRE}
             data={fibres}
             onRowClick={handleRowClick}

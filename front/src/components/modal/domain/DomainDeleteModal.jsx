@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -6,79 +6,74 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import {
-  useAllHostFromDomain,
   useAllHosts,
   useDeleteDomain,
   useDestroyDomain,
 } from "../../../api/RQHook";
+import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
+import Localization from "../../../utils/Localization";
 
 const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
   const { mutate: deleteDomain } = useDeleteDomain();
   const { mutate: destroyDomain } = useDestroyDomain(); // 파괴를 여기서
 
   const [format, setFormat] = useState(false);
-  const [hostName, setHostName] = useState("");
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [selectedNames, setSelectedNames] = useState([]);
+  const [hostVo, setHostVo] = useState({ id: "", name: "" });
+  
+  const { ids, names } = useMemo(() => {
+    if (!data) return { ids: [], names: [] };
 
-  // data가 배열 또는 단일 객체일 경우를 처리
-  useEffect(() => {
-    if (Array.isArray(data)) {
-      setSelectedIds(data.map((item) => item.id));
-      setSelectedNames(data.map((item) => item.name || item.alias || ""));
-    } else if (data) {
-      setSelectedIds([data.id]);
-      setSelectedNames([data.name || data.alias || ""]);
-    }
+    const dataArray = Array.isArray(data) ? data : [data];
+    return {
+      ids: dataArray.map((item) => item.id),
+      names: dataArray.map((item) => item.name),
+    };
   }, [data]);
 
   // 해당 데이터센터가 가진 호스트 목록을 가져와야함
   const {
     data: hosts = [], 
     isLoading: isHostsLoading
-  } = useAllHostFromDomain();
+  } = useAllHosts((e) => ({ ...e }));
 
   useEffect(() => {
     if (hosts && hosts.length > 0) {
-      setHostName(hosts[0].name); // 기본 호스트 이름 설정
+      setHostVo({id: hosts[0].id, name: hosts[0].name});
     }
   }, [hosts]);
 
   const handleFormSubmit = () => {
-    if (!selectedIds.length) {
-      console.error("ID가 없습니다. 삭제 요청을 취소합니다.");
-      return;
-    }
+    if (!ids.length) return console.error(`삭제할 도메인 ID가 없습니다.`);
 
     if (deleteMode) {
-      selectedIds.forEach((id, index) => {
+      ids.forEach((id, index) => {
         deleteDomain(
-          { domainId: id, format: format, hostName: hostName },
+          { domainId: id, format: format, hostName: hostVo.name },
           {
             onSuccess: () => {
-              if (index === selectedIds.length - 1) {
+              if (index === ids.length - 1) {
                 toast.success("도메인 삭제 완료");
                 onClose(); // 모든 삭제가 완료되면 모달 닫기
               }
             },
             onError: (error) => {
-              toast.error(`도메인 ${selectedNames[index]} 삭제 오류:`, error);
+              toast.error(`도메인 ${names[index]} 삭제 오류:`, error);
             },
           }
         );
       });
     } else {
       // 파괴일때
-      selectedIds.forEach((id, index) => {
+      ids.forEach((id, index) => {
         destroyDomain(id, {
           onSuccess: () => {
-            if (index === selectedIds.length - 1) {
+            if (index === ids.length - 1) {
               toast.success("도메인 파괴 완료");
               onClose(); // 모든 삭제가 완료되면 모달 닫기
             }
           },
           onError: (error) => {
-            toast.error(`도메인 ${selectedNames[index]} 삭제 오류:`, error);
+            toast.error(`도메인 ${names[index]} 삭제 오류:`, error);
           },
         });
       });
@@ -99,9 +94,9 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
             icon={faExclamationTriangle}
           />
           <span>
-            {selectedNames.length > 1
-              ? `${selectedNames.join(", ")} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`
-              : `${selectedNames[0]} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`}
+            {names.length > 1
+              ? `${names.join(", ")} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`
+              : `${names[0]} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`}
           </span>
         </div>
       </div>
@@ -117,7 +112,17 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
             />
             <label htmlFor="format">포맷 하시겠습니까?</label>
           </div>
-          <div className="disk-delete-box">
+
+          <LabelSelectOptionsID id="host" label={Localization.kr.HOST}
+            value={hostVo}
+            loading={isHostsLoading}
+            options={hosts}
+            onChange={(e) => {
+              const selected = hosts.find(h => h.id === e.target.value);
+              if (selected) setHostVo({ id: selected.id, name: selected.name });
+            }}
+          />
+          {/* <div className="disk-delete-box">
             <select
               value={hostName}
               onChange={(e) => setHostName(e.target.value)}
@@ -129,7 +134,7 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
         </div>
       )}
     </BaseModal>

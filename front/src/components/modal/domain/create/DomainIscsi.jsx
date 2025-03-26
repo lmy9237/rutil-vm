@@ -17,12 +17,14 @@ const DomainIscsi = ({
   setLunId,
   hostVo,
   setHostVo,
-  isIscsisLoading,
   importIscsiFromHost,
   loginIscsiFromHost,
   formImportState,
   setFormImportState,
-  refetchIscsis
+  refetchIscsis,
+  isIscsisLoading,
+  isIscsisError,
+  isIscsisSuccess
 }) => {
   console.log(`lungId: + ${lunId}, hostVo: ${hostVo}`);
 
@@ -144,6 +146,7 @@ const DomainIscsi = ({
               <div className='target-btn'><button className="search-button" onClick={handleSearchIscsi}>검색</button></div>
               <div>
                 <Tables
+                  isLoading={isIscsisLoading} isError={isIscsisError} isSuccess={isIscsisSuccess}
                   columns={TableColumnsInfo.TARGETS_LUNS}
                   data={iscsiSearchResults}
                   onRowClick={ (row) => handleRowClick(row) }

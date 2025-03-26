@@ -36,11 +36,11 @@ const DomainActionButtons = ({
   ];
 
   const domainDcActions = [
-    { type: "attach", label: "연결" }, // 연결 disabled 조건 구하기
+    { type: "attach", label: "연결", disabled: isUp }, // 연결 disabled 조건 구하기
     // { type: 'attach', label: '연결', disabled: isDeleteDisabled || isActive }, // 연결 disabled 조건 구하기
-    { type: "detach", label: "분리", disabled: isDeleteDisabled || isActive },
-    { type: "activate", label: "활성", disabled: isDeleteDisabled || isActive },
-    { type: "maintenance", label: "유지보수", disabled: isDeleteDisabled || isMaintenance, },
+    { type: "detach", label: "분리", disabled: isDeleteDisabled || isActive, onBtnClick: () => openModal("detach") },
+    { type: "activate", label: "활성", disabled: isDeleteDisabled || isActive, onBtnClick: () => openModal("activate") },
+    { type: "maintenance", label: "유지보수", disabled: isDeleteDisabled || isMaintenance, onBtnClick: () => openModal("maintenance") },
   ];
 
   const renderButtons = (actions) =>
@@ -64,7 +64,7 @@ const DomainActionButtons = ({
  
     <ActionButtonGroup
       actionType={actionType}
-      actions={basicActions}
+      actions={selectedActions}
     >
       {!isContextMenu && (
         <ActionButton label={"디스크"} onClick={() => navigate("/storages/disks")} actionType={actionType}/>
