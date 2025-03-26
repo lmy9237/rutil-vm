@@ -17,10 +17,10 @@ const DiskActionModal = ({ isOpen, action, data = [], onClose }) => {
       targetName={"디스크"}
       submitTitle={daLabel}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "650px" }} 
+      contentStyle={{ width: "800px" }} 
     >
       <div className="section-table-outer p-0.5">
-          <span style={{ fontWeight: "800" }}>디스크 할당:</span>
+          <h1>디스크 할당:</h1>
           
           <table>
             <thead>

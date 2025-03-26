@@ -93,6 +93,7 @@
 }
 .section-table-outer select {
   width: 100%;
+  margin: 6px 0;
 }
 .section-table-outer > button {
   display: flex;
@@ -101,7 +102,11 @@
   font-size: var(--fs-default);
   margin-bottom: 5px;
 }
-
+.section-table-outer>h1{
+  font-size: var(--fs-16);
+  font-weight: 700;
+  padding: 10px 0;
+}
 /*tablerowclick*/
 .row-click {
   color: var(--color-primary);

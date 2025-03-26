@@ -422,11 +422,11 @@ export const rvi36AddDisabled = (
     <path d="M12.1429 13.8571H7V12.1429H12.1429V7H13.8571V12.1429H19V13.8571H13.8571V19H12.1429V13.8571Z" fill="#888888"/>
   </>
 )
-export const rvi36Remove = (
+export const rvi36Remove= (isHovering = false) => (
   <>
-    <rect x="25.5" y="0.5" width="25" height="25" rx="3.5" transform="rotate(90 25.5 0.5)" fill="white"/>
-    <rect x="25.5" y="0.5" width="25" height="25" rx="3.5" transform="rotate(90 25.5 0.5)" stroke="#C6C6C6"/>
-    <path d="M7 14V12H19V14H7Z" fill="#717171"/>
+    <rect x="25.5" y="0.5" width="25" height="25" rx="3.5" transform="rotate(90 25.5 0.5)" fill="white" />
+    <rect x="25.5" y="0.5" width="25" height="25" rx="3.5" transform="rotate(90 25.5 0.5)" stroke={isHovering ? "#717171" : "#C6C6C6"}/>
+    <path d="M7 14V12H19V14H7Z" fill={isHovering ? "1D1D1D" : "#717171"}/>
   </>
 )
 export const rvi36RemoveHover = (

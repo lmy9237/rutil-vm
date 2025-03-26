@@ -115,7 +115,18 @@ const TableColumnsInfo = {
     { header: '제품', accessor: 'productName', clickable: false },
     { header: '드라이버', accessor: 'driver', clickable: false },
   ],
-
+  PROVIDER_NETWORKS: [
+    { key: "select", label: "", width: "40px" },
+    { key: "name", label: "이름" },
+    { key: "networkId", label: "공급자의 네트워크 ID" },
+  ],
+  IMPORT_NETWORKS: [
+    { key: "select", label: "", width: "40px" },
+    { key: "name", label: "이름" },
+    { key: "networkId", label: "공급자의 네트워크 ID" },
+    { key: "dataCenter", label: "데이터센터" },
+    { key: "allowAll", label: "모두 허용" },
+  ],
   VMS: [
     { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: '', accessor: 'engine', clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },

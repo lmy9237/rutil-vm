@@ -39,15 +39,25 @@
 /*호스트 네트워크 설정 */
 .network-separation-left {
   width: 78%;
+  background-color: var(--color-white);
+  /* background-color: yellow; */
+  border-radius: 1px ;
+  min-height: 45vh;
+  padding: 16px;
 }
 .network-item {
   padding: 15px;
   margin-bottom: 10px;
-  background-color: #d1e5eb;
   border: var(--border-simple);
-  border-radius: 5px;
+  border-radius: 1px;
   text-align: center;
   cursor: pointer;
+  display: flex;
+  padding: 8px 16px;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
+  font-size: var(--fs-default);
 }
 .network-item:hover {
   border: 1.7px dashed #002a4f;
@@ -57,21 +67,25 @@
   width: 37%;
   text-align: center;
   padding: 0.2rem;
+  font-size: var(--fs-17);
+  font-weight: 700;
 }
 .separation-left-content {
-  border: 1px solid #a3a3a3;
+  border-bottom: 1px solid #a3a3a3;
   display: flex;
   justify-content: space-between;
-  padding: 8px;
+  padding: 16px 0;
   margin-bottom: 7px;
 }
 .separation-left-content:last-child {
   margin-bottom: 1rem;
 }
 .interface {
-  border: 1px solid #a3a3a3;
-  padding: 5px;
+  border: 1px solid var(--color-gray-4);
+  padding: 8px 10px;
   width: 39%;
+  background: white;
+  border-radius: 1px;
 }
 .host-network-outer {
   padding: 0.2rem;
@@ -82,26 +96,33 @@
 .container {
   display: flex;
   align-items: center;
-  border: 1px solid skyblue;
+  border: 1px solid var(--color-gray-4);
   cursor: pointer;
-  padding: 0.1rem 0.2rem;
-  margin-bottom: 0.1rem;
+  padding: 8px 16px;
+  margin-bottom: 6px;
+  border-radius: 1px;
   background-color: white;
 }
 .container:hover {
-  background: lightblue;
+  background: var(--color-input-disabled);
 }
 .outer-networks {
   width: 100%;
 }
 .interface-header {
-  margin-bottom: 0.1rem;
+  color: #1D1D1D;
+  font-size: var(--fs-18);
+  font-weight: 700;
+  letter-spacing: -0.36px;
+  padding: 5px 0;
 }
 .assigned-network-outer {
-  border: 1px solid #949fa3;
+  background-color: white;
   display: flex;
+  border: 1px solid var(--color-gray-4);
   align-items: center;
   padding: 0.2rem;
+  border-radius: 1px;
   width: 41%;
   cursor:pointer;
 }
@@ -121,13 +142,16 @@
   width: 33%;
   padding: 0 11px;
   height: 45vh;
-  border: 1px solid #a3a3a3;
+  background-color: var(--color-white);
+  margin-left: 30px;
 }
 .right-section {
   display: flex;
   gap: 5px;
 }
-
+.unassigned-network{
+  
+}
 /*연필추가모달(outer는 app.css에있음)*/
 .backup-edit-content {
   width: 100%;
@@ -144,29 +168,14 @@
 }
 
 /*네트워크(가져오기)*/
-.network-bring-table-outer {
-  padding: 0 0.4rem 0.4rem 0.4rem;
-}
-.network-bring-table-outer span {
-  font-weight: 600;
-  margin-bottom: 0.1rem;
-  display: block;
+.network-bring-table-outer h1 {
+  font-size: var(--fs-16);
+  font-weight: 700;
+  padding: 10px 0;
 }
 .network-bring-table-outer > div {
   border:var(--border-simple);
   height: 27vh;
   overflow-y: auto; /* 세로 스크롤 추가 */
   overflow-x: hidden; /* 가로 스크롤 숨김 */
-}
-.network-bring-table-outer table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.network-bring-table-outer th,
-.network-bring-table-outer td {
-  padding: 0.04rem;
-}
-.network-bring-table-outer th {
-  text-align: left;
-  border-collapse: collapse;
 }

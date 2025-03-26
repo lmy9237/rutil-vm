@@ -212,7 +212,7 @@ const Dashboard = () => {
   return (
     <>
       {/* 대시보드 section */}
-      <div id="section" style={{ backgroundColor: "#EFF1F5",padding:"10px",border:"none" }}>
+      <div id="section" style={{ backgroundColor: "#EFF1F5",padding:"6px",border:"none" }}>
         <DashboardBoxGroup
           boxItems={[
             {

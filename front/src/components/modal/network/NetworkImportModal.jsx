@@ -4,6 +4,8 @@ import { useAllNetworkProviders } from "../../../api/RQHook";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
 import "./MNetwork.css";
+import TablesOuter from "../../table/TablesOuter";
+import TableColumnsInfo from "../../table/TableColumnsInfo";
 
 const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
   const {
@@ -90,122 +92,64 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
 
         {/* 공급자 네트워크 테이블 */}
         <div className="network-bring-table-outer">
-          <span className="font-bold">공급자 네트워크</span>
-          <div>
-            <table className="network-new-cluster-table">
-              <thead>
-                <tr>
-                  <th>
-                    <input
-                      type="checkbox"
-                      id="provider_select_all"
-                      checked={providerNetworks.every(
-                        (provider) => provider.allowAll
-                      )}
-                      onChange={(e) => {
-                        const isChecked = e.target.checked;
-                        setProviderNetworks((prev) =>
-                          prev.map((provider) => ({
-                            ...provider,
-                            allowAll: isChecked,
-                          }))
-                        );
-                      }}
-                    />
-                  </th>
-                  <th>이름</th>
-                  <th>공급자의 네트워크 ID</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {providerNetworks.map((provider) => (
-                  <tr key={provider.id}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        id={`provider_${provider.id}`}
-                        checked={provider.allowAll}
-                        onChange={() => {
-                          setProviderNetworks((prev) =>
-                            prev.map((p) =>
-                              p.id === provider.id
-                                ? { ...p, allowAll: !p.allowAll }
-                                : p
-                            )
-                          );
-                        }}
-                      />
-                    </td>
-                    <td>{provider.name}</td>
-                    <td>{provider.networkId}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <h1 className="font-bold">공급자 네트워크</h1>
+          <TablesOuter
+            columns={TableColumnsInfo.PROVIDER_NETWORKS}
+            data={providerNetworks.map((provider) => ({
+              id: provider.id,
+              select: (
+                <input
+                  type="checkbox"
+                  checked={provider.allowAll}
+                  onChange={() =>
+                    setProviderNetworks((prev) =>
+                      prev.map((p) =>
+                        p.id === provider.id
+                          ? { ...p, allowAll: !p.allowAll }
+                          : p
+                      )
+                    )
+                  }
+                />
+              ),
+              name: provider.name,
+              networkId: provider.networkId,
+            }))}
+            showSearchBox={true}
+          />
         </div>
+
 
         {/* 가져올 네트워크 테이블 */}
         <div className="network-bring-table-outer">
-          <span>가져올 네트워크</span>
-          <div>
-            <table className="network-new-cluster-table">
-              <thead>
-                <tr>
-                  <th>
-                    <input
-                      type="checkbox"
-                      id="select_all"
-                      checked={networkList.every((network) => network.allowAll)}
-                      onChange={handleSelectAllChange}
-                    />
-                  </th>
-                  <th>이름</th>
-                  <th>공급자의 네트워크 ID</th>
-                  <th>${Localization.kr.DATA_CENTER}</th>
-                  <th>
-                    <div className="flex">
-                      <input
-                        type="checkbox"
-                        id="allow_all"
-                        checked={networkList.every((network) => network.allowAll)}
-                        onChange={handleSelectAllChange}
-                      />
-                      <label htmlFor="allow_all"> 모두 허용</label>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {networkList.map((network) => (
-                  <tr key={network.id}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        id={`network_${network.id}`}
-                        checked={network.allowAll}
-                        onChange={() => handleCheckboxChange(network.id)}
-                      />
-                    </td>
-                    <td>{network.name}</td>
-                    <td>{network.networkId}</td>
-                    <td>{network.dataCenter}</td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        id={`allow_${network.id}`}
-                        checked={network.allowAll}
-                        onChange={() => handleCheckboxChange(network.id)}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <h1 className="font-bold">가져올 네트워크</h1>
+          <TablesOuter
+            columns={TableColumnsInfo.IMPORT_NETWORKS}
+            data={networkList.map((network) => ({
+              id: network.id,
+              select: (
+                <input
+                  type="checkbox"
+                  checked={network.allowAll}
+                  onChange={() => handleCheckboxChange(network.id)}
+                />
+              ),
+              name: network.name,
+              networkId: network.networkId,
+              dataCenter: network.dataCenter,
+              allowAll: (
+                <input
+                  type="checkbox"
+                  checked={network.allowAll}
+                  onChange={() => handleCheckboxChange(network.id)}
+                />
+              ),
+            }))}
+            showSearchBox={true}
+          />
         </div>
+
+
  
     </BaseModal>
   );

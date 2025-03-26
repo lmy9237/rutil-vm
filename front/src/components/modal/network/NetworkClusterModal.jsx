@@ -4,6 +4,7 @@ import TableColumnsInfo from '../../table/TableColumnsInfo';
 import { useAllClustersFromNetwork } from '../../../api/RQHook';
 import { renderStatusClusterIcon } from '../../Icon';
 import Localization from "../../../utils/Localization";
+import { RVI16, rvi16Install, rvi16VirtualMachine } from "../../icons/RutilVmIcons";
 
 const NetworkClusterModal = ({ 
   isOpen, 
@@ -22,7 +23,7 @@ const NetworkClusterModal = ({
     required: cluster?.networkVo?.required ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />,
     allAssigned: cluster?.connected ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />, // 모두 할당
     allRequired: cluster?.networkVo?.required ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />, // 모두 필요
-    vmNetMgmt: cluster?.networkVo?.usage?.vm ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />, // 가상 머신 네트워크 관리
+    vmNetMgmt: cluster?.networkVo?.usage?.vm ? (<RVI16 iconDef={rvi16VirtualMachine} />) : null,
     networkOutput: cluster?.networkVo?.usage?.display ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />, // 네트워크 출력
     migrationNetwork: cluster?.networkVo?.usage?.migration ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />, // 마이그레이션 네트워크
     glusterNetwork: cluster?.networkVo?.usage?.gluster ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />, // Gluster 네트워크
@@ -43,11 +44,13 @@ const NetworkClusterModal = ({
       onSubmit={() => {}}
       contentStyle={{ width: "900px"}}
     >
-      <TablesOuter
-        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
-        columns={TableColumnsInfo.CLUSTERS_POPUP} data={clusters || []}
-        onRowClick={() => console.log('Row clicked')}
-      />
+      <div className="py-3">
+        <TablesOuter
+          isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
+          columns={TableColumnsInfo.CLUSTERS_POPUP} data={clusters || []}
+          onRowClick={() => console.log('Row clicked')}
+        />
+      </div>
     </BaseModal>
   );
 };

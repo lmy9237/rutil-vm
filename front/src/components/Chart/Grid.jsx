@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Tooltip } from "react-tooltip"; // ✅ 툴팁 import
+import "react-tooltip/dist/react-tooltip.css"; // ✅ 스타일
 import "./Grid.css";
 
 const Grid = ({ type, data = [] }) => {
   const [gridData, setGridData] = useState([]);
   const navigate = useNavigate();
+  const tooltipId = "grid-tooltip";
 
   useEffect(() => {
     const filledData = [...data];
@@ -14,6 +17,7 @@ const Grid = ({ type, data = [] }) => {
         cpuPercent: null,
         memoryPercent: null,
         name: "",
+        status: "",
       });
     }
     if (JSON.stringify(filledData) !== JSON.stringify(gridData)) {
@@ -31,7 +35,7 @@ const Grid = ({ type, data = [] }) => {
   };
 
   const handleClick = (id) => {
-    if (id && id.startsWith("placeholder")) return; // placeholder 클릭 방지
+    if (id && id.startsWith("placeholder")) return;
     if (type === "domain") {
       navigate(`/storages/domains/${id}`);
     } else {
@@ -42,13 +46,16 @@ const Grid = ({ type, data = [] }) => {
   return (
     <div className="grid-container">
       {gridData.map((item, index) => {
-        const hasAnyData = item.cpuPercent !== null || item.memoryPercent !== null
+        const hasAnyData = item.cpuPercent !== null || item.memoryPercent !== null;
+
         return (
           <div
             key={item.id || index}
             className={`grid-item${hasAnyData ? `` : ` disabled`}`}
             onClick={() => hasAnyData && handleClick(item.id)}
-            title={item.name}
+            data-tooltip-id={tooltipId}
+            data-tooltip-content={item.name || ""}
+            data-tooltip-place="top"
             style={{
               backgroundColor:
                 type === "cpu"
@@ -65,15 +72,19 @@ const Grid = ({ type, data = [] }) => {
                 <div className="grid-item-name">( {item.name} )</div>
               </>
             ) : (
-              <div
-                className="percent"
-                style={{ color: "rgb(0 0 0)" }}
-              >
-              </div>
+              <div className="percent" style={{ color: "rgb(0 0 0)" }}></div>
             )}
           </div>
-        )
+        );
       })}
+
+      {/* ✅ 툴팁 컴포넌트는 한 번만 선언 */}
+      <Tooltip
+        id={tooltipId}
+        className="grid-tooltip"
+        effect="solid"
+        delayShow={100}
+      />
     </div>
   );
 };
