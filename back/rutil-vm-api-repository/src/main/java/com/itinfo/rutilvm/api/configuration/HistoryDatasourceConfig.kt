@@ -3,6 +3,7 @@ package com.itinfo.rutilvm.api.configuration
 import com.itinfo.rutilvm.common.LoggerDelegate
 
 import com.zaxxer.hikari.HikariDataSource
+import org.hibernate.cfg.Environment
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 import org.hibernate.dialect.PostgreSQL10Dialect
 import org.springframework.beans.factory.annotation.Qualifier
@@ -39,14 +40,11 @@ open class HistoryDatasourceConfig {
 			.dataSource(historyDataSource())
 			.packages("com.itinfo.rutilvm.api.repository.history.entity") // entity 클래스 패키지
 			.build().apply {
-				setJpaProperties(hibernateProperties())
+				setJpaProperties(Properties().apply {
+					put(Environment.DIALECT, PostgreSQL10Dialect::class.java.canonicalName)
+					put(Environment.PHYSICAL_NAMING_STRATEGY, CamelCaseToUnderscoresNamingStrategy::class.java.canonicalName)
+				})
 			}
-	}
-
-	@Bean
-	open fun hibernateProperties(): Properties = Properties().apply {
-		put("hibernate.dialect", PostgreSQL10Dialect::class.java.canonicalName)
-		put("hibernate.physical_naming_strategy", CamelCaseToUnderscoresNamingStrategy::class.java.canonicalName)
 	}
 
 	@Bean

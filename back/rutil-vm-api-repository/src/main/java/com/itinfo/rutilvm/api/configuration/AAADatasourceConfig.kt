@@ -3,7 +3,9 @@ package com.itinfo.rutilvm.api.configuration
 import com.itinfo.rutilvm.common.LoggerDelegate
 
 import com.zaxxer.hikari.HikariDataSource
+import org.hibernate.cfg.Environment
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+import org.hibernate.dialect.PostgreSQL10Dialect
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -37,7 +39,9 @@ open class AAADatasourceConfig {
 			.packages("com.itinfo.rutilvm.api.repository.aaarepository.entity")
 			.build().apply {
 				setJpaProperties(Properties().apply {
-					put("hibernate.physical_naming_strategy", CamelCaseToUnderscoresNamingStrategy::class.java.canonicalName)
+					put(Environment.DIALECT, PostgreSQL10Dialect::class.java.canonicalName)
+					put(Environment.PHYSICAL_NAMING_STRATEGY, CamelCaseToUnderscoresNamingStrategy::class.java.canonicalName)
+					// put(Environment.HBM2DDL_AUTO, "update") // refresh_token 테이블
 				})
 			}
 	}
