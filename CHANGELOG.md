@@ -14,33 +14,148 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 <!-- 
-### Added
+#### Added
 - [@chanhi2000][chanhi2000]
 - [@dhj27][dhj27]
 - [@lmy9237][lmy9237]
-### Changed/Fixed
+#### Changed/Fixed
 - [@chanhi2000][chanhi2000]
 - [@dhj27][dhj27]
 - [@lmy9237][lmy9237]
-### Removed 
+#### Removed 
 - [@chanhi2000][chanhi2000]
 - [@dhj27][dhj27]
 - [@lmy9237][lmy9237]
 -->
 
+## 0.2.4 - 2025-03-28
+
+### [`api-v0.2.4`][api-v0.2.4]: 백엔드
+
+#### Added
+
+<!-- - [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237] -->
+
+#### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - 그래픽 콘솔 API 정정
+- [@dhj27][dhj27]
+  - 디스크 업로드 코드 수정
+  - 스토리지 도메인 생성
+  - vm expectStatus 기능 주석 처리
+  - host expectStatus 기능 주석 처리
+- [@lmy9237][lmy9237]
+
+#### Removed 
+<!-- 
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237] 
+-->
+
+### [`web-v0.2.4`][web-v0.2.4]: 프론트
+
+#### Added
+
+- [@chanhi2000][chanhi2000]
+  - `wsproxy` 추가 및 환경구성
+  - 디자인 된 아이콘 리소스 추가 (20+)
+  - 용어 추가 (Localization)
+  - VM접근 noVNC 콘솔창 UI생성
+- [@dhj27][dhj27]
+  - Toggle Button 추가 (데이터센터, 호스트)
+- [@lmy9237][lmy9237]
+  - vm생성모달 nic라벨 넣기
+  - 가상머신 마이그레이션 Modal 제작
+  - vNic Profile > `HeaderButton` 의 아이콘 스타일 수정 (`accentColor` 기본, `rvi24Lan` 으로 설정)
+  - Storage Domain > 디스크 버튼 눌렀을 시 화면전환 오류
+  - 작업취소, 도메인 유지보수, 확인, 도메인파괴 추가모달 제작
+
+#### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - 로그인 화면 디자인 적용
+  - 우측상단 이벤트 아이콘 선택시 창 화면 높이
+- [@dhj27][dhj27]
+  - 모달 코드 리팩토링 (disk, cluster, host, disk upload, vnicprofile, network, template, network, vm)
+  - 클러스터 일반 정보 값 추가
+  - 클러스터 모달 - select 선택에 의한 변경 수정
+  - 스토리지 도메인 모달 수정
+    - fc 생성 완료
+    - nfs 생성 완료
+    - iscsi 나중
+  - 네트워크 모달 생성 수정
+  - host action 버튼 2차구현 항목 주석 처리
+  - 가상머신 생성 모달
+    - vm 시스템 총 cpu값 input 설정 변경
+    - iso 연결 수정
+- [@lmy9237][lmy9237]
+  - Hover색 설정: Tree Navigation
+  - Hover색 설정: 상세화면 Sub메뉴
+  - Paging Table 기본 개수 설정 (20) → 페이징테이블 컴포넌트안씀
+  - 사이즈: nav바 길이 끝까지 안 가는것 수정
+  - VM 일반페이지 넓이 줄어들 때, 항목쪽 텍스트 2줄 되는 현상 해소
+  - rutil manager페이지에서 Tree Navigtaion 선택 상태 해제 현상 해소
+  - font-size작게
+    - Dashboard > 원그래프 단위 (e.g. `GB`) 텍스트
+    - Dashboard 그리드박스 Percent 값 밑에 항목 명칭
+  - 그림자제거: VM > 상세화면 그래프
+  - 비활성화처리: Dashboard > 그리드박스에서 없는 항목에 대한 비활성화 처리
+  - 메뉴은닉: 설정 > 방화벽 메뉴
+  - 테이블 텍스트가 아닌 것들은 가운데 정렬
+  - (radio 버튼 > select): Host > Network 편집 Modal > IPv6 탭:
+  - UI복구: 설정 > 사용자 선택
+  - UI복구: Table 컴포넌트 선택 건 ID 추출 불량
+  - UI복구: RutilVmIcon > Tooltip `top` 으로 고정 안되는 현상
+  - UI복구: Tree Navigation > 가상머신 이름 길 때 `…` 으로 은닉 처리 (`white-space:nowrap;overflow:hidden;text-overflow:ellipsis`)
+  - UI복구: Storage Domain 우클릭박스 위치오류 수정
+  - UI복구: 대시보드 원그래프 크기 작아지는것 수정
+  - Modal 내 Toggle 버튼 스타일 수정 (`input-switch` 로 구성)
+    - 데이터센터 생성/편집 Modal  (`DataCenterModal`)
+    - 호스트 생성/편집 Modal (`HostModal`)
+    - 템플릿 생성/편집 Modal (`TemplateModal`)
+    - nic 생성/평집 Modal (`NicModal`)
+  - VM > 상세화면 상태 태그 (`SUSPENDED` 및 그 외 에 대한 설정)
+  - Footer 뷰 높이 `--h-rutil-footer` : `48px` → `36px`
+  - RutilVM 로고 width: `120px`
+  - Dashboard > 박스 총 숫자 → `font-size: var(--f-big)`으로 `font-weight: 700`
+  - Dashboard > 그리드 커서 hover에서 tooltip으로 항목 명 표출(질문)
+  - 가상머신 디스크편집안나오는것수정
+  - Dashboard 전체화면 padding **상, 우, 하** 쪽 감소 (`left`만 좀 작게 나오는데 그게 적당한 사이즈로 판단
+    - Grid gap값도 `6px`로 가야 공간이 균등하게 분포 될 것 같음
+    - Dashboard padding 사이사이 균등하게 (`6px` )
+    - 변수화 (`--p-default: 6px` )
+  - UI변경: Box, Grid, Graph 전체 `border-radius`: `5px`으로 통일
+    `App.css`에 변수로 값 관리 `--br-default: 5px`
+  - 가상머신 생성모달 닉 초기화되는것 수정
+  - 가상머신 생성모달 시스템 부분 숨기기
+
+<!-- #### Removed 
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237] -->
+
+### [`wsproxy-v0.2.4`][wsproxy-v0.2.4]: 웹소켓프록시
+
+신규 추가
+
 ---
 
-## 0.2.2 - 2025-03-21
+## 0.2.3 - 2025-03-21
 
 ### [`api-v0.2.3`][api-v0.2.3]: 백엔드
 
-### Added
+#### Added
 
 - [@chanhi2000][chanhi2000]
 - [@dhj27][dhj27]
 - [@lmy9237][lmy9237]
 
-### Changed/Fixed
+#### Changed/Fixed
 
 - [@chanhi2000][chanhi2000]
   - Dashboard VM 메모리/CPU 통계 기능 조회 오류 예외처리
@@ -57,7 +172,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [`web-v0.2.3`][web-v0.2.3]: 프론트
 
-### Added
+#### Added
 
 - [@chanhi2000][chanhi2000]
   - RutilVM 로고 적용 (로고 컴포넌트)
@@ -66,7 +181,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@lmy9237][lmy9237]
   - input 테두리 px줄이기 , 네비케이션과 세부페이지 카테고리 hover기능추가
 
-### Changed/Fixed
+#### Changed/Fixed
 
 - [@chanhi2000][chanhi2000]
   - 디자인 된 아이콘으로 교체 (상태, 메뉴, etc.)
@@ -94,7 +209,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 네비게이션 트리구조 안열리는것 , 아이콘 오류 수정
   - 디자인 수정
 
-### Removed 
+#### Removed 
 
 - [@chanhi2000][chanhi2000]
   - 불필요한 의존 컴포넌트 제거
@@ -108,7 +223,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [`api-v0.2.2`][api-v0.2.2]: 백엔드
 
-### Added
+#### Added
 
 - [@chanhi2000][chanhi2000]
   - 인증서 파일 임시보관 처리 ([`7ad2ad84`](https://github.com/ititcloud/rutil-vm/commit/7ad2ad84c3acc571c8ebfdf844df8cdf6c1c7bf7))
@@ -119,7 +234,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@lmy9237][lmy9237]
   - 가상머신 > 다운된 가상머신 추가
 
-### Changed/Fixed
+#### Changed/Fixed
 
 - [@chanhi2000][chanhi2000]
   - 인증서목록 조회 속도 개선 ([`7ad2ad84`](https://github.com/ititcloud/rutil-vm/commit/7ad2ad84c3acc571c8ebfdf844df8cdf6c1c7bf7))
@@ -144,7 +259,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 대시보드 그래프 수정
   - 테이블선택오류 수정
 
-### Removed 
+#### Removed 
 
 - [@chanhi2000][chanhi2000]
   - 불필요한 CORS처리 부분 제거 ([`bf760e05`](https://github.com/ititcloud/rutil-vm/commit/bf760e05482caed2d32ce348fdc8763ff69d357c))
@@ -154,7 +269,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [`web-v0.2.2`][web-v0.2.2]: 프론트
 
-### Added
+#### Added
 
 - [@chanhi2000][chanhi2000]
   - `react-scan` 추가: 렌더링 성능 측정 ([`acaf854c`](https://github.com/ititcloud/rutil-vm/commit/acaf854c7fd5a8ab4f3ea0e310698e66f01c85e0))
@@ -162,7 +277,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- - [@dhj27][dhj27]
 - [@lmy9237][lmy9237] -->
 
-### Changed/Fixed
+#### Changed/Fixed
 
 - [@chanhi2000][chanhi2000]
   - socket 통신 정상화 ([`bf760e05`](https://github.com/ititcloud/rutil-vm/commit/bf760e05482caed2d32ce348fdc8763ff69d357c))
@@ -178,7 +293,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 템플릿 - 가상머신 페이지 디자인  수정
 <!-- - [@lmy9237][lmy9237] -->
 
-### Removed 
+#### Removed 
 
 <!-- - [@chanhi2000][chanhi2000]
 - [@dhj27][dhj27]
@@ -190,7 +305,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [`api-v0.2.1`][api-v0.2.1]: 백엔드
 
-### Added
+#### Added
 
 - [@chanhi2000][chanhi2000]
   - 180번 서버 배포 및 접근정보에 대한 구성 ([`ccec77cd`](https://github.com/ititcloud/rutil-vm/commit/ccec77cd7d764230938cd862c3af26c6bb048632))
@@ -199,14 +314,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@dhj27][dhj27]
   - 가상머신 가져오기 API (vmware)
 
-### Changed
+#### Changed
 
 - [@chanhi2000][chanhi2000]
   - 프론트 + 백앤드 배포환경 구성 완료 ([`c2e2dc10`](https://github.com/ititcloud/rutil-vm/commit/c2e2dc1054a11ddb2e132b1b085ed32c9420bf49))
 - [@dhj27][dhj27]
   - 가상머신 편집
 
-### Fixed
+#### Fixed
 
 - [@chanhi2000][chanhi2000]
   - SSH 접근을 이용하여 호스트 재기동 기능 복구 ([`50640e2f`](https://github.com/ititcloud/rutil-vm/commit/50640e2ff6f0382247e62a72a6df23c7c4e419df))
@@ -214,7 +329,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 호스트 네트워크 모달 수정 및 기능 수정
   - 가상머신 스냅샷 수정
 
-### Removed
+#### Removed
 
 <!-- 
 - [@chanhi2000][chanhi2000]
@@ -224,7 +339,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [`web-v0.2.1`][web-v0.2.1]: 프론트
 
-### Added
+#### Added
 
 - [@chanhi2000][chanhi2000]
   - `rutil-vm` github action 자동 Docker Image 생성 ([`44afb86e`](https://github.com/ititcloud/rutil-vm/commit/44afb86e42fee46c186f955e66bb61740a5ec6a4))
@@ -233,7 +348,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 검색창 추가(새 컴포넌트추가)
   - 컴포넌트분리(모달nav , 검색창 , mainouter)
 
-### Changed
+#### Changed
 
 - [@chanhi2000][chanhi2000]
   - 프론트 + 백앤드 배포환경 구성 완료 ([`c2e2dc10`](https://github.com/ititcloud/rutil-vm/commit/c2e2dc1054a11ddb2e132b1b085ed32c9420bf49))
@@ -241,7 +356,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 가상머신 편집
 <!-- - [@lmy9237][lmy9237] -->
 
-### Fixed
+#### Fixed
 
 - [@chanhi2000][chanhi2000]
   - 프론트 Docker 배포에 쓰이는 `entrypoint.sh` 파일 EOF 문제 개선 ([`d5765291`](https://github.com/ititcloud/rutil-vm/commit/d57652910a58b5df48c0be08c8a8c15f86f005b2))
@@ -255,7 +370,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 대시보드 수정(차트크기,비율)
   - 모달창 크기수정
 
-### Removed
+#### Removed
 
 <!--
 - [@chanhi2000][chanhi2000]
@@ -267,7 +382,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0-beta2][api-v0.2.0-beta2] - 2025-03-07
 
-### Added
+#### Added
 
 - [@chanhi2000][chanhi2000]
   - `${DEVOPS}` admin 환경에 대한 관련 파일 추가 
@@ -299,7 +414,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `${FRONT}` 대시보드 박스 떨어지게하기(반응형)
   - `${FRONT}` 경보 / 알림칸 추가 
 
-### Changed
+#### Changed
 
 - [@chanhi2000][chanhi2000]
   - `${FRONT}`/`${BACK}` project nameing 변경 itcloud -> rutil-vm
@@ -319,7 +434,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `${FRONT}`: 우클릭박스 수정
   - `${FRONT}`: Path.jsx 링크이동
 
-### Fixed
+#### Fixed
 
 - [@chanhi2000][chanhi2000]
   - `${DEVOPS}`: ovirt-engine 호스팅 포트 변경 (443 -> 2443) 후 `rutil-vm-api`의 환경구성 (`a53c7305d`)
@@ -343,7 +458,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `${FRONT}` 필터버튼(ex:디스크유형) , 모달 옆에 메뉴버튼 , DynamicInputList 컴포넌트 분리
   - `${FRONT}` 성공/실패 토스트 수정
 
-### Removed
+#### Removed
 
 - [@lmy9237][lmy9237]
   - `${FRONT}` 필요없는 구 컴포넌트 삭제
@@ -352,8 +467,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
-[web-v0.2.3]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.3...web-v0.2.3
-[api-v0.2.3]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.3...api-v0.2.3
+[web-v0.2.4]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.3...web-v0.2.4
+[api-v0.2.4]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.3...api-v0.2.4
+[web-v0.2.3]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.2...web-v0.2.3
+[api-v0.2.3]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.2...api-v0.2.3
 [web-v0.2.2]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.1...web-v0.2.2
 [api-v0.2.2]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.1...api-v0.2.2
 [web-v0.2.1]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.0-beta2...web-v0.2.1

@@ -5,7 +5,6 @@ services:
     image: ititcloud/rutil-vm-api:latest
     container_name: rutil-vm-api
     ports:
-      # - "8080:8080"
       - "6690:6690"
     environment:
       TZ: Asia/Seoul
