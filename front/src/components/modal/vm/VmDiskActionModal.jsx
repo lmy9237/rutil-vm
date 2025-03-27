@@ -55,8 +55,8 @@ const VmDiskActionModal = ({ isOpen, action, onClose, vmId, data }) => {
         {
           onSuccess: () => {
             if (ids.length === 1 || index === ids.length - 1) {
-              toast.success(`디스크 ${getContentLabel(action)} 완료`);
               onClose();
+              toast.success(`디스크 ${getContentLabel(action)} 완료`);
             }
           },
           onError: (error) => {

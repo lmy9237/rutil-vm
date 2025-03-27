@@ -34,7 +34,7 @@ const DomainDatacenters = ({ domainId }) => {
         {datacenter?.name}
       </TableRowClick>
     ),
-    domainStatus: datacenter?.domainStatus === "ACTIVE" ? "활성화" : "비활성화",
+    domainStatus: datacenter?.domainStatus, // === "ACTIVE" ? "활성화" : "비활성화"
     searchText: `${datacenter?.name} ${datacenter?.domainStatus}`.toLowerCase(),
   }));
 

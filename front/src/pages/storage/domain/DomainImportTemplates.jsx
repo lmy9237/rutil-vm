@@ -64,9 +64,7 @@ const DomainImportTemplates = ({ domainId }) => {
       <span>ID: {selectedIds || ""}</span>
 
       <TablesOuter
-        isLoading={isTemplatesLoading}
-        isError={isTemplatesError}
-        isSuccess={isTemplatesSuccess}
+        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         columns={TableColumnsInfo.GET_VMS_TEMPLATES}
         data={filteredData}
         shouldHighlight1stCol={true}

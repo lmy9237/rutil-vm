@@ -37,8 +37,8 @@ const VmMigrationModal = ({
       },
       {
         onSuccess: () => {
-          console.log("Migration successful");
           onClose();
+          console.log("Migration successful");
         },
         onError: (error) => {
           console.error("Migration error:", error);

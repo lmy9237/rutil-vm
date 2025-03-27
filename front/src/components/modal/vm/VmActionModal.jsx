@@ -55,8 +55,8 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
       actionFn(vmId, {
         onSuccess: () => {
           if (ids.length === 1 || index === ids.length - 1) {
-            toast.success(`가상머신 ${getContentLabel(action)} 완료`);
             onClose();
+            toast.success(`가상머신 ${getContentLabel(action)} 완료`);
             navigate("/computing/vms");
           }
         },

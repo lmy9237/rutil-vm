@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Tables from '../../../table/Tables';
 import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import LabelInput from '../../../label/LabelInput';
@@ -26,12 +26,15 @@ const DomainIscsi = ({
   isIscsisError,
   isIscsisSuccess
 }) => {
-  console.log(`lungId: + ${lunId}, hostVo: ${hostVo}`);
 
+  useEffect(() => {
+    console.log("도메인으로부터 받은 lunId:", lunId);
+    console.log("도메인으로부터 받은 hostVo:", hostVo);
+  }, [lunId, hostVo]);
+  
   // iscsi 생성
   const handleSearchIscsi = () => {
-    if (!hostVo.id) 
-      return toast.error(`${Localization.kr.HOST}를 선택해주세요.`);
+    if (!hostVo.id) return toast.error(`${Localization.kr.HOST}를 선택해주세요.`);
     if (!formImportState.address || !formImportState.port) return toast.error('주소와 포트를 입력해주세요.');   
     
     importIscsiFromHost({ hostId: hostVo?.id, iscsiData: formImportState }, {
@@ -69,6 +72,7 @@ const DomainIscsi = ({
   const toggleFooterContent = () => {
     setIsFooterContentVisible((prev) => !prev);
   };
+
   return (
     <div className="storage-popup-iSCSI">
       <div className="section-table-outer">
@@ -76,21 +80,24 @@ const DomainIscsi = ({
           <div className="label-font-body">로딩 중...</div>
         ): mode === "edit" ? ( // 편집일때
           <Tables
+            isLoading={isIscsisLoading} isError={isIscsisError} isSuccess={isIscsisSuccess}
             columns={TableColumnsInfo.LUNS_TARGETS}
-            data={domain?.hostStorageVo?.logicalUnits?.map((logicalUnit) => ({
-              abled: logicalUnit.storageDomainId === "" ? "OK" : "NO",
-              status: logicalUnit.status,
-              id: logicalUnit.id,
-              size: logicalUnit.size ? `${(logicalUnit.size / (1024 ** 3)).toFixed(2)} GB` : "",
-              paths: logicalUnit.paths || 0,
-              vendorId: logicalUnit.vendorId || "",
-              productId: logicalUnit.productId || "",
-              serial: logicalUnit.serial || "",
-              target: logicalUnit.target || "",
-              address: logicalUnit.address || "",
-              port: logicalUnit.port || "",
-            })) || []}
-            // onRowClick={handleRowClick}
+            data={
+              domain?.hostStorageVo?.logicalUnits?.map((logicalUnit) => ({
+                abled: logicalUnit.storageDomainId === "" ? "OK" : "NO",
+                // status: logicalUnit.status,
+                id: logicalUnit.id,
+                size: logicalUnit.size ? `${(logicalUnit.size / (1024 ** 3)).toFixed(2)} GB` : "",
+                paths: logicalUnit.paths || 0,
+                vendorId: logicalUnit.vendorId || "",
+                productId: logicalUnit.productId || "",
+                serial: logicalUnit.serial || "",
+                target: logicalUnit.target || "",
+                address: logicalUnit.address || "",
+                port: logicalUnit.port || "",
+              })) || []
+            }
+            // shouldHighlight1stCol={true}
           />
         ): (
           <>

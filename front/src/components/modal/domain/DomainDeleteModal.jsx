@@ -53,8 +53,8 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
           {
             onSuccess: () => {
               if (index === ids.length - 1) {
-                toast.success("도메인 삭제 완료");
                 onClose(); // 모든 삭제가 완료되면 모달 닫기
+                toast.success("도메인 삭제 완료");
               }
             },
             onError: (error) => {
@@ -69,8 +69,8 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
         destroyDomain(id, {
           onSuccess: () => {
             if (index === ids.length - 1) {
-              toast.success("도메인 파괴 완료");
               onClose(); // 모든 삭제가 완료되면 모달 닫기
+              toast.success("도메인 파괴 완료");
             }
           },
           onError: (error) => {
@@ -96,9 +96,6 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
       }
       contentStyle={{ width: "670px" }}
     >
-      {/* <div className="domain-delete-popup modal"> */}
- 
-
       {deleteMode === true && (
         <>
           <div style={{ display: "flex" }}>
@@ -108,21 +105,6 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
               checked={format}
               onChange={(e) => setFormat(e.target.checked)}
             />
-
-    
-            {/* <div className="disk-delete-box">
-              <select
-                value={hostName}
-                onChange={(e) => setHostName(e.target.value)}
-                disabled={!format} // format이 false면 비활성화
-              >
-                {hosts.map((host) => (
-                  <option key={host.id} value={host.name}>
-                    {host.name} : {host.id}
-                  </option>
-                ))}
-              </select>
-            </div> */}
           </div>
           <LabelSelectOptionsID id="host" label={Localization.kr.HOST}
             value={hostVo}

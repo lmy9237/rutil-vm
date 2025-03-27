@@ -25,7 +25,7 @@ const DomainActionButtons = ({
     { type: "import", label: "가져오기", onBtnClick: () => openModal("import")  },
     { type: "edit", label: "편집", disabled: isEditDisabled , onBtnClick: () => openModal("edit") },
     { type: "delete", label: "삭제", disabled: isDeleteDisabled || isMaintenance || !isUnknown, onBtnClick: () => openModal("delete")  },
-    { type: "destory", label: "파괴", disabled: isDeleteDisabled || !isMaintenance, onBtnClick: () => openModal("destory")  },
+    { type: "destory", label: "파괴", disabled: isDeleteDisabled || isMaintenance, onBtnClick: () => openModal("destroy")  },
   ];
 
   const dcDomainActions = [

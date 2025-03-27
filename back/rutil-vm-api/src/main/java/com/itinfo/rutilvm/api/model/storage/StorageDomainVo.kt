@@ -1,12 +1,10 @@
 package com.itinfo.rutilvm.api.model.storage
 
-import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDiskProfilesToIdentifiedVos
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.*
-import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.*
@@ -207,7 +205,6 @@ fun List<StorageDomain>.toActiveDomains(): List<StorageDomainVo> =
 fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 	val storageDomain = this@toStorageDomainInfoVo
 	val dataCenter: DataCenter? = resolveDataCenter(conn)
-
 	return StorageDomainVo.builder {
 		id { storageDomain.id() }
 		name { storageDomain.name() }

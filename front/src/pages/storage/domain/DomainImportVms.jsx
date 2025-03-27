@@ -24,6 +24,10 @@ const DomainImportVms = ({ domainId }) => {
     isSuccess: isVmsSuccess,
   } = useAllUnregisteredVMFromDomain(domainId, (e) => ({ ...e }));
 
+  const [activeModal, setActiveModal] = useState(null);
+  const [selectedVms, setSelectedVms] = useState([]); // 다중 선택된 데이터센터
+  const selectedIds = (Array.isArray(selectedVms) ? selectedVms : []).map((vm) => vm.id).join(", ");
+
   const transformedData = vms.map((vm) => ({
     ...vm,
     name: vm?.name,
@@ -32,10 +36,6 @@ const DomainImportVms = ({ domainId }) => {
     cpuArc: vm?.cpuArc,
     stopTime: vm?.stopTime,
   }))
-
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedVms, setSelectedVms] = useState([]); // 다중 선택된 데이터센터
-  const selectedIds = (Array.isArray(selectedVms) ? selectedVms : []).map((vm) => vm.id).join(", ");
 
   return (
     <>

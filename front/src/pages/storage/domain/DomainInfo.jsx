@@ -36,6 +36,9 @@ const DomainInfo = () => {
   const { mutate: refreshDomain } = useRefreshLunDomain();
   const { mutate: ovfUpdateDomain } = useOvfUpdateDomain();
 
+  const isACTIVE = domain?.status === "ACTIVE";
+  const isUNKNOWN = domain?.status === "UNKNOWN";
+
   const [activeTab, setActiveTab] = useState("general");
   const [activeModal, setActiveModal] = useState(null);
 
@@ -46,7 +49,7 @@ const DomainInfo = () => {
     { id: "general", label: Localization.kr.GENERAL },
     { id: "datacenters", label: Localization.kr.DATA_CENTER },
     { id: "vms", label: Localization.kr.VM },
-    { id: "getVms", label: `${Localization.kr.VM} 가져오기` },
+    { id: "importVms", label: `${Localization.kr.VM} 가져오기` },
     { id: "templates", label: "템플릿" },
     { id: "importTemplates", label: "템플릿 가져오기" },
     { id: "disks", label: "디스크" },
@@ -103,8 +106,8 @@ const DomainInfo = () => {
 
   const sectionHeaderButtons = [
     { type: "edit", label: "도메인 편집", onClick: () => openModal("edit") },
-    { type: "delete", label: "삭제", onClick: () => openModal("delete") },
-    { type: "destroy", label: "파괴", onClick: () => openModal("destroy") },
+    { type: "delete", label: "삭제", disabled: !isACTIVE, onClick: () => openModal("delete") },
+    { type: "destroy", label: "파괴", disabled: !isACTIVE, onClick: () => openModal("destroy") },
   ];
 
   const popupItems = [

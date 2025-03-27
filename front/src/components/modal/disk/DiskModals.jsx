@@ -37,7 +37,10 @@ const DiskModals = ({
       />
     ),
     upload: (
-      <DiskUploadModal isOpen={activeModal === "upload"} onClose={onClose} />
+      <DiskUploadModal 
+        isOpen={activeModal === "upload"} 
+        onClose={onClose} 
+      />
     ),
     action: (
       <DiskActionModal

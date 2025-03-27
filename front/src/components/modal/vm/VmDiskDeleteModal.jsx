@@ -48,8 +48,8 @@ const VmDiskDeleteModal = ({ isOpen, onClose, vmId, data }) => {
         {
           onSuccess: () => {
             if (ids.length === 1 || index === ids.length - 1) {
-              toast.success("가상머신 디스크 삭제 완료");
               onClose();
+              toast.success("가상머신 디스크 삭제 완료");
             }
           },
           onError: (error) => {

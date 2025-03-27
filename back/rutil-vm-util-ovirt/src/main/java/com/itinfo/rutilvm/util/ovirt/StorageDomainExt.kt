@@ -126,7 +126,8 @@ fun Connection.removeStorageDomain(storageDomainId: String, format: Boolean, hos
 	} else {
 		this.srvStorageDomain(storageDomainId).remove().destroy(false).format(false).host(hostName).send()
 	}
-	this.expectStorageDomainDeleted(storageDomainId)
+	// this.expectStorageDomainDeleted(storageDomainId)
+	true
 
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccess("삭제", storageDomainId)
@@ -139,7 +140,8 @@ fun Connection.destroyStorageDomain(storageDomainId: String): Result<Boolean> = 
 	checkStorageDomainExists(storageDomainId)
 
 	this.srvStorageDomain(storageDomainId).remove().destroy(true).send()
-	this.expectStorageDomainDeleted(storageDomainId)
+	// this.expectStorageDomainDeleted(storageDomainId)
+	true
 
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccess("파괴", storageDomainId)

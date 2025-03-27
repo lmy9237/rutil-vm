@@ -133,8 +133,8 @@ const TemplateNeworkNewInterModal = ({
         },
         {
           onSuccess: () => {
-            toast.success("템플릿 네트워크인터페이스 생성 완료");
             onClose();
+            toast.success("템플릿 네트워크인터페이스 생성 완료");
           },
           onError: (error) => {
             toast.error("Error adding network:", error);

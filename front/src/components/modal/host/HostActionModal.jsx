@@ -52,8 +52,8 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
       actionFn(hostId, {
         onSuccess: () => {
           if (ids.length === 1 || index === ids.length - 1) {
-            toast.success(`호스트 ${getContentLabel(action)} 완료`);
             onClose();
+            toast.success(`호스트 ${getContentLabel(action)} 완료`);
           }
         },
         onError: (error) => {

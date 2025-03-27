@@ -31,6 +31,7 @@ const domainTypes = [
   { value: "export", label: "내보내기" },
 ];
 
+
 // 일반 정보
 const initialFormState = {
   id: "",
@@ -149,6 +150,17 @@ const DomainModal = ({
     serial: f?.logicalUnits[0]?.serial,
   }));
 
+  const commonProps = {
+    mode,
+    domain,
+    lunId,
+    setLunId,
+    hostVo,
+    setHostVo,
+    formImportState,
+    setFormImportState,
+  };  
+
   const isNfs = formState.storageType === "nfs" || domain?.storageType === "nfs";
   const isIscsi = formState.storageType === "iscsi" || domain?.storageType === "iscsi";
   const isFibre = formState.storageType === "fcp" || domain?.storageType === "fcp";
@@ -158,6 +170,7 @@ const DomainModal = ({
       setFormState(initialFormState);
       setFormImportState(formImportState);
       setNfsAddress("");
+      setLunId("");
     }
     if (editMode && domain) {
       setFormState({
@@ -170,19 +183,38 @@ const DomainModal = ({
         warning: domain?.warning,
         spaceBlocker: domain?.spaceBlocker,
       });
-
+    
+      if (domain?.dataCenterVo?.id) {
+        setDataCenterVo({ id: domain?.dataCenterVo?.id, name: domain?.dataCenterVo?.name });
+      }
+    
+      // ✅ hostVo가 유효할 때만 설정
+      if (domain?.hostVo?.id) {
+        setHostVo({ id: domain?.hostVo?.id, name: domain?.hostVo?.name });
+      }
+    
+      // ✅ lunId도 정상적으로 설정
+      if (domain?.hostStorageVo?.logicalUnits?.[0]?.id) {
+        setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id);
+      }
+    
+      // NFS 주소 설정
       if (domain?.storageType === "nfs") {
         setNfsAddress(domain?.storageAddress);
-      } else if (
-        domain?.storageType === "iscsi" ||
-        domain?.storageType === "fcp"
-      ) {
-        setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id);
-      }      
-      setDataCenterVo({id: domain?.dataCenterVo?.id, name: domain?.dataCenterVo?.name});
-      setHostVo({id: domain?.hostVo?.id, name: domain?.hostVo?.name});
-    }
+      }
+    }    
   }, [isOpen, editMode, domain]);
+
+  useEffect(() => {
+    if (mode === "edit" && !lunId && domain?.hostStorageVo?.logicalUnits?.[0]?.id) {
+      setLunId(domain.hostStorageVo.logicalUnits[0].id);
+    }
+  }, [mode, domain, lunId, setLunId]);
+
+  useEffect(() => {
+    console.log("modal 도메인으로부터 받은 lunId:", lunId);
+    console.log("modal 도메인으로부터 받은 hostVo:", hostVo);
+  }, [lunId, hostVo]);
 
   useEffect(() => {
     if (datacenterId) {
@@ -215,16 +247,16 @@ const DomainModal = ({
   }, [hosts, editMode]);
 
   useEffect(() => {
-    if (formState.storageType === "iscsi" && hostVo) {
+    if (formState.storageType === "iscsi" && hostVo?.id) {
       refetchIscsis();
     }
-  }, [hostVo, formState.storageType, refetchIscsis]);
+  }, [hostVo?.id, formState.storageType, refetchIscsis]);
 
   useEffect(() => {
-    if (formState.storageType === "fibre" && hostVo) {
+    if (formState.storageType === "fibre" && hostVo?.id) {
       refetchFibres();
     }
-  }, [hostVo, formState.storageType, refetchFibres]);
+  }, [hostVo?.id, formState.storageType, refetchFibres]);
 
   useEffect(() => {
     const options = storageTypeOptions(formState.domainType);
@@ -262,10 +294,14 @@ const DomainModal = ({
 
   const validateForm = () => {
     checkName(formState.name)
+
+    if(isNfs && !editMode && (!nfsAddress.includes(':') || !nfsAddress.includes('/'))){
+      return "주소입력이 잘못되었습니다."
+    }
   
     if (!dataCenterVo.id) 
       return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    if (!hostVo.name)
+    if (!hostVo)
       return `${Localization.kr.HOST}를 선택해주세요.`;
     if (formState.storageType === "NFS" && !nfsAddress)
       return "경로를 입력해주세요.";
@@ -285,8 +321,8 @@ const DomainModal = ({
     if (error) return toast.error(error);
 
     const onSuccess = () => {
-      onClose();
       toast.success(`도메인 ${dLabel} 완료`);
+      onClose();
     };
     const onError = (err) => toast.error(`Error ${dLabel} domain: ${err}`);
 
@@ -402,43 +438,30 @@ const DomainModal = ({
       )}
 
       {/* ISCSI 의 경우 */}
-      {/* {isIscsi && (
+      {/* 편집이 되기는 하지만 밑의 테이블 readonly 와 path 문제가 잇음 */}
+      {isIscsi && (
         <DomainIscsi
-          mode={mode}
-          domain={domain}
+          {...commonProps}
           iscsis={transIscsiData}
           iscsiSearchResults={iscsiSearchResults}
           setIscsiSearchResults={setIscsiSearchResults}
-          lunId={lunId}
-          setLunId={setLunId}
-          hostVo={hostVo}
-          setHostVo={setHostVo}
           importIscsiFromHost={importIscsiFromHost}
           // loginIscsiFromHost={loginIscsiFromHost}
-          formImportState={formImportState} // ✅ formImportState 전달
-          setFormImportState={setFormImportState} // ✅ 상태 업데이트 함수 전달
           refetchIscsis={refetchIscsis}
           isIscsisLoading={isIscsisLoading}
           isIscsisError={isIscsisError}
           isIscsisSuccess={isIscsisSuccess}
-        />
-      )} */}
+        />      
+      )}
 
       {/* Firbre 의 경우 */}
       {isFibre && (
         <DomainFibre
-          mode={mode}
-          domain={domain}
+          {...commonProps}
           fibres={transFibreData}
           fcpSearchResults={fcpSearchResults}
           setFcpSearchResults={setFcpSearchResults}
-          lunId={lunId}
-          setLunId={setLunId}
-          hostVo={hostVo}
-          setHostVo={setHostVo}
           importFcpFromHost={importFcpFromHost}
-          formImportState={formImportState}
-          setFormImportState={setFormImportState}
           isFibresLoading={isFibresLoading}
           isFibresError={isFibresError}
           isFibresSuccess={isFibresSuccess}

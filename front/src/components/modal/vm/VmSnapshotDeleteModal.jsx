@@ -3,6 +3,7 @@ import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import { useDeleteSnapshot } from "../../../api/RQHook";
 import { useMemo } from "react";
+import toast from "react-hot-toast";
 
 /**
  * @name VmSnapshotDeleteModal
