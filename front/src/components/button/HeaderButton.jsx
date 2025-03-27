@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "../Input/IconButton";
 import { RVI24 } from "../icons/RutilVmIcons";
-import "./HeaderButton.css";
 import PopupBox from "../common/PopupBox";
+import "./HeaderButton.css";
 
 /**
  * @name HeaderButton
@@ -59,9 +59,7 @@ const HeaderButton = ({
   return (
     <div className="section-header f-btw">
       <div className="section-header-left f-btw">
-        {titleIcon && (
-          <RVI24 iconDef={titleIcon} />
-        )}
+        {titleIcon && (<RVI24 iconDef={titleIcon} />)}
         <p>{title}</p>
         {status && <span
           className={`status-label f-center ${
@@ -72,7 +70,7 @@ const HeaderButton = ({
         </span>}
       </div>
       <div className="section-header-right f-btw">
-        <div className="flex justify-end article-nav">
+        <div className="article-nav f-end">
           {buttons.map((button, index) => (
             <IconButton id={button.id}
               key={index}

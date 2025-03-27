@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import { useEditTemplate, useTemplate } from "../../../api/RQHook";
-import "./MTemplate.css";
 import ModalNavButton from "../../navigation/ModalNavButton";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
+import "./MTemplate.css";
 
 const TemplateEditModal = ({
   isOpen,
@@ -102,8 +102,7 @@ const TemplateEditModal = ({
         {
           templateId: id,
           templateData: dataToSubmit,
-        },
-        {
+        }, {
           onSuccess: () => {
             onClose();
             toast.success("템플릿 편집 완료");

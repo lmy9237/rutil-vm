@@ -61,7 +61,7 @@ const VmDupl = ({
       vm?.usageDto?.cpuPercent === null || vm?.usageDto?.cpuPercent === undefined
         ? ""
         : `${vm?.usageDto?.cpuPercent}%`,
-        networkUsage:
+    networkUsage:
       vm.usageDto?.networkPercent !== null && vm.usageDto?.networkPercent !== undefined
         ? `${vm.usageDto.networkPercent}%`
         : vm.status === "UP"
@@ -73,10 +73,6 @@ const VmDupl = ({
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-
-  const selectedIds = (
-    Array.isArray(selectedVms) ? selectedVms : []
-  ).map((dc) => dc.id).join(", ");
 
   const handleNameClick = (id) => navigate(`/computing/vms/${id}`);
 
@@ -91,7 +87,7 @@ const VmDupl = ({
         {showSearchBox && (
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         )}
-        <VmActionButtons
+        <VmActionButtons vmId={selectedVms[0]?.id}
           openModal={openModal}
           isEditDisabled={selectedVms?.length !== 1}
           isDeleteDisabled={selectedVms?.length === 0}

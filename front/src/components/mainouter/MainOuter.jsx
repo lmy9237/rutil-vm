@@ -101,9 +101,7 @@ const MainOuter = ({
     event: "",
     default: "rgb(218, 236, 245)",
   });
-  const [selected, setSelected] = useState(
-    () => localStorage.getItem("selected") || "dashboard"
-  );
+  const [selected, setSelected] = useState(() => localStorage.getItem("selected") || "dashboard");
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,

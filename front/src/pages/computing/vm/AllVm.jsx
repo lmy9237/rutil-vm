@@ -2,10 +2,10 @@ import React from "react";
 import HeaderButton from "../../../components/button/HeaderButton";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VmDupl from "../../../components/dupl/VmDupl";
+import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 import { useAllVMs } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import "./Vm.css";
-import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name AllVm
@@ -28,15 +28,12 @@ const AllVm = () => {
       <HeaderButton titleIcon={rvi24Desktop()}
         title={Localization.kr.VM}
       />
-      <div className="w-full section-content">
-        <VmDupl
-          isLoading={isVmsLoading}
-          isError={isVmsError}
-          isSuccess={isVmsSuccess}
-          columns={TableColumnsInfo.VMS}
+      <div className="section-content w-full">
+        <VmDupl columns={TableColumnsInfo.VMS}
           vms={vms}
           onCloseModal={vmsRefetch}
           showSearchBox={true}
+          isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         />
       </div>
     </div>

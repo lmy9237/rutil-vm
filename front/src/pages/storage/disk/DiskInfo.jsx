@@ -51,8 +51,7 @@ const DiskInfo = () => {
   }, [section]);
 
   const handleTabClick = (tab) => {
-    const path =
-      tab === "general"
+    const path = tab === "general"
         ? `/storages/disks/${diskId}`
         : `/storages/disks/${diskId}/${tab}`;
     navigate(path);

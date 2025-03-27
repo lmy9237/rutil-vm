@@ -1,57 +1,54 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
-import { Toaster, toast } from 'react-hot-toast';
-import { Route, HashRouter as Router, Routes } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
+import { Route, HashRouter as Router, Routes } from "react-router-dom";
 import { scan } from "react-scan";
-import STOMP from './Socket';
+import STOMP from "./Socket";
+import Layout from "./components/Layout";
+import RequireAuth from "./components/RequireAuth";
 
-import Header from './components/Header/Header';
-import MainOuter from './components/mainouter/MainOuter';
-import Dashboard from './pages/dashboard/Dashboard';
-import RutilManager from './pages/Rutil/RutilManager';
-import DataCenterInfo from './pages/computing/datacenter/DataCenterInfo';
-import ClusterInfo from './pages/computing/cluster/ClusterInfo';
-import HostInfo from './pages/computing/host/HostInfo';
-import AllVm from './pages/computing/vm/AllVm';
-import VmInfo from './pages/computing/vm/VmInfo';
-import AllTemplates from './pages/computing/template/AllTemplates';
-import TemplateInfo from './pages/computing/template/TemplateInfo';
-import AllNetwork from './pages/network/network/AllNetwork';
-import NetworkInfo from './pages/network/network/NetworkInfo';
-import AllVnic from './pages/network/vnicProfile/AllVnic';
-import VnicProfileInfo from './pages/network/vnicProfile/VnicProfileInfo';
-import AllDomain from './pages/storage/domain/AllDomain';
-import DomainInfo from './pages/storage/domain/DomainInfo';
-import AllDisk from './pages/storage/disk/AllDisk';
-import DiskInfo from './pages/storage/disk/DiskInfo';
-import Event from './pages/event/Event';
-import SettingInfo from './pages/setting/SettingInfo';
-import Login from './pages/login/Login';
-import Error from './pages/Error';
+import Home from "./components/Home";
+import Login from "./pages/login/Login";
+import VncPage from "./pages/computing/vm/VncPage";
+import Error from "./pages/Error";
+import Dashboard from "./pages/dashboard/Dashboard";
+import RutilManager from "./pages/Rutil/RutilManager";
+import DataCenterInfo from "./pages/computing/datacenter/DataCenterInfo";
+import ClusterInfo from "./pages/computing/cluster/ClusterInfo";
+import HostInfo from "./pages/computing/host/HostInfo";
+import AllVm from "./pages/computing/vm/AllVm";
+import VmInfo from "./pages/computing/vm/VmInfo";
+import AllTemplates from "./pages/computing/template/AllTemplates";
+import TemplateInfo from "./pages/computing/template/TemplateInfo";
+import AllNetwork from "./pages/network/network/AllNetwork";
+import NetworkInfo from "./pages/network/network/NetworkInfo";
+import AllVnic from "./pages/network/vnicProfile/AllVnic";
+import VnicProfileInfo from "./pages/network/vnicProfile/VnicProfileInfo";
+import AllDomain from "./pages/storage/domain/AllDomain";
+import DomainInfo from "./pages/storage/domain/DomainInfo";
+import AllDisk from "./pages/storage/disk/AllDisk";
+import DiskInfo from "./pages/storage/disk/DiskInfo";
+import Event from "./pages/event/Event";
+import SettingInfo from "./pages/setting/SettingInfo";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "pretendard/dist/web/static/pretendard.css";
-
-import './App.css';
-// import './App-debug.css';
-import Footer from './components/footer/Footer';
-
+import "./App.css";
 
 const App = () => {
   //#region: 웹소켓연결
   const [stompClient, setStompClient] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   useEffect(() => {
     // Connect using STOMP
     STOMP.connect({}, (frame) => {
-      console.log('Connected: ' + frame);
-      
+      console.log("Connected: " + frame);
+
       // Subscribe to a topic
-      STOMP.subscribe('/topic/public', (res) => {
+      STOMP.subscribe("/topic/public", (res) => {
         const receivedMessage = JSON.parse(res.body);
-        console.log(`message received! ... ${receivedMessage}`)
+        console.log(`message received! ... ${receivedMessage}`);
         showMessage(receivedMessage);
-        showToast(receivedMessage);  // Show toast on message receive
+        showToast(receivedMessage); // Show toast on message receive
       });
     });
 
@@ -62,7 +59,7 @@ const App = () => {
     return () => {
       if (STOMP) {
         STOMP.disconnect(() => {
-          console.log('Disconnected from STOMP');
+          console.log("Disconnected from STOMP");
         });
       }
     };
@@ -70,7 +67,7 @@ const App = () => {
   //#endregion: 웹소켓연결
 
   const showMessage = (message) => {
-    console.log(`App > showMessage ...`)
+    console.log(`App > showMessage ...`);
     setMessages((prevMessages) => [...prevMessages, message]);
   };
 
@@ -80,112 +77,85 @@ const App = () => {
       icon: `${msg.symbol}`,
       duration: 1500,
       ariaProps: {
-        role: 'status',
-        'aria-live': 'polite',
+        role: "status",
+        "aria-live": "polite",
       },
     });
   };
 
-  const queryClient = new QueryClient()
-  const isAuthenticated = () => {
-    console.log(`App > isAuthenticated ...`);
-    return localStorage.getItem('username') !== null; // Example: check if a token exists
-  };
-  
-  const [authenticated, setAuthenticated] = useState(false);
-  useEffect(() => {
-    setAuthenticated(isAuthenticated());
-  }, []);
-
-
-  const [asideVisible, setAsideVisible] = useState(true); // aside-outer 상태 관리
-  const toggleAside = () => {
-    console.log(`App > toggleAside ...`);
-    setAsideVisible((prev) => !prev); // 열림/닫힘 상태만 변경
-  };
-
-  const [isFooterContentVisible, setIsFooterContentVisible] = useState(false);
 
   // react-scan 설정
   scan({
     enabled: false,
     log: true,
     trackUnnecessaryRenders: true,
-  })
+  });
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        {authenticated ? (
-          <>
-            <Header setAuthenticated={setAuthenticated} toggleAside={toggleAside}/>
-            <MainOuter
-              asideVisible={asideVisible} 
-              setAsideVisible={setAsideVisible}
-              isFooterContentVisible={isFooterContentVisible}
-              // TODO: 
-            >
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/computing/rutil-manager" element={<RutilManager />} />
-                <Route path="/computing/rutil-manager/:section" element={<RutilManager />} />
+    <>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          {/* 공개경로  */}
+          <Route path="login" element={<Login />} />
+          <Route path="vnc/:id" element={<VncPage />} />
 
-                <Route path="/computing/datacenters/:id/:section" element={<DataCenterInfo />} />
+          <Route element={<RequireAuth />}>
+            {/* 사용자 인증 필요 */}
+            <Route exact path="/" element={<Home />} >
+              <Route path="/" element={<Dashboard />} />
+              <Route path="computing/rutil-manager" element={<RutilManager />} />
+              <Route path="computing/rutil-manager/:section" element={<RutilManager />} />
 
-                <Route path="/computing/clusters/:id" element={<ClusterInfo />} />
-                <Route path="/computing/clusters/:id/:section" element={<ClusterInfo />} />  
-                
-                <Route path="/computing/hosts/:id" element={<HostInfo />}/>
-                <Route path="/computing/hosts/:id/:section" element={<HostInfo />}/>
+              <Route path="computing/datacenters/:id/:section" element={<DataCenterInfo />} />
 
-                <Route path="/computing/vms" element={<AllVm />} />
-                <Route path="/computing/vms/:id" element={<VmInfo />} />
-                <Route path="/computing/vms/:id/:section" element={<VmInfo />} />
-                
-                <Route path="/computing/vms/templates" element={<AllTemplates />} />
-                <Route path="/computing/templates" element={<AllTemplates />} />
-                <Route path="/computing/templates/:id" element={<TemplateInfo />} />
-                <Route path="/computing/templates/:id/:section" element={<TemplateInfo />} />
-                              
-                <Route path="/networks/rutil-manager" element={<RutilManager />} />
-                <Route path="/networks/rutil-manager/:section" element={<RutilManager />} />
+              <Route path="computing/clusters/:id" element={<ClusterInfo />} />
+              <Route path="computing/clusters/:id/:section" element={<ClusterInfo />} />  
+              
+              <Route path="computing/hosts/:id" element={<HostInfo />}/>
+              <Route path="computing/hosts/:id/:section" element={<HostInfo />}/>
 
-                <Route path="/networks" element={<AllNetwork />} />
-                <Route path="/networks/datacenters/:id/:section" element={<DataCenterInfo />} />
-                <Route path="/networks/:id" element={<NetworkInfo />} /> 
-                <Route path="/networks/:id/:section" element={<NetworkInfo />} /> 
+              <Route path="computing/vms" element={<AllVm />} />
+              <Route path="computing/vms/:id" element={<VmInfo />} />
+              <Route path="computing/vms/:id/:section" element={<VmInfo />} />
+              
+              <Route path="computing/vms/templates" element={<AllTemplates />} />
+              <Route path="computing/templates" element={<AllTemplates />} />
+              <Route path="computing/templates/:id" element={<TemplateInfo />} />
+              <Route path="computing/templates/:id/:section" element={<TemplateInfo />} />
+                            
+              <Route path="networks/rutil-manager" element={<RutilManager />} />
+              <Route path="networks/rutil-manager/:section" element={<RutilManager />} />
 
-                <Route path="/vnicProfiles" element={<AllVnic />} />
-                <Route path="/vnicProfiles/:id/:section" element={<VnicProfileInfo />} />
+              <Route path="networks" element={<AllNetwork />} />
+              <Route path="networks/datacenters/:id/:section" element={<DataCenterInfo />} />
+              <Route path="networks/:id" element={<NetworkInfo />} /> 
+              <Route path="networks/:id/:section" element={<NetworkInfo />} /> 
 
-                <Route path="/storages/rutil-manager" element={<RutilManager />} />
-                <Route path="/storages/rutil-manager/:section" element={<RutilManager />} />
+              <Route path="vnicProfiles" element={<AllVnic />} />
+              <Route path="vnicProfiles/:id/:section" element={<VnicProfileInfo />} />
 
-                <Route path="/storages/domains" element={<AllDomain />} />
-                <Route path="/storages/datacenters/:id/:section" element={<DataCenterInfo />} />
-                <Route path="/storages/domains/:id" element={<DomainInfo />} /> 
-                <Route path="/storages/domains/:id/:section" element={<DomainInfo />} /> 
-          
-                <Route path="/storages/disks" element={<AllDisk />} />
-                <Route path="/storages/disks/:id" element={<DiskInfo />} />
-                <Route path="/storages/disks/:id/:section" element={<DiskInfo />} />
+              <Route path="storages/rutil-manager" element={<RutilManager />} />
+              <Route path="storages/rutil-manager/:section" element={<RutilManager />} />
 
-                <Route path="/events" element={<Event />} />
-                <Route path="/settings/:section" element={<SettingInfo />} />
-                <Route path="/error" element={<Error />} />
-              </Routes>
-            </MainOuter>
-            <Footer 
-              isFooterContentVisible={isFooterContentVisible}
-              setIsFooterContentVisible={setIsFooterContentVisible}
-            />
-          </>
-          ) :
-          (<Routes>
-            <Route path="/" element={<Login setAuthenticated={setAuthenticated} />} />
-          </Routes>)
-        }
-      </Router>
+              <Route path="storages/domains" element={<AllDomain />} />
+              <Route path="storages/datacenters/:id/:section" element={<DataCenterInfo />} />
+              <Route path="storages/domains/:id" element={<DomainInfo />} /> 
+              <Route path="storages/domains/:id/:section" element={<DomainInfo />} /> 
+        
+              <Route path="storages/disks" element={<AllDisk />} />
+              <Route path="storages/disks/:id" element={<DiskInfo />} />
+              <Route path="storages/disks/:id/:section" element={<DiskInfo />} />
+
+              <Route path="events" element={<Event />} />
+              <Route path="settings/:section" element={<SettingInfo />} />
+              <Route path="error" element={<Error />} />
+            </Route>
+          </Route>
+
+          <Route path="*" element={<Error />} />
+        </Route>
+      </Routes>
+
       <Toaster
         position="bottom-right"
         reverseOrder={false}
@@ -193,7 +163,7 @@ const App = () => {
         toastOptions={{
           // duration: Infinity,
           duration: 5000, // 지속시간
-          className: "toast", 
+          className: "toast",
           success: {
             className: "toast toast-success",
           },
@@ -202,9 +172,8 @@ const App = () => {
           },
         }}
       />
-    </QueryClientProvider>
+    </>
   );
-}
-
+};
 
 export default App;

@@ -1,38 +1,32 @@
 import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { createRoot } from "react-dom/client";
-// import ReactDOM from 'react-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-// import "./main.css";
+import { AuthProvider } from "./context/AuthProvider"
+import { GlobalProvider } from "./context/GlobalProvider";
 
 if (typeof global === 'undefined') {
   window.global = window;
 }
 const container = document.getElementById("root");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
+const queryClient = new QueryClient()
+
 root.render(
   <React.StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <GlobalProvider>
+          <AuthProvider>
+            <Routes>
+              <Route path="/*" element={<App />}/>
+            </Routes>
+          </AuthProvider>
+        </GlobalProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   </React.StrictMode>
 );
-
-/*
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById("root")
-);
-
-ReactDOM.createRoot(document.getElementById('root'))
-  .render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-*/
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

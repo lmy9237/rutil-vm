@@ -14,6 +14,7 @@ import VmEvents from "./VmEvents";
 import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
 import { useVmById } from "../../../api/RQHook";
+import { openNewTab } from "../../../navigation";
 import "./Vm.css";
 
 /**
@@ -48,7 +49,6 @@ const VmInfo = () => {
 
   const [activeTab, setActiveTab] = useState("general");
   const [activeModal, setActiveModal] = useState(null);
-
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
 
@@ -74,8 +74,7 @@ const VmInfo = () => {
 
   const handleTabClick = (tab) => {
     console.log(`VmInfo > handleTabClick ... vmId: ${vmId}`)
-    const path =
-      tab === "general"? `/computing/vms/${vmId}` : `/computing/vms/${vmId}/${tab}`;
+    const path = tab === "general"? `/computing/vms/${vmId}` : `/computing/vms/${vmId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
   };
@@ -101,48 +100,35 @@ const VmInfo = () => {
 
   const sectionHeaderButtons = [
     {
-      type: "edit",
-      label: "편집",
-      disabled: !isUp,
-      onClick: () => openModal("edit"),
+      type: "edit", label: "편집", disabled: !isUp
+      , onClick: () => openModal("edit"),
     }, {
-      type: "start",
-      label: "실행",
-      disabled: !isMaintenance,
-      onClick: () => openModal("start"),
+      type: "start", label: "실행", disabled: isUp && !isMaintenance
+      , onClick: () => openModal("start"),
     }, {
-      type: "pause",
-      label: "일시중지",
-      disabled: !isUp,
-      onClick: () => openModal("pause"),
+      type: "pause", label: "일시중지", disabled: !isUp
+      , onClick: () => openModal("pause"),
     }, {
-      type: "reboot",
-      label: "재부팅",
-      disabled: !isUp,
-      onClick: () => openModal("reboot"),
+      type: "reboot", label: "재부팅", disabled: !isUp
+      , onClick: () => openModal("reboot"),
     }, {
-      type: "reset",
-      label: "재설정",
-      disabled: !isUp,
-      onClick: () => openModal("reset"),
+      type: "reset", label: "재설정", disabled: !isUp
+      , onClick: () => openModal("reset"),
     }, {
-      type: "stop",
-      label: "종료",
-      disabled: !isUp,
-      onClick: () => openModal("stop"),
+      type: "stop", label: "종료", disabled: !isUp /* TODO: shutdown으로 변경*/
+      , onClick: () => openModal("stop"), /* TODO: shutdown으로 변경 */
     }, {
-      type: "powerOff",
-      label: "전원 끔",
-      disabled: !isUp,
-      onClick: () => openModal("powerOff"),
-    }, {
-      type: "snapshots", 
-      label: "스냅샷 생성",
-      disabled: !isUp,
-      onClick: () => openModal("snapshot")
+      type: "powerOff", label: "전원 끔", disabled: !isUp
+      , onClick: () => openModal("powerOff"),
     }, { 
-      type: "migration", 
-      label: "마이그레이션" 
+      type: "console", label: "콘솔", disabled: !isUp
+      , onClick: () => openNewTab("console", vmId)
+    }, {
+      type: "snapshots",  label: "스냅샷 생성", disabled: !isUp
+      , onClick: () => openModal("snapshot")
+    }, { 
+      type: "migration",  label: "마이그레이션", disabled: isUp
+      , onClick: () => openModal("migration")
     },
   ];
 
@@ -180,8 +166,7 @@ const VmInfo = () => {
         popupItems={popupItems}
       />
       <div className="content-outer">
-        <NavButton
-          sections={sections}
+        <NavButton sections={sections}
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
@@ -192,10 +177,8 @@ const VmInfo = () => {
       </div>
 
       {/* vm 모달창 */}
-      <VmModals
-        activeModal={activeModal}
-        vm={vm}
-        selectedVms={vm}
+      <VmModals activeModal={activeModal}
+        vm={vm} selectedVms={vm}
         onClose={closeModal}
       />
     </div>

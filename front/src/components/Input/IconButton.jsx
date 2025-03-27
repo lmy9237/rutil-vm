@@ -1,5 +1,4 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {} from "@fortawesome/free-solid-svg-icons";
+import { RVI16 } from "../icons/RutilVmIcons";
 import "./IconButton.css";
 
 /**
@@ -10,20 +9,19 @@ import "./IconButton.css";
  * @param {string} key
  * @returns
  */
-const IconButton = ({ id, key, label, icon, onClick, disabled }) => {
+const IconButton = ({ 
+  key, 
+  label, iconDef=null,
+  ...props
+}) => {
   // console.log("...")
   return (
-    <button
-      id={id}
+    <button className="icon-button-container"
       key={key}
-      onClick={onClick}
-      disabled={disabled}
-      className="icon-button-container"
+      {...props}
     >
-      {icon && ( // icon이 존재할 경우에만 span과 FontAwesomeIcon 렌더링
-        <span className="icon-button-container">
-          <FontAwesomeIcon icon={icon} className="input-icon" fixedWidth />
-        </span>
+      {iconDef && ( // icon이 존재할 경우에만 span과 FontAwesomeIcon 렌더링
+        <RVI16 iconDef={iconDef} className="input-icon" />
       )}
       <p>{label}</p>
     </button>

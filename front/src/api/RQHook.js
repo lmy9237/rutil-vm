@@ -3479,9 +3479,50 @@ export const useAuthenticate = (username, password, _onSuccess, _onError) => use
     const res = await ApiManager.authenticate(username, password)
     return res
   },
-  onSuccess: _onSuccess,
-  onError: _onError,
+  onSuccess: (res) => {
+    const msgSuccess = `useAuthenticate > onSuccess ... res: ${res}`
+    console.log(msgSuccess)
+    _onSuccess(res);
+  },
+  onError: (err) => {
+    const msgErr = `useAuthenticate > onError ... err: ${err}`  
+    console.error(msgErr);
+    toast.error(msgErr);
+    _onError(err);
+  },
 })
+
+export const useIsAuthenticated = (username) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['isAuthenticated'],
+  queryFn: async() => {
+    const res = await localStorage.getItem("isUserAuthenticated") === "true"
+    console.log(`isAuthenticated ... username: ${username}, res: ${res}`)
+    return res
+  }
+})
+export const useUnAuthenticate = (username, _onSuccess, _onError) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      return true;
+    },
+    onSuccess: (res) => {
+      const msgSuccess = `useUnAuthenticate > onSuccess ... res: ${res}`
+      console.info(msgSuccess);
+      toast.success(`사용자 생성 완료`);
+      queryClient.invalidateQueries('isAuthenticated', false);
+      _onSuccess(res)
+    },
+    onError: (err) => {
+      const msgErr = `useUnAuthenticate > onError ... err: ${err}`  
+      console.error(msgErr);
+      toast.error(`사용자 생성 실패 ... 이유: ${err}`);
+      _onError(err)
+    },
+  })
+}
+
 /**
  * @name useAddUser
  * @description 사용자 생성 useQuery훅

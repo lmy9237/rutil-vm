@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Header.css";
+import useAuth from "../../hooks/useAuth";
 import {
   RVI24,
   LogoIcon,
@@ -21,6 +21,8 @@ import {
   rvi24DownArrow,
 } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
+import useGlobal from "../../hooks/useGlobal";
+import "./Header.css";
 
 /**
  * @name Header
@@ -29,11 +31,13 @@ import Localization from "../../utils/Localization";
  * @prop {JSX.useState} setAuthenticated
  * @returns {JSX.Element} Header
  */
-const Header = ({ setAuthenticated, toggleAside }) => {
+const Header = ({ toggleAside }) => {
+  const { setAuth } = useAuth();
   const handleTitleClick = () => navigate("/");
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
   const [isLoginBoxVisible, setLoginBoxVisible] = useState(false);
   const [isBellActive, setBellActive] = useState(false);
+  const { setValue, getValue } = useGlobal()
   // const [username, setUsername] = useState(localStorage["username"]);
 
   const toggleLoginBox = () => {
@@ -79,11 +83,13 @@ const Header = ({ setAuthenticated, toggleAside }) => {
 
   useEffect(() => {}, [isLoginBoxVisible, isBellActive]);
 
-  const handleLogout = (e) => {
+  const doLogout = (e) => {
     e.preventDefault();
-    setAuthenticated(false);
+    setAuth({})
+    setValue("isUserAuthenticated", false);
+    setValue("username", false);
     localStorage.clear();
-    navigate("/");
+    navigate("/login");
   };
 
   //배경색바꾸기
@@ -276,7 +282,7 @@ const Header = ({ setAuthenticated, toggleAside }) => {
             onClick={stopPropagation}
           >
             <div>계정설정</div>
-            <div onClick={(e) => handleLogout(e)}>로그아웃</div>
+            <div onClick={(e) => doLogout(e)}>로그아웃</div>
           </div>
         )}
       </div>

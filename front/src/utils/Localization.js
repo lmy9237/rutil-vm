@@ -9,6 +9,7 @@ export const Localization = {
     ROLE: "역할",
     NOT_ASSOCIATED: "해당 없음",
     IMPORT: "가져오기",
+    UNATTACHED: "붙어있지 않음",
     UNKNOWN: "알 수 없음",
     AVAILABLE: "사용가능",
     CPU: "CPU",
@@ -45,6 +46,7 @@ export const Localization = {
       else if (_status === "SUSPENDED")   return "일시중지";
       else if (_status === "MAINTENANCE") return "유지보수";
       else if (_status === "NON_OPERATIONAL") return "작동하지 않음";
+      else if (_status === "UNATTACHED")  return "붙어있지 않음";
       return _status;
     },
 

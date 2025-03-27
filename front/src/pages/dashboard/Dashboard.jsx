@@ -214,7 +214,6 @@ const Dashboard = () => {
   const cpuAvailablePercentageComputed = () => 100 - cpuUsedPercentageComputed()
   const memAvailablePercentageComputed = () => cpuMemory?.freeMemoryGB?.toFixed(0)
 
-
   return (
     <>
       {/* 대시보드 section */}
