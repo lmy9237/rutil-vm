@@ -8,7 +8,7 @@
   flex-wrap: wrap;
   gap: 0;
   min-height: 108px;
-  margin-bottom: 10px;
+  margin-bottom: var(--p-default);
 }
 .box {
   /* width: calc(16.66% - 0rem); */

@@ -33,7 +33,7 @@ html {
   --w-nav: 160px; /* nav넓이*/
   --w-text-input: 280px;
 
-
+  --p-default: 6px;
   --p-tmi-1:    8px;
   --p-tmi-2:    calc(8px + 40px);
   --p-tmi-2-wc: calc(8px + 20px);
@@ -187,7 +187,9 @@ input[disabled] {
     height: 100%;
     overflow-y: auto;
 }
-
+.icon{
+    cursor: pointer;
+}
 .dropdown-container {
   position: relative;
   display: inline-block;
@@ -228,10 +230,8 @@ input[disabled] {
     border: var(--border-btn);
     border-radius: 4px;
 }
-.select-box-outer {
-  width: 100%;
-  padding: 1% 0.3rem;
-}
+/*모달 옆에 메뉴있는것 추가 페딩*/
+
 .select-box {
   display: flex;
   justify-content: space-between;

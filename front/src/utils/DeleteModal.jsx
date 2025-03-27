@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import BaseModal from "../components/modal/BaseModal";
 
@@ -13,6 +13,9 @@ const DeleteModal = ({
 }) => {
   const navigate = useNavigate();
   const { mutate: deleteApi } = api;
+
+  const location = useLocation(); // 삭제했을때 세부페이지면 그전으로 돌아가기
+  const hasUUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(location.pathname);
 
   const { ids, names } = useMemo(() => {
     if (!data) return { ids: [], names: [] };
@@ -35,7 +38,7 @@ const DeleteModal = ({
           if (ids.length === 1 || index === ids.length - 1) {
             onClose();
             toast.success(`${label} 삭제 완료`);
-            navigate(navigation);
+            hasUUID ? navigate(-1) : navigate(navigation);
           }
         },
         onError: (error) => {

@@ -2,210 +2,97 @@ import React, { useEffect, useState } from "react";
 import BaseModal from "../BaseModal";
 import { useAllNetworkProviders } from "../../../api/RQHook";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
+import LabelInput from "../../label/LabelInput";
+import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
 import "./MVm.css";
 
 const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
-  const {
-    data: networkProvider = [],
-    isLoading: isDatacentersLoading
-  } = useAllNetworkProviders();
+  const { data: networkProvider = [], isLoading: isDatacentersLoading } = useAllNetworkProviders();
 
-  useEffect(() => {
-    console.log("📢 네트워크 공급자 데이터:", networkProvider);
-  }, [networkProvider]);
-
-  const [networkList, setNetworkList] = useState([
-    {
-      id: "network_1",
-      name: "네트워크 A",
-      networkId: "ID-1234",
-      dataCenter: `예시 ${Localization.kr.DATA_CENTER}`,
-      allowAll: false,
-    }, {
-      id: "network_2",
-      name: "네트워크 B",
-      networkId: "ID-5678",
-      dataCenter: `예시 ${Localization.kr.DATA_CENTER}`,
-      allowAll: false,
-    },
-  ]);
-
-  const [providerNetworks, setProviderNetworks] = useState([
-    { id: "provider_1", name: "공급자 네트워크 A", networkId: "예시시" },
-    { id: "provider_2", name: "공급자 네트워크 B", networkId: "예시시" },
-  ]);
   const [selectedProvider, setSelectedProvider] = useState("");
-  const [selectAll, setSelectAll] = useState(false);
-
-  // 전체 선택 체크박스 핸들러
-  const handleSelectAllChange = (e) => {
-    const isChecked = e.target.checked;
-    setSelectAll(isChecked);
-    setNetworkList((prev) =>
-      prev.map((network) => ({ ...network, allowAll: isChecked }))
-    );
-  };
-
-  // 개별 체크박스 핸들러
-  const handleCheckboxChange = (id) => {
-    setNetworkList((prev) =>
-      prev.map((network) =>
-        network.id === id
-          ? { ...network, allowAll: !network.allowAll }
-          : network
-      )
-    );
-  };
+  const [vcenter, setVcenter] = useState("");
+  const [vcDataCenter, setVcDataCenter] = useState("");
+  const [username, setUsername] = useState("");
+  const [esxi, setEsxi] = useState("");
+  const [cluster, setCluster] = useState("");
+  const [password, setPassword] = useState("");
+  const [authHostChecked, setAuthHostChecked] = useState(false);
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={Localization.kr.VM}
-      submitTitle={"가져오기"}
+    <BaseModal
+      isOpen={isOpen}
+      onClose={onClose}
+      targetName="가상머신 가져오기"
+      submitTitle=""
       onSubmit={onSubmit}
-      contentStyle={{ width: "880px" }} 
+      contentStyle={{ width: "900px" }}
     >
-      
-
-        {/* 네트워크 공급자 목록 */}
+      <div className="vm-import-form-grid">
         <LabelSelectOptions
-          id="cluster"
-          label="네트워크 공급자"
-          className="network-form-group f-btw"
+          label="데이터 센터"
+          id="datacenter"
+          value="select36"
+          onChange={() => {}}
+          options={[{ value: "select36", label: "select36" }]}
+        />
+        <LabelSelectOptions
+          label="외부 공급자"
+          id="provider"
           value={selectedProvider}
           onChange={(e) => setSelectedProvider(e.target.value)}
           disabled={isDatacentersLoading}
-          options={
-            isDatacentersLoading
-              ? [{ value: "", label: "로딩 중..." }]
-              : networkProvider.length > 0
-              ? networkProvider.map((provider) => ({
-                  value: provider.name,
-                  label: provider.name,
-                }))
-              : [{ value: "", label: "공급자 없음" }]
-          }
+          options={networkProvider.map((p) => ({ value: p.name, label: p.name }))}
         />
+        <LabelInput label="vCenter" id="vcenter" value={vcenter} onChange={(e) => setVcenter(e.target.value)} />
+        <LabelInput label="데이터 센터" id="vcDataCenter" value={vcDataCenter} onChange={(e) => setVcDataCenter(e.target.value)} />
+        <LabelInput label="사용자 이름" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <LabelInput label="ESXi" id="esxi" value={esxi} onChange={(e) => setEsxi(e.target.value)} />
+        <LabelInput label="클러스터" id="cluster" value={cluster} onChange={(e) => setCluster(e.target.value)} />
+        <LabelInput label="암호" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      </div>
 
-        {/* 공급자 네트워크 테이블 */}
-        <div className="network-bring-table-outer">
-          <span className="font-bold">공급자 네트워크</span>
-          <div>
-            <table className="network-new-cluster-table">
-              <thead>
-                <tr>
-                  <th>
-                    <input
-                      type="checkbox"
-                      id="provider_select_all"
-                      checked={providerNetworks.every(
-                        (provider) => provider.allowAll
-                      )}
-                      onChange={(e) => {
-                        const isChecked = e.target.checked;
-                        setProviderNetworks((prev) =>
-                          prev.map((provider) => ({
-                            ...provider,
-                            allowAll: isChecked,
-                          }))
-                        );
-                      }}
-                    />
-                  </th>
-                  <th>이름</th>
-                  <th>공급자의 네트워크 ID</th>
-                </tr>
-              </thead>
+      <div className="vm-import-checkbox">
+        <LabelCheckbox
+          id="authHost"
+          label="서버 인증 외장 확인 프록시 호스트"
+          checked={authHostChecked}
+          onChange={(e) => setAuthHostChecked(e.target.checked)}
+        />
+      </div>
 
-              <tbody>
-                {providerNetworks.map((provider) => (
-                  <tr key={provider.id}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        id={`provider_${provider.id}`}
-                        checked={provider.allowAll}
-                        onChange={() => {
-                          setProviderNetworks((prev) =>
-                            prev.map((p) =>
-                              p.id === provider.id
-                                ? { ...p, allowAll: !p.allowAll }
-                                : p
-                            )
-                          );
-                        }}
-                      />
-                    </td>
-                    <td>{provider.name}</td>
-                    <td>{provider.networkId}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <LabelSelectOptions
+        label="데이터 센터에 있는 모든 호스트"
+        id="allHosts"
+        value=""
+        onChange={() => {}}
+        options={[{ value: "", label: "데이터 센터에 있는 모든 호스트" }]}
+      />
 
-        {/* 가져올 네트워크 테이블 */}
-        <div className="network-bring-table-outer">
-          <span>가져올 네트워크</span>
-          <div>
-            <table className="network-new-cluster-table">
-              <thead>
-                <tr>
-                  <th>
-                    <input
-                      type="checkbox"
-                      id="select_all"
-                      checked={networkList.every((network) => network.allowAll)}
-                      onChange={handleSelectAllChange}
-                    />
-                  </th>
-                  <th>이름</th>
-                  <th>공급자의 네트워크 ID</th>
-                  <th>${Localization.kr.DATA_CENTER}</th>
-                  <th>
-                    <div className="flex">
-                      <input
-                        type="checkbox"
-                        id="allow_all"
-                        checked={networkList.every((network) => network.allowAll)}
-                        onChange={handleSelectAllChange}
-                      />
-                      <label htmlFor="allow_all"> 모두 허용</label>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {networkList.map((network) => (
-                  <tr key={network.id}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        id={`network_${network.id}`}
-                        checked={network.allowAll}
-                        onChange={() => handleCheckboxChange(network.id)}
-                      />
-                    </td>
-                    <td>{network.name}</td>
-                    <td>{network.networkId}</td>
-                    <td>{network.dataCenter}</td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        id={`allow_${network.id}`}
-                        checked={network.allowAll}
-                        onChange={() => handleCheckboxChange(network.id)}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
- 
+      <div className="vm-import-table">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>이름</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" defaultChecked /></td>
+              <td>CentOS 7</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" /></td>
+              <td>CentOS 7-1908 Minimum</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" /></td>
+              <td>CentOS 7.9 Stream - LIS</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </BaseModal>
   );
 };

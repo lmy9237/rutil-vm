@@ -1,4 +1,10 @@
-
+.graphic-console{
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;  
+    padding: 12px 0;
+}
 
 
 

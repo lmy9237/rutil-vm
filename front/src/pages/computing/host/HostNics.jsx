@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsAltH, faCrown, faDesktop, faTimes } from "@fortawesome/free-solid-svg-icons";
-import HostNetworkModal from "../../../components/modal/host/HostNetworkModal";
+
 import { useHost, useNetworkFromCluster, useNetworkInterfaceFromHost } from "../../../api/RQHook";
 import { renderTFStatusIcon, renderUpDownStatusIcon } from "../../../components/Icon";
 import { checkZeroSizeToMbps } from "../../../util";
-import { RVI16, rvi16ArrowsUp, rvi16ArrowsUpGreen, rvi16Star, rvi16TriangleUp, RVI24 } from "../../../components/icons/RutilVmIcons";
+import { RVI16, rvi16ArrowsUp, rvi16ArrowsUpGreen, rvi16Star, rvi16TriangleUp, rvi16VirtualMachine, RVI24, rvi24Checklist, rvi24CompareArrows, RVI36, rvi36Edit } from "../../../components/icons/RutilVmIcons";
 import Loading from "../../../components/common/Loading";
 import HostNetworkEditModal from "../../../components/modal/host/HostNetworkEditModal";
 import HostNetworkBondingModal from "../../../components/modal/host/HostNetworkBondingModal";
@@ -145,31 +145,35 @@ const HostNics = ({ hostId }) => {
           }
   
           if (outerItem.id === targetId) {
-            const targetHasBond = outerItem.name.startsWith("bond"); // bond 그룹인지 확인
-            const targetHasMultipleChildren = outerItem.children.length > 1; // 이미 2개 이상 container가 있는지
-            const targetHasNetwork = outerItem.networks.length > 0; // 네트워크가 걸려 있는지
+            const targetHasBond = outerItem.name.startsWith("bond");
+            const targetHasMultipleChildren = outerItem.children.length > 1;
+            const targetHasNetwork = outerItem.networks.length > 0;
+          
+            const sourceOuter = prevOuter.find((oi) => oi.id === parentId);
+            const sourceHasNetwork = sourceOuter?.networks?.length > 0;
           
             if (targetHasBond && targetHasMultipleChildren) {
-              // Bonding이 이미 있고, 여러 개의 container가 존재하면 그냥 추가
               return {
                 ...outerItem,
                 children: [...outerItem.children, item],
               };
             } else if (targetHasBond && !targetHasMultipleChildren && targetHasNetwork) {
-              // Bond 내에 하나의 container만 있고 네트워크가 걸려 있다면 이동 불가
               alert("Container를 이동할 수 없습니다. 연결된 네트워크가 있고 container가 하나뿐입니다.");
               validMove = false;
               return outerItem;
             } else {
-              // Bonding이 없는 상태에서 단일 container끼리 합칠 때 본딩 필요
-              bondRequired = true;
-            }          
-            // 본딩이 필요하든 아니든, container는 무조건 추가해야 함
+              // ✅ 여기 조건 추가
+              if (sourceHasNetwork || targetHasNetwork) {
+                bondRequired = true;
+              }
+            }
+          
             return {
               ...outerItem,
               children: [...outerItem.children, item],
             };
           }
+          
           
           return outerItem;
         });
@@ -250,52 +254,81 @@ const HostNics = ({ hostId }) => {
             .filter(outerItem => outerItem.children.length > 0 || outerItem.networks.length > 0)
             .map((outerItem) => (
               <div key={outerItem.id} className="separation-left-content">
-                <div 
-                  key={outerItem.id} 
-                  className="interface" 
-                  onDragOver={(e) => e.preventDefault()} 
-                  onDrop={() => drop(outerItem.id, "interface")}
-                > 
-                  {outerItem.name && (
-                    <div className="interface-header f-btw">
-                      {outerItem.name} {outerItem.name.startsWith("bond") && (
-                        <RVI16 iconDef={rvi16Star} className="icon" onClick={() => openBondingPopup("edit")} />
-                      )}
+
+                {/* ✅ 단일 container일 경우 .interface 제거하고 width: 39% 적용 */}
+                {outerItem.children.length === 1 ? (
+                  <div
+                    className="single-container-wrapper"
+                    style={{ width: "39%", margin: "0" }}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={() => drop(outerItem.id, "interface")}
+                  >
+                    <div 
+                      className="container" 
+                      draggable 
+                      onDragStart={(e) => dragStart(e, outerItem.children[0], "container", outerItem.id)}
+                    >
+                      <RVI16 iconDef={rvi16TriangleUp()} className="mr-1.5" />
+                      {outerItem.children[0].name}
                     </div>
-                  )}
-                  <div className="children">
-                    {outerItem.children.map((child) => (
-                        <>
-                         
-                      <div 
-                        key={child.id} 
-                        className="container" 
-                        draggable 
-                        onDragStart={(e) => dragStart(e, child, "container", outerItem.id)}
-                      >
-                        <RVI16 iconDef={rvi16TriangleUp()}/>
-                        {child.name}
-                      </div>
-                      </>
-                    ))}
                   </div>
-                </div>
+                ) : (
+                  <div 
+                    className="interface" 
+                    onDragOver={(e) => e.preventDefault()} 
+                    onDrop={() => drop(outerItem.id, "interface")}
+                  > 
+                    {outerItem.name && (
+                      <div className="interface-header f-btw">
+                        {outerItem.name} 
+                        {outerItem.name.startsWith("bond") && (
+                          <RVI36 iconDef={rvi36Edit} className="icon" onClick={() => openBondingPopup("edit")} />
+                        )}
+                      </div>
+                    )}
+                    <div className="children">
+                      {outerItem.children.map((child) => (
+                        <div 
+                          key={child.id} 
+                          className="container" 
+                          draggable 
+                          onDragStart={(e) => dragStart(e, child, "container", outerItem.id)}
+                        >
+                          <RVI16 iconDef={rvi16TriangleUp()} className="mr-1.5" />
+                          {child.name}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* 화살표 */}
                 <div className="flex items-center justify-center">
-                  <FontAwesomeIcon icon={faArrowsAltH} style={{color: "grey", width: "5vw", fontSize: "20px", }} />
+                  <RVI24 iconDef={rvi24CompareArrows()} className="icon" />
                 </div>
 
-                <div className="assigned-network-outer">
+                {/* 네트워크 영역 */}
+                {outerItem.networks.length === 0 ? (
+                  // ✅ 네트워크 없을 경우: .assigned-network-outer 제거, 넓이 41%
                   <div 
-                    className="outer-networks" 
+                    className="outer-networks f-center" 
+                    style={{ width: "41%"}}
                     onDragOver={(e) => e.preventDefault()} 
                     onDrop={() => drop(outerItem.id, "networkOuter")}
                   >
-                    {outerItem.networks.length === 0 ? (
-                      <div className="assigned-network"><span>할당된 네트워크 없음</span></div>
-                    ) : (
-                      outerItem.networks.map(network => (
+                    <div className="assigned-network">
+                      <span>할당된 네트워크 없음</span>
+                    </div>
+                  </div>
+                ) : (
+                  // ✅ 네트워크 있을 경우: 기존 구조 유지
+                  <div className="assigned-network-outer">
+                    <div 
+                      className="outer-networks" 
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={() => drop(outerItem.id, "networkOuter")}
+                    >
+                      {outerItem.networks.map(network => (
                         <div 
                           key={network.id} 
                           className="center" 
@@ -303,20 +336,21 @@ const HostNics = ({ hostId }) => {
                           onDragStart={(e) => dragStart(e, network, "networkOuter", outerItem.id)}
                         >
                           <div className="left-section">
-                            {renderTFStatusIcon(network?.status==="OPERATIONAL")}{network.name}
+                            {renderTFStatusIcon(network?.status === "OPERATIONAL")}{network.name}
                           </div>
                           <div className="right-section">
                             {network?.role && <FontAwesomeIcon icon={faDesktop} className="icon" />}
-                            <RVI16 iconDef={rvi16Star} className="icon" onClick={() => openNetworkEditPopup(network)} />
+                            <RVI36 iconDef={rvi36Edit} className="icon" onClick={() => openNetworkEditPopup(network)} />
                           </div>
                         </div>
-                      ))
-                    )}
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
+
               </div>
-            ))
-          }
+          ))}
+
         </div>
 
         <div
@@ -335,21 +369,22 @@ const HostNics = ({ hostId }) => {
               draggable
               onDragStart={(e) => dragStart(e, net, "unassigned")}
             >
-              <div className="flex">
+              <div className="flex text-left">
                 {renderTFStatusIcon(net?.status==="OPERATIONAL")}{net?.name}<br/>
                 {net?.vlan === 0 ? "":`(VLAN ${net?.vlan})` }
               </div>
+              <RVI16 iconDef={rvi16VirtualMachine} className="icon" />
             </div>
           ))}
         </div>
       </div>
       <LabelCheckbox
-        label="임시"
-        id="wipeAfterDelete"  
+        label="호스트와 Engine간의 연결을 확인"
+        id="checkHostEngineConnectivity" 
       />
       <LabelCheckbox
-        label="임시"
-        id="wipeAfterDelete"  
+        label="네트워크 설정 저장"
+        id="saveNetworkConfiguration" 
       />
       <Suspense fallback={<Loading/>}>
         {/* 네트워크쪽 연필 추가모달 */}

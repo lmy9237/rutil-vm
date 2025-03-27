@@ -12,6 +12,7 @@ import {
 } from "../../../api/RQHook";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import Localization from "../../../utils/Localization";
+import LabelCheckbox from "../../label/LabelCheckbox";
 
 const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
   const { mutate: deleteDomain } = useDeleteDomain();
@@ -85,34 +86,44 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
       targetName={"스토리지 도메인"}
       submitTitle={deleteMode ? "삭제" : "파괴"}
       onSubmit={handleFormSubmit}
+      shouldWarn={true}
+      promptText={
+        <span>
+          {names.length > 1
+            ? `${names.join(", ")} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`
+            : `${names[0]} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`}
+        </span>
+      }
+      contentStyle={{ width: "670px" }}
     >
       {/* <div className="domain-delete-popup modal"> */}
-      <div className="disk-delete-box">
-        <div>
-          <FontAwesomeIcon
-            style={{ marginRight: "0.3rem" }}
-            icon={faExclamationTriangle}
-          />
-          <span>
-            {names.length > 1
-              ? `${names.join(", ")} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`
-              : `${names[0]} 를(을) ${deleteMode ? "삭제" : "파괴"}하시겠습니까?`}
-          </span>
-        </div>
-      </div>
+ 
 
       {deleteMode === true && (
-        <div className="disk-delete-box" style={{ display: "flex" }}>
-          <div className="flex">
-            <input
-              type="checkbox"
+        <>
+          <div style={{ display: "flex" }}>
+            <LabelCheckbox
               id="format"
+              label="포맷 하시겠습니까?"
               checked={format}
-              onChange={(e) => setFormat(e.target.checked)} // 체크 여부에 따라 true/false 설정
+              onChange={(e) => setFormat(e.target.checked)}
             />
-            <label htmlFor="format">포맷 하시겠습니까?</label>
-          </div>
 
+    
+            {/* <div className="disk-delete-box">
+              <select
+                value={hostName}
+                onChange={(e) => setHostName(e.target.value)}
+                disabled={!format} // format이 false면 비활성화
+              >
+                {hosts.map((host) => (
+                  <option key={host.id} value={host.name}>
+                    {host.name} : {host.id}
+                  </option>
+                ))}
+              </select>
+            </div> */}
+          </div>
           <LabelSelectOptionsID id="host" label={Localization.kr.HOST}
             value={hostVo}
             loading={isHostsLoading}
@@ -122,20 +133,7 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
               if (selected) setHostVo({ id: selected.id, name: selected.name });
             }}
           />
-          {/* <div className="disk-delete-box">
-            <select
-              value={hostName}
-              onChange={(e) => setHostName(e.target.value)}
-              disabled={!format} // format이 false면 비활성화
-            >
-              {hosts.map((host) => (
-                <option key={host.id} value={host.name}>
-                  {host.name} : {host.id}
-                </option>
-              ))}
-            </select>
-          </div> */}
-        </div>
+        </>
       )}
     </BaseModal>
   );

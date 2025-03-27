@@ -62,7 +62,7 @@ const VmDisk = ({
   const handleRemoveDisk = useCallback((index, isExisting) => {
     setDiskListState((prev) => prev.filter((_, i) => i !== index));
   }, [setDiskListState]);
-
+  const [editDisk, setEditDisk] = useState(null);
 
   return (
     <>
@@ -98,6 +98,7 @@ const VmDisk = ({
                 iconDef={rvi36Edit} 
                 className="btn-icon"
                 currentColor="transparent"
+                onClick={() => setEditDisk(disk)}
               />
               <RVI36 
                 iconDef={rvi36Trash}
@@ -117,16 +118,22 @@ const VmDisk = ({
       </div>
 
       <Suspense fallback={<Loading/>}>
-        {isCreatePopupOpen && (
+      {(isCreatePopupOpen || editDisk) && (
           <VmDiskModal
-            isOpen={isCreatePopupOpen}
+            isOpen={true}
             diskType={false}
             vmId={vm?.id || ""}
-            vmName={`${vmName}_Disk${getNextDiskIndex}`}
+            editMode={!!editDisk} 
+            editingDisk={editDisk}
+            vmName={editDisk ? editDisk.alias : `${vmName}_Disk${getNextDiskIndex}`}
             dataCenterId={dataCenterId}
             hasBootableDisk={hasBootableDiskList}
             onCreateDisk={handleCreateDisk}
-            onClose={() => setIsCreatePopupOpen(false)}
+            onClose={() => {
+              setIsCreatePopupOpen(false);
+              setEditDisk(null); // 닫을 때 상태 초기화
+            }}
+    
           />
         )}
         {isConnectionPopupOpen && (

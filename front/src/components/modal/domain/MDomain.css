@@ -23,6 +23,18 @@
   height: 33.4vh;
   width: 38%;
 }
+/*도메인 파괴*/
+.destroy-text{
+  color: red;
+  font-weight: 600;
+  padding: 10px 0;
+  text-align: center;
+}
+/*도메인 유지관리*/
+.domain-name-box{
+  font-weight: 700;
+  margin-bottom: 10px;
+}
 /*가상머신 / 템플릿 가져오기*/
 .get-vm-template{
   height: 70%;

@@ -133,7 +133,7 @@ const TemplateEditModal = ({
           <div
               className="template-option-box f-btw"
               style={{
-                borderBottom: "1px solid #a7a6a6",
+                borderBottom: "1px solid #E2E5EB",
                 padding: "0.1rem 0",
               }}
             >
@@ -195,7 +195,7 @@ const TemplateEditModal = ({
           {activeTab  === "console" && (
             <>
               <div className="p-1">
-                <div className="font-bold">그래픽 콘솔</div>
+                <div className="graphic-console">그래픽 콘솔</div>
                 <div className="monitor f-btw">
                   <label htmlFor="monitor-select">모니터</label>
                   <select id="monitor-select">

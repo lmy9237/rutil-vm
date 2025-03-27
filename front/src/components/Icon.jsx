@@ -8,6 +8,7 @@ import {
   faSpinner,
   faMoon,
 } from "@fortawesome/free-solid-svg-icons";
+import { RVI16, rvi16TriangleDown, rvi16TriangleUp } from "./icons/RutilVmIcons";
 
 /**
  * @name icon
@@ -161,23 +162,25 @@ export const renderUpDownStatusIcon = (status) => {
 export const renderTFStatusIcon = (status) => {
   if (status) {
     return (
-      <FontAwesomeIcon
-        icon={faPlay}
-        fixedWidth
-        style={{
-          color: "green",
-          fontSize: "12px",
-          transform: "rotate(270deg)",
-        }}
-      />
+      // <FontAwesomeIcon
+      //   icon={faPlay}
+      //   fixedWidth
+      //   style={{
+      //     color: "green",
+      //     fontSize: "12px",
+      //     transform: "rotate(270deg)",
+      //   }}
+      // />
+      <RVI16 iconDef={rvi16TriangleUp()} className="icon mr-1.5" />
     );
   } else {
     return (
-      <FontAwesomeIcon
-        icon={faPlay}
-        fixedWidth
-        style={{ color: "red", fontSize: "12px", transform: "rotate(90deg)" }}
-      />
+      // <FontAwesomeIcon
+      //   icon={faPlay}
+      //   fixedWidth
+      //   style={{ color: "red", fontSize: "12px", transform: "rotate(90deg)" }}
+      // />
+      <RVI16 iconDef={rvi16TriangleDown()} className="icon mr-1.5" />
     );
   }
 };

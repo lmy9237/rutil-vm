@@ -5,7 +5,7 @@
   /* min-height: calc(100% - var(--h-dash-boxs-bar)); */
   /* height:60%; */
   flex-wrap: wrap;
-  margin-bottom: 10px;
+  margin-bottom: var(--p-default);
   background-color: white;
   padding: 24px;
   border-radius: var(--br-default);

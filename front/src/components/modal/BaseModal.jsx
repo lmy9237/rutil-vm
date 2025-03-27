@@ -17,6 +17,7 @@ const BaseModal = ({
   shouldWarn = false,
   onSubmit,
   contentStyle = {},
+  extraFooter = null, 
   ...props
 }) => {
   return (
@@ -49,8 +50,17 @@ const BaseModal = ({
 
         {/* 하단 버튼 */}
         <div className="edit-footer">
-          <button className="action" onClick={onSubmit}>{submitTitle}</button>
-          <button className="cancel" onClick={onClose}>취소</button>
+          {extraFooter ? (
+            <>
+              {extraFooter}
+              <button className="cancel" onClick={onClose}>취소</button>
+            </>
+          ) : (
+            <>
+              <button className="action" onClick={onSubmit}>{submitTitle}</button>
+              <button className="cancel" onClick={onClose}>취소</button>
+            </>
+          )}
         </div>
       </div>
     </Modal>

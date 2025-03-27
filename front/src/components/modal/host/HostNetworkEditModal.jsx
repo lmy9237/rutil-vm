@@ -44,8 +44,8 @@ const HostNetworkEditModal = ({
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
-      targetName={`네트워크 수정: ${network?.name}`}
-      submitTitle={""}
+      targetName={`네트워크 ${network?.name}`}
+      submitTitle={"수정"}
       onSubmit={() => {}}
       contentStyle={{ width: "880px" }} 
     >
@@ -60,22 +60,15 @@ const HostNetworkEditModal = ({
         <div className="backup-edit-content">
           {selectedModalTab === "ipv4" && (
             <>
-              <div className="backup-edit-radiobox">
-                <div className="font-bold">부트 프로토콜</div>
-                  {ipv4Options.map(({ id, value, label }, index) => (
-                    <div className="flex" key={id}>
-                      <input 
-                        type="radio" name="ipv4_mtu" 
-                        id={id} value={value} 
-                        checked={selectedIpv4Protocol === value}
-                        onChange={() => setSelectedIpv4Protocol(value)}
-                      />
-                      <label htmlFor={id}>{label}</label>
-                    </div>
-                  ))}
-              </div>
-
               <div className="select-box-outer">
+                <LabelSelectOptions
+                  label="부트 프로토콜"
+                  id="ipv4_mtu"
+                  value={selectedIpv4Protocol}
+                  onChange={(e) => setSelectedIpv4Protocol(e.target.value)}
+                  options={ipv4Options}
+                  disabled={false}
+                />
                 <LabelInput id="ip_address" label="IP" disabled={selectedIpv4Protocol  !== "static"} />
                 <LabelInput id="netmask" label="넷마스크 / 라우팅 접두사" disabled={selectedIpv4Protocol  !== "static"} />
                 <LabelInput id="gateway" label="게이트웨이" disabled={selectedIpv4Protocol  !== "static"} />
@@ -85,15 +78,15 @@ const HostNetworkEditModal = ({
 
           {selectedModalTab === "ipv6" && (
             <>
-             <LabelSelectOptions
-                label="부트 프로토콜"
-                id="ipv6_protocol"
-                value={selectedIpv6Protocol}
-                onChange={(e) => setSelectedIpv6Protocol(e.target.value)}
-                disabled={false}
-                options={ipv6Options}
+            <div className="select-box-outer">
+              <LabelSelectOptions
+                  label="부트 프로토콜"
+                  id="ipv6_protocol"
+                  value={selectedIpv6Protocol}
+                  onChange={(e) => setSelectedIpv6Protocol(e.target.value)}
+                  disabled={false}
+                  options={ipv6Options}
               />
-              <div className="select-box-outer mt-1">
                 <LabelInput id="ip_address" label="IP" disabled={selectedIpv6Protocol !== "static"} />
                 <LabelInput id="netmask" label="넷마스크 / 라우팅 접두사" disabled={selectedIpv6Protocol !== "static"} />
                 <LabelInput id="gateway" label="게이트웨이" disabled={selectedIpv6Protocol !== "static"} />
