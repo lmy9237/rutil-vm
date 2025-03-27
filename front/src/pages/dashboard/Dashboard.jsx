@@ -28,7 +28,7 @@ import {
   useDashboardMetricVmCpu,
   useDashboardMetricVmMemory,
 } from "../../api/RQHook";
-import GridStatus from "../../components/Chart/GridStatus";
+import GridLegends from "../../components/Chart/GridLegends";
 import Localization from "../../utils/Localization";
 import "./Dashboard.css";
 
@@ -208,6 +208,12 @@ const Dashboard = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  
+  const cpuCoreTotal = () => cpuMemory?.totalCpuCore
+  const cpuUsedPercentageComputed = () => Math.floor((cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100)
+  const cpuAvailablePercentageComputed = () => 100 - cpuUsedPercentageComputed()
+  const memAvailablePercentageComputed = () => cpuMemory?.freeMemoryGB?.toFixed(0)
+
 
   return (
     <>
@@ -262,38 +268,24 @@ const Dashboard = () => {
           <div className="dash-section-contents">
             <h1 className="dash-con-title">CPU</h1>
             <div className="status-value flex">
-              <h1>
-                {100 -
-                  Math.floor(
-                    (cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100
-                  )}
-              </h1>
-              <span>{"% "}{" "}</span>
-              <div>{Localization.kr.AVAILABLE} (총 {cpuMemory?.totalCpuCore} Core)</div>
+              <h1>{cpuAvailablePercentageComputed()}</h1>
+              <span>%</span>
+              <div>{Localization.kr.AVAILABLE} (총 {cpuCoreTotal()} Core)</div>
             </div>
             <span>
-              USED{" "}
-              {Math.floor(
-                (cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100
-              )}
-              {"% "} / Total {cpuMemory?.totalCpuCore} Core
+              {`USED ${cpuUsedPercentageComputed()} %`} / Total {cpuCoreTotal()} Core
             </span>
-
             <div className="graphs flex">
               <div
                 className="graph-wrap active-on-visible"
                 data-active-on-visible-callback-func-name="CircleRun"
               >
-                {
-                  cpuMemory && (
-                    <CpuApexChart cpu={cpuMemory?.totalCpuUsagePercent ?? 0} />
-                  ) /* ApexChart 컴포넌트를 여기에 삽입 */
-                }
+                {cpuMemory && (
+                  <CpuApexChart cpu={cpuMemory?.totalCpuUsagePercent ?? 0} />
+                )}
               </div>
               <div>{vmCpu && <CpuBarChart vmCpu={vmCpu} />}</div>
             </div>
-
-            {/*COMMIT { Math.floor((cpuMemory?.commitCpuCore)/(cpuMemory?.totalCpuCore)*100 )} % <br/> */}
             <div className="wave-graph">
               {/* <h2>Per CPU</h2> */}
               <div>
@@ -302,10 +294,11 @@ const Dashboard = () => {
             </div>
           </div>
 
+
           <div className="dash-section-contents">
             <h1 className="dash-con-title">MEMORY</h1>
             <div className="status-value flex">
-              <h1>{cpuMemory?.freeMemoryGB?.toFixed(0)}</h1>
+              <h1>{memAvailablePercentageComputed()}</h1>
               <span>GB</span>
               <div>{Localization.kr.AVAILABLE} (총 {cpuMemory?.totalMemoryGB?.toFixed(0)} GB)</div>
             </div>
@@ -351,15 +344,12 @@ const Dashboard = () => {
               USED {storage?.usedGB} GB / Total {storage?.freeGB} GB
             </span>
             <div className="graphs flex">
-              <div
-                className="graph-wrap active-on-visible"
+              <div className="graph-wrap active-on-visible"
                 data-active-on-visible-callback-func-name="CircleRun"
               >
-                {
-                  storage && (
-                    <StorageApexChart storage={storage?.usedPercent} />
-                  ) /* ApexChart 컴포넌트를 여기에 삽입 */
-                }
+                {storage && (
+                  <StorageApexChart storage={storage?.usedPercent} />
+                )}
               </div>
               <div>
                 {storageMemory && (
@@ -369,11 +359,7 @@ const Dashboard = () => {
             </div>
 
             <div className="wave-graph">
-              {/* <h2>Per Network</h2> */}
-              <div>
-                {/* <SuperAreaChart per={host} /> */}
-                <SuperAreaChart per={domain} type="domain" />
-              </div>
+              <SuperAreaChart per={domain} type="domain" />
             </div>
           </div>
         </div>
@@ -382,28 +368,21 @@ const Dashboard = () => {
           <div className="bar">
             <div>
               <span>CPU</span>
-              <div className="grid-outer">
-                <Grid type={"cpu"} data={vmMetricCpu} />
-              </div>
+              <Grid className="grid-outer" type={"cpu"} data={vmMetricCpu} />
             </div>
             <div>
               <span>MEMORY</span>
-              <div className="grid-outer">
-                <Grid type={"memory"} data={vmMetricMemory} />
-              </div>
+              <Grid className="grid-outer" type={"memory"} data={vmMetricMemory} />
             </div>
             <div>
               <span>StorageDomain</span>
-              <div className="grid-outer">
-                <Grid type={"domain"} data={storageMetric} />
-              </div>
+              <Grid className="grid-outer" type={"domain"} data={storageMetric} />
             </div>
             
           </div>
-          <GridStatus />
+          <GridLegends />
         </div>
-  
-      </div>{" "}
+      </div>
       {/* 대시보드 section끝 */}
     </>
   );

@@ -1,0 +1,13 @@
+.legend-bar-container {
+  gap: 6px;
+  font-size: var(--fs-default);
+}
+.legend-item { gap: 6px; }
+.legend {
+  display: inline-block;width: 15px;height: 15px;
+  border-radius: 3px;
+}
+.legend.crit { background-color: #E21D1D; }
+.legend.warn { background-color: #F46C53; }
+.legend.norm { background-color: #FFC58A; }
+.legend.okay { background-color: #E7F2FF; }
