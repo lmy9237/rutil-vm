@@ -223,8 +223,6 @@ fun VmCreateVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 
 fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
     val vm = this@toVmCreateVo
-    // val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
-    // val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
     // val nics: List<Nic> = conn.findAllNicsFromVm(vm.id(), follow = "nics.vnicprofile").getOrDefault(listOf())
     val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
     // val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()

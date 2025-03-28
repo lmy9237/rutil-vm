@@ -15,6 +15,8 @@ const DynamicInputList = ({
   onAdd = () => {},
   onRemove = () => {},
 }) => {
+  console.log("tf", options);
+
   return (
     <div className="dynamic-input-outer py-2">
       {values.map((input, index) => (

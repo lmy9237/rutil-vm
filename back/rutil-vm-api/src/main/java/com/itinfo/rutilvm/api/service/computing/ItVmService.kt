@@ -184,18 +184,19 @@ class VmServiceImpl(
 	@Throws(Error::class)
 	override fun findEditOne(vmId: String): VmCreateVo? {
 		log.info("findEditOne ... vmId : {}", vmId)
-		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,nics.vnicprofile,diskattachments,cdroms,statistics").getOrNull()
+		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,nics.vnicprofile.network,diskattachments,cdroms,statistics").getOrNull()
 		return res?.toVmCreateVo(conn)
 	}
 
 
 	@Throws(Error::class)
 	override fun add(vmCreateVo: VmCreateVo): VmCreateVo? {
-		log.info("add ... vmCreateVo: {}", VmCreateVo)
 		if(vmCreateVo.diskAttachmentVos.filter { it.bootable }.size > 1){
 			log.error("부팅가능한 디스크는 한개만")
 			throw ErrorPattern.VM_VO_INVALID.toException()
 		}
+		log.info("vmCreateVo {}", vmCreateVo)
+		log.info("cd  {} {}", vmCreateVo.connVo.id, vmCreateVo.connVo.name)
 
 		val res: Vm? = conn.addVm(
 			vmCreateVo.toAddVmBuilder(),

@@ -286,30 +286,6 @@ class VmController: BaseController() {
 		return ResponseEntity.ok(iVm.findGuestFromVm(vmId))
 	}
 
-	@Deprecated("필요없음")
-	@ApiOperation(
-		httpMethod="GET",
-		value="가상머신 권한 목록",
-		notes="선택된 가상머신의 권한 목록을 조회한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/{vmId}/permissions")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun permissions(
-		@PathVariable vmId: String? = null,
-	): ResponseEntity<List<PermissionVo>> {
-		if (vmId.isNullOrEmpty())
-			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		log.info("/computing/vms/{}/permissions ... 가상머신 권한", vmId)
-		return ResponseEntity.ok(iVm.findAllPermissionsFromVm(vmId))
-	}
-
 
 	//region: vmOp
 	@Autowired private lateinit var iVmOp: ItVmOperationService

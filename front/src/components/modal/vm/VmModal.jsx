@@ -103,7 +103,7 @@ const bootForm = {
   firstDevice: "hd", // 첫번째 장치
   secDevice: "", // 두번째 장치
   isCdDvdChecked: false, // cd/dvd 연결 체크박스
-  cdConn: { id: "", name: "" }, // iso 파일
+  connVo: { id: "", name: "" }, // iso 파일
   bootingMenu: false, // 부팅메뉴 활성화
 };
 
@@ -219,7 +219,8 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       setFormBootState({
         firstDevice: vm?.firstDevice || "hd",
         secDevice: vm?.secDevice || "",
-        cdConn: {id: vm?.connVo?.id || ""},
+        isCdDvdChecked: !vm?.connVo?.id,
+        connVo: {id: vm?.connVo?.id},
         bootingMenu: vm?.bootingMenu || false, 
       });
       setArchitecture("");
@@ -227,35 +228,31 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       setClusterVo({ id: vm?.clusterVo?.id, name: vm?.clusterVo?.name })
       setTemplateVo({ id: vm?.templateVo?.id, name: vm?.templateVo?.name })
       
-      const initialNicState = vm?.nicVos?.length? 
-        vm?.nicVos?.map((nic, index) => ({
-          id: nic?.id || "",
-          name: nic?.name || `nic${index + 1}`,
-          vnicProfileVo: {
-            id: nic?.vnicProfileVo?.id || "",
-            name: nic?.vnicProfileVo?.name || "",
-          },
-          networkVo: { name: nic.networkVo?.name || "" },
-        })): [{
-          id: "",
-          name: "nic1",
-          vnicProfileVo: { id: "" },
-          networkVo: { id: "", name: "" },
-        }];
+      const initialNicState = vm?.nicVos?.map((nic) => ({
+        id: nic?.id || "",
+        name: nic?.name || "",
+        vnicProfileVo: {
+          id: nic?.vnicProfileVo?.id || "",
+          name: nic?.vnicProfileVo?.name || "",
+        },
+        networkVo: {
+          id: nic?.networkVo?.id || "",
+          name: nic?.networkVo?.name || "",
+        },
+      })) || [];
       setNicListState(initialNicState);
 
-      const initialDiskState =
-        vm?.diskAttachmentVos?.map((d) => ({
-          id: d?.id,
-          alias: d?.diskImageVo?.alias,
-          virtualSize: d?.diskImageVo?.virtualSize? d?.diskImageVo?.virtualSize / (1024 * 1024 * 1024): 0,
-          interface_: d?.interface_ || "VIRTIO_SCSI",
-          readOnly: d?.readOnly || false,
-          bootable: d?.bootable || false,
-          storageDomainVo: { id: d?.diskImageVo?.storageDomainVo?.id || "" },
-          diskProfileVo: { id: d?.diskImageVo?.diskProfileVo?.id || "" },
-          isExisting: true,
-        })) || [];
+      const initialDiskState = vm?.diskAttachmentVos?.map((d) => ({
+        id: d?.id,
+        alias: d?.diskImageVo?.alias,
+        virtualSize: d?.diskImageVo?.virtualSize? d?.diskImageVo?.virtualSize / (1024 * 1024 * 1024): 0,
+        interface_: d?.interface_ || "VIRTIO_SCSI",
+        readOnly: d?.readOnly || false,
+        bootable: d?.bootable || false,
+        storageDomainVo: { id: d?.diskImageVo?.storageDomainVo?.id || "" },
+        diskProfileVo: { id: d?.diskImageVo?.diskProfileVo?.id || "" },
+        isExisting: true,
+      })) || [];
       setDiskListState(initialDiskState);
     } 
   }, [isOpen, editMode, vm]);
@@ -282,6 +279,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     }
   }, [clusterVo.id, clusters, osList.length]); // osList 전체가 아닌 length만 의존성에 포함
   
+  console.log("NIC 확인용:", nicListState);
 
   // 초기화 작업
   useEffect(() => {

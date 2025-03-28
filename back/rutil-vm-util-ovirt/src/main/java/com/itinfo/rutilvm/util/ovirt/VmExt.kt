@@ -71,7 +71,9 @@ fun Connection.startVm(vmId: String): Result<Boolean> = runCatching {
 		throw ErrorPattern.VM_STATUS_ERROR.toError()
 	}
 	this.srvVm(vmId).start().send()
-	this.expectVmStatus(vmId, VmStatus.UP)
+	// this.expectVmStatus(vmId, VmStatus.UP)
+	true
+
 }.onSuccess {
 	Term.VM.logSuccess("시작", vmId)
 }.onFailure {
@@ -87,7 +89,9 @@ fun Connection.stopVm(vmId: String): Result<Boolean> = runCatching {
 	}
 
 	this.srvVm(vmId).stop().send()
-	this.expectVmStatus(vmId, VmStatus.DOWN)
+	// this.expectVmStatus(vmId, VmStatus.DOWN)
+	true
+
 }.onSuccess {
 	Term.VM.logSuccess("전원끄기", vmId)
 }.onFailure {
@@ -99,7 +103,9 @@ fun Connection.suspendVm(vmId: String): Result<Boolean> = runCatching {
 	val vm: Vm = checkVm(vmId)
 
 	this.srvVm(vmId).suspend().send()
-	this.expectVmStatus(vmId, VmStatus.SUSPENDED)
+	// this.expectVmStatus(vmId, VmStatus.SUSPENDED)
+	true
+
 }.onSuccess {
 	Term.VM.logSuccess("일시정지", vmId)
 }.onFailure {
@@ -112,7 +118,9 @@ fun Connection.shutdownVm(vmId: String): Result<Boolean> = runCatching {
 	val vm: Vm = checkVm(vmId)
 
 	this.srvVm(vmId).shutdown().send()
-	this.expectVmStatus(vmId, VmStatus.DOWN)
+	// this.expectVmStatus(vmId, VmStatus.DOWN)
+	true
+
 }.onSuccess {
 	Term.VM.logSuccess("종료", vmId)
 }.onFailure {
@@ -124,7 +132,9 @@ fun Connection.rebootVm(vmId: String): Result<Boolean> = runCatching {
 	val vm: Vm = checkVm(vmId)
 
 	this.srvVm(vmId).reboot().send()
-	this.expectVmStatus(vmId, VmStatus.UP)
+	// this.expectVmStatus(vmId, VmStatus.UP)
+	true
+
 }.onSuccess {
 	Term.VM.logSuccess("재부팅", vmId)
 }.onFailure {
@@ -136,7 +146,9 @@ fun Connection.resetVm(vmId: String): Result<Boolean> = runCatching {
 	val vm: Vm = checkVm(vmId)
 
 	this.srvVm(vmId).reset().send()
-	this.expectVmStatus(vmId, VmStatus.UP)
+	// this.expectVmStatus(vmId, VmStatus.UP)
+	true
+
 }.onSuccess {
 	Term.VM.logSuccess("재설정", vmId)
 }.onFailure {

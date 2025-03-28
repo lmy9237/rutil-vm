@@ -62,14 +62,14 @@ class NetworkVo (
 	val mtu: Int = 0,
 	val portIsolation: Boolean = false,
 	val stp: Boolean = false,
-	val usage: UsageVo = UsageVo(),
 	val vdsmName: String = "",
-	val datacenterVo: IdentifiedVo = IdentifiedVo(),
-	val openStackNetworkVo: OpenStackNetworkVo = OpenStackNetworkVo(),
 	val vlan: Int = 0,
 	val status: NetworkStatus = NetworkStatus.NON_OPERATIONAL,
 	val display: Boolean = false,
 	val networkLabel: String = "",
+	val openStackNetworkVo: OpenStackNetworkVo = OpenStackNetworkVo(),
+	val usage: UsageVo = UsageVo(),
+	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
 	val clusterVo: IdentifiedVo = IdentifiedVo(),
 	val vnicProfileVos: List<IdentifiedVo> = listOf(),
 	val clusterVos: List<ClusterVo> = listOf(),
@@ -85,27 +85,26 @@ class NetworkVo (
 		private var bMtu: Int = 0; fun mtu( block: () -> Int?) { bMtu = block() ?: 0 }
 		private var bPortIsolation: Boolean = false; fun portIsolation( block: () -> Boolean?) { bPortIsolation = block() ?: false }
 		private var bStp: Boolean = false; fun stp( block: () -> Boolean?) { bStp = block() ?: false }
-		private var bUsage: UsageVo = UsageVo(); fun usage(block: () -> UsageVo?) { bUsage = block() ?: UsageVo() }
 		private var bVdsmName: String = ""; fun vdsmName(block: () -> String?) { bVdsmName = block() ?: "" }
-		private var bDatacenterVo: IdentifiedVo = IdentifiedVo(); fun datacenterVo(block: () -> IdentifiedVo?) { bDatacenterVo = block() ?: IdentifiedVo() }
-		private var bOpenStackNetworkVo: OpenStackNetworkVo = OpenStackNetworkVo(); fun openStackNetworkVo(block: () -> OpenStackNetworkVo?) { bOpenStackNetworkVo = block() ?: OpenStackNetworkVo() }
 		private var bVlan: Int = 0; fun vlan(block: () -> Int?) { bVlan = block() ?: 0 }
 		private var bStatus: NetworkStatus = NetworkStatus.NON_OPERATIONAL; fun status(block: () -> NetworkStatus?) { bStatus = block() ?: NetworkStatus.NON_OPERATIONAL }
 		private var bDisplay: Boolean = false; fun display(block: () -> Boolean?) { bDisplay = block() ?: false }
 		private var bNetworkLabel: String = ""; fun networkLabel(block: () -> String?) { bNetworkLabel = block() ?: "" }
+		private var bOpenStackNetworkVo: OpenStackNetworkVo = OpenStackNetworkVo(); fun openStackNetworkVo(block: () -> OpenStackNetworkVo?) { bOpenStackNetworkVo = block() ?: OpenStackNetworkVo() }
+		private var bUsage: UsageVo = UsageVo(); fun usage(block: () -> UsageVo?) { bUsage = block() ?: UsageVo() }
+		private var bDataCenterVo: IdentifiedVo = IdentifiedVo(); fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
 		private var bClusterVo: IdentifiedVo = IdentifiedVo(); fun clusterVo(block: () -> IdentifiedVo?) { bClusterVo = block() ?: IdentifiedVo() }
 		private var bVnicProfileVos: List<IdentifiedVo> = listOf(); fun vnicProfileVos(block: () -> List<IdentifiedVo>?) { bVnicProfileVos = block() ?: listOf() }
 		private var bClusterVos: List<ClusterVo> = listOf(); fun clusterVos(block: () -> List<ClusterVo>?) { bClusterVos = block() ?: listOf() }
 		private var bRequired: Boolean = false; fun required(block: () -> Boolean?) { bRequired = block() ?: false }
 
-		fun build(): NetworkVo = NetworkVo(bId, bName, bDescription, bComment, bMtu, bPortIsolation, bStp, bUsage, bVdsmName, bDatacenterVo, bOpenStackNetworkVo, bVlan, bStatus, bDisplay, bNetworkLabel, bClusterVo, bVnicProfileVos, bClusterVos, bRequired)
+		fun build(): NetworkVo = NetworkVo( bId, bName, bDescription, bComment, bMtu, bPortIsolation, bStp, bVdsmName, bVlan, bStatus, bDisplay, bNetworkLabel, bOpenStackNetworkVo, bUsage, bDataCenterVo, bClusterVo, bVnicProfileVos, bClusterVos, bRequired)
 	}
 
 	companion object{
 		inline fun builder(block: NetworkVo.Builder.() -> Unit): NetworkVo =  NetworkVo.Builder().apply(block).build()
 	}
 }
-
 
 fun Network.toNetworkIdName(): NetworkVo = NetworkVo.builder {
 	id { this@toNetworkIdName.id() }
@@ -124,7 +123,7 @@ fun Network.toNetworkMenu(): NetworkVo {
 		comment { network.comment() }
 		mtu { network.mtu().toInt() }
 		portIsolation { network.portIsolation() }
-		datacenterVo { network.dataCenter().fromDataCenterToIdentifiedVo() }
+		dataCenterVo { network.dataCenter().fromDataCenterToIdentifiedVo() }
 		vlan { if (network.vlanPresent()) network.vlan().idAsInteger() else 0 }
 	}
 }
@@ -146,7 +145,7 @@ fun Network.toNetworkVo(conn: Connection): NetworkVo {
 		stp { network.stp() }
 		usage { network.usages().toUsagesVo() }
 		vdsmName { network.vdsmName() }
-		datacenterVo { network.dataCenter().fromDataCenterToIdentifiedVo() }
+		dataCenterVo { network.dataCenter().fromDataCenterToIdentifiedVo() }
 		openStackNetworkVo {
 			if(network.externalProviderPresent())
 				conn.findOpenStackNetworkProvider(network.externalProvider().id())
@@ -172,7 +171,7 @@ fun Network.toDcNetworkMenu(): NetworkVo {
 		stp { network.stp() }
 		usage { network.usages().toUsagesVo() }
 		vdsmName { network.vdsmName() }
-		datacenterVo { network.dataCenter().fromDataCenterToIdentifiedVo() }
+		dataCenterVo { network.dataCenter().fromDataCenterToIdentifiedVo() }
 		openStackNetworkVo {
 			if(network.externalProviderPresent()) network.externalProvider().toOpenStackNetworkVo()
 			else null
@@ -212,7 +211,7 @@ fun NetworkVo.toNetworkBuilder(): NetworkBuilder {
 	val network = this@toNetworkBuilder
 
 	val builder = NetworkBuilder()
-		.dataCenter(DataCenterBuilder().id(network.datacenterVo.id).build())
+		.dataCenter(DataCenterBuilder().id(network.dataCenterVo.id).build())
 		.name(network.name)
 		.description(network.description)
 		.comment(network.comment)

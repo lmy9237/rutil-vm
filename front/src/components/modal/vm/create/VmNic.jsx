@@ -10,6 +10,10 @@ const VmNic = ({
   // vnicProfileVo.id 배열 만들기
   const nicValues = nicsState.map(nic => nic.vnicProfileVo?.id || "");
 
+  console.log("NIC 확인용:", nicsState);
+
+
+
   const handleChange = (index, value) => {
     const updated = [...nicsState];
     updated[index].vnicProfileVo.id = value;
@@ -20,7 +24,7 @@ const VmNic = ({
     const newNic = {
       id: "",
       name: `nic${nicsState.length + 1}`,
-      vnicProfileVo: { id: "" },
+      vnicProfileVo: { id: "", },
     };
     setNicsState([...nicsState, newNic]);
   };

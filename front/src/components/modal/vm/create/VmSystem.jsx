@@ -14,18 +14,34 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
     return factors;
   };
 
-  const handleCpuChange = (e) => {
-    const totalCpu = parseInt(e.target.value, 10);
+  // const handleCpuChange = (e) => {
+  //   const totalCpu = parseInt(e.target.value, 10);
+  //   if (!isNaN(totalCpu)) {
+  //     setFormSystemState((prev) => ({
+  //       ...prev,
+  //       cpuTopologyCnt: totalCpu,
+  //       cpuTopologySocket: totalCpu, // 기본적으로 소켓을 총 CPU로 설정
+  //       cpuTopologyCore: 1,
+  //       cpuTopologyThread: 1,
+  //     }));
+  //   }
+  // };
+  const handleCpuChange = (newCpuValueOrEvent) => {
+    const totalCpu = typeof newCpuValueOrEvent === 'number'
+      ? newCpuValueOrEvent
+      : parseInt(newCpuValueOrEvent.target.value, 10);
+  
     if (!isNaN(totalCpu) && totalCpu > 0) {
       setFormSystemState((prev) => ({
-        ...prev, // 기존 상태 유지
+        ...prev,
         cpuTopologyCnt: totalCpu,
-        cpuTopologySocket: totalCpu, // 기본적으로 소켓을 총 CPU로 설정
+        cpuTopologySocket: totalCpu,
         cpuTopologyCore: 1,
         cpuTopologyThread: 1,
       }));
     }
   };
+  
 
   const handleSocketChange = (e) => {
     const socket = parseInt(e.target.value, 10);
@@ -65,6 +81,25 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
         <LabelInputNum label="메모리 크기(MB)" id="memory_size" value={formSystemState.memorySize} onChange={ handleInputChange("memorySize") }/>
         <LabelInputNum label="최대 메모리(MB)" id="max_memory" value={formSystemState.memoryMax} onChange={ handleInputChange("memoryMax") }/>
         <LabelInputNum label="할당할 실제 메모리(MB)" id="actual_memory" value={formSystemState.memoryActual} onChange={ handleInputChange("memoryActual") }/>
+        
+        {/* <LabelInputNum label="총 가상 CPU" id="total_cpu" 
+          value={formSystemState.cpuTopologyCnt} 
+          onChange={ handleCpuChange } 
+        /> */}
+        {/* <LabelInputNum
+          label="총 가상 CPU"
+          id="total_cpu"
+          value={formSystemState.cpuTopologyCnt}
+          onChange={handleCpuChange}
+        /> */}
+        <label>총 가상 CPU</label>
+        <input
+          type="number"
+          id="total_cpu"
+          value={formSystemState.cpuTopologyCnt}
+          onChange={handleCpuChange}
+          min={1}
+        />
 
         <button className="btn-toggle-cpu" onClick={toggleCpuDetail}>
           <RVI16 iconDef={showCpuDetail ? rvi16ChevronUp : rvi16ChevronDown} className="mr-1.5" />
@@ -73,12 +108,6 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
         
         {showCpuDetail && (
           <div>
-            <LabelInputNum
-              label="총 가상 CPU"
-              id="total_cpu"
-              value={formSystemState.cpuTopologyCnt}
-              onChange={handleCpuChange}
-            />
             <LabelSelectOptions
               label="가상 소켓"
               id="virtual_socket"

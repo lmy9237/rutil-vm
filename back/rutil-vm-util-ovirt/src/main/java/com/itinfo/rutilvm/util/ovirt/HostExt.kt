@@ -156,9 +156,9 @@ fun Connection.deactivateHost(hostId: String): Result<Boolean> = runCatching {
 	}
 	srvHost(host.id()).deactivate().send()
 
-	if (!this.expectHostStatus(host.id(), HostStatus.MAINTENANCE)) {
-		throw Error("expectHostStatus가 실패했습니다 ... $hostId 가 유지관리 상태가 아닙니다.")
-	}
+	// if (!this.expectHostStatus(host.id(), HostStatus.MAINTENANCE)) {
+	// 	throw Error("expectHostStatus가 실패했습니다 ... $hostId 가 유지관리 상태가 아닙니다.")
+	// }
 	true
 }.onSuccess {
 	Term.HOST.logSuccess("비활성화", hostId)
@@ -175,9 +175,9 @@ fun Connection.activateHost(hostId: String): Result<Boolean> = runCatching {
 	}
 	srvHost(host.id()).activate().send()
 
-	if (!this.expectHostStatus(host.id(), HostStatus.UP)) {
-		throw Error("activate Host 실패했습니다 ...")
-	}
+	// if (!this.expectHostStatus(host.id(), HostStatus.UP)) {
+	// 	throw Error("activate Host 실패했습니다 ...")
+	// }
 	true
 }.onSuccess {
 	Term.HOST.logSuccess("활성화", hostId)
@@ -191,9 +191,9 @@ fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
 	this.srvHost(hostId).refresh().send()
 
-	if (!this.expectHostStatus(hostId, HostStatus.UP)) {
-		throw Error("refresh Host 실패했습니다 ...")
-	}
+	// if (!this.expectHostStatus(hostId, HostStatus.UP)) {
+	// 	throw Error("refresh Host 실패했습니다 ...")
+	// }
 	true
 }.onSuccess {
 	Term.HOST.logSuccess("새로고침", hostId)
@@ -207,6 +207,7 @@ fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching 
 	checkHostExists(hostId)
 	this.srvHost(hostId).enrollCertificate().send()
 	true
+
 }.onSuccess {
 	Term.HOST.logSuccess("인증서 등록", hostId)
 }.onFailure {

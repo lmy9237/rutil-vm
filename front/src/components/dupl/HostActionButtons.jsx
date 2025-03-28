@@ -45,8 +45,8 @@ const HostActionButtons = ({
     { type: "deactivate", label: "유지보수", disabled: !isUp },
     { type: "activate", label: "활성", disabled: !isMaintenance },
     { type: "restart", label: "재시작", disabled: isEditDisabled || !isUp },
-    { type: "reInstall", label: "다시 설치", disabled: isEditDisabled || isUp },
-    { type: "register", label: "인증서 등록", disabled: isEditDisabled || isUp, },
+    // { type: "reInstall", label: "다시 설치", disabled: isEditDisabled || isUp },
+    // { type: "register", label: "인증서 등록", disabled: isEditDisabled || isUp, },
     { type: "haOn", label: "글로벌 HA 유지 관리를 활성화", disabled: isEditDisabled || !isUp, },
     { type: "haOff", label: "글로벌 HA 유지 관리를 비활성화", disabled: isEditDisabled || !isUp, },
   ];

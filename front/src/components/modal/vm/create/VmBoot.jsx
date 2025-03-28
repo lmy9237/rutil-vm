@@ -21,12 +21,8 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
   };
 
   useEffect(() => {
-    // `cdConn.id`가 존재하면 `isCdDvdChecked`를 true, 없으면 false
-    setFormBootState((prev) => ({
-      ...prev,
-      isCdDvdChecked: Boolean(prev.cdConn?.id),
-    }));
-  }, [formBootState.cdConn?.id]);
+    setFormBootState((prev) => ({ ...prev, isCdDvdChecked: Boolean(prev.connVo?.id),}));
+  }, [formBootState.connVo]);  
 
   return (
     <div className="host-second-content">
@@ -47,27 +43,25 @@ const VmBoot = ({ editMode, isos, formBootState, setFormBootState }) => {
               setFormBootState((prev) => ({
                 ...prev,
                 isCdDvdChecked: isChecked,
-                cdConn: isChecked ? { id: isos[0]?.id || "" } : { id: "" },
+                connVo: isChecked ? { id: isos[0]?.id || "" } : { id: "" },
               }));
             }}
           />
           <LabelSelectOptionsID
             disabled={!formBootState.isCdDvdChecked || isos.length === 0}
-            value={formBootState.cdConn?.id}
-            onChange={(e) => setFormBootState((prev) => ({ ...prev, cdConn: { id: e.target.value },})) }
+            value={formBootState.connVo?.id}
             options={isos}
+            onChange={(e) => {
+              const selected = isos.find(i => i.id === e.target.value)
+              if (selected) setFormBootState((prev) => ({ ...prev, connVo: { id: selected.id, name: selected.name }}))
+            }}
           />
         </div>
         <LabelCheckbox
           id="enableBootMenu"
           label="부팅 메뉴를 활성화"
           checked={formBootState.bootingMenu}
-          onChange={(e) =>
-            setFormBootState((prev) => ({
-              ...prev,
-              bootingMenu: e.target.checked,
-            }))
-          }
+          onChange={(e) => setFormBootState((prev) => ({ ...prev, bootingMenu: e.target.checked })) }
         />
       </div>
     </div>

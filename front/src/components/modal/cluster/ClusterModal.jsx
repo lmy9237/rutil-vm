@@ -169,13 +169,13 @@ const ClusterModal = ({
     if (datacenterId) {
       setDataCenterVo({id: datacenterId});
     } else if (!editMode && datacenters && datacenters.length > 0) {
-      setDataCenterVo({id: datacenters[0].id});
+      setDataCenterVo({id: datacenters[0].id, name: datacenters[0].name});
     }
-  }, [datacenters, datacenterId, editMode]);
+  }, [datacenters, datacenterId, editMode]);  
 
   useEffect(() => {
     if (!editMode && networks && networks.length > 0) {
-      setNetworkVo({id: networks[0].id});
+      setNetworkVo({id: networks[0].id, name: networks[0].name});
     }
   }, [networks, editMode]);
 
@@ -231,7 +231,7 @@ const ClusterModal = ({
       contentStyle={{ width: "730px" }} 
     >
       <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
-        value={dataCenterVo}
+        value={dataCenterVo.id}
         disabled={editMode}
         loading={isDataCentersLoading}
         options={datacenters}
