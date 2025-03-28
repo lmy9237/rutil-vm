@@ -2,34 +2,50 @@ import React from "react";
 import DynamicInputList from "../../../label/DynamicInputList";
 import Localization from "../../../../utils/Localization";
 
-const VmNic = ({ 
+const VmNic = ({
   nicsState,
   setNicsState,
   nics
 }) => {
-  // vNIC 변경 핸들러
-  const handleNicChange = (index, value) => {
-    const updatedNics = [...nicsState];
-    updatedNics[index] = {
-      ...updatedNics[index],
-      vnicProfileVo: { id: value },
+  // vnicProfileVo.id 배열 만들기
+  const nicValues = nicsState.map(nic => nic.vnicProfileVo?.id || "");
+
+  const handleChange = (index, value) => {
+    const updated = [...nicsState];
+    updated[index].vnicProfileVo.id = value;
+    setNicsState(updated);
+  };
+
+  const handleAdd = () => {
+    const newNic = {
+      id: "",
+      name: `nic${nicsState.length + 1}`,
+      vnicProfileVo: { id: "" },
     };
-    setNicsState(updatedNics);
+    setNicsState([...nicsState, newNic]);
+  };
+
+  const handleRemove = (index) => {
+    const updated = [...nicsState];
+    updated.splice(index, 1);
+    setNicsState(updated);
   };
 
   return (
     <div className="host-second-content py-2">
       <p className="mb-0.5">
-        {Localization.kr.VNIC_PROFILE} 을 선택하여 {Localization.kr.VM} ${Localization.kr.NICS}를 설정하세요.
+        {Localization.kr.VNIC_PROFILE} 을 선택하여 {Localization.kr.VM} {Localization.kr.NICS}를 설정하세요.
       </p>
-      
+
       <DynamicInputList
-        maxCount={10} // 최대 10개까지 추가 가능
+        values={nicValues}
+        maxCount={10}
         inputType="select"
-        options={nics.map((profile) => profile.name)} // ✅ vNIC 드롭다운 옵션
-        disabled={false} // 비활성화 X
+        options={nics.map((opt) => opt.name)}
         getLabel={(index) => `nic${index + 1}`}
-        onChange={handleNicChange} // ✅ vNIC 변경 핸들러 적용
+        onChange={handleChange}
+        onAdd={handleAdd}
+        onRemove={handleRemove}
       />
     </div>
   );

@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 import ActionButton from "../button/ActionButton";
+import CancelModal from "../../utils/CancelModal";
+import DomainDestroyModal from "../modal/domain/DomainDestroyModal";
+import DomainMainTenanceModal from "../modal/domain/DomainMainTenanceModal";
+import DomainCheckModal from "../modal/domain/DomainCheckModal";
 
 const DomainActionButtons = ({
   openModal,
@@ -20,7 +24,17 @@ const DomainActionButtons = ({
   const isMaintenance = status === "MAINTENANCE";
   const isUnknown = status === "UNKNOWN";
 
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false); // 삭제예정
+  const [isDomainDestroyModalOpen, setIsDomainDestroyModalOpen] = useState(false); // 삭제예정
+  const [isDomainMainTenanceModalOpen, setIsDomainMainTenanceModalOpen] = useState(false);// 삭제예정
+  const [isDomainCheckModalOpen, setIsDomainCheckModalOpen] = useState(false); // 삭제예정
+
   const basicActions = [
+    { type: "edit", label: "유지보수모달(임시)", onBtnClick: () => setIsDomainMainTenanceModalOpen(true) },
+    { type: "edit", label: "도메인파괴(임시)", onBtnClick: () => setIsDomainDestroyModalOpen(true) }, // 이 부분 변경
+    { type: "edit", label: "도메인 확인(임시 추가모달)", onBtnClick: () => setIsDomainCheckModalOpen(true) }, 
+    { type: "edit", label: "작업취소모달(임시)", onBtnClick: () => setIsCancelModalOpen(true)},
+
     { type: "create", label: "생성", onBtnClick: () => openModal("create")  },
     { type: "import", label: "가져오기", onBtnClick: () => openModal("import")  },
     { type: "edit", label: "편집", disabled: isEditDisabled , onBtnClick: () => openModal("edit") },
@@ -61,7 +75,7 @@ const DomainActionButtons = ({
         : [];
 
   return (
- 
+ <>
     <ActionButtonGroup
       actionType={actionType}
       actions={selectedActions}
@@ -70,7 +84,24 @@ const DomainActionButtons = ({
         <ActionButton label={"디스크"} onClick={() => navigate("/storages/disks")} actionType={actionType}/>
       )}
     </ActionButtonGroup>
-
+   
+   <CancelModal
+   isOpen={isCancelModalOpen}
+   onClose={() => setIsCancelModalOpen(false)}
+ />
+ <DomainDestroyModal
+   isOpen={isDomainDestroyModalOpen}
+   onClose={() => setIsDomainDestroyModalOpen(false)}
+ />
+ <DomainMainTenanceModal
+   isOpen={isDomainMainTenanceModalOpen}
+   onClose={() => setIsDomainMainTenanceModalOpen(false)}
+ />
+ <DomainCheckModal
+   isOpen={isDomainCheckModalOpen}
+   onClose={() => setIsDomainCheckModalOpen(false)}
+ />
+ </>
     /*
     <div className={wrapperClass}>
  
@@ -94,6 +125,7 @@ const DomainActionButtons = ({
       {actionType === "domainDc" && renderButtons(domainDcActions)}
     </div>
     */
+
   );
 };
 

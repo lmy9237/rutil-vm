@@ -1,5 +1,7 @@
+import { useState } from "react";
 import LabelInputNum from "../../../label/LabelInputNum";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
+import { RVI16, rvi16ArrowsDown, rvi16Check, rvi16ChevronDown, rvi16ChevronUp, rvi16SeverityErrorLined } from "../../../icons/RutilVmIcons";
 
 
 const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
@@ -54,6 +56,9 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
     setFormSystemState((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
+  // 토글 상태
+  const [showCpuDetail, setShowCpuDetail] = useState(false); 
+  const toggleCpuDetail = () => setShowCpuDetail(prev => !prev);
   return (
     <>
       <div className="edit-second-content">
@@ -61,57 +66,61 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
         <LabelInputNum label="최대 메모리(MB)" id="max_memory" value={formSystemState.memoryMax} onChange={ handleInputChange("memoryMax") }/>
         <LabelInputNum label="할당할 실제 메모리(MB)" id="actual_memory" value={formSystemState.memoryActual} onChange={ handleInputChange("memoryActual") }/>
 
-        <LabelInputNum
-          label="총 가상 CPU"
-          id="total_cpu"
-          value={formSystemState.cpuTopologyCnt}
-          onChange={handleCpuChange}
-        />
+        <button className="btn-toggle-cpu" onClick={toggleCpuDetail}>
+          <RVI16 iconDef={showCpuDetail ? rvi16ChevronUp : rvi16ChevronDown} className="mr-1.5" />
+          {showCpuDetail ? "CPU 상세 옵션 닫기" : "CPU 상세 옵션 열기(체크박스형식?)"}
+        </button>
+        
+        {showCpuDetail && (
+          <div>
+            <LabelInputNum
+              label="총 가상 CPU"
+              id="total_cpu"
+              value={formSystemState.cpuTopologyCnt}
+              onChange={handleCpuChange}
+            />
+            <LabelSelectOptions
+              label="가상 소켓"
+              id="virtual_socket"
+              value={formSystemState.cpuTopologySocket}
+              onChange={handleSocketChange}
+              options={calculateFactors(formSystemState.cpuTopologyCnt).map((v) => ({
+                value: v, label: v,
+              }))}
+            />
+            <LabelSelectOptions
+              label="가상 소켓 당 코어"
+              id="core_per_socket"
+              value={formSystemState.cpuTopologyCore}
+              onChange={handleCoreChange}
+              options={calculateFactors(
+                formSystemState.cpuTopologyCnt / formSystemState.cpuTopologySocket
+              ).map((v) => ({
+                value: v, label: v,
+              }))}
+            />
+            <LabelSelectOptions
+              label="코어당 스레드"
+              id="thread_per_core"
+              value={formSystemState.cpuTopologyThread}
+              onChange={(e) =>
+                setFormSystemState((prev) => ({
+                  ...prev,
+                  cpuTopologyThread: parseInt(e.target.value, 10),
+                }))
+              }
+              options={calculateFactors(
+                formSystemState.cpuTopologyCnt /
+                  (formSystemState.cpuTopologySocket * formSystemState.cpuTopologyCore)
+              ).map((v) => ({
+                value: v, label: v,
+              }))}
+            />
+          </div>
+        )}
 
-        <LabelSelectOptions
-          label="가상 소켓"
-          id="virtual_socket"
-          value={formSystemState.cpuTopologySocket}
-          onChange={handleSocketChange}
-          options={calculateFactors(formSystemState.cpuTopologyCnt).map((factor) => ({
-            value: factor,
-            label: factor,
-          }))}
-        />
 
-        <LabelSelectOptions
-          label="가상 소켓 당 코어"
-          id="core_per_socket"
-          value={formSystemState.cpuTopologyCore}
-          onChange={handleCoreChange}
-          options={calculateFactors(
-            formSystemState.cpuTopologyCnt / formSystemState.cpuTopologySocket
-          ).map((factor) => ({
-            value: factor,
-            label: factor,
-          }))}
-        />
-
-        <LabelSelectOptions
-          label="코어당 스레드"
-          id="thread_per_core"
-          value={formSystemState.cpuTopologyThread}
-          onChange={(e) =>
-            setFormSystemState((prev) => ({
-              ...prev,
-              cpuTopologyThread: parseInt(e.target.value, 10),
-            }))
-          }
-          options={calculateFactors(
-            formSystemState.cpuTopologyCnt /
-              (formSystemState.cpuTopologySocket * formSystemState.cpuTopologyCore)
-          ).map((factor) => ({
-            value: factor,
-            label: factor,
-          }))}
-        />
-
-
+      </div>
         {/* 삭제예정 */}
         {/* <div className="network_form_group">
           <label htmlFor="virtual_socket">가상 소켓</label>
@@ -162,7 +171,7 @@ const VmSystem = ({ editMode, formSystemState, setFormSystemState}) => {
             ))}
           </select>
         </div> */}
-      </div>
+
     </>
   );
 };

@@ -96,7 +96,11 @@
   width:100%;
   height:90px;
 }
-
+.btn-toggle-cpu{
+  font-size: var(--fs-default);
+  border:var(--border-btn);
+  padding: 3px;
+}
 /*가상머신 ... 버튼 새템플릿 생성*/
 .new-template-popup .section-table-outer {
   height: 15vh;

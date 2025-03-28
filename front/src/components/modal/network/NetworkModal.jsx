@@ -102,6 +102,7 @@ const NetworkModal = ({
     }
   }, [clusters]);
 
+  
   const handleInputChange = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
   };
@@ -305,7 +306,7 @@ const NetworkModal = ({
         {/* <DynamicInputList maxCount={3}  inputType="text"  disabled={!dnsEnabled} /> */}
 
         {!editMode && (
-          <div className="network-new-cluster-form">
+          <div className="custom-table">
             <hr />
             <span>클러스터에서 네트워크를 연결/분리</span>
             <div>

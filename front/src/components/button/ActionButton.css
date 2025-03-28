@@ -27,7 +27,7 @@ button.btn-action[disabled]{
   border-radius: 0 !important;
 }
 .btn-right-click[disabled]{
-  background-color: white;
+  /* background-color: white; */
   color: #888888;
   border: none !important;
 }
