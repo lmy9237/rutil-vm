@@ -1,10 +1,9 @@
 .header {
   position:relative;width:100%;height:var(--h-rutil-header);
   background-color:var(--color-primary);
-  border-bottom: 1px solid #dfdfdf;
-  border-radius: 3px 3px 0 0;
+  border-bottom: 1px solid #dfdfdf;  
 }
-.header-left,.header-right { height:100%;}
+.header-left,.header-right { height:100%; }
 .header-right {
   display:flex;justify-content:flex-end;align-items:center;/* 세로 중앙 정렬 추가 */
 }
@@ -45,24 +44,20 @@
   position: absolute;
   background-color: #ffffff;
   z-index: 3;
-  width: 300px;
-  right: 0;
+  width: var(--w-bell-box);height: 804px;
+  top:var(--h-rutil-header);right: 0;
   font-size: var(--fs-default);
   border: 1px solid rgb(204, 204, 204);
-  top: 63px;
-  height: 804px;
   border-radius: 2px;
   box-shadow: -3px 3px 10px rgba(0, 0, 0, 0.2); 
 }
 .bell-box.expanded {
-  width: 700px; /* 확장 시 */
+  width: var(--w-bell-box-expanded); /* 확장 시 */
 }
-.bell-box>div{
+.bell-box > div {
   font-size: var(--fs-16);
   border-bottom:1px solid var(--color-table);
-  display:flex;
   overflow: overlay;
-  align-items: center;
 }
 .bell-cate{
   padding:7px;

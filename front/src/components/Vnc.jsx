@@ -1,23 +1,38 @@
 import React, { useRef } from 'react'
 import { VncScreen } from 'react-vnc'
-import HeaderButton from './button/HeaderButton';
-import Localization from "../utils/Localization";
+import { useVmConsoleAccessInfo } from "../api/RQHook";
 
 const Vnc = ({
-  wsUrl, vm, host, port, ticket,
-  autoConnect = false,
+  vmId, autoConnect = false,
 }) => {
+  const { data: vmConsoleAccessInfo } = useVmConsoleAccessInfo(vmId);
+    
+  let wsUrl = `wss://localhost/ws`;
+  if (import.meta.env.PROD) {
+    console.log("THIS IS PRODUCTION !!!");
+    console.log(`VmConsoleModal ... import.meta.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`);
+    wsUrl = "wss://__RUTIL_VM_OVIRT_IP_ADDRESS__/ws";
+  }
+
+  const isReady = () => vmId !== undefined && vmConsoleAccessInfo 
+    && vmConsoleAccessInfo?.address 
+    && vmConsoleAccessInfo?.port 
+    && vmConsoleAccessInfo?.token
+    && vmConsoleAccessInfo?.vm
+  
   const isValid = (vncUrl) => {
     if (!vncUrl.startsWith('ws://') && !vncUrl.startsWith('wss://')) {
       return false;
     }
     return true;
   };
-  const fullAccessUrl = () => `${wsUrl}/${host}:${port}`
-  const Spacer = () => <div style={{ width: '2rem', display: 'inline-block' }} />;
+  const fullAccessUrl = () => `${wsUrl}/${vmConsoleAccessInfo?.address}:${vmConsoleAccessInfo?.port}`
   const ref = useRef()
+  isReady() && console.log(
+    `... wsUrl: ${wsUrl}, address: ${vmConsoleAccessInfo?.address}, port: ${vmConsoleAccessInfo?.port}, ticket: ${vmConsoleAccessInfo?.token}`
+  );
+  isReady() && console.log(`... fullAccessUrl: ${fullAccessUrl()}`)
 
-  console.log(`... fullAccessUrl: ${fullAccessUrl()}`)
   /*
   useEffect(() => {
     if (!ref.current) {
@@ -44,88 +59,44 @@ const Vnc = ({
 
   return (
     <>
-    <div style={{ margin: '1rem' }}>
-      {/* <HeaderButton 
-        title={vm?.name ?? "RutilVM에 오신걸 환영합니다."}
-        status={Localization.kr.renderStatus(vm?.status)}
-      /> */}
-      <Spacer />
-      {/*<input type="text" onChange={({ target: { value } }) => {
-        setInputUrl(value);
-      }} name="url" placeholder="wss://your-vnc-url" />
-      */}
-    </div>
-
-    <div style={{ margin: '1rem' }}>
-      <button
-        onClick={() => {
-          const { connect, connected, disconnect } = ref.current ?? {};
-          if (connected) {
-            console.log(`Vnv > onClick ... connected: ${connected}`)
-            disconnect?.();
-            return;
-          }
-          connect?.();
-        }}
-      >
-        Connect / Disconnect
-      </button>
-    </div>
-
-    <div style={{ margin: '1rem' }}>
-      {
-        isValid(wsUrl)
-          ? (
-            <VncScreen
-              url={fullAccessUrl()}
-              autoConnect={true}
-              rfbOptions={{
-                "wsProtocols": ['binary']
-              }}
-              scaleViewport
-              background="#000000"
-              style={{
-                width: '100%',
-                height: '60vh',
-                // aspectRatio: '1024/'
-              }}
-              debug
-              onConnect={(rfb) => {
-                console.log("Vnc > onConnect ... ");
-              }}
-              onDisconnect={(rfb) => {
-                console.log("Vnc > onDisconnect ... ");
-              }}
-              onCredentialsRequired={(rfb) => {
-                console.log("Vnc > onCredentialsRequired ... ")
-                rfb.sendCredentials({
-                  "password": ticket,
-                })
-              }}
-              onSecurityFailure={(e) => {
-                console.error(`Vnc > onSecurityFailure (${e?.detail?.status}): ${e?.detail?.reason}`)
-              }}
-              onClipboard={(e) => {
-                console.log(`Vnc > onClipboard ${e.detail}`)
-              }} 
-              ref={ref}
-            />
-            // <VncScreen 
-            //   url={wsUrl}
-            //   scaleViewport
-            //   autoConnect={autoConnect}
-            //   background='#333'
-            //   style={{
-            //     height: '650px',
-            //     background: "#333",
-            //   }}
-            //   ref={ref}
-            // />
-          )
-          : <div>VNC URL not provided.</div>
-      }
-    </div>
-  </>
+      {isReady() && isValid(wsUrl) ? (
+        <VncScreen
+          url={fullAccessUrl()}
+          autoConnect={true}
+          rfbOptions={{
+            "wsProtocols": ['binary']
+          }}
+          scaleViewport
+          background="#000000"
+          style={{
+            width: '100%',
+            height: '100%',
+          }}
+          debug
+          onConnect={(rfb) => {
+            console.log("Vnc > onConnect ... ");
+          }}
+          onDisconnect={(rfb) => {
+            console.log("Vnc > onDisconnect ... ");
+          }}
+          onCredentialsRequired={(rfb) => {
+            console.log("Vnc > onCredentialsRequired ... ")
+            rfb.sendCredentials({
+              "password": vmConsoleAccessInfo?.token,
+            })
+          }}
+          onSecurityFailure={(e) => {
+            console.error(`Vnc > onSecurityFailure (${e?.detail?.status}): ${e?.detail?.reason}`)
+          }}
+          onClipboard={(e) => {
+            console.log(`Vnc > onClipboard ${e.detail}`)
+          }} 
+          ref={ref}
+        />
+      ) : (
+        <div>VNC URL not provided.</div>
+      )}
+    </>
   )
 }
 

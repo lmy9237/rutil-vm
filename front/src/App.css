@@ -32,6 +32,8 @@ html {
   --w-icon-tree: var(--h-icon-tree);
   --w-nav: 160px; /* nav넓이*/
   --w-text-input: 280px;
+  --w-bell-box: 300px;
+  --w-bell-box-expanded: 700px;
 
   --p-default: 6px;
   --p-tmi-1:    8px;
@@ -163,6 +165,7 @@ input[disabled] {
 .f-end    { display:flex;align-items:center;justify-content:flex-end; }
 .center   { display:flex;align-items:center;justify-content:space-between; }
 .f-btw    { display:flex;align-items:center;justify-content:space-between; }
+.v-center { display:flex;align-items:center;justify-content:center;flex-direction:column; }
 .v-start  { display:flex;align-items:flex-start;justify-content:center;flex-direction:column; }
 .v-end    { display:flex;align-items:flex-end;justify-content:center;flex-direction:column; }
 .v-btw    { display:flex;align-items:space-between;justify-content:center;flex-direction:column; } 

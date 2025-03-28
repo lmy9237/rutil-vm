@@ -28,6 +28,7 @@ export const Localization = {
     VNIC: "vNic",
     VNIC_PROFILE: "vNic 프로파일",
     EVENT: "이벤트",
+    UP: "실행 중",
     HA: "고가용성",
     SPARSE: "할당 정책",
     SIZE_AVAILABLE: "여유 공간",
@@ -66,14 +67,17 @@ export const Localization = {
 
     renderStatus(status = "") {
       const _status = status?.toUpperCase() ?? "";
-      if (_status === "UP")               return "실행중";
+      if (_status === "UP")               return "실행 중";
       else if (_status === "ACTIVE")      return "활성화";
+      else if (_status === "INSTALLING")      return "설치 중";
       else if (_status === "DOWN")        return "중지";
       else if (_status === "INACTIVE")    return "비활성화";
       else if (_status === "UNINITIALIZED") return "초기화되지 않음";
-      else if (_status === "REBOOT")      return "재부팅중";
+      else if (_status === "REBOOT")      return "재부팅 중";
       else if (_status === "SUSPENDED")   return "일시중지";
       else if (_status === "MAINTENANCE") return "유지보수";
+      else if (_status === "POWERING_UP") return "전원을 켜는 중";
+      else if (_status === "POWERING_DOWN") return "전원을 끄는 중";
       else if (_status === "OPERATIONAL") return "가동 중";
       else if (_status === "NON_OPERATIONAL") return "비 가동 중";
       else if (_status === "UNATTACHED")  return "붙어있지 않음";

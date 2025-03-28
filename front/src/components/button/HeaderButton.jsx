@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-import IconButton from "../Input/IconButton";
 import { RVI24 } from "../icons/RutilVmIcons";
+import IconButton from "../Input/IconButton";
+import StatusBadge from "../common/StatusBadge";
 import PopupBox from "../common/PopupBox";
+import Localization from "../../utils/Localization";
 import "./HeaderButton.css";
-
 /**
  * @name HeaderButton
  * @description 헤더 버튼
@@ -20,6 +21,7 @@ const HeaderButton = ({
   buttons = [],
   popupItems = [],
   titleIcon,
+  inverseColor=false,
 }) => {
   const [isPopupBoxVisible, setIsPopupBoxVisible] = useState(false);
   const togglePopupBox = () => setIsPopupBoxVisible(!isPopupBoxVisible);
@@ -40,10 +42,8 @@ const HeaderButton = ({
       const popupBox = document.querySelector(".popup-box");
       const popupBtn = document.querySelector(".popup-btn");
       if (
-        popupBox &&
-        !popupBox.contains(event.target) &&
-        popupBtn &&
-        !popupBtn.contains(event.target)
+        popupBox && !popupBox.contains(event.target) 
+        && popupBtn && !popupBtn.contains(event.target)
       ) {
         setIsPopupBoxVisible(false);
       }
@@ -60,14 +60,11 @@ const HeaderButton = ({
     <div className="section-header f-btw">
       <div className="section-header-left f-btw">
         {titleIcon && (<RVI24 iconDef={titleIcon} />)}
-        <p>{title}</p>
-        {status && <span
-          className={`status-label f-center ${
-            status === "실행중" ? "running" : status === "중지" ? "stopped" : "default"
-          }`}
-        >
-          {status}
-        </span>}
+        <p className={`section-header-title${inverseColor ? " inverse" : ""}`}>{title}</p>
+        {status && <StatusBadge 
+          status={status === Localization.kr.UP ? "running" : status === "중지" ? "stopped" : "default"}
+          text={status}
+        />}
       </div>
       <div className="section-header-right f-btw">
         <div className="article-nav f-end">

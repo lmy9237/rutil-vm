@@ -15,6 +15,9 @@
   font-size:var(--fs-big);font-weight:700;
   white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
 }
+.section-header-left p.inverse {
+  color:var(--color-white)
+}
 .section-header-right {}
 .article-nav {
   display: flex;

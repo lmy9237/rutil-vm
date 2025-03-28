@@ -611,6 +611,8 @@ export const status2Icon = (status = "") => {
     case Localization.kr.renderStatus("UP"):
     case "ACTIVE":
     case Localization.kr.renderStatus("ACTIVE"):   iconDef = rvi16TriangleUp();break;
+    case "INSTALLING":
+    case Localization.kr.renderStatus("INSTALLING"):   iconDef = rvi16Install;break;
     case "DOWN":
     case Localization.kr.renderStatus("DOWN"):
     case "INACTIVE":
@@ -624,6 +626,7 @@ export const status2Icon = (status = "") => {
     case "SUSPENDED":                              iconDef = rvi16Pause;break;
     case "NON_OPERATIONAL":                        iconDef = rvi16NonOperational;break;
     case "REBOOT":
+    case Localization.kr.renderStatus("REBOOT"):   
     case "실행중":
     default:                                       iconDef = rvi16QuestionMark();break;
   }

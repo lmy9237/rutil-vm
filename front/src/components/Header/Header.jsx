@@ -159,18 +159,11 @@ const Header = ({ toggleAside }) => {
             className={`bell-box ${isExpanded ? "expanded" : ""}`}
             onClick={stopPropagation}
           >
-            <div className="f-btw py-0.5 px-1.5 bell-cate">
-              <RVI16
-                iconDef={isExpanded ? rvi16ArrowRight : rvi16ArrowLeft}
+            <div className="f-btw bell-cate">
+              <RVI16 iconDef={isExpanded ? rvi16ArrowRight : rvi16ArrowLeft}
                 className="hover-icon"
                 onClick={handleExpand}
               />
-              {/* <FontAwesomeIcon
-                icon={isExpanded ? faAngleRight : faAngleLeft} 
-                fixedWidth
-                className="hover-icon"
-                onClick={handleExpand}
-              /> */}
               통지함
               <RVI16
                 iconDef={rvi16CloseMenu}
@@ -178,17 +171,11 @@ const Header = ({ toggleAside }) => {
                 onClick={() => setBellActive(false)}
               />
             </div>
-
             {/* 알림 탭 */}
-            <div
-              className={`bell-cate ${activeSection === "알림" ? "active" : ""}`}
+            <div className={`bell-cate ${activeSection === "알림" ? "active" : ""} f-start`}
               onClick={() => handleSectionClick("알림")}
             >
-              <RVI24
-                iconDef={
-                  activeSection === "알림" ? rvi24DownArrow : rvi24RightArrow
-                }
-              />
+              <RVI24 iconDef={activeSection === "알림" ? rvi24DownArrow : rvi24RightArrow}/>
               <span className="ml-1">알림</span>
             </div>
 
@@ -198,20 +185,15 @@ const Header = ({ toggleAside }) => {
                 <div className="bell-content-outer">
                   {notifications.map((notification) => (
                     <div key={notification.id} className="bell-content">
-                      <div>
-                        <RVI16 iconDef={rvi16Warning} />
-                      </div>
+                      <RVI16 iconDef={rvi16Warning} />
                       <div className="bell-mid">
                         {notification.message}
                         <div className="mt-0.5">{notification.date}</div>
                       </div>
-                      <div>
-                        <RVI16
-                          iconDef={rvi16Trash}
-                          className="trash-icon"
-                          onClick={() => handleDelete(notification.id, "알림")}
-                        />
-                      </div>
+                      <RVI16 iconDef={rvi16Trash}
+                        className="trash-icon"
+                        onClick={() => handleDelete(notification.id, "알림")}
+                      />
                     </div>
                   ))}
                 </div>
@@ -225,7 +207,7 @@ const Header = ({ toggleAside }) => {
 
             {/* 이벤트 탭 */}
             <div
-              className={`bell-cate ${activeSection === "이벤트" ? "active" : ""}`}
+              className={`bell-cate ${activeSection === "이벤트" ? "active" : ""} f-start`}
               onClick={() => handleSectionClick("이벤트")}
             >
               <RVI24
