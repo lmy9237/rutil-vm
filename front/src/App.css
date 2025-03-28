@@ -264,7 +264,8 @@ input[disabled] {
   display: flex; 
   justify-content: center; 
   align-items: center; 
-}*/
+}
+*/
 /*대상검색*/
 .target-search-outer{
     padding: 12px 0;

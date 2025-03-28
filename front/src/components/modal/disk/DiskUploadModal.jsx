@@ -187,8 +187,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                 onChange={handleInputChange("size")}
                 disabled
               />
-              <LabelInput
-                label="별칭"
+              <LabelInput label={Localization.kr.ALIAS}
                 value={formState.alias}
                 onChange={handleInputChange("alias")}
               />
@@ -231,7 +230,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                   ) : (
                     domains.map((opt) => (
                       <option key={opt.id} value={opt.id}>
-                        {opt.name} (사용가능: {convertBytesToGB(opt.availableSize)}, 총 공간: {convertBytesToGB(opt.usedSize+opt.availableSize)})
+                        {opt.name} (사용가능: {convertBytesToGB(opt.availableSize)}, 총 {Localization.kr.SIZE_TOTAL}: {convertBytesToGB(opt.usedSize+opt.availableSize)})
                       </option>
                     ))
                   )}
@@ -262,16 +261,14 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
           
             <div className="disk-new-img-right">
               <div className='img-checkbox-outer'>
-                <LabelCheckbox
-                  label="삭제 후 초기화"
+                <LabelCheckbox label={Localization.kr.WIPE_AFTER_DELETE}
                   id="wipeAfterDelete"
                   checked={formState.wipeAfterDelete}
                   onChange={handleInputChangeCheck("wipeAfterDelete")}
                 />
               </div>
               {/* <div className='img-checkbox-outer'>
-                <LabelCheckbox
-                  label="공유 가능"
+                <LabelCheckbox label={Localization.kr.IS_SHARABLE}
                   id="sharable"
                   className="sharable"
                   checked={sharable}

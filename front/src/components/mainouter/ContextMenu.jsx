@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./ContextMenu.css";
+import Localization from "../../utils/Localization";
 
 const ContextMenu = ({ visible, position, menuItems, onClose }) => {
   if (!visible) return null;
@@ -54,7 +55,7 @@ export const useContextMenu = () => {
       default:
         return [
           { label: "새로 만들기", onClick: () => console.log(`새로 만들기 - ${targetId}`) },
-          { label: "관리", onClick: () => console.log(`관리하기 - ${targetId}`) },
+          { label: Localization.kr.MANAGEMENT, onClick: () => console.log(`관리하기 - ${targetId}`) },
         ];
     }
   };

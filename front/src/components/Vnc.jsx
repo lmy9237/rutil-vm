@@ -1,8 +1,10 @@
 import React, { useRef } from 'react'
 import { VncScreen } from 'react-vnc'
+import HeaderButton from './button/HeaderButton';
+import Localization from "../utils/Localization";
 
 const Vnc = ({
-  wsUrl, host, port, ticket,
+  wsUrl, vm, host, port, ticket,
   autoConnect = false,
 }) => {
   const isValid = (vncUrl) => {
@@ -43,14 +45,15 @@ const Vnc = ({
   return (
     <>
     <div style={{ margin: '1rem' }}>
-      <label htmlFor="url">RutilVM 접속시도</label>
+      {/* <HeaderButton 
+        title={vm?.name ?? "RutilVM에 오신걸 환영합니다."}
+        status={Localization.kr.renderStatus(vm?.status)}
+      /> */}
       <Spacer />
       {/*<input type="text" onChange={({ target: { value } }) => {
         setInputUrl(value);
       }} name="url" placeholder="wss://your-vnc-url" />
-
-      <Spacer />
-       <button onClick={() => setVncUrl(inputUrl)}>Go!</button> */}
+      */}
     </div>
 
     <div style={{ margin: '1rem' }}>

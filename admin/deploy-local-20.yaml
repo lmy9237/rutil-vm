@@ -115,7 +115,7 @@ services:
       - ./rutil-vm/certs/fullchain.pem:/home/node/fullchain.pem:ro
     networks:
       - ovirt_network
-    restart: on-failure
+    restart: always # undefined으로 인자가 갈 때 죽음
 
 networks:
   ovirt_network:

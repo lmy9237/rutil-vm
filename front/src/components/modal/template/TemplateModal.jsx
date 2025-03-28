@@ -221,10 +221,10 @@ const TemplateModal = ({
             <table>
               <thead>
                 <tr>
-                  <th>별칭</th>
+                  <th>{Localization.kr.ALIAS}</th>
                   <th>가상 크기</th>
                   <th>포맷</th>
-                  <th>대상</th>
+                  <th>{Localization.kr.TARGET}</th>
                   <th>디스크 프로파일</th>
                 </tr>
               </thead>

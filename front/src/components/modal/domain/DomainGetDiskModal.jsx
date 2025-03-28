@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import BaseModal from "../BaseModal";
 import { useRegisteredDiskFromDomain } from '../../../api/RQHook';
 import '../domain/MDomain.css'
+import Localization from '../../../utils/Localization';
 
 const DomainGetDiskModal = ({ isOpen, domainId, data, onClose }) => {
   const { mutate: registerDisk } = useRegisteredDiskFromDomain();
@@ -49,7 +50,7 @@ const DomainGetDiskModal = ({ isOpen, domainId, data, onClose }) => {
         <table>
           <thead>
             <tr>
-              <th>별칭</th>
+              <th>{Localization.kr.ALIAS}</th>
               <th>가상 크기</th>
               {/* <th>디스크 프로파일</th> */}
             </tr>

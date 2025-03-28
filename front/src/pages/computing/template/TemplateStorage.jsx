@@ -79,10 +79,10 @@
 //             <tr>
 //               <th>스토리지 이름</th>
 //               <th>도메인 유형</th>
-//               <th>상태</th>
-//               <th>가용 공간 (GB)</th>
-//               <th>사용된 공간 (GB)</th>
-//               <th>전체 공간 (GB)</th>
+//               <th>{Localization.kr.STATUS}</th>
+//               <th>{Localization.kr.SIZE_AVAILABLE} (GB)</th>
+//               <th>{Localization.kr.SIZE_USED} (GB)</th>
+//               <th>{Localization.kr.SIZE_TOTAL} (GB)</th>
 //             </tr>
 //           </thead>
 //           <tbody>
@@ -127,11 +127,11 @@
 //                             <th>포맷</th>
 //                             <th>스토리지 유형</th>
 //                             <th>크기</th>
-//                             <th>상태</th>
+//                             <th>{Localization.kr.STATUS}</th>
 //                             <th>할당</th>
 //                             <th>인터페이스</th>
 //                             <th>유형</th>
-//                             <th>생성일자</th>
+//                             <th>{Localization.kr.DATE_CREATED}</th>
 //                           </tr>
 //                         </thead>
 //                         <tbody>

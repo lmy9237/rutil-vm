@@ -279,9 +279,7 @@ const Dashboard = () => {
                 className="graph-wrap active-on-visible"
                 data-active-on-visible-callback-func-name="CircleRun"
               >
-                {cpuMemory && (
-                  <CpuApexChart cpu={cpuMemory?.totalCpuUsagePercent ?? 0} />
-                )}
+                {cpuMemory && (<CpuApexChart cpu={cpuMemory?.totalCpuUsagePercent ?? 0} />)}
               </div>
               <div>{vmCpu && <CpuBarChart vmCpu={vmCpu} />}</div>
             </div>

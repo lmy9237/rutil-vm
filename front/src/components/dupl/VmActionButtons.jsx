@@ -94,8 +94,8 @@ const VmActionButtons = ({
             onClick={() => navigate("/computing/templates")}
           />
           <div ref={dropdownRef} className="dropdown-container">
-            <ActionButton label="관리"
-              iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown} 
+            <ActionButton iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown} 
+              label={Localization.kr.MANAGEMENT}
               onClick={toggleDropdown}
             />
             {activeDropdown && (

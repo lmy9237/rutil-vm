@@ -46,9 +46,9 @@ const Footer = ({
               <thead>
                 <tr>
                   <th>작업 이름 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>대상 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>상태 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>세부 정보 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>{Localization.kr.TARGET} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>{Localization.kr.STATUS} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  <th>{Localization.kr.DETAILS} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
                   <th>시작 {Localization.kr.TIME}<FontAwesomeIcon icon={faFilter} fixedWidth /></th>
                   <th>대기 {Localization.kr.TIME}<FontAwesomeIcon icon={faFilter} fixedWidth /></th>
                   <th>시작 {Localization.kr.TIME}<FontAwesomeIcon icon={faFilter} fixedWidth /></th>

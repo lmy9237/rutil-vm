@@ -7,6 +7,7 @@ import NetworkModals from "../modal/network/NetworkModals";
 import "./Dupl.css";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
+import Localization from "../../utils/Localization";
 
 /**
  * @name NetworkDupl
@@ -32,7 +33,8 @@ const NetworkDupl = ({
         {network?.name}
       </TableRowClick>
     ),
-    status: network?.status === "OPERATIONAL" ? "가동 중" : "비 가동 중",
+    status: Localization.kr.renderStatus(network?.status),
+    // status: network?.status === "OPERATIONAL" ? "가동 중" : "비 가동 중",
     vlan: network?.vlan === 0 ? "-" : network?.vlan,
     mtu: network?.mtu === 0 ? "기본값(1500)" : network?.mtu,
     datacenter: (
@@ -41,8 +43,8 @@ const NetworkDupl = ({
       </TableRowClick>
     ),
     role: [
-      network?.usage?.management ? "관리" : null,
-      network?.usage?.display ? "출력" : null,
+      network?.usage?.management ? Localization.kr.MANAGEMENT : null,
+      network?.usage?.display ? Localization.kr.PRINT : null,
       network?.usage?.migration ? "마이그레이션" : null,
       network?.usage?.gluster ? "글러스터" : null,
       network?.usage?.defaultRoute ? "기본라우팅" : null,

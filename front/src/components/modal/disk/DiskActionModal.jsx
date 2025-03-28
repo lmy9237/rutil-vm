@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import BaseModal from "../BaseModal";
 import "../domain/MDomain.css";
+import Localization from "../../../utils/Localization";
 
 const DiskActionModal = ({ isOpen, action, data = [], onClose }) => {
   // const { mutate: copyDisk } = useCopyDisk();
@@ -21,14 +22,13 @@ const DiskActionModal = ({ isOpen, action, data = [], onClose }) => {
     >
       <div className="section-table-outer p-0.5">
           <h1>디스크 할당:</h1>
-          
           <table>
             <thead>
               <tr>
-                <th>별칭</th>
+                <th>{Localization.kr.ALIAS}</th>
                 <th>가상 크기</th>
                 <th>소스</th>
-                <th>대상</th>
+                <th>{Localization.kr.TARGET}</th>
                 <th>디스크 프로파일</th>
               </tr>
             </thead>

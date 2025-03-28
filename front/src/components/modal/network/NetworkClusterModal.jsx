@@ -40,7 +40,7 @@ const NetworkClusterModal = ({
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={Localization.kr.NETWORK}
-      submitTitle={"관리"}
+      submitTitle={Localization.kr.MANAGEMENT}
       onSubmit={() => {}}
       contentStyle={{ width: "900px"}}
     >

@@ -599,7 +599,7 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
                   />
                 // ): importMode ? (
                 //   <>
-                //     <label className='label_font_name'>대상 검색</label>
+                //     <label className='label_font_name'>{Localization.kr.TARGET} {Localization.kr.SEARCH}</label>
                 //     {iscsiSearchResults?.length == 0 && (
                 //       <>
                 //     <FormGroup>

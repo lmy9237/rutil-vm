@@ -8,6 +8,7 @@ import SettingSessions from "./SettingSessions";
 import SettingCertificates from "./SettingCertificates";
 import { rvi24Gear } from "../../components/icons/RutilVmIcons";
 import "./Setting.css";
+import Localization from "../../utils/Localization";
 
 /**
  * @name SettingInfo
@@ -40,7 +41,7 @@ const SettingInfo = () => {
     setActiveTab(tab);
   };
   const pathData = [
-    "관리",
+    Localization.kr.MANAGEMENT,
     sections.find((section) => section.id === activeTab)?.label,
   ];
 
@@ -60,7 +61,8 @@ const SettingInfo = () => {
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24Gear()}
-        title="관리" additionalText="목록이름"
+        title={Localization.kr.MANAGEMENT}
+        additionalText="목록이름"
       />
       <div className="content-outer">
         <NavButton

@@ -104,7 +104,7 @@ const VmGeneral = ({ vmId }) => {
     }, {
       label: Localization.kr.DESCRIPTION, value: vm?.description
     }, {
-      label: "업타임", value: vm?.upTime
+      label: Localization.kr.UP_TIME, value: vm?.upTime
     }, {
       label: "IP 주소", value: vm?.ipv4
     }, {

@@ -26,7 +26,7 @@ private val log = LoggerFactory.getLogger(AggregateConsoleVo::class.java)
  * @deprecated 사용안할 예정
  **/
 class AggregateConsoleVo(
-	private val vm: IdentifiedVo = IdentifiedVo(),
+	val vm: IdentifiedVo = IdentifiedVo(),
 	private val graphicConsole: GraphicsConsoleVo = GraphicsConsoleVo(),
 	private val ticket: TicketVo = TicketVo()
 ): Serializable {
@@ -36,7 +36,6 @@ class AggregateConsoleVo(
 	val type: GraphicsType = graphicConsole.type
 	val token: String = ticket.value
 	val tokenExpiry: BigInteger = ticket.expiry
-	val vmId: String = vm.id
 	val consoleId: String = graphicConsole.id
 
 	override fun toString(): String =

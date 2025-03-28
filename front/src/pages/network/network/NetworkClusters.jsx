@@ -46,8 +46,8 @@ const NetworkClusters = ({ networkId }) => {
       <input type="checkbox" disabled />
     ),
     networkRole: [
-      cluster?.networkVo?.usage?.management ? "관리" : null,
-      cluster?.networkVo?.usage?.display ? "출력" : null,
+      cluster?.networkVo?.usage?.management ? Localization.kr.MANAGEMENT : null,
+      cluster?.networkVo?.usage?.display ? Localization.kr.PRINT : null,
       cluster?.networkVo?.usage?.migration ? "마이그레이션" : null,
       cluster?.networkVo?.usage?.gluster ? "글러스터" : null,
       cluster?.networkVo?.usage?.defaultRoute ? "기본라우팅" : null,

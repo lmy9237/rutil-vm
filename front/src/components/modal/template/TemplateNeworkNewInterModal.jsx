@@ -200,7 +200,7 @@ const TemplateNeworkNewInterModal = ({
           <span>선택된 유형: {selectedInterface}</span>
         </div>
         <div className="plug-radio-btn">
-          <span>링크 상태</span>
+          <span>링크 {Localization.kr.STATUS}</span>
           <div className="radio-outer">
             <div>
               <input
@@ -228,7 +228,7 @@ const TemplateNeworkNewInterModal = ({
         </div>
 
         <div className="plug-radio-btn">
-          <span>카드 상태</span>
+          <span>카드 {Localization.kr.STATUS}</span>
           <div className="radio-outer">
             <div>
               <input

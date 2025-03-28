@@ -103,7 +103,7 @@ const DomainIscsi = ({
           <>
             {/* {iscsiSearchResults?.length === 0 ? ( */}
               <div className="target-search-outer">
-                <label className="label-font-name">대상 검색</label>
+                <label className="label-font-name">{Localization.kr.TARGET} {Localization.kr.SEARCH}</label>
 
                 <div className='target-address-port f-btw'>
                   <div className='w-full mr-2'>

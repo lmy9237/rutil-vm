@@ -59,7 +59,7 @@ const VmCreatePlusModal = ({ isOpen, onRequestClose }) => {
                 <input type="text" />
               </div>
               <div className="img_input_box">
-                <span>별칭</span>
+                <span>{Localization.kr.ALIAS}</span>
                 <input type="text" />
               </div>
               <div className="img_input_box">
@@ -79,7 +79,7 @@ const VmCreatePlusModal = ({ isOpen, onRequestClose }) => {
                 </select>
               </div>
               <div className="img_select_box">
-                <label htmlFor="os">할당 정책</label>
+                <label htmlFor="os">{Localization.kr.SPARSE}</label>
                 <select id="os">
                   <option value="linux">Linux</option>
                 </select>
@@ -94,15 +94,15 @@ const VmCreatePlusModal = ({ isOpen, onRequestClose }) => {
             <div className="disk_new_img_right">
               <div>
                 <input type="checkbox" id="reset_after_deletion" checked />
-                <label htmlFor="reset_after_deletion">부팅 가능</label>
+                <label htmlFor="reset_after_deletion">{Localization.kr.IS_BOOTABLE}</label>
               </div>
               <div>
                 <input type="checkbox" className="shareable" />
-                <label htmlFor="shareable">공유 가능</label>
+                <label htmlFor="shareable">{Localization.kr.IS_SHARABLE}</label>
               </div>
               <div>
                 <input type="checkbox" id="incremental_backup" defaultChecked />
-                <label htmlFor="incremental_backup">읽기 전용</label>
+                <label htmlFor="incremental_backup">{Localization.kr.IS_READ_ONLY}</label>
               </div>
             </div>
           </div>
@@ -112,7 +112,7 @@ const VmCreatePlusModal = ({ isOpen, onRequestClose }) => {
             <div id="storage_lun_first">
               <div className="disk_new_img_left">
                 <div className="img_input_box">
-                  <span>별칭</span>
+                  <span>{Localization.kr.ALIAS}</span>
                   <input type="text" />
                 </div>
                 <div className="img_input_box">
@@ -141,7 +141,7 @@ const VmCreatePlusModal = ({ isOpen, onRequestClose }) => {
               <div className="disk_new_img_right">
                 <div>
                   <input type="checkbox" className="shareable" />
-                  <label htmlFor="shareable">공유 가능</label>
+                  <label htmlFor="shareable">{Localization.kr.IS_SHARABLE}</label>
                 </div>
               </div>
             </div>

@@ -8,7 +8,7 @@ import RequireAuth from "./components/RequireAuth";
 
 import Home from "./components/Home";
 import Login from "./pages/login/Login";
-import VncPage from "./pages/computing/vm/VncPage";
+import VmVnc from "./pages/computing/vm/VmVnc";
 import Error from "./pages/Error";
 import Dashboard from "./pages/dashboard/Dashboard";
 import RutilManager from "./pages/Rutil/RutilManager";
@@ -97,7 +97,7 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           {/* 공개경로  */}
           <Route path="login" element={<Login />} />
-          <Route path="vnc/:id" element={<VncPage />} />
+          <Route path="vnc/:id" element={<VmVnc />} />
 
           <Route element={<RequireAuth />}>
             {/* 사용자 인증 필요 */}

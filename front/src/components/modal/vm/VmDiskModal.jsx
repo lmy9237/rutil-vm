@@ -340,9 +340,8 @@ const VmDiskModal = ({
                 loading={isDomainsLoading}
                 options={domains}
               />
-              <LabelSelectOptions
+              <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
                 className="img-input-box"
-                label="할당 정책"
                 value={String(formState.sparse)}
                 // value={formState.sparse ? "true" : "false"}
                 onChange={(e) =>
@@ -372,17 +371,13 @@ const VmDiskModal = ({
 
             <div className="disk-new-img-right">
               <div className='img-checkbox-outer'>
-                <LabelCheckbox 
-                  label="삭제 후 초기화" 
-                  id="wipeAfterDelete" 
+                <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
                   checked={Boolean(formState.wipeAfterDelete)} 
                   onChange={handleInputChangeCheck("wipeAfterDelete")}
                 />
               </div>
               <div className='img-checkbox-outer'>
-                <LabelCheckbox 
-                  label="부팅 가능" 
-                  id="bootable" 
+                <LabelCheckbox id="bootable" label={Localization.kr.IS_BOOTABLE}
                   checked={Boolean(formState.bootable)} 
                   onChange={handleInputChangeCheck("bootable")}
                   disabled={hasBootableDisk} 
@@ -390,18 +385,14 @@ const VmDiskModal = ({
                 />
               </div>
               <div className='img-checkbox-outer'>
-                <LabelCheckbox 
-                  label="공유 가능" 
-                  id="sharable" 
+                <LabelCheckbox id="sharable" label={Localization.kr.IS_SHARABLE}
                   checked={Boolean(formState.sharable)} 
                   onChange={handleInputChangeCheck("sharable")} 
                   disabled={editMode} 
                 />
               </div>
               <div className='img-checkbox-outer'>
-                <LabelCheckbox 
-                  label="읽기 전용" 
-                  id="readOnly" 
+                <LabelCheckbox id="readOnly" label={Localization.kr.IS_READ_ONLY}
                   checked={Boolean(formState.readOnly)} 
                   onChange={handleInputChangeCheck("readOnly")} 
                   disabled={editMode}
@@ -433,7 +424,7 @@ const VmDiskModal = ({
             <div id="storage-lun-first">
               <div className="disk-new-img-left">
                 <div className="img-input-box">
-                  <span>별칭</span>
+                  <span>{Localization.kr.ALIAS}</span>
                   <input type="text" />
                 </div>
                 <div className="img-input-box">
@@ -462,7 +453,7 @@ const VmDiskModal = ({
               <div className="disk-new-img-right">
                 <div>
                   <input type="checkbox" className="shareable" />
-                  <label htmlFor="shareable">공유 가능</label>
+                  <label htmlFor="shareable">{Localization.kr.IS_SHARABLE}</label>
                 </div>
               </div>
             </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import BaseModal from "../BaseModal";
+import Localization from "../../../utils/Localization";
 
 const DomainMainTenanceModal = ({ isOpen, onClose }) => {
 
@@ -18,7 +19,7 @@ const DomainMainTenanceModal = ({ isOpen, onClose }) => {
             onClose={onClose}
             targetName="스토리지 도메인"
             shouldWarn={true}
-            submitTitle="관리" 
+            submitTitle={Localization.kr.MANAGEMENT}
             promptText={`다음의 스토리지 도메인을 유지관리 모드로 설정하시겠습니까?`}
             onSubmit={() => {}} // 무시
             contentStyle={{ width: "670px" }}

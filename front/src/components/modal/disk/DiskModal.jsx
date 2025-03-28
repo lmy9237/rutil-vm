@@ -27,7 +27,7 @@ const initialFormState = {
   sharable: false,
   backup: true,
   sparse: true, //할당정책: 씬
-  bootable: false, // vm 부팅가능
+  bootable: false,
   logicalName: "",
   readOnly: false, // vm 읽기전용
   cancelActive: false, // vm 취소 활성화
@@ -202,13 +202,11 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
                 onChange={handleInputChange("appendSize")}
               />
             )}
-            <LabelInput
-              label="별칭"
+            <LabelInput label={Localization.kr.ALIAS}
               value={formState.alias}
               onChange={handleInputChange("alias")}
             />
-            <LabelInput
-              label="설명"
+            <LabelInput label={Localization.kr.ALIAS}
               value={formState.description}
               onChange={handleInputChange("description")}
             />
@@ -234,8 +232,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
                 if (selected) setDomainVo({ id: selected.id, name: selected.name });
               }}
             />
-            <LabelSelectOptions
-              label="할당 정책"
+            <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
               value={String(formState.sparse)}
               onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true"}))}
               disabled={editMode}
@@ -254,16 +251,14 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
           </div>
           <div className="disk-new-img-right">
             <div className="img-checkbox-outer">
-              <LabelCheckbox
-                label="삭제 후 초기화"
+              <LabelCheckbox label={Localization.kr.WIPE_AFTER_DELETE}
                 id="wipeAfterDelete"
                 checked={formState.wipeAfterDelete}
                 onChange={handleInputChangeCheck("wipeAfterDelete")}
               />
             </div>
             {/* <div className="img-checkbox-outer">
-              <LabelCheckbox
-                label="공유 가능"
+              <LabelCheckbox label={Localization.kr.IS_SHARABLE}
                 id="sharable"
                 checked={formState.sharable}
                 onChange={handleInputChangeCheck("sharable")}
@@ -317,7 +312,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
             <div className="disk-new-img-right">
               <div>
                 <input type="checkbox" className="shareable" />
-                <label htmlFor="shareable">공유 가능</label>
+                <label htmlFor="shareable">{Localization.kr.IS_SHARABLE}</label>
               </div>
             </div>
           </div>

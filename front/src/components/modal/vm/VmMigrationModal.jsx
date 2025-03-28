@@ -6,6 +6,7 @@ import { useHostsForMigration, useMigration } from "../../../api/RQHook";
 import "./MVm.css";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
+import Localization from "../../../utils/Localization";
 
 const VmMigrationModal = ({
   isOpen,
@@ -62,7 +63,7 @@ const VmMigrationModal = ({
           <LabelSelectOptions
             className="migration-dropdown f-btw"
             id="host"
-            label="대상 호스트"
+            label={`${Localization.kr.TARGET} ${Localization.kr.HOST}`}
             value={selectedHost}
             onChange={(e) => setSelectedHost(e.target.value)}
             disabled={!ableHost || ableHost.length === 0}

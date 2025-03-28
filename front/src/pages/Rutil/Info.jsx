@@ -14,10 +14,10 @@ const Info = () => {
   const tableRows = [
     { label: Localization.kr.DATA_CENTER, value: dashboard?.datacenters ?? 0 },
     { label: Localization.kr.CLUSTER, value: dashboard?.clusters ?? 0 },
-    { label: "호스트", value: dashboard?.hosts ?? 0 },
-    { label: "가상머신", value: `${dashboard?.vmsUp ?? 0} / ${dashboard?.vms ?? 0}` },
+    { label: Localization.kr.HOST, value: dashboard?.hosts ?? 0 },
+    { label: Localization.kr.VM, value: `${dashboard?.vmsUp ?? 0} / ${dashboard?.vms ?? 0}` },
     { label: "스토리지 도메인", value: dashboard?.storageDomains ?? 0 },
-    { label: `부팅${Localization.kr.TIME}(업타임)`, value: dashboard?.bootTime ?? "" },
+    { label: `부팅${Localization.kr.TIME}(${Localization.kr.UP_TIME})`, value: dashboard?.bootTime ?? "" },
   ];
 
   console.log("...");
