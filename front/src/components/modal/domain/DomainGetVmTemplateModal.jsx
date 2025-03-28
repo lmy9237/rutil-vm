@@ -120,7 +120,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "880px" }} 
     >
-      <div className="get-modal-content mb-1">
+      <div className="mb-1">
         <div className="section-table-outer p-0.5">
           <table>
             <thead>
@@ -204,7 +204,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
         </div>
       </div>
 
-      <div className="get-modal-content">
+      <div className="filter-table">
         {/* 필터 버튼 */}
         <FilterButton
           options={filterOptions}

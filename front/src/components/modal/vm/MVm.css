@@ -173,16 +173,11 @@
 }
 
 /* 삭제모달창 */
-.vm-delete-popup {
-  max-height: 90%;
-  width: 38%;
-}
-.vm-delete-popup {
-  display: flex;
-  flex-direction: column;
-}
-.disk-delete-checkbox {
-  display: flex;
+.disk-delete-label{
+  font-weight: 700;
+  font-size: var(--fs-17);
+ width: 30%;
+  padding: 10px;
 }
 /*ova내보내기*/
 .ova-new-box {

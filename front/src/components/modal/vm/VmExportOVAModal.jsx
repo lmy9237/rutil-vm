@@ -3,6 +3,8 @@ import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import { useAllHosts } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import LabelSelectOptions from "../../label/LabelSelectOptions";
+import LabelInput from "../../label/LabelInput";
 
 const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
   const [host, setHost] = useState("#");
@@ -50,42 +52,30 @@ const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
       contentStyle={{ width: "600px"}} 
     >
       {/* <div className="vm-ova-popup modal"> */}
-        <div className="ova-new-box">
-          <label htmlFor="host_select">호스트</label>
-          <select
-            id="host_select"
-            value={host}
-            onChange={(e) => setHost(e.target.value)}
-          >
-            <option value="#">호스트를 선택하세요</option>
-            {hosts?.map((hostItem, index) => (
-              <option key={index} value={hostItem.name}>
-                {hostItem.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="ova-new-box">
-          <label htmlFor="directory">디렉토리</label>
-          <input
-            type="text"
-            id="directory"
-            value={directory}
-            onChange={(e) => setDirectory(e.target.value)}
-            placeholder="디렉토리를 입력하세요"
-          />
-        </div>
-        <div className="ova-new-box">
-          <label htmlFor="name">이름</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="가상 머신 이름을 입력하세요"
-            rows={3} // 이름이 길 경우를 대비해 textarea로 변경
-          />
-        </div>
+      <LabelSelectOptions
+        id="host_select"
+        label="호스트"
+        value={host}
+        onChange={(e) => setHost(e.target.value)}
+        options={[
+          { value: "#", label: "호스트를 선택하세요" },
+          ...hosts?.map((h) => ({ value: h.name, label: h.name })) || [],
+        ]}
+      />
+
+      <LabelInput
+        id="directory"
+        label="디렉토리"
+        value={directory}
+        onChange={(e) => setDirectory(e.target.value)}
+      />
+
+      <LabelInput
+        id="name"
+        label="이름"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
 
     </BaseModal>
   );

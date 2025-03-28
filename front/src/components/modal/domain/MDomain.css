@@ -49,9 +49,27 @@
   justify-content:space-between;
 }
 .get-template-info>div{
-  width:44%;
+  width: 44%;
+  background: var(--color-white);
+  height: 100%;
 }
 .get-template-info>div>div{
   display:flex;
   justify-content:space-between;
+}
+.filter-table{
+  border: var(--border-btn);
+  padding: 12px;
+}
+.filter-table .info-table-outer{
+  padding: 0;
+}
+.filter-table .table{
+  width: 100%;
+}
+.filter-table .table th{
+  width: 42%;
+}
+.filter-table .table th,.table td{
+  padding: 7px;
 }

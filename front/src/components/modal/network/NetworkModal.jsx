@@ -15,6 +15,7 @@ import {
 } from "../../../api/RQHook";
 import "./MNetwork.css";
 import Localization from "../../../utils/Localization";
+import TablesOuter from "../../table/TablesOuter";
 
 const FormGroup = ({ label, children }) => (
   <div className="network-form-group f-btw">
@@ -306,138 +307,121 @@ const NetworkModal = ({
         {/* <DynamicInputList maxCount={3}  inputType="text"  disabled={!dnsEnabled} /> */}
 
         {!editMode && (
-          <div className="custom-table">
+          <div className="network-new-cluster-form">
             <hr />
             <span>클러스터에서 네트워크를 연결/분리</span>
-            <div>
-              <table className="network-new-cluster-table">
-                <thead>
-                  <tr>
-                    <th>이름</th>
-                    <th>
-                      <div className="flex">
-                        <input
-                          type="checkbox"
-                          id="connect_all"
-                          checked={clusterVoList.every(
-                            (cluster) => cluster.isConnected
-                          )} // 모든 클러스터 연결 상태 확인
-                          onChange={(e) => {
-                            const isChecked = e.target.checked;
-                            setClusterVoList((prevState) =>
-                              prevState.map((cluster) => ({
-                                ...cluster,
-                                isConnected: isChecked,
-                                isRequired: isChecked
-                                  ? cluster.isRequired
-                                  : false, // 연결 해제 시 필수도 해제
-                              }))
-                            );
-                          }}
-                        />
-                        <label htmlFor="connect_all"> 모두 연결</label>
-                      </div>
-                    </th>
-                    <th>
-                      <div className="flex">
-                        <input
-                          type="checkbox"
-                          id="require_all"
-                          checked={
-                            clusterVoList.every(
-                              (cluster) => cluster.isRequired
-                            ) &&
-                            clusterVoList.every(
-                              (cluster) => cluster.isConnected
-                            ) // 연결 상태가 모두 체크된 경우에만 가능
-                          }
-                          disabled={
-                            !clusterVoList.every(
-                              (cluster) => cluster.isConnected
-                            )
-                          } // 연결 상태가 아닌 경우 비활성화
-                          onChange={(e) => {
-                            const isChecked = e.target.checked;
-                            setClusterVoList((prevState) =>
-                              prevState.map((cluster) => ({
-                                ...cluster,
-                                isRequired: isChecked, // "모두 필요" 상태 설정
-                              }))
-                            );
-                          }}
-                        />
-                        <label htmlFor="require_all"> 모두 필요</label>
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {clusterVoList.map((cluster, index) => (
-                    <tr key={cluster.id}>
-                      <td>
-                        {cluster.name} / {cluster.id}{" "}
-                      </td>
-                      <td>
-                        <div className="flex">
-                          <input
-                            type="checkbox"
-                            id={`connect_${cluster.id}`}
-                            checked={cluster.isConnected} // 연결 상태
-                            onChange={(e) => {
-                              const isChecked = e.target.checked;
-                              setClusterVoList((prevState) =>
-                                prevState.map((c, i) =>
-                                  i === index
-                                    ? {
-                                        ...c,
-                                        isConnected: isChecked,
-                                        isRequired: isChecked
-                                          ? c.isRequired
-                                          : false,
-                                      } // 연결 해제 시 필수 상태도 해제
-                                    : c
-                                )
-                              );
-                            }}
-                          />
-                          <label htmlFor={`connect_${cluster.id}`}>
-                            {" "}
-                            연결
-                          </label>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="flex">
-                          <input
-                            type="checkbox"
-                            id={`require_${cluster.id}`}
-                            checked={cluster.isRequired} // 필수 상태
-                            disabled={!cluster.isConnected} // 연결 상태가 체크되지 않으면 비활성화
-                            onChange={(e) => {
-                              const isChecked = e.target.checked;
-                              setClusterVoList((prevState) =>
-                                prevState.map((c, i) =>
-                                  i === index
-                                    ? { ...c, isRequired: isChecked }
-                                    : c
-                                )
-                              );
-                            }}
-                          />
-                          <label htmlFor={`require_${cluster.id}`}>
-                            {" "}
-                            필수
-                          </label>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <TablesOuter
+              isLoading={false}
+              isError={false}
+              isSuccess={true}
+              columns={[
+                {
+                  header: "이름",
+                  accessor: "name",
+                },
+                {
+                  header: (
+                    <div className="flex">
+                      <input
+                        type="checkbox"
+                        id="connect_all"
+                        checked={clusterVoList.every((cluster) => cluster.isConnected)}
+                        onChange={(e) => {
+                          const isChecked = e.target.checked;
+                          setClusterVoList((prevState) =>
+                            prevState.map((cluster) => ({
+                              ...cluster,
+                              isConnected: isChecked,
+                              isRequired: isChecked ? cluster.isRequired : false,
+                            }))
+                          );
+                        }}
+                      />
+                      <label htmlFor="connect_all"> 모두 연결</label>
+                    </div>
+                  ),
+                  accessor: "connect",
+                  width: "150px",
+                },
+                {
+                  header: (
+                    <div className="flex">
+                      <input
+                        type="checkbox"
+                        id="require_all"
+                        checked={
+                          clusterVoList.every((c) => c.isRequired) &&
+                          clusterVoList.every((c) => c.isConnected)
+                        }
+                        disabled={!clusterVoList.every((c) => c.isConnected)}
+                        onChange={(e) => {
+                          const isChecked = e.target.checked;
+                          setClusterVoList((prevState) =>
+                            prevState.map((cluster) => ({
+                              ...cluster,
+                              isRequired: isChecked,
+                            }))
+                          );
+                        }}
+                      />
+                      <label htmlFor="require_all"> 모두 필요</label>
+                    </div>
+                  ),
+                  accessor: "require",
+                  width: "150px",
+                },
+              ]}
+              data={clusterVoList.map((cluster, index) => ({
+                id: cluster.id,
+                name: `${cluster.name} / ${cluster.id}`,
+                connect: (
+                  <div className="flex">
+                    <input
+                      type="checkbox"
+                      id={`connect_${cluster.id}`}
+                      checked={cluster.isConnected}
+                      onChange={(e) => {
+                        const isChecked = e.target.checked;
+                        setClusterVoList((prevState) =>
+                          prevState.map((c, i) =>
+                            i === index
+                              ? {
+                                  ...c,
+                                  isConnected: isChecked,
+                                  isRequired: isChecked ? c.isRequired : false,
+                                }
+                              : c
+                          )
+                        );
+                      }}
+                    />
+                    <label htmlFor={`connect_${cluster.id}`}> 연결</label>
+                  </div>
+                ),
+                require: (
+                  <div className="flex">
+                    <input
+                      type="checkbox"
+                      id={`require_${cluster.id}`}
+                      checked={cluster.isRequired}
+                      disabled={!cluster.isConnected}
+                      onChange={(e) => {
+                        const isChecked = e.target.checked;
+                        setClusterVoList((prevState) =>
+                          prevState.map((c, i) =>
+                            i === index ? { ...c, isRequired: isChecked } : c
+                          )
+                        );
+                      }}
+                    />
+                    <label htmlFor={`require_${cluster.id}`}> 필수</label>
+                  </div>
+                ),
+              }))}
+            />
           </div>
         )}
+
       </div>
     </BaseModal>
   );

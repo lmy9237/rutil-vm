@@ -7,6 +7,7 @@ import BaseModal from "../BaseModal";
 import { useDeleteVm } from "../../../api/RQHook";
 import ApiManager from "../../../api/ApiManager";
 import "./MVm.css";
+import LabelCheckbox from "../../label/LabelCheckbox";
 
 const VmDeleteModal = ({ isOpen, onClose, data }) => {
   const [ids, setIds] = useState([]);
@@ -89,35 +90,28 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
       isOpen={isOpen}
       onClose={onClose}
       targetName={"가상머신"}
+      shouldWarn={true}
+      promptText={`${JSON.stringify(names.join(", "), null, 2)} 를(을) 삭제하시겠습니까?`}
       submitTitle={"삭제"}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px", height: "260px" }} 
     >
-      <div className="popup-content-outer">
-        <div className="disk-delete-box">
-          <div>
-            <FontAwesomeIcon
-              style={{ marginRight: "0.3rem" }}
-              icon={faExclamationTriangle}
-            />
-            <span>선택한 가상머신을 삭제하시겠습니까?</span>
-          </div>
-
+    
+    
           {ids.map((vmId, index) => (
-            <div key={vmId} className="disk-delete-checkbox">
-              <strong className="mr-2">{names[index]}</strong>
-              <input
-                type="checkbox"
+            <div key={vmId} className="disk-delete-checkbox f-btw">
+              <div className="disk-delete-label">{names[index]}</div>
+              <LabelCheckbox
                 id={`diskDelete-${vmId}`}
                 checked={detachOnlyList[vmId] || false}
                 onChange={() => handleCheckboxChange(vmId)}
-                disabled={!diskQueries[index]?.data?.length} // 디스크가 존재하지 않으면 disabled
+                disabled={!diskQueries[index]?.data?.length}
+                label="디스크 삭제"
               />
-              <label htmlFor={`diskDelete-${vmId}`}>디스크 삭제</label>
             </div>
           ))}
-        </div>
-      </div>
+      
+
     </BaseModal>
   );
 };

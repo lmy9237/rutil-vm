@@ -380,18 +380,15 @@ textarea {
   z-index: 1000;
 }
 /* 삭제모달 */
-.disk-delete-box {
-  display:flex;justify-content:center;align-items: center;
+/* .disk-delete-box {
+  justify-content:center;align-items: center;
   min-height: 56px;
   font-weight: 500;
 }
 .disk-delete-box > div {
   display: flex;
-}
-.error-icon{
-    margin-right: 5px;
- 
-}
+} */
+
 .network_new_nav div.active {
   background: #e4e4e4;
   color: #449bff;
