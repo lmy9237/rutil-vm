@@ -3,7 +3,8 @@ import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LabelCheckbox from "../../../label/LabelCheckbox";
 
-const VmInit = ({ editMode, formCloudState, setFormCloudState }) => {
+const VmInit = ({ formCloudState, setFormCloudState }) => {
+
   // 새로만들기->초기실행 화살표 누르면 밑에열리기
   const [isDomainHiddenBoxVisible, setDomainHiddenBoxVisible] = useState(false);
   const toggleDomainHiddenBox = () => {
@@ -14,9 +15,7 @@ const VmInit = ({ editMode, formCloudState, setFormCloudState }) => {
     <>
       <div>
         <div className="flex mb-1.5">
-        <LabelCheckbox
-          id="enableBootMenu"
-          label="Cloud-lnit"
+        <LabelCheckbox id="enableBootMenu" label="Cloud-lnit"
           checked={formCloudState.cloudInit} // cloudInit 상태를 checked 속성에 바인딩
           onChange={(e) => {
             const isChecked = e.target.checked;
@@ -45,12 +44,7 @@ const VmInit = ({ editMode, formCloudState, setFormCloudState }) => {
               <textarea name="content" cols="40" rows="8"
                 placeholder="여기에 스크립트를 입력하세요"
                 value={formCloudState.script} // script 상태와 바인딩
-                onChange={(e) =>
-                  setFormCloudState((prev) => ({
-                    ...prev,
-                    script: e.target.value,
-                  }))
-                }
+                onChange={(e) => setFormCloudState((prev) => ({ ...prev, script: e.target.value, }))}
               />
             </div>
           </div>

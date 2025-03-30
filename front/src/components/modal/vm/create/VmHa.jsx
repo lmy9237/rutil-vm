@@ -4,12 +4,13 @@ import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import LabelCheckbox from "../../../label/LabelCheckbox";
 import Localization from "../../../../utils/Localization";
 
+const priorityList = [
+  { value: 1, label: "낮음" },
+  { value: 50, label: "중간" },
+  { value: 100, label: "높음" },
+];
+
 const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
-  const priorityList = [
-    { value: 1, label: "낮음" },
-    { value: 50, label: "중간" },
-    { value: 100, label: "높음" },
-  ];
 
   useEffect(() => {
     // 편집 모드가 아니고, domains가 있을 경우 기본값 설정
@@ -24,8 +25,7 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
   return (
     <>
       <div className="ha-mode-second-content">
-        <LabelCheckbox id="ha_mode_box"
-          label={Localization.kr.HA}
+        <LabelCheckbox id="ha_mode_box" label={Localization.kr.HA}
           checked={formHaState.ha}
           onChange={(e) => {
             const isChecked = e.target.checked;
@@ -36,42 +36,17 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
             }));
           }}
         />
-{/*
-        <div className="flex">
-          <input
-            className="check_input"
-            type="checkbox"
-            id="ha_mode_box"
-            checked={formHaState.ha}
-            onChange={(e) => {
-              const isChecked = e.target.checked;
-              setFormHaState((prev) => ({
-                ...prev,
-                ha: isChecked,
-                storageDomainVo: isChecked && domains.length > 0 ? { id: domains[0].id, name: domains[0].name } : { id: "", name: "" },
-              }));
-            }}
-          />
-          <label className="check_label" htmlFor="ha_mode_box">
-            {Localization.kr.HA}
-          </label>
-        </div>
-*/}
-
-        <LabelSelectOptionsID
-          label={`${Localization.kr.VM} 임대 대상 스토리지 도메인`}
+        <LabelSelectOptionsID label={`${Localization.kr.VM} 임대 대상 ${Localization.kr.DOMAIN}`}
           value={formHaState.storageDomainVo.id}
           disabled={!formHaState.ha}  // ha가 체크되어야만 활성화됨
           onChange={(e) => {
             const selectedDomain = domains.find((domain) => domain.id === e.target.value);
             setFormHaState((prev) => ({
-              ...prev,
-              storageDomainVo: { id: selectedDomain.id, name: selectedDomain.name },
+              ...prev, storageDomainVo: { id: selectedDomain.id, name: selectedDomain.name },
             }));
           }}
           options={domains}
         />
-        <div><span>{formHaState.storageDomainVo.id}</span></div>
         {/* <div>
         <div>
           <span>재개 동작</span>
@@ -86,13 +61,12 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
         </select>
       </div> */}
 
-        <span className="py-2 font-bold">실행/마이그레이션 큐에서 우선순위 : </span> 
+        <div className="py-2 font-bold">실행/마이그레이션 큐에서 우선순위 </div> 
         <div className="ha-mode-article">
-          <LabelSelectOptions
-            label="우선 순위"
+          <LabelSelectOptions label="우선 순위"
             value={formHaState.priority}
-            onChange={(e) =>setFormHaState((prev) => ({ ...prev, priority: e.target.value }))}
             options={priorityList}
+            onChange={(e) =>setFormHaState((prev) => ({ ...prev, priority: e.target.value }))}
           />
         </div>
       </div>

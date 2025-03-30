@@ -134,32 +134,42 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   const { data: vm } = useFindEditVmById(vmId);
 
   // 클러스터 목록 가져오기
-  const { data: clusters = [], isLoading: isClustersLoading } =
-    useAllUpClusters((e) => ({ ...e }));
+  const { 
+    data: clusters = [], 
+    isLoading: isClustersLoading 
+  } = useAllUpClusters((e) => ({ ...e }));
 
   // 템플릿 가져오기
-  const { data: templates = [], isLoading: isTemplatesLoading } =
-  useFindTemplatesFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
+  const { 
+    data: templates = [], 
+    isLoading: isTemplatesLoading 
+  } = useFindTemplatesFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
 
   // 클러스터가 가지고 있는 nic 목록 가져오기
-  const { data: nics = [], isLoading: isNicsLoading } =
-    useAllvnicFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
+  const { 
+    data: nics = [], 
+    isLoading: isNicsLoading 
+  } = useAllvnicFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
 
   // 편집: 가상머신이 가지고 있는 디스크 목록 가져오기
   // const { data: disks = [], isLoading: isDisksLoading } = 
   //   useDisksFromVM(vmId, (e) => ({ ...e }));
-
-  const { data: hosts = [], isLoading: isHostsLoading } = 
-    useHostFromCluster(clusterVo.id, (e) => ({ ...e }));
-
-  const { data: osList = [], isLoading: isOssLoading } = 
-    useOsSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
-
-  const { data: domains = [], isLoading: isDomainsLoading } =
-    useAllActiveDomainFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
-
-  const { data: isos = [], isLoading: isIsoLoading } = 
-    useCDFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
+  const { 
+    data: hosts = [], 
+    isLoading: isHostsLoading 
+  } = useHostFromCluster(clusterVo.id, (e) => ({ ...e }));
+  const { 
+    data: osList = [], 
+    isLoading: isOssLoading 
+  } = useOsSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
+  const { 
+    data: domains = [], 
+    isLoading: isDomainsLoading 
+  } = useAllActiveDomainFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
+  const { 
+    data: isos = [], 
+    isLoading: isIsoLoading 
+  } = useCDFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
 
     
   const handleInputChange = (field) => (e) => {
@@ -228,32 +238,26 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       setClusterVo({ id: vm?.clusterVo?.id, name: vm?.clusterVo?.name })
       setTemplateVo({ id: vm?.templateVo?.id, name: vm?.templateVo?.name })
       
-      const initialNicState = vm?.nicVos?.map((nic) => ({
+      setNicListState(vm?.nicVos?.map((nic) => ({
         id: nic?.id || "",
         name: nic?.name || "",
-        vnicProfileVo: {
-          id: nic?.vnicProfileVo?.id || "",
-          name: nic?.vnicProfileVo?.name || "",
-        },
-        networkVo: {
-          id: nic?.networkVo?.id || "",
-          name: nic?.networkVo?.name || "",
-        },
-      })) || [];
-      setNicListState(initialNicState);
+        vnicProfileVo: { id: nic?.vnicProfileVo?.id, name: nic?.vnicProfileVo?.name },
+        networkVo: { id: nic?.networkVo?.id, name: nic?.networkVo?.name, },
+      })));
 
-      const initialDiskState = vm?.diskAttachmentVos?.map((d) => ({
+      setDiskListState(Array.isArray(vm?.diskAttachmentVos)? vm.diskAttachmentVos.map((d) => ({
         id: d?.id,
         alias: d?.diskImageVo?.alias,
-        virtualSize: d?.diskImageVo?.virtualSize? d?.diskImageVo?.virtualSize / (1024 * 1024 * 1024): 0,
+        virtualSize: d?.diskImageVo?.virtualSize
+          ? d.diskImageVo.virtualSize / (1024 * 1024 * 1024)
+          : 0,
         interface_: d?.interface_ || "VIRTIO_SCSI",
         readOnly: d?.readOnly || false,
         bootable: d?.bootable || false,
         storageDomainVo: { id: d?.diskImageVo?.storageDomainVo?.id || "" },
         diskProfileVo: { id: d?.diskImageVo?.diskProfileVo?.id || "" },
         isExisting: true,
-      })) || [];
-      setDiskListState(initialDiskState);
+      })): []);
     } 
   }, [isOpen, editMode, vm]);
 
@@ -286,10 +290,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     if (!editMode && clusters && clusters.length > 0) {
       const firstCluster = clusters[0];
       setClusterVo({id: firstCluster.id, name: firstCluster.name});
-      setDataCenterVo({
-        id: firstCluster.dataCenterVo?.id || "", 
-        name: firstCluster.dataCenterVo?.name || ""
-      });
+      setDataCenterVo({id: firstCluster.dataCenterVo?.id || "", name: firstCluster.dataCenterVo?.name || ""});
       setArchitecture(firstCluster.cpuArc || "");
     }
   }, [isOpen, clusters, editMode]);
@@ -359,13 +360,9 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   const validateForm = () => {
     checkName(formInfoState.name);// 이름 검증
 
-    if (!clusterVo.id) 
-      return `${Localization.kr.CLUSTER}를 선택해주세요.`;
-//  if (formSystemState.memorySize > "9223372036854775807") 
-//    return `${Localization.kr.MEMORY} 크기가 너무 큽니다.`;
+    if (!clusterVo.id) return `${Localization.kr.CLUSTER}를 선택해주세요.`;
     return null;
   };
-
 
   const handleFormSubmit = () => {
     // 디스크  연결은 id값 보내기 생성은 객체로 보내기
@@ -381,18 +378,19 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     console.log("가상머신 데이터 확인:", dataToSubmit);
 
     editMode
-      ? editVM({ vmId: vmId, vmdata: dataToSubmit },{ onSuccess, onError })
+      ? editVM(
+        { vmId: vmId, vmdata: dataToSubmit },
+        { onSuccess, onError }
+      )
       : addVM(dataToSubmit, { onSuccess, onError });
   };
 
   return (
-    <BaseModal 
-      isOpen={isOpen} 
-      onClose={onClose} 
-      targetName={"가상머신"} 
+    <BaseModal targetName={Localization.kr.VM} 
+      isOpen={isOpen} onClose={onClose} 
       submitTitle={vLabel}  
-      contentStyle={{ width: "850px", height: "730px" }}  
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "850px", height: "730px" }}  
     >
       <div className="popup-content-outer flex">
       <ModalNavButton
@@ -403,74 +401,43 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
 
       <div className="vm-edit-select-tab">
         <div className="edit-first-content pb-0.5">
-          <LabelSelectOptionsID
-            label={Localization.kr.CLUSTER}
+          <LabelSelectOptionsID label={Localization.kr.CLUSTER}
             value={clusterVo.id}
-            onChange={(e) => {
-              const selectedCluster = clusters.find((cluster) => cluster.id === e.target.value);
-              setClusterVo({
-                id: e.target.value,
-                name: selectedCluster ? selectedCluster.name : "",
-              });
-            }}
-            disabled={editMode} // 편집 모드일 경우 비활성화
+            disabled={editMode}
             loading={isClustersLoading}
             options={clusters}
-            etcLabel={dataCenterVo.name}
-          />
-          <div><span>{Localization.kr.DATA_CENTER}: {dataCenterVo.name}</span></div>
-          <LabelSelectOptionsID
-            label="템플릿"
-            value={templateVo.id}
             onChange={(e) => {
-              const selectedTemplate = templates.find((template) => template.id === e.target.value);
-              setClusterVo({
-                id: e.target.value,
-                name: selectedTemplate ? selectedTemplate.name : "",
-              });
+              const selected = clusters.find(c => c.id === e.target.value);
+              if (selected) setClusterVo({ id: selected.id, name: selected.name });
             }}
+            etcLabel={`[${Localization.kr.DATA_CENTER}: ${dataCenterVo.name}]`}
+          />
+          <LabelSelectOptionsID label="템플릿"
+            value={templateVo.id}
             disabled={editMode} // 편집 모드일 경우 비활성화
             loading={isTemplatesLoading}
             options={templates}
+            onChange={(e) => {
+              const selected = templates.find(t => t.id === e.target.value);
+              if (selected) setTemplateVo({ id: selected.id, name: selected.name });
+            }}
           />
-          {/*
-          <LabelSelectOptionsID
-            label="운영 시스템"
-            id="os_system"
-            value={formInfoState.osSystem}
-            onChange={ handleInputChange("osSystem") }
-            options={osList.map((opt) => ({
-              id: opt.name,
-              name: opt.description,
-            }))}
-          />
-          */}
           {/* TODO: options에 대한 별도 소형 컴포넌트 생성 필요 */}
-          <div className='input-select'>
-            <label>운영 시스템</label>
-            <select
-              value={formInfoState.osSystem}
-              onChange={ handleInputChange("osSystem") }
-            >
-              {osList.map((opt) => (
-                <option key={opt.name} value={opt.name}>
-                  {opt.description}
-                </option>
-              ))}
-            </select>
-          </div>
-          <LabelSelectOptions
-            label="칩셋/펌웨어 유형"
-            value={formInfoState.osType}
-            onChange={ handleInputChange("osType") }
-            options={chipsetOptionList}
-            disabled={architecture === "PPC64" || architecture === "S390X"}
+          <LabelSelectOptionsID id="os_system" label="운영 시스템"            
+            value={formInfoState.osSystem}
+            options={osList.map((opt) => ({id: opt.name, name: opt.description}))}
+            onChange={ handleInputChange("osSystem") }
           />
-          <LabelSelectOptions
-            label="최적화 옵션"
+          <LabelSelectOptions label="칩셋/펌웨어 유형"
+            value={formInfoState.osType}
+            disabled={architecture === "PPC64" || architecture === "S390X"}
+            options={chipsetOptionList}
+            onChange={ handleInputChange("osType") }
+          />
+          <LabelSelectOptions label="최적화 옵션"
             value={formInfoState.optimizeOption}
-            onChange={ handleInputChange("optimizeOption") }
             options={optimizeOptionList}
+            onChange={ handleInputChange("optimizeOption") }
           />
         </div>
 
@@ -489,9 +456,9 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
               setDiskListState={setDiskListState}
             />
             <VmNic
+              nics={nics}
               nicsState={nicListState}
               setNicsState={setNicListState}
-              nics={nics}
             />
           </>
         )}
@@ -503,14 +470,12 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
         )}
         {selectedModalTab === "beginning" && (
           <VmInit
-            // editMode={editMode}
             formCloudState={formCloudState}
             setFormCloudState={setFormCloudState}
           />
         )}
         {selectedModalTab === "host" && (
           <VmHost
-            // editMode={editMode}
             hosts={hosts}
             formHostState={formHostState}
             setFormHostState={setFormHostState}
@@ -518,7 +483,6 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
         )}
         {selectedModalTab === "ha_mode" && (
           <VmHa
-            // editMode={editMode}
             domains={domains}
             formHaState={formHaState}
             setFormHaState={setFormHaState}
@@ -526,8 +490,8 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
         )}
         {selectedModalTab === "boot_outer" && (
           <VmBoot
-            // editMode={editMode}
             isos={isos}
+            isIsoLoading={isIsoLoading}
             formBootState={formBootState}
             setFormBootState={setFormBootState}
           />

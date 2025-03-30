@@ -72,34 +72,28 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
   const validateForm = () => {
     checkName(formState.name);// 이름 검증
 
-    if (checkKoreanName(formState.description))
-      return "설명은 영어만 입력가능합니다.";
+    if (checkKoreanName(formState.description)) return "설명은 영어만 입력가능합니다.";
     return null;
   };
 
   // 제출
   const handleFormSubmit = () => {
-    console.log("DataCenterModal > handleFormSubmit ... ")
     const error = validateForm();
-    if (error) {
-      console.error(error);
-      return toast.error(error);
-    }
+    if (error) return toast.error(error);
 
     const dataToSubmit = { ...formState };
+
     const onSuccess = () => {
-      console.log("DataCenterModal > handleFormSubmit > onSuccess ... ")
       onClose();
       toast.success(`데이터센터 ${dcLabel} 완료`);
     };
-    const onError = (err) =>
-      toast.error(`Error ${dcLabel} data center: ${err}`);
+    const onError = (err) =>toast.error(`Error ${dcLabel} data center: ${err}`);
 
     editMode
       ? editDataCenter(
-          { dataCenterId: formState.id, dataCenterData: dataToSubmit },
-          { onSuccess, onError }
-        )
+        { dataCenterId: formState.id, dataCenterData: dataToSubmit },
+        { onSuccess, onError }
+      )
       : addDataCenter(dataToSubmit, { onSuccess, onError });
   };
 
@@ -111,9 +105,9 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
       contentStyle={{ width: "473px" }} 
     >
       <LabelInput id="name" label={Localization.kr.NAME}
+        autoFocus
         value={formState.name}
         onChange={handleInputChange("name")}
-        autoFocus
       />
       <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}

@@ -100,12 +100,9 @@ const VnicProfileModal = ({
   const validateForm = () => {
     checkName(formState.name);// 이름 검증
 
-    if (checkKoreanName(formState.description)) 
-      return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
-    if (!dataCenterVo.id) 
-      return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    if (!networkVo.id)
-      return `${Localization.kr.NETWORK}를 선택해주세요.`;
+    if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
+    if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
+    if (!networkVo.id) return `${Localization.kr.NETWORK}를 선택해주세요.`;
     return null;
   };
 
@@ -115,8 +112,7 @@ const VnicProfileModal = ({
 
     const dataToSubmit = {
       ...formState,
-      formState,portMirroring:
-        formState.passThrough === "ENABLED" ? false : formState.portMirroring,
+      formState,portMirroring: formState.passThrough === "ENABLED" ? false : formState.portMirroring,
       dataCenterVo,
       networkVo,
       networkFilterVo,
@@ -133,14 +129,16 @@ const VnicProfileModal = ({
     console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
 
     editMode
-      ? editVnicProfile({ vnicId: formState.id, vnicData: dataToSubmit },{ onSuccess, onError })
+      ? editVnicProfile(
+        { vnicId: formState.id, vnicData: dataToSubmit },
+        { onSuccess, onError }
+      )
       : addVnicProfile(dataToSubmit, { onSuccess, onError });
   };
 
   return (
-    <BaseModal 
-      isOpen={isOpen} onClose={onClose}
-      targetName={Localization.kr.VNIC_PROFILE}
+    <BaseModal targetName={Localization.kr.VNIC_PROFILE}
+      isOpen={isOpen} onClose={onClose}      
       submitTitle={vLabel}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px" }} 
@@ -165,14 +163,12 @@ const VnicProfileModal = ({
           if (selected) setNetworkVo({ id: selected.id, name: selected.name });
         }}
       />
-      <LabelInput id="name"
-        label={Localization.kr.NAME}
+      <LabelInput id="name" label={Localization.kr.NAME}
         value={formState.name}
         onChange={handleInputChange("name")}
         autoFocus
       />
-      <LabelInput id="description"
-        label={Localization.kr.DESCRIPTION}
+      <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
         onChange={handleInputChange("description")}
       />
@@ -188,9 +184,7 @@ const VnicProfileModal = ({
       />
       {/* TODO: 옵션없음 필요 */}
 
-      <LabelCheckbox
-        id="passThrough"
-        label="통과"
+      <LabelCheckbox id="passThrough" label="통과"
         checked={formState.passThrough === "ENABLED"}
         onChange={(e) => {
           const isChecked = e.target.checked;
@@ -202,9 +196,7 @@ const VnicProfileModal = ({
           }));
         }}
       />
-      <LabelCheckbox
-        id="migration"
-        label="마이그레이션 가능"
+      <LabelCheckbox id="migration" label="마이그레이션 가능"
         checked={formState.passThrough !== "DISABLED" || formState.migration}
         disabled={formState.passThrough === "DISABLED"}
         onChange={(e) => {
@@ -227,9 +219,7 @@ const VnicProfileModal = ({
             ))}
         </select>
       </div> */}
-      <LabelCheckbox
-        id="portMirroring"
-        label="포트 미러링"
+      <LabelCheckbox id="portMirroring" label="포트 미러링"
         checked={formState.portMirroring}
         disabled={formState.passThrough === "ENABLED"}
         onChange={(e) => {

@@ -5,6 +5,7 @@ import TableColumnsInfo from "../../table/TableColumnsInfo";
 import TablesOuter from "../../table/TablesOuter";
 import { checkZeroSizeToGB, convertBytesToGB } from "../../../util";
 import { useConnDiskListFromVM, useFindDiskListFromDataCenter } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 // 인터페이스 목록
 const interfaceList = [
@@ -102,7 +103,10 @@ const VmDiskConnectionModal = ({
       };
       const onError = (err) => toast.error(`Error 연결 disk: ${err}`);
   
-      connDiskListVm({ vmId, diskAttachmentList: selectedDiskLists}, { onSuccess, onError })
+      connDiskListVm(
+        { vmId, diskAttachmentList: selectedDiskLists}, 
+        { onSuccess, onError }
+      )
       onClose();
     } else {
       toast.error("디스크를 선택하세요!");
@@ -118,10 +122,8 @@ const VmDiskConnectionModal = ({
   };
 
   return (
-    <BaseModal 
-      isOpen={isOpen} 
-      onClose={onClose}
-      targetName={"가상 디스크"}
+    <BaseModal targetName={`가상 ${Localization.kr.DISK}`}
+      isOpen={isOpen} onClose={onClose}
       submitTitle={"연결"}
       onSubmit={diskType? handleFormSubmit : handleOkClick}
       contentStyle={{ width: "1000px"}} 
@@ -142,15 +144,16 @@ const VmDiskConnectionModal = ({
           직접 LUN
         </div> */}
       </div>
-      <span> vm: {vmId}<br/>size: {attDisks.length}<br/> dc: {dataCenterId}<br/></span>
+      <br/>
+      {/* <span> vm: {vmId}<br/>size: {attDisks.length}<br/> dc: {dataCenterId}<br/></span> */}
         <>
           <TablesOuter
+            isLoading={isAttDisksLoading} isErzror={isAttDisksError} isSuccess={isAttDisksSuccess}
             columns={activeTab === "img" ? TableColumnsInfo.VIRTUAL_DISK : TableColumnsInfo.VMS_STOP}
-            isLoading={isAttDisksLoading} isError={isAttDisksError} isSuccess={isAttDisksSuccess}
             data={attDisks.length > 0 ? attDisks.map((attDisk) => ({
               ...attDisk,
               alias: attDisk?.alias,  // alias 추가
-              virtualSize: convertBytesToGB(attDisk?.virtualSize) + ' GB',
+              virtualSize: checkZeroSizeToGB(attDisk?.virtualSize),
               actualSize: checkZeroSizeToGB(attDisk?.actualSize),
               storageDomain: attDisk?.storageDomainVo?.name,
               status: attDisk?.status === "UNINITIALIZED" ? "초기화되지 않음" : "UP",
@@ -158,8 +161,8 @@ const VmDiskConnectionModal = ({
                 <input
                   type="checkbox"
                   checked={selectedDisks.includes(attDisk.id)}
-                  onChange={() => handleCheckboxChange(attDisk.id)}
                   disabled={existingDiskIds.has(attDisk.id)}
+                  onChange={() => handleCheckboxChange(attDisk.id)}
                 />
               ),
               interface: (

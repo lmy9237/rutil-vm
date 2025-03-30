@@ -295,7 +295,7 @@ class DataCenterServiceImpl(
 		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
 		val res = storageDomains.flatMap { it.disks() ?: emptyList() }
 
-		return res.map { it.toDcDiskMenu() } // 0.833
+		return res.map { it.toDcDiskMenu(conn) } // 0.833
 		// return res.toDiskMenus(conn) // 6.33
 	}
 
@@ -336,15 +336,11 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findAttachDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo> {
 		log.info("findAttachDiskImageByDataCenter ... dataCenterId: {}", dataCenterId)
-		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
-		val res = storageDomains.flatMap { it.disks().filter { disk ->
-				disk.format() == COW && !disk.vmsPresent()
-			}
+		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks.storagedomain").getOrDefault(emptyList())
+		val res = storageDomains.flatMap {
+			it.disks().filter { disk -> disk.format() == COW && !disk.vmsPresent() }
 		}
-		// TODO: 템플릿 아이디에 대한건 다시 봐야할거 같음
-
-		return res.toDcDiskMenus() // 0.725
-		// return res // 8.8
+		return res.toDcDiskMenus(conn)
 	}
 
 	@Throws(Error::class)

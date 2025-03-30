@@ -69,13 +69,11 @@ const VmDisk = ({
       <div className="instance-image center py-2">
         <div className="font-bold">인스턴스 이미지</div>
         <div className="f-end" style={{ gap: "6px" }}>
-          <ActionButton
-            label="연결"
+          <ActionButton label="연결"
             actionType="default"
             onClick={() => setIsConnectionPopupOpen(true)}
           />
-          <ActionButton
-            label="생성"
+          <ActionButton label="생성"
             actionType="default"
             onClick={() => setIsCreatePopupOpen(true)}
           />
@@ -94,6 +92,7 @@ const VmDisk = ({
             </div>
             {/*{disk?.storageDomainVo?.id} <- 연결되어있는 디스크아이디*/}
             <div className="f-end">
+              <span>편집/삭제 2차구현</span>
               <RVI36 
                 iconDef={rvi36Edit} 
                 className="btn-icon"
@@ -118,7 +117,7 @@ const VmDisk = ({
       </div>
 
       <Suspense fallback={<Loading/>}>
-      {(isCreatePopupOpen || editDisk) && (
+        {(isCreatePopupOpen || editDisk) && (
           <VmDiskModal
             isOpen={true}
             diskType={false}
@@ -133,7 +132,6 @@ const VmDisk = ({
               setIsCreatePopupOpen(false);
               setEditDisk(null); // 닫을 때 상태 초기화
             }}
-    
           />
         )}
         {isConnectionPopupOpen && (

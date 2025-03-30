@@ -84,7 +84,6 @@ class HostController {
 	fun add(
 		@RequestBody host: HostVo? = null,
 		@RequestParam(defaultValue = "false") deployHostedEngine: Boolean
-		// @PathVariable deployHostedEngine: Boolean? = false,
 	): ResponseEntity<HostVo?> {
 		if (host == null)
 			throw ErrorPattern.HOST_VO_INVALID.toException()

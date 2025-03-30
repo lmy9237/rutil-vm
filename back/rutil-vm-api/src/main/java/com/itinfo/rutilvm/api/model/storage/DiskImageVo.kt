@@ -152,8 +152,14 @@ fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 fun List<Disk>.toDiskMenus(conn: Connection): List<DiskImageVo> =
 	this@toDiskMenus.map { it.toDiskMenu(conn) }
 
-fun Disk.toDcDiskMenu(): DiskImageVo {
+fun Disk.toDcDiskMenu(conn: Connection): DiskImageVo {
 	val disk = this@toDcDiskMenu
+	val templateId: String? = conn.findAllTemplates(follow = "diskattachments").getOrDefault(emptyList())
+		.firstOrNull { template ->
+			template.diskAttachmentsPresent() &&
+				template.diskAttachments().any { diskAttachment -> diskAttachment.id() == disk.id() }
+		}?.id()
+	val tmp: Template? = templateId?.let { conn.findTemplate(it).getOrNull() }
 	return DiskImageVo.builder {
 		id { disk.id() }
 		alias { disk.alias() }
@@ -166,12 +172,12 @@ fun Disk.toDcDiskMenu(): DiskImageVo {
 		storageType { disk.storageType() }
 		description { disk.description() }
 		connectVm { if(disk.vmsPresent()) disk.vms().first().fromVmToIdentifiedVo() else IdentifiedVo() }
-		// connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
-		// TODO: 템플릿 아이디에 대한건 다시 봐야할거 같음
+		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
 	}
 }
-fun List<Disk>.toDcDiskMenus(): List<DiskImageVo> =
-	this@toDcDiskMenus.map { it.toDcDiskMenu() }
+fun List<Disk>.toDcDiskMenus(conn:Connection): List<DiskImageVo> =
+	this@toDcDiskMenus.map { it.toDcDiskMenu(conn) }
+
 
 fun Disk.toDomainDiskMenu(conn: Connection): DiskImageVo {
 	val disk = this@toDomainDiskMenu

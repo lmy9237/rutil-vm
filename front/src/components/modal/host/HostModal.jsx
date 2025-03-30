@@ -79,10 +79,9 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
 
   const validateForm = () => {
     checkName(formState.name);// 이름 검증
-    if (!editMode && !formState.sshPassWord) 
-      return "비밀번호를 입력해주세요.";
-    if (!clusterVo.id)
-      return `${Localization.kr.CLUSTER}를 선택해주세요.`;
+
+    if (!editMode && !formState.sshPassWord) return "비밀번호를 입력해주세요.";
+    if (!clusterVo.id) return `${Localization.kr.CLUSTER}를 선택해주세요.`;
     return null;
   };
 
@@ -105,9 +104,9 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
 
     editMode
       ? editHost(
-          { hostId: formState.id, hostData: dataToSubmit },
-          { onSuccess, onError }
-        )
+        { hostId: formState.id, hostData: dataToSubmit },
+        { onSuccess, onError }
+      )
       : addHost(
           { hostData: dataToSubmit, deployHostedEngine: String(formState.hostedEngine), },
           { onSuccess, onError }
@@ -115,11 +114,11 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={Localization.kr.HOST}
+    <BaseModal targetName={Localization.kr.HOST}
+      isOpen={isOpen} onClose={onClose}      
       submitTitle={hLabel}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "730px", height: "560px" }} 
+      contentStyle={{ width: "730px", height: !editMode ? "600px" :"500px" }} 
     >
       <LabelSelectOptionsID label={`${Localization.kr.HOST} ${Localization.kr.CLUSTER}`}
         value={clusterVo.id}
@@ -134,9 +133,9 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
       <hr />
 
       <LabelInput id="name" label={Localization.kr.NAME}
+        autoFocus
         value={formState.name}
         onChange={handleInputChange("name")}
-        autoFocus
       />
       <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
@@ -144,13 +143,13 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
       />
       <LabelInput id="address" label={`${Localization.kr.HOST} 이름/IP`}
         value={formState.address}
-        onChange={handleInputChange("address")}
         disabled={editMode}
+        onChange={handleInputChange("address")}
       />
       <LabelInputNum id="sshPort" label="SSH 포트"
         value={formState.sshPort}
-        onChange={handleInputChange("sshPort")}
         disabled={editMode}
+        onChange={handleInputChange("sshPort")}
       />
       <hr />
 
@@ -176,42 +175,10 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
 
       <ToggleSwitchButton label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
         checked={formState.hostedEngine}
-        onChange={() => setFormState((prev) => ({ ...prev, hostedEngine: !formState.hostedEngine }))}
         disabled={editMode}
+        onChange={() => setFormState((prev) => ({ ...prev, hostedEngine: !formState.hostedEngine }))}
         tType={"배포"} fType={"없음"}
       />
-      
-{/* const hostEngines = [
-  { value: "false", label: "없음" },
-  { value: "true", label: "배포" },
-]; */}
-
-        {/* <div>
-        <div>vGPU 배치</div>
-        <div className="f-center">
-          {["consolidated", "separated"].map((option) => (
-            <label
-              key={option}
-              style={{ marginRight: "0.2rem", display: "flex" }}
-            >
-              <input
-                type="radio"
-                name="vgpu"
-                value={option}
-                checked={formState.vgpu === option}
-                onChange={handleInputChange("vgpu")}
-              />
-              {option === "consolidated" ? "통합" : "분산"}
-            </label>
-          ))}
-        </div> 
-      </div>}*/}
-      {/* <LabelSelectOptions label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
-        value={String(formState.deployHostedEngine)}
-        onChange={handleInputChange("deployHostedEngine")}
-        options={hostEngines}
-        disabled={editMode}
-      /> */}
     </BaseModal>
   );
 };

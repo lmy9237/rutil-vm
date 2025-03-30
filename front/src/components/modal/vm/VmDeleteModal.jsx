@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useQueries } from "@tanstack/react-query";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import { useDeleteVm } from "../../../api/RQHook";
 import ApiManager from "../../../api/ApiManager";
@@ -30,23 +28,28 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
 
   const diskQueries = useQueries({
     queries: ids.map((vmId) => ({
-      queryKey: ["DisksFromVM", vmId],
+      // queryKey: ["DisksFromVM", vmId],
       queryFn: async () => {
-        console.log(`Fetching disks for VM: ${vmId}`);
-        return await ApiManager.findDisksFromVM(vmId);
-      },
-      enabled: !!vmId,
+        try {
+          const disks = await ApiManager.findDisksFromVM(vmId);
+          return disks || []; // fallback to empty array
+        } catch (error) {
+          console.error(`Error fetching disks for VM ${vmId}`, error);
+          return []; // fallback
+        }
+      }      
     })),
   });
 
   useEffect(() => {
-    if (!diskQueries.length) return;
+    if (!diskQueries || !Array.isArray(diskQueries)) return;
 
     const newStates = {};
-    diskQueries.forEach(({ data }, index) => {
-      newStates[ids[index]] = data && data.length > 0; // 디스크가 있으면 true
+    diskQueries.forEach((query, index) => {
+      const hasData = query?.data && Array.isArray(query.data) && query.data.length > 0;
+      newStates[ids[index]] = hasData;
     });
-
+    
     setDetachOnlyList((prevStates) => ({
       ...prevStates,
       ...newStates,
@@ -96,22 +99,21 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px", height: "260px" }} 
     >
-    
-    
-          {ids.map((vmId, index) => (
-            <div key={vmId} className="disk-delete-checkbox f-btw">
-              <div className="disk-delete-label">{names[index]}</div>
-              <LabelCheckbox
-                id={`diskDelete-${vmId}`}
-                checked={detachOnlyList[vmId] || false}
-                onChange={() => handleCheckboxChange(vmId)}
-                disabled={!diskQueries[index]?.data?.length}
-                label="디스크 삭제"
-              />
-            </div>
-          ))}
-      
-
+      {ids?.map((vmId, index) => {
+        const isDisabled = !diskQueries[index]?.data || !Array.isArray(diskQueries[index]?.data) || diskQueries[index].data.length === 0;
+        return (
+          <div key={vmId} className="disk-delete-checkbox f-btw">
+            <div className="disk-delete-label">{names[index]}</div>
+            <LabelCheckbox
+              id={`diskDelete-${vmId}`}
+              checked={detachOnlyList[vmId] || false}
+              onChange={() => handleCheckboxChange(vmId)}
+              disabled={isDisabled}
+              label="디스크 삭제"
+            />
+          </div>
+        );
+      })}
     </BaseModal>
   );
 };

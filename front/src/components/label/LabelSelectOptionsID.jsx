@@ -22,6 +22,7 @@ const LabelSelectOptionsID = ({
   disabled,
   loading,
   options,
+  etcLabel
 }) => (
   <>
   <div className='input-select'>
@@ -35,7 +36,8 @@ const LabelSelectOptionsID = ({
         options.map((opt) => (
           <option key={opt.id} value={opt.id}>
             {/* {opt.name} */}
-            {opt.name}: {opt.id}
+            {opt.name}: {opt.id} {etcLabel}
+            {/* {opt.name} {etcLabel} */}
           </option>
         ))
       )}

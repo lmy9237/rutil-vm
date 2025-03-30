@@ -9,7 +9,7 @@ const migrationModeOptionList = [
   { value: "pinned", label: "마이그레이션 불가" },
 ];
 
-const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
+const VmHost = ({ hosts, formHostState, setFormHostState }) => {
   // hostVos 값이 있으면 hostInCluster를 false로 설정, 없으면 true
   useEffect(() => {
     if (formHostState.hostVos.length > 0) {
@@ -22,11 +22,11 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
   return (
     <div className="host-second-content">
       <div className="py-2">
-        <div style={{ fontWeight: 600 }}>실행 호스트:</div>
+        <div style={{ fontWeight: 600 }}>실행 호스트</div>
         <div className="form-checks">
           <div className="f-start">
             <input
-              className="form-check-input"
+              // className="form-check-input"
               type="radio"
               name="hostSelection"
               id="clusterHost"
@@ -53,12 +53,7 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
                 name="hostSelection"
                 id="specificHost"
                 checked={!formHostState.hostInCluster}
-                onChange={() =>
-                  setFormHostState((prev) => ({
-                    ...prev,
-                    hostInCluster: false,
-                  }))
-                }
+                onChange={() => setFormHostState((prev) => ({ ...prev, hostInCluster: false }))}
               />
               <label className="form-check-label" htmlFor="specificHost">
                 특정 호스트
@@ -101,12 +96,11 @@ const VmHost = ({ editMode, hosts, formHostState, setFormHostState }) => {
 
       {/* 마이그레이션 옵션 */}
       <div className="host-third-content">
-        <div className="py-2" style={{ fontWeight: 600 }}>마이그레이션 옵션:</div>
-        <LabelSelectOptions
-          label={"마이그레이션 모드"}
+        <div className="py-2" style={{ fontWeight: 600 }}>마이그레이션 옵션</div>
+        <LabelSelectOptions label={"마이그레이션 모드"}
           value={formHostState.migrationMode}
-          onChange={(e) => setFormHostState((prev) => ({ ...prev, migrationMode: e.target.value, }))}
           options={migrationModeOptionList}
+          onChange={(e) => setFormHostState((prev) => ({ ...prev, migrationMode: e.target.value, }))}
         />
       </div>
     </div>

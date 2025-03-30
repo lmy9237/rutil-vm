@@ -29,7 +29,7 @@ const initialFormState = {
   name: "",
   description: "",
   comment: "",
-  mtu: "0",
+  mtu: 0,
   vlanEnabled: false,
   vlan: "0",
   usageVm: true,
@@ -58,7 +58,7 @@ const NetworkModal = ({
   const { data: network } = useNetworkById(networkId);
   const { 
     data: datacenters = [], 
-    isLoading: isDatacentersLoading 
+    isLoading: isDataCentersLoading 
   } = useAllDataCenters((e) => ({ ...e }));
   const { 
     data: clusters = [], 
@@ -75,21 +75,22 @@ const NetworkModal = ({
         comment: network?.comment,
         mtu: network?.mtu,
         vlan: network?.vlan,
+        vlanEnabled: network?.vlan > 0, // 🔥 vlan 값이 0보다 크면 true
         usageVm: network?.usage?.vm,
-        portIsolation: network?.portIsolation || false, 
+        portIsolation: network?.portIsolation || false,
         dnsEnabled: network?.dnsEnabled || false,
       });
-      setDataCenterVo({id: network?.datacenterVo?.id});
+      setDataCenterVo({ id: network?.datacenterVo?.id, name: network?.datacenterVo?.name });
     }
-  }, [isOpen, editMode, network]);
+  }, [isOpen, editMode, network]);  
 
   useEffect(() => {
     if (dcId) {
       setDataCenterVo({id: dcId});
     } else if (!editMode && datacenters && datacenters.length > 0) {
-      setDataCenterVo({id: datacenters[0].id});
+      setDataCenterVo({id: datacenters[0].id, name: datacenters[0].name});
     }
-  }, [isOpen, datacenters, dcId, editMode]);
+  }, [datacenters, dcId, editMode]);
 
   useEffect(() => {
     if (clusters && clusters.length > 0) {
@@ -110,8 +111,8 @@ const NetworkModal = ({
 
   const validateForm = () => {
     checkName(formState.name);
-    if (!dataCenterVo.id) 
-      return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
+
+    if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     return null;
   };
 
@@ -122,16 +123,15 @@ const NetworkModal = ({
     const dataToSubmit = {
       ...formState,
       dataCenterVo,
-      clusterVos: 
-        clusterVoList.filter((cluster) => cluster.isConnected) // 🔥 연결된 클러스터만 필터링
-          .map((cluster) => ({
-            id: cluster.id,
-            name: cluster.name,
-            required: cluster.isRequired,
-          })),
+      clusterVos: // 🔥 연결된 클러스터만 필터링      
+        clusterVoList.filter((cluster) => cluster.isConnected).map((cluster) => ({
+          id: cluster.id,
+          name: cluster.name,
+          required: cluster.isRequired,
+        })),
       mtu: formState.mtu ? parseInt(formState.mtu, 10) : 0, // mtu가 빈 값이면 1500 설/정
       vlan: formState.vlanEnabled && formState.vlan? parseInt(formState.vlan, 10): 0,      
-      portIsolation: formState.portIsolation,
+      // portIsolation: formState.portIsolation,
       usage: { vm: formState.usageVm },
     };
 
@@ -144,13 +144,16 @@ const NetworkModal = ({
     console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
 
     editMode
-      ? editNetwork({ networkId: formState.id, networkData: dataToSubmit },{ onSuccess, onError })
+      ? editNetwork(
+        { networkId: formState.id, networkData: dataToSubmit },
+        { onSuccess, onError }
+      )
       : addNetwork(dataToSubmit, { onSuccess, onError });
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"논리 네트워크"}
+    <BaseModal targetName={`논리 ${Localization.kr.NETWORK}`}
+      isOpen={isOpen} onClose={onClose}       
       submitTitle={nLabel}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "770px"}}
@@ -159,7 +162,7 @@ const NetworkModal = ({
         <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
           value={dataCenterVo.id}
           disabled={editMode}
-          loading={isDatacentersLoading}
+          loading={isDataCentersLoading}
           options={datacenters}
           onChange={(e) => {
             const selected = datacenters.find(dc => dc.id === e.target.value);
@@ -167,9 +170,9 @@ const NetworkModal = ({
           }}
         />
         <LabelInput id="name" label={Localization.kr.NAME}
+          autoFocus
           value={formState.name}
           onChange={handleInputChange("name")}
-          autoFocus
         />
         <LabelInput id="description" label={Localization.kr.DESCRIPTION}
           value={formState.description}
@@ -183,7 +186,7 @@ const NetworkModal = ({
 
         <div className="center">
           <LabelCheckbox id="vlanEnabled" label="VLAN 태깅 활성화"
-            checked={formState.vlanEnabled}
+            checked={formState.vlanEnabled || network?.vlan}
             onChange={(e) =>
               setFormState((prev) => ({
                 ...prev,
@@ -200,9 +203,7 @@ const NetworkModal = ({
           />
         </div>
 
-        <LabelCheckbox
-          label="가상 머신 네트워크"
-          id="usageVm"
+        <LabelCheckbox id="usageVm" label="가상 머신 네트워크"          
           checked={formState.usageVm}
           onChange={(e) => {
             const isChecked = e.target.checked;
@@ -213,12 +214,10 @@ const NetworkModal = ({
             }));
           }}
         />
-        <LabelCheckbox
-          label="포트 분리"
-          id="portIsolation"
+        <LabelCheckbox id="portIsolation" label="포트 분리"          
           checked={formState.portIsolation}
-          onChange={(e) => setFormState((prev) => ({...prev, portIsolation: e.target.checked }))}
           disabled={editMode || !formState.usageVm} // 가상 머신 네트워크가 비활성화되면 비활성화(??)
+          onChange={(e) => setFormState((prev) => ({...prev, portIsolation: e.target.checked }))}
         />
 
         <FormGroup label="MTU" className="mtu-form">
@@ -227,15 +226,15 @@ const NetworkModal = ({
               <div className="flex">
                 <input
                   type="radio"
-                  checked={formState.mtu === "0"} // 기본값 1500 선택됨
-                  onChange={() => setFormState((prev) => ({ ...prev, mtu: "0" }))}
+                  checked={formState.mtu === 0} // 기본값 1500 선택됨
+                  onChange={() => setFormState((prev) => ({ ...prev, mtu: 0 }))}
                 />
                 <label>기본값 (1500)</label>
               </div>
               <div className="flex">
                 <input
                   type="radio"
-                  checked={formState.mtu !== "0"} // 사용자 정의 값이 있을 때 선택됨
+                  checked={formState.mtu !== 0} // 사용자 정의 값이 있을 때 선택됨
                   onChange={() =>
                     setFormState((prev) => ({ ...prev, mtu: "" }))
                   } // 빈 문자열로 설정해 사용자가 입력할 수 있도록
@@ -249,26 +248,22 @@ const NetworkModal = ({
                 style={{ width: "100%" }}
                 min="68"
                 step="1"
-                disabled={formState.mtu === "0"} // 기본값 선택 시 비활성화
-                value={formState.mtu === "0" ? "" : formState.mtu} // 기본값일 경우 빈 값 표시
+                disabled={formState.mtu === 0} // 기본값 선택 시 비활성화
+                value={formState.mtu === 0 ? "" : formState.mtu} // 기본값일 경우 빈 값 표시
                 onChange={(e) => {
                   const value = e.target.value;
-                  setFormState((prev) => ({
-                    ...prev,
-                    mtu: value, // 입력값 반영
-                  }));
+                  setFormState((prev) => ({ ...prev, mtu: value }));
                 }}
               />
             </div>
           </div>
         </FormGroup>
 
-        <LabelCheckbox
-          label="DNS 설정"
-          id="dns_settings"
+        <LabelCheckbox id="dns_settings" label="DNS 설정"
           checked={formState.dnsEnabled}
           // onChange={(e) => setDnsEnabled(e.target.checked)}
         />
+        <span>TODO: DNS 추가구현</span>
         
 {/* 
         <div className="text-[15px] font-bold">
@@ -311,9 +306,7 @@ const NetworkModal = ({
             <hr />
             <span>클러스터에서 네트워크를 연결/분리</span>
             <TablesOuter
-              isLoading={false}
-              isError={false}
-              isSuccess={true}
+              isLoading={false} isError={false} isSuccess={true}
               columns={[
                 {
                   header: "이름",
@@ -421,7 +414,6 @@ const NetworkModal = ({
             />
           </div>
         )}
-
       </div>
     </BaseModal>
   );

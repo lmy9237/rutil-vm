@@ -302,11 +302,9 @@ fun HostVo.toHostBuilder(): HostBuilder {
         .ssh(SshBuilder().port(this@toHostBuilder.sshPort).build()) // 기본값이 22 포트 연결은 더 테스트 해봐야함(ovirt 내에서 한적은 없음)
         .rootPassword(this@toHostBuilder.sshPassWord)   // 비밀번호 잘못되면 보여줄 코드?
         .powerManagement(PowerManagementBuilder().enabled(false).build()) // 전원관리 비활성화 (기본)
-//        .spm(SpmBuilder().priority(this@toHostBuilder.spmPriority))
         .vgpuPlacement(VgpuPlacement.fromValue(this@toHostBuilder.vgpu))
-//        .port()
-        // ssh port가 22면 .ssh() 설정하지 않아도 알아서 지정됨. port 변경을 cmd 에서만 하심
-    // deployHostedEngine은 ext에서
+//        .spm(SpmBuilder().priority(this@toHostBuilder.spmPriority))
+//        .port() // ssh port가 22면 .ssh() 설정하지 않아도 알아서 지정됨. port 변경을 cmd 에서만 하심
 }
 
 /**

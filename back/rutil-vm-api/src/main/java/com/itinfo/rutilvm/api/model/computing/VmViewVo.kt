@@ -277,46 +277,6 @@ fun Vm.toVmMenu(conn: Connection): VmViewVo {
 fun List<Vm>.toVmMenus(conn: Connection): List<VmViewVo> =
 	this@toVmMenus.map { it.toVmMenu(conn) }
 
-// fun Vm.toVmMenu(conn: Connection): VmViewVo {
-// 	val vm = this@toVmMenu
-// 	val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
-// 	val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
-// 	val reports: List<ReportedDevice> = conn.findAllReportedDevicesFromVm(vm.id()).getOrDefault(listOf())
-//
-// 	return VmViewVo.builder {
-// 		id { vm.id() }
-// 		name { vm.name() }
-// 		comment { vm.comment() }
-// 		creationTime {  ovirtDf.format(vm.creationTime()) }
-// 		status { vm.status() }
-// 		description { vm.description() }
-// 		hostedEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
-// 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
-// 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-// 		if (vm.status() == VmStatus.UP) {
-// 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id())
-// 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
-// 			fqdn { vm.fqdn() }
-// 			upTime { statistics.findVmUptime() }
-// 			hostVo { host?.fromHostToIdentifiedVo() }
-// 			ipv4 { reports.findVmIpv4() }
-// 			ipv6 { reports.findVmIpv6() }
-// 			usageDto { statistics.toVmUsage() }
-// 		} else {
-// 			fqdn { null }
-// 			upTime { null }
-// 			hostVo { null }
-// 			ipv4 { null }
-// 			ipv6 { null }
-// 			usageDto { null }
-// 		}
-// 	}
-// }
-// fun List<Vm>.toVmsMenu(conn: Connection): List<VmViewVo> =
-// 	this@toVmsMenu.map { it.toVmMenu(conn) }
-
-
-
 
 fun Vm.toVmVoInfo(conn: Connection): VmViewVo {
 	val vm = this@toVmVoInfo

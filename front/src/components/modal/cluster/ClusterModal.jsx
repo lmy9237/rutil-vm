@@ -190,12 +190,9 @@ const ClusterModal = ({
   const validateForm = () => {
     checkName(formState.name);// 이름 검증
 
-    if (checkKoreanName(formState.description)) 
-      return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
-    if (!dataCenterVo.id) 
-      return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    if (!networkVo.id)
-      return `${Localization.kr.NETWORK}를 선택해주세요.`;
+    if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
+    if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
+    if (!networkVo.id) return `${Localization.kr.NETWORK}를 선택해주세요.`;
     return null;
   };
 
@@ -210,22 +207,24 @@ const ClusterModal = ({
     };
 
     const onSuccess = () => {
-      toast.success(`${Localization.kr.CLUSTER} ${cLabel} 완료`);
       onClose();
+      toast.success(`${Localization.kr.CLUSTER} ${cLabel} 완료`);
     };
     const onError = (err) => toast.error(`Error ${cLabel} cluster: ${err}`);
 
     console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
 
     editMode
-      ? editCluster({ clusterId: formState.id, clusterData: dataToSubmit },{ onSuccess, onError })
+      ? editCluster(
+        { clusterId: formState.id, clusterData: dataToSubmit },
+        { onSuccess, onError }
+      )
       : addCluster(dataToSubmit, { onSuccess, onError });
   };
 
   return (
-    <BaseModal
-      isOpen={isOpen} onClose={onClose}
-      targetName={Localization.kr.CLUSTER}
+    <BaseModal targetName={Localization.kr.CLUSTER}
+      isOpen={isOpen} onClose={onClose}      
       submitTitle={cLabel}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px" }} 
@@ -242,9 +241,9 @@ const ClusterModal = ({
       />
       <hr />
       <LabelInput id="name" label={Localization.kr.NAME}
+        autoFocus
         value={formState.name}
         onChange={handleInputChange("name")}
-        autoFocus
       />
       <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
@@ -272,14 +271,14 @@ const ClusterModal = ({
       />
       <LabelSelectOptions id="cpu-type" label="CPU 유형"
         value={formState.cpuType}
-        onChange={handleInputChange("cpuType")}
         disabled={editMode}
         options={cpuOptions}
+        onChange={handleInputChange("cpuType")}
       />
       <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"
         value={formState.biosType}
-        options={biosTypeOptions}
         disabled={["PPC64", "S390X"].includes(formState.cpuArc)}
+        options={biosTypeOptions}
         onChange={handleInputChange("biosType")}
       />
       <LabelSelectOptions id="recovery_policy-type" label="복구정책"
