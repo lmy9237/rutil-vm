@@ -117,25 +117,17 @@
 }
 
 /*..버튼 가져오기 팝업*/
-.vm-bring-popup {
-  height: 85%;
-  width: 69%;
+.vm-impor-outer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 0px 18px;
+  margin-bottom: 10px;
 }
-.load-btn {
-  width: 4%;
-  padding: 0.1rem;
-  border: var(--border-simple);
+
+.vm-import-form-item {
+  width: 100%;
   display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-.vm-bring-table {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.3rem;
-}
-.vm-bring-table > div {
-  width: 44%;
+  flex-direction: column;
 }
 /*호스트 장치(장치추가 팝업)*/
 .able-host-device-table {

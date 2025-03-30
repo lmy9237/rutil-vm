@@ -29,63 +29,69 @@ const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
   const renderStep1 = () => (
     <>
       <div className="vm-import-form-grid">
-        <div className="vm-import-form-item">
-          <LabelSelectOptions
-            label="데이터 센터"
-            id="datacenter"
-            value={selectedDatacenter}
-            onChange={(e) => setSelectedDatacenter(e.target.value)}
-            options={[{ value: "Default", label: "Default" }]}
-          />
+
+        <div className="vm-impor-outer">
+          <div className="vm-import-form-item">
+            <LabelSelectOptions
+              label="데이터 센터"
+              id="datacenter"
+              value={selectedDatacenter}
+              onChange={(e) => setSelectedDatacenter(e.target.value)}
+              options={[{ value: "Default", label: "Default" }]}
+            />
+          </div>
+
+          <div className="vm-import-form-item">
+            <LabelSelectOptions
+              label="소스"
+              id="source"
+              value={selectedSource}
+              onChange={(e) => setSelectedSource(e.target.value)}
+              options={[{ value: "VMware", label: "VMware" }]}
+            />
+          </div>
+
+          <div className="vm-import-form-item">
+            <LabelSelectOptions
+              label="외부 공급자"
+              id="provider"
+              value={selectedProvider}
+              onChange={(e) => setSelectedProvider(e.target.value)}
+              disabled={isDatacentersLoading}
+              options={[
+                { value: "administrator", label: "administrator" },
+                ...networkProvider.map((p) => ({ value: p.name, label: p.name })),
+              ]}
+            />
+          </div>
+        </div>
+        
+        <div className="vm-impor-outer">
+          <div className="vm-import-form-item">
+            <LabelInput label="vCenter" id="vcenter" value={vcenter} onChange={(e) => setVcenter(e.target.value)} />
+          </div>
+
+          <div className="vm-import-form-item">
+            <LabelInput label="데이터 센터" id="vcDataCenter" value={vcDataCenter} onChange={(e) => setVcDataCenter(e.target.value)} />
+          </div>
+
+          <div className="vm-import-form-item">
+            <LabelInput label="사용자 이름" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+          </div>
+
+          <div className="vm-import-form-item">
+            <LabelInput label="ESXi" id="esxi" value={esxi} onChange={(e) => setEsxi(e.target.value)} />
+          </div>
+
+          <div className="vm-import-form-item">
+            <LabelInput label="클러스터" id="cluster" value={cluster} onChange={(e) => setCluster(e.target.value)} />
+          </div>
+
+          <div className="vm-import-form-item">
+            <LabelInput label="암호" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          </div>
         </div>
 
-        <div className="vm-import-form-item">
-          <LabelSelectOptions
-            label="소스"
-            id="source"
-            value={selectedSource}
-            onChange={(e) => setSelectedSource(e.target.value)}
-            options={[{ value: "VMware", label: "VMware" }]}
-          />
-        </div>
-
-        <div className="vm-import-form-item">
-          <LabelSelectOptions
-            label="외부 공급자"
-            id="provider"
-            value={selectedProvider}
-            onChange={(e) => setSelectedProvider(e.target.value)}
-            disabled={isDatacentersLoading}
-            options={[
-              { value: "administrator", label: "administrator" },
-              ...networkProvider.map((p) => ({ value: p.name, label: p.name })),
-            ]}
-          />
-        </div>
-
-        <div className="vm-import-form-item">
-          <LabelInput label="vCenter" id="vcenter" value={vcenter} onChange={(e) => setVcenter(e.target.value)} />
-        </div>
-
-        <div className="vm-import-form-item">
-          <LabelInput label="데이터 센터" id="vcDataCenter" value={vcDataCenter} onChange={(e) => setVcDataCenter(e.target.value)} />
-        </div>
-
-        <div className="vm-import-form-item">
-          <LabelInput label="사용자 이름" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
-        </div>
-
-        <div className="vm-import-form-item">
-          <LabelInput label="ESXi" id="esxi" value={esxi} onChange={(e) => setEsxi(e.target.value)} />
-        </div>
-
-        <div className="vm-import-form-item">
-          <LabelInput label="클러스터" id="cluster" value={cluster} onChange={(e) => setCluster(e.target.value)} />
-        </div>
-
-        <div className="vm-import-form-item">
-          <LabelInput label="암호" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </div>
       </div>
 
       <div className="vm-import-form-item">
@@ -99,7 +105,7 @@ const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
 
       <div className="vm-import-form-item">
         <LabelSelectOptions
-          label="데이터 센터에 있는 모든 호스트"
+    
           id="allHosts"
           value=""
           onChange={() => {}}

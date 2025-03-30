@@ -93,17 +93,17 @@ const VmActionButtons = ({
             label={"템플릿"}
             onClick={() => navigate("/computing/templates")}
           />
-          <div ref={dropdownRef} className="dropdown-container">
+          <div ref={dropdownRef} className="dropdown-container ">
             <ActionButton iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown} 
               label={Localization.kr.MANAGEMENT}
               onClick={toggleDropdown}
             />
             {activeDropdown && (
-              <div className="dropdown-menu">
+              <div className="right-click-menu-box context-menu-item dropdown-menu">
                 {manageActions.map(({ type, label, disabled }) => (
                   <button key={type}
                     disabled={disabled}
-                    className="dropdown-item"
+                    className="btn-right-click dropdown-item"
                     onClick={() => openModal(type)}
                   >
                     {label}

@@ -196,10 +196,10 @@ input[disabled] {
 .icon{
     cursor: pointer;
 }
-.dropdown-container {
+/* .dropdown-container {
   position: relative;
   display: inline-block;
-}
+} */
 /* .dropdown-container > button {
   height: 3.3vh;
   font-weight: 600;
@@ -210,10 +210,9 @@ input[disabled] {
 } */
 .dropdown-menu {
   position: absolute;
-  top: 103%;
   font-size: var(--fs-default);
   width: 230px;
-  right: 0;
+  right:17px;
   background: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 100;
@@ -228,9 +227,7 @@ input[disabled] {
   border-radius:0 !important;
   border-bottom: var(--color-gray-1);
 }
-.dropdown-item:hover {
-  background-color: var(--color-gray-2);
-}
+
 /*우클릭 메뉴박스*/
 .context-menu-item{
     border: var(--border-btn);
