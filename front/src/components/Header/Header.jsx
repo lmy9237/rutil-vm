@@ -175,7 +175,7 @@ const Header = ({ toggleAside }) => {
             <div className={`bell-cate ${activeSection === "알림" ? "active" : ""} f-start`}
               onClick={() => handleSectionClick("알림")}
             >
-              <RVI24 iconDef={activeSection === "알림" ? rvi24DownArrow : rvi24RightArrow}/>
+              <RVI24 iconDef={activeSection === "알림" ? rvi24DownArrow() : rvi24RightArrow()}/>
               <span className="ml-1">알림</span>
             </div>
 
@@ -212,7 +212,7 @@ const Header = ({ toggleAside }) => {
             >
               <RVI24
                 iconDef={
-                  activeSection === "이벤트" ? rvi24DownArrow : rvi24RightArrow
+                  activeSection === "이벤트" ? rvi24DownArrow() : rvi24RightArrow()
                 }
               />
               <span className="ml-1">이벤트</span>

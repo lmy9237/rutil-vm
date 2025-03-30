@@ -7,7 +7,7 @@ const BarChart = ({ names, percentages }) => {
 
   const [chartSize, setChartSize] = useState({
     width: "100%", // 부모 div의 100% 사용
-    height: "30vh", // 뷰포트 높이의 30% 사용
+    height: "230px",
   });
 
   const updateChartSize = () => {
@@ -25,7 +25,25 @@ const BarChart = ({ names, percentages }) => {
       setChartSize({ width: `${width}px`, height: `${height}px` });
     }
   };
-
+  useEffect(() => {
+    const paddedNames = [...names];
+    const paddedPercentages = [...percentages];
+  
+    // 3개가 안 되면 빈 항목으로 채움
+    while (paddedNames.length < 3) {
+      paddedNames.push("");           // 빈 카테고리
+      paddedPercentages.push(0);      // 값은 0으로
+    }
+  
+    setSeries([{ data: paddedPercentages }]);
+    setChartOptions((prevOptions) => ({
+      ...prevOptions,
+      xaxis: {
+        ...prevOptions.xaxis,
+        categories: paddedNames,
+      },
+    }));
+  }, [names, percentages]);
   useEffect(() => {
     updateChartSize();
     window.addEventListener("resize", updateChartSize);
@@ -67,7 +85,9 @@ const BarChart = ({ names, percentages }) => {
         fontWeight: "600",
       },
       formatter: function (val, opt) {
-        return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
+        const label = opt.w.globals.labels[opt.dataPointIndex];
+        if (val === 0 && !label) return ""; 
+        return `${label}: ${val}`;
       },
       offsetX: 0,
  
@@ -110,16 +130,7 @@ const BarChart = ({ names, percentages }) => {
     },
   });
 
-  useEffect(() => {
-    setSeries([{ data: percentages }]);
-    setChartOptions((prevOptions) => ({
-      ...prevOptions,
-      xaxis: {
-        ...prevOptions.xaxis,
-        categories: names,
-      },
-    }));
-  }, [names, percentages]);
+
 
   return (
     <div ref={chartContainerRef} style={{ width: "100%", maxWidth: "900px", minWidth: "100px" }}>
