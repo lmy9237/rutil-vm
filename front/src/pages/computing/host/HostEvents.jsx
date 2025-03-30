@@ -1,5 +1,6 @@
 import EventDupl from "../../../components/dupl/EventDupl";
 import { useEventFromHost } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name HostEvents
@@ -17,7 +18,7 @@ const HostEvents = ({ hostId }) => {
     isSuccess: isEventsSuccess,
   } = useEventFromHost(hostId, (e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <EventDupl

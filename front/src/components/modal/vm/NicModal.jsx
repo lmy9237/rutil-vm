@@ -12,6 +12,7 @@ import {
   useNetworkInterfaceByVMId,
 } from "../../../api/RQHook";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
+import Logger from "../../../utils/Logger";
 
 // 유형
 const interfaceOptions = [
@@ -50,13 +51,22 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
     ...e,
   }));
 
-  const handleInputChange = (field, value = null) => (e) => {
-    console.log(`NicModal > handleInputChange ... field: ${field}, value: ${value}`)
-    setFormInfoState((prev) => ({ ...prev, [field]: value ?? e.target.value }));
-  };
+  const handleInputChange =
+    (field, value = null) =>
+    (e) => {
+      Logger.debug(
+        `NicModal > handleInputChange ... field: ${field}, value: ${value}`
+      );
+      setFormInfoState((prev) => ({
+        ...prev,
+        [field]: value ?? e.target.value,
+      }));
+    };
 
   const handleRadioChange = (field, value) => {
-    console.log(`NicModal > handleRadioChange ... field: ${field}, value: ${value}`)
+    Logger.debug(
+      `NicModal > handleRadioChange ... field: ${field}, value: ${value}`
+    );
     setFormInfoState((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -101,7 +111,7 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
     };
     const onError = (err) => toast.error(`Error ${nLabel} nic: ${err}`);
 
-    console.log("가상머신 데이터 확인:", dataToSubmit);
+    Logger.debug(`NicModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`)
 
     editMode
       ? editNicFromVM(
@@ -127,7 +137,6 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
           value={formInfoState.name}
           onChange={handleInputChange("name")}
         />
-
         <LabelSelectOptionsID
           label="프로파일"
           value={vnicProfileVo?.id}
@@ -143,18 +152,16 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
           disabled={editMode}
         />
         <div className="mac-address">사용자 지정 MAC 주소</div>
+      </div>
 
-       
-             
-          </div>
-        
-              <ToggleSwitchButton id="plugged" 
-                label="링크 상태"
-                checked={formInfoState.linked}
-                onChange={() => handleRadioChange("linked", !formInfoState.linked)}
-                tType="Up" fType="Down"
-              />
-              {/* <div>
+      <ToggleSwitchButton id="plugged"
+        label="링크 상태"
+        checked={formInfoState.linked}
+        onChange={() => handleRadioChange("linked", !formInfoState.linked)}
+        tType="Up"
+        fType="Down"
+      />
+      {/* <div>
                 <input
                   type="radio"
                   name="status"
@@ -176,16 +183,14 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
                 <RVI16 iconDef={rvi16Disconnected} />
                 <label htmlFor="status_down">Down</label>
               </div>*/}
-       
-       
-            <ToggleSwitchButton id="plugged" 
-              label="카드 상태"
-              tType="연결됨" fType="분리"
-              checked={formInfoState.plugged === true}
-              onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}
-            />
 
- 
+      <ToggleSwitchButton id="plugged"
+        label="카드 상태"
+        tType="연결됨"
+        fType="분리"
+        checked={formInfoState.plugged === true}
+        onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}
+      />
     </BaseModal>
   );
 };

@@ -5,6 +5,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DiskDupl from "../../../components/dupl/DiskDupl";
 import { useAllDisks } from "../../../api/RQHook";
 import { rvi24Desktop, rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
 
 const AllDisk = () => {
   const {
@@ -14,7 +15,7 @@ const AllDisk = () => {
     isSuccess: isDisksSuccess,
   } = useAllDisks((e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <div id="section">
         {/* <HeaderButton titleIcon={faDatabase} title="디스크" /> */}

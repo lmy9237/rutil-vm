@@ -8,6 +8,7 @@ import {
   RVI16,
   severity2Icon,
 } from "../../components/icons/RutilVmIcons";
+import Logger from "../../utils/Logger";
 
 /**
  * @name DashboardBox
@@ -79,7 +80,7 @@ const DashboardBox = ({
  * @returns
  */
 const DashboardBoxGroup = ({ boxItems }) => {
-  console.log("...");
+  Logger.debug("...");
   return (
     <div className="dash-boxs">
       {boxItems &&

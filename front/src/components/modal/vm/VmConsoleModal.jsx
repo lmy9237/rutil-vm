@@ -1,21 +1,25 @@
 import React from "react";
 import BaseModal from "../BaseModal";
 import Vnc from "../../Vnc";
+import Logger from "../../../utils/Logger";
 import { useVmConsoleAccessInfo } from "../../../api/RQHook";
 
-const VmConsoleModal = ({ isOpen, onClose, vmId, autoConnect = true }) => {
+const VmConsoleModal = ({ 
+  isOpen,
+  onClose,
+  vmId,
+  autoConnect=true
+}) => {
   const { data: vmConsoleAccessInfo } = useVmConsoleAccessInfo(vmId);
 
   let wsUrl = `wss://localhost/ws`;
   if (import.meta.env.PROD) {
-    console.log("THIS IS PRODUCTION !!!");
-    console.log(`VmConsoleModal ... import.meta.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`);
+    Logger.info("THIS IS PRODUCTION !!!");
+    Logger.debug(`VmConsoleModal ... import.meta.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`);
     wsUrl = "wss://__RUTIL_VM_OVIRT_IP_ADDRESS__/ws";
   }
 
-  console.log(
-    `... wsUrl: ${wsUrl}, address: ${vmConsoleAccessInfo?.address}, port: ${vmConsoleAccessInfo?.port}, ticket: ${vmConsoleAccessInfo?.token}`
-  );
+  Logger.debug(`... wsUrl: ${wsUrl}, address: ${vmConsoleAccessInfo?.address}, port: ${vmConsoleAccessInfo?.port}, ticket: ${vmConsoleAccessInfo?.token}`);
   return (
     <BaseModal
       isOpen={isOpen}

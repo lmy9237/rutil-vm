@@ -2,6 +2,7 @@ import React from "react";
 import VmDupl from "../../../components/dupl/VmDupl";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { useVMsFromDataCenter } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DataCenterVms
@@ -19,7 +20,7 @@ const DataCenterVms = ({ datacenterId }) => {
     isSuccess: isVmsSuccess,
   } = useVMsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <VmDupl
       isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}

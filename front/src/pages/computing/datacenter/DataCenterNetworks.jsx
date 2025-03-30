@@ -2,6 +2,7 @@ import React from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import NetworkDupl from "../../../components/dupl/NetworkDupl";
 import { useNetworksFromDataCenter } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DataCenterNetworks
@@ -19,13 +20,12 @@ const DataCenterNetworks = ({ datacenterId }) => {
     isSuccess: isNetworksSuccess,
   } = useNetworksFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
-      <NetworkDupl
-        isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
-        columns={TableColumnsInfo.NETWORK_FROM_DATACENTER}
+      <NetworkDupl columns={TableColumnsInfo.NETWORK_FROM_DATACENTER}
         networks={networks}
+        isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
       />
     </>
   );

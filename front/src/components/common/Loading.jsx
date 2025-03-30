@@ -1,9 +1,10 @@
 import React from 'react'
 
 import "./Loading.css"
+import Logger from '../../utils/Logger'
 
 const Loading = () => {
-  console.log("...")
+  Logger.debug("...")
   return (
     <span>🌀 로딩중 ...</span>
   )

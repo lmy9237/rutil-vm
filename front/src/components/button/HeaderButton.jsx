@@ -7,6 +7,7 @@ import StatusBadge from "../common/StatusBadge";
 import PopupBox from "../common/PopupBox";
 import Localization from "../../utils/Localization";
 import "./HeaderButton.css";
+import Logger from "../../utils/Logger";
 /**
  * @name HeaderButton
  * @description 헤더 버튼
@@ -26,19 +27,19 @@ const HeaderButton = ({
   const [isPopupBoxVisible, setIsPopupBoxVisible] = useState(false);
   const togglePopupBox = () => setIsPopupBoxVisible(!isPopupBoxVisible);
   const handlePopupBoxItemClick = (item) => {
-    console.log(`HeaderButton > handlePopupBoxItemClick ... item: ${item}`)
+    Logger.debug(`HeaderButton > handlePopupBoxItemClick ... item: ${item}`)
     if (item.disabled) 
       return; // disabled 상태면 클릭 이벤트 무시
     if (item.onClick)
       item.onClick();
-    console.log(`Clicked on ${item.label}`);
+    Logger.debug(`Clicked on ${item.label}`);
     setIsPopupBoxVisible(false);
   };
 
   // 팝업 외부 클릭 시 닫히도록 처리
   useEffect(() => {
     const handleClickOutside = (event) => {
-      console.log("HeaderButton > handleClickOutside ...")
+      Logger.debug("HeaderButton > handleClickOutside ...")
       const popupBox = document.querySelector(".popup-box");
       const popupBtn = document.querySelector(".popup-btn");
       if (
@@ -55,7 +56,7 @@ const HeaderButton = ({
     };
   }, []);
 
-  console.log("...")
+  Logger.debug("...")
   return (
     <div className="section-header f-btw">
       <div className="section-header-left f-btw">

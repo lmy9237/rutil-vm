@@ -1,7 +1,7 @@
 .grid-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
+  gap: var(--p-default);
   width: 90%;
 }
 .grid-item {

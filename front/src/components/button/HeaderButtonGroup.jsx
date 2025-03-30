@@ -1,3 +1,4 @@
+import Logger from "../../utils/Logger"
 
 /**
  * @name HeaderButtonGroup
@@ -8,7 +9,7 @@
  * @returns 
  */
 const HeaderButtonGroup = () => {
-  console.log("...");
+  Logger.debug(`...`)
   return (
     <div>HeaderButtonGroup</div>
   )

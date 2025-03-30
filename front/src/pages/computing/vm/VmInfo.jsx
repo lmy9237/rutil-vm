@@ -14,8 +14,9 @@ import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
 import { useVmById } from "../../../api/RQHook";
 import { openNewTab } from "../../../navigation";
-import "./Vm.css";
 import VmDisks from "./VmDisks";
+import Logger from "../../../utils/Logger";
+import "./Vm.css";
 
 /**
  * @name VmInfo
@@ -73,7 +74,7 @@ const VmInfo = () => {
   }, [section]);
 
   const handleTabClick = (tab) => {
-    console.log(`VmInfo > handleTabClick ... vmId: ${vmId}`)
+    Logger.debug(`VmInfo > handleTabClick ... vmId: ${vmId}`)
     const path = tab === "general"? `/computing/vms/${vmId}` : `/computing/vms/${vmId}/${tab}`;
     navigate(path);
     setActiveTab(tab);

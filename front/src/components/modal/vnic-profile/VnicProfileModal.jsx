@@ -15,6 +15,7 @@ import { checkKoreanName, checkName } from "../../../util";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
+import Logger from "../../../utils/Logger";
 
 const initialFormState = {
   id: "",
@@ -70,7 +71,6 @@ const VnicProfileModal = ({
     setNetworkFilterVo({ id: vnic?.networkFilterVo?.id, name: vnic?.networkFilterVo?.name });
     setDataCenterVo({id: vnic?.dataCenterVo?.id, name: vnic?.dataCenterVo?.name});
     setNetworkVo({id: vnic?.networkVo?.id, name: vnic?.networkVo?.name});
-
   }, [isOpen, editMode, vnic]);
 
   useEffect(() => {
@@ -117,8 +117,7 @@ const VnicProfileModal = ({
       networkVo,
       networkFilterVo,
     };
-
-    console.log("dataToSubmit:", dataToSubmit);
+    Logger.debug(`dataToSubmit ... ${dataToSubmit}`);
 
     const onSuccess = () => {
       onClose();
@@ -126,7 +125,7 @@ const VnicProfileModal = ({
     };
     const onError = (err) => toast.error(`Error ${vLabel} VNicProfile: ${err}`);
 
-    console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
+    Logger.debug("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
 
     editMode
       ? editVnicProfile(

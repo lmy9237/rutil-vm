@@ -10,6 +10,8 @@ import { checkZeroSizeToMbps } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
 import ActionButton from "../../../components/button/ActionButton";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 
 /**
  * @name NetworkVms
@@ -29,10 +31,6 @@ const NetworkVms = ({ networkId }) => {
   const [activeFilter, setActiveFilter] = useState("running");
   const [selectedNics, setSelectedNics] = useState([]);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-
-  const selectedIds = (Array.isArray(selectedNics) ? selectedNics : [])
-    .map((nic) => nic.id)
-    .join(", ");
 
   // 필터링된 VM 데이터 계산
   const filteredVms = activeFilter === "running"
@@ -68,7 +66,7 @@ const NetworkVms = ({ networkId }) => {
     { key: "stopped", label: "정지중" },
   ];
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <div className="header-right-btns">
@@ -81,7 +79,6 @@ const NetworkVms = ({ networkId }) => {
       </div>
 
       <FilterButton options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
-      <span>id = {selectedIds || ""}</span>
 
       <TablesOuter
         isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
@@ -92,10 +89,12 @@ const NetworkVms = ({ networkId }) => {
         }
         data={ transformedFilteredData }
         onRowClick={(rows) => {
-          console.log("Selected Rows:", rows); // 선택된 데이터 확인
+          Logger.debug(`Selected Rows: ${rows}`); // 선택된 데이터 확인
           setSelectedNics(Array.isArray(rows) ? rows : []);
         }}
       />
+
+      <SelectedIdView items={selectedNics} />
 
       {/* nic 를 삭제하는 코드를 넣어야함 */}
       {/* <Suspense>

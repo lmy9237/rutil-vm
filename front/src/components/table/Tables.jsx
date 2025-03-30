@@ -2,10 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import TableRowLoading from "./TableRowLoading";
 import TableRowNoData from "./TableRowNoData";
 import { Tooltip } from "react-tooltip";
-import "./Table.css";
-import { RVI24, rvi24ChevronLeftRect, rvi24ChevronLeftRectDisabled, rvi24ChevronRightRect, rvi24ChevronRightRectDisabled } from "../icons/RutilVmIcons";
 import PagingButton from "./PagingButton";
-
+import Logger from "../../utils/Logger";
+import "./Table.css";
 
 /**
  * @name Tables
@@ -15,7 +14,6 @@ import PagingButton from "./PagingButton";
  * @returns {JSX.Element} 테이블 컴포넌트
  * 
  */
-
 const Tables = ({
   isLoading = null,
   isError = false,
@@ -76,7 +74,7 @@ const Tables = ({
         menuItems,
       });
     } else {
-      console.warn("메뉴 항목이 비어 있습니다.");
+      Logger.warn("메뉴 항목이 비어 있습니다.");
     }
     setContextRowIndex(rowIndex);
   };
@@ -110,7 +108,7 @@ const Tables = ({
   const [sortedData, setSortedData] = useState(data);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const sortData = (key, direction) => {
-  console.log(`PagingTable > sortData ... key: ${key}, direction: ${direction}`);
+  Logger.debug(`PagingTable > sortData ... key: ${key}, direction: ${direction}`);
 
   const sorted = [...data].sort((a, b) => {
     const aValue = a[key] ?? "";
@@ -161,7 +159,7 @@ const Tables = ({
 
   const handleSort = (column) => {
     // 내림, 오름차순
-    console.log(`PagingTable > handleSort ... column: ${column}`);
+    Logger.debug(`PagingTable > handleSort ... column: ${column}`);
     if (column.isIcon) return;
     const { accessor } = column;
     const direction =
@@ -174,9 +172,7 @@ const Tables = ({
 
   // 툴팁 설정
   const handleMouseEnter = (e, rowIndex, colIndex, content) => {
-    console.log(
-      `Tables > handleMouseEnter ... rowIndex: ${rowIndex}, colIndex: ${colIndex}`
-    );
+    Logger.debug(`Tables > handleMouseEnter ... rowIndex: ${rowIndex}, colIndex: ${colIndex}`);
     const element = e.target;
     if (element.scrollWidth > element.clientWidth) {
       setTooltips((prevTooltips) => ({
@@ -212,13 +208,9 @@ const Tables = ({
   };
 
   const handleRowClick = (rowIndex, e) => {
-    console.log(
-      `PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: ${e}`
-    );
+    Logger.debug(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: ${e}`);
     const clickedRow = sortedData[rowIndex];
-    if (!clickedRow) {
-      return;
-    }
+    if (!clickedRow) return;
 
     if (e.ctrlKey) {
       setSelectedRows((prev) => {
@@ -262,12 +254,10 @@ const Tables = ({
 
   const renderTableBody = () => {
     if (isLoading) {
-      // console.log("Tables > renderTableBody ... ");
       // 로딩중일 때
       return <TableRowLoading colLen={columns.length} />;
     } else if (!isLoading && isSuccess) {
       // 데이터 가져오기 성공 후
-      // console.log("Tables > data fetched successfully ... ");
       return sortedData.length === 0 ? ( // 데이터 0건일 때
         <TableRowNoData colLen={columns.length} />
       ) : (

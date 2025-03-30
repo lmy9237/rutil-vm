@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
+import Logger from "../../utils/Logger";
 /**
  * @name SettingCertificatesRenewalPolicies
  * @description 인증서 재갱신 정책
@@ -20,7 +21,7 @@ const SettingCertificatesRenewalPolicies = () => {
     "Failure to renew the certificates may result in the inability to access the web interface and disruption of certain services, so it is crucial to renew them in advance.",
   ];
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <details>
       <summary>

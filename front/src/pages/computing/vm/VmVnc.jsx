@@ -5,7 +5,9 @@ import Vnc from "../../../components/Vnc";
 import { rvi24Desktop } from '../../../components/icons/RutilVmIcons';
 import { useVmById } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 import "./VmVnc.css"
+
 /**
  * @name VmVnc
  * @description 가상머신 접속 VNC 페이지
@@ -20,7 +22,7 @@ const VmVnc = () => {
   const { data: vm } = useVmById(vmId);
   const navigate = useNavigate();
 
-  console.log("...")
+  Logger.debug("...")
   return (
     <div className="section-vnc w-full h-full v-center">
       <HeaderButton titleIcon={rvi24Desktop("#F8F8F8")}

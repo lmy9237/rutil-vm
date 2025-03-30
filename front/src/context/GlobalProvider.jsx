@@ -1,5 +1,6 @@
 // GlobalContext.js
 import React, { createContext, useState } from 'react';
+import Logger from '../utils/Logger';
 
 const GlobalContext = createContext();
 
@@ -14,7 +15,7 @@ const GlobalContext = createContext();
 export const GlobalProvider = ({ children }) => {
   const [store, setStore] = useState({});
   const setValue = (key, value) => {
-    console.log(`GlobalProvider > setValue ... ${key}: ${value}`)
+    Logger.debug(`GlobalProvider > setValue ... ${key}: ${value}`)
     setStore(prev => ({ ...prev, [key]: value }));
     localStorage.setItem(key, value);
   }

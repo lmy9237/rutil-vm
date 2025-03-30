@@ -1,6 +1,7 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DomainDupl from "../../../components/dupl/DomainDupl";
 import { useDomainsFromDataCenter } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DataCenterDomains
@@ -18,15 +19,14 @@ const DataCenterDomains = ({ datacenterId }) => {
     isSuccess: isStorageDomainsSuccess,
   } = useDomainsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...")
   return (
     <>
-      <DomainDupl
-        isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
-        columns={TableColumnsInfo.STORAGE_DOMAINS}
+      <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
         actionType={"dcDomain"}
         domains={storageDomains}
         datacenterId={datacenterId}
+        isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
       />
     </>
   );

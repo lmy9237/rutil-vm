@@ -1,9 +1,10 @@
 import React from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { useAllVmsFromTemplate } from "../../../api/RQHook";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
+import { useAllVmsFromTemplate } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name TemplateVms
@@ -36,7 +37,7 @@ const TemplateVms = ({ templateId }) => {
     ipv4: e?.ipv4 + " " + e?.ipv6,
   }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <TablesOuter

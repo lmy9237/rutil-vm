@@ -14,6 +14,7 @@ import { useDataCenter } from "../../../api/RQHook";
 import Loading from "../../../components/common/Loading";
 import Localization from "../../../utils/Localization";
 import { rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DataCenterInfo
@@ -106,7 +107,7 @@ const DataCenterInfo = () => {
     { type: "delete", label: "삭제", onClick: () => openModal("delete") },
   ];
 
-  console.log("...");
+  Logger.debug("...")
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24Datacenter()}

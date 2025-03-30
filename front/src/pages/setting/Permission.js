@@ -5,6 +5,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import './css/Permission.css';
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
 import TablesOuter from '../../components/table/TableOuter';
+import Logger from '../../utils/Logger';
 
 const Permission = ({ isOpen, onRequestClose }) => {
   const permissionData = [
@@ -71,7 +72,7 @@ const Permission = ({ isOpen, onRequestClose }) => {
       <TablesOuter
         columns={TableColumnsInfo.PERMISSIONS}
         data={permissionData} 
-        onRowClick={() => console.log('Row clicked')} 
+        onRowClick={() => Logger.debug('Row clicked')} 
       />
 
       <div className="power_last_content">

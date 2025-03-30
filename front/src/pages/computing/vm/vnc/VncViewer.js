@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 // import RFB from '@novnc/novnc/core/rfb';
 import RFB from '@novnc/novnc';
+import Logger from '../../../../utils/Logger';
 import './VncViewer.css'; // Create a CSS file to style your component
 
 const VncViewer = () => {
@@ -35,13 +36,13 @@ const VncViewer = () => {
       newRfb.addEventListener('connect', () => {
         setIsConnected(true);
         setErrorMessage('');
-        console.log('Connected to VNC server');
+        Logger.debug(`Connected to VNC server`);
       });
 
       newRfb.addEventListener('disconnect', () => {
         setIsConnected(false);
         setErrorMessage('Disconnected from VNC server');
-        console.log('Disconnected from VNC server');
+        Logger.debug(`Disconnected from VNC server`);
       });
 
       newRfb.addEventListener('securityfailure', (event) => {
@@ -55,7 +56,7 @@ const VncViewer = () => {
       setRfb(newRfb);
     } catch (error) {
       setErrorMessage(`Connection error: ${error.message}`);
-      console.error('Connection error', error);
+      Logger.error('Connection error', error);
     }
   };
 
@@ -71,14 +72,12 @@ const VncViewer = () => {
   return (
     <div className="vnc-viewer-container">
       <div className="vnc-controls">
-        <input
-          type="text"
+        <input type="text"
           placeholder="Host"
           value={host}
           onChange={(e) => setHost(e.target.value)}
         />
-        <input
-          type="text"
+        <input type="text"
           placeholder="Port"
           value={port}
           onChange={(e) => setPort(e.target.value)}

@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import BaseModal from "../components/modal/BaseModal";
+import Logger from "./Logger";
 
 const DeleteModal = ({
   isOpen=false, 
@@ -30,7 +31,10 @@ const DeleteModal = ({
   }, [data]);
 
   const handleFormSubmit = () => {
-    if (!ids.length) return console.error(`삭제할 ${label} ID가 없습니다.`);
+    if (!ids.length) {
+      Logger.error(`삭제할 ${label} ID가 없습니다.`);
+      return;
+    }
 
     ids.forEach((id, index) => {
       deleteApi(id, {
@@ -48,8 +52,7 @@ const DeleteModal = ({
     });
   };
 
-  console.log("...");
-
+  Logger.debug("...")
   return (
     <BaseModal
       isOpen={isOpen}

@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowsAltH, faCrown, faDesktop, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faDesktop } from "@fortawesome/free-solid-svg-icons";
 import { useHost, useNetworkById, useNetworkFromCluster, useNetworkInterfaceFromHost } from "../../../api/RQHook";
 import { renderTFStatusIcon, renderUpDownStatusIcon } from "../../../components/Icon";
 import { checkZeroSizeToMbps } from "../../../util";
-import { RVI16, rvi16ArrowsUp, rvi16ArrowsUpGreen, rvi16Star, rvi16TriangleUp, rvi16VirtualMachine, RVI24, rvi24Checklist, rvi24CompareArrows, RVI36, rvi36Edit } from "../../../components/icons/RutilVmIcons";
+import { RVI16, rvi16TriangleUp, rvi16VirtualMachine, RVI24, rvi24CompareArrows, RVI36, rvi36Edit } from "../../../components/icons/RutilVmIcons";
 import Loading from "../../../components/common/Loading";
 import HostNetworkEditModal from "../../../components/modal/host/HostNetworkEditModal";
 import HostNetworkBondingModal from "../../../components/modal/host/HostNetworkBondingModal";
 import LabelCheckbox from "../../../components/label/LabelCheckbox";
+import Logger from "../../../utils/Logger";
 
 
 const HostNics = ({ hostId }) => {
@@ -18,8 +19,7 @@ const HostNics = ({ hostId }) => {
   const { data: hostNics = [] } = useNetworkInterfaceFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
 
-  console.log("hostNics: ", hostNics);
-  
+  Logger.debug(`hostNics: ${JSON.stringify(hostNics, null, 2)}`);
   const transformedData = hostNics.map((e) => ({
     ...e,
     id: e?.id,
@@ -64,13 +64,9 @@ const HostNics = ({ hostId }) => {
     usageVm: e?.usage?.vm, 
   }));
 
-
   useEffect(() => {
-    console.log("NIC 데이터 확인:", transformedData);
+    Logger.debug(`NIC 데이터 확인 ... ${transformedData}`);
   }, [transformedData]);
-
-
-
 
   // 네트워크 인터페이스 및 Bonding 정보를 저장하는 배열
   const [outer, setOuter] = useState([]);

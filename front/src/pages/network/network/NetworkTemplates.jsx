@@ -6,6 +6,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
 import { useAllTemplatesFromNetwork } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name NetworkTemplates
@@ -33,7 +34,7 @@ const NetworkTemplates = ({ networkId }) => {
 
   const openDeleteModal = () => {
     // 제거 버튼 클릭 시 모달 열기
-    console.log("NetworkTemplates > openDeleteModal ...")
+    Logger.debug("NetworkTemplates > openDeleteModal ...")
     if (selectedNics.length > 0) { // 선택된 항목이 있을 때만 동작
       setModalData(selectedNics); // 선택된 항목을 모달에 전달
       setIsModalOpen(true); // 모달 열기
@@ -42,12 +43,12 @@ const NetworkTemplates = ({ networkId }) => {
 
   const closeDeleteModal = () => {
     // 모달 닫기
-    console.log("NetworkTemplates > closeDeleteModal ...")
+    Logger.debug("NetworkTemplates > closeDeleteModal ...")
     setIsModalOpen(false); // 모달 닫기
     setModalData(null); // 모달 데이터 초기화
   };
 
-  console.log("...")
+  Logger.debug("...")
   return (
     <>
       <div className="header-right-btns">

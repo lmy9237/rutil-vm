@@ -14,7 +14,7 @@ const IconButton = ({
   label, iconDef=null,
   ...props
 }) => {
-  // console.log("...")
+  
   return (
     <button className="icon-button-container"
       key={key}

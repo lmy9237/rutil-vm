@@ -3,6 +3,7 @@ import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import TablesOuter from "../../components/table/TablesOuter";
 import { useAllCerts } from "../../api/RQHook";
 import SettingCertificatesRenewalPolicies from "./SettingCertificatesRenewalPolicies";
+import Logger from "../../utils/Logger";
 /**
  * @name SettingCertificates
  * @description 관리 > 인증서
@@ -22,7 +23,7 @@ const SettingCertificates = () => {
       isSuccess: isCertsSuccess,
       refetch: refetchCerts
     } = useAllCerts((e) => {
-      console.log(`SettingCertificates ... ${JSON.stringify(e)}`);
+      Logger.debug(`SettingCertificates ... ${JSON.stringify(e)}`);
       return {
         ...e,
         notAfter: e.notAfter ?? 'N/A',
@@ -30,7 +31,7 @@ const SettingCertificates = () => {
       };
     });
 
-    console.log("...");
+    Logger.debug("...");
     return (
       <>
         {/* <SettingUserSessionsActionButtons
@@ -46,9 +47,7 @@ const SettingCertificates = () => {
           columns={TableColumnsInfo.SETTING_CERTIFICATES}
           data={certs}
           onRowClick={(row) => {
-            console.log(
-              `SettingCertificates > onRowClick ... row: ${JSON.stringify(row)}`
-            );
+            Logger.debug(`SettingCertificates > onRowClick ... row: ${JSON.stringify(row)}`);
             setSelectedCerts(row);
           }}
           showSearchBox={true} // 검색 박스 표시 여부 제어

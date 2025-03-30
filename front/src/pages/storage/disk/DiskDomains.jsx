@@ -4,6 +4,7 @@ import TableRowClick from '../../../components/table/TableRowClick';
 import { convertBytesToGB } from '../../../util';
 import { useAllStorageDomainFromDisk } from "../../../api/RQHook";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DiskDomains
@@ -25,11 +26,13 @@ const DiskDomains = ({ diskId }) => {
   }));
 
   const sizeCheck = (size) => {
-    console.log(`DiskDomains > sizeCheck ... size: ${size}`)
-    return (size === 0) ? 'N/A' : `${convertBytesToGB(size)} GB`;
+    Logger.debug.log(`DiskDomains > sizeCheck ... size: ${size}`)
+    return (size === 0) 
+      ? 'N/A' 
+      : `${convertBytesToGB(size)} GB`;
   };
 
-  console.log("...")
+  Logger.debug("...")
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <TablesOuter
@@ -38,10 +41,11 @@ const DiskDomains = ({ diskId }) => {
         data={(domains).map((domain) => ({
           ...domain,
           icon: status2Icon(domain.status),
-          storageDomain: <TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>,
-          domainType:
-            domain?.domainType === 'data' ? '데이터'
-              : domain?.domainType === 'iso' ? 'ISO'
+          storageDomain: (<TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>),
+          domainType: domain?.domainType === 'data' 
+              ? '데이터'
+              : domain?.domainType === 'iso' 
+                ? 'ISO'
                 : 'EXPORT',
           diskSize: sizeCheck(domain?.diskSize),
           availableSize: sizeCheck(domain?.availableSize),

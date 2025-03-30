@@ -1,6 +1,7 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { useHostdeviceFromHost } from "../../../api/RQHook";
 import Tables from "../../../components/table/Tables";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name HostDevices
@@ -18,14 +19,13 @@ const HostDevices = ({ hostId }) => {
     isSuccess: isHostDevicesSuccess,
   } = useHostdeviceFromHost(hostId, (e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...")
   return (
     <>
       <div className="section-table-outer">
-        <Tables
-          isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
-          columns={TableColumnsInfo.DEVICE_FROM_HOST}
+        <Tables columns={TableColumnsInfo.DEVICE_FROM_HOST}
           data={hostDevices}
+          isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
         />
       </div>
     </>

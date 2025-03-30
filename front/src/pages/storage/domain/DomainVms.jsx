@@ -6,6 +6,7 @@ import { useAllVMFromDomain } from '../../../api/RQHook';
 import { checkZeroSizeToGB } from '../../../util';
 import TableRowClick from '../../../components/table/TableRowClick';
 import { useNavigate } from 'react-router-dom';
+import Logger from '../../../utils/Logger';
 
 /**
  * @name DomainVms
@@ -57,7 +58,7 @@ const DomainVms = ({ domainId }) => {
   if (isVmsError)
     return (<div>Error loading VMs data.</div>);
 
-  console.log("...")
+  Logger.debug("...")
   return (
     <>
       <TablesOuter

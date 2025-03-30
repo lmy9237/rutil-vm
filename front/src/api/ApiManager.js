@@ -1,11 +1,11 @@
 import ENDPOINTS from "./Endpoints"
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-// import { RUTIL_VM_ENV } from "../../vite.config";
+import Logger from "../utils/Logger";
 
 if (process.env.NODE_ENV === 'production') {
-  console.log("THIS IS PRODUCTION !!!")
-  console.log(`ApiManager.js ... process.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`)
+  Logger.info("THIS IS PRODUCTION !!!")
+  Logger.debug(`ApiManager.js ... process.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`)
   axios.defaults.baseURL = 'https://__RUTIL_VM_OVIRT_IP_ADDRESS__:6690';
 }
 
@@ -25,10 +25,10 @@ axios.interceptors.request.use(config => {
 const makeAPICall = async ({method = "GET", url, data}) => {
   try {
     const res = await axios({
-        method: method,
-        url: url,
-        // TODO: access_token으로 모든 API 처리하기
-        data: method === "GET" ? null : data,
+      method: method,
+      url: url,
+      // TODO: access_token으로 모든 API 처리하기
+      data: method === "GET" ? null : data,
     });
     res.headers.get(`access_token`) && localStorage.setItem('token', res.headers.get(`access_token`)) // 로그인이 처음으로 성공했을 때 진행
     return res.data?.body
@@ -1319,23 +1319,17 @@ const ApiManager = {
    * @returns {Promise<Object>} API 응답 결과
    */
   editNicFromVM: async (vmId, nicId, nicData) => {
-    console.log('EDIT NIC API 호출 데이터:', {
-      vmId,
-      nicId,
-      nicData,
-    });
-
+    Logger.debug(`ApiManager > editNicFromVM ... vmId: ${vmId}, nicId: ${nicId}, nicData: ${nicData}`);
     try {
-      const response = await makeAPICall({
+      const res = await makeAPICall({
         method: "PUT",
         url: ENDPOINTS.EDIT_NIC_FROM_VM(vmId, nicId),
         data: nicData, // PUT 요청 시 전송할 데이터
       });
-
-      console.log('EDIT NIC API 응답 데이터:', response);
-      return response;
+      Logger.debug(`ApiManager > editNicFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      return res;
     } catch (error) {
-      console.error('EDIT NIC API 호출 에러:', error.response?.data || error.message);
+      console.error('ApiManager > editNicFromVM ... error:', error.response?.data || error.message);
       throw error;
     }
   },
@@ -1352,7 +1346,6 @@ const ApiManager = {
       vmId,
       nicId,
     });
-  
     return makeAPICall({
       method: "DELETE",
       url: ENDPOINTS.DELETE_NIC_FROM_VM(vmId, nicId),

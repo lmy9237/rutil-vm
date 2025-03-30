@@ -1,6 +1,7 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import NetworkDupl from "../../../components/dupl/NetworkDupl";
 import { useNetworkFromCluster } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name ClusterNetworks
@@ -18,7 +19,7 @@ const ClusterNetworks = ({ clusterId }) => {
     isSuccess: isNetworksSuccess,
   } = useNetworkFromCluster(clusterId, (e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <NetworkDupl

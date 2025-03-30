@@ -8,6 +8,7 @@ import { checkZeroSizeToGB } from "../../util";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 import { status2Icon } from "../icons/RutilVmIcons";
+import SelectedIdView from "../common/SelectedIdView";
 
 const DiskDupl = ({
   isLoading, isError, isSuccess,
@@ -57,10 +58,6 @@ const DiskDupl = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  const selectedIds = (
-    Array.isArray(selectedDisks) ? selectedDisks : []
-  ).map((d) => d.id).join(", ");
-
   const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
 
   const openModal = (action) => setActiveModal(action);
@@ -74,7 +71,6 @@ const DiskDupl = ({
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         )}
 
-        <span>ID: {selectedIds}</span>
         <DiskActionButtons
           openModal={openModal}
           isEditDisabled={selectedDisks.length !== 1}
@@ -101,6 +97,8 @@ const DiskDupl = ({
           />,
         ]}
       />
+
+      <SelectedIdView items={selectedDisks} />
 
       <DiskModals
         activeModal={activeModal}

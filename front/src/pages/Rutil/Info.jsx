@@ -2,6 +2,7 @@ import RutilVmLogo from "../../components/common/RutilVmLogo";
 import { useDashboard } from "../../api/RQHook";
 import Localization from "../../utils/Localization";
 import InfoTable from "../../components/table/InfoTable";
+import Logger from "../../utils/Logger";
 
 /**
  * @name Info
@@ -20,7 +21,7 @@ const Info = () => {
     { label: `부팅${Localization.kr.TIME}(${Localization.kr.UP_TIME})`, value: dashboard?.bootTime ?? "" },
   ];
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <div className="rutil-general-contents">

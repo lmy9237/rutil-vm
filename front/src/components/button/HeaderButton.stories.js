@@ -2,6 +2,7 @@ import { fn } from '@storybook/test';
 import HeaderButton from './HeaderButton';
 import { Subtitle } from '@storybook/blocks';
 import Localization from '../../utils/Localization';
+import Logger from '../../utils/Logger';
 
 export default {
   title: 'Example/HeaderButton',
@@ -30,8 +31,8 @@ export const ClusterHeaderButton = {
     subtitle: '??????????',
     additionalText: '목록이름',
     buttons: [
-      { id: 'edit_btn', label: '편집', onClick: () => console.log('Edit button clicked') },
-      { id: 'delete_btn', label: '삭제', onClick: () => console.log('Delete button clicked') },
+      { id: 'edit_btn', label: '편집', onClick: () => Logger.debug('Edit button clicked') },
+      { id: 'delete_btn', label: '삭제', onClick: () => Logger.debug('Delete button clicked') },
     ],
     popupItems: [
 

@@ -1,3 +1,5 @@
+import Logger from "../utils/Logger";
+
 const ENDPOINT_API_V1 = `/api/v1`
 const ENDPOINTS = {
   //#region: TreeNavigation

@@ -6,6 +6,7 @@ import TablesOuter from "../../table/TablesOuter";
 import { checkZeroSizeToGB, convertBytesToGB } from "../../../util";
 import { useConnDiskListFromVM, useFindDiskListFromDataCenter } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 // 인터페이스 목록
 const interfaceList = [
@@ -96,7 +97,7 @@ const VmDiskConnectionModal = ({
         };
       })
 
-      console.log("Form Data: ", selectedDiskLists);
+      Logger.debug("VmDiskConnectionModal > handleFormSubmit ... ", selectedDiskLists);
       const onSuccess = () => {
         onClose();
         toast.success(`가상머신 디스크 연결 완료`);

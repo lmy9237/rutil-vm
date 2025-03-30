@@ -5,6 +5,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { rvi24Network } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
 import { useAllNetworks } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 import "./Network.css";
 
 /**
@@ -22,7 +23,7 @@ const AllNetwork = () => {
     refetch: neworksRefetch,
   } = useAllNetworks((e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <div id="section">
       <div>

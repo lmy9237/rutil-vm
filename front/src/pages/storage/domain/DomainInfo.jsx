@@ -21,6 +21,7 @@ import {
   useRefreshLunDomain,
 } from "../../../api/RQHook";
 import { rvi24Cloud } from "../../../components/icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DomainInfo
@@ -63,10 +64,9 @@ const DomainInfo = () => {
   }, [section]);
 
   const handleTabClick = (tab) => {
-    const path =
-      tab === "general"
-        ? `/storages/domains/${domainId}`
-        : `/storages/domains/${domainId}/${tab}`;
+    const path = tab === "general"
+      ? `/storages/domains/${domainId}`
+      : `/storages/domains/${domainId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
   };
@@ -95,13 +95,13 @@ const DomainInfo = () => {
   const handleUpdateOvf = async () => {
     if (!domainId) return;
     ovfUpdateDomain(domainId);
-    console.error("OVF 업데이트");
+    Logger.info("OVF 업데이트");
   };
 
   const handleRefresh = async () => {
     if (!domainId) return;
     refreshDomain(domainId);
-    console.error("디스크 검사");
+    Logger.info("디스크 검사");
   };
 
   const sectionHeaderButtons = [

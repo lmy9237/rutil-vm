@@ -8,6 +8,7 @@ import { checkZeroSizeToGB, convertBytesToGB } from "../../util";
 import Localization from "../../utils/Localization";
 import TableRowClick from "../table/TableRowClick";
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
+import SelectedIdView from "../common/SelectedIdView";
 
 /**
  * @name DomainDupl
@@ -24,10 +25,6 @@ const DomainDupl = ({
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDomains, setSelectedDomains] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // ✅ 검색어 상태 추가
-
-  const selectedIds = (Array.isArray(selectedDomains) ? selectedDomains : [])
-    .map((sd) => sd.id)
-    .join(", ");
 
   // 검색어
   const transformedData = domains.map((domain) => ({
@@ -105,6 +102,8 @@ const DomainDupl = ({
           />,
         ]}
       />
+
+      <SelectedIdView items={selectedDomains} />
 
       {/* 도메인 모달창 */}
       <DomainModals

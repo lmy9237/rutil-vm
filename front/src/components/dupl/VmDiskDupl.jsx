@@ -11,6 +11,7 @@ import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import FilterButton from "../button/FilterButton";
 import TableColumnsInfo from "../table/TableColumnsInfo";
+import SelectedIdView from "../common/SelectedIdView";
 
 /**
  * @name VmDiskDupl
@@ -25,13 +26,11 @@ const VmDiskDupl = ({
 }) => {
   const { 
     data: vm
-    
   }  = useVmById(vmId);
   
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDisks, setSelectedDisks] = useState([]); // 다중 선택된 디스크
-  const selectedIds = (Array.isArray(selectedDisks) ? selectedDisks : []).map((disk) => disk.id).join(", ");
 
   const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
 
@@ -103,7 +102,6 @@ const VmDiskDupl = ({
           />
         </div>
       </div>
-      <span style={{fontSize:"16px"}}>ID: {selectedIds || ""}</span>
       
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
@@ -122,6 +120,8 @@ const VmDiskDupl = ({
           />
         ]}
       />
+
+      <SelectedIdView items={selectedDisks} />
       {/* 디스크 모달창 */}
       <Suspense>
         <VmDiskModals

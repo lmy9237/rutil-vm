@@ -6,6 +6,8 @@ import ClusterModals from "../modal/cluster/ClusterModals";
 import ClusterActionButtons from "./ClusterActionButtons";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
+import Logger from "../../utils/Logger";
+import SelectedIdView from "../common/SelectedIdView";
 
 /**
  * @name ClusterDupl
@@ -24,8 +26,7 @@ const ClusterDupl = ({
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedClusters, setSelectedClusters] = useState([]);
-  const selectedIds = (Array.isArray(selectedClusters) ? selectedClusters : []).map((cluster) => cluster.id).join(", ");
-
+  
   const handleNameClick = (id) => navigate(`/computing/clusters/${id}`);
 
   const openModal = (action) => setActiveModal(action);
@@ -68,7 +69,6 @@ const ClusterDupl = ({
           status={status}
         />
       </div>
-      {/* <span style={{fontSize:"16px"}}>ID: {selectedIds}</span> */}
 
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
@@ -88,6 +88,8 @@ const ClusterDupl = ({
         ]}
       />
 
+      <SelectedIdView items={selectedClusters} />
+
       {/* 클러스터 모달창 */}
       <ClusterModals
         activeModal={activeModal}
@@ -95,9 +97,8 @@ const ClusterDupl = ({
         selectedClusters={selectedClusters}
         datacenterId={datacenterId}
         onClose={() => {
-          console.log("ClusterDupl > onClose ... ")
-          closeModal()
-          
+          Logger.debug("ClusterDupl > onClose ... ")
+          closeModal();
         }}
       />
     </>

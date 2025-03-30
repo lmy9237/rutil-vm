@@ -15,6 +15,8 @@ import {
   useDeleteDiskFromVM,
 } from "../api/RQHook";
 import { RVI24, rvi24ErrorRed } from "./icons/RutilVmIcons";
+import Logger from "../utils/Logger";
+import toast from "react-hot-toast";
 
 const DeleteModals = ({
   isOpen,
@@ -59,90 +61,92 @@ const DeleteModals = ({
   }, [data]);
 
   useEffect(() => {
-    console.log("DeleteModal:", data, +id);
+    Logger.debug("DeleteModal:", data, +id);
   }, [data, id]);
 
   const handleFormSubmit = () => {
     if (!id) {
-      console.error("ID가 없습니다. 삭제 요청을 취소합니다.");
+      const msg = `ID가 없습니다. 삭제 요청을 취소합니다.`;
+      Logger.error(`DeleteModal > handleFormSubmit ... ${msg}`);
+      toast.error(msg)
       return;
     }
-
-    if (type === "DataCenter") {
-      console.log("Deleting DataCenter");
+    Logger.debug(`DeleteModal > handleFormSubmit ... type: ${type}`);
+    const _type = type.toLowerCase();
+    switch(_type) {
+    case "datacenter": 
+      Logger.debug(`DeleteModal > handleFormSubmit ... DataCenter 삭제`);
       id.forEach((datacenterId, index) => {
         handleDelete(() => deleteDataCenter(datacenterId), name[index]);
       });
-    } else if (type === "Cluster") {
-      console.log("Deleting Cluster");
+      onRequestClose();break;
+    case "cluster":
+      Logger.debug(`DeleteModal > handleFormSubmit ... Cluster 삭제`);
       id.forEach((clsuterId, index) => {
         handleDelete(() => deleteCluster(clsuterId), name[index]);
       });
-      onRequestClose();
-    } else if (type === "Host") {
-      console.log("Deleting Host");
+      onRequestClose();break;
+    case "host":
+      Logger.debug(`DeleteModal > handleFormSubmit ... Host 삭제`);
       id.forEach((hostId, index) => {
         handleDelete(() => deleteHost(hostId), name[index]);
       });
-    } else if (type === "Template") {
-      console.log("Deleting Template");
+      onRequestClose();break;
+    case "template":
+      Logger.debug(`DeleteModal > handleFormSubmit ... Template 삭제`);
       id.forEach((templateId, index) => {
         handleDelete(() => deleteTemplate(templateId), name[index]);
       });
-      onRequestClose();
-    } else if (type === "Network") {
-      console.log("Deleting Network");
+      onRequestClose();break;
+    case "network":
+      Logger.debug(`DeleteModal > handleFormSubmit ... Network 삭제`);
       id.forEach((networkId, index) => {
         handleDelete(() => deleteNetwork(networkId), name[index]);
       });
-      onRequestClose();
-    } else if (type === "vnicProfile") {
-      console.log("Deleting vnicProfile");
+      onRequestClose();break;
+    case "vnicprofile":
+      Logger.debug(`DeleteModal > handleFormSubmit ... vNic Profile 삭제`);
       id.forEach((vnicProfileId, index) => {
         handleDelete(() => deleteVnicProfile(vnicProfileId), name[index]);
       });
-      onRequestClose();
-    } else if (type === "NetworkInterface") {
+      onRequestClose();break;
+    case "networkinterface":
+      Logger.debug(`DeleteModal > handleFormSubmit ... NetworkInterface 삭제`);
       handleDelete(() => deleteNetworkInterface({ vmId, nicId: id }));
-      console.log("Deleting NetworkInterface");
-      onRequestClose();
-    } else if (
-      type === "NetworkInterfaceFromTemplate" ||
-      type === "TemplateNic"
-    ) {
+      /*id.forEach((nicId, index) => {
+        handleDelete(() => deleteNetworkInterface({ vmId, nicId: id }));
+      })*/
+      onRequestClose();break;
+    case "networkinterfacefromtemplate":
+    case "templatenic":
+      Logger.debug(`DeleteModal > handleFormSubmit ... NicFromTemplate 삭제`);
       id.forEach((nicId) => {
         handleDelete(() => deleteNicFromTemplate({ templateId, nicId }));
       });
-      console.log("Deleting NicFromTemplate");
-      onRequestClose();
-    } else if (type === "Disk") {
-      console.log("Deleting Disk");
+      onRequestClose();break;
+    case "disk":
+      Logger.debug(`DeleteModal > handleFormSubmit ... Disk 삭제`);
       id.forEach((diskkId, index) => {
         handleDelete(() => deleteDisk(diskkId), name[index]); // 각 네트워크를 개별적으로 삭제
       });
-      onRequestClose();
-    } else if (type === "Snapshot") {
-      console.log("Deleting Snapshots");
+      onRequestClose();break;
+    case "snapshot":
+      Logger.debug(`DeleteModal > handleFormSubmit ... Snapshot 삭제`);
       id.forEach((snapshotId, index) => {
         handleDelete(() => deleteSnapshot({ vmId, snapshotId }));
       });
-      onRequestClose();
-    } else if (type === "vmDisk") {
-      console.log("Deleting vmDisk");
+      onRequestClose();break;
+    case "vmdisk":
+      Logger.debug("Deleting vmDisk");
       handleDelete(() => deleteDiskFromVM({ vmId, diskAttachmentId: id }));
-      onRequestClose();
-    } else if (type === "TemplateNic") {
-      handleDelete(() => deleteNicFromTemplate({ templateId, nicId: id }));
-      console.log("Deleting NicFromTemplate");
-      onRequestClose();
-    }
+      onRequestClose();break;
+    default: onRequestClose();break;
+    }    
   };
 
-  const handleDelete = (deleteFn) => {
+  const handleDelete = (deleteFn = () => {}) => {
     deleteFn(id, {
       onSuccess: () => {
-        onRequestClose(); // 삭제 성공 시 모달 닫기
-
         if (type === "DataCenter") {
           // Datacenter 삭제 후 특정 경로로 이동
           navigate("/computing/rutil-manager/datacenters");
@@ -162,9 +166,10 @@ const DeleteModals = ({
             window.location.reload();
           }
         }
+        onRequestClose(); // 삭제 성공 시 모달 닫기
       },
       onError: (error) => {
-        console.error(`${contentLabel} ${name} 삭제 오류:`, error);
+        Logger.error(`${contentLabel} ${name} 삭제 오류:`, error);
       },
     });
   };
@@ -177,13 +182,11 @@ const DeleteModals = ({
       onSubmit={handleFormSubmit}
     >
       <div className="disk-delete-box">
-        <div>
-          <RVI24
-            className="error-icon"
-            iconDef={rvi24ErrorRed}
-          />
-          <span>&nbsp;{name} 를(을) 삭제하시겠습니까?&nbsp;</span>
-        </div>
+        <RVI24
+          className="error-icon"
+          iconDef={rvi24ErrorRed}
+        />
+        <span>&nbsp;{name} 를(을) 삭제하시겠습니까?&nbsp;</span>
       </div>
     </BaseModal>
   );

@@ -1,6 +1,7 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import HostDupl from "../../../components/dupl/HostDupl";
 import { useHostsFromDataCenter } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DataCenterHosts
@@ -18,7 +19,7 @@ const DataCenterHosts = ({ datacenterId }) => {
     isSuccess: isHostsSuccess,
   } = useHostsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...")
   return (
     <>
       <HostDupl

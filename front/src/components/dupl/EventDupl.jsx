@@ -4,6 +4,8 @@ import { severity2Icon } from "../icons/RutilVmIcons";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
 import TablesOuter from "../table/TablesOuter";
+import Logger from "../../utils/Logger";
+import SelectedIdView from "../common/SelectedIdView";
 
 /**
  * @name HostEvents
@@ -21,23 +23,16 @@ const EventDupl = ({
   handleRowClick,
   showSearchBox = true,
 }) => {
-  const [selectedEvents, setSelectedEvents] = useState([]);
-
   const transformedData = events.map((e) => ({
     ...e,
     _severity: severity2Icon(e?.severity),
   }))
-
+  const [selectedEvents, setSelectedEvents] = useState([]);
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  const selectedIds = (
-    Array.isArray(selectedEvents) ? selectedEvents : []
-  ).map((e) => e.id).join(", ");
-  
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
-      <span>ID: {selectedIds}</span>
       <div className="dupl-header-group">
         {showSearchBox && (
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -52,6 +47,8 @@ const EventDupl = ({
         multiSelect={true}
         showSearchBox={showSearchBox} // 검색 박스 표시 여부 제어
       />
+      
+      <SelectedIdView items={selectedEvents} />
     </>
   );
 };

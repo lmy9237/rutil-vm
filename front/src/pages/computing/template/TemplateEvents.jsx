@@ -1,5 +1,6 @@
 import EventDupl from "../../../components/dupl/EventDupl";
 import { useAllEventFromTemplate } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name TemplateEvents
@@ -17,7 +18,7 @@ const TemplateEvents = ({ templateId }) => {
     isSuccess: isEventsSuccess,
   } = useAllEventFromTemplate(templateId, (e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <EventDupl

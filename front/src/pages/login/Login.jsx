@@ -5,9 +5,9 @@ import RutilVmLogo from "../../components/common/RutilVmLogo";
 import IconInput from "../../components/Input/IconInput";
 import Localization from "../../utils/Localization";
 import FooterCompany from "../../components/footer/FooterCompany";
-import { useAuthenticate } from "../../api/RQHook";
-import useGlobal from "../../hooks/useGlobal";
 import useAuth from "../../hooks/useAuth";
+import { useAuthenticate } from "../../api/RQHook";
+import Logger from "../../utils/Logger";
 import "./Login.css";
 
 const Login = () => {
@@ -34,7 +34,7 @@ const Login = () => {
     isLoading: isAuthLoading,
     mutate: authMutate,
   } = useAuthenticate(username, password, (res) => {
-    console.log(res);
+    Logger.debug(res);
     if (!res || res.code > 200) {
       toast.error(`실패 ... ${res.message}`);
       return;
@@ -83,7 +83,7 @@ const Login = () => {
             placeholder={Localization.kr.PLACEHOLDER_USERNAME}
             value={username ?? ""}
             onChange={(e) => {
-              console.log("Username:", e.target.value); // 확인용 로그
+              Logger.debug(`Username: ${e.target.value}`); // 확인용 로그
               setUsername(e.target.value);
             }}
           />
@@ -100,15 +100,7 @@ const Login = () => {
             className="login-button f-center bgcolor-primary"
             disabled={isAuthLoading}
           >
-            {isAuthLoading ? (
-              <>
-                로그인 중...
-              </>
-            ) : (
-              <>
-                로그인
-              </>
-            )}
+            {isAuthLoading ? (<>로그인 중...</>) : (<>로그인</>)}
           </button>
         </form>
       </div>

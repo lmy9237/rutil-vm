@@ -1,7 +1,7 @@
 import React from "react";
-import DynamicInputList from "../../../label/DynamicInputList";
 import Localization from "../../../../utils/Localization";
 import { RVI36, rvi36Add, rvi36Remove } from "../../../icons/RutilVmIcons";
+import Logger from "../../../../utils/Logger";
 
 const VmNic = ({
   nics,
@@ -14,7 +14,7 @@ const VmNic = ({
     vnicProfileVo: { id: nic?.vnicProfileVo?.id, name: nic?.vnicProfileVo?.name }
   }));
 
-  console.log("NIC 확인용:", nicsState);
+  Logger.debug("NIC 확인용:", nicsState);
 
   const handleChange = (index, value) => {
     const updated = [...nicsState];

@@ -7,6 +7,7 @@ import HostActionButtons from "./HostActionButtons";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
+import SelectedIdView from "../common/SelectedIdView";
 
 const HostDupl = ({
   isLoading, isError, isSuccess,
@@ -15,7 +16,6 @@ const HostDupl = ({
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedHosts, setSelectedHosts] = useState([]);
-  const selectedIds = (Array.isArray(selectedHosts) ? selectedHosts : []).map((host) => host.id).join(", ");
 
   const handleNameClick = (id) => navigate(`/computing/hosts/${id}`);
 
@@ -63,7 +63,6 @@ const HostDupl = ({
         />
 
       </div>
-      <span>ID: {selectedIds || ""}</span>
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         columns={columns}
@@ -82,6 +81,7 @@ const HostDupl = ({
           />,
         ]}
       />
+      <SelectedIdView items={selectedHosts}/>
 
       {/* 호스트 모달창 */}
       <HostModals

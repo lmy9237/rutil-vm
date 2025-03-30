@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Tooltip } from "react-tooltip";
 import "./Table.css";
+import Logger from "../../utils/Logger";
 
 /**
  * @name Table
@@ -112,7 +113,7 @@ const Table = ({
   };
 
   const handleRowClick = (rowIndex, e) => {
-    console.log(`Table > handleRowClick ... rowIndex: ${rowIndex}`);
+    Logger.debug(`Table > handleRowClick ... rowIndex: ${rowIndex}`);
     const clickedRow = sortedData[rowIndex];
     if (e.ctrlKey) {
       setSelectedRows((prev) => {
@@ -130,7 +131,7 @@ const Table = ({
   };
 
   const handleContextMenu = (e, rowIndex) => {
-    console.log("Table > handleContextMenu ... ");
+    Logger.debug("Table > handleContextMenu ... ");
     e.preventDefault();
     const rowData = sortedData[rowIndex];
     setSelectedRows([rowIndex]);
@@ -148,13 +149,13 @@ const Table = ({
         menuItems,
       });
     } else {
-      console.warn("No context menu items provided.");
+      Logger.warn("No context menu items provided.");
     }
 
     setContextRowIndex(rowIndex);
   };
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <div className="w-full overflow-y-auto overflow-x-hidden">
       <table

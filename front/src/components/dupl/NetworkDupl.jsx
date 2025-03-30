@@ -4,10 +4,11 @@ import NetworkActionButtons from "./NetworkActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import NetworkModals from "../modal/network/NetworkModals";
-import "./Dupl.css";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
 import Localization from "../../utils/Localization";
+import SelectedIdView from "../common/SelectedIdView";
+import "./Dupl.css";
 
 /**
  * @name NetworkDupl
@@ -55,10 +56,6 @@ const NetworkDupl = ({
   // 변환된 데이터에서 검색 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
 
-  const selectedIds = (Array.isArray(selectedNetworks) ? selectedNetworks : [])
-    .map((network) => network.id)
-    .join(", ");
-  
   const handleNameClick = (id) => navigate(`/networks/${id}`);
 
   // 모달 열기 / 닫기
@@ -103,6 +100,8 @@ const NetworkDupl = ({
           />,
         ]}
       />
+
+      <SelectedIdView items={selectedNetworks} />
 
       {/* 네트워크 모달창 */}
       <NetworkModals

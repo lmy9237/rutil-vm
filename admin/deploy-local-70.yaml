@@ -87,6 +87,7 @@ services:
       LANG: ko_KR.utf8
       NODE_ENV: production
       __RUTIL_VM_OVIRT_IP_ADDRESS__: 192.168.0.70
+      __RUTIL_VM_LOGGING_ENABLED__: true
     volumes:
       - ./rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro

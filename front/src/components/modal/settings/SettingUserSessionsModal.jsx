@@ -1,5 +1,4 @@
-import React from "react";
-import BaseModal from "../BaseModal"
+import Logger from "../../../utils/Logger";
 
 /**
  * @name SettingUserSessionsModal
@@ -8,9 +7,11 @@ import BaseModal from "../BaseModal"
  * @returns 
  */
 const SettingUserSessionsModal = ({
-  modalType, userSession, onClose 
+  modalType
+  , userSession
+  , onClose
 }) => {
-  console.log("...")
+  Logger.debug("...")
   return (
     <>
     {/* <BaseModal isOpen={isOpen} onClose={onClose}

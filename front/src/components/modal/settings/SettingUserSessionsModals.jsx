@@ -1,5 +1,6 @@
 import React from "react";
 import SettingUserSessionsModal from "./SettingUserSessionsModal"
+import Logger from "../../../utils/Logger";
 
 /**
  * @name SettingUserSessionsModals
@@ -17,14 +18,14 @@ const SettingUserSessionsModals = ({
       />
     ),
   }
-  console.log("...")
-    return (
-      <>
-        {Object.keys(allModals).map((key) => (
-          <React.Fragment key={key}>{allModals[key]}</React.Fragment>
-        ))}
-      </>
-    );
+  Logger.debug("...")
+  return (
+    <>
+      {Object.keys(allModals).map((key) => (
+        <React.Fragment key={key}>{allModals[key]}</React.Fragment>
+      ))}
+    </>
+  );
 }
 
 export default SettingUserSessionsModals

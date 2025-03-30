@@ -1,4 +1,5 @@
 import toast, { useToaster } from "react-hot-toast/headless";
+import Logger from "../../utils/Logger";
 
 /**
  * @name DataNotifyToast
@@ -12,11 +13,10 @@ const DataNotifyToast = ({ data }) => {
   const { toasts, handlers } = useToaster();
   const { startPause, endPause } = handlers;
 
-  console.log("...")
+  Logger.debug("...")
   return (
     <div onMouseEnter={startPause} onMouseLeave={endPause}>
-      {toasts
-        .filter((toast) => toast.visible)
+      {toasts.filter((toast) => toast.visible)
         .map((toast) => (
           <div key={toast.id} {...toast.ariaProps}>
             {toast.message}

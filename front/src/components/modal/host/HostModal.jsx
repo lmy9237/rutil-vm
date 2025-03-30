@@ -14,6 +14,7 @@ import { checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import "./MHost.css";
+import Logger from "../../../utils/Logger";
 
 const initialFormState = {
   id: "",
@@ -33,7 +34,13 @@ const initialFormState = {
  * @param {boolean} isOpen
  * @returns
  */
-const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
+const HostModal = ({ 
+  isOpen
+  , editMode=false
+  , hId
+  , clusterId
+  , onClose
+}) => {
   const hLabel = editMode ? "편집" : "생성";
   const [formState, setFormState] = useState(initialFormState);
   const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
@@ -50,7 +57,7 @@ const HostModal = ({ isOpen, editMode = false, hId, clusterId, onClose }) => {
   useEffect(() => {
     if (!isOpen) return setFormState(initialFormState);
     if (editMode && host) {
-      console.log("hostModal", host);
+      Logger.debug(`hostModal: ${JSON.stringify(host, null, 2)}`);
       setFormState({
         id: host?.id,
         name: host?.name,

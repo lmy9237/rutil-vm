@@ -14,6 +14,7 @@ import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
 import { checkName, convertBytesToGB } from "../../../util";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
+import Logger from "../../../utils/Logger";
 
 const sizeToGB = (data) => Math.ceil(data / Math.pow(1024, 3));
 const onlyFileName = (fileName) => {
@@ -131,7 +132,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
       new Blob([JSON.stringify(dataToSubmit)], { type: "application/json" })
     ); // JSON 데이터 추가
 
-    console.log(`디스크 업로드 데이터 ${diskData}`);
+    Logger.debug(`디스크 업로드 데이터 ${diskData}`);
 
     uploadDisk(diskData, {
       onSuccess: () => {

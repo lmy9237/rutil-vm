@@ -1,4 +1,5 @@
 import EventDupl from "../../../components/dupl/EventDupl";
+import Logger from "../../../utils/Logger";
 import { useEventFromCluster } from "../../../api/RQHook";
 
 /**
@@ -15,16 +16,15 @@ const ClusterEvents = ({ clusterId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
-  } = useEventFromCluster(clusterId, (e) => ({ ...e }));
+  } = useEventFromCluster(clusterId, (e) => ({ 
+    ...e
+  }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
-    <>
-      <EventDupl
-        isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-        events={events}
-      />
-    </>
+    <EventDupl events={events}
+      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+    />
   );
 };
 

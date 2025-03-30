@@ -2,34 +2,42 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ApiManager from "./ApiManager";
 import toast from "react-hot-toast";
 import Localization from "../utils/Localization";
+import Logger from "../utils/Logger";
 
 //#region: Navigation
-// Custom hook to fetch tree navigations
-export const useAllTreeNavigations = (type = "none", mapPredicate = null) => {
+/**
+ * @name useAllTreeNavigations
+ * @description 트리네비게이션 API
+ * 
+ * @param {string} type =
+ * @param {function} mapPredicate 변형 조건
+ * 
+ * @returns 
+ * @see ApiManager.findAllTreeNaviations
+ */
+export const useAllTreeNavigations = (type = "none", mapPredicate=null) => {
   return useQuery({
     refetchOnWindowFocus: true,
     queryKey: ['allTreeNavigations', type],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
     queryFn: async () => {
+      Logger.debug(`[allTreeNavigations] useAllTreeNavigations ... `);
       const res = await ApiManager.findAllTreeNaviations(type);  // type을 기반으로 API 호출
-      if (mapPredicate)
-        return res?.map((e) => mapPredicate(e)) ?? [];  // 데이터 가공 처리
-      else 
-        return res ?? [];  // 기본 데이터 반환
+      return mapPredicate 
+        ? res?.map((e) => mapPredicate(e)) ?? [] // 데이터 가공 처리
+        : res ?? []; // 기본 데이터 반환
     }
   });
 };
 //#endregion
 
 //#region: Dashboard
-export const useDashboard = (mapPredicate) => useQuery({
+export const useDashboard = (mapPredicate=null) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboard'],
   queryFn: async () => {
-    console.log(`useDashboard ...`);
+    Logger.debug(`[dashboard] useDashboard ...`);
     const res = await ApiManager.getDashboard()
-    // setShouldRefresh(prevValue => false)
     return res
-    // return res?.map((e) => mapPredicate(e)) ?? []
   }
 }); 
 
@@ -37,7 +45,7 @@ export const useDashboardCpuMemory = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardCpuMemory'],
   queryFn: async () => {
-    console.log(`useDashboardCpuMemory ...`);
+    Logger.debug(`useDashboardCpuMemory ...`);
     const res = await ApiManager.getCpuMemory()
     // setShouldRefresh(prevValue => false)
     return res ?? []
@@ -58,7 +66,7 @@ export const useDashboardHosts = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardHosts'],
   queryFn: async () => {
-    console.log(`useDashboardHosts ...`);
+    Logger.debug(`useDashboardHosts ...`);
     const res = await ApiManager.getHosts()
     // setShouldRefresh(prevValue => false)
     return res ?? []
@@ -69,7 +77,7 @@ export const useDashboardDomain = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardDomain'],
   queryFn: async () => {
-    console.log(`useDashboardDomain ...`);
+    Logger.debug(`useDashboardDomain ...`);
     const res = await ApiManager.getDomain()
     // setShouldRefresh(prevValue => false)
     return res ?? []
@@ -80,7 +88,7 @@ export const useDashboardHost = (hostId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardHost'],
   queryFn: async () => {
-    console.log(`useDashboardHost ...`, hostId);
+    Logger.debug(`useDashboardHost ...`, hostId);
     const res = await ApiManager.getHost(hostId)
     // setShouldRefresh(prevValue => false)
     return res ?? []
@@ -91,7 +99,7 @@ export const useDashboardVmCpu = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardVmCpu'],
   queryFn: async () => {
-    console.log(`useDashboardVmCpu ...`);
+    Logger.debug(`useDashboardVmCpu ...`);
     const res = await ApiManager.getVmCpu()
     // setShouldRefresh(prevValue => false)
     return res ?? []
@@ -102,7 +110,7 @@ export const useDashboardVmMemory = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardVmMemory'],
   queryFn: async () => {
-    console.log(`useDashboardVmMemory ...`);
+    Logger.debug(`useDashboardVmMemory ...`);
     const res = await ApiManager.getVmMemory()
     // setShouldRefresh(prevValue => false)
     return res ?? []
@@ -113,7 +121,7 @@ export const useDashboardStorageMemory = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardStorageMemory'],
   queryFn: async () => {
-    console.log(`useDashboardStorageMemory ...`);
+    Logger.debug(`useDashboardStorageMemory ...`);
     const res = await ApiManager.getStorageMemory()
     // setShouldRefresh(prevValue => false)
     return res ?? []
@@ -125,7 +133,7 @@ export const useDashboardPerVmCpu = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardPerVmCpu'],
   queryFn: async () => {
-    console.log(`dashboardPerVmCpu ...`);
+    Logger.debug(`dashboardPerVmCpu ...`);
     const res = await ApiManager.getPerVmCpu()
     // setShouldRefresh(prevValue => false)
     return res ?? []
@@ -136,7 +144,7 @@ export const useDashboardPerVmMemory = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardPerVmMemory'],
   queryFn: async () => {
-    console.log(`dashboardPerVmMemory ...`);
+    Logger.debug(`dashboardPerVmMemory ...`);
     const res = await ApiManager.getPerVmMemory()
     // setShouldRefresh(prevValue => false)
     return res ?? []
@@ -147,7 +155,7 @@ export const useDashboardPerVmNetwork = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardPerVmNetwork'],
   queryFn: async () => {
-    console.log(`dashboardPerVmNetwork ...`);
+    Logger.debug(`dashboardPerVmNetwork ...`);
     const res = await ApiManager.getPerVmNetwork()
     // setShouldRefresh(prevValue => false)
     return res ?? []
@@ -159,7 +167,7 @@ export const useDashboardMetricVmCpu = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardMetricVmCpu'],
   queryFn: async () => {
-    console.log(`useDashboardMetricVmCpu ...`);
+    Logger.debug(`useDashboardMetricVmCpu ...`);
     const res = await ApiManager.getMetricVmCpu()
     return res ?? []
   }
@@ -168,7 +176,7 @@ export const useDashboardMetricVmMemory = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardMetricVmMemory'],
   queryFn: async () => {
-    console.log(`useDashboardMetricVmMemory ...`);
+    Logger.debug(`useDashboardMetricVmMemory ...`);
     const res = await ApiManager.getMetricVmMemory()
     return res ?? []
   }
@@ -177,7 +185,7 @@ export const useDashboardMetricStorage = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardMetricStorage'],
   queryFn: async () => {
-    console.log(`useDashboardMetricStorage ...`);
+    Logger.debug(`useDashboardMetricStorage ...`);
     const res = await ApiManager.getMetricStorage()
     return res ?? []
   }
@@ -198,7 +206,7 @@ export const useAllDataCenters = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allDataCenters'],
   queryFn: async () => {
-    console.log(`useAllDataCenters ...`);
+    Logger.debug(`useAllDataCenters ...`);
     const res = await ApiManager.findAllDataCenters()
     // setShouldRefresh(prevValue => false)
     return res?.map((e) => mapPredicate(e)) ?? []
@@ -215,7 +223,7 @@ export const useDataCenter = (dataCenterId) => useQuery({
   refetchOnWindowFocus: true,  // 윈도우가 포커스될 때마다 데이터 리프레시
   queryKey: ['dataCenter', dataCenterId],  // queryKey에 dataCenterId를 포함시켜 dataCenterId가 변경되면 다시 요청
   queryFn: async () => {
-    console.log(`useDataCenter ...`);
+    Logger.debug(`useDataCenter ...`);
     const res = await ApiManager.findDataCenter(dataCenterId);  // dataCenterId에 따라 API 호출
     return res ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
   },
@@ -236,7 +244,7 @@ export const useClustersFromDataCenter = (dataCenterId, mapPredicate) => useQuer
   refetchOnWindowFocus: true,
   queryKey: ['clustersFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    console.log(`clustersFromDataCenter ...`);
+    Logger.debug(`clustersFromDataCenter ...`);
     const res = await ApiManager.findAllClustersFromDataCenter(dataCenterId); 
     return res?.map(mapPredicate) ?? []; // 데이터 가공
   },
@@ -258,7 +266,7 @@ export const useHostsFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
   queryKey: ['hostsFromDataCenter', dataCenterId], 
   queryFn: async () => {
     // if(dataCenterId === '') return [];
-    console.log(`hostsFromDataCenter ... ${dataCenterId}`);
+    Logger.debug(`hostsFromDataCenter ... ${dataCenterId}`);
     const res = await ApiManager.findAllHostsFromDataCenter(dataCenterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -278,7 +286,7 @@ export const useVMsFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['vmsFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    console.log(`vmsFromDataCenter ... ${dataCenterId}`);
+    Logger.debug(`vmsFromDataCenter ... ${dataCenterId}`);
     const res = await ApiManager.findAllVmsFromDataCenter(dataCenterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -300,7 +308,7 @@ export const useDomainsFromDataCenter = (dataCenterId, mapPredicate) => useQuery
   refetchOnWindowFocus: true,
   queryKey: ['domainsFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    console.log(`domainsFromDataCenter ... ${dataCenterId}`);
+    Logger.debug(`domainsFromDataCenter ... ${dataCenterId}`);
     const res = await ApiManager.findAllDomainsFromDataCenter(dataCenterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -320,7 +328,7 @@ export const useNetworksFromDataCenter = (dataCenterId, mapPredicate) => useQuer
   refetchOnWindowFocus: true,
   queryKey: ['networksFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    console.log(`networksFromDataCenter ... ${dataCenterId}`);
+    Logger.debug(`networksFromDataCenter ... ${dataCenterId}`);
     const res = await ApiManager.findAllNetworksFromDataCenter(dataCenterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -340,7 +348,7 @@ export const useEventsFromDataCenter = (dataCenterId, mapPredicate) => useQuery(
   refetchOnWindowFocus: true,
   queryKey: ['eventsFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    console.log(`eventsFromDataCenter ... ${dataCenterId}`);
+    Logger.debug(`eventsFromDataCenter ... ${dataCenterId}`);
     const res = await ApiManager.findAllEventsFromDataCenter(dataCenterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   }
@@ -360,7 +368,7 @@ export const useFindTemplatesFromDataCenter = (dataCenterId, mapPredicate) => us
   refetchOnWindowFocus: true,
   queryKey: ['findTemplatesFromDataCenter', dataCenterId ], 
   queryFn: async () => {
-    console.log(`findTemplatesFromDataCenter ...`, dataCenterId);
+    Logger.debug(`findTemplatesFromDataCenter ...`, dataCenterId);
     const res = await ApiManager.findTemplatesFromDataCenter(dataCenterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -380,7 +388,7 @@ export const useFindDiskListFromDataCenter = (dataCenterId, mapPredicate) => use
   refetchOnWindowFocus: true,
   queryKey: ['FindDiskListFromDataCenter', dataCenterId ], 
   queryFn: async () => {
-    console.log(`FindDiskListFromDataCenter ...`, dataCenterId);
+    Logger.debug(`FindDiskListFromDataCenter ...`, dataCenterId);
     const res = await ApiManager.findDiskListFromDataCenter(dataCenterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -401,7 +409,7 @@ export const useCDFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['CDFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    // console.log(`useCDFromDataCenter ...`, dataCenterId);
+    // Logger.debug(`useCDFromDataCenter ...`, dataCenterId);
     const res = await ApiManager.findAllISOFromDataCenter(dataCenterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -445,7 +453,7 @@ export const useAddDataCenter = () => {
       queryClient.invalidateQueries('allDataCenters'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
     },
     onError: (error) => {
-      console.error('Error adding data center:', error);
+      Logger.error('Error adding data center:', error);
     },  
   });
 };
@@ -464,7 +472,7 @@ export const useEditDataCenter = () => {
       queryClient.invalidateQueries('allDataCenters');
     },
     onError: (error) => {
-      console.error('Error editing data center:', error);
+      Logger.error('Error editing data center:', error);
     },
   });
 };
@@ -483,7 +491,7 @@ export const useDeleteDataCenter = () => {
       queryClient.invalidateQueries('allDataCenters');
     },
     onError: (error) => {
-      console.error('Error deleting data center:', error);
+      Logger.error('Error deleting data center:', error);
     },
   });
 };
@@ -503,7 +511,7 @@ export const useAllClusters = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allClusters'],
   queryFn: async () => {
-    console.log(`useAllClusters ...`);
+    Logger.debug(`useAllClusters ...`);
     const res = await ApiManager.findAllClusters()
     // setShouldRefresh(prevValue => false)
     return res?.map((e) => mapPredicate(e)) ?? []
@@ -520,7 +528,7 @@ export const useAllUpClusters = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allClusters'],
   queryFn: async () => {
-    console.log(`useAllUpClusters ...`);
+    Logger.debug(`useAllUpClusters ...`);
     const res = await ApiManager.findAllUpClusters()
     return res?.map((e) => mapPredicate(e)) ?? []
   }
@@ -539,7 +547,7 @@ export const useCluster = (clusterId) => useQuery({
   queryKey: ['cluster', clusterId],  // queryKey에 clusterId를 포함시켜 clusterId가 변경되면 다시 요청
   queryFn: async () => {
     // if (!clusterId) return {};  // clusterId가 없을 때 빈 객체 반환
-    console.log(`useCluster ... ${clusterId}`);
+    Logger.debug(`useCluster ... ${clusterId}`);
     const res = await ApiManager.findCluster(clusterId);  // clusterId에 따라 API 호출
     return res ?? {};  // 반환값이 없으면 빈 객체 반환
   },
@@ -561,7 +569,7 @@ export const useNetworkFromCluster = (clusterId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['networkFromCluster', clusterId], 
   queryFn: async () => {
-    console.log(`테스트해보기useNetworkFromCluster ... ${clusterId}`);
+    Logger.debug(`테스트해보기useNetworkFromCluster ... ${clusterId}`);
     const res = await ApiManager.findNetworksFromCluster(clusterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -581,7 +589,7 @@ export const useHostFromCluster = (clusterId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['hostsFromCluster', clusterId], 
   queryFn: async () => {
-    console.log(`useHostFromCluster ... ${clusterId}`);
+    Logger.debug(`useHostFromCluster ... ${clusterId}`);
     const res = await ApiManager.findHostsFromCluster(clusterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -604,7 +612,7 @@ export const useVMFromCluster = (clusterId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['vmsFromCluster', clusterId], 
   queryFn: async () => {
-    console.log(`useVMFromCluster ... ${clusterId}`);
+    Logger.debug(`useVMFromCluster ... ${clusterId}`);
     const res = await ApiManager.findVMsFromCluster(clusterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   }
@@ -623,7 +631,7 @@ export const useVMFromCluster = (clusterId, mapPredicate) => useQuery({
 //   refetchOnWindowFocus: true,
 //   queryKey: ['permissionsFromCluster', clusterId], 
 //   queryFn: async () => {
-//     console.log(`usePermissionromCluster ... ${clusterId}`);
+//     Logger.debug(`usePermissionromCluster ... ${clusterId}`);
 //     const res = await ApiManager.findPermissionsFromCluster(clusterId); 
 //     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
 //   }
@@ -643,7 +651,7 @@ export const useCpuProfilesFromCluster = (clusterId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['cpuProfilesFromCluster', clusterId], 
   queryFn: async () => {
-    console.log(`useHostFromCluster ... ${clusterId}`);
+    Logger.debug(`useHostFromCluster ... ${clusterId}`);
     const res = await ApiManager.findCpuProfilesFromCluster(clusterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -666,7 +674,7 @@ export const useOsSystemsFromCluster = (clusterId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['osSystemsFromCluster', clusterId], 
   queryFn: async () => {
-    console.log(`useOsSystemsFromCluster ... ${clusterId}`);
+    Logger.debug(`useOsSystemsFromCluster ... ${clusterId}`);
     const res = await ApiManager.findOsSystemsFromCluster(clusterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -689,7 +697,7 @@ export const useEventFromCluster = (clusterId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['eventsFromCluster', clusterId], 
   queryFn: async () => {
-    console.log(`useEventFromCluster ... ${clusterId}`);
+    Logger.debug(`useEventFromCluster ... ${clusterId}`);
     const res = await ApiManager.findEventsFromCluster(clusterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -711,7 +719,7 @@ export const useAddCluster = () => {
       queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
     },
     onError: (error) => {
-      console.error('Error adding cluster:', error);
+      Logger.error('Error adding cluster:', error);
     },  
   });
 };
@@ -730,7 +738,7 @@ export const useEditCluster = () => {
       queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
     },
     onError: (error) => {
-      console.error('Error editing cluster:', error);
+      Logger.error('Error editing cluster:', error);
     },
   });
 };
@@ -749,7 +757,7 @@ export const useDeleteCluster = () => {
       queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
     },
     onError: (error) => {
-      console.error('Error deleting cluster:', error);
+      Logger.error('Error deleting cluster:', error);
     },
   });
 };
@@ -786,16 +794,16 @@ export const useHost = (hostId) => useQuery({
   queryKey: ['HostById',hostId],
   queryFn: async () => {
     if (!hostId) throw new Error('Host ID is missing.');
-    console.log(`useHost ... ${hostId}`)
+    Logger.debug(`useHost ... ${hostId}`)
     const res = await ApiManager.findHost(hostId)
     return res ?? {}
   },
   enabled: !!hostId
   // onSuccess: (data) => {
-  //   console.log('host data:', data);
+  //   Logger.debug('host data:', data);
   // },
   // onError: (error) => {
-  //   console.error('API 에러:', error.message);
+  //   Logger.error('API 에러:', error.message);
   // },
 })
 
@@ -814,7 +822,7 @@ export const useVmFromHost = (hostId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['VmFromHost', hostId], 
   queryFn: async () => {
-    console.log(`useVmFromHost ... ${hostId}`);
+    Logger.debug(`useVmFromHost ... ${hostId}`);
     const res = await ApiManager.findVmsFromHost(hostId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -835,7 +843,7 @@ export const useNetworkInterfaceFromHost = (hostId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['NetworkInterfaceFromHost', hostId], 
   queryFn: async () => {
-    console.log(`useNetworkInterfaceFromHost ... ${hostId}`);
+    Logger.debug(`useNetworkInterfaceFromHost ... ${hostId}`);
     const res = await ApiManager.findHostNicsFromHost(hostId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -856,7 +864,7 @@ export const useHostdeviceFromHost = (hostId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['HostdeviceFromHost', hostId], 
   queryFn: async () => {
-    console.log(`useHostdeviceFromHost ... ${hostId}`);
+    Logger.debug(`useHostdeviceFromHost ... ${hostId}`);
     const res = await ApiManager.findHostdevicesFromHost(hostId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -876,7 +884,7 @@ export const useEventFromHost = (hostId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['EventFromHost', hostId], 
   queryFn: async () => {
-    console.log(`EventFromHost ... ${hostId}`);
+    Logger.debug(`EventFromHost ... ${hostId}`);
     const res = await ApiManager.findEventsFromHost(hostId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -898,15 +906,15 @@ export const useIscsiFromHost = (hostId, mapPredicate) => useQuery({
   queryKey: ['IscsiFromHost', hostId], 
   queryFn: async () => {
     // if(hostId === null) return [];
-    console.log(`IscsiFromHost ... ${hostId}`);
+    Logger.debug(`IscsiFromHost ... ${hostId}`);
     const res = await ApiManager.findAllIscsiFromHost(hostId); 
     const processedData = res?.map((e) => mapPredicate(e)) ?? [];
-    console.log('Processed iSCSI data:', processedData);
+    Logger.debug('Processed iSCSI data:', processedData);
     return processedData; // 데이터 가공 후 반환
   },
   enabled: !!hostId,
   onSuccess: (data) => {
-    console.log('iSCSI data:', data);
+    Logger.debug('iSCSI data:', data);
   },
 })
 
@@ -925,15 +933,15 @@ export const useFibreFromHost = (hostId, mapPredicate) => useQuery({
   queryKey: ['fibreFromHost', hostId], 
   queryFn: async () => {
     if(hostId === null) return [];
-    console.log(`fibreFromHost ... ${hostId}`);
+    Logger.debug(`fibreFromHost ... ${hostId}`);
     const res = await ApiManager.findAllFibreFromHost(hostId); 
     const processedData = res?.map((e) => mapPredicate(e)) ?? [];
-    console.log('Processed Fibre data:', processedData);
+    Logger.debug('Processed Fibre data:', processedData);
     return processedData; // 데이터 가공 후 반환
   },
   enabled: !!hostId,
   onSuccess: (data) => {
-    console.log('Fibre data:', data);
+    Logger.debug('Fibre data:', data);
   },
 })
 
@@ -953,10 +961,10 @@ export const useImportIscsiFromHost = () => {
   return useMutation({
     mutationFn: async ({hostId, iscsiData}) => await ApiManager.findImportIscsiFromHost(hostId, iscsiData),
     onSuccess: (data) => {
-      console.log('iSCSI 가져오기 성공:', data); // 성공한 응답 데이터 출력
+      Logger.debug('iSCSI 가져오기 성공:', data); // 성공한 응답 데이터 출력
     },
     onError: (error) => {
-      console.error('iSCSI 가져오기 에러:', error);
+      Logger.error('iSCSI 가져오기 에러:', error);
     },
   });
 };
@@ -976,10 +984,10 @@ export const useImportFcpFromHost = () => {
   return useMutation({
     mutationFn: async ( { hostId } ) => await ApiManager.findImportFcpFromHost(hostId),
     onSuccess: (data) => {
-      console.log('fcp 가져오기 성공:', data);
+      Logger.debug('fcp 가져오기 성공:', data);
     },
     onError: (error) => {
-      console.error('fcp 가져오기 에러:', error);
+      Logger.error('fcp 가져오기 에러:', error);
     },
   });
 };
@@ -1000,10 +1008,10 @@ export const useLoginIscsiFromHost = () => {
   return useMutation({
     mutationFn: async ({hostId, iscsiData}) => await ApiManager.findLoginIscsiFromHost(hostId, iscsiData),
     onSuccess: (data) => {
-      console.log('iSCSI 로그인 성공:', data); // 성공한 응답 데이터 출력
+      Logger.debug('iSCSI 로그인 성공:', data); // 성공한 응답 데이터 출력
     },
     onError: (error) => {
-      console.error('iSCSI 로그인 에러:', error);
+      Logger.error('iSCSI 로그인 에러:', error);
     },
   });
 };
@@ -1025,7 +1033,7 @@ export const useAddHost = () => {
       queryClient.invalidateQueries('allHosts'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
     },
     onError: (error) => {
-      console.error('Error adding host:', error);
+      Logger.error('Error adding host:', error);
     },  
   });
 };
@@ -1044,7 +1052,7 @@ export const useEditHost = () => {
       queryClient.invalidateQueries('allHosts');
     },
     onError: (error) => {
-      console.error('Error editing host:', error);
+      Logger.error('Error editing host:', error);
     },
   });
 };
@@ -1063,7 +1071,7 @@ export const useDeleteHost = () => {
       queryClient.invalidateQueries('allHosts');
     },
     onError: (error) => {
-      console.error('Error deleting host:', error);
+      Logger.error('Error deleting host:', error);
     },
   });
 };
@@ -1080,11 +1088,11 @@ export const useDeactivateHost = () => {
   return useMutation({
     mutationFn: async (hostId) => await ApiManager.deactivateHost(hostId),
     onSuccess: () => {
-      console.log(`useDeactivateHost ... `);
+      Logger.debug(`useDeactivateHost ... `);
       queryClient.invalidateQueries('allHosts');
     },
     onError: (error) => {
-      console.error('Error deactivate host:', error);
+      Logger.error('Error deactivate host:', error);
     },  
   });
 };
@@ -1104,7 +1112,7 @@ export const useActivateHost = () => {
       queryClient.invalidateQueries('allHosts');
     },
     onError: (error) => {
-      console.error('Error deactivate host:', error);
+      Logger.error('Error deactivate host:', error);
     },  
   });
 };
@@ -1121,11 +1129,11 @@ export const useRestartHost = () => {
   return useMutation({
     mutationFn: async (hostId) => await ApiManager.restartHost(hostId),
     onSuccess: () => {
-      console.log(`useRestartHost ... `);
+      Logger.debug(`useRestartHost ... `);
       queryClient.invalidateQueries('allHosts');
     },
     onError: (error) => {
-      console.error('Error restart host:', error);
+      Logger.error('Error restart host:', error);
     },  
   });
 };
@@ -1161,7 +1169,7 @@ export const useVmById = (vmId) => useQuery({
   queryKey: ['VmById', vmId],
   queryFn: async () => {
     if (!vmId) return {};  
-    console.log(`vmId ID: ${vmId}`);
+    Logger.debug(`vmId ID: ${vmId}`);
     const res = await ApiManager.findVM(vmId);
     return res ?? {};
   },
@@ -1179,7 +1187,7 @@ export const useFindEditVmById = (vmId) => useQuery({
   queryKey: ['editVmById', vmId],
   queryFn: async () => {
     if (!vmId) return {};  
-    console.log(`vmId ID: ${vmId}`);
+    Logger.debug(`vmId ID: ${vmId}`);
     const res = await ApiManager.findEditVM(vmId);
     return res ?? {};
   },
@@ -1199,7 +1207,7 @@ export const useVm = (vmId) => useQuery({
   queryKey: ['VmById', vmId],
   queryFn: async () => {
     if (!vmId) return {};  
-    console.log(`vmId ID: ${vmId}`);
+    Logger.debug(`vmId ID: ${vmId}`);
     const res = await ApiManager.findVM(vmId);
     return res ?? {};
   },
@@ -1221,7 +1229,7 @@ export const useDisksFromVM = (vmId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['DisksFromVM', vmId], 
   queryFn: async () => {
-    console.log(`useDisksFromVM ... ${vmId}`);
+    Logger.debug(`useDisksFromVM ... ${vmId}`);
     const res = await ApiManager.findDisksFromVM(vmId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -1241,7 +1249,7 @@ export const useSnapshotsFromVM = (vmId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['SnapshotFromVM', vmId], 
   queryFn: async () => {
-    console.log(`useSnapshotFromVM ... ${vmId}`);
+    Logger.debug(`useSnapshotFromVM ... ${vmId}`);
     const res = await ApiManager.findSnapshotsFromVM(vmId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -1267,7 +1275,7 @@ export const useSnapshotDetailFromVM = (vmId, snapshotId) => useQuery({
       console.warn('Missing VM ID or Snapshot ID');
       return {};
     }
-    console.log(`Fetching snapshot details for VM ID: ${vmId}, Snapshot ID: ${snapshotId}`);
+    Logger.debug(`Fetching snapshot details for VM ID: ${vmId}, Snapshot ID: ${snapshotId}`);
     const res = await ApiManager.findSnapshotFromVm(vmId, snapshotId); 
     return res ?? {}; 
   },
@@ -1286,14 +1294,14 @@ export const useAddSnapshotFromVM = () => {
   return useMutation({
     // mutationFn: async ({vmId,snapshotData}) => await ApiManager.addSnapshotFromVM(vmId,snapshotData),
     mutationFn: async ({vmId, snapshotData}) => {
-      console.log(`Hook vm: ${vmId}....  ${snapshotData}`)
+      Logger.debug(`Hook vm: ${vmId}....  ${snapshotData}`)
       return await ApiManager.addSnapshotFromVM(vmId, snapshotData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries('SnapshotFromVM'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
     },
     onError: (error) => {
-      console.error('Error adding snapshot:', error);
+      Logger.error('Error adding snapshot:', error);
     },  
   });
 };
@@ -1308,7 +1316,7 @@ export const useDeleteSnapshot = () => {
   const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
   return useMutation({
     mutationFn: async ({ vmId, snapshotId }) => {
-      console.log('Deleting snapshot:', vmId, snapshotId);
+      Logger.debug('Deleting snapshot:', vmId, snapshotId);
       const response = await ApiManager.deleteSnapshotFromVM(vmId, snapshotId);
       return response;
     },
@@ -1316,7 +1324,7 @@ export const useDeleteSnapshot = () => {
       queryClient.invalidateQueries('SnapshotFromVM'); // 쿼리 캐시 무효화
     },
     onError: (error) => {
-      console.error('Error during snapshot deletion:', error);
+      Logger.error('Error during snapshot deletion:', error);
     },
   });
 };
@@ -1337,7 +1345,7 @@ export const useHostdevicesFromVM = (vmId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['HostdevicesFromVM', vmId], 
   queryFn: async () => {
-    console.log(`useHostdevicesFromVM ... ${vmId}`);
+    Logger.debug(`useHostdevicesFromVM ... ${vmId}`);
     const res = await ApiManager.findHostdevicesFromVM(vmId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -1360,7 +1368,7 @@ export const useNetworkInterfaceFromVM = (vmId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['NetworkInterfaceFromVM', vmId], 
   queryFn: async () => {
-    console.log(`useNetworkInterfaceFromVM... ${vmId}`);
+    Logger.debug(`useNetworkInterfaceFromVM... ${vmId}`);
     const res = await ApiManager.findNicsFromVM(vmId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -1382,10 +1390,10 @@ export const useNetworkInterfaceByVMId = (vmId,nicId) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['NetworkInterfaceByVMId', vmId], 
   queryFn: async () => {
-    console.log(`useNetworkInterfaceByVMId ... ${vmId}`);
-    console.log(`useNetworkInterfaceByVMId ... ${nicId}`);
+    Logger.debug(`useNetworkInterfaceByVMId ... ${vmId}`);
+    Logger.debug(`useNetworkInterfaceByVMId ... ${nicId}`);
     const res = await ApiManager.findNicFromVM(vmId,nicId); 
-    console.log('API Response:', res); // 반환된 데이터 구조 확인
+    Logger.debug('API Response:', res); // 반환된 데이터 구조 확인
     return res ?? {}; 
   },
   enabled: !!vmId, 
@@ -1407,7 +1415,7 @@ export const useApplicationFromVM = (vmId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['ApplicationFromVM', vmId], 
   queryFn: async () => {
-    console.log(`useApplicationFromVM ... ${vmId}`);
+    Logger.debug(`useApplicationFromVM ... ${vmId}`);
     const res = await ApiManager.findApplicationsFromVM(vmId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -1430,7 +1438,7 @@ export const useAllEventFromVM = (vmId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allEventFromVM', vmId], 
   queryFn: async () => {
-    console.log(`useAllEventFromDomain ... ${vmId}`);
+    Logger.debug(`useAllEventFromDomain ... ${vmId}`);
     const res = await ApiManager.findEventsFromVM(vmId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -1448,7 +1456,7 @@ export const useVmConsoleAccessInfo = (vmId) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['vmConsoleAccessInfo', vmId], 
   queryFn: async () => {
-    console.log(`useAggregateVmConsole ... ${vmId}`);
+    Logger.debug(`useAggregateVmConsole ... ${vmId}`);
     const res = await ApiManager.findVmConsoleAccessInfo(vmId);
     return res;
   },
@@ -1469,7 +1477,7 @@ export const useAddVm = () => {
       queryClient.invalidateQueries('allVMs'); 
     },
     onError: (error) => {
-      console.error('Error adding VM:', error);
+      Logger.error('Error adding VM:', error);
     },  
   });
 };
@@ -1485,12 +1493,12 @@ export const useEditVm = () => {
   return useMutation({
     mutationFn: async ({ vmId, vmdata }) => await ApiManager.editVM(vmId, vmdata),
     onSuccess: (data,{vmId}) => {
-      console.log('VM 편집한데이터:', data);
+      Logger.debug('VM 편집한데이터:', data);
       queryClient.invalidateQueries('allVMs');
       queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
     },
     onError: (error) => {
-      console.error('Error editing VM:', error);
+      Logger.error('Error editing VM:', error);
     },
   });
 };
@@ -1505,14 +1513,14 @@ export const useDeleteVm = () => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({ 
     mutationFn: async ({vmId, detachOnly}) => {
-      console.log(`Hook vm: ${vmId}....  ${detachOnly}`)
+      Logger.debug(`Hook vm: ${vmId}....  ${detachOnly}`)
       return await ApiManager.deleteVM(vmId, detachOnly)
     },
     onSuccess: () => {
       queryClient.invalidateQueries('allVMs');
     },
     onError: (error) => {
-      console.error('Error deleting vm:', error);
+      Logger.error('Error deleting vm:', error);
     },
   });
 };
@@ -1528,11 +1536,11 @@ export const useStartVM = () => {
   return useMutation({
     mutationFn: async (vmId) => await ApiManager.startVM(vmId),
     onSuccess: () => {
-      console.log(`useStartVM ... `);
+      Logger.debug(`useStartVM ... `);
       queryClient.invalidateQueries('allVMs');
     },
     onError: (error) => {
-      console.error('Error start vm:', error);
+      Logger.error('Error start vm:', error);
     },  
   });
 };
@@ -1547,11 +1555,11 @@ export const usePauseVM = () => {
   return useMutation({
     mutationFn: async (vmId) => await ApiManager.pauseVM(vmId),
     onSuccess: () => {
-      console.log(`usePauseVM ... `);
+      Logger.debug(`usePauseVM ... `);
       queryClient.invalidateQueries('allVMs');
     },
     onError: (error) => {
-      console.error('Error pause vm:', error);
+      Logger.error('Error pause vm:', error);
     },  
   });
 };
@@ -1567,11 +1575,11 @@ export const useShutdownVM = () => {
   return useMutation({
     mutationFn: async (vmId) => await ApiManager.shutdownVM(vmId),
     onSuccess: () => {
-      console.log(`useShutdownVM ... `);
+      Logger.debug(`useShutdownVM ... `);
       queryClient.invalidateQueries('allVMs');
     },
     onError: (error) => {
-      console.error('Error shutdown vm:', error);
+      Logger.error('Error shutdown vm:', error);
     },  
   });
 };
@@ -1586,11 +1594,11 @@ export const usePowerOffVM = () => {
   return useMutation({
     mutationFn: async (vmId) => await ApiManager.powerOffVM(vmId),
     onSuccess: () => {
-      console.log(`usePowerOffVM ... `);
+      Logger.debug(`usePowerOffVM ... `);
       queryClient.invalidateQueries('allVMs');
     },
     onError: (error) => {
-      console.error('Error powerOff vm:', error);
+      Logger.error('Error powerOff vm:', error);
     },  
   });
 };
@@ -1606,11 +1614,11 @@ export const useRebootVM = () => {
   return useMutation({
     mutationFn: async (vmId) => await ApiManager.rebootVM(vmId),
     onSuccess: () => {
-      console.log(`useRebootVM ... `);
+      Logger.debug(`useRebootVM ... `);
       queryClient.invalidateQueries('allVMs');
     },
     onError: (error) => {
-      console.error('Error reboot vm:', error);
+      Logger.error('Error reboot vm:', error);
     },  
   });
 };
@@ -1625,11 +1633,11 @@ export const useResetVM = () => {
   return useMutation({
     mutationFn: async (vmId) => await ApiManager.resetVM(vmId),
     onSuccess: () => {
-      console.log(`useResetVM ... `);
+      Logger.debug(`useResetVM ... `);
       queryClient.invalidateQueries('allVMs');
     },
     onError: (error) => {
-      console.error('Error reset vm:', error);
+      Logger.error('Error reset vm:', error);
     },  
   });
 };
@@ -1648,7 +1656,7 @@ export const useHostsForMigration = (vmId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['HostsForMigration', vmId], 
   queryFn: async () => {
-    console.log(`useAllVmsFromTemplate ... ${vmId}`);
+    Logger.debug(`useAllVmsFromTemplate ... ${vmId}`);
     const res = await ApiManager.migrateHostsFromVM(vmId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -1666,11 +1674,11 @@ export const useMigration = () => {
   return useMutation({
     mutationFn: async ({vmId,hostId}) => await ApiManager.migrateVM(vmId,hostId),
     onSuccess: () => {
-      console.log(`useMigration ... `);
+      Logger.debug(`useMigration ... `);
       queryClient.invalidateQueries('HostsForMigration');
     },
     onError: (error) => {
-      console.error('Error Migration :', error);
+      Logger.error('Error Migration :', error);
     },  
   });
 };
@@ -1686,11 +1694,11 @@ export const useExportVM = () => {
   return useMutation({
     mutationFn: async (vmId) => await ApiManager.exportVM(vmId),
     onSuccess: () => {
-      console.log(`useExportVM ... `);
+      Logger.debug(`useExportVM ... `);
       queryClient.invalidateQueries('allVMs');
     },
     onError: (error) => {
-      console.error('Error export vm:', error);
+      Logger.error('Error export vm:', error);
     },  
   });
 };
@@ -1705,15 +1713,15 @@ export const useAddNicFromVM = () => {
   const queryClient = useQueryClient(); // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, nicData }) => {
-      console.log('Received vmId:', vmId); // vmId 출력
-      console.log('Received nicData:', nicData); // nicData 출력
+      Logger.debug('Received vmId:', vmId); // vmId 출력
+      Logger.debug('Received nicData:', nicData); // nicData 출력
       return await ApiManager.addNicFromVM(vmId, nicData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries('NetworkInterfaceFromVM');
     },
     onError: (error) => {
-      console.error('Error adding data center:', error);
+      Logger.error('Error adding data center:', error);
     },
   });
 };
@@ -1727,7 +1735,7 @@ export const useEditNicFromVM = () => {
   const queryClient = useQueryClient();  
   return useMutation({
     mutationFn: async ({ vmId, nicId, nicData }) => {
-      console.log('EDIT NIC 요청 데이터:', { vmId, nicId, nicData });
+      Logger.debug('EDIT NIC 요청 데이터:', { vmId, nicId, nicData });
       return await ApiManager.editNicFromVM(vmId, nicId, nicData);
     },
     onSuccess: () => {
@@ -1736,7 +1744,7 @@ export const useEditNicFromVM = () => {
       
     },
     onError: (error) => {
-      console.error('Error editing data center:', error);
+      Logger.error('Error editing data center:', error);
     },
   });
 };
@@ -1752,15 +1760,15 @@ export const useDeleteNetworkInterface = () => {
   return useMutation({
     mutationFn: async ({ vmId,nicId}) => {
       // ID들이 제대로 전달되는지 확인하기 위해 로그 추가
-      console.log('Deleting VnicProfile with vmId:', vmId);
-      console.log('Deleting VnicProfile with nicId:', nicId);
+      Logger.debug('Deleting VnicProfile with vmId:', vmId);
+      Logger.debug('Deleting VnicProfile with nicId:', nicId);
       return await ApiManager.deleteNicFromVM(vmId,nicId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries('NetworkInterfaceFromVM');
     },
     onError: (error) => {
-      console.error('Error deleting NetworkInterface:', error);
+      Logger.error('Error deleting NetworkInterface:', error);
     },
   });
 };
@@ -1796,14 +1804,14 @@ export const useAddDiskFromVM = () => {
   const queryClient = useQueryClient(); // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, diskData }) => {
-      console.log(`${Localization.kr.VM} 생성 디스크데이터 diskData: ${diskData}`); // nicData 출력
+      Logger.debug(`${Localization.kr.VM} 생성 디스크데이터 diskData: ${diskData}`); // nicData 출력
       return await ApiManager.addDiskFromVM(vmId, diskData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries('DisksFromVM');
     },
     onError: (error) => {
-      console.error('Error adding disk:', error);
+      Logger.error('Error adding disk:', error);
     },
   });
 };
@@ -1818,14 +1826,14 @@ export const useEditDiskFromVM = () => {
   const queryClient = useQueryClient(); // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId, diskAttachment }) => {
-      console.log(`${Localization.kr.VM} 수정 디스크데이터: ${diskAttachment}`, );
+      Logger.debug(`${Localization.kr.VM} 수정 디스크데이터: ${diskAttachment}`, );
       return await ApiManager.editDiskFromVM(vmId, diskAttachmentId, diskAttachment);
     },
     onSuccess: () => {
       queryClient.invalidateQueries('DisksFromVM');
     },
     onError: (error) => {
-      console.error('Error edit disk:', error);
+      Logger.error('Error edit disk:', error);
     },
   });
 };
@@ -1841,14 +1849,14 @@ export const useDeleteDiskFromVM = () => {
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId, detachOnly }) => {
       // ID들이 제대로 전달되는지 확인하기 위해 로그 추가
-      console.log(`vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, detachOnly: ${detachOnly}`);
+      Logger.debug(`vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, detachOnly: ${detachOnly}`);
       await ApiManager.deleteDiskFromVM(vmId, diskAttachmentId, detachOnly);
     },
     onSuccess: () => {
       queryClient.invalidateQueries('DisksFromVM');
     },
     onError: (error) => {
-      console.error('Error deleting Disk:', error);
+      Logger.error('Error deleting Disk:', error);
     },
   });
 };
@@ -1870,7 +1878,7 @@ export const useConnDiskFromVM = () => {
       queryClient.invalidateQueries(['DisksFromVM']); 
     },
     onError: (error) => {
-      console.error('Error attaching disk to VM:', error);
+      Logger.error('Error attaching disk to VM:', error);
     },  
   });
 };
@@ -1891,7 +1899,7 @@ export const useConnDiskListFromVM = () => {
       queryClient.invalidateQueries(['DisksFromVM']); 
     },
     onError: (error) => {
-      console.error('Error attaching diskList to VM:', error);
+      Logger.error('Error attaching diskList to VM:', error);
     },  
   });
 };
@@ -1908,11 +1916,11 @@ export const useDeactivateDiskFromVm = () => {
   return useMutation({
     mutationFn: async ({vmId, diskAttachmentId}) => await ApiManager.deactivateDisksFromVM(vmId, diskAttachmentId),
     onSuccess: () => {
-      console.log(`useDeactivateDiskFromVm ... `);
+      Logger.debug(`useDeactivateDiskFromVm ... `);
       queryClient.invalidateQueries('allDisksFromVm');
     },
     onError: (error) => {
-      console.error('Error deactivate disk vm:', error);
+      Logger.error('Error deactivate disk vm:', error);
     },  
   });
 };
@@ -1932,7 +1940,7 @@ export const useActivateDiskFromVm  = () => {
       queryClient.invalidateQueries('allDisksFromVm');
     },
     onError: (error) => {
-      console.error('Error deactivate disk vm:', error);
+      Logger.error('Error deactivate disk vm:', error);
     },  
   });
 };
@@ -1954,10 +1962,10 @@ export const useActivateDiskFromVm  = () => {
 //   refetchOnWindowFocus: true,
 //   queryKey: ['FindDiskFromVM', vmId], 
 //   queryFn: async () => {
-//     console.log(`useFindDiskFromVM vm아이디... ${vmId}`);
-//     console.log(`useFindDiskFromVM 디스크아이디 ... ${diskId}`);
+//     Logger.debug(`useFindDiskFromVM vm아이디... ${vmId}`);
+//     Logger.debug(`useFindDiskFromVM 디스크아이디 ... ${diskId}`);
 //     const res = await ApiManager.findDiskFromVM(vmId,diskId); 
-//     console.log('API Response:', res); // 반환된 데이터 구조 확인
+//     Logger.debug('API Response:', res); // 반환된 데이터 구조 확인
 //     return res ?? {}; 
 //   },
 
@@ -1994,7 +2002,7 @@ export const useTemplate = (tId) => useQuery({
   queryKey: ['tId', tId],
   queryFn: async () => {
     if (!tId) return {};  
-    console.log(`Template ID: ${tId}`);
+    Logger.debug(`Template ID: ${tId}`);
     const res = await ApiManager.findTemplate(tId);
     return res ?? {};
   },
@@ -2017,7 +2025,7 @@ export const useAllVmsFromTemplate = (tId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllVmsFromTemplate', tId], 
   queryFn: async () => {
-    console.log(`useAllVmsFromTemplate ... ${tId}`);
+    Logger.debug(`useAllVmsFromTemplate ... ${tId}`);
     const res = await ApiManager.findVMsFromTemplate(tId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -2038,7 +2046,7 @@ export const useAllNicsFromTemplate = (tId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllNicsFromTemplate', tId], 
   queryFn: async () => {
-    console.log(`useAllNicsFromTemplate ... ${tId}`);
+    Logger.debug(`useAllNicsFromTemplate ... ${tId}`);
     const res = await ApiManager.findNicsFromTemplate(tId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2061,7 +2069,7 @@ export const useAllDisksFromTemplate = (tId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllDisksFromTemplate', tId], 
   queryFn: async () => {
-    console.log(`useAllDisksFromTemplate ... ${tId}`);
+    Logger.debug(`useAllDisksFromTemplate ... ${tId}`);
     const res = await ApiManager.findDisksFromTemplate(tId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2082,7 +2090,7 @@ export const useAllStoragesFromTemplate = (tId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllStoragesFromTemplate', tId], 
   queryFn: async () => {
-    console.log(`useAllStoragesFromTemplate ... ${tId}`);
+    Logger.debug(`useAllStoragesFromTemplate ... ${tId}`);
     const res = await ApiManager.findStorageDomainsFromTemplate(tId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2106,7 +2114,7 @@ export const useAllEventFromTemplate = (tId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllEventFromTemplate', tId], 
   queryFn: async () => {
-    console.log(`useAllEventFromTemplate ... ${tId}`);
+    Logger.debug(`useAllEventFromTemplate ... ${tId}`);
     const res = await ApiManager.findEventsFromTemplate(tId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2123,14 +2131,14 @@ export const useAddTemplate = () => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({vmId, templateData} ) =>{
-      console.log(`Hook vm: ${vmId}....  ${templateData}`)
+      Logger.debug(`Hook vm: ${vmId}....  ${templateData}`)
       return await ApiManager.addTemplate(vmId, templateData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries('allTemplates');
     },
     onError: (error) => {
-      console.error('Error adding Template:', error);
+      Logger.error('Error adding Template:', error);
     },  
   });
 };
@@ -2150,7 +2158,7 @@ export const useEditTemplate = () => {
       queryClient.invalidateQueries(['templateId', templateId]); // templateId 올바르게 사용
     },
     onError: (error) => {
-      console.error('Error editing Template:', error);
+      Logger.error('Error editing Template:', error);
     },
   });
 };
@@ -2170,7 +2178,7 @@ export const useDeleteTemplate = () => {
       queryClient.invalidateQueries('allTemplates');
     },
     onError: (error) => {
-      console.error('Error deleting Template:', error);
+      Logger.error('Error deleting Template:', error);
     },
   });
 };
@@ -2190,7 +2198,7 @@ export const useAddNicFromTemplate = () => {
       queryClient.invalidateQueries('AllNicsFromTemplate'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
     },
     onError: (error) => {
-      console.error('Error adding Template network:', error);
+      Logger.error('Error adding Template network:', error);
     },  
   });
 };
@@ -2213,7 +2221,7 @@ export const useEditNicFromTemplate = () => {
     },
   
     onError: (error) => {
-      console.error('Error editing Template network:', error);
+      Logger.error('Error editing Template network:', error);
     },
   });
 };
@@ -2230,15 +2238,15 @@ export const useDeleteNetworkFromTemplate = () => {
   return useMutation({
     mutationFn: async ({ templateId,nicId,detachOnly}) => {
       // ID들이 제대로 전달되는지 확인하기 위해 로그 추가
-      console.log('삭제할 템플릿id:', templateId );
-      console.log('Deleting VnicProfile with nicId:', nicId);
+      Logger.debug('삭제할 템플릿id:', templateId );
+      Logger.debug('Deleting VnicProfile with nicId:', nicId);
       return await ApiManager.deleteNicFromTemplate(templateId,nicId, detachOnly);
     },
     onSuccess: () => {
       queryClient.invalidateQueries('AllNicsFromTemplate');
     },
     onError: (error) => {
-      console.error('Error deleting NetworkInterface:', error);
+      Logger.error('Error deleting NetworkInterface:', error);
     },
   });
 };
@@ -2275,7 +2283,7 @@ export const useNetworkById = (networkId) => useQuery({
   queryKey: ['networkById', networkId],
   queryFn: async () => {
     if (!networkId) return {};  // networkId가 없는 경우 빈 객체 반환
-    console.log(`Fetching network with ID: ${networkId}`);
+    Logger.debug(`Fetching network with ID: ${networkId}`);
     const res = await ApiManager.findNetwork(networkId);
     return res ?? {};
   },
@@ -2297,7 +2305,7 @@ export const useAllClustersFromNetwork = (networkId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['clustersFromNetwork', networkId],
   queryFn: async () => {
-    console.log(`useAllClustersFromNetwork ... ${networkId}`);
+    Logger.debug(`useAllClustersFromNetwork ... ${networkId}`);
     const res = await ApiManager.findAllClustersFromNetwork(networkId);  // 클러스터 목록을 가져오는 API 호출
     return res?.map((e) => mapPredicate(e)) ?? [];
   },
@@ -2317,7 +2325,7 @@ export const useConnectedHostsFromNetwork = (networkId, mapPredicate) => useQuer
   refetchOnWindowFocus: true,
   queryKey: ['connectedHostsFromNetwork', networkId], 
   queryFn: async () => {
-    console.log(`useConnectedHostsFromNetwork ... ${networkId}`);
+    Logger.debug(`useConnectedHostsFromNetwork ... ${networkId}`);
     const res = await ApiManager.findConnectedHostsFromNetwork(networkId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -2341,7 +2349,7 @@ export const useDisconnectedHostsFromNetwork = (networkId, mapPredicate) => useQ
   refetchOnWindowFocus: true,
   queryKey: ['disconnectedHostsFromNetwork', networkId], 
   queryFn: async () => {
-    console.log(`useDisconnectedHostsFromNetwork ... ${networkId}`);
+    Logger.debug(`useDisconnectedHostsFromNetwork ... ${networkId}`);
     const res = await ApiManager.findDisconnectedHostsFromNetwork(networkId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -2365,7 +2373,7 @@ export const useAllVmsFromNetwork = (networkId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['vmFromNetwork', networkId], 
   queryFn: async () => {
-    console.log(`useAllVmsFromNetwork ... ${networkId}`);
+    Logger.debug(`useAllVmsFromNetwork ... ${networkId}`);
     const res = await ApiManager.findAllVmsFromNetwork(networkId); 
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
@@ -2388,9 +2396,9 @@ export const useAllTemplatesFromNetwork = (networkId, mapPredicate) => useQuery(
     if (!networkId) {
       throw new Error('Network ID is missing'); 
     }
-    console.log(`Fetching templates for Network ID: ${networkId}`);
+    Logger.debug(`Fetching templates for Network ID: ${networkId}`);
     const res = await ApiManager.findAllTemplatesFromNetwork(networkId);
-    console.log('API Response:', res); // API 응답 확인
+    Logger.debug('API Response:', res); // API 응답 확인
     return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
   enabled: !!networkId,
@@ -2414,7 +2422,7 @@ export const useAllVnicProfilesFromNetwork = (networkId, mapPredicate) => useQue
       console.warn('networkId가 존재하지 않습니다.');
       return [];
     }
-    console.log(`useAllVnicProfilesFromNetwork ... ${networkId}`);
+    Logger.debug(`useAllVnicProfilesFromNetwork ... ${networkId}`);
     const res = await ApiManager.findAllVnicProfilesFromNetwork(networkId);
     return res?.map((e) => mapPredicate(e)) ?? [];
   },
@@ -2435,7 +2443,7 @@ export const useAddNetwork = () => {
       queryClient.invalidateQueries('allNetworks'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
     },
     onError: (error) => {
-      console.error('Error adding network:', error);
+      Logger.error('Error adding network:', error);
     },  
   });
 };
@@ -2455,7 +2463,7 @@ export const useEditNetwork = () => {
       queryClient.invalidateQueries(['networkById', networkId]); // 수정된 네트워크 상세 정보 업데이트
     },
     onError: (error) => {
-      console.error('Error editing network:', error);
+      Logger.error('Error editing network:', error);
     },
   });
 };
@@ -2474,7 +2482,7 @@ export const useDeleteNetwork = () => {
       queryClient.invalidateQueries('allNetworks');
     },
     onError: (error) => {
-      console.error('Error deleting cluster:', error);
+      Logger.error('Error deleting cluster:', error);
     },
   });
 };
@@ -2525,7 +2533,7 @@ export const useVnicProfile = (vnicId) => useQuery({
   queryKey: ['vnicId', vnicId],
   queryFn: async () => {
     if (!vnicId) return {};  
-    console.log(`Fetching vnic profile with ID: ${vnicId}`);
+    Logger.debug(`Fetching vnic profile with ID: ${vnicId}`);
     const res = await ApiManager.findVnicProfile( vnicId);
     return res ?? {};
   },
@@ -2548,7 +2556,7 @@ export const useAllVmsFromVnicProfiles = (vnicProfileId, mapPredicate) => useQue
   refetchOnWindowFocus: true,
   queryKey: ['AllVmsFromVnicProfiles', vnicProfileId],
   queryFn: async () => {
-    console.log(`useAllVmsFromVnicProfiles모든목록조회 ... ${vnicProfileId}`);
+    Logger.debug(`useAllVmsFromVnicProfiles모든목록조회 ... ${vnicProfileId}`);
     const res = await ApiManager.findAllVmsFromVnicProfiles(vnicProfileId);
     return res?.map((e) => mapPredicate(e)) ?? [];
   },
@@ -2569,7 +2577,7 @@ export const useAllTemplatesFromVnicProfiles = (vnicProfileId, mapPredicate) => 
   refetchOnWindowFocus: true,
   queryKey: ['AllTemplatesFromVnicProfiles', vnicProfileId], 
   queryFn: async () => {
-    console.log(`useAllTemplatesFromVnicProfiles ... ${vnicProfileId}`);
+    Logger.debug(`useAllTemplatesFromVnicProfiles ... ${vnicProfileId}`);
     const res = await ApiManager.findAllTemplatesFromVnicProfiles(vnicProfileId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2593,7 +2601,7 @@ export const useAddVnicProfile = () => {
       queryClient.invalidateQueries('allVnicProfiles');
     },
     onError: (error) => {
-      console.error('Error adding vnic:', error);
+      Logger.error('Error adding vnic:', error);
     },  
   });
 };
@@ -2611,7 +2619,7 @@ export const useEditVnicProfile = () => {
       queryClient.invalidateQueries('allVnicProfiles');
     },
     onError: (error) => {
-      console.error('Error editing vnic:', error);
+      Logger.error('Error editing vnic:', error);
     },
   });
 };
@@ -2626,14 +2634,14 @@ export const useDeleteVnicProfile = () => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async (vnicProfileId ) => {
-      console.log('Deleting VnicProfile with vnicProfileId:', vnicProfileId);
+      Logger.debug('Deleting VnicProfile with vnicProfileId:', vnicProfileId);
       return await ApiManager.deleteVnicProfiles(vnicProfileId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries('allVnicProfiles');
     },
     onError: (error) => {
-      console.error('Error deleting VnicProfile:', error);
+      Logger.error('Error deleting VnicProfile:', error);
     },
   });
 };
@@ -2683,7 +2691,7 @@ export const useDomainById = (storageDomainId) => useQuery({
   queryKey: ['DomainById', storageDomainId],
   queryFn: async () => {
     if (!storageDomainId) return {};  
-    console.log(`Fetching network with ID: ${storageDomainId}`);
+    Logger.debug(`Fetching network with ID: ${storageDomainId}`);
     const res = await ApiManager.findDomain(storageDomainId);
     return res ?? {};
   },
@@ -2709,7 +2717,7 @@ export const useAllActiveDomainFromDataCenter = (dataCenterId, mapPredicate) => 
       console.warn('dataCenterId is undefined. Skipping API call.');
       return []; // 빈 배열 반환
     }
-    console.log(`useAllActiveDomainFromDataCenter ... ${dataCenterId}`);
+    Logger.debug(`useAllActiveDomainFromDataCenter ... ${dataCenterId}`);
     const res = await ApiManager.findActiveDomainFromDataCenter(dataCenterId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2730,13 +2738,13 @@ export const useAllDataCenterFromDomain = (storageDomainId) => useQuery({
   // refetchOnWindowFocus: true,
   queryKey: ['AllDataCenterFromDomain', storageDomainId], 
   queryFn: async () => {
-    console.log(`Fetching datacenters with ID: ${storageDomainId}`);
+    Logger.debug(`Fetching datacenters with ID: ${storageDomainId}`);
     const res = await ApiManager.findAllDataCentersFromDomain(storageDomainId);
     return res ?? '';
 
-    // console.log(`useAllDataCenterFromDomain ... ${storageDomainId}`);
+    // Logger.debug(`useAllDataCenterFromDomain ... ${storageDomainId}`);
     // const res = await ApiManager.findAllDataCentersFromDomain(storageDomainId); 
-    // console.log('API Response:', res);
+    // Logger.debug('API Response:', res);
     // return res?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
   enabled: !!storageDomainId,
@@ -2754,7 +2762,7 @@ export const useAllDataCenterFromDomain = (storageDomainId) => useQuery({
 export const useAllHostFromDomain = (storageDomainId) => useQuery({
   queryKey: ['useAllHostFromDomain', storageDomainId], 
   queryFn: async () => {
-    console.log(`Fetching hosts with ID: ${storageDomainId}`);
+    Logger.debug(`Fetching hosts with ID: ${storageDomainId}`);
     const res = await ApiManager.findAllHostsFromDomain(storageDomainId);
     return res ?? '';
   },
@@ -2775,7 +2783,7 @@ export const useAllVMFromDomain = (storageDomainId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllVMFromDomain', storageDomainId], 
   queryFn: async () => {
-    console.log(`useAllVMFromDomain ... ${storageDomainId}`);
+    Logger.debug(`useAllVMFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllVMsFromDomain(storageDomainId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2798,7 +2806,7 @@ export const useAllUnregisteredVMFromDomain = (storageDomainId, mapPredicate) =>
   refetchOnWindowFocus: true,
   // queryKey: ['AllVMFromDomain', storageDomainId], 
   queryFn: async () => {
-    console.log(`useAllUnregisteredVMFromDomain ... ${storageDomainId}`);
+    Logger.debug(`useAllUnregisteredVMFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllUnregisterdVMsFromDomain(storageDomainId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2820,7 +2828,7 @@ export const useAllDiskFromDomain = (storageDomainId, mapPredicate) => useQuery(
   refetchOnWindowFocus: true,
   queryKey: ['AllDiskFromDomain', storageDomainId], 
   queryFn: async () => {
-    console.log(`useAllDiskFromDomain ... ${storageDomainId}`);
+    Logger.debug(`useAllDiskFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllDisksFromDomain(storageDomainId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2840,7 +2848,7 @@ export const useAllUnregisteredDiskFromDomain = (storageDomainId, mapPredicate) 
   refetchOnWindowFocus: true,
   queryKey: ['AllUnregisteredDiskFromDomain', storageDomainId], 
   queryFn: async () => {
-    console.log(`useAllUnregisteredDiskFromDomain ... ${storageDomainId}`);
+    Logger.debug(`useAllUnregisteredDiskFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllUnregisteredDisksFromDomain(storageDomainId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2859,11 +2867,11 @@ export const useRegisteredDiskFromDomain = () => {
       return await ApiManager.registeredDiskFromDomain(storageDomainId, diskId)
     },
     onSuccess: () => {
-      console.log(`domain 디스크 불러오기 성공`)
+      Logger.debug(`domain 디스크 불러오기 성공`)
       queryClient.invalidateQueries('allStorageDomains');
     },
     onError: (error) => {
-      console.error('Error register disk to storageDomain:', error);
+      Logger.error('Error register disk to storageDomain:', error);
     },  
   });
 };
@@ -2881,7 +2889,7 @@ export const useDeletRegisteredDiskFromDomain = () => {
       queryClient.invalidateQueries('allStorageDomains');
     },
     onError: (error) => {
-      console.error('Error deleting disk register:', error);
+      Logger.error('Error deleting disk register:', error);
     },
   });
 };
@@ -2899,7 +2907,7 @@ export const useAllTemplateFromDomain = (storageDomainId, mapPredicate) => useQu
   refetchOnWindowFocus: true,
   queryKey: ['AllTemplateFromDomain', storageDomainId], 
   queryFn: async () => {
-    console.log(`useAllTemplateFromDomain ... ${storageDomainId}`);
+    Logger.debug(`useAllTemplateFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllTemplatesFromDomain(storageDomainId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2919,7 +2927,7 @@ export const useAllUnregisteredTemplateFromDomain = (storageDomainId, mapPredica
   refetchOnWindowFocus: true,
   queryKey: ['AllUnregisteredTemplateFromDomain', storageDomainId], 
   queryFn: async () => {
-    console.log(`useAllUnregisteredTemplateFromDomain ... ${storageDomainId}`);
+    Logger.debug(`useAllUnregisteredTemplateFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllUnregisteredTemplatesFromDomain(storageDomainId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2943,7 +2951,7 @@ export const useAllDiskProfileFromDomain = (storageDomainId, mapPredicate) => us
       console.warn('storageDomainId is undefined. Skipping API call.');
       return []; // 빈 배열 반환
     }
-    console.log(`useAllDiskProfileFromDomain ... ${storageDomainId}`);
+    Logger.debug(`useAllDiskProfileFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllDiskProfilesFromDomain(storageDomainId);
     return res?.map((e) => mapPredicate(e)) ?? [];
   },
@@ -2963,7 +2971,7 @@ export const useAllDiskSnapshotFromDomain = (storageDomainId, mapPredicate) => u
   refetchOnWindowFocus: true,
   queryKey: ['AllDiskSnapshotFromDomain', storageDomainId], 
   queryFn: async () => {
-    console.log(`useAllDiskSnapshotFromDomain ... ${storageDomainId}`);
+    Logger.debug(`useAllDiskSnapshotFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllDiskSnapshotsFromDomain(storageDomainId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -2986,7 +2994,7 @@ export const useAllEventFromDomain = (storageDomainId, mapPredicate) => useQuery
   queryKey: ['AllEventFromDomain', storageDomainId], 
   queryFn: async () => {
     if(storageDomainId === '') return [];
-    console.log(`useAllEventFromDomain ... ${storageDomainId}`);
+    Logger.debug(`useAllEventFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllEventsFromDomain(storageDomainId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -3005,7 +3013,7 @@ export const useAllActiveDataCenters = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   // queryKey: ['AllEventFromDomain', storageDomainId], 
   queryFn: async () => {
-    console.log(`useAllEventFromDomain ...`);
+    Logger.debug(`useAllEventFromDomain ...`);
     const res = await ApiManager.findActiveDataCenters(); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   }
@@ -3022,11 +3030,11 @@ export const useAddDomain = () => {
   return useMutation({
     mutationFn: async (domainData) => await ApiManager.addDomain(domainData),
     onSuccess: () => {
-      console.log('domain 생성성공')
+      Logger.debug('domain 생성성공')
       queryClient.invalidateQueries('allStorageDomains');
     },
     onError: (error) => {
-      console.error('Error adding storageDomain:', error);
+      Logger.error('Error adding storageDomain:', error);
     },  
   });
 };
@@ -3042,11 +3050,11 @@ export const useImportDomain = () => {
   return useMutation({
     mutationFn: async (domainData) => await ApiManager.importDomain(domainData),
     onSuccess: () => {
-      console.log('domain 가져오기 성공')
+      Logger.debug('domain 가져오기 성공')
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
-      console.error('Error adding storageDomain:', error);
+      Logger.error('Error adding storageDomain:', error);
     },  
   });
 };
@@ -3064,7 +3072,7 @@ export const useEditDomain = () => {
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
-      console.error('Error editing domain:', error);
+      Logger.error('Error editing domain:', error);
     },
   });
 };
@@ -3079,14 +3087,14 @@ export const useDeleteDomain = () => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({ 
     mutationFn: async ({domainId, format, hostName}) => {
-      console.log(` domainId: ${domainId}, format: ${format}, host: ${hostName}`);
+      Logger.debug(` domainId: ${domainId}, format: ${format}, host: ${hostName}`);
       await ApiManager.deleteDomain(domainId, format, hostName)
     },
     onSuccess: () => {      
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
-      console.error('Error deleting domain:', error);
+      Logger.error('Error deleting domain:', error);
     },
   });
 };
@@ -3105,7 +3113,7 @@ export const useDestroyDomain = () => {
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
-      console.error('Error destroy domain:', error);
+      Logger.error('Error destroy domain:', error);
     },  
   });
 };
@@ -3124,7 +3132,7 @@ export const useRefreshLunDomain = () => {
       queryClient.invalidateQueries('allStorageDomains');
     },
     onError: (error) => {
-      console.error('Error refreshLun domain:', error);
+      Logger.error('Error refreshLun domain:', error);
     },  
   });
 };
@@ -3143,7 +3151,7 @@ export const useOvfUpdateDomain = () => {
       queryClient.invalidateQueries('allStorageDomains');
     },
     onError: (error) => {
-      console.error('Error updateOvf domain:', error);
+      Logger.error('Error updateOvf domain:', error);
     },  
   });
 };
@@ -3162,7 +3170,7 @@ export const useActivateDomain = () => {
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
-      console.error('Error activate domain:', error);
+      Logger.error('Error activate domain:', error);
     },  
   });
 };
@@ -3181,7 +3189,7 @@ export const useAttachDomain = () => {
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
-      console.error('Error attach Domain:', error);
+      Logger.error('Error attach Domain:', error);
     },  
   });
 };
@@ -3200,7 +3208,7 @@ export const useDetachDomain = () => {
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
-      console.error('Error detach Domain:', error);
+      Logger.error('Error detach Domain:', error);
     },  
   });
 };
@@ -3219,7 +3227,7 @@ export const useMaintenanceDomain = () => {
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
     },
     onError: (error) => {
-      console.error('Error maintenance Domain:', error);
+      Logger.error('Error maintenance Domain:', error);
     },  
   });
 };
@@ -3253,7 +3261,7 @@ export const useDiskById = (diskId) => useQuery({
   queryKey: ['DiskById', diskId],
   queryFn: async () => {
     if (!diskId) return {};  
-    console.log(`useDiskById: ${diskId}`);
+    Logger.debug(`useDiskById: ${diskId}`);
     const res = await ApiManager.findDisk(diskId);
     return res ?? {};
   },
@@ -3275,7 +3283,7 @@ export const useAllVmsFromDisk = (diskId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllVmsFromDisk', diskId], 
   queryFn: async () => {
-    console.log(`useAllVmsFromDisk ... ${diskId}`);
+    Logger.debug(`useAllVmsFromDisk ... ${diskId}`);
     const res = await ApiManager.findAllVmsFromDisk(diskId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -3296,7 +3304,7 @@ export const useAllStorageDomainFromDisk = (diskId, mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllStorageDomainFromDisk', diskId], 
   queryFn: async () => {
-    console.log(`useAllStorageDomainFromDisk ... ${diskId}`);
+    Logger.debug(`useAllStorageDomainFromDisk ... ${diskId}`);
     const res = await ApiManager.findAllStorageDomainsFromDisk(diskId); 
     return res?.map((e) => mapPredicate(e)) ?? []; 
   },
@@ -3317,7 +3325,7 @@ export const useAddDisk = () => {
       queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
     },
     onError: (error) => {
-      console.error('Error adding disk:', error);
+      Logger.error('Error adding disk:', error);
     },  
   });
 };
@@ -3335,7 +3343,7 @@ export const useEditDisk = () => {
       queryClient.invalidateQueries('allDisks');
     },
     onError: (error) => {
-      console.error('Error editing disk:', error);
+      Logger.error('Error editing disk:', error);
     },
   });
 };
@@ -3353,7 +3361,7 @@ export const useDeleteDisk = () => {
       queryClient.invalidateQueries('allDisks');
     },
     onError: (error) => {
-      console.error('Error deleting disk:', error);
+      Logger.error('Error deleting disk:', error);
     },
   });
 };
@@ -3372,7 +3380,7 @@ export const useUploadDisk = () => {
       queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
     },
     onError: (error) => {
-      console.error('Error uploading disk:', error);
+      Logger.error('Error uploading disk:', error);
     },  
   });
 };
@@ -3390,7 +3398,7 @@ export const useMoveDisk = () => {
       queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
     },
     onError: (error) => {
-      console.error('Error moveing disk:', error);
+      Logger.error('Error moveing disk:', error);
     },  
   });
 };
@@ -3408,7 +3416,7 @@ export const useCopyDisk = () => {
       queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
     },
     onError: (error) => {
-      console.error('Error copy disk:', error);
+      Logger.error('Error copy disk:', error);
     },  
   });
 };
@@ -3460,7 +3468,7 @@ export const useUser = (username, exposeDetail = false) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['user'],
   queryFn: async () => {
-    console.log(`useUser ... username: ${username}, exposeDetail: ${exposeDetail}`);
+    Logger.debug(`useUser ... username: ${username}, exposeDetail: ${exposeDetail}`);
     const res = await ApiManager.findUser(username, exposeDetail)
     // setShouldRefresh(prevValue => false)
     return res
@@ -3481,12 +3489,12 @@ export const useAuthenticate = (username, password, _onSuccess, _onError) => use
   },
   onSuccess: (res) => {
     const msgSuccess = `useAuthenticate > onSuccess ... res: ${res}`
-    console.log(msgSuccess)
+    Logger.debug(msgSuccess)
     _onSuccess(res);
   },
   onError: (err) => {
     const msgErr = `useAuthenticate > onError ... err: ${err}`  
-    console.error(msgErr);
+    Logger.error(msgErr);
     toast.error(msgErr);
     _onError(err);
   },
@@ -3497,7 +3505,7 @@ export const useIsAuthenticated = (username) => useQuery({
   queryKey: ['isAuthenticated'],
   queryFn: async() => {
     const res = await localStorage.getItem("isUserAuthenticated") === "true"
-    console.log(`isAuthenticated ... username: ${username}, res: ${res}`)
+    Logger.debug(`isAuthenticated ... username: ${username}, res: ${res}`)
     return res
   }
 })
@@ -3516,7 +3524,7 @@ export const useUnAuthenticate = (username, _onSuccess, _onError) => {
     },
     onError: (err) => {
       const msgErr = `useUnAuthenticate > onError ... err: ${err}`  
-      console.error(msgErr);
+      Logger.error(msgErr);
       toast.error(`사용자 생성 실패 ... 이유: ${err}`);
       _onError(err)
     },
@@ -3543,7 +3551,7 @@ export const useAddUser = (user, onSuccess, onError) => {
     },
     onError: (err) => {
       const msgErr = `useAddUser > onError ... err: ${err}`  
-      console.error(msgErr);
+      Logger.error(msgErr);
       toast.error(`사용자 생성 실패 ... 이유: ${err}`);
       onError(err)
     },
@@ -3572,7 +3580,7 @@ export const useEditUser = (user, onSuccess, onError) => {
       onSuccess(res)
     },
     onError: (err) => {
-      console.error(`useEditUser > onError ... err: ${err}`);
+      Logger.error(`useEditUser > onError ... err: ${err}`);
       toast.error(`사용자 편집 실패 ... 이유: ${err}`);
       onError(err)
     },
@@ -3584,7 +3592,7 @@ export const useChangePasswordUser = (username, currentPassword, newPassword, on
     mutationFn: async () => await ApiManager.changePassword(username, currentPassword, newPassword),
     onSuccess: (res) => {
       const _res = res ?? {}
-      console.log(`useChangePasswordUser > onSuccess ... res: ${JSON.stringify(_res, null ,2)}`);
+      Logger.debug(`useChangePasswordUser > onSuccess ... res: ${JSON.stringify(_res, null ,2)}`);
       if (_res?.code && _res?.code !== 200)  {
         toast.error(`사용자 비밀번호변경 실패 ... 이유: ${res.message}`);
         return;
@@ -3595,7 +3603,7 @@ export const useChangePasswordUser = (username, currentPassword, newPassword, on
       onSuccess(res)
     },
     onError: (err) => {
-      console.error(`useChangePasswordUser > onError ... err: ${err}`);
+      Logger.error(`useChangePasswordUser > onError ... err: ${err}`);
       toast.error(`사용자 비밀번호변경 실패 ... 이유: ${err}`);
       onError(err)
     },
@@ -3611,7 +3619,7 @@ export const useRemoveUser = () => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async (username) => {
-      console.log(`Deleting user with username: ${username}`);
+      Logger.debug(`Deleting user with username: ${username}`);
       const res = await ApiManager.removeUser(username)
       return res
     },
@@ -3619,7 +3627,7 @@ export const useRemoveUser = () => {
       queryClient.invalidateQueries('allUsers');
     },
     onError: (error) => {
-      console.error('Error deleting users:', error);
+      Logger.error('Error deleting users:', error);
     },
   })
 };
@@ -3646,7 +3654,7 @@ export const useAllCerts = (mapPredicate) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allCerts'],
   queryFn: async () => {
-    console.log(`useUser ...`);
+    Logger.debug(`useUser ...`);
     const res = await ApiManager.findAllCerts()
     return res?.map((e) => mapPredicate(e)) ?? []
   }
@@ -3655,7 +3663,7 @@ export const useCert = (id) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['cert'],
   queryFn: async () => {
-    console.log(`useCert ... id: ${id}`);
+    Logger.debug(`useCert ... id: ${id}`);
     const res = await ApiManager.findCert(id)
     return res
   }

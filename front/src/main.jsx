@@ -2,10 +2,10 @@ import React from "react";
 import { Routes, Route, HashRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
 import { AuthProvider } from "./context/AuthProvider"
 import { GlobalProvider } from "./context/GlobalProvider";
+import reportWebVitals from "./reportWebVitals";
+import App from "./App";
 
 if (typeof global === 'undefined') {
   window.global = window;

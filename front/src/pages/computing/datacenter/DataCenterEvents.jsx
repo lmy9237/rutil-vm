@@ -1,6 +1,7 @@
 import React from "react";
 import EventDupl from "../../../components/dupl/EventDupl";
 import { useEventsFromDataCenter } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DataCenterEvents
@@ -18,7 +19,7 @@ const DataCenterEvents = ({ datacenterId }) => {
     isSuccess: isEventsSuccess,
   } = useEventsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...")
   return (
     <>
       <EventDupl

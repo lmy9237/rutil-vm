@@ -6,10 +6,13 @@ import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
+import SelectedIdView from "../common/SelectedIdView";
 
 const TemplateDupl = ({
   isLoading, isError, isSuccess,
-  templates = [], columns = [], type,
+  templates = [], 
+  columns = [], 
+  type,
   showSearchBox = true,  // ✅ 검색 여부 추가
 }) => {
   const navigate = useNavigate();
@@ -39,8 +42,6 @@ const TemplateDupl = ({
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-
-  const selectedIds = selectedTemplates.map((template) => template.id).join(", ");
   const handleNameClick = (id) => navigate(`/computing/templates/${id}`);
 
   // 모달 열기 / 닫기
@@ -83,6 +84,8 @@ const TemplateDupl = ({
           />,
         ]}
       />
+
+      <SelectedIdView items={selectedTemplates} />
 
       {/* 템플릿 모달창 */}
       <TemplateModals

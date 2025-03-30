@@ -7,6 +7,7 @@ import useSearch from "../button/useSearch";
 import TableRowClick from "../table/TableRowClick";
 import { status2Icon } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
+import SelectedIdView from "../common/SelectedIdView";
 
 const DataCenterDupl = ({
   isLoading, isError, isSuccess,
@@ -15,7 +16,6 @@ const DataCenterDupl = ({
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDataCenters, setSelectedDataCenters] = useState([]);
-
 
   const transformedData = datacenters.map((dc) => ({
     ...dc,
@@ -30,11 +30,6 @@ const DataCenterDupl = ({
     searchText: `${dc?.name} ${dc?.status} ${dc?.storageType ? "로컬" : "공유됨"}`,
   }));
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
-
-
-  const selectedIds = (
-    Array.isArray(selectedDataCenters) ? selectedDataCenters : []
-  ).map((dc) => dc.id).join(", ");
 
   const handleNameClick = (id) =>
     navigate(`/computing/datacenters/${id}/clusters`);
@@ -52,8 +47,9 @@ const DataCenterDupl = ({
 
   return (
     <>
-      <DataCenterActionButtons openModal={openModal} status={status} />
-      <span>ID: {selectedIds}</span>
+      <DataCenterActionButtons status={status}
+        openModal={openModal} 
+      />
 
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
@@ -74,6 +70,7 @@ const DataCenterDupl = ({
           />,
         ]}
       />
+      <SelectedIdView items={selectedDataCenters} />
 
       {/* 데이터센터 모달창 */}
       <DataCenterModals

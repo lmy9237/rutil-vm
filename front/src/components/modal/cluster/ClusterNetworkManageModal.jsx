@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import TableOuter from "./TableOuter"; // TableOuter 컴포넌트는 경로에 맞게 수정하세요.
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name ClusterNetworkManageModal
@@ -21,7 +22,7 @@ const ClusterNetworkManageModal = ({
   TableColumnsInfo,
   handleRowClick,
 }) => {
-  console.log("...");
+  Logger.debug("...");
   return (
     <Modal
       isOpen={isOpen}

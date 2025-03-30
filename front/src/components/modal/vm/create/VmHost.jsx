@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import Localization from "../../../../utils/Localization";
+import Logger from "../../../../utils/Logger";
 
 // 마이그레이션 모드
 const migrationModeOptionList = [
@@ -9,7 +10,11 @@ const migrationModeOptionList = [
   { value: "pinned", label: "마이그레이션 불가" },
 ];
 
-const VmHost = ({ hosts, formHostState, setFormHostState }) => {
+const VmHost = ({
+  hosts,
+  formHostState,
+  setFormHostState
+}) => {
   // hostVos 값이 있으면 hostInCluster를 false로 설정, 없으면 true
   useEffect(() => {
     if (formHostState.hostVos.length > 0) {
@@ -19,6 +24,7 @@ const VmHost = ({ hosts, formHostState, setFormHostState }) => {
     }
   }, [formHostState.hostVos, setFormHostState]);
 
+  Logger.debug("...")
   return (
     <div className="host-second-content">
       <div className="py-2">
@@ -65,7 +71,7 @@ const VmHost = ({ hosts, formHostState, setFormHostState }) => {
                 value={formHostState.hostVos.map((host) => host.id)}
                 onChange={(e) => {
                   const selectedIds = Array.from(e.target.selectedOptions, (option) => option.value);
-                  console.log("선택된 호스트 ID 목록:", selectedIds);
+                  Logger.debug(`선택된 호스트 ID 목록: ${selectedIds}`);
                   setFormHostState((prev) => ({
                     ...prev,
                     hostVos: hosts.filter((host) => selectedIds.includes(host.id)),

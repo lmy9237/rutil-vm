@@ -10,6 +10,8 @@ import useSearch from "../../../components/button/useSearch";
 import DomainActionModal from "../../../components/modal/domain/DomainActionModal";
 import DomainAttachModal from "../../../components/modal/domain/DomainAttachModal";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 
 /**
  * @name DomainDatacenters
@@ -42,7 +44,6 @@ const DomainDatacenters = ({ domainId }) => {
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDataCenters, setSelectedDataCenters] = useState([]); // 다중 선택된 데이터센터
-  const selectedIds = (Array.isArray(selectedDataCenters) ? selectedDataCenters : []).map((dc) => dc.id).join(", ");
 
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
@@ -51,8 +52,7 @@ const DomainDatacenters = ({ domainId }) => {
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   //TODO: 버튼 활성화
-
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <div className="dupl-header-group">
@@ -65,10 +65,7 @@ const DomainDatacenters = ({ domainId }) => {
           actionType={"domainDc"}
         />
       </div>
-      <span>ID: {selectedIds || ""}</span>
-      <br/>
-      <span>DC: {selectedDataCenters[0]?.name}</span>
-
+      
       <TablesOuter
         isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
         columns={TableColumnsInfo.DATACENTERS_FROM_STORAGE_DOMAIN}
@@ -76,6 +73,8 @@ const DomainDatacenters = ({ domainId }) => {
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedDataCenters(selectedRows)}
       />
+
+      <SelectedIdView items={selectedDataCenters} />
 
       {/* 도메인 모달창 */}
       <Suspense fallback={<Loading />}>

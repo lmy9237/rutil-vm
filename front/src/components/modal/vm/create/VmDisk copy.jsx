@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import Loading from "../../../common/Loading";
 import { useDisksFromVM } from "../../../../api/RQHook";
+import Logger from "../../../../utils/Logger";
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
 
@@ -48,7 +49,7 @@ const VmDisk = ({
 
   // 디스크 생성시 DiskListState에 들어갈 값(isCreated true)
   const handleCreateDisk = useCallback((newDisk) => {
-    console.log("handleCreateDisk - 전달된 새 디스크 데이터:", newDisk);
+    Logger.debug("handleCreateDisk - 전달된 새 디스크 데이터:", newDisk);
     setDiskListState((prevDisks) => [...prevDisks, { ...newDisk, isCreated: true, shouldUpdateDisk: false }]);
     setIsCreatePopupOpen(false);
   }, [setDiskListState]);
@@ -56,7 +57,7 @@ const VmDisk = ({
 
   // 디스크 편집시 표시될 값 입력 필요
   const handleEditDisk = useCallback((editDisk) => {
-    console.log("handleEditDisk - 편집된 디스크 데이터:", editDisk);
+    Logger.debug("handleEditDisk - 편집된 디스크 데이터:", editDisk);
     setDiskListState((prevDisks) =>
       prevDisks.map((disk) => disk.alias === editDisk.alias ? { ...disk, ...editDisk, shouldUpdateDisk: true } : disk)
     );

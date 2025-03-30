@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import TablesOuter from '../../../components/table/TablesOuter';
-import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import { useHostdevicesFromVM } from '../../../api/RQHook';
-// const VmDeviceAddModal = React.lazy(() => import('../../../components/modal/vm/VmDeviceAddModal'));
-
+import React, { useState } from "react";
+import TablesOuter from "../../../components/table/TablesOuter";
+import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import { useHostdevicesFromVM } from "../../../api/RQHook";
 
 /**
  * @name VmHostDevices
@@ -14,17 +13,15 @@ import { useHostdevicesFromVM } from '../../../api/RQHook';
  * @returns {JSX.Element} VmHostDevices
  */
 const VmHostDevices = ({ vmId }) => {
-  const { 
-    data: hostDevices = [], 
+  const {
+    data: hostDevices = [],
     isLoading: isHostDevicesLoading,
     isError: isHostDevicesError,
     isSuccess: isHostDevicesSuccess,
-  } = useHostdevicesFromVM(vmId, (e) => ({ ...e }));  
+  } = useHostdevicesFromVM(vmId, (e) => ({ ...e }));
 
   // const [activeModal, setActiveModal] = useState(null);
   const [selectedDevices, setSelectedDevices] = useState([]);
-  const selectedIds = (Array.isArray(selectedDevices) ? selectedDevices : []).map(d => d.id).join(', ');
-  
   return (
     <>
       <div className="header-right-btns">
@@ -33,34 +30,33 @@ const VmHostDevices = ({ vmId }) => {
         {/* <button className='disabled'>vGPU 관리</button> */}
         {/* <button onClick={() => openPopup('view_cpu')}>View CPU Pinning</button> */}
       </div>
-      <span>ID: {selectedIds || ''}</span>
 
-      <TablesOuter 
-        isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
-        columns={TableColumnsInfo.HOST_DEVICE_FROM_VM} 
+      <TablesOuter
+        isLoading={isHostDevicesLoading}
+        isError={isHostDevicesError}
+        isSuccess={isHostDevicesSuccess}
+        columns={TableColumnsInfo.HOST_DEVICE_FROM_VM}
         data={hostDevices.map((hostDevice) => ({
           ...hostDevice,
-          name: hostDevice?.name ?? 'Unknown',
-          capability: hostDevice?.capability ?? 'Unknown',
-          vendorName: hostDevice?.vendorName ?? 'Unknown',
-          productName: hostDevice?.productName ?? 'Unknown',
-          driver: hostDevice?.driver ?? 'Unknown',
+          name: hostDevice?.name ?? "Unknown",
+          capability: hostDevice?.capability ?? "Unknown",
+          vendorName: hostDevice?.vendorName ?? "Unknown",
+          productName: hostDevice?.productName ?? "Unknown",
+          driver: hostDevice?.driver ?? "Unknown",
           // currentlyUsed: hostDevice?.currentlyUsed ?? 'Unknown',
           // connectedToVM: hostDevice?.connectedToVM ?? 'Unknown',
           // iommuGroup: hostDevice?.iommuGroup ?? Localization.kr.NOT_ASSOCIATED,
           // mdevType: hostDevice?.mdevType ?? Localization.kr.NOT_ASSOCIATED,
-        }))} 
+        }))}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedDevices(selectedRows)}
         multiSelect={true}
       />
-    
+      <SelectedIdView items={selectedDevices} />
+
       {/* 모달창 */}
-      {/* { renderModals() } */}
-        
     </>
   );
 };
-  
-  export default VmHostDevices;
-  
+
+export default VmHostDevices;

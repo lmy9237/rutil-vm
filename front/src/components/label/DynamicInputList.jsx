@@ -2,6 +2,7 @@
 import React from "react";
 import "./DynamicInputList.css";
 import { RVI36, rvi36Add, rvi36Remove } from "../icons/RutilVmIcons";
+import Logger from "../../utils/Logger";
 
 const DynamicInputList = ({
   values = [],
@@ -15,7 +16,7 @@ const DynamicInputList = ({
   onAdd = () => {},
   onRemove = () => {},
 }) => {
-  console.log("tf", options);
+  Logger.debug(`... options: ${JSON.stringify(options, null, 2)}`)
 
   return (
     <div className="dynamic-input-outer py-2">

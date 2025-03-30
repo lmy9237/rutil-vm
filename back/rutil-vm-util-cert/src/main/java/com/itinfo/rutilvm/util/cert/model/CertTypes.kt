@@ -11,7 +11,8 @@ import java.util.concurrent.ConcurrentHashMap
  */
 enum class HostCertType(override val alias: String, override val path: String) : CertType {
 	VDSM("VDSM Certificate", "/etc/pki/vdsm/certs/vdsmcert.pem"),
-	/*VDSM_CA("VDSM CA Certificate", "/etc/pki/vdsm/certs/cacert.pem"),*/
+	/* VDSM("VDSM Certificate Key", "/etc/pki/vdsm/keys/vdsmkey.pem"), */
+	/* VDSM_CA("VDSM CA Certificate", "/etc/pki/vdsm/certs/cacert.pem"), */
 	UNKNOWN("", "");
 
 	companion object {

@@ -1,6 +1,7 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import HostDupl from "../../../components/dupl/HostDupl";
 import { useHostFromCluster } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name ClusterHosts
@@ -18,7 +19,7 @@ const ClusterHosts = ({ clusterId }) => {
     isSuccess: isHostsSuccess,
   } = useHostFromCluster(clusterId, (e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <HostDupl

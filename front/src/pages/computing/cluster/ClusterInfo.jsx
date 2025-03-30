@@ -13,6 +13,7 @@ import { useCluster } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import { rvi24Cluster } from "../../../components/icons/RutilVmIcons";
 import "./Cluster.css";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name ClusterInfo
@@ -92,7 +93,7 @@ const ClusterInfo = () => {
     { type: "delete", label: "삭제", onClick: () => openModal("delete") },
   ];
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24Cluster()}

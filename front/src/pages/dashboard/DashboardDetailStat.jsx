@@ -3,6 +3,7 @@ import RadialBarChart from "../../components/Chart/RadialBarChart";
 import BarChartWrapper from "../../components/Chart/BarChartWrapper";
 import SuperAreaChart from "../../components/Chart/SuperAreaChart";
 import "./DashboardDetailStat.css";
+import Logger from "../../utils/Logger";
 
 /**
  * @name DashboardDetailStat
@@ -17,7 +18,7 @@ const DashboardDetailStat = ({ title, totalPercentage }) => {
   const CpuApexChart = memo(({ cpu }) => { return <RadialBarChart percentage={cpu || 0} />; });
   const CpuBarChart = ({ vmCpu }) => (<BarChartWrapper data={vmCpu} keyName="name" keyPercent="cpuPercent" />);
 
-  console.log("...")
+  Logger.debug("...")
   return (
     <div className="dash-section-contents">
       <h1>{title}</h1>

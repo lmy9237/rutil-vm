@@ -2,6 +2,7 @@ import React from "react";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import DataCenterDupl from "../../components/dupl/DataCenterDupl";
 import { useAllDataCenters } from "../../api/RQHook";
+import Logger from "../../utils/Logger";
 
 /**
  * @name DataCenters
@@ -17,7 +18,7 @@ const DataCenters = () => {
     isSuccess: isDataCentersSuccess,
   } = useAllDataCenters((e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <DataCenterDupl

@@ -6,6 +6,7 @@ import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 import { useAllVMs } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import "./Vm.css";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name AllVm
@@ -22,7 +23,7 @@ const AllVm = () => {
     refetch: vmsRefetch,
   } = useAllVMs((e) => ({ ...e }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24Desktop()}

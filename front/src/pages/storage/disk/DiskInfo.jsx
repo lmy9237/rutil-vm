@@ -10,6 +10,7 @@ import DiskModals from "../../../components/modal/disk/DiskModals";
 import Localization from "../../../utils/Localization";
 import { useDiskById } from "../../../api/RQHook";
 import { rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DiskDomains
@@ -80,7 +81,7 @@ const DiskInfo = () => {
     // { type: 'upload', label: '업로드', onClick: () => openModal('restart') },
   ];
 
-  console.log("...")
+  Logger.debug("...")
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24HardDrive()}

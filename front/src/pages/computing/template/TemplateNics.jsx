@@ -8,6 +8,8 @@ import TemplateNicDeleteModal from "../../../components/modal/template/TemplateN
 import TemplateNeworkNewInterModal from "../../../components/modal/template/TemplateNeworkNewInterModal";
 import NicActionButtons from "../../../components/dupl/NicActionButtons";
 import { renderTFStatusIcon } from "../../../components/Icon";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name TemplateNics
@@ -45,19 +47,17 @@ const TemplateNics = ({ templateId }) => {
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedVnicProfiles, setSelectedVnicProfiles] = useState([]);
-  const selectedIds = (Array.isArray(selectedVnicProfiles) ? selectedVnicProfiles : []).map((vnic) => vnic.id).join(", ");
-
+  
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <NicActionButtons
         openModal={openModal}
         isEditDisabled={selectedVnicProfiles.length !== 1}
       />
-      <span>선택된 NIC ID: {selectedIds || "없음"}</span>
 
       <TablesOuter
         isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
@@ -72,6 +72,8 @@ const TemplateNics = ({ templateId }) => {
           />,
         ]}
       />
+
+      <SelectedIdView items={selectedVnicProfiles}/>
 
       {/* nic 모달창 */}
       <Suspense fallback={<Loading />}>

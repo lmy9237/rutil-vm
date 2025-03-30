@@ -5,6 +5,7 @@ import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useAllDataCenters, useAttachDomain } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DomainAttachModal
@@ -29,7 +30,7 @@ const DomainAttachModal = ({ isOpen, data, onClose }) => {
   const handleRowClick = (row) => {
     const selectedRow = Array.isArray(row) ? row[0] : row;
     if (selectedRow?.id) {
-      console.log(`선택한 ID: ${selectedRow.id}`);
+      Logger.debug(`선택한 ID: ${selectedRow.id}`);
       setSelectedId(selectedRow.id);
       setSelectedName(selectedRow.name);
     }
@@ -38,7 +39,7 @@ const DomainAttachModal = ({ isOpen, data, onClose }) => {
   const handleFormSubmit = () => {
     if (!selectedId) return toast.error(`${Localization.kr.DATA_CENTER}를 선택하세요.`);
 
-    console.log(`domain: ${data?.id}, dc: ${selectedId}`);
+    Logger.debug(`domain: ${data?.id}, dc: ${selectedId}`);
     attachDomain(
       { storageDomainId: data?.id, dataCenterId: selectedId },
       {
@@ -47,9 +48,7 @@ const DomainAttachModal = ({ isOpen, data, onClose }) => {
           toast.success(`도메인 ${Localization.kr.DATA_CENTER} ${selectedName} 연결 완료`);
         },
         onError: (error) => {
-          toast.error(
-            `도메인 ${Localization.kr.DATA_CENTER} ${selectedName} 연결 실패: ${error.message}`
-          );
+          toast.error(`도메인 ${Localization.kr.DATA_CENTER} ${selectedName} 연결 실패: ${error.message}`);
         },
       }
     );

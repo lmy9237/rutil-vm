@@ -1,8 +1,8 @@
 .legend-bar-container {
-  gap: 6px;
+  gap: var(--p-default);
   font-size: var(--fs-default);
 }
-.legend-item { gap: 6px; }
+.legend-item { gap: var(--p-default); }
 .legend {
   display: inline-block;width: 15px;height: 15px;
   border-radius: 3px;

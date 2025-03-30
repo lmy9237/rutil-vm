@@ -8,6 +8,7 @@ import TableRowClick from "../../../components/table/TableRowClick";
 import NetworkClusterModal from "../../../components/modal/network/NetworkClusterModal";
 import { useAllClustersFromNetwork } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name NetworkClusters
@@ -56,8 +57,7 @@ const NetworkClusters = ({ networkId }) => {
 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <div className="header-right-btns mb-2">

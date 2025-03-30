@@ -4,6 +4,7 @@ import TablesOuter from "../../../components/table/TablesOuter";
 import { convertBytesToGB } from "../../../util";
 import { useAllDiskSnapshotFromDomain } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 
 /**
  * @name DomainDiskSnapshots
@@ -28,8 +29,6 @@ const DomainDiskSnapshots = ({ domainId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSnapshots, setSelectedSnapshots] = useState([]);
 
-  const selectedIds = selectedSnapshots.map((snapshot) => snapshot.id).join(", ");
-
   return (
     <>
       <div className="header-right-btns">
@@ -41,14 +40,14 @@ const DomainDiskSnapshots = ({ domainId }) => {
         />
       </div>
 
-      <span>ID: {selectedIds || "선택된 ID가 없습니다."}</span>
-
       <TablesOuter
         isLoading={isDiskSnapshotsLoading} isError={isDiskSnapshotsError} isSuccess={isDiskSnapshotsSuccess}
         columns={TableColumnsInfo.DISK_SNAPSHOT_FROM_STORAGE_DOMAIN}
         data={transformedData}
         onRowClick={(selectedRows) => setSelectedSnapshots(selectedRows)}
       />
+
+      <SelectedIdView items={selectedSnapshots} />
 
       {/* <Suspense fallback={<Loading/>}>
         {isModalOpen && (

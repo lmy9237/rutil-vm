@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import { VncScreen } from 'react-vnc'
 import { useVmConsoleAccessInfo } from "../api/RQHook";
+import Logger from '../utils/Logger';
 
 const Vnc = ({
   vmId, autoConnect = false,
@@ -9,8 +10,8 @@ const Vnc = ({
     
   let wsUrl = `wss://localhost/ws`;
   if (import.meta.env.PROD) {
-    console.log("THIS IS PRODUCTION !!!");
-    console.log(`VmConsoleModal ... import.meta.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`);
+    Logger.debug("THIS IS PRODUCTION !!!");
+    Logger.debug(`VmLoggerModal ... import.meta.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`);
     wsUrl = "wss://__RUTIL_VM_OVIRT_IP_ADDRESS__/ws";
   }
 
@@ -28,15 +29,15 @@ const Vnc = ({
   };
   const fullAccessUrl = () => `${wsUrl}/${vmConsoleAccessInfo?.address}:${vmConsoleAccessInfo?.port}`
   const ref = useRef()
-  isReady() && console.log(
+  isReady() && Logger.debug(
     `... wsUrl: ${wsUrl}, address: ${vmConsoleAccessInfo?.address}, port: ${vmConsoleAccessInfo?.port}, ticket: ${vmConsoleAccessInfo?.token}`
   );
-  isReady() && console.log(`... fullAccessUrl: ${fullAccessUrl()}`)
+  isReady() && Logger.debug(`... fullAccessUrl: ${fullAccessUrl()}`)
 
   /*
   useEffect(() => {
     if (!ref.current) {
-      console.error('Container ref is not assigned');
+      Logger.error('Container ref is not assigned');
       return;
     }
 
@@ -45,11 +46,11 @@ const Vnc = ({
       wsProtocols: ['binary']
     })
     rfb.addEventListener('connect', () => {
-      console.log("Vnc > Connected to VNC")
+      Logger.debug("Vnc > Connected to VNC")
     })
 
     rfb.addEventListener('disconnect', (evt) => {
-      console.log("Vnc > Disconnected from VNC", evt)
+      Logger.debug("Vnc > Disconnected from VNC", evt)
     })
 
     return () => {
@@ -68,28 +69,25 @@ const Vnc = ({
           }}
           scaleViewport
           background="#000000"
-          style={{
-            width: '100%',
-            height: '100%',
-          }}
+          style={{width: '100%', height: '100%'}}
           debug
           onConnect={(rfb) => {
-            console.log("Vnc > onConnect ... ");
+            Logger.debug("Vnc > onConnect ... ");
           }}
           onDisconnect={(rfb) => {
-            console.log("Vnc > onDisconnect ... ");
+            Logger.debug("Vnc > onDisconnect ... ");
           }}
           onCredentialsRequired={(rfb) => {
-            console.log("Vnc > onCredentialsRequired ... ")
+            Logger.debug("Vnc > onCredentialsRequired ... ")
             rfb.sendCredentials({
               "password": vmConsoleAccessInfo?.token,
             })
           }}
           onSecurityFailure={(e) => {
-            console.error(`Vnc > onSecurityFailure (${e?.detail?.status}): ${e?.detail?.reason}`)
+            Logger.error(`Vnc > onSecurityFailure (${e?.detail?.status}): ${e?.detail?.reason}`)
           }}
           onClipboard={(e) => {
-            console.log(`Vnc > onClipboard ${e.detail}`)
+            Logger.debug(`Vnc > onClipboard ${e.detail}`)
           }} 
           ref={ref}
         />

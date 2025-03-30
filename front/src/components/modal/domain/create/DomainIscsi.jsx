@@ -6,6 +6,7 @@ import LabelInput from '../../../label/LabelInput';
 import LabelCheckbox from '../../../label/LabelCheckbox';
 import Localization from '../../../../utils/Localization';
 import { RVI24, rvi24ChevronUp, rvi24DownArrow } from '../../../icons/RutilVmIcons';
+import Logger from '../../../../utils/Logger';
 
 const DomainIscsi = ({
   mode,
@@ -28,8 +29,8 @@ const DomainIscsi = ({
 }) => {
 
   useEffect(() => {
-    console.log("도메인으로부터 받은 lunId:", lunId);
-    console.log("도메인으로부터 받은 hostVo:", hostVo);
+    Logger.debug("도메인으로부터 받은 lunId:", lunId);
+    Logger.debug("도메인으로부터 받은 hostVo:", hostVo);
   }, [lunId, hostVo]);
   
   // iscsi 생성
@@ -64,7 +65,7 @@ const DomainIscsi = ({
   const handleRowClick = (row) => {
     const selectedRow = Array.isArray(row) ? row[0] : row;
     if (selectedRow && selectedRow.id) {
-      console.log('선택한 LUN ID:', selectedRow.id);
+      Logger.debug('선택한 LUN ID:', selectedRow.id);
       setLunId(selectedRow.id);
     }
   }; 
@@ -169,7 +170,7 @@ const DomainIscsi = ({
           </>
       )}
       </div>
-      <div> <span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
+      <div><span style={{ fontSize: '22px' }}>id: {lunId}</span></div>
     </div>
   );
 };

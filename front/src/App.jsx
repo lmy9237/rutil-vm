@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import { Route, HashRouter as Router, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { scan } from "react-scan";
 import STOMP from "./Socket";
 import Layout from "./components/Layout";
@@ -31,6 +31,7 @@ import Event from "./pages/event/Event";
 import SettingInfo from "./pages/setting/SettingInfo";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "pretendard/dist/web/static/pretendard.css";
+import Logger from "./utils/Logger";
 import "./App.css";
 
 const App = () => {
@@ -41,12 +42,12 @@ const App = () => {
   useEffect(() => {
     // Connect using STOMP
     STOMP.connect({}, (frame) => {
-      console.log("Connected: " + frame);
+      Logger.debug("Connected: " + frame);
 
       // Subscribe to a topic
       STOMP.subscribe("/topic/public", (res) => {
         const receivedMessage = JSON.parse(res.body);
-        console.log(`message received! ... ${receivedMessage}`);
+        Logger.debug(`message received! ... ${receivedMessage}`);
         showMessage(receivedMessage);
         showToast(receivedMessage); // Show toast on message receive
       });
@@ -59,7 +60,7 @@ const App = () => {
     return () => {
       if (STOMP) {
         STOMP.disconnect(() => {
-          console.log("Disconnected from STOMP");
+          Logger.debug("Disconnected from STOMP");
         });
       }
     };
@@ -67,12 +68,12 @@ const App = () => {
   //#endregion: 웹소켓연결
 
   const showMessage = (message) => {
-    console.log(`App > showMessage ...`);
+    Logger.debug(`App > showMessage ...`);
     setMessages((prevMessages) => [...prevMessages, message]);
   };
 
   const showToast = (msg) => {
-    console.log(`App > showToast ...`);
+    Logger.debug(`App > showToast ...`);
     toast(`${msg.content}`, {
       icon: `${msg.symbol}`,
       duration: 1500,

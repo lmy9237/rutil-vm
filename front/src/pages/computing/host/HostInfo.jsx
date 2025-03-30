@@ -13,6 +13,7 @@ import Localization from "../../../utils/Localization";
 import { rvi24Host } from "../../../components/icons/RutilVmIcons";
 import { useHost } from "../../../api/RQHook";
 import "./Host.css";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name HostInfo
@@ -64,7 +65,7 @@ const HostInfo = () => {
   }, [section]);
 
   const handleTabClick = (tab) => {
-    console.log(`HostInfo > handleTabClick ... tab: ${tab}`);
+    Logger.debug(`HostInfo > handleTabClick ... tab: ${tab}`);
     const path = tab === "general"
         ? `/computing/hosts/${hostId}`
         : `/computing/hosts/${hostId}/${tab}`;
@@ -79,7 +80,7 @@ const HostInfo = () => {
 
   // 탭 메뉴 관리
   const renderSectionContent = () => {
-    console.log(`HostInfo > renderSectionContent ... `);
+    Logger.debug(`HostInfo > renderSectionContent ... `);
     const SectionComponent = {
       general: HostGeneral,
       vms: HostVms,

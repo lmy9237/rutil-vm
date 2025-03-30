@@ -8,6 +8,7 @@ import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGet
 import ActionButton from '../../../components/button/ActionButton';
 import Loading from '../../../components/common/Loading';
 import Localization from '../../../utils/Localization';
+import SelectedIdView from '../../../components/common/SelectedIdView';
 
 /**
  * @name DomainGetVms
@@ -25,8 +26,7 @@ const DomainImportVms = ({ domainId }) => {
   } = useAllUnregisteredVMFromDomain(domainId, (e) => ({ ...e }));
 
   const [activeModal, setActiveModal] = useState(null);
-  const [selectedVms, setSelectedVms] = useState([]); // 다중 선택된 데이터센터
-  const selectedIds = (Array.isArray(selectedVms) ? selectedVms : []).map((vm) => vm.id).join(", ");
+  const [selectedVms, setSelectedVms] = useState([]); // 다중 선택된 데이터센터  
 
   const transformedData = vms.map((vm) => ({
     ...vm,
@@ -51,8 +51,7 @@ const DomainImportVms = ({ domainId }) => {
           onClick={() => setActiveModal('delete')}
         />
       </div>
-      <span>ID: {selectedIds || ''}</span>
-
+      
       <TablesOuter 
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         columns={TableColumnsInfo.GET_VMS_TEMPLATES}
@@ -61,6 +60,8 @@ const DomainImportVms = ({ domainId }) => {
         onRowClick={(selectedRows) => setSelectedVms(selectedRows)}
         multiSelect={true}
       />
+
+      <SelectedIdView items={selectedVms} />
 
       <Suspense fallback={<Loading />}>
         {/* 가상머신 가져오기 모달 */}

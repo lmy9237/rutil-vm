@@ -6,6 +6,7 @@ import TablesOuter from "../../components/table/TablesOuter";
 import { useAllUsers } from "../../api/RQHook";
 import SettingUsersDeleteModal from '../../components/modal/settings/SettingUsersDeleteModal';
 import { RVI16, rvi16User, rvi16Superuser } from '../../components/icons/RutilVmIcons';
+import Logger from '../../utils/Logger';
 
 /**
  * @name SettingUsers
@@ -26,8 +27,7 @@ const SettingUsers = () => {
     isSuccess: isUsersSuccess,
     refetch: refetchUsers,
   } = useAllUsers((e) => {
-    console.log(`SettingUsers ... ${JSON.stringify(e)}`)
-    // const [username, provider] = e?.userName?.split('@') || [];
+    Logger.debug(`SettingUsers ... ${JSON.stringify(e, null ,2)}`)
     return { ...e };
   });
   
@@ -47,12 +47,12 @@ const SettingUsers = () => {
     remove: false,
   });
   const toggleModal = (type, isOpen) => {
-    console.log(`SettingUsers > toggleModal ... type: ${type}, isOpen: ${isOpen}`);
+    Logger.debug(`SettingUsers > toggleModal ... type: ${type}, isOpen: ${isOpen}`);
     setModals((prev) => ({ ...prev, [type]: isOpen }));
   };
 
   const openModal = (popupType) => {
-    console.log(`SettingUsers > openPopup ... popupType: ${popupType}`)
+    Logger.debug(`SettingUsers > openPopup ... popupType: ${popupType}`)
     setActiveModal(popupType);
     if (popupType === "add") {
       setModals({create: true, edit:false, changePassword:false, remove:false})
@@ -73,7 +73,7 @@ const SettingUsers = () => {
   };
 
   const renderModals = () => {
-    console.log("SettingUsers > renderModals ... ")
+    Logger.debug("SettingUsers > renderModals ... ")
     return (
       <Suspense>
       {(modals.create || (modals.edit && selectedUsers) || (modals.changePassword && selectedUsers)) && (
@@ -102,12 +102,13 @@ const SettingUsers = () => {
     )
   }
   
-  const status = 
-    selectedUsers.length === 0 ? "none"
-      : selectedUsers.length === 1 ? "single"
-      : "multiple";
+  const status = selectedUsers.length === 0 
+      ? "none"
+      : selectedUsers.length === 1 
+        ? "single"
+        : "multiple";
 
-  console.log("...")
+  Logger.debug("...")
   return (
     <>
       <SettingUsersActionButtons 

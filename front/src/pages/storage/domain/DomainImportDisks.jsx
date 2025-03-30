@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DomainGetDiskModal from "../../../components/modal/domain/DomainGetDiskModal";
-import { useAllUnregisteredDiskFromDomain } from "../../../api/RQHook";
-import { checkZeroSizeToGB } from "../../../util";
 import SearchBox from "../../../components/button/SearchBox";
 import useSearch from "../../../components/button/useSearch";
 import ActionButton from "../../../components/button/ActionButton";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import { checkZeroSizeToGB } from "../../../util";
+import Logger from "../../../utils/Logger";
+import { useAllUnregisteredDiskFromDomain } from "../../../api/RQHook";
 
 /**
  * @name DomainImportDisks
@@ -24,10 +26,7 @@ const DomainImportDisks = ({ domainId }) => {
   } = useAllUnregisteredDiskFromDomain(domainId, (e) => ({ ...e }));
 
   const [activeModal, setActiveModal] = useState(null);
-  const [selecteDisks, setSelectedDisks] = useState([]); // 다중 선택된 데이터센터
-  const selectedIds = (Array.isArray(selecteDisks) ? selecteDisks : [])
-    .map((disk) => disk.id)
-    .join(", ");
+  const [selectedDisks, setSelectedDisks] = useState([]); // 다중 선택된 데이터센터
 
   const transformedData = disks.map((disk) => ({
     ...disk,
@@ -40,7 +39,7 @@ const DomainImportDisks = ({ domainId }) => {
   }));
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  console.log(`disks: ${disks}`);
+  Logger.debug(`DomainImportDisks ... transformedData: ${transformedData}`);
   return (
     <>
       <div className="dupl-header-group">
@@ -50,7 +49,7 @@ const DomainImportDisks = ({ domainId }) => {
             label="가져오기" 
             actionType="default" 
             onClick={() => setActiveModal("get")}
-            disabled={selecteDisks.length === 0} 
+            disabled={selectedDisks.length === 0} 
           />
           <ActionButton 
             label="삭제" 
@@ -59,9 +58,6 @@ const DomainImportDisks = ({ domainId }) => {
           />
         </div>
       </div>
-      
-      <span>ID: {selectedIds || ""}</span>
-
       <TablesOuter
         isLoading={isDisksLoading}
         isError={isDisksError}
@@ -73,12 +69,14 @@ const DomainImportDisks = ({ domainId }) => {
         multiSelect={true}
       />
 
+      <SelectedIdView items={selectedDisks} />
+
       {/* 모달 */}
       {activeModal === "get" && (
         <DomainGetDiskModal
           isOpen={true}
           domainId={domainId}
-          data={selecteDisks}
+          data={selectedDisks}
           onClose={() => setActiveModal(null)}
         />
       )}
@@ -88,7 +86,7 @@ const DomainImportDisks = ({ domainId }) => {
           isOpen={true}
           onClose={() => setActiveModal(null)} 
           label={"등록되지 않은 디스크"}
-          data={selecteDisks}
+          data={selectedDisks}
           api={useDeleteDisk()}
         />
       )} */}

@@ -1,25 +1,21 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Logger from "../../utils/Logger";
 
 /**
  * @name TableRowClick
  * @description 테이블 행 선택
- * 
+ *
  * @param {string} type
  * @param {string} id
- * 
+ *
  * @returns
  */
-const TableRowClick = ({ 
-  type, 
-  id, 
-  children, 
-  style 
-}) => {
+const TableRowClick = ({ type, id, children, style }) => {
   const navigate = useNavigate();
 
   const handleClick = (e) => {
-    console.log("TableRowClick > handleClick ...");
+    Logger.debug("TableRowClick > handleClick ...");
     e.stopPropagation(); // 테이블 row 클릭과 충돌 방지
 
     const paths = {
@@ -35,18 +31,16 @@ const TableRowClick = ({
     };
 
     const path = paths[type];
-    if (path) 
-      navigate(path);
-    else
-      console.warn(`Unknown navigation type: ${type}`);
+    if (path) navigate(path);
+    else Logger.debug(`Unknown navigation type: ${type}`);
   };
-  
+
   return (
-    <div style={{textAlign: 'left'}}>
+    <div style={{ textAlign: "left" }}>
       <span
-        className='row-click'
+        className="row-click"
         onClick={handleClick}
-        style={{ color: 'rgb(9, 83, 153)' }}
+        style={{ color: "rgb(9, 83, 153)" }}
       >
         {children}
       </span>

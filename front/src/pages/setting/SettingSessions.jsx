@@ -3,7 +3,7 @@ import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import SettingUserSessionsActionButtons from "./SettingUserSessionsActionButtons";
 import { useAllUserSessions } from "../../api/RQHook";
 import TablesOuter from "../../components/table/TablesOuter";
-
+import Logger from "../../utils/Logger";
 /**
  * @name SettingSessions
  * @description 관리 > 활성 사용자 세션
@@ -23,7 +23,7 @@ const SettingSessions = () => {
     isSuccess: isUserSessionsSuccess,
     refetch: refetchUserSessios
   } = useAllUserSessions("", (e) => {
-    console.log(`SettingSessions ... ${JSON.stringify(e)}`);
+    Logger.debug(`SettingSessions ... ${JSON.stringify(e, null, 2)}`);
     // const [username, provider] = e?.userName?.split('@') || [];
     return {
       ...e,
@@ -37,14 +37,14 @@ const SettingSessions = () => {
     remove: false,
   });
   const toggleModal = (type, isOpen) => {
-    console.log(
+    Logger.debug(
       `SettingSessions > toggleModal ... type: ${type}, isOpen: ${isOpen}`
     );
     setModals((prev) => ({ ...prev, [type]: isOpen }));
   };
 
   const openModal = (popupType) => {
-    console.log(`SettingSessions > openPopup ... popupType: ${popupType}`);
+    Logger.debug(`SettingSessions > openPopup ... popupType: ${popupType}`);
     setActiveModal(popupType);
     if (popupType === "endSession") {
       setModals({ endSession: true });
@@ -53,7 +53,7 @@ const SettingSessions = () => {
   };
 
   const renderModals = () => {
-    console.log("SettingSessions > renderModals ... ");
+    Logger.debug("SettingSessions > renderModals ... ");
     return (
       <Suspense>
         {/* {modals.endSession && (
@@ -77,7 +77,7 @@ const SettingSessions = () => {
         ? "single"
         : "multiple";
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <SettingUserSessionsActionButtons
@@ -94,9 +94,7 @@ const SettingSessions = () => {
         columns={TableColumnsInfo.ACTIVE_USER_SESSION}
         data={userSessions}
         onRowClick={(row) => {
-          console.log(
-            `SettingSessions > onRowClick ... row: ${JSON.stringify(row)}`
-          );
+          Logger.debug(`SettingSessions > onRowClick ... row: ${JSON.stringify(row, null, 2)}`);
           setSelectedUserSessions(row);
         }}
         showSearchBox={true} // 검색 박스 표시 여부 제어

@@ -17,6 +17,7 @@ import {
   useNetworkInterfaceFromHost,
 } from "../../../api/RQHook";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name NetworkHosts
@@ -92,7 +93,7 @@ const NetworkHosts = ({ networkId }) => {
     { key: "disconnected", label: "연결 해제" },
   ];
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <div className="header-right-btns">

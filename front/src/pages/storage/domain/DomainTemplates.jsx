@@ -2,9 +2,8 @@ import React from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import { useAllTemplateFromDomain } from "../../../api/RQHook";
-import { convertBytesToGBFixed1 } from "../../../util";
 import TableRowClick from "../../../components/table/TableRowClick";
-
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DomainTemplates
@@ -41,7 +40,7 @@ const DomainTemplates = ({ domainId }) => {
     // ),
   }));
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <>
       <TablesOuter

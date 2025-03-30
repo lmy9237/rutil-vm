@@ -4,6 +4,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TablesOuter from "../../../components/table/TablesOuter";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DiskVms
@@ -39,7 +40,7 @@ const DiskVms = ({ diskId }) => {
     ipv4: vm?.ipv4 + " " + vm?.ipv6,
   }));
 
-  console.log("...")
+  Logger.debug("...")
   return (
     <>
       <TablesOuter

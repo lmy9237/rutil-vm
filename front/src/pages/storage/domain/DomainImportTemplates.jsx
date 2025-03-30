@@ -8,6 +8,7 @@ import { checkZeroSizeToMB } from "../../../util";
 import SearchBox from "../../../components/button/SearchBox";
 import useSearch from "../../../components/button/useSearch";
 import ActionButton from "../../../components/button/ActionButton";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 
 /**
  * @name DomainImportTemplates
@@ -26,7 +27,6 @@ const DomainImportTemplates = ({ domainId }) => {
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedTemplates, setSelectedTemplates] = useState([]); // 다중 선택된 데이터센터
-  const selectedIds = (Array.isArray(selectedTemplates) ? selectedTemplates : []).map((t) => t.id).join(", ");
 
   const transformedData = templates.map((t) => ({
     ...t,
@@ -61,7 +61,6 @@ const DomainImportTemplates = ({ domainId }) => {
           />
         </div>
       </div>
-      <span>ID: {selectedIds || ""}</span>
 
       <TablesOuter
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
@@ -71,6 +70,8 @@ const DomainImportTemplates = ({ domainId }) => {
         onRowClick={(selectedRows) => setSelectedTemplates(selectedRows)}
         multiSelect={true}
       />
+
+      <SelectedIdView items={selectedTemplates} />
 
       {/* 가상머신 가져오기 모달 */}
       {activeModal === "get" && (

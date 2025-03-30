@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import "./ContextMenu.css";
 import Localization from "../../utils/Localization";
+import Logger from "../../utils/Logger";
+import "./ContextMenu.css";
 
 const ContextMenu = ({ visible, position, menuItems, onClose }) => {
   if (!visible) return null;
@@ -43,19 +44,19 @@ export const useContextMenu = () => {
     switch (type) {
       case "storage":
         return [
-          { label: "새로운 도메인", onClick: () => console.log(`도메인 생성 - ${targetId}`) },
-          { label: "도메인 가져오기", onClick: () => console.log(`도메인 가져오기 - ${targetId}`) },
-          { label: "삭제", onClick: () => console.log(`삭제 - ${targetId}`) },
+          { label: "새로운 도메인", onClick: () => Logger.debug(`도메인 생성 - ${targetId}`) },
+          { label: "도메인 가져오기", onClick: () => Logger.debug(`도메인 가져오기 - ${targetId}`) },
+          { label: "삭제", onClick: () => Logger.debug(`삭제 - ${targetId}`) },
         ];
       case "network":
         return [
-          { label: "새 네트워크", onClick: () => console.log(`새 네트워크 추가 - ${targetId}`) },
-          { label: "연결 관리", onClick: () => console.log(`연결 관리 - ${targetId}`) },
+          { label: "새 네트워크", onClick: () => Logger.debug(`새 네트워크 추가 - ${targetId}`) },
+          { label: "연결 관리", onClick: () => Logger.debug(`연결 관리 - ${targetId}`) },
         ];
       default:
         return [
-          { label: "새로 만들기", onClick: () => console.log(`새로 만들기 - ${targetId}`) },
-          { label: Localization.kr.MANAGEMENT, onClick: () => console.log(`관리하기 - ${targetId}`) },
+          { label: "새로 만들기", onClick: () => Logger.debug(`새로 만들기 - ${targetId}`) },
+          { label: Localization.kr.MANAGEMENT, onClick: () => Logger.debug(`관리하기 - ${targetId}`) },
         ];
     }
   };

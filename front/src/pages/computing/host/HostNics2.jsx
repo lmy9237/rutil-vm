@@ -7,6 +7,7 @@ import { useHost, useNetworkFromCluster, useNetworkInterfaceFromHost } from "../
 import { renderTFStatusIcon, renderUpDownStatusIcon } from "../../../components/Icon";
 import { checkZeroSizeToMbps } from "../../../util";
 import { RVI16, rvi16Star } from "../../../components/icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
 
 
 const HostNics = ({ hostId }) => {
@@ -86,7 +87,7 @@ const HostNics = ({ hostId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    console.log("NIC 데이터 확인:", transformedData);
+    Logger.debug("NIC 데이터 확인:", transformedData);
   }, [transformedData]);
 
 
@@ -290,8 +291,6 @@ const HostNics = ({ hostId }) => {
     //   toast.success(`호스트 네트워크 설정 완료`);
     // };
     // const onError = (err) => toast.error(`Error 호스트 네트워크: ${err}`);
-
-    // console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
 
     // setHostNetwork(
     //   { hostId: formState.id, hostData: dataToSubmit },
