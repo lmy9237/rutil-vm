@@ -95,13 +95,13 @@ const VmSystem = ({ formSystemState, setFormSystemState}) => {
           value={formSystemState.cpuTopologyCnt}
           onChange={handleCpuChange}
         />
-        <label>총 가상 CPU</label>
+        {/* <label>총 가상 CPU</label>
         <input id="total_cpu"
           type="number"
           value={formSystemState.cpuTopologyCnt}
           onChange={handleCpuChange}
           min={1}
-        />
+        /> */}
 
         <button className="btn-toggle-cpu" onClick={toggleCpuDetail}>
           <RVI16 iconDef={showCpuDetail ? rvi16ChevronUp : rvi16ChevronDown} className="mr-1.5" />

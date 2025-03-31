@@ -67,7 +67,7 @@ const VmDisk = ({
   return (
     <>
       <div className="instance-image center py-2">
-        <div className="font-bold">인스턴스 이미지</div>
+        <div className="font-bold">가상 디스크</div>
         <div className="f-end" style={{ gap: "6px" }}>
           <ActionButton label="연결"
             actionType="default"

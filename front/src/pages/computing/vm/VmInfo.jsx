@@ -6,7 +6,6 @@ import Path from "../../../components/Header/Path";
 import VmModals from "../../../components/modal/vm/VmModals";
 import VmGeneral from "./VmGeneral";
 import VmNics from "./VmNics";
-import VmDisks from "./VmDisks";
 import VmSnapshots from "./VmSnapshots";
 import VmApplications from "./VmApplications";
 import VmHostDevices from "./VmHostDevices";
@@ -16,6 +15,7 @@ import Localization from "../../../utils/Localization";
 import { useVmById } from "../../../api/RQHook";
 import { openNewTab } from "../../../navigation";
 import "./Vm.css";
+import VmDisks from "./VmDisks";
 
 /**
  * @name VmInfo

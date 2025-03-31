@@ -8,7 +8,7 @@ const AreaChart = ({ series, datetimes }) => {
   const [options, setOptions] = useState({
     chart: {
       type: "area",
-      offsetX: 15,
+      offsetX: 0, // 🔸 그래프 자체의 x축 위치 조정 최소화
     },
     colors: ["#1597E5", "#69DADB", "rgb(177, 143, 216)"],
     dataLabels: {
@@ -20,10 +20,35 @@ const AreaChart = ({ series, datetimes }) => {
     xaxis: {
       type: "String",
       categories: datetimes,
+      labels: {
+        style: {
+          fontSize: '11px',
+        }
+      }
     },
     yaxis: {
-      min: 0, // 최소값 고정
-      max: 100, // 최대값 고정
+      min: 0,
+      max: 100,
+      tickAmount: 4, // 🔹 눈금 수 제한 (선택)
+      labels: {
+        show: true,
+        style: {
+          fontSize: '11px',
+        },
+        offsetX: -6, // 🔸 숫자 왼쪽으로 살짝 붙이기
+      },
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+    },
+    grid: {
+      padding: {
+        left: -24,  // ✅ 여백 최소로
+        right: 0,
+      },
     },
     tooltip: {
       x: {
@@ -31,6 +56,8 @@ const AreaChart = ({ series, datetimes }) => {
       },
     },
   });
+  
+  
 
   // 반응형 차트 크기 조정
   const [chartSize, setChartSize] = useState({

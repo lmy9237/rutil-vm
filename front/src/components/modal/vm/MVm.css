@@ -53,10 +53,13 @@
   margin-bottom: 0.7%;
   display: block;
 }
-.boot-checkboxs > div > div:nth-child(2) {
-  width: 47%;
-}
 
+.boot-checkboxs .input-select{
+  width: 122%;
+}
+.boot-checkboxs select{
+  width: 100% !important;
+}
 .edit-third-content > div:nth-child(2) > button {
   margin-right: 0.2rem;
 }

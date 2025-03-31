@@ -20,9 +20,20 @@ const VmBoot = ({ isos, isIsoLoading, formBootState, setFormBootState }) => {
     setFormBootState((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
+  
+  // useEffect(() => {
+  //   setFormBootState((prev) => ({ ...prev, isCdDvdChecked: Boolean(prev.connVo?.id),}));
+  // }, [formBootState.connVo]);  
+  
+  // cd 체크가안되는문제로 변경
   useEffect(() => {
-    setFormBootState((prev) => ({ ...prev, isCdDvdChecked: Boolean(prev.connVo?.id),}));
-  }, [formBootState.connVo]);  
+    if (formBootState.connVo?.id) {
+      setFormBootState((prev) => ({
+        ...prev,
+        isCdDvdChecked: true,
+      }));
+    }
+  }, [formBootState.connVo?.id]);
 
   return (
     <div className="host-second-content">
@@ -41,7 +52,7 @@ const VmBoot = ({ isos, isIsoLoading, formBootState, setFormBootState }) => {
         />
       </div>
 
-      <div className="boot-checkboxs">
+      <div className="boot-checkboxs flex">
         <LabelCheckbox id="connectCdDvd" label="CD/DVD 연결"
           checked={formBootState.isCdDvdChecked}
           onChange={(e) => {

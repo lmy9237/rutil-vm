@@ -20,12 +20,12 @@
     height: 36px;
 }
 .content-header-left div:hover{
-    background-color: var(--color-active);
+    background: var(--color-white);
 }
 .content-header-left div.active {
     color: var(--color-primary);
     font-weight: 600;
-    background-color: var(--color-active);
+    background: var(--color-table) !important;
 }
 
 .content-header-left div.active::after {

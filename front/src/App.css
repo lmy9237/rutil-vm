@@ -163,7 +163,7 @@ input[disabled] {
 .f-center { display:flex;align-items:center;justify-content:center; }
 .f-start  { display:flex;align-items:center;justify-content:flex-start; }
 .f-end    { display:flex;align-items:center;justify-content:flex-end; }
-.center   { display:flex;align-items:center;justify-content:space-between; }
+.center   { display:flex;justify-content:space-between; }
 .f-btw    { display:flex;align-items:center;justify-content:space-between; }
 .v-center { display:flex;align-items:center;justify-content:center;flex-direction:column; }
 .v-start  { display:flex;align-items:flex-start;justify-content:center;flex-direction:column; }

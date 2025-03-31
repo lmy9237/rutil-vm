@@ -108,6 +108,10 @@
   font-size: var(--fs-default);
   margin-bottom: 3px;
 }
+/*디스크*/
+.vm-disk-search{
+  width: 84%;
+}
 /*스냅샷*/
 .vm-snap-item{
   width: 49%;

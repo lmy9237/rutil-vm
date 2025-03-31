@@ -52,7 +52,6 @@
 .bar {
   display: flex;
   flex-wrap: wrap;
-  padding-left: 28px;
 }
 .bar > div {
   min-width: 371px;

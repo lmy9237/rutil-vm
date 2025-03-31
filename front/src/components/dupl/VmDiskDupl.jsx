@@ -1,7 +1,5 @@
 import { Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TablesOuter from "../table/TablesOuter";
-import TableRowClick from "../table/TableRowClick";
 import VmDiskModals from "../modal/vm/VmDiskModals";
 import VmDiskActionButtons from "./VmDiskActionButtons";
 import { checkZeroSizeToGB } from "../../util";
@@ -9,6 +7,10 @@ import { useVmById } from "../../api/RQHook";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
 import { status2Icon } from "../icons/RutilVmIcons";
+import TablesOuter from "../table/TablesOuter";
+import TableRowClick from "../table/TableRowClick";
+import FilterButton from "../button/FilterButton";
+import TableColumnsInfo from "../table/TableColumnsInfo";
 
 /**
  * @name VmDiskDupl
@@ -19,7 +21,7 @@ import { status2Icon } from "../icons/RutilVmIcons";
  */
 const VmDiskDupl = ({ 
   isLoading, isError, isSuccess,
-  vmDisks = [], columns = [], vmId,  showSearchBox =true
+  vmDisks = [],  vmId,  showSearchBox =true
 }) => {
   const { 
     data: vm
@@ -67,20 +69,39 @@ const VmDiskDupl = ({
   });
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  
+
+  const [activeDiskType, setActiveDiskType] = useState("all");
+  const diskFilters = [
+    { key: "all", label: "모두" },
+    { key: "image", label: "이미지" },
+    { key: "lun", label: "직접 LUN" },
+  ];
+  const columnMap = {
+    all: TableColumnsInfo.DISKS_FROM_VM,
+    image: TableColumnsInfo.DISK_IMAGES_FROM_VM,
+    lun: TableColumnsInfo.DISK_LUN_FROM_VM,
+  };
+  const columns = columnMap[activeDiskType];
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group">
-        {showSearchBox && (
-          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        )}
-        <VmDiskActionButtons
-          openModal={openModal}
-          isEditDisabled={selectedDisks?.length !== 1}
-          isDeleteDisabled={selectedDisks?.length === 0}
-          status={selectedDisks[0]?.active ? "active" : "deactive"}
-          selectedDisks={selectedDisks}
+      <div className="vm-disk-button center">
+        <FilterButton
+          options={diskFilters}
+          activeOption={activeDiskType}
+          onClick={setActiveDiskType}
         />
+        <div className="vm-disk-search center">
+          {showSearchBox && (
+            <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          )}
+          <VmDiskActionButtons
+            openModal={openModal}
+            isEditDisabled={selectedDisks?.length !== 1}
+            isDeleteDisabled={selectedDisks?.length === 0}
+            status={selectedDisks[0]?.active ? "active" : "deactive"}
+            selectedDisks={selectedDisks}
+          />
+        </div>
       </div>
       <span style={{fontSize:"16px"}}>ID: {selectedIds || ""}</span>
       

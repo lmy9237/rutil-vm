@@ -34,7 +34,7 @@ const initialFormState = {
 };
 
 const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
-  const nLabel = editMode ? "편집" : "생성";
+  const nLabel = editMode ? "확인" : "생성";
   const [formInfoState, setFormInfoState] = useState(initialFormState);
   const [vnicProfileVo, setVnicProfileVo] = useState({ id: "", name: "" });
 
