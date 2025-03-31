@@ -38,8 +38,8 @@ const NetworkDupl = ({
     vlan: network?.vlan === 0 ? "-" : network?.vlan,
     mtu: network?.mtu === 0 ? "기본값(1500)" : network?.mtu,
     datacenter: (
-      <TableRowClick type="datacenter" id={network?.datacenterVo?.id}>
-        {network?.datacenterVo?.name}
+      <TableRowClick type="datacenter" id={network?.dataCenterVo?.id}>
+        {network?.dataCenterVo?.name}
       </TableRowClick>
     ),
     role: [

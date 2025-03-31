@@ -16,13 +16,8 @@ import {
 import "./MNetwork.css";
 import Localization from "../../../utils/Localization";
 import TablesOuter from "../../table/TablesOuter";
-
-const FormGroup = ({ label, children }) => (
-  <div className="network-form-group f-btw">
-    <label style={{ "font-size": "15px" }}>{label}</label>
-    {children}
-  </div>
-);
+import DynamicInputList from "../../label/DynamicInputList";
+import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
 
 const initialFormState = {
   id: "",
@@ -50,19 +45,22 @@ const NetworkModal = ({
 
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [clusterVoList, setClusterVoList] = useState([]);
-  // const [dnsEnabled, setDnsEnabled] = useState(false);
+  const [dnsServers, setDnsServers] = useState([]);
 
   const { mutate: addNetwork } = useAddNetwork();
   const { mutate: editNetwork } = useEditNetwork();
 
   const { data: network } = useNetworkById(networkId);
+  console.log("netowrk: ", network);
   const { 
     data: datacenters = [], 
     isLoading: isDataCentersLoading 
   } = useAllDataCenters((e) => ({ ...e }));
   const { 
     data: clusters = [], 
-    isLoading: isClustersLoading 
+    isLoading: isClustersLoading,
+    isError: isClustersError,
+    isSuccess: isClustersSuccess
   } = useClustersFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
 
   useEffect(() => {
@@ -78,9 +76,10 @@ const NetworkModal = ({
         vlanEnabled: network?.vlan > 0, // 🔥 vlan 값이 0보다 크면 true
         usageVm: network?.usage?.vm,
         portIsolation: network?.portIsolation || false,
-        dnsEnabled: network?.dnsEnabled || false,
+        dnsEnabled: network?.dnsNameServers.length === 0 ? false : true,
       });
-      setDataCenterVo({ id: network?.datacenterVo?.id, name: network?.datacenterVo?.name });
+      setDataCenterVo({ id: network?.dataCenterVo?.id, name: network?.dataCenterVo?.name });
+      setDnsServers(network?.dnsNameServers)
     }
   }, [isOpen, editMode, network]);  
 
@@ -93,17 +92,26 @@ const NetworkModal = ({
   }, [datacenters, dcId, editMode]);
 
   useEffect(() => {
+    setClusterVoList([]);
+  }, [dataCenterVo.id]);
+  
+  useEffect(() => {
     if (clusters && clusters.length > 0) {
       setClusterVoList((prev) =>
-        clusters.map((cluster, index) => ({
-          ...cluster,
-          isConnected: prev[index]?.isConnected ?? true,
-          isRequired: prev[index]?.isRequired ?? false,
-        }))
+        clusters.map((cluster) => {
+          const existing = prev.find((c) => c.id === cluster.id);
+          return {
+            ...cluster,
+            isConnected: existing?.isConnected ?? true,
+            isRequired: existing?.isRequired ?? true,
+          };
+        })
       );
     }
-  }, [clusters]);
+  }, [clusters]);  
 
+  // dns 
+  const [isDnsHiddenBoxVisible, setDnsHiddenBoxVisible] = useState(false);
   
   const handleInputChange = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
@@ -129,10 +137,11 @@ const NetworkModal = ({
           name: cluster.name,
           required: cluster.isRequired,
         })),
-      mtu: formState.mtu ? parseInt(formState.mtu, 10) : 0, // mtu가 빈 값이면 1500 설/정
+      mtu: formState.mtu ? parseInt(formState.mtu, 10) : 0, 
       vlan: formState.vlanEnabled && formState.vlan? parseInt(formState.vlan, 10): 0,      
       // portIsolation: formState.portIsolation,
       usage: { vm: formState.usageVm },
+      dnsNameServers: dnsServers
     };
 
     const onSuccess = () => {
@@ -167,6 +176,7 @@ const NetworkModal = ({
           onChange={(e) => {
             const selected = datacenters.find(dc => dc.id === e.target.value);
             if (selected) setDataCenterVo({ id: selected.id, name: selected.name });
+            setClusterVoList([]);
           }}
         />
         <LabelInput id="name" label={Localization.kr.NAME}
@@ -220,10 +230,10 @@ const NetworkModal = ({
           onChange={(e) => setFormState((prev) => ({...prev, portIsolation: e.target.checked }))}
         />
 
-        <FormGroup label="MTU" className="mtu-form">
           <div className="mtu-input-outer">
             <div className="mtu-radio-input">
               <div className="flex">
+                {/* TODO: 디자인 */}
                 <input
                   type="radio"
                   checked={formState.mtu === 0} // 기본값 1500 선택됨
@@ -257,61 +267,81 @@ const NetworkModal = ({
               />
             </div>
           </div>
-        </FormGroup>
-
-        <LabelCheckbox id="dns_settings" label="DNS 설정"
-          checked={formState.dnsEnabled}
-          // onChange={(e) => setDnsEnabled(e.target.checked)}
-        />
-        <span>TODO: DNS 추가구현</span>
-        
-{/* 
-        <div className="text-[15px] font-bold">
-          DNS 서버
-        </div> */}
-      
-        {/* <FormGroup>
-          <div
-            className="network-form-group f-btw"
-            style={{ width: "100%", padding: 0 }}
-          >
-            <input type="text" id="dns_server" disabled={!dnsEnabled} />
-            <div
-              className="plusbtns"
-              style={{ "font-size": "13px", height: "32px" }}
-            >
-              <button
-                type="button"
-                className="border-r border-gray-500"
-                onClick={() => console.log("Add DNS Server")}
-                disabled={!dnsEnabled} // 버튼도 비활성화
-              >
-                +
-              </button>
-              <button
-                type="button"
-                className="border-r border-gray-500"
-                onClick={() => console.log("Remove DNS Server")}
-                disabled={!dnsEnabled}
-              >
-                -
-              </button>
-            </div>
+          
+        <div>
+          <br/>
+        <span>DNS 수정 필요</span>
           </div>
-        </FormGroup> */}
-        {/* <DynamicInputList maxCount={3}  inputType="text"  disabled={!dnsEnabled} /> */}
-
+        {/* <LabelCheckbox id="dns_settings" label="DNS 설정"
+          checked={formState.dnsEnabled}
+          onChange={(e) => {
+            const isChecked = e.target.checked;
+            setFormState((prev) => ({ 
+              ...prev, 
+              dnsEnabled: isChecked,
+            }))
+            setDnsServers(isChecked ? [""] : []);
+            if (!isChecked) {
+              setDnsHiddenBoxVisible(false); // 체크 해제 시 숨김 박스도 닫기
+            }
+          }}
+        />
+        {formState.dnsEnabled && (
+          <>
+            <div className="text-[15px] font-bold"> DNS 서버 </div>
+            {dnsServers.length !== 0 ?
+              (dnsServers.map((dns, index) => (
+              <div
+                key={index}
+                className="network-form-group f-btw"
+                style={{ width: "100%", padding: 0 }}
+              >
+                <input
+                  type="text"
+                  value={dns}
+                  onChange={(e) => {
+                    const updated = [...dnsServers];
+                    updated[index] = e.target.value;
+                    setDnsServers(updated);
+                  }}
+                />
+                <div className="dynamic-btns f-end">
+                  <RVI36
+                    iconDef={rvi36Remove()}
+                    className="btn-icon"
+                    currentColor="transparent"
+                    onClick={() => {
+                      const updated = [...dnsServers];
+                      updated.splice(index, 1);
+                      setDnsServers(updated);
+                    }}
+                  />
+                  <RVI36
+                    iconDef={rvi36Add(false)}
+                    className="btn-icon"
+                    currentColor="transparent"
+                    onClick={() => setDnsServers((prev) => [...prev, ""])}
+                  />
+                </div> 
+              </div>
+            ))) :(
+              <>
+              <span>t</span>
+              </>
+            )
+          }
+          </>
+        )} */}
+        
         {!editMode && (
           <div className="network-new-cluster-form">
+            <br/>
             <hr />
             <span>클러스터에서 네트워크를 연결/분리</span>
             <TablesOuter
-              isLoading={false} isError={false} isSuccess={true}
+              isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
               columns={[
-                {
-                  header: "이름",
-                  accessor: "name",
-                },
+                { header: Localization.kr.NAME, accessor: 'name', clickable: false },
                 {
                   header: (
                     <div className="flex">
@@ -343,16 +373,14 @@ const NetworkModal = ({
                         type="checkbox"
                         id="require_all"
                         checked={
-                          clusterVoList.every((c) => c.isRequired) &&
-                          clusterVoList.every((c) => c.isConnected)
+                          clusterVoList.every((c) => c.isRequired) && clusterVoList.every((c) => c.isConnected)
                         }
                         disabled={!clusterVoList.every((c) => c.isConnected)}
                         onChange={(e) => {
                           const isChecked = e.target.checked;
                           setClusterVoList((prevState) =>
                             prevState.map((cluster) => ({
-                              ...cluster,
-                              isRequired: isChecked,
+                              ...cluster, isRequired: isChecked,
                             }))
                           );
                         }}
@@ -366,7 +394,7 @@ const NetworkModal = ({
               ]}
               data={clusterVoList.map((cluster, index) => ({
                 id: cluster.id,
-                name: `${cluster.name} / ${cluster.id}`,
+                name: `${cluster.name}`,
                 connect: (
                   <div className="flex">
                     <input

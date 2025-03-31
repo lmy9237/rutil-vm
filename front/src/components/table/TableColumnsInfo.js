@@ -1,3 +1,4 @@
+import React from "react";
 import Localization from "../../utils/Localization";
 
 const DEFAULT_WIDTH_ICON_COLUMN = "48px";
@@ -270,7 +271,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.DATA_CENTER, accessor: 'datacenter', clickable: false },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false, width: '20%' },
     { header: 'VLAN 태그', accessor: 'vlan' ,clickable: false },
-    { header: '레이블', accessor: 'label', clickable: false },
+    // { header: '레이블', accessor: 'label', clickable: false },
     { header: 'MTU', accessor: 'mtu', clickable: false },
   ],
   VNIC_PROFILES_FROM_NETWORK: [
@@ -310,7 +311,6 @@ const TableColumnsInfo = {
     { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: false },
     { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: false },
   ],
-
   VMS_FROM_NETWORK: [
     { header: '', accessor: "icon", clickable: false , width:DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'name', clickable: false },
@@ -325,7 +325,6 @@ const TableColumnsInfo = {
     { header: Localization.kr.TOTAL_BYTE_TX, accessor: 'totalTx', clickable: false },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false }
   ],
-  
   VMS_UP_FROM_NETWORK: [
     { header: '', accessor: "icon", clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.NAME, accessor: '_name', clickable: false },
@@ -357,6 +356,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.CLUSTER, accessor: 'clusterName', clickable: false },
     { header: Localization.kr.VNIC, accessor: 'nicName', clickable: false },
   ],
+
 
   VNIC_PROFILES: [
     { header: Localization.kr.NAME, accessor: '_name', clickable: false },

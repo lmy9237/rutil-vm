@@ -11,6 +11,7 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.DataCenterBuilder
+import org.ovirt.engine.sdk4.builders.DnsResolverConfigurationBuilder
 import org.ovirt.engine.sdk4.builders.NetworkBuilder
 import org.ovirt.engine.sdk4.builders.NetworkLabelBuilder
 import org.ovirt.engine.sdk4.builders.OpenStackNetworkProviderBuilder
@@ -67,6 +68,7 @@ class NetworkVo (
 	val status: NetworkStatus = NetworkStatus.NON_OPERATIONAL,
 	val display: Boolean = false,
 	val networkLabel: String = "",
+	val dnsNameServers: List<String> = listOf(),
 	val openStackNetworkVo: OpenStackNetworkVo = OpenStackNetworkVo(),
 	val usage: UsageVo = UsageVo(),
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
@@ -90,6 +92,7 @@ class NetworkVo (
 		private var bStatus: NetworkStatus = NetworkStatus.NON_OPERATIONAL; fun status(block: () -> NetworkStatus?) { bStatus = block() ?: NetworkStatus.NON_OPERATIONAL }
 		private var bDisplay: Boolean = false; fun display(block: () -> Boolean?) { bDisplay = block() ?: false }
 		private var bNetworkLabel: String = ""; fun networkLabel(block: () -> String?) { bNetworkLabel = block() ?: "" }
+		private var bDnsNameServers: List<String> = listOf(); fun dnsNameServers(block: () -> List<String>?) { bDnsNameServers = block() ?: listOf() }
 		private var bOpenStackNetworkVo: OpenStackNetworkVo = OpenStackNetworkVo(); fun openStackNetworkVo(block: () -> OpenStackNetworkVo?) { bOpenStackNetworkVo = block() ?: OpenStackNetworkVo() }
 		private var bUsage: UsageVo = UsageVo(); fun usage(block: () -> UsageVo?) { bUsage = block() ?: UsageVo() }
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo(); fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
@@ -98,7 +101,7 @@ class NetworkVo (
 		private var bClusterVos: List<ClusterVo> = listOf(); fun clusterVos(block: () -> List<ClusterVo>?) { bClusterVos = block() ?: listOf() }
 		private var bRequired: Boolean = false; fun required(block: () -> Boolean?) { bRequired = block() ?: false }
 
-		fun build(): NetworkVo = NetworkVo( bId, bName, bDescription, bComment, bMtu, bPortIsolation, bStp, bVdsmName, bVlan, bStatus, bDisplay, bNetworkLabel, bOpenStackNetworkVo, bUsage, bDataCenterVo, bClusterVo, bVnicProfileVos, bClusterVos, bRequired)
+		fun build(): NetworkVo = NetworkVo( bId, bName, bDescription, bComment, bMtu, bPortIsolation, bStp, bVdsmName, bVlan, bStatus, bDisplay, bNetworkLabel, bDnsNameServers, bOpenStackNetworkVo, bUsage, bDataCenterVo, bClusterVo, bVnicProfileVos, bClusterVos, bRequired)
 	}
 
 	companion object{
@@ -151,6 +154,11 @@ fun Network.toNetworkVo(conn: Connection): NetworkVo {
 				conn.findOpenStackNetworkProvider(network.externalProvider().id())
 					.getOrNull()?.toOpenStackNetworkVo()
 			else null
+		}
+		dnsNameServers {
+			if(network.dnsResolverConfigurationPresent()){
+				network.dnsResolverConfiguration().nameServers().map { it.toString() }
+			} else emptyList()
 		}
 		vlan { if (network.vlanPresent()) network.vlan().idAsInteger() else 0}
 		vnicProfileVos { network.vnicProfiles().fromVnicProfilesToIdentifiedVos() }
@@ -224,12 +232,11 @@ fun NetworkVo.toNetworkBuilder(): NetworkBuilder {
 	if (network.vlan != 0) {
 		builder.vlan(VlanBuilder().id(network.vlan))
 	}
-//	.externalProvider(
-//		if(network.openStackNetworkVo.id.isNotEmpty())
-//			OpenStackNetworkProviderBuilder().id(network.openStackNetworkVo.id)
-//		else
-//			null
-//	)
+	if(network.dnsNameServers.isNotEmpty()){
+		builder.dnsResolverConfiguration(
+			DnsResolverConfigurationBuilder().nameServers(network.dnsNameServers).build()
+		)
+	}
 
 	log.info("NetworkVo: {}", this)
 	return builder
