@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsAltH, faCrown, faDesktop, faTimes } from "@fortawesome/free-solid-svg-icons";
-
-import { useHost, useNetworkFromCluster, useNetworkInterfaceFromHost } from "../../../api/RQHook";
+import { useHost, useNetworkById, useNetworkFromCluster, useNetworkInterfaceFromHost } from "../../../api/RQHook";
 import { renderTFStatusIcon, renderUpDownStatusIcon } from "../../../components/Icon";
 import { checkZeroSizeToMbps } from "../../../util";
 import { RVI16, rvi16ArrowsUp, rvi16ArrowsUpGreen, rvi16Star, rvi16TriangleUp, rvi16VirtualMachine, RVI24, rvi24Checklist, rvi24CompareArrows, RVI36, rvi36Edit } from "../../../components/icons/RutilVmIcons";
@@ -15,9 +14,12 @@ import LabelCheckbox from "../../../components/label/LabelCheckbox";
 const HostNics = ({ hostId }) => {
   const { data: host } = useHost(hostId);
   
+  // const { data: network } = useNetworkById();
   const { data: hostNics = [] } = useNetworkInterfaceFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
 
+  console.log("hostNics: ", hostNics);
+  
   const transformedData = hostNics.map((e) => ({
     ...e,
     id: e?.id,
@@ -61,7 +63,6 @@ const HostNics = ({ hostId }) => {
     vlan: e?.vlan,
     usageVm: e?.usage?.vm, 
   }));
-
 
 
   useEffect(() => {
@@ -238,7 +239,6 @@ const HostNics = ({ hostId }) => {
     dragItem.current = null; // Reset drag state
   };
 
- 
 
   return (
     <>
@@ -294,6 +294,7 @@ const HostNics = ({ hostId }) => {
                           draggable 
                           onDragStart={(e) => dragStart(e, child, "container", outerItem.id)}
                         >
+                          {renderTFStatusIcon(child?.status === "UP")}
                           <RVI16 iconDef={rvi16TriangleUp()} className="mr-1.5" />
                           {child.name}
                         </div>
@@ -347,10 +348,8 @@ const HostNics = ({ hostId }) => {
                     </div>
                   </div>
                 )}
-
               </div>
           ))}
-
         </div>
 
         <div

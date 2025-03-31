@@ -69,13 +69,13 @@ const NetworkHosts = ({ networkId }) => {
         </TableRowClick>
       ),
       networkDeviceStatus: renderUpDownStatusIcon(
-        host?.hostNicVos?.[0]?.status
+        host?.hostNicVos[0]?.status
       ),
-      networkDevice: host?.hostNicVos?.[0]?.name,
-      speed: host?.hostNicVos?.[0]?.speed,
-      rx: checkZeroSizeToMbps(host?.hostNicVos?.[0]?.rxSpeed),
-      tx: checkZeroSizeToMbps(host?.hostNicVos?.[0]?.txSpeed),
-      totalRx: host?.hostNicVos?.[0]?.rxTotalSpeed.toLocaleString(),
+      networkDevice: host?.hostNicVos[0]?.name,
+      speed: checkZeroSizeToMbps(host?.hostNicVos[0]?.speed),
+      rx: checkZeroSizeToMbps(host?.hostNicVos[0]?.rxSpeed),
+      tx: checkZeroSizeToMbps(host?.hostNicVos[0]?.txSpeed),
+      totalRx: host?.hostNicVos[0]?.rxTotalSpeed.toLocaleString(),
       totalTx: host.hostNicVos[0].txTotalSpeed.toLocaleString(),
     }));
   };

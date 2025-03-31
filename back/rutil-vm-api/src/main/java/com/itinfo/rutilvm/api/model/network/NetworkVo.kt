@@ -116,7 +116,6 @@ fun Network.toNetworkIdName(): NetworkVo = NetworkVo.builder {
 fun List<Network>.toNetworksIdName(): List<NetworkVo> =
 	this@toNetworksIdName.map { it.toNetworkIdName() }
 
-
 fun Network.toNetworkMenu(): NetworkVo {
 	val network = this@toNetworkMenu
  	return NetworkVo.builder {
