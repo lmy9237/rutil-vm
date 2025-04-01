@@ -42,8 +42,12 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
   const dcLabel = editMode ? "편집" : "생성";
   const [formState, setFormState] = useState(initialFormState);
 
-  const { mutate: addDataCenter } = useAddDataCenter();
-  const { mutate: editDataCenter } = useEditDataCenter();
+  const onSuccess = () => {
+    toast.success(`데이터센터 ${dcLabel} 완료`);
+    onClose();
+  };
+  const { mutate: addDataCenter } = useAddDataCenter(onSuccess, () => onClose());
+  const { mutate: editDataCenter } = useEditDataCenter(onSuccess, () => onClose());
   const { data: datacenter } = useDataCenter(dcId);
 
   // 모달 열릴때 초기화, 편집 정보넣기
@@ -83,18 +87,11 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
 
     const dataToSubmit = { ...formState };
 
-    const onSuccess = () => {
-      onClose();
-      toast.success(`데이터센터 ${dcLabel} 완료`);
-    };
-    const onError = (err) =>toast.error(`Error ${dcLabel} data center: ${err}`);
-
     editMode
       ? editDataCenter(
-        { dataCenterId: formState.id, dataCenterData: dataToSubmit },
-        { onSuccess, onError }
+        { dataCenterId: formState.id, dataCenterData: dataToSubmit }
       )
-      : addDataCenter(dataToSubmit, { onSuccess, onError });
+      : addDataCenter(dataToSubmit);
   };
 
   return (

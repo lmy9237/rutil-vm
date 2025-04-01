@@ -31,11 +31,13 @@ const makeAPICall = async ({method = "GET", url, data}) => {
       data: method === "GET" ? null : data,
     });
     res.headers.get(`access_token`) && localStorage.setItem('token', res.headers.get(`access_token`)) // 로그인이 처음으로 성공했을 때 진행
-    return res.data?.body
+    return res.data
   } catch(e) {
     console.error(`Error handling endpoint '${url}':`, e);
-    toast.error(`Error handling endpoint '${url}'\n${e.message}`)
-    return e?.response?.data?.head
+    // toast.error(`Error handling endpoint '${url}'\n${e.message}`)
+    const err = e?.response?.data;
+    err && toast.error(`[${err?.head?.code}] ${err?.head?.message}`)
+    return err;
   }
 }
 

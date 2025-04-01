@@ -126,9 +126,13 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     { id: "", name: "nic1", vnicProfileVo: { id: "" } },
   ]);
   const [diskListState, setDiskListState] = useState([]);
-
-  const { mutate: addVM } = useAddVm();
-  const { mutate: editVM } = useEditVm();
+  
+  const onSuccess = () => {
+    toast.success(`가상머신 ${vLabel} 완료`);
+    onClose();
+  };
+  const { mutate: addVM } = useAddVm(onSuccess, () => onClose());
+  const { mutate: editVM } = useEditVm(onSuccess, () => onClose());
 
   // 가상머신 상세데이터 가져오기
   const { data: vm } = useFindEditVmById(vmId);
@@ -369,20 +373,15 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     const error = validateForm();
     if (error) return toast.error(error);
 
-    const onSuccess = () => {
-      onClose();
-      toast.success(`가상머신 ${vLabel} 완료`);
-    };
-    const onError = (err) => toast.error(`Error ${vLabel} vm: ${err}`);
+    
     
     console.log("가상머신 데이터 확인:", dataToSubmit);
-
     editMode
-      ? editVM(
-        { vmId: vmId, vmdata: dataToSubmit },
-        { onSuccess, onError }
-      )
-      : addVM(dataToSubmit, { onSuccess, onError });
+      ? editVM({ 
+        vmId: vmId,
+        vmdata: dataToSubmit
+      })
+      : addVM(dataToSubmit);
   };
 
   return (
