@@ -21,12 +21,13 @@ import {
   useAllTemplates,
   useCDFromDataCenter,
   useDisksFromVM,
-  useHostFromCluster,
-  useAllActiveDomainFromDataCenter,
+  useHostsFromCluster,
+  useAllActiveDomainsFromDataCenter,
   useAllvnicFromDataCenter,
 } from "../../../api/RQHook";
 import "./MVm.css";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   const { mutate: addVM } = useAddVm();
@@ -176,13 +177,12 @@ const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     (e) => ({ ...e })
   );
 
-  const { data: hosts = [], isLoading: isHostsLoading } = useHostFromCluster(
-    clusterVoId,
+  const { data: hosts = [], isLoading: isHostsLoading } = useHostsFromCluster(clusterVoId,
     (e) => ({ ...e })
   );
 
   const { data: domains = [], isLoading: isDomainsLoading } =
-    useAllActiveDomainFromDataCenter(dataCenterId, (e) => ({ ...e }));
+    useAllActiveDomainsFromDataCenter(dataCenterId, (e) => ({ ...e }));
 
   const { data: isos = [], isLoading: isIsoLoading } = useCDFromDataCenter(
     dataCenterId,
@@ -499,11 +499,11 @@ const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       toast.error(error);
       return;
     }
-    console.log("가상머신 데이터 확인:", dataToSubmit);
+    Logger.debug(`가상머신 데이터: ${JSON.stringify(dataToSubmit, null, 2)}`);
 
     if (editMode) {
       editVM(
-        { vmId: vmId, vmdata: dataToSubmit },
+        { vmId: vmId, vmData: dataToSubmit },
         {
           onSuccess: () => {
             onClose();
@@ -528,7 +528,7 @@ const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       isOpen={isOpen}
       onClose={onClose}
       contentLabel={"가상머신"}
-      submitTitle={editMode ? "편집" : "생성"}
+      submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
       onSubmit={handleFormSubmit}
     >
       <div className="vm_edit_popup_content flex">

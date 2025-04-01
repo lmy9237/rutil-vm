@@ -1428,11 +1428,11 @@ const ApiManager = {
    * @param {Object} vmData 
    * @returns {Promise<Object>}
    */
-    editVM: async (vmId, vmdata) => {
+    editVM: async (vmId, vmData) => {
       return makeAPICall({
         method: "PUT",
         url: ENDPOINTS.EDIT_VM(vmId),
-        data: vmdata,
+        data: vmData,
         // defaultValues: DEFAULT_VALUES.EDIT_VM
       });
     },

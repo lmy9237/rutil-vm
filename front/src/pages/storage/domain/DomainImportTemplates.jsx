@@ -3,7 +3,7 @@ import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DomainGetVmTemplateModal from "../../../components/modal/domain/DomainGetVmTemplateModal";
 import DeleteModal from "../../../utils/DeleteModal";
-import { useAllUnregisteredTemplateFromDomain } from "../../../api/RQHook";
+import { useAllUnregisteredTemplatesFromDomain } from "../../../api/RQHook";
 import { checkZeroSizeToMB } from "../../../util";
 import SearchBox from "../../../components/button/SearchBox";
 import useSearch from "../../../components/button/useSearch";
@@ -23,7 +23,7 @@ const DomainImportTemplates = ({ domainId }) => {
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
-  } = useAllUnregisteredTemplateFromDomain(domainId, (e) => ({ ...e }));
+  } = useAllUnregisteredTemplatesFromDomain(domainId, (e) => ({ ...e }));
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedTemplates, setSelectedTemplates] = useState([]); // 다중 선택된 데이터센터

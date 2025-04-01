@@ -1,6 +1,6 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import HostDupl from "../../../components/dupl/HostDupl";
-import { useHostFromCluster } from "../../../api/RQHook";
+import { useHostsFromCluster } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -17,16 +17,16 @@ const ClusterHosts = ({ clusterId }) => {
     isLoading: isHostsLoading,
     isError: isHostsError,
     isSuccess: isHostsSuccess,
-  } = useHostFromCluster(clusterId, (e) => ({ ...e }));
+  } = useHostsFromCluster(clusterId, (e) => ({ ...e }));
 
   Logger.debug("...");
   return (
     <>
       <HostDupl
-        isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
         columns={TableColumnsInfo.HOSTS}
         hosts={hosts}
         clusterId={clusterId}
+        isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
       />
     </>
   );

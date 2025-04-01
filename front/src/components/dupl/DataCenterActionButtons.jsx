@@ -1,3 +1,4 @@
+import Localization from "../../utils/Localization";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 
 const DataCenterActionButtons = ({ 
@@ -6,9 +7,9 @@ const DataCenterActionButtons = ({
   actionType = 'default',
 }) => {
   const basicActions = [
-    { type: 'create', label: '생성', disabled: false, onBtnClick: () => openModal("create") }, 
-    { type: 'edit', label: '편집', disabled: status !== 'single', onBtnClick: () => openModal("edit") },
-    { type: 'delete', label: '삭제', disabled: status === 'none', onBtnClick: () => openModal("delete") }, 
+    { type: 'create', label: Localization.kr.CREATE, disabled: false, onBtnClick: () => openModal("create") }, 
+    { type: 'edit', label: Localization.kr.UPDATE, disabled: status !== 'single', onBtnClick: () => openModal("edit") },
+    { type: 'delete', label: Localization.kr.REMOVE, disabled: status === 'none', onBtnClick: () => openModal("delete") }, 
   ];
 
   return (

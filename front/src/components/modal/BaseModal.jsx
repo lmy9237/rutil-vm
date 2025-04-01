@@ -2,6 +2,7 @@ import React from "react";
 import Modal from "react-modal";
 import "./BaseModal.css";
 import { RVI24, rvi24Close, rvi24ErrorRed } from "../icons/RutilVmIcons";
+import Localization from "../../utils/Localization";
 /**
  * @name BaseModal
  * @description 기본 모달 테두리
@@ -53,12 +54,12 @@ const BaseModal = ({
           {extraFooter ? (
             <>
               {extraFooter}
-              <button className="cancel" onClick={onClose}>취소</button>
+              <button className="cancel" onClick={onClose}>{Localization.kr.CANCEL}</button>
             </>
           ) : (
             <>
-              <button className="action" onClick={onSubmit}>{submitTitle}</button>
-              <button className="cancel" onClick={onClose}>취소</button>
+              <button className="action" onClick={onSubmit}>{Localization.kr.OK}</button>
+              <button className="cancel" onClick={onClose}>{Localization.kr.CANCEL}</button>
             </>
           )}
         </div>

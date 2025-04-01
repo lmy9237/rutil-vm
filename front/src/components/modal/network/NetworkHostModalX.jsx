@@ -18,6 +18,7 @@ import { useHost, useNetworkFromCluster } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import "./MNetwork.css";
 import { RVI16, rvi16Star, rvi16StarGold } from "../../icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
 
 const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
   // State for managing the second modal
@@ -62,7 +63,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
   };
   useEffect(() => {
     if (network) {
-      console.log(`${Localization.kr.CLUSTER}에 대한 ${Localization.kr.NETWORK} 정보: ${network}`, );
+      Logger.debug(`${Localization.kr.CLUSTER}에 대한 ${Localization.kr.NETWORK} 정보: ${network}`);
     }
   }, [network]);
 

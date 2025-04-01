@@ -8,6 +8,7 @@ import {
 } from "../../icons/RutilVmIcons";
 import { useAllTreeNavigations } from "../../../api/RQHook";
 import NetworkActionButtons from "../../dupl/NetworkActionButtons";
+import Logger from "../../../utils/Logger";
 
 
 const NetworkTree = ({
@@ -42,8 +43,9 @@ const NetworkTree = ({
     });
   };
   useEffect(() => {
-    console.log("📦 contextMenu 상태:", contextMenu);
+    Logger.debug("📦 contextMenu 상태:", contextMenu);
   }, [contextMenu]);
+
   return (
     <div id="network_chart" className="tmi-g">
       {/* 레벨 1: Rutil Manager */}
@@ -115,8 +117,8 @@ const NetworkTree = ({
                         navigate(`/networks/${network.id}`);
                       }}
                       onContextMenu={(e) => {
-                        console.log("우클릭 발생!", network.id); // ✅ 이건 찍힘
                         e.preventDefault();
+                        Logger.debug(`우클릭 발생 ... ${network.id}`); // ✅ 이건 찍힘
                         onContextMenu?.(e, {
                           ...network,
                           level: 3,
@@ -147,8 +149,8 @@ const NetworkTree = ({
                           <span style={{ color: "black" }}>우클릭박스</span>
                           <NetworkActionButtons
                             openModal={(action) => {
+                              Logger.debug(`Open modal with action ... ${action}`);
                               onContextMenu(null); // 닫기
-                              console.log("Open modal with action:", action);
                             }}
                             selectedNetworks={[contextMenu.item]}
                             status={contextMenu.item?.status}

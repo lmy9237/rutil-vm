@@ -2,7 +2,7 @@ import React, { Suspense, useState } from 'react';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import DeleteModal from '../../../utils/DeleteModal';
-import { useAllUnregisteredVMFromDomain } from "../../../api/RQHook";
+import { useAllUnregisteredVMsFromDomain } from "../../../api/RQHook";
 import { checkZeroSizeToMB } from '../../../util';
 import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
 import ActionButton from '../../../components/button/ActionButton';
@@ -23,7 +23,7 @@ const DomainImportVms = ({ domainId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-  } = useAllUnregisteredVMFromDomain(domainId, (e) => ({ ...e }));
+  } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedVms, setSelectedVms] = useState([]); // 다중 선택된 데이터센터  

@@ -1,4 +1,4 @@
-import { useApplicationFromVM } from "../../../api/RQHook";
+import { useApplicationsFromVM } from "../../../api/RQHook";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 
@@ -15,7 +15,7 @@ const VmApplications = ({ vmId }) => {
     isLoading: isApplicationsLoading,
     isError: isApplicationsError,
     isSuccess: isApplicationsSuccess,
-  } = useApplicationFromVM(vmId, (e) => ({ ...e }));
+  } = useApplicationsFromVM(vmId, (e) => ({ ...e }));
 
   return (
     <div className="host-empty-outer">

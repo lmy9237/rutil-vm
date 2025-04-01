@@ -3,6 +3,7 @@ import DomainModal from "./DomainModal";
 import DomainDeleteModal from "./DomainDeleteModal";
 import DomainActionModal from "./DomainActionModal";
 import DomainAttachModal from "./DomainAttachModal";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DomainModals
@@ -88,7 +89,7 @@ const DomainModals = ({
     ),
   };
 
-  console.log("...")
+  Logger.debug("...")
   return (
     <>
       {Object.keys(modals).map((key) => (

@@ -1,5 +1,5 @@
 import EventDupl from "../../../components/dupl/EventDupl";
-import { useAllEventFromVM } from '../../../api/RQHook';
+import { useAllEventsFromVM } from '../../../api/RQHook';
 
 /**
  * @name VmEvents
@@ -15,7 +15,7 @@ const VmEvents = ({ vmId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
-  } = useAllEventFromVM(vmId, (e) => ({ ...e }));
+  } = useAllEventsFromVM(vmId, (e) => ({ ...e }));
 
   return (
     <>

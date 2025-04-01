@@ -348,8 +348,7 @@ const MainOuter = ({
             location.pathname.includes(id) ? "rgb(218, 236, 245)" : ""
           }
         />
-          <div
-            ref={resizerRef}
+          <div ref={resizerRef}
             className="resizer"
             onMouseDown={handleMouseDown}
           />

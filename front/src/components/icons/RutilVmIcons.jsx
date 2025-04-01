@@ -626,7 +626,9 @@ export const RVI36 = ({iconDef, width = 30, height = 30, onClick, currentColor='
  * @param {string} status 상태코드
  * @returns {JSX.Element} 툴팁이 포함 된 아이콘
  */
-export const status2Icon = (status = "") => {
+export const status2Icon = (
+  status = "",
+) => {
   const tooltipId = `status-tooltip-${status}`;
   let iconDef = rvi16QuestionMark()
   switch(status?.toUpperCase()) {
@@ -634,13 +636,15 @@ export const status2Icon = (status = "") => {
     case "UP":
     case Localization.kr.renderStatus("UP"):
     case "ACTIVE":
-    case Localization.kr.renderStatus("ACTIVE"):   iconDef = rvi16TriangleUp();break;
+    case Localization.kr.renderStatus("ACTIVE"):   
+    case "OPERATIONAL":
+    case Localization.kr.renderStatus("OPERATIONAL"):  iconDef = rvi16TriangleUp();break;
     case "INSTALLING":
     case Localization.kr.renderStatus("INSTALLING"):   iconDef = rvi16Install;break;
     case "DOWN":
     case Localization.kr.renderStatus("DOWN"):
     case "INACTIVE":
-    case Localization.kr.renderStatus("INACTIVE"): 
+    case Localization.kr.renderStatus("INACTIVE"):
     case "UNINITIALIZED":                          iconDef = rvi16TriangleDown();break;
     case "POWERING_DOWN":                          iconDef = rvi16ArrowsDownRed;break;
     case "WAIT_FOR_LAUNCH":
@@ -648,7 +652,6 @@ export const status2Icon = (status = "") => {
     case "POWERING_UP":                            iconDef = rvi16ArrowsUpGreen;break;
     case "MAINTENANCE":                            iconDef = rvi16Wrench("black");break;
     case "UNATTACHED":                             iconDef = rvi16Disconnected();break;
-    
     
     case "SUSPENDED":                              iconDef = rvi16Pause;break;
     case "NON_OPERATIONAL":                        iconDef = rvi16NonOperational;break;
@@ -664,6 +667,13 @@ export const status2Icon = (status = "") => {
         {Localization.kr.renderStatus(status)}
       </Tooltip>
     </>
+  )
+}
+export const clusterStatus2Icon = (status = "", connect=false) => {
+  return (
+    connect && (
+      <>{status2Icon(status)}</>
+    )
   )
 }
 

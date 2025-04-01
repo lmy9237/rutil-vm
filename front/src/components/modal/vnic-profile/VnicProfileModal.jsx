@@ -33,7 +33,7 @@ const VnicProfileModal = ({
   networkId,
   onClose,
 }) => {
-  const vLabel = editMode ? "편집" : "생성";
+  const vLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [formState, setFormState] = useState(initialFormState);
 
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });

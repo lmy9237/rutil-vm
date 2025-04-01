@@ -9,6 +9,7 @@ import TablesRow from '../../../components/table/TablesRow';
 import DeleteModal from '../../../utils/DeleteModal';
 import ActionButton from '../../../components/button/ActionButton';
 import { RVI16, rvi16ChevronDown, rvi16ChevronRight, RVI24 } from '../../../components/icons/RutilVmIcons';
+import Localization from '../../../utils/Localization';
 
 const VmSnapshots = ({ vmId }) => {
   const {
@@ -44,7 +45,7 @@ const VmSnapshots = ({ vmId }) => {
     <>
       <div className="header-right-btns">
         <ActionButton actionType="default"
-          label="생성"
+          label={Localization.kr.CREATE}
           onClick={() => openModal("create")}
         />
         <ActionButton actionType="default"
@@ -52,11 +53,12 @@ const VmSnapshots = ({ vmId }) => {
           onClick={() => openModal("preview")}
         />
         <ActionButton actionType="default"
-          label="삭제"
+          label={Localization.kr.REMOVE}
           onClick={() => openModal("delete")}
         />
         <ActionButton actionType="default"
-          label="이동"
+          label={Localization.kr.MOVE}
+          onClick={() => openModal("move")}
         />
       </div>
 

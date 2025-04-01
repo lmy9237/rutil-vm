@@ -1,15 +1,13 @@
 import React, { useState,useEffect } from 'react';
 import toast from 'react-hot-toast';
 import Modal from 'react-modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import BaseModal from "../BaseModal";
 import Tables from '../../../../components/table/Tables';
 import TableColumnsInfo from '../../../../components/table/TableColumnsInfo';
 import { 
   useAddDomain, 
   useAllDataCenters, 
-  useDomainById, 
+  useStroageDomain, 
   useEditDomain ,
   useHostsFromDataCenter,
   useDataCenter,
@@ -22,6 +20,7 @@ import {
 } from '../../../../api/RQHook';
 import '../css/MDomain.css'
 import Localization from '../../../utils/Localization';
+import Logger from '../../../utils/Logger';
 
 Modal.setAppElement('#root');
 
@@ -100,7 +99,7 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
     data: domain,
     refetch: refetchDomain,
     isLoading: isDomainLoading,
-  } = useDomainById(domainId);
+  } = useStroageDomain(domainId);
 
   // 데이터센터 가져오기
   const {
@@ -256,7 +255,7 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
     
   
   const handleRowClick = (row) => {
-    console.log('선택한 행 데이터:', row);
+    Logger.debug(`DomainImportModal > handleRowClick ... row: ${row}`)
     setLunId(row.id); // 선택된 LUN ID를 설정
     setTarget(row.target); // 선택된 target 값을 설정
     setAddress(row.address); // 선택된 address 값을 설정
@@ -298,11 +297,11 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
       { hostId: hostVoId, iscsiData },
       {
         onSuccess: (data) => {
-          console.log('iSCSI 가져오기 성공:', data);
+          Logger.debug('iSCSI 가져오기 성공:', data);
           setIscsiSearchResults(data); // 검색 결과 상태 업데이트
         },
         onError: (error) => {
-          console.error('iSCSI 가져오기 실패:', error);
+          Logger.debug('iSCSI 가져오기 실패:', error);
         },
       }
     );
@@ -317,11 +316,11 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
       { hostId: hostVoId },
       {
         onSuccess: (data) => {
-          console.log('fcp 가져오기 성공:', data);
+          Logger.debug('fcp 가져오기 성공:', data);
           setFcpSearchResults(data);
         },
         onError: (error) => {
-          console.error('fcp 가져오기 실패:', error);
+          Logger.error('fcp 가져오기 실패:', error);
         },
       }
     );
@@ -338,11 +337,11 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
       { hostId: hostVoId, iscsiData },
       {
         onSuccess: (data) => {
-          console.log('iSCSI 로그인 성공:', data);
+          Logger.debug('iSCSI 로그인 성공:', data);
           setIscsiSearchResults(data); // 검색 결과 상태 업데이트
         },
         onError: (error) => {
-          console.error('iSCSI 로그인 실패:', error);
+          Logger.error('iSCSI 로그인 실패:', error);
         },
       }
     );
@@ -390,7 +389,7 @@ const DomainImportModal = ({ isOpen, editMode = false, domainId, datacenterId, o
       };
     }
   
-    console.log('Data to submit:', dataToSubmit);
+    Logger.debug(`DomainImportModal > handleFormSubmit ... dataToSubmit: ${JSON.stringify(dataToSubmit, null, 2)}`);
   
     if (editMode) {
       editDomain(

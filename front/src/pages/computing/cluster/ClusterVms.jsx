@@ -1,6 +1,6 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VmDupl from "../../../components/dupl/VmDupl";
-import { useVMFromCluster } from "../../../api/RQHook";
+import { useVMsFromCluster } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -17,7 +17,7 @@ const ClusterVms = ({ clusterId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-  } = useVMFromCluster(clusterId, (e) => ({ ...e }));
+  } = useVMsFromCluster(clusterId, (e) => ({ ...e }));
 
   Logger.debug("...")
   return (

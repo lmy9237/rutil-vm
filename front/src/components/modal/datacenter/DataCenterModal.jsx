@@ -39,7 +39,7 @@ const versions = [{ value: "4.7", label: 4.7 }];
  * @returns
  */
 const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
-  const dcLabel = editMode ? "편집" : "생성";
+  const dcLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [formState, setFormState] = useState(initialFormState);
 
   const onSuccess = () => {
@@ -88,9 +88,7 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
     const dataToSubmit = { ...formState };
 
     editMode
-      ? editDataCenter(
-        { dataCenterId: formState.id, dataCenterData: dataToSubmit }
-      )
+      ? editDataCenter({ dataCenterId: formState.id, dataCenterData: dataToSubmit })
       : addDataCenter(dataToSubmit);
   };
 

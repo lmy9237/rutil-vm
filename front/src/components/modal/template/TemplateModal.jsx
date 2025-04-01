@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import {
   useAddTemplate,
-  useAllDiskProfileFromDomain,
+  useAllDiskProfilesFromDomain,
   useClustersFromDataCenter,
   useCpuProfilesFromCluster,
   useDisksFromVM,
@@ -15,6 +15,7 @@ import Localization from "../../../utils/Localization";
 import { checkName } from "../../../util";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
+import Logger from "../../../utils/Logger";
 
 const format = [
   { value: "RAW", label: "Raw" },
@@ -83,7 +84,7 @@ const TemplateModal = ({
   const { 
     data: diskProfiles = [], 
     isLoading: isDiskProfilesLoading
-  } = useAllDiskProfileFromDomain(domainVo.id || undefined, (e) => ({...e,}));
+  } = useAllDiskProfilesFromDomain(domainVo.id || undefined, (e) => ({...e,}));
  
   useEffect(() => {
     if (!isOpen) {
@@ -156,8 +157,7 @@ const TemplateModal = ({
       disks: disksToSubmit, // 모든 디스크 데이터를 포함
     };
 
-    console.log("템플릿 생성데이터:", dataToSubmit);
-
+    Logger.debug(`TemplateModal > dataToSubmit ... 템플릿 생성데이터: ${dataToSubmit}`);
     addTemplate( 
       { vmId: selectedVm.id, templateData: dataToSubmit },
       {
@@ -175,7 +175,7 @@ const TemplateModal = ({
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"템플릿"}
-      submitTitle={"생성"}
+      submitTitle={Localization.kr.CREATE}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px"}} 
     >   

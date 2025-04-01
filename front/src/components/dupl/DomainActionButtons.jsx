@@ -6,6 +6,7 @@ import CancelModal from "../../utils/CancelModal";
 import DomainDestroyModal from "../modal/domain/DomainDestroyModal";
 import DomainMainTenanceModal from "../modal/domain/DomainMainTenanceModal";
 import DomainCheckModal from "../modal/domain/DomainCheckModal";
+import Localization from "../../utils/Localization";
 
 const DomainActionButtons = ({
   openModal,
@@ -35,15 +36,15 @@ const DomainActionButtons = ({
     { type: "edit", label: "도메인 확인(임시 추가모달)", onBtnClick: () => setIsDomainCheckModalOpen(true) }, 
     { type: "edit", label: "작업취소모달(임시)", onBtnClick: () => setIsCancelModalOpen(true)},
 
-    { type: "create", label: "생성", onBtnClick: () => openModal("create")  },
-    { type: "import", label: "가져오기", onBtnClick: () => openModal("import")  },
-    { type: "edit", label: "편집", disabled: isEditDisabled , onBtnClick: () => openModal("edit") },
-    { type: "delete", label: "삭제", disabled: isDeleteDisabled || isMaintenance || !isUnknown, onBtnClick: () => openModal("delete")  },
-    { type: "destory", label: "파괴", disabled: isDeleteDisabled || isMaintenance, onBtnClick: () => openModal("destroy")  },
+    { type: "create", label: Localization.kr.CREATE, onBtnClick: () => openModal("create")  },
+    { type: "import", label: Localization.kr.IMPORT, onBtnClick: () => openModal("import")  },
+    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled , onBtnClick: () => openModal("edit") },
+    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled || isMaintenance || !isUnknown, onBtnClick: () => openModal("delete")  },
+    { type: "destory", label: Localization.kr.DESTROY, disabled: isDeleteDisabled || isMaintenance, onBtnClick: () => openModal("destroy")  },
   ];
 
   const dcDomainActions = [
-    { type: "create", label: "생성", onBtnClick: () => openModal("create")},
+    { type: "create", label: Localization.kr.CREATE, onBtnClick: () => openModal("create")},
     { type: "detach", label: "분리", disabled: isDeleteDisabled || isActive, onBtnClick: () => openModal("detach") },
     { type: "activate", label: "활성", disabled: isDeleteDisabled || isActive, onBtnClick: () => openModal("activate") },
     { type: "maintenance", label: "유지보수", disabled: isDeleteDisabled || isMaintenance, onBtnClick: () => openModal("maintenance")},

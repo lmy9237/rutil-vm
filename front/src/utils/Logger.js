@@ -1,5 +1,5 @@
 const isLoggingEnabled = 
-  import.meta.env.RUTIL_VM_LOGGING_ENABLED === 'true' || 
+  import.meta.env.VITE_RUTIL_VM_LOGGING_ENABLED === "true" || 
   '__RUTIL_VM_LOGGING_ENABLED__' === 'true';
 
 let Logger = {

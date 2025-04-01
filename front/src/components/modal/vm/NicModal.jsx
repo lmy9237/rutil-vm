@@ -9,7 +9,7 @@ import {
   useAddNicFromVM,
   useAllVnicProfiles,
   useEditNicFromVM,
-  useNetworkInterfaceByVMId,
+  useNetworkInterfaceFromVM,
 } from "../../../api/RQHook";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
@@ -35,7 +35,7 @@ const initialFormState = {
 };
 
 const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
-  const nLabel = editMode ? "확인" : "생성";
+  const nLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [formInfoState, setFormInfoState] = useState(initialFormState);
   const [vnicProfileVo, setVnicProfileVo] = useState({ id: "", name: "" });
 
@@ -43,7 +43,7 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
   const { mutate: editNicFromVM } = useEditNicFromVM();
 
   // 가상머신 내 네트워크인터페이스 상세
-  const { data: nicsdetail } = useNetworkInterfaceByVMId(vmId, nicId);
+  const { data: nicsdetail } = useNetworkInterfaceFromVM(vmId, nicId);
 
   // 모든 vnic프로파일 목록
   // TODO: 수정필요
@@ -75,7 +75,7 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
       setFormInfoState(initialFormState);
       setVnicProfileVo({ id: "", name: "" });
     } else if (editMode && nicsdetail) {
-      console.log("NIC 데이터 확인:", nicsdetail);
+      Logger.debug(`NIC 데이터: ${JSON.stringify(nicsdetail, null, 2)}`);
       setFormInfoState({
         id: nicsdetail?.id || "",
         name: nicsdetail?.name || "",

@@ -14,6 +14,7 @@ import {
 import { checkKoreanName, checkName } from "../../../util";
 import "./MCluster.css";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 const cpuArcs = [
   { value: "UNDEFINED", label: "정의되지 않음" },
@@ -127,7 +128,7 @@ const ClusterModal = ({
   datacenterId, 
   onClose
 }) => {
-  const cLabel = editMode ? "편집" : "생성";
+  const cLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [formState, setFormState] = useState(initialFormState);
 
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
@@ -211,8 +212,7 @@ const ClusterModal = ({
       toast.success(`${Localization.kr.CLUSTER} ${cLabel} 완료`);
     };
     const onError = (err) => toast.error(`Error ${cLabel} cluster: ${err}`);
-
-    console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
+    Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터 출력
 
     editMode
       ? editCluster(

@@ -12,6 +12,7 @@ import {
   useRebootVM,
   useResetVM,
 } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 const VmActionModal = ({ isOpen, action, data, onClose }) => {
   const { mutate: startVM } = useStartVM();
@@ -68,7 +69,7 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
   };
 
   const handleFormSubmit = () => {
-    console.log("VmActionModal > handleFormSubmit ... ");
+    Logger.debug("VmActionModal > handleFormSubmit ... ");
     if (!ids.length) {
       const msgErr = "ID가 없습니다."
       toast.error(msgErr);

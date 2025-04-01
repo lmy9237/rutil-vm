@@ -4,7 +4,7 @@ import DomainActionButtons from "../../../components/dupl/DomainActionButtons";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { useAllDataCenterFromDomain, useDomainById } from "../../../api/RQHook";
+import { useAllDataCentersFromDomain, useStroageDomain } from "../../../api/RQHook";
 import SearchBox from "../../../components/button/SearchBox";
 import useSearch from "../../../components/button/useSearch";
 import DomainActionModal from "../../../components/modal/domain/DomainActionModal";
@@ -26,7 +26,7 @@ const DomainDatacenters = ({ domainId }) => {
     isLoading: isDataCentersLoading,
     isError: isDataCentersError,
     isSuccess: isDataCentersSuccess,
-  } = useAllDataCenterFromDomain(domainId, (e) => ({ ...e }));
+  } = useAllDataCentersFromDomain(domainId, (e) => ({ ...e }));
 
   const transformedData = datacenters.map((datacenter) => ({
     ...datacenter,
@@ -40,7 +40,7 @@ const DomainDatacenters = ({ domainId }) => {
     searchText: `${datacenter?.name} ${datacenter?.domainStatus}`.toLowerCase(),
   }));
 
-  const { data: domain } = useDomainById(domainId);
+  const { data: domain } = useStroageDomain(domainId);
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDataCenters, setSelectedDataCenters] = useState([]); // 다중 선택된 데이터센터

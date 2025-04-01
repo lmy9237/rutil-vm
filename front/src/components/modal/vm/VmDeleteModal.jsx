@@ -6,6 +6,7 @@ import { useDeleteVm } from "../../../api/RQHook";
 import ApiManager from "../../../api/ApiManager";
 import "./MVm.css";
 import LabelCheckbox from "../../label/LabelCheckbox";
+import Logger from "../../../utils/Logger";
 
 const VmDeleteModal = ({ isOpen, onClose, data }) => {
   const [ids, setIds] = useState([]);
@@ -70,7 +71,7 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
     }
 
     ids.forEach((vmId, index) => {
-      console.log(`가상머신 삭제 ${vmId} : ${detachOnlyList[vmId]}`);
+      Logger.debug(`가상머신 삭제 ${vmId} : ${detachOnlyList[vmId]}`);
       deleteVm(
         { vmId, detachOnly: detachOnlyList[vmId] },
         {

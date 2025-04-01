@@ -11,7 +11,7 @@ import NetworkVms from "./NetworkVms";
 import NetworkTemplates from "./NetworkTemplates";
 import NetworkClusters from "./NetworkClusters";
 import Localization from "../../../utils/Localization";
-import { useNetworkById } from "../../../api/RQHook";
+import { useNetwork } from "../../../api/RQHook";
 import { rvi24Network } from "../../../components/icons/RutilVmIcons";
 
 /**
@@ -24,7 +24,7 @@ import { rvi24Network } from "../../../components/icons/RutilVmIcons";
 const NetworkInfo = () => {
   const navigate = useNavigate();
   const { id: networkId, section } = useParams();
-  const { data: network, isError, isLoading } = useNetworkById(networkId);
+  const { data: network, isError, isLoading } = useNetwork(networkId);
 
   const [activeTab, setActiveTab] = useState("general");
   const [activeModal, setActiveModal] = useState(null);
@@ -77,8 +77,8 @@ const NetworkInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "edit", label: "편집", onClick: () => openModal("edit") },
-    { type: "delete", label: "삭제", onClick: () => openModal("delete") },
+    { type: "edit", label: Localization.kr.UPDATE, onClick: () => openModal("edit") },
+    { type: "delete", label: Localization.kr.REMOVE, onClick: () => openModal("delete") },
   ];
 
   return (

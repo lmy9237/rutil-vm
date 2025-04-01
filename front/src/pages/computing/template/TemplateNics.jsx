@@ -7,9 +7,9 @@ import TableRowClick from "../../../components/table/TableRowClick";
 import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
 import TemplateNeworkNewInterModal from "../../../components/modal/template/TemplateNeworkNewInterModal";
 import NicActionButtons from "../../../components/dupl/NicActionButtons";
-import { renderTFStatusIcon } from "../../../components/Icon";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import Logger from "../../../utils/Logger";
+import { status2Icon } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name TemplateNics
@@ -28,7 +28,7 @@ const TemplateNics = ({ templateId }) => {
 
   const transformedData = vnicProfiles.map((nic) => ({
       ...nic,
-      status: renderTFStatusIcon(nic?.linked),
+      status: status2Icon(nic?.linked ? "UP" : "DOWN"),
       network: (
         <TableRowClick type="network" id={nic?.networkVo?.id}>
           {nic?.networkVo?.name}
@@ -39,7 +39,7 @@ const TemplateNics = ({ templateId }) => {
           {nic?.vnicProfileVo?.name}
         </TableRowClick>
       ),
-      _linked: nic?.linked === true ? "Up" : "Down",
+      _linked: nic?.linked === true ? "UP" : "DOWN",
       _plugged: (
         <input type="checkbox" checked={nic?.plugged === true} disabled />
       ),

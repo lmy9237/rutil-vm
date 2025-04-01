@@ -1,5 +1,5 @@
 import React from "react";
-import { useDomainById } from "../../../api/RQHook";
+import { useStroageDomain } from "../../../api/RQHook";
 import { checkZeroSizeToGB, convertBytesToGB } from "../../../util";
 import InfoTable from "../../../components/table/InfoTable";
 
@@ -13,7 +13,7 @@ const overCommit = (commit, disk) => ((commit / disk) * 100).toFixed(0);
  * @returns {JSX.Element} DomainGeneral
  */
 const DomainGeneral = ({ domainId }) => {
-  const { data: domain } = useDomainById(domainId);
+  const { data: domain } = useStroageDomain(domainId);
 
   const tableRows = [
     { label: "ID", value: domain?.id },

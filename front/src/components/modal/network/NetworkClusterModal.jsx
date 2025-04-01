@@ -2,9 +2,8 @@ import BaseModal from "../BaseModal";
 import TablesOuter from '../../table/TablesOuter';
 import TableColumnsInfo from '../../table/TableColumnsInfo';
 import { useAllClustersFromNetwork } from '../../../api/RQHook';
-import { renderStatusClusterIcon } from '../../Icon';
 import Localization from "../../../utils/Localization";
-import { RVI16, rvi16Install, rvi16VirtualMachine } from "../../icons/RutilVmIcons";
+import { clusterStatus2Icon, RVI16, rvi16Install, rvi16VirtualMachine } from "../../icons/RutilVmIcons";
 
 const NetworkClusterModal = ({ 
   isOpen, 
@@ -19,7 +18,7 @@ const NetworkClusterModal = ({
   } = useAllClustersFromNetwork(networkId, (cluster) => ({
     name: cluster?.name,
     connect: cluster?.connected ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />,
-    status: renderStatusClusterIcon(cluster?.connected, cluster?.networkVo?.status),
+    status: clusterStatus2Icon(cluster?.networkVo?.status, cluster?.connected),
     required: cluster?.networkVo?.required ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />,
     allAssigned: cluster?.connected ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />, // 모두 할당
     allRequired: cluster?.networkVo?.required ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />, // 모두 필요
@@ -48,7 +47,7 @@ const NetworkClusterModal = ({
         <TablesOuter
           isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
           columns={TableColumnsInfo.CLUSTERS_POPUP} data={clusters || []}
-          onRowClick={() => console.log('Row clicked')}
+          onRowClick={() => {}}
         />
       </div>
     </BaseModal>

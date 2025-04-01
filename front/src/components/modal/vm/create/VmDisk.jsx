@@ -3,6 +3,7 @@ import Loading from "../../../common/Loading";
 import { useDisksFromVM } from "../../../../api/RQHook";
 import ActionButton from "../../../button/ActionButton";
 import { RVI24, rvi24ChevronDown, rvi24Error, RVI36, rvi36Edit, rvi36Trash } from "../../../icons/RutilVmIcons";
+import Localization from "../../../../utils/Localization";
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
 
@@ -69,11 +70,11 @@ const VmDisk = ({
       <div className="instance-image center py-2">
         <div className="font-bold">가상 디스크</div>
         <div className="f-end" style={{ gap: "6px" }}>
-          <ActionButton label="연결"
+          <ActionButton label={Localization.kr.CONNECTION}
             actionType="default"
             onClick={() => setIsConnectionPopupOpen(true)}
           />
-          <ActionButton label="생성"
+          <ActionButton label={Localization.kr.CREATE}
             actionType="default"
             onClick={() => setIsCreatePopupOpen(true)}
           />

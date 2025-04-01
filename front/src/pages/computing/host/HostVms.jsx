@@ -1,6 +1,6 @@
 import React from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { useVmFromHost } from "../../../api/RQHook";
+import { useVmsFromHost } from "../../../api/RQHook";
 import VmDupl from "../../../components/dupl/VmDupl";
 
 /**
@@ -17,7 +17,7 @@ const HostVms = ({ hostId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-  } = useVmFromHost(hostId, (e) => ({ ...e }));
+  } = useVmsFromHost(hostId, (e) => ({ ...e }));
 
   return (
     <VmDupl columns={TableColumnsInfo.VMS_FROM_HOST}

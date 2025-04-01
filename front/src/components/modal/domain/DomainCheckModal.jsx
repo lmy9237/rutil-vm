@@ -2,6 +2,7 @@ import { useState } from "react";
 import BaseModal from "../BaseModal";
 import { RVI24, rvi24ErrorRed } from "../../icons/RutilVmIcons";
 import LabelCheckbox from "../../label/LabelCheckbox";
+import Localization from "../../../utils/Localization";
 
 const DomainCheckModal = ({ isOpen, onClose }) => {
   const [approved, setApproved] = useState(false);
@@ -19,7 +20,7 @@ const DomainCheckModal = ({ isOpen, onClose }) => {
       isOpen={isOpen}
       onClose={onClose}
       targetName="도메인"
-      submitTitle="확인"
+      submitTitle={Localization.kr.OK}
       onSubmit={handleSubmit}
       shouldWarn={true}
       promptText={`This operation might be unrecoverable and destructive!`}

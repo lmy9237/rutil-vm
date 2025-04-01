@@ -4,6 +4,7 @@ import NetworkImportModal from "./NetworkImportModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import Localization from "../../../utils/Localization";
 import { useDeleteNetwork } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 const NetworkModals = ({ 
   activeModal, 
@@ -13,7 +14,7 @@ const NetworkModals = ({
   onClose
 }) => {
   useEffect(() => {
-    console.log("selectedNetworks:", selectedNetworks);
+    Logger.debug(`NetworkModals.selectedNetworks:`, selectedNetworks);
   }, [selectedNetworks]);
   
   const modals = {

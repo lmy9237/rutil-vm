@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import {
-  renderUpDownStatusIcon,
-} from "../../../components/Icon";
 import { checkZeroSizeToMbps } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
 import ActionButton from "../../../components/button/ActionButton";
@@ -69,9 +66,7 @@ const NetworkHosts = ({ networkId }) => {
           {host?.dataCenterVo?.name}
         </TableRowClick>
       ),
-      networkDeviceStatus: renderUpDownStatusIcon(
-        host?.hostNicVos[0]?.status
-      ),
+      networkDeviceStatus: status2Icon(host?.hostNicVos[0]?.status),
       networkDevice: host?.hostNicVos[0]?.name,
       speed: checkZeroSizeToMbps(host?.hostNicVos[0]?.speed),
       rx: checkZeroSizeToMbps(host?.hostNicVos[0]?.rxSpeed),
@@ -80,8 +75,6 @@ const NetworkHosts = ({ networkId }) => {
       totalTx: host.hostNicVos[0].txTotalSpeed.toLocaleString(),
     }));
   };
-
-
 
   const connectionFilters = [
     { key: "connected", label: "연결됨" },

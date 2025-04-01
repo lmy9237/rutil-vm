@@ -39,13 +39,13 @@ const VmActionButtons = ({
   const isTemplate = status === "SUSPENDED" || status === "UP";
   const basicActions = [
     { 
-      type: "create", label: "생성", disabled: false
+      type: "create", label: Localization.kr.CREATE, disabled: false
       , onBtnClick: () => openModal("create")
     }, {
-      type: "edit", label: "편집", disabled: isEditDisabled
+      type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled
       , onBtnClick: () => openModal("edit") 
     }, { 
-      type: "start", label: "실행", disabled: isDeleteDisabled || (isUp && !isMaintenance)
+      type: "start", label: Localization.kr.START, disabled: isDeleteDisabled || (isUp && !isMaintenance)
       , onBtnClick: () => openModal("start")
     }, {
       type: "pause", label: "일시중지", disabled: !isUp || isDeleteDisabled
@@ -75,9 +75,9 @@ const VmActionButtons = ({
   ];
 
   const manageActions = [
-    { type: "import", label: "가져오기" },
+    { type: "import", label: Localization.kr.IMPORT, },
     { type: "copyVm", label: `${Localization.kr.VM} 복제`, disabled: isEditDisabled || !isPause },
-    { type: "delete", label: "삭제", disabled: isDeleteDisabled || isMaintenance },
+    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled || isMaintenance },
     { type: "templates", label: "템플릿 생성", disabled: isEditDisabled || isTemplate },
     { type: "ova", label: "ova로 내보내기", disabled: isEditDisabled },
   ];

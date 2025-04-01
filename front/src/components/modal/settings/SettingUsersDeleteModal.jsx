@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import { useRemoveUser } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 const SettingUsersDeleteModal = ({ isOpen, onClose, data }) => {
   const {
@@ -25,7 +26,7 @@ const SettingUsersDeleteModal = ({ isOpen, onClose, data }) => {
 
   
   const handleFormSubmit = () => {
-    console.log(`SettingUsersDeleteModal > handleFormSubmit ...`)
+    Logger.debug(`SettingUsersDeleteModal > handleFormSubmit ...`)
     if (!usernames.length) {
       toast.error("삭제할 사용자가 없습니다.");
       return;

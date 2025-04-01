@@ -5,6 +5,7 @@ import { useAllHosts } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import LabelInput from "../../label/LabelInput";
+import Logger from "../../../utils/Logger";
 
 const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
   const [host, setHost] = useState("#");
@@ -31,7 +32,7 @@ const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
       return;
     }
 
-    console.log("Exporting OVA:", { host, directory, name });
+    Logger.debug("Exporting OVA:", { host, directory, name });
     onClose(); // 모달 닫기
   };
 

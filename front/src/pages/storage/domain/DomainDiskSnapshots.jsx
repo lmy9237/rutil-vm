@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import { convertBytesToGB } from "../../../util";
-import { useAllDiskSnapshotFromDomain } from "../../../api/RQHook";
+import { useAllDiskSnapshotsFromDomain } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 
@@ -19,7 +19,7 @@ const DomainDiskSnapshots = ({ domainId }) => {
     isLoading: isDiskSnapshotsLoading,
     isSuccess: isDiskSnapshotsSuccess,
     isError: isDiskSnapshotsError
-  } = useAllDiskSnapshotFromDomain(domainId, (e) => ({ ...e }));
+  } = useAllDiskSnapshotsFromDomain(domainId, (e) => ({ ...e }));
 
   const transformedData = diskSnapshots.map((e) => ({
     ...e,

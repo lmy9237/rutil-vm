@@ -4,6 +4,7 @@ import TablesOuter from "../../../table/TablesOuter";
 import TableColumnsInfo from "../../../table/TableColumnsInfo";
 import { useAllDataCenters, useAllHosts } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name VmOnExportModal
@@ -33,10 +34,9 @@ const VmOnExportModal = ({ isOpen, onClose, selectedVm }) => {
       name: host?.name ?? "",
     };
   }
-
   
   const handleFormSubmit = () => {
-    console.log("VmOnExportModal > handleFormSubmit ... ");
+    Logger.debug(`VmOnExportModal > handleFormSubmit ... `);
   }
 
   return (
@@ -99,7 +99,7 @@ const VmOnExportModal = ({ isOpen, onClose, selectedVm }) => {
           <TablesOuter
             columns={TableColumnsInfo.VM_BRING_POPUP}
             data={[]}
-            onRowClick={() => console.log("Row clicked")}
+            onRowClick={() => Logger.debug("Row clicked")}
           />
         </div>
         <div>
@@ -107,7 +107,7 @@ const VmOnExportModal = ({ isOpen, onClose, selectedVm }) => {
           <TablesOuter
             columns={TableColumnsInfo.VM_BRING_POPUP}
             data={[]}
-            onRowClick={() => console.log("Row clicked")}
+            onRowClick={() => Logger.debug("Row clicked")}
           />
         </div>
       </div>

@@ -41,7 +41,7 @@ const HostModal = ({
   , clusterId
   , onClose
 }) => {
-  const hLabel = editMode ? "편집" : "생성";
+  const hLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [formState, setFormState] = useState(initialFormState);
   const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
 
@@ -107,8 +107,7 @@ const HostModal = ({
     };
     const onError = (err) => toast.error(`Error ${hLabel} host: ${err}`);
 
-    console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
-
+    Logger.debug(`HostModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`); // 데이터를 확인하기 위한 로그
     editMode
       ? editHost(
         { hostId: formState.id, hostData: dataToSubmit },

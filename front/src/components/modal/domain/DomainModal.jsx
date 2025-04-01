@@ -11,7 +11,7 @@ import LabelInput from "../../label/LabelInput";
 import {
   useAddDomain,
   useAllDataCenters,
-  useDomainById,
+  useStroageDomain,
   useEditDomain,
   useHostsFromDataCenter,
   useDataCenter,
@@ -24,6 +24,7 @@ import {
 } from "../../../api/RQHook";
 import { checkName, convertBytesToGB } from "../../../util";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 const domainTypes = [
   { value: "data", label: "데이터" },
@@ -77,7 +78,7 @@ const DomainModal = ({
   datacenterId,
   onClose,
 }) => {
-  const dLabel = mode === "edit" ? "편집" : mode === "import" ? "가져오기" : "생성";
+  const dLabel = mode === "edit" ? Localization.kr.UPDATE : mode === "import" ? Localization.kr.IMPORT : Localization.kr.CREATE;
   const editMode = mode === "edit";
   const importMode = mode === "import";
 
@@ -101,7 +102,7 @@ const DomainModal = ({
   const { mutate: importIscsiFromHost } = useImportIscsiFromHost(); // 가져오기 iscsi
   const { mutate: importFcpFromHost } = useImportFcpFromHost(); // 가져오기 fibre
 
-  const { data: domain } = useDomainById(domainId);
+  const { data: domain } = useStroageDomain(domainId);
   const { 
     data: dataCenters = [],
     isLoading: isDataCentersLoading 
@@ -212,8 +213,8 @@ const DomainModal = ({
   }, [mode, domain, lunId, setLunId]);
 
   useEffect(() => {
-    console.log("modal 도메인으로부터 받은 lunId:", lunId);
-    console.log("modal 도메인으로부터 받은 hostVo:", hostVo);
+    Logger.debug(`DomainModal.lunId: ${lunId}`);
+    Logger.debug(`DomainModal.hostVo: ${JSON.stringify(hostVo)}`);
   }, [lunId, hostVo]);
 
   useEffect(() => {
@@ -353,8 +354,7 @@ const DomainModal = ({
       };
     }
 
-    console.log("Data to submit:", dataToSubmit);
-
+    Logger.debug(`DomainModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`);
     editMode
       ? editDomain(
           { domainId: formState.id, domainData: dataToSubmit },

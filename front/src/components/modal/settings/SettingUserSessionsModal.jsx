@@ -16,7 +16,7 @@ const SettingUserSessionsModal = ({
     <>
     {/* <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"사용자"}
-      submitTitle={editMode ? "편집" : "생성"}
+      submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
       onSubmit={handleFormSubmit}
     >
     </BaseModal> */}

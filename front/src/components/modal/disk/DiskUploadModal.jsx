@@ -3,8 +3,8 @@ import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import {
   useAllActiveDataCenters,
-  useAllActiveDomainFromDataCenter,
-  useAllDiskProfileFromDomain,
+  useAllActiveDomainsFromDataCenter,
+  useAllDiskProfilesFromDomain,
   useHostsFromDataCenter,
   useUploadDisk,
 } from "../../../api/RQHook";
@@ -52,13 +52,13 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
   const {
     data: domains = [],
     isLoading: isDomainsLoading,
-  } = useAllActiveDomainFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
+  } = useAllActiveDomainsFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
 
   // 선택한 도메인이 가진 디스크 프로파일 가져오기
   const {
     data: diskProfiles = [],
     isLoading: isDiskProfilesLoading,
-  } = useAllDiskProfileFromDomain(domainVo.id || undefined, (e) => ({...e}));
+  } = useAllDiskProfilesFromDomain(domainVo.id || undefined, (e) => ({...e}));
   const {
     data: hosts = [],
     isLoading: isHostsLoading,

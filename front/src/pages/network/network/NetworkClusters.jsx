@@ -2,7 +2,6 @@ import React, { Suspense, useState } from "react";
 import Loading from "../../../components/common/Loading";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
-import { renderStatusClusterIcon } from "../../../components/Icon";
 import ActionButton from "../../../components/button/ActionButton";
 import TableRowClick from "../../../components/table/TableRowClick";
 import NetworkClusterModal from "../../../components/modal/network/NetworkClusterModal";
@@ -10,6 +9,7 @@ import { useAllClustersFromNetwork } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import { clusterStatus2Icon } from "../../../components/icons/RutilVmIcons";
 
 /**
  * @name NetworkClusters
@@ -38,10 +38,7 @@ const NetworkClusters = ({ networkId }) => {
     ) : (
       <input type="checkbox" disabled />
     ),
-    status: renderStatusClusterIcon(
-      cluster?.connected,
-      cluster?.networkVo?.status
-    ),
+    status: clusterStatus2Icon(cluster?.networkVo?.status, cluster?.connected),
     required: cluster?.networkVo?.required ? (
       <input type="checkbox" checked disabled />
     ) : (
@@ -57,10 +54,9 @@ const NetworkClusters = ({ networkId }) => {
   }));
 
   const [selectedClusters, setSelectedClusters] = useState([]);
-
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-  Logger.debug("...");
+  
+  Logger.debug("NetworkClusters ... ");
   return (
     <>
       <div className="header-right-btns mb-2">
@@ -71,7 +67,6 @@ const NetworkClusters = ({ networkId }) => {
       </div>
 
       <TablesOuter
-        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
         columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}
         data={transformedData}
         shouldHighlight1stCol={true}
@@ -87,6 +82,7 @@ const NetworkClusters = ({ networkId }) => {
             </button>
           </div>,
         ]}
+        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
       />
 
       <SelectedIdView item={selectedClusters}/>

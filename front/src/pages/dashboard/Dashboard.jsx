@@ -70,8 +70,6 @@ const StorageMemoryBarChart = ({ storageMemory }) => (
 
 //#region: Dashboard
 const Dashboard = () => {
-
-  const navigate = useNavigate();
   const {
     data: dashboard,
     status: dashboardStatus,
@@ -203,14 +201,6 @@ const Dashboard = () => {
   } = useDashboardMetricStorage();
 
   useEffect(() => {
-    const handleResize = debounce(adjustFontSize, 300);
-    window.addEventListener("resize", handleResize);
-    adjustFontSize();
-
-    navigate("/")
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
   }, []);
   
   const cpuCoreTotal = () => cpuMemory?.totalCpuCore

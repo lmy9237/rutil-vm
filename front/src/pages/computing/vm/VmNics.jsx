@@ -1,7 +1,7 @@
 import React, { useState, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
-import { useNetworkInterfaceFromVM } from "../../../api/RQHook";
+import { useNetworkInterfacesFromVM } from "../../../api/RQHook";
 import NicModal from "../../../components/modal/vm/NicModal";
 import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
@@ -23,7 +23,7 @@ const VmNics = ({ vmId }) => {
     isLoading: isNicsLoading,
     isError: isNicsError,
     Success: isNicsSuccess,
-  } = useNetworkInterfaceFromVM(vmId, (e) => ({ ...e }));
+  } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
   
   const transformedData = nics.map((nic) => ({
     ...nic,
@@ -62,18 +62,13 @@ const VmNics = ({ vmId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <ActionButton actionType="default"
-          label="새로 만들기"
+        <ActionButton actionType="default" label={Localization.kr.CREATE} 
           onClick={() => openModal("create")}
         />
-        <ActionButton actionType="default"
-          label="편집"
-          disabled={!selectedNic} 
+        <ActionButton actionType="default" label={Localization.kr.UPDATE} disabled={!selectedNic} 
           onClick={() => openModal("edit")}
         />
-        <ActionButton actionType="default"
-          label="제거"
-          disabled={!selectedNic}
+        <ActionButton actionType="default" label={Localization.kr.REMOVE} disabled={!selectedNic}
           onClick={() => openModal("delete")}
         />
       </div>

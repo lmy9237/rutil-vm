@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle, } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import { useDeleteNetworkFromTemplate } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 const TemplateNicDeleteModal = ({ isOpen, onClose, data, templateId }) => {
   const [ids, setIds] = useState([]);
@@ -25,25 +26,24 @@ const TemplateNicDeleteModal = ({ isOpen, onClose, data, templateId }) => {
       return;
     }  
     for (const { templateId, nicId } of ids) {
-      console.log("➡️ handleFormSubmit - Deleting NIC with templateId:", templateId, "nicId:", nicId);
+      Logger.debug("➡️ handleFormSubmit - Deleting NIC with templateId:", templateId, "nicId:", nicId);
 
       if (!templateId || !nicId) {
-        console.error("❌ handleFormSubmit - templateId 또는 nicId가 없습니다.", { templateId, nicId });
+        Logger.error("❌ handleFormSubmit - templateId 또는 nicId가 없습니다.", { templateId, nicId });
         return;
       }
       try {
         await deleteNicFromTemplate({ templateId, nicId });
-        console.log(`✅ NIC ${nicId} deleted successfully from Template ${templateId}.`);
+        Logger.debug(`✅ NIC ${nicId} deleted successfully from Template ${templateId}.`);
       } catch (error) {
-        console.error(`❌ Error deleting NIC ${nicId} from Template ${templateId}:`, error);
+        Logger.error(`❌ Error deleting NIC ${nicId} from Template ${templateId}:`, error);
       }
     }
-  
-    console.log("✅ All NIC deletion attempts completed.");
+    Logger.debug("✅ All NIC deletion attempts completed.");
     onClose();
   };
   
-  console.log("...")
+  Logger.debug("...")
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"NIC"}

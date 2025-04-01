@@ -4,6 +4,7 @@ import BaseModal from "../BaseModal";
 import TablesOuter from "../../table//TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useFindDiskListFromVM } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 const VmConnectionPlusModal = ({
   isOpen,
@@ -20,16 +21,17 @@ const VmConnectionPlusModal = ({
   };
 
   const handleFormSubmit = () => {
-    console.log("VmConnectionPlusModal > handleFormSubmit ... ")
-    if (selectedDiskId) {
-      const selectedDiskDetails = disks.find(
-        (disk) => disk.id === selectedDiskId
-      );
-      onSelectDisk(selectedDiskId, selectedDiskDetails);
-      onClose();
-    } else {
+    Logger.debug("VmConnectionPlusModal > handleFormSubmit ... ")
+    if (!selectedDiskId) {
       toast.error("디스크를 선택하세요!");
+      return;
     }
+    
+    const selectedDiskDetails = disks.find(
+      (disk) => disk.id === selectedDiskId
+    );
+    onSelectDisk(selectedDiskId, selectedDiskDetails);
+    onClose();
   };
 
   // 제외된 디스크 ID를 필터링
@@ -78,17 +80,15 @@ const VmConnectionPlusModal = ({
         </div>
       </div>
       {activeTab === "img" && (
-        <TablesOuter
-          columns={TableColumnsInfo.VIRTUAL_DISK}
+        <TablesOuter columns={TableColumnsInfo.VIRTUAL_DISK}
           data={disks}
-          onRowClick={() => console.log("Row clicked in 이미지 탭")}
+          onRowClick={() => Logger.debug("Row clicked in 이미지 탭")}
         />
       )}
       {activeTab === "directlun" && (
-        <TablesOuter
-          columns={TableColumnsInfo.VMS_STOP}
+        <TablesOuter columns={TableColumnsInfo.VMS_STOP}
           data={[]} // 직접 LUN 데이터를 여기에 추가하세요.
-          onRowClick={() => console.log("Row clicked in 직접 LUN 탭")}
+          onRowClick={() => Logger.debug("Row clicked in 직접 LUN 탭")}
         />
       )}
       <span>선택된 디스크 ID: {selectedDiskId || "없음"}</span>

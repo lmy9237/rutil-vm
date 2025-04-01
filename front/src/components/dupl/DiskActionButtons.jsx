@@ -1,5 +1,6 @@
 import React from "react";
 import ActionButtonGroup from "../button/ActionButtonGroup";
+import Localization from "../../utils/Localization";
 
 const DiskActionButtons = ({
   openModal,
@@ -9,9 +10,9 @@ const DiskActionButtons = ({
   actionType = "default",
 }) => {
   const basicActions = [
-    { type: "create", label: "생성", disabled: false, onBtnClick: () => openModal("create") },
-    { type: "edit", label: "편집", disabled: isEditDisabled, onBtnClick: () => openModal("edit") },
-    { type: "delete", label: "삭제", disabled: isDeleteDisabled , onBtnClick: () => openModal("delete")},
+    { type: "create", label: Localization.kr.CREATE, disabled: false, onBtnClick: () => openModal("create") },
+    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled, onBtnClick: () => openModal("edit") },
+    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled , onBtnClick: () => openModal("delete")},
     { type: "move", label: "이동", disabled: isEditDisabled , onBtnClick: () => openModal("move")},
     { type: "copy", label: "복사", disabled: isEditDisabled , onBtnClick: () => openModal("copy")},
     { type: "upload", label: "업로드", onBtnClick: () => openModal("upload") },

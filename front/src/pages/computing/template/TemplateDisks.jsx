@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import TableRowClick from '../../../components/table/TableRowClick';
-import { useAllDisksFromTemplate, useDomainById } from '../../../api/RQHook';
+import { useAllDisksFromTemplate, useStroageDomain } from '../../../api/RQHook';
 import { checkZeroSizeToGB, convertBytesToGB } from '../../../util';
 import { Tooltip } from 'react-tooltip';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import TablesOuter from '../../../components/table/TablesOuter';
 
 const StorageDomainWithTooltip = ({ domainId }) => {
-  const { data: storageDomain, isLoading } = useDomainById(domainId);
+  const { data: storageDomain, isLoading } = useStroageDomain(domainId);
   return (
     <>
       <span data-tooltip-id={`storage-domain-tooltip-${domainId}`}>

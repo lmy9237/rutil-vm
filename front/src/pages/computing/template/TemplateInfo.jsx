@@ -78,8 +78,8 @@ const TemplateInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "edit", label: "편집", onClick: () => openModal("edit") },
-    { type: "delete", label: "삭제", onClick: () => openModal("delete") },
+    { type: "edit", label: Localization.kr.UPDATE, onClick: () => openModal("edit") },
+    { type: "delete", label: Localization.kr.REMOVE, onClick: () => openModal("delete") },
     { type: "addVm", label: "새 가상머신", onClick: () => openModal("addVm") },
   ];
 

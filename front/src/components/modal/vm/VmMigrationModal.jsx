@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import { useHostsForMigration, useMigration } from "../../../api/RQHook";
 import "./MVm.css";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 const VmMigrationModal = ({
   isOpen,
@@ -22,8 +21,8 @@ const VmMigrationModal = ({
 
   useEffect(() => {
     if (selectedVm.id) {
-      console.log("VM id:", selectedVm.id);
-      console.log("ABLEHOST:", ableHost);
+      Logger.debug("VM id:", selectedVm.id);
+      Logger.debug("ABLEHOST:", ableHost);
     }
   }, [selectedVm.id, ableHost]);
 
@@ -31,21 +30,18 @@ const VmMigrationModal = ({
 
   // 되는지 안되는지모름
   const handleFormSubmit = () => {
-    migration(
-      {
-        vmId: selectedVm.id,
-        hostId: selectedHost,
+    migration({
+      vmId: selectedVm.id,
+      hostId: selectedHost,
+    }, {
+      onSuccess: () => {
+        onClose();
+        Logger.debug("Migration successful");
       },
-      {
-        onSuccess: () => {
-          onClose();
-          console.log("Migration successful");
-        },
-        onError: (error) => {
-          console.error("Migration error:", error);
-        },
-      }
-    );
+      onError: (error) => {
+        Logger.error("Migration error:", error);
+      },
+    });
   };
 
   return (

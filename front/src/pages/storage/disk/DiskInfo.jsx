@@ -8,7 +8,7 @@ import DiskVms from "./DiskVms";
 import DiskDomains from "./DiskDomains";
 import DiskModals from "../../../components/modal/disk/DiskModals";
 import Localization from "../../../utils/Localization";
-import { useDiskById } from "../../../api/RQHook";
+import { useDisk } from "../../../api/RQHook";
 import { rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 
@@ -27,7 +27,7 @@ const DiskInfo = () => {
     isLoading: isDiskLoading,
     isError: isDiskError,
     isSuccess: isDiskSuccess,
-  } = useDiskById(diskId);
+  } = useDisk(diskId);
 
   const [activeTab, setActiveTab] = useState("general");
   const [activeModal, setActiveModal] = useState(null);
@@ -74,10 +74,10 @@ const DiskInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "edit", label: "편집", onClick: () => openModal("edit") },
-    { type: "delete", label: "삭제", onClick: () => openModal("delete") },
-    { type: "move", label: "이동", onClick: () => openModal("move") },
-    { type: "copy", label: "복사", onClick: () => openModal("copy") },
+    { type: "edit", label: Localization.kr.UPDATE, onClick: () => openModal("edit") },
+    { type: "delete", label: Localization.kr.REMOVE, onClick: () => openModal("delete") },
+    { type: "move", label: Localization.kr.MOVE, onClick: () => openModal("move") },
+    { type: "copy", label: Localization.kr.COPY, onClick: () => openModal("copy") },
     // { type: 'upload', label: '업로드', onClick: () => openModal('restart') },
   ];
 

@@ -1,4 +1,4 @@
-import { useDiskById } from "../../../api/RQHook";
+import { useDisk } from "../../../api/RQHook";
 import InfoTable from "../../../components/table/InfoTable";
 import { checkZeroSizeToGB, convertBytesToGB } from "../../../util";
 import Localization from "../../../utils/Localization";
@@ -17,7 +17,7 @@ const DiskGeneral = ({ diskId }) => {
     isLoading: isDiskLoading,
     isError: isDiskError,
     isSuccess: isDiskSuccess,
-  } = useDiskById(diskId);
+  } = useDisk(diskId);
 
   const tableRows = [
     { label: Localization.kr.ALIAS, value: disk?.alias },

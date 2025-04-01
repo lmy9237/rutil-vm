@@ -7,8 +7,8 @@ import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import {
-  useAllActiveDomainFromDataCenter,
-  useAllDiskProfileFromDomain,
+  useAllActiveDomainsFromDataCenter,
+  useAllDiskProfilesFromDomain,
   useAddDiskFromVM,
   useEditDiskFromVM,
   useDiskAttachmentFromVm,
@@ -16,6 +16,7 @@ import {
 } from "../../../api/RQHook";
 import { checkKoreanName, convertBytesToGB, convertGBToBytes } from "../../../util";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 // 이 모달은 가상머신 생성에서 디스크 생성, 편집에서 사용될 예정
 // 또한 가상머신-디스크 에서 디스크 생성, 편집에서 사용될 예정
@@ -63,7 +64,7 @@ const VmDiskModal = ({
   onCreateDisk,
   onClose,  
 }) => {
-  const dLabel = editMode ? "편집" : "생성";
+  const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [activeTab, setActiveTab] = useState("img");
   const handleTabClick = (tab) => { setActiveTab(tab) };
 
@@ -81,11 +82,11 @@ const VmDiskModal = ({
 
   // 선택한 데이터센터가 가진 도메인 가져오기
   const { data: domains = [], isLoading: isDomainsLoading } = 
-    useAllActiveDomainFromDataCenter(dataCenterId || vm?.dataCenterVo?.id, (e) => ({ ...e }));
+    useAllActiveDomainsFromDataCenter(dataCenterId || vm?.dataCenterVo?.id, (e) => ({ ...e }));
 
   // 선택한 도메인이 가진 디스크 프로파일 가져오기
   const { data: diskProfiles = [], isLoading: isDiskProfilesLoading, } = 
-    useAllDiskProfileFromDomain(storageDomainVo.id, (e) => ({ ...e }));
+    useAllDiskProfilesFromDomain(storageDomainVo.id, (e) => ({ ...e }));
 
   useEffect(() => {
     if (vmName) {
@@ -206,7 +207,7 @@ const VmDiskModal = ({
       diskProfileVo: { id: selectedDiskProfile.id },
       isCreated: true, // 🚀 생성된 디스크는 isCreated: true
     };
-    console.log("Form Data: ", newDisk);
+    Logger.debug(`Form Data: ${JSON.stringify(newDisk, null, 2)}`);
     onCreateDisk(newDisk);
     onClose();
   };    
@@ -223,7 +224,7 @@ const VmDiskModal = ({
 
     const selectedDomain = domains.find((dm) => dm.id === storageDomainVo.id);
     const selectedDiskProfile = diskProfiles.find((dp) => dp.id === diskProfileVo.id);
-    console.log("Form Data: ", selectedDomain);
+    Logger.debug(`Form Data: ${JSON.stringify(selectedDomain, null, 2)}`);
 
     // 전송 객체
     const dataToSubmit = {
@@ -252,12 +253,11 @@ const VmDiskModal = ({
       toast.success(`가상머신 디스크 ${dLabel} 완료`);
     };
     const onError = (err) => toast.error(`Error ${dLabel} disk: ${err}`);
-
-    console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
+    Logger.debug(`데이터 : ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터를 확인하기 위한 로그
 
     editMode
-    ? editDiskVm({vmId, diskAttachmentId: formState?.id, diskAttachment: dataToSubmit },{ onSuccess, onError })
-    : addDiskVm({ vmId, diskData: dataToSubmit },{ onSuccess, onError });
+      ? editDiskVm({ vmId, diskAttachmentId: formState?.id, diskAttachment: dataToSubmit },{ onSuccess, onError })
+      : addDiskVm({ vmId, diskData: dataToSubmit },{ onSuccess, onError });
   };
 
   return (

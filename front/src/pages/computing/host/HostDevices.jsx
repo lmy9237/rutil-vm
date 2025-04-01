@@ -1,5 +1,5 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { useHostdeviceFromHost } from "../../../api/RQHook";
+import { useHostDevicesFromHost } from "../../../api/RQHook";
 import Tables from "../../../components/table/Tables";
 import Logger from "../../../utils/Logger";
 
@@ -17,7 +17,7 @@ const HostDevices = ({ hostId }) => {
     isLoading: isHostDevicesLoading,
     isError: isHostDevicesError,
     isSuccess: isHostDevicesSuccess,
-  } = useHostdeviceFromHost(hostId, (e) => ({ ...e }));
+  } = useHostDevicesFromHost(hostId, (e) => ({ ...e }));
 
   Logger.debug("...")
   return (

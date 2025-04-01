@@ -8,6 +8,7 @@ import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
 import "./MVm.css";
+import Logger from "../../../utils/Logger";
 
 const initialFormState = {
   id: "",
@@ -55,27 +56,27 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
           imageId: disk?.imageId,
       }})),
     };
+    Logger.debug(`VmSnapshotModal > handleFormSubmit ... snap: ${JSON.stringify(dataToSubmit, null, 2)}`);
 
-    console.log("snap: ", dataToSubmit);
-
-    addSnapshotFromVM({ vmId, snapshotData: dataToSubmit },
-      {
-        onSuccess: () => {
-          setSelectedDisks([]); // ✅ 선택된 디스크 초기화
-          onClose();
-          toast.success("스냅샷 생성 완료");
-        },
-        onError: (error) => {
-          toast.error("Error adding snapshot:", error);
-        },
-      }
-    );
+    addSnapshotFromVM({
+      vmId,
+      snapshotData: dataToSubmit
+    }, {
+       onSuccess: () => {
+         setSelectedDisks([]); // ✅ 선택된 디스크 초기화
+         onClose();
+         toast.success("스냅샷 생성 완료");
+       },
+       onError: (error) => {
+         toast.error("Error adding snapshot:", error);
+       },
+    });
   };
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"스냅샷"}
-      submitTitle={"생성"}
+      submitTitle={Localization.kr.CREATE}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "500px"}} 
     >

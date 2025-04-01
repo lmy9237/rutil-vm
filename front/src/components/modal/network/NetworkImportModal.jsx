@@ -3,9 +3,10 @@ import BaseModal from "../BaseModal";
 import { useAllNetworkProviders } from "../../../api/RQHook";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
-import "./MNetwork.css";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
+import Logger from "../../../utils/Logger";
+import "./MNetwork.css";
 
 const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
   const {
@@ -14,7 +15,7 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
   } = useAllNetworkProviders();
 
   useEffect(() => {
-    console.log("📢 네트워크 공급자 데이터:", networkProvider);
+    Logger.debug(`NetworkImportModal ... 📢 네트워크 공급자 데이터: ${JSON.stringify(networkProvider)}`);
   }, [networkProvider]);
 
   const [networkList, setNetworkList] = useState([
@@ -24,8 +25,7 @@ const NetworkImportModal = ({ isOpen, onClose, onSubmit }) => {
       networkId: "ID-1234",
       dataCenter: `예시 ${Localization.kr.DATA_CENTER}`,
       allowAll: false,
-    },
-    {
+    }, {
       id: "network_2",
       name: "네트워크 B",
       networkId: "ID-5678",

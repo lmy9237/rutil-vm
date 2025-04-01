@@ -1,3 +1,4 @@
+import Localization from "../../utils/Localization";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 
 const TemplateActionButtons = ({
@@ -8,8 +9,8 @@ const TemplateActionButtons = ({
 }) => {
 
   const basicActions = [
-    { type: "edit", label: "편집", disabled: isEditDisabled, onBtnClick: () => openModal("edit")  },
-    { type: "delete", label: "삭제", disabled: isDeleteDisabled, onBtnClick: () => openModal("delete")  },
+    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled, onBtnClick: () => openModal("edit")  },
+    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled, onBtnClick: () => openModal("delete")  },
   ];
 
   return (

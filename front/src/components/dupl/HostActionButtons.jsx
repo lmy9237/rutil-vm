@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 import { rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import ActionButton from "../button/ActionButton";
@@ -36,9 +34,9 @@ const HostActionButtons = ({
   const isMaintenance = status === "MAINTENANCE";
 
   const basicActions = [
-    { type: "create", label: "생성", disabled: false, onBtnClick: () => openModal("create")  },
-    { type: "edit", label: "편집", disabled: isEditDisabled , onBtnClick: () => openModal("edit") },
-    { type: "delete", label: "삭제", disabled: isDeleteDisabled, onBtnClick: () => openModal("delete")  },
+    { type: "create", label: Localization.kr.CREATE, disabled: false, onBtnClick: () => openModal("create")  },
+    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled , onBtnClick: () => openModal("edit") },
+    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled, onBtnClick: () => openModal("delete")  },
   ];
 
   const manageActions = [
@@ -58,22 +56,14 @@ const HostActionButtons = ({
     >
       {!isContextMenu && (
         <div ref={dropdownRef} className="dropdown-container">
-
           <ActionButton iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown} 
             label={Localization.kr.MANAGEMENT}
             onClick={toggleDropdown} 
           />
-          {activeDropdown && (<div className="dropdown-menu">
-            {manageActions.map(({ type, label, disabled }) => (
-
-//           <ActionButton onClick={toggleDropdown} label="관리" iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown} />
-//           {activeDropdown && (
-//             <div className="dropdown-menu context-menu-item">
-//               {manageActions.map(({ type, label, disabled }) => (
-// >>>>>>> 963fb8b ([f])
-                <button
-                  key={type}
-                  
+          {activeDropdown && (
+            <div className="dropdown-menu">
+              {manageActions.map(({ type, label, disabled }) => (
+                <button key={type}
                   onClick={() => openModal(type)}
                   disabled={disabled}
                   className="btn-right-click"

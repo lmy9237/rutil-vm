@@ -8,7 +8,7 @@ import ActionButton from "../../../components/button/ActionButton";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import { checkZeroSizeToGB } from "../../../util";
 import Logger from "../../../utils/Logger";
-import { useAllUnregisteredDiskFromDomain } from "../../../api/RQHook";
+import { useAllUnregisteredDisksFromDomain } from "../../../api/RQHook";
 
 /**
  * @name DomainImportDisks
@@ -23,7 +23,7 @@ const DomainImportDisks = ({ domainId }) => {
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
-  } = useAllUnregisteredDiskFromDomain(domainId, (e) => ({ ...e }));
+  } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDisks, setSelectedDisks] = useState([]); // 다중 선택된 데이터센터

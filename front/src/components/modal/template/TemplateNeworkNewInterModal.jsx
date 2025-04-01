@@ -10,6 +10,7 @@ import {
   useEditNicFromTemplate,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 const TemplateNeworkNewInterModal = ({
   isOpen,
@@ -51,7 +52,7 @@ const TemplateNeworkNewInterModal = ({
   }, [isOpen]);
 
   useEffect(() => {
-    console.log("template ID아아아:", templateId); // vmId 값 확인
+    Logger.debug(`TemplateNetworkNewInterModal.templateId: ${templateId}`); // vmId 값 확인
   }, [templateId]);
 
   // 템플릿 내 네트워크인터페이스 목록
@@ -63,7 +64,7 @@ const TemplateNeworkNewInterModal = ({
   }));
 
   useEffect(() => {
-    console.log("useEffect 호출 - nicData 상태:", nicData);
+    Logger.debug(`TemplateNetworkNewInterModal.nicData: ${JSON.stringify(nicData)}`);
     if (editMode && nicData) {
       setId(nicData.id);
       setName(nicData.name);
@@ -106,7 +107,7 @@ const TemplateNeworkNewInterModal = ({
       plugged,
       macAddress,
     };
-    console.log("네트워크인터페이스 생성, 편집데이터:", dataToSubmit);
+    Logger.debug(`TemplateNetworkNewInterModal > handleFormSubmit ... dataToSubmit: ${JSON.stringify(dataToSubmit, null, 2)}`);
 
     if (editMode && nicData) {
       editNicFromTemplate(
@@ -144,13 +145,13 @@ const TemplateNeworkNewInterModal = ({
     }
   };
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
       targetName={Localization.kr.NICS}
-      submitTitle={editMode ? "편집" : "생성"}
+      submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
       onSubmit={handleFormSubmit}
     >
       {/* <div className="new-network-interface modal"> */}

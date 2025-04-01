@@ -3,9 +3,11 @@ import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import "./MVm.css";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 const VmDeviceAddModal = ({ isOpen, onClose, hostDevices }) => {
-  console.log("...")
+  
+  Logger.debug("...")
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={`${Localization.kr.HOST} 장치`}
@@ -42,7 +44,7 @@ const VmDeviceAddModal = ({ isOpen, onClose, hostDevices }) => {
           <TablesOuter
             columns={TableColumnsInfo.ALL_DISK}
             data={hostDevices}
-            onRowClick={() => console.log("Row clicked")}
+            onRowClick={() => {}}
           />
         </div>
       </div>
@@ -53,7 +55,7 @@ const VmDeviceAddModal = ({ isOpen, onClose, hostDevices }) => {
           <TablesOuter
             columns={TableColumnsInfo.ALL_DISK}
             data={hostDevices}
-            onRowClick={() => console.log("Row clicked")}
+            onRowClick={() => {}}
           />
         </div>
       </div>

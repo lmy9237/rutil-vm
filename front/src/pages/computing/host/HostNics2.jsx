@@ -1,19 +1,16 @@
 /*삭제예정 */
 import React, { useState, useEffect, useRef } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowsAltH, faCrown, faDesktop, faTimes } from "@fortawesome/free-solid-svg-icons";
 import HostNetworkModal from "../../../components/modal/host/HostNetworkModal";
-import { useHost, useNetworkFromCluster, useNetworkInterfaceFromHost } from "../../../api/RQHook";
-import { renderTFStatusIcon, renderUpDownStatusIcon } from "../../../components/Icon";
+import { useHost, useNetworkFromCluster, useNetworkInterfacesFromHost } from "../../../api/RQHook";
 import { checkZeroSizeToMbps } from "../../../util";
-import { RVI16, rvi16Star } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
+import { status2Icon } from "../../../components/icons/RutilVmIcons";
 
 
 const HostNics = ({ hostId }) => {
   const { data: host } = useHost(hostId);
   
-  const { data: hostNics = [] } = useNetworkInterfaceFromHost(hostId, (e) => ({ ...e }));
+  const { data: hostNics = [] } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
 
   const transformedData = hostNics.map((e) => ({
@@ -63,7 +60,6 @@ const HostNics = ({ hostId }) => {
   // NIC 데이터 변환
   // const transformedData = nics.map((e) => ({
   //   ...e,
-  //   icon: renderUpDownStatusIcon(e?.status),
   //   ipv4: e?.ip?.address || "없음",
   //   ipv6: e?.ipv6?.address || "없음",
   //   macAddress: e?.macAddress || "정보없음",
@@ -87,7 +83,7 @@ const HostNics = ({ hostId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    Logger.debug("NIC 데이터 확인:", transformedData);
+    Logger.debug(`NIC 데이터: ${JSON.stringify(transformedData, null, 2)}`);
   }, [transformedData]);
 
 
@@ -171,7 +167,7 @@ const HostNics = ({ hostId }) => {
           }
   
           if (outerItem.id === targetId) {
-            const targetHasBond = outerItem.name.startsWith("bond"); // bond 그룹인지 확인
+            const targetHasBond = outerItem.name.startsWith("bond"); // bond 그룹여부
             const targetHasMultipleChildren = outerItem.children.length > 1; // 이미 2개 이상 container가 있는지
             const targetHasNetwork = outerItem.networks.length > 0; // 네트워크가 걸려 있는지
           
@@ -352,7 +348,7 @@ const HostNics = ({ hostId }) => {
                       onDragStart={(e) => dragStart(e, network, "networkOuter", outerItem.id)}
                     >
                       <div className="left-section">
-                        {renderTFStatusIcon(network?.status==="OPERATIONAL")}{network.name}
+                        {status2Icon(network?.status)}{network.name}
                       </div>
                       <div className="right-section">
                         {network?.role && <FontAwesomeIcon icon={faDesktop} className="icon" />}
@@ -379,7 +375,7 @@ const HostNics = ({ hostId }) => {
             onDragStart={(e) => dragStart(e, net, "unassigned")}
           >
             <div className="flex items-center justify-center">
-              {renderTFStatusIcon(net?.status==="OPERATIONAL")}{net?.name}<br/>
+              {status2Icon(net?.status)}{net?.name}<br/>
               {net?.vlan === 0 ? "":`(VLAN ${net?.vlan})` }
             </div>
           </div>
@@ -401,14 +397,14 @@ const HostNics = ({ hostId }) => {
                       <div className="font-medium">{nic.name}</div>
                     ) : (
                       <div className="font-medium flex items-center gap-2">
-                        {renderTFStatusIcon(nic.status === "UP")}
+                        {status2Icon(nic.status)}
                         <span>{nic.name}</span>
                       </div>
                     )}
 
                     {nic.bondingVo?.slaves?.length > 0 && nic.bondingVo.slaves.map((s) => (
                       <div key={s.id} className="border rounded-xl p-3 mt-3 flex items-center justify-between">
-                        {renderTFStatusIcon(nic.status === "UP")} <span>{s.name}</span>
+                        {status2Icon(nic.status)} <span>{s.name}</span>
                       </div>
                     ))}
                   </div>
@@ -425,7 +421,7 @@ const HostNics = ({ hostId }) => {
                 .map((nic) => (
                   <div className="border rounded-xl p-3 mt-3 flex items-center justify-between">
                     <div className="font-semibold flex items-center gap-2">
-                      {renderTFStatusIcon(nic.network.status)} {nic.network.name}
+                      {status2Icon(nic.network.status)} {nic.network.name}
                     </div>
                   </div>
               ))}  

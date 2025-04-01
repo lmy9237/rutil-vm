@@ -9,6 +9,8 @@ import {
   useActivateDiskFromVm,
   useDeactivateDiskFromVm,
 } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name VmDiskActionModal
@@ -41,15 +43,15 @@ const VmDiskActionModal = ({ isOpen, action, onClose, vmId, data }) => {
 
   const getContentLabel = () => {
     const labels = {
-      deactivate: "비활성화",
-      activate: "활성화",
+      deactivate: Localization.kr.DEACTIVATE,
+      activate: Localization.kr.ACTIVATE,
     };
     return labels[action] || "";
   };
 
   const handleAction = (actionFn) => {
     ids.forEach((diskAttachId, index) => {
-      console.log(`vmID: ${vmId}, diskId: ${diskAttachId}}`);
+      Logger.debug(`vmID: ${vmId}, diskId: ${diskAttachId}}`);
       actionFn(
         { vmId: vmId, diskAttachmentId: diskAttachId }, // 수정된 부분
         {

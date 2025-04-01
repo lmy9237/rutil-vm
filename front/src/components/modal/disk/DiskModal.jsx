@@ -7,15 +7,16 @@ import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import {
-  useDiskById,
+  useDisk,
   useAddDisk,
   useEditDisk,
   useAllActiveDataCenters,
-  useAllActiveDomainFromDataCenter,
-  useAllDiskProfileFromDomain,
+  useAllActiveDomainsFromDataCenter,
+  useAllDiskProfilesFromDomain,
 } from "../../../api/RQHook";
 import { checkName, convertBytesToGB } from "../../../util";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 const initialFormState = {
   id: "",
@@ -39,7 +40,7 @@ const sparseList = [
 ];
 
 const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
-  const dLabel = editMode ? "편집" : "생성";
+  const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [formState, setFormState] = useState(initialFormState);
 
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
@@ -49,9 +50,9 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   const { mutate: addDisk } = useAddDisk();
   const { mutate: editDisk } = useEditDisk();
 
-  const { data: disk } = useDiskById(diskId);
-  
-  console.log("diskId: ", diskId);
+  const { data: disk } = useDisk(diskId);
+  Logger.debug(`DiskModal.diskId: ${diskId}`);
+
   const { 
     data: datacenters = [], 
     isLoading: isDatacentersLoading 
@@ -59,12 +60,12 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   const { 
     data: domains = [], 
     isLoading: isDomainsLoading 
-  } = useAllActiveDomainFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
+  } = useAllActiveDomainsFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
 
   const { 
     data: diskProfiles = [], 
     isLoading: isDiskProfilesLoading 
-  } = useAllDiskProfileFromDomain(domainVo?.id || undefined, (e) => ({ ...e }));
+  } = useAllDiskProfilesFromDomain(domainVo?.id || undefined, (e) => ({ ...e }));
 
 
   const [activeTab, setActiveTab] = useState("img");
@@ -152,7 +153,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
     };
     const onError = (err) => toast.error(`Error ${dLabel} disk: ${err}`);
 
-    console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
+    Logger.debug(`DiskModal > dataToSubmit ... ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터를 확인하기 위한 로그
 
     editMode
       ? editDisk(

@@ -15,182 +15,251 @@ import Logger from "../utils/Logger";
  * @returns 
  * @see ApiManager.findAllTreeNaviations
  */
-export const useAllTreeNavigations = (type = "none", mapPredicate=null) => {
-  return useQuery({
-    refetchOnWindowFocus: true,
-    queryKey: ['allTreeNavigations', type],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
-    queryFn: async () => {
-      Logger.debug(`[allTreeNavigations] useAllTreeNavigations ... `);
-      const res = await ApiManager.findAllTreeNaviations(type);  // type을 기반으로 API 호출
-      return mapPredicate 
-        ? validate(res)?.map((e) => mapPredicate(e)) ?? [] // 데이터 가공 처리
-        : validate(res) ?? []; // 기본 데이터 반환
-    }
-  });
-};
+export const useAllTreeNavigations = (
+  type="none", 
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['allTreeNavigations', type],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
+  queryFn: async () => {
+    const res = await ApiManager.findAllTreeNaviations(type);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllTreeNavigations ... type: ${type}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
+  },
+});
+
 //#endregion
 
 //#region: Dashboard
-export const useDashboard = (mapPredicate=null) => useQuery({
+export const useDashboard = (
+  
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboard'],
   queryFn: async () => {
-    Logger.debug(`[dashboard] useDashboard ...`);
     const res = await ApiManager.getDashboard()
-    return validate(res)
-  }
-}); 
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useDashboard ... res: ${JSON.stringify(_res, null , 2)}`);
+    return _res
+  },
+});
 
-export const useDashboardCpuMemory = (mapPredicate) => useQuery({
+export const useDashboardCpuMemory = (
+  
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardCpuMemory'],
   queryFn: async () => {
-    Logger.debug(`useDashboardCpuMemory ...`);
     const res = await ApiManager.getCpuMemory()
-    return validate(res) ?? []
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
-  }
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useDashboardCpuMemory ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
+  },
 });
-export const useDashboardStorage = (mapPredicate) => useQuery({
+
+export const useDashboardStorage = (
+
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardStorage'],
   queryFn: async () => {
     const res = await ApiManager.getStorage()
-    return validate(res) ?? []
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
-  }
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useDashboardStorage ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
+  },
 });
-export const useDashboardHosts = (mapPredicate) => useQuery({
+
+export const useDashboardHosts = (
+  
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardHosts'],
   queryFn: async () => {
-    Logger.debug(`useDashboardHosts ...`);
     const res = await ApiManager.getHosts()
-    return validate(res) ?? []
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
-  }
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useDashboardHosts ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
+  },
 });
-export const useDashboardDomain = (mapPredicate) => useQuery({
+
+export const useDashboardDomain = (
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardDomain'],
   queryFn: async () => {
-    Logger.debug(`useDashboardDomain ...`);
     const res = await ApiManager.getDomain()
-    
-    return validate(res) ?? []
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
-  }
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useDashboardDomain ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
+  },
 });
-export const useDashboardHost = (hostId, mapPredicate) => useQuery({
+
+export const useDashboardHost = (
+  hostId,
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardHost'],
   queryFn: async () => {
-    Logger.debug(`useDashboardHost ...`, hostId);
     const res = await ApiManager.getHost(hostId)
-    
-    return validate(res) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useDashboardHost ... hostId: ${hostId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
-  }
+  },
 });
-export const useDashboardVmCpu = (mapPredicate) => useQuery({
+
+export const useDashboardVmCpu = (
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardVmCpu'],
   queryFn: async () => {
-    Logger.debug(`useDashboardVmCpu ...`);
-    const res = await ApiManager.getVmCpu()
-    
-    return validate(res) ?? []
+    const res = await ApiManager.getVmCpu();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useDashboardVmCpu ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
-  }
+  },
 });
-export const useDashboardVmMemory = (mapPredicate) => useQuery({
+
+export const useDashboardVmMemory = (
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardVmMemory'],
   queryFn: async () => {
-    Logger.debug(`useDashboardVmMemory ...`);
     const res = await ApiManager.getVmMemory()
-    
-    return validate(res) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useDashboardVmMemory ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
-  }
+  },
 });
-export const useDashboardStorageMemory = (mapPredicate) => useQuery({
+
+export const useDashboardStorageMemory = (
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardStorageMemory'],
   queryFn: async () => {
-    Logger.debug(`useDashboardStorageMemory ...`);
     const res = await ApiManager.getStorageMemory()
-    
-    return validate(res) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useDashboardStorageMemory ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
-  }
+  },
 });
 
-export const useDashboardPerVmCpu = (mapPredicate) => useQuery({
+export const useDashboardPerVmCpu = (
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardPerVmCpu'],
   queryFn: async () => {
-    Logger.debug(`dashboardPerVmCpu ...`);
     const res = await ApiManager.getPerVmCpu()
-    
-    return validate(res) ?? []
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
-  }
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > dashboardPerVmCpu ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
+  },
 });
-export const useDashboardPerVmMemory = (mapPredicate) => useQuery({
+
+export const useDashboardPerVmMemory = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardPerVmMemory'],
   queryFn: async () => {
-    Logger.debug(`dashboardPerVmMemory ...`);
     const res = await ApiManager.getPerVmMemory()
-    
-    return validate(res) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > dashboardPerVmMemory ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
   }
 });
-export const useDashboardPerVmNetwork = (mapPredicate) => useQuery({
+export const useDashboardPerVmNetwork = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardPerVmNetwork'],
   queryFn: async () => {
     Logger.debug(`dashboardPerVmNetwork ...`);
     const res = await ApiManager.getPerVmNetwork()
-    
-    return validate(res) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > dashboardPerVmNetwork ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
   }
 });
 
-export const useDashboardMetricVmCpu = (mapPredicate) => useQuery({
+export const useDashboardMetricVmCpu = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardMetricVmCpu'],
   queryFn: async () => {
     Logger.debug(`useDashboardMetricVmCpu ...`);
     const res = await ApiManager.getMetricVmCpu()
-    return validate(res) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useDashboardMetricVmCpu ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   }
 });
-export const useDashboardMetricVmMemory = (mapPredicate) => useQuery({
+export const useDashboardMetricVmMemory = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardMetricVmMemory'],
   queryFn: async () => {
-    Logger.debug(`useDashboardMetricVmMemory ...`);
     const res = await ApiManager.getMetricVmMemory()
-    return validate(res) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useDashboardMetricVmMemory ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   }
 });
-export const useDashboardMetricStorage = (mapPredicate) => useQuery({
+export const useDashboardMetricStorage = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardMetricStorage'],
   queryFn: async () => {
-    Logger.debug(`useDashboardMetricStorage ...`);
     const res = await ApiManager.getMetricStorage()
-    return validate(res) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useDashboardMetricStorage ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   }
 });
 //#endregion
 
 
-//#region: DataCenter ----------------데이터센터----------------
+//#region: DataCenter (데이터센터)
 /**
  * @name useAllDataCenters
  * @description 데이터센터 목록조회 useQuery훅
@@ -199,14 +268,18 @@ export const useDashboardMetricStorage = (mapPredicate) => useQuery({
  * 
  * @see ApiManager.findAllDataCenters
  */
-export const useAllDataCenters = (mapPredicate) => useQuery({
+export const useAllDataCenters = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allDataCenters'],
   queryFn: async () => {
-    Logger.debug(`useAllDataCenters ...`);
-    const res = await ApiManager.findAllDataCenters()
-    
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const res = await ApiManager.findAllDataCenters();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllDataCenters ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 });
 /**
@@ -216,13 +289,16 @@ export const useAllDataCenters = (mapPredicate) => useQuery({
  * @param {function} mapPredicate 객체 변형 처리
  * @see ApiManager.findDataCenter
  */
-export const useDataCenter = (dataCenterId) => useQuery({
+export const useDataCenter = (
+  dataCenterId,
+) => useQuery({
   refetchOnWindowFocus: true,  // 윈도우가 포커스될 때마다 데이터 리프레시
   queryKey: ['dataCenter', dataCenterId],  // queryKey에 dataCenterId를 포함시켜 dataCenterId가 변경되면 다시 요청
   queryFn: async () => {
-    Logger.debug(`useDataCenter ...`);
     const res = await ApiManager.findDataCenter(dataCenterId);  // dataCenterId에 따라 API 호출
-    return validate(res) ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
+    const _res = validate(res) ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
+    Logger.debug(`RQHook > useDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!dataCenterId, 
 });
@@ -237,13 +313,19 @@ export const useDataCenter = (dataCenterId) => useQuery({
  * 
  * @see ApiManager.findAllClustersFromDataCenter
  */
-export const useClustersFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+export const useClustersFromDataCenter = (
+  dataCenterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['clustersFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    Logger.debug(`clustersFromDataCenter ...`);
     const res = await ApiManager.findAllClustersFromDataCenter(dataCenterId); 
-    return validate(res)?.map(mapPredicate) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > clustersFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!dataCenterId, // dataCenterId가 있을 때만 쿼리를 실행
 });
@@ -258,14 +340,20 @@ export const useClustersFromDataCenter = (dataCenterId, mapPredicate) => useQuer
  * 
  * @see ApiManager.findAllHostsFromDataCenter
  */
-export const useHostsFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+export const useHostsFromDataCenter = (
+  dataCenterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['hostsFromDataCenter', dataCenterId], 
   queryFn: async () => {
     // if(dataCenterId === '') return [];
-    Logger.debug(`hostsFromDataCenter ... ${dataCenterId}`);
     const res = await ApiManager.findAllHostsFromDataCenter(dataCenterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useHostsFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!dataCenterId, 
 });
@@ -279,13 +367,19 @@ export const useHostsFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findAllVmsFromDataCenter
  */
-export const useVMsFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+export const useVMsFromDataCenter = (
+  dataCenterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['vmsFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    Logger.debug(`vmsFromDataCenter ... ${dataCenterId}`);
     const res = await ApiManager.findAllVmsFromDataCenter(dataCenterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate 
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? []; // 데이터 가공
+    Logger.debug(`RQHook > useVMsFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!dataCenterId, // dataCenterId가 있을 때만 쿼리 실행
   staleTime: 0,
@@ -301,13 +395,19 @@ export const useVMsFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findAllDomainsFromDataCenter
  */
-export const useDomainsFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+export const useDomainsFromDataCenter = (
+  dataCenterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['domainsFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    Logger.debug(`domainsFromDataCenter ... ${dataCenterId}`);
     const res = await ApiManager.findAllDomainsFromDataCenter(dataCenterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useDomainsFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!dataCenterId, // dataCenterId가 있을 때만 쿼리 실행
 });
@@ -321,13 +421,19 @@ export const useDomainsFromDataCenter = (dataCenterId, mapPredicate) => useQuery
  * 
  * @see ApiManager.findAllNetworksFromDataCenter
  */
-export const useNetworksFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+export const useNetworksFromDataCenter = (
+  dataCenterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['networksFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    Logger.debug(`networksFromDataCenter ... ${dataCenterId}`);
     const res = await ApiManager.findAllNetworksFromDataCenter(dataCenterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useNetworksFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!dataCenterId
 });
@@ -341,13 +447,19 @@ export const useNetworksFromDataCenter = (dataCenterId, mapPredicate) => useQuer
  * 
  * @see ApiManager.findAllEventsFromDataCenter
  */
-export const useEventsFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+export const useEventsFromDataCenter = (
+  dataCenterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['eventsFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    Logger.debug(`eventsFromDataCenter ... ${dataCenterId}`);
     const res = await ApiManager.findAllEventsFromDataCenter(dataCenterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useEventsFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 });
 
@@ -361,13 +473,19 @@ export const useEventsFromDataCenter = (dataCenterId, mapPredicate) => useQuery(
  * 
  * @see ApiManager.findTemplatesFromDataCenter
  */
-export const useFindTemplatesFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+export const useFindTemplatesFromDataCenter = (
+  dataCenterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['findTemplatesFromDataCenter', dataCenterId ], 
+  queryKey: ['templatesFromDataCenter', dataCenterId ], 
   queryFn: async () => {
-    Logger.debug(`findTemplatesFromDataCenter ...`, dataCenterId);
     const res = await ApiManager.findTemplatesFromDataCenter(dataCenterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useFindTemplatesFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!dataCenterId, 
 });
@@ -381,13 +499,19 @@ export const useFindTemplatesFromDataCenter = (dataCenterId, mapPredicate) => us
  * 
  * @see ApiManager.findDiskListFromDataCenter
  */
-export const useFindDiskListFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+export const useFindDiskListFromDataCenter = (
+  dataCenterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['FindDiskListFromDataCenter', dataCenterId ], 
+  queryKey: ['diskListFromDataCenter', dataCenterId ], 
   queryFn: async () => {
-    Logger.debug(`FindDiskListFromDataCenter ...`, dataCenterId);
     const res = await ApiManager.findDiskListFromDataCenter(dataCenterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useFindDiskListFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!dataCenterId, 
 });
@@ -402,13 +526,19 @@ export const useFindDiskListFromDataCenter = (dataCenterId, mapPredicate) => use
  * 
  * @see ApiManager.findAllISOFromDataCenter
  */
-export const useCDFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+export const useCDFromDataCenter = (
+  dataCenterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['CDFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    // Logger.debug(`useCDFromDataCenter ...`, dataCenterId);
     const res = await ApiManager.findAllISOFromDataCenter(dataCenterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useCDFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!dataCenterId, 
 });
@@ -422,38 +552,51 @@ export const useCDFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findVNicFromDataCenter
  */
-export const useAllvnicFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+export const useAllvnicFromDataCenter = (
+  dataCenterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllnicFromVM', dataCenterId], 
   queryFn: async () => {
     const res = await ApiManager.findVNicFromDataCenter(dataCenterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllvnicFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!dataCenterId, 
   staleTime: 0,
   cacheTime: 0,
 })
-
-
 /**
  * @name useAddDataCenter
  * @description 데이터센터 생성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.addDataCenter
  */
-export const useAddDataCenter = (postSuccess=()=>{}, postError) => {
+export const useAddDataCenter = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (dataCenterData) => await ApiManager.addDataCenter(dataCenterData),
-    onSuccess: (data) => {
-      Logger.debug('VM 생성데이터:', data);
+    mutationFn: async (dataCenterData) => {
+      const res = await ApiManager.addDataCenter(dataCenterData)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddDataCenter ... dataCenterData: ${JSON.stringify(dataCenterData, null, 2)}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddDataCenter ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allDataCenters'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess()
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -461,20 +604,29 @@ export const useAddDataCenter = (postSuccess=()=>{}, postError) => {
  * @name useEditDataCenter
  * @description 데이터센터 수정 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.editDataCenter
  */
-export const useEditDataCenter = (postSuccess=()=>{}, postError) => {
+export const useEditDataCenter = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  
   return useMutation({
-    mutationFn: async ({ dataCenterId, dataCenterData }) => await ApiManager.editDataCenter(dataCenterId, dataCenterData),
-    onSuccess: () => {
+    mutationFn: async ({ dataCenterId, dataCenterData }) => {
+      const res = await ApiManager.editDataCenter(dataCenterId, dataCenterData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditDataCenter ... dataCenterId: ${dataCenterId}, dataCenterData: ${JSON.stringify(dataCenterData, null, 2)}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditDataCenter ... res: ${JSON.stringify(res, null, 2)}`)
       queryClient.invalidateQueries('allDataCenters');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -482,20 +634,29 @@ export const useEditDataCenter = (postSuccess=()=>{}, postError) => {
  * @name useDeleteDataCenter
  * @description 데이터센터 삭제 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.deleteDataCenter
  */
-export const useDeleteDataCenter = (postSuccess=()=>{}, postError) => {
+export const useDeleteDataCenter = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({ 
-    mutationFn: async (dataCenterId) => await ApiManager.deleteDataCenter(dataCenterId),
-    onSuccess: () => {
+    mutationFn: async (dataCenterId) => {
+      const res = await ApiManager.deleteDataCenter(dataCenterId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeleteDataCenter ... dataCenterId: ${dataCenterId}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteDataCenter ... res: ${JSON.stringify(res, null, 2)}`)
       queryClient.invalidateQueries('allDataCenters');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -503,7 +664,7 @@ export const useDeleteDataCenter = (postSuccess=()=>{}, postError) => {
 //#endregion: DataCenter
 
 
-//#region: Cluster ----------------클러스터---------------------
+//#region: Cluster (클러스터)
 /**
  * @name useAllClusters
  * @description 클러스터 목록조회 useQuery훅
@@ -511,14 +672,18 @@ export const useDeleteDataCenter = (postSuccess=()=>{}, postError) => {
  * @param {function} mapPredicate 객체 변형 처리
  * @see ApiManager.findAllClusters
  */
-export const useAllClusters = (mapPredicate) => useQuery({
+export const useAllClusters = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allClusters'],
   queryFn: async () => {
-    Logger.debug(`useAllClusters ...`);
     const res = await ApiManager.findAllClusters()
-    
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllClusters ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 })
 /**
@@ -528,13 +693,18 @@ export const useAllClusters = (mapPredicate) => useQuery({
  * @param {function} mapPredicate 객체 변형 처리
  * @see ApiManager.findAllUpClusters
  */
-export const useAllUpClusters = (mapPredicate) => useQuery({
+export const useAllUpClusters = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allClusters'],
   queryFn: async () => {
-    Logger.debug(`useAllUpClusters ...`);
     const res = await ApiManager.findAllUpClusters()
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllUpClusters ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   }
 })
 /**
@@ -546,14 +716,16 @@ export const useAllUpClusters = (mapPredicate) => useQuery({
  * 
  * @see ApiManager.findCluster
  */
-export const useCluster = (clusterId) => useQuery({
+export const useCluster = (
+  clusterId
+) => useQuery({
   refetchOnWindowFocus: true,  // 윈도우 포커스 시 데이터 리프레시
   queryKey: ['cluster', clusterId],  // queryKey에 clusterId를 포함시켜 clusterId가 변경되면 다시 요청
   queryFn: async () => {
-    // if (!clusterId) return {};  // clusterId가 없을 때 빈 객체 반환
-    Logger.debug(`useCluster ... ${clusterId}`);
-    const res = await ApiManager.findCluster(clusterId);  // clusterId에 따라 API 호출
-    return validate(res) ?? {};  // 반환값이 없으면 빈 객체 반환
+    const res = await ApiManager.findCluster(clusterId);
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!clusterId, 
   staleTime: 0,  // 항상 최신 데이터를 유지
@@ -569,18 +741,24 @@ export const useCluster = (clusterId) => useQuery({
  * 
  * @see ApiManager.findNetworksFromCluster
  */
-export const useNetworkFromCluster = (clusterId, mapPredicate) => useQuery({
+export const useNetworkFromCluster = (
+  clusterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['networkFromCluster', clusterId], 
   queryFn: async () => {
-    Logger.debug(`테스트해보기useNetworkFromCluster ... ${clusterId}`);
     const res = await ApiManager.findNetworksFromCluster(clusterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useNetworkFromCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
-  enabled: !!clusterId, 
+  enabled: !!clusterId,
 })
 /**
- * @name useHostFromCluster
+ * @name useHostsFromCluster
  * @description 클러스터 내 호스트 목록조회 useQuery훅
  * 
  * @param {string} clusterId 클러스터ID
@@ -589,21 +767,26 @@ export const useNetworkFromCluster = (clusterId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findHostsFromCluster
  */
-export const useHostFromCluster = (clusterId, mapPredicate) => useQuery({
+export const useHostsFromCluster = (
+  clusterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['hostsFromCluster', clusterId], 
   queryFn: async () => {
-    Logger.debug(`useHostFromCluster ... ${clusterId}`);
     const res = await ApiManager.findHostsFromCluster(clusterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useHostsFromCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!clusterId, 
   staleTime: 0,
   cacheTime: 0,
 })
-
 /**
- * @name useVMFromCluster
+ * @name useVMsFromCluster
  * @description 클러스터 내 가상머신 목록조회 useQuery훅
  * 
  * @param {string} clusterId 클러스터ID
@@ -612,34 +795,49 @@ export const useHostFromCluster = (clusterId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findVMsFromCluster
  */
-export const useVMFromCluster = (clusterId, mapPredicate) => useQuery({
+export const useVMsFromCluster = (
+  clusterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['vmsFromCluster', clusterId], 
   queryFn: async () => {
-    Logger.debug(`useVMFromCluster ... ${clusterId}`);
+    Logger.debug(`useVMsFromCluster ... ${clusterId}`);
     const res = await ApiManager.findVMsFromCluster(clusterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
-  }
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useVMsFromCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
+  },
+  enabled: !!clusterId, 
 })
-// /**
-//  * @name usePermissionFromCluster
-//  * @description 클러스터 내 권한 목록조회 useQuery훅
-//  * 
-//  * @param {string} clusterId 클러스터ID
-//  * @param {function} mapPredicate 목록객체 변형 처리
-//  * @returns useQuery훅
-//  * 
-//  * @see ApiManager.findPermissionsFromCluster
-//  */
-// export const usePermissionFromCluster = (clusterId, mapPredicate) => useQuery({
-//   refetchOnWindowFocus: true,
-//   queryKey: ['permissionsFromCluster', clusterId], 
-//   queryFn: async () => {
-//     Logger.debug(`usePermissionromCluster ... ${clusterId}`);
-//     const res = await ApiManager.findPermissionsFromCluster(clusterId); 
-//     return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
-//   }
-// })
+/**
+ * @name usePermissionsFromCluster
+ * @description 클러스터 내 권한 목록조회 useQuery훅
+ * 
+ * @param {string} clusterId 클러스터ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findPermissionsFromCluster
+ */
+export const usePermissionsFromCluster = (
+  clusterId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['permissionsFromCluster', clusterId], 
+  queryFn: async () => {
+    const res = await ApiManager.findPermissionsFromCluster(clusterId); 
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > usePermissionsFromCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
+  },
+  enabled: !!clusterId, 
+})
 
 /**
  * @name useCpuProfilesFromCluster
@@ -651,13 +849,19 @@ export const useVMFromCluster = (clusterId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findCpuProfilesFromCluster
  */
-export const useCpuProfilesFromCluster = (clusterId, mapPredicate) => useQuery({
+export const useCpuProfilesFromCluster = (
+  clusterId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['cpuProfilesFromCluster', clusterId], 
   queryFn: async () => {
-    Logger.debug(`useHostFromCluster ... ${clusterId}`);
     const res = await ApiManager.findCpuProfilesFromCluster(clusterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useCpuProfilesFromCluster ... ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!clusterId, 
   staleTime: 0,
@@ -674,13 +878,19 @@ export const useCpuProfilesFromCluster = (clusterId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findOsSystemsFromCluster
  */
-export const useOsSystemsFromCluster = (clusterId, mapPredicate) => useQuery({
+export const useOsSystemsFromCluster = (
+  clusterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['osSystemsFromCluster', clusterId], 
   queryFn: async () => {
-    Logger.debug(`useOsSystemsFromCluster ... ${clusterId}`);
     const res = await ApiManager.findOsSystemsFromCluster(clusterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useOsSystemsFromCluster ... ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!clusterId, 
   staleTime: 0,
@@ -697,13 +907,19 @@ export const useOsSystemsFromCluster = (clusterId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findEventsFromCluster
  */
-export const useEventFromCluster = (clusterId, mapPredicate) => useQuery({
+export const useEventFromCluster = (
+  clusterId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['eventsFromCluster', clusterId], 
   queryFn: async () => {
-    Logger.debug(`useEventFromCluster ... ${clusterId}`);
     const res = await ApiManager.findEventsFromCluster(clusterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useEventFromCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!clusterId, 
 })
@@ -712,20 +928,27 @@ export const useEventFromCluster = (clusterId, mapPredicate) => useQuery({
  * @name useAddCluster
  * @description 클러스터 생성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.addCluster
  */
-export const useAddCluster = (postSuccess=()=>{}, postError) => {
+export const useAddCluster = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (clusterData) => await ApiManager.addCluster(clusterData),
-    onSuccess: () => {
+    mutationFn: async (clusterData) => {
+      const res = await ApiManager.addCluster(clusterData);
+      return validate(res)
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddCluster ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -733,20 +956,27 @@ export const useAddCluster = (postSuccess=()=>{}, postError) => {
  * @name useEditCluster
  * @description 클러스터 수정 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.editCluster
  */
-export const useEditCluster = (postSuccess=()=>{}, postError) => {
+export const useEditCluster = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  
   return useMutation({
-    mutationFn: async ({ clusterId, clusterData }) => await ApiManager.editCluster(clusterId, clusterData),
-    onSuccess: () => {
+    mutationFn: async ({ clusterId, clusterData }) => {
+      const res = await ApiManager.editCluster(clusterId, clusterData);
+      return validate(res)
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditCluster ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -754,20 +984,27 @@ export const useEditCluster = (postSuccess=()=>{}, postError) => {
  * @name useDeleteCluster
  * @description 클러스터 삭제 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.deleteCluster
  */
-export const useDeleteCluster = (postSuccess=()=>{}, postError) => {
+export const useDeleteCluster = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({ 
-    mutationFn: async (clusterId) => await ApiManager.deleteCluster(clusterId),
-    onSuccess: () => {
+    mutationFn: async (clusterId) => {
+      const res = await ApiManager.deleteCluster(clusterId)
+      return validate(res)
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteCluster ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -781,13 +1018,18 @@ export const useDeleteCluster = (postSuccess=()=>{}, postError) => {
  * @param {function} mapPredicate 객체 변형 처리
  * @see ApiManager.findAllHosts
  */
-export const useAllHosts = (mapPredicate) => useQuery({
+export const useAllHosts = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allHosts'],
   queryFn: async () => {
     const res = await ApiManager.findAllHosts()
-    
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllHosts ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   }
 })
 /**
@@ -799,27 +1041,23 @@ export const useAllHosts = (mapPredicate) => useQuery({
  * 
  * @see ApiManager.findHost
  */
-export const useHost = (hostId) => useQuery({
+export const useHost = (
+  hostId
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['HostById',hostId],
+  queryKey: ['HostById',hostId], // TODO: host로 변경
   queryFn: async () => {
-    if (!hostId) throw new Error('Host ID is missing.');
-    Logger.debug(`useHost ... ${hostId}`)
     const res = await ApiManager.findHost(hostId)
-    return validate(res) ?? {}
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!hostId
-  // onSuccess: (data) => {
-  //   Logger.debug('host data:', data);
-  // },
-  // onError: (error) => {
-  //   Logger.error('API 에러:', error.message);
-  // },
 })
 
 
 /**
- * @name useVmFromHost
+ * @name useVmsFromHost
  * @description 호스트 내 가상머신 목록조회 useQuery훅
  * 
  * @param {string} hostId
@@ -828,19 +1066,24 @@ export const useHost = (hostId) => useQuery({
  * 
  * @see ApiManager.findVmsFromHost
  */
-export const useVmFromHost = (hostId, mapPredicate) => useQuery({
+export const useVmsFromHost = (
+  hostId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['VmFromHost', hostId], 
+  queryKey: ['vmFromHost', hostId], 
   queryFn: async () => {
-    Logger.debug(`useVmFromHost ... ${hostId}`);
     const res = await ApiManager.findVmsFromHost(hostId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useVmsFromHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!hostId
 })
-
 /**
- * @name useNetworkInterfaceFromHost
+ * @name useNetworkInterfacesFromHost
  * @description 호스트 내 네트워크인터페이스 목록조회 useQuery훅
  * 
  * @param {string} hostId
@@ -849,19 +1092,25 @@ export const useVmFromHost = (hostId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findHostNicsFromHost
  */
-export const useNetworkInterfaceFromHost = (hostId, mapPredicate) => useQuery({
+export const useNetworkInterfacesFromHost = (
+  hostId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['NetworkInterfaceFromHost', hostId], 
   queryFn: async () => {
-    Logger.debug(`useNetworkInterfaceFromHost ... ${hostId}`);
     const res = await ApiManager.findHostNicsFromHost(hostId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useNetworkInterfacesFromHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!hostId
 })
 
 /**
- * @name useHostdeviceFromHost
+ * @name useHostDevicesFromHost
  * @description 호스트 내 호스트장치 목록조회 useQuery훅
  * 
  * @param {string} clusterId 클러스터ID
@@ -870,18 +1119,24 @@ export const useNetworkInterfaceFromHost = (hostId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findHostdevicesFromHost
  */
-export const useHostdeviceFromHost = (hostId, mapPredicate) => useQuery({
+export const useHostDevicesFromHost = (
+  hostId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['HostdeviceFromHost', hostId], 
+  queryKey: ['hostDevicesFromHost', hostId], 
   queryFn: async () => {
-    Logger.debug(`useHostdeviceFromHost ... ${hostId}`);
     const res = await ApiManager.findHostdevicesFromHost(hostId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useHostDevicesFromHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!hostId
 })
 /**
- * @name useEventFromHost
+ * @name useEventsFromHost
  * @description 호스트 내 이벤트 목록조회 useQuery훅
  * 
  * @param {string} clusterId 클러스터ID
@@ -890,13 +1145,19 @@ export const useHostdeviceFromHost = (hostId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findEventsFromHost
  */
-export const useEventFromHost = (hostId, mapPredicate) => useQuery({
+export const useEventsFromHost = (
+  hostId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['EventFromHost', hostId], 
+  queryKey: ['eventsFromHost', hostId], 
   queryFn: async () => {
-    Logger.debug(`EventFromHost ... ${hostId}`);
-    const res = await ApiManager.findEventsFromHost(hostId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const res = await ApiManager.findEventsFromHost(hostId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useEventsFromHost ... hostId: ${hostId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!hostId
 })
@@ -911,26 +1172,21 @@ export const useEventFromHost = (hostId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findAllIscsiFromHost
  */
-export const useIscsiFromHost = (hostId, mapPredicate, postSuccess=()=>{}, postError) => useQuery({
+export const useIscsiFromHost = (
+  hostId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['IscsiFromHost', hostId], 
+  queryKey: ['iscsiFromHost', hostId], 
   queryFn: async () => {
-    // if(hostId === null) return [];
-    Logger.debug(`IscsiFromHost ... ${hostId}`);
-    const res = await ApiManager.findAllIscsiFromHost(hostId); 
-    const processedData = validate(res)?.map((e) => mapPredicate(e)) ?? [];
-    Logger.debug('Processed iSCSI data:', processedData);
-    return processedData; // 데이터 가공 후 반환
+    const res = await ApiManager.findAllIscsiFromHost(hostId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useIscsiFromHost ... hostId: ${hostId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res; // 데이터 가공 후 반환
   },
   enabled: !!hostId,
-  onSuccess: (data) => {
-    Logger.debug('iSCSI data:', data);
-    postSuccess();
-  },
-  onError: (error) => {
-    Logger.error(error.message)
-    postError && postError();
-  },
 })
 
 /**
@@ -943,29 +1199,22 @@ export const useIscsiFromHost = (hostId, mapPredicate, postSuccess=()=>{}, postE
  * 
  * @see ApiManager.findAllFibreFromHost
  */
-export const useFibreFromHost = (hostId, mapPredicate, postSuccess=()=>{}, postError) => useQuery({
+export const useFibreFromHost = (
+  hostId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['fibreFromHost', hostId], 
-  queryFn: async () => {
-    if(hostId === null) return [];
-    Logger.debug(`fibreFromHost ... ${hostId}`);
-    const res = await ApiManager.findAllFibreFromHost(hostId); 
-    const processedData = validate(res)?.map((e) => mapPredicate(e)) ?? [];
-    Logger.debug('Processed Fibre data:', processedData);
-    return processedData; // 데이터 가공 후 반환
+  queryFn: async () => {    
+    const res = await ApiManager.findAllFibreFromHost(hostId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? []; 
+    Logger.debug(`RQHook > useFibreFromHost ... hostId: ${hostId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!hostId,
-  onSuccess: (data) => {
-    Logger.debug('Fibre data:', data);
-    postSuccess();
-  },
-  onError: (error) => {
-    Logger.error(error.message)
-    postError && postError();
-  },
 })
-
-
 /**
  * @name useImportIscsiFromHost
  * @description 호스트 가져오기 iscsi 목록조회 useQuery훅
@@ -976,21 +1225,29 @@ export const useFibreFromHost = (hostId, mapPredicate, postSuccess=()=>{}, postE
  * 
  * @see ApiManager.findImportIscsiFromHost
  */
-export const useImportIscsiFromHost = (postSuccess=()=>{}, postError) => {
-  // const queryClient = useQueryClient();
+export const useImportIscsiFromHost = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({hostId, iscsiData}) => await ApiManager.findImportIscsiFromHost(hostId, iscsiData),
-    onSuccess: (data) => {
-      Logger.debug('iSCSI 가져오기 성공:', data); // 성공한 응답 데이터 출력
+    mutationFn: async ({hostId, iscsiData}) => {
+      const res = await ApiManager.findImportIscsiFromHost(hostId, iscsiData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useImportIscsiFromHost ... hostId: ${hostId}, iscsiData: ${JSON.stringify(iscsiData, null, 2)}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useImportIscsiFromHost ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries(['iscsiFromHost'])
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
-
 /**
  * @name useImportFcpFromHost
  * @description 호스트 가져오기 fcp 목록조회 useQuery훅
@@ -1001,17 +1258,26 @@ export const useImportIscsiFromHost = (postSuccess=()=>{}, postError) => {
  * 
  * @see ApiManager.findImportFcpFromHost
  */
-export const useImportFcpFromHost = (postSuccess=()=>{}, postError) => {
-  // const queryClient = useQueryClient();
+export const useImportFcpFromHost = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ( { hostId } ) => await ApiManager.findImportFcpFromHost(hostId),
-    onSuccess: (data) => {
-      Logger.debug('fcp 가져오기 성공:', data);
+    mutationFn: async ({ hostId }) => {
+      const res = await ApiManager.findImportFcpFromHost(hostId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useImportFcpFromHost ... hostId: ${hostId}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useImportFcpFromHost ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries(['fcpsFromHost'])
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1027,41 +1293,53 @@ export const useImportFcpFromHost = (postSuccess=()=>{}, postError) => {
  * 
  * @see ApiManager.findLoginIscsiFromHost
  */
-export const useLoginIscsiFromHost = (postSuccess=()=>{}, postError) => {
-  // const queryClient = useQueryClient();
+export const useLoginIscsiFromHost = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({hostId, iscsiData}) => await ApiManager.findLoginIscsiFromHost(hostId, iscsiData),
-    onSuccess: (data) => {
-      Logger.debug('iSCSI 로그인 성공:', data); // 성공한 응답 데이터 출력
+    mutationFn: async ({ hostId, iscsiData }) => {
+      const res = await ApiManager.findLoginIscsiFromHost(hostId, iscsiData);
+      return validate(res);
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useLoginIscsiFromHost ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries(['iscsiFromHost'])
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
-
-
 
 /**
  * @name useAddHost
  * @description 호스트 생성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.addHost
  */
-export const useAddHost = (postSuccess=()=>{}, postError) => {
+export const useAddHost = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({hostData, deployHostedEngine}) => await ApiManager.addHost(hostData, deployHostedEngine),
-    onSuccess: () => {
+    mutationFn: async ({ hostData, deployHostedEngine }) => {
+      const res = await ApiManager.addHost(hostData, deployHostedEngine);
+      return validate(res);
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddHost ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allHosts'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화   
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1069,20 +1347,27 @@ export const useAddHost = (postSuccess=()=>{}, postError) => {
  * @name useEditHost
  * @description Host 수정 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.editHost
  */
-export const useEditHost = (postSuccess=()=>{}, postError) => {
+export const useEditHost = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  
   return useMutation({
-    mutationFn: async ({ hostId, hostData }) => await ApiManager.editHost(hostId, hostData),
-    onSuccess: () => {
+    mutationFn: async ({ hostId, hostData }) => {
+      const res = await ApiManager.editHost(hostId, hostData)
+      return validate(res);
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditHost ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allHosts');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1090,20 +1375,27 @@ export const useEditHost = (postSuccess=()=>{}, postError) => {
  * @name useDeleteHost
  * @description Host 삭제 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.deleteHost
  */
-export const useDeleteHost = (postSuccess=()=>{}, postError) => {
+export const useDeleteHost = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({ 
-    mutationFn: async (hostId) => await ApiManager.deleteHost(hostId),
-    onSuccess: () => {
+    mutationFn: async (hostId) => {
+      const res = await ApiManager.deleteHost(hostId)
+      return validate(res);
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteHost ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allHosts');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1112,21 +1404,27 @@ export const useDeleteHost = (postSuccess=()=>{}, postError) => {
  * @name useDeactivateHost
  * @description 호스트 유지보수 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.deactivateHost
  */
-export const useDeactivateHost = (postSuccess=()=>{}, postError) => {
+export const useDeactivateHost = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (hostId) => await ApiManager.deactivateHost(hostId),
-    onSuccess: () => {
-      Logger.debug(`useDeactivateHost ... `);
+    mutationFn: async (hostId) => {
+      const res = await ApiManager.deactivateHost(hostId);
+      return validate(res);
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeactivateHost ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allHosts');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1135,20 +1433,27 @@ export const useDeactivateHost = (postSuccess=()=>{}, postError) => {
  * @name useActivateHost
  * @description 호스트 활성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.activateHost
  */
-export const useActivateHost = (postSuccess=()=>{}, postError) => {
+export const useActivateHost = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (hostId) => await ApiManager.activateHost(hostId),
-    onSuccess: () => {
+    mutationFn: async (hostId) => {
+      const res = await ApiManager.activateHost(hostId)
+      return validate(res);
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useActivateHost ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allHosts');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1157,27 +1462,33 @@ export const useActivateHost = (postSuccess=()=>{}, postError) => {
  * @name useRestartHost
  * @description 호스트 재시작 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.restartHost
  */
-export const useRestartHost = (postSuccess=()=>{}, postError) => {
+export const useRestartHost = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (hostId) => await ApiManager.restartHost(hostId),
-    onSuccess: () => {
-      Logger.debug(`useRestartHost ... `);
+    mutationFn: async (hostId) => {
+      const res = await ApiManager.restartHost(hostId);
+      return validate(res);
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useRestartHost ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allHosts');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
 //#endregion: Host
 
-//#region: VM ----------------가상머신---------------------
+//#region: VM (가상머신)
 /**
  * @name useAllVMs
  * @description 가상머신 목록조회 useQuery훅
@@ -1185,13 +1496,19 @@ export const useRestartHost = (postSuccess=()=>{}, postError) => {
  * @param {function} mapPredicate 객체 변형 처리
  * @see ApiManager.findAllVMs
  */
-export const useAllVMs = (mapPredicate) => useQuery({
+export const useAllVMs = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allVMs'],
   queryFn: async () => {
     const res = await ApiManager.findAllVMs()
-    
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? []; 
+    Logger.debug(`RQHook > useAllVMs ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
+
   },
   staleTime: 2000, // 2초 동안 데이터 재요청 방지
 })
@@ -1203,13 +1520,15 @@ export const useAllVMs = (mapPredicate) => useQuery({
  * @returns useQuery 훅
  * @see ApiManager.findVM
  */
-export const useVmById = (vmId) => useQuery({
+export const useVmById = (
+  vmId
+) => useQuery({
   queryKey: ['VmById', vmId],
   queryFn: async () => {
-    if (!vmId) return {};  
-    Logger.debug(`vmId ID: ${vmId}`);
     const res = await ApiManager.findVM(vmId);
-    return validate(res) ?? {};
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useVmById ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!vmId
 });
@@ -1221,13 +1540,15 @@ export const useVmById = (vmId) => useQuery({
  * @returns useQuery 훅
  * @see ApiManager.findVM
  */
-export const useFindEditVmById = (vmId) => useQuery({
+export const useFindEditVmById = (
+  vmId
+) => useQuery({
   queryKey: ['editVmById', vmId],
   queryFn: async () => {
-    if (!vmId) return {};  
-    Logger.debug(`vmId ID: ${vmId}`);
     const res = await ApiManager.findEditVM(vmId);
-    return validate(res) ?? {};
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useFindEditVmById ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!vmId
 });
@@ -1239,15 +1560,18 @@ export const useFindEditVmById = (vmId) => useQuery({
  * 
  * @param {string} vmId 가상머신 ID
  * @returns useQuery 훅
- * * @see ApiManager.findVM
+ * 
+ * @see ApiManager.findVM
  */
-export const useVm = (vmId) => useQuery({
-  queryKey: ['VmById', vmId],
+export const useVm = (
+  vmId
+) => useQuery({
+  queryKey: ['vmById', vmId],
   queryFn: async () => {
-    if (!vmId) return {};  
-    Logger.debug(`vmId ID: ${vmId}`);
     const res = await ApiManager.findVM(vmId);
-    return validate(res) ?? {};
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useVm ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!vmId
 });
@@ -1263,13 +1587,19 @@ export const useVm = (vmId) => useQuery({
  * 
  * @see ApiManager.findDisksFromVM
  */
-export const useDisksFromVM = (vmId, mapPredicate) => useQuery({
+export const useDisksFromVM = (
+  vmId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['DisksFromVM', vmId], 
+  queryKey: ['disksFromVM', vmId], 
   queryFn: async () => {
-    Logger.debug(`useDisksFromVM ... ${vmId}`);
     const res = await ApiManager.findDisksFromVM(vmId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useDisksFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!vmId, 
 });
@@ -1283,13 +1613,20 @@ export const useDisksFromVM = (vmId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findSnapshotsFromVM
  */
-export const useSnapshotsFromVM = (vmId, mapPredicate) => useQuery({
+export const useSnapshotsFromVM = (
+  vmId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['SnapshotFromVM', vmId], 
   queryFn: async () => {
     Logger.debug(`useSnapshotFromVM ... ${vmId}`);
     const res = await ApiManager.findSnapshotsFromVM(vmId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useDisksFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!vmId, 
 });
@@ -1305,19 +1642,22 @@ export const useSnapshotsFromVM = (vmId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findSnapshotFromVM
  */
-export const useSnapshotDetailFromVM = (vmId, snapshotId) => useQuery({
+export const useSnapshotDetailFromVM = (
+  vmId, snapshotId
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['SnapshotDetailFromVM', vmId, snapshotId], // snapshotId 추가
+  queryKey: ['snapshotDetailFromVM', vmId, snapshotId], // snapshotId 추가
   queryFn: async () => {
     if (!vmId || !snapshotId) {
       console.warn('Missing VM ID or Snapshot ID');
       return {};
     }
-    Logger.debug(`Fetching snapshot details for VM ID: ${vmId}, Snapshot ID: ${snapshotId}`);
     const res = await ApiManager.findSnapshotFromVm(vmId, snapshotId); 
-    return validate(res) ?? {}; 
+    const _res = validate(res) ?? {}; 
+    Logger.debug(`RQHook > useSnapshotDetailFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
-  enabled: !!vmId
+  enabled: !!vmId && !!snapshotId
 });
 
 
@@ -1325,23 +1665,28 @@ export const useSnapshotDetailFromVM = (vmId, snapshotId) => useQuery({
  * @name useAddSnapshotFromVM
  * @description 가상머신 스냅샷 생성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAddSnapshotFromVM = (postSuccess=()=>{}, postError) => {
+export const useAddSnapshotFromVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     // mutationFn: async ({vmId,snapshotData}) => await ApiManager.addSnapshotFromVM(vmId,snapshotData),
     mutationFn: async ({vmId, snapshotData}) => {
-      Logger.debug(`Hook vm: ${vmId}....  ${snapshotData}`)
-      return await ApiManager.addSnapshotFromVM(vmId, snapshotData)
+      const res = await ApiManager.addSnapshotFromVM(vmId, snapshotData)
+      Logger.debug(`RQHook > useAddSnapshotFromVM ... vmId: ${vmId}, snapshotData: ${JSON.stringify(snapshotData, null, 2)}`)
+      return validate(res) ?? {}
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries('SnapshotFromVM'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddSnapshotFromVM ... res: ${JSON.stringify(res)}`)
+      queryClient.invalidateQueries(['snapshotFromVM','snapshotDetailFromVM']); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1350,23 +1695,28 @@ export const useAddSnapshotFromVM = (postSuccess=()=>{}, postError) => {
  * @name useDeleteSnapshot
  * @description 가상머신 스냅샷 삭제 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteSnapshot = (postSuccess=()=>{}, postError) => {
+export const useDeleteSnapshot = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
   return useMutation({
     mutationFn: async ({ vmId, snapshotId }) => {
-      Logger.debug('Deleting snapshot:', vmId, snapshotId);
       const res = await ApiManager.deleteSnapshotFromVM(vmId, snapshotId);
-      return validate(res);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useDeleteSnapshot ... vmId: ${vmId}, snapshotId: ${snapshotId}`)
+      return _res;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries('SnapshotFromVM'); // 쿼리 캐시 무효화
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteSnapshot ... res: ${JSON.stringify(res, null, 2)}`)
+      queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1374,7 +1724,7 @@ export const useDeleteSnapshot = (postSuccess=()=>{}, postError) => {
 
 
 /**
- * @name useHostdevicesFromVM
+ * @name useHostDevicesFromVM
  * @description 가상머신 내 호스트 장치 목록조회 useQuery훅
  * 
  * @param {string} vmId 가상머신ID
@@ -1383,13 +1733,19 @@ export const useDeleteSnapshot = (postSuccess=()=>{}, postError) => {
  * 
  * @see ApiManager.findHostdevicesFromVM
  */
-export const useHostdevicesFromVM = (vmId, mapPredicate) => useQuery({
+export const useHostDevicesFromVM = (
+  vmId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['HostdevicesFromVM', vmId], 
+  queryKey: ['hostDevicesFromVM', vmId], 
   queryFn: async () => {
-    Logger.debug(`useHostdevicesFromVM ... ${vmId}`);
     const res = await ApiManager.findHostdevicesFromVM(vmId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useHostDevicesFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!vmId, 
   staleTime: 0,
@@ -1397,7 +1753,7 @@ export const useHostdevicesFromVM = (vmId, mapPredicate) => useQuery({
 });
 
 /**
- * @name useNetworkInterfaceFromVM
+ * @name useNetworkInterfacesFromVM
  * @description 가상머신 내 네트워크인터페이스 목록조회 useQuery훅
  * 
  * @param {string} vmId 가상머신ID
@@ -1406,45 +1762,54 @@ export const useHostdevicesFromVM = (vmId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findNicsFromVM
  */
-export const useNetworkInterfaceFromVM = (vmId, mapPredicate) => useQuery({
+export const useNetworkInterfacesFromVM = (
+  vmId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['NetworkInterfaceFromVM', vmId], 
+  queryKey: ['networkInterfacesFromVM', vmId], 
   queryFn: async () => {
-    Logger.debug(`useNetworkInterfaceFromVM... ${vmId}`);
     const res = await ApiManager.findNicsFromVM(vmId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useNetworkInterfacesFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!vmId, 
 });
 
 /**
- * @name useNetworkInterfaceByVMId
+ * @name useNetworkInterfaceFromVM
  * @description 가상머신 내 네트워크인터페이스 상세조회 useQuery훅
  * 
  * @param {string} vmId 가상머신ID
- *  * @param {string} nicId 닉ID
+ * @param {string} nicId 네트워크인터페이스ID
+ * 
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
  * @see ApiManager.findNicFromVM
  */
-export const useNetworkInterfaceByVMId = (vmId,nicId) => useQuery({
+export const useNetworkInterfaceFromVM = (
+  vmId,
+  nicId
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['NetworkInterfaceByVMId', vmId], 
+  queryKey: ['networkInterfaceFromVM', vmId], 
   queryFn: async () => {
-    Logger.debug(`useNetworkInterfaceByVMId ... ${vmId}`);
-    Logger.debug(`useNetworkInterfaceByVMId ... ${nicId}`);
-    const res = await ApiManager.findNicFromVM(vmId,nicId); 
-    Logger.debug('API Response:', res); // 반환된 데이터 구조 확인
-    return validate(res) ?? {}; 
+    const res = await ApiManager.findNicFromVM(vmId, nicId); 
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useNetworkInterfaceFromVM ... vmId: ${vmId}, nicId: ${nicId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
-  enabled: !!vmId, 
+  enabled: !!vmId && !!nicId, 
   staleTime: 0,
   cacheTime: 0,
 });
 
 /**
- * @name useApplicationFromVM
+ * @name useApplicationsFromVM
  * @description 가상머신 내 어플리케이션 목록조회 useQuery훅
  * 
  * @param {string} vmId 가상머신ID
@@ -1453,18 +1818,23 @@ export const useNetworkInterfaceByVMId = (vmId,nicId) => useQuery({
  * 
  * @see ApiManager.findApplicationsFromVM
  */
-export const useApplicationFromVM = (vmId, mapPredicate) => useQuery({
+export const useApplicationsFromVM = (
+  vmId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['ApplicationFromVM', vmId], 
   queryFn: async () => {
-    Logger.debug(`useApplicationFromVM ... ${vmId}`);
     const res = await ApiManager.findApplicationsFromVM(vmId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useApplicationsFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   },
   enabled: !!vmId, 
   staleTime: 0,
   cacheTime: 0,
-
 });
 /**
  * @name useAllEventFromVM
@@ -1476,13 +1846,19 @@ export const useApplicationFromVM = (vmId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findAllDataCenterFromDomain
  */
-export const useAllEventFromVM = (vmId, mapPredicate) => useQuery({
+export const useAllEventsFromVM = (
+  vmId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allEventFromVM', vmId], 
   queryFn: async () => {
-    Logger.debug(`useAllEventFromDomain ... ${vmId}`);
-    const res = await ApiManager.findEventsFromVM(vmId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findEventsFromVM(vmId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllEventsFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!vmId
 })
@@ -1490,16 +1866,18 @@ export const useAllEventFromVM = (vmId, mapPredicate) => useQuery({
 
 /**
  * @name useVmConsoleAccessInfo
- * @description 가상머신 콘솔 useMutation 훅
+ * @description 가상머신 콘솔 접속정보 조회
  * 
- * @returns useMutation 훅
  */
-export const useVmConsoleAccessInfo = (vmId, postSuccess=()=>{}, postError) => useQuery({
+export const useVmConsoleAccessInfo = (
+  vmId
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['vmConsoleAccessInfo', vmId], 
   queryFn: async () => {
-    Logger.debug(`useAggregateVmConsole ... ${vmId}`);
     const res = await ApiManager.findVmConsoleAccessInfo(vmId);
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useVmConsoleAccessInfo ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
     return validate(res);
   },
   enabled: !!vmId
@@ -1509,23 +1887,28 @@ export const useVmConsoleAccessInfo = (vmId, postSuccess=()=>{}, postError) => u
  * @name useAddVm
  * @description 가상머신 생성 
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAddVm = (postSuccess=()=>{}, postError) => {
+export const useAddVm = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async (vmData) => {
       const res = await ApiManager.addVM(vmData)
-      return validate(res);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddVm ... vmData: ${JSON.stringify(vmData, null, 2)}`);
+      return _res
     },
-    onSuccess: (data) => {
-      Logger.debug('VM 생성데이터:', data);
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddVm ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVMs'); 
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1533,24 +1916,29 @@ export const useAddVm = (postSuccess=()=>{}, postError) => {
  * @name useEditVm
  * @description 가상머신 수정 
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useEditVm = (postSuccess=()=>{}, postError) => {
+export const useEditVm = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ vmId, vmdata }) => {
-      const res = await ApiManager.editVM(vmId, vmdata);
-      return validate(res);
+    mutationFn: async ({ vmId, vmData }) => {
+      const res = await ApiManager.editVM(vmId, vmData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditVm ... vmData: ${JSON.stringify(vmData, null, 2)}`);
+      return _res;
     },
-    onSuccess: (data,{vmId}) => {
-      Logger.debug('VM 편집한데이터:', data);
+    onSuccess: (res,{vmId}) => {
+      Logger.debug(`RQHook > useEditVm ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVMs');
       queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1559,22 +1947,29 @@ export const useEditVm = (postSuccess=()=>{}, postError) => {
  * @name useDeleteVm
  * @description 가상머신 삭제 useMutation 훅(아이디 잘뜸)
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteVm = (postSuccess=()=>{}, postError) => {
+export const useDeleteVm = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({ 
-    mutationFn: async ({vmId, detachOnly}) => {
-      Logger.debug(`Hook vm: ${vmId}....  ${detachOnly}`)
-      return await ApiManager.deleteVM(vmId, detachOnly)
+    mutationFn: async ({ vmId, detachOnly }) => {
+      const res = await ApiManager.deleteVM(vmId, detachOnly)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeleteVm ... vmId: ${vmId}, detachOnly: ${detachOnly}`);
+      return _res;
     },
-    onSuccess: () => {
+    onSuccess: (res,{vmId}) => {
+      Logger.debug(`RQHook > useDeleteVm ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVMs');
+      queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1583,20 +1978,28 @@ export const useDeleteVm = (postSuccess=()=>{}, postError) => {
  * @name useStartVM
  * @description 가상머신 실행 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useStartVM = (postSuccess=()=>{}, postError) => {
+export const useStartVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (vmId) => await ApiManager.startVM(vmId),
-    onSuccess: () => {
-      Logger.debug(`useStartVM ... `);
+    mutationFn: async (vmId) => {
+      const res = await ApiManager.startVM(vmId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useStartVM ... vmId: ${vmId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useStartVM ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     }, 
   });
 };
@@ -1604,20 +2007,28 @@ export const useStartVM = (postSuccess=()=>{}, postError) => {
  * @name usePauseVM
  * @description 가상머신 일시정지 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const usePauseVM = (postSuccess=()=>{}, postError) => {
+export const usePauseVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (vmId) => await ApiManager.pauseVM(vmId),
-    onSuccess: () => {
-      Logger.debug(`usePauseVM ... `);
+    mutationFn: async (vmId) => {
+      const res = await ApiManager.pauseVM(vmId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > usePauseVM ... vmId: ${vmId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > usePauseVM ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1626,41 +2037,57 @@ export const usePauseVM = (postSuccess=()=>{}, postError) => {
  * @name useShutdownVM
  * @description 가상머신 종료 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useShutdownVM = (postSuccess=()=>{}, postError) => {
+export const useShutdownVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (vmId) => await ApiManager.shutdownVM(vmId),
-    onSuccess: () => {
-      Logger.debug(`useShutdownVM ... `);
+    mutationFn: async (vmId) => {
+      const res = await ApiManager.shutdownVM(vmId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useShutdownVM ... vmId: ${vmId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useShutdownVM ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
 /**
  * @name usePowerOffVM
- * @description 가상머신 전원끔 useMutation 훅
+ * @description 가상머신 전원 끔 (a.k.a 강제 종료) useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const usePowerOffVM = (postSuccess=()=>{}, postError) => {
+export const usePowerOffVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (vmId) => await ApiManager.powerOffVM(vmId),
-    onSuccess: () => {
-      Logger.debug(`usePowerOffVM ... `);
+    mutationFn: async (vmId) => { 
+      const res = await ApiManager.powerOffVM(vmId)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > usePowerOffVM ... vmId: ${vmId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > usePowerOffVM ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },  
   });
 };
@@ -1669,20 +2096,28 @@ export const usePowerOffVM = (postSuccess=()=>{}, postError) => {
  * @name useRebootVM
  * @description 가상머신 재부팅 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useRebootVM = (postSuccess=()=>{}, postError) => {
+export const useRebootVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (vmId) => await ApiManager.rebootVM(vmId),
-    onSuccess: () => {
-      Logger.debug(`useRebootVM ... `);
+    mutationFn: async (vmId) => {
+      const res = await ApiManager.rebootVM(vmId)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useRebootVM ... vmId: ${vmId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useRebootVM ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     }, 
   });
 };
@@ -1690,20 +2125,28 @@ export const useRebootVM = (postSuccess=()=>{}, postError) => {
  * @name useResetVM
  * @description 가상머신 재설정 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useResetVM = (postSuccess=()=>{}, postError) => {
+export const useResetVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (vmId) => await ApiManager.resetVM(vmId),
-    onSuccess: () => {
-      Logger.debug(`useResetVM ... `);
+    mutationFn: async (vmId) => { 
+      const res = await ApiManager.resetVM(vmId)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useResetVM ... vmId: ${vmId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useResetVM ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     }, 
   });
 };
@@ -1712,19 +2155,25 @@ export const useResetVM = (postSuccess=()=>{}, postError) => {
  * @name useHostsForMigration
  * @description 가상머신 마이그레이션 호스트목록  useQuery훅
  * 
- * @param {string} vmId vmid
+ * @param {string} vmId 가상머신ID
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
  * @see ApiManager.migrateHostsFromVM
  */
-export const useHostsForMigration = (vmId, mapPredicate) => useQuery({
+export const useHostsForMigration = (
+  vmId,
+  mapPredicate
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['HostsForMigration', vmId], 
   queryFn: async () => {
-    Logger.debug(`useAllVmsFromTemplate ... ${vmId}`);
     const res = await ApiManager.migrateHostsFromVM(vmId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useHostsForMigration ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!vmId
 })
@@ -1733,20 +2182,28 @@ export const useHostsForMigration = (vmId, mapPredicate) => useQuery({
  * @name useMigration
  * @description 가상머신 마이그레이션 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useMigration = (postSuccess=()=>{}, postError) => {
+export const useMigration = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({vmId,hostId}) => await ApiManager.migrateVM(vmId,hostId),
-    onSuccess: () => {
-      Logger.debug(`useMigration ... `);
-      queryClient.invalidateQueries('HostsForMigration');
+    mutationFn: async ({ vmId, hostId }) => {
+      const res = await ApiManager.migrateVM(vmId, hostId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useMigration ... vmId: ${vmId}, hostId: ${hostId}`);
+      return _res
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useMigration ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries(['hostsForMigration', 'allVms']);
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1755,20 +2212,28 @@ export const useMigration = (postSuccess=()=>{}, postError) => {
  * @name useExportVM
  * @description 가상머신 내보내기 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useExportVM = (postSuccess=()=>{}, postError) => {
+export const useExportVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (vmId) => await ApiManager.exportVM(vmId),
-    onSuccess: () => {
-      Logger.debug(`useExportVM ... `);
+    mutationFn: async (vmId) => {
+      const res = await ApiManager.exportVM(vmId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useExportVM ... vmId: ${vmId}`);
+      return _res
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useExportVM ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1777,47 +2242,59 @@ export const useExportVM = (postSuccess=()=>{}, postError) => {
  * @name useAddNicFromVM
  * @description 가상머신 네트워크 인터페이스 생성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAddNicFromVM = (postSuccess=()=>{}, postError) => {
+export const useAddNicFromVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient(); // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, nicData }) => {
-      Logger.debug('Received vmId:', vmId); // vmId 출력
-      Logger.debug('Received nicData:', nicData); // nicData 출력
-      return await ApiManager.addNicFromVM(vmId, nicData);
+      const res = await ApiManager.addNicFromVM(vmId, nicData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddNicFromVM ... vmId: ${vmId}, nicData: ${nicData}`);
+      return _res
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddNicFromVM ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('NetworkInterfaceFromVM');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
-/** 수정해야됨
+/** 
  * @name useEditNicFromVM
  * @description 가상머신 네트워크 인터페이스 수정 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * 
+ * @todo 수정해야됨
  */
-export const useEditNicFromVM = (postSuccess=()=>{}, postError) => {
+export const useEditNicFromVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  
   return useMutation({
     mutationFn: async ({ vmId, nicId, nicData }) => {
-      Logger.debug('EDIT NIC 요청 데이터:', { vmId, nicId, nicData });
-      return await ApiManager.editNicFromVM(vmId, nicId, nicData);
+      const res = await ApiManager.editNicFromVM(vmId, nicId, nicData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditNicFromVM ... vmId: ${vmId}, nicId: ${nicId}, nicData: ${nicData}`);
+      return _res
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries('NetworkInterfaceFromVM'); 
-      queryClient.invalidateQueries(['NetworkInterfaceByVMId']);
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditNicFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries(['NetworkInterfaceByVMId', 'NetworkInterfaceFromVM']);
       postSuccess();      
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1826,28 +2303,31 @@ export const useEditNicFromVM = (postSuccess=()=>{}, postError) => {
  * @name useDeleteNetworkInterface
  * @description 가상머신 네트워크 인터페이스 삭제 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteNetworkInterface = (postSuccess=()=>{}, postError) => {
+export const useDeleteNetworkInterface = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({ vmId,nicId}) => {
-      // ID들이 제대로 전달되는지 확인하기 위해 로그 추가
-      Logger.debug('Deleting VnicProfile with vmId:', vmId);
-      Logger.debug('Deleting VnicProfile with nicId:', nicId);
-      return await ApiManager.deleteNicFromVM(vmId,nicId);
+    mutationFn: async ({ vmId, nicId }) => {
+      const res = await ApiManager.deleteNicFromVM(vmId, nicId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeleteNetworkInterface ... vmId: ${vmId}, nicId: ${nicId}`);
+      return _res
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteNetworkInterface ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('NetworkInterfaceFromVM');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
-
 /**
  * @name useDiskAttachmentFromVm
  * @description 가상머신 상세조회 useQuery 훅
@@ -1855,40 +2335,48 @@ export const useDeleteNetworkInterface = (postSuccess=()=>{}, postError) => {
  * @param {string} vmId 가상머신 ID
  * @param {string} diskAttachmentId diskAtachment ID
  * @returns useQuery 훅
- * * @see ApiManager.findDiskattachmentFromVM
+ * 
+ * @see ApiManager.findDiskattachmentFromVM
  */
-export const useDiskAttachmentFromVm = (vmId, diskAttachmentId) => useQuery({
+export const useDiskAttachmentFromVm = (
+  vmId, diskAttachmentId
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['DiskAttachmentFromVm', vmId, diskAttachmentId],
+  queryKey: ['diskAttachmentFromVm', vmId, diskAttachmentId],
   queryFn: async () => {
     const res = await ApiManager.findDiskattachmentFromVM(vmId, diskAttachmentId);
-    return validate(res) ?? {};
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useDiskAttachmentFromVm ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!vmId && !!diskAttachmentId,
 });
-
-
-
 /**
  * @name useAddDiskFromVM
  * @description 가상머신 디스크 생성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAddDiskFromVM = (postSuccess=()=>{}, postError) => {
+export const useAddDiskFromVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient(); // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, diskData }) => {
-      Logger.debug(`${Localization.kr.VM} 생성 디스크데이터 diskData: ${diskData}`); // nicData 출력
-      return await ApiManager.addDiskFromVM(vmId, diskData);
+      const res = await ApiManager.addDiskFromVM(vmId, diskData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddDiskFromVM ... vmId: ${vmId}, diskData: ${JSON.stringify(diskData, null, 2)}`);
+      return _res
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries('DisksFromVM');
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddDiskFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('disksFromVM');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1897,22 +2385,28 @@ export const useAddDiskFromVM = (postSuccess=()=>{}, postError) => {
  * @name useEditDiskFromVM
  * @description 가상머신 디스크 수정 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useEditDiskFromVM = (postSuccess=()=>{}, postError) => {
+export const useEditDiskFromVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient(); // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId, diskAttachment }) => {
-      Logger.debug(`${Localization.kr.VM} 수정 디스크데이터: ${diskAttachment}`, );
-      return await ApiManager.editDiskFromVM(vmId, diskAttachmentId, diskAttachment);
+      const res = await ApiManager.editDiskFromVM(vmId, diskAttachmentId, diskAttachment);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditDiskFromVM ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, diskAttachment: ${JSON.stringify(diskAttachment, null, 2)}`);
+      return _res
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries('DisksFromVM');
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditDiskFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('disksFromVM');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1921,23 +2415,28 @@ export const useEditDiskFromVM = (postSuccess=()=>{}, postError) => {
  * @name useDeleteDiskFromVM
  * @description 가상머신 디스크 삭제 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteDiskFromVM = (postSuccess=()=>{}, postError) => {
+export const useDeleteDiskFromVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId, detachOnly }) => {
-      // ID들이 제대로 전달되는지 확인하기 위해 로그 추가
-      Logger.debug(`vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, detachOnly: ${detachOnly}`);
-      await ApiManager.deleteDiskFromVM(vmId, diskAttachmentId, detachOnly);
+      const res = ApiManager.deleteDiskFromVM(vmId, diskAttachmentId, detachOnly);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeleteDiskFromVM ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, detachOnly: ${detachOnly}`);
+      return _res
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries('DisksFromVM');
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteDiskFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('allDisksFromVm');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1947,21 +2446,28 @@ export const useDeleteDiskFromVM = (postSuccess=()=>{}, postError) => {
  * @name useConnDiskFromVM
  * @description 가상머신 디스크 연결 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useConnDiskFromVM = (postSuccess=()=>{}, postError) => {
+export const useConnDiskFromVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, diskAttachment }) => {
-      return await ApiManager.attachDiskFromVM(vmId, diskAttachment);
+      const res = await ApiManager.attachDiskFromVM(vmId, diskAttachment);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useConnDiskFromVM ... vmId: ${vmId}, diskAttachment: ${JSON.stringify(diskAttachment, null, 2)}`);
+      return _res
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['DisksFromVM']); 
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useConnDiskFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries(['allDisksFromVm']); 
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1970,21 +2476,28 @@ export const useConnDiskFromVM = (postSuccess=()=>{}, postError) => {
  * @name useConnDiskListFromVM
  * @description 가상머신 디스크 연결 복수 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useConnDiskListFromVM = (postSuccess=()=>{}, postError) => {
+export const useConnDiskListFromVM = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentList }) => {
-      return await ApiManager.attachDisksFromVM(vmId, diskAttachmentList);
+      const res = await ApiManager.attachDisksFromVM(vmId, diskAttachmentList);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useConnDiskListFromVM ... vmId: ${vmId}, diskAttachmentList: ${JSON.stringify(diskAttachmentList, null, 2)}`);
+      return _res
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['DisksFromVM']); 
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useConnDiskListFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('allDisksFromVm');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -1993,21 +2506,29 @@ export const useConnDiskListFromVM = (postSuccess=()=>{}, postError) => {
  * @name useDeactivateDiskFromVm
  * @description 가상머신 디스크 비활성화 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.deactivateHost
  */
-export const useDeactivateDiskFromVm = (postSuccess=()=>{}, postError) => {
+export const useDeactivateDiskFromVm = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({vmId, diskAttachmentId}) => await ApiManager.deactivateDisksFromVM(vmId, diskAttachmentId),
-    onSuccess: () => {
-      Logger.debug(`useDeactivateDiskFromVm ... `);
+    mutationFn: async ({ vmId, diskAttachmentId }) => {
+      const res = await ApiManager.deactivateDisksFromVM(vmId, diskAttachmentId);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useDeactivateDiskFromVm ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}`);
+      return _res
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeactivateDiskFromVm ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allDisksFromVm');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -2016,67 +2537,79 @@ export const useDeactivateDiskFromVm = (postSuccess=()=>{}, postError) => {
  * @name useActivateDiskFromVm
  * @description 가상머신 디스크 활성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.activateHost
  */
-export const useActivateDiskFromVm  = (postSuccess=()=>{}, postError) => {
+export const useActivateDiskFromVm = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({vmId, diskAttachmentId}) => await ApiManager.activateDisksFromVM(vmId, diskAttachmentId),
-    onSuccess: () => {
+    mutationFn: async ({ vmId, diskAttachmentId }) => {
+      const res = await ApiManager.activateDisksFromVM(vmId, diskAttachmentId);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useActivateDiskFromVm ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}`);
+      return _res
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useActivateDiskFromVm ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allDisksFromVm');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     }, 
   });
 };
 
-
 // 보류
-// /**
-//  * @name useFindDiskFromVM
-//  * @description 가상머신 연결한 디스크 useQuery훅
-//  * 
-//  * @param {string} vmId 가상머신ID
-//  *  * @param {string} diskId 디스크 ID
-//  * @param {function} mapPredicate 목록객체 변형 처리
-//  * @returns useQuery훅
-//  * 
-//  * @see ApiManager.findNicFromVM
-//  */
-// export const useFindDiskFromVM = (vmId,diskId) => useQuery({
-//   refetchOnWindowFocus: true,
-//   queryKey: ['FindDiskFromVM', vmId], 
-//   queryFn: async () => {
-//     Logger.debug(`useFindDiskFromVM vm아이디... ${vmId}`);
-//     Logger.debug(`useFindDiskFromVM 디스크아이디 ... ${diskId}`);
-//     const res = await ApiManager.findDiskFromVM(vmId,diskId); 
-//     Logger.debug('API Response:', res); // 반환된 데이터 구조 확인
-//     return validate(res) ?? {}; 
-//   },
-
-// });
-
-
+/**
+ * @name useFindDiskFromVM
+ * @description 가상머신 연결한 디스크 useQuery훅
+ * 
+ * @param {string} vmId 가상머신ID
+ *  * @param {string} diskId 디스크 ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findNicFromVM
+ */
+/*
+export const useFindDiskFromVM = (vmId,diskId) => useQuery({
+   refetchOnWindowFocus: true,
+   queryKey: ['FindDiskFromVM', vmId], 
+   queryFn: async () => {
+     Logger.debug(`useFindDiskFromVM vm아이디... ${vmId}`);
+     Logger.debug(`useFindDiskFromVM 디스크아이디 ... ${diskId}`);
+     const res = await ApiManager.findDiskFromVM(vmId,diskId); 
+     Logger.debug('API Response:', res); // 반환된 데이터 구조 확인
+     return validate(res) ?? {}; 
+   },
+});
+*/
 //#endregion: VM
 
-//#region: TEMPLATE ----------------템플릿---------------------
+//#region: Template (템플릿)
 /**
  * @name useAllTemplates
  * @description 템플릿 목록조회 useQuery훅
  * 
  * @param {function} mapPredicate 객체 변형 처리
  */
-export const useAllTemplates = (mapPredicate) => useQuery({
+export const useAllTemplates = (
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allTemplates'],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplates()
-    
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllTemplates ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 });
 
@@ -2084,18 +2617,20 @@ export const useAllTemplates = (mapPredicate) => useQuery({
  * @name useTemplate
  * @description Template 상세조회 useQuery 훅
  * 
- * @param {string} tId Template ID
+ * @param {string} templateId Template ID
  * @returns useQuery 훅
  */
-export const useTemplate = (tId) => useQuery({
-  queryKey: ['tId', tId],
+export const useTemplate = (
+  templateId
+) => useQuery({
+  queryKey: ['template',templateId],
   queryFn: async () => {
-    if (!tId) return {};  
-    Logger.debug(`Template ID: ${tId}`);
-    const res = await ApiManager.findTemplate(tId);
-    return validate(res) ?? {};
+    const res = await ApiManager.findTemplate(templateId);
+    const _res =  validate(res) ?? {};
+    Logger.debug(`RQHook > useTemplate ... templateId: ${templateId} res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
-  enabled: !!tId,
+  enabled: !!templateId,
   staleTime: 0,
   cacheTime: 0,
 });
@@ -2104,42 +2639,54 @@ export const useTemplate = (tId) => useQuery({
  * @name useAllVmsFromTemplate
  * @description Template 내 가상머신 목록조회 useQuery훅
  * 
- * @param {string} tId TemplateID
+ * @param {string} templateId TemplateID
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
  * @see ApiManager.useAllVmsFromTemplate
  */
-export const useAllVmsFromTemplate = (tId, mapPredicate) => useQuery({
+export const useAllVmsFromTemplate = (
+  templateId,
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllVmsFromTemplate', tId], 
+  queryKey: ['AllVmsFromTemplate', templateId], 
   queryFn: async () => {
-    Logger.debug(`useAllVmsFromTemplate ... ${tId}`);
-    const res = await ApiManager.findVMsFromTemplate(tId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const res = await ApiManager.findVMsFromTemplate(templateId); 
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllVmsFromTemplate ... templateId: ${templateId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
-  enabled: !!tId,
+  enabled: !!templateId,
 })
 
 /**
  * @name useAllNicsFromTemplate
  * @description Template 내 네트워크 목록조회 useQuery훅
  * 
- * @param {string} tId TemplateID
+ * @param {string} templateId TemplateID
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
  * @see ApiManager.findAllVMsFromDomain
  */
-export const useAllNicsFromTemplate = (tId, mapPredicate) => useQuery({
+export const useAllNicsFromTemplate = (
+  templateId,
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllNicsFromTemplate', tId], 
+  queryKey: ['allNicsFromTemplate', templateId], 
   queryFn: async () => {
-    Logger.debug(`useAllNicsFromTemplate ... ${tId}`);
-    const res = await ApiManager.findNicsFromTemplate(tId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findNicsFromTemplate(templateId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllVmsFromTemplate ... templateId: ${templateId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
-  enabled: !!tId,
+  enabled: !!templateId,
   staleTime: 0,
   cacheTime: 0,
 })
@@ -2148,21 +2695,27 @@ export const useAllNicsFromTemplate = (tId, mapPredicate) => useQuery({
  * @name useAllDisksFromTemplate
  * @description Template 내 디스크 목록조회 useQuery훅
  * 
- * @param {string} tId TemplateID
+ * @param {string} templateId TemplateID
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
  * @see ApiManager.findAllVMsFromDomain
  */
-export const useAllDisksFromTemplate = (tId, mapPredicate) => useQuery({
+export const useAllDisksFromTemplate = (
+  templateId,
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllDisksFromTemplate', tId], 
+  queryKey: ['allDisksFromTemplate', templateId], 
   queryFn: async () => {
-    Logger.debug(`useAllDisksFromTemplate ... ${tId}`);
-    const res = await ApiManager.findDisksFromTemplate(tId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findDisksFromTemplate(templateId); 
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllDisksFromTemplate ... templateId: ${templateId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
-  enabled: !!tId,
+  enabled: !!templateId,
 })
 
 /**
@@ -2175,15 +2728,21 @@ export const useAllDisksFromTemplate = (tId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findStorageDomainsFromTemplate
  */
-export const useAllStoragesFromTemplate = (tId, mapPredicate) => useQuery({
+export const useAllStoragesFromTemplate = (
+  templateId,
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllStoragesFromTemplate', tId], 
+  queryKey: ['AllStoragesFromTemplate', templateId], 
   queryFn: async () => {
-    Logger.debug(`useAllStoragesFromTemplate ... ${tId}`);
-    const res = await ApiManager.findStorageDomainsFromTemplate(tId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findStorageDomainsFromTemplate(templateId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllDisksFromTemplate ... templateId: ${templateId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
-  enabled: !!tId,
+  enabled: !!templateId,
   staleTime: 0,
   cacheTime: 0,
 })
@@ -2193,43 +2752,55 @@ export const useAllStoragesFromTemplate = (tId, mapPredicate) => useQuery({
  * @name useAllEventFromTemplate
  * @description  Template 내  이벤트 목록조회 useQuery훅
  * 
- * @param {string} tId TemplateID
+ * @param {string} templateId TemplateID
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
  * @see ApiManager.findAllDataCenterFromDomain
  */
-export const useAllEventFromTemplate = (tId, mapPredicate) => useQuery({
+export const useAllEventFromTemplate = (
+  templateId,
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllEventFromTemplate', tId], 
+  queryKey: ['allEventFromTemplate', templateId], 
   queryFn: async () => {
-    Logger.debug(`useAllEventFromTemplate ... ${tId}`);
-    const res = await ApiManager.findEventsFromTemplate(tId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findEventsFromTemplate(templateId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] 
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllEventFromTemplate ... templateId: ${templateId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
-  enabled: !!tId,
+  enabled: !!templateId,
 })
 
 /**
  * @name useAddTemplate
  * @description Template 생성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAddTemplate = (postSuccess=()=>{}, postError) => {
+export const useAddTemplate = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({vmId, templateData} ) =>{
-      Logger.debug(`Hook vm: ${vmId}....  ${templateData}`)
-      return await ApiManager.addTemplate(vmId, templateData)
+    mutationFn: async ({ vmId, templateData }) => {
+      const res = await ApiManager.addTemplate(vmId, templateData)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddTemplate ... vmId: ${vmId}, templateData: ${JSON.stringify(templateData, null, 2)}`)
+      return _res
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddTemplate ... res: ${JSON.stringify(res, null, 2)}`)
       queryClient.invalidateQueries('allTemplates');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -2237,65 +2808,89 @@ export const useAddTemplate = (postSuccess=()=>{}, postError) => {
  * @name useEditTemplate
  * @description Template 수정 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useEditTemplate = (postSuccess=()=>{}, postError) => {
+export const useEditTemplate = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  
   return useMutation({
-    mutationFn: async ({ templateId, templateData }) => await ApiManager.editTemplate(templateId, templateData),
-    onSuccess: (data, variables) => {
-      const { templateId } = variables; // variables에서 templateId 추출
+    mutationFn: async ({ templateId, templateData }) => {
+      const res = await ApiManager.editTemplate(templateId, templateData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditTemplate ... templateId: ${templateId}, templateData: ${JSON.stringify(templateData, null, 2)}`)
+      return _res;
+    },
+    onSuccess: (res,{ templateId }) => {
+      Logger.debug(`RQHook > useEditTemplate ... res: ${JSON.stringify(res, null, 2)}`)
       queryClient.invalidateQueries('allTemplates');
-      queryClient.invalidateQueries(['templateId', templateId]); // templateId 올바르게 사용
+      queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
-
-
 /**
  * @name useDeleteTemplate
  * @description Template 삭제 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteTemplate = (postSuccess=()=>{}, postError) => {
+export const useDeleteTemplate = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({ 
-    mutationFn: async (templateId) => await ApiManager.deleteTemplate(templateId),
-    onSuccess: () => {
+    mutationFn: async (templateId) => {
+      const res = await ApiManager.deleteTemplate(templateId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeleteTemplate ... templateId: ${templateId}`)
+      return _res;
+    },
+    onSuccess: (res,{templateId}) => {
+      Logger.debug(`RQHook > useEditTemplate ... res: ${JSON.stringify(res, null, 2)}`)
       queryClient.invalidateQueries('allTemplates');
+      queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
-
-
 /**
  * @name useAddNicFromTemplate
  * @description 템플릿 네트워크 생성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAddNicFromTemplate = (postSuccess=()=>{}, postError) => {
+export const useAddNicFromTemplate = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({templateId,nicData}) => await ApiManager.addNicFromTemplate(templateId,nicData),
-    onSuccess: () => {
-      queryClient.invalidateQueries('AllNicsFromTemplate'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
+    mutationFn: async ({ templateId, nicData }) => {
+      const res = await ApiManager.addNicFromTemplate(templateId, nicData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddNicFromTemplate ... templateId: ${templateId}, nicData: ${JSON.stringify(nicData, null, 2)}`)
+      return _res;
+    },
+    onSuccess: (res,{templateId}) => {
+      Logger.debug(`RQHook > useAddNicFromTemplate ... res: ${JSON.stringify(res, null, 2)}`)
+      queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
+      queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -2303,23 +2898,29 @@ export const useAddNicFromTemplate = (postSuccess=()=>{}, postError) => {
  * @name useEditNicFromTemplate
  * @description 템플릿 네트워크 수정 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useEditNicFromTemplate = (postSuccess=()=>{}, postError) => {
+export const useEditNicFromTemplate = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();
-  
   return useMutation({
-    mutationFn: async ({ templateId, nicId, nicData }) => 
-      await ApiManager.editNicFromTemplate(templateId, nicId, nicData), // nicId 추가
-  
-    onSuccess: () => {
-      queryClient.invalidateQueries('AllNicsFromTemplate'); // 전체 네트워크 목록 업데이트
-      // queryClient.invalidateQueries(['tId', templateId]); // 수정된 네트워크 상세 정보 업데이트
+    mutationFn: async ({ templateId, nicId, nicData }) => {
+      const res = await ApiManager.editNicFromTemplate(templateId, nicId, nicData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditNicFromTemplate ... templateId: ${templateId}, nicId: ${nicId}, nicData: ${JSON.stringify(nicData, null, 2)}`)
+      return _res;
+    },
+    onSuccess: (res,{templateId}) => {
+      Logger.debug(`RQHook > useEditNicFromTemplate ... res: ${JSON.stringify(res, null, 2)}`)
+      queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
+      queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -2329,33 +2930,35 @@ export const useEditNicFromTemplate = (postSuccess=()=>{}, postError) => {
  * @name useDeleteNetworkFromTemplate
  * @description 템플릿 네트워크 삭제 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteNetworkFromTemplate = (postSuccess=()=>{}, postError) => {
+export const useDeleteNetworkFromTemplate = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({ templateId,nicId,detachOnly}) => {
-      // ID들이 제대로 전달되는지 확인하기 위해 로그 추가
-      Logger.debug('삭제할 템플릿id:', templateId );
-      Logger.debug('Deleting VnicProfile with nicId:', nicId);
-      return await ApiManager.deleteNicFromTemplate(templateId,nicId, detachOnly);
+    mutationFn: async ({ templateId, nicId, detachOnly }) => {
+      const res = await ApiManager.deleteNicFromTemplate(templateId, nicId, detachOnly);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditNicFromTemplate ... templateId: ${templateId}, nicId: ${nicId}, detachOnly: ${detachOnly}`)
+      return _res;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries('AllNicsFromTemplate');
+    onSuccess: (res,{templateId}) => {
+      Logger.debug(`RQHook > useEditNicFromTemplate ... res: ${JSON.stringify(res, null, 2)}`)
+      queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
+      queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
+//#endregion: Template (탬플릿)
 
-//#endregion: TEMPLATE
-
-
-
-//#region: Network -----------------네트워크---------------------
+//#region: Network (네트워크)
 /**
  * @name useAllNetworks
  * @description 네트워크 목록조회 useQuery훅
@@ -2363,29 +2966,36 @@ export const useDeleteNetworkFromTemplate = (postSuccess=()=>{}, postError) => {
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  */
-export const useAllNetworks = (mapPredicate) => useQuery({
+export const useAllNetworks = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allNetworks'],
   queryFn: async () => {
-    const res = await ApiManager.findAllNetworks()
-    
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const res = await ApiManager.findAllNetworks();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useFibreFromHost ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
   }
 });
 /**
- * @name useNetworkById
+ * @name useNetwork
  * @description 네트워크 상세조회 useQuery 훅
  * 
  * @param {string} networkId 네트워크 ID
  * @returns useQuery 훅
  */
-export const useNetworkById = (networkId) => useQuery({
-  queryKey: ['networkById', networkId],
+export const useNetwork = (
+  networkId
+) => useQuery({
+  queryKey: ['network', networkId],
   queryFn: async () => {
-    if (!networkId) return {};  // networkId가 없는 경우 빈 객체 반환
-    Logger.debug(`Fetching network with ID: ${networkId}`);
     const res = await ApiManager.findNetwork(networkId);
-    return validate(res) ?? {};
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useFibreFromHost ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!networkId,
   staleTime: 0,
@@ -2401,13 +3011,19 @@ export const useNetworkById = (networkId) => useQuery({
  * 
  * @see ApiManager.findAllClustersFromNetwork
  */
-export const useAllClustersFromNetwork = (networkId, mapPredicate) => useQuery({
+export const useAllClustersFromNetwork = (
+  networkId,
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['clustersFromNetwork', networkId],
   queryFn: async () => {
-    Logger.debug(`useAllClustersFromNetwork ... ${networkId}`);
-    const res = await ApiManager.findAllClustersFromNetwork(networkId);  // 클러스터 목록을 가져오는 API 호출
-    return validate(res)?.map((e) => mapPredicate(e)) ?? [];
+    const res = await ApiManager.findAllClustersFromNetwork(networkId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllClustersFromNetwork ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!networkId,
 })
@@ -2421,13 +3037,19 @@ export const useAllClustersFromNetwork = (networkId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findConnectedHostsFromNetwork
  */
-export const useConnectedHostsFromNetwork = (networkId, mapPredicate) => useQuery({
+export const useConnectedHostsFromNetwork = (
+  networkId,
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['connectedHostsFromNetwork', networkId], 
   queryFn: async () => {
-    Logger.debug(`useConnectedHostsFromNetwork ... ${networkId}`);
-    const res = await ApiManager.findConnectedHostsFromNetwork(networkId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const res = await ApiManager.findConnectedHostsFromNetwork(networkId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useConnectedHostsFromNetwork ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!networkId, 
   staleTime: 0,
@@ -2445,13 +3067,19 @@ export const useConnectedHostsFromNetwork = (networkId, mapPredicate) => useQuer
  * 
  * @see ApiManager.findDisconnectedHostsFromNetwork
  */
-export const useDisconnectedHostsFromNetwork = (networkId, mapPredicate) => useQuery({
+export const useDisconnectedHostsFromNetwork = (
+  networkId, 
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['disconnectedHostsFromNetwork', networkId], 
   queryFn: async () => {
-    Logger.debug(`useDisconnectedHostsFromNetwork ... ${networkId}`);
-    const res = await ApiManager.findDisconnectedHostsFromNetwork(networkId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const res = await ApiManager.findDisconnectedHostsFromNetwork(networkId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useDisconnectedHostsFromNetwork ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!networkId, 
   staleTime: 0,
@@ -2469,7 +3097,10 @@ export const useDisconnectedHostsFromNetwork = (networkId, mapPredicate) => useQ
  * 
  * @see ApiManager.findAllVmsFromNetwork
  */
-export const useAllVmsFromNetwork = (networkId, mapPredicate) => useQuery({
+export const useAllVmsFromNetwork = (
+  networkId, 
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['vmFromNetwork', networkId], 
   queryFn: async () => {
@@ -2489,17 +3120,19 @@ export const useAllVmsFromNetwork = (networkId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findAllTemplatesFromNetwork
  */
-export const useAllTemplatesFromNetwork = (networkId, mapPredicate) => useQuery({
+export const useAllTemplatesFromNetwork = (
+  networkId, 
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['templateFromNetwork', networkId], 
   queryFn: async () => {
-    if (!networkId) {
-      throw new Error('Network ID is missing'); 
-    }
-    Logger.debug(`Fetching templates for Network ID: ${networkId}`);
     const res = await ApiManager.findAllTemplatesFromNetwork(networkId);
-    Logger.debug('API Response:', res); // API 응답 확인
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllTemplatesFromNetwork ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!networkId,
 })
@@ -2514,60 +3147,79 @@ export const useAllTemplatesFromNetwork = (networkId, mapPredicate) => useQuery(
  * 
  * @see ApiManager.findAllVnicProfilesFromNetwork
  */
-export const useAllVnicProfilesFromNetwork = (networkId, mapPredicate) => useQuery({
+export const useAllVnicProfilesFromNetwork = (
+  networkId, 
+  mapPredicate=(e) => ({ ...e }),
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['vnicProfilesFromNetwork', networkId],
   queryFn: async () => {
-    if (!networkId) {
-      console.warn('networkId가 존재하지 않습니다.');
-      return [];
-    }
-    Logger.debug(`useAllVnicProfilesFromNetwork ... ${networkId}`);
     const res = await ApiManager.findAllVnicProfilesFromNetwork(networkId);
-    return validate(res)?.map((e) => mapPredicate(e)) ?? [];
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllVnicProfilesFromNetwork ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!networkId, 
 });
-
 /**
  * @name useAddNetwork
  * @description 네트워크 생성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAddNetwork = (postSuccess=()=>{}, postError) => {
+export const useAddNetwork = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (networkData) => await ApiManager.addNetwork(networkData),
-    onSuccess: () => {
+    mutationFn: async (networkData) => {
+      const res = await ApiManager.addNetwork(networkData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddNetwork ... networkData: ${JSON.stringify(networkData, null, 2)}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddNetwork ... res: ${JSON.stringify(res, null, 2)}`)
       queryClient.invalidateQueries('allNetworks'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
-
 /**
  * @name useEditNetwork
  * @description 네트워크 수정 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useEditNetwork = (postSuccess=()=>{}, postError) => {
+export const useEditNetwork = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ networkId, networkData }) => await ApiManager.editNetwork(networkId, networkData),
-    onSuccess: (data, { networkId }) => {
+    mutationFn: async ({ networkId, networkData }) => {
+      const res = await ApiManager.editNetwork(networkId, networkData);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useEditNetwork ... networkId: ${networkId}, networkData: ${JSON.stringify(networkData, null, 2)}`)
+      return _res;
+
+    },
+    onSuccess: (res, { networkId }) => {
+      Logger.debug(`RQHook > useEditNetwork ... res: ${JSON.stringify(res, null, 2)}`)
       queryClient.invalidateQueries('allNetworks'); // 전체 네트워크 목록 업데이트
       queryClient.invalidateQueries(['networkById', networkId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -2576,19 +3228,28 @@ export const useEditNetwork = (postSuccess=()=>{}, postError) => {
  * @name useDeleteNetwork
  * @description 네트워크 삭제 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteNetwork = (postSuccess=()=>{}, postError) => {
+export const useDeleteNetwork = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({ 
-    mutationFn: async (networkId) => await ApiManager.deleteNetwork(networkId),
-    onSuccess: () => {
+    mutationFn: async (networkId) => {
+      const res = await ApiManager.deleteNetwork(networkId)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useDeleteNetwork ... networkId: ${networkId}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteNetwork ... res: ${JSON.stringify(res, null, 2)}`)
       queryClient.invalidateQueries('allNetworks');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -2600,16 +3261,22 @@ export const useDeleteNetwork = (postSuccess=()=>{}, postError) => {
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  */
-export const useAllNetworkProviders = (mapPredicate) => useQuery({
+export const useAllNetworkProviders = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allNetworkProviders'],
   queryFn: async () => {
-    const res = await ApiManager.findAllNetworkProviders()
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const res = await ApiManager.findAllNetworkProviders();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllNetworkProviders ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 });
 
-//#region: VnicProfiles -----------------vnic프로파일---------------------
+//#region: VnicProfiles (vNic 프로파일)
 /**
  * @name useAllVnicProfiles
  * @description 모든 VNIC 프로파일 목록조회 useQuery훅
@@ -2619,12 +3286,18 @@ export const useAllNetworkProviders = (mapPredicate) => useQuery({
  * 
  * @see ApiManager.findAllVnicProfiles
  */
-export const useAllVnicProfiles = (mapPredicate) => useQuery({
+export const useAllVnicProfiles = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allVnicProfiles'],
   queryFn: async () => {
-    const res = await ApiManager.findAllVnicProfiles()
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const res = await ApiManager.findAllVnicProfiles();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllVnicProfiles ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 })
 
@@ -2638,10 +3311,10 @@ export const useAllVnicProfiles = (mapPredicate) => useQuery({
 export const useVnicProfile = (vnicId) => useQuery({
   queryKey: ['vnicId', vnicId],
   queryFn: async () => {
-    if (!vnicId) return {};  
-    Logger.debug(`Fetching vnic profile with ID: ${vnicId}`);
-    const res = await ApiManager.findVnicProfile( vnicId);
-    return validate(res) ?? {};
+    const res = await ApiManager.findVnicProfile(vnicId);
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useVnicProfile ... vnicId: ${vnicId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!vnicId,
   staleTime: 0,
@@ -2658,13 +3331,18 @@ export const useVnicProfile = (vnicId) => useQuery({
  * 
  * @see ApiManager.findAllVmsFromVnicProfiles
  */
-export const useAllVmsFromVnicProfiles = (vnicProfileId, mapPredicate) => useQuery({
+export const useAllVmsFromVnicProfiles = (vnicProfileId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllVmsFromVnicProfiles', vnicProfileId],
   queryFn: async () => {
-    Logger.debug(`useAllVmsFromVnicProfiles모든목록조회 ... ${vnicProfileId}`);
     const res = await ApiManager.findAllVmsFromVnicProfiles(vnicProfileId);
-    return validate(res)?.map((e) => mapPredicate(e)) ?? [];
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllVmsFromVnicProfiles ... vnicProfileId: ${vnicProfileId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!vnicProfileId, 
 });
@@ -2679,13 +3357,18 @@ export const useAllVmsFromVnicProfiles = (vnicProfileId, mapPredicate) => useQue
  * 
  * @see ApiManager.findAllTemplatesFromVnicProfiles
  */
-export const useAllTemplatesFromVnicProfiles = (vnicProfileId, mapPredicate) => useQuery({
+export const useAllTemplatesFromVnicProfiles = (vnicProfileId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllTemplatesFromVnicProfiles', vnicProfileId], 
   queryFn: async () => {
-    Logger.debug(`useAllTemplatesFromVnicProfiles ... ${vnicProfileId}`);
     const res = await ApiManager.findAllTemplatesFromVnicProfiles(vnicProfileId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllTemplatesFromVnicProfiles ... vnicProfileId: ${vnicProfileId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!vnicProfileId,
   staleTime: 0,
@@ -2697,19 +3380,28 @@ export const useAllTemplatesFromVnicProfiles = (vnicProfileId, mapPredicate) => 
  * @name useAddVnicProfile
  * @description vnic 새로만들기 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAddVnicProfile = (postSuccess=()=>{}, postError) => {
+export const useAddVnicProfile = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (vnicData) => await ApiManager.addVnicProfiles(vnicData),
-    onSuccess: () => {
+    mutationFn: async (vnicData) => {
+      const res = await ApiManager.addVnicProfiles(vnicData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddVnicProfile ... vnicData: ${JSON.stringify(vnicData, null, 2)}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddVnicProfile ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVnicProfiles');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -2717,18 +3409,28 @@ export const useAddVnicProfile = (postSuccess=()=>{}, postError) => {
  * @name useEditVnicProfile
  * @description vnic 수정 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useEditVnicProfile = (postSuccess=()=>{}, postError) => {
+export const useEditVnicProfile = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  
   return useMutation({
-    mutationFn: async ({vnicId, vnicData }) => await ApiManager.editVnicProfiles(vnicId, vnicData),
-    onSuccess: () => {
+    mutationFn: async ({ vnicId, vnicData }) => {
+      const res = await ApiManager.editVnicProfiles(vnicId, vnicData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditVnicProfile ... vnicId: ${vnicId}, vnicData: ${JSON.stringify(vnicData, null, 2)}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditVnicProfile ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVnicProfiles');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error('Error editing vnic:', error);
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -2737,22 +3439,28 @@ export const useEditVnicProfile = (postSuccess=()=>{}, postError) => {
  * @name useDeleteVnicProfile
  * @description VnicProfile 삭제 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteVnicProfile = (postSuccess=()=>{}, postError) => {
+export const useDeleteVnicProfile = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (vnicProfileId ) => {
-      Logger.debug('Deleting VnicProfile with vnicProfileId:', vnicProfileId);
-      return await ApiManager.deleteVnicProfiles(vnicProfileId);
+    mutationFn: async (vnicProfileId) => {
+      const res = await ApiManager.deleteVnicProfiles(vnicProfileId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeleteVnicProfile ... vnicProfileId: ${vnicProfileId}`);
+      return _res;
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteVnicProfile ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allVnicProfiles');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -2766,16 +3474,24 @@ export const useDeleteVnicProfile = (postSuccess=()=>{}, postError) => {
  * 
  * @see ApiManager.findAllNetworkFilters
  */
-export const useNetworkFilters = (mapPredicate) => useQuery({
+export const useNetworkFilters = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allNetworkFilters'],
   queryFn: async () => {
-    const res = await ApiManager.findAllNetworkFilters()
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const res = await ApiManager.findAllNetworkFilters();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllTemplatesFromVnicProfiles ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 })
-//#region: storage -----------------스토리지---------------------
+//#endreion VnicProfile (vNic 프로파일)
 
+
+//#region: Storage (스토리지)
 /**
  * @name useAllStorageDomains
  * @description 모든 스토리지 도메인 목록조회 useQuery훅
@@ -2783,12 +3499,18 @@ export const useNetworkFilters = (mapPredicate) => useQuery({
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  */
-export const useAllStorageDomains = (mapPredicate) => useQuery({
+export const useAllStorageDomains = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allStorageDomains'],
   queryFn: async () => {
     const res = await ApiManager.findAllStorageDomains()
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllStorageDomains ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 })
 /**
@@ -2798,20 +3520,20 @@ export const useAllStorageDomains = (mapPredicate) => useQuery({
  * @param {string} domainId 도메인 ID
  * @returns useQuery 훅
  */
-export const useDomainById = (storageDomainId) => useQuery({
+export const useStroageDomain = (storageDomainId) => useQuery({
   queryKey: ['DomainById', storageDomainId],
   queryFn: async () => {
-    if (!storageDomainId) return {};  
-    Logger.debug(`Fetching network with ID: ${storageDomainId}`);
     const res = await ApiManager.findDomain(storageDomainId);
-    return validate(res) ?? {};
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useStroageDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId,
   staleTime: 0,
   cacheTime: 0,
 });
 /**
- * @name useAllActiveDomainFromDataCenter
+ * @name useAllActiveDomainsFromDataCenter
  * @description active 도메인 목록조회 useQuery훅
  * 
  * @param {string} dataCenterId 도메인ID
@@ -2820,23 +3542,25 @@ export const useDomainById = (storageDomainId) => useQuery({
  * 
  * @see ApiManager.findActiveDomainFromDataCenter
  */
-export const useAllActiveDomainFromDataCenter = (dataCenterId, mapPredicate) => useQuery({
+export const useAllActiveDomainsFromDataCenter = (
+  dataCenterId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllActiveDomainFromDataCenter', dataCenterId], 
+  queryKey: ['AllActiveDomainsFromDataCenter', dataCenterId], 
   queryFn: async () => {
-    if (!dataCenterId) {
-      console.warn('dataCenterId is undefined. Skipping API call.');
-      return []; // 빈 배열 반환
-    }
-    Logger.debug(`useAllActiveDomainFromDataCenter ... ${dataCenterId}`);
-    const res = await ApiManager.findActiveDomainFromDataCenter(dataCenterId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findActiveDomainFromDataCenter(dataCenterId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllActiveDomainsFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!dataCenterId,
 })
 
 /**
- * @name useAllDataCenterFromDomain
+ * @name useAllDataCentersFromDomain
  * @description 도메인 내 데이터센터 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -2845,23 +3569,24 @@ export const useAllActiveDomainFromDataCenter = (dataCenterId, mapPredicate) => 
  * 
  * @see ApiManager.findAllDataCentersFromDomain
  */
-export const useAllDataCenterFromDomain = (storageDomainId) => useQuery({
-  // refetchOnWindowFocus: true,
-  queryKey: ['AllDataCenterFromDomain', storageDomainId], 
+export const useAllDataCentersFromDomain = (
+  storageDomainId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['allDataCentersFromDomain', storageDomainId], 
   queryFn: async () => {
-    Logger.debug(`Fetching datacenters with ID: ${storageDomainId}`);
     const res = await ApiManager.findAllDataCentersFromDomain(storageDomainId);
-    return validate(res) ?? '';
-
-    // Logger.debug(`useAllDataCenterFromDomain ... ${storageDomainId}`);
-    // const res = await ApiManager.findAllDataCentersFromDomain(storageDomainId); 
-    // Logger.debug('API Response:', res);
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllDataCentersFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId,
 })
 /**
- * @name useAllHostFromDomain
+ * @name useAllHostsFromDomain
  * @description 도메인 내 호스트 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -2870,18 +3595,24 @@ export const useAllDataCenterFromDomain = (storageDomainId) => useQuery({
  * 
  * @see ApiManager.findAllDataCentersFromDomain
  */
-export const useAllHostFromDomain = (storageDomainId) => useQuery({
-  queryKey: ['useAllHostFromDomain', storageDomainId], 
+export const useAllHostsFromDomain = (
+  storageDomainId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
+  queryKey: ['allHostsFromDomain', storageDomainId],
   queryFn: async () => {
-    Logger.debug(`Fetching hosts with ID: ${storageDomainId}`);
     const res = await ApiManager.findAllHostsFromDomain(storageDomainId);
-    return validate(res) ?? '';
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllHostsFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId,
 })
 
 /**
- * @name useAllVMFromDomain
+ * @name useAllVMsFromDomain
  * @description 도메인 내 디스크 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -2890,13 +3621,18 @@ export const useAllHostFromDomain = (storageDomainId) => useQuery({
  * 
  * @see ApiManager.findAllVMsFromDomain
  */
-export const useAllVMFromDomain = (storageDomainId, mapPredicate) => useQuery({
+export const useAllVMsFromDomain = (storageDomainId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllVMFromDomain', storageDomainId], 
+  queryKey: ['allVMsFromDomain', storageDomainId], 
   queryFn: async () => {
-    Logger.debug(`useAllVMFromDomain ... ${storageDomainId}`);
-    const res = await ApiManager.findAllVMsFromDomain(storageDomainId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findAllVMsFromDomain(storageDomainId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllVMsFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId,
   staleTime: 0,
@@ -2904,7 +3640,7 @@ export const useAllVMFromDomain = (storageDomainId, mapPredicate) => useQuery({
 })
 
 /**
- * @name useAllUnregisteredVMFromDomain
+ * @name useAllUnregisteredVMsFromDomain
  * @description 도메인 내 가상머신 불러오기 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -2913,20 +3649,25 @@ export const useAllVMFromDomain = (storageDomainId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findAllUnregisterdVMsFromDomain
  */
-export const useAllUnregisteredVMFromDomain = (storageDomainId, mapPredicate) => useQuery({
+export const useAllUnregisteredVMsFromDomain = (storageDomainId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   // queryKey: ['AllVMFromDomain', storageDomainId], 
   queryFn: async () => {
-    Logger.debug(`useAllUnregisteredVMFromDomain ... ${storageDomainId}`);
-    const res = await ApiManager.findAllUnregisterdVMsFromDomain(storageDomainId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findAllUnregisterdVMsFromDomain(storageDomainId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllUnregisteredVMsFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId,
   staleTime: 0,
   cacheTime: 0,
 })
 /**
- * @name useAllDiskFromDomain
+ * @name useAllDisksFromDomain
  * @description 도메인 내 디스크 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -2935,18 +3676,23 @@ export const useAllUnregisteredVMFromDomain = (storageDomainId, mapPredicate) =>
  * 
  * @see ApiManager.findAllDataCenterFromDomain
  */
-export const useAllDiskFromDomain = (storageDomainId, mapPredicate) => useQuery({
+export const useAllDisksFromDomain = (storageDomainId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllDiskFromDomain', storageDomainId], 
+  queryKey: ['allDisksFromDomain', storageDomainId], 
   queryFn: async () => {
-    Logger.debug(`useAllDiskFromDomain ... ${storageDomainId}`);
-    const res = await ApiManager.findAllDisksFromDomain(storageDomainId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findAllDisksFromDomain(storageDomainId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllDisksFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId,
 })
 /**
- * @name useAllUnregisteredDiskFromDomain
+ * @name useAllUnregisteredDisksFromDomain
  * @description 도메인 내 디스크 가져오기 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -2955,13 +3701,18 @@ export const useAllDiskFromDomain = (storageDomainId, mapPredicate) => useQuery(
  * 
  * @see ApiManager.findAllUnregisteredDisksFromDomain
  */
-export const useAllUnregisteredDiskFromDomain = (storageDomainId, mapPredicate) => useQuery({
+export const useAllUnregisteredDisksFromDomain = (storageDomainId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllUnregisteredDiskFromDomain', storageDomainId], 
+  queryKey: ['allUnregisteredDisksFromDomain', storageDomainId], 
   queryFn: async () => {
-    Logger.debug(`useAllUnregisteredDiskFromDomain ... ${storageDomainId}`);
-    const res = await ApiManager.findAllUnregisteredDisksFromDomain(storageDomainId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findAllUnregisteredDisksFromDomain(storageDomainId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllUnregisteredDisksFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId,
 })
@@ -2969,22 +3720,28 @@ export const useAllUnregisteredDiskFromDomain = (storageDomainId, mapPredicate) 
  * @name useRegisteredDiskFromDomain
  * @description 도메인 디스크 불러오기
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useRegisteredDiskFromDomain = (postSuccess=()=>{}, postError) => {
+export const useRegisteredDiskFromDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({storageDomainId, diskId}) => {
-      return await ApiManager.registeredDiskFromDomain(storageDomainId, diskId)
+      const res = await ApiManager.registeredDiskFromDomain(storageDomainId, diskId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeleteVnicProfile ... storageDomainId: ${storageDomainId}, diskId: ${diskId}`);
+      return _res;
     },
-    onSuccess: () => {
-      Logger.debug(`domain 디스크 불러오기 성공`)
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteVnicProfile ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -2992,24 +3749,33 @@ export const useRegisteredDiskFromDomain = (postSuccess=()=>{}, postError) => {
  * @name useDeletRegisteredDiskFromDomain
  * @description 도메인 디스크 불러오기 삭제
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeletRegisteredDiskFromDomain = (postSuccess=()=>{}, postError) => {
+export const useDeletRegisteredDiskFromDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({ 
-    mutationFn: async ({storageDomainId, diskId}) => await ApiManager.deleteRegisteredDiskFromDomain(storageDomainId, diskId),
-    onSuccess: () => {
+    mutationFn: async ({storageDomainId, diskId}) => {
+      const res = await ApiManager.deleteRegisteredDiskFromDomain(storageDomainId, diskId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeletRegisteredDiskFromDomain ... storageDomainId: ${storageDomainId}, diskId: ${diskId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeletRegisteredDiskFromDomain ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
 /**
- * @name useAllTemplateFromDomain
+ * @name useAllTemplatesFromDomain
  * @description 도메인 내 템플릿 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -3018,18 +3784,24 @@ export const useDeletRegisteredDiskFromDomain = (postSuccess=()=>{}, postError) 
  * 
  * @see ApiManager.findAllTemplatesFromDomain
  */
-export const useAllTemplateFromDomain = (storageDomainId, mapPredicate) => useQuery({
+export const useAllTemplatesFromDomain = (
+  storageDomainId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllTemplateFromDomain', storageDomainId], 
+  queryKey: ['allTemplatesFromDomain', storageDomainId], 
   queryFn: async () => {
-    Logger.debug(`useAllTemplateFromDomain ... ${storageDomainId}`);
-    const res = await ApiManager.findAllTemplatesFromDomain(storageDomainId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findAllTemplatesFromDomain(storageDomainId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllTemplatesFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId,
 })
 /**
- * @name useAllUnregisteredTemplateFromDomain
+ * @name useAllUnregisteredTemplatesFromDomain
  * @description 도메인 내 템플릿 불러오기 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -3038,18 +3810,24 @@ export const useAllTemplateFromDomain = (storageDomainId, mapPredicate) => useQu
  * 
  * @see ApiManager.findAllUnregisteredTemplatesFromDomain
  */
-export const useAllUnregisteredTemplateFromDomain = (storageDomainId, mapPredicate) => useQuery({
+export const useAllUnregisteredTemplatesFromDomain = (
+  storageDomainId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllUnregisteredTemplateFromDomain', storageDomainId], 
+  queryKey: ['allUnregisteredTemplatesFromDomain', storageDomainId], 
   queryFn: async () => {
-    Logger.debug(`useAllUnregisteredTemplateFromDomain ... ${storageDomainId}`);
-    const res = await ApiManager.findAllUnregisteredTemplatesFromDomain(storageDomainId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findAllUnregisteredTemplatesFromDomain(storageDomainId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllUnregisteredTemplatesFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId,
 })
 /**
- * @name useAllDiskProfileFromDomain
+ * @name useAllDiskProfilesFromDomain
  * @description 도메인 내 디스크 프로파일 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -3058,22 +3836,24 @@ export const useAllUnregisteredTemplateFromDomain = (storageDomainId, mapPredica
  * 
  * @see ApiManager.findAllDataCenterFromDomain
  */
-export const useAllDiskProfileFromDomain = (storageDomainId, mapPredicate) => useQuery({
+export const useAllDiskProfilesFromDomain = (
+  storageDomainId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllDiskProfileFromDomain', storageDomainId],
+  queryKey: ['allDiskProfilesFromDomain', storageDomainId],
   queryFn: async () => {
-    if (!storageDomainId) {
-      console.warn('storageDomainId is undefined. Skipping API call.');
-      return []; // 빈 배열 반환
-    }
-    Logger.debug(`useAllDiskProfileFromDomain ... ${storageDomainId}`);
     const res = await ApiManager.findAllDiskProfilesFromDomain(storageDomainId);
-    return validate(res)?.map((e) => mapPredicate(e)) ?? [];
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllDiskProfilesFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId, // storageDomainId가 있을 때만 쿼리 실행
 });
 /**
- * @name useAllDiskSnapshotFromDomain
+ * @name useAllDiskSnapshotsFromDomain
  * @description 도메인 내 디스크스냅샷 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -3082,20 +3862,26 @@ export const useAllDiskProfileFromDomain = (storageDomainId, mapPredicate) => us
  * 
  * @see ApiManager.findAllDataCenterFromDomain
  */
-export const useAllDiskSnapshotFromDomain = (storageDomainId, mapPredicate) => useQuery({
+export const useAllDiskSnapshotsFromDomain = (
+  storageDomainId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllDiskSnapshotFromDomain', storageDomainId], 
   queryFn: async () => {
-    Logger.debug(`useAllDiskSnapshotFromDomain ... ${storageDomainId}`);
-    const res = await ApiManager.findAllDiskSnapshotsFromDomain(storageDomainId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findAllDiskSnapshotsFromDomain(storageDomainId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllDiskSnapshotsFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId,
   staleTime: 0,
   cacheTime: 0,
 })
 /**
- * @name useAllEventFromDomain
+ * @name useAllEventsFromDomain
  * @description 도메인 내 이벤트 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -3104,14 +3890,20 @@ export const useAllDiskSnapshotFromDomain = (storageDomainId, mapPredicate) => u
  * 
  * @see ApiManager.findAllDataCenterFromDomain
  */
-export const useAllEventFromDomain = (storageDomainId, mapPredicate) => useQuery({
+export const useAllEventsFromDomain = (
+  storageDomainId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllEventFromDomain', storageDomainId], 
   queryFn: async () => {
     if(storageDomainId === '') return [];
-    Logger.debug(`useAllEventFromDomain ... ${storageDomainId}`);
-    const res = await ApiManager.findAllEventsFromDomain(storageDomainId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findAllEventsFromDomain(storageDomainId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllEventsFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!storageDomainId,
 })
@@ -3124,13 +3916,18 @@ export const useAllEventFromDomain = (storageDomainId, mapPredicate) => useQuery
  * 
  * @see ApiManager.findActiveDataCenters
  */
-export const useAllActiveDataCenters = (mapPredicate) => useQuery({
+export const useAllActiveDataCenters = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  // queryKey: ['AllEventFromDomain', storageDomainId], 
+  queryKey: ['allActiveDataCenters'], 
   queryFn: async () => {
-    Logger.debug(`useAllEventFromDomain ...`);
-    const res = await ApiManager.findActiveDataCenters(); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findActiveDataCenters();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllActiveDataCenters ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 })
 
@@ -3138,20 +3935,28 @@ export const useAllActiveDataCenters = (mapPredicate) => useQuery({
  * @name useAddDomain
  * @description 도메인 생성 useMutation 훅(수정해야됨)
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAddDomain = (postSuccess=()=>{}, postError) => {
+export const useAddDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (domainData) => await ApiManager.addDomain(domainData),
-    onSuccess: () => {
-      Logger.debug('domain 생성성공')
+    mutationFn: async (domainData) => {
+      const res = await ApiManager.addDomain(domainData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddDomain ... domainData: ${JSON.stringify(domainData, null ,2)}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddDomain ... res: ${JSON.stringify(res, null ,2)}`);
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3160,20 +3965,28 @@ export const useAddDomain = (postSuccess=()=>{}, postError) => {
  * @name useImportDomain
  * @description 도메인 가져오기 useMutation 훅(수정해야됨)
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useImportDomain = (postSuccess=()=>{}, postError) => {
+export const useImportDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (domainData) => await ApiManager.importDomain(domainData),
-    onSuccess: () => {
-      Logger.debug('domain 가져오기 성공')
+    mutationFn: async (domainData) => {
+      const res = await ApiManager.importDomain(domainData)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useImportDomain ... domainData: ${JSON.stringify(domainData, null ,2)}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useImportDomain ... res: ${JSON.stringify(res, null ,2)}`);
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3181,19 +3994,28 @@ export const useImportDomain = (postSuccess=()=>{}, postError) => {
  * @name useEditDomain
  * @description 도메인 수정 useMutation 훅(수정해야됨)
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useEditDomain = (postSuccess=()=>{}, postError) => {
+export const useEditDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ domainId, domainData }) => await ApiManager.editDomain(domainId, domainData),
-    onSuccess: () => {
+    mutationFn: async ({ domainId, domainData }) => {
+      const res = await ApiManager.editDomain(domainId, domainData)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditDomain ... domainId: ${domainId}, domainData: ${JSON.stringify(domainData, null ,2)}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditDomain ... res: ${JSON.stringify(res, null ,2)}`);
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3202,22 +4024,28 @@ export const useEditDomain = (postSuccess=()=>{}, postError) => {
  * @name useDeleteDomain
  * @description 도메인 삭제 useMutation 훅(확인안해봄-생성해보고 삭제해보기)
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteDomain = (postSuccess=()=>{}, postError) => {
+export const useDeleteDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({ 
-    mutationFn: async ({domainId, format, hostName}) => {
-      Logger.debug(` domainId: ${domainId}, format: ${format}, host: ${hostName}`);
-      await ApiManager.deleteDomain(domainId, format, hostName)
+    mutationFn: async ({domainId, format, hostName }) => {
+      const res = await ApiManager.deleteDomain(domainId, format, hostName);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeleteDomain ... domainId: ${domainId}, format: ${format}, hostName: ${hostName}`);
+      return _res;
     },
-    onSuccess: () => {      
+    onSuccess: (res) => {      
+      Logger.debug(`RQHook > useDeleteDomain ... res: ${JSON.stringify(res, null ,2)}`);
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3226,19 +4054,28 @@ export const useDeleteDomain = (postSuccess=()=>{}, postError) => {
  * @name useDestroyDomain
  * @description 도메인파괴 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDestroyDomain = (postSuccess=()=>{}, postError) => {
+export const useDestroyDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (domainId) => await ApiManager.destroyDomain(domainId),
-    onSuccess: () => {
+    mutationFn: async (domainId) => {
+      const res = await ApiManager.destroyDomain(domainId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDestroyDomain ... domainId: ${domainId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDestroyDomain ... res: ${JSON.stringify(res, null ,2)}`);
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3247,19 +4084,28 @@ export const useDestroyDomain = (postSuccess=()=>{}, postError) => {
  * @name useRefreshLunDomain
  * @description 스토리지 도메인 디스크 검사 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useRefreshLunDomain = (postSuccess=()=>{}, postError) => {
+export const useRefreshLunDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (domainId) => await ApiManager.refreshLunDomain(domainId),
-    onSuccess: () => {
+    mutationFn: async (domainId) => {
+      const res = await ApiManager.refreshLunDomain(domainId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useRefreshLunDomain ... domainId: ${domainId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useRefreshLunDomain ... res: ${JSON.stringify(res, null ,2)}`);
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3268,19 +4114,28 @@ export const useRefreshLunDomain = (postSuccess=()=>{}, postError) => {
  * @name useOvfUpdateDomain
  * @description 스토리지 도메인 ovf 업데이트 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useOvfUpdateDomain = (postSuccess=()=>{}, postError) => {
+export const useOvfUpdateDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (domainId) => await ApiManager.updateOvfDomain(domainId),
-    onSuccess: () => {
+    mutationFn: async (domainId) => {
+      const res = await ApiManager.updateOvfDomain(domainId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useOvfUpdateDomain ... domainId: ${domainId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useOvfUpdateDomain ... res: ${JSON.stringify(res, null ,2)}`);
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3289,19 +4144,28 @@ export const useOvfUpdateDomain = (postSuccess=()=>{}, postError) => {
  * @name useActivateDomain
  * @description 도메인 활성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useActivateDomain = (postSuccess=()=>{}, postError) => {
+export const useActivateDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({domainId, dataCenterId}) => await ApiManager.activateDomain(domainId, dataCenterId),
-    onSuccess: () => {
+    mutationFn: async ({domainId, dataCenterId}) => {
+      const res = await ApiManager.activateDomain(domainId, dataCenterId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useActivateDomain ... domainId: ${domainId}, dataCenterId: ${dataCenterId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useActivateDomain ... res: ${JSON.stringify(res, null ,2)}`);
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3310,19 +4174,28 @@ export const useActivateDomain = (postSuccess=()=>{}, postError) => {
  * @name useAttachDomain
  * @description 도메인 연결 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAttachDomain = (postSuccess=()=>{}, postError) => {
+export const useAttachDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({storageDomainId, dataCenterId}) => await ApiManager.attachDomain(storageDomainId, dataCenterId),
-    onSuccess: () => {
+    mutationFn: async ({storageDomainId, dataCenterId}) => {
+      const res = await ApiManager.attachDomain(storageDomainId, dataCenterId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useActivateDomain ... storageDomainId: ${storageDomainId}, dataCenterId: ${dataCenterId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAttachDomain ... res: ${JSON.stringify(res, null ,2)}`);
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3331,19 +4204,28 @@ export const useAttachDomain = (postSuccess=()=>{}, postError) => {
  * @name useDetachDomain
  * @description 도메인 분리 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDetachDomain = (postSuccess=()=>{}, postError) => {
+export const useDetachDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({domainId, dataCenterId}) => await ApiManager.detachDomain(domainId, dataCenterId),
-    onSuccess: () => {
+    mutationFn: async ({domainId, dataCenterId}) => {
+      const res = await ApiManager.detachDomain(domainId, dataCenterId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useActivateDomain ... domainId: ${domainId}, dataCenterId: ${dataCenterId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDetachDomain ... res: ${JSON.stringify(res, null ,2)}`);
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3352,25 +4234,34 @@ export const useDetachDomain = (postSuccess=()=>{}, postError) => {
  * @name useMaintenanceDomain
  * @description 도메인 유지보수 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useMaintenanceDomain = (postSuccess=()=>{}, postError) => {
+export const useMaintenanceDomain = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({domainId, dataCenterId}) => await ApiManager.maintenanceDomain(domainId, dataCenterId),
-    onSuccess: () => {
+    mutationFn: async ({domainId, dataCenterId}) => {
+      const res = await ApiManager.maintenanceDomain(domainId, dataCenterId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useMaintenanceDomain ... domainId: ${domainId}, dataCenterId: ${dataCenterId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useMaintenanceDomain ... res: ${JSON.stringify(res, null ,2)}`);
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
+//#endregion
 
-
-//#region: storage -----------------디스크---------------------
+//#region: Disk (디스크)
 /**
  * @name useAllDisks
  * @description 모든 디스크목록조회 useQuery훅
@@ -3378,29 +4269,37 @@ export const useMaintenanceDomain = (postSuccess=()=>{}, postError) => {
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  */
-export const useAllDisks = (mapPredicate) => useQuery({
+export const useAllDisks = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allDisks'],
   queryFn: async () => {
     const res = await ApiManager.findAllDisks()
-    return validate(res)?.map((e) => mapPredicate(e)) ?? [];
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllDisks ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   // staleTime: 2000, // 2초 동안 데이터 재요청 방지
 })
 /**
- * @name useDiskById
+ * @name useDisk
  * @description 디스크 상세조회 useQuery 훅
  * 
  * @param {string} diskId 디스크ID
  * @returns useQuery 훅
  */
-export const useDiskById = (diskId) => useQuery({
-  queryKey: ['DiskById', diskId],
+export const useDisk = (
+  diskId
+) => useQuery({
+  queryKey: ['disk', diskId],
   queryFn: async () => {
-    if (!diskId) return {};  
-    Logger.debug(`useDiskById: ${diskId}`);
     const res = await ApiManager.findDisk(diskId);
-    return validate(res) ?? {};
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useDisk ... diskId: ${diskId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!diskId,
   staleTime: 0,
@@ -3416,19 +4315,25 @@ export const useDiskById = (diskId) => useQuery({
  * 
  * @see ApiManager.findAllVmsFromDisk
  */
-export const useAllVmsFromDisk = (diskId, mapPredicate) => useQuery({
+export const useAllVmsFromDisk = (
+  diskId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllVmsFromDisk', diskId], 
+  queryKey: ['allVmsFromDisk', diskId], 
   queryFn: async () => {
-    Logger.debug(`useAllVmsFromDisk ... ${diskId}`);
-    const res = await ApiManager.findAllVmsFromDisk(diskId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const res = await ApiManager.findAllVmsFromDisk(diskId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllDisks ... diskId: ${diskId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!diskId,
 })
 
 /**
- * @name useAllStorageDomainFromDisk
+ * @name useAllStorageDomainsFromDisk
  * @description 디스크 내 스토리지 목록조회 useQuery훅
  * 
  * @param {string} diskId 디스크ID
@@ -3437,13 +4342,19 @@ export const useAllVmsFromDisk = (diskId, mapPredicate) => useQuery({
  * 
  * @see ApiManager.findAllStorageDomainsFromDisk
  */
-export const useAllStorageDomainFromDisk = (diskId, mapPredicate) => useQuery({
+export const useAllStorageDomainsFromDisk = (
+  diskId, 
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllStorageDomainFromDisk', diskId], 
+  queryKey: ['allStorageDomainsFromDisk', diskId], 
   queryFn: async () => {
-    Logger.debug(`useAllStorageDomainFromDisk ... ${diskId}`);
     const res = await ApiManager.findAllStorageDomainsFromDisk(diskId); 
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; 
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllStorageDomainsFromDisk ... diskId: ${diskId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   },
   enabled: !!diskId,
 })
@@ -3452,19 +4363,28 @@ export const useAllStorageDomainFromDisk = (diskId, mapPredicate) => useQuery({
  * @name useAddDisk
  * @description Disk 생성 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAddDisk = (postSuccess=()=>{}, postError) => {
+export const useAddDisk = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (diskData) => await ApiManager.addDisk(diskData),
-    onSuccess: () => {
+    mutationFn: async (diskData) => {
+      const res = await ApiManager.addDisk(diskData);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useAddDisk ... diskData: ${JSON.stringify(diskData, null ,2)}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddDisk ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3472,19 +4392,28 @@ export const useAddDisk = (postSuccess=()=>{}, postError) => {
  * @name useEditDisk
  * @description Disk 수정 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useEditDisk = (postSuccess=()=>{}, postError) => {
+export const useEditDisk = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  
   return useMutation({
-    mutationFn: async ({ diskId, diskData }) => await ApiManager.editDisk(diskId, diskData),
-    onSuccess: () => {
+    mutationFn: async ({ diskId, diskData }) => {
+      const res = await ApiManager.editDisk(diskId, diskData);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useEditDisk ... diskId: ${diskId}, diskData: ${JSON.stringify(diskData, null ,2)}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditDisk ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allDisks');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3492,40 +4421,57 @@ export const useEditDisk = (postSuccess=()=>{}, postError) => {
  * @name useDeleteDisk
  * @description Disk 삭제 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteDisk = (postSuccess=()=>{}, postError) => {
+export const useDeleteDisk = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({ 
-    mutationFn: async (diskId) => await ApiManager.deleteDisk(diskId),
-    onSuccess: () => {
+    mutationFn: async (diskId) => {
+      const res = await ApiManager.deleteDisk(diskId);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useEditDisk ... diskId: ${diskId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteDisk ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allDisks');
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
-
 /**
  * @name useUploadDisk
  * @description Disk 업로드 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useUploadDisk = (postSuccess=()=>{}, postError) => {
+export const useUploadDisk = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (diskData) => await ApiManager.uploadDisk(diskData),
-    onSuccess: () => {
+    mutationFn: async (diskData) => {
+      const res = await ApiManager.uploadDisk(diskData);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useUploadDisk ... diskData: ${JSON.stringify(diskData, null, 2)}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useUploadDisk ... res: ${JSON.stringify(res, null, 2)}`);
       queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3533,19 +4479,28 @@ export const useUploadDisk = (postSuccess=()=>{}, postError) => {
  * @name useMoveDisk
  * @description Disk 이동 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useMoveDisk = (postSuccess=()=>{}, postError) => {
+export const useMoveDisk = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (diskData) => await ApiManager.moveDisk(diskData),
-    onSuccess: () => {
-      queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
+    mutationFn: async (diskData) => {
+      const res = await ApiManager.moveDisk(diskData)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useMoveDisk ... diskData: ${JSON.stringify(diskData, null, 2)}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useMoveDisk ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('allDisks'); 
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
@@ -3553,25 +4508,33 @@ export const useMoveDisk = (postSuccess=()=>{}, postError) => {
  * @name useCopyDisk
  * @description Disk 복사 useMutation 훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useCopyDisk = (postSuccess=()=>{}, postError) => {
+export const useCopyDisk = (
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (diskData) => await ApiManager.copyDisk(diskData),
-    onSuccess: () => {
-      queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
+    mutationFn: async (diskData) => {
+      const res = await ApiManager.copyDisk(diskData)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useCopyDisk ... diskData: ${JSON.stringify(diskData, null, 2)}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useCopyDisk ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('allDisks'); 
+
       postSuccess();
     },
     onError: (error) => {
-      Logger.error(error.message)
-      postError && postError();
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
-
-
-//#region: event -----------------이벤트---------------------
+//#region: event (이벤트)
 /**
  * @name useAllEvents
  * @description 모든 이벤트 목록조회 useQuery훅
@@ -3579,12 +4542,18 @@ export const useCopyDisk = (postSuccess=()=>{}, postError) => {
  * @param {function} mapPredicate 
  * @returns useQuery훅
  */
-export const useAllEvents = (mapPredicate) => useQuery({
+export const useAllEvents = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allEvents'],
   queryFn: async () => {
     const res = await ApiManager.findAllEvent()
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllEvents ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 })
 //#endregion: event
@@ -3598,12 +4567,18 @@ export const useAllEvents = (mapPredicate) => useQuery({
  * @param {function} mapPredicate 
  * @returns useQuery훅
  */
-export const useAllUsers = (mapPredicate) => useQuery({
+export const useAllUsers = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allUsers'],
   queryFn: async () => {
-    const res = await ApiManager.findAllUsers()
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const res = await ApiManager.findAllUsers();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllUsers ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 })
 /**
@@ -3613,15 +4588,17 @@ export const useAllUsers = (mapPredicate) => useQuery({
  * @param {string} username 사용자 oVirt ID
  * @returns useQuery훅
  */
-export const useUser = (username, exposeDetail = false) => useQuery({
+export const useUser = (
+  username,
+  exposeDetail=false
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['user'],
   queryFn: async () => {
-    Logger.debug(`useUser ... username: ${username}, exposeDetail: ${exposeDetail}`);
     const res = await ApiManager.findUser(username, exposeDetail)
-    
-    return validate(res)
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useUser ... username: ${username}, exposeDetail: ${exposeDetail}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 })
 /**
@@ -3631,51 +4608,28 @@ export const useUser = (username, exposeDetail = false) => useQuery({
  * @param {function} mapPredicate 
  * @returns useQuery훅
  */
-export const useAuthenticate = (username, password, _onSuccess, _onError) => useMutation({
-  mutationFn: async () => {
-    const res = await ApiManager.authenticate(username, password)
-    return validate(res)
-  },
-  onSuccess: (res) => {
-    const msgSuccess = `useAuthenticate > onSuccess ... res: ${res}`
-    Logger.debug(msgSuccess)
-    _onSuccess(res);
-  },
-  onError: (err) => {
-    const msgErr = `useAuthenticate > onError ... err: ${err}`  
-    Logger.error(msgErr);
-    toast.error(msgErr);
-    _onError(err);
-  },
-})
-
-export const useIsAuthenticated = (username) => useQuery({
-  refetchOnWindowFocus: true,
-  queryKey: ['isAuthenticated'],
-  queryFn: async() => {
-    const res = await localStorage.getItem("isUserAuthenticated") === "true"
-    Logger.debug(`isAuthenticated ... username: ${username}, res: ${res}`)
-    return validate(res)
-  }
-})
-export const useUnAuthenticate = (username, _onSuccess, _onError) => {
+export const useAuthenticate = (
+  username, password, 
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () => {
-      return true;
+      const res = await ApiManager.authenticate(username, password)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAuthenticate ... username: ${username}, password: ${password}`);
+      return _res;
     },
     onSuccess: (res) => {
-      const msgSuccess = `useUnAuthenticate > onSuccess ... res: ${res}`
-      console.info(msgSuccess);
-      toast.success(`사용자 생성 완료`);
-      queryClient.invalidateQueries('isAuthenticated', false);
-      _onSuccess(res)
+      Logger.debug(`RQHook > useAuthenticate ... res: ${JSON.stringify(res, null, 2)}`);
+      if (!res) throw Error("[403] 로그인에 실패했습니다. 사용자ID 또는 비밀번호가 다릅니다.")
+      queryClient.invalidateQueries('allUsers,user');
+      postSuccess(res);
     },
-    onError: (err) => {
-      const msgErr = `useUnAuthenticate > onError ... err: ${err}`  
-      Logger.error(msgErr);
-      toast.error(`사용자 생성 실패 ... 이유: ${err}`);
-      _onError(err)
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   })
 }
@@ -3684,25 +4638,31 @@ export const useUnAuthenticate = (username, _onSuccess, _onError) => {
  * @name useAddUser
  * @description 사용자 생성 useQuery훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useAddUser = (user, onSuccess, onError) => {
+export const useAddUser = (
+  user,
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async () => await ApiManager.addUser(user),
-    onSuccess: (res) => {
-      const msgSuccess = `useAddUser > onSuccess ... res: ${res}`
-      console.info(msgSuccess);
-      toast.success(`사용자 생성 완료`);
-      queryClient.invalidateQueries('allUsers');
-      queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
-      onSuccess(res)
+    mutationFn: async () => {
+      const res = await ApiManager.addUser(user)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddUser ... user: ${JSON.stringify(user, null ,2)}`);
+      return _res;
     },
-    onError: (err) => {
-      const msgErr = `useAddUser > onError ... err: ${err}`  
-      Logger.error(msgErr);
-      toast.error(`사용자 생성 실패 ... 이유: ${err}`);
-      onError(err)
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddUser ... res: ${JSON.stringify(res, null, 2)}`);
+      toast.success("사용자 생성 성공")
+      queryClient.invalidateQueries('allUsers,user');
+      queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   })
 }
@@ -3710,51 +4670,59 @@ export const useAddUser = (user, onSuccess, onError) => {
  * @name useEditUser
  * @description 사용자 편집 useQuery훅
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useEditUser = (user, onSuccess, onError) => {
+export const useEditUser = (
+  user,
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async () => await ApiManager.editUser(user),
+    mutationFn: async () => {
+      const res = await ApiManager.editUser(user)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditUser ... user: ${JSON.stringify(user, null ,2)}`);
+      return _res;
+    },
     onSuccess: (res) => {
-      const _res = res ?? {}
-      console.info(`useEditUser > onSuccess ... res: ${JSON.stringify(_res, null ,2)}`);
-      if (_res?.code && _res?.code !== 200)  {
-        toast.error(`사용자 편집 실패 ... 이유: ${res.head.message}`);
-        return;
-      }
-      toast.success(`사용자 편집 완료`);
+      Logger.debug(`RQHook > useEditUser ... res: ${JSON.stringify(res, null, 2)}`);
+      toast.success("사용자 편집 성공")
       queryClient.invalidateQueries('allUsers');
       queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
-      onSuccess(res)
+      postSuccess(res);
     },
-    onError: (err) => {
-      Logger.error(`useEditUser > onError ... err: ${err}`);
-      toast.error(`사용자 편집 실패 ... 이유: ${err}`);
-      onError(err)
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 };
-export const useChangePasswordUser = (username, currentPassword, newPassword, onSuccess, onError) => {
+export const useChangePasswordUser = (
+  username, 
+  currentPassword, 
+  newPassword,
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async () => await ApiManager.changePassword(username, currentPassword, newPassword),
+    mutationFn: async () => {
+      const res = await ApiManager.changePassword(username, currentPassword, newPassword)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useChangePasswordUser ... username: ${username}`);
+      return _res;
+    },
     onSuccess: (res) => {
-      const _res = res ?? {}
-      Logger.debug(`useChangePasswordUser > onSuccess ... res: ${JSON.stringify(_res, null ,2)}`);
-      if (_res?.code && _res?.code !== 200)  {
-        toast.error(`사용자 비밀번호변경 실패 ... 이유: ${res.message}`);
-        return;
-      }
-      toast.success(`사용자 비밀번호변경 완료`);
+      Logger.debug(`RQHook > useChangePasswordUser ... res: ${JSON.stringify(res, null, 2)}`);
+      toast.success("사용자 비밀번호 변경 성공")
       queryClient.invalidateQueries('allUsers');
       queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
-      onSuccess(res)
+      postSuccess(res);
     },
-    onError: (err) => {
-      Logger.error(`useChangePasswordUser > onError ... err: ${err}`);
-      toast.error(`사용자 비밀번호변경 실패 ... 이유: ${err}`);
-      onError(err)
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   });
 }
@@ -3762,25 +4730,36 @@ export const useChangePasswordUser = (username, currentPassword, newPassword, on
  * @name useRemoveUser
  * @description 사용자 삭제
  * 
- * @returns useMutation 훅
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useRemoveUser = () => {
+export const useRemoveUser = (
+  username,
+  postSuccess=()=>{},postError
+) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async (username) => {
-      Logger.debug(`Deleting user with username: ${username}`);
       const res = await ApiManager.removeUser(username)
-      return validate(res)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useRemoveUser ... username: ${username}`);
+      return _res;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries('allUsers');
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useRemoveUser ... res: ${JSON.stringify(res, null, 2)}`);
+      toast.success("사용자 삭제 성공")
+      queryClient.invalidateQueries('allUsers,user');
+      queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
+      postSuccess(res);
     },
     onError: (error) => {
-      Logger.error('Error deleting users:', error);
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
     },
   })
 };
 //#endregion: User
+
 //#region: UserSession
 /**
  * @name useAllUserSessions
@@ -3789,32 +4768,50 @@ export const useRemoveUser = () => {
  * @param {function} mapPredicate 
  * @returns useQuery훅
  */
-export const useAllUserSessions = (username = "", mapPredicate = null) => useQuery({
+export const useAllUserSessions = (
+  username="",
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allUserSessions'],
   queryFn: async () => {
     const res = await ApiManager.findAllUserSessions(username)
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllUserSessions ... username: ${username} res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 })
 //#endregion: UserSession
+
 //#region: Certificate(s)
-export const useAllCerts = (mapPredicate) => useQuery({
+export const useAllCerts = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allCerts'],
   queryFn: async () => {
     Logger.debug(`useUser ...`);
     const res = await ApiManager.findAllCerts()
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllCerts ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 })
-export const useCert = (id) => useQuery({
+export const useCert = (
+  id
+) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['cert'],
   queryFn: async () => {
     Logger.debug(`useCert ... id: ${id}`);
     const res = await ApiManager.findCert(id)
-    return validate(res)
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useCert ... id: ${id}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
   }
 })
 //#endregion: Certificate(s)

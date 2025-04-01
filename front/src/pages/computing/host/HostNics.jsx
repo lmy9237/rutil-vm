@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDesktop } from "@fortawesome/free-solid-svg-icons";
-import { useHost, useNetworkById, useNetworkFromCluster, useNetworkInterfaceFromHost } from "../../../api/RQHook";
-import { renderTFStatusIcon, renderUpDownStatusIcon } from "../../../components/Icon";
+import { useHost, useNetworkFromCluster, useNetworkInterfacesFromHost } from "../../../api/RQHook";
 import { checkZeroSizeToMbps } from "../../../util";
-import { RVI16, rvi16TriangleUp, rvi16VirtualMachine, RVI24, rvi24CompareArrows, RVI36, rvi36Edit } from "../../../components/icons/RutilVmIcons";
+import { RVI16, rvi16TriangleUp, rvi16VirtualMachine, RVI24, rvi24CompareArrows, RVI36, rvi36Edit, status2Icon } from "../../../components/icons/RutilVmIcons";
 import Loading from "../../../components/common/Loading";
 import HostNetworkEditModal from "../../../components/modal/host/HostNetworkEditModal";
 import HostNetworkBondingModal from "../../../components/modal/host/HostNetworkBondingModal";
@@ -14,8 +13,8 @@ import Logger from "../../../utils/Logger";
 
 const HostNics = ({ hostId }) => {
   const { data: host } = useHost(hostId);
-  // const { data: network } = useNetworkById();
-  const { data: hostNics = [] } = useNetworkInterfaceFromHost(hostId, (e) => ({ ...e }));
+  
+  const { data: hostNics = [] } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
 
   Logger.debug(`hostNics: ${JSON.stringify(hostNics, null, 2)}`);
@@ -289,7 +288,7 @@ const HostNics = ({ hostId }) => {
                           draggable 
                           onDragStart={(e) => dragStart(e, child, "container", outerItem.id)}
                         >
-                          {renderTFStatusIcon(child?.status === "UP")}
+                          {status2Icon(child?.status)}
                           <RVI16 iconDef={rvi16TriangleUp()} className="mr-1.5" />
                           {child.name}
                         </div>
@@ -332,7 +331,7 @@ const HostNics = ({ hostId }) => {
                           onDragStart={(e) => dragStart(e, network, "networkOuter", outerItem.id)}
                         >
                           <div className="left-section">
-                            {renderTFStatusIcon(network?.status === "OPERATIONAL")}{network.name}
+                            {status2Icon(network?.status)}{network.name}
                           </div>
                           <div className="right-section">
                             {network?.role && <FontAwesomeIcon icon={faDesktop} className="icon" />}
@@ -364,7 +363,7 @@ const HostNics = ({ hostId }) => {
               onDragStart={(e) => dragStart(e, net, "unassigned")}
             >
               <div className="flex text-left">
-                {renderTFStatusIcon(net?.status==="OPERATIONAL")}{net?.name}<br/>
+                {status2Icon(net?.status)}{net?.name}<br/>
                 {net?.vlan === 0 ? "":`(VLAN ${net?.vlan})` }
               </div>
               <RVI16 iconDef={rvi16VirtualMachine} className="icon" />

@@ -1,3 +1,4 @@
+import Logger from "../../../utils/Logger";
 import BaseModal from "../BaseModal";
 
 /**
@@ -9,7 +10,7 @@ import BaseModal from "../BaseModal";
  * @deprecated NOT USED 
  */
 const VmCPUPinningModal = ({ isOpen, onClose }) => {
-  console.log("...")
+  Logger.debug("...")
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"CPU Pinning"}

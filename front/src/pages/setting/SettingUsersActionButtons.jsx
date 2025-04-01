@@ -1,5 +1,6 @@
 import React from "react";
 import ActionButtonGroup from "../../components/button/ActionButtonGroup";
+import Localization from "../../utils/Localization";
 
 /**
  * @name SettingUsersActionButtons
@@ -19,10 +20,10 @@ const SettingUsersActionButtons = ({
   actionType = 'default'
 }) => {
   const basicActions = [
-    { type: 'add', label: '생성', disabled: false, onBtnClick: () => openModal("add")  },
-    { type: 'edit', label: '편집', disabled: isEditDisabled , onBtnClick: () => openModal("edit") },
+    { type: 'add', label: Localization.kr.CREATE, disabled: false, onBtnClick: () => openModal("add")  },
+    { type: 'edit', label: Localization.kr.UPDATE, disabled: isEditDisabled , onBtnClick: () => openModal("edit") },
     { type: 'changePassword', label: '비밀번호변경', disabled: isEditDisabled, onBtnClick: () => openModal("changePassword")  },
-    { type: 'remove', label: '삭제', disabled: status === "none", onBtnClick: () => openModal("remove")  },
+    { type: 'remove', label: Localization.kr.REMOVE, disabled: status === "none", onBtnClick: () => openModal("remove")  },
     
   ];
 

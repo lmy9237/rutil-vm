@@ -8,6 +8,7 @@ import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
 import "./MTemplate.css";
+import Logger from "../../../utils/Logger";
 
 const TemplateEditModal = ({
   isOpen,
@@ -83,6 +84,7 @@ const TemplateEditModal = ({
       toast.error(`${Localization.kr.NAME}을 입력해주세요.`);
       return;
     }
+    
     const dataToSubmit = {
       clusterVo: {
         id: clsuterVoId || "",
@@ -95,7 +97,8 @@ const TemplateEditModal = ({
       optimizeOption: selectedOptimizeOption,
       osSystem,
     };
-    console.log("템플릿 Data:", dataToSubmit);
+    
+    Logger.debug(`템플릿: ${JSON.stringify(dataToSubmit, null, 2)}`);
     if (editMode) {
       dataToSubmit.id = id;
       editTemplate(
@@ -119,7 +122,7 @@ const TemplateEditModal = ({
     
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"템플릿"}
-      submitTitle={editMode ? "수정" : "생성"}
+      submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "800px", height: "470px" }} 
     >

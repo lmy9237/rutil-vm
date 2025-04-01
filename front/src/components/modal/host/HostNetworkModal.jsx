@@ -4,18 +4,17 @@ import { faArrowsAltH, faDesktop } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import HostNetworkBondingModal from "./HostNetworkBondingModal";
 import HostNetworkEditModal from "./HostNetworkEditModal";
-import { useHost, useNetworkFromCluster, useNetworkInterfaceFromHost } from "../../../api/RQHook";
+import { useHost, useNetworkFromCluster, useNetworkInterfacesFromHost } from "../../../api/RQHook";
 import Loading from "../../common/Loading";
-import { renderTFStatusIcon } from "../../Icon";
 import Localization from "../../../utils/Localization";
 import "../network/MNetwork.css";
-import { RVI16, rvi16Star } from "../../icons/RutilVmIcons";
+import { RVI16, rvi16Star, status2Icon } from "../../icons/RutilVmIcons";
 
 const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
   // 호스트 상세정보 조회로 클러스터id 뽑기
   const { data: host } = useHost(hostId);
   
-  const { data: hostNics } = useNetworkInterfaceFromHost(hostId, (e) => ({
+  const { data: hostNics } = useNetworkInterfacesFromHost(hostId, (e) => ({
     ...e,
     name: e?.name,
     ipv4BootProtocol: e?.bootProtocol,
@@ -246,8 +245,6 @@ const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
     // };
     // const onError = (err) => toast.error(`Error 호스트 네트워크: ${err}`);
 
-    // console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
-
     // editHost(
     //   { hostId: formState.id, hostData: dataToSubmit },
     //   { onSuccess, onError }
@@ -322,7 +319,7 @@ const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
                           onDragStart={(e) => dragStart(e, network, "networkOuter", outerItem.id)}
                         >
                           <div className="left-section">
-                            {renderTFStatusIcon(network?.status==="OPERATIONAL")}{network.name}
+                            {status2Icon(network?.status)}{network.name}
                           </div>
                           <div className="right-section">
                             {network?.role && <FontAwesomeIcon icon={faDesktop} className="icon" />}
@@ -355,7 +352,7 @@ const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
               onDragStart={(e) => dragStart(e, net, "unassigned")}
             >
               <div className="flex items-center justify-center">
-                {renderTFStatusIcon(net?.status==="OPERATIONAL")}{net?.name}<br/>
+                {status2Icon(net?.status)}{net?.name}<br/>
                 {net?.vlan === 0 ? "":`(VLAN ${net?.vlan})` }
               </div>
             </div>

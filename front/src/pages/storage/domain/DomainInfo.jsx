@@ -16,7 +16,7 @@ import DomainImportVms from "./DomainImportVms";
 import DomainImportTemplates from "./DomainImportTemplates";
 import DomainImportDisks from "./DomainImportDisks";
 import {
-  useDomainById,
+  useStroageDomain,
   useOvfUpdateDomain,
   useRefreshLunDomain,
 } from "../../../api/RQHook";
@@ -33,7 +33,7 @@ import Logger from "../../../utils/Logger";
 const DomainInfo = () => {
   const navigate = useNavigate();
   const { id: domainId, section } = useParams();
-  const { data: domain } = useDomainById(domainId);
+  const { data: domain } = useStroageDomain(domainId);
   const { mutate: refreshDomain } = useRefreshLunDomain();
   const { mutate: ovfUpdateDomain } = useOvfUpdateDomain();
 
@@ -105,9 +105,9 @@ const DomainInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "edit", label: "도메인 편집", onClick: () => openModal("edit") },
-    { type: "delete", label: "삭제", disabled: !isACTIVE, onClick: () => openModal("delete") },
-    { type: "destroy", label: "파괴", disabled: !isACTIVE, onClick: () => openModal("destroy") },
+    { type: "edit", label: `도메인 ${Localization.kr.UPDATE}`, onClick: () => openModal("edit") },
+    { type: "delete", label: Localization.kr.REMOVE, disabled: !isACTIVE, onClick: () => openModal("delete") },
+    { type: "destroy", label: Localization.kr.DESTROY, disabled: !isACTIVE, onClick: () => openModal("destroy") },
   ];
 
   const popupItems = [

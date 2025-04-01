@@ -1,4 +1,5 @@
 import BaseModal from "../components/modal/BaseModal";
+import Localization from "./Localization";
 
 const CancelModal = ({ isOpen, onClose }) => {
   return (
@@ -9,7 +10,7 @@ const CancelModal = ({ isOpen, onClose }) => {
       submitTitle="" 
       onSubmit={() => {}} // 무시
       extraFooter={
-        <button className="action" onClick={onClose}>확인</button>
+        <button className="action" onClick={onClose}>{Localization.kr.OK}</button>
       }
       contentStyle={{ width: "670px" }}
     >

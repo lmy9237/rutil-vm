@@ -31,8 +31,8 @@ export const ClusterHeaderButton = {
     subtitle: '??????????',
     additionalText: '목록이름',
     buttons: [
-      { id: 'edit_btn', label: '편집', onClick: () => Logger.debug('Edit button clicked') },
-      { id: 'delete_btn', label: '삭제', onClick: () => Logger.debug('Delete button clicked') },
+      { id: 'edit_btn', label: Localization.kr.UPDATE, onClick: () => Logger.debug('Edit button clicked') },
+      { id: 'delete_btn', label: Localization.kr.REMOVE, onClick: () => Logger.debug('Delete button clicked') },
     ],
     popupItems: [
 

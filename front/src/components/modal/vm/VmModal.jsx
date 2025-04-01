@@ -7,8 +7,8 @@ import {
   useEditVm,
   useAllUpClusters,
   useCDFromDataCenter,
-  useHostFromCluster,
-  useAllActiveDomainFromDataCenter,
+  useHostsFromCluster,
+  useAllActiveDomainsFromDataCenter,
   useAllvnicFromDataCenter,
   useOsSystemsFromCluster,
   useFindTemplatesFromDataCenter,
@@ -27,6 +27,7 @@ import { checkName } from "../../../util";
 import './MVm.css';
 import ModalNavButton from "../../navigation/ModalNavButton";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 // 탭 메뉴
 const tabs = [
@@ -107,8 +108,13 @@ const bootForm = {
   bootingMenu: false, // 부팅메뉴 활성화
 };
 
-const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
-  const vLabel = editMode ? "편집" : "생성";
+const VmModal = ({ 
+  isOpen, 
+  editMode = false, 
+  vmId, 
+  onClose
+}) => {
+  const vLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [selectedModalTab, setSelectedModalTab] = useState("common");
 
   const [formInfoState, setFormInfoState] = useState(infoform);
@@ -161,7 +167,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   const { 
     data: hosts = [], 
     isLoading: isHostsLoading 
-  } = useHostFromCluster(clusterVo.id, (e) => ({ ...e }));
+  } = useHostsFromCluster(clusterVo.id, (e) => ({ ...e }));
   const { 
     data: osList = [], 
     isLoading: isOssLoading 
@@ -169,7 +175,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   const { 
     data: domains = [], 
     isLoading: isDomainsLoading 
-  } = useAllActiveDomainFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
+  } = useAllActiveDomainsFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
   const { 
     data: isos = [], 
     isLoading: isIsoLoading 
@@ -267,27 +273,28 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
 
   // 클러스터 변경에 따른 결과
   useEffect(() => {
-    if (clusterVo.id && clusters.length > 0) {
-      const selectedCluster = clusters.find((c) => c.id === clusterVo.id);
-      if (selectedCluster) {
-        setDataCenterVo((prev) => {
-          return prev.id !== selectedCluster.dataCenterVo?.id
-            ? { id: selectedCluster.dataCenterVo?.id || "", name: selectedCluster.dataCenterVo?.name || "" }
-            : prev;
-        });
-  
-        setArchitecture(selectedCluster.cpuArc || "");
-  
-        const newOsSystem = osList.length > 0 ? osList[0].name : "other_linux";
-        if (formInfoState.osSystem !== newOsSystem) {
-          setFormInfoState((prev) => ({
-            ...prev, osSystem: newOsSystem }));
-        }
+    if (!clusterVo.id || clusters.length === 0) {
+      return;
+    }
+    const selectedCluster = clusters.find((c) => c.id === clusterVo.id);
+    if (selectedCluster) {
+      setDataCenterVo((prev) => {
+        return prev.id !== selectedCluster.dataCenterVo?.id
+          ? { id: selectedCluster.dataCenterVo?.id || "", name: selectedCluster.dataCenterVo?.name || "" }
+          : prev;
+      });
+
+      setArchitecture(selectedCluster.cpuArc || "");
+
+      const newOsSystem = osList.length > 0 ? osList[0].name : "other_linux";
+      if (formInfoState.osSystem !== newOsSystem) {
+        setFormInfoState((prev) => ({
+          ...prev, osSystem: newOsSystem }));
       }
     }
   }, [clusterVo.id, clusters, osList.length]); // osList 전체가 아닌 length만 의존성에 포함
   
-  console.log("NIC 확인용:", nicListState);
+  Logger.debug(`VmModal.nicListState: ${JSON.stringify(nicListState, null, 2)}`);
 
   // 초기화 작업
   useEffect(() => {
@@ -381,13 +388,11 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     const error = validateForm();
     if (error) return toast.error(error);
 
-    
-    
-    console.log("가상머신 데이터 확인:", dataToSubmit);
+    Logger.debug(`가상머신 데이터 ${JSON.stringify(dataToSubmit, null ,2)}`);
     editMode
       ? editVM({ 
         vmId: vmId,
-        vmdata: dataToSubmit
+        vmData: dataToSubmit
       })
       : addVM(dataToSubmit);
   };

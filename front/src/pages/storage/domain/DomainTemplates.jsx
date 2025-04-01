@@ -1,7 +1,7 @@
 import React from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
-import { useAllTemplateFromDomain } from "../../../api/RQHook";
+import { useAllTemplatesFromDomain } from "../../../api/RQHook";
 import TableRowClick from "../../../components/table/TableRowClick";
 import Logger from "../../../utils/Logger";
 
@@ -20,7 +20,7 @@ const DomainTemplates = ({ domainId }) => {
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
-  } = useAllTemplateFromDomain(domainId, (e) => ({ ...e }));
+  } = useAllTemplatesFromDomain(domainId, (e) => ({ ...e }));
 
   const transformedData = templates.map((t) => ({
     ...t,
@@ -40,7 +40,7 @@ const DomainTemplates = ({ domainId }) => {
     // ),
   }));
 
-  Logger.debug("...");
+  Logger.debug("DomainTemplates ...");
   return (
     <>
       <TablesOuter

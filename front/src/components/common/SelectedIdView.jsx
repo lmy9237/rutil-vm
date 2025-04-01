@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Logger from "../../utils/Logger";
 
 /**
  * @name SelectedIdView
@@ -12,13 +13,15 @@ const SelectedIdView = ({ items=[] }) => {
     .join(", ");
   
   const copyText = async (txt) => {
-    console.log(`SelectedIdView > copyText ... txt: ${txt}`)
-    await navigator.clipboard.writeText(txt);
+    Logger.debug(`SelectedIdView > copyText ... txt: ${txt}`)
+    await navigator.clipboard.writeText(txt).catch((e) => {
+      Logger.error(`something went WRONG ... reason: ${e.message}`)
+    });
   }
   useEffect(() => {
     copyText(selectedIds)
   }, [items])
-  console.log(`SelectedIdView ... import.meta.env.DEV: ${import.meta.env.DEV}`)
+  Logger.debug(`SelectedIdView ... import.meta.env.DEV: ${import.meta.env.DEV}`)
   
   return (
     <>

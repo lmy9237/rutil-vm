@@ -3,6 +3,7 @@ import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import Tables from '../../../table/Tables';
 import toast from 'react-hot-toast';
 import Localization from '../../../../utils/Localization';
+import Logger from '../../../../utils/Logger';
 
 const DomainFibre = ({ 
   mode, 
@@ -21,7 +22,7 @@ const DomainFibre = ({
   isFibresError,
   isFibresSuccess
 }) => {  
-  console.log("domainfibre ")
+  Logger.debug("...")
 
   const handleSearchFcp = () => {
     if (!hostVo.id) 
@@ -36,7 +37,7 @@ const DomainFibre = ({
   const handleRowClick = (row) => {
     const selectedRow = Array.isArray(row) ? row[0] : row;
     if (selectedRow && selectedRow.id) {
-      console.log('선택한 LUN ID:', selectedRow.id);
+      Logger.debug('선택한 LUN ID:', selectedRow.id);
       setLunId(selectedRow.id);
     }
   }; 

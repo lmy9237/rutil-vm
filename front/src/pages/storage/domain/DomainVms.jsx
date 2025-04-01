@@ -2,7 +2,7 @@ import React from 'react';
 import Loading from '../../../components/common/Loading';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import { useAllVMFromDomain } from '../../../api/RQHook';
+import { useAllVMsFromDomain } from '../../../api/RQHook';
 import { checkZeroSizeToGB } from '../../../util';
 import TableRowClick from '../../../components/table/TableRowClick';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +25,7 @@ const DomainVms = ({ domainId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-  } = useAllVMFromDomain(domainId, (e) => ({ ...e, }));
+  } = useAllVMsFromDomain(domainId, (e) => ({ ...e, }));
 
   const transformedData = vms.map((vm) => ({
     _name: (
@@ -61,10 +61,9 @@ const DomainVms = ({ domainId }) => {
   Logger.debug("...")
   return (
     <>
-      <TablesOuter
-        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
-        columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}
+      <TablesOuter columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}
         data={transformedData}
+        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
     </>
     

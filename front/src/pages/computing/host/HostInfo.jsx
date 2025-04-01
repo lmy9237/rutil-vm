@@ -12,8 +12,8 @@ import HostModals from "../../../components/modal/host/HostModals";
 import Localization from "../../../utils/Localization";
 import { rvi24Host } from "../../../components/icons/RutilVmIcons";
 import { useHost } from "../../../api/RQHook";
-import "./Host.css";
 import Logger from "../../../utils/Logger";
+import "./Host.css";
 
 /**
  * @name HostInfo
@@ -34,7 +34,11 @@ import Logger from "../../../utils/Logger";
 const HostInfo = () => {
   const navigate = useNavigate();
   const { id: hostId, section } = useParams();
-  const { data: host, isError, error, isLoading } = useHost(hostId);
+  const { 
+    data: host, 
+    isError, error, 
+    isLoading
+  } = useHost(hostId);
 
   const isUp = host?.status === "UP";
   const isMaintenance = host?.status === "MAINTENANCE";
@@ -93,17 +97,8 @@ const HostInfo = () => {
 
   // 편집, 삭제 버튼들
   const sectionHeaderButtons = [
-    {
-      type: "edit",
-      label: "편집",
-      disabled: !isUp,
-      onClick: () => openModal("edit"),
-    }, {
-      type: "delete",
-      label: "삭제",
-      disabled: !isMaintenance,
-      onClick: () => openModal("delete"),
-    },
+    { type: "edit", label: Localization.kr.UPDATE, disabled: !isUp, onClick: () => openModal("edit"), }, 
+    { type: "delete", label: Localization.kr.REMOVE, disabled: !isMaintenance, onClick: () => openModal("delete"), },
   ];
 
   const popupItems = [
@@ -114,11 +109,11 @@ const HostInfo = () => {
       onClick: () => openModal("deactivate"),
     }, {
       type: "activate",
-      label: "활성화",
+      label: Localization.kr.ACTIVATE,
       disabled: isMaintenance ,
       onClick: () => openModal("activate"),
     }, {
-      type: "restart",
+      type: Localization.kr.RESTART,
       label: "재시작",
       disabled: !isUp,
       onClick: () => openModal("restart"),

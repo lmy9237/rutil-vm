@@ -34,29 +34,13 @@ const Login = () => {
     isLoading: isAuthLoading,
     mutate: authMutate,
   } = useAuthenticate(username, password, (res) => {
-    Logger.debug(res);
-    if (!res || res.code > 200) {
-      toast.error(`실패 ... ${res.message}`);
-      return;
-    }
-    setAuth({
-      isUserAuthenticated: res,
-    })
+    setAuth({ isUserAuthenticated: res, })
     // 토큰 찾아 집어 넣은 후
     // setValue("username", username);
     // setValue("isUserAuthenticated", true);
     navigate(from, { replace: true });
   }, (err) => {
-    toast.error("로그인에 실패했습니다. 잠시 후 다시 시도해주세요.");
-    if (!err?.response) {
-      setErrMsg('No Server Response');
-    } else if (err.response?.status === 400) {
-        setErrMsg('Missing Username or Password');
-    } else if (err.response?.status === 401) {
-        setErrMsg('Unauthorized');
-    } else {
-        setErrMsg('Login Failed');
-    }
+    toast.error(err?.message);
     errRef.current.focus();
   });
 
@@ -78,7 +62,6 @@ const Login = () => {
         >
           <IconInput className="login-input text-lg"
             required
-            // icon={faUser}
             type="text"
             placeholder={Localization.kr.PLACEHOLDER_USERNAME}
             value={username ?? ""}
@@ -104,7 +87,7 @@ const Login = () => {
           </button>
         </form>
       </div>
-      <FooterCompany />
+      <FooterCompany isBrief={true} />
     </>
   );
 };

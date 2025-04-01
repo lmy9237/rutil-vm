@@ -2,9 +2,6 @@ import { useState } from "react";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
-import {
-  renderUpDownStatusIcon,
-} from "../../../components/Icon";
 import { useAllVmsFromNetwork } from "../../../api/RQHook";
 import { checkZeroSizeToMbps } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
@@ -49,7 +46,7 @@ const NetworkVms = ({ networkId }) => {
       ),
       fqdn: vm?.fqdn,
       ipAddress: vm?.ipv4 + "" + vm?.ipv6,
-      vnicStatus: renderUpDownStatusIcon(nic?.status),
+      vnicStatus: status2Icon(nic?.status),
       vnic: nic?.name || "",
       vnicRx: checkZeroSizeToMbps(nic?.rxSpeed),
       vnicTx: checkZeroSizeToMbps(nic?.txSpeed),

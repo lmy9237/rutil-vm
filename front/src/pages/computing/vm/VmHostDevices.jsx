@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import SelectedIdView from "../../../components/common/SelectedIdView";
-import { useHostdevicesFromVM } from "../../../api/RQHook";
+import { useHostDevicesFromVM } from "../../../api/RQHook";
 
 /**
  * @name VmHostDevices
@@ -18,7 +18,7 @@ const VmHostDevices = ({ vmId }) => {
     isLoading: isHostDevicesLoading,
     isError: isHostDevicesError,
     isSuccess: isHostDevicesSuccess,
-  } = useHostdevicesFromVM(vmId, (e) => ({ ...e }));
+  } = useHostDevicesFromVM(vmId, (e) => ({ ...e }));
 
   // const [activeModal, setActiveModal] = useState(null);
   const [selectedDevices, setSelectedDevices] = useState([]);

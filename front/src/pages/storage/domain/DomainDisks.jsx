@@ -1,6 +1,6 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DiskDupl from "../../../components/dupl/DiskDupl";
-import { useAllDiskFromDomain } from "../../../api/RQHook";
+import { useAllDisksFromDomain } from "../../../api/RQHook";
 
 /**
  * @name DomainDisks
@@ -15,7 +15,7 @@ const DomainDisks = ({ domainId }) => {
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
-  } = useAllDiskFromDomain(domainId, (e) => ({ ...e }));
+  } = useAllDisksFromDomain(domainId, (e) => ({ ...e }));
 
   return (
     <>

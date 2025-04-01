@@ -101,10 +101,10 @@ const VmInfo = () => {
 
   const sectionHeaderButtons = [
     {
-      type: "edit", label: "편집", disabled: !isUp
+      type: "edit", label: Localization.kr.UPDATE, disabled: !isUp
       , onClick: () => openModal("edit"),
     }, {
-      type: "start", label: "실행", disabled: isUp && !isMaintenance
+      type: "start", label: Localization.kr.START, disabled: isUp && !isMaintenance
       , onClick: () => openModal("start"),
     }, {
       type: "pause", label: "일시중지", disabled: !isUp

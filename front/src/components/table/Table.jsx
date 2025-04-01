@@ -92,7 +92,7 @@ const Table = ({
   };
 
   const handleSort = (column) => {
-    console.log(`Table > handleSort ... column: ${column}`);
+    Logger.debug(`Table > handleSort ... column: ${JSON.stringify(column, null, 2)}`);
     if (column.isIcon) return;
     const { accessor } = column;
     const direction =
@@ -103,7 +103,7 @@ const Table = ({
   };
 
   const handleMouseEnter = (e, rowIndex, colIndex, content) => {
-    console.log(`Table > handleMouseEnter ... rowIndex: ${rowIndex}, colIndex: ${colIndex}`);
+    Logger.debug(`Table > handleMouseEnter ... rowIndex: ${rowIndex}, colIndex: ${colIndex}`);
     const element = e.target;
     const hasOverflow = element.scrollWidth > element.clientWidth;
     setTooltips((prevTooltips) => ({

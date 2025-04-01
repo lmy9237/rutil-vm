@@ -2,7 +2,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
 import { convertBytesToGB } from '../../../util';
-import { useAllStorageDomainFromDisk } from "../../../api/RQHook";
+import { useAllStorageDomainsFromDisk } from "../../../api/RQHook";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 
@@ -20,13 +20,13 @@ const DiskDomains = ({ diskId }) => {
     isLoading: isDomainsLoading,
     isError: isDomainsError,
     isSuccess: isDomainsSuccess,
-  } = useAllStorageDomainFromDisk(diskId, (e) => ({
+  } = useAllStorageDomainsFromDisk(diskId, (e) => ({
     ...e,
     status: e.status === 'ACTIVE' ? '활성화' : '비활성화',
   }));
 
   const sizeCheck = (size) => {
-    Logger.debug.log(`DiskDomains > sizeCheck ... size: ${size}`)
+    Logger.debug(`DiskDomains > sizeCheck ... size: ${size}`)
     return (size === 0) 
       ? 'N/A' 
       : `${convertBytesToGB(size)} GB`;

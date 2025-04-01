@@ -7,6 +7,7 @@ import LabelCheckbox from "../../label/LabelCheckbox";
 import { validateUsername, validatePw } from "../../../util";
 import "./SettingsUserModal.css";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 const initialFormState = {
   id: "",
@@ -63,7 +64,7 @@ const SettingUsersModal = ({
   const handleFormSubmit = (e) => {
     e.preventDefault();
     // 디스크 연결은 id값 보내기 생성은 객체로 보내기
-    console.log("SettingUsersModal > handleFormSubmit ... ");
+    Logger.debug("SettingUsersModal > handleFormSubmit ... ");
     const error = validateForm(editMode);
     if (error) {
       toast.error(error);
@@ -76,17 +77,17 @@ const SettingUsersModal = ({
   };
 
   const updateInput = (field) => (e) => {
-    console.log(`SettingUsersModal > updateInput ... field: ${field}`)
+    Logger.debug(`SettingUsersModal > updateInput ... field: ${field}`)
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   const updateInputCheck = (field) => (e) => {
-    console.log(`SettingUsersModal > updateInputCheck ... field: ${field}`)
+    Logger.debug(`SettingUsersModal > updateInputCheck ... field: ${field}`)
     setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
   };
 
   const validateForm = (editMode) => {
-    console.log(`SettingUsersModal > validateForm ... editMode: ${editMode}`);
+    Logger.debug(`SettingUsersModal > validateForm ... editMode: ${editMode}`);
     let vUsername = validateUsername(formState.username);
     if (vUsername) return vUsername;
     let vPassword = validatePw(formState.password, formState.repassword);
@@ -95,11 +96,11 @@ const SettingUsersModal = ({
     return null;
   };
 
-  console.log("...");
+  Logger.debug("...");
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"사용자"}
-      submitTitle={editMode ? "편집" : changePassword ? "비밀번호 변경" : "생성"}
+      submitTitle={editMode ? Localization.kr.UPDATE : changePassword ? "비밀번호 변경" : Localization.kr.CREATE}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px", height: "560px" }}
     >

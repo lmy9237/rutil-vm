@@ -11,12 +11,13 @@ import {
   useClustersFromDataCenter,
   useAddNetwork,
   useEditNetwork,
-  useNetworkById,
+  useNetwork,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import TablesOuter from "../../table/TablesOuter";
-import "./MNetwork.css";
 import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
+import "./MNetwork.css";
 
 const initialFormState = {
   id: "",
@@ -39,7 +40,7 @@ const NetworkModal = ({
   dcId,
   onClose,
 }) => {
-  const nLabel = editMode ? "편집" : "생성";
+  const nLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [formState, setFormState] = useState(initialFormState);
 
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
@@ -49,8 +50,9 @@ const NetworkModal = ({
   const { mutate: addNetwork } = useAddNetwork();
   const { mutate: editNetwork } = useEditNetwork();
 
-  const { data: network } = useNetworkById(networkId);
-  console.log("netowrk: ", network);
+  const { data: network } = useNetwork(networkId);
+  
+  Logger.debug(`netowrk: ${JSON.stringify(network)}`);
   const { 
     data: datacenters = [], 
     isLoading: isDataCentersLoading 
@@ -148,8 +150,7 @@ const NetworkModal = ({
     };
     const onError = (err) => toast.error(`Error ${nLabel} network: ${err}`);
 
-    console.log("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
-
+    Logger.debug(`NetworkModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`); // 데이터를 확인하기 위한 로그
     editMode
       ? editNetwork(
         { networkId: formState.id, networkData: dataToSubmit },

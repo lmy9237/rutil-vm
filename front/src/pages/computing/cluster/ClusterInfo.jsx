@@ -89,8 +89,8 @@ const ClusterInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "edit", label: "편집", onClick: () => openModal("edit") },
-    { type: "delete", label: "삭제", onClick: () => openModal("delete") },
+    { type: "edit", label: Localization.kr.UPDATE, onClick: () => openModal("edit") },
+    { type: "delete", label: Localization.kr.REMOVE, onClick: () => openModal("delete") },
   ];
 
   Logger.debug("...");

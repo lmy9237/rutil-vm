@@ -1,5 +1,5 @@
 import EventDupl from "../../../components/dupl/EventDupl";
-import { useAllEventFromDomain } from "../../../api/RQHook";
+import { useAllEventsFromDomain } from "../../../api/RQHook";
 
 /**
  * @name DomainEvents
@@ -15,7 +15,7 @@ const DomainEvents = ({ domainId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
-  } = useAllEventFromDomain(domainId, (e) => ({
+  } = useAllEventsFromDomain(domainId, (e) => ({
     ...e,
   }));
 

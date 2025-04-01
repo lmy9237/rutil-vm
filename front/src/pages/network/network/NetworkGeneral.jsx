@@ -1,5 +1,5 @@
 import React from "react";
-import { useNetworkById } from "../../../api/RQHook";
+import { useNetwork } from "../../../api/RQHook";
 import InfoTable from "../../../components/table/InfoTable";
 import Localization from "../../../utils/Localization";
 
@@ -11,7 +11,7 @@ import Localization from "../../../utils/Localization";
  * @returns {JSX.Element} NetworkGeneral
  */
 const NetworkGeneral = ({ networkId }) => {
-  const { data: network } = useNetworkById(networkId);
+  const { data: network } = useNetwork(networkId);
 
   const tableRows = [
     { label: Localization.kr.NAME, value: network?.name },

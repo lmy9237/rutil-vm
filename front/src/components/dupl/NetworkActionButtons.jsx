@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 import ActionButton from "../button/ActionButton";
+import Localization from "../../utils/Localization";
 
 const NetworkActionButtons = ({
   openModal,
@@ -12,10 +13,10 @@ const NetworkActionButtons = ({
 }) => {
   const navigate = useNavigate();
   const basicActions = [
-    { type: "create", label: "생성", disabled: false, onBtnClick: () => openModal("create") },
-    { type: "edit", label: "편집", disabled: isEditDisabled, onBtnClick: () => openModal("edit") },
-    { type: "delete", label: "삭제", disabled: isDeleteDisabled, onBtnClick: () => openModal("delete") },
-    { type: "import", label: "가져오기", disabled: false, onBtnClick: () => openModal("import") },
+    { type: "create", label: Localization.kr.CREATE, disabled: false, onBtnClick: () => openModal("create") },
+    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled, onBtnClick: () => openModal("edit") },
+    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled, onBtnClick: () => openModal("delete") },
+    { type: "import", label: Localization.kr.IMPORT, disabled: false, onBtnClick: () => openModal("import") },
   ];
 
   return (

@@ -14,7 +14,7 @@ const VmNic = ({
     vnicProfileVo: { id: nic?.vnicProfileVo?.id, name: nic?.vnicProfileVo?.name }
   }));
 
-  Logger.debug("NIC 확인용:", nicsState);
+  Logger.debug(`VmNic.nicsState: ${JSON.stringify(nicsState, null, 2)}`);
 
   const handleChange = (index, value) => {
     const updated = [...nicsState];
