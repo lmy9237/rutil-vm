@@ -16,6 +16,7 @@ import {
 import Localization from "../../../utils/Localization";
 import TablesOuter from "../../table/TablesOuter";
 import "./MNetwork.css";
+import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
 
 const initialFormState = {
   id: "",
@@ -269,7 +270,7 @@ const NetworkModal = ({
           <br/>
         <span>DNS 수정 필요</span>
           </div>
-        {/* <LabelCheckbox id="dns_settings" label="DNS 설정"
+        <LabelCheckbox id="dns_settings" label="DNS 설정"
           checked={formState.dnsEnabled}
           onChange={(e) => {
             const isChecked = e.target.checked;
@@ -283,6 +284,7 @@ const NetworkModal = ({
             }
           }}
         />
+        
         {formState.dnsEnabled && (
           <>
             <div className="text-[15px] font-bold"> DNS 서버 </div>
@@ -328,7 +330,7 @@ const NetworkModal = ({
             )
           }
           </>
-        )} */}
+        )}
         
         {!editMode && (
           <div className="network-new-cluster-form">

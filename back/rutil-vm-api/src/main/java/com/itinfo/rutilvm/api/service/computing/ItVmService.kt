@@ -211,7 +211,8 @@ class VmServiceImpl(
 	// 가상머신이 down 상태가 아니라면 편집 불가능
 	@Throws(Error::class)
 	override fun update(vmUpdateVo: VmCreateVo): VmCreateVo? {
-		log.info("update ... vmCreateVo: {}", vmUpdateVo)
+		log.info("update ... ")
+		// log.info("update ... vmCreateVo: {}", vmUpdateVo)
 		if(vmUpdateVo.diskAttachmentVos.filter { it.bootable }.size > 1){
 			log.error("디스크 부팅가능은 한개만 가능")
 			throw ErrorPattern.VM_VO_INVALID.toException()
@@ -225,10 +226,6 @@ class VmServiceImpl(
 
 		// 새로운 디스크 목록에서 기존에 존재하지 않는 디스크만 필터링
 		val newDisks = vmUpdateVo.diskAttachmentVos.filter { it.diskImageVo.id !in existDiskIds }
-
-		newDisks.forEach {
-			println(it.diskImageVo.alias)
-		}
 
 		// 기존 nic 목록 조회
 		val existNics: List<Nic> = conn.findAllNicsFromVm(vmUpdateVo.id).getOrDefault(emptyList())
@@ -244,6 +241,8 @@ class VmServiceImpl(
 		val deleteNics = existNics.filter { it.id() !in newNicIds }
 
 		// NIC 삭제 처리
+		// TODO: 에러처리 고도화 필요
+
 		deleteNics.forEach { nic ->
 			conn.removeNicFromVm(vmUpdateVo.id, nic.id())
 			log.info("nic 삭제: {}", nic.name())

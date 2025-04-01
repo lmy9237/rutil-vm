@@ -67,11 +67,11 @@ enum class Term(
 }
 
 fun Term.logSuccess(action: String, target: String = "") {
-//	log.info("완료: {} {}  ... {}", this@logSuccess.desc, action, target)
+	// log.info("완료: {} {}  ... {}", this@logSuccess.desc, action, target)
 }
 
 fun Term.logSuccessWithin(withinItem: Term, action: String, target: String = "") {
-//	log.info("완료: {} 내 {} {} ... {}", this@logSuccessWithin.desc, withinItem.desc, action, target)
+	// log.info("완료: {} 내 {} {} ... {}", this@logSuccessWithin.desc, withinItem.desc, action, target)
 
 }
 
