@@ -1,4 +1,5 @@
 import React, { useEffect, memo } from "react";
+import { useNavigate } from "react-router-dom";
 import { adjustFontSize } from "../../UIEvent";
 import { debounce } from "lodash"; // 리스너의 호출 빈도를 줄이기 위해 디바운싱을 사용
 import DashboardBoxGroup from "./DashboardBoxGroup";
@@ -69,6 +70,8 @@ const StorageMemoryBarChart = ({ storageMemory }) => (
 
 //#region: Dashboard
 const Dashboard = () => {
+
+  const navigate = useNavigate();
   const {
     data: dashboard,
     status: dashboardStatus,
@@ -204,6 +207,7 @@ const Dashboard = () => {
     window.addEventListener("resize", handleResize);
     adjustFontSize();
 
+    navigate("/")
     return () => {
       window.removeEventListener("resize", handleResize);
     };

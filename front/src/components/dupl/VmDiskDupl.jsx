@@ -83,7 +83,7 @@ const VmDiskDupl = ({
   const columns = columnMap[activeDiskType];
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <div className="vm-disk-button center">
+      <div className="vm-disk-button center mb-2.5">
         <FilterButton
           options={diskFilters}
           activeOption={activeDiskType}

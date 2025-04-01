@@ -79,11 +79,31 @@ const VmHost = ({
                 }}
                 disabled={formHostState.hostInCluster}
               >
-                {hosts.map((opt) => (
-                  <option key={opt.id} value={opt.id}>
-                    {opt.name}
-                  </option>
-                ))}
+              <div className="host-select-list">
+                {hosts.map((host) => {
+                  const isSelected = formHostState.hostVos.some((h) => h.id === host.id);
+                  return (
+                    <div
+                      key={host.id}
+                      className={`host-option-item ${isSelected ? "selected" : ""}`}
+                      onClick={() => {
+                        const updated = isSelected
+                          ? formHostState.hostVos.filter((h) => h.id !== host.id) // 제거
+                          : [...formHostState.hostVos, host]; // 추가
+
+                        setFormHostState((prev) => ({
+                          ...prev,
+                          hostVos: updated,
+                        }));
+                      }}
+             
+                    >
+                      {host.name}
+                    </div>
+                  );
+                })}
+              </div>
+
               </select>
 
               <div style={{ marginTop: "10px" }}>

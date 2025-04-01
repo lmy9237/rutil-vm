@@ -26,11 +26,19 @@ const VmSystem = ({ formSystemState, setFormSystemState}) => {
   //     }));
   //   }
   // };
-  const handleCpuChange = (newCpuValueOrEvent) => {
-    const totalCpu = typeof newCpuValueOrEvent === 'number'
-      ? newCpuValueOrEvent
-      : parseInt(newCpuValueOrEvent.target.value, 10);
+  const handleCpuChange = (e) => {
+    const value = e.target.value;
   
+    // 입력값이 빈 문자열이면 그대로 상태 업데이트만 (렌더링은 반영 안 함)
+    if (value === "") {
+      setFormSystemState((prev) => ({
+        ...prev,
+        cpuTopologyCnt: "",
+      }));
+      return;
+    }
+  
+    const totalCpu = parseInt(value, 10);
     if (!isNaN(totalCpu) && totalCpu > 0) {
       setFormSystemState((prev) => ({
         ...prev,
@@ -91,8 +99,16 @@ const VmSystem = ({ formSystemState, setFormSystemState}) => {
           value={formSystemState.memoryActual} 
           onChange={ handleInputChange("memoryActual") }
         />
-        <LabelInputNum id="total_cpu" label="총 가상 CPU"
-          value={formSystemState.cpuTopologyCnt}
+        <LabelInputNum
+          id="total_cpu"
+          label="총 가상 CPU"
+          value={
+            formSystemState.cpuTopologyCnt !== undefined &&
+            formSystemState.cpuTopologyCnt !== null &&
+            !isNaN(formSystemState.cpuTopologyCnt)
+              ? formSystemState.cpuTopologyCnt
+              : ""
+          }
           onChange={handleCpuChange}
         />
         {/* <label>총 가상 CPU</label>

@@ -2,16 +2,19 @@
   font-size: var(--fs-16);
   width: 100%;height: var(--h-rutil-footer);
   display:flex;flex-direction:column;justify-content:flex-start;align-items:center;
+  display: flex;
+  flex-direction: column;
+  position: relative;
   /* position: absolute;bottom: 0;z-index: 3; */
 }
-.footer-outer.open {
+/* .footer-outer.open {
   height: var(--h-rutil-footer-open) !important;
-}
+} */
 .footer {
   width:100%;min-height:var(--h-rutil-footer);
   display:flex;
   /* flex-direction:row;justify-content:flex-start;align-items:center; */
-  border-top: 1px solid #cacaca;
+  border-top: 1px solid var(--color-gray-6);
   background:var(--color-primary-white);
   box-shadow: 0px -2px 4px 0px rgba(0, 0, 0, 0.1);
   z-index: 5;
@@ -30,18 +33,23 @@
   color: var(--color-black);
 }
 .footer-content {
-  width:100%;height:100%;
+  width: 100%;
+  flex: 1;
+  display: none;
   background: #f7f7f7;
-  display:none;
+  overflow: hidden;
 }
+
 .footer-content.open {
   display:flex;
+  flex-direction: column;
 }
 .footer-nav {
   font-size: var(--fs-default);
   width: 100%;
-  max-height: 190px; /* 원하는 높이 설정 */
-  overflow-y: auto; /* 세로 스크롤 추가 */
+  height: 100%;
+  flex: 1;
+  overflow-y: auto;
 }
 .footer-nav table{
   width: 100%;
@@ -62,4 +70,17 @@
 .footer-nav table td{
   padding:2px;
   border-bottom:var(--border-simple);
+}
+
+.footer-resizer {
+  height: 3px;
+  width: 100%;
+  cursor: row-resize;
+  background-color: var(--color-gray-6);
+  z-index: 10;
+  position: relative;
+}
+
+.footer-resizer:hover {
+  background-color: #aaa;
 }

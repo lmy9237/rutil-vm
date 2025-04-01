@@ -16,9 +16,7 @@ const SideNavbar = ({
   getBackgroundColor,
 }) => {
   const location = useLocation();
-  const [lastSelected, setLastSelected] = useState(
-    () => localStorage.getItem("lastSelected") || "computing"
-  );
+  const [lastSelected, setLastSelected] = useState(() => localStorage.getItem("lastSelected") || "computing");
 
   // 📌 현재 URL에 맞춰 버튼 활성화
   useEffect(() => {

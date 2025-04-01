@@ -221,7 +221,7 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
       });
       setFormHostState({
         hostInCluster: vm?.hostInCluster || true,
-        hostVos: vm?.hostVos.map((host) => {
+        hostVos: (vm?.hostVos || [])?.map((host) => {
           return { id: host.id, name: host.name}}),
         migrationMode: vm?.migrationMode || "migratable",
       });
@@ -305,7 +305,9 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     }
   }, [isOpen, templates, editMode]);
   
-
+  // 템플릿항목 숨기는 조건건
+  const isTemplateHidden = editMode && templateVo.id === "00000000-0000-0000-0000-000000000000";
+  
   const dataToSubmit = {
     // VmInfo
     ...formInfoState,
@@ -332,11 +334,17 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
     ...formBootState,
 
     // nic 목록
-    nicVos: nicListState.map((nic) => ({
-      id: nic?.id || "",
-      name: nic?.name,
-      vnicProfileVo: { id: nic?.vnicProfileVo?.id }
-    })),
+    nicVos: Array.isArray(nicListState)
+    ? nicListState.map((nic) => ({
+        id: nic?.id || "",
+        name: nic?.name || "",
+        vnicProfileVo: {
+          id: nic?.vnicProfileVo && "id" in nic.vnicProfileVo
+            ? nic.vnicProfileVo.id
+            : null
+        }
+      }))
+    : [],
 
     // 디스크 데이터 (객체 형태 배열로 변환)
     diskAttachmentVos: diskListState.map((disk) => ({
@@ -411,16 +419,19 @@ const VmModal = ({ isOpen, editMode = false, vmId, onClose }) => {
             }}
             etcLabel={`[${Localization.kr.DATA_CENTER}: ${dataCenterVo.name}]`}
           />
-          <LabelSelectOptionsID label="템플릿"
-            value={templateVo.id}
-            disabled={editMode} // 편집 모드일 경우 비활성화
-            loading={isTemplatesLoading}
-            options={templates}
-            onChange={(e) => {
-              const selected = templates.find(t => t.id === e.target.value);
-              if (selected) setTemplateVo({ id: selected.id, name: selected.name });
-            }}
-          />
+          {!isTemplateHidden && (
+            <LabelSelectOptionsID
+              label="템플릿"
+              value={templateVo.id}
+              disabled={editMode}
+              loading={isTemplatesLoading}
+              options={templates}
+              onChange={(e) => {
+                const selected = templates.find(t => t.id === e.target.value);
+                if (selected) setTemplateVo({ id: selected.id, name: selected.name });
+              }}
+            />
+          )}
           {/* TODO: options에 대한 별도 소형 컴포넌트 생성 필요 */}
           <LabelSelectOptionsID id="os_system" label="운영 시스템"            
             value={formInfoState.osSystem}

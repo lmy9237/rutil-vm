@@ -1,5 +1,5 @@
-import React, { Suspense, useEffect, useState } from "react";
-import Loading from "../../../components/common/Loading";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
@@ -10,15 +10,14 @@ import { checkZeroSizeToMbps } from "../../../util";
 import FilterButton from "../../../components/button/FilterButton";
 import ActionButton from "../../../components/button/ActionButton";
 import Localization from "../../../utils/Localization";
-import HostNetworkModal from "../../../components/modal/host/HostNetworkModal";
 import {
   useConnectedHostsFromNetwork,
   useDisconnectedHostsFromNetwork,
-  useNetworkInterfaceFromHost,
 } from "../../../api/RQHook";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+
 
 /**
  * @name NetworkHosts
@@ -29,6 +28,7 @@ import SelectedIdView from "../../../components/common/SelectedIdView";
  *
  */
 const NetworkHosts = ({ networkId }) => {
+  const navigate = useNavigate();
   const {
     data: connectedHosts = [],
     isLoading: isConnectedHostsLoading,
@@ -45,7 +45,6 @@ const NetworkHosts = ({ networkId }) => {
 
   const [activeFilter, setActiveFilter] = useState("connected");
   const [selectedHost, setSelectedHost] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const selectedHostId = (Array.isArray(selectedHost) ? selectedHost : []).map((host) => host.id).join(", ");
   // const buttonClass = (filter) =>
@@ -82,12 +81,7 @@ const NetworkHosts = ({ networkId }) => {
     }));
   };
 
-  const {
-    data: nics = [],
-    isLoading: isNicsLoading,
-    isError: isNicsError,
-    isSuccess: isNicsSuccess,
-  } = useNetworkInterfaceFromHost(selectedHostId, (e) => ({ ...e }));
+
 
   const connectionFilters = [
     { key: "connected", label: "연결됨" },
@@ -98,12 +92,16 @@ const NetworkHosts = ({ networkId }) => {
   return (
     <>
       <div className="header-right-btns">
-        <ActionButton
-          label={`${Localization.kr.HOST} 네트워크 설정`}
-          actionType="default"
-          onClick={() => setIsModalOpen(true)}
-          disabled={!selectedHostId}  // selectedHostId가 없으면 비활성화
-        />
+      <ActionButton
+  label={`${Localization.kr.HOST} 네트워크 설정`}
+  actionType="default"
+  onClick={() => {
+    if (selectedHostId) {
+      navigate(`/computing/hosts/${selectedHostId}/nics`);
+    }
+  }}
+  disabled={!selectedHostId}
+/>
       </div>
       <FilterButton options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
 
@@ -136,16 +134,6 @@ const NetworkHosts = ({ networkId }) => {
       />
 
       <SelectedIdView items={selectedHost} />
-
-      {/* 호스트 네트워크 모달창 */}
-      <Suspense fallback={<Loading />}>
-        <HostNetworkModal
-          nicData={nics}
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          hostId={selectedHostId}
-        />
-      </Suspense>
     </>
   );
 };

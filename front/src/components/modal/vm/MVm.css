@@ -104,6 +104,13 @@
   border:var(--border-btn);
   padding: 3px;
 }
+.host-option-item {
+  cursor: pointer;
+}
+.host-option-item.selected {
+  background-color: #cce5ff;
+}
+
 /*가상머신 ... 버튼 새템플릿 생성*/
 .new-template-popup .section-table-outer {
   height: 15vh;

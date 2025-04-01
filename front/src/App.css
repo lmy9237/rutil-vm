@@ -55,7 +55,8 @@ html {
   --color-gray-2:rgb(177, 182, 184);
   --color-gray-3: #cfe4eb;  
   --color-gray-4: #C6C6C6;         
-  --color-gray-5: #888;     
+  --color-gray-5: #888;    
+  --color-gray-6: #cacaca;      
   --color-gray-disabled: #6d6d6d;     /* 비활성화 색 */
   --color-disabled-2: #888;;
   --color-input-disabled:#EDEDED;
@@ -409,14 +410,18 @@ textarea {
 /*토스트*/
 .toast {
     font-size: var(--fs-16);
+    display: flex !important; 
     width: 400px;
     padding: 12px 9px;
     border-radius: 2%;
-    text-align: left;
+    text-align: left !important;
     color: black;
     border: var(--border-simple);
 }
-
+.toast > div:last-child {
+    flex: none !important;   
+    text-align: left !important;
+}
 /* 성공 토스트 */
 .toast-success {
   border-left: 4px solid limegreen;
