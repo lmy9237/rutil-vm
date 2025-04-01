@@ -21,14 +21,12 @@ const HostDevices = ({ hostId }) => {
 
   Logger.debug("...")
   return (
-    <>
-      <div className="section-table-outer">
-        <Tables columns={TableColumnsInfo.DEVICE_FROM_HOST}
-          data={hostDevices}
-          isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
-        />
-      </div>
-    </>
+    <div className="section-table-outer">
+      <Tables columns={TableColumnsInfo.DEVICE_FROM_HOST}
+        data={hostDevices}
+        isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
+      />
+    </div>
   );
 };
 

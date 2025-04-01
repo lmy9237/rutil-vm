@@ -11,10 +11,13 @@ const SelectedIdView = ({ items=[] }) => {
     .map((e) => e.id)
     .join(", ");
   
+  const copyText = async (txt) => {
+    console.log(`SelectedIdView > copyText ... txt: ${txt}`)
+    await navigator.clipboard.writeText(txt);
+  }
   useEffect(() => {
-    console.log("SelectedIdView ... copying")
-    navigator.clipboard.writeText(selectedIds);
-  }, items)
+    copyText(selectedIds)
+  }, [items])
   console.log(`SelectedIdView ... import.meta.env.DEV: ${import.meta.env.DEV}`)
   
   return (

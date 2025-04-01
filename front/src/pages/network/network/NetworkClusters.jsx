@@ -9,6 +9,7 @@ import NetworkClusterModal from "../../../components/modal/network/NetworkCluste
 import { useAllClustersFromNetwork } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 
 /**
  * @name NetworkClusters
@@ -55,6 +56,8 @@ const NetworkClusters = ({ networkId }) => {
     ].filter(Boolean).join(" / "),
   }));
 
+  const [selectedClusters, setSelectedClusters] = useState([]);
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   Logger.debug("...");
@@ -72,6 +75,7 @@ const NetworkClusters = ({ networkId }) => {
         columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}
         data={transformedData}
         shouldHighlight1stCol={true}
+        onRowClick={(selectedRows) => setSelectedClusters(selectedRows)}
         multiSelect={false}
         onContextMenuItems={(row) => [
           <div className="right-click-menu-box">
@@ -84,6 +88,8 @@ const NetworkClusters = ({ networkId }) => {
           </div>,
         ]}
       />
+
+      <SelectedIdView item={selectedClusters}/>
 
       {/* 네트워크 관리창 */}
       <Suspense fallback={<Loading />}>

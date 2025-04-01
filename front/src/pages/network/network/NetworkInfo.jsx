@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { faServer } from "@fortawesome/free-solid-svg-icons";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";

@@ -81,17 +81,14 @@ const NetworkVms = ({ networkId }) => {
       <FilterButton options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
 
       <TablesOuter
-        isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
         columns={
           activeFilter === "running"
             ? TableColumnsInfo.VMS_UP_FROM_NETWORK
             : TableColumnsInfo.VMS_STOP_FROM_NETWORK
         }
         data={ transformedFilteredData }
-        onRowClick={(rows) => {
-          Logger.debug(`Selected Rows: ${rows}`); // 선택된 데이터 확인
-          setSelectedNics(Array.isArray(rows) ? rows : []);
-        }}
+        onRowClick={(selectedRows) => setSelectedNics(selectedRows)}
+        isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
       />
 
       <SelectedIdView items={selectedNics} />

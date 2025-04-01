@@ -7,6 +7,7 @@ import TemplateNicDeleteModal from "../../../components/modal/template/TemplateN
 import { useAllTemplatesFromNetwork } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
 import Logger from "../../../utils/Logger";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 
 /**
  * @name NetworkTemplates
@@ -59,8 +60,7 @@ const NetworkTemplates = ({ networkId }) => {
             onClick={openDeleteModal}
             disabled={!selectedNicIds}  // selectedNicIds가 없으면 비활성화
           />
-      </div>
-      <span>선택된 NIC ID: {selectedNicIds || '없음'}</span>
+      </div>      
 
       <TablesOuter 
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
@@ -75,6 +75,8 @@ const NetworkTemplates = ({ networkId }) => {
           </div>
         ]}
       />
+
+      <SelectedIdView items={selectedNics}/>
 
       {/* 모달 렌더링 */}
       <Suspense fallback={<Loading/>}>

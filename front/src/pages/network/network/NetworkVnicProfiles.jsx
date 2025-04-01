@@ -20,11 +20,10 @@ const NetworkVnicProfiles = ({ networkId }) => {
 
   return (
     <>
-      <VnicProfileDupl
-        isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
-        columns={TableColumnsInfo.VNIC_PROFILES_FROM_NETWORK}
+      <VnicProfileDupl columns={TableColumnsInfo.VNIC_PROFILES_FROM_NETWORK}
         vnicProfiles={vnicProfiles}
         networkId={networkId}
+        isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
       />
     </>
   );

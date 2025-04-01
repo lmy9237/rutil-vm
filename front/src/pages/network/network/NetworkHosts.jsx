@@ -18,6 +18,7 @@ import {
 } from "../../../api/RQHook";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 
 /**
  * @name NetworkHosts
@@ -106,8 +107,6 @@ const NetworkHosts = ({ networkId }) => {
       </div>
       <FilterButton options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
 
-      <span>id = {selectedHostId || ""}</span>
-
       <TablesOuter
         isLoading={activeFilter === "connected" ? isConnectedHostsLoading: isDisconnectedHostsLoading}
         isError={ activeFilter === "connected" ? isConnectedHostsError : isDisconnectedHostsError }
@@ -135,6 +134,8 @@ const NetworkHosts = ({ networkId }) => {
         // </div>
         // ]}
       />
+
+      <SelectedIdView items={selectedHost} />
 
       {/* 호스트 네트워크 모달창 */}
       <Suspense fallback={<Loading />}>

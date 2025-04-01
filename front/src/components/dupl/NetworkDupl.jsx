@@ -19,8 +19,8 @@ import "./Dupl.css";
  * @returns {JSX.Element}
  */
 const NetworkDupl = ({
-  isLoading, isError, isSuccess,
   networks = [], columns = [], showSearchBox = true, 
+  isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);

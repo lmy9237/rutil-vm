@@ -7,6 +7,7 @@ import VmActionButtons from "./VmActionButtons";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
+import SelectedIdView from "../common/SelectedIdView";
 
 /**
  * @name VmDupl
@@ -82,7 +83,6 @@ const VmDupl = ({
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <span>ID: {selectedVms.map(vm => vm.id).join(", ")}</span>
       <div className="dupl-header-group">
         {showSearchBox && (
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -120,6 +120,8 @@ const VmDupl = ({
           />
         ]}
       />
+
+      <SelectedIdView items={selectedVms} />
 
       {/* VM 모달 */}
       <Suspense>

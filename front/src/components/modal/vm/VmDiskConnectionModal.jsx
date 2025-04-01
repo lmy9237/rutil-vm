@@ -7,6 +7,7 @@ import { checkZeroSizeToGB, convertBytesToGB } from "../../../util";
 import { useConnDiskListFromVM, useFindDiskListFromDataCenter } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import SelectedIdView from "../../common/SelectedIdView";
 
 // 인터페이스 목록
 const interfaceList = [
@@ -211,7 +212,7 @@ const VmDiskConnectionModal = ({
           }
           />
         </>
-      <span>선택된 디스크 ID: {selectedDisks.join(", ") || ""}</span>
+        <SelectedIdView items={selectedDisks} />
     </BaseModal>
   );
 };

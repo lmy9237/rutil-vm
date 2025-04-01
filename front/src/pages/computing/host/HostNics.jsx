@@ -14,7 +14,6 @@ import Logger from "../../../utils/Logger";
 
 const HostNics = ({ hostId }) => {
   const { data: host } = useHost(hostId);
-  
   // const { data: network } = useNetworkById();
   const { data: hostNics = [] } = useNetworkInterfaceFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
@@ -374,12 +373,12 @@ const HostNics = ({ hostId }) => {
         </div>
       </div>
       <LabelCheckbox
-        label="호스트와 Engine간의 연결을 확인"
         id="checkHostEngineConnectivity" 
+        label="호스트와 Engine간의 연결을 확인"
       />
-      <LabelCheckbox
-        label="네트워크 설정 저장"
-        id="saveNetworkConfiguration" 
+      <LabelCheckbox 
+      id="saveNetworkConfiguration"
+      label="네트워크 설정 저장"
       />
       <Suspense fallback={<Loading/>}>
         {/* 네트워크쪽 연필 추가모달 */}

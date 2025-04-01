@@ -1,7 +1,7 @@
 import { useState } from "react";
 import LabelInputNum from "../../../label/LabelInputNum";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
-import { RVI16, rvi16ArrowsDown, rvi16Check, rvi16ChevronDown, rvi16ChevronUp, rvi16SeverityErrorLined } from "../../../icons/RutilVmIcons";
+import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../../../icons/RutilVmIcons";
 
 
 const VmSystem = ({ formSystemState, setFormSystemState}) => {

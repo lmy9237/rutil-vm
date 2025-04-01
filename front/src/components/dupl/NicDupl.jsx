@@ -63,8 +63,7 @@ import NicActionButtons from "./NicActionButtons";
 //           isDeleteDisabled={selectedNics.length === 0}
 //         />
 //       </div>
-//       <span style={{fontSize:"12px"}}>ID: {selectedIds || ""}</span>
-      
+//      
 //       <TablesOuter
 //         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
 //         columns={columns}

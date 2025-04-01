@@ -6,6 +6,7 @@ import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
 import VnicProfileActionButtons from "./VnicProfileActionButtons";
 import SearchBox from "../button/SearchBox";  
 import useSearch from "../button/useSearch"; 
+import SelectedIdView from "../common/SelectedIdView";
 
 /**
  * @name VnicProfileDupl
@@ -86,6 +87,8 @@ const VnicProfileDupl = ({
           />,
         ]}
       />
+
+      <SelectedIdView items={selectedVnicProfiles} />
 
       {/* vNIC Profile 모달창 */}
       <VnicProfileModals

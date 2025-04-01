@@ -13,11 +13,9 @@ import {
   useEditNetwork,
   useNetworkById,
 } from "../../../api/RQHook";
-import "./MNetwork.css";
 import Localization from "../../../utils/Localization";
 import TablesOuter from "../../table/TablesOuter";
-import DynamicInputList from "../../label/DynamicInputList";
-import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
+import "./MNetwork.css";
 
 const initialFormState = {
   id: "",
@@ -76,7 +74,7 @@ const NetworkModal = ({
         vlanEnabled: network?.vlan > 0, // 🔥 vlan 값이 0보다 크면 true
         usageVm: network?.usage?.vm,
         portIsolation: network?.portIsolation || false,
-        dnsEnabled: network?.dnsNameServers.length === 0 ? false : true,
+        dnsEnabled: (network?.dnsNameServers || [])?.length !== 0,
       });
       setDataCenterVo({ id: network?.dataCenterVo?.id, name: network?.dataCenterVo?.name });
       setDnsServers(network?.dnsNameServers)
@@ -112,7 +110,6 @@ const NetworkModal = ({
 
   // dns 
   const [isDnsHiddenBoxVisible, setDnsHiddenBoxVisible] = useState(false);
-  
   const handleInputChange = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
   };
