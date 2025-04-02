@@ -28,12 +28,16 @@ const VmMigrationModal = ({ isOpen, onClose, selectedVm = {} }) => {
 
   useEffect(() => {
     if (!isOpen) return;
-    if (isCluster) {
-      setClusterVo({id: selectedVm?.clusterVo?.id || "", name: selectedVm?.clusterVo?.name || ""});
-      setHostVo({ id: "", name: "" });
-      setAffinityClosure(false);
-    }
-  }, [isOpen, isCluster]);
+  
+    // isOpen이 true가 되면 무조건 클러스터 모드로 설정
+    setIsCluster(true);
+    setClusterVo({
+      id: selectedVm?.clusterVo?.id || "",
+      name: selectedVm?.clusterVo?.name || "",
+    });
+    setHostVo({ id: "", name: "" });
+    setAffinityClosure(false);
+  }, [isOpen]);  
   
   useEffect(() => {
     if (!isOpen || isCluster || hostVo.id || ableHost.length === 0) return;
@@ -48,10 +52,11 @@ const VmMigrationModal = ({ isOpen, onClose, selectedVm = {} }) => {
   const handleFormSubmit = () => {
     migration({
       vmId: selectedVm.id,
-      vm: { clusterVo, hostVo },
-      affinityClosure: affinityClosure,
+      vm: isCluster ? { clusterVo } : { hostVo },
+      affinityClosure,
     });
   };
+  
 
   return (
     <BaseModal targetName="가상머신" submitTitle="마이그레이션"

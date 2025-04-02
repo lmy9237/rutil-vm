@@ -166,11 +166,10 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 
 	@Throws(Error::class)
 	override fun migrate(vmId: String, vmViewVo: VmViewVo, affinityClosure: Boolean): Boolean {
-		log.info("migrate")
 		log.info("migrate ... vmId:{}, vmViewVo: {}, aff: {}", vmId, vmViewVo, affinityClosure)
 		val res: Result<Boolean> = when {
-			vmViewVo.clusterVo.id.isEmpty() -> conn.migrationVmToHost(vmId, vmViewVo.clusterVo.id, affinityClosure)
-			vmViewVo.hostVo.id.isEmpty() -> conn.migrationVm(vmId, vmViewVo.hostVo.id, affinityClosure)
+			vmViewVo.clusterVo.id != "" && vmViewVo.hostVo.id == "" -> conn.migrationVm(vmId, vmViewVo.clusterVo.id, affinityClosure)
+			vmViewVo.clusterVo.id == "" && vmViewVo.hostVo.id != "" -> conn.migrationVmToHost(vmId, vmViewVo.hostVo.id, affinityClosure)
 			else -> throw IllegalArgumentException("Cluster 또는 Host 정보가 필요합니다.")
 		}
 		return res.isSuccess
