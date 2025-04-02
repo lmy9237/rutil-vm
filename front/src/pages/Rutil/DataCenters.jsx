@@ -16,15 +16,16 @@ const DataCenters = () => {
     isLoading: isDataCentersLoading,
     isError: isDataCentersError,
     isSuccess: isDataCentersSuccess,
+    refetch: refetchDataCenters,
   } = useAllDataCenters((e) => ({ ...e }));
 
   Logger.debug("...");
   return (
     <>
-      <DataCenterDupl
-        isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
-        columns={TableColumnsInfo.DATACENTERS}
+      <DataCenterDupl columns={TableColumnsInfo.DATACENTERS}
         datacenters={datacenters}
+        refetch={refetchDataCenters}
+        isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
       />
     </>
   );

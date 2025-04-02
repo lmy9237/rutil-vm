@@ -408,18 +408,19 @@ textarea {
 }
 /*토스트*/
 .toast {
-    font-size: var(--fs-16);
-    display: flex !important; 
-    width: 400px;
-    padding: 12px 9px;
-    border-radius: 2%;
-    text-align: left !important;
-    color: black;
-    border: var(--border-simple);
+  font-size: var(--fs-16);
+  width: 400px;
+  max-width: 500px;
+  padding: 12px 9px;
+  border-radius: 2%;
+  text-align: left !important;
+  color: black;
+  border: var(--border-simple);
+  z-index: 999;
 }
 .toast > div:last-child {
-    flex: none !important;   
-    text-align: left !important;
+  display:flex;align-items:center;justify-content:flex-start;flex-direction:row;
+  text-align: left !important;
 }
 /* 성공 토스트 */
 .toast-success {

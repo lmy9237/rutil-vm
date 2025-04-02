@@ -1,12 +1,17 @@
 import React, { useState, Suspense } from 'react';
+import { navigate } from '@storybook/addon-links';
+import toast from 'react-hot-toast';
 import SettingUsersActionButtons from "./SettingUsersActionButtons";
 import SettingUsersModals from "../../components/modal/settings/SettingUsersModals"
 import TableColumnsInfo from '../../components/table/TableColumnsInfo';
 import TablesOuter from "../../components/table/TablesOuter";
-import { useAllUsers } from "../../api/RQHook";
 import SettingUsersDeleteModal from '../../components/modal/settings/SettingUsersDeleteModal';
 import { RVI16, rvi16User, rvi16Superuser } from '../../components/icons/RutilVmIcons';
 import Logger from '../../utils/Logger';
+import SelectedIdView from '../../components/common/SelectedIdView';
+import useSearch from '../../components/button/useSearch';
+import { useAllUsers } from "../../api/RQHook";
+import SearchBox from '../../components/button/SearchBox';
 
 /**
  * @name SettingUsers
@@ -16,9 +21,6 @@ import Logger from '../../utils/Logger';
  */
 const SettingUsers = () => {
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const selectedUserIds = (Array.isArray(selectedUsers) ? selectedUsers : [])
-    .map((user) => user.id)
-    .join(", ");
   
   const { 
     data: users = [],
@@ -35,7 +37,8 @@ const SettingUsers = () => {
     return {
       ...e,
       icon: (<RVI16 iconDef={rvi16Superuser}/>),
-      isDisabled: (e.disabled) ? 'DISABLED' : 'AVAILABLE',
+      isDisabled: (e.disabled),
+      _isDisabled: (e.disabled) ? 'DISABLED' : 'AVAILABLE',
     }
   })
 
@@ -77,26 +80,31 @@ const SettingUsers = () => {
     return (
       <Suspense>
       {(modals.create || (modals.edit && selectedUsers) || (modals.changePassword && selectedUsers)) && (
-          <SettingUsersModals 
-            modalType={
-              modals.create ? "create" : modals.edit ? "edit" : modals.changePassword ? "changePassword" : ""
-            }
-            user={selectedUsers}
-            onClose={() => {
-              toggleModal(modals.create ? "create" : modals.edit ? "edit" : "changePassword", false)
-              refetchUsers()
-            }}
-          />
+        <SettingUsersModals 
+          modalType={
+            modals.create ? "create" 
+              : modals.edit ? "edit" 
+              : modals.changePassword  ? "changePassword"  : ""
+          }
+          user={selectedUsers}
+          onClose={() => {
+            toggleModal(modals.create ? "create"
+              : modals.edit ? "edit"
+              : "changePassword"
+              , false)
+            refetchUsers()
+          }}
+        />
       )}
       {modals.remove && selectedUsers.length !== 0 && (
-          <SettingUsersDeleteModal 
-            isOpen={modals.remove}
-            onClose={() => {
-              toggleModal("remove", false)
-              refetchUsers()
-            }}
-            data={selectedUsers}
-          />
+        <SettingUsersDeleteModal 
+          isOpen={modals.remove}
+          onClose={() => {
+            toggleModal("remove", false)
+            refetchUsers()
+          }}
+          data={selectedUsers}
+        />
       )}
       </Suspense>
     )
@@ -108,22 +116,37 @@ const SettingUsers = () => {
         ? "single"
         : "multiple";
 
-  Logger.debug("...")
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, TableColumnsInfo.SETTING_USER);
+
+  const showSearchBox = true
+  const handleNameClick = (id) => navigate(`/networks/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`SettingUsers > handleRefresh ... `)
+    if (!refetchUsers) return;
+    refetchUsers()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
+
+  Logger.debug("SettingUsers ...")
   return (
-    <>
-      <SettingUsersActionButtons 
-        openModal={openModal}
-        isEditDisabled={selectedUsers.length !== 1}
-        status={status}
-      />
-      <span>ID = { selectedUserIds ?? ""}</span>
-      <TablesOuter
-        isLoading={isUsersLoading} isError={isUsersError} isSuccess={isUsersSuccess}
-        columns={TableColumnsInfo.SETTING_USER}
-        data={transformedData}
-        onRowClick={(row) => {
-          setSelectedUsers(Array.isArray(row) ? row : [row]);
-        }}
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
+        {showSearchBox && (
+          <SearchBox
+            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+            onRefresh={handleRefresh}
+          />
+        )}
+        <SettingUsersActionButtons 
+          openModal={openModal}
+          isEditDisabled={selectedUsers.length !== 1}
+          status={status}
+        />
+      </div>
+      
+      <TablesOuter columns={TableColumnsInfo.SETTING_USER}
+        data={filteredData}
+        onRowClick={(selectedRows) => setSelectedUsers(selectedRows)}
         onContextMenuItems={(row) => [
           <SettingUsersActionButtons
             openModal={openModal}
@@ -131,11 +154,14 @@ const SettingUsers = () => {
             actionType="context"
           />,
         ]}
+        isLoading={isUsersLoading} isError={isUsersError} isSuccess={isUsersSuccess}
       />
+
+      <SelectedIdView items={selectedUsers} />
       
       {/* 모달창 */}
       {renderModals()}
-    </>
+    </div>
   );
 };
   

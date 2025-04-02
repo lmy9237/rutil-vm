@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { adjustFontSize } from "../../UIEvent";
-import "./MainOuter.css";
+import { useNavigate, useLocation } from "react-router-dom";
 import SideNavbar from "./SideNavbar";
 import SidebarTree from "./SidebarTree";
+import "./MainOuter.css";
 
 /**
  * @name MainOuter
@@ -114,18 +113,18 @@ const MainOuter = ({
   // url에 따라 맞는버튼 색칠
   const [selectedDiv, setSelectedDiv] = useState(null);
   useEffect(() => {
-    const path = location.pathname;
-    if (path.includes("/computing")) {
+  const from = location.state?.from?.pathname || "/";
+    if (from.includes("/computing")) {
       handleClick("computing"); // /computing이 들어가 있을 때
-    } else if (path.includes("/networks")) {
+    } else if (from.includes("/networks")) {
       handleClick("network"); // /networks가 들어가 있을 때
-    } else if (path.includes("/vnicProfiles")) {
+    } else if (from.includes("/vnicProfiles")) {
       handleClick("network"); // /networks가 들어가 있을 때
-    } else if (path.includes("/storages")) {
+    } else if (from.includes("/storages")) {
       handleClick("storage"); // /storages가 들어가 있을 때
-    } else if (path.includes("/events")) {
+    } else if (from.includes("/events")) {
       handleClick("event"); // /events가 들어가 있을 때
-    } else if (path.includes("/settings")) {
+    } else if (from.includes("/settings")) {
       handleClick("settings"); // /settings가 들어가 있을 때
     } else {
       handleClick("dashboard"); // 기본적으로 dashboard로 설정
@@ -137,7 +136,6 @@ const MainOuter = ({
     const path = location.pathname;
     const pathParts = path.split("/");
     const lastId = pathParts[pathParts.length - 1]; // 마지막 부분이 ID
-
     setSelectedDiv(lastId);
   }, [location.pathname]);
 
@@ -219,14 +217,6 @@ const MainOuter = ({
       JSON.stringify(openNetworkDataCenters)
     );
   }, [openNetworkDataCenters]);
-
-  useEffect(() => {
-    window.addEventListener("resize", adjustFontSize);
-    adjustFontSize();
-    return () => {
-      window.removeEventListener("resize", adjustFontSize);
-    };
-  }, []);
 
   const handleDetailClickStorage = (diskName) => {
     if (selectedDisk !== diskName) {

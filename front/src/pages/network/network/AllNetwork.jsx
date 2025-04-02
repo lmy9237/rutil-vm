@@ -20,25 +20,21 @@ const AllNetwork = () => {
     isLoading: isNetworksLoading,
     isError: isNetworksError,
     isSuccess: isNetworksSuccess,
-    refetch: neworksRefetch,
+    refetch: refetchNetworks,
   } = useAllNetworks((e) => ({ ...e }));
 
   Logger.debug("...");
   return (
     <div id="section">
-      <div>
-        <HeaderButton titleIcon={rvi24Network()} 
-          title={Localization.kr.NETWORK}
-        />
-      </div>
-      <div className="w-full section-content">
-        <NetworkDupl
-          isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
-          columns={TableColumnsInfo.NETWORKS}
-          networks={networks}
-          showSearchBox={true}
-        />
-      </div>
+      <HeaderButton titleIcon={rvi24Network()} 
+        title={Localization.kr.NETWORK}
+      />
+      <NetworkDupl columns={TableColumnsInfo.NETWORKS}
+        networks={networks}
+        showSearchBox={true}
+        refetch={refetchNetworks}
+        isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
+      />
     </div>
   );
 };

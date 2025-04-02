@@ -18,16 +18,16 @@ const DataCenterNetworks = ({ datacenterId }) => {
     isLoading: isNetworksLoading,
     isError: isNetworksError,
     isSuccess: isNetworksSuccess,
+    refetch: refetchNetworks,
   } = useNetworksFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  Logger.debug("...");
+  Logger.debug("DataCenterNetworks ...");
   return (
-    <>
-      <NetworkDupl columns={TableColumnsInfo.NETWORK_FROM_DATACENTER}
-        networks={networks}
-        isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
-      />
-    </>
+    <NetworkDupl columns={TableColumnsInfo.NETWORK_FROM_DATACENTER}
+      networks={networks}
+      refetch={refetchNetworks}
+      isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
+    />
   );
 };
 

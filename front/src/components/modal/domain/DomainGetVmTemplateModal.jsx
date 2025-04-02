@@ -8,8 +8,8 @@ import { useDataCenter } from "../../../api/RQHook";
 import { checkKoreanName } from "../../../util";
 import FilterButton from "../../button/FilterButton";
 import Localization from "../../../utils/Localization";
-import "./MDomain.css";
 import InfoTable from "../../table/InfoTable";
+import "./MDomain.css";
 
 const initialFormState = {
   id: "",
@@ -207,9 +207,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
       <div className="filter-table">
         {/* 필터 버튼 */}
         <FilterButton
-          options={filterOptions}
-          activeOption={activeFilter}
-          onClick={setActiveFilter}
+          options={filterOptions} activeOption={activeFilter} onClick={setActiveFilter}
         />
 
         {/* 섹션 변경 */}

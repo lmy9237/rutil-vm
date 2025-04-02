@@ -17,16 +17,15 @@ const DataCenterEvents = ({ datacenterId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
+    refetch: refetchEvents
   } = useEventsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  Logger.debug("...")
+  Logger.debug("DataCenterEvents ...")
   return (
-    <>
-      <EventDupl
-        isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-        events={events}
-      />
-    </>
+    <EventDupl events={events}
+      refetch={refetchEvents}
+      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+    />
   );
 };
 

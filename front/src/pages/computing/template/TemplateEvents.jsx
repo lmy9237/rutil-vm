@@ -16,16 +16,15 @@ const TemplateEvents = ({ templateId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
+    refetch: refetchEvents
   } = useAllEventFromTemplate(templateId, (e) => ({ ...e }));
 
-  Logger.debug("...");
+  Logger.debug("TemplateEvents ...");
   return (
-    <>
-      <EventDupl
-        isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-        events={events}
-      />
-    </>
+    <EventDupl events={events}
+      refetch={refetchEvents}
+      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+    />
   );
 };
 

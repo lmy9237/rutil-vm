@@ -17,17 +17,17 @@ const ClusterNetworks = ({ clusterId }) => {
     isLoading: isNetworksLoading,
     isError: isNetworksError,
     isSuccess: isNetworksSuccess,
+    refetch: refetchNetworks,
   } = useNetworkFromCluster(clusterId, (e) => ({ ...e }));
 
-  Logger.debug("...");
+  Logger.debug("ClusterNetworks ...");
   return (
-    <>
-      <NetworkDupl
-        isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
-        columns={TableColumnsInfo.NETWORK_FROM_CLUSTER}
-        networks={networks}
-      />
-    </>
+    <NetworkDupl
+      columns={TableColumnsInfo.NETWORK_FROM_CLUSTER}
+      networks={networks}
+      refetch={refetchNetworks}
+      isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
+    />
   );
 };
 

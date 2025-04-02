@@ -1512,22 +1512,22 @@ export const useAllVMs = (
   },
   staleTime: 2000, // 2초 동안 데이터 재요청 방지
 })
-/**
- * @name useVmById
+/**  
+ * @name useVm
  * @description 가상머신 상세조회 useQuery 훅
  * 
  * @param {string} vmId 가상머신 ID
  * @returns useQuery 훅
  * @see ApiManager.findVM
  */
-export const useVmById = (
+export const useVm = (
   vmId
 ) => useQuery({
-  queryKey: ['VmById', vmId],
+  queryKey: ['vm', vmId],
   queryFn: async () => {
     const res = await ApiManager.findVM(vmId);
     const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useVmById ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useVm ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
     return _res;
   },
   enabled: !!vmId
@@ -1552,30 +1552,6 @@ export const useFindEditVmById = (
   },
   enabled: !!vmId
 });
-
-// 둘중에 하나 지워야함
-/**
- * @name useVm
- * @description 가상머신 상세조회 useQuery 훅
- * 
- * @param {string} vmId 가상머신 ID
- * @returns useQuery 훅
- * 
- * @see ApiManager.findVM
- */
-export const useVm = (
-  vmId
-) => useQuery({
-  queryKey: ['vmById', vmId],
-  queryFn: async () => {
-    const res = await ApiManager.findVM(vmId);
-    const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useVm ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
-    return _res
-  },
-  enabled: !!vmId
-});
-
 
 /**
  * @name useDisksFromVM
@@ -4698,18 +4674,18 @@ export const useEditUser = (
     },
   });
 };
-export const useChangePasswordUser = (
+export const useUpdatePasswordUser = (
   username, 
-  currentPassword, 
-  newPassword,
+  pwCurrent, pwNew,
+  force=false,
   postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () => {
-      const res = await ApiManager.changePassword(username, currentPassword, newPassword)
+      const res = await ApiManager.updatePassword(username, pwCurrent, pwNew, force)
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useChangePasswordUser ... username: ${username}`);
+      Logger.debug(`RQHook > useChangePasswordUser ... username: ${username}, force: ${force}`);
       return _res;
     },
     onSuccess: (res) => {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import TemplateActionButtons from "./TemplateActionButtons";
 import TemplateModals from "../modal/template/TemplateModals";
 import TablesOuter from "../table/TablesOuter";
@@ -7,13 +8,15 @@ import TableRowClick from "../table/TableRowClick";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 import SelectedIdView from "../common/SelectedIdView";
+import Logger from "../../utils/Logger";
 
 const TemplateDupl = ({
-  isLoading, isError, isSuccess,
   templates = [], 
   columns = [], 
   type,
   showSearchBox = true,  // ✅ 검색 여부 추가
+  refetch,
+  isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
@@ -42,17 +45,27 @@ const TemplateDupl = ({
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleNameClick = (id) => navigate(`/computing/templates/${id}`);
 
   // 모달 열기 / 닫기
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
+  const handleNameClick = (id) => navigate(`/computing/templates/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`TemplateDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
 
+  Logger.debug(`TemplateDupl ...`)
   return (
     <>
-      <div className="dupl-header-group">
+      <div className="dupl-header-group f-start">
         {showSearchBox && (
-          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <SearchBox 
+            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+            onRefresh={handleRefresh}
+          />
         )}
         <TemplateActionButtons
           openModal={openModal}

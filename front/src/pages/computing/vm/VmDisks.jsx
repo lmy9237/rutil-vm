@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import VmDiskDupl from "../../../components/dupl/VmDiskDupl";
 import { useDisksFromVM } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name VmDisks
@@ -9,40 +10,23 @@ import { useDisksFromVM } from "../../../api/RQHook";
  * @prop {string} vmId 가상머신 ID
  * @returns {JSX.Element} VmDisks
  */
-
-
-
 const VmDisks = ({ vmId }) => {
   const {
     data: disks = [],
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
+    refetch: refetchDisks,
   } = useDisksFromVM(vmId, (e) => ({ ...e }));
-
-  // const [activeDiskType, setActiveDiskType] = useState("all"); // 필터링된 디스크 유형
-  // const vmDisks = activeDiskType === "all" 
-  //   ? disks 
-  //   : disks.filter((disk) => disk.diskImageVo?.storageType?.toLowerCase() === activeDiskType)
-
+  
+  Logger.debug(`VmDisks ... vmId: ${vmId}`)
   return (
-    <>
-   
-      <VmDiskDupl
-        isLoading={isDisksLoading}
-        isError={isDisksError}
-        isSuccess={isDisksSuccess}
-        vmDisks={disks}
-        // columns={
-        //   activeDiskType === "all" 
-        //     ? TableColumnsInfo.DISKS_FROM_VM 
-        //     : activeDiskType === "image" 
-        //       ? TableColumnsInfo.DISK_IMAGES_FROM_VM 
-        //       : TableColumnsInfo.DISK_LUN_FROM_VM
-        // }
-        vmId={vmId}
-      />
-    </>
+    <VmDiskDupl 
+      vmDisks={disks} 
+      vmId={vmId}
+      refetch={refetchDisks}
+      isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
+    />
   );
 };
 

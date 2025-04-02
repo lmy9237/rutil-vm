@@ -17,6 +17,7 @@ enum class FailureType(
 	DUPLICATE(409, "이름 중복"),
 	PRECONDITION_FAILED(412, "전제조건 통과 실패"),
 	UNPROCESSABLE_CONTENT(422, "다룰 수 없는 컨텐츠"),
+	LOCKED(423, "메서드의 소스 또는 대상 리소스가 잠김"),
 	UNKNOWN(499, "알 수 없는 오류"),
 
 	INTERNAL_SERVER_ERROR(500, "서버 에러입니다. 서버 팀에 연락주세요!");

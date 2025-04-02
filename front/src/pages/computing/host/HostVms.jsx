@@ -17,11 +17,13 @@ const HostVms = ({ hostId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
+    refetch: refetchVms,
   } = useVmsFromHost(hostId, (e) => ({ ...e }));
 
   return (
     <VmDupl columns={TableColumnsInfo.VMS_FROM_HOST}
       vms={vms}
+      refetch={refetchVms}
       isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
     />
   );

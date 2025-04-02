@@ -1,4 +1,6 @@
 import React, { Suspense, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import Loading from "../../../components/common/Loading";
 import DomainActionButtons from "../../../components/dupl/DomainActionButtons";
 import TablesOuter from "../../../components/table/TablesOuter";
@@ -20,12 +22,16 @@ import SelectedIdView from "../../../components/common/SelectedIdView";
  * @prop {string} domainId 도메인ID
  * @returns {JSX.Element} DomainDatacenters
  */
-const DomainDatacenters = ({ domainId }) => {
+const DomainDatacenters = ({
+  domainId,
+}) => {
+  const navigate = useNavigate();
   const {
     data: datacenters = [],
     isLoading: isDataCentersLoading,
     isError: isDataCentersError,
     isSuccess: isDataCentersSuccess,
+    refetch: refetchDataCenters,
   } = useAllDataCentersFromDomain(domainId, (e) => ({ ...e }));
 
   const transformedData = datacenters.map((datacenter) => ({
@@ -45,18 +51,27 @@ const DomainDatacenters = ({ domainId }) => {
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDataCenters, setSelectedDataCenters] = useState([]); // 다중 선택된 데이터센터
 
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
-
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  
+  const openModal = (action) => setActiveModal(action);
+  const closeModal = () => setActiveModal(null);
+  const handleNameClick = (id) => navigate(`/computing/templates/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`TemplateDupl > handleRefresh ... `)
+    if (!refetchDataCenters) return;
+    refetchDataCenters()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
 
-  //TODO: 버튼 활성화
-  Logger.debug("...");
+  Logger.debug("DomainDatacenters ...");
   return (
-    <>
-      <div className="dupl-header-group">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
+        <SearchBox 
+          searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+          onRefresh={handleRefresh}
+        />
         <DomainActionButtons
           openModal={openModal}
           isEditDisabled={selectedDataCenters.length !== 1}
@@ -95,7 +110,7 @@ const DomainDatacenters = ({ domainId }) => {
           />
         )}
       </Suspense>
-    </>
+    </div>
   );
 };
 

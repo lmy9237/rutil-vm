@@ -15,14 +15,15 @@ const Hosts = () => {
     isLoading: isHostsLoading,
     isError: isHostsError,
     isSuccess: isHostsSuccess,
+    refetch: refetchHosts,
   } = useAllHosts((e) => ({ ...e }));
 
   return (
     <>
-      <HostDupl
-        isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
-        columns={TableColumnsInfo.HOSTS}
+      <HostDupl columns={TableColumnsInfo.HOSTS}
         hosts={hosts}
+        refetch={refetchHosts}
+        isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
       />
     </>
   );

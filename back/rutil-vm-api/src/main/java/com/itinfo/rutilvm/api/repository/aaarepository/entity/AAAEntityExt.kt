@@ -14,6 +14,7 @@ fun OvirtUser.toUserVo(userDetail: UserDetail? = null, exposeDetail: Boolean = f
 	email { if (exposeDetail) userDetail?.email else "" }
 	administrative { if (exposeDetail) userDetail?.lastAdminCheckStatus else false }
 	disabled { this@toUserVo.disabled != 0 }
+	consecutiveFailures { this@toUserVo.consecutiveFailures }
 	createDate { if (exposeDetail) userDetail?.createDate else null }
 	authProvider { if (exposeDetail) userDetail?.domain else "" }
 	// principal { this@toUserVo.namespace }

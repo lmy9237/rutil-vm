@@ -1,6 +1,4 @@
 import React, { Suspense, useState } from 'react';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import VmSnapshotModal from '../../../components/modal/vm/VmSnapshotModal';
 import { useSnapshotsFromVM } from '../../../api/RQHook';

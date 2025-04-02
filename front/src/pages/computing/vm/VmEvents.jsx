@@ -1,5 +1,6 @@
 import EventDupl from "../../../components/dupl/EventDupl";
 import { useAllEventsFromVM } from '../../../api/RQHook';
+import Logger from "../../../utils/Logger";
 
 /**
  * @name VmEvents
@@ -15,15 +16,15 @@ const VmEvents = ({ vmId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
+    refetch: refetchEvents,
   } = useAllEventsFromVM(vmId, (e) => ({ ...e }));
 
+  Logger.debug("VmEvents ...")
   return (
-    <>
-      <EventDupl
-        isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-        events={events}
-      />
-    </>
+    <EventDupl events={events}
+      refetch={refetchEvents}
+      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+    />
   );
 };
 

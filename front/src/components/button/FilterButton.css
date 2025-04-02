@@ -6,19 +6,13 @@
   overflow: hidden; 
   width: fit-content;
   border: 1px solid var(--color-gray-4);
-  height: var(--h-primary);
-}
-.host-filter-btns > div {
-  display: flex;
-  justify-content: space-between;
+  height: var(--h-text-input);
 }
 .host-filter-btns button {
-  padding: 0 20px;
+  width: 60px;
   cursor: pointer;
-  border-radius: 0;
-  border:none;
-  border-right: 1px solid var(--color-gray-4);
-  color: var(--color-nav);
+  border-radius: 0;border:none;border-right: 1px solid var(--color-gray-4);
+  color:var(--color-nav);
   font-weight: 500;
 }
 .host-filter-btns button:last-child{

@@ -15,16 +15,16 @@ const StorageDomains = () => {
     isLoading: isStorageDomainsLoading,
     isError: isStorageDomainsError,
     isSuccess: isStorageDomainsSuccess,
+    refetch: refetchStorageDomains,
   } = useAllStorageDomains((e) => ({ ...e }));
 
   return (
-    <>
-      <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
-        domains={storageDomains}
-        type={"rutil"}
-        isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
-      />
-    </>
+    <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
+      domains={storageDomains}
+      type={"rutil"}
+      refetch={refetchStorageDomains}
+      isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
+    />
   );
 };
 

@@ -15,13 +15,14 @@ const Vms = () => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
+    refetch: refetchVms,
   } = useAllVMs((e) => ({ ...e }));
 
   return (
-    <VmDupl
-      isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
-      columns={TableColumnsInfo.VMS}
+    <VmDupl columns={TableColumnsInfo.VMS}
       vms={vms}
+      refetch={refetchVms}
+      isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
     />
   );
 };

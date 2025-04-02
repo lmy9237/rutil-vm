@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import ClusterModals from "../modal/cluster/ClusterModals";
@@ -20,17 +21,23 @@ import SelectedIdView from "../common/SelectedIdView";
  * @returns
  */
 const ClusterDupl = ({
-  isLoading, isError, isSuccess,
-  clusters = [], columns = [], datacenterId,  showSearchBox = true
+  clusters = [], columns = [], datacenterId,  
+  showSearchBox=true,
+  refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedClusters, setSelectedClusters] = useState([]);
-  
-  const handleNameClick = (id) => navigate(`/computing/clusters/${id}`);
 
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
+  const handleNameClick = (id) => navigate(`/computing/clusters/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`ClusterDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
 
   const transformedData = clusters.map((cluster) => ({
     ...cluster,
@@ -51,17 +58,19 @@ const ClusterDupl = ({
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-
   const status = 
       selectedClusters.length === 0 ? "none"
       : selectedClusters.length === 1 ? "single"
       : "multiple";
 
   return (
-    <>
-      <div className="dupl-header-group">
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
         {showSearchBox && (
-          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <SearchBox 
+            searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+            onRefresh={handleRefresh}
+          />
         )}
         <ClusterActionButtons
           openModal={openModal}
@@ -101,7 +110,7 @@ const ClusterDupl = ({
           closeModal();
         }}
       />
-    </>
+    </div>
   );
 };
 

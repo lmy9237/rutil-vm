@@ -4,6 +4,7 @@
   align-items: center;
   flex-wrap: wrap;
   min-height: var(--h-right-btn);
+  margin-left: auto;
 }
 .header-right-btns > button:last-child,
 .manage-button {

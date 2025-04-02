@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import DomainActionButtons from "./DomainActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import DomainModals from "../modal/domain/DomainModals";
@@ -9,6 +10,7 @@ import Localization from "../../utils/Localization";
 import TableRowClick from "../table/TableRowClick";
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
+import Logger from "../../utils/Logger";
 
 /**
  * @name DomainDupl
@@ -18,14 +20,20 @@ import SelectedIdView from "../common/SelectedIdView";
  * @returns {JSX.Element}
  */
 const DomainDupl = ({
-  isLoading, isError, isSuccess,
-  domains = [], columns = [], actionType = "domain", datacenterId, showSearchBox = true
+  domains = [], columns = [], actionType = "domain", datacenterId,
+  showSearchBox = true,
+  refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDomains, setSelectedDomains] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // ✅ 검색어 상태 추가
-
+  const handleRefresh = () =>  {
+    Logger.debug(`DomainDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
   // 검색어
   const transformedData = domains.map((domain) => ({
     ...domain,
@@ -47,8 +55,8 @@ const DomainDupl = ({
       domain?.storageType === "nfs"
         ? "NFS"
         : domain?.storageType === "iscsi"
-          ? "iSCSI"
-          : "Fibre Channel",
+            ? "iSCSI"
+            : "Fibre Channel",
     diskSize: checkZeroSizeToGB(domain?.diskSize),
     availableSize: checkZeroSizeToGB(domain?.availableSize),
     usedSize: checkZeroSizeToGB(domain?.usedSize),
@@ -69,9 +77,14 @@ const DomainDupl = ({
 
   return (
     <>
-      <div className="dupl-header-group">
+      <div className="dupl-header-group f-start">
         {/* ✅ 검색 UI 추가 */}
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />)}
+        {showSearchBox && (
+          <SearchBox
+            searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+            onRefresh={handleRefresh}
+          />
+        )}
         <DomainActionButtons
           openModal={openModal}
           isEditDisabled={selectedDomains.length !== 1}

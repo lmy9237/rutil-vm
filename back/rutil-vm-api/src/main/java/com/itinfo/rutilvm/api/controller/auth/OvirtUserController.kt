@@ -2,10 +2,13 @@ package com.itinfo.rutilvm.api.controller.auth
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.ItCloudOutput
+import com.itinfo.rutilvm.api.configuration.PropertiesConfig
 import com.itinfo.rutilvm.api.repository.aaarepository.entity.OvirtUser
 import com.itinfo.rutilvm.api.controller.BaseController
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.auth.UserVo
+import com.itinfo.rutilvm.api.model.auth.PasswordPrompt
+import com.itinfo.rutilvm.api.model.auth.ResetPasswordPrompt
 import com.itinfo.rutilvm.api.model.setting.PermissionVo
 import com.itinfo.rutilvm.api.service.auth.ItOvirtUserService
 import com.itinfo.rutilvm.api.service.auth.ItPermissionService
@@ -101,15 +104,12 @@ class OvirtUserController: BaseController() {
 		@RequestBody(required=true) passwordPrompt: PasswordPrompt,
 	): ResponseEntity<Boolean> {
 		log.info("validate ... username: {}, password: {}", username, passwordPrompt.password)
-
 		if (username.isEmpty()) throw ErrorPattern.OVIRTUSER_ID_NOT_FOUND.toException()
 		if (passwordPrompt.password.isEmpty()) throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
 
 		val res: HttpHeaders = ovirtUser.authenticate(username, passwordPrompt.password)
-		return ResponseEntity(res.isNotEmpty(), res, HttpStatus.OK)
+		return ResponseEntity.ok(res.isNotEmpty())
 	}
-	data class PasswordPrompt(val password: String = "")
-
 
 	@ApiOperation(
 		httpMethod="POST",
@@ -192,9 +192,8 @@ class OvirtUserController: BaseController() {
 		notes="비밀번호 변경"
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name="username", value="ovirt 사용자 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="currentPassword", value="ovirt 사용자 기존 비밀번호", dataTypeClass=String::class, required=true, paramType="body"),
-		ApiImplicitParam(name="newPassword", value="ovirt 사용자 신규 비밀번호", dataTypeClass=String::class, required=true, paramType="body"),
+		ApiImplicitParam(name="username", value="oVirt 사용자 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="resetPassword", value="oVirt 사용자 비밀번호 변경 서식", dataTypeClass=ResetPasswordPrompt::class, required=true, paramType="body"),
 		ApiImplicitParam(name="force", value="비밀번호 강제변경여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
 	)
 	@ApiResponses(
@@ -205,15 +204,14 @@ class OvirtUserController: BaseController() {
 	@PutMapping("{username}/password")
 	fun password(
 		@PathVariable(required=true) username: String = "",
-		@RequestBody(required=true) currentPassword: String? = null,
-		@RequestBody(required=true) newPassword: String? = null,
+		@RequestBody(required=true) resetPassword: ResetPasswordPrompt? = null,
 		@RequestParam(required=false) force: Boolean = false,
 	):  ResponseEntity<OvirtUser> {
 		log.info("password ... username: {}", username)
 		if (username.isEmpty())					throw ErrorPattern.OVIRTUSER_ID_NOT_FOUND.toException()
-		if (newPassword.isNullOrEmpty())		throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
-		if (!force && currentPassword.isNullOrEmpty())	throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
-		val res: OvirtUser = ovirtUser.updatePassword(username, currentPassword, newPassword, force)
+		if (resetPassword?.pwCurrent.isNullOrEmpty())		throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
+		if (!force && resetPassword?.pwCurrent.isNullOrEmpty())	throw ErrorPattern.OVIRTUSER_REQUIRED_VALUE_EMPTY.toException()
+		val res: OvirtUser = ovirtUser.updatePassword(username, resetPassword, force)
 		return ResponseEntity.ok(res)
 	}
 

@@ -12,7 +12,7 @@ import {
   useAddDiskFromVM,
   useEditDiskFromVM,
   useDiskAttachmentFromVm,
-  useVmById,
+  useVm,
 } from "../../../api/RQHook";
 import { checkKoreanName, convertBytesToGB, convertGBToBytes } from "../../../util";
 import Localization from "../../../utils/Localization";
@@ -74,7 +74,7 @@ const VmDiskModal = ({
 
   const { mutate: addDiskVm } = useAddDiskFromVM();
   const { mutate: editDiskVm } = useEditDiskFromVM();
-  const { data: vm }  = useVmById(vmId);
+  const { data: vm }  = useVm(vmId);
   
   // 디스크 데이터 가져오기
   const { data: diskAttachment } = 

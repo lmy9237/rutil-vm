@@ -17,6 +17,7 @@ const AllDomain = () => {
     isLoading: isStorageDomainsLoading,
     isError: isStorageDomainsError,
     isSuccess: isStorageDomainsSuccess,
+    refetch: refetchStorageDomains,
   } = useAllStorageDomains((e) => ({ ...e }));
 
   return (
@@ -24,15 +25,13 @@ const AllDomain = () => {
       <HeaderButton titleIcon={rvi24Storage()} 
         title="스토리지 도메인"
       />
-      <div className="w-full section-content">
-        <DomainDupl
-          columns={TableColumnsInfo.STORAGE_DOMAINS}
-          domains={storageDomains || []}
-          actionType={"domain"}
-          showSearchBox={true}
-          isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
-        />
-      </div>
+      <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
+        domains={storageDomains}
+        actionType={"domain"}
+        showSearchBox={true}
+        refetch={refetchStorageDomains}
+        isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
+      />
     </div>
   );
 };

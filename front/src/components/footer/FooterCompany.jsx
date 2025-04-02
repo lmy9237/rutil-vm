@@ -12,7 +12,7 @@ const FooterCompany = ({
   const copyright = "Copyright 아이티정보기술㈜. All rights reserved."
   
   return (
-    <div className="footer-company f-center">
+    <div className="footer-company f-center w-full">
       {!isBrief && <ItitinfoLogoIcon  />}
       <div className="footer-company-group v-start">
         {!isBrief && <ul className="footer-company-detail">

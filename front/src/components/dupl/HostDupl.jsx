@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import HostModals from "../modal/host/HostModals";
@@ -8,20 +9,26 @@ import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
+import Logger from "../../utils/Logger";
 
 const HostDupl = ({
-  isLoading, isError, isSuccess,
-  hosts = [], columns = [], clusterId,  showSearchBox =true
+  hosts = [], columns = [], clusterId,
+  showSearchBox =true,
+  refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedHosts, setSelectedHosts] = useState([]);
 
-  const handleNameClick = (id) => navigate(`/computing/hosts/${id}`);
-
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
-
+  const handleNameClick = (id) => navigate(`/computing/hosts/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`HostDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
 
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
   const transformedData = hosts.map((host) => ({
@@ -50,9 +57,12 @@ const HostDupl = ({
 
   return (
     <>
-     <div className="dupl-header-group">
+     <div className="dupl-header-group f-start">
         {showSearchBox && (
-          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <SearchBox 
+            searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+            onRefresh={handleRefresh}
+          />
         )}
         <HostActionButtons
           openModal={openModal}
@@ -61,7 +71,6 @@ const HostDupl = ({
           status={selectedHosts[0]?.status}
           selectedHosts={selectedHosts || []}
         />
-
       </div>
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}

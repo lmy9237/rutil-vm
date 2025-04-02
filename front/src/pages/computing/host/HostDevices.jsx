@@ -17,6 +17,7 @@ const HostDevices = ({ hostId }) => {
     isLoading: isHostDevicesLoading,
     isError: isHostDevicesError,
     isSuccess: isHostDevicesSuccess,
+    refetch: refetchHostDevices,
   } = useHostDevicesFromHost(hostId, (e) => ({ ...e }));
 
   Logger.debug("...")
@@ -24,6 +25,8 @@ const HostDevices = ({ hostId }) => {
     <div className="section-table-outer">
       <Tables columns={TableColumnsInfo.DEVICE_FROM_HOST}
         data={hostDevices}
+        showSearchBox={true}
+        refetch={refetchHostDevices}
         isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
       />
     </div>

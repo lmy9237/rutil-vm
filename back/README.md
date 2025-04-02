@@ -194,7 +194,10 @@ cat ~/.ssh/id_rsa.pub
 > -e RUTIL_VM_SSL_KEY_ALIAS=rutil-vm-api \                    # SSL 인증서 alias
 > -e RUTIL_VM_CORS_ALLOWED_ORIGINS=192.168.0.20;localhost;rutil-vm;rutilvm-ititinfo.com \       # CORS 예외대상 호스트명
 > -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 \       # CORS 예외대상 호스트의 포트
+> -e RUTIL_VM_OVIRT_LOGIN_LIMIT=5 \                           # 잠금처리를 위한 로그인 실패 최고 회수
 > -e RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED=false \              # JSch 디버깅 활성화 여부 (목적: SSH연결)
+> -e RUTIL_VM_OVIRT_SSH_JSCH_CONNECTION_TIMEOUT=60000 \       # 접속 Timout시간 (1분 in ms)
+> -e RUTIL_VM_OVIRT_SSH_CERT_LOCATION=/app/tmp \              # 앱 내 인증서 임시보관 위치 
 > -e RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION=/root/.ssh/id_rsa \   # SSH private key 위치 (기본: ${user.home}/.ssh/id_rsa)
 > -e RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS=root@192.168.0.20:22 \ # oVirt Engine의 SSH 접근주소
 > -e RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY= \                      # oVirt Engine의 SSH Private Key 위치
@@ -235,7 +238,10 @@ cat ~/.ssh/id_rsa.pub
 > -e RUTIL_VM_SSL_KEY_ALIAS=rutil-vm-api ^
 > -e RUTIL_VM_CORS_ALLOWED_ORIGINS=192.168.0.20;localhost;rutil-vm;rutilvm-ititinfo.com ^
 > -e RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT=3000;3443;443 ^
+> -e RUTIL_VM_OVIRT_LOGIN_LIMIT=5 ^
 > -e RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED=false ^
+> -e RUTIL_VM_OVIRT_SSH_JSCH_CONNECTION_TIMEOUT=60000 ^
+> -e RUTIL_VM_OVIRT_SSH_CERT_LOCATION=/app/tmp ^
 > -e RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION=/root/.ssh/id_rsa ^
 > -e RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS=root@192.168.0.20:22 ^
 > -e RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY= ^

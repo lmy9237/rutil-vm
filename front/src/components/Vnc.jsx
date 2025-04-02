@@ -1,13 +1,16 @@
-import React, { useRef } from 'react'
+import React, { forwardRef,  } from 'react'
 import { VncScreen } from 'react-vnc'
 import { useVmConsoleAccessInfo } from "../api/RQHook";
 import Logger from '../utils/Logger';
+import "./Vnc.css"
 
-const Vnc = ({
-  vmId, autoConnect = false,
-}) => {
-  const { data: vmConsoleAccessInfo } = useVmConsoleAccessInfo(vmId);
-    
+const Vnc = forwardRef(({
+  vmId, autoConnect=false,
+  isPreview=false,
+  ...props
+}, ref) => {
+  const { data: vmConsoleAccessInfo } = useVmConsoleAccessInfo(vmId);  
+  
   let wsUrl = `wss://localhost/ws`;
   if (import.meta.env.PROD) {
     Logger.debug("THIS IS PRODUCTION !!!");
@@ -28,7 +31,7 @@ const Vnc = ({
     return true;
   };
   const fullAccessUrl = () => `${wsUrl}/${vmConsoleAccessInfo?.address}:${vmConsoleAccessInfo?.port}`
-  const ref = useRef()
+  
   isReady() && Logger.debug(
     `... wsUrl: ${wsUrl}, address: ${vmConsoleAccessInfo?.address}, port: ${vmConsoleAccessInfo?.port}, ticket: ${vmConsoleAccessInfo?.token}`
   );
@@ -56,46 +59,51 @@ const Vnc = ({
     return () => {
       rfb.disconnect();
     };
-  }, [host, ticket])*/
-
+  }, [host, ticket])
+  */
+ 
   return (
-    <>
-      {isReady() && isValid(wsUrl) ? (
-        <VncScreen
-          url={fullAccessUrl()}
-          autoConnect={true}
-          rfbOptions={{
-            "wsProtocols": ['binary']
-          }}
-          scaleViewport
-          background="#000000"
-          style={{width: '100%', height: '100%'}}
-          debug
-          onConnect={(rfb) => {
-            Logger.debug("Vnc > onConnect ... ");
-          }}
-          onDisconnect={(rfb) => {
-            Logger.debug("Vnc > onDisconnect ... ");
-          }}
-          onCredentialsRequired={(rfb) => {
-            Logger.debug("Vnc > onCredentialsRequired ... ")
-            rfb.sendCredentials({
-              "password": vmConsoleAccessInfo?.token,
-            })
-          }}
-          onSecurityFailure={(e) => {
-            Logger.error(`Vnc > onSecurityFailure (${e?.detail?.status}): ${e?.detail?.reason}`)
-          }}
-          onClipboard={(e) => {
-            Logger.debug(`Vnc > onClipboard ${e.detail}`)
-          }} 
-          ref={ref}
-        />
-      ) : (
-        <div>VNC URL not provided.</div>
-      )}
-    </>
+    <div className={isPreview 
+      ? "vnc-size-preview"
+      : "w-full h-full"} 
+      ref={ref}
+    >
+    {isReady() && isValid(wsUrl) ? (
+      <VncScreen
+        url={fullAccessUrl()}
+        autoConnect={autoConnect}
+        rfbOptions={{
+          "wsProtocols": ['binary']
+        }}
+        scaleViewport
+        background="#000000"
+        style={{width: '100%', height: '100%'}}
+        debug
+        onConnect={(rfb) => {
+          Logger.debug("Vnc > onConnect ... ");
+        }}
+        onDisconnect={(rfb) => {
+          Logger.debug("Vnc > onDisconnect ... ");
+        }}
+        onCredentialsRequired={(rfb) => {
+          Logger.debug("Vnc > onCredentialsRequired ... ")
+          rfb.sendCredentials({
+            "password": vmConsoleAccessInfo?.token,
+          })
+        }}
+        onSecurityFailure={(e) => {
+          Logger.error(`Vnc > onSecurityFailure (${e?.detail?.status}): ${e?.detail?.reason}`)
+        }}
+        onClipboard={(e) => {
+          Logger.debug(`Vnc > onClipboard ${e.detail}`)
+        }}
+        // ref={ref}
+      />
+    ) : (
+      <div>VNC URL not provided.</div>
+    )}
+    </div>
   )
-}
+})
 
 export default Vnc

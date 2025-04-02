@@ -6,8 +6,8 @@ import IconInput from "../../components/Input/IconInput";
 import Localization from "../../utils/Localization";
 import FooterCompany from "../../components/footer/FooterCompany";
 import useAuth from "../../hooks/useAuth";
-import { useAuthenticate } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
+import { useAuthenticate } from "../../api/RQHook";
 import "./Login.css";
 
 const Login = () => {
@@ -40,7 +40,6 @@ const Login = () => {
     // setValue("isUserAuthenticated", true);
     navigate(from, { replace: true });
   }, (err) => {
-    toast.error(err?.message);
     errRef.current.focus();
   });
 

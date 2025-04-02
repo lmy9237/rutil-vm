@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.service.auth
 
+import com.itinfo.rutilvm.api.configuration.PropertiesConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.repository.aaarepository.OvirtUserRepository
 import com.itinfo.rutilvm.api.repository.aaarepository.RefreshTokenRepository
@@ -7,6 +8,7 @@ import com.itinfo.rutilvm.api.repository.aaarepository.UserDetailRepository
 import com.itinfo.rutilvm.api.repository.aaarepository.dto.TokenDto
 import com.itinfo.rutilvm.api.repository.aaarepository.entity.*
 import com.itinfo.rutilvm.api.error.toException
+import com.itinfo.rutilvm.api.model.auth.ResetPasswordPrompt
 import com.itinfo.rutilvm.api.model.auth.UserVo
 import com.itinfo.rutilvm.api.model.setting.UsersVo
 import com.itinfo.rutilvm.api.ovirt.hashPassword
@@ -95,12 +97,13 @@ interface ItOvirtUserService {
 	 * 사용자 비밀변호 변경
 	 *
 	 * @param username [String]
-	 * @param currentPassword [String]
-	 * @param newPassword [String]
+	 * @param resetPassword [ResetPasswordPrompt]
+	 * @param force [Boolean]
+	 *
 	 * @return [OvirtUser]
 	 */
 	@Throws(PSQLException::class)
-	fun updatePassword(username: String, currentPassword: String?, newPassword: String, force: Boolean): OvirtUser
+	fun updatePassword(username: String, resetPassword: ResetPasswordPrompt?, force: Boolean): OvirtUser
 	/**
 	 * [ItOvirtUserService.update]
 	 * 사용자 변경
@@ -144,6 +147,7 @@ interface ItOvirtUserService {
 class OvirtUserServiceImpl(
 
 ): BaseService(), ItOvirtUserService {
+	@Autowired private lateinit var propsConfig: PropertiesConfig
 	@Autowired private lateinit var jwtUtil: JwtUtil
 	@Autowired private lateinit var ovirtUsers: OvirtUserRepository
 	@Autowired private lateinit var userDetails: UserDetailRepository
@@ -223,22 +227,31 @@ class OvirtUserServiceImpl(
 	}
 
 	@Throws(PSQLException::class)
-	@Transactional("aaaTransactionManager")
 	override fun authenticate(username: String, password: String): HttpHeaders {
 		log.info("authenticate ... username: {}", username)
 		log.debug("authenticate ... password: {}", password)
 
 		// 아이디 검사
 		val user: OvirtUser = findOneAAA(username)
+		if (user.disabled == 1)
+			throw ErrorPattern.OVIRTUSER_LOCKED.toException()
 
 		// 비밀번호 검사
 		val res = password.validatePassword(user.password)
-		log.info("res: {}", res)
+		log.info("authenticate ... res: {}", res)
+
+		// 로그인 성공/실패 처리 기록
 		user.consecutiveFailures = if (res) 0 else user.consecutiveFailures+1
 		ovirtUsers.save(user)
-		if (!res) { // 로그인 실패 처리 기록
-			return HttpHeaders()
+
+		if (user.consecutiveFailures >= propsConfig.loginLimit) {
+			log.info("authenticate ... 실패처리 (총 {}번)", user.consecutiveFailures)
+			user.disabled = 1
+			ovirtUsers.save(user)
+			throw ErrorPattern.OVIRTUSER_LOCKED.toException()
 		}
+		if (!res)
+			throw ErrorPattern.OVIRTUSER_AUTH_INVALID.toException()
 
 		val dto: TokenDto = jwtUtil.createAllToken(username)
 		val rToken: RefreshToken? = refreshTokens.findByExternalId(user.uuid) // Refresh토큰 있는지 확인
@@ -261,14 +274,15 @@ class OvirtUserServiceImpl(
 	}
 
 	@Transactional("aaaTransactionManager")
-	override fun updatePassword(username: String, currentPassword: String?, newPassword: String, force: Boolean): OvirtUser {
+	override fun updatePassword(username: String, resetPassword: ResetPasswordPrompt?, force: Boolean): OvirtUser {
 		log.info("updatePassword ... username: {}", username)
 		val user: OvirtUser = findOneAAA(username)
 
-		if (!force && authenticate(username, currentPassword ?: "").isEmpty())
+		if (!force && authenticate(username, resetPassword?.pwCurrent ?: "").isEmpty())
 			throw ErrorPattern.OVIRTUSER_AUTH_INVALID.toException()
 
-		user.password = newPassword.hashPassword()
+		user.password = resetPassword?.pwNew?.hashPassword()
+			?: throw ErrorPattern.OVIRTUSER_AUTH_INVALID.toException()
 		val userUpdated: OvirtUser = ovirtUsers.save(user)
 		return userUpdated
 	}
@@ -278,6 +292,7 @@ class OvirtUserServiceImpl(
 		log.info("update ... username: {}, userVo: {}", username, userVo)
 		val user2Update: OvirtUser = findOneAAA(username).apply {
 			disabled = if (userVo?.disabled == true) 1 else 0
+			if (userVo?.disabled == false) consecutiveFailures = 0
 		}
 		val resUserUpdated: OvirtUser = ovirtUsers.save(user2Update)
 

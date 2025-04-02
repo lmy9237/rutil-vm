@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import VmDiskModals from "../modal/vm/VmDiskModals";
 import VmDiskActionButtons from "./VmDiskActionButtons";
 import { checkZeroSizeToGB } from "../../util";
-import { useVmById } from "../../api/RQHook";
+import { useVm } from "../../api/RQHook";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
 import { status2Icon } from "../icons/RutilVmIcons";
@@ -12,6 +12,8 @@ import TableRowClick from "../table/TableRowClick";
 import FilterButton from "../button/FilterButton";
 import TableColumnsInfo from "../table/TableColumnsInfo";
 import SelectedIdView from "../common/SelectedIdView";
+import Logger from "../../utils/Logger";
+import toast from "react-hot-toast";
 
 /**
  * @name VmDiskDupl
@@ -21,22 +23,28 @@ import SelectedIdView from "../common/SelectedIdView";
  * @returns
  */
 const VmDiskDupl = ({ 
+  vmDisks = [], vmId, 
+  showSearchBox=true,
+  refetch,
   isLoading, isError, isSuccess,
-  vmDisks = [],  vmId,  showSearchBox =true
 }) => {
   const { 
     data: vm
-  }  = useVmById(vmId);
+  }  = useVm(vmId);
   
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDisks, setSelectedDisks] = useState([]); // 다중 선택된 디스크
 
-  const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
-
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
-
+  const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`VmDiskDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
   const transformedData = vmDisks.map((d) => {
     const diskImage = d?.diskImageVo;
     return {
@@ -68,7 +76,6 @@ const VmDiskDupl = ({
   });
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-
   const [activeDiskType, setActiveDiskType] = useState("all");
   const diskFilters = [
     { key: "all", label: "모두" },
@@ -91,7 +98,10 @@ const VmDiskDupl = ({
         />
         <div className="vm-disk-search center">
           {showSearchBox && (
-            <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            <SearchBox 
+              searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+              onRefresh={handleRefresh}
+            />
           )}
           <VmDiskActionButtons
             openModal={openModal}
@@ -122,6 +132,7 @@ const VmDiskDupl = ({
       />
 
       <SelectedIdView items={selectedDisks} />
+
       {/* 디스크 모달창 */}
       <Suspense>
         <VmDiskModals

@@ -15,16 +15,15 @@ const Disks = () => {
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
+    refetch: refetchDisks,
   } = useAllDisks((e) => ({ ...e }));
 
   return (
-    <>
-      <DiskDupl
-        isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
-        columns={TableColumnsInfo.DISKS}
-        disks={disks}
-      />
-    </>
+    <DiskDupl columns={TableColumnsInfo.DISKS}
+      disks={disks}
+      refetch={refetchDisks}
+      isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
+    />
   );
 };
 

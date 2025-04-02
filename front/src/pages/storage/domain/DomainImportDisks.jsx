@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DomainGetDiskModal from "../../../components/modal/domain/DomainGetDiskModal";
@@ -18,11 +20,13 @@ import { useAllUnregisteredDisksFromDomain } from "../../../api/RQHook";
  * @returns {JSX.Element} DomainGetDisks
  */
 const DomainImportDisks = ({ domainId }) => {
+  const navigate = useNavigate()
   const {
     data: disks = [],
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
+    refetch: refetchDisks,
   } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
 
   const [activeModal, setActiveModal] = useState(null);
@@ -38,12 +42,22 @@ const DomainImportDisks = ({ domainId }) => {
     searchText: `${disk?.alias} ${disk?.sparse ? "씬 프로비저닝" : "사전 할당"} ${checkZeroSizeToGB(disk?.virtualSize)} ${checkZeroSizeToGB(disk?.actualSize)}`.toLowerCase(),
   }));
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleNameClick = (id) => navigate(`/computing/templates/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`TemplateDupl > handleRefresh ... `)
+    if (!refetchDisks) return;
+    refetchDisks()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
 
   Logger.debug(`DomainImportDisks ... transformedData: ${transformedData}`);
   return (
     <>
-      <div className="dupl-header-group">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <div className="dupl-header-group f-start">
+        <SearchBox 
+          searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+          refetch={handleRefresh}
+        />
         <div className="header-right-btns">
           <ActionButton 
             label="가져오기" 

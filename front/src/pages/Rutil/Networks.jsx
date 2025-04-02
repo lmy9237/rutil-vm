@@ -15,16 +15,15 @@ const Networks = () => {
     isLoading: isNetworksLoading,
     isError: isNetworksError,
     isSuccess: isNetworksSuccess,
+    refetch: refetchNetworks,
   } = useAllNetworks((e) => ({ ...e }));
 
   return (
-    <>
-      <NetworkDupl
-        isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
-        columns={TableColumnsInfo.NETWORKS}
+      <NetworkDupl columns={TableColumnsInfo.NETWORKS}
         networks={networks}
+        refetch={refetchNetworks}
+        isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
       />
-    </>
   );
 };
 

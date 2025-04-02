@@ -1,5 +1,4 @@
 import React from "react";
-import { faDesktop } from "@fortawesome/free-solid-svg-icons";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import TemplateDupl from "../../components/dupl/TemplateDupl";
 import { useAllTemplates } from "../../api/RQHook";
@@ -16,16 +15,15 @@ const Templates = () => {
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
+    refetch: refetchTemplates,
   } = useAllTemplates((e) => ({ ...e }));
 
   return (
-    <>
-      <TemplateDupl
-        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
-        columns={TableColumnsInfo.TEMPLATES}
-        templates={templates}
-      />
-    </>
+    <TemplateDupl columns={TableColumnsInfo.TEMPLATES}
+      templates={templates}
+      refetch={refetchTemplates}
+      isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
+    />
   );
 };
 

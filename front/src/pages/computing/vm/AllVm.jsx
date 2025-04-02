@@ -5,8 +5,8 @@ import VmDupl from "../../../components/dupl/VmDupl";
 import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 import { useAllVMs } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import "./Vm.css";
 import Logger from "../../../utils/Logger";
+import "./Vm.css";
 
 /**
  * @name AllVm
@@ -20,7 +20,7 @@ const AllVm = () => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-    refetch: vmsRefetch,
+    refetch: refetchVms,
   } = useAllVMs((e) => ({ ...e }));
 
   Logger.debug("...");
@@ -32,8 +32,9 @@ const AllVm = () => {
       <div className="section-content w-full">
         <VmDupl columns={TableColumnsInfo.VMS}
           vms={vms}
-          onCloseModal={vmsRefetch}
+          onCloseModal={refetchVms}
           showSearchBox={true}
+          refetch={refetchVms}
           isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         />
       </div>

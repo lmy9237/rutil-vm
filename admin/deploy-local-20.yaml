@@ -19,6 +19,7 @@ services:
       RUTIL_VM_SSL_KEY_ALIAS: rutil-vm-api
       RUTIL_VM_CORS_ALLOWED_ORIGINS: 192.168.0.20;localhost;rutil-vm;rutilvm-ititinfo.com
       RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT: 3000;3443;443
+      RUTIL_VM_OVIRT_LOGIN_LIMIT: 5
       RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED: true
       RUTIL_VM_OVIRT_SSH_JSCH_CONNECTION_TIMEOUT: 60000
       RUTIL_VM_OVIRT_SSH_CERT_LOCATION: /app/tmp
@@ -87,7 +88,7 @@ services:
       LANG: ko_KR.utf8
       NODE_ENV: production
       __RUTIL_VM_OVIRT_IP_ADDRESS__: 192.168.0.20
-      __VITE_RUTIL_VM_LOGGING_ENABLED__: true
+      __RUTIL_VM_LOGGING_ENABLED__: true
     volumes:
       - ./rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro

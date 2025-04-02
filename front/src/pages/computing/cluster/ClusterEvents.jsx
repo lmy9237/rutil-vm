@@ -16,6 +16,7 @@ const ClusterEvents = ({ clusterId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
+    refetch: refetchEvents
   } = useEventFromCluster(clusterId, (e) => ({ 
     ...e
   }));
@@ -23,6 +24,7 @@ const ClusterEvents = ({ clusterId }) => {
   Logger.debug("...");
   return (
     <EventDupl events={events}
+      refetch={refetchEvents}
       isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
     />
   );

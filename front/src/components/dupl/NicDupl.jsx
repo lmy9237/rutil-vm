@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import { renderTFStatusIcon } from "../Icon";
-import { useVmById } from "../../api/RQHook";
+import { useVm } from "../../api/RQHook";
 import NicModals from "../modal/nic/NicModals";
 import NicActionButtons from "./NicActionButtons";
 */
@@ -20,7 +20,7 @@ import NicActionButtons from "./NicActionButtons";
 //   isLoading, isError, isSuccess,
 //   vmNics = [], columns = [], vmId,  showSearchBox =true
 // }) => {
-//   const { data: vm }  = useVmById(vmId);
+//   const { data: vm }  = useVm(vmId);
   
 //   const navigate = useNavigate();
 //   const [activeModal, setActiveModal] = useState(null);

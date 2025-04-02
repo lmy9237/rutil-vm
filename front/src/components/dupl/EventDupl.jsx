@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import { severity2Icon } from "../icons/RutilVmIcons";
 import SearchBox from "../button/SearchBox";
@@ -16,12 +17,10 @@ import SelectedIdView from "../common/SelectedIdView";
  * @returns
  */
 const EventDupl = ({
-  isLoading,
-  isError,
-  isSuccess,
   events = [],
   handleRowClick,
-  showSearchBox = true,
+  showSearchBox=true,
+  refetch, isLoading, isError, isSuccess,
 }) => {
   const transformedData = events.map((e) => ({
     ...e,
@@ -29,13 +28,23 @@ const EventDupl = ({
   }))
   const [selectedEvents, setSelectedEvents] = useState([]);
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = () =>  {
+    Logger.debug(`EventDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
 
-  Logger.debug("...");
+  Logger.debug("EventDupl ...");
   return (
     <>
-      <div className="dupl-header-group">
+      <div className="dupl-header-group f-start">
         {showSearchBox && (
-          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <>
+            <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+              onRefresh={handleRefresh}
+            />
+          </>
         )}
       </div>
 

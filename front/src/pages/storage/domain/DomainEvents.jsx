@@ -15,19 +15,16 @@ const DomainEvents = ({ domainId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
+    refetch: refetchEvents,
   } = useAllEventsFromDomain(domainId, (e) => ({
     ...e,
   }));
 
   return (
-    <>
-      <EventDupl
-        isLoading={isEventsLoading}
-        isError={isEventsError}
-        isSuccess={isEventsSuccess}
-        events={events}
-      />
-    </>
+    <EventDupl events={events}
+      refetch={refetchEvents}
+      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+    />
   );
 };
 

@@ -17,6 +17,7 @@ const Event = () => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
+    refetch: refetchEvents
   } = useAllEvents((e) => ({
     ...e,
   }));
@@ -33,9 +34,9 @@ const Event = () => {
       />
       <div className="content-outer">
         <div className="section-content w-full">
-          <EventDupl
+          <EventDupl events={events}
+            refetch={refetchEvents}
             isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-            events={events}
           />
         </div>
       </div>

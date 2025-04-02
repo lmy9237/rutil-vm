@@ -13,18 +13,19 @@ import { useClustersFromDataCenter } from "../../../api/RQHook";
 const DataCenterClusters = ({ datacenterId }) => {
   const {
     data: clusters = [],
-    isLoading: isDataCentersLoading,
-    isError: isDataCentersError,
-    isSuccess: isDataCentersSuccess,
+    isLoading: isClustersLoading,
+    isError: isClustersError,
+    isSuccess: isClustersSuccess,
+    refetch: refetchClusters,
   } = useClustersFromDataCenter(datacenterId, (e) => ({...e,}));
 
   return (
     <>
-      <ClusterDupl
-        isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
-        columns={TableColumnsInfo.CLUSTERS_FROM_DATACENTER}
+      <ClusterDupl columns={TableColumnsInfo.CLUSTERS_FROM_DATACENTER}
         clusters={clusters}
         datacenterId={datacenterId}
+        refetch={refetchClusters}
+        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
       />
     </>
   );

@@ -1,10 +1,11 @@
-import { useVmById } from "../../../api/RQHook";
+import { useVm } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import InfoTable from "../../../components/table/InfoTable";
 import SemiCircleChart from "../../../components/Chart/SemiCircleChart";
 import TableRowClick from "../../../components/table/TableRowClick";
 import Localization from "../../../utils/Localization";
 import { RVI16, rvi16Cluster, rvi16Globe, rvi16Host } from "../../../components/icons/RutilVmIcons";
+import Vnc from "../../../components/Vnc";
 
 // 운영 시스템
 const osSystemList = [
@@ -91,7 +92,7 @@ const VmGeneral = ({ vmId }) => {
     isLoading: isVmLoading,
     isError: isVmError,
     isSuccess: isVmSuccess,
-  } = useVmById(vmId);
+  } = useVm(vmId);
 
   const osLabel =
     osSystemList.find((option) => option.value === vm?.osType)?.label || vm?.osSystem;
@@ -155,6 +156,11 @@ const VmGeneral = ({ vmId }) => {
   return (
     <>
       <div className="vm-detail-general-boxs">
+        {/* <Vnc vmId={vmId}
+          autoConnect={true} 
+          isPreview={true}
+        /> */}
+        {/* TODO: preview일 때 canvas 만 표출 되는 기능 개발 */}
         <div className="detail-general-box">
           <h1>{Localization.kr.GENERAL}</h1>
           <InfoTable tableRows={generalTableRows} />

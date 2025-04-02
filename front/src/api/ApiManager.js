@@ -2908,7 +2908,7 @@ migrateHostsFromVM: async (vmId) => {
     data: data,
   }),
   /**
-   * @name ApiManager.changePassword
+   * @name ApiManager.updatePassword
    * @description 사용자 비밀번호 변경경
    * 
    * @param {string} username 사용자 oVirt ID
@@ -2917,10 +2917,14 @@ migrateHostsFromVM: async (vmId) => {
    *
    * @returns {Promise<Object>} API 응답 결과
    */
-  changePassword: async(username, currentPasword, newPassword) => makeAPICall({
+  updatePassword: async(
+    username,
+    pwCurrent,pwNew,
+    force,
+  ) => makeAPICall({
     method: "PUT", 
-    url: ENDPOINTS.CHANGE_PASSWORD_USER(username, currentPasword, newPassword), 
-    // data: { currentPasword, newPassword },
+    url: ENDPOINTS.UPDATE_PASSWORD_USER(username, force), 
+    data: { pwCurrent, pwNew },
   }),
   /**
    * @name ApiManager.removeUser

@@ -7,9 +7,15 @@
   width: calc(100% - var(--h-text-input)) !important; border:none !important;
   height: 100%;
 }
-.search-box-btn {
+.btn-search-box {
   width: var(--h-text-input);height: 100%;cursor: pointer;
 }
-.search-box-btn:hover {
+.btn-search-box:hover {
   color: black;
 }
+.btn-refresh {
+  border: var(--border-btn);
+  height: var(--h-text-input);aspect-ratio:1/1;
+  border-radius: 2px;
+}
+

@@ -15,16 +15,14 @@ import "./Table.css";
  * 
  */
 const Tables = ({
-  isLoading = null,
-  isError = false,
-  isSuccess,
-  columns = [],
-  data = [],
+  columns = [], data = [],
   onRowClick = () => {},
   clickableColumnIndex = [],
   onContextMenuItems = false,
   onClickableColumnClick = () => {},
   showSearchBox = true,
+  refetch,
+  isLoading = null, isError = false, isSuccess,
   searchQuery = "",  // ✅ 기본값 추가
   setSearchQuery = () => {}, // ✅ 기본값 추가
 }) => {

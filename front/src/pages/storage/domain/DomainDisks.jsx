@@ -15,18 +15,15 @@ const DomainDisks = ({ domainId }) => {
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
+    refetch: refetchDisks,
   } = useAllDisksFromDomain(domainId, (e) => ({ ...e }));
 
   return (
-    <>
-      <DiskDupl
-        disks={disks}
-        columns={TableColumnsInfo.DISKS_FROM_STORAGE_DOMAIN}
-        isLoading={isDisksLoading}
-        isError={isDisksError}
-        isSuccess={isDisksSuccess}
-      />
-    </>
+    <DiskDupl columns={TableColumnsInfo.DISKS_FROM_STORAGE_DOMAIN}
+      disks={disks}
+      refetch={refetchDisks}
+      isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
+    />
   );
 };
 

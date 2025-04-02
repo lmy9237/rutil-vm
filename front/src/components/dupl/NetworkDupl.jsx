@@ -8,6 +8,8 @@ import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
 import Localization from "../../utils/Localization";
 import SelectedIdView from "../common/SelectedIdView";
+import Logger from "../../utils/Logger";
+import toast from "react-hot-toast";
 import "./Dupl.css";
 
 /**
@@ -19,7 +21,8 @@ import "./Dupl.css";
  * @returns {JSX.Element}
  */
 const NetworkDupl = ({
-  networks = [], columns = [], showSearchBox = true, 
+  networks = [], columns = [], showSearchBox = true,
+  refetch,
   isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
@@ -56,21 +59,28 @@ const NetworkDupl = ({
   // 변환된 데이터에서 검색 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
 
-  const handleNameClick = (id) => navigate(`/networks/${id}`);
-
   // 모달 열기 / 닫기
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
+  const handleNameClick = (id) => navigate(`/networks/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`NetworkDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
 
   return (
 
     <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group">
+      <div className="dupl-header-group f-start">
         {showSearchBox && (
-          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <SearchBox 
+            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+            onRefresh={handleRefresh}
+          />
         )}
         <NetworkActionButtons 
-          className=""
           openModal={openModal}
           isEditDisabled={selectedNetworks.length !== 1}
           isDeleteDisabled={selectedNetworks.length === 0}

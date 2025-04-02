@@ -3,6 +3,7 @@ const isLoggingEnabled =
   '__RUTIL_VM_LOGGING_ENABLED__' === 'true';
 
 let Logger = {
+  label: `This is RutilVM's Logger`,
   debug: () => {},
   table: () => {},
   info: (...args) => console.info(...args),
@@ -12,6 +13,7 @@ let Logger = {
 
 if (isLoggingEnabled) {
   Logger = {
+    label: `This is RutilVM's Logger`,
     debug: (...args) => console.log(...args),
     table: (...args) => console.table(...args),
     info: (...args) => console.info(...args),

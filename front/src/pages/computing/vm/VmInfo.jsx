@@ -12,7 +12,7 @@ import VmHostDevices from "./VmHostDevices";
 import VmEvents from "./VmEvents";
 import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
-import { useVmById } from "../../../api/RQHook";
+import { useVm } from "../../../api/RQHook";
 import { openNewTab } from "../../../navigation";
 import VmDisks from "./VmDisks";
 import Logger from "../../../utils/Logger";
@@ -43,7 +43,7 @@ const VmInfo = () => {
     isLoading: isVmLoading,
     isError: isVmError,
     isSuccess: isVmSuccess,
-  } = useVmById(vmId);
+  } = useVm(vmId);
 
   const isUp = vm?.status === "UP";
   const isMaintenance = vm?.status === "MAINTENANCE";

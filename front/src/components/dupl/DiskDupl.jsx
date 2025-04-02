@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import DiskModals from "../modal/disk/DiskModals";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import DiskActionButtons from "./DiskActionButtons";
-import { checkZeroSizeToGB } from "../../util";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 import { status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
+import { checkZeroSizeToGB } from "../../util";
+import Logger from "../../utils/Logger";
+
 
 const DiskDupl = ({
+  disks = [], columns = [], type = "disk", 
+  showSearchBox = true,
+  refetch,
   isLoading, isError, isSuccess,
-  disks = [], columns = [], type = "disk", showSearchBox = true
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
@@ -51,24 +56,32 @@ const DiskDupl = ({
 
     // ✅ 검색 필드 추가 (모든 데이터를 하나의 문자열로 만듦)
     diskData.searchText = `${diskData.alias} ${diskData.sparse} ${diskData.virtualSize} ${diskData.actualSize}`;
-
     return diskData;
   });
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
 
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
+  const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`DiskDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group">
+      <div className="dupl-header-group f-start">
         {/* 검색창 추가 */}
         {showSearchBox && (
-          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <SearchBox 
+            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+            onRefresh={handleRefresh}
+          />
         )}
 
         <DiskActionButtons

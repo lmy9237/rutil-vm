@@ -16,16 +16,15 @@ const HostEvents = ({ hostId }) => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
+    refetch: refetchEvents,
   } = useEventsFromHost(hostId, (e) => ({ ...e }));
 
-  Logger.debug("...");
+  Logger.debug("HostEvents ...");
   return (
-    <>
-      <EventDupl
-        isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-        events={events}
-      />
-    </>
+    <EventDupl events={events}
+      refetch={refetchEvents}
+      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+    />
   );
 };
 

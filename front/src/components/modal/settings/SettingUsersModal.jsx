@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
-import { useAddUser, useEditUser, useChangePasswordUser } from "../../../api/RQHook";
+import { useAddUser, useEditUser, useUpdatePasswordUser } from "../../../api/RQHook";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import { validateUsername, validatePw } from "../../../util";
 import "./SettingsUserModal.css";
@@ -17,7 +17,7 @@ const initialFormState = {
   password: "",
   repassword: "",
   passwordCurrent: "",
-  isDisabled: false,
+  disabled: false,
 };
 
 const SettingUsersModal = ({ 
@@ -49,21 +49,29 @@ const SettingUsersModal = ({
   const {
     isLoading: isChangePasswordLoading,
     mutate: changePasswordUser,
-  } = useChangePasswordUser(formState.username, formState.passwordCurrent, formState.password, (res) => {
+  } = useUpdatePasswordUser(formState.username, formState.passwordCurrent, formState.password, true, (res) => {
     onClose();
   } , (err) => {
+    onClose();
   });
 
   useEffect(() => {
     if (!isOpen || !(editMode || changePassword)) {
       return setFormState(initialFormState);
     }
-    setFormState({ ...user });
+    setFormState({ 
+      ...initialFormState,
+      id: user?.id,
+      firstName: user?.firstName,
+      surName: user?.surName,
+      username: user?.username,
+      disabled: user?.disabled,
+      email: user?.email
+    });
   }, [isOpen, editMode, changePassword, user])
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    // 디스크 연결은 id값 보내기 생성은 객체로 보내기
     Logger.debug("SettingUsersModal > handleFormSubmit ... ");
     const error = validateForm(editMode);
     if (error) {
@@ -125,9 +133,9 @@ const SettingUsersModal = ({
           />
         )}
         {!changePassword && (
-          <LabelCheckbox id="isDisabled" label="비활성화 여부"
-            onChange={updateInputCheck("isDisabled")}
-            checked={formState.isDisabled}
+          <LabelCheckbox id="disabled" label="비활성화 여부"
+            onChange={updateInputCheck("disabled")}
+            checked={formState.disabled}
           />
         )}
         {editMode && (

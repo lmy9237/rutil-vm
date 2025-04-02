@@ -10,6 +10,10 @@ import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import { clusterStatus2Icon } from "../../../components/icons/RutilVmIcons";
+import SearchBox from "../../../components/button/SearchBox";
+import useSearch from "../../../components/button/useSearch";
+import { navigate } from "@storybook/addon-links";
+import toast from "react-hot-toast";
 
 /**
  * @name NetworkClusters
@@ -24,6 +28,7 @@ const NetworkClusters = ({ networkId }) => {
     isLoading: isClustersLoading,
     isError: isClustersError,
     isSuccess: isClustersSuccess,
+    refetch: refetchClusters,
   } = useAllClustersFromNetwork(networkId, (e) => ({ ...e }));
 
   const transformedData = clusters.map((cluster) => ({
@@ -55,20 +60,35 @@ const NetworkClusters = ({ networkId }) => {
 
   const [selectedClusters, setSelectedClusters] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, TableColumnsInfo.CLUSTERS_FRON_NETWORK);
+  const showSearchBox = true
+  const handleNameClick = (id) => navigate(`/networks/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`NetworkDupl > handleRefresh ... `)
+    if (!refetchClusters) return;
+    refetchClusters()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
+
   Logger.debug("NetworkClusters ... ");
   return (
-    <>
-      <div className="header-right-btns mb-2">
-        <ActionButton actionType="default"
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
+        {showSearchBox && (
+          <SearchBox 
+            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+            onRefresh={handleRefresh}
+          />
+        )}
+        <ActionButton 
+          actionType="default"
           label={`${Localization.kr.NETWORK} 관리`}
           onClick={() => setIsModalOpen(true)}
         />
       </div>
 
-      <TablesOuter
-        columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}
-        data={transformedData}
+      <TablesOuter columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}
+        data={filteredData}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedClusters(selectedRows)}
         multiSelect={false}
@@ -97,7 +117,7 @@ const NetworkClusters = ({ networkId }) => {
           />
         )}
       </Suspense>
-    </>
+    </div>
   );
 };
 

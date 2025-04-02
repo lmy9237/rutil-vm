@@ -7,21 +7,19 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-class ItemNotFoundException(
-	message: String
-): ItCloudException(message) {
+class ItemNotFoundException(message: String): ItCloudException(message) {
 }
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-class IdNotFoundException(
-	message: String
-): ItCloudException(message) {
+class IdNotFoundException(message: String): ItCloudException(message) {
 }
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-class InvalidRequestException(
-	message: String
-): ItCloudException(message) {
+class InvalidRequestException(message: String): ItCloudException(message) {
+
+}
+@ResponseStatus(HttpStatus.LOCKED)
+class ResourceLockedException(message: String): ItCloudException(message) {
 
 }
 
@@ -62,6 +60,7 @@ fun ErrorPattern.toException(): ItCloudException {
 		ErrorPattern.TICKET_NOT_FOUND,-> ItemNotFoundException("[${code}] ${failureType.message} ${term.desc}")
 		ErrorPattern.OVIRTUSER_VO_INVALID,
 		ErrorPattern.OVIRTUSER_AUTH_INVALID,
+		ErrorPattern.OVIRTUSER_DUPLICATE,
 		ErrorPattern.ROLE_VO_INVALID,
 		ErrorPattern.DATACENTER_VO_INVALID,
 		ErrorPattern.CLUSTER_VO_INVALID,
@@ -77,6 +76,8 @@ fun ErrorPattern.toException(): ItCloudException {
 		ErrorPattern.TEMPLATE_VO_INVALID,
 		ErrorPattern.CONSOLE_VO_INVALID,
 		ErrorPattern.TICKET_VO_INVALID, -> InvalidRequestException("[${code}] ${term.desc} ${failureType.message}")
+
+		ErrorPattern.OVIRTUSER_LOCKED, -> ResourceLockedException("[${code}] ${term.desc} ${failureType.message}")
 		else -> ItCloudException(failureType.message)
 	}
 }

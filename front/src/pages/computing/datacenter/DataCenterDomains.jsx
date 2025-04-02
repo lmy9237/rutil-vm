@@ -17,6 +17,7 @@ const DataCenterDomains = ({ datacenterId }) => {
     isLoading: isStorageDomainsLoading,
     isError: isStorageDomainsError,
     isSuccess: isStorageDomainsSuccess,
+    refetch: refetchStorageDomains,
   } = useDomainsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
   Logger.debug("...")
@@ -26,6 +27,7 @@ const DataCenterDomains = ({ datacenterId }) => {
         actionType={"dcDomain"}
         domains={storageDomains}
         datacenterId={datacenterId}
+        refetch={refetchStorageDomains}
         isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
       />
     </>

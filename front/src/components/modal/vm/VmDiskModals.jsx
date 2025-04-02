@@ -2,7 +2,7 @@ import React from "react";
 import VmDiskConnectionModal from "./VmDiskConnectionModal";
 import VmDiskModal from "./VmDiskModal";
 import VmDiskActionModal from "./VmDiskActionModal";
-import { useDeleteDisk, useDisksFromVM, useVmById } from "../../../api/RQHook";
+import { useDeleteDisk, useDisksFromVM, useVm } from "../../../api/RQHook";
 import DeleteModal from "../../../utils/DeleteModal";
 import Localization from "../../../utils/Localization";
 
@@ -20,7 +20,7 @@ const VmDiskModals = ({
   vmId,
   onClose,
 }) => {
-  const { data: vm }  = useVmById(vmId);
+  const { data: vm }  = useVm(vmId);
   const { data: diskAttachments = [] } = useDisksFromVM(vmId);
 
   // 부팅가능한 디스크 있는지 검색

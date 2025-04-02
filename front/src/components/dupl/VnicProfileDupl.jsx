@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
@@ -7,6 +8,7 @@ import VnicProfileActionButtons from "./VnicProfileActionButtons";
 import SearchBox from "../button/SearchBox";  
 import useSearch from "../button/useSearch"; 
 import SelectedIdView from "../common/SelectedIdView";
+import Logger from "../../utils/Logger";
 
 /**
  * @name VnicProfileDupl
@@ -16,9 +18,10 @@ import SelectedIdView from "../common/SelectedIdView";
  * @returns {JSX.Element}
  */
 const VnicProfileDupl = ({
-  isLoading, isError, isSuccess,
   vnicProfiles = [], columns = [], networkId,
   showSearchBox = true,
+  refetch,
+  isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
@@ -50,15 +53,24 @@ const VnicProfileDupl = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  const handleNameClick = (id) => navigate(`/vnicProfiles/${id}/vms`);
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
+  const handleNameClick = (id) => navigate(`/vnicProfiles/${id}/vms`);
+  const handleRefresh = () =>  {
+    Logger.debug(`DiskDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group">
+      <div className="dupl-header-group f-start">
         {showSearchBox && (
-          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <SearchBox 
+            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+            onRefresh={handleRefresh}
+          />
         )}
         <VnicProfileActionButtons
           openModal={openModal}

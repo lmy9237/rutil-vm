@@ -165,11 +165,18 @@ const App = () => {
           // duration: Infinity,
           duration: 5000, // 지속시간
           className: "toast",
+          style: {
+            maxWidth: 500,
+          },
+          ariaProps: {
+            role: 'status',
+            'aria-live': 'polite',
+          },
           success: {
-            className: "toast toast-success",
+            className: "toast toast-success f-start",
           },
           error: {
-            className: "toast toast-error",
+            className: "toast toast-error f-start",
           },
         }}
       />

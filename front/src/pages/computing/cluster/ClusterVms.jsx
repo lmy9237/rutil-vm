@@ -17,12 +17,14 @@ const ClusterVms = ({ clusterId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
+    refetch: refetchVms,
   } = useVMsFromCluster(clusterId, (e) => ({ ...e }));
 
   Logger.debug("...")
   return (
     <VmDupl columns={TableColumnsInfo.VMS}
       vms={vms}
+      refetch={refetchVms}
       isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
     />
   );

@@ -14,7 +14,7 @@ import VmBoot from "./create/VmBoot";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import {
-  useVmById,
+  useVm,
   useAddVm,
   useEditVm,
   useAllUpClusters,
@@ -157,7 +157,7 @@ const VmNewModal = ({ isOpen, editMode = false, vmId, onClose }) => {
   };
 
   // 가상머신 상세데이터 가져오기
-  const { data: vm, refetch: refetchvms } = useVmById(vmId);
+  const { data: vm, refetch: refetchvms } = useVm(vmId);
 
   // 클러스터 목록 가져오기
   const { data: clusters = [], isLoading: isClustersLoading } =

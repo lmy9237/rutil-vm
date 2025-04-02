@@ -17,6 +17,7 @@ const AllTemplates = () => {
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
+    refetch: refetchTemplates,
   } = useAllTemplates((e) => ({ ...e }));
 
   return (
@@ -25,10 +26,10 @@ const AllTemplates = () => {
         title={"템플릿"}
       />
       <div className="w-full section-content">
-        <TemplateDupl
-          columns={TableColumnsInfo.TEMPLATES}
+        <TemplateDupl columns={TableColumnsInfo.TEMPLATES}
           templates={templates}
           showSearchBox={true}
+          refetch={refetchTemplates}
           isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         />
       </div>

@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.IdNotFoundException
 import com.itinfo.rutilvm.api.error.InvalidRequestException
 import com.itinfo.rutilvm.api.error.ItemNotFoundException
+import com.itinfo.rutilvm.api.error.ResourceLockedException
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.response.toRes
 import com.itinfo.rutilvm.util.ovirt.error.FailureType
@@ -12,7 +13,6 @@ import com.itinfo.rutilvm.util.ovirt.error.ItCloudException
 import io.swagger.annotations.Api
 import org.ovirt.engine.sdk4.Error
 import org.postgresql.util.PSQLException
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -41,6 +41,13 @@ open class BaseController(
 	fun handleNotFound(e: Throwable): ResponseEntity<Res<Any?>>  {
 		log.error("handleNotFound ... e: {}", e::class.simpleName)
 		return HttpStatus.NOT_FOUND.toResponseEntity(e.localizedMessage)
+	}
+
+	@ExceptionHandler(ResourceLockedException::class)
+	@ResponseStatus(HttpStatus.LOCKED)
+	fun handleLocked(e: Throwable): ResponseEntity<Res<Any?>>  {
+		log.error("handleLocked ... e: {}", e::class.simpleName)
+		return HttpStatus.LOCKED.toResponseEntity(e.localizedMessage)
 	}
 
 	@ExceptionHandler(Error::class, ItCloudException::class)

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import TablesOuter from "../table/TablesOuter";
+import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import DataCenterActionButtons from "./DataCenterActionButtons";
 import DataCenterModals from "../modal/datacenter/DataCenterModals";
 import useSearch from "../button/useSearch";
@@ -8,11 +10,11 @@ import TableRowClick from "../table/TableRowClick";
 import { status2Icon } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
 import SelectedIdView from "../common/SelectedIdView";
-import SearchBox from "../button/SearchBox";
+import Logger from "../../utils/Logger";
 
 const DataCenterDupl = ({
-  isLoading, isError, isSuccess,
-  datacenters = [], columns = [],  showSearchBox = true,
+  datacenters = [], columns = [], showSearchBox = true,
+  refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
@@ -32,11 +34,15 @@ const DataCenterDupl = ({
   }));
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
 
-  const handleNameClick = (id) =>
-    navigate(`/computing/datacenters/${id}/clusters`);
-
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
+  const handleNameClick = (id) => navigate(`/computing/datacenters/${id}/clusters`);
+  const handleRefresh = () =>  {
+    Logger.debug(`DataCenterDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
 
   //버튼 활성화 조건
   const status =
@@ -47,16 +53,18 @@ const DataCenterDupl = ({
         : "multiple";
 
   return (
-    <>
-      <div className="dupl-header-group">
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
         {showSearchBox && (
-          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        )}
-          <DataCenterActionButtons status={status}
-            openModal={openModal} 
+          <SearchBox 
+            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+            onRefresh={handleRefresh}
           />
+        )}
+        <DataCenterActionButtons status={status}
+          openModal={openModal} 
+        />
       </div>
-  
 
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
@@ -86,7 +94,7 @@ const DataCenterDupl = ({
         selectedDataCenters={selectedDataCenters}
         onClose={closeModal}
       />
-    </>
+    </div>
   );
 };
 
