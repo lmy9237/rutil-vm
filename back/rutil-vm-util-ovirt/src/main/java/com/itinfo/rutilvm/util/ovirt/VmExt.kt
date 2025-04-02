@@ -185,10 +185,10 @@ fun Connection.addVm(
 		this.selectCdromFromVm(vmAdded.id(), connId)
 	}
 
-	if (!this.expectVmStatus(vmAdded.id(), VmStatus.DOWN)) {
-		log.error("가상머신 생성 시간 초과: {}", vmAdded.name())
-		return Result.failure(Error("가상머신 생성 시간 초과"))
-	}
+	// if (!this.expectVmStatus(vmAdded.id(), VmStatus.DOWN)) {
+	// 	log.error("가상머신 생성 시간 초과: {}", vmAdded.name())
+	// 	return Result.failure(Error("가상머신 생성 시간 초과"))
+	// }
 	vmAdded
 }.onSuccess {
 	Term.VM.logSuccess("생성", it.id())
@@ -290,21 +290,39 @@ fun Connection.exportVm(
 
 }
 
-fun Connection.migrationVm(vmId: String, hostId: String): Result<Boolean> = runCatching {
+fun Connection.migrationVm(vmId: String, clusterId: String, affinityClosure: Boolean): Result<Boolean> = runCatching {
 	checkVmExists(vmId)
-	val host = checkHost(hostId)
-	this.srvVm(vmId).migrate().host(host).send()
+	val cluster = checkCluster(clusterId)
+	this.srvVm(vmId).migrate().cluster(cluster).migrateVmsInAffinityClosure(affinityClosure).send()
 
+	// TODO: 상태값에 대한 주석
 	// val updatedVm = checkVm(vmId)
 	// updatedVm.host().id() == host.id()
 	true
-	// TODO: 상태값에 대한 주석
 }.onSuccess {
 	Term.VM.logSuccess("마이그레이션", vmId)
 }.onFailure {
 	Term.VM.logFail("마이그레이션", it, vmId)
 	throw if (it is Error) it.toItCloudException() else it
 }
+
+fun Connection.migrationVmToHost(vmId: String, hostId: String, affinityClosure: Boolean): Result<Boolean> = runCatching {
+	checkVmExists(vmId)
+	val host = checkHost(hostId)
+	this.srvVm(vmId).migrate().host(host).migrateVmsInAffinityClosure(affinityClosure).send()
+
+	// TODO: 상태값에 대한 주석
+	// val updatedVm = checkVm(vmId)
+	// updatedVm.host().id() == host.id()
+	true
+}.onSuccess {
+	Term.VM.logSuccess("마이그레이션", vmId)
+}.onFailure {
+	Term.VM.logFail("마이그레이션", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+
 
 fun Connection.cancelMigrationVm(vmId: String): Result<Boolean> = runCatching {
 	checkVmExists(vmId)
@@ -484,10 +502,10 @@ fun Connection.removeNicFromVm(vmId: String, nicId: String): Result<Boolean> = r
 	val nic = this@removeNicFromVm.findNicFromVm(vmId, nicId)
 		.getOrNull() ?: throw ErrorPattern.NIC_NOT_FOUND.toError()
 
-	if (vm.status() == VmStatus.UP && nic.linked()) {
-		log.error("nic 카드 분리필요")
-		return Result.failure(Error("nic 카드 분리필요"))
-	}
+	if (vm.status() == VmStatus.UP && nic.linked())
+		throw ErrorPattern.NIC_UNLINKED_REQUIRED.apply {
+			this.additional = "NIC 연결분리 필요"
+		}.toError()
 	srvNicFromVm(vmId, nic.id()).remove().send()
 	true
 }.onSuccess {

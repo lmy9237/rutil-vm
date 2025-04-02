@@ -47,9 +47,14 @@ open class BaseController(
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	fun handleOvirtError(e: Throwable): ResponseEntity<Res<Any?>> {
 		log.error("handleOvirtError ... e: {}", e::class.simpleName)
+		val rawMessage = e.message ?: ""
+		val refinedMessage = Regex("""Fault detail is ['"]\[(.*?)]['"]""").find(rawMessage)?.groupValues?.get(1)
+			?: rawMessage
+		val resultMessage = "실패: 가상머신 편집, 이유: $refinedMessage"
+
 		return when {
-			e.message?.contains("${FailureType.NOT_FOUND.code}".toRegex()) == true -> HttpStatus.NOT_FOUND.toResponseEntity(e.localizedMessage)
-			e.message?.contains("${FailureType.BAD_REQUEST.code}".toRegex()) == true -> HttpStatus.BAD_REQUEST.toResponseEntity(e.localizedMessage)
+			e.message?.contains("${FailureType.NOT_FOUND.code}".toRegex()) == true -> HttpStatus.NOT_FOUND.toResponseEntity(resultMessage)
+			e.message?.contains("${FailureType.BAD_REQUEST.code}".toRegex()) == true -> HttpStatus.BAD_REQUEST.toResponseEntity(resultMessage)
 			else -> HttpStatus.INTERNAL_SERVER_ERROR.toResponseEntity(e.localizedMessage)
 		}
 	}

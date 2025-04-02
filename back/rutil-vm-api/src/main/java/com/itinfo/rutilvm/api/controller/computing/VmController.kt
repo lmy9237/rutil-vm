@@ -460,29 +460,31 @@ class VmController: BaseController() {
 	@ApiOperation(
 		httpMethod="POST",
 		value="가상머신 마이그레이션",
-		notes="선택된 가상머신을 재설정한다"
+		notes="선택된 가상머신을 마이그레이션한다"
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="vm", value="가상머신", dataTypeClass=VmViewVo::class, required=true, paramType="body"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED"),
 		ApiResponse(code = 404, message = "NOT_FOUND")
 	)
-	@PostMapping("/{vmId}/migrate/{hostId}")
+	@PostMapping("/{vmId}/migrate")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
-	fun reset(
+	fun migrate(
 		@PathVariable vmId: String? = null,
-		@PathVariable hostId: String? = null
+		@RequestBody vm: VmViewVo? = null,
+		@RequestParam(defaultValue = "false") affinityClosure: Boolean,
 	): ResponseEntity<Boolean> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		if (hostId.isNullOrEmpty())
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		log.info("/computing/vms/{}/migrate ... 가상머신 재설정", vmId)
-		return ResponseEntity.ok(iVmOp.migrate(vmId, hostId))
+		if (vm == null)
+			throw ErrorPattern.VM_VO_INVALID.toException()
+		log.info("receive affinty={}", affinityClosure)
+		log.info("/computing/vms/{}/migrate ... 가상머신 마이그레이션", vmId)
+		return ResponseEntity.ok(iVmOp.migrate(vmId, vm, affinityClosure))
 	}
 
 	@ApiOperation(

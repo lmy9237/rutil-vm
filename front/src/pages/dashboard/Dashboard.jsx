@@ -60,11 +60,7 @@ const MemoryBarChart = ({ vmMemory }) => (
   <BarChartWrapper data={vmMemory} keyName="name" keyPercent="memoryPercent" />
 );
 const StorageMemoryBarChart = ({ storageMemory }) => (
-  <BarChartWrapper
-    data={storageMemory}
-    keyName="name"
-    keyPercent="memoryPercent"
-  />
+  <BarChartWrapper data={storageMemory} keyName="name" keyPercent="memoryPercent" />
 );
 //#endregion: BarChart
 

@@ -36,7 +36,7 @@ const makeAPICall = async ({method = "GET", url, data}) => {
     console.error(`Error handling endpoint '${url}':`, e);
     // toast.error(`Error handling endpoint '${url}'\n${e.message}`)
     const err = e?.response?.data;
-    err && toast.error(`[${err?.head?.code}] ${err?.head?.message}`)
+    err && toast.error(`${err?.head?.message} [${err?.head?.code}]`)
     return err;
   }
 }
@@ -1580,14 +1580,15 @@ migrateHostsFromVM: async (vmId) => {
    * @description 가상머신 마이그레이션
    * 
    * @param {String} vmId
-   * @param {String} hostId
+   * @param {Vm} vm
+   * @param {Boolean} affinityClosure
    * @returns {Promise<Object>} 
    */
-  migrateVM: async (vmId, hostId) => {
+  migrateVM: async (vmId, vm, affinityClosure) => {
     return makeAPICall({
       method: "POST",
-      url: ENDPOINTS.MIGRATE_VM(vmId, hostId),  // ID를 URL에 포함
-      data: vmId
+      url: ENDPOINTS.MIGRATE_VM(vmId, vm, affinityClosure),  // ID를 URL에 포함
+      data: vm
       // defaultValues: DEFAULT_VALUES.MIGRATE_VM
     });
   },

@@ -18,12 +18,12 @@ const HostNics = ({ hostId }) => {
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
 
   Logger.debug(`hostNics: ${JSON.stringify(hostNics, null, 2)}`);
+
   const transformedData = hostNics.map((e) => ({
     ...e,
     id: e?.id,
     name: e?.name,
     bondingVo: {
-      // ...e?.bondingVo,
       activeSlave: {
         id: e?.bondingVo?.activeSlave?.id, 
         name: e?.bondingVo?.activeSlave?.name
@@ -90,14 +90,12 @@ const HostNics = ({ hostId }) => {
 
   useEffect(() => {
     if (hostNics) {
-      setOuter(
-        hostNics.map((nic) => ({
-          id: nic.id,
-          name: nic.bondingVo?.slaves?.length > 1 ? nic?.name : "",
-          children: nic.bondingVo?.slaves?.length > 0 ? nic.bondingVo.slaves : [{ id: nic.id, name: nic.name }],
-          networks: nic.networkVo?.id ? [{ id: nic.networkVo.id, name: nic.networkVo.name }] : [],
-        }))
-      );
+      setOuter(hostNics.map((nic) => ({
+        id: nic.id,
+        name: nic.bondingVo?.slaves?.length > 1 ? nic?.name : "",
+        children: nic.bondingVo?.slaves?.length > 0 ? nic.bondingVo.slaves : [{ id: nic.id, name: nic.name }],
+        networks: nic.networkVo?.id ? [{ id: nic.networkVo.id, name: nic.networkVo.name }] : [],
+      })));
     }
   }, [hostNics]);
 

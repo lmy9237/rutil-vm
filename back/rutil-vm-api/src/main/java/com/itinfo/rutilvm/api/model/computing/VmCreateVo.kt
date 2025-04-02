@@ -71,7 +71,7 @@ class VmCreateVo (
     val cpuTopologyCore: Int = 0,
     val cpuTopologySocket: Int = 0,
     val cpuTopologyThread: Int = 0,
-    // val timeOffset: String = "Asia/Seoul",
+    val timeOffset: String = "Etc/GMT",
     val cloudInit: Boolean = false,
     val script: String = "",
     val migrationMode: String = "",
@@ -113,7 +113,7 @@ class VmCreateVo (
 		private var bCpuTopologyCore: Int = 0; fun cpuTopologyCore(block: () -> Int?) { bCpuTopologyCore = block() ?: 0 }
 		private var bCpuTopologySocket: Int = 0; fun cpuTopologySocket(block: () -> Int?) { bCpuTopologySocket = block() ?: 0 }
 		private var bCpuTopologyThread: Int = 0; fun cpuTopologyThread(block: () -> Int?) { bCpuTopologyThread = block() ?: 0 }
-		// private var bTimeOffset: String = "Asia/Seoul"; fun timeOffset(block: () -> String?) { bTimeOffset = block() ?: "Asia/Seoul" }
+		private var bTimeOffset: String = "Etc/GMT"; fun timeOffset(block: () -> String?) { bTimeOffset = block() ?: "Etc/GMT" }
 		private var bCloudInit: Boolean = false; fun cloudInit(block: () -> Boolean?) { bCloudInit = block() ?: false }
 		private var bScript: String = ""; fun script(block: () -> String?) { bScript = block() ?: "" }
 		private var bMigrationMode: String = ""; fun migrationMode(block: () -> String?) { bMigrationMode = block() ?: "" }
@@ -137,7 +137,7 @@ class VmCreateVo (
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 
-		fun build(): VmCreateVo = VmCreateVo(bId, bName, bDescription, bComment, bOsSystem, bOsType, bOptimizeOption, bMemorySize, bMemoryMax, bMemoryActual, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, /*bTimeOffset,*/ bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationEncrypt, bParallelMigration, bHa, bPriority, bBootingMenu, bFirstDevice, bSecDevice, bDeviceList, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bConnVo, bDataCenterVo, bClusterVo, bTemplateVo, bNicVos, bDiskAttachmentVos, )
+		fun build(): VmCreateVo = VmCreateVo(bId, bName, bDescription, bComment, bOsSystem, bOsType, bOptimizeOption, bMemorySize, bMemoryMax, bMemoryActual, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationEncrypt, bParallelMigration, bHa, bPriority, bBootingMenu, bFirstDevice, bSecDevice, bDeviceList, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bConnVo, bDataCenterVo, bClusterVo, bTemplateVo, bNicVos, bDiskAttachmentVos, )
     }
 
     companion object {
@@ -158,24 +158,28 @@ fun VmCreateVo.toVmBuilder(): VmBuilder {
 }
 
 fun VmCreateVo.toAddVmBuilder(): Vm =
-	toVmBuilder()
-		.template(TemplateBuilder().id(templateVo.id))
-		.build()
+	toVmBuilder().template(TemplateBuilder().id(templateVo.id)).build()
 
 fun VmCreateVo.toEditVmBuilder(): Vm =
 	toVmBuilder()
 		.id(this.id)
+		.bios(BiosBuilder().type(BiosType.fromValue(osType)).build())
 		.build()
+
 
 fun VmCreateVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	name(name)
 	description(description)
 	comment(comment)
 	cluster(ClusterBuilder().id(clusterVo.id))
-	// template(TemplateBuilder().id(templateVo.id))
-	bios(BiosBuilder().type(BiosType.fromValue(osType)))
+	bios(BiosBuilder().type(BiosType.fromValue(osType)).build())
 	type(VmType.fromValue(optimizeOption))
-	// timeZone(TimeZoneBuilder().name(timeOffset))
+	timeZone(TimeZoneBuilder()
+		.name(
+			if(osSystem.contains("windows")) "GMT Standard Time"
+			else timeOffset
+		)
+	)
 }
 
 fun VmCreateVo.toVmSystemBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
@@ -191,7 +195,6 @@ fun VmCreateVo.toVmSystemBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.ap
 fun VmCreateVo.toVmInitBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	if (cloudInit) {
 		initialization(InitializationBuilder()
-			// .timezone(timeOffset)
 			.customScript(script))
 	}
 }
@@ -242,8 +245,8 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
 		description { vm.description() }
 		comment { vm.comment() }
 		osSystem { vm.os().type() }
-		osType { vm.bios().type().toString() }
-		optimizeOption { vm.type().toString() }
+		osType { vm.bios().type().value() }
+		optimizeOption { vm.type().value() }
 		memorySize { vm.memory() }
 		memoryMax { vm.memoryPolicy().max() }
 		memoryActual { vm.memoryPolicy().guaranteed() }

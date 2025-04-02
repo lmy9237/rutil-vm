@@ -183,7 +183,9 @@ class NetworkServiceImpl(
 	// dc 다르면 중복명 가능
 	@Throws(Error::class)
 	override fun add(networkVo: NetworkVo): NetworkVo? {
-		log.info("addNetwork ... ")
+		log.info("addNetwork ... {}", networkVo)
+		log.info("dns ... {}", networkVo.dnsNameServers)
+
 		val res: Network = conn.addNetwork(
 			networkVo.toAddNetworkBuilder()
 		).getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()

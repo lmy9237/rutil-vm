@@ -61,7 +61,7 @@ interface ItVmService {
 	 * 가상머신 편집
 	 *
 	 * @param vmUpdateVo [VmCreateVo]
-	 * @return [VmVo]
+	 * @return [VmCreateVo]
 	 */
 	@Throws(Error::class)
 	fun update(vmUpdateVo: VmCreateVo): VmCreateVo?
@@ -211,8 +211,10 @@ class VmServiceImpl(
 	// 가상머신이 down 상태가 아니라면 편집 불가능
 	@Throws(Error::class)
 	override fun update(vmUpdateVo: VmCreateVo): VmCreateVo? {
-		log.info("update ... ")
-		// log.info("update ... vmCreateVo: {}", vmUpdateVo)
+		// log.info("update ... ")
+		log.info("bios {}, fromValue: {}, valueOf: ", vmUpdateVo.osType, BiosType.fromValue(vmUpdateVo.osType))
+		log.info("update ... vmCreateVo: {}", vmUpdateVo)
+
 		if(vmUpdateVo.diskAttachmentVos.filter { it.bootable }.size > 1){
 			log.error("디스크 부팅가능은 한개만 가능")
 			throw ErrorPattern.VM_VO_INVALID.toException()

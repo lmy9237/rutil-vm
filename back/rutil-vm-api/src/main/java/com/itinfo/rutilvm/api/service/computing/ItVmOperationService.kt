@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.VmExportVo
+import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.fromHostsToIdentifiedVos
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
@@ -84,11 +85,12 @@ interface ItVmOperationService {
 	 * 가상머신 - 마이그레이션
 	 *
 	 * @param vmId [String] 가상머신 Id
-	 * @param hostId [String] 마이그레이션할 호스트 Id
+	 * @param vmViewVo [VmViewVo] 마이그레이션할 클러스터 id /호스트 Id
+	 * @param affinityClosure [Boolean]
 	 * @return [Boolean]
 	 */
 	@Throws(Error::class)
-	fun migrate(vmId: String, hostId: String): Boolean
+	fun migrate(vmId: String, vmViewVo: VmViewVo, affinityClosure: Boolean = false): Boolean
 
 	// 가상머신 내보내기 창
 	// 		호스트 목록 [ItClusterService.findAllHostsFromCluster] (가상 어플라이언스로 가상머신 내보내기)
@@ -156,14 +158,21 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 		val vm: Vm = conn.findVm(vmId)
 			.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
 		val res: List<Host> = conn.findAllHosts().getOrDefault(emptyList())
-			.filter { it.cluster().id() == vm.cluster().id() && it.id() != vm.host().id() }
+			.filter { it.cluster().id() == vm.cluster().id() }
+			// 내 호스트랑 같은건 front 에서 처리
+			// .filter { it.cluster().id() == vm.cluster().id() && it.id() != vm.host().id() }
 		return res.fromHostsToIdentifiedVos()
 	}
 
 	@Throws(Error::class)
-	override fun migrate(vmId: String, hostId: String): Boolean {
-		log.info("migrate ... ")
-		val res: Result<Boolean> = conn.migrationVm(vmId, hostId)
+	override fun migrate(vmId: String, vmViewVo: VmViewVo, affinityClosure: Boolean): Boolean {
+		log.info("migrate")
+		log.info("migrate ... vmId:{}, vmViewVo: {}, aff: {}", vmId, vmViewVo, affinityClosure)
+		val res: Result<Boolean> = when {
+			vmViewVo.clusterVo.id.isEmpty() -> conn.migrationVmToHost(vmId, vmViewVo.clusterVo.id, affinityClosure)
+			vmViewVo.hostVo.id.isEmpty() -> conn.migrationVm(vmId, vmViewVo.hostVo.id, affinityClosure)
+			else -> throw IllegalArgumentException("Cluster 또는 Host 정보가 필요합니다.")
+		}
 		return res.isSuccess
 	}
 

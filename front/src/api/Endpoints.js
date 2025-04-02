@@ -144,7 +144,16 @@ const ENDPOINTS = {
   EXPORT_VM: (vmId) =>                                                     `${ENDPOINT_API_V1}/computing/vms/${vmId}/export`, 
   CONSOLE_VM: (vmId) =>                                                    `${ENDPOINT_API_V1}/computing/vms/${vmId}/console`, 
   MIGRATE_HOST_LIST_VM: (vmId) =>                                          `${ENDPOINT_API_V1}/computing/vms/${vmId}/migrateHosts`, 
-  MIGRATE_VM: (vmId, hostId) =>                                            `${ENDPOINT_API_V1}/computing/vms/${vmId}/migrate/${hostId}`, 
+  MIGRATE_VM: (vmId, affinityClosure) => {
+    let url = `${ENDPOINT_API_V1}/computing/vms/${vmId}/migrate`;
+    const flag = affinityClosure === true || affinityClosure === 'true';
+    if(affinityClosure){
+      url += `?affinityClosure=${flag}`
+    }
+    return url;
+  },
+
+
   //#endregion: Vm
 
   //#region: Template

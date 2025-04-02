@@ -11,6 +11,7 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.DataCenterBuilder
+import org.ovirt.engine.sdk4.builders.DnsBuilder
 import org.ovirt.engine.sdk4.builders.DnsResolverConfigurationBuilder
 import org.ovirt.engine.sdk4.builders.NetworkBuilder
 import org.ovirt.engine.sdk4.builders.NetworkLabelBuilder

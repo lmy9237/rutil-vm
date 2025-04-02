@@ -8,6 +8,7 @@ enum class ErrorPattern(
 	val code: String,
 	val term: Term,
 	val failureType: FailureType,
+	var additional: String = ""
 ) {
 	OVIRTUSER_ID_NOT_FOUND("OVIRTUSER-E001", Term.OVIRT_USER, FailureType.ID_NOT_FOUND),
 	OVIRTUSER_NOT_FOUND("OVIRTUSER-E002", Term.OVIRT_USER, FailureType.NOT_FOUND),
@@ -59,6 +60,7 @@ enum class ErrorPattern(
 	NIC_ID_NOT_FOUND("NIC-E001", Term.NIC, FailureType.ID_NOT_FOUND),
 	NIC_NOT_FOUND("NIC-E002", Term.NIC, FailureType.NOT_FOUND),
 	NIC_VO_INVALID("NIC-E003", Term.NIC, FailureType.BAD_REQUEST),
+	NIC_UNLINKED_REQUIRED("NIC-E004", Term.NIC, FailureType.PRECONDITION_FAILED),
 	VM_ID_NOT_FOUND("VM-E001", Term.VM, FailureType.ID_NOT_FOUND),
 	VM_NOT_FOUND("VM-E002", Term.VM, FailureType.NOT_FOUND),
 	VM_VO_INVALID("VM-E003", Term.VM, FailureType.BAD_REQUEST),
@@ -150,6 +152,7 @@ fun ErrorPattern.toError(): Error {
 		ErrorPattern.TEMPLATE_VO_INVALID,
 		ErrorPattern.CONSOLE_VO_INVALID,
 		ErrorPattern.TICKET_VO_INVALID, -> Error("[${code}] ${term.desc} ${failureType.message}")
+		ErrorPattern.NIC_UNLINKED_REQUIRED -> Error("[${code}] ${term.desc} ${failureType.message}: $additional")
 		else -> Error(failureType.message)
 	}
 }

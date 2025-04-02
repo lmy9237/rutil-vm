@@ -1937,7 +1937,7 @@ export const useEditVm = (
     },
     onError: (error) => {
       Logger.error(error.message);
-      toast.error(error.message);
+      // toast.error(error.message);
       postError && postError(error);
     },
   });
@@ -2189,10 +2189,10 @@ export const useMigration = (
 ) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async ({ vmId, hostId }) => {
-      const res = await ApiManager.migrateVM(vmId, hostId);
+    mutationFn: async ({ vmId, vm, affinityClosure }) => {
+      const res = await ApiManager.migrateVM(vmId, vm, affinityClosure);
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useMigration ... vmId: ${vmId}, hostId: ${hostId}`);
+      Logger.debug(`RQHook > useMigration ... vmId: ${vmId}, vm: ${vm}, affinityClosure: ${affinityClosure}`);
       return _res
     },
     onSuccess: (res) => {

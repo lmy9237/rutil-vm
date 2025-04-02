@@ -41,17 +41,17 @@ const tabs = [
 
 // 칩셋 옵션
 const chipsetOptionList = [
-  { value: "I440FX_SEA_BIOS", label: "BIOS의 I440FX 칩셋" },
-  { value: "Q35_OVMF", label: "UEFI의 Q35 칩셋" },
-  { value: "Q35_SEA_BIOS", label: "BIOS의 Q35 칩셋" },
-  { value: "Q35_SECURE_BOOT", label: "UEFI SecureBoot의 Q35 칩셋" },
+  { value: "i440fx_sea_bios", label: "BIOS의 I440FX 칩셋" },
+  { value: "q35_ovmf", label: "UEFI의 Q35 칩셋" },
+  { value: "q35_sea_bios", label: "BIOS의 Q35 칩셋" },
+  { value: "q35_secure_boot", label: "UEFI SecureBoot의 Q35 칩셋" },
 ];
 
 // 최적화옵션
 const optimizeOptionList = [
-  { value: "SERVER", label: "서버" },
-  { value: "HIGH_PERFORMANCE", label: "고성능" },
-  { value: "DESKTOP", label: "데스크톱" },
+  { value: "server", label: "서버" },
+  { value: "high_performance", label: "고성능" },
+  { value: "desktop", label: "데스크톱" },
 ];
 
 
@@ -62,8 +62,8 @@ const infoform = {
   description: "",
   comment: "",
   osSystem: "other_linux",
-  osType: "Q35_OVMF" || chipsetOptionList[0].value,
-  optimizeOption: "SERVER",
+  osType: "q35_ovmf" || chipsetOptionList[0].value,
+  optimizeOption: "server",
 };
 
 //시스템
@@ -209,8 +209,8 @@ const VmModal = ({
         description: vm?.description || "",
         comment: vm?.comment || "",
         osSystem: vm?.osSystem || "",
-        osType: vm?.osType || "Q35_OVMF",
-        optimizeOption: vm?.optimizeOption || "SERVER"
+        osType: vm?.osType || "q35_ovmf",
+        optimizeOption: vm?.optimizeOption || "server"
       });
       setFormSystemState({
         memorySize: vm?.memorySize / (1024 * 1024), // 입력된 값는 mb, 보낼 단위는 byte
