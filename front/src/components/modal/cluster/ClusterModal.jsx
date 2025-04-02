@@ -135,8 +135,12 @@ const ClusterModal = ({
   const [networkVo, setNetworkVo] = useState({ id: "", name: "" });
   const [cpuOptions, setCpuOptions] = useState([]);
 
-  const { mutate: addCluster } = useAddCluster();
-  const { mutate: editCluster } = useEditCluster();
+  const onSuccess = () => {
+    onClose();
+    toast.success(`${Localization.kr.CLUSTER} ${cLabel} 완료`);
+  };
+  const { mutate: addCluster } = useAddCluster(onSuccess, () => onClose());
+  const { mutate: editCluster } = useEditCluster(onSuccess, () => onClose());
 
   const { data: cluster } = useCluster(clusterId);
   const { 
@@ -207,19 +211,11 @@ const ClusterModal = ({
       networkVo,
     };
 
-    const onSuccess = () => {
-      onClose();
-      toast.success(`${Localization.kr.CLUSTER} ${cLabel} 완료`);
-    };
-    const onError = (err) => toast.error(`Error ${cLabel} cluster: ${err}`);
     Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터 출력
 
     editMode
-      ? editCluster(
-        { clusterId: formState.id, clusterData: dataToSubmit },
-        { onSuccess, onError }
-      )
-      : addCluster(dataToSubmit, { onSuccess, onError });
+      ? editCluster({ clusterId: formState.id, clusterData: dataToSubmit })
+      : addCluster(dataToSubmit);
   };
 
   return (

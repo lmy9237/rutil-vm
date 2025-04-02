@@ -40,7 +40,11 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
   const [diskProfileVo, setDiskProfileVo] = useState({id: "", name: "" });
   const [hostVo, setHostVo] = useState({id: "", name: "" });
 
-  const { mutate: uploadDisk } = useUploadDisk();
+  const onSuccess = () => {
+    onClose();
+    toast.success(`디스크 업로드 완료`);
+  };
+  const { mutate: uploadDisk } = useUploadDisk(onSuccess, () => onClose());
 
   // 전체 데이터센터 가져오기
   const {
@@ -134,15 +138,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
 
     Logger.debug(`디스크 업로드 데이터 ${diskData}`);
 
-    uploadDisk(diskData, {
-      onSuccess: () => {
-        onClose(); // 성공 시 모달 닫기
-        toast.success("디스크 업로드 완료");
-      },
-      onError: (error) => {
-        toast.error("Error editing Host:", error);
-      },
-    });
+    uploadDisk(diskData);
   };
 
   return (

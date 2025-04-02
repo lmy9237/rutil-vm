@@ -47,8 +47,12 @@ const NetworkModal = ({
   const [clusterVoList, setClusterVoList] = useState([]);
   const [dnsServers, setDnsServers] = useState([]);
 
-  const { mutate: addNetwork } = useAddNetwork();
-  const { mutate: editNetwork } = useEditNetwork();
+  const onSuccess = () => {
+    onClose();
+    toast.success(`네트워크 ${nLabel} 완료`);
+  };
+  const { mutate: addNetwork } = useAddNetwork(onSuccess, () => onClose());
+  const { mutate: editNetwork } = useEditNetwork(onSuccess, () => onClose());
 
   const { data: network } = useNetwork(networkId);
   
@@ -144,19 +148,10 @@ const NetworkModal = ({
       dnsNameServers: dnsServers
     };
 
-    const onSuccess = () => {
-      onClose();
-      toast.success(`네트워크 ${nLabel} 완료`);
-    };
-    const onError = (err) => toast.error(`Error ${nLabel} network: ${err}`);
-
     Logger.debug(`NetworkModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`); // 데이터를 확인하기 위한 로그
     editMode
-      ? editNetwork(
-        { networkId: formState.id, networkData: dataToSubmit },
-        { onSuccess, onError }
-      )
-      : addNetwork(dataToSubmit, { onSuccess, onError });
+      ? editNetwork({ networkId: formState.id, networkData: dataToSubmit })
+      : addNetwork(dataToSubmit);
   };
 
   return (

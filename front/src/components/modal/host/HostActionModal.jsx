@@ -18,9 +18,16 @@ import Localization from "../../../utils/Localization";
  * @returns 
  */
 const HostActionModal = ({ isOpen, action, onClose, data }) => {
-  const { mutate: deactivateHost } = useDeactivateHost();
-  const { mutate: activateHost } = useActivateHost();
-  const { mutate: restartHost } = useRestartHost();
+  const onSuccess = () => {
+    if (ids.length === 1 || index === ids.length - 1) {
+      onClose();
+      toast.success(`호스트 ${getContentLabel(action)} 완료`);
+    }
+  };
+
+  const { mutate: deactivateHost } = useDeactivateHost(onSuccess, () => onClose());
+  const { mutate: activateHost } = useActivateHost(onSuccess, () => onClose());
+  const { mutate: restartHost } = useRestartHost(onSuccess, () => onClose());
 //const { mutate: stopHost } = useStopHost();
 
   const { ids, names } = useMemo(() => {
@@ -49,17 +56,7 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
 
   const handleAction = (actionFn) => {
     ids.forEach((hostId, index) => {
-      actionFn(hostId, {
-        onSuccess: () => {
-          if (ids.length === 1 || index === ids.length - 1) {
-            onClose();
-            toast.success(`호스트 ${getContentLabel(action)} 완료`);
-          }
-        },
-        onError: (error) => {
-          console.error(`${getContentLabel(action)} 오류:`, error);
-        },
-      });
+      actionFn(hostId);
     });
   };
 

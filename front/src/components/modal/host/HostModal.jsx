@@ -45,8 +45,12 @@ const HostModal = ({
   const [formState, setFormState] = useState(initialFormState);
   const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
 
-  const { mutate: addHost } = useAddHost();
-  const { mutate: editHost } = useEditHost();
+  const onSuccess = () => {
+    onClose();
+    toast.success(`호스트 ${hLabel} 완료`);
+  };
+  const { mutate: addHost } = useAddHost(onSuccess, () => onClose());
+  const { mutate: editHost } = useEditHost(onSuccess, () => onClose());
   
   const { data: host } = useHost(hId);
   const { 
@@ -101,22 +105,10 @@ const HostModal = ({
       clusterVo,
     };
 
-    const onSuccess = () => {
-      onClose();
-      toast.success(`호스트 ${hLabel} 완료`);
-    };
-    const onError = (err) => toast.error(`Error ${hLabel} host: ${err}`);
-
     Logger.debug(`HostModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`); // 데이터를 확인하기 위한 로그
     editMode
-      ? editHost(
-        { hostId: formState.id, hostData: dataToSubmit },
-        { onSuccess, onError }
-      )
-      : addHost(
-          { hostData: dataToSubmit, deployHostedEngine: String(formState.hostedEngine), },
-          { onSuccess, onError }
-        );
+      ? editHost({ hostId: formState.id, hostData: dataToSubmit })
+      : addHost({ hostData: dataToSubmit, deployHostedEngine: String(formState.hostedEngine), });
   };
 
   return (

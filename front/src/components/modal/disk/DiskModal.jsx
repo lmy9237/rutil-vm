@@ -46,9 +46,13 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [domainVo, setDomainVo] = useState({ id: "", name: "" });
   const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
-
-  const { mutate: addDisk } = useAddDisk();
-  const { mutate: editDisk } = useEditDisk();
+  
+  const onSuccess = () => {
+    onClose();
+    toast.success(`디스크 ${dLabel} 완료`);
+  };
+  const { mutate: addDisk } = useAddDisk(onSuccess, () => onClose());
+  const { mutate: editDisk } = useEditDisk(onSuccess, () => onClose());
 
   const { data: disk } = useDisk(diskId);
   Logger.debug(`DiskModal.diskId: ${diskId}`);
@@ -147,20 +151,11 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
       diskProfileVo,
     };
 
-    const onSuccess = () => {
-      onClose();
-      toast.success(`디스크 ${dLabel} 완료`);
-    };
-    const onError = (err) => toast.error(`Error ${dLabel} disk: ${err}`);
-
     Logger.debug(`DiskModal > dataToSubmit ... ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터를 확인하기 위한 로그
 
     editMode
-      ? editDisk(
-          { diskId: formState.id, diskData: dataToSubmit },
-          { onSuccess, onError }
-        )
-      : addDisk(dataToSubmit, { onSuccess, onError });
+      ? editDisk({ diskId: formState.id, diskData: dataToSubmit })
+      : addDisk(dataToSubmit);
   };
 
   return (

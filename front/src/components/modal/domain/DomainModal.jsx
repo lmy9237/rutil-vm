@@ -94,9 +94,13 @@ const DomainModal = ({
   const [iscsiSearchResults, setIscsiSearchResults] = useState([]); // 검색결과
   const [fcpSearchResults, setFcpSearchResults] = useState([]); // 검색결과
 
-  const { mutate: addDomain } = useAddDomain();
-  const { mutate: editDomain } = useEditDomain(); // 편집은 단순 이름, 설명 변경정도
-  const { mutate: importDomain } = useImportDomain(); // 가져오기
+  const onSuccess = () => {
+    toast.success(`도메인 ${dLabel} 완료`);
+    onClose();
+  };
+  const { mutate: addDomain } = useAddDomain(onSuccess, () => onClose());
+  const { mutate: editDomain } = useEditDomain(onSuccess, () => onClose()); // 편집은 단순 이름, 설명 변경정도
+  const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose()); // 가져오기
 
   // const { mutate: loginIscsiFromHost } = useLoginIscsiFromHost(); // 가져오기 iscsi 로그인
   const { mutate: importIscsiFromHost } = useImportIscsiFromHost(); // 가져오기 iscsi
@@ -321,12 +325,6 @@ const DomainModal = ({
     const error = validateForm();
     if (error) return toast.error(error);
 
-    const onSuccess = () => {
-      toast.success(`도메인 ${dLabel} 완료`);
-      onClose();
-    };
-    const onError = (err) => toast.error(`Error ${dLabel} domain: ${err}`);
-
     let dataToSubmit;
 
     // 편집: formState 데이터만 제출
@@ -356,13 +354,10 @@ const DomainModal = ({
 
     Logger.debug(`DomainModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`);
     editMode
-      ? editDomain(
-          { domainId: formState.id, domainData: dataToSubmit },
-          { onSuccess, onError }
-        )
+      ? editDomain({ domainId: formState.id, domainData: dataToSubmit })
       : importMode
-        ? importDomain(dataToSubmit, { onSuccess, onError })
-        : addDomain(dataToSubmit, { onSuccess, onError });
+        ? importDomain(dataToSubmit)
+        : addDomain(dataToSubmit);
   };
 
   return (

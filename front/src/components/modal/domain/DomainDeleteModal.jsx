@@ -15,8 +15,20 @@ import Localization from "../../../utils/Localization";
 import LabelCheckbox from "../../label/LabelCheckbox";
 
 const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
-  const { mutate: deleteDomain } = useDeleteDomain();
-  const { mutate: destroyDomain } = useDestroyDomain(); // 파괴를 여기서
+  
+  const onSuccess = () => {
+    onClose();
+    toast.success(`도메인 ${dLabel} 완료`);
+  };
+  // onSuccess: () => {
+  //   if (index === ids.length - 1) {
+  //     onClose(); // 모든 삭제가 완료되면 모달 닫기
+  //     toast.success("도메인 삭제 완료");
+  //   }
+  // },
+  const dLabel = deleteMode ? "삭제" : "파괴";
+  const { mutate: deleteDomain } = useDeleteDomain(onSuccess, () => onClose());
+  const { mutate: destroyDomain } = useDestroyDomain(onSuccess, () => onClose()); // 파괴를 여기서
 
   const [format, setFormat] = useState(false);
   const [hostVo, setHostVo] = useState({ id: "", name: "" });
@@ -48,35 +60,12 @@ const DomainDeleteModal = ({ isOpen, deleteMode = true, data, onClose }) => {
 
     if (deleteMode) {
       ids.forEach((id, index) => {
-        deleteDomain(
-          { domainId: id, format: format, hostName: hostVo.name },
-          {
-            onSuccess: () => {
-              if (index === ids.length - 1) {
-                onClose(); // 모든 삭제가 완료되면 모달 닫기
-                toast.success("도메인 삭제 완료");
-              }
-            },
-            onError: (error) => {
-              toast.error(`도메인 ${names[index]} 삭제 오류:`, error);
-            },
-          }
-        );
+        deleteDomain({ domainId: id, format: format, hostName: hostVo.name });
       });
     } else {
       // 파괴일때
       ids.forEach((id, index) => {
-        destroyDomain(id, {
-          onSuccess: () => {
-            if (index === ids.length - 1) {
-              onClose(); // 모든 삭제가 완료되면 모달 닫기
-              toast.success("도메인 파괴 완료");
-            }
-          },
-          onError: (error) => {
-            toast.error(`도메인 ${names[index]} 삭제 오류:`, error);
-          },
-        });
+        destroyDomain(id);
       });
     }
   };

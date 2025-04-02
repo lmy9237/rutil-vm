@@ -16,9 +16,13 @@ import {
  * @returns
  */
 const DomainActionModal = ({ isOpen, onClose, action, data, datacenterId }) => {
-  const { mutate: detachDomain } = useDetachDomain();
-  const { mutate: activateDomain } = useActivateDomain();
-  const { mutate: maintenanceDomain } = useMaintenanceDomain();
+  onSuccess: () => {
+    onClose();
+    toast.success(`도메인 ${getContentLabel()} 완료`);
+  };
+  const { mutate: detachDomain } = useDetachDomain(onSuccess, () => onClose());
+  const { mutate: activateDomain } = useActivateDomain(onSuccess, () => onClose());
+  const { mutate: maintenanceDomain } = useMaintenanceDomain(onSuccess, () => onClose());
 
   const { ids, names } = useMemo(() => {
     if (!data) return { ids: [], names: [] };
@@ -50,19 +54,7 @@ const DomainActionModal = ({ isOpen, onClose, action, data, datacenterId }) => {
     const actionFn = actionMap[action];
 
     ids.forEach((domainId) => {
-      actionFn(
-        { domainId, dataCenterId: datacenterId },
-        {
-          onSuccess: () => {
-            onClose();
-            toast.success(`도메인 ${getContentLabel()} 완료`);
-          },
-          onError: (error) => {
-            onClose();
-            toast.error(`일부 도메인 ${getContentLabel()} 실패 ${error}`);
-          },
-        }
-      );
+      actionFn({ domainId, dataCenterId: datacenterId });
     });
   };
 

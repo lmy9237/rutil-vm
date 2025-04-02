@@ -40,8 +40,12 @@ const VnicProfileModal = ({
   const [networkVo, setNetworkVo] = useState({ id: "", name: "" });
   const [networkFilterVo, setNetworkFilterVo] = useState({ id: "", name: "" });
 
-  const { mutate: addVnicProfile } = useAddVnicProfile();
-  const { mutate: editVnicProfile } = useEditVnicProfile();
+  const onSuccess = () => {
+    onClose();
+    toast.success(`${Localization.kr.VNIC_PROFILE} ${vLabel} 완료`);
+  };
+  const { mutate: addVnicProfile } = useAddVnicProfile(onSuccess, () => onClose());
+  const { mutate: editVnicProfile } = useEditVnicProfile(onSuccess, () => onClose());
 
   const { data: vnic } = useVnicProfile(vnicProfileId);
   const { 
@@ -119,20 +123,13 @@ const VnicProfileModal = ({
     };
     Logger.debug(`dataToSubmit ... ${dataToSubmit}`);
 
-    const onSuccess = () => {
-      onClose();
-      toast.success(`${Localization.kr.VNIC_PROFILE} ${vLabel} 완료`);
-    };
     const onError = (err) => toast.error(`Error ${vLabel} VNicProfile: ${err}`);
 
     Logger.debug("Form Data: ", dataToSubmit); // 데이터를 확인하기 위한 로그
 
     editMode
-      ? editVnicProfile(
-        { vnicId: formState.id, vnicData: dataToSubmit },
-        { onSuccess, onError }
-      )
-      : addVnicProfile(dataToSubmit, { onSuccess, onError });
+      ? editVnicProfile({ vnicId: formState.id, vnicData: dataToSubmit })
+      : addVnicProfile(dataToSubmit);
   };
 
   return (
