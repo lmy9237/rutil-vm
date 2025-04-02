@@ -87,33 +87,47 @@ const VmActionButtons = ({
       actionType={actionType}
       actions={basicActions}
     >
-      {!isContextMenu && (
-        <>
-          <ActionButton actionType={actionType}
-            label={"템플릿"}
-            onClick={() => navigate("/computing/templates")}
-          />
-          <div ref={dropdownRef} className="dropdown-container ">
-            <ActionButton iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown} 
-              label={Localization.kr.MANAGEMENT}
-              onClick={toggleDropdown}
-            />
-            {activeDropdown && (
-              <div className="right-click-menu-box context-menu-item dropdown-menu">
-                {manageActions.map(({ type, label, disabled }) => (
-                  <button key={type}
-                    disabled={disabled}
-                    className="btn-right-click dropdown-item"
-                    onClick={() => openModal(type)}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            )}
+    {isContextMenu ? (
+      // ✅ context menu일 때도 manageActions 보여주기
+      manageActions.map(({ type, label, disabled }) => (
+        <button key={type}
+          disabled={disabled}
+          className="btn-right-click dropdown-item"
+          onClick={() => openModal(type)}
+        >
+          {label}
+        </button>
+      ))
+    ) : (
+    <>
+      <ActionButton
+        actionType={actionType}
+        label={"템플릿"}
+        onClick={() => navigate("/computing/templates")}
+      />
+      <div ref={dropdownRef} className="dropdown-container">
+        <ActionButton
+          iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown}
+          label={Localization.kr.MANAGEMENT}
+          onClick={toggleDropdown}
+        />
+        {activeDropdown && (
+          <div className="right-click-menu-box context-menu-item dropdown-menu">
+            {manageActions.map(({ type, label, disabled }) => (
+              <button key={type}
+                disabled={disabled}
+                className="btn-right-click dropdown-item"
+                onClick={() => openModal(type)}
+              >
+                {label}
+              </button>
+            ))}
           </div>
-        </>
-      )}
+        )}
+      </div>
+    </>
+)}
+
     </ActionButtonGroup>
   );
 };

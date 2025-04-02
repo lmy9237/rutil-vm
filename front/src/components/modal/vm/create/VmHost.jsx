@@ -52,7 +52,7 @@ const VmHost = ({
 
           {/* 특정 호스트 선택 */}
           <div id="select-host" >
-            <div className="center  h-4">
+            <div className="f-center  h-4">
               <input
                 className="form-check-input"
                 type="radio"

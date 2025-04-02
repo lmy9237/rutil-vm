@@ -29,6 +29,7 @@ const NetworkActionButtons = ({
           <ActionButton label={"VNicProfile"}  onClick={() => navigate("/vnicProfiles")} actionType={actionType}/>
         )}
       </ActionButtonGroup>
+      
     </>
   );
 };

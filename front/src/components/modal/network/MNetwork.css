@@ -1,6 +1,5 @@
 /*새로만들기*/
-
-.network-new-cluster-table {
+/* .network-new-cluster-table {
   border-collapse: collapse;
   width: 100%;
   text-align: left;
@@ -14,8 +13,16 @@
 .network-new-cluster-table td {
   border: var(--border-simple);
   padding: 1px 3px;
+} 
+.plusbtns {
+  display: flex;
+  align-items: center;
+  border-radius: 2px;
 }
-
+.plusbtns > button {
+  height: 100%;
+}
+*/
 .network-new-cluster-form {
   margin-bottom: 20px;
 }
@@ -28,14 +35,8 @@
   overflow-y: auto; /* 세로 스크롤 추가 */
   overflow-x: hidden; /* 가로 스크롤 숨김 */
 }
-.plusbtns {
-  display: flex;
-  align-items: center;
-  border-radius: 2px;
-}
-.plusbtns > button {
-  height: 100%;
-}
+
+
 /*호스트 네트워크 설정 */
 .network-separation-left {
   width: 78%;

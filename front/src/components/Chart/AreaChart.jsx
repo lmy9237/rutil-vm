@@ -46,7 +46,7 @@ const AreaChart = ({ series, datetimes }) => {
     },
     grid: {
       padding: {
-        left: -24,  // ✅ 여백 최소로
+        left: -14,  // ✅ 여백 최소로
         right: 0,
       },
     },
@@ -70,12 +70,12 @@ const AreaChart = ({ series, datetimes }) => {
     if (chartContainerRef.current) {
       const containerWidth = chartContainerRef.current.clientWidth;
 
-      let width = Math.max(containerWidth * 0.93, 245); // 기본 너비
-      let height = Math.max(window.innerHeight * 0.2, 200); // 기본 높이
+      let width = Math.max(containerWidth * 0.95, 230); // 기본 너비
+      let height = Math.max(window.innerHeight * 0.14, 100); // 기본 높이
 
       if (window.innerWidth >= 2000) {
         width = Math.max(containerWidth * 1, 600); // 🔥 2000px 이상일 때 더 크게
-        height = Math.max(window.innerHeight * 0.25, 330);
+        height = Math.max(window.innerHeight * 0.21, 230);
       }
 
       setChartSize({ width: `${width}px`, height: `${height}px` });

@@ -132,21 +132,18 @@ const NetworkTree = ({
                     {contextMenu?.item?.id === network.id &&
                       contextMenu?.item?.type === "network" && (
                         <div
+                          className="right-click-menu-box context-menu-item"
                           ref={menuRef}
                           style={{
-                            position: "fixed", // ✅ fixed로 띄우면 무조건 보임
+                            position: "fixed", 
                             top: contextMenu.mouseY,
                             left: contextMenu.mouseX,
-                            zIndex: 9999,
-                            background: "white",
-                            border: "1px solid #ccc",
-                            borderRadius: "4px",
-                            padding: "4px",
-                            width: "220px"
+                            background:"white",
+                            zIndex:"9999"
                           }}
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <span style={{ color: "black" }}>우클릭박스</span>
+                        
                           <NetworkActionButtons
                             openModal={(action) => {
                               Logger.debug(`Open modal with action ... ${action}`);
@@ -158,7 +155,7 @@ const NetworkTree = ({
                             isContextMenu={true}
                           />
                         </div>
-                      )}
+                    )}
                   </div>
                 ))}
             </div>

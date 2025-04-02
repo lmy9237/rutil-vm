@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect, useMemo, useState, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   RVI24,
   rvi24Desktop,
@@ -16,6 +16,8 @@ const SideNavbar = ({
   getBackgroundColor,
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const firstRender = useRef()
   const [lastSelected, setLastSelected] = useState(() => localStorage.getItem("lastSelected") || "computing");
 
   // 📌 현재 URL에 맞춰 버튼 활성화
@@ -54,20 +56,25 @@ const SideNavbar = ({
     { iconDef: rvi24Event("currentColor"),        id: "event",     link: "/events",  },
   ];
 
-  const [isFirstRender, setIsFirstRender] = useState(true);
   useEffect(() => {
-  if (isFirstRender) {
-    setSelectedSection("computing");
-    setIsFirstRender(false);
+    if (firstRender.currrent) {
+      firstRender.current = false;
+      setSelectedSection("computing");
+    }
+    return;
+  });
+  
+  const isMenuActive = (id) => {
+    if (id === "computing" && firstRender.current) return false
+    return selectedSection === id
   }
-}, [isFirstRender]);
 
   return (
     <div id="aside">
       <div className="nav">
         {sections.map(({ iconDef, id, link }) => (
           <Link key={id} to={link} 
-            className={`rvi rvi-nav ${selectedSection === id ? "active" : ""}`}
+            className={`rvi rvi-nav ${isMenuActive(id) ? "active" : ""}`}
             onClick={() => handleClick(id)}
           >
             <RVI24 iconDef={iconDef} />

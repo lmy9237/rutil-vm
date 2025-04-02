@@ -54,19 +54,32 @@ const HostActionButtons = ({
       actionType={actionType}
       actions={basicActions}
     >
-      {!isContextMenu && (
+      {isContextMenu ? (
+        manageActions.map(({ type, label, disabled }) => (
+          <button
+            key={type}
+            disabled={disabled}
+            onClick={() => openModal(type)}
+            className="btn-right-click dropdown-item"
+          >
+            {label}
+          </button>
+        ))
+      ) : (
         <div ref={dropdownRef} className="dropdown-container">
-          <ActionButton iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown} 
+          <ActionButton
+            iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown}
             label={Localization.kr.MANAGEMENT}
-            onClick={toggleDropdown} 
+            onClick={toggleDropdown}
           />
           {activeDropdown && (
-            <div className="dropdown-menu">
+            <div className="right-click-menu-box context-menu-item dropdown-menu">
               {manageActions.map(({ type, label, disabled }) => (
-                <button key={type}
-                  onClick={() => openModal(type)}
+                <button
+                  key={type}
                   disabled={disabled}
-                  className="btn-right-click"
+                  onClick={() => openModal(type)}
+                  className="btn-right-click dropdown-item"
                 >
                   {label}
                 </button>
@@ -75,8 +88,9 @@ const HostActionButtons = ({
           )}
         </div>
       )}
-   </ActionButtonGroup>
+    </ActionButtonGroup>
   );
+  
 };
 
 export default HostActionButtons;

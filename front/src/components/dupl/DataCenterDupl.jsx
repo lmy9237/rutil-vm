@@ -8,6 +8,7 @@ import TableRowClick from "../table/TableRowClick";
 import { status2Icon } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
 import SelectedIdView from "../common/SelectedIdView";
+import SearchBox from "../button/SearchBox";
 
 const DataCenterDupl = ({
   isLoading, isError, isSuccess,
@@ -47,9 +48,15 @@ const DataCenterDupl = ({
 
   return (
     <>
-      <DataCenterActionButtons status={status}
-        openModal={openModal} 
-      />
+      <div className="dupl-header-group">
+        {showSearchBox && (
+          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        )}
+          <DataCenterActionButtons status={status}
+            openModal={openModal} 
+          />
+      </div>
+  
 
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}

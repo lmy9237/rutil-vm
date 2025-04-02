@@ -15,7 +15,7 @@ const BarChart = ({ names, percentages }) => {
       const containerWidth = chartContainerRef.current.clientWidth;
 
       let width = Math.max(containerWidth * 0.5, 230); // 기본 너비
-      let height = Math.max(window.innerHeight * 0.23, 200); // 기본 높이
+      let height = Math.max(window.innerHeight * 0.2, 100); // 기본 높이
 
       if (window.innerWidth >= 2600) {
         width = Math.max(containerWidth *  0.9, 650); // 🔥 2000px 이상일 때 더 크게
@@ -126,6 +126,12 @@ const BarChart = ({ names, percentages }) => {
             return "";
           },
         },
+      },
+      custom: function({ series, seriesIndex, dataPointIndex, w }) {
+        const label = w.globals.labels[dataPointIndex];
+        const value = series[seriesIndex][dataPointIndex];
+        if (!label) return ""; // 빈 항목이면 툴팁 안 뜸
+        return `<div class="apex-tooltip">${label}: ${value}</div>`;
       },
     },
   });

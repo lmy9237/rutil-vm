@@ -76,8 +76,26 @@ const VmSystem = ({ formSystemState, setFormSystemState}) => {
     }));
   };
 
+  // 최대메모리: 메모리크기 x 4 , 할당할 실제 메모리: 메모리크기와 같음
   const handleInputChange = (field) => (e) => {
-    setFormSystemState((prev) => ({ ...prev, [field]: e.target.value }));
+    const value = e.target.value;
+  
+    setFormSystemState((prev) => {
+      const updatedState = { ...prev, [field]: value };
+  
+      if (field === "memorySize") {
+        const memSize = parseInt(value, 10);
+        if (!isNaN(memSize)) {
+          updatedState.memoryMax = memSize * 4;
+          updatedState.memoryActual = memSize;
+        } else {
+          updatedState.memoryMax = "";
+          updatedState.memoryActual = "";
+        }
+      }
+  
+      return updatedState;
+    });
   };
 
   // 토글 상태

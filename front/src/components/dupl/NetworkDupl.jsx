@@ -109,6 +109,7 @@ const NetworkDupl = ({
         network={activeModal === "edit" ? selectedNetworks[0] : null}
         selectedNetworks={selectedNetworks}
         onClose={closeModal}
+        withModal // 🔥 내부에서 모달 제어하게 함
       />
     </div>
   );

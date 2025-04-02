@@ -225,13 +225,14 @@ const NetworkModal = ({
         />
         <LabelCheckbox id="portIsolation" label="포트 분리"          
           checked={formState.portIsolation}
+          className="mb-3"
           disabled={editMode || !formState.usageVm} // 가상 머신 네트워크가 비활성화되면 비활성화(??)
           onChange={(e) => setFormState((prev) => ({...prev, portIsolation: e.target.checked }))}
         />
 
           <div className="mtu-input-outer">
             <div className="mtu-radio-input">
-              <div className="flex">
+              <div className="f-start">
                 {/* TODO: 디자인 */}
                 <input
                   type="radio"
@@ -240,7 +241,9 @@ const NetworkModal = ({
                 />
                 <label>기본값 (1500)</label>
               </div>
-              <div className="flex">
+
+            <div  className="f-btw ">
+              <div className="f-center">
                 <input
                   type="radio"
                   checked={formState.mtu !== 0} // 사용자 정의 값이 있을 때 선택됨
@@ -249,28 +252,32 @@ const NetworkModal = ({
                   } // 빈 문자열로 설정해 사용자가 입력할 수 있도록
                 />
                 <label>사용자 정의</label>
+           
               </div>
-            </div>
-            <div className="mtu-text-input">
-              <input
-                type="number"
-                style={{ width: "100%" }}
-                min="68"
-                step="1"
-                disabled={formState.mtu === 0} // 기본값 선택 시 비활성화
-                value={formState.mtu === 0 ? "" : formState.mtu} // 기본값일 경우 빈 값 표시
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setFormState((prev) => ({ ...prev, mtu: value }));
-                }}
-              />
+              <div className="mtu-text-input">
+                  <input
+                    type="number"
+                    style={{ width: "100%" }}
+                    min="68"
+                    step="1"
+                    disabled={formState.mtu === 0} // 기본값 선택 시 비활성화
+                    value={formState.mtu === 0 ? "" : formState.mtu} // 기본값일 경우 빈 값 표시
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setFormState((prev) => ({ ...prev, mtu: value }));
+                    }}
+                  />
+                </div>
+              </div>
+
             </div>
           </div>
           
         <div>
           <br/>
-        <span>DNS 수정 필요</span>
-          </div>
+          <span>DNS 수정 필요</span>
+        </div>
+
         <LabelCheckbox id="dns_settings" label="DNS 설정"
           checked={formState.dnsEnabled}
           onChange={(e) => {
@@ -307,6 +314,12 @@ const NetworkModal = ({
                 />
                 <div className="dynamic-btns f-end">
                   <RVI36
+                    iconDef={rvi36Add(false)}
+                    className="btn-icon"
+                    currentColor="transparent"
+                    onClick={() => setDnsServers((prev) => [...prev, ""])}
+                  />
+                  <RVI36
                     iconDef={rvi36Remove()}
                     className="btn-icon"
                     currentColor="transparent"
@@ -315,12 +328,6 @@ const NetworkModal = ({
                       updated.splice(index, 1);
                       setDnsServers(updated);
                     }}
-                  />
-                  <RVI36
-                    iconDef={rvi36Add(false)}
-                    className="btn-icon"
-                    currentColor="transparent"
-                    onClick={() => setDnsServers((prev) => [...prev, ""])}
                   />
                 </div> 
               </div>
@@ -334,10 +341,10 @@ const NetworkModal = ({
         )}
         
         {!editMode && (
-          <div className="network-new-cluster-form">
-            <br/>
+          <div className="network-new-cluster-form mt-3">
+       
             <hr />
-            <span>클러스터에서 네트워크를 연결/분리</span>
+            <span className="mt-3 block">클러스터에서 네트워크를 연결/분리</span>
             <TablesOuter
               isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
               columns={[
