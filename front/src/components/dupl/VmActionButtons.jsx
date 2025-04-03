@@ -34,6 +34,7 @@ const VmActionButtons = ({
     setActiveDropdown((prev) => (prev ? null : "manage"));
 
   const isUp = status === "UP";
+  const isDown = status === "DOWN";
   const isMaintenance = status === "MAINTENANCE";
   const isPause = status === "PAUSE";
   const isTemplate = status === "SUSPENDED" || status === "UP";
@@ -66,7 +67,7 @@ const VmActionButtons = ({
       type: "console", label: "콘솔", disabled: !isUp
       , onBtnClick: () => openNewTab("console", vmId)
     }, {
-      type: "snapshot", label: "스냅샷 생성", disabled: isEditDisabled
+      type: "snapshot", label: "스냅샷 생성",   disabled: isEditDisabled || !(isUp || isDown)
       , onBtnClick: () => openModal("snapshot") 
     }, {
       type: "migration", label: "마이그레이션", disabled: !isUp
@@ -77,9 +78,9 @@ const VmActionButtons = ({
   const manageActions = [
     { type: "import", label: Localization.kr.IMPORT, },
     { type: "copyVm", label: `${Localization.kr.VM} 복제`, disabled: isEditDisabled || !isPause },
-    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled || isMaintenance },
+    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled || !isDown },
     { type: "templates", label: "템플릿 생성", disabled: isEditDisabled || isTemplate },
-    { type: "ova", label: "ova로 내보내기", disabled: isEditDisabled },
+    { type: "ova", label: "ova로 내보내기", disabled: isEditDisabled ||  !isDown  },
   ];
 
   return (

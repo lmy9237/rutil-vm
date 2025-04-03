@@ -87,7 +87,7 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
           onChange={(e) => setFormState((prev) => ({ ...prev, description: e.target.value }))}
         />
         <div>
-          <div className="font-bold">포함할 디스크 :</div>
+          {/* <div className="font-bold">포함할 디스크 :</div>
           <div className="snapshot-new-table">
             <TablesOuter
               isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
@@ -105,7 +105,7 @@ const VmSnapshotModal = ({ isOpen, vmId, onClose }) => {
                 ),
               })) || []}
             />
-          </div>
+          </div> */}
           <div>
             <LabelCheckbox 
               label={`${Localization.kr.MEMORY} 저장`}

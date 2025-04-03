@@ -29,12 +29,14 @@ const AllNetwork = () => {
       <HeaderButton titleIcon={rvi24Network()} 
         title={Localization.kr.NETWORK}
       />
-      <NetworkDupl columns={TableColumnsInfo.NETWORKS}
-        networks={networks}
-        showSearchBox={true}
-        refetch={refetchNetworks}
-        isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
-      />
+      <div className="section-content w-full">
+        <NetworkDupl columns={TableColumnsInfo.NETWORKS}
+          networks={networks}
+          showSearchBox={true}
+          refetch={refetchNetworks}
+          isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
+        />
+      </div>
     </div>
   );
 };

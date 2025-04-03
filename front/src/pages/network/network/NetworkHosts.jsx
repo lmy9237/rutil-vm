@@ -51,7 +51,7 @@ const NetworkHosts = ({ networkId }) => {
     return hosts.map((host) => ({
       ...host,
       icon: status2Icon(host?.status),
-      host: (
+      host: ( 
         <TableRowClick type="host" id={host?.id}>
           {host?.name}
         </TableRowClick>
@@ -86,15 +86,15 @@ const NetworkHosts = ({ networkId }) => {
     <>
       <div className="header-right-btns">
       <ActionButton
-  label={`${Localization.kr.HOST} 네트워크 설정`}
-  actionType="default"
-  onClick={() => {
-    if (selectedHostId) {
-      navigate(`/computing/hosts/${selectedHostId}/nics`);
-    }
-  }}
-  disabled={!selectedHostId}
-/>
+        label={`${Localization.kr.HOST} 네트워크 설정`}
+        actionType="default"
+        onClick={() => {
+          if (selectedHostId) {
+            navigate(`/computing/hosts/${selectedHostId}/nics`);
+          }
+        }}
+        disabled={!selectedHostId}
+      />
       </div>
       <FilterButton options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
 

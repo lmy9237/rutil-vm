@@ -29,15 +29,18 @@ const SearchBox = ({
         <RVI16 iconDef={rvi16Close}
           className="btn-search-box f-center" onClick={() => setSearchQuery("")}
         />
-      </div>
-      {/* END: 검색박스 */}
-      {/* START: 다시 로딩 */}
-      {onRefresh && (
-        <IconButton iconDef={rvi16Refresh("#717171")} 
-          className="btn-refresh f-center"
-          onClick={() => onRefresh()}
-        />
-      )}{/* END: 다시 로딩 */}
+        {/* START: 다시 로딩 */}
+        {onRefresh && (
+          <IconButton iconDef={rvi16Refresh("#717171")} 
+            className="btn-refresh f-center"
+            onClick={() => onRefresh()}
+          />
+        )}
+        {/* END: 다시 로딩 */}
+       </div>
+      
+     
+
     </>
   );
 };

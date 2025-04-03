@@ -17,9 +17,9 @@ const BarChart = ({ names, percentages }) => {
       let width = Math.max(containerWidth * 0.5, 230); // 기본 너비
       let height = Math.max(window.innerHeight * 0.2, 100); // 기본 높이
 
-      if (window.innerWidth >= 2600) {
+      if (window.innerWidth >= 2000) {
         width = Math.max(containerWidth *  0.9, 650); // 🔥 2000px 이상일 때 더 크게
-        height = Math.max(window.innerHeight * 0.25, 300);
+        height = Math.max(window.innerHeight * 0.2, 230);
       }
 
       setChartSize({ width: `${width}px`, height: `${height}px` });

@@ -178,7 +178,7 @@
 .disk-delete-label{
   font-weight: 700;
   font-size: var(--fs-17);
- width: 30%;
+ width: 100%;
   padding: 10px;
 }
 /*ova내보내기*/

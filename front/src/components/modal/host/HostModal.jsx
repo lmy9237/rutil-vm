@@ -165,11 +165,11 @@ const HostModal = ({
         </>
       )}
 
-      <ToggleSwitchButton label="vGPU 배치"
+      {/* <ToggleSwitchButton label="vGPU 배치"
         checked={formState.vgpu === "consolidated"}
         onChange={() => setFormState((prev) => ({ ...prev, vgpu: formState.vgpu === "consolidated" ? "separated" : "consolidated" }))}
         tType={"통합"} fType={"분산"}
-      />
+      /> */}
 
       <ToggleSwitchButton label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
         checked={formState.hostedEngine}

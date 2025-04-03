@@ -25,13 +25,15 @@ const AllDomain = () => {
       <HeaderButton titleIcon={rvi24Storage()} 
         title="스토리지 도메인"
       />
-      <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
-        domains={storageDomains}
-        actionType={"domain"}
-        showSearchBox={true}
-        refetch={refetchStorageDomains}
-        isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
-      />
+      <div className="section-content w-full">
+        <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
+          domains={storageDomains}
+          actionType={"domain"}
+          showSearchBox={true}
+          refetch={refetchStorageDomains}
+          isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
+        />
+      </div>
     </div>
   );
 };

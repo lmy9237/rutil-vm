@@ -73,7 +73,7 @@ const NetworkClusters = ({ networkId }) => {
   Logger.debug("NetworkClusters ... ");
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+      <div className="dupl-header-group f-btw">
         {showSearchBox && (
           <SearchBox 
             searchQuery={searchQuery} setSearchQuery={setSearchQuery}
@@ -87,7 +87,7 @@ const NetworkClusters = ({ networkId }) => {
         />
       </div>
 
-      <TablesOuter columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}
+      <TablesOuter columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}    
         data={filteredData}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedClusters(selectedRows)}

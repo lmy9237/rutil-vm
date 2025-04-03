@@ -62,7 +62,20 @@ const VmSnapshots = ({ vmId }) => {
 
       <div className='center'>
         <div className=" vm-snap-item">
-          {isSnapshotsLoading && <div className="no_snapshots">로딩중...</div>}
+          {isSnapshotsLoading && (
+            <div>
+              <div className="spinner" />
+              <div>로딩중...</div>
+            </div>
+          )}
+
+          {/*스냅샷없을때*/}
+          {!isSnapshotsLoading && transformedData?.length === 0 && (
+            <>
+            <div className="no-snapshot">스냅샷이 없습니다(디자인X)</div>
+            </>
+          )}
+
           {transformedData?.length > 0 && transformedData?.map((snapshot) => (
             <div
               key={snapshot.id}

@@ -55,6 +55,7 @@
 .bar > div {
   min-width: 371px;
   flex: 0.5; 
+  margin-bottom: 11px;
 }
 .bar span {
   font-size: var(--fs-14);
@@ -85,10 +86,14 @@
 }
 @media screen and (min-width: 2000px) {
   .bar span {
-    font-size: var(--fs-16);
-    margin: 11px 0;
+    font-size: var(--fs-18);
+    margin: 15px 0;
   }
   .bar-outer{
     padding: 14px 20px;
   }
+  .dash-section{
+    padding: 20px 24px; 
+  }
+  
 }

@@ -17,5 +17,6 @@
   border: var(--border-btn);
   height: var(--h-text-input);aspect-ratio:1/1;
   border-radius: 2px;
+  border-right: none;
 }
 

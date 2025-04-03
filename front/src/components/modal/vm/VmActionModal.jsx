@@ -99,26 +99,19 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
       targetName={"가상머신"}
       submitTitle={getContentLabel(action)}
       onSubmit={handleFormSubmit}
+      promptText={`${names.join(", ")} 를(을) ${getContentLabel(action)}하시겠습니까?`}
       contentStyle={{ width: "650px"}} 
+      shouldWarn={true}
     >
 
-    <div className="disk-delete-box">
+    {/* <div className="disk-delete-box">
       <div>
-        <FontAwesomeIcon
-          style={{ marginRight: "0.3rem" }}
-          icon={faExclamationTriangle}
-        />
         <span className="font-bold">
           {names.join(", ")} 를(을) {getContentLabel(action)}하시겠습니까?
         </span>
       </div>
-    </div>
+    </div> */}
 
-    {/*<div className="edit-footer">
-      <button style={{ display: 'none' }}></button>
-      <button onClick={handleFormSubmit}>OK</button>
-      <button onClick={onClose}>취소</button>
-    </div>*/}
 
     </BaseModal>
   );

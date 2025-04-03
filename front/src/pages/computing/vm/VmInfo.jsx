@@ -46,6 +46,7 @@ const VmInfo = () => {
   } = useVm(vmId);
 
   const isUp = vm?.status === "UP";
+  const isDown = vm?.status === "DOWN";
   const isMaintenance = vm?.status === "MAINTENANCE";
 
   const [activeTab, setActiveTab] = useState("general");
@@ -101,7 +102,7 @@ const VmInfo = () => {
 
   const sectionHeaderButtons = [
     {
-      type: "edit", label: Localization.kr.UPDATE, disabled: !isUp
+      type: "edit", label: Localization.kr.UPDATE
       , onClick: () => openModal("edit"),
     }, {
       type: "start", label: Localization.kr.START, disabled: isUp && !isMaintenance
@@ -116,16 +117,16 @@ const VmInfo = () => {
       type: "reset", label: "재설정", disabled: !isUp
       , onClick: () => openModal("reset"),
     }, {
-      type: "stop", label: "종료", disabled: !isUp /* TODO: shutdown으로 변경*/
-      , onClick: () => openModal("stop"), /* TODO: shutdown으로 변경 */
+      type: "shutdown", label: "종료", disabled:!isUp //
+      , onClick: () => openModal("shutdown"),
     }, {
-      type: "powerOff", label: "전원 끔", disabled: !isUp
+      type: "powerOff", label: "전원 끔", disabled: !isUp 
       , onClick: () => openModal("powerOff"),
     }, { 
       type: "console", label: "콘솔", disabled: !isUp
       , onClick: () => openNewTab("console", vmId)
     }, {
-      type: "snapshots",  label: "스냅샷 생성", disabled: !isUp
+      type: "snapshots",  label: "스냅샷 생성", disabled: !(isUp || isDown)
       , onClick: () => openModal("snapshot")
     }, { 
       type: "migration",  label: "마이그레이션", disabled: isUp
@@ -145,7 +146,7 @@ const VmInfo = () => {
     }, {
       type: "delete",
       label: "삭제",
-      disabled: !isMaintenance,
+      disabled: !isDown,
       onClick: () => openModal("delete"),
     }, {
       type: "templates",
@@ -154,6 +155,7 @@ const VmInfo = () => {
     }, { 
       type: "ova", 
       label: "OVA로 내보내기", 
+      disabled: !isDown,
       onClick: () => openModal("ova") 
     },
   ];

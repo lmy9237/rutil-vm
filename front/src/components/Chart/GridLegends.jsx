@@ -6,7 +6,7 @@ const GridLegends = () => {
     { type: "crit", "value": "90%" },
     { type: "warn", "value": "75-90%" },
     { type: "norm", "value": "65-75%%" },
-    { type: "okay", "value": "<65%" },
+    { type: "okay", "value": "<65%(임시노란색)" },
   ]
 
   return (

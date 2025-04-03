@@ -7,7 +7,7 @@
 .grid-item {
   border-radius: var(--br-default);
   cursor: pointer;
-  height: 39px;
+  height: 35px;
   font-size: var(--fs-12);
 }
 .grid-item:hover {
@@ -17,11 +17,11 @@
   cursor: not-allowed;
 }
 .percent h1 {
-  font-size: var(--fs-16);
+  font-size: var(--fs-15);
   font-weight: 700;
 }
 .percent .unit {
-  font-size: var(--fs-14) !important;
+  font-size: var(--fs-13) !important;
 }
 .percent placeholder {
   margin-top: 5px;
@@ -55,6 +55,16 @@
   .grid-item {
     border-radius: var(--br-default);
     cursor: pointer;
-    height: 52px;
+    height: 56px;
+    width: 180px;
+  }
+  .percent h1 {
+    font-size: var(--fs-21);
+  }
+  .grid-item-name{
+    font-size: var(--fs-13);
+  }
+  .percent .unit{
+    font-size: var(--fs-16) !important;
   }
 }

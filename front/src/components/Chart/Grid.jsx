@@ -52,7 +52,7 @@ const Grid = ({ type, data = [] }) => {
         return (
           <div
             key={item.id || index}
-            className={`grid-item${hasAnyData ? `` : ` disabled`}`}
+            className={`grid-item f-center${hasAnyData ? `` : ` disabled`}`}
             onClick={() => hasAnyData && handleClick(item.id)}
             data-tooltip-id={tooltipId}
             data-tooltip-content={item.name || ""}
@@ -66,11 +66,13 @@ const Grid = ({ type, data = [] }) => {
           >
             {hasAnyData ? (
               <>
-                <div className="percent f-center">
-                  <h1>{type === "cpu" ? item.cpuPercent : item.memoryPercent}</h1>
-                  <div className="percent unit">%</div>
+                <div>
+                  <div className="percent f-center">
+                    <h1>{type === "cpu" ? item.cpuPercent : item.memoryPercent}</h1>
+                    <div className="percent unit">%</div>
+                  </div>
+                  <div className="grid-item-name">( {item.name} )</div>
                 </div>
-                <div className="grid-item-name">( {item.name} )</div>
               </>
             ) : (
               <div className="percent" style={{ color: "rgb(0 0 0)" }}></div>
