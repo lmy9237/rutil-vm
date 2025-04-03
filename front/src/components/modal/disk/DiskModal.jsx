@@ -123,6 +123,21 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
   };
 
+  const handleInputSize = (field) => (e) => {
+    const value = e.target.value;
+  
+    if (field === "size" || field === "appendSize") {
+      if (value === "" || /^\d*$/.test(value)) {
+        setFormState((prev) => ({ ...prev, [field]: value }));
+      } else {
+        toast.error("숫자만 입력해주세요.");
+      }
+    } else {
+      setFormState((prev) => ({ ...prev, [field]: value }));
+    }
+  };
+  
+
   const validateForm = () => {
     checkName(formState.alias);
 
@@ -159,11 +174,8 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   };
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName={"디스크"}
-      submitTitle={dLabel}
+    <BaseModal targetName={"디스크"} submitTitle={dLabel}
+      isOpen={isOpen} onClose={onClose}      
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "640px" }}
     >
@@ -184,18 +196,16 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
       {activeTab === "img" && (
         <div className="disk-new-img">
           <div className="disk-new-img-left">
-            <LabelInputNum
-              label="크기(GB)"
+            <LabelInputNum label="크기(GB)"
               value={formState.size}
-              onChange={handleInputChange("size")}
               autoFocus={true}
               disabled={editMode}
+              onChange={handleInputSize("size")}
             />
             {editMode && (
-              <LabelInputNum
-                label="추가크기(GB)"
+              <LabelInputNum label="추가크기(GB)"
                 value={formState.appendSize}
-                onChange={handleInputChange("appendSize")}
+                onChange={handleInputSize("appendSize")}
               />
             )}
             <LabelInput label={Localization.kr.ALIAS}
@@ -206,8 +216,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
               value={formState.description}
               onChange={handleInputChange("description")}
             />
-            <LabelSelectOptionsID 
-              label={Localization.kr.DATA_CENTER}
+            <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
               value={dataCenterVo.id}
               disabled={editMode}
               loading={isDatacentersLoading}
@@ -217,8 +226,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
                 if (selected) setDataCenterVo({ id: selected.id, name: selected.name });
               }}
             />
-            <LabelSelectOptionsID
-              label="스토리지 도메인"
+            <LabelSelectOptionsID label="스토리지 도메인"
               value={domainVo.id}
               disabled={editMode}
               loading={isDomainsLoading}
@@ -234,8 +242,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
               disabled={editMode}
               options={sparseList}
             />
-            <LabelSelectOptionsID
-              label="디스크 프로파일"
+            <LabelSelectOptionsID label="디스크 프로파일"
               value={diskProfileVo.id}
               loading={isDiskProfilesLoading}
               options={diskProfiles}
@@ -262,8 +269,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
               />
             </div> */}
             <div className="img-checkbox-outer">
-              <LabelCheckbox
-                label="증분 백업 사용"
+              <LabelCheckbox label="증분 백업 사용"
                 id="backup"
                 checked={formState.backup}
                 onChange={handleInputChangeCheck("backup")}

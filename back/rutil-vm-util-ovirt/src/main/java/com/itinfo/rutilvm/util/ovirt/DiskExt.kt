@@ -83,7 +83,8 @@ fun Connection.removeDisk(diskId: String): Result<Boolean> = runCatching {
 	checkDiskExists(diskId)
 
 	this.srvDisk(diskId).remove().send()
-	this.expectDiskDeleted(diskId)
+	// this.expectDiskDeleted(diskId)
+	true
 }.onSuccess {
 	Term.DISK.logSuccess("삭제")
 }.onFailure {
@@ -169,11 +170,8 @@ fun Connection.uploadSetDisk(disk: Disk): Result<String> = runCatching {
 	// 디스크 ok 상태여야 이미지 업로드 가능
 	this.expectDiskStatus(diskUpload.id())
 
-	log.info("imageTransfer")
 	val imageTransfer = preparedImageTransfer(diskUpload.id())
-	log.info("imageTransfer1")
 	checkImageTransferReady(imageTransfer)
-	log.info("imageTransfer2")
 	log.info("imageTransfer.id {}", imageTransfer.id())
 
 	imageTransfer.id()
@@ -221,6 +219,18 @@ private fun Connection.addImageTransfer(imageTransferContainer: ImageTransferCon
 	Term.IMAGE_TRANSFER.logFail("업로드")
 	throw if (it is Error) it.toItCloudException() else it
 }
+
+fun Connection.cancelImageTransfer(imageId: String): Result<Boolean?> = runCatching {
+	this.srvAllImageTransfer().imageTransferService(imageId).cancel().send()
+
+	true
+}.onSuccess {
+	Term.IMAGE_TRANSFER.logSuccess("업로드 취소")
+}.onFailure {
+	Term.IMAGE_TRANSFER.logFail("업로드 취소")
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 
 fun Connection.srvImageTransfer(imageId: String): ImageTransferService =
 	this.srvAllImageTransfer().imageTransferService(imageId)
