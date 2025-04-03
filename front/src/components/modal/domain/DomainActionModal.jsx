@@ -16,9 +16,9 @@ import {
  * @returns
  */
 const DomainActionModal = ({ isOpen, onClose, action, data, datacenterId }) => {
-  onSuccess: () => {
-    onClose();
+  const onSuccess = () => {
     toast.success(`도메인 ${getContentLabel()} 완료`);
+    onClose();
   };
   const { mutate: detachDomain } = useDetachDomain(onSuccess, () => onClose());
   const { mutate: activateDomain } = useActivateDomain(onSuccess, () => onClose());
