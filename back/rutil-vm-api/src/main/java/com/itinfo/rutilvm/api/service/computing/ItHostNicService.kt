@@ -7,7 +7,9 @@ import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.Error
+import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.HostNic
+import org.ovirt.engine.sdk4.types.NetworkAttachment
 import org.springframework.stereotype.Service
 
 interface ItHostNicService {
@@ -20,6 +22,15 @@ interface ItHostNicService {
      */
     @Throws(Error::class)
     fun findAllFromHost(hostId: String): List<HostNicVo>
+	/**
+	 * [ItHostNicService.findAllHostNicsFromHost]
+	 * 호스트 네트워크 인터페이스 목록
+	 *
+	 * @param hostId [String] 호스트 Id
+	 * @return List<[HostNicVo]> 네트워크 인터페이스 목록
+	 */
+	@Throws(Error::class)
+	fun findAllHostNicsFromHost(hostId: String): List<HostNicVo>
     /**
      * [ItHostNicService.findOneFromHost]
      * 호스트 네트워크 인터페이스
@@ -30,6 +41,25 @@ interface ItHostNicService {
      */
     @Throws(Error::class)
     fun findOneFromHost(hostId: String, hostNicId: String): HostNicVo?
+	/**
+	 * [ItHostNicService.findAllNetworkAttachmentsFromHost]
+	 * 호스트 네트워크 할당 목록
+	 *
+	 * @param hostId [String] 호스트 Id
+	 * @return List<[NetworkAttachmentVo]> 네트워크 목록
+	 */
+	@Throws(Error::class)
+	fun findAllNetworkAttachmentsFromHost(hostId: String): List<NetworkAttachmentVo>
+	/**
+	 * [ItHostNicService.findNetworkAttachmentFromHost]
+	 * 호스트 네트워크 할당 조회
+	 *
+	 * @param hostId [String] 호스트 Id
+	 * @param naId [String] networkAttachment Id
+	 * @return [NetworkAttachmentVo] 네트워크
+	 */
+	@Throws(Error::class)
+	fun findNetworkAttachmentFromHost(hostId: String, naId: String): NetworkAttachmentVo?
     /**
      * [ItHostNicService.setUpNetworksFromHost]
      * 호스트 네트워크 설정
@@ -78,14 +108,39 @@ class ItHostNicServiceImpl(
         return filteredNics.toHostNicVos(conn)
     }
 
-    @Throws(Error::class)
+	@Throws(Error::class)
+	override fun findAllHostNicsFromHost(hostId: String): List<HostNicVo> {
+		log.info("findAllHostNicsFromHost ... hostId: {}", hostId)
+		val host: Host? = conn.findHost(hostId, follow = "networkattachments.network,nics.statistics").getOrNull()
+
+		val hostNics: List<HostNic>? = host?.nics()
+		val networkAttachments: List<NetworkAttachment>? = host?.networkAttachments()
+		val res: List<NetworkAttachment> = conn.findAllNetworkAttachmentsFromHost(hostId, follow = "host,host_nic,network").getOrDefault(emptyList())
+		TODO("해야도ㅓㅣㅁ")
+	}
+
+	@Throws(Error::class)
     override fun findOneFromHost(hostId: String, hostNicId: String): HostNicVo? {
         log.info("findOneFromHost ... hostId: {}, hostNicId: {}", hostId, hostNicId)
         val res: HostNic? = conn.findNicFromHost(hostId, hostNicId, follow = "host,statistics").getOrNull()
         return res?.toHostNicVo(conn)
     }
 
-    @Throws(Error::class)
+	@Throws(Error::class)
+	override fun findAllNetworkAttachmentsFromHost(hostId: String): List<NetworkAttachmentVo> {
+		log.info("findAllNetworkAttachmentFromHost... hostId: {}", hostId)
+		val res: List<NetworkAttachment> = conn.findAllNetworkAttachmentsFromHost(hostId, follow = "host,host_nic,network").getOrDefault(emptyList())
+		return res.toNetworkAttachmentVos()
+	}
+
+	@Throws(Error::class)
+	override fun findNetworkAttachmentFromHost(hostId: String, naId: String): NetworkAttachmentVo? {
+		log.info("findNetworkAttachmentFromHost ... hostId: {}, naId: {}", hostId, naId)
+		val res: NetworkAttachment? = conn.findNetworkAttachmentFromHost(hostId, naId, follow = "host,host_nic,network").getOrNull()
+		return res?.toNetworkAttachmentVo()
+	}
+
+	@Throws(Error::class)
     override fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean {
         log.info("setUpNetworksFromHost ... hostId: {}, hostNetworkVo: {}", hostId, hostNetworkVo)
         val res: Result<Boolean> = conn.setupNetworksFromHost(

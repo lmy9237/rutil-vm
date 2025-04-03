@@ -72,7 +72,9 @@ const ENDPOINTS = {
   FIND_VMS_FROM_HOST:(hostId) =>                                           `${ENDPOINT_API_V1}/computing/hosts/${hostId}/vms`, 
 
   FIND_HOST_NICS_FROM_HOST: (hostId) =>                                    `${ENDPOINT_API_V1}/computing/hosts/${hostId}/nics`, 
-  FIND_NETWORKS_FROM_HOST: (hostId) =>                                     `${ENDPOINT_API_V1}/computing/hosts/${hostId}/network`, 
+  FIND_HOST_NIC_FROM_HOST: (hostId, nicId) =>                              `${ENDPOINT_API_V1}/computing/hosts/${hostId}/nics/${nicId}`, 
+  FIND_NETWORK_ATTACHMENTS_FROM_HOST: (hostId) =>                          `${ENDPOINT_API_V1}/computing/hosts/${hostId}/networkAttachments`, 
+  FIND_NETWORK_ATTACHMENT_FROM_HOST: (hostId, networkAttachmentId) =>      `${ENDPOINT_API_V1}/computing/hosts/${hostId}/networkAttachments/${networkAttachmentId}`, 
   SETUP_HOST_NICS_FROM_HOST: (hostId) =>                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}/nics/setup`, 
 
   FIND_HOSTDEVICES_FROM_HOST:(hostId) =>                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}/devices`, 

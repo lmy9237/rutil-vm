@@ -400,9 +400,11 @@ fun Connection.loginIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): R
 private fun Connection.srvNetworkAttachmentsFromHost(hostId: String): NetworkAttachmentsService =
 	this.srvHost(hostId).networkAttachmentsService()
 
-fun Connection.findAllNetworkAttachmentsFromHost(hostId: String): Result<List<NetworkAttachment>> = runCatching {
+fun Connection.findAllNetworkAttachmentsFromHost(hostId: String, follow: String = ""): Result<List<NetworkAttachment>> = runCatching {
 	checkHostExists(hostId)
-	this.srvNetworkAttachmentsFromHost(hostId).list().send().attachments()
+	this.srvNetworkAttachmentsFromHost(hostId).list().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().attachments()
 
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT,"목록조회", hostId)
@@ -413,6 +415,19 @@ fun Connection.findAllNetworkAttachmentsFromHost(hostId: String): Result<List<Ne
 
 private fun Connection.srvNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String): NetworkAttachmentService =
 	this.srvNetworkAttachmentsFromHost(hostId).attachmentService(networkAttachmentId)
+
+fun Connection.findNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String, follow: String = ""): Result<NetworkAttachment> = runCatching {
+	checkHostExists(hostId)
+	this.srvNetworkAttachmentFromHost(hostId, networkAttachmentId).get().apply {
+		if (follow.isNotEmpty()) follow(follow)
+	}.send().attachment()
+
+}.onSuccess {
+	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT,"조회", hostId)
+}.onFailure {
+	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT,"조회", it, hostId)
+	throw if (it is Error) it.toItCloudException() else it
+}
 
 fun Connection.modifyNetworkAttachmentsFromHost(hostId: String, networkAttachments: List<NetworkAttachment>): Result<Boolean> = runCatching {
 	this.srvHost(hostId).setupNetworks().modifiedNetworkAttachments(networkAttachments).send()

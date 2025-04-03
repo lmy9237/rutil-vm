@@ -26,6 +26,20 @@ class IpAddressAssignmentVo (
     }
 }
 
+
+fun IpAddressAssignment.toIpAddressAssignmentVo(): IpAddressAssignmentVo {
+	val ip = this@toIpAddressAssignmentVo
+	return IpAddressAssignmentVo.builder {
+		assignmentMethod { ip.assignmentMethod().value() }
+		ipVo {
+			if(ip.ipPresent()) ip().toIp()
+			else IpVo()
+		}
+	}
+}
+fun List<IpAddressAssignment>.toIpAddressAssignmentVos(): List<IpAddressAssignmentVo> =
+	this@toIpAddressAssignmentVos.map { it.toIpAddressAssignmentVo() }
+
 /**
  * 호스트 네트워크 설정에서 사용됨
  */

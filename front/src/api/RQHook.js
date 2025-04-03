@@ -1097,13 +1097,85 @@ export const useNetworkInterfacesFromHost = (
   mapPredicate=(e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['NetworkInterfaceFromHost', hostId], 
+  queryKey: ['NetworkInterfacesFromHost', hostId], 
   queryFn: async () => {
     const res = await ApiManager.findHostNicsFromHost(hostId); 
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useNetworkInterfacesFromHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
+  },
+  enabled: !!hostId
+})
+/**
+ * @name useNetworkInterfaceFromHost
+ * @description 호스트 내 네트워크인터페이스 조회 useQuery훅
+ * 
+ * @param {string} hostId
+ * @param {string} nicId
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findHostNicsFromHost
+ */
+export const useNetworkInterfaceFromHost = (
+  hostId, nicId
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['NetworkInterfaceFromHost', hostId, nicId], 
+  queryFn: async () => {
+    const res = await ApiManager.findHostNicFromHost(hostId, nicId); 
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useNetworkInterfaceFromHost ... hostId: ${hostId} nicId: ${nicId},  res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
+  },
+  enabled: !!hostId
+})
+/**
+ * @name useNetworkAttachmentsFromHost
+ * @description 호스트 내 네트워크 결합 목록조회 useQuery훅
+ * 
+ * @param {string} hostId
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findNetworkAttachmentsFromHost
+ */
+export const useNetworkAttachmentsFromHost = (
+  hostId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['NetworkAttachmentsFromHost', hostId], 
+  queryFn: async () => {
+    const res = await ApiManager.findNetworkAttachmentsFromHost(hostId); 
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useNetworkAttachmentsFromHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
+  },
+  enabled: !!hostId
+})
+/**
+ * @name useNetworkAttachmentFromHost
+ * @description 호스트 내 네트워크 결합 조회 useQuery훅
+ * 
+ * @param {string} hostId
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findNetworkAttachmentFromHost
+ */
+export const useNetworkAttachmentFromHost = (
+  hostId, networkAttachmentId
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['NetworkAttachmentsFromHost', hostId, networkAttachmentId], 
+  queryFn: async () => {
+    const res = await ApiManager.findNetworkAttachmentFromHost(hostId, networkAttachmentId); 
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useNetworkAttachmentFromHost ... hostId: ${hostId} networkAttachmentId: ${networkAttachmentId},  res: ${JSON.stringify(_res, null, 2)}`);
     return _res
   },
   enabled: !!hostId

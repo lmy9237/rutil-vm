@@ -695,18 +695,45 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.FIND_NICS_FROM_HOST
   }),
   /**
-   * @name ApiManager.findNetworksFromHost
-   * @description 호스트 네트워크 목록
+   * @name ApiManager.findHostNicFromHost
+   * @description 호스트 Nic
    *
    * @param {string} hostId
    * @returns 
    * 
    * @see
    */
-  findNetworksFromHost : async (hostId) => makeAPICall({
+  findHostNicFromHost : async (hostId, nicId) => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_NETWORKS_FROM_HOST(hostId), 
-    // defaultValues: DEFAULT_VALUES.FIND_NETWORKS_FROM_HOST
+    url: ENDPOINTS.FIND_HOST_NIC_FROM_HOST(hostId, nicId), 
+    // defaultValues: DEFAULT_VALUES.FIND_NICS_FROM_HOST
+  }),
+  /**
+   * @name ApiManager.findNetworkAttachmentsFromHost
+   * @description 호스트 NetworkAttachments 목록
+   *
+   * @param {string} hostId
+   * @returns 
+   * 
+   * @see
+   */
+  findNetworkAttachmentsFromHost : async (hostId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_NETWORK_ATTACHMENTS_FROM_HOST(hostId), 
+    // defaultValues: DEFAULT_VALUES.FIND_NICS_FROM_HOST
+  }),
+  /**
+   * @name ApiManager.findNetworkAttachmentFromHost
+   * @description 호스트 NetworkAttachments 목록
+   *
+   * @param {string} hostId
+   * @returns 
+   * 
+   * @see
+   */
+  findNetworkAttachmentFromHost : async (hostId, networkAttachmentId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_NETWORK_ATTACHMENT_FROM_HOST(hostId, networkAttachmentId), 
   }),
   /**
    * @name ApiManager.findSetHostNicsFromHost

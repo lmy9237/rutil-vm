@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import ModalNavButton from "../../navigation/ModalNavButton";
 import Localization from "../../../utils/Localization";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
+import toast from "react-hot-toast";
 
 // 탭 메뉴
 const tabs = [
@@ -12,42 +13,107 @@ const tabs = [
   { id: "dns", label: "DNS 설정" },
 ];
 
+// AUTOCONF("autoconf"),
+//     DHCP("dhcp"),
+//     NONE("none"),
+//     POLY_DHCP_AUTOCONF("poly_dhcp_autoconf"),
+//     STATIC("static");
+  
 // ipv4 부트 프로토콜
 const ipv4Options = [
-  { id: "default_mtu", value: "default", label: "없음" },
-  { id: "dhcp_mtu", value: "dhcp", label: "DHCP" },
-  { id: "static_mtu", value: "static", label: "정적" },
+  { value: "none", label: "없음" },
+  { value: "dhcp", label: "DHCP" },
+  { value: "static", label: "정적" },
 ];
 
 // ipv6 부트 프로토콜
 const ipv6Options = [
-  { id: "default_mtu", value: "default", label: "없음" },
-  { id: "dhcp_mtu", value: "dhcp", label: "DHCP" },
-  { id: "slaac_mtu", value: "slaac", label: `${Localization.kr.STATELESS} 주소 자동 설정` },
-  { id: "dhcp_slaac_mtu", value: "dhcp_slaac", label: `DHCP 및 ${Localization.kr.STATELESS} 주소 자동 설정` },
-  { id: "static_mtu", value: "static", label: "정적" },
+  { value: "none", label: "없음" },
+  { value: "dhcp", label: "DHCP" },
+  { value: "autoconf", label: `${Localization.kr.STATELESS} 주소 자동 설정` },
+  { value: "poly_dhcp_autoconf", label: `DHCP 및 ${Localization.kr.STATELESS} 주소 자동 설정` },
+  { value: "static", label: "정적" },
 ];
 
+const initialFormState = {
+  id: "",
+  name: "",
+  inSync: true
+};
 
 const HostNetworkEditModal = ({ 
   isOpen, 
   onClose,  
-  network, 
+  networkAttachment, 
   dnsState, 
   setDnsState 
 }) => {
-  const [selectedModalTab, setSelectedModalTab] = useState("ipv4");
-  const [selectedIpv4Protocol, setSelectedIpv4Protocol] = useState("default");
-  const [selectedIpv6Protocol, setSelectedIpv6Protocol] = useState("default");
+  const [selectedModalTab, setSelectedModalTab] = useState("ipv4");  
+  const [formState, setFormState] = useState(initialFormState);
+    
+  const [networkVo, setNetworkVo] = useState({ id: "", name: "" });
+  const [ipv4Values, setIpv4Values] = useState({ protocol: "none", address: "", gateway: "", netmask: "" });
+  const [ipv6Values, setIpv6Values] = useState({ protocol: "none", address: "", gateway: "", netmask: "" });
+  const [dnsServers, setDnsServers] = useState([]); //nameServerList
+  
+  const onSuccess = () => {
+    onClose();
+    toast.success(`네트워크 편집 완료`);
+  };
+  // const { mutate: addNetwork } = useAddNetwork(onSuccess, () => onClose());
+
+  useEffect(() => {
+    if (!isOpen) {
+      setFormState(initialFormState);
+      setIpv4Values({ address: "", gateway: "", netmask: "" });
+      setIpv6Values({ address: "", gateway: "", netmask: "" });
+      return;
+    }
+  
+    if (networkAttachment) {
+      setFormState({
+        id: networkAttachment?.id,
+        name: networkAttachment?.name,
+        inSync: networkAttachment?.inSync
+      });
+  
+      setNetworkVo({
+        id: networkAttachment?.networkVo?.id,
+        name: networkAttachment?.networkVo?.name
+      });
+  
+      // const assignments = networkAttachment.ipAddressAssignments || [];
+
+  
+      // assignments.forEach((ip) => {
+      //   const { assignmentMethod, ipVo } = ip;
+      //   if (ipVo?.version === "V4") {
+      //     setIpv4Values({
+      //       protocol: assignmentMethod,
+      //       address: ipVo.address || "",
+      //       gateway: ipVo.gateway || "",
+      //       netmask: ipVo.netmask || "",
+      //     });
+      //   }
+      //   if (ipVo?.version === "V6") {
+      //     setIpv6Values({
+      //       protocol: assignmentMethod,
+      //       address: ipVo.address || "",
+      //       gateway: ipVo.gateway || "",
+      //       netmask: ipVo.netmask || "",
+      //     });
+      //   }
+      // });
+  
+      setDnsServers(networkAttachment?.nameServerList || []);
+    }
+  }, [isOpen, networkAttachment]);  
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName={`네트워크 ${network?.name}`}
-      submitTitle={"수정"}
+    <BaseModal targetName={`네트워크 ${networkAttachment?.name}`} submitTitle={"수정"}
+      isOpen={isOpen} onClose={onClose}      
       onSubmit={() => {}}
-      contentStyle={{ width: "880px" }} 
+      contentStyle={{ width: "800px"}} 
     >
       <div className="popup-content-outer flex">
         <ModalNavButton
@@ -56,51 +122,110 @@ const HostNetworkEditModal = ({
           onTabClick={setSelectedModalTab}
         />
 
-        {/* 탭 내용 */}
         <div className="backup-edit-content">
+          {/*
           {selectedModalTab === "ipv4" && (
             <>
               <div className="select-box-outer">
-                <LabelSelectOptions
-                  label="부트 프로토콜"
-                  id="ipv4_mtu"
-                  value={selectedIpv4Protocol}
-                  onChange={(e) => setSelectedIpv4Protocol(e.target.value)}
+                <LabelSelectOptions id="ipv4_mtu" label="부트 프로토콜"                  
+                  value={ipv4Values.protocol}
                   options={ipv4Options}
-                  disabled={false}
+                  onChange={(e) => setIpv4Values(prev => ({ ...prev, protocol: e.target.value }))}
                 />
-                <LabelInput id="ip_address" label="IP" disabled={selectedIpv4Protocol  !== "static"} />
-                <LabelInput id="netmask" label="넷마스크 / 라우팅 접두사" disabled={selectedIpv4Protocol  !== "static"} />
-                <LabelInput id="gateway" label="게이트웨이" disabled={selectedIpv4Protocol  !== "static"} />
+                <span>n{networkAttachment.ipAddressAssignments[0].protocol}</span>
+                <LabelInput id="ip_address" label="IP"
+                  value={ipv4Values.address}
+                  onChange={(e) => setIpv4Values(prev => ({ ...prev, address: e.target.value }))}
+                  disabled={ipv4Values.protocol !== "static"}
+                />
+                <LabelInput id="netmask" label="넷마스크 / 라우팅 접두사"
+                  value={ipv4Values.netmask}
+                  onChange={(e) => setIpv4Values(prev => ({ ...prev, netmask: e.target.value }))}
+                  disabled={ipv4Values.protocol !== "static"}
+                />
+                <LabelInput id="gateway" label="게이트웨이"
+                  value={ipv4Values.gateway}
+                  onChange={(e) => setIpv4Values(prev => ({ ...prev, gateway: e.target.value }))}
+                  disabled={ipv4Values.protocol !== "static"}
+                />
               </div>
             </>
           )}
 
           {selectedModalTab === "ipv6" && (
             <>
-            <div className="select-box-outer">
-              <LabelSelectOptions
-                  label="부트 프로토콜"
-                  id="ipv6_protocol"
-                  value={selectedIpv6Protocol}
-                  onChange={(e) => setSelectedIpv6Protocol(e.target.value)}
+              <div className="select-box-outer">
+                <LabelSelectOptions id="ipv6_protocol" label="부트 프로토콜"
+                  value={ipv6Values.protocol}
                   disabled={false}
                   options={ipv6Options}
-              />
-                <LabelInput id="ip_address" label="IP" disabled={selectedIpv6Protocol !== "static"} />
-                <LabelInput id="netmask" label="넷마스크 / 라우팅 접두사" disabled={selectedIpv6Protocol !== "static"} />
-                <LabelInput id="gateway" label="게이트웨이" disabled={selectedIpv6Protocol !== "static"} />
+                  onChange={(e) => setIpv6Values(prev => ({ ...prev, protocol: e.target.value }))}
+                />
+                <LabelInput id="ip_address" label="IP"
+                  value={ipv6Values.address}
+                  onChange={(e) => setIpv6Values(prev => ({ ...prev, address: e.target.value }))}
+                  disabled={ipv6Values.protocol !== "static"}
+                />
+                <LabelInput id="netmask" label="넷마스크 / 라우팅 접두사"
+                  value={ipv6Values.netmask}
+                  onChange={(e) => setIpv6Values(prev => ({ ...prev, netmask: e.target.value }))}
+                  disabled={ipv6Values.protocol !== "static"}
+                />
+                <LabelInput id="gateway" label="게이트웨이"
+                  value={ipv6Values.gateway}
+                  onChange={(e) => setIpv6Values(prev => ({ ...prev, gateway: e.target.value }))}
+                  disabled={ipv6Values.protocol !== "static"}
+                />
               </div>
             </>
-          )}
+          )} */}
 
           {selectedModalTab === "dns" && (
             <>
               <div className="host-plus-checkbox">
-                <input type="checkbox" id="dnsSetting" />
-                <label htmlFor="dnsSetting">DNS 설정</label>
+                <div className="text-[15px] font-bold"> DNS 서버 </div>
+                수정
+                  {/* {dnsServers.length !== 0 ?
+                    (dnsServers.map((dns, index) => (
+                    <div
+                      key={index}
+                      className="network-form-group f-btw"
+                      style={{ width: "100%", padding: 0 }}
+                    >
+                      <input
+                        type="text"
+                        value={dns}
+                        onChange={(e) => {
+                          const updated = [...dnsServers];
+                          updated[index] = e.target.value;
+                          setDnsServers(updated);
+                        }}
+                      />
+                      <div className="dynamic-btns f-end">
+                        <RVI36
+                          iconDef={rvi36Add(false)}
+                          className="btn-icon"
+                          currentColor="transparent"
+                          onClick={() => setDnsServers((prev) => [...prev, ""])}
+                        />
+                        <RVI36
+                          iconDef={rvi36Remove()}
+                          className="btn-icon"
+                          currentColor="transparent"
+                          onClick={() => {
+                            const updated = [...dnsServers];
+                            updated.splice(index, 1);
+                            setDnsServers(updated);
+                          }}
+                        />
+                      </div> 
+                    </div>
+                  ))) :(
+                    <>
+                    <span>t</span>
+                    </>
+                  ) */}
               </div>
-            
             </>
           )}
         </div>

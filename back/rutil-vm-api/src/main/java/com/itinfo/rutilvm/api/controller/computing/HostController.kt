@@ -6,6 +6,7 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.HostNetworkVo
 import com.itinfo.rutilvm.api.model.network.HostNicVo
+import com.itinfo.rutilvm.api.model.network.NetworkAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.HostStorageVo
 import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
 import com.itinfo.rutilvm.api.service.computing.ItHostNicService
@@ -306,6 +307,7 @@ class HostController {
 	}
 
 
+	// region: hostNic
 	@Autowired private lateinit var iHostNic: ItHostNicService
 
 	@ApiOperation(
@@ -330,6 +332,84 @@ class HostController {
 		log.info("/computing/hosts/{}/nics ... 호스트 nic 목록", hostId)
 		return ResponseEntity.ok(iHostNic.findAllFromHost(hostId))
 	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="호스트 네트워크 인터페이스 조회",
+		notes="선택된 호스트 네트워크 인터페이스를 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="nicId", value="네트워크 인터페이스 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{hostId}/nics/{nicId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun nic(
+		@PathVariable hostId: String? = null,
+		@PathVariable nicId: String? = null,
+	): ResponseEntity<HostNicVo> {
+		if (hostId.isNullOrEmpty())
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		if (nicId.isNullOrEmpty())
+			throw ErrorPattern.NIC_ID_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/nics/{} ... 호스트 nic ", hostId, nicId)
+		return ResponseEntity.ok(iHostNic.findOneFromHost(hostId, nicId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="호스트 네트워크 목록",
+		notes="선택된 호스트의 네트워크 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{hostId}/networkAttachments")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun networkAttachments(
+		@PathVariable hostId: String? = null
+	): ResponseEntity<List<NetworkAttachmentVo>> {
+		if (hostId.isNullOrEmpty())
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/networkAttachments ... 호스트 네트워크 목록", hostId)
+		return ResponseEntity.ok(iHostNic.findAllNetworkAttachmentsFromHost(hostId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="호스트 네트워크 결합",
+		notes="선택된 호스트의 네트워크 결합을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="networkAttachmentId", value="네트워크 결합 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{hostId}/networkAttachments/{networkAttachmentId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun networkAttachment(
+		@PathVariable hostId: String? = null,
+		@PathVariable networkAttachmentId: String? = null,
+	): ResponseEntity<NetworkAttachmentVo> {
+		if (hostId.isNullOrEmpty())
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		if (networkAttachmentId.isNullOrEmpty())
+			throw ErrorPattern.NETWORK_ATTACHMENT_ID_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/networkAttachments/{} ... 호스트 네트워크 목록", hostId, networkAttachmentId)
+		return ResponseEntity.ok(iHostNic.findNetworkAttachmentFromHost(hostId, networkAttachmentId))
+	}
+
 
 
 	@ApiOperation(
@@ -359,8 +439,9 @@ class HostController {
 		return ResponseEntity.ok(iHostNic.setUpNetworksFromHost(hostId, hostNetworkVo))
 	}
 
+	// endregion
 
-
+	// region: operation
 	@Autowired private lateinit var iHostOp: ItHostOperationService
 
 	@ApiOperation(
@@ -482,6 +563,7 @@ class HostController {
 		log.info("/computing/hosts/{}/deactivateGlobal ... 호스트 글로벌 HA 비활성화", hostId)
 		return ResponseEntity.ok(iHostOp.globalHaDeactivate(hostId))
 	}
+	// endregion
 
 	companion object {
 		private val log by LoggerDelegate()
