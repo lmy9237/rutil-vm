@@ -1,7 +1,6 @@
 /*컴포넌트 분리전 mainouter(삭제예정) */
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { adjustFontSize } from "../../UIEvent";
 import { useAllTreeNavigations } from "../../api/RQHook";
 import "./MainOuter.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -293,13 +292,6 @@ const MainOuter = ({
     }));
   };
 
-  useEffect(() => {
-    window.addEventListener("resize", adjustFontSize);
-    adjustFontSize();
-    return () => {
-      window.removeEventListener("resize", adjustFontSize);
-    };
-  }, []);
 
   const handleDetailClickStorage = (diskName) => {
     if (selectedDisk !== diskName) {

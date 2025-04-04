@@ -1,7 +1,4 @@
 import React, { useEffect, memo } from "react";
-import { useNavigate } from "react-router-dom";
-import { adjustFontSize } from "../../UIEvent";
-import { debounce } from "lodash"; // 리스너의 호출 빈도를 줄이기 위해 디바운싱을 사용
 import DashboardBoxGroup from "./DashboardBoxGroup";
 import RadialBarChart from "../../components/Chart/RadialBarChart";
 import BarChart from "../../components/Chart/BarChart";
@@ -200,6 +197,7 @@ const Dashboard = () => {
   }, []);
   
   const cpuCoreTotal = () => cpuMemory?.totalCpuCore
+  const cpuCoreUsed = () => cpuMemory?.usedCpuCore
   const cpuUsedPercentageComputed = () => Math.floor((cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100)
   const cpuAvailablePercentageComputed = () => 100 - cpuUsedPercentageComputed()
   const memAvailablePercentageComputed = () => cpuMemory?.freeMemoryGB?.toFixed(0)
@@ -256,13 +254,13 @@ const Dashboard = () => {
         <div className="dash-section f-btw">
           <div className="dash-section-contents">
             <h1 className="dash-con-title">CPU</h1>
-            <div className="status-value flex">
+            <div className="dash-status f-start">
               <h1>{cpuAvailablePercentageComputed()}</h1>
-              <span>%</span>
+              <span className="unit">%</span>
               <div>{Localization.kr.AVAILABLE} (총 {cpuCoreTotal()} Core)</div>
             </div>
             <span>
-              {`USED ${cpuUsedPercentageComputed()} %`} / Total {cpuCoreTotal()} Core
+              {`${cpuCoreUsed()}`} / {cpuCoreTotal()} Core
             </span>
             <div className="graphs flex">
               <div
@@ -271,7 +269,7 @@ const Dashboard = () => {
               >
                 {cpuMemory && (<CpuApexChart cpu={cpuMemory?.totalCpuUsagePercent ?? 0} />)}
               </div>
-              <div>{vmCpu && <CpuBarChart vmCpu={vmCpu} />}</div>
+              {vmCpu && <CpuBarChart vmCpu={vmCpu} />}
             </div>
             <div className="wave-graph">
               {/* <h2>Per CPU</h2> */}
@@ -284,14 +282,13 @@ const Dashboard = () => {
 
           <div className="dash-section-contents">
             <h1 className="dash-con-title">MEMORY</h1>
-            <div className="status-value flex">
+            <div className="dash-status f-start">
               <h1>{memAvailablePercentageComputed()}</h1>
-              <span>GB</span>
-              <div>{Localization.kr.AVAILABLE} (총 {cpuMemory?.totalMemoryGB?.toFixed(0)} GB)</div>
+              <span className="unit">GiB</span>
+              <div>{Localization.kr.AVAILABLE}</div>
             </div>
             <span>
-              USED {cpuMemory?.usedMemoryGB?.toFixed(1)} GB / Total{" "}
-              {cpuMemory?.totalMemoryGB?.toFixed(1)} GB
+              사용중 {cpuMemory?.usedMemoryGB?.toFixed(1)} GiB / 총 {cpuMemory?.totalMemoryGB?.toFixed(1)} GiB
             </span>
             <div className="graphs flex">
               <div
@@ -306,7 +303,7 @@ const Dashboard = () => {
                   ) /* ApexChart 컴포넌트를 여기에 삽입 */
                 }
               </div>
-              <div>{vmMemory && <MemoryBarChart vmMemory={vmMemory} />}</div>
+              {vmMemory && <MemoryBarChart vmMemory={vmMemory} />}
             </div>
 
             <div className="wave-graph">
@@ -317,34 +314,24 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div
-            className="dash-section-contents"
-            style={{ borderRight: "none" }}
-          >
+          <div className="dash-section-contents">
             <h1 className="dash-con-title">STORAGE</h1>
-            <div className="status-value flex">
-              <h1>{storage?.freeGB} </h1>
-              <span>GB</span>
-              <div>{Localization.kr.AVAILABLE} (총 {storage?.totalGB} GB)</div>
+            <div className="dash-status f-start">
+              <h1>{storage?.freeGB}</h1>
+              <span className="unit">GiB</span>
+              <div>{Localization.kr.AVAILABLE} (총 {storage?.totalGB} GiB)</div>
             </div>
             <span>
-              USED {storage?.usedGB} GB / Total {storage?.freeGB} GB
+              USED {storage?.usedGB} GiB / Total {storage?.freeGB} GiB
             </span>
             <div className="graphs flex">
               <div className="graph-wrap active-on-visible"
                 data-active-on-visible-callback-func-name="CircleRun"
               >
-                {storage && (
-                  <StorageApexChart storage={storage?.usedPercent} />
-                )}
+                {storage && (<StorageApexChart storage={storage?.usedPercent} />)}
               </div>
-              <div>
-                {storageMemory && (
-                  <StorageMemoryBarChart storageMemory={storageMemory} />
-                )}
-              </div>
+              {storageMemory && (<StorageMemoryBarChart storageMemory={storageMemory} />)}
             </div>
-
             <div className="wave-graph">
               <SuperAreaChart per={domain} type="domain" />
             </div>

@@ -118,15 +118,12 @@ const App = () => {
               <Route path="computing/vms" element={<AllVm />} />
               <Route path="computing/vms/:id" element={<VmInfo />} />
               <Route path="computing/vms/:id/:section" element={<VmInfo />} />
-              
               <Route path="computing/vms/templates" element={<AllTemplates />} />
+              
               <Route path="computing/templates" element={<AllTemplates />} />
               <Route path="computing/templates/:id" element={<TemplateInfo />} />
               <Route path="computing/templates/:id/:section" element={<TemplateInfo />} />
                             
-              <Route path="networks/rutil-manager" element={<RutilManager />} />
-              <Route path="networks/rutil-manager/:section" element={<RutilManager />} />
-
               <Route path="networks" element={<AllNetwork />} />
               <Route path="networks/datacenters/:id/:section" element={<DataCenterInfo />} />
               <Route path="networks/:id" element={<NetworkInfo />} /> 

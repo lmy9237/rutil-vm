@@ -1,4 +1,5 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import { Tooltip } from "react-tooltip";
 import Localization from "../../utils/Localization";
 import "./RutilVmIcons.css";
@@ -662,10 +663,10 @@ export const status2Icon = (
   }
   return (
     <>
-      <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}/>
-      <Tooltip id={tooltipId} effect="solid" middlewares={[]} className="custom-tooltip">
-        {Localization.kr.renderStatus(status)}
-      </Tooltip>
+      <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}
+        data-tooltip-content={Localization.kr.renderStatus(status)}
+      />
+      {createPortal(<Tooltip id={tooltipId} effect="solid" middlewares={[]} className="custom-tooltip"/>, document.body)}
     </>
   )
 }
@@ -688,18 +689,15 @@ export const clusterStatus2Icon = (status = "", connect=false) => {
 export const hostedEngineStatus2Icon = (isHostedEngineVm=false, isHostedEngine=false) => {
   const tag = isHostedEngineVm ? "hosted-engine-vm" : isHostedEngine ? "hosted-engine" : "";
   const iconDef = isHostedEngineVm ? rvi16StarGold : isHostedEngine ? rvi16Star : null;
-  const tooltipMessage = isHostedEngineVm ? "호스트 엔진 가상머신 실행 중" : isHostedEngine ? "호스트 엔진 가상머신 실행 가능" : null
-  //const tooltipMessage = isHostedEngineVm ? "호스트 엔진 가상머신|실행 중" : isHostedEngine ? "호스트 엔진 가상머신|실행 가능" : null
+  const tooltipMessage = `<span class="v-center">${isHostedEngineVm ? "<p>호스트 엔진 가상머신</p><p>실행 중</p>" : isHostedEngine ? "<p>호스트 엔진 가상머신</p><p>실행 가능</p>" : ""}</span>`
+
   const tooltipId = `status-tooltip-${tag}`
   return (
     <>
-      {iconDef && <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}/>}
-      {tooltipMessage && (
-        <Tooltip id={tooltipId} effect="solid" /*middlewares={[]}*/>
-          {tooltipMessage}
-          {/* {tooltipMessage.split("|").join((<br/>))} */}
-        </Tooltip>
-      )}
+      {iconDef && <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}
+        data-tooltip-html={tooltipMessage}
+      />}
+      {tooltipMessage && (createPortal(<Tooltip id={tooltipId} effect="solid" middlewares={[]} className="custom-tooltip"/>, document.body))}
     </>
   )
 }

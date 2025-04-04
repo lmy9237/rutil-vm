@@ -35,7 +35,7 @@ const TreeMenuItem = ({
       {...props}
     >
       {isChevronVisible && renderChevron()}
-        <RVI16 iconDef={iconDef} />
+      <RVI16 iconDef={iconDef} />
       <span>{title}</span>
     </div>
   )

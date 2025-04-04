@@ -7,6 +7,7 @@ import {
   useDeactivateHost,
   useActivateHost,
   useRestartHost,
+  useEnrollHostCertificate,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 
@@ -18,7 +19,7 @@ import Localization from "../../../utils/Localization";
  * @returns 
  */
 const HostActionModal = ({ isOpen, action, onClose, data }) => {
-  const onSuccess = () => {
+  const onSuccess = (index) => {
     if (ids.length === 1 || index === ids.length - 1) {
       onClose();
       toast.success(`호스트 ${getContentLabel(action)} 완료`);
@@ -28,6 +29,7 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
   const { mutate: deactivateHost } = useDeactivateHost(onSuccess, () => onClose());
   const { mutate: activateHost } = useActivateHost(onSuccess, () => onClose());
   const { mutate: restartHost } = useRestartHost(onSuccess, () => onClose());
+  const { mutate: enrollHostCertificate } = useEnrollHostCertificate(onSuccess, () => onClose());
 //const { mutate: stopHost } = useStopHost();
 
   const { ids, names } = useMemo(() => {
@@ -47,9 +49,9 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
       restart: "재시작",
       // stop: '중지',
       // reinstall: '다시 설치',
-      // register: '인증서 등록',
-      // haon: 'HA 활성화',
-      // haoff: 'HA 비활성화',
+      enrollCert: '인증서 등록',
+      haOn: 'HA 활성화',
+      haOff: 'HA 비활성화',
     };
     return labels[action] || "";
   };
@@ -72,9 +74,9 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
       restart: restartHost,
       // stop: stopHost,
       // reinstall: rein,
-      // register: rebootVM,
-      // haon: resetVM,
-      // haoff: resetVM,
+      enrollCert: enrollHostCertificate,
+      // haOn: resetVM,
+      // haOff: resetVM,
     };
 
     const actionFn = actionMap[action];

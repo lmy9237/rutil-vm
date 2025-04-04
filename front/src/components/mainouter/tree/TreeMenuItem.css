@@ -5,11 +5,15 @@
   color:var(--color-nav) !important;
   margin-left: 3px;
 }
+.tmi-icon-wrapper {
+  width:var(--w-icon-tree) !important;aspect-ratio:1/1
+}
 .tmi svg {
   aspect-ratio:1/1;width:var(--w-icon-tree) !important;
   /* height:var(--h-icon-tree) !important; */
 }
 .tmi span {
+  float:left;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .tmi:hover{

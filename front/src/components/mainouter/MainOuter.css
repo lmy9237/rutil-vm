@@ -28,9 +28,7 @@
 }
 } */
 .main-outer {
-  width: 100%;height: var(--h-rutil-content); 
-  overflow-y: auto;
-  display: flex;justify-content: space-between;
+  width: 100%;height: var(--h-rutil-content);overflow-y: auto;
 }
 .main-outer.open {
   height: var(--h-rutil-content-footer-open) !important;
@@ -40,7 +38,6 @@
   overflow: hidden;
   width: var(--w-aside-menu);height: 100%;
   background:white;
-
 }
 
 .aside-outer.closed {
@@ -148,11 +145,8 @@
 
 /* 🔹 크기 조절 핸들 스타일 */
 .resizer {
-  width: 5px;
-  position: absolute;
-  top: 0;
-  right:0;
-  height: 100%;
+  width: 5px;height: 100%;
+  position: absolute;top: 0;right:0;
   cursor: col-resize;
   z-index: 100;
 }

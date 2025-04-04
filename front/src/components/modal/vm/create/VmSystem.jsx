@@ -2,58 +2,67 @@ import { useState } from "react";
 import LabelInputNum from "../../../label/LabelInputNum";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../../../icons/RutilVmIcons";
+import Logger from "../../../../utils/Logger";
 
-
-const VmSystem = ({ formSystemState, setFormSystemState}) => {
-  // 총 cpu 계산
+const VmSystem = ({ 
+  formSystemState,
+  setFormSystemState
+}) => {
+  
   const calculateFactors = (num) => {
+    // 총 가산 CPU 계산
+    Logger.debug(`VmSystem > calculateFactors ... num: ${num}`)
     const factors = [];
     for (let i = 1; i <= num; i++) {
       if (num % i === 0) factors.push(i);
     }
     return factors;
   };
-
-  // const handleCpuChange = (e) => {
-  //   const totalCpu = parseInt(e.target.value, 10);
-  //   if (!isNaN(totalCpu)) {
-  //     setFormSystemState((prev) => ({
-  //       ...prev,
-  //       cpuTopologyCnt: totalCpu,
-  //       cpuTopologySocket: totalCpu, // 기본적으로 소켓을 총 CPU로 설정
-  //       cpuTopologyCore: 1,
-  //       cpuTopologyThread: 1,
-  //     }));
-  //   }
-  // };
+  /*
   const handleCpuChange = (e) => {
-    const value = e.target.value;
-  
-    // 입력값이 빈 문자열이면 그대로 상태 업데이트만 (렌더링은 반영 안 함)
-    if (value === "") {
+    const totalCpu = parseInt(e.target.value, 10);
+    if (!isNaN(totalCpu)) {
       setFormSystemState((prev) => ({
         ...prev,
-        cpuTopologyCnt: "",
-      }));
-      return;
-    }
-  
-    const totalCpu = parseInt(value, 10);
-    if (!isNaN(totalCpu) && totalCpu > 0) {
-      setFormSystemState((prev) => ({
-        ...prev,
-        cpuTopologyCnt: totalCpu,
-        cpuTopologySocket: totalCpu,
+        cpuTopologyTotal: totalCpu,
+        cpuTopologySocket: totalCpu, // 기본적으로 소켓을 총 CPU로 설정
         cpuTopologyCore: 1,
         cpuTopologyThread: 1,
       }));
     }
   };
+  */
+  const handleCpuChange = (e) => {
+    Logger.debug(`VmSystem > handleCpuChange ... value: ${e.target.value}`)
+    const value = e.target.value;
+    // 입력값이 빈 문자열이면 그대로 상태 업데이트만 (렌더링은 반영 안 함)
+    if (value === "") {
+      setFormSystemState((prev) => ({
+        ...prev,
+        cpuTopologyTotal: "",
+      }));
+      return;
+    }
+  
+    const totalCpu = parseInt(value, 10);
+    if (isNaN(totalCpu) || totalCpu <= 0) {
+      return;
+    }
+    setFormSystemState((prev) => ({
+      ...prev,
+      cpuTopologyTotal: totalCpu,
+      cpuTopologySocket: totalCpu,
+      cpuTopologyCore: 1,
+      cpuTopologyThread: 1,
+    }));
+  };
   
 
   const handleSocketChange = (e) => {
-    const socket = parseInt(e.target.value, 10);
-    const remaining = formSystemState.cpuTopologyCnt / socket;
+    const value = e.target.value
+    Logger.debug(`VmSystem > handleSocketChange ... value: ${value}`)
+    const socket = parseInt(value);
+    const remaining = formSystemState.cpuTopologyTotal / socket;
 
     setFormSystemState((prev) => ({
       ...prev,
@@ -63,11 +72,11 @@ const VmSystem = ({ formSystemState, setFormSystemState}) => {
     }));
   };
 
-  const handleCoreChange = (e) => {
-    const core = parseInt(e.target.value, 10);
-    const remaining =
-      formSystemState.cpuTopologyCnt /
-      (formSystemState.cpuTopologySocket * core);
+  const handleCorePerCoreChange = (e) => {
+    const value = e.target.value
+    Logger.debug(`VmSystem > handleCorePerCoreChange ... value: ${value}`)
+    const core = parseInt(value);
+    const remaining = formSystemState.cpuTopologyTotal / (formSystemState.cpuTopologySocket * core);
 
     setFormSystemState((prev) => ({
       ...prev,
@@ -79,6 +88,7 @@ const VmSystem = ({ formSystemState, setFormSystemState}) => {
   // 최대메모리: 메모리크기 x 4 , 할당할 실제 메모리: 메모리크기와 같음
   const handleInputChange = (field) => (e) => {
     const value = e.target.value;
+    Logger.debug(`VmSystem > handleInputChange ... field: ${field}, value: ${value}`)
   
     setFormSystemState((prev) => {
       const updatedState = { ...prev, [field]: value };
@@ -102,40 +112,40 @@ const VmSystem = ({ formSystemState, setFormSystemState}) => {
   const [showCpuDetail, setShowCpuDetail] = useState(false); 
   const toggleCpuDetail = () => setShowCpuDetail(prev => !prev);
 
+  const selectionNumPredicate = (v) => ({ value: v, label: v, })
+  const selectionsSockets = () => calculateFactors(formSystemState.cpuTopologyTotal).map(selectionNumPredicate)
+  const selectionsCoresPerSocket = () => selectionsSockets()
+  const selectionsThreadsPerCore = () => {
+    let threads = selectionsSockets()
+    threads.pop()
+    return threads;
+  }
+
   return (
     <>
       <div className="edit-second-content">
-        <LabelInputNum id="memory_size" label="메모리 크기(MB)"
+        <LabelInputNum id="mem" label="메모리 크기(MB)"
           value={formSystemState.memorySize} 
           onChange={ handleInputChange("memorySize") }
         />
-        <LabelInputNum id="max_memory"label="최대 메모리(MB)"
+        <LabelInputNum id="mem-max"label="최대 메모리(MB)"
           value={formSystemState.memoryMax} 
           onChange={ handleInputChange("memoryMax") }
         />
-        <LabelInputNum id="actual_memory" label="할당할 실제 메모리(MB)"
+        <LabelInputNum id="mem-actual" label="할당할 실제 메모리(MB)"
           value={formSystemState.memoryActual} 
           onChange={ handleInputChange("memoryActual") }
         />
-        <LabelInputNum
-          id="total_cpu"
-          label="총 가상 CPU"
+        <LabelInputNum id="cpu-total" label="총 가상 CPU"
           value={
-            formSystemState.cpuTopologyCnt !== undefined &&
-            formSystemState.cpuTopologyCnt !== null &&
-            !isNaN(formSystemState.cpuTopologyCnt)
-              ? formSystemState.cpuTopologyCnt
+            formSystemState.cpuTopologyTotal !== undefined &&
+            formSystemState.cpuTopologyTotal !== null &&
+            !isNaN(formSystemState.cpuTopologyTotal)
+              ? formSystemState.cpuTopologyTotal
               : ""
           }
           onChange={handleCpuChange}
         />
-        {/* <label>총 가상 CPU</label>
-        <input id="total_cpu"
-          type="number"
-          value={formSystemState.cpuTopologyCnt}
-          onChange={handleCpuChange}
-          min={1}
-        /> */}
 
         <button className="btn-toggle-cpu" onClick={toggleCpuDetail}>
           <RVI16 iconDef={showCpuDetail ? rvi16ChevronUp : rvi16ChevronDown} className="mr-1.5" />
@@ -146,23 +156,17 @@ const VmSystem = ({ formSystemState, setFormSystemState}) => {
           <div>
             <LabelSelectOptions id="virtual_socket" label="가상 소켓"              
               value={formSystemState.cpuTopologySocket}
-              options={calculateFactors(formSystemState.cpuTopologyCnt).map((v) => ({
-                value: v, label: v,
-              }))}
+              options={selectionsSockets()}
               onChange={handleSocketChange}
             />
             <LabelSelectOptions id="core_per_socket" label="가상 소켓 당 코어"
               value={formSystemState.cpuTopologyCore}
-              options={calculateFactors(formSystemState.cpuTopologyCnt / formSystemState.cpuTopologySocket).map((v) => ({
-                value: v, label: v,
-              }))}
-              onChange={handleCoreChange}
+              options={selectionsCoresPerSocket()}
+              onChange={handleCorePerCoreChange}
             />
             <LabelSelectOptions id="thread_per_core" label="코어당 스레드"
               value={formSystemState.cpuTopologyThread}
-              options={calculateFactors(formSystemState.cpuTopologyCnt /(formSystemState.cpuTopologySocket * formSystemState.cpuTopologyCore)).map((v) => ({
-                value: v, label: v,
-              }))}
+              options={selectionsThreadsPerCore()}
               onChange={(e) => setFormSystemState((prev) => ({...prev, cpuTopologyThread: parseInt(e.target.value, 10)}))}
             />
           </div>

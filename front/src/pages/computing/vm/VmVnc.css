@@ -5,6 +5,6 @@
   
 }
 .section-vnc .section-vnc-content {
-  height: calc(100% - var(--h-section-header));
+  width:100%;height: calc(100% - var(--h-section-header));
   background: black;
 }

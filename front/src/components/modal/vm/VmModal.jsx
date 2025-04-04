@@ -141,7 +141,9 @@ const VmModal = ({
   const { mutate: editVM } = useEditVm(onSuccess, () => onClose());
 
   // 가상머신 상세데이터 가져오기
-  const { data: vm } = useFindEditVmById(vmId);
+  const {
+    data: vm
+  } = useFindEditVmById(vmId);
 
   // 클러스터 목록 가져오기
   const { 

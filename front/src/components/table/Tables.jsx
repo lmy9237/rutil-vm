@@ -5,6 +5,7 @@ import { Tooltip } from "react-tooltip";
 import PagingButton from "./PagingButton";
 import Logger from "../../utils/Logger";
 import "./Table.css";
+import CONSTANT from "../../Constants";
 
 /**
  * @name Tables
@@ -187,7 +188,7 @@ const Tables = ({
   // 페이징처리
   // ✅ 현재 페이지 상태 및 페이지당 항목 개수 추가
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const itemsPerPage = CONSTANT.itemsPerPage;
   // 시작/끝 인덱스 계산
   const indexOfFirstItem = (currentPage - 1) * itemsPerPage;
   const indexOfLastItem = Math.min(currentPage * itemsPerPage, sortedData.length);

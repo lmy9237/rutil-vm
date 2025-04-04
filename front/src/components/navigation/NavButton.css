@@ -1,6 +1,5 @@
 .content-header {
-    border-right: var(--border-simple);
-    /* border-right: var(--border-box);*/
+  border-right: var(--border-default);
 }
 .active {
     transition: all 0.3s ease;

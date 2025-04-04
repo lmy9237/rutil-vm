@@ -84,10 +84,7 @@ const VmSnapshots = ({ vmId }) => {
           {isSnapshotsLoading && (<Loading/>)}
 
           {/*스냅샷없을때*/}
-          {!isSnapshotsLoading && transformedData?.length === 0 && (
-           <>
-           </>
-          )}
+          {!isSnapshotsLoading && transformedData?.length === 0 && (<div className="no-snapshot">스냅샷이 없습니다(디자인X)</div>)}
 
           {transformedData?.length > 0 && transformedData?.map((snapshot) => (
             <div

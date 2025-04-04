@@ -35,8 +35,8 @@ const HostActionButtons = ({
 
   const basicActions = [
     { type: "create", label: Localization.kr.CREATE, disabled: false, onBtnClick: () => openModal("create")  },
-    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled , onBtnClick: () => openModal("edit") },
-    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled, onBtnClick: () => openModal("delete")  },
+    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled, onBtnClick: () => openModal("edit") },
+    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled || !isMaintenance, onBtnClick: () => openModal("delete")  },
   ];
 
   const manageActions = [
@@ -44,9 +44,9 @@ const HostActionButtons = ({
     { type: "activate", label: "활성", disabled: !isMaintenance },
     { type: "restart", label: "재시작", disabled: isEditDisabled || !isUp },
     // { type: "reInstall", label: "다시 설치", disabled: isEditDisabled || isUp },
-    // { type: "register", label: "인증서 등록", disabled: isEditDisabled || isUp, },
-    { type: "haOn", label: "글로벌 HA 유지 관리를 활성화", disabled: isEditDisabled || !isUp, },
-    { type: "haOff", label: "글로벌 HA 유지 관리를 비활성화", disabled: isEditDisabled || !isUp, },
+    { type: "enrollCert", label: "인증서 등록", disabled: isEditDisabled },
+    { type: "haOn", label: "글로벌 HA 유지 관리를 활성화", disabled: isEditDisabled || !isUp || !isMaintenance, },
+    { type: "haOff", label: "글로벌 HA 유지 관리를 비활성화", disabled: isEditDisabled || !isUp },
   ];
 
   return (

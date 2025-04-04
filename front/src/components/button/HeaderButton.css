@@ -1,7 +1,7 @@
 .section-header {
   width: 100%;height:var(--h-section-header);
   /* min-height:var(--h-section-header); */
-  border-bottom: var(--border-box);
+  border-bottom: var(--border-default);
   padding: 0 16px;
 }
 .section-header-left {

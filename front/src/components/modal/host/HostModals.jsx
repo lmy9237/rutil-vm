@@ -46,7 +46,7 @@ const HostModals = ({
           "activate",
           "restart",
           "reInstall",
-          "register",
+          "enrollCert",
           "haOn",
           "haOff",
         ].includes(activeModal)}

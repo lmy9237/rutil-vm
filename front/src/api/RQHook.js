@@ -1,8 +1,21 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ApiManager from "./ApiManager";
 import toast from "react-hot-toast";
-import Localization from "../utils/Localization";
 import Logger from "../utils/Logger";
+//#region: 쿼리Key
+const QK = {
+  ALL_TREE_NAVIGATIONS: "allTreeNavigations",
+  DASHBOARD: "dashboard",
+  DASHBOARD_CPU_MEMORY: "dashboardCpuMemory",
+  DASHBOARD_STORAGE: "dashboardStorage",
+  DASHBOARD_HOSTS: "dashboardHosts",
+  DASHBOARD_DOMAIN: "dashboardDomain",
+  DASHBOARD_HOST: "dashboardHost",
+  DASHBOARD_VM_CPU: "dashboardVmCpu",
+}
+
+//#endregion: 쿼리Key
+
 
 //#region: Navigation
 /**
@@ -20,7 +33,7 @@ export const useAllTreeNavigations = (
   mapPredicate=(e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allTreeNavigations', type],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
+  queryKey: [QK.ALL_TREE_NAVIGATIONS, type],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
   queryFn: async () => {
     const res = await ApiManager.findAllTreeNaviations(type);
     const _res = mapPredicate
@@ -38,7 +51,7 @@ export const useDashboard = (
   
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['dashboard'],
+  queryKey: [QK.DASHBOARD],
   queryFn: async () => {
     const res = await ApiManager.getDashboard()
     const _res = validate(res) ?? {}
@@ -51,7 +64,7 @@ export const useDashboardCpuMemory = (
   
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['dashboardCpuMemory'],
+  queryKey: [QK.DASHBOARD_CPU_MEMORY],
   queryFn: async () => {
     const res = await ApiManager.getCpuMemory()
     const _res = validate(res) ?? {}
@@ -64,7 +77,7 @@ export const useDashboardStorage = (
 
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['dashboardStorage'],
+  queryKey: [QK.DASHBOARD_STORAGE],
   queryFn: async () => {
     const res = await ApiManager.getStorage()
     const _res = validate(res) ?? {}
@@ -77,7 +90,7 @@ export const useDashboardHosts = (
   
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['dashboardHosts'],
+  queryKey: [QK.DASHBOARD_HOSTS],
   queryFn: async () => {
     const res = await ApiManager.getHosts()
     const _res = validate(res) ?? {}
@@ -90,7 +103,7 @@ export const useDashboardDomain = (
   mapPredicate=(e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['dashboardDomain'],
+  queryKey: [QK.DASHBOARD_DOMAIN],
   queryFn: async () => {
     const res = await ApiManager.getDomain()
     const _res = mapPredicate
@@ -106,7 +119,7 @@ export const useDashboardHost = (
   mapPredicate=(e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['dashboardHost'],
+  queryKey: [QK.DASHBOARD_HOST],
   queryFn: async () => {
     const res = await ApiManager.getHost(hostId)
     const _res = mapPredicate
@@ -122,7 +135,7 @@ export const useDashboardVmCpu = (
   mapPredicate=(e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['dashboardVmCpu'],
+  queryKey: [QK.DASHBOARD_VM_CPU],
   queryFn: async () => {
     const res = await ApiManager.getVmCpu();
     const _res = mapPredicate
@@ -1372,7 +1385,9 @@ export const useLoginIscsiFromHost = (
   return useMutation({
     mutationFn: async ({ hostId, iscsiData }) => {
       const res = await ApiManager.findLoginIscsiFromHost(hostId, iscsiData);
-      return validate(res);
+      const _res = validate(res) || {}
+      Logger.debug(`RQHook > useLoginIscsiFromHost ... hostId: ${hostId}`)
+      validate(_res);
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useLoginIscsiFromHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1401,7 +1416,9 @@ export const useAddHost = (
   return useMutation({
     mutationFn: async ({ hostData, deployHostedEngine }) => {
       const res = await ApiManager.addHost(hostData, deployHostedEngine);
-      return validate(res);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useLoginIscsiFromHost ... hostData: ${JSON.stringify(hostData, null, 2)}, deployHostedEngine: ${deployHostedEngine}`)
+      validate(_res);
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1429,7 +1446,9 @@ export const useEditHost = (
   return useMutation({
     mutationFn: async ({ hostId, hostData }) => {
       const res = await ApiManager.editHost(hostId, hostData)
-      return validate(res);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditHost ... hostId: ${hostId}, hostData: ${hostData}`)
+      validate(_res);
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1457,7 +1476,9 @@ export const useDeleteHost = (
   return useMutation({ 
     mutationFn: async (hostId) => {
       const res = await ApiManager.deleteHost(hostId)
-      return validate(res);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeleteHost ... hostId: ${hostId}`)
+      validate(_res);
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1486,7 +1507,9 @@ export const useDeactivateHost = (
   return useMutation({
     mutationFn: async (hostId) => {
       const res = await ApiManager.deactivateHost(hostId);
-      return validate(res);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeactivateHost ... hostId: ${hostId}`)
+      validate(_res);
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeactivateHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1515,7 +1538,9 @@ export const useActivateHost = (
   return useMutation({
     mutationFn: async (hostId) => {
       const res = await ApiManager.activateHost(hostId)
-      return validate(res);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useActivateHost ... hostId: ${hostId}`)
+      validate(_res);
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useActivateHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1544,7 +1569,9 @@ export const useRestartHost = (
   return useMutation({
     mutationFn: async (hostId) => {
       const res = await ApiManager.restartHost(hostId);
-      return validate(res);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useRestartHost ... hostId: ${hostId}`)
+      validate(_res);
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRestartHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1558,6 +1585,29 @@ export const useRestartHost = (
     },
   });
 };
+export const useEnrollHostCertificate = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({
+    mutationFn: async (hostId) => {
+      const res = await ApiManager.enrollHostCertificate(hostId);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEnrollHostCertificate ... hostId: ${hostId}`)
+      validate(_res);
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEnrollHostCertificate ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('allHosts');
+      postSuccess();
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+}
 //#endregion: Host
 
 //#region: VM (가상머신)
@@ -2336,7 +2386,7 @@ export const useEditNicFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditNicFromVM ... res: ${JSON.stringify(res, null, 2)}`);
-      queryClient.invalidateQueries(['NetworkInterfaceByVMId', 'NetworkInterfaceFromVM']);
+      queryClient.invalidateQueries('NetworkInterfaceByVMId,NetworkInterfaceFromVM');
       postSuccess();      
     },
     onError: (error) => {

@@ -2,7 +2,7 @@ import Logger from "../../utils/Logger";
 import "./Loading.css";
 
 const Loading = () => {
-  Logger.debug("...");
+  Logger.debug("Loading ...")
   return (
     <div className="f-center">
       <div className="spinner" />

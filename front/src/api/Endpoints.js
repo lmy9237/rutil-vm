@@ -92,6 +92,8 @@ const ENDPOINTS = {
   ACTIVATE_HOST: (hostId) =>                                               `${ENDPOINT_API_V1}/computing/hosts/${hostId}/activate`, 
   DEACTIVATE_HOST: (hostId) =>                                             `${ENDPOINT_API_V1}/computing/hosts/${hostId}/deactivate`, 
   RESTART_HOST: (hostId) =>                                                `${ENDPOINT_API_V1}/computing/hosts/${hostId}/restart`, 
+  STOP_HOST: (hostId) =>                                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}/stop`, 
+  ENROLL_HOST_CERTIFICATE: (hostId) =>                                     `${ENDPOINT_API_V1}/computing/hosts/${hostId}/stop`, 
   //#endregion: Host
 
   //#region: Vm

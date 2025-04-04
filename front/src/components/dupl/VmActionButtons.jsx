@@ -37,6 +37,7 @@ const VmActionButtons = ({
   const isDown = status === "DOWN";
   const isMaintenance = status === "MAINTENANCE";
   const isPause = status === "PAUSE";
+  const isPoweringDown = status === "POWERING_DOWN";
   const isTemplate = status === "SUSPENDED" || status === "UP";
   const basicActions = [
     { 
@@ -61,10 +62,10 @@ const VmActionButtons = ({
       type: "shutdown", label: "종료", disabled: !isUp
       , onBtnClick: () => openModal("shutdown") 
     }, {
-      type: "powerOff", label: "전원끔", disabled: !isUp
+      type: "powerOff", label: "전원끔", disabled: !(isUp || isPoweringDown)
       , onBtnClick: () => openModal("powerOff")
     }, { 
-      type: "console", label: "콘솔", disabled: !isUp
+      type: "console", label: "콘솔", disabled: !isUp 
       , onBtnClick: () => openNewTab("console", vmId)
     }, {
       type: "snapshot", label: "스냅샷 생성",   disabled: isEditDisabled || !(isUp || isDown)

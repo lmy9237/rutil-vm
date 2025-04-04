@@ -1,8 +1,7 @@
-import React from "react";
 import { RVI16, rvi16Close, rvi16Refresh } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
-import "./SearchBox.css";
 import IconButton from "../Input/IconButton";
+import "./SearchBox.css";
 
 /**
  * @name SearchBox
@@ -29,6 +28,7 @@ const SearchBox = ({
         <RVI16 iconDef={rvi16Close}
           className="btn-search-box f-center" onClick={() => setSearchQuery("")}
         />
+        {/* END: 검색박스 */}
         {/* START: 다시 로딩 */}
         {onRefresh && (
           <IconButton iconDef={rvi16Refresh("#717171")} 
@@ -38,9 +38,6 @@ const SearchBox = ({
         )}
         {/* END: 다시 로딩 */}
        </div>
-      
-     
-
     </>
   );
 };

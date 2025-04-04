@@ -868,16 +868,30 @@ const ApiManager = {
     });
   },
   /**
-   * @name ApiManager.StopHost
+   * @name ApiManager.stopHost
    * @description 호스트 중지
    * 
    * @param {String} hostId - 호스트 ID
    * @returns {Promise<Object>} API 응답 결과
    */
-  StopHost: async (hostId) => {
+  stopHost: async (hostId) => {
     return makeAPICall({
       method: "POST",
-      url: ENDPOINTS.StopHost(hostId),  // ID를 URL에 포함
+      url: ENDPOINTS.STOP_HOST(hostId),  // ID를 URL에 포함
+      data: hostId
+    });
+  },
+  /**
+   * @name ApiManager.enrollHostCertificate
+   * @description 호스트 인증서 등록처리
+   * 
+   * @param {String} hostId - 호스트 ID
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  enrollHostCertificate: async (hostId) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.ENROLL_HOST_CERTIFICATE(hostId), // ID를 URL에 포함
       data: hostId
     });
   },
@@ -1371,10 +1385,6 @@ const ApiManager = {
    * @returns {Promise<Object>}
    */
   deleteNicFromVM: async (vmId, nicId) => {
-    console.log('DELETE NIC 요청 데이터:', { // 잘찍힘
-      vmId,
-      nicId,
-    });
     return makeAPICall({
       method: "DELETE",
       url: ENDPOINTS.DELETE_NIC_FROM_VM(vmId, nicId),
@@ -1585,22 +1595,18 @@ const ApiManager = {
       // defaultValues: DEFAULT_VALUES.EXPORT_VM
     });
   },
-/**
- * @name ApiManager.migrateHostsFromVM
- * @description 가상머신 마이그레이션 호스트목록
- * 
- * @param {String} vmId 가상 머신 ID
- */
-migrateHostsFromVM: async (vmId) => {
-  console.log(`Migrating hosts for VM with ID: ${vmId}`);  // vmId를 사용하는 API 호출 전 로그 출력
-  const response = await makeAPICall({
-    method: "GET",
-    url: ENDPOINTS.MIGRATE_HOST_LIST_VM(vmId),  // ID를 URL에 포함
-  });
-
-  console.log('API call response아아:', response);  // API 호출 후 응답 로그 출력
-  return response;  // 응답 반환
-},
+  /**
+   * @name ApiManager.migrateHostsFromVM
+   * @description 가상머신 마이그레이션 호스트목록
+   * 
+   * @param {String} vmId 가상 머신 ID
+   */
+  migrateHostsFromVM: async (vmId) => {
+    return makeAPICall({
+      method: "GET",
+      url: ENDPOINTS.MIGRATE_HOST_LIST_VM(vmId),  // ID를 URL에 포함
+    });
+  },
 
   /**
    * @name ApiManager.migrateVM

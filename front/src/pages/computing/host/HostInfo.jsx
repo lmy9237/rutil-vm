@@ -123,10 +123,10 @@ const HostInfo = () => {
       disabled: isUp,
       onClick: () => openModal("reInstall"),
     }, {
-      type: "register",
+      type: "enrollCert",
       label: "인증서 등록",
       disabled: isUp,
-      onClick: () => openModal("register"),
+      onClick: () => openModal("enrollCert"),
     }, {
       type: "haOn",
       label: "글로벌 HA 유지 관리를 활성화",

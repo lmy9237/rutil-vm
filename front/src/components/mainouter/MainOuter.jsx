@@ -319,7 +319,7 @@ const MainOuter = ({
 
   return (
     <div
-      className={`main-outer${isFooterContentVisible ? " open" : ""}`}  
+      className={`main-outer f-start${isFooterContentVisible ? " open" : ""}`}  
       onClick={handleMainClick}
     >
       <div className={asideClasses} style={asideStyles}>

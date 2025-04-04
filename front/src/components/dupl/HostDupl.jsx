@@ -7,7 +7,7 @@ import HostModals from "../modal/host/HostModals";
 import HostActionButtons from "./HostActionButtons";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
-import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
+import { status2Icon, hostedEngineStatus2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
 
@@ -73,7 +73,6 @@ const HostDupl = ({
         />
       </div>
       <TablesOuter
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         columns={columns}
         data={filteredData} 
         shouldHighlight1stCol={true}
@@ -89,6 +88,7 @@ const HostDupl = ({
             isContextMenu={true}
           />,
         ]}
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={selectedHosts}/>
 
