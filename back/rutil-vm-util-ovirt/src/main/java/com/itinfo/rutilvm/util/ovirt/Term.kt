@@ -62,6 +62,8 @@ enum class Term(
 	QUOTA("할당량"),
 	CLUSTER_QUOTA_LIMIT("클러스터 제한 할당량"),
 	CERT("인증서"),
+	JOB("작업"),
+	STEP("작업과정"),
 	UNKNOWN("알 수 없음")
 	;
 }

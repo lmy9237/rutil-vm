@@ -554,7 +554,6 @@ class HostController {
 		return ResponseEntity.ok(iHostNic.removeBondFromHost(hostId, hostNicVo))
 	}
 
-
 	@ApiOperation(
 		httpMethod="POST",
 		value="호스트 네트워크 설정",

@@ -120,6 +120,7 @@ class HostVo (
     val hostNicVos: List<HostNicVo> = listOf(),
     val vmVos: List<IdentifiedVo> = listOf(),
     val usageDto: UsageDto = UsageDto(),
+	val certificate: HCertificateVo = HCertificateVo(),
 
 ): Serializable{
     override fun toString(): String = gson.toJson(this)

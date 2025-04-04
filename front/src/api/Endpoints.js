@@ -274,11 +274,16 @@ const ENDPOINTS = {
   //#region: Event
   FIND_ALL_EVENTS: () =>                                                   `${ENDPOINT_API_V1}/events`,
   //#endregion: Event
+
+  //#region: Job
+  FIND_ALL_JOBS: () =>                                                     `${ENDPOINT_API_V1}/jobs/`,
+  FIND_JOB: (jobId) =>                                                     `${ENDPOINT_API_V1}/jobs/${jobId}`,
+  //#endregion: Job
   
   //#region: User
   FIND_ALL_USERS: () =>                                                    `${ENDPOINT_API_V1}/auth/users`,
   FIND_USER: (username) =>                                                 `${ENDPOINT_API_V1}/auth/users/${username}`,
-  UPDATE_PASSWORD_USER: (username, force) => `${ENDPOINT_API_V1}/auth/users/${username}/password?force=${force}`,
+  UPDATE_PASSWORD_USER: (username, force) =>                               `${ENDPOINT_API_V1}/auth/users/${username}/password?force=${force}`,
   //#endregion: User
   
   //#region: UserSession

@@ -10,6 +10,15 @@ import org.ovirt.engine.sdk4.types.User
 import java.io.Serializable
 import java.time.LocalDateTime
 
+/**
+ * [UserVo]
+ * 사용자 정보
+ *
+ * @property username [String] 사용자 ID
+ * @property password [String] 사용자 비밀번호
+ *
+ * @author 이찬희 (@chanhi2000)
+ */
 class UserVo(
 	var username: String = "",
 	var password: String = "",

@@ -1652,10 +1652,10 @@ const ApiManager = {
       url: ENDPOINTS.CONSOLE_VM(vmId),  // ID를 URL에 포함
     });
   },
-  //#endregion : VM ----------------------------------------------
+  //#endregion: VM ----------------------------------------------
 
 
-  //#region : Template ---------------------------------------------
+  //#region: Template ---------------------------------------------
   /**
    * @name ApiManager.findAllTemplates
    * @description 템플릿 목록
@@ -2888,6 +2888,29 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.FIND_ALL_EVENTS
   }),
   //#endregion: event
+
+  //#region: Job
+  /**
+   * @name ApiManager.findAllJobs
+   * @description 작업 목록
+   * 
+   * @returns 
+   **/
+  findAllJobs: async () => makeAPICall({
+    method: "GET",
+    url: ENDPOINTS.FIND_ALL_JOBS()
+  }),
+  /**
+   * @name ApiManager.findJob
+   * @description 작업 상세
+   * 
+   * @returns 
+   **/
+  findJob: async (jobId) => makeAPICall({
+    method: "GET",
+    url: ENDPOINTS.FIND_JOB(jobId)
+  }),
+  //#endregion: Job
 
 
   //#region: User
