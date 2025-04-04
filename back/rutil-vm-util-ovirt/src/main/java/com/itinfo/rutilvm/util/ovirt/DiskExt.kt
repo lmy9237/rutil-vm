@@ -220,8 +220,8 @@ private fun Connection.addImageTransfer(imageTransferContainer: ImageTransferCon
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.cancelImageTransfer(imageId: String): Result<Boolean?> = runCatching {
-	this.srvAllImageTransfer().imageTransferService(imageId).cancel().send()
+fun Connection.cancelImageTransfer(imageTransferId: String): Result<Boolean?> = runCatching {
+	this.srvAllImageTransfer().imageTransferService(imageTransferId).cancel().send()
 
 	true
 }.onSuccess {

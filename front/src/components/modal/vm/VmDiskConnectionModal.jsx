@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import TablesOuter from "../../table/TablesOuter";
-import { checkZeroSizeToGB, convertBytesToGB } from "../../../util";
+import { checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
 import { useConnDiskListFromVM, useFindDiskListFromDataCenter } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
@@ -155,8 +155,8 @@ const VmDiskConnectionModal = ({
             data={attDisks.length > 0 ? attDisks.map((attDisk) => ({
               ...attDisk,
               alias: attDisk?.alias,  // alias 추가
-              virtualSize: checkZeroSizeToGB(attDisk?.virtualSize),
-              actualSize: checkZeroSizeToGB(attDisk?.actualSize),
+              virtualSize: checkZeroSizeToGiB(attDisk?.virtualSize),
+              actualSize: checkZeroSizeToGiB(attDisk?.actualSize),
               storageDomain: attDisk?.storageDomainVo?.name,
               status: attDisk?.status === "UNINITIALIZED" ? "초기화되지 않음" : "UP",
               check: (

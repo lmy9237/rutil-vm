@@ -76,10 +76,10 @@ const VmActionButtons = ({
   ];
 
   const manageActions = [
-    { type: "import", label: Localization.kr.IMPORT, },
+    // { type: "import", label: Localization.kr.IMPORT, },
     { type: "copyVm", label: `${Localization.kr.VM} 복제`, disabled: isEditDisabled || !isPause },
     { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled || !isDown },
-    { type: "templates", label: "템플릿 생성", disabled: isEditDisabled || isTemplate },
+    { type: "templates", label: "템플릿 생성", disabled: isUp || isEditDisabled || isTemplate },
     { type: "ova", label: "ova로 내보내기", disabled: isEditDisabled ||  !isDown  },
   ];
 

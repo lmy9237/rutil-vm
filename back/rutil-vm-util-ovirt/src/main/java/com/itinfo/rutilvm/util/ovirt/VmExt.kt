@@ -807,14 +807,15 @@ fun Connection.findSnapshotFromVm(vmId: String, snapshotId: String, follow: Stri
 
 }
 
-fun Connection.addSnapshotFromVm(vmId: String, snapshot: Snapshot): Result<Snapshot> = runCatching {
+fun Connection.addSnapshotFromVm(vmId: String, snapshot: Snapshot): Result<Boolean> = runCatching {
 	checkVmExists(vmId)
 
-	val snapshotAdded: Snapshot =
-		this.srvSnapshotsFromVm(vmId).add().snapshot(snapshot).send().snapshot()
+	// val snapshotAdded: Snapshot =
+	this.srvSnapshotsFromVm(vmId).add().snapshot(snapshot).send()
 
-	this.expectSnapshotStatusFromVm(vmId, snapshotAdded.id(), SnapshotStatus.OK)
-	snapshotAdded
+	// this.expectSnapshotStatusFromVm(vmId, snapshotAdded.id(), SnapshotStatus.OK)
+	// snapshotAdded
+	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "생성", vmId)
 }.onFailure {
@@ -824,8 +825,8 @@ fun Connection.addSnapshotFromVm(vmId: String, snapshot: Snapshot): Result<Snaps
 
 fun Connection.removeSnapshotFromVm(vmId: String, snapshotId: String): Result<Boolean> = runCatching {
 	this.srvSnapshotFromVm(vmId, snapshotId).remove().send()
-	if (!this@removeSnapshotFromVm.isSnapshotDeletedFromVm(vmId, snapshotId))
-		return Result.failure(Error("스냅샷 삭제 시간 초과"))
+	// if (!this@removeSnapshotFromVm.isSnapshotDeletedFromVm(vmId, snapshotId))
+	// 	return Result.failure(Error("스냅샷 삭제 시간 초과"))
 	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "삭제", snapshotId)

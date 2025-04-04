@@ -29,8 +29,8 @@ const DomainTemplates = ({ domainId }) => {
         {t?.name}
       </TableRowClick>
     ),
-    // virtualSize: checkZeroSizeToGB(vm?.memoryGuaranteed),
-    // actualSize: checkZeroSizeToGB(vm?.memorySize),
+    // virtualSize: checkZeroSizeToGiB(vm?.memoryGuaranteed),
+    // actualSize: checkZeroSizeToGiB(vm?.memorySize),
     // disk: (
     //   <span 
     //     onClick={() => navigate(`/computing/vms/${vm?.id}/disks`)} 

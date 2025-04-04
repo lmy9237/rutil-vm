@@ -135,11 +135,12 @@ const VmInfo = () => {
   ];
 
   const popupItems = [
-    { 
-      type: "import", 
-      label: "가져오기", 
-      onClick: () => openModal("import") 
-    }, {
+    // { 
+    //   type: "import", 
+    //   label: "가져오기", 
+    //   onClick: () => openModal("import") 
+    // }, 
+    {
       type: "copyVm",
       label: `${Localization.kr.VM} 복제`,
       onClick: () => openModal("copyVm"),
@@ -151,6 +152,7 @@ const VmInfo = () => {
     }, {
       type: "templates",
       label: "템플릿 생성",
+      disabled: !isDown,
       onClick: () => openModal("templates"),
     }, { 
       type: "ova", 

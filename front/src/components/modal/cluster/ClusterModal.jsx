@@ -282,23 +282,6 @@ const ClusterModal = ({
         options={errorHandlingOptions}
         onChange={handleInputChange("errorHandling")}
       />
-      {/* <div>
-        <div className="cluster-form-group">
-          <div className="font-bold mb-0.5">복구정책</div>
-          {errorHandlingOptions.map((option) => (
-            <div key={option.value} className="host-text-radio-box mb-1 flex">
-              <input
-                type="radio"
-                name="recovery_policy"
-                value={option.value}
-                checked={formState.errorHandling === option.value}
-                onChange={handleInputChange("errorHandling")}
-              />
-              <label htmlFor={option.value}>{option.label}</label>
-            </div>
-          ))}
-        </div>
-      </div> */}
     </BaseModal>
   );
 };

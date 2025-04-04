@@ -8,10 +8,12 @@ import Loading from "../../../components/common/Loading";
 import HostNetworkEditModal from "../../../components/modal/host/HostNetworkEditModal";
 import HostNetworkBondingModal from "../../../components/modal/host/HostNetworkBondingModal";
 import LabelCheckbox from "../../../components/label/LabelCheckbox";
+import { Tooltip } from "react-tooltip";
+
 
 const HostNics = ({ hostId }) => {
   const { data: host } = useHost(hostId);
-  const { data: hostNics = [] } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
+  const { data: hostNics = [], isLoading: isHostNicsLoading } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
   const { data: networkAttchments = [] } = useNetworkAttachmentsFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
 
@@ -125,10 +127,24 @@ const HostNics = ({ hostId }) => {
                 <div key={nic.id} className="f-btw items-center mb-2">
                   <div className="w-[39%]">
                     {nic.bondingVo?.slaves?.length > 0 ? (
-                      <div className="container flex-col p-2 rounded">
-                        <div className="cursor-default select-none opacity-70">
+                      <div 
+                        className="container flex-col p-2 rounded"                      
+                        data-tooltip-id={`nic-tooltip-${nic.id}`}
+                        data-tooltip-html={`
+                          <div style="text-align: left;">
+                            <strong>MAC:</strong> ${nic.macAddress || "없음"}<br/>
+                            <strong>Rx 속도:</strong> ${nic.rxSpeed || "0"} Mbps<br/>
+                            <strong>총 Rx:</strong> ${nic.rxTotalSpeed || "0"} 바이트<br/>
+                            <strong>Tx 속도:</strong> ${nic.txSpeed || "0"} Mbps<br/>
+                            <strong>총 Tx:</strong> ${nic.txTotalSpeed || "0"} 바이트<br/>
+                            <strong>${nic.speed || "0"}Mbps / ${nic.pkts || "0 Pkts"}<br/>
+                          </div>
+                        `}
+                      >
+                        <div className="cursor-default select-none">
                           <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
-                          {nic.name} 
+                          {nic.name}
+                          <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
                           <RVI36 
                             iconDef={rvi36Edit} 
                             className="icon cursor-pointer"
@@ -137,7 +153,6 @@ const HostNics = ({ hostId }) => {
                               setIsBondingPopupOpen(true); 
                             }}
                           />
-                          {/* <pre>{JSON.stringify(nic, null, 2)}</pre> */}
                         </div>
                         <div className="ml-4 mt-1 text-sm">
                           {nic.bondingVo.slaves.map((slave) => {
@@ -166,6 +181,17 @@ const HostNics = ({ hostId }) => {
                       <div
                         className="container"
                         draggable
+                        data-tooltip-id={`nic-tooltip-${nic.id}`}
+                        data-tooltip-html={`
+                          <div style="text-align: left;">
+                            <strong>MAC:</strong> ${nic.macAddress || "없음"}<br/>
+                            <strong>Rx 속도:</strong> ${nic.rxSpeed || "0"} Mbps<br/>
+                            <strong>총 Rx:</strong> ${nic.rxTotalSpeed || "0"} 바이트<br/>
+                            <strong>Tx 속도:</strong> ${nic.txSpeed || "0"} Mbps<br/>
+                            <strong>총 Tx:</strong> ${nic.txTotalSpeed || "0"} 바이트<br/>
+                            <strong>${nic.speed || "0"}Mbps / ${nic.pkts || "0 Pkts"}<br/>
+                          </div>
+                        `}
                         onClick={() => {
                           setSelectedNic(nic);      // NIC 클릭 시 선택
                           setSelectedSlave(null);   // slave 선택 초기화
@@ -173,6 +199,7 @@ const HostNics = ({ hostId }) => {
                       >
                         <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
                         {nic.name}
+                        <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
                       </div>
                     )}
                   </div>
@@ -187,14 +214,18 @@ const HostNics = ({ hostId }) => {
                     <div className="w-[41%]">
                       <div
                         className="container" 
+                        
                         onClick={() => {
                           setSelectedNetwork(matchedNA.networkVo);
                         }}
                       >
-                        <div className="left-section">
+                        <div className="left-section"
+                        >
                           <RVI16 iconDef={ matchedNA.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
-                          {matchedNA.networkVo?.name || "이름 없음"}
+                          {matchedNA.networkVo?.name || "이름 없음"}<br />
+                          {`(VLAN ${matchedNA.networkVo?.id})`}
                         </div>
+                        
                         <div className="right-section">
                           {/* <FontAwesomeIcon icon={faDesktop} className="icon" /> */}
                           <RVI36 
@@ -224,7 +255,6 @@ const HostNics = ({ hostId }) => {
           <div><strong>선택된 네트워크 ID:</strong> <span>{selectedNetwork?.id || "없음"}</span></div>
         </div>
 
-
         <div
           className="network-separation-right"
           onDragOver={(e) => e.preventDefault()}
@@ -232,7 +262,6 @@ const HostNics = ({ hostId }) => {
           <div className="unassigned-network">
             <div>할당되지 않은 논리 네트워크</div>
           </div>
-
           {transUnNetworkData?.map((net) => (
             <div
               key={net.id}

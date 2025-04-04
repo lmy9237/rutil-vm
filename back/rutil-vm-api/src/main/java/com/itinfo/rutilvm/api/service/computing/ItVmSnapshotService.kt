@@ -37,10 +37,10 @@ interface ItVmSnapshotService {
 	 *
 	 * @param vmId
 	 * @param snapshotVo
-	 * @return [SnapshotVo]
+	 * @return [Boolean]
 	 */
 	@Throws(Error::class)
-	fun addFromVm(vmId: String, snapshotVo: SnapshotVo): SnapshotVo?
+	fun addFromVm(vmId: String, snapshotVo: SnapshotVo): Boolean?
 	/**
 	 * [ItVmSnapshotService.removeFromVm]
 	 * 스냅샷 삭제
@@ -125,13 +125,13 @@ class VmSnapshotServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun addFromVm(vmId: String, snapshotVo: SnapshotVo): SnapshotVo? {
+	override fun addFromVm(vmId: String, snapshotVo: SnapshotVo): Boolean? {
 		log.info("addFromVm ... ")
-		val res: Snapshot? = conn.addSnapshotFromVm(
+		val res: Result<Boolean> = conn.addSnapshotFromVm(
 			vmId,
 			snapshotVo.toSnapshotBuilder()
-		).getOrNull()
-		return res?.toSnapshotVo()
+		)
+		return res.isSuccess
 	}
 
 	@Throws(Error::class)

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TableRowClick from '../../../components/table/TableRowClick';
 import { useAllDisksFromTemplate, useStroageDomain } from '../../../api/RQHook';
-import { checkZeroSizeToGB, convertBytesToGB } from '../../../util';
+import { checkZeroSizeToGiB, convertBytesToGB } from '../../../util';
 import { Tooltip } from 'react-tooltip';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import TablesOuter from '../../../components/table/TablesOuter';
@@ -20,9 +20,9 @@ const StorageDomainWithTooltip = ({ domainId }) => {
           ? '로딩 중...'
           : <>
               {/* {storageDomain?.name || '정보 없음'}<br /> */}
-              크기: {checkZeroSizeToGB(storageDomain?.diskSize)}<br />
-              사용 가능: {checkZeroSizeToGB(storageDomain?.availableSize)}<br />
-              사용됨: {checkZeroSizeToGB(storageDomain?.usedSize)}<br />
+              크기: {checkZeroSizeToGiB(storageDomain?.diskSize)}<br />
+              사용 가능: {checkZeroSizeToGiB(storageDomain?.availableSize)}<br />
+              사용됨: {checkZeroSizeToGiB(storageDomain?.usedSize)}<br />
             </>
         }
       </Tooltip>
@@ -55,8 +55,8 @@ const TemplateDisks = ({ templateId }) => {
           {disk?.alias}
         </TableRowClick>
       ),
-      virtualSize: convertBytesToGB(disk?.virtualSize) + " GB",
-      actualSize: checkZeroSizeToGB(disk?.actualSize),
+      virtualSize: checkZeroSizeToGiB(disk?.virtualSize),
+      actualSize: checkZeroSizeToGiB(disk?.actualSize),
       creationTime: disk?.createDate || 'N/A',
       storageDomainId: disk?.storageDomainVo?.id,
       storageDomainName: disk?.storageDomainVo ? (

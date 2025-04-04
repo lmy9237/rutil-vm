@@ -9,7 +9,7 @@ import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 import { status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
-import { checkZeroSizeToGB } from "../../util";
+import { checkZeroSizeToGiB } from "../../util";
 import Logger from "../../utils/Logger";
 
 
@@ -50,8 +50,8 @@ const DiskDupl = ({
           {d?.connectVm?.name || d?.connectTemplate?.name}
         </TableRowClick>
       ),
-      virtualSize: checkZeroSizeToGB(d?.virtualSize),
-      actualSize: checkZeroSizeToGB(d?.actualSize),
+      virtualSize: checkZeroSizeToGiB(d?.virtualSize),
+      actualSize: checkZeroSizeToGiB(d?.actualSize),
     };
 
     // ✅ 검색 필드 추가 (모든 데이터를 하나의 문자열로 만듦)

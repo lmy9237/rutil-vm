@@ -5,7 +5,7 @@ import DomainActionButtons from "./DomainActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import DomainModals from "../modal/domain/DomainModals";
 import SearchBox from "../button/SearchBox"; // ✅ 검색 UI 추가
-import { checkZeroSizeToGB, convertBytesToGB } from "../../util";
+import { checkZeroSizeToGiB, convertBytesToGB } from "../../util";
 import Localization from "../../utils/Localization";
 import TableRowClick from "../table/TableRowClick";
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
@@ -57,9 +57,9 @@ const DomainDupl = ({
         : domain?.storageType === "iscsi"
             ? "iSCSI"
             : "Fibre Channel",
-    diskSize: checkZeroSizeToGB(domain?.diskSize),
-    availableSize: checkZeroSizeToGB(domain?.availableSize),
-    usedSize: checkZeroSizeToGB(domain?.usedSize),
+    diskSize: checkZeroSizeToGiB(domain?.diskSize),
+    availableSize: checkZeroSizeToGiB(domain?.availableSize),
+    usedSize: checkZeroSizeToGiB(domain?.usedSize),
     searchText: `${domain?.name} ${domain?.domainType} ${domain?.storageType} ${convertBytesToGB(domain?.diskSize)}GB`
   }));
 

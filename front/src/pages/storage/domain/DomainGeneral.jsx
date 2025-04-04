@@ -1,6 +1,6 @@
 import React from "react";
 import { useStroageDomain } from "../../../api/RQHook";
-import { checkZeroSizeToGB, convertBytesToGB } from "../../../util";
+import { checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
 import InfoTable from "../../../components/table/InfoTable";
 
 const overCommit = (commit, disk) => ((commit / disk) * 100).toFixed(0);
@@ -17,10 +17,10 @@ const DomainGeneral = ({ domainId }) => {
 
   const tableRows = [
     { label: "ID", value: domain?.id },
-    { label: "크기", value: checkZeroSizeToGB(domain?.diskSize) },
-    { label: "사용 가능", value: checkZeroSizeToGB(domain?.availableSize) },
-    { label: "사용됨", value: checkZeroSizeToGB(domain?.usedSize) },
-    { label: "할당됨", value: checkZeroSizeToGB(domain?.commitedSize) },
+    { label: "크기", value: checkZeroSizeToGiB(domain?.diskSize) },
+    { label: "사용 가능", value: checkZeroSizeToGiB(domain?.availableSize) },
+    { label: "사용됨", value: checkZeroSizeToGiB(domain?.usedSize) },
+    { label: "할당됨", value: checkZeroSizeToGiB(domain?.commitedSize) },
     {
       label: "오버 할당 비율",
       value: overCommit(domain?.availableSize, domain?.diskSize) + " %",

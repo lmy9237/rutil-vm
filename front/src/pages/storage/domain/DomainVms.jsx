@@ -3,7 +3,7 @@ import Loading from '../../../components/common/Loading';
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import { useAllVMsFromDomain } from '../../../api/RQHook';
-import { checkZeroSizeToGB } from '../../../util';
+import { checkZeroSizeToGiB } from '../../../util';
 import TableRowClick from '../../../components/table/TableRowClick';
 import { useNavigate } from 'react-router-dom';
 import Logger from '../../../utils/Logger';
@@ -33,8 +33,8 @@ const DomainVms = ({ domainId }) => {
         {vm?.name}
       </TableRowClick>
     ),
-    virtualSize: checkZeroSizeToGB(vm?.memoryGuaranteed),
-    actualSize: checkZeroSizeToGB(vm?.memorySize),
+    virtualSize: checkZeroSizeToGiB(vm?.memoryGuaranteed),
+    actualSize: checkZeroSizeToGiB(vm?.memorySize),
     disk: (
       <span 
         onClick={() => navigate(`/computing/vms/${vm?.id}/disks`)} 

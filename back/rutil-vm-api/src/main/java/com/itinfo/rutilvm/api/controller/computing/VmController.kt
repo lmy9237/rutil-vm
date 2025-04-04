@@ -1120,7 +1120,7 @@ class VmController: BaseController() {
 	fun addSnapshot(
 		@PathVariable vmId: String? = null,
 		@RequestBody snapshot: SnapshotVo? = null,
-	): ResponseEntity<SnapshotVo?> {
+	): ResponseEntity<Boolean?> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		if (snapshot == null)

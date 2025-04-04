@@ -8,7 +8,7 @@ import SearchBox from "../../../components/button/SearchBox";
 import useSearch from "../../../components/button/useSearch";
 import ActionButton from "../../../components/button/ActionButton";
 import SelectedIdView from "../../../components/common/SelectedIdView";
-import { checkZeroSizeToGB } from "../../../util";
+import { checkZeroSizeToGiB } from "../../../util";
 import Logger from "../../../utils/Logger";
 import { useAllUnregisteredDisksFromDomain } from "../../../api/RQHook";
 
@@ -36,10 +36,10 @@ const DomainImportDisks = ({ domainId }) => {
     ...disk,
     alias: disk?.alias,
     sparse: disk?.sparse ? "씬 프로비저닝" : "사전 할당",
-    virtualSize: checkZeroSizeToGB(disk?.virtualSize),
-    actualSize: checkZeroSizeToGB(disk?.actualSize),
+    virtualSize: checkZeroSizeToGiB(disk?.virtualSize),
+    actualSize: checkZeroSizeToGiB(disk?.actualSize),
     // ✅ 검색을 위한 text 필드 추가
-    searchText: `${disk?.alias} ${disk?.sparse ? "씬 프로비저닝" : "사전 할당"} ${checkZeroSizeToGB(disk?.virtualSize)} ${checkZeroSizeToGB(disk?.actualSize)}`.toLowerCase(),
+    searchText: `${disk?.alias} ${disk?.sparse ? "씬 프로비저닝" : "사전 할당"} ${checkZeroSizeToGiB(disk?.virtualSize)} ${checkZeroSizeToGiB(disk?.actualSize)}`.toLowerCase(),
   }));
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   const handleNameClick = (id) => navigate(`/computing/templates/${id}`);

@@ -1,7 +1,7 @@
 import React, { Suspense, useState } from 'react';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import VmSnapshotModal from '../../../components/modal/vm/VmSnapshotModal';
-import { useSnapshotsFromVM } from '../../../api/RQHook';
+import { useSnapshotsFromVM, useVm } from '../../../api/RQHook';
 import { convertBytesToMB } from '../../../util';
 import TablesRow from '../../../components/table/TablesRow';
 import DeleteModal from '../../../utils/DeleteModal';
@@ -11,6 +11,13 @@ import Localization from '../../../utils/Localization';
 import Loading from '../../../components/common/Loading';
 
 const VmSnapshots = ({ vmId }) => {
+  const {
+    data: vm,
+    isLoading: isVmLoading,
+    isError: isVmError,
+    isSuccess: isVmSuccess,
+  } = useVm(vmId);
+
   const {
     data: snapshots = [],
     isLoading: isSnapshotsLoading,
@@ -123,7 +130,7 @@ const VmSnapshots = ({ vmId }) => {
           <VmSnapshotModal
             isOpen
             onClose={closeModal}
-            vmId={vmId}
+            selectedVm={vm}
             // diskData={disks}
           />
         )}

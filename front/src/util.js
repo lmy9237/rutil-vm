@@ -48,7 +48,7 @@ export function checkName(name) {
  */
 export function formatNumberWithCommas(number) {
   const res = number.toLocaleString(); // Locale 기반 쉼표 포맷
-  Logger.debug(`util > formatNumberWithCommas ... number: ${number}, res: ${res}`);
+  // Logger.debug(`util > formatNumberWithCommas ... number: ${number}, res: ${res}`);
   return res;
 }
 
@@ -61,7 +61,7 @@ export function formatNumberWithCommas(number) {
  */
 export function convertBytesToMB(bytes) {
   const res = (bytes / (1024 * 1024)).toFixed(0);
-  Logger.debug(`util > convertBytesToMB ... bytes: ${bytes}, res: ${res}`);
+  Logger.debug(`util > convertBytesToMB ... bytes: ${bytes}, res: ${res}`); // 무한 루푸가 외 
   return res
 }
 
@@ -117,15 +117,15 @@ export function sizeToBytes(size) {
 }
 
 /**
- * @name checkZeroSizeToGB
+ * @name checkZeroSizeToGiB
  * @description 
  * 
  * @param {number} size 
  * @returns {string} 변환 된 값
  */
-export function checkZeroSizeToGB(size) {
-  const res = convertBytesToGB(size) < 1 ? "< 1 GB" : `${convertBytesToGB(size)} GB`
-  Logger.debug(`util > checkZeroSizeToGB ... size: ${size}, res: ${res}`);
+export function checkZeroSizeToGiB(size) {
+  const res = convertBytesToGB(size) < 1 ? "< 1 GiB" : `${convertBytesToGB(size)} GiB`
+  Logger.debug(`util > checkZeroSizeToGiB ... size: ${size}, res: ${res}`);
   return res;
 }
 

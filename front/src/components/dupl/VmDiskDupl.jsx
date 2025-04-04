@@ -2,7 +2,7 @@ import { Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import VmDiskModals from "../modal/vm/VmDiskModals";
 import VmDiskActionButtons from "./VmDiskActionButtons";
-import { checkZeroSizeToGB } from "../../util";
+import { checkZeroSizeToGiB } from "../../util";
 import { useVm } from "../../api/RQHook";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
@@ -64,8 +64,8 @@ const VmDiskDupl = ({
       interface: d?.interface_,
       storageType: diskImage?.storageType,
       sparse: diskImage?.sparse ? "씬 프로비저닝" : "사전 할당",
-      virtualSize: checkZeroSizeToGB(diskImage?.virtualSize),
-      actualSize: checkZeroSizeToGB(diskImage?.actualSize),
+      virtualSize: checkZeroSizeToGiB(diskImage?.virtualSize),
+      actualSize: checkZeroSizeToGiB(diskImage?.actualSize),
       storageDomain: (
         <TableRowClick type="domain" id={diskImage?.storageDomainVo?.id}>
           {diskImage?.storageDomainVo?.name}

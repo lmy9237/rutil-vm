@@ -337,7 +337,6 @@ const NetworkModal = ({
         
         {!editMode && (
           <div className="network-new-cluster-form mt-3">
-       
             <hr />
             <span className="mt-3 block">클러스터에서 네트워크를 연결/분리</span>
             <TablesOuter
