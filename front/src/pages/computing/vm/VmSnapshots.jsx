@@ -6,7 +6,7 @@ import { convertBytesToMB } from '../../../util';
 import TablesRow from '../../../components/table/TablesRow';
 import DeleteModal from '../../../utils/DeleteModal';
 import ActionButton from '../../../components/button/ActionButton';
-import { RVI16, rvi16ChevronDown, rvi16ChevronRight, RVI24 } from '../../../components/icons/RutilVmIcons';
+import { RVI16, rvi16ChevronDown, rvi16ChevronRight, rvi16Desktop, rvi16Location, rvi16Pause, RVI24 } from '../../../components/icons/RutilVmIcons';
 import Localization from '../../../utils/Localization';
 import Loading from '../../../components/common/Loading';
 
@@ -77,14 +77,17 @@ const VmSnapshots = ({ vmId }) => {
 
           {/* 항상 현재 위치 표시 */}
           <div className="snapshot-item f-start">
-              <RVI16 iconDef={rvi16ChevronDown} />
-              <div className='snapshot-label'>현재 위치</div>
+            <RVI16 iconDef={rvi16ChevronDown} />
+            <div className='snapshot-label  f-center'>
+              <RVI16 iconDef={rvi16Location} className="mr-1.5 ml-2.5" />
+              현재 위치
             </div>
-          
+          </div>
+   
           {isSnapshotsLoading && (<Loading/>)}
 
           {/*스냅샷없을때*/}
-          {!isSnapshotsLoading && transformedData?.length === 0 && (<div className="no-snapshot">스냅샷이 없습니다(디자인X)</div>)}
+          {!isSnapshotsLoading && transformedData?.length === 0 && (<></>)}
 
           {transformedData?.length > 0 && transformedData?.map((snapshot) => (
             <div
@@ -101,25 +104,28 @@ const VmSnapshots = ({ vmId }) => {
                     : rvi16ChevronRight
                 }
               />
-              <div className='snapshot-label'>{" " + snapshot?.description + "  /  " + snapshot?.date}</div>
+              <div className='snapshot-label f-center'>
+                <RVI16 iconDef={rvi16Desktop} className="mr-1.5 ml-2.5" />
+                {" " + snapshot?.description + "  /  " + snapshot?.date}
+              </div>
 
           
             </div>
           ))}
         </div>
-
+        
+        <div className="vm-snap-item">
           {selectedSnapshot ? (
-            <div className=" vm-snap-item">
-              <TablesRow
-                columns={TableColumnsInfo.SNAPSHOT_INFO_FROM_VM}
-                data={selectedSnapshot}
-              />
-            </div>
+            <TablesRow
+              columns={TableColumnsInfo.SNAPSHOT_INFO_FROM_VM}
+              data={selectedSnapshot}
+            />
           ) : (
-            <div className="abc" style={{ padding: '10px', width: '40%' }}>
-              <span></span>
+            <div style={{ padding: '20px', minHeight: '100px', color: '#999' }}>
+              스냅샷을 선택하면 상세 정보가 여기에 표시됩니다.
             </div>
           )}
+        </div>
       </div>
 
       <Suspense>
