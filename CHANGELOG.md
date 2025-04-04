@@ -28,6 +28,144 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@lmy9237][lmy9237]
 -->
 
+## 0.2.5 - 2025-04-04
+
+### [`api-v0.2.5`][api-v0.2.5]: 백엔드
+
+ 
+#### Added
+
+<!-- - [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237] -->
+
+#### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - 사용자 API 안정화: 예외처리 (잠금 및 비밀번호 불일치)
+- [@dhj27][dhj27]
+  - 로그 알림 (에러처리)
+  - Network 모달 정리
+    - dns 추가 (api자체 문제있음)
+  - 운영시스템 변경
+    - linux에서 window로 갈때 timezone 변경하여 운영시스템 변경 적용
+  - 기능개선: 호스트 네트워크 API 수정.
+- [@lmy9237][lmy9237]
+
+#### Removed 
+
+<!-- - [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237] -->
+
+
+### [`web-v0.2.5`][web-v0.2.5]: 프론트
+
+#### Added
+
+- [@chanhi2000][chanhi2000]
+  - 일반
+    - PagingTable 페이지 별 기본 개수 값 변수화 (`CONSTANT.itemsPerPage`)
+    - 목록화면에서 (검색화면 옆) Reloading 버튼 구현
+  - VM 목록
+    - 아이콘 추가 (`POWERING_UP`: 전원 켜는 중)
+  - Host 목록
+    - 아이콘 추가 (`INSTALLING`: 설치 중)
+- [@dhj27][dhj27]
+  - VM 목록 > 마이그레이션 적용
+- [@lmy9237][lmy9237]
+  - 일반
+    - nav 우클릭박스 제작
+    - Footer 창사이즈 조절 드레그 기능 생성
+    - 로딩 중 뷰 Spinner 표출
+
+#### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - 로그인 
+    - API 안정화
+    - `FooterCompany` 표출내용 생략 기능 추갸
+  - 사용자 > 생성/편집 Modal
+    - 잠금해제 처리 기능 보강
+      - 비활성화일 떄 로그인 방지
+      - 사용자 관리 UI 및 API 통신 처리강화
+  - VM > VNC
+    - Vnc화면 스크린샷 구현 (진행 중)
+  - VM 생성/편집 Modal
+    - 코어당 쓰레드: 최소공배수 형태로 select 구성
+  - Host 목록
+    - 상태에 따른 재시작 및 HA 설정 활성화 상태 정정
+  - Event 목록
+    - 아이콘 심각도 처리 정정
+  - 일반
+    - React Query Hook 전면 수정
+      - 에러 및 예외 메시지 필터링 및 표출처리 강화
+    - Toast 긴 메시지 표출 개선
+    - Modal 편집: 용어 변경 `편집` -> `확인`
+    - 큰 화면 border 스타일 통일
+    - Tooltip 출력 스타일 개선 (맨 앞으로, 메시지 중간정렬)
+- [@dhj27][dhj27]
+  - Network 목록: 데이터센터 datacenterVo, `comment` 값 출력
+  - Network 모달 정리
+    - 데이터센터 아이디에 따른 클러스터 목록 변화
+    - DNS 추가 (api자체 문제있음)
+  - VM 생성/편집 Modal 
+    - 운영시스템 변경
+      - VM up 상태에서는 운영시스템 변경 안됨
+      - linux에서 window로 갈때 timezone 변경하여 운영시스템 변경 적용
+      - 최적화 옵션 변경 적용
+      - 칩셋/펌웨어 유형 변경 적용
+  - Host Network 페이지 개선.
+  - Template 생성
+  - Snapshot 생성 이름 수정
+- [@lmy9237][lmy9237]
+  - Host 목록 > 관리 버튼 > Select 메뉴 스타일 일관화
+  - VM 상세: Snapshot, NIC 수정
+  - VM 생성/편집 Modal 
+    - 명칭: `인스턴스 이미지` 를 `가상 디스크` 로 변경
+    - 스타일: 부트옵션 CD/DVD 연결 Select박스 width 정상화
+    - 인스턴스 이미지 항목 아이콘 hover처리
+    - Sub메뉴 right-border 높이 전체가 아닌 것 수정
+    - Template 선택 박스 Blank일 때, 선택항목 자체를 은닉
+    - Host 선택 (클릭 시 선택 상태 유지 하도록, 다중선택)
+    - 메모리 크기 변경 시
+      - 최대 메모리: 메모리크기 x 4
+      - 할당할 실제 메모리: 메모리크기와 같음
+    - 총 가상 cpu 값 설정 안되는것 수정
+  - VM > Disk
+    -  검색 탭 위치 한 열로
+    - 테이블 위 항목 검색창 구조변경
+  - VM > Snapshot: (내용 0개일 때) 보여주기
+  - Network > Host목록
+    -  항목 선택 후 `호스트 네트워크 설정` 버튼 선택 시,
+      - 호스트 > 네트워크 인터페이스 화면으로 navigate
+      - 호스트 네트워크 설정 Modal 비활성화
+  - 일반
+    - 상세화면 사이드메뉴 > hover 시 색 적용 (연한 회색)
+    - Dashboard 그래프와 그리드박스 간격맞추기
+    - Dashboard 한화면에 그래프 보이게하기(스크롤X)
+    - Dashboard Horizontal Bar 그래프 Top3이기 때문에
+    - `width`: 1개든 2개든 넓이는 동일하게
+    - orientation: 최상위 고정
+      - 추가버튼 `[+]` 제거
+      - 삭제버튼 휴지통 아이콘
+    - Toast 가운데로 텍스트 나오는 것 왼쪽으로 정렬
+    - Paging Table 기본 개수 설정 (20)
+    - VM > action Button 설정 다시 맞추기
+    - VM > action Modal UI 수정
+    - VM, Host actionm Modal 수정
+
+
+#### Removed 
+
+- [@chanhi2000][chanhi2000]
+  - 불필요한 의존 컴포넌트 제거
+<!--
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+-->
+
+
 ## 0.2.4 - 2025-03-28
 
 ### [`api-v0.2.4`][api-v0.2.4]: 백엔드
@@ -467,6 +605,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[web-v0.2.5]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.4...web-v0.2.5
+[api-v0.2.5]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.4...api-v0.2.5
 [web-v0.2.4]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.3...web-v0.2.4
 [api-v0.2.4]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.3...api-v0.2.4
 [web-v0.2.3]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.2...web-v0.2.3

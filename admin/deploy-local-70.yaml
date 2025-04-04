@@ -89,6 +89,7 @@ services:
       NODE_ENV: production
       __RUTIL_VM_OVIRT_IP_ADDRESS__: 192.168.0.70
       __RUTIL_VM_LOGGING_ENABLED__: true
+      __RUTIL_VM_ITEMS_PER_PAGE__: 20
     volumes:
       - ./rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro
@@ -112,6 +113,8 @@ services:
       LC_ALL: ko_KR.UTF-8
       LANG: ko_KR.utf8
       PORT: 9999
+    volumes:
+      - ./rutil-vm/certs/fullchain.pem:/home/node/fullchain.pem:ro
     networks:
       - ovirt_network
     restart: always # undefined으로 인자가 갈 때 죽음

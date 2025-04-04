@@ -55,7 +55,6 @@ interface ItHostOperationService {
      * @param hostId [String] 호스트 아이디
      * @return [Boolean]
      */
-	@Deprecated("사용안함")
     @Throws(Error::class)
     fun enrollCertificate(hostId: String): Boolean
     /**
@@ -120,8 +119,6 @@ class HostOperationServiceImpl(
         return res?.isSuccess == true
     }
 
-    // TODO 인증서 등록에 대한 조건이 뭔지 모르겠음 (활성화 조건을 모름)
-	@Deprecated("사용안함")
     @Throws(Error::class)
     override fun enrollCertificate(hostId: String): Boolean {
         log.info("enrollCertificate ... hostId: {}", hostId)

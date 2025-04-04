@@ -88,6 +88,8 @@ services:
       LANG: ko_KR.utf8
       NODE_ENV: production
       __RUTIL_VM_OVIRT_IP_ADDRESS__: 192.168.0.180
+      __RUTIL_VM_LOGGING_ENABLED__: true
+      __RUTIL_VM_ITEMS_PER_PAGE__: 25
     volumes:
       - ./rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro
@@ -100,6 +102,23 @@ services:
 #      retries: 3
     restart: always # undefined으로 인자가 갈 때 죽음
 
+  rutil-vm-wsproxy:
+    image: ititcloud/rutil-vm-wsproxy:latest
+    container_name: rutil-vm-wsproxy
+    ports:
+      - "9999:9999"
+    environment:
+      TZ: Asia/Seoul
+      LANGUAGE: ko_KR;ko;en_US;en
+      LC_ALL: ko_KR.UTF-8
+      LANG: ko_KR.utf8
+      PORT: 9999
+    volumes:
+      - ./rutil-vm/certs/fullchain.pem:/home/node/fullchain.pem:ro
+    networks:
+      - ovirt_network
+    restart: always # undefined으로 인자가 갈 때 죽음
+    
 networks:
   ovirt_network:
     driver: bridge

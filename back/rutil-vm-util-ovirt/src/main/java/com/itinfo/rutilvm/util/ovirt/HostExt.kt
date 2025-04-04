@@ -205,7 +205,7 @@ fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 
 fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
-	this.srvHost(hostId).enrollCertificate().send()
+	this.srvHost(hostId).enrollCertificate().async(true).send()
 	true
 
 }.onSuccess {
