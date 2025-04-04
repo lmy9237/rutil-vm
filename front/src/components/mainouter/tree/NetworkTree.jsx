@@ -9,6 +9,7 @@ import {
 import { useAllTreeNavigations } from "../../../api/RQHook";
 import NetworkActionButtons from "../../dupl/NetworkActionButtons";
 import Logger from "../../../utils/Logger";
+import DataCenterActionButtons from "../../dupl/DataCenterActionButtons";
 
 
 const NetworkTree = ({
@@ -100,6 +101,29 @@ const NetworkTree = ({
                   }, "network");
                 }}
               />
+            {/* 👇 데이터센터 우클릭 시 context 메뉴 표시 */}
+            {contextMenu?.item?.id === dataCenter.id &&
+              contextMenu?.item?.type === "dataCenter" && (
+                <div
+                  className="right-click-menu-box context-menu-item"
+                  ref={menuRef}
+                  style={{
+                    position: "fixed",
+                    top: contextMenu.mouseY,
+                    left: contextMenu.mouseX,
+                    background: "white",
+                    zIndex: "9999",
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <DataCenterActionButtons
+                    selectedDataCenters={[contextMenu.item]}
+                    status="single" // 또는 contextMenu.item.status가 있으면 그걸로
+                    actionType="context"
+                    onCloseContextMenu={() => onContextMenu(null)}
+                  />
+                </div>
+            )}
 
               {/* 레벨 3: 네트워크 */}
               {isDataCenterOpen &&
@@ -153,6 +177,7 @@ const NetworkTree = ({
                             status={contextMenu.item?.status}
                             actionType="context"
                             isContextMenu={true}
+                            onCloseContextMenu={() => onContextMenu(null)} 
                           />
                         </div>
                     )}

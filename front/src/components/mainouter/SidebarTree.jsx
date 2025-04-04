@@ -112,9 +112,7 @@ useEffect(() => {
   };
 
   document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
+  return () => document.removeEventListener("mousedown", handleClickOutside);
 }, [contextMenu]);
   
   return (
@@ -137,7 +135,8 @@ useEffect(() => {
           getBackgroundColor={getBackgroundColor}
           getPaddingLeft={getPaddingLeft}
           onContextMenu={openContextMenu} 
-          contextMenu={contextMenu}        
+          contextMenu={contextMenu}      
+          closeContextMenu={closeContextMenu}  
           menuRef={menuRef} 
        />
       )}

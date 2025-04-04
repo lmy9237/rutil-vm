@@ -17,7 +17,6 @@ import SelectedIdView from "../../../components/common/SelectedIdView";
  * @returns {JSX.Element} NetworkTemplates
  */
 const NetworkTemplates = ({ networkId }) => {
-  const navigate = useNavigate();
   const { 
     data: templates = [],
     isLoading: isTemplatesLoading,
@@ -52,7 +51,7 @@ const NetworkTemplates = ({ networkId }) => {
   Logger.debug("...")
   return (
     <>
-      <div className="header-right-btns">
+      <div className="header-right-btns no-search-box">
         {/* 제거 버튼에 openDeleteModal 핸들러 연결 */}
           <ActionButton
             label="제거"

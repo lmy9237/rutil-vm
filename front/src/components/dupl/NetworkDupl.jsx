@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import NetworkActionButtons from "./NetworkActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
-import NetworkModals from "../modal/network/NetworkModals";
 import SearchBox from "../button/SearchBox";
 import useSearch from "../button/useSearch";
 import Localization from "../../utils/Localization";
@@ -26,7 +25,6 @@ const NetworkDupl = ({
   isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null);
   const [selectedNetworks, setSelectedNetworks] = useState([]);
 
   // 데이터를 변환 (검색 가능하도록 `searchText` 필드 추가)
@@ -59,9 +57,6 @@ const NetworkDupl = ({
   // 변환된 데이터에서 검색 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
 
-  // 모달 열기 / 닫기
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
   const handleNameClick = (id) => navigate(`/networks/${id}`);
   const handleRefresh = () =>  {
     Logger.debug(`NetworkDupl > handleRefresh ... `)
@@ -81,7 +76,7 @@ const NetworkDupl = ({
           />
         )}
         <NetworkActionButtons 
-          openModal={openModal}
+          selectedNetworks={selectedNetworks} 
           isEditDisabled={selectedNetworks.length !== 1}
           isDeleteDisabled={selectedNetworks.length === 0}
         />
@@ -102,7 +97,6 @@ const NetworkDupl = ({
         multiSelect={true} 
         onContextMenuItems={(row) => [
           <NetworkActionButtons
-            openModal={openModal}
             status={row?.status}
             selectedNetworks={[row]}
             actionType="context"
@@ -114,13 +108,13 @@ const NetworkDupl = ({
       <SelectedIdView items={selectedNetworks} />
 
       {/* 네트워크 모달창 */}
-      <NetworkModals
+      {/* <NetworkModals
         activeModal={activeModal}
         network={activeModal === "edit" ? selectedNetworks[0] : null}
         selectedNetworks={selectedNetworks}
         onClose={closeModal}
         withModal // 🔥 내부에서 모달 제어하게 함
-      />
+      /> */}
     </div>
   );
 };

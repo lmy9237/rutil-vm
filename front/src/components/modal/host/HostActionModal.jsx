@@ -91,16 +91,10 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
       targetName={Localization.kr.HOST}
       submitTitle={getContentLabel(action)}
       onSubmit={handleFormSubmit}
+      promptText={`${names.join(", ")} 를(을) ${getContentLabel(action)}하시겠습니까?`}
       contentStyle={{ width: "630px" }} 
+      shouldWarn={true}
     >
-      <div className="disk-delete-box">
-        <div>
-          <FontAwesomeIcon style={{ marginRight: "0.3rem" }} icon={faExclamationTriangle} />
-          <span>
-            {names.join(", ")} 를(을) {getContentLabel(action)} 하시겠습니까?
-          </span>
-        </div>
-      </div>
     </BaseModal>
   );
 };

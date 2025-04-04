@@ -31,7 +31,7 @@ const DomainDiskSnapshots = ({ domainId }) => {
 
   return (
     <>
-      <div className="header-right-btns">
+      <div className="header-right-btns no-search-box">
         <ActionButton
           label="제거"
           actionType="default"

@@ -44,7 +44,7 @@
   font-size: var(--fs-default);
   z-index: 9999;
 }
-@media screen and (min-width: 2000px) {
+@media screen and (min-width: 2800px) {
   .grid-container {
     display: grid;
     grid-template-columns: repeat(5, 1fr);

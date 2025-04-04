@@ -73,7 +73,7 @@ const AreaChart = ({ series, datetimes }) => {
       let width = Math.max(containerWidth * 0.95, 230); // 기본 너비
       let height = Math.max(window.innerHeight * 0.14, 100); // 기본 높이
 
-      if (window.innerWidth >= 2000) {
+      if (window.innerWidth >= 2200) {
         width = Math.max(containerWidth * 1, 550); // 🔥 2000px 이상일 때 더 크게
         height = Math.max(window.innerHeight * 0.21, 230);
       }

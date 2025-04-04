@@ -111,7 +111,6 @@
 .row-click {
   color: var(--color-primary);
   cursor: pointer;
-
 }
 .row-click:hover {
   text-decoration: underline;

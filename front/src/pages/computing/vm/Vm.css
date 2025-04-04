@@ -117,6 +117,7 @@
   width: 49%;
   padding: 24px 40px;
   border-radius: 8px;
+  background: yellow;
 }
 .snapshot-label{
   font-size: var(--fs-14);

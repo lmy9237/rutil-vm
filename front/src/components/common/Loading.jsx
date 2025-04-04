@@ -1,13 +1,14 @@
-import React from 'react'
-
-import "./Loading.css"
-import Logger from '../../utils/Logger'
+import Logger from "../../utils/Logger";
+import "./Loading.css";
 
 const Loading = () => {
-  Logger.debug("...")
+  Logger.debug("...");
   return (
-    <span>🌀 로딩중 ...</span>
-  )
-}
+    <div className="f-center">
+      <div className="spinner" />
+      <span>로딩중 ...</span>
+    </div>
+  );
+};
 
-export default Loading
+export default Loading;

@@ -1,4 +1,4 @@
-// import "./TableRow.css";
+import Loading from "../common/Loading";
 
 /**
  * @name TableRowLoading
@@ -9,8 +9,10 @@
  */
 const TableRowLoading = ({colLen}) => {
   return (
-    <tr className="text-center h-[10vh]">
-      <td colSpan={colLen}>🌀 로딩중 ...</td>
+    <tr className="h-[10vh]">
+      <td colSpan={colLen} className="table-loading-outer"> 
+        <Loading />
+      </td>
     </tr>
   );
 };

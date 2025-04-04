@@ -8,6 +8,7 @@ import DeleteModal from '../../../utils/DeleteModal';
 import ActionButton from '../../../components/button/ActionButton';
 import { RVI16, rvi16ChevronDown, rvi16ChevronRight, RVI24 } from '../../../components/icons/RutilVmIcons';
 import Localization from '../../../utils/Localization';
+import Loading from '../../../components/common/Loading';
 
 const VmSnapshots = ({ vmId }) => {
   const {
@@ -41,7 +42,7 @@ const VmSnapshots = ({ vmId }) => {
 
   return (
     <>
-      <div className="header-right-btns">
+      <div className="header-right-btns no-search-box">
         <ActionButton actionType="default"
           label={Localization.kr.CREATE}
           onClick={() => openModal("create")}
@@ -62,18 +63,23 @@ const VmSnapshots = ({ vmId }) => {
 
       <div className='center'>
         <div className=" vm-snap-item">
-          {isSnapshotsLoading && (
-            <div>
-              <div className="spinner" />
-              <div>로딩중...</div>
+          <div className="snapshot-item f-start">
+            <RVI16 iconDef={rvi16ChevronDown} />
+            <div className="snapshot-label">VM 스냅샷 {new Date().toLocaleString()}</div>
+          </div>
+
+          {/* 항상 현재 위치 표시 */}
+          <div className="snapshot-item f-start">
+              <RVI16 iconDef={rvi16ChevronDown} />
+              <div className='snapshot-label'>현재 위치</div>
             </div>
-          )}
+          
+          {isSnapshotsLoading && (<Loading/>)}
 
           {/*스냅샷없을때*/}
           {!isSnapshotsLoading && transformedData?.length === 0 && (
-            <>
-            <div className="no-snapshot">스냅샷이 없습니다(디자인X)</div>
-            </>
+           <>
+           </>
           )}
 
           {transformedData?.length > 0 && transformedData?.map((snapshot) => (
