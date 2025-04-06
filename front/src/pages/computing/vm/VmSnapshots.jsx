@@ -94,7 +94,7 @@ const VmSnapshots = ({ vmId }) => {
               key={snapshot.id}
               className="snapshot-item f-start"
               onClick={() => toggleSnapshotSelection(snapshot)}
-              style={{ cursor: 'pointer', padding: '4px 50px', background: selectedSnapshot?.id === snapshot.id ? '#E2E5EB' : 'none' }}
+              style={{ cursor: 'pointer', padding: '4px 26px', background: selectedSnapshot?.id === snapshot.id ? '#E2E5EB' : 'none' }}
             >
                {/* 선택된 스냅샷이면 아래, 아니면 오른쪽 화살표 */}
               <RVI16
@@ -121,9 +121,7 @@ const VmSnapshots = ({ vmId }) => {
               data={selectedSnapshot}
             />
           ) : (
-            <div style={{ padding: '20px', minHeight: '100px', color: '#999' }}>
-              스냅샷을 선택하면 상세 정보가 여기에 표시됩니다.
-            </div>
+            <></>
           )}
         </div>
       </div>

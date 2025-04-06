@@ -8,7 +8,7 @@ import {
   rvi16Cloud,
 } from "../../icons/RutilVmIcons";
 
-const StorageTree = ({ selectedDiv, setSelectedDiv }) => {
+const StorageTree = ({ selectedDiv, setSelectedDiv, onContextMenu, contextMenu, menuRef }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -84,19 +84,29 @@ const StorageTree = ({ selectedDiv, setSelectedDiv }) => {
 
           return (
             <div key={dataCenter.id} className="tmi-g">
-              <TreeMenuItem
-                level={2}
-                title={dataCenter.name}
-                iconDef={rvi16DataCenter}
-                isSelected={() => location.pathname.includes(dataCenter.id)}
-                isNextLevelVisible={isDataCenterOpen}
-                isChevronVisible={hasDomains}
-                onChevronClick={() => toggleDataCenter(dataCenter.id)}
-                onClick={() => {
-                  setSelectedDiv(dataCenter.id);
-                  navigate(`/storages/datacenters/${dataCenter.id}/clusters`);
-                }}
-              />
+             <TreeMenuItem
+              level={2}
+              title={dataCenter.name}
+              iconDef={rvi16DataCenter}
+              isSelected={() => location.pathname.includes(dataCenter.id)}
+              isNextLevelVisible={isDataCenterOpen}
+              isChevronVisible={hasDomains}
+              onChevronClick={() => toggleDataCenter(dataCenter.id)}
+              onClick={() => {
+                setSelectedDiv(dataCenter.id);
+                navigate(`/storages/datacenters/${dataCenter.id}/clusters`);
+              }}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                onContextMenu?.(e, {
+                  id: dataCenter.id,
+                  name: dataCenter.name,
+                  level: 2,
+                  type: "dataCenter",
+                }, "storage");
+              }}
+            />
+
 
               {/* 세 번째 레벨 (Storage Domains) */}
               {isDataCenterOpen &&

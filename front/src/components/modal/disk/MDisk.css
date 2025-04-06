@@ -23,14 +23,14 @@
   display: flex;
 }
 .disk-new-nav > div {
-  padding: 8px;
+  padding: 8px 0;
   margin-right: 2%;
   cursor: pointer;
 }
 .disk-new-nav .active {
   color: rgb(35, 132, 243);
   font-weight: 600;
-  border-bottom: 2px solid rgb(35, 132, 243);
+  /* border-bottom: 2px solid rgb(35, 132, 243); */
 }
 
 /*디스크(업로드)*/

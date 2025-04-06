@@ -48,7 +48,7 @@ const VmSnapshotModal = ({ isOpen, selectedVm, onClose }) => {
     <BaseModal targetName={`${Localization.kr.VM} <${selectedVm?.name}> ${Localization.kr.SNAPSHOT}`} submitTitle={Localization.kr.CREATE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "500px"}} 
+      contentStyle={{ minWidth: "500px"}} 
     >
       <div>
         <LabelInput id="description" label={Localization.kr.DESCRIPTION}

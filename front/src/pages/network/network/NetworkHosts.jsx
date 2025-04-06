@@ -84,19 +84,20 @@ const NetworkHosts = ({ networkId }) => {
   Logger.debug("...");
   return (
     <>
-      <div className="header-right-btns">
-      <ActionButton
-        label={`${Localization.kr.HOST} 네트워크 설정`}
-        actionType="default"
-        onClick={() => {
-          if (selectedHostId) {
-            navigate(`/computing/hosts/${selectedHostId}/nics`);
-          }
-        }}
-        disabled={!selectedHostId}
-      />
+      <div className="header-right-btns no-search-box f-btw ">
+        <FilterButton options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
+        <ActionButton
+          label={`${Localization.kr.HOST} 네트워크 설정`}
+          actionType="default"
+          onClick={() => {
+            if (selectedHostId) {
+              navigate(`/computing/hosts/${selectedHostId}/nics`);
+            }
+          }}
+          disabled={!selectedHostId}
+        />
       </div>
-      <FilterButton options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
+      
 
       <TablesOuter
         isLoading={activeFilter === "connected" ? isConnectedHostsLoading: isDisconnectedHostsLoading}
