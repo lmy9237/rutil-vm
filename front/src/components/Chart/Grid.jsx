@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip"; // ✅ 툴팁 import
 import "react-tooltip/dist/react-tooltip.css"; // ✅ 스타일
+import Logger from "../../utils/Logger";
 import "./Grid.css";
 
 const Grid = ({ type, data = [] }) => {
@@ -25,15 +26,16 @@ const Grid = ({ type, data = [] }) => {
     }
   }, [data, gridData]);
 
-  const getBackgroundColor = (value) => {
-    if (value === 0 || value === null) return "#F8F8F8";
-    // if (value < 65) return "#E7F2FF";
-    if (value < 65) return "yellow";
-    if (value >= 65 && value < 75) return "#FFF3C9";
-    if (value >= 75 && value < 90) return "#FFC58A";
-    if (value >= 90) return "rgb(226,29,29)";
-    return "white";
-  };
+  const severity2Label = (value) => {
+    Logger.debug(`Grid > severity2Label ... value: ${value}`)
+    if (value === 0 || value === null) return "disabled";
+    if (value < 65) return "okay";
+    else if (value >= 65 && value < 75) return "norm";
+    else if (value >= 75 && value < 90) return "warn";
+    else if (value >= 90) return "crit";
+  }
+
+  const displayMetric = (type, item) => type==="cpu" ? item.cpuPercent : item.memoryPercent;
 
   const handleClick = (id) => {
     if (id && id.startsWith("placeholder")) return;
@@ -50,25 +52,20 @@ const Grid = ({ type, data = [] }) => {
         const hasAnyData = item.cpuPercent !== null || item.memoryPercent !== null;
 
         return (
-          <div
-            key={item.id || index}
-            className={`grid-item f-center${hasAnyData ? `` : ` disabled`}`}
+          <div key={item.id || index}
+            className={
+              `grid-item f-center ${severity2Label(displayMetric(type, item))}${hasAnyData ? `` : ` disabled`}`
+            }
             onClick={() => hasAnyData && handleClick(item.id)}
             data-tooltip-id={tooltipId}
             data-tooltip-content={item.name || ""}
             data-tooltip-place="top"
-            style={{
-              backgroundColor:
-                type === "cpu"
-                  ? getBackgroundColor(item.cpuPercent)
-                  : getBackgroundColor(item.memoryPercent),
-            }}
           >
             {hasAnyData ? (
               <>
                 <div>
                   <div className="percent f-center">
-                    <h1>{type === "cpu" ? item.cpuPercent : item.memoryPercent}</h1>
+                    <h1>{displayMetric(type, item)}</h1>
                     <div className="percent unit">%</div>
                   </div>
                   <div className="grid-item-name">( {item.name} )</div>

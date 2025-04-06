@@ -48,7 +48,7 @@ const NetworkTemplates = ({ networkId }) => {
     setModalData(null); // 모달 데이터 초기화
   };
 
-  Logger.debug("...")
+  Logger.debug("NetworkTemplates ...")
   return (
     <>
       <div className="header-right-btns no-search-box">

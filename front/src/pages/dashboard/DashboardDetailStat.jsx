@@ -18,7 +18,7 @@ const DashboardDetailStat = ({ title, totalPercentage }) => {
   const CpuApexChart = memo(({ cpu }) => { return <RadialBarChart percentage={cpu || 0} />; });
   const CpuBarChart = ({ vmCpu }) => (<BarChartWrapper data={vmCpu} keyName="name" keyPercent="cpuPercent" />);
 
-  Logger.debug("...")
+  Logger.debug("DashboardDetailStat ...")
   return (
     <div className="dash-section-contents">
       <h1>{title}</h1>

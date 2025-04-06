@@ -107,7 +107,7 @@ const DataCenterInfo = () => {
     { type: "delete", label: Localization.kr.REMOVE, onClick: () => openModal("delete") },
   ];
 
-  Logger.debug("...")
+  Logger.debug("DataCenterInfo ...")
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24Datacenter()}

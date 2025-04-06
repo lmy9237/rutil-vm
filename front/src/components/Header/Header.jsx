@@ -21,7 +21,7 @@ import {
   rvi24DownArrow,
 } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
-import useGlobal from "../../hooks/useGlobal";
+import useUIState from "../../hooks/useUIState";
 import "./Header.css";
 
 /**
@@ -31,14 +31,14 @@ import "./Header.css";
  * @prop {JSX.useState} setAuthenticated
  * @returns {JSX.Element} Header
  */
-const Header = ({ toggleAside }) => {
+const Header = ({}) => {
   const { setAuth } = useAuth();
+  const { toggleAsideVisible } = useUIState();
+
   const handleTitleClick = () => navigate("/");
   const navigate = useNavigate();  
   const [isLoginBoxVisible, setLoginBoxVisible] = useState(false);
   const [isBellActive, setBellActive] = useState(false);
-  const { setValue, getValue } = useGlobal()
-  // const [username, setUsername] = useState(localStorage["username"]);
 
   const toggleLoginBox = () => {
     setLoginBoxVisible(!isLoginBoxVisible);
@@ -85,10 +85,7 @@ const Header = ({ toggleAside }) => {
 
   const doLogout = (e) => {
     e.preventDefault();
-    setAuth({})
-    setValue("isUserAuthenticated", false);
-    setValue("username", false);
-    localStorage.clear();
+    setAuth({});
     navigate("/login");
   };
 
@@ -126,7 +123,7 @@ const Header = ({ toggleAside }) => {
   return (
     <div className="header f-btw">
       <div className="header-left">
-        <TopMenuIcon iconDef={rvi24Hamburger("white")} onClick={toggleAside} />
+        <TopMenuIcon iconDef={rvi24Hamburger("white")} onClick={() => toggleAsideVisible()} />
         <LogoIcon disableHover={true} onClick={handleTitleClick}/>
       </div>
 

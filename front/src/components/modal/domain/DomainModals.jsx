@@ -89,7 +89,7 @@ const DomainModals = ({
     ),
   };
 
-  Logger.debug("...")
+  Logger.debug("DomainModals ...")
   return (
     <>
       {Object.keys(modals).map((key) => (

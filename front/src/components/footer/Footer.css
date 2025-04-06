@@ -17,15 +17,15 @@
   border-top: var(--border-default);
   background:var(--color-primary-white);
   box-shadow: 0px -2px 4px 0px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
   z-index: 5;
 }
 .footer > svg {
   margin: 0 12px; 
-  cursor: pointer;
   color: rgb(10, 55, 107);
   background-color: white;
 }
-.footer > div {
+.footer > span {
   font-weight: 500;
   display: block;
   cursor: pointer;

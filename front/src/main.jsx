@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from "./context/AuthProvider"
 import { GlobalProvider } from "./context/GlobalProvider";
+import { UIStateProvider } from "./context/UIStateProvider";
 import reportWebVitals from "./reportWebVitals";
 import App from "./App";
 
@@ -20,9 +21,11 @@ root.render(
       <HashRouter>
         <GlobalProvider>
           <AuthProvider>
-            <Routes>
-              <Route path="/*" element={<App />}/>
-            </Routes>
+            <UIStateProvider>
+              <Routes>
+                <Route path="/*" element={<App />}/>
+              </Routes>
+            </UIStateProvider>
           </AuthProvider>
         </GlobalProvider>
       </HashRouter>

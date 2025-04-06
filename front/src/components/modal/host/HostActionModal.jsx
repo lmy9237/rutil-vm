@@ -1,7 +1,5 @@
 import { useMemo } from "react";
 import toast from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationTriangle, } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import {
   useDeactivateHost,

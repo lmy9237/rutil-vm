@@ -104,7 +104,7 @@ const SettingUsersModal = ({
     return null;
   };
 
-  Logger.debug("...");
+  Logger.debug("SettingUsersModal ...");
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"사용자"}

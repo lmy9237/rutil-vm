@@ -20,7 +20,7 @@ const ClusterHosts = ({ clusterId }) => {
     refetch: refetchHosts,
   } = useHostsFromCluster(clusterId, (e) => ({ ...e }));
 
-  Logger.debug("...");
+  Logger.debug("ClusterHosts ...");
   return (
     <>
       <HostDupl columns={TableColumnsInfo.HOSTS}

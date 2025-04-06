@@ -37,7 +37,7 @@ const TemplateVms = ({ templateId }) => {
     ipv4: e?.ipv4 + " " + e?.ipv6,
   }));
 
-  Logger.debug("...");
+  Logger.debug("TemplateVms ...");
   return (
     <>
       <TablesOuter

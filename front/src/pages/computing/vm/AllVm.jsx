@@ -23,7 +23,7 @@ const AllVm = () => {
     refetch: refetchVms,
   } = useAllVMs((e) => ({ ...e }));
 
-  Logger.debug("...");
+  Logger.debug("AllVm ...");
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24Desktop()}

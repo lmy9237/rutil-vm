@@ -81,7 +81,7 @@ const NetworkHosts = ({ networkId }) => {
     { key: "disconnected", label: "연결 해제" },
   ];
 
-  Logger.debug("...");
+  Logger.debug("NetworkHosts ...");
   return (
     <>
       <div className="header-right-btns no-search-box f-btw ">

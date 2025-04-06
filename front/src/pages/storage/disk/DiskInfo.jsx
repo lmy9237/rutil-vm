@@ -81,7 +81,7 @@ const DiskInfo = () => {
     // { type: 'upload', label: '업로드', onClick: () => openModal('restart') },
   ];
 
-  Logger.debug("...")
+  Logger.debug("DiskInfo ...")
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24HardDrive()}

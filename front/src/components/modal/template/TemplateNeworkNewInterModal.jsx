@@ -145,7 +145,7 @@ const TemplateNeworkNewInterModal = ({
     }
   };
 
-  Logger.debug("...");
+  Logger.debug("TemplateNeworkNewInterModal ...");
   return (
     <BaseModal
       isOpen={isOpen}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import useUIState from "../../../hooks/useUIState";
 import TreeMenuItem from "./TreeMenuItem";
 import {
   rvi16Globe,
@@ -8,9 +9,8 @@ import {
 } from "../../icons/RutilVmIcons";
 import { useAllTreeNavigations } from "../../../api/RQHook";
 import NetworkActionButtons from "../../dupl/NetworkActionButtons";
-import Logger from "../../../utils/Logger";
 import DataCenterActionButtons from "../../dupl/DataCenterActionButtons";
-
+import Logger from "../../../utils/Logger";
 
 const NetworkTree = ({
   selectedDiv,
@@ -19,30 +19,16 @@ const NetworkTree = ({
   contextMenu,
   menuRef
 }) => {
+  const {
+    secondVisibleNetwork, toggleSecondVisibleNetwork,
+    openDataCentersNetwork, toggleOpenDataCentersNetwork
+  } = useUIState();
   const navigate = useNavigate();
   const location = useLocation();
 
+  // ✅ API 호출 (네트워크 트리 데이터)
   const { data: navNetworks } = useAllTreeNavigations("network");
 
-  const [openDataCenters, setOpenDataCenters] = useState(() => {
-    return JSON.parse(localStorage.getItem("openDataCenters")) || { network: false };
-  });
-  const [openNetworkDataCenters, setOpenNetworkDataCenters] = useState(() => {
-    return JSON.parse(localStorage.getItem("openNetworkDataCenters")) || {};
-  });
-
-  useEffect(() => {
-    localStorage.setItem("openDataCenters", JSON.stringify(openDataCenters));
-    localStorage.setItem("openNetworkDataCenters", JSON.stringify(openNetworkDataCenters));
-  }, [openDataCenters, openNetworkDataCenters]);
-
-  const toggleNetworkDataCenter = (dataCenterId) => {
-    setOpenNetworkDataCenters((prevState) => {
-      const newState = { ...prevState, [dataCenterId]: !prevState[dataCenterId] };
-      localStorage.setItem("openNetworkDataCenters", JSON.stringify(newState));
-      return newState;
-    });
-  };
   useEffect(() => {
     Logger.debug("📦 contextMenu 상태:", contextMenu);
   }, [contextMenu]);
@@ -50,20 +36,15 @@ const NetworkTree = ({
   return (
     <div id="network_chart" className="tmi-g">
       {/* 레벨 1: Rutil Manager */}
-      <TreeMenuItem
-        level={1}
+      <TreeMenuItem level={1}
         title="Rutil Manager"
         iconDef={rvi16Globe}
         isSelected={() => location.pathname.includes("rutil")}
-        isNextLevelVisible={openDataCenters.network}
+        isNextLevelVisible={secondVisibleNetwork()}
+        onChevronClick={() => toggleSecondVisibleNetwork()}
         isChevronVisible={true}
-        onChevronClick={() =>
-          setOpenDataCenters((prev) => {
-            const newState = { ...prev, network: !prev.network };
-            localStorage.setItem("openDataCenters", JSON.stringify(newState));
-            return newState;
-          })
-        }
+        // isNextLevelVisible={openDataCentersNetwork("network")}
+        // onChevronClick={() => toggleOpenDataCentersNetwork("network")}
         onClick={() => {
           setSelectedDiv("rutil-manager");
           navigate("/networks/rutil-manager");
@@ -71,22 +52,19 @@ const NetworkTree = ({
       />
 
       {/* 레벨 2: 데이터 센터 */}
-      {openDataCenters.network &&
-        navNetworks &&
-        navNetworks.map((dataCenter) => {
-          const isDataCenterOpen = openNetworkDataCenters[dataCenter.id] || false;
+      {secondVisibleNetwork() && navNetworks && navNetworks.map((dataCenter) => {
+          const isDataCenterOpen = openDataCentersNetwork(dataCenter.id) || false;
           const hasNetworks = Array.isArray(dataCenter.networks) && dataCenter.networks.length > 0;
 
           return (
             <div key={dataCenter.id} className="tmi-g">
-              <TreeMenuItem
-                level={2}
+              <TreeMenuItem level={2}
                 title={dataCenter.name}
                 iconDef={rvi16DataCenter}
                 isSelected={() => location.pathname.includes(dataCenter.id)}
                 isNextLevelVisible={isDataCenterOpen}
                 isChevronVisible={hasNetworks}
-                onChevronClick={() => toggleNetworkDataCenter(dataCenter.id)}
+                onChevronClick={() => toggleOpenDataCentersNetwork(dataCenter.id)}
                 onClick={() => {
                   setSelectedDiv(dataCenter.id);
                   navigate(`/networks/datacenters/${dataCenter.id}/clusters`);

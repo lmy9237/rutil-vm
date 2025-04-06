@@ -21,7 +21,7 @@ const Info = () => {
     { label: `부팅${Localization.kr.TIME}(${Localization.kr.UP_TIME})`, value: dashboard?.bootTime ?? "" },
   ];
 
-  Logger.debug("...");
+  Logger.debug("Info ...");
   return (
     <>
       <div className="rutil-general-contents">

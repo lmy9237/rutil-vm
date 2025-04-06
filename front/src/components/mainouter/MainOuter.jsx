@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import SideNavbar from "./SideNavbar";
 import SidebarTree from "./SidebarTree";
+import useUIState from "../../hooks/useUIState";
 import "./MainOuter.css";
 
 /**
@@ -14,14 +15,15 @@ import "./MainOuter.css";
  */
 const MainOuter = ({ 
   children, 
-  asideVisible, 
-  setAsideVisible,
-  isFooterContentVisible
 }) => {
+  const {
+    footerVisible, asideVisible, setAsideVisible,
+    tmiLastSelected, setTmiLastSelected,
+  } = useUIState();
   const navigate = useNavigate();
   const location = useLocation();
 
-  /* aside-popup화면사이즈드레그 */
+  /* aside-popup 화면사이즈드레그 */
   const [sidebarWidth, setSidebarWidth] = useState(240); // 초기 사이드바 너비 (%)
   const asideStyles = {
     width: asideVisible ? `${sidebarWidth}px` : "0px", // 닫힐 때 0px
@@ -64,7 +66,6 @@ const MainOuter = ({
   };
   const handleMouseUp = () => {
     isResizing.current = false;
-
     document.body.style.userSelect = "auto"; // ✅ 드래그 끝나면 다시 원래대로
     document.body.style.cursor = "default"; // ✅ 드래그 끝나면 기본 커서로 복구
   };
@@ -76,7 +77,6 @@ const MainOuter = ({
     const handleResize = () => {
       const isNowResponsive = window.innerWidth <= 1420;
       setIsResponsive(isNowResponsive);
-
       if (isNowResponsive) {
         setAsideVisible(false); // ✅ 1420px 이하일 때 aside 자동 닫기
       }
@@ -84,11 +84,9 @@ const MainOuter = ({
 
     window.addEventListener("resize", handleResize);
     handleResize(); // 초기 렌더링 시 체크
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const [lastSelected, setLastSelected] = useState(null); // 마지막 선택 항목 저장
   const [selectedDisk, setSelectedDisk] = useState(null);
   const [asidePopupVisible, setAsidePopupVisible] = useState(true);
   const [asidePopupBackgroundColor, setAsidePopupBackgroundColor] = useState({
@@ -114,21 +112,13 @@ const MainOuter = ({
   const [selectedDiv, setSelectedDiv] = useState(null);
   useEffect(() => {
   const from = location.state?.from?.pathname || "/";
-    if (from.includes("/computing")) {
-      handleClick("computing"); // /computing이 들어가 있을 때
-    } else if (from.includes("/networks")) {
-      handleClick("network"); // /networks가 들어가 있을 때
-    } else if (from.includes("/vnicProfiles")) {
-      handleClick("network"); // /networks가 들어가 있을 때
-    } else if (from.includes("/storages")) {
-      handleClick("storage"); // /storages가 들어가 있을 때
-    } else if (from.includes("/events")) {
-      handleClick("event"); // /events가 들어가 있을 때
-    } else if (from.includes("/settings")) {
-      handleClick("settings"); // /settings가 들어가 있을 때
-    } else {
-      handleClick("dashboard"); // 기본적으로 dashboard로 설정
-    }
+    if (from.includes("/computing"))          handleClick("computing"); // /computing이 들어가 있을 때
+    else if (from.includes("/networks"))      handleClick("network"); // /networks가 들어가 있을 때
+    else if (from.includes("/vnicProfiles"))  handleClick("network"); // /networks가 들어가 있을 때
+    else if (from.includes("/storages"))      handleClick("storage"); // /storages가 들어가 있을 때
+    else if (from.includes("/events"))        handleClick("event"); // /events가 들어가 있을 때
+    else if (from.includes("/settings"))      handleClick("settings"); // /settings가 들어가 있을 때
+    else                                      handleClick("dashboard"); // 기본적으로 dashboard로 설정
   }, [location.pathname]);
 
 
@@ -152,16 +142,6 @@ const MainOuter = ({
     }
   }, [selected, asidePopupVisible]); // selected와 asidePopupVisible이 변경될 때 실행
   // 새로고침해도 섹션유지-----------------------------
-  
-  const [isSecondVisible, setIsSecondVisible] = useState(
-    JSON.parse(localStorage.getItem("isSecondVisible")) || false
-  );
-  const [openDataCenters, setOpenDataCenters] = useState(
-    () => JSON.parse(localStorage.getItem("openDataCenters")) || {}
-  );
-  const [openClusters, setOpenClusters] = useState(
-    () => JSON.parse(localStorage.getItem("openClusters")) || {}
-  );
   const [openHosts, setOpenHosts] = useState(
     () => JSON.parse(localStorage.getItem("openHosts")) || {}
   );
@@ -181,43 +161,7 @@ const MainOuter = ({
     return hasChildren ? extraPadding : basePadding;
   };
   // 상태가 변경될 때마다 localStorage에 저장
-  useEffect(() => {
-    localStorage.setItem("isSecondVisible", JSON.stringify(isSecondVisible));
-  }, [isSecondVisible]);
-
-  useEffect(() => {
-    localStorage.setItem("openDataCenters", JSON.stringify(openDataCenters));
-  }, [openDataCenters]);
-
-  useEffect(() => {
-    localStorage.setItem("openClusters", JSON.stringify(openClusters));
-  }, [openClusters]);
-
-  useEffect(() => {
-    localStorage.setItem("openHosts", JSON.stringify(openHosts));
-  }, [openHosts]);
-
-  useEffect(() => {
-    localStorage.setItem("openDomains", JSON.stringify(openDomains));
-  }, [openDomains]);
-
-  useEffect(() => {
-    localStorage.setItem("openNetworks", JSON.stringify(openNetworks));
-  }, [openNetworks]);
-  useEffect(() => {
-    localStorage.setItem(
-      "openComputingDataCenters",
-      JSON.stringify(openComputingDataCenters)
-    );
-  }, [openComputingDataCenters]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "openNetworkDataCenters",
-      JSON.stringify(openNetworkDataCenters)
-    );
-  }, [openNetworkDataCenters]);
-
+  
   const handleDetailClickStorage = (diskName) => {
     if (selectedDisk !== diskName) {
       setSelectedDisk(diskName);
@@ -235,15 +179,14 @@ const MainOuter = ({
     }
     // 이벤트와 설정을 제외한 경우에만 마지막 선택 항목을 저장
     if (id !== "event" && id !== "settings" && id !== "dashboard") {
-      setLastSelected(id);
-      localStorage.setItem("lastSelected", id); // 로컬 스토리지에 저장
+      setTmiLastSelected(id);
     }
   };
 
   // 초기에는 가상머신 섹션을 마지막 섹션으로 설정
   useEffect(() => {
     if (isInitialLoad && selected === "dashboard") {
-      setLastSelected("computing");
+      setTmiLastSelected("computing");
     }
     setIsInitialLoad(false);
   }, [isInitialLoad, selected]);
@@ -252,7 +195,7 @@ const MainOuter = ({
   useEffect(() => {
     // 페이지가 처음 로드될 때 기본적으로 dashboard가 선택되도록 설정
     setSelected("dashboard");
-    setLastSelected("computing");
+    setTmiLastSelected("computing");
     toggleAsidePopup("dashboard");
   }, []);
   useEffect(() => {
@@ -301,7 +244,7 @@ const MainOuter = ({
       toggleAsidePopup("dashboard");
     }
     if (savedLastSelected) {
-      setLastSelected(savedLastSelected);
+      setTmiLastSelected(savedLastSelected);
     }
   }, []);
   // id포함유무에 따라 배경색결정
@@ -316,16 +259,13 @@ const MainOuter = ({
   };
 
   const asideClasses = `aside-outer ${asideVisible ? "open" : "closed"} ${window.innerWidth <= 1420 ? "responsive-closed" : ""}`;
-
   return (
     <div
-      className={`main-outer f-start${isFooterContentVisible ? " open" : ""}`}  
+      className={`main-outer f-start${footerVisible ? " open" : ""}`}  
       onClick={handleMainClick}
     >
       <div className={asideClasses} style={asideStyles}>
         <SideNavbar
-          asideVisible={asideVisible}
-          setAsideVisible={setAsideVisible}
           selectedSection={selectedSection}
           setSelectedSection={setSelectedSection}
           getBackgroundColor={getBackgroundColor}

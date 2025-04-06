@@ -20,7 +20,7 @@ const HostDevices = ({ hostId }) => {
     refetch: refetchHostDevices,
   } = useHostDevicesFromHost(hostId, (e) => ({ ...e }));
 
-  Logger.debug("...")
+  Logger.debug("HostDevices ...")
   return (
     <div className="section-table-outer">
       <Tables columns={TableColumnsInfo.DEVICE_FROM_HOST}

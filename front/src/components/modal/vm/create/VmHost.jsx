@@ -24,7 +24,7 @@ const VmHost = ({
     }
   }, [formHostState.hostVos, setFormHostState]);
 
-  Logger.debug("...")
+  Logger.debug("VmHost ...")
   return (
     <div className="host-second-content">
       <div className="py-2">

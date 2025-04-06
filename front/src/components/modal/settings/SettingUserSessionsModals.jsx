@@ -18,7 +18,7 @@ const SettingUserSessionsModals = ({
       />
     ),
   }
-  Logger.debug("...")
+  Logger.debug("SettingUserSessionsModals ...")
   return (
     <>
       {Object.keys(allModals).map((key) => (

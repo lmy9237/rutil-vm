@@ -31,7 +31,7 @@ const SettingCertificates = () => {
       };
     });
 
-    Logger.debug("...");
+    Logger.debug("SettingCertificates ...");
     return (
       <>
         {/* <SettingUserSessionsActionButtons

@@ -43,7 +43,7 @@ const TemplateNicDeleteModal = ({ isOpen, onClose, data, templateId }) => {
     onClose();
   };
   
-  Logger.debug("...")
+  Logger.debug("TemplateNicDeleteModal ...")
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"NIC"}

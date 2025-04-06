@@ -1,62 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TreeMenuItem from "./TreeMenuItem";
 import {
   rvi16Globe,
   rvi16Host,
   rvi16Desktop,
-  rvi16DesktopFlag,
   rvi16DataCenter,
   rvi16Cluster,
   rvi16DesktopSleep,
 } from "../../icons/RutilVmIcons";
 import { useAllTreeNavigations } from "../../../api/RQHook";
+import useUIState from "../../../hooks/useUIState";
 
-const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
+const ComputingTree = ({ selectedDiv, setSelectedDiv }) => {
+  const { 
+    secondVisibleComputing, toggleSecondVisibleComputing,
+    openDataCentersComputing, toggleOpenDataCentersComputing,
+    openClustersComputing, toggleOpenClustersComputing,
+    openHostsComputing, toggleOpenHostsComputing,
+  } = useUIState();
   const navigate = useNavigate();
   const location = useLocation();
 
   // ✅ API 호출 (컴퓨팅 트리 데이터)
   const { data: navClusters } = useAllTreeNavigations("cluster");
-
-  // ✅ 상태 관리
-  const [isSecondVisible, setIsSecondVisible] = useState(JSON.parse(localStorage.getItem("isSecondVisible")) || false);
-  const [openComputingDataCenters, setOpenComputingDataCenters] = useState(JSON.parse(localStorage.getItem("openComputingDataCenters")) || {});
-  const [openClusters, setOpenClusters] = useState(JSON.parse(localStorage.getItem("openClusters")) || {});
-  const [openHosts, setOpenHosts] = useState(JSON.parse(localStorage.getItem("openHosts")) || {});
-
-  const toggleComputingDataCenter = (dataCenterId) => {
-    setOpenComputingDataCenters((prevState) => ({
-      ...prevState,
-      [dataCenterId]: !prevState[dataCenterId],
-    }));
-  };
-  const toggleHost = (hostId) => {
-    setOpenHosts((prevState) => ({
-      ...prevState,
-      [hostId]: !prevState[hostId],
-    }));
-  };
-  const toggleCluster = (clusterId) => {
-    setOpenClusters((prevState) => ({
-      ...prevState,
-      [clusterId]: !prevState[clusterId],
-    }));
-  };
-
-  useEffect(() => {
-    localStorage.setItem("isSecondVisible", JSON.stringify(isSecondVisible));
-    localStorage.setItem(
-      "openComputingDataCenters",
-      JSON.stringify(openComputingDataCenters)
-    );
-    localStorage.setItem("openClusters", JSON.stringify(openClusters));
-    localStorage.setItem("openHosts", JSON.stringify(openHosts));
-  }, [isSecondVisible, openComputingDataCenters, openClusters, openHosts]);
-
-  const toggleState = (id, setState) => {
-    setState((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
 
   return (
     <div id="virtual_machine_chart" className="tmi-g">
@@ -68,8 +35,8 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
         isSelected={() =>
           location.pathname.includes("rutil")
         }
-        isNextLevelVisible={isSecondVisible}
-        onChevronClick={() => setIsSecondVisible(!isSecondVisible)}
+        isNextLevelVisible={secondVisibleComputing()}
+        onChevronClick={() => toggleSecondVisibleComputing()}
         onClick={() => {
           setSelectedDiv("rutil-manager");
           navigate("/computing/rutil-manager");
@@ -77,8 +44,8 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
       />
 
       {/* 두 번째 레벨 (Data Center) */}
-      {isSecondVisible && navClusters && navClusters.map((dataCenter) => {
-        const isDataCenterOpen = openComputingDataCenters[dataCenter.id] || false;
+      {secondVisibleComputing() && navClusters && navClusters.map((dataCenter) => {
+        const isDataCenterOpen = openDataCentersComputing(dataCenter.id) || false;
         const hasClusters = Array.isArray(dataCenter.clusters) && dataCenter.clusters.length > 0;
         return (
           <div key={dataCenter.id} className="tmi-g">
@@ -88,7 +55,7 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
               isSelected={() => location.pathname.includes(dataCenter.id)}
               isNextLevelVisible={isDataCenterOpen}
               isChevronVisible={hasClusters}
-              onChevronClick={() => toggleComputingDataCenter(dataCenter.id)}
+              onChevronClick={() => toggleOpenDataCentersComputing(dataCenter.id)}
               onClick={() => {
                 setSelectedDiv(dataCenter.id);
                 navigate(`/computing/datacenters/${dataCenter.id}/clusters`);
@@ -96,7 +63,7 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
             />
             {/* 세 번째 레벨 (Clusters) */}
             {isDataCenterOpen && Array.isArray(dataCenter.clusters) && dataCenter.clusters.map((cluster) => {
-              const isClusterOpen = openClusters[cluster.id] || false;
+              const isClusterOpen = openClustersComputing(cluster.id) || false;
               const hasHosts = Array.isArray(cluster.hosts) && cluster.hosts.length > 0;
               return (
                 <div key={cluster.id} className="tmi-g">
@@ -106,7 +73,7 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
                     isSelected={() => location.pathname.includes(cluster.id)}
                     isNextLevelVisible={isClusterOpen}
                     isChevronVisible={hasHosts}
-                    onChevronClick={() => toggleCluster(cluster.id)}
+                    onChevronClick={() => toggleOpenClustersComputing(cluster.id)}
                     onClick={() => {
                       setSelectedDiv(cluster.id);
                       navigate(`/computing/clusters/${cluster.id}`);
@@ -117,7 +84,7 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
                     <>
                       {/* Hosts */}
                       {Array.isArray(cluster.hosts) && cluster.hosts.map((host) => {
-                        const isHostOpen = openHosts[host.id] || false;
+                        const isHostOpen = openHostsComputing(host.id) || false;
                         const hasVMs = Array.isArray(host.vms) && host.vms.length > 0;
                         return (
                           <div key={host.id} className="tmi-g">
@@ -127,7 +94,7 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv, getPaddingLeft }) => {
                               isSelected={() => location.pathname.includes(host.id)}
                               isNextLevelVisible={isHostOpen}
                               isChevronVisible={hasVMs}
-                              onChevronClick={() => toggleHost(host.id)}
+                              onChevronClick={() => toggleOpenHostsComputing(host.id)}
                               onClick={() => {
                                 setSelectedDiv(host.id);
                                 navigate(`/computing/hosts/${host.id}`);

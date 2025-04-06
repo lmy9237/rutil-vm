@@ -37,10 +37,10 @@ const DiskVms = ({ diskId }) => {
         {vm?.hostVo?.name}
       </TableRowClick>
     ),
-    ipv4: vm?.ipv4 + " " + vm?.ipv6,
+    ipv4: `${vm?.ipv4} ${vm?.ipv6}`,
   }));
 
-  Logger.debug("...")
+  Logger.debug("DiskVms ...")
   return (
     <>
       <TablesOuter

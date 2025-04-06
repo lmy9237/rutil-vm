@@ -8,17 +8,18 @@ import {
   rvi24Event,
 } from "../icons/RutilVmIcons";
 import "./MainOuter.css"; // 기존 스타일 유지
+import useUIState from "../../hooks/useUIState";
 
 const SideNavbar = ({
-  asideVisible,
   selectedSection,
   setSelectedSection,
-  getBackgroundColor,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const firstRender = useRef()
-  const [lastSelected, setLastSelected] = useState(() => localStorage.getItem("lastSelected") || "computing");
+  const firstRender = useRef();
+  const {
+    tmiLastSelected, setTmiLastSelected
+  } = useUIState();
 
   // 📌 현재 URL에 맞춰 버튼 활성화
   useEffect(() => {
@@ -40,8 +41,7 @@ const SideNavbar = ({
 
     // 이벤트/설정 제외, 마지막 선택 항목 저장
     if (id !== "event" && id !== "settings" && id !=="dashboard") {
-      setLastSelected(id);
-      localStorage.setItem("lastSelected", id);
+      setTmiLastSelected(id);
     }
   };
 

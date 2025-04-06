@@ -5,8 +5,8 @@ import { scan } from "react-scan";
 import STOMP from "./Socket";
 import Layout from "./components/Layout";
 import RequireAuth from "./components/RequireAuth";
-
 import Home from "./components/Home";
+
 import Login from "./pages/login/Login";
 import VmVnc from "./pages/computing/vm/VmVnc";
 import Error from "./pages/Error";

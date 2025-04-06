@@ -4,6 +4,7 @@ import SettingUserSessionsActionButtons from "./SettingUserSessionsActionButtons
 import { useAllUserSessions } from "../../api/RQHook";
 import TablesOuter from "../../components/table/TablesOuter";
 import Logger from "../../utils/Logger";
+import SelectedIdView from "../../components/common/SelectedIdView";
 /**
  * @name SettingSessions
  * @description 관리 > 활성 사용자 세션
@@ -77,7 +78,7 @@ const SettingSessions = () => {
         ? "single"
         : "multiple";
 
-  Logger.debug("...");
+  Logger.debug("SettingSessions ...");
   return (
     <>
       <SettingUserSessionsActionButtons
@@ -86,7 +87,6 @@ const SettingSessions = () => {
         status={status}
       />
 
-      <span>ID = {selectedUserSessions?.id || ""}</span>
       <TablesOuter
         isLoading={isUserSessionsLoading}
         isError={isUserSessionsError}
@@ -99,6 +99,8 @@ const SettingSessions = () => {
         }}
         showSearchBox={true} // 검색 박스 표시 여부 제어
       />
+
+      <SelectedIdView items={selectedUserSessions} />
 
       {/* 모달창 */}
       {renderModals()}

@@ -13,7 +13,7 @@ const DataNotifyToast = ({ data }) => {
   const { toasts, handlers } = useToaster();
   const { startPause, endPause } = handlers;
 
-  Logger.debug("...")
+  Logger.debug("DataNotifyToast ...")
   return (
     <div onMouseEnter={startPause} onMouseLeave={endPause}>
       {toasts.filter((toast) => toast.visible)

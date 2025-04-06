@@ -22,7 +22,7 @@ const DomainFibre = ({
   isFibresError,
   isFibresSuccess
 }) => {  
-  Logger.debug("...")
+  Logger.debug("DomainFibre ...")
 
   const handleSearchFcp = () => {
     if (!hostVo.id) 

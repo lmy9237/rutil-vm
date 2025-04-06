@@ -25,14 +25,14 @@ faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
 
 /**
- * @name MainOuter
+ * @name OldMainOuter
  * @description ...
  *
  * @prop {string[]} columns
- * @returns {JSX.Element} MainOuter
+ * @returns {JSX.Element} OldMainOuter
  *
  */
-const MainOuter = ({ 
+const OldMainOuter = ({ 
   children, 
   asideVisible, 
   setAsideVisible,
@@ -651,8 +651,7 @@ const MainOuter = ({
             {isSecondVisible &&
               navStorageDomains &&
               navStorageDomains.map((dataCenter) => {
-                const isDataCenterOpen =
-                  openDataCenters[dataCenter.id] || false;
+                const isDataCenterOpen = openDataCenters[dataCenter.id] || false;
                 const hasDomains =
                   Array.isArray(dataCenter.storageDomains) &&
                   dataCenter.storageDomains.length > 0;
@@ -950,4 +949,4 @@ const MainOuter = ({
   );
 };
 
-export default MainOuter;
+export default OldMainOuter;

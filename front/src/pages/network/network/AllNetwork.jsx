@@ -23,7 +23,7 @@ const AllNetwork = () => {
     refetch: refetchNetworks,
   } = useAllNetworks((e) => ({ ...e }));
 
-  Logger.debug("...");
+  Logger.debug("AllNetwork ...");
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24Network()} 

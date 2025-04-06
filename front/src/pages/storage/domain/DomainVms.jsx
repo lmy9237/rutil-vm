@@ -58,7 +58,7 @@ const DomainVms = ({ domainId }) => {
   if (isVmsError)
     return (<div>Error loading VMs data.</div>);
 
-  Logger.debug("...")
+  Logger.debug("DomainVms ...")
   return (
     <>
       <TablesOuter columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}

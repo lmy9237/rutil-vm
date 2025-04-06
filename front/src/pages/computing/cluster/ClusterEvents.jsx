@@ -21,7 +21,7 @@ const ClusterEvents = ({ clusterId }) => {
     ...e
   }));
 
-  Logger.debug("...");
+  Logger.debug("ClusterEvents ...");
   return (
     <EventDupl events={events}
       refetch={refetchEvents}

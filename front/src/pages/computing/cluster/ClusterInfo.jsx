@@ -93,7 +93,7 @@ const ClusterInfo = () => {
     { type: "delete", label: Localization.kr.REMOVE, onClick: () => openModal("delete") },
   ];
 
-  Logger.debug("...");
+  Logger.debug("ClusterInfo ...");
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24Cluster()}

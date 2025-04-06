@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import "./Footer.css";
 import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
+import useUIState from "../../hooks/useUIState";
+import "./Footer.css";
 
 /**
  * @name Footer
@@ -11,12 +12,8 @@ import Localization from "../../utils/Localization";
  *
  * @returns {JSX.Element} Footer
  */
-const Footer = ({
-  isFooterContentVisible = false,
-  setIsFooterContentVisible,
-}) => {
-
-
+const Footer = () => {
+  const { footerVisible, toggleFooterVisible } = useUIState();
   // 드레그
   const footerBarHeight = 40;
   const [footerHeight, setFooterHeight] = useState(300);
@@ -63,8 +60,7 @@ const Footer = ({
   const tableData = Array.from({ length: 20 }).map((_, index) => ({
     id: index + 1,
     taskName: `작업 ${index + 1}`,
-    target:
-      index % 2 === 0 ? "CentOS 7.9 Shell Script 테스트 - MYK" : "Datacenter",
+    target: index % 2 === 0 ? "CentOS 7.9 Shell Script 테스트 - MYK" : "Datacenter",
     status: `완료 ${Localization.kr.TIME}`,
     details: "",
     startTime: "2025.02.28",
@@ -75,30 +71,28 @@ const Footer = ({
   return (
     <>
     {/* 드래그바 */}
-    {isFooterContentVisible && (
+    {footerVisible && (
       <div className="footer-resizer" onMouseDown={handleResizeStart} />
     )}
     <div
-      className={`footer-outer${isFooterContentVisible ? " open" : ""}`}
+      className={`footer-outer${footerVisible ? " open" : ""}`}
       style={{
-        height: isFooterContentVisible ? `${footerHeight + footerBarHeight}px` : "0px",
+        height: footerVisible ? `${footerHeight + footerBarHeight}px` : "0px",
       }}
     >
-      {/* 상단 "최근 작업" 바 */}
-      <div className="footer f-start" style={{ height: `${footerBarHeight}px` }}>
-        <RVI24
-          iconDef={isFooterContentVisible ? rvi24DownArrow() : rvi24ChevronUp()}
-          onClick={() => setIsFooterContentVisible(!isFooterContentVisible)}
-        />
-        <div onClick={() => setIsFooterContentVisible(!isFooterContentVisible)}>
-          최근 작업
-        </div>
+      {/* 상단 "최근작업" 바 */}
+      <div
+        className="footer f-start"
+        style={{ height: `${footerBarHeight}px` }}
+        onClick={() => toggleFooterVisible()}
+      >
+        <RVI24 iconDef={footerVisible ? rvi24DownArrow() : rvi24ChevronUp()}/>
+        <span>최근 작업</span>
       </div>
 
       {/* 테이블 */}
       <div
-        className={`footer-content${isFooterContentVisible ? " open" : ""}`}
-        // style={{ height: `${footerHeight}px` }}
+        className={`footer-content${footerVisible ? " open" : ""}`}
       >
         <div className="footer-nav">
           <div className="section-table-outer p-0.5">

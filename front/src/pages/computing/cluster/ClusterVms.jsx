@@ -20,7 +20,7 @@ const ClusterVms = ({ clusterId }) => {
     refetch: refetchVms,
   } = useVMsFromCluster(clusterId, (e) => ({ ...e }));
 
-  Logger.debug("...")
+  Logger.debug("ClusterVms ...")
   return (
     <VmDupl columns={TableColumnsInfo.VMS}
       vms={vms}

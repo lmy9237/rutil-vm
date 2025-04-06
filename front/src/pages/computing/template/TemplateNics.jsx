@@ -51,7 +51,7 @@ const TemplateNics = ({ templateId }) => {
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
 
-  Logger.debug("...");
+  Logger.debug("TemplateNics ...");
   return (
     <>
       <NicActionButtons

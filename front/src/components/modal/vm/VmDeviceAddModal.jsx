@@ -5,9 +5,12 @@ import "./MVm.css";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
-const VmDeviceAddModal = ({ isOpen, onClose, hostDevices }) => {
-  
-  Logger.debug("...")
+const VmDeviceAddModal = ({ 
+  isOpen,
+  onClose,
+  hostDevices
+}) => {
+  Logger.debug("VmDeviceAddModal ...")
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={`${Localization.kr.HOST} 장치`}

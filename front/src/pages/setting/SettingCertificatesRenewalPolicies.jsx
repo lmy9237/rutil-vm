@@ -21,7 +21,7 @@ const SettingCertificatesRenewalPolicies = () => {
     "Failure to renew the certificates may result in the inability to access the web interface and disruption of certain services, so it is crucial to renew them in advance.",
   ];
 
-  Logger.debug("...");
+  Logger.debug("SettingCertificatesRenewalPolicies ...");
   return (
     <details>
       <summary>

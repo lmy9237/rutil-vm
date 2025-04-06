@@ -22,7 +22,7 @@ const ClusterNetworkManageModal = ({
   TableColumnsInfo,
   handleRowClick,
 }) => {
-  Logger.debug("...");
+  Logger.debug("ClusterNetworkManageModal ...");
   return (
     <Modal
       isOpen={isOpen}

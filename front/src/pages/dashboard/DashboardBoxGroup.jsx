@@ -80,7 +80,7 @@ const DashboardBox = ({
  * @returns
  */
 const DashboardBoxGroup = ({ boxItems }) => {
-  Logger.debug("...");
+  Logger.debug("DashboardBoxGroup ...");
   return (
     <div className="dash-boxs">
       {boxItems &&

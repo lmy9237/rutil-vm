@@ -21,7 +21,7 @@ const DataCenterVms = ({ datacenterId }) => {
     refetch: refetchVms,
   } = useVMsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  Logger.debug("...");
+  Logger.debug("DataCenterVms ...");
   return (
     <VmDupl columns={TableColumnsInfo.VMS}
       vms={vms}

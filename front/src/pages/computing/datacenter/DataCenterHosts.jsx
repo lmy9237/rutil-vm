@@ -20,7 +20,7 @@ const DataCenterHosts = ({ datacenterId }) => {
     refetch: refetchHosts,
   } = useHostsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  Logger.debug("...")
+  Logger.debug("DataCenterHosts ...")
   return (
     <>
       <HostDupl columns={TableColumnsInfo.HOSTS}

@@ -19,7 +19,7 @@ const DataCenters = () => {
     refetch: refetchDataCenters,
   } = useAllDataCenters((e) => ({ ...e }));
 
-  Logger.debug("...");
+  Logger.debug("DataCenters ...");
   return (
     <>
       <DataCenterDupl columns={TableColumnsInfo.DATACENTERS}

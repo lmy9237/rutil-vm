@@ -11,7 +11,7 @@ const SettingUserSessionsModal = ({
   , userSession
   , onClose
 }) => {
-  Logger.debug("...")
+  Logger.debug("SettingUserSessionsModal ...")
   return (
     <>
     {/* <BaseModal isOpen={isOpen} onClose={onClose}

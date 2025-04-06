@@ -7,7 +7,7 @@ import Logger from "../../utils/Logger";
  * @returns {JSX.Element} SettingSessions
  */
 const SettingUserSessionsActionButtons = () => {
-  Logger.debug("...");
+  Logger.debug("SettingUserSessionsActionButtons ...");
   return (
     <>
     </>

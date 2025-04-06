@@ -52,7 +52,7 @@ const DeleteModal = ({
     });
   };
 
-  Logger.debug("...")
+  Logger.debug("DeleteModal ...")
   return (
     <BaseModal
       isOpen={isOpen}

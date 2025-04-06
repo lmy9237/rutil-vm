@@ -32,7 +32,7 @@ const DiskDomains = ({ diskId }) => {
       : `${convertBytesToGB(size)} GB`;
   };
 
-  Logger.debug("...")
+  Logger.debug("DiskDomains ...")
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <TablesOuter

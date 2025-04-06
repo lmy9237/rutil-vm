@@ -20,7 +20,7 @@ const DataCenterDomains = ({ datacenterId }) => {
     refetch: refetchStorageDomains,
   } = useDomainsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  Logger.debug("...")
+  Logger.debug("DataCenterDomains ...")
   return (
     <>
       <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}

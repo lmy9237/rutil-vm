@@ -63,7 +63,7 @@ const NetworkVms = ({ networkId }) => {
     { key: "stopped", label: "정지중" },
   ];
 
-  Logger.debug("...");
+  Logger.debug("NetworkVms...");
   return (
     <>
       <div className="header-right-btns">

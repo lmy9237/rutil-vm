@@ -155,7 +155,7 @@ const Table = ({
     setContextRowIndex(rowIndex);
   };
 
-  Logger.debug("...");
+  Logger.debug("Table ...");
   return (
     <div className="w-full overflow-y-auto overflow-x-hidden">
       <table
