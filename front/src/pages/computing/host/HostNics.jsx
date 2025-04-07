@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { useHost, useNetworkAttachmentsFromHost, useNetworkFromCluster, useNetworkInterfacesFromHost } from "../../../api/RQHook";
+import { useHost, useHostNicsFromHost, useNetworkAttachmentsFromHost, useNetworkFromCluster, useNetworkInterfacesFromHost } from "../../../api/RQHook";
 import { checkZeroSizeToMbps } from "../../../util";
 import { RVI16, rvi16TriangleDown, rvi16TriangleUp, rvi16VirtualMachine, RVI24, rvi24CompareArrows, RVI36, rvi36Edit, status2Icon } from "../../../components/icons/RutilVmIcons";
 import Loading from "../../../components/common/Loading";
@@ -13,7 +13,8 @@ import { Tooltip } from "react-tooltip";
 
 const HostNics = ({ hostId }) => {
   const { data: host } = useHost(hostId);
-  const { data: hostNics = [], isLoading: isHostNicsLoading } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
+  const { data: hostNics = [], isLoading: isHostNicsLoading } = useHostNicsFromHost(hostId, (e) => ({ ...e }));
+  // const { data: hostNics = [], isLoading: isHostNicsLoading } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
   const { data: networkAttchments = [] } = useNetworkAttachmentsFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
 

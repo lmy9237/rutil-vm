@@ -335,6 +335,29 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="GET",
+		value="호스트 네트워크 인터페이스 목록",
+		notes="선택된 호스트의 네트워크 인터페이스 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{hostId}/hostNics")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun hostNics(
+		@PathVariable hostId: String? = null
+	): ResponseEntity<List<HostNicVo>> {
+		if (hostId.isNullOrEmpty())
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/hostNics ... 호스트 nic 목록", hostId)
+		return ResponseEntity.ok(iHostNic.findAllHostNicsFromHost(hostId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
 		value="호스트 네트워크 인터페이스 조회",
 		notes="선택된 호스트 네트워크 인터페이스를 조회한다"
 	)

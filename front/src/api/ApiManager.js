@@ -681,6 +681,20 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.FIND_HOST_FROM_CLUSTER
   }),
   /**
+   * @name ApiManager.findAllHostNicsFromHost
+   * @description 호스트 Nic 목록
+   *
+   * @param {string} hostId
+   * @returns 
+   * 
+   * @see
+   */
+  findAllHostNicsFromHost : async (hostId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_HOST_NICS_FROM_HOST(hostId), 
+    // defaultValues: DEFAULT_VALUES.FIND_NICS_FROM_HOST
+  }),
+  /**
    * @name ApiManager.findHostNicsFromHost
    * @description 호스트 Nic 목록
    *

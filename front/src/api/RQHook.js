@@ -1096,6 +1096,32 @@ export const useVmsFromHost = (
   enabled: !!hostId
 })
 /**
+ * @name useHostNicsFromHost
+ * @description 호스트 내 네트워크 인터페이스 목록조회 useQuery훅
+ * 
+ * @param {string} hostId
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findHostNicsFromHost
+ */
+export const useHostNicsFromHost = (
+  hostId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['hostNicsFromHost', hostId], 
+  queryFn: async () => {
+    const res = await ApiManager.findAllHostNicsFromHost(hostId); 
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useHostNicsFromHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    return _res
+  },
+  enabled: !!hostId
+})
+/**
  * @name useNetworkInterfacesFromHost
  * @description 호스트 내 네트워크인터페이스 목록조회 useQuery훅
  * 

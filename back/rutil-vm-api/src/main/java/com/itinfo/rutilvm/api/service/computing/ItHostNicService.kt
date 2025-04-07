@@ -111,12 +111,13 @@ class ItHostNicServiceImpl(
 	@Throws(Error::class)
 	override fun findAllHostNicsFromHost(hostId: String): List<HostNicVo> {
 		log.info("findAllHostNicsFromHost ... hostId: {}", hostId)
-		val host: Host? = conn.findHost(hostId, follow = "networkattachments.network,nics.statistics").getOrNull()
-
-		val hostNics: List<HostNic>? = host?.nics()
-		val networkAttachments: List<NetworkAttachment>? = host?.networkAttachments()
-		val res: List<NetworkAttachment> = conn.findAllNetworkAttachmentsFromHost(hostId, follow = "host,host_nic,network").getOrDefault(emptyList())
-		TODO("해야도ㅓㅣㅁ")
+		// val host: Host? = conn.findHost(hostId, follow = "networkattachments.network,nics.statistics").getOrNull()
+		// val hostNics: List<HostNic>? = host?.nics()
+		// val networkAttachments: List<NetworkAttachment>? = host?.networkAttachments()
+		// val res: List<NetworkAttachment> = conn.findAllNetworkAttachmentsFromHost(hostId, follow = "host,host_nic,network").getOrDefault(emptyList())
+		// TODO("해야도ㅓㅣㅁ")
+		val res: List<HostNic> = conn.findAllHostNicsFromHost(hostId, follow = "host,statistics").getOrDefault(emptyList())
+		return res.toHostNicVos(conn)
 	}
 
 	@Throws(Error::class)
