@@ -57,7 +57,7 @@ open class BaseController(
 		val rawMessage = e.message ?: ""
 		val refinedMessage = Regex("""Fault detail is ['"]\[(.*?)]['"]""").find(rawMessage)?.groupValues?.get(1)
 			?: rawMessage
-		val resultMessage = "실패: 가상머신 편집, 이유: $refinedMessage"
+		val resultMessage = "실패: 알수없는 이, 이유: $refinedMessage"
 
 		return when {
 			e.message?.contains("${FailureType.NOT_FOUND.code}".toRegex()) == true -> HttpStatus.NOT_FOUND.toResponseEntity(resultMessage)

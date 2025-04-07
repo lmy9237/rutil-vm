@@ -429,6 +429,17 @@ fun Connection.findNetworkAttachmentFromHost(hostId: String, networkAttachmentId
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+// fun Connection.modifyNetworkAttachmentFromHost(hostId: String, networkAttachment: NetworkAttachment): Result<Boolean> = runCatching {
+// 	this.srvHost(hostId).setupNetworks().modifiedNetworkAttachments(networkAttachment).send()
+// 	this.srvHost(hostId).commitNetConfig().send()
+// 	true
+// }.onSuccess {
+// 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "편집", hostId)
+// }.onFailure {
+// 	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "편집", it, hostId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
+
 fun Connection.modifyNetworkAttachmentsFromHost(hostId: String, networkAttachments: List<NetworkAttachment>): Result<Boolean> = runCatching {
 	this.srvHost(hostId).setupNetworks().modifiedNetworkAttachments(networkAttachments).send()
 	this.srvHost(hostId).commitNetConfig().send()
@@ -437,17 +448,6 @@ fun Connection.modifyNetworkAttachmentsFromHost(hostId: String, networkAttachmen
 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "일괄편집", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "일괄편집", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-fun Connection.modifyNetworkAttachmentFromHost(hostId: String, networkAttachment: NetworkAttachment): Result<Boolean> = runCatching {
-	this.srvHost(hostId).setupNetworks().modifiedNetworkAttachments(networkAttachment).send()
-	this.srvHost(hostId).commitNetConfig().send()
-	true
-}.onSuccess {
-	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "편집", hostId)
-}.onFailure {
-	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "편집", it, hostId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
@@ -487,11 +487,30 @@ fun Connection.removeNetworkAttachmentsFromHost(
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.removeBondsFromHost(
-	hostId: String,
-	hostNics: List<HostNic> = listOf()
-): Result<Boolean> = runCatching {
-	this.srvHost(hostId).setupNetworks().removedBonds(hostNics).send()
+fun Connection.addBondFromHost(hostId: String, hostNic: HostNic): Result<Boolean> = runCatching {
+	this.srvHost(hostId).setupNetworks().modifiedBonds(hostNic).send()
+	this.srvHost(hostId).commitNetConfig().send()
+	true
+}.onSuccess {
+	Term.HOST.logSuccessWithin(Term.BOND, "생성", hostId)
+}.onFailure {
+	Term.HOST.logFailWithin(Term.BOND, "생성", it, hostId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.modifiedBondFromHost(hostId: String, hostNic: HostNic): Result<Boolean> = runCatching {
+	this.srvHost(hostId).setupNetworks().modifiedBonds(hostNic).send()
+	this.srvHost(hostId).commitNetConfig().send()
+	true
+}.onSuccess {
+	Term.HOST.logSuccessWithin(Term.BOND, "수정", hostId)
+}.onFailure {
+	Term.HOST.logFailWithin(Term.BOND, "수정", it, hostId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.removeBondFromHost(hostId: String, hostNic: HostNic): Result<Boolean> = runCatching {
+	this.srvHost(hostId).setupNetworks().removedBonds(hostNic).send()
 	this.srvHost(hostId).commitNetConfig().send()
 	true
 }.onSuccess {

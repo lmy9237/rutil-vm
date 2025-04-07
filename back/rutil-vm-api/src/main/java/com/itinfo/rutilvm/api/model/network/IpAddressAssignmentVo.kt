@@ -8,7 +8,7 @@ import org.ovirt.engine.sdk4.types.IpAddressAssignment
 import java.io.Serializable
 
 class IpAddressAssignmentVo (
-    val assignmentMethod: String = "",
+    val assignmentMethod: String = "", //BootProtocol
     val ipVo: IpVo = IpVo()
 ) : Serializable {
     override fun toString(): String =

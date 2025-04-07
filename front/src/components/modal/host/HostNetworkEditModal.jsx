@@ -5,6 +5,8 @@ import ModalNavButton from "../../navigation/ModalNavButton";
 import Localization from "../../../utils/Localization";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import toast from "react-hot-toast";
+import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
+import Logger from "../../../utils/Logger";
 
 // 탭 메뉴
 const tabs = [
@@ -13,19 +15,12 @@ const tabs = [
   { id: "dns", label: "DNS 설정" },
 ];
 
-// AUTOCONF("autoconf"),
-//     DHCP("dhcp"),
-//     NONE("none"),
-//     POLY_DHCP_AUTOCONF("poly_dhcp_autoconf"),
-//     STATIC("static");
-  
 // ipv4 부트 프로토콜
 const ipv4Options = [
   { value: "none", label: "없음" },
   { value: "dhcp", label: "DHCP" },
   { value: "static", label: "정적" },
 ];
-
 // ipv6 부트 프로토콜
 const ipv6Options = [
   { value: "none", label: "없음" },
@@ -37,7 +32,6 @@ const ipv6Options = [
 
 const initialFormState = {
   id: "",
-  name: "",
   inSync: true
 };
 
@@ -48,6 +42,7 @@ const HostNetworkEditModal = ({
   dnsState, 
   setDnsState 
 }) => {
+  Logger.debug(`networkAttachment 데이터: ${JSON.stringify(networkAttachment, null, 2)}`);
   const [selectedModalTab, setSelectedModalTab] = useState("ipv4");  
   const [formState, setFormState] = useState(initialFormState);
     
@@ -61,19 +56,11 @@ const HostNetworkEditModal = ({
     toast.success(`네트워크 편집 완료`);
   };
   // const { mutate: addNetwork } = useAddNetwork(onSuccess, () => onClose());
-
-  useEffect(() => {
-    if (!isOpen) {
-      setFormState(initialFormState);
-      setIpv4Values({ address: "", gateway: "", netmask: "" });
-      setIpv6Values({ address: "", gateway: "", netmask: "" });
-      return;
-    }
   
+  useEffect(() => {  
     if (networkAttachment) {
       setFormState({
         id: networkAttachment?.id,
-        name: networkAttachment?.name,
         inSync: networkAttachment?.inSync
       });
   
@@ -81,36 +68,34 @@ const HostNetworkEditModal = ({
         id: networkAttachment?.networkVo?.id,
         name: networkAttachment?.networkVo?.name
       });
-  
-      // const assignments = networkAttachment.ipAddressAssignments || [];
 
-  
-      // assignments.forEach((ip) => {
-      //   const { assignmentMethod, ipVo } = ip;
-      //   if (ipVo?.version === "V4") {
-      //     setIpv4Values({
-      //       protocol: assignmentMethod,
-      //       address: ipVo.address || "",
-      //       gateway: ipVo.gateway || "",
-      //       netmask: ipVo.netmask || "",
-      //     });
-      //   }
-      //   if (ipVo?.version === "V6") {
-      //     setIpv6Values({
-      //       protocol: assignmentMethod,
-      //       address: ipVo.address || "",
-      //       gateway: ipVo.gateway || "",
-      //       netmask: ipVo.netmask || "",
-      //     });
-      //   }
-      // });
+      const assignments = networkAttachment.ipAddressAssignments || [];
+      assignments.forEach((ip) => {
+        const { assignmentMethod, ipVo } = ip;
+        if (ipVo?.version === "V4") {
+          setIpv4Values({
+            protocol: assignmentMethod,
+            address: ipVo.address || "",
+            gateway: ipVo.gateway || "",
+            netmask: ipVo.netmask || "",
+          });
+        }
+        if (ipVo?.version === "V6") {
+          setIpv6Values({
+            protocol: assignmentMethod,
+            address: ipVo.address || "",
+            gateway: ipVo.gateway || "",
+            netmask: ipVo.netmask || "",
+          });
+        }
+      });
   
       setDnsServers(networkAttachment?.nameServerList || []);
     }
   }, [isOpen, networkAttachment]);  
 
   return (
-    <BaseModal targetName={`네트워크 ${networkAttachment?.name}`} submitTitle={"수정"}
+    <BaseModal targetName={`네트워크 ${networkVo?.name}`} submitTitle={"수정"}
       isOpen={isOpen} onClose={onClose}      
       onSubmit={() => {}}
       contentStyle={{ width: "800px"}} 
@@ -123,7 +108,7 @@ const HostNetworkEditModal = ({
         />
 
         <div className="backup-edit-content">
-          {/*
+          
           {selectedModalTab === "ipv4" && (
             <>
               <div className="select-box-outer">
@@ -132,7 +117,6 @@ const HostNetworkEditModal = ({
                   options={ipv4Options}
                   onChange={(e) => setIpv4Values(prev => ({ ...prev, protocol: e.target.value }))}
                 />
-                <span>n{networkAttachment.ipAddressAssignments[0].protocol}</span>
                 <LabelInput id="ip_address" label="IP"
                   value={ipv4Values.address}
                   onChange={(e) => setIpv4Values(prev => ({ ...prev, address: e.target.value }))}
@@ -178,22 +162,20 @@ const HostNetworkEditModal = ({
                 />
               </div>
             </>
-          )} */}
+          )}
 
           {selectedModalTab === "dns" && (
             <>
               <div className="host-plus-checkbox">
                 <div className="text-[15px] font-bold"> DNS 서버 </div>
-                수정
-                  {/* {dnsServers.length !== 0 ?
+                  {dnsServers.length !== 0 ?
                     (dnsServers.map((dns, index) => (
                     <div
                       key={index}
                       className="network-form-group f-btw"
                       style={{ width: "100%", padding: 0 }}
                     >
-                      <input
-                        type="text"
+                      <LabelInput
                         value={dns}
                         onChange={(e) => {
                           const updated = [...dnsServers];
@@ -224,7 +206,8 @@ const HostNetworkEditModal = ({
                     <>
                     <span>t</span>
                     </>
-                  ) */}
+                  )
+                }
               </div>
             </>
           )}

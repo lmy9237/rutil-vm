@@ -1168,7 +1168,7 @@ export const useNetworkInterfaceFromHost = (
     Logger.debug(`RQHook > useNetworkInterfaceFromHost ... hostId: ${hostId} nicId: ${nicId},  res: ${JSON.stringify(_res, null, 2)}`);
     return _res
   },
-  enabled: !!hostId
+  enabled: !!hostId && !!nicId
 })
 /**
  * @name useNetworkAttachmentsFromHost

@@ -22,15 +22,6 @@ interface ItHostNicService {
      */
     @Throws(Error::class)
     fun findAllFromHost(hostId: String): List<HostNicVo>
-	/**
-	 * [ItHostNicService.findAllHostNicsFromHost]
-	 * 호스트 네트워크 인터페이스 목록
-	 *
-	 * @param hostId [String] 호스트 Id
-	 * @return List<[HostNicVo]> 네트워크 인터페이스 목록
-	 */
-	@Throws(Error::class)
-	fun findAllHostNicsFromHost(hostId: String): List<HostNicVo>
     /**
      * [ItHostNicService.findOneFromHost]
      * 호스트 네트워크 인터페이스
@@ -60,36 +51,70 @@ interface ItHostNicService {
 	 */
 	@Throws(Error::class)
 	fun findNetworkAttachmentFromHost(hostId: String, naId: String): NetworkAttachmentVo?
+	/**
+	 * [ItHostNicService.updateNetworkAttachmentFromHost]
+	 * 호스트 네트워크 분리 (할당된 네트워크)
+	 *
+	 * @param hostId [String] 호스트 Id
+	 * @param networkAttachmentId [String] 네트워크 결합 Id
+	 * @param networkAttachmentVo [NetworkAttachmentVo] 네트워크
+	 * @return [Boolean] 아직미정
+	 */
+	@Throws(Error::class)
+	fun updateNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String, networkAttachmentVo: NetworkAttachmentVo): Boolean
+	/**
+	 * [ItHostNicService.removeNetworkAttachmentsFromHost]
+	 * 호스트 네트워크 분리 (할당된 네트워크)
+	 *
+	 * @param hostId [String] 호스트 Id
+	 * @param networkAttachmentVos List<[NetworkAttachmentVo]> 네트워크 연결 옵션
+	 * @return [Boolean] 아직미정
+	 */
+	@Throws(Error::class)
+	fun removeNetworkAttachmentsFromHost(hostId: String, networkAttachmentVos: List<NetworkAttachmentVo>): Boolean
+
     /**
-     * [ItHostNicService.setUpNetworksFromHost]
-     * 호스트 네트워크 설정
+     * [ItHostNicService.addBondFromHost]
+     * 호스트 네트워크 본딩 추가
      *
      * @param hostId [String] 호스트 Id
-     * @param hostNetworkVo [HostNetworkVo] 호스트 네트워크
+     * @param hostNicVo [HostNic] bonding 옵션
+     * @return [Boolean]
+     */
+    @Throws(Error::class)
+    fun addBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean
+    /**
+     * [ItHostNicService.modifiedBondFromHost]
+     * 호스트 네트워크 본딩 수정
+     *
+     * @param hostId [String] 호스트 Id
+     * @param hostNicId [String] 호스트 네트워크 인터페이스 Id
+     * @param hostNicVo [HostNic] bonding 옵션
      * @return [Boolean] 아직미정
      */
     @Throws(Error::class)
-    fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean
+    fun modifiedBondFromHost(hostId: String, hostNicId: String, hostNicVo: HostNicVo): Boolean
     /**
-     * [ItHostNicService.removeBondsFromHost]
+     * [ItHostNicService.removeBondFromHost]
      * 호스트 네트워크 본딩 삭제
      *
      * @param hostId [String] 호스트 Id
-     * @param bonds List<[HostNic]> bonding 옵션
+     * @param hostNicVo [HostNicVo] bonding 옵션
      * @return [Boolean] 아직미정
      */
     @Throws(Error::class)
-    fun removeBondsFromHost(hostId: String, bonds: List<HostNicVo>): Boolean
-    /**
-     * [ItHostNicService.removeBondsFromHost]
-     * 호스트 네트워크 분리 (할당된 네트워크)
-     *
-     * @param hostId [String] 호스트 Id
-     * @param networkAttachments List<[NetworkAttachmentVo]> 네트워크 연결 옵션
-     * @return [Boolean] 아직미정
-     */
-    @Throws(Error::class)
-    fun removeNetworkAttachmentFromHost(hostId: String, networkAttachments: List<NetworkAttachmentVo>): Boolean
+    fun removeBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean
+
+	/**
+	 * [ItHostNicService.setUpNetworksFromHost]
+	 * 호스트 네트워크 설정
+	 *
+	 * @param hostId [String] 호스트 Id
+	 * @param hostNetworkVo [HostNetworkVo] 호스트 네트워크
+	 * @return [Boolean] 아직미정
+	 */
+	@Throws(Error::class)
+	fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean
 }
 
 @Service
@@ -99,26 +124,9 @@ class ItHostNicServiceImpl(
     @Throws(Error::class)
     override fun findAllFromHost(hostId: String): List<HostNicVo> {
         log.info("findAllFromHost ... hostId: {}", hostId)
-        val hostNics: List<HostNic> = conn.findAllHostNicsFromHost(hostId, follow = "host,statistics").getOrDefault(emptyList())
-			// .filter { !it.baseInterfacePresent() }
-
-		val bondingSlaveIds = hostNics.flatMap { it.bonding()?.slaves()?.map { slave -> slave.id() } ?: emptyList() }.toSet()
-		val filteredNics = hostNics.filterNot { it.id() in bondingSlaveIds }
-
-        return filteredNics.toHostNicVos(conn)
-    }
-
-	@Throws(Error::class)
-	override fun findAllHostNicsFromHost(hostId: String): List<HostNicVo> {
-		log.info("findAllHostNicsFromHost ... hostId: {}", hostId)
-		// val host: Host? = conn.findHost(hostId, follow = "networkattachments.network,nics.statistics").getOrNull()
-		// val hostNics: List<HostNic>? = host?.nics()
-		// val networkAttachments: List<NetworkAttachment>? = host?.networkAttachments()
-		// val res: List<NetworkAttachment> = conn.findAllNetworkAttachmentsFromHost(hostId, follow = "host,host_nic,network").getOrDefault(emptyList())
-		// TODO("해야도ㅓㅣㅁ")
 		val res: List<HostNic> = conn.findAllHostNicsFromHost(hostId, follow = "host,statistics").getOrDefault(emptyList())
 		return res.toHostNicVos(conn)
-	}
+    }
 
 	@Throws(Error::class)
     override fun findOneFromHost(hostId: String, hostNicId: String): HostNicVo? {
@@ -142,35 +150,66 @@ class ItHostNicServiceImpl(
 	}
 
 	@Throws(Error::class)
-    override fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean {
-        log.info("setUpNetworksFromHost ... hostId: {}, hostNetworkVo: {}", hostId, hostNetworkVo)
-        val res: Result<Boolean> = conn.setupNetworksFromHost(
-            hostId,
+	override fun updateNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String, networkAttachmentVo: NetworkAttachmentVo): Boolean {
+		log.info("updateNetworkAttachmentFromHost ... hostId: {}, networkAttachmentId: {}, networkAttachmentVo: {}", hostId, networkAttachmentId, networkAttachmentVo)
+		val res: Result<Boolean> = conn.updateNetworkAttachmentFromHost(
+			hostId,
+			networkAttachmentId,
+			networkAttachmentVo.toModifiedNetworkAttachmentBuilder()
+		)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun removeNetworkAttachmentsFromHost(hostId: String, networkAttachmentVos: List<NetworkAttachmentVo>): Boolean {
+		log.info("removeNetworkAttachmentFromHost ... hostId: {}, networkAttachmentVos: {}", hostId, networkAttachmentVos)
+		val res: Result<Boolean> = conn.removeNetworkAttachmentsFromHost(
+			hostId,
+			networkAttachmentVos.toModifiedNetworkAttachments()
+		)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun addBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean {
+		log.info("modifiedBondFromHost ... hostId: {}, hostNic: {}", hostId, hostNicVo)
+		val res: Result<Boolean> = conn.addBondFromHost(
+			hostId,
+			hostNicVo.toAddBondBuilder()
+		)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun modifiedBondFromHost(hostId: String, hostNicId: String, hostNicVo: HostNicVo): Boolean {
+		log.info("modifiedBondFromHost ... hostId: {}, hostNicId: {}, hostNic: {}", hostId, hostNicId, hostNicVo)
+		val res: Result<Boolean> = conn.modifiedBondFromHost(
+			hostId,
+			hostNicVo.toModifiedBondBuilder()
+		)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun removeBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean {
+		log.info("removeBondFromHost ... hostId: {}", hostId)
+		val res: Result<Boolean> = conn.removeBondFromHost(
+			hostId,
+			hostNicVo.toBondBuilder()
+		)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean {
+		log.info("setUpNetworksFromHost ... hostId: {}, hostNetworkVo: {}", hostId, hostNetworkVo)
+		val res: Result<Boolean> = conn.setupNetworksFromHost(
+			hostId,
 			hostNetworkVo.bonds.toModifiedBonds(),
 			hostNetworkVo.networkAttachments.toModifiedNetworkAttachments()
-        )
-        return res.isSuccess
-    }
-
-    @Throws(Error::class)
-    override fun removeBondsFromHost(hostId: String, bonds: List<HostNicVo>): Boolean {
-        log.info("removeBondsFromHost ... hostId: {}", hostId)
-        val res: Result<Boolean> = conn.removeBondsFromHost(
-            hostId,
-            bonds.toModifiedBonds()
-        )
-        return res.isSuccess
-    }
-
-    @Throws(Error::class)
-    override fun removeNetworkAttachmentFromHost(hostId: String, networkAttachments: List<NetworkAttachmentVo>): Boolean {
-        log.info("removeNetworkAttachmentFromHost ... hostId: {}", hostId)
-        val res: Result<Boolean> = conn.removeNetworkAttachmentsFromHost(
-            hostId,
-            networkAttachments.toModifiedNetworkAttachments()
-        )
-        return res.isSuccess
-    }
+		)
+		return res.isSuccess
+	}
 
 
     companion object {
