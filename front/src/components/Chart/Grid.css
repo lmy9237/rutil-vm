@@ -7,7 +7,7 @@
 .grid-item {
   border-radius: var(--br-default);
   cursor: pointer;
-  height: 35px;
+  height: 40px;
   width: 90px;
   font-size: var(--fs-12);
 }

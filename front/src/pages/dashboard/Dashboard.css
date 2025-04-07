@@ -7,7 +7,7 @@
   flex-wrap: wrap;
   margin-bottom: var(--p-default);
   background-color: white;
-  padding: 20px 24px 1px 24px;
+  padding: 9px 24px 1px 24px;
   border-radius: var(--br-default);
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -46,7 +46,7 @@
   justify-content: space-between;
   background-color: rgb(255, 255, 255);
   width: 100%;
-  min-height: 27%;
+  min-height: 27.2%;
   /* background: yellow; */
 }
 .bar {
@@ -57,7 +57,7 @@
 .bar > div {
   min-width: 37 1px;
   flex: 1 1 200px; 
-  margin-bottom: 11px;
+  margin-bottom:30px;
   padding: 0 20px;
 }
 .bar span {
