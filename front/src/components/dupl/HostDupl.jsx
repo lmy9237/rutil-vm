@@ -10,6 +10,7 @@ import useSearch from "../button/useSearch";
 import { status2Icon, hostedEngineStatus2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
+import { getStatusSortKey } from "../icons/GetStatusSortkey";
 
 const HostDupl = ({
   hosts = [], columns = [], clusterId,
@@ -39,6 +40,7 @@ const HostDupl = ({
       </TableRowClick>
     ),
     icon: status2Icon(host?.status),
+    iconSortKey: getStatusSortKey(host?.status),
     hostedEngine: hostedEngineStatus2Icon(host?.hostedEngineVM, host?.hostedEngine),
     status: host?.status,
     spmStatus: host?.spmStatus === "NONE" ? "보통" : host?.spmStatus,

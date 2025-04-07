@@ -2,12 +2,13 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: var(--p-default);
-  width: 90%;
+  width: 94%;
 }
 .grid-item {
   border-radius: var(--br-default);
   cursor: pointer;
   height: 35px;
+  width: 90px;
   font-size: var(--fs-12);
 }
 .grid-item:hover {

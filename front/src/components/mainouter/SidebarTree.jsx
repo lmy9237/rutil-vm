@@ -102,6 +102,7 @@ const openContextMenu = (e, item, treeType) => {
     treeType, // 예: "network", "storage", "computing"
   });
 };
+
 const closeContextMenu = () => setContextMenu(null);
 useEffect(() => {
   const handleClickOutside = (e) => {
@@ -115,6 +116,8 @@ useEffect(() => {
   return () => document.removeEventListener("mousedown", handleClickOutside);
 }, [contextMenu]);
   
+
+
   return (
     <div className="aside-popup">
       {/* ✅ 가상머신 섹션 */}
@@ -148,6 +151,10 @@ useEffect(() => {
           setSelectedDiv={setSelectedDiv} 
           getBackgroundColor={getBackgroundColor}
           getPaddingLeft={getPaddingLeft}
+          onContextMenu={openContextMenu} 
+          contextMenu={contextMenu}      
+          closeContextMenu={closeContextMenu}  
+          menuRef={menuRef} 
         />
       )}
 

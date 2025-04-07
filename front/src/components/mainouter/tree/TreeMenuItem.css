@@ -11,6 +11,7 @@
 .tmi svg {
   aspect-ratio:1/1;width:var(--w-icon-tree) !important;
   /* height:var(--h-icon-tree) !important; */
+  flex-shrink: 0;
 }
 .tmi span {
   float:left;

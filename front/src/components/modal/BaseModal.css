@@ -19,7 +19,7 @@
   padding: 16px 24px;
   background: white;
   height: auto;
-  min-height: var(--h-modal-min);
+  /* min-height: var(--h-modal-min); */
   max-height: var(--h-modal-max);
   font-size: var(--fs-16);
 }
@@ -59,6 +59,7 @@
 .popup-contents-prompt {
   display:flex;flex-direction:row;align-items:center;justify-content:flex-start;
   height: auto;
+  /* padding: 13px; */
 }
 /*footer*/
 .edit-footer {

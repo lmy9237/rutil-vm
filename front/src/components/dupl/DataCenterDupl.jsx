@@ -11,6 +11,7 @@ import { status2Icon } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
+import { getStatusSortKey } from "../icons/GetStatusSortkey";
 
 const DataCenterDupl = ({
   datacenters = [], columns = [], showSearchBox = true,
@@ -20,18 +21,24 @@ const DataCenterDupl = ({
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDataCenters, setSelectedDataCenters] = useState([]);
 
-  const transformedData = datacenters.map((dc) => ({
-    ...dc,
-    _name: (
-      <TableRowClick type="datacenter" id={dc?.id}>
-        {dc?.name}
-      </TableRowClick>
-    ),
-    icon: status2Icon(dc?.status),
-    status: Localization.kr.renderStatus(dc?.status),
-    storageType: dc?.storageType ? "로컬" : "공유됨",
-    searchText: `${dc?.name} ${dc?.status} ${dc?.storageType ? "로컬" : "공유됨"}`,
-  }));
+  const transformedData = datacenters.map((dc) => {
+    const status = dc?.status; // ✅ 먼저 선언해줌
+  
+    return {
+      ...dc,
+      _name: (
+        <TableRowClick type="datacenter" id={dc?.id}>
+          {dc?.name}
+        </TableRowClick>
+      ),
+      icon: status2Icon(status),
+      iconSortKey: getStatusSortKey(status), // ✅ 그 다음에 사용
+      status: Localization.kr.renderStatus(status),
+      storageType: dc?.storageType ? "로컬" : "공유됨",
+      searchText: `${dc?.name} ${status} ${dc?.storageType ? "로컬" : "공유됨"}`,
+    };
+  });
+  
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
 
   const openModal = (action) => setActiveModal(action);

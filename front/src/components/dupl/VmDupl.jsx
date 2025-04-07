@@ -10,6 +10,7 @@ import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
+import { getStatusSortKey } from "../icons/GetStatusSortkey";
 
 /**
  * @name VmDupl
@@ -34,6 +35,7 @@ const VmDupl = ({
   const transformedData = vms.map((vm) => ({
     ...vm,
     icon: status2Icon(vm?.status),
+    iconSortKey: getStatusSortKey(vm?.status), 
     engine: hostedEngineStatus2Icon(vm?.hostedEngineVm),
     _name: (
       <TableRowClick type="vm" id={vm?.id}>

@@ -52,7 +52,7 @@
 .box-detail-icons {
   gap: 4px;
   font-size: var(--fs-default);
-  ont-weight: 600;
+  font-weight: 600;
 }
 .box-detail-icon { }
 .txt { line-height:var(--h-icon-tree); }

@@ -11,6 +11,7 @@ import TableRowClick from "../table/TableRowClick";
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
+import { getStatusSortKey } from "../icons/GetStatusSortkey";
 
 /**
  * @name DomainDupl
@@ -43,6 +44,7 @@ const DomainDupl = ({
       </TableRowClick>
     ),
     icon: status2Icon(domain.status),
+    iconSortKey: getStatusSortKey(domain?.status), 
     status: Localization.kr.renderStatus(domain?.status),
     hostedEngine: hostedEngineStatus2Icon(domain?.hostedEngine),
     domainType:
@@ -118,14 +120,7 @@ const DomainDupl = ({
 
       <SelectedIdView items={selectedDomains} />
 
-      {/* 도메인 모달창 */}
-      <DomainModals
-        activeModal={activeModal}
-        domain={selectedDomains[0]}
-        selectedDomains={selectedDomains}
-        datacenterId={datacenterId}
-        onClose={closeModal}
-      />
+
     </>
   );
 };

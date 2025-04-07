@@ -103,32 +103,45 @@ const Tables = ({
   }, [onRowClick]);
 
   // 테이블 정렬기능
-  
   const [sortedData, setSortedData] = useState(data);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const sortData = (key, direction) => {
-  Logger.debug(`PagingTable > sortData ... key: ${key}, direction: ${direction}`);
-
-  const sorted = [...data].sort((a, b) => {
-    const aValue = a[key] ?? "";
-    const bValue = b[key] ?? "";
-
-    // 문자열 비교: 대소문자 무시 및 로케일별 정렬 (A-Z, ㄱ-ㅎ)
-    const result = String(aValue).localeCompare(String(bValue), "ko", {
-      sensitivity: "base",
+    const sorted = [...data].sort((a, b) => {
+      const getValue = (row) => {
+        if (key === "icon") {
+          return row.iconSortKey ?? 99;
+        }
+  
+        const val = row[key];
+        if (React.isValidElement(val)) {
+          const child = val.props?.children;
+          if (Array.isArray(child)) return child.join("");
+          return child ?? "";
+        }
+        return val ?? "";
+      };
+  
+      const aValue = getValue(a);
+      const bValue = getValue(b);
+  
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return direction === "asc" ? aValue - bValue : bValue - aValue;
+      }
+  
+      return direction === "asc"
+        ? String(aValue).localeCompare(String(bValue), "ko", { sensitivity: "base" })
+        : String(bValue).localeCompare(String(aValue), "ko", { sensitivity: "base" });
     });
-
-    return direction === "asc" ? result : -result;
-  });
-
-  setSortedData(sorted);
-};
-
+  
+    setSortedData(sorted);
+  };
+  
+  
   useEffect(() => {
     let filteredData = data;
   
-    // 검색 기능 추가
-    if (searchQuery?.trim() !== "") { 
+    // 🔍 검색 필터 적용
+    if (searchQuery?.trim() !== "") {
       filteredData = data.filter((row) =>
         columns.some((column) =>
           String(row[column.accessor] ?? "")
@@ -138,22 +151,38 @@ const Tables = ({
       );
     }
   
-    // 정렬 기능 유지
+    // 🔁 정렬 적용 (icon 포함)
     if (sortConfig.key) {
+      const getValue = (row) => {
+        if (sortConfig.key === "icon") {
+          return row.iconSortKey ?? 99;
+        }
+  
+        const val = row[sortConfig.key];
+        if (React.isValidElement(val)) {
+          const child = val.props?.children;
+          return Array.isArray(child) ? child.join("") : child ?? "";
+        }
+        return val ?? "";
+      };
+  
       filteredData = [...filteredData].sort((a, b) => {
-        const aValue = a[sortConfig.key] ?? "";
-        const bValue = b[sortConfig.key] ?? "";
+        const aValue = getValue(a);
+        const bValue = getValue(b);
   
-        const result = String(aValue).localeCompare(String(bValue), "ko", {
-          sensitivity: "base",
-        });
+        if (typeof aValue === "number" && typeof bValue === "number") {
+          return sortConfig.direction === "asc" ? aValue - bValue : bValue - aValue;
+        }
   
-        return sortConfig.direction === "asc" ? result : -result;
+        return sortConfig.direction === "asc"
+          ? String(aValue).localeCompare(String(bValue), "ko", { sensitivity: "base" })
+          : String(bValue).localeCompare(String(aValue), "ko", { sensitivity: "base" });
       });
     }
   
     setSortedData(filteredData);
   }, [data, searchQuery, sortConfig]);
+  
   
 
   const handleSort = (column) => {

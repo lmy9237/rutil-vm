@@ -7,14 +7,16 @@ import DomainDestroyModal from "../modal/domain/DomainDestroyModal";
 import DomainMainTenanceModal from "../modal/domain/DomainMainTenanceModal";
 import DomainCheckModal from "../modal/domain/DomainCheckModal";
 import Localization from "../../utils/Localization";
+import DomainModals from "../modal/domain/DomainModals";
 
 const DomainActionButtons = ({
   openModal,
   isEditDisabled,
   isDeleteDisabled,
   status,
+  isContextMenu = false,
   actionType = "default",
-  isContextMenu
+  datacenterId,
 }) => {
   // 도메인 생성, 도메인 가져오기, 도메인 관리(편집), 삭제, connection, lun 새로고침, 파괴, 마스터 스토리지 도메인으로 선택
   // 데이터센터: 연결, 분리, 활성, 유지보수
@@ -29,6 +31,11 @@ const DomainActionButtons = ({
   const [isDomainDestroyModalOpen, setIsDomainDestroyModalOpen] = useState(false); // 삭제예정
   const [isDomainMainTenanceModalOpen, setIsDomainMainTenanceModalOpen] = useState(false);// 삭제예정
   const [isDomainCheckModalOpen, setIsDomainCheckModalOpen] = useState(false); // 삭제예정
+
+  //모달관련
+  const [activeModal, setActiveModal] = useState(null);
+  const [selectedDomains, setSelectedDomains] = useState([]);
+  const closeModal = () => setActiveModal(null);
 
   const basicActions = [
     { type: "edit", label: "유지보수모달(임시)", onBtnClick: () => setIsDomainMainTenanceModalOpen(true) },
@@ -58,28 +65,28 @@ const DomainActionButtons = ({
     { type: "maintenance", label: "유지보수", disabled: isDeleteDisabled || isMaintenance, onBtnClick: () => openModal("maintenance") },
   ];
 
-  const renderButtons = (actions) =>
-    actions.map(({ type, label, disabled }) => (
-      <button key={type} onClick={() => openModal(type)} disabled={disabled}>
-        {label}
-      </button>
-    ));
+  // const renderButtons = (actions) =>
+  //   actions.map(({ type, label, disabled }) => (
+  //     <button key={type} onClick={() => openModal(type)} disabled={disabled}>
+  //       {label}
+  //     </button>
+  //   ));
 
 
-  const selectedActions =
-  actionType === "domain"
-    ? basicActions
-    : actionType === "dcDomain"
-      ? dcDomainActions
-      : actionType === "domainDc"
-        ? domainDcActions
-        : [];
+  // const selectedActions =
+  // actionType === "domain"
+  //   ? basicActions
+  //   : actionType === "dcDomain"
+  //     ? dcDomainActions
+  //     : actionType === "domainDc"
+  //       ? domainDcActions
+  //       : [];
 
   return (
  <>
     <ActionButtonGroup
       actionType={actionType}
-      actions={selectedActions}
+      actions={basicActions}
     >
       {!isContextMenu && (
         <ActionButton label={"디스크"} onClick={() => navigate("/storages/disks")} actionType={actionType}/>
@@ -102,6 +109,15 @@ const DomainActionButtons = ({
    isOpen={isDomainCheckModalOpen}
    onClose={() => setIsDomainCheckModalOpen(false)}
  />
+
+       {/* 도메인 모달창 */}
+       <DomainModals
+        activeModal={activeModal}
+        domain={selectedDomains[0]}
+        selectedDomains={selectedDomains}
+        datacenterId={datacenterId}
+        onClose={closeModal}
+      />
  </>
     /*
     <div className={wrapperClass}>

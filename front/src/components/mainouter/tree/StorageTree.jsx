@@ -7,6 +7,8 @@ import {
   rvi16DataCenter,
   rvi16Cloud,
 } from "../../icons/RutilVmIcons";
+import DomainActionButtons from "../../dupl/DomainActionButtons";
+import DataCenterActionButtons from "../../dupl/DataCenterActionButtons";
 
 const StorageTree = ({ selectedDiv, setSelectedDiv, onContextMenu, contextMenu, menuRef }) => {
   const navigate = useNavigate();
@@ -103,10 +105,32 @@ const StorageTree = ({ selectedDiv, setSelectedDiv, onContextMenu, contextMenu, 
                   name: dataCenter.name,
                   level: 2,
                   type: "dataCenter",
-                }, "storage");
+                }, "network");
               }}
             />
-
+          {/* 👇 데이터센터 우클릭 시 context 메뉴 표시 */}
+          {contextMenu?.item?.id === dataCenter.id &&
+            contextMenu?.item?.type === "dataCenter" && (
+              <div
+                className="right-click-menu-box context-menu-item"
+                ref={menuRef}
+                style={{
+                  position: "fixed",
+                  top: contextMenu.mouseY,
+                  left: contextMenu.mouseX,
+                  background: "white",
+                  zIndex: "9999",
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <DataCenterActionButtons
+                  selectedDataCenters={[contextMenu.item]}
+                  status="single" 
+                  actionType="context"
+                  onCloseContextMenu={() => onContextMenu(null)}
+                />
+              </div>
+          )}
 
               {/* 세 번째 레벨 (Storage Domains) */}
               {isDataCenterOpen &&
@@ -130,7 +154,41 @@ const StorageTree = ({ selectedDiv, setSelectedDiv, onContextMenu, contextMenu, 
                           setSelectedDiv(domain.id);
                           navigate(`/storages/domains/${domain.id}`);
                         }}
+                        onContextMenu={(e) => {
+                          e.preventDefault();
+                          onContextMenu?.(e, {
+                            id: domain.id,
+                            name: domain.name,
+                            level: 3,
+                            type: "domain",
+                          }, "storage");
+                        }}
                       />
+                      {contextMenu?.item?.id === domain.id &&
+                        contextMenu?.item?.type === "domain" && (
+                          <div
+                            className="right-click-menu-box context-menu-item"
+                            ref={menuRef}
+                            style={{
+                              position: "fixed",
+                              top: contextMenu.mouseY,
+                              left: contextMenu.mouseX,
+                              background: "white",
+                              zIndex: 9999
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <DomainActionButtons
+                              openModal={(action) => {
+                                onContextMenu(null); // 닫기
+                              }}
+                              selectedDomains={[domain]}
+                              status={domain?.status}
+                              actionType="context"
+                              isContextMenu={true}
+                            />
+                          </div>
+                        )}
                     </div>
                   );
                 })}

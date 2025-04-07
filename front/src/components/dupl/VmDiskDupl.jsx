@@ -14,6 +14,7 @@ import TableColumnsInfo from "../table/TableColumnsInfo";
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
 import toast from "react-hot-toast";
+import { getStatusSortKey } from "../icons/GetStatusSortkey";
 
 /**
  * @name VmDiskDupl
@@ -47,9 +48,11 @@ const VmDiskDupl = ({
   }
   const transformedData = vmDisks.map((d) => {
     const diskImage = d?.diskImageVo;
+    const status = d?.active ? "UP" : "DOWN"; 
     return {
       ...d,
-      icon: status2Icon(d?.active ? "UP" : "DOWN"),
+      icon: status2Icon(status),
+      iconSortKey: getStatusSortKey(status),
       _alias: (
         <TableRowClick type="disk" id={diskImage?.id}>
           {diskImage?.alias}
