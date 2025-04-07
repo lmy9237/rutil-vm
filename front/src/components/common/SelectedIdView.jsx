@@ -7,7 +7,9 @@ import Logger from "../../utils/Logger";
  * @param {Array} items 목록
  * @returns {JSX.Element} ID표출 뷰
  */
-const SelectedIdView = ({ items=[] }) => {
+const SelectedIdView = ({ 
+  items=[],
+}) => {
   const selectedIds = (Array.isArray(items) ? items : [])
     .map((e) => e.id)
     .join(", ");
@@ -18,8 +20,9 @@ const SelectedIdView = ({ items=[] }) => {
       Logger.error(`something went WRONG ... reason: ${e.message}`)
     });
   }
+
   useEffect(() => {
-    copyText(selectedIds)
+    import.meta.env.DEV && copyText(selectedIds) // 개발 일 때만 활성화
   }, [items])
   Logger.debug(`SelectedIdView ... import.meta.env.DEV: ${import.meta.env.DEV}`)
   

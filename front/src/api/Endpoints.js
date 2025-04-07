@@ -1,3 +1,4 @@
+import CONSTANT from "../Constants";
 import Logger from "../utils/Logger";
 
 const ENDPOINT_API_V1 = `/api/v1`
@@ -279,7 +280,9 @@ const ENDPOINTS = {
   //#endregion: Disk
   
   //#region: Event
-  FIND_ALL_EVENTS: () =>                                                   `${ENDPOINT_API_V1}/events`,
+  FIND_ALL_EVENTS: () =>                                                  `${ENDPOINT_API_V1}/events`,
+  FIND_ALL_EVENTS_PAGE: (severityThreshold, pageNo=1,size) =>             `${ENDPOINT_API_V1}/events?${severityThreshold ? `severityThreshold=${severityThreshold}` : ""}${size ? `&size=${size}` : ""}${pageNo ? `&pageNo=${pageNo}` : ""}`,
+  FIND_EVENT: (eventId) =>                                                `${ENDPOINT_API_V1}/events/${eventId}`,
   //#endregion: Event
 
   //#region: Job

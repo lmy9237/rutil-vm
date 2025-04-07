@@ -84,7 +84,7 @@ const TemplateModal = ({
   // } = useAllDiskProfilesFromDomain(disk.diskImageVo?.storageDomainVo.id, (e) => ({...e,}));
 
   // TODO: 스토리지 도메인에 대한 디스크 프로파일 목록 출력문제
-  console.log(`disks: ${JSON.stringify(disks)}`);
+  Logger.debug(`TemplateModal > disks: ${JSON.stringify(disks, null, 2)}`);
   useEffect(() => {
     if (isOpen && selectedVm?.dataCenterVo?.id) {
       setDataCenterVo({

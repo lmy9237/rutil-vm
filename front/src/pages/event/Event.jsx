@@ -1,8 +1,10 @@
 import HeaderButton from "../../components/button/HeaderButton";
 import EventDupl from "../../components/dupl/EventDupl";
-import { rvi24Event } from "../../components/icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
+import { rvi24Event } from "../../components/icons/RutilVmIcons";
+import Logger from "../../utils/Logger";
 import { useAllEvents } from "../../api/RQHook";
+
 
 /**
  * @name Event
@@ -12,16 +14,20 @@ import { useAllEvents } from "../../api/RQHook";
  * @returns
  */
 const Event = () => {
+
   const {
-    data: events,
+    data: events = [],
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
     refetch: refetchEvents
-  } = useAllEvents((e) => ({
-    ...e,
-  }));
+  } = useAllEvents({
+    mapPredicate: (e) => ({
+      ...e,
+    })
+  });
 
+  Logger.debug("Event ...")
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24Event()}

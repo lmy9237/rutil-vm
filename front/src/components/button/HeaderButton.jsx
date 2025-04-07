@@ -8,6 +8,7 @@ import PopupBox from "../common/PopupBox";
 import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
 import "./HeaderButton.css";
+import useClickOutside from "../../hooks/useClickOutside";
 
 /**
  * @name HeaderButton
@@ -36,7 +37,7 @@ const HeaderButton = ({
     Logger.debug(`Clicked on ${item.label}`);
     setIsPopupBoxVisible(false);
   };
-
+  useClickOutside()
   // 팝업 외부 클릭 시 닫히도록 처리
   useEffect(() => {
     const handleClickOutside = (event) => {

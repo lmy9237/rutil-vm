@@ -33,13 +33,20 @@ import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "pretendard/dist/web/static/pretendard.css";
 import Logger from "./utils/Logger";
 import "./App.css";
+import useUIState from "./hooks/useUIState";
 
 const App = () => {
   //#region: 웹소켓연결
   const [stompClient, setStompClient] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const {
+    setLoginBoxVisible, setEventBoxVisible
+  } = useUIState()
   useEffect(() => {
+    setEventBoxVisible(false)
+    setLoginBoxVisible(false)
+
     // Connect using STOMP
     STOMP.connect({}, (frame) => {
       Logger.debug("Connected: " + frame);

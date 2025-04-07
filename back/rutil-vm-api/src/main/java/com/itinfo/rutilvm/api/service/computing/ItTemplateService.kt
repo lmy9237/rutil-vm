@@ -274,7 +274,7 @@ class TemplateServiceImpl(
 	override fun findAllEventsFromTemplate(templateId: String): List<EventVo> {
 		log.info("findAllEventsFromTemplate ... ")
 		val template: Template? = conn.findTemplate(templateId).getOrNull()
-		val res: List<Event> = conn.findAllEvents().getOrDefault(emptyList())
+		val res: List<Event> = conn.findAllEvents("sortby time desc").getOrDefault(emptyList())
 			.filter { it.templatePresent() && it.template().name() == template?.name() }
 		return res.toEventVos()
 	}

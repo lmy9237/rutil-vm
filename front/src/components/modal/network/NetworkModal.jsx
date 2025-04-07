@@ -56,7 +56,7 @@ const NetworkModal = ({
 
   const { data: network } = useNetwork(networkId);
   
-  Logger.debug(`netowrk: ${JSON.stringify(network)}`);
+  Logger.debug(`NetworkModal ... network: ${JSON.stringify(network)}`);
   const { 
     data: datacenters = [], 
     isLoading: isDataCentersLoading 

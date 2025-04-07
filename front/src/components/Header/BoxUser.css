@@ -1,0 +1,24 @@
+.box-user {
+  position: absolute;
+  background-color: #ffffff;
+  z-index: 4;
+  width: 138px;
+  height: 58px;
+  right: 0;
+  border-radius: 4px;
+  font-size: var(--fs-default);
+  border: 1px solid rgb(204, 204, 204);
+  top: 63px;
+  border-radius: 3px;
+}
+
+.box-user > div {
+  padding: 0px 12px;
+  height: 28px;
+  cursor: pointer;
+  align-items: center;
+  display: flex;
+}
+.box-user > div:hover {
+  background-color: #ebececd8;
+}

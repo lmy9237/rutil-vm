@@ -105,7 +105,7 @@ const HostModal = ({
       clusterVo,
     };
 
-    Logger.debug(`HostModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`); // 데이터를 확인하기 위한 로그
+    Logger.debug(`HostModal > handleFormSubmit ... dataToSubmit: ${JSON.stringify(dataToSubmit, null , 2)}`); // 데이터를 확인하기 위한 로그
     editMode
       ? editHost({ hostId: formState.id, hostData: dataToSubmit })
       : addHost({ hostData: dataToSubmit, deployHostedEngine: String(formState.hostedEngine), });

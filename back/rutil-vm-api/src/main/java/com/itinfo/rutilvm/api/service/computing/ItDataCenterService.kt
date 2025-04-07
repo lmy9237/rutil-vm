@@ -312,7 +312,7 @@ class DataCenterServiceImpl(
 	override fun findAllEventsFromDataCenter(dataCenterId: String): List<EventVo> {
 		log.info("findAllEventsFromDataCenter ... dataCenterId: {}", dataCenterId)
 		val dataCenter: DataCenter? = conn.findDataCenter(dataCenterId).getOrNull()
-		val res: List<Event> = conn.findAllEvents()
+		val res: List<Event> = conn.findAllEvents("sortby time desc")
 			.getOrDefault(emptyList())
 			.filter {(it.dataCenterPresent() && (
 					(it.dataCenter().idPresent() && it.dataCenter().id() == dataCenterId) ||

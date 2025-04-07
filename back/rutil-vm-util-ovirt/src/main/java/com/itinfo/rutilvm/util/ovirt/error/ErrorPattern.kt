@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.util.ovirt.error
 
 import com.itinfo.rutilvm.util.ovirt.Term
+import com.itinfo.rutilvm.util.ovirt.error.FailureType.ID_NOT_FOUND
 import com.itinfo.rutilvm.util.ovirt.error.FailureType.NOT_FOUND
 import org.ovirt.engine.sdk4.Error
 import java.util.concurrent.ConcurrentHashMap
@@ -88,6 +89,9 @@ enum class ErrorPattern(
 	TICKET_ID_NOT_FOUND("TICKET-E001", Term.TICKET, FailureType.ID_NOT_FOUND),
 	TICKET_NOT_FOUND("TICKET-E002", Term.TICKET, FailureType.NOT_FOUND),
 	TICKET_VO_INVALID("TICKET-E003", Term.TICKET, FailureType.BAD_REQUEST),
+	EVENT_ID_NOT_FOUND("EVENT-E001", Term.EVENT, FailureType.ID_NOT_FOUND),
+	EVENT_NOT_FOUND("EVENT-E002", Term.EVENT, FailureType.ID_NOT_FOUND),
+	EVENT_VO_INVALID("EVENT-E003", Term.EVENT, FailureType.BAD_REQUEST),
 	CERT_ID_NOT_FOUND("CERT-E001", Term.CERT, FailureType.ID_NOT_FOUND),
 	CERT_NOT_FOUND("CERT-E002", Term.CERT, FailureType.NOT_FOUND),
 	JOB_ID_NOT_FOUND("JOB-E001", Term.JOB, FailureType.ID_NOT_FOUND),
@@ -127,7 +131,8 @@ fun ErrorPattern.toError(): Error {
 		ErrorPattern.CONSOLE_ID_NOT_FOUND,
 		ErrorPattern.TICKET_ID_NOT_FOUND,
 		ErrorPattern.CERT_ID_NOT_FOUND,
-		ErrorPattern.JOB_ID_NOT_FOUND -> Error("[${code}] ${term.desc} ${failureType.message}")
+		ErrorPattern.JOB_ID_NOT_FOUND,
+		ErrorPattern.EVENT_ID_NOT_FOUND, -> Error("[${code}] ${term.desc} ${failureType.message}")
 		ErrorPattern.OVIRTUSER_NOT_FOUND,
 		ErrorPattern.ROLE_NOT_FOUND,
 		ErrorPattern.DATACENTER_NOT_FOUND,
@@ -145,7 +150,8 @@ fun ErrorPattern.toError(): Error {
 		ErrorPattern.CONSOLE_NOT_FOUND,
 		ErrorPattern.TICKET_NOT_FOUND,
 		ErrorPattern.CERT_NOT_FOUND,
-		ErrorPattern.JOB_NOT_FOUND, -> Error("[${code}] ${failureType.message} ${term.desc}")
+		ErrorPattern.JOB_NOT_FOUND,
+		ErrorPattern.EVENT_NOT_FOUND, -> Error("[${code}] ${failureType.message} ${term.desc}")
 		ErrorPattern.OVIRTUSER_VO_INVALID,
 		ErrorPattern.OVIRTUSER_AUTH_INVALID,
 		ErrorPattern.OVIRTUSER_LOCKED,
@@ -164,7 +170,8 @@ fun ErrorPattern.toError(): Error {
 		ErrorPattern.TEMPLATE_VO_INVALID,
 		ErrorPattern.CONSOLE_VO_INVALID,
 		ErrorPattern.TICKET_VO_INVALID,
-		ErrorPattern.JOB_VO_INVALID, -> Error("[${code}] ${term.desc} ${failureType.message}")
+		ErrorPattern.JOB_VO_INVALID,
+		ErrorPattern.EVENT_VO_INVALID, -> Error("[${code}] ${term.desc} ${failureType.message}")
 		ErrorPattern.NIC_UNLINKED_REQUIRED -> Error("[${code}] ${term.desc} ${failureType.message}: $additional")
 		else -> Error(failureType.message)
 	}

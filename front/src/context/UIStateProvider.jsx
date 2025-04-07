@@ -16,11 +16,21 @@ export const UIStateProvider = ({ children }) => {
   const KEY_TMI_OPEN_CLUSTER = "openCluster";
   const KEY_TMI_OPEN_HOST = "openHost";
   const KEY_TMI_OPEN_DOMAIN = "openDomain";
-  
+  const KEY_EVENT_BOX_EXPANDED = "eventBoxExpanded";
+  const KEY_EVENT_BOX_VISIBLE = "eventBoxVisible";
+  const KEY_EVENT_BOX_SECTION_ACTIVE = "eventBoxSectionActive"; // '알림', '이벤트'
+  // const KEY_EVENT_IDS_READ = "eventIdsRead"; 
+  const KEY_LOGIN_BOX_VISIBLE = "loginBoxVisible";
+
   const initialState = JSON.parse(localStorage.getItem(KEY_UI_STATE)) ?? {
     [KEY_FOOTER_VISIBLE]: false,
     [KEY_ASIDE_VISIBLE]: false,
-    [KEY_TMI_LAST_SELECTED]: "computing",
+    [KEY_TMI_LAST_SELECTED]: "",
+    [KEY_EVENT_BOX_VISIBLE]: false,
+    [KEY_EVENT_BOX_EXPANDED]: false,
+    [KEY_EVENT_BOX_SECTION_ACTIVE]: "알림",
+    // [KEY_EVENT_IDS_READ]: [],
+    [KEY_LOGIN_BOX_VISIBLE]: false,
     [KEY_TMI_COMPUTING]: {
       [KEY_SECOND_VISIBLE]: false,
       [KEY_TMI_OPEN_DATACENTER]: {
@@ -51,12 +61,12 @@ export const UIStateProvider = ({ children }) => {
   }
   const [sUIState, sSetUIState] = useState(initialState)
   const _UIState = () => {
-    const res = Object.assign({}, sUIState, JSON.parse(localStorage.getItem(KEY_UI_STATE)))
+    const res = Object.assign({}, sUIState) 
     Logger.debug(`UIStateProvider > _UIState ... res: ${JSON.stringify(res, null, 2)}`);
     return res;
   }
   const _setUIState = (newUIState) => {
-    Logger.debug(`UIStateProvider > _setUIState ... newUIState: ${newUIState}`);
+    // Logger.debug(`UIStateProvider > _setUIState ... newUIState: ${JSON.stringify(newUIState, null, 2)}`);
     sSetUIState(newUIState)
     localStorage.setItem(KEY_UI_STATE, JSON.stringify(newUIState, null, 2));
   }
@@ -99,7 +109,62 @@ export const UIStateProvider = ({ children }) => {
     });
   }
   //#endregion: 최근 선택 왼쪽메뉴
+
+  //#region: 밸 박스 활성화 여부
+  const eventBoxVisible = _UIState()[KEY_EVENT_BOX_VISIBLE] ?? false;
+  const setEventBoxVisible = (newV) => {
+    Logger.debug(`UIStateProvider > setEventBoxVisible ... newV: ${newV}`)
+    _setUIState({ 
+      ...sUIState,
+      [KEY_EVENT_BOX_VISIBLE]: newV
+    });
+  }
+  const toggleEventBoxVisible = () => {
+    Logger.debug(`UIStateProvider > toggleEventBoxVisible`)
+    setEventBoxVisible(!eventBoxVisible)
+  }
+  //#endregion: 밸 박스 활성화 여부
   
+  //#region: 이벤트 박스 (벨버튼) 메뉴 확장여부
+  const eventBoxExpanded = _UIState()[KEY_EVENT_BOX_EXPANDED] ?? false;
+  const setEventBoxExpanded = (newV) => {
+    Logger.debug(`UIStateProvider > setEventBoxExpanded ... newV: ${newV}`)
+    _setUIState({ 
+      ...sUIState,
+      [KEY_EVENT_BOX_EXPANDED]: newV
+    });
+  }
+  const toggleEventBoxExpanded = () => {
+    Logger.debug(`UIStateProvider > toggleEventBoxExpanded`)
+    setEventBoxExpanded(!eventBoxExpanded)
+  }
+  //#endregion: 이벤트 박스 (벨버튼) 메뉴 확장여부
+
+  //#region: 이벤트 박스 (벨버튼) 활성화 탭
+  const eventBoxSectionActive = _UIState()[KEY_EVENT_BOX_SECTION_ACTIVE] ?? "알림";
+  const setEventBoxSectionActive = (newV) => {
+    _setUIState({
+      ...sUIState,
+      [KEY_EVENT_BOX_SECTION_ACTIVE]: newV
+    });
+  }
+  //#endregion: 이벤트 박스 (벨버튼) 활성화 탭
+
+  //#region: 로그인박스 표출 여부
+  const loginBoxVisible = _UIState()[KEY_LOGIN_BOX_VISIBLE] ?? false;
+  const setLoginBoxVisible = (newV) => {
+    Logger.debug(`UIStateProvider > setLoginBoxVisible ... newV: ${newV}`)
+    _setUIState({ 
+      ...sUIState,
+      [KEY_LOGIN_BOX_VISIBLE]: newV
+    });
+  }
+  const toggleLoginBoxVisible = () => {
+    Logger.debug(`UIStateProvider > toggleBellACtive`)
+    setLoginBoxVisible(!loginBoxVisible)
+  }
+  //#endregion: 로그인박스 표출 여부
+
   //#region: 트리메뉴 데이터센터 보관값
   const _allTMIComputing = () => _UIState()[KEY_TMI_COMPUTING] ?? {}
   const _allTMINetwork = () => _UIState()[KEY_TMI_NETWORK] ?? {}
@@ -300,7 +365,11 @@ export const UIStateProvider = ({ children }) => {
         footerVisible, setFooterVisible, toggleFooterVisible,
         asideVisible, setAsideVisible, toggleAsideVisible,
         tmiLastSelected, setTmiLastSelected,
-        
+        eventBoxVisible, setEventBoxVisible, toggleEventBoxVisible,
+        eventBoxExpanded, setEventBoxExpanded, toggleEventBoxExpanded,
+        eventBoxSectionActive, setEventBoxSectionActive,
+        loginBoxVisible, setLoginBoxVisible, toggleLoginBoxVisible,
+
         secondVisibleComputing, setSecondVisibleComputing, toggleSecondVisibleComputing,
         secondVisibleNetwork, setSecondVisibleNetwork, toggleSecondVisibleNetwork,
         secondVisibleStorage, setSecondVisibleStorage, toggleSecondVisibleStorage,

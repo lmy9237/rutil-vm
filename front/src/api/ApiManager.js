@@ -2903,9 +2903,7 @@ const ApiManager = {
       toast.error(`Error fetching '\n${e.message}`)
     }
   },
-
   //#endregion: Disk
-
 
   //#region: event
   /**
@@ -2914,10 +2912,23 @@ const ApiManager = {
    * 
    * @returns 
    **/
-  findAllEvent: async () => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_ALL_EVENTS(),
-    // defaultValues: DEFAULT_VALUES.FIND_ALL_EVENTS
+  findAllEvents: async (severityThreshold=null, pageNo=null, size=null) => {
+    const _url = (pageNo || severityThreshold) ? ENDPOINTS.FIND_ALL_EVENTS_PAGE(severityThreshold, pageNo, size) : ENDPOINTS.FIND_ALL_EVENTS() 
+    return makeAPICall({
+      method: "GET", 
+      url: _url,
+      // defaultValues: DEFAULT_VALUES.FIND_ALL_EVENTS
+    })
+  },
+
+  /**
+   * @name ApiManager.removeEvent
+   * @param {string} eventId (제거 할) 이벤트ID
+   * @returns 
+   */
+  removeEvent: async (eventId) => makeAPICall({
+    method: "DELETE", 
+    url: ENDPOINTS.FIND_EVENT(eventId),
   }),
   //#endregion: event
 

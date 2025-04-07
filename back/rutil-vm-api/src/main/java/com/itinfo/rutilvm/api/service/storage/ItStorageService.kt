@@ -644,7 +644,7 @@ class StorageServiceImpl(
 		log.info("findAllEventsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val storageDomain: StorageDomain = conn.findStorageDomain(storageDomainId)
 			.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-		val res: List<Event> = conn.findAllEvents().getOrDefault(emptyList())
+		val res: List<Event> = conn.findAllEvents("sortby time desc").getOrDefault(emptyList())
 			.filter {event ->
 				event.storageDomainPresent() &&
 				(event.storageDomain().idPresent() && event.storageDomain().id().equals(storageDomainId) || (event.storageDomain().namePresent() && event.storageDomain().name().equals(storageDomain.name())) )

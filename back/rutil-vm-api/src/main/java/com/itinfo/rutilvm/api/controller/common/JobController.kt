@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 
 @Controller
 @Api(tags = ["Job"])
-@RequestMapping("/api/v1/job/")
+@RequestMapping("/api/v1/jobs/")
 class JobController: BaseController() {
 	@Autowired private lateinit var iJob: ItJobService
 
@@ -40,7 +40,7 @@ class JobController: BaseController() {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun jobs(): ResponseEntity<List<JobVo>> {
-		log.info("/computing/hosts ... 호스트 목록")
+		log.info("/jobs/ ... 호스트 목록")
 		return ResponseEntity.ok(iJob.findAll())
 	}
 
@@ -63,7 +63,7 @@ class JobController: BaseController() {
 	): ResponseEntity<JobVo?> {
 		if (jobId.isNullOrEmpty())
 			throw ErrorPattern.JOB_ID_NOT_FOUND.toException()
-		log.info("/computing/hosts/{} ... 작업 상세정보", jobId)
+		log.info("/jobs/{} ... 작업 상세정보", jobId)
 		return ResponseEntity.ok(iJob.findOne(jobId))
 	}
 

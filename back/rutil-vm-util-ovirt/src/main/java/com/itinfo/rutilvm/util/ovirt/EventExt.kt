@@ -11,23 +11,14 @@ import org.ovirt.engine.sdk4.types.Event
 private fun Connection.srvEvents(): EventsService =
 	systemService.eventsService()
 
-fun Connection.findAllEvents(searchQuery: String = "", follow: String = "", max: String = ""): Result<List<Event>> = runCatching {
+fun Connection.findAllEvents(searchQuery: String = "", follow: String = "", max: String = "", from: String = ""): Result<List<Event>> = runCatching {
 	this.srvEvents().list().apply {
 		if (max.isNotEmpty()) max(max.toInt())
+		if (from.isNotEmpty()) from(from.toInt())
 		if (searchQuery.isNotEmpty()) search(searchQuery)
 		if (follow.isNotEmpty()) follow(follow)
 	}.caseSensitive(false).send().events()
 
-	// if (searchQuery.isNotEmpty() && follow.isNotEmpty() && max.isNotEmpty())
-	// 	this.srvEvents().list().max(max.toInt()).search(searchQuery).follow(follow).caseSensitive(false).send().events()
-	// else if (searchQuery.isNotEmpty())
-	// 	this.srvEvents().list().search(searchQuery).caseSensitive(false).send().events()
-	// else if (follow.isNotEmpty())
-	// 	this.srvEvents().list().follow(follow).caseSensitive(false).send().events()
-	// else if (max.isNotEmpty())
-	// 	this.srvEvents().list().max(max.toInt()).send().events()
-	// else
-	// 	this.srvEvents().list().send().events()
 }.onSuccess {
 	Term.EVENT.logSuccess("목록조회")
 }.onFailure {
@@ -46,3 +37,14 @@ fun Connection.findEvent(eventId: String): Result<Event?> = runCatching {
 	Term.EVENT.logFail("상세조회")
 	throw if (it is Error) it.toItCloudException() else it
 }
+
+fun Connection.removeEvent(eventId: String): Result<Boolean?> = runCatching {
+	this.srvEvent(eventId).remove().send()
+	true
+}.onSuccess {
+	Term.EVENT.logSuccess("삭제")
+}.onFailure {
+	Term.EVENT.logFail("삭제")
+	throw if (it is Error) it.toItCloudException() else it
+}
+

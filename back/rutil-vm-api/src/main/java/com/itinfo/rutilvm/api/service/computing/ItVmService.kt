@@ -308,7 +308,7 @@ class VmServiceImpl(
 		log.info("findAllEventsFromVm ... vmId: {}", vmId)
 		val vm: Vm = conn.findVm(vmId)
 			.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
-		val res: List<Event> = conn.findAllEvents().getOrDefault(emptyList())
+		val res: List<Event> = conn.findAllEvents("sortby time desc").getOrDefault(emptyList())
 			.filter { it.vmPresent() && it.vm().name() == vm.name() }
 		return res.toEventVos()
 	}

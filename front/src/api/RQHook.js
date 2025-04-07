@@ -1474,7 +1474,7 @@ export const useLoginIscsiFromHost = (
       const res = await ApiManager.findLoginIscsiFromHost(hostId, iscsiData);
       const _res = validate(res) || {}
       Logger.debug(`RQHook > useLoginIscsiFromHost ... hostId: ${hostId}`)
-      validate(_res);
+      return _res;
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useLoginIscsiFromHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1505,7 +1505,7 @@ export const useAddHost = (
       const res = await ApiManager.addHost(hostData, deployHostedEngine);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useLoginIscsiFromHost ... hostData: ${JSON.stringify(hostData, null, 2)}, deployHostedEngine: ${deployHostedEngine}`)
-      validate(_res);
+      return _res;
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1534,8 +1534,8 @@ export const useEditHost = (
     mutationFn: async ({ hostId, hostData }) => {
       const res = await ApiManager.editHost(hostId, hostData)
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useEditHost ... hostId: ${hostId}, hostData: ${hostData}`)
-      validate(_res);
+      Logger.debug(`RQHook > useEditHost ... hostId: ${hostId}, hostData: ${JSON.stringify(hostData, null ,2)}`)
+      return _res;
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1565,7 +1565,7 @@ export const useDeleteHost = (
       const res = await ApiManager.deleteHost(hostId)
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useDeleteHost ... hostId: ${hostId}`)
-      validate(_res);
+      return _res;
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1596,7 +1596,7 @@ export const useDeactivateHost = (
       const res = await ApiManager.deactivateHost(hostId);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useDeactivateHost ... hostId: ${hostId}`)
-      validate(_res);
+      return _res;
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeactivateHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1627,7 +1627,7 @@ export const useActivateHost = (
       const res = await ApiManager.activateHost(hostId)
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useActivateHost ... hostId: ${hostId}`)
-      validate(_res);
+      return _res;
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useActivateHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1658,7 +1658,7 @@ export const useRestartHost = (
       const res = await ApiManager.restartHost(hostId);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useRestartHost ... hostId: ${hostId}`)
-      validate(_res);
+      return _res;
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRestartHost ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1681,7 +1681,7 @@ export const useEnrollHostCertificate = (
       const res = await ApiManager.enrollHostCertificate(hostId);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useEnrollHostCertificate ... hostId: ${hostId}`)
-      validate(_res);
+      return _res;
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEnrollHostCertificate ... res: ${JSON.stringify(res, null, 2)}`);
@@ -1860,8 +1860,9 @@ export const useAddSnapshotFromVM = (
     // mutationFn: async ({vmId,snapshotData}) => await ApiManager.addSnapshotFromVM(vmId,snapshotData),
     mutationFn: async ({vmId, snapshotData}) => {
       const res = await ApiManager.addSnapshotFromVM(vmId, snapshotData)
+      const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useAddSnapshotFromVM ... vmId: ${vmId}, snapshotData: ${JSON.stringify(snapshotData, null, 2)}`)
-      return validate(res) ?? {}
+      return _res
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddSnapshotFromVM ... res: ${JSON.stringify(res)}`)
@@ -3393,7 +3394,6 @@ export const useEditNetwork = (
       const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useEditNetwork ... networkId: ${networkId}, networkData: ${JSON.stringify(networkData, null, 2)}`)
       return _res;
-
     },
     onSuccess: (res, { networkId }) => {
       Logger.debug(`RQHook > useEditNetwork ... res: ${JSON.stringify(res, null, 2)}`)
@@ -4727,20 +4727,83 @@ export const useCopyDisk = (
  * @param {function} mapPredicate 
  * @returns useQuery훅
  */
-export const useAllEvents = (
+export const useAllEvents = ({
+  severityThreshold=null,
+  pageNo=null, size=null,
   mapPredicate=(e) => ({ ...e })
-) => useQuery({
+}) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allEvents'],
   queryFn: async () => {
-    const res = await ApiManager.findAllEvent()
+    const res = await ApiManager.findAllEvents(severityThreshold, pageNo, size)
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useAllEvents ... res: ${JSON.stringify(_res, null, 2)}`);
     return _res;
   }
-})
+});
+/**
+ * @name useAllEventsNormal
+ * @description 박스 안 정상 이벤트 목록조회 useQuery훅
+ * 
+ * @param {function} mapPredicate 
+ * @returns useQuery훅
+ */
+export const useAllEventsNormal = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['allEventsNormal'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllEvents(null, 1, 100)
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllEventsNormal ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
+  }
+});
+export const useAllNotiEvents = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['allNotiEvents'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllEvents("normal", 1, 40)
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllNotiEvents ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
+  }
+});
+
+
+export const useRemoveEvent = (
+  eventId, 
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const res = await ApiManager.removeEvent(eventId)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useRemoveEvent ... eventId: ${eventId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useRemoveEvent ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('allEvents,allNotiEvents,allEventsNormal');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  })
+}
 //#endregion: event
 
 
