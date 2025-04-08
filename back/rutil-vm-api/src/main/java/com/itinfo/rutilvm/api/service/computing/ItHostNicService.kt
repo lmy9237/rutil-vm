@@ -7,6 +7,7 @@ import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.Error
+import org.ovirt.engine.sdk4.builders.HostNicBuilder
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.HostNic
 import org.ovirt.engine.sdk4.types.NetworkAttachment
@@ -53,7 +54,7 @@ interface ItHostNicService {
 	fun findNetworkAttachmentFromHost(hostId: String, naId: String): NetworkAttachmentVo?
 	/**
 	 * [ItHostNicService.updateNetworkAttachmentFromHost]
-	 * 호스트 네트워크 분리 (할당된 네트워크)
+	 * 호스트 네트워크 편집
 	 *
 	 * @param hostId [String] 호스트 Id
 	 * @param networkAttachmentId [String] 네트워크 결합 Id
@@ -62,6 +63,16 @@ interface ItHostNicService {
 	 */
 	@Throws(Error::class)
 	fun updateNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String, networkAttachmentVo: NetworkAttachmentVo): Boolean
+	/**
+	 * [ItHostNicService.removeNetworkAttachmentFromHost]
+	 * 호스트 네트워크 분리 (할당된 네트워크)
+	 *
+	 * @param hostId [String] 호스트 Id
+	 * @param networkAttachmentVo [NetworkAttachmentVo] 네트워크 연결 옵션
+	 * @return [Boolean] 아직미정
+	 */
+	@Throws(Error::class)
+	fun removeNetworkAttachmentFromHost(hostId: String, networkAttachmentVo: NetworkAttachmentVo): Boolean
 	/**
 	 * [ItHostNicService.removeNetworkAttachmentsFromHost]
 	 * 호스트 네트워크 분리 (할당된 네트워크)
@@ -86,14 +97,15 @@ interface ItHostNicService {
     /**
      * [ItHostNicService.modifiedBondFromHost]
      * 호스트 네트워크 본딩 수정
+	 * 본딩 이름은 변경불가 (cli 가능)
+	 * 본딩 모드 변경가능 //TODO:본딩모드
      *
      * @param hostId [String] 호스트 Id
-     * @param hostNicId [String] 호스트 네트워크 인터페이스 Id
      * @param hostNicVo [HostNic] bonding 옵션
      * @return [Boolean] 아직미정
      */
     @Throws(Error::class)
-    fun modifiedBondFromHost(hostId: String, hostNicId: String, hostNicVo: HostNicVo): Boolean
+    fun modifiedBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean
     /**
      * [ItHostNicService.removeBondFromHost]
      * 호스트 네트워크 본딩 삭제
@@ -161,8 +173,18 @@ class ItHostNicServiceImpl(
 	}
 
 	@Throws(Error::class)
+	override fun removeNetworkAttachmentFromHost(hostId: String, networkAttachmentVo: NetworkAttachmentVo): Boolean {
+		log.info("removeNetworkAttachmentFromHost ... hostId: {}, networkAttachmentVo: {}", hostId, networkAttachmentVo)
+		val res: Result<Boolean> = conn.removeNetworkAttachmentFromHost(
+			hostId,
+			networkAttachmentVo.toModifiedNetworkAttachmentBuilder()
+		)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
 	override fun removeNetworkAttachmentsFromHost(hostId: String, networkAttachmentVos: List<NetworkAttachmentVo>): Boolean {
-		log.info("removeNetworkAttachmentFromHost ... hostId: {}, networkAttachmentVos: {}", hostId, networkAttachmentVos)
+		log.info("removeNetworkAttachmentsFromHost ... hostId: {}, networkAttachmentVos: {}", hostId, networkAttachmentVos)
 		val res: Result<Boolean> = conn.removeNetworkAttachmentsFromHost(
 			hostId,
 			networkAttachmentVos.toModifiedNetworkAttachments()
@@ -172,7 +194,7 @@ class ItHostNicServiceImpl(
 
 	@Throws(Error::class)
 	override fun addBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean {
-		log.info("modifiedBondFromHost ... hostId: {}, hostNic: {}", hostId, hostNicVo)
+		log.info("addBondFromHost ... hostId: {}, hostNic: {}", hostId, hostNicVo)
 		val res: Result<Boolean> = conn.addBondFromHost(
 			hostId,
 			hostNicVo.toAddBondBuilder()
@@ -181,11 +203,11 @@ class ItHostNicServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun modifiedBondFromHost(hostId: String, hostNicId: String, hostNicVo: HostNicVo): Boolean {
-		log.info("modifiedBondFromHost ... hostId: {}, hostNicId: {}, hostNic: {}", hostId, hostNicId, hostNicVo)
+	override fun modifiedBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean {
+		log.info("modifiedBondFromHost ... hostId: {}, hostNic: {}", hostId, hostNicVo)
 		val res: Result<Boolean> = conn.modifiedBondFromHost(
 			hostId,
-			hostNicVo.toModifiedBondBuilder()
+			hostNicVo.toBondBuilder()
 		)
 		return res.isSuccess
 	}

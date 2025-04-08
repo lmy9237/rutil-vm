@@ -7,6 +7,8 @@ import LabelSelectOptions from "../../label/LabelSelectOptions";
 import toast from "react-hot-toast";
 import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
+import ToggleSwitchButton from "../../button/ToggleSwitchButton";
+import LabelCheckbox from "../../label/LabelCheckbox";
 
 // 탭 메뉴
 const tabs = [
@@ -32,7 +34,7 @@ const ipv6Options = [
 
 const initialFormState = {
   id: "",
-  inSync: true
+  inSync: true,
 };
 
 const HostNetworkEditModal = ({ 
@@ -108,7 +110,18 @@ const HostNetworkEditModal = ({
         />
 
         <div className="backup-edit-content">
-          
+          <LabelCheckbox id="in_sync" label="네트워크 동기화 (임시)"        
+            value={formState.inSync}
+            disabled={true}
+            onChange={(e) => setFormState(prev => ({...prev, inSync: e.target.value}))}
+          />
+          <hr/>
+        {/* <ToggleSwitchButton label={`${Localization.kr.NETWORK} 동기화`}
+          checked={formState.inSync}
+          // disabled={editMode}
+          onChange={() => setFormState((prev) => ({ ...prev, inSync: !formState.inSync }))}
+          tType={"동기화"} fType={"비동기화"}
+        /> */}
           {selectedModalTab === "ipv4" && (
             <>
               <div className="select-box-outer">

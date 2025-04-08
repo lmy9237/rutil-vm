@@ -225,7 +225,6 @@ fun HostNicVo.toAddBondBuilder(): HostNic = HostNicBuilder()
  */
 fun HostNicVo.toModifiedBondBuilder(): HostNic = HostNicBuilder()
 	.id(this@toModifiedBondBuilder.id) // hostNic id
-	.name(this@toModifiedBondBuilder.name) // hostNic 이름
 	.bonding( this@toModifiedBondBuilder.bondingVo.toBonding() )
 	.build()
 fun List<HostNicVo>.toModifiedBonds(): List<HostNic> =

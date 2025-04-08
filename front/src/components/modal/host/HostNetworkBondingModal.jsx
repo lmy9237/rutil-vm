@@ -3,8 +3,8 @@ import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
-import { useNetworkInterfaceFromHost } from "../../../api/RQHook";
+import { useAddBonding, useNetworkInterfaceFromHost } from "../../../api/RQHook";
+import toast from "react-hot-toast";
 
 const optionList = [
   { value: "1", label: "(Mode 1) Active-Backup" },
@@ -20,10 +20,18 @@ const HostNetworkBondingModal = ({
   nicId,
   onClose, 
 }) => {
+  const bLabel = editmode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const { data: hostNic = [] } = useNetworkInterfaceFromHost(hostId, nicId);
+  
+  const onSuccess = () => {
+    onClose();
+    toast.success(`${Localization.kr.HOST} 본딩 ${bLabel} 완료`);
+  };
+  const { mutate: addBonding } = useAddBonding(onSuccess, () => onClose());
 
   const [name, setName] = useState("");
   const [options, setOptions] = useState([]);
+  const [mode, setMode] = useState("");
 
   const initializeOptions = (bonding) => {
     if (!bonding || !bonding.bondingVo) return;
@@ -43,10 +51,6 @@ const HostNetworkBondingModal = ({
       initializeOptions(hostNic);
     }
   }, [editmode, hostNic]);
-  
-
-  const selectedModeValue = options.find(opt => opt.name === "mode")?.value || "";
-  const selectedModeLabel = optionList.find(o => o.value === selectedModeValue)?.label || "";
 
   return (
     <BaseModal
@@ -54,16 +58,16 @@ const HostNetworkBondingModal = ({
       submitTitle={""}
       isOpen={isOpen} onClose={onClose}
       onSubmit={() => {}}
-      contentStyle={{ width: "480px" }}
+      contentStyle={{ width: "500px" }}
     >
       <LabelInput id="bonding_name" label="본딩이름"        
         value={name}
+        disabled={editmode}
         onChange={(e) => setName(e.target.value)}
       />
       <LabelSelectOptions id="bonding_mode" label="본딩모드"        
+        value={options.find(opt => opt.name === "mode")?.value || ""}
         options={optionList}
-        value={selectedModeValue}
-        disabled={editmode}
         onChange={(e) => {
           setOptions(prev =>
             prev.map(opt =>
@@ -71,6 +75,10 @@ const HostNetworkBondingModal = ({
             )
           );
         }}
+      />
+      <LabelInput id="user_mode" label="사용자 정의 모드"        
+        value={mode}
+        onChange={(e) => setMode(e.target.value)}
       />
     </BaseModal>
   );

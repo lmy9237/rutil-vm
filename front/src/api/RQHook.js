@@ -1096,32 +1096,6 @@ export const useVmsFromHost = (
   enabled: !!hostId
 })
 /**
- * @name useHostNicsFromHost
- * @description 호스트 내 네트워크 인터페이스 목록조회 useQuery훅
- * 
- * @param {string} hostId
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findHostNicsFromHost
- */
-export const useHostNicsFromHost = (
-  hostId,
-  mapPredicate=(e) => ({ ...e })
-) => useQuery({
-  refetchOnWindowFocus: true,
-  queryKey: ['hostNicsFromHost', hostId], 
-  queryFn: async () => {
-    const res = await ApiManager.findAllHostNicsFromHost(hostId); 
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useHostNicsFromHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
-    return _res
-  },
-  enabled: !!hostId
-})
-/**
  * @name useNetworkInterfacesFromHost
  * @description 호스트 내 네트워크인터페이스 목록조회 useQuery훅
  * 
@@ -1219,6 +1193,93 @@ export const useNetworkAttachmentFromHost = (
   },
   enabled: !!hostId
 })
+
+
+/**
+ * @name useAddBonding
+ * @description 호스트 네트워크 본딩 생성 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.addBonding
+ */
+export const useAddBonding = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({
+    mutationFn: async (hostNicData) => {
+      const res = await ApiManager.addBonding(hostNicData);
+      return validate(res)
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddBonding ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('NetworkInterfacesFromHost');
+      postSuccess();
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+/**
+ * @name useEditBonding
+ * @description 호스트 네트워크 본딩 수정 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.editCluster
+ */
+export const useEditBonding = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();  
+  return useMutation({
+    mutationFn: async ({ hostId, hostNicData }) => {
+      const res = await ApiManager.editBonding(hostId, hostNicData);
+      return validate(res)
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditBonding ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('NetworkInterfacesFromHost');
+      postSuccess();
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+/**
+ * @name useDeleteBonding
+ * @description 호스트 네트워크 본딩 삭제 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.deleteCluster
+ */
+export const useDeleteBonding = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({ 
+    mutationFn: async (hostId, hostNicData) => {
+      const res = await ApiManager.deleteBonding(hostId, hostNicData)
+      return validate(res)
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteBonding ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('NetworkInterfacesFromHost');
+      postSuccess();
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+
 
 /**
  * @name useHostDevicesFromHost

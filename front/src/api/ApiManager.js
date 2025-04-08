@@ -681,20 +681,6 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.FIND_HOST_FROM_CLUSTER
   }),
   /**
-   * @name ApiManager.findAllHostNicsFromHost
-   * @description 호스트 Nic 목록
-   *
-   * @param {string} hostId
-   * @returns 
-   * 
-   * @see
-   */
-  findAllHostNicsFromHost : async (hostId) => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_ALL_HOST_NICS_FROM_HOST(hostId), 
-    // defaultValues: DEFAULT_VALUES.FIND_NICS_FROM_HOST
-  }),
-  /**
    * @name ApiManager.findHostNicsFromHost
    * @description 호스트 Nic 목록
    *
@@ -749,8 +735,54 @@ const ApiManager = {
     method: "GET", 
     url: ENDPOINTS.FIND_NETWORK_ATTACHMENT_FROM_HOST(hostId, networkAttachmentId), 
   }),
+
   /**
-   * @name ApiManager.findSetHostNicsFromHost
+   * @name ApiManager.addBonding
+   * @description 새 Bonding 생성
+   * 
+   * @param {Object} hostId - 호스트 id
+   * @param {Object} hostNicData - 추가할 본딩 정보
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  addBonding: async (hostId, hostNicData) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.ADD_BONDING_HOST_NIC_FROM_HOST(),
+      data: hostNicData, // POST 요청 시 전송할 데이터
+    });
+  },
+  /**
+   * @name ApiManager.editBonding
+   * @description Bonding 편집
+   * 
+   * @param {string} hostId
+   * @param {Object} hostNicData - 추가할 본딩 정보
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  editBonding: async (hostId, hostNicData) => {
+    return makeAPICall({
+      method: "PUT",
+      url: ENDPOINTS.EDIT_BONDING_HOST_NICS_FROM_HOST(hostId),
+      data: hostNicData, // PUT 요청 시 전송할 데이터
+    });
+  },
+  /**
+   * @name ApiManager.deleteBonding
+   * @description Bonding 삭제
+   * 
+   * @param {String} hostId - 호스트 ID
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  deleteBonding: async (hostId) => {
+    return makeAPICall({
+      method: "DELETE",
+      url: ENDPOINTS.DELETE_BONDING_HOST_NICS_FROM_HOST(hostId),  // ID를 URL에 포함
+      data: hostId
+    });
+  },
+
+  /**
+   * @name ApiManager.setupHostNicsFromHost
    * @description 
    *
    * @param {string} hostId
@@ -758,10 +790,10 @@ const ApiManager = {
    * 
    * @see
    */
-  findSetHostNicsFromHost : async (hostId) => makeAPICall({
-    method: "GET", 
+  setupHostNicsFromHost : async (hostId, hostNicData) => makeAPICall({
+    method: "POST", 
     url: ENDPOINTS.SETUP_HOST_NICS_FROM_HOST(hostId), 
-    // defaultValues: DEFAULT_VALUES.FIND_NETWORKS_FROM_HOST
+    data: hostNicData
   }),
   /**
    * @name ApiManager.findHostdevicesFromHost

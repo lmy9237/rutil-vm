@@ -8,6 +8,7 @@ import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
+import org.ovirt.engine.sdk4.builders.HostNicBuilder
 import java.net.InetAddress
 
 
@@ -443,7 +444,9 @@ fun Connection.findNetworkAttachmentFromHost(hostId: String, networkAttachmentId
 fun Connection.modifyNetworkAttachmentsFromHost(hostId: String, networkAttachments: List<NetworkAttachment>): Result<Boolean> = runCatching {
 	this.srvHost(hostId).setupNetworks().modifiedNetworkAttachments(networkAttachments).send()
 	this.srvHost(hostId).commitNetConfig().send()
+
 	true
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "일괄편집", hostId)
 }.onFailure {
@@ -454,7 +457,9 @@ fun Connection.modifyNetworkAttachmentsFromHost(hostId: String, networkAttachmen
 fun Connection.updateNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String, networkAttachment: NetworkAttachment): Result<Boolean> = runCatching {
 	this.srvNetworkAttachmentFromHost(hostId, networkAttachmentId).update().attachment(networkAttachment).send()
 	this.srvHost(hostId).commitNetConfig().send()
+
 	true
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "편집", hostId)
 }.onFailure {
@@ -465,7 +470,22 @@ fun Connection.updateNetworkAttachmentFromHost(hostId: String, networkAttachment
 fun Connection.removeNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String): Result<Boolean> = runCatching {
 	this.srvNetworkAttachmentFromHost(hostId, networkAttachmentId).remove().send()
 	this.srvHost(hostId).commitNetConfig().send()
+
 	true
+
+}.onSuccess {
+	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "제거", hostId)
+}.onFailure {
+	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "제거", it, hostId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.removeNetworkAttachmentFromHost(hostId: String, networkAttachment: NetworkAttachment): Result<Boolean> = runCatching {
+	this.srvHost(hostId).setupNetworks().removedNetworkAttachments(networkAttachment).send()
+	this.srvHost(hostId).commitNetConfig().send()
+
+	true
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "제거", hostId)
 }.onFailure {
@@ -479,7 +499,9 @@ fun Connection.removeNetworkAttachmentsFromHost(
 ): Result<Boolean> = runCatching {
 	this.srvHost(hostId).setupNetworks().removedNetworkAttachments(networkAttachments).send()
 	this.srvHost(hostId).commitNetConfig().send()
+
 	true
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "제거", hostId)
 }.onFailure {

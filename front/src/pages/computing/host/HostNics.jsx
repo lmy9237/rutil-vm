@@ -24,6 +24,16 @@ const HostNics = ({ hostId }) => {
   const { data: networkAttchments = [] } = useNetworkAttachmentsFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
 
+  const [selectedNic, setSelectedNic] = useState(null);
+  const [selectedSlave, setSelectedSlave] = useState(null);
+  const [selectedNetwork, setSelectedNetwork] = useState(null);
+  const [connection, setConnection] = useState(true);
+  const [setting, setSetting] = useState(false);
+
+  const [isBondingPopupOpen, setIsBondingPopupOpen] = useState(false);
+  const [isNetworkEditPopupOpen, setIsNetworkEditPopupOpen] = useState(false);
+  
+
   // nic 데이터 변환
   const transformedData = hostNics.map((e) => ({
     ...e,
@@ -89,6 +99,7 @@ const HostNics = ({ hostId }) => {
   // 본딩 슬레이브에 있는 nic를 전체 nic목록에서 필터링
   const nicDisplayList = expectHostNicData.filter(nic => !bondingSlaveIds.includes(nic.id));
 
+
   // 네트워크 결합 데이터 변환
   const transNAData = networkAttchments.map((e) => ({
     id: e?.id,
@@ -145,7 +156,6 @@ const HostNics = ({ hostId }) => {
     `;
   };  
 
-
   // network 툴팁
   const generateNetworkTooltipHTML = (network) => {
     const ipv4 = network?.ipAddressAssignments?.find(ip => ip?.ipVo?.version === "V4")?.ipVo || {};
@@ -190,24 +200,12 @@ const HostNics = ({ hostId }) => {
   `;
   };
 
-  const [selectedNic, setSelectedNic] = useState(null);
-  const [selectedSlave, setSelectedSlave] = useState(null);
-  const [selectedNetwork, setSelectedNetwork] = useState(null);
-
-  const [isBondingPopupOpen, setIsBondingPopupOpen] = useState(false);
-  const [isNetworkEditPopupOpen, setIsNetworkEditPopupOpen] = useState(false);
-
-
-  const dragItem = useRef(); // 드래그할 아이템의 인덱스
-
-  // 드래그 시작할 때 선택된 아이템과 출처 저장.
-  // const dragStart = (e, item, source, parentId = null) => { dragItem.current = { item, source, parentId } };
-  
   return (
     <>
     <div className="header-right-btns">
         <ActionButton actionType="default" label={Localization.kr.CREATE} 
           // onClick={() => openModal("create")}
+          
         />
       </div>
 
@@ -362,10 +360,13 @@ const HostNics = ({ hostId }) => {
       </div>
 
       <LabelCheckbox id="connection" label="호스트와 Engine간의 연결을 확인" 
-        checked={true}
-        // onChange={(e) => setFormat(e.target.checked)}
+        value={connection}
+        onChange={(e) => setConnection(e.target.checked)}
       />
-      <LabelCheckbox id="networkSetting" label="네트워크 설정 저장" />
+      <LabelCheckbox id="networkSetting" label="네트워크 설정 저장" 
+        value={setting}
+        onChange={(e) => setSetting(e.target.checked)}
+      />
 
       <Suspense fallback={<Loading />}>
         <HostNetworkBondingModal

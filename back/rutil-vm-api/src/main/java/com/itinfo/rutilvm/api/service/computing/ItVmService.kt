@@ -185,6 +185,7 @@ class VmServiceImpl(
 	override fun findEditOne(vmId: String): VmCreateVo? {
 		log.info("findEditOne ... vmId : {}", vmId)
 		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,nics.vnicprofile.network,diskattachments,cdroms,statistics").getOrNull()
+		// vm의 상태가 unknown일때 follow 일때 null
 		return res?.toVmCreateVo(conn)
 	}
 
