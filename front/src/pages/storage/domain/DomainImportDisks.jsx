@@ -81,6 +81,21 @@ const DomainImportDisks = ({ domainId }) => {
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
         multiSelect={true}
+        // onContextMenuItems={(row) => [
+        //   <>
+        //   <ActionButton 
+        //     label="가져오기" 
+        //     actionType="default" 
+        //     onClick={() => setActiveModal("get")}
+        //     disabled={selectedDisks.length === 0} 
+        //   />
+        //   <ActionButton 
+        //     label="삭제" 
+        //     actionType="default" 
+        //     onClick={() => setActiveModal("delete")}
+        //   />
+        //   </>
+        // ]}
       />
 
       <SelectedIdView items={selectedDisks} />

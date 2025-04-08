@@ -2566,9 +2566,6 @@ background-color: #f0f0f0;
 }
 
 /*반응형*/
-@media (min-width: 2000px) {
-
-}
 @media (max-width: 1420px) {
     .resizer {
         display: none !important;

@@ -35,8 +35,6 @@
 .dash-section-contents > span {
   display: block;
   width: 100%;
-  color: #000000;
-  padding: 0.18rem 0.04rem;
   margin-bottom: 16px;
 }
 .bar-outer {
@@ -51,14 +49,17 @@
 }
 .bar {
   display: flex;
-  flex-wrap: wrap;
-  flex: 1 1 80px;
+  flex-wrap: wrap;       /* ✅ 다시 wrap 허용 */
+  gap: 37px;             /* ✅ 간격 명확히 지정 */
 }
 .bar > div {
-  min-width: 37 1px;
-  flex: 1 1 200px; 
-  margin-bottom:30px;
-  padding: 0 20px;
+  flex: 1 1 calc(33.333% - 16px); /* 3개 기준 */
+  max-width: calc(32.333% - 16px);
+  min-width: 260px;   
+  margin-bottom: 30px;
+  /* background-color: #ffff00; */
+  padding: 0 10px;
+  box-sizing: border-box;
 }
 .bar span {
   font-size: var(--fs-14);
@@ -66,11 +67,6 @@
   display: block;
   margin: 9px 0;
   width: 100%;
-}
-.grid-outer {
-  width: 100%;
-  display: flex;
-  margin-top: 0.2rem;
 }
 .wave-graph > h2 {
   font-size: var(--fs-16);
@@ -86,6 +82,20 @@
 .apexcharts-legend.apx-legend-position-bottom.apexcharts-align-center,
 .apexcharts-legend.apx-legend-position-top.apexcharts-align-center {
   display: none;
+}
+@media screen and (min-width: 2800px) {
+  .dash-section{
+    min-height: calc(100% - 38.5%);
+  }
+}
+@media screen and (max-width: 1300px) {
+  .bar > div {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+  .grid-container{
+    width: 48%;
+  }
 }
 @media screen and (min-width: 2000px) {
   .bar span {

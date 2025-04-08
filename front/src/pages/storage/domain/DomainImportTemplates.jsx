@@ -46,7 +46,7 @@ const DomainImportTemplates = ({ domainId }) => {
   
   return (
     <>
-      <div className="dupl-header-group">
+      <div className="dupl-header-group f-start">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <div className="header-right-btns">
           <ActionButton 
@@ -61,6 +61,7 @@ const DomainImportTemplates = ({ domainId }) => {
           />
         </div>
       </div>
+ 
 
       <TablesOuter
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}

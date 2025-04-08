@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import DomainActionButtons from "./DomainActionButtons";
 import TablesOuter from "../table/TablesOuter";
-import DomainModals from "../modal/domain/DomainModals";
 import SearchBox from "../button/SearchBox"; // ✅ 검색 UI 추가
 import { checkZeroSizeToGiB, convertBytesToGB } from "../../util";
 import Localization from "../../utils/Localization";
@@ -26,7 +25,6 @@ const DomainDupl = ({
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null);
   const [selectedDomains, setSelectedDomains] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // ✅ 검색어 상태 추가
   const handleRefresh = () =>  {
@@ -74,9 +72,9 @@ const DomainDupl = ({
 
   const handleNameClick = (id) => navigate(`/storages/domains/${id}`);
 
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
-
+  const isEditDisabled = selectedDomains.length !== 1;
+  const isDeleteDisabled = selectedDomains.length === 0;
+  const selectedStatus = selectedDomains[0]?.status;
   return (
     <>
       <div className="dupl-header-group f-start">
@@ -88,11 +86,11 @@ const DomainDupl = ({
           />
         )}
         <DomainActionButtons
-          openModal={openModal}
           isEditDisabled={selectedDomains.length !== 1}
           isDeleteDisabled={selectedDomains.length === 0}
           status={selectedDomains[0]?.status}
           actionType={actionType}
+          selectedDomains={selectedDomains} 
         />
       </div>
 
@@ -107,15 +105,22 @@ const DomainDupl = ({
         setSearchQuery={setSearchQuery} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
-        onContextMenuItems={(row) => [
-          <DomainActionButtons
-            openModal={openModal}
-            status={row?.status}
-            selectedDomains={[row]}
-            actionType="context"    
-            isContextMenu={true}
-          />,
-        ]}
+        onContextMenuItems={(row) => {
+          const isEditDisabled = !row;
+          const isDeleteDisabled = !row || row.status !== "UNKNOWN";
+          return [
+            <DomainActionButtons
+              isEditDisabled={isEditDisabled}
+              isDeleteDisabled={isDeleteDisabled}
+              status={row?.status}
+              selectedDomains={[row]}
+              actionType="context"
+              isContextMenu={true}
+            />
+          ];
+        }}
+      
+        
       />
 
       <SelectedIdView items={selectedDomains} />

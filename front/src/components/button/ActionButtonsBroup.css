@@ -5,18 +5,18 @@
   flex-wrap: wrap;
   min-height: var(--h-right-btn);
   margin-left: auto;
+  gap: 3px 0px; /* ✅ 버튼 간격 통일감 있게 */
 }
 .header-right-btns > button:last-child,
 .manage-button {
   margin-right: 0 !important;
 }
-
+.right-click-menu-box {
+  width: 186px;
+}
 @media screen and (max-width: 768px) {
   .header-right-btns > button:last-child,
   .manage-button {
-    margin-right: 8px !important;
+    margin-right: 4px !important;
   }
-}
-.right-click-menu-box {
-  width: 186px;
 }

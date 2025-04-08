@@ -9,6 +9,9 @@ const AreaChart = ({ series, datetimes }) => {
     chart: {
       type: "area",
       offsetX: 0, // 🔸 그래프 자체의 x축 위치 조정 최소화
+      zoom: {
+        enabled: false, // ✅ 줌 비활성화
+      },
     },
     colors: ["#1597E5", "#69DADB", "rgb(177, 143, 216)"],
     dataLabels: {
@@ -70,7 +73,7 @@ const AreaChart = ({ series, datetimes }) => {
     if (chartContainerRef.current) {
       const containerWidth = chartContainerRef.current.clientWidth;
 
-      let width = Math.max(containerWidth * 0.95, 230); // 기본 너비
+      let width = Math.max(containerWidth * 0.95, 220); // 기본 너비
       let height = Math.max(window.innerHeight * 0.14, 100); // 기본 높이
 
       if (window.innerWidth >= 2200) {

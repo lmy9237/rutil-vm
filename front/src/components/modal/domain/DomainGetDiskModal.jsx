@@ -56,6 +56,7 @@ const DomainGetDiskModal = ({ isOpen, domainId, data, onClose }) => {
       targetName={"디스크"}
       submitTitle={"불러오기"}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "880px" }} 
     >
       {/* <div className="disk-move-popup modal"> */}
       <div className="section-table-outer p-0.5">

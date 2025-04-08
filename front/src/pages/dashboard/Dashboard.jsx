@@ -352,7 +352,6 @@ const Dashboard = () => {
               <span>StorageDomain</span>
               <Grid className="grid-outer" type={"domain"} data={storageMetric} />
             </div>
-            
           </div>
           <GridLegends />
         </div>

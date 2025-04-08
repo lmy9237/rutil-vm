@@ -11,6 +11,7 @@ import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
+import { openNewTab } from "../../navigation";
 
 /**
  * @name VmDupl
@@ -116,23 +117,35 @@ const VmDupl = ({
         isError={isError} 
         isSuccess={isSuccess}
         columns={columns}
-        data={filteredData} // ✅ 검색 필터링된 데이터 사용
+        data={filteredData}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedVms(selectedRows)}
-        // clickableColumnIndex={[1]}
-        searchQuery={searchQuery} // ✅ 검색어 전달
-        setSearchQuery={setSearchQuery} // ✅ 검색어 변경 가능하도록 추가
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
-        onContextMenuItems={(row) => [
-          <VmActionButtons
-            openModal={openModal}
-            status={row?.status} 
-            selectedVms={[row]}
-            actionType="context"
-            isContextMenu={true}
-          />
-        ]}
+        onContextMenuItems={(row) => {
+          const vmId = row?.id;
+          const openModalFromContext = (type) => {
+            if (type === "console") {
+              openNewTab("console", vmId); 
+            } else {
+              openModal(type); 
+            }
+          };
+        
+          return [
+            <VmActionButtons
+              vmId={vmId}
+              openModal={openModalFromContext}
+              status={row?.status}
+              selectedVms={[row]}
+              actionType="context"
+              isContextMenu={true}
+            />,
+          ];
+        }}
+        
       />
 
       <SelectedIdView items={selectedVms} />

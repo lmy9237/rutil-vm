@@ -2,13 +2,14 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: var(--p-default);
-  width: 94%;
+  width: 99%;
 }
 .grid-item {
   border-radius: var(--br-default);
   cursor: pointer;
-  height: 40px;
-  width: 90px;
+  height: 36px;
+  width: 100%;
+  min-width: 76px;
   font-size: var(--fs-12);
 }
 .grid-item.crit { background-color: #E21D1D; }
@@ -51,26 +52,7 @@
   z-index: 9999;
 }
 @media screen and (min-width: 2800px) {
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: var(--p-default);
-    width: 90%;
-    min-height: 197px;
-  }
-  .grid-item {
-    border-radius: var(--br-default);
-    cursor: pointer;
-    height: 56px;
-    width: 180px;
-  }
-  .percent h1 {
-    font-size: var(--fs-21);
-  }
-  .grid-item-name{
-    font-size: var(--fs-13);
-  }
-  .percent .unit{
-    font-size: var(--fs-16) !important;
+  .grid-item{
+    height: 52px;
   }
 }

@@ -1,19 +1,15 @@
 /*일반파트*/
 .vm-detail-general-boxs {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
   margin-bottom: 0.2rem;
   gap: 16px;
 }
 .detail-general-box {
-  flex: 1;
   padding: 24px;
   border-radius: 8px;
+  width: 550px;
   background:var(--color-white);
-  max-width: 45%; /* ✅ 더 빨리 떨어지도록 조정 */
-  min-width: 463px;
-
+  /* background:red; */
 }
 .detail-general-box > h1 {
   font-size: var(--fs-16);
@@ -23,6 +19,7 @@
 }
 .detail-general-box .info-table-outer{
   padding: 0 !important;
+  width: 100%;
 }.detail-general-box .table{
   width: 100%;
 }
@@ -33,6 +30,7 @@
 }
 .capacity > div:first-child {
   font-weight: 700;
+  width: 40%;
   font-size: var(--fs-14);
 }
 
@@ -110,7 +108,8 @@
 }
 /*디스크*/
 .vm-disk-search{
-  width: 87%;
+  width: 90%;
+  margin-left: 20px;
 }
 /*스냅샷*/
 .vm-snap-item{
@@ -159,8 +158,8 @@
   margin-bottom: 0;
 }
 
-@media (max-width: 1400px) {
-  .detail-general-box {
-    max-width: 100%; /* ✅ 한 줄로 배치 */
+@media (max-width: 1200px) {
+  .vm-detail-general-boxs {
+    flex-wrap: wrap;
   }
 }

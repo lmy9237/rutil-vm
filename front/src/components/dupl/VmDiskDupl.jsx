@@ -98,6 +98,7 @@ const VmDiskDupl = ({
           options={diskFilters}
           activeOption={activeDiskType}
           onClick={setActiveDiskType}
+     
         />
         <div className="vm-disk-search center">
           {showSearchBox && (

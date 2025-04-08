@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Localization from "../../../../utils/Localization";
-import { RVI36, rvi36Add, rvi36Remove } from "../../../icons/RutilVmIcons";
 import Logger from "../../../../utils/Logger";
 import DynamicButton from "../../../label/DynamicButton";
+import "../../../label/DynamicInputList.jsx";
 
 const VmNic = ({
   nics,
@@ -37,6 +37,16 @@ const VmNic = ({
     updated.splice(index, 1);
     setNicsState(updated);
   };
+  // ✅ NIC이 하나도 없을 경우 nic1 기본 생성
+  useEffect(() => {
+    if (nicsState.length === 0) {
+      setNicsState([{
+        id: "",
+        name: "nic1",
+        vnicProfileVo: { id: "" }
+      }]);
+    }
+  }, [nicsState, setNicsState]);
 
   //옛날코드(삭제예정)
   // return (

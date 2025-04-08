@@ -68,7 +68,9 @@ const DataCenterDupl = ({
             onRefresh={handleRefresh}
           />
         )}
-        <DataCenterActionButtons status={status}
+        <DataCenterActionButtons 
+          selectedDataCenters={selectedDataCenters}
+          status={status}
           openModal={openModal} 
         />
       </div>

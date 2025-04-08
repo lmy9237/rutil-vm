@@ -111,8 +111,22 @@ const Tables = ({
         if (key === "icon") {
           return row.iconSortKey ?? 99;
         }
-  
+        
+        // 단위별 정렬
         const val = row[key];
+        if (typeof val === "string" && val.match(/^\d+(\.\d+)?\s?GiB$/i)) {
+          return parseFloat(val); // "200 GiB" → 200
+        }
+        if (typeof val === "string") {
+          if (val.includes("일")) {
+            const days = parseInt(val.replace("일", "").trim());
+            return days * 24 * 60; // 분 단위
+          }
+          if (val.includes("시간")) {
+            const hours = parseInt(val.replace("시간", "").trim());
+            return hours * 60; // 분 단위
+          }
+        }
         if (React.isValidElement(val)) {
           const child = val.props?.children;
           if (Array.isArray(child)) return child.join("");

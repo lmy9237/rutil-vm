@@ -10,10 +10,11 @@ import Localization from "../../utils/Localization";
 import DomainModals from "../modal/domain/DomainModals";
 
 const DomainActionButtons = ({
-  openModal,
+  onCloseContextMenu, 
   isEditDisabled,
   isDeleteDisabled,
   status,
+  selectedDomains = [],
   isContextMenu = false,
   actionType = "default",
   datacenterId,
@@ -34,7 +35,11 @@ const DomainActionButtons = ({
 
   //모달관련
   const [activeModal, setActiveModal] = useState(null);
-  const [selectedDomains, setSelectedDomains] = useState([]);
+
+  const openModal = (type) => {
+    setActiveModal(type);
+    onCloseContextMenu?.(); // context menu 닫기
+  };
   const closeModal = () => setActiveModal(null);
 
   const basicActions = [
@@ -89,29 +94,29 @@ const DomainActionButtons = ({
       actions={basicActions}
     >
       {!isContextMenu && (
-        <ActionButton label={"디스크"} onClick={() => navigate("/storages/disks")} actionType={actionType}/>
+        <ActionButton label={"디스크"} onClick={() => navigate("/storages/disks")} actionType={actionType} />
       )}
     </ActionButtonGroup>
    
-   <CancelModal
-   isOpen={isCancelModalOpen}
-   onClose={() => setIsCancelModalOpen(false)}
- />
- <DomainDestroyModal
-   isOpen={isDomainDestroyModalOpen}
-   onClose={() => setIsDomainDestroyModalOpen(false)}
- />
- <DomainMainTenanceModal
-   isOpen={isDomainMainTenanceModalOpen}
-   onClose={() => setIsDomainMainTenanceModalOpen(false)}
- />
- <DomainCheckModal
-   isOpen={isDomainCheckModalOpen}
-   onClose={() => setIsDomainCheckModalOpen(false)}
- />
+    <CancelModal
+      isOpen={isCancelModalOpen}
+      onClose={() => setIsCancelModalOpen(false)}
+    />
+    <DomainDestroyModal
+      isOpen={isDomainDestroyModalOpen}
+      onClose={() => setIsDomainDestroyModalOpen(false)}
+    />
+    <DomainMainTenanceModal
+      isOpen={isDomainMainTenanceModalOpen}
+      onClose={() => setIsDomainMainTenanceModalOpen(false)}
+    />
+    <DomainCheckModal
+      isOpen={isDomainCheckModalOpen}
+      onClose={() => setIsDomainCheckModalOpen(false)}
+    />
 
        {/* 도메인 모달창 */}
-       <DomainModals
+      <DomainModals
         activeModal={activeModal}
         domain={selectedDomains[0]}
         selectedDomains={selectedDomains}

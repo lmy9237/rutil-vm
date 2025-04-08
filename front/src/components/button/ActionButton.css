@@ -29,7 +29,7 @@ button.btn-action[disabled]{
 }
 .btn-right-click[disabled]{
   /* background-color: white; */
-  color: #888888;
+  color: #888888 !important;
   border: none !important;
 }
 .btn-right-click:not(:disabled):hover {

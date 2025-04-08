@@ -9,6 +9,8 @@ import ActionButton from '../../../components/button/ActionButton';
 import Loading from '../../../components/common/Loading';
 import Localization from '../../../utils/Localization';
 import SelectedIdView from '../../../components/common/SelectedIdView';
+import useSearch from '../../../components/button/useSearch';
+import SearchBox from '../../../components/button/SearchBox';
 
 /**
  * @name DomainGetVms
@@ -28,17 +30,24 @@ const DomainImportVms = ({ domainId }) => {
   const [activeModal, setActiveModal] = useState(null);
   const [selectedVms, setSelectedVms] = useState([]); // 다중 선택된 데이터센터  
 
-  const transformedData = vms.map((vm) => ({
-    ...vm,
-    name: vm?.name,
-    memory: checkZeroSizeToMB(vm?.memorySize),
-    cpu: vm?.cpuTopologyCnt,
-    cpuArc: vm?.cpuArc,
-    stopTime: vm?.stopTime,
-  }))
+  const transformedData = Array.isArray(vms)
+  ? vms.map((vm) => ({
+      ...vm,
+      name: vm?.name,
+      memory: checkZeroSizeToMB(vm?.memorySize),
+      cpu: vm?.cpuTopologyCnt,
+      cpuArc: vm?.cpuArc,
+      stopTime: vm?.stopTime,
+    }))
+  : [];
+
+  // ✅ 검색 기능 적용
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   return (
     <>
+    <div className="dupl-header-group f-start">
+      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <div className="header-right-btns">
         <ActionButton 
           label="가져오기" 
@@ -51,11 +60,12 @@ const DomainImportVms = ({ domainId }) => {
           onClick={() => setActiveModal('delete')}
         />
       </div>
-      
+    </div>
+    
       <TablesOuter 
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         columns={TableColumnsInfo.GET_VMS_TEMPLATES}
-        data={transformedData}
+        data={filteredData}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedVms(selectedRows)}
         multiSelect={true}
