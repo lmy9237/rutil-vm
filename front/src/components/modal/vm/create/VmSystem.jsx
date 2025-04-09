@@ -39,7 +39,7 @@ const VmSystem = ({
     if (value === "") {
       setFormSystemState((prev) => ({
         ...prev,
-        cpuTopologyTotal: "",
+        cpuTopologyCnt: "",
       }));
       return;
     }
@@ -50,7 +50,7 @@ const VmSystem = ({
     }
     setFormSystemState((prev) => ({
       ...prev,
-      cpuTopologyTotal: totalCpu,
+      cpuTopologyCnt: totalCpu,
       cpuTopologySocket: totalCpu,
       cpuTopologyCore: 1,
       cpuTopologyThread: 1,
@@ -62,7 +62,7 @@ const VmSystem = ({
     const value = e.target.value
     Logger.debug(`VmSystem > handleSocketChange ... value: ${value}`)
     const socket = parseInt(value);
-    const remaining = formSystemState.cpuTopologyTotal / socket;
+    const remaining = formSystemState.cpuTopologyCnt / socket;
 
     setFormSystemState((prev) => ({
       ...prev,
@@ -76,7 +76,7 @@ const VmSystem = ({
     const value = e.target.value
     Logger.debug(`VmSystem > handleCorePerCoreChange ... value: ${value}`)
     const core = parseInt(value);
-    const remaining = formSystemState.cpuTopologyTotal / (formSystemState.cpuTopologySocket * core);
+    const remaining = formSystemState.cpuTopologyCnt / (formSystemState.cpuTopologySocket * core);
 
     setFormSystemState((prev) => ({
       ...prev,
@@ -113,7 +113,7 @@ const VmSystem = ({
   const toggleCpuDetail = () => setShowCpuDetail(prev => !prev);
 
   const selectionNumPredicate = (v) => ({ value: v, label: v, })
-  const selectionsSockets = () => calculateFactors(formSystemState.cpuTopologyTotal).map(selectionNumPredicate)
+  const selectionsSockets = () => calculateFactors(formSystemState.cpuTopologyCnt).map(selectionNumPredicate)
   const selectionsCoresPerSocket = () => selectionsSockets()
   const selectionsThreadsPerCore = () => {
     let threads = selectionsSockets()
@@ -138,10 +138,10 @@ const VmSystem = ({
         />
         <LabelInputNum id="cpu-total" label="총 가상 CPU"
           value={
-            formSystemState.cpuTopologyTotal !== undefined &&
-            formSystemState.cpuTopologyTotal !== null &&
-            !isNaN(formSystemState.cpuTopologyTotal)
-              ? formSystemState.cpuTopologyTotal
+            formSystemState.cpuTopologyCnt !== undefined &&
+            formSystemState.cpuTopologyCnt !== null &&
+            !isNaN(formSystemState.cpuTopologyCnt)
+              ? formSystemState.cpuTopologyCnt
               : ""
           }
           onChange={handleCpuChange}

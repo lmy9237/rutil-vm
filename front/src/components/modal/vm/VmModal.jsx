@@ -400,9 +400,8 @@ const VmModal = ({
   };
 
   return (
-    <BaseModal targetName={Localization.kr.VM} 
+    <BaseModal targetName={Localization.kr.VM}   submitTitle={vLabel}  
       isOpen={isOpen} onClose={onClose} 
-      submitTitle={vLabel}  
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "850px", height: "730px" }}  
     >
