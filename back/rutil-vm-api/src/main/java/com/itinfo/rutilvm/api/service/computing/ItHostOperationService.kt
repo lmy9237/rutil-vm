@@ -83,9 +83,19 @@ interface ItHostOperationService {
 	 * @param hostId [String] 호스트 아이디
 	 * @return [Boolean]
 	 */
-	@Deprecated("사용안함")
 	@Throws(Error::class)
 	fun refresh(hostId: String): Boolean
+
+	/**
+	 * [ItHostOperationService.commitNetConfig]
+	 * 호스트 재부팅 확인
+	 *
+	 * @param hostId [String] 호스트 아이디
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class)
+	fun commitNetConfig(hostId: String): Boolean
+
 }
 
 @Service
@@ -146,7 +156,6 @@ class HostOperationServiceImpl(
         return res.isSuccess
     }
 
-	@Deprecated("사용안함")
 	@Throws(Error::class)
 	override fun refresh(hostId: String): Boolean {
 		log.info("refresh ... hostId: {}", hostId)
@@ -154,8 +163,14 @@ class HostOperationServiceImpl(
 		return res.isSuccess
 	}
 
+	@Throws(Error::class)
+	override fun commitNetConfig(hostId: String): Boolean {
+		log.info("commitNetConfig ... hostId: {}", hostId)
+		val res: Result<Boolean> = conn.commitNetConfigHost(hostId)
+		return res.isSuccess
+	}
 
-    companion object {
+	companion object {
         private val log by LoggerDelegate()
     }
 }

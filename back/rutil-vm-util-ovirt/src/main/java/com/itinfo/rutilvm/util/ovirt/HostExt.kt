@@ -203,6 +203,21 @@ fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun Connection.commitNetConfigHost(hostId: String): Result<Boolean> = runCatching {
+	checkHostExists(hostId)
+	this.srvHost(hostId).commitNetConfig().send()
+
+	// if (!this.expectHostStatus(hostId, HostStatus.UP)) {
+	// 	throw Error("refresh Host 실패했습니다 ...")
+	// }
+	true
+}.onSuccess {
+	Term.HOST.logSuccess("재부팅 확인", hostId)
+}.onFailure {
+	Term.HOST.logFail("재부팅 확인", it, hostId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 
 fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
