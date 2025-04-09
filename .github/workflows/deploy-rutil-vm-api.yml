@@ -24,7 +24,7 @@
 #  b. 환경변수 VERSION에 저장
 # 3. rutil-vm-api-*.tar 업로드
 #
-name: "[BACK] Build and Publish RutilVM API Docker Image"
+name: "[BACK] rutil-vm-api 빌드"
 
 on:
   push:
@@ -45,12 +45,23 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Connection Test
+        run: |
+          curl -X GET https://${{ secrets.NEXUS_DOCKER_REPO_ADDRESS }}/v2/_catalog
+
+      - name: Register Insecure Docker Repository
+        run: |
+          sudo mkdir -p /etc/docker
+          echo '{ "insecure-registries": ["${{ secrets.NEXUS_DOCKER_REPO_ADDRESS }}"] }' | sudo tee /etc/docker/daemon.json
+          sudo systemctl restart docker
+
       # Step 3: Docker 로그인 처리
-      - name: Login to Docker Hub
+      - name: Login to Sonatype Nexus Docker Registry
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          registry: ${{ secrets.NEXUS_DOCKER_REPO_ADDRESS }}
+          username: ${{ secrets.NEXUS_USERNAME }}
+          password: ${{ secrets.NEXUS_PASSWORD }}
 
       # Step 4a: Tag에서 Version값 추출
       - name: Extract version number
@@ -68,19 +79,19 @@ jobs:
       # Step 5: Docker이미지 빌드
       - name: Build Docker image
         run: |
-          docker buildx build --platform linux/amd64 --load -t ${{ secrets.DOCKER_HUB_USERNAME }}/rutil-vm-api:${{ env.VERSION }} ./back
+          docker buildx build --platform linux/amd64 --load -t ${{ secrets.NEXUS_DOCKER_REPO_ADDRESS }}/${{ secrets.NEXUS_USERNAME }}/rutil-vm-api:${{ env.VERSION }} ./back
 
       # Step 6: Docker 이미지 tar파일로 변환
-      - name: Save Docker image as tarball
-        run: |
-          docker save ${{ secrets.DOCKER_HUB_USERNAME }}/rutil-vm-api:${{ env.VERSION }} -o rutil-vm-api-${{ env.VERSION }}.tar
+      # - name: Save Docker image as tarball
+      #  run: |
+      #    docker save ${{ secrets.NEXUS_DOCKER_REPO_ADDRESS }}/${{ secrets.NEXUS_USERNAME }}/rutil-vm-api:${{ env.VERSION }} -o rutil-vm-api-${{ env.VERSION }}.tar
 
       # Step 6: (Github 아티팩트로) Docker이미지 tar파일 업로드
-      - name: Upload Docker image tarball as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: rutil-artifact
-          path: ./rutil-vm-api-${{ env.VERSION }}.tar
+      # - name: Upload Docker image tarball as artifact
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: rutil-artifact
+      #    path: ./rutil-vm-api-${{ env.VERSION }}.tar
 
       # Step 7: hub.docker.com으로 Docker이미지 푸시
       - name: Build and push Docker image
@@ -88,35 +99,35 @@ jobs:
         with:
           context: ./back
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/rutil-vm-api:${{ env.VERSION }}
+          tags: ${{ secrets.NEXUS_DOCKER_REPO_ADDRESS }}/${{ secrets.NEXUS_USERNAME }}/rutil-vm-api:${{ env.VERSION }}
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      # Step 1: Check out the repository (if needed for your file operations)
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Extract 'version number'
-        run: |
-          VERSION=${{ needs.build.outputs.VERSION }}
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-      - name: Identify 'version number' 
-        run: |
-          echo "Extracted version: ${{ env.VERSION }}"
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: rutil-artifact
-          path: .
-      - name: Upload Artifact(s)
-        uses: bungabear/synology_upload_action@master
-        with:
-          host:  ${{ secrets.SYNOLOGY_HOST }}
-          username:  ${{ secrets.SYNOLOGY_USERNAME }}
-          password:  ${{ secrets.SYNOLOGY_PASSWORD }}
-          filepath: rutil-vm-api-${{ env.VERSION }}.tar
-          filename:  rutil-vm-api-${{ env.VERSION }}.tar
-          uploadpath: /docker
-          overwrite: true
-          createparent: true
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     # Step 1: Check out the repository (if needed for your file operations)
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
+  #     - name: Extract 'version number'
+  #       run: |
+  #         VERSION=${{ needs.build.outputs.VERSION }}
+  #         echo "VERSION=${VERSION}" >> $GITHUB_ENV
+  #     - name: Identify 'version number' 
+  #       run: |
+  #         echo "Extracted version: ${{ env.VERSION }}"
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: rutil-artifact
+  #         path: .
+  #     - name: Upload Artifact(s)
+  #       uses: bungabear/synology_upload_action@master
+  #       with:
+  #         host:  ${{ secrets.SYNOLOGY_HOST }}
+  #         username:  ${{ secrets.SYNOLOGY_USERNAME }}
+  #         password:  ${{ secrets.SYNOLOGY_PASSWORD }}
+  #         filepath: rutil-vm-api-${{ env.VERSION }}.tar
+  #         filename:  rutil-vm-api-${{ env.VERSION }}.tar
+  #         uploadpath: /docker
+  #         overwrite: true
+  #         createparent: true
