@@ -109,7 +109,7 @@ const NetworkModal = ({
           return {
             ...cluster,
             isConnected: existing?.isConnected ?? true,
-            isRequired: existing?.isRequired ?? true,
+            isRequired: existing?.isRequired ?? false,
           };
         })
       );
