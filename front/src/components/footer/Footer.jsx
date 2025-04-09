@@ -16,14 +16,21 @@ import "./Footer.css";
 const Footer = () => {
   const { footerVisible, toggleFooterVisible } = useUIState();
   const {
-    data: jobs,
+    data: jobs = [],
     isLoading: isJobsLoading,
     isError: isJobsError,
     isSuccess: isJobsSuccess,
     refetch: refetchJobs
-  } = useAllJobs((e) => ({
-    ...e
-  }))
+  } = useAllJobs((e) => ({ ...e }))
+
+    // nic 데이터 변환
+    const transformedData = jobs.map((e) => ({
+      ...e,
+      description: e?.description,
+      status: e?.status,
+      startTime: e?.startTime,
+      endTime: e?.endTime
+    }));
 
   // 드레그
   const footerBarHeight = 40;
@@ -67,17 +74,6 @@ const Footer = () => {
     document.body.style.cursor = "default";
   };
   
-  // 임시 데이터
-  const tableData = Array.from({ length: 20 }).map((_, index) => ({
-    id: index + 1,
-    taskName: `작업 ${index + 1}`,
-    target: index % 2 === 0 ? "CentOS 7.9 Shell Script 테스트 - MYK" : "Datacenter",
-    status: `완료 ${Localization.kr.TIME}`,
-    details: "",
-    startTime: "2025.02.28",
-    waitTime: `${index + 1}ms`,
-    morningTime: "2025.02.28. 오전",
-  }));
 
   return (
     <>
@@ -110,25 +106,20 @@ const Footer = () => {
             <table>
               <thead>
                 <tr>
-                  <th>작업 이름 <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>{Localization.kr.TARGET} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>{Localization.kr.STATUS} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>{Localization.kr.DETAILS} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>시작 {Localization.kr.TIME} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>대기 {Localization.kr.TIME} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
-                  <th>시작 {Localization.kr.TIME} <FontAwesomeIcon icon={faFilter} fixedWidth /></th>
+                  {/* <th>{Localization.kr.TARGET} <FontAwesomeIcon icon={faFilter} fixedWidth /></th> */}
+                  <th>작업명</th>
+                  <th>{Localization.kr.STATUS}</th>
+                  <th>시작 {Localization.kr.TIME}</th>
+                  <th>종료 {Localization.kr.TIME}</th>
                 </tr>
               </thead>
               <tbody>
-                {tableData.map((row) => (
-                  <tr key={row.id}>
-                    <td>{row.taskName}</td>
-                    <td>{row.target}</td>
+                {transformedData.map((row) => (
+                  <tr>
+                    <td>{row.description}</td>
                     <td>{row.status}</td>
-                    <td>{row.details}</td>
                     <td>{row.startTime}</td>
-                    <td>{row.waitTime}</td>
-                    <td>{row.morningTime}</td>
+                    <td>{row.endTime}</td>
                   </tr>
                 ))}
               </tbody>

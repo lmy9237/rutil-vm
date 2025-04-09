@@ -1,5 +1,7 @@
 package com.itinfo.rutilvm.api.model.common
 
+import com.itinfo.rutilvm.api.formatEnhanced
+import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.types.ExternalSystemType
 import org.ovirt.engine.sdk4.types.Step
@@ -17,10 +19,12 @@ import java.util.*
  * @property name [String] 이름
  * @property description [String] 설명
  * @property comment [String] 코멘트
- * @property status [JobStatus] 작업상태
- * @property autoCleared [Boolean] ?
+ * @property type [StepEnum] StepEnum.UNKNOWN
+ * @property status [StepStatus] 작업상태
+ * @property number [BigInteger]
+ * @property progress [BigInteger]
  * @property external [Boolean] 외부 여부
- * @property lastUpdated [Date] 갱신일자
+ * @property externalType [ExternalSystemType] ExternalSystemType
  * @property startTime [Date] 시작일자
  * @property endTime [Date] 종료일자
  *
@@ -37,10 +41,16 @@ class StepVo(
 	val progress: BigInteger = BigInteger.ZERO,
 	val external: Boolean = false,
 	val externalType: ExternalSystemType? = null,
-	val startTime: Date? = null,
-	val endTime: Date? = null,
+	private val _startTime: Date? = null,
+	private val _endTime: Date? = null,
 	val parentStep: StepVo? = null,
 ): Serializable {
+
+	val startTime: String
+		get() = ovirtDf.formatEnhanced(_startTime)
+	val endTime: String
+		get() = ovirtDf.formatEnhanced(_endTime)
+
 	override fun toString(): String =
 		gson.toJson(this)
 

@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.model.computing
 
+import com.itinfo.rutilvm.api.formatEnhanced
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.api.model.*
@@ -112,8 +113,8 @@ class HostVo (
     val hugePage2048Total: Int = 0,
     val hugePage1048576Free: Int = 0,
     val hugePage1048576Total: Int = 0,
-    val bootingTime: String = "",
-    val hostHwVo: HostHwVo = HostHwVo(),
+	private val _bootingTime:  Date? = null,
+	val hostHwVo: HostHwVo = HostHwVo(),
     val hostSwVo: HostSwVo = HostSwVo(),
     val clusterVo: IdentifiedVo = IdentifiedVo(),
     val dataCenterVo: IdentifiedVo = IdentifiedVo(),
@@ -124,6 +125,9 @@ class HostVo (
 
 ): Serializable{
     override fun toString(): String = gson.toJson(this)
+
+	val bootingTime: String
+		get() = ovirtDf.formatEnhanced(_bootingTime)
 
     class Builder{
         private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: ""}
@@ -165,7 +169,7 @@ class HostVo (
         private var bHugePage2048Total: Int = 0; fun hugePage2048Total(block: () -> Int?) { bHugePage2048Total = block() ?: 0}
         private var bHugePage1048576Free: Int = 0; fun hugePage1048576Free(block: () -> Int?) { bHugePage1048576Free = block() ?: 0}
         private var bHugePage1048576Total: Int = 0; fun hugePage1048576Total(block: () -> Int?) { bHugePage1048576Total = block() ?: 0}
-        private var bBootingTime: String = ""; fun bootingTime (block: () -> String?) { bBootingTime = block() ?: ""}
+        private var bBootingTime: Date? = null; fun bootingTime (block: () -> Date?) { bBootingTime = block()}
         private var bHostHwVo: HostHwVo = HostHwVo(); fun hostHwVo(block: () -> HostHwVo?) { bHostHwVo = block() ?: HostHwVo() }
         private var bHostSwVo: HostSwVo = HostSwVo(); fun hostSwVo(block: () -> HostSwVo?) { bHostSwVo = block() ?: HostSwVo()}
         private var bClusterVo: IdentifiedVo = IdentifiedVo(); fun clusterVo(block: () -> IdentifiedVo?) { bClusterVo = block() ?: IdentifiedVo() }
@@ -263,7 +267,7 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
         hugePage2048Free { statistics.findPage("hugepages.2048.free") }
         hugePage1048576Total { statistics.findPage("hugepages.1048576.total") }
         hugePage1048576Free { statistics.findPage("hugepages.1048576.free") }
-        bootingTime { ovirtDf.format(Date(statistics.findBootTime()* 1000)) }
+        bootingTime { Date(statistics.findBootTime()* 1000) }
         hostHwVo { host.toHostHwVo() }
         hostSwVo { host.toHostSwVo(hostConfigurationEntity) }
         vmSizeVo { host.findVmCntFromHost() }
@@ -371,7 +375,7 @@ fun Host.toHostVo(conn: Connection): HostVo {
         hugePage2048Free { statistics.findPage("hugepages.2048.free") }
         hugePage1048576Total { statistics.findPage("hugepages.1048576.total") }
         hugePage1048576Free { statistics.findPage("hugepages.1048576.free") }
-        bootingTime { ovirtDf.format(Date(statistics.findBootTime())) }
+        bootingTime { Date(statistics.findBootTime()) }
         hostHwVo { host.toHostHwVo() }
 //        hostSwVo { host.toHostSwVo() }
         clusterVo { cluster?.fromClusterToIdentifiedVo() }

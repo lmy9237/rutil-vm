@@ -1,5 +1,7 @@
 package com.itinfo.rutilvm.api.model.common
 
+import com.itinfo.rutilvm.api.formatEnhanced
+import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.types.Job
 import org.ovirt.engine.sdk4.types.JobStatus
@@ -33,12 +35,17 @@ class JobVo(
 	val autoCleared: Boolean = false,
 	val external: Boolean = false,
 	val lastUpdated: Date? = null,
-	val startTime: Date? = null,
-	val endTime: Date? = null,
+	private val _startTime: Date? = null,
+	private val _endTime: Date? = null,
 	val steps: List<StepVo> = listOf(),
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
+
+	val startTime: String
+		get() = ovirtDf.formatEnhanced(_startTime)
+	val endTime: String
+		get() = ovirtDf.formatEnhanced(_endTime)
 
 	class Builder {
 		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }

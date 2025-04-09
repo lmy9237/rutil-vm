@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.model.computing
 
+import com.itinfo.rutilvm.api.formatEnhanced
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.ovirtDf
@@ -26,6 +27,7 @@ import org.ovirt.engine.sdk4.types.IpVersion.V6
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
+import java.util.Date
 
 private val log = LoggerFactory.getLogger(VmViewVo::class.java)
 
@@ -104,7 +106,7 @@ class VmViewVo (
 	val cpuTopologySocket: Int = 0,
 	val cpuTopologyThread: Int = 0,
 	val cpuPinningPolicy: String = "",
-    val creationTime: String = "",
+	private val _creationTime: Date? = null,
 	val deleteProtected: Boolean = false,
 	val monitor: Int = 0,
 	val displayType: DisplayType = DisplayType.VNC,
@@ -136,8 +138,8 @@ class VmViewVo (
 	val timeZone: String = "",
 	val fqdn: String = "",
 	val upTime: String = "",
-	val startTime: String = "",
-	val stopTime: String = "",
+	private val _startTime: Date? = null,
+	private val _stopTime: Date? = null,
 	val ipv4: List<String> = listOf(),
 	val ipv6: List<String> = listOf(),
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
@@ -156,6 +158,13 @@ class VmViewVo (
     override fun toString(): String =
         gson.toJson(this)
 
+	val creationTime: String
+		get() = ovirtDf.formatEnhanced(_creationTime)
+	val startTime: String
+		get() = ovirtDf.formatEnhanced(_startTime)
+	val stopTime: String
+		get() = ovirtDf.formatEnhanced(_stopTime)
+
     class Builder {
 		private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String =  ""; fun name(block: () -> String?) { bName = block() ?: "" }
@@ -170,7 +179,7 @@ class VmViewVo (
 		private var bCpuTopologySocket: Int = 0; fun cpuTopologySocket(block: () -> Int?) { bCpuTopologySocket = block() ?: 0 }
 		private var bCpuTopologyThread: Int = 0; fun cpuTopologyThread(block: () -> Int?) { bCpuTopologyThread = block() ?: 0 }
 		private var bCpuPinningPolicy: String = ""; fun cpuPinningPolicy(block: () -> String?) { bCpuPinningPolicy = block() ?: "" }
-		private var bCreationTime: String = ""; fun creationTime(block: () -> String?) { bCreationTime = block() ?: "" }
+		private var bCreationTime: Date? = null; fun creationTime(block: () -> Date?) { bCreationTime = block() }
 		private var bDeleteProtected: Boolean = false; fun deleteProtected(block: () -> Boolean?) { bDeleteProtected = block() ?: false }
 		private var bMonitor: Int =  0; fun monitor(block: () -> Int?) { bMonitor = block() ?: 0 }
 		private var bDisplayType: DisplayType = DisplayType.VNC; fun displayType(block: () -> DisplayType?) { bDisplayType = block() ?: DisplayType.VNC }
@@ -202,8 +211,8 @@ class VmViewVo (
 		private var bTimeZone: String = ""; fun timeZone(block: () -> String?) { bTimeZone = block() ?: "" }
 		private var bFqdn: String =  ""; fun fqdn(block: () -> String?) { bFqdn = block() ?: "" }
 		private var bUpTime: String = ""; fun upTime(block: () -> String?) { bUpTime = block() ?: "" }
-		private var bStartTime: String = ""; fun startTime(block: () -> String?) { bStartTime = block() ?: "" }
-		private var bStopTime: String = ""; fun stopTime(block: () -> String?) { bStopTime = block() ?: "" }
+		private var bStartTime: Date? = null; fun startTime(block: () -> Date?) { bStartTime = block() }
+		private var bStopTime: Date? = null; fun stopTime(block: () -> Date?) { bStopTime = block() }
 		private var bIpv4: List<String> = listOf(); fun ipv4(block: () -> List<String>?) { bIpv4 = block() ?: listOf() }
 		private var bIpv6: List<String> = listOf(); fun ipv6(block: () -> List<String>?) { bIpv6 = block() ?: listOf() }
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo(); fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
@@ -250,7 +259,7 @@ fun Vm.toVmMenu(conn: Connection): VmViewVo {
 		id { vm.id() }
 		name { vm.name() }
 		comment { vm.comment() }
-		creationTime {  ovirtDf.format(vm.creationTime()) }
+		creationTime {  vm.creationTime() }
 		status { vm.status() }
 		description { vm.description() }
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
@@ -346,7 +355,7 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
 		cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
 		cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
 		cpuPinningPolicy { vm.cpuPinningPolicy().value() }
-		creationTime { ovirtDf.format(vm.creationTime()) }
+		creationTime { vm.creationTime() }
 		deleteProtected { vm.deleteProtected() }
 		monitor { if(vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
 		displayType { if(vm.displayPresent()) vm.display().type() else DisplayType.VNC }
@@ -466,7 +475,7 @@ fun Vm.toVmStorageDomainMenu(conn: Connection, storageDomainId: String): VmViewV
 		id { this@toVmStorageDomainMenu.id() }
 		name { this@toVmStorageDomainMenu.name() }
 		status { this@toVmStorageDomainMenu.status() }
-		creationTime { ovirtDf.format(this@toVmStorageDomainMenu.creationTime()) }
+		creationTime { this@toVmStorageDomainMenu.creationTime() }
 		memoryGuaranteed { virtualSize }  // 원래 디스크의 가상크기 합친값
 		memorySize { actualSize }		// 디스크 실제 값 합친값
 		diskAttachmentVos { diskAttachments.fromDiskAttachmentsToIdentifiedVos() }
@@ -534,7 +543,7 @@ fun Vm.toUnregisteredVm(): VmViewVo {
 		memorySize { vm.memory() }
 		cpuTopologyCnt { calculateCpuTopology(this@toUnregisteredVm) }
 		cpuArc { vm.cpu().architecture() }
-		stopTime { ovirtDf.format(vm.stopTime()) }
+		stopTime { vm.stopTime() }
 	}
 }
 fun List<Vm>.toUnregisterdVms(): List<VmViewVo> =

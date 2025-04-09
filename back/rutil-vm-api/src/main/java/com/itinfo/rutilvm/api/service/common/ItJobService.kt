@@ -40,7 +40,7 @@ class JobServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<JobVo> {
 		log.info("findAll ...")
-		val res: List<Job> = conn.findAllJobs(follow="step").getOrDefault(listOf())
+		val res: List<Job> = conn.findAllJobs(follow="steps").getOrDefault(listOf())
 		return res.toJobVos()
 	}
 

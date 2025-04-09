@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.model.computing
 
 import com.itinfo.rutilvm.api.configuration.PropertiesConfig
+import com.itinfo.rutilvm.api.formatEnhanced
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.util.ovirt.*
@@ -8,6 +9,7 @@ import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
 import java.io.Serializable
+import java.util.Date
 
 private val log = LoggerFactory.getLogger(DashBoardVo::class.java)
 
@@ -47,13 +49,16 @@ class DashBoardVo (
     val eventsAlert: Int = 0,
     val eventsError: Int = 0,
     val eventsWarning: Int = 0,
-    val bootTime: String = "",
+	private val _bootTime: Date? = null,
     val version: String = "",
-    val releaseDate: String = "",
+	val releaseDate: String = "",
 
 ): Serializable {
     override fun toString(): String =
         gson.toJson(this)
+
+	val bootTime: String
+		get() = ovirtDf.formatEnhanced(_bootTime)
 
     class Builder {
         private var bDatacenters: Int = 0; fun datacenters(block: () -> Int?) { bDatacenters = block() ?: 0}
@@ -71,7 +76,7 @@ class DashBoardVo (
         private var bEventAlert: Int = 0; fun eventsAlert(block: () -> Int?) { bEventAlert = block() ?: 0}
         private var bEventError: Int = 0; fun eventsError(block: () -> Int?) { bEventError = block() ?: 0}
         private var bEventsWarning: Int = 0; fun eventsWarning(block: () -> Int?) { bEventsWarning = block() ?: 0}
-        private var bBootTime: String = ""; fun bootTime(block: () -> String?) {bBootTime = block() ?: ""}
+        private var bBootTime: Date? = null; fun bootTime(block: () -> Date?) {bBootTime = block() }
         private var bVersion: String = ""; fun version(block: () -> String?) { bVersion = block() ?: "" }
         private var bReleaseDate: String = ""; fun releaseDate(block: () -> String?) { bReleaseDate = block() ?: "" }
 
@@ -134,7 +139,7 @@ fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashBoardVo {
         eventsAlert { eventsAlert }
         eventsError { eventsError }
         eventsWarning { eventsWarning }
-        bootTime { date?.let { ovirtDf.format(it) } }
+        bootTime { date }
         version { propConfig.version }
         releaseDate { propConfig.releaseDate }
     }

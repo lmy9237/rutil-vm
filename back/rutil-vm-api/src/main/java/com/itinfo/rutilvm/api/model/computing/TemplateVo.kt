@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.model.computing;
 
+import com.itinfo.rutilvm.api.formatEnhanced
 import com.itinfo.rutilvm.util.ovirt.findBios
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.Os
@@ -18,6 +19,7 @@ import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
+import java.util.Date
 
 private val log = LoggerFactory.getLogger(TemplateVo::class.java)
 
@@ -41,7 +43,7 @@ class TemplateVo(
 	val cpuTopologyThread: Int = 0,
 	val cpuPinningPolicy: String = "",
 	val cpuShare: Int = 0,
-	val creationTime: String = "",
+	private val _creationTime: Date? = null,
 	val deleteProtected: Boolean = false,
 	val monitor: Int = 0,
 	val ha: Boolean = false,
@@ -82,6 +84,9 @@ class TemplateVo(
 	override fun toString(): String =
 		gson.toJson(this)
 
+	val creationTime: String
+		get() = ovirtDf.formatEnhanced(_creationTime)
+
 	class Builder {
 		private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: ""}
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: ""}
@@ -95,7 +100,7 @@ class TemplateVo(
 		private var bCpuTopologyThread: Int = 0; fun cpuTopologyThread(block: () -> Int?) { bCpuTopologyThread = block() ?: 0}
 		private var bCpuPinningPolicy: String = ""; fun cpuPinningPolicy(block: () -> String?) { bCpuPinningPolicy = block() ?: ""}
 		private var bCpuShare: Int = 0; fun cpuShare(block: () -> Int?) { bCpuShare = block() ?: 0}
-		private var bCreationTime: String = ""; fun creationTime(block: () -> String?) { bCreationTime = block() ?: ""}
+		private var bCreationTime: Date? = null; fun creationTime(block: () -> Date?) { bCreationTime = block() }
 		private var bDeleteProtected: Boolean = false; fun deleteProtected(block: () -> Boolean?) { bDeleteProtected = block() ?: false}
 		private var bMonitor: Int = 0; fun monitor(block: () -> Int?) { bMonitor = block() ?: 0}
 		private var bHa: Boolean = false; fun ha(block: () -> Boolean?) { bHa = block() ?: false}
@@ -160,7 +165,7 @@ fun Template.toTemplateMenu(conn: Connection): TemplateVo {
 		name { this@toTemplateMenu.name() }
 		comment { this@toTemplateMenu.comment() }
 		description { this@toTemplateMenu.description() }
-		creationTime { ovirtDf.format(this@toTemplateMenu.creationTime()) }
+		creationTime { this@toTemplateMenu.creationTime() }
 		status { this@toTemplateMenu.status() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
@@ -183,7 +188,7 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 		status { this@toTemplateInfo.status() }
 		versionName { if (this@toTemplateInfo.versionPresent()) this@toTemplateInfo.version().versionName() else "" }
 		versionNum { if (this@toTemplateInfo.versionPresent()) this@toTemplateInfo.version().versionNumberAsInteger() else 0 }
-		creationTime { ovirtDf.format(this@toTemplateInfo.creationTime()) }
+		creationTime { this@toTemplateInfo.creationTime() }
 		osSystem { if (this@toTemplateInfo.osPresent()) Os.findByCode(this@toTemplateInfo.os().type()).fullName else null }
 		chipsetFirmwareType { if (this@toTemplateInfo.bios().typePresent()) this@toTemplateInfo.bios().type().findBios() else null }
 		optimizeOption { this@toTemplateInfo.type().value() } // 최적화 옵션 this@toTemplateInfo.type().findVmType()
@@ -210,7 +215,7 @@ fun Template.toStorageTemplate(conn: Connection): TemplateVo {
 		name { this@toStorageTemplate.name() }
 		comment { this@toStorageTemplate.comment() }
 		description { this@toStorageTemplate.description() }
-		creationTime { ovirtDf.format(this@toStorageTemplate.creationTime()) }
+		creationTime { this@toStorageTemplate.creationTime() }
 		status { this@toStorageTemplate.status() }
 		// diskAttachmentVos {  }
 	}
@@ -228,7 +233,7 @@ fun Template.toUnregisterdTemplate(): TemplateVo {
 	return TemplateVo.builder {
 		id { template.id() }
 		name { template.name() }
-		creationTime { ovirtDf.format(template.creationTime()) }
+		creationTime { template.creationTime() }
 		cpuArc { template.cpu().architecture() }
 		memorySize { template.memory() }
 		cpuTopologyCnt {

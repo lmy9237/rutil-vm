@@ -15,6 +15,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.core.SpringVersion
 import org.springframework.scheduling.annotation.EnableScheduling
 import java.text.SimpleDateFormat
+import java.util.*
 
 private val log = LoggerFactory.getLogger(RutilVmApplication::class.java)
 
@@ -75,6 +76,9 @@ fun doSleep(timeInMilli: Long = DEFAULT_TIME_SLEEP_IN_MILLI) {
 	log.info("... doSleep($timeInMilli)")
 	try { Thread.sleep(timeInMilli) } catch (e: InterruptedException) { log.error(e.localizedMessage) }
 }
+
+fun SimpleDateFormat.formatEnhanced(date: Date?): String
+	= if (date == null) "" else this.format(date)
 
 fun doLongSleep() =
 	doSleep(DEFAULT_TIME_LONG_SLEEP_IN_MILLI)

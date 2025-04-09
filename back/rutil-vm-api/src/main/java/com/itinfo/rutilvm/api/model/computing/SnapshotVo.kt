@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.model.computing
 
+import com.itinfo.rutilvm.api.formatEnhanced
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromApplicationsToIdentifiedVos
 import com.itinfo.rutilvm.common.gson
@@ -17,6 +18,7 @@ import org.ovirt.engine.sdk4.builders.SnapshotBuilder
 import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
 import java.io.Serializable
+import java.util.Date
 
 private val log = LoggerFactory.getLogger(SnapshotVo::class.java)
 
@@ -38,7 +40,7 @@ class SnapshotVo (
     val id: String = "",
     val description: String = "",
     val status: String = "",
-    val date: String = "",
+	private val _date: Date? = null,
     val persistMemory: Boolean = false,
     val vmViewVo: VmViewVo = VmViewVo(),
     val snapshotDiskVos: List<SnapshotDiskVo> = listOf(),
@@ -48,11 +50,14 @@ class SnapshotVo (
 ): Serializable {
     override fun toString(): String = gson.toJson(this)
 
-    class Builder {
+	val date: String
+		get() = ovirtDf.formatEnhanced(_date)
+
+	class Builder {
         private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: "" }
         private var bDescription: String = ""; fun description(block: () -> String?) { bDescription= block() ?: "" }
         private var bStatus: String = ""; fun status(block: () -> String?) { bStatus= block() ?: "" }
-        private var bDate: String = ""; fun date(block: () -> String?) { bDate= block() ?: "" }
+        private var bDate: Date? = null; fun date(block: () -> Date?) { bDate= block() }
         private var bPersistMemory: Boolean = false; fun persistMemory(block: () -> Boolean?) { bPersistMemory= block() ?: false }
         private var bVmViewVo: VmViewVo = VmViewVo(); fun vmViewVo(block: () -> VmViewVo?) { bVmViewVo = block() ?: VmViewVo()  }
         private var bSnapshotDiskVos: List<SnapshotDiskVo> = listOf(); fun snapshotDiskVos(block: () -> List<SnapshotDiskVo>?) { bSnapshotDiskVos = block() ?: listOf() }
@@ -80,7 +85,7 @@ fun Snapshot.toSnapshotMenu(): SnapshotVo {
     return SnapshotVo.builder {
         id { snapshot.id() }
         description { snapshot.description() }
-        date { if (snapshot.vmPresent()) ovirtDf.format(snapshot.date().time) else "현재" }
+        date { if (snapshot.vmPresent()) snapshot.date() else null }
         status { snapshot.snapshotStatus().value() }
         persistMemory { snapshot.persistMemorystate() }
 		vmViewVo { snapshot.vm().toVmSystem() }
@@ -98,7 +103,7 @@ fun Snapshot.toSnapshotVo(): SnapshotVo {
     return SnapshotVo.builder {
         id { snapshot.id() }
         description { snapshot.description() }
-        date { if (snapshot.vmPresent()) ovirtDf.format(this@toSnapshotVo.date().time) else "현재" }
+        date { if (snapshot.vmPresent()) this@toSnapshotVo.date() else null }
         status { snapshot.snapshotStatus().value() }
         persistMemory { snapshot.persistMemorystate() }
 		vmViewVo { snapshot.vm().toVmSystem() }
