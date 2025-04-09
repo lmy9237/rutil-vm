@@ -26,7 +26,7 @@ const DynamicInputList = ({
       {values.map((item, index) => (
         <div key={index} className="dynamic-input f-btw mb-1.5">
           {showLabel && (
-            <div className="nic-label mr-2">{`nic${index + 1}`}</div>
+            <div className="nic-label mr-2">{`${item.name}`}</div>
           )}
           {inputType === "select" ? (
             <select
