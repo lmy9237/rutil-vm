@@ -13,14 +13,32 @@ import {
   useResetVM,
 } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
+import Localization from "../../../utils/Localization";
 
-const VmActionModal = ({ isOpen, action, data, onClose }) => {
-  const { mutate: startVM } = useStartVM();
-  const { mutate: pauseVM } = usePauseVM(); // 일시중지
-  const { mutate: shutdownVM } = useShutdownVM(); // 종료
-  const { mutate: powerOffVM } = usePowerOffVM(); // 전원끔
-  const { mutate: rebootVM } = useRebootVM();
-  const { mutate: resetVM } = useResetVM();
+const VmActionModal = ({ isOpen, action, data, onClose }) => {  
+  const getContentLabel = () => {
+    const labels = {
+      start: "실행",
+      pause: "일시중지",
+      reboot: "재부팅",
+      reset: "재설정",
+      shutdown: "종료",
+      powerOff: "전원을 Off",
+    };
+    return labels[action] || "";
+  };
+
+  const onSuccess = () => {
+    onClose();
+    toast.success(`${Localization.kr.VM} ${getContentLabel(action)} 완료`);
+  };
+
+  const { mutate: startVM } = useStartVM(onSuccess, () => onClose());
+  const { mutate: pauseVM } = usePauseVM(onSuccess, () => onClose()); // 일시중지
+  const { mutate: shutdownVM } = useShutdownVM(onSuccess, () => onClose()); // 종료
+  const { mutate: powerOffVM } = usePowerOffVM(onSuccess, () => onClose()); // 전원끔
+  const { mutate: rebootVM } = useRebootVM(onSuccess, () => onClose());
+  const { mutate: resetVM } = useResetVM(onSuccess, () => onClose());
 
   const navigate = useNavigate();
 
@@ -39,32 +57,10 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
     }
   }, [data]);
 
-  const getContentLabel = () => {
-    const labels = {
-      start: "실행",
-      pause: "일시중지",
-      reboot: "재부팅",
-      reset: "재설정",
-      shutdown: "종료",
-      powerOff: "전원을 Off",
-    };
-    return labels[action] || "";
-  };
 
   const handleAction = (actionFn) => {
-    ids.forEach((vmId, index) => {
-      actionFn(vmId, {
-        onSuccess: () => {
-          if (ids.length === 1 || index === ids.length - 1) {
-            onClose();
-            toast.success(`가상머신 ${getContentLabel(action)} 완료`);
-            navigate("/computing/vms");
-          }
-        },
-        onError: (error) => {
-          console.error(`${getContentLabel(action)} 오류:`, error);
-        },
-      });
+    ids.forEach((vmId) => {
+      actionFn(vmId);
     });
   };
 

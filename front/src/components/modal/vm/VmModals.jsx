@@ -15,7 +15,7 @@ const VmModals = ({ activeModal, vm, selectedVms = [], onClose }) => {
     edit:      (<VmModal            isOpen={activeModal === "edit"}      onClose={onClose} vmId={vm?.id}  editMode/>),
     delete:    (<VmDeleteModal      isOpen={activeModal === "delete"}    onClose={onClose} data={selectedVms} />),
     templates: (<TemplateModal      isOpen={activeModal === "templates"} onClose={onClose} selectedVm={vm} />),
-    snapshot:  (<VmSnapshotModal    isOpen={activeModal === "snapshot"}  onClose={onClose} vmId={vm?.id} data={selectedVms}  />),
+    snapshot:  (<VmSnapshotModal    isOpen={activeModal === "snapshot"}  onClose={onClose} selectedVm={vm}  />),
     import:    (<VmImportModal      isOpen={activeModal === "import"}    onClose={onClose}/>),  // 조건건바꿔야함
     // copy:      (<></>),  
     migration: (<VmMigrationModal   isOpen={activeModal === "migration"} onClose={onClose} selectedVm={vm} />),    // 조건바꿔야함
