@@ -100,7 +100,7 @@ services:
 #      interval: 10s
 #      timeout: 10s
 #      retries: 3
-    restart: on-failure
+    restart: always
     
   rutil-vm-wsproxy:
     image: ititinfo.synology.me:50951/ititcloud/rutil-vm-wsproxy:latest

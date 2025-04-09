@@ -33,7 +33,7 @@ const Header = () => {
   Logger.debug(`Header ...`)
   return (
     <div className="header f-btw">
-      <div className="header-left">
+      <div id="header-left" className="f-start">
         <TopMenuIcon 
           iconDef={rvi24Hamburger("white")} 
           onClick={() => toggleAsideVisible()} />
@@ -41,7 +41,7 @@ const Header = () => {
           onClick={() => navigate("/")} />
       </div>
 
-      <div className="header-right">
+      <div id="header-right" className="f-end">
         {/* 새로고침 */}
         <TopMenuIcon
           iconDef={rvi24Refresh("white")}

@@ -4,6 +4,7 @@ import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
 import useUIState from "../../hooks/useUIState";
+import { useAllJobs } from "../../api/RQHook";
 import "./Footer.css";
 
 /**
@@ -14,6 +15,16 @@ import "./Footer.css";
  */
 const Footer = () => {
   const { footerVisible, toggleFooterVisible } = useUIState();
+  const {
+    data: jobs,
+    isLoading: isJobsLoading,
+    isError: isJobsError,
+    isSuccess: isJobsSuccess,
+    refetch: refetchJobs
+  } = useAllJobs((e) => ({
+    ...e
+  }))
+
   // 드레그
   const footerBarHeight = 40;
   const [footerHeight, setFooterHeight] = useState(300);
@@ -125,11 +136,9 @@ const Footer = () => {
           </div>
         </div>
       </div>
-
     </div>
     </>
   );
-
 };
 
 export default Footer;

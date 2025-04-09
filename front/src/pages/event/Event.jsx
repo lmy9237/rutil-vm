@@ -16,7 +16,7 @@ import { useAllEvents } from "../../api/RQHook";
 const Event = () => {
 
   const {
-    data: events = [],
+    data: events,
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,

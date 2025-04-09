@@ -4806,6 +4806,39 @@ export const useRemoveEvent = (
 }
 //#endregion: event
 
+//#region: job
+export const useAllJobs = (
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['allJobs'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllJobs()
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllJobs ... res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
+  }
+});
+
+
+export const useJob = (
+  jobId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['allJobs'],
+  queryFn: async () => {
+    const res = await ApiManager.findJob(jobId)
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useJob ... jobId: ${jobId}, res: ${JSON.stringify(_res, null, 2)}`);
+    return _res;
+  },
+  enabled: !!jobId
+});
+//#endregion: job
+
 
 //#region: User
 /**

@@ -790,6 +790,10 @@ const TableColumnsInfo = {
     // // { header: '소스', accessor: 'source', clickable: false },
     // { header: '사용자 지정 이벤트 ID', accessor: 'customEventId', clickable: false }
   ],
+
+  JOBS: [
+    { header: Localization.kr.NAME, accessor: 'name', clickable: false }
+  ],
   // 사용자
   SETTING_USER: [
     { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },

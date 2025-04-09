@@ -1,18 +1,6 @@
 .header {
   position:relative;width:100%;height:var(--h-rutil-header);
   background-color:var(--color-primary);
-  border-bottom: 1px solid #dfdfdf;  
+  border-bottom: 1px solid #dfdfdf;
 }
 .header-left,.header-right { height:100%; }
-.header-right {
-  display:flex;justify-content:flex-end;align-items:center;/* 세로 중앙 정렬 추가 */
-}
-.header-left {
-  display:flex;justify-content:flex-start;align-items:center;
-}
-/* Header 아이콘들 */
-
-.user-btn {
-  display: flex;
-  align-items: center;
-}
