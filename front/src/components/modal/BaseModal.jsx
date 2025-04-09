@@ -35,17 +35,19 @@ const BaseModal = ({
             {`${targetName} ${submitTitle}`}
           </h1>
           <button onClick={onClose}>
-            <RVI24 iconDef={rvi24Close} />
+            <RVI24 iconDef={rvi24Close} className="ml-4"/>
           </button>
         </div>
         
         <div className="popup-contents">
-          <div className="popup-contents-prompt">
-            {shouldWarn && <RVI24 iconDef={rvi24ErrorRed}
-              className="error-icon"
-            />}
-            {promptText}
-          </div>
+          {(shouldWarn || promptText) && (
+            <div className="popup-contents-prompt">
+              {shouldWarn && (
+                <RVI24 iconDef={rvi24ErrorRed} className="error-icon mr-2" />
+              )}
+              {promptText}
+            </div>
+          )}
           {props.children}
         </div>
 

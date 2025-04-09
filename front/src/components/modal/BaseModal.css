@@ -49,17 +49,14 @@
 /*footer*/
 .popup-contents {
   height: var(--h-modal-content);
-  padding: 10px 0px;
+  /* padding: 10px 0px; */
   max-height: calc(var(--h-modal) - 10px);
   overflow-y: auto;
 }
-/* .popup-contents > * {
-  height: 100%;
-} */
 .popup-contents-prompt {
   display:flex;flex-direction:row;align-items:center;justify-content:flex-start;
   height: auto;
-  /* padding: 13px; */
+  padding: 15px 0;
 }
 /*footer*/
 .edit-footer {

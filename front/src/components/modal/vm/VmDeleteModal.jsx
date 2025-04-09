@@ -98,7 +98,7 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
       promptText={`${JSON.stringify(names.join(", "), null, 2)} 를(을) 삭제하시겠습니까?`}
       submitTitle={"삭제"}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "690px", height: "260px" }} 
+      contentStyle={{ width: "690px"}} 
     >
       {ids?.map((vmId, index) => {
         const isDisabled = !diskQueries[index]?.data || !Array.isArray(diskQueries[index]?.data) || diskQueries[index].data.length === 0;

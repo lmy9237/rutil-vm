@@ -338,8 +338,9 @@ select {
   width:55%;
   border: var(--border-btn);border-radius: 1px;
   font-size: var(--fs-default);
-  padding: 0 5px;
+  padding: 2px;
   outline: none;
+  border-radius: 1px;
   letter-spacing: -0.28px;
 }
 

@@ -83,14 +83,15 @@ export const Localization = {
 
     renderStatus(status = "") {
       const _status = status?.toUpperCase() ?? "";
-      if (_status === "UP")               return "실행 중";
+      if (_status === "UP" || _status === "UNASSIGNED")  return "실행 중";
       else if (_status === "ACTIVE")      return "활성화";
       else if (_status === "INSTALLING")      return "설치 중";
       else if (_status === "DOWN")        return "중지";
       else if (_status === "INACTIVE")    return "비활성화";
       else if (_status === "UNINITIALIZED") return "초기화되지 않음";
-      else if (_status === "REBOOT" || _status === "REBOOT_IN_PROGRES") return "재부팅 중";
+      else if (_status === "REBOOT" || _status === "REBOOT_IN_PROGRES")  return "재부팅/재설정 중";
       else if (_status === "SUSPENDED")   return "일시중지";
+      else if (_status === "SAVING_STATE")  return "일시중지 중";
       else if (_status === "MAINTENANCE") return "유지보수";
       else if (_status === "PREPARING_FOR_MAINTENANCE") return "유지보수 준비 중";
       else if (_status === "WAIT_FOR_LAUNCH") return "전원을 켜는 중";
@@ -99,6 +100,8 @@ export const Localization = {
       else if (_status === "OPERATIONAL") return "가동 중";
       else if (_status === "NON_OPERATIONAL") return "비 가동 중";
       else if (_status === "UNATTACHED")  return "붙어있지 않음";
+      else if (_status === "RESTORING_STATE")  return "복구 중";
+      else if (_status === "UNKNOWN")  return "알 수 없음";
       return _status;
     },
 

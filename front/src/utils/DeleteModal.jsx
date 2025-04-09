@@ -62,7 +62,7 @@ const DeleteModal = ({
       submitTitle={"삭제"}
       promptText={`${JSON.stringify(names.join(", "), null, 2)} 를(을) 삭제하시겠습니까?`}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "660px", height: "200px" }}
+      contentStyle={{ width: "660px" }}
     />
   );
 };

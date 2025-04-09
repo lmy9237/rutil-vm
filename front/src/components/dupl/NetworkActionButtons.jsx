@@ -17,7 +17,7 @@ const NetworkActionButtons = ({
 
   const openModal = (action) => {
     setActiveModal(action);
-    onCloseContextMenu?.(); 
+    onCloseContextMenu?.(); // contextMenu도 닫기
   };
 
   const closeModal = () => {

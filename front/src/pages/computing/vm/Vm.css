@@ -152,7 +152,7 @@
   font-size: var(--fs-default);
   font-weight: 600;
   line-height: 22.5px;
-  width: 56%;
+  min-width: 56%;
 }
 .snap-table:last-child {
   margin-bottom: 0;
