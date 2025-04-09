@@ -656,6 +656,7 @@ export const status2Icon = (
     case Localization.kr.renderStatus("REBOOT_IN_PROGRESS"):  
     case "UNASSIGNED": 
     case "SAVING_STATE": 
+    case "RESTORING_STATE": 
     case "PREPARING_FOR_MAINTENANCE":              iconDef = rvi16RebootLined();break;
     
     case "SUSPENDED":                              iconDef = rvi16Pause;break;

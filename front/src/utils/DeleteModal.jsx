@@ -35,22 +35,33 @@ const DeleteModal = ({
       Logger.error(`삭제할 ${label} ID가 없습니다.`);
       return;
     }
-
+  
     ids.forEach((id, index) => {
       deleteApi(id, {
         onSuccess: () => {
           if (ids.length === 1 || index === ids.length - 1) {
             onClose();
             toast.success(`${label} 삭제 완료`);
-            hasUUID ? navigate(-1) : navigate(navigation);
+  
+            const currentPath = location.pathname;
+            const uuidRegex = /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+  
+            if (uuidRegex.test(currentPath)) {
+              // UUID가 포함된 상세 경로 → 상위 경로로 이동
+              const parentPath = currentPath.replace(uuidRegex, "");
+              navigate(parentPath);
+            }
+            // UUID가 없으면 아무 것도 하지 않음 → 현재 화면 유지
           }
         },
         onError: (error) => {
-          toast.success(`${label} 삭제 완료 ${error.message}`);
+          toast.error(`${label} 삭제 실패: ${error.message}`);
         },
       });
     });
   };
+  
+  
 
   Logger.debug("DeleteModal ...")
   return (
@@ -60,10 +71,19 @@ const DeleteModal = ({
       targetName={label}
       shouldWarn={true}
       submitTitle={"삭제"}
-      promptText={`${JSON.stringify(names.join(", "), null, 2)} 를(을) 삭제하시겠습니까?`}
+      promptText={`다음 항목을 삭제하시겠습니까?`}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "660px" }}
-    />
+    >
+    <div>
+   
+    <div >
+      {names.map((name, index) => (
+        <div className="p-1.5 font-bold" key={index}> - {name}</div>
+      ))}
+    </div>
+  </div>
+  </BaseModal>
   );
 };
 

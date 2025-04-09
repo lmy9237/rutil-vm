@@ -18,6 +18,7 @@ import TablesOuter from "../../table/TablesOuter";
 import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import "./MNetwork.css";
+import DynamicInputList from "../../label/DynamicInputList";
 
 const initialFormState = {
   id: "",
@@ -288,7 +289,7 @@ const NetworkModal = ({
           }}
         />
         
-        {formState.dnsEnabled && (
+        {/* {formState.dnsEnabled && (
           <>
             <div className="text-[15px] font-bold"> DNS 서버 </div>
             {dnsServers.length !== 0 ?
@@ -333,7 +334,29 @@ const NetworkModal = ({
             )
           }
           </>
+        )} */}
+        {formState.dnsEnabled && (
+          <>
+            <div className="text-[15px] font-bold"> DNS 서버 </div>
+            <DynamicInputList
+              values={dnsServers.map((value) => ({ value }))}
+              inputType="text"
+              showLabel={false}
+              onChange={(index, value) => {
+                const updated = [...dnsServers];
+                updated[index] = value;
+                setDnsServers(updated);
+              }}
+              onAdd={() => setDnsServers((prev) => [...prev, ""])}
+              onRemove={(index) => {
+                const updated = [...dnsServers];
+                updated.splice(index, 1);
+                setDnsServers(updated);
+              }}
+            />
+          </>
         )}
+
         
         {!editMode && (
           <div className="network-new-cluster-form mt-3">

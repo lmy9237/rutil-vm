@@ -228,6 +228,8 @@ const Tables = ({
       }));
     }
   };
+
+  
   // 페이징처리
   // ✅ 현재 페이지 상태 및 페이지당 항목 개수 추가
   const [currentPage, setCurrentPage] = useState(1);

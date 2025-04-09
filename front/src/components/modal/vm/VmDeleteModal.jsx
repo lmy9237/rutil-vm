@@ -95,7 +95,8 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
       onClose={onClose}
       targetName={"가상머신"}
       shouldWarn={true}
-      promptText={`${JSON.stringify(names.join(", "), null, 2)} 를(을) 삭제하시겠습니까?`}
+      // promptText={`${JSON.stringify(names.join(", "), null, 2)} 를(을) 삭제하시겠습니까?`}
+      promptText={`다음 항목을 삭제하시겠습니까?`}
       submitTitle={"삭제"}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px"}} 
