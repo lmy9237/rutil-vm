@@ -193,3 +193,21 @@ fun Application.fromApplicationToIdentifiedVo(): IdentifiedVo = IdentifiedVo.bui
 }
 fun List<Application>.fromApplicationsToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromApplicationsToIdentifiedVos.map { it.fromApplicationToIdentifiedVo() }
+
+
+fun Vm.fromVmCdromToIdentifiedVo(diskId: String): IdentifiedVo? {
+	val file = cdroms().firstOrNull()?.takeIf { it.filePresent() }?.file()?.id()
+	return if (diskId == file) fromVmToIdentifiedVo() else null
+}
+
+fun List<Vm>.fromVmCdromsToIdentifiedVos(diskId: String): List<IdentifiedVo> =
+	this.mapNotNull { it.fromVmCdromToIdentifiedVo(diskId) }
+
+fun Template.fromTemplateCdromToIdentifiedVo(diskId: String): IdentifiedVo? {
+	val file = cdroms().firstOrNull()?.takeIf { it.filePresent() }?.file()?.id()
+	return if (diskId == file) fromTemplateToIdentifiedVo() else null
+}
+
+fun List<Template>.fromTemplateCdromsToIdentifiedVos(diskId: String): List<IdentifiedVo> =
+	this.mapNotNull { it.fromTemplateCdromToIdentifiedVo(diskId) }
+

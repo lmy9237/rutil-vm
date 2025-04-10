@@ -11,6 +11,7 @@ import { status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
 import { checkZeroSizeToGiB } from "../../util";
 import Logger from "../../utils/Logger";
+import { useCdromsDisks } from "../../api/RQHook";
 
 
 const DiskDupl = ({
@@ -22,9 +23,13 @@ const DiskDupl = ({
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDisks, setSelectedDisks] = useState([]);
-
+  
+  const diskIds = disks.map((d) => d.id);
+  const { data: cdromsMap = [] } = useCdromsDisks(diskIds);
+  
   // ✅ 데이터 변환: 검색이 가능하도록 `searchText` 추가
   const transformedData = disks.map((d) => {
+    const cdromObj = cdromsMap.find((item) => item.diskId === d.id);
     let diskData = {
       ...d,
       _alias: (
@@ -43,12 +48,15 @@ const DiskDupl = ({
       icon2: d?.readOnly ? "🔒" : "",
       sparse: d?.sparse ? "씬 프로비저닝" : "사전 할당",
       connect: (
+        <div>
         <TableRowClick
           type={d?.connectVm?.id ? "vm" : "template"}
           id={d?.connectVm?.id || d?.connectTemplate?.id}
         >
           {d?.connectVm?.name || d?.connectTemplate?.name}
         </TableRowClick>
+        <span>{(cdromObj?.cdroms || []).map((cd) => cd.name).join(', ')}</span>
+        </div>
       ),
       virtualSize: checkZeroSizeToGiB(d?.virtualSize),
       actualSize: checkZeroSizeToGiB(d?.actualSize),
@@ -61,7 +69,6 @@ const DiskDupl = ({
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-
 
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);

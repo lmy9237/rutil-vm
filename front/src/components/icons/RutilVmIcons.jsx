@@ -658,9 +658,9 @@ export const status2Icon = (
     case "SAVING_STATE": 
     case "RESTORING_STATE": 
     case "PREPARING_FOR_MAINTENANCE":              iconDef = rvi16RebootLined();break;
-    
     case "SUSPENDED":                              iconDef = rvi16Pause;break;
     case "NON_OPERATIONAL":                        iconDef = rvi16NonOperational;break;
+    case "LOCKED":
     case "UNKNOWN":
     default:                                       iconDef = rvi16QuestionMark();break;
   }

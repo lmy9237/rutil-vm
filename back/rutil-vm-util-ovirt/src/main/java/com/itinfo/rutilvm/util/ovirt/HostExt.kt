@@ -103,9 +103,10 @@ fun Connection.removeHost(hostId: String): Result<Boolean> = runCatching {
 	}
 
 	this.srvHost(hostId).remove().send()
-	if(!this.expectHostDeleted(hostId)){
-		throw Error("삭제 실패했습니다 ... ${hostId}.")
-	}
+	// if(!this.expectHostDeleted(hostId)){
+	// 	throw Error("삭제 실패했습니다 ... ${hostId}.")
+	// }
+
 	true
 }.onSuccess {
 	Term.HOST.logSuccess("삭제", hostId)

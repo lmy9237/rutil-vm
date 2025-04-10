@@ -6,6 +6,7 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.error.IdNotFoundException
 import com.itinfo.rutilvm.api.error.InvalidRequestException
 import com.itinfo.rutilvm.api.error.toException
+import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
@@ -58,6 +59,29 @@ class DiskController: BaseController() {
 	): ResponseEntity<List<DiskImageVo>> {
 		log.info("/storages/disks/simple ... 디스크 목록")
 		return ResponseEntity.ok(iDisk.findAllId())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="디스크가 가진 연결 목록",
+		notes="전체 디스크 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "diskId", value = "디스크이미지 ID", dataTypeClass = String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{diskId}/cdRoms")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun findAllCdRomsFromDisk(
+		@PathVariable diskId: String? = null,
+	): ResponseEntity<List<IdentifiedVo>> {
+		log.info("/storages/disks/{}/cdRoms ... cdroms", diskId)
+		if (diskId == null)
+			throw ErrorPattern.DISK_IMAGE_ID_NOT_FOUND.toException()
+		return ResponseEntity.ok(iDisk.findAllCdRomsFromDisk(diskId))
 	}
 
 	@ApiOperation(

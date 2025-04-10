@@ -134,8 +134,8 @@ const VmModal = ({
   const [diskListState, setDiskListState] = useState([]);
   
   const onSuccess = () => {
-    toast.success(`가상머신 ${vLabel} 완료`);
     onClose();
+    toast.success(`가상머신 ${vLabel} 완료`);
   };
   const { mutate: addVM } = useAddVm(onSuccess, () => onClose());
   const { mutate: editVM } = useEditVm(onSuccess, () => onClose());
@@ -400,7 +400,7 @@ const VmModal = ({
   };
 
   return (
-    <BaseModal targetName={Localization.kr.VM}   submitTitle={vLabel}  
+    <BaseModal targetName={Localization.kr.VM} submitTitle={vLabel}  
       isOpen={isOpen} onClose={onClose} 
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "850px", height: "730px" }}  

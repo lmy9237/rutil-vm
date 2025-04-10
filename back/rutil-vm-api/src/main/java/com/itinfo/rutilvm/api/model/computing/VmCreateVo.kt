@@ -174,8 +174,8 @@ fun VmCreateVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 	cluster(ClusterBuilder().id(clusterVo.id))
 	bios(BiosBuilder().type(BiosType.fromValue(osType)).build())
 	type(VmType.fromValue(optimizeOption))
-	timeZone(TimeZoneBuilder()
-		.name(
+	timeZone(
+		TimeZoneBuilder().name(
 			if(osSystem.contains("windows")) "GMT Standard Time"
 			else timeOffset
 		)
@@ -185,11 +185,13 @@ fun VmCreateVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 fun VmCreateVo.toVmSystemBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	memory(memorySize)
 	memoryPolicy(MemoryPolicyBuilder().max(memoryMax).guaranteed(memoryActual))
-	cpu(CpuBuilder().topology(CpuTopologyBuilder()
+	cpu(
+		CpuBuilder().topology(CpuTopologyBuilder()
 		.cores(cpuTopologyCore)
 		.sockets(cpuTopologySocket)
 		.threads(cpuTopologyThread)
-		.build()))
+		.build())
+	)
 }
 
 fun VmCreateVo.toVmInitBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
@@ -209,7 +211,7 @@ fun VmCreateVo.toVmHostBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 
 fun VmCreateVo.toVmHaBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	highAvailability(HighAvailabilityBuilder().enabled(ha).priority(priority))
-	if (ha) {
+	if (ha && storageDomainVo.id.isEmpty()) {
 		lease(StorageDomainLeaseBuilder().storageDomain(StorageDomainBuilder().id(storageDomainVo.id).build()))
 	}
 }
@@ -226,17 +228,17 @@ fun VmCreateVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 
 fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
     val vm = this@toVmCreateVo
-    // val nics: List<Nic> = conn.findAllNicsFromVm(vm.id(), follow = "nics.vnicprofile").getOrDefault(listOf())
     val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
-    // val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
 	val disk: Disk? = vm.cdroms().firstOrNull()?.file()?.id()?.let { conn.findDisk(it).getOrNull() }
-    // val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vm.id()).getOrDefault(listOf())
 	val storageDomain: StorageDomain? = if (vm.leasePresent()) {
 		conn.findStorageDomain(vm.lease().storageDomain().id()).getOrNull()
 	} else null
 	val hosts = if (vm.placementPolicy().hostsPresent()) {
 		vm.placementPolicy().hosts().map { it }.fromHostsToIdentifiedVos()
 	} else listOf()
+    // val nics: List<Nic> = conn.findAllNicsFromVm(vm.id(), follow = "nics.vnicprofile").getOrDefault(listOf())
+    // val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
+    // val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vm.id()).getOrDefault(listOf())
 	// val cpuProfile = conn.findCpuProfile(vm.cpuProfile().id()).getOrNull()
 
     return VmCreateVo.builder {

@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import Loading from "../../../common/Loading";
 import { useDisksFromVM } from "../../../../api/RQHook";
 import ActionButton from "../../../button/ActionButton";
-import { RVI24, rvi24ChevronDown, rvi24Error, RVI36, rvi36Edit, rvi36Trash } from "../../../icons/RutilVmIcons";
+import { RVI36, rvi36Edit, rvi36Trash } from "../../../icons/RutilVmIcons";
 import Localization from "../../../../utils/Localization";
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));

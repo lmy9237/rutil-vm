@@ -2732,6 +2732,18 @@ const ApiManager = {
     url: ENDPOINTS.FIND_ALL_DISKS(),
     // defaultValues: DEFAULT_VALUES.FIND_ALL_DISK
   }),
+  /**
+   * @name ApiManager.findCdromsDisk
+   * @description disk 목록
+   *
+   * @returns 
+   * 
+   * @see
+   */
+  findCdromsDisk: async (diskId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_CDROMS_DISK(diskId),
+  }),
 
   /**
    * @name ApiManager.findDisk

@@ -2,12 +2,11 @@ package com.itinfo.rutilvm.api.service.storage
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
+import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.computing.toDiskVms
-import com.itinfo.rutilvm.api.model.computing.toVmMenus
-import com.itinfo.rutilvm.api.model.response.Res
-import com.itinfo.rutilvm.api.model.setting.PermissionVo
-import com.itinfo.rutilvm.api.model.setting.toPermissionVos
+import com.itinfo.rutilvm.api.model.fromTemplateCdromsToIdentifiedVos
+import com.itinfo.rutilvm.api.model.fromVmCdromsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
@@ -48,6 +47,17 @@ interface ItDiskService {
      */
     @Throws(Error::class)
     fun findAllId(): List<DiskImageVo>
+
+
+	/**
+	 * [ItDiskService.findAllCdRomsFromDisk]
+	 * 디스크가 가진 cdrom정보
+	 *
+	 * @param diskId [String] 디스크 id
+	 * @return List<[IdentifiedVo]> 디스크 아이디 목록
+	 */
+	@Throws(Error::class)
+	fun findAllCdRomsFromDisk(diskId: String): List<IdentifiedVo>
     /**
      * [ItDiskService.findOne]
      * 디스크 정보
@@ -220,6 +230,15 @@ class DiskServiceImpl(
 		val res: List<Disk> = conn.findAllDisks().getOrDefault(emptyList())
 			.filter { it.contentType() != DiskContentType.OVF_STORE } // ovf_store 값은 제외하고
 		return res.toDiskIdNames()
+	}
+
+	@Throws(Error::class)
+	override fun findAllCdRomsFromDisk(diskId: String): List<IdentifiedVo> {
+		log.info("findAllCdRomsFromDisk ... {}", diskId)
+		val vms: List<Vm> = conn.findAllVms(follow = "cdroms").getOrDefault(emptyList())
+		val temps: List<Template> = conn.findAllTemplates(follow = "cdroms").getOrDefault(emptyList())
+		val list: List<IdentifiedVo> = vms.fromVmCdromsToIdentifiedVos(diskId) + temps.fromTemplateCdromsToIdentifiedVos(diskId)
+		return list
 	}
 
     @Throws(Error::class)

@@ -335,6 +335,7 @@ class DataCenterServiceImpl(
 
 	@Throws(Error::class)
 	override fun findAttachDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo> {
+		//TODO:값에 문제가 있음
 		log.info("findAttachDiskImageByDataCenter ... dataCenterId: {}", dataCenterId)
 		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks.storagedomain").getOrDefault(emptyList())
 		val res = storageDomains.flatMap {

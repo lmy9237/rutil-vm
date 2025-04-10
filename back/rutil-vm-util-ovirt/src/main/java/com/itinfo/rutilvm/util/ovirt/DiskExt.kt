@@ -36,7 +36,7 @@ fun Connection.findDisk(diskId: String, follow: String = ""): Result<Disk?> = ru
 }.onSuccess {
 	Term.DISK.logSuccess("상세조회")
 }.onFailure {
-	Term.DISK.logFail("상세조회")
+	Term.DISK.logFail("상세조회", target = diskId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 

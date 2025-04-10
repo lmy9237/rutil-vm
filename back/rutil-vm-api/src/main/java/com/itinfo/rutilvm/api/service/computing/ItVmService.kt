@@ -167,10 +167,7 @@ class VmServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<VmViewVo> {
 		log.info("findAll ... ")
-		// cluster.datacenter,statistics,reporteddevices
 		val res: List<Vm> = conn.findAllVms(follow = "cluster.datacenter,reporteddevices").getOrDefault(emptyList())
-		// val res: List<Vm> = conn.findVms()
-		// return res.toVmsMenu(conn) // 3.92
 		return res.toVmMenus(conn) // 3.86
 	}
 

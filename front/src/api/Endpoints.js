@@ -22,8 +22,8 @@ const ENDPOINTS = {
   GET_PER_VM_MEMORY: () =>                                                 `${ENDPOINT_API_V1}/dashboard/vmMemoryPerList`,
   GET_PER_VM_NETWORK: () =>                                                `${ENDPOINT_API_V1}/dashboard/vmNetworkPerList`,
          
-  GET_METRIC_VM_CPU: () =>                                                     `${ENDPOINT_API_V1}/dashboard/vmCpuMetricChart`,
-  GET_METRIC_VM_MEMORY: () =>                                                     `${ENDPOINT_API_V1}/dashboard/vmMemoryMetricChart`,
+  GET_METRIC_VM_CPU: () =>                                                 `${ENDPOINT_API_V1}/dashboard/vmCpuMetricChart`,
+  GET_METRIC_VM_MEMORY: () =>                                              `${ENDPOINT_API_V1}/dashboard/vmMemoryMetricChart`,
   GET_METRIC_STORAGE: () =>                                                `${ENDPOINT_API_V1}/dashboard/storageMetricList`,
   //#endregion: Dashboard
   
@@ -265,6 +265,7 @@ const ENDPOINTS = {
 
   //#region: Disk
   FIND_ALL_DISKS: () =>                                                    `${ENDPOINT_API_V1}/storages/disks`,
+  FIND_CDROMS_DISK: (diskId) =>                                            `${ENDPOINT_API_V1}/storages/disks/${diskId}/cdRoms`,
   FIND_DISK: (diskId) =>                                                   `${ENDPOINT_API_V1}/storages/disks/${diskId}`,
   FIND_VMS_FROM_DISK: (diskId) =>                                          `${ENDPOINT_API_V1}/storages/disks/${diskId}/vms`,
   FIND_STORAGE_DOMAINS_FROM_DISK: (diskId) =>                              `${ENDPOINT_API_V1}/storages/disks/${diskId}/storageDomains`,
@@ -280,9 +281,9 @@ const ENDPOINTS = {
   //#endregion: Disk
   
   //#region: Event
-  FIND_ALL_EVENTS: () =>                                                  `${ENDPOINT_API_V1}/events`,
-  FIND_ALL_EVENTS_PAGE: (severityThreshold, pageNo=1,size) =>             `${ENDPOINT_API_V1}/events?${severityThreshold ? `severityThreshold=${severityThreshold}` : ""}${size ? `&size=${size}` : ""}${pageNo ? `&pageNo=${pageNo}` : ""}`,
-  FIND_EVENT: (eventId) =>                                                `${ENDPOINT_API_V1}/events/${eventId}`,
+  FIND_ALL_EVENTS: () =>                                                   `${ENDPOINT_API_V1}/events`,
+  FIND_ALL_EVENTS_PAGE: (severityThreshold, pageNo=1,size) =>              `${ENDPOINT_API_V1}/events?${severityThreshold ? `severityThreshold=${severityThreshold}` : ""}${size ? `&size=${size}` : ""}${pageNo ? `&pageNo=${pageNo}` : ""}`,
+  FIND_EVENT: (eventId) =>                                                 `${ENDPOINT_API_V1}/events/${eventId}`,
   //#endregion: Event
 
   //#region: Job

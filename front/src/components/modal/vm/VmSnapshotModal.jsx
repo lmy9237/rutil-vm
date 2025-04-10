@@ -65,10 +65,14 @@ const VmSnapshotModal = ({ isOpen, selectedVm, onClose }) => {
           onChange={() => setFormState((prev) => ({ ...prev, persistMemory: !prev.persistMemory }))} // ✅ true/false로 변경
           tType={"저장"} fType={"저장안함"}
         />
-        <span>persistMemory: {formState.persistMemory ? "t" : "f"}</span><br/>
-        <span>status {selectedVm?.status}</span>
+        {/* <span>persistMemory: {formState.persistMemory ? "t" : "f"}</span><br/> */}
+        {/* <span>status {selectedVm?.status}</span> */}
         <br/>
-        <span>! 메모리를 저장하는 도중 가상 머신이 중지됨</span>
+        {
+          ["DOWN"].includes(selectedVm?.status) 
+            ? <span></span> 
+            : <span>! 메모리를 저장하는 도중 가상 머신이 중지됨</span>
+        }
       </div>
     </BaseModal>
   );

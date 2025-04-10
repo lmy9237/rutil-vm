@@ -68,7 +68,7 @@ const VmActionButtons = ({
       type: "console", label: "콘솔", disabled: !isUp 
       , onBtnClick: () => openNewTab("console", vmId)
     }, {
-      type: "snapshot", label: "스냅샷 생성",   disabled: isEditDisabled || !isUp 
+      type: "snapshot", label: "스냅샷 생성",   disabled: isEditDisabled 
       , onBtnClick: () => openModal("snapshot") 
     }, {
       type: "migration", label: "마이그레이션", disabled: !isUp

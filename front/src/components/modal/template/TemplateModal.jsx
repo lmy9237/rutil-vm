@@ -44,6 +44,8 @@ const TemplateModal = ({
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
   const [cpuProfileVo, setCpuProfileVo] = useState({ id: "", name: "" });
+  const [storageDomainVo, setStorageDomainVo] = useState({ id: "", name: "" });
+  const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
 
   const [diskVoList, setDiskVoList] = useState([]);
   const [diskProfileMap, setDiskProfileMap] = useState({});
@@ -69,7 +71,6 @@ const TemplateModal = ({
   // 가상머신에 연결되어있는 디스크
   const { 
     data: disks = [],
-    isLoading: isDisksLoading
   } = useDisksFromVM(selectedVm?.id, (e) => ({ ...e }));
 
   // 데이터센터 ID 기반으로 스토리지목록 가져오기
@@ -78,10 +79,10 @@ const TemplateModal = ({
     isLoading: isDomainsLoading
   } = useDomainsFromDataCenter(dataCenterVo?.id, (e) => ({...e }));
   
-  // const { 
-  //   data: diskProfiles = [], 
-  //   isLoading: isDiskProfilesLoading
-  // } = useAllDiskProfilesFromDomain(disk.diskImageVo?.storageDomainVo.id, (e) => ({...e,}));
+  const { 
+    data: diskProfiles = [], 
+    isLoading: isDiskProfilesLoading
+  } = useAllDiskProfilesFromDomain(storageDomainVo.id, (e) => ({...e,}));
 
   // TODO: 스토리지 도메인에 대한 디스크 프로파일 목록 출력문제
   Logger.debug(`TemplateModal > disks: ${JSON.stringify(disks, null, 2)}`);
@@ -255,30 +256,26 @@ const TemplateModal = ({
                   </td>
                   <td>
                     <LabelSelectOptionsID
-                      value={disk.diskImageVo?.storageDomainVo?.id}
+                      value={storageDomainVo?.id}
                       loading={isDomainsLoading}
                       options={domains.filter((d) => d.status === "ACTIVE")}
                       onChange={(e) => {
                         const selected = domains.find(d => d.id === e.target.value);
-                        if (selected) {
-                          handleDiskChange(index, "storageDomainVo", selected, true);
-                        }
+                        if (selected) setStorageDomainVo({id: selected.id, name:selected.name})
                       }}
                     />
-                    <span>{disk.diskImageVo?.storageDomainVo?.name}</span>
+                    <span>{storageDomainVo?.name}</span>
                   </td>
                   <td>
-                    {/* <LabelSelectOptionsID
-                      value={disk.diskImageVo?.diskProfileVo?.id}
+                    <LabelSelectOptionsID
+                      value={diskProfileVo?.id}
                       loading={isDiskProfilesLoading}
                       options={diskProfiles}
                       onChange={(e) => {
                         const selected = diskProfiles.find(d => d.id === e.target.value);
-                        if (selected) {
-                          handleDiskChange(index, "diskProfileVo", selected, true);
-                        }
+                        if (selected) setDiskProfileVo({id: selected.id, name:selected.name})
                       }}
-                    /> */}
+                    />
                     <span>{disk.diskImageVo?.diskProfileVo?.name}</span>
                   </td>
                 </tr>

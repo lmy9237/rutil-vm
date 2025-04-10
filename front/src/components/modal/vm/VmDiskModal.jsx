@@ -72,8 +72,12 @@ const VmDiskModal = ({
   const [storageDomainVo, setStorageDomainVo] = useState({ id: "", name: "" });
   const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
 
-  const { mutate: addDiskVm } = useAddDiskFromVM();
-  const { mutate: editDiskVm } = useEditDiskFromVM();
+  const onSuccess = () => {
+    onClose();
+    toast.success(`가상머신 디스크 ${dLabel} 완료`);
+  };
+  const { mutate: addDiskVm } = useAddDiskFromVM(onSuccess, () => onClose());
+  const { mutate: editDiskVm } = useEditDiskFromVM(onSuccess, () => onClose());
   const { data: vm }  = useVm(vmId);
   
   // 디스크 데이터 가져오기
@@ -85,8 +89,12 @@ const VmDiskModal = ({
     useAllActiveDomainsFromDataCenter(dataCenterId || vm?.dataCenterVo?.id, (e) => ({ ...e }));
 
   // 선택한 도메인이 가진 디스크 프로파일 가져오기
-  const { data: diskProfiles = [], isLoading: isDiskProfilesLoading, } = 
-    useAllDiskProfilesFromDomain(storageDomainVo.id, (e) => ({ ...e }));
+  const { 
+    data: diskProfiles = [], 
+    isLoading: isDiskProfilesLoading, 
+    isError: isDiskProfilesError,
+    isSuccess: isDiskProfilesSuccess
+  } = useAllDiskProfilesFromDomain(storageDomainVo.id, (e) => ({ ...e }));
 
   useEffect(() => {
     if (vmName) {
@@ -104,7 +112,7 @@ const VmDiskModal = ({
   
   useEffect(() => {
     if (!editMode && diskProfiles && diskProfiles.length > 0) {
-      setDiskProfileVo({id: diskProfiles[0].id});
+      setDiskProfileVo({id: diskProfiles[0].id, name: diskProfiles[0].id});
     }
   }, [diskProfiles, editMode]);
 
@@ -230,10 +238,6 @@ const VmDiskModal = ({
     const dataToSubmit = {
       id: formState?.id,
       ...formState,
-      // bootable: formState.bootable,
-      // readOnly: formState.readOnly,
-      // passDiscard: formState.passDiscard,
-      // interface_: formState.interface_,
       diskImageVo: {
         id:formState?.id,
         alias: formState.alias,
@@ -248,29 +252,21 @@ const VmDiskModal = ({
       },
     };
 
-    const onSuccess = () => {
-      onClose();
-      toast.success(`가상머신 디스크 ${dLabel} 완료`);
-    };
-    const onError = (err) => toast.error(`Error ${dLabel} disk: ${err}`);
+    
     Logger.debug(`데이터 : ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터를 확인하기 위한 로그
 
     editMode
-      ? editDiskVm({ vmId, diskAttachmentId: formState?.id, diskAttachment: dataToSubmit },{ onSuccess, onError })
-      : addDiskVm({ vmId, diskData: dataToSubmit },{ onSuccess, onError });
+      ? editDiskVm({ vmId, diskAttachmentId: formState?.id, diskAttachment: dataToSubmit })
+      : addDiskVm({ vmId, diskData: dataToSubmit });
   };
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName={"디스크"}
-      submitTitle={dLabel}
+    <BaseModal targetName={"디스크"} submitTitle={dLabel}
+      isOpen={isOpen} onClose={onClose}      
       onSubmit={diskType? handleFormSubmit : handleOkClick}
       contentStyle={{ width: "780px" }} 
     >
       {/* <div className="storage-disk-new-popup modal"> */}
-
         <div className="disk-new-nav">
           <div
             id="storage_img_btn"
@@ -286,87 +282,62 @@ const VmDiskModal = ({
         {/*이미지*/}
         {activeTab === "img" && (
           <div className="disk-new-img">
-            <div className="disk-new-img-left">
-              
+            <div className="disk-new-img-left">              
               <span>Bootable Disk: {hasBootableDisk ? "true" : "false"}</span>
-              <LabelInputNum
-                className="img-input-box"
-                label="크기(GB)"
+
+              <LabelInputNum label="크기(GB)"
                 value={formState.size}
-                onChange={handleInputChange("size")}
                 autoFocus={true}
                 disabled={editMode}
+                onChange={handleInputChange("size")}
               />
               {editMode && (
-                <LabelInputNum
-                  className="img-input-box"
-                  label="추가크기(GB)"
+                <LabelInputNum label="추가크기(GB)"
                   value={formState.appendSize}
                   onChange={handleInputChange("appendSize")}
                 />
               )}
-              <LabelInput id="alias"
-                className="img-input-box" 
-                label={Localization.kr.ALIAS}
+              <LabelInput id="alias" label={Localization.kr.ALIAS}
                 value={formState.alias} 
                 onChange={handleInputChange("alias")}
               />
-              <LabelInput id="description"
-                className="img-input-box" 
-                label={Localization.kr.DESCRIPTION}
+              <LabelInput id="description" label={Localization.kr.DESCRIPTION}
                 value={formState.description} 
                 onChange={handleInputChange("description")}
               />
-              <LabelSelectOptions
-                className="img-input-box"
-                label="인터페이스"
+              <LabelSelectOptions label="인터페이스"
                 value={formState.interface_}
-                onChange={handleInputChange("interface_")}
                 disabled={editMode}
                 options={interfaceList}
+                onChange={handleInputChange("interface_")}
               />
-              <LabelSelectOptionsID
-                className="img-input-box"
-                label="스토리지 도메인"
+              <LabelSelectOptionsID label="스토리지 도메인"
                 value={storageDomainVo.id}
-                onChange={(e) => {
-                  const selectedDomain = domains.find((domain) => domain.id === e.target.value);
-                  setStorageDomainVo({
-                    id: e.target.value,
-                    name: selectedDomain ? selectedDomain.name : "",
-                  });
-                }}
                 disabled={editMode}
                 loading={isDomainsLoading}
                 options={domains}
-              />
-              <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
-                className="img-input-box"
-                value={String(formState.sparse)}
-                // value={formState.sparse ? "true" : "false"}
-                onChange={(e) =>
-                  setFormState((prev) => ({
-                    ...prev,
-                    sparse: e.target.value === "true",
-                  }))
-                }
-                disabled={editMode}
-                options={sparseList}
-              />
-              <LabelSelectOptionsID
-                className="img-input-box"
-                label="디스크 프로파일"
-                value={diskProfileVo.id}
                 onChange={(e) => {
-                  const selectedDiskProfile = diskProfiles.find((dp) => dp.id === e.target.value);
-                  setDiskProfileVo({
-                    id: e.target.value,
-                    name: selectedDiskProfile ? selectedDiskProfile.name : "",
-                  });
+                  const selected = domains.find(domain => domain.id === e.target.value);
+                  if (selected) setStorageDomainVo({ id: selected.id, name: selected.name });
                 }}
+              />
+              <LabelSelectOptionsID label="디스크 프로파일"
+                value={diskProfileVo.id}
                 loading={isDiskProfilesLoading}
                 options={diskProfiles}
+                onChange={(e) => {
+                  const selected = diskProfiles.find((dp) => dp.id === e.target.value);
+                  if (selected) setDiskProfileVo({ id: selected.id, name: selected.name });
+                }}
               />
+              <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
+                value={String(formState.sparse)}
+                // value={formState.sparse ? "true" : "false"}
+                disabled={editMode}
+                options={sparseList}
+                onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true", }))}
+              />
+              
             </div>
 
             <div className="disk-new-img-right">
@@ -379,23 +350,23 @@ const VmDiskModal = ({
               <div className='img-checkbox-outer'>
                 <LabelCheckbox id="bootable" label={Localization.kr.IS_BOOTABLE}
                   checked={Boolean(formState.bootable)} 
-                  onChange={handleInputChangeCheck("bootable")}
                   disabled={hasBootableDisk} 
                   // TODO: bootable처리 
+                  onChange={handleInputChangeCheck("bootable")}
                 />
               </div>
               <div className='img-checkbox-outer'>
                 <LabelCheckbox id="sharable" label={Localization.kr.IS_SHARABLE}
                   checked={Boolean(formState.sharable)} 
-                  onChange={handleInputChangeCheck("sharable")} 
                   disabled={editMode} 
+                  onChange={handleInputChangeCheck("sharable")} 
                 />
               </div>
               <div className='img-checkbox-outer'>
                 <LabelCheckbox id="readOnly" label={Localization.kr.IS_READ_ONLY}
                   checked={Boolean(formState.readOnly)} 
-                  onChange={handleInputChangeCheck("readOnly")} 
                   disabled={editMode}
+                  onChange={handleInputChangeCheck("readOnly")} 
                 />
               </div>
               {/* 

@@ -4469,6 +4469,21 @@ export const useAllDisks = (
   },
   // staleTime: 2000, // 2초 동안 데이터 재요청 방지
 })
+export const useCdromsDisks = (diskIds = []) =>
+  useQuery({
+    queryKey: ['cdromsForDisks', diskIds],
+    enabled: diskIds.length > 0,
+    queryFn: async () => {
+      const res = await Promise.all(
+        diskIds.map((id) => ApiManager.findCdromsDisk(id))
+      );
+      return res.map((r, idx) => ({
+        diskId: diskIds[idx],
+        cdroms: validate(r) ?? [],
+      }));
+    },
+  });
+
 /**
  * @name useDisk
  * @description 디스크 상세조회 useQuery 훅
