@@ -10,7 +10,7 @@ import Localization from "../../utils/Localization";
 import DomainModals from "../modal/domain/DomainModals";
 
 const DomainActionButtons = ({
-  onCloseContextMenu, 
+  openModal,
   isEditDisabled,
   isDeleteDisabled,
   status,
@@ -33,14 +33,7 @@ const DomainActionButtons = ({
   const [isDomainMainTenanceModalOpen, setIsDomainMainTenanceModalOpen] = useState(false);// 삭제예정
   const [isDomainCheckModalOpen, setIsDomainCheckModalOpen] = useState(false); // 삭제예정
 
-  //모달관련
-  const [activeModal, setActiveModal] = useState(null);
 
-  const openModal = (type) => {
-    setActiveModal(type);
-    onCloseContextMenu?.(); // context menu 닫기
-  };
-  const closeModal = () => setActiveModal(null);
 
   const basicActions = [
     { type: "edit", label: "유지보수모달(임시)", onBtnClick: () => setIsDomainMainTenanceModalOpen(true) },
@@ -70,22 +63,22 @@ const DomainActionButtons = ({
     { type: "maintenance", label: "유지보수", disabled: isDeleteDisabled || isMaintenance, onBtnClick: () => openModal("maintenance") },
   ];
 
-  // const renderButtons = (actions) =>
-  //   actions.map(({ type, label, disabled }) => (
-  //     <button key={type} onClick={() => openModal(type)} disabled={disabled}>
-  //       {label}
-  //     </button>
-  //   ));
+  const renderButtons = (actions) =>
+    actions.map(({ type, label, disabled }) => (
+      <button key={type} onClick={() => openModal(type)} disabled={disabled}>
+        {label}
+      </button>
+    ));
 
 
-  // const selectedActions =
-  // actionType === "domain"
-  //   ? basicActions
-  //   : actionType === "dcDomain"
-  //     ? dcDomainActions
-  //     : actionType === "domainDc"
-  //       ? domainDcActions
-  //       : [];
+  const selectedActions =
+  actionType === "domain"
+    ? basicActions
+    : actionType === "dcDomain"
+      ? dcDomainActions
+      : actionType === "domainDc"
+        ? domainDcActions
+        : [];
 
   return (
  <>
@@ -114,15 +107,9 @@ const DomainActionButtons = ({
       isOpen={isDomainCheckModalOpen}
       onClose={() => setIsDomainCheckModalOpen(false)}
     />
+   
 
-       {/* 도메인 모달창 */}
-      <DomainModals
-        activeModal={activeModal}
-        domain={selectedDomains[0]}
-        selectedDomains={selectedDomains}
-        datacenterId={datacenterId}
-        onClose={closeModal}
-      />
+
  </>
     /*
     <div className={wrapperClass}>

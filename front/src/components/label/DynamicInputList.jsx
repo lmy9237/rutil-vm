@@ -1,5 +1,6 @@
 import React from "react";
 import DynamicButton from "../label/DynamicButton";
+import "./DynamicInputList.css"
 
 /**
  * @name DynamicInputList
@@ -30,6 +31,7 @@ const DynamicInputList = ({
           )}
           {inputType === "select" ? (
             <select
+              className="dynamic-select"
               value={item.vnicProfileVo?.id || ""}
               onChange={(e) => onChange(index, e.target.value)}
             >

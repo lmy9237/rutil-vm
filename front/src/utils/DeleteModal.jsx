@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import BaseModal from "../components/modal/BaseModal";
 import Logger from "./Logger";
+import { RVI16, rvi16ChevronRight } from "../components/icons/RutilVmIcons";
 
 const DeleteModal = ({
   isOpen=false, 
@@ -79,7 +80,10 @@ const DeleteModal = ({
    
     <div >
       {names.map((name, index) => (
-        <div className="p-1.5 font-bold" key={index}> - {name}</div>
+        <div className="p-1.5 font-bold flex f-start" key={index}> 
+          <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>
+          {name}
+        </div>
       ))}
     </div>
   </div>

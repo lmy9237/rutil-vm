@@ -14,6 +14,7 @@ import BoxEvent from "./BoxEvent";
 import Logger from "../../utils/Logger";
 import BoxUser from "./BoxUser";
 import "./Header.css";
+import SettingAccountModal from "../modal/settings/SettingAccountModal";
 
 /**
  * @name Header
@@ -30,7 +31,15 @@ const Header = () => {
     loginBoxVisible, toggleLoginBoxVisible,
   } = useUIState();
 
-  Logger.debug(`Header ...`)
+  const [activeModal, setActiveModal] = useState(null); 
+  const openSettingModal = () => {
+    setActiveModal("account");
+  };
+  const closeModal = () => {
+    setActiveModal(null);
+  };
+
+
   return (
     <div className="header f-btw">
       <div id="header-left" className="f-start">
@@ -70,8 +79,14 @@ const Header = () => {
             toggleLoginBoxVisible();
           }}
         />
-        {loginBoxVisible && <BoxUser />}
+        {loginBoxVisible && (
+          <BoxUser onOpenSetting={openSettingModal} />
+        )}
       </div>
+      <SettingAccountModal
+        isOpen={activeModal === "account"}
+        onClose={closeModal}
+      />
     </div>
   );
 };

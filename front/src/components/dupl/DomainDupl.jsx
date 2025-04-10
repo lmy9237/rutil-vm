@@ -11,6 +11,7 @@ import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
+import DomainModals from "../modal/domain/DomainModals";
 
 /**
  * @name DomainDupl
@@ -25,6 +26,11 @@ const DomainDupl = ({
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
+  //모달관련
+  const [activeModal, setActiveModal] = useState(null);
+  const openModal = (action) => setActiveModal(action);
+  const closeModal = () => setActiveModal(null);
+
   const [selectedDomains, setSelectedDomains] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // ✅ 검색어 상태 추가
   const handleRefresh = () =>  {
@@ -72,9 +78,8 @@ const DomainDupl = ({
 
   const handleNameClick = (id) => navigate(`/storages/domains/${id}`);
 
-  const isEditDisabled = selectedDomains.length !== 1;
-  const isDeleteDisabled = selectedDomains.length === 0;
-  const selectedStatus = selectedDomains[0]?.status;
+
+
   return (
     <>
       <div className="dupl-header-group f-start">
@@ -86,6 +91,7 @@ const DomainDupl = ({
           />
         )}
         <DomainActionButtons
+          openModal={openModal}
           isEditDisabled={selectedDomains.length !== 1}
           isDeleteDisabled={selectedDomains.length === 0}
           status={selectedDomains[0]?.status}
@@ -106,12 +112,11 @@ const DomainDupl = ({
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
         onContextMenuItems={(row) => {
-          const isEditDisabled = !row;
-          const isDeleteDisabled = !row || row.status !== "UNKNOWN";
           return [
             <DomainActionButtons
-              isEditDisabled={isEditDisabled}
-              isDeleteDisabled={isDeleteDisabled}
+              openModal={(action) => {
+                openModal(action); 
+              }}
               status={row?.status}
               selectedDomains={[row]}
               actionType="context"
@@ -125,7 +130,13 @@ const DomainDupl = ({
 
       <SelectedIdView items={selectedDomains} />
 
-
+      <DomainModals
+        activeModal={activeModal}
+        domain={selectedDomains[0]}
+        selectedDomains={selectedDomains}
+        datacenterId={datacenterId}
+        onClose={closeModal}
+      />
     </>
   );
 };

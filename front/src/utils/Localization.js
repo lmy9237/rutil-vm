@@ -89,7 +89,8 @@ export const Localization = {
       else if (_status === "DOWN")        return "중지";
       else if (_status === "INACTIVE")    return "비활성화";
       else if (_status === "UNINITIALIZED") return "초기화되지 않음";
-      else if (_status === "REBOOT" || _status === "REBOOT_IN_PROGRES")  return "재부팅/재설정 중";
+      else if (_status === "REBOOT")  return "재부팅 중";
+      else if (_status === "REBOOT_IN_PROGRESS")  return "재부팅/재설정 중";
       else if (_status === "SUSPENDED")   return "일시중지";
       else if (_status === "SAVING_STATE")  return "일시중지 중";
       else if (_status === "MAINTENANCE") return "유지보수";
@@ -101,6 +102,7 @@ export const Localization = {
       else if (_status === "NON_OPERATIONAL") return "비 가동 중";
       else if (_status === "UNATTACHED")  return "붙어있지 않음";
       else if (_status === "RESTORING_STATE")  return "복구 중";
+      else if (_status === "MIGRATING")  return "마이그레이션 중";
       else if (_status === "UNKNOWN")  return "알 수 없음";
       return _status;
     },

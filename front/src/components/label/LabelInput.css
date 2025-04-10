@@ -1,17 +1,28 @@
+input {
+  cursor: pointer;
+}
 .input-text,
 .input-select,
 .input-password,
 .input-number {
   width: 100%;
-  font-size: var(--fs-14);
+  font-size: var(--fs-default);
   padding: 10px 0;
   display: flex;justify-content: space-between;align-items: center;
 }
-.input-text > input,
-.input-password > input,
-.input-number > input {
-  padding: 10px
+input[type="text"],
+input[type="number"],
+input[type="password"],
+.input-select select {
+  width:55%;
+  border: var(--border-btn);border-radius: 1px;
+  font-size: var(--fs-default);
+  padding: 2px;
+  outline: none;
+  border-radius: 1px;
+  letter-spacing: -0.28px;
 }
+
 .input-checkbox {
   width: 100%;
   padding:7px 0;
@@ -20,9 +31,15 @@
   align-items: center;
 }
 
-.dynamic-Input{
-  width:100%;
+input[type="checkbox"],
+input[type="radio"] {
+  margin-right: 6px;
+  width: 16px;height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 .option-box{
   border: 1px solid red !important;
 }

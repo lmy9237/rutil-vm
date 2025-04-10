@@ -10,6 +10,7 @@ import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
 import toast from "react-hot-toast";
 import "./Dupl.css";
+import NetworkModals from "../modal/network/NetworkModals";
 
 /**
  * @name NetworkDupl
@@ -25,7 +26,10 @@ const NetworkDupl = ({
   isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
+  const [activeModal, setActiveModal] = useState(null);
   const [selectedNetworks, setSelectedNetworks] = useState([]);
+  const openModal = (action) => setActiveModal(action);
+  const closeModal = () => setActiveModal(null);
 
   // 데이터를 변환 (검색 가능하도록 `searchText` 필드 추가)
   const transformedData = networks.map((network) => ({
@@ -76,6 +80,7 @@ const NetworkDupl = ({
           />
         )}
         <NetworkActionButtons 
+          openModal={openModal}
           selectedNetworks={selectedNetworks} 
           isEditDisabled={selectedNetworks.length !== 1}
           isDeleteDisabled={selectedNetworks.length === 0}
@@ -97,6 +102,7 @@ const NetworkDupl = ({
         multiSelect={true} 
         onContextMenuItems={(row) => [
           <NetworkActionButtons
+            openModal={openModal}
             status={row?.status}
             selectedNetworks={[row]}
             actionType="context"
@@ -108,13 +114,13 @@ const NetworkDupl = ({
       <SelectedIdView items={selectedNetworks} />
 
       {/* 네트워크 모달창 */}
-      {/* <NetworkModals
-        activeModal={activeModal}
-        network={activeModal === "edit" ? selectedNetworks[0] : null}
-        selectedNetworks={selectedNetworks}
-        onClose={closeModal}
-        withModal // 🔥 내부에서 모달 제어하게 함
-      /> */}
+        <NetworkModals
+          activeModal={activeModal}
+          network={activeModal === "edit" ? selectedNetworks[0] : null}
+          selectedNetworks={selectedNetworks}
+          onClose={closeModal}
+          withModal // 🔥 내부에서 모달 제어하게 함
+        />
     </div>
   );
 };

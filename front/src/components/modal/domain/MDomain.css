@@ -73,3 +73,38 @@
 .filter-table .table th,.table td{
   padding: 7px;
 }
+
+/* iscsi 대상검색*/
+.target-search-outer{
+  padding: 12px 0;
+}
+.label-font-name{
+font-size: var(--fs-16);
+font-weight: 700;
+}
+.use-chap-outer{
+  background: var(--color-white);
+  border-radius: 1px;
+  border: 1px solid var(--color-table);
+}
+.use-chap-arrow{
+  height: 32px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+}
+.use-chap-content{
+  padding: 0 5px;
+}
+.target-btn{
+  width: 100%;
+  justify-content: right;
+  display: flex;
+  padding-bottom: 15px;
+}
+.target-btn>button{
+  height: 28px;
+  padding: 0 12px;
+  border: var(--border-btn);
+
+}

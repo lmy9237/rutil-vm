@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 import ActionButton from "../button/ActionButton";
 import Localization from "../../utils/Localization";
-import NetworkModals from "../modal/network/NetworkModals";
 
 const NetworkActionButtons = ({
+  openModal,
   selectedNetworks = [],
   status,
   actionType = "default",
@@ -13,16 +13,6 @@ const NetworkActionButtons = ({
   onCloseContextMenu, // contextMenu 닫기용 콜백
 }) => {
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null);
-
-  const openModal = (action) => {
-    setActiveModal(action);
-    onCloseContextMenu?.(); // contextMenu도 닫기
-  };
-
-  const closeModal = () => {
-    setActiveModal(null);
-  };
 
   const basicActions = [
     { type: "create", label: Localization.kr.CREATE, disabled: false, onBtnClick: () => openModal("create") },
@@ -42,15 +32,6 @@ const NetworkActionButtons = ({
           />
         )}
       </ActionButtonGroup>
-
-      {/* context menu 안에서도 모달 띄우기 가능 */}
-      <NetworkModals
-        activeModal={activeModal}
-        onClose={closeModal}
-        selectedNetworks={selectedNetworks}
-        network={selectedNetworks?.[0]}
-        dcId={selectedNetworks?.[0]?.dataCenterId}
-      />
     </>
   );
 };

@@ -68,10 +68,10 @@ html {
   --color-logo-text:#4679BC;
 
   --color-primary: #020B79;;           /* 메인색 */
-  --color-primary-hover: #2E379D;;           /* 메인:hover */
-  --color-primary-white: #FFF; /* 메인 아이콘버튼 색 */ 
-  --color-primary-1: #295b9c;           /* 주 border색 */
-  --color-primary-h: #0b4db5;         /* header 글자색 */  
+  --color-primary-hover: #2E379D;;           
+  --color-primary-white: #FFF; 
+  --color-primary-1: #295b9c;          
+  --color-primary-h: #0b4db5;         
   --color-primary-2: #446dbb;        
   --color-header:rgb(211, 232, 243);               /* 모달 header*/
   --color-bg-tooltip: #333333;        /* 툴팁 */
@@ -111,7 +111,6 @@ body { width:100%;height:100%;}
 #root {
   width:100%;height:100%;position: absolute;left:0;top:0;
   background-color: var(--color-bg);
-  /* background-color: #20acac; */
   text-rendering: optimizeLegibility;
   display:flex;justify-content:flex-start;align-items:center;flex-direction:column;
 }
@@ -120,6 +119,13 @@ details>summary {
   font-size: var(--fs-big);
 }
 /*-----중복 */
+#section {
+    width: calc(100% - var(--w-aside-menu));height:100%;
+    overflow-y: auto;
+    background-color: white;
+    overflow-x: hidden;
+    border-left: var(--border-default);
+}
 .content-outer {
   display: flex;
   width: 100%;
@@ -137,6 +143,7 @@ button {
   border-radius: 2px;
   align-items: center;
 }
+
 button[disabled],
 select[disabled],
 input[disabled] {
@@ -168,14 +175,6 @@ input[disabled] {
 .v-end    { display:flex;align-items:flex-end;justify-content:center;flex-direction:column; }
 .v-btw    { display:flex;align-items:space-between;justify-content:center;flex-direction:column; } 
 
-#section {
-  width: calc(100% - var(--w-aside-menu));height:100%;
-  overflow-y: auto;
-  background-color: white;
-  overflow-x: hidden;
-  border-left: var(--border-default);
-}
-
 .dash-boxs+.bar+.dash-section{
     height: 100%;
 }
@@ -192,9 +191,7 @@ input[disabled] {
     height: 100%;
     overflow-y: auto;
 }
-.icon{
-    cursor: pointer;
-}
+
 /* .dropdown-container {
   position: relative;
   display: inline-block;
@@ -258,52 +255,7 @@ input[disabled] {
   margin-bottom: 15px;
 }
 
-/*
-.img-input-box span,
-.img-select-box label {
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-}
-*/
-/*대상검색*/
-.target-search-outer{
-    padding: 12px 0;
-}
-.label-font-name{
-  font-size: var(--fs-16);
-  font-weight: 700;
-}
-.use-chap-outer{
-    background: var(--color-white);
-    border-radius: 1px;
-    border: 1px solid var(--color-table);
-}
-.use-chap-arrow{
-    height: 32px;
-    display: flex;
-    cursor: pointer;
-    align-items: center;
-}
-.use-chap-content{
-    padding: 0 5px;
-}
-.target-btn{
-    width: 100%;
-    justify-content: right;
-    display: flex;
-    padding-bottom: 15px;
-}
-.target-btn>button{
-    height: 28px;
-    padding: 0 12px;
-    border: var(--border-btn);
- 
-}
-
-/* 네트워크 인터페이스 팝업창들 */
 /* 새로만들기 */
-
 .network-popup-content > div {
   display: flex;
   justify-content: space-between;
@@ -314,24 +266,12 @@ input[disabled] {
   padding: 0.5rem 0.3rem;
 }
 
-
 .active {
   color: #449bff;
 }
-.active-tab {
-  background: var(--color-hover);
-  font-weight: 600 !important;
-  color: var(--color-primary);
-  border-right:  2px solid var(--color-primary-hover);
-}
 
-.inactive-tab {
-  color: black;
-}
-input {
-  cursor: pointer;
-}
-input[type="text"],
+
+/* input[type="text"],
 input[type="number"],
 input[type="password"],
 select {
@@ -351,7 +291,7 @@ input[type="radio"] {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
 input[type="submit"] {
   border: var(--border-simple);
@@ -365,30 +305,6 @@ textarea {
   padding: 0.1rem;
   outline: none;
 }
-
-/*info 설명박스*/
-.tooltip-box {
-  background-color: #333;
-  color: #e0e0e0;
-  font-style: italic;
-  padding: 10px;
-  border-radius: var(--br-default);
-  bottom: 0.3rem;
-  left: 2rem;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-  font-size: 0.3rem;
-  position: absolute;
-  z-index: 1000;
-}
-/* 삭제모달 */
-/* .disk-delete-box {
-  justify-content:center;align-items: center;
-  min-height: 56px;
-  font-weight: 500;
-}
-.disk-delete-box > div {
-  display: flex;
-} */
 
 .network_new_nav div.active {
   background: #e4e4e4;
@@ -425,23 +341,12 @@ textarea {
   display:flex;align-items:center;justify-content:flex-start;flex-direction:row;
   text-align: left !important;
 }
-/* 성공 토스트 */
 .toast-success {
   border-left: 4px solid limegreen;
 }
-
-/* 오류 토스트 */
 .toast-error {
   border-left: 4px solid crimson;
 }
-.apex-tooltip {
-    padding: 6px 10px;
-    font-size: var(--fs-12);
-    border-radius: 4px;
-    background: #333;
-    color: #fff;
-    white-space: nowrap;
-  }
 
 /* 스토리지 우클릭 메뉴박스*/
 /* #storage_context_menu {
@@ -514,7 +419,12 @@ textarea {
     transform: translate(-50%, -50%);
     box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
 }
-
+.img-input-box span,
+.img-select-box label {
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
 #template_article_outer{
     padding: 0 3%;
     font-size: 0.36rem;
@@ -713,7 +623,29 @@ textarea {
     text-align: left;
     width: 44%
 
-    
+----info 설명박스
+.tooltip-box {
+  background-color: #333;
+  color: #e0e0e0;
+  font-style: italic;
+  padding: 10px;
+  border-radius: var(--br-default);
+  bottom: 0.3rem;
+  left: 2rem;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 0.3rem;
+  position: absolute;
+  z-index: 1000;
+} 
+--- 삭제모달 
+ .disk-delete-box {
+  justify-content:center;align-items: center;
+  min-height: 56px;
+  font-weight: 500;
+}
+.disk-delete-box > div {
+  display: flex;
+} 
     관리(유지보수)
 .host_maintenance_popup{
     border: 1px solid #dfdddd;
@@ -2572,25 +2504,13 @@ background-color: #f0f0f0;
         display: none !important;
     }
 }
-
 @media screen and (max-width:1100px) {
-    /* .modal {
-        max-width: 100%;
-        min-height: auto;
-        max-height: 90vh;
-    } */
+
 }
 @media screen and (max-width: 768px) {
     .responsive-closed {
       background: white;
     }
-    /* 
-    .section-header{
-        display:block;
-        padding: 9px;
-        align-items: center;
-        display: flex;
-    } */
 }
 @media screen and (max-width: 500px) {
     .section-header>div:nth-child(2){

@@ -17,6 +17,7 @@ const StorageTree = ({
   onContextMenu,
   contextMenu,
   menuRef,
+  domain
 }) => {
   const { 
     secondVisibleStorage, toggleSecondVisibleStorage,
@@ -25,6 +26,10 @@ const StorageTree = ({
   } = useUIState();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const status = domain?.status;
+  const isEditDisabled = status === "MAINTENANCE"; // 필요에 따라 조건 조절
+  const isDeleteDisabled = status === "LOCKED" || status === "ACTIVE"; // 예시
 
   // API 호출 (스토리지 트리 데이터)
   const { data: navStorageDomains } = useAllTreeNavigations("storagedomain");
@@ -149,15 +154,17 @@ const StorageTree = ({
                             }}
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <DomainActionButtons
-                              openModal={(action) => {
-                                onContextMenu(null); // 닫기
-                              }}
-                              selectedDomains={[domain]}
-                              status={domain?.status}
-                              actionType="context"
-                              isContextMenu={true}
-                            />
+                          <DomainActionButtons
+                            openModal={(action) => {
+                              onContextMenu(null);
+                            }}
+                            selectedDomains={[domain]}
+                            status={status}
+                            isEditDisabled={isEditDisabled}
+                            isDeleteDisabled={isDeleteDisabled}
+                            actionType="context"
+                            isContextMenu={true}
+                          />
                           </div>
                         )}
                     </div>

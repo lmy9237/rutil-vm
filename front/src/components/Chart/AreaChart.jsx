@@ -73,7 +73,7 @@ const AreaChart = ({ series, datetimes }) => {
     if (chartContainerRef.current) {
       const containerWidth = chartContainerRef.current.clientWidth;
 
-      let width = Math.max(containerWidth * 0.95, 220); // 기본 너비
+      let width = Math.max(containerWidth * 0.9, 210); // 기본 너비
       let height = Math.max(window.innerHeight * 0.14, 100); // 기본 높이
 
       if (window.innerWidth >= 2200) {
@@ -85,7 +85,34 @@ const AreaChart = ({ series, datetimes }) => {
     }
   };
 
-
+  // side바에따라 그래프 겹치는 것 방지
+  useEffect(() => {
+    updateChartSize();
+  }, [datetimes, series]);
+  useEffect(() => {
+    updateChartSize();
+  
+    const resizeTimer = setTimeout(() => {
+      updateChartSize();
+    }, 200); // DOM 렌더 후 0.2초 뒤에 한 번 더
+  
+    return () => clearTimeout(resizeTimer);
+  }, [datetimes, series]);
+  useEffect(() => {
+    if (!chartContainerRef.current) return;
+  
+    const observer = new ResizeObserver(() => {
+      updateChartSize();
+    });
+  
+    observer.observe(chartContainerRef.current);
+  
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+  
+  
   // 창 크기 변경 시 차트 크기 업데이트
   useEffect(() => {
     updateChartSize();

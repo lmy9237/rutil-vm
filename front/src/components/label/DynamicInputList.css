@@ -1,3 +1,15 @@
+.dynamic-Input{
+  width:100%;
+}
+.dynamic-select{
+  width:55%;
+  border: var(--border-btn);border-radius: 1px;
+  font-size: var(--fs-default);
+  padding: 2px;
+  outline: none;
+  border-radius: 1px;
+  letter-spacing: -0.28px;
+}
 .dynamic-btns {
   min-width: 71px;
 }

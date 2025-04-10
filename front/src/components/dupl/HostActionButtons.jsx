@@ -31,6 +31,7 @@ const HostActionButtons = ({
     setActiveDropdown((prev) => (prev ? null : "manage"));
 
   const isUp = status === "UP";
+  const nonOperational = status === "NON_OPERATIONAL";
   const isMaintenance = status === "MAINTENANCE";
 
   const basicActions = [
@@ -41,8 +42,8 @@ const HostActionButtons = ({
 
   const manageActions = [
     { type: "deactivate", label: "유지보수", disabled: !isUp },
-    { type: "activate", label: "활성", disabled: !isMaintenance },
-    { type: "restart", label: "재시작", disabled: isEditDisabled || !isUp },
+    { type: "activate", label: "활성", disabled: isUp },
+    { type: "restart", label: "재시작", disabled: isEditDisabled || isUp },
     // { type: "reInstall", label: "다시 설치", disabled: isEditDisabled || isUp },
     { type: "enrollCert", label: "인증서 등록", disabled: isEditDisabled },
     { type: "haOn", label: "글로벌 HA 유지 관리를 활성화", disabled: isEditDisabled || !isUp || !isMaintenance, },
