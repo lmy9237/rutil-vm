@@ -1,6 +1,5 @@
-import React from "react"
 import ActionButton from "./ActionButton"
-import "./ActionButtonsBroup.css"
+import "./ActionButtonsGroup.css"
 
 const ActionButtonGroup = ({
   actionType = "default",
@@ -24,4 +23,4 @@ const ActionButtonGroup = ({
   )
 }
 
-export default ActionButtonGroup
+export default ActionButtonGroup;

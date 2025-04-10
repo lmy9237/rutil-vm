@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header/Header";
 import MainOuter from "./mainouter/MainOuter";
-import Footer from "./footer/Footer";
+import JobFooter from "./footer/JobFooter";
 import Logger from "../utils/Logger";
 
 const Home = () => {
@@ -12,7 +12,7 @@ const Home = () => {
       <MainOuter>
         <Outlet/>
       </MainOuter>
-      <Footer/>
+      <JobFooter/>
     </>
   );
 };

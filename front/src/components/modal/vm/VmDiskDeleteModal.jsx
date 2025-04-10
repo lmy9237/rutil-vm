@@ -43,9 +43,9 @@ const VmDiskDeleteModal = ({ isOpen, onClose, vmId, data }) => {
     }
 
     ids.forEach((diskAttachmentId, index) => {
-      deleteDisk(
-        { vmId, diskAttachmentId, detachOnly: !detachOnlyList[index] },
-        {
+      deleteDisk({ 
+        vmId, diskAttachmentId, detachOnly: !detachOnlyList[index] 
+      }, {
           onSuccess: () => {
             if (ids.length === 1 || index === ids.length - 1) {
               onClose();

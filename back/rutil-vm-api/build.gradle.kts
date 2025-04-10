@@ -197,6 +197,8 @@ dependencies {
 	annotationProcessor(Dependencies.springBootAnnotation)
     developmentOnly(Dependencies.springBootDevtools)
 	implementation(Dependencies.springBootActuator)
+	implementation(Dependencies.springBootBatch)
+	implementation(Dependencies.springBootWebflux)
     implementation(Dependencies.spring)
     implementation(Dependencies.springSecurity)
     implementation(Dependencies.jwt)

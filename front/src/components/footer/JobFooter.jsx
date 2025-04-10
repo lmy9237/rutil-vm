@@ -1,19 +1,19 @@
 import React, { useRef, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
 import useUIState from "../../hooks/useUIState";
 import { useAllJobs } from "../../api/RQHook";
-import "./Footer.css";
+import Spinner from "../common/Spinner";
+import TableRowNoData from "../table/TableRowNoData";
+import "./JobFooter.css";
 
 /**
- * @name Footer
+ * @name JobFooter
  * @description Footer
  *
  * @returns {JSX.Element} Footer
  */
-const Footer = () => {
+const JobFooter = () => {
   const { footerVisible, toggleFooterVisible } = useUIState();
   const {
     data: jobs = [],
@@ -23,14 +23,16 @@ const Footer = () => {
     refetch: refetchJobs
   } = useAllJobs((e) => ({ ...e }))
 
-    // nic 데이터 변환
-    const transformedData = jobs.map((e) => ({
-      ...e,
-      description: e?.description,
-      status: e?.status,
-      startTime: e?.startTime,
-      endTime: e?.endTime
-    }));
+  // job 데이터 변환
+  const transformedData = jobs.map((e) => ({
+    ...e,
+    isFinished: e?.status !== "STARTED" || e?.status !== "FAILED",
+    duration: '',
+    description: e?.description,
+    status: e?.status,
+    startTime: e?.startTime,
+    endTime: e?.endTime,
+  }));
 
   // 드레그
   const footerBarHeight = 40;
@@ -82,9 +84,9 @@ const Footer = () => {
       <div className="footer-resizer" onMouseDown={handleResizeStart} />
     )}
     <div
-      className={`footer-outer${footerVisible ? " open" : ""}`}
+      className={`footer-outer v-start${footerVisible ? " open" : ""}`}
       style={{
-        height: footerVisible ? `${footerHeight + footerBarHeight}px` : "0px",
+        height: footerVisible ? `${footerHeight + footerBarHeight}px` : "auto",
       }}
     >
       {/* 상단 "최근작업" 바 */}
@@ -114,12 +116,14 @@ const Footer = () => {
                 </tr>
               </thead>
               <tbody>
-                {transformedData.map((row) => (
-                  <tr>
-                    <td>{row.description}</td>
-                    <td>{row.status}</td>
-                    <td>{row.startTime}</td>
-                    <td>{row.endTime}</td>
+                {transformedData.length === 0 ? (
+                  <TableRowNoData colLen={4} />
+                ) : transformedData.map((job) => (
+                  <tr key={job?.id}>
+                    <td>{!job.isFinished && <Spinner/>}{job?.description}</td>
+                    <td>{Localization.kr.renderStatus(job?.status)}</td>
+                    <td>{job?.startTime}</td>
+                    <td>{job?.endTime}</td>
                   </tr>
                 ))}
               </tbody>
@@ -132,4 +136,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default JobFooter;

@@ -661,7 +661,6 @@ export const status2Icon = (
     case "MIGRATING":                               iconDef = rvi16RebootLined();break;
     case "REBOOT": 
     case "PREPARING_FOR_MAINTENANCE":               iconDef = rvi16Refresh();break;
-    
 
     case "SUSPENDED":                              iconDef = rvi16Pause;break;
     case "NON_OPERATIONAL":                        iconDef = rvi16NonOperational;break;

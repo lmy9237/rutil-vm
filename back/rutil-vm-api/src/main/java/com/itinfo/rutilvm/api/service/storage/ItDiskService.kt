@@ -7,6 +7,7 @@ import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.computing.toDiskVms
 import com.itinfo.rutilvm.api.model.fromTemplateCdromsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromVmCdromsToIdentifiedVos
+import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
@@ -19,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.URL
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
@@ -350,7 +353,8 @@ class DiskServiceImpl(
     @Throws(Error::class, IOException::class)
     override fun upload(file: MultipartFile, image: DiskImageVo): Boolean {
         log.info("uploadDisk ... file: {}, image:{}", file.name, image)
-        if (file.isEmpty) throw ErrorPattern.FILE_NOT_FOUND.toException() // 파일이 없으면 에러
+        if (file.isEmpty)
+			throw ErrorPattern.FILE_NOT_FOUND.toException() // 파일이 없으면 에러
 
         // 이미지 업로드해서 imageTransfer.id()를 알아낸다
 		val imageTransferId: String = conn.uploadSetDisk(
@@ -362,41 +366,38 @@ class DiskServiceImpl(
 
     @Throws(Error::class)
     fun uploadFileToTransferUrl(file: MultipartFile, imageTransferId: String): Boolean {
-        log.info("uploadFileToTransferUrl .. ")
-
+        log.info("uploadFileToTransferUrl ... ")
         val imageTransferService: ImageTransferService = conn.srvImageTransfer(imageTransferId)
         val transferUrl = imageTransferService.get().send().imageTransfer().transferUrl()
+        log.info("uploadFileToTransferUrl ... transferUrl: $transferUrl")
 
-        log.info("transferUrl: $transferUrl")
-        disableSSLVerification()
-
-//        System.setProperty("sun.net.http.allowRestrictedHeaders", "true")
+		disableSSLVerification()
         val url = URL(transferUrl)
-        val https: HttpsURLConnection = url.openConnection() as HttpsURLConnection
-        https.allowUserInteraction = true
-        https.setRequestMethod("PUT")
-        https.setRequestProperty("PUT", url.path)
-        https.setRequestProperty("Content-Length", file.size.toString())
-        https.setFixedLengthStreamingMode(file.size)
-        https.setDoOutput(true)
-        https.connect()
+        (url.openConnection() as? HttpsURLConnection)?.apply {
+			allowUserInteraction = true
+			setRequestMethod("PUT")
+			setRequestProperty("PUT", url.path)
+			setRequestProperty("Content-Length", file.size.toString())
+			setFixedLengthStreamingMode(file.size)
+			setDoOutput(true)
+		}?.also { http ->
+			http.connect()
+			val bufferSize = calculateOptimalBufferSize(file.size)
+			val buffer = ByteArray(bufferSize)
+			val insBuffered: InputStream = BufferedInputStream(file.inputStream, bufferSize)
+			BufferedOutputStream(http.outputStream, bufferSize).use { outsBuffered ->
+				var bytesRead: Int
+				while (insBuffered.read(buffer).also { bytesRead = it } != -1) {
+					outsBuffered.write(buffer, 0, bytesRead)
+				}
+				outsBuffered.flush()
+			}.runCatching {
 
-        val bufferSize = calculateOptimalBufferSize(file.size)
-//        if (file.size > 10_000_000) 524288 else 131072  // 10MB 이상은 512KB 버퍼 사용
-
-        val bufferedInputStream = BufferedInputStream(file.inputStream, bufferSize)
-        val bufferedOutputStream = BufferedOutputStream(https.outputStream, bufferSize)
-
-        val buffer = ByteArray(bufferSize)
-        var bytesRead: Int
-        while (bufferedInputStream.read(buffer).also { bytesRead = it } != -1) {
-            bufferedOutputStream.write(buffer, 0, bytesRead)
-        }
-        bufferedOutputStream.flush()
-
-        imageTransferService.finalize_().send()
-        https.disconnect()
-        log.info("완")
+			}
+			imageTransferService.finalize_().send()
+			http.disconnect()
+			log.info("uploadFileToTransferUrl ... 완료!")
+		}
         return true
     }
 

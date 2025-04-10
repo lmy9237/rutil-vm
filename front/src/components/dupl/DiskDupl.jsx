@@ -24,11 +24,11 @@ const DiskDupl = ({
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDisks, setSelectedDisks] = useState([]);
   
-  const diskIds = disks.map((d) => d.id);
+  const diskIds = !Array.isArray(disks) ? [] : disks.map((d) => d.id);
   const { data: cdromsMap = [] } = useCdromsDisks(diskIds);
   
   // ✅ 데이터 변환: 검색이 가능하도록 `searchText` 추가
-  const transformedData = disks.map((d) => {
+  const transformedData = !Array.isArray(disks) ? [] : disks.map((d) => {
     const cdromObj = cdromsMap.find((item) => item.diskId === d.id);
     let diskData = {
       ...d,

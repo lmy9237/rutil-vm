@@ -132,6 +132,7 @@ const App = () => {
               <Route path="computing/templates/:id/:section" element={<TemplateInfo />} />
                             
               <Route path="networks" element={<AllNetwork />} />
+              <Route path="networks/rutil-manager" element={<RutilManager />} />
               <Route path="networks/datacenters/:id/:section" element={<DataCenterInfo />} />
               <Route path="networks/:id" element={<NetworkInfo />} /> 
               <Route path="networks/:id/:section" element={<NetworkInfo />} /> 

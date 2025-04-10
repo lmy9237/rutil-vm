@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
 import RutilVmLogo from "../../components/common/RutilVmLogo";
 import IconInput from "../../components/Input/IconInput";
 import Localization from "../../utils/Localization";
-import FooterCompany from "../../components/footer/FooterCompany";
+import CompanyInfoFooter from "../../components/footer/CompanyInfoFooter";
 import useAuth from "../../hooks/useAuth";
 import Logger from "../../utils/Logger";
 import { useAuthenticate } from "../../api/RQHook";
@@ -86,7 +85,7 @@ const Login = () => {
           </button>
         </form>
       </div>
-      <FooterCompany isBrief={true} />
+      <CompanyInfoFooter isBrief={true} />
     </>
   );
 };

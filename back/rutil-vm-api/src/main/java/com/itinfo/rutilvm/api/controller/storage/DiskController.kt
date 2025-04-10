@@ -14,11 +14,15 @@ import com.itinfo.rutilvm.api.service.storage.ItDiskService
 
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatus.HTTP_VERSION_NOT_SUPPORTED
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import reactor.core.publisher.Mono
 import java.io.IOException
 
 @Controller
@@ -268,19 +272,24 @@ class DiskController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@PostMapping("/upload", consumes = ["multipart/form-data"])
+	@PostMapping("/upload", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@Throws(IdNotFoundException::class, InvalidRequestException::class, IOException::class)
 	fun uploadDisk(
 		@RequestPart diskImage: DiskImageVo?,
 		@RequestPart file: MultipartFile,
-	): ResponseEntity<Boolean> {
+	): Mono<ResponseEntity<Boolean>> {
 		log.info("/storages/disks/upload ... 업로드")
 		if (diskImage == null)
 			throw ErrorPattern.DISK_IMAGE_VO_INVALID.toException()
 		log.info("Received diskImage: {}", diskImage)
-		return ResponseEntity.ok(iDisk.upload(file, diskImage))
+
+		return Mono.fromRunnable<ResponseEntity<Boolean>?> {
+			iDisk.upload(file, diskImage)
+		}.then(Mono.just(ResponseEntity.ok(true))).onErrorResume {
+			Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false))
+		}
 	}
 
 
@@ -357,7 +366,6 @@ class DiskController: BaseController() {
 		log.info("/storages/disks/{}/storageDomains ... ", diskId)
 		return ResponseEntity.ok(iDisk.findAllStorageDomainsFromDisk(diskId))
 	}
-
 
 
 //	@ApiOperation(

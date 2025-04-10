@@ -4471,8 +4471,6 @@ export const useAllDisks = (
 })
 export const useCdromsDisks = (diskIds = []) =>
   useQuery({
-    queryKey: ['cdromsForDisks', diskIds],
-    enabled: diskIds.length > 0,
     queryFn: async () => {
       const res = await Promise.all(
         diskIds.map((id) => ApiManager.findCdromsDisk(id))
@@ -4482,6 +4480,8 @@ export const useCdromsDisks = (diskIds = []) =>
         cdroms: validate(r) ?? [],
       }));
     },
+    queryKey: ['cdromsForDisks', diskIds],
+    enabled: diskIds.length > 0,
   });
 
 /**
@@ -4653,12 +4653,12 @@ export const useDeleteDisk = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useUploadDisk = (
-  postSuccess=()=>{},postError
+  inProgress=()=>{},postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async (diskData) => {
-      const res = await ApiManager.uploadDisk(diskData);
+      const res = await ApiManager.uploadDisk(diskData, inProgress);
       const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useUploadDisk ... diskData: ${JSON.stringify(diskData, null, 2)}`);
       return _res;

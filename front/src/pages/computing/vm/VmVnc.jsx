@@ -55,7 +55,8 @@ const VmVnc = ({
         buttons={sectionHeaderButtons}
         inverseColor
       />
-      <div className="section-vnc-content" 
+      <div
+        className="section-vnc-content" 
       >
         <Vnc vmId={vmId}
           autoConnect={true}

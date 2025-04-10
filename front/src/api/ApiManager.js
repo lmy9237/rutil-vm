@@ -2898,7 +2898,9 @@ const ApiManager = {
   //   });
   // },
 
-  uploadDisk: async (diskData) => {
+  uploadDisk: async (diskData, inProgress=null) => {
+    const msg = `디스크 업로드 중 ...`
+    const toastId = toast.loading(msg)
     try {
       const res = await axios({
           method: "POST",
@@ -2906,9 +2908,14 @@ const ApiManager = {
           headers: {
             "Content-Type": "multipart/form-data"
           },
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              if (progress > 0) inProgress && inProgress(progress, toastId)
+            }
+          },
           data: diskData
       }); 
-      res.headers.get(`access_token`) && localStorage.setItem('token', res.headers.get(`access_token`)) // 로그인이 처음으로 성공했을 때 진행
       return res.data?.body
     } catch(e) {
       console.error(`Error fetching ':`, e);

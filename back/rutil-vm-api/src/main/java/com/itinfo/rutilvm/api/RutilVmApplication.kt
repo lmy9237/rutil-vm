@@ -1,8 +1,5 @@
 package com.itinfo.rutilvm.api
 
-// import kotlinx.coroutines.CoroutineScope
-// import kotlinx.coroutines.newSingleThreadContext
-// import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.autoconfigure.SpringBootApplication

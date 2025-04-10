@@ -1,5 +1,5 @@
 /* components/button/ActionButton.css */
-.btn-action {
+button.btn-action {
   height: var(--h-primary);
   margin-right: 4px;
   padding: 0 8px;

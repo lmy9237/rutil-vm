@@ -50,6 +50,8 @@ export const Localization = {
     IS_READ_ONLY: "읽기전용",
     IS_IN_USE: "형재 사용중",
     WIPE_AFTER_DELETE: "삭제 후 초기화",
+    STARTED: "시작됨",
+    FINISHED: "완료",
 
     GENERAL: "일반",
     MANAGEMENT: "관리",
@@ -80,6 +82,7 @@ export const Localization = {
     PLACEHOLDER_SEARCH: "검색어를 입력하세요.",
     PLACEHOLDER_USERNAME: "사용자명을 입력하세요.",
     PLACEHOLDER_PASSWORD: "비밀번호를 입력하세요.",
+    NO_INFO: "🤷‍♂️ 내용이 없습니다",
 
     renderStatus(status = "") {
       const _status = status?.toUpperCase() ?? "";
@@ -103,6 +106,9 @@ export const Localization = {
       else if (_status === "UNATTACHED")  return "붙어있지 않음";
       else if (_status === "RESTORING_STATE")  return "복구 중";
       else if (_status === "MIGRATING")  return "마이그레이션 중";
+      else if (_status === "STARTED")  return "시작됨";
+      else if (_status === "FAILED")  return "실패";
+      else if (_status === "FINISHED")  return "완료";
       else if (_status === "UNKNOWN")  return "알 수 없음";
       return _status;
     },

@@ -74,7 +74,7 @@ services:
 #      interval: 10s
 #      timeout: 10s
 #      retries: 3
-    restart: on-failure
+    restart: unless-stopped
 
   rutil-vm:
     image: ititinfo.synology.me:50951/ititcloud/rutil-vm:latest
@@ -100,7 +100,7 @@ services:
 #      interval: 10s
 #      timeout: 10s
 #      retries: 3
-    restart: always
+    restart: unless-stopped
     
   rutil-vm-wsproxy:
     image: ititinfo.synology.me:50951/ititcloud/rutil-vm-wsproxy:latest
@@ -117,7 +117,7 @@ services:
       - ./rutil-vm/certs/fullchain.pem:/home/node/fullchain.pem:ro
     networks:
       - ovirt_network
-    restart: always # undefined으로 인자가 갈 때 죽음
+    restart: unless-stopped
 
 networks:
   ovirt_network:

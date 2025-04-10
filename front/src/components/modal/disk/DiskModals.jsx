@@ -14,11 +14,6 @@ const DiskModals = ({
   selectedDisks = [], 
   onClose
 }) => {
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.DISK} 삭제 완료`);
-  };
-
   const modals = {
     create: (
       <DiskModal 
@@ -40,7 +35,7 @@ const DiskModals = ({
         label={"디스크"}
         data={selectedDisks}
         onClose={onClose}
-        api={useDeleteDisk(onSuccess, () => onClose())}
+        api={useDeleteDisk(() => onClose(), () => onClose())}
       />
     ),
     upload: (

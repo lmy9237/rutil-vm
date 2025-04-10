@@ -18,7 +18,7 @@ object Dependencies {
         "org.springframework:spring-tx:${Versions.spring}",
         "org.springframework:spring-web:${Versions.spring}",
         "org.springframework:spring-webmvc:${Versions.spring}",
-        "org.springframework:spring-websocket:${Versions.spring}",
+		"org.springframework:spring-websocket:${Versions.spring}",
     )
     val springTest = "org.springframework:spring-test:${Versions.spring}"
     val springSecurity = listOf(
@@ -47,7 +47,11 @@ object Dependencies {
         "org.springframework.boot:spring-boot-configuration-processor:${Versions.springBoot}"
     val springBootWebsocket =
         "org.springframework.boot:spring-boot-starter-websocket:${Versions.springBoot}"
-    val springBootTomcat =
+    val springBootWebflux =
+		"org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}"
+	val springBootBatch =
+		"org.springframework.boot:spring-boot-starter-batch:${Versions.springBoot}"
+	val springBootTomcat =
         "org.springframework.boot:spring-boot-starter-tomcat:${Versions.springBoot}"
     val springBootDevtools =
         "org.springframework.boot:spring-boot-devtools:${Versions.springBoot}"
@@ -57,7 +61,6 @@ object Dependencies {
         "org.springframework.boot:spring-boot-starter:${Versions.springBoot}",
         "org.springframework.boot:spring-boot-starter-web-services:${Versions.springBoot}",
         "org.springframework.boot:spring-boot-starter-log4j2:${Versions.springBoot}",
-
     ) + springBootJpa + springBootWebsocket
 
     val jackson = listOf(

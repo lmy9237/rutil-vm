@@ -1,8 +1,8 @@
 import React from "react";
-import "./FooterCompany.css"
 import { ItitinfoLogoIcon } from "../icons/RutilVmIcons";
+import "./CompanyInfoFooter.css"
 
-const FooterCompany = ({
+const CompanyInfoFooter = ({
   isBrief=true,
 }) => {
   const items = [
@@ -28,4 +28,4 @@ const FooterCompany = ({
   );
 }
 
-export default FooterCompany;
+export default CompanyInfoFooter;

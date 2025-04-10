@@ -44,7 +44,13 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
     onClose();
     toast.success(`디스크 업로드 완료`);
   };
-  const { mutate: uploadDisk } = useUploadDisk(onSuccess, () => onClose());
+  const { mutate: uploadDisk } = useUploadDisk((progress, toastId) => {
+    onClose()
+    toast.loading(`디스크 업로드 중 ... ${progress}%`, {
+      id: toastId,
+    });
+    
+  }, onSuccess, () => onClose());
 
   // 전체 데이터센터 가져오기
   const {
@@ -131,13 +137,9 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
     // 파일데이터를 비동기로 보내기 위해 사용하는 객체
     const diskData = new FormData();
     diskData.append("file", file); // file 추가
-    diskData.append(
-      "diskImage",
-      new Blob([JSON.stringify(dataToSubmit)], { type: "application/json" })
-    ); // JSON 데이터 추가
+    diskData.append("diskImage", new Blob([JSON.stringify(dataToSubmit)], { type: "application/json" })); // JSON 데이터 추가
 
     Logger.debug(`디스크 업로드 데이터 ${diskData}`);
-
     uploadDisk(diskData);
   };
 
