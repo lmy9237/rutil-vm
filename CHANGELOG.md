@@ -28,6 +28,104 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@lmy9237][lmy9237]
 -->
 
+## 0.2.6 - 2025-04-11
+
+- [`api-v0.2.6`][api-v0.2.6]: 백엔드
+- [`web-v0.2.6`][web-v0.2.6]: 프론트앤드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `${front}`: UI 상태값 (좌측메뉴, Footer,  트리메뉴, etc.) useContext 화 (`UIStateProvider`)
+  - `${front}`/`${back}`: 이벤트 조회 조건 신규 추가 (페이징 및 심각도 조절)
+  - `${front}`/`${back}`: 최근작업 (Job) 처리 API 추가 및 개선
+    - 외부 작업 추가 및 종료 API 추가
+    - Disk 업로드에 대한 연동
+  - `${front}`: 용어 및 아이콘 정의:
+    - 중지 중 (`POWERING_DOWN`)
+- [@dhj27][dhj27]
+  - Host Network interface
+    - `${back}`: Host Network Bonding 생성, 편집, 삭제 코드 추가
+    - `${back}`: Host NetworkAttachment 생성, 편집, 삭제 코드 추가
+    - `${front}`: Bonding 모달 값 추가
+    - `${front}`: NetworkAttachment 모달 값 추가
+    - `${front}`: Host Nic별 값 출력 (속도)
+    - `${front}`: Host Network ip값 출력(dns 아직)
+    - `${front}`: Host Nic 위 생성 버튼 추가
+  - 디스크 복사 모달 기능 추가
+  - VM > 스냅샷 삭제 모달 기능 추가 
+  - Job / Steps UI 적용
+- [@lmy9237][lmy9237]
+  - `${front}`: 테이블 아이콘 + React Element으로 구성 된 내용 (e.g. hyperlink 있는 이름) 정렬기능 추가
+  - `${front}`: 호스트 유지보수된것  활성(UNASSIGNED)→상태(툴팁),아이콘추가
+  - `${front}`: Storage Doamin > `UNKNOWN` ”알 수 없음” 상태 값 추가
+  - `${front}`: 계정설정 모달창추가(비밀번호변경)
+  - `${front}`: 왼쪽메뉴 우클릭박스 네트워크,데이터센터 모달 기능추가
+  - `${front}`: 용어 및 아이콘 정의:
+    - 유지보수 준비중 (`PREPARING_FOR_MAINTENANCE`)
+    - 복구중 (`RESTORING_STATE`) 
+    - 마이그레이션 중 (`MIGRATIONG`)
+    - 일시중지 중 (`SAVING_STATE`),
+    - 재설정,재부팅 (`REBOOT_IN_PROGRESS`) 대기→상태(툴팁),아이콘추가
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - `${devops}`: 백엔드 docker 로그 utf-8 한글출력 정상화
+  - `${front}`/`${back}`: 알림 버튼에 대한 이벤트 API 연동
+  - `${front}`: (알림이 있을 때) 알림 버튼에 뱃지 UI 생성
+  - `${front}`/`${back}`: Disk 업로드 API 처리방식 개선
+    - QCOW 유형 허용
+    - Disk 업로드 진행과정 출력
+  - `${front}`: VM 생성/편집 > 총 가상 CPU 에 값에 반응
+- [@dhj27][dhj27]
+  - Host Network interface > 상세 항목을 표출
+    - HostNic  → 항목: Rx/Tx Speed 등
+    - NetworkAttachment → ip, mac
+  - VM 편집에서 총 가상 CPU 값 표기
+  - 가상머신 액션 버튼에 이벤트 onsuccess(), onclose() 넣기
+  - VM 스냅샷 생성 모달 창 이름 표시  
+  - 디스크 목록 - iso 연결되어 있는 가상머신 목록 출력
+  - 가상머신 스냅샷 버튼 활성화
+  - 가상머신 스냅샷 삭제 기능 활성화
+  - 가상머신 생성 - 디스크 모달 에러 수정
+  - 템플릿 생성 모달 수정
+    - 템플릿 도메인 별 디스크 프로파일 출력
+    - 도메인 크기 출력
+  - ErrorPattern DUPLICATE 수정
+- [@lmy9237][lmy9237]
+  - [front] Network 상세 > 호스트: Tab과 ActionHeaderButtons 와 한열로(네트워크 호스트,가상머신쪽 디자인비교)
+  - [front]  aside nav 아이콘 작아지는 것 수정
+  - [front]  Dashboard 매트릭 박스 0크기고정 (`grid-item-name` max-width 설정)
+  - [front]  Computing > VM (`test`) 선택 > 디스크 > `test_Disk1`  선택 > 스토리지 > `rutilvm-ititinfo_nfs01` 선택 > 가상머신 가져오기 화면이 죽는것 수정
+  - [front] VM 상세화면 > 일반 (SideNavbar 열었을 때) 글자가 2둘로 변하는 현상
+  - [front] 검색창 정렬기능 숫자단위 오류 수정 ex ) 2 200 3 4
+  - [front] 스토리지 도메인 우클릭박스 모달창 안열리는것 수정
+  - [front] 데이터센터 모달 정보 안나오는 것 수정
+  - [front] 대시보드 그래프차트 줌기능(스크롤?) 막기
+  - [front]  header-right-btns  밑으로 떨어졌을때 간격주기
+  - [front]  Dashboard > Grid 박스 사이즈 틀어지는 현상 (1425 x 925 px)
+  - [front] VM > 콘솔 우클릭메뉴 navigation 정상화
+  - [front]  VM 상태가 일시중지 일 때 스냅샷 생성 비활성화 수정
+  - [front] 삭제모달창 UI깨지는 것 수정
+  - [front]  삭제 후 전화면으로 돌아가는 것 navigation 경로 수정
+  - [front] 삭제모달 복수선택했을때 목록으로 구분 (삭제 모달 크기 너무작음)
+  - [front] dynamic 컴포넌트 적용(가상머신생성모달,네트워크 생성모달 dns)
+  - [front]  스냅샷 생성 성공 후, 이름 텍스트 찌그러지는것 수정
+  - [front] 호스트 > `NON_OPERATIONAL` 일 때 편집 유지보수 활성화, 가능하도록 (ovirt 와 같게)
+  - [front]  input css 정리
+  - [front]  호스트 유지보수 모드에서 재시작 버튼 활성화
+  - [front] 대시보드 그래프 aside바에따라 겹치는 것 방지
+  - [front] 툴팁 값 불량 정정(하이퍼링크) + 기존 tootip 스타일때문에 css안먹는 문제로 tootip → tippy로 변경
+
+### Removed 
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+  - 필요없는 DeleteModal/DeleteModals 삭제
+  - 호스트 삭제 대기 해제 (처리는 진행 되나 Modal창이 계속 떠있는 현상) 
+- [@lmy9237][lmy9237]
+
 ## 0.2.5 - 2025-04-04
 
 ### [`api-v0.2.5`][api-v0.2.5]: 백엔드
@@ -59,7 +157,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@lmy9237][lmy9237] -->
 
 
-### [`web-v0.2.5`][web-v0.2.5]: 프론트
+### [`web-v0.2.5`][web-v0.2.5]: 프론트앤드
 
 #### Added
 
@@ -194,7 +292,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@lmy9237][lmy9237] 
 -->
 
-### [`web-v0.2.4`][web-v0.2.4]: 프론트
+### [`web-v0.2.4`][web-v0.2.4]: 프론트앤드
 
 #### Added
 
@@ -308,7 +406,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@dhj27][dhj27]
 - [@lmy9237][lmy9237] -->
 
-### [`web-v0.2.3`][web-v0.2.3]: 프론트
+### [`web-v0.2.3`][web-v0.2.3]: 프론트앤드
 
 #### Added
 
@@ -605,6 +703,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[web-v0.2.6]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.5...web-v0.2.6
+[api-v0.2.6]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.5...api-v0.2.6
 [web-v0.2.5]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.4...web-v0.2.5
 [api-v0.2.5]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.4...api-v0.2.5
 [web-v0.2.4]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.3...web-v0.2.4

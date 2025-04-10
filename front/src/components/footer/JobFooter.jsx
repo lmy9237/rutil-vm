@@ -5,9 +5,8 @@ import useUIState from "../../hooks/useUIState";
 import { useAllJobs } from "../../api/RQHook";
 import Spinner from "../common/Spinner";
 import TableRowNoData from "../table/TableRowNoData";
-import "./JobFooter.css";
 import SelectedIdView from "../common/SelectedIdView";
-import { formatNumberWithCommas } from "../../util";
+import "./JobFooter.css";
 
 
 /**
@@ -127,7 +126,7 @@ const JobFooter = () => {
               </thead>
               <tbody>
                 {transformedData.length === 0 ? (
-                  <TableRowNoData colLen={4} />
+                  <TableRowNoData colLen={5} />
                 ) : transformedData.map((job) => (
                   <tr key={job?.id}>
                     <td className="f-start">{!job?.isFinished && <Spinner/>}{job?.description}</td>
