@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import {
   useAddTemplate,
-  useAllDiskProfilesFromDomain,
   useClustersFromDataCenter,
   useCpuProfilesFromCluster,
   useDisksFromVM,
@@ -95,6 +94,7 @@ const TemplateModal = ({
     })),
   });  
 
+  Logger.debug(`domains ** : ${JSON.stringify(domains, null, 2)}`);
   Logger.debug(`TemplateModal > disks: ${JSON.stringify(disks, null, 2)}`);
 
   useEffect(() => {
@@ -161,7 +161,6 @@ const TemplateModal = ({
       setDiskProfilesList(newDiskProfilesMap);
     }
   }, [getDiskProfiles, domains]); 
-
 
   const handleInputChange = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
@@ -286,7 +285,7 @@ const TemplateModal = ({
                       />
                     </td>
                     <td>
-                      <LabelSelectOptionsID id={`domain_selet`}
+                      <LabelSelectOptionsID
                         value={disk.diskImageVo?.storageDomainVo?.id}
                         loading={isDomainsLoading}
                         options={domains.filter((d) => d.status === "ACTIVE")}
@@ -294,17 +293,22 @@ const TemplateModal = ({
                           const selected = domains.find(d => d.id === e.target.value);
                           if (selected) {
                             handleDiskChange(index, "storageDomainVo", selected, true);
-                        
-                            // 해당 storageDomain의 첫 번째 disk profile 자동 설정 (선택적)
                             const newProfiles = diskProfilesList[selected.id] || [];
                             if (newProfiles.length > 0) {
                               handleDiskChange(index, "diskProfileVo", newProfiles[0], true);
                             }
                           }
-                        }}
-                        
+                        }}                        
                       />
-                      <span>{disk.diskImageVo?.storageDomainVo?.id}/ {disk.diskImageVo?.storageDomainVo?.name}</span>
+                      {(() => {
+                        const selected = domains.find(d => d.id === disk.diskImageVo?.storageDomainVo?.id);
+                        return selected ? (
+                          <div className="text-xs text-gray-500 mt-1">
+                            사용 가능: {checkZeroSizeToGiB(selected.availableSize)} /
+                            총 용량: {checkZeroSizeToGiB(selected.diskSize)}
+                          </div>
+                        ) : null;
+                      })()}
                     </td>
                     <td>
                       <LabelSelectOptionsID
@@ -312,12 +316,10 @@ const TemplateModal = ({
                         loading={false}
                         options={diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || []}
                         onChange={(e) => {
-                          const selected = (diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || [])
-                            .find(d => d.id === e.target.value);
+                          const selected = (diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || []).find(d => d.id === e.target.value);
                           if (selected) handleDiskChange(index, "diskProfileVo", selected, true);
                         }}
                       />
-                      <span>{disk.diskImageVo?.diskProfileVo?.id}/ {disk.diskImageVo?.diskProfileVo?.name}</span>
                     </td>
                   </tr>
                 ))}

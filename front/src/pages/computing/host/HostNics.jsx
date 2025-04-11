@@ -205,7 +205,6 @@ const HostNics = ({ hostId }) => {
     <div className="header-right-btns">
         <ActionButton actionType="default" label={Localization.kr.CREATE} 
           // onClick={() => openModal("create")}
-          
         />
       </div>
 

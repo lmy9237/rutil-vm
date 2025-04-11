@@ -64,7 +64,7 @@ export function formatNumberWithCommas(number) {
  */
 export function convertBytesToMB(bytes) {
   const res = (bytes / (1024 * 1024)).toFixed(0);
-  Logger.debug(`util > convertBytesToMB ... bytes: ${bytes}, res: ${res}`); // 무한 루푸가 외 
+  // Logger.debug(`util > convertBytesToMB ... bytes: ${bytes}, res: ${res}`); // 무한 루푸가 외 
   return res
 }
 
@@ -75,7 +75,7 @@ export function convertBytesToMB(bytes) {
  */
 export function convertBytesToGB(bytes) {
   const res = (bytes / (1024 * 1024)).toFixed(0);
-  Logger.debug(`util > convertBytesToMB ... bytes: ${bytes}, res: ${res}`);
+  // Logger.debug(`util > convertBytesToMB ... bytes: ${bytes}, res: ${res}`);
   return (bytes / (1024 * 1024 * 1024)).toFixed(0);
 }
 
@@ -88,7 +88,7 @@ export function convertBytesToGB(bytes) {
  */
 export function convertBytesToGBFixed1(bytes) {
   const res = (bytes / (1024 * 1024 * 1024)).toFixed(1);
-  Logger.debug(`util > convertBytesToGBFixed1 ... bytes: ${bytes}, res: ${res}`);
+  // Logger.debug(`util > convertBytesToGBFixed1 ... bytes: ${bytes}, res: ${res}`);
   return res;
 }
 
@@ -101,7 +101,7 @@ export function convertBytesToGBFixed1(bytes) {
  */
 export function convertGBToBytes(gb) {
   const res = gb * (1024 * 1024 * 1024);
-  Logger.debug(`util > convertGBToBytes ... gb: ${gb}, res: ${res}`);
+  // Logger.debug(`util > convertGBToBytes ... gb: ${gb}, res: ${res}`);
   return res;
 }
 
@@ -115,7 +115,7 @@ export function convertGBToBytes(gb) {
  */
 export function sizeToBytes(size) {
   const res = parseInt(size, 10) * 1024 * 1024 * 1024;
-  Logger.debug(`util > sizeToBytes ... size: ${size}, res: ${res}`);
+  // Logger.debug(`util > sizeToBytes ... size: ${size}, res: ${res}`);
   return res
 }
 
@@ -128,7 +128,7 @@ export function sizeToBytes(size) {
  */
 export function checkZeroSizeToGiB(size) {
   const res = convertBytesToGB(size) < 1 ? "< 1 GiB" : `${convertBytesToGB(size)} GiB`
-  Logger.debug(`util > checkZeroSizeToGiB ... size: ${size}, res: ${res}`);
+  // Logger.debug(`util > checkZeroSizeToGiB ... size: ${size}, res: ${res}`);
   return res;
 }
 
@@ -141,14 +141,14 @@ export function checkZeroSizeToGiB(size) {
  */
 export function checkZeroSizeToMB(size) {
   const res = convertBytesToMB(size) < 1 ? "< 1 MB" : `${convertBytesToMB(size)} MB`;
-  Logger.debug(`util > checkZeroSizeToMB ... size: ${size}, res: ${res}`);
+  // Logger.debug(`util > checkZeroSizeToMB ... size: ${size}, res: ${res}`);
   return res;
 }
 
 
 export function convertBpsToMbps(bytes) {
   const res = bytes / 1_000_000;
-  Logger.debug(`util > convertBpsToMbps ... bytes: ${bytes}, res: ${res}`)
+  // Logger.debug(`util > convertBpsToMbps ... bytes: ${bytes}, res: ${res}`)
   return res;
 }
 

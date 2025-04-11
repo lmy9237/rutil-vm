@@ -275,7 +275,7 @@ const ENDPOINTS = {
   DELETE_DISK: (diskId) =>                                                 `${ENDPOINT_API_V1}/storages/disks/${diskId}`,
   COPY_DISK: (diskId) =>                                                   `${ENDPOINT_API_V1}/storages/disks/${diskId}/copy`,
   FIND_STORAGE_DOMAINS_TO_MOVE_DISK: (diskId) =>                           `${ENDPOINT_API_V1}/storages/disks/${diskId}/move`,
-  MOVE_DISK: (diskId) =>                                                   `${ENDPOINT_API_V1}/storages/disks/${diskId}/move`,
+  MOVE_DISK: (diskId, storageDomainId) =>                                  `${ENDPOINT_API_V1}/storages/disks/${diskId}/move/${storageDomainId}`,
   REFRESH_LUN_DISK: (diskId) =>                                            `${ENDPOINT_API_V1}/storages/disks/${diskId}/refreshLun`,
   UPLOAD_DISK: () =>                                                       `${ENDPOINT_API_V1}/storages/disks/upload`,
   //#endregion: Disk

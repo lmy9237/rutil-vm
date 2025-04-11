@@ -306,7 +306,7 @@ class DiskServiceImpl(
         val disk: Disk = conn.findDisk(diskId)
             .getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
         val res: List<StorageDomain> = conn.findAllStorageDomains().getOrDefault(emptyList())
-            .filter { it.id() != disk.storageDomains().first().id() }
+            .filter { it.id() != disk.storageDomains().first().id() && it.status() == StorageDomainStatus.ACTIVE }
         return res.toStorageDomainSizes()
     }
 

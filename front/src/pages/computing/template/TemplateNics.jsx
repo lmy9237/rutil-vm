@@ -10,6 +10,8 @@ import NicActionButtons from "../../../components/dupl/NicActionButtons";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import Logger from "../../../utils/Logger";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
+import ActionButton from "../../../components/button/ActionButton";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name TemplateNics
@@ -54,6 +56,19 @@ const TemplateNics = ({ templateId }) => {
   Logger.debug("TemplateNics ...");
   return (
     <>
+      <div className="header-right-btns">
+        <ActionButton actionType="default" label={Localization.kr.CREATE} 
+          disabled={false}
+          // onClick={() => openModal("create")}
+        />
+        <ActionButton actionType="default" label={Localization.kr.UPDATE} 
+          // onClick={() => openModal("create")}
+        />
+        <ActionButton actionType="default" label={Localization.kr.REMOVE} 
+          // onClick={() => openModal("create")}
+        />
+      </div>
+      
       <NicActionButtons
         openModal={openModal}
         isEditDisabled={selectedVnicProfiles.length !== 1}

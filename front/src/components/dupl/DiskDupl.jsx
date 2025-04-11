@@ -37,7 +37,7 @@ const DiskDupl = ({
           {d?.alias || d?.diskImageVo?.alias}
         </TableRowClick>
       ),
-      icon: status2Icon(d.status),
+      icon: status2Icon(d.status),  
       storageDomain: (
         <TableRowClick type="domain" id={d?.storageDomainVo?.id}>
           {d?.storageDomainVo?.name}

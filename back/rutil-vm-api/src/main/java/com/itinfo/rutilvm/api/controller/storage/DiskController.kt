@@ -217,7 +217,7 @@ class DiskController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED")
 	)
-	@PostMapping("/{diskId}/move")
+	@PostMapping("/{diskId}/move/{storageDomainId}")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
 	fun moveDisk(

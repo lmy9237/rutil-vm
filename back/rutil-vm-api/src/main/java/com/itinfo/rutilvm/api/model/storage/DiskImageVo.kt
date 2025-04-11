@@ -120,6 +120,7 @@ fun List<Disk>.toDiskIdNames(): List<DiskImageVo> =
 fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 	val disk = this@toDiskMenu
 	val storageDomain: StorageDomain? = conn.findStorageDomain(this.storageDomains().first().id()).getOrNull()
+	val dataCenter: DataCenter? = storageDomain?.dataCenters()?.first()?.let { conn.findDataCenter(it.id()).getOrNull() }
 
 	val diskLink: Disk? = conn.findDisk(this@toDiskMenu.id()).getOrNull()
 	val vmConn: Vm? = if(diskLink?.vmsPresent() == true){
@@ -138,6 +139,7 @@ fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 		alias { disk.alias() }
 		sharable { disk.shareable() }
 		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
+		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
 		status { disk.status() }

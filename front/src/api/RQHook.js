@@ -3699,7 +3699,7 @@ export const useAllStorageDomains = (
   }
 })
 /**
- * @name useDomainById
+ * @name useStroageDomain
  * @description 도메인 상세조회 useQuery 훅
  * 
  * @param {string} domainId 도메인 ID
@@ -4687,10 +4687,10 @@ export const useMoveDisk = (
 ) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (diskData) => {
-      const res = await ApiManager.moveDisk(diskData)
+    mutationFn: async ({diskId, storageDomainId}) => {
+      const res = await ApiManager.moveDisk(diskId, storageDomainId)
       const _res = validate(res) ?? {};
-      Logger.debug(`RQHook > useMoveDisk ... diskData: ${JSON.stringify(diskData, null, 2)}`);
+      // Logger.debug(`RQHook > useMoveDisk ... diskData: ${JSON.stringify(diskId, storageDomainId, null, 2)}`);
       return _res;
     },
     onSuccess: (res) => {

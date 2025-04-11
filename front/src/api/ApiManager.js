@@ -2858,12 +2858,11 @@ const ApiManager = {
    * @param {Object} diskData 
    * @returns {Promise<Object>}
    */
-  moveDisk: async (diskId, diskData) => {
+  moveDisk: async (diskId, storageDomainId) => {
     return makeAPICall({
       method: "POST",
-      url: ENDPOINTS.MOVE_DISK(diskId),
-      data: diskData, 
-      // defaultValues: DEFAULT_VALUES.MOVE_DISK
+      url: ENDPOINTS.MOVE_DISK(diskId, storageDomainId),
+      data: {diskId, storageDomainId}, 
     });
   },
   /**
