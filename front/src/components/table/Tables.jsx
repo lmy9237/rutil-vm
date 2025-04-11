@@ -6,6 +6,9 @@ import PagingButton from "./PagingButton";
 import Logger from "../../utils/Logger";
 import "./Table.css";
 import CONSTANT from "../../Constants";
+import 'tippy.js/dist/tippy.css';           
+import 'tippy.js/animations/shift-away.css';
+import Tippy from "@tippyjs/react";
 
 /**
  * @name Tables
@@ -149,7 +152,7 @@ const Tables = ({
   
     setSortedData(sorted);
   };
-  
+
   
   useEffect(() => {
     let filteredData = data;
@@ -228,10 +231,19 @@ const Tables = ({
       }));
     }
   };
-
+  const getCellTooltipContent = (value) => {
+    if (React.isValidElement(value)) {
+      // JSX 요소의 텍스트 추출
+      const child = value.props?.children;
+      return Array.isArray(child) ? child.join("") : String(child ?? "");
+    } else if (typeof value === "object" && value !== null) {
+      // 일반 객체인 경우 JSON으로 안전하게 변환
+      return JSON.stringify(value);
+    }
+    return String(value ?? ""); // 기본값: 문자열로 변환
+  };
   
   // 페이징처리
-  // ✅ 현재 페이지 상태 및 페이지당 항목 개수 추가
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = CONSTANT.itemsPerPage;
   // 시작/끝 인덱스 계산
@@ -307,15 +319,111 @@ const Tables = ({
       ) : (
         // 데이터 있을 경우
         paginatedData.map((row, rowIndex) => {
-          const globalIndex = indexOfFirstItem + rowIndex; // ✅ 전체 데이터 기준 인덱스
+          const globalIndex = indexOfFirstItem + rowIndex; 
         
           return (
+            // <tr
+            //   key={globalIndex}
+            //   onClick={(e) => {
+            //     setSelectedRowIndex(globalIndex);
+            //     setContextRowIndex(null);
+            //     onRowClick([row]); // ✅ 배열로 전달
+            //     handleRowClick(globalIndex, e);
+            //   }}
+            //   onContextMenu={(e) => handleContextMenu(e, globalIndex)}
+            //   className={
+            //     selectedRows.includes(globalIndex) || contextRowIndex === globalIndex
+            //       ? "selected-row"
+            //       : ""
+            //   }
+            // >
+            //   {columns.map((column, colIndex) => (
+            //     <td
+            //       key={colIndex}
+            //       data-tooltip-id={`tooltip-${globalIndex}-${colIndex}`}
+            //       data-tooltip-content={getCellTooltipContent(row[column.accessor])}
+            //       onMouseEnter={(e) =>
+            //         handleMouseEnter(e, globalIndex, colIndex, row[column.accessor])
+            //       }
+            //       style={{
+            //         whiteSpace: "nowrap",
+            //         overflow: "hidden",
+            //         textOverflow: "ellipsis",
+            //         textAlign: React.isValidElement(row[column.accessor]) ? "center" : "left",
+            //         verticalAlign: "middle",
+            //         cursor:
+            //           row[column.accessor] &&
+            //           clickableColumnIndex.includes(colIndex)
+            //             ? "pointer"
+            //             : "default",
+            //         color:
+            //           row[column.accessor] &&
+            //           clickableColumnIndex.includes(colIndex)
+            //             ? "blue"
+            //             : "inherit",
+            //         fontWeight:
+            //           row[column.accessor] &&
+            //           clickableColumnIndex.includes(colIndex)
+            //             ? "500"
+            //             : "normal",
+            //         width: column?.width ?? "",
+            //       }}
+            //       onClick={(e) => {
+            //         if (
+            //           row[column.accessor] &&
+            //           clickableColumnIndex.includes(colIndex)
+            //         ) {
+            //           e.stopPropagation();
+            //           if (onClickableColumnClick) {
+            //             onClickableColumnClick(row);
+            //           }
+            //         }
+            //       }}
+            //       onMouseOver={(e) => {
+            //         if (
+            //           row[column.accessor] &&
+            //           clickableColumnIndex.includes(colIndex)
+            //         ) {
+            //           e.target.style.textDecoration = "underline";
+            //         }
+            //       }}
+            //       onMouseOut={(e) => {
+            //         if (
+            //           row[column.accessor] &&
+            //           clickableColumnIndex.includes(colIndex)
+            //         ) {
+            //           e.target.style.textDecoration = "none";
+            //         }
+            //       }}
+            //     >
+            //           <Tippy
+            //             content={getCellTooltipContent(row[column.accessor])}
+            //             delay={[200, 0]}
+            //             placement="top"
+            //             animation="shift-away"
+            //             theme="dark-tooltip" 
+            //             arrow={true}        
+            //             disabled={!tooltips[`${globalIndex}-${colIndex}`]}
+            //           >
+            //             <div style={{ display: "flex", alignItems: "center"}}>
+            //               {typeof row[column.accessor] !== "string" &&
+            //               typeof row[column.accessor] !== "number" &&
+            //               row[column.accessor]?.type?.name !== "TableRowClick" ? (
+            //                 row[column.accessor]
+            //               ) : (
+            //                 row[column.accessor]
+            //               )}
+            //             </div>
+            //           </Tippy>
+            //     </td>
+            //   ))}
+            // </tr>
             <tr
               key={globalIndex}
               onClick={(e) => {
                 setSelectedRowIndex(globalIndex);
                 setContextRowIndex(null);
-                onRowClick([row]); // ✅ 배열로 전달
+                onRowClick([row]);
                 handleRowClick(globalIndex, e);
               }}
               onContextMenu={(e) => handleContextMenu(e, globalIndex)}
@@ -325,81 +433,89 @@ const Tables = ({
                   : ""
               }
             >
-              {columns.map((column, colIndex) => (
-                <td
-                  key={colIndex}
-                  data-tooltip-id={`tooltip-${globalIndex}-${colIndex}`}
-                  data-tooltip-content={row[column.accessor]}
-                  onMouseEnter={(e) =>
-                    handleMouseEnter(e, globalIndex, colIndex, row[column.accessor])
-                  }
-                  style={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    textAlign:
-                      typeof row[column.accessor] === "string" ||
-                      typeof row[column.accessor] === "number"
-                        ? "left"
-                        : "center",
-                    verticalAlign: "middle",
-                    cursor:
-                      row[column.accessor] &&
-                      clickableColumnIndex.includes(colIndex)
-                        ? "pointer"
-                        : "default",
-                    color:
-                      row[column.accessor] &&
-                      clickableColumnIndex.includes(colIndex)
-                        ? "blue"
-                        : "inherit",
-                    fontWeight:
-                      row[column.accessor] &&
-                      clickableColumnIndex.includes(colIndex)
-                        ? "500"
-                        : "normal",
-                    width: column?.width ?? "",
-                  }}
-                  onClick={(e) => {
-                    if (
-                      row[column.accessor] &&
-                      clickableColumnIndex.includes(colIndex)
-                    ) {
-                      e.stopPropagation();
-                      if (onClickableColumnClick) {
+              {columns.map((column, colIndex) => {
+                const cellValue = row[column.accessor];
+                const isJSX = React.isValidElement(cellValue);
+                const isTableRowClick = isJSX && cellValue?.type?.name === "TableRowClick";
+                const isBoolean = typeof cellValue === "boolean";
+
+                // 아이콘, 체크박스 등은 가운데, TableRowClick은 왼쪽
+                const shouldCenter = (isJSX && !isTableRowClick) || isBoolean;
+
+                return (
+                  <td
+                    key={colIndex}
+                    data-tooltip-id={`tooltip-${globalIndex}-${colIndex}`}
+                    data-tooltip-content={getCellTooltipContent(cellValue)}
+                    onMouseEnter={(e) =>
+                      handleMouseEnter(e, globalIndex, colIndex, cellValue)
+                    }
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      textAlign: shouldCenter ? "center" : "left",
+                      verticalAlign: "middle",
+                      cursor:
+                        cellValue && clickableColumnIndex.includes(colIndex)
+                          ? "pointer"
+                          : "default",
+                      color:
+                        cellValue && clickableColumnIndex.includes(colIndex)
+                          ? "blue"
+                          : "inherit",
+                      fontWeight:
+                        cellValue && clickableColumnIndex.includes(colIndex)
+                          ? "500"
+                          : "normal",
+                      width: column?.width ?? "",
+                    }}
+                    onClick={(e) => {
+                      if (
+                        cellValue &&
+                        clickableColumnIndex.includes(colIndex) &&
+                        onClickableColumnClick
+                      ) {
+                        e.stopPropagation();
                         onClickableColumnClick(row);
                       }
-                    }
-                  }}
-                  onMouseOver={(e) => {
-                    if (
-                      row[column.accessor] &&
-                      clickableColumnIndex.includes(colIndex)
-                    ) {
-                      e.target.style.textDecoration = "underline";
-                    }
-                  }}
-                  onMouseOut={(e) => {
-                    if (
-                      row[column.accessor] &&
-                      clickableColumnIndex.includes(colIndex)
-                    ) {
-                      e.target.style.textDecoration = "none";
-                    }
-                  }}
-                >
-                  {typeof row[column.accessor] !== "string" &&
-                  typeof row[column.accessor] !== "number" &&
-                  row[column.accessor]?.type?.name !== "TableRowClick" ? (
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                      {row[column.accessor]}
-                    </div>
-                  ) : (
-                    row[column.accessor]
-                  )}
-                </td>
-              ))}
+                    }}
+                    onMouseOver={(e) => {
+                      if (cellValue && clickableColumnIndex.includes(colIndex)) {
+                        e.target.style.textDecoration = "underline";
+                      }
+                    }}
+                    onMouseOut={(e) => {
+                      if (cellValue && clickableColumnIndex.includes(colIndex)) {
+                        e.target.style.textDecoration = "none";
+                      }
+                    }}
+                  >
+                    <Tippy
+                      content={getCellTooltipContent(cellValue)}
+                      delay={[200, 0]}
+                      placement="top"
+                      animation="shift-away"
+                      theme="dark-tooltip"
+                      arrow={true}
+                      disabled={!tooltips[`${globalIndex}-${colIndex}`]}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: shouldCenter ? "center" : "flex-start",
+                          alignItems: "center",
+                        }}
+                      >
+                        {isJSX ? cellValue : String(cellValue ?? "")}
+                      </div>
+                    </Tippy>
+                  </td>
+                );
+              })}
             </tr>
+
+
           );
         })
         
@@ -469,7 +585,7 @@ const Tables = ({
       )}
 
       {/* Tooltip */}
-      {data &&
+      {/* {data &&
         data.map((row, rowIndex) =>
           columns.map(
             (column, colIndex) =>
@@ -479,12 +595,16 @@ const Tables = ({
                   id={`tooltip-${rowIndex}-${colIndex}`}
                   place="right"
                   effect="solid"
-                  delayShow={400} // 1초 지연 후 표시
+                  className="my-tooltip"
+                  delayShow={200} // 1초 지연 후 표시
                   content={tooltips[`${rowIndex}-${colIndex}`]} // 툴팁에 표시할 내용
+                  componentsProps={{
+                    color:"white",
+                  }}
                 />
               )
           )
-        )}
+        )} */}
     </>
   );
 };

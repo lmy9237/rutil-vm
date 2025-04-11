@@ -19,6 +19,8 @@ const DataCenterDupl = ({
 }) => {
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
+  const openModal = (action) => setActiveModal(action);
+  const closeModal = () => setActiveModal(null);
   const [selectedDataCenters, setSelectedDataCenters] = useState([]);
 
   const transformedData = datacenters.map((dc) => {
@@ -41,8 +43,6 @@ const DataCenterDupl = ({
   
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
 
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
   const handleNameClick = (id) => navigate(`/computing/datacenters/${id}/clusters`);
   const handleRefresh = () =>  {
     Logger.debug(`DataCenterDupl > handleRefresh ... `)
@@ -50,14 +50,6 @@ const DataCenterDupl = ({
     refetch()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
-
-  //버튼 활성화 조건
-  const status =
-    selectedDataCenters.length === 0
-      ? "none"
-      : selectedDataCenters.length === 1
-        ? "single"
-        : "multiple";
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
@@ -69,9 +61,9 @@ const DataCenterDupl = ({
           />
         )}
         <DataCenterActionButtons 
-          selectedDataCenters={selectedDataCenters}
-          status={status}
-          openModal={openModal} 
+          openModal={openModal}
+          isEditDisabled={selectedDataCenters.length !== 1}
+          isDeleteDisabled={selectedDataCenters.length === 0}
         />
       </div>
 
@@ -87,8 +79,12 @@ const DataCenterDupl = ({
         columns={columns}
         onContextMenuItems={(row) => [
           <DataCenterActionButtons
-            openModal={openModal}
-            status={row?.status}
+            openModal={(action) => {
+              setSelectedDataCenters([row]);
+              openModal(action);
+            }}
+            isEditDisabled={false}
+            isDeleteDisabled={false}
             selectedDataCenters={[row]}
             actionType="context"
           />,

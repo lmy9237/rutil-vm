@@ -17,7 +17,10 @@ const NetworkTree = ({
   setSelectedDiv,
   onContextMenu,
   contextMenu,
-  menuRef
+  menuRef,
+  setActiveModal,        
+  setSelectedNetworks,
+  setSelectedDataCenters
 }) => {
   const {
     secondVisibleNetwork, toggleSecondVisibleNetwork,
@@ -94,12 +97,17 @@ const NetworkTree = ({
                   }}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <DataCenterActionButtons
-                    selectedDataCenters={[contextMenu.item]}
-                    status="single" // 또는 contextMenu.item.status가 있으면 그걸로
-                    actionType="context"
-                    onCloseContextMenu={() => onContextMenu(null)}
-                  />
+              <DataCenterActionButtons
+                selectedDataCenters={[contextMenu.item]}
+                status="single"
+                actionType="context"
+                onCloseContextMenu={() => onContextMenu(null)}
+                openModal={(action) => {
+                  setActiveModal?.(`datacenter:${action}`);
+                  setSelectedDataCenters?.([contextMenu.item]); 
+                  onContextMenu(null);      // 우클릭박스 닫기
+                }}
+              />
                 </div>
             )}
 
@@ -148,8 +156,9 @@ const NetworkTree = ({
                         
                           <NetworkActionButtons
                             openModal={(action) => {
-                              Logger.debug(`Open modal with action ... ${action}`);
-                              onContextMenu(null); // 닫기
+                              setActiveModal?.(`network:${action}`); 
+                              setSelectedNetworks?.([contextMenu.item]);    
+                              onContextMenu(null);                         
                             }}
                             selectedNetworks={[contextMenu.item]}
                             status={contextMenu.item?.status}

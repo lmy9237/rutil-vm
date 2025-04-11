@@ -17,7 +17,9 @@ const StorageTree = ({
   onContextMenu,
   contextMenu,
   menuRef,
-  domain
+  domain,
+  setActiveModal,        
+  setSelectedDataCenters
 }) => {
   const { 
     secondVisibleStorage, toggleSecondVisibleStorage,
@@ -100,12 +102,17 @@ const StorageTree = ({
                     }}
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <DataCenterActionButtons
-                      selectedDataCenters={[contextMenu.item]}
-                      status="single" 
-                      actionType="context"
-                      onCloseContextMenu={() => onContextMenu(null)}
-                    />
+                  <DataCenterActionButtons
+                    selectedDataCenters={[contextMenu.item]}
+                    status="single"
+                    actionType="context"
+                    onCloseContextMenu={() => onContextMenu(null)}
+                    openModal={(action) => {
+                      setActiveModal?.(`datacenter:${action}`);
+                      setSelectedDataCenters?.([contextMenu.item]); 
+                      onContextMenu(null);    
+                    }}
+                  />
                   </div>
               )}
 

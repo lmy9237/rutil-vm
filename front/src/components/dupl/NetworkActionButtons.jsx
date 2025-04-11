@@ -10,7 +10,6 @@ const NetworkActionButtons = ({
   status,
   actionType = "default",
   isContextMenu = false,
-  onCloseContextMenu, // contextMenu 닫기용 콜백
 }) => {
   const navigate = useNavigate();
 

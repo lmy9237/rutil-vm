@@ -250,11 +250,17 @@ const VmModal = ({
       setClusterVo({ id: vm?.clusterVo?.id, name: vm?.clusterVo?.name })
       setTemplateVo({ id: vm?.templateVo?.id, name: vm?.templateVo?.name })
       
-      setNicListState(vm?.nicVos?.map((nic) => ({
+      setNicListState(vm.nicVos.map((nic) => ({
         id: nic?.id || "",
         name: nic?.name || "",
-        vnicProfileVo: { id: nic?.vnicProfileVo?.id, name: nic?.vnicProfileVo?.name },
-        networkVo: { id: nic?.networkVo?.id, name: nic?.networkVo?.name, },
+        vnicProfileVo: {
+          id: nic?.vnicProfileVo?.id || "",
+          name: nic?.vnicProfileVo?.name || "",
+        },
+        networkVo: {
+          id: nic?.networkVo?.id || "",
+          name: nic?.networkVo?.name || "",
+        },
       })));
 
       setDiskListState(Array.isArray(vm?.diskAttachmentVos)? vm.diskAttachmentVos.map((d) => ({

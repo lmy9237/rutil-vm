@@ -42,7 +42,7 @@ const initialFormState = {
   sparse: true, //할당정책: 씬
   active: true, // 디스크 활성화
   wipeAfterDelete: false, // 삭제 후 초기화
-  bootable: false, // 부팅가능
+  bootable: true, // 부팅가능
   sharable: false, // 공유가능
   readOnly: false, // 읽기전용
   // cancelActive: false, // 취소 활성화
@@ -139,7 +139,7 @@ const VmDiskModal = ({
         sparse: diskAttachment?.diskImageVo?.sparse || false,
         active: diskAttachment?.active || false,
         wipeAfterDelete: diskAttachment?.diskImageVo?.wipeAfterDelete || false,
-        bootable: diskAttachment?.bootable || false,
+        bootable: diskAttachment?.bootable || true,
         sharable: diskAttachment?.diskImageVo?.sharable || false,
         readOnly: diskAttachment?.readOnly || false,
         // cancelActive: diskAttachment?.cancelActive || false,
@@ -163,7 +163,7 @@ const VmDiskModal = ({
         sparse: initialDisk?.sparse || false,
         active: initialDisk?.active || false,
         wipeAfterDelete: initialDisk?.wipeAfterDelete || false,
-        bootable: initialDisk?.bootable || false,
+        bootable: initialDisk?.bootable || true,
         sharable: initialDisk?.sharable || false,
         readOnly: initialDisk?.readOnly || false,
         backup: initialDisk?.backup || false,
@@ -349,9 +349,9 @@ const VmDiskModal = ({
               </div>
               <div className='img-checkbox-outer'>
                 <LabelCheckbox id="bootable" label={Localization.kr.IS_BOOTABLE}
-                  checked={Boolean(formState.bootable)} 
+                  // checked={Boolean(formState.bootable)} 
                   disabled={hasBootableDisk} 
-                  // TODO: bootable처리 
+                  checked={Boolean(formState.bootable) || hasBootableDisk}
                   onChange={handleInputChangeCheck("bootable")}
                 />
               </div>

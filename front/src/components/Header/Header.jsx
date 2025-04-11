@@ -14,7 +14,7 @@ import BoxEvent from "./BoxEvent";
 import Logger from "../../utils/Logger";
 import BoxUser from "./BoxUser";
 import "./Header.css";
-import SettingAccountModal from "../modal/settings/SettingAccountModal";
+import SettingUsersModal from "../modal/settings/SettingUsersModal";
 
 /**
  * @name Header
@@ -31,14 +31,11 @@ const Header = () => {
     loginBoxVisible, toggleLoginBoxVisible,
   } = useUIState();
 
-  const [activeModal, setActiveModal] = useState(null); 
-  const openSettingModal = () => {
-    setActiveModal("account");
+  const [modalType, setModalType] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user")) || [];
+  const handleOpenChangePassword = () => {
+    setModalType("changePassword");
   };
-  const closeModal = () => {
-    setActiveModal(null);
-  };
-
 
   return (
     <div className="header f-btw">
@@ -80,12 +77,15 @@ const Header = () => {
           }}
         />
         {loginBoxVisible && (
-          <BoxUser onOpenSetting={openSettingModal} />
+          <BoxUser onOpenSetting={handleOpenChangePassword} />
         )}
       </div>
-      <SettingAccountModal
-        isOpen={activeModal === "account"}
-        onClose={closeModal}
+      <SettingUsersModal
+        isOpen={modalType === "changePassword"}
+        onClose={() => setModalType(null)}
+        targetName={"사용자"}
+        user={user[0]}
+        changePassword
       />
     </div>
   );

@@ -310,11 +310,6 @@ textarea {
   background: #e4e4e4;
   color: #449bff;
 }
-/*툴팁*/
-.custom-tooltip {
-  transform: translateY(-6px); 
-  z-index: 10000 !important;
-}
 
 /* 중복끝 */
 .error-text {

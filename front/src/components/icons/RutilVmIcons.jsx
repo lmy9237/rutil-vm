@@ -648,20 +648,26 @@ export const status2Icon = (
     case Localization.kr.renderStatus("INACTIVE"):
     case "UNINITIALIZED":                          iconDef = rvi16TriangleDown();break;
     case "POWERING_DOWN":                          iconDef = rvi16ArrowsDownRed;break;
-    case "WAIT_FOR_LAUNCH":
     case "INITIALIZING":
     case "POWERING_UP":                            iconDef = rvi16ArrowsUpGreen;break;
     case "MAINTENANCE":                            iconDef = rvi16Wrench("black");break;
     case "UNATTACHED":                             iconDef = rvi16Disconnected();break;
-    case "REBOOT_IN_PROGRESS":
-    case Localization.kr.renderStatus("REBOOT_IN_PROGRESS"):  
     case "UNASSIGNED": 
     case "SAVING_STATE": 
     case "RESTORING_STATE": 
-    case "MIGRATING":                              iconDef = rvi16RebootLined();break;
+    case "WAIT_FOR_LAUNCH":
+    case "MIGRATING":                               iconDef = rvi16RebootLined();break;
     case "REBOOT": 
-    case "PREPARING_FOR_MAINTENANCE":              iconDef = rvi16Refresh();break;
+    case "REBOOT_IN_PROGRESS":
+    case Localization.kr.renderStatus("REBOOT_IN_PROGRESS"):  
+    case "PREPARING_FOR_MAINTENANCE":               iconDef = rvi16Refresh();break;
     case "LOCKED":                                 iconDef = rvi16Lock();break;
+    // case "MIGRATING":                              iconDef = rvi16RebootLined();break;
+    // case "REBOOT": 
+    // case "PREPARING_FOR_MAINTENANCE":              iconDef = rvi16Refresh();break;
+    // case "LOCKED":                                 iconDef = rvi16Lock();break;
+
+
     case "SUSPENDED":                              iconDef = rvi16Pause;break;
     case "NON_OPERATIONAL":                        iconDef = rvi16NonOperational;break;
     case "UNKNOWN":

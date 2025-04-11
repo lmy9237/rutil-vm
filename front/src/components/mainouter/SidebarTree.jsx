@@ -4,6 +4,8 @@ import ComputingTree from "./tree/ComputingTree";
 import NetworkTree from "./tree/NetworkTree";
 import StorageTree from "./tree/StorageTree";
 import useUIState from "../../hooks/useUIState";
+import NetworkModals from "../modal/network/NetworkModals";
+import DataCenterModals from "../modal/datacenter/DataCenterModals";
 
 const SidebarTree = ({ selected }) => {
   const location = useLocation();
@@ -50,7 +52,10 @@ useEffect(() => {
   return () => document.removeEventListener("mousedown", handleClickOutside);
 }, [contextMenu]);
   
-
+// 모달열기
+const [activeModal, setActiveModal] = useState(null);
+const [selectedNetworks, setSelectedNetworks] = useState([]);
+const [selectedDataCenters, setSelectedDataCenters] = useState([]);
 
   return (
     <div className="aside-popup">
@@ -66,6 +71,7 @@ useEffect(() => {
 
       {/* ✅ 네트워크 섹션 */}
       {sectionToRender === "network" && (
+        <>
         <NetworkTree 
           selectedDiv={selectedDiv} 
           setSelectedDiv={setSelectedDiv} 
@@ -75,7 +81,17 @@ useEffect(() => {
           contextMenu={contextMenu}      
           closeContextMenu={closeContextMenu}  
           menuRef={menuRef} 
+          setActiveModal={setActiveModal}             
+          setSelectedNetworks={setSelectedNetworks}  
+          setSelectedDataCenters={setSelectedDataCenters} 
        />
+        <NetworkModals
+          activeModal={activeModal?.startsWith("network:") ? activeModal.split(":")[1] : null}
+          selectedNetworks={selectedNetworks}
+          network={activeModal?.startsWith("network:") && activeModal.includes("edit") ? selectedNetworks[0] : null}
+          onClose={() => setActiveModal(null)}
+        />
+     </>
       )}
 
       {/* ✅ 스토리지 섹션 */}
@@ -89,8 +105,16 @@ useEffect(() => {
           contextMenu={contextMenu}      
           closeContextMenu={closeContextMenu}  
           menuRef={menuRef} 
+          setActiveModal={setActiveModal} 
+          setSelectedDataCenters={setSelectedDataCenters}    
         />
       )}
+      <DataCenterModals
+        activeModal={activeModal?.startsWith("datacenter:") ? activeModal.split(":")[1] : null}
+        selectedDataCenters={selectedDataCenters}
+        dataCenter={activeModal?.startsWith("datacenter:") && activeModal.includes("edit") ? selectedDataCenters[0] : null}
+        onClose={() => setActiveModal(null)}
+      />
     </div>
   );
 };

@@ -19,8 +19,17 @@ const VmNic = ({
   Logger.debug(`VmNic.nicsState: ${JSON.stringify(nicsState, null, 2)}`);
 
   const handleChange = (index, value) => {
-    const updated = [...nicsState];
-    updated[index].vnicProfileVo.id = value;
+    const updated = nicsState.map((nic, i) =>
+      i === index
+        ? {
+            ...nic,
+            vnicProfileVo: {
+              ...nic.vnicProfileVo,
+              id: value,
+            },
+          }
+        : nic
+    );
     setNicsState(updated);
   };
 

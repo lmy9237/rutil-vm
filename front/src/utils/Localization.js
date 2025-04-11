@@ -111,7 +111,7 @@ export const Localization = {
       else if (_status === "UNINITIALIZED") return "초기화되지 않음";
       else if (_status === "REBOOT")  return "재부팅 중";
       else if (_status === "REBOOT_IN_PROGRESS")  return "재부팅/재설정 중";
-      else if (_status === "SUSPENDED")   return "일시중지";
+      else if (_status === "SUSPENDED" || _status === "PAUSED")   return "일시중지";
       else if (_status === "SAVING_STATE")  return "일시중지 중";
       else if (_status === "MAINTENANCE") return "유지보수";
       else if (_status === "PREPARING_FOR_MAINTENANCE") return "유지보수 준비 중";
