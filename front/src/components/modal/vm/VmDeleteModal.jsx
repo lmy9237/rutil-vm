@@ -29,18 +29,18 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
 
   const diskQueries = useQueries({
     queries: ids.map((vmId) => ({
-      // queryKey: ["DisksFromVM", vmId],
+      queryKey: ['DisksFromVM', vmId],
       queryFn: async () => {
         try {
           const disks = await ApiManager.findDisksFromVM(vmId);
-          return disks || []; // fallback to empty array
+          return disks || [];
         } catch (error) {
           console.error(`Error fetching disks for VM ${vmId}`, error);
-          return []; // fallback
+          return [];
         }
-      }      
+      }
     })),
-  });
+  });  
 
   useEffect(() => {
     if (!diskQueries || !Array.isArray(diskQueries)) return;
