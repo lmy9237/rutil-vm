@@ -66,6 +66,10 @@ fun Connection.detachStorageDomainsToDataCenter(storageDomainId: String, dataCen
 }
 
 fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: String): Result<StorageDomain?> = runCatching {
+	if (this.findAllStorageDomains().getOrDefault(emptyList())
+			.nameDuplicateStorageDomain(storageDomain.name())) {
+		throw ErrorPattern.STORAGE_DOMAIN_DUPLICATE.toError()
+	}
 	val storageAdded: StorageDomain? =
 		this.srvStorageDomains().add().storageDomain(storageDomain).send().storageDomain()
 
@@ -104,6 +108,10 @@ fun Connection.importFcpStorageDomain(storageDomain: StorageDomain): Result<Stor
 
 // 도메인 관리(편집)
 fun Connection.updateStorageDomain(storageDomainId: String, storageDomain: StorageDomain): Result<StorageDomain?> = runCatching {
+	if (this.findAllStorageDomains().getOrDefault(emptyList())
+			.nameDuplicateStorageDomain(storageDomain.name(), storageDomainId)) {
+		throw ErrorPattern.STORAGE_DOMAIN_DUPLICATE.toError()
+	}
 	val storageDomainUpdated: StorageDomain? =
 		this.srvStorageDomain(storageDomainId).update().storageDomain(storageDomain).send().storageDomain()
 
@@ -410,17 +418,20 @@ fun Connection.findAllDiskProfilesFromStorageDomain(storageDomainId: String): Re
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-private fun Connection.srvPermissionsFromStorageDomain(sdId: String): AssignedPermissionsService =
-	this.srvStorageDomain(sdId).permissionsService()
+// private fun Connection.srvPermissionsFromStorageDomain(sdId: String): AssignedPermissionsService =
+// 	this.srvStorageDomain(sdId).permissionsService()
+//
+// fun Connection.findAllPermissionsFromStorageDomain(storageDomainId: String): Result<List<Permission>> = runCatching {
+// 	checkStorageDomainExists(storageDomainId)
+//
+// 	this.srvPermissionsFromStorageDomain(storageDomainId).list().send().permissions()
+//
+// }.onSuccess {
+// 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.PERMISSION, "목록조회", storageDomainId)
+// }.onFailure {
+// 	Term.STORAGE_DOMAIN.logFailWithin(Term.PERMISSION, "목록조회", it, storageDomainId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
 
-fun Connection.findAllPermissionsFromStorageDomain(storageDomainId: String): Result<List<Permission>> = runCatching {
-	checkStorageDomainExists(storageDomainId)
-
-	this.srvPermissionsFromStorageDomain(storageDomainId).list().send().permissions()
-
-}.onSuccess {
-	Term.STORAGE_DOMAIN.logSuccessWithin(Term.PERMISSION, "목록조회", storageDomainId)
-}.onFailure {
-	Term.STORAGE_DOMAIN.logFailWithin(Term.PERMISSION, "목록조회", it, storageDomainId)
-	throw if (it is Error) it.toItCloudException() else it
-}
+fun List<StorageDomain>.nameDuplicateStorageDomain(domainName: String, domainId: String? = null): Boolean =
+	this.filter { it.id() != domainId }.any { it.name() == domainName }

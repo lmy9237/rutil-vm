@@ -57,15 +57,15 @@ fun Connection.exportTemplate(templateId: String, exclusive: Boolean, toStorageD
 fun Connection.addTemplate(vmId: String, template: Template): Result<Template?> = runCatching {
 	val vm = checkVm(vmId)
 	if (vm.status() == VmStatus.UP) {
-		log.error("addTemplate ... 가상머신 up 상태에서는 템플릿 생성 불가")
-		return Result.failure(Error("가상머신 UP 상태에서는 템플릿 생성 불가"))
+		throw ErrorPattern.VM_STATUS_ERROR.toError()
+		// log.error("addTemplate ... 가상머신 up 상태에서는 템플릿 생성 불가")
+		// return Result.failure(Error("가상머신    상태에서는 템플릿 생성 불가"))
 	}
 
-	if (this.findAllTemplates()
-			.getOrDefault(listOf())
-			.templateHasDuplicateName(template.name())) {
-		return FailureType.DUPLICATE.toResult(Term.TEMPLATE.desc)
-	}
+	// if (this.findAllTemplates().getOrDefault(listOf())
+	// 		.templateHasDuplicateName(template.name())) {
+	// 	throw ErrorPattern.TEMPLATE_DUPLICATE.toError()
+	// }
 
 	val templateAdded: Template? =
 		this.srvTemplates().add().template(template)/*.clonePermissions(f).seal(seal)*/.send().template()
@@ -86,13 +86,12 @@ fun Connection.addTemplate(vmId: String, template: Template): Result<Template?> 
 fun Connection.updateTemplate(templateId: String, template: Template): Result<Template?> = runCatching {
 	checkTemplateExists(templateId)
 
-	if (this.findAllTemplates()
-			.getOrDefault(listOf())
-			.templateHasDuplicateName(template.name(), template.id())) {
-		return FailureType.DUPLICATE.toResult(Term.TEMPLATE.desc)
-	}
+	// if (this.findAllTemplates().getOrDefault(listOf())
+	// 		.templateHasDuplicateName(template.name(), template.id())) {
+	// 	throw ErrorPattern.TEMPLATE_DUPLICATE.toError()
+	// }
 	val templateUpdated: Template? =
-		this@updateTemplate.srvTemplate(templateId).update().template(template).send().template()
+		this.srvTemplate(templateId).update().template(template).send().template()
 
 	templateUpdated ?: throw ErrorPattern.TEMPLATE_NOT_FOUND.toError()
 }.onSuccess {
@@ -105,7 +104,7 @@ fun Connection.updateTemplate(templateId: String, template: Template): Result<Te
 fun Connection.removeTemplate(templateId: String): Result<Boolean> = runCatching {
 	val template = checkTemplate(templateId)
 
-	this@removeTemplate.srvTemplate(template.id()).remove().send()
+	this.srvTemplate(template.id()).remove().send()
 	true
 }.onSuccess {
 	Term.TEMPLATE.logSuccess("삭제", templateId)
@@ -172,10 +171,7 @@ fun Connection.findAllNicsFromTemplate(templateId: String, follow: String = ""):
 	this.srvNicsFromTemplate(templateId).list().apply {
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().nics()
-	// if (follow.isNotEmpty())
-	// 	this.srvNicsFromTemplate(templateId).list().follow(follow).send().nics()
-	// else
-	// 	this.srvNicsFromTemplate(templateId).list().send().nics()
+
 }.onSuccess {
 	Term.TEMPLATE.logSuccessWithin(Term.NIC, "목록조회", templateId)
 }.onFailure {

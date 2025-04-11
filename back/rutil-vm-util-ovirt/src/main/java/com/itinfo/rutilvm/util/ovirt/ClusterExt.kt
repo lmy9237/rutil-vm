@@ -53,7 +53,7 @@ fun List<Cluster>.nameDuplicateCluster(clusterName: String, clusterId: String? =
 fun Connection.addCluster(cluster: Cluster): Result<Cluster?> = runCatching {
 	if (this.findAllClusters().getOrDefault(emptyList())
 			.nameDuplicateCluster(cluster.name())) {
-		return FailureType.DUPLICATE.toResult(Term.CLUSTER.desc)
+		throw ErrorPattern.CLUSTER_DUPLICATE.toError()
 	}
 	val clusterAdded: Cluster? =
 		this.srvClusters().add().cluster(cluster).send().cluster()
@@ -69,7 +69,7 @@ fun Connection.addCluster(cluster: Cluster): Result<Cluster?> = runCatching {
 fun Connection.updateCluster(cluster: Cluster): Result<Cluster?> = runCatching {
 	if (this.findAllClusters().getOrDefault(emptyList())
 			.nameDuplicateCluster(cluster.name(), cluster.id())) {
-		return FailureType.DUPLICATE.toResult(Term.CLUSTER.desc)
+		throw ErrorPattern.CLUSTER_DUPLICATE.toError()
 	}
 	val clusterUpdated: Cluster? =
 		this.srvCluster(cluster.id()).update().cluster(cluster).send().cluster()
@@ -118,6 +118,7 @@ fun Connection.findAllHostsFromCluster(clusterId: String, follow: String = ""): 
 
 	this.findAllHosts(follow = follow).getOrDefault(emptyList())
 		.filter { it.cluster().id() == clusterId }
+
 }.onSuccess {
 	Term.CLUSTER.logSuccessWithin(Term.HOST, "목록조회")
 }.onFailure {
@@ -174,6 +175,7 @@ fun Connection.findNetworkFromCluster(clusterId: String, networkId: String): Res
 
 fun Connection.addNetworkFromCluster(clusterId: String, network: Network): Result<Network?> = runCatching {
 	this.srvCluster(clusterId).networksService().add().network(network).send().network()
+
 }.onSuccess {
 	Term.CLUSTER.logSuccessWithin(Term.NETWORK, "생성")
 }.onFailure {
@@ -186,6 +188,7 @@ private fun Connection.srvExternalNetworkProviders(clusterId: String): ClusterEx
 
 fun Connection.findAllExternalNetworkProviders(clusterId: String): Result<List<ExternalProvider>> = runCatching {
 	srvExternalNetworkProviders(clusterId).list().send().providers()
+
 }.onSuccess {
 	Term.EXTERNAL_NETWORK_PROVIDER.logSuccess("목록조회")
 }.onFailure {

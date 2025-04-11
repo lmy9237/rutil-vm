@@ -46,7 +46,7 @@ fun Connection.addVnicProfileFromNetwork(networkId: String, vnicProfile: VnicPro
 
 	if (this.findAllVnicProfiles().getOrDefault(listOf())
 			.nameDuplicateVnicProfileName(vnicProfile.name())) {
-		return FailureType.DUPLICATE.toResult(Term.VNIC_PROFILE.desc)
+		throw ErrorPattern.VNIC_PROFILE_DUPLICATE.toError()
 	}
 	this.srvVnicProfilesFromNetwork(networkId).add().profile(vnicProfile).send().profile()
 
@@ -58,6 +58,11 @@ fun Connection.addVnicProfileFromNetwork(networkId: String, vnicProfile: VnicPro
 }
 
 fun Connection.updateVnicProfile(vnicProfile: VnicProfile): Result<VnicProfile?> = runCatching {
+	if (this.findAllVnicProfiles().getOrDefault(listOf())
+			.nameDuplicateVnicProfileName(vnicProfile.name(), vnicProfile.id())) {
+		throw ErrorPattern.VNIC_PROFILE_DUPLICATE.toError()
+	}
+
 	this.srvVnicProfile(vnicProfile.id()).update().profile(vnicProfile).send().profile()
 
 }.onSuccess {

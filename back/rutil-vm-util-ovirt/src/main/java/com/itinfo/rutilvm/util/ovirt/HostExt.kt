@@ -52,31 +52,29 @@ fun Connection.addHost(
 ): Result<Host?> = runCatching {
 	if (this.findAllHosts().getOrDefault(emptyList())
 			.nameDuplicateHost(host.name())) {
-		return FailureType.DUPLICATE.toResult(Term.HOST.desc)
+		throw ErrorPattern.HOST_DUPLICATE.toError()
 	}
 
 	log.info("배포작업: {}", deployHostedEngine)
-	val hostAdded: Host =
+	val hostAdded: Host? =
 		srvHosts().add().deployHostedEngine(deployHostedEngine).reboot(true).activate(true).host(host).send().host()
 
 	// 상태 up 될때까지 기다리기
 //	this.expectHostStatus(hostAdded.id(), HostStatus.UP)
 
-	log.info("Host 생성 끝")
-	hostAdded
+	hostAdded  ?: throw ErrorPattern.HOST_NOT_FOUND.toError()
 }.onSuccess {
 	Term.HOST.logSuccess("생성")
 }.onFailure {
 	log.error("호스트 생성 실패")
 	Term.HOST.logFail("생성", it)
-	log.error("왜냐고")
 	throw if (it is Error) it.toItCloudException() else it
 }
 
 fun Connection.updateHost(host: Host): Result<Host?> = runCatching {
 	if(this.findAllHosts().getOrDefault(emptyList())
 			.nameDuplicateHost(host.name(), host.id())) {
-		return FailureType.DUPLICATE.toResult(Term.HOST.desc)
+		throw ErrorPattern.HOST_DUPLICATE.toError()
 	}
 	val hostUpdated: Host? =
 		this.srvHost(host.id()).update().host(host).send().host()
@@ -154,7 +152,8 @@ fun Connection.deactivateHost(hostId: String): Result<Boolean> = runCatching {
 	val host = checkHost(hostId)
 
 	if (host.status() == HostStatus.MAINTENANCE) {
-		throw Error("deactivateHost 실패 ... $hostId 가 이미 유지관리 상태") // return 대신 throw
+		throw ErrorPattern.HOST_IS_MAINTENANCE.toError()
+		// throw Error("deactivateHost 실패 ... $hostId 가 이미 유지관리 상태") // return 대신 throw
 	}
 	srvHost(host.id()).deactivate().send()
 
@@ -173,7 +172,8 @@ fun Connection.deactivateHost(hostId: String): Result<Boolean> = runCatching {
 fun Connection.activateHost(hostId: String): Result<Boolean> = runCatching {
 	val host = checkHost(hostId)
 	if (host.status() == HostStatus.UP) {
-		return Result.failure(Error("activateHost 실패 ... ${host.name()}가 이미 활성 상태 "))
+		throw ErrorPattern.HOST_ACTIVE.toError()
+		// return Result.failure(Error("activateHost 실패 ... ${host.name()}가 이미 활성 상태 "))
 	}
 	srvHost(host.id()).activate().send()
 
@@ -223,6 +223,7 @@ fun Connection.commitNetConfigHost(hostId: String): Result<Boolean> = runCatchin
 fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
 	this.srvHost(hostId).enrollCertificate().async(true).send()
+
 	true
 
 }.onSuccess {
@@ -235,10 +236,12 @@ fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching 
 fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
 	val host: Host = checkHost(hostId)
 	if (host.status() !== HostStatus.UP) {
-		return Result.failure(Error("activeGlobalHaFromHost 실패 ... ${host.name()}가 비활성화 된 상태"))
+		throw ErrorPattern.HOST_ACTIVE.toError()
+		// return Result.failure(Error("activeGlobalHaFromHost 실패 ... ${host.name()}가 비활성화 된 상태"))
 	}
 	if (host.hostedEnginePresent() && host.hostedEngine().globalMaintenancePresent() && host.hostedEngine().globalMaintenance()) {
-		return Result.failure(Error("activeGlobalHaFromHost 실패 ... ${host.name()}가 이미 글로벌 HA 된 상태"))
+		throw ErrorPattern.HOST_IS_GLOBAL_HA.toError()
+		// return Result.failure(Error("activeGlobalHaFromHost 실패 ... ${host.name()}가 이미 글로벌 HA 된 상태"))
 	}
 	true
 }.onSuccess {
@@ -273,6 +276,7 @@ fun Connection.findPowerManagementFromHost(hostId: String, fenceType: FenceType)
 fun Connection.migrateHostFromVm(vmId: String, host: Host): Result<Boolean> = runCatching {
 	this.srvVm(vmId).migrate().host(host).send()
 	true
+
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.HOST,"이동", vmId)
 }.onFailure {
@@ -630,13 +634,13 @@ fun Connection.findAllHostDeviceFromHost(hostId: String): Result<List<HostDevice
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.findAllPermissionFromHost(hostId: String): Result<List<Permission>> = runCatching {
-	checkHostExists(hostId)
-
-	this.srvHost(hostId).permissionsService().list().send().permissions()
-}.onSuccess {
-	Term.HOST.logSuccessWithin(Term.PERMISSION, "목록조회", hostId)
-}.onFailure {
-	Term.HOST.logFailWithin(Term.PERMISSION, "목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
+// fun Connection.findAllPermissionFromHost(hostId: String): Result<List<Permission>> = runCatching {
+// 	checkHostExists(hostId)
+//
+// 	this.srvHost(hostId).permissionsService().list().send().permissions()
+// }.onSuccess {
+// 	Term.HOST.logSuccessWithin(Term.PERMISSION, "목록조회", hostId)
+// }.onFailure {
+// 	Term.HOST.logFailWithin(Term.PERMISSION, "목록조회", it, hostId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }

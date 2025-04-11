@@ -117,10 +117,10 @@ fun Connection.moveDisk(diskId: String, domainId: String): Result<Boolean> = run
 
 	this.srvDisk(diskId).move().storageDomain(storageDomain).send()
 
-	if (!expectDiskStatus(diskId)) {
-		log.error("디스크 이동 실패 ... 시간 초과")
-		return Result.failure(Error("디스크 이동 실패 ... 시간 초과"))
-	}
+	// if (!expectDiskStatus(diskId)) {
+	// 	log.error("디스크 이동 실패 ... 시간 초과")
+	// 	return Result.failure(Error("디스크 이동 실패 ... 시간 초과"))
+	// }
 	true
 }.onSuccess {
 	Term.DISK.logSuccess("이동")
@@ -136,10 +136,10 @@ fun Connection.copyDisk(diskId: String, diskAlias: String, domainId: String): Re
 
 	this.srvDisk(diskId).copy().disk(DiskBuilder().id(diskId).alias(diskAlias)).storageDomain(storageDomain).send()
 
-	if (!expectDiskStatus(disk.id())) {
-		log.error("디스크 복사 실패 ... 시간 초과")
-		return Result.failure(Error("시간 초과"))
-	}
+	// if (!expectDiskStatus(disk.id())) {
+	// 	log.error("디스크 복사 실패 ... 시간 초과")
+	// 	return Result.failure(Error("시간 초과"))
+	// }
 	true
 }.onSuccess {
 	Term.DISK.logSuccess("복사")
@@ -154,6 +154,7 @@ fun Connection.refreshLunDisk(diskId: String, hostId: String): Result<Boolean> =
 
 	this.srvDisk(diskId).refreshLun().host(host).send()
 	true
+
 }.onSuccess {
 	Term.DISK.logSuccess("Lun 새로고침")
 }.onFailure {
@@ -164,9 +165,9 @@ fun Connection.refreshLunDisk(diskId: String, hostId: String): Result<Boolean> =
 // 디스크 이미지 업로드하기 위해 하는 세팅
 fun Connection.uploadSetDisk(disk: Disk): Result<String> = runCatching {
 	// 디스크 생성
-	val diskUpload: Disk = this.addDisk(disk).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
+	val diskUpload: Disk =
+		this.addDisk(disk).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
 
-	log.info("diskupload1")
 	// 디스크 ok 상태여야 이미지 업로드 가능
 	this.expectDiskStatus(diskUpload.id())
 

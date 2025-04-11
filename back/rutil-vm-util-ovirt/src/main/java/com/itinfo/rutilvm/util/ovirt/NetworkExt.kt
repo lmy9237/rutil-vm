@@ -116,9 +116,9 @@ fun Connection.findAllNetworkLabelsFromNetwork(networkId: String): Result<List<N
 	this.srvNetworkLabelsFromNetwork(networkId).list().send().labels()
 
 }.onSuccess {
-	log.info("{} 내 {} 목록조회 완료 ... {}", Term.NETWORK, Term.NETWORK_LABEL, networkId)
+	Term.NETWORK.logSuccessWithin(Term.NETWORK_LABEL, "목록조회", networkId)
 }.onFailure {
-	log.info("{} 내 {} 목록조회 실패 ... 이유: {}", Term.NETWORK, Term.NETWORK_LABEL, it.localizedMessage)
+	Term.NETWORK.logFailWithin(Term.NETWORK_LABEL, "상세조회", it, networkId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
@@ -126,9 +126,11 @@ fun Connection.addNetworkLabelFromNetwork(networkId: String, networkLabel: Netwo
 	this.srvNetworkLabelsFromNetwork(networkId).add().label(networkLabel).send().label()
 
 }.onSuccess {
-	log.info("{} 내 {} 생성 완료 ... {}", Term.NETWORK, Term.NETWORK_LABEL, networkLabel.name())
+	Term.NETWORK.logSuccessWithin(Term.NETWORK_LABEL, "생성", networkLabel.name())
+	// log.info("{} 내 {} 생성 완료 ... {}", Term.NETWORK, Term.NETWORK_LABEL, networkLabel.name())
 } .onFailure {
-	log.error("{} 내 {} 생성 실패... {}", Term.NETWORK, Term.NETWORK_LABEL, it.localizedMessage)
+	Term.NETWORK.logFailWithin(Term.NETWORK_LABEL, "생성", it, networkLabel.name())
+	// log.error("{} 내 {} 생성 실패... {}", Term.NETWORK, Term.NETWORK_LABEL, it.localizedMessage)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
@@ -146,19 +148,19 @@ fun Connection.removeNetworkLabelFromNetwork(networkId: String, networkLabelId: 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-private fun Connection.srvPermissionsFromNetwork(networkId: String): AssignedPermissionsService =
-	this.srvNetwork(networkId).permissionsService()
-
-fun Connection.findAllPermissionsFromNetwork(networkId: String, follow: String = ""): Result<List<Permission>> = runCatching {
-	checkNetworkExists(networkId)
-
-	this.srvPermissionsFromNetwork(networkId).list().apply {
-		if (follow.isNotEmpty()) follow(follow)
-	}.send().permissions()
-
-}.onSuccess {
-	Term.NETWORK.logSuccessWithin(Term.PERMISSION, "목록조회", networkId)
-}.onFailure {
-	Term.NETWORK.logFailWithin(Term.PERMISSION, "목록조회", it, networkId)
-	throw if (it is Error) it.toItCloudException() else it
-}
+// private fun Connection.srvPermissionsFromNetwork(networkId: String): AssignedPermissionsService =
+// 	this.srvNetwork(networkId).permissionsService()
+//
+// fun Connection.findAllPermissionsFromNetwork(networkId: String, follow: String = ""): Result<List<Permission>> = runCatching {
+// 	checkNetworkExists(networkId)
+//
+// 	this.srvPermissionsFromNetwork(networkId).list().apply {
+// 		if (follow.isNotEmpty()) follow(follow)
+// 	}.send().permissions()
+//
+// }.onSuccess {
+// 	Term.NETWORK.logSuccessWithin(Term.PERMISSION, "목록조회", networkId)
+// }.onFailure {
+// 	Term.NETWORK.logFailWithin(Term.PERMISSION, "목록조회", it, networkId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }

@@ -41,7 +41,7 @@ fun Connection.findDataCenter(dcId: String, follow: String = ""): Result<DataCen
 fun Connection.addDataCenter(dataCenter: DataCenter): Result<DataCenter?> = runCatching {
 	if (this.findAllDataCenters().getOrDefault(emptyList())
 			.nameDuplicateDataCenter(dataCenter.name())) {
-		return FailureType.DUPLICATE.toResult(Term.DATACENTER.desc)
+		throw ErrorPattern.DATACENTER_DUPLICATE.toError()
 	}
 	val dataCenterAdded: DataCenter? =
 		this.srvDataCenters().add().dataCenter(dataCenter).send().dataCenter()
@@ -57,7 +57,7 @@ fun Connection.addDataCenter(dataCenter: DataCenter): Result<DataCenter?> = runC
 fun Connection.updateDataCenter(dataCenter: DataCenter): Result<DataCenter?> = runCatching {
 	if (this.findAllDataCenters().getOrDefault(emptyList())
 			.nameDuplicateDataCenter(dataCenter.name(), dataCenter.id())) {
-		return FailureType.DUPLICATE.toResult(Term.DATACENTER.desc)
+		throw ErrorPattern.DATACENTER_DUPLICATE.toError()
 	}
     val dataCenterUpdated: DataCenter? =
 		this.srvDataCenter(dataCenter.id()).update().dataCenter(dataCenter).send().dataCenter()
@@ -72,9 +72,10 @@ fun Connection.updateDataCenter(dataCenter: DataCenter): Result<DataCenter?> = r
 
 fun Connection.removeDataCenter(dataCenterId: String): Result<Boolean> = runCatching {
 	val dataCenter = checkDataCenter(dataCenterId)
-
 	this.srvDataCenter(dataCenter.id()).remove().force(true).send()
-	this.expectDataCenterDeleted(dataCenterId)
+
+	// this.expectDataCenterDeleted(dataCenterId)
+	true
 }.onSuccess {
 	Term.DATACENTER.logSuccess("삭제")
 }.onFailure {
@@ -177,11 +178,13 @@ fun Connection.activateAttachedStorageDomainFromDataCenter(dataCenterId: String,
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
 	if(storageDomain.status() == StorageDomainStatus.ACTIVE){
-		throw Error("activate 실패 ... $storageDomainId 가 이미 활성 상태") // return 대신 throw
+		throw ErrorPattern.STORAGE_DOMAIN_ACTIVE.toError()
+		// throw Error("activate 실패 ... $storageDomainId 가 이미 활성 상태") // return 대신 throw
 	}
 
 	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).activate().send()
 	true
+
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"활성화", dataCenterId)
 }.onFailure {
@@ -194,12 +197,14 @@ fun Connection.deactivateAttachedStorageDomainFromDataCenter(dataCenterId: Strin
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
 	if(storageDomain.status() == StorageDomainStatus.MAINTENANCE){
-		throw Error("maintenance 실패 ... $storageDomainId 가 이미 유지관리 상태") // return 대신 throw
+		throw ErrorPattern.STORAGE_DOMAIN_MAINTENANCE.toError()
+		// throw Error("maintenance 실패 ... $storageDomainId 가 이미 유지관리 상태") // return 대신 throw
 	}
 
 	// force == ovf 업데이트 여부
 	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).deactivate().force(true).send()
 	true
+
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"비활성화", dataCenterId)
 }.onFailure {

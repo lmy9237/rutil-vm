@@ -346,17 +346,6 @@ interface ItStorageService {
 	@Throws(Error::class)
 	fun findAllEventsFromStorageDomain(storageDomainId: String): List<EventVo>
 
-	/**
-	 * [ItStorageService.findAllPermissionsFromStorageDomain]
-	 * 스토리지도메인 - 권한
-	 *
-	 * @param storageDomainId [String] 스토리지 도메인 Id
-	 * @return List<[PermissionVo]> 권한 목록
-	 */
-	@Throws(Error::class)
-	@Deprecated("나중구현")
-	fun findAllPermissionsFromStorageDomain(storageDomainId: String): List<PermissionVo>
-
 }
 
 @Service
@@ -653,14 +642,14 @@ class StorageServiceImpl(
 	}
 
 
-	@Deprecated("나중구현")
-	@Throws(Error::class)
-	override fun findAllPermissionsFromStorageDomain(storageDomainId: String): List<PermissionVo> {
-		log.info("findAllPermissionsFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val res: List<Permission> = conn.findAllPermissionsFromStorageDomain(storageDomainId)
-			.getOrDefault(emptyList())
-		return res.toPermissionVos(conn)
-	}
+	// @Deprecated("나중구현")
+	// @Throws(Error::class)
+	// override fun findAllPermissionsFromStorageDomain(storageDomainId: String): List<PermissionVo> {
+	// 	log.info("findAllPermissionsFromStorageDomain ... storageDomainId: {}", storageDomainId)
+	// 	val res: List<Permission> = conn.findAllPermissionsFromStorageDomain(storageDomainId)
+	// 		.getOrDefault(emptyList())
+	// 	return res.toPermissionVos(conn)
+	// }
 
 
 	companion object {
