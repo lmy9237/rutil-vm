@@ -2972,6 +2972,29 @@ const ApiManager = {
     method: "GET",
     url: ENDPOINTS.FIND_JOB(jobId)
   }),
+  /**
+   * @name ApiManager.addJob
+   * @description (외부) 작업 추가
+   * 
+   * @param {Object} job 추가할 작업 정보
+   *
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  addJob: async(job) => makeAPICall({
+    method: "POST", 
+    url: ENDPOINTS.FIND_ALL_JOBS(), 
+    data: job
+  }),
+  /**
+   * @name ApiManager.endJob
+   * @description (외부) 작업 종료
+   * 
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  endJob: async(jobId) => makeAPICall({
+    method: "PUT", 
+    url: ENDPOINTS.END_JOB(jobId),
+  }),
   //#endregion: Job
 
 

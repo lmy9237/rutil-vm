@@ -34,27 +34,24 @@ const LabelInput = ({
    * 
    * @returns 
    */
-  const cNameByType = () => {
-    return `input-${type}`;
-  }
+  const cNameByType = () => `input-${type}`;
   
   return (
-    <>
-      <div className={cNameByType()}>
-        <label htmlFor={id}>{label}</label>
-        <input
-          id={id}
-          type={type}
-          placeholder={label}
-          value={value}
-          autoFocus={autoFocus}
-          onChange={onChange}
-          onInvalid={onInvalid}
-          disabled={props.disabled}
-          required={required}
-        />
-      </div>
-    </>
+    <div className={cNameByType()}>
+      <label htmlFor={id}>{label}</label>
+      <input
+        id={id}
+        type={type}
+        placeholder={label}
+        value={value}
+        autoFocus={autoFocus}
+        onChange={onChange}
+        onInvalid={onInvalid}
+        disabled={props.disabled}
+        required={required}
+      />
+    </div>
   );
 };
+
 export default LabelInput;

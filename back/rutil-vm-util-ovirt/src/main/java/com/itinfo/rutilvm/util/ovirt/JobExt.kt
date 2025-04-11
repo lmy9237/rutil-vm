@@ -41,6 +41,35 @@ fun Connection.findJob(jobId: String, follow: String = ""): Result<Job?> = runCa
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun Connection.addJob(job: Job): Result<Job?> = runCatching {
+	this.srvJobs().add().job(job).send().job()
+}.onSuccess {
+	Term.JOB.logSuccess("생성")
+}.onFailure {
+	Term.JOB.logFail("생성", it)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.endJob(jobId: String): Result<Boolean?> = runCatching {
+	this.srvJob(jobId).end().send()
+	true
+}.onSuccess {
+	Term.JOB.logSuccess("종료")
+}.onFailure {
+	Term.JOB.logFail("종료", it)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.clearJob(jobId: String): Result<Boolean?> = runCatching {
+	this.srvJob(jobId).clear().send()
+	true
+}.onSuccess {
+	Term.JOB.logSuccess("지우기")
+}.onFailure {
+	Term.JOB.logFail("지우기", it)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 private fun Connection.srvSteps(jobId: String): StepsService =
 	this.srvJob(jobId).stepsService()
 

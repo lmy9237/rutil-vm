@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
-import {
-  useAllActiveDataCenters,
-  useAllActiveDomainsFromDataCenter,
-  useAllDiskProfilesFromDomain,
-  useHostsFromDataCenter,
-  useUploadDisk,
-} from "../../../api/RQHook";
 import "../domain/MDomain.css";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
@@ -15,6 +8,14 @@ import Localization from "../../../utils/Localization";
 import { checkName, convertBytesToGB } from "../../../util";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import Logger from "../../../utils/Logger";
+import {
+  useAllActiveDataCenters,
+  useAllActiveDomainsFromDataCenter,
+  useAllDiskProfilesFromDomain,
+  useHostsFromDataCenter,
+  useUploadDisk,
+  useAddJob,
+} from "../../../api/RQHook";
 
 const sizeToGB = (data) => Math.ceil(data / Math.pow(1024, 3));
 const onlyFileName = (fileName) => {
@@ -31,8 +32,16 @@ const initialFormState = {
   // sharable: false,
 };
 
+const initialJobFormState = {
+  name: "디스크 파일 업로드",
+  description: "(RutilVM에서) 디스크 파일 업로드",
+  status: 'STARTED',
+}
+
 const DiskUploadModal = ({ isOpen, onClose }) => {
   const [formState, setFormState] = useState(initialFormState);
+  const [jobFormState, setJobFormState] = useState(initialJobFormState)
+
   const [file, setFile] = useState(null);
 
   const [dataCenterVo, setDataCenterVo] = useState({id: "", name: "" });
@@ -40,17 +49,19 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
   const [diskProfileVo, setDiskProfileVo] = useState({id: "", name: "" });
   const [hostVo, setHostVo] = useState({id: "", name: "" });
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`디스크 업로드 완료`);
-  };
+  const {
+    mutate: addJob
+  } = useAddJob({
+    ...jobFormState,
+    description: `(RutilVM에서) 디스크 파일 업로드 (파일명: ${file && onlyFileName(file?.name)})`,
+  }, () => onClose(), () => onClose());
+
   const { mutate: uploadDisk } = useUploadDisk((progress, toastId) => {
     onClose()
     toast.loading(`디스크 업로드 중 ... ${progress}%`, {
       id: toastId,
     });
-    
-  }, onSuccess, () => onClose());
+  }, () => onClose(), () => onClose());
 
   // 전체 데이터센터 가져오기
   const {
@@ -112,7 +123,6 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
 
   const validateForm = () => {
     checkName(formState.alias)
-    
     if (!formState.size) return "크기를 입력해주세요.";
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     if (!domainVo.id) return "스토리지 도메인을 선택해주세요.";
@@ -124,7 +134,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
     const error = validateForm();
     if (error) return toast.error(error);
 
-    const sizeToBytes =  parseInt(formState.size, 10) * 1024 * 1024 * 1024;    
+    const sizeToBytes = parseInt(formState.size, 10) * 1024 * 1024 * 1024;    
 
     const dataToSubmit = {
       ...formState,
@@ -139,8 +149,9 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
     diskData.append("file", file); // file 추가
     diskData.append("diskImage", new Blob([JSON.stringify(dataToSubmit)], { type: "application/json" })); // JSON 데이터 추가
 
-    Logger.debug(`디스크 업로드 데이터 ${diskData}`);
+    Logger.debug(`DiskUploadModal > 디스크 업로드 데이터 ${diskData}`);
     uploadDisk(diskData);
+    addJob()
   };
 
   return (
@@ -154,21 +165,20 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
       <div className="storage-upload-first f-btw">
         <p>파일 선택</p>
         <div>
-          <input
+          <input id="file"
             type="file"
-            id="file"
-            accept=".iso"
+            accept=".iso,.qcow2,.vhd,.img,.raw"
             onChange={(e) => {
               const uploadedFile = e.target.files[0];
-              if (uploadedFile) {
-                setFile(uploadedFile); // 파일 저장
-                setFormState((prev) => ({
-                  ...prev,
-                  alias: onlyFileName(uploadedFile.name),
-                  description: uploadedFile.name,
-                  size: uploadedFile.size, // bytes 단위
-                }));
-              }
+              if (!uploadedFile) return
+
+              setFile(uploadedFile); // 파일 저장
+              setFormState((prev) => ({
+                ...prev,
+                alias: onlyFileName(uploadedFile.name),
+                description: uploadedFile.name,
+                size: uploadedFile.size, // bytes 단위
+              }));
             }}
           />
         </div>
@@ -190,8 +200,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                 value={formState.alias}
                 onChange={handleInputChange("alias")}
               />
-              <LabelInput
-                label="설명"
+              <LabelInput label={Localization.kr.DESCRIPTION}
                 value={formState.description}
                 onChange={handleInputChange("description")}
               />

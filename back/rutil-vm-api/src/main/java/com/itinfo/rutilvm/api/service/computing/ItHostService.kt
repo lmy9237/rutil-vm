@@ -46,7 +46,6 @@ interface ItHostService {
 	 * @return [HostVo]?
 	 */
 	@Throws(Error::class)
-	// fun add(hostVo: HostVo): HostVo?
 	fun add(hostVo: HostVo, deployHostedEngine: Boolean?): HostVo?
 	/**
 	 * [ItHostService.update]

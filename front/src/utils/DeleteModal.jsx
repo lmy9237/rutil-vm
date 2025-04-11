@@ -42,7 +42,7 @@ const DeleteModal = ({
         onSuccess: () => {
           if (ids.length === 1 || index === ids.length - 1) {
             onClose();
-            toast.success(`${label} 삭제 완료`);
+            toast.success(`[200] ${label} 삭제 요청완료`);
   
             const currentPath = location.pathname;
             const uuidRegex = /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
@@ -56,7 +56,7 @@ const DeleteModal = ({
           }
         },
         onError: (error) => {
-          toast.error(`${label} 삭제 실패: ${error.message}`);
+          toast.error(`${label} 삭제 요청완료: ${error.message}`);
         },
       });
     });

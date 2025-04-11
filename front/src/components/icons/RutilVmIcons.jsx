@@ -658,13 +658,12 @@ export const status2Icon = (
     case "UNASSIGNED": 
     case "SAVING_STATE": 
     case "RESTORING_STATE": 
-    case "MIGRATING":                               iconDef = rvi16RebootLined();break;
+    case "MIGRATING":                              iconDef = rvi16RebootLined();break;
     case "REBOOT": 
-    case "PREPARING_FOR_MAINTENANCE":               iconDef = rvi16Refresh();break;
-
+    case "PREPARING_FOR_MAINTENANCE":              iconDef = rvi16Refresh();break;
+    case "LOCKED":                                 iconDef = rvi16Lock();break;
     case "SUSPENDED":                              iconDef = rvi16Pause;break;
     case "NON_OPERATIONAL":                        iconDef = rvi16NonOperational;break;
-    case "LOCKED":
     case "UNKNOWN":
     default:                                       iconDef = rvi16QuestionMark();break;
   }

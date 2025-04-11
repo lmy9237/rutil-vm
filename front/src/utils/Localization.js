@@ -63,6 +63,9 @@ export const Localization = {
     TIMEZONE: "시간대",
     DATE: "날짜",
     DATE_CREATED: "생성일자",
+    HOUR: "시간",
+    MINUTE: "분",
+    SECOND: "초",
     SEARCH: "검색",
     CREATE: "생성",
     UPDATE: "편집",
@@ -83,6 +86,20 @@ export const Localization = {
     PLACEHOLDER_USERNAME: "사용자명을 입력하세요.",
     PLACEHOLDER_PASSWORD: "비밀번호를 입력하세요.",
     NO_INFO: "🤷‍♂️ 내용이 없습니다",
+
+    renderTime(milliseconds){
+      const hours = Math.floor(milliseconds / 3600000);
+      const minutes = Math.floor((milliseconds % 3600000) / 60000);
+      const seconds = Math.floor((milliseconds % 60000) / 1000);
+    
+      let result = "";
+    
+      if (hours > 0) result += `${hours}시간 `;
+      if (minutes > 0) result += `${minutes}분 `;
+      if (seconds > 0 || hours > 0 || minutes > 0) result += `${seconds}초`;
+    
+      return result.trim();
+    },
 
     renderStatus(status = "") {
       const _status = status?.toUpperCase() ?? "";
@@ -106,6 +123,7 @@ export const Localization = {
       else if (_status === "UNATTACHED")  return "붙어있지 않음";
       else if (_status === "RESTORING_STATE")  return "복구 중";
       else if (_status === "MIGRATING")  return "마이그레이션 중";
+      else if (_status === "LOCKED")  return "잠김";
       else if (_status === "STARTED")  return "시작됨";
       else if (_status === "FAILED")  return "실패";
       else if (_status === "FINISHED")  return "완료";
@@ -120,7 +138,7 @@ export const Localization = {
       else if (_severity === "WARNING")     return "경고";
       else if (_severity === "NORMAL")      return "정상";
       return _severity;
-    }
+    },
   }
 }
 

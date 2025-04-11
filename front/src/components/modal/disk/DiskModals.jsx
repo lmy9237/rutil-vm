@@ -5,8 +5,6 @@ import DiskUploadModal from "./DiskUploadModal";
 import DiskActionModal from "./DiskActionModal";
 import { useDeleteDisk } from "../../../api/RQHook";
 import "./MDisk.css";
-import Localization from "../../../utils/Localization";
-import toast from "react-hot-toast";
 
 const DiskModals = ({ 
   activeModal, 

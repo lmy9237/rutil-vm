@@ -4661,6 +4661,7 @@ export const useUploadDisk = (
       const res = await ApiManager.uploadDisk(diskData, inProgress);
       const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useUploadDisk ... diskData: ${JSON.stringify(diskData, null, 2)}`);
+      toast.success(`[200] 디스크 업로드 요청완료`)
       return _res;
     },
     onSuccess: (res) => {
@@ -4837,13 +4838,18 @@ export const useAllJobs = (
   }
 });
 
-
+/**
+ * @name useJob
+ * @description 작업 상세조회 useQuery훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
 export const useJob = (
   jobId,
   mapPredicate=(e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allJobs'],
+  queryKey: ['job', jobId],
   queryFn: async () => {
     const res = await ApiManager.findJob(jobId)
     const _res = validate(res) ?? {}
@@ -4852,6 +4858,71 @@ export const useJob = (
   },
   enabled: !!jobId
 });
+
+/**
+ * @name useAddJob
+ * @description 작업 생성 useQuery훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
+export const useAddJob = (
+  job,
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const res = await ApiManager.addJob(job)
+      const _res = validate(res) ?? {}
+      toast.success(`[200] 작업 생성 요청 성공`)
+      Logger.debug(`RQHook > useAddJob ... job: ${JSON.stringify(job, null ,2)}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddJob ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('allJobs');
+      queryClient.invalidateQueries(['job', res.id]); // 수정된 네트워크 상세 정보 업데이트
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  })
+}
+
+/**
+ * @name useAddJob
+ * @description 작업 생성 useQuery훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
+export const useEndJob = (
+  jobId,
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const res = await ApiManager.endJob(jobId)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddJob ... jobId: ${jobId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddJob ... res: ${JSON.stringify(res, null, 2)}`);
+      queryClient.invalidateQueries('allJobs');
+      queryClient.invalidateQueries(['job', jobId]); // 수정된 네트워크 상세 정보 업데이트
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  })
+}
 //#endregion: job
 
 

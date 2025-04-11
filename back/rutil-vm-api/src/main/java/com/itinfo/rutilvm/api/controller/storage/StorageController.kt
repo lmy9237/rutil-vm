@@ -61,8 +61,6 @@ class StorageController: BaseController() {
 		return ResponseEntity.ok(iDomain.findOne(storageDomainId))
 	}
 
-
-	// 생성
 	@ApiOperation(
 		httpMethod="POST",
 		value="스토리지 도메인 생성",

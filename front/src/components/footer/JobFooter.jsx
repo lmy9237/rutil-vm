@@ -6,6 +6,9 @@ import { useAllJobs } from "../../api/RQHook";
 import Spinner from "../common/Spinner";
 import TableRowNoData from "../table/TableRowNoData";
 import "./JobFooter.css";
+import SelectedIdView from "../common/SelectedIdView";
+import { formatNumberWithCommas } from "../../util";
+
 
 /**
  * @name JobFooter
@@ -14,7 +17,6 @@ import "./JobFooter.css";
  * @returns {JSX.Element} Footer
  */
 const JobFooter = () => {
-  const { footerVisible, toggleFooterVisible } = useUIState();
   const {
     data: jobs = [],
     isLoading: isJobsLoading,
@@ -23,16 +25,21 @@ const JobFooter = () => {
     refetch: refetchJobs
   } = useAllJobs((e) => ({ ...e }))
 
+
   // job 데이터 변환
-  const transformedData = jobs.map((e) => ({
+  const transformedData = (!Array.isArray(jobs) ? [] : jobs).map((e) => ({
     ...e,
-    isFinished: e?.status !== "STARTED" || e?.status !== "FAILED",
+    isFinished: e?.status === "FINISHED" || e?.status === "FAILED" ,
     duration: '',
     description: e?.description,
     status: e?.status,
     startTime: e?.startTime,
     endTime: e?.endTime,
   }));
+  
+  const [selectedJobs, setSelectedJobs] = useState([]);
+
+  const { footerVisible, toggleFooterVisible } = useUIState();
 
   // 드레그
   const footerBarHeight = 40;
@@ -105,7 +112,7 @@ const JobFooter = () => {
       >
         <div className="footer-nav">
           <div className="section-table-outer p-0.5">
-            <table>
+            <table id="table-job">
               <thead>
                 <tr>
                   {/* <th>{Localization.kr.TARGET} <FontAwesomeIcon icon={faFilter} fixedWidth /></th> */}
@@ -113,6 +120,7 @@ const JobFooter = () => {
                   <th>{Localization.kr.STATUS}</th>
                   <th>시작 {Localization.kr.TIME}</th>
                   <th>종료 {Localization.kr.TIME}</th>
+                  <th>총 소요 {Localization.kr.TIME} (ms)</th>
                 </tr>
               </thead>
               <tbody>
@@ -120,15 +128,19 @@ const JobFooter = () => {
                   <TableRowNoData colLen={4} />
                 ) : transformedData.map((job) => (
                   <tr key={job?.id}>
-                    <td>{!job.isFinished && <Spinner/>}{job?.description}</td>
+                    <td className="f-start">{!job?.isFinished && <Spinner/>}{job?.description}</td>
+                    {/* <td>{!job?.isFinished && <Spinner/>}{job?.description}</td> */}
                     <td>{Localization.kr.renderStatus(job?.status)}</td>
                     <td>{job?.startTime}</td>
                     <td>{job?.endTime}</td>
+                    <td>{Localization.kr.renderTime(job?.timestamp)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+
+          <SelectedIdView items={selectedJobs} />
         </div>
       </div>
     </div>

@@ -289,6 +289,7 @@ const ENDPOINTS = {
   //#region: Job
   FIND_ALL_JOBS: () =>                                                     `${ENDPOINT_API_V1}/jobs/`,
   FIND_JOB: (jobId) =>                                                     `${ENDPOINT_API_V1}/jobs/${jobId}`,
+  END_JOB: (jobId) =>                                                      `${ENDPOINT_API_V1}/jobs/${jobId}/end`,
   //#endregion: Job
   
   //#region: User

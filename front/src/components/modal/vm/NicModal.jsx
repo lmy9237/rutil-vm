@@ -43,20 +43,21 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
   const { mutate: editNicFromVM } = useEditNicFromVM();
 
   // 가상머신 내 네트워크인터페이스 상세
-  const { data: nicsdetail } = useNetworkInterfaceFromVM(vmId, nicId);
+  const {
+    data: nicsdetail 
+  } = useNetworkInterfaceFromVM(vmId, nicId);
 
   // 모든 vnic프로파일 목록
   // TODO: 수정필요
-  const { data: vnics, isLoading: vnicLoading } = useAllVnicProfiles((e) => ({
+  const {
+    data: vnics,
+    isLoading: vnicLoading
+  } = useAllVnicProfiles((e) => ({
     ...e,
   }));
 
-  const handleInputChange =
-    (field, value = null) =>
-    (e) => {
-      Logger.debug(
-        `NicModal > handleInputChange ... field: ${field}, value: ${value}`
-      );
+  const handleInputChange = (field, value = null) => (e) => {
+      Logger.debug(`NicModal > handleInputChange ... field: ${field}, value: ${value}`);
       setFormInfoState((prev) => ({
         ...prev,
         [field]: value ?? e.target.value,
@@ -64,9 +65,7 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
     };
 
   const handleRadioChange = (field, value) => {
-    Logger.debug(
-      `NicModal > handleRadioChange ... field: ${field}, value: ${value}`
-    );
+    Logger.debug(`NicModal > handleRadioChange ... field: ${field}, value: ${value}`);
     setFormInfoState((prev) => ({ ...prev, [field]: value }));
   };
 

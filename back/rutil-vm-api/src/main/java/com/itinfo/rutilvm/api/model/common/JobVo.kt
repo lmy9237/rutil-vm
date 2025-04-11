@@ -2,12 +2,15 @@ package com.itinfo.rutilvm.api.model.common
 
 import com.itinfo.rutilvm.api.formatEnhanced
 import com.itinfo.rutilvm.api.ovirtDf
+import com.itinfo.rutilvm.common.differenceInMillis
 import com.itinfo.rutilvm.common.gson
+import org.ovirt.engine.sdk4.builders.JobBuilder
 import org.ovirt.engine.sdk4.types.Job
 import org.ovirt.engine.sdk4.types.JobStatus
 import org.ovirt.engine.sdk4.types.JobStatus.UNKNOWN
 import java.io.Serializable
 import java.util.*
+import java.time.Duration
 
 /**
  * [JobVo]
@@ -47,6 +50,9 @@ class JobVo(
 	val endTime: String
 		get() = ovirtDf.formatEnhanced(_endTime)
 
+	val timestamp: String
+		get() = if (_endTime == null || _startTime == null) "N/A" else "${_startTime.differenceInMillis(_endTime)}"
+
 	class Builder {
 		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
@@ -63,8 +69,18 @@ class JobVo(
 	}
 	companion object {
 		inline fun builder(block: JobVo.Builder.() -> Unit): JobVo = JobVo.Builder().apply(block).build()
+
 	}
 }
+fun JobVo.toJob(): Job = JobBuilder()
+	.name(name)
+	.description(description)
+	.comment(comment)
+	.status(status)
+	.autoCleared(autoCleared)
+	.external(true)
+	.startTime(Date())
+	.build()
 
 fun Job.toJobVo(): JobVo = JobVo.builder {
 	id { id() }
@@ -81,4 +97,4 @@ fun Job.toJobVo(): JobVo = JobVo.builder {
 }
 
 fun List<Job>.toJobVos(): List<JobVo> =
-	this.map { it.toJobVo() }
+	this.map { it.toJobVo() }.sortedByDescending { it.startTime }

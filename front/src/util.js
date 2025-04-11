@@ -47,10 +47,13 @@ export function checkName(name) {
  * @param {number} number
  */
 export function formatNumberWithCommas(number) {
-  const res = number.toLocaleString(); // Locale 기반 쉼표 포맷
-  // Logger.debug(`util > formatNumberWithCommas ... number: ${number}, res: ${res}`);
+  if (isNaN(number)) return "N/A"
+  const _number = (typeof number === 'string' || number instanceof String) ? parseInt(number) : number
+  const res = parseInt(_number).toLocaleString(); // Locale 기반 쉼표 포맷
+  Logger.debug(`util > formatNumberWithCommas ... number: ${_number}, res: ${res}`);
   return res;
 }
+
 
 /**
  * @name convertBytesToMB
