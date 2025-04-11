@@ -39,7 +39,9 @@ const JobFooter = () => {
   
   const [selectedJobs, setSelectedJobs] = useState([]);
 
-  const { footerVisible, toggleFooterVisible } = useUIState();
+  const {
+    footerVisible, toggleFooterVisible 
+  } = useUIState();
 
   // 드레그
   const footerBarHeight = 40;
@@ -120,7 +122,7 @@ const JobFooter = () => {
                   <th>{Localization.kr.STATUS}</th>
                   <th>시작 {Localization.kr.TIME}</th>
                   <th>종료 {Localization.kr.TIME}</th>
-                  <th>총 소요 {Localization.kr.TIME} (ms)</th>
+                  <th>총 소요 {Localization.kr.TIME}</th>
                 </tr>
               </thead>
               <tbody>
@@ -129,7 +131,6 @@ const JobFooter = () => {
                 ) : transformedData.map((job) => (
                   <tr key={job?.id}>
                     <td className="f-start">{!job?.isFinished && <Spinner/>}{job?.description}</td>
-                    {/* <td>{!job?.isFinished && <Spinner/>}{job?.description}</td> */}
                     <td>{Localization.kr.renderStatus(job?.status)}</td>
                     <td>{job?.startTime}</td>
                     <td>{job?.endTime}</td>

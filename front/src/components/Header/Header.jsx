@@ -8,13 +8,15 @@ import {
   rvi24Gear,
   rvi24Bell,
   rvi24PersonCircle,
+  rvi24BellNew,
 } from "../icons/RutilVmIcons";
 import useUIState from "../../hooks/useUIState";
 import BoxEvent from "./BoxEvent";
-import Logger from "../../utils/Logger";
 import BoxUser from "./BoxUser";
 import "./Header.css";
 import SettingUsersModal from "../modal/settings/SettingUsersModal";
+import "./Header.css";
+import Logger from "../../utils/Logger";
 
 /**
  * @name Header
@@ -26,17 +28,19 @@ import SettingUsersModal from "../modal/settings/SettingUsersModal";
 const Header = () => {
   const navigate = useNavigate();
   const {
-    toggleAsideVisible,
+    eventBadgeNum, toggleAsideVisible,
     eventBoxVisible, toggleEventBoxVisible,
     loginBoxVisible, toggleLoginBoxVisible,
   } = useUIState();
 
-  const [modalType, setModalType] = useState(null);
+  const [activeModal, setActiveModal] = useState(null); 
   const user = JSON.parse(localStorage.getItem("user")) || [];
   const handleOpenChangePassword = () => {
-    setModalType("changePassword");
+    setActiveModal("changePassword");
   };
+  
 
+  Logger.debug(`Header ...`)
   return (
     <div className="header f-btw">
       <div id="header-left" className="f-start">
@@ -60,7 +64,11 @@ const Header = () => {
         />
         {/* 알림 */}
         <TopMenuIcon
-          iconDef={rvi24Bell("white")}
+          iconDef={
+            (eventBadgeNum > 0) 
+              ? rvi24BellNew("white")
+              : rvi24Bell("white")
+          }
           onClick={(e) => {
             e.stopPropagation();
             toggleEventBoxVisible()
@@ -76,13 +84,11 @@ const Header = () => {
             toggleLoginBoxVisible();
           }}
         />
-        {loginBoxVisible && (
-          <BoxUser onOpenSetting={handleOpenChangePassword} />
-        )}
+        {loginBoxVisible && <BoxUser onOpenSetting={handleOpenChangePassword} />}
       </div>
       <SettingUsersModal
-        isOpen={modalType === "changePassword"}
-        onClose={() => setModalType(null)}
+        isOpen={activeModal === "changePassword"}
+        onClose={() => setActiveModal(null)}
         targetName={"사용자"}
         user={user[0]}
         changePassword

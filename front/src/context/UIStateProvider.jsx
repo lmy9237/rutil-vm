@@ -19,6 +19,7 @@ export const UIStateProvider = ({ children }) => {
   const KEY_EVENT_BOX_EXPANDED = "eventBoxExpanded";
   const KEY_EVENT_BOX_VISIBLE = "eventBoxVisible";
   const KEY_EVENT_BOX_SECTION_ACTIVE = "eventBoxSectionActive"; // '알림', '이벤트'
+  const KEY_EVENT_BADGE_NUM = "eventBadgeNum";
   // const KEY_EVENT_IDS_READ = "eventIdsRead"; 
   const KEY_LOGIN_BOX_VISIBLE = "loginBoxVisible";
 
@@ -29,6 +30,7 @@ export const UIStateProvider = ({ children }) => {
     [KEY_EVENT_BOX_VISIBLE]: false,
     [KEY_EVENT_BOX_EXPANDED]: false,
     [KEY_EVENT_BOX_SECTION_ACTIVE]: "알림",
+    [KEY_EVENT_BADGE_NUM]: 0,
     // [KEY_EVENT_IDS_READ]: [],
     [KEY_LOGIN_BOX_VISIBLE]: false,
     [KEY_TMI_COMPUTING]: {
@@ -149,6 +151,17 @@ export const UIStateProvider = ({ children }) => {
     });
   }
   //#endregion: 이벤트 박스 (벨버튼) 활성화 탭
+
+  //#region: 이벤트 박스 알림 개수
+  const eventBadgeNum = _UIState()[KEY_EVENT_BADGE_NUM] ?? 0;
+  const setEventBadgeNum = (newV) => {
+    Logger.debug(`UIStateProvider > setEventBadgeNum ... newV: ${newV}`)
+    _setUIState({ 
+      ...sUIState,
+      [KEY_EVENT_BADGE_NUM]: newV
+    });
+  }
+  //#endregion: 
 
   //#region: 로그인박스 표출 여부
   const loginBoxVisible = _UIState()[KEY_LOGIN_BOX_VISIBLE] ?? false;
@@ -368,6 +381,7 @@ export const UIStateProvider = ({ children }) => {
         eventBoxVisible, setEventBoxVisible, toggleEventBoxVisible,
         eventBoxExpanded, setEventBoxExpanded, toggleEventBoxExpanded,
         eventBoxSectionActive, setEventBoxSectionActive,
+        eventBadgeNum, setEventBadgeNum,
         loginBoxVisible, setLoginBoxVisible, toggleLoginBoxVisible,
 
         secondVisibleComputing, setSecondVisibleComputing, toggleSecondVisibleComputing,

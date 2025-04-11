@@ -4,6 +4,8 @@ import TablesOuter from "../../components/table/TablesOuter";
 import { useAllCerts } from "../../api/RQHook";
 import SettingCertificatesRenewalPolicies from "./SettingCertificatesRenewalPolicies";
 import Logger from "../../utils/Logger";
+import SelectedIdView from "../../components/common/SelectedIdView";
+
 /**
  * @name SettingCertificates
  * @description 관리 > 인증서
@@ -22,14 +24,15 @@ const SettingCertificates = () => {
       isError: isCertsError,
       isSuccess: isCertsSuccess,
       refetch: refetchCerts
-    } = useAllCerts((e) => {
-      Logger.debug(`SettingCertificates ... ${JSON.stringify(e)}`);
-      return {
+    } = useAllCerts((e) => ({
         ...e,
-        notAfter: e.notAfter ?? 'N/A',
-        dday: (e.daysRemaining > 0) ? `${e.daysRemaining} 일 남음` : 'N/A'
-      };
-    });
+    }));
+
+    const transformedData = (!Array.isArray(certs) ? [] : certs).map((e) => ({
+      ...e,
+      notAfter: e.notAfter ?? 'N/A',
+      dday: (e.daysRemaining > 0) ? `${e.daysRemaining} 일 남음` : 'N/A'
+    }))
 
     Logger.debug("SettingCertificates ...");
     return (
@@ -39,19 +42,19 @@ const SettingCertificates = () => {
           isEditDisabled={setSelectedCerts.length !== 1}
           status={status}
         /> */}
-        <span>ID = {selectedCerts?.id || ""}</span>
         <TablesOuter
           isLoading={isCertsLoading}
           isError={isCertsError}
           isSuccess={isCertsSuccess}
           columns={TableColumnsInfo.SETTING_CERTIFICATES}
-          data={certs}
+          data={transformedData}
           onRowClick={(row) => {
             Logger.debug(`SettingCertificates > onRowClick ... row: ${JSON.stringify(row)}`);
             setSelectedCerts(row);
           }}
           showSearchBox={true} // 검색 박스 표시 여부 제어
         />
+        <SelectedIdView items={selectedCerts} />
   
         {/* 모달창 renderModals() */}
         <br/>

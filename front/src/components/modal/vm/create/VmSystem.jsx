@@ -18,20 +18,7 @@ const VmSystem = ({
     }
     return factors;
   };
-  /*
-  const handleCpuChange = (e) => {
-    const totalCpu = parseInt(e.target.value, 10);
-    if (!isNaN(totalCpu)) {
-      setFormSystemState((prev) => ({
-        ...prev,
-        cpuTopologyTotal: totalCpu,
-        cpuTopologySocket: totalCpu, // 기본적으로 소켓을 총 CPU로 설정
-        cpuTopologyCore: 1,
-        cpuTopologyThread: 1,
-      }));
-    }
-  };
-  */
+
   const handleCpuChange = (e) => {
     Logger.debug(`VmSystem > handleCpuChange ... value: ${e.target.value}`)
     const value = e.target.value;
@@ -61,29 +48,48 @@ const VmSystem = ({
   const handleSocketChange = (e) => {
     const value = e.target.value
     Logger.debug(`VmSystem > handleSocketChange ... value: ${value}`)
-    const socket = parseInt(value);
-    const remaining = formSystemState.cpuTopologyCnt / socket;
+    const socket = parseInt(value, 10);
+    const core = formSystemState.cpuTopologyCnt / socket;
+    const thread = formSystemState.cpuTopologyCnt / (socket * core)
 
     setFormSystemState((prev) => ({
       ...prev,
       cpuTopologySocket: socket,
-      cpuTopologyCore: remaining, // 나머지 값은 코어로 설정
-      cpuTopologyThread: 1, // 스레드는 기본적으로 1
+      cpuTopologyCore: core, // 나머지 값은 코어로 설정
+      cpuTopologyThread: thread, // 스레드는 기본적으로 1
     }));
   };
 
-  const handleCorePerCoreChange = (e) => {
+  const handleCorePerSocketChange = (e) => {
     const value = e.target.value
-    Logger.debug(`VmSystem > handleCorePerCoreChange ... value: ${value}`)
-    const core = parseInt(value);
-    const remaining = formSystemState.cpuTopologyCnt / (formSystemState.cpuTopologySocket * core);
+    Logger.debug(`VmSystem > handleCorePerSocketChange ... value: ${value}`)
+    const core = parseInt(value, 10);
+    const thread = formSystemState.cpuTopologyCnt / core;
+    const socket = formSystemState.cpuTopologyCnt / (core * thread)
 
     setFormSystemState((prev) => ({
       ...prev,
+      cpuTopologySocket: socket,
       cpuTopologyCore: core,
-      cpuTopologyThread: remaining, // 나머지 값은 스레드로 설정
+      cpuTopologyThread: thread, // 나머지 값은 스레드로 설정
     }));
   };
+
+  const handleThreadPerCoreChange = (e) => {
+    const value = e.target.value
+    Logger.debug(`VmSystem > handleThreadPerCoreChange ... value: ${value}`)
+    const thread = parseInt(value, 10);
+    const core = formSystemState.cpuTopologyCnt / thread;
+    const socket = formSystemState.cpuTopologyCnt / (thread * core);
+
+    setFormSystemState((prev) => ({
+      ...prev,
+      cpuTopologySocket: socket,
+      cpuTopologyCore: core,
+      cpuTopologyThread: thread, // 나머지 값은 스레드로 설정
+    }));
+  }
+  
 
   // 최대메모리: 메모리크기 x 4 , 할당할 실제 메모리: 메모리크기와 같음
   const handleInputChange = (field) => (e) => {
@@ -162,12 +168,12 @@ const VmSystem = ({
             <LabelSelectOptions id="core_per_socket" label="가상 소켓 당 코어"
               value={formSystemState.cpuTopologyCore}
               options={selectionsCoresPerSocket()}
-              onChange={handleCorePerCoreChange}
+              onChange={handleCorePerSocketChange}
             />
             <LabelSelectOptions id="thread_per_core" label="코어당 스레드"
               value={formSystemState.cpuTopologyThread}
               options={selectionsThreadsPerCore()}
-              onChange={(e) => setFormSystemState((prev) => ({...prev, cpuTopologyThread: parseInt(e.target.value, 10)}))}
+              onChange={handleThreadPerCoreChange}
             />
           </div>
         )}

@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import TableRowLoading from "./TableRowLoading";
 import TableRowNoData from "./TableRowNoData";
-import { Tooltip } from "react-tooltip";
 import PagingButton from "./PagingButton";
 import Logger from "../../utils/Logger";
 import "./Table.css";
 import CONSTANT from "../../Constants";
-import 'tippy.js/dist/tippy.css';           
-import 'tippy.js/animations/shift-away.css';
 import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
+import "tippy.js/animations/shift-away.css";
 
 /**
  * @name Tables

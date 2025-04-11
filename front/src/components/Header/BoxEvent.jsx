@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import useUIState from "../../hooks/useUIState";
 import {
   RVI24,
@@ -45,7 +45,13 @@ const BoxEvent = ({
     })
   );
 
+  useEffect(() => {
+    const badgeNum = Array.isArray(notiEvents) ? notiEvents.length : 0;
+    setEventBadgeNum(badgeNum);
+  }, [notiEvents])
+
   const {
+    setEventBadgeNum,
     eventBoxVisible, setEventBoxVisible,
     eventBoxExpanded, toggleEventBoxExpanded,
     eventBoxSectionActive, setEventBoxSectionActive

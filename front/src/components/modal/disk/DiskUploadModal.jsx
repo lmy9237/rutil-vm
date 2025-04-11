@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
-import "../domain/MDomain.css";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
@@ -15,7 +14,9 @@ import {
   useHostsFromDataCenter,
   useUploadDisk,
   useAddJob,
+  useEndJob,
 } from "../../../api/RQHook";
+import "../domain/MDomain.css";
 
 const sizeToGB = (data) => Math.ceil(data / Math.pow(1024, 3));
 const onlyFileName = (fileName) => {
@@ -36,11 +37,13 @@ const initialJobFormState = {
   name: "디스크 파일 업로드",
   description: "(RutilVM에서) 디스크 파일 업로드",
   status: 'STARTED',
+  autoCleared: true,
 }
 
 const DiskUploadModal = ({ isOpen, onClose }) => {
   const [formState, setFormState] = useState(initialFormState);
   const [jobFormState, setJobFormState] = useState(initialJobFormState)
+  const [addedJobId, setAddedJobId] = useState("")
 
   const [file, setFile] = useState(null);
 
@@ -53,11 +56,22 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
     mutate: addJob
   } = useAddJob({
     ...jobFormState,
-    description: `(RutilVM에서) 디스크 파일 업로드 (파일명: ${file && onlyFileName(file?.name)})`,
-  }, () => onClose(), () => onClose());
+    description: `(RutilVM) 디스크 파일 업로드 (파일명: ${file && onlyFileName(file?.name)})`,
+  }, (res) => {
+    setAddedJobId(res.id)
+    onClose()
+  }, () => onClose());
+
+  const {
+    mutate: endJob
+  } = useEndJob(addedJobId)
 
   const { mutate: uploadDisk } = useUploadDisk((progress, toastId) => {
     onClose()
+    if (progress >= 100) {
+      endJob()
+      return
+    }
     toast.loading(`디스크 업로드 중 ... ${progress}%`, {
       id: toastId,
     });

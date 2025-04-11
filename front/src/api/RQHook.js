@@ -4780,6 +4780,7 @@ export const useAllEventsNormal = (
     return _res;
   }
 });
+
 export const useAllNotiEvents = (
   mapPredicate=(e) => ({ ...e })
 ) => useQuery({
@@ -4795,7 +4796,6 @@ export const useAllNotiEvents = (
   }
 });
 
-
 export const useRemoveEvent = (
   eventId, 
   postSuccess=()=>{},postError
@@ -4810,7 +4810,7 @@ export const useRemoveEvent = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvent ... res: ${JSON.stringify(res, null, 2)}`);
-      queryClient.invalidateQueries('allEvents,allNotiEvents,allEventsNormal');
+      queryClient.invalidateQueries(['allEvents','allNotiEvents','allEventsNormal']);
       postSuccess(res);
     },
     onError: (error) => {
