@@ -1,10 +1,11 @@
-import React from 'react'
-import { 
+import React from "react";
+import {
   RVI16,
   rvi16ChevronDown,
   rvi16ChevronRight,
-} from '../../icons/RutilVmIcons';
+} from "../../icons/RutilVmIcons";
 import "./TreeMenuItem.css";
+import Logger from "../../../utils/Logger";
 
 const TreeMenuItem = ({
   level=1,
@@ -28,6 +29,7 @@ const TreeMenuItem = ({
     onChevronClick();
   }
 
+  Logger.debug(`TreeMenuItem ...`)
   return (
     <div id={`tmi-${level}`}
       className={`tmi f-start${isSelected() ? " active" : ""}${isChevronVisible ? " wc" : ""}`}

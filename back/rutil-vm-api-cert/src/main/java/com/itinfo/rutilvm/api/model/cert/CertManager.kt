@@ -59,6 +59,8 @@ open class CertManager(
 		null
 	}
 
+
+
 	private val cert: X509Certificate?
 		get() {
 			val cLocal: ByteArray? = certFileLocal()

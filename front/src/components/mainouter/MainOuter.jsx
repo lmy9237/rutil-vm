@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import SideNavbar from "./SideNavbar";
 import SidebarTree from "./SidebarTree";
 import useUIState from "../../hooks/useUIState";
+import Logger from "../../utils/Logger";
 import "./MainOuter.css";
 
 /**
@@ -43,6 +44,7 @@ const MainOuter = ({
   const handleMouseDown = (e) => {
     isResizing.current = true;
     xRef.current = e.clientX;
+    Logger.debug(`MainOuter > handleMouseDown ... e.clientX: ${e.clientX}`)
     leftWidthRef.current = sidebarWidth;
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -64,13 +66,14 @@ const MainOuter = ({
       }
     });
   };
+
   const handleMouseUp = () => {
+    Logger.debug(`MainOuter > handleMouseUp ...`)
     isResizing.current = false;
     document.body.style.userSelect = "auto"; // ✅ 드래그 끝나면 다시 원래대로
     document.body.style.cursor = "default"; // ✅ 드래그 끝나면 기본 커서로 복구
   };
 
-  /* */
   const [isResponsive, setIsResponsive] = useState(window.innerWidth <= 1420);
 
   useEffect(() => {
@@ -98,7 +101,7 @@ const MainOuter = ({
     event: "",
     default: "rgb(218, 236, 245)",
   });
-  const [selected, setSelected] = useState(() => localStorage.getItem("selected") || "dashboard");
+
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
@@ -106,21 +109,9 @@ const MainOuter = ({
   });
   const [contextMenuTarget, setContextMenuTarget] = useState(null);
   const [activeSection, setActiveSection] = useState("general");
-  const [isInitialLoad, setIsInitialLoad] = useState(true); // 초기 대시보드섹션 설정
-
+  
   // url에 따라 맞는버튼 색칠
   const [selectedDiv, setSelectedDiv] = useState(null);
-  useEffect(() => {
-  const from = location.state?.from?.pathname || "/";
-    if (from.includes("/computing"))          handleClick("computing"); // /computing이 들어가 있을 때
-    else if (from.includes("/networks"))      handleClick("network"); // /networks가 들어가 있을 때
-    else if (from.includes("/vnicProfiles"))  handleClick("network"); // /networks가 들어가 있을 때
-    else if (from.includes("/storages"))      handleClick("storage"); // /storages가 들어가 있을 때
-    else if (from.includes("/events"))        handleClick("event"); // /events가 들어가 있을 때
-    else if (from.includes("/settings"))      handleClick("settings"); // /settings가 들어가 있을 때
-    else                                      handleClick("dashboard"); // 기본적으로 dashboard로 설정
-  }, [location.pathname]);
-
 
   useEffect(() => {
     const path = location.pathname;
@@ -129,40 +120,20 @@ const MainOuter = ({
     setSelectedDiv(lastId);
   }, [location.pathname]);
 
-
-
   useEffect(() => {
     const waveGraph = document.querySelector(".wave_graph");
     if (waveGraph) {
-      if (selected === "dashboard" && asidePopupVisible) {
+      if (tmiLastSelected === "dashboard" && asidePopupVisible) {
         waveGraph.style.marginLeft = "0"; // Dashboard일 때 aside-popup 열려있으면 margin-left를 0으로
       } else {
         waveGraph.style.marginLeft = "1rem"; // 기본값
       }
     }
-  }, [selected, asidePopupVisible]); // selected와 asidePopupVisible이 변경될 때 실행
-  // 새로고침해도 섹션유지-----------------------------
-  const [openHosts, setOpenHosts] = useState(
-    () => JSON.parse(localStorage.getItem("openHosts")) || {}
-  );
-  const [openDomains, setOpenDomains] = useState(
-    () => JSON.parse(localStorage.getItem("openDomains")) || {}
-  );
-  const [openNetworks, setOpenNetworks] = useState(
-    () => JSON.parse(localStorage.getItem("openNetworks")) || {}
-  );
-  const [openComputingDataCenters, setOpenComputingDataCenters] = useState(
-    () => JSON.parse(localStorage.getItem("openComputingDataCenters")) || {}
-  );
-  const [openNetworkDataCenters, setOpenNetworkDataCenters] = useState(
-    () => JSON.parse(localStorage.getItem("openNetworkDataCenters")) || {}
-  );
-  const getPaddingLeft = (hasChildren, basePadding = "1rem", extraPadding = "0.6rem") => {
-    return hasChildren ? extraPadding : basePadding;
-  };
+  }, [tmiLastSelected, asidePopupVisible]); // selected와 asidePopupVisible이 변경될 때 실행
   // 상태가 변경될 때마다 localStorage에 저장
   
   const handleDetailClickStorage = (diskName) => {
+    Logger.debug(`MainOuter > handleDetailClickStorage ... diskName: ${diskName}`)
     if (selectedDisk !== diskName) {
       setSelectedDisk(diskName);
       setSelectedDiv(null);
@@ -170,114 +141,24 @@ const MainOuter = ({
     }
   };
 
-  const handleClick = (id) => {
-    if (id !== selected) {
-      setSelected(id); // 선택한 섹션만 업데이트
-      toggleAsidePopup(id); // 배경색 설정
-      setAsidePopupVisible(true); // 항상 열림 상태 유지
-      localStorage.setItem("selected", id); // 로컬 스토리지 저장
-    }
-    // 이벤트와 설정을 제외한 경우에만 마지막 선택 항목을 저장
-    if (id !== "event" && id !== "settings" && id !== "dashboard") {
-      setTmiLastSelected(id);
-    }
-  };
-
-  // 초기에는 가상머신 섹션을 마지막 섹션으로 설정
-  useEffect(() => {
-    if (isInitialLoad && selected === "dashboard") {
-      setTmiLastSelected("computing");
-    }
-    setIsInitialLoad(false);
-  }, [isInitialLoad, selected]);
-
-
-  useEffect(() => {
-    // 페이지가 처음 로드될 때 기본적으로 dashboard가 선택되도록 설정
-    setSelected("dashboard");
-    setTmiLastSelected("computing");
-    toggleAsidePopup("dashboard");
-  }, []);
-  useEffect(() => {
-    // 페이지가 처음 로드될 때 기본적으로 computing 섹션이 선택되도록 설정
-    setSelected("computing");
-    toggleAsidePopup("computing");
-    setSelectedDiv(null); // 루틸매니저가 선택되지 않도록 초기화
-  }, []);
-
-  const toggleAsidePopup = (id) => {
-    const newBackgroundColor = {
-      dashboard: "",
-      computing: "",
-      storage: "",
-      network: "",
-      setting: "",
-      event: "",
-      default: "",
-    };
-    // selected 값에 따라 색상을 변경하는 로직
-    if (id === "dashboard") {
-      newBackgroundColor.dashboard = "rgb(218, 236, 245)";
-    } else if (id === "computing") {
-      newBackgroundColor.computing = "rgb(218, 236, 245)";
-    } else if (id === "storage") {
-      newBackgroundColor.storage = "rgb(218, 236, 245)";
-    } else if (id === "network") {
-      newBackgroundColor.network = "rgb(218, 236, 245)";
-    } else if (id === "event") {
-      newBackgroundColor.event = "rgb(218, 236, 245)";
-    } else if (id === "settings") {
-      newBackgroundColor.settings = "rgb(218, 236, 245)";
-    }
-    setAsidePopupBackgroundColor(newBackgroundColor);
-  };
-  const [selectedSection, setSelectedSection] = useState(() => localStorage.getItem("selected") || "dashboard");
-  // 저장된 항목에 맞춰 배경색 초기화
-  useEffect(() => {
-    const savedSelected = localStorage.getItem("selected");
-    const savedLastSelected = localStorage.getItem("lastSelected");
-    if (savedSelected) {
-      setSelected(savedSelected);
-      toggleAsidePopup(savedSelected);
-    } else {
-      setSelected("dashboard");
-      toggleAsidePopup("dashboard");
-    }
-    if (savedLastSelected) {
-      setTmiLastSelected(savedLastSelected);
-    }
-  }, []);
-  // id포함유무에 따라 배경색결정
-  const getBackgroundColor = (id) => {
-    const path = location.pathname;
-    return path.includes(id) ? "rgb(218, 236, 245)" : "";
-  };
-
   const handleMainClick = () => {
+    Logger.debug(`MainOuter > handleMainClick ... `)
     setContextMenuVisible(false);
     setContextMenuTarget(null);
   };
 
   const asideClasses = `aside-outer ${asideVisible ? "open" : "closed"} ${window.innerWidth <= 1420 ? "responsive-closed" : ""}`;
+  Logger.debug(`MainOuter ... `)
   return (
     <div
       className={`main-outer f-start${footerVisible ? " open" : ""}`}  
       onClick={handleMainClick}
     >
       <div className={asideClasses} style={asideStyles}>
-        <SideNavbar
-          selectedSection={selectedSection}
-          setSelectedSection={setSelectedSection}
-          getBackgroundColor={getBackgroundColor}
-        />
+        <SideNavbar />
 
         {/* 크기 조절 핸들 */}
-        <SidebarTree
-          selected={selectedSection}
-          getBackgroundColor={(id) =>
-            location.pathname.includes(id) ? "rgb(218, 236, 245)" : ""
-          }
-        />
+        <SidebarTree />
           <div ref={resizerRef}
             className="resizer"
             onMouseDown={handleMouseDown}

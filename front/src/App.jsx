@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import { Route, Routes, useRouteError } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { scan } from "react-scan";
 import STOMP from "./Socket";
 import Layout from "./components/Layout";
@@ -30,10 +30,10 @@ import Event from "./pages/event/Event";
 import SettingInfo from "./pages/setting/SettingInfo";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "pretendard/dist/web/static/pretendard.css";
-import Logger from "./utils/Logger";
-import "./App.css";
 import useUIState from "./hooks/useUIState";
 import ErrorBoundary from "./pages/ErrorBoundary";
+import Logger from "./utils/Logger";
+import "./App.css";
 
 const App = () => {
   //#region: 웹소켓연결
@@ -41,9 +41,15 @@ const App = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const {
-    setLoginBoxVisible, setEventBoxVisible
+    setTmiLastSelected, setLoginBoxVisible, setEventBoxVisible,
+    footerJobRefetchInterval, setFoooterJobRefetchInterval
   } = useUIState()
+  
   useEffect(() => {
+    if (!footerJobRefetchInterval || footerJobRefetchInterval === 0) {
+      setFoooterJobRefetchInterval(5000)
+    }
+    setTmiLastSelected("computing")
     setEventBoxVisible(false)
     setLoginBoxVisible(false)
 

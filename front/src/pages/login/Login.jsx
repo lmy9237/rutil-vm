@@ -33,7 +33,10 @@ const Login = () => {
     isLoading: isAuthLoading,
     mutate: authMutate,
   } = useAuthenticate(username, password, (res) => {
-    setAuth({ isUserAuthenticated: res, })
+    setAuth({ 
+      username: username,
+      isUserAuthenticated: res,
+    })
     // 토큰 찾아 집어 넣은 후
     // setValue("username", username);
     // setValue("isUserAuthenticated", true);

@@ -24,8 +24,7 @@ const NetworkActionButtons = ({
     <>
       <ActionButtonGroup actionType={actionType} actions={basicActions}>
         {!isContextMenu && (
-          <ActionButton
-            label={"VNicProfile"}
+          <ActionButton label={Localization.kr.VNIC_PROFILE}
             onClick={() => navigate("/vnicProfiles")}
             actionType={actionType}
           />

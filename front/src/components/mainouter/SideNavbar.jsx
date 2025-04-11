@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
+import { Link, useLocation, } from "react-router-dom";
 import {
   RVI24,
   rvi24Desktop,
@@ -9,14 +9,10 @@ import {
 } from "../icons/RutilVmIcons";
 import "./MainOuter.css"; // 기존 스타일 유지
 import useUIState from "../../hooks/useUIState";
+import Logger from "../../utils/Logger";
 
-const SideNavbar = ({
-  selectedSection,
-  setSelectedSection,
-}) => {
+const SideNavbar = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const firstRender = useRef();
   const {
     tmiLastSelected, setTmiLastSelected
   } = useUIState();
@@ -34,13 +30,9 @@ const SideNavbar = ({
 
   // 📌 버튼 클릭 시 선택 처리
   const handleClick = (id) => {
-    if (id !== selectedSection) {
-      setSelectedSection(id);
-      localStorage.setItem("selected", id);
-    }
-
+    Logger.debug(`SideNavbar > handleClick ... id: ${id}`)
     // 이벤트/설정 제외, 마지막 선택 항목 저장
-    if (id !== "event" && id !== "settings" && id !=="dashboard") {
+    if (id !== "event" && id !== "settings") {
       setTmiLastSelected(id);
     }
   };
@@ -56,25 +48,12 @@ const SideNavbar = ({
     { iconDef: rvi24Event("currentColor"),        id: "event",     link: "/events",  },
   ];
 
-  useEffect(() => {
-    if (firstRender.currrent) {
-      firstRender.current = false;
-      setSelectedSection("computing");
-    }
-    return;
-  });
-  
-  const isMenuActive = (id) => {
-    if (id === "computing" && firstRender.current) return false
-    return selectedSection === id
-  }
-
   return (
     <div id="aside">
       <div className="nav">
         {sections.map(({ iconDef, id, link }) => (
           <Link key={id} to={link} 
-            className={`rvi rvi-nav ${isMenuActive(id) ? "active" : ""}`}
+            className={`rvi rvi-nav ${tmiLastSelected === id ? "active" : ""}`}
             onClick={() => handleClick(id)}
           >
             <RVI24 iconDef={iconDef} />

@@ -263,7 +263,7 @@ const Tables = ({
   };
 
   const handleRowClick = (rowIndex, e) => {
-    Logger.debug(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: ${e}`);
+    Logger.debug(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: `, e);
     const clickedRow = sortedData[rowIndex];
     if (!clickedRow) return;
 

@@ -5,26 +5,33 @@ const UIStateContext = createContext({});
 
 export const UIStateProvider = ({ children }) => {
   const KEY_UI_STATE = "uiState";
-  const KEY_FOOTER_VISIBLE = "footerVisible"
-  const KEY_ASIDE_VISIBLE = "asideVisible"
-  const KEY_TMI_LAST_SELECTED = "tmiLastSelected"
-  const KEY_SECOND_VISIBLE = "secondVisible"
-  const KEY_TMI_COMPUTING = "tmiComputing";
-  const KEY_TMI_NETWORK = "tmiNetwork";
-  const KEY_TMI_STORAGE = "tmiStorage";
-  const KEY_TMI_OPEN_DATACENTER = "openDataCenter";
+  const KEY_FOOTER_VISIBLE = "footerVisible"                          /* Footer 표출여부 */
+  const KEY_FOOTER_JOB_REFETCH_INTERVAL = "footerJobRefetchInterval"; /* 최근작업 조회 처리 주기 (기본 5초) */
+  const KEY_ASIDE_VISIBLE = "asideVisible"                            /* aside 표출여부 */
+  const KEY_TMI_LAST_SELECTED = "tmiLastSelected"                     /* 트리메뉴 선택 */
+  const KEY_TMI_COMPUTING = "tmiComputing";                           /* computing 트리메뉴 그룹 상태 */
+  const KEY_TMI_NETWORK = "tmiNetwork";                               /* network 트리메뉴 그룹 상태 */
+  const KEY_TMI_STORAGE = "tmiStorage";                               /* storage 트리메뉴 그룹 상태 */
+  const KEY_SECOND_VISIBLE = "secondVisible"                          /* 각 트리메뉴 안 Rutil Manager 확장처리 여부 */
+  const KEY_TMI_OPEN_DATACENTER = "openDataCenter";                   /* 각 트리메뉴 안 Rutil Manager 확장처리 여부 */
   const KEY_TMI_OPEN_CLUSTER = "openCluster";
   const KEY_TMI_OPEN_HOST = "openHost";
   const KEY_TMI_OPEN_DOMAIN = "openDomain";
-  const KEY_EVENT_BOX_EXPANDED = "eventBoxExpanded";
-  const KEY_EVENT_BOX_VISIBLE = "eventBoxVisible";
+  const KEY_EVENT_BOX_VISIBLE = "eventBoxVisible";                    /* 이벤트 박스 표출여부 */
+  const KEY_EVENT_BOX_EXPANDED = "eventBoxExpanded";                  /* 이벤트 박스 확장여부 */
   const KEY_EVENT_BOX_SECTION_ACTIVE = "eventBoxSectionActive"; // '알림', '이벤트'
-  const KEY_EVENT_BADGE_NUM = "eventBadgeNum";
+  const KEY_EVENT_BADGE_NUM = "eventBadgeNum";                        /* 이벤트 박스 표출개수 */ 
   // const KEY_EVENT_IDS_READ = "eventIdsRead"; 
-  const KEY_LOGIN_BOX_VISIBLE = "loginBoxVisible";
+  const KEY_LOGIN_BOX_VISIBLE = "loginBoxVisible";                    /* 로그인 박스 표출여부 */
+  const KEY_CONTEXT_MENU = "contextMenu";                             /* 우클릭 팝업  */
+  const KEY_CONTEXT_MENU_CLIENT_X = "clientX";                        /* 우클릭 팝업 표츨 X좌표 */
+  const KEY_CONTEXT_MENU_CLIENT_Y = "clientY";                        /* 우클릭 팝업 표츨 Y좌표 */
+  const KEY_CONTEXT_MENU_ITEM = "item";                               /* 우클릭 팝업 내용물 */
+  const KEY_CONTEXT_MENU_TREE_TYPE = "treeType";                      /* 우클릭 팝업 트리유형 (예: "network", "storage", "computing") */
 
   const initialState = JSON.parse(localStorage.getItem(KEY_UI_STATE)) ?? {
     [KEY_FOOTER_VISIBLE]: false,
+    [KEY_FOOTER_JOB_REFETCH_INTERVAL]: 5000,
     [KEY_ASIDE_VISIBLE]: false,
     [KEY_TMI_LAST_SELECTED]: "",
     [KEY_EVENT_BOX_VISIBLE]: false,
@@ -33,6 +40,9 @@ export const UIStateProvider = ({ children }) => {
     [KEY_EVENT_BADGE_NUM]: 0,
     // [KEY_EVENT_IDS_READ]: [],
     [KEY_LOGIN_BOX_VISIBLE]: false,
+    [KEY_CONTEXT_MENU]: {
+
+    },
     [KEY_TMI_COMPUTING]: {
       [KEY_SECOND_VISIBLE]: false,
       [KEY_TMI_OPEN_DATACENTER]: {
@@ -86,6 +96,19 @@ export const UIStateProvider = ({ children }) => {
     Logger.debug(`UIStateProvider > toggleFooterVisible`)
     setFooterVisible(!footerVisible)
   }
+  //#endregion: Footer 표출
+
+
+  //#region: 최근작업 조회 처리 주기 (기본 5초)
+  const footerJobRefetchInterval = _UIState()[KEY_FOOTER_JOB_REFETCH_INTERVAL] ?? 5000;
+  const setFooterJobRefetchInterval = (newV) => {
+    Logger.debug(`UIStateProvider > footerJobRefetchInterval ... newV: ${newV}`)
+    _setUIState({ 
+      ...sUIState,
+      [KEY_FOOTER_JOB_REFETCH_INTERVAL]: newV
+    });
+  }
+  //#endregion: 최근작업 조회 처리 주기 (기본 5초)
 
   //#region: 왼쪽메뉴 활성화
   const asideVisible = _UIState()[KEY_ASIDE_VISIBLE] ?? false;
@@ -105,6 +128,7 @@ export const UIStateProvider = ({ children }) => {
   //#region: 최근 선택 왼쪽메뉴
   const tmiLastSelected = _UIState()[KEY_TMI_LAST_SELECTED] ?? "computing";
   const setTmiLastSelected = (newV) => {
+    Logger.debug(`UIStateProvider > setTmiLastSelected ... newV: ${newV}`)
     _setUIState({
       ...sUIState,
       [KEY_TMI_LAST_SELECTED]: newV
@@ -177,6 +201,18 @@ export const UIStateProvider = ({ children }) => {
     setLoginBoxVisible(!loginBoxVisible)
   }
   //#endregion: 로그인박스 표출 여부
+
+  //#region
+  const contextMenu = _UIState()[KEY_CONTEXT_MENU] ?? null;
+  const setContextMenu = (newV) => {
+    Logger.debug(`UIStateProvider > setContextMenu ... newV: ${newV}`)
+    _setUIState({ 
+      ...sUIState,
+      [KEY_CONTEXT_MENU]: newV
+    });
+  }
+  
+  //#endregion
 
   //#region: 트리메뉴 데이터센터 보관값
   const _allTMIComputing = () => _UIState()[KEY_TMI_COMPUTING] ?? {}
@@ -376,6 +412,7 @@ export const UIStateProvider = ({ children }) => {
     <UIStateContext.Provider value={
       {
         footerVisible, setFooterVisible, toggleFooterVisible,
+        footerJobRefetchInterval, setFooterJobRefetchInterval, 
         asideVisible, setAsideVisible, toggleAsideVisible,
         tmiLastSelected, setTmiLastSelected,
         eventBoxVisible, setEventBoxVisible, toggleEventBoxVisible,
@@ -383,6 +420,7 @@ export const UIStateProvider = ({ children }) => {
         eventBoxSectionActive, setEventBoxSectionActive,
         eventBadgeNum, setEventBadgeNum,
         loginBoxVisible, setLoginBoxVisible, toggleLoginBoxVisible,
+        contextMenu, setContextMenu,
 
         secondVisibleComputing, setSecondVisibleComputing, toggleSecondVisibleComputing,
         secondVisibleNetwork, setSecondVisibleNetwork, toggleSecondVisibleNetwork,

@@ -44,7 +44,8 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
   });  
 
   //TODO:디스크가 뜨지 않음
-  Logger.debug(`diskQueries==== ${JSON.stringify(diskQueries, null , 2)}`);
+  Logger.debug(`VmDeleteModal.diskQueries: `, diskQueries);
+  
   useEffect(() => {
     if (!diskQueries || !Array.isArray(diskQueries)) return;
 

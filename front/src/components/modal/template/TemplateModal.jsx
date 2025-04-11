@@ -94,8 +94,8 @@ const TemplateModal = ({
     })),
   });  
 
-  Logger.debug(`domains ** : ${JSON.stringify(domains, null, 2)}`);
-  Logger.debug(`TemplateModal > disks: ${JSON.stringify(disks, null, 2)}`);
+  Logger.debug(`TemplateModal > domains: `, domains);
+  Logger.debug(`TemplateModal > disks: `, disks);
 
   useEffect(() => {
     if (isOpen && selectedVm?.dataCenterVo?.id) {

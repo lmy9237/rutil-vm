@@ -3,11 +3,20 @@ import { useState, createContext } from "react";
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-  const [sAuth, sSetAuth] = useState({})
-  const auth = Object.assign({}, sAuth, JSON.parse(localStorage.getItem("auth")))
+  const KEY_AUTH = "auth"
+  const KEY_IS_USER_AUTHENTICATED = "isUserAuthenticated"
+  const KEY_IS_USERNAME = "username"
+  const initialState = JSON.parse(localStorage.getItem(KEY_AUTH)) ?? {
+    [KEY_IS_USER_AUTHENTICATED]: false,
+    [KEY_IS_USERNAME]: ""
+  }
+  const [sAuth, sSetAuth] = useState(initialState)
+  const auth = Object.assign({}, sAuth, JSON.parse(localStorage.getItem(KEY_AUTH)))
   const setAuth = (newV) => {
-    sSetAuth(newV);
-    localStorage.setItem("auth", JSON.stringify(newV, null, 2));
+    sSetAuth({
+      ...newV
+    });
+    localStorage.setItem(KEY_AUTH, JSON.stringify(newV, null, 2));
   }
 
   return (

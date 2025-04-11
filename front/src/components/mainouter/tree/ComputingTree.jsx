@@ -11,22 +11,17 @@ import {
 } from "../../icons/RutilVmIcons";
 import { useAllTreeNavigations } from "../../../api/RQHook";
 import useUIState from "../../../hooks/useUIState";
-import DataCenterActionButtons from "../../dupl/DataCenterActionButtons";
-import ClusterActionButtons from "../../dupl/ClusterActionButtons";
 
 const ComputingTree = ({ 
   selectedDiv,
   setSelectedDiv,
-  getBackgroundColor,
-  getPaddingLeft,
-  onContextMenu,
-  contextMenu,
   menuRef,
   setActiveModal,
   setSelectedDataCenters,
   setSelectedClusters 
  }) => {
-  const { 
+  const {
+    contextMenu, setContextMenu,
     secondVisibleComputing, toggleSecondVisibleComputing,
     openDataCentersComputing, toggleOpenDataCentersComputing,
     openClustersComputing, toggleOpenClustersComputing,
@@ -75,42 +70,18 @@ const ComputingTree = ({
               }}
               onContextMenu={(e) => {
                 e.preventDefault();
-                onContextMenu?.(e, {
-                  id: dataCenter.id,
-                  name: dataCenter.name,
-                  level: 2,
-                  type: "dataCenter",
-                }, "network");
+                setContextMenu({
+                  mouseX: e.clientX,
+                  mouseY: e.clientY,
+                  item: {
+                    ...dataCenter,
+                    level: 2,
+                    type: "dataCenter",
+                  },
+                  treeType: "computing"
+                });
               }}
-              
             />
-            {contextMenu?.item?.id === dataCenter.id &&
-              contextMenu?.item?.type === "dataCenter" && (
-                <div
-                  className="right-click-menu-box context-menu-item"
-                  ref={menuRef}
-                  style={{
-                    position: "fixed",
-                    top: contextMenu.mouseY,
-                    left: contextMenu.mouseX,
-                    background: "white",
-                    zIndex: 9999,
-                  }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <DataCenterActionButtons
-                    selectedDataCenters={[contextMenu.item]}
-                    status="single"
-                    actionType="context"
-                    onCloseContextMenu={() => onContextMenu(null)}
-                    openModal={(action) => {
-                      setActiveModal?.(`datacenter:${action}`);
-                      setSelectedDataCenters?.([contextMenu.item]);
-                      onContextMenu(null);
-                    }}
-                  />
-                </div>
-            )}
 
             {/* 세 번째 레벨 (Clusters) */}
             {isDataCenterOpen && Array.isArray(dataCenter.clusters) && dataCenter.clusters.map((cluster) => {
@@ -118,56 +89,33 @@ const ComputingTree = ({
               const hasHosts = Array.isArray(cluster.hosts) && cluster.hosts.length > 0;
               return (
                 <div key={cluster.id} className="tmi-g">
-                   <TreeMenuItem
-                  level={3}
-                  title={cluster.name}
-                  iconDef={rvi16Cluster}
-                  isSelected={() => location.pathname.includes(cluster.id)}
-                  isNextLevelVisible={isClusterOpen}
-                  isChevronVisible={hasHosts}
-                  onChevronClick={() => toggleOpenClustersComputing(cluster.id)}
-                  onClick={() => {
-                    setSelectedDiv(cluster.id);
-                    navigate(`/computing/clusters/${cluster.id}`);
-                  }}
-                  onContextMenu={(e) => {
-                    e.preventDefault();
-                    onContextMenu?.(e, {
-                      id: cluster.id,
-                      name: cluster.name,
-                      level: 3,
-                      type: "cluster",
-                    }, "computing");
-                  }}
-                />
+                  <TreeMenuItem
+                    level={3}
+                    title={cluster.name}
+                    iconDef={rvi16Cluster}
+                    isSelected={() => location.pathname.includes(cluster.id)}
+                    isNextLevelVisible={isClusterOpen}
+                    isChevronVisible={hasHosts}
+                    onChevronClick={() => toggleOpenClustersComputing(cluster.id)}
+                    onClick={() => {
+                      setSelectedDiv(cluster.id);
+                      navigate(`/computing/clusters/${cluster.id}`);
+                    }}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      setContextMenu({
+                        mouseX: e.clientX,
+                        mouseY: e.clientY,
+                        item: {
+                          ...cluster,
+                          level: 3,
+                          type: "cluster",
+                        },
+                        treeType: "computing"
+                      });
+                    }}
+                  />
 
-                  {/* 우클릭 context 메뉴 */}
-                  {contextMenu?.item?.id === cluster.id &&
-                    contextMenu?.item?.type === "cluster" && (
-                      <div
-                        className="right-click-menu-box context-menu-item"
-                        ref={menuRef}
-                        style={{
-                          position: "fixed",
-                          top: contextMenu.mouseY,
-                          left: contextMenu.mouseX,
-                          background: "white",
-                          zIndex: 9999,
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <ClusterActionButtons
-                          openModal={(action) => {
-                            setActiveModal?.(`cluster:${action}`);
-                            setSelectedClusters?.([contextMenu.item]);
-                            onContextMenu(null);
-                          }}
-                          isEditDisabled={false} // 필요 시 조건 지정 가능
-                          status={"ready"}       // 또는 contextMenu.item.status 등
-                          actionType="context"
-                        />
-                      </div>
-                  )}
                   {/* 네 번째 레벨 (Hosts & VM Downs) */}
                   {isClusterOpen && (
                     <>
@@ -188,6 +136,19 @@ const ComputingTree = ({
                                 setSelectedDiv(host.id);
                                 navigate(`/computing/hosts/${host.id}`);
                               }}
+                              onContextMenu={(e) => {
+                                e.preventDefault();
+                                setContextMenu({
+                                  mouseX: e.clientX,
+                                  mouseY: e.clientY,
+                                  item: {
+                                    ...host,
+                                    level: 4,
+                                    type: "host",
+                                  },
+                                  treeType: "computing"
+                                });
+                              }}
                             />
                             {/* 다섯 번째 레벨 (VMs under Host) */}
                             {isHostOpen && Array.isArray(host.vms) && host.vms.map((vm) => (
@@ -204,6 +165,20 @@ const ComputingTree = ({
                                   onClick={() => {
                                     setSelectedDiv(vm.id);
                                     navigate(`/computing/vms/${vm.id}`);
+                                  }}
+                                  onContextMenu={(e) => {
+                                    e.preventDefault();
+                                    setContextMenu({
+                                      mouseX: e.clientX,
+                                      mouseY: e.clientY,
+                                      item: {
+                                        id: vm.id,
+                                        name: vm.name,
+                                        level: 5,
+                                        type: "vm",
+                                      },
+                                      treeType: "computing"
+                                    });
                                   }}
                                 />
                               </div>
@@ -225,17 +200,31 @@ const ComputingTree = ({
                               setSelectedDiv(vm.id);
                               navigate(`/computing/vms/${vm.id}`);
                             }}
+                            onContextMenu={(e) => {
+                              e.preventDefault();
+                              setContextMenu({
+                                mouseX: e.clientX,
+                                mouseY: e.clientY,
+                                item: {
+                                  id: vm.id,
+                                  name: vm.name,
+                                  level: 4,
+                                  type: "vm",
+                                },
+                                treeType: "computing"
+                              });
+                            }}
                           />
                         </div>
                       ))}
                     </>
                   )}
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -35,12 +35,16 @@ enum class EngineCertType(override val alias: String, override val path: String)
 	ENGINE("Engine Certificate", "/etc/pki/ovirt-engine/certs/apache.cer"),
 	ENGINE_SERVER("Engine Server Certificate",  "/etc/pki/ovirt-engine/certs/engine.cer"),
 	ENGINE_CA("Engine CA Certificate", "/etc/pki/ovirt-engine/ca.pem"),
+	ENGINE_PK("Engine Private Key", "/etc/pki/ovirt-engine/keys/engine_id_rsa"),
 	UNKNOWN("", "");
 
 	companion object {
 		private val findMap: MutableMap<String, CertType> = ConcurrentHashMap<String, CertType>()
 		init {
 			EngineCertType.values().forEach { findMap[it.alias] = it }
+		}
+		val allCerts: List<EngineCertType> = EngineCertType.values().filterNot {
+			it == UNKNOWN || it == ENGINE_PK
 		}
 		@JvmStatic fun findByAlias(alias: String): CertType = findMap.entries.firstOrNull { it.value.alias == alias }?.value ?: UNKNOWN
 	}

@@ -1,3 +1,5 @@
+import Logger from "./Logger";
+
 export const Localization = {
   kr: {
     NAME: "이름",
@@ -61,6 +63,7 @@ export const Localization = {
     USER_ID: "사용자ID",
     PRINT: "출력",
     TIME: "시간",
+    TIMESTAMP: "총 소요 시간",
     TIMEZONE: "시간대",
     DATE: "날짜",
     DATE_CREATED: "생성일자",
@@ -88,10 +91,11 @@ export const Localization = {
     PLACEHOLDER_PASSWORD: "비밀번호를 입력하세요.",
     NO_INFO: "🤷‍♂️ 내용이 없습니다",
 
-    renderTime(milliseconds){
+    renderTime(milliseconds) {
+      Logger.debug(`Localization > renderTime ... milliseconds: ${milliseconds}`)
       const hours = Math.floor(milliseconds / 3600000);
       const minutes = Math.floor((milliseconds % 3600000) / 60000);
-      const seconds = Math.floor((milliseconds % 60000) / 1000);
+      const seconds = Math.ceil((milliseconds % 60000) / 1000);
     
       let result = "";
     

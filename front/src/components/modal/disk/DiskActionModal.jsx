@@ -69,7 +69,7 @@ const DiskActionModal = ({
       const currentDomainId = disk?.storageDomainVo?.id;
   
       if (disk && queryResult.data && queryResult.isSuccess) {
-        const domains = queryResult.data.body || queryResult.data || [];
+        const domains = queryResult.data?.body ?? [];
   
         const filteredDomains = domains
           .filter((d) => d.status === "ACTIVE" && (action !== "move" || d.id !== currentDomainId))
@@ -86,7 +86,7 @@ const DiskActionModal = ({
     }
   }, [getDomains, data]);  
   
-  Logger.debug(`domainList: `, domainList);
+  domainList && Logger.debug(`domainList: `, domainList);
 
   // 같은 데이터센터 안에 잇는 스토리지 도메인 목록을 불러와야함
 

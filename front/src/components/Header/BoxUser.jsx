@@ -24,7 +24,7 @@ const BoxUser = ({ onOpenSetting }) => {
   });
 
   const handleOpenSetting = () => {
-    Logger.debug("BoxUser > 계정 설정 클릭");
+    Logger.debug("BoxUser > handleOpenSetting ... 계정 설정 클릭");
     onOpenSetting();               // 상위에서 모달 열기
     setLoginBoxVisible(false);     // 드롭다운 닫기
   };

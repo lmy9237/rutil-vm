@@ -79,9 +79,7 @@ open class CertConfig(
 	@Bean
 	open fun engineCertManagers(): List<CertManager> {
 		log.info("engineCertManagers ... ")
-		val certs = EngineCertType.values().filter {
-			it != EngineCertType.UNKNOWN
-		}.map {
+		val certs = EngineCertType.allCerts.map {
 			it.toCertManager(conn4Engine(), ovirtSSHCertLocation)
 		}
 		return certs.onEach {

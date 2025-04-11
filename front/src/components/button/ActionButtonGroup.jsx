@@ -3,7 +3,6 @@ import "./ActionButtonsGroup.css"
 
 const ActionButtonGroup = ({
   actionType = "default",
-  isContextMenu = false,
   actions = [],
   manageActions = [],
   ...props

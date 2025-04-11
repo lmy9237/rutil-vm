@@ -214,7 +214,7 @@ const DomainModal = ({
 
   useEffect(() => {
     Logger.debug(`DomainModal.lunId: ${lunId}`);
-    Logger.debug(`DomainModal.hostVo: ${JSON.stringify(hostVo)}`);
+    Logger.debug(`DomainModal.hostVo: `, hostVo);
   }, [lunId, hostVo]);
 
   useEffect(() => {

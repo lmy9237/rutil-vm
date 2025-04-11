@@ -55,7 +55,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   const { mutate: editDisk } = useEditDisk(onSuccess, () => onClose());
 
   const { data: disk } = useDisk(diskId);
-  Logger.debug(`DiskModal.diskId: ${diskId}`);
+  diskId && Logger.debug(`DiskModal.diskId: ${diskId}`);
 
   const { 
     data: datacenters = [], 

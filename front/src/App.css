@@ -224,9 +224,9 @@ input[disabled] {
 }
 
 /*우클릭 메뉴박스*/
-.context-menu-item{
-    border: var(--border-btn);
-    border-radius: 4px;
+.context-menu-item {
+  border: var(--border-btn);
+  border-radius: 4px;
 }
 /*모달 옆에 메뉴있는것 추가 페딩*/
 

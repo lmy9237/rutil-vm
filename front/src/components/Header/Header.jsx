@@ -13,10 +13,11 @@ import {
 import useUIState from "../../hooks/useUIState";
 import BoxEvent from "./BoxEvent";
 import BoxUser from "./BoxUser";
-import "./Header.css";
 import SettingUsersModal from "../modal/settings/SettingUsersModal";
-import "./Header.css";
 import Logger from "../../utils/Logger";
+import "./Header.css";
+import useAuth from "../../hooks/useAuth";
+import { useUser } from "../../api/RQHook";
 
 /**
  * @name Header
@@ -34,11 +35,12 @@ const Header = () => {
   } = useUIState();
 
   const [activeModal, setActiveModal] = useState(null); 
-  const user = JSON.parse(localStorage.getItem("user")) || [];
-  const handleOpenChangePassword = () => {
-    setActiveModal("changePassword");
-  };
-  
+  const { auth } = useAuth()
+  const { 
+    data: user
+  } = useUser(auth.username, true)
+
+  const handleOpenChangePassword = () => setActiveModal("changePassword");
 
   Logger.debug(`Header ...`)
   return (
@@ -86,11 +88,12 @@ const Header = () => {
         />
         {loginBoxVisible && <BoxUser onOpenSetting={handleOpenChangePassword} />}
       </div>
+
       <SettingUsersModal
         isOpen={activeModal === "changePassword"}
         onClose={() => setActiveModal(null)}
         targetName={"사용자"}
-        user={user[0]}
+        user={user}
         changePassword
       />
     </div>

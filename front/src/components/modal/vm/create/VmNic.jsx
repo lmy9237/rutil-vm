@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Localization from "../../../../utils/Localization";
 import Logger from "../../../../utils/Logger";
-import DynamicButton from "../../../label/DynamicButton";
 import "../../../label/DynamicInputList.jsx";
 import DynamicInputList from "../../../label/DynamicInputList.jsx";
 
@@ -11,12 +10,11 @@ const VmNic = ({
   setNicsState,
 }) => {
   const nicValues = nicsState.map((nic) => ({
-    id: nic?.id,
-    name: nic?.name,
+    ...nic,
     vnicProfileVo: { id: nic?.vnicProfileVo?.id, name: nic?.vnicProfileVo?.name }
   }));
 
-  Logger.debug(`VmNic.nicsState: ${JSON.stringify(nicsState, null, 2)}`);
+  Logger.debug(`VmNic.nicsState: `, nicsState);
 
   const handleChange = (index, value) => {
     const updated = nicsState.map((nic, i) =>

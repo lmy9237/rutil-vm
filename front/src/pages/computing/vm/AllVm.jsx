@@ -32,7 +32,6 @@ const AllVm = () => {
       <div className="section-content w-full">
         <VmDupl columns={TableColumnsInfo.VMS}
           vms={vms}
-          onCloseModal={refetchVms}
           showSearchBox={true}
           refetch={refetchVms}
           isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}

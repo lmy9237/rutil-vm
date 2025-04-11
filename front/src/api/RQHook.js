@@ -2,6 +2,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ApiManager from "./ApiManager";
 import toast from "react-hot-toast";
 import Logger from "../utils/Logger";
+import useUIState from "../hooks/useUIState";
+
 //#region: 쿼리Key
 const QK = {
   ALL_TREE_NAVIGATIONS: "allTreeNavigations",
@@ -13,7 +15,6 @@ const QK = {
   DASHBOARD_HOST: "dashboardHost",
   DASHBOARD_VM_CPU: "dashboardVmCpu",
 }
-
 //#endregion: 쿼리Key
 
 
@@ -2151,7 +2152,7 @@ export const useAddVm = (
     mutationFn: async (vmData) => {
       const res = await ApiManager.addVM(vmData)
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useAddVm ... vmData: ${JSON.stringify(vmData, null, 2)}`);
+      Logger.debug(`RQHook > useAddVm ... vmData: `, vmData);
       return _res
     },
     onSuccess: (res) => {
@@ -2217,7 +2218,9 @@ export const useDeleteVm = (
     onSuccess: (res,{vmId}) => {
       Logger.debug(`RQHook > useDeleteVm ... res: `, res);
       queryClient.invalidateQueries('allVMs');
+      queryClient.invalidateQueries('allDisksFromVm');
       queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
+      queryClient.invalidateQueries(['editVmById', vmId])
       postSuccess();
     },
     onError: (error) => {
@@ -4893,18 +4896,22 @@ export const useRemoveEvent = (
 //#region: job
 export const useAllJobs = (
   mapPredicate=(e) => ({ ...e })
-) => useQuery({
-  refetchOnWindowFocus: true,
-  queryKey: ['allJobs'],
-  queryFn: async () => {
-    const res = await ApiManager.findAllJobs()
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllJobs ... res: `, _res);
-    return _res;
-  }
-});
+  ,refetchInterval=5000,
+) => {
+  return useQuery({
+    refetchOnWindowFocus: true,
+    refetchInterval: refetchInterval, // 5초
+    queryKey: ['allJobs'],
+    queryFn: async () => {
+      const res = await ApiManager.findAllJobs()
+      const _res = mapPredicate
+        ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+        : validate(res) ?? [];
+      Logger.debug(`RQHook > useAllJobs ... res: `, _res);
+      return _res;
+    }
+  })
+}
 
 /**
  * @name useJob
@@ -5034,7 +5041,8 @@ export const useUser = (
     const _res = validate(res) ?? {}
     Logger.debug(`RQHook > useUser ... username: ${username}, exposeDetail: ${exposeDetail}, res: `, _res);
     return _res;
-  }
+  },
+  enabled: !!username,
 })
 /**
  * @name useAuthenticate

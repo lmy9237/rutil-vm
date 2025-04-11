@@ -24,10 +24,10 @@ import VmBoot from './create/VmBoot';
 import LabelSelectOptions from '../../label/LabelSelectOptions';
 import LabelSelectOptionsID from '../../label/LabelSelectOptionsID';
 import { checkName } from "../../../util";
-import './MVm.css';
 import ModalNavButton from "../../navigation/ModalNavButton";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import './MVm.css';
 
 // 탭 메뉴
 const tabs = [
@@ -53,7 +53,6 @@ const optimizeOptionList = [
   { value: "high_performance", label: "고성능" },
   { value: "desktop", label: "데스크톱" },
 ];
-
 
 // 일반
 const infoform = {
@@ -172,6 +171,7 @@ const VmModal = ({
     data: osList = [], 
     isLoading: isOssLoading 
   } = useOsSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
+  
   const { 
     data: domains = [], 
     isLoading: isDomainsLoading 

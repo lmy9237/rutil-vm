@@ -24,8 +24,8 @@ import { openNewTab } from "../../navigation";
 const VmDupl = ({
   vms = [], columns = [],
   actionType, status, 
-  onCloseModal = ()=>{},
   showSearchBox=true,
+  onCloseModal,
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
@@ -157,6 +157,7 @@ const VmDupl = ({
           selectedVms={selectedVms}
           onClose={() => {
             closeModal();
+            setSelectedVms([])
             onCloseModal && onCloseModal();
           }}
         />
