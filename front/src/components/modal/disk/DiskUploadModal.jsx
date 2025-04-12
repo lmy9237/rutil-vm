@@ -169,10 +169,8 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <BaseModal
+    <BaseModal targetName={"디스크"} submitTitle={"업로드"}
       isOpen={isOpen} onClose={onClose}
-      targetName={"디스크"}
-      submitTitle={"업로드"}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "790px" }} 
     >      

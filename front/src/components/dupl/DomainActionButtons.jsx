@@ -36,10 +36,10 @@ const DomainActionButtons = ({
 
 
   const basicActions = [
-    { type: "edit", label: "유지보수모달(임시)", onBtnClick: () => setIsDomainMainTenanceModalOpen(true) },
-    { type: "edit", label: "도메인파괴(임시)", onBtnClick: () => setIsDomainDestroyModalOpen(true) }, // 이 부분 변경
-    { type: "edit", label: "도메인 확인(임시 추가모달)", onBtnClick: () => setIsDomainCheckModalOpen(true) }, 
-    { type: "edit", label: "작업취소모달(임시)", onBtnClick: () => setIsCancelModalOpen(true)},
+    { type: "edit1", label: "유지보수모달(임시)", onBtnClick: () => setIsDomainMainTenanceModalOpen(true) },
+    { type: "edit2", label: "도메인파괴(임시)", onBtnClick: () => setIsDomainDestroyModalOpen(true) }, // 이 부분 변경
+    { type: "edit3", label: "도메인 확인(임시 추가모달)", onBtnClick: () => setIsDomainCheckModalOpen(true) }, 
+    { type: "edit4", label: "작업취소모달(임시)", onBtnClick: () => setIsCancelModalOpen(true)},
 
     { type: "create", label: Localization.kr.CREATE, onBtnClick: () => openModal("create")  },
     { type: "import", label: Localization.kr.IMPORT, onBtnClick: () => openModal("import")  },

@@ -13,10 +13,8 @@ const DiskActionButtons = ({
     { type: "create", label: Localization.kr.CREATE, disabled: false, onBtnClick: () => openModal("create") },
     { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled, onBtnClick: () => openModal("edit") },
     { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled , onBtnClick: () => openModal("delete")},
-    { type: "move", label: "이동", onBtnClick: () => openModal("move")},
-    // { type: "move", label: "이동", disabled: isEditDisabled, onBtnClick: () => openModal("move")},
-    { type: "copy", label: "복사", onBtnClick: () => openModal("copy")},
-    // { type: "copy", label: "복사", disabled: isEditDisabled , onBtnClick: () => openModal("copy")},
+    { type: "move", label: "이동", disabled: isDeleteDisabled ,onBtnClick: () => openModal("move")},
+    { type: "copy", label: "복사", disabled: isDeleteDisabled ,onBtnClick: () => openModal("copy")},
     { type: "upload", label: "업로드", onBtnClick: () => openModal("upload") },
   ];
   return (

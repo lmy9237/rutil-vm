@@ -4716,10 +4716,10 @@ export const useCopyDisk = (
 ) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (diskData) => {
-      const res = await ApiManager.copyDisk(diskData)
+    mutationFn: async ({diskId, diskImage}) => {
+      const res = await ApiManager.copyDisk(diskId, diskImage)
       const _res = validate(res) ?? {};
-      Logger.debug(`RQHook > useCopyDisk ... diskData: ${JSON.stringify(diskData, null, 2)}`);
+      Logger.debug(`RQHook > useCopyDisk ... diskImage: ${JSON.stringify(diskImage, null, 2)}`);
       return _res;
     },
     onSuccess: (res) => {

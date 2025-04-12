@@ -104,7 +104,6 @@ const DiskDupl = ({
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
-        // clickableColumnIndex={[0]}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
         columns={columns}

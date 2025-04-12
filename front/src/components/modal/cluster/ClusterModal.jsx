@@ -219,9 +219,8 @@ const ClusterModal = ({
   };
 
   return (
-    <BaseModal targetName={Localization.kr.CLUSTER}
+    <BaseModal targetName={Localization.kr.CLUSTER} submitTitle={cLabel}
       isOpen={isOpen} onClose={onClose}      
-      submitTitle={cLabel}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px" }} 
     >

@@ -50,6 +50,22 @@ const DiskModals = ({
         onClose={onClose}
       />
     ),
+    // move: (
+    //   <DiskMoveModal
+    //     isOpen={activeModal === "move"}
+    //     action={activeModal}
+    //     data={selectedDisks}
+    //     onClose={onClose}
+    //   />
+    // ),
+    // copy: (
+    //   <DiskCopyModal
+    //     isOpen={activeModal === "copy"}
+    //     action={activeModal}
+    //     data={selectedDisks}
+    //     onClose={onClose}
+    //   />
+    // ),
   };
 
   return (
