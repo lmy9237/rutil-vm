@@ -19,7 +19,8 @@ const StorageTree = ({
   menuRef,
   domain,
   setActiveModal,        
-  setSelectedDataCenters
+  setSelectedDataCenters,
+  setSelectedDomains, 
 }) => {
   const { 
     secondVisibleStorage, toggleSecondVisibleStorage,
@@ -82,9 +83,7 @@ const StorageTree = ({
                       name: dataCenter.name,
                       level: 2,
                       type: "dataCenter",
-                    },
-                    "storage"
-                  );
+                    },"storage");
                 }}
               />
               {/* 👇 데이터센터 우클릭 시 context 메뉴 표시 */}
@@ -163,7 +162,9 @@ const StorageTree = ({
                           >
                           <DomainActionButtons
                             openModal={(action) => {
-                              onContextMenu(null);
+                              setActiveModal?.(`domain:${action}`);
+                              setSelectedDomains?.([domain]);  
+                              onContextMenu(null);             
                             }}
                             selectedDomains={[domain]}
                             status={status}
@@ -172,6 +173,7 @@ const StorageTree = ({
                             actionType="context"
                             isContextMenu={true}
                           />
+
                           </div>
                         )}
                     </div>

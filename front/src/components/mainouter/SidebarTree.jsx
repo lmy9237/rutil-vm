@@ -6,6 +6,8 @@ import StorageTree from "./tree/StorageTree";
 import useUIState from "../../hooks/useUIState";
 import NetworkModals from "../modal/network/NetworkModals";
 import DataCenterModals from "../modal/datacenter/DataCenterModals";
+import DomainModals from "../modal/domain/DomainModals";
+import ClusterModals from "../modal/cluster/ClusterModals";
 
 const SidebarTree = ({ selected }) => {
   const location = useLocation();
@@ -56,17 +58,35 @@ useEffect(() => {
 const [activeModal, setActiveModal] = useState(null);
 const [selectedNetworks, setSelectedNetworks] = useState([]);
 const [selectedDataCenters, setSelectedDataCenters] = useState([]);
+const [selectedDomains, setSelectedDomains] = useState([]);
+const [selectedClusters, setSelectedClusters] = useState([]);
+
 
   return (
     <div className="aside-popup">
       {/* ✅ 가상머신 섹션 */}
       {sectionToRender === "computing" && 
-        <ComputingTree 
-          selectedDiv={selectedDiv} 
-          setSelectedDiv={setSelectedDiv} 
+      <>
+        <ComputingTree
+          selectedDiv={selectedDiv}
+          setSelectedDiv={setSelectedDiv}
           getBackgroundColor={getBackgroundColor}
           getPaddingLeft={getPaddingLeft}
+          onContextMenu={openContextMenu}      
+          contextMenu={contextMenu}
+          menuRef={menuRef}
+          setActiveModal={setActiveModal}        
+          setSelectedDataCenters={setSelectedDataCenters} 
+          setSelectedClusters={setSelectedClusters} 
         />
+        <ClusterModals
+          activeModal={activeModal?.startsWith("cluster:") ? activeModal.split(":")[1] : null}
+          selectedClusters={selectedClusters}
+          cluster={activeModal?.startsWith("cluster:") && activeModal.includes("edit") ? selectedClusters[0] : null}
+          datacenterId={selectedDataCenters[0]?.id}
+          onClose={() => setActiveModal(null)}
+        />
+      </>
       }
 
       {/* ✅ 네트워크 섹션 */}
@@ -96,18 +116,26 @@ const [selectedDataCenters, setSelectedDataCenters] = useState([]);
 
       {/* ✅ 스토리지 섹션 */}
       {sectionToRender === "storage" && (
-        <StorageTree 
-          selectedDiv={selectedDiv} 
-          setSelectedDiv={setSelectedDiv} 
-          getBackgroundColor={getBackgroundColor}
-          getPaddingLeft={getPaddingLeft}
-          onContextMenu={openContextMenu} 
-          contextMenu={contextMenu}      
-          closeContextMenu={closeContextMenu}  
-          menuRef={menuRef} 
-          setActiveModal={setActiveModal} 
-          setSelectedDataCenters={setSelectedDataCenters}    
-        />
+        <>
+          <StorageTree 
+            selectedDiv={selectedDiv} 
+            setSelectedDiv={setSelectedDiv} 
+            getBackgroundColor={getBackgroundColor}
+            getPaddingLeft={getPaddingLeft}
+            onContextMenu={openContextMenu} 
+            contextMenu={contextMenu}      
+            closeContextMenu={closeContextMenu}  
+            menuRef={menuRef} 
+            setActiveModal={setActiveModal} 
+            setSelectedDataCenters={setSelectedDataCenters}    
+          />
+          <DomainModals
+            activeModal={activeModal?.startsWith("domain:") ? activeModal.split(":")[1] : null}
+            selectedDomains={selectedDomains}
+            domain={activeModal?.startsWith("domain:") && activeModal.includes("edit") ? selectedDomains[0] : null}
+            onClose={() => setActiveModal(null)}
+          />
+        </>
       )}
       <DataCenterModals
         activeModal={activeModal?.startsWith("datacenter:") ? activeModal.split(":")[1] : null}

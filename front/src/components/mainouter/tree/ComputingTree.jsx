@@ -11,8 +11,21 @@ import {
 } from "../../icons/RutilVmIcons";
 import { useAllTreeNavigations } from "../../../api/RQHook";
 import useUIState from "../../../hooks/useUIState";
+import DataCenterActionButtons from "../../dupl/DataCenterActionButtons";
+import ClusterActionButtons from "../../dupl/ClusterActionButtons";
 
-const ComputingTree = ({ selectedDiv, setSelectedDiv }) => {
+const ComputingTree = ({ 
+  selectedDiv,
+  setSelectedDiv,
+  getBackgroundColor,
+  getPaddingLeft,
+  onContextMenu,
+  contextMenu,
+  menuRef,
+  setActiveModal,
+  setSelectedDataCenters,
+  setSelectedClusters 
+ }) => {
   const { 
     secondVisibleComputing, toggleSecondVisibleComputing,
     openDataCentersComputing, toggleOpenDataCentersComputing,
@@ -60,25 +73,101 @@ const ComputingTree = ({ selectedDiv, setSelectedDiv }) => {
                 setSelectedDiv(dataCenter.id);
                 navigate(`/computing/datacenters/${dataCenter.id}/clusters`);
               }}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                onContextMenu?.(e, {
+                  id: dataCenter.id,
+                  name: dataCenter.name,
+                  level: 2,
+                  type: "dataCenter",
+                }, "network");
+              }}
+              
             />
+            {contextMenu?.item?.id === dataCenter.id &&
+              contextMenu?.item?.type === "dataCenter" && (
+                <div
+                  className="right-click-menu-box context-menu-item"
+                  ref={menuRef}
+                  style={{
+                    position: "fixed",
+                    top: contextMenu.mouseY,
+                    left: contextMenu.mouseX,
+                    background: "white",
+                    zIndex: 9999,
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <DataCenterActionButtons
+                    selectedDataCenters={[contextMenu.item]}
+                    status="single"
+                    actionType="context"
+                    onCloseContextMenu={() => onContextMenu(null)}
+                    openModal={(action) => {
+                      setActiveModal?.(`datacenter:${action}`);
+                      setSelectedDataCenters?.([contextMenu.item]);
+                      onContextMenu(null);
+                    }}
+                  />
+                </div>
+            )}
+
             {/* 세 번째 레벨 (Clusters) */}
             {isDataCenterOpen && Array.isArray(dataCenter.clusters) && dataCenter.clusters.map((cluster) => {
               const isClusterOpen = openClustersComputing(cluster.id) || false;
               const hasHosts = Array.isArray(cluster.hosts) && cluster.hosts.length > 0;
               return (
                 <div key={cluster.id} className="tmi-g">
-                  <TreeMenuItem level={3}
-                    title={cluster.name}
-                    iconDef={rvi16Cluster}
-                    isSelected={() => location.pathname.includes(cluster.id)}
-                    isNextLevelVisible={isClusterOpen}
-                    isChevronVisible={hasHosts}
-                    onChevronClick={() => toggleOpenClustersComputing(cluster.id)}
-                    onClick={() => {
-                      setSelectedDiv(cluster.id);
-                      navigate(`/computing/clusters/${cluster.id}`);
-                    }}
-                  />
+                   <TreeMenuItem
+                  level={3}
+                  title={cluster.name}
+                  iconDef={rvi16Cluster}
+                  isSelected={() => location.pathname.includes(cluster.id)}
+                  isNextLevelVisible={isClusterOpen}
+                  isChevronVisible={hasHosts}
+                  onChevronClick={() => toggleOpenClustersComputing(cluster.id)}
+                  onClick={() => {
+                    setSelectedDiv(cluster.id);
+                    navigate(`/computing/clusters/${cluster.id}`);
+                  }}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    onContextMenu?.(e, {
+                      id: cluster.id,
+                      name: cluster.name,
+                      level: 3,
+                      type: "cluster",
+                    }, "computing");
+                  }}
+                />
+
+                  {/* 우클릭 context 메뉴 */}
+                  {contextMenu?.item?.id === cluster.id &&
+                    contextMenu?.item?.type === "cluster" && (
+                      <div
+                        className="right-click-menu-box context-menu-item"
+                        ref={menuRef}
+                        style={{
+                          position: "fixed",
+                          top: contextMenu.mouseY,
+                          left: contextMenu.mouseX,
+                          background: "white",
+                          zIndex: 9999,
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ClusterActionButtons
+                          openModal={(action) => {
+                            setActiveModal?.(`cluster:${action}`);
+                            setSelectedClusters?.([contextMenu.item]);
+                            onContextMenu(null);
+                          }}
+                          isEditDisabled={false} // 필요 시 조건 지정 가능
+                          status={"ready"}       // 또는 contextMenu.item.status 등
+                          actionType="context"
+                        />
+                      </div>
+                  )}
                   {/* 네 번째 레벨 (Hosts & VM Downs) */}
                   {isClusterOpen && (
                     <>
