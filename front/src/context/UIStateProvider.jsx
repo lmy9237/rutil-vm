@@ -64,7 +64,7 @@ export const UIStateProvider = ({ children }) => {
   const [sUIState, sSetUIState] = useState(initialState)
   const _UIState = () => {
     const res = Object.assign({}, sUIState) 
-    Logger.debug(`UIStateProvider > _UIState ... res: ${JSON.stringify(res, null, 2)}`);
+    Logger.debug(`UIStateProvider > _UIState ... res: `, res);
     return res;
   }
   const _setUIState = (newUIState) => {

@@ -82,7 +82,9 @@ const VmNics = ({ vmId }) => {
               onClick={() => setSelectedNic(nic)} // NIC 선택 시 상태 업데이트
               key={nic?.id}
             >
-              <div className="network-content">
+              <div className="network-content"
+                onClick={() => toggleDetails(nic.id)}
+              >
                 <div className="network-status">
                   <RVI24 iconDef={visibleDetails[nic.id] ? rvi24ChevronDown() : rvi24ChevronRight()}
                     onClick={() => toggleDetails(nic.id)}

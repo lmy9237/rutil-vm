@@ -39,7 +39,7 @@ export const useAllTreeNavigations = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useAllTreeNavigations ... type: ${type}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllTreeNavigations ... type: ${type}, res: `, _res);
     return _res;
   },
 });
@@ -68,7 +68,7 @@ export const useDashboardCpuMemory = (
   queryFn: async () => {
     const res = await ApiManager.getCpuMemory()
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useDashboardCpuMemory ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDashboardCpuMemory ... res: `, _res);
     return _res
   },
 });
@@ -81,7 +81,7 @@ export const useDashboardStorage = (
   queryFn: async () => {
     const res = await ApiManager.getStorage()
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useDashboardStorage ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDashboardStorage ... res: `, _res);
     return _res;
   },
 });
@@ -94,7 +94,7 @@ export const useDashboardHosts = (
   queryFn: async () => {
     const res = await ApiManager.getHosts()
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useDashboardHosts ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDashboardHosts ... res: `, _res);
     return _res
   },
 });
@@ -109,7 +109,7 @@ export const useDashboardDomain = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useDashboardDomain ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDashboardDomain ... res: `, _res);
     return _res
   },
 });
@@ -125,7 +125,7 @@ export const useDashboardHost = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useDashboardHost ... hostId: ${hostId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDashboardHost ... hostId: ${hostId}, res: `, _res);
     return _res;
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
   },
@@ -141,7 +141,7 @@ export const useDashboardVmCpu = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useDashboardVmCpu ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDashboardVmCpu ... res: `, _res);
     return _res;
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
   },
@@ -157,7 +157,7 @@ export const useDashboardVmMemory = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useDashboardVmMemory ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDashboardVmMemory ... res: `, _res);
     return _res;
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
   },
@@ -173,7 +173,7 @@ export const useDashboardStorageMemory = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useDashboardStorageMemory ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDashboardStorageMemory ... res: `, _res);
     return _res
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
   },
@@ -189,7 +189,7 @@ export const useDashboardPerVmCpu = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > dashboardPerVmCpu ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > dashboardPerVmCpu ... res: `, _res);
     return _res
   },
 });
@@ -204,7 +204,7 @@ export const useDashboardPerVmMemory = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > dashboardPerVmMemory ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > dashboardPerVmMemory ... res: `, _res);
     return _res
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
   }
@@ -220,7 +220,7 @@ export const useDashboardPerVmNetwork = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > dashboardPerVmNetwork ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > dashboardPerVmNetwork ... res: `, _res);
     return _res
     // return validate(res)?.map((e) => mapPredicate(e)) ?? []
   }
@@ -237,7 +237,7 @@ export const useDashboardMetricVmCpu = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useDashboardMetricVmCpu ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDashboardMetricVmCpu ... res: `, _res);
     return _res
   }
 });
@@ -251,7 +251,7 @@ export const useDashboardMetricVmMemory = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useDashboardMetricVmMemory ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDashboardMetricVmMemory ... res: `, _res);
     return _res
   }
 });
@@ -265,7 +265,7 @@ export const useDashboardMetricStorage = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useDashboardMetricStorage ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDashboardMetricStorage ... res: `, _res);
     return _res
   }
 });
@@ -291,7 +291,7 @@ export const useAllDataCenters = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useAllDataCenters ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllDataCenters ... res: `, _res);
     return _res;
   }
 });
@@ -310,7 +310,7 @@ export const useDataCenter = (
   queryFn: async () => {
     const res = await ApiManager.findDataCenter(dataCenterId);  // dataCenterId에 따라 API 호출
     const _res = validate(res) ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
-    Logger.debug(`RQHook > useDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
   enabled: !!dataCenterId, 
@@ -337,7 +337,7 @@ export const useClustersFromDataCenter = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공 
       : validate(res) ?? []
-    Logger.debug(`RQHook > clustersFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > clustersFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res
   },
   enabled: !!dataCenterId, // dataCenterId가 있을 때만 쿼리를 실행
@@ -365,7 +365,7 @@ export const useHostsFromDataCenter = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useHostsFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useHostsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res
   },
   enabled: !!dataCenterId, 
@@ -391,7 +391,7 @@ export const useVMsFromDataCenter = (
     const _res = mapPredicate 
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? []; // 데이터 가공
-    Logger.debug(`RQHook > useVMsFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useVMsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
   enabled: !!dataCenterId, // dataCenterId가 있을 때만 쿼리 실행
@@ -419,7 +419,7 @@ export const useDomainsFromDataCenter = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useDomainsFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDomainsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
   enabled: !!dataCenterId, // dataCenterId가 있을 때만 쿼리 실행
@@ -445,7 +445,7 @@ export const useNetworksFromDataCenter = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useNetworksFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useNetworksFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
   enabled: !!dataCenterId
@@ -471,7 +471,7 @@ export const useEventsFromDataCenter = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useEventsFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useEventsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   }
 });
@@ -497,7 +497,7 @@ export const useFindTemplatesFromDataCenter = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useFindTemplatesFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useFindTemplatesFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
   enabled: !!dataCenterId, 
@@ -523,7 +523,7 @@ export const useFindDiskListFromDataCenter = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useFindDiskListFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useFindDiskListFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
   enabled: !!dataCenterId, 
@@ -550,7 +550,7 @@ export const useCDFromDataCenter = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useCDFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useCDFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res
   },
   enabled: !!dataCenterId, 
@@ -576,7 +576,7 @@ export const useAllvnicFromDataCenter = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllvnicFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllvnicFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res
   },
   enabled: !!dataCenterId, 
@@ -602,7 +602,7 @@ export const useAddDataCenter = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddDataCenter ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddDataCenter ... res: `, res);
       queryClient.invalidateQueries('allDataCenters'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess()
     },
@@ -632,7 +632,7 @@ export const useEditDataCenter = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useEditDataCenter ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useEditDataCenter ... res: `, res)
       queryClient.invalidateQueries('allDataCenters');
       postSuccess();
     },
@@ -662,7 +662,7 @@ export const useDeleteDataCenter = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteDataCenter ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useDeleteDataCenter ... res: `, res)
       queryClient.invalidateQueries('allDataCenters');
       postSuccess();
     },
@@ -695,7 +695,7 @@ export const useAllClusters = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllClusters ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllClusters ... res: `, _res);
     return _res;
   }
 })
@@ -716,7 +716,7 @@ export const useAllUpClusters = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllUpClusters ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllUpClusters ... res: `, _res);
     return _res
   }
 })
@@ -737,7 +737,7 @@ export const useCluster = (
   queryFn: async () => {
     const res = await ApiManager.findCluster(clusterId);
     const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
   enabled: !!clusterId, 
@@ -765,7 +765,7 @@ export const useNetworkFromCluster = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useNetworkFromCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useNetworkFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
   enabled: !!clusterId,
@@ -791,7 +791,7 @@ export const useHostsFromCluster = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useHostsFromCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useHostsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res;
   },
   enabled: !!clusterId, 
@@ -820,7 +820,7 @@ export const useVMsFromCluster = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useVMsFromCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useVMsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res;
   },
   enabled: !!clusterId, 
@@ -846,7 +846,7 @@ export const usePermissionsFromCluster = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > usePermissionsFromCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > usePermissionsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
   enabled: !!clusterId, 
@@ -873,7 +873,7 @@ export const useCpuProfilesFromCluster = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useCpuProfilesFromCluster ... ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useCpuProfilesFromCluster ... ${clusterId}, res: `, _res);
     return _res
   },
   enabled: !!clusterId, 
@@ -902,7 +902,7 @@ export const useOsSystemsFromCluster = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useOsSystemsFromCluster ... ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useOsSystemsFromCluster ... ${clusterId}, res: `, _res);
     return _res
   },
   enabled: !!clusterId, 
@@ -931,7 +931,7 @@ export const useEventFromCluster = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useEventFromCluster ... clusterId: ${clusterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useEventFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
   enabled: !!clusterId, 
@@ -954,7 +954,7 @@ export const useAddCluster = (
       return validate(res)
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddCluster ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddCluster ... res: `, res);
       queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
       postSuccess();
     },
@@ -982,7 +982,7 @@ export const useEditCluster = (
       return validate(res)
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useEditCluster ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useEditCluster ... res: `, res);
       queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
       postSuccess();
     },
@@ -1010,7 +1010,7 @@ export const useDeleteCluster = (
       return validate(res)
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteCluster ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeleteCluster ... res: `, res);
       queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
       postSuccess();
     },
@@ -1041,7 +1041,7 @@ export const useAllHosts = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllHosts ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllHosts ... res: `, _res);
     return _res
   }
 })
@@ -1062,7 +1062,7 @@ export const useHost = (
   queryFn: async () => {
     const res = await ApiManager.findHost(hostId)
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useHost ... hostId: ${hostId},  res: `, _res);
     return _res
   },
   enabled: !!hostId
@@ -1090,7 +1090,7 @@ export const useVmsFromHost = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useVmsFromHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useVmsFromHost ... hostId: ${hostId},  res: `, _res);
     return _res
   },
   enabled: !!hostId
@@ -1116,7 +1116,7 @@ export const useNetworkInterfacesFromHost = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useNetworkInterfacesFromHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useNetworkInterfacesFromHost ... hostId: ${hostId},  res: `, _res);
     return _res
   },
   enabled: !!hostId
@@ -1139,7 +1139,7 @@ export const useNetworkInterfaceFromHost = (
   queryFn: async () => {
     const res = await ApiManager.findHostNicFromHost(hostId, nicId); 
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useNetworkInterfaceFromHost ... hostId: ${hostId} nicId: ${nicId},  res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useNetworkInterfaceFromHost ... hostId: ${hostId} nicId: ${nicId},  res: `, _res);
     return _res
   },
   enabled: !!hostId && !!nicId
@@ -1165,7 +1165,7 @@ export const useNetworkAttachmentsFromHost = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useNetworkAttachmentsFromHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useNetworkAttachmentsFromHost ... hostId: ${hostId},  res: `, _res);
     return _res
   },
   enabled: !!hostId
@@ -1188,7 +1188,7 @@ export const useNetworkAttachmentFromHost = (
   queryFn: async () => {
     const res = await ApiManager.findNetworkAttachmentFromHost(hostId, networkAttachmentId); 
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useNetworkAttachmentFromHost ... hostId: ${hostId} networkAttachmentId: ${networkAttachmentId},  res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useNetworkAttachmentFromHost ... hostId: ${hostId} networkAttachmentId: ${networkAttachmentId},  res: `, _res);
     return _res
   },
   enabled: !!hostId
@@ -1212,7 +1212,7 @@ export const useAddBonding = (
       return validate(res)
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddBonding ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddBonding ... res: `, res);
       queryClient.invalidateQueries('NetworkInterfacesFromHost');
       postSuccess();
     },
@@ -1240,7 +1240,7 @@ export const useEditBonding = (
       return validate(res)
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useEditBonding ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useEditBonding ... res: `, res);
       queryClient.invalidateQueries('NetworkInterfacesFromHost');
       postSuccess();
     },
@@ -1268,7 +1268,7 @@ export const useDeleteBonding = (
       return validate(res)
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteBonding ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeleteBonding ... res: `, res);
       queryClient.invalidateQueries('NetworkInterfacesFromHost');
       postSuccess();
     },
@@ -1302,7 +1302,7 @@ export const useHostDevicesFromHost = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useHostDevicesFromHost ... hostId: ${hostId},  res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useHostDevicesFromHost ... hostId: ${hostId},  res: `, _res);
     return _res
   },
   enabled: !!hostId
@@ -1328,7 +1328,7 @@ export const useEventsFromHost = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useEventsFromHost ... hostId: ${hostId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useEventsFromHost ... hostId: ${hostId}, res: `, _res);
     return _res
   },
   enabled: !!hostId
@@ -1355,7 +1355,7 @@ export const useIscsiFromHost = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useIscsiFromHost ... hostId: ${hostId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useIscsiFromHost ... hostId: ${hostId}, res: `, _res);
     return _res; // 데이터 가공 후 반환
   },
   enabled: !!hostId,
@@ -1382,7 +1382,7 @@ export const useFibreFromHost = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? []; 
-    Logger.debug(`RQHook > useFibreFromHost ... hostId: ${hostId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useFibreFromHost ... hostId: ${hostId}, res: `, _res);
     return _res
   },
   enabled: !!hostId,
@@ -1405,11 +1405,11 @@ export const useImportIscsiFromHost = (
     mutationFn: async ({hostId, iscsiData}) => {
       const res = await ApiManager.findImportIscsiFromHost(hostId, iscsiData);
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useImportIscsiFromHost ... hostId: ${hostId}, iscsiData: ${JSON.stringify(iscsiData, null, 2)}`)
+      Logger.debug(`RQHook > useImportIscsiFromHost ... hostId: ${hostId}, iscsiData: `, iscsiData)
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useImportIscsiFromHost ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useImportIscsiFromHost ... res: `, res);
       queryClient.invalidateQueries(['iscsiFromHost'])
       postSuccess();
     },
@@ -1442,7 +1442,7 @@ export const useImportFcpFromHost = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useImportFcpFromHost ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useImportFcpFromHost ... res: `, res);
       queryClient.invalidateQueries(['fcpsFromHost'])
       postSuccess();
     },
@@ -1477,7 +1477,7 @@ export const useLoginIscsiFromHost = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useLoginIscsiFromHost ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useLoginIscsiFromHost ... res: `, res);
       queryClient.invalidateQueries(['iscsiFromHost'])
       postSuccess();
     },
@@ -1504,11 +1504,11 @@ export const useAddHost = (
     mutationFn: async ({ hostData, deployHostedEngine }) => {
       const res = await ApiManager.addHost(hostData, deployHostedEngine);
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useLoginIscsiFromHost ... hostData: ${JSON.stringify(hostData, null, 2)}, deployHostedEngine: ${deployHostedEngine}`)
+      Logger.debug(`RQHook > useLoginIscsiFromHost ... deployHostedEngine: ${deployHostedEngine}, hostData: `, hostData)
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddHost ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddHost ... res: `, res);
       queryClient.invalidateQueries('allHosts'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화   
       postSuccess();
     },
@@ -1538,7 +1538,7 @@ export const useEditHost = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useEditHost ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useEditHost ... res: `, res);
       queryClient.invalidateQueries('allHosts');
       postSuccess();
     },
@@ -1568,7 +1568,7 @@ export const useDeleteHost = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteHost ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeleteHost ... res: `, res);
       queryClient.invalidateQueries('allHosts');
       postSuccess();
     },
@@ -1599,7 +1599,7 @@ export const useDeactivateHost = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeactivateHost ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeactivateHost ... res: `, res);
       queryClient.invalidateQueries('allHosts');
       postSuccess();
     },
@@ -1630,7 +1630,7 @@ export const useActivateHost = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useActivateHost ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useActivateHost ... res: `, res);
       queryClient.invalidateQueries('allHosts');
       postSuccess();
     },
@@ -1661,7 +1661,7 @@ export const useRestartHost = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useRestartHost ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useRestartHost ... res: `, res);
       queryClient.invalidateQueries('allHosts');
       postSuccess();
     },
@@ -1684,7 +1684,7 @@ export const useEnrollHostCertificate = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useEnrollHostCertificate ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useEnrollHostCertificate ... res: `, res);
       queryClient.invalidateQueries('allHosts');
       postSuccess();
     },
@@ -1715,7 +1715,7 @@ export const useAllVMs = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? []; 
-    Logger.debug(`RQHook > useAllVMs ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllVMs ... res: `, _res);
     return _res;
 
   },
@@ -1736,7 +1736,7 @@ export const useVm = (
   queryFn: async () => {
     const res = await ApiManager.findVM(vmId);
     const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useVm ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useVm ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
   enabled: !!vmId
@@ -1756,7 +1756,7 @@ export const useFindEditVmById = (
   queryFn: async () => {
     const res = await ApiManager.findEditVM(vmId);
     const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useFindEditVmById ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useFindEditVmById ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
   enabled: !!vmId
@@ -1783,7 +1783,7 @@ export const useDisksFromVM = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useDisksFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDisksFromVM ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
   enabled: !!vmId, 
@@ -1810,7 +1810,7 @@ export const useSnapshotsFromVM = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useDisksFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDisksFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
   enabled: !!vmId, 
@@ -1839,7 +1839,7 @@ export const useSnapshotDetailFromVM = (
     }
     const res = await ApiManager.findSnapshotFromVm(vmId, snapshotId); 
     const _res = validate(res) ?? {}; 
-    Logger.debug(`RQHook > useSnapshotDetailFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useSnapshotDetailFromVM ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
   enabled: !!vmId && !!snapshotId
@@ -1895,7 +1895,7 @@ export const useDeleteSnapshot = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteSnapshot ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useDeleteSnapshot ... res: `, res)
       queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
       postSuccess();
     },
@@ -1930,7 +1930,7 @@ export const useHostDevicesFromVM = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useHostDevicesFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useHostDevicesFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
   enabled: !!vmId, 
@@ -1959,7 +1959,7 @@ export const useNetworkInterfacesFromVM = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useNetworkInterfacesFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useNetworkInterfacesFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
   enabled: !!vmId, 
@@ -1986,7 +1986,7 @@ export const useNetworkInterfaceFromVM = (
   queryFn: async () => {
     const res = await ApiManager.findNicFromVM(vmId, nicId); 
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useNetworkInterfaceFromVM ... vmId: ${vmId}, nicId: ${nicId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useNetworkInterfaceFromVM ... vmId: ${vmId}, nicId: ${nicId}, res: `, _res);
     return _res
   },
   enabled: !!vmId && !!nicId, 
@@ -2015,7 +2015,7 @@ export const useApplicationsFromVM = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useApplicationsFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useApplicationsFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
   enabled: !!vmId, 
@@ -2043,7 +2043,7 @@ export const useAllEventsFromVM = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllEventsFromVM ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllEventsFromVM ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
   enabled: !!vmId
@@ -2063,7 +2063,7 @@ export const useVmConsoleAccessInfo = (
   queryFn: async () => {
     const res = await ApiManager.findVmConsoleAccessInfo(vmId);
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useVmConsoleAccessInfo ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useVmConsoleAccessInfo ... vmId: ${vmId}, res: `, _res);
     return validate(res);
   },
   enabled: !!vmId
@@ -2087,7 +2087,7 @@ export const useAddVm = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddVm ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddVm ... res: `, res);
       queryClient.invalidateQueries('allVMs'); 
       postSuccess();
     },
@@ -2116,7 +2116,7 @@ export const useEditVm = (
       return _res;
     },
     onSuccess: (res,{vmId}) => {
-      Logger.debug(`RQHook > useEditVm ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useEditVm ... res: `, res);
       queryClient.invalidateQueries('allVMs');
       queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess();
@@ -2147,7 +2147,7 @@ export const useDeleteVm = (
       return _res;
     },
     onSuccess: (res,{vmId}) => {
-      Logger.debug(`RQHook > useDeleteVm ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeleteVm ... res: `, res);
       queryClient.invalidateQueries('allVMs');
       queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess();
@@ -2178,7 +2178,7 @@ export const useStartVM = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useStartVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useStartVM ... res: `, res);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2207,7 +2207,7 @@ export const usePauseVM = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > usePauseVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > usePauseVM ... res: `, res);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2237,7 +2237,7 @@ export const useShutdownVM = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useShutdownVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useShutdownVM ... res: `, res);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2266,7 +2266,7 @@ export const usePowerOffVM = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > usePowerOffVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > usePowerOffVM ... res: `, res);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2296,7 +2296,7 @@ export const useRebootVM = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useRebootVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useRebootVM ... res: `, res);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2325,7 +2325,7 @@ export const useResetVM = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useResetVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useResetVM ... res: `, res);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2358,7 +2358,7 @@ export const useHostsForMigration = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useHostsForMigration ... vmId: ${vmId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useHostsForMigration ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
   enabled: !!vmId
@@ -2382,7 +2382,7 @@ export const useMigration = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useMigration ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useMigration ... res: `, res);
       queryClient.invalidateQueries(['hostsForMigration', 'allVms']);
       postSuccess();
     },
@@ -2412,7 +2412,7 @@ export const useExportVM = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useExportVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useExportVM ... res: `, res);
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2442,7 +2442,7 @@ export const useAddNicFromVM = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddNicFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddNicFromVM ... res: `, res);
       queryClient.invalidateQueries('NetworkInterfaceFromVM');
       postSuccess();
     },
@@ -2473,7 +2473,7 @@ export const useEditNicFromVM = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useEditNicFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useEditNicFromVM ... res: `, res);
       queryClient.invalidateQueries('NetworkInterfaceByVMId,NetworkInterfaceFromVM');
       postSuccess();      
     },
@@ -2503,7 +2503,7 @@ export const useDeleteNetworkInterface = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteNetworkInterface ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeleteNetworkInterface ... res: `, res);
       queryClient.invalidateQueries('NetworkInterfaceFromVM');
       postSuccess();
     },
@@ -2532,7 +2532,7 @@ export const useDiskAttachmentFromVm = (
   queryFn: async () => {
     const res = await ApiManager.findDiskattachmentFromVM(vmId, diskAttachmentId);
     const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useDiskAttachmentFromVm ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDiskAttachmentFromVm ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, res: `, _res);
     return _res;
   },
   enabled: !!vmId && !!diskAttachmentId,
@@ -2555,7 +2555,7 @@ export const useAddDiskFromVM = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddDiskFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddDiskFromVM ... res: `, res);
       queryClient.invalidateQueries('disksFromVM');
       postSuccess();
     },
@@ -2585,7 +2585,7 @@ export const useEditDiskFromVM = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useEditDiskFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useEditDiskFromVM ... res: `, res);
       queryClient.invalidateQueries('disksFromVM');
       postSuccess();
     },
@@ -2615,7 +2615,7 @@ export const useDeleteDiskFromVM = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteDiskFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeleteDiskFromVM ... res: `, res);
       queryClient.invalidateQueries('allDisksFromVm');
       postSuccess();
     },
@@ -2646,7 +2646,7 @@ export const useConnDiskFromVM = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useConnDiskFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useConnDiskFromVM ... res: `, res);
       queryClient.invalidateQueries(['allDisksFromVm']); 
       postSuccess();
     },
@@ -2676,7 +2676,7 @@ export const useConnDiskListFromVM = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useConnDiskListFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useConnDiskListFromVM ... res: `, res);
       queryClient.invalidateQueries('allDisksFromVm');
       postSuccess();
     },
@@ -2707,7 +2707,7 @@ export const useDeactivateDiskFromVm = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeactivateDiskFromVm ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeactivateDiskFromVm ... res: `, res);
       queryClient.invalidateQueries('allDisksFromVm');
       postSuccess();
     },
@@ -2738,7 +2738,7 @@ export const useActivateDiskFromVm = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useActivateDiskFromVm ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useActivateDiskFromVm ... res: `, res);
       queryClient.invalidateQueries('allDisksFromVm');
       postSuccess();
     },
@@ -2794,7 +2794,7 @@ export const useAllTemplates = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useAllTemplates ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllTemplates ... res: `, _res);
     return _res;
   }
 });
@@ -2813,7 +2813,7 @@ export const useTemplate = (
   queryFn: async () => {
     const res = await ApiManager.findTemplate(templateId);
     const _res =  validate(res) ?? {};
-    Logger.debug(`RQHook > useTemplate ... templateId: ${templateId} res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useTemplate ... templateId: ${templateId} res: `, _res);
     return _res;
   },
   enabled: !!templateId,
@@ -2842,7 +2842,7 @@ export const useAllVmsFromTemplate = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useAllVmsFromTemplate ... templateId: ${templateId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllVmsFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
   },
   enabled: !!templateId,
@@ -2869,7 +2869,7 @@ export const useAllNicsFromTemplate = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useAllVmsFromTemplate ... templateId: ${templateId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllVmsFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
   },
   enabled: !!templateId,
@@ -2898,7 +2898,7 @@ export const useAllDisksFromTemplate = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useAllDisksFromTemplate ... templateId: ${templateId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllDisksFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
   },
   enabled: !!templateId,
@@ -2925,7 +2925,7 @@ export const useAllStoragesFromTemplate = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useAllDisksFromTemplate ... templateId: ${templateId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllDisksFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
   },
   enabled: !!templateId,
@@ -2955,7 +2955,7 @@ export const useAllEventFromTemplate = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] 
       : validate(res) ?? []
-    Logger.debug(`RQHook > useAllEventFromTemplate ... templateId: ${templateId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllEventFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
   },
   enabled: !!templateId,
@@ -2979,7 +2979,7 @@ export const useAddTemplate = (
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddTemplate ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useAddTemplate ... res: `, res)
       queryClient.invalidateQueries('allTemplates');
       postSuccess();
     },
@@ -3008,7 +3008,7 @@ export const useEditTemplate = (
       return _res;
     },
     onSuccess: (res,{ templateId }) => {
-      Logger.debug(`RQHook > useEditTemplate ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useEditTemplate ... res: `, res)
       queryClient.invalidateQueries('allTemplates');
       queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess();
@@ -3038,7 +3038,7 @@ export const useDeleteTemplate = (
       return _res;
     },
     onSuccess: (res,{templateId}) => {
-      Logger.debug(`RQHook > useEditTemplate ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useEditTemplate ... res: `, res)
       queryClient.invalidateQueries('allTemplates');
       queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess();
@@ -3068,7 +3068,7 @@ export const useAddNicFromTemplate = (
       return _res;
     },
     onSuccess: (res,{templateId}) => {
-      Logger.debug(`RQHook > useAddNicFromTemplate ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useAddNicFromTemplate ... res: `, res)
       queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
       queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess();
@@ -3098,7 +3098,7 @@ export const useEditNicFromTemplate = (
       return _res;
     },
     onSuccess: (res,{templateId}) => {
-      Logger.debug(`RQHook > useEditNicFromTemplate ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useEditNicFromTemplate ... res: `, res)
       queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
       queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess();
@@ -3130,7 +3130,7 @@ export const useDeleteNetworkFromTemplate = (
       return _res;
     },
     onSuccess: (res,{templateId}) => {
-      Logger.debug(`RQHook > useEditNicFromTemplate ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useEditNicFromTemplate ... res: `, res)
       queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
       queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess();
@@ -3162,7 +3162,7 @@ export const useAllNetworks = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useFibreFromHost ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useFibreFromHost ... res: `, _res);
     return _res
   }
 });
@@ -3180,7 +3180,7 @@ export const useNetwork = (
   queryFn: async () => {
     const res = await ApiManager.findNetwork(networkId);
     const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useFibreFromHost ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useFibreFromHost ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
   enabled: !!networkId,
@@ -3208,7 +3208,7 @@ export const useAllClustersFromNetwork = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllClustersFromNetwork ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllClustersFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
   enabled: !!networkId,
@@ -3234,7 +3234,7 @@ export const useConnectedHostsFromNetwork = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useConnectedHostsFromNetwork ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useConnectedHostsFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
   enabled: !!networkId, 
@@ -3264,7 +3264,7 @@ export const useDisconnectedHostsFromNetwork = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useDisconnectedHostsFromNetwork ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDisconnectedHostsFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
   enabled: !!networkId, 
@@ -3317,7 +3317,7 @@ export const useAllTemplatesFromNetwork = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllTemplatesFromNetwork ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllTemplatesFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
   enabled: !!networkId,
@@ -3344,7 +3344,7 @@ export const useAllVnicProfilesFromNetwork = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllVnicProfilesFromNetwork ... networkId: ${networkId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllVnicProfilesFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
   enabled: !!networkId, 
@@ -3367,7 +3367,7 @@ export const useAddNetwork = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddNetwork ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useAddNetwork ... res: `, res)
       queryClient.invalidateQueries('allNetworks'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess();
     },
@@ -3396,7 +3396,7 @@ export const useEditNetwork = (
       return _res;
     },
     onSuccess: (res, { networkId }) => {
-      Logger.debug(`RQHook > useEditNetwork ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useEditNetwork ... res: `, res)
       queryClient.invalidateQueries('allNetworks'); // 전체 네트워크 목록 업데이트
       queryClient.invalidateQueries(['networkById', networkId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess();
@@ -3427,7 +3427,7 @@ export const useDeleteNetwork = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteNetwork ... res: ${JSON.stringify(res, null, 2)}`)
+      Logger.debug(`RQHook > useDeleteNetwork ... res: `, res)
       queryClient.invalidateQueries('allNetworks');
       postSuccess();
     },
@@ -3456,7 +3456,7 @@ export const useAllNetworkProviders = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllNetworkProviders ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllNetworkProviders ... res: `, _res);
     return _res;
   }
 });
@@ -3481,7 +3481,7 @@ export const useAllVnicProfiles = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllVnicProfiles ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllVnicProfiles ... res: `, _res);
     return _res;
   }
 })
@@ -3498,7 +3498,7 @@ export const useVnicProfile = (vnicId) => useQuery({
   queryFn: async () => {
     const res = await ApiManager.findVnicProfile(vnicId);
     const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useVnicProfile ... vnicId: ${vnicId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useVnicProfile ... vnicId: ${vnicId}, res: `, _res);
     return _res;
   },
   enabled: !!vnicId,
@@ -3526,7 +3526,7 @@ export const useAllVmsFromVnicProfiles = (vnicProfileId,
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllVmsFromVnicProfiles ... vnicProfileId: ${vnicProfileId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllVmsFromVnicProfiles ... vnicProfileId: ${vnicProfileId}, res: `, _res);
     return _res;
   },
   enabled: !!vnicProfileId, 
@@ -3552,7 +3552,7 @@ export const useAllTemplatesFromVnicProfiles = (vnicProfileId,
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllTemplatesFromVnicProfiles ... vnicProfileId: ${vnicProfileId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllTemplatesFromVnicProfiles ... vnicProfileId: ${vnicProfileId}, res: `, _res);
     return _res;
   },
   enabled: !!vnicProfileId,
@@ -3579,7 +3579,7 @@ export const useAddVnicProfile = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddVnicProfile ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddVnicProfile ... res: `, res);
       queryClient.invalidateQueries('allVnicProfiles');
       postSuccess();
     },
@@ -3608,7 +3608,7 @@ export const useEditVnicProfile = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useEditVnicProfile ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useEditVnicProfile ... res: `, res);
       queryClient.invalidateQueries('allVnicProfiles');
       postSuccess();
     },
@@ -3638,7 +3638,7 @@ export const useDeleteVnicProfile = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteVnicProfile ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeleteVnicProfile ... res: `, res);
       queryClient.invalidateQueries('allVnicProfiles');
       postSuccess();
     },
@@ -3669,7 +3669,7 @@ export const useNetworkFilters = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllTemplatesFromVnicProfiles ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllTemplatesFromVnicProfiles ... res: `, _res);
     return _res;
   }
 })
@@ -3694,7 +3694,7 @@ export const useAllStorageDomains = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllStorageDomains ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllStorageDomains ... res: `, _res);
     return _res;
   }
 })
@@ -3710,7 +3710,7 @@ export const useStroageDomain = (storageDomainId) => useQuery({
   queryFn: async () => {
     const res = await ApiManager.findDomain(storageDomainId);
     const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useStroageDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useStroageDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -3738,7 +3738,7 @@ export const useAllActiveDomainsFromDataCenter = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllActiveDomainsFromDataCenter ... dataCenterId: ${dataCenterId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllActiveDomainsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
   enabled: !!dataCenterId,
@@ -3765,7 +3765,7 @@ export const useAllDataCentersFromDomain = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllDataCentersFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllDataCentersFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -3790,7 +3790,7 @@ export const useAllHostsFromDomain = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllHostsFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllHostsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -3816,7 +3816,7 @@ export const useAllVMsFromDomain = (storageDomainId,
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllVMsFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllVMsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -3844,7 +3844,7 @@ export const useAllUnregisteredVMsFromDomain = (storageDomainId,
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllUnregisteredVMsFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllUnregisteredVMsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -3871,7 +3871,7 @@ export const useAllDisksFromDomain = (storageDomainId,
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllDisksFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllDisksFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -3896,7 +3896,7 @@ export const useAllUnregisteredDisksFromDomain = (storageDomainId,
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllUnregisteredDisksFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllUnregisteredDisksFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -3919,7 +3919,7 @@ export const useRegisteredDiskFromDomain = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteVnicProfile ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeleteVnicProfile ... res: `, res);
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess();
     },
@@ -3948,7 +3948,7 @@ export const useDeletRegisteredDiskFromDomain = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeletRegisteredDiskFromDomain ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeletRegisteredDiskFromDomain ... res: `, res);
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess();
     },
@@ -3980,7 +3980,7 @@ export const useAllTemplatesFromDomain = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllTemplatesFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllTemplatesFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -4006,7 +4006,7 @@ export const useAllUnregisteredTemplatesFromDomain = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllUnregisteredTemplatesFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllUnregisteredTemplatesFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -4032,7 +4032,7 @@ export const useAllDiskProfilesFromDomain = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllDiskProfilesFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllDiskProfilesFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId, // storageDomainId가 있을 때만 쿼리 실행
@@ -4058,7 +4058,7 @@ export const useAllDiskSnapshotsFromDomain = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllDiskSnapshotsFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllDiskSnapshotsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -4087,7 +4087,7 @@ export const useAllEventsFromDomain = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllEventsFromDomain ... storageDomainId: ${storageDomainId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllEventsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -4111,7 +4111,7 @@ export const useAllActiveDataCenters = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllActiveDataCenters ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllActiveDataCenters ... res: `, _res);
     return _res;
   }
 })
@@ -4464,7 +4464,7 @@ export const useAllDisks = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllDisks ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllDisks ... res: `, _res);
     return _res;
   },
   // staleTime: 2000, // 2초 동안 데이터 재요청 방지
@@ -4498,7 +4498,7 @@ export const useDisk = (
   queryFn: async () => {
     const res = await ApiManager.findDisk(diskId);
     const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useDisk ... diskId: ${diskId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useDisk ... diskId: ${diskId}, res: `, _res);
     return _res;
   },
   enabled: !!diskId,
@@ -4526,7 +4526,7 @@ export const useAllVmsFromDisk = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllDisks ... diskId: ${diskId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllDisks ... diskId: ${diskId}, res: `, _res);
     return _res;
   },
   enabled: !!diskId,
@@ -4553,7 +4553,7 @@ export const useAllStorageDomainsFromDisk = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllStorageDomainsFromDisk ... diskId: ${diskId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllStorageDomainsFromDisk ... diskId: ${diskId}, res: `, _res);
     return _res;
   },
   enabled: !!diskId,
@@ -4577,7 +4577,7 @@ export const useAddDisk = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddDisk ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddDisk ... res: `, res);
       queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
       postSuccess();
     },
@@ -4606,7 +4606,7 @@ export const useEditDisk = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useEditDisk ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useEditDisk ... res: `, res);
       queryClient.invalidateQueries('allDisks');
       postSuccess();
     },
@@ -4635,7 +4635,7 @@ export const useDeleteDisk = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteDisk ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useDeleteDisk ... res: `, res);
       queryClient.invalidateQueries('allDisks');
       postSuccess();
     },
@@ -4665,7 +4665,7 @@ export const useUploadDisk = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useUploadDisk ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useUploadDisk ... res: `, res);
       queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
       postSuccess();
     },
@@ -4694,7 +4694,7 @@ export const useMoveDisk = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useMoveDisk ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useMoveDisk ... res: `, res);
       queryClient.invalidateQueries('allDisks'); 
       postSuccess();
     },
@@ -4723,7 +4723,7 @@ export const useCopyDisk = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useCopyDisk ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useCopyDisk ... res: `, res);
       queryClient.invalidateQueries('allDisks'); 
 
       postSuccess();
@@ -4755,7 +4755,7 @@ export const useAllEvents = ({
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllEvents ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllEvents ... res: `, _res);
     return _res;
   }
 });
@@ -4776,7 +4776,7 @@ export const useAllEventsNormal = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllEventsNormal ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllEventsNormal ... res: `, _res);
     return _res;
   }
 });
@@ -4791,7 +4791,7 @@ export const useAllNotiEvents = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllNotiEvents ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllNotiEvents ... res: `, _res);
     return _res;
   }
 });
@@ -4809,7 +4809,7 @@ export const useRemoveEvent = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useRemoveEvent ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useRemoveEvent ... res: `, res);
       queryClient.invalidateQueries(['allEvents','allNotiEvents','allEventsNormal']);
       postSuccess(res);
     },
@@ -4833,7 +4833,7 @@ export const useAllJobs = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllJobs ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllJobs ... res: `, _res);
     return _res;
   }
 });
@@ -4853,7 +4853,7 @@ export const useJob = (
   queryFn: async () => {
     const res = await ApiManager.findJob(jobId)
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useJob ... jobId: ${jobId}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useJob ... jobId: ${jobId}, res: `, _res);
     return _res;
   },
   enabled: !!jobId
@@ -4879,7 +4879,7 @@ export const useAddJob = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddJob ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddJob ... res: `, res);
       queryClient.invalidateQueries('allJobs');
       queryClient.invalidateQueries(['job', res.id]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
@@ -4911,7 +4911,7 @@ export const useEndJob = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddJob ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddJob ... res: `, res);
       queryClient.invalidateQueries('allJobs');
       queryClient.invalidateQueries(['job', jobId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
@@ -4944,7 +4944,7 @@ export const useAllUsers = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllUsers ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllUsers ... res: `, _res);
     return _res;
   }
 })
@@ -4964,7 +4964,7 @@ export const useUser = (
   queryFn: async () => {
     const res = await ApiManager.findUser(username, exposeDetail)
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useUser ... username: ${username}, exposeDetail: ${exposeDetail}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useUser ... username: ${username}, exposeDetail: ${exposeDetail}, res: `, _res);
     return _res;
   }
 })
@@ -4988,7 +4988,7 @@ export const useAuthenticate = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAuthenticate ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAuthenticate ... res: `, res);
       if (!res) throw Error("[403] 로그인에 실패했습니다. 사용자ID 또는 비밀번호가 다릅니다.")
       queryClient.invalidateQueries('allUsers,user');
       postSuccess(res);
@@ -5020,7 +5020,7 @@ export const useAddUser = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddUser ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useAddUser ... res: `, res);
       toast.success("사용자 생성 성공")
       queryClient.invalidateQueries('allUsers,user');
       queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
@@ -5052,7 +5052,7 @@ export const useEditUser = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useEditUser ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useEditUser ... res: `, res);
       toast.success("사용자 편집 성공")
       queryClient.invalidateQueries('allUsers');
       queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
@@ -5080,7 +5080,7 @@ export const useUpdatePasswordUser = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useChangePasswordUser ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useChangePasswordUser ... res: `, res);
       toast.success("사용자 비밀번호 변경 성공")
       queryClient.invalidateQueries('allUsers');
       queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
@@ -5112,7 +5112,7 @@ export const useRemoveUser = (
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useRemoveUser ... res: ${JSON.stringify(res, null, 2)}`);
+      Logger.debug(`RQHook > useRemoveUser ... res: `, res);
       toast.success("사용자 삭제 성공")
       queryClient.invalidateQueries('allUsers,user');
       queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
@@ -5146,7 +5146,7 @@ export const useAllUserSessions = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllUserSessions ... username: ${username} res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllUserSessions ... username: ${username} res: `, _res);
     return _res;
   }
 })
@@ -5164,7 +5164,7 @@ export const useAllCerts = (
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllCerts ... res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useAllCerts ... res: `, _res);
     return _res;
   }
 })
@@ -5177,7 +5177,7 @@ export const useCert = (
     Logger.debug(`useCert ... id: ${id}`);
     const res = await ApiManager.findCert(id)
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useCert ... id: ${id}, res: ${JSON.stringify(_res, null, 2)}`);
+    Logger.debug(`RQHook > useCert ... id: ${id}, res: `, _res);
     return _res;
   }
 })

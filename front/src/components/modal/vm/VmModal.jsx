@@ -302,7 +302,7 @@ const VmModal = ({
     }
   }, [clusterVo.id, clusters, osList.length]); // osList 전체가 아닌 length만 의존성에 포함
   
-  Logger.debug(`VmModal.nicListState: ${JSON.stringify(nicListState, null, 2)}`);
+  Logger.debug(`VmModal.nicListState: `, nicListState);
 
   // 초기화 작업
   useEffect(() => {
