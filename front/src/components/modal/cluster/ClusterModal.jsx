@@ -172,28 +172,53 @@ const ClusterModal = ({
 
   useEffect(() => {
     if (datacenterId) {
-      setDataCenterVo({id: datacenterId});
+      setDataCenterVo({ id: datacenterId });
     } else if (!editMode && datacenters && datacenters.length > 0) {
-      setDataCenterVo({id: datacenters[0].id, name: datacenters[0].name});
+      const defaultDc = datacenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
+      if (defaultDc) {
+        setDataCenterVo({ id: defaultDc.id, name: defaultDc.name });
+      } else {
+        setDataCenterVo({ id: datacenters[0].id, name: datacenters[0].name });
+      }
     }
   }, [datacenters, datacenterId, editMode]);  
 
   useEffect(() => {
     if (!editMode && networks && networks.length > 0) {
-      setNetworkVo({id: networks[0].id, name: networks[0].name});
+      const defaultN = networks.find(n => n.name === "ovirtmgmt");
+      if(defaultN){
+        setNetworkVo({id: defaultN.id, name: defaultN.name});
+      } else {
+        setNetworkVo({id: networks[0].id, name: networks[0].name});
+      }
     }
   }, [networks, editMode]);
 
   useEffect(() => {
-    setCpuOptions(cpuArcOptions[formState.cpuArc] || []);
+    const options = cpuArcOptions[formState.cpuArc] || [];
+    setCpuOptions(options);
+  
+    // CPU 아키텍처가 변경시 cpu유형 0번째로 자동 설정
+    if (options.length > 0) {
+      setFormState((prev) => ({ ...prev, cpuType: options[0].value }));
+    } else {
+      setFormState((prev) => ({ ...prev, cpuType: "" }));
+    }
   }, [formState.cpuArc]);
+  
 
   const handleInputChange = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
+  const handleSelectIdChange = (setVo, voList) => (e) => {
+    const selected = voList.find((item) => item.id === e.target.value);
+    if (selected) setVo({ id: selected.id, name: selected.name });
+  };
+
   const validateForm = () => {
-    checkName(formState.name);// 이름 검증
+    const nameError = checkName(formState.name);
+    if (nameError) return nameError;
 
     if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
@@ -229,10 +254,7 @@ const ClusterModal = ({
         disabled={editMode}
         loading={isDataCentersLoading}
         options={datacenters}
-        onChange={(e) => {
-          const selected = datacenters.find(dc => dc.id === e.target.value);
-          if (selected) setDataCenterVo({ id: selected.id, name: selected.name });
-        }}
+        onChange={ handleSelectIdChange(setDataCenterVo, datacenters) }
       />
       <hr />
       <LabelInput id="name" label={Localization.kr.NAME}
@@ -248,15 +270,12 @@ const ClusterModal = ({
         value={formState.comment}
         onChange={handleInputChange("comment")}
       />
-      <LabelSelectOptionsID id="network-man" label="관리 네트워크"
+      <LabelSelectOptionsID id="network-man" label={`관리 ${Localization.kr.NETWORK}`}
         value={networkVo.id}
         disabled={editMode}
         loading={isNetworksLoading}
         options={networks}
-        onChange={(e) => {
-          const selected = networks.find(n => n.id === e.target.value);
-          if (selected) setNetworkVo({ id: selected.id, name: selected.name });
-        }}
+        onChange={handleSelectIdChange(setNetworkVo, networks)}
       />
       <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
         value={formState.cpuArc}

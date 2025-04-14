@@ -38,6 +38,7 @@ const VmActionButtons = ({
   const isMaintenance = status === "MAINTENANCE";
   const isPause = status === "PAUSE";
   const isPoweringDown = status === "POWERING_DOWN";
+  const isPoweringUp = status === "POWERING_UP";
   const isTemplate = status === "SUSPENDED" || status === "UP";
   const basicActions = [
     { 
@@ -62,7 +63,7 @@ const VmActionButtons = ({
       type: "shutdown", label: "종료", disabled: !isUp
       , onBtnClick: () => openModal("shutdown") 
     }, {
-      type: "powerOff", label: "전원끔", disabled: !(isUp || isPoweringDown)
+      type: "powerOff", label: "전원끔", disabled: !(isUp || isPoweringUp)
       , onBtnClick: () => openModal("powerOff")
     }, { 
       type: "console", label: "콘솔", disabled: !isUp 
@@ -80,8 +81,8 @@ const VmActionButtons = ({
     // { type: "import", label: Localization.kr.IMPORT, },
     { type: "copyVm", label: `${Localization.kr.VM} 복제`, disabled: isEditDisabled || !isPause },
     { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled || !isDown },
-    { type: "templates", label: "템플릿 생성", disabled: isUp || isEditDisabled || isTemplate },
-    { type: "ova", label: "ova로 내보내기", disabled: isEditDisabled ||  !isDown  },
+    { type: "templates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || isEditDisabled || isTemplate },
+    { type: "ova", label: "ova로 내보내기", disabled: isEditDisabled || !isDown },
   ];
 
   return (
@@ -93,42 +94,42 @@ const VmActionButtons = ({
       // ✅ context menu일 때도 manageActions 보여주기
       manageActions.map(({ type, label, disabled }) => (
         <button key={type}
-          disabled={disabled}
           className="btn-right-click dropdown-item"
+          disabled={disabled}
           onClick={() => openModal(type)}
         >
           {label}
         </button>
       ))
     ) : (
-    <>
-      <ActionButton
-        actionType={actionType}
-        label={"템플릿"}
-        onClick={() => navigate("/computing/templates")}
-      />
-      <div ref={dropdownRef} className="dropdown-container">
+      <>
         <ActionButton
-          iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown}
-          label={Localization.kr.MANAGEMENT}
-          onClick={toggleDropdown}
+          actionType={actionType}
+          label={Localization.kr.TEMPLATE}
+          onClick={() => navigate("/computing/templates")}
         />
-        {activeDropdown && (
-          <div className="right-click-menu-box context-menu-item dropdown-menu">
-            {manageActions.map(({ type, label, disabled }) => (
-              <button key={type}
-                disabled={disabled}
-                className="btn-right-click dropdown-item"
-                onClick={() => openModal(type)}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </>
-)}
+        <div ref={dropdownRef} className="dropdown-container">
+          <ActionButton
+            iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown}
+            label={Localization.kr.MANAGEMENT}
+            onClick={toggleDropdown}
+          />
+          {activeDropdown && (
+            <div className="right-click-menu-box context-menu-item dropdown-menu">
+              {manageActions.map(({ type, label, disabled }) => (
+                <button key={type}
+                  disabled={disabled}
+                  className="btn-right-click dropdown-item"
+                  onClick={() => openModal(type)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </>
+    )}
 
     </ActionButtonGroup>
   );

@@ -556,34 +556,6 @@ export const useCDFromDataCenter = (
   enabled: !!dataCenterId, 
 });
 /**
- * @name useAllvnicFromDataCenter
- * @description  가상머신 생성창-nic목록 목록조회 useQuery훅
- * 
- * @param {string} dataCenterId 데이터센터 id
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findVNicFromDataCenter
- */
-export const useAllvnicFromDataCenter = (
-  dataCenterId,
-  mapPredicate=(e) => ({ ...e })
-) => useQuery({
-  refetchOnWindowFocus: true,
-  queryKey: ['AllnicFromVM', dataCenterId], 
-  queryFn: async () => {
-    const res = await ApiManager.findVNicFromDataCenter(dataCenterId); 
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllvnicFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
-    return _res
-  },
-  enabled: !!dataCenterId, 
-  staleTime: 0,
-  cacheTime: 0,
-})
-/**
  * @name useAddDataCenter
  * @description 데이터센터 생성 useMutation 훅
  * 
@@ -903,6 +875,35 @@ export const useOsSystemsFromCluster = (
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useOsSystemsFromCluster ... ${clusterId}, res: `, _res);
+    return _res
+  },
+  enabled: !!clusterId, 
+  staleTime: 0,
+  cacheTime: 0,
+})
+
+/**
+ * @name useAllvnicFromCluster
+ * @description  가상머신 생성창-nic목록 목록조회 useQuery훅
+ * 
+ * @param {string} dataCenterId 데이터센터 id
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findVNicFromCluster
+ */
+export const useAllvnicFromCluster = (
+  clusterId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['AllnicFromVM', clusterId], 
+  queryFn: async () => {
+    const res = await ApiManager.findVNicFromCluster(clusterId); 
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllvnicFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
   enabled: !!clusterId, 
@@ -2676,7 +2677,7 @@ export const useDeleteDiskFromVM = (
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId, detachOnly }) => {
-      const res = ApiManager.deleteDiskFromVM(vmId, diskAttachmentId, detachOnly);
+      const res = await ApiManager.deleteDiskFromVM(vmId, diskAttachmentId, detachOnly);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useDeleteDiskFromVM ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, detachOnly: ${detachOnly}`);
       return _res

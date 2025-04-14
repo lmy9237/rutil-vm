@@ -24,14 +24,13 @@ import { getStatusSortKey } from "../icons/GetStatusSortkey";
  * @returns
  */
 const VmDiskDupl = ({ 
-  vmDisks = [], vmId, 
+  vmDisks = [], 
+  vmId, 
   showSearchBox=true,
   refetch,
   isLoading, isError, isSuccess,
 }) => {
-  const { 
-    data: vm
-  }  = useVm(vmId);
+  const { data: vm } = useVm(vmId);
   
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);

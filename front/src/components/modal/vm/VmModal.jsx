@@ -9,9 +9,9 @@ import {
   useCDFromDataCenter,
   useHostsFromCluster,
   useAllActiveDomainsFromDataCenter,
-  useAllvnicFromDataCenter,
   useOsSystemsFromCluster,
   useFindTemplatesFromDataCenter,
+  useAllvnicFromCluster,
 } from '../../../api/RQHook';
 import VmCommon from './create/VmCommon';
 import VmNic from './create/VmNic';
@@ -135,15 +135,13 @@ const VmModal = ({
   
   const onSuccess = () => {
     onClose();
-    toast.success(`가상머신 ${vLabel} 완료`);
+    toast.success(`${Localization.kr.VM} ${vLabel} 완료`);
   };
   const { mutate: addVM } = useAddVm(onSuccess, () => onClose());
   const { mutate: editVM } = useEditVm(onSuccess, () => onClose());
 
   // 가상머신 상세데이터 가져오기
-  const {
-    data: vm
-  } = useFindEditVmById(vmId);
+  const { data: vm } = useFindEditVmById(vmId);
 
   // 클러스터 목록 가져오기
   const { 
@@ -159,9 +157,9 @@ const VmModal = ({
 
   // 클러스터가 가지고 있는 nic 목록 가져오기
   const { 
-    data: nics = [], 
+    data: vnics = [], 
     isLoading: isNicsLoading 
-  } = useAllvnicFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
+  } = useAllvnicFromCluster(clusterVo.id, (e) => ({ ...e }));
 
   // 편집: 가상머신이 가지고 있는 디스크 목록 가져오기
   // const { data: disks = [], isLoading: isDisksLoading } = 
@@ -187,6 +185,11 @@ const VmModal = ({
   const handleInputChange = (field) => (e) => {
     setFormInfoState((prev) => ({ ...prev, [field]: e.target.value }));
   };
+
+  const handleSelectIdChange = (setVo, voList) => (e) => {
+    const selected = voList.find((item) => item.id === e.target.value);
+    if (selected) setVo({ id: selected.id, name: selected.name });
+  }; 
 
   // 초기값 설정
   useEffect(() => {
@@ -310,10 +313,19 @@ const VmModal = ({
   // 초기화 작업
   useEffect(() => {
     if (!editMode && clusters && clusters.length > 0) {
-      const firstCluster = clusters[0];
-      setClusterVo({id: firstCluster.id, name: firstCluster.name});
-      setDataCenterVo({id: firstCluster.dataCenterVo?.id || "", name: firstCluster.dataCenterVo?.name || ""});
-      setArchitecture(firstCluster.cpuArc || "");
+      
+      const defaultC = clusters.find(c => c.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
+      if (defaultC) {
+        setClusterVo({ id: defaultC.id, name: defaultC.name });
+        setClusterVo({id: defaultC.id, name: defaultC.name});
+        setDataCenterVo({id: defaultC.dataCenterVo?.id || "", name: defaultC.dataCenterVo?.name || ""});
+        setArchitecture(defaultC.cpuArc || "");
+      } else {
+        const firstCluster = clusters[0];
+        setClusterVo({id: firstCluster.id, name: firstCluster.name});
+        setDataCenterVo({id: firstCluster.dataCenterVo?.id || "", name: firstCluster.dataCenterVo?.name || ""});
+        setArchitecture(firstCluster.cpuArc || "");
+      }      
     }
   }, [isOpen, clusters, editMode]);
 
@@ -391,7 +403,8 @@ const VmModal = ({
   };
 
   const validateForm = () => {
-    checkName(formInfoState.name);// 이름 검증
+    const nameError = checkName(formInfoState.name);
+    if (nameError) return nameError;
 
     if (!clusterVo.id) return `${Localization.kr.CLUSTER}를 선택해주세요.`;
     return null;
@@ -404,10 +417,7 @@ const VmModal = ({
 
     Logger.debug(`가상머신 데이터 ${JSON.stringify(dataToSubmit, null ,2)}`);
     editMode
-      ? editVM({ 
-        vmId: vmId,
-        vmData: dataToSubmit
-      })
+      ? editVM({ vmId: vmId, vmData: dataToSubmit })
       : addVM(dataToSubmit);
   };
 
@@ -431,26 +441,18 @@ const VmModal = ({
             disabled={editMode}
             loading={isClustersLoading}
             options={clusters}
-            onChange={(e) => {
-              const selected = clusters.find(c => c.id === e.target.value);
-              if (selected) setClusterVo({ id: selected.id, name: selected.name });
-            }}
+            onChange={handleSelectIdChange(setClusterVo, clusters)}            
             etcLabel={`[${Localization.kr.DATA_CENTER}: ${dataCenterVo.name}]`}
           />
           {!isTemplateHidden && (
-            <LabelSelectOptionsID
-              label="템플릿"
+            <LabelSelectOptionsID label="템플릿"
               value={templateVo.id}
               disabled={editMode}
               loading={isTemplatesLoading}
               options={templates}
-              onChange={(e) => {
-                const selected = templates.find(t => t.id === e.target.value);
-                if (selected) setTemplateVo({ id: selected.id, name: selected.name });
-              }}
+              onChange={handleSelectIdChange(setTemplateVo, templates)}
             />
           )}
-          {/* TODO: options에 대한 별도 소형 컴포넌트 생성 필요 */}
           <LabelSelectOptionsID id="os_system" label="운영 시스템"            
             value={formInfoState.osSystem}
             options={osList.map((opt) => ({id: opt.name, name: opt.description}))}
@@ -458,7 +460,8 @@ const VmModal = ({
           />
           <LabelSelectOptions label="칩셋/펌웨어 유형"
             value={formInfoState.osType}
-            disabled={architecture === "PPC64" || architecture === "S390X"}
+            disabled={["PPC64", "S390X"].includes(architecture)}
+            // disabled={architecture === "PPC64" || architecture === "S390X"}
             options={chipsetOptionList}
             onChange={ handleInputChange("osType") }
           />
@@ -484,7 +487,7 @@ const VmModal = ({
               setDiskListState={setDiskListState}
             />
             <VmNic
-              nics={nics}
+              nics={vnics}
               nicsState={nicListState}
               setNicsState={setNicListState}
             />

@@ -6,6 +6,7 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.model.network.NetworkVo
+import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.service.computing.ItClusterService
 
 import io.swagger.annotations.*
@@ -268,6 +269,29 @@ class ClusterController: BaseController() {
 			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
 		log.info("/computing/clusters/{}/manageNetworks ... 클러스터 내 네트워크 관리 목록", clusterId)
 		return ResponseEntity.ok(iCluster.findAllManageNetworksFromCluster(clusterId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="vnicProfile 목록조회",
+		notes="선택된 클러스터의 vnicProfile 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="clusterId", value="클러스터 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{clusterId}/vnicProfiles")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun vnicProfiles(
+		@PathVariable clusterId: String? = null
+	): ResponseEntity<List<VnicProfileVo>> {
+		if (clusterId.isNullOrEmpty())
+			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
+		log.info("/computing/clusters/{}/vnicProfiles ... 클러스터 vnicProfile 목록", clusterId)
+		return ResponseEntity.ok(iCluster.findAllVnicProfilesFromCluster(clusterId))
 	}
 
 	// manageNetworksFromCluster

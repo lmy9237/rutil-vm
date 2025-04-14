@@ -1,9 +1,8 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import { useDeleteSnapshot } from "../../../api/RQHook";
 import { useMemo } from "react";
 import toast from "react-hot-toast";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name VmSnapshotDeleteModal
@@ -38,16 +37,13 @@ const VmSnapshotDeleteModal = ({ isOpen, onClose, data, vmId }) => {
   };
 
   return (
-    <BaseModal targetName={"스냅샷"} submitTitle={"삭제"}
+    <BaseModal targetName={Localization.kr.SNAPSHOT} submitTitle={Localization.kr.REMOVE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleDelete}
+      promptText={`${descriptions.join(", ")} 를(을) ${Localization.kr.REMOVE}하시겠습니까?`}
       contentStyle={{ width: "600px" }}
-    >
-      <div className="disk-delete-box">
-        <FontAwesomeIcon style={{ marginRight: "0.3rem" }}icon={faExclamationTriangle}/>
-        <span> {descriptions.join(", ")} 를(을) 삭제하시겠습니까? </span>
-      </div>
-     
+      shouldWarn={true}
+    >     
     </BaseModal>
   );
 };

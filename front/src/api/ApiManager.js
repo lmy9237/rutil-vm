@@ -547,7 +547,18 @@ const ApiManager = {
       data: networkData, // POST 요청 시 전송할 데이터
       // defaultValues: DEFAULT_VALUES.ADD_NETWORK_CLUSTER
     });
-  },
+  },  
+  /**
+   * @name ApiManager.findVNicFromCluster
+   * @description vnicprofile 목록
+   * 
+   * @returns 
+   **/
+  findVNicFromCluster : async (clusterId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_VNICPROFILES_FROM_CLUSTER(clusterId), 
+    // defaultValues: DEFAULT_VALUES.FIND_NICS_FROM_CLUSTER
+  }),
    /**
    * @name ApiManager.findEventsFromCluster
    * @description 이벤트 목록 
@@ -1501,18 +1512,6 @@ const ApiManager = {
     method: "GET", 
     url: ENDPOINTS.FIND_EVENTS_FROM_VM(vmId), 
     // defaultValues: DEFAULT_VALUES.FIND_EVENTS_FROM_VM
-  }),
-
-  /**
-   * @name ApiManager.findVNicFromDataCenter
-   * @description iso 목록
-   * 
-   * @returns 
-   **/
-  findVNicFromDataCenter : async (dataCenterId) => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_VNICPROFILES_FROM_DATA_CENTER(dataCenterId), 
-    // defaultValues: DEFAULT_VALUES.FIND_NICS_FROM_CLUSTER
   }),
 
   /**

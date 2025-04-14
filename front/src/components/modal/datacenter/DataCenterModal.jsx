@@ -38,16 +38,22 @@ const versions = [{ value: "4.7", label: 4.7 }];
  * @param {boolean} isOpen ...
  * @returns
  */
-const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
+const DataCenterModal = ({ 
+  isOpen, 
+  editMode = false, 
+  dcId, 
+  onClose 
+}) => {
   const dcLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [formState, setFormState] = useState(initialFormState);
-
+  
   const onSuccess = () => {
-    toast.success(`데이터센터 ${dcLabel} 완료`);
     onClose();
+    toast.success(`${Localization.kr.DATA_CENTER} ${dcLabel} 완료`);
   };
   const { mutate: addDataCenter } = useAddDataCenter(onSuccess, () => onClose());
   const { mutate: editDataCenter } = useEditDataCenter(onSuccess, () => onClose());
+
   const { data: datacenter } = useDataCenter(dcId);
 
   // 모달 열릴때 초기화, 편집 정보넣기
@@ -74,9 +80,10 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
 
   // 값 검증
   const validateForm = () => {
-    checkName(formState.name);// 이름 검증
+    const nameError = checkName(formState.name);
+    if (nameError) return nameError;
 
-    if (checkKoreanName(formState.description)) return "설명은 영어만 입력가능합니다.";
+    if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}은 영어만 입력가능합니다.`;
     return null;
   };
 
@@ -93,9 +100,8 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
   };
 
   return (
-    <BaseModal targetName={Localization.kr.DATA_CENTER}
-      isOpen={isOpen} onClose={onClose}
-      submitTitle={dcLabel}
+    <BaseModal targetName={Localization.kr.DATA_CENTER} submitTitle={dcLabel}
+      isOpen={isOpen} onClose={onClose}      
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "473px" }} 
     >
@@ -112,13 +118,11 @@ const DataCenterModal = ({ isOpen, editMode = false, dcId, onClose }) => {
         value={formState.comment}
         onChange={handleInputChange("comment")}
       />
-
       <ToggleSwitchButton id="storage-type" label="스토리지 타입"
         checked={formState.storageType}
         onChange={() => setFormState((prev) => ({ ...prev, storageType: !formState.storageType }))}
         tType="로컬" fType="공유됨"
       />
-
       <LabelSelectOptions id="quarter-mode" label="쿼터 모드"
         value={formState.quotaMode}
         onChange={handleInputChange("quotaMode")}

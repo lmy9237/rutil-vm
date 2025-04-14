@@ -52,7 +52,7 @@ const TemplateModal = ({
   
   const onSuccess = () => {
     onClose();
-    toast.success(`템플릿 생성 완료`);
+    toast.success(`${Localization.kr.TEMPLATE} 생성 완료`);
   };
   const { mutate: addTemplate } = useAddTemplate(onSuccess, () => onClose());
 
@@ -118,7 +118,12 @@ const TemplateModal = ({
 
   useEffect(() => {
     if (clusters && clusters.length > 0) {
-      setClusterVo({ id: clusters[0].id, name: clusters[0].name });
+      const defaultC = clusters.find(c => c.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
+      if (defaultC) {
+        setClusterVo({ id: defaultC.id, name: defaultC.name });
+      } else {
+        setClusterVo({ id: clusters[0].id, name: clusters[0].name });
+      }
     }
   }, [clusters]);
 
@@ -166,6 +171,12 @@ const TemplateModal = ({
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
+  const handleSelectIdChange = (setVo, voList) => (e) => {
+    const selected = voList.find((item) => item.id === e.target.value);
+    if (selected) setVo({ id: selected.id, name: selected.name });
+  };
+
+
   const handleDiskChange = (index, field, value, nested = false) => {
     setDiskVoList((prev) => {
       const updated = [...prev];
@@ -183,7 +194,8 @@ const TemplateModal = ({
   };
 
   const validateForm = () => {
-    checkName(formState.name);
+    const nameError = checkName(formState.name);
+    if (nameError) return nameError;
 
     return null;
   };
@@ -215,7 +227,7 @@ const TemplateModal = ({
   };
 
   return (
-    <BaseModal targetName={"템플릿"} submitTitle={Localization.kr.CREATE}
+    <BaseModal targetName={`${Localization.kr.TEMPLATE}`} submitTitle={Localization.kr.CREATE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px" }}
@@ -237,19 +249,13 @@ const TemplateModal = ({
         loading={isClustersLoading}
         value={clusterVo.id}
         options={clusters}
-        onChange={(e) => {
-          const selected = clusters.find(c => c.id === e.target.value);
-          if (selected) setClusterVo({ id: selected.id, name: selected.name });
-        }}
+        onChange={handleSelectIdChange(setClusterVo, clusters)}
       />
       <LabelSelectOptionsID id="cpu_profile_select" label="CPU 프로파일"
         loading={isCpuProfilesLoading}
         value={cpuProfileVo.id}
         options={cpuProfiles}
-        onChange={(e) => {
-          const selected = cpuProfiles.find(cp => cp.id === e.target.value);
-          if (selected) setCpuProfileVo({ id: selected.id, name: selected.name });
-        }}
+        onChange={handleSelectIdChange(setCpuProfileVo, cpuProfiles)}
       />
 
       {disks && disks.length > 0 && (

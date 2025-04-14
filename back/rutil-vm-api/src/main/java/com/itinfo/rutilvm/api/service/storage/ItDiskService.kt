@@ -124,16 +124,6 @@ interface ItDiskService {
      */
     @Throws(Error::class)
     fun remove(diskId: String): Boolean
-    // /**
-    //  * [ItDiskService.removeMultiple]
-    //  * 디스크 삭제
-    //  *
-    //  * @param diskIdList List<[String]> 디스크 ID 리스트
-    //  * @return [Boolean] 성공여부
-    //  */
-    // @Throws(Error::class)
-    // fun removeMultiple(diskIdList: List<String>): List<Boolean>
-
 
     /**
      * [ItDiskService.findAllStorageDomainsToMoveFromDisk]
@@ -155,15 +145,6 @@ interface ItDiskService {
      */
     @Throws(Error::class)
     fun move(diskId: String, storageDomainId: String): Boolean
-    /**
-     * [ItDiskService.moveMultiple]
-     * 디스크 이동
-     *
-     * @param diskList List<[DiskImageVo>]
-     * @return Map<[String], [String]>
-     */
-    @Throws(Error::class)
-    fun moveMultiple(diskList: List<DiskImageVo>): Map<String, String>
     /**
      * [ItDiskService.copy]
      * 디스크 복사
@@ -247,7 +228,7 @@ class DiskServiceImpl(
     @Throws(Error::class)
     override fun findOne(diskId: String): DiskImageVo? {
         log.info("findOne ... diskId: $diskId, disk: $this")
-        val res: Disk? = conn.findDisk(diskId).getOrNull()
+        val res: Disk? = conn.findDisk(diskId, follow = "diskprofile").getOrNull()
         // val res: Disk? = conn.findDisk(diskId, follow = "diskprofile.storagedomain").getOrNull()
         return res?.toDiskInfo(conn)
     }
@@ -292,14 +273,6 @@ class DiskServiceImpl(
         return res.isSuccess
     }
 
-    // override fun removeMultiple(diskIdList: List<String>): List<Boolean> {
-    //     log.info("removeMultiple ... diskIdList ... {}", diskIdList)
-    //     val res: List<Result<Boolean>> = diskIdList.map { diskId ->
-    //         conn.removeDisk(diskId)
-    //     }
-    //     return res.map { it.isSuccess }
-    // }
-
     @Throws(Error::class)
     override fun findAllStorageDomainsToMoveFromDisk(diskId: String): List<StorageDomainVo> {
         log.info("findAllStorageDomainsToMoveFromDisk ... diskId: $diskId")
@@ -315,26 +288,6 @@ class DiskServiceImpl(
         log.info("move ... diskId: $diskId, storageDomainId: $storageDomainId")
         val res: Result<Boolean> = conn.moveDisk(diskId, storageDomainId)
         return res.isSuccess
-    }
-
-    @Throws(Error::class)
-    override fun moveMultiple(diskList: List<DiskImageVo>): Map<String, String> {
-        log.info("moveMultiple ... diskList: $diskList")
-        val result = mutableMapOf<String, String>()
-
-        diskList.forEach { diskImageVo ->
-            val diskName: String = conn.findDisk(diskImageVo.id).getOrNull()?.name().toString()
-            try{
-                val isSuccess = conn.moveDisk(diskImageVo.id, diskImageVo.storageDomainVo.id).isSuccess
-                if (isSuccess) {
-                    result[diskName] = "Success"
-                }
-            } catch (ex: Exception) {
-                log.error("Failed to move disk: $diskName", ex)
-                result[diskName] = "Failure: ${ex.message}" // 실패한 경우 메시지 추가
-            }
-        }
-        return result
     }
 
     @Throws(Error::class)

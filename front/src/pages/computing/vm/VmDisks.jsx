@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import VmDiskDupl from "../../../components/dupl/VmDiskDupl";
 import { useDisksFromVM } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";

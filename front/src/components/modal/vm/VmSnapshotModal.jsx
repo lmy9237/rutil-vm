@@ -20,7 +20,7 @@ const VmSnapshotModal = ({ isOpen, selectedVm, onClose }) => {
   // SUSPENDED 일시중지 상태라면 스냅샷 생성 자체가 안되는거 같음
   const onSuccess = () => {
     onClose();
-    toast.success(`스냅샷 생성 완료`);
+    toast.success(`${Localization.kr.SNAPSHOT} 생성 완료`);
   };
   const { mutate: addSnapshotFromVM } = useAddSnapshotFromVM(onSuccess, () => onClose());
   
@@ -30,11 +30,7 @@ const VmSnapshotModal = ({ isOpen, selectedVm, onClose }) => {
       const pad = (n) => n.toString().padStart(2, "0");
 
       const formattedDate = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
-
-      setFormState((prev) => ({
-        ...prev,
-        description: `${selectedVm?.name || ""}_${formattedDate}`
-      }));
+      setFormState((prev) => ({ ...prev, description: `${selectedVm?.name || ""}_${formattedDate}`}));
     }
   }, [isOpen, selectedVm]);
 
@@ -49,7 +45,7 @@ const VmSnapshotModal = ({ isOpen, selectedVm, onClose }) => {
   };
 
   return (
-    <BaseModal targetName={`${Localization.kr.VM} <${selectedVm?.name}> ${Localization.kr.SNAPSHOT}`} submitTitle={Localization.kr.CREATE}
+    <BaseModal targetName={`${selectedVm?.name} ${Localization.kr.SNAPSHOT}`} submitTitle={Localization.kr.CREATE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ minWidth: "500px"}} 
@@ -65,14 +61,10 @@ const VmSnapshotModal = ({ isOpen, selectedVm, onClose }) => {
           onChange={() => setFormState((prev) => ({ ...prev, persistMemory: !prev.persistMemory }))} // ✅ true/false로 변경
           tType={"저장"} fType={"저장안함"}
         />
-        {/* <span>persistMemory: {formState.persistMemory ? "t" : "f"}</span><br/> */}
-        {/* <span>status {selectedVm?.status}</span> */}
         <br/>
-        {
-          ["DOWN"].includes(selectedVm?.status) 
-            ? <span></span> 
-            : <span>! 메모리를 저장하는 도중 가상 머신이 중지됨</span>
-        }
+        {["DOWN"].includes(selectedVm?.status) 
+          ? <span></span> 
+          : <span>! 메모리를 저장하는 도중 가상 머신이 중지됨</span>}
       </div>
     </BaseModal>
   );

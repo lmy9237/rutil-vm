@@ -80,7 +80,12 @@ const HostModal = ({
     if (clusterId) {
       setClusterVo({id: clusterId});
     } else if (!editMode && clusters && clusters.length > 0) {
-      setClusterVo({id: clusters[0].id});
+      const defaultC = clusters.find(c => c.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
+      if (defaultC) {
+        setClusterVo({ id: defaultC.id, name: defaultC.name });
+      } else {
+        setClusterVo({ id: clusters[0].id, name: clusters[0].name });
+      }
     }
   }, [clusters, clusterId, editMode]);
 
@@ -88,8 +93,14 @@ const HostModal = ({
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
+  const handleSelectIdChange = (setVo, voList) => (e) => {
+    const selected = voList.find((item) => item.id === e.target.value);
+    if (selected) setVo({ id: selected.id, name: selected.name });
+  }; 
+
   const validateForm = () => {
-    checkName(formState.name);// 이름 검증
+    const nameError = checkName(formState.name);
+    if (nameError) return nameError;
 
     if (!editMode && !formState.sshPassWord) return "비밀번호를 입력해주세요.";
     if (!clusterVo.id) return `${Localization.kr.CLUSTER}를 선택해주세요.`;
@@ -122,13 +133,9 @@ const HostModal = ({
         disabled={editMode}
         loading={isClustersLoading}
         options={clusters}
-        onChange={(e) => {
-          const selected = clusters.find(c => c.id === e.target.value);
-          if (selected) setClusterVo({ id: selected.id, name: selected.name });
-        }}
+        onChange={handleSelectIdChange(setClusterVo, clusters)}
       />
       <hr />
-
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
         value={formState.name}
@@ -149,7 +156,6 @@ const HostModal = ({
         onChange={handleInputChange("sshPort")}
       />
       <hr />
-
       {!editMode && (
         <>
           <div className="font-semibold py-1.5">

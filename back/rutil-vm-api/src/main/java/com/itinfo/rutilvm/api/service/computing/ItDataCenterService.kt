@@ -6,9 +6,7 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.fromDisksToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
-import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
-import com.itinfo.rutilvm.api.model.network.toDcVnicProfileMenus
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.service.BaseService
@@ -170,15 +168,15 @@ interface ItDataCenterService {
 	 */
 	@Throws(Error::class)
 	fun findAllISOFromDataCenter(dataCenterId: String): List<IdentifiedVo>
-	/**
-	 * [ItDataCenterService.findAllVnicProfilesFromDataCenter]
-	 * 가상머신 생성 -  vnicprofile 목록 출력 (가상머신 생성, 네트워크 인터페이스 생성)
-	 *
-	 * @param dataCenterId [String] 데이터센터 Id
-	 * @return List<[VnicProfileVo]> VnicProfile 목록
-	 */
-	@Throws(Error::class)
-	fun findAllVnicProfilesFromDataCenter(dataCenterId: String): List<VnicProfileVo>
+	// /**
+	//  * [ItDataCenterService.findAllVnicProfilesFromDataCenter]
+	//  * 가상머신 생성 -  vnicprofile 목록 출력 (가상머신 생성, 네트워크 인터페이스 생성)
+	//  *
+	//  * @param dataCenterId [String] 데이터센터 Id
+	//  * @return List<[VnicProfileVo]> VnicProfile 목록
+	//  */
+	// @Throws(Error::class)
+	// fun findAllVnicProfilesFromDataCenter(dataCenterId: String): List<VnicProfileVo>
 
 	/**
 	 * [ItDataCenterService.dashboardComputing]
@@ -270,7 +268,6 @@ class DataCenterServiceImpl(
 		log.debug("findAllVmsFromDataCenter ... dataCenterId: {}", dataCenterId)
 		val res: List<Vm> = conn.findAllVmsFromDataCenter(dataCenterId).getOrDefault(emptyList())
 		return res.toVmMenus(conn) // 3.21
-		// return res.toVmsMenu(conn) // 4.55
 	}
 
 	@Throws(Error::class)
@@ -278,7 +275,6 @@ class DataCenterServiceImpl(
 		log.info("findAllStorageDomainsFromDataCenter ... dataCenterId: {}", dataCenterId)
 		val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
 		return res.toDcDomainMenus(conn) // 1.15
-		// return res.toStorageDomainsMenu(conn) // 1.448
 	}
 
 	@Throws(Error::class)
@@ -296,7 +292,6 @@ class DataCenterServiceImpl(
 		val res = storageDomains.flatMap { it.disks() ?: emptyList() }
 
 		return res.map { it.toDcDiskMenu(conn) } // 0.833
-		// return res.toDiskMenus(conn) // 6.33
 	}
 
 	@Throws(Error::class)
@@ -305,7 +300,6 @@ class DataCenterServiceImpl(
 		val res: List<Network> = conn.findAllNetworks(follow = "vnicprofiles").getOrDefault(emptyList())
 			.filter { it.dataCenter().id() == dataCenterId }
 		return res.toDcNetworkMenus()
-		// return res.toNetworkVos(conn) // 1.298
 	}
 
 	@Throws(Error::class)
@@ -349,31 +343,24 @@ class DataCenterServiceImpl(
 		log.info("findAllISOFromDataCenter ...  dataCenterId: {}", dataCenterId)
 		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
 		val res = storageDomains.flatMap { it.disks().filter { disk -> disk.contentType() == ISO && disk.status() == OK }}
-
-		// val a: List<Disk> = conn.findDataCenter(dataCenterId, follow = "storagedomains.disks").getOrNull()!!
-		// 	.storageDomains()
-		// 	.flatMap { it.disks().orEmpty() }
-		// 	.map { it }
-		// 	.filter { it.contentType() == DiskContentType.ISO && it.status() == DiskStatus.OK }
- 		// return a.fromDisksToIdentifiedVos() // 0.991
  		return res.fromDisksToIdentifiedVos() // 0.803
 	}
 
-	@Throws(Error::class)
-	override fun findAllVnicProfilesFromDataCenter(dataCenterId: String): List<VnicProfileVo> {
-		log.info("findAllVnicProfilesFromDataCenter ... dataCenterId: {}", dataCenterId)
-		val networks: List<Network> = conn.findAllNetworks(follow = "vnicprofiles.network").getOrDefault(emptyList())
-			.filter { it.dataCenter().id() == dataCenterId }
-		val res = networks.flatMap { it.vnicProfiles() }
-
-		// val a: List<VnicProfile> = conn.findAllNetworks().getOrDefault(emptyList())
-		// 	.filter { it.dataCenter().id() == dataCenterId }
-		// 	.flatMap { network -> conn.findAllVnicProfilesFromNetwork(network.id())
-		// 		.getOrDefault(emptyList())
-		// 	}
-		// return a.toVnicProfileToVmVos(conn) // 1.813
-		return res.toDcVnicProfileMenus() // 0.749
-	}
+	// @Throws(Error::class)
+	// override fun findAllVnicProfilesFromDataCenter(dataCenterId: String): List<VnicProfileVo> {
+	// 	log.info("findAllVnicProfilesFromDataCenter ... dataCenterId: {}", dataCenterId)
+	// 	val networks: List<Network> = conn.findAllNetworks(follow = "vnicprofiles.network").getOrDefault(emptyList())
+	// 		.filter { it.dataCenter().id() == dataCenterId }
+	// 	val res = networks.flatMap { it.vnicProfiles() }
+	//
+	// 	// val a: List<VnicProfile> = conn.findAllNetworks().getOrDefault(emptyList())
+	// 	// 	.filter { it.dataCenter().id() == dataCenterId }
+	// 	// 	.flatMap { network -> conn.findAllVnicProfilesFromNetwork(network.id())
+	// 	// 		.getOrDefault(emptyList())
+	// 	// 	}
+	// 	// return a.toVnicProfileToVmVos(conn) // 1.813
+	// 	return res.toDcVnicProfileMenus() // 0.749
+	// }
 
 	@Throws(Error::class)
 	override fun dashboardComputing(): List<DataCenterVo> {

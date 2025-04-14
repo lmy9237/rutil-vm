@@ -40,23 +40,23 @@ const ENDPOINTS = {
   FIND_TEMPLATES_FROM_DATA_CENTER: (dataCenterId) =>                       `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/templates`,
   FIND_ATTACH_DISK_LIST_FROM_DATA_CENTER:(dataCenterId) =>                 `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/attachDisks`,
   FIND_ISOS_FROM_DATA_CENTER:(dataCenterId) =>                             `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/iso`, 
-  FIND_VNICPROFILES_FROM_DATA_CENTER:(dataCenterId) =>                     `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/vnicProfiles`, 
-
+  
   ADD_DATA_CENTER: () =>                                                   `${ENDPOINT_API_V1}/computing/datacenters`,
   EDIT_DATA_CENTER: (dataCenterId) =>                                      `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}`, 
   DELETE_DATA_CENTER: (dataCenterId) =>                                    `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}`, 
   //#endregion: DataCenter
-
+  
   // region: Cluster
   FIND_ALL_CLUSTERS: () =>                                                 `${ENDPOINT_API_V1}/computing/clusters`,
   FIND_ALL_UP_CLUSTERS: () =>                                              `${ENDPOINT_API_V1}/computing/clusters/up`,
   FIND_CLUSTER: (clusterId) =>                                             `${ENDPOINT_API_V1}/computing/clusters/${clusterId}`, 
   FIND_HOSTS_FROM_CLUSTER:(clusterId) =>                                   `${ENDPOINT_API_V1}/computing/clusters/${clusterId}/hosts`, 
   FIND_VMS_FROM_CLUSTER:(clusterId) =>                                     `${ENDPOINT_API_V1}/computing/clusters/${clusterId}/vms`, 
-
+  
   FIND_NETWORKS_FROM_CLUSTER:(clusterId) =>                                `${ENDPOINT_API_V1}/computing/clusters/${clusterId}/networks`, 
   ADD_NETWORK_FROM_CLUSTER:(clusterId) =>                                  `${ENDPOINT_API_V1}/computing/clusters/${clusterId}/networks`,
   MANAGE_NETWORKS_FROM_CLUSTER:(clusterId) =>                              `${ENDPOINT_API_V1}/computing/clusters/${clusterId}/manageNetworks`, 
+  FIND_VNICPROFILES_FROM_CLUSTER:(clusterId) =>                            `${ENDPOINT_API_V1}/computing/clusters/${clusterId}/vnicProfiles`, 
   FIND_OS_SYSTEM_FROM_CLUSTER:(clusterId) =>                               `${ENDPOINT_API_V1}/computing/clusters/${clusterId}/osSystems`, 
 
   FIND_EVENTS_FROM_CLUSTER: (clusterId) =>                                 `${ENDPOINT_API_V1}/computing/clusters/${clusterId}/events`,

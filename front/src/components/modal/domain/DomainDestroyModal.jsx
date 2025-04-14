@@ -1,6 +1,7 @@
 import { useState } from "react";
 import BaseModal from "../BaseModal";
 import LabelCheckbox from "../../label/LabelCheckbox";
+import Localization from "../../../utils/Localization";
 
 const DomainDestroyModal = ({ isOpen, onClose }) => {
   const [approved, setApproved] = useState(false);
@@ -14,11 +15,8 @@ const DomainDestroyModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName="도메인"
-      submitTitle="파괴"
+    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle="파괴"
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleSubmit}
       contentStyle={{ width: "670px" }}
     >

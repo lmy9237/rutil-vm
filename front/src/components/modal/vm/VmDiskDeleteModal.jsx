@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faExclamationTriangle,
-} from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import { useDeleteDiskFromVM } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
+import LabelCheckbox from "../../label/LabelCheckbox";
 
 /**
  * @name VmDiskDeleteModal
@@ -13,90 +11,64 @@ import { useDeleteDiskFromVM } from "../../../api/RQHook";
  * 
  * @param {boolean} isOpen ..
  * @returns
- * @deprecated
  */
-const VmDiskDeleteModal = ({ isOpen, onClose, vmId, data }) => {
-  const { mutate: deleteDisk } = useDeleteDiskFromVM();
+const VmDiskDeleteModal = ({ 
+  isOpen, 
+  vmId, 
+  data,
+  onClose, 
+}) => {
+  const onSuccess = () => {
+    onClose();
+    toast.success(`${Localization.kr.VM} ${Localization.kr.DISK} ${Localization.kr.REMOVE} 완료`);
+  };
+  const { mutate: deleteDisk } = useDeleteDiskFromVM(onSuccess, () => onClose());
 
-  const [ids, setIds] = useState([]);
-  const [alias, setAlias] = useState([]);
-  const [detachOnlyList, setDetachOnlyList] = useState([]); // 디스크 완전삭제
+  console.log("*** data", data);
 
-  useEffect(() => {
-    if (Array.isArray(data)) {
-      const ids = data.map((item) => item.diskImageVo.id);
-      const alias = data.map((item) => item.diskImageVo.alias);
-      setIds(ids);
-      setAlias(alias);
-      setDetachOnlyList(Array(data.length).fill(true)); // 초기값 true
-    } else if (data) {
-      setIds([data?.id]);
-      setAlias([data?.alias]);
-      setDetachOnlyList([true]);
-    }
+  const { ids, aliases } = useMemo(() => {
+    const dataArray = Array.isArray(data) ? data : data ? [data] : [];
+    return {
+      ids: dataArray.map((item) => item.id),
+      aliases: dataArray.map((item) => item.diskImageVo?.alias || "undefined"),
+    };
   }, [data]);
 
+  const [detachOnlyList, setDetachOnlyList] = useState([false]); // 디스크 완전삭제
+
   const handleFormSubmit = () => {
-    if (!ids.length) {
-      console.error("삭제할 디스크 ID가 없습니다.");
-      return;
-    }
+    if (!ids.length) { return toast.error(`삭제할 ${Localization.kr.DISK} ID가 없습니다.`) }
 
     ids.forEach((diskAttachmentId, index) => {
-      deleteDisk({ 
-        vmId, diskAttachmentId, detachOnly: !detachOnlyList[index] 
-      }, {
-          onSuccess: () => {
-            if (ids.length === 1 || index === ids.length - 1) {
-              onClose();
-            }
-          },
-          onError: (error) => {
-          },
-        }
-      );
+      deleteDisk({ vmId, diskAttachmentId, detachOnly: detachOnlyList[index] });
     });
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"가상머신 디스크"}
-      submitTitle={"삭제"}
+    <BaseModal targetName={`${Localization.kr.VM} ${Localization.kr.DISK}`} submitTitle={Localization.kr.REMOVE}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
+      promptText={`다음 항목을 삭제하시겠습니까?`}
+      contentStyle={{ width: "630px" }}
+      shouldWarn={true}
     >
-      {/* <div className="storage-delete-popup modal"> */}
-      <div className="disk-delete-box">
-        {ids.map((diskId, index) => (
-          <div
-            key={diskId}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "0.5rem",
-            }}
-          >
-            <FontAwesomeIcon
-              style={{ marginRight: "0.3rem" }}
-              icon={faExclamationTriangle}
-            />
-            <span> {alias[index]} 를(을) 삭제하시겠습니까? </span>
-            <label style={{ marginLeft: "0.5rem" }}>
-              <input
-                type="checkbox"
-                checked={detachOnlyList[index]}
-                onChange={() =>
-                  setDetachOnlyList((prev) => {
-                    const newList = [...prev];
-                    newList[index] = !newList[index]; // 값 반전
-                    return newList;
-                  })
-                }
-              />
-              완전 삭제
-            </label>
-          </div>
-        ))}
-      </div>
+      {ids.map((diskId, index) => (
+        <div key={diskId} className="disk-delete-checkbox f-btw">
+          <div className="disk-delete-label">{aliases[index]}</div>
+          <LabelCheckbox label={`완전 ${Localization.kr.REMOVE}`}
+            id={`diskDelete-${index}`}
+            checked={detachOnlyList[index] || false}
+            onChange={() =>
+              setDetachOnlyList((prev) => {
+                const newList = [...prev];
+                newList[index] = !newList[index]; // 값 반전
+                return newList;
+              })
+            }
+          />
+          {/* <span>{detachOnlyList[index] === true ? "A" : "B"}</span> */}
+        </div>
+      ))}
     </BaseModal>
   );
 };

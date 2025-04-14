@@ -89,13 +89,13 @@ fun List<VnicProfile>.toVnicProfileToVmVos(conn: Connection): List<VnicProfileVo
 	this@toVnicProfileToVmVos.map { it.toVnicProfileToVmVo(conn) }
 
 
-fun VnicProfile.toDcVnicProfileMenu(): VnicProfileVo = VnicProfileVo.builder {
-	id { this@toDcVnicProfileMenu.id() }
-	name { this@toDcVnicProfileMenu.name() }
-	networkVo { this@toDcVnicProfileMenu.network().fromNetworkToIdentifiedVo() }
+fun VnicProfile.toCVnicProfileMenu(): VnicProfileVo = VnicProfileVo.builder {
+	id { this@toCVnicProfileMenu.id() }
+	name { this@toCVnicProfileMenu.name() }
+	networkVo { this@toCVnicProfileMenu.network().fromNetworkToIdentifiedVo() }
 }
-fun List<VnicProfile>.toDcVnicProfileMenus(): List<VnicProfileVo> =
-	this@toDcVnicProfileMenus.map { it.toDcVnicProfileMenu() }
+fun List<VnicProfile>.toCVnicProfileMenus(): List<VnicProfileVo> =
+	this@toCVnicProfileMenus.map { it.toCVnicProfileMenu() }
 
 
 

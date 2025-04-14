@@ -20,6 +20,7 @@ export const Localization = {
     CLUSTER: "클러스터",
     HOST: "호스트",
     VM: "가상머신",
+    TEMPLATE: "템플릿",
     SNAPSHOT: "스냅샷",
     NETWORK: "네트워크",
     NETWORK_FILTER: `네트워크 필터`,

@@ -14,13 +14,11 @@ import {
   useStroageDomain,
   useEditDomain,
   useHostsFromDataCenter,
-  useDataCenter,
   useIscsiFromHost,
   useFibreFromHost,
   useImportIscsiFromHost,
   useImportFcpFromHost,
   useImportDomain,
-  useLoginIscsiFromHost,
 } from "../../../api/RQHook";
 import { checkName, convertBytesToGB } from "../../../util";
 import Localization from "../../../utils/Localization";
@@ -31,7 +29,6 @@ const domainTypes = [
   { value: "iso", label: "ISO" },
   { value: "export", label: "내보내기" },
 ];
-
 
 // 일반 정보
 const initialFormState = {
@@ -55,7 +52,6 @@ const importFormState = {
   chapPassword: "",
   useChap: false,
 };
-
 
 const storageTypeOptions = (dType) => {
   switch (dType) {
@@ -95,7 +91,7 @@ const DomainModal = ({
   const [fcpSearchResults, setFcpSearchResults] = useState([]); // 검색결과
 
   const onSuccess = () => {
-    toast.success(`도메인 ${dLabel} 완료`);
+    toast.success(`${Localization.kr.DOMAIN} ${dLabel} 완료`);
     onClose();
   };
   const { mutate: addDomain } = useAddDomain(onSuccess, () => onClose());
@@ -225,7 +221,12 @@ const DomainModal = ({
     if (datacenterId) {
       setDataCenterVo({id: datacenterId});
     } else if (!editMode && dataCenters && dataCenters.length > 0) {
-      setDataCenterVo({id: dataCenters[0].id});
+      const defaultDc = dataCenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
+      if (defaultDc) {
+        setDataCenterVo({ id: defaultDc.id, name: defaultDc.name });
+      } else {
+        setDataCenterVo({ id: dataCenters[0].id, name: dataCenters[0].name });
+      }
     }
   }, [dataCenters, datacenterId, editMode]);
 
@@ -297,8 +298,14 @@ const DomainModal = ({
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
+  const handleSelectIdChange = (setVo, voList) => (e) => {
+    const selected = voList.find((item) => item.id === e.target.value);
+    if (selected) setVo({ id: selected.id, name: selected.name });
+  }; 
+
   const validateForm = () => {
-    checkName(formState.name)
+    const nameError = checkName(formState.name);
+    if (nameError) return nameError;
 
     if(isNfs && !editMode && (!nfsAddress.includes(':') || !nfsAddress.includes('/'))){
       return "주소입력이 잘못되었습니다."
@@ -361,11 +368,8 @@ const DomainModal = ({
   };
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName={"도메인"}
-      submitTitle={dLabel}
+    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={dLabel}
+      isOpen={isOpen} onClose={onClose}      
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "700px"}}
     >
@@ -376,10 +380,7 @@ const DomainModal = ({
             disabled={editMode}
             loading={isDataCentersLoading}
             options={dataCenters}
-            onChange={(e) => {
-              const selected = dataCenters.find(dc => dc.id === e.target.value);
-              if (selected) setDataCenterVo({ id: selected.id, name: selected.name });
-            }}
+            onChange={handleSelectIdChange(setDataCenterVo, dataCenters)}
           />
           <LabelSelectOptions id="domain-type" label="도메인 기능"
             value={formState.domainType}
@@ -398,11 +399,9 @@ const DomainModal = ({
             disabled={editMode}
             loading={isHostsLoading}
             options={hosts}
-            onChange={(e) => {
-              const selected = hosts.find(h => h.id === e.target.value);
-              if (selected) setHostVo({ id: selected.id, name: selected.name });
-            }}
+            onChange={handleSelectIdChange(setHostVo, hosts)}
           />
+          {/* TODO: 호스트 변경 안됨 */}
         </div>
 
         <div className="domain-new-right">

@@ -144,8 +144,7 @@ const VmDupl = ({
               isContextMenu={true}
             />,
           ];
-        }}
-        
+        }}        
       />
 
       <SelectedIdView items={selectedVms} />

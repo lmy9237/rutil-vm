@@ -139,7 +139,8 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   
 
   const validateForm = () => {
-    checkName(formState.alias);
+    const nameError = checkName(formState.alias);
+    if (nameError) return nameError;
 
     if (!formState.size) return "크기를 입력해주세요.";
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;

@@ -7,7 +7,6 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.model.network.NetworkVo
-import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.service.computing.ItDataCenterService
@@ -378,28 +377,28 @@ class DataCenterController: BaseController() {
 		return ResponseEntity.ok(iDataCenter.findAllISOFromDataCenter(dataCenterId))
 	}
 
-	@ApiOperation(
-		httpMethod="GET",
-		value="가상머신 생성창 - vnicProfile 목록",
-		notes="가상머신 생성시에 필요한 vnicProfile 목록을 조회한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="dataCenterId", value="데이터센터 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/{dataCenterId}/vnicProfiles")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun vnicProfiles(
-		@PathVariable dataCenterId: String? = null,
-	): ResponseEntity<List<VnicProfileVo>?> {
-		if (dataCenterId.isNullOrEmpty())
-			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
-		log.info("/computing/dataCenters/{}/vnicProfiles ... 가상머신 생성창 - vnicProfiles 목록", dataCenterId)
-		return ResponseEntity.ok(iDataCenter.findAllVnicProfilesFromDataCenter(dataCenterId))
-	}
+	// @ApiOperation(
+	// 	httpMethod="GET",
+	// 	value="가상머신 생성창 - vnicProfile 목록",
+	// 	notes="가상머신 생성시에 필요한 vnicProfile 목록을 조회한다"
+	// )
+	// @ApiImplicitParams(
+	// 	ApiImplicitParam(name="dataCenterId", value="데이터센터 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 200, message = "OK")
+	// )
+	// @GetMapping("/{dataCenterId}/vnicProfiles")
+	// @ResponseBody
+	// @ResponseStatus(HttpStatus.OK)
+	// fun vnicProfiles(
+	// 	@PathVariable dataCenterId: String? = null,
+	// ): ResponseEntity<List<VnicProfileVo>?> {
+	// 	if (dataCenterId.isNullOrEmpty())
+	// 		throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
+	// 	log.info("/computing/dataCenters/{}/vnicProfiles ... 가상머신 생성창 - vnicProfiles 목록", dataCenterId)
+	// 	return ResponseEntity.ok(iDataCenter.findAllVnicProfilesFromDataCenter(dataCenterId))
+	// }
 
 
 	companion object {

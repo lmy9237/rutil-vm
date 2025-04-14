@@ -12,7 +12,6 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.builders.NetworkBuilder
 import org.ovirt.engine.sdk4.types.*
-import org.ovirt.engine.sdk4.types.DataCenterStatus.UP
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import kotlin.Throws
@@ -90,6 +89,7 @@ interface ItClusterService {
 	 */
 	@Throws(Error::class)
 	fun findAllVmsFromCluster(clusterId: String): List<VmViewVo>
+
 	/**
 	 * [ItClusterService.findAllNetworksFromCluster]
 	 * 클러스터가 가지고있는 네트워크 목록
@@ -99,7 +99,6 @@ interface ItClusterService {
 	 */
 	@Throws(Error::class)
 	fun findAllNetworksFromCluster(clusterId: String): List<NetworkVo>
-
 	/**
 	 * [ItClusterService.addNetworkFromCluster]
 	 * 클러스터 네트워크 추가
@@ -130,6 +129,15 @@ interface ItClusterService {
 	 */
 	@Throws(Error::class)
 	fun manageNetworksFromCluster(clusterId: String, networkVos: List<NetworkVo>): Boolean
+	/**
+	 * [ItClusterService.findAllVnicProfilesFromCluster]
+	 * 클러스터가 가지고있는 VnicProfile 목록
+	 *
+	 * @param clusterId [String] 클러스터 Id
+	 * @return List<[VnicProfileVo]> VnicProfile 목록
+	 */
+	@Throws(Error::class)
+	fun findAllVnicProfilesFromCluster(clusterId: String): List<VnicProfileVo>
 
 	/**
 	 * [ItClusterService.findAllEventsFromCluster]
@@ -299,6 +307,16 @@ class ClusterServiceImpl(
 		 */
 //		return false
 		TODO("네트워크 관리 실행")
+	}
+
+	@Throws(Error::class)
+	override fun findAllVnicProfilesFromCluster(clusterId: String): List<VnicProfileVo> {
+		log.info("findAllVnicProfilesFromCluster ... clusterId: {}", clusterId)
+		val networks: List<Network> = conn.findAllNetworksFromCluster(clusterId).getOrDefault(emptyList())
+		val res: List<VnicProfile> = networks.flatMap { network ->
+			conn.findAllVnicProfilesFromNetwork(network.id(), follow = "network").getOrDefault(emptyList())
+		}
+		return res.toCVnicProfileMenus()
 	}
 
 	@Throws(Error::class)

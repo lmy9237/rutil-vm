@@ -2,9 +2,8 @@ import React from "react";
 import VmDiskConnectionModal from "./VmDiskConnectionModal";
 import VmDiskModal from "./VmDiskModal";
 import VmDiskActionModal from "./VmDiskActionModal";
-import { useDeleteDisk, useDisksFromVM, useVm } from "../../../api/RQHook";
-import DeleteModal from "../../../utils/DeleteModal";
-import Localization from "../../../utils/Localization";
+import { useDisksFromVM, useVm } from "../../../api/RQHook";
+import VmDiskDeleteModal from "./VmDiskDeleteModal";
 
 /**
  * @name VmDiskModals
@@ -46,8 +45,8 @@ const VmDiskModals = ({
     edit: (
       <VmDiskModal
         isOpen={activeModal === "edit"}
-        diskType={true}
         editMode
+        diskType={true}
         vmId={vmId || ""}
         diskAttachmentId={disk?.id || ""}
         hasBootableDisk={hasBootableDisk}
@@ -55,16 +54,16 @@ const VmDiskModals = ({
       />
     ),
     delete: (
-      <DeleteModal isOpen={activeModal === "delete"}
-        label={`${Localization.kr.VM} 디스크`}
+      <VmDiskDeleteModal
+        isOpen={activeModal === "delete"}
         vmId={vmId || ""}
         data={selectedDisks}
-        api={useDeleteDisk}
         onClose={onClose}
       />
     ),
     connect: (
-      <VmDiskConnectionModal isOpen={activeModal === "connect"}
+      <VmDiskConnectionModal 
+        isOpen={activeModal === "connect"}
         diskType={true}
         vmId={vmId}
         dataCenterId={vm?.dataCenterVo?.id || ""}

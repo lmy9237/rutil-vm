@@ -50,7 +50,7 @@ const NetworkModal = ({
 
   const onSuccess = () => {
     onClose();
-    toast.success(`네트워크 ${nLabel} 완료`);
+    toast.success(`${Localization.kr.NETWORK} ${nLabel} 완료`);
   };
   const { mutate: addNetwork } = useAddNetwork(onSuccess, () => onClose());
   const { mutate: editNetwork } = useEditNetwork(onSuccess, () => onClose());
@@ -93,7 +93,12 @@ const NetworkModal = ({
     if (dcId) {
       setDataCenterVo({id: dcId});
     } else if (!editMode && datacenters && datacenters.length > 0) {
-      setDataCenterVo({id: datacenters[0].id, name: datacenters[0].name});
+      const defaultDc = datacenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
+      if (defaultDc) {
+        setDataCenterVo({ id: defaultDc.id, name: defaultDc.name });
+      } else {
+        setDataCenterVo({ id: datacenters[0].id, name: datacenters[0].name });
+      }
     }
   }, [datacenters, dcId, editMode]);
 
@@ -123,7 +128,8 @@ const NetworkModal = ({
   };
 
   const validateForm = () => {
-    checkName(formState.name);
+    const nameError = checkName(formState.name);
+    if (nameError) return nameError;
 
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     return null;
@@ -156,9 +162,8 @@ const NetworkModal = ({
   };
 
   return (
-    <BaseModal targetName={`논리 ${Localization.kr.NETWORK}`}
-      isOpen={isOpen} onClose={onClose}       
-      submitTitle={nLabel}
+    <BaseModal targetName={`논리 ${Localization.kr.NETWORK}`} submitTitle={nLabel}
+      isOpen={isOpen} onClose={onClose}      
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "770px"}}
     >

@@ -15,7 +15,7 @@ const DataCenterModals = ({
       <DataCenterModal 
         isOpen={activeModal === 'create'} 
         onClose={onClose} 
-        />,
+      />,
     edit: (
       <DataCenterModal
         editMode

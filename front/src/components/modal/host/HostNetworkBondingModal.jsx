@@ -21,13 +21,14 @@ const HostNetworkBondingModal = ({
   onClose, 
 }) => {
   const bLabel = editmode ? Localization.kr.UPDATE : Localization.kr.CREATE;
-  const { data: hostNic = [] } = useNetworkInterfaceFromHost(hostId, nicId);
   
   const onSuccess = () => {
     onClose();
     toast.success(`${Localization.kr.HOST} 본딩 ${bLabel} 완료`);
   };
   const { mutate: addBonding } = useAddBonding(onSuccess, () => onClose());
+
+  const { data: hostNic = [] } = useNetworkInterfaceFromHost(hostId, nicId);
 
   const [name, setName] = useState("");
   const [options, setOptions] = useState([]);
@@ -53,9 +54,7 @@ const HostNetworkBondingModal = ({
   }, [editmode, hostNic]);
 
   return (
-    <BaseModal
-      targetName={!editmode ? `새 본딩 ${Localization.kr.CREATE}` : `본딩 ${name} ${Localization.kr.UPDATE}`}
-      submitTitle={""}
+    <BaseModal targetName={!editmode ? `새 본딩 ${Localization.kr.CREATE}` : `본딩 ${name} ${Localization.kr.UPDATE}`} submitTitle={""}
       isOpen={isOpen} onClose={onClose}
       onSubmit={() => {}}
       contentStyle={{ width: "500px" }}
@@ -69,11 +68,7 @@ const HostNetworkBondingModal = ({
         value={options.find(opt => opt.name === "mode")?.value || ""}
         options={optionList}
         onChange={(e) => {
-          setOptions(prev =>
-            prev.map(opt =>
-              opt.name === "mode" ? { ...opt, value: e.target.value } : opt
-            )
-          );
+          setOptions(prev => prev.map(opt => opt.name === "mode" ? { ...opt, value: e.target.value } : opt ));
         }}
       />
       <LabelInput id="user_mode" label="사용자 정의 모드"        

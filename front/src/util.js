@@ -9,7 +9,7 @@ import Logger from "./utils/Logger";
  * @returns 
  */
 export function checkKoreanName(name) {
-  const res = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(name);
+  const res = /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(name);
   Logger.debug(`util > checkKoreanName ... name: ${name}, res: ${res}`);
   return res; // 한글이 포함되면 true 반환
 }

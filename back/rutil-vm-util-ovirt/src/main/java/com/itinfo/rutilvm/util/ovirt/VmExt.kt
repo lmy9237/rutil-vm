@@ -678,6 +678,7 @@ fun Connection.removeDiskAttachmentToVm(
 	}
 	// DiskAttachment 삭제 요청 및 결과 확인
 	this.srvDiskAttachmentFromVm(vmId, diskAttachmentId).remove().detachOnly(detachOnly).send()
+
 	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "삭제", vmId)
@@ -702,7 +703,8 @@ fun Connection.activeDiskAttachmentToVm(vmId: String, diskAttachmentId: String):
 	this.updateDiskAttachmentToVm(vmId, diskAttachment)
 		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
 
-	expectDiskStatus(vmId, diskAttachmentId, true)
+	// expectDiskStatus(vmId, diskAttachmentId, true)
+	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "활성화", vmId)
 }.onFailure {
@@ -712,7 +714,6 @@ fun Connection.activeDiskAttachmentToVm(vmId: String, diskAttachmentId: String):
 
 fun Connection.deactivateDiskAttachmentToVm(vmId: String, diskAttachmentId: String): Result<Boolean> = runCatching {
 	checkVmExists(vmId)
-
 	val diskStatus: DiskAttachment = this.findDiskAttachmentFromVm(vmId, diskAttachmentId)
 		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND.toError()
 
@@ -725,7 +726,8 @@ fun Connection.deactivateDiskAttachmentToVm(vmId: String, diskAttachmentId: Stri
 	this.updateDiskAttachmentToVm(vmId, diskAttachment)
 		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
 
-	expectDiskStatus(vmId, diskAttachmentId, false)
+	// expectDiskStatus(vmId, diskAttachmentId, false)
+	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "비활성화", vmId)
 }.onFailure {
