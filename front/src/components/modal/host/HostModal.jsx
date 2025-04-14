@@ -35,11 +35,11 @@ const initialFormState = {
  * @returns
  */
 const HostModal = ({ 
-  isOpen
-  , editMode=false
-  , hId
-  , clusterId
-  , onClose
+  isOpen, 
+  editMode=false, 
+  hId, 
+  clusterId, 
+  onClose
 }) => {
   const hLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [formState, setFormState] = useState(initialFormState);
@@ -47,7 +47,7 @@ const HostModal = ({
 
   const onSuccess = () => {
     onClose();
-    toast.success(`호스트 ${hLabel} 완료`);
+    toast.success(`${Localization.kr.HOST} ${hLabel} 완료`);
   };
   const { mutate: addHost } = useAddHost(onSuccess, () => onClose());
   const { mutate: editHost } = useEditHost(onSuccess, () => onClose());
@@ -112,9 +112,8 @@ const HostModal = ({
   };
 
   return (
-    <BaseModal targetName={Localization.kr.HOST}
+    <BaseModal targetName={Localization.kr.HOST} submitTitle={hLabel}
       isOpen={isOpen} onClose={onClose}      
-      submitTitle={hLabel}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px", height: !editMode ? "600px" :"500px" }} 
     >

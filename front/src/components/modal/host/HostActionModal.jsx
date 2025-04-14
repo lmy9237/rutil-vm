@@ -6,6 +6,7 @@ import {
   useActivateHost,
   useRestartHost,
   useEnrollHostCertificate,
+  useRefreshHost,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 
@@ -28,6 +29,7 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
   const { mutate: activateHost } = useActivateHost(onSuccess, () => onClose());
   const { mutate: restartHost } = useRestartHost(onSuccess, () => onClose());
   const { mutate: enrollHostCertificate } = useEnrollHostCertificate(onSuccess, () => onClose());
+  const { mutate: refreshHost } = useRefreshHost(onSuccess, () => onClose());
 //const { mutate: stopHost } = useStopHost();
 
   const { ids, names } = useMemo(() => {
@@ -46,7 +48,7 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
       activate: "활성화",
       restart: "재시작",
       // stop: '중지',
-      // reinstall: '다시 설치',
+      refresh: '새로고침',
       enrollCert: '인증서 등록',
       haOn: 'HA 활성화',
       haOff: 'HA 비활성화',
@@ -71,7 +73,7 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
       activate: activateHost,
       restart: restartHost,
       // stop: stopHost,
-      // reinstall: rein,
+      refresh: refreshHost,
       enrollCert: enrollHostCertificate,
       // haOn: resetVM,
       // haOff: resetVM,
@@ -86,10 +88,8 @@ const HostActionModal = ({ isOpen, action, onClose, data }) => {
   };
 
   return (
-    
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={Localization.kr.HOST}
-      submitTitle={getContentLabel(action)}
+    <BaseModal targetName={Localization.kr.HOST} submitTitle={getContentLabel(action)}
+      isOpen={isOpen} onClose={onClose}      
       onSubmit={handleFormSubmit}
       promptText={`${names.join(", ")} 를(을) ${getContentLabel(action)}하시겠습니까?`}
       contentStyle={{ width: "630px" }} 

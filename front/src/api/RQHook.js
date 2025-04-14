@@ -1672,6 +1672,7 @@ export const useRestartHost = (
     },
   });
 };
+
 export const useEnrollHostCertificate = (
   postSuccess=()=>{},postError
 ) => {
@@ -1695,6 +1696,72 @@ export const useEnrollHostCertificate = (
     },
   });
 }
+
+
+/**
+ * @name useRefreshHost
+ * @description 호스트 새로고침 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.refreshHost
+ */
+export const useRefreshHost = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({
+    mutationFn: async (hostId) => {
+      const res = await ApiManager.refreshHost(hostId)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useRefreshHost ... hostId: ${hostId}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useRefreshHost ... res: `, res);
+      queryClient.invalidateQueries('allHosts');
+      postSuccess();
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+
+/**
+ * @name useCommitNetConfigHost
+ * @description 호스트 재부팅 확인 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.commitNetConfigHost
+ */
+export const useCommitNetConfigHost = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({
+    mutationFn: async (hostId) => {
+      const res = await ApiManager.commitNetConfigHost(hostId)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > usecommitNetConfigHost ... hostId: ${hostId}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > usecommitNetConfigHost ... res: `, res);
+      queryClient.invalidateQueries('allHosts');
+      postSuccess();
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+
+
+
 //#endregion: Host
 
 //#region: VM (가상머신)

@@ -103,6 +103,8 @@ const ENDPOINTS = {
   RESTART_HOST: (hostId) =>                                                `${ENDPOINT_API_V1}/computing/hosts/${hostId}/restart`, 
   STOP_HOST: (hostId) =>                                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}/stop`, 
   ENROLL_HOST_CERTIFICATE: (hostId) =>                                     `${ENDPOINT_API_V1}/computing/hosts/${hostId}/stop`, 
+  REFRESH_HOST: (hostId) =>                                                `${ENDPOINT_API_V1}/computing/hosts/${hostId}/refresh`, 
+  COMMIT_NET_CONFIG_HOST: (hostId) =>                                      `${ENDPOINT_API_V1}/computing/hosts/${hostId}/commitNetConfig`, 
   //#endregion: Host
 
   //#region: Vm

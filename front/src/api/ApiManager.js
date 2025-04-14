@@ -941,7 +941,34 @@ const ApiManager = {
       data: hostId
     });
   },
-
+  /**
+     * @name ApiManager.refreshHost
+     * @description 호스트 새로고침
+     * 
+     * @param {String} hostId - 호스트 ID
+     * @returns {Promise<Object>} API 응답 결과
+     */
+  refreshHost: async (hostId) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.REFRESH_HOST(hostId),  // ID를 URL에 포함
+      data: hostId
+    });
+  },
+  /**
+     * @name ApiManager.commitNetConfigHost
+     * @description 호스트 재시작
+     * 
+     * @param {String} hostId - 호스트 ID
+     * @returns {Promise<Object>} API 응답 결과
+     */
+  commitNetConfigHost: async (hostId) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.COMMIT_NET_CONFIG_HOST(hostId),  // ID를 URL에 포함
+      data: hostId
+    });
+  },
 
   //#endregion: Host
 

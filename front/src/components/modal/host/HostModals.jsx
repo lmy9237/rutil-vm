@@ -4,6 +4,7 @@ import HostActionModal from "./HostActionModal";
 import { useDeleteHost } from "../../../api/RQHook";
 import DeleteModal from "../../../utils/DeleteModal";
 import Localization from "../../../utils/Localization";
+import HostCommitNetModal from "./HostCommitNetModal";
 
 const HostModals = ({
   activeModal,
@@ -45,7 +46,8 @@ const HostModals = ({
           "deactivate",
           "activate",
           "restart",
-          "reInstall",
+          "refresh",
+          // "reInstall",
           "enrollCert",
           "haOn",
           "haOff",
@@ -55,6 +57,13 @@ const HostModals = ({
         onClose={onClose}
       />
     ),
+    commitNetHost: (
+      <HostCommitNetModal
+        isOpen={activeModal === "commitNetHost"}
+        data={host} // TODO: 정의 필요
+        onClose={onClose}
+      />
+    )    
   };
 
   return (
