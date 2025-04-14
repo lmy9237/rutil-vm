@@ -5,7 +5,7 @@
  }
  .table {
     border-collapse: collapse;
-    width: 67%;
+    width: 100%;
   }
   .table th,
   .table td {
@@ -17,7 +17,7 @@
 
   .table th {
     text-align: left;
-    width: 41%;
+    width: 28%;
   }
   .table td {
     text-align: left;

@@ -68,7 +68,7 @@ const JobFooter = () => {
       const dy = startYRef.current - e.clientY; // 아래로 내리면 양수
       const newHeight = startHeightRef.current + dy;
   
-      if (newHeight >= 184 && newHeight <= 600) {
+      if (newHeight >= 40 && newHeight <= 1000) {
         setFooterHeight(newHeight);
       }
     });

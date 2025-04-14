@@ -20,7 +20,8 @@ const NetworkTree = ({
   menuRef,
   setActiveModal,        
   setSelectedNetworks,
-  setSelectedDataCenters
+  setSelectedDataCenters,
+  closeContextMenu
 }) => {
   const {
     secondVisibleNetwork, toggleSecondVisibleNetwork,
@@ -101,13 +102,15 @@ const NetworkTree = ({
                 selectedDataCenters={[contextMenu.item]}
                 status="single"
                 actionType="context"
+                isContextMenu={true}
                 onCloseContextMenu={() => onContextMenu(null)}
                 openModal={(action) => {
                   setActiveModal?.(`datacenter:${action}`);
                   setSelectedDataCenters?.([contextMenu.item]); 
-                  onContextMenu(null);      // 우클릭박스 닫기
+                  closeContextMenu();              
                 }}
               />
+
                 </div>
             )}
 
@@ -158,7 +161,7 @@ const NetworkTree = ({
                             openModal={(action) => {
                               setActiveModal?.(`network:${action}`); 
                               setSelectedNetworks?.([contextMenu.item]);    
-                              onContextMenu(null);                         
+                              closeContextMenu();                       
                             }}
                             selectedNetworks={[contextMenu.item]}
                             status={contextMenu.item?.status}

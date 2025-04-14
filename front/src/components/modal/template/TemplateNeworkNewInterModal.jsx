@@ -153,6 +153,7 @@ const TemplateNeworkNewInterModal = ({
       targetName={Localization.kr.NICS}
       submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
       onSubmit={handleFormSubmit}
+      contentStyle={{ width: "690px" }}
     >
       {/* <div className="new-network-interface modal"> */}
       <div className="network-popup-content">

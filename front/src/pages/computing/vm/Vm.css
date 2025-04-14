@@ -141,6 +141,7 @@
   height: 100%;
   width: 63%;
   text-align: left;
+  font-size: var(--fs-default);
 }
 .snap-table tr{
   align-items: center;

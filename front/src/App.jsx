@@ -133,6 +133,7 @@ const App = () => {
                             
               <Route path="networks" element={<AllNetwork />} errorElement={<ErrorBoundary/>} />
               <Route path="networks/rutil-manager" element={<RutilManager />} errorElement={<ErrorBoundary/>} />
+              <Route path="networks/rutil-manager/:section" element={<RutilManager />} errorElement={<ErrorBoundary/>} />
               <Route path="networks/datacenters/:id/:section" element={<DataCenterInfo />} errorElement={<ErrorBoundary/>} />
               <Route path="networks/:id" element={<NetworkInfo />} errorElement={<ErrorBoundary/>} />
               <Route path="networks/:id/:section" element={<NetworkInfo />} errorElement={<ErrorBoundary/>} />

@@ -1,36 +1,23 @@
 import React from "react";
 import Localization from "../../utils/Localization";
+import ActionButtonGroup from "../button/ActionButtonGroup";
 
 const NicActionButtons = ({
   openModal,
   isEditDisabled,
   isDeleteDisabled,
-  type = "default",
+  actionType = "default",
+  isContextMenu = false,
 }) => {
   const basicActions = [
-    { type: "create", label: Localization.kr.CREATE, disabled: false },
-    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled },
-    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled },
+    { type: "create", label: Localization.kr.CREATE, disabled: false,onBtnClick: () => openModal("create"),},
+    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled, onBtnClick: () => openModal("edit"), },
+    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled, onBtnClick: () => openModal("delete"), },
   ];
 
-  const wrapperClass = type === "context" 
-    ? "right-click-menu-box"
-    : "header-right-btns";
-    
-  return (
-    <div className={wrapperClass}>
-      {basicActions.map(({ type: actionType, label, disabled }) => (
-        <button
-          key={actionType}
-          onClick={() => openModal(actionType)}
-          disabled={disabled}
-          className="right-click-menu-btn"
-        >
-          {label}
-        </button>
-      ))}
-    </div>
-  );
+    return (
+      <ActionButtonGroup actionType={actionType} actions={basicActions}/>
+    );
 };
 
 export default NicActionButtons;

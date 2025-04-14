@@ -12,6 +12,9 @@ import Logger from "../../../utils/Logger";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import ActionButton from "../../../components/button/ActionButton";
 import Localization from "../../../utils/Localization";
+import SearchBox from "../../../components/button/SearchBox";
+import useSearch from "../../../components/button/useSearch";
+import toast from "react-hot-toast";
 
 /**
  * @name TemplateNics
@@ -20,14 +23,18 @@ import Localization from "../../../utils/Localization";
  * @prop {string} templatId 탬플릿 ID
  * @returns {JSX.Element} TemplateNics
  */
-const TemplateNics = ({ templateId }) => {
+const TemplateNics = ({ 
+  templateId,
+  showSearchBox = true, 
+  refetch,
+}) => {
   const {
     data: vnicProfiles = [],
     isLoading: isVnicProfilesLoading,
     isError: isVnicProfilesError,
     isSuccess: isVnicProfilesSuccess,
   } = useAllNicsFromTemplate(templateId, (e) => ({ ...e }));
-
+  const columns = TableColumnsInfo.NICS_FROM_TEMPLATE;
   const transformedData = vnicProfiles.map((nic) => ({
       ...nic,
       status: status2Icon(nic?.linked ? "UP" : "DOWN"),
@@ -49,35 +56,37 @@ const TemplateNics = ({ templateId }) => {
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedVnicProfiles, setSelectedVnicProfiles] = useState([]);
-  
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
+  const handleRefresh = () =>  {
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
+
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
 
   Logger.debug("TemplateNics ...");
   return (
     <>
-      <div className="header-right-btns">
-        <ActionButton actionType="default" label={Localization.kr.CREATE} 
-          disabled={false}
-          // onClick={() => openModal("create")}
-        />
-        <ActionButton actionType="default" label={Localization.kr.UPDATE} 
-          // onClick={() => openModal("create")}
-        />
-        <ActionButton actionType="default" label={Localization.kr.REMOVE} 
-          // onClick={() => openModal("create")}
-        />
-      </div>
-      
+      <div className="dupl-header-group f-start">
+        {showSearchBox && (
+          <SearchBox 
+            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+            onRefresh={handleRefresh}
+          />
+        )}
       <NicActionButtons
         openModal={openModal}
         isEditDisabled={selectedVnicProfiles.length !== 1}
       />
-
+     </div>
       <TablesOuter
         isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
-        columns={TableColumnsInfo.NICS_FROM_TEMPLATE}
-        data={transformedData}
+        columns={columns}   
+        data={filteredData}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setSelectedVnicProfiles(selectedRows)}
         onContextMenuItems={(row) => [
           <NicActionButtons

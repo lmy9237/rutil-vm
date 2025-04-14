@@ -110,6 +110,7 @@ const [selectedClusters, setSelectedClusters] = useState([]);
           selectedNetworks={selectedNetworks}
           network={activeModal?.startsWith("network:") && activeModal.includes("edit") ? selectedNetworks[0] : null}
           onClose={() => setActiveModal(null)}
+          // isContextDelete={activeModal?.includes("context")} 
         />
      </>
       )}

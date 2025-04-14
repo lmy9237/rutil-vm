@@ -120,6 +120,7 @@ export const Localization = {
       else if (_status === "POWERING_DOWN") return "전원을 끄는 중";
       else if (_status === "OPERATIONAL") return "가동 중";
       else if (_status === "NON_OPERATIONAL") return "비 가동 중";
+      else if (_status === "NON_RESPONSIVE") return "응답하지 않음";
       else if (_status === "UNATTACHED")  return "붙어있지 않음";
       else if (_status === "RESTORING_STATE")  return "복구 중";
       else if (_status === "MIGRATING")  return "마이그레이션 중";
@@ -128,6 +129,7 @@ export const Localization = {
       else if (_status === "FAILED")  return "실패";
       else if (_status === "FINISHED")  return "완료";
       else if (_status === "UNKNOWN")  return "알 수 없음";
+      else if (_status === "IN_PREVIEW")  return "미리보기";
       return _status;
     },
 

@@ -236,7 +236,10 @@ const VmModal = ({
       setFormHaState({
         ha: vm?.ha || false,
         priority: vm?.priority || 1,
-        storageDomainVo: { id: vm?.storageDomainVo?.id || "" }
+        storageDomainVo: {
+          id: vm?.storageDomainVo?.id || "",
+          name: vm?.storageDomainVo?.name || ""
+        }
       });
       setFormBootState({
         firstDevice: vm?.firstDevice || "hd",
@@ -343,7 +346,10 @@ const VmModal = ({
 
     // VmHa
     ...formHaState,
-    storageDomainVo: { id: formHaState.storageDomainVo.id },
+    storageDomainVo: {
+      id: formHaState.storageDomainVo.id,
+      name: formHaState.storageDomainVo.name
+    },
 
     // VmBoot
     ...formBootState,

@@ -76,16 +76,16 @@ const VmSnapshots = ({ vmId }) => {
 
       <div className='center'>
         <div className=" vm-snap-item">
-          <div className="snapshot-item f-start">
+          {/* <div className="snapshot-item f-start">
             <RVI16 iconDef={rvi16ChevronDown} />
             <div className="snapshot-label">VM 스냅샷 {new Date().toLocaleString()}</div>
-          </div>
+          </div> */}
 
           {/* 항상 현재 위치 표시 */}
           <div className="snapshot-item f-start">
             <RVI16 iconDef={rvi16ChevronDown} />
             <div className='snapshot-label  f-center'>
-              <RVI16 iconDef={rvi16Location} className="mr-1.5 ml-2.5" />
+              <RVI16 iconDef={rvi16Location} className="mx-1.5" />
               현재 위치
             </div>
           </div>
@@ -103,9 +103,14 @@ const VmSnapshots = ({ vmId }) => {
               style={{ cursor: 'pointer', padding: '4px 26px', background: selectedSnapshot?.id === snapshot.id ? '#E2E5EB' : 'none' }}
             >
                {/* 선택된 스냅샷이면 아래, 아니면 오른쪽 화살표 */}
-              <RVI16 iconDef={selectedSnapshot?.id === snapshot.id? rvi16ChevronDown : rvi16ChevronRight}/>
+              <RVI16 iconDef={selectedSnapshot?.id === snapshot.id? rvi16ChevronDown : rvi16ChevronRight}  className="mx-1.5"/>
               <div className='snapshot-label f-center'>
-              [상태: {snapshot?._status}]<RVI16 iconDef={rvi16Desktop} className="mr-1.5 ml-2.5" />
+                [상태:
+                  <div className="f-center mx-0.5">
+                    {snapshot?._status}
+                  </div> 
+                ]
+                <RVI16 iconDef={rvi16Desktop} className="mx-1.5" />
                 {snapshot?.description}
               </div>          
             </div>

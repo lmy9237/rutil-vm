@@ -6,6 +6,8 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
 import "./RutilVmIcons.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faPause } from "@fortawesome/free-solid-svg-icons";
 /**
  * @name ItitinfoLogoIcon
  */
@@ -487,10 +489,22 @@ export const severity2Icon = (severity, isLined=false) => {
   }
   return (
     <>
-      <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}/>
+      {/* <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}/>
       <Tooltip id={tooltipId} effect="solid" middlewares={[]} className="custom-tooltip">
         {Localization.kr.renderSeverity(severity)}
-      </Tooltip>
+      </Tooltip> */}
+      <Tippy
+        content={Localization.kr.renderSeverity(severity)}
+        placement="top"
+        delay={[200, 0]}
+        animation="shift-away"
+        theme="dark-tooltip"
+        arrow={true}
+      >
+        <span style={{ display: "inline-flex", alignItems: "center" }}>
+          <RVI16 iconDef={iconDef} />
+        </span>
+      </Tippy>
     </>
   )
 }
@@ -621,7 +635,6 @@ export const RVI36 = ({iconDef, width = 30, height = 30, onClick, currentColor='
   )
 }
 
-
 /**
  * @name status2Icon
  * @description 상태에 따른 RutilVM용 SVG 아이콘 출력
@@ -632,7 +645,7 @@ export const RVI36 = ({iconDef, width = 30, height = 30, onClick, currentColor='
 export const status2Icon = (
   status = "",
 ) => {
-  const tooltipId = `status-tooltip-${status}`;
+  // const tooltipId = `status-tooltip-${status}`;
   let iconDef = rvi16QuestionMark()
   switch(status?.toUpperCase()) {
     case "OK":
@@ -669,18 +682,31 @@ export const status2Icon = (
     // case "PREPARING_FOR_MAINTENANCE":              iconDef = rvi16Refresh();break;
     // case "LOCKED":                                 iconDef = rvi16Lock();break;
 
-
+    case "IN_PREVIEW":                             iconDef = <FontAwesomeIcon icon={faEye} color="#777" size="sm" />;break; // 임시
     case "SUSPENDED":                              iconDef = rvi16Pause;break;
+    case "NON_RESPONSIVE":
     case "NON_OPERATIONAL":                        iconDef = rvi16NonOperational;break;
     case "UNKNOWN":
     default:                                       iconDef = rvi16QuestionMark();break;
   }
   return (
     <>
-      <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}
+      <Tippy
+        content={Localization.kr.renderStatus(status)}
+        delay={[200, 0]}
+        placement="top"
+        animation="shift-away"
+        theme="dark-tooltip"
+        arrow={true}
+      >
+        <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+          <RVI16 iconDef={iconDef} />
+        </span>
+      </Tippy>
+      {/* <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}
         data-tooltip-content={Localization.kr.renderStatus(status)}
       />
-      {createPortal(<Tooltip id={tooltipId} effect="solid" middlewares={[]} className="custom-tooltip"/>, document.body)}
+      {createPortal(<Tooltip id={tooltipId} effect="solid" middlewares={[]} className="custom-tooltip"/>, document.body)} */}
     </>
   )
 }
@@ -700,20 +726,43 @@ export const clusterStatus2Icon = (status = "", connect=false) => {
  * @param {boolean} isHostedEngine 호스트엔진일 경우
  * @returns {JSX.Element} 툴팁이 포함 된 아이콘
  */
-export const hostedEngineStatus2Icon = (isHostedEngineVm=false, isHostedEngine=false) => {
-  const tag = isHostedEngineVm ? "hosted-engine-vm" : isHostedEngine ? "hosted-engine" : "";
-  const iconDef = isHostedEngineVm ? rvi16StarGold : isHostedEngine ? rvi16Star : null;
-  const tooltipMessage = `<span class="v-center">${isHostedEngineVm ? "<p>호스트 엔진 가상머신</p><p>실행 중</p>" : isHostedEngine ? "<p>호스트 엔진 가상머신</p><p>실행 가능</p>" : ""}</span>`
+// export const hostedEngineStatus2Icon = (isHostedEngineVm=false, isHostedEngine=false) => {
+//   const tag = isHostedEngineVm ? "hosted-engine-vm" : isHostedEngine ? "hosted-engine" : "";
+//   const iconDef = isHostedEngineVm ? rvi16StarGold : isHostedEngine ? rvi16Star : null;
+//   const tooltipMessage = `<span class="v-center">${isHostedEngineVm ? "<p>호스트 엔진 가상머신</p><p>실행 중</p>" : isHostedEngine ? "<p>호스트 엔진 가상머신</p><p>실행 가능</p>" : ""}</span>`
 
-  const tooltipId = `status-tooltip-${tag}`
-  return (
-    <>
-      {iconDef && <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}
-        data-tooltip-html={tooltipMessage}
-      />}
-      {tooltipMessage && (createPortal(<Tooltip id={tooltipId} effect="solid" middlewares={[]} className="custom-tooltip"/>, document.body))}
-    </>
-  )
-}
+//   const tooltipId = `status-tooltip-${tag}`
+//   return (
+//     <>
+//       {iconDef && <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}
+//         data-tooltip-html={tooltipMessage}
+//       />}
+//       {tooltipMessage && (createPortal(<Tooltip id={tooltipId} effect="solid" middlewares={[]} className="custom-tooltip"/>, document.body))}
+//     </>
+//   )
+// }
+  export const hostedEngineStatus2Icon = (isHostedEngineVm = false, isHostedEngine = false) => {
+    const iconDef = isHostedEngineVm ? rvi16StarGold : isHostedEngine ? rvi16Star : null;
 
+    const tooltipContent = isHostedEngineVm
+    ? <div className="v-center">호스트 엔진 가상머신<br />실행 중</div>
+    : isHostedEngine
+    ? <div className="v-center">호스트 엔진 가상머신<br />실행 가능</div>
+    : null;
+    if (!iconDef || !tooltipContent) return null;
+
+    return (
+      <Tippy
+        content={<div className="v-center">{tooltipContent}</div>}
+        placement="top"
+        theme="dark-tooltip"
+        animation="shift-away"
+        arrow={true}
+      >
+        <span style={{ display: "inline-flex", alignItems: "center" }}>
+          <RVI16 iconDef={iconDef} />
+        </span>
+      </Tippy>
+    );
+  };
 //#endregion

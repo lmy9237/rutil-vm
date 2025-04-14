@@ -50,9 +50,9 @@
   border: var(--border-simple);
   background:white;
 }
-.footer-nav table tr{
+/* .footer-nav table tr{
   border-bottom:var(--border-simple);
-}
+} */
 .footer-nav table th{
   border-right:var(--border-simple);
   text-align:left;
@@ -73,8 +73,4 @@
 
 .footer-resizer:hover {
   background-color: #aaa;
-}
-
-table#table-job tr>td:first-child {
-  
 }

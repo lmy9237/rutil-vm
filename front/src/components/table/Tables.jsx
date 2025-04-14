@@ -321,102 +321,7 @@ const Tables = ({
           const globalIndex = indexOfFirstItem + rowIndex; 
         
           return (
-            // <tr
-            //   key={globalIndex}
-            //   onClick={(e) => {
-            //     setSelectedRowIndex(globalIndex);
-            //     setContextRowIndex(null);
-            //     onRowClick([row]); // ✅ 배열로 전달
-            //     handleRowClick(globalIndex, e);
-            //   }}
-            //   onContextMenu={(e) => handleContextMenu(e, globalIndex)}
-            //   className={
-            //     selectedRows.includes(globalIndex) || contextRowIndex === globalIndex
-            //       ? "selected-row"
-            //       : ""
-            //   }
-            // >
-            //   {columns.map((column, colIndex) => (
-            //     <td
-            //       key={colIndex}
-            //       data-tooltip-id={`tooltip-${globalIndex}-${colIndex}`}
-            //       data-tooltip-content={getCellTooltipContent(row[column.accessor])}
-            //       onMouseEnter={(e) =>
-            //         handleMouseEnter(e, globalIndex, colIndex, row[column.accessor])
-            //       }
-            //       style={{
-            //         whiteSpace: "nowrap",
-            //         overflow: "hidden",
-            //         textOverflow: "ellipsis",
-            //         textAlign: React.isValidElement(row[column.accessor]) ? "center" : "left",
-            //         verticalAlign: "middle",
-            //         cursor:
-            //           row[column.accessor] &&
-            //           clickableColumnIndex.includes(colIndex)
-            //             ? "pointer"
-            //             : "default",
-            //         color:
-            //           row[column.accessor] &&
-            //           clickableColumnIndex.includes(colIndex)
-            //             ? "blue"
-            //             : "inherit",
-            //         fontWeight:
-            //           row[column.accessor] &&
-            //           clickableColumnIndex.includes(colIndex)
-            //             ? "500"
-            //             : "normal",
-            //         width: column?.width ?? "",
-            //       }}
-            //       onClick={(e) => {
-            //         if (
-            //           row[column.accessor] &&
-            //           clickableColumnIndex.includes(colIndex)
-            //         ) {
-            //           e.stopPropagation();
-            //           if (onClickableColumnClick) {
-            //             onClickableColumnClick(row);
-            //           }
-            //         }
-            //       }}
-            //       onMouseOver={(e) => {
-            //         if (
-            //           row[column.accessor] &&
-            //           clickableColumnIndex.includes(colIndex)
-            //         ) {
-            //           e.target.style.textDecoration = "underline";
-            //         }
-            //       }}
-            //       onMouseOut={(e) => {
-            //         if (
-            //           row[column.accessor] &&
-            //           clickableColumnIndex.includes(colIndex)
-            //         ) {
-            //           e.target.style.textDecoration = "none";
-            //         }
-            //       }}
-            //     >
-            //           <Tippy
-            //             content={getCellTooltipContent(row[column.accessor])}
-            //             delay={[200, 0]}
-            //             placement="top"
-            //             animation="shift-away"
-            //             theme="dark-tooltip" 
-            //             arrow={true}        
-            //             disabled={!tooltips[`${globalIndex}-${colIndex}`]}
-            //           >
-            //             <div style={{ display: "flex", alignItems: "center"}}>
-            //               {typeof row[column.accessor] !== "string" &&
-            //               typeof row[column.accessor] !== "number" &&
-            //               row[column.accessor]?.type?.name !== "TableRowClick" ? (
-            //                 row[column.accessor]
-            //               ) : (
-            //                 row[column.accessor]
-            //               )}
-            //             </div>
-            //           </Tippy>
-            //     </td>
-            //   ))}
-            // </tr>
+
             <tr
               key={globalIndex}
               onClick={(e) => {
@@ -440,7 +345,7 @@ const Tables = ({
 
                 // 아이콘, 체크박스 등은 가운데, TableRowClick은 왼쪽
                 const shouldCenter = (isJSX && !isTableRowClick) || isBoolean;
-
+                const columnAlign = column?.align ?? (shouldCenter ? "center" : "left");
                 return (
                   <td
                     key={colIndex}
@@ -453,7 +358,7 @@ const Tables = ({
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      textAlign: shouldCenter ? "center" : "left",
+                      textAlign: columnAlign,
                       verticalAlign: "middle",
                       cursor:
                         cellValue && clickableColumnIndex.includes(colIndex)
@@ -502,7 +407,7 @@ const Tables = ({
                       <div
                         style={{
                           display: "flex",
-                          justifyContent: shouldCenter ? "center" : "flex-start",
+                          justifyContent: columnAlign === "center" ? "center" : "flex-start",
                           alignItems: "center",
                         }}
                       >
