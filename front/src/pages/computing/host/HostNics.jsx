@@ -231,9 +231,11 @@ const HostNics = ({ hostId }) => {
                         data-tooltip-id={`nic-tooltip-${nic.id}`}
                         data-tooltip-html={generateNicTooltipHTML(nic)}
                       >
-                        <div className="cursor-default select-none">
-                          <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
-                          {nic.name}
+                        <div className=" cursor-default select-none interface-content">
+                          <div className="f-start">
+                            <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
+                            {nic.name}
+                          </div>
                           <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
                           <RVI36 iconDef={rvi36Edit} className="icon cursor-pointer"
                             onClick={() => {

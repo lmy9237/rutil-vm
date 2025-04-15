@@ -109,7 +109,13 @@
 .host-option-item.selected {
   background-color: #cce5ff;
 }
-
+.disk-item span{
+  margin-right: 25px;
+  max-width: 352px;
+  white-space: nowrap;       
+  overflow: hidden;          
+  text-overflow: ellipsis;  
+}
 /*가상머신 ... 버튼 새템플릿 생성*/
 .new-template-popup .section-table-outer {
   height: 15vh;

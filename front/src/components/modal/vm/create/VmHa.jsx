@@ -19,33 +19,52 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
         ...prev,
         storageDomainVo: prev.ha ? { id: domains[0].id, name: domains[0].name } : { id: "", name: "" },
       }));
+    } else {
+      const [domainFound] = domains.filter((e) => e?.id === formHaState?.storageDomainVo?.id);
+      setFormHaState((prev) => ({
+        ...prev,
+        storageDomainVo: prev.ha ? { ...domainFound } : { id: "", name: "" },
+      }));
     }
   }, [domains, editMode, setFormHaState]);
 
   return (
     <>
       <div className="ha-mode-second-content">
-        <LabelCheckbox id="ha_mode_box" label={Localization.kr.HA}
+      <LabelCheckbox id="ha_mode_box" label={Localization.kr.HA}
           checked={formHaState.ha}
           onChange={(e) => {
             const isChecked = e.target.checked;
             setFormHaState((prev) => ({
               ...prev,
               ha: isChecked,
-              storageDomainVo: isChecked && domains.length > 0 ? { id: domains[0].id, name: domains[0].name } : { id: "", name: "" },
+              storageDomainVo: { id: "", name: "" }, 
             }));
           }}
         />
-        <LabelSelectOptionsID label={`${Localization.kr.VM} 임대 대상 ${Localization.kr.DOMAIN}`}
+        <LabelSelectOptionsID
+          label={`${Localization.kr.VM} 임대 대상 ${Localization.kr.DOMAIN}`}
           value={formHaState.storageDomainVo.id}
           disabled={!formHaState.ha}  // ha가 체크되어야만 활성화됨
           onChange={(e) => {
             const selectedDomain = domains.find((domain) => domain.id === e.target.value);
-            setFormHaState((prev) => ({
-              ...prev, storageDomainVo: { id: selectedDomain.id, name: selectedDomain.name },
-            }));
+            if (selectedDomain) {
+              setFormHaState((prev) => ({
+                ...prev, 
+                storageDomainVo: { id: selectedDomain.id, name: selectedDomain.name },
+              }));
+            } else {
+              // '도메인 없음' 선택 시
+              setFormHaState((prev) => ({
+                ...prev,
+                storageDomainVo: { id: "", name: "" },
+              }));
+            }
           }}
-          options={domains}
+          options={[
+            { id: "", name: "도메인 없음" },  
+            ...domains
+          ]}
         />
         {/* <div>
         <div>

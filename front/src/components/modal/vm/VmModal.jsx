@@ -240,8 +240,8 @@ const VmModal = ({
         ha: vm?.ha || false,
         priority: vm?.priority || 1,
         storageDomainVo: {
-          id: vm?.storageDomainVo?.id || "",
-          name: vm?.storageDomainVo?.name || ""
+          id: vm?.storageDomainVo?.id ,
+          name: vm?.storageDomainVo?.name
         }
       });
       setFormBootState({
@@ -306,9 +306,15 @@ const VmModal = ({
           ...prev, osSystem: newOsSystem }));
       }
     }
-  }, [clusterVo.id, clusters, osList.length]); // osList 전체가 아닌 length만 의존성에 포함
+  }, [clusterVo.id, clusters, osList.length]); 
   
-  Logger.debug(`VmModal.nicListState: `, nicListState);
+  // (확인용 , 삭제예정정)최소한 하나라도 vnicProfile이 선택되어 있는 경우만 로그 출력
+  useEffect(() => {
+    const hasSelectedNic = nicListState.some(nic => nic?.vnicProfileVo?.id);
+    if (hasSelectedNic) {
+      Logger.debug("VmModal.닉상태 (선택됨):", nicListState);
+    }
+  }, [nicListState]);
 
   // 초기화 작업
   useEffect(() => {
@@ -345,7 +351,7 @@ const VmModal = ({
     templateVo,
 
     ...formSystemState,
-    memorySize: formSystemState.memorySize * 1024 * 1024,  // mb -> byte
+    memorySize: formSystemState.memorySize * 1024 * 1024, 
     memoryMax: formSystemState.memoryMax * 1024 * 1024,
     memoryActual: formSystemState.memoryActual * 1024 * 1024,
     
@@ -401,7 +407,7 @@ const VmModal = ({
       },
     })),    
   };
-
+  console.log("선택된 도메인:", formHaState.storageDomainVo);
   const validateForm = () => {
     const nameError = checkName(formInfoState.name);
     if (nameError) return nameError;
@@ -414,7 +420,10 @@ const VmModal = ({
     // 디스크  연결은 id값 보내기 생성은 객체로 보내기
     const error = validateForm();
     if (error) return toast.error(error);
-
+    console.log("formHaState: ", formHaState);
+    console.log("dataToSubmit.storageDomainVo: ", dataToSubmit.storageDomainVo);
+    console.log(" 전체 dataToSubmit: ", dataToSubmit);
+  
     Logger.debug(`가상머신 데이터 ${JSON.stringify(dataToSubmit, null ,2)}`);
     editMode
       ? editVM({ vmId: vmId, vmData: dataToSubmit })
@@ -487,6 +496,7 @@ const VmModal = ({
               setDiskListState={setDiskListState}
             />
             <VmNic
+              editMode={editMode}
               nics={vnics}
               nicsState={nicListState}
               setNicsState={setNicListState}
@@ -514,6 +524,7 @@ const VmModal = ({
         )}
         {selectedModalTab === "ha_mode" && (
           <VmHa
+            editMode={editMode}
             domains={domains}
             formHaState={formHaState}
             setFormHaState={setFormHaState}

@@ -91,7 +91,8 @@
 .section-table-outer input[type="checkbox"] {
   text-align: center;
 }
-.section-table-outer select {
+.section-table-outer select ,
+.section-table-outer input[type="text"] {
   width: 100%;
   margin: 6px 0;
 }

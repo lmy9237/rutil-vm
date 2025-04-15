@@ -2169,7 +2169,7 @@ export const useAddVm = (
 };
 /**
  * @name useEditVm
- * @description 가상머신 수정 
+ * @description 가상머신 편집
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */

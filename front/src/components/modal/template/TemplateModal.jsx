@@ -230,7 +230,7 @@ const TemplateModal = ({
     <BaseModal targetName={`${Localization.kr.TEMPLATE}`} submitTitle={Localization.kr.CREATE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "690px" }}
+      contentStyle={{ width: "730px" }}
     >
       <LabelInput id="name" label={Localization.kr.NAME}
         value={formState.name}
@@ -266,8 +266,8 @@ const TemplateModal = ({
               <thead>
                 <tr>
                   <th>{Localization.kr.ALIAS}</th>
-                  <th>가상 크기</th>
-                  <th>포맷</th>
+                  <th style={{width:'10%'}}>가상 크기</th>
+                  <th style={{width:'10%'}}>포맷</th>
                   <th>{Localization.kr.TARGET}</th>
                   <th>디스크 프로파일</th>
                 </tr>

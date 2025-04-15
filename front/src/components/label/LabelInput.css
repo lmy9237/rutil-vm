@@ -44,10 +44,6 @@ input[type="radio"] {
   border: 1px solid red !important;
 }
 /* 옵션 박스 스타일 */
-.option-box{
-  background-color: yellow;
-  border-radius: 1px;
-}
 .input-select select option {
   height: var(--h-primary);
   padding: 10px;

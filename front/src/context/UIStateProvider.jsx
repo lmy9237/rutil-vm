@@ -23,7 +23,7 @@ export const UIStateProvider = ({ children }) => {
   const KEY_EVENT_BADGE_NUM = "eventBadgeNum";                        /* 이벤트 박스 표출개수 */ 
   // const KEY_EVENT_IDS_READ = "eventIdsRead"; 
   const KEY_LOGIN_BOX_VISIBLE = "loginBoxVisible";                    /* 로그인 박스 표출여부 */
-  const KEY_CONTEXT_MENU = "contextMenu";                             /* 우클릭 팝업  */
+  const KEY_CONTEXT_MENU = "contextMenu";                             /* 우클릭 팝업 */
   const KEY_CONTEXT_MENU_CLIENT_X = "clientX";                        /* 우클릭 팝업 표츨 X좌표 */
   const KEY_CONTEXT_MENU_CLIENT_Y = "clientY";                        /* 우클릭 팝업 표츨 Y좌표 */
   const KEY_CONTEXT_MENU_ITEM = "item";                               /* 우클릭 팝업 내용물 */
