@@ -17,7 +17,7 @@ import java.math.BigInteger
  * </statistic>
  */
 fun List<Statistic>.findSpeed(query: String): BigInteger {
-	log.debug("List<Statistics>.findSpeed ... query: $query")
+	// log.debug("List<Statistics>.findSpeed ... query: $query")
 	return this.firstOrNull { it.namePresent() && it.name() == query && it.valuesPresent() }
 		?.values()?.firstOrNull()?.datum()?.toBigInteger() ?: BigInteger.ZERO
 }

@@ -230,9 +230,9 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
     val vm = this@toVmCreateVo
     val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
 	val disk: Disk? = vm.cdroms().firstOrNull()?.file()?.id()?.let { conn.findDisk(it).getOrNull() }
-	val storageDomain: StorageDomain? = if (vm.leasePresent()) {
-		conn.findStorageDomain(vm.lease().storageDomain().id()).getOrNull()
-	} else null
+	val storageDomain: StorageDomain? =
+		if (vm.leasePresent()) { conn.findStorageDomain(vm.lease().storageDomain().id()).getOrNull() }
+		else null
 	val hosts = if (vm.placementPolicy().hostsPresent()) {
 		vm.placementPolicy().hosts().map { it }.fromHostsToIdentifiedVos()
 	} else listOf()

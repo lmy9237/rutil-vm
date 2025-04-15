@@ -183,6 +183,7 @@ fun List<HostNic>.toSlaveHostNicVos(conn: Connection): List<HostNicVo> =
 	this@toSlaveHostNicVos.map { it.toSlaveHostNicVo(conn) }
 
 
+
 // fun HostNic.toSetHostNicVo(conn: Connection): HostNicVo {
 // 	val host: Host? = conn.findHost(this@toSetHostNicVo.host().id())
 // 		.getOrNull()

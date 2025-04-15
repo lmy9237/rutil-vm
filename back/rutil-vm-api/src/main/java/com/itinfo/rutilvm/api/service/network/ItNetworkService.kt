@@ -257,7 +257,7 @@ class NetworkServiceImpl(
 	@Throws(Error::class)
 	override fun findAllClustersFromNetwork(networkId: String): List<ClusterVo> {
 		log.info("findAllClustersFromNetwork ... networkId: {}", networkId)
-		val network: Network = conn.findNetwork(networkId).getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		val network = checkNetwork(networkId)
 		val dcId = network.dataCenter().id()
 		val res: List<Cluster> = conn.findAllClustersFromDataCenter(dcId, follow = "networks").getOrDefault(emptyList())
 		return res.toNetworkClusterVos(conn, networkId)
@@ -265,30 +265,29 @@ class NetworkServiceImpl(
 
 	@Throws(Error::class)
 	override fun findConnectedHostsFromNetwork(networkId: String): List<HostVo> {
-		log.info("findConnectedHostsFromNetwork ... ")
-		val network: Network = conn.findNetwork(networkId).getOrNull()?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		log.info("findConnectedHostsFromNetwork ... networkId: {}", networkId)
+		val network = checkNetwork(networkId)
 		val res: List<Host> = conn.findAllHosts(follow = "cluster.datacenter,networkattachments,nics").getOrDefault(emptyList())
 			.filter { host ->
-				host.cluster().dataCenter().id() == network.dataCenter().id() &&
-					host.networkAttachments().any { networkAttachment -> networkAttachment.network().id() == networkId }
+				val clusterNetworks = conn.findAllNetworksFromCluster(host.cluster().id()).getOrDefault(emptyList())
+					.any { it.id() == networkId }
+				host.networkAttachments().any { it.network().id() == networkId } && clusterNetworks
 			}
-		return res.toNetworkHostMenus(conn) //TODO
+
+		return res.toNetworkHostMenus(conn, networkId)
 	}
 
 	@Throws(Error::class)
 	override fun findDisConnectedHostsFromNetwork(networkId: String): List<HostVo> {
 		log.info("findDisConnectedHostsFromNetwork ... networkId: {}", networkId)
-
-		val network: Network = conn.findNetwork(networkId).getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
-
-		val hosts: List<Host> = conn.findAllHosts(follow = "cluster.datacenter,networkattachments.network,nics").getOrDefault(emptyList())
+		val network = checkNetwork(networkId)
+		val hosts: List<Host> = conn.findAllHosts(follow = "cluster.datacenter,networkattachments,nics").getOrDefault(emptyList())
 			.filter { host ->
-				// 동일한 데이터센터에 속하지만, networkId에 연결된 NetworkAttachment가 없는 경우
-				host.cluster().dataCenter().id() == network.dataCenter().id() &&
-					host.networkAttachments().none { it.network().id() == networkId }
+				val clusterNetworks = conn.findAllNetworksFromCluster(host.cluster().id()).getOrDefault(emptyList())
+					.any { it.id() == networkId }
+				host.networkAttachments().none { it.network().id() == networkId } && clusterNetworks
 			}
-
-		return hosts.toNetworkHostMenus(conn)
+		return hosts.toNetworkDisConnectedHostMenus()
 	}
 
 	@Throws(Error::class)
@@ -321,6 +320,10 @@ class NetworkServiceImpl(
 		return res.fromNetworkFiltersToIdentifiedVos()
 	}
 
+
+	private fun checkNetwork(networkId: String): Network {
+		return conn.findNetwork(networkId).getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+	}
 
 	companion object {
 		private val log by LoggerDelegate()

@@ -278,8 +278,9 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
 /**
  * 네트워크에서 호스트 볼때
  */
-fun Host.toNetworkHostMenu(conn: Connection): HostVo {
+fun Host.toNetworkHostMenu(conn: Connection, networkId: String): HostVo {
 	val host = this@toNetworkHostMenu
+	val filteredNics = host.nics().filter { it.networkPresent() && it.network().id() == networkId }
 
     return HostVo.builder {
         id { host.id() }
@@ -287,11 +288,28 @@ fun Host.toNetworkHostMenu(conn: Connection): HostVo {
         status { host.status() }
         clusterVo { if(host.clusterPresent()) host.cluster().fromClusterToIdentifiedVo() else IdentifiedVo()}
         dataCenterVo { if(host.clusterPresent() && host.cluster().dataCenterPresent()) host.cluster().dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo() }
-        hostNicVos { host.nics().toSlaveHostNicVos(conn) }
+        hostNicVos { filteredNics.toSlaveHostNicVos(conn) }
     }
 }
-fun List<Host>.toNetworkHostMenus(conn: Connection): List<HostVo> =
-    this@toNetworkHostMenus.map { it.toNetworkHostMenu(conn) }
+fun List<Host>.toNetworkHostMenus(conn: Connection, networkId: String): List<HostVo> =
+    this@toNetworkHostMenus.map { it.toNetworkHostMenu(conn, networkId) }
+
+
+/**
+ * 네트워크에서 호스트 볼때
+ */
+fun Host.toNetworkDisConnectedHostMenu(): HostVo {
+	val host = this@toNetworkDisConnectedHostMenu
+    return HostVo.builder {
+        id { host.id() }
+        name { host.name() }
+        status { host.status() }
+        clusterVo { if(host.clusterPresent()) host.cluster().fromClusterToIdentifiedVo() else IdentifiedVo()}
+        dataCenterVo { if(host.clusterPresent() && host.cluster().dataCenterPresent()) host.cluster().dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo() }
+    }
+}
+fun List<Host>.toNetworkDisConnectedHostMenus(): List<HostVo> =
+    this@toNetworkDisConnectedHostMenus.map { it.toNetworkDisConnectedHostMenu() }
 
 
 
