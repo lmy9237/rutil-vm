@@ -1,23 +1,28 @@
+import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
 import Localization from "../../utils/Localization";
 import ActionButtonGroup from "../button/ActionButtonGroup";
+import Logger from "../../utils/Logger";
+import CONSTANT from "../../Constants";
 
 const TemplateActionButtons = ({
-  openModal,
-  isEditDisabled,
-  isDeleteDisabled,
   actionType = "default",
 }) => {
+  const { activeModal, setActiveModal, } = useUIState()
+  const { templatesSelected } = useGlobal()
 
+  const hasDefaultTemplate = 
+    Array.isArray(templatesSelected) && 
+    templatesSelected.filter((e) => e.id === CONSTANT.templateIdDefault).length > 0
+  
   const basicActions = [
-    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled, onBtnClick: () => openModal("edit")  },
-    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled, onBtnClick: () => openModal("delete")  },
+    { type: "update", onBtnClick: () => setActiveModal("template:update"), label: Localization.kr.UPDATE, disabled: templatesSelected.length !== 1, },
+    { type: "remove", onBtnClick: () => setActiveModal("template:remove"), label: Localization.kr.REMOVE, disabled: templatesSelected.length === 0 || hasDefaultTemplate, },
   ];
 
+  Logger.debug(`TemplateActionButtons ... `)
   return (
-    <ActionButtonGroup
-      actionType={actionType}
-      actions={basicActions}
-    />
+    <ActionButtonGroup actionType={actionType} actions={basicActions} />
   );
 };
 

@@ -19,13 +19,10 @@ const NavButton = React.memo(({ sections, handleSectionClick }) => {
     }
   }, [pathname, sections]); // pathname 또는 sections가 변경될 때마다 실행
 
-  const handleClick = useCallback(
-    (sectionId) => {
-      setActiveSection(sectionId);
-      handleSectionClick(sectionId);
-    },
-    [handleSectionClick]
-  );
+  const handleClick = useCallback((sectionId) => {
+    setActiveSection(sectionId);
+    handleSectionClick(sectionId);
+  }, [handleSectionClick]);
 
   return (
     <div className="content-header">

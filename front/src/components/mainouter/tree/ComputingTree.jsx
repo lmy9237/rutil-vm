@@ -1,5 +1,8 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import useUIState from "../../../hooks/useUIState";
+import useTmi from "../../../hooks/useTmi";
+import useGlobal from "../../../hooks/useGlobal";
 import TreeMenuItem from "./TreeMenuItem";
 import {
   rvi16Globe,
@@ -10,31 +13,37 @@ import {
   rvi16DesktopSleep,
 } from "../../icons/RutilVmIcons";
 import { useAllTreeNavigations } from "../../../api/RQHook";
-import useUIState from "../../../hooks/useUIState";
+import Logger from "../../../utils/Logger";
 
-const ComputingTree = ({ 
-  selectedDiv,
-  setSelectedDiv,
-  menuRef,
-  setActiveModal,
-  setSelectedDataCenters,
-  setSelectedClusters 
- }) => {
+/**
+ * @name ComputingTree
+ * @description computing 메뉴 
+ *
+ * @returns {JSX.Element} ComputingTree
+ */
+const ComputingTree = ({}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { contextMenu, setContextMenu, } = useUIState();
   const {
-    contextMenu, setContextMenu,
     secondVisibleComputing, toggleSecondVisibleComputing,
     openDataCentersComputing, toggleOpenDataCentersComputing,
     openClustersComputing, toggleOpenClustersComputing,
     openHostsComputing, toggleOpenHostsComputing,
-  } = useUIState();
-  const navigate = useNavigate();
-  const location = useLocation();
+  } = useTmi();
+  const {
+    setDatacentersSelected,
+    setClustersSelected,
+    setHostsSelected,
+    setVmsSelected,
+  } = useGlobal();
 
   // ✅ API 호출 (컴퓨팅 트리 데이터)
   const { data: navClusters } = useAllTreeNavigations("cluster");
 
+  Logger.debug(`ComputingTree ... `)
   return (
-    <div id="virtual_machine_chart" className="tmi-g">
+    <div id="tmi-computing" className="tmi-g">
       {/* 첫 번째 레벨 (Rutil Manager) */}
       <TreeMenuItem level={1}
         title="Rutil Manager"
@@ -46,7 +55,6 @@ const ComputingTree = ({
         isNextLevelVisible={secondVisibleComputing()}
         onChevronClick={() => toggleSecondVisibleComputing()}
         onClick={() => {
-          setSelectedDiv("rutil-manager");
           navigate("/computing/rutil-manager");
         }}
       />
@@ -65,18 +73,18 @@ const ComputingTree = ({
               isChevronVisible={hasClusters}
               onChevronClick={() => toggleOpenDataCentersComputing(dataCenter.id)}
               onClick={() => {
-                setSelectedDiv(dataCenter.id);
                 navigate(`/computing/datacenters/${dataCenter.id}/clusters`);
               }}
               onContextMenu={(e) => {
                 e.preventDefault();
+                setDatacentersSelected(dataCenter)
                 setContextMenu({
                   mouseX: e.clientX,
                   mouseY: e.clientY,
                   item: {
                     ...dataCenter,
                     level: 2,
-                    type: "dataCenter",
+                    type: "datacenter",
                   },
                   treeType: "computing"
                 });
@@ -89,8 +97,7 @@ const ComputingTree = ({
               const hasHosts = Array.isArray(cluster.hosts) && cluster.hosts.length > 0;
               return (
                 <div key={cluster.id} className="tmi-g">
-                  <TreeMenuItem
-                    level={3}
+                  <TreeMenuItem level={3}
                     title={cluster.name}
                     iconDef={rvi16Cluster}
                     isSelected={() => location.pathname.includes(cluster.id)}
@@ -98,11 +105,11 @@ const ComputingTree = ({
                     isChevronVisible={hasHosts}
                     onChevronClick={() => toggleOpenClustersComputing(cluster.id)}
                     onClick={() => {
-                      setSelectedDiv(cluster.id);
                       navigate(`/computing/clusters/${cluster.id}`);
                     }}
                     onContextMenu={(e) => {
                       e.preventDefault();
+                      setClustersSelected(cluster)
                       setContextMenu({
                         mouseX: e.clientX,
                         mouseY: e.clientY,
@@ -133,11 +140,11 @@ const ComputingTree = ({
                               isChevronVisible={hasVMs}
                               onChevronClick={() => toggleOpenHostsComputing(host.id)}
                               onClick={() => {
-                                setSelectedDiv(host.id);
                                 navigate(`/computing/hosts/${host.id}`);
                               }}
                               onContextMenu={(e) => {
                                 e.preventDefault();
+                                setHostsSelected(host)
                                 setContextMenu({
                                   mouseX: e.clientX,
                                   mouseY: e.clientY,
@@ -163,11 +170,11 @@ const ComputingTree = ({
                                   isChevronVisible={false}
                                   onChevronClick={()=>{}}
                                   onClick={() => {
-                                    setSelectedDiv(vm.id);
                                     navigate(`/computing/vms/${vm.id}`);
                                   }}
                                   onContextMenu={(e) => {
                                     e.preventDefault();
+                                    setVmsSelected(vm)
                                     setContextMenu({
                                       mouseX: e.clientX,
                                       mouseY: e.clientY,
@@ -197,17 +204,17 @@ const ComputingTree = ({
                             isChevronVisible={false}
                             onChevronClick={()=>{}}
                             onClick={() => {
-                              setSelectedDiv(vm.id);
                               navigate(`/computing/vms/${vm.id}`);
                             }}
                             onContextMenu={(e) => {
                               e.preventDefault();
+                              e.stopPropagation();
+                              setVmsSelected(vm)
                               setContextMenu({
                                 mouseX: e.clientX,
                                 mouseY: e.clientY,
                                 item: {
-                                  id: vm.id,
-                                  name: vm.name,
+                                  ...vm,
                                   level: 4,
                                   type: "vm",
                                 },

@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import useUIState from "../../hooks/useUIState";
+import useSearch from "../../hooks/useSearch"; 
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
 import VnicProfileActionButtons from "./VnicProfileActionButtons";
 import SearchBox from "../button/SearchBox";  
-import useSearch from "../button/useSearch"; 
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
+import useGlobal from "../../hooks/useGlobal";
 
 /**
  * @name VnicProfileDupl
@@ -24,11 +26,11 @@ const VnicProfileDupl = ({
   isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedVnicProfiles, setSelectedVnicProfiles] = useState([]);
+  const { activeModal, setActiveModal } = useUIState();
+  const { vnicProfilesSelected, setVnicProfilesSelected } = useGlobal();
 
   // ✅ 데이터 변환 (검색 가능하도록 `searchText` 필드 추가)
-  const transformedData = vnicProfiles.map((vnic) => ({
+  const transformedData = (!Array.isArray(vnicProfiles) ? [] : vnicProfiles).map((vnic) => ({
     ...vnic,
     _name: (
       <TableRowClick type="vnicProfile" id={vnic?.id}>
@@ -53,8 +55,6 @@ const VnicProfileDupl = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
   const handleNameClick = (id) => navigate(`/vnicProfiles/${id}/vms`);
   const handleRefresh = () =>  {
     Logger.debug(`DiskDupl > handleRefresh ... `)
@@ -63,19 +63,12 @@ const VnicProfileDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
+  Logger.debug(`VnicProfileDupl ... `)
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
-        {showSearchBox && (
-          <SearchBox 
-            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-            onRefresh={handleRefresh}
-          />
-        )}
-        <VnicProfileActionButtons
-          openModal={openModal}
-          isEditDisabled={selectedVnicProfiles.length !== 1}
-        />
+        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>)}
+        <VnicProfileActionButtons />
       </div>
 
       {/* 테이블 컴포넌트 */}
@@ -84,31 +77,25 @@ const VnicProfileDupl = ({
         columns={columns}
         data={filteredData} 
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setSelectedVnicProfiles(selectedRows)}
+        onRowClick={(selectedRows) => setVnicProfilesSelected(selectedRows)}
         // clickableColumnIndex={[0]}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
         onContextMenuItems={(row) => [
-          <VnicProfileActionButtons
-            openModal={openModal}
-            status={row?.status}
-            selectedVnicProfiles={[row]}
-            actionType="context"
+          <VnicProfileActionButtons actionType="context"
+            status={row?.status}            
           />,
         ]}
       />
 
-      <SelectedIdView items={selectedVnicProfiles} />
+      <SelectedIdView items={vnicProfilesSelected} />
 
       {/* vNIC Profile 모달창 */}
       <VnicProfileModals
-        activeModal={activeModal}
-        vnicProfile={activeModal === "edit" ? selectedVnicProfiles[0] : null}
-        selectedVnicProfiles={selectedVnicProfiles}
+        vnicProfile={activeModal() === "edit" ? vnicProfilesSelected[0] : null}
         networkId={networkId}
-        onClose={closeModal}
       />
     </div>
   );

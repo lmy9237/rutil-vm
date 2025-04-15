@@ -4,7 +4,7 @@ import BaseModal from "../BaseModal";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import TablesOuter from "../../table/TablesOuter";
 import { checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
-import { useConnDiskListFromVM, useFindDiskListFromDataCenter } from "../../../api/RQHook";
+import { useConnDiskListFromVM, useAllAttachedDisksFromDataCenter } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import SelectedIdView from "../../common/SelectedIdView";
@@ -16,8 +16,15 @@ const interfaceList = [
   { value: "SATA", label: "SATA" },
 ];
 
-// 연결에서 수정은 vm disk edit 으로 넘어감
-// type이 disk면 vm disk목록에서 연결, 다른건 가상머신 생성에서 디스크연결
+/**
+ * @name VmDiskConnectionModal
+ * @description ...
+ * 연결에서 수정은 vm disk edit 으로 넘어감
+ * type이 disk면 vm disk목록에서 연결, 다른건 가상머신 생성에서 디스크연결
+ * 
+ * @param {*} param0 
+ * @returns 
+ */
 const VmDiskConnectionModal = ({
   isOpen,
   diskType = true,  // t=disk페이지에서 생성 f=vm만들때 같이 생성
@@ -32,11 +39,11 @@ const VmDiskConnectionModal = ({
   // const { } = useConnDiskFromVM(vmId, )
   // 데이터센터 밑에 잇는 디스크 목록 검색
   const { 
-    data: attDisks=[],
+    data: attDisks = [],
     isLoading: isAttDisksLoading,
     isError: isAttDisksError,
     isSuccess: isAttDisksSuccess,
-  } = useFindDiskListFromDataCenter(dataCenterId, (e) => ({ ...e }));
+  } = useAllAttachedDisksFromDataCenter(dataCenterId, (e) => ({ ...e }));
 
   const [activeTab, setActiveTab] = useState("img");
   const [selectedDisks, setSelectedDisks] = useState([]); // 디스크 목록
@@ -49,6 +56,7 @@ const VmDiskConnectionModal = ({
 
   // 인터페이스 변경
   const handleInterfaceChange = (diskId, newInterface) => {
+    Logger.debug(`VmDiskConnectionModal > handleInterfaceChange ... `)
     setSelectedInterfaces((prev) => ({
       ...prev,
       [diskId]: newInterface, // diskId를 키로 새로운 인터페이스 값 저장
@@ -60,8 +68,8 @@ const VmDiskConnectionModal = ({
     if (selectedDisks.length > 0) {
       const selectedDiskLists = selectedDisks.map((diskId) => {
         const diskDetails = attDisks.find((disk) => disk?.id === diskId);
+
         if (!diskDetails) return null;
-  
         return {
           id: diskId,
           alias: diskDetails.alias,  // 디스크 이름 추가
@@ -124,9 +132,8 @@ const VmDiskConnectionModal = ({
   };
 
   return (
-    <BaseModal targetName={`가상 ${Localization.kr.DISK}`}
+    <BaseModal targetName={`가상 ${Localization.kr.DISK}`} submitTitle={"연결"}
       isOpen={isOpen} onClose={onClose}
-      submitTitle={"연결"}
       onSubmit={diskType? handleFormSubmit : handleOkClick}
       contentStyle={{ width: "1000px"}} 
     >

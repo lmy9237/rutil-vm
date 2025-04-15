@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import useUIState from "../../hooks/useUIState";
+import useSearch from "../../hooks/useSearch";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import ClusterModals from "../modal/cluster/ClusterModals";
 import ClusterActionButtons from "./ClusterActionButtons";
 import SearchBox from "../button/SearchBox";
-import useSearch from "../button/useSearch";
 import Logger from "../../utils/Logger";
 import SelectedIdView from "../common/SelectedIdView";
+import useGlobal from "../../hooks/useGlobal";
 
 /**
  * @name ClusterDupl
@@ -27,11 +29,8 @@ const ClusterDupl = ({
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedClusters, setSelectedClusters] = useState([]);
-
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
+  const { clustersSelected, setClustersSelected } = useGlobal();
+  
   const handleNameClick = (id) => navigate(`/computing/clusters/${id}`);
   const handleRefresh = () =>  {
     Logger.debug(`ClusterDupl > handleRefresh ... `)
@@ -40,7 +39,7 @@ const ClusterDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
-  const transformedData = clusters.map((cluster) => ({
+  const transformedData = (!Array.isArray(clusters) ? [] : clusters).map((cluster) => ({
     ...cluster,
     _name: (
       <TableRowClick type="cluster" id={cluster?.id}>
@@ -60,56 +59,40 @@ const ClusterDupl = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   const status = 
-      selectedClusters.length === 0 ? "none"
-      : selectedClusters.length === 1 ? "single"
+      clustersSelected.length === 0 ? "none"
+      : clustersSelected.length === 1 ? "single"
       : "multiple";
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
-        {showSearchBox && (
-          <SearchBox 
-            searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
-            onRefresh={handleRefresh}
-          />
-        )}
-        <ClusterActionButtons
-          openModal={openModal}
-          isEditDisabled={selectedClusters.length !== 1}
-          status={status}
+        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}  onRefresh={handleRefresh} />)}
+        <ClusterActionButtons status={status}
+          isEditDisabled={clustersSelected.length === 0}
         />
       </div>
 
       <TablesOuter
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         columns={columns}
         data={filteredData}
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setSelectedClusters(selectedRows)}
+        onRowClick={(selectedRows) => setClustersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true} // 다중 선택 활성화
         onContextMenuItems={(row) => [
-          <ClusterActionButtons
-            openModal={openModal}
+          <ClusterActionButtons actionType="context"
             status={row?.status}
             selectedClusters={[row]}
-            actionType="context"
           />,
         ]}
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
 
-      <SelectedIdView items={selectedClusters} />
+      <SelectedIdView items={clustersSelected} />
 
       {/* 클러스터 모달창 */}
-      <ClusterModals
-        activeModal={activeModal}
-        cluster={selectedClusters[0]}
-        selectedClusters={selectedClusters}
+      <ClusterModals cluster={clustersSelected[0]}
         datacenterId={datacenterId}
-        onClose={() => {
-          Logger.debug("ClusterDupl > onClose ... ")
-          closeModal();
-        }}
       />
     </div>
   );

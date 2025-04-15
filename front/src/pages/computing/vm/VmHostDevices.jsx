@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import useUIState from "../../../hooks/useUIState";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import { useHostDevicesFromVM } from "../../../api/RQHook";
+import useGlobal from "../../../hooks/useGlobal";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name VmHostDevices
@@ -13,6 +16,8 @@ import { useHostDevicesFromVM } from "../../../api/RQHook";
  * @returns {JSX.Element} VmHostDevices
  */
 const VmHostDevices = ({ vmId }) => {
+  const { activeModal, setActiveModal, } = useUIState()
+  const { hostDevicesSelected, setHostDevicesSelected } = useGlobal()
   const {
     data: hostDevices = [],
     isLoading: isHostDevicesLoading,
@@ -20,8 +25,7 @@ const VmHostDevices = ({ vmId }) => {
     isSuccess: isHostDevicesSuccess,
   } = useHostDevicesFromVM(vmId, (e) => ({ ...e }));
 
-  // const [activeModal, setActiveModal] = useState(null);
-  const [selectedDevices, setSelectedDevices] = useState([]);
+  Logger.debug(`VmHostDevices ... `)
   return (
     <>
       <div className="header-right-btns">
@@ -49,10 +53,11 @@ const VmHostDevices = ({ vmId }) => {
           // mdevType: hostDevice?.mdevType ?? Localization.kr.NOT_ASSOCIATED,
         }))}
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setSelectedDevices(selectedRows)}
+        onRowClick={(selectedRows) => setHostDevicesSelected(selectedRows)}
         multiSelect={true}
       />
-      <SelectedIdView items={selectedDevices} />
+      
+      <SelectedIdView items={hostDevicesSelected} />
 
       {/* 모달창 */}
     </>

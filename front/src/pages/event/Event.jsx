@@ -5,7 +5,6 @@ import { rvi24Event } from "../../components/icons/RutilVmIcons";
 import Logger from "../../utils/Logger";
 import { useAllEvents } from "../../api/RQHook";
 
-
 /**
  * @name Event
  * @description 이벤트

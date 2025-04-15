@@ -1,10 +1,13 @@
 import React, { Suspense, useState } from "react";
+import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
+import SelectedIdView from "../../components/common/SelectedIdView";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import SettingUserSessionsActionButtons from "./SettingUserSessionsActionButtons";
 import { useAllUserSessions } from "../../api/RQHook";
 import TablesOuter from "../../components/table/TablesOuter";
 import Logger from "../../utils/Logger";
-import SelectedIdView from "../../components/common/SelectedIdView";
+
 /**
  * @name SettingSessions
  * @description 관리 > 활성 사용자 세션
@@ -12,10 +15,8 @@ import SelectedIdView from "../../components/common/SelectedIdView";
  * @returns {JSX.Element} SettingSessions
  */
 const SettingSessions = () => {
-  const [selectedUserSessions, setSelectedUserSessions] = useState([]);
-  const selectedUserSessionIds = (Array.isArray(selectedUserSessions) ? selectedUserSessions : [])
-    .map((userSession) => userSession.id)
-    .join(", ");
+  const { activeModal, setActiveModal, } = useUIState()
+  const { userSessionsSelected, setUserSessionsSelected } = useGlobal()
 
   const {
     data: userSessions = [],
@@ -30,28 +31,6 @@ const SettingSessions = () => {
       ...e,
     };
   });
-
-  const [activeModal, setActiveModal] = useState(null);
-  const [modals, setModals] = useState({
-    create: false,
-    edit: false,
-    remove: false,
-  });
-  const toggleModal = (type, isOpen) => {
-    Logger.debug(
-      `SettingSessions > toggleModal ... type: ${type}, isOpen: ${isOpen}`
-    );
-    setModals((prev) => ({ ...prev, [type]: isOpen }));
-  };
-
-  const openModal = (popupType) => {
-    Logger.debug(`SettingSessions > openPopup ... popupType: ${popupType}`);
-    setActiveModal(popupType);
-    if (popupType === "endSession") {
-      setModals({ endSession: true });
-      return;
-    }
-  };
 
   const renderModals = () => {
     Logger.debug("SettingSessions > renderModals ... ");
@@ -72,9 +51,9 @@ const SettingSessions = () => {
   };
 
   const status =
-    selectedUserSessions.length === 0
+  userSessionsSelected.length === 0
       ? "none"
-      : selectedUserSessions.length === 1
+      : userSessionsSelected.length === 1
         ? "single"
         : "multiple";
 
@@ -82,8 +61,7 @@ const SettingSessions = () => {
   return (
     <>
       <SettingUserSessionsActionButtons
-        openModal={openModal}
-        isEditDisabled={selectedUserSessions.length !== 1}
+        isEditDisabled={userSessionsSelected.length !== 1}
         status={status}
       />
 
@@ -93,14 +71,11 @@ const SettingSessions = () => {
         isSuccess={isUserSessionsSuccess}
         columns={TableColumnsInfo.ACTIVE_USER_SESSION}
         data={userSessions}
-        onRowClick={(row) => {
-          Logger.debug(`SettingSessions > onRowClick ... row: ${JSON.stringify(row, null, 2)}`);
-          setSelectedUserSessions(row);
-        }}
+        onRowClick={(row) => setUserSessionsSelected(row)}
         showSearchBox={true} // 검색 박스 표시 여부 제어
       />
 
-      <SelectedIdView items={selectedUserSessions} />
+      <SelectedIdView items={userSessionsSelected} />
 
       {/* 모달창 */}
       {renderModals()}

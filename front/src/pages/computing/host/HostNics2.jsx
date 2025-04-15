@@ -7,9 +7,10 @@ import Logger from "../../../utils/Logger";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 
 
-const HostNics = ({ hostId }) => {
+const HostNics = ({
+  hostId
+}) => {
   const { data: host } = useHost(hostId);
-  
   const { data: hostNics = [] } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
 

@@ -1,25 +1,24 @@
+import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
 import Localization from "../../utils/Localization";
 import ActionButtonGroup from "../button/ActionButtonGroup";
+import Logger from "../../utils/Logger";
 
 const VnicProfileActionButtons = ({
-  openModal,
-  isEditDisabled,
-  isDeleteDisabled,
   actionType = 'default'
 }) => {
+  const { activeModal, setActiveModal } = useUIState()
+  const { vnicProfilesSelected } = useGlobal()
+
   const basicActions = [
-    { type: "create", label: Localization.kr.CREATE, disabled: false, onBtnClick: () => openModal("create")  },
-    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled, onBtnClick: () => openModal("edit")  },
-    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled, onBtnClick: () => openModal("delete")  },
+    { type: "create", onBtnClick: () => setActiveModal("vnicprofile:create"), label: Localization.kr.CREATE, disabled: vnicProfilesSelected.length > 0, },
+    { type: "update", onBtnClick: () => setActiveModal("vnicprofile:update"), label: Localization.kr.UPDATE, disabled: vnicProfilesSelected.length !== 1, },
+    { type: "remove", onBtnClick: () => setActiveModal("vnicprofile:remove"), label: Localization.kr.REMOVE, disabled: vnicProfilesSelected.length === 0, },
   ];
 
+  Logger.debug(`VnicProfileActionButtons ... `)
   return (
-    <>
-      <ActionButtonGroup
-        actionType={actionType}
-        actions={basicActions}
-      />
-    </>
+    <ActionButtonGroup actionType={actionType} actions={basicActions} />
   );
 };
 

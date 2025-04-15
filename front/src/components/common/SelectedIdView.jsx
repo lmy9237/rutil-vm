@@ -10,8 +10,8 @@ import Logger from "../../utils/Logger";
 const SelectedIdView = ({ 
   items=[],
 }) => {
-  const selectedIds = (Array.isArray(items) ? items : [])
-    .map((e) => e.id)
+  const selectedIds = (!Array.isArray(items) ? [] : items)
+    .map((e) => e?.id ?? e?.username)
     .join(", ");
   
   const copyText = async (txt) => {

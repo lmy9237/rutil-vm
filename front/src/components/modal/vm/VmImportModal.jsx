@@ -1,19 +1,52 @@
 import React, { useState } from "react";
 import BaseModal from "../BaseModal";
-import { useAllNetworkProviders } from "../../../api/RQHook";
+import useGlobal from "../../../hooks/useGlobal";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
+import Localization from "../../../utils/Localization";
+import { useAllDataCenters, useAllNetworkProviders } from "../../../api/RQHook";
 import "./MVm.css";
 
-const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
-  const { data: networkProvider = [], isLoading: isDatacentersLoading } = useAllNetworkProviders();
+const VmImportModal = ({ 
+  isOpen,
+  onClose,
+  onSubmit
+}) => {
+  const { 
+    networkProvidersSelected, setNetworkProvidersSelected,
+    datacentersSelected, setDatacentersSelected,
+  } = useGlobal()
+
+  const {
+    data: datacenters,
+    isLoading: isDatacentersLoading,
+  } = useAllDataCenters()
+
+  const transformedDatacenters = [
+    { value: "", label: "N/A" },
+    ...(!Array.isArray(datacenters) ? [] : datacenters).map((dc) => ({
+      value: dc?.id,
+      label: dc?.name
+    }))
+  ]
+
+  const {
+    data: networkProviders = [],
+    isLoading: isNetworkProviders
+  } = useAllNetworkProviders();
+
+  const transformedNetorkProviders = [
+    { value: "", label: "N/A" },
+    ...(!Array.isArray(networkProviders) ? [] : networkProviders).map((p) => ({
+      value: p?.id,
+      label: p?.name
+    }))
+  ]
 
   const [step, setStep] = useState(1);
 
-  const [selectedDatacenter, setSelectedDatacenter] = useState("Default");
   const [selectedSource, setSelectedSource] = useState("VMware");
-  const [selectedProvider, setSelectedProvider] = useState("administrator");
 
   const [vcenter, setVcenter] = useState("");
   const [vcDataCenter, setVcDataCenter] = useState("");
@@ -25,19 +58,16 @@ const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
 
   const goNext = () => setStep((prev) => prev + 1);
   const goPrev = () => setStep((prev) => prev - 1);
-
   const renderStep1 = () => (
     <>
       <div className="vm-import-form-grid">
 
         <div className="vm-impor-outer">
           <div className="vm-import-form-item">
-            <LabelSelectOptions
-              label="데이터 센터"
-              id="datacenter"
-              value={selectedDatacenter}
-              onChange={(e) => setSelectedDatacenter(e.target.value)}
-              options={[{ value: "Default", label: "Default" }]}
+            <LabelSelectOptions id="datacenter" label={Localization.kr.DATA_CENTER}
+              value={datacentersSelected}
+              onChange={(e) => setDatacentersSelected(e.target.value)}
+              options={[...transformedDatacenters]}
             />
           </div>
 
@@ -55,13 +85,10 @@ const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
             <LabelSelectOptions
               label="외부 공급자"
               id="provider"
-              value={selectedProvider}
-              onChange={(e) => setSelectedProvider(e.target.value)}
+              value={networkProvidersSelected}
+              onChange={(e) => setNetworkProvidersSelected(e.target.value)}
               disabled={isDatacentersLoading}
-              options={[
-                { value: "administrator", label: "administrator" },
-                ...networkProvider.map((p) => ({ value: p.name, label: p.name })),
-              ]}
+              options={[...transformedNetorkProviders]}
             />
           </div>
         </div>
@@ -95,8 +122,7 @@ const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
       </div>
 
       <div className="vm-import-form-item">
-        <LabelCheckbox
-          id="authHost"
+        <LabelCheckbox id="authHost"
           label="서버 SSL 인증서 확인 프록시 호스트"
           checked={authHostChecked}
           onChange={(e) => setAuthHostChecked(e.target.checked)}
@@ -104,9 +130,7 @@ const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
       </div>
 
       <div className="vm-import-form-item">
-        <LabelSelectOptions
-    
-          id="allHosts"
+        <LabelSelectOptions id="allHosts"
           value=""
           onChange={() => {}}
           options={[{ value: "", label: "데이터 센터에 있는 모든 호스트" }]}
@@ -180,11 +204,9 @@ const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
   );
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName="가상머신"
-      submitTitle={step === 2 ? "가져오기" : "다음"}
+    <BaseModal targetName="가상머신"
+      isOpen={isOpen} onClose={onClose}
+      submitTitle={step === 2 ? Localization.kr.IMPORT : "다음"}
       onSubmit={step === 2 ? onSubmit : goNext}
       contentStyle={{ width: "900px" }}
       extraFooter={
@@ -194,7 +216,7 @@ const VmImportModal = ({ isOpen, onClose, onSubmit }) => {
               뒤로
             </button>
             <button className="action" onClick={onSubmit}>
-              가져오기
+              {Localization.kr.IMPORT}
             </button>
           </>
         ) : null

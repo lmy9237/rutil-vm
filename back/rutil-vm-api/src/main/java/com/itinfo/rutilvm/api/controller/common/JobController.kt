@@ -58,15 +58,15 @@ class JobController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping("/{jobId}/end")
+	@GetMapping("/{jobId}")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	fun endJob(
+	fun findOne(
 		@PathVariable jobId: String? = null,
 	): ResponseEntity<JobVo?> {
 		if (jobId.isNullOrEmpty())
 			throw ErrorPattern.JOB_ID_NOT_FOUND.toException()
-		log.info("/jobs/{}/end ... 작업 상세정보", jobId)
+		log.info("/jobs/{} ... 작업 상세정보", jobId)
 		return ResponseEntity.ok(iJob.findOne(jobId))
 	}
 

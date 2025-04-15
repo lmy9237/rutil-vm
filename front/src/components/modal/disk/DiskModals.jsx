@@ -1,71 +1,49 @@
 import React from "react";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import DiskModal from "./DiskModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import DiskUploadModal from "./DiskUploadModal";
 import DiskActionModal from "./DiskActionModal";
 import { useDeleteDisk } from "../../../api/RQHook";
 import "./MDisk.css";
+import Localization from "../../../utils/Localization";
 
 const DiskModals = ({ 
-  activeModal, 
   disk,
-  selectedDisks = [], 
-  onClose
 }) => {
+  const { activeModal, setActiveModal } = useUIState()
+  const { disksSelected } = useGlobal()
+
   const modals = {
     create: (
-      <DiskModal 
-        isOpen={activeModal === "create"} 
-        onClose={onClose} 
+      <DiskModal isOpen={activeModal() === "disk:create"}
+        onClose={() => setActiveModal(null)}
       />
-    ),
-    edit: (
-      <DiskModal 
-        isOpen={activeModal === "edit"}
+    ), update: (
+      <DiskModal key={activeModal()} isOpen={activeModal() === "disk:update"}
+        onClose={() => setActiveModal(null)}
         editMode
         diskId={disk?.id}
-        onClose={onClose}
       />
-    ),
-    delete: (
-      <DeleteModal
-        isOpen={activeModal === "delete"}
-        label={"디스크"}
-        data={selectedDisks}
-        onClose={onClose}
-        api={useDeleteDisk(() => onClose(), () => onClose())}
+    ), remove: (
+      <DeleteModal key={activeModal()} isOpen={activeModal() === "disk:remove"}
+        onClose={() => setActiveModal(null)}
+        label={Localization.kr.DISK}
+        data={disksSelected}
+        api={useDeleteDisk(() => setActiveModal(null), () => setActiveModal(null))}
       />
-    ),
-    upload: (
-      <DiskUploadModal 
-        isOpen={activeModal === "upload"} 
-        onClose={onClose} 
+    ), upload: (
+      <DiskUploadModal key={activeModal()} isOpen={activeModal() === "disk:upload"} 
+        onClose={() => setActiveModal(null)}
       />
-    ),
-    action: (
-      <DiskActionModal
-        isOpen={["copy", "move"].includes(activeModal)}
+    ), action: (
+      <DiskActionModal key={activeModal()} isOpen={["disk:copy", "disk:move"].includes(activeModal)}
+        onClose={() => setActiveModal(null)}
         action={activeModal}
-        data={selectedDisks}
-        onClose={onClose}
+        data={disksSelected}
       />
     ),
-    // move: (
-    //   <DiskMoveModal
-    //     isOpen={activeModal === "move"}
-    //     action={activeModal}
-    //     data={selectedDisks}
-    //     onClose={onClose}
-    //   />
-    // ),
-    // copy: (
-    //   <DiskCopyModal
-    //     isOpen={activeModal === "copy"}
-    //     action={activeModal}
-    //     data={selectedDisks}
-    //     onClose={onClose}
-    //   />
-    // ),
   };
 
   return (

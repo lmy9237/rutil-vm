@@ -38,7 +38,9 @@ const DomainActivateModal = ({
   }, [domains]);
   
   const handleFormSubmit = () => {
-    if (!ids.length) return toast.error("실행할 도메인이 없습니다.");
+    if (!ids.length) {
+      return toast.error("실행할 도메인이 없습니다.");
+    }
 
     ids.forEach((domainId) => {
       activateDomain({ domainId, dataCenterId: datacenterId });

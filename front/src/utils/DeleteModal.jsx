@@ -8,7 +8,7 @@ import { RVI16, rvi16ChevronRight } from "../components/icons/RutilVmIcons";
 const DeleteModal = ({
   isOpen=false, 
   onClose, 
-  label, 
+  label="", 
   data, 
   api, 
   navigation
@@ -22,12 +22,10 @@ const DeleteModal = ({
   const { ids, names } = useMemo(() => {
     if (!data) return { ids: [], names: [] };
 
-    const dataArray = Array.isArray(data) ? data : [data];
+    const dataArray = !Array.isArray(data) ? [data] : data;
     return {
-      ids: dataArray.map((item) => item.id),
-      names: dataArray.map((item) => {
-        return item?.name || item?.alias || item?.description /* 디스크일 때 */
-      }),
+      ids: dataArray.map((item) => item?.id || item?.username),
+      names: dataArray.map((item) => item?.name || item?.alias || item?.description || item?.username),
     };
   }, [data]);
 
@@ -62,13 +60,10 @@ const DeleteModal = ({
     });
   };
   
-  
-
   Logger.debug("DeleteModal ...")
   return (
     <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
+      isOpen={isOpen} onClose={onClose}
       targetName={label}
       shouldWarn={true}
       submitTitle={"삭제"}
@@ -78,7 +73,7 @@ const DeleteModal = ({
     >
     <div>
    
-    <div >
+    <div>
       {names.map((name, index) => (
         <div className="p-1.5 font-bold flex f-start" key={index}> 
           <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>

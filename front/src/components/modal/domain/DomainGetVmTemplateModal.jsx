@@ -116,7 +116,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={isVmMode ? "가상머신" : "템플릿"}
-      submitTitle={"가져오기"}
+      submitTitle={Localization.kr.IMPORT}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "880px" }} 
     >

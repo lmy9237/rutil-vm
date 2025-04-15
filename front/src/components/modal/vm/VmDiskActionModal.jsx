@@ -1,9 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import toast from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faExclamationTriangle,
-} from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import {
   useActivateDiskFromVm,
@@ -30,8 +26,8 @@ const VmDiskActionModal = ({
   data 
 }) => {
   const labelMap = {
-    deactivate: "비활성화",
-    activate: "활성화",
+    "vmdisk:deactivate": "비활성화",
+    "vmdisk:activate": "활성화",
   };
   const contentLabel = useMemo(() => labelMap[action] || "", [action]);
 
@@ -58,6 +54,7 @@ const VmDiskActionModal = ({
   }, [data]);
 
   const handleFormSubmit = () => {
+    Logger.debug(`VmDiskActionModal > handleFormSubmit ... `)
     if (!ids.length) return toast.error("ID가 없습니다.");
 
     const actionFn = actionMap[action];
@@ -66,6 +63,7 @@ const VmDiskActionModal = ({
     ids.forEach((diskAttachId) => actionFn({ vmId: vmId, diskAttachmentId: diskAttachId }));
   };
 
+  Logger.debug(`VmDiskActionModal ... `)
   return (
     <BaseModal targetName={`${Localization.kr.VM} ${Localization.kr.DISK}`} submitTitle={contentLabel}
       isOpen={isOpen} onClose={onClose}

@@ -6,6 +6,13 @@ import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useFindDiskListFromVM } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 
+/**
+ * @name VmConnectionPlusModal
+ * @description ... 
+ * 
+ * @param {*} param0 
+ * @returns {JSX.Element} VmConnectionPlusModal
+ */
 const VmConnectionPlusModal = ({
   isOpen,
   onClose,
@@ -15,6 +22,23 @@ const VmConnectionPlusModal = ({
 }) => {
   const [activeTab, setActiveTab] = useState("img");
   const [selectedDiskId, setSelectedDiskId] = useState(null);
+  
+  // 제외된 디스크 ID를 필터링
+  const { data: rawDisks } = useFindDiskListFromVM((e) => ({
+    ...e,
+    radio: (
+      <input
+        type="radio"
+        name="diskSelection"
+        value={e.id}
+        onChange={() => setSelectedDiskId(e.id)}
+      />
+    ),
+    virtualSize: e?.virtualSize / Math.pow(1024, 3) + " GB",
+    actualSize: e?.actualSize / Math.pow(1024, 3) + " GB",
+    storageDomainVo: e?.storageDomainVo?.name,
+    status: e?.status === "UNINITIALIZED" ? "초기화되지 않음" : "UP",
+  }));
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -34,29 +58,11 @@ const VmConnectionPlusModal = ({
     onClose();
   };
 
-  // 제외된 디스크 ID를 필터링
-  const { data: rawDisks } = useFindDiskListFromVM((e) => ({
-    ...e,
-    radio: (
-      <input
-        type="radio"
-        name="diskSelection"
-        value={e.id}
-        onChange={() => setSelectedDiskId(e.id)}
-      />
-    ),
-    virtualSize: e?.virtualSize / Math.pow(1024, 3) + " GB",
-    actualSize: e?.actualSize / Math.pow(1024, 3) + " GB",
-    storageDomainVo: e?.storageDomainVo?.name,
-    status: e?.status === "UNINITIALIZED" ? "초기화되지 않음" : "UP",
-  }));
 
   // 제외된 디스크 ID를 필터링
-  const disks =
-    rawDisks?.filter((disk) => !excludedDiskIds.includes(disk.id)) || [];
+  const disks = rawDisks?.filter((disk) => !excludedDiskIds.includes(disk.id)) || [];
 
   return (
-    
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={"가상 디스크"}
       submitTitle={"연결"}

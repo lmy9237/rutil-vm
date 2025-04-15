@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import useUIState from "../../hooks/useUIState";
+import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
 import TemplateActionButtons from "./TemplateActionButtons";
 import TemplateModals from "../modal/template/TemplateModals";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
-import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
+import useGlobal from "../../hooks/useGlobal";
 
 const TemplateDupl = ({
   templates = [], 
@@ -19,11 +21,11 @@ const TemplateDupl = ({
   isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedTemplates, setSelectedTemplates] = useState([]);
+  const { activeModal, setActiveModal } = useUIState()
+  const { templatesSelected, setTemplatesSelected } = useGlobal();
 
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
-  const transformedData = templates.map((temp) => ({
+  const transformedData = (!Array.isArray(templates) ? [] : templates).map((temp) => ({
     ...temp,
     _name: (
       <TableRowClick type="template" id={temp?.id}>
@@ -46,9 +48,6 @@ const TemplateDupl = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  // 모달 열기 / 닫기
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
   const handleNameClick = (id) => navigate(`/computing/templates/${id}`);
   const handleRefresh = () =>  {
     Logger.debug(`TemplateDupl > handleRefresh ... `)
@@ -61,52 +60,33 @@ const TemplateDupl = ({
   return (
     <>
       <div className="dupl-header-group f-start">
-        {showSearchBox && (
-          <SearchBox 
-            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-            onRefresh={handleRefresh}
-          />
-        )}
-        <TemplateActionButtons
-          openModal={openModal}
-          isEditDisabled={selectedTemplates.length !== 1}
-          isDeleteDisabled={selectedTemplates.length === 0}
-        />
+        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>)}
+        <TemplateActionButtons />
       </div>
 
       {/* 테이블 컴포넌트 */}
       <TablesOuter
-        isLoading={isLoading}
-        isError={isError}
-        isSuccess={isSuccess}
         columns={columns}
         data={filteredData} // ✅ 검색 필터링된 데이터 사용
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setSelectedTemplates(selectedRows)}
+        onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
         // clickableColumnIndex={[0]}
         searchQuery={searchQuery} // ✅ 검색어 전달
         setSearchQuery={setSearchQuery} // ✅ 검색어 변경 가능하도록 추가
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         onContextMenuItems={(row) => [
-          <TemplateActionButtons
-            openModal={openModal}
+          <TemplateActionButtons actionType="context"
             status={row?.status}
-            selectedTemplates={[row]}
-            actionType="context"
           />,
         ]}
       />
 
-      <SelectedIdView items={selectedTemplates} />
+      <SelectedIdView items={templatesSelected} />
 
       {/* 템플릿 모달창 */}
-      <TemplateModals
-        activeModal={activeModal}
-        template={selectedTemplates[0]}
-        selectedTemplates={selectedTemplates}
-        onClose={closeModal}
-      />
+      <TemplateModals template={templatesSelected[0]} />
     </>
   );
 };

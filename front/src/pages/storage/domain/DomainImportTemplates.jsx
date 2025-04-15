@@ -1,14 +1,17 @@
 import React, { useState } from "react";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
+import useSearch from "../../../hooks/useSearch";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DomainGetVmTemplateModal from "../../../components/modal/domain/DomainGetVmTemplateModal";
 import DeleteModal from "../../../utils/DeleteModal";
-import { useAllUnregisteredTemplatesFromDomain } from "../../../api/RQHook";
-import { checkZeroSizeToMB } from "../../../util";
 import SearchBox from "../../../components/button/SearchBox";
-import useSearch from "../../../components/button/useSearch";
 import ActionButton from "../../../components/button/ActionButton";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import { checkZeroSizeToMB } from "../../../util";
+import { useAllUnregisteredTemplatesFromDomain } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name DomainImportTemplates
@@ -17,7 +20,12 @@ import SelectedIdView from "../../../components/common/SelectedIdView";
  * @prop {string} domainId 도메인ID
  * @returns {JSX.Element} DomainGetTemplates
  */
-const DomainImportTemplates = ({ domainId }) => {
+const DomainImportTemplates = ({ 
+  domainId
+}) => {
+  const { activeModal, setActiveModal, } = useUIState();
+  const { templatesSelected, setTemplatesSelected } = useGlobal(); // 다중 선택된 데이터센터
+
   const {
     data: templates = [],
     isLoading: isTemplatesLoading,
@@ -25,10 +33,7 @@ const DomainImportTemplates = ({ domainId }) => {
     isSuccess: isTemplatesSuccess,
   } = useAllUnregisteredTemplatesFromDomain(domainId, (e) => ({ ...e }));
 
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedTemplates, setSelectedTemplates] = useState([]); // 다중 선택된 데이터센터
-
-  const transformedData = templates.map((t) => ({
+  const transformedData = (!Array.isArray(templates) ? [] : templates).map((t) => ({
     ...t,
     name: t.name,
     memory: checkZeroSizeToMB(t.memorySize),
@@ -49,48 +54,45 @@ const DomainImportTemplates = ({ domainId }) => {
       <div className="dupl-header-group f-start">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <div className="header-right-btns">
-          <ActionButton 
-            label="가져오기" 
+          <ActionButton label={Localization.kr.IMPORT}
             actionType="default" 
-            onClick={() => setActiveModal('get')}
+            onClick={() => setActiveModal('domaintemplate:importVm')}
           />
-          <ActionButton
-            label="삭제" 
+          <ActionButton label={Localization.kr.REMOVE}
             actionType="default" 
-            onClick={() => setActiveModal('delete')}
+            onClick={() => setActiveModal("domaintemplate:remove")}
           />
         </div>
       </div>
- 
 
       <TablesOuter
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         columns={TableColumnsInfo.GET_VMS_TEMPLATES}
         data={filteredData}
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setSelectedTemplates(selectedRows)}
+        onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
         multiSelect={true}
       />
 
-      <SelectedIdView items={selectedTemplates} />
+      <SelectedIdView items={templatesSelected} />
 
       {/* 가상머신 가져오기 모달 */}
-      {activeModal === "get" && (
+      {activeModal() === "domaintemplate:importVm" && (
         <DomainGetVmTemplateModal
           isOpen={true}
-          data={selectedTemplates}
+          data={templatesSelected}
           type="template"
           onClose={() => setActiveModal(null)}
         />
       )}
 
-      {activeModal === "delete" && (
+      {activeModal() === "domaintemplate:remove" && (
         <DeleteModal
           isOpen={true}
           type="DataCenter"
           onRequestClose={() => setActiveModal(null)}
           contentLabel={"템플릿"}
-          data={selectedTemplates}
+          data={templatesSelected}
         />
       )}
     </>

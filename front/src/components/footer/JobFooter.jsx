@@ -1,16 +1,13 @@
-import React, { useRef, useState } from "react";
-import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
-import Localization from "../../utils/Localization";
-import useUIState from "../../hooks/useUIState";
-import Spinner from "../common/Spinner";
-import TableRowNoData from "../table/TableRowNoData";
+import React, { useEffect, useRef, useState } from "react";
+import useGlobal from "../../hooks/useGlobal";
+import useFooterState from "../../hooks/useFooterState";
 import SelectedIdView from "../common/SelectedIdView";
+import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
 import { useAllJobs } from "../../api/RQHook";
-import "./JobFooter.css";
 import Logger from "../../utils/Logger";
-import Tables from "../table/Tables";
 import TableColumnsInfo from "../table/TableColumnsInfo";
 import TablesOuter from "../table/TablesOuter";
+import "./JobFooter.css";
 
 /**
  * @name JobFooter
@@ -21,8 +18,11 @@ import TablesOuter from "../table/TablesOuter";
 const JobFooter = () => {
   const {
     footerVisible, toggleFooterVisible,
+    footerDragging, setFooterDragging,
+    footerOffsetY, setFooterOffsetY,
     footerJobRefetchInterval
-  } = useUIState();
+  } = useFooterState();
+  const { jobsSelected, setJobsSelected } = useGlobal()
 
   const {
     data: jobs = [],
@@ -30,7 +30,7 @@ const JobFooter = () => {
     isError: isJobsError,
     isSuccess: isJobsSuccess,
     refetch: refetchJobs
-  } = useAllJobs((e) => ({ ...e }), parseInt(footerJobRefetchInterval))
+  } = useAllJobs((e) => ({ ...e }), parseInt(footerJobRefetchInterval()))
 
 
   // job 데이터 변환
@@ -42,80 +42,29 @@ const JobFooter = () => {
     startTime: e?.startTime,
     endTime: e?.endTime,
   }));
-  
-  const [selectedJobs, setSelectedJobs] = useState([]);
 
-  // 드레그
-  const footerBarHeight = 40;
-  const [footerHeight, setFooterHeight] = useState(80);
-  const isResizing = useRef(false);
-  const startYRef = useRef(0);
-  const startHeightRef = useRef(0);
-  
-  const handleResizeStart = (e) => {
-    isResizing.current = true;
-    startYRef.current = e.clientY;
-    Logger.debug(`JobFooter > handleResizeStart ... e.clientY: ${e.clientY}`)
-    startHeightRef.current = footerHeight;
-  
-    document.addEventListener("mousemove", handleResizeMove);
-    document.addEventListener("mouseup", handleResizeEnd);
-  
-    document.body.style.userSelect = "none";
-    document.body.style.cursor = "row-resize";
-  };
-  
-  const handleResizeMove = (e) => {
-    Logger.debug(`JobFooter > handleResizeMove ... e.clientY: ${e.clientY}`)
-    if (!isResizing.current) return;
-  
-    requestAnimationFrame(() => {
-      const dy = startYRef.current - e.clientY; // 아래로 내리면 양수
-      const newHeight = startHeightRef.current + dy;
-  
-      if (newHeight >= 40 && newHeight <= 1000) {
-        setFooterHeight(newHeight);
-      }
-    });
-  };
-  
-  const handleResizeEnd = () => {
-    Logger.debug(`JobFooter > handleResizeEnd ...`)
-    isResizing.current = false;
-  
-    document.removeEventListener("mousemove", handleResizeMove);
-    document.removeEventListener("mouseup", handleResizeEnd);
-  
-    document.body.style.userSelect = "auto";
-    document.body.style.cursor = "default";
-  };
-  
-
+  Logger.debug(`JobFooter ... `)
   return (
     <>
-      {/* 드래그바 */}
-      {footerVisible && (
-        <div className="footer-resizer" onMouseDown={handleResizeStart} />
-      )}
       <div
-        className={`footer-outer v-start${footerVisible ? " open" : ""}`}
-        style={{
-          height: footerVisible ? `${footerHeight + footerBarHeight}px` : "auto",
-        }}
+        className={`footer-outer v-start${footerVisible() ? " open" : ""}`}
       >
         {/* 상단 "최근작업" 바 */}
         <div
           className="footer f-start"
-          style={{ height: `${footerBarHeight}px` }}
-          onClick={() => toggleFooterVisible()}
+          style={{ height: `40px` }}
+          onClick={(e) => {
+            e.stopPropagation()
+            toggleFooterVisible()
+          }}
         >
-          <RVI24 iconDef={footerVisible ? rvi24DownArrow() : rvi24ChevronUp()}/>
+          <RVI24 iconDef={footerVisible() ? rvi24DownArrow() : rvi24ChevronUp()}/>
           <span>최근 작업</span>
         </div>
 
         {/* 테이블 */}
         <div
-          className={`footer-content${footerVisible ? " open" : ""}`}
+          className={`footer-content${footerVisible() ? " open" : ""}`}
         >
           <div className="footer-nav">
             <TablesOuter
@@ -124,10 +73,10 @@ const JobFooter = () => {
               isLoading={isJobsLoading}
               isError={isJobsError}
               isSuccess={isJobsSuccess}
-              onRowClick={(selected) => setSelectedJobs(selected)}
+              onRowClick={(row) => setJobsSelected(row)}
               showSearchBox={false}
             />
-            <SelectedIdView items={selectedJobs} />
+            <SelectedIdView items={jobsSelected} />
           </div>
         </div>
       </div>

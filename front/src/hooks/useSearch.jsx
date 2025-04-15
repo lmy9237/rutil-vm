@@ -7,7 +7,9 @@ import { useState, useMemo } from "react";
  * @param {Array} data - 검색할 데이터 배열
  * @returns {Object} { searchQuery, setSearchQuery, filteredData }
  */
-const useSearch = (data = []) => {
+const useSearch = (
+  data = []
+) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredData = useMemo(() => {

@@ -1,41 +1,41 @@
 import React from "react";
+import useUIState from "../../../hooks/useUIState";
 import TemplateEditModal from "./TemplateEditModal";
 import VmModal from "../../modal/vm/VmModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteTemplate } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
+import useGlobal from "../../../hooks/useGlobal";
 
 const TemplateModals = ({
-  activeModal,
   template,
-  selectedTemplates = [],
-  onClose,
 }) => {
+  const { activeModal, setActiveModal, } = useUIState()
+  const { templatesSelected } = useGlobal()
+
   const modals = {
-    edit: (
-      <TemplateEditModal
+    update: (
+      <TemplateEditModal isOpen={activeModal() === "template:update"}
+        onClose={() => setActiveModal(null)}  
         editMode
-        isOpen={activeModal === "edit"}
         templateId={template?.id}
-        onClose={onClose}
       />
-    ),
-    delete: (
-      <DeleteModal isOpen={activeModal === "delete"}
-        onClose={onClose}
+    ), remove: (
+      <DeleteModal isOpen={activeModal() === "template:remove"}
+        onClose={() => setActiveModal(null)}
         label={"템플릿"}
-        data={selectedTemplates}
+        data={templatesSelected}
         api={useDeleteTemplate()}
         // navigation={''}
       />
-    ),
-    addVm: (
-      <VmModal 
-        isOpen={activeModal === "create"} 
-        onClose={onClose} 
-      />      
+    ), addVm: (
+      <VmModal isOpen={activeModal() === "vm:create"}
+        onClose={() => setActiveModal(null)}
+      />
     ),
   };
 
+  Logger.debug(`TemplateModals ... `)
   return (
     <>
       {Object.keys(modals).map((key) => (

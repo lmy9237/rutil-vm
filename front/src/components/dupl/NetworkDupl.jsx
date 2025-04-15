@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
+import toast from "react-hot-toast";
+import useSearch from "../../hooks/useSearch";
 import NetworkActionButtons from "./NetworkActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import SearchBox from "../button/SearchBox";
-import useSearch from "../button/useSearch";
 import Localization from "../../utils/Localization";
 import SelectedIdView from "../common/SelectedIdView";
-import Logger from "../../utils/Logger";
-import toast from "react-hot-toast";
-import "./Dupl.css";
 import NetworkModals from "../modal/network/NetworkModals";
+import Logger from "../../utils/Logger";
+import "./Dupl.css";
 
 /**
  * @name NetworkDupl
@@ -26,13 +28,11 @@ const NetworkDupl = ({
   isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedNetworks, setSelectedNetworks] = useState([]);
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
+  const { activeModal, setActiveModal } = useUIState()
+  const { networksSelected, setNetworksSelected } = useGlobal()
 
   // 데이터를 변환 (검색 가능하도록 `searchText` 필드 추가)
-  const transformedData = networks.map((network) => ({
+  const transformedData = (!Array.isArray(networks) ? [] : networks).map((network) => ({
     ...network,
     _name: (
       <TableRowClick type="network" id={network?.id}>
@@ -69,8 +69,8 @@ const NetworkDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
+  Logger.debug(`NetworkDupl ...`)
   return (
-
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         {showSearchBox && (
@@ -79,46 +79,31 @@ const NetworkDupl = ({
             onRefresh={handleRefresh}
           />
         )}
-        <NetworkActionButtons 
-          openModal={openModal}
-          selectedNetworks={selectedNetworks} 
-          isEditDisabled={selectedNetworks.length !== 1}
-          isDeleteDisabled={selectedNetworks.length === 0}
-        />
+        <NetworkActionButtons />
       </div>
 
       {/* 테이블 컴포넌트 */}
       <TablesOuter
-        isLoading={isLoading} 
-        isError={isError} 
-        isSuccess={isSuccess}
         columns={columns}
         data={filteredData} 
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setSelectedNetworks(selectedRows)}
+        onRowClick={(selectedRows) => setNetworksSelected(selectedRows)}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true} 
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         onContextMenuItems={(row) => [
-          <NetworkActionButtons
-            openModal={openModal}
+          <NetworkActionButtons actionType="context"
             status={row?.status}
-            selectedNetworks={[row]}
-            actionType="context"
-            isContextMenu={true}
           />,
         ]}
       />
 
-      <SelectedIdView items={selectedNetworks} />
+      <SelectedIdView items={networksSelected} />
 
       {/* 네트워크 모달창 */}
-        <NetworkModals
-          activeModal={activeModal}
-          network={activeModal === "edit" ? selectedNetworks[0] : null}
-          selectedNetworks={selectedNetworks}
-          onClose={closeModal}
+        <NetworkModals network={activeModal() === "edit" ? networksSelected[0] : null}
           withModal // 🔥 내부에서 모달 제어하게 함
         />
     </div>

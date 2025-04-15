@@ -1,8 +1,9 @@
 import React from 'react'
+import Localization from "../../utils/Localization";
 
 const LoadingOption = () => {
   return (
-    <option>로딩중...</option>
+    <option>{Localization.kr.LOADING}{Localization.kr.IN_PROGRESS}</option>
   )
 }
 

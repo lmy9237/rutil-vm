@@ -1,7 +1,10 @@
 import React from "react";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import SettingUsersModal from './SettingUsersModal'
 import DeleteModal from "../../../utils/DeleteModal"
 import { useRemoveUser } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name SettingUsersModals
@@ -9,34 +12,30 @@ import { useRemoveUser } from "../../../api/RQHook";
  * 
  * @returns 
  */
-const SettingUsersModals = ({
-  modalType, user, onClose 
-}) => {
-  const allModals = {
+const SettingUsersModals = ({}) => {
+  const { activeModal, setActiveModal } = useUIState()
+  const { usersSelected } = useGlobal()
+
+  const modals = {
     create:  (
-      <SettingUsersModal isOpen={modalType==="create"} onClose={onClose} 
-        targetName={"사용자"}
+      <SettingUsersModal key={activeModal()} isOpen={activeModal() === "user:create"} 
+        onClose={() => setActiveModal(null)} 
       />
-    ),
-    edit: (
-      <SettingUsersModal isOpen={modalType==="edit"} onClose={onClose} 
-        targetName={"사용자"}
-        user={user[0]}
+    ), update: (
+      <SettingUsersModal key={activeModal()} isOpen={activeModal() === "user:update"} 
+        onClose={() => setActiveModal(null)} 
         editMode
       />
-    ),
-    changePassword: (
-      <SettingUsersModal isOpen={modalType==="changePassword"} onClose={onClose} 
-        targetName={"사용자"}
-        user={user[0]}
-        changePassword
+    ), changePassword: (
+      <SettingUsersModal key={activeModal()} isOpen={activeModal() === "user:changePassword"} 
+        onClose={() => setActiveModal(null)} 
+        changePassword={true}
       />
-    ),
-    remove: (
-      <DeleteModal isOpen={modalType==="remove"}
-        label={"사용자"}
-        onClose={onClose}
-        data={user[0]}
+    ), remove: (
+      <DeleteModal key={activeModal()} isOpen={activeModal() === "user:remove"}
+        onClose={() => setActiveModal(null)}
+        label={Localization.kr.USER}
+        data={usersSelected}
         api={useRemoveUser()}
       />
     ),
@@ -44,8 +43,8 @@ const SettingUsersModals = ({
   
   return (
     <>
-      {Object.keys(allModals).map((key) => (
-        <React.Fragment key={key}>{allModals[key]}</React.Fragment>
+      {Object.keys(modals).map((key) => (
+        <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>
   );

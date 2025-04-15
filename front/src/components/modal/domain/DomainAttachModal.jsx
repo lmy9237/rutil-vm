@@ -3,10 +3,12 @@ import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
-import { useAllDataCenters, useAllStorageDomains, useAttachDomain } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import useGlobal from "../../../hooks/useGlobal";
+import SelectedIdView from "../../common/SelectedIdView";
 import { checkZeroSizeToGiB } from "../../../util";
+import { useAllDataCenters, useAllStorageDomains, useAttachDomain } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DomainAttachModal
@@ -23,6 +25,8 @@ const DomainAttachModal = ({
   datacenterId,
   onClose 
 }) => {
+  const { datacentersSelected, setDatacentersSelected } = useGlobal()
+
   // fromDatacenter 는 데이터센터에서 바라보는 도메인, fromDomain 는 도메인에서 바라보는 데이터센터
   const title = sourceContext === "fromDomain" ? `${Localization.kr.DATA_CENTER}` : `${Localization.kr.DOMAIN}`;
   const label = sourceContext === "fromDomain"
@@ -31,8 +35,13 @@ const DomainAttachModal = ({
     onClose();
     toast.success(`${title} 연결 완료`);
   };
-  const { mutate: attachDomain } = useAttachDomain(onSuccess, () => onClose());
-
+  
+  const {
+    data: domains = [],
+    isLoading: isDomainsLoading,
+    isError: isDomainsError,
+    isSuccess: isDomainsSuccess,
+  } = useAllStorageDomains((e) => ({ ...e }));
   const {
     data: datacenters = [],
     isLoading: isDataCentersLoading,
@@ -41,11 +50,8 @@ const DomainAttachModal = ({
   } = useAllDataCenters((e) => ({ ...e }));
 
   const {
-    data: domains = [],
-    isLoading: isDomainsLoading,
-    isError: isDomainsError,
-    isSuccess: isDomainsSuccess,
-  } = useAllStorageDomains((e) => ({ ...e }));
+    mutate: attachDomain 
+  } = useAttachDomain(onSuccess, () => onClose());
 
   const transformedDataCenterData = datacenters.map((dc) => ({
     ...dc,
@@ -87,15 +93,16 @@ const DomainAttachModal = ({
   };
 
   const handleFormSubmit = () => {
-    if (!selectedId) return toast.error(`${Localization.kr.DATA_CENTER}를 선택하세요.`);
+    Logger.debug(`DomainAttachModal > handleFormSubmit ... `)
 
     label 
       ? attachDomain({ storageDomainId: domainId, dataCenterId: selectedId })
       : attachDomain({ storageDomainId: selectedId, dataCenterId: datacenterId })
   };
 
+  Logger.debug(`DomainAttachModal ... `)
   return (
-    <BaseModal targetName={title} submitTitle={"연결"}
+    <BaseModal targetName={title} submitTitle={Localization.kr.CONNECTION}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "650px"}} 
@@ -112,10 +119,11 @@ const DomainAttachModal = ({
           }
           data={label ? transformedDataCenterData : transformedDomainData}
           shouldHighlight1stCol={true}
-          onRowClick={(row) => handleRowClick(row)}
+          onRowClick={(row) => setDatacentersSelected(row)}
         />
       </div>
-      <span>id: {selectedId}</span>
+
+      <SelectedIdView items={datacentersSelected} />
     </BaseModal>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import useUIState from "../../hooks/useUIState";
+import useBoxState from "../../hooks/useBoxState";
 import {
   RVI24,
   RVI16,
@@ -24,6 +24,13 @@ import "./BoxEvent.css";
 const BoxEvent = ({
   ...props
 }) => {
+  const {
+    setEventBadgeNum,
+    eventBoxVisible, setEventBoxVisible,
+    eventBoxExpanded, toggleEventBoxExpanded,
+    eventBoxSectionActive, setEventBoxSectionActive
+  } = useBoxState();
+
   const {
     data: eventsNormal = [],
     isLoading: isEventsNormalLoading,
@@ -50,31 +57,24 @@ const BoxEvent = ({
     setEventBadgeNum(badgeNum);
   }, [notiEvents])
 
-  const {
-    setEventBadgeNum,
-    eventBoxVisible, setEventBoxVisible,
-    eventBoxExpanded, toggleEventBoxExpanded,
-    eventBoxSectionActive, setEventBoxSectionActive
-  } = useUIState();
-
   const bellBoxRef = useRef(null);
   useClickOutside(bellBoxRef, (e) => {
     Logger.debug(`BoxEvent > useClickOutside ...`);
-    if (eventBoxVisible) setEventBoxVisible(false);
+    if (eventBoxVisible()) setEventBoxVisible(false);
   })
-  const handleSectionClick = (section) => setEventBoxSectionActive(eventBoxSectionActive === section ? "" : section);
+  const handleSectionClick = (section) => setEventBoxSectionActive(eventBoxSectionActive() === section ? "" : section);
   const stopPropagation = (e) => e.stopPropagation();
   
   return (
     <div 
       ref={bellBoxRef}
-      className={`bell-box ${eventBoxExpanded ? "expanded" : ""}`}
+      className={`bell-box ${eventBoxExpanded() ? "expanded" : ""}`}
       onClick={stopPropagation}
       {...props}
     >
       <div className="f-btw bell-cate">
         <span className="bell-header-icon f-center">
-        <RVI16 iconDef={eventBoxExpanded ? rvi16ArrowRight : rvi16ArrowLeft}
+        <RVI16 iconDef={eventBoxExpanded() ? rvi16ArrowRight : rvi16ArrowLeft}
           className="hover-icon"
           onClick={() => toggleEventBoxExpanded()}
         />
@@ -88,17 +88,17 @@ const BoxEvent = ({
         </span>
       </div>
       {/* 알림 탭 */}
-      <div className={`bell-cate bell-cate-section  ${eventBoxSectionActive === "알림" ? "active" : ""} f-start`}
+      <div className={`bell-cate bell-cate-section  ${eventBoxSectionActive() === "알림" ? "active" : ""} f-start`}
         onClick={() => handleSectionClick("알림")}
       >
         <span className="bell-header-icon f-center">
-          <RVI24 iconDef={eventBoxSectionActive === "알림" ? rvi24DownArrow() : rvi24RightArrow()}/>
+          <RVI24 iconDef={eventBoxSectionActive() === "알림" ? rvi24DownArrow() : rvi24RightArrow()}/>
         </span>
         <span className="bell-section-title ml-1">알림</span>
       </div>
 
       {/* 알림 내용 */}
-      {eventBoxSectionActive === "알림" && (
+      {eventBoxSectionActive() === "알림" && (
         <>
           <div className="bell-content-outer">
             <BoxEventItems events={notiEvents} />
@@ -118,22 +118,22 @@ const BoxEvent = ({
       >
         <span className="bell-header-icon f-center">
           <RVI24
-            iconDef={eventBoxSectionActive === "이벤트" ? rvi24DownArrow() : rvi24RightArrow()}
+            iconDef={eventBoxSectionActive() === "이벤트" ? rvi24DownArrow() : rvi24RightArrow()}
           />
         </span>
         <span className="bell-section-title ml-1">이벤트</span>
       </div>
 
       {/* 이벤트 내용 (알림 아래로 깔리도록 설정) */}
-      {eventBoxSectionActive === "이벤트" && (
+      {eventBoxSectionActive() === "이벤트" && (
         <>
           <div className="bell-content-outer event-section">
             <BoxEventItems events={eventsNormal} />
           </div>
 
           <div className="bell-btns">
-            <div className="mr-3">모두 삭제</div>
-            <div>모두 출력</div>
+            <div className="f-center">모두 삭제</div>
+            <div className="f-center">모두 출력</div>
           </div>
         </>
       )}

@@ -1,16 +1,17 @@
-import { Suspense, useState } from "react";
-import { useAllNicsFromTemplate } from "../../../api/RQHook";
+import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
+import useSearch from "../../../hooks/useSearch";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
 import NicActionButtons from "../../../components/dupl/NicActionButtons";
 import SelectedIdView from "../../../components/common/SelectedIdView";
-import Logger from "../../../utils/Logger";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import SearchBox from "../../../components/button/SearchBox";
-import useSearch from "../../../components/button/useSearch";
-import toast from "react-hot-toast";
 import NicModal from "../../../components/modal/vm/NicModal";
+import { useAllNicsFromTemplate } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name TemplateNics
@@ -24,14 +25,17 @@ const TemplateNics = ({
   showSearchBox = true, 
   refetch,
 }) => {
+  const { activeModal, setActiveModal, } = useUIState()
+  const { vnicProfilesSelected, setVnicProfilesSelected } = useGlobal()
   const {
     data: vnicProfiles = [],
     isLoading: isVnicProfilesLoading,
     isError: isVnicProfilesError,
     isSuccess: isVnicProfilesSuccess,
   } = useAllNicsFromTemplate(templateId, (e) => ({ ...e }));
+
   const columns = TableColumnsInfo.NICS_FROM_TEMPLATE;
-  const transformedData = vnicProfiles.map((nic) => ({
+  const transformedData = (!Array.isArray(vnicProfiles) ? [] : vnicProfiles).map((nic) => ({
       ...nic,
       status: status2Icon(nic?.linked ? "UP" : "DOWN"),
       network: (
@@ -50,8 +54,6 @@ const TemplateNics = ({
       ),
     }))
 
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedVnicProfiles, setSelectedVnicProfiles] = useState([]);
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
   const handleRefresh = () =>  {
     if (!refetch) return;
@@ -59,86 +61,71 @@ const TemplateNics = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
-
   Logger.debug("TemplateNics ...");
   return (
     <>
       <div className="dupl-header-group f-start">
-        {showSearchBox && (
-          <SearchBox 
-            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-            onRefresh={handleRefresh}
-          />
-        )}
-      <NicActionButtons
-        openModal={openModal}
-        isEditDisabled={selectedVnicProfiles.length !== 1}
-      />
+        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>)}
+        <NicActionButtons
+          isEditDisabled={vnicProfilesSelected.length !== 1}
+        />
      </div>
       <TablesOuter
-        isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
-        columns={columns}   
+        columns={columns}
         data={filteredData}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        onRowClick={(selectedRows) => setSelectedVnicProfiles(selectedRows)}
+        onRowClick={(selectedRows) => setVnicProfilesSelected(selectedRows)}
+        isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
         onContextMenuItems={(row) => [
-          <NicActionButtons
-            openModal={openModal}
+          <NicActionButtons type="context"
             isEditDisabled={!row}
-            type="context"
           />,
         ]}
       />
 
-      <SelectedIdView items={selectedVnicProfiles}/>
+      <SelectedIdView items={vnicProfilesSelected}/>
 
       {/* nic 모달창 */}
-      {activeModal === "create" && (
-        <NicModal
-          isOpen={true}
-          onClose={closeModal}
-          editMode={false}
+      {activeModal() === "nic:create" && (
+        <NicModal key={activeModal()} isOpen={activeModal() === "nic:create"}
+          onClose={() => setActiveModal(null)}
           vmId={templateId}   // ✅ templateId를 vmId처럼 넘김
           nicId={null}
         />
       )}
-      {activeModal === "edit" && (
-        <NicModal
-          isOpen={true}
-          onClose={closeModal}
-          editMode={true}
+      {activeModal() === "nic:edit" && (
+        <NicModal key={activeModal()} isOpen={activeModal() === "nic:updateedit"}
+          onClose={() => setActiveModal(null)}
+          editMode
           vmId={templateId}   // ✅ templateId를 vmId처럼 넘김
-          nicId={selectedVnicProfiles[0]?.id}
+          nicId={vnicProfilesSelected[0]?.id}
         />
       )}
-
       {/* <Suspense fallback={<Loading />}>
-        {activeModal === "create" && (
+        {activeModal() === "create" && (
           <TemplateNeworkNewInterModal
             isOpen={true}
-            onClose={closeModal}
+            onClose={() => setActiveModal(null)}
             editMode={false}
             templateId={templateId}
             nicData={selectedVnicProfiles[0]} // 수정 시 첫 번째 항목 전달
           />
         )}
-        {activeModal === "edit" && (
+        {activeModal() === "edit" && (
           <TemplateNeworkNewInterModal
             isOpen={true}
-            onClose={closeModal}
+            onClose={() => setActiveModal(null)}
             editMode={true}
             templateId={templateId}
             nicData={selectedVnicProfiles[0]} // 수정 시 첫 번째 항목 전달
           />
         )}
 
-        {activeModal === "delete" && (
+        {activeModal() === "delete" && (
           <TemplateNicDeleteModal
             isOpen={true}
-            onClose={closeModal}
+            onClose={() => setActiveModal(null)}
             data={selectedVnicProfiles[0]} // 선택된 NIC 데이터 전달
             templateId={templateId}
           />

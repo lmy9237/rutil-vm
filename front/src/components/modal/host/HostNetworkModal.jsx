@@ -10,11 +10,17 @@ import Localization from "../../../utils/Localization";
 import "../network/MNetwork.css";
 import { RVI16, rvi16Star, status2Icon } from "../../icons/RutilVmIcons";
 
-const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
+const HostNetworkModal = ({
+  isOpen,
+  onClose,
+  hostId
+}) => {
   // 호스트 상세정보 조회로 클러스터id 뽑기
   const { data: host } = useHost(hostId);
   
-  const { data: hostNics } = useNetworkInterfacesFromHost(hostId, (e) => ({
+  const {
+    data: hostNics
+  } = useNetworkInterfacesFromHost(hostId, (e) => ({
     ...e,
     name: e?.name,
     ipv4BootProtocol: e?.bootProtocol,
@@ -36,7 +42,9 @@ const HostNetworkModal = ({ isOpen, onClose, hostId }) => {
   }));
   
   // 할당되지 않은 논리 네트워크 조회
-  const { data: network } = useNetworkFromCluster(host?.clusterVo?.id, (network) => ({
+  const {
+    data: network
+  } = useNetworkFromCluster(host?.clusterVo?.id, (network) => ({
     id: network?.id ?? "",
     name: network?.name ?? "",
     status: network?.status ?? "",

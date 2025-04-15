@@ -12,9 +12,9 @@ import {
   useNetworksFromDataCenter,
 } from "../../../api/RQHook";
 import { checkKoreanName, checkName } from "../../../util";
-import "./MCluster.css";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import "./MCluster.css";
 
 const cpuArcs = [
   { value: "UNDEFINED", label: "정의되지 않음" },
@@ -139,10 +139,10 @@ const ClusterModal = ({
     onClose();
     toast.success(`${Localization.kr.CLUSTER} ${cLabel} 완료`);
   };
+  const { data: cluster } = useCluster(clusterId);
   const { mutate: addCluster } = useAddCluster(onSuccess, () => onClose());
   const { mutate: editCluster } = useEditCluster(onSuccess, () => onClose());
 
-  const { data: cluster } = useCluster(clusterId);
   const { 
     data: datacenters = [], 
     isLoading: isDataCentersLoading 
@@ -153,7 +153,9 @@ const ClusterModal = ({
   } = useNetworksFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
 
   useEffect(() => {
-    if (!isOpen) return setFormState(initialFormState);
+    if (!isOpen) {
+      return setFormState(initialFormState);
+    }
     if (editMode && cluster) {
       setFormState({
         id: cluster?.id,
@@ -254,7 +256,7 @@ const ClusterModal = ({
         disabled={editMode}
         loading={isDataCentersLoading}
         options={datacenters}
-        onChange={ handleSelectIdChange(setDataCenterVo, datacenters) }
+        onChange={handleSelectIdChange(setDataCenterVo, datacenters) }
       />
       <hr />
       <LabelInput id="name" label={Localization.kr.NAME}

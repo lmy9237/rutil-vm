@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import useGlobal from "../../hooks/useGlobal";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import DataCenterDupl from "../../components/dupl/DataCenterDupl";
 import { useAllDataCenters } from "../../api/RQHook";
@@ -18,7 +19,7 @@ const DataCenters = () => {
     isSuccess: isDataCentersSuccess,
     refetch: refetchDataCenters,
   } = useAllDataCenters((e) => ({ ...e }));
-
+  
   Logger.debug("DataCenters ...");
   return (
     <>

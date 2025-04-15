@@ -1,5 +1,6 @@
 import React, { useEffect, useState} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import useUIState from '../../../hooks/useUIState';
 import Path from '../../../components/Header/Path';
 import NavButton from '../../../components/navigation/NavButton';
 import VnicProfileVms from './VnicProfileVms';
@@ -18,16 +19,13 @@ import HeaderButton from '../../../components/button/HeaderButton';
  */
 const VnicProfileInfo = () => {
   const navigate = useNavigate();
+  const { activeModal, setActiveModal, } = useUIState()
   const { id: vnicProfileId, section } = useParams();
   const {
     data: vnic, status, isRefetching, refetch, isError, error, isLoading
   } = useVnicProfile(vnicProfileId, (e) => ({...e,}));
   
   const [activeTab, setActiveTab] = useState('vms');
-  const [activeModal, setActiveModal] = useState(null);
-
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
 
   useEffect(() => {
     if (isError || (!isLoading && !vnic)) {
@@ -61,8 +59,8 @@ const VnicProfileInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: 'edit', label: Localization.kr.UPDATE, onClick: () => openModal('edit'),},
-    { type: 'delete', label: Localization.kr.REMOVE, onClick: () => openModal('delete'), },
+    { type: 'update', label: Localization.kr.UPDATE, onClick: () => setActiveModal("vnicprofile:update"),},
+    { type: 'remove', label: Localization.kr.REMOVE, onClick: () => setActiveModal("vnicprofile:remove"), },
   ]
 
   return (
@@ -84,12 +82,7 @@ const VnicProfileInfo = () => {
       </div>
 
       {/* 클러스터 모달창 */}
-      <VnicProfileModals
-        activeModal={activeModal}
-        vnicProfile={vnic}
-        selectedVnicProfiles={vnic}
-        onClose={closeModal}
-      />
+      <VnicProfileModals vnicProfile={vnic} />
     </div>
   );
 };

@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
+import useTmi from "../../../hooks/useTmi";
 import TreeMenuItem from "./TreeMenuItem";
 import {
   rvi16Globe,
@@ -10,29 +12,22 @@ import {
 import { useAllTreeNavigations } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 
-const NetworkTree = ({
-  selectedDiv,
-  setSelectedDiv,
-  menuRef,
-  setActiveModal,        
-  setSelectedNetworks,
-  setSelectedDataCenters,
-  closeContextMenu
-}) => {
-  const {
-    contextMenu, setContextMenu,
-    secondVisibleNetwork, toggleSecondVisibleNetwork,
-    openDataCentersNetwork, toggleOpenDataCentersNetwork
-  } = useUIState();
+const NetworkTree = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { contextMenu, setContextMenu, } = useUIState();
+  const {
+    secondVisibleNetwork, toggleSecondVisibleNetwork,
+    openDataCentersNetwork, toggleOpenDataCentersNetwork
+  } = useTmi();
+  const { setDatacentersSelected, setNetworksSelected, } = useGlobal();
 
   // ✅ API 호출 (네트워크 트리 데이터)
   const { data: navNetworks } = useAllTreeNavigations("network");
 
   Logger.debug(`NetworkTree ...`)
   return (
-    <div id="network_chart" className="tmi-g">
+    <div id="tmi-network" className="tmi-g">
       {/* 레벨 1: Rutil Manager */}
       <TreeMenuItem level={1}
         title="Rutil Manager"
@@ -42,7 +37,6 @@ const NetworkTree = ({
         onChevronClick={() => toggleSecondVisibleNetwork()}
         isChevronVisible={true}
         onClick={() => {
-          setSelectedDiv("rutil-manager");
           navigate("/networks/rutil-manager");
         }}
       />
@@ -51,7 +45,6 @@ const NetworkTree = ({
       {secondVisibleNetwork() && navNetworks && navNetworks.map((dataCenter) => {
         const isDataCenterOpen = openDataCentersNetwork(dataCenter.id) || false;
         const hasNetworks = Array.isArray(dataCenter.networks) && dataCenter.networks.length > 0;
-
         return (
           <div key={dataCenter.id} className="tmi-g">
             <TreeMenuItem level={2}
@@ -62,19 +55,19 @@ const NetworkTree = ({
               isChevronVisible={hasNetworks}
               onChevronClick={() => toggleOpenDataCentersNetwork(dataCenter.id)}
               onClick={() => {
-                setSelectedDiv(dataCenter.id);
                 navigate(`/networks/datacenters/${dataCenter.id}/clusters`);
               }}
               onContextMenu={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                setDatacentersSelected(dataCenter);
                 setContextMenu({
                   mouseX: e.clientX,
                   mouseY: e.clientY,
                   item: {
-                    id: dataCenter.id,
-                    name: dataCenter.name,
+                    ...dataCenter,
                     level: 2,
-                    type: "dataCenter",
+                    type: "datacenter",
                   },
                   treeType: "network"
                 });
@@ -84,19 +77,19 @@ const NetworkTree = ({
             {/* 레벨 3: 네트워크 */}
             {isDataCenterOpen && dataCenter.networks.map((network) => (
               <div key={network.id} style={{ position: "relative" }}>
-                <TreeMenuItem
-                  level={3}
+                <TreeMenuItem level={3}
                   title={network.name}
                   iconDef={rvi16Network}
                   isSelected={() => location.pathname.includes(network.id)}
                   isNextLevelVisible={false}
                   isChevronVisible={false}
                   onClick={() => {
-                    setSelectedDiv(network.id);
                     navigate(`/networks/${network.id}`);
                   }}
                   onContextMenu={(e) => {
                     e.preventDefault();
+                    e.stopPropagation();
+                    setNetworksSelected(network);
                     setContextMenu({
                       mouseX: e.clientX,
                       mouseY: e.clientY,

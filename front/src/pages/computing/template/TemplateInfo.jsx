@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import useUIState from "../../../hooks/useUIState";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import { useTemplate } from "../../../api/RQHook";
@@ -13,6 +14,7 @@ import TemplateDisks from "./TemplateDisks";
 import Localization from "../../../utils/Localization";
 import { rvi24Template } from "../../../components/icons/RutilVmIcons";
 
+
 /**
  * @name TemplateInfo
  * @description 탬플릿 전체
@@ -21,14 +23,11 @@ import { rvi24Template } from "../../../components/icons/RutilVmIcons";
  */
 const TemplateInfo = () => {
   const navigate = useNavigate();
+  const { activeModal, setActiveModal, } = useUIState()
   const { id: templateId, section } = useParams();
   const { data: template, isError, isLoading } = useTemplate(templateId);
 
-  const [activeTab, setActiveTab] = useState("general");
-  const [activeModal, setActiveModal] = useState(null);
-
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
+  const [activeTab, setActiveTab] = useState("general")
 
   useEffect(() => {
     if (isError || (!isLoading && !template)) {
@@ -78,9 +77,9 @@ const TemplateInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "edit", label: Localization.kr.UPDATE, onClick: () => openModal("edit") },
-    { type: "delete", label: Localization.kr.REMOVE, onClick: () => openModal("delete") },
-    { type: "addVm", label: "새 가상머신", onClick: () => openModal("addVm") },
+    { type: "update", onClick: () => setActiveModal("template:update"), label: Localization.kr.UPDATE,  },
+    { type: "remove", onClick: () => setActiveModal("template:remove"), label: Localization.kr.REMOVE,  },
+    { type: "addVm", onClick: () => setActiveModal("template:addVm"), label: "새 가상머신", },
   ];
 
   return (
@@ -102,12 +101,7 @@ const TemplateInfo = () => {
       </div>
 
       {/* template 모달창 */}
-      <TemplateModals
-        activeModal={activeModal}
-        template={template}
-        selectedTemplates={template}
-        onClose={closeModal}
-      />
+      <TemplateModals template={template} />
     </div>
   );
 };

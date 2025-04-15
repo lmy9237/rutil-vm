@@ -15,11 +15,10 @@ import {
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import TablesOuter from "../../table/TablesOuter";
-import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
-import "./MNetwork.css";
 import DynamicInputList from "../../label/DynamicInputList";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
+import "./MNetwork.css";
 
 const initialFormState = {
   id: "",
@@ -57,12 +56,10 @@ const NetworkModal = ({
     onClose();
     toast.success(`${Localization.kr.NETWORK} ${nLabel} 완료`);
   };
+  const { data: network } = useNetwork(networkId);
   const { mutate: addNetwork } = useAddNetwork(onSuccess, () => onClose());
   const { mutate: editNetwork } = useEditNetwork(onSuccess, () => onClose());
 
-  const { data: network } = useNetwork(networkId);
-  
-  Logger.debug(`NetworkModal ... network: ${JSON.stringify(network)}`);
   const { 
     data: datacenters = [], 
     isLoading: isDataCentersLoading 
@@ -75,8 +72,12 @@ const NetworkModal = ({
   } = useClustersFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
 
   useEffect(() => {
-    if (!isOpen) setFormState(initialFormState);
+    if (!isOpen) {
+      setFormState(initialFormState);
+    }
+    
     if (editMode && network) {
+      Logger.debug(`NetworkModal ... network: `, network);
       setFormState({
         id: network?.id,
         name: network?.name,

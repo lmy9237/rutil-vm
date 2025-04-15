@@ -1,4 +1,5 @@
 import React, { Suspense, useState } from "react";
+import useSearch from '../../../hooks/useSearch';
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DeleteModal from "../../../utils/DeleteModal";
@@ -9,8 +10,9 @@ import ActionButton from '../../../components/button/ActionButton';
 import Loading from '../../../components/common/Loading';
 import Localization from '../../../utils/Localization';
 import SelectedIdView from '../../../components/common/SelectedIdView';
-import useSearch from '../../../components/button/useSearch';
 import SearchBox from '../../../components/button/SearchBox';
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name DomainGetVms
@@ -27,10 +29,10 @@ const DomainImportVms = ({ domainId }) => {
     isSuccess: isVmsSuccess,
   } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
 
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedVms, setSelectedVms] = useState([]); // 다중 선택된 데이터센터
+  const { activeModal, setActiveModal, } = useUIState()
+  const { vmsSelected, setVmsSelected } = useGlobal(); // 다중 선택된 데이터센터
 
-  const transformedData = (Array.isArray(vms) ? vms : []).map((vm) => ({
+  const transformedData = (!Array.isArray(vms) ? [] : vms).map((vm) => ({
     ...vm,
     name: vm?.name,
     memory: checkZeroSizeToMB(vm?.memorySize),
@@ -47,11 +49,11 @@ const DomainImportVms = ({ domainId }) => {
     <div className="dupl-header-group f-start">
       <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <div className="header-right-btns">
-        <ActionButton label="가져오기"
+        <ActionButton label={Localization.kr.IMPORT}
           actionType="default"
           onClick={() => setActiveModal("get")}
         />
-        <ActionButton label="삭제"
+        <ActionButton label={Localization.kr.REMOVE}
           actionType="default"
           onClick={() => setActiveModal("delete")}
         />
@@ -61,27 +63,27 @@ const DomainImportVms = ({ domainId }) => {
       <TablesOuter columns={TableColumnsInfo.VMS_IMPORT_FROM_STORAGE_DOMAIN}
         data={filteredData}
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setSelectedVms(selectedRows)}
+        onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         multiSelect={true}
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
 
-      <SelectedIdView items={selectedVms} />
+      <SelectedIdView items={vmsSelected} />
 
       <Suspense fallback={<Loading />}>
-        {activeModal === "get" && (
+        {/* 가상머신 가져오기 모달 */}
+        {activeModal() === "domaintemplate:importVm" && (
           <DomainGetVmTemplateModal
             isOpen={true}
-            data={selectedVms}
+            data={vmsSelected}
             onClose={() => setActiveModal(null)}
           />
         )}
-        {activeModal === "delete" && (
-          <DeleteModal type="Vm"
-            isOpen={true}
-            onRequestClose={() => setActiveModal(null)}
+        {activeModal() === "domaintemplate:remove" && (
+          <DeleteModal type="Vm" isOpen={true}
             contentLabel={Localization.kr.VM}
-            data={selectedVms}
+            data={vmsSelected}
+            onRequestClose={() => setActiveModal(null)}
           />
         )}
       </Suspense>

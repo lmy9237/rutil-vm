@@ -1,20 +1,23 @@
 import { Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
+import useSearch from "../../hooks/useSearch";
 import VmDiskModals from "../modal/vm/VmDiskModals";
 import VmDiskActionButtons from "./VmDiskActionButtons";
-import { checkZeroSizeToGiB } from "../../util";
-import { useVm } from "../../api/RQHook";
 import SearchBox from "../button/SearchBox";
-import useSearch from "../button/useSearch";
 import { status2Icon } from "../icons/RutilVmIcons";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import FilterButton from "../button/FilterButton";
 import TableColumnsInfo from "../table/TableColumnsInfo";
 import SelectedIdView from "../common/SelectedIdView";
+import { useVm } from "../../api/RQHook";
+import { checkZeroSizeToGiB } from "../../util";
 import Logger from "../../utils/Logger";
-import toast from "react-hot-toast";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
+
 
 /**
  * @name VmDiskDupl
@@ -31,21 +34,11 @@ const VmDiskDupl = ({
   isLoading, isError, isSuccess,
 }) => {
   const { data: vm } = useVm(vmId);
-  
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedDisks, setSelectedDisks] = useState([]); // 다중 선택된 디스크
+  const { activeModal, setActiveModal } = useUIState()
+  const { disksSelected, setDisksSelected } = useGlobal(); // 다중 선택된 디스크
 
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
-  const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
-  const handleRefresh = () =>  {
-    Logger.debug(`VmDiskDupl > handleRefresh ... `)
-    if (!refetch) return;
-    refetch()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
-  const transformedData = vmDisks.map((d) => {
+  const transformedData = (!Array.isArray(vmDisks) ? [] : vmDisks).map((d) => {
     const diskImage = d?.diskImageVo;
     const status = d?.active ? "UP" : "DOWN"; 
     return {
@@ -78,6 +71,14 @@ const VmDiskDupl = ({
   });
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`VmDiskDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
+
   const [activeDiskType, setActiveDiskType] = useState("all");
   const diskFilters = [
     { key: "all", label: "모두" },
@@ -90,6 +91,8 @@ const VmDiskDupl = ({
     lun: TableColumnsInfo.DISK_LUN_FROM_VM,
   };
   const columns = columnMap[activeDiskType];
+
+  Logger.debug(`VmDiskDupl ... `)
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="vm-disk-button center mb-2.5">
@@ -97,53 +100,38 @@ const VmDiskDupl = ({
           options={diskFilters}
           activeOption={activeDiskType}
           onClick={setActiveDiskType}
-     
         />
         <div className="vm-disk-search center">
-          {showSearchBox && (
-            <SearchBox 
-              searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-              onRefresh={handleRefresh}
-            />
-          )}
+          {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
           <VmDiskActionButtons
-            openModal={openModal}
-            isEditDisabled={selectedDisks?.length !== 1}
-            isDeleteDisabled={selectedDisks?.length === 0}
-            status={selectedDisks[0]?.active ? "active" : "deactive"}
-            selectedDisks={selectedDisks}
+            isEditDisabled={disksSelected?.length !== 1}
+            isDeleteDisabled={disksSelected?.length === 0}
+            status={disksSelected[0]?.active ? "active" : "deactive"}            
           />
         </div>
       </div>
       
       <TablesOuter
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         columns={columns}
         data={filteredData}
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
+        onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
         onContextMenuItems={(row) => [ // 마우스 버튼
-          <VmDiskActionButtons
-            openModal={openModal}
+          <VmDiskActionButtons actionType="context"
             isEditDisabled={!row}
-            actionType='context'
-            isContextMenu={true}
           />
         ]}
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
 
-      <SelectedIdView items={selectedDisks} />
+      <SelectedIdView items={disksSelected} />
 
       {/* 디스크 모달창 */}
       <Suspense>
-        <VmDiskModals
-          activeModal={activeModal}
-          disk={selectedDisks[0]}
-          selectedDisks={selectedDisks}
+        <VmDiskModals disk={disksSelected[0]}
           vmId={vmId}
-          onClose={closeModal}
         />
       </Suspense>
     </div>

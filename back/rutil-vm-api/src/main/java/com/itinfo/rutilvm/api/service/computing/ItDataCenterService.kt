@@ -14,7 +14,6 @@ import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.types.*
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.DiskContentType.ISO
-import org.ovirt.engine.sdk4.types.DiskFormat.COW
 import org.ovirt.engine.sdk4.types.DiskStatus.OK
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -149,7 +148,7 @@ interface ItDataCenterService {
 	@Throws(Error::class)
 	fun findAllTemplatesFromDataCenter(dataCenterId: String): List<IdentifiedVo>
 	/**
-	 * [ItDataCenterService.findAttachDiskImageFromDataCenter]
+	 * [ItDataCenterService.findUnattachedDiskImageFromDataCenter]
 	 * 가상머신 생성 - 인스턴스 이미지 - 연결 -> 디스크 목록
 	 * 기준: 아무것도 연결되어 있지 않은 디스크
 	 * 인스턴스 이미지 -> 생성 시 필요한 스토리지 도메인
@@ -158,7 +157,7 @@ interface ItDataCenterService {
 	 * @return List<[DiskImageVo]> 디스크  목록
 	 */
 	@Throws(Error::class)
-	fun findAttachDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo>
+	fun findUnattachedDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo>
 	/**
 	 * [ItDataCenterService.findAllISOFromDataCenter]
 	 * 가상머신 생성 - 부트 옵션 - 생성 시 필요한 CD/DVD 연결할 ISO 목록 (디스크이미지)
@@ -168,13 +167,13 @@ interface ItDataCenterService {
 	 */
 	@Throws(Error::class)
 	fun findAllISOFromDataCenter(dataCenterId: String): List<IdentifiedVo>
-	// /**
-	//  * [ItDataCenterService.findAllVnicProfilesFromDataCenter]
-	//  * 가상머신 생성 -  vnicprofile 목록 출력 (가상머신 생성, 네트워크 인터페이스 생성)
-	//  *
-	//  * @param dataCenterId [String] 데이터센터 Id
-	//  * @return List<[VnicProfileVo]> VnicProfile 목록
-	//  */
+	/**
+	 * [ItDataCenterService.findAllVnicProfilesFromDataCenter]
+	 * 가상머신 생성 -  vnicprofile 목록 출력 (가상머신 생성, 네트워크 인터페이스 생성)
+	 *
+	 * @param dataCenterId [String] 데이터센터 Id
+	 * @return List<[VnicProfileVo]> VnicProfile 목록
+	 */
 	// @Throws(Error::class)
 	// fun findAllVnicProfilesFromDataCenter(dataCenterId: String): List<VnicProfileVo>
 
@@ -328,12 +327,13 @@ class DataCenterServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAttachDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo> {
-		//TODO:값에 문제가 있음
-		log.info("findAttachDiskImageByDataCenter ... dataCenterId: {}", dataCenterId)
-		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks.storagedomain").getOrDefault(emptyList())
+	override fun findUnattachedDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo> {
+		log.info("findUnattachedDiskImageFromDataCenter  ... dataCenterId: {}", dataCenterId)
+		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks.storage_domain.vms").getOrDefault(emptyList())
 		val res = storageDomains.flatMap {
-			it.disks().filter { disk -> disk.format() == COW && !disk.vmsPresent() }
+			it.disks().filter { disk ->
+				disk.format() == DiskFormat.COW && !disk.vmsPresent()
+			}
 		}
 		return res.toDcDiskMenus(conn)
 	}

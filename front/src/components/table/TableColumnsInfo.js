@@ -812,9 +812,9 @@ const TableColumnsInfo = {
     { header: Localization.kr.NAME, accessor: 'name', clickable: false }
   ],
   JOB_HISTORY_COLUMNS : [
-    { header: '작업명',              accessor: 'description' },
-    { header: `시작 ${Localization.kr.TIME}`,  accessor: 'startTime' , width:'120px' },
-    { header: `종료 ${Localization.kr.TIME}`,  accessor: 'endTime' , width:'120px'},
+    { header: '작업명',                        accessor: 'description' },
+    { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime' , width:'120px' },
+    { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime' , width:'120px'},
     { header: Localization.kr.STATUS,          accessor: 'statusLabel', width:'120px' },
     { header: Localization.kr.TIMESTAMP,       accessor: 'timestampLabel' , width:'30%' },
   ],

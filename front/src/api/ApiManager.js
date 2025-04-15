@@ -363,13 +363,13 @@ const ApiManager = {
   }),  
 
   /**
-   * @name ApiManager.findDiskListFromDataCenter
+   * @name ApiManager.findAllAttachedDisksFromDataCenter
    * @description 연결할 수 있는 디스크 목록
    * 
    * @param {string} dataCenterId
    * @returns 
    **/
-  findDiskListFromDataCenter : async (dataCenterId) => makeAPICall({
+  findAllAttachedDisksFromDataCenter : async (dataCenterId) => makeAPICall({
     method: "GET", 
     url: ENDPOINTS.FIND_ATTACH_DISK_LIST_FROM_DATA_CENTER(dataCenterId), 
     // defaultValues: DEFAULT_VALUES.FIND_DISK_LIST_FROM_VM

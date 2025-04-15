@@ -1,27 +1,29 @@
 import React from "react";
+import useUIState from "../../hooks/useUIState";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 import Localization from "../../utils/Localization";
+import Logger from "../../utils/Logger";
+import useGlobal from "../../hooks/useGlobal";
 
 const DiskActionButtons = ({
-  openModal,
-  isEditDisabled,
-  isDeleteDisabled,
-  status,
   actionType = "default",
+  status,
 }) => {
+  const { setActiveModal } = useUIState()
+  const { disksSelected } = useGlobal()
+
   const basicActions = [
-    { type: "create", label: Localization.kr.CREATE, disabled: false, onBtnClick: () => openModal("create") },
-    { type: "edit", label: Localization.kr.UPDATE, disabled: isEditDisabled, onBtnClick: () => openModal("edit") },
-    { type: "delete", label: Localization.kr.REMOVE, disabled: isDeleteDisabled , onBtnClick: () => openModal("delete")},
-    { type: "move", label: "이동", disabled: isDeleteDisabled ,onBtnClick: () => openModal("move")},
-    { type: "copy", label: "복사", disabled: isDeleteDisabled ,onBtnClick: () => openModal("copy")},
-    { type: "upload", label: "업로드", onBtnClick: () => openModal("upload") },
+    { type: "create", onBtnClick: () => setActiveModal("disk:create"), label: Localization.kr.CREATE, disabled: disksSelected.length > 0, },
+    { type: "update", onBtnClick: () => setActiveModal("disk:update"), label: Localization.kr.UPDATE, disabled: disksSelected.length !== 1, },
+    { type: "remove", onBtnClick: () => setActiveModal("disk:remove"), label: Localization.kr.REMOVE, disabled: disksSelected.length === 0, },
+    { type: "move",   onBtnClick: () => setActiveModal("disk:move"),   label: Localization.kr.MOVE, disabled: disksSelected.length === 0, },
+    { type: "copy",   onBtnClick: () => setActiveModal("disk:copy"),   label: "복사", disabled: disksSelected.length === 0, },
+    { type: "upload", onBtnClick: () => setActiveModal("disk:upload"), label: "업로드", disabled: disksSelected.length > 0, },
   ];
+
+  Logger.debug(`DiskActionButtons ... `)
   return (
-    <ActionButtonGroup
-      actionType={actionType}
-      actions={basicActions}
-    />
+    <ActionButtonGroup actionType={actionType} actions={basicActions} />
   );
 };
 

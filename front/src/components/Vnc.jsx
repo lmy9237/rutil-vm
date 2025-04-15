@@ -3,6 +3,7 @@ import { VncScreen } from 'react-vnc'
 import { useVmConsoleAccessInfo } from "../api/RQHook";
 import Logger from '../utils/Logger';
 import "./Vnc.css"
+import CONSTANT from '../Constants';
 
 const Vnc = forwardRef(({
   vmId, autoConnect=false,
@@ -11,13 +12,7 @@ const Vnc = forwardRef(({
 }, ref) => {
   const { data: vmConsoleAccessInfo } = useVmConsoleAccessInfo(vmId);  
   
-  let wsUrl = `wss://localhost/ws`;
-  if (import.meta.env.PROD) {
-    Logger.debug("THIS IS PRODUCTION !!!");
-    Logger.debug(`VmLoggerModal ... import.meta.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`);
-    wsUrl = "wss://__RUTIL_VM_OVIRT_IP_ADDRESS__/ws";
-  }
-
+  let wsUrl = `wss://${CONSTANT.baseUrl}/ws`;
   const isReady = () => vmId !== undefined && vmConsoleAccessInfo 
     && vmConsoleAccessInfo?.address 
     && vmConsoleAccessInfo?.port 

@@ -1,11 +1,12 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
+import useSearch from "../../hooks/useSearch";
 import TablesOuter from "../table/TablesOuter";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import DataCenterActionButtons from "./DataCenterActionButtons";
 import DataCenterModals from "../modal/datacenter/DataCenterModals";
-import useSearch from "../button/useSearch";
 import TableRowClick from "../table/TableRowClick";
 import { status2Icon } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
@@ -18,14 +19,11 @@ const DataCenterDupl = ({
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null);
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
-  const [selectedDataCenters, setSelectedDataCenters] = useState([]);
+  const { activeModal, setActiveModal } = useUIState();
+  const { datacentersSelected, setDatacentersSelected } = useGlobal();
 
-  const transformedData = datacenters.map((dc) => {
+  const transformedData = (!Array.isArray(datacenters) ? [] : datacenters).map((dc) => {
     const status = dc?.status; // ✅ 먼저 선언해줌
-  
     return {
       ...dc,
       _name: (
@@ -54,17 +52,8 @@ const DataCenterDupl = ({
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
-        {showSearchBox && (
-          <SearchBox 
-            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-            onRefresh={handleRefresh}
-          />
-        )}
-        <DataCenterActionButtons 
-          openModal={openModal}
-          isEditDisabled={selectedDataCenters.length !== 1}
-          isDeleteDisabled={selectedDataCenters.length === 0}
-        />
+        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
+        <DataCenterActionButtons actionType="default" />
       </div>
 
       <TablesOuter
@@ -72,33 +61,18 @@ const DataCenterDupl = ({
         data={filteredData} 
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
-        onRowClick={(selectedRows) => setSelectedDataCenters(selectedRows)}
-        // clickableColumnIndex={[1]}
+        onRowClick={(selectedRows) => setDatacentersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
         columns={columns}
         onContextMenuItems={(row) => [
-          <DataCenterActionButtons
-            openModal={(action) => {
-              setSelectedDataCenters([row]);
-              openModal(action);
-            }}
-            isEditDisabled={false}
-            isDeleteDisabled={false}
-            selectedDataCenters={[row]}
-            actionType="context"
-          />,
+          <DataCenterActionButtons actionType="context" />,
         ]}
       />
-      <SelectedIdView items={selectedDataCenters} />
+      <SelectedIdView items={datacentersSelected} />
 
       {/* 데이터센터 모달창 */}
-      <DataCenterModals
-        activeModal={activeModal}
-        dataCenter={activeModal === "edit" ? selectedDataCenters[0] : null}
-        selectedDataCenters={selectedDataCenters}
-        onClose={closeModal}
-      />
+      <DataCenterModals dataCenter={activeModal() === "edit" ? datacentersSelected[0] : null} />
     </div>
   );
 };

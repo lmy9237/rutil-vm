@@ -41,7 +41,7 @@ const versions = [{ value: "4.7", label: 4.7 }];
 const DataCenterModal = ({ 
   isOpen, 
   editMode = false, 
-  dcId, 
+  datacenterId, 
   onClose 
 }) => {
   const dcLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
@@ -51,14 +51,14 @@ const DataCenterModal = ({
     onClose();
     toast.success(`${Localization.kr.DATA_CENTER} ${dcLabel} 완료`);
   };
+  const { data: datacenter } = useDataCenter(datacenterId);
   const { mutate: addDataCenter } = useAddDataCenter(onSuccess, () => onClose());
   const { mutate: editDataCenter } = useEditDataCenter(onSuccess, () => onClose());
-
-  const { data: datacenter } = useDataCenter(dcId);
 
   // 모달 열릴때 초기화, 편집 정보넣기
   useEffect(() => {
     if (!isOpen) {
+      /* 열리기 전 */
       return setFormState(initialFormState);
     }
     if (editMode && datacenter) {

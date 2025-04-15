@@ -15,14 +15,15 @@ const VnicProfiles = () => {
     isLoading: isVnicProfilesLoading,
     isError: isVnicProfilesError,
     isSuccess: isVnicProfilesSuccess,
+    refetch: refetchVnicProfiles,
   } = useAllVnicProfiles((e) => ({ ...e }));
 
   return (
     <>
-      <VnicProfileDupl
-        isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
-        columns={TableColumnsInfo.VNIC_PROFILES}
+      <VnicProfileDupl columns={TableColumnsInfo.VNIC_PROFILES}
         vnicProfiles={vnicProfiles}
+        refetch={refetchVnicProfiles}
+        isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
       />
     </>
   );

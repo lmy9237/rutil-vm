@@ -15,12 +15,12 @@ import Localization from "../../../utils/Localization";
 const VmActionModal = ({ isOpen, action, data, onClose }) => {  
   const getContentLabel = () => {
     const labels = {
-      start: "실행",
-      pause: "일시중지",
-      reboot: "재부팅",
-      reset: "재설정",
-      shutdown: "종료",
-      powerOff: "전원을 Off",
+      "vm:start": "실행",
+      "vm:pause": "일시중지",
+      "vm:reboot": "재부팅",
+      "vm:reset": "재설정",
+      "vm:shutdown": "종료",
+      "vm:powerOff": "전원을 Off",
     };
     return labels[action] || "";
   };

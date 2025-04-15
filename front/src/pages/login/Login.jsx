@@ -84,7 +84,7 @@ const Login = () => {
             className="login-button f-center bgcolor-primary"
             disabled={isAuthLoading}
           >
-            {isAuthLoading ? (<>로그인 중...</>) : (<>로그인</>)}
+            {isAuthLoading ? (<>{Localization.kr.LOGIN} {Localization.kr.IN_PROGRESS}</>) : (<>{Localization.kr.LOGIN}</>)}
           </button>
         </form>
       </div>

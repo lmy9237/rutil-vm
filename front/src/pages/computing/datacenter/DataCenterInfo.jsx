@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
+import useUIState from "../../../hooks/useUIState";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -41,12 +42,8 @@ const DataCenterInfo = () => {
     isError: isDataCenterError,
     isSuccess: isDataCenterSuccess,
   } = useDataCenter(dataCenterId, (e) => ({ ...e }));
-
+  const { activeModal, setActiveModal, } = useUIState()
   const [activeTab, setActiveTab] = useState("clusters");
-  const [activeModal, setActiveModal] = useState(null);
-
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
 
   useEffect(() => {
     if (isDataCenterError || (!isDataCenterLoading && !dataCenter)) {
@@ -68,6 +65,7 @@ const DataCenterInfo = () => {
   }, [section]);
 
   const handleTabClick = (tab) => {
+    Logger.debug(`DataCenterInfo > handleTabClick ... tab: ${tab}`)
     // 현재 경로에서 섹션 추출: computing, storages, networks 중 하나
     const section = location.pathname.split("/")[1]; // 첫 번째 세그먼트가 섹션 정보
 
@@ -103,8 +101,8 @@ const DataCenterInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "edit", label: Localization.kr.UPDATE, onClick: () => openModal("edit") },
-    { type: "delete", label: Localization.kr.REMOVE, onClick: () => openModal("delete") },
+    { type: "update", onClick: () => setActiveModal("datacenter:update"), label: Localization.kr.UPDATE, },
+    { type: "remove", onClick: () => setActiveModal("datacenter:remove"), label: Localization.kr.REMOVE, },
   ];
 
   Logger.debug("DataCenterInfo ...")
@@ -127,12 +125,7 @@ const DataCenterInfo = () => {
       </div>
 
       {/* 데이터센터 모달창 */}
-      <DataCenterModals
-        activeModal={activeModal}
-        dataCenter={dataCenter}
-        selectedDataCenters={dataCenter}
-        onClose={closeModal}
-      />
+      <DataCenterModals dataCenter={dataCenter}/>
     </div>
   );
 };

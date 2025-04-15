@@ -1,6 +1,6 @@
 import Tables from "./Tables";
-import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 import Logger from "../../utils/Logger";
+import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
 import "./Table.css";
 
 /**
@@ -28,9 +28,6 @@ const TablesOuter = ({
     <>
       <div className="section-table-outer">
         <Tables
-          isLoading={isLoading}
-          isError={isError}
-          isSuccess={isSuccess}
           columns={columns}
           data={filteredData} // ✅ 검색 필터링된 데이터 전달
           searchQuery={searchQuery} // ✅ 검색어 전달
@@ -41,6 +38,7 @@ const TablesOuter = ({
           shouldHighlight1stCol={shouldHighlight1stCol}
           onContextMenuItems={onContextMenuItems}
           onClickableColumnClick={onClickableColumnClick}
+          isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         />
       </div>
     </>

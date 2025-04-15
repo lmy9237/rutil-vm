@@ -156,13 +156,14 @@ fun List<Disk>.toDiskMenus(conn: Connection): List<DiskImageVo> =
 
 fun Disk.toDcDiskMenu(conn: Connection): DiskImageVo {
 	val disk = this@toDcDiskMenu
-	log.info("disk.vmsPresent():{} / {}", disk.vmsPresent(), disk.id())
+	log.info("disk.vmsPresent(): {} / {}", disk.vmsPresent(), disk.id())
 	val templateId: String? = conn.findAllTemplates(follow = "diskattachments").getOrDefault(emptyList())
 		.firstOrNull { template ->
 			template.diskAttachmentsPresent() &&
 				template.diskAttachments().any { diskAttachment -> diskAttachment.id() == disk.id() }
 		}?.id()
 	val tmp: Template? = templateId?.let { conn.findTemplate(it).getOrNull() }
+
 	return DiskImageVo.builder {
 		id { disk.id() }
 		alias { disk.alias() }

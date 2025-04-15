@@ -2,8 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Tooltip } from "react-tooltip";
-import "./Table.css";
 import Logger from "../../utils/Logger";
+import "./Table.css";
 
 /**
  * @name Table

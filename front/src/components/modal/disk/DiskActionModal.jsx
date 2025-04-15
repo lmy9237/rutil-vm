@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+import { useQueries } from "@tanstack/react-query";
 import BaseModal from "../BaseModal";
 import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
-import { useCopyDisk, useMoveDisk } from "../../../api/RQHook";
-import toast from "react-hot-toast";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import { useQueries } from "@tanstack/react-query";
-import ApiManager from "../../../api/ApiManager";
 import LabelInput from "../../label/LabelInput";
+import ApiManager from "../../../api/ApiManager";
+import { useCopyDisk, useMoveDisk } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 import "../domain/MDomain.css";
 
 const DiskActionModal = ({ 
@@ -16,13 +16,13 @@ const DiskActionModal = ({
   data=[], // 배열일수도 한개만 들어올수도
   onClose
 }) => {
-  const daLabel = action === "move" ? "이동" : "복사";
-  
+  const daLabel = action === "move" ? Localization.kr.MOVE : "복사";
   const [aliases, setAliases] = useState({});
   const [domainList, setDomainList] = useState({});
   const [targetDomains, setTargetDomains] = useState({});
 
-  Logger.debug(`DiskActionModal.data: `, data);
+  Logger.debug(`DiskActionModal ... data: `, data);
+  const disks = !Array.isArray(data) ? [data] : data;
 
   const onSuccess = () => {
     onClose();
@@ -31,7 +31,6 @@ const DiskActionModal = ({
   const { mutate: copyDisk } = useCopyDisk(onSuccess, () => onClose());
   const { mutate: moveDisk } = useMoveDisk(onSuccess, () => onClose());
 
-  const disks = Array.isArray(data) ? data : [data];
 
   const getDomains = useQueries({
     queries: disks.map((disk) => ({
@@ -86,10 +85,9 @@ const DiskActionModal = ({
     }
   }, [getDomains, data]);  
   
-  domainList && Logger.debug(`domainList: `, domainList);
+  domainList && Logger.debug(`DiskActionModal > domainList: `, domainList);
 
   // 같은 데이터센터 안에 잇는 스토리지 도메인 목록을 불러와야함
-
   const handleFormSubmit = () => {
     disks.forEach((disk) => {
       let selectedDomainId = targetDomains[disk.id];

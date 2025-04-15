@@ -9,6 +9,9 @@ import ActionButton from "../../../components/button/ActionButton";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import useGlobal from "../../../hooks/useGlobal";
+import Localization from "../../../utils/Localization";
+import useUIState from "../../../hooks/useUIState";
 
 /**
  * @name NetworkVms
@@ -17,7 +20,11 @@ import SelectedIdView from "../../../components/common/SelectedIdView";
  * @prop {string} networkId 네트워크 ID
  * @returns {JSX.Element} NetworkVms
  */
-const NetworkVms = ({ networkId }) => {
+const NetworkVms = ({
+  networkId
+}) => {
+  const { activeModal, setActiveModal } = useUIState()
+  const { nicsSelected, setNicsSelected } = useGlobal()
   const {
     data: nics = [],
     isLoading: isNicsLoading,
@@ -26,13 +33,11 @@ const NetworkVms = ({ networkId }) => {
   } = useAllVmsFromNetwork(networkId, (e) => ({ ...e }));
 
   const [activeFilter, setActiveFilter] = useState("running");
-  const [selectedNics, setSelectedNics] = useState([]);
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // 필터링된 VM 데이터 계산
   const filteredVms = activeFilter === "running"
-    ? nics.filter((nic) => nic?.vmViewVo?.status === "UP")
-    : nics.filter((nic) => nic?.vmViewVo?.status !== "UP");
+    ? (!Array.isArray(nics) ? [] : nics).filter((nic) => nic?.vmViewVo?.status === "UP")
+    : (!Array.isArray(nics) ? [] : nics).filter((nic) => nic?.vmViewVo?.status !== "UP");
 
   const transformedFilteredData = filteredVms.map((nic) => {
     const vm = nic?.vmViewVo;
@@ -56,8 +61,6 @@ const NetworkVms = ({ networkId }) => {
     };
   });
 
-  const toggleDeleteModal = (isOpen) => setDeleteModalOpen(isOpen);
-
   const statusFilters = [
     { key: "running", label: "실행중" },
     { key: "stopped", label: "정지중" },
@@ -68,15 +71,11 @@ const NetworkVms = ({ networkId }) => {
     <>
       <div className="header-right-btns no-search-box f-btw">
         <FilterButton options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
-        <ActionButton
-          label="제거"
-          actionType="default"
-          onClick={() => toggleDeleteModal(true)}
-          disabled={activeFilter !== "stopped" || !selectedNics.length} 
+        <ActionButton label={Localization.kr.REMOVE}
+          onClick={() => setActiveModal(null)}
+          disabled={activeFilter !== "stopped" || !nicsSelected.length} 
         />
       </div>
-
-     
 
       <TablesOuter
         columns={
@@ -84,12 +83,12 @@ const NetworkVms = ({ networkId }) => {
             ? TableColumnsInfo.VMS_UP_FROM_NETWORK
             : TableColumnsInfo.VMS_STOP_FROM_NETWORK
         }
-        data={ transformedFilteredData }
-        onRowClick={(selectedRows) => setSelectedNics(selectedRows)}
+        data={transformedFilteredData}
+        onRowClick={(rows) => setNicsSelected(rows)}
         isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
       />
 
-      <SelectedIdView items={selectedNics} />
+      <SelectedIdView items={nicsSelected} />
 
       {/* nic 를 삭제하는 코드를 넣어야함 */}
       {/* <Suspense>

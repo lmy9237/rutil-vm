@@ -338,9 +338,7 @@ const HostNics = ({ hostId }) => {
   return (
     <>
     <div className="header-right-btns">
-        <ActionButton actionType="default" label={Localization.kr.CREATE} 
-          // onClick={() => openModal("create")}
-        />
+        <ActionButton actionType="default" label={Localization.kr.CREATE} />
       </div>
 
       <div className="py-3 font-bold underline">색깔 임시로 넣어놓았습니다.</div>

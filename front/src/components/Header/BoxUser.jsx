@@ -1,33 +1,46 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
-import useClickOutside from "../../hooks/useClickOutside";
 import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
+import useClickOutside from "../../hooks/useClickOutside";
+import SettingUsersModals from "../modal/settings/SettingUsersModals";
 import Logger from "../../utils/Logger";
+import { useUser } from "../../api/RQHook";
 import "./BoxUser.css";
+import useBoxState from "../../hooks/useBoxState";
 
-const BoxUser = ({ onOpenSetting }) => {
+/**
+ * @name BoxUser
+ * @description 박스 (사용자 정보)
+ * 
+ * @returns {JSX.Element} 
+ */
+const BoxUser = ({}) => {
   const navigate = useNavigate();
+  const { auth, setAuth } = useAuth();
+  const { setUsersSelected, clearAllSelected } = useGlobal()
+  const { 
+    data: user,
+    isLoading: isUserLoading,
+    isSuccess: isUserSuccess
+  } = useUser(auth.username, true);
+  
+  useEffect(() => {
+    setUsersSelected([user])
+  }, [auth, user])
+
+  const { setActiveModal, } = useUIState();
+  const { loginBoxVisible, setLoginBoxVisible } = useBoxState()
+  
   const userBoxRef = useRef(null);
-  const { setAuth } = useAuth();
-
-  const {
-    loginBoxVisible, setLoginBoxVisible
-  } = useUIState();
-
-  const stopPropagation = (e) => e.stopPropagation();
-
   useClickOutside(userBoxRef, (e) => {
-    if (loginBoxVisible) {
-      setLoginBoxVisible(false);
+    if (loginBoxVisible()) {
+      clearAllSelected();
     }
   });
 
-  const handleOpenSetting = () => {
-    Logger.debug("BoxUser > handleOpenSetting ... 계정 설정 클릭");
-    onOpenSetting();               // 상위에서 모달 열기
-    setLoginBoxVisible(false);     // 드롭다운 닫기
-  };
 
   const doLogout = (e) => {
     Logger.debug("Header > doLogout ...");
@@ -37,10 +50,21 @@ const BoxUser = ({ onOpenSetting }) => {
   };
 
   return (
-    <div ref={userBoxRef} className="box-user" onClick={stopPropagation}>
-      <div onClick={handleOpenSetting}>계정설정</div>
-      <div onClick={(e) => doLogout(e)}>로그아웃</div>
-    </div>
+    <>
+      <div ref={userBoxRef} className="box-user" >
+        <div onClick={(e) => {
+          e.stopPropagation()
+          if (!user) {
+            toast.error(`사용자를 찾을 수 없습니다.`)
+            return 
+          } 
+          setActiveModal("user:changePassword");
+          setLoginBoxVisible(false);
+        }}>계정설정</div>
+        <div onClick={(e) => doLogout(e)}>로그아웃</div>
+      </div>
+      <SettingUsersModals />
+    </>
   );
 };
 

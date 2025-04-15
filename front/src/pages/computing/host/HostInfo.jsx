@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -35,26 +37,24 @@ const HostInfo = () => {
   const navigate = useNavigate();
   const { id: hostId, section } = useParams();
   const { 
-    data: host, 
-    isError, error, 
-    isLoading
+    data: host,
+    isLoading: isHostLoading,
+    isError: isHostError, 
+    isSuccess, isSuccessError,
   } = useHost(hostId);
+  const { activeModal, setActiveModal, } = useUIState()
 
   const isUp = host?.status === "UP";
   const isMaintenance = host?.status === "MAINTENANCE";
   const isNonOperational = host?.status === "NON_OPERATIONAL"
 
   const [activeTab, setActiveTab] = useState("general");
-  const [activeModal, setActiveModal] = useState(null);
-
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
 
   useEffect(() => {
-    if (isError || (!isLoading && !host)) {
+    if (isHostError || (!isHostLoading && !host)) {
       navigate("/computing/rutil-manager/hosts");
     }
-  }, [isError, isLoading, host, navigate]);
+  }, [isHostError, isHostLoading, host, navigate]);
 
   const sections = [
     { id: "general", label: Localization.kr.GENERAL },
@@ -97,8 +97,8 @@ const HostInfo = () => {
 
   // 편집, 삭제 버튼들
   const sectionHeaderButtons = [
-    { type: "edit", label: Localization.kr.UPDATE, disabled: !isUp, onClick: () => openModal("edit"), }, 
-    { type: "delete", label: Localization.kr.REMOVE, disabled: !isMaintenance, onClick: () => openModal("delete"), },
+    { type: "host:update", onClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: !isUp, }, 
+    { type: "host:remove", onClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: !isMaintenance, },
   ];
 
   const popupItems = [
@@ -106,37 +106,37 @@ const HostInfo = () => {
       type: "deactivate",
       label: "유지보수",
       disabled: !isUp && isNonOperational,
-      onClick: () => openModal("deactivate"),
+      onClick: () => setActiveModal("host:deactivate"),
     }, {
       type: "activate",
       label: Localization.kr.ACTIVATE,
       disabled: isMaintenance ,
-      onClick: () => openModal("activate"),
+      onClick: () => setActiveModal("host:activate"),
     }, {
       type: Localization.kr.RESTART,
       label: "재시작",
       disabled: !isUp,
-      onClick: () => openModal("restart"),
+      onClick: () => setActiveModal("host:restart"),
     }, {
       type: "reInstall",
       label: "다시 설치",
       disabled: isUp,
-      onClick: () => openModal("reInstall"),
+      onClick: () => setActiveModal("host:reInstall"),
     }, {
       type: "enrollCert",
       label: "인증서 등록",
       disabled: isUp,
-      onClick: () => openModal("enrollCert"),
+      onClick: () => setActiveModal("host:enrollCert"),
     }, {
       type: "haOn",
       label: "글로벌 HA 유지 관리를 활성화",
       disabled: !isUp,
-      onClick: () => openModal("haOn"),
+      onClick: () => setActiveModal("host:haOn"),
     }, {
       type: "haOff",
       label: "글로벌 HA 유지 관리를 비활성화",
       disabled: !isUp,
-      onClick: () => openModal("haOff"),
+      onClick: () => setActiveModal("host:haOff"),
     },
   ];
 
@@ -164,12 +164,7 @@ const HostInfo = () => {
       </div>
 
       {/* 호스트 모달창 */}
-      <HostModals
-        activeModal={activeModal}
-        host={host}
-        selectedHosts={host}
-        onClose={closeModal}
-      />
+      <HostModals host={host} />
     </div>
   );
 };

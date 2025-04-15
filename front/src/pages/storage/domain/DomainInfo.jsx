@@ -22,6 +22,7 @@ import {
 } from "../../../api/RQHook";
 import { rvi24Cloud } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
+import useUIState from "../../../hooks/useUIState";
 
 /**
  * @name DomainInfo
@@ -32,6 +33,7 @@ import Logger from "../../../utils/Logger";
  */
 const DomainInfo = () => {
   const navigate = useNavigate();
+  const { activeModal, setActiveModal, } = useUIState()
   const { id: domainId, section } = useParams();
   const { data: domain } = useStroageDomain(domainId);
   const { mutate: refreshDomain } = useRefreshLunDomain();
@@ -41,10 +43,6 @@ const DomainInfo = () => {
   const isUNKNOWN = domain?.status === "UNKNOWN";
 
   const [activeTab, setActiveTab] = useState("general");
-  const [activeModal, setActiveModal] = useState(null);
-
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
 
   const sections = [
     { id: "general", label: Localization.kr.GENERAL },
@@ -53,8 +51,8 @@ const DomainInfo = () => {
     { id: "importVms", label: `${Localization.kr.VM} 가져오기` },
     { id: "templates", label: "템플릿" },
     { id: "importTemplates", label: "템플릿 가져오기" },
-    { id: "disks", label: "디스크" },
-    { id: "importDisks", label: "디스크 불러오기" },
+    { id: "disks", label: Localization.kr.DISK },
+    { id: "importDisks", label: `${Localization.kr.DISK} 가져오기` },
     { id: "diskSnapshots", label: "디스크 스냅샷" },
     { id: "events", label: Localization.kr.EVENT },
   ];
@@ -105,9 +103,9 @@ const DomainInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "edit", label: `도메인 ${Localization.kr.UPDATE}`, onClick: () => openModal("edit") },
-    { type: "delete", label: Localization.kr.REMOVE, disabled: !isACTIVE, onClick: () => openModal("delete") },
-    { type: "destroy", label: Localization.kr.DESTROY, disabled: !isACTIVE, onClick: () => openModal("destroy") },
+    { type: "update", label: `도메인 ${Localization.kr.UPDATE}`, onClick: () => setActiveModal("domain:update") },
+    { type: "remove", label: Localization.kr.REMOVE, disabled: !isACTIVE, onClick: () => setActiveModal("domain:remove") },
+    { type: "destroy", label: Localization.kr.DESTROY, disabled: !isACTIVE, onClick: () => setActiveModal("domain:destroy") },
   ];
 
   const popupItems = [
@@ -139,10 +137,9 @@ const DomainInfo = () => {
 
       {/* domain 모달창 */}
       <DomainModals
-        activeModal={activeModal}
         domain={domain}
         selectedDomains={domain}
-        onClose={closeModal}
+        onClose={() => setActiveModal(null)}
       />
     </div>
   );

@@ -50,7 +50,14 @@ const initialFormState = {
   shouldUpdateDisk: false,
 };
 
-// type은 vm이면 가상머신 생성할때 디스크 생성하는 창, disk면 가상머신 디스크 목록에서 생성하는
+/**
+ * @name VmDiskModal
+ * @description ...
+ * type은 vm이면 가상머신 생성할때 디스크 생성하는 창, disk면 가상머신 디스크 목록에서 생성하는
+ * 
+ * @param {*} param0 
+ * @returns 
+ */
 const VmDiskModal = ({
   isOpen,
   editMode = false,
@@ -67,7 +74,6 @@ const VmDiskModal = ({
   const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [activeTab, setActiveTab] = useState("img");
   const handleTabClick = (tab) => { setActiveTab(tab) };
-
   const [formState, setFormState] = useState(initialFormState);
   const [storageDomainVo, setStorageDomainVo] = useState({ id: "", name: "" });
   const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
@@ -193,6 +199,7 @@ const VmDiskModal = ({
   }; 
 
   const validateForm = () => {
+    Logger.debug(`VmDiskModal > validateForm ... `)
     if (!formState.alias) return `${Localization.kr.ALIAS}을 입력해주세요.`;
     if (checkKoreanName(formState.alias)) return `${Localization.kr.ALIAS}을 입력해주세요.`;
     if (!formState.size) return `크기를 입력해주세요.`;
@@ -202,6 +209,7 @@ const VmDiskModal = ({
   };
 
   const handleOkClick = () => {
+    Logger.debug(`VmDiskModal > handleOkClick ... `)
     const error = validateForm();
     if (error) return toast.error(error);
  
@@ -228,6 +236,7 @@ const VmDiskModal = ({
 
 
   const handleFormSubmit = () => {
+    Logger.debug(`VmDiskModal > handleFormSubmit ... `)
     const error = validateForm();
     if (error) return toast.error(error);
  
@@ -242,8 +251,8 @@ const VmDiskModal = ({
 
     // 전송 객체
     const dataToSubmit = {
-      id: formState?.id,
       ...formState,
+      id: formState?.id,
       diskImageVo: {
         id:formState?.id,
         alias: formState.alias,

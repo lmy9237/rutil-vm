@@ -18,9 +18,7 @@ import "./VmVnc.css"
 const VmVnc = ({
   ...props
 }) => {
-  const { 
-    id: vmId,
-  } = useParams();
+  const { id: vmId, } = useParams();
   const { data: vm } = useVm(vmId);
   
   const screenRef = useRef(null);

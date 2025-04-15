@@ -11,6 +11,7 @@ import Localization from "../../../utils/Localization";
 import { useDisk } from "../../../api/RQHook";
 import { rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
+import useUIState from "../../../hooks/useUIState";
 
 /**
  * @name DiskDomains
@@ -21,6 +22,8 @@ import Logger from "../../../utils/Logger";
  */
 const DiskInfo = () => {
   const navigate = useNavigate();
+  const { activeModal, setActiveModal, } = useUIState()
+
   const { id: diskId, section } = useParams();
   const {
     data: disk,
@@ -30,10 +33,6 @@ const DiskInfo = () => {
   } = useDisk(diskId);
 
   const [activeTab, setActiveTab] = useState("general");
-  const [activeModal, setActiveModal] = useState(null);
-
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
 
   useEffect(() => {
     if (isDiskError || (!isDiskLoading && !disk)) {
@@ -74,11 +73,11 @@ const DiskInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "edit", label: Localization.kr.UPDATE, onClick: () => openModal("edit") },
-    { type: "delete", label: Localization.kr.REMOVE, onClick: () => openModal("delete") },
-    { type: "move", label: Localization.kr.MOVE, onClick: () => openModal("move") },
-    { type: "copy", label: Localization.kr.COPY, onClick: () => openModal("copy") },
-    // { type: 'upload', label: '업로드', onClick: () => openModal('restart') },
+    { type: "update", label: Localization.kr.UPDATE, onClick: () => setActiveModal("disk:update") },
+    { type: "remove", label: Localization.kr.REMOVE, onClick: () => setActiveModal("disk:remove") },
+    { type: "move", label: Localization.kr.MOVE, onClick: () => setActiveModal("disk:move") },
+    { type: "copy", label: Localization.kr.COPY, onClick: () => setActiveModal("disk:copy") },
+    // { type: 'upload', label: '업로드', onClick: () => setActiveModal("disk:restart") },
   ];
 
   Logger.debug("DiskInfo ...")
@@ -101,12 +100,7 @@ const DiskInfo = () => {
       </div>
 
       {/* 디스크 모달창 */}
-      <DiskModals
-        activeModal={activeModal}
-        disk={disk}
-        selectedDisks={disk}
-        onClose={closeModal}
-      />
+      <DiskModals disk={disk} />
     </div>
   );
 };

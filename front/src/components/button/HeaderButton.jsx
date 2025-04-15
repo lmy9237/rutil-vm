@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import useClickOutside from "../../hooks/useClickOutside";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { RVI24 } from "../icons/RutilVmIcons";
@@ -8,7 +9,6 @@ import PopupBox from "../common/PopupBox";
 import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
 import "./HeaderButton.css";
-import useClickOutside from "../../hooks/useClickOutside";
 
 /**
  * @name HeaderButton
@@ -36,8 +36,6 @@ const HeaderButton = ({
     setIsPopupBoxVisible(false);
   };
 
-  // 외부 클릭 시 팝업 닫기
-  useClickOutside();
   useEffect(() => {
     const handleClickOutside = (event) => {
       const popupBox = document.querySelector(".popup-box");
@@ -91,10 +89,8 @@ const HeaderButton = ({
       <div className="section-header-right f-btw">
         <div className="article-nav f-end">
           {!isCompactMode &&
-            buttons.map((button, index) => (
-              <IconButton
-                id={button.id}
-                key={index}
+            buttons.map((button, i) => (
+              <IconButton key={i} id={button.id}
                 label={button.label}
                 icon={button.icon}
                 onClick={button.onClick}

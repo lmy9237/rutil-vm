@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import NetworkModal from "./NetworkModal";
 import NetworkImportModal from "./NetworkImportModal";
 import DeleteModal from "../../../utils/DeleteModal";
@@ -7,50 +9,41 @@ import { useDeleteNetwork } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 
 const NetworkModals = ({ 
-  activeModal, 
   network, 
-  selectedNetworks = [], 
-  dcId, 
-  onClose
+  dcId,
 }) => {
-  useEffect(() => {
-    Logger.debug(`NetworkModals.selectedNetworks:`, selectedNetworks);
-  }, [selectedNetworks]);
+  const { activeModal, setActiveModal } = useUIState()
+  const { networksSelected } = useGlobal()
   
   const modals = {
-    create: 
-      <NetworkModal 
-        isOpen={activeModal === 'create'} 
+    create: (
+      <NetworkModal key={activeModal()} isOpen={activeModal() === "network:create"} 
+        onClose={() => setActiveModal(null)} 
         dcId={dcId}
-        onClose={onClose} 
-      />,
-    edit: (
-      <NetworkModal
+      />
+    ), update: (
+      <NetworkModal key={activeModal()} isOpen={activeModal() === "network:update"}
+        onClose={() => setActiveModal(null)}
         editMode
-        isOpen={activeModal === 'edit'}
         networkId={network?.id}
-        onClose={onClose}
-    />
-    ),
-    delete: (
-      <DeleteModal
-        isOpen={activeModal === 'delete' }
-        onClose={onClose}
+      />
+    ), import: (
+      <NetworkImportModal key={activeModal()} isOpen={activeModal() === 'network:import'}
+        onClose={() => setActiveModal(null)}
+        data={networksSelected}
+      />
+    ), remove: (
+      <DeleteModal key={activeModal()} isOpen={activeModal() === "network:remove"}
+        onClose={() => setActiveModal(null)}
         label={Localization.kr.NETWORK}
-        data={selectedNetworks}
+        data={networksSelected}
         api={useDeleteNetwork()}
         // navigation={''}
       />
-    ),
-    import: (
-      <NetworkImportModal
-        isOpen={activeModal === 'import'}
-        onClose={onClose}
-        data={selectedNetworks}
-      />
-    )
+    ), 
   };
 
+  Logger.debug(`NetworkModals ... `)
   return (
     <>
       {Object.keys(modals).map((key) => (

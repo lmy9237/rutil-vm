@@ -1,5 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import useBoxState from "../../hooks/useBoxState";
+import useUIState from "../../hooks/useUIState";
+import BoxEvent from "./BoxEvent";
+import BoxUser from "./BoxUser";
+import SettingUsersModal from "../modal/settings/SettingUsersModal";
 import {
   LogoIcon,
   TopMenuIcon,
@@ -10,14 +16,9 @@ import {
   rvi24PersonCircle,
   rvi24BellNew,
 } from "../icons/RutilVmIcons";
-import useUIState from "../../hooks/useUIState";
-import BoxEvent from "./BoxEvent";
-import BoxUser from "./BoxUser";
-import SettingUsersModal from "../modal/settings/SettingUsersModal";
+import { useUser } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 import "./Header.css";
-import useAuth from "../../hooks/useAuth";
-import { useUser } from "../../api/RQHook";
 
 /**
  * @name Header
@@ -29,18 +30,18 @@ import { useUser } from "../../api/RQHook";
 const Header = () => {
   const navigate = useNavigate();
   const {
-    eventBadgeNum, toggleAsideVisible,
+    activeModal, setActiveModal, toggleAsideVisible
+  } = useUIState();
+  const {
+    eventBadgeNum,
     eventBoxVisible, toggleEventBoxVisible,
     loginBoxVisible, toggleLoginBoxVisible,
-  } = useUIState();
+  } = useBoxState()
 
-  const [activeModal, setActiveModal] = useState(null); 
   const { auth } = useAuth()
   const { 
     data: user
   } = useUser(auth.username, true)
-
-  const handleOpenChangePassword = () => setActiveModal("changePassword");
 
   Logger.debug(`Header ...`)
   return (
@@ -76,7 +77,7 @@ const Header = () => {
             toggleEventBoxVisible()
           }}
         />
-        {eventBoxVisible && <BoxEvent />}
+        {eventBoxVisible() && <BoxEvent />}
         
         {/* 사용자 버튼 */}
         <TopMenuIcon
@@ -86,11 +87,10 @@ const Header = () => {
             toggleLoginBoxVisible();
           }}
         />
-        {loginBoxVisible && <BoxUser onOpenSetting={handleOpenChangePassword} />}
+        {loginBoxVisible() && <BoxUser />}
       </div>
 
-      <SettingUsersModal
-        isOpen={activeModal === "changePassword"}
+      <SettingUsersModal isOpen={activeModal() === "user:changePassword"}
         onClose={() => setActiveModal(null)}
         targetName={"사용자"}
         user={user}

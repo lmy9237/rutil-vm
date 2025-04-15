@@ -333,7 +333,7 @@ class DataCenterController: BaseController() {
 
 	@ApiOperation(
 		httpMethod="GET",
-		value="가상머신 생성창 - 디스크 연결 목록(데이터센터Id 기반)",
+		value="가상머신 생성창 - 디스크 연결 목록 (데이터센터Id 기반)",
 		notes="해당 데이터센터 내에 있는 디스크 연결 목록을 조회한다"
 	)
 	@ApiImplicitParams(
@@ -342,16 +342,16 @@ class DataCenterController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping("/{dataCenterId}/attachDisks")
+	@GetMapping("/{dataCenterId}/unattachedDiskImages")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	fun attachDisks(
+	fun unattachedDiskImages(
 		@PathVariable dataCenterId: String? = null,
 	): ResponseEntity<List<DiskImageVo>?> {
 		if (dataCenterId.isNullOrEmpty())
 			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
-		log.info("/computing/datacenters/{}/attachDisks ... 가상머신 생성창 - 디스크 연결 목록", dataCenterId)
-		return ResponseEntity.ok(iDataCenter.findAttachDiskImageFromDataCenter(dataCenterId))
+		log.info("/computing/datacenters/{}/unattachedDiskImages ... 가상머신 생성창 - 디스크 연결 목록", dataCenterId)
+		return ResponseEntity.ok(iDataCenter.findUnattachedDiskImageFromDataCenter(dataCenterId))
 	}
 
 	@ApiOperation(

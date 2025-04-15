@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Link, useLocation, } from "react-router-dom";
+import useTmi from "../../hooks/useTmi";
 import {
   RVI24,
   rvi24Desktop,
@@ -7,15 +8,14 @@ import {
   rvi24Storage,
   rvi24Event,
 } from "../icons/RutilVmIcons";
-import "./MainOuter.css"; // 기존 스타일 유지
-import useUIState from "../../hooks/useUIState";
 import Logger from "../../utils/Logger";
+import "./MainOuter.css";
 
 const SideNavbar = () => {
   const location = useLocation();
   const {
     tmiLastSelected, setTmiLastSelected
-  } = useUIState();
+  } = useTmi();
 
   // 📌 현재 URL에 맞춰 버튼 활성화
   useEffect(() => {
@@ -32,7 +32,7 @@ const SideNavbar = () => {
   const handleClick = (id) => {
     Logger.debug(`SideNavbar > handleClick ... id: ${id}`)
     // 이벤트/설정 제외, 마지막 선택 항목 저장
-    if (id !== "event" && id !== "settings") {
+    if (id !== "settings") {
       setTmiLastSelected(id);
     }
   };
@@ -44,7 +44,7 @@ const SideNavbar = () => {
     { iconDef: rvi24Network("currentColor"),      id: "network",   link: "/networks",  },
     { iconDef: rvi24Storage("currentColor"),      id: "storage",   link: "/storages/domains",  },
     // 추가가 필요할 시 주석 해제
-    // { iconDef: rvi24Gear("#9999999"),       id: "settings",  link: "/settings/session",  },
+    // { iconDef: rvi24Gear("#9999999"),          id: "settings",  link: "/settings/session",  },
     { iconDef: rvi24Event("currentColor"),        id: "event",     link: "/events",  },
   ];
 

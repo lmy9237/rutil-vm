@@ -1,46 +1,49 @@
 import React from "react";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import HostModal from "./HostModal";
 import HostActionModal from "./HostActionModal";
-import { useDeleteHost } from "../../../api/RQHook";
-import DeleteModal from "../../../utils/DeleteModal";
-import Localization from "../../../utils/Localization";
 import HostCommitNetModal from "./HostCommitNetModal";
+import DeleteModal from "../../../utils/DeleteModal";
+import { useDeleteHost } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
+/**
+ * @name HostModals
+ * @description 호스트 모달 모음
+ * 
+ * @returns {JSX.Element} HostModals
+ */
 const HostModals = ({
-  activeModal,
   host,
-  selectedHosts = [],
   clusterId,
-  onClose,
 }) => {
+  const { activeModal, setActiveModal } = useUIState()
+  const { hostsSelected } = useGlobal()
+
   const modals = {
     create: (
-      <HostModal
-        isOpen={activeModal === "create"}
+      <HostModal isOpen={activeModal() === "host:create"}
         clusterId={clusterId}
-        onClose={onClose}
+        onClose={() => setActiveModal(null)} 
       />
-    ),
-    edit: (
-      <HostModal
+    ), update: (
+      <HostModal isOpen={activeModal() === "host:update"}
         editMode
-        isOpen={activeModal === "edit"}
         hId={host?.id}
         clusterId={clusterId}
-        onClose={onClose}
+        onClose={() => setActiveModal(null)} 
       />
-    ),
-    delete: (
-      <DeleteModal
-        isOpen={activeModal === "delete"}
-        onClose={onClose}
+    ), remove: (
+      <DeleteModal isOpen={activeModal() === "host:remove"}
         label={Localization.kr.HOST}
-        data={selectedHosts}
+        data={hostsSelected}
         api={useDeleteHost()}
+        onClose={() => setActiveModal(null)} 
         // navigation={''}
       />
-    ),
-    action: (
+    ), action: (
       <HostActionModal
         isOpen={[
           "deactivate",
@@ -53,19 +56,20 @@ const HostModals = ({
           "haOff",
         ].includes(activeModal)}
         action={activeModal}
-        data={selectedHosts}
-        onClose={onClose}
+        data={hostsSelected}
+        onClose={() => setActiveModal(null)} 
       />
     ),
     commitNetHost: (
       <HostCommitNetModal
-        isOpen={activeModal === "commitNetHost"}
+        isOpen={activeModal() === "commitNetHost"}
         data={host} // TODO: 정의 필요
-        onClose={onClose}
+        onClose={() => setActiveModal(null)} 
       />
     )    
   };
 
+  Logger.debug(`HostModals ...`)
   return (
     <>
       {Object.keys(modals).map((key) => (

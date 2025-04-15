@@ -1,4 +1,5 @@
 import React, { useState, Suspense } from "react";
+import useUIState from "../../../hooks/useUIState";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import { useNetworkInterfacesFromVM } from "../../../api/RQHook";
@@ -9,6 +10,8 @@ import { checkZeroSizeToMbps } from "../../../util";
 import ActionButton from "../../../components/button/ActionButton";
 import Localization from "../../../utils/Localization";
 import { RVI24, rvi24ChevronDown, rvi24ChevronRight } from "../../../components/icons/RutilVmIcons";
+import useGlobal from "../../../hooks/useGlobal";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 
 /**
  * @name VmNics
@@ -18,6 +21,9 @@ import { RVI24, rvi24ChevronDown, rvi24ChevronRight } from "../../../components/
  * @returns
  */
 const VmNics = ({ vmId }) => {
+  const { activeModal, setActiveModal, } = useUIState()
+  const { nicsSelected, setNicsSelected } = useGlobal()
+
   const {
     data: nics = [],
     isLoading: isNicsLoading,
@@ -48,38 +54,34 @@ const VmNics = ({ vmId }) => {
     pkts: `${nic?.rxTotalError}` || "1",    
   }));
 
-  const [selectedNic, setSelectedNic] = useState(null);
   const [visibleDetails, setVisibleDetails] = useState({});
   const toggleDetails = (id) => setVisibleDetails((prev) => ({ 
     ...prev, 
     [id]: !prev[id]
   }));
 
-  const [activeModal, setActiveModal] = useState(null);
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
-
   return (
     <>
       <div className="header-right-btns">
-        <ActionButton actionType="default" label={Localization.kr.CREATE} 
-          onClick={() => openModal("create")}
+        <ActionButton actionType="default" label={Localization.kr.CREATE} disabled={nicsSelected.length > 0} 
+          onClick={() => setActiveModal("nic:create")}
         />
-        <ActionButton actionType="default" label={Localization.kr.UPDATE} disabled={!selectedNic} 
-          onClick={() => openModal("edit")}
+        <ActionButton actionType="default" label={Localization.kr.UPDATE} disabled={nicsSelected.length !== 1} 
+          onClick={() => setActiveModal("nic:update")}
         />
-        <ActionButton actionType="default" label={Localization.kr.REMOVE} disabled={!selectedNic}
-          onClick={() => openModal("delete")}
+        <ActionButton actionType="default" label={Localization.kr.REMOVE} disabled={nicsSelected.length === 0}
+          onClick={() => setActiveModal("nic:remove")}
         />
       </div>
-      <span>id = {selectedNic?.id || ""}</span>
+
+      <SelectedIdView items={nicsSelected} />
 
       <div className="network-interface-outer">
         {transformedData.length > 0 ? ( // NIC가 하나라도 있을 때 실행
           transformedData?.map((nic, i) => (
             <div
-              className={`network_content2 ${selectedNic?.id === nic.id ? "selected" : ""}`}
-              onClick={() => setSelectedNic(nic)} // NIC 선택 시 상태 업데이트
+              className={`network_content2 ${nicsSelected[0]?.id === nic.id ? "selected" : ""}`}
+              onClick={() => setNicsSelected(nic)} // NIC 선택 시 상태 업데이트
               key={nic?.id}
             >
               <div className="network-content"
@@ -161,20 +163,18 @@ const VmNics = ({ vmId }) => {
       </div>
       
       <Suspense>
-        {activeModal === "create" && (
-          <NicModal
-            isOpen
-            onClose={closeModal}            
+        {activeModal() === "nic:create" && (
+          <NicModal key={activeModal()} isOpen={activeModal() === "nic:create"}
+            onClose={() => setActiveModal(null)}            
             vmId={vmId}
           />
         )}
-        {activeModal === "edit" && (
-          <NicModal
-            isOpen
+        {activeModal() === "nic:update" && (
+          <NicModal key={activeModal()} isOpen={activeModal() === "nic:update"}
+            onClose={() => setActiveModal(null)}
             editMode
-            onClose={closeModal}
             vmId={vmId}
-            nicId={selectedNic?.id}
+            nicId={nicsSelected[0]?.id}
           />
         )}
         {/* {activePopup === "delete" && selectedNics && (

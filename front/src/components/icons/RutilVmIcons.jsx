@@ -698,7 +698,7 @@ export const status2Icon = (
         theme="dark-tooltip"
         arrow={true}
       >
-        <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+        <span className="f-center">
           <RVI16 iconDef={iconDef} />
         </span>
       </Tippy>
@@ -729,10 +729,11 @@ export const hostedEngineStatus2Icon = (isHostedEngineVm = false, isHostedEngine
   const iconDef = isHostedEngineVm ? rvi16StarGold : isHostedEngine ? rvi16Star : null;
 
   const tooltipContent = isHostedEngineVm
-  ? <div className="v-center">호스트 엔진 가상머신<br />실행 중</div>
-  : isHostedEngine
-  ? <div className="v-center">호스트 엔진 가상머신<br />실행 가능</div>
-  : null;
+    ? <><span>호스트 엔진 가상머신</span><span>실행 중</span></>
+    : isHostedEngine
+    ? <><span>호스트 엔진 가상머신</span><span>실행 가능</span></>
+    : null;
+
   if (!iconDef || !tooltipContent) return null;
 
   return (
@@ -743,7 +744,7 @@ export const hostedEngineStatus2Icon = (isHostedEngineVm = false, isHostedEngine
       animation="shift-away"
       arrow={true}
     >
-      <span style={{ display: "inline-flex", alignItems: "center" }}>
+      <span className="f-center" style={{ display: "inline-flex", alignItems: "center" }}>
         <RVI16 iconDef={iconDef} />
       </span>
     </Tippy>

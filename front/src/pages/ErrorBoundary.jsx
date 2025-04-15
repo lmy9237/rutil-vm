@@ -12,7 +12,6 @@ const ErrorBoundary = () => {
   return <ErrorContainer>⚠️ {error instanceof AxiosError ? error?.response?.data : message}</ErrorContainer>;
 };
 
-
 const ErrorContainer = ({children}) => {
   const location = useLocation();
   const navigate = useNavigate();

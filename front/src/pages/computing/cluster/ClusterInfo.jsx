@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -10,10 +12,11 @@ import ClusterVms from "./ClusterVms";
 import ClusterNetworks from "./ClusterNetworks";
 import ClusterEvents from "./ClusterEvents";
 import { useCluster } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
 import { rvi24Cluster } from "../../../components/icons/RutilVmIcons";
-import "./Cluster.css";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import "./Cluster.css";
+
 
 /**
  * @name ClusterInfo
@@ -40,10 +43,7 @@ const ClusterInfo = () => {
   } = useCluster(clusterId, (e) => ({ ...e }));
 
   const [activeTab, setActiveTab] = useState("general");
-  const [activeModal, setActiveModal] = useState(null);
-
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
+  const { activeModal, setActiveModal, } = useUIState()
 
   useEffect(() => {
     if (isClusterError || (!isClusterLoading && !cluster)) {
@@ -64,6 +64,7 @@ const ClusterInfo = () => {
   }, [section]);
 
   const handleTabClick = (tab) => {
+    Logger.debug(`ClusterInfo > handleTabClick ... tab: ${tab}`)
     const path =
       tab === "general"
         ? `/computing/clusters/${clusterId}`
@@ -78,6 +79,7 @@ const ClusterInfo = () => {
   ];
 
   const renderSectionContent = () => {
+    Logger.debug(`ClusterInfo > renderSectionContent ... `)
     const SectionComponent = {
       general: ClusterGeneral,
       hosts: ClusterHosts,
@@ -89,8 +91,8 @@ const ClusterInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "edit", label: Localization.kr.UPDATE, onClick: () => openModal("edit") },
-    { type: "delete", label: Localization.kr.REMOVE, onClick: () => openModal("delete") },
+    { type: "update", onClick: () => setActiveModal("cluster:update"), label: Localization.kr.UPDATE, },
+    { type: "remove", onClick: () => setActiveModal("cluster:remove"), label: Localization.kr.REMOVE, },
   ];
 
   Logger.debug("ClusterInfo ...");
@@ -113,12 +115,7 @@ const ClusterInfo = () => {
       </div>
 
       {/* 클러스터 모달창 */}
-      <ClusterModals
-        activeModal={activeModal}
-        cluster={cluster}
-        selectedClusters={cluster}
-        onClose={closeModal}
-      />
+      <ClusterModals cluster={cluster}/>
     </div>
   );
 };

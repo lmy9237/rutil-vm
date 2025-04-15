@@ -6,7 +6,12 @@ import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import "../domain/MDomain.css";
 
-const DomainGetDiskModal = ({ isOpen, domainId, data, onClose }) => {
+const DomainGetDiskModal = ({
+  isOpen,
+  domainId,
+  data,
+  onClose
+}) => {
   const { mutate: registerDisk } = useRegisteredDiskFromDomain();
 
   Logger.debug(

@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "react-modal";
-import "./BaseModal.css";
+import useUIState from "../../hooks/useUIState";
 import { RVI24, rvi24Close, rvi24ErrorRed } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
+import Logger from "../../utils/Logger";
+import "./BaseModal.css";
+
 /**
  * @name BaseModal
  * @description 기본 모달 테두리
@@ -21,6 +24,12 @@ const BaseModal = ({
   extraFooter = null, 
   ...props
 }) => {
+  const { setContextMenu } = useUIState()
+  useEffect(() => {
+    Logger.debug(`BaseModal > useEffect ...`)
+    setContextMenu(null)
+  }, [])
+
   return (
     <Modal className="Modal" overlayClassName="Overlay"
       // overlayClassName="Overlay newRolePopupOverlay" <-- DiskActionModal, DomainGetDiskModal

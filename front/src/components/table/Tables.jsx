@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
+import useUIState from "../../hooks/useUIState";
 import TableRowLoading from "./TableRowLoading";
 import TableRowNoData from "./TableRowNoData";
 import PagingButton from "./PagingButton";
 import Logger from "../../utils/Logger";
-import "./Table.css";
 import CONSTANT from "../../Constants";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
+import "./Table.css";
+import useClickOutside from "../../hooks/useClickOutside";
 
 /**
  * @name Tables
@@ -23,25 +25,25 @@ const Tables = ({
   clickableColumnIndex = [],
   onContextMenuItems = false,
   onClickableColumnClick = () => {},
-  showSearchBox = true,
   refetch,
   isLoading = null, isError = false, isSuccess,
   searchQuery = "",  // ✅ 기본값 추가
   setSearchQuery = () => {}, // ✅ 기본값 추가
 }) => {
+  const { contextMenu, setContextMenu } = useUIState()
+
   const [selectedRowIndex, setSelectedRowIndex] = useState(null); // 선택된 행의 인덱스를 관리
   const [tooltips, setTooltips] = useState({}); // 툴팁 상태 관리
   const [contextRowIndex, setContextRowIndex] = useState(null); // 우클릭한 행의 인덱스 관리
   const [selectedRows, setSelectedRows] = useState([]); // ctrl다중선택택
 
   // 검색박스
-
   // 우클릭 메뉴 위치 관리
-  const [contextMenu, setContextMenu] = useState(null);
   const handleContextMenu = (e, rowIndex) => {
+    Logger.debug(`Tables > handleContextMenu ... rowIndex: ${rowIndex}, e: `, e)
     e.preventDefault();
+    
     const rowData = sortedData[rowIndex];
-  
     setSelectedRows([rowIndex]);
     setSelectedRowIndex(rowIndex);
     if (typeof onRowClick === "function") {
@@ -80,29 +82,13 @@ const Tables = ({
     setContextRowIndex(rowIndex);
   };
   
-  
-
   const tableRef = useRef(null);
   // 테이블 외부 클릭 시 선택된 행 초기화, 단 메뉴 박스,모달,headerbutton 제외
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        tableRef.current &&
-        !tableRef.current.contains(event.target) &&
-        (!menuRef.current || !menuRef.current.contains(event.target)) &&
-        !event.target.closest(".header-right-btns button") &&
-        !event.target.closest(".Overlay")
-      ) {
-        setSelectedRowIndex(null);
-        setSelectedRows([]);
-        if (typeof onRowClick === "function") onRowClick([]);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [onRowClick]);
+  useClickOutside(tableRef, (e) => {
+    setSelectedRowIndex(null);
+    setSelectedRows([]);
+    if (typeof onRowClick === "function") onRowClick([]);
+  }, [".header-right-btns button", ".Overlay", "#right-click-menu-box"]);
 
   // 테이블 정렬기능
   const [sortedData, setSortedData] = useState(data);
@@ -199,7 +185,6 @@ const Tables = ({
     setSortedData(filteredData);
   }, [data, searchQuery, sortConfig]);
   
-  
 
   const handleSort = (column) => {
     // 내림, 오름차순
@@ -266,7 +251,7 @@ const Tables = ({
     const clickedRow = sortedData[rowIndex];
     if (!clickedRow) return;
 
-    if (e.ctrlKey) {
+    if (e.ctrlKey) { /* ctrl 키를 눌렀을 때 */
       setSelectedRows((prev) => {
         const updated = prev.includes(rowIndex)
           ? prev.filter((index) => index !== rowIndex)
@@ -291,21 +276,6 @@ const Tables = ({
   }, [data, sortConfig]);
 
   // 우클릭 메뉴 외부 클릭 시 메뉴 닫기 + 배경색 초기화
-  const menuRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutsideMenu = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setContextMenu(null);
-        setContextRowIndex(null);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutsideMenu);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutsideMenu);
-    };
-  }, []);
-
   const renderTableBody = () => {
     if (isLoading) {
       // 로딩중일 때
@@ -320,7 +290,6 @@ const Tables = ({
           const globalIndex = indexOfFirstItem + rowIndex; 
         
           return (
-
             <tr
               key={globalIndex}
               onClick={(e) => {
@@ -419,11 +388,8 @@ const Tables = ({
                 );
               })}
             </tr>
-
-
           );
         })
-        
       );
     }
   };
@@ -472,44 +438,7 @@ const Tables = ({
             />
           </div>
       )}
-
       </div>
-      {/* 우클릭 메뉴 박스 */}
-      {contextMenu && (
-        <div ref={menuRef}
-          className="my-context-menu"
-          style={{
-            top: `${contextMenu.mouseY}px`,
-            left: `${contextMenu.mouseX}px`,
-          }}
-        >
-          {contextMenu.menuItems.map((item, index) => (
-            <div className="context-menu-item" key={index}>{item}</div>
-          ))}
-        </div>
-      )}
-
-      {/* Tooltip */}
-      {/* {data &&
-        data.map((row, rowIndex) =>
-          columns.map(
-            (column, colIndex) =>
-              tooltips[`${rowIndex}-${colIndex}`] && (
-                <Tooltip
-                  key={`tooltip-${rowIndex}-${colIndex}`}
-                  id={`tooltip-${rowIndex}-${colIndex}`}
-                  place="right"
-                  effect="solid"
-                  className="my-tooltip"
-                  delayShow={200} // 1초 지연 후 표시
-                  content={tooltips[`${rowIndex}-${colIndex}`]} // 툴팁에 표시할 내용
-                  componentsProps={{
-                    color:"white",
-                  }}
-                />
-              )
-          )
-        )} */}
     </>
   );
 };

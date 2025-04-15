@@ -1,5 +1,17 @@
+const baseUrl = () => {
+  let _value = 'localhost'; // 기본값
+  try {
+    _value = import.meta.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS;
+    if (import.meta.env.PROD) _value = '__RUTIL_VM_OVIRT_IP_ADDRESS__';
+  } catch(e) {
+     console.error(`Constants > baseUrl ... ${e.message}`)
+  }
+  console.log(`Constants > baseUrl ... value: ${_value}`)
+  return _value;
+}
+
 const itemsPerPage = () => {
-  let _value = 10; // default
+  let _value = 10; // 기본값
   try {
     _value = parseInt(import.meta.env.VITE_RUTIL_VM_ITEMS_PER_PAGE);
     if (import.meta.env.PROD) _value = parseInt('__RUTIL_VM_ITEMS_PER_PAGE__');
@@ -24,8 +36,10 @@ const isLoggingEnabled = () => {
  * @prop {boolean} isLoggingEnabled 로깅 활성화 여부
  */
 const CONSTANT = {
+  baseUrl: baseUrl(),
   itemsPerPage: itemsPerPage(),
-  isLoggingEnabled: isLoggingEnabled()
+  isLoggingEnabled: isLoggingEnabled(),
+  templateIdDefault: "00000000-0000-0000-0000-000000000000"
 }
 
 export default CONSTANT;

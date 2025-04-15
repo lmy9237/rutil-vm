@@ -6,11 +6,9 @@ import "./IconButton.css";
  * @description 아이콘 버튼
  *
  * @param {string} id
- * @param {string} key
  * @returns
  */
 const IconButton = ({ 
-  key, 
   label,
   iconDef=null,
   ...props
@@ -18,7 +16,6 @@ const IconButton = ({
   
   return (
     <button className="icon-button-container"
-      key={key}
       {...props}
     >
       {iconDef && ( // icon이 존재할 경우에만 span과 FontAwesomeIcon 렌더링

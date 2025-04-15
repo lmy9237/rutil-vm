@@ -5,9 +5,10 @@ import LabelInput from "../../label/LabelInput";
 import { useAddUser, useEditUser, useUpdatePasswordUser } from "../../../api/RQHook";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import { validateUsername, validatePw } from "../../../util";
-import "./SettingsUserModal.css";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import useGlobal from "../../../hooks/useGlobal";
+import "./SettingsUserModal.css";
 
 const initialFormState = {
   id: "",
@@ -21,30 +22,23 @@ const initialFormState = {
 };
 
 const SettingUsersModal = ({ 
-  isOpen,
-  editMode = false,
+  isOpen=false,
+  editMode=false,
   changePassword = false,
-  user,
   onClose
 }) => {
+  const { usersSelected } = useGlobal()
+
   const [formState, setFormState] = useState(initialFormState);
   const { 
     isLoading: isAddUserLoading,
     mutate: addUser,
-  } = useAddUser({ ...formState }, (res) => {
-    onClose();
-  } , (err) => {
-    onClose();
-  });
+  } = useAddUser({ ...formState });
 
   const {
     isLoading: isEditUserLoading, 
     mutate: editUser,
-  } = useEditUser({ ...formState }, (res) => {
-    onClose();
-  } , (err) => {
-    onClose();
-  });
+  } = useEditUser({ ...formState });
 
   const {
     isLoading: isChangePasswordLoading,
@@ -61,14 +55,14 @@ const SettingUsersModal = ({
     }
     setFormState({ 
       ...initialFormState,
-      id: user?.id,
-      firstName: user?.firstName,
-      surName: user?.surName,
-      username: user?.username,
-      disabled: user?.disabled,
-      email: user?.email
+      id: usersSelected[0]?.id,
+      firstName: usersSelected[0]?.firstName,
+      surName: usersSelected[0]?.surName,
+      username: usersSelected[0]?.username,
+      disabled: usersSelected[0]?.disabled,
+      email: usersSelected[0]?.email
     });
-  }, [isOpen, editMode, changePassword, user])
+  }, [isOpen, editMode, changePassword])
 
   const handleFormSubmit = (e) => {
     e.preventDefault();

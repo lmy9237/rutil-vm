@@ -1,18 +1,26 @@
-  import React, { Suspense, useState } from 'react';
+import React, { Suspense, useState } from 'react';
+import toast from 'react-hot-toast';
+import useUIState from '../../../hooks/useUIState';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
 import VmSnapshotModal from '../../../components/modal/vm/VmSnapshotModal';
-import { useDeleteSnapshot, useSnapshotsFromVM, useVm } from '../../../api/RQHook';
+import { useSnapshotsFromVM, useVm } from '../../../api/RQHook';
 import { convertBytesToMB } from '../../../util';
 import TablesRow from '../../../components/table/TablesRow';
-import DeleteModal from '../../../utils/DeleteModal';
 import ActionButton from '../../../components/button/ActionButton';
 import { RVI16, rvi16ChevronDown, rvi16ChevronRight, rvi16Desktop, rvi16Location, rvi16Pause, RVI24, status2Icon } from '../../../components/icons/RutilVmIcons';
 import Localization from '../../../utils/Localization';
 import Loading from '../../../components/common/Loading';
-import toast from 'react-hot-toast';
 import VmSnapshotDeleteModal from '../../../components/modal/vm/VmSnapshotDeleteModal';
+import Logger from '../../../utils/Logger';
+import useGlobal from '../../../hooks/useGlobal';
 
-const VmSnapshots = ({ vmId }) => {
+
+const VmSnapshots = ({
+  vmId
+}) => {
+  const { activeModal, setActiveModal, } = useUIState()
+  const { snapshotsSelected, setSnapshotsSelected } = useGlobal()
+
   const {
     data: vm,
     isLoading: isVmLoading,
@@ -28,7 +36,7 @@ const VmSnapshots = ({ vmId }) => {
   } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
 
 
-  const transformedData = snapshots.map((snapshot) => ({
+  const transformedData = (!Array.isArray(snapshots) ? [] : snapshots).map((snapshot) => ({
     ...snapshot,
     id: snapshot?.id,
     description: snapshot?.description,
@@ -42,35 +50,28 @@ const VmSnapshots = ({ vmId }) => {
     _status: status2Icon(snapshot?.status)
   }));
 
-  const [selectedSnapshot, setSelectedSnapshot] = useState(null);
-  const [activeModal, setActiveModal] = useState(null);
+
   const hasLockedSnapshot = transformedData.some(snap => snap.status === "locked");
-
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
-
-  const toggleSnapshotSelection = (snapshot) => {
-    setSelectedSnapshot(snapshot);
-  };
-
+  
+  Logger.debug(`VmSnapshots ... `)
   return (
     <>
       <div className="header-right-btns no-search-box">
         <ActionButton actionType="default" label={Localization.kr.CREATE}
           disabled={hasLockedSnapshot} 
-          onClick={() => openModal("create")}
+          onClick={() => setActiveModal("vmsnapshot:create")}
         />
         <ActionButton actionType="default" label="미리보기"          
-          disabled={!selectedSnapshot} 
-          onClick={() => openModal("preview")}
+          disabled={!snapshotsSelected} 
+          onClick={() => setActiveModal("vmsnapshot:preview")}
         />
         <ActionButton actionType="default" label={Localization.kr.REMOVE}
-          disabled={!selectedSnapshot} 
-          onClick={() => openModal("delete")}
+          disabled={!snapshotsSelected} 
+          onClick={() => setActiveModal("vmsnapshot:remove")}
         />
         <ActionButton actionType="default" label={Localization.kr.MOVE}          
-          disabled={!selectedSnapshot} 
-          onClick={() => openModal("move")}
+          disabled={!snapshotsSelected} 
+          onClick={() => setActiveModal("vmsnapshot:move")}
         />
       </div>
 
@@ -99,11 +100,11 @@ const VmSnapshots = ({ vmId }) => {
             <div
               key={snapshot.id}
               className="snapshot-item f-start"
-              onClick={() => toggleSnapshotSelection(snapshot)}
-              style={{ cursor: 'pointer', padding: '4px 26px', background: selectedSnapshot?.id === snapshot.id ? '#E2E5EB' : 'none' }}
+              onClick={() => setSnapshotsSelected(snapshot)}
+              style={{ cursor: 'pointer', padding: '4px 26px', background: snapshotsSelected[0]?.id === snapshot.id ? '#E2E5EB' : 'none' }}
             >
                {/* 선택된 스냅샷이면 아래, 아니면 오른쪽 화살표 */}
-              <RVI16 iconDef={selectedSnapshot?.id === snapshot.id? rvi16ChevronDown : rvi16ChevronRight}  className="mx-1.5"/>
+              <RVI16 iconDef={snapshotsSelected[0]?.id === snapshot.id? rvi16ChevronDown : rvi16ChevronRight}  className="mx-1.5"/>
               <div className='snapshot-label f-center'>
                 [상태:
                   <div className="f-center mx-0.5">
@@ -118,10 +119,10 @@ const VmSnapshots = ({ vmId }) => {
         </div>
         
         <div className="vm-snap-item">
-          {selectedSnapshot ? (
+          {snapshotsSelected.length > 0 ? (
             <TablesRow
               columns={TableColumnsInfo.SNAPSHOT_INFO_FROM_VM}
-              data={selectedSnapshot}
+              data={snapshotsSelected}
             />
           ) : (
             <></>
@@ -130,19 +131,19 @@ const VmSnapshots = ({ vmId }) => {
       </div>
 
       <Suspense>
-        {activeModal === "create" && (
+        {activeModal() === "vmsnapshot:create" && (
           <VmSnapshotModal
-            isOpen
-            onClose={closeModal}
+            isOpen={activeModal() === "vmsnapshot:create"}
+            onClose={setActiveModal(null)}
             selectedVm={vm}
             // diskData={disks}
           />
         )}
-        {activeModal === "delete" && (
+        {activeModal() === "vmsnapshot:remove" && (
           <VmSnapshotDeleteModal 
-            isOpen
-            onClose={closeModal}
-            data={selectedSnapshot}
+            isOpen={activeModal() === "vmsnapshot:remove"}
+            onClose={setActiveModal(null)}
+            data={snapshotsSelected}
             vmId={vm.id}
           />
         )}

@@ -41,6 +41,7 @@ fun Connection.findStorageDomain(storageDomainId: String, follow: String = ""): 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+
 fun Connection.attachStorageDomainsToDataCenter(storageDomainId: String, dataCenterId: String): Result<Boolean> = runCatching {
 	this.srvDataCenter(dataCenterId).storageDomainsService().add()
 		.storageDomain(StorageDomainBuilder().id(storageDomainId).build())

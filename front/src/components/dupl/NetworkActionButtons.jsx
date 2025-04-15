@@ -1,23 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import useGlobal from "../../hooks/useGlobal";
+import useUIState from "../../hooks/useUIState";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 import ActionButton from "../button/ActionButton";
 import Localization from "../../utils/Localization";
 
 const NetworkActionButtons = ({
-  openModal,
-  selectedNetworks = [],
-  status,
   actionType = "default",
-  isContextMenu = false,
 }) => {
   const navigate = useNavigate();
+  const { setActiveModal } = useUIState()
+  const { networksSelected } = useGlobal()
+
+  const isContextMenu = actionType === "context";
 
   const basicActions = [
-    { type: "create", label: Localization.kr.CREATE, disabled: false, onBtnClick: () => openModal("create") },
-    { type: "edit", label: Localization.kr.UPDATE, disabled: selectedNetworks.length !== 1, onBtnClick: () => openModal("edit") },
-    { type: "delete", label: Localization.kr.REMOVE, disabled: selectedNetworks.length === 0, onBtnClick: () => openModal("delete") },
-    { type: "import", label: Localization.kr.IMPORT, disabled: false, onBtnClick: () => openModal("import") },
+    { type: "create", onBtnClick: () => setActiveModal("network:create"), label: Localization.kr.CREATE, disabled: networksSelected.length > 0, },
+    { type: "update", onBtnClick: () => setActiveModal("network:update"), label: Localization.kr.UPDATE, disabled: networksSelected.length !== 1, },
+    { type: "remove", onBtnClick: () => setActiveModal("network:remove"), label: Localization.kr.REMOVE, disabled: networksSelected.length === 0, },
+    { type: "import", onBtnClick: () => setActiveModal("network:import"), label: Localization.kr.IMPORT, disabled: networksSelected.length !== 1, },
   ];
 
   return (

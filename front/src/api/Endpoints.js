@@ -38,7 +38,7 @@ const ENDPOINTS = {
   FIND_NETWORKS_FROM_DATA_CENTER: (dataCenterId) =>                        `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/networks`, 
   FIND_EVENTS_FROM_DATA_CENTER: (dataCenterId) =>                          `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/events`,
   FIND_TEMPLATES_FROM_DATA_CENTER: (dataCenterId) =>                       `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/templates`,
-  FIND_ATTACH_DISK_LIST_FROM_DATA_CENTER:(dataCenterId) =>                 `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/attachDisks`,
+  FIND_ATTACH_DISK_LIST_FROM_DATA_CENTER:(dataCenterId) =>                 `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/unattachedDiskImages`,
   FIND_ISOS_FROM_DATA_CENTER:(dataCenterId) =>                             `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/iso`, 
   
   ADD_DATA_CENTER: () =>                                                   `${ENDPOINT_API_V1}/computing/datacenters`,

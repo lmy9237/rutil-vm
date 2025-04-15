@@ -1,19 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
+import { useQueries } from "@tanstack/react-query";
 import BaseModal from "../BaseModal";
 import { useMigration } from "../../../api/RQHook";
-import "./MVm.css";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import toast from "react-hot-toast";
-import { useQueries } from "@tanstack/react-query";
 import ApiManager from "../../../api/ApiManager";
+import useGlobal from "../../../hooks/useGlobal";
 
 const VmMigrationModal = ({ 
   isOpen, 
-  selectedVms,
   onClose, 
 }) => {
+  const { vmsSelected } = useGlobal() 
+
   const onSuccess = () => {
     toast.success(`${Localization.kr.VM} 마이그레이션 완료`);
     onClose();
@@ -23,22 +24,22 @@ const VmMigrationModal = ({
   const [vmStates, setVmStates] = useState({});
 
   const { ids, names } = useMemo(() => {
-    if (!selectedVms) return { ids: [], names: [] };
-    const dataArray = Array.isArray(selectedVms) ? selectedVms : [selectedVms];
+    if (!vmsSelected) return { ids: [], names: [] };
+    
+    const dataArray = Array.isArray(vmsSelected) ? vmsSelected : [vmsSelected];
+
     return {
       ids: dataArray.map((item) => item.id),
       names: dataArray.map((item) => item.name || 'undefined'),
     };
-  }, [selectedVms]);
-
+  }, [vmsSelected]);
 
   useEffect(() => {
-    if (!isOpen || !selectedVms) return;
+    if (!isOpen || !vmsSelected) return;
 
     const initialState = {};
-    const dataArray = Array.isArray(selectedVms) ? selectedVms : [selectedVms];
-    
-    dataArray.forEach((vm) => {
+ 
+    [...vmsSelected].forEach((vm) => {
       initialState[vm.id] = {
         isCluster: true,
         clusterVo: {
@@ -50,7 +51,7 @@ const VmMigrationModal = ({
       };
     });
     setVmStates(initialState);
-  }, [isOpen, selectedVms]);
+  }, [isOpen, vmsSelected]);
 
   const hostQueries = useQueries({
     queries: ids.map((vmId) => ({
@@ -69,7 +70,7 @@ const VmMigrationModal = ({
   });    
 
   const handleFormSubmit = () => {
-    selectedVms.forEach((vm) => {
+    vmsSelected.forEach((vm) => {
       const { isCluster, clusterVo, hostVo, affinityClosure } = vmStates[vm.id] || {};
       const payload = {
         vmId: vm.id,
@@ -82,7 +83,7 @@ const VmMigrationModal = ({
   
   
   // 기준 VM (첫 번째) 기준
-  const referenceVM = selectedVms?.[0];
+  const referenceVM = vmsSelected[0];
   const vmState = referenceVM ? vmStates[referenceVM.id] : {};
   const { isCluster, clusterVo, hostVo, affinityClosure } = vmState || {};
   const hostQuery = hostQueries[0];
@@ -102,13 +103,12 @@ const VmMigrationModal = ({
         <p className="font-bold mb-2">
           다음 {Localization.kr.VM}(을)를 마이그레이션합니다:
         </p>
-        {Array.isArray(selectedVms) ? selectedVms.map((vm) => (
+        {[...vmsSelected].map((vm) => (
           <div key={vm.id} className="flex font-bold">
             <div className="mr-1.5">-</div>
-
             <div>{vm.name}</div>
           </div>
-        )) : null}
+        ))}
       </div>
 
       {/* ✅ 공통 옵션 UI 1세트만 표시 */}
@@ -121,7 +121,7 @@ const VmMigrationModal = ({
             onChange={() => {
               const newVal = !isCluster;
               const updated = { ...vmStates };
-              selectedVms.forEach((vm) => {
+              [...vmsSelected].forEach((vm) => {
                 updated[vm.id] = {
                   ...updated[vm.id],
                   isCluster: newVal,
@@ -150,7 +150,7 @@ const VmMigrationModal = ({
               const selected = ableHost.find(h => h.id === e.target.value);
               if (selected) {
                 const updated = { ...vmStates };
-                selectedVms.forEach((vm) => {
+                [...vmsSelected].forEach((vm) => {
                   updated[vm.id] = {
                     ...updated[vm.id],
                     hostVo: { id: selected.id, name: selected.name },
@@ -168,7 +168,7 @@ const VmMigrationModal = ({
             checked={affinityClosure}
             onChange={() => {
               const updated = { ...vmStates };
-              selectedVms.forEach((vm) => {
+              [...vmsSelected].forEach((vm) => {
                 updated[vm.id] = {
                   ...updated[vm.id],
                   affinityClosure: !affinityClosure,

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import useUIState from "../../../hooks/useUIState";
 import HeaderButton from "../../../components/button/HeaderButton";
 import NavButton from "../../../components/navigation/NavButton";
 import Path from "../../../components/Header/Path";
@@ -13,7 +14,6 @@ import VmEvents from "./VmEvents";
 import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
 import { useVm } from "../../../api/RQHook";
-import { openNewTab } from "../../../navigation";
 import VmDisks from "./VmDisks";
 import Logger from "../../../utils/Logger";
 import "./Vm.css";
@@ -37,6 +37,7 @@ import "./Vm.css";
  */
 const VmInfo = () => {
   const navigate = useNavigate();
+  const { activeModal, setActiveModal, } = useUIState()
   const { id: vmId, section } = useParams();
   const {
     data: vm,
@@ -49,10 +50,7 @@ const VmInfo = () => {
   const isDown = vm?.status === "DOWN";
   const isMaintenance = vm?.status === "MAINTENANCE";
 
-  const [activeTab, setActiveTab] = useState("general");
-  const [activeModal, setActiveModal] = useState(null);
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
+  const [activeTab, setActiveTab] = useState("general")
 
   useEffect(() => {
     if (isVmError || (!isVmLoading && !vm)) {
@@ -101,65 +99,28 @@ const VmInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    {
-      type: "edit", label: Localization.kr.UPDATE
-      , onClick: () => openModal("edit"),
-    }, {
-      type: "start", label: Localization.kr.START, disabled: isUp && !isMaintenance
-      , onClick: () => openModal("start"),
-    }, {
-      type: "pause", label: "일시중지", disabled: !isUp
-      , onClick: () => openModal("pause"),
-    }, {
-      type: "reboot", label: "재부팅", disabled: !isUp
-      , onClick: () => openModal("reboot"),
-    }, {
-      type: "reset", label: "재설정", disabled: !isUp
-      , onClick: () => openModal("reset"),
-    }, {
-      type: "shutdown", label: "종료", disabled:!isUp //
-      , onClick: () => openModal("shutdown"),
-    }, {
-      type: "powerOff", label: "전원 끔", disabled: !isUp 
-      , onClick: () => openModal("powerOff"),
-    }, { 
-      type: "console", label: "콘솔", disabled: !isUp
-      , onClick: () => openNewTab("console", vmId)
-    }, {
-      type: "snapshots",  label: "스냅샷 생성", disabled: !(isUp || isDown)
-      , onClick: () => openModal("snapshot")
-    }, { 
-      type: "migration",  label: "마이그레이션", disabled: isUp
-      , onClick: () => openModal("migration")
-    },
+    { type: "update", onClick: () => setActiveModal("vm:update"), label: Localization.kr.UPDATE, },
+    { type: "start", onClick: () => setActiveModal("vm:start"), label: Localization.kr.START, disabled: isUp && !isMaintenance },
+    { type: "pause", onClick: () => setActiveModal("vm:pause"), label: Localization.kr.PAUSE, disabled: !isUp },
+    { type: "reboot", onClick: () => setActiveModal("vm:reboot"), label: "재부팅", disabled: !isUp },
+    { type: "reset", onClick: () => setActiveModal("vm:reset"), label: "재설정", disabled: !isUp },
+    { type: "shutdown", onClick: () => setActiveModal("vm:shutdown"), label: "종료", disabled:!isUp, },
+    { type: "powerOff", onClick: () => setActiveModal("vm:powerOff"), label: "전원 끔", disabled: !isUp  },
+    { type: "console", onClick: () => setActiveModal("vm:console", vmId), label: "콘솔", disabled: !isUp },
+    { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"), label: "스냅샷 생성", disabled: !(isUp || isDown) },
+    { type: "migration", onClick: () => setActiveModal("vm:migration"), label: "마이그레이션", disabled: isUp },
   ];
 
   const popupItems = [
-    // { 
-    //   type: "import", 
-    //   label: "가져오기", 
-    //   onClick: () => openModal("import") 
-    // }, 
-    {
-      type: "copyVm",
-      label: `${Localization.kr.VM} 복제`,
-      onClick: () => openModal("copyVm"),
-    }, {
-      type: "delete",
-      label: "삭제",
-      disabled: !isDown,
-      onClick: () => openModal("delete"),
-    }, {
-      type: "templates",
-      label: "템플릿 생성",
-      disabled: !isDown,
-      onClick: () => openModal("templates"),
-    }, { 
-      type: "ova", 
-      label: "OVA로 내보내기", 
-      disabled: !isDown,
-      onClick: () => openModal("ova") 
-    },
+    /* { 
+      type: "import", 
+      label: Localization.kr.IMPORT, 
+      onClick: () => setActiveModal("vm:import") 
+    }, */
+    { type: "copyVm", onClick: () => setActiveModal("vm:copyVm"), label: `${Localization.kr.VM} 복제` },
+    { type: "delete", onClick: () => setActiveModal("vm:delete"), label: Localization.kr.REMOVE, disabled: !isDown, },
+    { type: "templates", onClick: () => setActiveModal("vm:templates"), label: "템플릿 생성", disabled: !isDown, }, 
+    { type: "ova", onClick: () => setActiveModal("vm:ova"), label: "OVA로 내보내기",  disabled: !isDown, },
   ];
 
   return (
@@ -182,10 +143,7 @@ const VmInfo = () => {
       </div>
 
       {/* vm 모달창 */}
-      <VmModals activeModal={activeModal}
-        vm={vm} selectedVms={vm}
-        onClose={closeModal}
-      />
+      <VmModals vm={vm}/>
     </div>
   );
 };

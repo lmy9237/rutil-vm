@@ -14,7 +14,13 @@ import {
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import useGlobal from "../../../hooks/useGlobal";
 
+
+const connectionFilters = [
+  { key: "connected", label: "연결됨" },
+  { key: "disconnected", label: "연결 해제" },
+];
 
 /**
  * @name NetworkHosts
@@ -24,18 +30,12 @@ import SelectedIdView from "../../../components/common/SelectedIdView";
  * @returns {JSX.Element} NetworkHosts
  *
  */
-
-const connectionFilters = [
-  { key: "connected", label: "연결됨" },
-  { key: "disconnected", label: "연결 해제" },
-];
-
-const NetworkHosts = ({ networkId }) => {
+const NetworkHosts = ({ 
+  networkId
+}) => {
   const navigate = useNavigate();
+  const { hostsSelected, setHostsSelected, } = useGlobal()
   const [activeFilter, setActiveFilter] = useState("connected");
-  const [selectedHost, setSelectedHost] = useState(null);
-
-  const selectedHostId = (Array.isArray(selectedHost) ? selectedHost : []).map((host) => host.id).join(", ");
 
   const {
     data: connectedHosts = [],
@@ -50,6 +50,8 @@ const NetworkHosts = ({ networkId }) => {
     isError: isDisconnectedHostsError,
     isSuccess: isDisconnectedHostsSuccess,
   } = useDisconnectedHostsFromNetwork(networkId, (e) => ({ ...e }));
+
+  const selectedHostId = (!Array.isArray(hostsSelected) ? [] : hostsSelected).map((host) => host.id).join(", ");
 
   const transformHostData = (hosts) => {
     return hosts.map((host) => {
@@ -90,15 +92,11 @@ const NetworkHosts = ({ networkId }) => {
     });
   };
   
-
+  Logger.debug(`NetworkHosts ... `)
   return (
     <>
       <div className="header-right-btns no-search-box f-btw ">
-        <FilterButton 
-          options={connectionFilters} 
-          activeOption={activeFilter} 
-          onClick={setActiveFilter} 
-        />
+        <FilterButton  options={connectionFilters}  activeOption={activeFilter} onClick={setActiveFilter} />
         <ActionButton
           label={`${Localization.kr.HOST} ${Localization.kr.NETWORK} 설정`}
           actionType="default"
@@ -114,8 +112,8 @@ const NetworkHosts = ({ networkId }) => {
 
       <TablesOuter
         isLoading={activeFilter === "connected" ? isConnectedHostsLoading: isDisconnectedHostsLoading}
-        isError={ activeFilter === "connected" ? isConnectedHostsError : isDisconnectedHostsError }
-        isSuccess={ activeFilter === "connected" ? isConnectedHostsSuccess : isDisconnectedHostsSuccess }
+        isError={activeFilter === "connected" ? isConnectedHostsError : isDisconnectedHostsError }
+        isSuccess={activeFilter === "connected" ? isConnectedHostsSuccess : isDisconnectedHostsSuccess }
         columns={
           activeFilter === "connected"
             ? TableColumnsInfo.HOSTS_FROM_NETWORK
@@ -126,7 +124,7 @@ const NetworkHosts = ({ networkId }) => {
             ? transformHostData(connectedHosts)
             : transformHostData(disconnectedHosts)
         }
-        onRowClick={(row) => setSelectedHost(row)}
+        onRowClick={(row) => setHostsSelected(row)}
         // onContextMenuItems={(row) => [
         //   <div className='right-click-menu-box'>
         //     <button
@@ -140,7 +138,7 @@ const NetworkHosts = ({ networkId }) => {
         // ]}
       />
 
-      <SelectedIdView items={selectedHost} />
+      <SelectedIdView items={hostsSelected} />
     </>
   );
 };

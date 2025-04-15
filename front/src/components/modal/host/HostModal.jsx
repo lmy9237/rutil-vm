@@ -13,8 +13,8 @@ import {
 import { checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
-import "./MHost.css";
 import Logger from "../../../utils/Logger";
+import "./MHost.css";
 
 const initialFormState = {
   id: "",
@@ -59,9 +59,12 @@ const HostModal = ({
   } = useAllClusters( (e) => ({ ...e }));
 
   useEffect(() => {
-    if (!isOpen) return setFormState(initialFormState);
+    if (!isOpen) {
+      /* 열리기 전 */
+      return setFormState(initialFormState);
+    }
     if (editMode && host) {
-      Logger.debug(`hostModal: ${JSON.stringify(host, null, 2)}`);
+      Logger.debug(`HostModal > useEffect ... host: `, host);
       setFormState({
         id: host?.id,
         name: host?.name,

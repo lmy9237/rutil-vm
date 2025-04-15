@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import useUIState from "../../../hooks/useUIState";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -23,14 +24,11 @@ import { rvi24Network } from "../../../components/icons/RutilVmIcons";
  */
 const NetworkInfo = () => {
   const navigate = useNavigate();
+  const { activeModal, setActiveModal, } = useUIState()
   const { id: networkId, section } = useParams();
   const { data: network, isError, isLoading } = useNetwork(networkId);
 
   const [activeTab, setActiveTab] = useState("general");
-  const [activeModal, setActiveModal] = useState(null);
-
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
 
   useEffect(() => {
     if (isError || (!isLoading && !network)) {
@@ -77,8 +75,8 @@ const NetworkInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "edit", label: Localization.kr.UPDATE, onClick: () => openModal("edit") },
-    { type: "delete", label: Localization.kr.REMOVE, onClick: () => openModal("delete") },
+    { type: "update", label: Localization.kr.UPDATE, onClick: () => setActiveModal("network:update") },
+    { type: "remove", label: Localization.kr.REMOVE, onClick: () => setActiveModal("network:remove") },
   ];
 
   return (
@@ -101,10 +99,9 @@ const NetworkInfo = () => {
 
       {/* 네트워크 모달창 */}
       <NetworkModals
-        activeModal={activeModal}
         network={network}
         selectedNetworks={network}
-        onClose={closeModal}
+        onClose={() => setActiveModal(null)}
       />
     </div>
   );

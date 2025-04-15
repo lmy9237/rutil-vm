@@ -1,18 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import useUIState from "../../hooks/useUIState";
+import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
 import DiskModals from "../modal/disk/DiskModals";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import DiskActionButtons from "./DiskActionButtons";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
-import useSearch from "../button/useSearch"; // ✅ 검색 기능 추가
 import { status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
 import { checkZeroSizeToGiB } from "../../util";
-import Logger from "../../utils/Logger";
 import { useCdromsDisks } from "../../api/RQHook";
-
+import Logger from "../../utils/Logger";
+import useGlobal from "../../hooks/useGlobal";
 
 const DiskDupl = ({
   disks = [], columns = [], type = "disk", 
@@ -21,14 +22,14 @@ const DiskDupl = ({
   isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedDisks, setSelectedDisks] = useState([]);
-  
-  const diskIds = !Array.isArray(disks) ? [] : disks.map((d) => d.id);
+  const { activeModal, setActiveModal } = useUIState();
+  const { disksSelected, setDisksSelected } = useGlobal()
+    
+  const diskIds = (!Array.isArray(disks) ? [] : disks).map((d) => d.id);
   const { data: cdromsMap = [] } = useCdromsDisks(diskIds);
   
   // ✅ 데이터 변환: 검색이 가능하도록 `searchText` 추가
-  const transformedData = !Array.isArray(disks) ? [] : disks.map((d) => {
+  const transformedData = (!Array.isArray(disks) ? [] : disks).map((d) => {
     const cdromObj = cdromsMap.find((item) => item.diskId === d.id);
     let diskData = {
       ...d,
@@ -70,8 +71,6 @@ const DiskDupl = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
   const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
   const handleRefresh = () =>  {
     Logger.debug(`DiskDupl > handleRefresh ... `)
@@ -80,6 +79,7 @@ const DiskDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
+  Logger.debug(`DiskDupl ... `)
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
@@ -92,10 +92,7 @@ const DiskDupl = ({
         )}
 
         <DiskActionButtons
-          openModal={openModal}
-          isEditDisabled={selectedDisks.length !== 1}
-          isDeleteDisabled={selectedDisks.length === 0}
-          status={selectedDisks[0]?.status}
+          status={disksSelected[0]?.status}
         />
       </div>
       <TablesOuter
@@ -103,13 +100,12 @@ const DiskDupl = ({
         data={filteredData} // ✅ 검색된 데이터만 표시
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        onRowClick={(selectedRows) => setSelectedDisks(selectedRows)}
+        onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
         columns={columns}
         onContextMenuItems={(row) => [
           <DiskActionButtons
-            openModal={openModal}
             status={row?.status}
             selectedDisks={[row]}
             actionType="context"
@@ -117,13 +113,11 @@ const DiskDupl = ({
         ]}
       />
 
-      <SelectedIdView items={selectedDisks} />
+      <SelectedIdView items={disksSelected} />
 
       <DiskModals
-        activeModal={activeModal}
-        selectedDisks={selectedDisks}
-        disk={activeModal === "edit" ? selectedDisks[0] : null}
-        onClose={closeModal}
+        selectedDisks={disksSelected}
+        disk={activeModal() === "disk:update" ? disksSelected[0] : null}
       />
     </div>
   );

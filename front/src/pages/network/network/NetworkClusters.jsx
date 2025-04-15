@@ -1,19 +1,21 @@
 import React, { Suspense, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useSearch from "../../../hooks/useSearch";
 import Loading from "../../../components/common/Loading";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import ActionButton from "../../../components/button/ActionButton";
 import TableRowClick from "../../../components/table/TableRowClick";
 import NetworkClusterModal from "../../../components/modal/network/NetworkClusterModal";
-import { useAllClustersFromNetwork } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import { clusterStatus2Icon } from "../../../components/icons/RutilVmIcons";
 import SearchBox from "../../../components/button/SearchBox";
-import useSearch from "../../../components/button/useSearch";
-import { navigate } from "@storybook/addon-links";
-import toast from "react-hot-toast";
+import { useAllClustersFromNetwork } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
+import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name NetworkClusters
@@ -23,6 +25,10 @@ import toast from "react-hot-toast";
  * @returns {JSX.Element} NetworkClusters
  */
 const NetworkClusters = ({ networkId }) => {
+  const navigate = useNavigate();
+  const { activeModal, setActiveModal } = useUIState()
+  const { clustersSelected, setClustersSelected } = useGlobal()
+
   const {
     data: clusters = [],
     isLoading: isClustersLoading,
@@ -57,9 +63,7 @@ const NetworkClusters = ({ networkId }) => {
       cluster?.networkVo?.usage?.defaultRoute ? "기본라우팅" : null,
     ].filter(Boolean).join(" / "),
   }));
-
-  const [selectedClusters, setSelectedClusters] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, TableColumnsInfo.CLUSTERS_FRON_NETWORK);
   const showSearchBox = true
   const handleNameClick = (id) => navigate(`/networks/${id}`);
@@ -74,29 +78,24 @@ const NetworkClusters = ({ networkId }) => {
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-btw">
-        {showSearchBox && (
-          <SearchBox 
-            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-            onRefresh={handleRefresh}
-          />
-        )}
+        {showSearchBox && <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />}
         <ActionButton 
           actionType="default"
           label={`${Localization.kr.NETWORK} 관리`}
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setActiveModal("network:manage")}
         />
       </div>
 
       <TablesOuter columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}    
         data={filteredData}
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setSelectedClusters(selectedRows)}
+        onRowClick={(selectedRows) => setClustersSelected(selectedRows)}
         multiSelect={false}
         onContextMenuItems={(row) => [
           <div className="right-click-menu-box">
             <button
               className="right-click-menu-btn"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setActiveModal("network:manage")}
             >
               네트워크 관리
             </button>
@@ -105,14 +104,13 @@ const NetworkClusters = ({ networkId }) => {
         isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
       />
 
-      <SelectedIdView item={selectedClusters}/>
+      <SelectedIdView item={clustersSelected}/>
 
       {/* 네트워크 관리창 */}
       <Suspense fallback={<Loading />}>
-        {isModalOpen && (
-          <NetworkClusterModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+        {activeModal() === "network:manage" && (
+          <NetworkClusterModal key={activeModal()} isOpen={activeModal() === "network:manage"}
+            onClose={() => setActiveModal(null)}
             networkId={networkId}
           />
         )}

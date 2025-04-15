@@ -74,11 +74,9 @@ const DomainModal = ({
   datacenterId,
   onClose,
 }) => {
-  const dLabel = 
-    mode === "edit" 
-    ? Localization.kr.UPDATE 
-    : mode === "import" 
-      ? Localization.kr.IMPORT : Localization.kr.CREATE;
+  const dLabel = mode === "update" ? Localization.kr.UPDATE 
+    : mode === "import" ? Localization.kr.IMPORT 
+    : Localization.kr.CREATE;
 
   const editMode = mode === "edit";
   const importMode = mode === "import";
@@ -99,15 +97,14 @@ const DomainModal = ({
     onClose();
     toast.success(`${Localization.kr.DOMAIN} ${dLabel} 완료`);
   };
+  const { data: domain } = useStroageDomain(domainId);
   const { mutate: addDomain } = useAddDomain(onSuccess, () => onClose());
   const { mutate: editDomain } = useEditDomain(onSuccess, () => onClose()); // 편집은 단순 이름, 설명 변경정도
   const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose()); // 가져오기
-
   // const { mutate: loginIscsiFromHost } = useLoginIscsiFromHost(); // 가져오기 iscsi 로그인
   const { mutate: importIscsiFromHost } = useImportIscsiFromHost(); // 가져오기 iscsi
   const { mutate: importFcpFromHost } = useImportFcpFromHost(); // 가져오기 fibre
 
-  const { data: domain } = useStroageDomain(domainId);
   const { 
     data: dataCenters = [],
     isLoading: isDataCentersLoading 
@@ -175,6 +172,7 @@ const DomainModal = ({
       setNfsAddress("");
       setLunId("");
     }
+
     if (editMode && domain) {
       setFormState({
         id: domain?.id,

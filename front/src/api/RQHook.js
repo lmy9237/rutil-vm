@@ -504,7 +504,7 @@ export const useFindTemplatesFromDataCenter = (
   enabled: !!dataCenterId, 
 });
 /**
- * @name useFindDiskListFromDataCenter
+ * @name useAllAttachedDisksFromDataCenter
  * @description 가상머신 연결할 수 있는 디스크 useQuery훅
  * 
  * @param {string} dataCenterId 데이터센터ID
@@ -513,18 +513,18 @@ export const useFindTemplatesFromDataCenter = (
  * 
  * @see ApiManager.findDiskListFromDataCenter
  */
-export const useFindDiskListFromDataCenter = (
+export const useAllAttachedDisksFromDataCenter = (
   dataCenterId,
   mapPredicate=(e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['diskListFromDataCenter', dataCenterId ], 
+  queryKey: ['allAttachedDisksFromDataCenter', dataCenterId ], 
   queryFn: async () => {
-    const res = await ApiManager.findDiskListFromDataCenter(dataCenterId); 
+    const res = await ApiManager.findAllAttachedDisksFromDataCenter(dataCenterId); 
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useFindDiskListFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
+    Logger.debug(`RQHook > useAllAttachedDisksFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
   enabled: !!dataCenterId, 

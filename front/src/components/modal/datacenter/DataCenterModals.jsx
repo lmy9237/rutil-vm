@@ -1,40 +1,41 @@
 import React from "react";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import DataCenterModal from "./DataCenterModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteDataCenter } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 const DataCenterModals = ({ 
-  activeModal, 
-  dataCenter, 
-  selectedDataCenters = [], 
-  onClose
+  dataCenter,
 }) => {
+  const { activeModal, setActiveModal } = useUIState()
+  const { datacentersSelected } = useGlobal()
+
   const modals = {
-    create: 
-      <DataCenterModal 
-        isOpen={activeModal === 'create'} 
-        onClose={onClose} 
-      />,
-    edit: (
-      <DataCenterModal
-        editMode
-        isOpen={activeModal === 'edit'}
-        dcId={dataCenter?.id}
-        onClose={onClose}
+    create: (
+      <DataCenterModal key={activeModal()} isOpen={activeModal() === "datacenter:create"} 
+        onClose={() => setActiveModal(null)}
       />
-    ),
-    delete: (
-      <DeleteModal label={Localization.kr.DATA_CENTER}
-        isOpen={activeModal === "delete"}
-        onClose={onClose}
-        data={selectedDataCenters}
+    ), update: (
+      <DataCenterModal key={activeModal()} isOpen={activeModal() === "datacenter:update"}
+        editMode
+        datacenterId={dataCenter?.id ?? datacentersSelected[0]?.id}
+        onClose={() => setActiveModal(null)}
+      />
+    ), remove: (
+      <DeleteModal key={activeModal()} isOpen={activeModal() === "datacenter:remove"}
+        label={Localization.kr.DATA_CENTER}
+        data={datacentersSelected}
         api={useDeleteDataCenter()}
-        navigation={'/computing/rutil-manager/datacenters'}
+        onClose={() => setActiveModal(null)}
+        // navigation={'/computing/rutil-manager/datacenters'}
       />
     )
   };
 
+  Logger.debug(`DataCenterModals ...`)
   return (
     <>
       {Object.keys(modals).map((key) => (

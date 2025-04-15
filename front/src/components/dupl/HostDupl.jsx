@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
+import useSearch from "../../hooks/useSearch";
 import toast from "react-hot-toast";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import HostModals from "../modal/host/HostModals";
 import HostActionButtons from "./HostActionButtons";
 import SearchBox from "../button/SearchBox";
-import useSearch from "../button/useSearch";
 import { status2Icon, hostedEngineStatus2Icon } from "../icons/RutilVmIcons";
+import { getStatusSortKey } from "../icons/GetStatusSortkey";
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
-import { getStatusSortKey } from "../icons/GetStatusSortkey";
+
 
 const HostDupl = ({
   hosts = [], columns = [], clusterId,
@@ -18,11 +21,9 @@ const HostDupl = ({
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedHosts, setSelectedHosts] = useState([]);
+  const { activeModal, setActiveModal, } = useUIState()
+  const { hostsSelected, setHostsSelected } = useGlobal();
 
-  const openModal = (action) => setActiveModal(action);
-  const closeModal = () => setActiveModal(null);
   const handleNameClick = (id) => navigate(`/computing/hosts/${id}`);
   const handleRefresh = () =>  {
     Logger.debug(`HostDupl > handleRefresh ... `)
@@ -32,7 +33,7 @@ const HostDupl = ({
   }
 
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
-  const transformedData = hosts.map((host) => ({
+  const transformedData = (!Array.isArray(hosts) ? [] : hosts).map((host) => ({
     ...host,
     _name: (
       <TableRowClick type="host" id={host?.id}>
@@ -57,51 +58,36 @@ const HostDupl = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
+  Logger.debug(`HostDupl ...`)
   return (
     <>
      <div className="dupl-header-group f-start">
-        {showSearchBox && (
-          <SearchBox 
-            searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
-            onRefresh={handleRefresh}
-          />
-        )}
+        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}  onRefresh={handleRefresh}/>)}
         <HostActionButtons
-          openModal={openModal}
-          isEditDisabled={selectedHosts.length !== 1}
-          isDeleteDisabled={selectedHosts.length === 0}
-          status={selectedHosts[0]?.status}
-          selectedHosts={selectedHosts || []}
+          status={hostsSelected[0]?.status}
         />
       </div>
+
       <TablesOuter
         columns={columns}
         data={filteredData} 
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setSelectedHosts(selectedRows)}
+        onRowClick={(selectedRows) => setHostsSelected(selectedRows)}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         onContextMenuItems={(row) => [
-          <HostActionButtons
-            openModal={openModal}
+          <HostActionButtons actionType="context"
             status={row?.status}
-            selectedHosts={[row]}
-            actionType="context"
-            isContextMenu={true}
           />,
         ]}
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
-      <SelectedIdView items={selectedHosts}/>
+      <SelectedIdView items={hostsSelected}/>
 
       {/* 호스트 모달창 */}
-      <HostModals
-        activeModal={activeModal}
-        host={selectedHosts[0]}
-        selectedHosts={selectedHosts}
-        clusterId={clusterId}
-        onClose={closeModal}
-      />
+      <HostModals host={activeModal() === "edit" ? hostsSelected[0] : null} clusterId={clusterId} />
     </>
   );
 };

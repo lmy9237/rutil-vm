@@ -28,6 +28,7 @@ import ModalNavButton from "../../navigation/ModalNavButton";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import './MVm.css';
+import CONSTANT from "../../../Constants";
 
 // 탭 메뉴
 const tabs = [
@@ -337,12 +338,12 @@ const VmModal = ({
 
   useEffect(() => {
     if (!editMode && templates && templates.length > 0) {
-      setTemplateVo({id: "00000000-0000-0000-0000-000000000000"});
+      setTemplateVo({id: CONSTANT.templateIdDefault});
     }
   }, [isOpen, templates, editMode]);
   
   // 템플릿항목 숨기는 조건건
-  const isTemplateHidden = editMode && templateVo.id === "00000000-0000-0000-0000-000000000000";
+  const isTemplateHidden = editMode && templateVo.id === CONSTANT.templateIdDefault;
   
   const dataToSubmit = {
     // VmInfo
@@ -373,17 +374,15 @@ const VmModal = ({
     ...formBootState,
 
     // nic 목록
-    nicVos: Array.isArray(nicListState)
-    ? nicListState.map((nic) => ({
-        id: nic?.id || "",
-        name: nic?.name || "",
-        vnicProfileVo: {
-          id: nic?.vnicProfileVo && "id" in nic.vnicProfileVo
-            ? nic.vnicProfileVo.id
-            : null
-        }
-      }))
-    : [],
+    nicVos: (!Array.isArray(nicListState) ? [] : nicListState).map((nic) => ({
+      id: nic?.id || "",
+      name: nic?.name || "",
+      vnicProfileVo: {
+        id: nic?.vnicProfileVo && "id" in nic.vnicProfileVo
+          ? nic.vnicProfileVo.id
+          : null
+      }
+    })),
 
     // 디스크 데이터 (객체 형태 배열로 변환)
     diskAttachmentVos: diskListState.map((disk) => ({
@@ -407,7 +406,8 @@ const VmModal = ({
       },
     })),    
   };
-  console.log("선택된 도메인:", formHaState.storageDomainVo);
+
+  Logger.debug(`VmModal ... formHaState.storageDomainVo: `, formHaState.storageDomainVo);
   const validateForm = () => {
     const nameError = checkName(formInfoState.name);
     if (nameError) return nameError;
