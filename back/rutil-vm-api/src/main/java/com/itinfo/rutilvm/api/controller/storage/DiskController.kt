@@ -84,7 +84,7 @@ class DiskController: BaseController() {
 	): ResponseEntity<List<IdentifiedVo>> {
 		log.info("/storages/disks/{}/cdRoms ... cdroms", diskId)
 		if (diskId == null)
-			throw ErrorPattern.DISK_IMAGE_ID_NOT_FOUND.toException()
+			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
 		return ResponseEntity.ok(iDisk.findAllCdRomsFromDisk(diskId))
 	}
 
@@ -106,7 +106,7 @@ class DiskController: BaseController() {
 		@PathVariable diskId: String? = null,
 	): ResponseEntity<DiskImageVo> {
 		if (diskId == null)
-			throw ErrorPattern.DISK_IMAGE_ID_NOT_FOUND.toException()
+			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
 		log.info("/storages/disks/{} ... 디스크", diskId)
 		return ResponseEntity.ok(iDisk.findOne(diskId))
 	}
@@ -129,7 +129,7 @@ class DiskController: BaseController() {
 		@RequestBody diskImage: DiskImageVo? = null,
 	): ResponseEntity<DiskImageVo?> {
 		if (diskImage == null)
-			throw ErrorPattern.DISK_IMAGE_VO_INVALID.toException()
+			throw ErrorPattern.DISK_VO_INVALID.toException()
 		log.info("/disks ... 디스크 이미지 생성")
 		return ResponseEntity.ok(iDisk.add(diskImage))
 	}
@@ -154,9 +154,9 @@ class DiskController: BaseController() {
 		@RequestBody diskImage: DiskImageVo?
 	): ResponseEntity<DiskImageVo?> {
 		if (diskId == null)
-			throw ErrorPattern.DISK_IMAGE_ID_NOT_FOUND.toException()
+			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
 		if (diskImage == null)
-			throw ErrorPattern.DISK_IMAGE_VO_INVALID.toException()
+			throw ErrorPattern.DISK_VO_INVALID.toException()
 		log.info("/storages/disks/{} ... 디스크 이미지 편집", diskId)
 		return ResponseEntity.ok(iDisk.update(diskImage))
 	}
@@ -179,7 +179,7 @@ class DiskController: BaseController() {
 		@PathVariable diskId: String? = null,
 	): ResponseEntity<Boolean> {
 		if (diskId == null)
-			throw ErrorPattern.DISK_IMAGE_ID_NOT_FOUND.toException()
+			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
 		log.info("/storages/disks/{} ... 디스크 이미지 삭제", diskId)
 		return ResponseEntity.ok(iDisk.remove(diskId))
 	}
@@ -255,7 +255,7 @@ class DiskController: BaseController() {
 		if (diskId.isNullOrEmpty())
 			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
 		if (diskImage == null)
-			throw ErrorPattern.DISK_IMAGE_VO_INVALID.toException()
+			throw ErrorPattern.DISK_VO_INVALID.toException()
 		log.info("/storages/disks/{}/copy ... 디스크 - 복사", diskId)
 		return ResponseEntity.ok(iDisk.copy(diskImage))
 	}
@@ -282,7 +282,7 @@ class DiskController: BaseController() {
 	): Mono<ResponseEntity<Boolean>> {
 		log.info("/storages/disks/upload ... 업로드")
 		if (diskImage == null)
-			throw ErrorPattern.DISK_IMAGE_VO_INVALID.toException()
+			throw ErrorPattern.DISK_VO_INVALID.toException()
 		log.info("Received diskImage: {}", diskImage)
 
 		return Mono.fromRunnable<ResponseEntity<Boolean>?> {

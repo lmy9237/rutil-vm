@@ -65,14 +65,15 @@ enum class ErrorPattern(
 	DISK_ID_NOT_FOUND("DISK-E001", Term.DISK, FailureType.ID_NOT_FOUND),
 	DISK_NOT_FOUND("DISK-E002", Term.DISK, FailureType.NOT_FOUND),
 	DISK_VO_INVALID("DISK-E003", Term.DISK, FailureType.BAD_REQUEST),
+	DISK_BOOT_OPTION("DISK-E004", Term.DISK, FailureType.CONFLICT),
 	DISK_DUPLICATE("DISK-E004", Term.DISK, FailureType.DUPLICATE),
 	DISK_PROFILE_ID_NOT_FOUND("DISK_PROFILE-E001", Term.DISK_PROFILE, FailureType.ID_NOT_FOUND),
 	DISK_PROFILE_NOT_FOUND("DISK_PROFILE-E002", Term.DISK_PROFILE, FailureType.NOT_FOUND),
 	DISK_PROFILE_VO_INVALID("DISK_PROFILE-E003", Term.DISK_PROFILE, FailureType.BAD_REQUEST),
 	DISK_PROFILE_DUPLICATE("DISK_PROFILE-E004", Term.DISK_PROFILE, FailureType.DUPLICATE),
-	DISK_IMAGE_ID_NOT_FOUND("DISKIMAGE-E001", Term.DISK_IMAGE, FailureType.ID_NOT_FOUND),
-	DISK_IMAGE_NOT_FOUND("DISKIMAGE-E002", Term.DISK_IMAGE, FailureType.NOT_FOUND),
-	DISK_IMAGE_VO_INVALID("DISKIMAGE-E003", Term.DISK_IMAGE, FailureType.BAD_REQUEST),
+	// DISK_IMAGE_ID_NOT_FOUND("DISKIMAGE-E001", Term.DISK_IMAGE, FailureType.ID_NOT_FOUND),
+	// DISK_IMAGE_NOT_FOUND("DISKIMAGE-E002", Term.DISK_IMAGE, FailureType.NOT_FOUND),
+	// DISK_IMAGE_VO_INVALID("DISKIMAGE-E003", Term.DISK_IMAGE, FailureType.BAD_REQUEST),
 	DISK_ATTACHMENT_ID_NOT_FOUND("DISKATTACHMENT-E001", Term.DISK_ATTACHMENT, FailureType.ID_NOT_FOUND),
 	DISK_ATTACHMENT_NOT_FOUND("DISKATTACHMENT-E002", Term.DISK_ATTACHMENT, FailureType.NOT_FOUND),
 	DISK_ATTACHMENT_VO_INVALID("DISKATTACHMENT-E003", Term.DISK_ATTACHMENT, FailureType.BAD_REQUEST),
@@ -142,7 +143,7 @@ fun ErrorPattern.toError(): Error {
 			ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND,
 			ErrorPattern.HOST_ID_NOT_FOUND,
 			ErrorPattern.DISK_ID_NOT_FOUND,
-			ErrorPattern.DISK_IMAGE_ID_NOT_FOUND,
+			// ErrorPattern.DISK_IMAGE_ID_NOT_FOUND,
 			ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND,
 			ErrorPattern.NETWORK_ID_NOT_FOUND,
 			ErrorPattern.NIC_ID_NOT_FOUND,
@@ -165,7 +166,7 @@ fun ErrorPattern.toError(): Error {
 			ErrorPattern.STORAGE_DOMAIN_NOT_FOUND,
 			ErrorPattern.HOST_NOT_FOUND,
 			ErrorPattern.DISK_NOT_FOUND,
-			ErrorPattern.DISK_IMAGE_NOT_FOUND,
+			// ErrorPattern.DISK_IMAGE_NOT_FOUND,
 			ErrorPattern.DISK_ATTACHMENT_NOT_FOUND,
 			ErrorPattern.NETWORK_NOT_FOUND,
 			ErrorPattern.NIC_NOT_FOUND,
@@ -193,6 +194,8 @@ fun ErrorPattern.toError(): Error {
 
 		// 특별한 추가 메시지 필요할 때
 		this == ErrorPattern.NIC_UNLINKED_REQUIRED -> Error("[${code}] ${term.desc} ${failureType.message}: $additional")
+
+		this == ErrorPattern.DISK_BOOT_OPTION -> Error("[${code}] ${term.desc} ${failureType.message}: 부팅가능한 디스크는 오직 한개만 가능합니다")
 
 		// 기본 처리
 		else -> Error(failureType.message)

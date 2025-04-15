@@ -112,8 +112,7 @@ fun Connection.shutdownVm(vmId: String): Result<Boolean> = runCatching {
 }
 
 fun Connection.rebootVm(vmId: String): Result<Boolean> = runCatching {
-	val vm: Vm = checkVm(vmId)
-
+	checkVmExists(vmId)
 	this.srvVm(vmId).reboot().send()
 	// this.expectVmStatus(vmId, VmStatus.UP)
 	true
@@ -126,8 +125,7 @@ fun Connection.rebootVm(vmId: String): Result<Boolean> = runCatching {
 }
 
 fun Connection.resetVm(vmId: String): Result<Boolean> = runCatching {
-	val vm: Vm = checkVm(vmId)
-
+	checkVmExists(vmId)
 	this.srvVm(vmId).reset().send()
 	// this.expectVmStatus(vmId, VmStatus.UP)
 	true
@@ -146,31 +144,31 @@ fun Connection.addVm(
 	nics: List<Nic>?,
 	connId: String?,
 ): Result<Vm?> = runCatching {
-	if (this.findAllVms().getOrDefault(listOf())
-			.nameDuplicateVm(vm.name())) {
+	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name())) {
 		throw ErrorPattern.VM_DUPLICATE.toError()
 	}
 
 	val vmAdded: Vm =
 		this.srvVms().add().vm(vm).send().vm() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
 
-	// 디스크 연결 조건 확인 및 실행
-	if (!diskAttachments.isNullOrEmpty()) {
-		this.addMultipleDiskAttachmentsToVm(vmAdded.id(), diskAttachments)
-	}
-	// NIC 추가 조건 확인 및 실행
-	if (!nics.isNullOrEmpty()) {
-		this.addMultipleNicsToVm(vmAdded.id(), nics)
-	}
-	// ISO 설정 조건 확인 및 실행
-	if (connId != null) {
-		this.selectCdromFromVm(vmAdded.id(), connId)
-	}
+	diskAttachments?.takeIf { it.isNotEmpty() }?.let { addMultipleDiskAttachmentsToVm(vmAdded.id(), it) }
+	nics?.takeIf { it.isNotEmpty() }?.let { addMultipleNicsToVm(vmAdded.id(), it) }
+	connId?.takeIf { it.isNotEmpty() }?.let { addCdromFromVm(vmAdded.id(), it) }
 
-	// if (!this.expectVmStatus(vmAdded.id(), VmStatus.DOWN)) {
-	// 	log.error("가상머신 생성 시간 초과: {}", vmAdded.name())
-	// 	return Result.failure(Error("가상머신 생성 시간 초과"))
+
+	// // 디스크 연결 조건 확인 및 실행
+	// if (!diskAttachments.isNullOrEmpty()) {
+	// 	this.addMultipleDiskAttachmentsToVm(vmAdded.id(), diskAttachments)
 	// }
+	// // NIC 추가 조건 확인 및 실행
+	// if (!nics.isNullOrEmpty()) {
+	// 	this.addMultipleNicsToVm(vmAdded.id(), nics)
+	// }
+	// // ISO 설정 조건 확인 및 실행
+	// if (connId != null) {
+	// 	this.addCdromFromVm(vmAdded.id(), connId)
+	// }
+
 	vmAdded
 }.onSuccess {
 	Term.VM.logSuccess("생성", it.id())
@@ -186,25 +184,35 @@ fun Connection.updateVm(
 	nics: List<Nic>?,
 	connId: String?
 ): Result<Vm?> = runCatching {
-	if (this.findAllVms().getOrDefault(listOf())
-			.nameDuplicateVm(vm.name(), vm.id())) {
+	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name(), vm.id())) {
 		throw ErrorPattern.VM_DUPLICATE.toError()
 	}
-	checkVmExists(vm.id())
 
-	val vmUpdated: Vm = this.srvVm(vm.id()).update().vm(vm).send().vm()
-		?: throw ErrorPattern.VM_NOT_FOUND.toError()
+	val vmUpdated: Vm =
+		this.srvVm(vm.id()).update().vm(vm).send().vm() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
 
-	if (!diskAttachments.isNullOrEmpty()) {
-		this.addMultipleDiskAttachmentsToVm(vmUpdated.id(), diskAttachments)
-	}
+	diskAttachments?.takeIf { it.isNotEmpty() }?.let { addMultipleDiskAttachmentsToVm(vmUpdated.id(), it) }
+	nics?.takeIf { it.isNotEmpty() }?.let { addMultipleNicsToVm(vmUpdated.id(), it) }
 
-	if (!nics.isNullOrEmpty()) {
-		this.addMultipleNicsToVm(vmUpdated.id(), nics)
+
+	// if (!diskAttachments.isNullOrEmpty()) {
+	// 	this.addMultipleDiskAttachmentsToVm(vmUpdated.id(), diskAttachments)
+	// }
+	// if (!nics.isNullOrEmpty()) {
+	// 	this.addMultipleNicsToVm(vmUpdated.id(), nics)
+	// }
+
+	val cdrom: Cdrom = this.srvVmCdromsFromVm(vmUpdated.id()).list().send().cdroms().first()
+
+	// ISO 설정 조건 확인 및 실행
+
+	// cdrom에 값 자체가 없다면
+	if (connId != null && !cdrom.filePresent()) {
+		this.addCdromFromVm(vmUpdated.id(), connId)
+	}else if(connId != null && cdrom.filePresent() && cdrom.file().id() != connId ){
+		this.updateCdromFromVm(vmUpdated.id(), cdrom.file().id(), connId)
 	}
-	if (connId != null) {
-		this.selectCdromFromVm(vmUpdated.id(), connId)
-	}
+	// !cdrom.file().id().equals(connId)
 
 	vmUpdated
 }.onSuccess {
@@ -347,11 +355,11 @@ fun Connection.findVmCdromFromVm(vmId: String, cdromId: String): Result<Cdrom?> 
 
 }
 
-fun Connection.selectCdromFromVm(vmId: String, bootId: String): Result<Cdrom> = runCatching {
+fun Connection.addCdromFromVm(vmId: String, cdromId: String): Result<Cdrom> = runCatching {
 	checkVmExists(vmId)
-
 	this.srvVmCdromsFromVm(vmId).add()
-		.cdrom(CdromBuilder().file(FileBuilder().id(bootId))).send().cdrom()
+		.cdrom(CdromBuilder().file(FileBuilder().id(cdromId))).send().cdrom()
+
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "생성", vmId)
 }.onFailure {
@@ -359,16 +367,21 @@ fun Connection.selectCdromFromVm(vmId: String, bootId: String): Result<Cdrom> = 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.updateCdromFromVm(vmId: String, cdromId: String, cdrom: Cdrom): Result<Cdrom?> = runCatching {
+fun Connection.updateCdromFromVm(vmId: String, cdromId: String, newCdromId: String): Result<Cdrom?> = runCatching {
 	checkVmExists(vmId)
+	log.info("======= cdromId: {}, newCdrom: {}", cdromId, newCdromId)
+	this.srvVmCdromFromVm(vmId, cdromId).update()
+		.cdrom(CdromBuilder().file(FileBuilder().id(newCdromId))).send().cdrom()
 
-	this.srvVmCdromFromVm(vmId, cdromId).update().cdrom(cdrom).current(true).send().cdrom()
+		// TODO: current는 실행중인 가상머신에서 바로 변경할때 가능
+		// https://ovirt.github.io/ovirt-engine-api-model/master/#services/vm_cdrom/methods/update
+		// .cdrom(CdromBuilder().file(FileBuilder().id(newCdromId))).current(true).send().cdrom()
+
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "편집", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.CD_ROM, "편집", it, vmId)
 	throw if (it is Error) it.toItCloudException() else it
-
 }
 
 private fun Connection.srvNicsFromVm(vmId: String): VmNicsService =

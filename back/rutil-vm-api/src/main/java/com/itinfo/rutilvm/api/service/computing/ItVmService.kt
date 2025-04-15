@@ -181,41 +181,36 @@ class VmServiceImpl(
 	@Throws(Error::class)
 	override fun findEditOne(vmId: String): VmCreateVo? {
 		log.info("findEditOne ... vmId : {}", vmId)
-		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,nics.vnicprofile.network,diskattachments,cdroms,statistics").getOrNull()
 		// vm의 상태가 unknown일때 follow 일때 null
+		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,nics.vnicprofile.network,diskattachments,cdroms,statistics").getOrNull()
 		return res?.toVmCreateVo(conn)
 	}
 
 
 	@Throws(Error::class)
 	override fun add(vmCreateVo: VmCreateVo): VmCreateVo? {
-		if(vmCreateVo.diskAttachmentVos.filter { it.bootable }.size > 1){
-			log.error("부팅가능한 디스크는 한개만")
-			throw ErrorPattern.VM_VO_INVALID.toException()
-		}
 		log.info("vmCreateVo {}", vmCreateVo)
-		log.info("cd  {} {}", vmCreateVo.connVo.id, vmCreateVo.connVo.name)
+
+		if(vmCreateVo.diskAttachmentVos.filter { it.bootable }.size > 1){
+			throw ErrorPattern.DISK_BOOT_OPTION.toException()
+		}
 
 		val res: Vm? = conn.addVm(
 			vmCreateVo.toAddVmBuilder(),
 			vmCreateVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
-			vmCreateVo.nicVos.map { it.toVmNicBuilder() }.takeIf { it.isNotEmpty() }, // NIC가 있는 경우만 전달
+			vmCreateVo.nicVos.takeIf { it.isNotEmpty() }?.map { it.toVmNicBuilder() }, // NIC가 있는 경우만 전달
 			vmCreateVo.connVo.id.takeIf { it.isNotEmpty() }  // ISO 설정이 있는 경우만 전달
 		).getOrNull()
 		return res?.toVmCreateVo(conn)
 	}
 
 	// 서비스에서 디스크 목록과 nic 목록을 분류(분류만)
-	// 가상머신이 down 상태가 아니라면 편집 불가능
 	@Throws(Error::class)
 	override fun update(vmUpdateVo: VmCreateVo): VmCreateVo? {
-		// log.info("update ... ")
-		log.info("bios {}, fromValue: {}, valueOf: ", vmUpdateVo.osType, BiosType.fromValue(vmUpdateVo.osType))
 		log.info("update ... vmCreateVo: {}", vmUpdateVo)
 
 		if(vmUpdateVo.diskAttachmentVos.filter { it.bootable }.size > 1){
-			log.error("디스크 부팅가능은 한개만 가능")
-			throw ErrorPattern.VM_VO_INVALID.toException()
+			throw ErrorPattern.DISK_BOOT_OPTION.toException()
 		}
 
 		// 기존 디스크 목록 조회
@@ -240,12 +235,8 @@ class VmServiceImpl(
 		val newNicIds = vmUpdateVo.nicVos.mapNotNull { it.id.takeIf { id -> id.isNotEmpty() } }.toSet()
 		val deleteNics = existNics.filter { it.id() !in newNicIds }
 
-		// NIC 삭제 처리
-		// TODO: 에러처리 고도화 필요
-
 		deleteNics.forEach { nic ->
 			conn.removeNicFromVm(vmUpdateVo.id, nic.id())
-			log.info("nic 삭제: {}", nic.name())
 		}
 
 		val res: Vm? = conn.updateVm(

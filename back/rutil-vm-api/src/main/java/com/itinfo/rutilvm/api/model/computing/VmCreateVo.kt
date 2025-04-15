@@ -146,7 +146,6 @@ class VmCreateVo (
 }
 
 fun VmCreateVo.toVmBuilder(): VmBuilder {
-	// log.info("vmCreateVo: {}", this)
 	return VmBuilder().apply {
 		toVmInfoBuilder(this)
 		toVmSystemBuilder(this)
@@ -158,7 +157,9 @@ fun VmCreateVo.toVmBuilder(): VmBuilder {
 }
 
 fun VmCreateVo.toAddVmBuilder(): Vm =
-	toVmBuilder().template(TemplateBuilder().id(templateVo.id)).build()
+	toVmBuilder()
+		.template(TemplateBuilder().id(templateVo.id))
+		.build()
 
 fun VmCreateVo.toEditVmBuilder(): Vm =
 	toVmBuilder()
@@ -184,20 +185,24 @@ fun VmCreateVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 
 fun VmCreateVo.toVmSystemBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	memory(memorySize)
-	memoryPolicy(MemoryPolicyBuilder().max(memoryMax).guaranteed(memoryActual))
+	memoryPolicy(
+		MemoryPolicyBuilder().max(memoryMax).guaranteed(memoryActual)
+	)
 	cpu(
-		CpuBuilder().topology(CpuTopologyBuilder()
-		.cores(cpuTopologyCore)
-		.sockets(cpuTopologySocket)
-		.threads(cpuTopologyThread)
-		.build())
+		CpuBuilder()
+			.topology(
+				CpuTopologyBuilder()
+					.cores(cpuTopologyCore)
+					.sockets(cpuTopologySocket)
+					.threads(cpuTopologyThread)
+					.build()
+			)
 	)
 }
 
 fun VmCreateVo.toVmInitBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	if (cloudInit) {
-		initialization(InitializationBuilder()
-			.customScript(script))
+		initialization(InitializationBuilder().customScript(script))
 	}
 }
 
@@ -211,17 +216,19 @@ fun VmCreateVo.toVmHostBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 
 fun VmCreateVo.toVmHaBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	highAvailability(HighAvailabilityBuilder().enabled(ha).priority(priority))
-	if (ha && storageDomainVo.id.isEmpty()) {
-		lease(StorageDomainLeaseBuilder().storageDomain(StorageDomainBuilder().id(storageDomainVo.id).build()))
+	if (ha && storageDomainVo.id.isNotEmpty()) {
+		lease(StorageDomainLeaseBuilder().storageDomain(StorageDomainBuilder().id(storageDomainVo.id).build()).build())
 	}
 }
 
 fun VmCreateVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	val bootDeviceList = mutableListOf(BootDevice.fromValue(firstDevice))
 	if (secDevice.isNotEmpty()) bootDeviceList.add(BootDevice.fromValue(secDevice))
-	os(OperatingSystemBuilder()
+	os(
+		OperatingSystemBuilder()
 		.type(osSystem)
-		.boot(BootBuilder().devices(bootDeviceList)))
+		.boot(BootBuilder().devices(bootDeviceList))
+	)
 	bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(bootingMenu)).build())
 }
 
