@@ -368,14 +368,11 @@ fun Connection.addCdromFromVm(vmId: String, cdromId: String): Result<Cdrom> = ru
 }
 
 fun Connection.updateCdromFromVm(vmId: String, cdromId: String, newCdromId: String): Result<Cdrom?> = runCatching {
-	checkVmExists(vmId)
-	log.info("======= cdromId: {}, newCdrom: {}", cdromId, newCdromId)
-	this.srvVmCdromFromVm(vmId, cdromId).update()
-		.cdrom(CdromBuilder().file(FileBuilder().id(newCdromId))).send().cdrom()
+	val vm = checkVm(vmId)
 
-		// TODO: current는 실행중인 가상머신에서 바로 변경할때 가능
-		// https://ovirt.github.io/ovirt-engine-api-model/master/#services/vm_cdrom/methods/update
-		// .cdrom(CdromBuilder().file(FileBuilder().id(newCdromId))).current(true).send().cdrom()
+	// current는 실행중인 가상머신에서 바로 변경할때 가능
+	this.srvVmCdromFromVm(vmId, cdromId).update()
+		.cdrom(CdromBuilder().file(FileBuilder().id(newCdromId))).current(vm.status() == VmStatus.UP).send().cdrom()
 
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "편집", vmId)

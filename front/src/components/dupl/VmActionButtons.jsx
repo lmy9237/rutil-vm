@@ -59,6 +59,7 @@ const VmActionButtons = ({
     }, { 
       type: "reset", label: "재설정", disabled: !isUp
       , onBtnClick: () => openModal("reset")
+      // 가상머신의 시스템을 변경했을때 바뀐 설정을 적용하려면 재설정으로만 적용이 가능함
     }, { 
       type: "shutdown", label: "종료", disabled: !isUp
       , onBtnClick: () => openModal("shutdown") 

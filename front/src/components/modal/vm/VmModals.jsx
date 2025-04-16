@@ -18,7 +18,7 @@ const VmModals = ({ activeModal, vm, selectedVms = [], onClose }) => {
     snapshot:  (<VmSnapshotModal    isOpen={activeModal === "snapshot"}  onClose={onClose} selectedVm={vm}  />),
     import:    (<VmImportModal      isOpen={activeModal === "import"}    onClose={onClose}/>),  // 조건건바꿔야함
     // copy:      (<></>),  
-    migration: (<VmMigrationModal   isOpen={activeModal === "migration"} onClose={onClose} selectedVm={vm} />),    // 조건바꿔야함
+    migration: (<VmMigrationModal   isOpen={activeModal === "migration"} onClose={onClose} selectedVms={selectedVms} />),    // 조건바꿔야함
     ova:       (<VmExportOVAModal   isOpen={activeModal === "ova"}       onClose={onClose} selectedVm={vm} vmId={vm?.id} />),
     action: (
       <VmActionModal

@@ -34,7 +34,7 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
         try {
           const disks = await ApiManager.findDisksFromVM(vmId);
           console.info(`disks *** ${vmId}`, disks);
-          return disks || [];
+          return disks.body || [];
         } catch (error) {
           console.error(`Error fetching disks for VM ${vmId}`, error);
           return [];
@@ -42,24 +42,29 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
       }
     })),
   });  
-
-  //TODO:디스크가 뜨지 않음
-  Logger.debug(`VmDeleteModal.diskQueries: `, diskQueries);
-  
-  useEffect(() => {
-    if (!diskQueries || !Array.isArray(diskQueries)) return;
-
-    const newStates = {};
-    diskQueries.forEach((query, index) => {
-      const hasData = query?.data && Array.isArray(query.data) && query.data.length > 0;
-      newStates[ids[index]] = hasData;
-    });
     
-    setDetachOnlyList((prevStates) => ({
-      ...prevStates,
-      ...newStates,
-    }));
-  }, [JSON.stringify(diskQueries), ids]);
+  useEffect(() => {
+    if (!Array.isArray(diskQueries)) return;
+  
+    const isAllFetched = diskQueries.every(
+      (query) => query.status === 'success' || query.status === 'error'
+    );
+  
+    if (!isAllFetched) return;
+  
+    const newStates = {};
+    ids.forEach((vmId, index) => {
+      const disks = diskQueries[index]?.data || [];
+      const hasDisks = Array.isArray(disks) && disks.length > 0;
+      newStates[vmId] = hasDisks;
+    });
+  
+    setDetachOnlyList((prev) => {
+      const isSame = ids.every((id) => prev[id] === newStates[id]);
+      return isSame ? prev : newStates;
+    });
+  }, [ids, diskQueries.map(q => q.status).join(), diskQueries.map(q => q.data?.length).join()]);
+  
 
   const handleCheckboxChange = (vmId) => {
     setDetachOnlyList((prevStates) => ({ ...prevStates, [vmId]: !prevStates[vmId] }));
@@ -78,20 +83,22 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
     <BaseModal targetName={Localization.kr.VM} submitTitle={Localization.kr.REMOVE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      promptText={`다음 항목을 삭제하시겠습니까?`}
+      promptText={`다음 항목을 ${Localization.kr.REMOVE}하시겠습니까?`}
       contentStyle={{ width: "690px"}} 
       shouldWarn={true}
     >
       {ids?.map((vmId, index) => {
-        const isDisabled = !diskQueries[index]?.data || !Array.isArray(diskQueries[index]?.data) || diskQueries[index].data.length === 0;
+        const disks = diskQueries[index]?.data || [];
+        const isDisabled = disks.length === 0;
+
         return (
           <div key={vmId} className="disk-delete-checkbox f-btw">
             <div className="disk-delete-label">{names[index]}</div>
-            <LabelCheckbox label={`${Localization.kr.DISK} ${Localization.kr.REMOVE}`}
-              id={`diskDelete-${vmId}`}
+            <LabelCheckbox id={`diskDelete-${vmId}`} 
+              label={`${Localization.kr.DISK} ${Localization.kr.REMOVE}`}               
               checked={detachOnlyList[vmId] || false}
               onChange={() => handleCheckboxChange(vmId)}
-              disabled={isDisabled}              
+              disabled={isDisabled}
             />
           </div>
         );
