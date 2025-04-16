@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense } from "react";
+import React, { useState, useEffect, useRef, Suspense, useMemo } from "react";
 import { useHost, useNetworkAttachmentsFromHost, useNetworkFromCluster, useNetworkInterfacesFromHost } from "../../../api/RQHook";
 import { checkZeroSizeToMbps } from "../../../util";
 import { RVI16, rvi16TriangleDown, rvi16TriangleUp, rvi16VirtualMachine, RVI24, rvi24CompareArrows, RVI36, rvi36Edit, status2Icon } from "../../../components/icons/RutilVmIcons";
@@ -9,6 +9,7 @@ import LabelCheckbox from "../../../components/label/LabelCheckbox";
 import { Tooltip } from "react-tooltip";
 import ActionButton from "../../../components/button/ActionButton";
 import Localization from "../../../utils/Localization";
+import "./Host.css";
 
 const assignmentMethods = [
   { value: "none", label: "없음" },
@@ -33,7 +34,138 @@ const HostNics = ({ hostId }) => {
   const [isBondingPopupOpen, setIsBondingPopupOpen] = useState(false);
   const [isNetworkEditPopupOpen, setIsNetworkEditPopupOpen] = useState(false);
   
+  // 드레그
+  const [detachedNetworks, setDetachedNetworks] = useState([]);
+  const dragItem = useRef(null);
+  const dragStart = (e, item, source, parentId = null) => {
+    dragItem.current = { item, source, parentId };
+  };
+  const [tempAttachments, setTempAttachments] = useState([]);
+  const drop = (targetId, targetType) => {
+    if (!dragItem.current) return;
+    const { item, source, parentId } = dragItem.current;
+  
+    // if (source === "unassigned" && targetType === "nic") {
+    //   const targetNic = nicDisplayList.find((nic) => nic.id === targetId);
+    //   const matchedNA = filteredNAData.find((na) => na.hostNicVo.id === targetId);
+  
+    //   if (matchedNA) {
+    //     alert("1개의 네트워크만 연결할 수 있습니다.");
+    //   } else {
+    //     setSelectedNic(targetNic);
+    //     setSelectedNetwork(item);
+    //     setIsNetworkEditPopupOpen(true);
+    //   }
+    
+    //   dragItem.current = null;
+    //   return;
+    // }
+  
+    if (source === "nic" && targetType === "nic") {
+      if (parentId === targetId) {
+        alert("같은 본딩 내에서는 이동할 수 없습니다.");
+        dragItem.current = null;
+        return;
+      }
+    
+      const sourceNic = nicDisplayList.find(nic => nic.id === parentId);
+      const targetNic = nicDisplayList.find(nic => nic.id === targetId);
+    
+      const sourceSlaveCount = sourceNic?.bondingVo?.slaves?.length || 0;
+      const targetSlaveCount = targetNic?.bondingVo?.slaves?.length || 0;
+    
+      const sourceIsSingle = sourceSlaveCount <= 1;
+      const targetIsSingle = targetSlaveCount <= 1;
+    
+      const sourceHasNet = transNAData.some(na => na.hostNicVo.id === parentId);
+      const targetHasNet = transNAData.some(na => na.hostNicVo.id === targetId);
+    
+      if (sourceIsSingle && targetIsSingle) {
+        if (sourceHasNet && targetHasNet) {
+          alert("두 단일 인터페이스 모두 네트워크가 연결되어 있어 본딩할 수 없습니다.");
+          dragItem.current = null;
+          return;
+        }
+    
+        // ✅ 본딩 생성이 필요한 조건이지만, 실제 본딩 모달은 띄우지 않음
+        // → 여기선 나중에 처리할 수 있도록 state만 세팅해두거나 이동만 처리
+        console.log("단일 NIC끼리 본딩 가능"); // 참고용 로그
+        dragItem.current = null;
+        return;
+      }
+    
+      if (!sourceIsSingle && targetIsSingle && targetHasNet) {
+        alert("네트워크가 연결된 NIC에는 슬레이브를 추가할 수 없습니다.");
+        dragItem.current = null;
+        return;
+      }
+    
+      // ✅ 그 외 경우도 그냥 드래그 허용. 모달 열지 않음
+      console.log("드래그만 허용. 모달은 안 뜸.");
+      dragItem.current = null;
+      return;
+    }
+    
+    
+    // 네트워크
+    if (source === "network" && targetType === "unassigned") {
+      console.log("💥 네트워크 할당 해제", item, "from", parentId);
+    
+      const detachedNA = {
+        id: `temp-detached-${item.id}-${parentId}`,
+        inSync: true,
+        ipAddressAssignments: [],
+        hostVo: { id: host?.id, name: host?.name },
+        hostNicVo: { id: parentId, name: nicDisplayList.find(n => n.id === parentId)?.name },
+        networkVo: { id: item.id, name: item.name },
+        nameServerList: []
+      };
+    
+      // 추가!
+      setDetachedNetworks(prev => Array.from(new Set([...prev, item.id])));
+      setSelectedNetwork(detachedNA); // <- 모달이나 로깅용
+      setSelectedNic(null); // 필요시 초기화
+    
+      dragItem.current = null;
+      return;
+    }
+    
 
+
+    // drop 내에서 네트워크를 NIC에 할당
+    if (source === "unassigned" && targetType === "nic") {
+      const targetNic = nicDisplayList.find((nic) => nic.id === targetId);
+    
+      const newNA = {
+        id: `temp-${item.id}-${targetNic.id}`,
+        inSync: true,
+        ipAddressAssignments: [],
+        hostVo: { id: host?.id, name: host?.name },
+        hostNicVo: { id: targetNic.id, name: targetNic.name },
+        networkVo: { id: item.id, name: item.name },
+        nameServerList: [],
+      };
+    
+      // 💥 기존 연결을 강제로 detached 처리
+      const existingNA = filteredNAData.find((na) => na.networkVo.id === item.id);
+      if (existingNA) {
+        setDetachedNetworks((prev) => [...prev, item.id]);
+      }
+    
+      setTempAttachments((prev) => [
+        ...prev.filter((na) => na.networkVo.id !== item.id),
+        newNA,
+      ]);
+      setSelectedNetwork(newNA);
+      setSelectedNic(targetNic);
+      dragItem.current = null;
+      return;
+    }
+    
+    dragItem.current = null;
+  };
+  
+  
   // nic 데이터 변환
   const transformedData = hostNics.map((e) => ({
     ...e,
@@ -127,7 +259,9 @@ const HostNics = ({ hostId }) => {
     },
     nameServerList: e?.nameServerList || []
   }));  
-
+  const filteredNAData = transNAData.filter(
+    na => !detachedNetworks.includes(na.networkVo.id)
+  );
   // 호스트가 가지고 있는 전체 네트워크 데이터 변환
   const transNetworkData = networks.map((e) => ({
     id: e?.id,
@@ -138,10 +272,11 @@ const HostNics = ({ hostId }) => {
   }));
   
   // 결합되지 못한 네트워크 데이터 필터링
-  const transUnNetworkData = transNetworkData.filter(
-    (net) => !(transNAData.map((na) => na.networkVo?.id)).includes(net.id)
-  );
 
+  const transUnNetworkData = useMemo(() => {
+    const allAttachedNetworkIds = [...filteredNAData, ...tempAttachments].map((na) => na.networkVo?.id);
+    return transNetworkData.filter(net => !allAttachedNetworkIds.includes(net.id));
+  }, [filteredNAData, tempAttachments, transNetworkData]);
   // nic 툴팁
   const generateNicTooltipHTML = (nic) => {
     return `
@@ -208,155 +343,187 @@ const HostNics = ({ hostId }) => {
         />
       </div>
 
-      <div className="py-3 font-bold underline"></div>
+      <div className="py-3 font-bold underline">색깔 임시로 넣어놓았습니다.</div>
+      
       <div className="host-network-separation f-btw">
-        <div className="network-separation-left">
-          <div className="f-btw">
-            <div>인터페이스</div>
-            <div>할당된 논리 네트워크</div>
-          </div>
+        <div className="flex separations">
+          <div className="network-separation-left">
 
-          <div className="single-container-wrapper">
-            {nicDisplayList.map((nic) => {
-              const matchedNA = transNAData.find(
-                (na) => na.networkVo?.id && na.networkVo.id === nic.network?.id
-              );
-            
-              return (
-                <div key={nic.id} className="f-btw items-center mb-2">
-                  <div className="w-[39%]">
-                    {nic.bondingVo?.slaves?.length > 0 ? (
-                      <div 
-                        className="container flex-col p-2 rounded"                      
-                        data-tooltip-id={`nic-tooltip-${nic.id}`}
-                        data-tooltip-html={generateNicTooltipHTML(nic)}
-                      >
-                        <div className=" cursor-default select-none interface-content">
-                          <div className="f-start">
-                            <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
-                            {nic.name}
-                          </div>
-                          <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
-                          <RVI36 iconDef={rvi36Edit} className="icon cursor-pointer"
-                            onClick={() => {
-                              setSelectedNic(nic);
-                              setIsBondingPopupOpen(true); 
-                            }}
-                          />
-                     </div>                   
-                        <div className="ml-4 mt-1 text-sm">
-                          {nic.bondingVo.slaves.map((slave) => {
-                            return (
-                              <div
-                                key={slave.id}
-                                className={`container block mb-1 px-2 py-1 rounded transition`}
-                                draggable
-                                data-tooltip-id={`nic-tooltip-${slave.id}`}
-                                data-tooltip-html={generateNicTooltipHTML(slave)}
-                                onClick={() => {
-                                  setSelectedSlave(slave);
-                                  setSelectedNic(null);  // nic는 초기화
-                                }}
-                              >
-                                <div className="flex items-center gap-1">
-                                  <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
-                                  {slave.name}
-                                  <Tooltip id={`nic-tooltip-${slave.id}`} place="top" effect="solid" />
+            <div className="f-btw mb-2">
+              <div>인터페이스</div>
+              <div>할당된 논리 네트워크</div>
+            </div>
+
+            <div className="single-container-wrapper">
+              {nicDisplayList.map((nic) => {
+                const matchedNA = [...filteredNAData, ...tempAttachments].find(
+                  (na) => na.hostNicVo?.id === nic.id
+                );
+              
+                return (
+                  <div key={nic.id} className="f-btw mb-2 nic-outer">
+                    <div className="interface-content-outer"
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={() => drop(nic.id, "nic")}
+                      
+                    >
+                      {nic.bondingVo?.slaves?.length > 0 ? (
+                        <div 
+                          className="container flex-col p-2 rounded"                      
+                          data-tooltip-id={`nic-tooltip-${nic.id}`}
+                          data-tooltip-html={generateNicTooltipHTML(nic)}
+                        >
+                          <div className="interface-content">
+                            <div className="f-start">
+                              <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
+                              {nic.name}
+                            </div>
+                            {/* <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" /> */}
+                            <RVI36 iconDef={rvi36Edit} className="icon cursor-pointer"
+                              onClick={() => {
+                                setSelectedNic(nic);
+                                setIsBondingPopupOpen(true); 
+                              }}
+                            />
+                          </div>                   
+                          <div 
+                            className="w-full interface-container-outer"
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={() => drop(nic.id, "bonding-group")} // 👈 타입 다르게
+                          >
+                            {nic.bondingVo.slaves.map((slave) => {
+                              return (
+                                <div
+                                  key={slave.id}
+                                  className={`interface-container container`}
+                                  draggable
+                                  data-tooltip-id={`nic-tooltip-${slave.id}`}
+                                  data-tooltip-html={generateNicTooltipHTML(slave)}
+                                  onClick={() => {
+                                    setSelectedSlave(slave);
+                                    setSelectedNic(null);  // nic는 초기화
+                                  }}
+                                  onDragStart={(e) => dragStart(e, slave, "nic", nic.id)}
+                                >
+                                  <div className="flex  gap-1">
+                                    <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
+                                    {slave.name}
+                                    {/* <Tooltip id={`nic-tooltip-${slave.id}`} place="top" effect="solid" /> */}
+                                  </div>
                                 </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ) : (
+                        <div
+                          className="interface-container container"
+                          draggable
+                          data-tooltip-id={`nic-tooltip-${nic.id}`}
+                          data-tooltip-html={generateNicTooltipHTML(nic)}
+                          onClick={() => {
+                            setSelectedNic(nic);      // NIC 클릭 시 선택
+                            setSelectedSlave(null);   // slave 선택 초기화
+                          }}
+                        >
+                          <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
+                          {nic.name}
+                          <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* 화살표 */}
+                    {matchedNA && (
+                      <div className="flex items-center justify-center">
+                        <RVI24 iconDef={rvi24CompareArrows()} className="icon" />
+                      </div>
+                    )}
+
+                    {matchedNA ? (
+                      <div className="w-[41%] assigned-network-outer">
+                        <div
+                          className="container assigned-network" 
+                          draggable
+                          onDragStart={(e) => {
+                            console.log("🟢 onDragStart 발생 - assigned-network");
+                            console.log("📦 드래그 대상 networkVo:", matchedNA.networkVo);
+                            console.log("📦 드래그 parent NIC ID:", matchedNA.hostNicVo?.id);
+                            dragStart(e, matchedNA.networkVo, "network", matchedNA.hostNicVo?.id);
+                          }}
+                          data-tooltip-id={`network-tooltip-${matchedNA.networkVo.id}`}
+                          data-tooltip-html={generateNetworkTooltipHTML(matchedNA)}
+                          onClick={() => {
+                            setSelectedNetwork(matchedNA);  // 중요: matchedNA 통째로 전달!
+                          }}
+                        >
+                          <div className="assigned-network-content">
+                            <div>
+                              <div className="f-start">
+                                <RVI16 iconDef={matchedNA.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
+                                {matchedNA.networkVo?.name || "이름 없음"}
                               </div>
-                            );
-                          })}
+                              <div className="pl-5 assigned-network-label">{`(VLAN ${matchedNA.networkVo?.id})`}</div>
+                            </div>
+                            {/* <Tooltip id={`network-tooltip-${matchedNA.networkVo?.id}`} place="top" effect="solid" /> */}
+                        
+                            <div className="right-section">
+                              <RVI36 
+                                iconDef={rvi36Edit} 
+                                className="icon cursor-pointer" 
+                                onClick={() => {
+                                  setSelectedNetwork(matchedNA); // 통째로 넘김
+                                  setIsNetworkEditPopupOpen(true); 
+                                }}
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     ) : (
-                      <div
-                        className="container"
-                        draggable
-                        data-tooltip-id={`nic-tooltip-${nic.id}`}
-                        data-tooltip-html={generateNicTooltipHTML(nic)}
-                        onClick={() => {
-                          setSelectedNic(nic);      // NIC 클릭 시 선택
-                          setSelectedSlave(null);   // slave 선택 초기화
-                        }}
+                      <div className="empty-network-content container w-[41%] text-gray-400"
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={() => drop(nic.id, "nic")} 
                       >
-                        <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
-                        {nic.name}
-                        <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
+                        할당된 네트워크 없음
                       </div>
                     )}
                   </div>
-
-                  {/* 화살표 */}
-                  {matchedNA && (
-                    <div className="flex items-center justify-center">
-                      <RVI24 iconDef={rvi24CompareArrows()} className="icon" />
-                    </div>
-                  )}
-
-                  {matchedNA ? (
-                    <div className="w-[41%]">
-                      <div
-                        className="container" 
-                        draggable
-                        data-tooltip-id={`network-tooltip-${matchedNA.networkVo.id}`}
-                        data-tooltip-html={generateNetworkTooltipHTML(matchedNA)}
-                        onClick={() => {
-                          setSelectedNetwork(matchedNA);  // 중요: matchedNA 통째로 전달!
-                        }}
-                      >
-                        <div className="left-section">
-                          <RVI16 iconDef={matchedNA.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
-                          {matchedNA.networkVo?.name || "이름 없음"}<br />
-                          {`(VLAN ${matchedNA.networkVo?.id})`}
-                          <Tooltip id={`network-tooltip-${matchedNA.networkVo?.id}`} place="top" effect="solid" />
-                        </div>
-                        <div className="right-section">
-                          <RVI36 
-                            iconDef={rvi36Edit} 
-                            className="icon cursor-pointer" 
-                            onClick={() => {
-                              setSelectedNetwork(matchedNA); // 통째로 넘김
-                              setIsNetworkEditPopupOpen(true); 
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="container w-[41%] text-gray-400">할당된 네트워크 없음</div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* <div className="mt-4 p-3 border-t border-gray-300 text-sm">
-          <div><strong>선택된 NIC ID:</strong> <span>{selectedNic?.id || "없음"}</span></div>
-          <div><strong>선택된 Slave ID:</strong> <span>{selectedSlave?.id || "없음"}</span></div>
-          <div><strong>선택된 네트워크 ID:</strong> <span>{selectedNetwork?.id || "없음"}</span></div>
-        </div> */}
-
-        <div
-          className="network-separation-right"
-          onDragOver={(e) => e.preventDefault()}
-        >
-          <div className="unassigned-network">
-            <div>할당되지 않은 논리 네트워크</div>
-          </div>
-          {transUnNetworkData?.map((net) => (
-            <div
-              key={net.id}
-              className="network-item"
-              draggable
-            >
-              <div className="flex text-left">
-                {status2Icon(net?.status)}&nbsp;&nbsp;{net?.name}<br />
-                {net?.vlan === 0 ? "" : `(VLAN ${net?.vlan})`}
-              </div>
-              <RVI16 iconDef={rvi16VirtualMachine} className="icon" />
+                );
+              })}
             </div>
-          ))}
+          </div>
+
+          {/* <div className="mt-4 p-3 border-t border-gray-300 text-sm">
+            <div><strong>선택된 NIC ID:</strong> <span>{selectedNic?.id || "없음"}</span></div>
+            <div><strong>선택된 Slave ID:</strong> <span>{selectedSlave?.id || "없음"}</span></div>
+            <div><strong>선택된 네트워크 ID:</strong> <span>{selectedNetwork?.id || "없음"}</span></div>
+          </div> */}
+
+          {/*할당되지않은 네트워크 */}
+          <div
+            className="network-separation-right"
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={() => drop(null, "unassigned")}
+          >
+            <div className="unassigned-network">
+              <div>할당되지 않은 논리 네트워크</div>
+            </div>
+            {transUnNetworkData?.map((net) => (
+              <div
+                key={net.id}
+                className="network-item"
+                draggable
+                onDragStart={(e) => dragStart(e, net, "unassigned")} // ✅ source 지정!
+              >
+                <div className="flex text-left">
+                  {status2Icon(net?.status)}&nbsp;&nbsp;{net?.name}<br />
+                  {net?.vlan === 0 ? "" : `(VLAN ${net?.vlan})`}
+                </div>
+                <RVI16 iconDef={rvi16VirtualMachine} className="icon" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -372,7 +539,7 @@ const HostNics = ({ hostId }) => {
       <Suspense fallback={<Loading />}>
         <HostNetworkBondingModal
           isOpen={isBondingPopupOpen}
-          // editmode={} // 전제조건 줘야함
+          // editmode={} 
           editmode
           hostId={hostId}
           nicId={selectedNic?.id}  // 선택된 NIC 전달

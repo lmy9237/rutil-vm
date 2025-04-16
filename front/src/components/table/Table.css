@@ -11,6 +11,13 @@
   color: var(--color-nav);
   letter-spacing:var(--letter-28);
 }
+.cell-ellipsis {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 /*search-box*/
 .search-box button {
   padding: 5px 10px;

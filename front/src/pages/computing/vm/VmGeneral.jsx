@@ -118,7 +118,7 @@ const VmGeneral = ({ vmId }) => {
       label: Localization.kr.CLUSTER,
       value: (
         <div className="related-object f-start">
-          <RVI16 iconDef={rvi16Cluster} />
+          <RVI16 iconDef={rvi16Cluster} className="mr-1"/>
           <TableRowClick type="cluster" id={vm?.clusterVo?.id}>
             {vm?.clusterVo?.name}
           </TableRowClick>
@@ -128,7 +128,7 @@ const VmGeneral = ({ vmId }) => {
       label: Localization.kr.HOST,
       value: (
         <div className="related-object f-start">
-          <RVI16 iconDef={rvi16Host} />
+          <RVI16 iconDef={rvi16Host} className="mr-1"/>
           <TableRowClick type="host" id={vm?.hostVo?.id}>
             {vm?.hostVo?.name}
           </TableRowClick>

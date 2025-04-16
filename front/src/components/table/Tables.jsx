@@ -216,16 +216,15 @@ const Tables = ({
 
   // 툴팁 설정
   const handleMouseEnter = (e, rowIndex, colIndex, content) => {
-    Logger.debug(`Tables > handleMouseEnter ... rowIndex: ${rowIndex}, colIndex: ${colIndex}`);
-    const element = e.target;
-    if (element.scrollWidth > element.clientWidth) {
-      setTooltips((prevTooltips) => ({
-        ...prevTooltips,
+    const target = e.currentTarget.querySelector('.cell-ellipsis');
+    if (target && target.scrollWidth > target.clientWidth) {
+      setTooltips((prev) => ({
+        ...prev,
         [`${rowIndex}-${colIndex}`]: content,
       }));
     } else {
-      setTooltips((prevTooltips) => ({
-        ...prevTooltips,
+      setTooltips((prev) => ({
+        ...prev,
         [`${rowIndex}-${colIndex}`]: null,
       }));
     }
@@ -395,25 +394,19 @@ const Tables = ({
                       }
                     }}
                   >
-                    <Tippy
-                      content={getCellTooltipContent(cellValue)}
-                      delay={[200, 0]}
-                      placement="top"
-                      animation="shift-away"
-                      theme="dark-tooltip"
-                      arrow={true}
-                      disabled={!tooltips[`${globalIndex}-${colIndex}`]}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: columnAlign === "center" ? "center" : "flex-start",
-                          alignItems: "center",
-                        }}
-                      >
-                        {isJSX ? cellValue : String(cellValue ?? "")}
-                      </div>
-                    </Tippy>
+                  <Tippy
+                    content={getCellTooltipContent(cellValue)}
+                    delay={[200, 0]}
+                    placement="top"
+                    animation="shift-away"
+                    theme="dark-tooltip"
+                    arrow={true}
+                    disabled={!tooltips[`${globalIndex}-${colIndex}`]}
+                  >
+                    <div className="cell-ellipsis">
+                      {isJSX ? cellValue : String(cellValue ?? "")}
+                    </div>
+                  </Tippy>
                   </td>
                 );
               })}

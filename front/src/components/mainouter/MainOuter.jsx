@@ -18,7 +18,7 @@ const MainOuter = ({
   children, 
 }) => {
   const {
-    footerVisible, asideVisible, setAsideVisible,
+    footerVisible , asideVisible, setAsideVisible,
     tmiLastSelected, setTmiLastSelected,
   } = useUIState();
   const navigate = useNavigate();

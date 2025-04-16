@@ -44,7 +44,7 @@ const JobFooter = () => {
 
   // 드레그
   const footerBarHeight = 40;
-  const [footerHeight, setFooterHeight] = useState(300);
+  const [footerHeight, setFooterHeight] = useState(80);
   const isResizing = useRef(false);
   const startYRef = useRef(0);
   const startHeightRef = useRef(0);

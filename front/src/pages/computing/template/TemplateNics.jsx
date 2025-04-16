@@ -1,20 +1,16 @@
 import { Suspense, useState } from "react";
 import { useAllNicsFromTemplate } from "../../../api/RQHook";
-import Loading from "../../../components/common/Loading";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
-import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
-import TemplateNeworkNewInterModal from "../../../components/modal/template/TemplateNeworkNewInterModal";
 import NicActionButtons from "../../../components/dupl/NicActionButtons";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import Logger from "../../../utils/Logger";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
-import ActionButton from "../../../components/button/ActionButton";
-import Localization from "../../../utils/Localization";
 import SearchBox from "../../../components/button/SearchBox";
 import useSearch from "../../../components/button/useSearch";
 import toast from "react-hot-toast";
+import NicModal from "../../../components/modal/vm/NicModal";
 
 /**
  * @name TemplateNics
@@ -100,7 +96,26 @@ const TemplateNics = ({
       <SelectedIdView items={selectedVnicProfiles}/>
 
       {/* nic 모달창 */}
-      <Suspense fallback={<Loading />}>
+      {activeModal === "create" && (
+        <NicModal
+          isOpen={true}
+          onClose={closeModal}
+          editMode={false}
+          vmId={templateId}   // ✅ templateId를 vmId처럼 넘김
+          nicId={null}
+        />
+      )}
+      {activeModal === "edit" && (
+        <NicModal
+          isOpen={true}
+          onClose={closeModal}
+          editMode={true}
+          vmId={templateId}   // ✅ templateId를 vmId처럼 넘김
+          nicId={selectedVnicProfiles[0]?.id}
+        />
+      )}
+
+      {/* <Suspense fallback={<Loading />}>
         {activeModal === "create" && (
           <TemplateNeworkNewInterModal
             isOpen={true}
@@ -128,7 +143,7 @@ const TemplateNics = ({
             templateId={templateId}
           />
         )}
-      </Suspense>
+      </Suspense> */}
     </>
   );
 };

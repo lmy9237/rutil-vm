@@ -100,7 +100,7 @@ const HostNetworkEditModal = ({
     <BaseModal targetName={`네트워크 ${networkVo?.name}`} submitTitle={"수정"}
       isOpen={isOpen} onClose={onClose}      
       onSubmit={() => {}}
-      contentStyle={{ width: "800px"}} 
+      contentStyle={{ width: "800px" , height: "430px" }} 
     >
       <div className="popup-content-outer flex">
         <ModalNavButton

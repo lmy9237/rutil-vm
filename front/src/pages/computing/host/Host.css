@@ -61,48 +61,136 @@
     color: white;
     font-weight: 700;
   }
-  
-  .host-nic-table-outer{
-    overflow-y: auto;
-    height: 67.3vh;
-    overflow-x: hidden;
-  }
-
- .host-network-boxs{
-     margin-bottom:0.2rem;
- }
- .h-network-change-table{
-    padding:0.1rem 0.4rem;
-}
-.h-icon-btn{
-    padding:3px;
-}
-.host-network-hiddenbox{
-    background-color: white;
-    padding: 0.2rem;
-}
 
 
-.host-network-contents{
-  background:var(--color-white);
-  display:flex;
-  width: 100%;
-  padding: 0 30px;
-  padding: 24px 36px;
+/*호스트 네트워크 설정 */
+.network-separation-left {
+  width: 78%;
+  background-color: var(--color-white);
+  /* background-color: yellow; */
+  border-radius: 1px ;
+  min-height: 45vh;
+  padding: 16px;
 }
-.host-network-contents>div:first-child{
-   display:flex;
-   margin-bottom: 9px;
-   padding-right: 36px;
+.network-item {
+  padding: 15px;
+  margin-bottom: 10px;
+  border: var(--border-simple);
+  border-radius: 1px;
+  background-color: white;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  padding: 8px 16px;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
+  font-size: var(--fs-default);
 }
-.host-network-contents .info-table-outer{
-   width: 100% !important;
-   padding: 0  ;
-   padding-left: 16px;
+.network-item:hover {
+  border: 1.7px dashed #002a4f;
+  transform: scale(1); /* 크기 10% 증가 */
 }
+.network-separation-left > div:first-child > div {
+  width: 37%;
+  text-align: center;
+  padding: 0.2rem;
+  font-size: var(--fs-17);
+  font-weight: 700;
+}
+.separation-left-content {
+  border-bottom: 1px solid #a3a3a3;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+  margin-bottom: 7px;
+}
+.separation-left-content:last-child {
+  margin-bottom: 1rem;
+}
+.interface {
+  border: 1px solid var(--color-gray-4);
+  padding: 8px 10px;
+  width: 39%;
+  background: white;
+  border-radius: 1px;
+}
+.host-network-outer {
+  padding: 0.2rem;
+  height: 53.5vh;
+  overflow-y: auto; /* 세로 스크롤 추가 */
+  overflow-x: hidden; /* 가로 스크롤 숨김 */
+}
+.container {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-gray-4);
+  cursor: pointer;
+  padding: 8px 16px;
+  margin-bottom: 6px;
+  border-radius: 1px;
+  background-color: white;
+}
+.container:hover {
+  background: var(--color-input-disabled);
+}
+
+.interface-header {
+  color: #1D1D1D;
+  font-size: var(--fs-18);
+  font-weight: 700;
+  letter-spacing: -0.36px;
+  padding: 5px 0;
+}
+.unassigned-network{
+  text-align: center;
+  padding: 0.2rem;
+  font-size: var(--fs-17);
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.network-separation-right {
+  width: 33%;
+  padding: 0 11px;
+  background-color: var(--color-white);
+  margin-left: 30px;
+  padding: 14px;
+}
+
+
 /*네트워크인터페이스 */
+.nic-outer{
+  font-size: var(--fs-14);
+}
+.interface-content-outer{
+  width: 39%;
+}
 .interface-content{
   display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* .assigned-network-label{
+  max-width: 300px;
+  white-space: nowrap;     
+  overflow: hidden;           
+  text-overflow: ellipsis;  
+} */
+.assigned-network-content{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.interface-container-outer{
+  background: skyblue;
+}
+.interface-container{
+  background: green;
+}
+.separations{
+  height: 100%;
   justify-content: space-between;
   width: 100%;
 }
