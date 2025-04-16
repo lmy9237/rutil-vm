@@ -294,10 +294,11 @@ class StorageController: BaseController() {
 	@ApiOperation(
 		httpMethod="POST",
 		value="스토리지 도메인 - 데이터센터 연결",
-		notes="선택된 스토리지 도메인의 데이터센터 연결(??) 말을어캐하지"
+		notes="선택된 스토리지 도메인을 데이터센터에 연결한다"
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "dataCenterId", value = "데이터센터 ID", dataTypeClass=String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
@@ -323,6 +324,7 @@ class StorageController: BaseController() {
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "dataCenterId", value = "데이터센터 ID", dataTypeClass=String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
@@ -348,6 +350,7 @@ class StorageController: BaseController() {
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "dataCenterId", value = "데이터센터 ID", dataTypeClass=String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
@@ -373,6 +376,7 @@ class StorageController: BaseController() {
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "dataCenterId", value = "데이터센터 ID", dataTypeClass=String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
@@ -381,14 +385,15 @@ class StorageController: BaseController() {
 	@ResponseBody
 	fun maintenanceFromDataCenter(
 		@PathVariable("storageDomainId") storageDomainId: String? = null,
-		@PathVariable("dataCenterId") dataCenterId: String? = null
+		@PathVariable("dataCenterId") dataCenterId: String? = null,
+		@RequestParam(defaultValue = "false") ovf: Boolean,
 	): ResponseEntity<Boolean> {
 		if (dataCenterId == null)
 			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/dataCenters/{}/maintenance ... 데이터센터 유지보수 maintenance", storageDomainId, dataCenterId)
-		return ResponseEntity.ok(iDomain.maintenanceFromDataCenter(dataCenterId, storageDomainId))
+		return ResponseEntity.ok(iDomain.maintenanceFromDataCenter(dataCenterId, storageDomainId, ovf))
 	}
 
 

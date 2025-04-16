@@ -4,6 +4,9 @@ import DomainDeleteModal from "./DomainDeleteModal";
 import DomainActionModal from "./DomainActionModal";
 import DomainAttachModal from "./DomainAttachModal";
 import Logger from "../../../utils/Logger";
+import DomainDestroyModal from "./DomainDestroyModal";
+import DomainCheckModal from "./DomainCheckModal";
+import DomainMainTenanceModal from "./DomainMainTenanceModal";
 
 /**
  * @name DomainModals
@@ -58,35 +61,65 @@ const DomainModals = ({
     delete: (
       <DomainDeleteModal
         isOpen={activeModal === "delete"}
-        data={selectedDomains}
-        deleteMode={true}
+        domain={domain}
         onClose={onClose}
       />
     ),
     destroy: (
-      <DomainDeleteModal
+      <DomainDestroyModal
         isOpen={activeModal === "destroy"}
-        data={selectedDomains}
-        deleteMode={false}
+        domain={domain}
+        onClose={onClose}
+      />
+    ), 
+    attach: (
+      <DomainAttachModal
+        isOpen={activeModal === "attach"}
+        actionType // true면 데이터센터에서 도메인를 바라봄 (도메인 목록이 뜸)
+        domainId={domain?.id}
+        datacenterId={datacenterId || ""}
         onClose={onClose}
       />
     ),
     action: (
       <DomainActionModal
-        isOpen={["detach", "activate", "maintenance"].includes(activeModal)}
+        isOpen={["detach", "activate"].includes(activeModal)}
         action={activeModal}
-        data={selectedDomains}
+        domains={selectedDomains}
         datacenterId={datacenterId}
         onClose={onClose}
       />
     ),
-    attach: (
-      <DomainAttachModal
-        isOpen={activeModal === "attach"}
-        data={selectedDomains}
+    maintenance: (
+      <DomainMainTenanceModal
+        isOpen={activeModal === "maintenance"}
+        domains={selectedDomains}
+        datacenterId={datacenterId}
         onClose={onClose}
       />
+      // <DomainCheckModal // 도메인 확인
+      //   isOpen={activeModal === "maintenance"}
+      //   onClose={onClose}
+      // />
     ),
+
+    // <CancelModal
+    //   isOpen={isCancelModalOpen}
+    //   onClose={() => setIsCancelModalOpen(false)}
+    // />
+    // <DomainDestroyModal
+    //   isOpen={isDomainDestroyModalOpen}
+    //   onClose={() => setIsDomainDestroyModalOpen(false)}
+    // />
+    // <DomainMainTenanceModal
+    //   isOpen={isDomainMainTenanceModalOpen}
+    //   onClose={() => setIsDomainMainTenanceModalOpen(false)}
+    // />
+    // <DomainCheckModal
+    //   isOpen={isDomainCheckModalOpen}
+    //   onClose={() => setIsDomainCheckModalOpen(false)}
+    // />
+   
   };
 
   Logger.debug("DomainModals ...")

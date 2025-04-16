@@ -192,7 +192,7 @@ fun Connection.activateAttachedStorageDomainFromDataCenter(dataCenterId: String,
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.deactivateAttachedStorageDomainFromDataCenter(dataCenterId: String, storageDomainId: String): Result<Boolean> = runCatching {
+fun Connection.deactivateAttachedStorageDomainFromDataCenter(dataCenterId: String, storageDomainId: String, ovf: Boolean): Result<Boolean> = runCatching {
 	val storageDomain: StorageDomain = this.findAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId)
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
@@ -202,7 +202,7 @@ fun Connection.deactivateAttachedStorageDomainFromDataCenter(dataCenterId: Strin
 	}
 
 	// force == ovf 업데이트 여부
-	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).deactivate().force(true).send()
+	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).deactivate().force(ovf).send()
 	true
 
 }.onSuccess {

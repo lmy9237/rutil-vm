@@ -4497,10 +4497,10 @@ export const useMaintenanceDomain = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({domainId, dataCenterId}) => {
-      const res = await ApiManager.maintenanceDomain(domainId, dataCenterId);
+    mutationFn: async ({domainId, dataCenterId, ovf}) => {
+      const res = await ApiManager.maintenanceDomain(domainId, dataCenterId, ovf);
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useMaintenanceDomain ... domainId: ${domainId}, dataCenterId: ${dataCenterId}`);
+      Logger.debug(`RQHook > useMaintenanceDomain ... domainId: ${domainId}, dataCenterId: ${dataCenterId} ovf: ${ovf}`);
       return _res;
     },
     onSuccess: (res) => {

@@ -2730,10 +2730,10 @@ const ApiManager = {
    * @param {String} dataCenterId - 데이터센터 ID
    * @returns {Promise<Object>} API 응답 결과
    */
-  maintenanceDomain: async (domainId, dataCenterId) => {
+  maintenanceDomain: async (domainId, dataCenterId, ovf) => {
     return makeAPICall({
       method: "POST",
-      url: ENDPOINTS.MAINTENANCE_FROM_DATACENTER(domainId, dataCenterId), 
+      url: ENDPOINTS.MAINTENANCE_FROM_DATACENTER(domainId, dataCenterId, ovf), 
       data: {domainId, dataCenterId}
     });
   },

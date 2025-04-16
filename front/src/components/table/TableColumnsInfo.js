@@ -382,7 +382,7 @@ const TableColumnsInfo = {
     { header: '도메인 유형', accessor: 'domainType' },
     { header: '스토리지 유형', accessor: 'storageType', width: '10%' },
     { header: '포맷', accessor: 'format' },
-    { header: '데이터 센터간 상태', accessor: 'status', width: '10%' },
+    { header: '데이터 센터간 상태', accessor: '_status', width: '10%' },
     { header: Localization.kr.SIZE_AVAILABLE, accessor: 'availableSize' },
     { header: Localization.kr.SIZE_USED, accessor: 'usedSize' },
     { header: Localization.kr.SIZE_TOTAL, accessor: 'diskSize' },
@@ -393,7 +393,7 @@ const TableColumnsInfo = {
   DATACENTERS_FROM_STORAGE_DOMAIN : [
     { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: '_name', clickable: false , width: '17%'},
-    { header: '데이터 센터 내의 도메인 상태', accessor: 'domainStatus', clickable: false },
+    { header: '데이터 센터 내의 도메인 상태', accessor: '_domainStatus', clickable: false },
   ],
   DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN : [
     { header: Localization.kr.NAME, accessor: 'name', clickable: false , width: '17%'},

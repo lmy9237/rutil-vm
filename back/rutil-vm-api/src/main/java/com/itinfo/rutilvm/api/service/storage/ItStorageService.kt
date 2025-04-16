@@ -170,10 +170,11 @@ interface ItStorageService {
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
 	 * @param dataCenterId [String] 데이터센터 Id
+	 * @param ovf [Boolean] ovf 업데이트
 	 * @return [Boolean]
 	 */
 	@Throws(Error::class)
-	fun maintenanceFromDataCenter(dataCenterId: String, storageDomainId: String): Boolean
+	fun maintenanceFromDataCenter(dataCenterId: String, storageDomainId: String, ovf: Boolean): Boolean
 
 	/**
 	 * [ItStorageService.findAllVmsFromStorageDomain]
@@ -480,9 +481,9 @@ class StorageServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun maintenanceFromDataCenter(dataCenterId: String, storageDomainId: String): Boolean {
-		log.info("maintenanceFromDataCenter ... storageDomainId: {}, dataCenterId: {}", storageDomainId, dataCenterId)
-		val res: Result<Boolean> = conn.deactivateAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId)
+	override fun maintenanceFromDataCenter(dataCenterId: String, storageDomainId: String, ovf: Boolean): Boolean {
+		log.info("maintenanceFromDataCenter ... storageDomainId: {}, dataCenterId: {} ovf: {}", storageDomainId, dataCenterId, ovf)
+		val res: Result<Boolean> = conn.deactivateAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId, ovf)
 		return res.isSuccess
 	}
 

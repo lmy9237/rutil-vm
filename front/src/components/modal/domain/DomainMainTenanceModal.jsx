@@ -1,55 +1,56 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import BaseModal from "../BaseModal";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import toast from "react-hot-toast";
+import { useMaintenanceDomain } from "../../../api/RQHook";
 
-const DomainMainTenanceModal = ({ isOpen, onClose }) => {
+const DomainMainTenanceModal = ({ isOpen, domains, datacenterId, onClose }) => {
+  const onSuccess = () => {
+    onClose();
+    toast.success(`${Localization.kr.DOMAIN} 유지보수 완료`);
+  };  
+  const { mutate: maintenanceDomain } = useMaintenanceDomain(onSuccess, () => onClose());
+
+  const { ids, names } = useMemo(() => {
+    if (!domains) return { ids: [], names: [] };
+
+    const dataArray = Array.isArray(domains) ? domains : [domains];
+    return {
+      ids: dataArray.map((item) => item.id),
+      names: dataArray.map((item) => item.name),
+    };
+  }, [domains]);
+
   const [ignoreOVF, setIgnoreOVF] = useState(false);
-  const [reason, setReason] = useState("");
 
   const handleSubmit = () => {
     Logger.debug("OVF 무시:", ignoreOVF);
-    Logger.debug("이유:", reason);
-    onClose();
+
+    ids.forEach((domainId) => {
+      maintenanceDomain({ domainId, dataCenterId: datacenterId, ovf: ignoreOVF });
+    });
   };
+
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName="스토리지 도메인"
-      shouldWarn={true}
-      submitTitle={Localization.kr.MANAGEMENT}
-      promptText={`다음의 스토리지 도메인을 유지관리 모드로 설정하시겠습니까?`}
-      onSubmit={() => {}} // 무시
-      contentStyle={{ width: "670px" }}
+    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={Localization.kr.MANAGEMENT}
+      isOpen={isOpen} onClose={onClose}      
+      promptText={`다음의 ${Localization.kr.DOMAIN}을 유지 ${Localization.kr.MANAGEMENT} 모드로 설정하시겠습니까?`}
+      onSubmit={handleSubmit}
+      contentStyle={{ width: "600px" }}
+      shouldWarn={true}      
     >
-      <div className="domain-maintenance-modal">
-        {/* 도메인명 */}
-        <div className="domain-name-box">-hosted_storage</div>
-
-        {/* 체크박스 */}
-        <div className="ovf-checkbox-box">
-          <LabelCheckbox
-            id="ignoreOvf"
-            label="OVF 업데이트 실패 무시"
-            checked={ignoreOVF}
-            onChange={(e) => setIgnoreOVF(e.target.checked)}
-          />
-        </div>
-
-        {/* 이유 입력 */}
-        <div className="reason-box f-btw">
-          <div>이유</div>
-          <input
-            type="text"
-            className="reason-input"
-            placeholder="이유를 작성해주세요."
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-          />
-        </div>
+      <div className="domain-name-box">
+        {names.join(", ")}
       </div>
+      
+      <LabelCheckbox id="ignoreOvf" label="OVF 업데이트 실패 무시"
+        checked={ignoreOVF}
+        onChange={(e) => setIgnoreOVF(e.target.checked)}
+      /> 
+      <span>{ignoreOVF === true ? "t" : "F"}</span>
+      <br/>
     </BaseModal>
   );
 };

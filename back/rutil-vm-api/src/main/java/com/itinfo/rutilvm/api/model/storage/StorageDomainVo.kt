@@ -149,7 +149,7 @@ fun StorageDomain.toStorageDomainMenu(conn: Connection): StorageDomainVo {
 		id { storageDomain.id() }
 		name { storageDomain.name() }
 		description { storageDomain.description() }
-		status { storageDomainStatus }
+		status { if(storageDomain.statusPresent()) storageDomain.status() else storageDomainStatus }
 		hostedEngine { hostedVm }
 		comment { storageDomain.comment() }
 		domainType { storageDomain.type().value() }

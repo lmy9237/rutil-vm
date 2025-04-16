@@ -18,27 +18,28 @@ import DomainModals from "../modal/domain/DomainModals";
  * @description 도메인 목록을 표시하는 컴포넌트 (검색 및 테이블 포함)
  * 
  * @param {Array} domains,
+ * @param {Boolean} actionType datacenter-domain, domain-datacenter 버튼활성화,
  * @returns {JSX.Element}
  */
 const DomainDupl = ({
-  domains = [], columns = [], actionType = "domain", datacenterId,
+  domains = [], columns = [], actionType=true, datacenterId,
   showSearchBox = true,
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  //모달관련
   const [activeModal, setActiveModal] = useState(null);
+  const [selectedDomains, setSelectedDomains] = useState([]);
+
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
-
-  const [selectedDomains, setSelectedDomains] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(""); // ✅ 검색어 상태 추가
+  const handleNameClick = (id) => navigate(`/storages/domains/${id}`);
   const handleRefresh = () =>  {
     Logger.debug(`DomainDupl > handleRefresh ... `)
     if (!refetch) return;
     refetch()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
+
   // 검색어
   const transformedData = domains.map((domain) => ({
     ...domain,
@@ -49,7 +50,8 @@ const DomainDupl = ({
     ),
     icon: status2Icon(domain.status),
     iconSortKey: getStatusSortKey(domain?.status), 
-    status: Localization.kr.renderStatus(domain?.status),
+    _status: Localization.kr.renderStatus(domain?.status),
+    status: domain?.status,
     hostedEngine: hostedEngineStatus2Icon(domain?.hostedEngine),
     domainType:
       domain?.domainType === "data"
@@ -69,6 +71,7 @@ const DomainDupl = ({
     searchText: `${domain?.name} ${domain?.domainType} ${domain?.storageType} ${convertBytesToGB(domain?.diskSize)}GB`
   }));
 
+  const [searchQuery, setSearchQuery] = useState(""); // ✅ 검색어 상태 추가
   // 검색 기능 적용 (부분 검색 가능)
   const filteredData = transformedData.filter((domain) =>
     domain.searchText
@@ -76,14 +79,9 @@ const DomainDupl = ({
       .includes(searchQuery.toLowerCase())
   );
 
-  const handleNameClick = (id) => navigate(`/storages/domains/${id}`);
-
-
-
   return (
-    <>
+    <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
-        {/* ✅ 검색 UI 추가 */}
         {showSearchBox && (
           <SearchBox
             searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
@@ -95,8 +93,8 @@ const DomainDupl = ({
           isEditDisabled={selectedDomains.length !== 1}
           isDeleteDisabled={selectedDomains.length === 0}
           status={selectedDomains[0]?.status}
+          selectedDomains={selectedDomains || []} 
           actionType={actionType}
-          selectedDomains={selectedDomains} 
         />
       </div>
 
@@ -107,27 +105,18 @@ const DomainDupl = ({
         data={filteredData} // ✅ 검색 필터링된 데이터 전달
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedDomains(selectedRows)}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
-        onContextMenuItems={(row) => {
-          return [
-            <DomainActionButtons
-              openModal={(action) => {
-                openModal(action); 
-              }}
-              status={row?.status}
-              selectedDomains={[row]}
-              actionType="context"
-              isContextMenu={true}
-            />
-          ];
-        }}
-      
-        
+        onContextMenuItems={(row) => [
+          <DomainActionButtons
+            openModal={openModal}
+            status={row?.status}
+            selectedDomains={[row]}
+            actionType="context"
+            isContextMenu={true}
+          />
+        ]}
       />
-
       <SelectedIdView items={selectedDomains} />
 
       <DomainModals
@@ -137,7 +126,7 @@ const DomainDupl = ({
         datacenterId={datacenterId}
         onClose={closeModal}
       />
-    </>
+    </div>
   );
 };
 

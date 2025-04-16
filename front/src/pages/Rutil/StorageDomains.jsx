@@ -21,7 +21,7 @@ const StorageDomains = () => {
   return (
     <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
       domains={storageDomains}
-      type={"rutil"}
+      actionType
       refetch={refetchStorageDomains}
       isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
     />

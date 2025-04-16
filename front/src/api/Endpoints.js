@@ -229,7 +229,7 @@ const ENDPOINTS = {
   ACTIVATE_FROM_DATACENTER: (storageDomainId, dataCenterId) =>             `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/dataCenters/${dataCenterId}/activate`,
   ATTACH_FROM_DATACENTER: (storageDomainId, dataCenterId) =>               `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/dataCenters/${dataCenterId}/attach`,
   DETACH_FROM_DATACENTER: (storageDomainId, dataCenterId) =>               `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/dataCenters/${dataCenterId}/detach`,
-  MAINTENANCE_FROM_DATACENTER: (storageDomainId, dataCenterId) =>          `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/dataCenters/${dataCenterId}/maintenance`,
+  MAINTENANCE_FROM_DATACENTER: (storageDomainId, dataCenterId, ovf) =>          `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/dataCenters/${dataCenterId}/maintenance?ovf=${ovf}`,
   
   FIND_VMS_FROM_STORAGE_DOMAINS: (storageDomainId) =>                      `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/vms`,
   FIND_UNREGISTERD_VMS_FROM_STORAGE_DOMAINS: (storageDomainId) =>          `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/vms/unregistered`,

@@ -4,41 +4,46 @@ import BaseModal from "../BaseModal";
 import {
   useActivateDomain,
   useDetachDomain,
-  useMaintenanceDomain,
 } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name DomainActionModal
- * @description 도메인에서 실행하는 거지만 데이터센터
+ * @description 
  * action으로 type 전달
  *
  * @prop {boolean} isOpen
  * @returns
  */
-const DomainActionModal = ({ isOpen, onClose, action, data, datacenterId }) => {
+const DomainActionModal = ({ 
+  isOpen, 
+  onClose, 
+  action,
+  // actionType=true, // actionType이 true 면 데이터센터에서 도메인을 바라보는 방향
+  domains, 
+  datacenterId 
+}) => {
   const onSuccess = () => {
-    toast.success(`도메인 ${getContentLabel()} 완료`);
+    toast.success(`${Localization.kr.DOMAIN} ${getContentLabel()} 완료`);
     onClose();
   };
   const { mutate: detachDomain } = useDetachDomain(onSuccess, () => onClose());
   const { mutate: activateDomain } = useActivateDomain(onSuccess, () => onClose());
-  const { mutate: maintenanceDomain } = useMaintenanceDomain(onSuccess, () => onClose());
 
   const { ids, names } = useMemo(() => {
-    if (!data) return { ids: [], names: [] };
+    if (!domains) return { ids: [], names: [] };
 
-    const dataArray = Array.isArray(data) ? data : [data];
+    const dataArray = Array.isArray(domains) ? domains : [domains];
     return {
       ids: dataArray.map((item) => item.id),
       names: dataArray.map((item) => item.name),
     };
-  }, [data]);
-
+  }, [domains]);
+  
   const getContentLabel = () => {
     const labels = {
       detach: "분리",
       activate: "활성",
-      maintenance: "유지보수",
     };
     return labels[action] || "";
   };
@@ -49,7 +54,7 @@ const DomainActionModal = ({ isOpen, onClose, action, data, datacenterId }) => {
     const actionMap = {
       detach: detachDomain,
       activate: activateDomain,
-      maintenance: maintenanceDomain,
+      // maintenance: maintenanceDomain,
     };
     const actionFn = actionMap[action];
 
@@ -59,13 +64,12 @@ const DomainActionModal = ({ isOpen, onClose, action, data, datacenterId }) => {
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"스토리지 도메인"}
-      submitTitle={getContentLabel(action)}
+    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={getContentLabel(action)}
+      isOpen={isOpen} onClose={onClose}      
       onSubmit={handleFormSubmit}
-      shouldWarn={false}
       promptText={`${names.join(", ")} 를(을) ${getContentLabel(action)} 하시겠습니까?`}
-      contentStyle={{ width: "630px", height: "200px" }} 
+      contentStyle={{ width: "630px", height: "230px" }} 
+      shouldWarn={true}
     />
   );
 };
