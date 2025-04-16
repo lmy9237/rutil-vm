@@ -38,6 +38,7 @@ const VmDupl = ({
     icon: status2Icon(vm?.status),
     iconSortKey: getStatusSortKey(vm?.status), 
     engine: hostedEngineStatus2Icon(vm?.hostedEngineVm),
+    nextRun: vm?.nextRun === true ? "!" : "", //  재시작여부 / 다음 실행시 새로운 설정이 적용되는 서버
     _name: (
       <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}
@@ -113,9 +114,7 @@ const VmDupl = ({
 
       {/* 테이블 컴포넌트 */}
       <TablesOuter
-        isLoading={isLoading} 
-        isError={isError} 
-        isSuccess={isSuccess}
+        isLoading={isLoading} isError={isError}  isSuccess={isSuccess}
         columns={columns}
         data={filteredData}
         shouldHighlight1stCol={true}

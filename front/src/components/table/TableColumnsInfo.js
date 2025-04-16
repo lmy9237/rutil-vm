@@ -130,6 +130,7 @@ const TableColumnsInfo = {
   ],
   VMS: [
     { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: '', accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: '', accessor: 'engine', clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
     { header: Localization.kr.COMMENT, accessor: 'comment', clickable: false, width: '20%' },

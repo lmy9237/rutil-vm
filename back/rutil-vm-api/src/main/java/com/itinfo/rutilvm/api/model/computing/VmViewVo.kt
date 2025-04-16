@@ -6,13 +6,8 @@ import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
-import com.itinfo.rutilvm.util.ovirt.findAllDiskAttachmentsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllNicsFromVm
-import com.itinfo.rutilvm.util.ovirt.findAllReportedDevicesFromVm
-import com.itinfo.rutilvm.util.ovirt.findAllSnapshotDisksFromVm
-import com.itinfo.rutilvm.util.ovirt.findAllSnapshotsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromVm
-import com.itinfo.rutilvm.util.ovirt.findAllVmCdromsFromVm
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findDataCenter
 import com.itinfo.rutilvm.util.ovirt.findDisk
@@ -75,6 +70,8 @@ private val log = LoggerFactory.getLogger(VmViewVo::class.java)
  * @property hostedEngineVm [Boolean]
  * @property timeZone [String]   // Etc/GMT & Asia/Seoul
  * @property fqdn [String]
+ * @property nextRun [Boolean]
+ * @property runOnce [Boolean]
  * @property upTime [String]
  * @property startTime [String]
  * @property stopTime [String]
@@ -137,6 +134,8 @@ class VmViewVo (
 	val hostedEngineVm: Boolean = false,
 	val timeZone: String = "",
 	val fqdn: String = "",
+	val nextRun: Boolean = false,
+	val runOnce: Boolean = false,
 	val upTime: String = "",
 	private val _startTime: Date? = null,
 	private val _stopTime: Date? = null,
@@ -210,6 +209,8 @@ class VmViewVo (
 		private var bHostedEngineVm: Boolean = false; fun hostedEngineVm(block: () -> Boolean?) { bHostedEngineVm = block() ?: false }
 		private var bTimeZone: String = ""; fun timeZone(block: () -> String?) { bTimeZone = block() ?: "" }
 		private var bFqdn: String =  ""; fun fqdn(block: () -> String?) { bFqdn = block() ?: "" }
+		private var bNextRun: Boolean =  false; fun nextRun(block: () -> Boolean?) { bNextRun = block() ?: false }
+		private var bRunOnce: Boolean =  false; fun runOnce(block: () -> Boolean?) { bRunOnce = block() ?: false }
 		private var bUpTime: String = ""; fun upTime(block: () -> String?) { bUpTime = block() ?: "" }
 		private var bStartTime: Date? = null; fun startTime(block: () -> Date?) { bStartTime = block() }
 		private var bStopTime: Date? = null; fun stopTime(block: () -> Date?) { bStopTime = block() }
@@ -228,7 +229,7 @@ class VmViewVo (
 		private var bNicVos: List<IdentifiedVo> = listOf(); fun nicVos(block: () -> List<IdentifiedVo>?) { bNicVos = block() ?: listOf() }
 		private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
 
-        fun build(): VmViewVo = VmViewVo(bId, bName, bDescription, bComment, bStatus, bBiosBootMenu, bBiosType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bCreationTime, bDeleteProtected, bMonitor, bDisplayType, bHa, bHaPriority, bIoThreadCnt, bMemorySize, bMemoryGuaranteed, bMemoryMax, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bFirstDevice, bSecDevice, bOsType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bPlacementPolicy, bStartPaused, bStorageErrorResumeBehaviour, bType, bUsb, bVirtioScsiMultiQueueEnabled, bHostedEngineVm, bTimeZone, bFqdn, bUpTime, bStartTime, bStopTime, bIpv4, bIpv6, bDataCenterVo, bClusterVo, bHostVo, bOriginTemplateVo, bTemplateVo, bCpuProfileVo, bDiskAttachmentVos, bCdRomVo, bSnapshotVos, bHostDeviceVos, bNicVos, bUsageDto,)
+        fun build(): VmViewVo = VmViewVo(bId, bName, bDescription, bComment, bStatus, bBiosBootMenu, bBiosType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bCreationTime, bDeleteProtected, bMonitor, bDisplayType, bHa, bHaPriority, bIoThreadCnt, bMemorySize, bMemoryGuaranteed, bMemoryMax, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bFirstDevice, bSecDevice, bOsType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bPlacementPolicy, bStartPaused, bStorageErrorResumeBehaviour, bType, bUsb, bVirtioScsiMultiQueueEnabled, bHostedEngineVm, bTimeZone, bFqdn, bNextRun, bRunOnce, bUpTime, bStartTime, bStopTime, bIpv4, bIpv6, bDataCenterVo, bClusterVo, bHostVo, bOriginTemplateVo, bTemplateVo, bCpuProfileVo, bDiskAttachmentVos, bCdRomVo, bSnapshotVos, bHostDeviceVos, bNicVos, bUsageDto,)
     }
 
     companion object {
@@ -262,6 +263,7 @@ fun Vm.toVmMenu(conn: Connection): VmViewVo {
 		creationTime {  vm.creationTime() }
 		status { vm.status() }
 		description { vm.description() }
+		nextRun { vm.nextRunConfigurationExists() }
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
 		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
 		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
@@ -398,6 +400,7 @@ fun Vm.toVmViewVo(conn: Connection): VmViewVo {
 		virtioScsiMultiQueueEnabled { vm.virtioScsiMultiQueuesEnabled() }
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" }
 		timeZone { vm.timeZone().name() }
+		nextRun { vm.nextRunConfigurationExists() }
 		if (vm.status() == VmStatus.UP) {
 			// val nics: List<Nic> = conn.findAllNicsFromVm(vm.id()).getOrDefault(listOf())
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
