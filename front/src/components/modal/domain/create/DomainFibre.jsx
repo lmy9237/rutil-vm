@@ -74,7 +74,7 @@ const DomainFibre = ({
             {fcpSearchResults?.length > 0 && (
               <Tables
                 isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
-                columns={TableColumnsInfo.FIBRE_IMPORT}
+                columns={TableColumnsInfo.FIBRE}
                 data={fcpSearchResults}
                 onRowClick={handleRowClick}
               />

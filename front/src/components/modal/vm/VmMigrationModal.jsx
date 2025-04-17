@@ -9,7 +9,11 @@ import toast from "react-hot-toast";
 import { useQueries } from "@tanstack/react-query";
 import ApiManager from "../../../api/ApiManager";
 
-const VmMigrationModal = ({ isOpen, onClose, selectedVms }) => {
+const VmMigrationModal = ({ 
+  isOpen, 
+  selectedVms,
+  onClose, 
+}) => {
   const onSuccess = () => {
     toast.success(`${Localization.kr.VM} 마이그레이션 완료`);
     onClose();
@@ -17,9 +21,9 @@ const VmMigrationModal = ({ isOpen, onClose, selectedVms }) => {
   const { mutate: migration } = useMigration(onSuccess, () => onClose());
 
   const [vmStates, setVmStates] = useState({});
+
   const { ids, names } = useMemo(() => {
     if (!selectedVms) return { ids: [], names: [] };
-    
     const dataArray = Array.isArray(selectedVms) ? selectedVms : [selectedVms];
     return {
       ids: dataArray.map((item) => item.id),
@@ -27,11 +31,14 @@ const VmMigrationModal = ({ isOpen, onClose, selectedVms }) => {
     };
   }, [selectedVms]);
 
+
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !selectedVms) return;
 
     const initialState = {};
-    selectedVms.forEach((vm) => {
+    const dataArray = Array.isArray(selectedVms) ? selectedVms : [selectedVms];
+    
+    dataArray.forEach((vm) => {
       initialState[vm.id] = {
         isCluster: true,
         clusterVo: {
@@ -79,7 +86,8 @@ const VmMigrationModal = ({ isOpen, onClose, selectedVms }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "770px" }}
     >
-      {selectedVms.map((vm, index) => {
+      {Array.isArray(selectedVms) &&
+        selectedVms.map((vm, index) => {
         const vmState = vmStates[vm.id] || {};
         const { isCluster, clusterVo, hostVo, affinityClosure } = vmState;
 

@@ -20,7 +20,7 @@ import {
   useImportFcpFromHost,
   useImportDomain,
 } from "../../../api/RQHook";
-import { checkName, convertBytesToGB } from "../../../util";
+import { checkName, checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
@@ -74,7 +74,12 @@ const DomainModal = ({
   datacenterId,
   onClose,
 }) => {
-  const dLabel = mode === "edit" ? Localization.kr.UPDATE : mode === "import" ? Localization.kr.IMPORT : Localization.kr.CREATE;
+  const dLabel = 
+    mode === "edit" 
+    ? Localization.kr.UPDATE 
+    : mode === "import" 
+      ? Localization.kr.IMPORT : Localization.kr.CREATE;
+
   const editMode = mode === "edit";
   const importMode = mode === "import";
 
@@ -91,8 +96,8 @@ const DomainModal = ({
   const [fcpSearchResults, setFcpSearchResults] = useState([]); // 검색결과
 
   const onSuccess = () => {
-    toast.success(`${Localization.kr.DOMAIN} ${dLabel} 완료`);
     onClose();
+    toast.success(`${Localization.kr.DOMAIN} ${dLabel} 완료`);
   };
   const { mutate: addDomain } = useAddDomain(onSuccess, () => onClose());
   const { mutate: editDomain } = useEditDomain(onSuccess, () => onClose()); // 편집은 단순 이름, 설명 변경정도
@@ -128,17 +133,17 @@ const DomainModal = ({
 
   const transIscsiData = iscsis.map((i) => ({
     ...i,
-    lun: i?.logicalUnits[0]?.id,
-    address: i?.logicalUnits[0]?.address,
     abled: i?.logicalUnits[0]?.storageDomainId === "" ? "OK" : "NO",
-    target: i?.logicalUnits[0]?.target,
-    port: i?.logicalUnits[0]?.port,
     status: i?.logicalUnits[0]?.status,
-    size: convertBytesToGB(i?.logicalUnits[0]?.size),
+    lunId: i?.logicalUnits[0]?.id,
+    size: checkZeroSizeToGiB(i?.logicalUnits[0]?.size),
     paths: i?.logicalUnits[0]?.paths,
-    productId: i?.logicalUnits[0]?.productId,
     vendorId: i?.logicalUnits[0]?.vendorId,
+    productId: i?.logicalUnits[0]?.productId,
     serial: i?.logicalUnits[0]?.serial,
+    target: i?.logicalUnits[0]?.target,
+    address: i?.logicalUnits[0]?.address,
+    port: i?.logicalUnits[0]?.port,
   }));
 
   const transFibreData = fibres.map((f) => ({
@@ -154,12 +159,9 @@ const DomainModal = ({
   const commonProps = {
     mode,
     domain,
-    lunId,
-    setLunId,
-    hostVo,
-    setHostVo,
-    formImportState,
-    setFormImportState,
+    lunId, setLunId,
+    hostVo, setHostVo,
+    formImportState, setFormImportState,
   };  
 
   const isNfs = formState.storageType === "nfs" || domain?.storageType === "nfs";
@@ -213,8 +215,7 @@ const DomainModal = ({
   }, [mode, domain, lunId, setLunId]);
 
   useEffect(() => {
-    Logger.debug(`DomainModal.lunId: ${lunId}`);
-    Logger.debug(`DomainModal.hostVo: `, hostVo);
+    console.info(`DomainModal.hostVo: `, hostVo);
   }, [lunId, hostVo]);
 
   useEffect(() => {
@@ -382,7 +383,7 @@ const DomainModal = ({
             options={dataCenters}
             onChange={handleSelectIdChange(setDataCenterVo, dataCenters)}
           />
-          <LabelSelectOptions id="domain-type" label="도메인 기능"
+          <LabelSelectOptions id="domain-type" label={`도메인 기능`}
             value={formState.domainType}
             disabled={editMode}
             options={domainTypes}
@@ -395,13 +396,12 @@ const DomainModal = ({
             onChange={handleInputChange("storageType")}
           />
           <LabelSelectOptionsID id="host" label={Localization.kr.HOST}
-            value={hostVo}
+            value={hostVo.id}
             disabled={editMode}
             loading={isHostsLoading}
             options={hosts}
             onChange={handleSelectIdChange(setHostVo, hosts)}
           />
-          {/* TODO: 호스트 변경 안됨 */}
         </div>
 
         <div className="domain-new-right">
@@ -427,7 +427,6 @@ const DomainModal = ({
           mode={mode}
           nfsAddress={nfsAddress}
           setNfsAddress={setNfsAddress}
-          domain={domain}
         />
       )}
 
@@ -465,11 +464,11 @@ const DomainModal = ({
 
       <div className="tab-content">
         <div className="storage-specific-content">
-          <LabelInputNum id="warning" label="디스크 공간 부족 경고 표시(%)"
+          <LabelInputNum id="warning" label="디스크 공간 부족 경고 표시 (%)"
             value={formState.warning}
             onChange={handleInputChange("warning")}
           />
-          <LabelInputNum id="spaceBlocker" label="심각히 부족한 디스크 공간의 동작 차단(GB)"
+          <LabelInputNum id="spaceBlocker" label="심각히 부족한 디스크 공간의 동작 차단 (GB)"
             value={formState.spaceBlocker}
             onChange={handleInputChange("spaceBlocker")}
           />

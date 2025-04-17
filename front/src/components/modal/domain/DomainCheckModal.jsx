@@ -1,6 +1,5 @@
 import { useState } from "react";
 import BaseModal from "../BaseModal";
-import { RVI24, rvi24ErrorRed } from "../../icons/RutilVmIcons";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
 
@@ -16,15 +15,12 @@ const DomainCheckModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName="도메인"
-      submitTitle={Localization.kr.OK}
+    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={Localization.kr.OK}
+      isOpen={isOpen} onClose={onClose} 
       onSubmit={handleSubmit}
-      shouldWarn={true}
       promptText={`This operation might be unrecoverable and destructive!`}
       contentStyle={{ width: "770px" }}
+      shouldWarn={true}
     >
       <div className="domain-check-modal">
         <div className="modal-info-text mt-4 center">
@@ -37,11 +33,9 @@ const DomainCheckModal = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        <LabelCheckbox
-            id="approve"
-            label="Approve operation"
-            checked={approved}
-            onChange={(e) => setApproved(e.target.checked)}
+        <LabelCheckbox id="approve" label="작업 승인"
+          checked={approved}
+          onChange={(e) => setApproved(e.target.checked)}
         />
       </div>
     </BaseModal>

@@ -1,12 +1,13 @@
 import React from "react";
 import DomainModal from "./DomainModal";
 import DomainDeleteModal from "./DomainDeleteModal";
-import DomainActionModal from "./DomainActionModal";
 import DomainAttachModal from "./DomainAttachModal";
 import Logger from "../../../utils/Logger";
 import DomainDestroyModal from "./DomainDestroyModal";
 import DomainCheckModal from "./DomainCheckModal";
 import DomainMainTenanceModal from "./DomainMainTenanceModal";
+import DomainActivateModal from "./DomainActivateModal";
+import DomainDetachModal from "./DomainDetachModal";
 
 /**
  * @name DomainModals
@@ -26,6 +27,7 @@ const DomainModals = ({
   domain,
   selectedDomains = [],
   datacenterId,
+  sourceContext, // all, dcDomain, domainDc
   onClose,
 }) => {
   const modals = {
@@ -75,17 +77,25 @@ const DomainModals = ({
     attach: (
       <DomainAttachModal
         isOpen={activeModal === "attach"}
-        actionType // true면 데이터센터에서 도메인를 바라봄 (도메인 목록이 뜸)
+        sourceContext={sourceContext}
         domainId={domain?.id}
         datacenterId={datacenterId || ""}
         onClose={onClose}
       />
     ),
-    action: (
-      <DomainActionModal
-        isOpen={["detach", "activate"].includes(activeModal)}
-        action={activeModal}
+    activate: (
+      <DomainActivateModal
+        isOpen={activeModal === "activate"}
         domains={selectedDomains}
+        datacenterId={datacenterId}
+        onClose={onClose}
+      />
+    ),
+    detach: (
+      <DomainDetachModal
+        isOpen={activeModal === "detach"}
+        sourceContext={sourceContext}
+        domain={domain}
         datacenterId={datacenterId}
         onClose={onClose}
       />

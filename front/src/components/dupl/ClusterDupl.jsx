@@ -21,7 +21,8 @@ import SelectedIdView from "../common/SelectedIdView";
  * @returns
  */
 const ClusterDupl = ({
-  clusters = [], columns = [], datacenterId,  
+  clusters = [], columns = [], 
+  datacenterId,  
   showSearchBox=true,
   refetch, isLoading, isError, isSuccess,
 }) => {

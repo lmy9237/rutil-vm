@@ -119,7 +119,7 @@ export const Localization = {
       else if (_status === "SUSPENDED" || _status === "PAUSED")   return "일시중지";
       else if (_status === "SAVING_STATE")  return "일시중지 중";
       else if (_status === "MAINTENANCE") return "유지보수";
-      else if (_status === "PREPARING_FOR_MAINTENANCE") return "유지보수 준비 중";
+      else if (_status === "PREPARING_FOR_MAINTENANCE") return "유지 관리 모드 준비 중";
       else if (_status === "WAIT_FOR_LAUNCH") return "전원을 켜는 중";
       else if (_status === "POWERING_UP") return "전원을 켜는 중";
       else if (_status === "POWERING_DOWN") return "전원을 끄는 중";

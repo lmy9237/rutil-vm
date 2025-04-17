@@ -42,7 +42,7 @@ const LabelInput = ({
       <input
         id={id}
         type={type}
-        placeholder={label}
+        placeholder={"  "+label}
         value={value}
         autoFocus={autoFocus}
         onChange={onChange}

@@ -12,6 +12,7 @@ import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
 import DomainModals from "../modal/domain/DomainModals";
+import DomainDataCenterActionButtons from "./DomainDataCenterActionButtons";
 
 /**
  * @name DomainDupl
@@ -22,10 +23,14 @@ import DomainModals from "../modal/domain/DomainModals";
  * @returns {JSX.Element}
  */
 const DomainDupl = ({
-  domains = [], columns = [], actionType=true, datacenterId,
+  columns = [], domains = [],
+  actionType, 
+  datacenterId,
+  sourceContext = "all", 
   showSearchBox = true,
   refetch, isLoading, isError, isSuccess,
 }) => {
+  // sourceContext: all = 전체목록 fromDomain = 도메인에서 데이터센터 fromDatacenter = 데이터센터에서 도메인
   const navigate = useNavigate();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedDomains, setSelectedDomains] = useState([]);
@@ -88,14 +93,25 @@ const DomainDupl = ({
             onRefresh={handleRefresh}
           />
         )}
-        <DomainActionButtons
-          openModal={openModal}
-          isEditDisabled={selectedDomains.length !== 1}
-          isDeleteDisabled={selectedDomains.length === 0}
-          status={selectedDomains[0]?.status}
-          selectedDomains={selectedDomains || []} 
-          actionType={actionType}
-        />
+        {sourceContext === "all" ? (
+          <DomainActionButtons
+            openModal={openModal}
+            isEditDisabled={selectedDomains.length !== 1}
+            isDeleteDisabled={selectedDomains.length === 0}
+            status={selectedDomains[0]?.status}
+            selectedDomains={selectedDomains || []} 
+            actionType={actionType}
+          />
+        ): (
+          <DomainDataCenterActionButtons
+            openModal={openModal}
+            isEditDisabled={selectedDomains.length !== 1}
+            isDeleteDisabled={selectedDomains.length === 0}
+            status={selectedDomains[0]?.status}
+            selectedDomains={selectedDomains || []} 
+            actionType={actionType}
+          />
+        )}
       </div>
 
       {/* 테이블 컴포넌트 */}
@@ -111,9 +127,9 @@ const DomainDupl = ({
           <DomainActionButtons
             openModal={openModal}
             status={row?.status}
-            selectedDomains={[row]}
-            actionType="context"
+            // selectedDomains={[row]}
             isContextMenu={true}
+            actionType="context"
           />
         ]}
       />
@@ -124,6 +140,7 @@ const DomainDupl = ({
         domain={selectedDomains[0]}
         selectedDomains={selectedDomains}
         datacenterId={datacenterId}
+        sourceContext={sourceContext}
         onClose={closeModal}
       />
     </div>

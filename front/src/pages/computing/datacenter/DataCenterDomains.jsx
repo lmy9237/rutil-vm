@@ -24,9 +24,10 @@ const DataCenterDomains = ({ datacenterId }) => {
   return (
     <>
       <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
-        actionType={false}
         domains={storageDomains}
+        actionType={false}
         datacenterId={datacenterId}
+        sourceContext={"fromDatacenter"}
         refetch={refetchStorageDomains}
         isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
       />

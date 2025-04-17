@@ -1,25 +1,22 @@
 import React from 'react';
+import LabelInput from '../../../label/LabelInput';
 
-const DomainNfs = ({ mode, nfsAddress, setNfsAddress, domain }) => {
+const DomainNfs = ({ mode, nfsAddress, setNfsAddress }) => {
   const editMode = mode === 'edit';
 
   return (
     <>
-      <div className="storage-popup-iSCSI">
-        <div className='domain-num-box center'>
-          <label htmlFor="NFSPath" className='label_font_body'>NFS 서버 경로</label>
-          {editMode ? (
-            <input type="text" value={domain?.storageAddress} disabled/>
-          ): (          
-            <input 
-              type="text" 
-              value={nfsAddress}  
-              onChange={(e) => { setNfsAddress(e.target.value) }} 
-              placeholder="예: myserver.mydomain.com:/my/local/path" 
-            />
-          )}
+      <LabelInput label={"내보내기 경로"}
+        value={nfsAddress}
+        disabled={editMode}
+        onChange={(e) => { setNfsAddress(e.target.value) }} 
+      />
+      {!editMode && (
+        <div className="text-xs text-gray-500 mt-1">
+          예: <b>myserver.mydomain.com:/my/local/path</b>
         </div>
-      </div>
+      )}
+      
     </>
   )
 };

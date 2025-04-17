@@ -8,13 +8,15 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { useAllDataCentersFromDomain, useStroageDomain } from "../../../api/RQHook";
 import SearchBox from "../../../components/button/SearchBox";
 import useSearch from "../../../components/button/useSearch";
-import DomainActionModal from "../../../components/modal/domain/DomainActionModal";
+import DomainActionModal from "../../../components/modal/domain/DomainActivateModal";
 import DomainAttachModal from "../../../components/modal/domain/DomainAttachModal";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import DomainMainTenanceModal from "../../../components/modal/domain/DomainMainTenanceModal";
 import Localization from "../../../utils/Localization";
+import DomainDataCenterActionButtons from "../../../components/dupl/DomainDataCenterActionButtons";
+import DomainDetachModal from "../../../components/modal/domain/DomainDetachModal";
 
 /**
  * @name DomainDatacenters
@@ -24,6 +26,8 @@ import Localization from "../../../utils/Localization";
  * @returns {JSX.Element} DomainDatacenters
  */
 const DomainDatacenters = ({ domainId }) => {
+  const { data: domain } = useStroageDomain(domainId);
+
   const {
     data: datacenters = [],
     isLoading: isDataCentersLoading,
@@ -45,16 +49,14 @@ const DomainDatacenters = ({ domainId }) => {
     searchText: `${datacenter?.name} ${datacenter?.domainStatus}`.toLowerCase(),
   }));
 
-  const { data: domain } = useStroageDomain(domainId);
 
-// ✅ 검색 기능 적용
+  // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   const [selectedDataCenters, setSelectedDataCenters] = useState([]); // 다중 선택된 데이터센터
   
   const [activeModal, setActiveModal] = useState(null);
   const openModal = (action) => setActiveModal(action);
   const closeModal = () => setActiveModal(null);
-
   const handleRefresh = () =>  {
     Logger.debug(`DataCenters > handleRefresh ... `)
     if (!refetchDataCenters) return;
@@ -62,7 +64,7 @@ const DomainDatacenters = ({ domainId }) => {
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
-  Logger.debug("DomainDatacenters ...");
+
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
@@ -70,12 +72,12 @@ const DomainDatacenters = ({ domainId }) => {
           searchQuery={searchQuery} setSearchQuery={setSearchQuery}
           onRefresh={handleRefresh}
         />
-        <DomainActionButtons
+        <DomainDataCenterActionButtons
           openModal={openModal}
           isEditDisabled={selectedDataCenters.length !== 1}
           isDeleteDisabled={selectedDataCenters.length === 0}
           status={transformedData[0]?.domainStatus}
-          actionType={false}
+          actionType="default"
         />
       </div>
       <TablesOuter
@@ -92,14 +94,15 @@ const DomainDatacenters = ({ domainId }) => {
       <Suspense fallback={<Loading />}>
         <DomainAttachModal
           isOpen={activeModal === "attach"}
+          sourceContext="fromDomain"
           domainId={domainId}
           datacenterId={selectedDataCenters[0]?.id}
           onClose={closeModal}
         />
-        <DomainActionModal
-          isOpen={["detach", "activate"].includes(activeModal)}
-          action={activeModal} // `type` 전달
-          domains={domain}
+        <DomainDetachModal
+          isOpen={activeModal === "detach"}
+          sourceContext="fromDomain"
+          domain={domain}
           datacenterId={selectedDataCenters[0]?.id}
           onClose={closeModal}
         />

@@ -546,7 +546,8 @@ fun Vm.toUnregisteredVm(): VmViewVo {
 		memorySize { vm.memory() }
 		cpuTopologyCnt { calculateCpuTopology(this@toUnregisteredVm) }
 		cpuArc { vm.cpu().architecture() }
-		stopTime { vm.stopTime() }
+		creationTime { if(vm.creationTimePresent()) vm.creationTime() else null }
+		stopTime { if(vm.stopTimePresent()) vm.stopTime() else null }
 	}
 }
 fun List<Vm>.toUnregisterdVms(): List<VmViewVo> =

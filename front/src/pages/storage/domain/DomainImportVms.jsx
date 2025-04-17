@@ -34,9 +34,10 @@ const DomainImportVms = ({ domainId }) => {
     ...vm,
     name: vm?.name,
     memory: checkZeroSizeToMB(vm?.memorySize),
-    cpu: vm?.cpuTopologyCnt,
+    cpuTopologyCnt: vm?.cpuTopologyCnt,
     cpuArc: vm?.cpuArc,
-    stopTime: vm?.stopTime,
+    creationTime: vm?.creationTime,
+    // stopTime: vm?.stopTime,
   }))
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
@@ -57,7 +58,7 @@ const DomainImportVms = ({ domainId }) => {
       </div>
     </div>
     
-      <TablesOuter columns={TableColumnsInfo.GET_VMS_TEMPLATES}
+      <TablesOuter columns={TableColumnsInfo.VMS_IMPORT_FROM_STORAGE_DOMAIN}
         data={filteredData}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setSelectedVms(selectedRows)}
@@ -68,7 +69,6 @@ const DomainImportVms = ({ domainId }) => {
       <SelectedIdView items={selectedVms} />
 
       <Suspense fallback={<Loading />}>
-        {/* 가상머신 가져오기 모달 */}
         {activeModal === "get" && (
           <DomainGetVmTemplateModal
             isOpen={true}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
-import { convertBytesToGB } from "../../../util";
+import { checkZeroSizeToGiB } from "../../../util";
 import { useAllDiskSnapshotsFromDomain } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
 import SelectedIdView from "../../../components/common/SelectedIdView";
@@ -23,7 +23,7 @@ const DomainDiskSnapshots = ({ domainId }) => {
 
   const transformedData = diskSnapshots.map((e) => ({
     ...e,
-    actualSize: convertBytesToGB(e?.actualSize) + " GB",
+    actualSize: checkZeroSizeToGiB(e?.actualSize),
   }))
 
   const [isModalOpen, setIsModalOpen] = useState(false);

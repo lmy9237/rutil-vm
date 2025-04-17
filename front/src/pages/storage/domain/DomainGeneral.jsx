@@ -1,5 +1,5 @@
 import React from "react";
-import { useStroageDomain } from "../../../api/RQHook";
+import { useAllDiskSnapshotsFromDomain, useStroageDomain } from "../../../api/RQHook";
 import { checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
 import InfoTable from "../../../components/table/InfoTable";
 
@@ -14,6 +14,7 @@ const overCommit = (commit, disk) => ((commit / disk) * 100).toFixed(0);
  */
 const DomainGeneral = ({ domainId }) => {
   const { data: domain } = useStroageDomain(domainId);
+   const { data: diskSnapshots = [] } = useAllDiskSnapshotsFromDomain(domainId, (e) => ({ ...e }));
 
   const tableRows = [
     { label: "ID", value: domain?.id },
@@ -23,11 +24,13 @@ const DomainGeneral = ({ domainId }) => {
     { label: "할당됨", value: checkZeroSizeToGiB(domain?.commitedSize) },
     {
       label: "오버 할당 비율",
-      value: overCommit(domain?.availableSize, domain?.diskSize) + " %",
+      value: overCommit(domain?.commitedSize, domain?.diskSize) + " %",
     },
-    { label: "이미지: (약간의 문제)", value: domain?.diskImageVos?.length || 0 },
-    { label: "경로", value: domain?.storageType === "nfs"? domain?.storageAddress : "" }, // nfs 일때만
-    // { label: "NFS 버전", value: domain?.nfsVersion },
+    { label: "이미지 개수:", value: domain?.diskImageVos?.length || 0 },
+    { label: "디스크 스냅샷 개수:", value: diskSnapshots?.length || 0 },
+    ...(domain?.storageType === "nfs"
+      ? [{ label: "경로", value: domain?.storageAddress }]: []),
+  
     { 
       label: "디스크 공간 부족 경고 표시", 
       value: `${domain?.warning} % (${((convertBytesToGB(domain?.diskSize) / domain?.warning).toFixed(0))} GB)` 

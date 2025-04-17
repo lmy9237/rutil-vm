@@ -126,7 +126,7 @@ const DiskActionModal = ({
   
 
   return (
-    <BaseModal targetName={"디스크"} submitTitle={daLabel}
+    <BaseModal targetName={Localization.kr.DISK} submitTitle={daLabel}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "800px" }}
@@ -137,9 +137,9 @@ const DiskActionModal = ({
           <thead>
             <tr>
               <th>{Localization.kr.ALIAS}</th>
-              <th>가상 크기</th>
-              <th>현재 스토리지 도메인</th>
-              <th>{Localization.kr.TARGET} 스토리지 도메인</th>
+              <th>{Localization.kr.SIZE_VIRTUAL}</th>
+              <th>현재 {Localization.kr.DOMAIN}</th>
+              <th>{Localization.kr.TARGET} {Localization.kr.DOMAIN}</th>
               {/* <th>{Localization.kr.DISK_PROFILE}</th> */}
             </tr>
           </thead>

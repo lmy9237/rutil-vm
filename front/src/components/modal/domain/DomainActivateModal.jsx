@@ -8,26 +8,23 @@ import {
 import Localization from "../../../utils/Localization";
 
 /**
- * @name DomainActionModal
+ * @name DomainActivateModal
  * @description 
  * action으로 type 전달
  *
  * @prop {boolean} isOpen
  * @returns
  */
-const DomainActionModal = ({ 
+const DomainActivateModal = ({ 
   isOpen, 
   onClose, 
-  action,
-  // actionType=true, // actionType이 true 면 데이터센터에서 도메인을 바라보는 방향
   domains, 
   datacenterId 
 }) => {
   const onSuccess = () => {
-    toast.success(`${Localization.kr.DOMAIN} ${getContentLabel()} 완료`);
     onClose();
+    toast.success(`${Localization.kr.DOMAIN} 활성화 완료`);
   };
-  const { mutate: detachDomain } = useDetachDomain(onSuccess, () => onClose());
   const { mutate: activateDomain } = useActivateDomain(onSuccess, () => onClose());
 
   const { ids, names } = useMemo(() => {
@@ -40,38 +37,23 @@ const DomainActionModal = ({
     };
   }, [domains]);
   
-  const getContentLabel = () => {
-    const labels = {
-      detach: "분리",
-      activate: "활성",
-    };
-    return labels[action] || "";
-  };
-
   const handleFormSubmit = () => {
     if (!ids.length) return toast.error("실행할 도메인이 없습니다.");
 
-    const actionMap = {
-      detach: detachDomain,
-      activate: activateDomain,
-      // maintenance: maintenanceDomain,
-    };
-    const actionFn = actionMap[action];
-
     ids.forEach((domainId) => {
-      actionFn({ domainId, dataCenterId: datacenterId });
+      activateDomain({ domainId, dataCenterId: datacenterId });
     });
   };
 
   return (
-    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={getContentLabel(action)}
+    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={"활성"}
       isOpen={isOpen} onClose={onClose}      
       onSubmit={handleFormSubmit}
-      promptText={`${names.join(", ")} 를(을) ${getContentLabel(action)} 하시겠습니까?`}
+      promptText={`${names.join(", ")} 를(을) 활성화 하시겠습니까?`}
       contentStyle={{ width: "630px", height: "230px" }} 
       shouldWarn={true}
     />
   );
 };
 
-export default DomainActionModal;
+export default DomainActivateModal;

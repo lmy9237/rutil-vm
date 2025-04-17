@@ -396,8 +396,14 @@ const TableColumnsInfo = {
     { header: '데이터 센터 내의 도메인 상태', accessor: '_domainStatus', clickable: false },
   ],
   DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN : [
-    { header: Localization.kr.NAME, accessor: 'name', clickable: false , width: '17%'},
-    { header: '스토리지 유형', accessor: 'storageType', clickable: false },    
+    { header: Localization.kr.NAME, accessor: 'name', clickable: false, width: '20%'},
+    { header: '유형', accessor: 'domainType', clickable: false, width: '17%' },
+    { header: '타입', accessor: 'storageType', clickable: false, width: '17%' },
+    { header: '여유 공간', accessor: 'availableSize', clickable: false, width: '17%' },
+  ],
+  STORAGE_DOMAINS_ATTACH_FROM_DATACENTER : [
+    { header: Localization.kr.NAME, accessor: 'name', clickable: false, width: '20%'},
+    { header: '유형', accessor: 'storageType', clickable: false, width: '17%' },
   ],
   TEMPLATES_FROM_STORAGE_DOMAIN: [
     { header: Localization.kr.ALIAS, accessor: '_name', clickable: false },
@@ -415,7 +421,6 @@ const TableColumnsInfo = {
     { header: Localization.kr.DATE_CREATED, accessor: 'creationTime', clickable: false },
   ],
   TARGETS_LUNS: [
-    { header: 'Select', accessor: 'checkbox', clickable: true },
     { header: 'Target Name', accessor: 'target', clickable: true },
     { header: 'address', accessor: 'address', clickable: true },
     { header: 'port', accessor: 'port', clickable: true },
@@ -423,7 +428,7 @@ const TableColumnsInfo = {
   LUNS_TARGETS: [
     { header: '여부', accessor: 'abled', clickable: false },
     { header: 'status', accessor: 'status', clickable: false },
-    { header: 'Lun ID', accessor: 'id', clickable: false },
+    { header: 'Lun ID', accessor: 'lunId', clickable: false },
     { header: Localization.kr.SIZE_ACTUAL, accessor: 'size', clickable: false },
     { header: '#path', accessor: 'paths', clickable: false },
     { header: 'vendor ID', accessor: 'vendorId', clickable: false },
@@ -436,7 +441,7 @@ const TableColumnsInfo = {
   ],
   
   FIBRE: [
-    { header: '', accessor: 'check', clickable: true },
+    { header: '', accessor: 'check', clickable: true, width: '5%'  },
     { header: 'status', accessor: 'status', clickable: false },
     { header: 'Lun ID', accessor: 'id', clickable: false },
     { header: 'size', accessor: 'size', clickable: false },
@@ -529,8 +534,19 @@ const TableColumnsInfo = {
     { header: Localization.kr.CPU, accessor: Localization.kr.CPU, clickable: false },
     { header: '아키텍처', accessor: 'cpuArc', clickable: false },
     { header: '디스크', accessor: 'disk', clickable: false },
-    { header: '중지 일자', accessor: 'stopTime', clickable: false },
+    { header: '생성 일자', accessor: 'creationTime', clickable: false },
+    // { header: '중지 일자', accessor: 'stopTime', clickable: false },
     // { header: '내보낸 시점', accessor: 'exportedAt', clickable: false },
+  ],  
+
+  VMS_IMPORT_FROM_STORAGE_DOMAIN: [
+    { header: Localization.kr.NAME, accessor: 'name', clickable: false, width: '10%' },
+    { header: Localization.kr.MEMORY, accessor: 'memory', clickable: false },
+    { header: Localization.kr.CPU, accessor: 'cpuTopologyCnt', clickable: false },
+    { header: '아키텍처', accessor: 'cpuArc', clickable: false },
+    { header: '디스크', accessor: 'disk', clickable: false },
+    { header: '생성 일자', accessor: 'creationTime', clickable: false },
+    // { header: '중지 일자', accessor: 'stopTime', clickable: false },
   ],  
   GET_DISK_TEMPLATES: [
     { header: Localization.kr.ALIAS, accessor: 'alias', clickable: true ,width:'10%'},

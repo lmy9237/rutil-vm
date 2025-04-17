@@ -79,8 +79,8 @@
   padding: 12px 0;
 }
 .label-font-name{
-font-size: var(--fs-16);
-font-weight: 700;
+  font-size: var(--fs-16);
+  font-weight: 700;
 }
 .use-chap-outer{
   background: var(--color-white);

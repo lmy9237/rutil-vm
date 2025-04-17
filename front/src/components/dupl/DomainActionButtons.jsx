@@ -10,10 +10,9 @@ const DomainActionButtons = ({
   isDeleteDisabled,
   status,
   isContextMenu = false,
-  actionType=true,
+  actionType = "default",  // default, context
 }) => {
   // 도메인 생성, 도메인 가져오기, 도메인 관리(편집), 삭제, connection, lun 새로고침, 파괴, 마스터 스토리지 도메인으로 선택
-  // 데이터센터: 연결, 분리, 활성, 유지보수
   const navigate = useNavigate();
 
   const isUp = status === "UP";
@@ -29,18 +28,11 @@ const DomainActionButtons = ({
     { type: "destory", label: Localization.kr.DESTROY, disabled: isDeleteDisabled || isMaintenance, onBtnClick: () => openModal("destroy")  },
   ];
 
-  const dcActions = [
-    { type: "attach", label: "연결", disabled: isUp, onBtnClick: () => openModal("attach") }, // 연결 disabled 조건 구하기
-    { type: "detach", label: "분리", disabled: isDeleteDisabled || isActive, onBtnClick: () => openModal("detach") },
-    { type: "activate", label: "활성", disabled: isDeleteDisabled || isActive, onBtnClick: () => openModal("activate") },
-    { type: "maintenance", label: "유지보수", disabled: isDeleteDisabled || isMaintenance, onBtnClick: () => openModal("maintenance") },
-  ];
-
   return (
     <>
       <ActionButtonGroup
         actionType={actionType}
-        actions={actionType === true ? basicActions : dcActions}
+        actions={basicActions}
       >
         {!isContextMenu && (
           <ActionButton label={Localization.kr.DISK} onClick={() => navigate("/storages/disks")} actionType={actionType} />
