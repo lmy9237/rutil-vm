@@ -1,19 +1,7 @@
-import "./LabelInput.css"
+import { useState, useRef, useEffect } from "react";
+import "./LabelInput.css";
+import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 
-/**
- * @name LabelSelectOptions
- * @description 레이블 선택란
- *
- * @prop {string} className
- * @prop {string} label
- * @prop {string} id
- * @prop {string} value
- * @prop {function} onChange
- * @prop {boolean} disabled
- * @prop {Array} options
- *
- * @returns {JSX.Element} LabelSelectOptions
- */
 const LabelSelectOptions = ({
   className = "",
   label,
@@ -21,22 +9,57 @@ const LabelSelectOptions = ({
   value,
   onChange,
   disabled,
-  options,
-}) => (
-  <>
-  {/*<div className={`flex justify-center items-center mb-1 w-full px-[25px] ${className}`}>
-    <label className="flex justify-end items-center mx-1 w-[60px] max-w-[100px] text-end" htmlFor={id}>*/}
-   <div className='input-select'>
-    <label htmlFor={id}>{label}</label>
-    <select value={value} onChange={onChange} disabled={disabled}>
-      {options.map((opt) => (
-        <option className="option-box" key={opt.value} value={opt.value}>
-          {opt.label}
-        </option>
-      ))}
-    </select>
-  </div>
-  </>
-);
+  options = [],
+}) => {
+  const [open, setOpen] = useState(false);
+  const selectRef = useRef(null);
+
+  const handleOptionClick = (optionValue) => {
+    if (disabled) return;
+    onChange({ target: { value: optionValue } });
+    setOpen(false);
+  };
+
+  const handleClickOutside = (e) => {
+    if (selectRef.current && !selectRef.current.contains(e.target)) {
+      setOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const selectedLabel = options.find(opt => opt.value === value)?.label || "선택하세요";
+
+  return (
+    <div className={`input-select custom-select-wrapper${className}`} ref={selectRef}>
+      <label htmlFor={id}>{label}</label>
+      <div
+        className={`custom-select-box f-btw   ${disabled ? "disabled" : ""}`}
+        onClick={() => !disabled && setOpen(!open)}
+      >
+        <span>{selectedLabel}</span>
+        <RVI16 iconDef={open ? rvi16ChevronUp : rvi16ChevronDown} />
+      </div>
+      {open && (
+        <div className="custom-options">
+          {options.map((opt) => (
+            <div
+              key={opt.value}
+              className={`custom-option ${opt.value === value ? "selected" : ""}`}
+              onClick={() => handleOptionClick(opt.value)}
+            >
+              {opt.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default LabelSelectOptions;

@@ -19,6 +19,7 @@ import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import "./MNetwork.css";
 import DynamicInputList from "../../label/DynamicInputList";
+import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 
 const initialFormState = {
   id: "",
@@ -42,7 +43,11 @@ const NetworkModal = ({
   onClose,
 }) => {
   const nLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
-  const [formState, setFormState] = useState(initialFormState);
+  const [formState, setFormState] = useState({
+    ...initialFormState,
+    useCustomMtu: false,      // ✅ 추가
+    customMtu: "",            // ✅ 추가
+  });
 
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [clusterVoList, setClusterVoList] = useState([]);
@@ -231,48 +236,77 @@ const NetworkModal = ({
           onChange={(e) => setFormState((prev) => ({...prev, portIsolation: e.target.checked }))}
         />
 
-          <div className="mtu-input-outer">
-            <div className="mtu-radio-input">
-              <div className="f-start">
-                {/* TODO: 디자인 */}
-                <input
-                  type="radio"
-                  checked={formState.mtu === 0} // 기본값 1500 선택됨
-                  onChange={() => setFormState((prev) => ({ ...prev, mtu: 0 }))}
-                />
-                <label>기본값 (1500)</label>
-              </div>
-
-            <div  className="f-btw ">
-              <div className="f-center">
-                <input
-                  type="radio"
-                  checked={formState.mtu !== 0} // 사용자 정의 값이 있을 때 선택됨
-                  onChange={() =>
-                    setFormState((prev) => ({ ...prev, mtu: "" }))
-                  } // 빈 문자열로 설정해 사용자가 입력할 수 있도록
-                />
-                <label>사용자 정의</label>
-           
-              </div>
-              <div className="mtu-text-input">
-                  <input
-                    type="number"
-                    style={{ width: "100%" }}
-                    min="68"
-                    step="1"
-                    disabled={formState.mtu === 0} // 기본값 선택 시 비활성화
-                    value={formState.mtu === 0 ? "" : formState.mtu} // 기본값일 경우 빈 값 표시
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setFormState((prev) => ({ ...prev, mtu: value }));
-                    }}
-                  />
-                </div>
-              </div>
-
-            </div>
+        {/*삭제예정*/}
+        {/* <div className="f-start">
+          <input
+            type="radio"
+            checked={formState.mtu === 0} // 기본값 1500 선택됨
+            onChange={() => setFormState((prev) => ({ ...prev, mtu: 0 }))}
+          />
+          <label>기본값 (1500)</label>
+        </div> */}
+        {/* 
+        <div  className="f-btw ">
+        <div className="f-center">
+          <input
+            type="radio"
+            checked={formState.mtu !== 0}
+            onChange={() =>
+              setFormState((prev) => ({ ...prev, mtu: "" }))
+            }
+          />
+          <label>사용자 정의</label>
+      
+        </div>
+        <div className="mtu-text-input">
+            <input
+              type="number"
+              style={{ width: "100%" }}
+              min="68"
+              step="1"
+              disabled={formState.mtu === 0} // 기본값 선택 시 비활성화
+              value={formState.mtu === 0 ? "" : formState.mtu} // 기본값일 경우 빈 값 표시
+              onChange={(e) => {
+                const value = e.target.value;
+                setFormState((prev) => ({ ...prev, mtu: value }));
+              }}
+            />
           </div>
+        </div> */}
+          
+        <div className="mtu-input-outer flex items-center gap-3">
+          <ToggleSwitchButton
+            id="mtuToggle"
+            label="MTU 설정"
+            checked={formState.mtu !== 0}
+            tType="사용자 정의"
+            fType="기본값 (1500)"
+            onChange={(e) => {
+              const isCustom = e.target.checked;
+              setFormState((prev) => ({
+                ...prev,
+                mtu: isCustom ? 1500 : 0, // 사용자 정의일 경우 기본값으로 시작
+              }));
+            }}
+          />
+
+          <input
+            type="number"
+            className="ml-2"
+            style={{ width: "150px" }}
+            min="68"
+            step="1"
+            value={formState.mtu}
+            disabled={formState.mtu === 0}
+            onChange={(e) =>
+              setFormState((prev) => ({
+                ...prev,
+                mtu: parseInt(e.target.value || "0", 10),
+              }))
+            }
+          />
+        </div>
+
           
         <div>
           <br/>
@@ -364,9 +398,9 @@ const NetworkModal = ({
 
         
         {!editMode && (
-          <div className="network-new-cluster-form mt-3">
+          <div className=" py-3">
             <hr />
-            <span className="mt-3 block">클러스터에서 네트워크를 연결/분리</span>
+            <span className="mt-3 block font-bold">클러스터에서 네트워크를 연결/분리</span>
             <TablesOuter
               isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
               columns={[

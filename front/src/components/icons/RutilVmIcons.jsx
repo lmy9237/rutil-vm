@@ -476,16 +476,15 @@ export const RVI24 = ({iconDef, width = 24, height = 24, onClick, currentColor="
   )
 }
 
-export const severity2Icon = (severity, isLined=false) => {
-  const tooltipId = `status-tooltip-${severity}`;
-  let iconDef = (<RVI16 iconDef={rvi16QuestionMark()} />);
+export const severity2Icon = (severity, isLined=false) => {  
+  let iconDef = rvi16QuestionMark();
   switch (severity) {
-  case "ALERT":   iconDef = (<RVI16 iconDef={isLined ? rvi16SeverityAlertLined() : rvi16SeverityAlert()} />);break;
-  case "ERROR":   iconDef = (<RVI16 iconDef={isLined ? rvi16SeverityErrorLined() : rvi16SeverityError()} />);break;
-  case "WARNING": iconDef = (<RVI16 iconDef={isLined ? rvi16SeverityWarningLined() : rvi16SeverityWarning()} />);break;
-  // case "NORMAL":  iconDef = (<RVI16 iconDef={isLined ? rvi16SeverityNormalLined() : rvi16SeverityNormal()} />);break;
-  case "NORMAL":  iconDef = (<RVI16 iconDef={isLined ? rvi16SeverityNormalLined() : rvi16Check()} />);break;
-  default:        iconDef = (<RVI16 iconDef={rvi16QuestionMark()} />);break;
+  case "ALERT":   iconDef = isLined ? rvi16SeverityAlertLined() : rvi16SeverityAlert();break;
+  case "ERROR":   iconDef = isLined ? rvi16SeverityErrorLined() : rvi16SeverityError();break;
+  case "WARNING": iconDef = isLined ? rvi16SeverityWarningLined() : rvi16SeverityWarning();break;
+  // case "NORMAL":  iconDef = isLined ? rvi16SeverityNormalLined() : rvi16SeverityNormal();break;
+  case "NORMAL":  iconDef = isLined ? rvi16SeverityNormalLined() : rvi16Check();break;
+  default:        iconDef = rvi16QuestionMark();break;
   }
   return (
     <>
@@ -726,43 +725,28 @@ export const clusterStatus2Icon = (status = "", connect=false) => {
  * @param {boolean} isHostedEngine 호스트엔진일 경우
  * @returns {JSX.Element} 툴팁이 포함 된 아이콘
  */
-// export const hostedEngineStatus2Icon = (isHostedEngineVm=false, isHostedEngine=false) => {
-//   const tag = isHostedEngineVm ? "hosted-engine-vm" : isHostedEngine ? "hosted-engine" : "";
-//   const iconDef = isHostedEngineVm ? rvi16StarGold : isHostedEngine ? rvi16Star : null;
-//   const tooltipMessage = `<span class="v-center">${isHostedEngineVm ? "<p>호스트 엔진 가상머신</p><p>실행 중</p>" : isHostedEngine ? "<p>호스트 엔진 가상머신</p><p>실행 가능</p>" : ""}</span>`
+export const hostedEngineStatus2Icon = (isHostedEngineVm = false, isHostedEngine = false) => {
+  const iconDef = isHostedEngineVm ? rvi16StarGold : isHostedEngine ? rvi16Star : null;
 
-//   const tooltipId = `status-tooltip-${tag}`
-//   return (
-//     <>
-//       {iconDef && <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}
-//         data-tooltip-html={tooltipMessage}
-//       />}
-//       {tooltipMessage && (createPortal(<Tooltip id={tooltipId} effect="solid" middlewares={[]} className="custom-tooltip"/>, document.body))}
-//     </>
-//   )
-// }
-  export const hostedEngineStatus2Icon = (isHostedEngineVm = false, isHostedEngine = false) => {
-    const iconDef = isHostedEngineVm ? rvi16StarGold : isHostedEngine ? rvi16Star : null;
+  const tooltipContent = isHostedEngineVm
+  ? <div className="v-center">호스트 엔진 가상머신<br />실행 중</div>
+  : isHostedEngine
+  ? <div className="v-center">호스트 엔진 가상머신<br />실행 가능</div>
+  : null;
+  if (!iconDef || !tooltipContent) return null;
 
-    const tooltipContent = isHostedEngineVm
-    ? <div className="v-center">호스트 엔진 가상머신<br />실행 중</div>
-    : isHostedEngine
-    ? <div className="v-center">호스트 엔진 가상머신<br />실행 가능</div>
-    : null;
-    if (!iconDef || !tooltipContent) return null;
-
-    return (
-      <Tippy
-        content={<div className="v-center">{tooltipContent}</div>}
-        placement="top"
-        theme="dark-tooltip"
-        animation="shift-away"
-        arrow={true}
-      >
-        <span style={{ display: "inline-flex", alignItems: "center" }}>
-          <RVI16 iconDef={iconDef} />
-        </span>
-      </Tippy>
-    );
-  };
+  return (
+    <Tippy
+      content={<div className="v-center">{tooltipContent}</div>}
+      placement="top"
+      theme="dark-tooltip"
+      animation="shift-away"
+      arrow={true}
+    >
+      <span style={{ display: "inline-flex", alignItems: "center" }}>
+        <RVI16 iconDef={iconDef} />
+      </span>
+    </Tippy>
+  );
+};
 //#endregion

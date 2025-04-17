@@ -403,8 +403,16 @@ const Tables = ({
                     arrow={true}
                     disabled={!tooltips[`${globalIndex}-${colIndex}`]}
                   >
-                    <div className="cell-ellipsis">
-                      {isJSX ? cellValue : String(cellValue ?? "")}
+                    <div className="cell-ellipsis" style={{ textAlign: shouldCenter ? "center" : "left" }}>
+                      {isJSX ? (
+                        isTableRowClick ? (
+                          cellValue  
+                        ) : (
+                          <div className="f-center">{cellValue}</div> 
+                        )
+                      ) : (
+                        String(cellValue ?? "")
+                      )}
                     </div>
                   </Tippy>
                   </td>

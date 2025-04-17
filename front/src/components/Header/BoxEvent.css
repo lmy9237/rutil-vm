@@ -13,7 +13,7 @@
   width: var(--w-bell-box-expanded); /* 확장 시 */
 }
 .bell-box.footer-active {
-  height: auto; /* TODO: Footer 확장시 높이 설정*/
+  height: auto; 
 }
 .bell-box > div {
   font-size: var(--fs-16);
@@ -50,25 +50,16 @@
 }
 .bell-btns {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 10px;
   height: 48px;
-  font-size: var(--fs-default);
 }
-.bell-btns > div {
-  padding: 0px 10px;
-  height: 24px;
-  text-align: center;
-  border-radius: 3px;
+.bell-btns>div{
+  width: 50%;
   cursor: pointer;
-  background: var(--color-primary-white);
-  color: var(--color-nav);
-  border: var(--border-btn);
+  color: var(--color-active);
+  font-size: var(--fs-14);
 }
-.bell-btns > div:hover {
+.bell-btns>div:hover{
   text-decoration: underline;
-  background: var(--color-white);
 }
 .bell-content {
   width: 100%;padding: 12px 8px;
@@ -93,10 +84,10 @@
   cursor: pointer;
 }
 .bell-mid {
-  width:calc(100% - 60px);height:100%;
-  word-wrap: break-word; /* 긴 단어 자동 줄바꿈 */
+  width:calc(100% - 55px);height:100%;
+  word-wrap: break-word; 
   overflow-wrap: break-word;
-  white-space: normal; /* 자동 줄바꿈 */
+  white-space: normal; 
 }
 .bell-mid p { 
   word-wrap: break-word;
@@ -106,7 +97,7 @@
 }
 /* bell-content가 활성화되었을 때 (내용에 따라 높이 자동 조절) */
 .bell-content.open {
-  max-height: 1000px; /* 충분히 큰 값 설정 */
+  max-height: 1000px; 
 }
 .clickable {
   cursor: pointer;

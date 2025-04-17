@@ -12,12 +12,13 @@
   letter-spacing:var(--letter-28);
 }
 .cell-ellipsis {
-  display: block;
+  display: block; /* block이 되어야 overflow + ellipsis 작동 */
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 /*search-box*/
 .search-box button {
   padding: 5px 10px;

@@ -60,7 +60,7 @@ const HeaderButton = ({
       const nav = document.querySelector(".article-nav");
       if (container && nav) {
         const isOverflowing = nav.scrollWidth > container.clientWidth;
-        setIsCompactMode(isOverflowing || window.innerWidth < 1100);
+        setIsCompactMode(isOverflowing || window.innerWidth < 1200);
       }
     };
     handleResize(); // 초기 실행

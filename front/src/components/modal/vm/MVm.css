@@ -75,9 +75,7 @@
   display: flex;
   justify-content: space-between;
 }
-.instance-image{
-  padding: 0 0.22rem;
-}
+
 .disk-list-container{
   padding: 0 0.22rem;
   margin-top: 12px;
@@ -152,31 +150,16 @@
 }
 
 /*네트워크 인터페이스 새로만들기*/
-
 .mac-address{
   font-weight: 700;
   font-size: var(--fs-17);
   padding: 6px 0;
 }
 
-
 /*마이그레이션 팝업*/
-.migration-article-outer > h1{
-  font-weight: 700;
-  font-size: var(--fs-17);
-  padding-top: 16px;
-}
-.migration-dropdown {
-  margin-bottom: 0.2rem;
-}
-.migration-article > div:last-child {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-.migration-article > div{
+.migration-article {
   padding: 10px 0;
-  font-size: var(--fs-14);
+  margin-bottom: 10px;
 }
 
 /* 삭제모달창 */
@@ -191,4 +174,8 @@
   display: flex;
   justify-content: space-between;
   padding: 0.2rem;
+}
+/**/
+.nic-toggle{
+  width: 59%;
 }

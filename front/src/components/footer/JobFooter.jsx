@@ -8,6 +8,9 @@ import SelectedIdView from "../common/SelectedIdView";
 import { useAllJobs } from "../../api/RQHook";
 import "./JobFooter.css";
 import Logger from "../../utils/Logger";
+import Tables from "../table/Tables";
+import TableColumnsInfo from "../table/TableColumnsInfo";
+import TablesOuter from "../table/TablesOuter";
 
 /**
  * @name JobFooter
@@ -115,34 +118,15 @@ const JobFooter = () => {
           className={`footer-content${footerVisible ? " open" : ""}`}
         >
           <div className="footer-nav">
-            <div className="section-table-outer p-0.5">
-              <table id="table-job">
-                <thead>
-                  <tr>
-                    {/* <th>{Localization.kr.TARGET} <FontAwesomeIcon icon={faFilter} fixedWidth /></th> */}
-                    <th>작업명</th>
-                    <th>{Localization.kr.STATUS}</th>
-                    <th>시작 {Localization.kr.TIME}</th>
-                    <th>종료 {Localization.kr.TIME}</th>
-                    <th>{Localization.kr.TIMESTAMP}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {transformedData.length === 0 ? (
-                    <TableRowNoData colLen={5} />
-                  ) : transformedData.map((job) => (
-                    <tr key={job?.id}>
-                      <td className="f-start">{!job?.isFinished && <Spinner/>}{job?.description}</td>
-                      <td>{Localization.kr.renderStatus(job?.status)}</td>
-                      <td>{job?.startTime}</td>
-                      <td>{job?.endTime}</td>
-                      <td>{Localization.kr.renderTime(job?.timestamp)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
+            <TablesOuter
+              columns={TableColumnsInfo.JOB_HISTORY_COLUMNS}
+              data={transformedData}
+              isLoading={isJobsLoading}
+              isError={isJobsError}
+              isSuccess={isJobsSuccess}
+              onRowClick={(selected) => setSelectedJobs(selected)}
+              showSearchBox={false}
+            />
             <SelectedIdView items={selectedJobs} />
           </div>
         </div>

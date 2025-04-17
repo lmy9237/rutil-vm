@@ -1,4 +1,5 @@
 @tailwind base;
+
 @tailwind components;
 @tailwind utilities;
 html {
@@ -66,6 +67,7 @@ html {
   --color-table:#E2E5EB;
   --color-active:#EDF1F5;
   --color-logo-text:#4679BC;
+  --color-active:#449bff;
 
   --color-primary: #020B79;;           /* 메인색 */
   --color-primary-hover: #2E379D;;           
@@ -267,7 +269,7 @@ input[disabled] {
 }
 
 .active {
-  color: #449bff;
+  color: var(--color-active);
 }
 
 
@@ -308,7 +310,7 @@ textarea {
 
 .network_new_nav div.active {
   background: #e4e4e4;
-  color: #449bff;
+  color: var(--color-active);
 }
 
 /* 중복끝 */
@@ -2484,7 +2486,41 @@ background-color: #f0f0f0;
   justify-content: right;
   width: 60%;
 }
+.network-new-cluster-table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: left;
+}
+.network-new-cluster-table thead {
+  background-color: #d1e2eb;
+  border-top: none;
+}
 
+.network-new-cluster-table th,
+.network-new-cluster-table td {
+  border: var(--border-simple);
+  padding: 1px 3px;
+} 
+.plusbtns {
+  display: flex;
+  align-items: center;
+  border-radius: 2px;
+}
+.plusbtns > button {
+  height: 100%;
+}
+  .network-new-cluster-form {
+  margin-bottom: 20px;
+}
+.network-new-cluster-form > span {
+  font-weight: 600;
+}
+.network-new-cluster-form > div {
+  border: var(--border-simple);
+  height: 37vh;
+  overflow-y: auto;
+  overflow-x: hidden; 
+}
 */
 
 /* Computing.css */

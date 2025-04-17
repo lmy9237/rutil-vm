@@ -1,7 +1,6 @@
 .host-filter-btns {
   display: flex;
   font-size: var(--fs-default);
-  margin-bottom: 8px;
   border-radius: 4px;
   overflow: hidden; 
   width: fit-content;

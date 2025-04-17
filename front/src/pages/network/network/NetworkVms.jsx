@@ -66,7 +66,8 @@ const NetworkVms = ({ networkId }) => {
   Logger.debug("NetworkVms...");
   return (
     <>
-      <div className="header-right-btns">
+      <div className="header-right-btns no-search-box f-btw">
+        <FilterButton options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
         <ActionButton
           label="제거"
           actionType="default"
@@ -75,7 +76,7 @@ const NetworkVms = ({ networkId }) => {
         />
       </div>
 
-      <FilterButton options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
+     
 
       <TablesOuter
         columns={

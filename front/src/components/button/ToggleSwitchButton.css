@@ -6,7 +6,6 @@
 }
 .switch-outer{
   display: flex;
-  width: 55%;
 }
 .switch input {
   opacity:0;

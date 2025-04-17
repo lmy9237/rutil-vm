@@ -17,8 +17,6 @@
 }
 .footer > svg {
   margin: 0 12px; 
-  color: rgb(10, 55, 107);
-  background-color: white;
 }
 .footer > span {
   font-weight: 500;
@@ -44,22 +42,6 @@
   width: 100%;height: 100%;
   flex: 1;
   overflow-y: auto;
-}
-.footer-nav table{
-  width: 100%;
-  border: var(--border-simple);
-  background:white;
-}
-/* .footer-nav table tr{
-  border-bottom:var(--border-simple);
-} */
-.footer-nav table th{
-  border-right:var(--border-simple);
-  text-align:left;
-  padding:2px;
-}
-.footer-nav table th:last-child{
-  border-right:none;
 }
 
 .footer-resizer {

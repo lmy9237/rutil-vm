@@ -153,13 +153,15 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
         <div className="mac-address">사용자 지정 MAC 주소</div>
       </div>
 
-      <ToggleSwitchButton id="plugged"
-        label="링크 상태"
-        checked={formInfoState.linked}
-        onChange={() => handleRadioChange("linked", !formInfoState.linked)}
-        tType="Up"
-        fType="Down"
-      />
+      <div className="nic-toggle">
+        <ToggleSwitchButton id="plugged"
+          label="링크 상태"
+          checked={formInfoState.linked}
+          onChange={() => handleRadioChange("linked", !formInfoState.linked)}
+          tType="Up"
+          fType="Down"
+        />
+      </div>
       {/* <div>
                 <input
                   type="radio"
@@ -183,13 +185,15 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
                 <label htmlFor="status_down">Down</label>
               </div>*/}
 
-      <ToggleSwitchButton id="plugged"
-        label="카드 상태"
-        tType="연결됨"
-        fType="분리"
-        checked={formInfoState.plugged === true}
-        onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}
-      />
+      <div className="nic-toggle">
+        <ToggleSwitchButton id="plugged"
+          label="카드 상태"
+          tType="연결됨"
+          fType="분리"
+          checked={formInfoState.plugged === true}
+          onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}
+        />
+      </div>
     </BaseModal>
   );
 };

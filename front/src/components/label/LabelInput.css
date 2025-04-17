@@ -1,10 +1,10 @@
-input {
+input{
   cursor: pointer;
 }
 .input-text,
 .input-select,
 .input-password,
-.input-number {
+.input-number{
   width: 100%;
   font-size: var(--fs-default);
   padding: 10px 0;
@@ -13,7 +13,9 @@ input {
 input[type="text"],
 input[type="number"],
 input[type="password"],
-.input-select select, select{
+.input-select select, 
+select,
+.custom-select-box{
   width:55%;
   border: var(--border-btn);border-radius: 1px;
   font-size: var(--fs-default);
@@ -40,11 +42,49 @@ input[type="radio"] {
   align-items: center;
 }
 
-.option-box{
-  border: 1px solid red !important;
-}
 /* 옵션 박스 스타일 */
-.input-select select option {
-  height: var(--h-primary);
-  padding: 10px;
+
+/*select박스*/
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+  font-size: var(--fs-default);
+}
+
+.custom-select.disabled {
+  color: #888888;
+  cursor: not-allowed;
+}
+.custom-select-select{
+  position: relative;
+}
+.custom-options {
+  position: absolute;
+  top: 79%;
+  right: 0;
+  width: 55%;
+  background: white;
+  border-top: none;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  border: var(--border-btn);border-radius: 1px;
+  border-top: none !important;
+}
+
+.custom-option {
+  height: 28px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-default);
+  cursor: pointer;
+}
+
+.custom-option:hover {
+  background-color: #EFF1F5;
+}
+.custom-option.selected {
+  background-color: #EFF1F5;
+  font-weight: 600;
 }

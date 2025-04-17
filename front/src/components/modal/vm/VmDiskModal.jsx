@@ -219,7 +219,7 @@ const VmDiskModal = ({
       readOnly: formState.readOnly,
       storageDomainVo: { id: selectedDomain.id },
       diskProfileVo: { id: selectedDiskProfile.id },
-      isCreated: true, // 🚀 생성된 디스크는 isCreated: true
+      isCreated: true,
     };
     Logger.debug(`Form Data: ${JSON.stringify(newDisk, null, 2)}`);
     onCreateDisk(newDisk);

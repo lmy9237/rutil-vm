@@ -105,8 +105,8 @@ const BoxEvent = ({
           </div>
 
           <div className="bell-btns">
-            <div className="mr-3">모두 삭제</div>
-            <div>모두 출력</div>
+            <div className="f-center">모두 삭제</div>
+            <div className="f-center">모두 출력</div>
           </div>
         </>
       )}
@@ -167,12 +167,12 @@ const BoxEventItem = ({
 
   return (
     <div key={event?.id} 
-      className="bell-content f-start"
+      className="bell-content flex"
       {...props}
     >
       {event?.severity && (
-        <span className="bell-icon f-center">
-          <RVI16 iconDef={severity2Icon(event?.severity, true)} />
+        <span className="bell-icon f-center mr-1.5">
+          {severity2Icon(event?.severity, true)}
         </span>
       )}
         <div className="bell-mid v-start">
