@@ -72,7 +72,7 @@ const DomainModal = ({
   mode = "domain:create",
   domainId,
   datacenterId,
-  onClose
+  onClose,
 }) => {
   const dLabel = mode === "domain:update" ? Localization.kr.UPDATE 
     : mode === "domain:import" ? Localization.kr.IMPORT 

@@ -82,29 +82,60 @@
   font-size: var(--fs-16);
   font-weight: 700;
 }
-.use-chap-outer{
+/* .use-chap-outer{
   background: var(--color-white);
   border-radius: 1px;
   border: 1px solid var(--color-table);
-}
-.use-chap-arrow{
+} */
+.use-chap-arrow {
+  background-color: var(--color-white); /* ✅ 토글영역에만 배경 */
   height: 32px;
   display: flex;
-  cursor: pointer;
   align-items: center;
+  padding: 0 8px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  /* border: 1px solid var(--color-table); */
+  border-radius: 2px;
 }
 .use-chap-content{
   padding: 0 5px;
 }
+
+.input-inline-wrap {
+  display: flex;
+  align-items: flex-end; /* 라벨 높이 맞추기 */
+  gap: 20px;             /* 주소-포트 사이 간격 */
+  margin-bottom: 8px;
+}
+
 .target-btn{
   width: 100%;
   justify-content: right;
   display: flex;
-  padding-bottom: 15px;
+  padding-bottom: 3px;
 }
 .target-btn>button{
   height: 28px;
   padding: 0 12px;
   border: var(--border-btn);
+}
 
+
+/* 펼쳐진 내용 */
+.use-chap-content {
+  padding: 8px;
+  padding-top: 0;
+  padding-bottom: revert;
+  display: flex;
+  align-items: flex-end; /* 라벨 높이 맞추기 */
+  gap: 20px;             /* 주소-포트 사이 간격 */
+  margin-bottom: 8px;
+}
+
+/* 사용자 인증이 ON일 때 전체 div에 배경색, 테두리 */
+.target-search-right.with-background {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-table);
+  border-radius: 2px;
 }

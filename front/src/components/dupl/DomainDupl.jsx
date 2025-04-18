@@ -86,18 +86,12 @@ const DomainDupl = ({
         {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
         {sourceContext === "all" ? (
           <DomainActionButtons
-            isEditDisabled={domainsSelected.length !== 1}
-            isDeleteDisabled={domainsSelected.length === 0}
             status={domainsSelected[0]?.status}
-            selectedDomains={domainsSelected || []} 
             actionType={actionType}
           />
         ): (
           <DomainDataCenterActionButtons
-            isEditDisabled={domainsSelected.length !== 1}
-            isDeleteDisabled={domainsSelected.length === 0}
             status={domainsSelected[0]?.status}
-            selectedDomains={domainsSelected || []} 
             actionType={actionType}
           />
         )}

@@ -1474,7 +1474,7 @@ export const useLoginIscsiFromHost = (
   return useMutation({
     mutationFn: async ({ hostId, iscsiData }) => {
       const res = await ApiManager.findLoginIscsiFromHost(hostId, iscsiData);
-      const _res = validate(res) || {}
+      const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useLoginIscsiFromHost ... hostId: ${hostId}`)
       return _res;
     },

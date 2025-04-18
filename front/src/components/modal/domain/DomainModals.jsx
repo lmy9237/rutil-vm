@@ -10,6 +10,7 @@ import DomainCheckModal from "./DomainCheckModal";
 import DomainMainTenanceModal from "./DomainMainTenanceModal";
 import DomainActivateModal from "./DomainActivateModal";
 import DomainDetachModal from "./DomainDetachModal";
+import DomainImportModal from "./DomainImportModal";
 
 /**
  * @name DomainModals
@@ -37,27 +38,30 @@ const DomainModals = ({
     create: (
       <DomainModal key={activeModal()} isOpen={activeModal() === "domain:create"}
         onClose={() => setActiveModal()}
-        mode={activeModal}
+        mode={activeModal()}
         datacenterId={datacenterId}
       />
     ), update: (
       <DomainModal key={activeModal()} isOpen={activeModal() === "domain:update"}
         onClose={() => setActiveModal()}
         editMode
-        mode={"update"}
-        domainId={domain?.id}
+        mode={activeModal()}
+        domainId={domain?.id ?? domainsSelected[0]?.id}
       />
     ), import: (
-      <DomainModal key={activeModal()} isOpen={activeModal() === "domain:import"}
-        onClose={() => setActiveModal()}
-        mode={"import"}
-        domainId={domain?.id}
-      />  /*
+      // <DomainModal key={activeModal()} isOpen={activeModal() === "domain:import"}
+      //   onClose={() => setActiveModal()}
+      //   mode={activeModal()}
+      //   domainId={domain?.id}
+      // />  
+      
       <DomainImportModal
-        isOpen={activeModal() === 'import'}
+        key={activeModal()} isOpen={activeModal() === "domain:import"}
+        onClose={() => setActiveModal()}
+        mode={activeModal()}
         domainId={domain?.id}
-        onClose={() => setActiveModal()} />
-      */
+      />
+      
     ), remove: (
       <DomainDeleteModal key={activeModal()} isOpen={activeModal() === "domain:remove"}
         onClose={() => setActiveModal()}

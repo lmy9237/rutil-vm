@@ -5,8 +5,12 @@
 .input-number{
   width: 100%;
   font-size: var(--fs-default);
-  padding: 10px 0;
-  display: flex;justify-content: space-between;align-items: center;
+  padding: 8px 0;
+  /* white-space: nowrap;  줄바꿈 금지*/
+  white-space: nowrap; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 input[type="text"],
 input[type="number"],
