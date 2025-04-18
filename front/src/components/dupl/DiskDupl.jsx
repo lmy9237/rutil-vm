@@ -48,17 +48,21 @@ const DiskDupl = ({
       icon1: d?.bootable ? "🔑" : "",
       icon2: d?.readOnly ? "🔒" : "",
       sparse: d?.sparse ? "씬 프로비저닝" : "사전 할당",
-      connect: (
-        <div>
-        <TableRowClick
-          type={d?.connectVm?.id ? "vm" : "template"}
-          id={d?.connectVm?.id || d?.connectTemplate?.id}
-        >
-          {d?.connectVm?.name || d?.connectTemplate?.name}
-        </TableRowClick>
-        <span>{(cdromObj?.cdroms || []).map((cd) => cd.name).join(', ')}</span>
-        </div>
-      ),
+      // connect: (
+      //   <>
+      //   <TableRowClick
+      //     type={d?.connectVm?.id ? "vm" : "template"}
+      //     id={d?.connectVm?.id || d?.connectTemplate?.id}
+      //   >
+      //     {d?.connectVm?.name || d?.connectTemplate?.name}
+      //   </TableRowClick>
+      //   <span>{(cdromObj?.cdroms || []).map((cd) => cd.name).join(', ')}</span>
+      //   </>
+      // ),
+      connect: [
+        d?.connectVm?.name || d?.connectTemplate?.name,
+        ...(cdromObj?.cdroms || []).map(cd => cd.name)
+      ].filter(Boolean).join(", "),
       virtualSize: checkZeroSizeToGiB(d?.virtualSize),
       actualSize: checkZeroSizeToGiB(d?.actualSize),
     };

@@ -8,7 +8,7 @@ import VnicProfileTemplates from './VnicProfileTemplates';
 import VnicProfileModals from '../../../components/modal/vnic-profile/VnicProfileModals';
 import Localization from '../../../utils/Localization';
 import { useVnicProfile } from '../../../api/RQHook';
-import { rvi24Flag } from '../../../components/icons/RutilVmIcons';
+import {rvi24Lan } from '../../../components/icons/RutilVmIcons';
 import HeaderButton from '../../../components/button/HeaderButton';
 
 /**
@@ -65,7 +65,7 @@ const VnicProfileInfo = () => {
 
   return (
     <div id="section">
-      <HeaderButton titleIcon={rvi24Flag}
+      <HeaderButton titleIcon={rvi24Lan()}
         title={vnic?.name}
         buttons={sectionHeaderButtons}
       />

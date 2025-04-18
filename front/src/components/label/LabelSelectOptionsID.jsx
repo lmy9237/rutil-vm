@@ -32,6 +32,7 @@ const LabelSelectOptionsID = ({
 }) => {
   const [open, setOpen] = useState(false);
 
+  const wrapperRef = useRef(null);        // ✅ 전체 감지
   const selectBoxRef = useRef(null);       // ✅ custom-select-box만 허용
 
   const handleOptionClick = (optionValue) => {
@@ -40,8 +41,10 @@ const LabelSelectOptionsID = ({
     setOpen(false);
   };
 
-  useClickOutside(selectBoxRef, (e) => {
-    setOpen(false);
+  useClickOutside(wrapperRef, (e) => {
+    if (!selectBoxRef.current?.contains(e.target)) {
+      setOpen(false);
+    }
   });
 
   const selectedLabel = loading
@@ -53,7 +56,7 @@ const LabelSelectOptionsID = ({
         : "선택하세요";
 
   return (
-    <div className={`input-select custom-select-wrapper ${className}`} >
+    <div className={`input-select custom-select-wrapper ${className}`} ref={wrapperRef}>
       <label htmlFor={id}>{label}</label>
 
       <div
@@ -62,7 +65,9 @@ const LabelSelectOptionsID = ({
         onClick={() => !disabled && setOpen(!open)}
       >
         <span>{selectedLabel}</span>
-        <RVI16 iconDef={open ? rvi16ChevronUp : rvi16ChevronDown} />
+        <RVI16 
+          iconDef={open ? rvi16ChevronUp : rvi16ChevronDown} 
+        />
       </div>
 
       {open && !loading && (

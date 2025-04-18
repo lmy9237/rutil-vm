@@ -45,96 +45,28 @@ const HostNics = ({ hostId }) => {
     if (!dragItem.current) return;
     const { item, source, parentId } = dragItem.current;
   
-    // if (source === "unassigned" && targetType === "nic") {
-    //   const targetNic = nicDisplayList.find((nic) => nic.id === targetId);
-    //   const matchedNA = filteredNAData.find((na) => na.hostNicVo.id === targetId);
+    // NIC 간 슬레이브 드래그는 생략 (이미 잘 처리 중)
   
-    //   if (matchedNA) {
-    //     alert("1개의 네트워크만 연결할 수 있습니다.");
-    //   } else {
-    //     setSelectedNic(targetNic);
-    //     setSelectedNetwork(item);
-    //     setIsNetworkEditPopupOpen(true);
-    //   }
-    
-    //   dragItem.current = null;
-    //   return;
-    // }
-  
-    if (source === "nic" && targetType === "nic") {
-      if (parentId === targetId) {
-        alert("같은 본딩 내에서는 이동할 수 없습니다.");
-        dragItem.current = null;
-        return;
-      }
-    
-      const sourceNic = nicDisplayList.find(nic => nic.id === parentId);
-      const targetNic = nicDisplayList.find(nic => nic.id === targetId);
-    
-      const sourceSlaveCount = sourceNic?.bondingVo?.slaves?.length || 0;
-      const targetSlaveCount = targetNic?.bondingVo?.slaves?.length || 0;
-    
-      const sourceIsSingle = sourceSlaveCount <= 1;
-      const targetIsSingle = targetSlaveCount <= 1;
-    
-      const sourceHasNet = transNAData.some(na => na.hostNicVo.id === parentId);
-      const targetHasNet = transNAData.some(na => na.hostNicVo.id === targetId);
-    
-      if (sourceIsSingle && targetIsSingle) {
-        if (sourceHasNet && targetHasNet) {
-          alert("두 단일 인터페이스 모두 네트워크가 연결되어 있어 본딩할 수 없습니다.");
-          dragItem.current = null;
-          return;
-        }
-    
-        // ✅ 본딩 생성이 필요한 조건이지만, 실제 본딩 모달은 띄우지 않음
-        // → 여기선 나중에 처리할 수 있도록 state만 세팅해두거나 이동만 처리
-        console.log("단일 NIC끼리 본딩 가능"); // 참고용 로그
-        dragItem.current = null;
-        return;
-      }
-    
-      if (!sourceIsSingle && targetIsSingle && targetHasNet) {
-        alert("네트워크가 연결된 NIC에는 슬레이브를 추가할 수 없습니다.");
-        dragItem.current = null;
-        return;
-      }
-    
-      // ✅ 그 외 경우도 그냥 드래그 허용. 모달 열지 않음
-      console.log("드래그만 허용. 모달은 안 뜸.");
-      dragItem.current = null;
-      return;
-    }
-    
-    
-    // 네트워크
     if (source === "network" && targetType === "unassigned") {
       console.log("💥 네트워크 할당 해제", item, "from", parentId);
-    
-      const detachedNA = {
-        id: `temp-detached-${item.id}-${parentId}`,
-        inSync: true,
-        ipAddressAssignments: [],
-        hostVo: { id: host?.id, name: host?.name },
-        hostNicVo: { id: parentId, name: nicDisplayList.find(n => n.id === parentId)?.name },
-        networkVo: { id: item.id, name: item.name },
-        nameServerList: []
-      };
-    
-      // 추가!
-      setDetachedNetworks(prev => Array.from(new Set([...prev, item.id])));
-      setSelectedNetwork(detachedNA); // <- 모달이나 로깅용
-      setSelectedNic(null); // 필요시 초기화
-    
+  
+      // 💥 detachedNetworks에 추가
+      setDetachedNetworks((prev) => Array.from(new Set([...prev, item.id])));
+      // 💥 tempAttachments에서도 제거
+      setTempAttachments((prev) => prev.filter((na) => na.networkVo.id !== item.id));
+  
       dragItem.current = null;
       return;
     }
-    
-
-
-    // drop 내에서 네트워크를 NIC에 할당
+  
     if (source === "unassigned" && targetType === "nic") {
+      console.log("💥 NIC에 네트워크 붙이기", item, "to", targetId);
+    
       const targetNic = nicDisplayList.find((nic) => nic.id === targetId);
+      if (!targetNic) {
+        dragItem.current = null;
+        return;
+      }
     
       const newNA = {
         id: `temp-${item.id}-${targetNic.id}`,
@@ -146,24 +78,31 @@ const HostNics = ({ hostId }) => {
         nameServerList: [],
       };
     
-      // 💥 기존 연결을 강제로 detached 처리
+      // 💥 1. 기존에 연결되어 있던 networkAttachment 찾기
       const existingNA = filteredNAData.find((na) => na.networkVo.id === item.id);
       if (existingNA) {
-        setDetachedNetworks((prev) => [...prev, item.id]);
+        // 기존 연결이 있으면 -> 💥 detachedNetworks에 추가해서 숨기기
+        setDetachedNetworks((prev) => Array.from(new Set([...prev, existingNA.networkVo.id])));
       }
     
+      // 💥 2. tempAttachments에 새로운 연결 추가
       setTempAttachments((prev) => [
         ...prev.filter((na) => na.networkVo.id !== item.id),
         newNA,
       ]);
-      setSelectedNetwork(newNA);
-      setSelectedNic(targetNic);
+    
+      
+      // 💥 3. (안 해도 되지만) detachedNetworks에서 중복 제거 확실히
+      setDetachedNetworks((prev) => prev.filter((id, idx, self) => self.indexOf(id) === idx));
+    
       dragItem.current = null;
       return;
     }
     
+  
     dragItem.current = null;
   };
+  
   
   
   // nic 데이터 변환
