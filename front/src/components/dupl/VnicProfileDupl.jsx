@@ -20,17 +20,16 @@ import useGlobal from "../../hooks/useGlobal";
  * @returns {JSX.Element}
  */
 const VnicProfileDupl = ({
-  vnicProfiles = [], columns = [], networkId,
-  showSearchBox = true,
-  refetch,
-  isLoading, isError, isSuccess,
+  vnicProfiles = [], columns = [], showSearchBox = true,
+  networkId,
+  refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal } = useUIState();
   const { vnicProfilesSelected, setVnicProfilesSelected } = useGlobal();
 
   // ✅ 데이터 변환 (검색 가능하도록 `searchText` 필드 추가)
-  const transformedData = (!Array.isArray(vnicProfiles) ? [] : vnicProfiles).map((vnic) => ({
+  const transformedData = [...vnicProfiles].map((vnic) => ({
     ...vnic,
     _name: (
       <TableRowClick type="vnicProfile" id={vnic?.id}>
@@ -63,7 +62,6 @@ const VnicProfileDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
-  Logger.debug(`VnicProfileDupl ... `)
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
@@ -72,29 +70,22 @@ const VnicProfileDupl = ({
       </div>
 
       {/* 테이블 컴포넌트 */}
-      <TablesOuter
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+      <TablesOuter target={"vnicprofile"}
         columns={columns}
         data={filteredData} 
-        shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setVnicProfilesSelected(selectedRows)}
-        // clickableColumnIndex={[0]}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
-        onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
-        onContextMenuItems={(row) => [
-          <VnicProfileActionButtons actionType="context"
-            status={row?.status}            
-          />,
-        ]}
+        /*shouldHighlight1stCol={true}*/
+        onRowClick={(selectedRows) => setVnicProfilesSelected(selectedRows)}
+        onClickableColumnClick={(row) => handleNameClick(row.id)}
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
 
       <SelectedIdView items={vnicProfilesSelected} />
 
       {/* vNIC Profile 모달창 */}
-      <VnicProfileModals
-        vnicProfile={activeModal() === "edit" ? vnicProfilesSelected[0] : null}
+      <VnicProfileModals vnicProfile={vnicProfilesSelected[0]}
         networkId={networkId}
       />
     </div>

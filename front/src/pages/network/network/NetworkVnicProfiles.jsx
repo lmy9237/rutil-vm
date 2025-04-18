@@ -2,6 +2,7 @@ import React from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VnicProfileDupl from "../../../components/dupl/VnicProfileDupl";
 import { useAllVnicProfilesFromNetwork } from "../../../api/RQHook";
+import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name NetworkVnicProfiles
@@ -10,7 +11,10 @@ import { useAllVnicProfilesFromNetwork } from "../../../api/RQHook";
  * @prop {string} networkId 네트워크 ID
  * @returns {JSX.Element} NetworkVnicProfiles
  */
-const NetworkVnicProfiles = ({ networkId }) => {
+const NetworkVnicProfiles = ({ 
+  networkId
+}) => {
+  const { networksSelected } = useGlobal() 
   const {
     data: vnicProfiles = [],
     isLoading: isVnicProfilesLoading,

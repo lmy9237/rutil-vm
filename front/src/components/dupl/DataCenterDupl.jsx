@@ -14,13 +14,13 @@ import Logger from "../../utils/Logger";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
 
 const DataCenterDupl = ({
-  datacenters = [], columns = [], showSearchBox = true,
+  datacenters = [], columns = [], showSearchBox=true,
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const { datacentersSelected, setDatacentersSelected } = useGlobal();
 
-  const transformedData = (!Array.isArray(datacenters) ? [] : datacenters).map((dc) => {
+  const transformedData = [...datacenters].map((dc) => {
     const status = dc?.status; // ✅ 먼저 선언해줌
     return {
       ...dc,
@@ -43,7 +43,7 @@ const DataCenterDupl = ({
   const handleRefresh = () =>  {
     Logger.debug(`DataCenterDupl > handleRefresh ... `)
     if (!refetch) return;
-    refetch()
+    refetch() 
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
@@ -51,28 +51,27 @@ const DataCenterDupl = ({
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
-        <DataCenterActionButtons actionType="default" />
+        <DataCenterActionButtons />
       </div>
 
-      <TablesOuter
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+      <TablesOuter target={"datacenter"}
         columns={columns}
         data={filteredData} 
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
+        multiSelect={true}
+        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setDatacentersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        multiSelect={true}
-        onContextMenuItems={(row) => [
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        /*onContextMenuItems={(row) => [
           <DataCenterActionButtons actionType="context"/>,
-        ]}
+        ]}*/
       />
       <SelectedIdView items={datacentersSelected} />
 
       {/* 데이터센터 모달창 */}
-      <DataCenterModals 
-        dataCenter={datacentersSelected[0]} 
-      />
+      <DataCenterModals dataCenter={datacentersSelected[0]}  />
     </div>
   );
 };

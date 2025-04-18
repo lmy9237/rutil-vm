@@ -10,7 +10,7 @@ const DataCenterActionButtons = ({ actionType = "default" }) => {
   const { datacentersSelected } = useGlobal()
   const isContextMenu = actionType === "context";
 
-  const selected1st = (!Array.isArray(datacentersSelected) ? [] : datacentersSelected)[0] ?? null
+  const selected1st = [...datacentersSelected][0] ?? null
 
   const basicActions = [
     { type: "create", onBtnClick: () => setActiveModal("datacenter:create"), label: Localization.kr.CREATE, disabled: datacentersSelected.length > 0, },

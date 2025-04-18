@@ -62,7 +62,7 @@ const cpuArcOptions = {
     { value: "IBM z14", label: "IBM z14" },
   ],
   UNDEFINED: [
-    { value: "자동 감지", label: "자동 감지" },
+    { value: "", label: "자동 감지" },
     { value: "Intel Nehalem Family", label: "Intel Nehalem Family" },
     { value: "Secure Intel Nehalem Family", label: "Secure Intel Nehalem Family" },
     { value: "Intel Westmere Family", label: "Intel Westmere Family" },

@@ -16,7 +16,7 @@ const ClusterActionButtons = ({ actionType = "default" }) => {
   const { clustersSelected } = useGlobal()
   const isContextMenu = actionType === "context";
 
-  const selected1st = (!Array.isArray(clustersSelected) ? [] : clustersSelected)[0] ?? null
+  const selected1st = [...clustersSelected][0] ?? null
 
   const basicActions = [
     { type: "create", onBtnClick: () => setActiveModal("cluster:create"), label: Localization.kr.CREATE, disabled: clustersSelected.length > 0 },

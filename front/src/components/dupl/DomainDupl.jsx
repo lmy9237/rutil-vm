@@ -25,11 +25,10 @@ import Logger from "../../utils/Logger";
  * @returns {JSX.Element}
  */
 const DomainDupl = ({
-  columns = [], domains = [],
+  domains = [], columns = [], showSearchBox = true,
   actionType, 
   datacenterId,
   sourceContext = "all", 
-  showSearchBox = true,
   refetch, isLoading, isError, isSuccess,
 }) => {
   // sourceContext: all = 전체목록 fromDomain = 도메인에서 데이터센터 fromDatacenter = 데이터센터에서 도메인
@@ -38,7 +37,7 @@ const DomainDupl = ({
   const { domainsSelected, setDomainsSelected } = useGlobal()
   
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
-  const transformedData = (!Array.isArray(domains) ? [] : domains).map((domain) => ({
+  const transformedData = [...domains].map((domain) => ({
     ...domain,
     _name: (
       <TableRowClick type="domain" id={domain?.id}>
@@ -79,48 +78,44 @@ const DomainDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
-  Logger.debug(`DomainDupl ...`)
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
         {sourceContext === "all" ? (
-          <DomainActionButtons
+          <DomainActionButtons actionType={actionType} 
             status={domainsSelected[0]?.status}
-            actionType={actionType}
           />
         ): (
-          <DomainDataCenterActionButtons
+          <DomainDataCenterActionButtons actionType={actionType}
             status={domainsSelected[0]?.status}
-            actionType={actionType}
           />
         )}
       </div>
 
       {/* 테이블 컴포넌트 */}
-      <TablesOuter
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+      <TablesOuter target={"domain"}
         columns={columns}
         data={filteredData} // ✅ 검색 필터링된 데이터 전달
-        shouldHighlight1stCol={true}
+        multiSelect={true}
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery} 
+        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setDomainsSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        multiSelect={true}
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         onContextMenuItems={(row) => [
-          <DomainActionButtons
+          <DomainActionButtons actionType="context"
             status={row?.status}
-            // selectedDomains={[row]}
             isContextMenu={true}
-            actionType="context"
           />
         ]}
       />
       
       <SelectedIdView items={domainsSelected} />
 
-      <DomainModals
-        onClose={() => setActiveModal(null)}
-        domain={domainsSelected[0]}        
+      {/* 도메인 모달창 */}
+      <DomainModals domain={domainsSelected[0]}        
         datacenterId={datacenterId}
         sourceContext={sourceContext}
       />

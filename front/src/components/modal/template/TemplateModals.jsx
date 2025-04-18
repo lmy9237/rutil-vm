@@ -1,11 +1,10 @@
 import React from "react";
 import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import TemplateEditModal from "./TemplateEditModal";
 import VmModal from "../../modal/vm/VmModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteTemplate } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
 
 const TemplateModals = ({
   template,
@@ -35,10 +34,11 @@ const TemplateModals = ({
     ),
   };
 
-  Logger.debug(`TemplateModals ... `)
   return (
     <>
-      {Object.keys(modals).map((key) => (
+      {Object.keys(modals).filter((key) => 
+        activeModal() === `vm:${key}` || activeModal() === `template:${key}`
+      ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>

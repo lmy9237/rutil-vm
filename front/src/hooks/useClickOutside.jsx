@@ -19,7 +19,7 @@ const useClickOutside = (
 
   const stopPropagation = (e) => e.stopPropagation();
   const handleClickOutside = (e) => {
-    Logger.debug(`hooks > useClickOutside ... cloastsElements: `, closestElements)
+    Logger.debug(`hooks > useClickOutside ... closestElements: `, closestElements)
     if (
       !elementRef?.current?.contains(e?.target) && 
       !closestElements?.reduce((acc, el, i) => acc || e.target.closest(el), false) &&

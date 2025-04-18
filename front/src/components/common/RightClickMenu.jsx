@@ -4,29 +4,38 @@ import useGlobal from "../../hooks/useGlobal";
 import useClickOutside from "../../hooks/useClickOutside";
 import DataCenterModals from "../modal/datacenter/DataCenterModals";
 import ClusterModals from "../modal/cluster/ClusterModals";
+import HostModals from "../modal/host/HostModals";
+import VmModals from "../modal/vm/VmModals";
+import TemplateModals from "../modal/template/TemplateModals";
 import NetworkModals from "../modal/network/NetworkModals";
 import DomainModals from "../modal/domain/DomainModals";
-import VmModals from "../modal/vm/VmModals";
+import SettingUsersModals from "../modal/settings/SettingUsersModals";
+
 import DataCenterActionButtons from "../dupl/DataCenterActionButtons";
 import ClusterActionButtons from "../dupl/ClusterActionButtons"
+import HostActionButtons from "../dupl/HostActionButtons";
+import VmActionButtons from "../dupl/VmActionButtons";
+import TemmplateActionButtons from "../dupl/TemplateActionButtons";
 import NetworkActionButtons from "../dupl/NetworkActionButtons"
 import DomainActionButtons from "../dupl/DomainActionButtons";
-import HostActionButtons from "../dupl/HostActionButtons";
-import HostModals from "../modal/host/HostModals";
-import VmActionButtons from "../dupl/VmActionButtons";
+import DiskActionButtons from "../dupl/DiskActionButtons";
+import VmDiskActionButtons from "../dupl/VmDiskActionButtons";
+import SettingUsersActionButtons from "../dupl/SettingUsersActionButtons"
 import Logger from "../../utils/Logger";
+import useUIState from "../../hooks/useUIState";
+import VmDiskModals from "../modal/vm/VmDiskModals";
+import DiskModals from "../modal/disk/DiskModals";
+import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
 
 /**
  * @name RightClickMenu
- * @description 우클릭 했을 때 나오는 메뉴에 대한 모든 UI
+ * @description 우클릭 했을 때 나오는 메뉴에 대한 UI
  * 
  * @returns {JSX.Element} 화면
  */
 const RightClickMenu = () => {
+  const { activeModal } = useUIState()
   const {
-    activeModal, setActiveModal,
-  } = useGlobal()
-  const { 
     contextMenu, contextMenuType, clearAllContextMenu
   } = useContextMenu()
   const { 
@@ -34,19 +43,20 @@ const RightClickMenu = () => {
     clustersSelected, setClustersSelected,
     hostsSelected, setHostsSelected,
     vmsSelected, setVmsSelected,
+    templatesSelected, setTemplatesSelected,
     networksSelected, setNetworksSelected,
+    vnicProfilesSelected, setVnicProfilesSelected,
     domainsSelected, setDomainsSelected,
+    disksSelected, setDisksSelected,
+    usersSelected, setUsersSelected,
     clearAllSelected,
   } = useGlobal()
   
   const menuRef = useRef(null); // ✅ context menu 영역 참조
   useClickOutside(menuRef, (e) => {
-    if (contextMenu() === null) {
-      return;
+    if (contextMenu() !== null) {
+      setTimeout(() => clearAllContextMenu(), 800)
     }
-    setTimeout(() => {
-      clearAllContextMenu();
-    }, 1000)
     // clearAllSelected() // TOOD: 문제가 많음.... (VM마이그레이션 체크 풀 때)
   })
 
@@ -54,20 +64,16 @@ const RightClickMenu = () => {
   return (
     <>
       <DataCenterModals dataCenter={datacentersSelected[0] ?? null} />
-      <ClusterModals cluster={clustersSelected[0] ?? null}
-        // datacenterId={}  // TODO: 선택 된 호스트 모달의 datacenterId 찾기
-      />
-      <HostModals host={hostsSelected[0] ?? null}
-        // clusterId={}  // TODO: 생성,수정에서 쓰이지만 필요한지 모르겠음. (HostModal에서 확인)
-      /> 
-      <NetworkModals network={networksSelected[0] ?? null}
-        // dcId={}  // TODO: 선택 된 호스트 모달의 datacenterId 찾기
-      />
-      <DomainModals
-        domain={domainsSelected[0] ?? null}
-        // datacenterId={}  // TODO: 선택 된 호스트 모달의 datacenterId 찾기
-      />
+      <ClusterModals cluster={clustersSelected[0] ?? null} />
+      <HostModals host={hostsSelected[0] ?? null} /> 
       <VmModals vm={vmsSelected[0] ?? null} />
+      <TemplateModals template={templatesSelected[0] ?? null} />
+      <NetworkModals network={networksSelected[0] ?? null} />
+      <VnicProfileModals vnicProfile={vnicProfilesSelected[0] ?? null} />
+      <DomainModals domain={domainsSelected[0] ?? null} />
+      <DiskModals disk={disksSelected[0] ?? null} />
+      <VmDiskModals disk={disksSelected[0] ?? null} />
+      <SettingUsersModals user={usersSelected[0] ?? null} />
       {(contextMenu() !== null && contextMenuType() !== null) ? (
         <div id="right-click-menu-box"
           className="right-click-menu-box context-menu-item"
@@ -87,26 +93,46 @@ const RightClickMenu = () => {
             />
           ) : (contextMenuType() === "cluster") ? (
             <ClusterActionButtons actionType="context"
-              isEditDisabled={false} // 필요 시 조건 지정 가능
-              status={"ready"}       // 또는 contextMenu.item.status 등
+              status={"ready"}
             />
-          ) : (contextMenuType() === "host") ? 
-            (<HostActionButtons actionType="context"
-              isEditDisabled={false} // 필요 시 조건 지정 가능
-              status={"ready"}       // 또는 contextMenu.item.status 등
-            />
-          ) : (contextMenuType() === "network") ? 
-            (<NetworkActionButtons actionType="context"
-              status={contextMenu().item?.status}
-            />
-          ) : (contextMenuType() === "domain") ? (
-            <DomainActionButtons actionType="context"
-              status={contextMenu()?.item?.status}
+          ) : (contextMenuType() === "host") ? (
+            <HostActionButtons actionType="context"
+              status={"ready"}
             />
           ) : (contextMenuType() === "vm") ? (
             <VmActionButtons actionType="context"
               status={contextMenu()?.item?.status}
             />
+          ) : (contextMenuType() === "template") ? (
+            <TemmplateActionButtons actionType={"context"} 
+              status={contextMenu()?.item?.status}
+            />
+          ) : (contextMenuType() === "network") ? 
+            (<NetworkActionButtons actionType={"context"} 
+              status={contextMenu().item?.status}
+            />
+          ) : (contextMenuType() === "vnicprofile") ? 
+            (<NetworkActionButtons actionType={"context"} 
+              status={contextMenu().item?.status}
+            />
+          ) : (contextMenuType() === "domain") ? (
+            <DomainActionButtons actionType={"context"} 
+              status={contextMenu()?.item?.status}
+            />
+          ) : (contextMenuType() === "disk") ? (
+            <DiskActionButtons actionType={"context"} 
+              status={contextMenu()?.item?.status}
+            />
+          ) : (contextMenuType() === "vmdisk") ? (
+            <VmDiskActionButtons actionType={"context"} 
+              status={contextMenu()?.item?.status}
+            />
+          ) : (contextMenuType() === "user") ? (
+            <SettingUsersActionButtons actionType={"context"} 
+              status={contextMenu()?.item?.status}
+            />
+          ) : (contextMenuType() === "event") ? (
+            <></>
           ) : null}
         </div>
       ) : null}

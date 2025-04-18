@@ -35,10 +35,11 @@ const DataCenterModals = ({
     )
   };
 
-  Logger.debug(`DataCenterModals ...`)
   return (
     <>
-      {Object.keys(modals).map((key) => (
+      {Object.keys(modals).filter((key) => 
+        activeModal() === `datacenter:${key}`
+      ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>

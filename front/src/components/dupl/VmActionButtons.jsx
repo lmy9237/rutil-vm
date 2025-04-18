@@ -21,7 +21,7 @@ const VmActionButtons = ({ actionType = "default" }) => {
   const dropdownRef = useRef(null);
   useClickOutside(dropdownRef, (e) => setActiveDropdown(null))
 
-  const selected1st = (!Array.isArray(vmsSelected) ? [] : vmsSelected)[0] ?? null
+  const selected1st = [...vmsSelected][0] ?? null
 
   const isUp = selected1st?.status === "UP";
   const isDown = selected1st?.status === "DOWN";

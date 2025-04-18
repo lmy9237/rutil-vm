@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import {
   useStartVM,
@@ -20,17 +21,17 @@ const ACTIONS = {
   "vm:powerOff": { label: "전원을 Off", hook: usePowerOffVM },
 };
 
-const VmActionModal = ({ isOpen, action, data, onClose }) => {
-  const { label = "", hook } = ACTIONS[action] || {};
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.VM} ${label} 완료`);
-  };
-
-  const { mutate } = hook ? hook(onSuccess, onClose) : { mutate: null };
+const VmActionModal = ({
+  isOpen,
+  data,
+  onClose
+}) => {  
+  const { activeModal } = useUIState()
+  const { label = "", hook } = ACTIONS[activeModal()] || {};
+  const { mutate } = hook ? hook(onClose, onClose) : { mutate: null };
 
   const { ids, names } = useMemo(() => {
-    const list = Array.isArray(data) ? data : data ? [data] : [];
+    const list = [...data];
     return {
       ids: list.map((item) => item.id),
       names: list.map((item) => item.name || "undefined"),
@@ -38,7 +39,7 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
   }, [data]);
 
   const handleSubmit = () => {
-    if (!mutate) return toast.error(`알 수 없는 액션: ${action}`);
+    if (!mutate) return toast.error(`알 수 없는 액션: ${activeModal()}`);
     if (!ids.length) return toast.error("ID가 없습니다.");
 
     ids.forEach((id) => mutate(id));

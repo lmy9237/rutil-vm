@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 import { rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import ActionButton from "../button/ActionButton";
@@ -6,17 +6,24 @@ import Localization from "../../utils/Localization";
 import useUIState from "../../hooks/useUIState";
 import Logger from "../../utils/Logger";
 import useGlobal from "../../hooks/useGlobal";
+import useClickOutside from "../../hooks/useClickOutside";
 
 // const HostActionButtons = ({ actionType = "default", status }) => {
-const HostActionButtons = ({ actionType = "default" }) => {
+const HostActionButtons = ({ 
+  actionType = "default"
+}) => {
   const { setActiveModal, setContextMenu } = useUIState()
   const { hostsSelected } = useGlobal()
   const isContextMenu = actionType === "context";
 
+  const activeDropdownRef = useRef()
   const [activeDropdown, setActiveDropdown] = useState(null);
   const toggleDropdown = () => setActiveDropdown((prev) => (prev ? null : "manage"));
+  useClickOutside(activeDropdownRef, (e) => {
+    setActiveDropdown(null)
+  })
 
-  const selected1st = (!Array.isArray(hostsSelected) ? [] : hostsSelected)[0] ?? null
+  const selected1st = [...hostsSelected][0] ?? null
 
   const isUp = selected1st?.status === "UP";
   const nonOperational = selected1st?.status === "NON_OPERATIONAL";
@@ -63,12 +70,14 @@ const HostActionButtons = ({ actionType = "default" }) => {
             onClick={toggleDropdown}
           />
           {activeDropdown && (
-            <div className="right-click-menu-box context-menu-item dropdown-menu">
+            <div className="right-click-menu-box context-menu-item dropdown-menu"
+              ref={activeDropdownRef}
+            >
               {manageActions.map(({ type, label, disabled }) => (
                 <button key={type}
                   disabled={disabled}
-                  onClick={() => setActiveModal(`host:${type}`)}
                   className="btn-right-click dropdown-item"
+                  onClick={() => setActiveModal(`host:${type}`)}
                 >
                   {label}
                 </button>

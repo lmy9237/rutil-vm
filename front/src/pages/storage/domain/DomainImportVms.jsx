@@ -32,7 +32,7 @@ const DomainImportVms = ({ domainId }) => {
   const { activeModal, setActiveModal, } = useUIState()
   const { vmsSelected, setVmsSelected } = useGlobal(); // 다중 선택된 데이터센터
 
-  const transformedData = (!Array.isArray(vms) ? [] : vms).map((vm) => ({
+  const transformedData = [...vms].map((vm) => ({
     ...vm,
     name: vm?.name,
     memory: checkZeroSizeToMB(vm?.memorySize),

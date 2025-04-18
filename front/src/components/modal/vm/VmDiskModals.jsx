@@ -6,7 +6,6 @@ import VmDiskModal from "./VmDiskModal";
 import VmDiskActionModal from "./VmDiskActionModal";
 import VmDiskDeleteModal from "./VmDiskDeleteModal";
 import { useDisksFromVM, useVm } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
 
 
 /**
@@ -43,7 +42,6 @@ const VmDiskModals = ({
         vmName={`${vm?.name}_Disk${diskCount}`}
         dataCenterId={vm?.dataCenterVo?.id || ""}
         hasBootableDisk={hasBootableDisk}
-        
       />
     ), update: (
       <VmDiskModal isOpen={activeModal() === "vmdisk:update"}
@@ -53,7 +51,6 @@ const VmDiskModals = ({
         vmId={vmId || ""}
         diskAttachmentId={disk?.id || ""}
         hasBootableDisk={hasBootableDisk}
-        
       />
     ), remove: (
       <VmDiskDeleteModal isOpen={activeModal() === "vmdisk:remove"}
@@ -88,11 +85,12 @@ const VmDiskModals = ({
     ),
   };
 
-  Logger.debug(`VmDiskModals ... `)
   return (
     <>
-      {Object.keys(modals).map((key) => (
-        <React.Fragment key={key}>{modals[key]}</React.Fragment>
+      {Object.keys(modals).filter((key) => 
+        activeModal() === `vmdisk:${key}`
+      ).map((key) => (
+          <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>
   );

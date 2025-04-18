@@ -16,20 +16,18 @@ import Logger from "../../utils/Logger";
 import useGlobal from "../../hooks/useGlobal";
 
 const DiskDupl = ({
-  disks = [], columns = [], type = "disk", 
-  showSearchBox = true,
-  refetch,
-  isLoading, isError, isSuccess,
+  disks = [], columns = [], showSearchBox = true,
+  refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal } = useUIState();
   const { disksSelected, setDisksSelected } = useGlobal()
     
-  const diskIds = (!Array.isArray(disks) ? [] : disks).map((d) => d.id);
+  const diskIds = [...disks].map((d) => d.id);
   const { data: cdromsMap = [] } = useCdromsDisks(diskIds);
   
   // ✅ 데이터 변환: 검색이 가능하도록 `searchText` 추가
-  const transformedData = (!Array.isArray(disks) ? [] : disks).map((d) => {
+  const transformedData = [...disks].map((d) => {
     const cdromObj = cdromsMap.find((item) => item.diskId === d.id);
     let diskData = {
       ...d,
@@ -48,17 +46,19 @@ const DiskDupl = ({
       icon1: d?.bootable ? "🔑" : "",
       icon2: d?.readOnly ? "🔒" : "",
       sparse: d?.sparse ? "씬 프로비저닝" : "사전 할당",
-      // connect: (
-      //   <>
-      //   <TableRowClick
-      //     type={d?.connectVm?.id ? "vm" : "template"}
-      //     id={d?.connectVm?.id || d?.connectTemplate?.id}
-      //   >
-      //     {d?.connectVm?.name || d?.connectTemplate?.name}
-      //   </TableRowClick>
-      //   <span>{(cdromObj?.cdroms || []).map((cd) => cd.name).join(', ')}</span>
-      //   </>
-      // ),
+      /*
+      connect: (
+        <>
+        <TableRowClick
+          type={d?.connectVm?.id ? "vm" : "template"}
+          id={d?.connectVm?.id || d?.connectTemplate?.id}
+        >
+          {d?.connectVm?.name || d?.connectTemplate?.name}
+        </TableRowClick>
+        <span>{(cdromObj?.cdroms || []).map((cd) => cd.name).join(', ')}</span>
+        </>
+      ),
+      */
       connect: [
         d?.connectVm?.name || d?.connectTemplate?.name,
         ...(cdromObj?.cdroms || []).map(cd => cd.name)
@@ -83,42 +83,35 @@ const DiskDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
-  Logger.debug(`DiskDupl ... `)
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         {/* 검색창 추가 */}
-        {showSearchBox && (
-          <SearchBox 
-            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-            onRefresh={handleRefresh}
-          />
-        )}
-
+        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
         <DiskActionButtons status={disksSelected[0]?.status}/>
       </div>
-      <TablesOuter
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+
+      <TablesOuter target={"disk"}
+        columns={columns}
         data={filteredData} // ✅ 검색된 데이터만 표시
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        multiSelect={true}
+        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        multiSelect={true}
-        columns={columns}
-        onContextMenuItems={(row) => [
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        /*onContextMenuItems={(row) => [
           <DiskActionButtons actionType="context"
             status={row?.status}
           />,
-        ]}
+        ]}*/
       />
 
       <SelectedIdView items={disksSelected} />
 
-      <DiskModals
-        selectedDisks={disksSelected}
-        disk={activeModal() === "disk:update" ? disksSelected[0] : null}
-      />
+      {/* 디스크 모달창 */}
+      <DiskModals disk={disksSelected[0]} />
     </div>
   );
 };

@@ -24,15 +24,14 @@ import "./Dupl.css";
  */
 const NetworkDupl = ({
   networks = [], columns = [], showSearchBox = true,
-  refetch,
-  isLoading, isError, isSuccess,
+  refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal } = useUIState()
   const { networksSelected, setNetworksSelected } = useGlobal()
 
   // 데이터를 변환 (검색 가능하도록 `searchText` 필드 추가)
-  const transformedData = (!Array.isArray(networks) ? [] : networks).map((network) => ({
+  const transformedData = [...networks].map((network) => ({
     ...network,
     _name: (
       <TableRowClick type="network" id={network?.id}>
@@ -58,7 +57,7 @@ const NetworkDupl = ({
     searchText: `${network?.name} ${network?.vlan} ${network?.mtu} ${network?.datacenterVo?.name || ""}`
   }));
 
-  // 변환된 데이터에서 검색 적용
+  // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
 
   const handleNameClick = (id) => navigate(`/networks/${id}`);
@@ -69,41 +68,29 @@ const NetworkDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
-  Logger.debug(`NetworkDupl ...`)
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
-        {showSearchBox && (
-          <SearchBox 
-            searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-            onRefresh={handleRefresh}
-          />
-        )}
+        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
         <NetworkActionButtons />
       </div>
 
       {/* 테이블 컴포넌트 */}
-      <TablesOuter
+      <TablesOuter target={"network"}
         columns={columns}
         data={filteredData} 
-        shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setNetworksSelected(selectedRows)}
         searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
-        onClickableColumnClick={(row) => handleNameClick(row.id)}
+        setSearchQuery={setSearchQuery}
         multiSelect={true} 
+        /*shouldHighlight1stCol={true}*/
+        onRowClick={(selectedRows) => setNetworksSelected(selectedRows)} 
+        onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        onContextMenuItems={(row) => [
-          <NetworkActionButtons actionType="context"
-            status={row?.status}
-          />,
-        ]}
       />
-
       <SelectedIdView items={networksSelected} />
 
       {/* 네트워크 모달창 */}
-      <NetworkModals network={networksSelected[0] ?? null} />
+      <NetworkModals network={networksSelected[0]} />
     </div>
   );
 };

@@ -34,7 +34,7 @@ const JobFooter = () => {
 
 
   // job 데이터 변환
-  const transformedData = (!Array.isArray(jobs) ? [] : jobs).map((e) => ({
+  const transformedData = [...jobs].map((e) => ({
     ...e,
     isFinished: e?.status === "FINISHED" || e?.status === "FAILED" ,
     description: e?.description,

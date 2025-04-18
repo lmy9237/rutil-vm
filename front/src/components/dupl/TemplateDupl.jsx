@@ -13,19 +13,15 @@ import Logger from "../../utils/Logger";
 import useGlobal from "../../hooks/useGlobal";
 
 const TemplateDupl = ({
-  templates = [], 
-  columns = [], 
-  type,
-  showSearchBox = true,  // ✅ 검색 여부 추가
-  refetch,
-  isLoading, isError, isSuccess,
+  templates = [],  columns = [], showSearchBox = true,  // ✅ 검색 여부 추가 
+  refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal } = useUIState()
   const { templatesSelected, setTemplatesSelected } = useGlobal();
 
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
-  const transformedData = (!Array.isArray(templates) ? [] : templates).map((temp) => ({
+  const transformedData = [...templates].map((temp) => ({
     ...temp,
     _name: (
       <TableRowClick type="template" id={temp?.id}>
@@ -56,38 +52,31 @@ const TemplateDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
-  Logger.debug(`TemplateDupl ...`)
   return (
-    <>
+    <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>)}
         <TemplateActionButtons />
       </div>
 
       {/* 테이블 컴포넌트 */}
-      <TablesOuter
+      <TablesOuter target={"template"}
         columns={columns}
         data={filteredData} // ✅ 검색 필터링된 데이터 사용
-        shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
-        // clickableColumnIndex={[0]}
         searchQuery={searchQuery} // ✅ 검색어 전달
         setSearchQuery={setSearchQuery} // ✅ 검색어 변경 가능하도록 추가
-        onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
+        /*shouldHighlight1stCol={true}*/
+        onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
+        onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        onContextMenuItems={(row) => [
-          <TemplateActionButtons actionType="context"
-            status={row?.status}
-          />,
-        ]}
       />
 
       <SelectedIdView items={templatesSelected} />
 
       {/* 템플릿 모달창 */}
       <TemplateModals template={templatesSelected[0]} />
-    </>
+    </div>
   );
 };
 

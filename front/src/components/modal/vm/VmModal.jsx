@@ -257,7 +257,7 @@ const VmModal = ({
       setClusterVo({ id: vm?.clusterVo?.id, name: vm?.clusterVo?.name })
       setTemplateVo({ id: vm?.templateVo?.id, name: vm?.templateVo?.name })
       
-      setNicListState(vm.nicVos.map((nic) => ({
+      setNicListState([...vm.nicVos].map((nic) => ({
         id: nic?.id || "",
         name: nic?.name || "",
         vnicProfileVo: {
@@ -270,7 +270,7 @@ const VmModal = ({
         },
       })));
 
-      setDiskListState(Array.isArray(vm?.diskAttachmentVos)? vm.diskAttachmentVos.map((d) => ({
+      setDiskListState([...vm?.diskAttachmentVos].map((d) => ({
         id: d?.id,
         alias: d?.diskImageVo?.alias,
         virtualSize: d?.diskImageVo?.virtualSize
@@ -282,7 +282,7 @@ const VmModal = ({
         storageDomainVo: { id: d?.diskImageVo?.storageDomainVo?.id || "" },
         diskProfileVo: { id: d?.diskImageVo?.diskProfileVo?.id || "" },
         isExisting: true,
-      })): []);
+      })));
     } 
   }, [isOpen, editMode, vm]);
 

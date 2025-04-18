@@ -5,41 +5,41 @@ import ClusterModal from "./ClusterModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import Localization from "../../../utils/Localization";
 import { useDeleteCluster } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
 
 const ClusterModals = ({
   cluster,
   datacenterId, /* NOTE: 생성에만 필요함 */
 }) => {
   const { activeModal, setActiveModal } = useUIState()
-  const { clustersSelected } = useGlobal()
+  const { datacentersSelected, clustersSelected } = useGlobal()
 
   const modals = {
     create: (
       <ClusterModal key={activeModal()} isOpen={activeModal() === "cluster:create"}
-        datacenterId={datacenterId}
         onClose={() => setActiveModal(null)}
+        datacenterId={datacentersSelected[0]?.id ?? datacenterId}
       />
     ), update: (
       <ClusterModal key={activeModal()} isOpen={activeModal() === "cluster:update"}
-        editMode
-        clusterId={cluster?.id}
         onClose={() => setActiveModal(null)}
+        editMode
+        clusterId={clustersSelected[0]?.id ?? cluster?.id}
       />
     ), remove: (
       <DeleteModal key={activeModal()} isOpen={activeModal() === "cluster:remove"}
+        onClose={() => setActiveModal(null)}
         label={Localization.kr.CLUSTER}
         data={clustersSelected}
         api={useDeleteCluster()}
-        onClose={() => setActiveModal(null)}
       />
     ),
   };
 
-  Logger.debug(`ClusterModals ...`)
   return (
     <>
-      {Object.keys(modals).map((key) => (
+      {Object.keys(modals).filter((key) => 
+        activeModal() === `cluster:${key}`
+      ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>

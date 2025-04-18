@@ -6,29 +6,26 @@ import { useDeleteVnicProfile } from "../../../api/RQHook.js";
 import Localization from "../../../utils/Localization.js";
 import useGlobal from "../../../hooks/useGlobal.js";
 
-
 const VnicProfileModals = ({ 
   vnicProfile,
   networkId,
 }) => {
   const { activeModal, setActiveModal } = useUIState()
-  const { vnicProfilesSelected } = useGlobal()
+  const { vnicProfilesSelected, networksSelected } = useGlobal()
 
   const modals = {
     create: (
       <VnicProfileModal isOpen={activeModal() === "vnicprofile:create"} 
-        networkId={networkId}
         onClose={() => setActiveModal(null)}
+        networkId={networksSelected[0]?.id ?? networkId}
       />
-    ),
-    update: (
+    ), update: (
       <VnicProfileModal isOpen={activeModal() === "vnicprofile:update"}
-        editMode
-        vnicProfileId={vnicProfile?.id}
         onClose={() => setActiveModal(null)}
+        editMode
+        vnicProfileId={vnicProfilesSelected[0]?.id ?? vnicProfile?.id}
       />
-    ),
-    remove: (
+    ), remove: (
       <DeleteModal isOpen={activeModal() === "vnicprofile:remove"}
         label={Localization.kr.VNIC_PROFILE}
         data={vnicProfilesSelected}
@@ -41,7 +38,9 @@ const VnicProfileModals = ({
 
   return (
     <>
-      {Object.keys(modals).map((key) => (
+      {Object.keys(modals).filter((key) => 
+        activeModal() === `vnicprofile:${key}`
+      ).map((key) => (
           <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>

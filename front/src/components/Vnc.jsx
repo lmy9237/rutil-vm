@@ -2,8 +2,8 @@ import React, { forwardRef,  } from 'react'
 import { VncScreen } from 'react-vnc'
 import { useVmConsoleAccessInfo } from "../api/RQHook";
 import Logger from '../utils/Logger';
-import "./Vnc.css"
 import CONSTANT from '../Constants';
+import "./Vnc.css"
 
 const Vnc = forwardRef(({
   vmId, autoConnect=false,
@@ -11,7 +11,6 @@ const Vnc = forwardRef(({
   ...props
 }, ref) => {
   const { data: vmConsoleAccessInfo } = useVmConsoleAccessInfo(vmId);  
-  
   
   let wsUrl = `wss://${CONSTANT.baseUrl}/ws`;
   // let wsUrl = `wss://localhost/ws`;

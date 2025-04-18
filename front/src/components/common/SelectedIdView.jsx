@@ -10,7 +10,7 @@ import Logger from "../../utils/Logger";
 const SelectedIdView = ({ 
   items=[],
 }) => {
-  const selectedIds = (!Array.isArray(items) ? [] : items)
+  const selectedIds = [...items]
     .map((e) => e?.id ?? e?.username)
     .join(", ");
   

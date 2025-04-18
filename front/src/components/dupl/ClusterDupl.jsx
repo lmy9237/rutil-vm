@@ -1,7 +1,5 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import useUIState from "../../hooks/useUIState";
 import useSearch from "../../hooks/useSearch";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
@@ -30,7 +28,7 @@ const ClusterDupl = ({
   const navigate = useNavigate();
   const { clustersSelected, setClustersSelected } = useGlobal();
 
-  const transformedData = (!Array.isArray(clusters) ? [] : clusters).map((cluster) => ({
+  const transformedData = [...clusters].map((cluster) => ({
     ...cluster,
     _name: (
       <TableRowClick type="cluster" id={cluster?.id}>
@@ -47,6 +45,7 @@ const ClusterDupl = ({
     searchText: `${cluster?.name} ${cluster?.dataCenterVo?.name || ""}`.toLowerCase(),
   }));
 
+  // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   const handleNameClick = (id) => navigate(`/computing/clusters/${id}`);
@@ -61,28 +60,27 @@ const ClusterDupl = ({
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}  onRefresh={handleRefresh} />)}
-        <ClusterActionButtons actionType = "default"/>
+        <ClusterActionButtons actionType="default"/>
       </div>
 
-      <TablesOuter
+      <TablesOuter target={"cluster"}
         columns={columns}
         data={filteredData}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         multiSelect={true}
-        shouldHighlight1stCol={true}
+        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setClustersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        onContextMenuItems={(row) => [
+        /*onContextMenuItems={(row) => [
           <ClusterActionButtons actionType="context"/>,
-        ]}
+        ]}*/
       />
       <SelectedIdView items={clustersSelected} />
 
       {/* 클러스터 모달창 */}
-      <ClusterModals 
-        cluster={clustersSelected[0]}
+      <ClusterModals cluster={clustersSelected[0]}
         datacenterId={datacenterId}
       />
     </div>

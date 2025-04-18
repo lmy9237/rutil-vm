@@ -27,18 +27,16 @@ import { getStatusSortKey } from "../icons/GetStatusSortkey";
  * @returns
  */
 const VmDiskDupl = ({ 
-  vmDisks = [], 
+  vmDisks = [], showSearchBox=true, 
   vmId, 
-  showSearchBox=true,
-  refetch,
-  isLoading, isError, isSuccess,
+  refetch, isLoading, isError, isSuccess,
 }) => {
   const { data: vm } = useVm(vmId);
   const navigate = useNavigate();
   const { activeModal, setActiveModal } = useUIState()
   const { disksSelected, setDisksSelected } = useGlobal(); // 다중 선택된 디스크
 
-  const transformedData = (!Array.isArray(vmDisks) ? [] : vmDisks).map((d) => {
+  const transformedData = [...vmDisks].map((d) => {
     const diskImage = d?.diskImageVo;
     const status = d?.active ? "UP" : "DOWN"; 
     return {
@@ -71,6 +69,7 @@ const VmDiskDupl = ({
   });
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+
   const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
   const handleRefresh = () =>  {
     Logger.debug(`VmDiskDupl > handleRefresh ... `)
@@ -92,7 +91,6 @@ const VmDiskDupl = ({
   };
   const columns = columnMap[activeDiskType];
 
-  Logger.debug(`VmDiskDupl ... `)
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="vm-disk-button center mb-2.5">
@@ -104,36 +102,32 @@ const VmDiskDupl = ({
         <div className="vm-disk-search center">
           {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
           <VmDiskActionButtons
-            isEditDisabled={disksSelected?.length !== 1}
-            isDeleteDisabled={disksSelected?.length === 0}
             status={disksSelected[0]?.active ? "active" : "deactive"}            
           />
         </div>
       </div>
       
-      <TablesOuter
+      <TablesOuter target={"vmdisk"}
         columns={columns}
         data={filteredData}
-        shouldHighlight1stCol={true}
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery} 
+        multiSelect={true}
+        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        multiSelect={true}
-        onContextMenuItems={(row) => [ // 마우스 버튼
-          <VmDiskActionButtons actionType="context"
-            isEditDisabled={!row}
-          />
-        ]}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        /*onContextMenuItems={(row) => [ // 마우스 버튼
+          <VmDiskActionButtons actionType="context" />
+        ]}*/
       />
 
       <SelectedIdView items={disksSelected} />
 
       {/* 디스크 모달창 */}
-      <Suspense>
-        <VmDiskModals disk={disksSelected[0]}
-          vmId={vmId}
-        />
-      </Suspense>
+      <VmDiskModals disk={disksSelected[0]}
+        vmId={vmId}
+      />
     </div>
   );
 };

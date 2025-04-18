@@ -23,6 +23,8 @@ import {
 import { checkName, checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import useGlobal from "../../../hooks/useGlobal";
+import useUIState from "../../../hooks/useUIState";
 
 const domainTypes = [
   { value: "data", label: "데이터" },
@@ -74,12 +76,16 @@ const DomainModal = ({
   datacenterId,
   onClose
 }) => {
-  const dLabel = mode === "domain:update" ? Localization.kr.UPDATE 
-    : mode === "domain:import" ? Localization.kr.IMPORT 
+
+  const { activeModal } = useUIState()
+  const { setDomainsSelected } = useGlobal()
+
+  const dLabel = activeModal() === "domain:update" ? Localization.kr.UPDATE 
+    : activeModal() === "domain:import" ? Localization.kr.IMPORT 
     : Localization.kr.CREATE;
 
-  const editMode = mode === "domain:update";
-  const importMode = mode === "domain:import";
+  const editMode = activeModal() === "domain:update";
+  const importMode = activeModal() === "domain:import";
 
   const [formState, setFormState] = useState(initialFormState); // 일반정보
   const [formImportState, setFormImportState] = useState(importFormState); // 가져오기
@@ -154,7 +160,6 @@ const DomainModal = ({
   }));
 
   const commonProps = {
-    mode,
     domain,
     lunId, setLunId,
     hostVo, setHostVo,
@@ -173,6 +178,7 @@ const DomainModal = ({
       setLunId("");
     }
 
+    setDomainsSelected(domain)
     if (editMode && domain) {
       setFormState({
         id: domain?.id,
@@ -207,10 +213,10 @@ const DomainModal = ({
   }, [isOpen, editMode, domain]);
 
   useEffect(() => {
-    if (mode === "edit" && !lunId && domain?.hostStorageVo?.logicalUnits?.[0]?.id) {
+    if (activeModal === "domain:update" && !lunId && domain?.hostStorageVo?.logicalUnits?.[0]?.id) {
       setLunId(domain.hostStorageVo.logicalUnits[0].id);
     }
-  }, [mode, domain, lunId, setLunId]);
+  }, [activeModal, domain, lunId, setLunId]);
 
   useEffect(() => {
     console.info(`DomainModal.hostVo: `, hostVo);
@@ -422,7 +428,7 @@ const DomainModal = ({
       {/* NFS 의 경우 */}
       {isNfs && (
         <DomainNfs
-          mode={mode}
+          // mode={mode}
           nfsAddress={nfsAddress}
           setNfsAddress={setNfsAddress}
         />

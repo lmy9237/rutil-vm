@@ -4,7 +4,6 @@ import useGlobal from "../../../hooks/useGlobal";
 import DomainModal from "./DomainModal";
 import DomainDeleteModal from "./DomainDeleteModal";
 import DomainAttachModal from "./DomainAttachModal";
-import Logger from "../../../utils/Logger";
 import DomainDestroyModal from "./DomainDestroyModal";
 import DomainCheckModal from "./DomainCheckModal";
 import DomainMainTenanceModal from "./DomainMainTenanceModal";
@@ -107,28 +106,31 @@ const DomainModals = ({
       />
       */
     ),
-    // <CancelModal
-    //   isOpen={isCancelModalOpen}
-    //   onClose={() => setIsCancelModalOpen(false)}
-    // />
-    // <DomainDestroyModal
-    //   isOpen={isDomainDestroyModalOpen}
-    //   onClose={() => setIsDomainDestroyModalOpen(false)}
-    // />
-    // <DomainMainTenanceModal
-    //   isOpen={isDomainMainTenanceModalOpen}
-    //   onClose={() => setIsDomainMainTenanceModalOpen(false)}
-    // />
-    // <DomainCheckModal
-    //   isOpen={isDomainCheckModalOpen}
-    //   onClose={() => setIsDomainCheckModalOpen(false)}
-    // />
+    /*
+    <CancelModal
+      isOpen={isCancelModalOpen}
+      onClose={() => setIsCancelModalOpen(false)}
+    />
+    <DomainDestroyModal
+      isOpen={isDomainDestroyModalOpen}
+      onClose={() => setIsDomainDestroyModalOpen(false)}
+    />
+    <DomainMainTenanceModal
+      isOpen={isDomainMainTenanceModalOpen}
+      onClose={() => setIsDomainMainTenanceModalOpen(false)}
+    />
+    <DomainCheckModal
+      isOpen={isDomainCheckModalOpen}
+      onClose={() => setIsDomainCheckModalOpen(false)}
+    />
+    */
   };
 
-  Logger.debug("DomainModals ...")
   return (
     <>
-      {Object.keys(modals).map((key) => (
+      {Object.keys(modals).filter((key) => 
+        activeModal() === `domain:${key}`
+      ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>

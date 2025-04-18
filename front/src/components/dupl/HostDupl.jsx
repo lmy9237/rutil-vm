@@ -20,7 +20,7 @@ const HostDupl = ({
   const navigate = useNavigate();
   const { hostsSelected, setHostsSelected } = useGlobal();
 
-  const transformedData = (!Array.isArray(hosts) ? [] : hosts).map((host) => ({
+  const transformedData = [...hosts].map((host) => ({
     ...host,
     _name: (
       <TableRowClick type="host" id={host?.id}>
@@ -59,28 +59,26 @@ const HostDupl = ({
         <HostActionButtons actionType = "default"/>
       </div>
 
-      <TablesOuter
+      <TablesOuter target={"host"}
         columns={columns}
         data={filteredData} 
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         multiSelect={true}
-        shouldHighlight1stCol={true}
+        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setHostsSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        onContextMenuItems={(row) => [
+        /*onContextMenuItems={(row) => [
           <HostActionButtons actionType="context" status={row?.status} />,
-        ]}
+        ]}*/
       />
       <SelectedIdView items={hostsSelected}/>
 
       {/* 호스트 모달창 */}
-      <HostModals 
-        host={hostsSelected[0]} 
+      <HostModals host={hostsSelected[0]} 
         clusterId={clusterId} 
       />
-      {/* <HostModals host={activeModal() === "edit" ? hostsSelected[0] : null} clusterId={clusterId} /> */}
     </div>
   );
 };

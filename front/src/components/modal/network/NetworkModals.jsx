@@ -6,7 +6,6 @@ import NetworkImportModal from "./NetworkImportModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import Localization from "../../../utils/Localization";
 import { useDeleteNetwork } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
 
 const NetworkModals = ({ 
   network, 
@@ -28,7 +27,7 @@ const NetworkModals = ({
         networkId={network?.id}
       />
     ), import: (
-      <NetworkImportModal key={activeModal()} isOpen={activeModal() === 'network:import'}
+      <NetworkImportModal key={activeModal()} isOpen={activeModal() === "network:import"}
         onClose={() => setActiveModal(null)}
         data={networksSelected}
       />
@@ -43,10 +42,11 @@ const NetworkModals = ({
     ), 
   };
 
-  Logger.debug(`NetworkModals ... `)
   return (
     <>
-      {Object.keys(modals).map((key) => (
+      {Object.keys(modals).filter((key) => 
+        activeModal() === `network:${key}`
+      ).map((key) => (
           <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>

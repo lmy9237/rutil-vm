@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
+import useBoxState from "../../hooks/useBoxState";
 import useUIState from "../../hooks/useUIState";
 import useGlobal from "../../hooks/useGlobal";
 import useClickOutside from "../../hooks/useClickOutside";
@@ -9,7 +10,6 @@ import SettingUsersModals from "../modal/settings/SettingUsersModals";
 import Logger from "../../utils/Logger";
 import { useUser } from "../../api/RQHook";
 import "./BoxUser.css";
-import useBoxState from "../../hooks/useBoxState";
 
 /**
  * @name BoxUser

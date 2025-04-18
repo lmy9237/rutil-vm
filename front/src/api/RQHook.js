@@ -3,6 +3,7 @@ import ApiManager from "./ApiManager";
 import toast from "react-hot-toast";
 import Logger from "../utils/Logger";
 import useUIState from "../hooks/useUIState";
+import Localization from "../utils/Localization";
 
 //#region: 쿼리Key
 const QK = {
@@ -957,7 +958,8 @@ export const useAddCluster = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddCluster ... res: `, res);
-      queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
+      toast.success(`${Localization.kr.CLUSTER} ${Localization.kr.CREATE} 요청완료`)
+      queryClient.invalidateQueries(`allClusters,clustersFromDataCenter,${QK.ALL_TREE_NAVIGATIONS}`);
       postSuccess();
     },
     onError: (error) => {
@@ -985,6 +987,7 @@ export const useEditCluster = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditCluster ... res: `, res);
+      toast.success(`${Localization.kr.CLUSTER} ${Localization.kr.UPDATE} 요청완료`)
       queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
       postSuccess();
     },
@@ -1013,7 +1016,8 @@ export const useDeleteCluster = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteCluster ... res: `, res);
-      queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
+      queryClient.removeQueries(`allClusters,clustersFromDataCenter,${QK.ALL_TREE_NAVIGATIONS}`);
+      queryClient.invalidateQueries(QK.ALL_TREE_NAVIGATIONS)
       postSuccess();
     },
     onError: (error) => {
@@ -2217,6 +2221,7 @@ export const useDeleteVm = (
     },
     onSuccess: (res,{vmId}) => {
       Logger.debug(`RQHook > useDeleteVm ... res: `, res);
+      toast.success(`${Localization.kr.VM} ${Localization.kr.REMOVE} 요청완료`)
       queryClient.invalidateQueries('allVMs');
       queryClient.invalidateQueries('allDisksFromVm');
       queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
@@ -2250,6 +2255,7 @@ export const useStartVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useStartVM ... res: `, res);
+      toast.success(`${Localization.kr.VM} ${Localization.kr.START} 요청완료`)
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2279,6 +2285,7 @@ export const usePauseVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > usePauseVM ... res: `, res);
+      toast.success(`${Localization.kr.VM} ${Localization.kr.PAUSE} 요청완료`)
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2309,6 +2316,7 @@ export const useShutdownVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useShutdownVM ... res: `, res);
+      toast.success(`${Localization.kr.VM} ${Localization.kr.END} 요청완료`)
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2338,6 +2346,7 @@ export const usePowerOffVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > usePowerOffVM ... res: `, res);
+      toast.success(`${Localization.kr.VM} ${Localization.kr.POWER_OFF} 요청완료`)
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2368,6 +2377,7 @@ export const useRebootVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRebootVM ... res: `, res);
+      toast.success(`${Localization.kr.VM} ${Localization.kr.REBOOT} 요청완료`)
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },
@@ -2397,6 +2407,7 @@ export const useResetVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useResetVM ... res: `, res);
+      toast.success(`${Localization.kr.VM} ${Localization.kr.RESET} 요청완료`)
       queryClient.invalidateQueries('allVMs');
       postSuccess();
     },

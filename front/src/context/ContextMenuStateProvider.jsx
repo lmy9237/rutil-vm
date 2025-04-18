@@ -29,7 +29,13 @@ export const ContextMenuStateProvider = ({ children }) => {
     Logger.debug(`UIStateProvider > setContextMenu ... newV: `, newV, `, type: ${type}`)
     _setContextMenuState({
       ...sContextMenuState,
-      [KEY_CONTEXT_MENU_CONTENT]: newV,
+      [KEY_CONTEXT_MENU_CONTENT]: { 
+        ...newV,
+        "item": {
+          _name: [newV]?.item?.name,
+          icon: '',
+        }
+      },
       [KEY_CONTEXT_MENU_TYPE]: type
     });
   }

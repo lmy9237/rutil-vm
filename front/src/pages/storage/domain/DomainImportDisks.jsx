@@ -37,7 +37,7 @@ const DomainImportDisks = ({
     refetch: refetchDisks,
   } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
 
-  const transformedData = (!Array.isArray(disks) ? [] : disks).map((disk) => ({
+  const transformedData = [...disks].map((disk) => ({
     ...disk,
     alias: disk?.alias,
     sparse: disk?.sparse ? "씬 프로비저닝" : "사전 할당",

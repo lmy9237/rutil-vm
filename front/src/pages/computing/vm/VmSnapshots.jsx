@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import useUIState from '../../../hooks/useUIState';
 import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
@@ -13,13 +13,14 @@ import Loading from '../../../components/common/Loading';
 import VmSnapshotDeleteModal from '../../../components/modal/vm/VmSnapshotDeleteModal';
 import Logger from '../../../utils/Logger';
 import useGlobal from '../../../hooks/useGlobal';
+import VmSnapshotActionButtons from '../../../components/dupl/VmSnapshotActionButtons';
 
 
 const VmSnapshots = ({
   vmId
 }) => {
   const { activeModal, setActiveModal, } = useUIState()
-  const { snapshotsSelected, setSnapshotsSelected } = useGlobal()
+  const { setVmsSelected, snapshotsSelected, setSnapshotsSelected } = useGlobal()
 
   const {
     data: vm,
@@ -53,26 +54,15 @@ const VmSnapshots = ({
 
   const hasLockedSnapshot = transformedData.some(snap => snap.status === "locked");
   
+  useEffect(() => {
+    setVmsSelected(vm)
+  }, [vm])
+
   Logger.debug(`VmSnapshots ... `)
   return (
     <>
       <div className="header-right-btns no-search-box">
-        <ActionButton actionType="default" label={Localization.kr.CREATE}
-          disabled={hasLockedSnapshot} 
-          onClick={() => setActiveModal("vmsnapshot:create")}
-        />
-        <ActionButton actionType="default" label="미리보기"          
-          disabled={!snapshotsSelected} 
-          onClick={() => setActiveModal("vmsnapshot:preview")}
-        />
-        <ActionButton actionType="default" label={Localization.kr.REMOVE}
-          disabled={!snapshotsSelected} 
-          onClick={() => setActiveModal("vmsnapshot:remove")}
-        />
-        <ActionButton actionType="default" label={Localization.kr.MOVE}          
-          disabled={!snapshotsSelected} 
-          onClick={() => setActiveModal("vmsnapshot:move")}
-        />
+        <VmSnapshotActionButtons hasLocked={hasLockedSnapshot} />
       </div>
 
       <div className='center'>
@@ -93,7 +83,7 @@ const VmSnapshots = ({
    
           {isSnapshotsLoading && (<Loading/>)}
 
-          {/*스냅샷없을때*/}
+          {/* TODO: 스냅샷 없을때 */}
           {!isSnapshotsLoading && transformedData?.length === 0 && (<></>)}
 
           {transformedData?.length > 0 && transformedData?.map((snapshot) => (
@@ -134,15 +124,18 @@ const VmSnapshots = ({
         {activeModal() === "vmsnapshot:create" && (
           <VmSnapshotModal
             isOpen={activeModal() === "vmsnapshot:create"}
-            onClose={setActiveModal(null)}
-            selectedVm={vm}
-            // diskData={disks}
+            onClose={() => setActiveModal(null)}
           />
         )}
+        {activeModal() === "vmsnapshot:preview" && (
+          Logger.warn("'스냅샷 미리보기' 기능 준비중 ...")
+        )}
+        {activeModal() === "vmsnapshot:move" && (
+          Logger.warn("'스냅샷 이동' 기능 준비중 ...")
+        )}
         {activeModal() === "vmsnapshot:remove" && (
-          <VmSnapshotDeleteModal 
-            isOpen={activeModal() === "vmsnapshot:remove"}
-            onClose={setActiveModal(null)}
+          <VmSnapshotDeleteModal isOpen={activeModal() === "vmsnapshot:remove"}
+            onClose={() => setActiveModal(null)}
             data={snapshotsSelected}
             vmId={vm.id}
           />

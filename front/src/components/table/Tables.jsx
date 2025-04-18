@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import useUIState from "../../hooks/useUIState";
 import useClickOutside from "../../hooks/useClickOutside";
+import useContextMenu from "../../hooks/useContextMenu";
 import TableRowLoading from "./TableRowLoading";
 import TableRowNoData from "./TableRowNoData";
 import PagingButton from "./PagingButton";
@@ -9,8 +10,8 @@ import CONSTANT from "../../Constants";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
-import "./Table.css";
 import RightClickMenu from "../common/RightClickMenu";
+import "./Table.css";
 
 /**
  * @name Tables
@@ -21,17 +22,18 @@ import RightClickMenu from "../common/RightClickMenu";
  * 
  */
 const Tables = ({
-  columns = [], data = [],
+  target = "datacenter", columns = [], data = [],
   onRowClick = () => {},
   clickableColumnIndex = [],
-  onContextMenuItems = false,
   onClickableColumnClick = () => {},
   refetch,
   isLoading = null, isError = false, isSuccess,
   searchQuery = "",  // ✅ 기본값 추가
   setSearchQuery = () => {}, // ✅ 기본값 추가
 }) => {
-  const { contextMenu, setContextMenu, contextMenuType } = useUIState()
+  const {
+    contextMenu, setContextMenu
+  } = useContextMenu()
 
   const [selectedRowIndex, setSelectedRowIndex] = useState(null); // 선택된 행의 인덱스를 관리
   const [tooltips, setTooltips] = useState({}); // 툴팁 상태 관리
@@ -47,43 +49,16 @@ const Tables = ({
     const rowData = sortedData[rowIndex];
     setSelectedRows([rowIndex]);
     setSelectedRowIndex(rowIndex);
-    if (typeof onRowClick === "function") {
+    if (typeof onRowClick === "function")
       onRowClick([rowData]);
-    }
   
-    if (onContextMenuItems) {
-      const menuItems = onContextMenuItems(rowData);
-  
-      // 📌 테이블의 위치 계산
-      const tableRect = tableRef.current?.getBoundingClientRect();
-      const menuWidth = 150; // 예상 메뉴 너비
-      const menuHeight = 120; // 예상 메뉴 높이
-      const padding = 10; // 여백을 위한 패딩
-  
-      // 📌 마우스 클릭 위치 (테이블 기준 상대 좌표)
-      let mouseX = e.clientX - (tableRect?.left ?? 0);
-      let mouseY = e.clientY - (tableRect?.top ?? 0);
-  
-      // 📌 화면 바깥으로 나가는 경우 위치 조정
-      if (mouseX + menuWidth > window.innerWidth) {
-        mouseX -= menuWidth + padding;
-      }
-      if (mouseY + menuHeight > window.innerHeight) {
-        mouseY -= menuHeight + padding;
-      }
-  
-      setContextMenu({
-        mouseX,
-        mouseY,
-        item: {
-          ...sortedData[rowIndex],
-          type: ""
-        },
-      });
-    } else {
-      Logger.warn("메뉴 항목이 비어 있습니다.");
-    }
-    setContextRowIndex(rowIndex);
+    setContextMenu({
+      mouseX: e.clientX,
+      mouseY: e.clientY,
+      item: {
+        ...sortedData[rowIndex],
+      },
+    }, target);
   };
   
   const tableRef = useRef(null);

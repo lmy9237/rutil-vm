@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import BaseModal from "../BaseModal";
-import { useAddSnapshotFromVM } from "../../../api/RQHook";
-import LabelInput from "../../label/LabelInput";
-import Localization from "../../../utils/Localization";
-import "./MVm.css";
-import Logger from "../../../utils/Logger";
-import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import useGlobal from "../../../hooks/useGlobal";
+import BaseModal from "../BaseModal";
+import LabelInput from "../../label/LabelInput";
+import ToggleSwitchButton from "../../button/ToggleSwitchButton";
+import { useAddSnapshotFromVM } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
+import "./MVm.css";
 
 const initialFormState = {
   id: "",
@@ -15,9 +15,11 @@ const initialFormState = {
   persistMemory: true, // 메모리 저장 
 };
 
-const VmSnapshotModal = ({ isOpen, onClose }) => {
+const VmSnapshotModal = ({
+  isOpen,
+  onClose
+}) => {
   const [formState, setFormState] = useState(initialFormState);
-
   const { vmsSelected } = useGlobal(); // ✅ vmsSelected 직접 읽기
   const selectedVm = vmsSelected?.[0] ?? null; // ✅ 첫 번째 VM 기준으로
 

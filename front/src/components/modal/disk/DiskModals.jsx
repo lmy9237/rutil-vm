@@ -9,6 +9,11 @@ import { useDeleteDisk } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import "./MDisk.css";
 
+const ACTIONS = [
+  "disk:copy",
+  "disk:move"
+]
+
 const DiskModals = ({ 
   disk,
 }) => {
@@ -38,7 +43,7 @@ const DiskModals = ({
         onClose={() => setActiveModal(null)}
       />
     ), action: (
-      <DiskActionModal key={activeModal()} isOpen={["disk:copy", "disk:move"].includes(activeModal)}
+      <DiskActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal)}
         onClose={() => setActiveModal(null)}
         action={activeModal}
         data={disksSelected}
@@ -48,7 +53,9 @@ const DiskModals = ({
 
   return (
     <>
-      {Object.keys(modals).map((key) => (
+      {Object.keys(modals).filter((key) => 
+        activeModal() === `disk:${key}` || ACTIONS.includes(activeModal())
+      ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>

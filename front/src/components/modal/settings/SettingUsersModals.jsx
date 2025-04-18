@@ -26,13 +26,14 @@ const SettingUsersModals = ({
     ), update: (
       <SettingUsersModal key={activeModal()} isOpen={activeModal() === "user:update"} 
         onClose={() => setActiveModal(null)} 
-        user={user?.id ?? usersSelected[0]?.id}
         editMode
+        user={usersSelected[0]?.id ?? user?.id}
       />
     ), changePassword: (
       <SettingUsersModal key={activeModal()} isOpen={activeModal() === "user:changePassword"} 
         onClose={() => setActiveModal(null)} 
-        changePassword={true}
+        changePassword
+        user={usersSelected[0]?.id ?? user?.id}
       />
     ), remove: (
       <DeleteModal key={activeModal()} isOpen={activeModal() === "user:remove"}
@@ -46,7 +47,9 @@ const SettingUsersModals = ({
   
   return (
     <>
-      {Object.keys(modals).map((key) => (
+     {Object.keys(modals).filter((key) => 
+        activeModal() === `user:${key}`
+      ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>

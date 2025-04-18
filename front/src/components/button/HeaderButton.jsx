@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { RVI24 } from "../icons/RutilVmIcons";
@@ -8,6 +8,7 @@ import PopupBox from "../common/PopupBox";
 import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
 import "./HeaderButton.css";
+import useClickOutside from "../../hooks/useClickOutside";
 
 /**
  * @name HeaderButton
@@ -25,30 +26,21 @@ const HeaderButton = ({
   titleIcon,
   inverseColor = false,
 }) => {
+  const popupBoxRef = useRef(null)
   const [isPopupBoxVisible, setIsPopupBoxVisible] = useState(false);
-  const [isCompactMode, setIsCompactMode] = useState(false);
-
   const togglePopupBox = () => setIsPopupBoxVisible(!isPopupBoxVisible);
+
+  const [isCompactMode, setIsCompactMode] = useState(false);
   const handlePopupBoxItemClick = (item) => {
     if (item.disabled) return;
     if (item.onClick) item.onClick();
     setIsPopupBoxVisible(false);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      const popupBox = document.querySelector(".popup-box");
-      const popupBtn = document.querySelector(".popup-btn");
-      if (
-        popupBox && !popupBox.contains(event.target) &&
-        popupBtn && !popupBtn.contains(event.target)
-      ) {
-        setIsPopupBoxVisible(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  useClickOutside(popupBoxRef, (e) => {
+    setIsPopupBoxVisible(false);
+  })
+
 
   // 버튼이 넘치면 compact 모드로
   useEffect(() => {
@@ -98,7 +90,10 @@ const HeaderButton = ({
             ))}
 
           {allPopupItems.length > 0 && (
-            <div className="popup-container">
+            <div
+              className="popup-container"
+              ref={popupBoxRef}
+            >
               <button className="popup-btn" onClick={togglePopupBox}>
                 <FontAwesomeIcon icon={faEllipsisV} fixedWidth />
               </button>

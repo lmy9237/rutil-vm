@@ -7,8 +7,17 @@ import HostCommitNetModal from "./HostCommitNetModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteHost } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
 
+const ACTIONS = [
+  "host:deactivate",
+  "host:activate",
+  "host:restart",
+  "host:refresh",
+  // "host:reInstall",
+  "host:enrollCert",
+  "host:haOn",
+  "host:haOff",
+]
 /**
  * @name HostModals
  * @description 호스트 모달 모음
@@ -44,35 +53,25 @@ const HostModals = ({
         // navigation={''}
       />
     ), action: (
-      <HostActionModal key={activeModal()} 
-        isOpen={[
-          "host:deactivate",
-          "host:activate",
-          "host:restart",
-          "host:refresh",
-          // "host:reInstall",
-          "host:enrollCert",
-          "host:haOn",
-          "host:haOff",
-        ].includes(activeModal())}
+      <HostActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}
+        onClose={() => setActiveModal(null)} 
         action={activeModal()}
         data={hostsSelected}
-        onClose={() => setActiveModal(null)} 
       />
-    ),
-    commitNetHost: (
+    ), commitNetHost: (
       <HostCommitNetModal key={activeModal()} isOpen={activeModal() === "host:commitNetHost"}
+        onClose={() => setActiveModal(null)} 
         data={hostsSelected[0]}
         // data={hostsSelected[0] ?? host} // TODO: 정의 필요
-        onClose={() => setActiveModal(null)} 
       />
     )    
   };
 
-  Logger.debug(`HostModals ...`)
   return (
     <>
-      {Object.keys(modals).map((key) => (
+      {Object.keys(modals).filter((key) => 
+        activeModal() === `host:${key}` || ACTIONS.includes(activeModal())
+      ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>

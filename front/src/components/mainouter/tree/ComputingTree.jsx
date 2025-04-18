@@ -49,14 +49,10 @@ const ComputingTree = ({}) => {
         title="Rutil Manager"
         iconDef={rvi16Globe}
         // isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
-        isSelected={() =>
-          location.pathname.includes("rutil")
-        }
+        isSelected={() => location.pathname.includes("rutil") }
         isNextLevelVisible={secondVisibleComputing()}
         onChevronClick={() => toggleSecondVisibleComputing()}
-        onClick={() => {
-          navigate("/computing/rutil-manager");
-        }}
+        onClick={() => navigate("/computing/rutil-manager")}
       />
 
       {/* 두 번째 레벨 (Data Center) */}

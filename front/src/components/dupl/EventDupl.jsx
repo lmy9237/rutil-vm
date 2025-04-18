@@ -17,16 +17,16 @@ import Logger from "../../utils/Logger";
  * @returns
  */
 const EventDupl = ({
-  events = [],
-  showSearchBox=true,
+  events = [], showSearchBox=true,
   refetch, isLoading, isError, isSuccess,
 }) => {
   const { eventsSelected, setEventsSelected } = useGlobal()
-  const transformedData = (!Array.isArray(events) ? [] : events).map((e) => ({
+  const transformedData = [...events].map((e) => ({
     ...e,
     _severity: severity2Icon(e?.severity),
   }))
   
+  // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   const handleRefresh = () =>  {
     Logger.debug(`EventDupl > handleRefresh ... `)
@@ -42,16 +42,22 @@ const EventDupl = ({
         {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
       </div>
 
-      <TablesOuter
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+      <TablesOuter target={"event"}
         columns={TableColumnsInfo.EVENTS}
         data={filteredData}
-        onRowClick={(selectedRows) => setEventsSelected(selectedRows)}
         multiSelect={true}
-        showSearchBox={showSearchBox} // 검색 박스 표시 여부 제어
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery} 
+        /*shouldHighlight1stCol={true}*/
+        onRowClick={(selectedRows) => setEventsSelected(selectedRows)}
+        /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
+        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       
       <SelectedIdView items={eventsSelected} />
+      
+      {/* 이벤트 모달창 */}
+      
     </>
   );
 };
