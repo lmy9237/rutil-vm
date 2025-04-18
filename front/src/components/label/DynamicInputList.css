@@ -1,5 +1,5 @@
-.dynamic-Input{
-  width:100%;
+.dynamic-select-outer{
+  width: 50%;
 }
 .dynamic-select{
   width:55%;
@@ -9,6 +9,9 @@
   outline: none;
   border-radius: 1px;
   letter-spacing: -0.28px;
+}
+.dynamic-select-outer .custom-options{
+  width: 100%;
 }
 .dynamic-btns {
   min-width: 71px;

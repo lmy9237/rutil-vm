@@ -296,15 +296,21 @@ const NetworkModal = ({
             className="ml-2"
             style={{ width: "150px" }}
             min="68"
+            max="1500"   
             step="1"
             value={formState.mtu}
             disabled={formState.mtu === 0}
-            onChange={(e) =>
+            onChange={(e) => {
+              let value = parseInt(e.target.value || "0", 10);
+              if (value > 1500) {
+                value = 1500;
+                toast.error("MTU는 최대 1500까지만 설정할 수 있습니다."); 
+              }
               setFormState((prev) => ({
                 ...prev,
-                mtu: parseInt(e.target.value || "0", 10),
-              }))
-            }
+                mtu: value,
+              }));
+            }}
           />
         </div>
 

@@ -54,7 +54,7 @@ const VmBoot = ({ isos, isIsoLoading, formBootState, setFormBootState }) => {
 
       <div className="boot-checkboxs flex">
 
-          <div className="ee">
+       
           <LabelCheckbox id="connectCdDvd" label="CD/DVD 연결"
             checked={formBootState.isCdDvdChecked}
             onChange={(e) => {
@@ -66,11 +66,10 @@ const VmBoot = ({ isos, isIsoLoading, formBootState, setFormBootState }) => {
               }));
             }}
           />
-    </div>
+  
 
           <LabelSelectOptionsID
             value={formBootState.connVo?.id}
-            className="ii"
             disabled={!formBootState.isCdDvdChecked || isos.length === 0}
             loading={isIsoLoading}
             options={isos}

@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import "./LabelInput.css";
 import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
+import useClickOutside from "../../hooks/useClickOutside"; // ✅ import 추가
 
 /**
  * @name LabelSelectOptionsID
@@ -27,10 +28,11 @@ const LabelSelectOptionsID = ({
   disabled,
   loading,
   options = [],
-  etcLabel = ""
+  etcLabel = "",
 }) => {
   const [open, setOpen] = useState(false);
-  const selectRef = useRef(null);
+
+  const selectBoxRef = useRef(null);       // ✅ custom-select-box만 허용
 
   const handleOptionClick = (optionValue) => {
     if (disabled) return;
@@ -38,18 +40,9 @@ const LabelSelectOptionsID = ({
     setOpen(false);
   };
 
-  const handleClickOutside = (e) => {
-    if (selectRef.current && !selectRef.current.contains(e.target)) {
-      setOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  useClickOutside(selectBoxRef, (e) => {
+    setOpen(false);
+  });
 
   const selectedLabel = loading
     ? "로딩중~"
@@ -60,15 +53,18 @@ const LabelSelectOptionsID = ({
         : "선택하세요";
 
   return (
-    <div className={`input-select custom-select-wrapper ${className}`} ref={selectRef}>
+    <div className={`input-select custom-select-wrapper ${className}`} >
       <label htmlFor={id}>{label}</label>
+
       <div
         className={`custom-select-box f-btw ${disabled ? "disabled" : ""}`}
+        ref={selectBoxRef} // ✅ ref 적용
         onClick={() => !disabled && setOpen(!open)}
       >
         <span>{selectedLabel}</span>
         <RVI16 iconDef={open ? rvi16ChevronUp : rvi16ChevronDown} />
       </div>
+
       {open && !loading && (
         <div className="custom-options">
           {options.length === 0 ? (

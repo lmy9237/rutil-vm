@@ -1,5 +1,4 @@
 @tailwind base;
-
 @tailwind components;
 @tailwind utilities;
 html {
@@ -103,12 +102,6 @@ html {
   --fs-tb-default: 12px;
 
   --letter-28: -0.28px;
-}
-.ee{
-    width: 30%;
-}
-.ii{
-    width: 100%
 }
 * {
   margin: 0;padding: 0;box-sizing: border-box;

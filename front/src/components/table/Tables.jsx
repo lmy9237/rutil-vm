@@ -314,10 +314,11 @@ const Tables = ({
                 const cellValue = row[column.accessor];
                 const isJSX = React.isValidElement(cellValue);
                 const isTableRowClick = isJSX && cellValue?.type?.name === "TableRowClick";
-                const isBoolean = typeof cellValue === "boolean";
+                // const isBoolean = typeof cellValue === "boolean";
 
                 // 아이콘, 체크박스 등은 가운데, TableRowClick은 왼쪽
-                const shouldCenter = (isJSX && !isTableRowClick) || isBoolean;
+                const shouldCenter = (isJSX && !isTableRowClick);
+                // const shouldCenter = (isJSX && !isTableRowClick) || isBoolean;
                 const columnAlign = column?.align ?? (shouldCenter ? "center" : "left");
                 return (
                   <td

@@ -280,7 +280,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.NETWORK, accessor: 'network', clickable: false },
     { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: true },
     { header: Localization.kr.NETWORK_FILTER, accessor: 'networkFilter', clickable: false },
-    { header: '포트 미러링', accessor: 'portMirroring', clickable: false ,align:"left"},
+    { header: '포트 미러링', accessor: 'portMirroring', clickable: false,align:"left"},
     { header: '통과', accessor: 'passThrough', clickable: false },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],
