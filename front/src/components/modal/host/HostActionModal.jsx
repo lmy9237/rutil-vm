@@ -17,69 +17,46 @@ import Localization from "../../../utils/Localization";
  * @param {boolean} isOpen ...
  * @returns 
  */
-const HostActionModal = ({ 
-  isOpen, 
-  action, 
-  onClose, 
-  data
-}) => {  
-  const labelMap = {
-    "host:deactivate": "유지보수",
-    "host:activate": "활성화",
-    "host:restart": "재시작",
-    "host:refresh": "새로고침",
-    "host:enrollCert": "인증서 등록",
-    "host:haOn": "HA 활성화",
-    "host:haOff": "HA 비활성화",
-  };
-  const contentLabel = useMemo(() => labelMap[action] || "", [action]);
 
+const ACTIONS = {
+  "host:deactivate": { label: "유지보수", hook: useDeactivateHost },
+  "host:activate": { label: "활성화", hook: useActivateHost },
+  "host:restart": { label: "재시작", hook: useRestartHost },
+  "host:refresh": { label: "새로고침", hook: useRefreshHost },
+  "host:enrollCert": { label: "인증서 등록", hook: useEnrollHostCertificate },
+  // "host:haOn": { label: "HA 활성화", hook:  },
+  // "host:haOff": { label: "HA 비활성화", hook:  },
+};
+
+const HostActionModal = ({ isOpen, action, data, onClose }) => {  
+  const { label = "", hook } = ACTIONS[action] || {};
   const onSuccess = () => {
     onClose();
-    toast.success(`${Localization.kr.HOST} ${contentLabel} 완료`);
+    toast.success(`${Localization.kr.HOST} ${label} 완료`);
   };
 
-  const { mutate: deactivateHost } = useDeactivateHost(onSuccess, () => onClose());
-  const { mutate: activateHost } = useActivateHost(onSuccess, () => onClose());
-  const { mutate: restartHost } = useRestartHost(onSuccess, () => onClose());
-  const { mutate: enrollHostCertificate } = useEnrollHostCertificate(onSuccess, () => onClose());
-  const { mutate: refreshHost } = useRefreshHost(onSuccess, () => onClose());
-//const { mutate: stopHost } = useStopHost()
+  const { mutate } = hook ? hook(onSuccess, onClose) : { mutate: null };
 
-  const actionMap = useMemo(() => ({
-    "host:deactivate": deactivateHost,
-    "host:activate": activateHost,
-    "host:restart": restartHost,
-    "host:refresh": refreshHost,
-    "host:enrollCert": enrollHostCertificate,
-    // stop: stopHost,
-    // haOn: resetVM,
-    // haOff: resetVM,
-  }),
-  [deactivateHost, activateHost, restartHost, refreshHost, enrollHostCertificate]
-  );
   const { ids, names } = useMemo(() => {
-    const dataArray = Array.isArray(data) ? data : data ? [data] : [];
+    const list = Array.isArray(data) ? data : data ? [data] : [];
     return {
-      ids: dataArray.map((item) => item.id),
-      names: dataArray.map((item) => item.name || "undefined"),
+      ids: list.map((item) => item.id),
+      names: list.map((item) => item.name || "undefined"),
     };
   }, [data]);
 
-  const handleFormSubmit = () => {
+  const handleSubmit = () => {
+    if (!mutate) return toast.error(`알 수 없는 액션: ${action}`);
     if (!ids.length) return toast.error("ID가 없습니다.");
 
-    const actionFn = actionMap[action];
-    if (!actionFn) return toast.error(`알 수 없는 액션: ${action}`);
-
-    ids.forEach((hostId) => actionFn(hostId));
+    ids.forEach((id) => mutate(id));
   };
 
   return (
-    <BaseModal targetName={Localization.kr.HOST} submitTitle={contentLabel}
+    <BaseModal targetName={Localization.kr.HOST} submitTitle={label}
       isOpen={isOpen} onClose={onClose}      
-      onSubmit={handleFormSubmit}
-      promptText={`${names.join(", ")} 를(을) ${contentLabel}하시겠습니까?`}
+      onSubmit={handleSubmit}
+      promptText={`${names.join(", ")} 를(을) ${label}하시겠습니까?`}
       contentStyle={{ width: "630px" }} 
       shouldWarn={true}
     />

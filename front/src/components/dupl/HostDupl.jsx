@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState from "../../hooks/useUIState";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
 import toast from "react-hot-toast";
@@ -14,25 +12,14 @@ import { getStatusSortKey } from "../icons/GetStatusSortkey";
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
 
-
 const HostDupl = ({
-  hosts = [], columns = [], clusterId,
-  showSearchBox =true,
+  hosts = [], columns = [], showSearchBox =true,
+  clusterId,
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal, } = useUIState()
   const { hostsSelected, setHostsSelected } = useGlobal();
 
-  const handleNameClick = (id) => navigate(`/computing/hosts/${id}`);
-  const handleRefresh = () =>  {
-    Logger.debug(`HostDupl > handleRefresh ... `)
-    if (!refetch) return;
-    refetch()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
-
-  // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
   const transformedData = (!Array.isArray(hosts) ? [] : hosts).map((host) => ({
     ...host,
     _name: (
@@ -55,40 +42,46 @@ const HostDupl = ({
     searchText: `${host?.name} ${host?.clusterVo?.name || ""} ${host?.dataCenterVo?.name || ""}`.toLowerCase(),
   }));
 
-  // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  Logger.debug(`HostDupl ...`)
+  const handleNameClick = (id) => navigate(`/computing/hosts/${id}`);
+  const handleRefresh = () =>  {
+    Logger.debug(`HostDupl > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }
+
   return (
-    <>
+    <div onClick={(e) => e.stopPropagation()}>
      <div className="dupl-header-group f-start">
         {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}  onRefresh={handleRefresh}/>)}
-        <HostActionButtons
-          status={hostsSelected[0]?.status}
-        />
+        <HostActionButtons actionType = "default"/>
       </div>
 
       <TablesOuter
         columns={columns}
         data={filteredData} 
-        shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setHostsSelected(selectedRows)}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
+        shouldHighlight1stCol={true}
+        onRowClick={(selectedRows) => setHostsSelected(selectedRows)}
+        onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         onContextMenuItems={(row) => [
-          <HostActionButtons actionType="context"
-            status={row?.status}
-          />,
+          <HostActionButtons actionType="context" status={row?.status} />,
         ]}
       />
       <SelectedIdView items={hostsSelected}/>
 
       {/* 호스트 모달창 */}
-      <HostModals host={activeModal() === "edit" ? hostsSelected[0] : null} clusterId={clusterId} />
-    </>
+      <HostModals 
+        host={hostsSelected[0]} 
+        clusterId={clusterId} 
+      />
+      {/* <HostModals host={activeModal() === "edit" ? hostsSelected[0] : null} clusterId={clusterId} /> */}
+    </div>
   );
 };
 

@@ -17,23 +17,26 @@ import Logger from "../../../utils/Logger";
  */
 const HostModals = ({
   host,
+  clusterId, /* NOTE: 생성에만 필요함 */
 }) => {
   const { activeModal, setActiveModal } = useUIState()
   const { hostsSelected } = useGlobal()
 
   const modals = {
     create: (
-      <HostModal isOpen={activeModal() === "host:create"}
+      <HostModal key={activeModal()} isOpen={activeModal() === "host:create"}
+        clusterId={clusterId}
         onClose={() => setActiveModal(null)} 
       />
     ), update: (
-      <HostModal isOpen={activeModal() === "host:update"}
+      <HostModal key={activeModal()} isOpen={activeModal() === "host:update"}
         editMode
-        hostId={host?.id ?? hostsSelected[0]?.id}
+        hostId={host?.id}
+        // hostId={host?.id ?? hostsSelected[0]?.id}
         onClose={() => setActiveModal(null)} 
       />
     ), remove: (
-      <DeleteModal isOpen={activeModal() === "host:remove"}
+      <DeleteModal key={activeModal()} isOpen={activeModal() === "host:remove"}
         label={Localization.kr.HOST}
         data={hostsSelected}
         api={useDeleteHost()}
@@ -41,7 +44,7 @@ const HostModals = ({
         // navigation={''}
       />
     ), action: (
-      <HostActionModal
+      <HostActionModal key={activeModal()} 
         isOpen={[
           "host:deactivate",
           "host:activate",
@@ -51,16 +54,16 @@ const HostModals = ({
           "host:enrollCert",
           "host:haOn",
           "host:haOff",
-        ].includes(activeModal)}
-        action={activeModal}
+        ].includes(activeModal())}
+        action={activeModal()}
         data={hostsSelected}
         onClose={() => setActiveModal(null)} 
       />
     ),
     commitNetHost: (
-      <HostCommitNetModal
-        isOpen={activeModal() === "host:commitNetHost"}
-        data={hostsSelected[0] ?? host} // TODO: 정의 필요
+      <HostCommitNetModal key={activeModal()} isOpen={activeModal() === "host:commitNetHost"}
+        data={hostsSelected[0]}
+        // data={hostsSelected[0] ?? host} // TODO: 정의 필요
         onClose={() => setActiveModal(null)} 
       />
     )    

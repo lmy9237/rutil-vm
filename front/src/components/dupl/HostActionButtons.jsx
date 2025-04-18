@@ -7,21 +7,20 @@ import useUIState from "../../hooks/useUIState";
 import Logger from "../../utils/Logger";
 import useGlobal from "../../hooks/useGlobal";
 
-const HostActionButtons = ({
-  actionType = "default",
-  status,
-}) => {
+// const HostActionButtons = ({ actionType = "default", status }) => {
+const HostActionButtons = ({ actionType = "default" }) => {
   const { setActiveModal, setContextMenu } = useUIState()
-  const { hostsSelected, setHostSelected } = useGlobal()
+  const { hostsSelected } = useGlobal()
   const isContextMenu = actionType === "context";
 
   const [activeDropdown, setActiveDropdown] = useState(null);
-
   const toggleDropdown = () => setActiveDropdown((prev) => (prev ? null : "manage"));
 
-  const isUp = status === "UP";
-  const nonOperational = status === "NON_OPERATIONAL";
-  const isMaintenance = status === "MAINTENANCE";
+  const selected1st = (!Array.isArray(hostsSelected) ? [] : hostsSelected)[0] ?? null
+
+  const isUp = selected1st?.status === "UP";
+  const nonOperational = selected1st?.status === "NON_OPERATIONAL";
+  const isMaintenance = selected1st?.status === "MAINTENANCE";
 
   const basicActions = [
     { type: "create", onBtnClick: () => setActiveModal("host:create"), label: Localization.kr.CREATE, disabled: hostsSelected.length > 0, },
@@ -34,7 +33,7 @@ const HostActionButtons = ({
     { type: "activate", onBtnClick: () => setActiveModal("host:activate"), label: "활성", disabled: hostsSelected.length === 0 || !isMaintenance || isUp },
     { type: "restart", onBtnClick: () => setActiveModal("host:restart"), label: "재시작", disabled: hostsSelected.length === 0 || isUp },
     { type: "refresh", onBtnClick: () => setActiveModal("host:refresh"), label: "기능을 새로고침", disabled: hostsSelected.length === 0 || !isUp },
-    { type: "commitNetHost", onBtnClick: () => setActiveModal("host:commitNetHost"), label: "호스트 재부팅 확인", disabled: hostsSelected.length === 0 || isUp },
+    { type: "commitNetHost", onBtnClick: () => setActiveModal("host:commitNetHost"), label: "호스트 재부팅 확인", disabled: hostsSelected.length !== 1 || isUp },
     { type: "enrollCert", onBtnClick: () => setActiveModal("host:enrollCert"), label: "인증서 등록", disabled: hostsSelected.length === 0 },
     { type: "haOn", onBtnClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: hostsSelected.length === 0 || !isUp || !isMaintenance, },
     { type: "haOff", onBtnClick: () => setActiveModal("host:haOff"), label: "글로벌 HA 유지 관리를 비활성화", disabled: hostsSelected.length === 0 || !isUp },
@@ -48,11 +47,10 @@ const HostActionButtons = ({
     >
       {isContextMenu ? (
         manageActions.map(({ type, label, disabled }) => (
-          <button
-            key={type}
-            disabled={disabled}
-            onClick={() => setContextMenu(type)}
+          <button key={type}
             className="btn-right-click dropdown-item"
+            disabled={disabled}
+            onClick={() => setActiveModal(`host:${type}`)}
           >
             {label}
           </button>
@@ -67,10 +65,9 @@ const HostActionButtons = ({
           {activeDropdown && (
             <div className="right-click-menu-box context-menu-item dropdown-menu">
               {manageActions.map(({ type, label, disabled }) => (
-                <button
-                  key={type}
+                <button key={type}
                   disabled={disabled}
-                  onClick={() => setContextMenu(type)}
+                  onClick={() => setActiveModal(`host:${type}`)}
                   className="btn-right-click dropdown-item"
                 >
                   {label}

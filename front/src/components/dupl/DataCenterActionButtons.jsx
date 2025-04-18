@@ -5,12 +5,12 @@ import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
 import useGlobal from "../../hooks/useGlobal";
 
-const DataCenterActionButtons = ({
-  actionType = "default",
-}) => {
+const DataCenterActionButtons = ({ actionType = "default" }) => {
   const { setActiveModal } = useUIState()
   const { datacentersSelected } = useGlobal()
   const isContextMenu = actionType === "context";
+
+  const selected1st = (!Array.isArray(datacentersSelected) ? [] : datacentersSelected)[0] ?? null
 
   const basicActions = [
     { type: "create", onBtnClick: () => setActiveModal("datacenter:create"), label: Localization.kr.CREATE, disabled: datacentersSelected.length > 0, },

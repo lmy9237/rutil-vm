@@ -5,7 +5,11 @@ import Localization from "../../../utils/Localization";
 import toast from "react-hot-toast";
 import { useCommitNetConfigHost } from "../../../api/RQHook";
 
-const HostCommitNetModal = ({ isOpen, data, onClose }) => {
+const HostCommitNetModal = ({ 
+  isOpen, 
+  data, 
+  onClose 
+}) => {
   const [approved, setApproved] = useState(false);
   
   const onSuccess = () => {

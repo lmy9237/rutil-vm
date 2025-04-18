@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import useUIState from "../../hooks/useUIState";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
 import TablesOuter from "../table/TablesOuter";
@@ -19,7 +18,6 @@ const DataCenterDupl = ({
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal } = useUIState();
   const { datacentersSelected, setDatacentersSelected } = useGlobal();
 
   const transformedData = (!Array.isArray(datacenters) ? [] : datacenters).map((dc) => {
@@ -58,21 +56,23 @@ const DataCenterDupl = ({
 
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        columns={columns}
         data={filteredData} 
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         onRowClick={(selectedRows) => setDatacentersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
-        columns={columns}
         onContextMenuItems={(row) => [
-          <DataCenterActionButtons actionType="context" />,
+          <DataCenterActionButtons actionType="context"/>,
         ]}
       />
       <SelectedIdView items={datacentersSelected} />
 
       {/* 데이터센터 모달창 */}
-      <DataCenterModals dataCenter={activeModal() === "edit" ? datacentersSelected[0] : null} />
+      <DataCenterModals 
+        dataCenter={datacentersSelected[0]} 
+      />
     </div>
   );
 };

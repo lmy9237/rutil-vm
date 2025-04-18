@@ -20,48 +20,49 @@ const VmModals = ({
 
   const allModals = {
     create: (
-      <VmModal isOpen={activeModal() === "vm:create"}
+      <VmModal key={activeModal()} isOpen={activeModal() === "vm:create"}
         onClose={() => setActiveModal(null)}
       />
     ), update: (
-      <VmModal isOpen={activeModal() === "vm:update"} 
-        onClose={() => setActiveModal(null)}
+      <VmModal key={activeModal()} isOpen={activeModal() === "vm:update"} 
         editMode
         vmId={vm?.id} 
+        onClose={() => setActiveModal(null)}
       />
     ), remove: (
-      <VmDeleteModal isOpen={activeModal() === "vm:remove"}
-        onClose={() => setActiveModal(null)}
+      <VmDeleteModal key={activeModal()} isOpen={activeModal() === "vm:remove"}
         data={vmsSelected} 
+        onClose={() => setActiveModal(null)}
       />
     ), templates: (
-      <TemplateModal isOpen={activeModal() === "vm:templates"}
-        onClose={() => setActiveModal(null)}
+      <TemplateModal key={activeModal()} isOpen={activeModal() === "vm:templates"}
         selectedVm={vm}
+        onClose={() => setActiveModal(null)}
       />
     ), snapshot: (
-      <VmSnapshotModal isOpen={activeModal() === "vm:snapshot"}
-        onClose={() => setActiveModal(null)}
+      <VmSnapshotModal key={activeModal()} isOpen={activeModal() === "vm:snapshot"}
         selectedVm={vm}
+        onClose={() => setActiveModal(null)}
       />
     ), import: (
-      <VmImportModal isOpen={activeModal() === "vm:import"}
-        onClose={() => setActiveModal(null)} // TODO: 조건건바꿔야함
+      <VmImportModal key={activeModal()} isOpen={activeModal() === "vm:import"}
+        onClose={() => setActiveModal(null)} // TODO: 조건바꿔야함
       />
     ), copy: (
-      <></>
+      <>
+      </>
     ), migration: (
-      <VmMigrationModal isOpen={activeModal() === "vm:migration"}
+      <VmMigrationModal key={activeModal()} isOpen={activeModal() === "vm:migration"}
         onClose={() => setActiveModal(null)}
       />
     ), ova: (
-      <VmExportOVAModal isOpen={activeModal() === "vm:ova"}
-        onClose={() => setActiveModal(null)}
+      <VmExportOVAModal key={activeModal()} isOpen={activeModal() === "vm:ova"}
         selectedVm={vm}
         vmId={vm?.id}
+        onClose={() => setActiveModal(null)}  
       />
     ), action: (
-      <VmActionModal
+      <VmActionModal key={activeModal()} 
         isOpen={[
           "vm:start",
           "vm:pause",

@@ -146,7 +146,7 @@ const VnicProfileModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.VNIC_PROFILE} submitTitle={vLabel}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}     
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px" }} 
     >

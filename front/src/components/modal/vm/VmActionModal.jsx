@@ -9,87 +9,50 @@ import {
   useRebootVM,
   useResetVM,
 } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
 import Localization from "../../../utils/Localization";
-import useUIState from "../../../hooks/useUIState";
 
-const VmactiveModal = ({
-  isOpen,
-  data,
-  onClose
-}) => {  
-  const { activeModal } = useUIState()
-  const getContentLabel = () => {
-    const labels = {
-      "vm:start": "실행",
-      "vm:pause": "일시중지",
-      "vm:reboot": "재부팅",
-      "vm:reset": "재설정",
-      "vm:shutdown": "종료",
-      "vm:powerOff": "전원을 Off",
-    };
-    return labels[activeModal()] || "";
-  };
+const ACTIONS = {
+  "vm:start": { label: "실행", hook: useStartVM },
+  "vm:pause": { label: "일시중지", hook: usePauseVM },
+  "vm:reboot": { label: "재부팅", hook: useRebootVM },
+  "vm:reset": { label: "재설정", hook: useResetVM },
+  "vm:shutdown": { label: "종료", hook: useShutdownVM },
+  "vm:powerOff": { label: "전원을 Off", hook: usePowerOffVM },
+};
 
+const VmActionModal = ({ isOpen, action, data, onClose }) => {
+  const { label = "", hook } = ACTIONS[action] || {};
   const onSuccess = () => {
     onClose();
-    toast.success(`${Localization.kr.VM} ${getContentLabel(activeModal())} 완료`);
+    toast.success(`${Localization.kr.VM} ${label} 완료`);
   };
-  const { mutate: startVM } = useStartVM(onSuccess, () => onClose());
-  const { mutate: pauseVM } = usePauseVM(onSuccess, () => onClose()); // 일시중지
-  const { mutate: shutdownVM } = useShutdownVM(onSuccess, () => onClose()); // 종료
-  const { mutate: powerOffVM } = usePowerOffVM(onSuccess, () => onClose()); // 전원끔
-  const { mutate: rebootVM } = useRebootVM(onSuccess, () => onClose());
-  const { mutate: resetVM } = useResetVM(onSuccess, () => onClose());
+
+  const { mutate } = hook ? hook(onSuccess, onClose) : { mutate: null };
 
   const { ids, names } = useMemo(() => {
-    if (!data) return { ids: [], names: [] };
-    
-    const dataArray = Array.isArray(data) ? data : [data];
+    const list = Array.isArray(data) ? data : data ? [data] : [];
     return {
-      ids: dataArray.map((item) => item.id),
-      names: dataArray.map((item) => item.name || 'undefined'),
+      ids: list.map((item) => item.id),
+      names: list.map((item) => item.name || "undefined"),
     };
   }, [data]);
 
-  const handleAction = (actionFn) => {
-    ids.forEach((vmId) => {
-      actionFn(vmId);
-    });
-  };
+  const handleSubmit = () => {
+    if (!mutate) return toast.error(`알 수 없는 액션: ${action}`);
+    if (!ids.length) return toast.error("ID가 없습니다.");
 
-  const handleFormSubmit = () => {
-    Logger.debug("VmactiveModal > handleFormSubmit ... ");
-    if (!ids.length) {
-      const msgErr = "ID가 없습니다."
-      toast.error(msgErr);
-      return;
-    }
-
-    const actionMap = {
-      start: startVM,
-      pause: pauseVM,
-      reboot: rebootVM,
-      reset: resetVM,
-      shutdown: shutdownVM,
-      powerOff: powerOffVM,
-    };
-
-    const actionFn = actionMap[activeModal()];
-    if (!actionFn) { return toast.error(`알 수 없는 액션: ${activeModal()}`) }
-    handleAction(actionFn);
+    ids.forEach((id) => mutate(id));
   };
 
   return (
-    <BaseModal targetName={Localization.kr.VM} submitTitle={getContentLabel(activeModal())}
-      isOpen={isOpen} onClose={onClose}      
-      onSubmit={handleFormSubmit}
-      promptText={`${names.join(", ")} 를(을) ${getContentLabel(activeModal())}하시겠습니까?`}
-      contentStyle={{ width: "650px"}} 
+    <BaseModal targetName={Localization.kr.VM} submitTitle={label}
+      isOpen={isOpen} onClose={onClose}
+      onSubmit={handleSubmit}
+      promptText={`${names.join(", ")} 를(을) ${label}하시겠습니까?`}
+      contentStyle={{ width: "650px" }}
       shouldWarn={true}
-    >
-    </BaseModal>
+    />
   );
 };
 
-export default VmactiveModal;
+export default VmActionModal;

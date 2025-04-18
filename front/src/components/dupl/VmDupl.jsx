@@ -1,7 +1,5 @@
-import { Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import useUIState from "../../hooks/useUIState";
 import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
@@ -11,7 +9,6 @@ import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
-import { openNewTab } from "../../navigation";
 import Logger from "../../utils/Logger";
 import useGlobal from "../../hooks/useGlobal";
 
@@ -24,17 +21,13 @@ import useGlobal from "../../hooks/useGlobal";
  * @returns {JSX.Element}
  */
 const VmDupl = ({
-  vms = [], columns = [],
-  actionType, status, 
-  showSearchBox=true,
-  onCloseModal,
+  vms = [], columns = [], showSearchBox=true,
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal } = useUIState();
+  // const { activeModal, setActiveModal } = useUIState();
   const { vmsSelected, setVmsSelected } = useGlobal();
 
-  // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
   const transformedData = (!Array.isArray(vms) ? [] : vms).map((vm) => ({
     ...vm,
     icon: status2Icon(vm?.status),
@@ -80,7 +73,6 @@ const VmDupl = ({
     searchText: `${vm?.name} ${vm?.hostVo?.name || ""} ${vm?.clusterVo?.name || ""} ${vm?.dataCenterVo?.name || ""} ${vm?.ipv4} ${vm?.ipv6}`.toLowerCase(),
   }));
 
-  // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   const handleNameClick = (id) => navigate(`/computing/vms/${id}`);
@@ -91,53 +83,55 @@ const VmDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }
 
-  Logger.debug("VmDupl > ... ")
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
-        <VmActionButtons />
+        <VmActionButtons actionType = "default" status={vmsSelected} />
       </div>
 
       {/* 테이블 컴포넌트 */}
       <TablesOuter
         columns={columns}
         data={filteredData}
-        shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        onClickableColumnClick={(row) => handleNameClick(row.id)}
         multiSelect={true}
+        shouldHighlight1stCol={true}
+        onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
+        onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        onContextMenuItems={(row) => {
-          const vmId = row?.id;
-          const openModalFromContext = (type) => {
-            if (type === "console") {
-              openNewTab("console", vmId); 
-            } else {
-              setActiveModal(type); 
-            }
-          };
-        
-          return [
-            <VmActionButtons actionType="context" />,
-          ];
-        }}        
+        onContextMenuItems={(row) => [
+          <VmActionButtons actionType="context" status={row?.status}/>,
+        ]}        
+        // onContextMenuItems={(row) => {
+        //   const vmId = row?.id;
+        //   const openModalFromContext = (type) => {
+        //     if (type === "console") {
+        //       openNewTab("console", vmId); 
+        //     } else {
+        //       setActiveModal(type); 
+        //     }
+        //   };
+        //   return [
+        //     <VmActionButtons actionType="context" status={row?.status}/>,
+        //   ];
+        // }}        
       />
 
       <SelectedIdView items={vmsSelected} />
 
       {/* VM 모달 */}
-      <Suspense>
-        <VmModals vm={vmsSelected[0]}
-          onClose={() => {
-            setActiveModal(null);
-            setVmsSelected([])
-            onCloseModal && onCloseModal();
-          }}
-        />
-      </Suspense>
+      {/* <Suspense> */}
+      <VmModals 
+        vm={vmsSelected[0]}
+        // onClose={() => {
+        //   setActiveModal(null);
+        //   setVmsSelected([])
+        //   // onCloseModal && onCloseModal();
+        // }}
+      />
+      {/* </Suspense> */}
     </div>
   );
 };
