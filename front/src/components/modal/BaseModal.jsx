@@ -24,10 +24,11 @@ const BaseModal = ({
   extraFooter = null, 
   ...props
 }) => {
-  const { setContextMenu } = useUIState()
+  const { clearAllContextMenu } = useUIState()
+
   useEffect(() => {
     Logger.debug(`BaseModal > useEffect ...`)
-    setContextMenu(null)
+    clearAllContextMenu(null)
   }, [])
 
   return (

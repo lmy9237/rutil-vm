@@ -1060,7 +1060,7 @@ export const useHost = (
   hostId
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['HostById',hostId], // TODO: host로 변경
+  queryKey: ['HostById', hostId], // TODO: host로 변경
   queryFn: async () => {
     const res = await ApiManager.findHost(hostId)
     const _res = validate(res) ?? {}

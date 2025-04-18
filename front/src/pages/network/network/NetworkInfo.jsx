@@ -14,6 +14,7 @@ import NetworkClusters from "./NetworkClusters";
 import Localization from "../../../utils/Localization";
 import { useNetwork } from "../../../api/RQHook";
 import { rvi24Network } from "../../../components/icons/RutilVmIcons";
+import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name NetworkInfo
@@ -24,17 +25,23 @@ import { rvi24Network } from "../../../components/icons/RutilVmIcons";
  */
 const NetworkInfo = () => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal, } = useUIState()
   const { id: networkId, section } = useParams();
-  const { data: network, isError, isLoading } = useNetwork(networkId);
+  const { activeModal, setActiveModal, } = useUIState()
+  const { networksSelected, setNetworksSelected } = useGlobal()
+  const {
+    data: network,
+    isError: isNetworkError,
+    isLoading: isNetworkLoading,
+   } = useNetwork(networkId);
 
   const [activeTab, setActiveTab] = useState("general");
 
   useEffect(() => {
-    if (isError || (!isLoading && !network)) {
+    if (isNetworkError || (!isNetworkLoading && !network)) {
       navigate("/networks");
     }
-  }, [isError, isLoading, network, navigate]);
+    setNetworksSelected(network)
+  }, [network, navigate]);
 
   const sections = [
     { id: "general", label: Localization.kr.GENERAL },
@@ -98,11 +105,7 @@ const NetworkInfo = () => {
       </div>
 
       {/* 네트워크 모달창 */}
-      <NetworkModals
-        network={network}
-        selectedNetworks={network}
-        onClose={() => setActiveModal(null)}
-      />
+      <NetworkModals network={network} />
     </div>
   );
 };

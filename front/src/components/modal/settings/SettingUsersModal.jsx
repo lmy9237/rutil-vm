@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
-import { useAddUser, useEditUser, useUpdatePasswordUser } from "../../../api/RQHook";
+import { useUser, useAddUser, useEditUser, useUpdatePasswordUser } from "../../../api/RQHook";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import { validateUsername, validatePw } from "../../../util";
 import Localization from "../../../utils/Localization";
@@ -24,12 +24,15 @@ const initialFormState = {
 const SettingUsersModal = ({ 
   isOpen=false,
   editMode=false,
-  changePassword = false,
+  changePassword=false,
+  user, 
   onClose
 }) => {
-  const { usersSelected } = useGlobal()
-
+  const { usersSelected, setUsersSelected } = useGlobal()
   const [formState, setFormState] = useState(initialFormState);
+  const {
+    data: userFound
+  } = useUser(user?.id ?? usersSelected[0]?.id)
   const { 
     isLoading: isAddUserLoading,
     mutate: addUser,
@@ -53,16 +56,17 @@ const SettingUsersModal = ({
     if (!isOpen || !(editMode || changePassword)) {
       return setFormState(initialFormState);
     }
+    setUsersSelected(userFound)
     setFormState({ 
       ...initialFormState,
-      id: usersSelected[0]?.id,
-      firstName: usersSelected[0]?.firstName,
-      surName: usersSelected[0]?.surName,
-      username: usersSelected[0]?.username,
-      disabled: usersSelected[0]?.disabled,
-      email: usersSelected[0]?.email
+      id: userFound?.id,
+      firstName: userFound?.firstName,
+      surName: userFound?.surName,
+      username: userFound?.username,
+      disabled: userFound?.disabled,
+      email: userFound?.email
     });
-  }, [isOpen, editMode, changePassword])
+  }, [isOpen, editMode, changePassword, userFound])
 
   const handleFormSubmit = (e) => {
     e.preventDefault();

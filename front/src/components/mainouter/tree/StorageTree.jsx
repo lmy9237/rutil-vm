@@ -70,10 +70,9 @@ const StorageTree = ({}) => {
                   item: {
                     ...dataCenter,
                     level: 2,
-                    type: "datacenter",
                   },
                   treeType: "storage",
-                });
+                }, "datacenter");
               }}
             />
             
@@ -106,10 +105,9 @@ const StorageTree = ({}) => {
                           item: {
                             ...domain,
                             level: 3,
-                            type: "domain",
                           },
                           treeType: "storage"
-                        })
+                        }, "domain")
                       }}
                     />
                   </div>

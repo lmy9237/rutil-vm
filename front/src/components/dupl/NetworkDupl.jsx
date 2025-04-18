@@ -103,9 +103,7 @@ const NetworkDupl = ({
       <SelectedIdView items={networksSelected} />
 
       {/* 네트워크 모달창 */}
-        <NetworkModals network={activeModal() === "edit" ? networksSelected[0] : null}
-          withModal // 🔥 내부에서 모달 제어하게 함
-        />
+      <NetworkModals network={networksSelected[0] ?? null} />
     </div>
   );
 };

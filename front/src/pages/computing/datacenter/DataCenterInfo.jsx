@@ -1,6 +1,8 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
+import Loading from "../../../components/common/Loading";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -12,7 +14,6 @@ import DataCenterDomains from "./DataCenterDomains";
 import DataCenterNetworks from "./DataCenterNetworks";
 import DataCenterEvents from "./DataCenterEvents";
 import { useDataCenter } from "../../../api/RQHook";
-import Loading from "../../../components/common/Loading";
 import Localization from "../../../utils/Localization";
 import { rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
@@ -43,13 +44,15 @@ const DataCenterInfo = () => {
     isSuccess: isDataCenterSuccess,
   } = useDataCenter(dataCenterId, (e) => ({ ...e }));
   const { activeModal, setActiveModal, } = useUIState()
+  const { datacentersSelected, setDatacentersSelected } = useGlobal()
   const [activeTab, setActiveTab] = useState("clusters");
 
   useEffect(() => {
     if (isDataCenterError || (!isDataCenterLoading && !dataCenter)) {
       navigate("/computing/rutil-manager/datacenters");
     }
-  }, [isDataCenterError, isDataCenterLoading, dataCenter, navigate]);
+    setDatacentersSelected(dataCenter)
+  }, [dataCenter, navigate]);
 
   const sections = [
     { id: "clusters", label: Localization.kr.CLUSTER },
@@ -118,7 +121,7 @@ const DataCenterInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="px-[0.5rem] py-[0.5rem] info-content">
+        <div className="px-[0.5rem] py-[0.5rem] w-full info-content">
           <Path pathElements={pathData}  basePath={`/computing/datacenters/${dataCenterId}/clusters`}/>
           <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
         </div>

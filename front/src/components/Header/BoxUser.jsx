@@ -41,7 +41,6 @@ const BoxUser = ({}) => {
     }
   });
 
-
   const doLogout = (e) => {
     Logger.debug("Header > doLogout ...");
     e.preventDefault();
@@ -63,7 +62,7 @@ const BoxUser = ({}) => {
         }}>계정설정</div>
         <div onClick={(e) => doLogout(e)}>로그아웃</div>
       </div>
-      <SettingUsersModals />
+      <SettingUsersModals user={user}/>
     </>
   );
 };

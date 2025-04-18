@@ -25,12 +25,13 @@ import Logger from "../../utils/Logger";
 const RightClickMenu = () => {
   const { 
     activeModal, setActiveModal,
-    contextMenu, setContextMenu,
+    contextMenu, contextMenuType, clearAllContextMenu
   } = useUIState()
   const { 
     datacentersSelected, setDatacentersSelected,
     clustersSelected, setClustersSelected,
     hostsSelected, setHostsSelected,
+    vmsSelected, setVmsSelected,
     networksSelected, setNetworksSelected,
     domainsSelected, setDomainsSelected,
     clearAllSelected,
@@ -38,10 +39,10 @@ const RightClickMenu = () => {
   
   const menuRef = useRef(null); // ✅ context menu 영역 참조
   useClickOutside(menuRef, (e) => {
-    if (!contextMenu()) {
+    if (contextMenu() !== null) {
       return;
     }
-    setContextMenu(null);
+    clearAllContextMenu();
     clearAllSelected()
   })
 
@@ -53,20 +54,17 @@ const RightClickMenu = () => {
         // datacenterId={}  // TODO: 선택 된 호스트 모달의 datacenterId 찾기
       />
       <HostModals host={hostsSelected[0] ?? null}
-        // clusterId={}  // TODO: 선택 된 호스트 모달의 clusterId 찾기
+        // clusterId={}  // TODO: 생성,수정에서 쓰이지만 필요한지 모르겠음. (HostModal에서 확인)
       /> 
-      <NetworkModals 
-        network={networksSelected[0] ?? null}
+      <NetworkModals network={networksSelected[0] ?? null}
         // dcId={}  // TODO: 선택 된 호스트 모달의 datacenterId 찾기
       />
       <DomainModals
         domain={domainsSelected[0] ?? null}
         // datacenterId={}  // TODO: 선택 된 호스트 모달의 datacenterId 찾기
       />
-      <VmModals
-        vm={domainsSelected[0] ?? null}
-      />
-      {contextMenu() ? (
+      <VmModals vm={vmsSelected[0] ?? null} />
+      {(contextMenu() && contextMenuType()) ? (
         <div id="right-click-menu-box"
           className="right-click-menu-box context-menu-item"
           ref={menuRef}
@@ -79,29 +77,29 @@ const RightClickMenu = () => {
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {(contextMenu()?.item?.type === "datacenter") ? (
+          {(contextMenuType() === "datacenter") ? (
             <DataCenterActionButtons actionType="context"
               status={"single"}
             />
-          ) : (contextMenu()?.item?.type === "cluster") ? (
+          ) : (contextMenuType() === "cluster") ? (
             <ClusterActionButtons actionType="context"
               isEditDisabled={false} // 필요 시 조건 지정 가능
               status={"ready"}       // 또는 contextMenu.item.status 등
             />
-          ) : (contextMenu()?.item?.type === "host") ? 
+          ) : (contextMenuType() === "host") ? 
             (<HostActionButtons actionType="context"
               isEditDisabled={false} // 필요 시 조건 지정 가능
               status={"ready"}       // 또는 contextMenu.item.status 등
             />
-          ) : (contextMenu()?.item?.type === "network") ? 
+          ) : (contextMenuType() === "network") ? 
             (<NetworkActionButtons actionType="context"
               status={contextMenu().item?.status}
             />
-          ) : (contextMenu()?.item?.type === "domain") ? (
+          ) : (contextMenuType() === "domain") ? (
             <DomainActionButtons actionType="context"
               status={contextMenu()?.item?.status}
             />
-          ) : (contextMenu()?.item?.type === "vm") ? (
+          ) : (contextMenuType() === "vm") ? (
             <VmActionButtons actionType="context"
               status={contextMenu()?.item?.status}
             />

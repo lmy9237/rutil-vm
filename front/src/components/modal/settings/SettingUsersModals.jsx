@@ -12,7 +12,9 @@ import Localization from "../../../utils/Localization";
  * 
  * @returns 
  */
-const SettingUsersModals = ({}) => {
+const SettingUsersModals = ({
+  user,
+}) => {
   const { activeModal, setActiveModal } = useUIState()
   const { usersSelected } = useGlobal()
 
@@ -24,6 +26,7 @@ const SettingUsersModals = ({}) => {
     ), update: (
       <SettingUsersModal key={activeModal()} isOpen={activeModal() === "user:update"} 
         onClose={() => setActiveModal(null)} 
+        user={user?.id ?? usersSelected[0]?.id}
         editMode
       />
     ), changePassword: (

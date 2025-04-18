@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
+import Loading from "../../../components/common/Loading";
 import Path from "../../../components/Header/Path";
 import HostGeneral from "./HostGeneral";
 import HostVms from "./HostVms";
@@ -40,21 +41,23 @@ const HostInfo = () => {
     data: host,
     isLoading: isHostLoading,
     isError: isHostError, 
-    isSuccess, isSuccessError,
+    isSuccess: isHostSuccess,
   } = useHost(hostId);
   const { activeModal, setActiveModal, } = useUIState()
-
-  const isUp = host?.status === "UP";
-  const isMaintenance = host?.status === "MAINTENANCE";
-  const isNonOperational = host?.status === "NON_OPERATIONAL"
-
+  const { hostsSelected, setHostsSelected } = useGlobal()
   const [activeTab, setActiveTab] = useState("general");
 
   useEffect(() => {
     if (isHostError || (!isHostLoading && !host)) {
       navigate("/computing/rutil-manager/hosts");
     }
-  }, [isHostError, isHostLoading, host, navigate]);
+    setHostsSelected(host)
+  }, [host, navigate]);
+
+  const isUp = host?.status === "UP";
+  const isMaintenance = host?.status === "MAINTENANCE";
+  const isNonOperational = host?.status === "NON_OPERATIONAL"
+
 
   const sections = [
     { id: "general", label: Localization.kr.GENERAL },
@@ -102,42 +105,13 @@ const HostInfo = () => {
   ];
 
   const popupItems = [
-    {
-      type: "deactivate",
-      label: "유지보수",
-      disabled: !isUp && isNonOperational,
-      onClick: () => setActiveModal("host:deactivate"),
-    }, {
-      type: "activate",
-      label: Localization.kr.ACTIVATE,
-      disabled: isMaintenance ,
-      onClick: () => setActiveModal("host:activate"),
-    }, {
-      type: Localization.kr.RESTART,
-      label: "재시작",
-      disabled: !isUp,
-      onClick: () => setActiveModal("host:restart"),
-    }, {
-      type: "reInstall",
-      label: "다시 설치",
-      disabled: isUp,
-      onClick: () => setActiveModal("host:reInstall"),
-    }, {
-      type: "enrollCert",
-      label: "인증서 등록",
-      disabled: isUp,
-      onClick: () => setActiveModal("host:enrollCert"),
-    }, {
-      type: "haOn",
-      label: "글로벌 HA 유지 관리를 활성화",
-      disabled: !isUp,
-      onClick: () => setActiveModal("host:haOn"),
-    }, {
-      type: "haOff",
-      label: "글로벌 HA 유지 관리를 비활성화",
-      disabled: !isUp,
-      onClick: () => setActiveModal("host:haOff"),
-    },
+    { type: "deactivate", onClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: !isUp && isNonOperational, },
+    { type: "activate", onClick: () => setActiveModal("host:activate"), label: Localization.kr.ACTIVATE, disabled: isMaintenance , },
+    { type: "restart", onClick: () => setActiveModal("host:restart"), label: Localization.kr.RESTART, disabled: !isUp, },
+    { type: "reInstall", onClick: () => setActiveModal("host:reInstall"), label: "다시 설치", disabled: isUp, },
+    { type: "enrollCert", onClick: () => setActiveModal("host:enrollCert"), label: "인증서 등록", disabled: isUp, },
+    { type: "haOn", onClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: !isUp, }, 
+    { type: "haOff", onClick: () => setActiveModal("host:haOff"), label: "글로벌 HA 유지 관리를 비활성화", disabled: !isUp, },
   ];
 
   return (
@@ -154,12 +128,12 @@ const HostInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full info-content">
+        <div className="px-[0.5rem] py-[0.5rem] w-full info-content">
           <Path
             pathElements={pathData}
             basePath={`/computing/hosts/${hostId}`}
           />
-          {renderSectionContent()}
+          <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
         </div>
       </div>
 

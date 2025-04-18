@@ -6,8 +6,8 @@ import DeleteModal from "../../../utils/DeleteModal";
 import DiskUploadModal from "./DiskUploadModal";
 import DiskActionModal from "./DiskActionModal";
 import { useDeleteDisk } from "../../../api/RQHook";
-import "./MDisk.css";
 import Localization from "../../../utils/Localization";
+import "./MDisk.css";
 
 const DiskModals = ({ 
   disk,

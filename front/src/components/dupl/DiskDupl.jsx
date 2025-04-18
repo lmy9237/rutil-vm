@@ -91,9 +91,7 @@ const DiskDupl = ({
           />
         )}
 
-        <DiskActionButtons
-          status={disksSelected[0]?.status}
-        />
+        <DiskActionButtons status={disksSelected[0]?.status}/>
       </div>
       <TablesOuter
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
@@ -105,10 +103,8 @@ const DiskDupl = ({
         multiSelect={true}
         columns={columns}
         onContextMenuItems={(row) => [
-          <DiskActionButtons
+          <DiskActionButtons actionType="context"
             status={row?.status}
-            selectedDisks={[row]}
-            actionType="context"
           />,
         ]}
       />

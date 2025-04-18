@@ -17,7 +17,6 @@ import Logger from "../../../utils/Logger";
  */
 const HostModals = ({
   host,
-  clusterId,
 }) => {
   const { activeModal, setActiveModal } = useUIState()
   const { hostsSelected } = useGlobal()
@@ -25,14 +24,12 @@ const HostModals = ({
   const modals = {
     create: (
       <HostModal isOpen={activeModal() === "host:create"}
-        clusterId={clusterId}
         onClose={() => setActiveModal(null)} 
       />
     ), update: (
       <HostModal isOpen={activeModal() === "host:update"}
         editMode
-        hId={host?.id}
-        clusterId={clusterId}
+        hostId={host?.id ?? hostsSelected[0]?.id}
         onClose={() => setActiveModal(null)} 
       />
     ), remove: (
@@ -46,14 +43,14 @@ const HostModals = ({
     ), action: (
       <HostActionModal
         isOpen={[
-          "deactivate",
-          "activate",
-          "restart",
-          "refresh",
-          // "reInstall",
-          "enrollCert",
-          "haOn",
-          "haOff",
+          "host:deactivate",
+          "host:activate",
+          "host:restart",
+          "host:refresh",
+          // "host:reInstall",
+          "host:enrollCert",
+          "host:haOn",
+          "host:haOff",
         ].includes(activeModal)}
         action={activeModal}
         data={hostsSelected}
@@ -62,8 +59,8 @@ const HostModals = ({
     ),
     commitNetHost: (
       <HostCommitNetModal
-        isOpen={activeModal() === "commitNetHost"}
-        data={host} // TODO: 정의 필요
+        isOpen={activeModal() === "host:commitNetHost"}
+        data={hostsSelected[0] ?? host} // TODO: 정의 필요
         onClose={() => setActiveModal(null)} 
       />
     )    

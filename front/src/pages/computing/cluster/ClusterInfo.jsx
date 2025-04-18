@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
+import Loading from "../../../components/common/Loading";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -41,15 +42,16 @@ const ClusterInfo = () => {
     isError: isClusterError,
     isSuccess: isClusterSuccess,
   } = useCluster(clusterId, (e) => ({ ...e }));
-
-  const [activeTab, setActiveTab] = useState("general");
   const { activeModal, setActiveModal, } = useUIState()
+  const { clustersSelected, setClustersSelected } = useGlobal()
+  const [activeTab, setActiveTab] = useState("general");
 
   useEffect(() => {
     if (isClusterError || (!isClusterLoading && !cluster)) {
       navigate("/computing/rutil-manager/clusters");
     }
-  }, [isClusterError, isClusterLoading, cluster, navigate]);
+    setClustersSelected(cluster)
+  }, [cluster, navigate]);
 
   const sections = [
     { id: "general", label: Localization.kr.GENERAL },
@@ -110,7 +112,7 @@ const ClusterInfo = () => {
         />
         <div className="w-full info-content">
           <Path pathElements={pathData} basePath={`/computing/clusters/${clusterId}`}/>
-          {renderSectionContent()}
+          <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
         </div>
       </div>
 

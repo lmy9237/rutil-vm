@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import useUIState from "../../hooks/useUIState";
+import useClickOutside from "../../hooks/useClickOutside";
 import TableRowLoading from "./TableRowLoading";
 import TableRowNoData from "./TableRowNoData";
 import PagingButton from "./PagingButton";
@@ -9,7 +10,7 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
 import "./Table.css";
-import useClickOutside from "../../hooks/useClickOutside";
+import RightClickMenu from "../common/RightClickMenu";
 
 /**
  * @name Tables
@@ -30,7 +31,7 @@ const Tables = ({
   searchQuery = "",  // ✅ 기본값 추가
   setSearchQuery = () => {}, // ✅ 기본값 추가
 }) => {
-  const { contextMenu, setContextMenu } = useUIState()
+  const { contextMenu, setContextMenu, contextMenuType } = useUIState()
 
   const [selectedRowIndex, setSelectedRowIndex] = useState(null); // 선택된 행의 인덱스를 관리
   const [tooltips, setTooltips] = useState({}); // 툴팁 상태 관리
@@ -74,7 +75,10 @@ const Tables = ({
       setContextMenu({
         mouseX,
         mouseY,
-        menuItems,
+        item: {
+          ...sortedData[rowIndex],
+          type: ""
+        },
       });
     } else {
       Logger.warn("메뉴 항목이 비어 있습니다.");
@@ -214,6 +218,7 @@ const Tables = ({
       }));
     }
   };
+
   const getCellTooltipContent = (value) => {
     if (React.isValidElement(value)) {
       // JSX 요소의 텍스트 추출
@@ -397,7 +402,9 @@ const Tables = ({
   return (
     <>
       <div className="w-full overflow-y-hidden ">
-        <table className="custom-table" ref={tableRef}>
+        <table className="custom-table" 
+          ref={tableRef}
+        >
           <thead>
             <tr>
               {columns.map((column, index) => (
@@ -409,7 +416,7 @@ const Tables = ({
                     width: column.width,
                   }}
                 >
-                  <div className="flex justify-center items-center">
+                  <div className="f-center">
                     {column.header}
                     {!column.isIcon && sortConfig.key === column.accessor && (
                       <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
@@ -425,19 +432,19 @@ const Tables = ({
         {/*페이지버튼 */}
         {sortedData.length > itemsPerPage && (
           <div className="paging-arrows my-2">
-            <PagingButton
-              type="prev"
+            <PagingButton type="prev"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
             />
             <span className="px-1.5">{`${startNumber} - ${endNumber}`}</span>
-            <PagingButton
-              type="next"
+            <PagingButton type="next"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage >= Math.ceil(sortedData.length / itemsPerPage)}
             />
           </div>
-      )}
+        )}
+        {/* 우클릭 */}
+        <RightClickMenu />
       </div>
     </>
   );

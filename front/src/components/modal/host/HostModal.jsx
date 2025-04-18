@@ -15,6 +15,7 @@ import Localization from "../../../utils/Localization";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
 import "./MHost.css";
+import useGlobal from "../../../hooks/useGlobal";
 
 const initialFormState = {
   id: "",
@@ -37,10 +38,11 @@ const initialFormState = {
 const HostModal = ({ 
   isOpen, 
   editMode=false, 
-  hId, 
-  clusterId, 
+  hostId,
+  clusterId, // TODO: 필요한지 모르겠음 ... 데이터조회에서 가져오고 있음
   onClose
 }) => {
+  const { hostsSelected, setHostsSelected } = useGlobal()
   const hLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [formState, setFormState] = useState(initialFormState);
   const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
@@ -49,10 +51,10 @@ const HostModal = ({
     onClose();
     toast.success(`${Localization.kr.HOST} ${hLabel} 완료`);
   };
+  const { data: host } = useHost(hostId);
   const { mutate: addHost } = useAddHost(onSuccess, () => onClose());
   const { mutate: editHost } = useEditHost(onSuccess, () => onClose());
   
-  const { data: host } = useHost(hId);
   const { 
     data: clusters = [], 
     isLoading: isClustersLoading 
@@ -63,6 +65,7 @@ const HostModal = ({
       /* 열리기 전 */
       return setFormState(initialFormState);
     }
+    setHostsSelected(host)
     if (editMode && host) {
       Logger.debug(`HostModal > useEffect ... host: `, host);
       setFormState({
@@ -77,7 +80,7 @@ const HostModal = ({
       });
       setClusterVo({id: host?.clusterVo?.id, name: host?.clusterVo?.name});
     }
-  }, [isOpen, editMode, host]);
+  }, [isOpen, editMode, hostsSelected]);
 
   useEffect(() => {
     if (clusterId) {

@@ -24,7 +24,7 @@ import Logger from "../../../utils/Logger";
 const ComputingTree = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { contextMenu, setContextMenu, } = useUIState();
+  const { contextMenu, setContextMenu } = useUIState();
   const {
     secondVisibleComputing, toggleSecondVisibleComputing,
     openDataCentersComputing, toggleOpenDataCentersComputing,
@@ -84,10 +84,9 @@ const ComputingTree = ({}) => {
                   item: {
                     ...dataCenter,
                     level: 2,
-                    type: "datacenter",
                   },
                   treeType: "computing"
-                });
+                }, "datacenter");
               }}
             />
 
@@ -109,6 +108,7 @@ const ComputingTree = ({}) => {
                     }}
                     onContextMenu={(e) => {
                       e.preventDefault();
+                      setDatacentersSelected(dataCenter)
                       setClustersSelected(cluster)
                       setContextMenu({
                         mouseX: e.clientX,
@@ -116,10 +116,9 @@ const ComputingTree = ({}) => {
                         item: {
                           ...cluster,
                           level: 3,
-                          type: "cluster",
                         },
                         treeType: "computing"
-                      });
+                      }, "cluster");
                     }}
                   />
 
@@ -144,6 +143,8 @@ const ComputingTree = ({}) => {
                               }}
                               onContextMenu={(e) => {
                                 e.preventDefault();
+                                setDatacentersSelected(dataCenter)
+                                setClustersSelected(cluster)
                                 setHostsSelected(host)
                                 setContextMenu({
                                   mouseX: e.clientX,
@@ -151,10 +152,9 @@ const ComputingTree = ({}) => {
                                   item: {
                                     ...host,
                                     level: 4,
-                                    type: "host",
                                   },
                                   treeType: "computing"
-                                });
+                                }, "host");
                               }}
                             />
                             {/* 다섯 번째 레벨 (VMs under Host) */}
@@ -174,18 +174,19 @@ const ComputingTree = ({}) => {
                                   }}
                                   onContextMenu={(e) => {
                                     e.preventDefault();
+                                    setDatacentersSelected(dataCenter)
+                                    setClustersSelected(cluster)
+                                    setHostsSelected(host)
                                     setVmsSelected(vm)
                                     setContextMenu({
                                       mouseX: e.clientX,
                                       mouseY: e.clientY,
                                       item: {
-                                        id: vm.id,
-                                        name: vm.name,
+                                        ...vm,
                                         level: 5,
-                                        type: "vm",
                                       },
                                       treeType: "computing"
-                                    });
+                                    }, "vm");
                                   }}
                                 />
                               </div>
@@ -209,6 +210,9 @@ const ComputingTree = ({}) => {
                             onContextMenu={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
+                              setDatacentersSelected(dataCenter)
+                              setClustersSelected(cluster)
+                              // setHostsSelected(host)
                               setVmsSelected(vm)
                               setContextMenu({
                                 mouseX: e.clientX,
@@ -216,10 +220,9 @@ const ComputingTree = ({}) => {
                                 item: {
                                   ...vm,
                                   level: 4,
-                                  type: "vm",
                                 },
                                 treeType: "computing"
-                              });
+                              }, "vm");
                             }}
                           />
                         </div>

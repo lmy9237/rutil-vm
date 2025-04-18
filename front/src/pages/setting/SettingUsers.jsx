@@ -84,7 +84,7 @@ const SettingUsers = () => {
       <SelectedIdView items={usersSelected} />
       
       {/* 모달창 */}
-      <SettingUsersModals />
+      <SettingUsersModals user={usersSelected[0]} />
     </div>
   );
 };

@@ -48,7 +48,7 @@ export const TMIStateProvider = ({ children }) => {
   const [sTMIState, setTMIState] = useState(initialState)
   const _TMIState = () => {
     const res = Object.assign({}, JSON.parse(sessionStorage.getItem(KEY_TMI_STATE)), sTMIState) 
-    Logger.debug(`UIStateProvider > _TMIState ... res: `, res);
+    Logger.debug(`TMIStateProvider > _TMIState ... res: `, res);
     return res;
   }
 
@@ -61,7 +61,7 @@ export const TMIStateProvider = ({ children }) => {
   //#region: 최근 선택 왼쪽메뉴
   const tmiLastSelected = _TMIState()[KEY_TMI_LAST_SELECTED] ?? "computing";
   const setTmiLastSelected = (newV) => {
-    Logger.debug(`UIStateProvider > setTmiLastSelected ... newV: ${newV}`)
+    Logger.debug(`TMIStateProvider > setTmiLastSelected ... newV: ${newV}`)
     setTMIState({
       ...sTMIState,
       [KEY_TMI_LAST_SELECTED]: newV
@@ -74,7 +74,7 @@ export const TMIStateProvider = ({ children }) => {
   const _allTMINetwork = () => _TMIState()[KEY_TMI_NETWORK] ?? {}
   const _allTMIStorage = () => _TMIState()[KEY_TMI_STORAGE] ?? {}
   const _browseTMI = (tmiId=KEY_TMI_COMPUTING) => {
-    Logger.debug(`UIStateProvider > _browseTMI ... tmiId: ${tmiId}`)
+    Logger.debug(`TMIStateProvider > _browseTMI ... tmiId: ${tmiId}`)
     const _default = {
       [KEY_TMI_COMPUTING]: {
         [KEY_SECOND_VISIBLE]: false,
@@ -114,7 +114,7 @@ export const TMIStateProvider = ({ children }) => {
   //#region: 왼쪽메뉴 안 트리표출여부
   const _secondVisible = (tmiId=KEY_TMI_COMPUTING) => _browseTMI(tmiId)[KEY_SECOND_VISIBLE] ?? false;
   const _setSecondVisible = (tmiId=KEY_TMI_COMPUTING, newV) => {
-    Logger.debug(`UIStateProvider > _setSecondVisible ... tmiId: ${tmiId}, newV: ${newV}`)
+    Logger.debug(`TMIStateProvider > _setSecondVisible ... tmiId: ${tmiId}, newV: ${newV}`)
     setTMIState({
       ...sTMIState,
       [tmiId] : {
@@ -124,7 +124,7 @@ export const TMIStateProvider = ({ children }) => {
     });
   }
   const _toggleSecondVisible = (tmiId=KEY_TMI_COMPUTING) => {
-    Logger.debug(`UIStateProvider > _toggleSecondVisible ... tmiId: ${tmiId}`)
+    Logger.debug(`TMIStateProvider > _toggleSecondVisible ... tmiId: ${tmiId}`)
     _setSecondVisible(tmiId, !_secondVisible(tmiId))
   }
   
@@ -144,12 +144,12 @@ export const TMIStateProvider = ({ children }) => {
 
   const _browseOpenDataCenters = (tmiId=KEY_TMI_COMPUTING) => _browseTMI(tmiId)[KEY_TMI_OPEN_DATACENTER] ?? {}
   const _openDataCenters = (tmiId, target) => {
-    Logger.debug(`UIStateProvider > _openDataCenters ... tmiId: ${tmiId}, target: ${target}`)
+    Logger.debug(`TMIStateProvider > _openDataCenters ... tmiId: ${tmiId}, target: ${target}`)
     const _tmiFound = _browseOpenDataCenters(tmiId) ?? {}
     return _tmiFound[target] ?? false;
   }
   const _setOpenDataCenters = (tmiId, target, newV) => {
-    Logger.debug(`UIStateProvider > _setOpenDataCenters ... tmiId: ${tmiId}, target: ${target}, newV: ${newV}`)
+    Logger.debug(`TMIStateProvider > _setOpenDataCenters ... tmiId: ${tmiId}, target: ${target}, newV: ${newV}`)
     setTMIState({ 
       ...sTMIState,
       [tmiId] : {
@@ -162,7 +162,7 @@ export const TMIStateProvider = ({ children }) => {
     });
   }
   const _toggleOpenDataCenters = (tmiId, target) => {
-    Logger.debug(`UIStateProvider > _toggleOpenDataCenters ... tmiId: ${tmiId}, target: ${target}`)
+    Logger.debug(`TMIStateProvider > _toggleOpenDataCenters ... tmiId: ${tmiId}, target: ${target}`)
     _setOpenDataCenters(tmiId, target, !_openDataCenters(tmiId, target))
   }
   const openDataCentersComputing = (target) => _openDataCenters(KEY_TMI_COMPUTING, target)
@@ -171,12 +171,12 @@ export const TMIStateProvider = ({ children }) => {
 
   const _browseOpenClusters = (tmiId=KEY_TMI_COMPUTING) => _browseTMI(tmiId)[KEY_TMI_OPEN_CLUSTER] ?? {}
   const _openClusters = (tmiId, target) => {
-    Logger.debug(`UIStateProvider > _openClusters ... tmiId: ${tmiId}, target: ${target}`)
+    Logger.debug(`TMIStateProvider > _openClusters ... tmiId: ${tmiId}, target: ${target}`)
     const _tmiFound = _browseOpenClusters(tmiId) ?? {}
     return _tmiFound[target] ?? false;
   }
   const _setOpenClusters = (tmiId, target, newV) => {
-    Logger.debug(`UIStateProvider > _setOpenClusters ... tmiId: ${tmiId}, target: ${target}, newV: ${newV}`)
+    Logger.debug(`TMIStateProvider > _setOpenClusters ... tmiId: ${tmiId}, target: ${target}, newV: ${newV}`)
     setTMIState({ 
       ...sTMIState,
       [tmiId] : {
@@ -189,18 +189,18 @@ export const TMIStateProvider = ({ children }) => {
     });
   }
   const _toggleOpenClusters = (tmiId, target) => {
-    Logger.debug(`UIStateProvider > _toggleOpenClusters ... tmiId: ${tmiId}, target: ${target}`)
+    Logger.debug(`TMIStateProvider > _toggleOpenClusters ... tmiId: ${tmiId}, target: ${target}`)
     _setOpenClusters(tmiId, target, !_openClusters(tmiId, target))
   }
 
   const _browseOpenHosts = (tmiId=KEY_TMI_COMPUTING) => _browseTMI(tmiId)[KEY_TMI_OPEN_HOST]
   const _openHosts = (tmiId, target) => {
-    Logger.debug(`UIStateProvider > _openHosts ... tmiId: ${tmiId}, target: ${target}`)
+    Logger.debug(`TMIStateProvider > _openHosts ... tmiId: ${tmiId}, target: ${target}`)
     const _tmiFound = _browseOpenHosts(tmiId) ?? {}
     return _tmiFound[target] ?? false;
   }
   const _setOpenHosts = (tmiId, target, newV) => {
-    Logger.debug(`UIStateProvider > _setOpenHosts ... tmiId: ${tmiId}, target: ${target}, newV: ${newV}`)
+    Logger.debug(`TMIStateProvider > _setOpenHosts ... tmiId: ${tmiId}, target: ${target}, newV: ${newV}`)
     setTMIState({ 
       ...sTMIState,
       [tmiId] : {
@@ -213,19 +213,19 @@ export const TMIStateProvider = ({ children }) => {
     });
   }
   const _toggleOpenHosts = (tmiId, target) => {
-    Logger.debug(`UIStateProvider > _toggleOpenHosts ... tmiId: ${tmiId}, target: ${target}`)
+    Logger.debug(`TMIStateProvider > _toggleOpenHosts ... tmiId: ${tmiId}, target: ${target}`)
     _setOpenHosts(tmiId, target, !_openHosts(tmiId, target))
   }
 
   const _browseOpenDomains = (tmiId=KEY_TMI_STORAGE) => _browseTMI(tmiId)[KEY_TMI_OPEN_DOMAIN]
   const _openDomains = (tmiId, target) => {
-    Logger.debug(`UIStateProvider > _openDomains ... tmiId: ${tmiId}, target: ${target}`)
+    Logger.debug(`TMIStateProvider > _openDomains ... tmiId: ${tmiId}, target: ${target}`)
     const _tmiFound = _browseOpenDomains(tmiId) ?? {}
     const _openDomainsState = _tmiFound ?? {}
     return _openDomainsState[target] ?? false;
   }
   const _setOpenDomains = (tmiId, target, newV) => {
-    Logger.debug(`UIStateProvider > _setOpenDomains ... tmiId: ${tmiId}, target: ${target}, newV: ${newV}`)
+    Logger.debug(`TMIStateProvider > _setOpenDomains ... tmiId: ${tmiId}, target: ${target}, newV: ${newV}`)
     setTMIState({ 
       ...sTMIState,
       [tmiId] : {
@@ -238,7 +238,7 @@ export const TMIStateProvider = ({ children }) => {
     });
   }
   const _toggleOpenDomains = (tmiId, target) => {
-    Logger.debug(`UIStateProvider > _toggleOpenDomains ... tmiId: ${tmiId}, target: ${target}`)
+    Logger.debug(`TMIStateProvider > _toggleOpenDomains ... tmiId: ${tmiId}, target: ${target}`)
     _setOpenHosts(tmiId, target, !_openDomains(tmiId, target))
   }
 

@@ -67,10 +67,9 @@ const NetworkTree = ({}) => {
                   item: {
                     ...dataCenter,
                     level: 2,
-                    type: "datacenter",
                   },
                   treeType: "network"
-                });
+                }, "datacenter");
               }}
             />
 
@@ -89,6 +88,7 @@ const NetworkTree = ({}) => {
                   onContextMenu={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    setDatacentersSelected(dataCenter);
                     setNetworksSelected(network);
                     setContextMenu({
                       mouseX: e.clientX,
@@ -96,10 +96,9 @@ const NetworkTree = ({}) => {
                       item: {
                         ...network,
                         level: 3,
-                        type: "network",
                       },
                       treeType: "network"
-                    });
+                    }, "network");
                   }}
                 />
               </div>
