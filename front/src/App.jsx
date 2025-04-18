@@ -5,7 +5,7 @@ import { scan } from "react-scan";
 import useUIState from "./hooks/useUIState";
 import useBoxState from "./hooks/useBoxState";
 import useTmi from "./hooks/useTmi";
-import STOMP from "./Socket";
+// import STOMP from "./Socket";
 import Layout from "./components/Layout";
 import RequireAuth from "./components/RequireAuth";
 import Home from "./components/Home";
@@ -58,6 +58,7 @@ const App = () => {
     setLoginBoxVisible(false)
 
     // Connect using STOMP
+    /*
     STOMP.connect({}, (frame) => {
       Logger.debug("Connected: " + frame);
 
@@ -81,6 +82,7 @@ const App = () => {
         });
       }
     };
+    */
   }, []);
   //#endregion: 웹소켓연결
 

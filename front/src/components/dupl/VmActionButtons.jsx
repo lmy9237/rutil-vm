@@ -14,7 +14,7 @@ const VmActionButtons = ({
 }) => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal } = useUIState()
-  const { vmsSelected, setVmsSelect4d } = useGlobal()
+  const { vmsSelected, setVmsSelected } = useGlobal()
 
   const isContextMenu = actionType === "context";
 
@@ -32,6 +32,7 @@ const VmActionButtons = ({
   const isPoweringDown = vmSelected1st?.status === "POWERING_DOWN";
   const isPoweringUp = vmSelected1st?.status === "POWERING_UP";
   const isTemplate = vmSelected1st?.status === "SUSPENDED" || vmSelected1st?.status === "UP";
+  
   const basicActions = [
     { type: "create", onBtnClick: () => setActiveModal("vm:create"), label: Localization.kr.CREATE, disabled: vmsSelected.length > 0 },
     { type: "update", onBtnClick: () => setActiveModal("vm:update"), label: Localization.kr.UPDATE, disabled: vmsSelected.length !== 1 },
@@ -39,7 +40,7 @@ const VmActionButtons = ({
     { type: "pause", onBtnClick: () => setActiveModal("vm:pause"), label: Localization.kr.PAUSE, disabled: vmsSelected.length === 0 || !isUp }, 
     { type: "reboot", onBtnClick: () => setActiveModal("vm:reboot"), label: "재부팅", disabled: vmsSelected.length === 0 || !isUp },
     { type: "reset", onBtnClick: () => setActiveModal("vm:reset"), label: "재설정", disabled: vmsSelected.length === 0 || !isUp }, // 가상머신의 시스템을 변경했을때 바뀐 설정을 적용하려면 재설정으로만 적용이 가능함
-    { type: "shutdown", onBtnClick: () => setActiveModal("vm:shutdown"), label: "종료", disabled: vmsSelected.length === 0 || !isUp },
+    { type: "shutdown", onBtnClick: () => setActiveModal("vm:shutdown"), label: Localization.kr.END, disabled: vmsSelected.length === 0 || !isUp },
     { type: "powerOff", onBtnClick: () => setActiveModal("vm:powerOff"), label: "전원끔", disabled: vmsSelected.length === 0 || !(isUp || isPoweringUp) }, 
     { type: "console", onBtnClick: () => openNewTab("console", vmSelected1st?.id), label: "콘솔", disabled: vmsSelected.length === 0 || !isUp },
     { type: "snapshot", onBtnClick: () => setActiveModal("vm:snapshot"), label: "스냅샷 생성", disabled: vmsSelected.length !== 1  },
@@ -63,7 +64,7 @@ const VmActionButtons = ({
         <button key={type}
           className="btn-right-click dropdown-item"
           disabled={disabled}
-          onClick={() => setActiveModal(type)}
+          onClick={() => setActiveModal(`vm:${type}`)}
         >
           {label}
         </button>

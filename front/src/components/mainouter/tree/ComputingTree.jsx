@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import useUIState from "../../../hooks/useUIState";
 import useTmi from "../../../hooks/useTmi";
 import useGlobal from "../../../hooks/useGlobal";
+import useContextMenu from "../../../hooks/useContextMenu";
 import TreeMenuItem from "./TreeMenuItem";
 import {
   rvi16Globe,
@@ -24,7 +24,7 @@ import Logger from "../../../utils/Logger";
 const ComputingTree = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { contextMenu, setContextMenu } = useUIState();
+  const { contextMenu, setContextMenu } = useContextMenu();
   const {
     secondVisibleComputing, toggleSecondVisibleComputing,
     openDataCentersComputing, toggleOpenDataCentersComputing,

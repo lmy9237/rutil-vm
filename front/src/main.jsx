@@ -6,6 +6,7 @@ import { AuthProvider } from "./context/AuthProvider"
 import { GlobalProvider } from "./context/GlobalProvider";
 import { FooterStateProvider } from "./context/FooterStateProvider";
 import { BoxStateProvider } from './context/BoxStateProvider'
+import { ContextMenuStateProvider } from "./context/ContextMenuStateProvider";
 import { TMIStateProvider } from "./context/TMIStateProvider";
 import { UIStateProvider } from "./context/UIStateProvider";
 import reportWebVitals from "./reportWebVitals";
@@ -28,11 +29,13 @@ root.render(
             <UIStateProvider>
               <FooterStateProvider>
                 <BoxStateProvider>
-                  <TMIStateProvider>
-                    <Routes>
-                      <Route path="/*" element={<App />}/>
-                    </Routes>
-                  </TMIStateProvider>
+                  <ContextMenuStateProvider>
+                    <TMIStateProvider>
+                      <Routes>
+                        <Route path="/*" element={<App />}/>
+                      </Routes>
+                    </TMIStateProvider>
+                  </ContextMenuStateProvider>
                 </BoxStateProvider>
               </FooterStateProvider>
             </UIStateProvider>

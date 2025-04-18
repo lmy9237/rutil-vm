@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
+import useContextMenu from "../../../hooks/useContextMenu";
 import useGlobal from "../../../hooks/useGlobal";
 import useTmi from "../../../hooks/useTmi";
 import TreeMenuItem from "./TreeMenuItem";
@@ -15,7 +16,7 @@ import Logger from "../../../utils/Logger";
 const NetworkTree = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { contextMenu, setContextMenu, } = useUIState();
+  const { contextMenu, setContextMenu, } = useContextMenu();
   const {
     secondVisibleNetwork, toggleSecondVisibleNetwork,
     openDataCentersNetwork, toggleOpenDataCentersNetwork

@@ -12,12 +12,21 @@ const Vnc = forwardRef(({
 }, ref) => {
   const { data: vmConsoleAccessInfo } = useVmConsoleAccessInfo(vmId);  
   
+  
   let wsUrl = `wss://${CONSTANT.baseUrl}/ws`;
-  const isReady = () => vmId !== undefined && vmConsoleAccessInfo 
-    && vmConsoleAccessInfo?.address 
-    && vmConsoleAccessInfo?.port 
-    && vmConsoleAccessInfo?.token
-    && vmConsoleAccessInfo?.vm
+  // let wsUrl = `wss://localhost/ws`;
+  if (import.meta.env.PROD) {
+    Logger.debug("THIS IS PRODUCTION !!!");
+    Logger.debug(`VmLoggerModal ... import.meta.env.VITE_RUTIL_VM_OVIRT_IP_ADDRESS: __RUTIL_VM_OVIRT_IP_ADDRESS__\n\n`);
+    wsUrl = "wss://__RUTIL_VM_OVIRT_IP_ADDRESS__/ws";
+  }
+
+  const isReady = () => vmId !== undefined
+    && vmConsoleAccessInfo !== null && vmConsoleAccessInfo !== undefined
+    && vmConsoleAccessInfo?.address !== null && vmConsoleAccessInfo?.address !== ""
+    && vmConsoleAccessInfo?.port !== null && vmConsoleAccessInfo?.port !== ""
+    && vmConsoleAccessInfo?.token !== null && vmConsoleAccessInfo?.token !== ""
+    && vmConsoleAccessInfo?.vm !== null && vmConsoleAccessInfo?.vm !== ""
   
   const isValid = (vncUrl) => {
     if (!vncUrl.startsWith('ws://') && !vncUrl.startsWith('wss://')) {

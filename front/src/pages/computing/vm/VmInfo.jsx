@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
+import Loading from "../../../components/common/Loading";
 import HeaderButton from "../../../components/button/HeaderButton";
 import NavButton from "../../../components/navigation/NavButton";
 import Path from "../../../components/Header/Path";
@@ -138,7 +139,7 @@ const VmInfo = () => {
         />
         <div className="w-full info-content">
           <Path pathElements={pathData}  basePath={`/computing/vms/${vmId}`}/>
-          {renderSectionContent()}
+          <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
         </div>
       </div>
 

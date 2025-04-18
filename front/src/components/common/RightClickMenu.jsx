@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import useUIState from "../../hooks/useUIState";
+import useContextMenu from "../../hooks/useContextMenu";
 import useGlobal from "../../hooks/useGlobal";
 import useClickOutside from "../../hooks/useClickOutside";
 import DataCenterModals from "../modal/datacenter/DataCenterModals";
@@ -23,10 +23,12 @@ import Logger from "../../utils/Logger";
  * @returns {JSX.Element} 화면
  */
 const RightClickMenu = () => {
-  const { 
+  const {
     activeModal, setActiveModal,
+  } = useGlobal()
+  const { 
     contextMenu, contextMenuType, clearAllContextMenu
-  } = useUIState()
+  } = useContextMenu()
   const { 
     datacentersSelected, setDatacentersSelected,
     clustersSelected, setClustersSelected,
@@ -39,11 +41,13 @@ const RightClickMenu = () => {
   
   const menuRef = useRef(null); // ✅ context menu 영역 참조
   useClickOutside(menuRef, (e) => {
-    if (contextMenu() !== null) {
+    if (contextMenu() === null) {
       return;
     }
-    clearAllContextMenu();
-    clearAllSelected()
+    setTimeout(() => {
+      clearAllContextMenu();
+    }, 1000)
+    // clearAllSelected() // TOOD: 문제가 많음.... (VM마이그레이션 체크 풀 때)
   })
 
   Logger.debug(`RightClickMenu ... `)
@@ -64,7 +68,7 @@ const RightClickMenu = () => {
         // datacenterId={}  // TODO: 선택 된 호스트 모달의 datacenterId 찾기
       />
       <VmModals vm={vmsSelected[0] ?? null} />
-      {(contextMenu() && contextMenuType()) ? (
+      {(contextMenu() !== null && contextMenuType() !== null) ? (
         <div id="right-click-menu-box"
           className="right-click-menu-box context-menu-item"
           ref={menuRef}

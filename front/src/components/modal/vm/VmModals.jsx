@@ -69,8 +69,8 @@ const VmModals = ({
           "vm:reset",
           "vm:shutdown",
           "vm:powerOff",
-        ].includes(activeModal)}
-        action={activeModal}
+        ].includes(activeModal())}
+        action={activeModal()}
         data={vmsSelected}
         onClose={() => setActiveModal(null)}
       />

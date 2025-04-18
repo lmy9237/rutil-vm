@@ -617,7 +617,7 @@ export default HostNics;
 //   const [selectedBonding, setSelectedBonding] = useState(null);
 //   const [selectedNetwork, setSelectedNetwork] = useState(null);
 
-//   const [contextMenu, setContextMenu] = useState(null);
+//   const [contextMenu, setContextMenu] = useContextMenu(null);
 //   const [isBondingPopupOpen, setIsBondingPopupOpen] = useState(false);
 //   const [isNetworkEditPopupOpen, setIsNetworkEditPopupOpen] = useState(false);
   

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Modal from "react-modal";
 import useUIState from "../../hooks/useUIState";
+import useContextMenu from "../../hooks/useContextMenu";
 import { RVI24, rvi24Close, rvi24ErrorRed } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
@@ -24,7 +25,7 @@ const BaseModal = ({
   extraFooter = null, 
   ...props
 }) => {
-  const { clearAllContextMenu } = useUIState()
+  const { clearAllContextMenu } = useContextMenu()
 
   useEffect(() => {
     Logger.debug(`BaseModal > useEffect ...`)

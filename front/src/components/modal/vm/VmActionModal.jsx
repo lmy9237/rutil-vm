@@ -11,8 +11,14 @@ import {
 } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import Localization from "../../../utils/Localization";
+import useUIState from "../../../hooks/useUIState";
 
-const VmActionModal = ({ isOpen, action, data, onClose }) => {  
+const VmactiveModal = ({
+  isOpen,
+  data,
+  onClose
+}) => {  
+  const { activeModal } = useUIState()
   const getContentLabel = () => {
     const labels = {
       "vm:start": "실행",
@@ -22,12 +28,12 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
       "vm:shutdown": "종료",
       "vm:powerOff": "전원을 Off",
     };
-    return labels[action] || "";
+    return labels[activeModal()] || "";
   };
 
   const onSuccess = () => {
     onClose();
-    toast.success(`${Localization.kr.VM} ${getContentLabel(action)} 완료`);
+    toast.success(`${Localization.kr.VM} ${getContentLabel(activeModal())} 완료`);
   };
   const { mutate: startVM } = useStartVM(onSuccess, () => onClose());
   const { mutate: pauseVM } = usePauseVM(onSuccess, () => onClose()); // 일시중지
@@ -53,7 +59,7 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
   };
 
   const handleFormSubmit = () => {
-    Logger.debug("VmActionModal > handleFormSubmit ... ");
+    Logger.debug("VmactiveModal > handleFormSubmit ... ");
     if (!ids.length) {
       const msgErr = "ID가 없습니다."
       toast.error(msgErr);
@@ -69,16 +75,16 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
       powerOff: powerOffVM,
     };
 
-    const actionFn = actionMap[action];
-    if (!actionFn) { return toast.error(`알 수 없는 액션: ${action}`) }
+    const actionFn = actionMap[activeModal()];
+    if (!actionFn) { return toast.error(`알 수 없는 액션: ${activeModal()}`) }
     handleAction(actionFn);
   };
 
   return (
-    <BaseModal targetName={Localization.kr.VM} submitTitle={getContentLabel(action)}
+    <BaseModal targetName={Localization.kr.VM} submitTitle={getContentLabel(activeModal())}
       isOpen={isOpen} onClose={onClose}      
       onSubmit={handleFormSubmit}
-      promptText={`${names.join(", ")} 를(을) ${getContentLabel(action)}하시겠습니까?`}
+      promptText={`${names.join(", ")} 를(을) ${getContentLabel(activeModal())}하시겠습니까?`}
       contentStyle={{ width: "650px"}} 
       shouldWarn={true}
     >
@@ -86,4 +92,4 @@ const VmActionModal = ({ isOpen, action, data, onClose }) => {
   );
 };
 
-export default VmActionModal;
+export default VmactiveModal;
