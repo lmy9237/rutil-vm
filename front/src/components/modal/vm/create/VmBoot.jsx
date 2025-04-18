@@ -53,27 +53,33 @@ const VmBoot = ({ isos, isIsoLoading, formBootState, setFormBootState }) => {
       </div>
 
       <div className="boot-checkboxs flex">
-        <LabelCheckbox id="connectCdDvd" label="CD/DVD 연결"
-          checked={formBootState.isCdDvdChecked}
-          onChange={(e) => {
-            const isChecked = e.target.checked;
-            setFormBootState((prev) => ({
-              ...prev,
-              isCdDvdChecked: isChecked,
-              connVo: isChecked ? { id: isos[0]?.id || "" } : { id: "" },
-            }));
-          }}
-        />
-        <LabelSelectOptionsID
-          value={formBootState.connVo?.id}
-          disabled={!formBootState.isCdDvdChecked || isos.length === 0}
-          loading={isIsoLoading}
-          options={isos}
-          onChange={(e) => {
-            const selected = isos.find(i => i.id === e.target.value)
-            if (selected) setFormBootState((prev) => ({ ...prev, connVo: { id: selected.id, name: selected.name }}))
-          }}
-        />
+
+          <div className="ee">
+          <LabelCheckbox id="connectCdDvd" label="CD/DVD 연결"
+            checked={formBootState.isCdDvdChecked}
+            onChange={(e) => {
+              const isChecked = e.target.checked;
+              setFormBootState((prev) => ({
+                ...prev,
+                isCdDvdChecked: isChecked,
+                connVo: isChecked ? { id: isos[0]?.id || "" } : { id: "" },
+              }));
+            }}
+          />
+    </div>
+
+          <LabelSelectOptionsID
+            value={formBootState.connVo?.id}
+            className="ii"
+            disabled={!formBootState.isCdDvdChecked || isos.length === 0}
+            loading={isIsoLoading}
+            options={isos}
+            onChange={(e) => {
+              const selected = isos.find(i => i.id === e.target.value)
+              if (selected) setFormBootState((prev) => ({ ...prev, connVo: { id: selected.id, name: selected.name }}))
+            }}
+          />
+      
       </div>
       <LabelCheckbox id="enableBootMenu" label="부팅 메뉴를 활성화"
         checked={formBootState.bootingMenu}

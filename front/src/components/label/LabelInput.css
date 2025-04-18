@@ -1,6 +1,4 @@
-input{
-  cursor: pointer;
-}
+
 .input-text,
 .input-select,
 .input-password,
@@ -17,6 +15,7 @@ input[type="password"],
 select,
 .custom-select-box{
   width:55%;
+  cursor: pointer;
   border: var(--border-btn);border-radius: 1px;
   font-size: var(--fs-default);
   padding: 2px;
@@ -38,6 +37,7 @@ input[type="radio"] {
   margin-right: 6px;
   width: 16px;height: 16px;
   display: flex;
+  cursor: pointer;
   justify-content: center;
   align-items: center;
 }
@@ -51,6 +51,7 @@ input[type="radio"] {
   font-size: var(--fs-default);
 }
 
+.custom-select-box.disabled ,
 .custom-select.disabled {
   color: #888888;
   cursor: not-allowed;
@@ -73,7 +74,7 @@ input[type="radio"] {
 }
 
 .custom-option {
-  height: 28px;
+  min-height: 28px;
   padding: 0 5px;
   display: flex;
   align-items: center;

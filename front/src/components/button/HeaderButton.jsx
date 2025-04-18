@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import useClickOutside from "../../hooks/useClickOutside";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { RVI24 } from "../icons/RutilVmIcons";

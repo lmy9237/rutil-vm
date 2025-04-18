@@ -53,13 +53,6 @@
   margin-bottom: 0.7%;
   display: block;
 }
-
-.boot-checkboxs .input-select{
-  width: 122%;
-}
-.boot-checkboxs select{
-  width: 100% !important;
-}
 .edit-third-content > div:nth-child(2) > button {
   margin-right: 0.2rem;
 }
@@ -122,13 +115,6 @@
   border-bottom: 1px solid gray;
 }
 
-/*스냅샷 생성*/
-.snapshot-new-table {
-  max-height: 21vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
 /*..버튼 가져오기 팝업*/
 .vm-impor-outer {
   display: grid;
@@ -169,12 +155,7 @@
  width: 100%;
   padding: 10px;
 }
-/*ova내보내기*/
-.ova-new-box {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.2rem;
-}
+
 /**/
 .nic-toggle{
   width: 59%;

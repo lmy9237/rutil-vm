@@ -7,6 +7,7 @@ import Localization from "../../../utils/Localization";
 import "./MVm.css";
 import Logger from "../../../utils/Logger";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
+import useGlobal from "../../../hooks/useGlobal";
 
 const initialFormState = {
   id: "",
@@ -14,10 +15,12 @@ const initialFormState = {
   persistMemory: true, // 메모리 저장 
 };
 
-const VmSnapshotModal = ({ isOpen, selectedVm, onClose }) => {
+const VmSnapshotModal = ({ isOpen, onClose }) => {
   const [formState, setFormState] = useState(initialFormState);
 
-  // SUSPENDED 일시중지 상태라면 스냅샷 생성 자체가 안되는거 같음
+  const { vmsSelected } = useGlobal(); // ✅ vmsSelected 직접 읽기
+  const selectedVm = vmsSelected?.[0] ?? null; // ✅ 첫 번째 VM 기준으로
+
   const onSuccess = () => {
     onClose();
     toast.success(`${Localization.kr.SNAPSHOT} 생성 완료`);
@@ -25,7 +28,7 @@ const VmSnapshotModal = ({ isOpen, selectedVm, onClose }) => {
   const { mutate: addSnapshotFromVM } = useAddSnapshotFromVM(onSuccess, () => onClose());
   
   useEffect(() => {
-    if (isOpen ) {
+    if (isOpen  && selectedVm) {
       const now = new Date();
       const pad = (n) => n.toString().padStart(2, "0");
 

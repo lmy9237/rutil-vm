@@ -47,7 +47,7 @@ const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"가상 어플라이언스로 가상 머신 내보내기"}
+      targetName={"가상 어플라이언스로 가상 머신"}
       submitTitle={"내보내기"}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "600px"}} 
