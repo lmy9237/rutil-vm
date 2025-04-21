@@ -37,16 +37,16 @@ const RightClickMenu = () => {
     contextMenu, contextMenuType, clearAllContextMenu
   } = useContextMenu()
   const { 
-    datacentersSelected, setDatacentersSelected,
-    clustersSelected, setClustersSelected,
-    hostsSelected, setHostsSelected,
-    vmsSelected, setVmsSelected,
-    templatesSelected, setTemplatesSelected,
-    networksSelected, setNetworksSelected,
-    vnicProfilesSelected, setVnicProfilesSelected,
-    domainsSelected, setDomainsSelected,
-    disksSelected, setDisksSelected,
-    usersSelected, setUsersSelected,
+    datacentersSelected, // setDatacentersSelected,
+    clustersSelected, // setClustersSelected,
+    hostsSelected, // setHostsSelected,
+    vmsSelected, // setVmsSelected,
+    templatesSelected, // setTemplatesSelected,
+    networksSelected, // setNetworksSelected,
+    vnicProfilesSelected, // setVnicProfilesSelected,
+    domainsSelected, // setDomainsSelected,
+    disksSelected, // setDisksSelected,
+    usersSelected, // setUsersSelected,
     sourceContext,
     clearAllSelected,
   } = useGlobal()
@@ -63,7 +63,7 @@ const RightClickMenu = () => {
     <>
       <DataCenterModals dataCenter={datacentersSelected[0] ?? null} />
       <ClusterModals cluster={clustersSelected[0] ?? null} />
-      <HostModals host={hostsSelected[0] ?? null} /> 
+      <HostModals host={hostsSelected[0] ?? null} />
       <VmModals vm={vmsSelected[0] ?? null} />
       <TemplateModals template={templatesSelected[0] ?? null} />
       <NetworkModals network={networksSelected[0] ?? null} />

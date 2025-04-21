@@ -6,22 +6,11 @@ const UIStateContext = createContext({});
 export const UIStateProvider = ({ children }) => {
   const KEY_UI_STATE = "uiState";
   const KEY_CURRENT_PAGE = "currentPage"                              /* 현재위치 (in File) */
-  const KEY_ASIDE_VISIBLE = "asideVisible"                            /* aside 표출여부 */
-  const KEY_ASIDE_DRAGGING = "asideDragging"                          /* aside 표출여부 */
-  const KEY_ASIDE_OFFSET_X = "asideOffsetX"                           /* aside 표출여부 */
   
   const KEY_ACTIVE_MODAL = "activeModal";                             /* (활성화 된) 모달 */
-  const KEY_CONTEXT_MENU_CLIENT_X = "clientX";                        /* 우클릭 팝업 표츨 X좌표 */
-  const KEY_CONTEXT_MENU_CLIENT_Y = "clientY";                        /* 우클릭 팝업 표츨 Y좌표 */
-  const KEY_CONTEXT_MENU_ITEM = "item";                               /* 우클릭 팝업 내용물 */
-  const KEY_CONTEXT_MENU_TREE_TYPE = "treeType";                      /* 우클릭 팝업 트리유형 (예: "network", "storage", "computing") */
 
   const initialState = JSON.parse(sessionStorage.getItem(KEY_UI_STATE)) ?? {
-  [KEY_CURRENT_PAGE]: "",
-    [KEY_ASIDE_VISIBLE]: true,
-    [KEY_ASIDE_DRAGGING]: false,
-    [KEY_ASIDE_OFFSET_X]: 0,
-
+    [KEY_CURRENT_PAGE]: "",
     [KEY_ACTIVE_MODAL]: null,
   }
   const [sUIState, sSetUIState] = useState(initialState)
@@ -44,21 +33,6 @@ export const UIStateProvider = ({ children }) => {
   
   //#endregion: 현재 위치 (in File)
 
-  //#region: 왼쪽메뉴 활성화
-  const asideVisible = () => _UIState()[KEY_ASIDE_VISIBLE] ?? false;
-  const setAsideVisible = (newV) => {
-    Logger.debug(`UIStateProvider > setAsideVisible ... newV: ${newV}`)
-    _setUIState({
-      ...sUIState,
-      [KEY_ASIDE_VISIBLE]: newV
-    });
-  }
-  const toggleAsideVisible = () => {
-    Logger.debug(`UIStateProvider > toggleAsideVisible`)
-    setAsideVisible(!asideVisible())
-  }
-  //#endregion: 왼쪽메뉴 활성화
-
   //#region: 활성화 된 모달
   const activeModal = () => _UIState()[KEY_ACTIVE_MODAL] ?? null;
   const setActiveModal = (newV) => {
@@ -73,9 +47,8 @@ export const UIStateProvider = ({ children }) => {
   return (
     <UIStateContext.Provider value={
       {
-        sUIState, _setUIState,
+        _setUIState,
         currentPage, setCurrentPage,
-        asideVisible, setAsideVisible, toggleAsideVisible,
         activeModal, setActiveModal,
       }
     }>

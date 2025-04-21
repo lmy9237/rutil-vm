@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import RutilVmLogo from "../../components/common/RutilVmLogo";
 import IconInput from "../../components/Input/IconInput";
@@ -54,10 +54,10 @@ const Login = () => {
     setErrMsg('')
   }, [username, password])
 
-  const doLogin = (e) => {
+  const doLogin = useCallback((e) => {
     e.preventDefault();
     authMutate(username, password)
-  };
+  }, [username, password]);
 
   return (
     <>

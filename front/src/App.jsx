@@ -5,6 +5,7 @@ import { scan } from "react-scan";
 import useUIState from "./hooks/useUIState";
 import useBoxState from "./hooks/useBoxState";
 import useTmi from "./hooks/useTmi";
+import useAsideState from "./hooks/useAsideState";
 import useFooterState from "./hooks/useFooterState";
 // import STOMP from "./Socket";
 import Layout from "./components/Layout";
@@ -42,7 +43,8 @@ const App = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const { footerJobRefetchInterval, setFoooterJobRefetchInterval } = useFooterState()
-  const { setActiveModal, setAsideVisible, } = useUIState()
+  const { setActiveModal, } = useUIState()
+  const { setAsideVisible } = useAsideState()
   const { setLoginBoxVisible, setEventBoxVisible, } = useBoxState()
 
   const { setTmiLastSelected } = useTmi()

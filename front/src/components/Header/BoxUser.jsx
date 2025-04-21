@@ -1,12 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import useBoxState from "../../hooks/useBoxState";
 import useUIState from "../../hooks/useUIState";
-import useGlobal from "../../hooks/useGlobal";
 import useClickOutside from "../../hooks/useClickOutside";
-import SettingUsersModal from "../modal/settings/SettingUsersModal";
 import Logger from "../../utils/Logger";
 import { useUser } from "../../api/RQHook";
 import "./BoxUser.css";
@@ -20,33 +18,32 @@ import "./BoxUser.css";
 const BoxUser = ({}) => {
   const navigate = useNavigate();
   const { auth, setAuth } = useAuth();
-  const { setUsersSelected, clearAllSelected } = useGlobal()
   const { 
     data: user,
     isLoading: isUserLoading,
     isSuccess: isUserSuccess
   } = useUser(auth.username, true);
 
-  const { activeModal, setActiveModal, } = useUIState();
-  const { loginBoxVisible, setLoginBoxVisible } = useBoxState()
-  
+  const { setActiveModal, } = useUIState();
+  const { setLoginBoxVisible } = useBoxState()
+
   const userBoxRef = useRef(null);
   useClickOutside(userBoxRef, (e) => {
-    if (loginBoxVisible()) {
-      clearAllSelected();
-    }
+    setLoginBoxVisible(false)
   });
 
-  const doLogout = (e) => {
+  const doLogout = useCallback((e) => {
     Logger.debug("Header > doLogout ...");
     e.preventDefault();
     setAuth({});
     navigate("/login");
-  };
+  }, [])
 
   return (
     <>
-      <div ref={userBoxRef} className="box-user" >
+      <div ref={userBoxRef}
+        className="box-user"
+      >
         <div onClick={(e) => {
           e.stopPropagation()
           if (!user) {
@@ -58,10 +55,6 @@ const BoxUser = ({}) => {
         }}>계정설정</div>
         <div onClick={(e) => doLogout(e)}>로그아웃</div>
       </div>
-      <SettingUsersModal key={activeModal()} isOpen={activeModal() === "user:changePassword"} 
-        onClose={() => setActiveModal(null)} 
-        changePassword
-        user={user?.id} />
     </>
   );
 };

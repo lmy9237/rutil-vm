@@ -9,7 +9,6 @@ import Logger from "../utils/Logger";
 import "./Home.css"
 
 const Home = () => {
-  const [_footerOffsetY, _setFooterOffsetY] = useState(10)
   const {
     footerVisible, toggleFooterVisible,
     footerDragging, setFooterDragging,
@@ -17,35 +16,6 @@ const Home = () => {
     footerJobRefetchInterval
   } = useFooterState()
 
-  /*
-  const handleMouseDown = (e) => {
-    Logger.debug(`JobFooter > handleMouseDown ... `)
-    setFooterDragging(true)
-  }
-  
-  useEffect(() => {
-    if (!footerDragging()) {
-      setFooterOffsetY(_footerOffsetY)
-      return;
-    }
-  
-    const handleMouseMove = (e) => {
-      _setFooterOffsetY(Math.max(0, e.clientY));
-    };
-    const handleMouseUp = () => {
-      setFooterDragging(false);
-    };
-  
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [footerDragging]);
-  */
-
-  Logger.debug(`Home ...`)
   return (
     <>
       <Header/>
@@ -54,9 +24,16 @@ const Home = () => {
       </MainOuter>
       
       {/* 드래그바 */}
-      <div className="footer-resizer f-center"
+      {/* <div className="footer-resizer f-center"
+        onMouseDown={handler}
+        style={{
+          bottom: `${footerHeight}px`
+        }}
       />
-      <JobFooter/>
+      <JobFooter
+        style={{ height: `${footerHeight}px` }}
+      /> */}
+      <JobFooter />
       <RightClickMenu />
     </>
   );

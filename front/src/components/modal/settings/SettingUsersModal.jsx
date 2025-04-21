@@ -32,8 +32,9 @@ const SettingUsersModal = ({
   const [formState, setFormState] = useState(initialFormState);
   const {
     data: userFound
-  } = useUser(usersSelected[0]?.id ?? user?.id)
-  const { 
+  } = useUser(usersSelected[0]?.username ?? user?.username)
+  
+  const {
     isLoading: isAddUserLoading,
     mutate: addUser,
   } = useAddUser({ ...formState });

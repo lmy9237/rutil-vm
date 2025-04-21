@@ -5,19 +5,15 @@ const FooterStateContext = createContext({});
 
 export const FooterStateProvider = ({ children }) => {
   const KEY_FOOTER_STATE = "footerState"
-  const KEY_FOOTER_VISIBLE = "footerVisible"                          /* Footer 표출여부 */
-  const KEY_FOOTER_DRAGGING = "footerDragging"                        /* Footer 높이조절 상태 */
-  const KEY_FOOTER_OFFSET_Y = "footerOffsetY"                         /* Footer 높이 */
+  const KEY_FOOTER_HEIGHT_IN_PX = "footerHeightInPx"                  /* Footer 높이 */
   const KEY_FOOTER_JOB_REFETCH_INTERVAL = "footerJobRefetchInterval"; /* 최근작업 조회 처리 주기 (기본 5초) */
   
   const initialState = JSON.parse(sessionStorage.getItem(KEY_FOOTER_STATE)) ?? {
-    [KEY_FOOTER_VISIBLE]: false,
-    [KEY_FOOTER_DRAGGING]: false,
-    [KEY_FOOTER_OFFSET_Y]: 0,
+    [KEY_FOOTER_HEIGHT_IN_PX]: 0,
     [KEY_FOOTER_JOB_REFETCH_INTERVAL]: 5000,
   }
   const [sFooterState, sSetFooterState] = useState(initialState)
-  const _footerState = () => Object.assign({}, sFooterState, JSON.parse(sessionStorage.getItem(KEY_FOOTER_STATE)))
+  const _footerState = () => Object.assign({}, JSON.parse(sessionStorage.getItem(KEY_FOOTER_STATE)), sFooterState)
   const _setFooterState = (newUIState) => {
     Logger.debug(`FooterStateProvider > _setFooterState ... newUIState: `, newUIState);
     sSetFooterState(newUIState)
@@ -25,45 +21,34 @@ export const FooterStateProvider = ({ children }) => {
   }
 
    //#region: Footer 표출
-   const footerVisible = () => _footerState()[KEY_FOOTER_VISIBLE] ?? false;
+   const footerVisible = () => _footerState()[KEY_FOOTER_HEIGHT_IN_PX] > 40;
    const setFooterVisible = (newV) => {
      Logger.debug(`UIStateProvider > setFooterVisible ... newV: ${newV}`)
      _setFooterState({
        ..._footerState,
-       [KEY_FOOTER_VISIBLE]: newV
+       [KEY_FOOTER_HEIGHT_IN_PX]: newV ? 168 : 40,
      })
    }
    const toggleFooterVisible = () => {
-     Logger.debug(`UIStateProvider > toggleFooterVisible ... `)
-     setFooterVisible(!footerVisible())
+    Logger.debug(`UIStateProvider > toggleFooterVisible ... `)
+   const newV = !footerVisible()
+   _setFooterState({
+      ..._footerState,
+      [KEY_FOOTER_HEIGHT_IN_PX]: newV ? 168 : 40,
+    })
    }
    //#endregion: Footer 표출
  
-   //#region: Footer 높이조절 상태
-   const footerDragging = () => _footerState()[KEY_FOOTER_DRAGGING] ?? false;
-   const setFooterDragging = (newV) => {
-     Logger.debug(`UIStateProvider > setFooterDragging ... newV: ${newV}`)
+   //#region: Footer 높이조절
+   const footerHeightInPx = () => _footerState()[KEY_FOOTER_HEIGHT_IN_PX] ?? 0;
+   const setFooterHeightInPx = (newV) => {
+     Logger.debug(`UIStateProvider > setFooterHeightInPx ... newV: ${newV}`)
      _setFooterState({
        ..._footerState,
-       [KEY_FOOTER_DRAGGING]: newV
+       [KEY_FOOTER_HEIGHT_IN_PX]: newV
      })
    }
-   const toggleFooterDragging = () => {
-     Logger.debug(`UIStateProvider > toggleFooterDragging ... `)
-     setFooterDragging(!footerDragging())
-   }
-   //#endregion: Footer 높이조절 상태
- 
-   //#endregion: Footer 높이
-   const footerOffsetY = () => _footerState()[KEY_FOOTER_OFFSET_Y] ?? 0;
-   const setFooterOffsetY = (newV) => {
-     Logger.debug(`UIStateProvider > setFooterOffsetY ... newV: ${newV}`)
-     _setFooterState({
-       ..._footerState,
-       [KEY_FOOTER_OFFSET_Y]: parseInt(newV)
-     })
-   }
-   //#endregion: Footer 높이
+   //#endregion: Footer 높이조절
  
  
    //#region: 최근작업 조회 처리 주기 (기본 5초)
@@ -77,13 +62,11 @@ export const FooterStateProvider = ({ children }) => {
    }
    //#endregion: 최근작업 조회 처리 주기 (기본 5초)
 
-  Logger.debug(`FooterStateProvider ... `)
   return (
     <FooterStateContext.Provider value={
       {
         footerVisible, setFooterVisible, toggleFooterVisible,
-        footerDragging, setFooterDragging, toggleFooterDragging,
-        footerOffsetY, setFooterOffsetY,
+        footerHeightInPx, setFooterHeightInPx,
         footerJobRefetchInterval, setFooterJobRefetchInterval, 
       }
     }>

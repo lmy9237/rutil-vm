@@ -1,13 +1,11 @@
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import useUIState from "../../hooks/useUIState";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
 import SelectedIdView from "../../components/common/SelectedIdView";
 import SearchBox from "../../components/button/SearchBox";
 import SettingUsersActionButtons from "../../components/dupl/SettingUsersActionButtons";
-import SettingUsersModals from "../../components/modal/settings/SettingUsersModals";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import TablesOuter from "../../components/table/TablesOuter";
 import {
@@ -16,7 +14,6 @@ import {
 } from "../../components/icons/RutilVmIcons";
 import { useAllUsers } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
-
 
 /**
  * @name SettingUsers
@@ -79,9 +76,6 @@ const SettingUsers = () => {
       />
 
       <SelectedIdView items={usersSelected} />
-      
-      {/* 사용자 설정 모달창 */}
-      <SettingUsersModals user={usersSelected[0]} />
     </div>
   );
 };

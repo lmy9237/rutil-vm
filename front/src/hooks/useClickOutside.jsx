@@ -17,7 +17,6 @@ const useClickOutside = (
   const callbackRef = useRef(null)
   callbackRef.current = callback
 
-  const stopPropagation = (e) => e.stopPropagation();
   const handleClickOutside = (e) => {
     Logger.debug(`hooks > useClickOutside ... closestElements: `, closestElements)
     if (
@@ -26,7 +25,7 @@ const useClickOutside = (
       callbackRef?.current
     ) {
       Logger.debug(`hooks > useClickOutside ... callback will TRIGGER`)
-      stopPropagation(e)
+      // e.stopPropagation();
       callbackRef.current(e)
     }
   }

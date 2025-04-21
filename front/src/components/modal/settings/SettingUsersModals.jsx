@@ -56,4 +56,4 @@ const SettingUsersModals = ({
   );
 }
 
-export default SettingUsersModals
+export default React.memo(SettingUsersModals)

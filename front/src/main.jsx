@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from "./context/AuthProvider"
 import { GlobalProvider } from "./context/GlobalProvider";
+import { AsideStateProvider } from "./context/AsideStateProvider";
 import { FooterStateProvider } from "./context/FooterStateProvider";
 import { BoxStateProvider } from './context/BoxStateProvider'
 import { ContextMenuStateProvider } from "./context/ContextMenuStateProvider";
@@ -29,17 +30,19 @@ root.render(
           <AuthProvider>
             {/* <EventsProvider> */}
             <UIStateProvider>
-              <FooterStateProvider>
-                <BoxStateProvider>
-                  <ContextMenuStateProvider>
-                    <TMIStateProvider>
-                      <Routes>
-                        <Route path="/*" element={<App />}/>
-                      </Routes>
-                    </TMIStateProvider>
-                  </ContextMenuStateProvider>
-                </BoxStateProvider>
-              </FooterStateProvider>
+              <AsideStateProvider>
+                <FooterStateProvider>
+                  <BoxStateProvider>
+                    <ContextMenuStateProvider>
+                      <TMIStateProvider>
+                        <Routes>
+                          <Route path="/*" element={<App />}/>
+                        </Routes>
+                      </TMIStateProvider>
+                    </ContextMenuStateProvider>
+                  </BoxStateProvider>
+                </FooterStateProvider>
+              </AsideStateProvider>
             </UIStateProvider>
             {/* </EventsProvider> */}
           </AuthProvider>

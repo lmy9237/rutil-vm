@@ -1,11 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import useAsideState from "../../hooks/useAsideState";
 import useBoxState from "../../hooks/useBoxState";
 import useUIState from "../../hooks/useUIState";
 import BoxEvent from "./BoxEvent";
 import BoxUser from "./BoxUser";
-import SettingUsersModal from "../modal/settings/SettingUsersModal";
 import {
   LogoIcon,
   TopMenuIcon,
@@ -16,7 +15,6 @@ import {
   rvi24PersonCircle,
   rvi24BellNew,
 } from "../icons/RutilVmIcons";
-import { useUser } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 import "./Header.css";
 
@@ -29,19 +27,12 @@ import "./Header.css";
  */
 const Header = () => {
   const navigate = useNavigate();
-  const {
-    activeModal, setActiveModal, toggleAsideVisible
-  } = useUIState();
+  const { toggleAsideVisible } = useAsideState();
   const {
     eventBadgeNum,
     eventBoxVisible, toggleEventBoxVisible,
     loginBoxVisible, toggleLoginBoxVisible,
   } = useBoxState()
-
-  const { auth } = useAuth()
-  const { 
-    data: user
-  } = useUser(auth.username, true)
 
   Logger.debug(`Header ...`)
   return (
@@ -49,7 +40,10 @@ const Header = () => {
       <div id="header-left" className="f-start">
         <TopMenuIcon 
           iconDef={rvi24Hamburger("white")} 
-          onClick={() => toggleAsideVisible()} />
+          onClick={(e) => {
+            e.stopPropagation()
+            toggleAsideVisible()
+          }} />
         <LogoIcon disableHover={true} 
           onClick={() => navigate("/")} />
       </div>
@@ -57,8 +51,7 @@ const Header = () => {
       <div id="header-right" className="f-end">
         {/* 새로고침 */}
         <TopMenuIcon
-          iconDef={rvi24Refresh("white")}
-          onClick={() => window.location.reload()}
+          iconDef={rvi24Refresh("white")} onClick={() => window.location.reload()}
         />
         {/* 설정 */}
         <TopMenuIcon
@@ -89,13 +82,6 @@ const Header = () => {
         />
         {loginBoxVisible() && <BoxUser />}
       </div>
-
-      <SettingUsersModal isOpen={activeModal() === "user:changePassword"}
-        onClose={() => setActiveModal(null)}
-        targetName={"사용자"}
-        user={user}
-        changePassword
-      />
     </div>
   );
 };
