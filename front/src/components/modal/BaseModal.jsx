@@ -49,7 +49,7 @@ const BaseModal = ({
             <RVI24 iconDef={rvi24Close} className="ml-4"/>
           </button>
         </div>
-        
+        <hr/>
         <div className="popup-contents">
           {(shouldWarn || promptText) && (
             <div className="popup-contents-prompt">
@@ -63,6 +63,7 @@ const BaseModal = ({
         </div>
 
         {/* 하단 버튼 */}
+        <hr/>
         <div className="edit-footer">
           {extraFooter ? (
             <>

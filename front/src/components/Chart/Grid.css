@@ -16,6 +16,7 @@
 .grid-item.warn { background-color: #F46C53; }
 .grid-item.norm { background-color: #FFC58A; }
 .grid-item.okay { background-color: #E7F2FF; }
+.grid-item.empty{ background-color: #F8F8F8} 
 .grid-item.disabled { background-color: #F8F8F8;cursor: not-allowed; }
 
 .grid-item:hover {

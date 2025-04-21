@@ -20,21 +20,20 @@ const VmSystem = ({
   };
 
   const handleCpuChange = (e) => {
-    Logger.debug(`VmSystem > handleCpuChange ... value: ${e.target.value}`)
     const value = e.target.value;
-    // 입력값이 빈 문자열이면 그대로 상태 업데이트만 (렌더링은 반영 안 함)
     if (value === "") {
       setFormSystemState((prev) => ({
         ...prev,
         cpuTopologyCnt: "",
+        cpuTopologySocket: "",
+        cpuTopologyCore: "",
+        cpuTopologyThread: "",
       }));
       return;
     }
-  
     const totalCpu = parseInt(value, 10);
-    if (isNaN(totalCpu) || totalCpu <= 0) {
-      return;
-    }
+    if (isNaN(totalCpu) || totalCpu <= 0) return;
+  
     setFormSystemState((prev) => ({
       ...prev,
       cpuTopologyCnt: totalCpu,
@@ -44,51 +43,61 @@ const VmSystem = ({
     }));
   };
   
-
   const handleSocketChange = (e) => {
-    const value = e.target.value
-    Logger.debug(`VmSystem > handleSocketChange ... value: ${value}`)
-    const socket = parseInt(value, 10);
-    const core = formSystemState.cpuTopologyCnt / socket;
-    const thread = formSystemState.cpuTopologyCnt / (socket * core)
-
+    const socket = parseInt(e.target.value, 10);
+    const totalCpu = formSystemState.cpuTopologyCnt;
+    if (!socket || socket <= 0 || !totalCpu) return;
+  
+    let core = 1;
+    let thread = 1;
+    if (totalCpu % socket === 0) {
+      core = totalCpu / socket;
+    } else {
+      core = 1;
+      thread = totalCpu / socket;
+    }
+  
+    const newThread = Math.round(totalCpu / (socket * core));
+  
     setFormSystemState((prev) => ({
       ...prev,
       cpuTopologySocket: socket,
-      cpuTopologyCore: core, // 나머지 값은 코어로 설정
-      cpuTopologyThread: thread, // 스레드는 기본적으로 1
+      cpuTopologyCore: core,
+      cpuTopologyThread: newThread > 0 ? newThread : 1,
     }));
   };
-
+  
   const handleCorePerSocketChange = (e) => {
-    const value = e.target.value
-    Logger.debug(`VmSystem > handleCorePerSocketChange ... value: ${value}`)
-    const core = parseInt(value, 10);
-    const thread = formSystemState.cpuTopologyCnt / core;
-    const socket = formSystemState.cpuTopologyCnt / (core * thread)
-
+    const core = parseInt(e.target.value, 10);
+    const totalCpu = formSystemState.cpuTopologyCnt;
+    const socket = formSystemState.cpuTopologySocket || 1;
+    if (!core || core <= 0 || !totalCpu) return;
+  
+    const newThread = Math.round(totalCpu / (socket * core));
+  
     setFormSystemState((prev) => ({
       ...prev,
-      cpuTopologySocket: socket,
       cpuTopologyCore: core,
-      cpuTopologyThread: thread, // 나머지 값은 스레드로 설정
+      cpuTopologyThread: newThread > 0 ? newThread : 1,
     }));
   };
-
+  
   const handleThreadPerCoreChange = (e) => {
-    const value = e.target.value
-    Logger.debug(`VmSystem > handleThreadPerCoreChange ... value: ${value}`)
-    const thread = parseInt(value, 10);
-    const core = formSystemState.cpuTopologyCnt / thread;
-    const socket = formSystemState.cpuTopologyCnt / (thread * core);
-
+    const thread = parseInt(e.target.value, 10);
+    const totalCpu = formSystemState.cpuTopologyCnt;
+    const socket = formSystemState.cpuTopologySocket || 1;
+    if (!thread || thread <= 0 || !totalCpu) return;
+  
+    const newCore = Math.round(totalCpu / (socket * thread));
+  
     setFormSystemState((prev) => ({
       ...prev,
-      cpuTopologySocket: socket,
-      cpuTopologyCore: core,
-      cpuTopologyThread: thread, // 나머지 값은 스레드로 설정
+      cpuTopologyThread: thread,
+      cpuTopologyCore: newCore > 0 ? newCore : 1,
     }));
-  }
+  };
+  
+  
   
 
   // 최대메모리: 메모리크기 x 4 , 할당할 실제 메모리: 메모리크기와 같음
@@ -118,14 +127,21 @@ const VmSystem = ({
   const [showCpuDetail, setShowCpuDetail] = useState(false); 
   const toggleCpuDetail = () => setShowCpuDetail(prev => !prev);
 
-  const selectionNumPredicate = (v) => ({ value: v, label: v, })
-  const selectionsSockets = () => calculateFactors(formSystemState.cpuTopologyCnt).map(selectionNumPredicate)
-  const selectionsCoresPerSocket = () => selectionsSockets()
+  const selectionNumPredicate = (v) => ({ value: v, label: v.toString() });
+
+  const selectionsSockets = () => {
+    const cpuCnt = formSystemState.cpuTopologyCnt;
+    if (!cpuCnt || isNaN(cpuCnt)) return [];
+    return calculateFactors(cpuCnt).map(selectionNumPredicate);
+  };
+  
+  const selectionsCoresPerSocket = () => selectionsSockets();
+  
   const selectionsThreadsPerCore = () => {
-    let threads = selectionsSockets()
-    threads.pop()
-    return threads;
-  }
+    const cpuCnt = formSystemState.cpuTopologyCnt;
+    if (!cpuCnt || isNaN(cpuCnt)) return [];
+    return calculateFactors(cpuCnt).map(selectionNumPredicate);
+  };
 
   return (
     <>

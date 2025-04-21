@@ -15,7 +15,6 @@
 
 /*네트워크(가져오기)*/
 .network-bring-table-outer h1 {
-  font-size: var(--fs-16);
   font-weight: 700;
   padding: 10px 0;
 }

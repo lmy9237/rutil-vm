@@ -116,7 +116,7 @@ const VmDisk = ({
           </div>     
         ))}
       </div>
-
+      <hr/>
       <Suspense fallback={<Loading/>}>
         {(isCreatePopupOpen || editDisk) && (
           <VmDiskModal

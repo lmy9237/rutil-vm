@@ -8,7 +8,11 @@ import useAuth from "../../hooks/useAuth";
 import Logger from "../../utils/Logger";
 import { useAuthenticate } from "../../api/RQHook";
 import "./Login.css";
-import backgroundImg from "./img/background-img.jpg";
+// import backgroundImg from "./img/background-img.jpg";
+import backgroundImg from "./img/background-img2.jpg";
+// import backgroundImg from "./img/background-img3.jpg";
+// import backgroundImg from "./img/background-img4.jpg";
+// import backgroundImg from "./img/background-img5.jpg";
 
 const Login = () => {
   // 모달 관련 상태 및 함수
@@ -91,20 +95,13 @@ const Login = () => {
               </button>
             </form>
           </div>
-          {/* <div style={{ width: '500px', height: '300px', position: 'relative' }}>
-            <img
-              src={backgroundImg}
-              alt="Background"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover', // ⭐ div 비율에 맞게 꽉 채우고 잘라내기
-                position: 'absolute',
-                top: 0,
-                left: 0,
-              }}
-            />
-          </div> */}
+        </div>
+        <div className="background-container">
+          <img
+            src={backgroundImg}
+            alt="Background"
+            className="background-image"
+          />
         </div>
       </div>
       <CompanyInfoFooter isBrief={true} />

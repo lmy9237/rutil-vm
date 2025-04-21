@@ -34,23 +34,30 @@ const VmNic = ({
   const handleAdd = () => {
     const newNic = {
       id: "",
-      name: `nic${nicsState.length + 1}`,
+      name: `NIC${nicsState.length + 1}`,
       vnicProfileVo: { id: "", },
     };
     setNicsState([...nicsState, newNic]);
   };
 
-  const handleRemove = (index) => {
-    const updated = [...nicsState];
-    updated.splice(index, 1);
-    setNicsState(updated);
+  const handleRemove = (indexToRemove) => {
+    const newValues = nicsState.filter((_, idx) => idx !== indexToRemove);
+  
+    // NIC 이름 다시 재정렬
+    const updatedValues = newValues.map((item, idx) => ({
+      ...item,
+      name: `NIC${idx + 1}`, // 소문자 nic+숫자
+    }));
+  
+    setNicsState(updatedValues);
   };
+  
 
   useEffect(() => {
     if (nicsState.length === 0) {
       setNicsState([{
         id: "",
-        name: "nic1",
+        name: "NIC1",
         vnicProfileVo: { id: "" }
       }]);
     }

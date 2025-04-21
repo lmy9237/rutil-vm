@@ -31,7 +31,8 @@ const Grid = ({
 
   const severity2Label = useCallback((value) => {
     Logger.debug(`Grid > severity2Label ... value: ${value}`)
-    if (value === 0 || value === null) return "disabled";
+    if (value === null) return "disabled";
+    if (value === 0) return "empty";
     if (value < 65) return "okay";
     else if (value >= 65 && value < 75) return "norm";
     else if (value >= 75 && value < 90) return "warn";

@@ -290,8 +290,11 @@ const Tables = ({
                 const isTableRowClick = isJSX && cellValue?.type?.name === "TableRowClick";
                 // const isBoolean = typeof cellValue === "boolean";
 
+                const isGiBOrPercent = 
+                typeof cellValue === "string" &&
+                (cellValue.trim().toLowerCase().endsWith("gib") || cellValue.trim().endsWith("%"));
                 // 아이콘, 체크박스 등은 가운데, TableRowClick은 왼쪽
-                const shouldCenter = (isJSX && !isTableRowClick);
+                const shouldCenter = (isJSX && !isTableRowClick) || isGiBOrPercent; 
                 // const shouldCenter = (isJSX && !isTableRowClick) || isBoolean;
                 const columnAlign = column?.align ?? (shouldCenter ? "center" : "left");
                 return (

@@ -52,7 +52,7 @@ const JobFooter = () => {
         {/* 상단 "최근작업" 바 */}
         <div
           className="footer f-start"
-          style={{ height: `40px` }}
+          style={{ height: `36px` }}
           onClick={(e) => {
             e.stopPropagation()
             toggleFooterVisible()

@@ -32,7 +32,7 @@ select,
   width: 100%;
   padding:7px 0;
   display: flex;
-  font-size: var(--fs-14);
+  font-size: var(--fs-default);
   align-items: center;
 }
 
@@ -45,8 +45,6 @@ input[type="radio"] {
   justify-content: center;
   align-items: center;
 }
-
-/* 옵션 박스 스타일 */
 
 /*select박스*/
 .custom-select-wrapper {
@@ -65,7 +63,7 @@ input[type="radio"] {
 }
 .custom-options {
   position: absolute;
-  top: 79%;
+  top: 75%;
   right: 0;
   width: 55%;
   background: white;
@@ -92,6 +90,12 @@ input[type="radio"] {
 .custom-option.selected {
   background-color: #EFF1F5;
   font-weight: 600;
+}
+.custom-select-box span{
+  width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .custom-select-box svg{
   aspect-ratio:1/1;width:var(--w-icon-tree) !important;

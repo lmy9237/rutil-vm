@@ -98,6 +98,43 @@ const HostNics = ({ hostId }) => {
       dragItem.current = null;
       return;
     }
+    if (source === "unassigned" && targetType === "empty") {
+      console.log("💥 '할당되지 않은 네트워크'를 '빈 NIC'에 붙임", item, "to NIC", targetId);
+    
+      const targetNic = nicDisplayList.find((nic) => nic.id === targetId);
+      if (!targetNic) {
+        dragItem.current = null;
+        return;
+      }
+    
+      const newNA = {
+        id: `temp-${item.id}-${targetNic.id}`,
+        inSync: true,
+        ipAddressAssignments: [],
+        hostVo: { id: host?.id, name: host?.name },
+        hostNicVo: { id: targetNic.id, name: targetNic.name },
+        networkVo: { id: item.id, name: item.name },
+        nameServerList: [],
+      };
+    
+      // 기존에 연결되어 있는 networkAttachment가 있다면 제거
+      const existingNA = filteredNAData.find((na) => na.networkVo.id === item.id);
+      if (existingNA) {
+        setDetachedNetworks((prev) => Array.from(new Set([...prev, existingNA.networkVo.id])));
+      }
+    
+      // 새로운 tempAttachments 추가
+      setTempAttachments((prev) => [
+        ...prev.filter((na) => na.networkVo.id !== item.id),
+        newNA,
+      ]);
+    
+      // detachedNetworks 정리
+      setDetachedNetworks((prev) => prev.filter((id, idx, self) => self.indexOf(id) === idx));
+    
+      dragItem.current = null;
+      return;
+    }
     
   
     dragItem.current = null;
@@ -420,7 +457,7 @@ const HostNics = ({ hostId }) => {
                     ) : (
                       <div className="empty-network-content container w-[41%] text-gray-400"
                         onDragOver={(e) => e.preventDefault()}
-                        onDrop={() => drop(nic.id, "nic")} 
+                          onDrop={() => drop(nic.id, "empty")} 
                       >
                         할당된 네트워크 없음
                       </div>
