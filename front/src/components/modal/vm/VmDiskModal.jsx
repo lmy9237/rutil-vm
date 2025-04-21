@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
@@ -73,7 +73,9 @@ const VmDiskModal = ({
 }) => {
   const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [activeTab, setActiveTab] = useState("img");
-  const handleTabClick = (tab) => { setActiveTab(tab) };
+  const handleTabClick = useCallback((tab) => { 
+    setActiveTab(tab) 
+  }, []);
   const [formState, setFormState] = useState(initialFormState);
   const [storageDomainVo, setStorageDomainVo] = useState({ id: "", name: "" });
   const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
@@ -90,7 +92,7 @@ const VmDiskModal = ({
   const { data: diskAttachment } = useDiskAttachmentFromVm(vmId, diskAttachmentId);
 
   // 선택한 데이터센터가 가진 도메인 가져오기
-  const { 
+  const {
     data: domains = [], 
     isLoading: isDomainsLoading 
   } = useAllActiveDomainsFromDataCenter(dataCenterId || vm?.dataCenterVo?.id, (e) => ({ ...e }));
@@ -114,7 +116,6 @@ const VmDiskModal = ({
       setStorageDomainVo({ id: domains[0].id, name: domains[0].name });
     }
   }, [domains, editMode, storageDomainVo.id]);
-  
   
   useEffect(() => {
     if (!editMode && diskProfiles && diskProfiles.length > 0) {
@@ -184,7 +185,6 @@ const VmDiskModal = ({
     }
   }, [editMode, initialDisk, hasBootableDisk]);
   
-
   const handleInputChange = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.value }));
   };
@@ -198,7 +198,7 @@ const VmDiskModal = ({
     if (selected) setVo({ id: selected.id, name: selected.name });
   }; 
 
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     Logger.debug(`VmDiskModal > validateForm ... `)
     if (!formState.alias) return `${Localization.kr.ALIAS}을 입력해주세요.`;
     if (checkKoreanName(formState.alias)) return `${Localization.kr.ALIAS}을 입력해주세요.`;
@@ -206,9 +206,9 @@ const VmDiskModal = ({
     if (!storageDomainVo.id) return `${Localization.kr.DOMAIN}을 선택해주세요.`;
     if (!diskProfileVo.id) return `${Localization.kr.DISK_PROFILE}을 선택해주세요.`;
     return null;
-  };
+  }, [formState, storageDomainVo, diskProfileVo]);
 
-  const handleOkClick = () => {
+  const handleOkClick = useCallback(() => {
     Logger.debug(`VmDiskModal > handleOkClick ... `)
     const error = validateForm();
     if (error) return toast.error(error);
@@ -229,13 +229,13 @@ const VmDiskModal = ({
       diskProfileVo: { id: selectedDiskProfile.id },
       isCreated: true,
     };
-    Logger.debug(`Form Data: ${JSON.stringify(newDisk, null, 2)}`);
+    Logger.debug(`VmDiskModal > handleOkClick ... Form Data: `, newDisk);
     onCreateDisk(newDisk);
     onClose();
-  };    
+  }, []);    
 
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = useCallback(() => {
     Logger.debug(`VmDiskModal > handleFormSubmit ... `)
     const error = validateForm();
     if (error) return toast.error(error);
@@ -247,7 +247,7 @@ const VmDiskModal = ({
 
     const selectedDomain = domains.find((dm) => dm.id === storageDomainVo.id);
     const selectedDiskProfile = diskProfiles.find((dp) => dp.id === diskProfileVo.id);
-    Logger.debug(`Form Data: ${JSON.stringify(selectedDomain, null, 2)}`);
+    Logger.debug(`VmDiskModal > handleFormSubmit ... Form Data: `, selectedDomain);
 
     // 전송 객체
     const dataToSubmit = {
@@ -272,7 +272,7 @@ const VmDiskModal = ({
     editMode
       ? editDiskVm({ vmId, diskAttachmentId: formState?.id, diskAttachment: dataToSubmit })
       : addDiskVm({ vmId, diskData: dataToSubmit });
-  };
+  }, [formState, storageDomainVo, diskProfileVo]);
 
   return (
     <BaseModal targetName={Localization.kr.DISK} submitTitle={dLabel}

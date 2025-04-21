@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import AreaChart from "./AreaChart";
 import Localization from "../../utils/Localization";
 
-const SuperAreaChart = ({ per, type }) => {
+const SuperAreaChart = ({ 
+  per,
+  type
+}) => {
   const [series, setSeries] = useState([]);
   const [datetimes, setDatetimes] = useState([]);
 
   // 날짜 변환 함수 (HH:mm 형식)
-  const formatDate = (isoDate) => {
+  const formatDate = useCallback((isoDate) => {
     const date = new Date(isoDate);
     return `${date.getHours().toString().padStart(2, "0")}:${date
       .getMinutes()
       .toString()
       .padStart(2, "0")}`;
-  };
+  }, []);
 
   useEffect(() => {
     if (Array.isArray(per) && per.length > 0) {
@@ -62,4 +65,4 @@ const SuperAreaChart = ({ per, type }) => {
   return <AreaChart series={series} datetimes={datetimes} />;
 };
 
-export default SuperAreaChart;
+export default React.memo(SuperAreaChart);

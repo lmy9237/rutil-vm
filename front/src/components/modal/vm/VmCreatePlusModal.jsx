@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -14,10 +14,9 @@ import Localization from "../../../utils/Localization";
  */
 const VmCreatePlusModal = ({ isOpen, onRequestClose }) => {
   const [activeTab, setActiveTab] = useState("img");
-
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     setActiveTab(tab);
-  };
+  }, []);
 
   return (
     <Modal

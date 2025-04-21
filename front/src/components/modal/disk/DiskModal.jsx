@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
@@ -73,9 +73,9 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
 
 
   const [activeTab, setActiveTab] = useState("img");
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     setActiveTab(tab);
-  };
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return setFormState(initialFormState);

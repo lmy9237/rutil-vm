@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import TablesOuter from "../../table//TablesOuter";
@@ -40,27 +40,28 @@ const VmConnectionPlusModal = ({
     status: e?.status === "UNINITIALIZED" ? "초기화되지 않음" : "UP",
   }));
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     setActiveTab(tab);
-  };
+  }, []);
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = useCallback(() => {
     Logger.debug("VmConnectionPlusModal > handleFormSubmit ... ")
     if (!selectedDiskId) {
       toast.error("디스크를 선택하세요!");
       return;
     }
     
-    const selectedDiskDetails = disks.find(
-      (disk) => disk.id === selectedDiskId
-    );
+    const selectedDiskDetails = disks.find((disk) => disk.id === selectedDiskId);
+    
     onSelectDisk(selectedDiskId, selectedDiskDetails);
     onClose();
-  };
+  }, [selectedDiskId]);
 
 
   // 제외된 디스크 ID를 필터링
-  const disks = rawDisks?.filter((disk) => !excludedDiskIds.includes(disk.id)) || [];
+  const disks = useMemo(() => (
+    rawDisks?.filter((disk) => !excludedDiskIds.includes(disk.id)) || []
+  ), [rawDisks]);
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}

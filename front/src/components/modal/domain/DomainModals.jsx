@@ -48,12 +48,6 @@ const DomainModals = ({
         domainId={domain?.id ?? domainsSelected[0]?.id}
       />
     ), import: (
-      // <DomainModal key={activeModal()} isOpen={activeModal() === "domain:import"}
-      //   onClose={() => setActiveModal()}
-      //   mode={activeModal()}
-      //   domainId={domain?.id}
-      // />  
-      
       <DomainImportModal
         key={activeModal()} isOpen={activeModal() === "domain:import"}
         onClose={() => setActiveModal()}

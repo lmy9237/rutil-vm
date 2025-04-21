@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
@@ -32,7 +32,7 @@ const SettingUsersModal = ({
   const [formState, setFormState] = useState(initialFormState);
   const {
     data: userFound
-  } = useUser(user?.id ?? usersSelected[0]?.id)
+  } = useUser(usersSelected[0]?.id ?? user?.id)
   const { 
     isLoading: isAddUserLoading,
     mutate: addUser,
@@ -68,7 +68,7 @@ const SettingUsersModal = ({
     });
   }, [isOpen, editMode, changePassword, userFound])
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = useCallback((e) => {
     e.preventDefault();
     Logger.debug("SettingUsersModal > handleFormSubmit ... ");
     const error = validateForm(editMode);
@@ -80,7 +80,7 @@ const SettingUsersModal = ({
     if (editMode) editUser();
     else if (changePassword) changePasswordUser();
     else addUser();
-  };
+  }, [editMode, changePassword]);
 
   const updateInput = (field) => (e) => {
     Logger.debug(`SettingUsersModal > updateInput ... field: ${field}`)

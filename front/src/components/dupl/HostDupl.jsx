@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
@@ -44,13 +45,16 @@ const HostDupl = ({
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  const handleNameClick = (id) => navigate(`/computing/hosts/${id}`);
-  const handleRefresh = () =>  {
+  const handleNameClick = useCallback((id) => {
+    navigate(`/computing/hosts/${id}`);
+  }, [navigate])
+
+  const handleRefresh = useCallback(() => {
     Logger.debug(`HostDupl > handleRefresh ... `)
     if (!refetch) return;
     refetch()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
@@ -77,7 +81,7 @@ const HostDupl = ({
 
       {/* 호스트 모달창 */}
       <HostModals host={hostsSelected[0]} 
-        clusterId={clusterId} 
+        clusterId={clusterId}
       />
     </div>
   );

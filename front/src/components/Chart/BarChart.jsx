@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
 import "./BarChart.css";
 
@@ -153,4 +153,4 @@ const BarChart = ({ names, percentages }) => {
   );
 };
 
-export default BarChart;
+export default React.memo(BarChart);

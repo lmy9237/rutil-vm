@@ -79,24 +79,25 @@ const DashboardBox = ({
  * @param {Array} boxItems 박스정보 목록
  * @returns
  */
-const DashboardBoxGroup = ({ boxItems }) => {
+const DashboardBoxGroup = ({ 
+  boxItems
+}) => {
   Logger.debug("DashboardBoxGroup ...");
   return (
     <div className="dash-boxs">
-      {boxItems &&
-        boxItems.map((e, i) => (
-          <DashboardBox key={i}
-            iconDef={e.iconDef}
-            title={e.title}
-            cntTotal={e.cntTotal} cntUp={e.cntUp} cntDown={e.cntDown}
-            alert={e.alert}
-            error={e.error}
-            warning={e.warning}
-            navigatePath={e.navigatePath}
-          />
-        ))}
+      {[...boxItems].map((e, i) => (
+        <DashboardBox key={i}
+          iconDef={e.iconDef}
+          title={e.title}
+          cntTotal={e.cntTotal} cntUp={e.cntUp} cntDown={e.cntDown}
+          alert={e.alert}
+          error={e.error}
+          warning={e.warning}
+          navigatePath={e.navigatePath}
+        />
+      ))}
     </div>
   );
 };
 
-export default DashboardBoxGroup;
+export default React.memo(DashboardBoxGroup);

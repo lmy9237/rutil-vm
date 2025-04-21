@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ComputingTree from "./tree/ComputingTree";
 import NetworkTree from "./tree/NetworkTree";
 import StorageTree from "./tree/StorageTree";
-import Logger from "../../utils/Logger";
 import useTmi from "../../hooks/useTmi";
 
 const SidebarTree = () => {
@@ -18,17 +17,15 @@ const SidebarTree = () => {
     }
   }, [tmiLastSelected])
 
-  // TODO: 처음 로딩시 적용은 ComputingTree 그 이후는 전의 메뉴로
-  Logger.debug(`SidebarTree ...`)
   return (
     <div className="aside-popup">
       {/* ✅ 가상머신 섹션 */}
-      {(tmiLastSelected === "computing" || tmiLastSelected === "dashboard") && <ComputingTree />} 
+      {tmiLastSelected === "computing" && <ComputingTree />} 
       {tmiLastSelected === "network" && <NetworkTree />}
       {tmiLastSelected === "storage" && <StorageTree />}
-      {tmiLastSelected === "event" && (renderedPreviously)}
+      {(tmiLastSelected === "event" || tmiLastSelected === "dashboard") && (renderedPreviously)}
     </div>
   );
 };
 
-export default SidebarTree;
+export default React.memo(SidebarTree);

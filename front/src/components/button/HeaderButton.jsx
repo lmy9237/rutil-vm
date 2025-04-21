@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { RVI24 } from "../icons/RutilVmIcons";
@@ -31,16 +31,15 @@ const HeaderButton = ({
   const togglePopupBox = () => setIsPopupBoxVisible(!isPopupBoxVisible);
 
   const [isCompactMode, setIsCompactMode] = useState(false);
-  const handlePopupBoxItemClick = (item) => {
+  /*const handlePopupBoxItemClick = (item) => {
     if (item.disabled) return;
     if (item.onClick) item.onClick();
     setIsPopupBoxVisible(false);
-  };
+  };*/
 
   useClickOutside(popupBoxRef, (e) => {
     setIsPopupBoxVisible(false);
   })
-
 
   // 버튼이 넘치면 compact 모드로
   useEffect(() => {
@@ -89,21 +88,19 @@ const HeaderButton = ({
               />
             ))}
 
-          {allPopupItems.length > 0 && (
-            <div
-              className="popup-container"
-              ref={popupBoxRef}
-            >
-              <button className="popup-btn" onClick={togglePopupBox}>
-                <FontAwesomeIcon icon={faEllipsisV} fixedWidth />
-              </button>
-              <PopupBox
-                isVisible={isPopupBoxVisible}
-                items={allPopupItems}
-                onClose={() => setIsPopupBoxVisible(false)}
-              />
-            </div>
-          )}
+          {allPopupItems.length > 0 && (<div
+            className="popup-container"
+            ref={popupBoxRef}
+          >
+            <button className="popup-btn" onClick={togglePopupBox}>
+              <FontAwesomeIcon icon={faEllipsisV} fixedWidth />
+            </button>
+            <PopupBox
+              isVisible={isPopupBoxVisible}
+              items={[...allPopupItems]}
+              onClose={() => setIsPopupBoxVisible(false)}
+            />
+          </div>)}
         </div>
       </div>
     </div>

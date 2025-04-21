@@ -64,7 +64,8 @@ const NetworkModal = ({
     data: datacenters = [], 
     isLoading: isDataCentersLoading 
   } = useAllDataCenters((e) => ({ ...e }));
-  const { 
+  
+  const {
     data: clusters = [], 
     isLoading: isClustersLoading,
     isError: isClustersError,

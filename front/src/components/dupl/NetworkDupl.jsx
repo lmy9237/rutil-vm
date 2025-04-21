@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUIState from "../../hooks/useUIState";
 import useGlobal from "../../hooks/useGlobal";
@@ -60,13 +60,16 @@ const NetworkDupl = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
 
-  const handleNameClick = (id) => navigate(`/networks/${id}`);
-  const handleRefresh = () =>  {
+  const handleNameClick = useCallback((id) => {
+    navigate(`/networks/${id}`);
+  }, [navigate])
+  
+  const handleRefresh = useCallback(() =>  {
     Logger.debug(`NetworkDupl > handleRefresh ... `)
     if (!refetch) return;
     refetch()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
   return (
     <div onClick={(e) => e.stopPropagation()}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import VmDeleteModal from "./VmDeleteModal";
@@ -12,14 +12,6 @@ import VmImportModal from "./VmImportModal";
 import Logger from "../../../utils/Logger";
 import "./MVm.css";
 
-const ACTIONS = [
-  "vm:start",
-  "vm:pause",
-  "vm:reboot",
-  "vm:reset",
-  "vm:shutdown",
-  "vm:powerOff",
-]
 /**
  * @name VmModals
  * @description 가상머신 모달 모음
@@ -29,6 +21,14 @@ const ACTIONS = [
 const VmModals = ({ 
   vm,
 }) => {
+  const ACTIONS = useMemo(() => ([
+    "vm:start",
+    "vm:pause",
+    "vm:reboot",
+    "vm:reset",
+    "vm:shutdown",
+    "vm:powerOff",
+  ]), [])
   const { activeModal, setActiveModal, } = useUIState()
   const { vmsSelected } = useGlobal()
 
@@ -95,4 +95,4 @@ const VmModals = ({
   );
 };
 
-export default VmModals;
+export default React.memo(VmModals);

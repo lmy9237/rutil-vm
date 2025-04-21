@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useUIState from "../../hooks/useUIState";
@@ -26,7 +26,6 @@ import Logger from "../../utils/Logger";
  */
 const SettingUsers = () => {
   const navigate = useNavigate()
-  const { activeModal, setActiveModal, } = useUIState()
   const { usersSelected, setUsersSelected } = useGlobal();
   
   const { 
@@ -35,11 +34,9 @@ const SettingUsers = () => {
     isError: isUsersError,
     isSuccess: isUsersSuccess,
     refetch: refetchUsers,
-  } = useAllUsers((e) => ({ 
-    ...e 
-  }));
+  } = useAllUsers((e) => ({ ...e  }));
   
-  const transformedData = (!Array.isArray(users) ? [] : users).map((e) => ({
+  const transformedData = [...users].map((e) => ({
     ...e,
     icon: (<RVI16 iconDef={rvi16Superuser}/>),
     isDisabled: (e.disabled),
@@ -48,19 +45,21 @@ const SettingUsers = () => {
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, TableColumnsInfo.SETTING_USER);
 
-  const showSearchBox = true
-  const handleNameClick = (id) => navigate(`/networks/${id}`);
-  const handleRefresh = () =>  {
+  const handleNameClick = useCallback((id) => {
+    navigate(`/networks/${id}`);
+  }, [navigate])
+    
+  const handleRefresh = useCallback(() => {
     Logger.debug(`SettingUsers > handleRefresh ... `)
     if (!refetchUsers) return;
     refetchUsers()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <SettingUsersActionButtons />
       </div>
       

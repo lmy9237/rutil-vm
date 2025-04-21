@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInputNum from "../../label/LabelInputNum";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import LabelInput from "../../label/LabelInput";
+import { checkName } from "../../../util";
+import Localization from "../../../utils/Localization";
+import DomainNfsImport from "./import/DomainNfsImport";
+import DomainFibreImport from "./import/DomainFibreImport";
+import DomainIscsiImport from "./import/DomainIscsiImport";
 import {
   useAllDataCenters,
   useHostsFromDataCenter,
@@ -13,12 +18,7 @@ import {
   useImportDomain,
   useLoginIscsiFromHost,
 } from "../../../api/RQHook";
-import { checkName } from "../../../util";
-import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
-import DomainNfsImport from "./import/DomainNfsImport";
-import DomainFibreImport from "./import/DomainFibreImport";
-import DomainIscsiImport from "./import/DomainIscsiImport";
 
 const domainTypes = [
   { value: "data", label: "데이터" },
@@ -26,19 +26,6 @@ const domainTypes = [
   { value: "export", label: "내보내기" },
 ];
 
-const storageTypeOptions = (dType) => {
-  switch (dType) {
-    case "iso":
-    case "export":
-      return [{ value: "nfs", label: "NFS" }];
-    default: // data
-      return [
-        { value: "nfs", label: "NFS" },
-        { value: "iscsi", label: "ISCSI" },
-        { value: "fcp", label: "Fibre Channel" },
-      ];
-  }
-};
 
 // 일반 정보
 const initialFormState = {
@@ -68,12 +55,9 @@ const loginFormState = {
 
 const DomainImportModal = ({
   isOpen,
-  // mode = "domain:import",
   datacenterId,
   onClose,
 }) => {
-  // const { data: domain } = useStroageDomain(domainId);
-
   const [formState, setFormState] = useState(initialFormState); // 일반정보
   const [formImportState, setFormImportState] = useState(importFormState); // 가져오기
   const [formLoginState, setFormLoginState] = useState(loginFormState); // 로그인
@@ -88,9 +72,9 @@ const DomainImportModal = ({
   const [iscsiResults, setIscsiResults] = useState([]); // 검색결과
   const [fcResults, setFcResults] = useState([]); // 검색결과
   
-  const isNfs = formState.storageType === "nfs";
-  const isIscsi = formState.storageType === "iscsi";
-  const isFibre = formState.storageType === "fcp";
+  const isNfs = formState.storageType === "nfs"
+  const isIscsi = formState.storageType === "iscsi"
+  const isFibre = formState.storageType === "fcp"
 
   const onSuccess = () => {
     onClose();
@@ -98,8 +82,6 @@ const DomainImportModal = ({
   };
   const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose()); // 가져오기 iscsi  
   const { mutate: importFcpFromHost } = useImportFcpFromHost(onSuccess, () => onClose()); // 가져오기 fibre
-
-  // const { mutate: loginIscsiFromHost } = useLoginIscsiFromHost(); // iscsi 로그인
 
   const { 
     data: dataCenters = [],
@@ -166,9 +148,25 @@ const DomainImportModal = ({
       setHostVo({id: hosts[0].id, name: hosts[0].name});
     }
   }, [hosts]);
+
+  
+  const storageTypeOptions = useCallback((dType) => {
+    switch (dType) {
+      case "iso":
+      case "export":
+        return [{ value: "nfs", label: "NFS" }];
+      default: // data
+        return [
+          { value: "nfs", label: "NFS" },
+          { value: "iscsi", label: "ISCSI" },
+          { value: "fcp", label: "Fibre Channel" },
+        ];
+    }
+  }, []);
   
 
   useEffect(() => {
+    Logger.debug(`DomainImportModal > useEffect ... 스토리지유형 설정`)
     const options = storageTypeOptions(formState.domainType);
     setStorageTypes(options);
 
@@ -179,7 +177,10 @@ const DomainImportModal = ({
   }, [formState.domainType]);
 
   const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
+    setFormState((prev) => ({ 
+      ...prev,
+      [field]: e.target.value
+    }));
   };
 
   const handleSelectIdChange = (setVo, voList) => (e) => {
@@ -230,7 +231,7 @@ const DomainImportModal = ({
       ...(formState.storageType === "nfs" && { storageAddress, storagePath }),
     };
 
-    Logger.debug(`DomainModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`);
+    Logger.debug(`DomainModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
     importDomain(dataToSubmit)
   };
 
@@ -248,7 +249,7 @@ const DomainImportModal = ({
             options={dataCenters}
             onChange={handleSelectIdChange(setDataCenterVo, dataCenters)}
           />
-          <LabelSelectOptions id="domain-type" label={`도메인 기능`}
+          <LabelSelectOptions id="domain-type" label={`도메인 유형`}
             value={formState.domainType}
             options={domainTypes}
             onChange={handleInputChange("domainType")}
@@ -292,8 +293,7 @@ const DomainImportModal = ({
 
       {/* ISCSI 의 경우 */}
       {isIscsi && (
-        <DomainIscsiImport
-          lunId={lunId} setLunId={setLunId}
+        <DomainIscsiImport lunId={lunId} setLunId={setLunId}
           hostVo={hostVo} setHostVo={setHostVo}
           formImportState={formImportState} setFormImportState={setFormImportState}
           iscsiResults={iscsiResults} setIscsiResults={setIscsiResults}
@@ -336,4 +336,4 @@ const DomainImportModal = ({
   );
 };
 
-export default DomainImportModal;
+export default React.memo(DomainImportModal);

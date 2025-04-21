@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
+import RightClickMenu from "./common/RightClickMenu";
 import { Outlet } from "react-router-dom";
-import useUIState from "../hooks/useUIState";
+import useFooterState from "../hooks/useFooterState";
 import Header from "./Header/Header";
 import MainOuter from "./mainouter/MainOuter";
 import JobFooter from "./footer/JobFooter";
 import Logger from "../utils/Logger";
 import "./Home.css"
-import useFooterState from "../hooks/useFooterState";
 
 const Home = () => {
   const [_footerOffsetY, _setFooterOffsetY] = useState(10)
@@ -57,6 +57,7 @@ const Home = () => {
       <div className="footer-resizer f-center"
       />
       <JobFooter/>
+      <RightClickMenu />
     </>
   );
 };

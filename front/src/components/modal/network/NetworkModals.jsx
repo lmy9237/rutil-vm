@@ -48,7 +48,7 @@ const NetworkModals = ({
         activeModal() === `network:${key}`
       ).map((key) => (
           <React.Fragment key={key}>{modals[key]}</React.Fragment>
-      ))}
+      ))}   
     </>
   );
 };

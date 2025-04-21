@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useUIState from "../../../hooks/useUIState";
@@ -65,22 +65,23 @@ const NetworkClusters = ({ networkId }) => {
   }));
   
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, TableColumnsInfo.CLUSTERS_FRON_NETWORK);
-  const showSearchBox = true
-  const handleNameClick = (id) => navigate(`/networks/${id}`);
-  const handleRefresh = () =>  {
+  const handleNameClick = useCallback((id) => {
+    navigate(`/networks/${id}`);
+  }, [navigate])
+
+  const handleRefresh = useCallback(() => {
     Logger.debug(`NetworkDupl > handleRefresh ... `)
     if (!refetchClusters) return;
     refetchClusters()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
   Logger.debug("NetworkClusters ... ");
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-btw">
-        {showSearchBox && <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />}
-        <ActionButton 
-          actionType="default"
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <ActionButton actionType="default"
           label={`${Localization.kr.NETWORK} 관리`}
           onClick={() => setActiveModal("network:manage")}
         />

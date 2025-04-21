@@ -1,8 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import ReactApexChart from "react-apexcharts";
 import "./AreaChart.css";
 
-const AreaChart = ({ series, datetimes }) => {
+const AreaChart = ({ 
+  series,
+  datetimes
+}) => {
   const chartContainerRef = useRef(null);
 
   const [options, setOptions] = useState({
@@ -69,7 +72,7 @@ const AreaChart = ({ series, datetimes }) => {
   });
 
   // 부모 div 크기에 맞춰 차트 크기 조정
-  const updateChartSize = () => {
+  const updateChartSize = useCallback(() => {
     if (chartContainerRef.current) {
       const containerWidth = chartContainerRef.current.clientWidth;
 
@@ -83,12 +86,13 @@ const AreaChart = ({ series, datetimes }) => {
 
       setChartSize({ width: `${width}px`, height: `${height}px` });
     }
-  };
+  }, [chartContainerRef]);
 
   // side바에따라 그래프 겹치는 것 방지
   useEffect(() => {
     updateChartSize();
   }, [datetimes, series]);
+
   useEffect(() => {
     updateChartSize();
   
@@ -98,6 +102,7 @@ const AreaChart = ({ series, datetimes }) => {
   
     return () => clearTimeout(resizeTimer);
   }, [datetimes, series]);
+
   useEffect(() => {
     if (!chartContainerRef.current) return;
   
@@ -124,18 +129,18 @@ const AreaChart = ({ series, datetimes }) => {
   }, []);
 
   return (
-    <div ref={chartContainerRef} style={{ width: "100%", maxWidth: "900px", minWidth: "300px" }}>
-      <div id="chart">
-        <ReactApexChart
-          options={options}
-          series={series}
-          type="area"
-          width={chartSize.width}
-          height={chartSize.height}
-        />
-      </div>
+    <div ref={chartContainerRef} 
+      style={{ width: "100%", maxWidth: "900px", minWidth: "300px" }}
+    >
+      <ReactApexChart id="chart"
+        options={options}
+        series={series}
+        type="area"
+        width={chartSize.width}
+        height={chartSize.height}
+      />
     </div>
   );
 };
 
-export default AreaChart;
+export default React.memo(AreaChart);

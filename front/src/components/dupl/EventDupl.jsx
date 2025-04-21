@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
@@ -28,12 +29,12 @@ const EventDupl = ({
   
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = () =>  {
+  const handleRefresh = useCallback(() =>  {
     Logger.debug(`EventDupl > handleRefresh ... `)
     if (!refetch) return;
     refetch()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
   Logger.debug("EventDupl ...");
   return (

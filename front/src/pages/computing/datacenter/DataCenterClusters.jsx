@@ -1,3 +1,4 @@
+import React from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import ClusterDupl from "../../../components/dupl/ClusterDupl";
 import { useClustersFromDataCenter } from "../../../api/RQHook";
@@ -10,7 +11,9 @@ import { useClustersFromDataCenter } from "../../../api/RQHook";
  * @param {string} datacenterId 데이터센터 ID
  * @returns
  */
-const DataCenterClusters = ({ datacenterId }) => {
+const DataCenterClusters = ({
+  datacenterId
+}) => {
   const {
     data: clusters = [],
     isLoading: isClustersLoading,

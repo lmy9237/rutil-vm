@@ -235,4 +235,4 @@ const ComputingTree = ({}) => {
   );
 };
 
-export default ComputingTree;
+export default React.memo(ComputingTree);

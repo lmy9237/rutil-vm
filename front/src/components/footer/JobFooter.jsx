@@ -67,14 +67,11 @@ const JobFooter = () => {
           className={`footer-content${footerVisible() ? " open" : ""}`}
         >
           <div className="footer-nav">
-            <TablesOuter
-              columns={TableColumnsInfo.JOB_HISTORY_COLUMNS}
+            <TablesOuter columns={TableColumnsInfo.JOB_HISTORY_COLUMNS}
               data={transformedData}
-              isLoading={isJobsLoading}
-              isError={isJobsError}
-              isSuccess={isJobsSuccess}
               onRowClick={(row) => setJobsSelected(row)}
               showSearchBox={false}
+              isLoading={isJobsLoading} isError={isJobsError} isSuccess={isJobsSuccess}
             />
             <SelectedIdView items={jobsSelected} />
           </div>

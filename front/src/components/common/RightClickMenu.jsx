@@ -21,11 +21,10 @@ import DomainActionButtons from "../dupl/DomainActionButtons";
 import DiskActionButtons from "../dupl/DiskActionButtons";
 import VmDiskActionButtons from "../dupl/VmDiskActionButtons";
 import SettingUsersActionButtons from "../dupl/SettingUsersActionButtons"
-import Logger from "../../utils/Logger";
-import useUIState from "../../hooks/useUIState";
 import VmDiskModals from "../modal/vm/VmDiskModals";
 import DiskModals from "../modal/disk/DiskModals";
 import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
+import Logger from "../../utils/Logger";
 
 /**
  * @name RightClickMenu
@@ -34,7 +33,6 @@ import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
  * @returns {JSX.Element} 화면
  */
 const RightClickMenu = () => {
-  const { activeModal } = useUIState()
   const {
     contextMenu, contextMenuType, clearAllContextMenu
   } = useContextMenu()
@@ -57,7 +55,6 @@ const RightClickMenu = () => {
     if (contextMenu() !== null) {
       setTimeout(() => clearAllContextMenu(), 800)
     }
-    // clearAllSelected() // TOOD: 문제가 많음.... (VM마이그레이션 체크 풀 때)
   })
 
   Logger.debug(`RightClickMenu ... `)
@@ -132,7 +129,7 @@ const RightClickMenu = () => {
               status={contextMenu()?.item?.status}
             />
           ) : (contextMenuType() === "event") ? (
-            <></>
+            null
           ) : null}
         </div>
       ) : null}
@@ -140,4 +137,4 @@ const RightClickMenu = () => {
   );
 };
 
-export default RightClickMenu;
+export default React.memo(RightClickMenu);

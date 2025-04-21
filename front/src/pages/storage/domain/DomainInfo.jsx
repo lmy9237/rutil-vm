@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
@@ -44,7 +44,7 @@ const DomainInfo = () => {
 
   const [activeTab, setActiveTab] = useState("general");
 
-  const sections = [
+  const sections = useMemo(() => ([
     { id: "general", label: Localization.kr.GENERAL },
     { id: "datacenters", label: Localization.kr.DATA_CENTER },
     { id: "vms", label: Localization.kr.VM },
@@ -55,24 +55,24 @@ const DomainInfo = () => {
     { id: "importDisks", label: `${Localization.kr.DISK} 가져오기` },
     { id: "diskSnapshots", label: "디스크 스냅샷" },
     { id: "events", label: Localization.kr.EVENT },
-  ];
+  ]), []);
 
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
+  const pathData = useMemo(() => ([
+    domain?.name,
+    sections.find((section) => section.id === activeTab)?.label,
+  ]), [domain, sections, activeTab]);
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     const path = tab === "general"
       ? `/storages/domains/${domainId}`
       : `/storages/domains/${domainId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  };
-
-  const pathData = [
-    domain?.name,
-    sections.find((section) => section.id === activeTab)?.label,
-  ];
+  }, [domainId]);
+  
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
 
   const renderSectionContent = () => {
     const SectionComponent = {
@@ -90,28 +90,28 @@ const DomainInfo = () => {
     return SectionComponent ? <SectionComponent domainId={domainId} /> : null;
   };
 
-  const handleUpdateOvf = async () => {
+  const handleUpdateOvf = useCallback(async () => {
     if (!domainId) return;
     ovfUpdateDomain(domainId);
-    Logger.info("OVF 업데이트");
-  };
+    Logger.info("DomainInfo > OVF 업데이트 ...");
+  }, [domainId]);
 
-  const handleRefresh = async () => {
+  const handleRefresh = useCallback(async () => {
     if (!domainId) return;
     refreshDomain(domainId);
-    Logger.info("디스크 검사");
-  };
+    Logger.info("DomainInfo > 디스크 검사 ...");
+  }, [domainId]);
 
-  const sectionHeaderButtons = [
+  const sectionHeaderButtons = useMemo(() => ([
     { type: "update", label: `도메인 ${Localization.kr.UPDATE}`, onClick: () => setActiveModal("domain:update") },
     { type: "remove", label: Localization.kr.REMOVE, disabled: !isACTIVE, onClick: () => setActiveModal("domain:remove") },
     { type: "destroy", label: Localization.kr.DESTROY, disabled: !isACTIVE, onClick: () => setActiveModal("domain:destroy") },
-  ];
+  ]), [isACTIVE]);
 
-  const popupItems = [
+  const popupItems = useMemo(() => ([
     { type: "updateOvf", label: "OVF 업데이트", onClick: handleUpdateOvf },
     { type: "refreshlun", label: "디스크 검사", onClick: handleRefresh },
-  ];
+  ]), []);
 
   return (
     <div id="section">
@@ -136,10 +136,8 @@ const DomainInfo = () => {
       </div>
 
       {/* domain 모달창 */}
-      <DomainModals
-        domain={domain}
+      <DomainModals domain={domain}
         selectedDomains={domain}
-        onClose={() => setActiveModal(null)}
       />
     </div>
   );

@@ -1,6 +1,7 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, seCallback } from "react";
 import toast from "react-hot-toast";
 import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
 import Loading from "../../../components/common/Loading";
 import TablesOuter from "../../../components/table/TablesOuter";
@@ -16,7 +17,6 @@ import DomainDataCenterActionButtons from "../../../components/dupl/DomainDataCe
 import DomainDetachModal from "../../../components/modal/domain/DomainDetachModal";
 import { useAllDataCentersFromDomain, useStroageDomain } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name DomainDatacenters
@@ -42,7 +42,7 @@ const DomainDatacenters = ({
     data: domain
   } = useStroageDomain(domainId);
 
-  const transformedData = (!Array.isArray(datacenters) ? [] : datacenters).map((datacenter) => ({
+  const transformedData = [...datacenters].map((datacenter) => ({
     ...datacenter,
     icon: status2Icon(datacenter?.domainStatus),
     _name: (
@@ -59,12 +59,12 @@ const DomainDatacenters = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   
-  const handleRefresh = () =>  {
+  const handleRefresh = useCallback(() => {
     Logger.debug(`DomainDataCenters > handleRefresh ... `)
     if (!refetchDataCenters) return;
     refetchDataCenters()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
 
   return (

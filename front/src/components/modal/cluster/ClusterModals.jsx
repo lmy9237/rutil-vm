@@ -46,4 +46,4 @@ const ClusterModals = ({
   );
 };
 
-export default ClusterModals;
+export default React.memo(ClusterModals);

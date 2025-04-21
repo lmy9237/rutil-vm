@@ -1,4 +1,4 @@
-import React, { useEffect, memo } from "react";
+import React, { useMemo } from "react";
 import DashboardBoxGroup from "./DashboardBoxGroup";
 import RadialBarChart from "../../components/Chart/RadialBarChart";
 import BarChart from "../../components/Chart/BarChart";
@@ -30,22 +30,15 @@ import GridLegends from "../../components/Chart/GridLegends";
 import Localization from "../../utils/Localization";
 import "./Dashboard.css";
 
-//#region: RadialBarChart
-const CpuApexChart = memo(({ cpu }) => (<RadialBarChart percentage={cpu || 0} />));
-const MemoryApexChart = memo(({ memory }) => (<RadialBarChart percentage={memory || 0} />));
-const StorageApexChart = memo(({ storage }) => (<RadialBarChart percentage={storage || 0} />));
-//#endregion: RadialBarChart
-
 //#region: BarChart
 const BarChartWrapper = ({ data, keyName, keyPercent }) => {
-  const names = React.useMemo(
-    () => data?.map((e) => e[keyName]) ?? [],
-    [data, keyName]
-  );
-  const percentages = React.useMemo(
-    () => data?.map((e) => e[keyPercent]) ?? [],
-    [data, keyPercent]
-  );
+  const names = useMemo(() => 
+    data?.map((e) => e[keyName]) ?? []
+  , [data, keyName]);
+
+  const percentages = useMemo(() => 
+    data?.map((e) => e[keyPercent]) ?? []
+  , [data, keyPercent]);
 
   return <BarChart names={names} percentages={percentages} />;
 };
@@ -192,15 +185,24 @@ const Dashboard = () => {
     error: storageMetricError,
     isLoading: isstoragemMetricoading,
   } = useDashboardMetricStorage();
-
-  useEffect(() => {
-  }, []);
   
-  const cpuCoreTotal = () => cpuMemory?.totalCpuCore
-  const cpuCoreUsed = () => cpuMemory?.usedCpuCore
-  const cpuUsedPercentageComputed = () => Math.floor((cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100)
-  const cpuAvailablePercentageComputed = () => 100 - cpuUsedPercentageComputed()
-  const memAvailablePercentageComputed = () => cpuMemory?.freeMemoryGB?.toFixed(0)
+  const cpuCoreTotal = useMemo(() => (
+    cpuMemory?.totalCpuCore
+  ), [cpuMemory])
+  const cpuCoreUsed = useMemo(() => (
+    cpuMemory?.usedCpuCore
+  ), [cpuMemory])
+  const cpuUsedPercentageComputed = useMemo(() => (
+    Math.floor((cpuMemory?.usedCpuCore / cpuMemory?.totalCpuCore) * 100)
+  ), [cpuMemory])
+  const cpuAvailablePercentageComputed = useMemo(() => (
+    100 - cpuUsedPercentageComputed
+  ), [cpuUsedPercentageComputed])
+  const memAvailablePercentageComputed = useMemo(() => (
+    cpuMemory?.freeMemoryGB?.toFixed(0)
+  ), [cpuMemory])
+
+  ;
 
   return (
     <>
@@ -255,27 +257,25 @@ const Dashboard = () => {
           <div className="dash-section-contents">
             <h1 className="dash-con-title">CPU</h1>
             <div className="dash-status f-start">
-              <h1>{cpuAvailablePercentageComputed()}</h1>
+              <h1>{cpuAvailablePercentageComputed}</h1>
               <span className="unit">%</span>
-              <div>{Localization.kr.AVAILABLE} (총 {cpuCoreTotal()} Core)</div>
+              <div>{Localization.kr.AVAILABLE} (총 {cpuCoreTotal} Core)</div>
             </div>
             <span>
-              {`${cpuCoreUsed()}`} / {cpuCoreTotal()} Core
+              {`${cpuCoreUsed}`} / {cpuCoreTotal} Core
             </span>
             <div className="graphs flex">
               <div
                 className="graph-wrap active-on-visible"
                 data-active-on-visible-callback-func-name="CircleRun"
               >
-                {cpuMemory && (<CpuApexChart cpu={cpuMemory?.totalCpuUsagePercent ?? 0} />)}
+                {cpuMemory && (<RadialBarChart percentage={cpuMemory?.totalCpuUsagePercent ?? 0} />)}
               </div>
               {vmCpu && <CpuBarChart vmCpu={vmCpu} />}
             </div>
             <div className="wave-graph">
               {/* <h2>Per CPU</h2> */}
-              <div>
-                <SuperAreaChart per={host} type="cpu" />
-              </div>
+              <SuperAreaChart per={host} type="cpu" />
             </div>
           </div>
 
@@ -283,7 +283,7 @@ const Dashboard = () => {
           <div className="dash-section-contents">
             <h1 className="dash-con-title">MEMORY</h1>
             <div className="dash-status f-start">
-              <h1>{memAvailablePercentageComputed()}</h1>
+              <h1>{memAvailablePercentageComputed}</h1>
               <span className="unit">GiB</span>
               <div>{Localization.kr.AVAILABLE}</div>
             </div>
@@ -295,22 +295,13 @@ const Dashboard = () => {
                 className="graph-wrap active-on-visible"
                 data-active-on-visible-callback-func-name="CircleRun"
               >
-                {
-                  cpuMemory && (
-                    <MemoryApexChart
-                      memory={cpuMemory?.totalMemoryUsagePercent}
-                    />
-                  ) /* ApexChart 컴포넌트를 여기에 삽입 */
-                }
+                {cpuMemory && (<RadialBarChart percentage={cpuMemory?.totalMemoryUsagePercent} />)}
               </div>
               {vmMemory && <MemoryBarChart vmMemory={vmMemory} />}
             </div>
 
             <div className="wave-graph">
-              {/* <h2>Per MEMORY</h2> */}
-              <div>
-                <SuperAreaChart per={host} type="memory" />
-              </div>
+              <SuperAreaChart per={host} type="memory" />
             </div>
           </div>
 
@@ -328,7 +319,7 @@ const Dashboard = () => {
               <div className="graph-wrap active-on-visible"
                 data-active-on-visible-callback-func-name="CircleRun"
               >
-                {storage && (<StorageApexChart storage={storage?.usedPercent} />)}
+                {storage && (<RadialBarChart percentage={storage?.usedPercent || 0} />)}
               </div>
               {storageMemory && (<StorageMemoryBarChart storageMemory={storageMemory} />)}
             </div>

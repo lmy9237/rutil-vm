@@ -79,7 +79,7 @@ const DomainIscsi = ({
     <div className="storage-popup-iSCSI">
       <div className="section-table-outer">
       {isIscsisLoading ? (
-          <div className="label-font-body">로딩 중...</div>
+        <div className="label-font-body">로딩 중...</div>
       ): mode === "edit" ? ( // 편집일때
         <Tables
           isLoading={isIscsisLoading} isError={isIscsisError} isSuccess={isIscsisSuccess}

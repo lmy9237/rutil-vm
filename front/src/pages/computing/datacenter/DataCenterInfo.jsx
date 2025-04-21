@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useCallback, useMemo } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
@@ -52,22 +52,9 @@ const DataCenterInfo = () => {
       navigate("/computing/rutil-manager/datacenters");
     }
     setDatacentersSelected(dataCenter)
-  }, [dataCenter, navigate]);
+  }, [dataCenter]);
 
-  const sections = [
-    { id: "clusters", label: Localization.kr.CLUSTER },
-    { id: "hosts", label: Localization.kr.HOST },
-    { id: "vms", label: Localization.kr.VM },
-    { id: "storageDomains", label: "스토리지" },
-    { id: "network", label: "논리 네트워크" },
-    { id: "events", label: Localization.kr.EVENT },
-  ];
-
-  useEffect(() => {
-    setActiveTab(section || "clusters");
-  }, [section]);
-
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     Logger.debug(`DataCenterInfo > handleTabClick ... tab: ${tab}`)
     // 현재 경로에서 섹션 추출: computing, storages, networks 중 하나
     const section = location.pathname.split("/")[1]; // 첫 번째 세그먼트가 섹션 정보
@@ -82,12 +69,25 @@ const DataCenterInfo = () => {
     const path = `/${currentSection}/datacenters/${dataCenterId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  };
+  }, []);
 
-  const pathData = [
+  const sections = useMemo(() => ([
+    { id: "clusters", label: Localization.kr.CLUSTER },
+    { id: "hosts", label: Localization.kr.HOST },
+    { id: "vms", label: Localization.kr.VM },
+    { id: "storageDomains", label: "스토리지" },
+    { id: "network", label: "논리 네트워크" },
+    { id: "events", label: Localization.kr.EVENT },
+  ]), []);
+
+  const pathData = useMemo(() => ([
     dataCenter?.name,
     sections.find((section) => section.id === activeTab)?.label,
-  ];
+  ]), [dataCenter, activeTab]);
+
+  useEffect(() => {
+    setActiveTab(section || "clusters");
+  }, [section]);
 
   const renderSectionContent = () => {
     const SectionComponent = {
@@ -103,10 +103,10 @@ const DataCenterInfo = () => {
     ) : null;
   };
 
-  const sectionHeaderButtons = [
+  const sectionHeaderButtons = useMemo(() => ([
     { type: "update", onClick: () => setActiveModal("datacenter:update"), label: Localization.kr.UPDATE, },
     { type: "remove", onClick: () => setActiveModal("datacenter:remove"), label: Localization.kr.REMOVE, },
-  ];
+  ]), []);
 
   Logger.debug("DataCenterInfo ...")
   return (

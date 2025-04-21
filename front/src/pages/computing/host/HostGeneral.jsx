@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDashboardHost, useHost } from "../../../api/RQHook";
+import useGlobal from "../../../hooks/useGlobal";
 import { convertBytesToMB } from "../../../util";
-import "./Host.css";
 import InfoTable from "../../../components/table/InfoTable";
 import SuperAreaChart from "../../../components/Chart/SuperAreaChart";
 import Localization from "../../../utils/Localization";
+import "./Host.css";
 
 /**
  * @name HostGeneral
@@ -14,7 +15,9 @@ import Localization from "../../../utils/Localization";
  * @param {string} hostId 호스트 ID
  * @returns
  */
-const HostGeneral = ({ hostId }) => {
+const HostGeneral = ({
+  hostId
+}) => {
   const {
     data: host,
     isLoading: isHostLoading,
@@ -33,22 +36,14 @@ const HostGeneral = ({ hostId }) => {
   } = useDashboardHost(hostId);
 
   const [activeTab, setActiveTab] = useState("general");
-  const [chartData, setChartData] = useState(null);
-  
-  // hostId 변경 시 hostPerRefetch 호출 & 기존 데이터 지우기
-  useEffect(() => {
-    setChartData(null); // 데이터 초기화
-    hostPerRefetch();
-  }, [hostId]); // hostId가 변경될 때마다 실행
-  
+  const { hostsSelected, setHostsSelected } = useGlobal()
+
   // 최신 데이터를 반영
   useEffect(() => {
-    if (!isHostPerLoading && !isHostPerRefetching && hostPer) {
-      setChartData(hostPer); // 데이터 업데이트
-    }
-  }, [hostPer, isHostPerLoading, isHostPerRefetching]);
+    if (host) setHostsSelected(host)
+  }, [host, hostPer]);
 
-  const renderGeneralTab = [
+  const renderGeneralTab = useMemo(() => ([
     { label: `${Localization.kr.HOST} 이름/IP`, value: host?.name },
     { label: "SPM 우선순위", value: host?.spmPriority },
     { label: "활성 가상 머신", value: host?.vmSizeVo?.upCnt },
@@ -64,9 +59,9 @@ const HostGeneral = ({ hostId }) => {
     { label: "새로운 가상 머신의 스케줄링을 위한 최대 여유 메모리", value: `${convertBytesToMB(host?.memoryMax)} MB`, },
     { label: "Huge Pages (size: free/total)", value: `2048: ${host?.hugePage2048Free}/${host?.hugePage2048Total}, 1048576: ${host?.hugePage1048576Free}/${host?.hugePage1048576Total}`, },
     { label: "SELinux 모드", value: host?.seLinux },
-  ];
+  ]), []);
 
-  const renderHardwareTab = [
+  const renderHardwareTab = useMemo(() => ([
     { label: "제조사", value: host?.hostHwVo?.manufacturer },
     { label: "버전", value: host?.hostHwVo?.hwVersion },
     { label: "UUID", value: host?.hostHwVo?.uuid },
@@ -78,9 +73,9 @@ const HostGeneral = ({ hostId }) => {
     { label: "CPU 소켓", value: host?.hostHwVo?.cpuTopologySocket },
     { label: "소켓당 CPU 코어", value: host?.hostHwVo?.cpuTopologyCore },
     { label: "코어당 CPU의 스레드", value: host?.hostHwVo?.cpuTopologyThread },
-  ];
+  ]), [host]);
 
-  const renderSoftwareTab = [
+  const renderSoftwareTab = useMemo(() => ([
     { label: "OS 버전", value: host?.hostSwVo?.osVersion },
     // { label: "OS 정보", value: host?.hostSwVo?.osInfo },
     { label: "커널 버전", value: host?.hostSwVo?.kernalVersion },
@@ -94,21 +89,23 @@ const HostGeneral = ({ hostId }) => {
     { label: "Nmstate 버전", value: host?.hostSwVo?.nmstateVersion },
     { label: "VNC 암호화", value: "비활성화됨" },
     { label: "OVN configured", value: "예" },
-  ];
+  ]), [host]);
 
-  const tabs = [
+  const tabs = useMemo(() => ([
     { tab: "general", label: Localization.kr.GENERAL, tableRows: renderGeneralTab },
     { tab: "hardware", label: "하드웨어", tableRows: renderHardwareTab },
     { tab: "software", label: "소프트웨어", tableRows: renderSoftwareTab },
-  ];
+  ]), [renderGeneralTab, renderHardwareTab, renderSoftwareTab]);
 
+  const rows4ActiveTab = useMemo(() => ([
+    tabs.find(({ tab }) => tab === activeTab)?.tableRows || []
+  ]), [tabs,activeTab])
+  
   return (
-    // <div className="host-content-outer">
     <div>
       <div className="host-tabs">
-        {tabs.map(({ tab, label }, index) => (
-          <button
-            key={tab}
+        {[...tabs].map(({ tab, label }, i) => (
+          <button key={tab}
             onClick={() => setActiveTab(tab)}
             className={`tab-button ${activeTab === tab ? "active" : ""}`}
           >
@@ -117,10 +114,10 @@ const HostGeneral = ({ hostId }) => {
         ))}
       </div>
       <InfoTable tableRows={tabs.find(({ tab }) => tab === activeTab)?.tableRows || []} />
-        <br/>
+      <br/>
       <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
-        cpu <SuperAreaChart key={`${hostId}-cpu`} per={chartData} type="cpu" />
-        memory <SuperAreaChart key={`${hostId}-memory`} per={chartData} type="memory" />
+        cpu <SuperAreaChart key={`${hostId}-cpu`} per={hostPer} type="cpu" />
+        memory <SuperAreaChart key={`${hostId}-memory`} per={hostPer} type="memory" />
       </div>
     </div>
   );

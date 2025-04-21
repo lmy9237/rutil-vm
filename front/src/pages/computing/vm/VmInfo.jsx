@@ -18,6 +18,7 @@ import { useVm } from "../../../api/RQHook";
 import VmDisks from "./VmDisks";
 import Logger from "../../../utils/Logger";
 import "./Vm.css";
+import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name VmInfo
@@ -52,11 +53,13 @@ const VmInfo = () => {
   const isMaintenance = vm?.status === "MAINTENANCE";
 
   const [activeTab, setActiveTab] = useState("general")
+  const { setVmsSelected } = useGlobal()
 
   useEffect(() => {
     if (isVmError || (!isVmLoading && !vm)) {
       navigate("/computing/vms");
     }
+    setVmsSelected(vm)
   }, [isVmError, isVmLoading, vm, navigate]);
 
   const sections = [

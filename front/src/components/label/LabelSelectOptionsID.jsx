@@ -42,9 +42,7 @@ const LabelSelectOptionsID = ({
   };
 
   useClickOutside(wrapperRef, (e) => {
-    if (!selectBoxRef.current?.contains(e.target)) {
-      setOpen(false);
-    }
+    setOpen(false);
   });
 
   const selectedLabel = loading

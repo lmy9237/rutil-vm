@@ -1,3 +1,4 @@
+import { useCallback } from "react"
 import toast from "react-hot-toast";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
@@ -11,7 +12,6 @@ import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import SearchBox from "../../../components/button/SearchBox";
 import NicModal from "../../../components/modal/vm/NicModal";
 import { useAllNicsFromTemplate } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
 
 /**
  * @name TemplateNics
@@ -55,13 +55,18 @@ const TemplateNics = ({
     }))
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
-  const handleRefresh = () =>  {
+  /*
+  const handleNameClick = useCallback((id) => {
+    navigate(`/computing/hosts/${id}`);
+  }, [])
+  */
+
+  const handleRefresh = useCallback(() => {
     if (!refetch) return;
     refetch()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
-  Logger.debug("TemplateNics ...");
   return (
     <>
       <div className="dupl-header-group f-start">

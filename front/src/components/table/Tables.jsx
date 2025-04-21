@@ -270,8 +270,7 @@ const Tables = ({
           const globalIndex = indexOfFirstItem + rowIndex; 
         
           return (
-            <tr
-              key={globalIndex}
+            <tr key={globalIndex}
               onClick={(e) => {
                 setSelectedRowIndex(globalIndex);
                 setContextRowIndex(null);
@@ -419,8 +418,6 @@ const Tables = ({
             />
           </div>
         )}
-        {/* 우클릭 */}
-        <RightClickMenu />
       </div>
     </>
   );

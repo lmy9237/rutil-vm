@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useGlobal from "../../hooks/useGlobal";
@@ -39,13 +40,16 @@ const DataCenterDupl = ({
   
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
 
-  const handleNameClick = (id) => navigate(`/computing/datacenters/${id}/clusters`);
-  const handleRefresh = () =>  {
+  const handleNameClick = useCallback((id) => {
+    navigate(`/computing/datacenters/${id}/clusters`);
+  }, [navigate])
+
+  const handleRefresh = useCallback(() =>  {
     Logger.debug(`DataCenterDupl > handleRefresh ... `)
     if (!refetch) return;
     refetch() 
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
@@ -69,9 +73,6 @@ const DataCenterDupl = ({
         ]}*/
       />
       <SelectedIdView items={datacentersSelected} />
-
-      {/* 데이터센터 모달창 */}
-      <DataCenterModals dataCenter={datacentersSelected[0]}  />
     </div>
   );
 };

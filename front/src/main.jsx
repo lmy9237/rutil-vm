@@ -1,4 +1,5 @@
 import React from "react";
+import Modal from "react-modal";
 import { Routes, Route, HashRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -18,6 +19,7 @@ if (typeof global === 'undefined') {
 const container = document.getElementById("root");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 const queryClient = new QueryClient()
+Modal.setAppElement("#root")
 
 root.render(
   <React.StrictMode>

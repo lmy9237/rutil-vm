@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useUIState from "../../hooks/useUIState"
@@ -70,13 +71,16 @@ const DomainDupl = ({
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   
-  const handleNameClick = (id) => navigate(`/storages/domains/${id}`);
-  const handleRefresh = () =>  {
+  const handleNameClick = useCallback((id) => {
+    navigate(`/storages/domains/${id}`);
+  }, [navigate])
+  
+  const handleRefresh = useCallback(() =>  {
     Logger.debug(`DomainDupl > handleRefresh ... `)
     if (!refetch) return;
     refetch()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
   return (
     <div onClick={(e) => e.stopPropagation()}>

@@ -14,8 +14,8 @@ import { checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
-import "./MHost.css";
 import useGlobal from "../../../hooks/useGlobal";
+import "./MHost.css";
 
 const initialFormState = {
   id: "",

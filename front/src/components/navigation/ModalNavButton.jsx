@@ -2,7 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./ModalNavButton.css";
 
-const ModalNavButton = ({ tabs, activeTab, onTabClick }) => {
+const ModalNavButton = ({ 
+  tabs,
+  activeTab,
+  onTabClick
+}) => {
   return (
     <div className="network-backup-edit-nav">
       {tabs.map((tab) => (

@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import useUIState from "../../../hooks/useUIState";
 import useContextMenu from "../../../hooks/useContextMenu";
 import useTmi from "../../../hooks/useTmi";
 import useGlobal from "../../../hooks/useGlobal";
@@ -121,4 +120,4 @@ const StorageTree = ({}) => {
   );
 };
 
-export default StorageTree;
+export default React.memo(StorageTree);

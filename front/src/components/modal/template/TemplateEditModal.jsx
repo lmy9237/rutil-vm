@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import { useEditTemplate, useTemplate } from "../../../api/RQHook";
@@ -38,10 +38,11 @@ const TemplateEditModal = ({
     { value: "server", label: "서버" },
   ]);
 
-  const tabs = [
+  const tabs = useMemo(() => ([
     { id: "general", label: Localization.kr.GENERAL },
     { id: "console", label: "콘솔" },
-  ];
+  ]), []);
+
   useEffect(() => {
     if (isOpen) {
       setActiveTab("general"); // 모달이 열릴 때 기본적으로 "general" 설정
@@ -49,13 +50,13 @@ const TemplateEditModal = ({
   }, [isOpen]);
   const [activeTab, setActiveTab] = useState("general");
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     setActiveTab(tab);
-  };
+  }, []);
+
   //해당데이터 상세정보 가져오기
   const { data: templateData } = useTemplate(templateId);
-  const [selectedOptimizeOption, setSelectedOptimizeOption] =
-    useState("server"); // 칩셋 선택
+  const [selectedOptimizeOption, setSelectedOptimizeOption] = useState("server"); // 칩셋 선택
   const [selectedChipset, setSelectedChipset] = useState("Q35_OVMF"); // 칩셋 선택
 
   // 초기값설정
@@ -133,11 +134,11 @@ const TemplateEditModal = ({
 
         <div className="backup-edit-content">
           <div
-              className="template-option-box f-btw"
-              style={{
-                borderBottom: "1px solid #E2E5EB",
-                padding: "0.1rem 0",
-              }}
+            className="template-option-box f-btw"
+            style={{
+              borderBottom: "1px solid #E2E5EB",
+              padding: "0.1rem 0",
+            }}
             >
               <LabelSelectOptions
                 id="optimization"

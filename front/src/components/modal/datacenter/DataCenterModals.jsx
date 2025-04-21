@@ -39,9 +39,9 @@ const DataCenterModals = ({
     <>
       {Object.keys(modals).filter((key) => 
         activeModal() === `datacenter:${key}`
-      ).map((key) => (
+      ).map((key) => 
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
-      ))}
+      )}
     </>
   );
 };

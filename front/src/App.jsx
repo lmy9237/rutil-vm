@@ -5,6 +5,7 @@ import { scan } from "react-scan";
 import useUIState from "./hooks/useUIState";
 import useBoxState from "./hooks/useBoxState";
 import useTmi from "./hooks/useTmi";
+import useFooterState from "./hooks/useFooterState";
 // import STOMP from "./Socket";
 import Layout from "./components/Layout";
 import RequireAuth from "./components/RequireAuth";
@@ -34,7 +35,6 @@ import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "pretendard/dist/web/static/pretendard.css";
 import Logger from "./utils/Logger";
 import "./App.css";
-import useFooterState from "./hooks/useFooterState";
 
 const App = () => {
   //#region: 웹소켓연결
@@ -42,17 +42,16 @@ const App = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const { footerJobRefetchInterval, setFoooterJobRefetchInterval } = useFooterState()
-  const { setAsideVisible, } = useUIState()
+  const { setActiveModal, setAsideVisible, } = useUIState()
   const { setLoginBoxVisible, setEventBoxVisible, } = useBoxState()
 
-  const {
-    setTmiLastSelected
-  } = useTmi()
+  const { setTmiLastSelected } = useTmi()
   
   useEffect(() => {
     if (!footerJobRefetchInterval() || footerJobRefetchInterval() === 0) {
       setFoooterJobRefetchInterval(5000)
     }
+    setActiveModal(null)
     setAsideVisible(true)
     setEventBoxVisible(false)
     setLoginBoxVisible(false)

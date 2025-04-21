@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect, useCallback, useMemo } from "react";
 import Logger from "../../utils/Logger";
 
 /**
@@ -10,21 +10,22 @@ import Logger from "../../utils/Logger";
 const SelectedIdView = ({ 
   items=[],
 }) => {
-  const selectedIds = [...items]
-    .map((e) => e?.id ?? e?.username)
-    .join(", ");
+  const selectedIds = useMemo(() => (
+    [...items]
+      .map((e) => e?.id ?? e?.username)
+      .join(", ")
+  ), [items])
   
-  const copyText = async (txt) => {
+  const copyText = useCallback(async (txt) => {
     Logger.debug(`SelectedIdView > copyText ... txt: ${txt}`)
     await navigator.clipboard.writeText(txt).catch((e) => {
       Logger.error(`something went WRONG ... reason: ${e.message}`)
     });
-  }
+  }, [])
 
   useEffect(() => {
     import.meta.env.DEV && copyText(selectedIds) // 개발 일 때만 활성화
   }, [items])
-  Logger.debug(`SelectedIdView ... import.meta.env.DEV: ${import.meta.env.DEV}`)
   
   return (
     <>
@@ -33,4 +34,4 @@ const SelectedIdView = ({
   )
 }
 
-export default SelectedIdView
+export default React.memo(SelectedIdView)

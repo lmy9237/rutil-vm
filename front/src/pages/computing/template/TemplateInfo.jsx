@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import { useTemplate } from "../../../api/RQHook";
@@ -26,6 +27,7 @@ const TemplateInfo = () => {
   const { activeModal, setActiveModal, } = useUIState()
   const { id: templateId, section } = useParams();
   const { data: template, isError, isLoading } = useTemplate(templateId);
+  const { templatesSelected, setTemplatesSelected } = useGlobal()
 
   const [activeTab, setActiveTab] = useState("general")
 
@@ -33,34 +35,39 @@ const TemplateInfo = () => {
     if (isError || (!isLoading && !template)) {
       navigate("/computing/templates");
     }
+    setTemplatesSelected(template)
   }, [isError, isLoading, template, navigate]);
 
-  const sections = [
-    { id: "general", label: Localization.kr.GENERAL },
-    { id: "vms", label: Localization.kr.VM },
-    { id: "nics", label: Localization.kr.NICS },
-    { id: "disks", label: "디스크" },
-    // { id: "storageDomains", label: "스토리지" },
-    { id: "events", label: Localization.kr.EVENT },
-  ];
-
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
-
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     const path =
       tab === "general"
         ? `/computing/templates/${templateId}`
         : `/computing/templates/${templateId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  };
+  }, [templateId]);
 
-  const pathData = [
-    template?.name,
-    sections.find((section) => section.id === activeTab)?.label,
-  ];
+  const pathData = useMemo(() => {
+    return [
+      template?.name,
+      sections.find((section) => section.id === activeTab)?.label,
+    ]
+  }, [template, sections, activeTab]);
+
+  const sections = useMemo(() => {
+    return [
+      { id: "general", label: Localization.kr.GENERAL },
+      { id: "vms", label: Localization.kr.VM },
+      { id: "nics", label: Localization.kr.NICS },
+      { id: "disks", label: "디스크" },
+      // { id: "storageDomains", label: "스토리지" },
+      { id: "events", label: Localization.kr.EVENT },
+    ]
+  }, []);
+
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
 
   const renderSectionContent = () => {
     const SectionComponent = {
@@ -76,11 +83,13 @@ const TemplateInfo = () => {
     ) : null;
   };
 
-  const sectionHeaderButtons = [
-    { type: "update", onClick: () => setActiveModal("template:update"), label: Localization.kr.UPDATE,  },
-    { type: "remove", onClick: () => setActiveModal("template:remove"), label: Localization.kr.REMOVE,  },
-    { type: "addVm", onClick: () => setActiveModal("template:addVm"), label: "새 가상머신", },
-  ];
+  const sectionHeaderButtons = useMemo(() => {
+    return [
+      { type: "update", onClick: () => setActiveModal("template:update"), label: Localization.kr.UPDATE,  },
+      { type: "remove", onClick: () => setActiveModal("template:remove"), label: Localization.kr.REMOVE,  },
+      { type: "addVm", onClick: () => setActiveModal("template:addVm"), label: "새 가상머신", },
+    ];
+  }, [])
 
   return (
     <div id="section">

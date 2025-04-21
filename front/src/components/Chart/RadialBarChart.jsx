@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
 import "./RadialBarChart.css";
 
-const RadialBarChart = ({ percentage }) => {
+const RadialBarChart = ({ 
+  percentage=0
+}) => {
   const chartContainerRef = useRef(null);
 
   const [chartSize, setChartSize] = useState({
@@ -125,4 +127,4 @@ const RadialBarChart = ({ percentage }) => {
   );
 };
 
-export default RadialBarChart;
+export default React.memo(RadialBarChart);

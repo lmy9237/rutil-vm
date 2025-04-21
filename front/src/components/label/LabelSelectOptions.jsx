@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useMemo, useCallback } from "react";
 import "./LabelInput.css";
 import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import useClickOutside from "../../hooks/useClickOutside";
+import Logger from "../../utils/Logger";
 
 const LabelSelectOptions = ({
   className = "",
@@ -15,23 +16,27 @@ const LabelSelectOptions = ({
   const [open, setOpen] = useState(false);
   const selectRef = useRef(null);
 
-  const handleOptionClick = (optionValue) => {
+  const handleOptionClick = useCallback((optionValue) => {
+    Logger.debug(`LabelSelectOptions > handleOptionClick ... optionValue: ${optionValue}`)
     if (disabled) return;
     onChange({ target: { value: optionValue } });
     setOpen(false);
-  };
+  }, []);
 
   useClickOutside(selectRef, (e) => {
     setOpen(false);
   })
+
   const boxStyle = !label ? { width: "100%" } : undefined; // label이 없으면 100% width style 지정 
-  const selectedLabel = options.find(opt => opt.value === value)?.label || "선택하세요";
+  const selectedLabel = useMemo(() => (
+    options.find(opt => opt.value === value)?.label || "선택하세요"
+  ), [options]);
 
   return (
     <div className={`input-select custom-select-wrapper${className}`} ref={selectRef}>
       {label && <div className="select-label">{label}</div>}
       <div
-        className={`custom-select-box f-btw   ${disabled ? "disabled" : ""}`}
+        className={`custom-select-box f-btw ${disabled ? "disabled" : ""}`}
         style={boxStyle} 
         onClick={() => !disabled && setOpen(!open)}
       >

@@ -1,7 +1,9 @@
 import React from 'react';
 import LabelInput from '../../../label/LabelInput';
 
-const DomainNfsImport = ({ nfsAddress, setNfsAddress }) => {
+const DomainNfsImport = ({
+  nfsAddress, setNfsAddress
+}) => {
   return (
     <>
       <LabelInput label={"내보내기 경로"}

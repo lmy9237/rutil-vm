@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
@@ -52,38 +52,37 @@ const HostInfo = () => {
       navigate("/computing/rutil-manager/hosts");
     }
     setHostsSelected(host)
-  }, [host, navigate]);
+  }, [host]);
 
   const isUp = host?.status === "UP";
   const isMaintenance = host?.status === "MAINTENANCE";
   const isNonOperational = host?.status === "NON_OPERATIONAL"
 
-
-  const sections = [
-    { id: "general", label: Localization.kr.GENERAL },
-    { id: "vms", label: Localization.kr.VM },
-    { id: "nics", label: Localization.kr.NICS },
-    { id: "devices", label: `${Localization.kr.HOST} 장치` },
-    { id: "events", label: Localization.kr.EVENT },
-  ];
-
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
-
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     Logger.debug(`HostInfo > handleTabClick ... tab: ${tab}`);
     const path = tab === "general"
         ? `/computing/hosts/${hostId}`
         : `/computing/hosts/${hostId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  };
+  }, [hostId]);
 
-  const pathData = [
+  const sections = useMemo(() => ([
+    { id: "general", label: Localization.kr.GENERAL },
+    { id: "vms", label: Localization.kr.VM },
+    { id: "nics", label: Localization.kr.NICS },
+    { id: "devices", label: `${Localization.kr.HOST} 장치` },
+    { id: "events", label: Localization.kr.EVENT },
+  ]), [])
+
+  const pathData = useMemo(() => ([
     host?.name,
     sections.find((section) => section.id === activeTab)?.label,
-  ];
+  ]), [host]);  
+
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
 
   // 탭 메뉴 관리
   const renderSectionContent = () => {
@@ -99,10 +98,10 @@ const HostInfo = () => {
   };
 
   // 편집, 삭제 버튼들
-  const sectionHeaderButtons = [
+  const sectionHeaderButtons = useMemo(() => ([
     { type: "host:update", onClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: !isUp, }, 
     { type: "host:remove", onClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: !isMaintenance, },
-  ];
+  ]), [])
 
   const popupItems = [
     { type: "deactivate", onClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: !isUp && isNonOperational, },

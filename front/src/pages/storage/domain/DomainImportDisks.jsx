@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useUIState from "../../../hooks/useUIState";
@@ -48,22 +48,22 @@ const DomainImportDisks = ({
   }));
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  const handleNameClick = (id) => navigate(`/computing/templates/${id}`);
-  const handleRefresh = () =>  {
+  const handleNameClick = useCallback((id) => {
+    navigate(`/computing/templates/${id}`);
+  }, [navigate])
+
+  const handleRefresh = useCallback(() => {
     Logger.debug(`TemplateDupl > handleRefresh ... `)
     if (!refetchDisks) return;
     refetchDisks()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
   Logger.debug(`DomainImportDisks ... transformedData: ${transformedData}`);
   return (
     <>
       <div className="dupl-header-group f-start">
-        <SearchBox 
-          searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-          refetch={handleRefresh}
-        />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={handleRefresh}/>
         <div className="header-right-btns">
           <ActionButton label={Localization.kr.IMPORT}
             actionType="default" 

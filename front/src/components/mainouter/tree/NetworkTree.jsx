@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import useUIState from "../../../hooks/useUIState";
 import useContextMenu from "../../../hooks/useContextMenu";
 import useGlobal from "../../../hooks/useGlobal";
 import useTmi from "../../../hooks/useTmi";
@@ -111,4 +110,4 @@ const NetworkTree = ({}) => {
   );
 };
 
-export default NetworkTree;
+export default React.memo(NetworkTree);

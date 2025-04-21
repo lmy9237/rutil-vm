@@ -1,7 +1,9 @@
 import React from "react";
 import "./InfoTable.css";
 
-const InfoTable = ({ tableRows }) => {
+const InfoTable = ({ 
+  tableRows
+}) => {
   return (
     <div className="info-table-outer">
       <table className="table">

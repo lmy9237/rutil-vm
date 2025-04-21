@@ -1,3 +1,4 @@
+import { useCallback } from "react"
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
@@ -75,13 +76,16 @@ const VmDupl = ({
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  const handleNameClick = (id) => navigate(`/computing/vms/${id}`);
-  const handleRefresh = () =>  {
+  const handleNameClick = useCallback((id) => {
+    navigate(`/computing/vms/${id}`);
+  }, [navigate])
+
+  const handleRefresh = useCallback(() => {
     Logger.debug(`VmDupl > handleRefresh ... `)
     if (!refetch) return;
     refetch()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
   return (
     <div onClick={(e) => e.stopPropagation()}>

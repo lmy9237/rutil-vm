@@ -6,7 +6,7 @@ import useBoxState from "../../hooks/useBoxState";
 import useUIState from "../../hooks/useUIState";
 import useGlobal from "../../hooks/useGlobal";
 import useClickOutside from "../../hooks/useClickOutside";
-import SettingUsersModals from "../modal/settings/SettingUsersModals";
+import SettingUsersModal from "../modal/settings/SettingUsersModal";
 import Logger from "../../utils/Logger";
 import { useUser } from "../../api/RQHook";
 import "./BoxUser.css";
@@ -26,12 +26,8 @@ const BoxUser = ({}) => {
     isLoading: isUserLoading,
     isSuccess: isUserSuccess
   } = useUser(auth.username, true);
-  
-  useEffect(() => {
-    setUsersSelected([user])
-  }, [auth, user])
 
-  const { setActiveModal, } = useUIState();
+  const { activeModal, setActiveModal, } = useUIState();
   const { loginBoxVisible, setLoginBoxVisible } = useBoxState()
   
   const userBoxRef = useRef(null);
@@ -62,7 +58,10 @@ const BoxUser = ({}) => {
         }}>계정설정</div>
         <div onClick={(e) => doLogout(e)}>로그아웃</div>
       </div>
-      <SettingUsersModals user={user}/>
+      <SettingUsersModal key={activeModal()} isOpen={activeModal() === "user:changePassword"} 
+        onClose={() => setActiveModal(null)} 
+        changePassword
+        user={user?.id} />
     </>
   );
 };

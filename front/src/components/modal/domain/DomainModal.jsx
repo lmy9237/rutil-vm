@@ -300,7 +300,10 @@ const DomainModal = ({
   }, [formState.storageType]);
 
   const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
+    setFormState((prev) => ({
+      ...prev,
+      [field]: e.target.value
+    }));
   };
 
   const handleSelectIdChange = (setVo, voList) => (e) => {
@@ -426,13 +429,13 @@ const DomainModal = ({
       </div>
   
       {/* NFS 의 경우 */}
-      {isNfs && (
+      {/* {isNfs && ( */}
         <DomainNfs
           // mode={mode}
           nfsAddress={nfsAddress}
           setNfsAddress={setNfsAddress}
         />
-      )}
+      {/* )} */}
 
       {/* ISCSI 의 경우 */}
       {/* 편집이 되기는 하지만 밑의 테이블 readonly 와 path 문제가 잇음 */}
@@ -445,9 +448,7 @@ const DomainModal = ({
           importIscsiFromHost={importIscsiFromHost}
           // loginIscsiFromHost={loginIscsiFromHost}
           refetchIscsis={refetchIscsis}
-          isIscsisLoading={isIscsisLoading}
-          isIscsisError={isIscsisError}
-          isIscsisSuccess={isIscsisSuccess}
+          isIscsisLoading={isIscsisLoading} isIscsisError={isIscsisError} isIscsisSuccess={isIscsisSuccess}
         />      
       )}
 
@@ -464,6 +465,7 @@ const DomainModal = ({
           isFibresSuccess={isFibresSuccess}
         />
       )}
+
       <hr />
 
       <div className="tab-content">

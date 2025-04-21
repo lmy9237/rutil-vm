@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
@@ -17,7 +17,6 @@ import { rvi24Cluster } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import "./Cluster.css";
-
 
 /**
  * @name ClusterInfo
@@ -53,19 +52,7 @@ const ClusterInfo = () => {
     setClustersSelected(cluster)
   }, [cluster, navigate]);
 
-  const sections = [
-    { id: "general", label: Localization.kr.GENERAL },
-    { id: "hosts", label: Localization.kr.HOST },
-    { id: "vms", label: Localization.kr.VM },
-    { id: "networks", label: "논리 네트워크" },
-    { id: "events", label: Localization.kr.EVENT },
-  ];
-
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
-
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     Logger.debug(`ClusterInfo > handleTabClick ... tab: ${tab}`)
     const path =
       tab === "general"
@@ -73,12 +60,24 @@ const ClusterInfo = () => {
         : `/computing/clusters/${clusterId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  };
+  }, []);
 
-  const pathData = [
+  const sections = useMemo(() => ([
+    { id: "general", label: Localization.kr.GENERAL },
+    { id: "hosts", label: Localization.kr.HOST },
+    { id: "vms", label: Localization.kr.VM },
+    { id: "networks", label: "논리 네트워크" },
+    { id: "events", label: Localization.kr.EVENT },
+  ]), []);
+
+  const pathData = useMemo(() => ([
     cluster?.name,
     sections.find((section) => section.id === activeTab)?.label,
-  ];
+  ]), [cluster, activeTab])
+
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
 
   const renderSectionContent = () => {
     Logger.debug(`ClusterInfo > renderSectionContent ... `)
@@ -92,12 +91,11 @@ const ClusterInfo = () => {
     return SectionComponent ? <SectionComponent clusterId={clusterId} /> : null;
   };
 
-  const sectionHeaderButtons = [
+  const sectionHeaderButtons = useMemo(() => ([
     { type: "update", onClick: () => setActiveModal("cluster:update"), label: Localization.kr.UPDATE, },
     { type: "remove", onClick: () => setActiveModal("cluster:remove"), label: Localization.kr.REMOVE, },
-  ];
+  ]), []);
 
-  Logger.debug("ClusterInfo ...");
   return (
     <div id="section">
       <HeaderButton titleIcon={rvi24Cluster()}

@@ -57,7 +57,7 @@ export const useDashboard = (
   queryFn: async () => {
     const res = await ApiManager.getDashboard()
     const _res = validate(res) ?? {}
-    Logger.debug(`RQHook > useDashboard ... res: ${JSON.stringify(_res, null , 2)}`);
+    Logger.debug(`RQHook > useDashboard ... res: `, _res);
     return _res
   },
 });

@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useUIState from "../../hooks/useUIState";
@@ -70,13 +70,16 @@ const VmDiskDupl = ({
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  const handleNameClick = (id) => navigate(`/storages/disks/${id}`);
-  const handleRefresh = () =>  {
+  const handleNameClick = useCallback((id) => {
+    navigate(`/storages/disks/${id}`);
+  }, [navigate])
+
+  const handleRefresh = useCallback(() => {
     Logger.debug(`VmDiskDupl > handleRefresh ... `)
     if (!refetch) return;
     refetch()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }
+  }, [])
 
   const [activeDiskType, setActiveDiskType] = useState("all");
   const diskFilters = [
