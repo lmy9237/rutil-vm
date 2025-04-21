@@ -77,6 +77,17 @@ const RadialBarChart = ({
         },
       },
     },
+    tooltip: {
+      enabled: true,
+      fillSeriesColor: false,
+      theme: "light", // 'dark' 로 변경가능
+      y: {
+        formatter: (val) => `${val}%`,
+        title: {
+          // formatter: () => "제목",
+        },
+      },
+    },
     labels: [],
     colors: ["#FF4560"],
   });

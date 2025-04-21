@@ -73,7 +73,7 @@ const Grid = ({
                     <h1>{displayMetric(type, item)}</h1>
                     <div className="percent unit">%</div>
                   </div>
-                  <div className="grid-item-name">( {item.name} )</div>
+                  <div className="grid-item-name"> {item.name} </div>
                 </div>
               </>
             ) : (

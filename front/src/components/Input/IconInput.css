@@ -3,8 +3,6 @@
   max-width:400px;
   display: flex;
   align-items: center;
-  border: var(--border-simple);
-  border-radius: 4px; /* Rounded corners */
   padding: 5px; /* Inner padding */
   width: 100%; /* Full width */
   max-width: 400px; /* Maximum width */
@@ -31,8 +29,4 @@
   
 .icon-input::placeholder {
   color: #999; /* Placeholder color */
-}
-
-.icon-input-container:focus-within {
-  border-color: #007bff; /* Highlight border on focus */
 }

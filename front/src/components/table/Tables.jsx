@@ -391,7 +391,7 @@ const Tables = ({
                     width: column.width,
                   }}
                 >
-                  <div className="f-center">
+                  <div className="f-start">
                     {column.header}
                     {!column.isIcon && sortConfig.key === column.accessor && (
                       <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>

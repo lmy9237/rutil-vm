@@ -10,7 +10,7 @@ const GridLegends = () => {
   ]
 
   return (
-    <div className="legend-bar-container f-end">
+    <div className="legend-bar-container f-start pl-3.5">
       {legends.map(({ type, value }) => (
         <div className="legend-item f-center">
           <span className={`legend ${type}`} />
