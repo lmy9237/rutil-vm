@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Tables from '../../../table/Tables';
 import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import LabelInput from '../../../label/LabelInput';
@@ -8,39 +8,62 @@ import Logger from '../../../../utils/Logger';
 import ToggleSwitchButton from '../../../button/ToggleSwitchButton';
 
 const DomainIscsiImport = ({
-  iscsis = [], setIscsis,
-  iscsiSearchResults,setIscsiSearchResults,
+  iscsiResults, setIscsiResults,
   lunId, setLunId,
-  hostVo,
-  importIscsiFromHost,
-  loginIscsiFromHost,
+  hostVo, setHostVo,
   formImportState, setFormImportState,
-  refetchIscsis, isIscsisLoading, isIscsisError, isIscsisSuccess
+  importIscsiFromHostAPI, 
+  loginIscsiFromHostAPI,
+  // refetchIscsis, isIscsisLoading, isIscsisError, isIscsisSuccess
 }) => {
-  // useEffect(() => {
-  //   Logger.debug("도메인으로부터 받은 lunId:", lunId);
-  //   Logger.debug("도메인으로부터 받은 hostVo:", hostVo);
-  // }, [lunId, hostVo]);
-  
   const [isFooterContentVisible, setIsFooterContentVisible] = useState(false);
+  const [isIscsisLoading, setIsIscsisLoading] = useState(false);
+  const [isIscsisError, setIsIscsisError] = useState(false);
+  const [isIscsisSuccess, setIsIscsisSuccess] = useState(false);
+
   
+  const transIscsiData = iscsiResults.map((i) => ({
+    ...i,
+    target: i?.target,
+    address: i?.address,
+    port: i?.port,
+  }));
+  
+  // 주소와 포트로 검색한 결과값 반환
   const handleSearchIscsi = () => {
     if (!hostVo.id) return toast.error(`${Localization.kr.HOST}를 선택해주세요.`);
     if (!formImportState.address) return toast.error('주소를 입력해주세요.');   
     if (!formImportState.port) return toast.error('포트를 입력해주세요.');   
-    
-    importIscsiFromHost({ hostId: hostVo?.id, iscsiData: formImportState }, {
-      onSuccess: (data) => { setIscsiSearchResults(data);setIscsis(data); },
-      onError: (error) => { toast.error('iSCSI 가져오기 실패:', error) }
-    });
+
+    setIsIscsisLoading(true);
+
+    importIscsiFromHostAPI(
+      { hostId: hostVo?.id, iscsiData: formImportState },
+      { 
+        onSuccess: (data) => {
+          setIscsiResults(data);
+          setIsIscsisLoading(false);
+          setIsIscsisSuccess(true);
+          setIsIscsisError(false);
+        },
+        onError: (error) => {
+          toast.error("iSCSI 가져오기 실패");
+          setIsIscsisLoading(false);
+          setIsIscsisSuccess(false);
+          setIsIscsisError(true);
+        },
+      }
+    );
   };
+  
+  console.log("$$ result" , iscsiResults)
 
   // iscsi 가져오기 시 로그인 처리
   const handleLoginIscsi = () => {
     if (!formImportState.target) return toast.error('항목을 선택해주세요.');
 
-    loginIscsiFromHost({ hostId: hostVo?.id, iscsiData: formImportState }, {
-      onSuccess: (data) => { setIscsiSearchResults(data); setIscsis(data); },
+    loginIscsiFromHostAPI({ hostId: hostVo?.id, iscsiData: formImportState }, {
+      onSuccess: (data) => { setIscsiResults(data) },
       onError: (error) => { toast.error('iSCSI 로그인 실패:', error) },
     });
   };
@@ -124,7 +147,7 @@ const DomainIscsiImport = ({
   
             <Tables columns={TableColumnsInfo.IMPORT_ISCSI}
               isLoading={isIscsisLoading} isError={isIscsisError} isSuccess={isIscsisSuccess}
-              data={iscsis}
+              data={transIscsiData}
               onRowClick={ (row) => handleRowClick(row) }
               shouldHighlight1stCol={true}
             />

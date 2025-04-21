@@ -1416,9 +1416,9 @@ export const useImportIscsiFromHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useImportIscsiFromHost ... res: `, res);
-      queryClient.invalidateQueries(['iscsiFromHost'])
-      postSuccess();
-    },
+      queryClient.invalidateQueries(['iscsiFromHost']);
+      postSuccess(res);
+    },    
     onError: (error) => {
       Logger.error(error.message);
       toast.error(error.message);

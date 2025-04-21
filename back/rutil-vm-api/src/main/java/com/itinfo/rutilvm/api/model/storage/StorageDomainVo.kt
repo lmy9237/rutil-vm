@@ -239,24 +239,24 @@ fun List<StorageDomain>.toStorageDomainInfoVos(conn: Connection): List<StorageDo
  */
 fun StorageDomainVo.toStorageDomainBuilder(): StorageDomainBuilder {
 	return StorageDomainBuilder()
-		.name(this@toStorageDomainBuilder.name)
-		.type(StorageDomainType.fromValue(this@toStorageDomainBuilder.domainType))
-		.description(this@toStorageDomainBuilder.description)
-		.comment(this@toStorageDomainBuilder.comment)
-		.warningLowSpaceIndicator(this@toStorageDomainBuilder.warning)
-		.criticalSpaceActionBlocker(this@toStorageDomainBuilder.spaceBlocker)  //디스크 공간 동작 차단
-		.dataCenters(*arrayOf(DataCenterBuilder().id(this@toStorageDomainBuilder.dataCenterVo.id).build()))
-		.host(HostBuilder().name(this@toStorageDomainBuilder.hostVo.name).build())
+		.name(this.name)
+		.type(StorageDomainType.fromValue(this.domainType))
+		.description(this.description)
+		.comment(this.comment)
+		.warningLowSpaceIndicator(this.warning)
+		.criticalSpaceActionBlocker(this.spaceBlocker)  //디스크 공간 동작 차단
+		.dataCenters(*arrayOf(DataCenterBuilder().id(this.dataCenterVo.id).build()))
+		.host(HostBuilder().name(this.hostVo.name).build())
 }
 
 fun StorageDomainVo.toAddStorageDomainBuilder(): StorageDomain {
 	log.info("toAddStorageDomainBuilder: {}", this)
-	return this@toAddStorageDomainBuilder.toStorageDomainBuilder()
+	return this.toStorageDomainBuilder()
 		.storage(
 			when (StorageType.fromValue(this@toAddStorageDomainBuilder.storageType)) {
-				StorageType.NFS -> this@toAddStorageDomainBuilder.toAddNFSBuilder()
-				StorageType.ISCSI -> this@toAddStorageDomainBuilder.toAddISCSIBuilder()
-				StorageType.FCP -> this@toAddStorageDomainBuilder.toAddFCPBuilder()
+				StorageType.NFS -> this.toAddNFSBuilder()
+				StorageType.ISCSI -> this.toAddISCSIBuilder()
+				StorageType.FCP -> this.toAddFCPBuilder()
 				else -> throw IllegalArgumentException("Unsupported storage type")
 			}
 		)
@@ -265,11 +265,19 @@ fun StorageDomainVo.toAddStorageDomainBuilder(): StorageDomain {
 
 fun StorageDomainVo.toImportStorageDomainBuilder(): StorageDomain {
 	log.info("toImportStorageDomainBuilder: {}", this)
-	// TODO: 가져오기 id값의 위치를 알아봐야 할 듯
-	return this@toImportStorageDomainBuilder
-		.toStorageDomainBuilder()
-		.id(this@toImportStorageDomainBuilder.id)
-		.storage(HostStorageBuilder().type(StorageType.fromValue(this@toImportStorageDomainBuilder.storageType)))
+
+	return this.toStorageDomainBuilder()
+		.id(this.id)
+		.storage(HostStorageBuilder().type(StorageType.fromValue(this.storageType)))
+		.build()
+}
+
+fun StorageDomainVo.toImportFCStorageDomainBuilder(): StorageDomain {
+	log.info("toImportStorageDomainBuilder: {}", this)
+
+	return this.toStorageDomainBuilder()
+		.id(this.id)
+		.storage(HostStorageBuilder().type(StorageType.fromValue(this.storageType)))
 		.build()
 }
 

@@ -23,6 +23,7 @@ select,
   border: var(--border-btn);border-radius: 1px;
   font-size: var(--fs-default);
   padding: 2px;
+  padding-left: 6px;
   outline: none;
   border-radius: 1px;
   letter-spacing: -0.28px;

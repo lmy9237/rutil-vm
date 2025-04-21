@@ -27,7 +27,6 @@ import DomainImportModal from "./DomainImportModal";
 const DomainModals = ({
   domain,
   datacenterId,
-  sourceContext, // all, dcDomain, domainDc
   onClose,
 }) => {
   const { activeModal, setActiveModal, } = useUIState()
@@ -45,20 +44,16 @@ const DomainModals = ({
         onClose={() => setActiveModal()}
         editMode
         mode={activeModal()}
-        domainId={domain?.id ?? domainsSelected[0]?.id}
+        // domainId={domain?.id ?? domainsSelected[0]?.id}
       />
     ), import: (
-      <DomainImportModal
-        key={activeModal()} isOpen={activeModal() === "domain:import"}
+      <DomainImportModal key={activeModal()} isOpen={activeModal() === "domain:import"}
         onClose={() => setActiveModal()}
-        mode={activeModal()}
-        domainId={domain?.id}
+        // mode={activeModal()}
       />
-      
     ), remove: (
       <DomainDeleteModal key={activeModal()} isOpen={activeModal() === "domain:remove"}
         onClose={() => setActiveModal()}
-        domain={domain}
         deleteMode={true}
       />
     ), destroy: (
@@ -69,29 +64,21 @@ const DomainModals = ({
     ), attach: (
       <DomainAttachModal key={activeModal()} isOpen={activeModal() === "domain:attach"}
         onClose={() => setActiveModal()}
-        sourceContext={sourceContext}
         actionType // true면 데이터센터에서 도메인를 바라봄 (도메인 목록이 뜸)
-        domainId={domain?.id}
-        datacenterId={datacenterId || ""}
       />
     ), activate: (
       <DomainActivateModal isOpen={activeModal() === "domain:activate"}
         onClose={() => setActiveModal()}
-        domains={domainsSelected}
-        datacenterId={datacenterId}
       />
     ), detach: (
       <DomainDetachModal isOpen={activeModal() === "domain:detach"}
         onClose={() => setActiveModal()}
-        sourceContext={sourceContext}
         domain={domain}
         datacenterId={datacenterId}
       />
     ), maintenance: (
       <DomainMainTenanceModal key={activeModal()} isOpen={activeModal() === "domain:maintenance"}
         onClose={() => setActiveModal()}
-        domains={domainsSelected}
-        datacenterId={datacenterId}
       />
       /*
       <DomainCheckModal // 도메인 확인

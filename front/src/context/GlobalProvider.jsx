@@ -175,6 +175,12 @@ export const GlobalProvider = ({ children }) => {
       _setCertsSelected([{...newV}]);
   }
 
+  const [sourceContext, _setSourceContext] = useState("all"); // "fromDomain" ... 
+  const setSourceContext = (newV) => {
+    Logger.debug(`GlobalProvider > setSourceContext ... newV: `, newV)
+    _setSourceContext(newV ?? "all")
+  }
+
   const clearAllSelected = () => {
     Logger.debug(`GlobalProvider > clearAllSelected ... `)
     setDatacentersSelected([])
@@ -195,6 +201,7 @@ export const GlobalProvider = ({ children }) => {
     setUsersSelected([])
     setUserSessionsSelected([])
     setCertsSelected([])
+    setSourceContext(null)
   }
 
   return (
@@ -217,6 +224,7 @@ export const GlobalProvider = ({ children }) => {
       usersSelected, setUsersSelected,
       userSessionsSelected, setUserSessionsSelected,
       certsSelected, setCertsSelected,
+      sourceContext, setSourceContext,
       clearAllSelected,
     }}>
       {children}

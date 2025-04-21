@@ -5,8 +5,11 @@ import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import toast from "react-hot-toast";
 import { useMaintenanceDomain } from "../../../api/RQHook";
+import useGlobal from "../../../hooks/useGlobal";
 
-const DomainMainTenanceModal = ({ isOpen, domains, datacenterId, onClose }) => {
+const DomainMainTenanceModal = ({ isOpen, onClose }) => {
+  const { datacentersSelected, domainsSelected } = useGlobal()
+
   const onSuccess = () => {
     onClose();
     toast.success(`${Localization.kr.DOMAIN} 유지보수 완료`);
@@ -14,14 +17,14 @@ const DomainMainTenanceModal = ({ isOpen, domains, datacenterId, onClose }) => {
   const { mutate: maintenanceDomain } = useMaintenanceDomain(onSuccess, () => onClose());
 
   const { ids, names } = useMemo(() => {
-    if (!domains) return { ids: [], names: [] };
+    if (!domainsSelected) return { ids: [], names: [] };
 
-    const dataArray = Array.isArray(domains) ? domains : [domains];
+    const dataArray = Array.isArray(domainsSelected) ? domainsSelected : [domainsSelected];
     return {
       ids: dataArray.map((item) => item.id),
       names: dataArray.map((item) => item.name),
     };
-  }, [domains]);
+  }, [domainsSelected]);
 
   const [ignoreOVF, setIgnoreOVF] = useState(false);
 
@@ -29,7 +32,7 @@ const DomainMainTenanceModal = ({ isOpen, domains, datacenterId, onClose }) => {
     Logger.debug("OVF 무시:", ignoreOVF);
 
     ids.forEach((domainId) => {
-      maintenanceDomain({ domainId, dataCenterId: datacenterId, ovf: ignoreOVF });
+      maintenanceDomain({ domainId, dataCenterId: datacentersSelected[0]?.id, ovf: ignoreOVF });
     });
   };
 

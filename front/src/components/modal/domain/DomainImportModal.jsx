@@ -26,7 +26,6 @@ const domainTypes = [
   { value: "export", label: "내보내기" },
 ];
 
-
 // 일반 정보
 const initialFormState = {
   id: "",
@@ -80,7 +79,16 @@ const DomainImportModal = ({
     onClose();
     toast.success(`${Localization.kr.DOMAIN} 가져오기 완료`);
   };
-  const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose()); // 가져오기 iscsi  
+  
+  const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose()); // 가져오기
+  const { mutate: importIscsiFromHostAPI } = useImportIscsiFromHost(
+    (data) => {
+      setIscsiResults(data); // <-- 여기서 직접 설정
+    },
+    (error) => {
+      toast.error("iSCSI 가져오기 실패:", error);
+    }
+  );  
   const { mutate: importFcpFromHost } = useImportFcpFromHost(onSuccess, () => onClose()); // 가져오기 fibre
 
   const { 
@@ -99,13 +107,6 @@ const DomainImportModal = ({
   //   isError: isFibresError, 
   //   isSuccess: isFibresSuccess
   // } = useFibreFromHost(hostVo?.id, (e) => ({ ...e }));
-
-  const transIscsiData = iscsiResults.map((i) => ({
-    ...i,
-    target: i?.target,
-    address: i?.address,
-    port: i?.port,
-  }));
 
   const transFibreData = fcResults.map((f) => ({
     ...f,
@@ -293,10 +294,13 @@ const DomainImportModal = ({
 
       {/* ISCSI 의 경우 */}
       {isIscsi && (
-        <DomainIscsiImport lunId={lunId} setLunId={setLunId}
+        <DomainIscsiImport 
+          iscsiResults={iscsiResults} setIscsiResults={setIscsiResults}
+          lunId={lunId} setLunId={setLunId}
           hostVo={hostVo} setHostVo={setHostVo}
           formImportState={formImportState} setFormImportState={setFormImportState}
-          iscsiResults={iscsiResults} setIscsiResults={setIscsiResults}
+          importIscsiFromHostAPI={importIscsiFromHostAPI}
+          // loginIscsiFromHostAPI={}
           // loginIscsiFromHost={loginIscsiFromHost}
           // refetchIscsis={} 
           // isIscsisLoading={} 

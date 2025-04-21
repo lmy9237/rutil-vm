@@ -13,7 +13,6 @@ import TableRowClick from "../table/TableRowClick";
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
-import DomainModals from "../modal/domain/DomainModals";
 import DomainDataCenterActionButtons from "./DomainDataCenterActionButtons";
 import Logger from "../../utils/Logger";
 
@@ -28,13 +27,12 @@ import Logger from "../../utils/Logger";
 const DomainDupl = ({
   domains = [], columns = [], showSearchBox = true,
   actionType, 
-  datacenterId,
   sourceContext = "all", 
   refetch, isLoading, isError, isSuccess,
 }) => {
   // sourceContext: all = 전체목록 fromDomain = 도메인에서 데이터센터 fromDatacenter = 데이터센터에서 도메인
   const navigate = useNavigate();
-  const { activeModal, setActiveModal } = useUIState();
+  // const { activeModal, setActiveModal } = useUIState();
   const { domainsSelected, setDomainsSelected } = useGlobal()
   
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
@@ -119,10 +117,10 @@ const DomainDupl = ({
       <SelectedIdView items={domainsSelected} />
 
       {/* 도메인 모달창 */}
-      <DomainModals domain={domainsSelected[0]}        
+      {/* <DomainModals domain={domainsSelected[0]}        
         datacenterId={datacenterId}
         sourceContext={sourceContext}
-      />
+      /> */}
     </div>
   );
 };

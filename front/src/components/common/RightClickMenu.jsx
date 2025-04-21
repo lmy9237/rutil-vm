@@ -47,6 +47,7 @@ const RightClickMenu = () => {
     domainsSelected, setDomainsSelected,
     disksSelected, setDisksSelected,
     usersSelected, setUsersSelected,
+    sourceContext,
     clearAllSelected,
   } = useGlobal()
   
@@ -67,7 +68,10 @@ const RightClickMenu = () => {
       <TemplateModals template={templatesSelected[0] ?? null} />
       <NetworkModals network={networksSelected[0] ?? null} />
       <VnicProfileModals vnicProfile={vnicProfilesSelected[0] ?? null} />
-      <DomainModals domain={domainsSelected[0] ?? null} />
+      <DomainModals 
+        domain={domainsSelected[0] ?? null} 
+        sourceContext={sourceContext}
+      />
       <DiskModals disk={disksSelected[0] ?? null} />
       <VmDiskModals disk={disksSelected[0] ?? null} />
       <SettingUsersModals user={usersSelected[0] ?? null} />

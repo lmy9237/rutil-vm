@@ -12,7 +12,7 @@ const DomainNfsImport = ({
       />
       <div className="text-xs text-gray-500 mt-1">
         예: <b>myserver.mydomain.com:/my/local/path</b>
-      </div>      
+      </div>
     </>
   )
 };

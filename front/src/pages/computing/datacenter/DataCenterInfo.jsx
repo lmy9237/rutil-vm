@@ -44,7 +44,7 @@ const DataCenterInfo = () => {
     isSuccess: isDataCenterSuccess,
   } = useDataCenter(dataCenterId, (e) => ({ ...e }));
   const { activeModal, setActiveModal, } = useUIState()
-  const { datacentersSelected, setDatacentersSelected } = useGlobal()
+  const { setDatacentersSelected, setSourceContext } = useGlobal()
   const [activeTab, setActiveTab] = useState("clusters");
 
   useEffect(() => {
@@ -52,6 +52,7 @@ const DataCenterInfo = () => {
       navigate("/computing/rutil-manager/datacenters");
     }
     setDatacentersSelected(dataCenter)
+    setSourceContext("fromDatacenter")
   }, [dataCenter]);
 
   const handleTabClick = useCallback((tab) => {

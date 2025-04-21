@@ -88,7 +88,7 @@ fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: Stri
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.importFcpStorageDomain(storageDomain: StorageDomain): Result<StorageDomain?> = runCatching {
+fun Connection.importStorageDomain(storageDomain: StorageDomain, dataCenterId: String): Result<StorageDomain?> = runCatching {
 	val storageImported: StorageDomain? =
 		this.srvStorageDomains().addBlockDomain().storageDomain(storageDomain).send().storageDomain()
 
@@ -96,8 +96,7 @@ fun Connection.importFcpStorageDomain(storageDomain: StorageDomain): Result<Stor
 	storageImported ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
 	// 스토리지 도메인을 데이터센터에 붙이는 작업
-//	this.attachStorageDomainsToDataCenter(storageAdded.id(), dataCenterId)
-//		.onFailure { throw it }
+	this.attachStorageDomainsToDataCenter(storageImported.id(), dataCenterId).onFailure { throw it }
 
 	storageImported
 }.onSuccess {

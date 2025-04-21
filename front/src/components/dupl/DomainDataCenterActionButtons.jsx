@@ -1,28 +1,31 @@
 import React from "react";
 import ActionButtonGroup from "../button/ActionButtonGroup";
+import useGlobal from "../../hooks/useGlobal";
+import useUIState from "../../hooks/useUIState";
 
 const DomainDataCenterActionButtons = ({
-  openModal,
-  isEditDisabled,
-  isDeleteDisabled,
-  status,
-  isContextMenu = false,
   actionType = "default",
+  status,
 }) => {
   // 데이터센터-도메인: 연결(도메인), 분리, 활성, 유지보수
   // 도메인-데이터센터: 연결(데이터센터), 분리, 활성, 유지보수
+  const { setActiveModal } = useUIState();
+  const { domainsSelected } = useGlobal()
+  const isContextMenu = actionType === "context";
 
   const isUp = status === "UP";
   const isActive = status === "ACTIVE";
   const isMaintenance = status === "MAINTENANCE";
+  const isLocked = status === "LOCKED";
+  const isUnknown = status === "UNKNOWN";
 
   const basicActions = [
-    { type: "attach", label: "연결", disabled: isUp, onBtnClick: () => openModal("attach") }, // 연결 disabled 조건 구하기
-    { type: "detach", label: "분리", disabled: isEditDisabled || isActive, onBtnClick: () => openModal("detach") },
-    { type: "activate", label: "활성", disabled: isDeleteDisabled || isActive, onBtnClick: () => openModal("activate") },
-    { type: "maintenance", label: "유지보수", disabled: isDeleteDisabled || isMaintenance, onBtnClick: () => openModal("maintenance") },
+    { type: "attach", onBtnClick: () => setActiveModal("domain:attach"), label: "연결", }, // 연결 disabled 조건 구하기 disabled: domainsSelected.length === 0 데이터센터가 없을때
+    { type: "detach", onBtnClick: () => setActiveModal("domain:detach"), label: "분리", disabled: domainsSelected.length === 0 || isLocked || isActive, },
+    { type: "activate", onBtnClick: () => setActiveModal("domain:activate"), label: "활성", disabled: domainsSelected.length === 0 || isLocked || isActive, },
+    { type: "maintenance", onBtnClick: () => setActiveModal("domain:maintenance"), label: "유지보수", disabled: domainsSelected.length === 0 || isLocked || isMaintenance, },
   ];
-
+ 
   return (
     <>
       <ActionButtonGroup

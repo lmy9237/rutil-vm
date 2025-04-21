@@ -1,4 +1,3 @@
-import { useState } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
@@ -18,14 +17,12 @@ import Logger from "../../../utils/Logger";
  *
  * @returns
  */
-const DomainAttachModal = ({ 
-  isOpen, 
-  sourceContext,
-  domainId,
-  datacenterId,
-  onClose 
-}) => {
-  const { datacentersSelected, setDatacentersSelected } = useGlobal()
+const DomainAttachModal = ({ isOpen, onClose }) => {
+  const {
+    datacentersSelected, setDatacentersSelected, 
+    domainsSelected, setDomainsSelected,
+    sourceContext
+  } = useGlobal()
 
   // fromDatacenter 는 데이터센터에서 바라보는 도메인, fromDomain 는 도메인에서 바라보는 데이터센터
   const title = sourceContext === "fromDomain" ? `${Localization.kr.DATA_CENTER}` : `${Localization.kr.DOMAIN}`;
@@ -80,24 +77,12 @@ const DomainAttachModal = ({
     })
   );
 
-  const [selectedId, setSelectedId] = useState(null); // 단일 값으로 변경
-  const [selectedName, setSelectedName] = useState(null); // 단일 값으로 변경
-
-  const handleRowClick = (row) => {
-    const selectedRow = Array.isArray(row) ? row[0] : row;
-    if (selectedRow?.id) {
-      Logger.debug(`선택한 ID: ${selectedRow.id}`);
-      setSelectedId(selectedRow.id);
-      setSelectedName(selectedRow.name);
-    }
-  };
-
   const handleFormSubmit = () => {
     Logger.debug(`DomainAttachModal > handleFormSubmit ... `)
 
-    label 
-      ? attachDomain({ storageDomainId: domainId, dataCenterId: selectedId })
-      : attachDomain({ storageDomainId: selectedId, dataCenterId: datacenterId })
+    attachDomain(
+      { storageDomainId: domainsSelected[0]?.id, dataCenterId: datacentersSelected[0]?.id }
+    )
   };
 
   Logger.debug(`DomainAttachModal ... `)
@@ -112,18 +97,19 @@ const DomainAttachModal = ({
           isLoading={label ? isDataCentersLoading : isDomainsLoading}
           isError={label ? isDataCentersError : isDomainsError}
           isSuccess={label ? isDataCentersSuccess : isDomainsSuccess}
-          columns={
-            label
-              ? TableColumnsInfo.STORAGE_DOMAINS_ATTACH_FROM_DATACENTER
-              : TableColumnsInfo.DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN
+          columns={ label
+            ? TableColumnsInfo.STORAGE_DOMAINS_ATTACH_FROM_DATACENTER
+            : TableColumnsInfo.DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN
           }
           data={label ? transformedDataCenterData : transformedDomainData}
           shouldHighlight1stCol={true}
-          onRowClick={(row) => setDatacentersSelected(row)}
+          onRowClick={label 
+            ? (row) => setDatacentersSelected(row)
+            : (row) => setDomainsSelected(row)
+          }
         />
       </div>
-
-      <SelectedIdView items={datacentersSelected} />
+      <SelectedIdView items={label ? datacentersSelected: domainsSelected} />
     </BaseModal>
   );
 };

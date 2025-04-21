@@ -14,7 +14,7 @@ const overCommit = (commit, disk) => ((commit / disk) * 100).toFixed(0);
  */
 const DomainGeneral = ({ domainId }) => {
   const { data: domain } = useStroageDomain(domainId);
-   const { data: diskSnapshots = [] } = useAllDiskSnapshotsFromDomain(domainId, (e) => ({ ...e }));
+  const { data: diskSnapshots = [] } = useAllDiskSnapshotsFromDomain(domainId, (e) => ({ ...e }));
 
   const tableRows = [
     { label: "ID", value: domain?.id },

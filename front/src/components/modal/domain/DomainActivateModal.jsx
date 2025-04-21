@@ -6,6 +6,7 @@ import {
   useDetachDomain,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name DomainActivateModal
@@ -15,12 +16,8 @@ import Localization from "../../../utils/Localization";
  * @prop {boolean} isOpen
  * @returns
  */
-const DomainActivateModal = ({ 
-  isOpen, 
-  onClose, 
-  domains, 
-  datacenterId 
-}) => {
+const DomainActivateModal = ({ isOpen, onClose }) => {
+  const { datacentersSelected, domainsSelected } = useGlobal()
   const onSuccess = () => {
     onClose();
     toast.success(`${Localization.kr.DOMAIN} 활성화 완료`);
@@ -28,14 +25,14 @@ const DomainActivateModal = ({
   const { mutate: activateDomain } = useActivateDomain(onSuccess, () => onClose());
 
   const { ids, names } = useMemo(() => {
-    if (!domains) return { ids: [], names: [] };
+    if (!domainsSelected) return { ids: [], names: [] };
 
-    const dataArray = Array.isArray(domains) ? domains : [domains];
+    const dataArray = Array.isArray(domainsSelected) ? domainsSelected : [domainsSelected];
     return {
       ids: dataArray.map((item) => item.id),
       names: dataArray.map((item) => item.name),
     };
-  }, [domains]);
+  }, [domainsSelected]);
   
   const handleFormSubmit = () => {
     if (!ids.length) {
@@ -43,7 +40,7 @@ const DomainActivateModal = ({
     }
 
     ids.forEach((domainId) => {
-      activateDomain({ domainId, dataCenterId: datacenterId });
+      activateDomain({ domainId, dataCenterId: datacentersSelected[0]?.id });
     });
   };
 

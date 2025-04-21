@@ -23,6 +23,7 @@ import {
 import { rvi24Cloud } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name DomainInfo
@@ -35,6 +36,8 @@ const DomainInfo = () => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal, } = useUIState()
   const { id: domainId, section } = useParams();
+  const { setDomainsSelected, setSourceContext } = useGlobal()
+
   const { data: domain } = useStroageDomain(domainId);
   const { mutate: refreshDomain } = useRefreshLunDomain();
   const { mutate: ovfUpdateDomain } = useOvfUpdateDomain();
@@ -43,6 +46,10 @@ const DomainInfo = () => {
   const isUNKNOWN = domain?.status === "UNKNOWN";
 
   const [activeTab, setActiveTab] = useState("general");
+  useEffect(() => {
+    setDomainsSelected(domain)
+    setSourceContext("fromDomain")
+  }, [domain])
 
   const sections = useMemo(() => ([
     { id: "general", label: Localization.kr.GENERAL },
@@ -136,9 +143,9 @@ const DomainInfo = () => {
       </div>
 
       {/* domain 모달창 */}
-      <DomainModals domain={domain}
+      {/* <DomainModals domain={domain}
         selectedDomains={domain}
-      />
+      /> */}
     </div>
   );
 };

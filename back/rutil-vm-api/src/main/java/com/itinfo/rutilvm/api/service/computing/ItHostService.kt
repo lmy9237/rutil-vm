@@ -96,54 +96,6 @@ interface ItHostService {
 	fun findAllEventsFromHost(hostId: String): List<EventVo>
 
 
-	/**
-	 * [ItHostService.findAllIscsiFromHost]
-	 * 도메인 생성 - iSCSI 유형 대상 LUN 목록
-	 *
-	 * @param hostId [String] 호스트 Id
-	 * @return List<[HostStorageVo]>
-	 */
-	@Throws(Error::class)
-	fun findAllIscsiFromHost(hostId: String): List<HostStorageVo>
-	/**
-	 * [ItHostService.findAllFibreFromHost]
-	 * 도메인 생성 - Fibre Channel 유형 대상 LUN 목록
-	 * 타입이 tcp로 뜸
-	 *
-	 * @param hostId [String] 호스트 Id
-	 * @return List<[HostStorageVo]>
-	 */
-	@Throws(Error::class)
-	fun findAllFibreFromHost(hostId: String): List<HostStorageVo>
-	/**
-	 * [ItHostService.findImportIscsiFromHost]
-	 * 도메인 가져오기 - iSCSI 유형 대상 LUN 목록
-	 *
-	 * @param hostId [String] 호스트 Id
-	 * @param iscsiDetailVo [IscsiDetailVo]
-	 * @return List<[IscsiDetailVo]>
-	 */
-	@Throws(Error::class)
-	fun findImportIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): List<IscsiDetailVo>
-	/**
-	 * [ItHostService.findUnregisterDomainFromHost]
-	 * 도메인 가져오기 - iSCSI 유형 대상 LUN 목록
-	 *
-	 * @param hostId [String] 호스트 Id
-	 * @return List<[StorageDomainVo]>
-	 */
-	@Throws(Error::class)
-	fun findUnregisterDomainFromHost(hostId: String): List<IdentifiedVo>
-	/**
-	 * [ItHostService.loginIscsiFromHost]
-	 * 도메인 가져오기 - iSCSI 로그인
-	 *
-	 * @param hostId [String] 호스트 Id
-	 * @param iscsiDetailVo [IscsiDetailVo]
-	 * @return List<[StorageDomainVo]>
-	 */
-	@Throws(Error::class)
-	fun loginIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): Boolean
 }
 
 @Service
@@ -224,46 +176,6 @@ class HostServiceImpl(
 		return res.toEventVos()
 	}
 
-	@Throws(Error::class)
-	override fun findAllIscsiFromHost(hostId: String): List<HostStorageVo> {
-		// TODO 확인필요
-		log.info("findAllIscsiFromHost... hostId: {}", hostId)
-		val res: List<HostStorage> = conn.findAllHostStoragesFromHost(hostId).getOrDefault(emptyList())
-			.filter { it.type() == StorageType.ISCSI }
-		return res.toHostStorageVos()
-	}
-
-	@Throws(Error::class)
-	override fun findAllFibreFromHost(hostId: String): List<HostStorageVo> {
-		log.info("findAllFibreFromHost... hostId: {}", hostId)
-		val res: List<HostStorage> = conn.findAllHostStoragesFromHost(hostId).getOrDefault(emptyList())
-			.filter { it.type() == StorageType.FCP }
-		return res.toHostStorageVos()
-	}
-
-	@Throws(Error::class)
-	override fun findImportIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): List<IscsiDetailVo> {
-		log.info("findImportIscsiFromHost... hostId: {}", hostId)
-		val res: List<IscsiDetails> = conn.discoverIscsiFromHost(
-			hostId,
-			iscsiDetailVo.toDiscoverIscsiDetailVo()
-		).getOrDefault(emptyList())
-		return res.toIscsiDetailVos()
-	}
-
-	@Throws(Error::class)
-	override fun findUnregisterDomainFromHost(hostId: String): List<IdentifiedVo> {
-		log.info("findUnregisterDomainFromHost... hostId: {}", hostId)
-		val res: List<StorageDomain> = conn.unRegisteredStorageDomainsFromHost(hostId).getOrDefault(emptyList())
-		return res.fromStorageDomainsToIdentifiedVos()
-	}
-
-	@Throws(Error::class)
-	override fun loginIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): Boolean {
-		log.info("loginIscsiFromHost... hostId: {}", hostId)
-		val res: Result<Boolean> = conn.loginIscsiFromHost(hostId, iscsiDetailVo.toLoginIscsi())
-		return res.isSuccess
-	}
 
 	private fun calculateUsage(host: Host, hostNic: HostNic?): UsageDto? {
 		return if (host.status() == HostStatus.UP && hostNic != null) {

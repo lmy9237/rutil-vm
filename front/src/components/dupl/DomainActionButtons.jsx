@@ -31,13 +31,6 @@ const DomainActionButtons = ({
     { type: "destory", onBtnClick: () => setActiveModal("domain:destroy"), label: Localization.kr.DESTROY, disabled: domainsSelected.length === 0 || isLocked || isMaintenance,  },
   ];
 
-  const dcActions = [
-    { type: "attach", onBtnClick: () => setActiveModal("domain:attach"), label: "연결", disabled: domainsSelected.length === 0 || isUp, }, // 연결 disabled 조건 구하기
-    { type: "detach", onBtnClick: () => setActiveModal("domain:detach"), label: "분리", disabled: domainsSelected.length === 0 || isLocked || isActive, },
-    { type: "activate", onBtnClick: () => setActiveModal("domain:activate"), label: "활성", disabled: domainsSelected.length === 0 || isLocked || isActive, },
-    { type: "maintenance", onBtnClick: () => setActiveModal("domain:maintenance"), label: "유지보수", disabled: domainsSelected.length === 0 || isLocked || isMaintenance, },
-  ];
-
   Logger.debug(`...`)
   return (
     <>
