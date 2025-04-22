@@ -30,9 +30,8 @@ fun Connection.srvDisk(diskId: String): DiskService =
 
 fun Connection.findDisk(diskId: String, follow: String = ""): Result<Disk?> = runCatching {
 	this.srvDisk(diskId).get().allContent(true).apply {
-		if(follow.isNotEmpty()) follow(follow)
+		if (follow.isNotEmpty()) follow(follow)
 	}.send().disk()
-
 }.onSuccess {
 	Term.DISK.logSuccess("상세조회")
 }.onFailure {

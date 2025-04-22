@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { useMaintenanceDomain } from "../../../api/RQHook";
 import useGlobal from "../../../hooks/useGlobal";
 
-const DomainMaintenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceModal
+const DomainMainttenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceModal
   isOpen,
   onClose
 }) => {
@@ -60,4 +60,4 @@ const DomainMaintenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceMod
   );
 };
 
-export default DomainMaintenanceModal;
+export default DomainMainttenanceModal;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import useBoxState from "../../hooks/useBoxState";
 import {
   RVI24,
@@ -15,6 +15,7 @@ import { useAllEventsNormal, useAllNotiEvents, useRemoveEvent } from "../../api/
 import Logger from "../../utils/Logger";
 import useClickOutside from "../../hooks/useClickOutside";
 import "./BoxEvent.css";
+import useFooterState from "../../hooks/useFooterState";
 
 /**
  * @name BoxEvent
@@ -30,6 +31,9 @@ const BoxEvent = ({
     eventBoxExpanded, toggleEventBoxExpanded,
     eventBoxSectionActive, setEventBoxSectionActive
   } = useBoxState();
+  const {
+    footerHeightInPx
+  } = useFooterState()
 
   const {
     data: eventsNormal = [],
@@ -64,12 +68,25 @@ const BoxEvent = ({
   })
   const handleSectionClick = (section) => setEventBoxSectionActive(eventBoxSectionActive() === section ? "" : section);
   const stopPropagation = (e) => e.stopPropagation();
+  const bellHeaderHeights = useMemo(() => (
+    (120) /* 각 bell-header 높이 */ + 50 /* bell-btns 높이 */
+  ) ,[])
+  const headerHeight = useMemo(() => (
+    63 /* 헤더 높이 */
+  ), [])
+  const currentEventBoxHeightInPx = useMemo(() => {
+    Logger.debug(`BoxEvent currentEventBoxHeightInPx ... window.innerHeight: ${window.innerHeight}, footerHeightInPx: ${footerHeightInPx()}`)
+    return window.innerHeight - footerHeightInPx() - headerHeight;
+}, [footerHeightInPx])
   
   return (
     <div 
       ref={bellBoxRef}
       className={`bell-box ${eventBoxExpanded() ? "expanded" : ""}`}
       onClick={stopPropagation}
+      style={{
+        height: currentEventBoxHeightInPx
+      }}
       {...props}
     >
       <div className="f-btw bell-cate">
@@ -88,11 +105,14 @@ const BoxEvent = ({
         </span>
       </div>
       {/* 알림 탭 */}
-      <div className={`bell-cate bell-cate-section  ${eventBoxSectionActive() === "알림" ? "active" : ""} f-start`}
+      <div className={`bell-cate bell-cate-section ${eventBoxSectionActive() === "알림" ? "active" : ""} f-start`}
         onClick={() => handleSectionClick("알림")}
       >
         <span className="bell-header-icon f-center">
-          <RVI24 iconDef={eventBoxSectionActive() === "알림" ? rvi24DownArrow() : rvi24RightArrow()}/>
+          <RVI24 iconDef={eventBoxSectionActive() === "알림" 
+            ? rvi24DownArrow() 
+            : rvi24RightArrow()}
+          />
         </span>
         <span className="bell-section-title ml-1">알림</span>
       </div>
@@ -100,7 +120,11 @@ const BoxEvent = ({
       {/* 알림 내용 */}
       {eventBoxSectionActive() === "알림" && (
         <>
-          <div className="bell-content-outer">
+          <div className="bell-content-outer"
+            style={{
+              height: currentEventBoxHeightInPx - bellHeaderHeights,
+            }}
+          >
             <BoxEventItems events={notiEvents} />
           </div>
 
@@ -127,7 +151,11 @@ const BoxEvent = ({
       {/* 이벤트 내용 (알림 아래로 깔리도록 설정) */}
       {eventBoxSectionActive() === "이벤트" && (
         <>
-          <div className="bell-content-outer event-section">
+          <div className="bell-content-outer event-section"
+            style={{
+              height: currentEventBoxHeightInPx - bellHeaderHeights,
+            }}
+          >
             <BoxEventItems events={eventsNormal} />
           </div>
 
@@ -150,11 +178,16 @@ const BoxEventContent = () => {
 }
 
 const BoxEventItems = ({
-  events=[]
-}) => {
-  Logger.debug(`BoxEventItems ...`)
-  return events.map((e) => <BoxEventItem event={e} />)
-}
+  events=[],
+  ...props
+}) => (
+  events.map((e) => 
+    <BoxEventItem event={e} 
+      {...props}
+    />
+  )
+)
+
 
 const BoxEventItem = ({
   event,

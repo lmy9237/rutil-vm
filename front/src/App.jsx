@@ -46,7 +46,6 @@ const App = () => {
   const { setActiveModal, } = useUIState()
   const { setAsideVisible } = useAsideState()
   const { setLoginBoxVisible, setEventBoxVisible, } = useBoxState()
-
   const { setTmiLastSelected } = useTmi()
   
   useEffect(() => {
@@ -103,7 +102,6 @@ const App = () => {
       },
     });
   };
-
 
   // react-scan 설정
   scan({

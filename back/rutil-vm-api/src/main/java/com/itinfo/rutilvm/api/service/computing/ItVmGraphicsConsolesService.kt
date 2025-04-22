@@ -55,11 +55,11 @@ interface ItVmGraphicsConsolesService {
 	 *
 	 * @param vmId [String] 가상머신 Id
 	 * @param graphicsConsoleId [String] 그래픽콘솔 Id
-	 * @param expiry [Int] 콘솔 접근 만료시간
+	 * @param expiry [Long] 콘솔 접근 만료시간
 	 *
 	 * @return [GraphicsConsoleVo]
 	 */
-	fun publishTicket(vmId: String, graphicsConsoleId: String, expiry: Int?): TicketVo
+	fun publishTicket(vmId: String, graphicsConsoleId: String, expiry: Long?): TicketVo
 }
 
 @Service
@@ -92,7 +92,7 @@ class VmGraphicsConsolesServiceImpl(
 		return gConsole.toGraphicsConsoleVo()
 	}
 
-	override fun publishTicket(vmId: String, graphicsConsoleId: String, expiry: Int?): TicketVo {
+	override fun publishTicket(vmId: String, graphicsConsoleId: String, expiry: Long?): TicketVo {
 		log.info("publishTicket ... vmId: {}, graphicsConsoleId: {}, expiry: {}", vmId, graphicsConsoleId, expiry)
 		val ticket: Ticket =
 			conn.findTicketFromVmGraphicsConsole(vmId, graphicsConsoleId, expiry?.toBigInteger()).getOrNull()

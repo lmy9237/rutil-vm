@@ -8,7 +8,7 @@ import DomainCheckModal from "./DomainCheckModal";
 import DomainActivateModal from "./DomainActivateModal";
 import DomainDetachModal from "./DomainDetachModal";
 import DomainImportModal from "./DomainImportModal";
-import DomainMaintenanceModal from "./DomainMaintenanceModal";
+import DomainMainttenanceModal from "./DomainMainttenanceModal";
 
 /**
  * @name DomainModals
@@ -72,7 +72,7 @@ const DomainModals = ({
         onClose={() => setActiveModal(null)}
       />
     ), maintenance: (
-      <DomainMaintenanceModal key={activeModal()} isOpen={activeModal() === "domain:maintenance"}
+      <DomainMainttenanceModal key={activeModal()} isOpen={activeModal() === "domain:maintenance"}
         onClose={() => setActiveModal()}
       />
       /*

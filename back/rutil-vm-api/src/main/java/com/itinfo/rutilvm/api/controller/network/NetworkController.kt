@@ -41,7 +41,7 @@ class NetworkController: BaseController() {
 	@GetMapping
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	fun networks(): ResponseEntity<List<NetworkVo>> {
+	fun findAll(): ResponseEntity<List<NetworkVo>> {
 		log.info("/networks ... 네트워크 목록")
 		return ResponseEntity.ok(iNetwork.findAll())
 	}

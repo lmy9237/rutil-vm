@@ -16,6 +16,7 @@ import VnicProfiles from "./VnicProfiles";
 import Localization from "../../utils/Localization";
 import { rvi24Globe } from "../../components/icons/RutilVmIcons";
 import SectionLayout from "../../components/SectionLayout";
+import Logger from "../../utils/Logger";
 import "./RutilManager.css";
 
 /**
@@ -75,20 +76,20 @@ const RutilManager = () => {
     sections.find((section) => section.id === activeTab)?.label,
   ], [sections, activeTab]);
 
-  const sectionComponents = {
-    info: Info,
-    datacenters: DataCenters,
-    clusters: Clusters,
-    hosts: Hosts,
-    vms: Vms,
-    templates: Templates,
-    storageDomains: StorageDomains,
-    disks: Disks,
-    networks: Networks,
-    vnicProfiles: VnicProfiles,
-  };
-
   const renderSectionContent = useCallback(() => {
+    Logger.debug(`RutilManager > renderSectionContent ...`)
+    const sectionComponents = {
+      info: Info,
+      datacenters: DataCenters,
+      clusters: Clusters,
+      hosts: Hosts,
+      vms: Vms,
+      templates: Templates,
+      storageDomains: StorageDomains,
+      disks: Disks,
+      networks: Networks,
+      vnicProfiles: VnicProfiles,
+    };
     const SectionComponent = sectionComponents[activeTab] || Info;
     return <SectionComponent />;
   }, [activeTab]);

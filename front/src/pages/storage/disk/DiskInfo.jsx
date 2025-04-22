@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
@@ -6,7 +6,6 @@ import Path from "../../../components/Header/Path";
 import DiskGeneral from "./DiskGeneral";
 import DiskVms from "./DiskVms";
 import DiskDomains from "./DiskDomains";
-import DiskModals from "../../../components/modal/disk/DiskModals";
 import Localization from "../../../utils/Localization";
 import { useDisk } from "../../../api/RQHook";
 import { rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
@@ -42,39 +41,41 @@ const DiskInfo = () => {
       navigate("/storages/disks");
     }
     setDisksSelected(disk)
-  }, [isDiskError, isDiskLoading, disk, navigate]);
+  }, [disk]);
 
-  const sections = [
+  const sections = useMemo(() => ([
     { id: "general", label: Localization.kr.GENERAL },
     { id: "vms", label: "가상머신" },
     { id: "domains", label: "스토리지" },
-  ];
+  ]), []);
 
   useEffect(() => {
     setActiveTab(section || "general");
   }, [section]);
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     const path = tab === "general"
         ? `/storages/disks/${diskId}`
         : `/storages/disks/${diskId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  };
+  }, [diskId]);
 
-  const pathData = [
+  
+  const pathData = useMemo(() => ([
     disk?.alias,
     sections.find((section) => section.id === activeTab)?.label,
-  ];
+  ]), [disk, sections, activeTab]);
 
-  const renderSectionContent = () => {
+  const renderSectionContent = useCallback(() => {
+    Logger.debug(`DiskInfo > renderSectionContent ...`)
     const SectionComponent = {
       general: DiskGeneral,
       vms: DiskVms,
       domains: DiskDomains,
     }[activeTab];
     return SectionComponent ? <SectionComponent diskId={diskId} /> : null;
-  };
+  }, [activeTab, diskId]);
 
   const sectionHeaderButtons = [
     { type: "update", label: Localization.kr.UPDATE, onClick: () => setActiveModal("disk:update") },

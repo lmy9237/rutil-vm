@@ -1,9 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useUIState from "../../hooks/useUIState";
 import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
-import DiskModals from "../modal/disk/DiskModals";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import DiskActionButtons from "./DiskActionButtons";
@@ -21,10 +20,17 @@ const DiskDupl = ({
 }) => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal } = useUIState();
-  const { disksSelected, setDisksSelected } = useGlobal()
+  const { 
+    disksSelected, setDisksSelected,
+    diskProfilesSelected, setDiskProfilesSelected,
+  } = useGlobal()
     
-  const diskIds = [...disks].map((d) => d.id);
-  const { data: cdromsMap = [] } = useCdromsDisks(diskIds);
+  const diskIds = useMemo(() => ([...disks].map((d) => d.id)
+  ), [disks]);
+
+  const {
+    data: cdromsMap = [] 
+  } = useCdromsDisks(diskIds);
   
   // ✅ 데이터 변환: 검색이 가능하도록 `searchText` 추가
   const transformedData = [...disks].map((d) => {
@@ -86,11 +92,17 @@ const DiskDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
+  useEffect(() => {
+    Logger.debug(`DiskDupl > useEffect ... disksSelected: `, disksSelected)
+    const diskProfileSelectedFound = [...disksSelected].map((e) => e?.diskProfileVo)
+    setDiskProfilesSelected(diskProfileSelectedFound)
+  }, [disksSelected])
+
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         {/* 검색창 추가 */}
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <DiskActionButtons status={disksSelected[0]?.status}/>
       </div>
 
@@ -104,17 +116,9 @@ const DiskDupl = ({
         onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        /*onContextMenuItems={(row) => [
-          <DiskActionButtons actionType="context"
-            status={row?.status}
-          />,
-        ]}*/
       />
 
       <SelectedIdView items={disksSelected} />
-
-      {/* 디스크 모달창 */}
-      <DiskModals disk={disksSelected[0]} />
     </div>
   );
 };

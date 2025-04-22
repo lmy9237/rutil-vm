@@ -120,6 +120,16 @@ export const GlobalProvider = ({ children }) => {
     else if (!Array.isArray(newV) && typeof newV === "object")
       _setDisksSelected([{...newV}]);
   }
+  
+  const [diskProfilesSelected, _setDiskProfilesSelected] = useState([]);
+  const setDiskProfilesSelected = (newV) => {
+    Logger.debug(`GlobalProvider > setDiskProfilesSelected ... newV: `, newV)
+    if (Array.isArray(newV))
+      _setDiskProfilesSelected([...newV]);
+    else if (!Array.isArray(newV) && typeof newV === "object")
+      _setDiskProfilesSelected([{...newV}]);
+  }
+
 
   const [vnicProfilesSelected, _setVnicProfilesSelected] = useState([]);
   const setVnicProfilesSelected = (newV) => {
@@ -227,6 +237,7 @@ export const GlobalProvider = ({ children }) => {
       nicsSelected, setNicsSelected,
       domainsSelected, setDomainsSelected,
       disksSelected, setDisksSelected,
+      diskProfilesSelected, setDiskProfilesSelected,
       vnicProfilesSelected, setVnicProfilesSelected,
       templatesSelected, setTemplatesSelected,
       jobsSelected, setJobsSelected,

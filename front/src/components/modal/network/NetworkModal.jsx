@@ -201,7 +201,8 @@ const NetworkModal = ({
         />
         <hr />
 
-        <div className="center">
+        <div id="vlan-enabled-group"
+          className="f-center">
           <LabelCheckbox id="vlanEnabled" label="VLAN 태깅 활성화"
             checked={formState.vlanEnabled || network?.vlan}
             onChange={(e) =>
@@ -212,8 +213,7 @@ const NetworkModal = ({
               }))
             }
           />
-          <LabelInputNum id="vlan"
-            placeholder="VLAN ID"
+          <LabelInputNum id="vlan" placeholder="VLAN ID"
             value={formState.vlan}
             disabled={!formState.vlanEnabled}
             onChange={(e) => setFormState((prev) => ({ ...prev, vlan: e.target.value }))}
@@ -321,20 +321,23 @@ const NetworkModal = ({
           <span>DNS 수정 필요</span>
         </div>
 
-        <LabelCheckbox id="dns_settings" label="DNS 설정"
-          checked={formState.dnsEnabled}
-          onChange={(e) => {
-            const isChecked = e.target.checked;
-            setFormState((prev) => ({ 
-              ...prev, 
-              dnsEnabled: isChecked,
-            }))
-            setDnsServers(isChecked ? [""] : []);
-            if (!isChecked) {
-              setDnsHiddenBoxVisible(false); // 체크 해제 시 숨김 박스도 닫기
-            }
-          }}
-        />
+        <div id="dns-settings-group" class="f-center">
+          <LabelCheckbox id="dns-settings" label="DNS 설정"
+            checked={formState.dnsEnabled}
+            onChange={(e) => {
+              const isChecked = e.target.checked;
+              setFormState((prev) => ({ 
+                ...prev, 
+                dnsEnabled: isChecked,
+              }))
+              setDnsServers(isChecked ? [""] : []);
+              if (!isChecked) {
+                setDnsHiddenBoxVisible(false); // 체크 해제 시 숨김 박스도 닫기
+              }
+            }}
+          />
+        </div>
+        
         
         {/* {formState.dnsEnabled && (
           <>

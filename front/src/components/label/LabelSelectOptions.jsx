@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import useClickOutside from "../../hooks/useClickOutside";
 import Logger from "../../utils/Logger";
@@ -21,7 +22,7 @@ const LabelSelectOptions = ({
     if (disabled) return;
     onChange({ target: { value: optionValue } });
     setOpen(false);
-  }, []);
+  }, [disabled]);
 
   useClickOutside(selectRef, (e) => setOpen(false))
 
@@ -44,18 +45,41 @@ const LabelSelectOptions = ({
       {open && (
         <div className="custom-options">
           {options.map((opt) => (
-            <div
-              key={opt.value}
-              className={`custom-option ${opt.value === value ? "selected" : ""}`}
-              onClick={() => handleOptionClick(opt.value)}
-            >
-              {opt.label}
-            </div>
+            <LabelSelectOption 
+              opt={opt}
+              value={value}
+              handleOptionClick={handleOptionClick}
+            />
           ))}
         </div>
+        // createPortal((
+        //   <div className="custom-options">
+        //     {options.map((opt) => (
+        //       <LabelSelectOption 
+        //         opt={opt}
+        //         value={value}
+        //         handleOptionClick={handleOptionClick}
+        //       />
+        //     ))}
+        //   </div>
+        // ), document.querySelector(".modal"))
       )}
     </div>
   );
 };
+
+const LabelSelectOption = ({
+  opt, 
+  value,
+  handleOptionClick,
+}) => (
+  <div
+    key={opt.value}
+    className={`custom-option ${opt.value === value ? "selected" : ""}`}
+    onClick={() => handleOptionClick(opt.value)}
+  >
+    {opt.label}
+  </div>
+)
 
 export default LabelSelectOptions;

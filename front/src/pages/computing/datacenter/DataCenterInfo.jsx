@@ -102,7 +102,7 @@ const DataCenterInfo = () => {
     return SectionComponent ? (
       <SectionComponent datacenterId={dataCenterId} />
     ) : null;
-  }, [activeTab]);
+  }, [activeTab, dataCenterId]);
 
   const sectionHeaderButtons = useMemo(() => ([
     { type: "update", onClick: () => setActiveModal("datacenter:update"), label: Localization.kr.UPDATE, },

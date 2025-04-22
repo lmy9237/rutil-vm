@@ -67,7 +67,7 @@ class DiskImageVo(
 	val diskProfileVo: IdentifiedVo = IdentifiedVo(),
 	val storageDomainVo: IdentifiedVo = IdentifiedVo(),
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
-	// val diskProfileVos: List<\IdentifiedVo> = listOf()
+	// val diskProfileVos: List<IdentifiedVo> = listOf()
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -104,7 +104,6 @@ class DiskImageVo(
 		inline fun builder(block: Builder.() -> Unit): DiskImageVo = Builder().apply(block).build()
 	}
 }
-
 
 fun Disk.toDiskIdName(): DiskImageVo = DiskImageVo.builder {
 	id { this@toDiskIdName.id() }

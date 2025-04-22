@@ -2,7 +2,7 @@
   position: absolute;
   background-color: #ffffff;
   z-index: 200;
-  width: var(--w-bell-box);height: 804px;
+  width: var(--w-bell-box);
   top:var(--h-rutil-header);right: 0;
   font-size: var(--fs-default);
   border: 1px solid rgb(204, 204, 204);

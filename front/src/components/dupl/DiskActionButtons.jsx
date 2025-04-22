@@ -17,7 +17,7 @@ const DiskActionButtons = ({
     { type: "update", onBtnClick: () => setActiveModal("disk:update"), label: Localization.kr.UPDATE, disabled: disksSelected.length !== 1, },
     { type: "remove", onBtnClick: () => setActiveModal("disk:remove"), label: Localization.kr.REMOVE, disabled: disksSelected.length === 0, },
     { type: "move",   onBtnClick: () => setActiveModal("disk:move"),   label: Localization.kr.MOVE, disabled: disksSelected.length === 0, },
-    { type: "copy",   onBtnClick: () => setActiveModal("disk:copy"),   label: "복사", disabled: disksSelected.length === 0, },
+    { type: "copy",   onBtnClick: () => setActiveModal("disk:copy"),   label: Localization.kr.COPY, disabled: disksSelected.length === 0, },
     { type: "upload", onBtnClick: () => setActiveModal("disk:upload"), label: "업로드", disabled: disksSelected.length > 0, },
   ];
 

@@ -127,6 +127,7 @@ fun Network.toNetworkMenu(): NetworkVo {
 		mtu { network.mtu().toInt() }
 		portIsolation { network.portIsolation() }
 		dataCenterVo { network.dataCenter().fromDataCenterToIdentifiedVo() }
+		usage { network.usages().toUsagesVo() }
 		vlan { if (network.vlanPresent()) network.vlan().idAsInteger() else 0 }
 	}
 }

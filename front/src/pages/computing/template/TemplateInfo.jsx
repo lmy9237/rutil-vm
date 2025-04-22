@@ -28,15 +28,15 @@ const TemplateInfo = () => {
   const { id: templateId, section } = useParams();
   const {
     data: template,
-    isError,
-    isLoading,
+    isError: isTemplateError,
+    isLoading: isTemplateLoading,
   } = useTemplate(templateId);
   const { templatesSelected, setTemplatesSelected } = useGlobal()
 
   const [activeTab, setActiveTab] = useState("general")
 
   useEffect(() => {
-    if (isError || (!isLoading && !template)) {
+    if (isTemplateError || (!isTemplateLoading && !template)) {
       navigate("/computing/templates");
     }
     setTemplatesSelected(template)
@@ -82,15 +82,13 @@ const TemplateInfo = () => {
     return SectionComponent ? (
       <SectionComponent templateId={templateId} />
     ) : null;
-  }, []);
+  }, [activeTab, templateId]);
 
-  const sectionHeaderButtons = useMemo(() => {
-    return [
-      { type: "update", onClick: () => setActiveModal("template:update"), label: Localization.kr.UPDATE,  },
-      { type: "remove", onClick: () => setActiveModal("template:remove"), label: Localization.kr.REMOVE,  },
-      { type: "addVm", onClick: () => setActiveModal("template:addVm"), label: "새 가상머신", },
-    ];
-  }, [])
+  const sectionHeaderButtons = useMemo(() => [
+    { type: "update", onClick: () => setActiveModal("template:update"), label: Localization.kr.UPDATE,  },
+    { type: "remove", onClick: () => setActiveModal("template:remove"), label: Localization.kr.REMOVE,  },
+    { type: "addVm",  onClick: () => setActiveModal("template:addVm"),  label: "새 가상머신", },
+  ], [])
 
   return (
     <SectionLayout>

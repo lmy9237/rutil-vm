@@ -164,7 +164,8 @@ input[disabled] {
 .f-start  { display:flex;align-items:center;justify-content:flex-start; }
 .f-end    { display:flex;align-items:center;justify-content:flex-end; }
 .f-btw    { display:flex;align-items:center;justify-content:space-between; }
-.v-center { display:flex;align-items:center;justify-content:flex-start;flex-direction:column; }
+.v-center { display:flex;align-items:center;justify-content:center;flex-direction:column; }
+.v-start  { display:flex;align-items:center;justify-content:flex-start;flex-direction:column; }
 .v-end    { display:flex;align-items:center;justify-content:flex-end;flex-direction:column; }
 .v-btw    { display:flex;align-items:space-between;justify-content:center;flex-direction:column; } 
 

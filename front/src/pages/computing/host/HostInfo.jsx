@@ -85,7 +85,7 @@ const HostInfo = () => {
   }, [section]);
 
   // 탭 메뉴 관리
-  const renderSectionContent = () => {
+  const renderSectionContent = useCallback(() => {
     Logger.debug(`HostInfo > renderSectionContent ... `);
     const SectionComponent = {
       general: HostGeneral,
@@ -95,13 +95,13 @@ const HostInfo = () => {
       events: HostEvents,
     }[activeTab];
     return SectionComponent ? <SectionComponent hostId={hostId} /> : null;
-  };
+  }, [activeTab, hostId]);
 
   // 편집, 삭제 버튼들
   const sectionHeaderButtons = useMemo(() => ([
     { type: "host:update", onClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: !isUp, }, 
     { type: "host:remove", onClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: !isMaintenance, },
-  ]), [])
+  ]), [host])
 
   const popupItems = [
     { type: "deactivate", onClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: !isUp && isNonOperational, },

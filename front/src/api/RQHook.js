@@ -1971,6 +1971,7 @@ export const useDeleteSnapshot = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteSnapshot ... res: `, res)
+      toast.success(`[200] ${Localization.kr.SNAPSHOT} ${Localization.kr.REMOVE} 요청완료`)
       queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
       postSuccess();
     },
@@ -1982,7 +1983,80 @@ export const useDeleteSnapshot = (
   });
 };
 
+export const usePreviewSnapshot = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
+  return useMutation({
+    mutationFn: async ({ vmId, snapshotId }) => {
+      const res = await ApiManager.previewSnapshotFromVM(vmId, snapshotId);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > usePreviewSnapshot ... vmId: ${vmId}, snapshotId: ${snapshotId}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > usePreviewSnapshot ... res: `, res)
+      toast.success(`[200] ${Localization.kr.SNAPSHOT} ${Localization.kr.PREVIEW} 요청완료`)
+      queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
+      postSuccess();
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
 
+export const useCommitSnapshot = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
+  return useMutation({
+    mutationFn: async ({ vmId }) => {
+      const res = await ApiManager.commitSnapshotFromVM(vmId);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useCommitSnapshot ... vmId: ${vmId}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useCommitSnapshot ... res: `, res)
+      toast.success(`[200] ${Localization.kr.SNAPSHOT} ${Localization.kr.COMMENT} 요청완료`)
+      queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
+      postSuccess();
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+
+export const useUndoSnapshot = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
+  return useMutation({
+    mutationFn: async ({ vmId }) => {
+      const res = await ApiManager.undoSnapshotFromVM(vmId);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useUndoSnapshot ... vmId: ${vmId}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useUndoSnapshot ... res: `, res)
+      toast.success(`[200] ${Localization.kr.SNAPSHOT} ${Localization.kr.UNDO} 요청완료`)
+      queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
+      postSuccess();
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
 
 /**
  * @name useHostDevicesFromVM

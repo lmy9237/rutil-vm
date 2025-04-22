@@ -1,5 +1,6 @@
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useRef } from "react";
 import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import { useNetworkInterfacesFromVM } from "../../../api/RQHook";
@@ -7,11 +8,11 @@ import NicModal from "../../../components/modal/vm/NicModal";
 import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { checkZeroSizeToMbps } from "../../../util";
-import ActionButton from "../../../components/button/ActionButton";
-import Localization from "../../../utils/Localization";
 import { RVI24, rvi24ChevronDown, rvi24ChevronRight } from "../../../components/icons/RutilVmIcons";
-import useGlobal from "../../../hooks/useGlobal";
+import Localization from "../../../utils/Localization";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import NicActionButtons from "../../../components/dupl/NicActionButtons";
+import useClickOutside from "../../../hooks/useClickOutside";
 
 /**
  * @name VmNics
@@ -31,7 +32,7 @@ const VmNics = ({ vmId }) => {
     Success: isNicsSuccess,
   } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
   
-  const transformedData = nics.map((nic) => ({
+  const transformedData = [...nics].map((nic) => ({
     ...nic,
     id: nic?.id,
     name: nic?.name,
@@ -60,37 +61,38 @@ const VmNics = ({ vmId }) => {
     [id]: !prev[id]
   }));
 
+  const nicRef = useRef()
+  useClickOutside(nicRef, (e) => setNicsSelected([])) /* 외부 창을 눌렀을 때 선택 해제 */
+
   return (
-    <>
-      <div className="header-right-btns">
-        <ActionButton actionType="default" label={Localization.kr.CREATE} disabled={nicsSelected.length > 0} 
-          onClick={() => setActiveModal("nic:create")}
-        />
-        <ActionButton actionType="default" label={Localization.kr.UPDATE} disabled={nicsSelected.length !== 1} 
-          onClick={() => setActiveModal("nic:update")}
-        />
-        <ActionButton actionType="default" label={Localization.kr.REMOVE} disabled={nicsSelected.length === 0}
-          onClick={() => setActiveModal("nic:remove")}
-        />
+    <div ref={nicRef} onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
+        <NicActionButtons />
       </div>
 
-      <SelectedIdView items={nicsSelected} />
-
       <div className="network-interface-outer">
-        {transformedData.length > 0 ? ( // NIC가 하나라도 있을 때 실행
-          transformedData?.map((nic, i) => (
-            <div
+        {transformedData.length === 0 ? ( // NIC가 하나라도 있을 때 실행
+          <p
+            style={{
+              textAlign: "center",
+              color: "gray",
+              padding: "20px",
+              fontSize: "14px",
+            }}
+          >
+            표시할 네트워크 인터페이스가 없습니다.
+          </p>
+        ) : (
+          [...transformedData].map((nic, i) => (
+            <div key={nic?.id}
               className={`network_content2 ${nicsSelected[0]?.id === nic.id ? "selected" : ""}`}
               onClick={() => setNicsSelected(nic)} // NIC 선택 시 상태 업데이트
-              key={nic?.id}
             >
               <div className="network-content"
                 onClick={() => toggleDetails(nic.id)}
               >
                 <div className="network-status">
-                  <RVI24 iconDef={visibleDetails[nic.id] ? rvi24ChevronDown() : rvi24ChevronRight()}
-                    onClick={() => toggleDetails(nic.id)}
-                  />
+                  <RVI24 iconDef={visibleDetails[nic.id] ? rvi24ChevronDown() : rvi24ChevronRight()}/>
                   <FontAwesomeIcon
                     icon={Boolean(nic?.linked) ? faArrowCircleUp : faArrowCircleDown}
                     style={{ color: Boolean(nic?.linked) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
@@ -148,19 +150,10 @@ const VmNics = ({ vmId }) => {
               </div>
             </div>
           ))
-        ) : (
-          <p
-            style={{
-              textAlign: "center",
-              color: "gray",
-              padding: "20px",
-              fontSize: "14px",
-            }}
-          >
-            표시할 네트워크 인터페이스가 없습니다.
-          </p>
         )}
       </div>
+      
+      <SelectedIdView items={nicsSelected} />
       
       <Suspense>
         {activeModal() === "nic:create" && (
@@ -188,7 +181,7 @@ const VmNics = ({ vmId }) => {
           />
         )} */}
       </Suspense>
-    </>
+    </div>
   );
 };
 export default VmNics;

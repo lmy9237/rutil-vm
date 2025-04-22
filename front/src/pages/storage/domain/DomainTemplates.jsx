@@ -21,8 +21,7 @@ import Logger from "../../../utils/Logger";
 const DomainTemplates = ({
   domainId
 }) => {
-  const { domainsSelected } = useGlobal()
-  
+  const { domainsSelected, setTemplatesSelected } = useGlobal()
   const {
     data: templates = [],
     isLoading: isTemplatesLoading,
@@ -70,9 +69,10 @@ const DomainTemplates = ({
       <TablesOuter target={"template"} 
         columns={TableColumnsInfo.TEMPLATES_FROM_STORAGE_DOMAIN}
         data={filteredData}
-        multiSelect={true}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery}
+        multiSelect={true}
+        onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)} // 선택된 항목 업데이트
         refetch={refetchTemplates}
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />

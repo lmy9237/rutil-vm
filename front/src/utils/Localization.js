@@ -54,6 +54,9 @@ export const Localization = {
     IS_READ_ONLY: "읽기전용",
     IS_IN_USE: "형재 사용중",
     WIPE_AFTER_DELETE: "삭제 후 초기화",
+    PREVIEW: "미리보기",
+    COMMIT: "커밋",
+    UNDO: "되돌리기",
     STARTED: "시작됨",
     FINISHED: "완료",
 
@@ -62,7 +65,7 @@ export const Localization = {
     TARGET: "대상",
     USER: "사용자",
     USER_ID: "사용자ID",
-    LOGIN: "LOGIN",
+    LOGIN: "로그인",
     LOGOUT: "로그아웃",
     PRINT: "출력",
     TIME: "시간",
@@ -97,10 +100,8 @@ export const Localization = {
     IN_PROGRESS: "중 ...",
 
     PLACEHOLDER_SEARCH: "검색어를 입력하세요.",
-    // PLACEHOLDER_USERNAME: "사용자명을 입력하세요.",
-    // PLACEHOLDER_PASSWORD: "비밀번호를 입력하세요.",
-    PLACEHOLDER_USERNAME: "USERNAME",
-    PLACEHOLDER_PASSWORD: "PASSWORD",
+    PLACEHOLDER_USERNAME: "사용자명",
+    PLACEHOLDER_PASSWORD: "암호",
     NO_INFO: "🤷‍♂️ 내용이 없습니다",
 
     renderTime(milliseconds) {

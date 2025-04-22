@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import useUIState from "../../hooks/useUIState";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import useClickOutside from "../../hooks/useClickOutside";
 import useContextMenu from "../../hooks/useContextMenu";
 import TableRowLoading from "./TableRowLoading";
@@ -255,13 +254,14 @@ const Tables = ({
     }
   }, [data, sortConfig]);
 
-  // 우클릭 메뉴 외부 클릭 시 메뉴 닫기 + 배경색 초기화
-  const renderTableBody = () => {
+
+  const renderTableBody = useCallback(() => {
     if (isLoading) {
       // 로딩중일 때
       return <TableRowLoading colLen={columns.length} />;
     } else if (!isLoading && isSuccess) {
       // 데이터 가져오기 성공 후
+      Logger.debug(`Tables > renderTableBody ... isLoading: ${isLoading}, isSuccess: ${isSuccess}`)
       return sortedData.length === 0 ? ( // 데이터 0건일 때
         <TableRowNoData colLen={columns.length} />
       ) : (
@@ -375,7 +375,7 @@ const Tables = ({
         })
       );
     }
-  };
+  }, [sortedData, paginatedData]);
 
   return (
     <>

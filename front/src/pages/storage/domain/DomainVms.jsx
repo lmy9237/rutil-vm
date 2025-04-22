@@ -14,6 +14,7 @@ import Logger from "../../../utils/Logger";
 /**
  * @name DomainVms
  * @description 도메인에 종속 된 VM정보
+ * /storages/domains/<DOMAIN_ID>/vms
  * 
  * @prop {string} domainId 도메인ID
  * @returns {JSX.Element} DomainVms

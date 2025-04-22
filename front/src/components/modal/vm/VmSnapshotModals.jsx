@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useMemo } from "react";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import VmSnapshotModal from "./VmSnapshotModal";
+import VmSnapshotActionModal from "./VmSnapshotActionModal";
 import VmSnapshotDeleteModal from "./VmSnapshotDeleteModal";
 import Logger from "../../../utils/Logger";
 
@@ -16,6 +17,11 @@ import Logger from "../../../utils/Logger";
 const VmSnapshotModals = ({
 
 }) => {
+  const ACTIONS = useMemo(() => ([
+    "vmsnapshot:preview",
+    "vmsnapshot:commit",
+    "vmsnapshot:undo",
+  ]), [])
   const { activeModal, setActiveModal } = useUIState()
   const { vmsSelected, snapshotsSelected } = useGlobal()
   
@@ -24,10 +30,11 @@ const VmSnapshotModals = ({
       <VmSnapshotModal key={activeModal()} isOpen={activeModal() === "vmsnapshot:create"}
         onClose={() => setActiveModal(null)}
       />
-    ), preveiw: (
-      Logger.warn("'스냅샷 미리보기' 기능 준비중 ...")
-    ), move: (
-      Logger.warn("'스냅샷 이동' 기능 준비중 ...")
+    ), action: (
+      <VmSnapshotActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}
+        onClose={() => setActiveModal(null)}
+        data={snapshotsSelected}
+      />
     ), remove: (
       <VmSnapshotDeleteModal isOpen={activeModal() === "vmsnapshot:remove"}
         vmId={vmsSelected[0]?.id}
@@ -40,7 +47,7 @@ const VmSnapshotModals = ({
   return (
     <>
       {Object.keys(modals).filter((key) => 
-        activeModal() === `vmsnapshot:${key}`
+        activeModal() === `vmsnapshot:${key}` || ACTIONS.includes(activeModal())
       ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}

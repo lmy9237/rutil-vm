@@ -1258,6 +1258,7 @@ class VmController: BaseController() {
 		log.info("/computing/vms/{}/snapshots/undo ... 가상머신 커밋", vmId)
 		return ResponseEntity.ok(iVmSnapshot.undoFromVm(vmId))
 	}
+// TODO: 보류 (2차개발)
 /*
 	@ApiOperation(
 	 	httpMethod="POST",
@@ -1375,7 +1376,7 @@ class VmController: BaseController() {
 	@ApiImplicitParams(
 		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
 		ApiImplicitParam(name="graphicConsoleId", value="그래픽 콘솔 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="expiry", value="콘솔 접근 만료시간 (초)", dataTypeClass=Int::class, defaultValue="7200", required=true, paramType="query"),
+		ApiImplicitParam(name="expiry", value="콘솔 접근 만료시간 (초)", dataTypeClass=Long::class, defaultValue="7200", required=true, paramType="query"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED"),
@@ -1387,7 +1388,7 @@ class VmController: BaseController() {
 	fun publishTicket(
 		@PathVariable vmId: String? = null,
 		@PathVariable graphicConsoleId: String? = null,
-		@RequestParam expiry: Int? = 7200,
+		@RequestParam expiry: Long? = 7200L,
 	): ResponseEntity<TicketVo> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()

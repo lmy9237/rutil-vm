@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useCallback } from "react";
+import React, { useEffect, useMemo, useCallback, useRef } from "react";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
+import useClickOutside from "../../../hooks/useClickOutside";
 import Loading from "../../../components/common/Loading";
 import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import VmSnapshotModal from "../../../components/modal/vm/VmSnapshotModal";
-import VmSnapshotDeleteModal from "../../../components/modal/vm/VmSnapshotDeleteModal";
 import VmSnapshotActionButtons from "../../../components/dupl/VmSnapshotActionButtons";
 import {
   RVI16,
@@ -17,8 +16,8 @@ import {
 } from "../../../components/icons/RutilVmIcons";
 import { useSnapshotsFromVM, useVm } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
-import "./VmSnapshots.css"
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import "./VmSnapshots.css"
 
 /**
  * @name VmSnapshots
@@ -63,20 +62,30 @@ const VmSnapshots = ({
 
   const hasLockedSnapshot = useMemo(() => {
     [...transformedData]?.some(snap => snap.status === "locked")
-  }, [transformedData])
+  }, [transformedData]) // NOTE: 하나 이상 잠겨있는 스냅샷이 있을 때 나머지 종작이 안됨
+  
+  const snapshotItemRef = useRef()
+  useClickOutside(snapshotItemRef, (e) => {
+    setSnapshotsSelected([])
+  }, [".header-right-btns button", ".Overlay", "#right-click-menu-box"])
   
   useEffect(() => {
     setVmsSelected(vm)
   }, [vm])
 
   return (
-    <>
+    <div 
+      onClick={(e) => e.stopPropagation()} 
+    >
       <div className="header-right-btns no-search-box">
         <VmSnapshotActionButtons hasLocked={hasLockedSnapshot} />
       </div>
 
       <div className="snapshot-group f-start">
-        <div className="vm-snap-item">
+        <div 
+          ref={snapshotItemRef}
+          className="vm-snap-item"
+        >
           {/* 항상 현재 위치 표시 */}
           <div className="snapshot-item f-start">
             <RVI16 iconDef={rvi16ChevronDown} />
@@ -124,7 +133,7 @@ const VmSnapshots = ({
         </div>
       </div>
       <SelectedIdView items={snapshotsSelected} />
-    </>
+    </div>
   );
 };
 

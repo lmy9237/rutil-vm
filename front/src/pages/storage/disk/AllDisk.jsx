@@ -6,6 +6,7 @@ import { useAllDisks } from "../../../api/RQHook";
 import { rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import SectionLayout from "../../../components/SectionLayout";
+import Localization from "../../../utils/Localization";
 
 const AllDisk = () => {
   const {
@@ -16,11 +17,10 @@ const AllDisk = () => {
     refetch: refetchDisks,
   } = useAllDisks((e) => ({ ...e }));
 
-  Logger.debug("AllDisk ...");
   return (
     <SectionLayout>
       <HeaderButton titleIcon={rvi24HardDrive()}
-        title="디스크"
+        title={Localization.kr.DISK}
       />
       <div className="w-full section-content">
         <DiskDupl columns={TableColumnsInfo.DISKS}

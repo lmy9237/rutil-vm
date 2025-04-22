@@ -77,8 +77,7 @@ const NetworkTemplates = ({
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <div className="header-right-btns no-search-box">
           {/* 제거 버튼에 openDeleteModal 핸들러 연결 */}
-          <ActionButton label={Localization.kr.REMOVE}
-            actionType="default"
+          <ActionButton actionType="default" label={Localization.kr.REMOVE}
             onClick={openDeleteModal}
             disabled={!selectedNicIds}  // selectedNicIds가 없으면 비활성화
           />

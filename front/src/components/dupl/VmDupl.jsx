@@ -75,11 +75,9 @@ const VmDupl = ({
   }));
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-
   const handleNameClick = useCallback((id) => {
     navigate(`/computing/vms/${id}`);
   }, [navigate])
-
   const handleRefresh = useCallback(() => {
     Logger.debug(`VmDupl > handleRefresh ... `)
     if (!refetch) return;
@@ -125,9 +123,6 @@ const VmDupl = ({
         */
       />
       <SelectedIdView items={vmsSelected} />
-
-      {/* VM 모달 */}
-      <VmModals vm={vmsSelected[0]} />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import useGlobal from "../../hooks/useGlobal";
 import useFooterState from "../../hooks/useFooterState";
 import SelectedIdView from "../common/SelectedIdView";
@@ -20,7 +20,7 @@ const JobFooter = ({
 }) => {
   const {
     footerVisible, toggleFooterVisible,
-    setFooterHeightInPx,
+    footerHeightInPx, setFooterHeightInPx,
     footerJobRefetchInterval
   } = useFooterState();
   const { jobsSelected, setJobsSelected } = useGlobal()
@@ -72,6 +72,12 @@ const JobFooter = ({
       setFooterHeight(168)
     }
   }, [footerVisible])
+
+  useEffect(() => {
+    if (footerHeight !== footerHeightInPx) setTimeout(() => {
+      setFooterHeightInPx(footerHeight)
+    }, 300)
+  }, [footerHeight])
 
   return (
     <>

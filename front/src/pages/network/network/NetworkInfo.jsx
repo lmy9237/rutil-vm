@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import NavButton from "../../../components/navigation/NavButton";
@@ -70,7 +70,7 @@ const NetworkInfo = () => {
     sections.find((section) => section.id === activeTab)?.label,
   ];
 
-  const renderSectionContent = () => {
+  const renderSectionContent = useCallback(() => {
     const SectionComponent = {
       general: NetworkGeneral,
       vnicProfiles: NetworkVnicProfiles,
@@ -80,12 +80,12 @@ const NetworkInfo = () => {
       templates: NetworkTemplates,
     }[activeTab];
     return SectionComponent ? <SectionComponent networkId={networkId} /> : null;
-  };
+  }, [activeTab, networkId]);
 
-  const sectionHeaderButtons = [
+  const sectionHeaderButtons = useMemo(() => ([
     { type: "update", label: Localization.kr.UPDATE, onClick: () => setActiveModal("network:update") },
     { type: "remove", label: Localization.kr.REMOVE, onClick: () => setActiveModal("network:remove") },
-  ];
+  ]), []);
 
   return (
     <SectionLayout>

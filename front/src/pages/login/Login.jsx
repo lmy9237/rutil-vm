@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 import RutilVmLogo from "../../components/common/RutilVmLogo";
 import IconInput from "../../components/Input/IconInput";
 import Localization from "../../utils/Localization";
 import CompanyInfoFooter from "../../components/footer/CompanyInfoFooter";
-import useAuth from "../../hooks/useAuth";
+import { rvi16Lock, rvi16User } from "../../components/icons/RutilVmIcons";
 import Logger from "../../utils/Logger";
 import { useAuthenticate } from "../../api/RQHook";
 import "./Login.css";
@@ -20,7 +21,6 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
-  const userRef = useRef();
   const errRef = useRef();
 
   // 사용자 정보
@@ -60,7 +60,7 @@ const Login = () => {
 
   return (
     <>
-      <div className="login-container"   
+      <div className="login-container w-full h-full"   
         style={{
           backgroundImage: `url(${backgroundImg})`,
           backgroundSize: "cover",   // ✅ 수정
@@ -68,45 +68,39 @@ const Login = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="login-form-outer">
- 
-          <div className="login-form-box f-center">
-            <div>
-              <RutilVmLogo className="bigger" />
-              <form className="" 
-                onSubmit={doLogin}
+        <div className="login-form-outer v-center">
+          <div className="login-form-box v-center">
+            <RutilVmLogo className="bigger" />
+            <form className="v-center w-full" 
+              onSubmit={doLogin}
+            >
+              <IconInput className="login-input text-lg"
+                required type="text"
+                iconDef={rvi16User()}
+                placeholder={Localization.kr.PLACEHOLDER_USERNAME}
+                value={username ?? ""}
+                onChange={(e) => {
+                  Logger.debug(`Username: ${e.target.value}`); // 확인용 로그
+                  setUsername(e.target.value);
+                }}
+              />
+              <IconInput className="login-input text-lg"
+                required type="password"
+                iconDef={rvi16Lock("#999999")}
+                placeholder={Localization.kr.PLACEHOLDER_PASSWORD}
+                value={password ?? ""}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button type="submit"
+                className="login-button f-center bgcolor-primary"
+                disabled={isAuthLoading}
               >
-                <IconInput className="login-input text-lg"
-                  required
-                  type="text"
-                  placeholder={Localization.kr.PLACEHOLDER_USERNAME}
-                  value={username ?? ""}
-                  onChange={(e) => {
-                    Logger.debug(`Username: ${e.target.value}`); // 확인용 로그
-                    setUsername(e.target.value);
-                  }}
-                />
-                <IconInput className="login-input text-lg"
-                  required
-                  // icon={faKey}
-                  type="password"
-                  placeholder={Localization.kr.PLACEHOLDER_PASSWORD}
-                  value={password ?? ""}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  type="submit"
-                  className="login-button f-center bgcolor-primary"
-                  disabled={isAuthLoading}
-                >
-                  {isAuthLoading ? (<>{Localization.kr.LOGIN} {Localization.kr.IN_PROGRESS}</>) : (<>{Localization.kr.LOGIN}</>)}
-                </button>
-              </form>
-              <CompanyInfoFooter isBrief={true} />
-            </div>
+                {isAuthLoading ? (<>{Localization.kr.LOGIN} {Localization.kr.IN_PROGRESS}</>) : (<>{Localization.kr.LOGIN}</>)}
+              </button>
+            </form>
+            <CompanyInfoFooter isBrief={true} />
           </div>
         </div>
-
       </div>
      
     </>

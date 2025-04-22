@@ -90,8 +90,8 @@ const VmInfo = () => {
     sections.find((section) => section.id === activeTab)?.label,
   ]), [vm, sections, activeTab]);
 
-  // 탭 메뉴 관리
-  const renderSectionContent = () => {
+    // 탭 메뉴 관리
+  const renderSectionContent = useCallback(() => {
     Logger.debug(`VmInfo > renderSectionContent ...`)
     const SectionComponent = {
       general: VmGeneral,
@@ -103,9 +103,9 @@ const VmInfo = () => {
       events: VmEvents,
     }[activeTab];
     return SectionComponent ? <SectionComponent vmId={vmId} /> : null;
-  };
+  }, [activeTab, vmId]);
 
-  const sectionHeaderButtons = [
+  const sectionHeaderButtons = useMemo(() => ([
     { type: "update",    onClick: () => setActiveModal("vm:update"),        label: Localization.kr.UPDATE, },
     { type: "start",     onClick: () => setActiveModal("vm:start"),         label: Localization.kr.START, disabled: isUp && !isMaintenance },
     { type: "pause",     onClick: () => setActiveModal("vm:pause"),         label: Localization.kr.PAUSE, disabled: !isUp },
@@ -116,7 +116,7 @@ const VmInfo = () => {
     { type: "console",   onClick: () => setActiveModal("vm:console", vmId), label: Localization.kr.CONSOLE, disabled: !isUp },
     { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: "스냅샷 생성", disabled: !(isUp || isDown) },
     { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: isUp },
-  ];
+  ]), [vm]);
 
   const popupItems = [
     /* { type: "import",  onClick: () => setActiveModal("vm:import"),  label: Localization.kr.IMPORT, }, */

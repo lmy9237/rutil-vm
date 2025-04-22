@@ -27,6 +27,7 @@ const DomainImportVms = ({ domainId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
+    refetch: refetchVms,
   } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
 
   const { activeModal, setActiveModal, } = useUIState()
@@ -47,7 +48,7 @@ const DomainImportVms = ({ domainId }) => {
   return (
     <>
     <div className="dupl-header-group f-start">
-      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={refetchVms} />
       <div className="header-right-btns">
         <ActionButton label={Localization.kr.IMPORT}
           actionType="default"

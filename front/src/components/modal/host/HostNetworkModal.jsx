@@ -319,9 +319,8 @@ const HostNetworkModal = ({
                       <div className="assigned-network"><span>할당된 네트워크 없음</span></div>
                     ) : (
                       outerItem.networks.map(network => (
-                        <div 
-                          key={network.id} 
-                          className="center" 
+                        <div key={network.id} 
+                          className="f-center" 
                           draggable 
                           onDragStart={(e) => dragStart(e, network, "networkOuter", outerItem.id)}
                         >

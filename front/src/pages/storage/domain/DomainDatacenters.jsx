@@ -93,7 +93,7 @@ const DomainDatacenters = ({ domainId }) => {
           />
         }
         {activeModal() === "domain:maintenance" && 
-          <DomainMainTenanceModal isOpen={activeModal() === "domain:maintenance"}
+          <DomainMainttenanceModal isOpen={activeModal() === "domain:maintenance"}
             onClose={() => setActiveModal(null)}
             domains={domain}
             datacenterId={datacentersSelected[0]?.id}

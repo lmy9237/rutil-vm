@@ -73,13 +73,13 @@ const ClusterInfo = () => {
   const pathData = useMemo(() => ([
     cluster?.name,
     sections.find((section) => section.id === activeTab)?.label,
-  ]), [cluster, activeTab])
+  ]), [activeTab, cluster])
 
   useEffect(() => {
     setActiveTab(section || "general");
   }, [section]);
 
-  const renderSectionContent = () => {
+  const renderSectionContent = useCallback(() => {
     Logger.debug(`ClusterInfo > renderSectionContent ... `)
     const SectionComponent = {
       general: ClusterGeneral,
@@ -89,7 +89,7 @@ const ClusterInfo = () => {
       events: ClusterEvents,
     }[activeTab];
     return SectionComponent ? <SectionComponent clusterId={clusterId} /> : null;
-  };
+  }, [activeTab, clusterId]);
 
   const sectionHeaderButtons = useMemo(() => ([
     { type: "update", onClick: () => setActiveModal("cluster:update"), label: Localization.kr.UPDATE, },
