@@ -57,6 +57,8 @@ const RightClickMenu = () => {
 
   const contextTargets2Ignore = useMemo(() => ([ /* 우킄릭시 메뉴 제공되지 않는 기능대상 */
     "application",
+    "iscsi",
+    "fcp",
   ]), [])
   
   const menuRef = useRef(null); // ✅ context menu 영역 참조

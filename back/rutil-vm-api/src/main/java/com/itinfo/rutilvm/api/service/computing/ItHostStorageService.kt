@@ -73,7 +73,7 @@ interface ItHostStorageService {
 	 * @return List<[StorageDomainVo]>
 	 */
 	@Throws(Error::class)
-	fun loginIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): Boolean
+	fun loginIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): List<String>
 }
 
 @Service
@@ -114,10 +114,17 @@ class ItHostStorageServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun loginIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): Boolean {
+	override fun loginIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): List<String> {
 		log.info("loginIscsiFromHost... hostId: {}", hostId)
-		val res: Result<Boolean> = conn.loginIscsiFromHost(hostId, iscsiDetailVo.toLoginIscsi())
-		return res.isSuccess
+		log.info("iscsiDetailVo.target = {}", iscsiDetailVo.target)
+		log.info("iscsiDetailVo.address = {}", iscsiDetailVo.address)
+		log.info("iscsiDetailVo.port = {}", iscsiDetailVo.port)
+
+		val res: List<String> = conn.loginIscsiFromHost(
+			hostId,
+			iscsiDetailVo.toLoginIscsi()
+		).getOrDefault(emptyList())
+		return res
 	}
 
 

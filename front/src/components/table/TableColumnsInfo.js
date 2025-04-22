@@ -440,13 +440,14 @@ const TableColumnsInfo = {
     { header: 'port', accessor: 'port', clickable: true },
   ],
   IMPORT_ISCSI: [
+    // { header: 'checkbox', accessor: 'check', clickable: true, width: '5%' },
     { header: 'IQN', accessor: 'target', clickable: true },
     { header: 'address', accessor: 'address', clickable: true },
     { header: 'port', accessor: 'port', clickable: true },
   ],
   
   FIBRE: [
-    { header: '', accessor: 'check', clickable: true, width: '5%'  },
+    // { header: '', accessor: 'check', clickable: true, width: '5%'  },
     { header: 'status', accessor: 'status', clickable: false },
     { header: 'Lun ID', accessor: 'id', clickable: false },
     { header: 'size', accessor: 'size', clickable: false },
@@ -457,7 +458,7 @@ const TableColumnsInfo = {
   ],
 
   IMPORT_FIBRE: [
-    { header: 'checkbox', accessor: 'check', clickable: true, width: '5%' },
+    // { header: 'checkbox', accessor: 'check', clickable: true, width: '5%' },
     { header: Localization.kr.NAME, accessor: 'name', clickable: true },
     { header: 'id', accessor: 'id', clickable: true },
   ],

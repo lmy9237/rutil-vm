@@ -85,66 +85,68 @@ const DomainIscsiImport = ({
   return (
     <div className="storage-popup-iSCSI">
       <div className="section-table-outer">
-          <div className="target-search-outer">
-            <label className="label-font-name">{Localization.kr.TARGET} {Localization.kr.SEARCH}</label>
+        <div className="target-search-outer">
+          <label className="label-font-name">{Localization.kr.TARGET} {Localization.kr.SEARCH}</label>
 
-            <div className="input-inline-wrap">
-              <LabelInput id="address" label="주소"
-                value={formImportState?.address} 
-                onChange={handleInputChange('address')} 
-              />
-              <LabelInput label="포트" id="port" 
-                value={formImportState?.port} 
-                onChange={handleInputChange('port')} 
-              />
-            </div>
-
-            <div className={`target-search-right ${formImportState.useChap ? 'with-background' : ''}`}>
-              <div className="use-chap-arrow">
-                <ToggleSwitchButton
-                  label="사용자 인증"
-                  checked={formImportState.useChap}
-                  onChange={(e) => {
-                    const checked = e.target.checked;
-                    setFormImportState((prev) => ({ ...prev, useChap: checked }));
-                    setIsFooterContentVisible(checked);
-                  }}
-                  tType={"on"} fType={"off"}
-                />
-              </div>
-
-              {isFooterContentVisible && (
-                <div className="use-chap-content">
-                  <LabelInput id="chapName" label="CHAP 사용자 이름"
-                    value={formImportState.chapName}
-                    onChange={handleInputChange('chapName')}
-                    disabled={!formImportState.useChap}
-                  />
-                  <LabelInput id="chapPassword" label="CHAP 암호"
-                    type="password"
-                    value={formImportState.chapPassword}
-                    onChange={handleInputChange('chapPassword')}
-                    disabled={!formImportState.useChap}
-                  />
-                  <div className="target-btn">
-                    <button className="all-login-button" onClick={handleLoginIscsi}>로그인</button>
-                  </div>
-                </div>
-                )}
-              </div>
-            
-            <div className='target-btn'>
-              <button className="search-button" onClick={handleSearchIscsi}>검색</button>
-            </div>
-
+          <div className="input-inline-wrap">
+            <LabelInput id="address" label="주소"
+              value={formImportState?.address} 
+              onChange={handleInputChange('address')} 
+            />
+            <LabelInput label="포트" id="port" 
+              value={formImportState?.port} 
+              onChange={handleInputChange('port')} 
+            />
           </div>
 
-          <Tables columns={TableColumnsInfo.IMPORT_ISCSI}
-            isLoading={isIscsisLoading} isError={isIscsisError} isSuccess={isIscsisSuccess}
-            data={transIscsiData}
-            onRowClick={ (row) => handleRowClick(row) }
-            shouldHighlight1stCol={true}
-          />
+          <div className={`target-search-right ${formImportState.useChap ? 'with-background' : ''}`}>
+            <div className="use-chap-arrow">
+              <ToggleSwitchButton
+                label="사용자 인증"
+                checked={formImportState.useChap}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setFormImportState((prev) => ({ ...prev, useChap: checked }));
+                  setIsFooterContentVisible(checked);
+                }}
+                tType={"on"} fType={"off"}
+              />
+            </div>
+
+            {isFooterContentVisible && (
+              <div className="use-chap-content">
+                <LabelInput id="chapName" label="CHAP 사용자 이름"
+                  value={formImportState.chapName}
+                  onChange={handleInputChange('chapName')}
+                  disabled={!formImportState.useChap}
+                />
+                <LabelInput id="chapPassword" label="CHAP 암호"
+                  type="password"
+                  value={formImportState.chapPassword}
+                  onChange={handleInputChange('chapPassword')}
+                  disabled={!formImportState.useChap}
+                />
+                <div className="target-btn">
+                  <button className="all-login-button" onClick={handleLoginIscsi}>로그인</button>
+                </div>
+              </div>
+              )}
+            </div>
+          
+          <div className='target-btn'>
+            <button className="search-button" onClick={handleSearchIscsi}>검색</button>
+          </div>
+
+        </div>
+
+        <Tables target={"iscsi"}
+          columns={TableColumnsInfo.IMPORT_ISCSI}
+          data={transIscsiData}
+          onRowClick={ (row) => handleRowClick(row) }
+          shouldHighlight1stCol={true}
+          isLoading={isIscsisLoading} isError={isIscsisError} isSuccess={isIscsisSuccess}
+        />
+        <br/>
         <div><span style={{ fontSize: '22px' }}>id: {lunId}</span></div>
       </div>
     </div>

@@ -406,11 +406,17 @@ fun Connection.unRegisteredStorageDomainsFromHost(hostId: String): Result<List<S
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.loginIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): Result<Boolean> = runCatching {
+fun Connection.loginIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): Result<List<String>> = runCatching {
 	checkHostExists(hostId)
 
+	//TODO: 로그인 후 값 받아오는 처리
 	this.srvHost(hostId).iscsiLogin().iscsi(iscsiDetails).send()
-	true
+
+	this.srvHost(hostId).iscsiDiscover().send().iscsiTargets()
+	// this.srvHost(hostId).discoverIscsi().send().discoveredTargets()
+
+	// true
+
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.STORAGE,"iscsi 로그인 성공", hostId)
 }.onFailure {

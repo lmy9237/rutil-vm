@@ -58,7 +58,7 @@ fun IscsiDetailVo.toDiscoverIscsiDetailVo(): IscsiDetails {
 fun IscsiDetailVo.toLoginIscsi(): IscsiDetails {
     return IscsiDetailsBuilder()
         .target(this@toLoginIscsi.target)
-        .address(this@toLoginIscsi.address)
+        .address(this@toLoginIscsi.target)
         .port(this@toLoginIscsi.port)
         .build()
 }

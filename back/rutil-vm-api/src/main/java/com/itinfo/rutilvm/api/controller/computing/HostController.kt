@@ -736,6 +736,32 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="POST",
+		value="도메인 가져오기에 필요한 iSCSI 로그인",
+		notes="도메인 가져오기 - iSCSI 요쳥"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "hostId", value = "호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "iscsiDetailVo", value="target, address, port", dataTypeClass=IscsiDetailVo::class, paramType="body")
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@PostMapping("/{hostId}/iscsiToLogin")
+	@ResponseBody
+	fun loginISCSI(
+		@PathVariable("hostId") hostId: String? = null,
+		@RequestBody iscsiDetailVo: IscsiDetailVo? = null
+	): ResponseEntity<List<String>> {
+		if (hostId == null)
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		if(iscsiDetailVo == null)
+			throw ErrorPattern.DISCOVER_TARGET_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/iscsiToLogin {} {} {} ... 호스트 iscsi 로그인 목록", hostId, iscsiDetailVo.target, iscsiDetailVo.address, iscsiDetailVo.port)
+		return ResponseEntity.ok(iHostStorage.loginIscsiFromHost(hostId, iscsiDetailVo))
+	}
+
+	@ApiOperation(
+		httpMethod="POST",
 		value="도메인 가져오기에 필요한 fcp 요청",
 		notes="도메인 가져오기 - fcp 요쳥"
 	)
