@@ -11,7 +11,6 @@ const DomainDataCenterActionButtons = ({
   // 도메인-데이터센터: 연결(데이터센터), 분리, 활성, 유지보수
   const { setActiveModal } = useUIState();
   const { domainsSelected } = useGlobal()
-  const isContextMenu = actionType === "context";
 
   const isUp = status === "UP";
   const isActive = status === "ACTIVE";

@@ -252,22 +252,22 @@ class StorageController: BaseController() {
 		return ResponseEntity.ok(iDomain.findAllDataCentersFromStorageDomain(storageDomainId))
 	}
 
-	@ApiOperation(
-		httpMethod="GET",
-		value="스토리지 도메인 활성화된 데이터센터 목록",
-		notes="스토리지 도메인 활성화된 데이터센터 목록"
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/dataCenters")
-	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-	fun activeDatacenters(
-	): ResponseEntity<List<DataCenterVo>> {
-		log.info("/storages/datacenters ...")
-		return ResponseEntity.ok(iDomain.findAllDataCenterFromStorageDomain())
-	}
+	// @ApiOperation(
+	// 	httpMethod="GET",
+	// 	value="스토리지 도메인 활성화된 데이터센터 목록",
+	// 	notes="스토리지 도메인 활성화된 데이터센터 목록"
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 200, message = "OK")
+	// )
+	// @GetMapping("/dataCenters")
+	// @ResponseStatus(HttpStatus.OK)
+	// @ResponseBody
+	// fun activeDatacenters(
+	// ): ResponseEntity<List<DataCenterVo>> {
+	// 	log.info("/storages/datacenters ...")
+	// 	return ResponseEntity.ok(iDomain.findAllDataCenterFromStorageDomain())
+	// }
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -361,11 +361,11 @@ class StorageController: BaseController() {
 		@PathVariable("storageDomainId") storageDomainId: String? = null,
 		@PathVariable("dataCenterId") dataCenterId: String? = null
 	): ResponseEntity<Boolean> {
-		if (dataCenterId == null)
-			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-		log.info("/storages/{}/dataCenters/{}/activate ... 데이터센터 활성 activate", storageDomainId, dataCenterId)
+		if (dataCenterId == null)
+			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/dataCenters/{}/activate ... 데이터센터 활성", storageDomainId, dataCenterId)
 		return ResponseEntity.ok(iDomain.activateFromDataCenter(dataCenterId, storageDomainId))
 	}
 

@@ -263,31 +263,13 @@ fun StorageDomainVo.toAddStorageDomainBuilder(): StorageDomain {
 		.build()
 }
 
-fun StorageDomainVo.toImportStorageDomainBuilder(): StorageDomain {
-	log.info("toImportStorageDomainBuilder: {}", this)
-
-	return this.toStorageDomainBuilder()
-		.id(this.id)
-		.storage(HostStorageBuilder().type(StorageType.fromValue(this.storageType)))
-		.build()
-}
-
-fun StorageDomainVo.toImportFCStorageDomainBuilder(): StorageDomain {
-	log.info("toImportStorageDomainBuilder: {}", this)
-
-	return this.toStorageDomainBuilder()
-		.id(this.id)
-		.storage(HostStorageBuilder().type(StorageType.fromValue(this.storageType)))
-		.build()
-}
-
 // NFS
 fun StorageDomainVo.toAddNFSBuilder(): HostStorage {
 	return HostStorageBuilder()
-			.address(this@toAddNFSBuilder.storageAddress)
+		.address(this@toAddNFSBuilder.storageAddress)
 //			.nfsVersion(NfsVersion.AUTO)
-			.path(this@toAddNFSBuilder.storagePath)
-			.type(StorageType.fromValue(this@toAddNFSBuilder.storageType))
+		.path(this@toAddNFSBuilder.storagePath)
+		.type(StorageType.fromValue(this@toAddNFSBuilder.storageType))
 	.build()
 }
 
@@ -322,6 +304,16 @@ fun StorageDomainVo.toAddFCPBuilder(): HostStorage {
 		// 	)
 		// )
 	.build()
+}
+
+
+// 도메인 가져오기 iscsi와 fc 모두
+fun StorageDomainVo.toImportStorageDomainBuilder(): StorageDomain {
+	log.info("toImportStorageDomainBuilder: {}", this)
+	return this.toStorageDomainBuilder()
+		.storage(HostStorageBuilder().type(StorageType.fromValue(this.storageType)))
+		.id(this.id)
+		.build()
 }
 
 /**

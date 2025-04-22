@@ -383,6 +383,13 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun import(storageDomainVo: StorageDomainVo): StorageDomainVo? {
 		log.info("import ... storageDomain name: {}", storageDomainVo.name)
+
+		// NFS 라면 생성 함수로
+		if (StorageType.fromValue(storageDomainVo.storageType) == StorageType.NFS) {
+			return add(storageDomainVo)
+		}
+
+		// ISCSI, FCP 는 가져오기  addBlockDomain
 		val res: StorageDomain? = conn.importStorageDomain(
 			storageDomainVo.toImportStorageDomainBuilder(),
 			storageDomainVo.dataCenterVo.id
@@ -461,29 +468,29 @@ class StorageServiceImpl(
 
 	@Throws(Error::class)
 	override fun attachFromDataCenter(dataCenterId: String, storageDomainId: String): Boolean {
-		log.info("attachFromDataCenter ... storageDomainId: {}, dataCenterId: {}", storageDomainId, dataCenterId)
-		val res: Result<Boolean> = conn.attachStorageDomainsToDataCenter(storageDomainId, dataCenterId)
+		log.info("attachFromDataCenter ... dataCenterId: {}, storageDomainId: {}", dataCenterId, storageDomainId)
+		val res: Result<Boolean> = conn.attachStorageDomainToDataCenter(dataCenterId, storageDomainId)
 		return res.isSuccess
 	}
 
 	@Throws(Error::class)
 	override fun detachFromDataCenter(dataCenterId: String, storageDomainId: String): Boolean {
-		log.info("detachFromDataCenter ... storageDomainId: {}, dataCenterId: {}", storageDomainId, dataCenterId)
-		val res: Result<Boolean> = conn.detachStorageDomainsToDataCenter(storageDomainId, dataCenterId)
+		log.info("detachFromDataCenter ... dataCenterId: {}, storageDomainId: {}", dataCenterId, storageDomainId)
+		val res: Result<Boolean> = conn.detachStorageDomainToDataCenter(dataCenterId, storageDomainId)
 		return res.isSuccess
 	}
 
 	@Throws(Error::class)
 	override fun activateFromDataCenter(dataCenterId: String, storageDomainId: String): Boolean {
-		log.info("activateFromDataCenter ... storageDomainId: {}, dataCenterId: {}", storageDomainId, dataCenterId)
-		val res: Result<Boolean> = conn.activateAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId)
+		log.info("activateFromDataCenter ... dataCenterId: {}, storageDomainId: {}", storageDomainId, dataCenterId)
+		val res: Result<Boolean> = conn.activateStorageDomainToDataCenter(dataCenterId, storageDomainId)
 		return res.isSuccess
 	}
 
 	@Throws(Error::class)
 	override fun maintenanceFromDataCenter(dataCenterId: String, storageDomainId: String, ovf: Boolean): Boolean {
-		log.info("maintenanceFromDataCenter ... storageDomainId: {}, dataCenterId: {} ovf: {}", storageDomainId, dataCenterId, ovf)
-		val res: Result<Boolean> = conn.deactivateAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId, ovf)
+		log.info("maintenanceFromDataCenter ... dataCenterId: {}, storageDomainId: {} ovf: {}", storageDomainId, dataCenterId, ovf)
+		val res: Result<Boolean> = conn.deactivateStorageDomainToDataCenter(dataCenterId, storageDomainId, ovf)
 		return res.isSuccess
 	}
 

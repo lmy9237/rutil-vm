@@ -8,8 +8,10 @@ import {
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import Localization from "../../../utils/Localization";
 import LabelCheckbox from "../../label/LabelCheckbox";
+import useGlobal from "../../../hooks/useGlobal";
 
-const DomainDeleteModal = ({ isOpen, domain, onClose }) => {
+const DomainDeleteModal = ({ isOpen, onClose }) => {
+  const { domainsSelected } = useGlobal()
   const onSuccess = () => {
     onClose();
     toast.success(`${Localization.kr.DOMAIN} ${Localization.kr.REMOVE} 완료`);
@@ -33,7 +35,7 @@ const DomainDeleteModal = ({ isOpen, domain, onClose }) => {
 
   const handleFormSubmit = () => {
     
-    deleteDomain({ domainId: domain?.id, format: format, hostName: hostVo.name });
+    deleteDomain({ domainId: domainsSelected[0]?.id, format: format, hostName: hostVo.name });
   };
 
   return (
@@ -41,7 +43,7 @@ const DomainDeleteModal = ({ isOpen, domain, onClose }) => {
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       shouldWarn={true}
-      promptText={`${domain?.name} 를(을) ${Localization.kr.REMOVE} 하시겠습니까?`}
+      promptText={`${domainsSelected[0]?.name} 를(을) ${Localization.kr.REMOVE} 하시겠습니까?`}
       contentStyle={{ width: "670px" }}
     >
       <div style={{ display: "flex" }}>
@@ -54,6 +56,7 @@ const DomainDeleteModal = ({ isOpen, domain, onClose }) => {
         value={hostVo}
         loading={isHostsLoading}
         options={hosts}
+        disabled={!format}
         onChange={(e) => {
           const selected = hosts.find(h => h.id === e.target.value);
           if (selected) setHostVo({ id: selected.id, name: selected.name });

@@ -42,29 +42,6 @@ fun Connection.findStorageDomain(storageDomainId: String, follow: String = ""): 
 }
 
 
-fun Connection.attachStorageDomainsToDataCenter(storageDomainId: String, dataCenterId: String): Result<Boolean> = runCatching {
-	this.srvDataCenter(dataCenterId).storageDomainsService().add()
-		.storageDomain(StorageDomainBuilder().id(storageDomainId).build())
-		.send()
-	true
-
-}.onSuccess {
-	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"연결", storageDomainId)
-}.onFailure {
-	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"연결", storageDomainId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-fun Connection.detachStorageDomainsToDataCenter(storageDomainId: String, dataCenterId: String): Result<Boolean> = runCatching {
-	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).remove().send()
-	true
-
-}.onSuccess {
-	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"분리", storageDomainId)
-}.onFailure {
-	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"분리", storageDomainId)
-	throw if (it is Error) it.toItCloudException() else it
-}
 
 fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: String): Result<StorageDomain?> = runCatching {
 	if (this.findAllStorageDomains().getOrDefault(emptyList())
@@ -78,7 +55,7 @@ fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: Stri
 	storageAdded ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
 	// 스토리지 도메인을 데이터센터에 붙이는 작업
-	this.attachStorageDomainsToDataCenter(storageAdded.id(), dataCenterId).onFailure { throw it }
+	this.attachStorageDomainToDataCenter(storageAdded.id(), dataCenterId).onFailure { throw it }
 
 	storageAdded
 }.onSuccess {
@@ -96,7 +73,7 @@ fun Connection.importStorageDomain(storageDomain: StorageDomain, dataCenterId: S
 	storageImported ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
 	// 스토리지 도메인을 데이터센터에 붙이는 작업
-	this.attachStorageDomainsToDataCenter(storageImported.id(), dataCenterId).onFailure { throw it }
+	this.attachStorageDomainToDataCenter(storageImported.id(), dataCenterId).onFailure { throw it }
 
 	storageImported
 }.onSuccess {
@@ -148,7 +125,6 @@ fun Connection.destroyStorageDomain(storageDomainId: String): Result<Boolean> = 
 	checkStorageDomainExists(storageDomainId)
 
 	this.srvStorageDomain(storageDomainId).remove().destroy(true).send()
-	// this.expectStorageDomainDeleted(storageDomainId)
 	true
 
 }.onSuccess {

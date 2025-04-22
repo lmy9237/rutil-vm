@@ -7,16 +7,17 @@ import toast from "react-hot-toast";
 import { useMaintenanceDomain } from "../../../api/RQHook";
 import useGlobal from "../../../hooks/useGlobal";
 
-const DomainMainTenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceModal
+const DomainMaintenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceModal
   isOpen,
   onClose
 }) => {
   const { datacentersSelected, domainsSelected } = useGlobal()
+  // 만약 가상머신에 대한 임대가 포함되어 있다면 유지보수 불가능
 
   const onSuccess = () => {
     onClose();
     toast.success(`${Localization.kr.DOMAIN} 유지보수 완료`);
-  };  
+  }; 
   const { mutate: maintenanceDomain } = useMaintenanceDomain(onSuccess, () => onClose());
 
   const { ids, names } = useMemo(() => {
@@ -59,4 +60,4 @@ const DomainMainTenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceMod
   );
 };
 
-export default DomainMainTenanceModal;
+export default DomainMaintenanceModal;

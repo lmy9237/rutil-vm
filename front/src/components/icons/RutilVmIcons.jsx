@@ -675,7 +675,8 @@ export const status2Icon = (
     case "REBOOT_IN_PROGRESS":
     case Localization.kr.renderStatus("REBOOT_IN_PROGRESS"):  
     case "PREPARING_FOR_MAINTENANCE":               iconDef = rvi16Refresh();break;
-    case "LOCKED":                                  iconDef = rvi16Lock();break;
+    case "LOCKED":
+      case "IMAGE_LOCKED":                          iconDef = rvi16Lock();break;
     // case "MIGRATING":                              iconDef = rvi16RebootLined();break;
     // case "REBOOT": 
     // case "PREPARING_FOR_MAINTENANCE":              iconDef = rvi16Refresh();break;

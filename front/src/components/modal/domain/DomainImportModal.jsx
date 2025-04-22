@@ -35,6 +35,7 @@ const initialFormState = {
 
 // import = 가져오기
 // nfs 는 같음, iscsi 주소, 포트, 사용자 인증 이름, 암호 해서 검색
+// fc는 id만 필요한듯
 const importFormState = {
   target: "",
   address: "",
@@ -73,12 +74,10 @@ const DomainImportModal = ({
   const onSuccess = () => {
     onClose();
     toast.success(`${Localization.kr.DOMAIN} 가져오기 완료`);
-  };
-  
+  };  
   const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose()); // 가져오기
-  const {
-    mutate: importIscsiFromHostAPI 
-  } = useImportIscsiFromHost(
+  
+  const { mutate: importIscsiFromHostAPI } = useImportIscsiFromHost(
     (data) => {
       setIscsiResults(data); // <-- 여기서 직접 설정
     },
@@ -86,7 +85,14 @@ const DomainImportModal = ({
       toast.error("iSCSI 가져오기 실패:", error);
     }
   );  
-  const { mutate: importFcpFromHost } = useImportFcpFromHost(onSuccess, () => onClose()); // 가져오기 fibre
+  const { mutate: importFcpFromHostAPI } = useImportFcpFromHost(
+    (data) => {
+      setFcResults(data); // <-- 여기서 직접 설정
+    },
+    (error) => {
+      toast.error("fc 가져오기 실패:", error);
+    }
+);  
 
   const { 
     data: dataCenters = [],
@@ -96,20 +102,6 @@ const DomainImportModal = ({
     data: hosts = [], 
     isLoading: isHostsLoading 
   } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
-  
-  // const {
-  //   data: fibres = [],
-  //   refetch: refetchFibres,
-  //   isLoading: isFibresLoading,
-  //   isError: isFibresError, 
-  //   isSuccess: isFibresSuccess
-  // } = useFibreFromHost(hostVo?.id, (e) => ({ ...e }));
-
-  const transFibreData = fcResults.map((f) => ({
-    ...f,
-    id: f?.id,
-    name: f?.name,
-  }));
 
   const resetFormStates = () => {
     setFormState(initialFormState);
@@ -167,10 +159,12 @@ const DomainImportModal = ({
     Logger.debug(`DomainImportModal > useEffect ... 스토리지유형 설정, formState.domainType: `, formState.domainType)
     const options = storageTypeOptions(formState.domainType);
     setStorageTypes(options);
-
+  
     // 기본 storageType을 options의 첫 번째 값으로 설정
     if (options.length > 0) {
-      setFormState((prev) => ({ ...prev, storageType: options[0].value }));
+      setFormState((prev) => ({ 
+        ...prev, 
+        storageType: options[0].value }));
     }
   }, [formState.domainType]);
 
@@ -204,6 +198,9 @@ const DomainImportModal = ({
     }
     return null;
   };
+  
+  Logger.debug("현재 도메인 타입:", formState.domainType);
+
 
   const handleFormSubmit = () => {
     const error = validateForm();
@@ -295,25 +292,16 @@ const DomainImportModal = ({
           formImportState={formImportState} setFormImportState={setFormImportState}
           importIscsiFromHostAPI={importIscsiFromHostAPI}
           // loginIscsiFromHostAPI={}
-          // loginIscsiFromHost={loginIscsiFromHost}
-          // refetchIscsis={} 
-          // isIscsisLoading={} 
-          // isIscsisError={} 
-          // isIscsisSuccess={}
         />      
       )}
 
       {/* Firbre 의 경우 */}
       {isFibre && (
         <DomainFibreImport
+          fcResults={fcResults} setFcResults={setFcResults}
           lunId={lunId} setLunId={setLunId}
           hostVo={hostVo} setHostVo={setHostVo}
-          formImportState={formImportState} setFormImportState={setFormImportState}
-          fcResults={fcResults} setFcResults={setFcResults}
-          // refetchFc={} 
-          // isFcLoading={} 
-          // isFcError={} 
-          // isFcSuccess={}
+          importFcpFromHostAPI={importFcpFromHostAPI}
         />
       )}
       <hr />

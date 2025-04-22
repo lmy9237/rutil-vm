@@ -93,12 +93,12 @@ fun Connection.checkVnicProfile(vnicProfileId: String): VnicProfile {
 fun Connection.checkStorageDomainExists(domainId: String) {
 	if (this.findStorageDomain(domainId).isFailure) {
 		log.error("StorageDomain 없음 {}", domainId)
-		throw ErrorPattern.VNIC_PROFILE_NOT_FOUND.toError()
+		throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 	}
 }
 fun Connection.checkStorageDomain(domainId: String): StorageDomain {
 	return this.findStorageDomain(domainId)
-		.getOrNull() ?: throw ErrorPattern.VNIC_PROFILE_NOT_FOUND.toError()
+		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 }
 
 fun Connection.checkDiskExists(diskId: String) {

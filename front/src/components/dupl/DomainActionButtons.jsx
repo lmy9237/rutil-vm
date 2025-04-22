@@ -22,12 +22,14 @@ const DomainActionButtons = ({
   const isMaintenance = status === "MAINTENANCE";
   const isLocked = status === "LOCKED";
   const isUnknown = status === "UNKNOWN";
+  const isUnattached = status === "UNATTACHED";
 
   const basicActions = [
     { type: "create",  onBtnClick: () => setActiveModal("domain:create"),  label: Localization.kr.CREATE,  disabled: domainsSelected.length > 0},
     { type: "import",  onBtnClick: () => setActiveModal("domain:import"),  label: Localization.kr.IMPORT,  disabled: domainsSelected.length > 0 || isMaintenance, },
     { type: "update",  onBtnClick: () => setActiveModal("domain:update"),  label: Localization.kr.UPDATE,  disabled: domainsSelected.length !== 1 || isMaintenance, },
-    { type: "remove",  onBtnClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length === 0 || isLocked || isMaintenance || !isUnknown,  },
+    { type: "remove",  onBtnClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length === 0 || !isUnattached  },
+    // { type: "remove",  onBtnClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length === 0 || isLocked || isMaintenance || !isUnknown,  },
     { type: "destory", onBtnClick: () => setActiveModal("domain:destroy"), label: Localization.kr.DESTROY, disabled: domainsSelected.length === 0 || isLocked || isMaintenance,  },
   ];
 

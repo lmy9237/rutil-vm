@@ -1,15 +1,14 @@
 import React from "react";
 import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
 import DomainModal from "./DomainModal";
 import DomainDeleteModal from "./DomainDeleteModal";
 import DomainAttachModal from "./DomainAttachModal";
 import DomainDestroyModal from "./DomainDestroyModal";
 import DomainCheckModal from "./DomainCheckModal";
-import DomainMainTenanceModal from "./DomainMainTenanceModal";
 import DomainActivateModal from "./DomainActivateModal";
 import DomainDetachModal from "./DomainDetachModal";
 import DomainImportModal from "./DomainImportModal";
+import DomainMaintenanceModal from "./DomainMaintenanceModal";
 
 /**
  * @name DomainModals
@@ -29,7 +28,7 @@ const DomainModals = ({
   datacenterId,
 }) => {
   const { activeModal, setActiveModal, } = useUIState()
-  const { domainsSelected } = useGlobal()
+  // const { domainsSelected } = useGlobal()
 
   const modals = {
     create: (
@@ -71,11 +70,9 @@ const DomainModals = ({
     ), detach: (
       <DomainDetachModal isOpen={activeModal() === "domain:detach"}
         onClose={() => setActiveModal(null)}
-        domain={domain}
-        datacenterId={datacenterId}
       />
     ), maintenance: (
-      <DomainMainTenanceModal key={activeModal()} isOpen={activeModal() === "domain:maintenance"}
+      <DomainMaintenanceModal key={activeModal()} isOpen={activeModal() === "domain:maintenance"}
         onClose={() => setActiveModal()}
       />
       /*

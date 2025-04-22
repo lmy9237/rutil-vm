@@ -81,7 +81,7 @@ const DomainAttachModal = ({ isOpen, onClose }) => {
     Logger.debug(`DomainAttachModal > handleFormSubmit ... `)
 
     attachDomain(
-      { storageDomainId: domainsSelected[0]?.id, dataCenterId: datacentersSelected[0]?.id }
+      { dataCenterId: datacentersSelected[0]?.id, storageDomainId: domainsSelected[0]?.id }
     )
   };
 

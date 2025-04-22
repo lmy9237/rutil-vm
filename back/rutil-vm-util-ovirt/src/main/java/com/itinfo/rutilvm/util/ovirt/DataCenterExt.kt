@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.util.ovirt.error.*
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.Connection
+import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
 import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
 
@@ -153,35 +154,52 @@ fun Connection.findAllAttachedStorageDomainsFromDataCenter(dataCenterId: String,
 fun Connection.srvAttachedStorageDomainFromDataCenter(dataCenterId: String, storageDomainId: String): AttachedStorageDomainService =
 	this.srvAllAttachedStorageDomainsFromDataCenter(dataCenterId).storageDomainService(storageDomainId)
 
-fun Connection.findAllAttachedStorageDomainDisksFromDataCenter(dataCenterId: String, storageDomainId: String): Result<List<Disk>> = runCatching {
-	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).disksService().list().send().disks()
-
-}.onSuccess {
-	Term.DATACENTER.logSuccessWithin(Term.DISK,"목록조회", dataCenterId)
-}.onFailure {
-	Term.DATACENTER.logFailWithin(Term.DISK,"목록조회", it, dataCenterId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
 fun Connection.findAttachedStorageDomainFromDataCenter(dataCenterId: String, storageDomainId: String): Result<StorageDomain?> = runCatching {
 	srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).get().send().storageDomain()
 
 }.onSuccess {
-	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"목록조회", dataCenterId)
+	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"상세조회", dataCenterId)
 }.onFailure {
-	Term.DATACENTER.logFailWithin(Term.STORAGE_DOMAIN,"목록조회", it, dataCenterId)
+	Term.DATACENTER.logFailWithin(Term.STORAGE_DOMAIN,"상세조회", it, dataCenterId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.activateAttachedStorageDomainFromDataCenter(dataCenterId: String, storageDomainId: String): Result<Boolean> = runCatching {
+
+fun Connection.attachStorageDomainToDataCenter(dataCenterId: String, storageDomainId: String): Result<Boolean> = runCatching {
+	this.srvAllAttachedStorageDomainsFromDataCenter(dataCenterId)
+		.add()
+		.storageDomain(StorageDomainBuilder().id(storageDomainId).build())
+		.send()
+
+	true
+
+}.onSuccess {
+	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"연결", storageDomainId)
+}.onFailure {
+	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"연결", storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.detachStorageDomainToDataCenter(dataCenterId: String, storageDomainId: String): Result<Boolean> = runCatching {
+	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).remove()/*.async(true)*/.send()
+
+	true
+
+}.onSuccess {
+	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"분리", storageDomainId)
+}.onFailure {
+	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"분리", storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.activateStorageDomainToDataCenter(dataCenterId: String, storageDomainId: String): Result<Boolean> = runCatching {
 	val storageDomain: StorageDomain = this.findAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId)
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
 	if(storageDomain.status() == StorageDomainStatus.ACTIVE){
 		throw ErrorPattern.STORAGE_DOMAIN_ACTIVE.toError()
-		// throw Error("activate 실패 ... $storageDomainId 가 이미 활성 상태") // return 대신 throw
+		// $storageDomainId 가 이미 활성 상태"
 	}
-
 	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).activate().send()
 	true
 
@@ -192,7 +210,7 @@ fun Connection.activateAttachedStorageDomainFromDataCenter(dataCenterId: String,
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.deactivateAttachedStorageDomainFromDataCenter(dataCenterId: String, storageDomainId: String, ovf: Boolean): Result<Boolean> = runCatching {
+fun Connection.deactivateStorageDomainToDataCenter(dataCenterId: String, storageDomainId: String, ovf: Boolean): Result<Boolean> = runCatching {
 	val storageDomain: StorageDomain = this.findAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId)
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
@@ -212,21 +230,16 @@ fun Connection.deactivateAttachedStorageDomainFromDataCenter(dataCenterId: Strin
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.removeAttachedStorageDomainFromDataCenter(dataCenterId: String, storageDomainId: String): Result<Boolean> = runCatching {
-	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).remove().async(true).send()
-	/*
-	// TODO: UNATTACHED 상태확인 체크 기능필요
-	while (storageDomain.status() != StorageDomainStatus.UNATTACHED)
-		storageDomainService.remove().destroy(true).send()
-	*/
-	true
+
+fun Connection.findAllAttachedStorageDomainDisksFromDataCenter(dataCenterId: String, storageDomainId: String): Result<List<Disk>> = runCatching {
+	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).disksService().list().send().disks()
+
 }.onSuccess {
-	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"삭제", dataCenterId)
+	Term.DATACENTER.logSuccessWithin(Term.DISK,"목록조회", dataCenterId)
 }.onFailure {
-	Term.DATACENTER.logFailWithin(Term.STORAGE_DOMAIN,"삭제", it, dataCenterId)
+	Term.DATACENTER.logFailWithin(Term.DISK,"목록조회", it, dataCenterId)
 	throw if (it is Error) it.toItCloudException() else it
 }
-
 
 // region: 유틸
 
