@@ -13,9 +13,11 @@
 }
 .login-form-box{
   background: white;
-  padding: 90px 50px;
+  padding: 0px 40px;
+  height: 550px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); 
   border-radius: 9px; 
+  position: relative;
 }
 
 form {

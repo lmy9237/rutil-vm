@@ -72,6 +72,7 @@
   min-height: 45vh;
   padding: 16px;
 }
+
 .network-item {
   padding: 15px;
   margin-bottom: 10px;
@@ -178,16 +179,24 @@
   overflow: hidden;           
   text-overflow: ellipsis;  
 } */
+.assigned-network{
+  background-color: yellow !important;
+  border: 1px solid black;
+}
 .assigned-network-content{
   display: flex;
   width: 100%;
   justify-content: space-between;
+  background-color: rgb(145, 144, 199);
+}
+.empty-network-content{
+  background-color: pink;
 }
 .interface-container-outer{
   background: skyblue;
 }
 .interface-container{
-  background: green;
+  background: rgb(96, 167, 96);
 }
 .separations{
   height: 100%;

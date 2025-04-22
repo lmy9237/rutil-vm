@@ -2,7 +2,7 @@
 .rutil-vm-logo {
   flex-direction:column;
   width:140px;aspect-ratio:134/36;margin:10px;
-  margin-bottom: 70px;
+  margin-bottom: 50px;
 }
 .rutil-vm-logo.big {
   width: 240px !important;

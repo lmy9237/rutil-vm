@@ -1,6 +1,9 @@
 .footer-company {
   gap:40px;
-  padding: 20px 0;border-top:1px #E2E5EB solid;
+  padding: 20px 0;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 .footer-company-group {
   gap:8px;

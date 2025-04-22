@@ -2,12 +2,7 @@
 .storage-domain-new-outer{
   width:100%;height:var(--h-modal-content);
 }
-.storage-domain-new-first{
-  border-bottom: 1px solid var(--color-table);
-}
-.storage-domain-new-first>div:first-child{
-  border-bottom: 1px solid var(--color-table);
-}
+
 
 .domain-new-select{
   width: 100%;

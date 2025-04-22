@@ -261,7 +261,7 @@ const DomainImportModal = ({
             onChange={handleSelectIdChange(setHostVo, hosts)}
           />
         </div>
-
+        <hr/>
         <div className="domain-new-right">
           <LabelInput id="name" label={Localization.kr.NAME}
             value={formState.name}

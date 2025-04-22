@@ -84,11 +84,12 @@ const RadialBarChart = ({
       y: {
         formatter: (val) => `${val}%`,
         title: {
-          // formatter: () => "제목",
+          formatter: () => "", 
         },
       },
     },
     labels: [],
+
     colors: ["#FF4560"],
   });
 
