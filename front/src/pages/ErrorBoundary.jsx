@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import { useRouteError } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import SectionLayout from "../components/SectionLayout";
 
 const ErrorBoundary = () => {
   const location = useLocation();
@@ -17,7 +18,7 @@ const ErrorContainer = ({children}) => {
   const navigate = useNavigate();
 
   return (
-    <div id="section">
+    <SectionLayout>
       <div className="error-text">
         <FontAwesomeIcon icon={faExclamationTriangle} fixedWidth /> &nbsp;
         <span>페이지를 표시할 수 없습니다.</span>
@@ -25,7 +26,7 @@ const ErrorContainer = ({children}) => {
         <button onClick={() => navigate("/")}>홈으로 이동</button>
         <button onClick={() => navigate(-2)}>뒤로가기</button>
       </div>
-    </div>
+    </SectionLayout>
   );
 }
 

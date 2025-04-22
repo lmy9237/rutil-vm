@@ -11,12 +11,12 @@ import HostVms from "./HostVms";
 import HostNics from "./HostNics";
 import HostDevices from "./HostDevices";
 import HostEvents from "./HostEvents";
-import HostModals from "../../../components/modal/host/HostModals";
 import Localization from "../../../utils/Localization";
 import { rvi24Host } from "../../../components/icons/RutilVmIcons";
 import { useHost } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import "./Host.css";
+import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name HostInfo
@@ -114,7 +114,7 @@ const HostInfo = () => {
   ];
 
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Host()}
         title={host?.name}
         status={Localization.kr.renderStatus(host?.status)}
@@ -135,10 +135,7 @@ const HostInfo = () => {
           <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
         </div>
       </div>
-
-      {/* 호스트 모달창 */}
-      <HostModals host={host} />
-    </div>
+    </SectionLayout>
   );
 };
 

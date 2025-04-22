@@ -1,24 +1,24 @@
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
+import SectionLayout from "../../../components/SectionLayout";
 import Loading from "../../../components/common/Loading";
 import HeaderButton from "../../../components/button/HeaderButton";
 import NavButton from "../../../components/navigation/NavButton";
 import Path from "../../../components/Header/Path";
-import VmModals from "../../../components/modal/vm/VmModals";
 import VmGeneral from "./VmGeneral";
 import VmNics from "./VmNics";
 import VmSnapshots from "./VmSnapshots";
 import VmApplications from "./VmApplications";
 import VmHostDevices from "./VmHostDevices";
 import VmEvents from "./VmEvents";
+import VmDisks from "./VmDisks";
+import { useVm } from "../../../api/RQHook";
 import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
-import { useVm } from "../../../api/RQHook";
-import VmDisks from "./VmDisks";
 import Logger from "../../../utils/Logger";
 import "./Vm.css";
-import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name VmInfo
@@ -47,22 +47,22 @@ const VmInfo = () => {
     isError: isVmError,
     isSuccess: isVmSuccess,
   } = useVm(vmId);
+  const { setVmsSelected } = useGlobal()
 
   const isUp = vm?.status === "UP";
   const isDown = vm?.status === "DOWN";
   const isMaintenance = vm?.status === "MAINTENANCE";
 
   const [activeTab, setActiveTab] = useState("general")
-  const { setVmsSelected } = useGlobal()
 
   useEffect(() => {
     if (isVmError || (!isVmLoading && !vm)) {
       navigate("/computing/vms");
     }
     setVmsSelected(vm)
-  }, [isVmError, isVmLoading, vm, navigate]);
+  }, [vm]);
 
-  const sections = [
+  const sections = useMemo(() => ([
     { id: "general", label: Localization.kr.GENERAL },
     { id: "nics", label: Localization.kr.NICS },
     { id: "disks", label: "디스크" },
@@ -70,26 +70,29 @@ const VmInfo = () => {
     { id: "applications", label: "애플리케이션" },
     { id: "hostDevices", label: `${Localization.kr.HOST} 장치` },
     { id: "events", label: Localization.kr.EVENT },
-  ];
+  ]), []);
 
   useEffect(() => {
     setActiveTab(section || "general");
   }, [section]);
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     Logger.debug(`VmInfo > handleTabClick ... vmId: ${vmId}`)
-    const path = tab === "general"? `/computing/vms/${vmId}` : `/computing/vms/${vmId}/${tab}`;
+    const path = tab === "general"
+      ? `/computing/vms/${vmId}` 
+      : `/computing/vms/${vmId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  };
+  }, [vmId]);
 
-  const pathData = [
+  const pathData = useMemo(() => ([
     vm?.name,
     sections.find((section) => section.id === activeTab)?.label,
-  ];
+  ]), [vm, sections, activeTab]);
 
   // 탭 메뉴 관리
   const renderSectionContent = () => {
+    Logger.debug(`VmInfo > renderSectionContent ...`)
     const SectionComponent = {
       general: VmGeneral,
       nics: VmNics,
@@ -103,24 +106,20 @@ const VmInfo = () => {
   };
 
   const sectionHeaderButtons = [
-    { type: "update", onClick: () => setActiveModal("vm:update"), label: Localization.kr.UPDATE, },
-    { type: "start", onClick: () => setActiveModal("vm:start"), label: Localization.kr.START, disabled: isUp && !isMaintenance },
-    { type: "pause", onClick: () => setActiveModal("vm:pause"), label: Localization.kr.PAUSE, disabled: !isUp },
-    { type: "reboot", onClick: () => setActiveModal("vm:reboot"), label: "재부팅", disabled: !isUp },
-    { type: "reset", onClick: () => setActiveModal("vm:reset"), label: "재설정", disabled: !isUp },
-    { type: "shutdown", onClick: () => setActiveModal("vm:shutdown"), label: "종료", disabled:!isUp, },
-    { type: "powerOff", onClick: () => setActiveModal("vm:powerOff"), label: "전원 끔", disabled: !isUp  },
-    { type: "console", onClick: () => setActiveModal("vm:console", vmId), label: "콘솔", disabled: !isUp },
-    { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"), label: "스냅샷 생성", disabled: !(isUp || isDown) },
-    { type: "migration", onClick: () => setActiveModal("vm:migration"), label: "마이그레이션", disabled: isUp },
+    { type: "update",    onClick: () => setActiveModal("vm:update"),        label: Localization.kr.UPDATE, },
+    { type: "start",     onClick: () => setActiveModal("vm:start"),         label: Localization.kr.START, disabled: isUp && !isMaintenance },
+    { type: "pause",     onClick: () => setActiveModal("vm:pause"),         label: Localization.kr.PAUSE, disabled: !isUp },
+    { type: "reboot",    onClick: () => setActiveModal("vm:reboot"),        label: Localization.kr.REBOOT, disabled: !isUp },
+    { type: "reset",     onClick: () => setActiveModal("vm:reset"),         label: Localization.kr.RESET, disabled: !isUp },
+    { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END, disabled:!isUp, },
+    { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF, disabled: !isUp  },
+    { type: "console",   onClick: () => setActiveModal("vm:console", vmId), label: Localization.kr.CONSOLE, disabled: !isUp },
+    { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: "스냅샷 생성", disabled: !(isUp || isDown) },
+    { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: "마이그레이션", disabled: isUp },
   ];
 
   const popupItems = [
-    /* { 
-      type: "import", 
-      label: Localization.kr.IMPORT, 
-      onClick: () => setActiveModal("vm:import") 
-    }, */
+    /* { type: "import",  onClick: () => setActiveModal("vm:import"),  label: Localization.kr.IMPORT, }, */
     { type: "copyVm", onClick: () => setActiveModal("vm:copyVm"), label: `${Localization.kr.VM} 복제` },
     { type: "delete", onClick: () => setActiveModal("vm:delete"), label: Localization.kr.REMOVE, disabled: !isDown, },
     { type: "templates", onClick: () => setActiveModal("vm:templates"), label: "템플릿 생성", disabled: !isDown, }, 
@@ -128,7 +127,7 @@ const VmInfo = () => {
   ];
 
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Desktop()}
         title={vm?.name}
         status={Localization.kr.renderStatus(vm?.status)}
@@ -145,10 +144,7 @@ const VmInfo = () => {
           <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
         </div>
       </div>
-
-      {/* vm 모달창 */}
-      <VmModals vm={vm}/>
-    </div>
+    </SectionLayout>
   );
 };
 

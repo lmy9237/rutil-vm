@@ -145,13 +145,17 @@
 
 /* 🔹 크기 조절 핸들 스타일 */
 .resizer {
-  width: 5px;height: 100%;
+  position: sticky;
+  width: var(--thickness-border-resizer);height: 100%;
   cursor: col-resize;
+  background-color: var(--color-border-resizer);
   z-index: 100;
+  -webkit-user-select: none;
 }
 
 .resizer:hover {
   cursor: ew-resize;
+  background-color: var(--color-hover);
 }
 .resizer:active {
   cursor: col-resize;

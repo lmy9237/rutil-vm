@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import NavButton from "../../components/navigation/NavButton";
 import HeaderButton from "../../components/button/HeaderButton";
@@ -16,12 +16,24 @@ import VnicProfiles from "./VnicProfiles";
 import Localization from "../../utils/Localization";
 import "./RutilManager.css";
 import { rvi24Globe } from "../../components/icons/RutilVmIcons";
+import SectionLayout from "../../components/SectionLayout";
 
 /**
  * @name RutilManager
  * @description Rutil Manager 창
  * 
  * @returns {JSX.Element} Rutil Manager 창
+ * 
+ * @see Info
+ * @see DataCenters
+ * @see Clusters
+ * @see Hosts
+ * @see Vms
+ * @see Templates
+ * @see StorageDomains
+ * @see Disks
+ * @see Networks
+ * @see VnicProfiles
  */
 const RutilManager = () => {
   const { section } = useParams();
@@ -32,7 +44,7 @@ const RutilManager = () => {
   const rootPath = location.pathname.split("/").slice(0, 2).join("/"); // '/computing' 또는 '/networks' 등 추출
 
   // Header와 Sidebar에 쓰일 섹션과 버튼 정보
-  const sections = [
+  const sections = useMemo(() => [
     { id: "info", label: Localization.kr.GENERAL },
     { id: "datacenters", label: Localization.kr.DATA_CENTER },
     { id: "clusters", label: Localization.kr.CLUSTER },
@@ -43,25 +55,25 @@ const RutilManager = () => {
     { id: "disks", label: "디스크" },
     { id: "networks", label: Localization.kr.NETWORK },
     { id: "vnicProfiles", label: Localization.kr.VNIC_PROFILE },
-  ];
+  ], []);
 
   // section이 변경될때 tab도 같이 변경
   useEffect(() => {
     setActiveTab(!section ? "info" : section);
   }, [section]);
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     const path = tab === "info"
         ? `${rootPath}/rutil-manager`
         : `${rootPath}/rutil-manager/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  };
+  }, [rootPath]);
 
-  const pathData = [
+  const pathData = useMemo(() => [
     "Rutil Manager",
     sections.find((section) => section.id === activeTab)?.label,
-  ];
+  ], [sections, activeTab]);
 
   const sectionComponents = {
     info: Info,
@@ -76,13 +88,13 @@ const RutilManager = () => {
     vnicProfiles: VnicProfiles,
   };
 
-  const renderSectionContent = () => {
+  const renderSectionContent = useCallback(() => {
     const SectionComponent = sectionComponents[activeTab] || Info;
     return <SectionComponent />;
-  };
+  }, []);
 
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton title="Rutil Manager"
         titleIcon={rvi24Globe()}
       />
@@ -97,7 +109,7 @@ const RutilManager = () => {
           {renderSectionContent()}
         </div>
       </div>
-    </div>
+    </SectionLayout>
   );
 }
 

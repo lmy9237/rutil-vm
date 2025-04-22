@@ -10,6 +10,7 @@ import Localization from '../../../utils/Localization';
 import { useVnicProfile } from '../../../api/RQHook';
 import {rvi24Lan } from '../../../components/icons/RutilVmIcons';
 import HeaderButton from '../../../components/button/HeaderButton';
+import SectionLayout from '../../../components/SectionLayout';
 
 /**
  * @name VnicProfileInfo
@@ -64,7 +65,7 @@ const VnicProfileInfo = () => {
   ]
 
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Lan()}
         title={vnic?.name}
         buttons={sectionHeaderButtons}
@@ -80,10 +81,7 @@ const VnicProfileInfo = () => {
           { renderSectionContent() }
         </div>
       </div>
-
-      {/* 클러스터 모달창 */}
-      <VnicProfileModals vnicProfile={vnic} />
-    </div>
+    </SectionLayout>
   );
 };
 

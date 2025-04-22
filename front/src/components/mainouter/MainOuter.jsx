@@ -1,12 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import useUIState from "../../hooks/useUIState";
-import useTmi from "../../hooks/useTmi";
+import React, { useEffect, useState } from "react";
+import useAsideState from "../../hooks/useAsideState";
 import SideNavbar from "./SideNavbar";
 import SidebarTree from "./SidebarTree";
 import Logger from "../../utils/Logger";
 import "./MainOuter.css";
-import useAsideState from "../../hooks/useAsideState";
 
 /**
  * @name MainOuter
@@ -19,30 +16,14 @@ import useAsideState from "../../hooks/useAsideState";
 const MainOuter = ({ 
   children, 
 }) => {
-  const { tmiLastSelected, setTmiLastSelected, } = useTmi();
   const { 
-    asideVisible, asideWidthInPx,
-    setAsideWidthInPx
+    asideVisible, setAsideWidthInPx
   } = useAsideState()
 
-  const [asidePopupVisible, setAsidePopupVisible] = useState(true);
   const [activeSection, setActiveSection] = useState("general");
 
-  useEffect(() => {
-    const waveGraph = document.querySelector(".wave_graph");
-    if (waveGraph) {
-      if (tmiLastSelected === "dashboard" && asidePopupVisible) {
-        waveGraph.style.marginLeft = "0"; // Dashboard일 때 aside-popup 열려있으면 margin-left를 0으로
-      } else {
-        waveGraph.style.marginLeft = "1rem"; // 기본값
-      }
-    }
-  }, [tmiLastSelected, asidePopupVisible]); // selected와 asidePopupVisible이 변경될 때 실행
-  // 상태가 변경될 때마다 localStorage에 저장
-
   /* aside-popup 화면사이즈드레그 */
-  const ASIDE_RIGHT_VERT_BAR_WIDTH = 236
-  const [asideWidth, setAsideWidth] = useState(ASIDE_RIGHT_VERT_BAR_WIDTH); // 초기 사이드바 너비
+  const [asideWidth, setAsideWidth] = useState(asideVisible ?? 236); // 초기 사이드바 너비
   const handleMouseDown = (mouseDownEvent) => {
     Logger.debug(`MainOuter > handleMouseDown ... `)
 
@@ -64,7 +45,7 @@ const MainOuter = ({
   }
   
   useEffect(() => {
-    Logger.debug(`JobFooter > useEffect ... asideWidth: ${asideWidth}`)
+    Logger.debug(`MainOuter > useEffect ... asideWidth: ${asideWidth}`)
     setAsideWidthInPx(asideWidth)
   }, [asideWidth])
 
@@ -73,14 +54,13 @@ const MainOuter = ({
       <div
         className={`main-outer f-start`}
       >
-        
         <div
           style={{ 
             display: asideVisible() ? `block` : `none`,
             width: `${asideWidth}px`,
             minWidth: asideWidth < 236 ? 236 : asideWidth
           }}
-          className={`aside-outer `}
+          className={`aside-outer${(asideVisible() ? `` : " closed")}`}
         >
           <SideNavbar />
           <SidebarTree />{/* 크기 조절 핸들 */}

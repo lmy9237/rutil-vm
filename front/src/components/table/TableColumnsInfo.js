@@ -70,7 +70,7 @@ const TableColumnsInfo = {
   ],
   VMS_FROM_HOST: [
     { header: '', accessor: "icon", clickable: false, width: '10%' },
-    { header: Localization.kr.NAME, accessor: 'name', clickable: true, width: '20%' },
+    { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipv4', clickable: false, width: '20%' },
     { header: 'FQDN', accessor: 'fqdn', clickable: false, width: '20%' },
     { header: Localization.kr.STATUS, accessor: 'status', clickable: false, width: '10%' },
@@ -700,7 +700,7 @@ const TableColumnsInfo = {
     { header: '모두 필요', accessor: 'allRequired', clickable: false },
     { header: `${Localization.kr.VM} 네트워크 관리`, accessor: 'vmNetMgmt', clickable: false, width:'16%' },
     { header: '네트워크 출력', accessor: 'networkOutput', clickable: false },
-    { header: '마이그레이션 네트워크', accessor: 'migrationNetwork', clickable: false , width:'16%'},
+    { header: `${Localization.kr.MIGRATION} ${Localization.kr.NETWORK}`, accessor: 'migrationNetwork', clickable: false , width:'16%'},
     { header: 'Gluster 네트워크', accessor: 'glusterNetwork', clickable: false },
     { header: '기본 라우팅', accessor: 'defaultRouting', clickable: false },
   ],

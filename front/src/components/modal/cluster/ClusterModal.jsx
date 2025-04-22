@@ -14,14 +14,9 @@ import {
 import { checkKoreanName, checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import CONSTANT from "../../../Constants";
 import "./MCluster.css";
 
-const cpuArcs = [
-  { value: "UNDEFINED", label: "정의되지 않음" },
-  { value: "X86_64", label: "x86_64" },
-  { value: "PPC64", label: "ppc64" },
-  { value: "S390X", label: "s390x" },
-];
 
 // name이 value고, description이 label
 const cpuArcOptions = {
@@ -105,9 +100,9 @@ const biosTypeOptions = [
 ];
 
 const errorHandlingOptions = [
-  { value: "migrate", label: `${Localization.kr.VM}을 마이그레이션함` },
-  { value: "migrate_highly_available", label: `${Localization.kr.HOST} ${Localization.kr.VM}만 마이그레이션` },
-  { value: "do_not_migrate", label: `${Localization.kr.VM}은 마이그레이션 하지 않음` },
+  { value: "migrate", label: `${Localization.kr.VM}을 ${Localization.kr.MIGRATION}함` },
+  { value: "migrate_highly_available", label: `${Localization.kr.HOST} ${Localization.kr.VM}만 ${Localization.kr.MIGRATION}` },
+  { value: "do_not_migrate", label: `${Localization.kr.VM}은 ${Localization.kr.MIGRATION} 하지 않음` },
 ];
 
 const initialFormState = {
@@ -281,7 +276,7 @@ const ClusterModal = ({
       />
       <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
         value={formState.cpuArc}
-        options={cpuArcs}
+        options={CONSTANT.cpuArcs}
         disabled={editMode}
         onChange={handleInputChange("cpuArc")}
       />

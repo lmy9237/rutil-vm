@@ -16,7 +16,7 @@ const VmMigrationModal = ({
   const { vmsSelected } = useGlobal() 
 
   const onSuccess = () => {
-    toast.success(`${Localization.kr.VM} 마이그레이션 완료`);
+    toast.success(`${Localization.kr.VM} ${Localization.kr.MIGRATION} 완료`);
     onClose();
   };
   const { mutate: migration } = useMigration(onSuccess, () => onClose());
@@ -93,7 +93,7 @@ const VmMigrationModal = ({
   return (
     <BaseModal
       targetName={Localization.kr.VM}
-      submitTitle="마이그레이션"
+      submitTitle={Localization.kr.MIGRATION}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleFormSubmit}
@@ -101,7 +101,7 @@ const VmMigrationModal = ({
     >
       <div className="migration-article">
         <p className="font-bold mb-2">
-          다음 {Localization.kr.VM}(을)를 마이그레이션합니다:
+          다음 {Localization.kr.VM}(을)를 {Localization.kr.MIGRATION}합니다:
         </p>
         {[...vmsSelected].map((vm) => (
           <div key={vm.id} className="flex font-bold">
@@ -164,7 +164,7 @@ const VmMigrationModal = ({
 
           <LabelCheckbox
             id={`affinity-${referenceVM.id}`}
-            label="선택한 가상 머신을 사용하여 양극 강제 연결 그룹의 모든 가상 시스템을 마이그레이션합니다."
+            label={`선택한 ${Localization.kr.VM}을 사용하여 양극 강제 연결 그룹의 모든 가상 시스템을 ${Localization.kr.MIGRATION}합니다.`}
             checked={affinityClosure}
             onChange={() => {
               const updated = { ...vmStates };
@@ -185,38 +185,27 @@ const VmMigrationModal = ({
 
 export default VmMigrationModal;
 
-// 옛날코드
-// import { useEffect, useMemo, useState } from "react";
-// import BaseModal from "../BaseModal";
-// import { useMigration } from "../../../api/RQHook";
-// import "./MVm.css";
-// import LabelCheckbox from "../../label/LabelCheckbox";
-// import Localization from "../../../utils/Localization";
-// import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-// import toast from "react-hot-toast";
-// import { useQueries } from "@tanstack/react-query";
-// import ApiManager from "../../../api/ApiManager";
+/*
+const VmMigrationModal = ({ isOpen, onClose, selectedVms }) => {
+  const onSuccess = () => {
+    toast.success(`${Localization.kr.VM} ${Localization.kr.MIGRATION} 완료`);
+    onClose();
+  };
+  const { mutate: migration } = useMigration(onSuccess, () => onClose());
 
-// const VmMigrationModal = ({ isOpen, onClose, selectedVms }) => {
-//   const onSuccess = () => {
-//     toast.success(`${Localization.kr.VM} 마이그레이션 완료`);
-//     onClose();
-//   };
-//   const { mutate: migration } = useMigration(onSuccess, () => onClose());
-
-//   const [vmStates, setVmStates] = useState({});
-//   const { ids, names } = useMemo(() => {
-//     if (!selectedVms) return { ids: [], names: [] };
+   const [vmStates, setVmStates] = useState({});
+   const { ids, names } = useMemo(() => {
+     if (!selectedVms) return { ids: [], names: [] };
     
-//     const dataArray = Array.isArray(selectedVms) ? selectedVms : [selectedVms];
-//     return {
-//       ids: dataArray.map((item) => item.id),
-//       names: dataArray.map((item) => item.name || 'undefined'),
-//     };
-//   }, [selectedVms]);
+     const dataArray = Array.isArray(selectedVms) ? selectedVms : [selectedVms];
+     return {
+       ids: dataArray.map((item) => item.id),
+       names: dataArray.map((item) => item.name || 'undefined'),
+     };
+   }, [selectedVms]);
 
-//   useEffect(() => {
-//     if (!isOpen) return;
+   useEffect(() => {
+     if (!isOpen) return;
 
 //     const initialState = {};
 //     selectedVms.forEach((vm) => {
@@ -262,7 +251,7 @@ export default VmMigrationModal;
 //   };
 
 //   return (
-//     <BaseModal targetName={Localization.kr.VM} submitTitle="마이그레이션"
+//     <BaseModal targetName={Localization.kr.VM} submitTitle={Localization.kr.MIGRATION}
 //       isOpen={isOpen} onClose={onClose}      
 //       onSubmit={handleFormSubmit}
 //       contentStyle={{ width: "770px" }}
@@ -337,3 +326,4 @@ export default VmMigrationModal;
 // };
 
 // export default VmMigrationModal;
+*/

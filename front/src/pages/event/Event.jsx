@@ -4,6 +4,7 @@ import Localization from "../../utils/Localization";
 import { rvi24Event } from "../../components/icons/RutilVmIcons";
 import Logger from "../../utils/Logger";
 import { useAllEvents } from "../../api/RQHook";
+import SectionLayout from "../../components/SectionLayout";
 
 /**
  * @name Event
@@ -13,7 +14,6 @@ import { useAllEvents } from "../../api/RQHook";
  * @returns
  */
 const Event = () => {
-
   const {
     data: events,
     isLoading: isEventsLoading,
@@ -28,7 +28,7 @@ const Event = () => {
 
   Logger.debug("Event ...")
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Event()}
         title={Localization.kr.EVENT}
         subtitle="Chart"
@@ -45,7 +45,7 @@ const Event = () => {
           />
         </div>
       </div>
-    </div>
+    </SectionLayout>
   );
 };
 

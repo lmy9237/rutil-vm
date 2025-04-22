@@ -6,7 +6,6 @@ import Loading from "../../../components/common/Loading";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
-import DataCenterModals from "../../../components/modal/datacenter/DataCenterModals";
 import DataCenterClusters from "./DataCenterClusters";
 import DataCenterHosts from "./DataCenterHosts";
 import DataCenterVms from "./DataCenterVms";
@@ -17,6 +16,7 @@ import { useDataCenter } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import { rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
+import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name DataCenterInfo
@@ -70,7 +70,7 @@ const DataCenterInfo = () => {
     const path = `/${currentSection}/datacenters/${dataCenterId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  }, []);
+  }, [dataCenterId]);
 
   const sections = useMemo(() => ([
     { id: "clusters", label: Localization.kr.CLUSTER },
@@ -90,7 +90,7 @@ const DataCenterInfo = () => {
     setActiveTab(section || "clusters");
   }, [section]);
 
-  const renderSectionContent = () => {
+  const renderSectionContent = useCallback(() => {
     const SectionComponent = {
       clusters: DataCenterClusters,
       hosts: DataCenterHosts,
@@ -102,16 +102,15 @@ const DataCenterInfo = () => {
     return SectionComponent ? (
       <SectionComponent datacenterId={dataCenterId} />
     ) : null;
-  };
+  }, [activeTab]);
 
   const sectionHeaderButtons = useMemo(() => ([
     { type: "update", onClick: () => setActiveModal("datacenter:update"), label: Localization.kr.UPDATE, },
     { type: "remove", onClick: () => setActiveModal("datacenter:remove"), label: Localization.kr.REMOVE, },
   ]), []);
 
-  Logger.debug("DataCenterInfo ...")
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Datacenter()}
         title={dataCenter?.name}
         buttons={sectionHeaderButtons}
@@ -127,10 +126,7 @@ const DataCenterInfo = () => {
           <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
         </div>
       </div>
-
-      {/* 데이터센터 모달창 */}
-      <DataCenterModals dataCenter={dataCenter}/>
-    </div>
+    </SectionLayout>
   );
 };
 

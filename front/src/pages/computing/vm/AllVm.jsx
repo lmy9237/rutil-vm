@@ -1,4 +1,5 @@
 import React from "react";
+import SectionLayout from "../../../components/SectionLayout";
 import HeaderButton from "../../../components/button/HeaderButton";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VmDupl from "../../../components/dupl/VmDupl";
@@ -25,7 +26,7 @@ const AllVm = () => {
 
   Logger.debug("AllVm ...");
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Desktop()}
         title={Localization.kr.VM}
       />
@@ -37,7 +38,7 @@ const AllVm = () => {
           isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         />
       </div>
-    </div>
+    </SectionLayout>
   );
 };
 

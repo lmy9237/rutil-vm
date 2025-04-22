@@ -24,6 +24,7 @@ import { rvi24Cloud } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
+import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name DomainInfo
@@ -121,7 +122,7 @@ const DomainInfo = () => {
   ]), []);
 
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Cloud()} 
         title={domain?.name}
         buttons={sectionHeaderButtons}
@@ -134,19 +135,14 @@ const DomainInfo = () => {
           handleSectionClick={handleTabClick}
         />
         <div className="w-full px-[0.5rem] py-[0.5rem] info-content">
-          <Path
-            pathElements={pathData}
+          <Path pathElements={pathData}
             basePath={`/storages/domains/${domainId}`}
           />
           {renderSectionContent()}
         </div>
       </div>
 
-      {/* domain 모달창 */}
-      {/* <DomainModals domain={domain}
-        selectedDomains={domain}
-      /> */}
-    </div>
+    </SectionLayout>
   );
 };
 

@@ -7,8 +7,8 @@ import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
-import "./MTemplate.css";
 import Logger from "../../../utils/Logger";
+import "./MTemplate.css";
 
 const TemplateEditModal = ({
   isOpen,
@@ -29,7 +29,6 @@ const TemplateEditModal = ({
   const [clsuterVoName, setClsuterVoName] = useState("");
 
   const { mutate: editTemplate } = useEditTemplate();
-
   
   // 최적화옵션(영어로 값바꿔야됨)
   const [optimizeOption, setOptimizeOption] = useState([
@@ -40,7 +39,7 @@ const TemplateEditModal = ({
 
   const tabs = useMemo(() => ([
     { id: "general", label: Localization.kr.GENERAL },
-    { id: "console", label: "콘솔" },
+    { id: "console", label: Localization.kr.CONSOLE },
   ]), []);
 
   useEffect(() => {

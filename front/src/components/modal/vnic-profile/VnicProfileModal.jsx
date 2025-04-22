@@ -194,7 +194,8 @@ const VnicProfileModal = ({
           }));
         }}
       />
-      <LabelCheckbox id="migration" label="마이그레이션 가능"
+      <LabelCheckbox id="migration" 
+        label={`${Localization.kr.MIGRATION} 가능`}
         checked={formState.passThrough !== "DISABLED" || formState.migration}
         disabled={formState.passThrough === "DISABLED"}
         onChange={(e) => { setFormState((prev) => ({...prev, migration: e.target.checked})) }}

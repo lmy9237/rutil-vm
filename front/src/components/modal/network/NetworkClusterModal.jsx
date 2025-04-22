@@ -52,7 +52,7 @@ const NetworkClusterModal = ({
     networkRole: [
       cluster?.networkVo?.usage?.management ? '관리' : null,
       cluster?.networkVo?.usage?.display ? '출력' : null,
-      cluster?.networkVo?.usage?.migration ? '마이그레이션' : null,
+      cluster?.networkVo?.usage?.migration ? Localization.kr.MIGRATION : null,
       cluster?.networkVo?.usage?.gluster ? '글러스터' : null,
       cluster?.networkVo?.usage?.defaultRoute ? '기본라우팅' : null,
     ].filter(Boolean).join('/'),
@@ -75,7 +75,7 @@ const NetworkClusterModal = ({
     networkRole: [
       c?.networkVo?.usage?.management && '관리',
       c?.networkVo?.usage?.display && '출력',
-      c?.networkVo?.usage?.migration && '마이그레이션',
+      c?.networkVo?.usage?.migration && Localization.kr.MIGRATION,
       c?.networkVo?.usage?.gluster && '글러스터',
       c?.networkVo?.usage?.defaultRoute && '기본라우팅',
     ].filter(Boolean).join('/'),

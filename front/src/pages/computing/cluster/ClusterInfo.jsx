@@ -6,7 +6,6 @@ import Loading from "../../../components/common/Loading";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
-import ClusterModals from "../../../components/modal/cluster/ClusterModals";
 import ClusterGeneral from "./ClusterGeneral";
 import ClusterHosts from "./ClusterHosts";
 import ClusterVms from "./ClusterVms";
@@ -17,6 +16,7 @@ import { rvi24Cluster } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import "./Cluster.css";
+import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name ClusterInfo
@@ -97,7 +97,7 @@ const ClusterInfo = () => {
   ]), []);
 
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Cluster()}
         title={cluster?.name}
         buttons={sectionHeaderButtons}
@@ -113,10 +113,7 @@ const ClusterInfo = () => {
           <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
         </div>
       </div>
-
-      {/* 클러스터 모달창 */}
-      <ClusterModals cluster={cluster}/>
-    </div>
+    </SectionLayout>
   );
 };
 

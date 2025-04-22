@@ -7,6 +7,7 @@ import Localization from "../../../utils/Localization";
 import { useAllNetworks } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import "./Network.css";
+import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name AllNetwork
@@ -23,9 +24,8 @@ const AllNetwork = () => {
     refetch: refetchNetworks,
   } = useAllNetworks((e) => ({ ...e }));
 
-  Logger.debug("AllNetwork ...");
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Network()} 
         title={Localization.kr.NETWORK}
       />
@@ -37,7 +37,7 @@ const AllNetwork = () => {
           isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
         />
       </div>
-    </div>
+    </SectionLayout>
   );
 };
 

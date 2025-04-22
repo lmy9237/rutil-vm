@@ -1,14 +1,11 @@
 import React from "react";
-import Modal from "react-modal";
 import { useAllVnicProfiles } from "../../../api/RQHook";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VnicProfileDupl from "../../../components/dupl/VnicProfileDupl";
 import Localization from "../../../utils/Localization";
 import { rvi24Flag, rvi24Lan } from "../../../components/icons/RutilVmIcons";
 import HeaderButton from "../../../components/button/HeaderButton";
-
-// React Modal 설정
-Modal.setAppElement("#root");
+import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name AllVnic
@@ -25,7 +22,7 @@ const AllVnic = () => {
   } = useAllVnicProfiles((e) => ({ ...e }));
 
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Lan()}
         title={Localization.kr.VNIC_PROFILE}
       />
@@ -37,7 +34,7 @@ const AllVnic = () => {
           showSearchBox={true}
         />
       </div>
-    </div>
+    </SectionLayout>
   );
 };
 

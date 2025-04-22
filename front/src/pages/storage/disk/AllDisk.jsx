@@ -5,6 +5,7 @@ import DiskDupl from "../../../components/dupl/DiskDupl";
 import { useAllDisks } from "../../../api/RQHook";
 import { rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
+import SectionLayout from "../../../components/SectionLayout";
 
 const AllDisk = () => {
   const {
@@ -17,7 +18,7 @@ const AllDisk = () => {
 
   Logger.debug("AllDisk ...");
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24HardDrive()}
         title="디스크"
       />
@@ -29,7 +30,7 @@ const AllDisk = () => {
           isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
         />
       </div>
-    </div>
+    </SectionLayout>
   );
 };
 

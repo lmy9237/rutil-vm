@@ -5,9 +5,9 @@ import Logger from "../../../../utils/Logger";
 
 // 마이그레이션 모드
 const migrationModeOptionList = [
-  { value: "migratable", label: "수동 및 자동 마이그레이션 허용" },
-  { value: "user_migratable", label: "수동 마이그레이션만 허용" },
-  { value: "pinned", label: "마이그레이션 불가" },
+  { value: "migratable", label: `수동 및 자동 ${Localization.kr.MIGRATION} 허용` },
+  { value: "user_migratable", label: `수동 마이그레이션만 허용` },
+  { value: "pinned", label: `${Localization.kr.MIGRATION} 불가` },
 ];
 
 const VmHost = ({
@@ -122,8 +122,8 @@ const VmHost = ({
 
       {/* 마이그레이션 옵션 */}
       <div className="host-third-content">
-        <div className="py-2" style={{ fontWeight: 600 }}>마이그레이션 옵션</div>
-        <LabelSelectOptions label={"마이그레이션 모드"}
+        <div className="py-2" style={{ fontWeight: 600 }}>{Localization.kr.MIGRATION} 옵션</div>
+        <LabelSelectOptions label={`${Localization.kr.MIGRATION} 모드`}
           value={formHostState.migrationMode}
           options={migrationModeOptionList}
           onChange={(e) => setFormHostState((prev) => ({ ...prev, migrationMode: e.target.value, }))}

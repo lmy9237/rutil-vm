@@ -9,6 +9,7 @@ import SettingCertificates from "./SettingCertificates";
 import { rvi24Gear } from "../../components/icons/RutilVmIcons";
 import "./Setting.css";
 import Localization from "../../utils/Localization";
+import SectionLayout from "../../components/SectionLayout";
 
 /**
  * @name SettingInfo
@@ -59,7 +60,7 @@ const SettingInfo = () => {
   };
 
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Gear()}
         title={Localization.kr.MANAGEMENT}
         additionalText="목록이름"
@@ -75,7 +76,7 @@ const SettingInfo = () => {
           {renderSectionContent()}
         </div>
       </div>
-    </div>
+    </SectionLayout>
   );
 };
 export default SettingInfo;

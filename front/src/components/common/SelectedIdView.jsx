@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useMemo } from "react";
 import Logger from "../../utils/Logger";
+import useCopyToClipboard from "../../hooks/useCopyToClipboard";
 
 /**
  * @name SelectedIdView
@@ -15,16 +16,11 @@ const SelectedIdView = ({
       .map((e) => e?.id ?? e?.username)
       .join(", ")
   ), [items])
-  
-  const copyText = useCallback(async (txt) => {
-    Logger.debug(`SelectedIdView > copyText ... txt: ${txt}`)
-    await navigator.clipboard.writeText(txt).catch((e) => {
-      Logger.error(`something went WRONG ... reason: ${e.message}`)
-    });
-  }, [])
+  const [copied, copy] = useCopyToClipboard(selectedIds)
 
   useEffect(() => {
-    import.meta.env.DEV && copyText(selectedIds) // 개발 일 때만 활성화
+    Logger.debug(`SelectedIdView > useEffect ... items: `, items)
+    import.meta.env.DEV && copy() // 개발 일 때만 활성화
   }, [items])
   
   return (

@@ -54,16 +54,15 @@
 
 .footer-resizer {
   position: sticky;
-  height: 3px;width: 100%;
+  height: var(--thickness-border-resizer-footer);width: 100%;
   cursor: row-resize;
-  background-color: var(--color-gray-6);
+  background-color: var(--color-border-resizer);
   /*background-color: #2ecc71;*/
-  cursor: row-resize;
-  z-index: 10;
+  z-index: 100;
   -webkit-user-select: none;
 }
   
 .footer-resizer:hover {
-  background-color: #aaa;
+  background-color: var(--color-hover);
 }
   

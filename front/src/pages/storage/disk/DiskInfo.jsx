@@ -12,6 +12,8 @@ import { useDisk } from "../../../api/RQHook";
 import { rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import useUIState from "../../../hooks/useUIState";
+import SectionLayout from "../../../components/SectionLayout";
+import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name DiskDomains
@@ -23,6 +25,7 @@ import useUIState from "../../../hooks/useUIState";
 const DiskInfo = () => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal, } = useUIState()
+  const { disksSelected, setDisksSelected } = useGlobal()
 
   const { id: diskId, section } = useParams();
   const {
@@ -38,6 +41,7 @@ const DiskInfo = () => {
     if (isDiskError || (!isDiskLoading && !disk)) {
       navigate("/storages/disks");
     }
+    setDisksSelected(disk)
   }, [isDiskError, isDiskLoading, disk, navigate]);
 
   const sections = [
@@ -82,7 +86,7 @@ const DiskInfo = () => {
 
   Logger.debug("DiskInfo ...")
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24HardDrive()}
         title={disk?.alias}
         buttons={sectionHeaderButtons}
@@ -98,10 +102,7 @@ const DiskInfo = () => {
           {renderSectionContent()}
         </div>
       </div>
-
-      {/* 디스크 모달창 */}
-      <DiskModals disk={disk} />
-    </div>
+    </SectionLayout>
   );
 };
 

@@ -72,11 +72,6 @@ const JobFooter = ({
       setFooterHeight(168)
     }
   }, [footerVisible])
-  
-  useEffect(() => {
-    Logger.debug(`JobFooter > useEffect ... footerHeight: ${footerHeight}`)
-    setFooterHeightInPx(footerHeight)
-  }, [footerHeight])
 
   return (
     <>

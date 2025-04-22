@@ -1,15 +1,17 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
+import useClickOutside from "../../hooks/useClickOutside";
+import { openNewTab } from "../../navigation";
 import { rvi16ChevronUp, rvi16ChevronDown } from "../icons/RutilVmIcons";
 import ActionButton from "../button/ActionButton";
 import ActionButtonGroup from "../button/ActionButtonGroup";
-import { openNewTab } from "../../navigation";
 import Localization from "../../utils/Localization";
-import useClickOutside from "../../hooks/useClickOutside";
-import useGlobal from "../../hooks/useGlobal";
 
-const VmActionButtons = ({ actionType = "default" }) => {
+const VmActionButtons = ({ 
+  actionType = "default"
+}) => {
   const navigate = useNavigate();
   const { setActiveModal, setContextMenu } = useUIState()
   const { vmsSelected } = useGlobal()
@@ -35,16 +37,16 @@ const VmActionButtons = ({ actionType = "default" }) => {
   const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "DOWN");
   
   const basicActions = [
-    { type: "create", onBtnClick: () => setActiveModal("vm:create"), label: Localization.kr.CREATE },
-    { type: "update", onBtnClick: () => setActiveModal("vm:update"), label: Localization.kr.UPDATE, disabled: vmsSelected.length !== 1 },
-    { type: "start", onBtnClick: () => setActiveModal("vm:start"), label: Localization.kr.START, disabled: !allDown },
-    { type: "pause", onBtnClick: () => setActiveModal("vm:pause"), label: Localization.kr.PAUSE, disabled: !allUp },
-    { type: "reboot", onBtnClick: () => setActiveModal("vm:reboot"), label: "재부팅", disabled: !allUp },
-    { type: "reset", onBtnClick: () => setActiveModal("vm:reset"), label: "재설정", disabled: !allUp },
-    { type: "shutdown", onBtnClick: () => setActiveModal("vm:shutdown"), label: Localization.kr.END, disabled: !allUp },
-    { type: "powerOff", onBtnClick: () => setActiveModal("vm:powerOff"), label: "전원끔", disabled: !allUp },
-    { type: "console", onBtnClick: () => openNewTab("console", selected1st?.id), label: "콘솔", disabled: !allUp },
-    { type: "migration", onBtnClick: () => setActiveModal("vm:migration"), label: "마이그레이션", disabled: !allUp },
+    { type: "create",     onBtnClick: () => setActiveModal("vm:create"), label: Localization.kr.CREATE, disabled: vmsSelected.length > 0 },
+    { type: "update",     onBtnClick: () => setActiveModal("vm:update"), label: Localization.kr.UPDATE, disabled: vmsSelected.length !== 1 },
+    { type: "start",      onBtnClick: () => setActiveModal("vm:start"), label: Localization.kr.START, disabled: !allDown },
+    { type: "pause",      onBtnClick: () => setActiveModal("vm:pause"), label: Localization.kr.PAUSE, disabled: !allUp },
+    { type: "reboot",     onBtnClick: () => setActiveModal("vm:reboot"), label: Localization.kr.REBOOT, disabled: !allUp },
+    { type: "reset",      onBtnClick: () => setActiveModal("vm:reset"), label: Localization.kr.RESET, disabled: !allUp },
+    { type: "shutdown",   onBtnClick: () => setActiveModal("vm:shutdown"), label: Localization.kr.END, disabled: !allUp },
+    { type: "powerOff",   onBtnClick: () => setActiveModal("vm:powerOff"), label: Localization.kr.POWER_OFF, disabled: !allUp },
+    { type: "console",    onBtnClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE, disabled: !allUp },
+    { type: "migration",  onBtnClick: () => setActiveModal("vm:migration"), label: Localization.kr.MIGRATION, disabled: !allUp },
   ];
 
   const manageActions = [

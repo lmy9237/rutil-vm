@@ -29,6 +29,7 @@ import {
 import GridLegends from "../../components/Chart/GridLegends";
 import Localization from "../../utils/Localization";
 import "./Dashboard.css";
+import SectionLayout from "../../components/SectionLayout";
 
 //#region: BarChart
 const BarChartWrapper = ({ data, keyName, keyPercent }) => {
@@ -207,7 +208,9 @@ const Dashboard = () => {
   return (
     <>
       {/* 대시보드 section */}
-      <div id="section" style={{ backgroundColor: "#EFF1F5",padding:"6px",border:"none" }}>
+      <SectionLayout
+        style={{ backgroundColor: "#EFF1F5",padding:"6px",border:"none" }}
+      >
         <DashboardBoxGroup
           boxItems={[
             {
@@ -346,7 +349,7 @@ const Dashboard = () => {
           </div>
           <GridLegends />
         </div>
-      </div>
+      </SectionLayout>
       {/* 대시보드 section끝 */}
     </>
   );

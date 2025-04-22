@@ -15,6 +15,7 @@ import Localization from "../../../utils/Localization";
 import { useNetwork } from "../../../api/RQHook";
 import { rvi24Network } from "../../../components/icons/RutilVmIcons";
 import useGlobal from "../../../hooks/useGlobal";
+import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name NetworkInfo
@@ -87,7 +88,7 @@ const NetworkInfo = () => {
   ];
 
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Network()}
         title={network?.name}
         buttons={sectionHeaderButtons}
@@ -103,10 +104,7 @@ const NetworkInfo = () => {
           {renderSectionContent()}
         </div>
       </div>
-
-      {/* 네트워크 모달창 */}
-      <NetworkModals network={network} />
-    </div>
+    </SectionLayout>
   );
 };
 

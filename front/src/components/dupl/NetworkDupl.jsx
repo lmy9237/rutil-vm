@@ -50,7 +50,7 @@ const NetworkDupl = ({
     role: [
       network?.usage?.management ? Localization.kr.MANAGEMENT : null,
       network?.usage?.display ? Localization.kr.PRINT : null,
-      network?.usage?.migration ? "마이그레이션" : null,
+      network?.usage?.migration ? Localization.kr.MIGRATION : null,
       network?.usage?.gluster ? "글러스터" : null,
       network?.usage?.defaultRoute ? "기본라우팅" : null,
     ].filter(Boolean).join(" / "),

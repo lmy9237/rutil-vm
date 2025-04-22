@@ -5,6 +5,7 @@ import DomainDupl from "../../../components/dupl/DomainDupl";
 import { useAllStorageDomains } from "../../../api/RQHook";
 import { rvi24Storage } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
+import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name AllDomain
@@ -22,8 +23,10 @@ const AllDomain = () => {
   } = useAllStorageDomains((e) => ({ ...e }));
 
   return (
-    <div id="section">
-      <HeaderButton titleIcon={rvi24Storage()} title={Localization.kr.DOMAIN}/>
+    <SectionLayout>
+      <HeaderButton titleIcon={rvi24Storage()} 
+        title={Localization.kr.DOMAIN}
+      />
       <div className="section-content w-full">
         <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
           domains={storageDomains}
@@ -32,7 +35,7 @@ const AllDomain = () => {
           isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
         />
       </div>
-    </div>
+    </SectionLayout>
   );
 };
 

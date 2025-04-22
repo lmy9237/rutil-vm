@@ -3,6 +3,7 @@ import BaseModal from "../BaseModal";
 import Vnc from "../../Vnc";
 import Logger from "../../../utils/Logger";
 import { useVmConsoleAccessInfo } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 const VmConsoleModal = ({ 
   isOpen,
@@ -24,7 +25,7 @@ const VmConsoleModal = ({
     <BaseModal
       isOpen={isOpen}
       onClose={onClose}
-      targetName={"가상머신 그래픽 콘솔"}
+      targetName={`${Localization.kr.VM} 그래픽 ${Localization.kr.CONSOLE}`}
       submitTitle={"연결"}
       contentStyle={{
         width: "850px",

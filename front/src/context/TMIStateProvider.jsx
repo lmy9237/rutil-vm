@@ -15,7 +15,7 @@ export const TMIStateProvider = ({ children }) => {
   const KEY_TMI_OPEN_HOST = "openHost";
   const KEY_TMI_OPEN_DOMAIN = "openDomain";
 
-  const initialState = JSON.parse(sessionStorage.getItem(KEY_TMI_STATE)) ?? {
+  const initialState = JSON.parse(localStorage.getItem(KEY_TMI_STATE)) ?? {
     [KEY_TMI_LAST_SELECTED]: "",
     [KEY_TMI_COMPUTING]: {
       [KEY_SECOND_VISIBLE]: false,
@@ -47,14 +47,14 @@ export const TMIStateProvider = ({ children }) => {
   }
   const [sTMIState, setTMIState] = useState(initialState)
   const _TMIState = () => {
-    const res = Object.assign({}, JSON.parse(sessionStorage.getItem(KEY_TMI_STATE)), sTMIState) 
+    const res = Object.assign({}, JSON.parse(localStorage.getItem(KEY_TMI_STATE)), sTMIState) 
     Logger.debug(`TMIStateProvider > _TMIState ... res: `, res);
     return res;
   }
 
   useEffect(() => {
     return () => {
-      sessionStorage.setItem(KEY_TMI_STATE, JSON.stringify(sTMIState));
+      localStorage.setItem(KEY_TMI_STATE, JSON.stringify(sTMIState));
     }
   }, [sTMIState])
 

@@ -80,7 +80,7 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
         </select>
       </div> */}
 
-        <div className="py-2 font-bold">실행/마이그레이션 큐에서 우선순위 </div> 
+        <div className="py-2 font-bold">실행/{Localization.kr.MIGRATION} 큐에서 우선순위 </div> 
         <div className="ha-mode-article">
           <LabelSelectOptions label="우선 순위"
             value={formHaState.priority}

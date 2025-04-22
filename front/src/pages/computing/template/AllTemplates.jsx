@@ -4,6 +4,7 @@ import TemplateDupl from "../../../components/dupl/TemplateDupl";
 import HeaderButton from "../../../components/button/HeaderButton";
 import { useAllTemplates } from "../../../api/RQHook";
 import { rvi24Template } from "../../../components/icons/RutilVmIcons";
+import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name AllTemplates
@@ -21,7 +22,7 @@ const AllTemplates = () => {
   } = useAllTemplates((e) => ({ ...e }));
 
   return (
-    <div id="section">
+    <SectionLayout>
       <HeaderButton titleIcon={rvi24Template()}
         title={"템플릿"}
       />
@@ -33,7 +34,7 @@ const AllTemplates = () => {
           isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         />
       </div>
-    </div>
+    </SectionLayout>
   );
 };
 

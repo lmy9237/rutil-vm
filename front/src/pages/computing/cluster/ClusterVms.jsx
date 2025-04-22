@@ -1,7 +1,6 @@
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VmDupl from "../../../components/dupl/VmDupl";
 import { useVMsFromCluster } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
 
 /**
  * @name ClusterVms
@@ -20,7 +19,6 @@ const ClusterVms = ({ clusterId }) => {
     refetch: refetchVms,
   } = useVMsFromCluster(clusterId, (e) => ({ ...e }));
 
-  Logger.debug("ClusterVms ...")
   return (
     <VmDupl columns={TableColumnsInfo.VMS}
       vms={vms}
