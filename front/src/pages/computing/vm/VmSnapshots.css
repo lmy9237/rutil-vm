@@ -1,0 +1,71 @@
+.snapshot-group {
+  align-items: flex-start !important;
+  gap: 4px;
+}
+.vm-snap-item {
+  width: auto;
+  padding: 20px 20px;
+  border-radius: 8px;
+  background: var(--color-white);
+}
+.vm-snap-item:first-child {
+  width: 60%;
+}
+.vm-snap-item:last-child {
+  margin-left:auto;
+  width: 35%;
+}
+.snapshot-item {
+  cursor: pointer;
+  padding: 4px 20px;
+  background: none;
+}
+.snapshot-item.selected {
+  background-color: #E2E5EB !important;
+}
+.snapshot-label {
+  word-break: break-all;
+  font-size: var(--fs-14);
+  color: var(--color-nav);
+}
+.snap-table {
+  height: 100%;
+  width: 63%;
+  text-align: left;
+  font-size: var(--fs-default);
+}
+.snap-table tr {
+  width: 100%;
+  margin-bottom: 6px;
+}
+.snap-table th {
+  font-size: var(--fs-default);
+  font-weight: 600;
+  line-height: 22.5px;
+  width: 45%;
+  min-width: 45%;
+}
+.snap-table td {
+  word-break: break-all;
+  width: 45%;
+  margin-left: auto;
+}
+.snap-table:last-child {
+  margin-bottom: 0;
+}
+
+.snap-hidden-content {
+  display: none;
+  overflow: hidden;
+}
+.snap-hidden-content.active {
+  display: block;
+  max-height: 33vh;
+  border: 1px solid #b9b9b9;
+  border-top: none;
+  color: gray;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.3rem;
+  font-size: var(--fs-16);
+}

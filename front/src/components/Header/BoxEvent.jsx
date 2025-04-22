@@ -163,7 +163,7 @@ const BoxEventItem = ({
 }) => {
   const {
     mutate: removeEvent
-  } = useRemoveEvent(event?.id)
+  } = useRemoveEvent(() => {}, () => {})
 
   return (
     <div key={event?.id} 

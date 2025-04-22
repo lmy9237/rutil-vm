@@ -4,8 +4,14 @@ import { faExclamationTriangle, } from "@fortawesome/free-solid-svg-icons";
 import BaseModal from "../BaseModal";
 import { useDeleteNetworkFromTemplate } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
+import Localization from "../../../utils/Localization";
 
-const TemplateNicDeleteModal = ({ isOpen, onClose, data, templateId }) => {
+const TemplateNicDeleteModal = ({
+  isOpen,
+  onClose,
+  data,
+  templateId
+}) => {
   const [ids, setIds] = useState([]);
   const [names, setNames] = useState([]);
   const { mutateAsync: deleteNicFromTemplate } = useDeleteNetworkFromTemplate(); 
@@ -45,9 +51,11 @@ const TemplateNicDeleteModal = ({ isOpen, onClose, data, templateId }) => {
   
   Logger.debug("TemplateNicDeleteModal ...")
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
+    <BaseModal 
+      isOpen={isOpen}
+      onClose={onClose}
       targetName={"NIC"}
-      submitTitle={"삭제"}
+      submitTitle={Localization.kr.REMOVE}
       onSubmit={handleFormSubmit}
     >
       {/* <div className="storage-delete-popup modal"> */}

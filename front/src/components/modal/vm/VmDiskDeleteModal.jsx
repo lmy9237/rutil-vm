@@ -1,9 +1,10 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import { useDeleteDiskFromVM } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import LabelCheckbox from "../../label/LabelCheckbox";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name VmDiskDeleteModal
@@ -24,25 +25,26 @@ const VmDiskDeleteModal = ({
   };
   const { mutate: deleteDisk } = useDeleteDiskFromVM(onSuccess, () => onClose());
 
-  console.log("*** data", data);
+  Logger.debug(`VmDiskDeleteModal ... data: `, data);
 
   const { ids, aliases } = useMemo(() => {
-    const dataArray = Array.isArray(data) ? data : data ? [data] : [];
     return {
-      ids: dataArray.map((item) => item.id),
-      aliases: dataArray.map((item) => item.diskImageVo?.alias || "undefined"),
+      ids: [...data].map((item) => item?.id),
+      aliases: [...data].map((item) => item?.diskImageVo?.alias || "undefined"),
     };
   }, [data]);
 
   const [detachOnlyList, setDetachOnlyList] = useState([false]); // 디스크 완전삭제
 
-  const handleFormSubmit = () => {
-    if (!ids.length) { return toast.error(`삭제할 ${Localization.kr.DISK} ID가 없습니다.`) }
+  const handleFormSubmit = useCallback(() => {
+    if (!ids.length) {
+      return toast.error(`삭제할 ${Localization.kr.DISK} ID가 없습니다.`)
+    }
 
-    ids.forEach((diskAttachmentId, index) => {
+    [...ids]?.forEach((diskAttachmentId, index) => {
       deleteDisk({ vmId, diskAttachmentId, detachOnly: detachOnlyList[index] });
     });
-  };
+  }, [ids]);
 
   return (
     <BaseModal targetName={`${Localization.kr.VM} ${Localization.kr.DISK}`} submitTitle={Localization.kr.REMOVE}

@@ -107,6 +107,13 @@ const cpuArcs = () => [
   { value: "S390X", label: "s390x" },
 ];
 
+// 도메인 유형
+const domainTypeOptions = () => [
+  { value: "data",   label: "데이터" },
+  { value: "iso",    label: "ISO" },
+  { value: "export", label: "내보내기" },
+]
+
 /**
  * @name CONSTANT
  * 
@@ -121,6 +128,7 @@ const CONSTANT = {
   osOptions: osOptions(),
   chipsetOptions: chipsetOptions(),
   cpuArcs: cpuArcs(),
+  domainTypeOptions: domainTypeOptions(),
 }
 
 export default CONSTANT;

@@ -1,8 +1,7 @@
-import React, { memo } from "react";
+import React from "react";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import DeleteModal from "../../../utils/DeleteModal";
-import EventModal from "./EventModal";
 import Localization from "../../../utils/Localization";
 import { useRemoveEvent } from "../../../api/RQHook";
 

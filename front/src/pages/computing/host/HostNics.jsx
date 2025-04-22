@@ -1,15 +1,31 @@
 import React, { useState, useEffect, useRef, Suspense, useMemo } from "react";
-import { useHost, useNetworkAttachmentsFromHost, useNetworkFromCluster, useNetworkInterfacesFromHost } from "../../../api/RQHook";
+import { Tooltip } from "react-tooltip";
 import { checkZeroSizeToMbps } from "../../../util";
-import { RVI16, rvi16TriangleDown, rvi16TriangleUp, rvi16VirtualMachine, RVI24, rvi24CompareArrows, RVI36, rvi36Edit, status2Icon } from "../../../components/icons/RutilVmIcons";
+import {
+  RVI16,
+  rvi16TriangleDown,
+  rvi16TriangleUp,
+  rvi16VirtualMachine,
+  RVI24,
+  rvi24CompareArrows,
+  RVI36,
+  rvi36Edit,
+  status2Icon,
+} from "../../../components/icons/RutilVmIcons";
 import Loading from "../../../components/common/Loading";
 import HostNetworkEditModal from "../../../components/modal/host/HostNetworkEditModal";
 import HostNetworkBondingModal from "../../../components/modal/host/HostNetworkBondingModal";
 import LabelCheckbox from "../../../components/label/LabelCheckbox";
-import { Tooltip } from "react-tooltip";
 import ActionButton from "../../../components/button/ActionButton";
+import {
+  useHost,
+  useNetworkAttachmentsFromHost,
+  useNetworkFromCluster,
+  useNetworkInterfacesFromHost,
+} from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import "./Host.css";
+import Logger from "../../../utils/Logger";
 
 const assignmentMethods = [
   { value: "none", label: "없음" },
@@ -41,6 +57,7 @@ const HostNics = ({ hostId }) => {
     dragItem.current = { item, source, parentId };
   };
   const [tempAttachments, setTempAttachments] = useState([]);
+  
   const drop = (targetId, targetType) => {
     if (!dragItem.current) return;
     const { item, source, parentId } = dragItem.current;
@@ -48,7 +65,7 @@ const HostNics = ({ hostId }) => {
     // NIC 간 슬레이브 드래그는 생략 (이미 잘 처리 중)
   
     if (source === "network" && targetType === "unassigned") {
-      console.log("💥 네트워크 할당 해제", item, "from", parentId);
+      Logger.debug("💥 네트워크 할당 해제", item, "from", parentId);
   
       // 💥 detachedNetworks에 추가
       setDetachedNetworks((prev) => Array.from(new Set([...prev, item.id])));
@@ -60,7 +77,7 @@ const HostNics = ({ hostId }) => {
     }
   
     if (source === "unassigned" && targetType === "nic") {
-      console.log("💥 NIC에 네트워크 붙이기", item, "to", targetId);
+      Logger.debug("💥 NIC에 네트워크 붙이기", item, "to", targetId);
     
       const targetNic = nicDisplayList.find((nic) => nic.id === targetId);
       if (!targetNic) {
@@ -99,7 +116,7 @@ const HostNics = ({ hostId }) => {
       return;
     }
     if (source === "unassigned" && targetType === "empty") {
-      console.log("💥 '할당되지 않은 네트워크'를 '빈 NIC'에 붙임", item, "to NIC", targetId);
+      Logger.debug("💥 '할당되지 않은 네트워크'를 '빈 NIC'에 붙임", item, "to NIC", targetId);
     
       const targetNic = nicDisplayList.find((nic) => nic.id === targetId);
       if (!targetNic) {
@@ -135,15 +152,11 @@ const HostNics = ({ hostId }) => {
       dragItem.current = null;
       return;
     }
-    
-  
     dragItem.current = null;
   };
   
-  
-  
   // nic 데이터 변환
-  const transformedData = hostNics.map((e) => ({
+  const transformedData = [...hostNics]?.map((e) => ({
     ...e,
     id: e?.id,
     name: e?.name,
@@ -420,9 +433,9 @@ const HostNics = ({ hostId }) => {
                           className="container assigned-network" 
                           draggable
                           onDragStart={(e) => {
-                            console.log("🟢 onDragStart 발생 - assigned-network");
-                            console.log("📦 드래그 대상 networkVo:", matchedNA.networkVo);
-                            console.log("📦 드래그 parent NIC ID:", matchedNA.hostNicVo?.id);
+                            Logger.debug("🟢 onDragStart 발생 - assigned-network");
+                            Logger.debug("📦 드래그 대상 networkVo:", matchedNA.networkVo);
+                            Logger.debug("📦 드래그 parent NIC ID:", matchedNA.hostNicVo?.id);
                             dragStart(e, matchedNA.networkVo, "network", matchedNA.hostNicVo?.id);
                           }}
                           data-tooltip-id={`network-tooltip-${matchedNA.networkVo.id}`}

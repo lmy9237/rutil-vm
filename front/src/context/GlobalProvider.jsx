@@ -57,6 +57,15 @@ export const GlobalProvider = ({ children }) => {
     else if (!Array.isArray(newV) && typeof newV === "object")
       _setVmsSelected([{...newV}]);
   }
+  
+  const [applicationsSelected, _setApplicationsSelected] = useState([]);
+  const setApplicationsSelected = (newV) => {
+    Logger.debug(`GlobalProvider > setApplicationsSelected ... newV: `, newV)
+    if (Array.isArray(newV))
+      _setApplicationsSelected([...newV]);
+    else if (!Array.isArray(newV) && typeof newV === "object")
+      _setApplicationsSelected([{...newV}]);
+  }
 
   const [snapshotsSelected, _setSnapshotsSelected] = useState([]);
   const setSnapshotsSelected = (newV) => {
@@ -211,6 +220,7 @@ export const GlobalProvider = ({ children }) => {
       hostsSelected, setHostsSelected,
       hostDevicesSelected, setHostDevicesSelected,
       vmsSelected, setVmsSelected,
+      applicationsSelected, setApplicationsSelected,
       snapshotsSelected, setSnapshotsSelected,
       networksSelected, setNetworksSelected,
       networkProvidersSelected, setNetworkProvidersSelected,

@@ -256,7 +256,7 @@ const ENDPOINTS = {
     } else {
       url += `?host=${hostName}`;
     }
-    console.log('Generated URL:', url); // URL 확인
+    Logger.debug(`Generated URL: ${url}`); // URL 확인
     return url;
   },  
   DESTORY_STORAGE_DOMAIN: (storageDomainId) =>                             `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/destroy`, 

@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo } from "react";
+import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
+import useSearch from "../../../hooks/useSearch";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
+import SearchBox from "../../../components/button/SearchBox";
 import { checkZeroSizeToGiB } from "../../../util";
 import { useAllDiskSnapshotsFromDomain } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
 import SelectedIdView from "../../../components/common/SelectedIdView";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DomainDiskSnapshots
@@ -20,41 +24,55 @@ const DomainDiskSnapshots = ({
   domainId
 }) => {
   const { activeModal, setActiveModal } = useUIState()
-  const { snapshotsSelected, setSnapshotSelected } = useGlobal()
+  const { domainsSelected, snapshotsSelected, setSnapshotsSelected } = useGlobal()
 
   const { 
     data: diskSnapshots = [], 
     isLoading: isDiskSnapshotsLoading,
     isSuccess: isDiskSnapshotsSuccess,
-    isError: isDiskSnapshotsError
-  } = useAllDiskSnapshotsFromDomain(domainId, (e) => ({ ...e }));
+    isError: isDiskSnapshotsError,
+    refetch: refetchDiskSnapshots,
+  } = useAllDiskSnapshotsFromDomain(domainId ?? domainsSelected[0]?.id, (e) => ({ ...e }));
 
-  const transformedData = [...diskSnapshots].map((e) => ({
+  const transformedData = useMemo(() => [...diskSnapshots].map((e) => ({
     ...e,
     actualSize: checkZeroSizeToGiB(e?.actualSize),
     // actualSize: `${convertBytesToGB(e?.actualSize)} GB`,
-  }))
+  })), [diskSnapshots])
 
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = useCallback(() =>  {
+    Logger.debug(`DomainDiskSnapshots > handleRefresh ... `)
+    if (!refetchDiskSnapshots) return;
+    refetchDiskSnapshots()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
+  
   return (
-    <>
-      <div className="header-right-btns no-search-box">
-        <ActionButton
-          label={Localization.kr.REMOVE}
-          actionType="default"
-          onClick={() => setActiveModal(null)}
-          disabled={snapshotsSelected.length === 0}  // 선택된 항목이 없으면 비활성화
-        />
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <div className="header-right-btns">
+          <ActionButton actionType="default" label={Localization.kr.REMOVE}
+            disabled={snapshotsSelected.length === 0}  // 선택된 항목이 없으면 비활성화
+            onClick={() => setActiveModal("vmsnapshot:remove")}
+          />
+        </div>
       </div>
 
-      <TablesOuter
-        isLoading={isDiskSnapshotsLoading} isError={isDiskSnapshotsError} isSuccess={isDiskSnapshotsSuccess}
+      <TablesOuter target={"snapshot"}
         columns={TableColumnsInfo.DISK_SNAPSHOT_FROM_STORAGE_DOMAIN}
-        data={transformedData}
-        onRowClick={(selectedRows) => setSnapshotSelected(selectedRows)}
+        data={filteredData}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        multiSelect={true}
+        onRowClick={(selectedRows) => setSnapshotsSelected(selectedRows)}
+        refetch={refetchDiskSnapshots}
+        isLoading={isDiskSnapshotsLoading} isError={isDiskSnapshotsError} isSuccess={isDiskSnapshotsSuccess}
       />
 
       <SelectedIdView items={snapshotsSelected} />
-    </>
+    </div>
   );
 };
 

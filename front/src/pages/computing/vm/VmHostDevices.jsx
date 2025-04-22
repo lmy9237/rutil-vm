@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import useUIState from "../../../hooks/useUIState";
+import React, { useCallback, useMemo } from "react";
+import toast from "react-hot-toast";
+import useGlobal from "../../../hooks/useGlobal";
+import useSearch from "../../../hooks/useSearch";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import SearchBox from "../../../components/button/SearchBox";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import SelectedIdView from "../../../components/common/SelectedIdView";
 import { useHostDevicesFromVM } from "../../../api/RQHook";
-import useGlobal from "../../../hooks/useGlobal";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -15,52 +17,64 @@ import Logger from "../../../utils/Logger";
  * @param {string} vmId 가상머신 ID
  * @returns {JSX.Element} VmHostDevices
  */
-const VmHostDevices = ({ vmId }) => {
-  const { activeModal, setActiveModal, } = useUIState()
-  const { hostDevicesSelected, setHostDevicesSelected } = useGlobal()
+const VmHostDevices = ({ 
+  vmId
+}) => {
+  const { 
+    vmsSelected, setVmsSelected,
+    hostDevicesSelected, setHostDevicesSelected
+  } = useGlobal()
   const {
     data: hostDevices = [],
     isLoading: isHostDevicesLoading,
     isError: isHostDevicesError,
     isSuccess: isHostDevicesSuccess,
+    refetch: refetchHostDevices,
   } = useHostDevicesFromVM(vmId, (e) => ({ ...e }));
+  
+  const transformedData = useMemo(() => ([...hostDevices]?.map((e) => ({
+    ...e,
+    name: e?.name ?? "N/A",
+    capability: e?.capability ?? "N/A",
+    vendorName: e?.vendorName ?? "N/A",
+    productName: e?.productName ?? "N/A",
+    driver: e?.driver ?? "N/A",
+    // currentlyUsed: hostDevice?.currentlyUsed ?? 'Unknown',
+    // connectedToVM: hostDevice?.connectedToVM ?? 'Unknown',
+    // iommuGroup: hostDevice?.iommuGroup ?? Localization.kr.NOT_ASSOCIATED,
+    // mdevType: hostDevice?.mdevType ?? Localization.kr.NOT_ASSOCIATED,
+  }))), [hostDevices])
+
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = useCallback(() => {
+    Logger.debug(`HostDevices > handleRefresh ... `)
+    if (!refetchHostDevices) return;
+    refetchHostDevices()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
 
   Logger.debug(`VmHostDevices ... `)
   return (
-    <>
-      <div className="header-right-btns">
-        {/* <button onClick={() => setActiveModal('add')}>장치 추가</button>
-        <button onClick={() => setActiveModal('delete')} className='disabled'>장치 삭제</button> */}
-        {/* <button className='disabled'>vGPU 관리</button> */}
-        {/* <button onClick={() => openPopup('view_cpu')}>View CPU Pinning</button> */}
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
+        {/* <HostActionButtons actionType = "default"/> */}
       </div>
 
-      <TablesOuter
-        isLoading={isHostDevicesLoading}
-        isError={isHostDevicesError}
-        isSuccess={isHostDevicesSuccess}
+      <TablesOuter target={"hostdevice"}
         columns={TableColumnsInfo.HOST_DEVICE_FROM_VM}
-        data={hostDevices.map((hostDevice) => ({
-          ...hostDevice,
-          name: hostDevice?.name ?? "Unknown",
-          capability: hostDevice?.capability ?? "Unknown",
-          vendorName: hostDevice?.vendorName ?? "Unknown",
-          productName: hostDevice?.productName ?? "Unknown",
-          driver: hostDevice?.driver ?? "Unknown",
-          // currentlyUsed: hostDevice?.currentlyUsed ?? 'Unknown',
-          // connectedToVM: hostDevice?.connectedToVM ?? 'Unknown',
-          // iommuGroup: hostDevice?.iommuGroup ?? Localization.kr.NOT_ASSOCIATED,
-          // mdevType: hostDevice?.mdevType ?? Localization.kr.NOT_ASSOCIATED,
-        }))}
+        data={filteredData}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setHostDevicesSelected(selectedRows)}
         multiSelect={true}
+        onRowClick={(selectedRows) => setHostDevicesSelected(selectedRows)}
+        refetch={refetchHostDevices}
+        isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
       />
       
       <SelectedIdView items={hostDevicesSelected} />
-
-      {/* 모달창 */}
-    </>
+    </div>
   );
 };
 

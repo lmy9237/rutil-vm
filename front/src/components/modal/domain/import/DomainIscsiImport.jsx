@@ -55,8 +55,7 @@ const DomainIscsiImport = ({
     );
   };
   
-  console.log("$$ result" , iscsiResults)
-
+  Logger.debug("DomainIscsiImport ... iscsiResults: " , iscsiResults)
   // iscsi 가져오기 시 로그인 처리
   const handleLoginIscsi = () => {
     if (!formImportState.target) return toast.error('항목을 선택해주세요.');

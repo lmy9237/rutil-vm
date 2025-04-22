@@ -30,7 +30,6 @@ const TreeMenuItem = ({
     onChevronClick(e);
   }
 
-  Logger.debug(`TreeMenuItem ...`)
   return (
     <div id={`tmi-${level}`}
       className={`tmi f-start${isSelected() ? " active" : ""}${isChevronVisible ? " wc" : ""}`}

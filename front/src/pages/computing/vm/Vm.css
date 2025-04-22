@@ -109,52 +109,7 @@
 /*디스크*/
 .vm-disk-search { width: 100%;gap: 10px; }
 /*스냅샷*/
-.vm-snap-item {
-  width: 49%;
-  padding: 24px 40px;
-  border-radius: 8px;
-  background: var(--color-white);
-}
-.snapshot-label{
-  font-size: var(--fs-14);
-  color: var(--color-nav);
-}
-.snap-hidden-content {
-  display: none;
-  overflow: hidden;
-}
-.snap-hidden-content.active {
-  display: block;
-  max-height: 33vh;
-  border: 1px solid #b9b9b9;
-  border-top: none;
-  color: gray;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 0.3rem;
-  font-size: var(--fs-16);
-}
-.snap-table {
-  height: 100%;
-  width: 63%;
-  text-align: left;
-  font-size: var(--fs-default);
-}
-.snap-table tr{
-  align-items: center;
-  display: flex;
-  margin-bottom: 6px;
-  width: 100%;
-}
-.snap-table th{
-  font-size: var(--fs-default);
-  font-weight: 600;
-  line-height: 22.5px;
-  min-width: 56%;
-}
-.snap-table:last-child {
-  margin-bottom: 0;
-}
+
 
 @media (max-width: 1200px) {
   .vm-detail-general-boxs {

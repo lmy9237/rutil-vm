@@ -10,7 +10,7 @@ import SearchBox from "../button/SearchBox";
 import { status2Icon } from "../icons/RutilVmIcons";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
-import FilterButton from "../button/FilterButton";
+import FilterButtons from "../button/FilterButtons";
 import TableColumnsInfo from "../table/TableColumnsInfo";
 import SelectedIdView from "../common/SelectedIdView";
 import { useVm } from "../../api/RQHook";
@@ -97,15 +97,9 @@ const VmDiskDupl = ({
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="vm-disk-search f-start mb-2.5">
-        <FilterButton
-          options={diskFilters}
-          activeOption={activeDiskType}
-          onClick={setActiveDiskType}
-        />
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
-        <VmDiskActionButtons
-          status={disksSelected[0]?.active ? "active" : "deactive"}            
-        />
+        <FilterButtons options={diskFilters} activeOption={activeDiskType} onClick={setActiveDiskType} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <VmDiskActionButtons status={disksSelected[0]?.active ? "active" : "deactive"} />
       </div>
       
       <TablesOuter target={"vmdisk"}

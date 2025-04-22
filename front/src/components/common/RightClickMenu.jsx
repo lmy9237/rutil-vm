@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import useContextMenu from "../../hooks/useContextMenu";
 import useGlobal from "../../hooks/useGlobal";
 import useClickOutside from "../../hooks/useClickOutside";
@@ -26,6 +26,7 @@ import EventActionButtons from "../dupl/EventActionButtons"
 import VmDiskModals from "../modal/vm/VmDiskModals";
 import DiskModals from "../modal/disk/DiskModals";
 import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
+import VmSnapshotModals from "../modal/vm/VmSnapshotModals";
 
 /**
  * @name RightClickMenu
@@ -42,6 +43,7 @@ const RightClickMenu = () => {
     clustersSelected, // setClustersSelected,
     hostsSelected, // setHostsSelected,
     vmsSelected, // setVmsSelected,
+    snapshotsSelected, // setSnapshotsSelected,
     templatesSelected, // setTemplatesSelected,
     networksSelected, // setNetworksSelected,
     vnicProfilesSelected, // setVnicProfilesSelected,
@@ -52,6 +54,10 @@ const RightClickMenu = () => {
     sourceContext,
     clearAllSelected,
   } = useGlobal()
+
+  const contextTargets2Ignore = useMemo(() => ([ /* 우킄릭시 메뉴 제공되지 않는 기능대상 */
+    "application",
+  ]), [])
   
   const menuRef = useRef(null); // ✅ context menu 영역 참조
   useClickOutside(menuRef, (e) => {
@@ -66,18 +72,21 @@ const RightClickMenu = () => {
       <ClusterModals cluster={clustersSelected[0] ?? null} />
       <HostModals host={hostsSelected[0] ?? null} />
       <VmModals vm={vmsSelected[0] ?? null} />
+      <VmSnapshotModals snapshot={snapshotsSelected[0] ?? null} />
       <TemplateModals template={templatesSelected[0] ?? null} />
       <NetworkModals network={networksSelected[0] ?? null} />
       <VnicProfileModals vnicProfile={vnicProfilesSelected[0] ?? null} />
-      <DomainModals 
-        domain={domainsSelected[0] ?? null} 
+      <DomainModals domain={domainsSelected[0] ?? null} 
         sourceContext={sourceContext}
       />
       <DiskModals disk={disksSelected[0] ?? null} />
       <VmDiskModals disk={disksSelected[0] ?? null} />
       <EventModals event={eventsSelected[0] ?? null}/>
       <SettingUsersModals user={usersSelected[0] ?? null} />
-      {(contextMenu() !== null && contextMenuType() !== null) ? (
+      {(contextMenu() !== null && 
+        contextMenuType() !== null && 
+        !contextTargets2Ignore.includes(contextMenuType())
+      ) ? (
         <div id="right-click-menu-box"
           className="right-click-menu-box context-menu-item"
           ref={menuRef}

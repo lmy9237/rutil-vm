@@ -4,7 +4,7 @@ import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { checkZeroSizeToMbps } from "../../../util";
-import FilterButton from "../../../components/button/FilterButton";
+import FilterButtons from "../../../components/button/FilterButtons";
 import ActionButton from "../../../components/button/ActionButton";
 import Localization from "../../../utils/Localization";
 import {
@@ -96,7 +96,7 @@ const NetworkHosts = ({
   return (
     <>
       <div className="header-right-btns no-search-box f-btw ">
-        <FilterButton  options={connectionFilters}  activeOption={activeFilter} onClick={setActiveFilter} />
+        <FilterButtons options={connectionFilters}  activeOption={activeFilter} onClick={setActiveFilter} />
         <ActionButton
           label={`${Localization.kr.HOST} ${Localization.kr.NETWORK} 설정`}
           actionType="default"

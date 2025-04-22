@@ -27,8 +27,8 @@ const EventActionButtons = ({
   }, [eventsSelected])
   
   const basicActions = [
-    { type: "copyMsg",  onBtnClick: () => handleMsgCopy(), label: "메시지복사", disabled: eventsSelected.length === 0 },
-    { type: "remove",   onBtnClick: () => setActiveModal("event:remove"), label: Localization.kr.REMOVE, disabled: eventsSelected.length === 0 },
+    { type: "copyMsg", onBtnClick: () => handleMsgCopy(), label: "메시지복사", disabled: eventsSelected.length === 0 },
+    { type: "remove",  onBtnClick: () => setActiveModal("event:remove"), label: Localization.kr.REMOVE, disabled: eventsSelected.length === 0 },
   ];
 
   return (

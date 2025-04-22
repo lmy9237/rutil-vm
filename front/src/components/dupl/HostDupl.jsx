@@ -5,7 +5,6 @@ import useSearch from "../../hooks/useSearch";
 import toast from "react-hot-toast";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
-import HostModals from "../modal/host/HostModals";
 import HostActionButtons from "./HostActionButtons";
 import SearchBox from "../button/SearchBox";
 import { status2Icon, hostedEngineStatus2Icon } from "../icons/RutilVmIcons";
@@ -21,7 +20,7 @@ const HostDupl = ({
   const navigate = useNavigate();
   const { hostsSelected, setHostsSelected } = useGlobal();
 
-  const transformedData = [...hosts].map((host) => ({
+  const transformedData = [...hosts]?.map((host) => ({
     ...host,
     _name: (
       <TableRowClick type="host" id={host?.id}>
@@ -58,7 +57,7 @@ const HostDupl = ({
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
-     <div className="dupl-header-group f-start">
+      <div className="dupl-header-group f-start">
         {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}  onRefresh={handleRefresh}/>)}
         <HostActionButtons actionType = "default"/>
       </div>
@@ -78,11 +77,6 @@ const HostDupl = ({
         ]}*/
       />
       <SelectedIdView items={hostsSelected}/>
-
-      {/* 호스트 모달창 */}
-      <HostModals host={hostsSelected[0]} 
-        clusterId={clusterId}
-      />
     </div>
   );
 };

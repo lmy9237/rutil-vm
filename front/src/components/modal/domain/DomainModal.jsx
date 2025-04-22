@@ -71,18 +71,18 @@ const storageTypeOptions = (dType) => {
 
 const DomainModal = ({
   isOpen,
-  mode = "domain:create",
-  domainId,
-  datacenterId,
+  domainId, // TODO: 제거대상 (사용안함)
+  datacenterId, // TODO: 제거대상 (사용안함)
   onClose
 }) => {
-
   const { activeModal } = useUIState()
-  const { setDomainsSelected } = useGlobal()
+  const { datacentersSelected, domainsSelected, setDomainsSelected } = useGlobal()
 
-  const dLabel = activeModal() === "domain:update" ? Localization.kr.UPDATE 
-    : activeModal() === "domain:import" ? Localization.kr.IMPORT 
-    : Localization.kr.CREATE;
+  const dLabel = activeModal() === "domain:update" 
+    ? Localization.kr.UPDATE 
+    : activeModal() === "domain:import" 
+      ? Localization.kr.IMPORT 
+      : Localization.kr.CREATE;
 
   const editMode = activeModal() === "domain:update";
   const importMode = activeModal() === "domain:import";
@@ -103,7 +103,9 @@ const DomainModal = ({
     onClose();
     toast.success(`${Localization.kr.DOMAIN} ${dLabel} 완료`);
   };
-  const { data: domain } = useStroageDomain(domainId);
+  const {
+    data: domain 
+  } = useStroageDomain(domainsSelected[0]?.id ?? domainId);
   const { mutate: addDomain } = useAddDomain(onSuccess, () => onClose());
   const { mutate: editDomain } = useEditDomain(onSuccess, () => onClose()); // 편집은 단순 이름, 설명 변경정도
   const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose()); // 가져오기
@@ -315,14 +317,12 @@ const DomainModal = ({
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
 
-    if(isNfs && !editMode && (!nfsAddress.includes(':') || !nfsAddress.includes('/'))){
+    if (isNfs && !editMode && (!nfsAddress.includes(':') || !nfsAddress.includes('/'))){
       return "주소입력이 잘못되었습니다."
     }
   
-    if (!dataCenterVo.id) 
-      return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    if (!hostVo)
-      return `${Localization.kr.HOST}를 선택해주세요.`;
+    if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
+    if (!hostVo) return `${Localization.kr.HOST}를 선택해주세요.`;
     if (formState.storageType === "NFS" && !nfsAddress)
       return "경로를 입력해주세요.";
     if (formState.storageType !== "nfs" && lunId) {
@@ -429,13 +429,13 @@ const DomainModal = ({
       </div>
   
       {/* NFS 의 경우 */}
-      {/* {isNfs && ( */}
+      {isNfs && (
         <DomainNfs
           // mode={mode}
           nfsAddress={nfsAddress}
           setNfsAddress={setNfsAddress}
         />
-      {/* )} */}
+      )}
 
       {/* ISCSI 의 경우 */}
       {/* 편집이 되기는 하지만 밑의 테이블 readonly 와 path 문제가 잇음 */}
@@ -465,9 +465,7 @@ const DomainModal = ({
           isFibresSuccess={isFibresSuccess}
         />
       )}
-
       <hr />
-
       <div className="tab-content">
         <div className="storage-specific-content">
           <LabelInputNum id="warning" label="디스크 공간 부족 경고 표시 (%)"

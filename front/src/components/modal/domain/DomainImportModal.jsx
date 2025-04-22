@@ -19,12 +19,7 @@ import {
   useLoginIscsiFromHost,
 } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
-
-const domainTypes = [
-  { value: "data", label: "데이터" },
-  { value: "iso", label: "ISO" },
-  { value: "export", label: "내보내기" },
-];
+import CONSTANT from "../../../Constants";
 
 // 일반 정보
 const initialFormState = {
@@ -81,7 +76,9 @@ const DomainImportModal = ({
   };
   
   const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose()); // 가져오기
-  const { mutate: importIscsiFromHostAPI } = useImportIscsiFromHost(
+  const {
+    mutate: importIscsiFromHostAPI 
+  } = useImportIscsiFromHost(
     (data) => {
       setIscsiResults(data); // <-- 여기서 직접 설정
     },
@@ -151,23 +148,23 @@ const DomainImportModal = ({
   }, [hosts]);
 
   
-  const storageTypeOptions = useCallback((dType) => {
-    switch (dType) {
-      case "iso":
-      case "export":
-        return [{ value: "nfs", label: "NFS" }];
+  const storageTypeOptions = useCallback((domainType) => {
+    const allOptions = [
+      { value: "nfs",   label: "NFS" },
+      { value: "iscsi", label: "iSCSI" },
+      { value: "fcp",   label: "Fibre Channel" },
+    ]
+    switch (domainType) {
+      case "iso":  
+      case "export": return allOptions.filter((e) => e.value === "nfs");
       default: // data
-        return [
-          { value: "nfs", label: "NFS" },
-          { value: "iscsi", label: "ISCSI" },
-          { value: "fcp", label: "Fibre Channel" },
-        ];
+        return allOptions;
     }
   }, []);
   
 
   useEffect(() => {
-    Logger.debug(`DomainImportModal > useEffect ... 스토리지유형 설정`)
+    Logger.debug(`DomainImportModal > useEffect ... 스토리지유형 설정, formState.domainType: `, formState.domainType)
     const options = storageTypeOptions(formState.domainType);
     setStorageTypes(options);
 
@@ -178,10 +175,7 @@ const DomainImportModal = ({
   }, [formState.domainType]);
 
   const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ 
-      ...prev,
-      [field]: e.target.value
-    }));
+    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   const handleSelectIdChange = (setVo, voList) => (e) => {
@@ -252,7 +246,7 @@ const DomainImportModal = ({
           />
           <LabelSelectOptions id="domain-type" label={`도메인 유형`}
             value={formState.domainType}
-            options={domainTypes}
+            options={CONSTANT.domainTypeOptions}
             onChange={handleInputChange("domainType")}
           />
           <LabelSelectOptions id="storage-type" label="스토리지 유형"

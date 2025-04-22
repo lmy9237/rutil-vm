@@ -83,6 +83,7 @@ html {
   --border-default: var(--border-w) solid var(--color-gray-1);
   --border-box: var(--border-w) solid var(--color-black);
   --border-btn: var(--border-w) solid var(--color-gray);
+  --border-btn-filter: var(--border-w) solid var(--color-gray-4);
   --border-modal-btn:var(--border-w) solid var(--color-primary-hover);
   --border-simple: var(--border-w) solid var(--color-gray-2);
   --br-default:5px;

@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
@@ -13,7 +14,6 @@ import { checkZeroSizeToGiB } from "../../../util";
 import Logger from "../../../utils/Logger";
 import { useAllUnregisteredDisksFromDomain } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name DomainImportDisks
@@ -27,7 +27,7 @@ const DomainImportDisks = ({
 }) => {
   const navigate = useNavigate()
   const { activeModal, setActiveModal, } = useUIState()
-  const { disksSelected, setDisksSelected } = useGlobal()
+  const { domainsSelected, disksSelected, setDisksSelected } = useGlobal()
 
   const {
     data: disks = [],
@@ -37,7 +37,7 @@ const DomainImportDisks = ({
     refetch: refetchDisks,
   } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
 
-  const transformedData = [...disks].map((disk) => ({
+  const transformedData = useMemo(() => [...disks].map((disk) => ({
     ...disk,
     alias: disk?.alias,
     sparse: disk?.sparse ? "씬 프로비저닝" : "사전 할당",
@@ -45,9 +45,9 @@ const DomainImportDisks = ({
     actualSize: checkZeroSizeToGiB(disk?.actualSize),
     // ✅ 검색을 위한 text 필드 추가
     searchText: `${disk?.alias} ${disk?.sparse ? "씬 프로비저닝" : "사전 할당"} ${checkZeroSizeToGiB(disk?.virtualSize)} ${checkZeroSizeToGiB(disk?.actualSize)}`.toLowerCase(),
-  }));
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  })), [disks]);
 
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   const handleNameClick = useCallback((id) => {
     navigate(`/computing/templates/${id}`);
   }, [navigate])
@@ -59,33 +59,31 @@ const DomainImportDisks = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
-  Logger.debug(`DomainImportDisks ... transformedData: ${transformedData}`);
+  Logger.debug(`DomainImportDisks ... filteredData: ${filteredData}`);
   return (
     <>
       <div className="dupl-header-group f-start">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={handleRefresh}/>
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
         <div className="header-right-btns">
-          <ActionButton label={Localization.kr.IMPORT}
-            actionType="default" 
+          <ActionButton actionType="default" label={Localization.kr.IMPORT}
+            disabled={disksSelected.length === 0} 
             onClick={() => setActiveModal("domain:importDisk")}
-            disabled={disksSelected.length === 0} 
           />
-          <ActionButton label={Localization.kr.REMOVE}
-            actionType="default" 
-            onClick={() => setActiveModal("disk:delete")}
+          <ActionButton actionType="default" label={Localization.kr.REMOVE}
             disabled={disksSelected.length === 0} 
+            onClick={() => setActiveModal("disk:delete")}
           />
         </div>
       </div>
-      <TablesOuter
-        isLoading={isDisksLoading}
-        isError={isDisksError}
-        isSuccess={isDisksSuccess}
+
+      <TablesOuter target={"disk"}
         columns={TableColumnsInfo.GET_DISKS}
         data={filteredData}
-        shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
         multiSelect={true}
+        onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
+        shouldHighlight1stCol={true}
+        refetch={refetchDisks}
+        isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
         /*
         onContextMenuItems={(row) => [
           <>
@@ -113,15 +111,6 @@ const DomainImportDisks = ({
           onClose={() => setActiveModal(null)}
         />
       )}
-      {/* {activeModal() === 'delete' && (
-        <DeleteModal
-          isOpen={true}
-          onClose={() => setActiveModal(null)} 
-          label={"등록되지 않은 디스크"}
-          data={selectedDisks}
-          api={useDeleteDisk()}
-        />
-      )} */}
     </>
   );
 };

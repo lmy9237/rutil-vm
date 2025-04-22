@@ -46,7 +46,6 @@ const DomainDupl = ({
     icon: status2Icon(domain.status),
     iconSortKey: getStatusSortKey(domain?.status), 
     _status: Localization.kr.renderStatus(domain?.status),
-    status: domain?.status,
     hostedEngine: hostedEngineStatus2Icon(domain?.hostedEngine),
     domainType:
       domain?.domainType === "data"
@@ -83,7 +82,7 @@ const DomainDupl = ({
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         {sourceContext === "all" ? (
           <DomainActionButtons actionType={actionType} 
             status={domainsSelected[0]?.status}
@@ -102,25 +101,12 @@ const DomainDupl = ({
         multiSelect={true}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
-        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setDomainsSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        onContextMenuItems={(row) => [
-          <DomainActionButtons actionType="context"
-            status={row?.status}
-            isContextMenu={true}
-          />
-        ]}
       />
       
       <SelectedIdView items={domainsSelected} />
-
-      {/* 도메인 모달창 */}
-      {/* <DomainModals domain={domainsSelected[0]}        
-        datacenterId={datacenterId}
-        sourceContext={sourceContext}
-      /> */}
     </div>
   );
 };

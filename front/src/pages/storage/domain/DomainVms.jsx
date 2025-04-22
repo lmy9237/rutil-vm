@@ -1,12 +1,15 @@
-import React from 'react';
-import Loading from '../../../components/common/Loading';
-import TablesOuter from '../../../components/table/TablesOuter';
-import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import { useAllVMsFromDomain } from '../../../api/RQHook';
-import { checkZeroSizeToGiB } from '../../../util';
-import TableRowClick from '../../../components/table/TableRowClick';
-import { useNavigate } from 'react-router-dom';
-import Logger from '../../../utils/Logger';
+import React, { useMemo, useCallback } from "react";
+import toast from "react-hot-toast";
+import useGlobal from "../../../hooks/useGlobal";
+import useSearch from "../../../hooks/useSearch";
+import TablesOuter from "../../../components/table/TablesOuter";
+import TableRowClick from "../../../components/table/TableRowClick";
+import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
+import SearchBox from "../../../components/button/SearchBox";
+import { useAllVMsFromDomain } from "../../../api/RQHook";
+import { checkZeroSizeToGiB } from "../../../util";
+import { useNavigate } from "react-router-dom";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DomainVms
@@ -19,15 +22,17 @@ import Logger from '../../../utils/Logger';
  */
 const DomainVms = ({ domainId }) => {
   const navigate = useNavigate();
+  const { domainsSelected } = useGlobal()
 
   const {
     data: vms = [],
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-  } = useAllVMsFromDomain(domainId, (e) => ({ ...e, }));
+    refetch: refetchVms,
+  } = useAllVMsFromDomain(domainId ?? domainsSelected[0]?.id, (e) => ({ ...e, }));
 
-  const transformedData = vms.map((vm) => ({
+  const transformedData = useMemo(() => [...vms].map((vm) => ({
     _name: (
       <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}
@@ -50,23 +55,35 @@ const DomainVms = ({ domainId }) => {
       </span>
     ),
     creationTime: vm?.creationTime
-  }));
+  })), [vms]);
 
-  if (isVmsLoading)
-    return (<Loading />);
-  
-  if (isVmsError)
-    return (<div>Error loading VMs data.</div>);
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = useCallback(() =>  {
+    Logger.debug(`DomainVms > handleRefresh ... `)
+    if (!refetchVms) return;
+    refetchVms()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
 
   Logger.debug("DomainVms ...")
   return (
-    <>
-      <TablesOuter columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}
-        data={transformedData}
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        {/* <EventActionButtons /> */}
+      </div>
+
+      <TablesOuter target={"unknown"} 
+        columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}
+        data={filteredData}
+        multiSelect={true}
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery}
+        /*onRowClick={(selectedRows) => {setEventsSelected(selectedRows)}}*/
+        refetch={refetchVms}
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
-    </>
-    
+    </div>
   );
 };
 

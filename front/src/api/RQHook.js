@@ -637,6 +637,7 @@ export const useDeleteDataCenter = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteDataCenter ... res: `, res)
+      toast.success(`[200] ${Localization.kr.DATA_CENTER} ${Localization.kr.REMOVE} 요청완료`)
       queryClient.invalidateQueries('allDataCenters');
       postSuccess();
     },
@@ -1416,12 +1417,13 @@ export const useImportIscsiFromHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useImportIscsiFromHost ... res: `, res);
+      toast.success(`[200] iSCSI ${Localization.kr.IMPORT} 요청성공`)
       queryClient.invalidateQueries(['iscsiFromHost']);
       postSuccess(res);
     },    
     onError: (error) => {
       Logger.error(error.message);
-      toast.error(error.message);
+      toast.error(`${error.message}`);
       postError && postError(error);
     },
   });
@@ -4881,12 +4883,11 @@ export const useAllNotiEvents = (
 });
 
 export const useRemoveEvent = (
-  eventId, 
   postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (eventId) => {
       const res = await ApiManager.removeEvent(eventId)
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useRemoveEvent ... eventId: ${eventId}`);
@@ -4894,6 +4895,7 @@ export const useRemoveEvent = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvent ... res: `, res);
+      toast.success(`[200] ${Localization.kr.EVENT} ${Localization.kr.REMOVE} 요청완료`)
       queryClient.invalidateQueries(['allEvents','allNotiEvents','allEventsNormal']);
       postSuccess(res);
     },

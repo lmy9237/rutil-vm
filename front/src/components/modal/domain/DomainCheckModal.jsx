@@ -23,7 +23,7 @@ const DomainCheckModal = ({ isOpen, onClose }) => {
       shouldWarn={true}
     >
       <div className="domain-check-modal">
-        <div className="modal-info-text mt-4 center">
+        <div className="modal-info-text mt-4 f-center">
           <div>ⓘ The following LUNs are already in use:</div>
         </div>
 

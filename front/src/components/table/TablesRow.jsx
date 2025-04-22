@@ -10,27 +10,22 @@ import "./Table.css";
  * 
  */
 const TablesRow = ({
-  isLoading, isError, isSuccess,
   columns = [],
   data = [],
-}) => {
-
-  return (
-    <>
-      <div className="w-full overflow-y-hidden ">
-        <table className="snap-table">
-          <tbody>
-            {columns.map((column, index) => (
-              <tr key={index}>
-                <th>{column.header}</th>
-                <td>{data[column.accessor] ?? ""}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-};
+  isLoading, isError, isSuccess,
+}) => (
+  <div className="w-full overflow-y-hidden ">
+    <table className="snap-table w-full">
+      <tbody>
+        {columns.map((column, index) => (
+          <tr className="f-center" key={index}>
+            <th>{column.header}</th>
+            <td>{data[column.accessor] ?? ""}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
 
 export default TablesRow;

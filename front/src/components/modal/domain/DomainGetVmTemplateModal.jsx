@@ -6,7 +6,7 @@ import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useDataCenter } from "../../../api/RQHook";
 import { checkKoreanName } from "../../../util";
-import FilterButton from "../../button/FilterButton";
+import FilterButtons from "../../button/FilterButtons";
 import Localization from "../../../utils/Localization";
 import InfoTable from "../../table/InfoTable";
 import "./MDomain.css";
@@ -206,9 +206,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
 
       <div className="filter-table">
         {/* 필터 버튼 */}
-        <FilterButton
-          options={filterOptions} activeOption={activeFilter} onClick={setActiveFilter}
-        />
+        <FilterButtons options={filterOptions} activeOption={activeFilter} onClick={setActiveFilter} />
 
         {/* 섹션 변경 */}
         {activeFilter === "general" && (

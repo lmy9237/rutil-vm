@@ -4,7 +4,7 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
 import { useAllVmsFromNetwork } from "../../../api/RQHook";
 import { checkZeroSizeToMbps } from "../../../util";
-import FilterButton from "../../../components/button/FilterButton";
+import FilterButtons from "../../../components/button/FilterButtons";
 import ActionButton from "../../../components/button/ActionButton";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
@@ -39,7 +39,7 @@ const NetworkVms = ({
     ? [...nics].filter((nic) => nic?.vmViewVo?.status === "UP")
     : [...nics].filter((nic) => nic?.vmViewVo?.status !== "UP");
 
-  const transformedFilteredData = filteredVms.map((nic) => {
+  const transformedFilteredData = [...filteredVms].map((nic) => {
     const vm = nic?.vmViewVo;
     return {
       ...nic,
@@ -70,7 +70,7 @@ const NetworkVms = ({
   return (
     <>
       <div className="header-right-btns no-search-box f-btw">
-        <FilterButton options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
+        <FilterButtons options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
         <ActionButton label={Localization.kr.REMOVE}
           onClick={() => setActiveModal(null)}
           disabled={activeFilter !== "stopped" || !nicsSelected.length} 

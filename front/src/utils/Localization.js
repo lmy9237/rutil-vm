@@ -118,11 +118,12 @@ export const Localization = {
 
     renderStatus(status = "") {
       const _status = status?.toUpperCase() ?? "";
+      if (_status === "OK")                 return "양호";
       if (_status === "UP" || _status === "UNASSIGNED")  return "실행 중";
-      else if (_status === "ACTIVE")      return "활성화";
-      else if (_status === "INSTALLING")      return "설치 중";
-      else if (_status === "DOWN")        return "중지";
-      else if (_status === "INACTIVE")    return "비활성화";
+      else if (_status === "ACTIVE")        return "활성화";
+      else if (_status === "INSTALLING")    return "설치 중";
+      else if (_status === "DOWN")          return "중지";
+      else if (_status === "INACTIVE")      return "비활성화";
       else if (_status === "UNINITIALIZED") return "초기화되지 않음";
       else if (_status === "REBOOT")  return "재부팅 중";
       else if (_status === "REBOOT_IN_PROGRESS")  return "재부팅/재설정 중";
@@ -153,7 +154,7 @@ export const Localization = {
       if (_severity === "ALERT")            return "알림";
       else if (_severity === "ERROR")       return "실패";
       else if (_severity === "WARNING")     return "경고";
-      else if (_severity === "NORMAL")      return "정상";
+      else if (_severity === "NORMAL")      return "양호";//"정상"
       return _severity;
     },
   }

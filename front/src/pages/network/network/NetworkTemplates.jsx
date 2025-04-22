@@ -1,15 +1,19 @@
-import { Suspense, useState } from "react";
+import { Suspense, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import useUIState from "../../../hooks/useUIState";
+import useSearch from "../../../hooks/useSearch";
 import Loading from "../../../components/common/Loading";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
+import SearchBox from "../../../components/button/SearchBox";
 import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
 import { useAllTemplatesFromNetwork } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
 import Logger from "../../../utils/Logger";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name NetworkTemplates
@@ -22,54 +26,74 @@ const NetworkTemplates = ({
   networkId
 }) => {
   const { activeModal, setActiveModal } = useUIState()
-  const { nicsSelected, setNicsSelected } = useGlobal()
+  const { networksSelected, nicsSelected, setNicsSelected } = useGlobal()
+  const [modalData, setModalData] = useState(null); // 모달에 전달할 데이터
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태 초기값 false
+  
   const { 
     data: templates = [],
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
+    refetch: refetchTemplates,
   } = useAllTemplatesFromNetwork(networkId, (e) => ({ ...e }));
 
-  const [modalData, setModalData] = useState(null); // 모달에 전달할 데이터
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태 초기값 false
+  const transformedData = useMemo(() => [...templates].map((e) => ({
+    ...e
+  })), [templates])
 
   // 선택된 Template ID와 NIC ID 추출
-  const selectedTemplateIds = [...nicsSelected].map(t => t.id).join(', ');
-  const selectedNicIds = [...nicsSelected].map(t => t.nicId).join(', ');
+  const selectedTemplateIds = useMemo(() => 
+    [...nicsSelected].map((t) => t.id)
+      .join(', ')
+    , [nicsSelected])
 
-  const openDeleteModal = () => {
+  const selectedNicIds = useMemo(() => 
+    [...nicsSelected].map(t => t.nicId)
+      .join(', ')
+    , [nicsSelected])
+
+  const openDeleteModal = useCallback(() => {
     // 제거 버튼 클릭 시 모달 열기
     Logger.debug("NetworkTemplates > openDeleteModal ... nicsSelected: ", nicsSelected)
     if (nicsSelected.length > 0) { // 선택된 항목이 있을 때만 동작
       setModalData(nicsSelected); // 선택된 항목을 모달에 전달
       setIsModalOpen(true); // 모달 열기
     }
-  };
+  }, []);
+
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = useCallback(() =>  {
+    Logger.debug(`NetworkTemplates > handleRefresh ... `)
+    if (!refetchTemplates) return;
+    refetchTemplates()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
 
   Logger.debug("NetworkTemplates ...")
   return (
-    <>
-      <div className="header-right-btns no-search-box">
-        {/* 제거 버튼에 openDeleteModal 핸들러 연결 */}
-          <ActionButton
-            label="제거"
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <div className="header-right-btns no-search-box">
+          {/* 제거 버튼에 openDeleteModal 핸들러 연결 */}
+          <ActionButton label={Localization.kr.REMOVE}
             actionType="default"
             onClick={openDeleteModal}
             disabled={!selectedNicIds}  // selectedNicIds가 없으면 비활성화
           />
-      </div>      
+        </div>
+      </div>
 
-      <TablesOuter 
+      <TablesOuter target={"template"}
         columns={TableColumnsInfo.TEMPLATES_FROM_NETWORK}
-        data={templates} 
+        data={filteredData}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => nicsSelected(selectedRows)} // 선택된 항목 업데이트
-        multiSelect={true}
-        onContextMenuItems={(row) => [
-          <div className='right-click-menu-box'>
-            <button className='right-click-menu-btn' onClick={openDeleteModal}>제거</button>
-          </div>
-        ]}
+        refetch={refetchTemplates}
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
 
@@ -77,15 +101,15 @@ const NetworkTemplates = ({
 
       {/* 모달 렌더링 */}
       <Suspense fallback={<Loading/>}>
-        {activeModal() === "nic:remove" && (
-          <TemplateNicDeleteModal isOpen={activeModal() === "nic:remove"}
+        {activeModal() === "template:remove" && (
+          <TemplateNicDeleteModal isOpen={activeModal() === "template:remove"}
             onClose={() => setActiveModal(null)}
             data={modalData} // 선택된 NIC 데이터 전달
             templateId={selectedTemplateIds}
           />
         )}
       </Suspense>
-    </>
+    </div>
   );
 };
 
