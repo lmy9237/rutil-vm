@@ -69,13 +69,15 @@ const VmDisk = ({
     <>
       <div className="instance-image center py-2">
         <div className="font-bold">가상 디스크</div>
-        <div className="f-end" style={{ gap: "6px" }}>
+        <div className="f-end">
           <ActionButton label={Localization.kr.CONNECTION}
             actionType="default"
+            className="instance-disk-btn"
             onClick={() => setIsConnectionPopupOpen(true)}
           />
           <ActionButton label={Localization.kr.CREATE}
             actionType="default"
+            className="instance-disk-btn"
             onClick={() => setIsCreatePopupOpen(true)}
           />
         </div>
@@ -88,7 +90,7 @@ const VmDisk = ({
               <span style={{ marginRight: "25px" }}>
                 <strong>{disk.isExisting ? "[기존] " : disk.isCreated ? "[생성] " : "[연결] "}</strong>
                   {disk?.alias} ({(disk?.size || disk?.virtualSize) + ' GB'}) {disk?.bootable ? "[부팅]" : ""} 
-                  !임시노란색!
+                 
               </span>
             </div>
             {/*{disk?.storageDomainVo?.id} <- 연결되어있는 디스크아이디*/}

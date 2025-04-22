@@ -79,7 +79,7 @@ const VmHost = ({
                 }}
                 disabled={formHostState.hostInCluster}
               >
-              <div className="host-select-list">
+              <div className="host-select-list pl-1.5">
                 {hosts.map((host) => {
                   const isSelected = formHostState.hostVos.some((h) => h.id === host.id);
                   return (

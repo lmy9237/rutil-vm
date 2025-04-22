@@ -62,7 +62,7 @@ export const Localization = {
     TARGET: "대상",
     USER: "사용자",
     USER_ID: "사용자ID",
-    LOGIN: "로그인",
+    LOGIN: "LOGIN",
     LOGOUT: "로그아웃",
     PRINT: "출력",
     TIME: "시간",
@@ -97,8 +97,10 @@ export const Localization = {
     IN_PROGRESS: "중 ...",
 
     PLACEHOLDER_SEARCH: "검색어를 입력하세요.",
-    PLACEHOLDER_USERNAME: "사용자명을 입력하세요.",
-    PLACEHOLDER_PASSWORD: "비밀번호를 입력하세요.",
+    // PLACEHOLDER_USERNAME: "사용자명을 입력하세요.",
+    // PLACEHOLDER_PASSWORD: "비밀번호를 입력하세요.",
+    PLACEHOLDER_USERNAME: "USERNAME",
+    PLACEHOLDER_PASSWORD: "PASSWORD",
     NO_INFO: "🤷‍♂️ 내용이 없습니다",
 
     renderTime(milliseconds) {

@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LabelCheckbox from "../../../label/LabelCheckbox";
+import { RVI12, rvi12ArrowRight } from "../../../icons/RutilVmIcons";
 
 const VmInit = ({ formCloudState, setFormCloudState }) => {
 
@@ -33,13 +32,15 @@ const VmInit = ({ formCloudState, setFormCloudState }) => {
 
         {formCloudState.cloudInit && (
           <div className="py-2">
-            <FontAwesomeIcon
-              icon={faChevronCircleRight}
-              id="domain_hidden_box_btn2"
-              onClick={toggleDomainHiddenBox}
-              fixedWidth
-            />
-            <span>사용자 지정 스크립트</span>
+            <div className="f-start">
+              <RVI12
+                iconDef={rvi12ArrowRight}
+                id="domain_hidden_box_btn2"
+                onClick={toggleDomainHiddenBox}
+                fixedWidth
+              />
+              <span>사용자 지정 스크립트</span>
+            </div>
             <div className="mt-0.5" id="domain_hidden_box2" style={{ display: "block" }}>
               <textarea name="content" cols="40" rows="8"
                 placeholder="여기에 스크립트를 입력하세요"

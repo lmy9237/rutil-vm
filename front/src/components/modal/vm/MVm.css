@@ -81,6 +81,9 @@
   height:90px;
   font-size: var(--fs-default);
 }
+.instance-disk-btn{
+  background-color: red;
+}
 .btn-toggle-cpu{
   font-size: var(--fs-default);
   border:var(--border-btn);

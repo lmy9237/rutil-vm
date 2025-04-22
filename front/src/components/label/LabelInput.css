@@ -20,15 +20,18 @@ select,
 .custom-select-box{
   width:55%;
   cursor: pointer;
-  border: var(--border-btn);border-radius: 1px;
+  border: var(--border-hr);  border-radius: 1px;
   font-size: var(--fs-default);
   padding: 2px;
+  color: var(--color-black);
   padding-left: 6px;
   outline: none;
   border-radius: 1px;
   letter-spacing: -0.28px;
 }
-
+.custom-select-box{
+  background-color: var(--color-white);
+}
 .input-checkbox {
   width: 100%;
   padding:7px 0;
@@ -40,7 +43,7 @@ select,
 input[type="checkbox"],
 input[type="radio"] {
   margin-right: 6px;
-  width: 16px;height: 16px;
+  width: 15px;height: 15px;
   display: flex;
   cursor: pointer;
   justify-content: center;
@@ -72,7 +75,7 @@ input[type="radio"] {
   z-index: 10;
   max-height: 200px;
   overflow-y: auto;
-  border: var(--border-btn);border-radius: 1px;
+  border: var(--border-hr);border-radius: 1px;
   border-top: none !important;
 }
 
@@ -86,10 +89,10 @@ input[type="radio"] {
 }
 
 .custom-option:hover {
-  background-color: #EFF1F5;
+  background-color: var(--color-white);
 }
 .custom-option.selected {
-  background-color: #EFF1F5;
+  background-color: var(--color-white);
   font-weight: 600;
 }
 .custom-select-box span{

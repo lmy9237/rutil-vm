@@ -3,30 +3,27 @@
   max-width:400px;
   display: flex;
   align-items: center;
-  padding: 5px; /* Inner padding */
+  padding: 5px 0; /* Inner padding */
   width: 100%; /* Full width */
-  max-width: 400px; /* Maximum width */
-  background-color: #fff; /* Background color */
 }
 
 .icon-container {
   display: flex;
   align-items: center;
-  padding: 0 8px; /* Spacing between the icon and the input */
-  color: #999; /* Icon color */
+  padding: 0 8px;
+  color: #999;
 }
   
-.input-icon {
-  font-size: 16px; /* Icon size */
+.login-input {
+  width: 100% !important; 
+  padding: 7px !important;
+  font-size: var(--fs-16);
+  border: var(--border-hr) !important;
+  border-radius: 5px !important;
+  color: var(--color-black);
 }
-  
 .icon-input {
-  flex: 1; /* Take remaining width */
-  border: none; /* Remove default border */
-  outline: none; /* Remove outline */  
-  padding: 8px; /* Padding for input text */
+  flex: 1; 
+  padding: 8px; 
 }
-  
-.icon-input::placeholder {
-  color: #999; /* Placeholder color */
-}
+

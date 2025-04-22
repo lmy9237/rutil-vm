@@ -8,11 +8,10 @@ import useAuth from "../../hooks/useAuth";
 import Logger from "../../utils/Logger";
 import { useAuthenticate } from "../../api/RQHook";
 import "./Login.css";
-// import backgroundImg from "./img/background-img.jpg";
-import backgroundImg from "./img/background-img2.jpg";
-// import backgroundImg from "./img/background-img3.jpg";
-// import backgroundImg from "./img/background-img4.jpg";
-// import backgroundImg from "./img/background-img5.jpg";
+
+import backgroundImg from "./img/background-img.png";
+// import backgroundImg from "./img/background-img2.jpg";
+
 
 const Login = () => {
   // 모달 관련 상태 및 함수
@@ -61,50 +60,55 @@ const Login = () => {
 
   return (
     <>
-      <div className="login-container">
+      <div className="login-container"   
+        style={{
+          backgroundImage: `url(${backgroundImg})`,
+          backgroundSize: "cover",   // ✅ 수정
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <div className="login-form-outer">
-          <div>
-            <RutilVmLogo className="bigger" description="RutilVM에 오신걸 환영합니다." />
-            <form className="" 
-              onSubmit={doLogin}
-            >
-              <IconInput className="login-input text-lg"
-                required
-                type="text"
-                placeholder={Localization.kr.PLACEHOLDER_USERNAME}
-                value={username ?? ""}
-                onChange={(e) => {
-                  Logger.debug(`Username: ${e.target.value}`); // 확인용 로그
-                  setUsername(e.target.value);
-                }}
-              />
-              <IconInput className="login-input text-lg"
-                required
-                // icon={faKey}
-                type="password"
-                placeholder={Localization.kr.PLACEHOLDER_PASSWORD}
-                value={password ?? ""}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <button
-                type="submit"
-                className="login-button f-center bgcolor-primary"
-                disabled={isAuthLoading}
+ 
+          <div className="login-form-box f-center">
+            <div>
+              <RutilVmLogo className="bigger" />
+              <form className="" 
+                onSubmit={doLogin}
               >
-                {isAuthLoading ? (<>{Localization.kr.LOGIN} {Localization.kr.IN_PROGRESS}</>) : (<>{Localization.kr.LOGIN}</>)}
-              </button>
-            </form>
+                <IconInput className="login-input text-lg"
+                  required
+                  type="text"
+                  placeholder={Localization.kr.PLACEHOLDER_USERNAME}
+                  value={username ?? ""}
+                  onChange={(e) => {
+                    Logger.debug(`Username: ${e.target.value}`); // 확인용 로그
+                    setUsername(e.target.value);
+                  }}
+                />
+                <IconInput className="login-input text-lg"
+                  required
+                  // icon={faKey}
+                  type="password"
+                  placeholder={Localization.kr.PLACEHOLDER_PASSWORD}
+                  value={password ?? ""}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="login-button f-center bgcolor-primary"
+                  disabled={isAuthLoading}
+                >
+                  {isAuthLoading ? (<>{Localization.kr.LOGIN} {Localization.kr.IN_PROGRESS}</>) : (<>{Localization.kr.LOGIN}</>)}
+                </button>
+              </form>
+              <CompanyInfoFooter isBrief={true} />
+            </div>
           </div>
         </div>
-        <div className="background-container">
-          <img
-            src={backgroundImg}
-            alt="Background"
-            className="background-image"
-          />
-        </div>
+
       </div>
-      <CompanyInfoFooter isBrief={true} />
+     
     </>
   );
 };

@@ -11,14 +11,14 @@ const IconInput = ({
 }) => {
   return (
     <div className="icon-input-container">
-      <div className="icon-container">
+      {/* <div className="icon-container">
         <FontAwesomeIcon icon={icon} className="input-icon" />
-      </div>
+      </div> */}
       <input
         type={type}
         className="icon-input"
         placeholder={placeholder}
-        {...props} // Spread other props to allow customization
+        {...props}
       />
     </div>
   );
