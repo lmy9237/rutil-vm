@@ -38,14 +38,13 @@ const VmImportModal = ({
 
   const transformedNetorkProviders = [
     { value: "", label: "N/A" },
-    ...(!Array.isArray(networkProviders) ? [] : networkProviders).map((p) => ({
+    ...[...networkProviders].map((p) => ({
       value: p?.id,
       label: p?.name
     }))
   ]
 
   const [step, setStep] = useState(1);
-
   const [selectedSource, setSelectedSource] = useState("VMware");
 
   const [vcenter, setVcenter] = useState("");

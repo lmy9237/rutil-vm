@@ -14,15 +14,12 @@ const DomainGetDiskModal = ({
 }) => {
   const { mutate: registerDisk } = useRegisteredDiskFromDomain();
 
-  Logger.debug(
-    `DomainGetDiskModal.data: ${JSON.stringify(data)}, domainId: ${domainId}`
-  );
+  Logger.debug(`DomainGetDiskModal, domainId: ${domainId}, data: `, data);
   const { ids } = useMemo(() => {
     if (!data) return { ids: [] };
 
-    const dataArray = Array.isArray(data) ? data : [data];
     return {
-      ids: dataArray.map((item) => item.id),
+      ids: [...data]?.map((item) => item.id),
     };
   }, [data]);
 

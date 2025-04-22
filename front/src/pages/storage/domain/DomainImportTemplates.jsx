@@ -33,7 +33,7 @@ const DomainImportTemplates = ({
     isSuccess: isTemplatesSuccess,
   } = useAllUnregisteredTemplatesFromDomain(domainId, (e) => ({ ...e }));
 
-  const transformedData = (!Array.isArray(templates) ? [] : templates).map((t) => ({
+  const transformedData = [...templates].map((t) => ({
     ...t,
     name: t.name,
     memory: checkZeroSizeToMB(t.memorySize),
@@ -48,7 +48,6 @@ const DomainImportTemplates = ({
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  
   return (
     <>
       <div className="dupl-header-group f-start">
@@ -80,19 +79,18 @@ const DomainImportTemplates = ({
       {activeModal() === "domaintemplate:importVm" && (
         <DomainGetVmTemplateModal
           isOpen={true}
-          data={templatesSelected}
           type="template"
+          data={templatesSelected}
           onClose={() => setActiveModal(null)}
         />
       )}
 
       {activeModal() === "domaintemplate:remove" && (
-        <DeleteModal
+        <DeleteModal contentLabel={Localization.kr.TEMPLATE}
           isOpen={true}
           type="DataCenter"
-          onRequestClose={() => setActiveModal(null)}
-          contentLabel={"템플릿"}
           data={templatesSelected}
+          onRequestClose={() => setActiveModal(null)}
         />
       )}
     </>

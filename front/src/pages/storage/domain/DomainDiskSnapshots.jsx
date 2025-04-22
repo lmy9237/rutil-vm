@@ -29,7 +29,7 @@ const DomainDiskSnapshots = ({
     isError: isDiskSnapshotsError
   } = useAllDiskSnapshotsFromDomain(domainId, (e) => ({ ...e }));
 
-  const transformedData = (!Array.isArray(diskSnapshots) ? [] : diskSnapshots).map((e) => ({
+  const transformedData = [...diskSnapshots].map((e) => ({
     ...e,
     actualSize: checkZeroSizeToGiB(e?.actualSize),
     // actualSize: `${convertBytesToGB(e?.actualSize)} GB`,
@@ -54,18 +54,6 @@ const DomainDiskSnapshots = ({
       />
 
       <SelectedIdView items={snapshotsSelected} />
-
-      {/* <Suspense fallback={<Loading/>}>
-        {isModalOpen && (
-          <DeleteModal
-            isOpen={isModalOpen}
-            type="DiskSnapShot"
-            onRequestClose={() => setIsModalOpen(false)}
-            contentLabel="디스크 스냅샷"
-            data={snapshotsSelected}
-          />
-        )}
-      </Suspense> */}
     </>
   );
 };

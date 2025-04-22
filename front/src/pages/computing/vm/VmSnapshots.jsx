@@ -1,19 +1,27 @@
-import React, { Suspense, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import useUIState from '../../../hooks/useUIState';
-import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import VmSnapshotModal from '../../../components/modal/vm/VmSnapshotModal';
-import { useSnapshotsFromVM, useVm } from '../../../api/RQHook';
-import { convertBytesToMB } from '../../../util';
-import TablesRow from '../../../components/table/TablesRow';
-import ActionButton from '../../../components/button/ActionButton';
-import { RVI16, rvi16ChevronDown, rvi16ChevronRight, rvi16Desktop, rvi16Location, rvi16Pause, RVI24, status2Icon } from '../../../components/icons/RutilVmIcons';
-import Localization from '../../../utils/Localization';
-import Loading from '../../../components/common/Loading';
-import VmSnapshotDeleteModal from '../../../components/modal/vm/VmSnapshotDeleteModal';
-import Logger from '../../../utils/Logger';
-import useGlobal from '../../../hooks/useGlobal';
-import VmSnapshotActionButtons from '../../../components/dupl/VmSnapshotActionButtons';
+import React, { Suspense, useEffect, useMemo } from "react";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
+import Loading from "../../../components/common/Loading";
+import TablesRow from "../../../components/table/TablesRow";
+import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
+import VmSnapshotModal from "../../../components/modal/vm/VmSnapshotModal";
+import VmSnapshotDeleteModal from "../../../components/modal/vm/VmSnapshotDeleteModal";
+import VmSnapshotActionButtons from "../../../components/dupl/VmSnapshotActionButtons";
+import {
+  RVI16,
+  rvi16ChevronDown,
+  rvi16ChevronRight,
+  rvi16Desktop,
+  rvi16Location,
+  rvi16Pause,
+  RVI24,
+  status2Icon,
+} from "../../../components/icons/RutilVmIcons";
+import Localization from "../../../utils/Localization";
+import { useSnapshotsFromVM, useVm } from "../../../api/RQHook";
+import { convertBytesToMB } from "../../../util";
+import Logger from "../../../utils/Logger";
+
 
 
 const VmSnapshots = ({
@@ -37,7 +45,7 @@ const VmSnapshots = ({
   } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
 
 
-  const transformedData = (!Array.isArray(snapshots) ? [] : snapshots).map((snapshot) => ({
+  const transformedData = [...snapshots].map((snapshot) => ({
     ...snapshot,
     id: snapshot?.id,
     description: snapshot?.description,
@@ -52,7 +60,9 @@ const VmSnapshots = ({
   }));
 
 
-  const hasLockedSnapshot = transformedData.some(snap => snap.status === "locked");
+  const hasLockedSnapshot = useMemo(() => {
+    transformedData.some(snap => snap.status === "locked")
+  }, [transformedData])
   
   useEffect(() => {
     setVmsSelected(vm)

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import {
@@ -9,6 +9,7 @@ import {
   useRefreshHost,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name HostActionModal
@@ -28,8 +29,13 @@ const ACTIONS = {
   // "host:haOff": { label: "HA 비활성화", hook:  },
 };
 
-const HostActionModal = ({ isOpen, action, data, onClose }) => {  
+const HostActionModal = ({ 
+  isOpen,
+  action, 
+  onClose
+}) => {  
   const { label = "", hook } = ACTIONS[action] || {};
+  const { hostsSelected } = useGlobal()
   const onSuccess = () => {
     onClose();
     toast.success(`${Localization.kr.HOST} ${label} 완료`);
@@ -38,19 +44,18 @@ const HostActionModal = ({ isOpen, action, data, onClose }) => {
   const { mutate } = hook ? hook(onSuccess, onClose) : { mutate: null };
 
   const { ids, names } = useMemo(() => {
-    const list = Array.isArray(data) ? data : data ? [data] : [];
     return {
-      ids: list.map((item) => item.id),
-      names: list.map((item) => item.name || "undefined"),
+      ids: [...hostsSelected].map((host) => host?.id),
+      names: [...hostsSelected].map((host) => host?.name ?? ""),
     };
-  }, [data]);
+  }, [hostsSelected]);
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (!mutate) return toast.error(`알 수 없는 액션: ${action}`);
     if (!ids.length) return toast.error("ID가 없습니다.");
 
     ids.forEach((id) => mutate(id));
-  };
+  }, [mutate, ids]);
 
   return (
     <BaseModal targetName={Localization.kr.HOST} submitTitle={label}

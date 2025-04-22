@@ -46,7 +46,7 @@ const StorageTree = ({}) => {
       {/* 두 번째 레벨 (Data Center) */}
       {secondVisibleStorage() && navStorageDomains && navStorageDomains.map((dataCenter) => {
         const isDataCentersOpen = openDataCentersStorage(dataCenter.id);
-        const hasDomains = Array.isArray(dataCenter.storageDomains) && dataCenter.storageDomains.length > 0;
+        const hasDomains = [...dataCenter.storageDomains]?.length > 0;
 
         return (
           <div key={dataCenter.id} className="tmi-g">
@@ -77,10 +77,9 @@ const StorageTree = ({}) => {
             />
             
             {/* 세 번째 레벨 (Storage Domains) */}
-            {isDataCentersOpen &&
-              Array.isArray(dataCenter.storageDomains) && dataCenter.storageDomains.map((domain) => {
+            {isDataCentersOpen && [...dataCenter.storageDomains]?.map((domain) => {
                 const isDomainOpen = openDomainsStorage(domain.id) || false;
-                const hasDisks = Array.isArray(domain.disks) && domain.disks.length > 0;
+                const hasDisks = [...domain.disks]?.length > 0;
 
                 return (
                   <div key={domain.id} className="tmi-g">

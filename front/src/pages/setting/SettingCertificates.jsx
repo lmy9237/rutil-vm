@@ -27,7 +27,7 @@ const SettingCertificates = () => {
       ...e,
   }));
 
-  const transformedData = (!Array.isArray(certs) ? [] : certs).map((e) => ({
+  const transformedData = [...certs].map((e) => ({
     ...e,
     notAfter: e.notAfter ?? 'N/A',
     dday: (e.daysRemaining > 0) ? `${e.daysRemaining} 일 남음` : 'N/A'

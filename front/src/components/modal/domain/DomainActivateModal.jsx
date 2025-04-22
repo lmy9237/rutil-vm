@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import {
   useActivateDomain,
-  useDetachDomain,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import useGlobal from "../../../hooks/useGlobal";
@@ -27,10 +26,9 @@ const DomainActivateModal = ({ isOpen, onClose }) => {
   const { ids, names } = useMemo(() => {
     if (!domainsSelected) return { ids: [], names: [] };
 
-    const dataArray = Array.isArray(domainsSelected) ? domainsSelected : [domainsSelected];
     return {
-      ids: dataArray.map((item) => item.id),
-      names: dataArray.map((item) => item.name),
+      ids: [...domainsSelected].map((item) => item.id),
+      names: [...domainsSelected].map((item) => item.name),
     };
   }, [domainsSelected]);
   
@@ -39,7 +37,7 @@ const DomainActivateModal = ({ isOpen, onClose }) => {
       return toast.error("실행할 도메인이 없습니다.");
     }
 
-    ids.forEach((domainId) => {
+    [...ids]?.forEach((domainId) => {
       activateDomain({ domainId, dataCenterId: datacentersSelected[0]?.id });
     });
   };

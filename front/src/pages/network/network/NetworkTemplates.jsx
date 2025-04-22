@@ -34,22 +34,16 @@ const NetworkTemplates = ({
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태 초기값 false
 
   // 선택된 Template ID와 NIC ID 추출
-  const selectedTemplateIds = (!Array.isArray(nicsSelected) ? [] : nicsSelected).map(t => t.id).join(', ');
-  const selectedNicIds = (!Array.isArray(nicsSelected) ? [] : nicsSelected).map(t => t.nicId).join(', ');
+  const selectedTemplateIds = [...nicsSelected].map(t => t.id).join(', ');
+  const selectedNicIds = [...nicsSelected].map(t => t.nicId).join(', ');
 
   const openDeleteModal = () => {
     // 제거 버튼 클릭 시 모달 열기
-    Logger.debug("NetworkTemplates > openDeleteModal ...")
+    Logger.debug("NetworkTemplates > openDeleteModal ... nicsSelected: ", nicsSelected)
     if (nicsSelected.length > 0) { // 선택된 항목이 있을 때만 동작
       setModalData(nicsSelected); // 선택된 항목을 모달에 전달
       setIsModalOpen(true); // 모달 열기
     }
-  };
-
-  const closeDeleteModal = () => {
-    Logger.debug("NetworkTemplates > closeDeleteModal ...")
-    setIsModalOpen(false); // 모달 닫기
-    setModalData(null); // 모달 데이터 초기화
   };
 
   Logger.debug("NetworkTemplates ...")

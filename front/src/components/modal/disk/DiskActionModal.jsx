@@ -8,6 +8,7 @@ import LabelInput from "../../label/LabelInput";
 import ApiManager from "../../../api/ApiManager";
 import { useCopyDisk, useMoveDisk } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
+import useGlobal from "../../../hooks/useGlobal";
 import "../domain/MDomain.css";
 
 const DiskActionModal = ({ 
@@ -17,12 +18,12 @@ const DiskActionModal = ({
   onClose
 }) => {
   const daLabel = action === "move" ? Localization.kr.MOVE : "복사";
+  const { disksSelected } = useGlobal()
   const [aliases, setAliases] = useState({});
   const [domainList, setDomainList] = useState({});
   const [targetDomains, setTargetDomains] = useState({});
 
-  Logger.debug(`DiskActionModal ... data: `, data);
-  const disks = !Array.isArray(data) ? [data] : data;
+  Logger.debug(`DiskActionModal ... disksSelected: `, disksSelected);
 
   const onSuccess = () => {
     onClose();
@@ -33,7 +34,7 @@ const DiskActionModal = ({
 
 
   const getDomains = useQueries({
-    queries: disks.map((disk) => ({
+    queries: [...disksSelected]?.map((disk) => ({
       queryKey: ['allDomainsFromDataCenter', disk.dataCenterVo.id],
       queryFn: async () => {
         try {
@@ -50,13 +51,13 @@ const DiskActionModal = ({
   useEffect(() => {
     if (action === "copy") {
       const initialAliases = {};
-      for (let i=0; i<disks.length; i++) {
-        const disk = disks[i];
+      for (let i=0; i<disksSelected.length; i++) {
+        const disk = disksSelected[i];
         initialAliases[disk.id] = `${disk.alias || ""}`;
       }
       setAliases(initialAliases);
     }
-  }, [action, disks]);  
+  }, [action, disksSelected]);  
 
   useEffect(() => {
     const newDomainList = {};
@@ -64,12 +65,11 @@ const DiskActionModal = ({
     for (let i=0; i<getDomains.length; i++) {
       // getDomains.forEach((queryResult, idx) => {
       const queryResult = getDomains[i];
-      const disk = disks[i]; // 각 디스크와 매핑
+      const disk = disksSelected[i]; // 각 디스크와 매핑
       const currentDomainId = disk?.storageDomainVo?.id;
   
       if (disk && queryResult.data && queryResult.isSuccess) {
         const domains = queryResult.data?.body ?? [];
-  
         const filteredDomains = domains
           .filter((d) => d.status === "ACTIVE" && (action !== "move" || d.id !== currentDomainId))
           .map((d) => ({ id: d.id, name: d.name }));
@@ -89,7 +89,7 @@ const DiskActionModal = ({
 
   // 같은 데이터센터 안에 잇는 스토리지 도메인 목록을 불러와야함
   const handleFormSubmit = () => {
-    disks.forEach((disk) => {
+    [...disksSelected]?.forEach((disk) => {
       let selectedDomainId = targetDomains[disk.id];
   
       // 선택된 도메인이 없다면, 첫 번째 도메인 자동 선택
@@ -142,8 +142,8 @@ const DiskActionModal = ({
             </tr>
           </thead>
           <tbody>
-            {disks.length > 0 ? (
-              disks.map((disk, index) => (
+            {disksSelected.length > 0 ? (
+              [...disksSelected]?.map((disk, index) => (
                 <tr key={disk.id || index}>
                   <td>
                     {action === "move" ? (

@@ -41,7 +41,6 @@ const HostModals = ({
       <HostModal key={activeModal()} isOpen={activeModal() === "host:update"}
         editMode
         hostId={host?.id}
-        // hostId={host?.id ?? hostsSelected[0]?.id}
         onClose={() => setActiveModal(null)} 
       />
     ), remove: (
@@ -56,7 +55,6 @@ const HostModals = ({
       <HostActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}
         onClose={() => setActiveModal(null)} 
         action={activeModal()}
-        data={hostsSelected}
       />
     ), commitNetHost: (
       <HostCommitNetModal key={activeModal()} isOpen={activeModal() === "host:commitNetHost"}

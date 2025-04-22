@@ -374,7 +374,7 @@ const VmModal = ({
     ...formBootState,
 
     // nic 목록
-    nicVos: (!Array.isArray(nicListState) ? [] : nicListState).map((nic) => ({
+    nicVos: [...nicListState]?.map((nic) => ({
       id: nic?.id || "",
       name: nic?.name || "",
       vnicProfileVo: {

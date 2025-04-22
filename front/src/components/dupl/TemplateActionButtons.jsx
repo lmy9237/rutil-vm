@@ -12,8 +12,7 @@ const TemplateActionButtons = ({
   const { templatesSelected } = useGlobal()
 
   const hasDefaultTemplate = 
-    Array.isArray(templatesSelected) && 
-    templatesSelected.filter((e) => e.id === CONSTANT.templateIdDefault).length > 0
+    [...templatesSelected]?.filter((e) => e.id === CONSTANT.templateIdDefault)?.length > 0
   
   const basicActions = [
     { type: "update", onBtnClick: () => setActiveModal("template:update"), label: Localization.kr.UPDATE, disabled: templatesSelected.length !== 1, },

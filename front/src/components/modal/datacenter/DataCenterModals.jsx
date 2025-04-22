@@ -5,7 +5,6 @@ import DataCenterModal from "./DataCenterModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteDataCenter } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
 
 const DataCenterModals = ({ 
   dataCenter,

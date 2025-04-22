@@ -207,48 +207,48 @@ const VmMigrationModal = ({ isOpen, onClose, selectedVms }) => {
    useEffect(() => {
      if (!isOpen) return;
 
-//     const initialState = {};
-//     selectedVms.forEach((vm) => {
-//       initialState[vm.id] = {
-//         isCluster: true,
-//         clusterVo: {
-//           id: vm?.clusterVo?.id || "",
-//           name: vm?.clusterVo?.name || "",
-//         },
-//         hostVo: { id: "", name: "" },
-//         affinityClosure: false,
-//       };
-//     });
-//     setVmStates(initialState);
-//   }, [isOpen, selectedVms]);
+     const initialState = {};
+     selectedVms.forEach((vm) => {
+       initialState[vm.id] = {
+         isCluster: true,
+         clusterVo: {
+           id: vm?.clusterVo?.id || "",
+           name: vm?.clusterVo?.name || "",
+         },
+         hostVo: { id: "", name: "" },
+         affinityClosure: false,
+       };
+     });
+     setVmStates(initialState);
+   }, [isOpen, selectedVms]);
 
-//   const hostQueries = useQueries({
-//     queries: ids.map((vmId) => ({
-//       queryKey: ['HostsFromVM', vmId],
-//       queryFn: async () => {
-//         try {
-//           const hosts = await ApiManager.migrateHostsFromVM(vmId);
-//           console.info(`hosts *** ${vmId}`, hosts);
-//           return hosts.body || [];
-//         } catch (error) {
-//           console.error(`Error fetching hosts for VM ${vmId}`, error);
-//           return [];
-//         }
-//       }
-//     })),
-//   });    
+   const hostQueries = useQueries({
+     queries: ids.map((vmId) => ({
+       queryKey: ['HostsFromVM', vmId],
+       queryFn: async () => {
+         try {
+           const hosts = await ApiManager.migrateHostsFromVM(vmId);
+           console.info(`hosts *** ${vmId}`, hosts);
+           return hosts.body || [];
+         } catch (error) {
+           console.error(`Error fetching hosts for VM ${vmId}`, error);
+           return [];
+         }
+       }
+     })),
+   });    
 
-//   const handleFormSubmit = () => {
-//     selectedVms.forEach((vm) => {
-//       const { isCluster, clusterVo, hostVo, affinityClosure } = vmStates[vm.id] || {};
-//       const payload = {
-//         vmId: vm.id,
-//         vm: isCluster ? { clusterVo } : { hostVo },
-//         affinityClosure
-//       };
-//       migration(payload);
-//     });
-//   };
+   const handleFormSubmit = () => {
+     selectedVms.forEach((vm) => {
+       const { isCluster, clusterVo, hostVo, affinityClosure } = vmStates[vm.id] || {};
+       const payload = {
+         vmId: vm.id,
+         vm: isCluster ? { clusterVo } : { hostVo },
+         affinityClosure
+       };
+       migration(payload);
+     });
+   };
 
 //   return (
 //     <BaseModal targetName={Localization.kr.VM} submitTitle={Localization.kr.MIGRATION}

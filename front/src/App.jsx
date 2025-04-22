@@ -183,7 +183,7 @@ const App = () => {
         toastOptions={{
           // duration: Infinity,
           duration: 5000, // 지속시간
-          className: "toast",
+          className: "toast f-start",
           style: {
             maxWidth: 500,
           },

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
+import LabelCheckbox from "../../label/LabelCheckbox";
 import ModalNavButton from "../../navigation/ModalNavButton";
 import Localization from "../../../utils/Localization";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
-import toast from "react-hot-toast";
 import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
-import Logger from "../../../utils/Logger";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
-import LabelCheckbox from "../../label/LabelCheckbox";
+import Logger from "../../../utils/Logger";
 
 // 탭 메뉴
 const tabs = [
@@ -52,11 +51,6 @@ const HostNetworkEditModal = ({
   const [ipv4Values, setIpv4Values] = useState({ protocol: "none", address: "", gateway: "", netmask: "" });
   const [ipv6Values, setIpv6Values] = useState({ protocol: "none", address: "", gateway: "", netmask: "" });
   const [dnsServers, setDnsServers] = useState([]); //nameServerList
-  
-  const onSuccess = () => {
-    onClose();
-    toast.success(`네트워크 편집 완료`);
-  };
   // const { mutate: addNetwork } = useAddNetwork(onSuccess, () => onClose());
   
   useEffect(() => {  

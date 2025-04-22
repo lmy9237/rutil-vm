@@ -56,11 +56,11 @@ const DomainInfo = () => {
     { id: "general", label: Localization.kr.GENERAL },
     { id: "datacenters", label: Localization.kr.DATA_CENTER },
     { id: "vms", label: Localization.kr.VM },
-    { id: "importVms", label: `${Localization.kr.VM} 가져오기` },
-    { id: "templates", label: "템플릿" },
-    { id: "importTemplates", label: "템플릿 가져오기" },
+    { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}` },
+    { id: "templates", label: Localization.kr.TEMPLATE },
+    { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}` },
     { id: "disks", label: Localization.kr.DISK },
-    { id: "importDisks", label: `${Localization.kr.DISK} 가져오기` },
+    { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}` },
     { id: "diskSnapshots", label: "디스크 스냅샷" },
     { id: "events", label: Localization.kr.EVENT },
   ]), []);
@@ -82,7 +82,7 @@ const DomainInfo = () => {
     setActiveTab(section || "general");
   }, [section]);
 
-  const renderSectionContent = () => {
+  const renderSectionContent = useCallback(() => {
     const SectionComponent = {
       general: DomainGeneral,
       datacenters: DomainDatacenters,
@@ -96,7 +96,7 @@ const DomainInfo = () => {
       events: DomainEvents,
     }[activeTab];
     return SectionComponent ? <SectionComponent domainId={domainId} /> : null;
-  };
+  }, [activeTab, domainId]);
 
   const handleUpdateOvf = useCallback(async () => {
     if (!domainId) return;

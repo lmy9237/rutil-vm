@@ -20,9 +20,8 @@ const DomainIscsiImport = ({
   const [isIscsisLoading, setIsIscsisLoading] = useState(false);
   const [isIscsisError, setIsIscsisError] = useState(false);
   const [isIscsisSuccess, setIsIscsisSuccess] = useState(false);
-
   
-  const transIscsiData = iscsiResults.map((i) => ({
+  const transIscsiData = [...iscsiResults]?.map((i) => ({
     ...i,
     target: i?.target,
     address: i?.address,

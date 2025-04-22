@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import Tables from '../../../table/Tables';
 import toast from 'react-hot-toast';
@@ -34,13 +34,13 @@ const DomainFibre = ({
     });
   };
 
-  const handleRowClick = (row) => {
+  const handleRowClick = useCallback((row) => {
     const selectedRow = Array.isArray(row) ? row[0] : row;
     if (selectedRow && selectedRow.id) {
       Logger.debug('선택한 LUN ID:', selectedRow.id);
       setLunId(selectedRow.id);
     }
-  }; 
+  }, []);
 
   return (
     <div className="storage-popup-iSCSI">
@@ -73,20 +73,20 @@ const DomainFibre = ({
             <button className='search-button' onClick={handleSearchFcp}>검색</button>
             {fcpSearchResults?.length > 0 && (
               <Tables
-                isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
                 columns={TableColumnsInfo.FIBRE}
                 data={fcpSearchResults}
                 onRowClick={handleRowClick}
+                isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
               />
             )}
           </>
         ): (
           <Tables
-            isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
             columns={TableColumnsInfo.FIBRE}
             data={fibres}
             onRowClick={handleRowClick}
             shouldHighlight1stCol={true}
+            isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
           />
         )} 
         <div> <span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>

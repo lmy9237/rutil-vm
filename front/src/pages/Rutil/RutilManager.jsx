@@ -14,9 +14,9 @@ import Disks from "./Disks";
 import Networks from "./Networks";
 import VnicProfiles from "./VnicProfiles";
 import Localization from "../../utils/Localization";
-import "./RutilManager.css";
 import { rvi24Globe } from "../../components/icons/RutilVmIcons";
 import SectionLayout from "../../components/SectionLayout";
+import "./RutilManager.css";
 
 /**
  * @name RutilManager
@@ -50,7 +50,7 @@ const RutilManager = () => {
     { id: "clusters", label: Localization.kr.CLUSTER },
     { id: "hosts", label: Localization.kr.HOST },
     { id: "vms", label: Localization.kr.VM },
-    { id: "templates", label: "템플릿" },
+    { id: "templates", label: Localization.kr.TEMPLATE },
     { id: "storageDomains", label: "스토리지 도메인" },
     { id: "disks", label: "디스크" },
     { id: "networks", label: Localization.kr.NETWORK },
@@ -91,7 +91,7 @@ const RutilManager = () => {
   const renderSectionContent = useCallback(() => {
     const SectionComponent = sectionComponents[activeTab] || Info;
     return <SectionComponent />;
-  }, []);
+  }, [activeTab]);
 
   return (
     <SectionLayout>

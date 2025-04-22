@@ -44,7 +44,7 @@ const NetworkTree = ({}) => {
       {/* 레벨 2: 데이터 센터 */}
       {secondVisibleNetwork() && navNetworks && navNetworks.map((dataCenter) => {
         const isDataCenterOpen = openDataCentersNetwork(dataCenter.id) || false;
-        const hasNetworks = Array.isArray(dataCenter.networks) && dataCenter.networks.length > 0;
+        const hasNetworks = [...dataCenter.networks]?.length > 0;
         return (
           <div key={dataCenter.id} className="tmi-g">
             <TreeMenuItem level={2}

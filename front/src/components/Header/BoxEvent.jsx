@@ -53,7 +53,7 @@ const BoxEvent = ({
   );
 
   useEffect(() => {
-    const badgeNum = Array.isArray(notiEvents) ? notiEvents.length : 0;
+    const badgeNum = [...notiEvents]?.length ?? 0;
     setEventBadgeNum(badgeNum);
   }, [notiEvents])
 

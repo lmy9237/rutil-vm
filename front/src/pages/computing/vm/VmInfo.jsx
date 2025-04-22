@@ -115,7 +115,7 @@ const VmInfo = () => {
     { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF, disabled: !isUp  },
     { type: "console",   onClick: () => setActiveModal("vm:console", vmId), label: Localization.kr.CONSOLE, disabled: !isUp },
     { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: "스냅샷 생성", disabled: !(isUp || isDown) },
-    { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: "마이그레이션", disabled: isUp },
+    { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: isUp },
   ];
 
   const popupItems = [

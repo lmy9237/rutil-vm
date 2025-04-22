@@ -20,7 +20,9 @@ const DataCenterActionButtons = ({ actionType = "default" }) => {
 
   Logger.debug(`DataCenterActionButtons ... datacentersSelected.length: ${datacentersSelected.length}, isContextMenu: ${isContextMenu} `)
   return (
-    <ActionButtonGroup actionType={actionType} actions={basicActions} />
+    <ActionButtonGroup actionType={actionType} 
+      actions={basicActions} 
+    />
   );
 };
 

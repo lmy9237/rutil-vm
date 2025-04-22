@@ -7,7 +7,10 @@ import toast from "react-hot-toast";
 import { useMaintenanceDomain } from "../../../api/RQHook";
 import useGlobal from "../../../hooks/useGlobal";
 
-const DomainMainTenanceModal = ({ isOpen, onClose }) => {
+const DomainMainTenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceModal
+  isOpen,
+  onClose
+}) => {
   const { datacentersSelected, domainsSelected } = useGlobal()
 
   const onSuccess = () => {
@@ -18,11 +21,9 @@ const DomainMainTenanceModal = ({ isOpen, onClose }) => {
 
   const { ids, names } = useMemo(() => {
     if (!domainsSelected) return { ids: [], names: [] };
-
-    const dataArray = Array.isArray(domainsSelected) ? domainsSelected : [domainsSelected];
     return {
-      ids: dataArray.map((item) => item.id),
-      names: dataArray.map((item) => item.name),
+      ids: [...domainsSelected].map((item) => item.id),
+      names: [...domainsSelected].map((item) => item.name),
     };
   }, [domainsSelected]);
 
@@ -31,7 +32,7 @@ const DomainMainTenanceModal = ({ isOpen, onClose }) => {
   const handleSubmit = () => {
     Logger.debug("OVF 무시:", ignoreOVF);
 
-    ids.forEach((domainId) => {
+    [...ids]?.forEach((domainId) => {
       maintenanceDomain({ domainId, dataCenterId: datacentersSelected[0]?.id, ovf: ignoreOVF });
     });
   };

@@ -96,18 +96,16 @@ const VmDiskDupl = ({
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <div className="vm-disk-button center mb-2.5">
+      <div className="vm-disk-search f-start mb-2.5">
         <FilterButton
           options={diskFilters}
           activeOption={activeDiskType}
           onClick={setActiveDiskType}
         />
-        <div className="vm-disk-search center">
-          {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
-          <VmDiskActionButtons
-            status={disksSelected[0]?.active ? "active" : "deactive"}            
-          />
-        </div>
+        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
+        <VmDiskActionButtons
+          status={disksSelected[0]?.active ? "active" : "deactive"}            
+        />
       </div>
       
       <TablesOuter target={"vmdisk"}

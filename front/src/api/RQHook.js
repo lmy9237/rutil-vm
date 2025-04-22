@@ -3450,6 +3450,7 @@ export const useAddNetwork = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddNetwork ... res: `, res)
+      toast.success(`${Localization.kr.NETWORK} ${Localization.kr.CREATE} 요청완료`);
       queryClient.invalidateQueries('allNetworks'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess();
     },
@@ -3479,6 +3480,7 @@ export const useEditNetwork = (
     },
     onSuccess: (res, { networkId }) => {
       Logger.debug(`RQHook > useEditNetwork ... res: `, res)
+      toast.success(`${Localization.kr.NETWORK} ${Localization.kr.UPDATE} 요청완료`);
       queryClient.invalidateQueries('allNetworks'); // 전체 네트워크 목록 업데이트
       queryClient.invalidateQueries(['networkById', networkId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess();

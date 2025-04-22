@@ -323,8 +323,8 @@ textarea {
   z-index: 999;
 }
 .toast > div:last-child {
-  display:flex;align-items:center;justify-content:flex-start;flex-direction:row;
   text-align: left !important;
+  word-break: break-all;
 }
 .toast-success {
   border-left: 4px solid limegreen;

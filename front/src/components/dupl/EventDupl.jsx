@@ -8,6 +8,7 @@ import SearchBox from "../button/SearchBox";
 import TablesOuter from "../table/TablesOuter";
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
+import EventActionButtons from "./EventActionButtons";
 
 /**
  * @name HostEvents
@@ -38,9 +39,10 @@ const EventDupl = ({
 
   Logger.debug("EventDupl ...");
   return (
-    <>
+    <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
+        <EventActionButtons />
       </div>
 
       <TablesOuter target={"event"}
@@ -50,16 +52,13 @@ const EventDupl = ({
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         /*shouldHighlight1stCol={true}*/
-        onRowClick={(selectedRows) => setEventsSelected(selectedRows)}
+        onRowClick={(selectedRows) => {setEventsSelected(selectedRows)}}
         /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       
       <SelectedIdView items={eventsSelected} />
-      
-      {/* 이벤트 모달창 */}
-      
-    </>
+    </div>
   );
 };
 

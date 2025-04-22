@@ -2051,14 +2051,14 @@ const ApiManager = {
    * @param {Object} networkData 
    * @returns {Promise<Object>}
    */
-    editNetwork: async (networkId, networkData) => {
-      return makeAPICall({
-        method: "PUT",
-        url: ENDPOINTS.EDIT_NETWORK(networkId),
-        data: networkData, 
-        // defaultValues: DEFAULT_VALUES.EDIT_NETWORK
-      });
-    },
+  editNetwork: async (networkId, networkData) => {
+    return makeAPICall({
+      method: "PUT",
+      url: ENDPOINTS.EDIT_NETWORK(networkId),
+      data: networkData, 
+      // defaultValues: DEFAULT_VALUES.EDIT_NETWORK
+    });
+  },
   /**
    * @name ApiManager.deleteNetwork
    * @description 네트워크 삭제

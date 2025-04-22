@@ -58,7 +58,7 @@ const ComputingTree = ({}) => {
       {/* 두 번째 레벨 (Data Center) */}
       {secondVisibleComputing() && navClusters && navClusters.map((dataCenter) => {
         const isDataCenterOpen = openDataCentersComputing(dataCenter.id) || false;
-        const hasClusters = Array.isArray(dataCenter.clusters) && dataCenter.clusters.length > 0;
+        const hasClusters = [...dataCenter.clusters]?.length > 0;
         return (
           <div key={dataCenter.id} className="tmi-g">
             <TreeMenuItem level={2}
@@ -87,9 +87,9 @@ const ComputingTree = ({}) => {
             />
 
             {/* 세 번째 레벨 (Clusters) */}
-            {isDataCenterOpen && Array.isArray(dataCenter.clusters) && dataCenter.clusters.map((cluster) => {
+            {isDataCenterOpen && [...dataCenter.clusters].map((cluster) => {
               const isClusterOpen = openClustersComputing(cluster.id) || false;
-              const hasHosts = Array.isArray(cluster.hosts) && cluster.hosts.length > 0;
+              const hasHosts = [...cluster.hosts]?.length > 0;
               return (
                 <div key={cluster.id} className="tmi-g">
                   <TreeMenuItem level={3}
@@ -122,9 +122,9 @@ const ComputingTree = ({}) => {
                   {isClusterOpen && (
                     <>
                       {/* Hosts */}
-                      {Array.isArray(cluster.hosts) && cluster.hosts.map((host) => {
+                      {[...cluster.hosts]?.map((host) => {
                         const isHostOpen = openHostsComputing(host.id) || false;
-                        const hasVMs = Array.isArray(host.vms) && host.vms.length > 0;
+                        const hasVMs = [...host.vms]?.length > 0;
                         return (
                           <div key={host.id} className="tmi-g">
                             <TreeMenuItem level={4}
@@ -154,7 +154,7 @@ const ComputingTree = ({}) => {
                               }}
                             />
                             {/* 다섯 번째 레벨 (VMs under Host) */}
-                            {isHostOpen && Array.isArray(host.vms) && host.vms.map((vm) => (
+                            {isHostOpen && [...host.vms]?.map((vm) => (
                               <div key={vm.id} className="tmi-g">
                                 <TreeMenuItem level={5}
                                   title={vm.name}
@@ -191,7 +191,7 @@ const ComputingTree = ({}) => {
                         )}
                       )}
                       {/* VM(중지) */}
-                      {Array.isArray(cluster.vmDowns) && cluster.vmDowns.map((vm) => (
+                      {[...cluster.vmDowns]?.map((vm) => (
                         <div key={vm.id} className="tmi-g">
                           <TreeMenuItem level={4}
                             title={vm.name}

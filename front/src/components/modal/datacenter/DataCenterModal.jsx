@@ -50,6 +50,7 @@ const DataCenterModal = ({
   const onSuccess = () => {
     onClose();
     toast.success(`${Localization.kr.DATA_CENTER} ${dcLabel} 완료`);
+    // TODO: 제거 RQHook에서 처리하도록 구현
   };
   const { data: datacenter } = useDataCenter(datacenterId);
   const { mutate: addDataCenter } = useAddDataCenter(onSuccess, () => onClose());

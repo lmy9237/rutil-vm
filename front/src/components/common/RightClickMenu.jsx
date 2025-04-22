@@ -9,6 +9,7 @@ import VmModals from "../modal/vm/VmModals";
 import TemplateModals from "../modal/template/TemplateModals";
 import NetworkModals from "../modal/network/NetworkModals";
 import DomainModals from "../modal/domain/DomainModals";
+import EventModals from "../modal/event/EventModals";
 import SettingUsersModals from "../modal/settings/SettingUsersModals";
 
 import DataCenterActionButtons from "../dupl/DataCenterActionButtons";
@@ -21,10 +22,10 @@ import DomainActionButtons from "../dupl/DomainActionButtons";
 import DiskActionButtons from "../dupl/DiskActionButtons";
 import VmDiskActionButtons from "../dupl/VmDiskActionButtons";
 import SettingUsersActionButtons from "../dupl/SettingUsersActionButtons"
+import EventActionButtons from "../dupl/EventActionButtons"
 import VmDiskModals from "../modal/vm/VmDiskModals";
 import DiskModals from "../modal/disk/DiskModals";
 import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
-import Logger from "../../utils/Logger";
 
 /**
  * @name RightClickMenu
@@ -46,6 +47,7 @@ const RightClickMenu = () => {
     vnicProfilesSelected, // setVnicProfilesSelected,
     domainsSelected, // setDomainsSelected,
     disksSelected, // setDisksSelected,
+    eventsSelected, // setEventsSelected,
     usersSelected, // setUsersSelected,
     sourceContext,
     clearAllSelected,
@@ -54,11 +56,10 @@ const RightClickMenu = () => {
   const menuRef = useRef(null); // ✅ context menu 영역 참조
   useClickOutside(menuRef, (e) => {
     if (contextMenu() !== null) {
-      setTimeout(() => clearAllContextMenu(), 800)
+      setTimeout(() => clearAllContextMenu(), 250)
     }
   })
 
-  Logger.debug(`RightClickMenu ... `)
   return (
     <>
       <DataCenterModals dataCenter={datacentersSelected[0] ?? null} />
@@ -74,6 +75,7 @@ const RightClickMenu = () => {
       />
       <DiskModals disk={disksSelected[0] ?? null} />
       <VmDiskModals disk={disksSelected[0] ?? null} />
+      <EventModals event={eventsSelected[0] ?? null}/>
       <SettingUsersModals user={usersSelected[0] ?? null} />
       {(contextMenu() !== null && contextMenuType() !== null) ? (
         <div id="right-click-menu-box"
@@ -133,7 +135,9 @@ const RightClickMenu = () => {
               status={contextMenu()?.item?.status}
             />
           ) : (contextMenuType() === "event") ? (
-            null
+            <EventActionButtons actionType={"context"}
+              status={contextMenu()?.item?.status}
+            />
           ) : null}
         </div>
       ) : null}
