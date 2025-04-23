@@ -252,22 +252,22 @@ class StorageController: BaseController() {
 		return ResponseEntity.ok(iDomain.findAllDataCentersFromStorageDomain(storageDomainId))
 	}
 
-	// @ApiOperation(
-	// 	httpMethod="GET",
-	// 	value="스토리지 도메인 활성화된 데이터센터 목록",
-	// 	notes="스토리지 도메인 활성화된 데이터센터 목록"
-	// )
-	// @ApiResponses(
-	// 	ApiResponse(code = 200, message = "OK")
-	// )
-	// @GetMapping("/dataCenters")
-	// @ResponseStatus(HttpStatus.OK)
-	// @ResponseBody
-	// fun activeDatacenters(
-	// ): ResponseEntity<List<DataCenterVo>> {
-	// 	log.info("/storages/datacenters ...")
-	// 	return ResponseEntity.ok(iDomain.findAllDataCenterFromStorageDomain())
-	// }
+	@ApiOperation(
+		httpMethod="GET",
+		value="스토리지 도메인 활성화된 데이터센터 목록",
+		notes="스토리지 도메인 활성화된 데이터센터 목록"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/dataCenters")
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	fun activeDatacenters(
+	): ResponseEntity<List<DataCenterVo>> {
+		log.info("/storages/datacenters ...")
+		return ResponseEntity.ok(iDomain.findAllDataCenterFromStorageDomain())
+	}
 
 	@ApiOperation(
 		httpMethod="GET",

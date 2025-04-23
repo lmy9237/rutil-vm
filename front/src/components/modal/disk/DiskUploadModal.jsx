@@ -15,6 +15,7 @@ import {
   useUploadDisk,
   useAddJob,
   useEndJob,
+  useAllDataCenters,
 } from "../../../api/RQHook";
 import "../domain/MDomain.css";
 
@@ -83,6 +84,8 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
     isLoading: isDatacentersLoading,
   } = useAllActiveDataCenters((e) => ({ ...e }));
 
+  // const filteredDatacenters = datacenters.filter((d) => d.status === "UP");
+
   // 선택한 데이터센터가 가진 도메인 가져오기
   const {
     data: domains = [],
@@ -105,7 +108,12 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (datacenters && datacenters.length > 0) {
-      setDataCenterVo({id: datacenters[0].id});
+    const defaultDc = datacenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
+      if (defaultDc) {
+        setDataCenterVo({ id: defaultDc.id, name: defaultDc.name });
+      } else {
+        setDataCenterVo({ id: datacenters[0].id, name: datacenters[0].name });
+      }
     }
   }, [datacenters]);
 
@@ -134,6 +142,11 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
   const handleInputChangeCheck = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
   };
+
+  const handleSelectIdChange = (setVo, voList) => (e) => {
+    const selected = voList.find((item) => item.id === e.target.value);
+    if (selected) setVo({ id: selected.id, name: selected.name });
+  }; 
 
   const validateForm = () => {
     checkName(formState.alias)
@@ -221,10 +234,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                 value={dataCenterVo.id}
                 loading={isDatacentersLoading}
                 options={datacenters}
-                onChange={(e) => {
-                  const selected = datacenters.find(dc => dc.id === e.target.value);
-                  if (selected) setDataCenterVo({ id: selected.id, name: selected.name });
-                }}
+                onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
               />
               {/* <LabelSelectOptionsID
                 label="스토리지 도메인"
@@ -240,10 +250,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                 <label className="">스토리지 도메인</label>
                 <select 
                   value={domainVo.id} 
-                  onChange={(e) => {
-                    const selected = domains.find(d => d.id === e.target.value);
-                    if (selected) setDomainVo({ id: selected.id, name: selected.name });
-                  }}
+                  onChange={handleSelectIdChange(setDomainVo, domains)}
                 >
                   {isDomainsLoading ? (
                     <option>로딩중~</option>
@@ -262,20 +269,14 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                 value={diskProfileVo.id}
                 loading={isDiskProfilesLoading}
                 options={diskProfiles}
-                onChange={(e) => {
-                  const selected = diskProfiles.find(dp => dp.id === e.target.value);
-                  if (selected) setDiskProfileVo({ id: selected.id, name: selected.name });
-                }}
+                onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles)}
               />
               <LabelSelectOptionsID
                 label={Localization.kr.HOST}
                 value={hostVo.id}
                 loading={isHostsLoading}
                 options={hosts}
-                onChange={(e) => {
-                  const selected = hosts.find(h => h.id === e.target.value);
-                  if (selected) setHostVo({ id: selected.id, name: selected.name });
-                }}
+                onChange={handleSelectIdChange(setHostVo, hosts)}
               />
             </div>
           
