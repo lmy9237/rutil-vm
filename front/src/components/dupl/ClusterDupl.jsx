@@ -82,11 +82,6 @@ const ClusterDupl = ({
         ]}*/
       />
       <SelectedIdView items={clustersSelected} />
-
-      {/* 클러스터 모달창 */}
-      <ClusterModals cluster={clustersSelected[0]}
-        datacenterId={datacenterId}
-      />
     </div>
   );
 };

@@ -232,7 +232,7 @@ const VmDiskModal = ({
     Logger.debug(`VmDiskModal > handleOkClick ... Form Data: `, newDisk);
     onCreateDisk(newDisk);
     onClose();
-  }, []);    
+  }, [formState, storageDomainVo, diskProfileVo]);
 
 
   const handleFormSubmit = useCallback(() => {

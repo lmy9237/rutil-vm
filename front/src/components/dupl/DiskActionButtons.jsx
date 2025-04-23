@@ -11,9 +11,10 @@ const DiskActionButtons = ({
 }) => {
   const { setActiveModal } = useUIState()
   const { disksSelected } = useGlobal()
+  const isContextMenu = actionType === "context";
 
   const basicActions = [
-    { type: "create", onBtnClick: () => setActiveModal("disk:create"), label: Localization.kr.CREATE, disabled: disksSelected.length > 0, },
+    { type: "create", onBtnClick: () => setActiveModal("disk:create"), label: Localization.kr.CREATE, disabled: isContextMenu && disksSelected.length > 0, },
     { type: "update", onBtnClick: () => setActiveModal("disk:update"), label: Localization.kr.UPDATE, disabled: disksSelected.length !== 1, },
     { type: "remove", onBtnClick: () => setActiveModal("disk:remove"), label: Localization.kr.REMOVE, disabled: disksSelected.length === 0, },
     { type: "move",   onBtnClick: () => setActiveModal("disk:move"),   label: Localization.kr.MOVE, disabled: disksSelected.length === 0, },

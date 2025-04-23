@@ -9,9 +9,10 @@ const NicActionButtons = ({
 }) => {
   const { setActiveModal } = useUIState()
   const { nicsSelected } = useGlobal()
+  const isContextMenu = actionType === "context";
 
   const basicActions = useMemo(() => ([
-    { type: "create", onBtnClick: () => setActiveModal("nic:create"), label: Localization.kr.CREATE, disabled: nicsSelected.length > 0, },
+    { type: "create", onBtnClick: () => setActiveModal("nic:create"), label: Localization.kr.CREATE, disabled: isContextMenu && nicsSelected.length > 0, },
     { type: "update", onBtnClick: () => setActiveModal("nic:update"), label: Localization.kr.UPDATE, disabled: nicsSelected.length !== 1, },
     { type: "remove", onBtnClick: () => setActiveModal("nic:remove"), label: Localization.kr.REMOVE, disabled: nicsSelected.length === 0, },
   ]), [nicsSelected]);

@@ -17,12 +17,12 @@ const LabelSelectOptions = ({
   const [open, setOpen] = useState(false);
   const selectRef = useRef(null);
 
-  const handleOptionClick = useCallback((optionValue) => {
+  const handleOptionClick = (optionValue) => {
     Logger.debug(`LabelSelectOptions > handleOptionClick ... optionValue: ${optionValue}`)
     if (disabled) return;
     onChange({ target: { value: optionValue } });
     setOpen(false);
-  }, [disabled]);
+  }/* useCallback 불가능 - 매번 랜더링 필요 */
 
   useClickOutside(selectRef, (e) => setOpen(false))
 

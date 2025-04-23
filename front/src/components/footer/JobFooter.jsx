@@ -2,12 +2,13 @@ import React, { useEffect, useMemo, useState } from "react";
 import useGlobal from "../../hooks/useGlobal";
 import useFooterState from "../../hooks/useFooterState";
 import SelectedIdView from "../common/SelectedIdView";
+import TableColumnsInfo from "../table/TableColumnsInfo";
+import TablesOuter from "../table/TablesOuter";
 import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
 import { useAllJobs } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
-import TableColumnsInfo from "../table/TableColumnsInfo";
-import TablesOuter from "../table/TablesOuter";
 import "./JobFooter.css";
+import Localization from "../../utils/Localization";
 
 /**
  * @name JobFooter
@@ -41,6 +42,7 @@ const JobFooter = ({
     status: e?.status,
     startTime: e?.startTime,
     endTime: e?.endTime,
+    timestamp: isNaN(e?.timestamp) ? 'N/A' : Localization.kr.renderTime(e?.timestamp),
   }))), [jobs]);
 
   const FOOTER_TOP_HORIZ_BAR_HEIGHT = 40

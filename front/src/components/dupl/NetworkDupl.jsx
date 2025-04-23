@@ -91,9 +91,6 @@ const NetworkDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={networksSelected} />
-
-      {/* 네트워크 모달창 */}
-      <NetworkModals network={networksSelected[0]} />
     </div>
   );
 };

@@ -25,7 +25,7 @@ const DomainActionButtons = ({
   const isUnattached = status === "UNATTACHED";
 
   const basicActions = [
-    { type: "create",  onBtnClick: () => setActiveModal("domain:create"),  label: Localization.kr.CREATE,  disabled: domainsSelected.length > 0},
+    { type: "create",  onBtnClick: () => setActiveModal("domain:create"),  label: Localization.kr.CREATE,  disabled: isContextMenu && domainsSelected.length > 0},
     { type: "import",  onBtnClick: () => setActiveModal("domain:import"),  label: Localization.kr.IMPORT,  disabled: domainsSelected.length > 0 || isMaintenance, },
     { type: "update",  onBtnClick: () => setActiveModal("domain:update"),  label: Localization.kr.UPDATE,  disabled: domainsSelected.length !== 1 || isMaintenance, },
     { type: "remove",  onBtnClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length === 0 || !isUnattached  },
@@ -33,11 +33,10 @@ const DomainActionButtons = ({
     { type: "destory", onBtnClick: () => setActiveModal("domain:destroy"), label: Localization.kr.DESTROY, disabled: domainsSelected.length === 0 || isLocked || isMaintenance,  },
   ];
 
-  Logger.debug(`...`)
   return (
     <>
-      <ActionButtonGroup actionType={actionType}
-        actions={basicActions}
+      <ActionButtonGroup 
+        actionType={actionType} actions={basicActions}
       >
         {!isContextMenu && (
           <ActionButton label={Localization.kr.DISK} onClick={() => navigate("/storages/disks")} actionType={actionType} />

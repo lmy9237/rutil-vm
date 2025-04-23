@@ -29,9 +29,7 @@ fun Connection.findAllSnapshotsFromVm(vmId: String, follow: String = ""): Result
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.SNAPSHOT, "목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
-
-}
+	throw if (it is Error) it.toItCloudException() else it}
 
 private fun Connection.srvSnapshotFromVm(vmId: String, snapshotId: String): SnapshotService =
 	this.srvSnapshotsFromVm(vmId).snapshotService(snapshotId)

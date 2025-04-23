@@ -25,7 +25,7 @@ const VmSnapshotActionButtons = ({
   const vmSelected1st = [...vmsSelected][0] ?? null
   const isVmUp = useMemo(() => vmSelected1st?.status === "UP", [vmsSelected])
   const snapshotSelected1st =  [...snapshotsSelected][0] ?? null
-  const isSnapshotInPreview = useMemo(() => snapshotSelected1st?.status === "in_preview", [snapshotsSelected])
+  const isSnapshotInPreview = useMemo(() => [...snapshotsSelected]?.every((e) => e?.status === "in_preview"), [snapshotsSelected])
 
   const basicActions = useMemo(() => ([
     { type: "create",   onBtnClick: () => setActiveModal("vmsnapshot:create"), label: Localization.kr.CREATE, disabled: isContextMenu && snapshotsSelected.length > 0, },

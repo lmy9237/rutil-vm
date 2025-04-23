@@ -8,11 +8,10 @@ import Logger from "../../utils/Logger";
 import useGlobal from "../../hooks/useGlobal";
 import useClickOutside from "../../hooks/useClickOutside";
 
-// const HostActionButtons = ({ actionType = "default", status }) => {
 const HostActionButtons = ({ 
   actionType = "default"
 }) => {
-  const { setActiveModal, setContextMenu } = useUIState()
+  const { setActiveModal } = useUIState()
   const { hostsSelected } = useGlobal()
   const isContextMenu = actionType === "context";
 
@@ -30,7 +29,7 @@ const HostActionButtons = ({
   const isMaintenance = selected1st?.status === "MAINTENANCE";
 
   const basicActions = [
-    { type: "create", onBtnClick: () => setActiveModal("host:create"), label: Localization.kr.CREATE, disabled: hostsSelected.length > 0, },
+    { type: "create", onBtnClick: () => setActiveModal("host:create"), label: Localization.kr.CREATE, disabled: isContextMenu && hostsSelected.length > 0, },
     { type: "update", onBtnClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: hostsSelected.length !== 1, },
     { type: "remove", onBtnClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: hostsSelected.length === 0 || !isMaintenance, },
   ];
@@ -49,8 +48,7 @@ const HostActionButtons = ({
   Logger.debug(`HostActionButtons ... `)
   return (
     <ActionButtonGroup
-      actionType={actionType}
-      actions={basicActions}
+      actionType={actionType} actions={basicActions}
     >
       {isContextMenu ? (
         manageActions.map(({ type, label, disabled }) => (

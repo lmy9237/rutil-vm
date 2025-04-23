@@ -65,8 +65,8 @@ const VmInfo = () => {
   const sections = useMemo(() => ([
     { id: "general", label: Localization.kr.GENERAL },
     { id: "nics", label: Localization.kr.NICS },
-    { id: "disks", label: "디스크" },
-    { id: "snapshots", label: "스냅샷" },
+    { id: "disks", label: Localization.kr.DISK },
+    { id: "snapshots", label: Localization.kr.SNAPSHOT },
     { id: "applications", label: "애플리케이션" },
     { id: "hostDevices", label: `${Localization.kr.HOST} 장치` },
     { id: "events", label: Localization.kr.EVENT },
@@ -115,7 +115,7 @@ const VmInfo = () => {
     { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF, disabled: !isUp  },
     { type: "console",   onClick: () => setActiveModal("vm:console", vmId), label: Localization.kr.CONSOLE, disabled: !isUp },
     { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: "스냅샷 생성", disabled: !(isUp || isDown) },
-    { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: isUp },
+    { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: !isUp },
   ]), [vm]);
 
   const popupItems = [

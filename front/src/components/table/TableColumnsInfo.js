@@ -809,7 +809,7 @@ const TableColumnsInfo = {
     { header: '알림', accessor: '_severity', clickable: false, width:'40px'},    
     { header: '메세지', accessor: 'description', clickable: false},
     // { header: '상관 관계 ID', accessor: 'correlationId', clickable: false },
-    // // { header: '소스', accessor: 'source', clickable: false },
+    // { header: '소스', accessor: 'source', clickable: false },
     // { header: '사용자 지정 이벤트 ID', accessor: 'customEventId', clickable: false }
   ],
 
@@ -820,8 +820,8 @@ const TableColumnsInfo = {
     { header: '작업명',                        accessor: 'description' },
     { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime' , width:'120px' },
     { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime' , width:'120px'},
-    { header: Localization.kr.STATUS,          accessor: 'statusLabel', width:'120px' },
-    { header: Localization.kr.TIMESTAMP,       accessor: 'timestampLabel' , width:'30%' },
+    { header: Localization.kr.STATUS,          accessor: 'status', width:'120px' },
+    { header: Localization.kr.TIMESTAMP,       accessor: 'timestamp' , width:'30%' },
   ],
   // 사용자
   SETTING_USER: [

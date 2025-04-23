@@ -35,16 +35,17 @@ const VmActionButtons = ({
 
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "UP");
   const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "DOWN");
+  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status.includes("UP", "POWERING_DOWN"));
   
   const basicActions = [
-    { type: "create",     onBtnClick: () => setActiveModal("vm:create"), label: Localization.kr.CREATE, disabled: vmsSelected.length > 0 },
+    { type: "create",     onBtnClick: () => setActiveModal("vm:create"), label: Localization.kr.CREATE, disabled: isContextMenu && vmsSelected.length > 0 },
     { type: "update",     onBtnClick: () => setActiveModal("vm:update"), label: Localization.kr.UPDATE, disabled: vmsSelected.length !== 1 },
     { type: "start",      onBtnClick: () => setActiveModal("vm:start"), label: Localization.kr.START, disabled: !allDown },
     { type: "pause",      onBtnClick: () => setActiveModal("vm:pause"), label: Localization.kr.PAUSE, disabled: !allUp },
     { type: "reboot",     onBtnClick: () => setActiveModal("vm:reboot"), label: Localization.kr.REBOOT, disabled: !allUp },
     { type: "reset",      onBtnClick: () => setActiveModal("vm:reset"), label: Localization.kr.RESET, disabled: !allUp },
-    { type: "shutdown",   onBtnClick: () => setActiveModal("vm:shutdown"), label: Localization.kr.END, disabled: !allUp },
-    { type: "powerOff",   onBtnClick: () => setActiveModal("vm:powerOff"), label: Localization.kr.POWER_OFF, disabled: !allUp },
+    { type: "shutdown",   onBtnClick: () => setActiveModal("vm:shutdown"), label: Localization.kr.END, disabled: vmsSelected.length === 0 || !allUp },
+    { type: "powerOff",   onBtnClick: () => setActiveModal("vm:powerOff"), label: Localization.kr.POWER_OFF, disabled: vmsSelected.length === 0 || !allOkay2PowerDown  },
     { type: "console",    onBtnClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE, disabled: !allUp },
     { type: "migration",  onBtnClick: () => setActiveModal("vm:migration"), label: Localization.kr.MIGRATION, disabled: !allUp },
     { type: "snapshot",   onBtnClick: () => setActiveModal("vm:snapshot"), label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`}

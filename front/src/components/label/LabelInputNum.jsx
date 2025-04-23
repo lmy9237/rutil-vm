@@ -15,21 +15,17 @@ import LabelInput from "./LabelInput";
  * @returns {JSX.Element} LabelInputNum
  */
 const LabelInputNum = ({
-  className,
   label,
   id,
   value,
   autoFocus = false,
-  onChange,
-  disabled,
-}) => (
-  <LabelInput className={className}
+  ...props
+}) => ( 
+  <LabelInput id={id}
     label={label}
-    id={id}
     value={value}
     autoFocus={autoFocus}
-    onChange={onChange}
-    disabled={disabled}
+    {...props}
   />
 );
 

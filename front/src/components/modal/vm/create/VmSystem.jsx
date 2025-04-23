@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import LabelInputNum from "../../../label/LabelInputNum";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../../../icons/RutilVmIcons";
@@ -34,20 +34,27 @@ const VmSystem = ({
     const totalCpu = parseInt(value, 10);
     if (isNaN(totalCpu) || totalCpu <= 0) return;
   
-    setFormSystemState((prev) => ({
-      ...prev,
-      cpuTopologyCnt: totalCpu,
-      cpuTopologySocket: totalCpu,
-      cpuTopologyCore: 1,
-      cpuTopologyThread: 1,
-    }));
-  };
+    Logger.debug(`VmSystem > handleCpuChange ... value:${e.target.value}\ntotalCpu:${totalCpu}`)
+    const _formSystemState = {
+
+    }
+    setFormSystemState((prev) => {
+      Logger.debug(`VmSystem > handleCpuChange ... prev: `, prev)
+      return {
+        ...prev,
+        cpuTopologyCnt: totalCpu,
+        cpuTopologySocket: totalCpu,
+        cpuTopologyCore: 1,
+        cpuTopologyThread: 1,
+      }
+    });
+    Logger.debug(`VmSystem > handleCpuChange ... formState: `, formSystemState)
+  }
   
   const handleSocketChange = (e) => {
     const socket = parseInt(e.target.value, 10);
     const totalCpu = formSystemState.cpuTopologyCnt;
-    if (!socket || socket <= 0 || !totalCpu) return;
-  
+    /*if (!socket || socket <= 0 || !totalCpu) return;
     let core = 1;
     let thread = 1;
     if (totalCpu % socket === 0) {
@@ -56,49 +63,52 @@ const VmSystem = ({
       core = 1;
       thread = totalCpu / socket;
     }
-  
-    const newThread = Math.round(totalCpu / (socket * core));
-  
+    */
+    const core = totalCpu / socket
+    const thread = Math.round(totalCpu / (socket * core));
+    Logger.debug(`VmSystem > handleSocketChange ... value: ${e.target.value}\ntotolCpu:${totalCpu}\nsocket:${socket}\ncore:${core}\nthread:${thread}`)
     setFormSystemState((prev) => ({
       ...prev,
       cpuTopologySocket: socket,
       cpuTopologyCore: core,
-      cpuTopologyThread: newThread > 0 ? newThread : 1,
+      cpuTopologyThread: thread > 0 ? thread : 1,
     }));
   };
   
   const handleCorePerSocketChange = (e) => {
     const core = parseInt(e.target.value, 10);
     const totalCpu = formSystemState.cpuTopologyCnt;
+    /*
     const socket = formSystemState.cpuTopologySocket || 1;
+
     if (!core || core <= 0 || !totalCpu) return;
-  
-    const newThread = Math.round(totalCpu / (socket * core));
-  
+    */
+    const socket = (totalCpu / core) || 1;
+    const thread = Math.round(totalCpu / (socket * core)) || 1;
+
+    Logger.debug(`VmSystem > handleCorePerSocketChange ... value: ${e.target.value}\ntotolCpu:${totalCpu}\nsocket:${socket}\ncore:${core}\nthread:${thread}`)
     setFormSystemState((prev) => ({
       ...prev,
+      cpuTopologySocket: socket,
       cpuTopologyCore: core,
-      cpuTopologyThread: newThread > 0 ? newThread : 1,
+      cpuTopologyThread: thread,
     }));
   };
   
   const handleThreadPerCoreChange = (e) => {
     const thread = parseInt(e.target.value, 10);
     const totalCpu = formSystemState.cpuTopologyCnt;
-    const socket = formSystemState.cpuTopologySocket || 1;
-    if (!thread || thread <= 0 || !totalCpu) return;
+    const socket = (totalCpu / thread) || 1;  
+    const core = Math.round(totalCpu / (socket * thread)) || 1;
   
-    const newCore = Math.round(totalCpu / (socket * thread));
-  
+    Logger.debug(`VmSystem > handleThreadPerCoreChange ... value: ${e.target.value}\ntotolCpu:${totalCpu}\nsocket:${socket}\ncore:${core}\nthread:${thread}`)
     setFormSystemState((prev) => ({
       ...prev,
+      cpuTopologySocket: socket,
+      cpuTopologyCore: core,
       cpuTopologyThread: thread,
-      cpuTopologyCore: newCore > 0 ? newCore : 1,
     }));
-  };
-  
-  
-  
+  }
 
   // 최대메모리: 메모리크기 x 4 , 할당할 실제 메모리: 메모리크기와 같음
   const handleInputChange = (field) => (e) => {
@@ -121,51 +131,47 @@ const VmSystem = ({
   
       return updatedState;
     });
-  };
+  }
 
   // 토글 상태
   const [showCpuDetail, setShowCpuDetail] = useState(false); 
   const toggleCpuDetail = () => setShowCpuDetail(prev => !prev);
-
   const selectionNumPredicate = (v) => ({ value: v, label: v.toString() });
-
   const selectionsSockets = () => {
+    Logger.debug(`VmSystem > selectionsSockets ... `)
     const cpuCnt = formSystemState.cpuTopologyCnt;
     if (!cpuCnt || isNaN(cpuCnt)) return [];
     return calculateFactors(cpuCnt).map(selectionNumPredicate);
-  };
+  }
   
-  const selectionsCoresPerSocket = () => selectionsSockets();
-  
+  const selectionsCoresPerSocket = () => {
+    Logger.debug(`VmSystem > selectionsSockets ... `)
+    return selectionsSockets()
+  }
+
   const selectionsThreadsPerCore = () => {
     const cpuCnt = formSystemState.cpuTopologyCnt;
     if (!cpuCnt || isNaN(cpuCnt)) return [];
     return calculateFactors(cpuCnt).map(selectionNumPredicate);
-  };
+  }
 
   return (
     <>
       <div className="edit-second-content">
         <LabelInputNum id="mem" label="메모리 크기(MB)"
           value={formSystemState.memorySize} 
-          onChange={ handleInputChange("memorySize") }
+          onChange={handleInputChange("memorySize")}
         />
         <LabelInputNum id="mem-max"label="최대 메모리(MB)"
           value={formSystemState.memoryMax} 
-          onChange={ handleInputChange("memoryMax") }
+          onChange={handleInputChange("memoryMax")}
         />
         <LabelInputNum id="mem-actual" label="할당할 실제 메모리(MB)"
           value={formSystemState.memoryActual} 
-          onChange={ handleInputChange("memoryActual") }
+          onChange={handleInputChange("memoryActual") }
         />
         <LabelInputNum id="cpu-total" label="총 가상 CPU"
-          value={
-            formSystemState.cpuTopologyCnt !== undefined &&
-            formSystemState.cpuTopologyCnt !== null &&
-            !isNaN(formSystemState.cpuTopologyCnt)
-              ? formSystemState.cpuTopologyCnt
-              : ""
-          }
+          value={formSystemState.cpuTopologyCnt}
           onChange={handleCpuChange}
         />
 

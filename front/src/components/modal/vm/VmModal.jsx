@@ -69,7 +69,7 @@ const infoform = {
 //시스템
 const systemForm = {
   memorySize: 1024, // 메모리 크기
-  memoryMax: 1024, // 최대 메모리
+  memoryMax: (1024*4), // 최대 메모리
   memoryActual: 1024, // 할당할 실제메모리
   cpuTopologyCnt: 1, // 총cpu
   cpuTopologyCore: 1, // 가상 소켓 당 코어
@@ -504,9 +504,8 @@ const VmModal = ({
           </>
         )}
         {selectedModalTab === "system" && (
-          <VmSystem
-            formSystemState={formSystemState}
-            setFormSystemState={setFormSystemState}
+          <VmSystem 
+            formSystemState={formSystemState} setFormSystemState={setFormSystemState}
           />
         )}
         {selectedModalTab === "beginning" && (
