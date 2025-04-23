@@ -129,7 +129,7 @@ const VmModal = ({
   const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
   const [templateVo, setTemplateVo] = useState({ id: "", name: "" });
   const [nicListState, setNicListState] = useState([
-    { id: "", name: "NIC1", vnicProfileVo: { id: "" } },
+    { id: "", name: "nic1", vnicProfileVo: { id: "" } },
   ]);
   const [diskListState, setDiskListState] = useState([]);
   
