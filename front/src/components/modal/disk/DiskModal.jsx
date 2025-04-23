@@ -213,7 +213,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
               value={formState.alias}
               onChange={handleInputChange("alias")}
             />
-            <LabelInput label={Localization.kr.ALIAS}
+            <LabelInput label={Localization.kr.DESCRIPTION}
               value={formState.description}
               onChange={handleInputChange("description")}
             />
@@ -227,7 +227,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
                 if (selected) setDataCenterVo({ id: selected.id, name: selected.name });
               }}
             />
-            <LabelSelectOptionsID label="스토리지 도메인"
+            <LabelSelectOptionsID label={Localization.kr.DOMAIN}
               value={domainVo.id}
               disabled={editMode}
               loading={isDomainsLoading}

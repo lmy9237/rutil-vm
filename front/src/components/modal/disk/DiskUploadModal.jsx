@@ -149,11 +149,13 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
   }; 
 
   const validateForm = () => {
-    checkName(formState.alias)
+    const nameError = checkName(formState.alias);
+    if (nameError) return nameError;
+
     if (!formState.size) return "크기를 입력해주세요.";
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    if (!domainVo.id) return "스토리지 도메인을 선택해주세요.";
-    if (!diskProfileVo.id) return "디스크 프로파일을 선택해주세요.";
+    if (!domainVo.id) return `${Localization.kr.DOMAIN}을 선택해주세요.`;
+    if (!diskProfileVo.id) return `${Localization.kr.DISK_PROFILE}을 선택해주세요.`;
     return null;
   };
 
@@ -182,11 +184,11 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <BaseModal targetName={"디스크"} submitTitle={"업로드"}
+    <BaseModal targetName={Localization.kr.DISK} submitTitle={"업로드"}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "790px" }} 
-    >      
+    >
       <div className="storage-upload-first f-btw">
         <p>파일 선택</p>
         <div>
@@ -213,9 +215,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
         <div className="disk-option">디스크 옵션</div>
           <div className="disk-new-img" style={{ paddingTop: "0.4rem" }}>
             <div className="disk-new-img-left">
-              <LabelInput
-                label="크기(GB)"
-                id="size"
+              <LabelInput id="size" label={Localization.kr.SIZE_ACTUAL}
                 type="number"
                 value={sizeToGB(formState.size)}
                 onChange={handleInputChange("size")}
@@ -241,10 +241,11 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
                 value={domainVo.id}
                 loading={isDomainsLoading}
                 options={domains}
-                onChange={(e) => {
-                  const selected = domains.find(d => d.id === e.target.value);
-                  if (selected) setDomainVo({ id: selected.id, name: selected.name });
-                }}
+                onChange={handleSelectIdChange(setDomainVo, domains)}
+                // onChange={(e) => {
+                //   const selected = domains.find(d => d.id === e.target.value);
+                //   if (selected) setDomainVo({ id: selected.id, name: selected.name });
+                // }}
               /> */}
               <div className='input-select'>
                 <label className="">스토리지 도메인</label>
