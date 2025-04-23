@@ -187,18 +187,17 @@ const ClusterModal = ({
   
 
   useEffect(() => {
-    if (networks && networks.length > 0) {
-      const defaultNetwork = networks.find(n => n.name === "ovirtmgmt");
-      if (defaultNetwork) {
-        setNetworkVo({ id: defaultNetwork.id, name: defaultNetwork.name });
+    if (!editMode && networks && networks.length > 0) {
+      const defaultN = networks.find(n => n.name === "ovirtmgmt");
+      if (defaultN) {
+        setNetworkVo({ id: defaultN.id, name: defaultN.name });
       } else {
         setNetworkVo({ id: networks[0].id, name: networks[0].name });
       }
     } else {
       setNetworkVo({ id: "", name: "" }); // 네트워크 없음 초기화
     }
-  }, [networks]);
-  
+  }, [dataCenterVo.id, networks, editMode]); // 💡 핵심: dataCenterVo.id를 의존성에 추가
 
   useEffect(() => {
     const options = cpuArcOptions[formState.cpuArc] || [];
