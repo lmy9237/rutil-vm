@@ -44,6 +44,3 @@
   background-color: transparent !important; /* 배경 제거 */
   border-radius: 20px;
 }
-.logo-icon:hover{
-  background-color: red !important;
-}

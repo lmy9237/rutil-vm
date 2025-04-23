@@ -2,9 +2,12 @@
 .login-container {
   position: relative;overflow: hidden;z-index: 1;padding:0 20px;
 }
-.login-form-outer {
-  width:400px;height:100%;
-  padding: 0 40px;
+
+.login-form-outer{
+  height:100%;
+  width: 35%;
+  display: flex;
+  flex-direction:column;justify-content:center;align-items:center;
 }
 .login-form-box {
   background: white;

@@ -5,6 +5,13 @@
     line-height: 150%;  
     padding: 12px 0;
 }
-
-
+.template-select{
+    max-width: 150px !important;
+}
+.object{
+    max-width: 220px !important;
+}
+.template-select .custom-options{
+    width: 100% !important;
+}
 

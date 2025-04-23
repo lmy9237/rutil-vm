@@ -67,7 +67,8 @@ const VmBoot = ({ isos, isIsoLoading, formBootState, setFormBootState }) => {
             }}
           />
   
-
+          
+        <div style={{ width: "55%" }}>
           <LabelSelectOptionsID
             value={formBootState.connVo?.id}
             disabled={!formBootState.isCdDvdChecked || isos.length === 0}
@@ -78,7 +79,7 @@ const VmBoot = ({ isos, isIsoLoading, formBootState, setFormBootState }) => {
               if (selected) setFormBootState((prev) => ({ ...prev, connVo: { id: selected.id, name: selected.name }}))
             }}
           />
-      
+        </div>
       </div>
       <LabelCheckbox id="enableBootMenu" label="부팅 메뉴를 활성화"
         checked={formBootState.bootingMenu}

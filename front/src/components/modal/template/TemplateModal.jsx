@@ -230,7 +230,7 @@ const TemplateModal = ({
     <BaseModal targetName={`${Localization.kr.TEMPLATE}`} submitTitle={Localization.kr.CREATE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "730px" }}
+      contentStyle={{ width: "800px" }}
     >
       <LabelInput id="name" label={Localization.kr.NAME}
         value={formState.name}
@@ -260,78 +260,85 @@ const TemplateModal = ({
 
       {disks && disks.length > 0 && (
         <>
+          
           <div className="font-bold">디스크 할당</div>
-          <div className="section-table-outer py-1">
-            <table>
-              <thead>
-                <tr>
-                  <th>{Localization.kr.ALIAS}</th>
-                  <th style={{width:'10%'}}>가상 크기</th>
-                  <th style={{width:'10%'}}>포맷</th>
-                  <th>{Localization.kr.TARGET}</th>
-                  <th>디스크 프로파일</th>
-                </tr>
-              </thead>
-              <tbody>
-                {diskVoList.map((disk, index) => (
-                  <tr key={disk.id}>
-                    <td>
-                      <LabelInput label={""}
-                        value={disk.diskImageVo?.alias || ""}
-                        onChange={(e) => handleDiskChange(index, "alias", e.target.value)}
-                      />
-                    </td>
-                    <td>{checkZeroSizeToGiB(disk.diskImageVo?.virtualSize)}</td>
-                    <td>
-                      <LabelSelectOptions
-                        id={`diskFormat-${index}`}
-                        value={disk.diskImageVo?.format}
-                        options={formats}
-                        onChange={(e) => handleDiskChange(index, "format", e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <LabelSelectOptionsID
-                        value={disk.diskImageVo?.storageDomainVo?.id}
-                        loading={isDomainsLoading}
-                        options={domains.filter((d) => d.status === "ACTIVE")}
-                        onChange={(e) => {
-                          const selected = domains.find(d => d.id === e.target.value);
-                          if (selected) {
-                            handleDiskChange(index, "storageDomainVo", selected, true);
-                            const newProfiles = diskProfilesList[selected.id] || [];
-                            if (newProfiles.length > 0) {
-                              handleDiskChange(index, "diskProfileVo", newProfiles[0], true);
-                            }
-                          }
-                        }}                        
-                      />
-                      {(() => {
-                        const selected = domains.find(d => d.id === disk.diskImageVo?.storageDomainVo?.id);
-                        return selected ? (
-                          <div className="text-xs text-gray-500 mt-1">
-                            사용 가능: {checkZeroSizeToGiB(selected.availableSize)} /
-                            총 용량: {checkZeroSizeToGiB(selected.diskSize)}
-                          </div>
-                        ) : null;
-                      })()}
-                    </td>
-                    <td>
-                      <LabelSelectOptionsID
-                        value={disk.diskImageVo?.diskProfileVo?.id}
-                        loading={false}
-                        options={diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || []}
-                        onChange={(e) => {
-                          const selected = (diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || []).find(d => d.id === e.target.value);
-                          if (selected) handleDiskChange(index, "diskProfileVo", selected, true);
-                        }}
-                      />
-                    </td>
+         
+          
+            <div className="section-table-outer py-1">
+              <table>
+                <thead>
+                  <tr>
+                    <th style={{width:"30%"}}>{Localization.kr.ALIAS}</th>
+                    <th style={{width:"20%"}}>가상 크기</th>
+                    <th >포맷</th>
+                    <th >{Localization.kr.TARGET}</th>
+                    <th >디스크 프로파일</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {diskVoList.map((disk, index) => (
+                    <tr key={disk.id}>
+                      <td>
+                        <LabelInput label={""}
+                          value={disk.diskImageVo?.alias || ""}
+                          onChange={(e) => handleDiskChange(index, "alias", e.target.value)}
+                        />
+                      </td>
+                      <td>{checkZeroSizeToGiB(disk.diskImageVo?.virtualSize)}</td>
+                      <td >
+                        <LabelSelectOptions
+                          id={`diskFormat-${index}`}
+                          value={disk.diskImageVo?.format}
+                          options={formats}
+                          className="template-select"
+                          onChange={(e) => handleDiskChange(index, "format", e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <LabelSelectOptionsID
+                          value={disk.diskImageVo?.storageDomainVo?.id}
+                          loading={isDomainsLoading}
+                          className="template-select object"
+                          options={domains.filter((d) => d.status === "ACTIVE")}
+                          onChange={(e) => {
+                            const selected = domains.find(d => d.id === e.target.value);
+                            if (selected) {
+                              handleDiskChange(index, "storageDomainVo", selected, true);
+                              const newProfiles = diskProfilesList[selected.id] || [];
+                              if (newProfiles.length > 0) {
+                                handleDiskChange(index, "diskProfileVo", newProfiles[0], true);
+                              }
+                            }
+                          }}                        
+                        />
+                        {(() => {
+                          const selected = domains.find(d => d.id === disk.diskImageVo?.storageDomainVo?.id);
+                          return selected ? (
+                            <div className="text-xs text-gray-500 mt-1">
+                              사용 가능: {checkZeroSizeToGiB(selected.availableSize)} /
+                              총 용량: {checkZeroSizeToGiB(selected.diskSize)}
+                            </div>
+                          ) : null;
+                        })()}
+                      </td>
+                      <td>
+                        <LabelSelectOptionsID
+                          value={disk.diskImageVo?.diskProfileVo?.id}
+                          loading={false}
+                          className="template-select"
+                          options={diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || []}
+                          onChange={(e) => {
+                            const selected = (diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || []).find(d => d.id === e.target.value);
+                            if (selected) handleDiskChange(index, "diskProfileVo", selected, true);
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          
         </>
       )}
       {!disks || disks.length === 0 ? (

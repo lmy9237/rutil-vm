@@ -221,6 +221,7 @@ const HostNics = ({ hostId }) => {
       dragItem.current = null;
       return;
     }
+    
     dragItem.current = null;
   };
   /*
@@ -326,7 +327,7 @@ const HostNics = ({ hostId }) => {
 
     const expectHostNicData = [...transformedData]?.map((nic) => {
       if (nic.bondingVo?.slaves?.length > 0) {
-        const enrichedSlaves = nic?.bondingVo?.slaves?.map((slave) => {
+        const enrichedSlaves = [...nic?.bondingVo?.slaves]?.map((slave) => {
           const fullSlave = transformedData.find(item => item.id === slave.id);
           return {
             ...slave,
@@ -488,9 +489,9 @@ const HostNics = ({ hostId }) => {
                         onDrop={() => drop(nic.id, "nic")}
                       
                     >
-                      {nic.bondingVo?.slaves?.length > 0 ? (
+                      {nic.bondingVo?.slaves?.length > 1 ? (
                         <div 
-                          className="container flex-col p-2 rounded"                      
+                          className="interface-outer container flex-col p-2 rounded"                      
                           data-tooltip-id={`nic-tooltip-${nic.id}`}
                           data-tooltip-html={generateNicTooltipHTML(nic)}
                         >
@@ -501,7 +502,7 @@ const HostNics = ({ hostId }) => {
                                 <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
                                 {nic.name}
                               </div>
-                              <RVI36 iconDef={rvi36Edit} className="icon cursor-pointer"
+                              <RVI36 iconDef={rvi36Edit()} className="icon cursor-pointer"
                                 onClick={() => {
                                   setSelectedNic(nic);
                                   setIsEditMode(true);
@@ -558,6 +559,7 @@ const HostNics = ({ hostId }) => {
                       )}
                     </div>
 )}
+
                     {/* 화살표 */}
                     <div className="flex items-center justify-center">
                       <RVI24 iconDef={rvi24CompareArrows()} className="icon" />
@@ -593,7 +595,7 @@ const HostNics = ({ hostId }) => {
                         
                             <div className="right-section">
                               <RVI36 
-                                iconDef={rvi36Edit} 
+                                iconDef={rvi36Edit()} 
                                 className="icon cursor-pointer" 
                                 onClick={() => {
                                   setSelectedNetwork(matchedNA); // 통째로 넘김

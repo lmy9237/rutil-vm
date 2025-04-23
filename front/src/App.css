@@ -1472,6 +1472,21 @@ textarea {
     color: rgb(10, 55, 107);
     background: white;
 }
+.snap-hidden-content {
+  display: none;
+  overflow: hidden;
+}
+.snap-hidden-content.active {
+  display: block;
+  max-height: 33vh;
+  border: 1px solid #b9b9b9;
+  border-top: none;
+  color: gray;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.3rem;
+  font-size: var(--fs-16);
+}
 
 #disk_content table {
     width: 100%;

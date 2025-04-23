@@ -85,7 +85,7 @@ const VmDisk = ({
 
       <div className="disk-list-container">
         {diskListState.length > 0 && diskListState.map((disk, index) => (
-          <div key={index} className="disk-item center mb-0.5">
+          <div key={index} className="disk-item f-btw  mb-0.5">
             <div className="f-start">
               <span style={{ marginRight: "25px" }}>
                 <strong>{disk.isExisting ? "[기존] " : disk.isCreated ? "[생성] " : "[연결] "}</strong>
@@ -97,7 +97,7 @@ const VmDisk = ({
             <div className="f-end">
               <span>편집/삭제 2차구현</span>
               <RVI36 
-                iconDef={rvi36Edit} 
+                iconDef={rvi36Edit()} 
                 className="btn-icon"
                 currentColor="transparent"
                 onClick={() => setEditDisk(disk)}

@@ -80,56 +80,56 @@ const VmSnapshots = ({
       <div className="header-right-btns no-search-box">
         <VmSnapshotActionButtons hasLocked={hasLockedSnapshot} />
       </div>
-
-      <div className="snapshot-group f-start">
-        <div 
-          ref={snapshotItemRef}
-          className="vm-snap-item"
-        >
-          {/* 항상 현재 위치 표시 */}
-          <div className="snapshot-item f-start">
-            <RVI16 iconDef={rvi16ChevronDown} />
-            <div className="snapshot-label f-center">
-              <RVI16 iconDef={rvi16Location} className="mx-1.5" />
-              현재 위치
+      <div  className="snapshot-group-outer f-btw">
+        <div  className="snapshot-group f-start">
+          <div ref={snapshotItemRef}
+            className="vm-snap-item"
+          >
+            {/* 항상 현재 위치 표시 */}
+            <div className="snapshot-item f-start">
+              <RVI16 iconDef={rvi16ChevronDown} />
+              <div className="snapshot-label f-center">
+                <RVI16 iconDef={rvi16Location} className="mx-1.5" />
+                현재 위치
+              </div>
             </div>
+    
+            {isSnapshotsLoading && (<Loading/>)}
+
+            {/* TODO: 스냅샷 없을때 */}
+            {!isSnapshotsLoading && transformedData?.length === 0 && (<></>)}
+
+            {[...transformedData]?.map((snapshot) => (
+              <div key={snapshot.id}
+                className={`snapshot-item f-start ${snapshotsSelected[0]?.id === snapshot.id ? "selected" : ""}`}
+                onClick={() => setSnapshotsSelected(snapshot)}
+              >
+                {/* 선택된 스냅샷이면 아래, 아니면 오른쪽 화살표 */}
+                <RVI16 iconDef={
+                  snapshotsSelected[0]?.id === snapshot.id 
+                    ? rvi16ChevronDown 
+                    : rvi16ChevronRight()
+                  }
+                  className="mx-1.5"
+                />
+                <div className='snapshot-label f-center'>
+                  {snapshot?._status}
+                  <RVI16 iconDef={rvi16Desktop} className="mx-1.5" />
+                  {snapshot?.description}
+                </div>          
+              </div>
+            ))}
           </div>
-   
-          {isSnapshotsLoading && (<Loading/>)}
-
-          {/* TODO: 스냅샷 없을때 */}
-          {!isSnapshotsLoading && transformedData?.length === 0 && (<></>)}
-
-          {[...transformedData]?.map((snapshot) => (
-            <div key={snapshot.id}
-              className={`snapshot-item f-start ${snapshotsSelected[0]?.id === snapshot.id ? "selected" : ""}`}
-              onClick={() => setSnapshotsSelected(snapshot)}
-            >
-              {/* 선택된 스냅샷이면 아래, 아니면 오른쪽 화살표 */}
-              <RVI16 iconDef={
-                snapshotsSelected[0]?.id === snapshot.id 
-                  ? rvi16ChevronDown 
-                  : rvi16ChevronRight()
-                }
-                className="mx-1.5"
+          
+          <div className="vm-snap-item">
+            {snapshotsSelected.length > 0 ? (
+              <TablesRow columns={TableColumnsInfo.SNAPSHOT_INFO_FROM_VM}
+                data={snapshotsSelected[0]}
               />
-              <div className='snapshot-label f-center'>
-                {snapshot?._status}
-                <RVI16 iconDef={rvi16Desktop} className="mx-1.5" />
-                {snapshot?.description}
-              </div>          
-            </div>
-          ))}
-        </div>
-        
-        <div className="vm-snap-item">
-          {snapshotsSelected.length > 0 ? (
-            <TablesRow columns={TableColumnsInfo.SNAPSHOT_INFO_FROM_VM}
-              data={snapshotsSelected[0]}
-            />
-          ) : (
-            <></>
-          )}
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
       </div>
       <SelectedIdView items={snapshotsSelected} />

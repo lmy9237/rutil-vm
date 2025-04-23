@@ -213,11 +213,14 @@ const NetworkModal = ({
               }))
             }
           />
-          <LabelInputNum id="vlan" placeholder="VLAN ID"
-            value={formState.vlan}
-            disabled={!formState.vlanEnabled}
-            onChange={(e) => setFormState((prev) => ({ ...prev, vlan: e.target.value }))}
-          />
+          <div style={{width:"330px"}}>
+            <LabelInputNum id="vlan"
+              placeholder="VLAN ID"
+              value={formState.vlan}
+              disabled={!formState.vlanEnabled}
+              onChange={(e) => setFormState((prev) => ({ ...prev, vlan: e.target.value }))}
+            />
+          </div>
         </div>
 
         <LabelCheckbox id="usageVm" label="가상 머신 네트워크"          

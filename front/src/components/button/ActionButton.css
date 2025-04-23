@@ -29,6 +29,7 @@ button.btn-action[disabled]{
 }
 .btn-right-click[disabled]{
   /* background-color: white; */
+  width: 99%;
   color: #888888 !important;
   border: none !important;
 }

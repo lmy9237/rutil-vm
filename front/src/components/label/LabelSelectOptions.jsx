@@ -32,7 +32,7 @@ const LabelSelectOptions = ({
   ), [options, value]);
 
   return (
-    <div className={`input-select custom-select-wrapper${className}`} ref={selectRef}>
+    <div className={`input-select custom-select-wrapper ${className}`} ref={selectRef}>
       {label && <div className="select-label">{label}</div>}
       <div
         className={`custom-select-box f-btw ${disabled ? "disabled" : ""}`}

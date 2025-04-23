@@ -179,18 +179,15 @@
   overflow: hidden;           
   text-overflow: ellipsis;  
 } */
-.assigned-network{
-  background-color: yellow !important;
-  border: 1px solid black;
-}
+
 .assigned-network-content{
   display: flex;
   width: 100%;
   justify-content: space-between;
-  background-color: rgb(145, 144, 199);
 }
-.empty-network-content{
-  background-color: pink;
+
+.interface-outer{
+  background-color: #002a4f;
 }
 .interface-container-outer{
   background: skyblue;

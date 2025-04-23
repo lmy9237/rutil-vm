@@ -55,11 +55,10 @@ const VmNics = ({ vmId }) => {
     pkts: `${nic?.rxTotalError}` || "1",    
   }));
 
-  const [visibleDetails, setVisibleDetails] = useState({});
-  const toggleDetails = (id) => setVisibleDetails((prev) => ({ 
-    ...prev, 
-    [id]: !prev[id]
-  }));
+  const [visibleDetailId, setVisibleDetailId] = useState(null);
+  const toggleDetails = (id) => {
+    setVisibleDetailId((prev) => (prev === id ? null : id));
+  };
 
   const nicRef = useRef()
   useClickOutside(nicRef, (e) => setNicsSelected([])) /* 외부 창을 눌렀을 때 선택 해제 */
@@ -86,13 +85,18 @@ const VmNics = ({ vmId }) => {
           [...transformedData].map((nic, i) => (
             <div key={nic?.id}
               className={`network_content2 ${nicsSelected[0]?.id === nic.id ? "selected" : ""}`}
-              onClick={() => setNicsSelected(nic)} // NIC 선택 시 상태 업데이트
+              onClick={() => {
+                setNicsSelected(nic)
+                setVisibleDetailId(nic.id);
+              }} // NIC 선택 시 상태 업데이트
             >
               <div className="network-content"
                 onClick={() => toggleDetails(nic.id)}
               >
                 <div className="network-status">
-                  <RVI24 iconDef={visibleDetails[nic.id] ? rvi24ChevronDown() : rvi24ChevronRight()}/>
+                  <RVI24 iconDef={visibleDetailId === nic.id ? rvi24ChevronDown() : rvi24ChevronRight()} 
+                    onClick={() => toggleDetails(nic.id)}
+                  />
                   <FontAwesomeIcon
                     icon={Boolean(nic?.linked) ? faArrowCircleUp : faArrowCircleDown}
                     style={{ color: Boolean(nic?.linked) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
@@ -125,7 +129,7 @@ const VmNics = ({ vmId }) => {
 
               <div
                 className="network-content-detail"
-                style={{ display: visibleDetails[nic.id] ? "flex" : "none" }}
+                style={{ display: visibleDetailId === nic.id ? "flex" : "none" }}
               >
                 <div className="network-content-detail-box">
                   <div className="font-bold">일반</div>

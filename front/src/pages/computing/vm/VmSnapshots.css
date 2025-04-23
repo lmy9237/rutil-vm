@@ -1,18 +1,22 @@
+
 .snapshot-group {
-  align-items: flex-start !important;
-  gap: 4px;
+  height: 100%;
+  justify-content: space-between;
+  width: 100%;
+  display: flex;
 }
 .vm-snap-item {
   width: auto;
-  padding: 20px 20px;
+  padding: 20px;
   border-radius: 8px;
+  min-height: 220px;
   background: var(--color-white);
 }
 .vm-snap-item:first-child {
   width: 60%;
 }
 .vm-snap-item:last-child {
-  margin-left:auto;
+  margin-left: 30px;
   width: 35%;
 }
 .snapshot-item {
@@ -54,18 +58,3 @@
   margin-bottom: 0;
 }
 
-.snap-hidden-content {
-  display: none;
-  overflow: hidden;
-}
-.snap-hidden-content.active {
-  display: block;
-  max-height: 33vh;
-  border: 1px solid #b9b9b9;
-  border-top: none;
-  color: gray;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 0.3rem;
-  font-size: var(--fs-16);
-}
