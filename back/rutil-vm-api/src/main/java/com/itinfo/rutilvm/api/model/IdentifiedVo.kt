@@ -109,6 +109,14 @@ fun List<HostNic>.fromHostNicsToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromHostNicsToIdentifiedVos.map { it.fromHostNicToIdentifiedVo() }
 
 
+fun IscsiDetails.fromIscsiDetailToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
+	id { storageDomainId() }
+	name { if (usernamePresent()) username() else "" }
+}
+fun List<IscsiDetails>.fromIscsiDetailsToIdentifiedVos(): List<IdentifiedVo> =
+	this.map { it.fromIscsiDetailToIdentifiedVo() }
+
+
 fun VnicProfile.fromVnicProfileToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }

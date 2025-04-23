@@ -10,7 +10,7 @@ import ToggleSwitchButton from '../../../button/ToggleSwitchButton';
 const DomainIscsiImport = ({
   iscsiResults, setIscsiResults,
   lunId, setLunId,
-  hostVo, setHostVo,
+  hostVo,
   formImportState, setFormImportState,
   importIscsiFromHostAPI, 
   loginIscsiFromHostAPI,
@@ -27,6 +27,9 @@ const DomainIscsiImport = ({
     address: i?.address,
     port: i?.port,
   }));
+
+  const [selectedTarget, setSelectedTarget] = useState("");
+
   
   // 주소와 포트로 검색한 결과값 반환
   const handleSearchIscsi = () => {
@@ -56,14 +59,37 @@ const DomainIscsiImport = ({
   };
   
   Logger.debug("DomainIscsiImport ... iscsiResults: " , iscsiResults)
+  Logger.debug("####formImportState: " , formImportState)
+
   // iscsi 가져오기 시 로그인 처리
   const handleLoginIscsi = () => {
-    if (!formImportState.target) return toast.error('항목을 선택해주세요.');
+    if (!selectedTarget) return toast.error('항목을 선택해주세요.');
+
+    console.log("로그인 시 사용할 target:", formImportState.target); // 확인용 로그
 
     loginIscsiFromHostAPI({ hostId: hostVo?.id, iscsiData: formImportState }, {
       onSuccess: (data) => { setIscsiResults(data) },
       onError: (error) => { toast.error('iSCSI 로그인 실패:', error) },
     });
+    // setIsIscsisLoading(true);
+
+    // importIscsiFromHostAPI(
+    //   { hostId: hostVo?.id, iscsiData: formImportState },
+    //   { 
+    //     onSuccess: (data) => {
+    //       setIscsiResults(data);
+    //       setIsIscsisLoading(false);
+    //       setIsIscsisSuccess(true);
+    //       setIsIscsisError(false);
+    //     },
+    //     onError: (error) => {
+    //       toast.error("iSCSI 가져오기 실패");
+    //       setIsIscsisLoading(false);
+    //       setIsIscsisSuccess(false);
+    //       setIsIscsisError(true);
+    //     },
+    //   }
+    // );
   };
 
   const handleInputChange = (field) => (e) => {
@@ -74,13 +100,24 @@ const DomainIscsiImport = ({
     setFormImportState((prev) => ({ ...prev, [field]: e.target.checked }));
   };
   
+  const handleTargetRowClick = (row) => {
+    const selectedRow = Array.isArray(row) ? row[0] : row;
+    if (selectedRow && selectedRow.target) {
+      Logger.debug('선택한 target:', selectedRow.target);
+      // setLunId(selectedRow.id);
+      setSelectedTarget(selectedRow.target); // 추가: target 텍스트 저장
+      setFormImportState((prev) => ({ ...prev, target: selectedRow.target }));
+    }
+  };
+
   const handleRowClick = (row) => {
     const selectedRow = Array.isArray(row) ? row[0] : row;
     if (selectedRow && selectedRow.id) {
       Logger.debug('선택한 LUN ID:', selectedRow.id);
       setLunId(selectedRow.id);
     }
-  }; 
+  };
+
 
   return (
     <div className="storage-popup-iSCSI">
@@ -126,28 +163,43 @@ const DomainIscsiImport = ({
                   onChange={handleInputChange('chapPassword')}
                   disabled={!formImportState.useChap}
                 />
-                <div className="target-btn">
+                {/* <div className="target-btn">
                   <button className="all-login-button" onClick={handleLoginIscsi}>로그인</button>
-                </div>
+                </div> */}
               </div>
               )}
             </div>
-          
           <div className='target-btn'>
             <button className="search-button" onClick={handleSearchIscsi}>검색</button>
           </div>
 
         </div>
-
+        
         <Tables target={"iscsi"}
           columns={TableColumnsInfo.IMPORT_ISCSI}
+          data={transIscsiData}
+          onRowClick={ (row) => handleTargetRowClick(row) }
+          shouldHighlight1stCol={true}
+          isLoading={isIscsisLoading} isError={isIscsisError} isSuccess={isIscsisSuccess}
+        />
+        {isIscsisSuccess &&
+          <button className="all-login-button" onClick={handleLoginIscsi}>로그인</button>
+        }
+        <br/>
+        <span style={{ fontSize: '18px' }}>선택된 Target (IQN): {selectedTarget}</span>
+
+        {/* 주소와 포트로 검색하고 나오는 값에 대해서 다시 검색했을때 나올 테이블 */}
+        <Tables target={"fcp"}
+          columns={TableColumnsInfo.IMPORT_FIBRE}
           data={transIscsiData}
           onRowClick={ (row) => handleRowClick(row) }
           shouldHighlight1stCol={true}
           isLoading={isIscsisLoading} isError={isIscsisError} isSuccess={isIscsisSuccess}
         />
         <br/>
-        <div><span style={{ fontSize: '22px' }}>id: {lunId}</span></div>
+        <div>
+          <span style={{ fontSize: '22px' }}>id: {lunId}</span><br />
+        </div>
       </div>
     </div>
   );

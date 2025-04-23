@@ -44,12 +44,14 @@ const LabelSelectOptionsID = ({
 
   useClickOutside(wrapperRef, (e) => setOpen(false));
   const boxStyle = !label ? { width: "100%" } : undefined;
+  const selectedOption = options.find(opt => opt.id === value);
+
   const selectedLabel = loading
     ? "로딩중~"
     : options.length === 0
       ? "항목 없음"
-      : options.find(opt => opt.id === value)
-        ? `${options.find(opt => opt.id === value).name}: ${options.find(opt => opt.id === value).id} ${etcLabel}`
+      : selectedOption
+        ? `${selectedOption.name}: ${selectedOption.id} ${etcLabel}`
         : "선택하세요";
 
   return (
@@ -74,6 +76,7 @@ const LabelSelectOptionsID = ({
           ) : (
             options.map((opt) => (
               <LabelSelectOptionId
+                key={opt.id} 
                 opt={opt}
                 value={value}
                 etcLabel={etcLabel}
@@ -112,7 +115,7 @@ const LabelSelectOptionId = ({
   handleOptionClick,
 }) => (
   <div
-    key={opt.id}
+    // key={opt.id}
     className={`custom-option ${opt.id === value ? "selected" : ""}`}
     onClick={() => handleOptionClick(opt.id)}
   >

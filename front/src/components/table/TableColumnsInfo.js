@@ -1,4 +1,3 @@
-import React from "react";
 import Localization from "../../utils/Localization";
 
 const DEFAULT_WIDTH_ICON_COLUMN = "48px";
@@ -459,7 +458,7 @@ const TableColumnsInfo = {
 
   IMPORT_FIBRE: [
     // { header: 'checkbox', accessor: 'check', clickable: true, width: '5%' },
-    { header: Localization.kr.NAME, accessor: 'name', clickable: true },
+    { header: Localization.kr.NAME, accessor: 'name', clickable: true, width: '30%' },
     { header: 'id', accessor: 'id', clickable: true },
   ],
 

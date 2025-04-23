@@ -373,6 +373,7 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun add(storageDomainVo: StorageDomainVo): StorageDomainVo? {
 		log.info("add ... storageDomain name: {}", storageDomainVo.name)
+		log.info("datacenter id: {} name: {}", storageDomainVo.dataCenterVo.id, storageDomainVo.dataCenterVo.name)
 		val res: StorageDomain? = conn.addStorageDomain(
 			storageDomainVo.toAddStorageDomainBuilder(),
 			storageDomainVo.dataCenterVo.id

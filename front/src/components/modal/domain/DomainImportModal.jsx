@@ -50,7 +50,7 @@ const loginFormState = {
 
 const DomainImportModal = ({
   isOpen,
-  datacenterId,
+  // datacenterId,
   onClose,
 }) => {
   const [formState, setFormState] = useState(initialFormState); // 일반정보
@@ -66,6 +66,7 @@ const DomainImportModal = ({
 
   const [iscsiResults, setIscsiResults] = useState([]); // 검색결과
   const [fcResults, setFcResults] = useState([]); // 검색결과
+  const [iscsiLoginResults, setIscsiLoginResults] = useState([]); // 검색결과
   
   const isNfs = formState.storageType === "nfs"
   const isIscsi = formState.storageType === "iscsi"
@@ -92,7 +93,15 @@ const DomainImportModal = ({
     (error) => {
       toast.error("fc 가져오기 실패:", error);
     }
-);  
+  );  
+  const { mutate: loginIscsiFromHostAPI } = useLoginIscsiFromHost(
+    (data) => {
+      setIscsiLoginResults(data); // <-- 여기서 직접 설정
+    },
+    (error) => {
+      toast.error("fc 가져오기 실패:", error);
+    }
+  );  
 
   const { 
     data: dataCenters = [],
@@ -121,9 +130,10 @@ const DomainImportModal = ({
 
 
   useEffect(() => {
-    if (datacenterId) {
-      setDataCenterVo({id: datacenterId});
-    } else if (dataCenters && dataCenters.length > 0) {
+    // if ( datacenterId ) {
+    //   setDataCenterVo({id: datacenterId});
+    // } else 
+    if (dataCenters && dataCenters.length > 0) {
       const defaultDc = dataCenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
       if (defaultDc) {
         setDataCenterVo({ id: defaultDc.id, name: defaultDc.name });
@@ -131,7 +141,8 @@ const DomainImportModal = ({
         setDataCenterVo({ id: dataCenters[0].id, name: dataCenters[0].name });
       }
     }
-  }, [dataCenters, datacenterId]);
+  }, [dataCenters]);
+  // }, [dataCenters, datacenterId]);
 
   useEffect(() => {
     if (hosts && hosts.length > 0) {
@@ -156,16 +167,12 @@ const DomainImportModal = ({
   
 
   useEffect(() => {
-    Logger.debug(`DomainImportModal > useEffect ... 스토리지유형 설정, formState.domainType: `, formState.domainType)
     const options = storageTypeOptions(formState.domainType);
     setStorageTypes(options);
   
     // 기본 storageType을 options의 첫 번째 값으로 설정
     if (options.length > 0) {
-      setFormState((prev) => ({ 
-        ...prev, 
-        storageType: options[0].value }));
-    }
+      setFormState((prev) => ({ ...prev, storageType: options[0].value })) }
   }, [formState.domainType]);
 
   const handleInputChange = (field) => (e) => {
@@ -199,8 +206,6 @@ const DomainImportModal = ({
     return null;
   };
   
-  Logger.debug("현재 도메인 타입:", formState.domainType);
-
 
   const handleFormSubmit = () => {
     const error = validateForm();
@@ -217,7 +222,7 @@ const DomainImportModal = ({
 
     const dataToSubmit = {
       ...formState,
-      dataCenterVo,
+      dataCenterVo: { id: dataCenterVo.id, name: dataCenterVo.name },
       hostVo,
       logicalUnits: logicalUnit ? [logicalUnit.id] : [],
       ...(formState.storageType === "nfs" && { storageAddress, storagePath }),
@@ -236,6 +241,7 @@ const DomainImportModal = ({
       <div className="storage-domain-new-first">
         <div>
           <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
+            key={dataCenterVo.id}
             value={dataCenterVo.id}
             loading={isDataCentersLoading}
             options={dataCenters}
@@ -252,6 +258,7 @@ const DomainImportModal = ({
             onChange={handleInputChange("storageType")}
           />
           <LabelSelectOptionsID id="host" label={Localization.kr.HOST}
+            // key={hostVo.id}
             value={hostVo.id}
             loading={isHostsLoading}
             options={hosts}
@@ -291,7 +298,7 @@ const DomainImportModal = ({
           hostVo={hostVo} setHostVo={setHostVo}
           formImportState={formImportState} setFormImportState={setFormImportState}
           importIscsiFromHostAPI={importIscsiFromHostAPI}
-          // loginIscsiFromHostAPI={}
+          loginIscsiFromHostAPI={loginIscsiFromHostAPI}
         />      
       )}
 

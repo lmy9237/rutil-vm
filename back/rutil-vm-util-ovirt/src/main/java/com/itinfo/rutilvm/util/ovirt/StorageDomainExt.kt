@@ -42,8 +42,8 @@ fun Connection.findStorageDomain(storageDomainId: String, follow: String = ""): 
 }
 
 
-
 fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: String): Result<StorageDomain?> = runCatching {
+	log.info("addStorageDomain--- dataCenterId: {}", dataCenterId)
 	if (this.findAllStorageDomains().getOrDefault(emptyList())
 			.nameDuplicateStorageDomain(storageDomain.name())) {
 		throw ErrorPattern.STORAGE_DOMAIN_DUPLICATE.toError()
@@ -53,9 +53,10 @@ fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: Stri
 
 	// 스토리지 도메인이 생성되지 않았을 경우 예외 처리
 	storageAdded ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
+	log.info("attachStorageDomainToDataCenter--- storageAdded.id(): {} dataCenterId: {}", storageAdded.id(), dataCenterId)
 
 	// 스토리지 도메인을 데이터센터에 붙이는 작업
-	this.attachStorageDomainToDataCenter(storageAdded.id(), dataCenterId).onFailure { throw it }
+	this.attachStorageDomainToDataCenter(dataCenterId, storageAdded.id()).onFailure { throw it }
 
 	storageAdded
 }.onSuccess {
@@ -66,6 +67,7 @@ fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: Stri
 }
 
 fun Connection.importStorageDomain(storageDomain: StorageDomain, dataCenterId: String): Result<StorageDomain?> = runCatching {
+	log.info("importStorageDomain--- dataCenterId: {}", dataCenterId)
 	val storageImported: StorageDomain? =
 		this.srvStorageDomains().addBlockDomain().storageDomain(storageDomain).send().storageDomain()
 
@@ -73,7 +75,7 @@ fun Connection.importStorageDomain(storageDomain: StorageDomain, dataCenterId: S
 	storageImported ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
 	// 스토리지 도메인을 데이터센터에 붙이는 작업
-	this.attachStorageDomainToDataCenter(storageImported.id(), dataCenterId).onFailure { throw it }
+	this.attachStorageDomainToDataCenter(dataCenterId, storageImported.id()).onFailure { throw it }
 
 	storageImported
 }.onSuccess {
@@ -104,14 +106,15 @@ fun Connection.updateStorageDomain(storageDomainId: String, storageDomain: Stora
 fun Connection.removeStorageDomain(storageDomainId: String, format: Boolean, hostName: String?): Result<Boolean> = runCatching {
 	checkStorageDomainExists(storageDomainId)
 
-	log.info("hostName: $hostName")
-	if (format) {
-		if (hostName == null) { throw ErrorPattern.STORAGE_DOMAIN_DELETE_INVALID.toError() }
-		this.srvStorageDomain(storageDomainId).remove().destroy(false).format(true).host(hostName).send()
-	} else {
-		this.srvStorageDomain(storageDomainId).remove().destroy(false).format(false).host(hostName).send()
+	if (format && hostName == null) {
+		throw ErrorPattern.STORAGE_DOMAIN_DELETE_INVALID.toError()
 	}
-	// this.expectStorageDomainDeleted(storageDomainId)
+
+	val removal = this.srvStorageDomain(storageDomainId).remove().destroy(false).format(format)
+	if (hostName != null) {
+		removal.host(hostName)
+	}
+	removal.send()
 	true
 
 }.onSuccess {

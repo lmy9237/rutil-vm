@@ -51,6 +51,14 @@ fun IscsiDetailVo.toDiscoverIscsiDetailVo(): IscsiDetails {
         .port(this@toDiscoverIscsiDetailVo.port)
         .build()
 }
+fun IscsiDetailVo.toDiscoverIscsiIqnDetailVo(): IscsiDetails {
+    return IscsiDetailsBuilder()
+		.target(this.target)
+		.portal(this.portal)
+        .address(this.address)
+        .port(this.port)
+        .build()
+}
 
 /**
  * iscsi 로그인
@@ -58,7 +66,7 @@ fun IscsiDetailVo.toDiscoverIscsiDetailVo(): IscsiDetails {
 fun IscsiDetailVo.toLoginIscsi(): IscsiDetails {
     return IscsiDetailsBuilder()
         .target(this@toLoginIscsi.target)
-        .address(this@toLoginIscsi.target)
+        .address(this@toLoginIscsi.address)
         .port(this@toLoginIscsi.port)
         .build()
 }

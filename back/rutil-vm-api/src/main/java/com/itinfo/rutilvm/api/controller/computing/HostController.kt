@@ -751,7 +751,7 @@ class HostController {
 	fun loginISCSI(
 		@PathVariable("hostId") hostId: String? = null,
 		@RequestBody iscsiDetailVo: IscsiDetailVo? = null
-	): ResponseEntity<List<String>> {
+	): ResponseEntity<List<IdentifiedVo>> {
 		if (hostId == null)
 			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
 		if(iscsiDetailVo == null)

@@ -3,12 +3,14 @@ package com.itinfo.rutilvm.api.service.computing
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.model.fromIscsiDetailsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromStorageDomainsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.model.storage.HostStorageVo
 import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.model.storage.toDiscoverIscsiDetailVo
+import com.itinfo.rutilvm.api.model.storage.toDiscoverIscsiIqnDetailVo
 import com.itinfo.rutilvm.api.model.storage.toHostStorageVos
 import com.itinfo.rutilvm.api.model.storage.toIscsiDetailVos
 import com.itinfo.rutilvm.api.model.storage.toLoginIscsi
@@ -73,7 +75,7 @@ interface ItHostStorageService {
 	 * @return List<[StorageDomainVo]>
 	 */
 	@Throws(Error::class)
-	fun loginIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): List<String>
+	fun loginIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): List<IdentifiedVo>
 }
 
 @Service
@@ -114,17 +116,19 @@ class ItHostStorageServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun loginIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): List<String> {
+	override fun loginIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): List<IdentifiedVo> {
 		log.info("loginIscsiFromHost... hostId: {}", hostId)
 		log.info("iscsiDetailVo.target = {}", iscsiDetailVo.target)
 		log.info("iscsiDetailVo.address = {}", iscsiDetailVo.address)
 		log.info("iscsiDetailVo.port = {}", iscsiDetailVo.port)
 
-		val res: List<String> = conn.loginIscsiFromHost(
+		conn.loginIscsiFromHost(hostId, iscsiDetailVo.toLoginIscsi())
+
+		val res: List<IscsiDetails> = conn.discoverIscsiFromHost(
 			hostId,
-			iscsiDetailVo.toLoginIscsi()
+			iscsiDetailVo.toDiscoverIscsiIqnDetailVo()
 		).getOrDefault(emptyList())
-		return res
+		return res.fromIscsiDetailsToIdentifiedVos()
 	}
 
 
