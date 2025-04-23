@@ -56,7 +56,7 @@ const VmModals = ({
     ), snapshot: (
       <VmSnapshotModal key={activeModal()} isOpen={activeModal() === "vm:snapshot"}
         onClose={() => setActiveModal(null)}
-        selectedVm={vm} // TODO: 조건바꿔야함
+        selectedVm={vmsSelected} 
       />
     ), import: (
       <VmImportModal key={activeModal()} isOpen={activeModal() === "vm:import"}
@@ -71,7 +71,7 @@ const VmModals = ({
     ), ova: (
       <VmExportOVAModal key={activeModal()} isOpen={activeModal() === "vm:ova"}
         onClose={() => setActiveModal(null)}  
-        selectedVm={vm} // TODO: 조건바꿔야함
+        selectedVm={vmsSelected} // TODO: 조건바꿔야함
         vmId={vm?.id}
       />
     ), action: (

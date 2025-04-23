@@ -231,8 +231,15 @@ fun NetworkVo.toNetworkBuilder(): NetworkBuilder {
 		builder.usages(NetworkUsage.VM)
 	}
 	if (network.vlan != 0) {
-		builder.vlan(VlanBuilder().id(network.vlan))
+		builder.vlan(VlanBuilder().id((network.vlan)))
+		// TODO: vlan 값이 0일 때 ovirt에서는 경고문구를 띄어줄 떄가 있다. 20번 ovrirtmgmt 참고
 	}
+	/*builder.vlan(
+		VlanBuilder().apply {
+			id(network.vlan)
+		}
+	)*/
+
 	if(network.dnsNameServers.isNotEmpty()){
 		builder.dnsResolverConfiguration(
 			DnsResolverConfigurationBuilder().nameServers(network.dnsNameServers).build()

@@ -81,7 +81,7 @@ const VmSnapshots = ({
         <VmSnapshotActionButtons hasLocked={hasLockedSnapshot} />
       </div>
       <div  className="snapshot-group-outer f-btw">
-        <div  className="snapshot-group f-start">
+        <div  className="snapshot-group">
           <div ref={snapshotItemRef}
             className="vm-snap-item"
           >

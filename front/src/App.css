@@ -69,6 +69,7 @@ html {
   --color-logo-text:#4679BC;
   --color-active:#449bff;
   --color-border-resizer: #dddddd;
+  --color-border-default:#cfcfcf;
 
   --color-primary: #020B79;;           /* 메인색 */
   --color-primary-hover: #2E379D;;           
@@ -81,7 +82,7 @@ html {
   --color-hover:#E7F2FF;
   
   --border-w: 1px; /* 테두리 두깨 */
-  --border-default: var(--border-w) solid var(--color-gray-1);
+  --border-default: var(--border-w) solid var(--color-border-default);
   --border-box: var(--border-w) solid var(--color-black);
   --border-btn: var(--border-w) solid var(--color-gray);
   --border-btn-filter: var(--border-w) solid var(--color-gray-4);

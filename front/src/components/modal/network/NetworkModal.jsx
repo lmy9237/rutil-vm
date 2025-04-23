@@ -80,13 +80,14 @@ const NetworkModal = ({
     if (editMode && network) {
       Logger.debug(`NetworkModal ... network: `, network);
       setFormState({
+        ...initialFormState,
         id: network?.id,
         name: network?.name,
         description: network?.description,
         comment: network?.comment,
         mtu: network?.mtu,
-        vlan: network?.vlan,
-        vlanEnabled: network?.vlan > 0, // 🔥 vlan 값이 0보다 크면 true
+        vlan: network?.vlan != null && network?.vlan > 0 ? String(network.vlan) : "0",
+        vlanEnabled: network?.vlan != null && network?.vlan > 0,
         usageVm: network?.usage?.vm,
         portIsolation: network?.portIsolation || false,
         dnsEnabled: (network?.dnsNameServers || [])?.length !== 0,
@@ -203,13 +204,13 @@ const NetworkModal = ({
 
         <div id="vlan-enabled-group"
           className="f-center">
-          <LabelCheckbox id="vlanEnabled" label="VLAN 태깅 활성화"
-            checked={formState.vlanEnabled || network?.vlan}
+         <LabelCheckbox id="vlanEnabled" label="VLAN 태깅 활성화"
+            checked={formState.vlanEnabled} // ✅ 상태만 사용
             onChange={(e) =>
               setFormState((prev) => ({
                 ...prev,
                 vlanEnabled: e.target.checked,
-                vlan: e.target.checked ? prev.vlan : ""
+                vlan: e.target.checked ? prev.vlan : "", // 해제 시 vlan 값도 초기화
               }))
             }
           />

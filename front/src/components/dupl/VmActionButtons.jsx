@@ -47,6 +47,7 @@ const VmActionButtons = ({
     { type: "powerOff",   onBtnClick: () => setActiveModal("vm:powerOff"), label: Localization.kr.POWER_OFF, disabled: !allUp },
     { type: "console",    onBtnClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE, disabled: !allUp },
     { type: "migration",  onBtnClick: () => setActiveModal("vm:migration"), label: Localization.kr.MIGRATION, disabled: !allUp },
+    { type: "snapshot",   onBtnClick: () => setActiveModal("vm:snapshot"), label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`}
   ];
 
   const manageActions = [

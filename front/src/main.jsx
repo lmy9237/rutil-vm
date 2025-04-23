@@ -19,7 +19,15 @@ if (typeof global === 'undefined') {
 }
 const container = document.getElementById("root");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({ //자동 refetch
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: true,
+      refetchInterval: 5000,
+      staleTime: 0,
+    },
+  },
+});
 Modal.setAppElement("#root")
 
 root.render(
