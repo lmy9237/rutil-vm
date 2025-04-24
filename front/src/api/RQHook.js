@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ApiManager from "./ApiManager";
 import toast from "react-hot-toast";
 import Logger from "../utils/Logger";
-import useUIState from "../hooks/useUIState";
+import useJobQueue from "../hooks/useJobQueue";
 import Localization from "../utils/Localization";
 
 //#region: 쿼리Key
@@ -17,7 +17,6 @@ const QK = {
   DASHBOARD_VM_CPU: "dashboardVmCpu",
 }
 //#endregion: 쿼리Key
-
 
 //#region: Navigation
 /**
@@ -5030,12 +5029,11 @@ export const useJob = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddJob = (
-  job,
   postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (job) => {
       const res = await ApiManager.addJob(job)
       const _res = validate(res) ?? {}
       toast.success(`[200] 작업 생성 요청 성공`)
@@ -5063,18 +5061,17 @@ export const useAddJob = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useEndJob = (
-  jobId,
   postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({ jobId }) => {
       const res = await ApiManager.endJob(jobId)
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useAddJob ... jobId: ${jobId}`);
       return _res;
     },
-    onSuccess: (res) => {
+    onSuccess: (res, { jobId }) => {
       Logger.debug(`RQHook > useAddJob ... res: `, res);
       queryClient.invalidateQueries('allJobs');
       queryClient.invalidateQueries(['job', jobId]); // 수정된 네트워크 상세 정보 업데이트

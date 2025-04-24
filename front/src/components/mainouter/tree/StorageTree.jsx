@@ -58,6 +58,7 @@ const StorageTree = ({}) => {
               isChevronVisible={hasDomains}
               onChevronClick={() => toggleDataCentersStorage(dataCenter.id)}
               onClick={() => {
+                setDatacentersSelected(dataCenter)
                 navigate(`/storages/datacenters/${dataCenter.id}/clusters`);
               }}
               onContextMenu={(e) => {
@@ -92,11 +93,14 @@ const StorageTree = ({}) => {
                       isChevronVisible={hasDisks}
                       onChevronClick={() => toggleOpenDomainsStorage(domain.id)}
                       onClick={() => {
+                        setDatacentersSelected(dataCenter)
+                        setDomainsSelected(domain)
                         navigate(`/storages/domains/${domain.id}`);
                       }}
                       onContextMenu={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                        setDatacentersSelected(dataCenter)
                         setDomainsSelected(domain)
                         setContextMenu({
                           mouseX: e.clientX,

@@ -51,7 +51,7 @@ fun Connection.addJob(job: Job): Result<Job?> = runCatching {
 }
 
 fun Connection.endJob(jobId: String): Result<Boolean?> = runCatching {
-	this.srvJob(jobId).end().send()
+	this.srvJob(jobId).end().async(true).send()
 	true
 }.onSuccess {
 	Term.JOB.logSuccess("종료")

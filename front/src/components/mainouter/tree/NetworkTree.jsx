@@ -55,6 +55,7 @@ const NetworkTree = ({}) => {
               isChevronVisible={hasNetworks}
               onChevronClick={() => toggleOpenDataCentersNetwork(dataCenter.id)}
               onClick={() => {
+                setDatacentersSelected(dataCenter);
                 navigate(`/networks/datacenters/${dataCenter.id}/clusters`);
               }}
               onContextMenu={(e) => {
@@ -83,6 +84,8 @@ const NetworkTree = ({}) => {
                   isNextLevelVisible={false}
                   isChevronVisible={false}
                   onClick={() => {
+                    setDatacentersSelected(dataCenter);
+                    setNetworksSelected(network);
                     navigate(`/networks/${network.id}`);
                   }}
                   onContextMenu={(e) => {

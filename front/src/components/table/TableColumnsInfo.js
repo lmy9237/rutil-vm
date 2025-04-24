@@ -498,7 +498,7 @@ const TableColumnsInfo = {
   SNAPSHOT_INFO_FROM_VM: [
     { header: Localization.kr.NAME, accessor: 'description', clickable: false },
     { header: Localization.kr.DATE, accessor: 'date', clickable: false, width: '5%' },
-    { header: Localization.kr.STATUS, accessor: 'status', clickable: false, width: '5%' },
+    { header: Localization.kr.STATUS, accessor: 'statusKr', clickable: false, width: '5%' },
     { header: '가상 시스템 메모리 스냅샷 생성', accessor: 'persistMemory', clickable: false },
     { header: '설정된 메모리', accessor: 'memorySize', clickable: false },
     { header: '할당할 실제 메모리', accessor: 'memoryActual', clickable: false },

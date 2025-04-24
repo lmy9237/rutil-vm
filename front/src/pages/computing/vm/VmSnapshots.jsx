@@ -12,11 +12,13 @@ import {
   rvi16ChevronRight,
   rvi16Desktop,
   rvi16Location,
+  rvi16Lock,
   status2Icon,
 } from "../../../components/icons/RutilVmIcons";
 import { useSnapshotsFromVM, useVm } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import Localization from "../../../utils/Localization";
 import "./VmSnapshots.css"
 
 /**
@@ -50,6 +52,7 @@ const VmSnapshots = ({
     id: snapshot?.id,
     description: snapshot?.description,
     status: snapshot?.status,
+    statusKr: Localization.kr.renderStatus(snapshot?.status),
     created: snapshot?.date ?? "현재",
     interface_: snapshot?.interface_,
     persistMemory: snapshot?.persistMemory ? "true" : "false",
@@ -60,9 +63,13 @@ const VmSnapshots = ({
   })), [snapshots]);
 
 
-  const hasLockedSnapshot = useMemo(() => {
-    [...transformedData]?.some(snap => snap.status === "locked")
-  }, [transformedData]) // NOTE: 하나 이상 잠겨있는 스냅샷이 있을 때 나머지 종작이 안됨
+  const hasLockedSnapshot = useMemo(() => (
+    [...transformedData]?.some(snap => snap?.status === "locked")
+  ), [transformedData]) // NOTE: 하나 이상 잠겨있는 스냅샷이 있을 때 나머지 종작이 안됨
+  
+  const inPreview = useMemo(() => (
+    [...transformedData]?.some(snap => snap?.status === "in_preview")
+  ), [transformedData]) // NOTE: 하나 이상 미리보기 스냅샷이 있을 때 커밋/돌아가기 동작만 됨
   
   const snapshotItemRef = useRef()
   useClickOutside(snapshotItemRef, (e) => {
@@ -78,7 +85,10 @@ const VmSnapshots = ({
       onClick={(e) => e.stopPropagation()} 
     >
       <div className="header-right-btns no-search-box">
-        <VmSnapshotActionButtons hasLocked={hasLockedSnapshot} />
+        <VmSnapshotActionButtons 
+          hasLocked={hasLockedSnapshot}
+          inPreview={inPreview}
+        />
       </div>
       <div  className="snapshot-group-outer f-btw">
         <div  className="snapshot-group">
@@ -89,8 +99,13 @@ const VmSnapshots = ({
             <div className="snapshot-item f-start">
               <RVI16 iconDef={rvi16ChevronDown} />
               <div className="snapshot-label f-center">
-                <RVI16 iconDef={rvi16Location} className="mx-1.5" />
-                현재 위치
+                <RVI16
+                  iconDef={hasLockedSnapshot ? rvi16Lock() : rvi16Location} 
+                  className="mx-1.5"
+                />
+                {hasLockedSnapshot ? "잠겨있음" 
+                 : inPreview ? "스냅샷 미리보기 상태"
+                 : "현재 위치"}
               </div>
             </div>
     

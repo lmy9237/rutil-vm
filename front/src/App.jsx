@@ -42,7 +42,7 @@ const App = () => {
   const [stompClient, setStompClient] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const { footerJobRefetchInterval, setFoooterJobRefetchInterval } = useFooterState()
+  const { setFooterVisible, footerJobRefetchInterval, setFoooterJobRefetchInterval } = useFooterState()
   const { setActiveModal, } = useUIState()
   const { setAsideVisible } = useAsideState()
   const { setLoginBoxVisible, setEventBoxVisible, } = useBoxState()
@@ -56,6 +56,7 @@ const App = () => {
     setAsideVisible(true)
     setEventBoxVisible(false)
     setLoginBoxVisible(false)
+    setFooterVisible(false)
 
     // Connect using STOMP
     /*

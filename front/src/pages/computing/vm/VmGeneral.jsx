@@ -5,8 +5,9 @@ import SemiCircleChart from "../../../components/Chart/SemiCircleChart";
 import TableRowClick from "../../../components/table/TableRowClick";
 import Localization from "../../../utils/Localization";
 import { RVI16, rvi16Cluster, rvi16Host } from "../../../components/icons/RutilVmIcons";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import CONSTANT from "../../../Constants";
+import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name VmGeneral
@@ -19,12 +20,21 @@ import CONSTANT from "../../../Constants";
 const VmGeneral = ({ 
   vmId
 }) => {
+  const { setVmsSelected, setClustersSelected, setHostsSelected } = useGlobal()
   const {
     data: vm,
     isLoading: isVmLoading,
     isError: isVmError,
     isSuccess: isVmSuccess,
   } = useVm(vmId);
+
+  useEffect(() => {
+    if (vm?.hostVo)
+      setHostsSelected(vm?.hostVo)
+    if (vm?.clusterVo)
+      setClustersSelected(vm?.clusterVo)
+    setVmsSelected(vm)
+  }, [vm])
 
   const osLabel = useMemo(() => (
     CONSTANT.osOptions.find((e) => e.value === vm?.osType)?.label || vm?.osSystem
@@ -33,7 +43,6 @@ const VmGeneral = ({
   const chipsetLabel = useMemo(() => (
     CONSTANT.chipsetOptions.find((option) => option.value === vm?.biosType)?.label || vm?.chipsetFirmwareType
   ), [vm])
-  
 
   const generalTableRows = [
     { label: "전원상태", value: vm?.status },

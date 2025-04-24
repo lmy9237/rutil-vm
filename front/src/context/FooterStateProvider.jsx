@@ -31,8 +31,8 @@ export const FooterStateProvider = ({ children }) => {
    }
    const toggleFooterVisible = () => {
     Logger.debug(`UIStateProvider > toggleFooterVisible ... `)
-   const newV = !footerVisible()
-   _setFooterState({
+    const newV = !footerVisible()
+    _setFooterState({
       ..._footerState,
       [KEY_FOOTER_HEIGHT_IN_PX]: newV ? 168 : 40,
     })

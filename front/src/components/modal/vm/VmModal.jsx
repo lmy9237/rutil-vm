@@ -424,7 +424,7 @@ const VmModal = ({
     console.log("dataToSubmit.storageDomainVo: ", dataToSubmit.storageDomainVo);
     console.log(" 전체 dataToSubmit: ", dataToSubmit);
   
-    Logger.debug(`가상머신 데이터 ${JSON.stringify(dataToSubmit, null ,2)}`);
+    Logger.debug(`VmModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
     editMode
       ? editVM({ vmId: vmId, vmData: dataToSubmit })
       : addVM(dataToSubmit);
@@ -454,7 +454,7 @@ const VmModal = ({
             etcLabel={`[${Localization.kr.DATA_CENTER}: ${dataCenterVo.name}]`}
           />
           {!isTemplateHidden && (
-            <LabelSelectOptionsID label="템플릿"
+            <LabelSelectOptionsID label={Localization.kr.TEMPLATE}
               value={templateVo.id}
               disabled={editMode}
               loading={isTemplatesLoading}

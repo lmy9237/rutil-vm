@@ -10,6 +10,7 @@ import { FooterStateProvider } from "./context/FooterStateProvider";
 import { BoxStateProvider } from './context/BoxStateProvider'
 import { ContextMenuStateProvider } from "./context/ContextMenuStateProvider";
 import { TMIStateProvider } from "./context/TMIStateProvider";
+import { JobQueueProvider } from "./context/JobQueueProvider";
 import { UIStateProvider } from "./context/UIStateProvider";
 import reportWebVitals from "./reportWebVitals";
 import App from "./App";
@@ -43,9 +44,11 @@ root.render(
                   <BoxStateProvider>
                     <ContextMenuStateProvider>
                       <TMIStateProvider>
-                        <Routes>
-                          <Route path="/*" element={<App />}/>
-                        </Routes>
+                        <JobQueueProvider>
+                          <Routes>
+                            <Route path="/*" element={<App />}/>
+                          </Routes>
+                        </JobQueueProvider>
                       </TMIStateProvider>
                     </ContextMenuStateProvider>
                   </BoxStateProvider>

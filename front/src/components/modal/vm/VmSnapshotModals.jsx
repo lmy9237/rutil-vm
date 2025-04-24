@@ -23,23 +23,25 @@ const VmSnapshotModals = ({
     "vmsnapshot:undo",
   ]), [])
   const { activeModal, setActiveModal } = useUIState()
-  const { vmsSelected, snapshotsSelected } = useGlobal()
-  
+  const { vmsSelected, snapshotsSelected, setSnapshotsSelected } = useGlobal()
+  const onModalClose = () => {
+    setActiveModal(null)
+    setSnapshotsSelected([])
+  }
   const modals = {
     create: (
       <VmSnapshotModal key={activeModal()} isOpen={activeModal() === "vmsnapshot:create"}
-        onClose={() => setActiveModal(null)}
+        onClose={onModalClose}
       />
     ), action: (
       <VmSnapshotActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}
-        onClose={() => setActiveModal(null)}
-        data={snapshotsSelected}
+        onClose={onModalClose}
       />
     ), remove: (
       <VmSnapshotDeleteModal isOpen={activeModal() === "vmsnapshot:remove"}
         vmId={vmsSelected[0]?.id}
         data={snapshotsSelected}
-        onClose={() => setActiveModal(null)}
+        onClose={onModalClose}
       />
     )
   }

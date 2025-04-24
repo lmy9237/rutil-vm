@@ -1,8 +1,10 @@
 package com.itinfo.rutilvm.api.service.storage
 
+import com.google.auto.service.AutoService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.common.JobVo
 import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.computing.toDiskVms
 import com.itinfo.rutilvm.api.model.fromTemplateCdromsToIdentifiedVos
@@ -10,11 +12,14 @@ import com.itinfo.rutilvm.api.model.fromVmCdromsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.api.service.common.ItJobService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
+import org.ovirt.engine.sdk4.builders.JobBuilder
 
 import org.ovirt.engine.sdk4.services.ImageTransferService
 import org.ovirt.engine.sdk4.types.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.BufferedInputStream
@@ -200,6 +205,8 @@ interface ItDiskService {
 @Service
 class DiskServiceImpl(
 ): BaseService(), ItDiskService {
+	@Autowired private lateinit var iJob: ItJobService
+
     @Throws(Error::class)
     override fun findAll(): List<DiskImageVo> {
         log.info("findAll ... ")
@@ -324,6 +331,11 @@ class DiskServiceImpl(
     @Throws(Error::class)
     fun uploadFileToTransferUrl(file: MultipartFile, imageTransferId: String): Boolean {
         log.info("uploadFileToTransferUrl ... ")
+		val jobAdded = iJob.add(JobVo.builder {
+			name { "디스크 파일 업로드" }
+			description { "(RutilVM에서) 디스크 파일 업로드 <${imageTransferId}>" }
+			status { JobStatus.STARTED }
+		})
         val imageTransferService: ImageTransferService = conn.srvImageTransfer(imageTransferId)
         val transferUrl = imageTransferService.get().send().imageTransfer().transferUrl()
         log.info("uploadFileToTransferUrl ... transferUrl: $transferUrl")
@@ -353,6 +365,7 @@ class DiskServiceImpl(
 			}
 			imageTransferService.finalize_().send()
 			http.disconnect()
+			jobAdded?.id?.let { id -> iJob.end(id) }
 			log.info("uploadFileToTransferUrl ... 완료!")
 		}
         return true

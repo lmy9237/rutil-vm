@@ -50,13 +50,14 @@ const LabelSelectOptionsID = ({
 }) => {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);        // ✅ 전체 감지
-
-  // const handleOptionClick = useCallback((optionValue) => {
-  //   Logger.debug(`LabelSelectOptionsID > handleOptionClick ... optionValue: ${optionValue}`)
-  //   if (disabled) return;
-  //   onChange({ target: { value: optionValue } });
-  //   setOpen(false);
-  // }, [onChange, disabled]);
+  /*
+  const handleOptionClick = useCallback((optionValue) => {
+    Logger.debug(`LabelSelectOptionsID > handleOptionClick ... optionValue: ${optionValue}`)
+    if (disabled) return;
+    onChange({ target: { value: optionValue } });
+    setOpen(false);
+  }, [onChange, disabled]);
+  */
 
   const handleOptionClick = useCallback((optionValue) => {
     Logger.debug(`LabelSelectOptionsID > handleOptionClick ... optionValue:`, optionValue);

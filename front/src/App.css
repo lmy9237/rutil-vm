@@ -126,8 +126,7 @@ input[disabled] {
 }
 .popup-content-outer {
   /* height: var(--h-modal-content); */
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: hidden;overflow-y: auto;
   height: 100%;
 }
 .f-center { display:flex;align-items:center;justify-content:center; }

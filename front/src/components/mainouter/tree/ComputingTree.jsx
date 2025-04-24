@@ -69,6 +69,7 @@ const ComputingTree = ({}) => {
               isChevronVisible={hasClusters}
               onChevronClick={() => toggleOpenDataCentersComputing(dataCenter.id)}
               onClick={() => {
+                setDatacentersSelected(dataCenter)
                 navigate(`/computing/datacenters/${dataCenter.id}/clusters`);
               }}
               onContextMenu={(e) => {
@@ -100,6 +101,8 @@ const ComputingTree = ({}) => {
                     isChevronVisible={hasHosts}
                     onChevronClick={() => toggleOpenClustersComputing(cluster.id)}
                     onClick={() => {
+                      setDatacentersSelected(dataCenter)
+                      setClustersSelected(cluster)
                       navigate(`/computing/clusters/${cluster.id}`);
                     }}
                     onContextMenu={(e) => {
@@ -135,6 +138,8 @@ const ComputingTree = ({}) => {
                               isChevronVisible={hasVMs}
                               onChevronClick={() => toggleOpenHostsComputing(host.id)}
                               onClick={() => {
+                                setDatacentersSelected(dataCenter)
+                                setClustersSelected(cluster)
                                 navigate(`/computing/hosts/${host.id}`);
                               }}
                               onContextMenu={(e) => {
@@ -166,6 +171,8 @@ const ComputingTree = ({}) => {
                                   isChevronVisible={false}
                                   onChevronClick={()=>{}}
                                   onClick={() => {
+                                    setDatacentersSelected(dataCenter)
+                                    setClustersSelected(cluster)
                                     navigate(`/computing/vms/${vm.id}`);
                                   }}
                                   onContextMenu={(e) => {
@@ -201,6 +208,8 @@ const ComputingTree = ({}) => {
                             isChevronVisible={false}
                             onChevronClick={()=>{}}
                             onClick={() => {
+                              setDatacentersSelected(dataCenter)
+                              setClustersSelected(cluster)
                               navigate(`/computing/vms/${vm.id}`);
                             }}
                             onContextMenu={(e) => {

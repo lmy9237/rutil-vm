@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
@@ -13,9 +13,6 @@ import {
   useAllDiskProfilesFromDomain,
   useHostsFromDataCenter,
   useUploadDisk,
-  useAddJob,
-  useEndJob,
-  useAllDataCenters,
 } from "../../../api/RQHook";
 import "../domain/MDomain.css";
 
@@ -44,7 +41,22 @@ const initialJobFormState = {
 const DiskUploadModal = ({ isOpen, onClose }) => {
   const [formState, setFormState] = useState(initialFormState);
   const [jobFormState, setJobFormState] = useState(initialJobFormState)
-  const [addedJobId, setAddedJobId] = useState("")
+  const [jobQueue, dispatch] = useReducer((state, action) => {
+    Logger.debug(`jobQueueReducer ... action.type: ${action.type}`)
+    switch (action.type) {
+      case 'PUSH_JOB':
+        return [...state, action.payload];
+      case 'POP_JOB':
+        const updated = [...state];
+        const jobId = updated.pop();
+        return jobId
+      case 'RESET':
+        return [];
+      default:
+        return state;
+    }
+  }
+  , []);
 
   const [file, setFile] = useState(null);
 
@@ -53,30 +65,12 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
   const [diskProfileVo, setDiskProfileVo] = useState({id: "", name: "" });
   const [hostVo, setHostVo] = useState({id: "", name: "" });
 
-  const {
-    mutate: addJob
-  } = useAddJob({
-    ...jobFormState,
-    description: `(RutilVM) 디스크 파일 업로드 (파일명: ${file && onlyFileName(file?.name)})`,
-  }, (res) => {
-    setAddedJobId(res.id)
-    onClose()
-  }, () => onClose());
-
-  const {
-    mutate: endJob
-  } = useEndJob(addedJobId)
-
   const { mutate: uploadDisk } = useUploadDisk((progress, toastId) => {
     onClose()
-    if (progress >= 100) {
-      endJob()
-      return
-    }
     toast.loading(`디스크 업로드 중 ... ${progress}%`, {
       id: toastId,
     });
-  }, () => onClose(), () => onClose());
+  });
 
   // 전체 데이터센터 가져오기
   const {
@@ -180,7 +174,6 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
 
     Logger.debug(`DiskUploadModal > 디스크 업로드 데이터 ${diskData}`);
     uploadDisk(diskData);
-    addJob()
   };
 
   return (

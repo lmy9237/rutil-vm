@@ -32,7 +32,7 @@ const VmDupl = ({
     icon: status2Icon(vm?.status),
     iconSortKey: getStatusSortKey(vm?.status), 
     engine: hostedEngineStatus2Icon(vm?.hostedEngineVm),
-    nextRun: vm?.nextRun === true ? "!" : "", //  재시작여부 / 다음 실행시 새로운 설정이 적용되는 서버
+    nextRun: vm?.nextRun === true ? "!" : "", //  재시작여부 / 다음 실행시 새로운 설정이 적용되는 서버 TODO: 아이콘 추가 (rvi16ExclamationMark)
     _name: (
       <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}
