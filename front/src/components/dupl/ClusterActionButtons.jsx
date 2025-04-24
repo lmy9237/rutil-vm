@@ -12,9 +12,7 @@ import Logger from "../../utils/Logger";
  * @returns
  * 
  */
-const ClusterActionButtons = ({ 
-  actionType = "default"
-}) => {
+const ClusterActionButtons = ({ actionType = "default" }) => {
   const { setActiveModal, } = useUIState()
   const { clustersSelected } = useGlobal()
   const isContextMenu = actionType === "context";

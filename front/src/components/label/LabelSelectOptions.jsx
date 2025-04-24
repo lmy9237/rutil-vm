@@ -1,5 +1,4 @@
-import { useState, useRef, useMemo, useCallback } from "react";
-import { createPortal } from "react-dom";
+import { useState, useRef, useMemo } from "react";
 import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import useClickOutside from "../../hooks/useClickOutside";
 import Logger from "../../utils/Logger";

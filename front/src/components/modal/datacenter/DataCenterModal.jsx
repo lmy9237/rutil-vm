@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { toast } from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
@@ -12,6 +12,8 @@ import {
 import "./MDatacenter.css";
 import Localization from "../../../utils/Localization";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
+import { handleInputChange } from "../../label/HandleInput";
+import useGlobal from "../../../hooks/useGlobal";
 
 const initialFormState = {
   id: "",
@@ -23,14 +25,6 @@ const initialFormState = {
   quotaMode: "DISABLED",
 };
 
-const quotaModes = [
-  { value: "DISABLED", label: "비활성화됨" },
-  { value: "AUDIT", label: "감사" },
-  { value: "ENABLED", label: "활성화됨" },
-];
-
-const versions = [{ value: "4.7", label: 4.7 }];
-
 /**
  * @name DataCenterModal
  * @description ...
@@ -39,18 +33,19 @@ const versions = [{ value: "4.7", label: 4.7 }];
  * @returns
  */
 const DataCenterModal = ({ 
-  isOpen, 
-  editMode = false, 
-  datacenterId, 
-  onClose 
+  isOpen, onClose, editMode = false 
 }) => {
   const dcLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+  
+  const { datacentersSelected } = useGlobal()
+  const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
+
   const [formState, setFormState] = useState(initialFormState);
   
+// TODO: 제거 RQHook에서 처리하도록 구현
   const onSuccess = () => {
     onClose();
-    toast.success(`${Localization.kr.DATA_CENTER} ${dcLabel} 완료`);
-    // TODO: 제거 RQHook에서 처리하도록 구현
+    toast.success(`${Localization.kr.DATA_CENTER} ${dcLabel} ${Localization.kr.FINISHED}`);
   };
   const { data: datacenter } = useDataCenter(datacenterId);
   const { mutate: addDataCenter } = useAddDataCenter(onSuccess, () => onClose());
@@ -59,7 +54,6 @@ const DataCenterModal = ({
   // 모달 열릴때 초기화, 편집 정보넣기
   useEffect(() => {
     if (!isOpen) {
-      /* 열리기 전 */
       return setFormState(initialFormState);
     }
     if (editMode && datacenter) {
@@ -75,15 +69,10 @@ const DataCenterModal = ({
     }
   }, [isOpen, editMode, datacenter]);
 
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
   // 값 검증
   const validateForm = () => {
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
-
     if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}은 영어만 입력가능합니다.`;
     return null;
   };
@@ -109,15 +98,15 @@ const DataCenterModal = ({
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
         value={formState.name}
-        onChange={handleInputChange("name")}
+        onChange={handleInputChange(setFormState, "name")}
       />
       <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
-        onChange={handleInputChange("description")}
+        onChange={handleInputChange(setFormState, "description")}
       />
       <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
-        onChange={handleInputChange("comment")}
+        onChange={handleInputChange(setFormState, "comment")}
       />
       <ToggleSwitchButton id="storage-type" label="스토리지 타입"
         checked={formState.storageType}
@@ -126,12 +115,12 @@ const DataCenterModal = ({
       />
       <LabelSelectOptions id="quarter-mode" label="쿼터 모드"
         value={formState.quotaMode}
-        onChange={handleInputChange("quotaMode")}
+        onChange={handleInputChange(setFormState, "quotaMode")}
         options={quotaModes}
       />
       <LabelSelectOptions id="version-compatible" label="호환버전"
         value={formState.version}
-        onChange={handleInputChange("version")}
+        onChange={handleInputChange(setFormState, "version")}
         options={versions}
       />
     </BaseModal>
@@ -139,3 +128,11 @@ const DataCenterModal = ({
 };
 
 export default DataCenterModal;
+
+const quotaModes = [
+  { value: "DISABLED", label: `${Localization.kr.DEACTIVATE}` },
+  { value: "AUDIT", label: "감사" },
+  { value: "ENABLED", label: `${Localization.kr.ACTIVATE}` },
+];
+
+const versions = [{ value: "4.7", label: 4.7 }];

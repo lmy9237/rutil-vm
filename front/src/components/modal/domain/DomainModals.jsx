@@ -23,10 +23,7 @@ import DomainMainttenanceModal from "./DomainMainttenanceModal";
  * @see DomainActionModal
  * @see DomainAttachModal
  */
-const DomainModals = ({
-  domain,
-  datacenterId,
-}) => {
+const DomainModals = () => {
   const { activeModal, setActiveModal, } = useUIState()
   // const { domainsSelected } = useGlobal()
 
@@ -34,19 +31,16 @@ const DomainModals = ({
     create: (
       <DomainModal key={activeModal()} isOpen={activeModal() === "domain:create"}
         onClose={() => setActiveModal(null)}
-        datacenterId={datacenterId}
       />
     ), update: (
       <DomainModal key={activeModal()} isOpen={activeModal() === "domain:update"}
         onClose={() => setActiveModal(null)}
         editMode
         mode={activeModal()}
-        // domainId={domain?.id ?? domainsSelected[0]?.id}
       />
     ), import: (
       <DomainImportModal key={activeModal()} isOpen={activeModal() === "domain:import"}
         onClose={() => setActiveModal(null)}
-        // mode={activeModal()}
       />
     ), remove: (
       <DomainDeleteModal key={activeModal()} isOpen={activeModal() === "domain:remove"}
@@ -56,7 +50,6 @@ const DomainModals = ({
     ), destroy: (
       <DomainDestroyModal key={activeModal()} isOpen={activeModal() === "domain:destroy"}
         onClose={() => setActiveModal(null)}
-        domain={domain}
       />
     ), attach: (
       <DomainAttachModal key={activeModal()} isOpen={activeModal() === "domain:attach"}

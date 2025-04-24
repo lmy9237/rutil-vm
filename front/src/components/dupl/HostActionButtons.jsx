@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 import { rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import ActionButton from "../button/ActionButton";
@@ -8,9 +8,14 @@ import Logger from "../../utils/Logger";
 import useGlobal from "../../hooks/useGlobal";
 import useClickOutside from "../../hooks/useClickOutside";
 
-const HostActionButtons = ({ 
-  actionType = "default"
-}) => {
+/**
+ * @name HostActionButtons
+ * @description ...
+ * 
+ * @returns
+ * 
+ */
+const HostActionButtons = ({ actionType = "default" }) => {
   const { setActiveModal } = useUIState()
   const { hostsSelected } = useGlobal()
   const isContextMenu = actionType === "context";
@@ -18,9 +23,7 @@ const HostActionButtons = ({
   const activeDropdownRef = useRef()
   const [activeDropdown, setActiveDropdown] = useState(null);
   const toggleDropdown = () => setActiveDropdown((prev) => (prev ? null : "manage"));
-  useClickOutside(activeDropdownRef, (e) => {
-    setActiveDropdown(null)
-  })
+  useClickOutside(activeDropdownRef, (e) => { setActiveDropdown(null) })
 
   const selected1st = [...hostsSelected][0] ?? null
 
@@ -28,13 +31,13 @@ const HostActionButtons = ({
   const nonOperational = selected1st?.status === "NON_OPERATIONAL";
   const isMaintenance = selected1st?.status === "MAINTENANCE";
 
-  const basicActions = [
+  const basicActions = useMemo(() => [
     { type: "create", onBtnClick: () => setActiveModal("host:create"), label: Localization.kr.CREATE, disabled: isContextMenu && hostsSelected.length > 0, },
     { type: "update", onBtnClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: hostsSelected.length !== 1, },
     { type: "remove", onBtnClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: hostsSelected.length === 0 || !isMaintenance, },
-  ];
+  ], [actionType, hostsSelected]);
 
-  const manageActions = [
+  const manageActions = useMemo(() => [
     { type: "deactivate", onBtnClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: !isUp },
     { type: "activate", onBtnClick: () => setActiveModal("host:activate"), label: "활성", disabled: hostsSelected.length === 0 || !isMaintenance || isUp },
     { type: "restart", onBtnClick: () => setActiveModal("host:restart"), label: "재시작", disabled: hostsSelected.length === 0 || isUp },
@@ -43,7 +46,7 @@ const HostActionButtons = ({
     { type: "enrollCert", onBtnClick: () => setActiveModal("host:enrollCert"), label: "인증서 등록", disabled: hostsSelected.length === 0 },
     { type: "haOn", onBtnClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: hostsSelected.length === 0 || !isUp || !isMaintenance, },
     { type: "haOff", onBtnClick: () => setActiveModal("host:haOff"), label: "글로벌 HA 유지 관리를 비활성화", disabled: hostsSelected.length === 0 || !isUp },
-  ];
+  ], [actionType, hostsSelected]);
 
   Logger.debug(`HostActionButtons ... `)
   return (

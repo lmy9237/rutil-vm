@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import BaseModal from "../components/modal/BaseModal";
 import Logger from "./Logger";
 import { RVI16, rvi16ChevronRight } from "../components/icons/RutilVmIcons";
+import Localization from "./Localization";
 
 const DeleteModal = ({
   isOpen=false, 
@@ -31,7 +32,7 @@ const DeleteModal = ({
 
   const handleFormSubmit = () => {
     if (!ids.length) {
-      Logger.error(`삭제할 ${label} ID가 없습니다.`);
+      Logger.error(`${Localization.kr.REMOVE}할 ${label} ID가 없습니다.`);
       return;
     }
   
@@ -40,7 +41,7 @@ const DeleteModal = ({
         onSuccess: () => {
           if (ids.length === 1 || index === ids.length - 1) {
             onClose();
-            toast.success(`[200] ${label} 삭제 요청완료`);
+            toast.success(`[200] ${label} ${Localization.kr.REMOVE} 요청완료`);
   
             const currentPath = location.pathname;
             const uuidRegex = /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
@@ -54,7 +55,7 @@ const DeleteModal = ({
           }
         },
         onError: (error) => {
-          toast.error(`${label} 삭제 요청완료: ${error.message}`);
+          toast.error(`${label} ${Localization.kr.REMOVE} 요청완료: ${error.message}`);
         },
       });
     });
@@ -66,22 +67,18 @@ const DeleteModal = ({
       isOpen={isOpen} onClose={onClose}
       targetName={label}
       shouldWarn={true}
-      submitTitle={"삭제"}
-      promptText={`다음 항목을 삭제하시겠습니까?`}
+      submitTitle={Localization.kr.REMOVE}
+      promptText={`다음 항목을 ${Localization.kr.REMOVE}하시겠습니까?`}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "660px" }}
     >
-    <div>
-   
-    <div>
       {names.map((name, index) => (
         <div className="p-1.5 font-bold flex f-start" key={index}> 
           <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>
           {name}
         </div>
       ))}
-    </div>
-  </div>
+      <br/>
   </BaseModal>
   );
 };

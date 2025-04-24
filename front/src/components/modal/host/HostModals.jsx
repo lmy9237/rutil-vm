@@ -8,48 +8,32 @@ import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteHost } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 
-const ACTIONS = [
-  "host:deactivate",
-  "host:activate",
-  "host:restart",
-  "host:refresh",
-  // "host:reInstall",
-  "host:enrollCert",
-  "host:haOn",
-  "host:haOff",
-]
 /**
  * @name HostModals
  * @description 호스트 모달 모음
  * 
  * @returns {JSX.Element} HostModals
  */
-const HostModals = ({
-  host,
-  clusterId, /* NOTE: 생성에만 필요함 */
-}) => {
+const HostModals = () => {
   const { activeModal, setActiveModal } = useUIState()
   const { hostsSelected } = useGlobal()
 
   const modals = {
     create: (
       <HostModal key={activeModal()} isOpen={activeModal() === "host:create"}
-        clusterId={clusterId}
         onClose={() => setActiveModal(null)} 
       />
     ), update: (
       <HostModal key={activeModal()} isOpen={activeModal() === "host:update"}
-        editMode
-        hostId={host?.id}
         onClose={() => setActiveModal(null)} 
+        editMode
       />
     ), remove: (
       <DeleteModal key={activeModal()} isOpen={activeModal() === "host:remove"}
+        onClose={() => setActiveModal(null)} 
         label={Localization.kr.HOST}
         data={hostsSelected}
         api={useDeleteHost()}
-        onClose={() => setActiveModal(null)} 
-        // navigation={''}
       />
     ), action: (
       <HostActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}
@@ -59,8 +43,6 @@ const HostModals = ({
     ), commitNetHost: (
       <HostCommitNetModal key={activeModal()} isOpen={activeModal() === "host:commitNetHost"}
         onClose={() => setActiveModal(null)} 
-        data={hostsSelected[0]}
-        // data={hostsSelected[0] ?? host} // TODO: 정의 필요
       />
     )    
   };
@@ -77,3 +59,14 @@ const HostModals = ({
 };
 
 export default HostModals;
+
+const ACTIONS = [
+  "host:deactivate",
+  "host:activate",
+  "host:restart",
+  "host:refresh",
+  // "host:reInstall",
+  "host:enrollCert",
+  "host:haOn",
+  "host:haOff",
+]

@@ -12,7 +12,7 @@ import Logger from "../../utils/Logger";
  * @returns {JSX.Element} Clusters
  */
 const Clusters = () => {
-  const { datacentersSelected, clustersSelected, setClustersSelected } = useGlobal()
+  const { setClustersSelected } = useGlobal()
 
   const {
     data: clusters = [],
@@ -23,24 +23,20 @@ const Clusters = () => {
   } = useAllClusters((e) => ({ ...e }));
 
   useEffect(() => {
-    Logger.debug("DataCenters > useEffect ...");
+    Logger.debug("Clusters > useEffect ...");
     return () => {
-      Logger.debug("DataCenters > useEffect ... CLEANING UP");
+      Logger.debug("Clusters > useEffect ... CLEANING UP");
       setClustersSelected([])
     }
   }, [])
 
   Logger.debug(`Clusters ... `)
   return (
-    <>
-      <ClusterDupl columns={TableColumnsInfo.CLUSTERS}
-        clusters={clusters}
-        refetch={refetchClusters}
-        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
-      />
-      <span>{clustersSelected[0]?.name}</span><br/>
-      <span>{datacentersSelected[0]?.name}</span>
-    </>
+    <ClusterDupl columns={TableColumnsInfo.CLUSTERS}
+      clusters={clusters}
+      refetch={refetchClusters}
+      isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
+    />
   );
 };
 

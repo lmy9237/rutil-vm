@@ -6,7 +6,6 @@ import ModalNavButton from "../../navigation/ModalNavButton";
 import Localization from "../../../utils/Localization";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
-import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
 
 // 탭 메뉴

@@ -5,6 +5,13 @@ import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
 import useGlobal from "../../hooks/useGlobal";
 
+/**
+ * @name DataCenterActionButtons
+ * @description ...
+ * 
+ * @returns
+ * 
+ */
 const DataCenterActionButtons = ({ actionType = "default" }) => {
   const { setActiveModal } = useUIState()
   const { datacentersSelected } = useGlobal()

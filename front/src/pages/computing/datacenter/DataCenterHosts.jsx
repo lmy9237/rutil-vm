@@ -19,16 +19,13 @@ const DataCenterHosts = ({ datacenterId }) => {
     isSuccess: isHostsSuccess,
     refetch: refetchHosts,
   } = useHostsFromDataCenter(datacenterId, (e) => ({ ...e }));
-
   Logger.debug("DataCenterHosts ...")
   return (
-    <>
-      <HostDupl columns={TableColumnsInfo.HOSTS}
-        hosts={hosts}
-        refetch={refetchHosts}
-        isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
-      />
-    </>
+    <HostDupl columns={TableColumnsInfo.HOSTS}
+      hosts={hosts}
+      refetch={refetchHosts}
+      isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
+    />
   );
 };
 

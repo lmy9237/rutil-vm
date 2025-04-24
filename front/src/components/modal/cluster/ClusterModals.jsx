@@ -6,24 +6,25 @@ import DeleteModal from "../../../utils/DeleteModal";
 import Localization from "../../../utils/Localization";
 import { useDeleteCluster } from "../../../api/RQHook";
 
-const ClusterModals = ({
-  cluster,
-  datacenterId, /* NOTE: 생성에만 필요함 */
-}) => {
+/**
+ * @name ClusterModals
+ * @description 클러스터 모달 모음
+ * 
+ * @returns {JSX.Element} ClusterModals
+ */
+const ClusterModals = () => {
   const { activeModal, setActiveModal } = useUIState()
-  const { datacentersSelected, clustersSelected } = useGlobal()
+  const { clustersSelected } = useGlobal()
 
   const modals = {
     create: (
       <ClusterModal key={activeModal()} isOpen={activeModal() === "cluster:create"}
         onClose={() => setActiveModal(null)}
-        datacenterId={datacenterId || datacentersSelected?.[0]?.id}
       />
     ), update: (
       <ClusterModal key={activeModal()} isOpen={activeModal() === "cluster:update"}
         onClose={() => setActiveModal(null)}
         editMode
-        clusterId={clustersSelected[0]?.id ?? cluster?.id}
       />
     ), remove: (
       <DeleteModal key={activeModal()} isOpen={activeModal() === "cluster:remove"}

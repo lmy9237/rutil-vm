@@ -3,12 +3,16 @@ import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import DataCenterModal from "./DataCenterModal";
 import DeleteModal from "../../../utils/DeleteModal";
-import { useDeleteDataCenter } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import { useDeleteDataCenter } from "../../../api/RQHook";
 
-const DataCenterModals = ({ 
-  dataCenter,
-}) => {
+/**
+ * @name DataCenterModals
+ * @description 데이터센터 모달 모음
+ * 
+ * @returns {JSX.Element} DataCenterModals
+ */
+const DataCenterModals = () => {
   const { activeModal, setActiveModal } = useUIState()
   const { datacentersSelected } = useGlobal()
 
@@ -19,16 +23,15 @@ const DataCenterModals = ({
       />
     ), update: (
       <DataCenterModal key={activeModal()} isOpen={activeModal() === "datacenter:update"}
-        editMode
-        datacenterId={dataCenter?.id ?? datacentersSelected[0]?.id}
         onClose={() => setActiveModal(null)}
+        editMode
       />
     ), remove: (
       <DeleteModal key={activeModal()} isOpen={activeModal() === "datacenter:remove"}
+        onClose={() => setActiveModal(null)}
         label={Localization.kr.DATA_CENTER}
         data={datacentersSelected}
         api={useDeleteDataCenter()}
-        onClose={() => setActiveModal(null)}
         // navigation={'/computing/rutil-manager/datacenters'}
       />
     )

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { toast } from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
@@ -17,7 +17,199 @@ import Logger from "../../../utils/Logger";
 import CONSTANT from "../../../Constants";
 import "./MCluster.css";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import useGlobal from "../../../hooks/useGlobal";
 
+const initialFormState = {
+  id: "",
+  name: "",
+  description: "",
+  comment: "",
+  cpuArc: "UNDEFINED",
+  cpuType: "",
+  biosType: "CLUSTER_DEFAULT",
+  errorHandling: "migrate",
+};
+
+const ClusterModal = ({
+  isOpen, onClose, editMode = false,
+}) => {
+  const cLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+
+  const { datacentersSelected, clustersSelected } = useGlobal()
+  const clusterId = useMemo(() => [...clustersSelected][0]?.id, [clustersSelected])
+  const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
+
+  const [formState, setFormState] = useState(initialFormState);
+  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
+  const [networkVo, setNetworkVo] = useState({ id: "", name: "" });
+  const [cpuOptions, setCpuOptions] = useState([]);
+
+  const biosTypeFiltered = editMode
+    ? biosTypeOptions.filter(opt => opt.value !== "CLUSTER_DEFAULT")
+    : biosTypeOptions;
+
+  const onSuccess = () => {
+    onClose();
+    toast.success(`${Localization.kr.CLUSTER} ${cLabel} ${Localization.kr.FINISHED}`);
+  };
+  const { data: cluster } = useCluster(clusterId);
+  const { mutate: addCluster } = useAddCluster(onSuccess, () => onClose());
+  const { mutate: editCluster } = useEditCluster(onSuccess, () => onClose());
+  const { 
+    data: datacenters = [], 
+    isLoading: isDataCentersLoading 
+  } = useAllDataCenters((e) => ({ ...e }));
+  const { 
+    data: networks = [], 
+    isLoading: isNetworksLoading 
+  } = useNetworksFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
+  
+  useEffect(() => {
+    if (!isOpen) {
+      setFormState(initialFormState);
+      setDataCenterVo({id: "", name: ""});
+      setNetworkVo({id: "", name: ""});
+    }
+    if (editMode && cluster) {
+      setFormState({
+        id: cluster?.id,
+        name: cluster?.name,
+        description: cluster?.description,
+        comment: cluster?.comment,
+        cpuArc: cluster?.cpuArc,
+        cpuType: cluster?.cpuType,
+        biosType: cluster?.biosType,
+        errorHandling: cluster?.errorHandling,
+      });
+      setDataCenterVo({id: cluster?.dataCenterVo?.id, name: cluster?.dataCenterVo?.name});
+      setNetworkVo({id: cluster?.networkVo?.id, name: cluster?.networkVo?.name});
+    }
+  }, [isOpen, editMode, cluster]);
+
+  useEffect(() => {
+    if (datacenterId) {
+      const selected = datacenters.find(dc => dc.id === datacenterId);
+      setDataCenterVo({ id: selected?.id, name: selected?.name });
+      setNetworkVo({id: "", name: ""});
+    } else if (!editMode && datacenters.length > 0) {
+      // datacenterId가 없다면 기본 데이터센터 선택
+      const defaultDc = datacenters.find(dc => dc.name === "Default");
+      const firstDc = defaultDc || datacenters[0];
+      setDataCenterVo({ id: firstDc.id, name: firstDc.name });
+      setNetworkVo({id: "", name: ""});
+    }
+  }, [datacenterId, datacenters, editMode]);
+  
+  useEffect(() => {
+    if (!editMode && networks && networks.length > 0) {
+      const defaultNetwork = networks.find(n => n.name === "ovirtmgmt");
+      const firstN = defaultNetwork || networks[0];
+      setNetworkVo({ id: firstN.id, name: firstN.name });
+    }
+  }, [networks, editMode]);
+  
+  useEffect(() => {
+    const options = cpuArcOptions[formState.cpuArc] || [];
+    setCpuOptions(options);
+  
+    if (!editMode) {
+      setFormState((prev) => ({ ...prev, cpuType: options[0].value || ""  }));
+    }
+  }, [formState.cpuArc, editMode]);
+  
+  
+  const validateForm = () => {
+    const nameError = checkName(formState.name);
+    if (nameError) return nameError;
+
+    if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
+    if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
+    if (!networkVo.id) return `${Localization.kr.NETWORK}를 선택해주세요.`;
+    return null;
+  };
+
+  const handleFormSubmit = () => {
+    const error = validateForm();
+    if (error) return toast.error(error);
+
+    const dataToSubmit = {
+      ...formState,
+      dataCenterVo,
+      networkVo,
+    };
+
+    Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터 출력
+
+    editMode
+      ? editCluster({ clusterId: formState.id, clusterData: dataToSubmit })
+      : addCluster(dataToSubmit);
+  };
+
+  return (
+    <BaseModal targetName={Localization.kr.CLUSTER} submitTitle={cLabel}
+      isOpen={isOpen} onClose={onClose}      
+      onSubmit={handleFormSubmit}
+      contentStyle={{ width: "730px" }} 
+    >
+      <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
+        value={dataCenterVo.id}
+        disabled={editMode}
+        loading={isDataCentersLoading}
+        options={datacenters}
+        onChange={handleSelectIdChange(setDataCenterVo, datacenters) }
+      />
+      <hr />
+      <LabelInput id="name" label={Localization.kr.NAME}
+        autoFocus
+        value={formState.name}
+        onChange={handleInputChange(setFormState, "name")}
+      />
+      <LabelInput id="description" label={Localization.kr.DESCRIPTION}
+        value={formState.description}
+        onChange={handleInputChange(setFormState, "description")}
+      />
+      <LabelInput id="comment" label={Localization.kr.COMMENT}
+        value={formState.comment}
+        onChange={handleInputChange(setFormState, "comment")}
+      />
+      <LabelSelectOptionsID id="network-man" label={`관리 ${Localization.kr.NETWORK}`}
+        value={networkVo.id}
+        disabled={editMode}
+        loading={isNetworksLoading}
+        options={networks}
+        onChange={handleSelectIdChange(setNetworkVo, networks)}
+      />
+      <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
+        value={formState.cpuArc}
+        options={CONSTANT.cpuArcs}
+        disabled={editMode}
+        onChange={handleInputChange(setFormState, "cpuArc")}
+      />
+      <LabelSelectOptions id="cpu-type" label="CPU 유형"
+        value={formState.cpuType}
+        disabled={editMode}
+        options={cpuOptions}
+        onChange={handleInputChange(setFormState, "cpuType")}
+      />
+      {!["PPC64", "S390X", "UNDEFINED"].includes(formState.cpuArc) && (
+        <LabelSelectOptions
+          id="firmware-type"
+          label="칩셋/펌웨어 유형"
+          value={formState.biosType}
+          options={biosTypeFiltered}
+          onChange={handleInputChange(setFormState, "biosType")}
+        />
+      )}
+      <LabelSelectOptions id="recovery_policy-type" label="복구정책"
+        value={formState.errorHandling}
+        options={errorHandlingOptions}
+        onChange={handleInputChange(setFormState, "errorHandling")}
+      />
+    </BaseModal>
+  );
+};
+
+export default ClusterModal;
 
 // name이 value고, description이 label
 const cpuArcOptions = {
@@ -105,203 +297,3 @@ const errorHandlingOptions = [
   { value: "migrate_highly_available", label: `${Localization.kr.HOST} ${Localization.kr.VM}만 ${Localization.kr.MIGRATION}` },
   { value: "do_not_migrate", label: `${Localization.kr.VM}은 ${Localization.kr.MIGRATION} 하지 않음` },
 ];
-
-const initialFormState = {
-  id: "",
-  name: "",
-  description: "",
-  comment: "",
-  cpuArc: "UNDEFINED",
-  cpuType: "",
-  biosType: "CLUSTER_DEFAULT",
-  errorHandling: "migrate",
-};
-
-const ClusterModal = ({
-  isOpen, 
-  onClose,
-  editMode = false, 
-  clusterId, 
-  datacenterId, 
-}) => {
-  const cLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
-  const [formState, setFormState] = useState(initialFormState);
-
-  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
-  const [networkVo, setNetworkVo] = useState({ id: "", name: "" });
-  const [cpuOptions, setCpuOptions] = useState([]);
-
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.CLUSTER} ${cLabel} 완료`);
-  };
-  const { data: cluster } = useCluster(clusterId);
-  const { mutate: addCluster } = useAddCluster(onSuccess, () => onClose());
-  const { mutate: editCluster } = useEditCluster(onSuccess, () => onClose());
-
-  useEffect(() => {
-    if (!isOpen) {
-      setFormState(initialFormState);
-      setDataCenterVo({id: "", name: ""});
-      setNetworkVo({id: "", name: ""});
-    }
-    if (editMode && cluster) {
-      setFormState({
-        id: cluster?.id,
-        name: cluster?.name,
-        description: cluster?.description,
-        comment: cluster?.comment,
-        cpuArc: cluster?.cpuArc,
-        cpuType: cluster?.cpuType,
-        biosType: cluster?.biosType,
-        errorHandling: cluster?.errorHandling,
-      });
-      setDataCenterVo({id: cluster?.dataCenterVo?.id, name: cluster?.dataCenterVo?.name});
-      setNetworkVo({id: cluster?.networkVo?.id, name: cluster?.networkVo?.name});
-    }
-  }, [isOpen, editMode, cluster]);
-
-  const { 
-    data: datacenters = [], 
-    isLoading: isDataCentersLoading 
-  } = useAllDataCenters((e) => ({ ...e }));
-  const { 
-    data: networks = [], 
-    isLoading: isNetworksLoading 
-  } = useNetworksFromDataCenter(datacenterId || dataCenterVo?.id, (e) => ({ ...e }));
-
-
-  useEffect(() => {
-    if (datacenterId) {
-      const selected = datacenters.find(dc => dc.id === datacenterId);
-      setDataCenterVo(
-        selected 
-        ? { id: selected.id, name: selected.name } 
-        : { id: datacenterId, name: "" }
-      );
-      setNetworkVo({id: "", name: ""});
-    } else if (!editMode && datacenters.length > 0) {
-      // datacenterId가 없고 기본 데이터센터 선택
-      const defaultDc = datacenters.find(dc => dc.name === "Default");
-      const fallbackDc = defaultDc ?? datacenters[0];
-      setDataCenterVo({ id: fallbackDc.id, name: fallbackDc.name });
-      setNetworkVo({id: "", name: ""});
-    }
-  }, [datacenterId, datacenters, editMode]);
-  
-
-  useEffect(() => {
-    if (networks && networks.length > 0) {
-      const defaultNetwork = networks.find(n => n.name === "ovirtmgmt");
-      if (defaultNetwork) {
-        setNetworkVo({ id: defaultNetwork.id, name: defaultNetwork.name });
-      } else {
-        setNetworkVo({ id: networks[0].id, name: networks[0].name });
-      }
-    } else {
-      setNetworkVo({ id: "", name: "" }); // 네트워크 없음 초기화
-    }
-  }, [networks]);
-  
-
-  useEffect(() => {
-    const options = cpuArcOptions[formState.cpuArc] || [];
-    setCpuOptions(options);
-  
-    // CPU 아키텍처가 변경시 cpu유형 0번째로 자동 설정
-    if (options.length > 0) {
-      setFormState((prev) => ({ ...prev, cpuType: options[0].value }));
-    } else {
-      setFormState((prev) => ({ ...prev, cpuType: "" }));
-    }
-  }, [formState.cpuArc]);
-  
-  const validateForm = () => {
-    const nameError = checkName(formState.name);
-    if (nameError) return nameError;
-
-    if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
-    if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    if (!networkVo.id) return `${Localization.kr.NETWORK}를 선택해주세요.`;
-    return null;
-  };
-
-  const handleFormSubmit = () => {
-    const error = validateForm();
-    if (error) return toast.error(error);
-
-    const dataToSubmit = {
-      ...formState,
-      dataCenterVo,
-      networkVo,
-    };
-
-    Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터 출력
-
-    editMode
-      ? editCluster({ clusterId: formState.id, clusterData: dataToSubmit })
-      : addCluster(dataToSubmit);
-  };
-
-  return (
-    <BaseModal targetName={Localization.kr.CLUSTER} submitTitle={cLabel}
-      isOpen={isOpen} onClose={onClose}      
-      onSubmit={handleFormSubmit}
-      contentStyle={{ width: "730px" }} 
-    >
-      <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
-        value={dataCenterVo.id}
-        disabled={editMode}
-        loading={isDataCentersLoading}
-        options={datacenters}
-        onChange={handleSelectIdChange(setDataCenterVo, datacenters) }
-      />
-      <hr />
-      <LabelInput id="name" label={Localization.kr.NAME}
-        autoFocus
-        value={formState.name}
-        onChange={handleInputChange(setFormState, "name")}
-      />
-      <LabelInput id="description" label={Localization.kr.DESCRIPTION}
-        value={formState.description}
-        onChange={handleInputChange(setFormState, "description")}
-      />
-      <LabelInput id="comment" label={Localization.kr.COMMENT}
-        value={formState.comment}
-        onChange={handleInputChange(setFormState, "comment")}
-      />
-      <LabelSelectOptionsID id="network-man" label={`관리 ${Localization.kr.NETWORK}`}
-        value={networkVo.id}
-        disabled={editMode}
-        loading={isNetworksLoading}
-        options={networks}
-        onChange={handleSelectIdChange(setNetworkVo, networks)}
-      />
-      <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
-        value={formState.cpuArc}
-        options={CONSTANT.cpuArcs}
-        disabled={editMode}
-        onChange={handleInputChange(setFormState, "cpuArc")}
-      />
-      <LabelSelectOptions id="cpu-type" label="CPU 유형"
-        value={formState.cpuType}
-        disabled={editMode}
-        options={cpuOptions}
-        onChange={handleInputChange(setFormState, "cpuType")}
-      />
-      <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"
-        value={formState.biosType}
-        disabled={["PPC64", "S390X"].includes(formState.cpuArc)}
-        options={biosTypeOptions}
-        onChange={handleInputChange(setFormState, "biosType")}
-      />
-      <LabelSelectOptions id="recovery_policy-type" label="복구정책"
-        value={formState.errorHandling}
-        options={errorHandlingOptions}
-        onChange={handleInputChange(setFormState, "errorHandling")}
-      />
-    </BaseModal>
-  );
-};
-
-export default ClusterModal;

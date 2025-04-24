@@ -15,7 +15,6 @@ import useGlobal from "../../../hooks/useGlobal";
 const DataCenterClusters = ({
   datacenterId
 }) => {
-  const { datacentersSelected, clustersSelected, setClustersSelected } = useGlobal()
   const {
     data: clusters = [],
     isLoading: isClustersLoading,
@@ -25,16 +24,11 @@ const DataCenterClusters = ({
   } = useClustersFromDataCenter(datacenterId, (e) => ({...e,}));
 
   return (
-    <>
-      <ClusterDupl columns={TableColumnsInfo.CLUSTERS_FROM_DATACENTER}
-        clusters={clusters}
-        refetch={refetchClusters}
-        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
-      />
-      
-      <span>{clustersSelected[0]?.name}</span><br/>
-      <span>{datacentersSelected[0]?.name}</span>
-    </>
+    <ClusterDupl columns={TableColumnsInfo.CLUSTERS_FROM_DATACENTER}
+      clusters={clusters}
+      refetch={refetchClusters}
+      isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
+    />
   );
 };
 

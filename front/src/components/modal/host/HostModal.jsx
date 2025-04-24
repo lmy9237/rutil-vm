@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
@@ -9,6 +9,7 @@ import {
   useEditHost,
   useHost,
   useAllClusters,
+  useClustersFromDataCenter,
 } from "../../../api/RQHook";
 import { checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
@@ -16,6 +17,7 @@ import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
 import useGlobal from "../../../hooks/useGlobal";
 import "./MHost.css";
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 
 const initialFormState = {
   id: "",
@@ -36,38 +38,43 @@ const initialFormState = {
  * @returns
  */
 const HostModal = ({ 
-  isOpen, 
-  editMode=false, 
-  hostId,
-  clusterId, // TODO: 필요한지 모르겠음 ... 데이터조회에서 가져오고 있음
-  onClose
+  isOpen, onClose, editMode=false
 }) => {
-  const { hostsSelected, setHostsSelected } = useGlobal()
   const hLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+
+  const { datacentersSelected, clustersSelected, hostsSelected } = useGlobal();
+  const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
+  const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
+  const clusterId = useMemo(() => [...clustersSelected][0]?.id, [clustersSelected]);
+
   const [formState, setFormState] = useState(initialFormState);
   const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
 
   const onSuccess = () => {
     onClose();
-    toast.success(`${Localization.kr.HOST} ${hLabel} 완료`);
+    toast.success(`${Localization.kr.HOST} ${hLabel} ${Localization.kr.FINISHED}`);
   };
   const { data: host } = useHost(hostId);
   const { mutate: addHost } = useAddHost(onSuccess, () => onClose());
   const { mutate: editHost } = useEditHost(onSuccess, () => onClose());
-  
+
+  const {
+    data: dcClusters = [],
+    isLoading: isDcClustersLoading,
+  } = useClustersFromDataCenter(datacenterId, (e) => ({...e,}));
   const { 
     data: clusters = [], 
     isLoading: isClustersLoading 
-  } = useAllClusters( (e) => ({ ...e }));
+  } = useAllClusters((e) => ({ ...e }));
+
+  const clusterOptions = datacenterId && dcClusters?.length > 0 ? dcClusters : clusters;
 
   useEffect(() => {
     if (!isOpen) {
-      /* 열리기 전 */
-      return setFormState(initialFormState);
+      setFormState(initialFormState);
+      setClusterVo({id: "", name: ""});
     }
-    setHostsSelected(host)
     if (editMode && host) {
-      Logger.debug(`HostModal > useEffect ... host: `, host);
       setFormState({
         id: host?.id,
         name: host?.name,
@@ -80,29 +87,19 @@ const HostModal = ({
       });
       setClusterVo({id: host?.clusterVo?.id, name: host?.clusterVo?.name});
     }
-  }, [isOpen, editMode, hostsSelected]);
+  }, [isOpen, editMode, host]);
 
   useEffect(() => {
     if (clusterId) {
-      setClusterVo({id: clusterId});
-    } else if (!editMode && clusters && clusters.length > 0) {
-      const defaultC = clusters.find(c => c.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
-      if (defaultC) {
-        setClusterVo({ id: defaultC.id, name: defaultC.name });
-      } else {
-        setClusterVo({ id: clusters[0].id, name: clusters[0].name });
-      }
+      const selected = clusterOptions.find(c => c.id === clusterId);
+      setClusterVo({id: selected?.id, name: selected?.name});
+    } else if (!editMode && clusterOptions && clusterOptions.length > 0) {
+      // 만약 "Default"라는 이름이 있다면 우선 선택
+      const defaultC = clusterOptions.find(c => c.name === "Default");
+      const firstC = defaultC || clusterOptions[0];
+      setClusterVo({ id: firstC.id, name: firstC.name });
     }
-  }, [clusters, clusterId, editMode]);
-
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
-  const handleSelectIdChange = (setVo, voList) => (e) => {
-    const selected = voList.find((item) => item.id === e.target.value);
-    if (selected) setVo({ id: selected.id, name: selected.name });
-  }; 
+  }, [clusterOptions, clusterId, editMode]);
 
   const validateForm = () => {
     const nameError = checkName(formState.name);
@@ -123,6 +120,7 @@ const HostModal = ({
     };
 
     Logger.debug(`HostModal > handleFormSubmit ... dataToSubmit: ${JSON.stringify(dataToSubmit, null , 2)}`); // 데이터를 확인하기 위한 로그
+    
     editMode
       ? editHost({ hostId: formState.id, hostData: dataToSubmit })
       : addHost({ hostData: dataToSubmit, deployHostedEngine: String(formState.hostedEngine), });
@@ -132,34 +130,35 @@ const HostModal = ({
     <BaseModal targetName={Localization.kr.HOST} submitTitle={hLabel}
       isOpen={isOpen} onClose={onClose}      
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "730px", height: !editMode ? "600px" :"500px" }} 
+      contentStyle={{ width: "730px"}} 
+      // contentStyle={{ width: "730px", height: !editMode ? "600px" :"400px" }} 
     >
       <LabelSelectOptionsID label={`${Localization.kr.HOST} ${Localization.kr.CLUSTER}`}
         value={clusterVo.id}
         disabled={editMode}
-        loading={isClustersLoading}
-        options={clusters}
-        onChange={handleSelectIdChange(setClusterVo, clusters)}
+        loading={datacenterId ? isDcClustersLoading : isClustersLoading}
+        options={clusterOptions}
+        onChange={handleSelectIdChange(setClusterVo, clusterOptions)}
       />
       <hr />
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
         value={formState.name}
-        onChange={handleInputChange("name")}
+        onChange={handleInputChange(setFormState, "name")}
       />
       <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
-        onChange={handleInputChange("comment")}
+        onChange={handleInputChange(setFormState, "comment")}
       />
       <LabelInput id="address" label={`${Localization.kr.HOST} 이름/IP`}
         value={formState.address}
         disabled={editMode}
-        onChange={handleInputChange("address")}
+        onChange={handleInputChange(setFormState, "address")}
       />
       <LabelInputNum id="sshPort" label="SSH 포트"
         value={formState.sshPort}
         disabled={editMode}
-        onChange={handleInputChange("sshPort")}
+        onChange={handleInputChange(setFormState, "sshPort")}
       />
       <hr />
       {!editMode && (
@@ -171,7 +170,7 @@ const HostModal = ({
           <LabelInput id="sshPassWord" label="암호" 
             type="password"           
             value={formState.sshPassWord}
-            onChange={handleInputChange("sshPassWord")}
+            onChange={handleInputChange(setFormState, "sshPassWord")}
           />
         </>
       )}

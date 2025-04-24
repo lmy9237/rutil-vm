@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import useUIState from "../../hooks/useUIState"
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가;
 import DomainActionButtons from "./DomainActionButtons";
@@ -26,13 +25,11 @@ import Logger from "../../utils/Logger";
  */
 const DomainDupl = ({
   domains = [], columns = [], showSearchBox = true,
-  actionType, 
-  sourceContext = "all", 
+  actionType, sourceContext = "all", 
   refetch, isLoading, isError, isSuccess,
 }) => {
   // sourceContext: all = 전체목록 fromDomain = 도메인에서 데이터센터 fromDatacenter = 데이터센터에서 도메인
   const navigate = useNavigate();
-  // const { activeModal, setActiveModal } = useUIState();
   const { domainsSelected, setDomainsSelected } = useGlobal()
   
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)

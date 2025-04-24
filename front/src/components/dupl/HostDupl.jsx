@@ -41,6 +41,7 @@ const HostDupl = ({
     searchText: `${host?.name} ${host?.clusterVo?.name || ""} ${host?.dataCenterVo?.name || ""}`.toLowerCase(),
   }));
 
+  // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   const handleNameClick = useCallback((id) => {
