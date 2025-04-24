@@ -6,7 +6,6 @@ import useSearch from "../../hooks/useSearch";
 import TablesOuter from "../table/TablesOuter";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import DataCenterActionButtons from "./DataCenterActionButtons";
-import DataCenterModals from "../modal/datacenter/DataCenterModals";
 import TableRowClick from "../table/TableRowClick";
 import { status2Icon } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
@@ -14,6 +13,15 @@ import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
 
+/**
+ * @name DataCenterDupl
+ * @description ...
+ * 
+ * @param {Array} datacenters
+ * @param {string[]} columns
+ * 
+ * @returns
+ */
 const DataCenterDupl = ({
   datacenters = [], columns = [], showSearchBox=true,
   refetch, isLoading, isError, isSuccess,
@@ -64,7 +72,6 @@ const DataCenterDupl = ({
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         multiSelect={true}
-        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setDatacentersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}

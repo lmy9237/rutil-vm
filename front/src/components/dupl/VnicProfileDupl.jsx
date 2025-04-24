@@ -1,11 +1,10 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useUIState from "../../hooks/useUIState";
 import useSearch from "../../hooks/useSearch"; 
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
-import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
 import VnicProfileActionButtons from "./VnicProfileActionButtons";
 import SearchBox from "../button/SearchBox";  
 import SelectedIdView from "../common/SelectedIdView";
@@ -21,11 +20,9 @@ import useGlobal from "../../hooks/useGlobal";
  */
 const VnicProfileDupl = ({
   vnicProfiles = [], columns = [], showSearchBox = true,
-  networkId,
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal } = useUIState();
   const { vnicProfilesSelected, setVnicProfilesSelected } = useGlobal();
 
   // ✅ 데이터 변환 (검색 가능하도록 `searchText` 필드 추가)
@@ -79,18 +76,11 @@ const VnicProfileDupl = ({
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         multiSelect={true}
-        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setVnicProfilesSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
-
       <SelectedIdView items={vnicProfilesSelected} />
-
-      {/* vNIC Profile 모달창 */}
-      <VnicProfileModals vnicProfile={vnicProfilesSelected[0]}
-        networkId={networkId}
-      />
     </div>
   );
 };

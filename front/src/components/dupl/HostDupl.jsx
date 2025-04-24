@@ -14,7 +14,6 @@ import Logger from "../../utils/Logger";
 
 const HostDupl = ({
   hosts = [], columns = [], showSearchBox =true,
-  clusterId,
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
@@ -68,7 +67,6 @@ const HostDupl = ({
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         multiSelect={true}
-        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setHostsSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}

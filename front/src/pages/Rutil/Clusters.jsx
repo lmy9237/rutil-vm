@@ -12,6 +12,8 @@ import Logger from "../../utils/Logger";
  * @returns {JSX.Element} Clusters
  */
 const Clusters = () => {
+  const { datacentersSelected, clustersSelected, setClustersSelected } = useGlobal()
+
   const {
     data: clusters = [],
     isLoading: isClustersLoading,
@@ -19,7 +21,6 @@ const Clusters = () => {
     isSuccess: isClustersSuccess,
     refetch: refetchClusters,
   } = useAllClusters((e) => ({ ...e }));
-  const { setClustersSelected } = useGlobal()
 
   useEffect(() => {
     Logger.debug("DataCenters > useEffect ...");
@@ -37,6 +38,8 @@ const Clusters = () => {
         refetch={refetchClusters}
         isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
       />
+      <span>{clustersSelected[0]?.name}</span><br/>
+      <span>{datacentersSelected[0]?.name}</span>
     </>
   );
 };

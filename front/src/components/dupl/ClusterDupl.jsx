@@ -5,7 +5,6 @@ import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
-import ClusterModals from "../modal/cluster/ClusterModals";
 import ClusterActionButtons from "./ClusterActionButtons";
 import SearchBox from "../button/SearchBox";
 import Logger from "../../utils/Logger";
@@ -23,7 +22,6 @@ import SelectedIdView from "../common/SelectedIdView";
  */
 const ClusterDupl = ({
   clusters = [], columns = [], showSearchBox=true,
-  datacenterId,  
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
@@ -73,7 +71,6 @@ const ClusterDupl = ({
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         multiSelect={true}
-        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setClustersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}

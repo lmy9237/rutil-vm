@@ -26,7 +26,6 @@ const DataCenterClusters = ({
     <>
       <ClusterDupl columns={TableColumnsInfo.CLUSTERS_FROM_DATACENTER}
         clusters={clusters}
-        datacenterId={datacenterId}
         refetch={refetchClusters}
         isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
       />

@@ -1,5 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { useState, useRef, useCallback } from "react";
 import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import useClickOutside from "../../hooks/useClickOutside"; // ✅ import 추가
 import Logger from "../../utils/Logger";
@@ -50,8 +49,8 @@ const LabelSelectOptionsID = ({
     ? "로딩중~"
     : options.length === 0
       ? "항목 없음"
-      : selectedOption
-        ? `${selectedOption.name}: ${selectedOption.id} ${etcLabel}`
+      : options.find(opt => opt.id === value)
+        ? `${options.find(opt => opt.id === value).name}: ${options.find(opt => opt.id === value).id} ${etcLabel}`
         : "선택하세요";
 
   return (
@@ -76,7 +75,7 @@ const LabelSelectOptionsID = ({
           ) : (
             options.map((opt) => (
               <LabelSelectOptionId
-                key={opt.id} 
+                // key={opt.id} 
                 opt={opt}
                 value={value}
                 etcLabel={etcLabel}
@@ -115,7 +114,7 @@ const LabelSelectOptionId = ({
   handleOptionClick,
 }) => (
   <div
-    // key={opt.id}
+    key={opt.id}
     className={`custom-option ${opt.id === value ? "selected" : ""}`}
     onClick={() => handleOptionClick(opt.id)}
   >

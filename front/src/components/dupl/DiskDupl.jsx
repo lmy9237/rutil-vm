@@ -103,7 +103,7 @@ const DiskDupl = ({
       <div className="dupl-header-group f-start">
         {/* 검색창 추가 */}
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-        <DiskActionButtons status={disksSelected[0]?.status}/>
+        <DiskActionButtons />
       </div>
 
       <TablesOuter target={"disk"}

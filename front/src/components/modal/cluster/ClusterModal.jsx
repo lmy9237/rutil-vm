@@ -16,6 +16,7 @@ import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import CONSTANT from "../../../Constants";
 import "./MCluster.css";
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 
 
 // name이 value고, description이 label
@@ -145,7 +146,7 @@ const ClusterModal = ({
   const { 
     data: networks = [], 
     isLoading: isNetworksLoading 
-  } = useNetworksFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
+  } = useNetworksFromDataCenter(dataCenterVo?.id || datacenterId, (e) => ({ ...e }));
 
   useEffect(() => {
     if (!isOpen) {
@@ -169,27 +170,35 @@ const ClusterModal = ({
 
   useEffect(() => {
     if (datacenterId) {
-      setDataCenterVo({ id: datacenterId });
-    } else if (!editMode && datacenters && datacenters.length > 0) {
-      const defaultDc = datacenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
-      if (defaultDc) {
-        setDataCenterVo({ id: defaultDc.id, name: defaultDc.name });
+      const selected = datacenters.find(dc => dc.id === datacenterId);
+      if (selected) {
+        setDataCenterVo({ id: selected.id, name: selected.name });
       } else {
-        setDataCenterVo({ id: datacenters[0].id, name: datacenters[0].name });
+        setDataCenterVo({ id: datacenterId, name: "" });
+      }
+    } else if (!editMode && datacenters && datacenters.length > 0) {
+      const defaultDc = datacenters.find(dc => dc.name === "Default");
+      const targetDc = defaultDc ?? datacenters[0];
+      if (targetDc) {
+        setDataCenterVo({ id: targetDc.id, name: targetDc.name });
       }
     }
-  }, [datacenters, datacenterId, editMode]);  
+  }, [datacenters, datacenterId, editMode]);
+  
 
   useEffect(() => {
-    if (!editMode && networks && networks.length > 0) {
-      const defaultN = networks.find(n => n.name === "ovirtmgmt");
-      if(defaultN){
-        setNetworkVo({id: defaultN.id, name: defaultN.name});
+    if (networks && networks.length > 0) {
+      const defaultNetwork = networks.find(n => n.name === "ovirtmgmt");
+      if (defaultNetwork) {
+        setNetworkVo({ id: defaultNetwork.id, name: defaultNetwork.name });
       } else {
-        setNetworkVo({id: networks[0].id, name: networks[0].name});
+        setNetworkVo({ id: networks[0].id, name: networks[0].name });
       }
+    } else {
+      setNetworkVo({ id: "", name: "" }); // 네트워크 없음 초기화
     }
-  }, [networks, editMode]);
+  }, [networks]);
+  
 
   useEffect(() => {
     const options = cpuArcOptions[formState.cpuArc] || [];
@@ -203,16 +212,6 @@ const ClusterModal = ({
     }
   }, [formState.cpuArc]);
   
-
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
-  const handleSelectIdChange = (setVo, voList) => (e) => {
-    const selected = voList.find((item) => item.id === e.target.value);
-    if (selected) setVo({ id: selected.id, name: selected.name });
-  };
-
   const validateForm = () => {
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
@@ -257,15 +256,15 @@ const ClusterModal = ({
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
         value={formState.name}
-        onChange={handleInputChange("name")}
+        onChange={handleInputChange(setFormState, "name")}
       />
       <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
-        onChange={handleInputChange("description")}
+        onChange={handleInputChange(setFormState, "description")}
       />
       <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
-        onChange={handleInputChange("comment")}
+        onChange={handleInputChange(setFormState, "comment")}
       />
       <LabelSelectOptionsID id="network-man" label={`관리 ${Localization.kr.NETWORK}`}
         value={networkVo.id}
@@ -278,24 +277,24 @@ const ClusterModal = ({
         value={formState.cpuArc}
         options={CONSTANT.cpuArcs}
         disabled={editMode}
-        onChange={handleInputChange("cpuArc")}
+        onChange={handleInputChange(setFormState, "cpuArc")}
       />
       <LabelSelectOptions id="cpu-type" label="CPU 유형"
         value={formState.cpuType}
         disabled={editMode}
         options={cpuOptions}
-        onChange={handleInputChange("cpuType")}
+        onChange={handleInputChange(setFormState, "cpuType")}
       />
       <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"
         value={formState.biosType}
         disabled={["PPC64", "S390X"].includes(formState.cpuArc)}
         options={biosTypeOptions}
-        onChange={handleInputChange("biosType")}
+        onChange={handleInputChange(setFormState, "biosType")}
       />
       <LabelSelectOptions id="recovery_policy-type" label="복구정책"
         value={formState.errorHandling}
         options={errorHandlingOptions}
-        onChange={handleInputChange("errorHandling")}
+        onChange={handleInputChange(setFormState, "errorHandling")}
       />
     </BaseModal>
   );

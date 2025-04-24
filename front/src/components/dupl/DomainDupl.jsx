@@ -83,15 +83,10 @@ const DomainDupl = ({
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-        {sourceContext === "all" ? (
-          <DomainActionButtons actionType={actionType} 
-            status={domainsSelected[0]?.status}
-          />
-        ): (
-          <DomainDataCenterActionButtons actionType={actionType}
-            status={domainsSelected[0]?.status}
-          />
-        )}
+        {sourceContext === "all" 
+          ? <DomainActionButtons actionType={actionType} />
+          : <DomainDataCenterActionButtons actionType={actionType} />
+        }
       </div>
 
       {/* 테이블 컴포넌트 */}
@@ -105,7 +100,6 @@ const DomainDupl = ({
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
-      
       <SelectedIdView items={domainsSelected} />
     </div>
   );

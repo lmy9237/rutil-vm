@@ -5,7 +5,6 @@ import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
 import SelectedIdView from "../common/SelectedIdView";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
-import VmModals from "../modal/vm/VmModals";
 import VmActionButtons from "./VmActionButtons";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
@@ -26,7 +25,6 @@ const VmDupl = ({
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  // const { activeModal, setActiveModal } = useUIState();
   const { vmsSelected, setVmsSelected } = useGlobal();
 
   const transformedData = [...vms].map((vm) => ({
@@ -99,7 +97,6 @@ const VmDupl = ({
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         multiSelect={true}
-        /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}

@@ -23,7 +23,6 @@ const VmDisks = ({ vmId }) => {
   return (
     <VmDiskDupl 
       vmDisks={disks} 
-      vmId={vmId}
       refetch={refetchDisks}
       isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
     />

@@ -7,11 +7,12 @@ import useGlobal from "../../hooks/useGlobal";
 
 const DiskActionButtons = ({
   actionType = "default",
-  status,
 }) => {
   const { setActiveModal } = useUIState()
   const { disksSelected } = useGlobal()
   const isContextMenu = actionType === "context";
+
+  const selected1st = [...disksSelected][0] ?? null
 
   const basicActions = [
     { type: "create", onBtnClick: () => setActiveModal("disk:create"), label: Localization.kr.CREATE, disabled: isContextMenu && disksSelected.length > 0, },

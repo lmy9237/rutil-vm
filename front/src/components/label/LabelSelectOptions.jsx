@@ -46,7 +46,7 @@ const LabelSelectOptions = ({
         <div className="custom-options">
           {options.map((opt) => (
             <LabelSelectOption 
-              key={opt.value}
+              // key={opt.value}
               opt={opt}
               value={value}
               handleOptionClick={handleOptionClick}
@@ -75,7 +75,7 @@ const LabelSelectOption = ({
   handleOptionClick,
 }) => (
   <div
-    // key={opt.value}
+    key={opt.value}
     className={`custom-option ${opt.value === value ? "selected" : ""}`}
     onClick={() => handleOptionClick(opt.value)}
   >
