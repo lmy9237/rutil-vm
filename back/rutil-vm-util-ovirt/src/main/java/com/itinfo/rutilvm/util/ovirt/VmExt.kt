@@ -84,16 +84,19 @@ fun Connection.stopVm(vmId: String): Result<Boolean> = runCatching {
 
 fun Connection.suspendVm(vmId: String): Result<Boolean> = runCatching {
 	val vm: Vm = checkVm(vmId)
-
 	this.srvVm(vmId).suspend().send()
 	// this.expectVmStatus(vmId, VmStatus.SUSPENDED)
 	true
-
 }.onSuccess {
 	Term.VM.logSuccess("일시정지", vmId)
 }.onFailure {
 	Term.VM.logFail("일시정지", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error)
+		if (it.message?.contains("409|review".toRegex()) == true)
+			ErrorPattern.VM_CONFLICT_WHILE_PREVIEWING_SNAPSHOT.toError()
+		else
+			it.toItCloudException()
+	else it
 }
 
 // TODO: 종료되지 않고 다시 올라올때가 잇음, expectVmStatus대신 다른 함수 써야 할지 확인 필요

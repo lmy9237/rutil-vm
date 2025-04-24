@@ -52,17 +52,19 @@ const LabelSelectOptions = ({
             />
           ))}
         </div>
-        // createPortal((
-        //   <div className="custom-options">
-        //     {options.map((opt) => (
-        //       <LabelSelectOption 
-        //         opt={opt}
-        //         value={value}
-        //         handleOptionClick={handleOptionClick}
-        //       />
-        //     ))}
-        //   </div>
-        // ), document.querySelector(".modal"))
+        /*
+        createPortal((
+          <div className="custom-options">
+            {options.map((opt) => (
+              <LabelSelectOption 
+                opt={opt}
+                value={value}
+                handleOptionClick={handleOptionClick}
+              />
+            ))}
+          </div>
+        ), document.querySelector(".modal"))
+        */
       )}
     </div>
   );

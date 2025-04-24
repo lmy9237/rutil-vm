@@ -9,6 +9,7 @@ import com.itinfo.rutilvm.api.model.fromHostsToIdentifiedVos
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
+import com.itinfo.rutilvm.util.ovirt.error.ItCloudException
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.Vm
@@ -23,7 +24,7 @@ interface ItVmOperationService {
 	 * @param vmId [String] 가상머신 Id
 	 * @return [Boolean]
 	 */
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	fun start(vmId: String): Boolean
 	/**
 	 * [ItVmOperationService.pause]
@@ -32,7 +33,7 @@ interface ItVmOperationService {
 	 * @param vmId [String] 가상머신 Id
 	 * @return [Boolean]
 	 */
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	fun pause(vmId: String): Boolean
 	/**
 	 * [ItVmOperationService.powerOff]
@@ -41,7 +42,7 @@ interface ItVmOperationService {
 	 * @param vmId [String] 가상머신 Id
 	 * @return [Boolean]
 	 */
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	fun powerOff(vmId: String): Boolean
 	/**
 	 * [ItVmOperationService.shutdown]
@@ -50,7 +51,7 @@ interface ItVmOperationService {
 	 * @param vmId [String] 가상머신 Id
 	 * @return [Boolean]
 	 */
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	fun shutdown(vmId: String): Boolean
 	/**
 	 * [ItVmOperationService.reboot]
@@ -59,7 +60,7 @@ interface ItVmOperationService {
 	 * @param vmId [String] 가상머신 Id
 	 * @return [Boolean]
 	 */
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	fun reboot(vmId: String): Boolean
 	/**
 	 * [ItVmOperationService.reset]
@@ -68,7 +69,7 @@ interface ItVmOperationService {
 	 * @param vmId [String] 가상머신 Id
 	 * @return [Boolean]
 	 */
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	fun reset(vmId: String): Boolean
 
 	/**
@@ -78,7 +79,7 @@ interface ItVmOperationService {
 	 * @param vmId [String] 가상머신 Id
 	 * @return List<[IdentifiedVo]>
 	 */
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	fun migrateHostList(vmId: String): List<IdentifiedVo>
 	/**
 	 * [ItVmOperationService.migrate]
@@ -89,7 +90,7 @@ interface ItVmOperationService {
 	 * @param affinityClosure [Boolean]
 	 * @return [Boolean]
 	 */
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	fun migrate(vmId: String, vmViewVo: VmViewVo, affinityClosure: Boolean = false): Boolean
 
 	// 가상머신 내보내기 창
@@ -110,49 +111,49 @@ interface ItVmOperationService {
 @Service
 class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	override fun start(vmId: String): Boolean {
 		log.info("start ... vmId: {}", vmId)
 		val res: Result<Boolean> = conn.startVm(vmId)
 		return res.isSuccess
 	}
 
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	override fun pause(vmId: String): Boolean {
 		log.info("pause ... vmId: {}", vmId)
 		val res: Result<Boolean> = conn.suspendVm(vmId)
 		return res.isSuccess
 	}
 
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	override fun powerOff(vmId: String): Boolean {
 		log.info("powerOff ... vmId: {}", vmId)
 		val res: Result<Boolean> = conn.stopVm(vmId)
 		return res.isSuccess
 	}
 
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	override fun shutdown(vmId: String): Boolean {
 		log.info("shutdown ... vmId: {}", vmId)
 		val res: Result<Boolean> = conn.shutdownVm(vmId)
 		return res.isSuccess
 	}
 
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	override fun reboot(vmId: String): Boolean {
 		log.info("reboot ... vmId: {}", vmId)
 		val res: Result<Boolean> = conn.rebootVm(vmId)
 		return res.isSuccess
 	}
 
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	override fun reset(vmId: String): Boolean {
 		log.info("reset ... vmId: {}", vmId)
 		val res: Result<Boolean> = conn.resetVm(vmId)
 		return res.isSuccess
 	}
 
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	override fun migrateHostList(vmId: String): List<IdentifiedVo> {
 		log.info("migrateHostList ... vmId: {}", vmId)
 		val vm: Vm = conn.findVm(vmId)
@@ -164,7 +165,7 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 		return res.fromHostsToIdentifiedVos()
 	}
 
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	override fun migrate(vmId: String, vmViewVo: VmViewVo, affinityClosure: Boolean): Boolean {
 		log.info("migrate ... vmId:{}, vmViewVo: {}, aff: {}", vmId, vmViewVo, affinityClosure)
 		val res: Result<Boolean> = when {
@@ -175,7 +176,7 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 		return res.isSuccess
 	}
 
-	@Throws(Error::class)
+	@Throws(Error::class, ItCloudException::class)
 	override fun exportOva(vmId: String, vmExportVo: VmExportVo): Boolean {
 		log.info("exportOva ... ")
 		val res: Result<Boolean> = conn.exportVm(

@@ -3,6 +3,7 @@ import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import useClickOutside from "../../hooks/useClickOutside"; // ✅ import 추가
 import Logger from "../../utils/Logger";
 import "./LabelInput.css";
+import Loading from "../common/Loading";
 
 /**
  * @name LabelSelectOptionsID
@@ -74,7 +75,7 @@ const LabelSelectOptionsID = ({
   const boxStyle = !label ? { width: "100%" } : undefined;
 
   const getSelectedLabel = () => {
-    if (loading) return "로딩중~";
+    if (loading) return <Loading/>;
     if (options.length === 0) return "항목 없음";
     const selected = options.find((opt) => opt.id === value);
     return selected

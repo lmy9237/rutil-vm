@@ -35,7 +35,7 @@ const VmActionButtons = ({
 
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "UP");
   const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "DOWN");
-  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status.includes("UP", "POWERING_DOWN"));
+  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.some(vm => vm?.status === "UP" || vm?.status === "POWERING_DOWN");
   
   const basicActions = [
     { type: "create",     onBtnClick: () => setActiveModal("vm:create"), label: Localization.kr.CREATE, disabled: isContextMenu && vmsSelected.length > 0 },

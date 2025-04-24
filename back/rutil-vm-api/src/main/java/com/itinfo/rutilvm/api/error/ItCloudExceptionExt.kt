@@ -23,6 +23,11 @@ class ResourceLockedException(message: String): ItCloudException(message) {
 
 }
 
+@ResponseStatus(HttpStatus.CONFLICT)
+class ConflictException(message: String): ItCloudException(message) {
+
+}
+
 fun ErrorPattern.toException(): ItCloudException {
 	return when(this) {
 		ErrorPattern.OVIRTUSER_ID_NOT_FOUND,
@@ -76,8 +81,8 @@ fun ErrorPattern.toException(): ItCloudException {
 		ErrorPattern.TEMPLATE_VO_INVALID,
 		ErrorPattern.CONSOLE_VO_INVALID,
 		ErrorPattern.TICKET_VO_INVALID, -> InvalidRequestException("[${code}] ${term.desc} ${failureType.message}")
-
 		ErrorPattern.OVIRTUSER_LOCKED, -> ResourceLockedException("[${code}] ${term.desc} ${failureType.message}")
+		ErrorPattern.VM_CONFLICT_WHILE_PREVIEWING_SNAPSHOT -> ConflictException("[${code}] ${term.desc} ${failureType.message}: $additional")
 		else -> ItCloudException(failureType.message)
 	}
 }

@@ -1,8 +1,6 @@
 package com.itinfo.rutilvm.util.ovirt.error
 
 import com.itinfo.rutilvm.util.ovirt.Term
-import com.itinfo.rutilvm.util.ovirt.error.FailureType.ID_NOT_FOUND
-import com.itinfo.rutilvm.util.ovirt.error.FailureType.NOT_FOUND
 import org.ovirt.engine.sdk4.Error
 import java.util.concurrent.ConcurrentHashMap
 
@@ -49,6 +47,7 @@ enum class ErrorPattern(
 	VM_STATUS_ERROR("VM-E005", Term.VM, FailureType.BAD_REQUEST),
 	VM_STATUS_UP("VM-E005", Term.VM, FailureType.FORBIDDEN),
 	VM_DUPLICATE("VM-E006", Term.VM, FailureType.DUPLICATE),
+	VM_CONFLICT_WHILE_PREVIEWING_SNAPSHOT("VM-E007", Term.VM, FailureType.CONFLICT, "스냅샷 미리보기인 상태에서 허용되지 않은 처리."),
 	TEMPLATE_ID_NOT_FOUND("TEMPLATE-E001", Term.TEMPLATE, FailureType.ID_NOT_FOUND),
 	TEMPLATE_NOT_FOUND("TEMPLATE-E002", Term.TEMPLATE, FailureType.NOT_FOUND),
 	TEMPLATE_VO_INVALID("TEMPLATE-E003", Term.TEMPLATE, FailureType.BAD_REQUEST),
@@ -99,6 +98,7 @@ enum class ErrorPattern(
 	SNAPSHOT_ID_NOT_FOUND("SNAPSHOT-E001", Term.SNAPSHOT, FailureType.ID_NOT_FOUND),
 	SNAPSHOT_NOT_FOUND("SNAPSHOT-E002", Term.SNAPSHOT, FailureType.NOT_FOUND),
 	SNAPSHOT_VO_INVALID("SNAPSHOT-E003", Term.SNAPSHOT, FailureType.BAD_REQUEST),
+	SNAPSHOT_CONFLICT_WHILE_PREVIEWING_SNAPSHOT("SNAPSHOT-E004", Term.SNAPSHOT, FailureType.CONFLICT, "스냅샷 미리보기인 상태에서 허용되지 않은 처리."),
 	// SNAPSHOT_DUPLICATE("SNAPSHOT-E004", Term.SNAPSHOT, FailureType.DUPLICATE),
 	VNIC_PROFILE_ID_NOT_FOUND("VNICPROFILE-E001", Term.VNIC_PROFILE, FailureType.ID_NOT_FOUND),
 	VNIC_PROFILE_NOT_FOUND("VNICPROFILE-E002", Term.VNIC_PROFILE, FailureType.NOT_FOUND),
@@ -183,19 +183,20 @@ fun ErrorPattern.toError(): Error {
 		// VO_INVALID, AUTH_INVALID 등 BAD_REQUEST 관련
 		this.name.endsWith("_VO_INVALID") ||
 			this == ErrorPattern.OVIRTUSER_AUTH_INVALID ||
-			this == ErrorPattern.OVIRTUSER_LOCKED -> Error("[${code}] ${term.desc} ${failureType.message}")
+			this == ErrorPattern.OVIRTUSER_LOCKED -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
 
 		// *_DUPLICATE 항목들 공통 처리
-		this.name.endsWith("_DUPLICATE") -> Error("[${code}] ${term.desc} ${failureType.message}")
+		this.name.endsWith("_DUPLICATE") -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
 
-		this.name.endsWith("_ACTIVE") -> Error("[${code}] ${term.desc} ${failureType.message}")
-		this.name.endsWith("_INACTIVE") -> Error("[${code}] ${term.desc} ${failureType.message}")
-		this.name.endsWith("_MAINTENANCE") -> Error("[${code}] ${term.desc} ${failureType.message}")
+		this.name.endsWith("_ACTIVE") -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
+		this.name.endsWith("_INACTIVE") -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
+		this.name.endsWith("_MAINTENANCE") -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
 
 		// 특별한 추가 메시지 필요할 때
-		this == ErrorPattern.NIC_UNLINKED_REQUIRED -> Error("[${code}] ${term.desc} ${failureType.message}: $additional")
-
-		this == ErrorPattern.DISK_BOOT_OPTION -> Error("[${code}] ${term.desc} ${failureType.message}: 부팅가능한 디스크는 오직 한개만 가능합니다")
+		this == ErrorPattern.NIC_UNLINKED_REQUIRED ||
+		this == ErrorPattern.VM_CONFLICT_WHILE_PREVIEWING_SNAPSHOT ||
+		this == ErrorPattern.SNAPSHOT_CONFLICT_WHILE_PREVIEWING_SNAPSHOT -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}}: $additional")
+		this == ErrorPattern.DISK_BOOT_OPTION -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}: 부팅가능한 디스크는 오직 한개만 가능합니다")
 
 		// 기본 처리
 		else -> Error(failureType.message)

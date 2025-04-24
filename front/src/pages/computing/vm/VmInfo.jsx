@@ -2,6 +2,7 @@ import { useState, useEffect, Suspense, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
+import { openNewTab } from "../../../navigation";
 import SectionLayout from "../../../components/SectionLayout";
 import Loading from "../../../components/common/Loading";
 import HeaderButton from "../../../components/button/HeaderButton";
@@ -63,13 +64,13 @@ const VmInfo = () => {
   }, [vm]);
 
   const sections = useMemo(() => ([
-    { id: "general", label: Localization.kr.GENERAL },
-    { id: "nics", label: Localization.kr.NICS },
-    { id: "disks", label: Localization.kr.DISK },
-    { id: "snapshots", label: Localization.kr.SNAPSHOT },
+    { id: "general",      label: Localization.kr.GENERAL },
+    { id: "nics",         label: Localization.kr.NICS },
+    { id: "disks",        label: Localization.kr.DISK },
+    { id: "snapshots",    label: Localization.kr.SNAPSHOT },
     { id: "applications", label: "애플리케이션" },
-    { id: "hostDevices", label: `${Localization.kr.HOST} 장치` },
-    { id: "events", label: Localization.kr.EVENT },
+    { id: "hostDevices",  label: `${Localization.kr.HOST} 장치` },
+    { id: "events",       label: Localization.kr.EVENT },
   ]), []);
 
   useEffect(() => {
@@ -113,17 +114,17 @@ const VmInfo = () => {
     { type: "reset",     onClick: () => setActiveModal("vm:reset"),         label: Localization.kr.RESET, disabled: !isUp },
     { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END, disabled:!isUp, },
     { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF, disabled: !isUp  },
-    { type: "console",   onClick: () => setActiveModal("vm:console", vmId), label: Localization.kr.CONSOLE, disabled: !isUp },
+    { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE, disabled: !isUp },
     { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: "스냅샷 생성", disabled: !(isUp || isDown) },
     { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: !isUp },
   ]), [vm]);
 
   const popupItems = [
     /* { type: "import",  onClick: () => setActiveModal("vm:import"),  label: Localization.kr.IMPORT, }, */
-    { type: "copyVm", onClick: () => setActiveModal("vm:copyVm"), label: `${Localization.kr.VM} 복제` },
-    { type: "delete", onClick: () => setActiveModal("vm:delete"), label: Localization.kr.REMOVE, disabled: !isDown, },
+    { type: "copyVm",    onClick: () => setActiveModal("vm:copyVm"), label: `${Localization.kr.VM} 복제` },
+    { type: "delete",    onClick: () => setActiveModal("vm:delete"), label: Localization.kr.REMOVE, disabled: !isDown, },
     { type: "templates", onClick: () => setActiveModal("vm:templates"), label: "템플릿 생성", disabled: !isDown, }, 
-    { type: "ova", onClick: () => setActiveModal("vm:ova"), label: "OVA로 내보내기",  disabled: !isDown, },
+    { type: "ova",       onClick: () => setActiveModal("vm:ova"), label: "OVA로 내보내기",  disabled: !isDown, },
   ];
 
   return (

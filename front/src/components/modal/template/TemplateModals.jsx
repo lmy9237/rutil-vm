@@ -5,6 +5,7 @@ import TemplateEditModal from "./TemplateEditModal";
 import VmModal from "../../modal/vm/VmModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteTemplate } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 const TemplateModals = ({
   template,
@@ -22,7 +23,7 @@ const TemplateModals = ({
     ), remove: (
       <DeleteModal isOpen={activeModal() === "template:remove"}
         onClose={() => setActiveModal(null)}
-        label={"템플릿"}
+        label={Localization.kr.TEMPLATE}
         data={templatesSelected}
         api={useDeleteTemplate()}
         // navigation={''}

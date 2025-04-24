@@ -50,7 +50,7 @@ const NetworkInfo = () => {
     { id: "clusters", label: Localization.kr.CLUSTER },
     { id: "hosts", label: Localization.kr.HOST },
     { id: "vms", label: Localization.kr.VM },
-    { id: "templates", label: "템플릿" },
+    { id: "templates", label: Localization.kr.TEMPLATE },
   ];
 
   useEffect(() => {

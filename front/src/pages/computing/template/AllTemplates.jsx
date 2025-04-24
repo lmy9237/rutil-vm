@@ -5,6 +5,7 @@ import HeaderButton from "../../../components/button/HeaderButton";
 import { useAllTemplates } from "../../../api/RQHook";
 import { rvi24Template } from "../../../components/icons/RutilVmIcons";
 import SectionLayout from "../../../components/SectionLayout";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name AllTemplates
@@ -24,7 +25,7 @@ const AllTemplates = () => {
   return (
     <SectionLayout>
       <HeaderButton titleIcon={rvi24Template()}
-        title={"템플릿"}
+        title={Localization.kr.TEMPLATE}
       />
       <div className="w-full section-content">
         <TemplateDupl columns={TableColumnsInfo.TEMPLATES}

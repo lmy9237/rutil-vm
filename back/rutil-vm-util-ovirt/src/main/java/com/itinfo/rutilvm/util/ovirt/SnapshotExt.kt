@@ -61,7 +61,12 @@ fun Connection.addSnapshotFromVm(vmId: String, snapshot: Snapshot): Result<Boole
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "생성", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.SNAPSHOT, "생성", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error)
+		if (it.message?.contains("409|review".toRegex()) == true)
+			ErrorPattern.SNAPSHOT_CONFLICT_WHILE_PREVIEWING_SNAPSHOT.toError()
+		else
+			it.toItCloudException()
+	else it
 }
 
 fun Connection.removeSnapshotFromVm(vmId: String, snapshotId: String): Result<Boolean> = runCatching {

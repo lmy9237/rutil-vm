@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.controller
 
+import com.itinfo.rutilvm.api.error.ConflictException
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.IdNotFoundException
 import com.itinfo.rutilvm.api.error.InvalidRequestException
@@ -50,6 +51,13 @@ open class BaseController(
 		return HttpStatus.LOCKED.toResponseEntity(e.localizedMessage)
 	}
 
+	@ExceptionHandler(ConflictException::class)
+	@ResponseStatus(HttpStatus.LOCKED)
+	fun handleConflict(e: Throwable): ResponseEntity<Res<Any?>>  {
+		log.error("handleConflict ... e: {}", e::class.simpleName)
+		return HttpStatus.CONFLICT.toResponseEntity(e.localizedMessage)
+	}
+
 	@ExceptionHandler(Error::class, ItCloudException::class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	fun handleOvirtError(e: Throwable): ResponseEntity<Res<Any?>> {
@@ -60,8 +68,10 @@ open class BaseController(
 		val resultMessage = "실패: 알수없는 이, 이유: $refinedMessage"
 
 		return when {
+			// ovirt-sdk 에서 예외로 분류 되는 오류
 			e.message?.contains("${FailureType.NOT_FOUND.code}".toRegex()) == true -> HttpStatus.NOT_FOUND.toResponseEntity(resultMessage)
 			e.message?.contains("${FailureType.BAD_REQUEST.code}".toRegex()) == true -> HttpStatus.BAD_REQUEST.toResponseEntity(resultMessage)
+			e.message?.contains("${FailureType.CONFLICT.code}".toRegex()) == true -> HttpStatus.CONFLICT.toResponseEntity(resultMessage)
 			else -> HttpStatus.INTERNAL_SERVER_ERROR.toResponseEntity(e.localizedMessage)
 		}
 	}
