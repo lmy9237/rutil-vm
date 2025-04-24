@@ -2,6 +2,7 @@ import React from "react";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import ClusterDupl from "../../../components/dupl/ClusterDupl";
 import { useClustersFromDataCenter } from "../../../api/RQHook";
+import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name DataCenterClusters
@@ -14,6 +15,7 @@ import { useClustersFromDataCenter } from "../../../api/RQHook";
 const DataCenterClusters = ({
   datacenterId
 }) => {
+  const { datacentersSelected, clustersSelected, setClustersSelected } = useGlobal()
   const {
     data: clusters = [],
     isLoading: isClustersLoading,
@@ -29,6 +31,9 @@ const DataCenterClusters = ({
         refetch={refetchClusters}
         isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
       />
+      
+      <span>{clustersSelected[0]?.name}</span><br/>
+      <span>{datacentersSelected[0]?.name}</span>
     </>
   );
 };

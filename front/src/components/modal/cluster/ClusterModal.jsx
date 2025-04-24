@@ -119,10 +119,10 @@ const initialFormState = {
 
 const ClusterModal = ({
   isOpen, 
+  onClose,
   editMode = false, 
   clusterId, 
   datacenterId, 
-  onClose
 }) => {
   const cLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [formState, setFormState] = useState(initialFormState);
@@ -139,18 +139,11 @@ const ClusterModal = ({
   const { mutate: addCluster } = useAddCluster(onSuccess, () => onClose());
   const { mutate: editCluster } = useEditCluster(onSuccess, () => onClose());
 
-  const { 
-    data: datacenters = [], 
-    isLoading: isDataCentersLoading 
-  } = useAllDataCenters((e) => ({ ...e }));
-  const { 
-    data: networks = [], 
-    isLoading: isNetworksLoading 
-  } = useNetworksFromDataCenter(dataCenterVo?.id || datacenterId, (e) => ({ ...e }));
-
   useEffect(() => {
     if (!isOpen) {
-      return setFormState(initialFormState);
+      setFormState(initialFormState);
+      setDataCenterVo({id: "", name: ""});
+      setNetworkVo({id: "", name: ""});
     }
     if (editMode && cluster) {
       setFormState({
@@ -168,22 +161,33 @@ const ClusterModal = ({
     }
   }, [isOpen, editMode, cluster]);
 
+  const { 
+    data: datacenters = [], 
+    isLoading: isDataCentersLoading 
+  } = useAllDataCenters((e) => ({ ...e }));
+  const { 
+    data: networks = [], 
+    isLoading: isNetworksLoading 
+  } = useNetworksFromDataCenter(datacenterId || dataCenterVo?.id, (e) => ({ ...e }));
+
+
   useEffect(() => {
     if (datacenterId) {
       const selected = datacenters.find(dc => dc.id === datacenterId);
-      if (selected) {
-        setDataCenterVo({ id: selected.id, name: selected.name });
-      } else {
-        setDataCenterVo({ id: datacenterId, name: "" });
-      }
-    } else if (!editMode && datacenters && datacenters.length > 0) {
+      setDataCenterVo(
+        selected 
+        ? { id: selected.id, name: selected.name } 
+        : { id: datacenterId, name: "" }
+      );
+      setNetworkVo({id: "", name: ""});
+    } else if (!editMode && datacenters.length > 0) {
+      // datacenterId가 없고 기본 데이터센터 선택
       const defaultDc = datacenters.find(dc => dc.name === "Default");
-      const targetDc = defaultDc ?? datacenters[0];
-      if (targetDc) {
-        setDataCenterVo({ id: targetDc.id, name: targetDc.name });
-      }
+      const fallbackDc = defaultDc ?? datacenters[0];
+      setDataCenterVo({ id: fallbackDc.id, name: fallbackDc.name });
+      setNetworkVo({id: "", name: ""});
     }
-  }, [datacenters, datacenterId, editMode]);
+  }, [datacenterId, datacenters, editMode]);
   
 
   useEffect(() => {

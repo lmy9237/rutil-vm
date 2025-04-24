@@ -17,7 +17,7 @@ const ClusterModals = ({
     create: (
       <ClusterModal key={activeModal()} isOpen={activeModal() === "cluster:create"}
         onClose={() => setActiveModal(null)}
-        datacenterId={datacentersSelected[0]?.id ?? datacenterId}
+        datacenterId={datacenterId || datacentersSelected?.[0]?.id}
       />
     ), update: (
       <ClusterModal key={activeModal()} isOpen={activeModal() === "cluster:update"}
