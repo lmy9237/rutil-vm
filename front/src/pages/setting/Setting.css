@@ -258,7 +258,7 @@
   /*설정(설정->MAC주소 풀)*/
 #setting_mac_form .setting_part_table_outer{
   height: 27vh;
-  border:var(--border-simple);
+  border:var(--border-default);
 }
   /*설정(설정->MAC주소 풀->새로만들기)팝업*/
 .setting_mac_new_outer{

@@ -221,7 +221,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
                       padding: "15px",
                       marginBottom: "10px",
                       backgroundColor: "lightblue",
-                      border: "var(--border-simple)",
+                      border: "var(--border-default)",
                       borderRadius: "5px",
                       textAlign: "center",
                       fontSize: "16px",

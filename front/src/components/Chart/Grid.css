@@ -24,7 +24,7 @@
 }
 
 .percent h1 {
-  font-size: var(--fs-15);
+  font-size: var(--fs-14);
   font-weight: 700;
 }
 .percent .unit {

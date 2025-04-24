@@ -15,7 +15,7 @@ button.btn-action[disabled]{
     color: #888888;
 }
 
-.btn-right-click { /* .right-click-menu-box */
+.btn-right-click { 
   height: 26px;
   font-size: var(--fs-default);
   width: 100%;
@@ -35,4 +35,5 @@ button.btn-action[disabled]{
 }
 .btn-right-click:not(:disabled):hover {
   background-color: var(--color-hover);
+  width: 99%;
 }

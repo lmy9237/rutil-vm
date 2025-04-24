@@ -96,7 +96,6 @@ const VmSnapshots = ({
     
             {isSnapshotsLoading && (<Loading/>)}
 
-            {/* TODO: 스냅샷 없을때 */}
             {!isSnapshotsLoading && transformedData?.length === 0 && (<></>)}
 
             {[...transformedData]?.map((snapshot) => (

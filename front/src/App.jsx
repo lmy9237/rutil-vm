@@ -181,7 +181,7 @@ const App = () => {
         toastOptions={{
           // duration: Infinity,
           duration: 5000, // 지속시간
-          className: "toast f-start",
+          className: "toast",
           style: {
             maxWidth: 500,
           },
@@ -190,10 +190,10 @@ const App = () => {
             'aria-live': 'polite',
           },
           success: {
-            className: "toast toast-success f-start",
+            className: "toast toast-success",
           },
           error: {
-            className: "toast toast-error f-start",
+            className: "toast toast-error",
           },
         }}
       />

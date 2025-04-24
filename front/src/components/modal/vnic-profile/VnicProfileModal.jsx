@@ -68,7 +68,7 @@ const VnicProfileModal = ({
       id: vnic?.id || "",
       name: vnic?.name || "",
       description: vnic?.description || "",
-      migration: vnic?.migration || false,
+      migration: vnic?.migration || true,
       passThrough: vnic?.passThrough || "DISABLED",
       portMirroring: vnic?.portMirroring || false,
     });
@@ -196,9 +196,15 @@ const VnicProfileModal = ({
       />
       <LabelCheckbox id="migration" 
         label={`${Localization.kr.MIGRATION} 가능`}
-        checked={formState.passThrough !== "DISABLED" || formState.migration}
+        checked={formState.migration}
         disabled={formState.passThrough === "DISABLED"}
-        onChange={(e) => { setFormState((prev) => ({...prev, migration: e.target.checked})) }}
+        onChange={(e) => {
+          const isChecked = e.target.checked;
+          setFormState((prev) => ({
+            ...prev,
+            migration: isChecked
+          }))
+        }}
       />
       {/* 페일오버 vNIC 프로파일 */}
       {/* <div className="vnic-new-box">

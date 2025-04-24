@@ -407,21 +407,22 @@ const Tables = ({
           <tbody>{renderTableBody()}</tbody>
         </table>
 
-        {/*페이지버튼 */}
-        {sortedData.length > itemsPerPage && (
-          <div className="paging-arrows my-2">
-            <PagingButton type="prev"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            />
-            <span className="px-1.5">{`${startNumber} - ${endNumber}`}</span>
-            <PagingButton type="next"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage >= Math.ceil(sortedData.length / itemsPerPage)}
-            />
-          </div>
-        )}
+        
       </div>
+      {/*페이지버튼 */}
+      {sortedData.length > itemsPerPage && (   
+        <div className="paging-arrows my-2">
+          <PagingButton type="prev"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          />
+          <span className="px-1.5">{`${startNumber} - ${endNumber}`}</span>
+          <PagingButton type="next"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= Math.ceil(sortedData.length / itemsPerPage)}
+          />
+        </div>
+      )}
     </>
   );
 };

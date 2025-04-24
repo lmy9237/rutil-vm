@@ -62,7 +62,7 @@
 #aside {
   width: 100%;
   background-color: #ffffff;
-  border-bottom:1px solid var(--color-gray-1);
+  border-bottom:var(--border-default);
   font-size: var(--fs-big);
   margin-bottom: 0.04rem;
   padding: 0.1rem;
@@ -82,12 +82,7 @@
   color: var(--color-black);
   text-decoration:none;
 }
-/* .nav > a {
-  margin-right: 17px;
-}
-.nav > a:last-child{
-  margin-right: 0 !important;
-} */
+
 .nav a.active {
   background: var(--color-primary);
   border-radius: 20px;
@@ -112,14 +107,11 @@
   /* padding: 3px 5px; */
 }
 
-#aside_popup_first{
-  padding:2px 8px;
-}
 .context-menu {
   position: absolute;
   display: none;
   background-color: white;
-  border: var(--border-simple);
+  border: var(--border-default);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
   z-index: 1000;
   border-radius: 3px;
@@ -146,9 +138,9 @@
 /* 🔹 크기 조절 핸들 스타일 */
 .resizer {
   position: sticky;
-  width: var(--thickness-border-resizer);height: 100%;
+  width: var(--thickness-border);height: 100%;
   cursor: col-resize;
-  background-color: var(--color-border-resizer);
+  background-color: var(--color-border-default);
   z-index: 100;
   -webkit-user-select: none;
 }
@@ -161,7 +153,6 @@
   cursor: col-resize;
 }
 .responsive-closed {
-  /* left: 0; */
   font-size:0.3rem;
   z-index: 3;
   background: white;
@@ -170,7 +161,6 @@
   transition: width 0.1s ease-out;
 }
 
-/**/
 .vm-icon {
   position: relative; 
 }

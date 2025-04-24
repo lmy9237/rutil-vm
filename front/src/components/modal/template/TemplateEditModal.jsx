@@ -56,7 +56,7 @@ const TemplateEditModal = ({
   //해당데이터 상세정보 가져오기
   const { data: templateData } = useTemplate(templateId);
   const [selectedOptimizeOption, setSelectedOptimizeOption] = useState("server"); // 칩셋 선택
-  const [selectedChipset, setSelectedChipset] = useState("Q35_OVMF"); // 칩셋 선택
+ // const [selectedChipset, setSelectedChipset] = useState("Q35_OVMF"); // 칩셋 선택
 
   // 초기값설정
   useEffect(() => {
@@ -64,17 +64,17 @@ const TemplateEditModal = ({
       const template = templateData;
       if (template) {
         setId(template?.id || "");
-        setName(template?.name || ""); // 이름안뜸
+        setName(template?.name || ""); 
         setDescription(template?.description || "");
         setComment(template?.comment || "");
         setOsSystem(template?.osSystem || "");
-        setStateless(template?.stateless || false);
+        setStateless(template?.stateless || false); // 상태비저장
         setClsuterVoId(template.clusterVo?.id || "");
         setClsuterVoName(template.clusterVo?.name || "");
-        setStartPaused(template?.startPaused || false);
-        setDeleteProtected(template?.deleteProtected || false);
+        setStartPaused(template?.startPaused || false);  // 일시정지 모드에서 시작
+        setDeleteProtected(template?.deleteProtected || false); //  삭제 방지
         setSelectedOptimizeOption(template?.optimizeOption || "server");
-        setSelectedChipset(template?.chipsetFirmwareType || "Q35_OVMF");
+    //  setSelectedChipset(template?.chipsetFirmwareType || "Q35_OVMF");
       }
     }
   }, [isOpen, templateData]);
@@ -96,6 +96,9 @@ const TemplateEditModal = ({
       comment,
       optimizeOption: selectedOptimizeOption,
       osSystem,
+      stateless,
+      startPaused,
+      deleteProtected,
     };
     
     Logger.debug(`템플릿: ${JSON.stringify(dataToSubmit, null, 2)}`);
@@ -132,21 +135,16 @@ const TemplateEditModal = ({
         <ModalNavButton tabs={tabs} activeTab={activeTab} onTabClick={handleTabClick} />
 
         <div className="backup-edit-content">
-          <div
-            className="template-option-box f-btw"
-            style={{
-              borderBottom: "1px solid #E2E5EB",
-              padding: "0.1rem 0",
-            }}
-            >
-              <LabelSelectOptions
-                id="optimization"
-                label="최적화 옵션"
-                value={selectedOptimizeOption}
-                onChange={(e) => setSelectedOptimizeOption(e.target.value)}
-                options={optimizeOption}
-              />
-            </div>
+          <div>
+            <LabelSelectOptions
+              id="optimization"
+              label="최적화 옵션"
+              value={selectedOptimizeOption}
+              onChange={(e) => setSelectedOptimizeOption(e.target.value)}
+              options={optimizeOption}
+            />
+          </div>
+          <hr/>
           {activeTab  === "general" && (
             <>
             <div className="template-edit-texts">
@@ -201,7 +199,7 @@ const TemplateEditModal = ({
                 <div className="monitor f-btw">
                   <label htmlFor="monitor-select">모니터</label>
                   <select id="monitor-select">
-                    <option value="1">1</option>
+                    <option value="1">값 고쳐야함!</option>
                   </select>
                 </div>
               </div>

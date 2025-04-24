@@ -25,6 +25,7 @@ const VmSnapshotActionButtons = ({
   const vmSelected1st = [...vmsSelected][0] ?? null
   const isVmUp = useMemo(() => vmSelected1st?.status === "UP", [vmsSelected])
   const snapshotSelected1st =  [...snapshotsSelected][0] ?? null
+  const isVmLocked = useMemo(() => vmSelected1st?.status === "LOCKED", [vmSelected1st]); // 안됨
   const isSnapshotInPreview = useMemo(() => [...snapshotsSelected]?.every((e) => e?.status === "in_preview"), [snapshotsSelected])
 
   const basicActions = useMemo(() => ([

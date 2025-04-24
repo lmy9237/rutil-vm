@@ -13,7 +13,7 @@
 .modal {
   transform: translate(-50%, -50%);
   box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
-  border: var(--border-simple);
+  border: var(--border-default);
   position: absolute;
   border-radius: 8px;
   padding: 16px 24px;
@@ -25,7 +25,6 @@
 }
 .popup-header {
   font-size: var(--fs-big);
-
   color: var(--color-black);
   width: 100%;
   height: var(--h-modal-header);
@@ -73,7 +72,7 @@
   height: var(--h-32);
   margin-top: 10px;
   margin-left: 10px;
-  border: var(--border-simple);
+  border: var(--border-default);
   background-color: #f9f9f9;
   cursor: pointer;
   font-size: var(--fs-14);
@@ -99,6 +98,6 @@
 .edit-footer button:first-child,
 .edit-footer button:nth-child(3) {
   background-color: rgb(218, 218, 218);
-  border: var(--border-simple);
+  border: var(--border-default);
 }
 */

@@ -9,7 +9,7 @@
 .rutil-general-contents>div:first-child{
     display:flex;
     margin-bottom: 9px;
-    border-right:var(--border-simple);
+    border-right:var(--border-default);
     padding-right: 36px;
 }
 .rutil-general-contents .info-table-outer{
@@ -18,7 +18,7 @@
     padding-left: 16px;
 }
 /* .type-info-boxs{
-    border:var(--border-simple);
+    border:var(--border-default);
     padding:8px;
 }
 .type-info-box{

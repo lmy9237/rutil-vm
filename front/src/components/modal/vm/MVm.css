@@ -8,7 +8,7 @@
   height: 48vh;
   width: 60%;
   background-color: #fafafa;
-  border-right: var(--border-simple);
+  border-right: var(--border-default);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   font-weight: 800;
 }
@@ -85,7 +85,7 @@
   background-color:var(--color-white);
   padding: 5px 10px;
   margin-left: 4px;
-  border: var(--border-simple);
+  border: var(--border-default);
   border-radius: 4px;
   font-weight: 500;
   letter-spacing: -0.32px;
@@ -157,7 +157,6 @@
   padding: 10px;
 }
 
-/**/
 .nic-toggle{
   width: 59%;
 }

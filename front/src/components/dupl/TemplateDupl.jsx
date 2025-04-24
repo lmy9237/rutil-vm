@@ -76,9 +76,6 @@ const TemplateDupl = ({
       />
 
       <SelectedIdView items={templatesSelected} />
-
-      {/* 템플릿 모달창 */}
-      <TemplateModals template={templatesSelected[0]} />
     </div>
   );
 };

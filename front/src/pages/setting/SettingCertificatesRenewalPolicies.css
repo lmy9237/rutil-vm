@@ -1,5 +1,5 @@
 ul { margin: 0 30px !important; }
-li { color: var(--color-gray-2); }
+li { color: var(--color-border-default); }
 details {
   border: var(--border-default);
   border-radius: 4px;

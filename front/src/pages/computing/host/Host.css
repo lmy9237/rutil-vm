@@ -76,7 +76,7 @@
 .network-item {
   padding: 15px;
   margin-bottom: 10px;
-  border: var(--border-simple);
+  border: var(--border-default);
   border-radius: 1px;
   background-color: white;
   text-align: center;
@@ -110,7 +110,7 @@
   margin-bottom: 1rem;
 }
 .interface {
-  border: 1px solid var(--color-gray-4);
+  border: var(--border-default);
   padding: 8px 10px;
   width: 39%;
   background: white;
@@ -125,12 +125,12 @@
 .container {
   display: flex;
   align-items: center;
-  border: 1px solid var(--color-gray-4);
+  border: 1px solid var(--border-default);
   cursor: pointer;
   padding: 8px 16px;
   margin-bottom: 6px;
   border-radius: 1px;
-  background-color: white;
+
 }
 .container:hover {
   background: var(--color-input-disabled);
@@ -179,7 +179,10 @@
   overflow: hidden;           
   text-overflow: ellipsis;  
 } */
-
+.assigned-network-outer{
+  border: var(--border-default);
+  background-color: white;
+}
 .assigned-network-content{
   display: flex;
   width: 100%;

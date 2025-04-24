@@ -29,7 +29,6 @@
   text-decoration:none;
 }
 .rvi.rvi-nav:hover {
-  background: var(--color-bg);
   border-radius: 20px;
 }
 

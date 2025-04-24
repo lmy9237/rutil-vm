@@ -19,8 +19,8 @@
   padding: 10px 0;
 }
 .network-bring-table-outer > div {
-  border:var(--border-simple);
+  border:var(--border-default);
   height: 27vh;
-  overflow-y: auto; /* 세로 스크롤 추가 */
-  overflow-x: hidden; /* 가로 스크롤 숨김 */
+  overflow-y: auto;
+  overflow-x: hidden;
 }

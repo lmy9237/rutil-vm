@@ -224,17 +224,20 @@ const NetworkModal = ({
           </div>
         </div>
 
-        <LabelCheckbox id="usageVm" label="가상 머신 네트워크"          
-          checked={formState.usageVm}
-          onChange={(e) => {
-            const isChecked = e.target.checked;
-            setFormState((prev) => ({
-              ...prev,
-              usageVm: isChecked,
-              portIsolation: isChecked ? prev.portIsolation : false, // 포트 분리를 비활성화
-            }));
-          }}
-        />
+        <LabelCheckbox
+        id="usageVm"
+        label="가상 머신 네트워크"
+        checked={formState.usageVm}
+        onChange={(e) => {
+          const isChecked = e.target.checked;
+          setFormState((prev) => ({
+            ...prev,
+            usageVm: isChecked,
+            portIsolation: isChecked ? prev.portIsolation : false, // 꺼질 땐 포트 분리도 같이 false
+          }));
+        }}
+        disabled={editMode && formState.portIsolation} // 포트 분리 활성 상태에선 편집모드일 때 비활성화
+      />
         <LabelCheckbox id="portIsolation" label="포트 분리"          
           checked={formState.portIsolation}
           className="mb-3"
@@ -307,6 +310,10 @@ const NetworkModal = ({
             disabled={formState.mtu === 0}
             onChange={(e) => {
               let value = parseInt(e.target.value || "0", 10);
+              if (value <= 68) {
+                toast.error("MTU는 68이상의 값만 입력 가능합니다.");
+                return;
+              }
               if (value > 1500) {
                 value = 1500;
                 toast.error("MTU는 최대 1500까지만 설정할 수 있습니다."); 

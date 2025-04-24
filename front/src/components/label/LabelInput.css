@@ -20,7 +20,7 @@ select,
 .custom-select-box{
   width:55%;
   cursor: pointer;
-  border: var(--border-hr);  border-radius: 1px;
+  border: var(--border-default);  border-radius: 1px;
   font-size: var(--fs-default);
   padding: 2px;
   color: var(--color-black);
@@ -75,7 +75,7 @@ input[type="radio"] {
   z-index: 10;
   max-height: 142px;
   overflow-y: auto;
-  border: var(--border-hr);border-radius: 1px;
+  border: var(--border-default);border-radius: 1px;
   border-top: none !important;
 }
 
