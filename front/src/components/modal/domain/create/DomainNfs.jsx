@@ -1,9 +1,8 @@
 import React from 'react';
 import LabelInput from '../../../label/LabelInput';
 
-const DomainNfs = ({ mode, nfsAddress, setNfsAddress }) => {
-  const editMode = mode === 'edit';
-
+const DomainNfs = ({ editMode=false, nfsAddress, setNfsAddress }) => {
+  // const editMode = mode === 'edit';
   return (
     <>
       <LabelInput label={"내보내기 경로"}

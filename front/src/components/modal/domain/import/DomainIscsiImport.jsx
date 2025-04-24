@@ -6,12 +6,13 @@ import LabelInput from '../../../label/LabelInput';
 import Localization from '../../../../utils/Localization';
 import Logger from '../../../../utils/Logger';
 import ToggleSwitchButton from '../../../button/ToggleSwitchButton';
+import { handleInputChange } from '../../../label/HandleInput';
 
 const DomainIscsiImport = ({
   iscsiResults, setIscsiResults,
   lunId, setLunId,
   hostVo,
-  formImportState, setFormImportState,
+  formSearchState, setFormSearchState,
   importIscsiFromHostAPI, 
   loginIscsiFromHostAPI,
   // refetchIscsis, isIscsisLoading, isIscsisError, isIscsisSuccess
@@ -40,7 +41,7 @@ const DomainIscsiImport = ({
     setIsIscsisLoading(true);
 
     importIscsiFromHostAPI(
-      { hostId: hostVo?.id, iscsiData: formImportState },
+      { hostId: hostVo?.id, iscsiData: formSearchState },
       { 
         onSuccess: (data) => {
           setIscsiResults(data);
@@ -59,15 +60,15 @@ const DomainIscsiImport = ({
   };
   
   Logger.debug("DomainIscsiImport ... iscsiResults: " , iscsiResults)
-  Logger.debug("####formImportState: " , formImportState)
+  Logger.debug("####formImportState: " , formSearchState)
 
   // iscsi 가져오기 시 로그인 처리
   const handleLoginIscsi = () => {
     if (!selectedTarget) return toast.error('항목을 선택해주세요.');
 
-    console.log("로그인 시 사용할 target:", formImportState.target); // 확인용 로그
+    console.log("로그인 시 사용할 target:", formSearchState.target); // 확인용 로그
 
-    loginIscsiFromHostAPI({ hostId: hostVo?.id, iscsiData: formImportState }, {
+    loginIscsiFromHostAPI({ hostId: hostVo?.id, iscsiData: formSearchState }, {
       onSuccess: (data) => { setIscsiResults(data) },
       onError: (error) => { toast.error('iSCSI 로그인 실패:', error) },
     });
@@ -92,12 +93,8 @@ const DomainIscsiImport = ({
     // );
   };
 
-  const handleInputChange = (field) => (e) => {
-    setFormImportState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
   const handleInputChangeCheck = (field) => (e) => {
-    setFormImportState((prev) => ({ ...prev, [field]: e.target.checked }));
+    setFormSearchState((prev) => ({ ...prev, [field]: e.target.checked }));
   };
   
   const handleTargetRowClick = (row) => {
@@ -106,7 +103,7 @@ const DomainIscsiImport = ({
       Logger.debug('선택한 target:', selectedRow.target);
       // setLunId(selectedRow.id);
       setSelectedTarget(selectedRow.target); // 추가: target 텍스트 저장
-      setFormImportState((prev) => ({ ...prev, target: selectedRow.target }));
+      setFormSearchState((prev) => ({ ...prev, target: selectedRow.target }));
     }
   };
 
@@ -118,7 +115,6 @@ const DomainIscsiImport = ({
     }
   };
 
-
   return (
     <div className="storage-popup-iSCSI">
       <div className="section-table-outer">
@@ -127,23 +123,23 @@ const DomainIscsiImport = ({
 
           <div className="input-inline-wrap">
             <LabelInput id="address" label="주소"
-              value={formImportState?.address} 
-              onChange={handleInputChange('address')} 
+              value={formSearchState?.address} 
+              onChange={handleInputChange(setFormSearchState, 'address')} 
             />
             <LabelInput label="포트" id="port" 
-              value={formImportState?.port} 
-              onChange={handleInputChange('port')} 
+              value={formSearchState?.port} 
+              onChange={handleInputChange(setFormSearchState, 'port')} 
             />
           </div>
 
-          <div className={`target-search-right ${formImportState.useChap ? 'with-background' : ''}`}>
+          <div className={`target-search-right ${formSearchState.useChap ? 'with-background' : ''}`}>
             <div className="use-chap-arrow">
               <ToggleSwitchButton
                 label="사용자 인증"
-                checked={formImportState.useChap}
+                checked={formSearchState.useChap}
                 onChange={(e) => {
                   const checked = e.target.checked;
-                  setFormImportState((prev) => ({ ...prev, useChap: checked }));
+                  setFormSearchState((prev) => ({ ...prev, useChap: checked }));
                   setIsFooterContentVisible(checked);
                 }}
                 tType={"on"} fType={"off"}
@@ -153,15 +149,15 @@ const DomainIscsiImport = ({
             {isFooterContentVisible && (
               <div className="use-chap-content">
                 <LabelInput id="chapName" label="CHAP 사용자 이름"
-                  value={formImportState.chapName}
-                  onChange={handleInputChange('chapName')}
-                  disabled={!formImportState.useChap}
+                  value={formSearchState.chapName}
+                  onChange={handleInputChange(setFormSearchState, 'chapName')}
+                  disabled={!formSearchState.useChap}
                 />
                 <LabelInput id="chapPassword" label="CHAP 암호"
                   type="password"
-                  value={formImportState.chapPassword}
-                  onChange={handleInputChange('chapPassword')}
-                  disabled={!formImportState.useChap}
+                  value={formSearchState.chapPassword}
+                  onChange={handleInputChange(setFormSearchState, 'chapPassword')}
+                  disabled={!formSearchState.useChap}
                 />
                 {/* <div className="target-btn">
                   <button className="all-login-button" onClick={handleLoginIscsi}>로그인</button>

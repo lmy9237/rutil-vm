@@ -8,6 +8,14 @@ export function handleInputChange(setState, field) {
   };
 }
 
+
+export function handleInputCheck(setState, field) {
+  return (e) => {
+    const value = e?.target?.checked;
+    setState((prev) => ({ ...prev, [field]: value }));
+  };
+}
+
 /**
  * select 필드에서 id 기반 객체 선택 시 핸들러
  */

@@ -20,6 +20,7 @@ import {
 } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import CONSTANT from "../../../Constants";
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 
 // 일반 정보
 const initialFormState = {
@@ -36,7 +37,7 @@ const initialFormState = {
 // import = 가져오기
 // nfs 는 같음, iscsi 주소, 포트, 사용자 인증 이름, 암호 해서 검색
 // fc는 id만 필요한듯
-const importFormState = {
+const searchFormState = {
   target: "",
   address: "",
   port: 3260,
@@ -49,12 +50,10 @@ const loginFormState = {
 };
 
 const DomainImportModal = ({
-  isOpen,
-  // datacenterId,
-  onClose,
+  isOpen, onClose,
 }) => {
   const [formState, setFormState] = useState(initialFormState); // 일반정보
-  const [formImportState, setFormImportState] = useState(importFormState); // 가져오기
+  const [formSearchState, setFormSearchState] = useState(searchFormState); // 검색
   const [formLoginState, setFormLoginState] = useState(loginFormState); // 로그인
   
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
@@ -79,28 +78,16 @@ const DomainImportModal = ({
   const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose()); // 가져오기
   
   const { mutate: importIscsiFromHostAPI } = useImportIscsiFromHost(
-    (data) => {
-      setIscsiResults(data); // <-- 여기서 직접 설정
-    },
-    (error) => {
-      toast.error("iSCSI 가져오기 실패:", error);
-    }
+    (data) => { setIscsiResults(data) },
+    (error) => { toast.error("iSCSI 가져오기 실패:", error) }
   );  
   const { mutate: importFcpFromHostAPI } = useImportFcpFromHost(
-    (data) => {
-      setFcResults(data); // <-- 여기서 직접 설정
-    },
-    (error) => {
-      toast.error("fc 가져오기 실패:", error);
-    }
+    (data) => { setFcResults(data) },
+    (error) => { toast.error("fc 가져오기 실패:", error) }
   );  
   const { mutate: loginIscsiFromHostAPI } = useLoginIscsiFromHost(
-    (data) => {
-      setIscsiLoginResults(data); // <-- 여기서 직접 설정
-    },
-    (error) => {
-      toast.error("fc 가져오기 실패:", error);
-    }
+    (data) => { setIscsiLoginResults(data) },
+    (error) => { toast.error("fc 가져오기 실패:", error) }
   );  
 
   const { 
@@ -114,7 +101,7 @@ const DomainImportModal = ({
 
   const resetFormStates = () => {
     setFormState(initialFormState);
-    setFormImportState(importFormState);
+    setFormSearchState(searchFormState);
     setFormLoginState(loginFormState);
     setNfsAddress("");
     setLunId("");
@@ -130,9 +117,6 @@ const DomainImportModal = ({
 
 
   useEffect(() => {
-    // if ( datacenterId ) {
-    //   setDataCenterVo({id: datacenterId});
-    // } else 
     if (dataCenters && dataCenters.length > 0) {
       const defaultDc = dataCenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
       if (defaultDc) {
@@ -175,15 +159,6 @@ const DomainImportModal = ({
       setFormState((prev) => ({ ...prev, storageType: options[0].value })) }
   }, [formState.domainType]);
 
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
-  const handleSelectIdChange = (setVo, voList) => (e) => {
-    const selected = voList.find((item) => item.id === e.target.value);
-    if (selected) setVo({ id: selected.id, name: selected.name });
-  }; 
-
   const validateForm = () => {
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
@@ -206,7 +181,6 @@ const DomainImportModal = ({
     return null;
   };
   
-
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) return toast.error(error);
@@ -250,12 +224,12 @@ const DomainImportModal = ({
           <LabelSelectOptions id="domain-type" label={`도메인 유형`}
             value={formState.domainType}
             options={CONSTANT.domainTypeOptions}
-            onChange={handleInputChange("domainType")}
+            onChange={handleInputChange(setFormState, "domainType")}
           />
           <LabelSelectOptions id="storage-type" label="스토리지 유형"
             value={formState.storageType}
             options={storageTypes}
-            onChange={handleInputChange("storageType")}
+            onChange={handleInputChange(setFormState, "storageType")}
           />
           <LabelSelectOptionsID id="host" label={Localization.kr.HOST}
             // key={hostVo.id}
@@ -269,16 +243,16 @@ const DomainImportModal = ({
         <div className="domain-new-right">
           <LabelInput id="name" label={Localization.kr.NAME}
             value={formState.name}
-            onChange={handleInputChange("name")}
+            onChange={handleInputChange(setFormState, "name")}
             autoFocus
           />
           <LabelInput id="description" label={Localization.kr.DESCRIPTION}
             value={formState.description}
-            onChange={handleInputChange("description")}
+            onChange={handleInputChange(setFormState, "description")}
           />
           <LabelInput id="comment" label={Localization.kr.COMMENT}
             value={formState.comment}
-            onChange={handleInputChange("comment")}
+            onChange={handleInputChange(setFormState, "comment")}
           />
         </div>
       </div>
@@ -296,7 +270,7 @@ const DomainImportModal = ({
           iscsiResults={iscsiResults} setIscsiResults={setIscsiResults}
           lunId={lunId} setLunId={setLunId}
           hostVo={hostVo} setHostVo={setHostVo}
-          formImportState={formImportState} setFormImportState={setFormImportState}
+          formSearchState={formSearchState} setFormSearchState={setFormSearchState}
           importIscsiFromHostAPI={importIscsiFromHostAPI}
           loginIscsiFromHostAPI={loginIscsiFromHostAPI}
         />      
@@ -317,11 +291,11 @@ const DomainImportModal = ({
         <div className="storage-specific-content">
           <LabelInputNum id="warning" label="디스크 공간 부족 경고 표시 (%)"
             value={formState.warning}
-            onChange={handleInputChange("warning")}
+            onChange={handleInputChange(setFormState, "warning")}
           />
           <LabelInputNum id="spaceBlocker" label="심각히 부족한 디스크 공간의 동작 차단 (GB)"
             value={formState.spaceBlocker}
-            onChange={handleInputChange("spaceBlocker")}
+            onChange={handleInputChange(setFormState, "spaceBlocker")}
           />
         </div>
       </div>
