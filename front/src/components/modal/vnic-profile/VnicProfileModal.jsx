@@ -16,6 +16,7 @@ import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Logger from "../../../utils/Logger";
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 
 const initialFormState = {
   id: "",
@@ -42,7 +43,7 @@ const VnicProfileModal = ({
 
   const onSuccess = () => {
     onClose();
-    toast.success(`${Localization.kr.VNIC_PROFILE} ${vLabel} 완료`);
+    toast.success(`${Localization.kr.VNIC_PROFILE} ${vLabel} ${Localization.kr.FINISHED}`);
   };
   const { mutate: addVnicProfile } = useAddVnicProfile(onSuccess, () => onClose());
   const { mutate: editVnicProfile } = useEditVnicProfile(onSuccess, () => onClose());
@@ -63,7 +64,12 @@ const VnicProfileModal = ({
   } = useNetworkFilters((e) => ({ ...e }));
 
   useEffect(() => {
-    if (!isOpen) return setFormState(initialFormState);
+    if (!isOpen) {
+      setFormState(initialFormState);
+      setDataCenterVo({id: "", name: ""});
+      setNetworkVo({id: "", name: ""});
+      setNetworkFilterVo({id: "", name: ""});
+    }
     setFormState({
       id: vnic?.id || "",
       name: vnic?.name || "",
@@ -77,44 +83,35 @@ const VnicProfileModal = ({
     setNetworkVo({id: vnic?.networkVo?.id, name: vnic?.networkVo?.name});
   }, [isOpen, editMode, vnic]);
 
+  console.log("&& networkFilterVo ", networkFilterVo);
+
   useEffect(() => {
     if (!editMode && datacenters && datacenters.length > 0) {
-      const defaultDc = datacenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
-      if (defaultDc) {
-        setDataCenterVo({ id: defaultDc.id, name: defaultDc.name });
-      } else {
-        setDataCenterVo({ id: datacenters[0].id, name: datacenters[0].name });
-      }
+      const defaultDc = datacenters.find(dc => dc.name === "Default");
+      const firstDc = defaultDc || datacenters[0];
+      setDataCenterVo({ id: firstDc.id, name: firstDc.name });
+      setNetworkVo({id: "", name: ""});
     }
-  }, [isOpen, datacenters, editMode]);
+  }, [datacenters, editMode]);
   
   useEffect(() => {
     if(networkId) {
-      setNetworkVo({id: networkId});
+      const selected = networks.find(n => n.id === networkId);
+      setNetworkVo({id: selected?.id, name: selected?.name});
     } else if (!editMode && networks && networks.length > 0) {
-      const defaultN = networks.find(n => n.name === "ovirtmgmt");
-      if(defaultN){
-        setNetworkVo({id: defaultN.id, name: defaultN.name});
-      } else {
-        setNetworkVo({id: networks[0].id, name: networks[0].name});
-      }
+      const defaultNetwork = networks.find(n => n.name === "ovirtmgmt");
+      const firstN = defaultNetwork || networks[0];
+      setNetworkVo({ id: firstN.id, name: firstN.name });
     }
-  }, [isOpen, networks, networkId, editMode]);
+  }, [networkId, networks, editMode]);
   
   useEffect(() => {
-    if (!editMode && nFilters.length > 0) {
-      setNetworkFilterVo({id: nFilters[0].id});
+    if (!editMode && nFilters && nFilters.length > 0) {
+      const defaultNF = nFilters.find(nf => nf.name === "vdsm-no-mac-spoofing");
+      const firstNF = defaultNF || nFilters[0];
+      setNetworkFilterVo({ id: firstNF.id, name: firstNF.name });
     }
   }, [nFilters, editMode]);
-
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
-  const handleSelectIdChange = (setVo, voList) => (e) => {
-    const selected = voList.find((item) => item.id === e.target.value);
-    if (selected) setVo({ id: selected.id, name: selected.name });
-  }; 
 
   const validateForm = () => {
     const nameError = checkName(formState.name);
@@ -167,7 +164,7 @@ const VnicProfileModal = ({
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
         value={formState.name}
-        onChange={handleInputChange("name")}
+        onChange={handleInputChange(setFormState, "name")}
       />
       <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
