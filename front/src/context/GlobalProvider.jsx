@@ -176,13 +176,13 @@ export const GlobalProvider = ({ children }) => {
       _setUsersSelected([{...newV}]);
   }
 
-  const [userSessionsSelected, _setUserSessionsSelected] = useState([]);
-  const setUserSessionsSelected = (newV) => {
-    Logger.debug(`GlobalProvider > setUserSessionsSelected ... newV: `, newV)
+  const [usersessionsSelected, _setUsersessionsSelected] = useState([]);
+  const setUsersessionsSelected = (newV) => {
+    Logger.debug(`GlobalProvider > setUsersessionsSelected ... newV: `, newV)
     if (Array.isArray(newV))
-      _setUserSessionsSelected([...newV]);
+      _setUsersessionsSelected([...newV]);
     else if (!Array.isArray(newV) && typeof newV === "object")
-      _setUserSessionsSelected([{...newV}]);
+      _setUsersessionsSelected([{...newV}]);
   }
 
   const [certsSelected, _setCertsSelected] = useState([]);
@@ -218,7 +218,7 @@ export const GlobalProvider = ({ children }) => {
     setJobsSelected([])
     setEventsSelected([])
     setUsersSelected([])
-    setUserSessionsSelected([])
+    setUsersessionsSelected([])
     setCertsSelected([])
     setSourceContext(null)
   }
@@ -243,7 +243,7 @@ export const GlobalProvider = ({ children }) => {
       jobsSelected, setJobsSelected,
       eventsSelected, setEventsSelected,
       usersSelected, setUsersSelected,
-      userSessionsSelected, setUserSessionsSelected,
+      usersessionsSelected, setUsersessionsSelected,
       certsSelected, setCertsSelected,
       sourceContext, setSourceContext,
       clearAllSelected,

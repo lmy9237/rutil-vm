@@ -1,20 +1,11 @@
-import { useEffect, useState } from "react"
-import RightClickMenu from "./common/RightClickMenu";
 import { Outlet } from "react-router-dom";
-import useFooterState from "../hooks/useFooterState";
 import Header from "./Header/Header";
+import RightClickMenu from "./common/RightClickMenu";
 import MainOuter from "./mainouter/MainOuter";
 import JobFooter from "./footer/JobFooter";
-import Logger from "../utils/Logger";
 import "./Home.css"
 
 const Home = () => {
-  const {
-    footerVisible, toggleFooterVisible,
-    footerDragging, setFooterDragging,
-    footerOffsetY, setFooterOffsetY,
-    footerJobRefetchInterval
-  } = useFooterState()
 
   return (
     <>

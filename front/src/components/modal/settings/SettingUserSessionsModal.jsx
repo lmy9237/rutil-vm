@@ -1,4 +1,3 @@
-import Logger from "../../../utils/Logger";
 
 /**
  * @name SettingUserSessionsModal
@@ -7,19 +6,12 @@ import Logger from "../../../utils/Logger";
  * @returns 
  */
 const SettingUserSessionsModal = ({
-  modalType
-  , userSession
-  , onClose
+  usersession
 }) => {
-  Logger.debug("SettingUserSessionsModal ...")
+
+  
   return (
     <>
-    {/* <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"사용자"}
-      submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
-      onSubmit={handleFormSubmit}
-    >
-    </BaseModal> */}
     </>
   );
 }

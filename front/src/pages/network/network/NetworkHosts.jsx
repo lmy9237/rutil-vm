@@ -1,8 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useGlobal from "../../../hooks/useGlobal";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
+import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import { checkZeroSizeToMbps } from "../../../util";
 import FilterButtons from "../../../components/button/FilterButtons";
 import ActionButton from "../../../components/button/ActionButton";
@@ -11,10 +14,7 @@ import {
   useConnectedHostsFromNetwork,
   useDisconnectedHostsFromNetwork,
 } from "../../../api/RQHook";
-import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import useGlobal from "../../../hooks/useGlobal";
 
 
 const connectionFilters = [

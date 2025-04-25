@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo } from "react";
-import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import useClickOutside from "../../hooks/useClickOutside";
+import Loading from "../common/Loading";
+import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import Logger from "../../utils/Logger";
 import "./LabelInput.css";
 
@@ -11,6 +12,7 @@ const LabelSelectOptions = ({
   value,
   onChange,
   disabled,
+  loading,
   options = [],
 }) => {
   const [open, setOpen] = useState(false);
@@ -26,9 +28,12 @@ const LabelSelectOptions = ({
   useClickOutside(selectRef, (e) => setOpen(false))
 
   const boxStyle = !label ? { width: "100%" } : undefined; // label이 없으면 100% width style 지정 
-  const selectedLabel = useMemo(() => (
-    options.find(opt => opt.value === value)?.label || "선택하세요"
-  ), [options, value]);
+  const selectedLabel = useMemo(() => {
+    if (loading) return <Loading/>;
+    if (options.length === 0) return "항목 없음";
+    const selected = options?.find(opt => opt.value === value)?.label || "선택하세요"
+    return selected ?? "선택하세요";
+  }, [options, loading, value]);
 
   return (
     <div className={`input-select custom-select-wrapper ${className}`} ref={selectRef}>

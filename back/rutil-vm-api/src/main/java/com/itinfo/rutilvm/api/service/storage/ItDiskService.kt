@@ -335,6 +335,7 @@ class DiskServiceImpl(
 			name { "디스크 파일 업로드" }
 			description { "(RutilVM에서) 디스크 파일 업로드 <${imageTransferId}>" }
 			status { JobStatus.STARTED }
+			autoCleared { true }
 		})
         val imageTransferService: ImageTransferService = conn.srvImageTransfer(imageTransferId)
         val transferUrl = imageTransferService.get().send().imageTransfer().transferUrl()
@@ -365,7 +366,10 @@ class DiskServiceImpl(
 			}
 			imageTransferService.finalize_().send()
 			http.disconnect()
-			jobAdded?.id?.let { id -> iJob.end(id) }
+			jobAdded?.id?.let { id ->
+				log.info("uploadFileToTransferUrl ... 최근작업 ({}) 종료처리!", id)
+				iJob.end(id)
+			}
 			log.info("uploadFileToTransferUrl ... 완료!")
 		}
         return true

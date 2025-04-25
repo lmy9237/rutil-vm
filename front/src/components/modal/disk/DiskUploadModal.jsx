@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
@@ -31,33 +31,8 @@ const initialFormState = {
   // sharable: false,
 };
 
-const initialJobFormState = {
-  name: "디스크 파일 업로드",
-  description: "(RutilVM에서) 디스크 파일 업로드",
-  status: 'STARTED',
-  autoCleared: true,
-}
-
 const DiskUploadModal = ({ isOpen, onClose }) => {
   const [formState, setFormState] = useState(initialFormState);
-  const [jobFormState, setJobFormState] = useState(initialJobFormState)
-  const [jobQueue, dispatch] = useReducer((state, action) => {
-    Logger.debug(`jobQueueReducer ... action.type: ${action.type}`)
-    switch (action.type) {
-      case 'PUSH_JOB':
-        return [...state, action.payload];
-      case 'POP_JOB':
-        const updated = [...state];
-        const jobId = updated.pop();
-        return jobId
-      case 'RESET':
-        return [];
-      default:
-        return state;
-    }
-  }
-  , []);
-
   const [file, setFile] = useState(null);
 
   const [dataCenterVo, setDataCenterVo] = useState({id: "", name: "" });

@@ -15,7 +15,12 @@ const secDeviceOptionList = [
   { value: "network", label: "네트워크(PXE)" },
 ];
 
-const VmBoot = ({ isos, isIsoLoading, formBootState, setFormBootState }) => {
+const VmBoot = ({
+  isos, 
+  isIsoLoading,
+  formBootState,
+  setFormBootState
+}) => {
   const handleInputChange = (field) => (e) => {
     setFormBootState((prev) => ({ ...prev, [field]: e.target.value }));
   };
@@ -75,8 +80,9 @@ const VmBoot = ({ isos, isIsoLoading, formBootState, setFormBootState }) => {
             loading={isIsoLoading}
             options={isos}
             onChange={(e) => {
-              const selected = isos.find(i => i.id === e.target.value)
+              const selected = isos.find(i => i.id === (e?.target?.value ?? e?.id))
               if (selected) setFormBootState((prev) => ({ ...prev, connVo: { id: selected.id, name: selected.name }}))
+              // TODO:handleSelectIdChange를 쓰려면 특정 prop에 값 변경하는 처리가 있어야함
             }}
           />
         </div>

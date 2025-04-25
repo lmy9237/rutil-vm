@@ -23,7 +23,7 @@ const NetworkTree = ({}) => {
   const { setDatacentersSelected, setNetworksSelected, } = useGlobal();
 
   // ✅ API 호출 (네트워크 트리 데이터)
-  const { data: navNetworks } = useAllTreeNavigations("network");
+  const { data: navNetworks = [] } = useAllTreeNavigations("network");
 
   Logger.debug(`NetworkTree ...`)
   return (
@@ -42,31 +42,31 @@ const NetworkTree = ({}) => {
       />
 
       {/* 레벨 2: 데이터 센터 */}
-      {secondVisibleNetwork() && navNetworks && navNetworks.map((dataCenter) => {
-        const isDataCenterOpen = openDataCentersNetwork(dataCenter.id) || false;
-        const hasNetworks = [...dataCenter.networks]?.length > 0;
+      {secondVisibleNetwork() && [...navNetworks].map((dc) => {
+        const isDataCenterOpen = openDataCentersNetwork(dc?.id) || false;
+        const hasNetworks = [...dc?.networks]?.length > 0;
         return (
-          <div key={dataCenter.id} className="tmi-g">
+          <div key={dc?.id} className="tmi-g">
             <TreeMenuItem level={2}
-              title={dataCenter.name}
+              title={dc?.name}
               iconDef={rvi16DataCenter}
-              isSelected={() => location.pathname.includes(dataCenter.id)}
+              isSelected={() => location.pathname.includes(dc?.id)}
               isNextLevelVisible={isDataCenterOpen}
               isChevronVisible={hasNetworks}
-              onChevronClick={() => toggleOpenDataCentersNetwork(dataCenter.id)}
+              onChevronClick={() => toggleOpenDataCentersNetwork(dc?.id)}
               onClick={() => {
-                setDatacentersSelected(dataCenter);
-                navigate(`/networks/datacenters/${dataCenter.id}/clusters`);
+                setDatacentersSelected(dc);
+                dc?.id && navigate(`/networks/datacenters/${dc?.id}/clusters`);
               }}
               onContextMenu={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                setDatacentersSelected(dataCenter);
+                setDatacentersSelected(dc);
                 setContextMenu({
                   mouseX: e.clientX,
                   mouseY: e.clientY,
                   item: {
-                    ...dataCenter,
+                    ...dc,
                     level: 2,
                   },
                   treeType: "network"
@@ -75,7 +75,7 @@ const NetworkTree = ({}) => {
             />
 
             {/* 레벨 3: 네트워크 */}
-            {isDataCenterOpen && dataCenter.networks.map((network) => (
+            {isDataCenterOpen && [...dc?.networks].map((network) => (
               <div key={network.id} style={{ position: "relative" }}>
                 <TreeMenuItem level={3}
                   title={network.name}
@@ -84,14 +84,14 @@ const NetworkTree = ({}) => {
                   isNextLevelVisible={false}
                   isChevronVisible={false}
                   onClick={() => {
-                    setDatacentersSelected(dataCenter);
+                    setDatacentersSelected(dc);
                     setNetworksSelected(network);
                     navigate(`/networks/${network.id}`);
                   }}
                   onContextMenu={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    setDatacentersSelected(dataCenter);
+                    setDatacentersSelected(dc);
                     setNetworksSelected(network);
                     setContextMenu({
                       mouseX: e.clientX,

@@ -39,7 +39,7 @@ const ComputingTree = ({}) => {
   } = useGlobal();
 
   // ✅ API 호출 (컴퓨팅 트리 데이터)
-  const { data: navClusters } = useAllTreeNavigations("cluster");
+  const { data: navClusters = [] } = useAllTreeNavigations("cluster");
 
   Logger.debug(`ComputingTree ... `)
   return (
@@ -56,30 +56,30 @@ const ComputingTree = ({}) => {
       />
 
       {/* 두 번째 레벨 (Data Center) */}
-      {secondVisibleComputing() && navClusters && navClusters.map((dataCenter) => {
-        const isDataCenterOpen = openDataCentersComputing(dataCenter.id) || false;
-        const hasClusters = [...dataCenter.clusters]?.length > 0;
+      {secondVisibleComputing() && [...navClusters].map((dc) => {
+        const isDataCenterOpen = openDataCentersComputing(dc?.id) || false;
+        const hasClusters = [...dc?.clusters]?.length > 0;
         return (
-          <div key={dataCenter.id} className="tmi-g">
+          <div key={dc?.id} className="tmi-g">
             <TreeMenuItem level={2}
-              title={dataCenter.name}
+              title={dc?.name}
               iconDef={rvi16DataCenter}
-              isSelected={() => location.pathname.includes(dataCenter.id)}
+              isSelected={() => location.pathname.includes(dc?.id)}
               isNextLevelVisible={isDataCenterOpen}
               isChevronVisible={hasClusters}
-              onChevronClick={() => toggleOpenDataCentersComputing(dataCenter.id)}
+              onChevronClick={() => toggleOpenDataCentersComputing(dc?.id)}
               onClick={() => {
-                setDatacentersSelected(dataCenter)
-                navigate(`/computing/datacenters/${dataCenter.id}/clusters`);
+                setDatacentersSelected(dc)
+                dc?.id && navigate(`/computing/datacenters/${dc?.id}/clusters`);
               }}
               onContextMenu={(e) => {
                 e.preventDefault();
-                setDatacentersSelected(dataCenter)
+                setDatacentersSelected(dc)
                 setContextMenu({
                   mouseX: e.clientX,
                   mouseY: e.clientY,
                   item: {
-                    ...dataCenter,
+                    ...dc,
                     level: 2,
                   },
                   treeType: "computing"
@@ -88,26 +88,26 @@ const ComputingTree = ({}) => {
             />
 
             {/* 세 번째 레벨 (Clusters) */}
-            {isDataCenterOpen && [...dataCenter.clusters].map((cluster) => {
+            {isDataCenterOpen && [...dc.clusters].map((cluster) => {
               const isClusterOpen = openClustersComputing(cluster.id) || false;
               const hasHosts = [...cluster.hosts]?.length > 0;
               return (
-                <div key={cluster.id} className="tmi-g">
+                <div key={cluster?.id} className="tmi-g">
                   <TreeMenuItem level={3}
-                    title={cluster.name}
+                    title={cluster?.name}
                     iconDef={rvi16Cluster}
-                    isSelected={() => location.pathname.includes(cluster.id)}
+                    isSelected={() => location.pathname.includes(cluster?.id)}
                     isNextLevelVisible={isClusterOpen}
                     isChevronVisible={hasHosts}
-                    onChevronClick={() => toggleOpenClustersComputing(cluster.id)}
+                    onChevronClick={() => toggleOpenClustersComputing(cluster?.id)}
                     onClick={() => {
-                      setDatacentersSelected(dataCenter)
+                      setDatacentersSelected(dc)
                       setClustersSelected(cluster)
-                      navigate(`/computing/clusters/${cluster.id}`);
+                      cluster?.id && navigate(`/computing/clusters/${cluster?.id}`);
                     }}
                     onContextMenu={(e) => {
                       e.preventDefault();
-                      setDatacentersSelected(dataCenter)
+                      setDatacentersSelected(dc)
                       setClustersSelected(cluster)
                       setContextMenu({
                         mouseX: e.clientX,
@@ -133,18 +133,18 @@ const ComputingTree = ({}) => {
                             <TreeMenuItem level={4}
                               title={host.name}
                               iconDef={rvi16Host}
-                              isSelected={() => location.pathname.includes(host.id)}
+                              isSelected={() => location.pathname.includes(host?.id)}
                               isNextLevelVisible={isHostOpen}
                               isChevronVisible={hasVMs}
-                              onChevronClick={() => toggleOpenHostsComputing(host.id)}
+                              onChevronClick={() => toggleOpenHostsComputing(host?.id)}
                               onClick={() => {
-                                setDatacentersSelected(dataCenter)
+                                setDatacentersSelected(dc)
                                 setClustersSelected(cluster)
-                                navigate(`/computing/hosts/${host.id}`);
+                                host?.id && navigate(`/computing/hosts/${host.id}`);
                               }}
                               onContextMenu={(e) => {
                                 e.preventDefault();
-                                setDatacentersSelected(dataCenter)
+                                setDatacentersSelected(dc)
                                 setClustersSelected(cluster)
                                 setHostsSelected(host)
                                 setContextMenu({
@@ -160,24 +160,24 @@ const ComputingTree = ({}) => {
                             />
                             {/* 다섯 번째 레벨 (VMs under Host) */}
                             {isHostOpen && [...host.vms]?.map((vm) => (
-                              <div key={vm.id} className="tmi-g">
+                              <div key={vm?.id} className="tmi-g">
                                 <TreeMenuItem level={5}
-                                  title={vm.name}
+                                  title={vm?.name}
                                   iconDef={rvi16Desktop}
                                   // TODO: host에 붙어있지만 상태가 이상한 경우에 대한 조건처리
                                   // iconDef={rvi16DesktopFlag()}
-                                  isSelected={() => location.pathname.includes(vm.id)}
+                                  isSelected={() => location.pathname.includes(vm?.id)}
                                   isNextLevelVisible={isHostOpen}
                                   isChevronVisible={false}
                                   onChevronClick={()=>{}}
                                   onClick={() => {
-                                    setDatacentersSelected(dataCenter)
+                                    setDatacentersSelected(dc)
                                     setClustersSelected(cluster)
-                                    navigate(`/computing/vms/${vm.id}`);
+                                    vm?.id && navigate(`/computing/vms/${vm?.id}`);
                                   }}
                                   onContextMenu={(e) => {
                                     e.preventDefault();
-                                    setDatacentersSelected(dataCenter)
+                                    setDatacentersSelected(dc)
                                     setClustersSelected(cluster)
                                     setHostsSelected(host)
                                     setVmsSelected(vm)
@@ -199,23 +199,23 @@ const ComputingTree = ({}) => {
                       )}
                       {/* VM(중지) */}
                       {[...cluster.vmDowns]?.map((vm) => (
-                        <div key={vm.id} className="tmi-g">
+                        <div key={vm?.id} className="tmi-g">
                           <TreeMenuItem level={4}
-                            title={vm.name}
+                            title={vm?.name}
                             iconDef={rvi16DesktopSleep}
-                            isSelected={() => location.pathname.includes(vm.id)}
+                            isSelected={() => location.pathname.includes(vm?.id)}
                             isNextLevelVisible={false}
                             isChevronVisible={false}
                             onChevronClick={()=>{}}
                             onClick={() => {
-                              setDatacentersSelected(dataCenter)
+                              setDatacentersSelected(dc)
                               setClustersSelected(cluster)
-                              navigate(`/computing/vms/${vm.id}`);
+                              vm?.id && navigate(`/computing/vms/${vm?.id}`);
                             }}
                             onContextMenu={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              setDatacentersSelected(dataCenter)
+                              setDatacentersSelected(dc)
                               setClustersSelected(cluster)
                               // setHostsSelected(host)
                               setVmsSelected(vm)

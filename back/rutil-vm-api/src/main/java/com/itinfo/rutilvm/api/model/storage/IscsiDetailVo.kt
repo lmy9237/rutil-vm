@@ -49,6 +49,7 @@ fun IscsiDetailVo.toDiscoverIscsiDetailVo(): IscsiDetails {
     return IscsiDetailsBuilder()
         .address(this@toDiscoverIscsiDetailVo.address)
         .port(this@toDiscoverIscsiDetailVo.port)
+		.target(this@toDiscoverIscsiDetailVo.target)
         .build()
 }
 fun IscsiDetailVo.toDiscoverIscsiIqnDetailVo(): IscsiDetails {

@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import useAsideState from "../../hooks/useAsideState";
 import useBoxState from "../../hooks/useBoxState";
-import useUIState from "../../hooks/useUIState";
 import BoxEvent from "./BoxEvent";
 import BoxUser from "./BoxUser";
 import {
@@ -50,12 +49,11 @@ const Header = () => {
 
       <div id="header-right" className="f-end">
         {/* 새로고침 */}
-        <TopMenuIcon
-          iconDef={rvi24Refresh("white")} onClick={() => window.location.reload()}
+        <TopMenuIcon iconDef={rvi24Refresh("white")}
+          onClick={() => window.location.reload()}
         />
         {/* 설정 */}
-        <TopMenuIcon
-          iconDef={rvi24Gear("white")}
+        <TopMenuIcon iconDef={rvi24Gear("white")}
           onClick={() => navigate("/settings/users")}
         />
         {/* 알림 */}
@@ -73,8 +71,7 @@ const Header = () => {
         {eventBoxVisible() && <BoxEvent />}
         
         {/* 사용자 버튼 */}
-        <TopMenuIcon
-          iconDef={rvi24PersonCircle("white")}
+        <TopMenuIcon iconDef={rvi24PersonCircle("white")}
           onClick={(e) => {
             e.stopPropagation();
             toggleLoginBoxVisible();

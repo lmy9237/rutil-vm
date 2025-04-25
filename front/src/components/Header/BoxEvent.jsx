@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import useBoxState from "../../hooks/useBoxState";
+import useClickOutside from "../../hooks/useClickOutside";
+import useFooterState from "../../hooks/useFooterState";
 import {
   RVI24,
   RVI16,
@@ -13,9 +15,7 @@ import {
 } from "../icons/RutilVmIcons";
 import { useAllEventsNormal, useAllNotiEvents, useRemoveEvent } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
-import useClickOutside from "../../hooks/useClickOutside";
 import "./BoxEvent.css";
-import useFooterState from "../../hooks/useFooterState";
 
 /**
  * @name BoxEvent
@@ -122,7 +122,7 @@ const BoxEvent = ({
         <>
           <div className="bell-content-outer"
             style={{
-              height: currentEventBoxHeightInPx - bellHeaderHeights,
+              minHeight: currentEventBoxHeightInPx - bellHeaderHeights,
             }}
           >
             <BoxEventItems events={notiEvents} />
@@ -153,7 +153,7 @@ const BoxEvent = ({
         <>
           <div className="bell-content-outer event-section"
             style={{
-              height: currentEventBoxHeightInPx - bellHeaderHeights,
+              minHeight: currentEventBoxHeightInPx - bellHeaderHeights,
             }}
           >
             <BoxEventItems events={eventsNormal} />

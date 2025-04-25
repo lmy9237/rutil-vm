@@ -128,9 +128,9 @@ const TableColumnsInfo = {
   ],
 
   VMS: [
-    { header: '재설정', accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
-    { header: '', accessor: 'engine', clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: Localization.kr.RESET, accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: '엔진', accessor: 'engine', clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
     { header: Localization.kr.COMMENT, accessor: 'comment', clickable: false, width: '20%' },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipv4', clickable: false, width: '20%' },

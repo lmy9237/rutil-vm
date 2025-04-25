@@ -144,6 +144,7 @@ export const Localization = {
       else if (_status === "RESTORING_STATE")  return "복구 중";
       else if (_status === "MIGRATING")  return "마이그레이션 중";
       else if (_status === "LOCKED")  return "잠김";
+      else if (_status === "IMAGE_LOCKED") return "이미지 잠김";
       // else if (_status === "NEXTRUN")  return "??";
       else if (_status === "STARTED")  return "시작됨";
       else if (_status === "FAILED")  return "실패";

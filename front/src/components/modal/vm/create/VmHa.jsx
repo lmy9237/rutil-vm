@@ -47,12 +47,13 @@ const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
           value={formHaState.storageDomainVo.id}
           disabled={!formHaState.ha}  // ha가 체크되어야만 활성화됨
           onChange={(e) => {
-            const selectedDomain = domains.find((domain) => domain.id === e.target.value);
+            const selectedDomain = [...domains]?.find((domain) => domain.id === (e?.target?.value ?? e?.id));
             if (selectedDomain) {
               setFormHaState((prev) => ({
                 ...prev, 
                 storageDomainVo: { id: selectedDomain.id, name: selectedDomain.name },
               }));
+              // TODO:handleSelectIdChange를 쓰려면 특정 prop에 값 변경하는 처리가 있어야함
             } else {
               // '도메인 없음' 선택 시
               setFormHaState((prev) => ({

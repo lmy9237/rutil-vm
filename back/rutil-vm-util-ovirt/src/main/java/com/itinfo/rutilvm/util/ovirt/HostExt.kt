@@ -382,11 +382,12 @@ fun Connection.findAllHostStoragesFromHost(hostId: String): Result<List<HostStor
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.discoverIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): Result<List<IscsiDetails>> = runCatching {
+fun Connection.discoverIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): Result<List<HostStorage>> = runCatching {
 	checkHostExists(hostId)
-
-	this.srvHost(hostId).discoverIscsi().iscsi(iscsiDetails).send().discoveredTargets()
-
+	val srv = this.srvHost(hostId).apply {
+		iscsiLogin().iscsi(iscsiDetails).async(true).send()
+	}
+	srv.storageService().list().send().storages()
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.STORAGE,"목록조회", hostId)
 }.onFailure {
@@ -409,9 +410,7 @@ fun Connection.unRegisteredStorageDomainsFromHost(hostId: String): Result<List<S
 fun Connection.loginIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
 
-	//TODO: 로그인 후 값 받아오는 처리
 	this.srvHost(hostId).iscsiLogin().iscsi(iscsiDetails).send()
-
 
 	true
 

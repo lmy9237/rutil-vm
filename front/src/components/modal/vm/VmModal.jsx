@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
   useFindEditVmById,  
@@ -11,7 +12,7 @@ import {
   useAllActiveDomainsFromDataCenter,
   useOsSystemsFromCluster,
   useFindTemplatesFromDataCenter,
-  useAllvnicFromCluster,
+  useAllvnicFromCluster, 
 } from '../../../api/RQHook';
 import VmCommon from './create/VmCommon';
 import VmNic from './create/VmNic';
@@ -30,7 +31,6 @@ import Logger from "../../../utils/Logger";
 import './MVm.css';
 import CONSTANT from "../../../Constants";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import useGlobal from "../../../hooks/useGlobal";
 
 // 일반
 const infoform = {
@@ -160,14 +160,6 @@ const VmModal = ({
     isLoading: isIsoLoading 
   } = useCDFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
 
-  // 별도 handler 추가
-  const handleOsSystemChange = (selectedOption) => {
-    const selected = osList.find((item) => item.name === selectedOption.id);
-    if (selected) {
-      setFormInfoState((prev) => ({ ...prev, osSystem: selected.name }));
-    }
-  };
-
   // 초기값 설정
   useEffect(() => {
     if (!isOpen) {
@@ -198,10 +190,10 @@ const VmModal = ({
         memorySize: vm?.memorySize / (1024 * 1024), // 입력된 값는 mb, 보낼 단위는 byte
         memoryMax: vm?.memoryMax / (1024 * 1024),
         memoryActual: vm?.memoryActual / (1024 * 1024),
-        cpuTopologyCnt: vm?.cpuTopologyCnt || 1,
-        cpuTopologyCore: vm?.cpuTopologyCore || 1,
-        cpuTopologySocket: vm?.cpuTopologySocket || 1,
-        cpuTopologyThread: vm?.cpuTopologyThread || 1,
+        cpuTopologyCnt: vm?.cpuTopologyCnt ?? 1,
+        cpuTopologyCore: vm?.cpuTopologyCore ?? 1,
+        cpuTopologySocket: vm?.cpuTopologySocket ?? 1,
+        cpuTopologyThread: vm?.cpuTopologyThread ?? 1,
       });
       setFormCloudState({
         cloudInit: vm?.cloudInit || false,
@@ -277,13 +269,14 @@ const VmModal = ({
 
       setArchitecture(selectedCluster.cpuArc || "");
 
+      // TODO: 규칙의 에메모호함 편집에서 값을 제대로 읽어오지 못함
       const newOsSystem = osList.length > 0 ? osList[0].name : "other_linux";
       if (formInfoState.osSystem !== newOsSystem) {
         setFormInfoState((prev) => ({
           ...prev, osSystem: newOsSystem }));
       }
     }
-  }, [clusterVo.id, clusters, osList.length]); 
+  }, [clusterVo.id, clusters, osList]); 
   
   // (확인용 , 삭제예정정)최소한 하나라도 vnicProfile이 선택되어 있는 경우만 로그 출력
   useEffect(() => {
@@ -441,7 +434,7 @@ const VmModal = ({
           <LabelSelectOptionsID id="os_system" label="운영 시스템"
             value={formInfoState.osSystem}
             options={osList.map((opt) => ({id: opt.name, name: opt.description}))}
-            onChange={handleOsSystemChange }
+            onChange={ handleInputChange(setFormInfoState, "osSystem") }
           />
           <LabelSelectOptions label="칩셋/펌웨어 유형"
             value={formInfoState.osType}

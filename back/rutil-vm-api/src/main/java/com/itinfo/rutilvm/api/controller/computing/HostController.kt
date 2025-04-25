@@ -10,6 +10,7 @@ import com.itinfo.rutilvm.api.model.network.NetworkAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.HostStorageVo
 import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.model.storage.LogicalUnitVo
 import com.itinfo.rutilvm.api.service.computing.ItHostNicService
 import com.itinfo.rutilvm.api.service.computing.ItHostOperationService
 import com.itinfo.rutilvm.api.service.computing.ItHostService
@@ -725,10 +726,10 @@ class HostController {
 	fun searchIscsi(
 		@PathVariable("hostId") hostId: String? = null,
 		@RequestBody iscsiDetailVo: IscsiDetailVo? = null  // 로그인은 나중에(chap 이름, 암호도 들어가야함)
-	): ResponseEntity<List<IscsiDetailVo>> {
+	): ResponseEntity<List<LogicalUnitVo>> {
 		if (hostId == null)
 			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		if(iscsiDetailVo == null)
+		if (iscsiDetailVo == null)
 			throw ErrorPattern.DISCOVER_TARGET_NOT_FOUND.toException()
 		log.info("/computing/hosts/{}/searchIscsi {} {} ... 호스트 iscsi 검색 목록", hostId, iscsiDetailVo.address, iscsiDetailVo.port)
 		return ResponseEntity.ok(iHostStorage.findImportIscsiFromHost(hostId, iscsiDetailVo))
@@ -755,34 +756,6 @@ class HostController {
 		log.info("/computing/hosts/{}/searchFc ... 호스트 fc 검색 목록", hostId)
 		return ResponseEntity.ok(iHostStorage.findUnregisterDomainFromHost(hostId))
 	}
-
-
-	@ApiOperation(
-		httpMethod="POST",
-		value="도메인 가져오기에 필요한 iSCSI 로그인",
-		notes="도메인 가져오기 - iSCSI 요쳥"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name = "hostId", value = "호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name = "iscsiDetailVo", value="target, address, port", dataTypeClass=IscsiDetailVo::class, paramType="body")
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@PostMapping("/{hostId}/iscsiToLogin")
-	@ResponseBody
-	fun loginISCSI(
-		@PathVariable("hostId") hostId: String? = null,
-		@RequestBody iscsiDetailVo: IscsiDetailVo? = null
-	): ResponseEntity<List<IdentifiedVo>> {
-		if (hostId == null)
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		if(iscsiDetailVo == null)
-			throw ErrorPattern.DISCOVER_TARGET_NOT_FOUND.toException()
-		log.info("/computing/hosts/{}/iscsiToLogin {} {} {} ... 호스트 iscsi 로그인 목록", hostId, iscsiDetailVo.target, iscsiDetailVo.address, iscsiDetailVo.port)
-		return ResponseEntity.ok(iHostStorage.loginIscsiFromHost(hostId, iscsiDetailVo))
-	}
-
 	// endregion
 
 

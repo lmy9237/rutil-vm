@@ -49,6 +49,11 @@ const MainOuter = ({
     setAsideWidthInPx(asideWidth)
   }, [asideWidth])
 
+  useEffect(() => {
+    Logger.debug(`MainOuter > useEffect ... asideVisible: ${asideVisible}`)
+    setAsideWidth(asideVisible ? asideWidth : 0)
+  }, [asideVisible])
+
   return (
     <>
       <div
@@ -56,11 +61,11 @@ const MainOuter = ({
       >
         <div
           style={{ 
-            display: asideVisible() ? `block` : `none`,
+            display: asideVisible ? `block` : `none`,
             width: `${asideWidth}px`,
             minWidth: asideWidth < 236 ? 236 : asideWidth
           }}
-          className={`aside-outer${(asideVisible() ? `` : " closed")}`}
+          className={`aside-outer${(asideVisible ? `` : " closed")}`}
         >
           <SideNavbar />
           <SidebarTree />{/* 크기 조절 핸들 */}

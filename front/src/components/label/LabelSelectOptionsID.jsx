@@ -1,9 +1,9 @@
-import { useState, useRef, useCallback } from "react";
-import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
+import { useState, useRef, useCallback, useMemo } from "react";
 import useClickOutside from "../../hooks/useClickOutside"; // ✅ import 추가
+import Loading from "../common/Loading";
+import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import Logger from "../../utils/Logger";
 import "./LabelInput.css";
-import Loading from "../common/Loading";
 
 /**
  * @name LabelSelectOptionsID
@@ -75,14 +75,14 @@ const LabelSelectOptionsID = ({
 
   const boxStyle = !label ? { width: "100%" } : undefined;
 
-  const getSelectedLabel = () => {
+  const selectedLabel = useMemo(() => {
     if (loading) return <Loading/>;
     if (options.length === 0) return "항목 없음";
     const selected = options.find((opt) => opt.id === value);
     return selected
       ? `${selected.name}: ${selected.id} ${etcLabel}`
       : "선택하세요";
-  };
+  }, [options, loading, value]);
 
   return (
     <div className={`input-select custom-select-wrapper ${className}`} ref={wrapperRef}>
@@ -92,7 +92,7 @@ const LabelSelectOptionsID = ({
           style={boxStyle}
           onClick={() => !disabled && setOpen(!open)}
         >
-          <span>{getSelectedLabel()}</span>
+          <span>{selectedLabel}</span>
           <RVI16 iconDef={open ? rvi16ChevronUp : rvi16ChevronDown} />
         </div>
 

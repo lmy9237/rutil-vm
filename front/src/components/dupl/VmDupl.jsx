@@ -2,15 +2,15 @@ import { useCallback } from "react"
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
+import useGlobal from "../../hooks/useGlobal";
+import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import SelectedIdView from "../common/SelectedIdView";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import VmActionButtons from "./VmActionButtons";
-import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
 import Logger from "../../utils/Logger";
-import useGlobal from "../../hooks/useGlobal";
 
 /**
  * @name VmDupl
@@ -90,7 +90,6 @@ const VmDupl = ({
         <VmActionButtons />
       </div>
 
-      {/* 테이블 컴포넌트 */}
       <TablesOuter target={"vm"}
         columns={columns}
         data={filteredData}
@@ -100,24 +99,6 @@ const VmDupl = ({
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        /*
-        onContextMenuItems={(row) => [
-          <VmActionButtons actionType="context" status={row?.status}/>,
-        ]}
-        onContextMenuItems={(row) => {
-          const vmId = row?.id;
-          const openModalFromContext = (type) => {
-            if (type === "console") {
-              openNewTab("console", vmId); 
-            } else {
-              setActiveModal(type); 
-            }
-          };
-          return [
-            <VmActionButtons actionType="context" status={row?.status}/>,
-          ];
-        }}
-        */
       />
       <SelectedIdView items={vmsSelected} />
     </div>

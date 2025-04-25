@@ -1,11 +1,15 @@
+import React, { useCallback } from "react";
+import toast from "react-hot-toast";
+import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
+import useSearch from "../../hooks/useSearch";
+import SearchBox from "../../components/button/SearchBox"; // ✅ 검색창 추가
 import SelectedIdView from "../../components/common/SelectedIdView";
-import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import TablesOuter from "../../components/table/TablesOuter";
+import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import { useAllCerts } from "../../api/RQHook";
 import SettingCertificatesRenewalPolicies from "./SettingCertificatesRenewalPolicies";
 import Logger from "../../utils/Logger";
-import useUIState from "../../hooks/useUIState";
-import useGlobal from "../../hooks/useGlobal";
 
 /**
  * @name SettingCertificates
@@ -32,29 +36,36 @@ const SettingCertificates = () => {
     notAfter: e.notAfter ?? 'N/A',
     dday: (e.daysRemaining > 0) ? `${e.daysRemaining} 일 남음` : 'N/A'
   }))
+  
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = useCallback(() => {
+    Logger.debug(`VmDupl > handleRefresh ... `)
+    if (!refetchCerts) return;
+    refetchCerts()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
 
   Logger.debug("SettingCertificates ...");
   return (
-    <>
-      {/* <SettingUserSessionsActionButtons
-        isEditDisabled={certsSelected.length !== 1}
-        status={status}
-      /> */}
-      <TablesOuter
-        isLoading={isCertsLoading}
-        isError={isCertsError}
-        isSuccess={isCertsSuccess}
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        {/* <SettingUserSessionsActionButtons /> */}
+      </div>
+      <TablesOuter target={"cert"}
         columns={TableColumnsInfo.SETTING_CERTIFICATES}
-        data={transformedData}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        data={filteredData}
         onRowClick={(row) => setCertsSelected(row)}
-        showSearchBox={true} // 검색 박스 표시 여부 제어
+        /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
+        isLoading={isCertsLoading} isError={isCertsError} isSuccess={isCertsSuccess}
       />
       <SelectedIdView items={certsSelected} />
 
-      {/* 모달창 renderModals() */}
       <br/>
       <SettingCertificatesRenewalPolicies />
-    </>
+    </div>
   );
 }
 

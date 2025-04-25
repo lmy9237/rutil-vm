@@ -1,11 +1,13 @@
-import React, { Suspense, useState } from "react";
-import useUIState from "../../hooks/useUIState";
+import React, { useCallback } from "react";
+import toast from "react-hot-toast";
 import useGlobal from "../../hooks/useGlobal";
+import useSearch from "../../hooks/useSearch";
+import SearchBox from "../../components/button/SearchBox"; // ✅ 검색창 추가
 import SelectedIdView from "../../components/common/SelectedIdView";
+import TablesOuter from "../../components/table/TablesOuter";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import SettingUserSessionsActionButtons from "./SettingUserSessionsActionButtons";
 import { useAllUserSessions } from "../../api/RQHook";
-import TablesOuter from "../../components/table/TablesOuter";
 import Logger from "../../utils/Logger";
 
 /**
@@ -15,8 +17,7 @@ import Logger from "../../utils/Logger";
  * @returns {JSX.Element} SettingSessions
  */
 const SettingSessions = () => {
-  const { activeModal, setActiveModal, } = useUIState()
-  const { userSessionsSelected, setUserSessionsSelected } = useGlobal()
+  const { usersessionsSelected, setUsersessionsSelected } = useGlobal()
 
   const {
     data: userSessions = [],
@@ -24,62 +25,39 @@ const SettingSessions = () => {
     isError: isUserSessionsError,
     isSuccess: isUserSessionsSuccess,
     refetch: refetchUserSessios
-  } = useAllUserSessions("", (e) => {
-    Logger.debug(`SettingSessions ... ${JSON.stringify(e, null, 2)}`);
-    // const [username, provider] = e?.userName?.split('@') || [];
-    return {
-      ...e,
-    };
-  });
+  } = useAllUserSessions("");
 
-  const renderModals = () => {
-    Logger.debug("SettingSessions > renderModals ... ");
-    return (
-      <Suspense>
-        {/* {modals.endSession && (
-          <SettingUserSessionsModals
-            modalType={modals.create ? "create" : modals.edit ? "edit" : ""}
-            user={selectedUserSessions}
-            onClose={() => {
-              toggleModal(modals.create ? "create" : "edit", false);
-              refetchUserSessios();
-            }}
-          />
-        )} */}
-      </Suspense>
-    );
-  };
+  const transformedData = [...userSessions]?.map((session) => ({
+    ...session
+  }))
 
-  const status =
-  userSessionsSelected.length === 0
-      ? "none"
-      : userSessionsSelected.length === 1
-        ? "single"
-        : "multiple";
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = useCallback(() => {
+    Logger.debug(`VmDupl > handleRefresh ... `)
+    if (!refetchUserSessios) return;
+    refetchUserSessios()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
 
-  Logger.debug("SettingSessions ...");
   return (
-    <>
-      <SettingUserSessionsActionButtons
-        isEditDisabled={userSessionsSelected.length !== 1}
-        status={status}
-      />
+    <div onClick={(e) => e.stopPropagation()}>
+      <div className="dupl-header-group f-start">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SettingUserSessionsActionButtons />
+      </div>
 
-      <TablesOuter
-        isLoading={isUserSessionsLoading}
-        isError={isUserSessionsError}
-        isSuccess={isUserSessionsSuccess}
+      <TablesOuter target={"usersession"}
         columns={TableColumnsInfo.ACTIVE_USER_SESSION}
-        data={userSessions}
-        onRowClick={(row) => setUserSessionsSelected(row)}
-        showSearchBox={true} // 검색 박스 표시 여부 제어
+        data={filteredData}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onRowClick={(row) => setUsersessionsSelected(row)}
+        /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
+        isLoading={isUserSessionsLoading} isError={isUserSessionsError} isSuccess={isUserSessionsSuccess}
       />
 
-      <SelectedIdView items={userSessionsSelected} />
-
-      {/* 모달창 */}
-      {renderModals()}
-    </>
+      <SelectedIdView items={usersessionsSelected} />
+    </div>
   );
 };
 

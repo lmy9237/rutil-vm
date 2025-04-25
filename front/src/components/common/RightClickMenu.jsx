@@ -11,6 +11,7 @@ import NetworkModals from "../modal/network/NetworkModals";
 import DomainModals from "../modal/domain/DomainModals";
 import EventModals from "../modal/event/EventModals";
 import SettingUsersModals from "../modal/settings/SettingUsersModals";
+import SettingUserSessionsModal from "../modal/settings/SettingUserSessionsModal";
 
 import DataCenterActionButtons from "../dupl/DataCenterActionButtons";
 import ClusterActionButtons from "../dupl/ClusterActionButtons"
@@ -51,12 +52,15 @@ const RightClickMenu = () => {
     disksSelected, // setDisksSelected,
     eventsSelected, // setEventsSelected,
     usersSelected, // setUsersSelected,
+    usersessionsSelected, // setUsersessionsSelected,
     sourceContext,
     clearAllSelected,
   } = useGlobal()
 
   const contextTargets2Ignore = useMemo(() => ([ /* 우킄릭시 메뉴 제공되지 않는 기능대상 */
     "application",
+    "usersession", // 활성화 세션
+    "cert", // 인증서
     "iscsi",
     "fcp",
   ]), [])
@@ -83,6 +87,7 @@ const RightClickMenu = () => {
       <VmDiskModals disk={disksSelected[0] ?? null} />
       <EventModals event={eventsSelected[0] ?? null}/>
       <SettingUsersModals user={usersSelected[0] ?? null} />
+      <SettingUserSessionsModal usersession={usersessionsSelected[0] ?? null} />
       {(contextMenu() !== null && 
         contextMenuType() !== null && 
         !contextTargets2Ignore.includes(contextMenuType())

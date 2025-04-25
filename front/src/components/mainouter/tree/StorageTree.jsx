@@ -24,7 +24,7 @@ const StorageTree = ({}) => {
   const { setDatacentersSelected, setDomainsSelected, } = useGlobal();
 
   // ✅ API 호출 (스토리지 트리 데이터)
-  const { data: navStorageDomains } = useAllTreeNavigations("storagedomain");
+  const { data: navStorageDomains = [] } = useAllTreeNavigations("storagedomain");
 
   Logger.debug(`StorageTree ... `)
   return (
@@ -44,32 +44,32 @@ const StorageTree = ({}) => {
       />
 
       {/* 두 번째 레벨 (Data Center) */}
-      {secondVisibleStorage() && navStorageDomains && navStorageDomains.map((dataCenter) => {
-        const isDataCentersOpen = openDataCentersStorage(dataCenter.id);
-        const hasDomains = [...dataCenter.storageDomains]?.length > 0;
+      {secondVisibleStorage() && navStorageDomains && [...navStorageDomains].map((dc) => {
+        const isDataCentersOpen = openDataCentersStorage(dc?.id);
+        const hasDomains = [...dc?.storageDomains]?.length > 0;
 
         return (
-          <div key={dataCenter.id} className="tmi-g">
+          <div key={dc?.id} className="tmi-g" id="tmi-datacenter">
             <TreeMenuItem level={2}
-              title={dataCenter.name}
+              title={dc?.name}
               iconDef={rvi16DataCenter}
-              isSelected={() => location.pathname.includes(dataCenter.id)}
+              isSelected={() => location.pathname.includes(dc?.id)}
               isNextLevelVisible={isDataCentersOpen}
               isChevronVisible={hasDomains}
-              onChevronClick={() => toggleDataCentersStorage(dataCenter.id)}
+              onChevronClick={() => toggleDataCentersStorage(dc?.id)}
               onClick={() => {
-                setDatacentersSelected(dataCenter)
-                navigate(`/storages/datacenters/${dataCenter.id}/clusters`);
+                setDatacentersSelected(dc)
+                dc?.id && navigate(`/storages/datacenters/${dc?.id}/clusters`);
               }}
               onContextMenu={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                setDatacentersSelected(dataCenter)
+                setDatacentersSelected(dc)
                 setContextMenu({
                   mouseX: e.clientX,
                   mouseY: e.clientY,
                   item: {
-                    ...dataCenter,
+                    ...dc,
                     level: 2,
                   },
                   treeType: "storage",
@@ -78,29 +78,29 @@ const StorageTree = ({}) => {
             />
             
             {/* 세 번째 레벨 (Storage Domains) */}
-            {isDataCentersOpen && [...dataCenter.storageDomains]?.map((domain) => {
-                const isDomainOpen = openDomainsStorage(domain.id) || false;
-                const hasDisks = [...domain.disks]?.length > 0;
+            {isDataCentersOpen && [...dc?.storageDomains]?.map((domain) => {
+                const isDomainOpen = openDomainsStorage(domain?.id) || false;
+                const hasDisks = [...domain?.disks]?.length > 0;
 
                 return (
-                  <div key={domain.id} className="tmi-g">
+                  <div key={domain?.id} className="tmi-g" id="tmi-domain">
                     <TreeMenuItem
                       level={3}
-                      title={domain.name}
+                      title={domain?.name}
                       iconDef={rvi16Cloud}
-                      isSelected={() => location.pathname.includes(domain.id)}
+                      isSelected={() => location.pathname.includes(domain?.id)}
                       isNextLevelVisible={isDomainOpen}
                       isChevronVisible={hasDisks}
-                      onChevronClick={() => toggleOpenDomainsStorage(domain.id)}
+                      onChevronClick={() => toggleOpenDomainsStorage(domain?.id)}
                       onClick={() => {
-                        setDatacentersSelected(dataCenter)
+                        setDatacentersSelected(dc)
                         setDomainsSelected(domain)
-                        navigate(`/storages/domains/${domain.id}`);
+                        domain?.id && navigate(`/storages/domains/${domain?.id}`);
                       }}
                       onContextMenu={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        setDatacentersSelected(dataCenter)
+                        setDatacentersSelected(dc)
                         setDomainsSelected(domain)
                         setContextMenu({
                           mouseX: e.clientX,

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
 import { useAddBonding, useNetworkInterfaceFromHost } from "../../../api/RQHook";
-import toast from "react-hot-toast";
 
 const optionList = [
   { value: "1", label: "(Mode 1) Active-Backup" },
@@ -36,9 +36,9 @@ const HostNetworkBondingModal = ({
 
   const initializeOptions = (bonding) => {
     if (!bonding || !bonding.bondingVo) return;
-    const bondingOptions = bonding.bondingVo.optionVos || [];
+    const bondingOptions = [...bonding?.bondingVo?.optionVos];
     setOptions(
-      bondingOptions.map(option => ({
+      [...bondingOptions].map(option => ({
         name: option.name,
         value: option.value,
         type: option.type

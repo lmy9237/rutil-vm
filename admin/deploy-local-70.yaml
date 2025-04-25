@@ -69,11 +69,11 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - ovirt_network
-#    healthcheck:
-#      test: ["CMD-SHELL", "curl --silent --fail localhost:9600 || exit 1"]
-#      interval: 10s
-#      timeout: 10s
-#      retries: 3
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail https://localhost:6690 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
     restart: on-failure
 
   rutil-vm:
@@ -95,11 +95,11 @@ services:
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro
     networks:
       - ovirt_network
-#    healthcheck:
-#      test: ["CMD-SHELL", "curl --silent --fail localhost:9600 || exit 1"]
-#      interval: 10s
-#      timeout: 10s
-#      retries: 3
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail https://localhost:433 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
     restart: always
     
   rutil-vm-wsproxy:
