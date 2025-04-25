@@ -173,13 +173,7 @@
   width: 100%;
 }
 
-/* .assigned-network-label{
-  max-width: 300px;
-  white-space: nowrap;     
-  overflow: hidden;           
-  text-overflow: ellipsis;  
-} */
-.assigned-network-outer{
+.assigned-network-outer,.empty-network-content{
   border: var(--border-default);
   background-color: white;
 }

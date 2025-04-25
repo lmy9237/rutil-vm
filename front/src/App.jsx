@@ -87,22 +87,22 @@ const App = () => {
   }, []);
   //#endregion: 웹소켓연결
 
-  const showMessage = (message) => {
-    Logger.debug(`App > showMessage ...`);
-    setMessages((prevMessages) => [...prevMessages, message]);
-  };
+  // const showMessage = (message) => {
+  //   Logger.debug(`App > showMessage ...`);
+  //   setMessages((prevMessages) => [...prevMessages, message]);
+  // };
 
-  const showToast = (msg) => {
-    Logger.debug(`App > showToast ...`);
-    toast(`${msg.content}`, {
-      icon: `${msg.symbol}`,
-      duration: 1500,
-      ariaProps: {
-        role: "status",
-        "aria-live": "polite",
-      },
-    });
-  };
+  // const showToast = (msg) => {
+  //   Logger.debug(`App > showToast ...`);
+  //   toast(`${msg.content}`, {
+  //     icon: `${msg.symbol}`,
+  //     duration: 1500,
+  //     ariaProps: {
+  //       role: "status",
+  //       "aria-live": "polite",
+  //     },
+  //   });
+  // };
 
   // react-scan 설정
   scan({

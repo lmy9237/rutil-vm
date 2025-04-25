@@ -205,11 +205,12 @@ input[disabled] {
   width: 100%;
   padding: 0.5rem 0.3rem;
 }
-
 .active {
   color: var(--color-active);
 }
-
+.toast{
+  max-width: 800px;
+}
 /* .color-primary {
   color: var(--color-primary);
 }

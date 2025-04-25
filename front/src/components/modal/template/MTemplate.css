@@ -1,9 +1,8 @@
 .graphic-console{
-    font-size: 16px;
+    font-size: var(--fs-default);
     font-style: normal;
-    font-weight: 700;
-    line-height: 150%;  
-    padding: 12px 0;
+    font-weight: 700; 
+    padding: 8px 0;
 }
 .template-select{
     max-width: 150px !important;
