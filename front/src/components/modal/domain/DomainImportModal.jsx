@@ -77,14 +77,27 @@ const DomainImportModal = ({
   );  
 
   const { 
-    data: dataCenters = [],
-    isLoading: isDataCentersLoading 
+    data: datacenters = [],
+    isLoading: isDatacentersLoading 
   } = useAllDataCenters((e) => ({ ...e }));
   const { 
     data: hosts = [], 
     isLoading: isHostsLoading 
   } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
+  const storageTypeOptions = useCallback((domainType) => {
+    const allOptions = [
+      { value: "nfs",   label: "NFS" },
+      { value: "fcp",   label: "Fibre Channel" },
+    ]
+    switch (domainType) {
+      case "iso":  
+      case "export": return allOptions.filter((e) => e.value === "nfs");
+      default: // data
+        return allOptions;
+    }
+  }, []);
+  
   const resetFormStates = () => {
     setFormState(initialFormState);
     setFormSearchState(searchFormState);
@@ -102,38 +115,19 @@ const DomainImportModal = ({
 
 
   useEffect(() => {
-    if (dataCenters && dataCenters.length > 0) {
-      const defaultDc = dataCenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
-      if (defaultDc) {
-        setDataCenterVo({ id: defaultDc.id, name: defaultDc.name });
-      } else {
-        setDataCenterVo({ id: dataCenters[0].id, name: dataCenters[0].name });
-      }
+    if (datacenters && datacenters.length > 0) {
+      const defaultDc = datacenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
+      const firstDc = defaultDc || datacenters[0];
+      setDataCenterVo({ id: firstDc.id, name: firstDc.name });
     }
-  }, [dataCenters]);
-  // }, [dataCenters, datacenterId]);
+  }, [datacenters]);
 
   useEffect(() => {
     if (hosts && hosts.length > 0) {
       setHostVo({id: hosts[0].id, name: hosts[0].name});
     }
   }, [hosts]);
-
   
-  const storageTypeOptions = useCallback((domainType) => {
-    const allOptions = [
-      { value: "nfs",   label: "NFS" },
-      { value: "fcp",   label: "Fibre Channel" },
-    ]
-    switch (domainType) {
-      case "iso":  
-      case "export": return allOptions.filter((e) => e.value === "nfs");
-      default: // data
-        return allOptions;
-    }
-  }, []);
-  
-
   useEffect(() => {
     const options = storageTypeOptions(formState.domainType);
     setStorageTypes(options);
@@ -188,9 +182,9 @@ const DomainImportModal = ({
           <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
             key={dataCenterVo.id}
             value={dataCenterVo.id}
-            loading={isDataCentersLoading}
-            options={dataCenters}
-            onChange={handleSelectIdChange(setDataCenterVo, dataCenters)}
+            loading={isDatacentersLoading}
+            options={datacenters}
+            onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
           />
           <LabelSelectOptions id="domain-type" label={`도메인 유형`}
             value={formState.domainType}

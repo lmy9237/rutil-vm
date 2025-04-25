@@ -19,6 +19,7 @@ const DomainFibreImport = ({
     ...i,
     id: i?.id,
     name: i?.name,
+    volumeGroup: i?.volumeGroup,
   }));
 
   const handleSearchFcp = () => {
@@ -63,6 +64,7 @@ const DomainFibreImport = ({
           data={transFcData}
           onRowClick={handleRowClick}
         />
+        <div> <span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
         <div> <span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
       </div>
     </div>

@@ -14,6 +14,7 @@ import com.itinfo.rutilvm.api.model.storage.toDiscoverIscsiIqnDetailVo
 import com.itinfo.rutilvm.api.model.storage.toHostStorageVos
 import com.itinfo.rutilvm.api.model.storage.toIscsiDetailVos
 import com.itinfo.rutilvm.api.model.storage.toLoginIscsi
+import com.itinfo.rutilvm.api.model.storage.toStorageDomainInfoVos
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 
@@ -65,7 +66,7 @@ interface ItHostStorageService {
 	 * @return List<[StorageDomainVo]>
 	 */
 	@Throws(Error::class)
-	fun findUnregisterDomainFromHost(hostId: String): List<IdentifiedVo>
+	fun findUnregisterDomainFromHost(hostId: String): List<StorageDomainVo>
 	/**
 	 * [ItHostStorageService.loginIscsiFromHost]
 	 * 도메인 가져오기 - iSCSI 로그인
@@ -109,10 +110,10 @@ class ItHostStorageServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findUnregisterDomainFromHost(hostId: String): List<IdentifiedVo> {
+	override fun findUnregisterDomainFromHost(hostId: String): List<StorageDomainVo> {
 		log.info("findUnregisterDomainFromHost... hostId: {}", hostId)
 		val res: List<StorageDomain> = conn.unRegisteredStorageDomainsFromHost(hostId).getOrDefault(emptyList())
-		return res.fromStorageDomainsToIdentifiedVos()
+		return res.toStorageDomainInfoVos(conn)
 	}
 
 	@Throws(Error::class)

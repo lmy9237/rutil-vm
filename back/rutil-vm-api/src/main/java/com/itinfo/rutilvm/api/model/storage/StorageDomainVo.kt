@@ -311,8 +311,25 @@ fun StorageDomainVo.toAddFCPBuilder(): HostStorage {
 fun StorageDomainVo.toImportStorageDomainBuilder(): StorageDomain {
 	log.info("toImportStorageDomainBuilder: {}", this)
 	return this.toStorageDomainBuilder()
-		.storage(HostStorageBuilder().type(StorageType.fromValue(this.storageType)))
+		.storage(toImportFCPBuilder())
 		.id(this.id)
+		.build()
+}
+fun StorageDomainVo.toImportFCPBuilder(): HostStorage {
+	return HostStorageBuilder()
+		.type(StorageType.fromValue(this.storageType))
+		.logicalUnits(this.logicalUnits.map {
+			LogicalUnitBuilder().id(it).build()
+		})
+		.volumeGroup(
+			VolumeGroupBuilder().id(this@toImportFCPBuilder.hostStorageVo.volumeGroup).build()
+		)
+		// .overrideLuns(true)
+		// overrideLuns = 생성기능 강제 처리
+		// This operation might be unrecoverable and destructive.
+		// the following luns are alread in use,"
+		// 버튼 "approve operation"
+
 		.build()
 }
 

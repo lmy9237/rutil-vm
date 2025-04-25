@@ -9,6 +9,7 @@ import com.itinfo.rutilvm.api.model.network.HostNicVo
 import com.itinfo.rutilvm.api.model.network.NetworkAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.HostStorageVo
 import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
+import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.service.computing.ItHostNicService
 import com.itinfo.rutilvm.api.service.computing.ItHostOperationService
 import com.itinfo.rutilvm.api.service.computing.ItHostService
@@ -748,7 +749,7 @@ class HostController {
 	@ResponseBody
 	fun searchFc(
 		@PathVariable("hostId") hostId: String? = null
-	): ResponseEntity<List<IdentifiedVo>> {
+	): ResponseEntity<List<StorageDomainVo>> {
 		if (hostId == null)
 			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
 		log.info("/computing/hosts/{}/searchFc ... 호스트 fc 검색 목록", hostId)
