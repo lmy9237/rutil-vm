@@ -29,6 +29,7 @@ import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import './MVm.css';
 import CONSTANT from "../../../Constants";
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 
 // 탭 메뉴
 const tabs = [
@@ -183,14 +184,22 @@ const VmModal = ({
   } = useCDFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
 
     
-  const handleInputChange = (field) => (e) => {
-    setFormInfoState((prev) => ({ ...prev, [field]: e.target.value }));
+  // const handleInputChange = (field) => (e) => {
+  //   setFormInfoState((prev) => ({ ...prev, [field]: e.target.value }));
+  // };
+
+  // 별도 handler 추가
+  const handleOsSystemChange = (selectedOption) => {
+    const selected = osList.find((item) => item.name === selectedOption.id);
+    if (selected) {
+      setFormInfoState((prev) => ({ ...prev, osSystem: selected.name }));
+    }
   };
 
-  const handleSelectIdChange = (setVo, voList) => (e) => {
-    const selected = voList.find((item) => item.id === e.target.value);
-    if (selected) setVo({ id: selected.id, name: selected.name });
-  }; 
+  // const handleSelectIdChange = (setVo, voList) => (e) => {
+  //   const selected = voList.find((item) => item.id === e.target.value);
+  //   if (selected) setVo({ id: selected.id, name: selected.name });
+  // }; 
 
   // 초기값 설정
   useEffect(() => {
@@ -462,22 +471,22 @@ const VmModal = ({
               onChange={handleSelectIdChange(setTemplateVo, templates)}
             />
           )}
-          <LabelSelectOptionsID id="os_system" label="운영 시스템"            
+          <LabelSelectOptionsID id="os_system" label="운영 시스템"
             value={formInfoState.osSystem}
             options={osList.map((opt) => ({id: opt.name, name: opt.description}))}
-            onChange={ handleInputChange("osSystem") }
+            onChange={handleOsSystemChange }
           />
           <LabelSelectOptions label="칩셋/펌웨어 유형"
             value={formInfoState.osType}
             disabled={["PPC64", "S390X"].includes(architecture)}
             // disabled={architecture === "PPC64" || architecture === "S390X"}
             options={chipsetOptionList}
-            onChange={ handleInputChange("osType") }
+            onChange={ handleInputChange(setFormInfoState, "osType") }
           />
           <LabelSelectOptions label="최적화 옵션"
             value={formInfoState.optimizeOption}
             options={optimizeOptionList}
-            onChange={ handleInputChange("optimizeOption") }
+            onChange={ handleInputChange(setFormInfoState, "optimizeOption") }
           />
         </div>
         <hr/>
