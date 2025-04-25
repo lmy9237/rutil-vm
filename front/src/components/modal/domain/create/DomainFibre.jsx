@@ -4,34 +4,61 @@ import Tables from '../../../table/Tables';
 import toast from 'react-hot-toast';
 import Localization from '../../../../utils/Localization';
 import Logger from '../../../../utils/Logger';
+import { checkZeroSizeToGiB } from '../../../../util';
 
 const DomainFibre = ({ 
-  mode, 
-  domain,
-  fibres,
-  fcpSearchResults,
-  setFcpSearchResults,
-  lunId,
-  setLunId,
+  editMode,
+  fcResults, setFcResults,
+  lunId, setLunId,
   hostVo,
-  setHostVo,
-  importFcpFromHost,
-  formImportState,
-  setFormImportState,
-  isFibresLoading,
-  isFibresError,
-  isFibresSuccess
+  formSearchState, setFormSearchState,
+  searchFcAPI,
+  refetchFibres, isFibresLoading, isFibresError, isFibresSuccess
 }) => {  
   Logger.debug("DomainFibre ...")
 
-  const handleSearchFcp = () => {
-    if (!hostVo.id) 
-      return toast.error(`${Localization.kr.HOST}를 선택해주세요.`);
-      
-    importFcpFromHost({ hostId: hostVo.id }, {
-      onSuccess: (data) => { setFcpSearchResults(data)},
-      onError: (error) => { toast.error('fcp 가져오기 실패:', error)},
-    });
+  const transFibreData = fcResults.map((f) => {
+    const fc = f?.logicalUnits?.[0];
+    if (!fc) return null;
+  
+    return {
+      id: fc.id,
+      status: fc.status,
+      size: checkZeroSizeToGiB(fc.size),
+      paths: fc.paths,
+      vendorId: fc.vendorId,
+      productId: fc.productId,
+      serial: fc.serial,
+      abled: fc.storageDomainId === "" ? "OK" : "NO",
+    };
+  }).filter(Boolean);
+  
+  // DomainCheckModal
+
+  const handleSearchFc= () => {
+    if (!hostVo.id) return toast.error(`${Localization.kr.HOST}를 선택해주세요.`);
+    // if (!formImportState.address) return toast.error('주소를 입력해주세요.');   
+    // if (!formImportState.port) return toast.error('포트를 입력해주세요.');   
+
+    isFibresLoading(true);
+
+    searchFcAPI(
+      { hostId: hostVo?.id, iscsiData: formSearchState },
+      { 
+        onSuccess: (data) => {
+          setFcResults(data);
+          isFibresLoading(false);
+          isFibresSuccess(true);
+          isFibresError(false);
+        },
+        onError: (error) => {
+          toast.error("fc 가져오기 실패");
+          isFibresLoading(false);
+          isFibresSuccess(false);
+          isFibresError(true);
+        },
+      }
+    );
   };
 
   const handleRowClick = useCallback((row) => {
@@ -45,51 +72,21 @@ const DomainFibre = ({
   return (
     <div className="storage-popup-iSCSI">
       <div className="section-table-outer">
-        {isFibresLoading ? (
-          <div className="label-font-body">로딩 중...</div>
-        ) : mode === "edit" ? (
-          <Tables
-            isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
-            columns={TableColumnsInfo.FIBRE}
-            data={
-              domain?.hostStorageVo?.logicalUnits?.map((logicalUnit) => ({
-                abled: logicalUnit.storageDomainId === "" ? "OK" : "NO",
-                status: logicalUnit.status,
-                id: logicalUnit.id,
-                size: logicalUnit.size ? `${(logicalUnit.size / (1024 ** 3)).toFixed(2)} GB` : "N/A",
-                paths: logicalUnit.paths || 0,
-                vendorId: logicalUnit.vendorId || "N/A",
-                productId: logicalUnit.productId || "N/A",
-                serial: logicalUnit.serial || "N/A",
-                target: logicalUnit.target || "N/A",
-                address: logicalUnit.address || "N/A",
-                port: logicalUnit.port || "N/A",
-              })) || []
-            }
-            onRowClick={handleRowClick}
+        {/* 편집 */}
+        {editMode ? (
+          <Tables columns={TableColumnsInfo.FIBRE}
+            data={transFibreData}
+            // onRowClick={handleRowClick}
+            isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}            
           />
-        ): mode === "import" ? (
-          <>
-            <button className='search-button' onClick={handleSearchFcp}>검색</button>
-            {fcpSearchResults?.length > 0 && (
-              <Tables
-                columns={TableColumnsInfo.FIBRE}
-                data={fcpSearchResults}
-                onRowClick={handleRowClick}
-                isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
-              />
-            )}
-          </>
         ): (
-          <Tables
-            columns={TableColumnsInfo.FIBRE}
-            data={fibres}
+          <Tables columns={TableColumnsInfo.FIBRE}            
+            data={transFibreData} 
             onRowClick={handleRowClick}
-            shouldHighlight1stCol={true}
-            isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
+            isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}  
           />
         )} 
-        <div> <span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
+        <div><span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
       </div>
     </div>
   )

@@ -664,8 +664,8 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="GET",
-		value="도메인 생성 - iSCSI 목록",
-		notes="도메인 생성 - iSCSI 유형 대상 LUN 목록"
+		value="도메인 - iSCSI 목록",
+		notes="도메인 - iSCSI 유형 대상 LUN 목록, 기본적으로 있는 항목 출력. 생성시 사용"
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "hostId", value = "호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
@@ -686,8 +686,8 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="GET",
-		value="도메인 생성시 - Fibre Channel ",
-		notes="도메인 생성 - Fibre Channel 유형 대상 LUN 목록"
+		value="도메인 - Fibre Channel ",
+		notes="도메인 - Fibre Channel 유형 대상 LUN 목록, 기본적으로 있는 항목 출력. 생성시 사용"
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "hostId", value = "호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
@@ -709,19 +709,19 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="POST",
-		value="도메인 가져오기에 필요한 iSCSI 요청",
-		notes="도메인 가져오기 - iSCSI 요쳥"
+		value="도메인 - iSCSI 검색 요청",
+		notes="도메인 - 주소와 포트로 있는 iscsi 검색 요청. 가져오기에 사용"
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "hostId", value = "호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name= "iscsiDetailVo", value="address, port", dataTypeClass=IscsiDetailVo::class, paramType="body")
+		ApiImplicitParam(name= "iscsiDetailVo", value="검색(address, port)", dataTypeClass=IscsiDetailVo::class, paramType="body")
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@PostMapping("/{hostId}/iscsisToImport")
+	@PostMapping("/{hostId}/searchIscsi")
 	@ResponseBody
-	fun importISCSIs(
+	fun searchIscsi(
 		@PathVariable("hostId") hostId: String? = null,
 		@RequestBody iscsiDetailVo: IscsiDetailVo? = null  // 로그인은 나중에(chap 이름, 암호도 들어가야함)
 	): ResponseEntity<List<IscsiDetailVo>> {
@@ -729,8 +729,30 @@ class HostController {
 			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
 		if(iscsiDetailVo == null)
 			throw ErrorPattern.DISCOVER_TARGET_NOT_FOUND.toException()
-		log.info("/computing/hosts/{}/iscsisToImport {} {} ... 호스트 iscsis 가져오기 목록", hostId, iscsiDetailVo.address, iscsiDetailVo.port)
+		log.info("/computing/hosts/{}/searchIscsi {} {} ... 호스트 iscsi 검색 목록", hostId, iscsiDetailVo.address, iscsiDetailVo.port)
 		return ResponseEntity.ok(iHostStorage.findImportIscsiFromHost(hostId, iscsiDetailVo))
+	}
+
+	@ApiOperation(
+		httpMethod="POST",
+		value="도메인 - Fibre Channel 검색 요청",
+		notes="도메인 - Fibre Channel 검색 요청. 가져오기에 사용"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "hostId", value = "호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@PostMapping("/{hostId}/searchFc")
+	@ResponseBody
+	fun searchFc(
+		@PathVariable("hostId") hostId: String? = null
+	): ResponseEntity<List<IdentifiedVo>> {
+		if (hostId == null)
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/searchFc ... 호스트 fc 검색 목록", hostId)
+		return ResponseEntity.ok(iHostStorage.findUnregisterDomainFromHost(hostId))
 	}
 
 
@@ -760,27 +782,6 @@ class HostController {
 		return ResponseEntity.ok(iHostStorage.loginIscsiFromHost(hostId, iscsiDetailVo))
 	}
 
-	@ApiOperation(
-		httpMethod="POST",
-		value="도메인 가져오기에 필요한 fcp 요청",
-		notes="도메인 가져오기 - fcp 요쳥"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name = "hostId", value = "호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@PostMapping("/{hostId}/fcpToImport")
-	@ResponseBody
-	fun importFcps(
-		@PathVariable("hostId") hostId: String? = null
-	): ResponseEntity<List<IdentifiedVo>> {
-		if (hostId == null)
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		log.info("/computing/hosts/{}/fcpToImport ... 호스트 fcp 가져오기 목록", hostId)
-		return ResponseEntity.ok(iHostStorage.findUnregisterDomainFromHost(hostId))
-	}
 	// endregion
 
 

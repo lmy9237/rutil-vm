@@ -8,7 +8,7 @@ import Localization from '../../../../utils/Localization';
 const DomainFibreImport = ({ 
   fcResults, setFcResults,
   lunId, setLunId,
-  hostVo, setHostVo,
+  hostVo,
   importFcpFromHostAPI
 }) => {  
   const [isFcpLoading, setIsFcpLoading] = useState(false);
@@ -55,17 +55,14 @@ const DomainFibreImport = ({
   return (
     <div className="storage-popup-iSCSI">
       <div className="section-table-outer">
-        
-            <div className="target-btn">
-              <button className="all-login-button" onClick={handleSearchFcp}>로그인</button>
-            </div>
-            <Tables
-              isLoading={isFcpLoading} isError={isFcpError} isSuccess={isFcpSuccess}
-              columns={TableColumnsInfo.IMPORT_FIBRE}
-              data={transFcData}
-              onRowClick={handleRowClick}
-              shouldHighlight1stCol={true}
-            />
+        <div className="target-btn">
+          <button className="all-login-button" onClick={handleSearchFcp}>검색</button>
+        </div>
+        <Tables columns={TableColumnsInfo.IMPORT_FIBRE}
+          isLoading={isFcpLoading} isError={isFcpError} isSuccess={isFcpSuccess}          
+          data={transFcData}
+          onRowClick={handleRowClick}
+        />
         <div> <span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
       </div>
     </div>

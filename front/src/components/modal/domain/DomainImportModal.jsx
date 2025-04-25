@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInputNum from "../../label/LabelInputNum";
@@ -9,14 +9,11 @@ import { checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
 import DomainNfsImport from "./import/DomainNfsImport";
 import DomainFibreImport from "./import/DomainFibreImport";
-import DomainIscsiImport from "./import/DomainIscsiImport";
 import {
   useAllDataCenters,
   useHostsFromDataCenter,
-  useImportIscsiFromHost,
-  useImportFcpFromHost,
+  useSearchFcFromHost,
   useImportDomain,
-  useLoginIscsiFromHost,
 } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import CONSTANT from "../../../Constants";
@@ -54,7 +51,7 @@ const DomainImportModal = ({
 }) => {
   const [formState, setFormState] = useState(initialFormState); // 일반정보
   const [formSearchState, setFormSearchState] = useState(searchFormState); // 검색
-  const [formLoginState, setFormLoginState] = useState(loginFormState); // 로그인
+  // const [formLoginState, setFormLoginState] = useState(loginFormState); // 로그인
   
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [hostVo, setHostVo] = useState({ id: "", name: "" });
@@ -63,12 +60,9 @@ const DomainImportModal = ({
   const [nfsAddress, setNfsAddress] = useState("");
   const [lunId, setLunId] = useState(""); // iscsi, fibre 생성시 사용
 
-  const [iscsiResults, setIscsiResults] = useState([]); // 검색결과
   const [fcResults, setFcResults] = useState([]); // 검색결과
-  const [iscsiLoginResults, setIscsiLoginResults] = useState([]); // 검색결과
   
   const isNfs = formState.storageType === "nfs"
-  const isIscsi = formState.storageType === "iscsi"
   const isFibre = formState.storageType === "fcp"
 
   const onSuccess = () => {
@@ -77,17 +71,9 @@ const DomainImportModal = ({
   };  
   const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose()); // 가져오기
   
-  const { mutate: importIscsiFromHostAPI } = useImportIscsiFromHost(
-    (data) => { setIscsiResults(data) },
-    (error) => { toast.error("iSCSI 가져오기 실패:", error) }
-  );  
-  const { mutate: importFcpFromHostAPI } = useImportFcpFromHost(
+  const { mutate: importFcpFromHostAPI } = useSearchFcFromHost(
     (data) => { setFcResults(data) },
-    (error) => { toast.error("fc 가져오기 실패:", error) }
-  );  
-  const { mutate: loginIscsiFromHostAPI } = useLoginIscsiFromHost(
-    (data) => { setIscsiLoginResults(data) },
-    (error) => { toast.error("fc 가져오기 실패:", error) }
+    (error) => { toast.error("fcp 가져오기 실패:", error) }
   );  
 
   const { 
@@ -102,10 +88,9 @@ const DomainImportModal = ({
   const resetFormStates = () => {
     setFormState(initialFormState);
     setFormSearchState(searchFormState);
-    setFormLoginState(loginFormState);
+    // setFormLoginState(loginFormState);
     setNfsAddress("");
     setLunId("");
-    setIscsiResults([]);
     setFcResults([]);
   };
   
@@ -138,7 +123,6 @@ const DomainImportModal = ({
   const storageTypeOptions = useCallback((domainType) => {
     const allOptions = [
       { value: "nfs",   label: "NFS" },
-      { value: "iscsi", label: "iSCSI" },
       { value: "fcp",   label: "Fibre Channel" },
     ]
     switch (domainType) {
@@ -169,15 +153,9 @@ const DomainImportModal = ({
   
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     if (!hostVo.id) return `${Localization.kr.HOST}를 선택해주세요.`;
-    if (formState.storageType === "NFS" && !nfsAddress) return "경로를 입력해주세요.";
-    if (formState.storageType !== "nfs" && lunId) {
-      const selectedLogicalUnit =
-        formState.storageType === "iscsi"
-          ? iscsiResults.find((iLun) => iLun.id === lunId)
-          : fcResults.find((fLun) => fLun.id === lunId);
-      if (selectedLogicalUnit?.abled === "NO")
-        return "선택한 항목은 사용할 수 없습니다.";
-    }
+    if (formState.storageType === "nfs" && !nfsAddress) return "경로를 입력해주세요.";
+    if (formState.storageType === "fcp" && !lunId)  return "항목을 선택하세요.";
+    
     return null;
   };
   
@@ -185,24 +163,17 @@ const DomainImportModal = ({
     const error = validateForm();
     if (error) return toast.error(error);
   
-    const logicalUnit =
-      formState.storageType === "iscsi"
-        ? iscsiResults.find((iLun) => iLun.id === lunId)
-        // : formState.storageType === "fcp"
-        //   ? fibres.find((fLun) => fLun.id === lunId)
-          : null;
-    
     const [storageAddress, storagePath] = nfsAddress.split(":");
 
     const dataToSubmit = {
       ...formState,
       dataCenterVo: { id: dataCenterVo.id, name: dataCenterVo.name },
       hostVo,
-      logicalUnits: logicalUnit ? [logicalUnit.id] : [],
+      id: lunId,
       ...(formState.storageType === "nfs" && { storageAddress, storagePath }),
     };
 
-    Logger.debug(`DomainModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
+    Logger.debug(`DomainImportModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
     importDomain(dataToSubmit)
   };
 
@@ -265,7 +236,7 @@ const DomainImportModal = ({
       )}
 
       {/* ISCSI 의 경우 */}
-      {isIscsi && (
+      {/* {isIscsi && (
         <DomainIscsiImport 
           iscsiResults={iscsiResults} setIscsiResults={setIscsiResults}
           lunId={lunId} setLunId={setLunId}
@@ -274,7 +245,7 @@ const DomainImportModal = ({
           importIscsiFromHostAPI={importIscsiFromHostAPI}
           loginIscsiFromHostAPI={loginIscsiFromHostAPI}
         />      
-      )}
+      )} */}
 
       {/* Firbre 의 경우 */}
       {isFibre && (

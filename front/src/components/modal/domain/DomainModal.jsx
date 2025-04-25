@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import DomainNfs from "./create/DomainNfs";
-import DomainIscsi from "./create/DomainIscsi";
 import DomainFibre from "./create/DomainFibre";
 import LabelInputNum from "../../label/LabelInputNum";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
@@ -14,12 +13,10 @@ import {
   useStroageDomain,
   useEditDomain,
   useHostsFromDataCenter,
-  useIscsiFromHost,
   useFibreFromHost,
-  useImportIscsiFromHost,
-  useImportFcpFromHost,
+  useSearchFcFromHost,
 } from "../../../api/RQHook";
-import { checkName, checkZeroSizeToGiB } from "../../../util";
+import { checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import useGlobal from "../../../hooks/useGlobal";
@@ -37,13 +34,14 @@ const initialFormState = {
   spaceBlocker: "5",
 };
 
-// iscsi 주소, 포트, 사용자 인증 이름, 암호 해서 검색
+// 주소, 포트  검색
 const searchFormState = {
   target: "",
   address: "",
   port: 3260,
 };
 
+// 사용자 인증 이름, 암호 검색
 const loginFormState = {
   chapName: "",
   chapPassword: "",
@@ -59,14 +57,6 @@ const DomainModal = ({
   const domainId = useMemo(() => [...domainsSelected][0]?.id, [domainsSelected]);
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
 
-  // const dLabel = activeModal() === "domain:update" 
-  //   ? Localization.kr.UPDATE 
-  //   : activeModal() === "domain:import" 
-  //     ? Localization.kr.IMPORT 
-  //     : Localization.kr.CREATE;
-  // const editMode = activeModal() === "domain:update";
-  // const importMode = activeModal() === "domain:import";
-
   const [formState, setFormState] = useState(initialFormState); // 일반정보
   const [formSearchState, setFormSearchState] = useState(searchFormState);
   
@@ -74,9 +64,8 @@ const DomainModal = ({
   const [hostVo, setHostVo] = useState({ id: "", name: "" });
   const [storageTypes, setStorageTypes] = useState([]);
   const [nfsAddress, setNfsAddress] = useState(""); // nfs
-  const [lunId, setLunId] = useState(""); // iscsi, fibre 생성시 사용
+  const [lunId, setLunId] = useState(""); // fibre 사용
 
-  const [iscsiResults, setIscsiResults] = useState([]); // 검색결과
   const [fcResults, setFcResults] = useState([]); // 검색결과
 
   const resetFormStates = () => {
@@ -86,7 +75,6 @@ const DomainModal = ({
     setStorageTypes([]);
     setNfsAddress("");
     setLunId("");
-    setIscsiResults([]);
     setFcResults([]);
   };
 
@@ -98,10 +86,7 @@ const DomainModal = ({
 
   const { mutate: addDomain } = useAddDomain(onSuccess, () => onClose());
   const { mutate: editDomain } = useEditDomain(onSuccess, () => onClose()); // 편집은 단순 이름, 설명 변경정도
-  // const { mutate: loginIscsiFromHost } = useLoginIscsiFromHost(); // 가져오기 iscsi 로그인
-  const { mutate: importIscsiFromHost } = useImportIscsiFromHost(); // 가져오기 iscsi
-  const { mutate: importFcpFromHost } = useImportFcpFromHost(); // 가져오기 fibre
-
+  
   const { 
     data: datacenters = [],
     isLoading: isDatacentersLoading 
@@ -110,13 +95,8 @@ const DomainModal = ({
     data: hosts = [],
     isLoading: isHostsLoading 
   } = useHostsFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
-  const {
-    data: iscsis = [],
-    refetch: refetchIscsis,
-    isLoading: isIscsisLoading,
-    isError: isIscsisError,
-    isSuccess: isIscsisSuccess,
-  } = useIscsiFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
+
+  // 도메인 생성 - fc 목록 출력
   const {
     data: fibres = [],
     refetch: refetchFibres,
@@ -125,30 +105,53 @@ const DomainModal = ({
     isSuccess: isFibresSuccess
   } = useFibreFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
 
-  const transIscsiData = iscsis.map((i) => ({
-    ...i,
-    abled: i?.logicalUnits[0]?.storageDomainId === "" ? "OK" : "NO",
-    status: i?.logicalUnits[0]?.status,
-    lunId: i?.logicalUnits[0]?.id,
-    size: checkZeroSizeToGiB(i?.logicalUnits[0]?.size),
-    paths: i?.logicalUnits[0]?.paths,
-    vendorId: i?.logicalUnits[0]?.vendorId,
-    productId: i?.logicalUnits[0]?.productId,
-    serial: i?.logicalUnits[0]?.serial,
-    target: i?.logicalUnits[0]?.target,
-    address: i?.logicalUnits[0]?.address,
-    port: i?.logicalUnits[0]?.port,
-  }));
 
-  const transFibreData = fibres.map((f) => ({
-    ...f,
-    status: f?.logicalUnits[0]?.status,
-    size: f?.logicalUnits[0]?.size ? f.logicalUnits[0].size / 1024 ** 3 : f?.logicalUnits[0]?.size,
-    paths: f?.logicalUnits[0]?.paths,
-    productId: f?.logicalUnits[0]?.productId,
-    vendorId: f?.logicalUnits[0]?.vendorId,
-    serial: f?.logicalUnits[0]?.serial,
-  }));
+  console.log("%% transFibreData", fibres);
+
+  // fc 검색
+  const { mutate: searchFc } = useSearchFcFromHost(
+    (data) => { setFcResults(data) },
+    (error) => { toast.error("fc 검색 실패:", error) }
+  );
+  
+  useEffect(() => {
+    if (datacenterId) {
+      const selected = datacenters.find(dc => dc.id === datacenterId);
+      setDataCenterVo({ id: selected?.id, name: selected?.name });
+    } else if (!editMode && datacenters.length > 0) {
+      // datacenterId가 없다면 기본 데이터센터 선택
+      const defaultDc = datacenters.find(dc => dc.name === "Default");
+      const firstDc = defaultDc || datacenters[0];
+      setDataCenterVo({ id: firstDc.id, name: firstDc.name });
+    }
+  }, [datacenterId, datacenters, editMode]);
+
+  useEffect(() => {
+    if (!editMode && dataCenterVo.id) {
+      setFormState((prev) => ({
+        ...initialFormState,
+        domainType: prev.domainType,
+      }));
+      setStorageTypes(storageTypeOptions(initialFormState.domainType));
+      setFormSearchState(searchFormState);
+      setNfsAddress("");
+      setLunId("");
+      setFcResults([]);
+    }
+  }, [dataCenterVo, editMode]);
+  
+
+  useEffect(() => {
+    if (!editMode && hosts && hosts.length > 0) {
+      setHostVo({id: hosts[0].id, name: hosts[0].name});
+    }
+  }, [hosts, editMode]);
+
+  useEffect(() => {
+    if (formState.storageType === "fibre" && hostVo?.id) {
+      refetchFibres();
+    }
+  }, [hostVo?.id, formState.storageType, refetchFibres]);
 
   useEffect(() => {
     if (!isOpen) return resetFormStates();
@@ -175,52 +178,6 @@ const DomainModal = ({
   }, [isOpen, editMode, domain]);
 
   useEffect(() => {
-    if (datacenterId) {
-      const selected = datacenters.find(dc => dc.id === datacenterId);
-      setDataCenterVo({ id: selected?.id, name: selected?.name });
-    } else if (!editMode && datacenters.length > 0) {
-      // datacenterId가 없다면 기본 데이터센터 선택
-      const defaultDc = datacenters.find(dc => dc.name === "Default");
-      const firstDc = defaultDc || datacenters[0];
-      setDataCenterVo({ id: firstDc.id, name: firstDc.name });
-    }
-  }, [datacenterId, datacenters, editMode]);
-
-  useEffect(() => {
-    if (!editMode && dataCenterVo.id) {
-      setFormState((prev) => ({
-        ...initialFormState,
-        domainType: prev.domainType,
-      }));
-      setStorageTypes(storageTypeOptions(initialFormState.domainType));
-      setNfsAddress("");
-      setLunId("");
-      setIscsiResults([]);
-      setFcResults([]);
-      setFormSearchState(searchFormState);
-    }
-  }, [dataCenterVo, editMode]);
-  
-
-  useEffect(() => {
-    if (!editMode && hosts && hosts.length > 0) {
-      setHostVo({id: hosts[0].id, name: hosts[0].name});
-    }
-  }, [hosts, editMode]);
-
-  useEffect(() => {
-    if (formState.storageType === "iscsi" && hostVo?.id) {
-      refetchIscsis();
-    }
-  }, [hostVo?.id, formState.storageType, refetchIscsis]);
-
-  useEffect(() => {
-    if (formState.storageType === "fibre" && hostVo?.id) {
-      refetchFibres();
-    }
-  }, [hostVo?.id, formState.storageType, refetchFibres]);
-
-  useEffect(() => {
     const options = storageTypeOptions(formState.domainType);
     setStorageTypes(options);
     if (!editMode && options.length > 0) {
@@ -229,44 +186,30 @@ const DomainModal = ({
   }, [formState.domainType, editMode]);
 
   useEffect(() => {
+    setFormSearchState(searchFormState);
     setNfsAddress("");
     setLunId("");
-    setIscsiResults([]); // iSCSI 검색 결과 초기화
-    setFcResults([]); // FCP 검색 결과 초기화
-    setFormSearchState();
+    setFcResults([]); // FC 검색 결과 초기화
   }, [formState.storageType]);
 
-
-  const commonProps = {
-    domain,
-    lunId, setLunId,
-    hostVo, setHostVo,
-    formSearchState, setFormSearchState,
-  };  
-
   const isNfs = formState.storageType === "nfs";
-  const isIscsi = formState.storageType === "iscsi";
-  const isFibre = formState.storageType === "fcp";
+  const isFibre = formState.storageType === "fc";
 
   const validateForm = () => {
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
+  
+    if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
+    if (!hostVo.id) return `${Localization.kr.HOST}를 선택해주세요.`;
 
+    if (formState.storageType === "NFS" && !nfsAddress) return "경로를 입력해주세요.";
     if (isNfs && !editMode && (!nfsAddress.includes(':') || !nfsAddress.includes('/'))){
       return "주소입력이 잘못되었습니다."
     }
-  
-    if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    if (!hostVo) return `${Localization.kr.HOST}를 선택해주세요.`;
-    if (formState.storageType === "NFS" && !nfsAddress)
-      return "경로를 입력해주세요.";
-    if (formState.storageType !== "nfs" && lunId) {
-      const selectedLogicalUnit =
-        formState.storageType === "iscsi"
-          ? iscsis.find((iLun) => iLun.id === lunId)
-          : fibres.find((fLun) => fLun.id === lunId);
-      if (selectedLogicalUnit?.abled === "NO")
-        return "선택한 항목은 사용할 수 없습니다.";
+    
+    if (formState.storageType === "fc" && !lunId) {
+      const selectedLogicalUnit = fibres.find((fLun) => fLun.id === lunId);
+      if (selectedLogicalUnit?.abled === "NO") return "선택한 항목은 사용할 수 없습니다.";
     }
     return null;
   };
@@ -280,14 +223,8 @@ const DomainModal = ({
     if (editMode) {
       dataToSubmit = { ...formState };
     } else {
-      const logicalUnit =
-        formState.storageType === "iscsi"
-          ? iscsis.find((iLun) => iLun.id === lunId)
-          : formState.storageType === "fcp"
-            ? fibres.find((fLun) => fLun.id === lunId)
-            : null;
-
       const [storageAddress, storagePath] = nfsAddress.split(":");
+      const logicalUnit =  fibres.find((fLun) => fLun.id === lunId);
 
       dataToSubmit = {
         ...formState,
@@ -357,7 +294,7 @@ const DomainModal = ({
           />
         </div>
       </div>
-      <hr/>
+      <hr/><br/>
       
       {/* NFS 의 경우 */}
       {isNfs && (
@@ -368,29 +305,33 @@ const DomainModal = ({
       )}
 
       {/* ISCSI 의 경우 / 편집이 되기는 하지만 밑의 테이블 readonly 와 path 문제가 잇음*/}
-      {isIscsi && (
+      {/* {isIscsi && (
         <DomainIscsi  
           editMode={editMode}
-          iscsiResults={iscsiResults} setIscsiResults={setIscsiResults}
+          iscsiResults={iscsiResults}
           lunId={lunId} setLunId={setLunId}
           hostVo={hostVo}
           formSearchState={formSearchState} setFormSearchState={setFormSearchState}
-          // refetchIscsis={refetchIscsis}
-          // isIscsisLoading={isIscsisLoading} isIscsisError={isIscsisError} isIscsisSuccess={isIscsisSuccess}
+          refetchIscsis={refetchIscsis}
+          isIscsisLoading={isIscsisLoading} isIscsisError={isIscsisError} isIscsisSuccess={isIscsisSuccess}
+          importIscsiFromHostAPI={importIscsiFromHostAPI}
         />      
-      )}
+      )} */}
 
       {/* Firbre 의 경우 */}
       {isFibre && (
         <DomainFibre
           editMode={editMode}
-          fcResults={fcResults} setFcResults={setFcResults}
+          fcResults={fibres} setFcResults={setFcResults}
           lunId={lunId} setLunId={setLunId}
           hostVo={hostVo}
-          // isFibresLoading={isFibresLoading} isFibresError={isFibresError} isFibresSuccess={isFibresSuccess}
+          searchFcAPI={searchFc}
+          refetchFibres={refetchFibres}
+          isFibresLoading={isFibresLoading} isFibresError={isFibresError} isFibresSuccess={isFibresSuccess}
         />
       )}
       <hr />
+
       <div className="tab-content">
         <div className="storage-specific-content">
           <LabelInputNum id="warning" label="디스크 공간 부족 경고 표시 (%)"
@@ -423,8 +364,8 @@ const storageTypeOptions = (dType) => {
     default: // data
       return [
         { value: "nfs", label: "NFS" },
-        { value: "iscsi", label: "ISCSI" },
-        { value: "fcp", label: "Fibre Channel" },
+        // { value: "iscsi", label: "ISCSI" },
+        { value: "fc", label: "Fibre Channel" },
       ];
   }
 };

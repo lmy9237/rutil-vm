@@ -2524,7 +2524,7 @@ const ApiManager = {
     url: ENDPOINTS.FIND_ISCSIS_FROM_HOST(hostId)
   }),
   /**
-   * @name ApiManager.findImportIscsiFromHost
+   * @name ApiManager.findSearchIscsiFromHost
    * @description iSCSI 목록
    *
    * @param {string} hostId
@@ -2532,13 +2532,13 @@ const ApiManager = {
    * 
    * @see
    */
-  findImportIscsiFromHost: async (hostId, iscsiData) => makeAPICall({
+  findSearchIscsiFromHost: async (hostId, iscsiData) => makeAPICall({
     method: "POST", 
-    url: ENDPOINTS.FIND_IMPORT_ISCSIS_FROM_HOST(hostId, iscsiData),
+    url: ENDPOINTS.FIND_SEARCH_ISCSIS_FROM_HOST(hostId, iscsiData),
     data: iscsiData
   }),
   /**
-   * @name ApiManager.findImportFcpFromHost
+   * @name ApiManager.findSearchFcFromHost
    * @description fcp 목록
    *
    * @param {string} hostId
@@ -2546,9 +2546,9 @@ const ApiManager = {
    * 
    * @see
    */
-  findImportFcpFromHost: async (hostId) => makeAPICall({
+  findSearchFcFromHost: async (hostId) => makeAPICall({
     method: "POST", 
-    url: ENDPOINTS.FIND_IMPORT_FCPS_FROM_HOST(hostId),
+    url: ENDPOINTS.FIND_SEARCH_FCS_FROM_HOST(hostId),
     data: hostId
   }),
   

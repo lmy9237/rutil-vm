@@ -1394,28 +1394,28 @@ export const useFibreFromHost = (
   enabled: !!hostId,
 })
 /**
- * @name useImportIscsiFromHost
- * @description 호스트 가져오기 iscsi 목록조회 useQuery훅
+ * @name useSearchIscsiFromHost
+ * @description 호스트 iscsi 목록조회 useQuery훅
  * 
  * @param {string} hostId
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
- * @see ApiManager.findImportIscsiFromHost
+ * @see ApiManager.findSearchIscsiFromHost
  */
-export const useImportIscsiFromHost = (
+export const useSearchIscsiFromHost = (
   postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({hostId, iscsiData}) => {
-      const res = await ApiManager.findImportIscsiFromHost(hostId, iscsiData);
+      const res = await ApiManager.findSearchIscsiFromHost(hostId, iscsiData);
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useImportIscsiFromHost ... hostId: ${hostId}, iscsiData: `, iscsiData)
+      Logger.debug(`RQHook > useSearchIscsiFromHost ... hostId: ${hostId}, iscsiData: `, iscsiData)
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useImportIscsiFromHost ... res: `, res);
+      Logger.debug(`RQHook > useSearchIscsiFromHost ... res: `, res);
       toast.success(`[200] iSCSI ${Localization.kr.IMPORT} 요청성공`)
       queryClient.invalidateQueries(['iscsiFromHost']);
       postSuccess(res);
@@ -1428,29 +1428,29 @@ export const useImportIscsiFromHost = (
   });
 };
 /**
- * @name useImportFcpFromHost
- * @description 호스트 가져오기 fcp 목록조회 useQuery훅
+ * @name useSearchFcFromHost
+ * @description 호스트 fc 목록조회 useQuery훅
  * 
  * @param {string} hostId
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
- * @see ApiManager.findImportFcpFromHost
+ * @see ApiManager.findSearchFcFromHost
  */
-export const useImportFcpFromHost = (
+export const useSearchFcFromHost = (
   postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ hostId }) => {
-      const res = await ApiManager.findImportFcpFromHost(hostId);
+      const res = await ApiManager.findSearchFcFromHost(hostId);
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useImportFcpFromHost ... hostId: ${hostId}`)
+      Logger.debug(`RQHook > useSearchFcFromHost ... hostId: ${hostId}`)
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useImportFcpFromHost ... res: `, res);
-      queryClient.invalidateQueries(['fcpsFromHost'])
+      Logger.debug(`RQHook > useSearchFcFromHost ... res: `, res);
+      queryClient.invalidateQueries(['fcsFromHost'])
       postSuccess();
     },
     onError: (error) => {
