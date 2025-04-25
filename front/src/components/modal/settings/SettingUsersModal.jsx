@@ -109,7 +109,7 @@ const SettingUsersModal = ({
       targetName={"사용자"}
       submitTitle={editMode ? Localization.kr.UPDATE : changePassword ? "비밀번호 변경" : Localization.kr.CREATE}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "730px"}}
+      contentStyle={{ width: "560px"}}
     >
       <div>
         <LabelInput id="username" label="아이디(영문)"

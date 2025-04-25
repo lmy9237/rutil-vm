@@ -72,7 +72,7 @@ const DomainGetDiskModal = ({
             </tr>
           </thead>
           <tbody>
-            {data.map((disk, index) => (
+          {(Array.isArray(data) ? data : []).map((disk, index) => (
               <tr key={index}>
                 <td>{disk.alias}</td>
                 <td>{disk.virtualSize}</td>

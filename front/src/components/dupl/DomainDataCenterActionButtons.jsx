@@ -12,11 +12,9 @@ const DomainDataCenterActionButtons = ({
   const { setActiveModal } = useUIState();
   const { domainsSelected } = useGlobal()
 
-  const isUp = status === "UP";
   const isActive = status === "ACTIVE";
   const isMaintenance = status === "MAINTENANCE";
   const isLocked = status === "LOCKED";
-  const isUnknown = status === "UNKNOWN";
 
   const basicActions = [
     { type: "attach", onBtnClick: () => setActiveModal("domain:attach"), label: "연결", }, // 연결 disabled 조건 구하기 disabled: domainsSelected.length === 0 데이터센터가 없을때

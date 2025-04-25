@@ -9,6 +9,7 @@ import DomainActivateModal from "./DomainActivateModal";
 import DomainDetachModal from "./DomainDetachModal";
 import DomainImportModal from "./DomainImportModal";
 import DomainMainttenanceModal from "./DomainMainttenanceModal";
+import DomainGetDiskModal from "./DomainGetDiskModal";
 
 /**
  * @name DomainModals
@@ -62,6 +63,10 @@ const DomainModals = () => {
       />
     ), detach: (
       <DomainDetachModal isOpen={activeModal() === "domain:detach"}
+        onClose={() => setActiveModal(null)}
+      />
+    ), importDisk: (
+      <DomainGetDiskModal key={activeModal()} isOpen={activeModal() === "domain:importDisk"}
         onClose={() => setActiveModal(null)}
       />
     ), maintenance: (

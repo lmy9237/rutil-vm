@@ -28,7 +28,7 @@ const interfaceOptions = [
 const initialFormState = {
   id: "",
   name: "",
-  linked: true, //링크상태(link state) t(up)/f(down) -> nic 상태도 같이 변함
+  linked: true, 
   plugged: true,
   macAddress: "",
   interface_: "VIRTIO" || interfaceOptions[6].value,
@@ -154,12 +154,21 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
       </div>
 
       <div className="nic-toggle">
-        <ToggleSwitchButton id="plugged"
+        <ToggleSwitchButton id="linked-toggle"
           label="링크 상태"
           checked={formInfoState.linked}
           onChange={() => handleRadioChange("linked", !formInfoState.linked)}
           tType="Up"
           fType="Down"
+        />
+      </div>
+      <div className="nic-toggle">
+        <ToggleSwitchButton id="plugged-toggle"
+          label="카드 상태"
+          checked={formInfoState.plugged}
+          onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}
+          tType="연결됨"
+          fType="분리"
         />
       </div>
       {/* <div>
@@ -185,15 +194,7 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
                 <label htmlFor="status_down">Down</label>
               </div>*/}
 
-      <div className="nic-toggle">
-        <ToggleSwitchButton id="plugged"
-          label="카드 상태"
-          tType="연결됨"
-          fType="분리"
-          checked={formInfoState.plugged === true}
-          onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}
-        />
-      </div>
+
     </BaseModal>
   );
 };

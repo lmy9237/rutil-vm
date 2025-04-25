@@ -92,7 +92,7 @@ const DomainAttachModal = ({ isOpen, onClose }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "650px"}} 
     >
-      <div>
+      <div className="py-4">
         <TablesOuter
           isLoading={label ? isDataCentersLoading : isDomainsLoading}
           isError={label ? isDataCentersError : isDomainsError}
@@ -108,8 +108,9 @@ const DomainAttachModal = ({ isOpen, onClose }) => {
             : (row) => setDomainsSelected(row)
           }
         />
+        <SelectedIdView items={label ? datacentersSelected: domainsSelected} />
       </div>
-      <SelectedIdView items={label ? datacentersSelected: domainsSelected} />
+  
     </BaseModal>
   );
 };

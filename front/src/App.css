@@ -102,7 +102,7 @@ details>summary {
 }
 
 hr {
-  height: var(--thickness-border);
+  /* height: var(--border-w); */
   background-color: var(--color-border-default);
 }
 ul { list-style-type: circle; }

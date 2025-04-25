@@ -84,33 +84,9 @@ const DomainImportDisks = ({
         shouldHighlight1stCol={true}
         refetch={refetchDisks}
         isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
-        /*
-        onContextMenuItems={(row) => [
-          <>
-          <ActionButton label={Localization.kr.IMPORT}
-            actionType="default" 
-            onClick={() => setActiveModal("get")}
-            disabled={selectedDisks.length === 0} 
-          />
-          <ActionButton label={Localization.kr.REMOVE}
-            actionType="default" 
-            onClick={() => setActiveModal("delete")}
-          />
-          </>
-        ]}
-        */
       />
 
       <SelectedIdView items={disksSelected} />
-
-      {/* 모달 */}
-      {activeModal() === "domain:importDisk" && (
-        <DomainGetDiskModal isOpen={activeModal() === "domain:importDisk"}
-          domainId={domainId}
-          data={disksSelected}
-          onClose={() => setActiveModal(null)}
-        />
-      )}
     </>
   );
 };

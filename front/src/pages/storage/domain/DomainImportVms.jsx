@@ -52,11 +52,13 @@ const DomainImportVms = ({ domainId }) => {
       <div className="header-right-btns">
         <ActionButton label={Localization.kr.IMPORT}
           actionType="default"
-          onClick={() => setActiveModal("get")}
+          disabled={vmsSelected.length === 0} 
+          onClick={() => setActiveModal("domainvm:importVm")}
         />
         <ActionButton label={Localization.kr.REMOVE}
           actionType="default"
-          onClick={() => setActiveModal("delete")}
+          disabled={vmsSelected.length === 0} 
+          onClick={() => setActiveModal("domainvm:remove")}
         />
       </div>
     </div>
@@ -72,15 +74,15 @@ const DomainImportVms = ({ domainId }) => {
       <SelectedIdView items={vmsSelected} />
 
       <Suspense fallback={<Loading />}>
-        {/* 가상머신 가져오기 모달 */}
-        {activeModal() === "domaintemplate:importVm" && (
+        {/* 가상머신 가져오기 모달 -> DomainImporttemplates에서도 쓰고있어서 domainmodals에 어떻게 써야하나! */}
+        {activeModal() === "domainvm:importVm" && (
           <DomainGetVmTemplateModal
             isOpen={true}
             data={vmsSelected}
             onClose={() => setActiveModal(null)}
           />
         )}
-        {activeModal() === "domaintemplate:remove" && (
+        {activeModal() === "domainvm:remove" && (
           <DeleteModal type="Vm" isOpen={true}
             contentLabel={Localization.kr.VM}
             data={vmsSelected}

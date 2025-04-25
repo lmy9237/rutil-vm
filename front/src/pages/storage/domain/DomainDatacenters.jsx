@@ -73,33 +73,6 @@ const DomainDatacenters = ({ domainId }) => {
       />
 
       <SelectedIdView items={datacentersSelected} /><br/>
-
-      {/* 도메인 모달창 */}
-      {/* <Suspense fallback={<Loading />}>
-        {activeModal() === "domain:attach" && 
-          <DomainAttachModal isOpen={activeModal() === "domain:attach"}
-            onClose={() => setActiveModal(null)}
-            sourceContext="fromDomain"
-            domainId={domainId}
-            datacenterId={datacentersSelected[0]?.id}
-          />
-        }
-        {activeModal() === "domain:detach" && 
-          <DomainDetachModal isOpen={activeModal() === "domain:detach"}
-            sourceContext="fromDomain"
-            onClose={() => setActiveModal(null)}
-            domains={domain}
-            datacenterId={datacentersSelected[0]?.id}
-          />
-        }
-        {activeModal() === "domain:maintenance" && 
-          <DomainMainttenanceModal isOpen={activeModal() === "domain:maintenance"}
-            onClose={() => setActiveModal(null)}
-            domains={domain}
-            datacenterId={datacentersSelected[0]?.id}
-          />
-        }
-      </Suspense> */}
     </div>
   );
 };

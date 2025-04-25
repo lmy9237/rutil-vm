@@ -55,10 +55,12 @@ const DomainImportTemplates = ({
         <div className="header-right-btns">
           <ActionButton label={Localization.kr.IMPORT}
             actionType="default" 
+            disabled={templatesSelected.length === 0} 
             onClick={() => setActiveModal('domaintemplate:importVm')}
           />
           <ActionButton label={Localization.kr.REMOVE}
             actionType="default" 
+            disabled={templatesSelected.length === 0} 
             onClick={() => setActiveModal("domaintemplate:remove")}
           />
         </div>
@@ -75,7 +77,7 @@ const DomainImportTemplates = ({
 
       <SelectedIdView items={templatesSelected} />
 
-      {/* 가상머신 가져오기 모달 */}
+      {/* 가져오기 모달 -> DomainImportVms에서도 쓰고있어서 domainmodals에 어떻게 써야하나! */}
       {activeModal() === "domaintemplate:importVm" && (
         <DomainGetVmTemplateModal
           isOpen={true}

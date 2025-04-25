@@ -1,12 +1,12 @@
 .host-filter-btns {
   width: fit-content;height: var(--h-text-input);
   font-size: var(--fs-default);
-  border-radius: 4px;
+  border-radius: 1px;
   border: var(--border-btn-filter);
 }
 .host-filter-btns button {
   min-width: 60px;height:100%;
-  cursor: pointer;
+  padding: 0 6px;
   border-radius: 0;border:none;
   border-right: var(--border-btn-filter);
   color:var(--color-nav);

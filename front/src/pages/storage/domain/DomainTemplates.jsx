@@ -8,6 +8,9 @@ import SearchBox from "../../../components/button/SearchBox";
 import { useAllTemplatesFromDomain } from "../../../api/RQHook";
 import TableRowClick from "../../../components/table/TableRowClick";
 import Logger from "../../../utils/Logger";
+import { checkZeroSizeToGiB } from "../../../util";
+
+
 
 /**
  * @name DomainTemplates
@@ -28,7 +31,7 @@ const DomainTemplates = ({
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
     refetch: refetchTemplates,
-  } = useAllTemplatesFromDomain(domainId, domainsSelected[0]?.id, (e) => ({ ...e }));
+  } = useAllTemplatesFromDomain(domainId ?? domainsSelected[0]?.id, (e) => ({ ...e }));
 
   const transformedData = useMemo(() => [...templates].map((t) => ({
     ...t,
@@ -37,17 +40,10 @@ const DomainTemplates = ({
         {t?.name}
       </TableRowClick>
     ),
-    /*
-    virtualSize: checkZeroSizeToGiB(vm?.memoryGuaranteed),
-    actualSize: checkZeroSizeToGiB(vm?.memorySize),
-    disk: (
-      <span 
-        onClick={() => navigate(`/computing/vms/${vm?.id}/disks`)} 
-        style={{ color: 'rgb(9, 83, 153)' }}
-      > {vm?.diskAttachmentVos?.length} 
-      </span>
-    ),
-    */
+    disk: (t?.diskAttachmentVos?.length || "") ,
+    virtualSize: checkZeroSizeToGiB(t?.memoryGuaranteed), 
+    actualSize: checkZeroSizeToGiB(t?.memorySize),
+    creationTime: t?.creationTime || "-", 
   })), [templates]);
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
@@ -72,7 +68,7 @@ const DomainTemplates = ({
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery}
         multiSelect={true}
-        onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)} // 선택된 항목 업데이트
+        onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
         refetch={refetchTemplates}
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
