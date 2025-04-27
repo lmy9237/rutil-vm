@@ -131,6 +131,8 @@ fun List<Nic>.toNicIdNames(): List<NicVo> =
 fun Nic.toVmNic(): NicVo = NicVo.builder {
 	id { this@toVmNic.id() }
 	name { this@toVmNic.name() }
+	plugged { this@toVmNic.plugged() }
+	linked { this@toVmNic.linked() }
 	networkVo { this@toVmNic.vnicProfile().network().fromNetworkToIdentifiedVo() }
 	vnicProfileVo { this@toVmNic.vnicProfile().fromVnicProfileToIdentifiedVo() }
 }
