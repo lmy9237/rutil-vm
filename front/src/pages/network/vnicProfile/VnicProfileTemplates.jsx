@@ -30,7 +30,7 @@ const VnicProfileTemplates = ({ vnicProfileId }) => {
   return (
     <TablesOuter
       isLoading={isTemplateLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
-      columns={TableColumnsInfo.TEMPLATE_FROM_VNIC_PROFILES}
+      columns={TableColumnsInfo.TEMPLATE_FROM_VNIC_PROFILE}
       data={transformedData}
     />
   );

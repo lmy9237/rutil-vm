@@ -14,13 +14,13 @@ import {
   useEditDomain,
   useHostsFromDataCenter,
   useFibreFromHost,
-  useSearchFcFromHost,
 } from "../../../api/RQHook";
 import { checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import useGlobal from "../../../hooks/useGlobal";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import { useQueryClient } from "@tanstack/react-query";
 
 // 일반 정보
 const initialFormState = {
@@ -41,36 +41,36 @@ const searchFormState = {
   port: 3260,
 };
 
-// 사용자 인증 이름, 암호 검색
-const loginFormState = {
-  chapName: "",
-  chapPassword: "",
-  useChap: false,
-};
+// // 사용자 인증 이름, 암호 검색
+// const loginFormState = {
+//   chapName: "",
+//   chapPassword: "",
+//   useChap: false,
+// };
 
 const DomainModal = ({
   isOpen, onClose, editMode=false
 }) => {
+  const queryClient = useQueryClient();
   const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
-  const { datacentersSelected, domainsSelected, setDomainsSelected } = useGlobal()
+  const { datacentersSelected, domainsSelected } = useGlobal()
   const domainId = useMemo(() => [...domainsSelected][0]?.id, [domainsSelected]);
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
 
   const [formState, setFormState] = useState(initialFormState); // 일반정보
-  const [formSearchState, setFormSearchState] = useState(searchFormState);
-  
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [hostVo, setHostVo] = useState({ id: "", name: "" });
   const [storageTypes, setStorageTypes] = useState([]);
   const [nfsAddress, setNfsAddress] = useState(""); // nfs
   const [lunId, setLunId] = useState(""); // fibre 사용
-
-  const [fcResults, setFcResults] = useState([]); // 검색결과
+  
+  // const [formSearchState, setFormSearchState] = useState(searchFormState); // 주소, 포트 입력
+  const [fcResults, setFcResults] = useState([]); // 주소와 포트를 넣은 검색결과
 
   const resetFormStates = () => {
     setFormState(initialFormState);
-    setFormSearchState(searchFormState);
+    // setFormSearchState(searchFormState);
     setHostVo({ id: "", name: "" });
     setStorageTypes([]);
     setNfsAddress("");
@@ -105,15 +105,6 @@ const DomainModal = ({
     isSuccess: isFibresSuccess
   } = useFibreFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
 
-
-  console.log("%% transFibreData", fibres);
-
-  // fc 검색
-  const { mutate: searchFc } = useSearchFcFromHost(
-    (data) => { setFcResults(data) },
-    (error) => { toast.error("fc 검색 실패:", error) }
-  );
-  
   useEffect(() => {
     if (datacenterId) {
       const selected = datacenters.find(dc => dc.id === datacenterId);
@@ -133,26 +124,40 @@ const DomainModal = ({
         domainType: prev.domainType,
       }));
       setStorageTypes(storageTypeOptions(initialFormState.domainType));
-      setFormSearchState(searchFormState);
+      // setFormSearchState(searchFormState);
       setNfsAddress("");
       setLunId("");
-      setFcResults([]);
+      refetchFibres();
     }
   }, [dataCenterVo, editMode]);
   
-
   useEffect(() => {
-    if (!editMode && hosts && hosts.length > 0) {
-      setHostVo({id: hosts[0].id, name: hosts[0].name});
+    if (!editMode) {
+      if (hosts.length > 0) {
+        setHostVo({ id: hosts[0].id, name: hosts[0].name });
+      } else {
+        setHostVo({ id: "", name: "" });
+  
+        queryClient.removeQueries({
+          queryKey: ['fibreFromHost'],
+        });
+      }
     }
-  }, [hosts, editMode]);
-
+  }, [hosts, editMode, queryClient]);  
+  
   useEffect(() => {
-    if (formState.storageType === "fibre" && hostVo?.id) {
-      refetchFibres();
+    if (!editMode && formState.storageType === "fibre") {
+      if (hostVo?.id) {
+        
+        queryClient.removeQueries({
+          queryKey: ['fibreFromHost', hostVo.id],
+        });
+        refetchFibres();
+      }
     }
-  }, [hostVo?.id, formState.storageType, refetchFibres]);
-
+  }, [hostVo?.id, formState.storageType, editMode, queryClient, refetchFibres]);
+  
+  
   useEffect(() => {
     if (!isOpen) return resetFormStates();
     if (editMode && domain) {
@@ -186,10 +191,9 @@ const DomainModal = ({
   }, [formState.domainType, editMode]);
 
   useEffect(() => {
-    setFormSearchState(searchFormState);
+    // setFormSearchState(searchFormState);
     setNfsAddress("");
     setLunId("");
-    setFcResults([]); // FC 검색 결과 초기화
   }, [formState.storageType]);
 
   const isNfs = formState.storageType === "nfs";
@@ -322,10 +326,9 @@ const DomainModal = ({
       {isFibre && (
         <DomainFibre
           editMode={editMode}
-          fcResults={fibres} setFcResults={setFcResults}
+          fibres={fibres}
           lunId={lunId} setLunId={setLunId}
           hostVo={hostVo}
-          searchFcAPI={searchFc}
           refetchFibres={refetchFibres}
           isFibresLoading={isFibresLoading} isFibresError={isFibresError} isFibresSuccess={isFibresSuccess}
         />

@@ -134,14 +134,14 @@ const VmNics = ({ vmId }) => {
                 <div className="network-content-detail-box">
                   <div className="font-bold">일반</div>
                   <TablesRow
-                    columns={TableColumnsInfo.NICS_FROM_VMS} 
+                    columns={TableColumnsInfo.NICS_FROM_VM} 
                     data={nic} 
                   />
                 </div>
                 <div className="network-content-detail-box">
                   <div className="font-bold">통계</div>
                   <TablesRow
-                    columns={TableColumnsInfo.NICS_CALC_FROM_VMS} 
+                    columns={TableColumnsInfo.NICS_CALC_FROM_VM} 
                     data={nic} 
                   />
                 </div>

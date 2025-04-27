@@ -3,6 +3,7 @@ package com.itinfo.rutilvm.api.model.storage
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDiskProfilesToIdentifiedVos
+import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.*
 
@@ -205,6 +206,7 @@ fun List<StorageDomain>.toActiveDomains(): List<StorageDomainVo> =
 fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 	val storageDomain = this@toStorageDomainInfoVo
 	val dataCenter: DataCenter? = resolveDataCenter(conn)
+	val host: Host? = findHostFromStorageDomain(conn)
 	return StorageDomainVo.builder {
 		id { storageDomain.id() }
 		name { storageDomain.name() }
@@ -226,6 +228,7 @@ fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 		storageAddress { storageDomain.storage().address() + storageDomain.storage().path() } // 경로
 //		nfsVersion { storageDomain.storage().nfsVersion().value() }
 		hostStorageVo { storageDomain.storage().toHostStorageVoByType() }
+		hostVo { host?.fromHostToIdentifiedVo() }
 	}
 }
 fun List<StorageDomain>.toStorageDomainInfoVos(conn: Connection): List<StorageDomainVo> =
@@ -355,6 +358,13 @@ fun StorageDomainVo.toEditStorageDomainBuilder(): StorageDomain {
 // 데이터센터 찾기
 fun StorageDomain.resolveDataCenter(conn: Connection): DataCenter? {
 	return if(this@resolveDataCenter.dataCentersPresent()) conn.findDataCenter(this@resolveDataCenter.dataCenters().first().id()).getOrNull() else null
+}
+
+fun StorageDomain.findHostFromStorageDomain(conn: Connection): Host? {
+	val hosts: List<Host> = conn.findAllHosts(follow = "cluster.datacenter.storagedomains").getOrDefault(emptyList())
+	return hosts.firstOrNull { host ->
+		host.cluster()?.dataCenter()?.storageDomains()?.any { it.id() == this@findHostFromStorageDomain.id() } == true
+	}
 }
 
 

@@ -30,7 +30,7 @@ const VnicProfileVms = ({ vnicProfileId }) => {
   return (
     <TablesOuter
       isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
-      columns={TableColumnsInfo.VMS_FROM_VNIC_PROFILES}
+      columns={TableColumnsInfo.VMS_FROM_VNIC_PROFILE}
       data={transformedData}
     />
   );

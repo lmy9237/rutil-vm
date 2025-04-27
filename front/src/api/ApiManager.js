@@ -2580,7 +2580,6 @@ const ApiManager = {
       method: "POST",
       url: ENDPOINTS.ADD_STORAGE_DOMAIN(),
       data: domainData, 
-      // defaultValues: DEFAULT_VALUES.ADD_STORAGE_DOMAIN
     });
   },
   /**

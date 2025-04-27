@@ -366,7 +366,18 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun findOne(storageDomainId: String): StorageDomainVo? {
 		log.info("findOne... ")
+
 		val res: StorageDomain? = conn.findStorageDomain(storageDomainId, follow = "disks,diskprofiles").getOrNull()
+		val dcId =
+			if(res?.dataCenterPresent() == true) conn.findDataCenter(res.dataCenters().first().id()).getOrNull()
+			else null
+
+		// follow 때문에 위험한 코드
+		val hosts: List<Host> = conn.findAllHosts(follow = "cluster.datacenter.storagedomains").getOrDefault(emptyList())
+		val host = hosts.firstOrNull { host ->
+			host.cluster()?.dataCenter()?.storageDomains()?.any { it.id() == storageDomainId } == true
+		}
+		log.info("&&&&&&&&&& host: {}, {}", host?.name(), host?.id())
 		return res?.toStorageDomainInfoVo(conn)
 	}
 

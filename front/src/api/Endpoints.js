@@ -1,6 +1,3 @@
-import CONSTANT from "../Constants";
-import Logger from "../utils/Logger";
-
 const ENDPOINT_API_V1 = `/api/v1`
 const ENDPOINTS = {
   //#region: TreeNavigation
@@ -168,7 +165,6 @@ const ENDPOINTS = {
     return url;
   },
 
-
   //#endregion: Vm
 
   //#region: Template
@@ -248,16 +244,18 @@ const ENDPOINTS = {
   ADD_STORAGE_DOMAIN: () =>                                                `${ENDPOINT_API_V1}/storages/domains`,
   IMPORT_STORAGE_DOMAIN: () =>                                             `${ENDPOINT_API_V1}/storages/domains/import`,
   EDIT_STORAGE_DOMAIN: (domainId) =>                                       `${ENDPOINT_API_V1}/storages/domains/${domainId}`,
-  // DELETE_STORAGE_DOMAIN: (domainId, format, hostName) =>                `${ENDPOINT_API_V1}/storages/domains/${domainId}?format=${format}&host=${hostName}`,
   DELETE_STORAGE_DOMAIN: (domainId, format, hostName) => {
-    let url = `/api/v1/storages/domains/${domainId}`;
-    if (format) {
-      url += `?format=true&host=${hostName}`;
-    } else {
-      url += `?host=${hostName}`;
-    }
-    Logger.debug(`Generated URL: ${url}`); // URL 확인
-    return url;
+    format 
+      ? `/api/v1/storages/domains/${domainId}?format=true&host=${hostName}`
+      : `/api/v1/storages/domains/${domainId}&host=${hostName}`
+    // let url = `/api/v1/storages/domains/${domainId}`;
+    // if (format) {
+    //   url += `?format=true&host=${hostName}`;
+    // } else {
+    //   url += `?host=${hostName}`;
+    // }
+    // return url;
+    // `/api/v1/storages/domains/${domainId}?${format ? 'format=true&' : ''}host=${hostName}`;
   },  
   DESTORY_STORAGE_DOMAIN: (storageDomainId) =>                             `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/destroy`, 
   OVF_UPDATE_STORAGE_DOMAIN: (storageDomainId) =>                          `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/updateOvf`,

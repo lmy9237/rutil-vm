@@ -126,9 +126,10 @@ const TableColumnsInfo = {
     { header: '', accessor: 'engine', clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
   ],
+
   VMS: [
+    { header: '재설정', accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
-    { header: '', accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: '', accessor: 'engine', clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
     { header: Localization.kr.COMMENT, accessor: 'comment', clickable: false, width: '20%' },
@@ -144,7 +145,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.UP_TIME, accessor: 'upTime', clickable: false, width: '12%' },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false, width: '25%' }
   ],
-  NICS_FROM_VMS: [
+  NICS_FROM_VM: [
     { header: '연결됨', accessor: 'linked', clickable: false, width: '7%' },
     { header: `${Localization.kr.NETWORK} ${Localization.kr.NAME}`, accessor: 'networkName', clickable: false },
     { header: '프로파일 이름', accessor: 'vnicProfileName', clickable: false },
@@ -154,7 +155,7 @@ const TableColumnsInfo = {
     { header: '포트 미러링', accessor: 'portMirroring', clickable: false },
     { header: '게스트 인터페이스 이름', accessor: 'guestInterfaceName', clickable: false },
   ],
-  NICS_CALC_FROM_VMS: [
+  NICS_CALC_FROM_VM: [
     { header: Localization.kr.SPEED_RX, accessor: 'rxSpeed', clickable: false, width: '7%' },
     { header: Localization.kr.SPEED_TX, accessor: 'txSpeed', clickable: false },
     { header: Localization.kr.TOTAL_BYTE_RX, accessor: 'rxTotalSpeed', clickable: false },
@@ -220,6 +221,41 @@ const TableColumnsInfo = {
     { header: '드라이버', accessor: 'driver', clickable: false },
     { header: '현재 사용중', accessor: 'used', clickable: false },
   ],
+  SNAPSHOT_INFO_FROM_VM: [
+    { header: Localization.kr.NAME, accessor: 'description', clickable: false },
+    { header: Localization.kr.DATE, accessor: 'date', clickable: false, width: '5%' },
+    { header: Localization.kr.STATUS, accessor: 'statusKr', clickable: false, width: '5%' },
+    { header: '가상 시스템 메모리 스냅샷 생성', accessor: 'persistMemory', clickable: false },
+    { header: '설정된 메모리', accessor: 'memorySize', clickable: false },
+    { header: '할당할 실제 메모리', accessor: 'memoryActual', clickable: false },
+  ],
+  SNAPSHOT_DISK_FROM_VM: [
+    { header: Localization.kr.STATUS, accessor: 'status', clickable: false, width: '5%' },
+    { header: Localization.kr.ALIAS, accessor: 'alias', clickable: false, width: '17%' },
+    { header: Localization.kr.DATE_CREATED, accessor: 'date', clickable: false },
+    { header: Localization.kr.SIZE_VIRTUAL, accessor: 'provisionedSize', clickable: false },
+    { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
+    { header: Localization.kr.SPARSE, accessor: 'sparse', clickable: false },
+    { header: '인터페이스', accessor: 'interface_', clickable: false },
+    { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
+    { header: '디스크 스냅샷 ID', accessor: 'imageId', clickable: false, width: '16%' },
+  ],  
+  SNAPSHOT_NIC_FROM_VM: [
+    { header: Localization.kr.NAME, accessor: 'name', clickable: false, width: '10%' },
+    { header: `${Localization.kr.NETWORK} ${Localization.kr.NAME}`, accessor: 'networkName', clickable: false, width: '15%' },
+    { header: '프로파일 이름', accessor: 'profileName', clickable: false, width: '15%' },
+    { header: '유형', accessor: 'interface_', clickable: false, width: '10%' },
+    { header: 'MAC', accessor: 'macAddress', clickable: false, width: '15%' },
+    { header: 'Rx 속도 (Mbps)', accessor: 'rxSpeed', clickable: false, width: '10%' },
+    { header: 'Tx 속도 (Mbps)', accessor: 'txSpeed', clickable: false, width: '10%' },
+    { header: '중단 (Pkts)', accessor: 'txTotalError', clickable: false, width: '10%' },
+  ],
+  SNAPSHOT_APPLICATION_FROM_VM: [
+    { header: '애플리케이션 이름', accessor: 'name', clickable: false, width: '10%' },
+    { header: '버전', accessor: 'version', clickable: false, width: '15%' },
+    { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false, width: '15%' },
+  ],
+
   TEMPLATES: [
     { header: Localization.kr.NAME, accessor: '_name', clickable: true },
     { header: Localization.kr.DATE_CREATED, accessor: 'creationTime', clickable: false },
@@ -262,7 +298,6 @@ const TableColumnsInfo = {
     { header: '유형', accessor: 'storageType', clickable: false },
     // { header: Localization.kr.DATE_CREATED, accessor: 'creationTime', clickable: false },
   ],
-
 
   NETWORKS: [
     { header: Localization.kr.NAME, accessor: '_name', clickable: true },
@@ -366,13 +401,14 @@ const TableColumnsInfo = {
     { header: '통과', accessor: 'passThrough', clickable: false },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],
-  VMS_FROM_VNIC_PROFILES: [
+  VMS_FROM_VNIC_PROFILE: [
     { header: Localization.kr.NAME, accessor: 'name', clickable: false },
   ],
-  TEMPLATE_FROM_VNIC_PROFILES: [
+  TEMPLATE_FROM_VNIC_PROFILE: [
     { header: Localization.kr.NAME, accessor: '_name', clickable: false },
     { header: '버전', accessor: 'versionNum', clickable: false },
   ],
+
   STORAGE_DOMAINS: [
     { header: Localization.kr.STATUS, accessor: "icon", width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: '', accessor: 'hostedEngine', width: '3%' },
@@ -387,7 +423,6 @@ const TableColumnsInfo = {
     { header: Localization.kr.DESCRIPTION, accessor: 'description' },
     { header: Localization.kr.COMMENT, accessor: 'comment', width: '12%' },
   ],
-  
   DATACENTERS_FROM_STORAGE_DOMAIN : [
     { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: '_name', clickable: false , width: '17%'},
@@ -432,20 +467,16 @@ const TableColumnsInfo = {
     { header: 'vendor ID', accessor: 'vendorId', clickable: false },
     { header: 'product ID', accessor: 'productId', clickable: false },
     { header: 'serial', accessor: 'serial', clickable: false },
-    
     { header: 'Target Name', accessor: 'target', clickable: true },
     { header: 'address', accessor: 'address', clickable: true },
     { header: 'port', accessor: 'port', clickable: true },
   ],
   IMPORT_ISCSI: [
-    // { header: 'checkbox', accessor: 'check', clickable: true, width: '5%' },
     { header: 'IQN', accessor: 'target', clickable: true },
     { header: 'address', accessor: 'address', clickable: true },
     { header: 'port', accessor: 'port', clickable: true },
   ],
-  
   FIBRE: [
-    // { header: '', accessor: 'check', clickable: true, width: '5%'  },
     { header: 'status', accessor: 'status', clickable: false },
     { header: 'Lun ID', accessor: 'id', clickable: false },
     { header: 'size', accessor: 'size', clickable: false },
@@ -454,18 +485,10 @@ const TableColumnsInfo = {
     { header: 'product ID', accessor: 'productId', clickable: false },
     { header: 'serial', accessor: 'serial', clickable: false },
   ],
-
   IMPORT_FIBRE: [
-    // { header: 'checkbox', accessor: 'check', clickable: true, width: '5%' },
     { header: Localization.kr.NAME, accessor: 'name', clickable: true, width: '30%' },
     { header: 'id', accessor: 'id', clickable: true },
   ],
-
-//---------------------------
-    // 템플릿
-  
-    
-//------------------------------------------
   DISKS_FROM_STORAGE_DOMAIN: [
     { header: Localization.kr.ALIAS, accessor: '_alias', clickable: false , width: '16%' },
     { header: Localization.kr.IS_BOOTABLE, accessor: 'icon1', clickable: false },
@@ -481,8 +504,6 @@ const TableColumnsInfo = {
     { header: '유형', accessor: 'storageType', clickable: false },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],
-
-
   DISK_SNAPSHOT_FROM_STORAGE_DOMAIN: [
     { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
     { header: Localization.kr.DATE_CREATED, accessor: 'creationDate', clickable: false },
@@ -492,44 +513,6 @@ const TableColumnsInfo = {
     { header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, accessor: 'storageDomainVo.name', clickable: false },
     { header: Localization.kr.STATUS, accessor: 'status', clickable: false },
     { header: '디스크 스냅샷 ID', accessor: 'id', clickable: false },
-  ],
-  
-  SNAPSHOT_INFO_FROM_VM: [
-    { header: Localization.kr.NAME, accessor: 'description', clickable: false },
-    { header: Localization.kr.DATE, accessor: 'date', clickable: false, width: '5%' },
-    { header: Localization.kr.STATUS, accessor: 'statusKr', clickable: false, width: '5%' },
-    { header: '가상 시스템 메모리 스냅샷 생성', accessor: 'persistMemory', clickable: false },
-    { header: '설정된 메모리', accessor: 'memorySize', clickable: false },
-    { header: '할당할 실제 메모리', accessor: 'memoryActual', clickable: false },
-  ],
-  
-  SNAPSHOT_DISK_FROM_VM: [
-    { header: Localization.kr.STATUS, accessor: 'status', clickable: false, width: '5%' },
-    { header: Localization.kr.ALIAS, accessor: 'alias', clickable: false, width: '17%' },
-    { header: Localization.kr.DATE_CREATED, accessor: 'date', clickable: false },
-    { header: Localization.kr.SIZE_VIRTUAL, accessor: 'provisionedSize', clickable: false },
-    { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
-    { header: Localization.kr.SPARSE, accessor: 'sparse', clickable: false },
-    { header: '인터페이스', accessor: 'interface_', clickable: false },
-    { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
-    { header: '디스크 스냅샷 ID', accessor: 'imageId', clickable: false, width: '16%' },
-  ],
-  
-  SNAPSHOT_NIC_FROM_VM: [
-    { header: Localization.kr.NAME, accessor: 'name', clickable: false, width: '10%' },
-    { header: `${Localization.kr.NETWORK} ${Localization.kr.NAME}`, accessor: 'networkName', clickable: false, width: '15%' },
-    { header: '프로파일 이름', accessor: 'profileName', clickable: false, width: '15%' },
-    { header: '유형', accessor: 'interface_', clickable: false, width: '10%' },
-    { header: 'MAC', accessor: 'macAddress', clickable: false, width: '15%' },
-    { header: 'Rx 속도 (Mbps)', accessor: 'rxSpeed', clickable: false, width: '10%' },
-    { header: 'Tx 속도 (Mbps)', accessor: 'txSpeed', clickable: false, width: '10%' },
-    { header: '중단 (Pkts)', accessor: 'txTotalError', clickable: false, width: '10%' },
-  ],
-  
-  SNAPSHOT_APPLICATION_FROM_VM: [
-    { header: '애플리케이션 이름', accessor: 'name', clickable: false, width: '10%' },
-    { header: '버전', accessor: 'version', clickable: false, width: '15%' },
-    { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false, width: '15%' },
   ],
 
   GET_VMS_TEMPLATES: [
@@ -579,7 +562,6 @@ const TableColumnsInfo = {
     { header: Localization.kr.STATUS, accessor: 'status', clickable: false, width: '10%' },
     { header: Localization.kr.UP_TIME, accessor: 'upTime', clickable: false, width: '20%' },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false, width: '25%' },
-
   ],
 
   DISKS: [
@@ -600,7 +582,6 @@ const TableColumnsInfo = {
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipAddress', clickable: false },
     { header: Localization.kr.UP_TIME, accessor: 'uptime', clickable: false },
   ],
-  
   STORAGE_DOMAINS_FROM_DISK: [
     { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN  },
     { header: '도메인 이름', accessor: 'storageDomain', clickable: false },
@@ -611,7 +592,6 @@ const TableColumnsInfo = {
     { header: Localization.kr.SIZE_USED, accessor: 'usedSize', clickable: false },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],
-
   VIRTUAL_DISK:  [
     { header: '', accessor: 'check', clickable: false, width: '5%'  },
     { header: Localization.kr.ALIAS, accessor: 'alias', clickable: true },
@@ -624,12 +604,10 @@ const TableColumnsInfo = {
     { header: 'R/O', accessor: 'readonly', clickable: false, width: '5%'  },
     { header: 'bootable', accessor: 'bootable', clickable: false, width: '5%'  },
     { header: 'i', accessor: 'b', clickable: false, width: '5%'  },
-
   ],
 // ---------------------------------------------------------------
 
 
-  
   LUNS: [
     { header: Localization.kr.NAME, accessor: 'name', clickable: true },
     { header: Localization.kr.STATUS, accessor: 'status', clickable: false },
@@ -640,20 +618,6 @@ const TableColumnsInfo = {
     { header: Localization.kr.NAME, accessor: 'logicalName' },
     { header: Localization.kr.DESCRIPTION, accessor: 'description' },
   ],
-
-  ALL_DISK:  [
-    { header: Localization.kr.NAME, accessor: 'alias', clickable: true,width:'15%' },
-    { header: 'ID', accessor: 'id', clickable: false ,width:'15%'},
-    { header: '', accessor: 'icon1', clickable: false,width:'4%' },
-    { header: '', accessor: 'icon2', clickable: false ,width:'4%'},
-    { header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, accessor: 'connectionTarget', clickable: false },
-    { header: '스토리지 도메인', accessor: 'storageDomain', clickable: false },
-    { header: Localization.kr.SIZE_VIRTUAL, accessor: 'virtualSize', clickable: false },
-    { header: Localization.kr.STATUS, accessor: 'status', clickable: false },
-    { header: '유형', accessor: 'storageType', clickable: false },
-    { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
-  ],
-  
   LUN_DISK:  [
     { header: Localization.kr.NAME, accessor: 'alias', clickable: true,width:'10%' },
     { header: 'ID', accessor: 'id', clickable: false },
@@ -678,21 +642,6 @@ const TableColumnsInfo = {
     { header: Localization.kr.NETWORK, accessor: 'network', clickable: false },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipv4', clickable: false },
   ],
-  
-
-  
-  CLUSTERS_DATA :[
-    { accessor: 'status', clickable: false,      header: Localization.kr.STATUS},
-    { accessor: 'name', clickable: true,         header: Localization.kr.NAME},
-    { accessor: 'comment', clickable: false,     header: Localization.kr.COMMENT},
-    { accessor: 'version', clickable: false,     header: '호환 버전'},
-    { accessor: 'description', clickable: false, header: Localization.kr.DESCRIPTION, },
-    { accessor: 'cpuType', clickable: false,     header: `${Localization.kr.CLUSTER} ${Localization.kr.CPU} 유형`, },
-    { accessor: 'hostCount', clickable: false,   header: `${Localization.kr.HOST} 수`},
-    { accessor: 'vmCount', clickable: false,     header: `${Localization.kr.VM} 수`},
-    { accessor: 'upgrade', clickable: false,     header: '업그레이드 상태' },
-
-  ],
   CLUSTERS_POPUP: [
     { header: Localization.kr.NAME, accessor: 'name', clickable: false },
     { header: '모두 할당', accessor: 'allAssigned', clickable: false },
@@ -703,7 +652,6 @@ const TableColumnsInfo = {
     { header: 'Gluster 네트워크', accessor: 'glusterNetwork', clickable: false },
     { header: '기본 라우팅', accessor: 'defaultRouting', clickable: false },
   ],
-  
   HOSTS_DISCONNECTION: [
     { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'name', clickable: false },
@@ -763,7 +711,6 @@ const TableColumnsInfo = {
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],
   
-
   VM_BRING_POPUP:[
     { header: Localization.kr.NAME, accessor: 'name', clickable: false },
   ],

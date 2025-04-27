@@ -65,7 +65,6 @@ const DomainFibreImport = ({
           onRowClick={handleRowClick}
         />
         <div> <span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
-        <div> <span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
       </div>
     </div>
   )
