@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import {
@@ -17,6 +17,7 @@ import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Logger from "../../../utils/Logger";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import useGlobal from "../../../hooks/useGlobal";
 
 const initialFormState = {
   id: "",
@@ -28,13 +29,15 @@ const initialFormState = {
 };
 
 const VnicProfileModal = ({
-  isOpen,
-  editMode = false,
-  vnicProfileId,
-  networkId,
-  onClose,
+  isOpen, onClose, editMode = false,
 }) => {
   const vLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+
+  const { networksSelected, vnicProfilesSelected, datacentersSelected } = useGlobal();  
+  const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
+  const networkId = useMemo(() => [...networksSelected][0]?.id, [networksSelected]);
+  const vnicProfileId = useMemo(() => [...vnicProfilesSelected][0]?.id, [vnicProfilesSelected]);
+
   const [formState, setFormState] = useState(initialFormState);
 
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
@@ -86,13 +89,16 @@ const VnicProfileModal = ({
   console.log("&& networkFilterVo ", networkFilterVo);
 
   useEffect(() => {
-    if (!editMode && datacenters && datacenters.length > 0) {
+    if (datacenterId) {
+      const selected = datacenters.find(dc => dc.id === datacenterId);
+      setDataCenterVo({ id: selected?.id, name: selected?.name });
+    } else if (!editMode && datacenters.length > 0) {
+      // datacenterId가 없다면 기본 데이터센터 선택
       const defaultDc = datacenters.find(dc => dc.name === "Default");
       const firstDc = defaultDc || datacenters[0];
       setDataCenterVo({ id: firstDc.id, name: firstDc.name });
-      setNetworkVo({id: "", name: ""});
     }
-  }, [datacenters, editMode]);
+  }, [datacenterId, datacenters, editMode]);
   
   useEffect(() => {
     if(networkId) {

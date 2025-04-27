@@ -29,7 +29,6 @@ const DiskModals = ({
       <DiskModal key={activeModal()} isOpen={activeModal() === "disk:update"}
         onClose={() => setActiveModal(null)}
         editMode
-        diskId={disk?.id}
       />
     ), remove: (
       <DeleteModal key={activeModal()} isOpen={activeModal() === "disk:remove"}

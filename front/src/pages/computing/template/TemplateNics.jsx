@@ -10,7 +10,7 @@ import NicActionButtons from "../../../components/dupl/NicActionButtons";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import SearchBox from "../../../components/button/SearchBox";
-import NicModal from "../../../components/modal/vm/NicModal";
+import VmNicModal from "../../../components/modal/vm/VmNicModal";
 import { useAllNicsFromTemplate } from "../../../api/RQHook";
 
 /**
@@ -93,14 +93,14 @@ const TemplateNics = ({
 
       {/* nic 모달창 */}
       {activeModal() === "nic:create" && (
-        <NicModal key={activeModal()} isOpen={activeModal() === "nic:create"}
+        <VmNicModal key={activeModal()} isOpen={activeModal() === "nic:create"}
           onClose={() => setActiveModal(null)}
           vmId={templateId}   // ✅ templateId를 vmId처럼 넘김
           nicId={null}
         />
       )}
       {activeModal() === "nic:edit" && (
-        <NicModal key={activeModal()} isOpen={activeModal() === "nic:updateedit"}
+        <VmNicModal key={activeModal()} isOpen={activeModal() === "nic:updateedit"}
           onClose={() => setActiveModal(null)}
           editMode
           vmId={templateId}   // ✅ templateId를 vmId처럼 넘김

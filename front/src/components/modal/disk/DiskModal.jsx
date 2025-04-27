@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
@@ -17,6 +17,8 @@ import {
 import { checkName, convertBytesToGB } from "../../../util";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import useGlobal from "../../../hooks/useGlobal";
+import { handleInputChange, handleInputCheck, handleSelectIdChange } from "../../label/HandleInput";
 
 const initialFormState = {
   id: "",
@@ -34,22 +36,20 @@ const initialFormState = {
   cancelActive: false, // vm 취소 활성화
 };
 
-const sparseList = [
-  { value: "true", label: "씬 프로비저닝" },
-  { value: "false", label: "사전 할당" },
-];
-
-const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
+const DiskModal = ({ isOpen, editMode = false, onClose }) => {
   const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
-  const [formState, setFormState] = useState(initialFormState);
 
+  const { disksSelected } = useGlobal();
+  const diskId = useMemo(() => [...disksSelected][0]?.id, [disksSelected]);
+
+  const [formState, setFormState] = useState(initialFormState);
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [domainVo, setDomainVo] = useState({ id: "", name: "" });
   const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
   
   const onSuccess = () => {
     onClose();
-    toast.success(`디스크 ${dLabel} 완료`);
+    toast.success(`${Localization.kr.DISK} ${dLabel} 완료`);
   };
   const { mutate: addDisk } = useAddDisk(onSuccess, () => onClose());
   const { mutate: editDisk } = useEditDisk(onSuccess, () => onClose());
@@ -73,9 +73,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
 
 
   const [activeTab, setActiveTab] = useState("img");
-  const handleTabClick = useCallback((tab) => {
-    setActiveTab(tab);
-  }, []);
+  const handleTabClick = useCallback((tab) => { setActiveTab(tab) }, []);
 
   useEffect(() => {
     if (!isOpen) return setFormState(initialFormState);
@@ -115,14 +113,6 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
     }
   }, [diskProfiles, editMode]);
 
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
-  const handleInputChangeCheck = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
-  };
-
   const handleInputSize = (field) => (e) => {
     const value = e.target.value;
   
@@ -136,7 +126,6 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
       setFormState((prev) => ({ ...prev, [field]: value }));
     }
   };
-  
 
   const validateForm = () => {
     const nameError = checkName(formState.alias);
@@ -144,8 +133,8 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
 
     if (!formState.size) return "크기를 입력해주세요.";
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    if (!domainVo.id) return "스토리지 도메인을 선택해주세요.";
-    if (!diskProfileVo.id) return "디스크 프로파일을 선택해주세요.";
+    if (!domainVo.id) return `${Localization.kr.DOMAIN}을 선택해주세요.`;
+    if (!diskProfileVo.id) return `${Localization.kr.DISK_PROFILE}을 선택해주세요.`;
     return null;
   };
 
@@ -175,14 +164,13 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
   };
 
   return (
-    <BaseModal targetName={"디스크"} submitTitle={dLabel}
+    <BaseModal targetName={Localization.kr.DISK} submitTitle={dLabel}
       isOpen={isOpen} onClose={onClose}      
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "640px" }}
     >
       <div className="disk-new-nav">
-        <div
-          id="storage_img_btn"
+        <div id="storage_img_btn"
           onClick={() => handleTabClick("img")}
           className={activeTab === "img" ? "active" : ""}
         >
@@ -211,31 +199,25 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
             )}
             <LabelInput label={Localization.kr.ALIAS}
               value={formState.alias}
-              onChange={handleInputChange("alias")}
+              onChange={handleInputChange(setFormState, "alias")}
             />
             <LabelInput label={Localization.kr.DESCRIPTION}
               value={formState.description}
-              onChange={handleInputChange("description")}
+              onChange={handleInputChange(setFormState, "description")}
             />
             <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
               value={dataCenterVo.id}
               disabled={editMode}
               loading={isDatacentersLoading}
               options={datacenters}
-              onChange={(e) => {
-                const selected = datacenters.find(dc => dc.id === e.target.value);
-                if (selected) setDataCenterVo({ id: selected.id, name: selected.name });
-              }}
+              onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
             />
             <LabelSelectOptionsID label={Localization.kr.DOMAIN}
               value={domainVo.id}
               disabled={editMode}
               loading={isDomainsLoading}
               options={domains}
-              onChange={(e) => {
-                const selected = domains.find(d => d.id === e.target.value);
-                if (selected) setDomainVo({ id: selected.id, name: selected.name });
-              }}
+              onChange={handleSelectIdChange(setDomainVo, domains)}
             />
             <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
               value={String(formState.sparse)}
@@ -243,14 +225,11 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
               disabled={editMode}
               options={sparseList}
             />
-            <LabelSelectOptionsID label="디스크 프로파일"
+            <LabelSelectOptionsID label={Localization.kr.DISK_PROFILE}
               value={diskProfileVo.id}
               loading={isDiskProfilesLoading}
               options={diskProfiles}
-              onChange={(e) => {
-                const selected = diskProfiles.find(dp => dp.id === e.target.value);
-                if (selected) setDiskProfileVo({ id: selected.id, name: selected.name });
-              }}
+              onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles)}
             />
           </div>
           <div className="disk-new-img-right">
@@ -258,7 +237,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
               <LabelCheckbox label={Localization.kr.WIPE_AFTER_DELETE}
                 id="wipeAfterDelete"
                 checked={formState.wipeAfterDelete}
-                onChange={handleInputChangeCheck("wipeAfterDelete")}
+                onChange={handleInputCheck(setFormState, "wipeAfterDelete")}
               />
             </div>
             {/* <div className="img-checkbox-outer">
@@ -273,7 +252,7 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
               <LabelCheckbox label="증분 백업 사용"
                 id="backup"
                 checked={formState.backup}
-                onChange={handleInputChangeCheck("backup")}
+                onChange={handleInputCheck(setFormState, "backup")}
               />
             </div>
           </div>
@@ -326,3 +305,8 @@ const DiskModal = ({ isOpen, editMode = false, diskId, onClose }) => {
 };
 
 export default DiskModal;
+
+const sparseList = [
+  { value: "true", label: "씬 프로비저닝" },
+  { value: "false", label: "사전 할당" },
+];

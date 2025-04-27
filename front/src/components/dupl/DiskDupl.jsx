@@ -117,7 +117,6 @@ const DiskDupl = ({
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
-
       <SelectedIdView items={disksSelected} />
     </div>
   );

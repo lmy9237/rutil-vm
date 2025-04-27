@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
@@ -19,6 +19,8 @@ import Logger from "../../../utils/Logger";
 import DynamicInputList from "../../label/DynamicInputList";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import "./MNetwork.css";
+import useGlobal from "../../../hooks/useGlobal";
+import { handleInputChange, handleInputCheck, handleSelectIdChange } from "../../label/HandleInput";
 
 const initialFormState = {
   id: "",
@@ -31,23 +33,21 @@ const initialFormState = {
   usageVm: true,
   portIsolation: false,
   dnsEnabled: false,
+  useCustomMtu: false,      // ✅ 추가
+  customMtu: "",            // ✅ 추가
 };
 
 //  Fault reason is "Operation Failed". Fault detail is "[Cannot edit Network. This logical network is used by host: rutilvm-dev.host04
 const NetworkModal = ({
-  isOpen,
-  editMode = false,
-  networkId,
-  dcId,
-  onClose,
+  isOpen, onClose, editMode = false,
 }) => {
   const nLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
-  const [formState, setFormState] = useState({
-    ...initialFormState,
-    useCustomMtu: false,      // ✅ 추가
-    customMtu: "",            // ✅ 추가
-  });
+  
+  const { networksSelected, datacentersSelected } = useGlobal()
+  const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
+  const networkId = useMemo(() => [...networksSelected][0]?.id, [networksSelected])
 
+  const [formState, setFormState] = useState(initialFormState);
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [clusterVoList, setClusterVoList] = useState([]);
   const [dnsServers, setDnsServers] = useState([]);
@@ -98,17 +98,16 @@ const NetworkModal = ({
   }, [isOpen, editMode, network]);  
 
   useEffect(() => {
-    if (dcId) {
-      setDataCenterVo({id: dcId});
-    } else if (!editMode && datacenters && datacenters.length > 0) {
-      const defaultDc = datacenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
-      if (defaultDc) {
-        setDataCenterVo({ id: defaultDc.id, name: defaultDc.name });
-      } else {
-        setDataCenterVo({ id: datacenters[0].id, name: datacenters[0].name });
-      }
+    if (datacenterId) {
+      const selected = datacenters.find(dc => dc.id === datacenterId);
+      setDataCenterVo({ id: selected?.id, name: selected?.name });
+    } else if (!editMode && datacenters.length > 0) {
+      // datacenterId가 없다면 기본 데이터센터 선택
+      const defaultDc = datacenters.find(dc => dc.name === "Default");
+      const firstDc = defaultDc || datacenters[0];
+      setDataCenterVo({ id: firstDc.id, name: firstDc.name });
     }
-  }, [datacenters, dcId, editMode]);
+  }, [datacenterId, datacenters, editMode]);
 
   useEffect(() => {
     setClusterVoList([]);
@@ -131,9 +130,6 @@ const NetworkModal = ({
 
   // dns 
   const [isDnsHiddenBoxVisible, setDnsHiddenBoxVisible] = useState(false);
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
 
   const validateForm = () => {
     const nameError = checkName(formState.name);
@@ -181,24 +177,20 @@ const NetworkModal = ({
           disabled={editMode}
           loading={isDataCentersLoading}
           options={datacenters}
-          onChange={(e) => {
-            const selected = datacenters.find(dc => dc.id === e.target.value);
-            if (selected) setDataCenterVo({ id: selected.id, name: selected.name });
-            setClusterVoList([]);
-          }}
+          onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
         />
         <LabelInput id="name" label={Localization.kr.NAME}
           autoFocus
           value={formState.name}
-          onChange={handleInputChange("name")}
+          onChange={handleInputChange(setFormState, "name")}
         />
         <LabelInput id="description" label={Localization.kr.DESCRIPTION}
           value={formState.description}
-          onChange={handleInputChange("description")}
+          onChange={handleInputChange(setFormState, "description")}
         />
         <LabelInput id="comment" label={Localization.kr.COMMENT}
           value={formState.comment}
-          onChange={handleInputChange("comment")}
+          onChange={handleInputChange(setFormState, "comment")}
         />
         <hr />
 
@@ -219,30 +211,28 @@ const NetworkModal = ({
               placeholder="VLAN ID"
               value={formState.vlan}
               disabled={!formState.vlanEnabled}
-              onChange={(e) => setFormState((prev) => ({ ...prev, vlan: e.target.value }))}
+              onChange={handleInputChange(setFormState, "vlan")}
             />
           </div>
         </div>
 
-        <LabelCheckbox
-        id="usageVm"
-        label="가상 머신 네트워크"
-        checked={formState.usageVm}
-        onChange={(e) => {
-          const isChecked = e.target.checked;
-          setFormState((prev) => ({
-            ...prev,
-            usageVm: isChecked,
-            portIsolation: isChecked ? prev.portIsolation : false, // 꺼질 땐 포트 분리도 같이 false
-          }));
-        }}
-        disabled={editMode && formState.portIsolation} // 포트 분리 활성 상태에선 편집모드일 때 비활성화
+        <LabelCheckbox id="usageVm" label={`${Localization.kr.VM} ${Localization.kr.NETWORK}`}
+          checked={formState.usageVm}
+          disabled={editMode && formState.portIsolation} // 포트 분리 활성 상태에선 편집모드일 때 비활성화
+          onChange={(e) => {
+            const isChecked = e.target.checked;
+            setFormState((prev) => ({
+              ...prev,
+              usageVm: isChecked,
+              portIsolation: isChecked ? prev.portIsolation : false, // 꺼질 땐 포트 분리도 같이 false
+            }));
+          }}
       />
         <LabelCheckbox id="portIsolation" label="포트 분리"          
           checked={formState.portIsolation}
           className="mb-3"
           disabled={editMode || !formState.usageVm} // 가상 머신 네트워크가 비활성화되면 비활성화(??)
-          onChange={(e) => setFormState((prev) => ({...prev, portIsolation: e.target.checked }))}
+          onChange={handleInputCheck(setFormState, "portIsolation")}
         />
 
         {/*삭제예정*/}
@@ -284,19 +274,15 @@ const NetworkModal = ({
         </div> */}
           
         <div className="mtu-input-outer flex items-center gap-3">
-          <ToggleSwitchButton
-            id="mtuToggle"
-            label="MTU 설정"
+          <ToggleSwitchButton id="mtuToggle" label="MTU 설정"
             checked={formState.mtu !== 0}
-            tType="사용자 정의"
-            fType="기본값 (1500)"
             onChange={(e) => {
               const isCustom = e.target.checked;
               setFormState((prev) => ({
-                ...prev,
-                mtu: isCustom ? 1500 : 0, // 사용자 정의일 경우 기본값으로 시작
+                ...prev, mtu: isCustom ? 1500 : 0, // 사용자 정의일 경우 기본값으로 시작
               }));
             }}
+            tType="사용자 정의" fType="기본값 (1500)"
           />
 
           <input
@@ -304,7 +290,7 @@ const NetworkModal = ({
             className="ml-2"
             style={{ width: "150px" }}
             min="68"
-            max="1500"   
+            max="1500"
             step="1"
             value={formState.mtu}
             disabled={formState.mtu === 0}
@@ -337,10 +323,7 @@ const NetworkModal = ({
             checked={formState.dnsEnabled}
             onChange={(e) => {
               const isChecked = e.target.checked;
-              setFormState((prev) => ({ 
-                ...prev, 
-                dnsEnabled: isChecked,
-              }))
+              setFormState((prev) => ({  ...prev, dnsEnabled: isChecked }))
               setDnsServers(isChecked ? [""] : []);
               if (!isChecked) {
                 setDnsHiddenBoxVisible(false); // 체크 해제 시 숨김 박스도 닫기

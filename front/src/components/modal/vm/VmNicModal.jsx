@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
@@ -13,6 +13,8 @@ import {
 } from "../../../api/RQHook";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
+import useGlobal from "../../../hooks/useGlobal";
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 
 // 유형
 const interfaceOptions = [
@@ -34,35 +36,30 @@ const initialFormState = {
   interface_: "VIRTIO" || interfaceOptions[6].value,
 };
 
-const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
+const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
   const nLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+
+  const { vmsSelected, nicsSelected } = useGlobal();
+  const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
+  const nicId = useMemo(() => [...nicsSelected][0]?.id, [nicsSelected]);
+
   const [formInfoState, setFormInfoState] = useState(initialFormState);
   const [vnicProfileVo, setVnicProfileVo] = useState({ id: "", name: "" });
 
-  const { mutate: addNicFromVM } = useAddNicFromVM();
-  const { mutate: editNicFromVM } = useEditNicFromVM();
-
-  // 가상머신 내 네트워크인터페이스 상세
-  const {
-    data: nicsdetail 
-  } = useNetworkInterfaceFromVM(vmId, nicId);
+  const onSuccess = () => {
+    onClose();
+    toast.success(`nic ${nLabel} 완료`);
+  };
+  const { data: nicsdetail } = useNetworkInterfaceFromVM(vmId, nicId);
+  const { mutate: addNicFromVM } = useAddNicFromVM(onSuccess, () => onClose());
+  const { mutate: editNicFromVM } = useEditNicFromVM(onSuccess, () => onClose());
 
   // 모든 vnic프로파일 목록
   // TODO: 수정필요
   const {
     data: vnics,
     isLoading: vnicLoading
-  } = useAllVnicProfiles((e) => ({
-    ...e,
-  }));
-
-  const handleInputChange = (field, value = null) => (e) => {
-      Logger.debug(`NicModal > handleInputChange ... field: ${field}, value: ${value}`);
-      setFormInfoState((prev) => ({
-        ...prev,
-        [field]: value ?? e.target.value,
-      }));
-    };
+  } = useAllVnicProfiles((e) => ({...e}));
 
   const handleRadioChange = (field, value) => {
     Logger.debug(`NicModal > handleRadioChange ... field: ${field}, value: ${value}`);
@@ -90,6 +87,14 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
     }
   }, [isOpen, editMode, nicsdetail]);
 
+  useEffect(() => {
+    if (!editMode && vnics && vnics.length > 0) {
+      const defaultVnic = vnics.find(n => n.name === "ovirtmgmt");
+      const firstN = defaultVnic || vnics[0];
+      setVnicProfileVo({ id: firstN.id, name: firstN.name });
+    }
+  }, [vnics, editMode]);
+
   const dataToSubmit = {
     ...formInfoState,
     vnicProfileVo: { id: vnicProfileVo.id },
@@ -104,10 +109,7 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
     const error = validateForm();
     if (error) return toast.error(error);
 
-    const onSuccess = () => {
-      onClose();
-      toast.success(`nic ${nLabel} 완료`);
-    };
+    
     const onError = (err) => toast.error(`Error ${nLabel} nic: ${err}`);
 
     Logger.debug(`NicModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`)
@@ -121,32 +123,26 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
   };
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName={Localization.kr.NICS}
-      submitTitle={nLabel}
+    <BaseModal targetName={Localization.kr.NICS} submitTitle={nLabel}
+      isOpen={isOpen} onClose={onClose}       
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px" }}
     >
       <div className="network-popup-content">
-        <LabelInput
-          id="name"
-          label={Localization.kr.NAME}
+        <LabelInput id="name" label={Localization.kr.NAME}
           value={formInfoState.name}
-          onChange={handleInputChange("name")}
+          onChange={handleInputChange(setFormInfoState, "name")}
         />
-        <LabelSelectOptionsID
-          label="프로파일"
+        <LabelSelectOptionsID label="프로파일"
           value={vnicProfileVo?.id}
-          onChange={(e) => setVnicProfileVo({ id: e.target.value })}
           loading={vnicLoading}
-          options={vnics || []}
+          options={vnics}
+          onChange={handleSelectIdChange(setVnicProfileVo, vnics)}
+          // etcLabel={} // 네트워크명
         />
-        <LabelSelectOptions
-          label="유형"
+        <LabelSelectOptions label="유형"
           value={formInfoState.interface_}
-          onChange={handleInputChange("interface_")}
+          onChange={handleInputChange(setFormInfoState, "interface_")}
           options={interfaceOptions}
           disabled={editMode}
         />
@@ -154,49 +150,46 @@ const NicModal = ({ isOpen, onClose, editMode = false, vmId, nicId }) => {
       </div>
 
       <div className="nic-toggle">
-        <ToggleSwitchButton id="linked-toggle"
-          label="링크 상태"
+        <ToggleSwitchButton id="linked-toggle" label="링크 상태"
           checked={formInfoState.linked}
           onChange={() => handleRadioChange("linked", !formInfoState.linked)}
-          tType="Up"
-          fType="Down"
+          tType="Up" fType="Down"
         />
       </div>
       <div className="nic-toggle">
-        <ToggleSwitchButton id="plugged-toggle"
-          label="카드 상태"
+        <ToggleSwitchButton id="plugged-toggle" label="카드 상태"
           checked={formInfoState.plugged}
           onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}
-          tType="연결됨"
-          fType="분리"
+          tType="연결됨" fType="분리"
         />
       </div>
       {/* <div>
-                <input
-                  type="radio"
-                  name="status"
-                  id="status_up"
-                  checked={formInfoState.linked === true} // linked가 true일 때 체크
-                  onChange={() => handleRadioChange("linked", true)}
-                />
-                <RVI16 iconDef={rvi16Connected} />
-                <label htmlFor="status_up">Up</label>
-              </div>
-              <div>
-                <input
-                  id="status_down"
-                  type="radio"
-                  name="status"
-                  checked={formInfoState.linked === false} // linked가 false일 때 체크
-                  onChange={() => handleRadioChange("linked", false)}
-                />
-                <RVI16 iconDef={rvi16Disconnected} />
-                <label htmlFor="status_down">Down</label>
-              </div>*/}
+            <input
+              type="radio"
+              name="status"
+              id="status_up"
+              checked={formInfoState.linked === true} // linked가 true일 때 체크
+              onChange={() => handleRadioChange("linked", true)}
+            />
+            <RVI16 iconDef={rvi16Connected} />
+            <label htmlFor="status_up">Up</label>
+          </div>
+          <div>
+            <input
+              id="status_down"
+              type="radio"
+              name="status"
+              checked={formInfoState.linked === false} // linked가 false일 때 체크
+              onChange={() => handleRadioChange("linked", false)}
+            />
+            <RVI16 iconDef={rvi16Disconnected} />
+            <label htmlFor="status_down">Down</label>
+          </div>
+        */}
 
 
     </BaseModal>
   );
 };
 
-export default NicModal;
+export default VmNicModal;

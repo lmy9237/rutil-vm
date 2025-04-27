@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import {
@@ -30,31 +30,7 @@ import Logger from "../../../utils/Logger";
 import './MVm.css';
 import CONSTANT from "../../../Constants";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-
-// 탭 메뉴
-const tabs = [
-  { id: "common", label: Localization.kr.GENERAL },
-  { id: "system", label: "시스템" },
-  { id: "beginning", label: "초기 실행" },
-  { id: "host", label: Localization.kr.HOST },
-  { id: "ha_mode", label: Localization.kr.HA },
-  { id: "boot_outer", label: "부트 옵션" },
-];
-
-// 칩셋 옵션
-const chipsetOptionList = [
-  { value: "i440fx_sea_bios", label: "BIOS의 I440FX 칩셋" },
-  { value: "q35_ovmf", label: "UEFI의 Q35 칩셋" },
-  { value: "q35_sea_bios", label: "BIOS의 Q35 칩셋" },
-  { value: "q35_secure_boot", label: "UEFI SecureBoot의 Q35 칩셋" },
-];
-
-// 최적화옵션
-const optimizeOptionList = [
-  { value: "server", label: "서버" },
-  { value: "high_performance", label: "고성능" },
-  { value: "desktop", label: "데스크톱" },
-];
+import useGlobal from "../../../hooks/useGlobal";
 
 // 일반
 const infoform = {
@@ -110,12 +86,13 @@ const bootForm = {
 };
 
 const VmModal = ({ 
-  isOpen, 
-  editMode = false, 
-  vmId, 
-  onClose
+  isOpen, onClose, editMode = false,
 }) => {
   const vLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+
+  const { vmsSelected } = useGlobal();
+  const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
+
   const [selectedModalTab, setSelectedModalTab] = useState("common");
 
   const [formInfoState, setFormInfoState] = useState(infoform);
@@ -183,11 +160,6 @@ const VmModal = ({
     isLoading: isIsoLoading 
   } = useCDFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
 
-    
-  // const handleInputChange = (field) => (e) => {
-  //   setFormInfoState((prev) => ({ ...prev, [field]: e.target.value }));
-  // };
-
   // 별도 handler 추가
   const handleOsSystemChange = (selectedOption) => {
     const selected = osList.find((item) => item.name === selectedOption.id);
@@ -195,11 +167,6 @@ const VmModal = ({
       setFormInfoState((prev) => ({ ...prev, osSystem: selected.name }));
     }
   };
-
-  // const handleSelectIdChange = (setVo, voList) => (e) => {
-  //   const selected = voList.find((item) => item.id === e.target.value);
-  //   if (selected) setVo({ id: selected.id, name: selected.name });
-  // }; 
 
   // 초기값 설정
   useEffect(() => {
@@ -553,3 +520,28 @@ const VmModal = ({
 };
 
 export default VmModal;
+
+// 탭 메뉴
+const tabs = [
+  { id: "common", label: Localization.kr.GENERAL },
+  { id: "system", label: "시스템" },
+  { id: "beginning", label: "초기 실행" },
+  { id: "host", label: Localization.kr.HOST },
+  { id: "ha_mode", label: Localization.kr.HA },
+  { id: "boot_outer", label: "부트 옵션" },
+];
+
+// 칩셋 옵션
+const chipsetOptionList = [
+  { value: "i440fx_sea_bios", label: "BIOS의 I440FX 칩셋" },
+  { value: "q35_ovmf", label: "UEFI의 Q35 칩셋" },
+  { value: "q35_sea_bios", label: "BIOS의 Q35 칩셋" },
+  { value: "q35_secure_boot", label: "UEFI SecureBoot의 Q35 칩셋" },
+];
+
+// 최적화옵션
+const optimizeOptionList = [
+  { value: "server", label: "서버" },
+  { value: "high_performance", label: "고성능" },
+  { value: "desktop", label: "데스크톱" },
+];

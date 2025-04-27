@@ -6,32 +6,27 @@ import { useDeleteVnicProfile } from "../../../api/RQHook.js";
 import Localization from "../../../utils/Localization.js";
 import useGlobal from "../../../hooks/useGlobal.js";
 
-const VnicProfileModals = ({ 
-  vnicProfile,
-  networkId,
-}) => {
+const VnicProfileModals = ({ }) => {
   const { activeModal, setActiveModal } = useUIState()
-  const { vnicProfilesSelected, networksSelected } = useGlobal()
+  const { vnicProfilesSelected } = useGlobal()
 
   const modals = {
     create: (
       <VnicProfileModal isOpen={activeModal() === "vnicprofile:create"} 
         onClose={() => setActiveModal(null)}
-        networkId={networksSelected[0]?.id ?? networkId}
       />
     ), update: (
       <VnicProfileModal isOpen={activeModal() === "vnicprofile:update"}
         onClose={() => setActiveModal(null)}
         editMode
-        vnicProfileId={vnicProfilesSelected[0]?.id ?? vnicProfile?.id}
       />
     ), remove: (
       <DeleteModal isOpen={activeModal() === "vnicprofile:remove"}
         label={Localization.kr.VNIC_PROFILE}
         data={vnicProfilesSelected}
         api={useDeleteVnicProfile()}
-        // navigation={''}
         onClose={() => setActiveModal(null)}
+        // navigation={''}
       />
     )
   };

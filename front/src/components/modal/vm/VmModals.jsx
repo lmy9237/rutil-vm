@@ -41,7 +41,6 @@ const VmModals = ({
       <VmModal key={activeModal()} isOpen={activeModal() === "vm:update"} 
         onClose={() => setActiveModal(null)}
         editMode
-        vmId={vmsSelected[0]?.id ?? vm?.id} 
       />
     ), remove: (
       <VmDeleteModal key={activeModal()} isOpen={activeModal() === "vm:remove"}

@@ -67,7 +67,7 @@ const HostModal = ({
     isLoading: isClustersLoading 
   } = useAllClusters((e) => ({ ...e }));
 
-  const clusterOptions = datacenterId && dcClusters?.length > 0 ? dcClusters : clusters;
+  const clusterOptions = datacenterId ? dcClusters : clusters;
 
   useEffect(() => {
     if (!isOpen) {

@@ -7,10 +7,7 @@ import DeleteModal from "../../../utils/DeleteModal";
 import Localization from "../../../utils/Localization";
 import { useDeleteNetwork } from "../../../api/RQHook";
 
-const NetworkModals = ({ 
-  network, 
-  dcId,
-}) => {
+const NetworkModals = ({ }) => {
   const { activeModal, setActiveModal } = useUIState()
   const { networksSelected } = useGlobal()
   
@@ -18,13 +15,11 @@ const NetworkModals = ({
     create: (
       <NetworkModal key={activeModal()} isOpen={activeModal() === "network:create"} 
         onClose={() => setActiveModal(null)} 
-        dcId={dcId}
       />
     ), update: (
       <NetworkModal key={activeModal()} isOpen={activeModal() === "network:update"}
         onClose={() => setActiveModal(null)}
         editMode
-        networkId={network?.id}
       />
     ), import: (
       <NetworkImportModal key={activeModal()} isOpen={activeModal() === "network:import"}

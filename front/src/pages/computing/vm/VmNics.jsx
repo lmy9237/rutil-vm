@@ -4,7 +4,7 @@ import useGlobal from "../../../hooks/useGlobal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import { useNetworkInterfacesFromVM } from "../../../api/RQHook";
-import NicModal from "../../../components/modal/vm/NicModal";
+import VmNicModal from "../../../components/modal/vm/VmNicModal";
 import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { checkZeroSizeToMbps } from "../../../util";
@@ -56,9 +56,7 @@ const VmNics = ({ vmId }) => {
   }));
 
   const [visibleDetailId, setVisibleDetailId] = useState(null);
-  const toggleDetails = (id) => {
-    setVisibleDetailId((prev) => (prev === id ? null : id));
-  };
+  const toggleDetails = (id) => { setVisibleDetailId((prev) => (prev === id ? null : id))};
 
   const nicRef = useRef()
   useClickOutside(nicRef, (e) => setNicsSelected([])) /* 외부 창을 눌렀을 때 선택 해제 */
@@ -71,14 +69,7 @@ const VmNics = ({ vmId }) => {
 
       <div className="network-interface-outer">
         {transformedData.length === 0 ? ( // NIC가 하나라도 있을 때 실행
-          <p
-            style={{
-              textAlign: "center",
-              color: "gray",
-              padding: "20px",
-              fontSize: "14px",
-            }}
-          >
+          <p style={{textAlign: "center", color: "gray", padding: "20px", fontSize: "14px" }}>
             표시할 네트워크 인터페이스가 없습니다.
           </p>
         ) : (
@@ -110,7 +101,7 @@ const VmNics = ({ vmId }) => {
                   <span>{nic?.name}</span>
                 </div>
                 <div>
-                  <div>네트워크 이름</div>
+                  <div>{Localization.kr.NETWORK} {Localization.kr.NAME}</div>
                   <div>{nic?.networkVo?.name}</div>
                 </div>
                 <div>
@@ -161,17 +152,17 @@ const VmNics = ({ vmId }) => {
       
       <Suspense>
         {activeModal() === "nic:create" && (
-          <NicModal key={activeModal()} isOpen={activeModal() === "nic:create"}
+          <VmNicModal key={activeModal()} isOpen={activeModal() === "nic:create"}
             onClose={() => setActiveModal(null)}            
-            vmId={vmId}
+            // vmId={vmId}
           />
         )}
         {activeModal() === "nic:update" && (
-          <NicModal key={activeModal()} isOpen={activeModal() === "nic:update"}
+          <VmNicModal key={activeModal()} isOpen={activeModal() === "nic:update"}
             onClose={() => setActiveModal(null)}
             editMode
-            vmId={vmId}
-            nicId={nicsSelected[0]?.id}
+            // vmId={vmId}
+            // nicId={nicsSelected[0]?.id}
           />
         )}
         {/* {activePopup === "delete" && selectedNics && (
