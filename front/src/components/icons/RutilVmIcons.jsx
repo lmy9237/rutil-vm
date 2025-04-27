@@ -46,7 +46,7 @@ export const ItitinfoLogoIcon = ({
  * @returns {JSX.Element} SVG형태의 RutilVM 로고 아이콘
  */
 export const LogoIcon = ({ 
-  width=134, height=36, logoColor = "#8CC453", textColor = "white", 
+  width=134, height=30, logoColor = "#8CC453", textColor = "white", 
   disableHover=false,
   ...props 
 }) => (

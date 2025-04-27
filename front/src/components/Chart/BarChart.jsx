@@ -7,7 +7,6 @@ const BarChart = ({ names, percentages }) => {
 
   const [chartSize, setChartSize] = useState({
     width: "100%", // 부모 div의 100% 사용
-    height: "230px",
   });
 
   const updateChartSize = () => {
@@ -22,7 +21,7 @@ const BarChart = ({ names, percentages }) => {
         height = Math.max(window.innerHeight * 0.2, 230);
       }
 
-      setChartSize({ width: `${width}px`, height: `${height}px` });
+      setChartSize({ width: `${width}px`, height: "187x" });;
     }
   };
   useEffect(() => {
@@ -146,7 +145,7 @@ const BarChart = ({ names, percentages }) => {
           series={series}
           type="bar"
           width={chartSize.width}
-          height={chartSize.height}
+          height={chartSize.height || "250px"}
         />
       </div>
     </div>

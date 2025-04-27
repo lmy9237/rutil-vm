@@ -121,11 +121,10 @@ const TableColumnsInfo = {
     { key: "networkId", label: "공급자의 네트워크 ID" },
   ],
   IMPORT_NETWORKS: [
-    { key: "select", label: "", width: "40px" },
-    { key: "name", label: "이름" },
-    { key: "networkId", label: "공급자의 네트워크 ID" },
-    { key: "dataCenter", label: "데이터센터" },
-    { key: "allowAll", label: "모두 허용" },
+    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: '', accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: '', accessor: 'engine', clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
   ],
   VMS: [
     { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },

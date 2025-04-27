@@ -8,6 +8,7 @@ import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useAllNetworkProviders } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import "./MNetwork.css";
+import { RVI24, rvi24ChevronDown, rvi24ChevronUp, rvi24DownArrow } from "../../icons/RutilVmIcons";
 
 const NetworkImportModal = ({
   isOpen,
@@ -19,49 +20,66 @@ const NetworkImportModal = ({
     data: networkProvider = [],
     isLoading: isDatacentersLoading
   } = useAllNetworkProviders();
-
-  const [networkList, setNetworkList] = useState([
+  const providerNetworkColumns = [
     {
-      id: "network_1",
-      name: "네트워크 A",
-      networkId: "ID-1234",
-      dataCenter: `예시 ${Localization.kr.DATA_CENTER}`,
-      allowAll: false,
-    }, {
-      id: "network_2",
-      name: "네트워크 B",
-      networkId: "ID-5678",
-      dataCenter: `예시 ${Localization.kr.DATA_CENTER}`,
-      allowAll: false,
+      header: (
+        <input
+          type="checkbox"
+          id="provider_select_all"
+          onChange={() => {}} // 임시: 아무것도 안 함
+        />
+      ),
+      accessor: "select",
+      width: "50px",
     },
-  ]);
-
+    { header: "이름", accessor: "name" },
+    { header: "공급자의 네트워크 ID", accessor: "networkId" },
+  ];
+  
+  
+  const importNetworkColumns = [
+    {
+      header: (
+        <input
+          type="checkbox"
+          id="import_select_all"
+          onChange={() => {}} // 임시
+        />
+      ),
+      accessor: "select",
+      width: "50px",
+    },
+    { header: "이름", accessor: "name" },
+    { header: "공급자의 네트워크 ID", accessor: "networkId" },
+    { header: "데이터 센터", accessor: "dataCenter" },
+    {
+      header: (
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="allow_all"
+            onChange={() => {}} // ✅ 아무것도 안 함
+          />
+          <label htmlFor="allow_all" className="ml-1">모두 허용</label>
+        </div>
+      ),
+      accessor: "allowAll",
+      width: "50px",
+    },
+  ];
+  
+  
+  
   const [providerNetworks, setProviderNetworks] = useState([
-    { id: "provider_1", name: "공급자 네트워크 A", networkId: "예시시" },
-    { id: "provider_2", name: "공급자 네트워크 B", networkId: "예시시" },
+    { id: "provider_1", name: "공급자 네트워크 A", networkId: "NET-001", selected: false },
+    { id: "provider_2", name: "공급자 네트워크 B", networkId: "NET-002", selected: false },
   ]);
   
+  const [networkList, setNetworkList] = useState([
+    { id: "network_1", name: "가져올 네트워크 A", networkId: "NET-101", dataCenter: "DC-01", allowAll: false, selected: false },
+    { id: "network_2", name: "가져올 네트워크 B", networkId: "NET-102", dataCenter: "DC-02", allowAll: false, selected: false },
+  ]);
   const [selectAll, setSelectAll] = useState(false);
-
-  // 전체 선택 체크박스 핸들러
-  const handleSelectAllChange = (e) => {
-    const isChecked = e.target.checked;
-    setSelectAll(isChecked);
-    setNetworkList((prev) =>
-      prev.map((network) => ({ ...network, allowAll: isChecked }))
-    );
-  };
-
-  // 개별 체크박스 핸들러
-  const handleCheckboxChange = (id) => {
-    setNetworkList((prev) =>
-      prev.map((network) =>
-        network.id === id
-          ? { ...network, allowAll: !network.allowAll }
-          : network
-      )
-    );
-  };
 
   Logger.debug(`NetworkImportModal ...`)
   return (
@@ -94,59 +112,81 @@ const NetworkImportModal = ({
       <div className="network-bring-table-outer">
         <h1 className="font-bold">공급자 네트워크</h1>
         <TablesOuter
-          columns={TableColumnsInfo.PROVIDER_NETWORKS}
+          columns={providerNetworkColumns}
           data={providerNetworks.map((provider) => ({
             id: provider.id,
             select: (
-              <input
-                type="checkbox"
-                checked={provider.allowAll}
-                onChange={() =>
-                  setProviderNetworks((prev) =>
-                    prev.map((p) =>
-                      p.id === provider.id
-                        ? { ...p, allowAll: !p.allowAll }
-                        : p
-                    )
-                  )
-                }
-              />
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id={`provider_select_${provider.id}`}
+                  checked={provider.selected}
+                  onChange={() => {
+                    setProviderNetworks((prev) =>
+                      prev.map((p) =>
+                        p.id === provider.id ? { ...p, selected: !p.selected } : p
+                      )
+                    );
+                  }}
+                />
+              </div>
             ),
             name: provider.name,
             networkId: provider.networkId,
           }))}
-          showSearchBox={true}
         />
       </div>
 
+      <div className="f-center py-2">
+         <RVI24 iconDef={rvi24ChevronUp()} className="mr-3" />
+         <RVI24 iconDef={rvi24ChevronDown()}  />
+      </div>
 
       {/* 가져올 네트워크 테이블 */}
       <div className="network-bring-table-outer">
         <h1 className="font-bold">가져올 네트워크</h1>
         <TablesOuter
-          columns={TableColumnsInfo.IMPORT_NETWORKS}
+          columns={importNetworkColumns}
           data={networkList.map((network) => ({
             id: network.id,
             select: (
-              <input
-                type="checkbox"
-                checked={network.allowAll}
-                onChange={() => handleCheckboxChange(network.id)}
-              />
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id={`import_select_${network.id}`}
+                  checked={network.selected}
+                  onChange={() => {
+                    setNetworkList((prev) =>
+                      prev.map((n) =>
+                        n.id === network.id ? { ...n, selected: !n.selected } : n
+                      )
+                    );
+                  }}
+                />
+              </div>
             ),
             name: network.name,
             networkId: network.networkId,
             dataCenter: network.dataCenter,
             allowAll: (
-              <input
-                type="checkbox"
-                checked={network.allowAll}
-                onChange={() => handleCheckboxChange(network.id)}
-              />
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id={`allowAll_${network.id}`}
+                  checked={network.allowAll}
+                  onChange={() => {
+                    setNetworkList((prev) =>
+                      prev.map((n) =>
+                        n.id === network.id ? { ...n, allowAll: !n.allowAll } : n
+                      )
+                    );
+                  }}
+                />
+              </div>
             ),
           }))}
-          showSearchBox={true}
         />
+
       </div>
     </BaseModal>
   );
