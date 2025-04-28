@@ -95,7 +95,7 @@ const NetworkHosts = ({
   Logger.debug(`NetworkHosts ... `)
   return (
     <>
-      <div className="header-right-btns f-btw no-search-box">
+      <div className="header-right-btns no-search-box" style={{justifyContent:'space-between'}}>
         <FilterButtons options={connectionFilters}  activeOption={activeFilter} onClick={setActiveFilter} />
         <ActionButton
           label={`${Localization.kr.HOST} ${Localization.kr.NETWORK} 설정`}

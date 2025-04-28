@@ -120,7 +120,7 @@ const VmNics = ({ vmId }) => {
 
               <div
                 className="network-content-detail"
-                style={{ display: visibleDetailId === nic.id ? "flex" : "none" }}
+                style={{ display: (visibleDetailId === nic.id && nicsSelected[0]?.id === nic.id) ? "flex" : "none" }}
               >
                 <div className="network-content-detail-box">
                   <div className="font-bold">일반</div>

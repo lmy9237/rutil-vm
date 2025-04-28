@@ -383,7 +383,8 @@ const NetworkModal = ({
           <>
             <div className="font-bold"> DNS 서버 </div>
             <DynamicInputList
-              values={dnsServers.map((value) => ({ value }))}
+              // values={dnsServers.map((value) => ({ value }))}
+              values={dnsServers.map((dns) => ({ value: dns }))}
               inputType="text"
               showLabel={false}
               onChange={(index, value) => {

@@ -31,7 +31,6 @@
   background: var(--color-white);
 }
 .backup-edit-content {
-  font-size: var(--fs-16);
   width: 86%;
   padding: 0 24px;
 }

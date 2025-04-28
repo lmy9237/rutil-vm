@@ -173,7 +173,7 @@ const HostNetworkEditModal = ({
           {selectedModalTab === "dns" && (
             <>
               <div className="host-plus-checkbox">
-                <div className="text-[15px] font-bold"> DNS 서버 </div>
+                <div className="font-bold"> DNS 서버 </div>
                   {dnsServers.length !== 0 ?
                     (dnsServers.map((dns, index) => (
                     <div

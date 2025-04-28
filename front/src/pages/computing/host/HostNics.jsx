@@ -221,6 +221,41 @@ const HostNics = ({ hostId }) => {
       dragItem.current = null;
       return;
     }
+    // if (source === "container" && targetType === "nic") {
+    //   const sourceNic = nicDisplayList.find((nic) => nic.id === item.id);
+    //   const targetNic = nicDisplayList.find((nic) => nic.id === targetId);
+    
+    //   if (!sourceNic || !targetNic) {
+    //     dragItem.current = null;
+    //     return;
+    //   }
+    
+    //   // 🛑 sourceNic이 본딩 그룹 안에 있는 경우 => 그 슬레이브 NIC 기준으로 다시 찾아야 함
+    //   const realSourceId = sourceNic.bondingVo?.slaves?.find(slave => slave.id === item.id)?.id || sourceNic.id;
+    //   const realTargetId = targetNic.bondingVo?.slaves?.find(slave => slave.id === targetId)?.id || targetNic.id;
+    
+    //   const sourceHasNetwork = [...filteredNAData, ...tempAttachments].some(
+    //     (na) => na.hostNicVo?.id === realSourceId
+    //   );
+    //   const targetHasNetwork = [...filteredNAData, ...tempAttachments].some(
+    //     (na) => na.hostNicVo?.id === realTargetId
+    //   );
+    
+    //   if (sourceHasNetwork && targetHasNetwork) {
+    //     alert("하나의 인터페이스에 둘 이상의 비-VLAN 네트워크를 사용할 수 없습니다.");
+    //     dragItem.current = null;
+    //     return;
+    //   }
+    
+    //   // 본딩 생성
+    //   setSelectedNic(targetNic);
+    //   setSelectedSlave(sourceNic);
+    //   setIsEditMode(false);
+    //   setIsBondingPopupOpen(true);
+    
+    //   dragItem.current = null;
+    //   return;
+    // }
     
     dragItem.current = null;
   };

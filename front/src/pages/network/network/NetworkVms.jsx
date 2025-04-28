@@ -69,7 +69,7 @@ const NetworkVms = ({
   Logger.debug("NetworkVms...");
   return (
     <>
-      <div className="header-right-btns no-search-box f-btw">
+      <div className="header-right-btns no-search-box" style={{justifyContent:'space-between'}}>
         <FilterButtons options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
         <ActionButton label={Localization.kr.REMOVE}
           onClick={() => setActiveModal(null)}
