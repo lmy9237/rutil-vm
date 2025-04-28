@@ -12,16 +12,16 @@ const BarChart = ({ names, percentages }) => {
   const updateChartSize = () => {
     if (chartContainerRef.current) {
       const containerWidth = chartContainerRef.current.clientWidth;
-
-      let width = Math.max(containerWidth * 0.5, 230); // 기본 너비
-      let height = Math.max(window.innerHeight * 0.2, 100); // 기본 높이
-
-      if (window.innerWidth >= 2800) {
-        width = Math.max(containerWidth *  0.9, 650); // 🔥 2000px 이상일 때 더 크게
-        height = Math.max(window.innerHeight * 0.2, 230);
+  
+      let width = Math.max(containerWidth * 0.5, 230); // 기본 width
+      let height = 184; // ✅ 기본 고정 height (px)
+  
+      if (window.innerWidth >= 2000) {
+        width = Math.max(containerWidth * 0.9, 650);
+        height = 260; // ✅ 화면 크면 height도 고정 증가
       }
-
-      setChartSize({ width: `${width}px`, height: "187x" });;
+  
+      setChartSize({ width: `${width}px`, height: `${height}px` });
     }
   };
   useEffect(() => {

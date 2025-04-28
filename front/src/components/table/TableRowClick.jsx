@@ -40,7 +40,7 @@ const TableRowClick = ({ type, id, children, style }) => {
       <span
         className="row-click"
         onClick={handleClick}
-        style={{ color: "rgb(9, 83, 153)" }}
+        style={{ color: "rgb(9, 83, 153)", textAlign: "left"  }}
       >
         {children}
       </span>

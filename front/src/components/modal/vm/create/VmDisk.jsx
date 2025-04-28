@@ -96,12 +96,12 @@ const VmDisk = ({
             {/*{disk?.storageDomainVo?.id} <- 연결되어있는 디스크아이디*/}
             <div className="f-end">
               <span>편집/삭제 2차구현</span>
-              <RVI36 
+              {/* <RVI36 
                 iconDef={rvi36Edit()} 
                 className="btn-icon"
                 currentColor="transparent"
                 onClick={() => setEditDisk(disk)}
-              />
+              /> */}
               <RVI36 
                 iconDef={rvi36Trash}
                 className="btn-icon"

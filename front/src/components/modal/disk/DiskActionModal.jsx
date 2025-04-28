@@ -132,6 +132,7 @@ const DiskActionModal = ({
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "800px" }}
     >
+    <div className="py-3">
       <div className="section-table-outer p-0.5">
         <h1>디스크 할당:</h1>
         <table>
@@ -185,6 +186,7 @@ const DiskActionModal = ({
           </tbody>
         </table>
       </div>
+    </div>
     </BaseModal>
   );
 };

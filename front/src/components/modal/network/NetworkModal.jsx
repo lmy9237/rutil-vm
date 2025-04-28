@@ -381,7 +381,7 @@ const NetworkModal = ({
         )} */}
         {formState.dnsEnabled && (
           <>
-            <div className="text-[15px] font-bold"> DNS 서버 </div>
+            <div className="font-bold"> DNS 서버 </div>
             <DynamicInputList
               values={dnsServers.map((value) => ({ value }))}
               inputType="text"

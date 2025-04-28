@@ -289,16 +289,23 @@ const Tables = ({
                 const isTableRowClick = isJSX && cellValue?.type?.name === "TableRowClick";
                 // const isBoolean = typeof cellValue === "boolean";
 
-                const isGiBOrPercent = 
+                // 아이콘, 체크박스,상태,유형 등은 가운데, TableRowClick은 왼쪽
+                const isForceCenter = ["status", "storageType"].includes(column.accessor);
+                
                 typeof cellValue === "string" &&
                 (cellValue.trim().toLowerCase().endsWith("gib") || cellValue.trim().endsWith("%"));
-                // 아이콘, 체크박스 등은 가운데, TableRowClick은 왼쪽
-                const shouldCenter = (isJSX && !isTableRowClick) || isGiBOrPercent; 
-                // const shouldCenter = (isJSX && !isTableRowClick) || isBoolean;
+
+                const shouldCenter = 
+                (isJSX && !isTableRowClick) || // 아이콘 같은 JSX
+                (typeof cellValue === "string" && (cellValue.trim().toLowerCase().endsWith("gib") || cellValue.trim().endsWith("%"))) || // GiB나 % 끝나는 문자열
+                isForceCenter;
+
                 const columnAlign = column?.align ?? (shouldCenter ? "center" : "left");
+            
                 return (
                   <td
                     key={colIndex}
+                    
                     data-tooltip-id={`tooltip-${globalIndex}-${colIndex}`}
                     data-tooltip-content={getCellTooltipContent(cellValue)}
                     onMouseEnter={(e) =>
@@ -323,6 +330,7 @@ const Tables = ({
                           ? "500"
                           : "normal",
                       width: column?.width ?? "",
+                      ...(column?.style ?? {}), 
                     }}
                     onClick={(e) => {
                       if (
@@ -354,7 +362,7 @@ const Tables = ({
                     arrow={true}
                     disabled={!tooltips[`${globalIndex}-${colIndex}`]}
                   >
-                    <div className="cell-ellipsis" style={{ textAlign: shouldCenter ? "center" : "left" }}>
+                    <div className="cell-ellipsis" style={{ textAlign: isTableRowClick ? "left" : shouldCenter ? "center" : "left" }}>
                       {isJSX ? (
                         isTableRowClick ? (
                           cellValue  
@@ -391,9 +399,10 @@ const Tables = ({
                   style={{
                     cursor: column.isIcon ? "default" : "pointer",
                     width: column.width,
+                    ...(column?.style ?? {}),
                   }}
                 >
-                  <div className="f-start">
+                  <div className="f-center">
                     {column.header}
                     {!column.isIcon && sortConfig.key === column.accessor && (
                       <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>

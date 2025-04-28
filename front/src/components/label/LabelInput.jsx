@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./LabelInput.css";
 
 /**
@@ -34,10 +37,18 @@ const LabelInput = ({
    * 
    * @returns 
    */
+  const [showPassword, setShowPassword] = useState(false); // 🔥 비밀번호 보기 상태
+
   const cNameByType = () => `input-${type}`;
+
+  const handleTogglePassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const isPasswordType = type === "password";
   
   return (
-    <div className={cNameByType()}>
+    <div className={`input-container ${cNameByType()} ${className}`}>
       <label htmlFor={id}>{label}</label>
       <input
         id={id}
@@ -50,6 +61,13 @@ const LabelInput = ({
         disabled={props.disabled}
         required={required}
       />
+      {isPasswordType && (
+        <FontAwesomeIcon
+          icon={showPassword ? faEyeSlash : faEye}
+          onClick={handleTogglePassword}
+          className="password-toggle-icon"
+        />
+      )}
     </div>
   );
 };

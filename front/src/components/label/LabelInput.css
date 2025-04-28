@@ -6,7 +6,6 @@
   width: 100%;
   font-size: var(--fs-default);
   padding: 8px 0;
-  /* white-space: nowrap;  줄바꿈 금지*/
   white-space: nowrap; 
   display: flex;
   justify-content: space-between;
@@ -28,6 +27,18 @@ select,
   outline: none;
   border-radius: 1px;
   letter-spacing: -0.28px;
+}
+.input-container{
+  position: relative;
+}
+.password-toggle-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--color-nav);
+  font-size: var(--fs-14)
 }
 .custom-select-box{
   background-color: var(--color-white);

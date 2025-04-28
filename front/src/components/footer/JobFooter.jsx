@@ -114,6 +114,7 @@ const JobFooter = ({
         >
           <div className="footer-nav">
             <TablesOuter columns={TableColumnsInfo.JOB_HISTORY_COLUMNS}
+              style={{paddingLeft:'30px'}}
               data={transformedData}
               onRowClick={(row) => setJobsSelected(row)}
               showSearchBox={false}

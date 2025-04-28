@@ -96,10 +96,10 @@
   padding: 3px;
 }
 .host-option-item {
-  cursor: pointer;
+  padding-left: 6px;
 }
 .host-option-item.selected {
-  background-color: #cce5ff;
+  background: var(--color-white);
 }
 .disk-item span{
   margin-right: 25px;

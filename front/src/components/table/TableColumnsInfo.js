@@ -69,16 +69,17 @@ const TableColumnsInfo = {
     { header: Localization.kr.UP_TIME, accessor: 'upTime', clickable: false },
   ],
   VMS_FROM_HOST: [
-    { header: '', accessor: "icon", clickable: false, width: '10%' },
+    { header: '', accessor: "icon", clickable: false, width: '5%' },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipv4', clickable: false, width: '20%' },
     { header: 'FQDN', accessor: 'fqdn', clickable: false, width: '20%' },
-    { header: Localization.kr.STATUS, accessor: 'status', clickable: false, width: '10%' },
-    { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: true, width: '20%' },
-    { header: 'Memory', accessor: 'memoryUsage', clickable: false, width: '12%' },
-    { header: Localization.kr.CPU, accessor: 'cpuUsage', clickable: false, width: '12%' },
-    { header: 'Network', accessor: 'networkUsage', clickable: false, width: '12%' },
-    { header: Localization.kr.UP_TIME, accessor: 'upTime', clickable: false, width: '20%' },
+    { header: Localization.kr.STATUS, accessor: 'status', clickable: false},
+    { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: true },
+    { header: '스냅샷', accessor: '', clickable: false },
+    { header: 'Memory', accessor: 'memoryUsage', clickable: false},
+    { header: Localization.kr.CPU, accessor: 'cpuUsage', clickable: false },
+    { header: 'Network', accessor: 'networkUsage', clickable: false },
+    { header: Localization.kr.UP_TIME, accessor: 'upTime', clickable: false},
   ],
   NETWORK_INTERFACE_FROM_HOST:[
     { header: "", accessor: "icon", width: DEFAULT_WIDTH_ICON_COLUMN },
@@ -129,7 +130,7 @@ const TableColumnsInfo = {
   ],
 
   VMS: [
-    { header: Localization.kr.RESET, accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    // { header: Localization.kr.RESET, accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: '엔진', accessor: 'engine', clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
@@ -138,6 +139,7 @@ const TableColumnsInfo = {
     { header: 'FQDN', accessor: 'fqdn', clickable: false, width: '20%' },
     { header: Localization.kr.STATUS, accessor: 'status', clickable: false, width: '10%' },
     { header: Localization.kr.HOST, accessor: 'host', clickable: true, width: '25%' },
+    { header: '스냅샷', accessor: '', clickable: false },
     { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: true, width: '20%' },
     { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: true, width: '20%' },
     { header: 'Memory', accessor: 'memoryUsage', clickable: false, width: '12%' },
@@ -453,6 +455,7 @@ const TableColumnsInfo = {
     { header: '스냅샷', accessor: 'snapshot', clickable: false },
     { header: Localization.kr.SIZE_VIRTUAL, accessor: 'virtualSize', clickable: false },
     { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
+    { header: '스냅샷', accessor: '', clickable: false },
     { header: Localization.kr.DATE_CREATED, accessor: 'creationTime', clickable: false },
   ],
   TARGETS_LUNS: [
@@ -765,10 +768,10 @@ const TableColumnsInfo = {
     { header: Localization.kr.NAME, accessor: 'name', clickable: false }
   ],
   JOB_HISTORY_COLUMNS : [
-    { header: '작업명',                        accessor: 'description' },
-    { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime' , width:'120px' },
-    { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime' , width:'120px'},
-    { header: Localization.kr.STATUS,          accessor: 'status', width:'120px' },
+    { header: '작업명', accessor: 'description', style: { paddingLeft: "30px" }},
+    { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime'  , width:'5%'},
+    { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime' , width:'5%'},
+    { header: Localization.kr.STATUS,          accessor: 'status', width:'5%' },
     { header: Localization.kr.TIMESTAMP,       accessor: 'timestamp' , width:'30%' },
   ],
   // 사용자

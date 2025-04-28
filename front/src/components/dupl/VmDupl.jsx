@@ -8,7 +8,7 @@ import SelectedIdView from "../common/SelectedIdView";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import VmActionButtons from "./VmActionButtons";
-import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
+import { hostedEngineStatus2Icon, RVI16, rvi16Refresh, status2Icon } from "../icons/RutilVmIcons";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
 import Logger from "../../utils/Logger";
 
@@ -29,10 +29,15 @@ const VmDupl = ({
 
   const transformedData = [...vms].map((vm) => ({
     ...vm,
-    icon: status2Icon(vm?.status),
+    icon: (
+      <div className="f-center" style={{ gap: "4px" }}>
+        {status2Icon(vm?.status)}
+        {vm?.nextRun === true && <span> <RVI16 iconDef={rvi16Refresh()}/></span>} 
+        {/* 재시작여부 / 다음 실행시 새로운 설정이 적용되는 서버 TODO: 아이콘 추가 (rvi16ExclamationMark)*/} 
+      </div>
+    ),
     iconSortKey: getStatusSortKey(vm?.status), 
     engine: hostedEngineStatus2Icon(vm?.hostedEngineVm),
-    nextRun: vm?.nextRun === true ? "?!" : "", //  재시작여부 / 다음 실행시 새로운 설정이 적용되는 서버 TODO: 아이콘 추가 (rvi16ExclamationMark)
     _name: (
       <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}
