@@ -52,7 +52,7 @@ const VmInfo = () => {
 
   const isUp = vm?.status === "UP";
   const isDown = vm?.status === "DOWN";
-  const isPause = vm?.status === "PAUSE";
+  const isPause = vm?.status === "SUSPENDED";
   const isMaintenance = vm?.status === "MAINTENANCE";
 
   const [activeTab, setActiveTab] = useState("general")
@@ -109,7 +109,7 @@ const VmInfo = () => {
 
   const sectionHeaderButtons = useMemo(() => ([
     { type: "update",    onClick: () => setActiveModal("vm:update"),        label: Localization.kr.UPDATE, },
-    { type: "start",     onClick: () => setActiveModal("vm:start"),         label: Localization.kr.START, disabled: !(isDown || isPause) && !isMaintenance },
+    { type: "start",     onClick: () => setActiveModal("vm:start"),         label: Localization.kr.START, disabled: !(isDown || isPause || isMaintenance) },
     { type: "pause",     onClick: () => setActiveModal("vm:pause"),         label: Localization.kr.PAUSE, disabled: !isUp },
     { type: "reboot",    onClick: () => setActiveModal("vm:reboot"),        label: Localization.kr.REBOOT, disabled: !isUp },
     { type: "reset",     onClick: () => setActiveModal("vm:reset"),         label: Localization.kr.RESET, disabled: !isUp },

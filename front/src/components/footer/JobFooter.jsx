@@ -73,11 +73,13 @@ const JobFooter = ({
       /* 최초로 눌러서 열 때 */
       setFooterHeight(168)
     }
-  }, [footerVisible])
+  }, [footerVisible, footerHeight])
 
   useEffect(() => {
-    if (footerHeight !== footerHeightInPx) setTimeout(() => {
-      setFooterHeightInPx(footerHeight)
+    if (footerHeight !== footerHeightInPx()) setTimeout(() => {
+      return () => {
+        setFooterHeightInPx(footerHeight)
+      }
     }, 300)
   }, [footerHeight])
 

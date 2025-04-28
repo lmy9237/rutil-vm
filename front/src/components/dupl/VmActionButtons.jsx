@@ -28,7 +28,7 @@ const VmActionButtons = ({
   const isUp = selected1st?.status === "UP";
   const isDown = selected1st?.status === "DOWN";
   const isMaintenance = selected1st?.status === "MAINTENANCE";
-  const isPause = selected1st?.status === "PAUSE";
+  const isPause = selected1st?.status === "SUSPENDED";
   const isPoweringDown = selected1st?.status === "POWERING_DOWN";
   const isPoweringUp = selected1st?.status === "POWERING_UP";
   const isTemplate = selected1st?.status === "SUSPENDED" || selected1st?.status === "UP";

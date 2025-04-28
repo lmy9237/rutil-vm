@@ -16,6 +16,7 @@ import {
 } from "../icons/RutilVmIcons";
 import Logger from "../../utils/Logger";
 import "./Header.css";
+import useFooterState from "../../hooks/useFooterState";
 
 /**
  * @name Header
@@ -27,6 +28,7 @@ import "./Header.css";
 const Header = () => {
   const navigate = useNavigate();
   const { toggleAsideVisible } = useAsideState();
+  const { setFooterHeightInPx } = useFooterState()
   const {
     eventBadgeNum,
     eventBoxVisible, toggleEventBoxVisible,
@@ -50,7 +52,10 @@ const Header = () => {
       <div id="header-right" className="f-end">
         {/* 새로고침 */}
         <TopMenuIcon iconDef={rvi24Refresh("white")}
-          onClick={() => window.location.reload()}
+          onClick={() => {
+            setFooterHeightInPx(40)
+            window.location.reload()
+          }}
         />
         {/* 설정 */}
         <TopMenuIcon iconDef={rvi24Gear("white")}

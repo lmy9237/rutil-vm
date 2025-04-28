@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import useClickOutside from "../../hooks/useClickOutside";
 import { RVI24 } from "../icons/RutilVmIcons";
 import IconButton from "../Input/IconButton";
 import StatusBadge from "../common/StatusBadge";
@@ -8,7 +9,6 @@ import PopupBox from "../common/PopupBox";
 import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
 import "./HeaderButton.css";
-import useClickOutside from "../../hooks/useClickOutside";
 
 /**
  * @name HeaderButton

@@ -11,6 +11,7 @@ import {
   rvi16ChevronDown,
   rvi16ChevronRight,
   rvi16Desktop,
+  rvi16DesktopFlag,
   rvi16Location,
   rvi16Lock,
   status2Icon,
@@ -55,7 +56,8 @@ const VmSnapshots = ({
     statusKr: Localization.kr.renderStatus(snapshot?.status),
     created: snapshot?.date ?? "현재",
     interface_: snapshot?.interface_,
-    persistMemory: snapshot?.persistMemory ? "true" : "false",
+    persistMemory: snapshot?.persistMemory ? "포함" : "비포함",
+    _persistMemory: snapshot?.persistMemory ? rvi16DesktopFlag("#0A7CFF") : rvi16Desktop,
     cpuCore: `${snapshot?.vmViewVo?.cpuTopologyCnt} (${snapshot?.vmViewVo?.cpuTopologyCore}:${snapshot?.vmViewVo?.cpuTopologySocket}:${snapshot?.vmViewVo?.cpuTopologyThread})`,
     memorySize: convertBytesToMB(snapshot?.vmViewVo?.memorySize) + " MB" ?? "",
     memoryActual: convertBytesToMB(snapshot?.vmViewVo?.memoryGuaranteed) + " MB" ?? "",
@@ -70,7 +72,7 @@ const VmSnapshots = ({
   const inPreview = useMemo(() => (
     [...transformedData]?.some(snap => snap?.status === "in_preview")
   ), [transformedData]) // NOTE: 하나 이상 미리보기 스냅샷이 있을 때 커밋/돌아가기 동작만 됨
-  
+
   const snapshotItemRef = useRef()
   useClickOutside(snapshotItemRef, (e) => {
     setSnapshotsSelected([])
@@ -128,7 +130,7 @@ const VmSnapshots = ({
                 />
                 <div className='snapshot-label f-center'>
                   {snapshot?._status}
-                  <RVI16 iconDef={rvi16Desktop} className="mx-1.5" />
+                  <RVI16 iconDef={snapshot?._persistMemory} className="mx-1.5" />
                   {snapshot?.description}
                 </div>          
               </div>

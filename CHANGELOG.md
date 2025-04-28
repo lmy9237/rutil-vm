@@ -873,7 +873,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 프로젝트 병합 후 첫 릴리즈
 
 [web-v0.3.0]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.6...web-v0.3.0
-[api-v0.3.0]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.6...api-v0.3.0
 [web-v0.2.6]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.5...web-v0.2.6
 [api-v0.2.6]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.5...api-v0.2.6
 [web-v0.2.5]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.4...web-v0.2.5
