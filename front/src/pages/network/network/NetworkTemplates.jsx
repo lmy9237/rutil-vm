@@ -75,7 +75,7 @@ const NetworkTemplates = ({
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-        <div className="header-right-btns no-search-box">
+        <div className="header-right-btns ">
           {/* 제거 버튼에 openDeleteModal 핸들러 연결 */}
           <ActionButton actionType="default" label={Localization.kr.REMOVE}
             onClick={openDeleteModal}

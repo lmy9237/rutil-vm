@@ -9,7 +9,6 @@ import CONSTANT from "../../Constants";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
-import RightClickMenu from "../common/RightClickMenu";
 import "./Table.css";
 
 /**

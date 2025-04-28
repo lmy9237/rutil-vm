@@ -40,6 +40,10 @@
   color: var(--color-blue);
   letter-spacing: var(--letter-28);
 }
+.article-nav > button[disabled]{
+  background-color: var(--color-input-disabled) !important;
+  color: var(--color-gray) !important;
+}
 .popup-btn {
   position: relative;
 }
