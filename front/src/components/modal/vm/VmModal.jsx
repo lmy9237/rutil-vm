@@ -255,6 +255,7 @@ const VmModal = ({
   }, [isOpen, editMode, vm]);
 
   // 클러스터 변경에 따른 결과
+  console.log("###osSystem", formInfoState.osSystem);
   useEffect(() => {
     if (!clusterVo.id || clusters.length === 0) {
       return;
@@ -269,14 +270,15 @@ const VmModal = ({
 
       setArchitecture(selectedCluster.cpuArc || "");
 
-      // TODO: 규칙의 에메모호함 편집에서 값을 제대로 읽어오지 못함
-      const newOsSystem = osList.length > 0 ? osList[0].name : "other_linux";
-      if (formInfoState.osSystem !== newOsSystem) {
-        setFormInfoState((prev) => ({
-          ...prev, osSystem: newOsSystem }));
+      if (!editMode) {
+        const newOsSystem = osList.length > 0 ? osList[0].name : "other_linux";
+        if (formInfoState.osSystem !== newOsSystem) {
+          setFormInfoState((prev) => ({...prev, osSystem: newOsSystem }));
+        }
       }
     }
-  }, [clusterVo.id, clusters, osList]); 
+  }, [clusterVo.id, clusters, osList.length, editMode]);
+
   
   // (확인용 , 삭제예정정)최소한 하나라도 vnicProfile이 선택되어 있는 경우만 로그 출력
   useEffect(() => {

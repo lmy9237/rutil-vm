@@ -19,6 +19,8 @@ import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.*
 import org.ovirt.engine.sdk4.types.IpVersion.V4
 import org.ovirt.engine.sdk4.types.IpVersion.V6
+import org.ovirt.engine.sdk4.types.SnapshotType.ACTIVE
+import org.ovirt.engine.sdk4.types.SnapshotType.PREVIEW
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
@@ -256,6 +258,7 @@ fun List<Vm>.toVmStatusList(): List<VmViewVo> =
 
 fun Vm.toVmMenu(conn: Connection): VmViewVo {
 	val vm = this@toVmMenu
+	val snapshots: List<IdentifiedVo> = vm.snapshots().filter { it.snapshotType() != ACTIVE && it.snapshotType() != PREVIEW }.fromSnapshotsToIdentifiedVos()
 	return VmViewVo.builder {
 		id { vm.id() }
 		name { vm.name() }
@@ -267,6 +270,7 @@ fun Vm.toVmMenu(conn: Connection): VmViewVo {
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
 		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
 		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
+		snapshotVos { snapshots }
 		if (vm.status() == VmStatus.UP) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id()).getOrDefault(emptyList())
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()

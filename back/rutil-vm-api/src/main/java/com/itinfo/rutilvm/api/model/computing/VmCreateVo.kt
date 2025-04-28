@@ -164,9 +164,12 @@ fun VmCreateVo.toAddVmBuilder(): Vm =
 fun VmCreateVo.toEditVmBuilder(): Vm =
 	toVmBuilder()
 		.id(this.id)
-		.bios(BiosBuilder().type(BiosType.fromValue(osType)).build())
+		.bios(
+			BiosBuilder()
+				.type(BiosType.fromValue(osType))
+				.bootMenu(BootMenuBuilder().enabled(bootingMenu).build())
+		)
 		.build()
-
 
 fun VmCreateVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	name(name)
@@ -229,7 +232,10 @@ fun VmCreateVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 		.type(osSystem)
 		.boot(BootBuilder().devices(bootDeviceList))
 	)
-	bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(bootingMenu)).build())
+	bios(
+		BiosBuilder()
+			.bootMenu(BootMenuBuilder().enabled(bootingMenu).build())
+	)
 }
 
 

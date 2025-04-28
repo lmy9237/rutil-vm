@@ -2,18 +2,7 @@ import { useEffect } from "react";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
 import LabelCheckbox from "../../../label/LabelCheckbox";
-
-const firstDeviceOptionList = [
-  { value: "hd", label: "하드 디스크" },
-  { value: "cdrom", label: "CD-ROM" },
-  { value: "network", label: "네트워크(PXE)" },
-];
-
-const secDeviceOptionList = [
-  { value: "", label: "없음" },
-  { value: "cdrom", label: "CD-ROM" },
-  { value: "network", label: "네트워크(PXE)" },
-];
+import { handleInputCheck, handleSelectIdChange } from "../../../label/HandleInput";
 
 const VmBoot = ({
   isos, 
@@ -32,12 +21,10 @@ const VmBoot = ({
   
   // cd 체크가안되는문제로 변경
   useEffect(() => {
-    if (formBootState.connVo?.id) {
-      setFormBootState((prev) => ({
-        ...prev,
-        isCdDvdChecked: true,
-      }));
-    }
+    setFormBootState((prev) => ({
+      ...prev,
+      isCdDvdChecked: !!formBootState.connVo?.id, // id가 있으면 true, 없으면 false
+    }));
   }, [formBootState.connVo?.id]);
 
   return (
@@ -58,21 +45,20 @@ const VmBoot = ({
       </div>
 
       <div className="boot-checkboxs flex">
-
-       
-          <LabelCheckbox id="connectCdDvd" label="CD/DVD 연결"
-            checked={formBootState.isCdDvdChecked}
-            onChange={(e) => {
-              const isChecked = e.target.checked;
-              setFormBootState((prev) => ({
-                ...prev,
-                isCdDvdChecked: isChecked,
-                connVo: isChecked ? { id: isos[0]?.id || "" } : { id: "" },
-              }));
-            }}
-          />
-  
-          
+        <LabelCheckbox id="connectCdDvd" label="CD/DVD 연결"
+          checked={formBootState.isCdDvdChecked}
+          onChange={(e) => {
+            const isChecked = e.target.checked;
+            const firstIso = isos[0]?.id ? { id: isos[0].id, name: isos[0].name } : { id: "", name: "" };
+            
+            setFormBootState((prev) => ({
+              ...prev,
+              isCdDvdChecked: isChecked,
+              connVo: isChecked ? firstIso : { id: "", name: "" },
+            }));
+          }}
+        />
+        
         <div style={{ width: "55%" }}>
           <LabelSelectOptionsID
             value={formBootState.connVo?.id}
@@ -89,10 +75,22 @@ const VmBoot = ({
       </div>
       <LabelCheckbox id="enableBootMenu" label="부팅 메뉴를 활성화"
         checked={formBootState.bootingMenu}
-        onChange={(e) => setFormBootState((prev) => ({ ...prev, bootingMenu: e.target.checked })) }
+        onChange={handleInputCheck(setFormBootState, "bootingMenu")}
       />
     </div>
   );
 };
 
 export default VmBoot;
+
+const firstDeviceOptionList = [
+  { value: "hd", label: "하드 디스크" },
+  { value: "cdrom", label: "CD-ROM" },
+  { value: "network", label: "네트워크(PXE)" },
+];
+
+const secDeviceOptionList = [
+  { value: "", label: "없음" },
+  { value: "cdrom", label: "CD-ROM" },
+  { value: "network", label: "네트워크(PXE)" },
+];

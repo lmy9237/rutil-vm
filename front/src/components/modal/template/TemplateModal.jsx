@@ -18,11 +18,8 @@ import Logger from "../../../utils/Logger";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import { useQueries } from "@tanstack/react-query";
 import ApiManager from "../../../api/ApiManager";
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 
-const formats = [
-  { value: "RAW", label: "Raw" },
-  { value: "COW", label: "Cow" },
-];
 
 const initialFormState = {
   name: "",
@@ -167,14 +164,14 @@ const TemplateModal = ({
     }
   }, [getDiskProfiles, domains]); 
 
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
+  // const handleInputChange = (field) => (e) => {
+  //   setFormState((prev) => ({ ...prev, [field]: e.target.value }));
+  // };
 
-  const handleSelectIdChange = (setVo, voList) => (e) => {
-    const selected = voList.find((item) => item.id === e.target.value);
-    if (selected) setVo({ id: selected.id, name: selected.name });
-  };
+  // const handleSelectIdChange = (setVo, voList) => (e) => {
+  //   const selected = voList.find((item) => item.id === e.target.value);
+  //   if (selected) setVo({ id: selected.id, name: selected.name });
+  // };
 
 
   const handleDiskChange = (index, field, value, nested = false) => {
@@ -227,7 +224,7 @@ const TemplateModal = ({
   };
 
   return (
-    <BaseModal targetName={`${Localization.kr.TEMPLATE}`} submitTitle={Localization.kr.CREATE}
+    <BaseModal targetName={Localization.kr.TEMPLATE} submitTitle={Localization.kr.CREATE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "800px" }}
@@ -235,15 +232,15 @@ const TemplateModal = ({
       <LabelInput id="name" label={Localization.kr.NAME}
         value={formState.name}
         autoFocus
-        onChange={handleInputChange("name")}
+        onChange={handleInputChange(setFormState, "name")}
       />
       <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
-        onChange={handleInputChange("description")}
+        onChange={handleInputChange(setFormState, "description")}
       />
       <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
-        onChange={handleInputChange("comment")}
+        onChange={handleInputChange(setFormState, "comment")}
       />
       <LabelSelectOptionsID id="cluster_select" label={`${Localization.kr.CLUSTER}`}
         loading={isClustersLoading}
@@ -260,10 +257,7 @@ const TemplateModal = ({
 
       {disks && disks.length > 0 && (
         <>
-          
           <div className="font-bold">디스크 할당</div>
-         
-          
             <div className="section-table-outer py-1">
               <table>
                 <thead>
@@ -272,7 +266,7 @@ const TemplateModal = ({
                     <th style={{width:"20%"}}>가상 크기</th>
                     <th >포맷</th>
                     <th >{Localization.kr.TARGET}</th>
-                    <th >디스크 프로파일</th>
+                    <th >{Localization.kr.DISK_PROFILE}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -286,11 +280,10 @@ const TemplateModal = ({
                       </td>
                       <td>{checkZeroSizeToGiB(disk.diskImageVo?.virtualSize)}</td>
                       <td >
-                        <LabelSelectOptions
-                          id={`diskFormat-${index}`}
+                        <LabelSelectOptions id={`diskFormat-${index}`}
+                          className="template-select"
                           value={disk.diskImageVo?.format}
                           options={formats}
-                          className="template-select"
                           onChange={(e) => handleDiskChange(index, "format", e.target.value)}
                         />
                       </td>
@@ -338,7 +331,6 @@ const TemplateModal = ({
                 </tbody>
               </table>
             </div>
-          
         </>
       )}
       {!disks || disks.length === 0 ? (
@@ -362,3 +354,8 @@ const TemplateModal = ({
 };
 
 export default TemplateModal;
+
+const formats = [
+  { value: "RAW", label: "Raw" },
+  { value: "COW", label: "Cow" },
+];
