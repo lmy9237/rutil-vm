@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import useGlobal from "../../hooks/useGlobal";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import { useAllNetworks } from "../../api/RQHook";
 import NetworkDupl from "../../components/dupl/NetworkDupl";
+import Logger from "../../utils/Logger";
 
 /**
  * @name Networks
@@ -10,6 +12,8 @@ import NetworkDupl from "../../components/dupl/NetworkDupl";
  * @returns
  */
 const Networks = () => {
+  const { setNetworksSelected } = useGlobal()
+
   const {
     data: networks = [],
     isLoading: isNetworksLoading,
@@ -17,6 +21,13 @@ const Networks = () => {
     isSuccess: isNetworksSuccess,
     refetch: refetchNetworks,
   } = useAllNetworks((e) => ({ ...e }));
+  
+  useEffect(() => {
+    return () => {
+      Logger.debug("Networks > useEffect ... CLEANING UP");
+      setNetworksSelected([])
+    }
+  }, []);
 
   return (
     <NetworkDupl columns={TableColumnsInfo.NETWORKS}

@@ -57,6 +57,7 @@ const HostInfo = () => {
   const isUp = host?.status === "UP";
   const isMaintenance = host?.status === "MAINTENANCE";
   const isNonOperational = host?.status === "NON_OPERATIONAL"
+  const isInstalling = host?.status === "INSTALLING";
 
   const handleTabClick = useCallback((tab) => {
     Logger.debug(`HostInfo > handleTabClick ... tab: ${tab}`);
@@ -65,7 +66,7 @@ const HostInfo = () => {
         : `/computing/hosts/${hostId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  }, [hostId]);
+  }, [navigate, activeTab, hostId]);
 
   const sections = useMemo(() => ([
     { id: "general", label: Localization.kr.GENERAL },
@@ -99,18 +100,18 @@ const HostInfo = () => {
 
   // 편집, 삭제 버튼들
   const sectionHeaderButtons = useMemo(() => ([
-    { type: "host:update", onClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: !isUp, }, 
-    { type: "host:remove", onClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: !isMaintenance, },
+    { type: "host:update", onClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: !isUp || isInstalling, }, 
+    { type: "host:remove", onClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: !isMaintenance || isInstalling, },
   ]), [host])
 
   const popupItems = [
-    { type: "deactivate", onClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: !isUp && isNonOperational, },
-    { type: "activate", onClick: () => setActiveModal("host:activate"), label: Localization.kr.ACTIVATE, disabled: isMaintenance , },
-    { type: "restart", onClick: () => setActiveModal("host:restart"), label: Localization.kr.RESTART, disabled: !isUp, },
-    { type: "reInstall", onClick: () => setActiveModal("host:reInstall"), label: "다시 설치", disabled: isUp, },
-    { type: "enrollCert", onClick: () => setActiveModal("host:enrollCert"), label: "인증서 등록", disabled: isUp, },
-    { type: "haOn", onClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: !isUp, }, 
-    { type: "haOff", onClick: () => setActiveModal("host:haOff"), label: "글로벌 HA 유지 관리를 비활성화", disabled: !isUp, },
+    { type: "deactivate", onClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: isInstalling || isNonOperational || !isUp, },
+    { type: "activate", onClick: () => setActiveModal("host:activate"), label: Localization.kr.ACTIVATE, disabled: !isMaintenance || isUp || isInstalling, },
+    { type: "restart", onClick: () => setActiveModal("host:restart"), label: Localization.kr.RESTART, disabled: !isUp || isInstalling, },
+    { type: "reInstall", onClick: () => setActiveModal("host:reInstall"), label: "다시 설치", disabled: isUp || isInstalling, },
+    { type: "enrollCert", onClick: () => setActiveModal("host:enrollCert"), label: "인증서 등록", disabled: isUp || isInstalling, },
+    { type: "haOn", onClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: !isUp || isInstalling, }, 
+    { type: "haOff", onClick: () => setActiveModal("host:haOff"), label: "글로벌 HA 유지 관리를 비활성화", disabled: !isUp || isInstalling, },
   ];
 
   return (

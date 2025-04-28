@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
+import useGlobal from "../../hooks/useGlobal";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import HostDupl from "../../components/dupl/HostDupl";
 import { useAllHosts } from "../../api/RQHook";
-import useGlobal from "../../hooks/useGlobal";
 import Logger from "../../utils/Logger";
 
 /**
@@ -12,7 +12,7 @@ import Logger from "../../utils/Logger";
  * @returns {JSX.Element} Disks
  */
 const Hosts = () => {
-  const { hostsSelected, setHostsSelected } = useGlobal()
+  const { setHostsSelected } = useGlobal()
 
   const {
     data: hosts = [],
@@ -23,23 +23,18 @@ const Hosts = () => {
   } = useAllHosts((e) => ({ ...e }));
 
   useEffect(() => {
-    Logger.debug("Hosts > useEffect ...");
     return () => {
       Logger.debug("Hosts > useEffect ... CLEANING UP");
       setHostsSelected([])
     }
   }, []);
 
-  Logger.debug(`Hosts ... `)
   return (
-    <>
     <HostDupl columns={TableColumnsInfo.HOSTS}
       hosts={hosts}
       refetch={refetchHosts}
       isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
     />
-    <span>{hostsSelected[0]?.id}</span>
-    </>
   );
 };
 

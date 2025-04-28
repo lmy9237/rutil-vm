@@ -5,6 +5,7 @@ version = Versions.Project.RUTIL_VM
 val jar: Jar by tasks
 jar.enabled = true
 dependencies {
+	compileOnly(project(":rutil-vm-common"))
     compileOnly(Dependencies.kotlinStdlib)
     compileOnly(Dependencies.log4j)
     compileOnly(Dependencies.gson)

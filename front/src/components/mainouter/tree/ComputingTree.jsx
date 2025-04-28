@@ -11,6 +11,8 @@ import {
   rvi16DataCenter,
   rvi16Cluster,
   rvi16DesktopSleep,
+  rvi16DesktopFlag,
+  rvi16Pause,
 } from "../../icons/RutilVmIcons";
 import { useAllTreeNavigations } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
@@ -202,7 +204,7 @@ const ComputingTree = ({}) => {
                         <div key={vm?.id} className="tmi-g">
                           <TreeMenuItem level={4}
                             title={vm?.name}
-                            iconDef={rvi16DesktopSleep}
+                            iconDef={vm?.status === "SUSPENDED" ? rvi16Pause : rvi16DesktopSleep}
                             isSelected={() => location.pathname.includes(vm?.id)}
                             isNextLevelVisible={false}
                             isChevronVisible={false}

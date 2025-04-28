@@ -43,7 +43,7 @@ class JobController: BaseController() {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun jobs(): ResponseEntity<List<JobVo>> {
-		log.info("/jobs/ ... 호스트 목록")
+		log.info("/jobs/ ... 최근작업 목록")
 		return ResponseEntity.ok(iJob.findAll())
 	}
 

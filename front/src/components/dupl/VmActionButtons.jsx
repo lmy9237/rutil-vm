@@ -35,12 +35,13 @@ const VmActionButtons = ({
 
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "UP");
   const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "DOWN");
+  const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "PAUSE");
   const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.some(vm => vm?.status === "UP" || vm?.status === "POWERING_DOWN");
   
   const basicActions = [
     { type: "create",     onBtnClick: () => setActiveModal("vm:create"), label: Localization.kr.CREATE, disabled: isContextMenu && vmsSelected.length > 0 },
     { type: "update",     onBtnClick: () => setActiveModal("vm:update"), label: Localization.kr.UPDATE, disabled: vmsSelected.length !== 1 },
-    { type: "start",      onBtnClick: () => setActiveModal("vm:start"), label: Localization.kr.START, disabled: !allDown },
+    { type: "start",      onBtnClick: () => setActiveModal("vm:start"), label: Localization.kr.START, disabled: !(allDown || allPause) },
     { type: "pause",      onBtnClick: () => setActiveModal("vm:pause"), label: Localization.kr.PAUSE, disabled: !allUp },
     { type: "reboot",     onBtnClick: () => setActiveModal("vm:reboot"), label: Localization.kr.REBOOT, disabled: !allUp },
     { type: "reset",      onBtnClick: () => setActiveModal("vm:reset"), label: Localization.kr.RESET, disabled: !allUp },

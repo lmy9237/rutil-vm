@@ -97,7 +97,7 @@ fun Connection.removeHost(hostId: String): Result<Boolean> = runCatching {
 	}
 	if (host.status() != HostStatus.MAINTENANCE) {
 		log.warn("{} 삭제 실패... {} 가 유지관리 상태가 아님 ", Term.HOST.desc, hostId)
-		throw throw ErrorPattern.HOST_NOT_MAINTENANCE.toError()
+		throw ErrorPattern.HOST_NOT_MAINTENANCE.toError()
 	}
 
 	this.srvHost(hostId).remove().send()

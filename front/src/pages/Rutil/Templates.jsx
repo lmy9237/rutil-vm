@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import useGlobal from "../../hooks/useGlobal";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import TemplateDupl from "../../components/dupl/TemplateDupl";
 import { useAllTemplates } from "../../api/RQHook";
+import Logger from "../../utils/Logger";
 
 /**
  * @name Templates
@@ -10,6 +12,7 @@ import { useAllTemplates } from "../../api/RQHook";
  * @returns
  */
 const Templates = () => {
+  const { setTemplatesSelected } = useGlobal()
   const {
     data: templates = [],
     isLoading: isTemplatesLoading,
@@ -17,6 +20,13 @@ const Templates = () => {
     isSuccess: isTemplatesSuccess,
     refetch: refetchTemplates,
   } = useAllTemplates((e) => ({ ...e }));
+
+  useEffect(() => {
+    return () => {
+      Logger.debug("Templates > useEffect ... CLEANING UP");
+      setTemplatesSelected([])
+    }
+  }, []);
 
   return (
     <TemplateDupl columns={TableColumnsInfo.TEMPLATES}

@@ -28,12 +28,12 @@ const VmSnapshotActionButtons = ({
   const snapshotSelected1st =  [...snapshotsSelected][0] ?? null
 
   const basicActions = useMemo(() => ([
-    { type: "create",   onBtnClick: () => setActiveModal("vmsnapshot:create"),  label: Localization.kr.CREATE,  disabled: isVmUp || hasLocked || inPreview || (isContextMenu && snapshotsSelected.length > 0 ), },
+    { type: "create",   onBtnClick: () => setActiveModal("vmsnapshot:create"),  label: Localization.kr.CREATE,  disabled: hasLocked || (isContextMenu && snapshotsSelected.length > 0 ), },
     { type: "preview",  onBtnClick: () => setActiveModal("vmsnapshot:preview"), label: Localization.kr.PREVIEW, disabled: isVmUp || hasLocked || inPreview || snapshotsSelected.length === 0, },
     { type: "commit",   onBtnClick: () => setActiveModal("vmsnapshot:commit"),  label: Localization.kr.COMMIT,  disabled: isVmUp || hasLocked || !inPreview || snapshotsSelected.length === 0, },
     { type: "undo",     onBtnClick: () => setActiveModal("vmsnapshot:undo"),    label: Localization.kr.UNDO,    disabled: isVmUp || hasLocked || !inPreview || snapshotsSelected.length === 0, },
     { type: "remove",   onBtnClick: () => setActiveModal("vmsnapshot:remove"),  label: Localization.kr.REMOVE,  disabled: isVmUp || hasLocked || inPreview || vmsSelected.length === 0 || snapshotsSelected.length === 0, },
-  ]), [snapshotsSelected, vmsSelected]);
+  ]), [hasLocked, snapshotsSelected, vmsSelected]);
 
   Logger.debug(`VmSnapshotActionButtons ... datacentersSelected.length: ${vmsSelected.length}, isContextMenu: ${isContextMenu} `)
   return (

@@ -8,6 +8,7 @@ import useClickOutside from "../../hooks/useClickOutside";
 import Logger from "../../utils/Logger";
 import { useUser } from "../../api/RQHook";
 import "./BoxUser.css";
+import useAsideState from "../../hooks/useAsideState";
 
 /**
  * @name BoxUser
@@ -23,7 +24,7 @@ const BoxUser = ({}) => {
     isLoading: isUserLoading,
     isSuccess: isUserSuccess
   } = useUser(auth.username, true);
-
+  const { setAsideVisible } = useAsideState()
   const { setActiveModal, } = useUIState();
   const { setLoginBoxVisible } = useBoxState()
 
@@ -36,6 +37,8 @@ const BoxUser = ({}) => {
     Logger.debug("Header > doLogout ...");
     e.preventDefault();
     setAuth({});
+    setAsideVisible(true);
+    setLoginBoxVisible(false)
     navigate("/login");
   }, [])
 

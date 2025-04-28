@@ -66,6 +66,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.CPU, accessor: 'cpuUsage', clickable: false },
     { header: Localization.kr.NETWORK, accessor: 'networkUsage', clickable: false },
     { header: 'SPM', accessor: 'spmStatus', clickable: false },
+    { header: Localization.kr.UP_TIME, accessor: 'upTime', clickable: false },
   ],
   VMS_FROM_HOST: [
     { header: '', accessor: "icon", clickable: false, width: '10%' },

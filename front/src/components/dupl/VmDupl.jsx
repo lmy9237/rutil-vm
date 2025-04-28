@@ -21,7 +21,7 @@ import Logger from "../../utils/Logger";
  * @returns {JSX.Element}
  */
 const VmDupl = ({
-  vms = [], columns = [], showSearchBox=true,
+  vms = [], columns = [], 
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ const VmDupl = ({
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <VmActionButtons />
       </div>
 

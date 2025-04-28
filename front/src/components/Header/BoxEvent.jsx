@@ -123,6 +123,7 @@ const BoxEvent = ({
           <div className="bell-content-outer"
             style={{
               minHeight: currentEventBoxHeightInPx - bellHeaderHeights,
+              height: currentEventBoxHeightInPx - bellHeaderHeights,
             }}
           >
             <BoxEventItems events={notiEvents} />
@@ -154,6 +155,7 @@ const BoxEvent = ({
           <div className="bell-content-outer event-section"
             style={{
               minHeight: currentEventBoxHeightInPx - bellHeaderHeights,
+              height: currentEventBoxHeightInPx - bellHeaderHeights,
             }}
           >
             <BoxEventItems events={eventsNormal} />

@@ -46,7 +46,7 @@ fun Connection.startVm(vmId: String): Result<Boolean> = runCatching {
 
 	val diskAttachments = this.findAllDiskAttachmentsFromVm(vmId).getOrDefault(listOf())
 	if (!diskAttachments.any { it.bootable() }) {
-		log.error("가상머신 디스크중 부팅가능한 디스크가 없음")
+		log.error("가상머신 디스크 중 부팅 가능한 디스크가 없음")
 		throw ErrorPattern.DISK_ATTACHMENT_NOT_BOOTABLE.toError()
 	}
 	if(vm.status() == VmStatus.UP){

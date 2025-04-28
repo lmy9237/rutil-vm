@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import useGlobal from "../../hooks/useGlobal";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import DomainDupl from "../../components/dupl/DomainDupl";
 import { useAllStorageDomains } from "../../api/RQHook";
+import Logger from "../../utils/Logger";
 
 /**
  * @name StorageDomains
@@ -10,6 +12,8 @@ import { useAllStorageDomains } from "../../api/RQHook";
  * @returns {JSX.Element} StorageDomains
  */
 const StorageDomains = () => {
+  const { setDomainsSelected } = useGlobal()
+
   const {
     data: storageDomains = [],
     isLoading: isStorageDomainsLoading,
@@ -17,6 +21,13 @@ const StorageDomains = () => {
     isSuccess: isStorageDomainsSuccess,
     refetch: refetchStorageDomains,
   } = useAllStorageDomains((e) => ({ ...e }));
+
+  useEffect(() => {
+    return () => {
+      Logger.debug("Hosts > useEffect ... CLEANING UP");
+      setDomainsSelected([])
+    }
+  }, []);
 
   return (
     <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}

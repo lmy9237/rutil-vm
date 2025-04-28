@@ -65,13 +65,6 @@ fun List<Statistic>.findVmUpTime(): String {
 		it.values().firstOrNull()?.datum()?.toLong()
 	}.firstOrNull() ?: 0L
 
-	val days = time / (60 * 60 * 24)
-	val hours = (time % (60 * 60 * 24)) / (60 * 60)
-	val minutes = ((time % (60 * 60 * 24)) % (60 * 60)) / 60
-
-	return if (days > 0)    "${days}일"
-	else if (hours > 0)     "${hours}시간"
-	else if (minutes > 0)   "${minutes}분"
-	else                    ""
+	return time.toTimeElpasedKr()
 }
 

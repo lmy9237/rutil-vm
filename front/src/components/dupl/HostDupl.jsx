@@ -13,7 +13,7 @@ import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
 
 const HostDupl = ({
-  hosts = [], columns = [], showSearchBox =true,
+  hosts = [], columns = [],
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
@@ -58,8 +58,8 @@ const HostDupl = ({
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}  onRefresh={handleRefresh}/>)}
-        <HostActionButtons actionType = "default"/>
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}  onRefresh={handleRefresh}/>
+        <HostActionButtons actionType="default"/>
       </div>
 
       <TablesOuter target={"host"}

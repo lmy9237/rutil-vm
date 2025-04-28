@@ -77,7 +77,7 @@ enum class ErrorPattern(
 	DISK_ATTACHMENT_NOT_FOUND("DISKATTACHMENT-E002", Term.DISK_ATTACHMENT, FailureType.NOT_FOUND),
 	DISK_ATTACHMENT_VO_INVALID("DISKATTACHMENT-E003", Term.DISK_ATTACHMENT, FailureType.BAD_REQUEST),
 	DISK_ATTACHMENT_ACTIVE_INVALID("DISKATTACHMENT-E004", Term.DISK_ATTACHMENT, FailureType.BAD_REQUEST),
-	DISK_ATTACHMENT_NOT_BOOTABLE("DISKATTACHMENT-E005", Term.DISK_ATTACHMENT, FailureType.BAD_REQUEST),
+	DISK_ATTACHMENT_NOT_BOOTABLE("DISKATTACHMENT-E005", Term.DISK_ATTACHMENT, FailureType.BAD_REQUEST, "부팅 가능한 디스크가 없음"),
 	DISK_ATTACHMENT_DUPLICATE("DISKATTACHMENT-E006", Term.DISK_ATTACHMENT, FailureType.BAD_REQUEST),
 	IMAGE_TRANSFER_NOT_FOUND("IMAGE_TRANSFER_NOT_FOUND", Term.IMAGE_TRANSFER, FailureType.NOT_FOUND),
 	TRANSFER_URL_EMPTY("TRANSFER_URL_EMPTY", Term.IMAGE_TRANSFER, FailureType.NOT_FOUND),
@@ -155,7 +155,7 @@ fun ErrorPattern.toError(): Error {
 			ErrorPattern.CERT_ID_NOT_FOUND,
 			ErrorPattern.JOB_ID_NOT_FOUND,
 			ErrorPattern.EVENT_ID_NOT_FOUND
-		) -> Error("[${code}] ${term.desc} ${failureType.message}")
+		) -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
 
 		// NOT_FOUND 종류
 		this in listOf(
@@ -178,10 +178,11 @@ fun ErrorPattern.toError(): Error {
 			ErrorPattern.CERT_NOT_FOUND,
 			ErrorPattern.JOB_NOT_FOUND,
 			ErrorPattern.EVENT_NOT_FOUND
-		) -> Error("[${code}] ${failureType.message} ${term.desc}")
+		) -> Error("[${code}] (${failureType.code})${failureType.message} ${term.desc}")
 
 		// VO_INVALID, AUTH_INVALID 등 BAD_REQUEST 관련
 		this.name.endsWith("_VO_INVALID") ||
+			this == ErrorPattern.DISK_ATTACHMENT_ACTIVE_INVALID ||
 			this == ErrorPattern.OVIRTUSER_AUTH_INVALID ||
 			this == ErrorPattern.OVIRTUSER_LOCKED -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
 
@@ -195,6 +196,8 @@ fun ErrorPattern.toError(): Error {
 		// 특별한 추가 메시지 필요할 때
 		this == ErrorPattern.NIC_UNLINKED_REQUIRED ||
 		this == ErrorPattern.VM_CONFLICT_WHILE_PREVIEWING_SNAPSHOT ||
+		this == ErrorPattern.DISK_ATTACHMENT_DUPLICATE ||
+		this == ErrorPattern.DISK_ATTACHMENT_NOT_BOOTABLE ||
 		this == ErrorPattern.SNAPSHOT_CONFLICT_WHILE_PREVIEWING_SNAPSHOT -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}}: $additional")
 		this == ErrorPattern.DISK_BOOT_OPTION -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}: 부팅가능한 디스크는 오직 한개만 가능합니다")
 

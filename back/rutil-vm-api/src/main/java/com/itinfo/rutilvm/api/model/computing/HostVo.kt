@@ -9,6 +9,8 @@ import com.itinfo.rutilvm.api.model.network.toHostNicVos
 import com.itinfo.rutilvm.api.model.network.toSlaveHostNicVos
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.entity.HostConfigurationEntity
+import com.itinfo.rutilvm.common.differenceInMillis
+import com.itinfo.rutilvm.common.toTimeElapsedKr
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.slf4j.LoggerFactory
@@ -124,10 +126,13 @@ class HostVo (
 	// val certificate: HCertificateVo = HCertificateVo(),
 
 ): Serializable{
-    override fun toString(): String = gson.toJson(this)
+    override fun toString(): String =
+		gson.toJson(this)
 
 	val bootingTime: String
 		get() = ovirtDf.formatEnhanced(_bootingTime)
+	val upTime: String
+		get() = _bootingTime?.differenceInMillis(Date())?.div(1000L)?.toTimeElapsedKr() ?: "N/A"
 
     class Builder{
         private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: ""}
@@ -205,7 +210,11 @@ fun List<Host>.toHostsIdName(): List<HostVo> =
 fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
     val host = this@toHostMenu
     val dataCenter: DataCenter? = host.cluster().resolveDataCenter(conn)
-    val hostedVm = conn.isHostedEngineVm(host.id())
+    val hostedVm =
+		conn.isHostedEngineVm(host.id())
+	val statistics: List<Statistic> =
+		conn.findAllStatisticsFromHost(host.id())
+			.getOrDefault(listOf())
 
     return HostVo.builder {
         id { host.id() }
@@ -221,6 +230,7 @@ fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
         vmSizeVo { host.findVmCntFromHost() }
         usageDto { usageDto }
         spmStatus { host.spm().status() }
+		bootingTime { Date(statistics.findBootTime() * 1000) }
     }
 }
 
@@ -267,7 +277,7 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
         hugePage2048Free { statistics.findPage("hugepages.2048.free") }
         hugePage1048576Total { statistics.findPage("hugepages.1048576.total") }
         hugePage1048576Free { statistics.findPage("hugepages.1048576.free") }
-        bootingTime { Date(statistics.findBootTime()* 1000) }
+        bootingTime { Date(statistics.findBootTime() * 1000) }
         hostHwVo { host.toHostHwVo() }
         hostSwVo { host.toHostSwVo(hostConfigurationEntity) }
         vmSizeVo { host.findVmCntFromHost() }

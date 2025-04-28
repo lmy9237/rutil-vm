@@ -23,7 +23,6 @@ const Clusters = () => {
   } = useAllClusters((e) => ({ ...e }));
 
   useEffect(() => {
-    Logger.debug("Clusters > useEffect ...");
     return () => {
       Logger.debug("Clusters > useEffect ... CLEANING UP");
       setClustersSelected([])

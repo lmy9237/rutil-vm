@@ -42,7 +42,7 @@ const DiskModals = ({
         onClose={() => setActiveModal(null)}
       />
     ), action: (
-      <DiskActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal)}
+      <DiskActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}
         onClose={() => setActiveModal(null)}
         action={activeModal}
         data={disksSelected}

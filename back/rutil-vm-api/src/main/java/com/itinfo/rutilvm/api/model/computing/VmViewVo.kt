@@ -6,6 +6,7 @@ import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.ovirtDf
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
+import com.itinfo.rutilvm.common.toTimeElapsedKr
 import com.itinfo.rutilvm.util.ovirt.findAllNicsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromVm
 import com.itinfo.rutilvm.util.ovirt.findCluster
@@ -591,15 +592,7 @@ fun List<Statistic>.findVmUptime(): String {
 	}.map {
 		it.values().firstOrNull()?.datum()?.toLong()
 	}.firstOrNull() ?: 0L
-
-	val days = time / (60 * 60 * 24)
-	val hours = (time % (60 * 60 * 24)) / (60 * 60)
-	val minutes = ((time % (60 * 60 * 24)) % (60 * 60)) / 60
-
-	return if (days > 0)    "${days}일"
-	else if (hours > 0)     "${hours}시간"
-	else if (minutes > 0)   "${minutes}분"
-	else                    ""
+	return time.toTimeElapsedKr()
 }
 
 

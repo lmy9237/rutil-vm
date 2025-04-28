@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useQueries } from "@tanstack/react-query";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import Localization from "../../../utils/Localization";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
@@ -8,16 +10,17 @@ import LabelInput from "../../label/LabelInput";
 import ApiManager from "../../../api/ApiManager";
 import { useCopyDisk, useMoveDisk } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
 import "../domain/MDomain.css";
 
 const DiskActionModal = ({ 
-  isOpen,
-  action,
   data=[], // 배열일수도 한개만 들어올수도
+  isOpen,
   onClose
 }) => {
-  const daLabel = action === "move" ? Localization.kr.MOVE : "복사";
+  const { activeModal } = useUIState()
+  const daLabel = activeModal() === "disk:move" 
+    ? Localization.kr.MOVE 
+    : "복사";
   const { disksSelected } = useGlobal()
   const [aliases, setAliases] = useState({});
   const [domainList, setDomainList] = useState({});
@@ -49,7 +52,7 @@ const DiskActionModal = ({
   });  
 
   useEffect(() => {
-    if (action === "copy") {
+    if (activeModal() === "disk:copy") {
       const initialAliases = {};
       for (let i=0; i<disksSelected.length; i++) {
         const disk = disksSelected[i];
@@ -57,7 +60,7 @@ const DiskActionModal = ({
       }
       setAliases(initialAliases);
     }
-  }, [action, disksSelected]);  
+  }, [activeModal, disksSelected]);  
 
   useEffect(() => {
     const newDomainList = {};
@@ -71,7 +74,7 @@ const DiskActionModal = ({
       if (disk && queryResult.data && queryResult.isSuccess) {
         const domains = queryResult.data?.body ?? [];
         const filteredDomains = domains
-          .filter((d) => d.status === "ACTIVE" && (action !== "move" || d.id !== currentDomainId))
+          .filter((d) => d.status === "ACTIVE" && (activeModal() !== "disk:move" || d.id !== currentDomainId))
           .map((d) => ({ id: d.id, name: d.name }));
   
         newDomainList[disk.id] = filteredDomains;
@@ -104,7 +107,7 @@ const DiskActionModal = ({
       }
   
       // 복사 or 이동 처리
-      if (action === "copy") {
+      if (activeModal() === "disk:copy") {
         copyDisk({
           diskId: disk.id,
           diskImage: {
@@ -146,11 +149,10 @@ const DiskActionModal = ({
               [...disksSelected]?.map((disk, index) => (
                 <tr key={disk.id || index}>
                   <td>
-                    {action === "move" ? (
+                    {activeModal() === "disk:move" ? (
                       disk.alias
                     ) : (
-                      <LabelInput
-                        label={""}
+                      <LabelInput label={""}
                         value={aliases[disk.id] || ""}
                         onChange={(e) => {
                           const newAlias = e.target.value;

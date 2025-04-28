@@ -59,7 +59,7 @@ const HostGeneral = ({
     { label: "새로운 가상 머신의 스케줄링을 위한 최대 여유 메모리", value: `${convertBytesToMB(host?.memoryMax)} MB`, },
     { label: "Huge Pages (size: free/total)", value: `2048: ${host?.hugePage2048Free}/${host?.hugePage2048Total}, 1048576: ${host?.hugePage1048576Free}/${host?.hugePage1048576Total}`, },
     { label: "SELinux 모드", value: host?.seLinux },
-  ]), []);
+  ]), [host]);
 
   const renderHardwareTab = useMemo(() => ([
     { label: "제조사", value: host?.hostHwVo?.manufacturer },
@@ -99,7 +99,7 @@ const HostGeneral = ({
 
   const rows4ActiveTab = useMemo(() => ([
     tabs.find(({ tab }) => tab === activeTab)?.tableRows || []
-  ]), [tabs,activeTab])
+  ]), [tabs, activeTab])
   
   return (
     <div>
@@ -115,7 +115,7 @@ const HostGeneral = ({
       </div>
       <InfoTable tableRows={tabs.find(({ tab }) => tab === activeTab)?.tableRows || []} />
       <br/>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
+      <div className="f-btw" style={{ gap: "20px" }}>
         cpu <SuperAreaChart key={`${hostId}-cpu`} per={hostPer} type="cpu" />
         memory <SuperAreaChart key={`${hostId}-memory`} per={hostPer} type="memory" />
       </div>

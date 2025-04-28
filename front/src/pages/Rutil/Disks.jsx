@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import useGlobal from "../../hooks/useGlobal";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import DiskDupl from "../../components/dupl/DiskDupl";
 import { useAllDisks } from "../../api/RQHook";
+import Logger from "../../utils/Logger";
 
 /**
  * @name Disks
@@ -10,6 +12,8 @@ import { useAllDisks } from "../../api/RQHook";
  * @returns {JSX.Element} Disks
  */
 const Disks = () => {
+  const { setDisksSelected } = useGlobal()
+
   const {
     data: disks = [],
     isLoading: isDisksLoading,
@@ -17,6 +21,13 @@ const Disks = () => {
     isSuccess: isDisksSuccess,
     refetch: refetchDisks,
   } = useAllDisks((e) => ({ ...e }));
+  
+  useEffect(() => {
+    return () => {
+      Logger.debug("Disks > useEffect ... CLEANING UP");
+      setDisksSelected([])
+    }
+  }, []);
 
   return (
     <DiskDupl columns={TableColumnsInfo.DISKS}
