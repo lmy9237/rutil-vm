@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.util.ovirt
 
+import com.itinfo.rutilvm.common.toTimeElapsedKr
 import org.ovirt.engine.sdk4.types.Statistic
 import java.math.BigInteger
 
@@ -65,6 +66,6 @@ fun List<Statistic>.findVmUpTime(): String {
 		it.values().firstOrNull()?.datum()?.toLong()
 	}.firstOrNull() ?: 0L
 
-	return time.toTimeElpasedKr()
+	return time.toTimeElapsedKr()
 }
 
