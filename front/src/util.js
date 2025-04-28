@@ -74,10 +74,34 @@ export function convertBytesToMB(bytes) {
  * @returns {string} The formatted size in GB.
  */
 export function convertBytesToGB(bytes) {
-  const res = (bytes / (1024 * 1024)).toFixed(0);
+  // const res = (bytes / (1024 * 1024)).toFixed(0);
   // Logger.debug(`util > convertBytesToMB ... bytes: ${bytes}, res: ${res}`);
   return (bytes / (1024 * 1024 * 1024)).toFixed(0);
 }
+
+// /**
+//  * @name convertBytesToGiB
+//  * @description 바이트를 GiB로 변환합니다. 소수점 둘째자리까지 표기
+//  *
+//  * @param {number} bytes
+//  * @returns {number} GiB 값
+//  */
+// export function convertBytesToGiB(bytes) {
+//   return Number((bytes / (1024 ** 3)).toFixed(2));
+// }
+
+// /**
+//  * @name checkZeroSizeToGiB
+//  * @description 바이트 값을 GiB 문자열로 표현합니다. (1 GiB 이하 처리 포함)
+//  *
+//  * @param {number} size 바이트 크기
+//  * @returns {string} 변환된 GiB 표현 값
+//  */
+// export function checkZeroSizeToGiBs(size) {
+//   const GiB = convertBytesToGiB(size);
+//   return GiB < 1 ? "< 1 GiB" : `${GiB} GiB`;
+// }
+
 
 /**
  * @name convertBytesToGBFixed1

@@ -86,6 +86,7 @@ const ENDPOINTS = {
   FIND_HOSTDEVICES_FROM_HOST:(hostId) =>                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}/devices`, 
   FIND_EVENTS_FROM_HOST:(hostId) =>                                        `${ENDPOINT_API_V1}/computing/hosts/${hostId}/events`, 
 
+  FIND_STORAGES_FROM_HOST: (hostId) =>                                     `${ENDPOINT_API_V1}/computing/hosts/${hostId}/storages`,
   FIND_FIBRES_FROM_HOST: (hostId) =>                                       `${ENDPOINT_API_V1}/computing/hosts/${hostId}/fibres`,
   FIND_ISCSIS_FROM_HOST: (hostId) =>                                       `${ENDPOINT_API_V1}/computing/hosts/${hostId}/iscsis`,
   FIND_SEARCH_ISCSIS_FROM_HOST: (hostId) =>                                `${ENDPOINT_API_V1}/computing/hosts/${hostId}/searchIscsi`,
@@ -245,16 +246,16 @@ const ENDPOINTS = {
   IMPORT_STORAGE_DOMAIN: () =>                                             `${ENDPOINT_API_V1}/storages/domains/import`,
   EDIT_STORAGE_DOMAIN: (domainId) =>                                       `${ENDPOINT_API_V1}/storages/domains/${domainId}`,
   DELETE_STORAGE_DOMAIN: (domainId, format, hostName) => {
-    format 
-      ? `/api/v1/storages/domains/${domainId}?format=true&host=${hostName}`
-      : `/api/v1/storages/domains/${domainId}&host=${hostName}`
-    // let url = `/api/v1/storages/domains/${domainId}`;
-    // if (format) {
-    //   url += `?format=true&host=${hostName}`;
-    // } else {
-    //   url += `?host=${hostName}`;
-    // }
-    // return url;
+    // format 
+    //   ? `/api/v1/storages/domains/${domainId}?format=true&host=${hostName}`
+    //   : `/api/v1/storages/domains/${domainId}&host=${hostName}`
+    let url = `/api/v1/storages/domains/${domainId}`;
+    if (format) {
+      url += `?format=true&host=${hostName}`;
+    } else {
+      url += `?host=${hostName}`;
+    }
+    return url;
     // `/api/v1/storages/domains/${domainId}?${format ? 'format=true&' : ''}host=${hostName}`;
   },  
   DESTORY_STORAGE_DOMAIN: (storageDomainId) =>                             `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/destroy`, 

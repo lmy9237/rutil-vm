@@ -34,8 +34,11 @@ const DomainDeleteModal = ({ isOpen, onClose }) => {
   }, [hosts]);
 
   const handleFormSubmit = () => {
-    
-    deleteDomain({ domainId: domainsSelected[0]?.id, format: format, hostName: hostVo.name });
+    deleteDomain(
+      { domainId: domainsSelected[0]?.id, 
+        format: format, 
+        hostName: hostVo.name }
+    );
   };
 
   return (

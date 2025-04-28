@@ -30,7 +30,7 @@ const DomainActionButtons = ({
     { type: "update",  onBtnClick: () => setActiveModal("domain:update"),  label: Localization.kr.UPDATE,  disabled: domainsSelected.length !== 1 || isMaintenance, },
     { type: "remove",  onBtnClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length === 0 || !isUnattached  },
     // { type: "remove",  onBtnClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length === 0 || isLocked || isMaintenance || !isUnknown,  },
-    { type: "destory", onBtnClick: () => setActiveModal("domain:destroy"), label: Localization.kr.DESTROY, disabled: domainsSelected.length !== 0 || isLocked || isMaintenance,  },
+    { type: "destory", onBtnClick: () => setActiveModal("domain:destroy"), label: Localization.kr.DESTROY, disabled: domainsSelected.length !== 1 || !isUnattached || isMaintenance,  },
   ];
 
   return (

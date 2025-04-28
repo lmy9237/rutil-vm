@@ -2498,6 +2498,19 @@ const ApiManager = {
 
 
   /**
+   * @name ApiManager.findAllStoragesFromHost
+   * @description storages 목록
+   *
+   * @param {string} hostId
+   * @returns 
+   * 
+   * @see
+   */
+  findAllStoragesFromHost: async (hostId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_STORAGES_FROM_HOST(hostId),
+  }),
+  /**
    * @name ApiManager.findAllFibreFromHost
    * @description fibre channel 목록
    *
@@ -2634,11 +2647,11 @@ const ApiManager = {
    * @param {String} domainId - 도메인 ID
    * @returns {Promise<Object>} API 응답 결과
    */
-  destroyDomain: async (domainId) => {
+  destroyDomain: async (storageDomainId) => {
     return makeAPICall({
       method: "DELETE",
-      url: ENDPOINTS.DESTORY_STORAGE_DOMAIN(domainId), 
-      data: domainId
+      url: ENDPOINTS.DESTORY_STORAGE_DOMAIN(storageDomainId), 
+      data: storageDomainId
     });
   },
 

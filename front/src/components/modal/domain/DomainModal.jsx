@@ -21,6 +21,7 @@ import Logger from "../../../utils/Logger";
 import useGlobal from "../../../hooks/useGlobal";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import { useQueryClient } from "@tanstack/react-query";
+import DomainCheckModal from "./DomainCheckModal";
 
 // 일반 정보
 const initialFormState = {
@@ -64,9 +65,12 @@ const DomainModal = ({
   const [storageTypes, setStorageTypes] = useState([]);
   const [nfsAddress, setNfsAddress] = useState(""); // nfs
   const [lunId, setLunId] = useState(""); // fibre 사용
-  
+
+  const [isDomainCheckOpen, setDomainCheckOpen] = useState(false);
+  const [approveChecked, setApproveChecked] = useState(false);
+
   // const [formSearchState, setFormSearchState] = useState(searchFormState); // 주소, 포트 입력
-  const [fcResults, setFcResults] = useState([]); // 주소와 포트를 넣은 검색결과
+  // const [fcResults, setFcResults] = useState([]); // 주소와 포트를 넣은 검색결과
 
   const resetFormStates = () => {
     setFormState(initialFormState);
@@ -75,7 +79,7 @@ const DomainModal = ({
     setStorageTypes([]);
     setNfsAddress("");
     setLunId("");
-    setFcResults([]);
+    // setFcResults([]);
   };
 
   const onSuccess = () => {
@@ -104,6 +108,14 @@ const DomainModal = ({
     isError: isFibresError, 
     isSuccess: isFibresSuccess
   } = useFibreFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
+  
+  // const {
+  //   data: storages = [],
+  //   refetch: refetchStorages,
+  //   isLoading: isStoragesLoading,
+  //   isError: isStoragesError, 
+  //   isSuccess: isStoragesSuccess
+  // } = useStoragesFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
 
   useEffect(() => {
     if (datacenterId) {
@@ -153,6 +165,7 @@ const DomainModal = ({
           queryKey: ['fibreFromHost', hostVo.id],
         });
         refetchFibres();
+        
       }
     }
   }, [hostVo?.id, formState.storageType, editMode, queryClient, refetchFibres]);
@@ -176,7 +189,7 @@ const DomainModal = ({
       
       if (domain?.storageType === "nfs") { 
         setNfsAddress(domain?.storageAddress);
-      } else {
+      } else if(domain?.storageType === "fcp") {
         setLunId(domain?.hostStorageVo?.logicalUnits[0]?.id);
       }
     }    
@@ -197,7 +210,7 @@ const DomainModal = ({
   }, [formState.storageType]);
 
   const isNfs = formState.storageType === "nfs";
-  const isFibre = formState.storageType === "fc";
+  const isFibre = formState.storageType === "fcp";
 
   const validateForm = () => {
     const nameError = checkName(formState.name);
@@ -211,7 +224,7 @@ const DomainModal = ({
       return "주소입력이 잘못되었습니다."
     }
     
-    if (formState.storageType === "fc" && !lunId) {
+    if (formState.storageType === "fcp" && !lunId) {
       const selectedLogicalUnit = fibres.find((fLun) => fLun.id === lunId);
       if (selectedLogicalUnit?.abled === "NO") return "선택한 항목은 사용할 수 없습니다.";
     }
@@ -221,15 +234,27 @@ const DomainModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) return toast.error(error);
+  
+    const usedLun = fibres.find((fLun) => fLun.status === "USED");
+  
+    if (usedLun) {
+      setDomainCheckOpen(true); // 🔥 확인 모달 열기
+      return;
+    }
+  
+    submitDomain(); // 바로 submit
+  };
+  
 
+  const submitDomain = () => {
     let dataToSubmit;
-
+  
     if (editMode) {
       dataToSubmit = { ...formState };
     } else {
       const [storageAddress, storagePath] = nfsAddress.split(":");
-      const logicalUnit =  fibres.find((fLun) => fLun.id === lunId);
-
+      const logicalUnit = fibres.find((fLun) => fLun.id === lunId);
+  
       dataToSubmit = {
         ...formState,
         dataCenterVo,
@@ -238,12 +263,14 @@ const DomainModal = ({
         ...(formState.storageType === "nfs" && { storageAddress, storagePath }),
       };
     }
-
-    Logger.debug(`DomainModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`);
+  
+    Logger.debug(`DomainModal > submitDomain ... dataToSubmit:`, dataToSubmit);
+  
     editMode
       ? editDomain({ domainId: formState.id, domainData: dataToSubmit })
       : addDomain(dataToSubmit);
   };
+  
 
   return (
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={dLabel}
@@ -347,11 +374,25 @@ const DomainModal = ({
           />
         </div>
       </div>
+            
+      <DomainCheckModal
+        isOpen={isDomainCheckOpen}
+        onClose={() => {
+          setDomainCheckOpen(false);
+          setApproveChecked(false);
+        }}
+        onApprove={() => {
+          setDomainCheckOpen(false);
+          submitDomain(); // 승인했으면 최종 등록
+        }}
+      />
     </BaseModal>
   );
 };
 
 export default DomainModal;
+
+
 
 const domainTypes = [
   { value: "data", label: "데이터" },
@@ -368,7 +409,7 @@ const storageTypeOptions = (dType) => {
       return [
         { value: "nfs", label: "NFS" },
         // { value: "iscsi", label: "ISCSI" },
-        { value: "fc", label: "Fibre Channel" },
+        { value: "fcp", label: "Fibre Channel" },
       ];
   }
 };

@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import BaseModal from "../BaseModal";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
 import { useDestroyDomain } from "../../../api/RQHook";
 import toast from "react-hot-toast";
+import useGlobal from "../../../hooks/useGlobal";
 
-const DomainDestroyModal = ({ isOpen, domain, onClose }) => {
+const DomainDestroyModal = ({ isOpen, onClose }) => {
+  const { domainsSelected } = useGlobal()
+  const domain = useMemo(() => [...domainsSelected][0], [domainsSelected]);
+
   const onSuccess = () => {
     onClose();
     toast.success(`${Localization.kr.DOMAIN} ${Localization.kr.DESTROY} 완료`);
@@ -16,8 +20,8 @@ const DomainDestroyModal = ({ isOpen, domain, onClose }) => {
 
   const handleSubmit = () => {
     if (!approved) return toast.error("작업승인해야함");
-    
-    destroyDomain({ domainId: domain?.id });
+  
+    destroyDomain(domain?.id);
   };
 
   return (
@@ -26,11 +30,15 @@ const DomainDestroyModal = ({ isOpen, domain, onClose }) => {
       onSubmit={handleSubmit}
       contentStyle={{ width: "600px" }}
     >
+      <br/>
+      <div>
+        [임시] {Localization.kr.DOMAIN} <b>{domain?.name}</b>을 파괴 하시겠습니까?
+      </div>
       <div className="destroy-text">
         다음의 작업은 복구가 불가능한 상태입니다!
       </div>
       <div>
-        데이터베이스에 있는 <b>{domain?.name}</b> 스토리지 도메인에 속한 모든 객체에 대한 참조가 삭제될 것입니다.
+        데이터베이스에 있는 <b>{domain?.name}</b> {Localization.kr.DOMAIN}에 속한 모든 객체에 대한 참조가 삭제될 것입니다.
         다시 사용하려면 수동으로 스토리지를 정리해야 할 수 있습니다.
       </div>
 

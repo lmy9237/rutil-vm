@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import Tables from '../../../table/Tables';
 import toast from 'react-hot-toast';
-import Localization from '../../../../utils/Localization';
 import Logger from '../../../../utils/Logger';
 import { checkZeroSizeToGiB } from '../../../../util';
 
@@ -26,7 +25,8 @@ const DomainFibre = ({
       vendorId: fc.vendorId,
       productId: fc.productId,
       serial: fc.serial,
-      abled: fc.storageDomainId === "" ? "OK" : "NO",
+      // abled: fc.storageDomainId === "" ? "OK" : "NO",
+      storageDomainId: fc.storageDomainId
     };
   }).filter(Boolean);
   
@@ -41,6 +41,15 @@ const DomainFibre = ({
       toast.error("선택할 수 없는 LUN입니다."); 
       return;
     }
+    if (selectedRow?.storageDomainId !== "") {
+      toast.error("선택할 수 없는 LUN입니다."); 
+      setLunId("");
+      return;
+    }
+    // if (selectedRow?.storageDomainId === "") {
+    //   toast.error(`${selectedRow?.status}`); 
+    //   return;
+    // }
   
     if (selectedRow && selectedRow.id) {
       Logger.debug('선택한 LUN ID:', selectedRow.id);
@@ -60,11 +69,15 @@ const DomainFibre = ({
             isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}            
           />
         ): ( */}
+        <>
+          <span>asdf {fibres[0]?.status}</span>
+
           <Tables columns={TableColumnsInfo.FIBRE}            
             data={transFibreData} 
             onRowClick={handleRowClick}
             isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}  
           />
+        </>
         {/* )}  */}
         <div><span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
       </div>

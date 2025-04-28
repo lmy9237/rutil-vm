@@ -48,7 +48,7 @@ fun HostStorage.toHostStorageVo() : HostStorageVo {
 
     return HostStorageVo.builder {
         id { hostStorage.id() }
-        logicalUnits { hostStorage.logicalUnits().toIscsiLogicalUnitVos() }
+        logicalUnits { hostStorage.logicalUnits().toLogicalUnitVos() }
         type { hostStorage.type() }
         hostVo { if(hostStorage.hostPresent()) hostStorage.host().fromHostToIdentifiedVo() else null }
     }

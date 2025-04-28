@@ -54,7 +54,7 @@ const DomainMainttenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceMo
         checked={ignoreOVF}
         onChange={(e) => setIgnoreOVF(e.target.checked)}
       /> 
-      <span>{ignoreOVF === true ? "t" : "F"}</span>
+      {/* <span>{ignoreOVF === true ? "t" : "F"}</span> */}
       <br/>
     </BaseModal>
   );

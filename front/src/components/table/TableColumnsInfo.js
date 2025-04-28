@@ -489,6 +489,7 @@ const TableColumnsInfo = {
     { header: 'vendor ID', accessor: 'vendorId', clickable: false },
     { header: 'product ID', accessor: 'productId', clickable: false },
     { header: 'serial', accessor: 'serial', clickable: false },
+    { header: 'storageDomainId', accessor: 'storageDomainId', clickable: false },
   ],
   IMPORT_FIBRE: [
     { header: Localization.kr.NAME, accessor: 'name', clickable: true, width: '30%' },

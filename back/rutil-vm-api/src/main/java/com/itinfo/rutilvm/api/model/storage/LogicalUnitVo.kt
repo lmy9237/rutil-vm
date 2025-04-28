@@ -1,12 +1,14 @@
 package com.itinfo.rutilvm.api.model.storage
 
-import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.common.gson
 
 import org.ovirt.engine.sdk4.types.LogicalUnit
 import org.ovirt.engine.sdk4.types.LunStatus
+import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
+
+private val log = LoggerFactory.getLogger(LogicalUnitVo::class.java)
 
 /**
  * [LogicalUnitVo]
@@ -72,7 +74,6 @@ class LogicalUnitVo (
     }
 
     companion object {
-        private val log by LoggerDelegate()
         inline fun builder(block: Builder.() -> Unit): LogicalUnitVo = Builder().apply(block).build()
     }
 }
@@ -110,3 +111,28 @@ fun LogicalUnit.toFibreLogicalUnitVo(): LogicalUnitVo = LogicalUnitVo.builder {
 }
 fun List<LogicalUnit>.toFibreLogicalUnitVos(): List<LogicalUnitVo> =
 	map { it.toFibreLogicalUnitVo() }
+
+fun LogicalUnit.toLogicalUnitVo(): LogicalUnitVo {
+	val logical = this@toLogicalUnitVo
+	log.info("** Logical.storageDomainId(): {}", this@toLogicalUnitVo.storageDomainId())
+
+	return LogicalUnitVo.builder {
+		id { if(logical.idPresent()) logical.id() else null }
+		address { if(logical.addressPresent()) logical.address() else null }
+		port { if(logical.portPresent()) logical.portAsInteger() else null }
+		portal { if(logical.portalPresent()) logical.portal() else null }
+		target { if(logical.targetPresent()) logical.target() else null }
+		discardMaxSize { if(logical.discardMaxSizePresent()) logical.discardMaxSizeAsInteger() else null }
+		discardZeroesData { if(logical.discardZeroesDataPresent()) logical.discardZeroesData() else null }
+		paths { if(logical.pathsPresent()) logical.pathsAsInteger() else null }
+		productId { if(logical.productIdPresent()) logical.productId() else null }
+		serial { if(logical.serialPresent()) logical.serial() else null }
+		size { if(logical.sizePresent()) logical.size() else null }
+		status { if(logical.statusPresent()) logical.status() else null }
+		storageDomainId { if(logical.storageDomainIdPresent()) logical.storageDomainId() else null }
+		vendorId { if(logical.vendorIdPresent()) logical.vendorId() else null }
+		volumeGroup { if(logical.volumeGroupIdPresent()) logical.volumeGroupId() else null }
+	}
+}
+fun List<LogicalUnit>.toLogicalUnitVos(): List<LogicalUnitVo> =
+	this@toLogicalUnitVos.map { it.toLogicalUnitVo() }

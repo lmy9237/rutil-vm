@@ -1340,6 +1340,32 @@ export const useEventsFromHost = (
 })
 
 /**
+ * @name useStoragesFromHost
+ * @description 호스트 내 storages (생성) 목록조회 useQuery훅
+ * 
+ * @param {string} hostId
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllStoragesFromHost
+ */
+export const useStoragesFromHost = (
+  hostId,
+  mapPredicate=(e) => ({ ...e })
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['storagesFromHost', hostId], 
+  queryFn: async () => {
+    const res = await ApiManager.findAllStoragesFromHost(hostId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useStoragesFromHost ... hostId: ${hostId}, res: `, _res);
+    return _res; // 데이터 가공 후 반환
+  },
+  enabled: !!hostId,
+});
+/**
  * @name useIscsiFromHost
  * @description 호스트 내 iscsi (생성) 목록조회 useQuery훅
  * 
@@ -1364,8 +1390,7 @@ export const useIscsiFromHost = (
     return _res; // 데이터 가공 후 반환
   },
   enabled: !!hostId,
-})
-
+});
 /**
  * @name useFibreFromHost
  * @description 호스트 내 fibre 목록조회 useQuery훅
@@ -1391,7 +1416,7 @@ export const useFibreFromHost = (
     return _res
   },
   enabled: !!hostId,
-})
+});
 /**
  * @name useSearchIscsiFromHost
  * @description 호스트 iscsi 목록조회 useQuery훅
@@ -4404,10 +4429,10 @@ export const useDestroyDomain = (
 ) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (domainId) => {
-      const res = await ApiManager.destroyDomain(domainId);
+    mutationFn: async (storageDomainId) => {
+      const res = await ApiManager.destroyDomain(storageDomainId);
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useDestroyDomain ... domainId: ${domainId}`);
+      Logger.debug(`RQHook > useDestroyDomain ... storageDomainId: ${storageDomainId}`);
       return _res;
     },
     onSuccess: (res) => {

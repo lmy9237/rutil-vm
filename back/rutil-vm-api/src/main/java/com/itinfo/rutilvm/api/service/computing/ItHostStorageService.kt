@@ -22,6 +22,15 @@ import org.springframework.stereotype.Service
 interface ItHostStorageService {
 
 	/**
+	 * [ItHostStorageService.findAllFromHost]
+	 * 도메인 생성 -
+	 *
+	 * @param hostId [String] 호스트 Id
+	 * @return List<[HostStorageVo]>
+	 */
+	@Throws(Error::class)
+	fun findAllFromHost(hostId: String): List<HostStorageVo>
+	/**
 	 * [ItHostStorageService.findAllIscsiFromHost]
 	 * 도메인 생성 - iSCSI 유형 대상 LUN 목록
 	 * 이미 검색을 통해 등록이 된 스토리지?
@@ -66,6 +75,13 @@ interface ItHostStorageService {
 @Service
 class ItHostStorageServiceImpl(
 ): BaseService(), ItHostStorageService {
+
+	@Throws(Error::class)
+	override fun findAllFromHost(hostId: String): List<HostStorageVo> {
+		log.info("findAllFromHost... hostId: {}", hostId)
+		val res: List<HostStorage> = conn.findAllHostStoragesFromHost(hostId).getOrDefault(emptyList())
+		return res.toHostStorageVos()
+	}
 
 	@Throws(Error::class)
 	override fun findAllIscsiFromHost(hostId: String): List<HostStorageVo> {

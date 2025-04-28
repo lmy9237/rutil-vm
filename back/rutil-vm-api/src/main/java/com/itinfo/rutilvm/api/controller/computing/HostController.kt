@@ -666,6 +666,28 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="GET",
+		value="도메인 - 생성할때 뜰 목록",
+		notes="도메인 - iSCSI, Fc. 생성시 사용"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "hostId", value = "호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{hostId}/storages")
+	@ResponseBody
+	fun storages(
+		@PathVariable("hostId") hostId: String? = null
+	): ResponseEntity<List<HostStorageVo>> {
+		if (hostId == null)
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/storages ... 호스트 storages 목록", hostId)
+		return ResponseEntity.ok(iHostStorage.findAllFromHost(hostId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
 		value="도메인 - iSCSI 목록",
 		notes="도메인 - iSCSI 유형 대상 LUN 목록, 기본적으로 있는 항목 출력. 생성시 사용"
 	)
