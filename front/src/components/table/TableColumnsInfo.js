@@ -143,6 +143,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.CPU, accessor: 'cpuUsage', clickable: false, width: '12%' },
     { header: 'Network', accessor: 'networkUsage', clickable: false, width: '12%' },
     { header: Localization.kr.UP_TIME, accessor: 'upTime', clickable: false, width: '12%' },
+    { header: '스냅샷 여부', accessor: 'snapshotExist', clickable: false },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false, width: '25%' }
   ],
   NICS_FROM_VM: [
@@ -185,7 +186,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.SIZE_VIRTUAL, accessor: 'virtualSize', clickable: false },
     { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
     { header: Localization.kr.SPARSE, accessor: 'sparse', clickable: false },
-    { header: '스토리지 도메인', accessor: 'storageDomain', clickable: false },
+    { header: Localization.kr.DOMAIN, accessor: 'storageDomain', clickable: false },
     { header: '스토리지 유형', accessor: 'storageType', clickable: false },
     { header: Localization.kr.DATE_CREATED, accessor: 'creationDate', clickable: false },
     { header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, accessor: 'connectionvm', clickable: false },
