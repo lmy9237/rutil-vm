@@ -18,13 +18,10 @@ import "./Host.css";
 const HostGeneral = ({
   hostId
 }) => {
-  const {
-    data: host,
-    isLoading: isHostLoading,
-    isError: isHostError,
-    isSuccess: isHostSuccess,
-  } = useHost(hostId);
+  const [activeTab, setActiveTab] = useState("general");
+  const { hostsSelected, setHostsSelected } = useGlobal()
 
+  const { data: host } = useHost(hostId);
   const {
     data: hostPer,
     status: hostPerStatus,
@@ -34,9 +31,6 @@ const HostGeneral = ({
     error: hostPerError,
     isLoading: isHostPerLoading,
   } = useDashboardHost(hostId);
-
-  const [activeTab, setActiveTab] = useState("general");
-  const { hostsSelected, setHostsSelected } = useGlobal()
 
   // 최신 데이터를 반영
   useEffect(() => {
@@ -97,9 +91,9 @@ const HostGeneral = ({
     { tab: "software", label: "소프트웨어", tableRows: renderSoftwareTab },
   ]), [renderGeneralTab, renderHardwareTab, renderSoftwareTab]);
 
-  const rows4ActiveTab = useMemo(() => ([
-    tabs.find(({ tab }) => tab === activeTab)?.tableRows || []
-  ]), [tabs, activeTab])
+  // const rows4ActiveTab = useMemo(() => ([
+  //   tabs.find(({ tab }) => tab === activeTab)?.tableRows || []
+  // ]), [tabs, activeTab])
   
   return (
     <div>

@@ -56,8 +56,8 @@ const TableColumnsInfo = {
     { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: '', accessor: "hostedEngine", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '12%' },
-    { header: Localization.kr.COMMENT, accessor: 'comment', clickable: false, width: '12%' },
     { header: `${Localization.kr.HOST} 이름/IP`, accessor: 'address', clickable: false, width: '12%' },
+    { header: Localization.kr.COMMENT, accessor: 'comment', clickable: false, width: '12%' },
     { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: true, width: '12%' },
     { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: false, width: '10%' },
     { header: `${Localization.kr.VM} 수`, accessor: 'vmCnt', clickable: false, width: '10%' },
@@ -91,6 +91,20 @@ const TableColumnsInfo = {
     { header: Localization.kr.TOTAL_BYTE_TX, accessor: 'txTotalSpeed' }, // 총 Tx
     { header: Localization.kr.SPEED, accessor: 'speed' }, // 총 Mbps
     { header: 'Pkts', accessor: 'pkts' } // 패킷 수
+  ],
+  NETWORK_ADAPTER_FROM_HOST:[
+    // { header: "", accessor: "icon", width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.NAME, accessor: 'name' }, // 인터페이스 이름
+    { header: Localization.kr.SPEED_RX, accessor: 'rxSpeed' }, // Rx 속도
+    { header: Localization.kr.SPEED_TX, accessor: 'txSpeed' }, // Tx 속도
+    { header: "구성된 속도", accessor: 'autoNegotiation' }, // autoNegotiation
+    { header: '스위치(네트워크?)', accessor: 'network' }, // 스위치
+    { header: 'MAC', accessor: 'macAddress' }, // MAC 주소
+    { header: '실제 IP 범위', accessor: 'ipv4Address' }, // IP 주소
+    // { header: Localization.kr.TOTAL_BYTE_RX, accessor: 'rxTotalSpeed' }, // 총 Rx
+    // { header: Localization.kr.TOTAL_BYTE_TX, accessor: 'txTotalSpeed' }, // 총 Tx
+    // { header: Localization.kr.SPEED, accessor: 'speed' }, // 총 Mbps
+    // { header: 'Pkts', accessor: 'pkts' } // 패킷 수
   ],
   NETWORK_FROM_HOST:[
     // { header: '', accessor: "icon", width: DEFAULT_WIDTH_ICON_COLUMN }, // 아이콘

@@ -17,6 +17,7 @@ import { useHost } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import "./Host.css";
 import SectionLayout from "../../../components/SectionLayout";
+import HostNetworkAdapter from "./HostNetworkAdapter";
 
 /**
  * @name HostInfo
@@ -72,6 +73,7 @@ const HostInfo = () => {
     { id: "general", label: Localization.kr.GENERAL },
     { id: "vms", label: Localization.kr.VM },
     { id: "nics", label: Localization.kr.NICS },
+    { id: "networkAdapter", label: "네트워크 어댑터" },
     { id: "devices", label: `${Localization.kr.HOST} 장치` },
     { id: "events", label: Localization.kr.EVENT },
   ]), [])
@@ -92,6 +94,7 @@ const HostInfo = () => {
       general: HostGeneral,
       vms: HostVms,
       nics: HostNics,
+      networkAdapter: HostNetworkAdapter,
       devices: HostDevices,
       events: HostEvents,
     }[activeTab];

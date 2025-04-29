@@ -1,5 +1,4 @@
 import Tables from "./Tables";
-import Logger from "../../utils/Logger";
 import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
 import "./Table.css";
 

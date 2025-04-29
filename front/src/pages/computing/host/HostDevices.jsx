@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
@@ -20,10 +20,7 @@ import Logger from "../../../utils/Logger";
 const HostDevices = ({
   hostId
 }) => {
-  const { 
-    hostsSelected, setHostsSelected,
-    hostDevicesSelected, setHostDevicesSelected
-  } = useGlobal()
+  const { hostsSelected, setHostsSelected, hostDevicesSelected, setHostDevicesSelected} = useGlobal()
   const {
     data: hostDevices = [],
     isLoading: isHostDevicesLoading,
@@ -32,10 +29,9 @@ const HostDevices = ({
     refetch: refetchHostDevices,
   } = useHostDevicesFromHost(hostId, (e) => ({ ...e }));
   
-  const transformedData = [...hostDevices]?.map((e) => ({
-    ...e
-  }))
+  const transformedData = [...hostDevices]?.map((e) => ({ ...e }))
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  
   const handleRefresh = useCallback(() => {
     Logger.debug(`HostDevices > handleRefresh ... `)
     if (!refetchHostDevices) return;
@@ -44,11 +40,11 @@ const HostDevices = ({
   }, [])
 
   Logger.debug("HostDevices ...")
+  
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <div className="dupl-header-group f-start">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
-        {/* <HostActionButtons actionType = "default"/> */}
       </div>
 
       <TablesOuter target={"hostdevice"}
@@ -62,8 +58,8 @@ const HostDevices = ({
         refetch={refetchHostDevices}
         isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
       />
-
       <SelectedIdView items={hostDevicesSelected}/>
+
     </div>
   );
 };
