@@ -126,7 +126,6 @@ class HostServiceImpl(
 	}
 
 	@Throws(Error::class)
-	// override fun add(hostVo: HostVo): HostVo? {
 	override fun add(hostVo: HostVo, deployHostedEngine: Boolean?): HostVo? {
 		log.info("add ... ")
 		val res: Host? = conn.addHost(

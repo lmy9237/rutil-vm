@@ -40,13 +40,13 @@ class LogicalUnitVo (
     val port: Int = 0,
     val portal: String = "",
     val productId: String = "",
+	val serial: String = "",
     val size: BigInteger = BigInteger.ZERO,
     val status: LunStatus = LunStatus.UNUSABLE,
     val storageDomainId: String = "",
     val target: String = "",
     val vendorId: String = "",
-    val serial: String = "",
-    val volumeGroup: String = "",
+    val volumeGroupId: String = "",
 ): Serializable {
     override fun toString(): String =
         gson.toJson(this)
@@ -62,15 +62,15 @@ class LogicalUnitVo (
         private var bPort: Int = 0; fun port(block: () -> Int?) { bPort = block() ?: 0}
         private var bPortal: String = ""; fun portal(block: () -> String?) { bPortal = block() ?: ""}
         private var bProductId: String = ""; fun productId(block: () -> String?) { bProductId = block() ?: ""}
+        private var bSerial: String = ""; fun serial(block: () -> String?) { bSerial = block() ?: ""}
         private var bSize: BigInteger = BigInteger.ZERO; fun size(block: () -> BigInteger?) { bSize = block() ?: BigInteger.ZERO}
         private var bStatus: LunStatus = LunStatus.UNUSABLE; fun status(block: () -> LunStatus?) { bStatus = block() ?: LunStatus.UNUSABLE}
         private var bStorageDomainId: String = ""; fun storageDomainId(block: () -> String?) { bStorageDomainId = block() ?: ""}
         private var bTarget: String = ""; fun target(block: () -> String?) { bTarget = block() ?: ""}
         private var bVendorId: String = ""; fun vendorId(block: () -> String?) { bVendorId = block() ?: ""}
-        private var bSerial: String = ""; fun serial(block: () -> String?) { bSerial = block() ?: ""}
-        private var bVolumeGroup: String = ""; fun volumeGroup(block: () -> String?) { bVolumeGroup = block() ?: ""}
+        private var bVolumeGroupId: String = ""; fun volumeGroupId(block: () -> String?) { bVolumeGroupId = block() ?: ""}
 
-        fun build(): LogicalUnitVo = LogicalUnitVo(bId, bAddress, bDiscardMaxSize, bDiscardZeroesData, bDiskId, bLunMapping, bPaths, bPort, bPortal, bProductId, bSize, bStatus, bStorageDomainId, bTarget, bVendorId, bSerial, bVolumeGroup )
+        fun build(): LogicalUnitVo = LogicalUnitVo(bId, bAddress, bDiscardMaxSize, bDiscardZeroesData, bDiskId, bLunMapping, bPaths, bPort, bPortal, bProductId, bSerial, bSize, bStatus, bStorageDomainId, bTarget, bVendorId, bVolumeGroupId )
     }
 
     companion object {
@@ -78,19 +78,42 @@ class LogicalUnitVo (
     }
 }
 
-// logicalunit 공통 빌더
+fun LogicalUnit.toLogicalUnitVo(): LogicalUnitVo {
+	val logical = this@toLogicalUnitVo
+	return LogicalUnitVo.builder {
+		id { if(logical.idPresent()) logical.id() else null }
+		address { if(logical.addressPresent()) logical.address() else null }
+		port { if(logical.portPresent()) logical.portAsInteger() else null }
+		portal { if(logical.portalPresent()) logical.portal() else null }
+		target { if(logical.targetPresent()) logical.target() else null }
+		discardMaxSize { if(logical.discardMaxSizePresent()) logical.discardMaxSizeAsInteger() else null }
+		discardZeroesData { if(logical.discardZeroesDataPresent()) logical.discardZeroesData() else null }
+		paths { if(logical.pathsPresent()) logical.pathsAsInteger() else null }
+		productId { if(logical.productIdPresent()) logical.productId() else null }
+		serial { if(logical.serialPresent()) logical.serial() else null }
+		size { if(logical.sizePresent()) logical.size() else null }
+		status { if(logical.statusPresent()) logical.status() else null }
+		storageDomainId { if(logical.storageDomainIdPresent()) logical.storageDomainId() else null }
+		vendorId { if(logical.vendorIdPresent()) logical.vendorId() else null }
+		volumeGroupId { if(logical.volumeGroupIdPresent()) logical.volumeGroupId() else null }
+	}
+}
+fun List<LogicalUnit>.toLogicalUnitVos(): List<LogicalUnitVo> =
+	this@toLogicalUnitVos.map { it.toLogicalUnitVo() }
+
+
 fun LogicalUnit.toLogicalUnitVoBuilder(): LogicalUnitVo.Builder.() -> Unit = {
 	id { this@toLogicalUnitVoBuilder.id() }
 	discardMaxSize { this@toLogicalUnitVoBuilder.discardMaxSizeAsInteger() }
 	discardZeroesData { this@toLogicalUnitVoBuilder.discardZeroesData() }
 	paths { this@toLogicalUnitVoBuilder.pathsAsInteger() }
 	productId { this@toLogicalUnitVoBuilder.productId() }
+	serial { this@toLogicalUnitVoBuilder.serial() }
 	size { this@toLogicalUnitVoBuilder.size() }
 	status { this@toLogicalUnitVoBuilder.status() }
 	storageDomainId { this@toLogicalUnitVoBuilder.storageDomainId() }
 	vendorId { this@toLogicalUnitVoBuilder.vendorId() }
-	serial { this@toLogicalUnitVoBuilder.serial() }
-	volumeGroup { this@toLogicalUnitVoBuilder.volumeGroupId() }
+	volumeGroupId { this@toLogicalUnitVoBuilder.volumeGroupId() }
 }
 
 // iSCSI
@@ -112,27 +135,4 @@ fun LogicalUnit.toFibreLogicalUnitVo(): LogicalUnitVo = LogicalUnitVo.builder {
 fun List<LogicalUnit>.toFibreLogicalUnitVos(): List<LogicalUnitVo> =
 	map { it.toFibreLogicalUnitVo() }
 
-fun LogicalUnit.toLogicalUnitVo(): LogicalUnitVo {
-	val logical = this@toLogicalUnitVo
-	log.info("** Logical.storageDomainId(): {}", this@toLogicalUnitVo.storageDomainId())
 
-	return LogicalUnitVo.builder {
-		id { if(logical.idPresent()) logical.id() else null }
-		address { if(logical.addressPresent()) logical.address() else null }
-		port { if(logical.portPresent()) logical.portAsInteger() else null }
-		portal { if(logical.portalPresent()) logical.portal() else null }
-		target { if(logical.targetPresent()) logical.target() else null }
-		discardMaxSize { if(logical.discardMaxSizePresent()) logical.discardMaxSizeAsInteger() else null }
-		discardZeroesData { if(logical.discardZeroesDataPresent()) logical.discardZeroesData() else null }
-		paths { if(logical.pathsPresent()) logical.pathsAsInteger() else null }
-		productId { if(logical.productIdPresent()) logical.productId() else null }
-		serial { if(logical.serialPresent()) logical.serial() else null }
-		size { if(logical.sizePresent()) logical.size() else null }
-		status { if(logical.statusPresent()) logical.status() else null }
-		storageDomainId { if(logical.storageDomainIdPresent()) logical.storageDomainId() else null }
-		vendorId { if(logical.vendorIdPresent()) logical.vendorId() else null }
-		volumeGroup { if(logical.volumeGroupIdPresent()) logical.volumeGroupId() else null }
-	}
-}
-fun List<LogicalUnit>.toLogicalUnitVos(): List<LogicalUnitVo> =
-	this@toLogicalUnitVos.map { it.toLogicalUnitVo() }

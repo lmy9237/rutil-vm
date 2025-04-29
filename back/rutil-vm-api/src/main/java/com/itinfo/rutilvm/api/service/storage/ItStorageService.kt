@@ -366,18 +366,7 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun findOne(storageDomainId: String): StorageDomainVo? {
 		log.info("findOne... ")
-
 		val res: StorageDomain? = conn.findStorageDomain(storageDomainId, follow = "disks,diskprofiles").getOrNull()
-		val dcId =
-			if(res?.dataCenterPresent() == true) conn.findDataCenter(res.dataCenters().first().id()).getOrNull()
-			else null
-
-		// follow 때문에 위험한 코드
-		val hosts: List<Host> = conn.findAllHosts(follow = "cluster.datacenter.storagedomains").getOrDefault(emptyList())
-		val host = hosts.firstOrNull { host ->
-			host.cluster()?.dataCenter()?.storageDomains()?.any { it.id() == storageDomainId } == true
-		}
-		log.info("&&&&&&&&&& host: {}, {}", host?.name(), host?.id())
 		return res?.toStorageDomainInfoVo(conn)
 	}
 
@@ -397,7 +386,7 @@ class StorageServiceImpl(
 		log.info("import ... storageDomain name: {}", storageDomainVo.name)
 
 		// NFS 라면 생성 함수로
-		if (StorageType.fromValue(storageDomainVo.storageType) == StorageType.NFS) {
+		if (storageDomainVo.storageVo.type == StorageType.NFS) {
 			return add(storageDomainVo)
 		}
 

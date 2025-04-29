@@ -1,12 +1,12 @@
 package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.api.model.storage.HostStorageVo
+import com.itinfo.rutilvm.api.model.computing.HostStorageVo
+import com.itinfo.rutilvm.api.model.computing.toHostStorageVos
 import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
 import com.itinfo.rutilvm.api.model.storage.LogicalUnitVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.model.storage.toDiscoverIscsiDetailVo
-import com.itinfo.rutilvm.api.model.storage.toHostStorageVos
 import com.itinfo.rutilvm.api.model.storage.toIscsiLogicalUnitVos
 import com.itinfo.rutilvm.api.model.storage.toStorageDomainInfoVos
 import com.itinfo.rutilvm.api.service.BaseService
@@ -102,12 +102,8 @@ class ItHostStorageServiceImpl(
 	@Throws(Error::class)
 	override fun findImportIscsiFromHost(hostId: String, iscsiDetailVo: IscsiDetailVo): List<LogicalUnitVo> {
 		log.info("findImportIscsiFromHost... hostId: {}", hostId)
-		log.info("iscsiDetailVo.target: {}", iscsiDetailVo.target)
-		log.info("iscsiDetailVo.address: {}", iscsiDetailVo.address)
-		log.info("iscsiDetailVo.port: {}", iscsiDetailVo.port)
-		val res: List<LogicalUnit> =
-			conn.discoverIscsiFromHost(hostId, iscsiDetailVo.toDiscoverIscsiDetailVo())
-				.getOrDefault(emptyList()).map { it.logicalUnits() }.flatten()
+		val res: List<LogicalUnit> = conn.discoverIscsiFromHost(hostId, iscsiDetailVo.toDiscoverIscsiDetailVo()).getOrDefault(emptyList())
+			.map { it.logicalUnits() }.flatten()
 		return res.toIscsiLogicalUnitVos()
 	}
 
