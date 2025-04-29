@@ -131,12 +131,9 @@ const HostInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="px-[0.5rem] py-[0.5rem] w-full info-content">
-          <Path
-            pathElements={pathData}
-            basePath={`/computing/hosts/${hostId}`}
-          />
-          <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
+        <div className="info-content v-start gap-8 w-full">
+          <Path pathElements={pathData} basePath={`/computing/hosts/${hostId}`} />
+          {renderSectionContent()}
         </div>
       </div>
     </SectionLayout>

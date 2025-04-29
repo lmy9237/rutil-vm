@@ -16,8 +16,8 @@
   width: 60%;
 }
 .vm-snap-item:last-child {
-  margin-left: 30px;
   width: 38%;
+  margin-left: 30px;
 }
 .snapshot-item {
   cursor: pointer;
@@ -29,21 +29,17 @@
 }
 .snapshot-label {
   word-break: break-all;
-  font-size: var(--fs-14);
   color: var(--color-nav);
 }
 .snap-table {
   height: 100%;
   width: 63%;
   text-align: left;
-  font-size: var(--fs-default);
 }
 .snap-table tr {
-  width: 100%;
-  margin-bottom: 6px;
+  width: 100%;margin-bottom: 6px;
 }
 .snap-table th {
-  font-size: var(--fs-default);
   font-weight: 600;
   line-height: 22.5px;
   width: 45%;

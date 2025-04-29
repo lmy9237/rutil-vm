@@ -1,69 +1,23 @@
 /*일반파트*/
 .vm-detail-general-boxs {
-  display: flex;
-  margin-bottom: 0.2rem;
   gap: 16px;
+  align-items:flex-start !important;
 }
 .detail-general-box {
+  width: 550px !important;height:auto;min-height:460px;
   padding: 24px;
   border-radius: 8px;
-  width: 550px;
   background:var(--color-white);
   /* background:red; */
 }
-.detail-general-box > h1 {
-  font-size: var(--fs-16);
-  font-weight: 700;
-  border-bottom: 1px solid #C6C6C6;
-  padding-bottom: 12px;
-}
-.detail-general-box .info-table-outer{
-  padding: 0 !important;
-  width: 100%;
-}.detail-general-box .table{
+.detail-general-box .table {
   width: 100%;
 }
 .capacity {
-  font-size: var(--fs-default);
   padding-top: 10px;
-  display: flex;
 }
-.capacity > div:first-child {
-  font-weight: 700;
+.capacity > span:first-child {
   width: 40%;
-  font-size: var(--fs-14);
-}
-
-.detail-general-boxs-bottom {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-.vm-general-box {
-  display: flex;
-  font-size: var(--fs-defult);
-  align-items: center;
-  font-weight: 600;
-  border-bottom: 1px solid #dedede;
-  padding: 0.1rem;
-}
-.vm-general-bottom-box {
-  width: 33%;
-  border: 1px solid #dedede;
- 
-}
-.vm-add-snapshot-btn {
-  display: flex;
-  font-size: var(--fs-defult);
-  align-items: center;
-  background: #d7e8ef;
-  padding: 0.1rem;
-  margin: 0.2rem;
-}
-.vm-add-snapshot-btn:hover {
-  font-weight: 600;
-  cursor: pointer;
-  color: blue;
 }
 .disk-bar {
   height: 90%;
@@ -71,31 +25,24 @@
 /* 네트워크 인터페이스 */
 .network-content {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--fs-16);
   border-bottom: 1px solid rgb(226, 226, 226);
   cursor: pointer;
-  align-items:center;
 }
 .network-content:hover {
   background-color: #ebececd8;
 }
-.network-status {
-  display:flex;align-items:center;justify-content:flex-start;flex-direction: row;
-}
 .network-content > div:first-child {
   padding: 10px;
 }
-.network-content > div{
-  min-width:200px;
+.network-content > div {
+  width:25%;
+  max-width:200px;
 }
 .network-content > div:nth-child(n + 2) {
   text-align: center;
   padding-top: 0.4rem;
 }
 .network-content > div > div:nth-child(2) {
-  font-size: var(--fs-default);
   color: #4f4f4f;
 }
 .network-content-detail > div {
@@ -103,7 +50,6 @@
   padding: 10px;
 }
 .network-content-detail-box > div {
-  font-size: var(--fs-14);
   margin-bottom: 3px;
 }
 .network_content2.selected .network-content {
@@ -112,9 +58,10 @@
   background: var(--color-table) !important;
 }
 /*디스크*/
-.vm-disk-search { width: 100%;gap: 10px; }
-/*스냅샷*/
-
+.vm-disk-search { 
+  width:100%;
+  gap:10px;
+}
 
 @media (max-width: 1200px) {
   .vm-detail-general-boxs {

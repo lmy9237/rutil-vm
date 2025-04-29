@@ -76,8 +76,8 @@ const VnicProfileInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton titleIcon={rvi24Lan()}
-        title={vnicProfile?.name}
+      <HeaderButton title={vnicProfile?.name}
+        titleIcon={rvi24Lan()}
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
@@ -85,11 +85,9 @@ const VnicProfileInfo = () => {
           activeSection={activeTab} 
           handleSectionClick={handleTabClick} 
         />
-        <div className="w-full info-content">
-          <Path pathElements={pathData} 
-            basePath={`/vnicProfiles/${vnicProfileId}/vms`}
-          />
-          { renderSectionContent() }
+        <div className="info-content v-start gap-8 w-full">
+          <Path pathElements={pathData} basePath={`/vnicProfiles/${vnicProfileId}/vms`}/>
+          {renderSectionContent()}
         </div>
       </div>
     </SectionLayout>

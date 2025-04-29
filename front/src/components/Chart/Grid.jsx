@@ -71,10 +71,10 @@ const Grid = ({
               <>
                 <div>
                   <div className="percent f-center">
-                    <h1>{displayMetric(type, item)}</h1>
+                    <h1 className="fs-14">{displayMetric(type, item)}</h1>
                     <div className="percent unit">%</div>
                   </div>
-                  <div className="grid-item-name"> {item.name} </div>
+                  <div className="grid-item-name fs-10">{item.name}</div>
                 </div>
               </>
             ) : (

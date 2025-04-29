@@ -57,7 +57,7 @@ const VmSnapshots = ({
     created: snapshot?.date ?? "현재",
     interface_: snapshot?.interface_,
     persistMemory: snapshot?.persistMemory ? "포함" : "비포함",
-    _persistMemory: snapshot?.persistMemory ? rvi16DesktopFlag("#0A7CFF") : rvi16Desktop,
+    _persistMemory: snapshot?.persistMemory ? rvi16DesktopFlag("#0A7CFF") : rvi16Desktop(),
     cpuCore: `${snapshot?.vmViewVo?.cpuTopologyCnt} (${snapshot?.vmViewVo?.cpuTopologyCore}:${snapshot?.vmViewVo?.cpuTopologySocket}:${snapshot?.vmViewVo?.cpuTopologyThread})`,
     memorySize: convertBytesToMB(snapshot?.vmViewVo?.memorySize) + " MB" ?? "",
     memoryActual: convertBytesToMB(snapshot?.vmViewVo?.memoryGuaranteed) + " MB" ?? "",
@@ -83,24 +83,22 @@ const VmSnapshots = ({
   }, [vm])
 
   return (
-    <div 
-      onClick={(e) => e.stopPropagation()} 
-    >
-      <div className="header-right-btns no-search-box">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <VmSnapshotActionButtons 
           hasLocked={hasLockedSnapshot}
           inPreview={inPreview}
         />
       </div>
-      <div  className="snapshot-group-outer f-btw">
+      <div className="snapshot-group-outer f-btw w-full">
         <div  className="snapshot-group">
           <div ref={snapshotItemRef}
             className="vm-snap-item"
           >
             {/* 항상 현재 위치 표시 */}
             <div className="snapshot-item f-start">
-              <RVI16 iconDef={rvi16ChevronDown} />
-              <div className="snapshot-label f-center">
+              <RVI16 iconDef={rvi16ChevronDown()} />
+              <div className="snapshot-label f-center fs-14">
                 <RVI16
                   iconDef={hasLockedSnapshot ? rvi16Lock() : rvi16Location} 
                   className="mx-1.5"
@@ -123,7 +121,7 @@ const VmSnapshots = ({
                 {/* 선택된 스냅샷이면 아래, 아니면 오른쪽 화살표 */}
                 <RVI16 iconDef={
                   snapshotsSelected[0]?.id === snapshot.id 
-                    ? rvi16ChevronDown 
+                    ? rvi16ChevronDown()
                     : rvi16ChevronRight()
                   }
                   className="mx-1.5"
@@ -149,7 +147,7 @@ const VmSnapshots = ({
         </div>
       </div>
       <SelectedIdView items={snapshotsSelected} />
-    </div>
+    </>
   );
 };
 

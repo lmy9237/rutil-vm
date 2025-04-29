@@ -21,6 +21,7 @@ export const Localization = {
     DATA_CENTER: "데이터센터",
     CLUSTER: "클러스터",
     HOST: "호스트",
+    ENGINE: "엔진",
     VM: "가상머신",
     TEMPLATE: "템플릿",
     SNAPSHOT: "스냅샷",
@@ -128,7 +129,8 @@ export const Localization = {
       else if (_status === "DOWN")          return "중지";
       else if (_status === "INACTIVE")      return "비활성화";
       else if (_status === "UNINITIALIZED") return "초기화되지 않음";
-      else if (_status === "REBOOT")  return "재부팅 중";
+      else if (_status === "NEXT_RUN")      return "다음 실행 시 변경내용 적용";
+      else if (_status === "REBOOT")        return "재부팅 중";
       else if (_status === "REBOOT_IN_PROGRESS")  return "재부팅/재설정 중";
       else if (_status === "SUSPENDED" || _status === "PAUSED")   return "일시중지";
       else if (_status === "SAVING_STATE")  return "일시중지 중";

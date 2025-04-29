@@ -67,7 +67,7 @@ const HostActionButtons = ({ actionType = "default" }) => {
       ) : (
         <div className="dropdown-container">
           <ActionButton
-            iconDef={activeDropdown ? rvi16ChevronUp : rvi16ChevronDown}
+            iconDef={activeDropdown ? rvi16ChevronUp() : rvi16ChevronDown()}
             label={Localization.kr.MANAGEMENT}
             onClick={toggleDropdown}
           />

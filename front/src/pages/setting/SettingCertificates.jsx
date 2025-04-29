@@ -45,10 +45,9 @@ const SettingCertificates = () => {
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
-  Logger.debug("SettingCertificates ...");
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         {/* <SettingUserSessionsActionButtons /> */}
       </div>
@@ -62,10 +61,9 @@ const SettingCertificates = () => {
         isLoading={isCertsLoading} isError={isCertsError} isSuccess={isCertsSuccess}
       />
       <SelectedIdView items={certsSelected} />
-
       <br/>
       <SettingCertificatesRenewalPolicies />
-    </div>
+    </>
   );
 }
 

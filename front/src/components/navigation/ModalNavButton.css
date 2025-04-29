@@ -9,11 +9,9 @@
   color: black;
 }
 .network-backup-edit {
-    /* height: 57.4vh; */
-    width: 48%;
+  width: 48%;
 }
 .network-backup-edit-nav {
-  font-size: var(--fs-14);
   width: 23%;
   border-right: var(--border-default);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -21,11 +19,9 @@
 }
 .network-backup-edit-nav > div {
   height: 36px;
-  align-items: center;
-  cursor: pointer;
-  display: flex;
-  font-weight: 300;
   padding-left: 8px;
+  cursor: pointer;
+  font-weight: 300;
 }
 .network-backup-edit-nav > div:hover{
   background: var(--color-white);

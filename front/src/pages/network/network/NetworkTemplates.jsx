@@ -1,10 +1,10 @@
 import { Suspense, useState, useMemo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import useUIState from "../../../hooks/useUIState";
 import useSearch from "../../../hooks/useSearch";
 import Loading from "../../../components/common/Loading";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import SearchBox from "../../../components/button/SearchBox";
@@ -12,7 +12,6 @@ import TemplateNicDeleteModal from "../../../components/modal/template/TemplateN
 import { useAllTemplatesFromNetwork } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
 import Logger from "../../../utils/Logger";
-import SelectedIdView from "../../../components/common/SelectedIdView";
 import Localization from "../../../utils/Localization";
 
 /**
@@ -70,12 +69,11 @@ const NetworkTemplates = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
-  Logger.debug("NetworkTemplates ...")
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-        <div className="header-right-btns ">
+        <div className="header-right-btns">
           {/* 제거 버튼에 openDeleteModal 핸들러 연결 */}
           <ActionButton actionType="default" label={Localization.kr.REMOVE}
             onClick={openDeleteModal}
@@ -83,7 +81,6 @@ const NetworkTemplates = ({
           />
         </div>
       </div>
-
       <TablesOuter target={"template"}
         columns={TableColumnsInfo.TEMPLATES_FROM_NETWORK}
         data={filteredData}
@@ -95,9 +92,7 @@ const NetworkTemplates = ({
         refetch={refetchTemplates}
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
-
       <SelectedIdView items={nicsSelected}/>
-
       {/* 모달 렌더링 */}
       <Suspense fallback={<Loading/>}>
         {activeModal() === "template:remove" && (
@@ -108,7 +103,7 @@ const NetworkTemplates = ({
           />
         )}
       </Suspense>
-    </div>
+    </>
   );
 };
 

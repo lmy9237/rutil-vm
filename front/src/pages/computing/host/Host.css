@@ -1,66 +1,34 @@
-/*세부정보*/
-.host-content-outer{
-    width: 100%;
-    padding: 0.2rem 0;
-    font-size: var(--fs-16);
-    height: 100%;
-    overflow-y: auto; /* 세로 스크롤바를 필요할 때 표시합니다 */
-}
-.host-table{
-    text-align: left;
-}
-
-.host-table{
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    font-size: var(--fs-default);
-}
-
-.host-table th{
-    text-align: left ;
-    width: 60%;
-    padding: 0.06rem 0 ;
-}
-.host-table tr{
-    width: 100%;
-}
 /* 호스트 네트워크 인터페이스 */ 
 .host-network-boxs:hover{
-    background:#e6eefa;
- }
- .host-tabs {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    border: 1px solid gray;
-    border-radius: 4px;
-    overflow: hidden; 
-    width: fit-content;
-    font-size: var(--fs-14);
-    font-weight: 500;
-    margin-bottom: 16px;
-  }
+  background:#e6eefa;
+}
+
+.host-tabs {
+  width: fit-content;
+  margin-bottom: 16px;
+  border: 1px solid gray;border-radius: 4px;
+  overflow: hidden; 
+}
   
-  .host-tabs .tab-button {
-    padding: 0 40px;
-    border: none;
-    height: 32px;
-    color: var(--color-nav);
-    font-weight: 500;
-    border-right: 1px solid gray;
-    transition: background-color 0.3s, color 0.3s;
-  }
+.host-tabs .tab-button {
+  padding: 0 40px;
+  border: none;
+  height: 32px;
+  color: var(--color-nav);
+  font-weight: 500;
+  border-right: 1px solid gray;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.host-tabs .tab-button:last-child {
+  border-right: none; 
+}
   
-  .host-tabs .tab-button:last-child {
-    border-right: none; 
-  }
-  
-  .host-tabs .tab-button.active {
-    background-color: var(--color-primary-hover);
-    color: white;
-    font-weight: 700;
-  }
+.host-tabs .tab-button.active {
+  background-color: var(--color-primary-hover);
+  color: white;
+  font-weight: 700;
+}
 
 
 /*호스트 네트워크 설정 */
@@ -81,12 +49,8 @@
   background-color: white;
   text-align: center;
   cursor: pointer;
-  display: flex;
   padding: 8px 16px;
-  justify-content: space-between;
-  align-items: center;
   align-self: stretch;
-  font-size: var(--fs-default);
 }
 .network-item:hover {
   border: 1.7px dashed #002a4f;
@@ -94,15 +58,11 @@
 }
 .network-separation-left > div:first-child > div {
   width: 37%;
-  text-align: center;
   padding: 0.2rem;
-  font-size: var(--fs-17);
-  font-weight: 700;
+  text-align: center;
 }
 .separation-left-content {
   border-bottom: 1px solid #a3a3a3;
-  display: flex;
-  justify-content: space-between;
   padding: 16px 0;
   margin-bottom: 7px;
 }
@@ -135,16 +95,12 @@
 
 .interface-header {
   color: #1D1D1D;
-  font-size: var(--fs-18);
-  font-weight: 700;
   letter-spacing: -0.36px;
   padding: 5px 0;
 }
-.unassigned-network{
+.unassigned-network {
   text-align: center;
   padding: 0.2rem;
-  font-size: var(--fs-17);
-  font-weight: 700;
   margin-bottom: 15px;
 }
 
@@ -158,9 +114,6 @@
 
 
 /*네트워크인터페이스 */
-.nic-outer{
-  font-size: var(--fs-14);
-}
 .interface-content-outer{
   width: 39%;
 }
@@ -175,9 +128,8 @@
   background-color: rgb(255, 255, 255);
 }
 .assigned-network-content{
-  display: flex;
+  display: flex;justify-content: space-between;
   width: 100%;
-  justify-content: space-between;
 }
 
 .interface-outer{
@@ -185,12 +137,12 @@
   /* background: var(--color-input-disabled); */
   border: var(--border-default);
 }
-.interface-container-outer{
+.interface-container-outer {
   background-color: rgb(141, 197, 52);
 }
-.interface-container{
+.interface-container {
   border: var(--border-default);
- background-color: rgb(117, 111, 111);
+  background-color: rgb(117, 111, 111);
 }
 .separations{
   height: 100%;

@@ -19,7 +19,6 @@ const VmEvents = ({ vmId }) => {
     refetch: refetchEvents,
   } = useAllEventsFromVM(vmId, (e) => ({ ...e }));
 
-  Logger.debug("VmEvents ...")
   return (
     <EventDupl events={events}
       refetch={refetchEvents}

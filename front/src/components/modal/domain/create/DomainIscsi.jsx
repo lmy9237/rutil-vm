@@ -90,7 +90,7 @@
 //       ): (
 //         <>
 //           <div className="target-search-outer">
-//             <label className="label-font-name">{Localization.kr.TARGET} {Localization.kr.SEARCH}</label>
+//             <label className="fs-16">{Localization.kr.TARGET} {Localization.kr.SEARCH}</label>
 //             <div className="target-search-container">
               
 //               <div className="input-inline-wrap">

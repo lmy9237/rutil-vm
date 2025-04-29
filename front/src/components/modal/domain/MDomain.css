@@ -3,20 +3,9 @@
   width:100%;height:var(--h-modal-content);
 }
 
-
-.domain-new-select{
-  width: 100%;
-  margin-bottom: 0.3rem;
-}
-.domain-num-box{
-  padding: 14px 0;
-  font-size: var(--fs-14);
-}
-
 /*도메인 삭제*/
 .domain-delete-popup{
-  height: 33.4vh;
-  width: 38%;
+  width: 38%;height: 33.4vh;
 }
 /*도메인 파괴*/
 .destroy-text{
@@ -30,23 +19,15 @@
   font-weight: 700;
   margin-bottom: 10px;
 }
-/*가상머신 / 템플릿 가져오기*/
-.get-vm-template{
-  height: 70%;
-  width: 48%;
-}
 
 .get-template-info{
   overflow-y: auto;
   height: 26vh;
   overflow-x: hidden;
-  display:flex;
-  justify-content:space-between;
 }
 .get-template-info>div{
-  width: 44%;
+  width: 44%;height: 100%;
   background: var(--color-white);
-  height: 100%;
 }
 .get-template-info>div>div{
   display:flex;
@@ -59,23 +40,16 @@
 .filter-table .info-table-outer{
   padding: 0;
 }
-.filter-table .table{
-  width: 100%;
-}
-.filter-table .table th{
-  width: 42%;
-}
-.filter-table .table th,.table td{
+.filter-table .table { width: 100%; }
+.filter-table .table th { width: 42%; }
+.filter-table .table th,
+.filter-table .table td {
   padding: 7px;
 }
 
 /* iscsi 대상검색*/
 .target-search-outer{
   padding: 12px 0;
-}
-.label-font-name{
-  font-size: var(--fs-16);
-  font-weight: 700;
 }
 /* .use-chap-outer{
   background: var(--color-white);

@@ -2,7 +2,6 @@ import React, { useState, useEffect, Suspense, useCallback, useMemo } from "reac
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
-import Loading from "../../../components/common/Loading";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -12,9 +11,9 @@ import DataCenterVms from "./DataCenterVms";
 import DataCenterDomains from "./DataCenterDomains";
 import DataCenterNetworks from "./DataCenterNetworks";
 import DataCenterEvents from "./DataCenterEvents";
-import { useDataCenter } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import { rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
+import { useDataCenter } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import SectionLayout from "../../../components/SectionLayout";
 
@@ -121,9 +120,9 @@ const DataCenterInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="px-[0.5rem] py-[0.5rem] w-full info-content">
-          <Path pathElements={pathData}  basePath={`/computing/datacenters/${dataCenterId}/clusters`}/>
-          <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
+        <div className="info-content v-start gap-8 w-full">
+          <Path type={"datacenter"} pathElements={pathData} basePath={`/computing/datacenters/${dataCenterId}/clusters`}/>
+          {renderSectionContent()}
         </div>
       </div>
     </SectionLayout>

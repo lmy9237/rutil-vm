@@ -42,10 +42,9 @@ const VmGeneralChart = ({diskData}) => {
 
   return (
     <div id="chart">
-      <ReactApexChart
+      <ReactApexChart type="bar"
         options={state.options}
         series={state.series}
-        type="bar"
         height={215}
       />
     </div>

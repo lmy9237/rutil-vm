@@ -276,7 +276,7 @@ const HostNetworkModal = ({
           {outer
             .filter(outerItem => outerItem.children.length > 0 || outerItem.networks.length > 0)
             .map((outerItem) => (
-              <div key={outerItem.id} className="separation-left-content">
+              <div key={outerItem.id} className="separation-left-content f-btw">
                 <div 
                   key={outerItem.id} 
                   className="interface" 
@@ -284,7 +284,7 @@ const HostNetworkModal = ({
                   onDrop={() => drop(outerItem.id, "interface")}
                 > 
                   {outerItem.name && (
-                    <div className="interface-header">
+                    <div className="interface-header fs-18">
                       {outerItem.name} {outerItem.name.startsWith("bond") && (
                         <RVI16 iconDef={rvi16Star} className="icon" onClick={() => openBondingPopup("edit")} />
                       )}
@@ -351,9 +351,8 @@ const HostNetworkModal = ({
           </div>
         
           {availableNetworks?.map((net) => (
-            <div
-              key={net.id}
-              className="network-item"
+            <div key={net.id}
+              className="network-item f-btw"
               draggable
               onDragStart={(e) => dragStart(e, net, "unassigned")}
             >

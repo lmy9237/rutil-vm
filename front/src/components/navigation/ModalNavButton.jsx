@@ -8,12 +8,12 @@ const ModalNavButton = ({
   onTabClick
 }) => {
   return (
-    <div className="network-backup-edit-nav">
+    <div className="network-backup-edit-nav fs-14">
       {tabs.map((tab) => (
         <div
           key={tab.id}
           id={`${tab.id}_tab`}
-          className={activeTab === tab.id ? "active-tab" : "inactive-tab"}
+          className={`f-center ${activeTab === tab.id ? "active-tab" : "inactive-tab"}`}
           onClick={() => onTabClick(tab.id)}
         >
           {tab.label}

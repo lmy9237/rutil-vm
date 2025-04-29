@@ -23,7 +23,7 @@ const LabelCheckbox = ({
   disabled,
   required,
 }) => (
-  <div className={`input-checkbox ${className}`}>
+  <div className={`input-checkbox f-start ${className}`}>
     <input
       id={id}
       type="checkbox"

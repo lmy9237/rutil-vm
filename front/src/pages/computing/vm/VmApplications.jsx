@@ -30,7 +30,6 @@ const VmApplications = ({ vmId }) => {
     ...e
   }))
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-
   const handleRefresh = useCallback(() => {
     Logger.debug(`VmApplications > handleRefresh ... `)
     if (!refetchApplications) return;
@@ -39,12 +38,11 @@ const VmApplications = ({ vmId }) => {
   }, [])
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-2 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}  onRefresh={handleRefresh}/>
         {/* <HostActionButtons actionType = "default"/> */}
       </div>
-      
       <TablesOuter target={"application"}
         columns={TableColumnsInfo.APPLICATIONS_FROM_VM}
         data={filteredData}
@@ -56,9 +54,8 @@ const VmApplications = ({ vmId }) => {
         refetch={refetchApplications}
         isLoading={isApplicationsLoading} isError={isApplicationsError} isSuccess={isApplicationsSuccess}
       />
-
       <SelectedIdView items={applicationsSelected}/>
-    </div>
+    </>
   );
 };
 

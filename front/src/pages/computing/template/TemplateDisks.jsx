@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
-import TableRowClick from '../../../components/table/TableRowClick';
-import { useAllDisksFromTemplate, useStroageDomain } from '../../../api/RQHook';
-import { checkZeroSizeToGiB, convertBytesToGB } from '../../../util';
-import { Tooltip } from 'react-tooltip';
-import TableColumnsInfo from '../../../components/table/TableColumnsInfo';
-import TablesOuter from '../../../components/table/TablesOuter';
-import SelectedIdView from '../../../components/common/SelectedIdView';
-import useGlobal from '../../../hooks/useGlobal';
-import useUIState from '../../../hooks/useUIState';
-import Logger from '../../../utils/Logger';
+import React, { useCallback } from "react";
+import { Tooltip } from "react-tooltip";
+import toast from "react-hot-toast";
+import useSearch from "../../../hooks/useSearch";
+import useGlobal from "../../../hooks/useGlobal";
+import useUIState from "../../../hooks/useUIState";
+import SearchBox from "../../../components/button/SearchBox";
+import TableRowClick from "../../../components/table/TableRowClick";
+import { useAllDisksFromTemplate, useStroageDomain } from "../../../api/RQHook";
+import { checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
+import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
+import TablesOuter from "../../../components/table/TablesOuter";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import Logger from "../../../utils/Logger";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name TemplateDisks
@@ -27,13 +31,14 @@ const TemplateDisks = ({
     isLoading: isDisksLoading,
     isError: isDisksError,
     isSuccess: isDisksSuccess,
+    refetch: refetchDisks,
   } = useAllDisksFromTemplate(templateId, ((e) => ({...e})));
   
-  const transformedData = (!Array.isArray(disks) ? [] : disks).map((e) => {
+  const transformedData = [...disks].map((e) => {
     const disk = e?.diskImageVo;
     return {
       id: e?.id,
-      interfaceType: e?.interface_ || 'N/A',
+      interfaceType: e?.interface_ || Localization.kr.NOT_ASSOCIATED,
       _alias: (
         <TableRowClick type="disk" id={disk?.id}>
           {disk?.alias}
@@ -52,15 +57,31 @@ const TemplateDisks = ({
     };
   });
 
-  Logger.debug(`TemplateDisks ... `)
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = useCallback(() =>  {
+    Logger.debug(`EventDupl > handleRefresh ... `)
+    if (!refetchDisks) return;
+    refetchDisks()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
+  
   return (
-    <>
-      <TablesOuter columns={TableColumnsInfo.DISKS_FROM_TEMPLATE}
-        data={transformedData}
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
+        {/* <HostActionButtons actionType = "default"/> */}
+      </div>
+      <TablesOuter target={"disk"}
+        columns={TableColumnsInfo.DISKS_FROM_TEMPLATE}
+        data={filteredData}
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery}
+        multiSelect={true}
+        shouldHighlight1stCol={true}
         onRowClick={(rows) => setDisksSelected(rows)}
+        refetch={refetchDisks}
         isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
       />
-
       <SelectedIdView items={disksSelected} />
     </>
   );

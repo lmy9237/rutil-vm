@@ -130,10 +130,10 @@ const VmInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton titleIcon={rvi24Desktop()}
-        title={vm?.name}
-        status={Localization.kr.renderStatus(vm?.status)}
+      <HeaderButton title={vm?.name}
+        titleIcon={rvi24Desktop()}
         buttons={sectionHeaderButtons}
+        status={Localization.kr.renderStatus(vm?.status)}
         popupItems={popupItems}
       />
       <div className="content-outer">
@@ -141,9 +141,9 @@ const VmInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full info-content">
-          <Path pathElements={pathData}  basePath={`/computing/vms/${vmId}`}/>
-          <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
+        <div className="info-content v-start gap-8 w-full">
+          <Path pathElements={pathData} basePath={`/computing/vms/${vmId}`}/>
+          {renderSectionContent()}
         </div>
       </div>
     </SectionLayout>

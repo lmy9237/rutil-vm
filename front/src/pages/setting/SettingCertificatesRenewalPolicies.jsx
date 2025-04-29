@@ -24,7 +24,7 @@ const SettingCertificatesRenewalPolicies = () => {
   Logger.debug("SettingCertificatesRenewalPolicies ...");
   return (
     <details>
-      <summary>
+      <summary className="fs-16">
         <FontAwesomeIcon icon={faExclamationTriangle} fixedWidth />
         인증서 재갱신 정책
       </summary>

@@ -32,7 +32,7 @@ const StorageTree = ({}) => {
       {/* 첫 번째 레벨 (Rutil Manager) */}
       <TreeMenuItem level={1}
         title="Rutil Manager"
-        iconDef={rvi16Globe}
+        iconDef={rvi16Globe("currentColor")}
         // isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
         isSelected={() => location.pathname.includes("rutil")}
         isNextLevelVisible={secondVisibleStorage()}
@@ -52,7 +52,7 @@ const StorageTree = ({}) => {
           <div key={dc?.id} className="tmi-g" id="tmi-datacenter">
             <TreeMenuItem level={2}
               title={dc?.name}
-              iconDef={rvi16DataCenter}
+              iconDef={rvi16DataCenter("currentColor")}
               isSelected={() => location.pathname.includes(dc?.id)}
               isNextLevelVisible={isDataCentersOpen}
               isChevronVisible={hasDomains}
@@ -87,7 +87,7 @@ const StorageTree = ({}) => {
                     <TreeMenuItem
                       level={3}
                       title={domain?.name}
-                      iconDef={rvi16Cloud}
+                      iconDef={rvi16Cloud("currentColor")}
                       isSelected={() => location.pathname.includes(domain?.id)}
                       isNextLevelVisible={isDomainOpen}
                       isChevronVisible={hasDisks}

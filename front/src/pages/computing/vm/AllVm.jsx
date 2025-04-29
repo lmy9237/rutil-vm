@@ -6,7 +6,6 @@ import VmDupl from "../../../components/dupl/VmDupl";
 import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
 import { useAllVMs } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
 import "./Vm.css";
 
 /**
@@ -24,13 +23,12 @@ const AllVm = () => {
     refetch: refetchVms,
   } = useAllVMs((e) => ({ ...e }));
 
-  Logger.debug("AllVm ...");
   return (
     <SectionLayout>
       <HeaderButton titleIcon={rvi24Desktop()}
         title={Localization.kr.VM}
       />
-      <div className="section-content w-full">
+      <div className="section-content v-start gap-8 w-full">
         <VmDupl columns={TableColumnsInfo.VMS}
           vms={vms}
           showSearchBox={true}

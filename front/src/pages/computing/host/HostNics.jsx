@@ -490,9 +490,8 @@ const HostNics = ({ hostId }) => {
       <div className="host-network-separation f-btw" style={{ position: "relative" }}>
         <div className="flex separations">
           <div className="network-separation-left">
-
             <div className="f-btw mb-2">
-              <div>인터페이스</div>
+              <div className="fs-18">인터페이스</div>
               <div>할당된 논리 네트워크</div>
             </div>
 
@@ -503,7 +502,7 @@ const HostNics = ({ hostId }) => {
                 );
               
                 return (
-                  <div key={nic.id} className="f-btw mb-2 nic-outer">
+                  <div key={nic.id} className="nic-outer f-btw fs-14 mb-2">
                     {(nic.bondingVo?.slaves?.length > 0 || !nic.name.startsWith('bond')) && (
              <div className="interface-content-outer" onDragOver={(e) => e.preventDefault()} onDrop={() => drop(nic.id, "nic")}>
 
@@ -623,9 +622,9 @@ const HostNics = ({ hostId }) => {
             onDrop={() => drop(null, "unassigned")}
           >
             <div className="unassigned-network">
-              <div>할당되지 않은 논리 네트워크</div>
+              <span className="fs-18">할당되지 않은 논리 네트워크</span>
             </div>
-            {transUnNetworkData?.map((net) => (
+            {[...transUnNetworkData]?.map((net) => (
               <UnassignedNetworkItem
                 key={net.id}
                 network={net}
@@ -890,7 +889,7 @@ export default HostNics;
 //           {outer
 //             .filter(outerItem => outerItem.children.length > 0 || outerItem.networks.length > 0)
 //             .map((outerItem) => (
-//               <div key={outerItem.id} className="separation-left-content">
+//               <div key={outerItem.id} className="separation-left-content f-btw">
 
 //                 {outerItem.children.length === 1 ? (
 //                   <div
@@ -915,7 +914,7 @@ export default HostNics;
 //                     onDrop={() => drop(outerItem.id, "interface")}
 //                   > 
 //                     {outerItem.name && (
-//                       <div className="interface-header f-btw">
+//                       <div className="interface-header f-btw fs-18">
 //                         {outerItem.name} 
 //                         {outerItem.name.startsWith("bond") && (
 //                           <RVI36 iconDef={rvi36Edit} className="icon" onClick={() => openBondingPopup("edit")} />
@@ -996,7 +995,7 @@ export default HostNics;
 //           {availableNetworks?.map((net) => (
 //             <div
 //               key={net.id}
-//               className="network-item"
+//               className="network-item f-btw"
 //               draggable
 //               onDragStart={(e) => dragStart(e, net, "unassigned")}
 //             >

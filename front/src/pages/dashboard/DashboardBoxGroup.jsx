@@ -40,33 +40,33 @@ const DashboardBox = ({
       <span className="box-icon-title f-start">
         {/* FontAwesome 아이콘인지, SVG 아이콘인지 체크 후 렌더링 */}
         <RVI24 className="box-icon" iconDef={iconDef} />
-        <p className="box-icon-name">{title}</p>
+        <p className="box-icon-name fs-14">{title}</p>
       </span>
 
       <div className="box-detail f-end">
         <div className="box-detail-icons f-end">
           {cntUp && (<div className="box-detail-icon f-end">
             <RVI16 className="box-icon sml" iconDef={rvi16DiagonalUp()} />
-            <span className="txt up v-end">{cntUp}</span>
+            <span className="up v-end">{cntUp}</span>
           </div>)}
           {cntDown && (<div className="box-detail-icon f-end">
             <RVI16 className="box-icon sml" iconDef={rvi16DiagonalDown()} />
-            <span className="txt down v-end">{cntDown}</span>
+            <span className="down v-end">{cntDown}</span>
           </div>)}
           {alert && (<div className="box-detail-icon f-end">
             {severity2Icon("ALERT", true)}
-            <span className="txt alert v-end">{alert}</span>
+            <span className="alert v-end">{alert}</span>
           </div>)}
           {error && (<div className="box-detail-icon f-end">
             {severity2Icon("ERROR", true)}
-            <span className="txt error v-end">{error}</span>
+            <span className="error v-end">{error}</span>
           </div>)}
           {warning && (<div className="box-detail-icon f-end">
             {severity2Icon("WARNING", true)}
-            <span className="txt warning f-start">{warning}</span>
+            <span className="warning v-end">{warning}</span>
           </div>)}
         </div>
-        <h1 className="f-center">{cntTotal}</h1>
+        <h1 className="f-end fs-24 fw-700">{cntTotal}</h1>
       </div>
     </div>
   );

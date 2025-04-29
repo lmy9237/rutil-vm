@@ -346,7 +346,7 @@ const VmDiskModal = ({
               />
             </div>
 
-            <div className="disk-new-img-right">
+            <div className="disk-new-img-right f-end">
               <div className='img-checkbox-outer'>
                 <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
                   checked={Boolean(formState.wipeAfterDelete)} 
@@ -426,7 +426,7 @@ const VmDiskModal = ({
                   </select>
                 </div>
               </div>
-              <div className="disk-new-img-right">
+              <div className="disk-new-img-right f-end">
                 <div>
                   <input type="checkbox" className="shareable" />
                   <label htmlFor="shareable">{Localization.kr.IS_SHARABLE}</label>

@@ -29,7 +29,7 @@ const AllNetwork = () => {
       <HeaderButton titleIcon={rvi24Network()} 
         title={Localization.kr.NETWORK}
       />
-      <div className="section-content w-full">
+      <div className="section-content v-start gap-8 w-full">
         <NetworkDupl columns={TableColumnsInfo.NETWORKS}
           networks={networks}
           showSearchBox={true}

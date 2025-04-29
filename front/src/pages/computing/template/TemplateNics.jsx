@@ -22,7 +22,6 @@ import { useAllNicsFromTemplate } from "../../../api/RQHook";
  */
 const TemplateNics = ({ 
   templateId,
-  showSearchBox = true, 
   refetch,
 }) => {
   const { activeModal, setActiveModal, } = useUIState()
@@ -32,6 +31,7 @@ const TemplateNics = ({
     isLoading: isVnicProfilesLoading,
     isError: isVnicProfilesError,
     isSuccess: isVnicProfilesSuccess,
+    refetch: refetchVnicProfiles,
   } = useAllNicsFromTemplate(templateId, (e) => ({ ...e }));
 
   const columns = TableColumnsInfo.NICS_FROM_TEMPLATE;
@@ -55,12 +55,6 @@ const TemplateNics = ({
     }))
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
-  /*
-  const handleNameClick = useCallback((id) => {
-    navigate(`/computing/hosts/${id}`);
-  }, [])
-  */
-
   const handleRefresh = useCallback(() => {
     if (!refetch) return;
     refetch()
@@ -68,30 +62,27 @@ const TemplateNics = ({
   }, [])
 
   return (
-    <>
-      <div className="dupl-header-group f-start">
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>)}
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
         <NicActionButtons
           isEditDisabled={vnicProfilesSelected.length !== 1}
         />
-     </div>
-      <TablesOuter
+      </div>
+      <TablesOuter target={"vnicprofile"}
         columns={columns}
         data={filteredData}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        multiSelect={true}
+        shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setVnicProfilesSelected(selectedRows)}
+        refetch={refetchVnicProfiles}
         isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
-        onContextMenuItems={(row) => [
-          <NicActionButtons type="context"
-            isEditDisabled={!row}
-          />,
-        ]}
       />
-
       <SelectedIdView items={vnicProfilesSelected}/>
 
-      {/* nic 모달창 */}
+      {/* TODO: VmNicModals 생성: nic 모달창 */}
       {activeModal() === "nic:create" && (
         <VmNicModal key={activeModal()} isOpen={activeModal() === "nic:create"}
           onClose={() => setActiveModal(null)}

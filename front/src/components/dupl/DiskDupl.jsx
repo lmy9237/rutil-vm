@@ -15,7 +15,7 @@ import Logger from "../../utils/Logger";
 import useGlobal from "../../hooks/useGlobal";
 
 const DiskDupl = ({
-  disks = [], columns = [], showSearchBox = true,
+  disks = [], columns = [],
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
@@ -99,13 +99,11 @@ const DiskDupl = ({
   }, [disksSelected])
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
-        {/* 검색창 추가 */}
+    <>{/* v-start으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <DiskActionButtons />
       </div>
-
       <TablesOuter target={"disk"}
         columns={columns}
         data={filteredData} // ✅ 검색된 데이터만 표시
@@ -118,7 +116,7 @@ const DiskDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={disksSelected} />
-    </div>
+    </>
   );
 };
 

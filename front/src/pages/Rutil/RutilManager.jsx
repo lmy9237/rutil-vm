@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import NavButton from "../../components/navigation/NavButton";
 import HeaderButton from "../../components/button/HeaderButton";
 import Path from "../../components/Header/Path";
-import Info from "./Info";
+import RutilGeneral from "./RutilGeneral";
 import DataCenters from "./DataCenters";
 import Clusters from "./Clusters";
 import Hosts from "./Hosts";
@@ -25,7 +25,7 @@ import "./RutilManager.css";
  * 
  * @returns {JSX.Element} Rutil Manager 창
  * 
- * @see Info
+ * @see RutilGeneral
  * @see DataCenters
  * @see Clusters
  * @see Hosts
@@ -79,7 +79,7 @@ const RutilManager = () => {
   const renderSectionContent = useCallback(() => {
     Logger.debug(`RutilManager > renderSectionContent ...`)
     const sectionComponents = {
-      info: Info,
+      info: RutilGeneral,
       datacenters: DataCenters,
       clusters: Clusters,
       hosts: Hosts,
@@ -90,7 +90,7 @@ const RutilManager = () => {
       networks: Networks,
       vnicProfiles: VnicProfiles,
     };
-    const SectionComponent = sectionComponents[activeTab] || Info;
+    const SectionComponent = sectionComponents[activeTab] || RutilGeneral;
     return <SectionComponent />;
   }, [activeTab]);
 
@@ -105,7 +105,7 @@ const RutilManager = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full info-content">
+        <div className="info-content v-start gap-8 w-full">
           <Path pathElements={pathData} />
           {renderSectionContent()}
         </div>

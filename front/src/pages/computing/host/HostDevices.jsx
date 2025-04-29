@@ -39,14 +39,10 @@ const HostDevices = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
-  Logger.debug("HostDevices ...")
-  
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
-      </div>
-
+    <>{/* v-start w-full으로 묶어짐*/}
+      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
+      {/* <HostActionButtons actionType = "default"/> */}
       <TablesOuter target={"hostdevice"}
         columns={TableColumnsInfo.DEVICE_FROM_HOST}
         data={filteredData}
@@ -59,8 +55,7 @@ const HostDevices = ({
         isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
       />
       <SelectedIdView items={hostDevicesSelected}/>
-
-    </div>
+    </>
   );
 };
 

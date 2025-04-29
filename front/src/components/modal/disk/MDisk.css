@@ -1,16 +1,12 @@
 /*새로만들기*/
 .disk-new-img-right {
-  display: flex;
-  justify-content: right;
   width: 100%;
 }
-.disk-new-img-right>.input-checkbox{
+.disk-new-img-right > .input-checkbox{
   display: flex;
 }
-.disk-new-img-left {
-  width: 100%;
-}
-.img-checkbox-outer{
+.disk-new-img-left { width: 100%; }
+.img-checkbox-outer {
   margin-left: 24px;
 }
 /*이미지,직접lun버튼*/
@@ -34,7 +30,6 @@
 
 /*디스크(업로드)*/
 .storage-upload-first {
-  display: flex;
   height: 62px;
   border-bottom: 1px solid var(--color-table);
 }
@@ -42,17 +37,10 @@
   font-weight: 600;
   margin-right: 16px;
 }
-.storage-upload-first>p{
-  font-size: var(--fs-16);
-}
 .storage-upload-first>div{
-  width: 55%;
-  font-size: var(--fs-14);
-  height: var(--h-32);
+  width: 55%;height: var(--h-32);
 }
 
 .disk-option {
-  font-size: var(--fs-18);
   padding-top: 16px;
-  font-weight: 700;
 }

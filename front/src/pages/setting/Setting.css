@@ -2,7 +2,6 @@
 .Modal {
     z-index: 1000;
   }
-  
   .Overlay {
     z-index: 999;
   }
@@ -72,52 +71,19 @@
     height: 8%;
 }
 .user_sessionInfo_popup .network_new_nav>div{
+    width: 50%;
     font-weight: 800;
     text-align: center;
-    font-size: 0.33rem;
-    width: 50%;
     cursor: pointer;
     padding: 0.25rem;
     border-right: 1px solid rgb(206, 206, 206);
 }
 /*계정설정*/
-.setting_name_email,.setting_homepage,.serial_console{
-  padding:0.2rem 0.4rem ;
-  
-}
-.setting_name_email>div{
-  display:flex;
-
-  justify-content: space-between;
-  margin-bottom:0
-}
-.setting_name_email span{
-  text-align: left;
-  width: 40%;
-  display: block;
-}
 .serial_console_text{
   height:10vh;
   display:block;
   width:100%;
   margin-top:0.2rem
-}
-.set_part_checkboxs{
-  font-size: 0.34rem;
-  padding: 0.1rem 0.4rem;
-}
-
-.set_part_buttons{
-  display: flex;
-  width: 26%;
-  justify-content: space-between;
-  margin-bottom: 0.4rem;
-}
-.set_part_buttons>div{
-  border: 1px solid black;
-  border-radius: 2px;
-  padding: 0.1rem;
-  cursor: pointer;
 }
 .checkbox_toolbar>div{
   margin-bottom: 0.25rem;

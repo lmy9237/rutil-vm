@@ -4,10 +4,11 @@ import "./BarChart.css";
 
 const BarChart = ({ names, percentages }) => {
   const chartContainerRef = useRef(null);
-
-  const [chartSize, setChartSize] = useState({
-    width: "100%", // 부모 div의 100% 사용
-  });
+  const [chartSize, setChartSize] = useState(
+    {
+      width: "100%", // 부모 div의 100% 사용
+    }
+  );
 
   const updateChartSize = () => {
     if (chartContainerRef.current) {
@@ -139,11 +140,10 @@ const BarChart = ({ names, percentages }) => {
 
   return (
     <div ref={chartContainerRef} style={{ width: "100%", maxWidth: "900px", minWidth: "100px" }}>
-      <div id="bar_chart">
-        <ReactApexChart
+      <div id="bar-chart">
+        <ReactApexChart type="bar"
           options={chartOptions}
           series={series}
-          type="bar"
           width={chartSize.width}
           height={chartSize.height || "250px"}
         />

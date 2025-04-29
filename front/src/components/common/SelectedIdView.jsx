@@ -25,7 +25,7 @@ const SelectedIdView = ({
   
   return (
     <>
-      {import.meta.env.DEV && <span className="selected-ids">{selectedIds.length === 0 ? "선택된 ID가 없습니다" : `ID: ${selectedIds}`}</span>} {/* TODO: DEV일 때만 표출 하도록 */}
+      {import.meta.env.DEV && <span className="selected-ids fs-8">{selectedIds.length === 0 ? "선택된 ID가 없습니다" : `ID: ${selectedIds}`}</span>} {/* TODO: DEV일 때만 표출 하도록 */}
     </>
   )
 }

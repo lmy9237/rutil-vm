@@ -26,11 +26,7 @@ const DomainDataCenterActionButtons = ({
  
   return (
     <>
-      <ActionButtonGroup
-        actionType={actionType}
-        actions={basicActions}
-      >
-      </ActionButtonGroup>
+      <ActionButtonGroup actionType={actionType} actions={basicActions} />
    </>
   );
 };

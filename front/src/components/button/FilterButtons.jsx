@@ -8,17 +8,9 @@ const FilterButtons = ({
 }) => (
   <div className="host-filter-btns f-center">
     {options.map(({ key, label }) => (
-      /* <button
-        key={key}
-        onClick={() => onClick(key)}
-        className={activeOption === key ? "active" : ""}
-      >
-        {label}
-      </button>
-      */
       <FilterButton key={key}
-        label={label}
         onClick={() => onClick(key)}
+        label={label}
         isActive={activeOption === key}
       />
     ))}

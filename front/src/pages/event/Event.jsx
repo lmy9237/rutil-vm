@@ -2,18 +2,17 @@ import HeaderButton from "../../components/button/HeaderButton";
 import EventDupl from "../../components/dupl/EventDupl";
 import Localization from "../../utils/Localization";
 import { rvi24Event } from "../../components/icons/RutilVmIcons";
-import Logger from "../../utils/Logger";
 import { useAllEvents } from "../../api/RQHook";
 import SectionLayout from "../../components/SectionLayout";
 
 /**
- * @name Event
+ * @name AllEvents
  * @description 이벤트
  * (/events)
  *
  * @returns
  */
-const Event = () => {
+const AllEvents = () => {
   const {
     data: events,
     isLoading: isEventsLoading,
@@ -26,7 +25,6 @@ const Event = () => {
     })
   });
 
-  Logger.debug("Event ...")
   return (
     <SectionLayout>
       <HeaderButton titleIcon={rvi24Event()}
@@ -38,7 +36,7 @@ const Event = () => {
         togglePopup={() => {}}
       />
       <div className="content-outer">
-        <div className="section-content w-full">
+        <div className="section-content v-start gap-8 w-full">
           <EventDupl events={events}
             refetch={refetchEvents}
             isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
@@ -49,4 +47,4 @@ const Event = () => {
   );
 };
 
-export default Event;
+export default AllEvents;

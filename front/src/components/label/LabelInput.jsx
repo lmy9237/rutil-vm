@@ -65,7 +65,7 @@ const LabelInput = ({
         <FontAwesomeIcon
           icon={showPassword ? faEyeSlash : faEye}
           onClick={handleTogglePassword}
-          className="password-toggle-icon"
+          className="password-toggle-icon fs-14"
         />
       )}
     </div>

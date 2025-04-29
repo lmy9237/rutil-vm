@@ -1,6 +1,5 @@
 .legend-bar-container {
   gap: var(--p-default);
-  font-size: var(--fs-default);
 }
 .legend-item { gap: var(--p-default); }
 .legend {

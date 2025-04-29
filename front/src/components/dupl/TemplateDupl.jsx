@@ -2,18 +2,17 @@ import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
 import TemplateActionButtons from "./TemplateActionButtons";
-import TemplateModals from "../modal/template/TemplateModals";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
-import useGlobal from "../../hooks/useGlobal";
 
 const TemplateDupl = ({
-  templates = [],  columns = [], showSearchBox = true,  // ✅ 검색 여부 추가 
+  templates = [],  columns = [],
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
@@ -56,13 +55,11 @@ const TemplateDupl = ({
   }, [])
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>)}
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
         <TemplateActionButtons />
       </div>
-
-      {/* 테이블 컴포넌트 */}
       <TablesOuter target={"template"}
         columns={columns}
         data={filteredData} // ✅ 검색 필터링된 데이터 사용
@@ -76,7 +73,7 @@ const TemplateDupl = ({
       />
 
       <SelectedIdView items={templatesSelected} />
-    </div>
+    </>
   );
 };
 

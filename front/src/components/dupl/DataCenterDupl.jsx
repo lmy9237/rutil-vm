@@ -23,7 +23,7 @@ import { getStatusSortKey } from "../icons/GetStatusSortkey";
  * @returns
  */
 const DataCenterDupl = ({
-  datacenters = [], columns = [], showSearchBox=true,
+  datacenters = [], columns = [],
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
@@ -60,12 +60,11 @@ const DataCenterDupl = ({
   }, [])
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <DataCenterActionButtons />
       </div>
-
       <TablesOuter target={"datacenter"}
         columns={columns}
         data={filteredData} 
@@ -80,7 +79,7 @@ const DataCenterDupl = ({
         ]}*/
       />
       <SelectedIdView items={datacentersSelected} />
-    </div>
+    </>
   );
 };
 

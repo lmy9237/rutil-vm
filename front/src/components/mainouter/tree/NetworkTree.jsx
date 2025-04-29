@@ -31,7 +31,7 @@ const NetworkTree = ({}) => {
       {/* 레벨 1: Rutil Manager */}
       <TreeMenuItem level={1}
         title="Rutil Manager"
-        iconDef={rvi16Globe}
+        iconDef={rvi16Globe("currentColor")}
         isSelected={() => location.pathname.includes("rutil")}
         isNextLevelVisible={secondVisibleNetwork()}
         onChevronClick={() => toggleSecondVisibleNetwork()}
@@ -49,7 +49,7 @@ const NetworkTree = ({}) => {
           <div key={dc?.id} className="tmi-g">
             <TreeMenuItem level={2}
               title={dc?.name}
-              iconDef={rvi16DataCenter}
+              iconDef={rvi16DataCenter("currentColor")}
               isSelected={() => location.pathname.includes(dc?.id)}
               isNextLevelVisible={isDataCenterOpen}
               isChevronVisible={hasNetworks}

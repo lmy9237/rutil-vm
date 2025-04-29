@@ -2,7 +2,6 @@ import React, { useState, useMemo } from "react";
 import { RVI16 } from "../icons/RutilVmIcons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import Logger from "../../utils/Logger";
 import "./../label/LabelInput.css"; // Import the CSS file
 import "./IconInput.css"; // Import the CSS file
 
@@ -21,7 +20,7 @@ const IconInput = ({
     <div className="icon-input-container" style={{ position: "relative" }}>
       {iconDef && (
         <span className="icon-container">
-          <RVI16 iconDef={iconDef} className="input-icon" />
+          <RVI16 iconDef={iconDef} />
         </span>
       )}
       <input
@@ -33,7 +32,7 @@ const IconInput = ({
       {isPassword && (
         <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye}
           onClick={handleTogglePassword}
-          className="password-toggle-icon"
+          className="password-toggle-icon fs-14"
         />        
       )}
     </div>

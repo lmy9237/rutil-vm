@@ -22,7 +22,6 @@
 }
 .box > span {
   width: 100%;
-  font-size: var(--fs-16);
   color: black;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -38,20 +37,15 @@
 .box-icon-title { gap: 2px; }
 
 .box-detail {
-  gap:8px;
   width: 100%;
-  align-items:flex-end !important;
+  gap: 8px;
 }
 .box-detail > h1 {
-  font-size: var(--fs-big);
   line-height: 27px;
-  font-weight: 700;
   color: black;
-  align-items:flex-end !important;
 }
 .box-detail-icons {
   gap: 4px;
-  font-size: var(--fs-default);
   font-weight: 600;
 }
 .box-detail-icon { }

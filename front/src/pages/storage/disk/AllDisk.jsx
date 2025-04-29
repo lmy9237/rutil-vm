@@ -22,7 +22,7 @@ const AllDisk = () => {
       <HeaderButton titleIcon={rvi24HardDrive()}
         title={Localization.kr.DISK}
       />
-      <div className="w-full section-content">
+      <div className="section-content v-start gap-8 w-full">
         <DiskDupl columns={TableColumnsInfo.DISKS}
           disks={disks} 
           showSearchBox={true}

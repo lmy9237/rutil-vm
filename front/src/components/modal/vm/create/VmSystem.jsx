@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useState } from "react";
 import LabelInputNum from "../../../label/LabelInputNum";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../../../icons/RutilVmIcons";
@@ -176,7 +176,9 @@ const VmSystem = ({
         />
 
         <button className="btn-toggle-cpu" onClick={toggleCpuDetail}>
-          <RVI16 iconDef={showCpuDetail ? rvi16ChevronUp : rvi16ChevronDown} className="mr-1.5" />
+          <RVI16 iconDef={showCpuDetail ? rvi16ChevronUp() : rvi16ChevronDown()} 
+            className="mr-1.5"
+          />
           {showCpuDetail ? "CPU 상세 옵션 닫기" : "CPU 상세 옵션 열기"}
         </button>
         

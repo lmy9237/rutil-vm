@@ -41,9 +41,7 @@ const BoxEvent = ({
     isError: isEventsNormalError,
     isSuccess: isEventsNormalSuccess,
     refetch: refetchEvents
-  } = useAllEventsNormal((e) => ({
-    ...e,
-  }));
+  } = useAllEventsNormal((e) => ({ ...e, }));
 
   const {
     data: notiEvents = [],
@@ -51,10 +49,7 @@ const BoxEvent = ({
     isError: isNotiEventsError,
     isSuccess: isNotiEventsSuccess,
     refetch: refetchNotiEvents
-  } = useAllNotiEvents((e) => ({
-      ...e,
-    })
-  );
+  } = useAllNotiEvents((e) => ({ ...e, }));
 
   useEffect(() => {
     const badgeNum = [...notiEvents]?.length ?? 0;
@@ -80,16 +75,15 @@ const BoxEvent = ({
 }, [footerHeightInPx])
   
   return (
-    <div 
-      ref={bellBoxRef}
-      className={`bell-box ${eventBoxExpanded() ? "expanded" : ""}`}
+    <div  ref={bellBoxRef}
+      className={`bell-box fs-16 ${eventBoxExpanded() ? "expanded" : ""}`}
       onClick={stopPropagation}
       style={{
         height: currentEventBoxHeightInPx
       }}
       {...props}
     >
-      <div className="f-btw bell-cate">
+      <div className="bell-cate f-btw fs-16">
         <span className="bell-header-icon f-center">
         <RVI16 iconDef={eventBoxExpanded() ? rvi16ArrowRight : rvi16ArrowLeft}
           className="hover-icon"
@@ -114,7 +108,7 @@ const BoxEvent = ({
             : rvi24RightArrow()}
           />
         </span>
-        <span className="bell-section-title ml-1">알림</span>
+        <span className="bell-section-title fs-16 ml-1">알림</span>
       </div>
 
       {/* 알림 내용 */}
@@ -129,9 +123,9 @@ const BoxEvent = ({
             <BoxEventItems events={notiEvents} />
           </div>
 
-          <div className="bell-btns">
-            <div className="f-center">모두 삭제</div>
-            <div className="f-center">모두 출력</div>
+          <div className="bell-btns f-center">
+            <div className="f-center fs-14">모두 삭제</div>
+            <div className="f-center fs-14">모두 출력</div>
           </div>
         </>
       )}
@@ -146,7 +140,7 @@ const BoxEvent = ({
             iconDef={eventBoxSectionActive() === "이벤트" ? rvi24DownArrow() : rvi24RightArrow()}
           />
         </span>
-        <span className="bell-section-title ml-1">이벤트</span>
+        <span className="bell-section-title fs-16 ml-1">이벤트</span>
       </div>
 
       {/* 이벤트 내용 (알림 아래로 깔리도록 설정) */}
@@ -161,9 +155,9 @@ const BoxEvent = ({
             <BoxEventItems events={eventsNormal} />
           </div>
 
-          <div className="bell-btns">
-            <div className="f-center">모두 삭제</div>
-            <div className="f-center">모두 출력</div>
+          <div className="bell-btns f-center">
+            <div className="f-center fs-14">모두 삭제</div>
+            <div className="f-center fs-14">모두 출력</div>
           </div>
         </>
       )}
@@ -202,7 +196,7 @@ const BoxEventItem = ({
 
   return (
     <div key={event?.id} 
-      className="bell-content flex"
+      className="bell-content f-center"
       {...props}
     >
       {event?.severity && (
@@ -211,13 +205,11 @@ const BoxEventItem = ({
         </span>
       )}
         <div className="bell-mid v-start">
-          <p className="v-start">{event?.description}</p>
+          <p className="v-start truncate">{event?.description}</p>
           <div className="mt-0.5">{event?.time}</div>
         </div>
       <span className="bell-icon bell-icon-trash f-center">
-        <RVI16 iconDef={rvi16Trash()}
-          onClick={() => removeEvent(event?.id)}
-        />
+        <RVI16 iconDef={rvi16Trash()} onClick={() => removeEvent(event?.id)} />
       </span>
 
     </div>

@@ -85,7 +85,6 @@ const DomainAttachModal = ({ isOpen, onClose }) => {
     )
   };
 
-  Logger.debug(`DomainAttachModal ... `)
   return (
     <BaseModal targetName={title} submitTitle={Localization.kr.CONNECTION}
       isOpen={isOpen} onClose={onClose}
@@ -93,7 +92,7 @@ const DomainAttachModal = ({ isOpen, onClose }) => {
       contentStyle={{ width: "650px"}} 
     >
       <div className="py-4">
-        <TablesOuter
+        <TablesOuter target={"domain"}
           isLoading={label ? isDataCentersLoading : isDomainsLoading}
           isError={label ? isDataCentersError : isDomainsError}
           isSuccess={label ? isDataCentersSuccess : isDomainsSuccess}

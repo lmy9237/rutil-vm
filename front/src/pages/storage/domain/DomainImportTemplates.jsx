@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
+import toast from "react-hot-toast";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
@@ -12,6 +13,7 @@ import SelectedIdView from "../../../components/common/SelectedIdView";
 import { checkZeroSizeToMB } from "../../../util";
 import { useAllUnregisteredTemplatesFromDomain } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DomainImportTemplates
@@ -32,6 +34,7 @@ const DomainImportTemplates = ({
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
+    refetch: refetchTemplates
   } = useAllUnregisteredTemplatesFromDomain(domainId, (e) => ({ ...e }));
 
   const transformedData = [...templates].map((t) => ({
@@ -49,10 +52,19 @@ const DomainImportTemplates = ({
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = useCallback(() =>  {
+    Logger.debug(`EventDupl > handleRefresh ... `)
+    if (!refetchTemplates) return;
+    refetchTemplates()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
+
+  // TODO: ActionButtons 생성
+  // TODO: TemplateModals 생성
   return (
-    <>
-      <div className="dupl-header-group f-start">
-      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={templateRefetch} />
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <div className="header-right-btns">
           <ActionButton label={Localization.kr.IMPORT}
             actionType="default" 
@@ -66,14 +78,16 @@ const DomainImportTemplates = ({
           />
         </div>
       </div>
-
-      <TablesOuter
-        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
+      <TablesOuter target={"template"}
         columns={TableColumnsInfo.GET_VMS_TEMPLATES}
         data={filteredData}
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery}
+        multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
-        multiSelect={true}
+        refetch={refetchTemplates}
+        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
 
       <SelectedIdView items={templatesSelected} />

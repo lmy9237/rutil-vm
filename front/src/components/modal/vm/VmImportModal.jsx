@@ -24,7 +24,7 @@ const VmImportModal = ({
   } = useAllDataCenters()
 
   const transformedDatacenters = [
-    { value: "", label: "N/A" },
+    { value: "", label: Localization.kr.NOT_ASSOCIATED },
     ...(!Array.isArray(datacenters) ? [] : datacenters).map((dc) => ({
       value: dc?.id,
       label: dc?.name
@@ -37,7 +37,7 @@ const VmImportModal = ({
   } = useAllNetworkProviders();
 
   const transformedNetorkProviders = [
-    { value: "", label: "N/A" },
+    { value: "", label: Localization.kr.NOT_ASSOCIATED },
     ...[...networkProviders].map((p) => ({
       value: p?.id,
       label: p?.name

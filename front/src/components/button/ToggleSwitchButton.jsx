@@ -21,7 +21,7 @@ const ToggleSwitchButton = ({
           />
           <span className="slider round"></span>
         </label>
-        <span className="toggle-status">{checked ? tType : fType}</span>
+        <span className="toggle-status f-start">{checked ? tType : fType}</span>
       </div>
     </div>
   )

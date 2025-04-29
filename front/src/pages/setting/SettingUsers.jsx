@@ -54,12 +54,9 @@ const SettingUsers = () => {
   }, [])
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-        <SettingUsersActionButtons />
-      </div>
-      
+    <>{/* v-start w-full으로 묶어짐*/}
+      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+      <SettingUsersActionButtons />
       <TablesOuter target={"user"}
         columns={TableColumnsInfo.SETTING_USER}
         data={filteredData}
@@ -74,9 +71,8 @@ const SettingUsers = () => {
           <SettingUsersActionButtons actionType="context" />,
         ]}*/
       />
-
       <SelectedIdView items={usersSelected} />
-    </div>
+    </>
   );
 };
   

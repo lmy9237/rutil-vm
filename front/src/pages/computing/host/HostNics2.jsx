@@ -303,9 +303,8 @@ const HostNics = ({
     </div>
     
     {/* <div className="p-4 grid grid-cols-2 gap-4">
-      <div className="host-network-contents">
-      {outer
-        .filter(outerItem => outerItem.children.length > 0 || outerItem.networks.length > 0)
+      <div className="host-network-contents fs-16">
+      {outer.filter(outerItem => outerItem.children.length > 0 || outerItem.networks.length > 0)
         .map((outerItem) => (
           <div key={outerItem.id} className="flex items-start gap-4">
             <div key={outerItem.id} 
@@ -371,7 +370,7 @@ const HostNics = ({
     >
       <div className ="f-btw"><div>할당되지 않은 논리 네트워크</div></div>
         {availableNetworks?.map((net) => (
-          <div key={net.id} className="network-item"
+          <div key={net.id} className="network-item f-btw"
             draggable
             onDragStart={(e) => dragStart(e, net, "unassigned")}
           >
@@ -384,11 +383,10 @@ const HostNics = ({
       </div> */}
 
     <div className="p-4 grid grid-cols-2 gap-4">
-      <div className="host-network-contents">
-
+      <div className="host-network-contents fs-16">
         <div className="col-span-1">          
           <div className="p-4 space-y-4">
-            <h2 className="text-lg font-semibold">인터페이스</h2>
+            <h2 className="font-semibold fs-16">인터페이스</h2>
             {transformedData
               .filter(nic => nic.network?.name)
               .map((nic) => (
@@ -416,7 +414,7 @@ const HostNics = ({
 
         <div className="col-span-1">
           <div className="p-4">
-            <h2 className="text-lg font-semibold">할당된 논리 네트워크</h2>
+            <h2 className="font-semibold fs-16">할당된 논리 네트워크</h2>
               {transformedData
                 .filter(nic => nic.network?.name)
                 .map((nic) => (
@@ -430,24 +428,24 @@ const HostNics = ({
         </div>        
       </div>
 
-      <div className="host-network-contents">
+      <div className="host-network-contents fs-16">
         <div className="col-span-1">
           <div className="p-4">
-            <h2 className="text-lg font-semibold">할당되지 않은 논리 네트워크</h2>
+            <h2 className="font-semibold fs-16">할당되지 않은 논리 네트워크</h2>
 
             <div className="bg-gray-100 p-2 text-xs rounded-md font-medium mb-2">필수</div>
-              {transNetworkData.filter((n) => n.usageVm).map((net) => (
-                <div key={net.id} className="border rounded-xl p-3 mt-3 flex items-center justify-between">
-                  <div className="text-red-600">▼ {net.name}</div>
-                </div>
-              ))}
+            {transNetworkData.filter((n) => n.usageVm).map((net) => (
+              <div key={net.id} className="border rounded-xl p-3 mt-3 flex items-center justify-between">
+                <div className="text-red-600">▼ {net.name}</div>
+              </div>
+            ))}
 
             <div className="bg-gray-100 p-2 text-xs rounded-md font-medium mt-4 mb-2">필요하지 않음</div>
-              {transNetworkData.filter((n) => !n.usageVm).map((net) => (
-                <div key={net.id} className="border rounded-xl p-3 mt-3 flex items-center justify-between">
-                  <div className="text-red-600">▼ {net.name}</div>
-                </div>
-              ))}
+            {transNetworkData.filter((n) => !n.usageVm).map((net) => (
+              <div key={net.id} className="border rounded-xl p-3 mt-3 flex items-center justify-between">
+                <div className="text-red-600">▼ {net.name}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ import { RVI16, rvi16VirtualMachine, status2Icon } from "../../../../components/
 const UnassignedNetworkItem = ({ network, onDragStart }) => {
   return (
     <div
-      className="network-item"
+      className="network-item f-btw"
       draggable
       onDragStart={onDragStart}
     >

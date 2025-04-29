@@ -232,7 +232,7 @@ const DiskModal = ({ isOpen, editMode = false, onClose }) => {
               onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles)}
             />
           </div>
-          <div className="disk-new-img-right">
+          <div className="disk-new-img-right f-end">
             <div className="img-checkbox-outer">
               <LabelCheckbox label={Localization.kr.WIPE_AFTER_DELETE}
                 id="wipeAfterDelete"
@@ -291,7 +291,7 @@ const DiskModal = ({ isOpen, editMode = false, onClose }) => {
                 </select>
               </div>
             </div>
-            <div className="disk-new-img-right">
+            <div className="disk-new-img-right f-end">
               <div>
                 <input type="checkbox" className="shareable" />
                 <label htmlFor="shareable">{Localization.kr.IS_SHARABLE}</label>

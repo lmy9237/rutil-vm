@@ -10,7 +10,6 @@
         padding: 0 3px;
         border-radius: 3px;
         cursor: pointer;
-        font-size: 0.29rem; 
     }
     .select_box2>div:last-child,
     .plug_radio_btn>div{
@@ -22,7 +21,6 @@
         padding: 0 3px;
         border-radius: 3px;
         cursor: pointer;
-        font-size: 0.29rem; 
     }
     .radio_outer>div{
         width: 100%;
@@ -42,7 +40,6 @@
     }
     .network_parameter_outer{
         padding: 1% 2%;
-        font-size: 0.32rem;
     }
     .network_parameter_outer>span{
         font-weight: 600;
@@ -65,7 +62,6 @@
     }
     #buttons>button{
        width: 50%;
-       font-size: 0.4rem;
        font-weight: 600;
        cursor: pointer;
     }
@@ -119,7 +115,6 @@
     height: 3.3vh;
     padding: 0 3px;
     cursor: pointer;
-    font-size: 0.29rem;
 }
 .console_checkboxs{
     padding:0.4rem;
@@ -180,13 +175,11 @@
     justify-content: space-between;
     padding-bottom: 2%;
 }
-#ha_mode_second_content>div:nth-child(n+2) select
-{
+#ha_mode_second_content>div:nth-child(n+2) select {
     width: 47%;
     height: 3.3vh;
     padding: 0 3px;
     cursor: pointer;
-    font-size: 0.29rem;
 }
 
 .ha_mode_article>span{
@@ -210,7 +203,6 @@
     height: 3.3vh;
     padding: 0 3px;
     cursor: pointer;
-    font-size: 0.29rem;
 }
 .network_edit_popup form{
     height: 66.3vh;

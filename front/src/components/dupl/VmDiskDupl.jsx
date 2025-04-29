@@ -89,13 +89,12 @@ const VmDiskDupl = ({
   const columns = columnMap[activeDiskType];
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="vm-disk-search f-start mb-2.5">
+    <>
+      <div className="dupl-header-group f-start gap-4 w-full">
         <FilterButtons options={diskFilters} activeOption={activeDiskType} onClick={setActiveDiskType} />
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-        <VmDiskActionButtons actionType = "default"/>
+        <VmDiskActionButtons />
       </div>
-      
       <TablesOuter target={"vmdisk"}
         columns={columns}
         data={filteredData}
@@ -110,7 +109,7 @@ const VmDiskDupl = ({
         ]}*/
       />
       <SelectedIdView items={disksSelected} />
-    </div>
+    </>
   );
 };
 

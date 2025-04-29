@@ -2,15 +2,14 @@ import React, { useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import SearchBox from "../../../components/button/SearchBox";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
-import SearchBox from "../../../components/button/SearchBox";
-import { useAllTemplatesFromDomain } from "../../../api/RQHook";
 import TableRowClick from "../../../components/table/TableRowClick";
-import Logger from "../../../utils/Logger";
+import { useAllTemplatesFromDomain } from "../../../api/RQHook";
 import { checkZeroSizeToGiB } from "../../../util";
-
-
+import Logger from "../../../utils/Logger";
 
 /**
  * @name DomainTemplates
@@ -24,7 +23,7 @@ import { checkZeroSizeToGiB } from "../../../util";
 const DomainTemplates = ({
   domainId
 }) => {
-  const { domainsSelected, setTemplatesSelected } = useGlobal()
+  const { domainsSelected, templatesSelected, setTemplatesSelected } = useGlobal()
   const {
     data: templates = [],
     isLoading: isTemplatesLoading,
@@ -54,14 +53,13 @@ const DomainTemplates = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
   
-  Logger.debug("DomainTemplates ...");
+  // TODO: 필요하면 정리
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         {/* <EventActionButtons /> */}
       </div>
-
       <TablesOuter target={"template"} 
         columns={TableColumnsInfo.TEMPLATES_FROM_STORAGE_DOMAIN}
         data={filteredData}
@@ -72,7 +70,8 @@ const DomainTemplates = ({
         refetch={refetchTemplates}
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
-    </div>
+      <SelectedIdView items={templatesSelected} />
+    </>
   );
 };
 

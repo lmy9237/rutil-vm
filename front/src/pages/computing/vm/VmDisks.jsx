@@ -1,7 +1,6 @@
 import React from "react";
 import VmDiskDupl from "../../../components/dupl/VmDiskDupl";
 import { useDisksFromVM } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
 
 /**
  * @name VmDisks
@@ -10,7 +9,9 @@ import Logger from "../../../utils/Logger";
  * @prop {string} vmId 가상머신 ID
  * @returns {JSX.Element} VmDisks
  */
-const VmDisks = ({ vmId }) => {
+const VmDisks = ({
+  vmId
+}) => {
   const {
     data: disks = [],
     isLoading: isDisksLoading,
@@ -19,7 +20,6 @@ const VmDisks = ({ vmId }) => {
     refetch: refetchDisks,
   } = useDisksFromVM(vmId, (e) => ({ ...e }));
   
-  Logger.debug(`VmDisks ... vmId: ${vmId}`)
   return (
     <VmDiskDupl 
       vmDisks={disks} 

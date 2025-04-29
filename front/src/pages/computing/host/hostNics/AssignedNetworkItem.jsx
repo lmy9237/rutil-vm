@@ -21,7 +21,7 @@ const AssignedNetworkItem = ({
         data-tooltip-id={`network-tooltip-${matchedNA.networkVo.id}`}
         data-tooltip-html={tooltipHTML}
       >
-        <div className="assigned-network-content">
+        <div className="assigned-network-content fs-16">
           <div>
             <div className="f-start">
               <RVI16 iconDef={isUp ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />

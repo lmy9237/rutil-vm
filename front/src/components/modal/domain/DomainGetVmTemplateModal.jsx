@@ -156,7 +156,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
                   {isVmMode ? (
                     // ✅ 가상머신 모드일 때 렌더링
                     <>
-                      <td>{item.alias || "N/A"}</td>  {/* 이름 */}
+                      <td>{item.alias || Localization.kr.NOT_ASSOCIATED}</td>  {/* 이름 */}
                       <td>{item.source || "oVirt"}</td>  {/* 소스 */}
                       <td>{item.memory || "1024 MB"}</td>  {/* 메모리 */}
                       <td>{item.cpu || "1"}</td>  {/* CPU */}
@@ -210,7 +210,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
 
         {/* 섹션 변경 */}
         {activeFilter === "general" && (
-          <div className="get-template-info three-columns">
+          <div className="get-template-info f-btw three-columns">
             {Array.from({ length: 3 }, (_, groupIndex) => {
               const splitRows = tableRows.filter((_, index) => index % 3 === groupIndex);
               return (

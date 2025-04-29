@@ -21,15 +21,14 @@
   box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
   z-index: 1001; /* 추가 */
 }
-.power_radio_group {
+.power-radio-group {
   display: flex;
-  font-size: 0.36rem;
   padding: 0.3rem;
 }
-.power_radio_group input {
+.power-radio-group input {
   margin-right: 0.1rem;
 }
-.power_radio_group label {
+.power-radio-group label {
   margin-right: 0.5rem;
 }
 
@@ -42,17 +41,14 @@
 .power_contents_outer > div {
   width: 30%;
   margin-right: 0.4rem;
-  font-size: 0.3rem;
 }
 .power_last_content {
   width: 30%;
   margin: 0.2rem 0.4rem;
-  font-size: 0.3rem;
 }
 .power_contents_outer label,
 .power_last_content label {
   display: block;
-  font-size: 0.34rem;
   margin-bottom: 0.2rem;
 }
 .power_contents_outer select,
@@ -63,7 +59,6 @@
   cursor: pointer;
 }
 .power_contents_outer > div > div {
-  font-size: 0.34rem;
   margin-bottom: 0.2rem;
 }
 .power_contents_outer input[type="submit"] {
@@ -79,7 +74,6 @@
 }
 
 .power_table table {
-  font-size: 0.3rem;
   width: 100%;
   height: 3.75vh;
   border-collapse: collapse;

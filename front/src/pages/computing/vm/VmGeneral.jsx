@@ -1,13 +1,14 @@
-import { useVm } from "../../../api/RQHook";
-import { convertBytesToMB } from "../../../util";
+import { useEffect, useMemo } from "react";
+import useGlobal from "../../../hooks/useGlobal";
 import InfoTable from "../../../components/table/InfoTable";
 import SemiCircleChart from "../../../components/Chart/SemiCircleChart";
 import TableRowClick from "../../../components/table/TableRowClick";
+import { useVm } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import { RVI16, rvi16Cluster, rvi16Host } from "../../../components/icons/RutilVmIcons";
-import { useEffect, useMemo } from "react";
 import CONSTANT from "../../../Constants";
-import useGlobal from "../../../hooks/useGlobal";
+import { convertBytesToMB } from "../../../util";
+import { RVI16, rvi16Cluster, rvi16Host } from "../../../components/icons/RutilVmIcons";
+import "./Vm.css"
 
 /**
  * @name VmGeneral
@@ -56,7 +57,7 @@ const VmGeneral = ({
       label: Localization.kr.CLUSTER,
       value: (
         <div className="related-object f-start">
-          <RVI16 iconDef={rvi16Cluster} className="mr-1"/>
+          <RVI16 iconDef={rvi16Cluster("currentColor")} className="mr-1"/>
           <TableRowClick type="cluster" id={vm?.clusterVo?.id}>
             {vm?.clusterVo?.name}
           </TableRowClick>
@@ -66,13 +67,17 @@ const VmGeneral = ({
       label: Localization.kr.HOST,
       value: (
         <div className="related-object f-start">
-          <RVI16 iconDef={rvi16Host} className="mr-1"/>
-          <TableRowClick type="host" id={vm?.hostVo?.id}>
-            {vm?.hostVo?.name}
-          </TableRowClick>
+          {vm?.hostVo?.id ? (
+            <>
+              <RVI16 iconDef={rvi16Host("currentColor")} className="mr-1"/>
+              <TableRowClick type="host" id={vm?.hostVo?.id}>
+                {vm?.hostVo?.name}
+              </TableRowClick>
+            </>
+          ) : ("N/A")}
         </div>
       ),
-    },
+    }
   ];
 
   const hardwareTableRows = [
@@ -93,35 +98,34 @@ const VmGeneral = ({
 
   return (
     <>
-      <div className="vm-detail-general-boxs">
-        {/* <Vnc vmId={vmId}
-          autoConnect={true} 
-          isPreview={true}
-        /> */}
+      <div className="vm-detail-general-boxs f-start w-full">
         {/* TODO: preview일 때 canvas 만 표출 되는 기능 개발 */}
-        <div className="detail-general-box">
-          <h1>{Localization.kr.GENERAL}</h1>
+        <div className="detail-general-box v-start gap-8">
+          <h1 className="f-start fs-16 fw-500 w-full">{Localization.kr.GENERAL}</h1>
+          <hr className="w-full"/>
           <InfoTable tableRows={generalTableRows} />
         </div>
 
-        <div className="detail-general-box">
-          <h1>{Localization.kr.VM} 하드웨어</h1>
+        <div className="detail-general-box v-start gap-8">
+          <h1 className="f-start fs-16 fw-500 w-full">{Localization.kr.VM} 하드웨어</h1>
+          <hr className="w-full"/>
           <InfoTable tableRows={hardwareTableRows} />
         </div>
 
-        <div className="detail-general-box">
-          <h1>용량 및 사용량</h1>
+        <div className="detail-general-box v-start gap-8">
+          <h1 className="f-start fs-16 fw-500 w-full">용량 및 사용량</h1>
+          <hr className="w-full"/>
           <div className="capacity-outer">
-            <div className="capacity">
-              <div>CPU</div>
+            <div className="capacity f-center">
+              <span className="fs-14">CPU</span>
               <SemiCircleChart percentage={vm?.usageDto?.cpuPercent || 0} />
             </div>
-            <div className="capacity">
-              <div>{Localization.kr.MEMORY}</div>
+            <div className="capacity f-center">
+              <span className="fs-14">{Localization.kr.MEMORY}</span>
               <SemiCircleChart percentage={vm?.usageDto?.memoryPercent || 0} />
             </div>
-            <div className="capacity">
-              <div>네트워크</div>
+            <div className="capacity f-center">
+              <span className="fs-14">네트워크</span>
               <SemiCircleChart percentage={vm?.usageDto?.networkPercent || 0} />
             </div>
           </div>

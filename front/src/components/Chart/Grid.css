@@ -1,16 +1,13 @@
 .grid-container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: var(--p-default);
   width: 99%;
+  display: grid;
+  gap: var(--p-default);
+  grid-template-columns: repeat(5, 1fr);
 }
 .grid-item {
+  width: 100%;min-width: 76px;height: 36px;
   border-radius: var(--br-default);
   cursor: pointer;
-  height: 36px;
-  width: 100%;
-  min-width: 76px;
-  font-size: var(--fs-12);
 }
 .grid-item.crit { background-color: #E21D1D; }
 .grid-item.warn { background-color: #F46C53; }
@@ -23,25 +20,16 @@
   opacity: 0.7;
 }
 
-.percent h1 {
-  font-size: var(--fs-14);
-  font-weight: 700;
-}
-.percent .unit {
-  font-size: var(--fs-13) !important;
-}
 .percent placeholder {
   margin-top: 5px;
-  font-size: var(--fs-default);
   color: #000000;
   z-index: 1;
 }
 .grid-item-name {
-  font-size: 9px;
+  max-width: 76px;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 76px;
   text-overflow: ellipsis;
 }
 #grid-tooltip {
@@ -49,7 +37,6 @@
   color: #fff;
   padding: 6px 10px;
   border-radius: var(--br-default);
-  font-size: var(--fs-default);
   z-index: 9999;
 }
 @media screen and (min-width: 2800px) {

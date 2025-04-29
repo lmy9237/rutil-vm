@@ -354,7 +354,7 @@ const Tables = ({
                     }}
                   >
                   <Tippy
-                    content={getCellTooltipContent(cellValue)}
+                    content={<div className="v-start w-full">{getCellTooltipContent(cellValue)}</div>}
                     delay={[200, 0]}
                     placement="top"
                     animation="shift-away"
@@ -391,23 +391,21 @@ const Tables = ({
           ref={tableRef}
         >
           <thead>
-            <tr>
+            <tr >
               {columns.map((column, index) => (
-                <th
+                <th className="fw-700"
                   key={index}
                   onClick={() => handleSort(column)}
                   style={{
                     cursor: column.isIcon ? "default" : "pointer",
-                    width: column.width,
+                    width: column.width ?? "auto",
                     ...(column?.style ?? {}),
                   }}
                 >
-                  <div className="f-center">
-                    {column.header}
-                    {!column.isIcon && sortConfig.key === column.accessor && (
-                      <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                    )}
-                  </div>
+                  {column.header}
+                  {!column.isIcon && sortConfig.key === column.accessor && (
+                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
                 </th>
               ))}
             </tr>

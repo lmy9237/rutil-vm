@@ -47,7 +47,6 @@ const DomainDatacenters = ({ domainId }) => {
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  
   const handleRefresh = useCallback(() => {
     Logger.debug(`DomainDataCenters > handleRefresh ... `)
     if (!refetchDataCenters) return;
@@ -57,23 +56,25 @@ const DomainDatacenters = ({ domainId }) => {
 
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
         <DomainDataCenterActionButtons actionType="default"
           status={transformedData[0]?.domainStatus}
         />
       </div>
-      <TablesOuter
-        isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
+      <TablesOuter target={"datacenter"}
         columns={TableColumnsInfo.DATACENTERS_FROM_STORAGE_DOMAIN}
         data={filteredData}
-        shouldHighlight1stCol={true}
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery} 
+        multiSelect={true}
         onRowClick={(selectedRows) => setDatacentersSelected(selectedRows)}
+        shouldHighlight1stCol={true}
+        isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
       />
-
       <SelectedIdView items={datacentersSelected} /><br/>
-    </div>
+    </>
   );
 };
 

@@ -40,12 +40,11 @@ const SettingSessions = () => {
   }, [])
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <SettingUserSessionsActionButtons />
       </div>
-
       <TablesOuter target={"usersession"}
         columns={TableColumnsInfo.ACTIVE_USER_SESSION}
         data={filteredData}
@@ -55,9 +54,8 @@ const SettingSessions = () => {
         /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
         isLoading={isUserSessionsLoading} isError={isUserSessionsError} isSuccess={isUserSessionsSuccess}
       />
-
       <SelectedIdView items={usersessionsSelected} />
-    </div>
+    </>
   );
 };
 

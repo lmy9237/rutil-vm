@@ -19,7 +19,7 @@ import EventActionButtons from "./EventActionButtons";
  * @returns
  */
 const EventDupl = ({
-  events = [], showSearchBox=true,
+  events = [],
   refetch, isLoading, isError, isSuccess,
 }) => {
   const { eventsSelected, setEventsSelected } = useGlobal()
@@ -37,14 +37,12 @@ const EventDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
-  Logger.debug("EventDupl ...");
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <EventActionButtons />
       </div>
-
       <TablesOuter target={"event"}
         columns={TableColumnsInfo.EVENTS}
         data={filteredData}
@@ -56,9 +54,8 @@ const EventDupl = ({
         /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
-      
       <SelectedIdView items={eventsSelected} />
-    </div>
+    </>
   );
 };
 

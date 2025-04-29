@@ -53,7 +53,7 @@ const TableColumnsInfo = {
   ],
 
   HOSTS: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: '', accessor: "hostedEngine", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '12%' },
     { header: `${Localization.kr.HOST} 이름/IP`, accessor: 'address', clickable: false, width: '12%' },
@@ -69,7 +69,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.UP_TIME, accessor: 'upTime', clickable: false },
   ],
   VMS_FROM_HOST: [
-    { header: '', accessor: "icon", clickable: false, width: '5%' },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: '5%' },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipv4', clickable: false, width: '20%' },
     { header: 'FQDN', accessor: 'fqdn', clickable: false, width: '20%' },
@@ -107,7 +107,7 @@ const TableColumnsInfo = {
     // { header: 'Pkts', accessor: 'pkts' } // 패킷 수
   ],
   NETWORK_FROM_HOST:[
-    // { header: '', accessor: "icon", width: DEFAULT_WIDTH_ICON_COLUMN }, // 아이콘
+    // { header: Localization.kr.STATUS, accessor: "icon", width: DEFAULT_WIDTH_ICON_COLUMN }, // 아이콘
     { header: '관리되지 않음', accessor: 'bridged' }, 
     { header: 'VLAN', accessor: 'vlan' },
     { header: `${Localization.kr.NETWORK} ${Localization.kr.NAME}`, accessor: 'networkName', clickable: true }, 
@@ -137,16 +137,16 @@ const TableColumnsInfo = {
     { key: "networkId", label: "공급자의 네트워크 ID" },
   ],
   IMPORT_NETWORKS: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: '', accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
-    { header: '', accessor: 'engine', clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: Localization.kr.ENGINE, clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
   ],
 
   VMS: [
     // { header: Localization.kr.RESET, accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
-    { header: '엔진', accessor: 'engine', clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: Localization.kr.ENGINE, accessor: 'engine', clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
     { header: Localization.kr.COMMENT, accessor: 'comment', clickable: false, width: '20%' },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipv4', clickable: false, width: '20%' },
@@ -181,7 +181,7 @@ const TableColumnsInfo = {
     { header: '중단 (Pkts)', accessor: 'pkts', clickable: false },
   ],
   DISKS_FROM_VM: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.ALIAS, accessor: '_alias', clickable: true ,width:'10%'},
     { header: Localization.kr.IS_BOOTABLE, accessor: 'bootable', clickable: false,width:'4%' },
     { header: Localization.kr.IS_SHARABLE, accessor: 'sharable', clickable: false,width:'4%' },
@@ -195,7 +195,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],
   DISK_IMAGES_FROM_VM: [
-    { header: '', accessor: "icon", clickable: false,width:'4%' },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false,width:'4%' },
     { header: Localization.kr.ALIAS, accessor: '_alias', clickable: true ,width:'10%'},
     { header: Localization.kr.IS_BOOTABLE, accessor: 'bootable', clickable: false,width:'4%' },
     { header: Localization.kr.IS_SHARABLE, accessor: 'sharable', clickable: false,width:'4%' },
@@ -286,7 +286,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],
   VMS_FROM_TEMPLATE:[
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '10%' },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipv4', clickable: false, width: '10%' },
     { header: 'FQDN', accessor: 'fqdn', clickable: false, width: '10%' },
@@ -344,7 +344,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],
   HOSTS_FROM_NETWORK: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'host', clickable: false, width: '10%' },
     { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: true , width: '10%'},
     { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: true },
@@ -358,13 +358,13 @@ const TableColumnsInfo = {
     { header: Localization.kr.TOTAL_BYTE_TX, accessor: 'totalTx', clickable: false },
   ],
   HOSTS_DISCONNECT_FROM_NETWORK: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'name', clickable: false },
     { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: false },
     { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: false },
   ],
   VMS_FROM_NETWORK: [
-    { header: '', accessor: "icon", clickable: false , width:DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false , width:DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'name', clickable: false },
     { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: false },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipAddress', clickable: false },
@@ -378,7 +378,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false }
   ],
   VMS_UP_FROM_NETWORK: [
-    { header: '', accessor: "icon", clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.NAME, accessor: '_name', clickable: false },
     // { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: false },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipAddress', clickable: false }, // 스웨거 정보없음
@@ -392,7 +392,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false }
   ],
   VMS_STOP_FROM_NETWORK: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: '_name', clickable: false },
     // { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: false },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipAddress', clickable: false },
@@ -442,7 +442,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.COMMENT, accessor: 'comment', width: '12%' },
   ],
   DATACENTERS_FROM_STORAGE_DOMAIN : [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: '_name', clickable: false , width: '17%'},
     { header: '데이터 센터 내의 도메인 상태', accessor: '_domainStatus', clickable: false },
   ],
@@ -597,14 +597,14 @@ const TableColumnsInfo = {
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],
   VMS_FROM_DISK: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'name', clickable: false },
     { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: false },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipAddress', clickable: false },
     { header: Localization.kr.UP_TIME, accessor: 'uptime', clickable: false },
   ],
   STORAGE_DOMAINS_FROM_DISK: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN  },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN  },
     { header: '도메인 이름', accessor: 'storageDomain', clickable: false },
     { header: '도메인 유형', accessor: 'domainType', clickable: false },
     { header: Localization.kr.STATUS, accessor: 'status', clickable: false },
@@ -674,7 +674,7 @@ const TableColumnsInfo = {
     { header: '기본 라우팅', accessor: 'defaultRouting', clickable: false },
   ],
   HOSTS_DISCONNECTION: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'name', clickable: false },
     { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: false },
     { header: Localization.kr.DATA_CENTER, accessor: 'dataCenter', clickable: false },
@@ -695,7 +695,7 @@ const TableColumnsInfo = {
     { header: 'SPM', accessor: 'spmStatus', clickable: false },
   ],
   HOSTS_FROM_CLUSTER: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },  // 이모티콘 칸
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },  // 이모티콘 칸
     { header: Localization.kr.NAME, accessor: 'name', clickable: false },
     { header: `${Localization.kr.HOST} 이름/IP`, accessor: 'hostNameIP', clickable: false },
     { header: Localization.kr.STATUS, accessor: 'status', clickable: false },
@@ -716,7 +716,7 @@ const TableColumnsInfo = {
     { header: 'SPM', accessor: 'spmStatus', clickable: false }
   ],
   VM_CHART:[
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },  // 이모티콘 칸
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },  // 이모티콘 칸
     { header: Localization.kr.NAME, accessor: 'name', clickable: true },
     { header: Localization.kr.COMMENT, accessor: 'comment', clickable: false },
     { header: Localization.kr.HOST, accessor: 'hostVo', clickable: true },
@@ -743,7 +743,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false }
   ],
   PERMISSIONS: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.USER, accessor: 'user', clickable: false },
     { header: '인증 공급자', accessor: 'provider', clickable: false },
     { header: '네임스페이스', accessor: 'nameSpace', clickable: false },
@@ -792,7 +792,7 @@ const TableColumnsInfo = {
   ],
   // 사용자
   SETTING_USER: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'firstName', clickable: false },
     { header: '성', accessor: 'surName', clickable: false },
     { header: Localization.kr.USER_ID, accessor: 'username', clickable: false },
@@ -815,7 +815,7 @@ const TableColumnsInfo = {
 
   //설정 (역할)
   SETTING_ROLE:[
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'name', clickable: false },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],
@@ -825,7 +825,7 @@ const TableColumnsInfo = {
   ],
    //설정(시스템권한)
   SETTING_SYSTEM: [
-    { header: '', accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.USER_ID, accessor: 'user', clickable: false },
     { header: '인증 공급자', accessor: 'provider', clickable: false },
     { header: '네임스페이스', accessor: 'nameSpace', clickable: false },

@@ -19,7 +19,7 @@ const IconButton = ({
       {...props}
     >
       {iconDef && ( // icon이 존재할 경우에만 span과 FontAwesomeIcon 렌더링
-        <RVI16 iconDef={iconDef} className="input-icon" />
+        <RVI16 iconDef={iconDef} />
       )}
       {label && <p>{label}</p>}
     </button>

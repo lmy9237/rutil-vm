@@ -2,10 +2,10 @@ import React from "react";
 import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import "./css/Permission.css";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import TablesOuter from "../../components/table/TableOuter";
 import Logger from "../../utils/Logger";
+import "./css/Permission.css";
 
 const Permission = ({ isOpen, onRequestClose }) => {
   const permissionData = [
@@ -31,7 +31,7 @@ const Permission = ({ isOpen, onRequestClose }) => {
         </button>
       </div>
 
-      <div className="power_radio_group">
+      <div className="power-radio-group">
         <input type="radio" id="user" name="option" defaultChecked />
         <label htmlFor="user">사용자</label>
 

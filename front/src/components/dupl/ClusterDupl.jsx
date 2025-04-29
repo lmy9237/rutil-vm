@@ -59,12 +59,11 @@ const ClusterDupl = ({
   }, [])
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}  onRefresh={handleRefresh} />)}
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <ClusterActionButtons actionType="default"/>
       </div>
-
       <TablesOuter target={"cluster"}
         columns={columns}
         data={filteredData}
@@ -79,7 +78,7 @@ const ClusterDupl = ({
         ]}*/
       />
       <SelectedIdView items={clustersSelected} />
-    </div>
+    </>
   );
 };
 

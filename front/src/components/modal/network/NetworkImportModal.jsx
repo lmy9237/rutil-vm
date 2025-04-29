@@ -138,8 +138,8 @@ const NetworkImportModal = ({
       </div>
 
       <div className="f-center py-2">
-         <RVI24 iconDef={rvi24ChevronUp()} className="mr-3" />
-         <RVI24 iconDef={rvi24ChevronDown()}  />
+        <RVI24 iconDef={rvi24ChevronUp()} className="mr-3" />
+        <RVI24 iconDef={rvi24ChevronDown()}  />
       </div>
 
       {/* 가져올 네트워크 테이블 */}

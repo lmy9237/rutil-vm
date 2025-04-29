@@ -1,91 +1,59 @@
 .Overlay {
   background-color: #6868684f;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: fixed;top: 0;left: 0;right: 0;bottom: 0;
   overflow-x: auto;
 }
 .modal {
+  position: absolute;
+  height: auto;max-height: var(--h-modal-max);
+  padding: 16px 24px;
   transform: translate(-50%, -50%);
   box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
-  border: var(--border-default);
-  position: absolute;
-  border-radius: 8px;
-  padding: 16px 24px;
+  border:var(--border-default);border-radius: 8px;
   background: white;
-  height: auto;
-  /* min-height: var(--h-modal-min); */
-  max-height: var(--h-modal-max);
-  font-size: var(--fs-default);
 }
 .popup-header {
-  font-size: var(--fs-big);
+  width: 100%;height: var(--h-modal-header);
   color: var(--color-black);
-  width: 100%;
-  height: var(--h-modal-header);
   padding-bottom: 16px;
 }
-.popup-header > h1 {
-  display: flex;
-  font-weight: 700;
-  justify-content: center;
-  align-items: center;
-}
 .popup-header > button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   margin-top: 1px;
-  border: none;
   padding: 0 !important;
+  border: none;
   cursor: pointer;
 }
 /*footer*/
 .popup-contents {
   height: var(--h-modal-content);
-  /* padding: 10px 0px; */
   max-height: calc(var(--h-modal) - 10px);
   overflow-y: auto;
 }
 .popup-contents-prompt {
-  display:flex;flex-direction:row;align-items:center;justify-content:flex-start;
   height: auto;
   padding: 15px 0;
-  font-size: var(--fs-16);
 }
 /*footer*/
 .edit-footer {
-  width: 100%;
-  height: var(--h-modal-footer);
+  width: 100%;height: var(--h-modal-footer);
   background-color: white;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
 }
 .edit-footer button {
-  padding: 0 16px;
   height: var(--h-32);
-  margin-top: 10px;
-  margin-left: 10px;
+  padding: 0 16px;
+  margin-top: 10px;margin-left: 10px;
   border: var(--border-default);
-  background-color: #f9f9f9;
+  /*background-color: #292727;*/
   cursor: pointer;
-  font-size: var(--fs-14);
   border-radius: 4px;
-  font-weight: 500;
   letter-spacing: -0.32px;
 }
 .edit-footer button.action {
   background-color: var(--color-primary-hover);
-  color: white;
+  color: var(--color-white);
   border: var(--border-modal-btn);
 }
-.edit-footer button.action:hover{
+.edit-footer button.action:hover {
   background-color: var(--color-primary);
 }
 .edit-footer button.cancel {

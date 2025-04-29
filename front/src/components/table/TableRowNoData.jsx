@@ -10,7 +10,7 @@ import Localization from "../../utils/Localization";
 const TableRowNoData = ({colLen = 1}) => {
   return (
     <tr className="text-center h-[10vh]">
-      <td colSpan={colLen}>{Localization.kr.NO_INFO}</td>
+      <td className="text-center" colSpan={colLen}>{Localization.kr.NO_INFO}</td>
     </tr>
   );
 }

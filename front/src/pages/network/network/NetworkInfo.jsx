@@ -89,8 +89,8 @@ const NetworkInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton titleIcon={rvi24Network()}
-        title={network?.name}
+      <HeaderButton title={network?.name}
+        titleIcon={rvi24Network()}
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
@@ -99,7 +99,7 @@ const NetworkInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full px-[0.5rem] py-[0.5rem] info-content">
+        <div className="info-content v-start gap-8 w-full">
           <Path pathElements={pathData} basePath={`/networks/${networkId}`} />
           {renderSectionContent()}
         </div>

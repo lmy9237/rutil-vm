@@ -27,7 +27,7 @@ const AllDomain = () => {
       <HeaderButton titleIcon={rvi24Storage()} 
         title={Localization.kr.DOMAIN}
       />
-      <div className="section-content w-full">
+      <div className="section-content v-start gap-8 w-full">
         <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
           domains={storageDomains}
           actionType

@@ -61,8 +61,8 @@ const SettingInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton titleIcon={rvi24Gear()}
-        title={Localization.kr.MANAGEMENT}
+      <HeaderButton title={Localization.kr.MANAGEMENT}
+        titleIcon={rvi24Gear()}
         additionalText="목록이름"
       />
       <div className="content-outer">
@@ -71,7 +71,7 @@ const SettingInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full info-content">
+        <div className="info-content v-start gap-8 w-full">
           <Path pathElements={pathData} />
           {renderSectionContent()}
         </div>

@@ -59,10 +59,10 @@ const DomainImportDisks = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
-  Logger.debug(`DomainImportDisks ... filteredData: ${filteredData}`);
+  // TODO: ActionButtons 생성
   return (
     <>
-      <div className="dupl-header-group f-start">
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
         <div className="header-right-btns">
           <ActionButton actionType="default" label={Localization.kr.IMPORT}

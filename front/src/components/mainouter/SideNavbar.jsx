@@ -49,8 +49,8 @@ const SideNavbar = () => {
   ];
 
   return (
-    <div id="aside">
-      <div className="nav">
+    <div id="aside" className="f-center fs-24">
+      <div className="nav f-start">
         {sections.map(({ iconDef, id, link }) => (
           <Link key={id} to={link} 
             className={`rvi rvi-nav ${tmiLastSelected === id ? "active" : ""}`}

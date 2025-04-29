@@ -20,10 +20,9 @@ const TreeMenuItem = ({
 }) => {
   const renderChevron = () => (
     isNextLevelVisible
-      ? <RVI16 iconDef={rvi16ChevronDown} onClick={(e) => _onChevronClick(e)}/> 
+      ? <RVI16 iconDef={rvi16ChevronDown()} onClick={(e) => _onChevronClick(e)}/> 
       : <RVI16 iconDef={rvi16ChevronRight()} onClick={(e) => _onChevronClick(e)}/>
   )
-
   const _onChevronClick = (e) => {
     Logger.debug(`TreeMenuItem > _onChevronClick ... `)
     e.stopPropagation();
@@ -32,13 +31,13 @@ const TreeMenuItem = ({
 
   return (
     <div id={`tmi-${level}`}
-      className={`tmi f-start${isSelected() ? " active" : ""}${isChevronVisible ? " wc" : ""}`}
+      className={`tmi f-start ${isSelected() ? " active" : ""}${isChevronVisible ? " wc" : ""}`}
       // style={{ backgroundColor: getBackgroundColor("rutil-manager") }}
       {...props}
     >
       {isChevronVisible && renderChevron()}
       <RVI16 iconDef={iconDef} />
-      <span>{title}</span>
+      <span id="tmi-label" className={`${isSelected() ? " fw-500" : ""}`}>{title}</span>
     </div>
   )
 }

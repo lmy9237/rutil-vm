@@ -1,3 +1,8 @@
+import { useCallback } from "react";
+import useSearch from "../../../hooks/useSearch";
+import useGlobal from "../../../hooks/useGlobal";
+import SearchBox from "../../../components/button/SearchBox";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableRowClick from '../../../components/table/TableRowClick';
@@ -5,6 +10,7 @@ import { convertBytesToGB } from '../../../util';
 import { useAllStorageDomainsFromDisk } from "../../../api/RQHook";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
+import toast from "react-hot-toast";
 
 /**
  * @name DiskDomains
@@ -14,17 +20,43 @@ import Logger from "../../../utils/Logger";
  * @param {string} diskId 디스크ID
  * @returns
  */
-const DiskDomains = ({ diskId }) => {
+const DiskDomains = ({ 
+  diskId
+}) => {
+  const { domainsSelected, setDomainsSelected } = useGlobal()
   const {
     data: domains = [],
     isLoading: isDomainsLoading,
     isError: isDomainsError,
     isSuccess: isDomainsSuccess,
+    refetch: refetchDomains,
   } = useAllStorageDomainsFromDisk(diskId, (e) => ({
     ...e,
-    status: e.status === 'ACTIVE' ? '활성화' : '비활성화',
   }));
+  
+  const transformedData = [...domains].map((domain) => ({
+    ...domain,
+    status: domain?.status === 'ACTIVE' ? '활성화' : '비활성화',
+    icon: status2Icon(domain.status),
+    storageDomain: (<TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>),
+    domainType: domain?.domainType === 'data' 
+        ? '데이터'
+        : domain?.domainType === 'iso' 
+          ? 'ISO'
+          : 'EXPORT',
+    diskSize: sizeCheck(domain?.diskSize),
+    availableSize: sizeCheck(domain?.availableSize),
+    usedSize: sizeCheck(domain?.usedSize),
+  }))
 
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = useCallback(() =>  {
+    Logger.debug(`DiskDomains > handleRefresh ... `)
+    if (!refetchDomains) return;
+    refetchDomains()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
+  
   const sizeCheck = (size) => {
     Logger.debug(`DiskDomains > sizeCheck ... size: ${size}`)
     return (size === 0) 
@@ -32,28 +64,24 @@ const DiskDomains = ({ diskId }) => {
       : `${convertBytesToGB(size)} GB`;
   };
 
-  Logger.debug("DiskDomains ...")
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <TablesOuter
-        isLoading={isDomainsLoading} isError={isDomainsError} isSuccess={isDomainsSuccess}
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        {/*  */}
+      </div>
+      <TablesOuter target={"domain"}
         columns={TableColumnsInfo.STORAGE_DOMAINS_FROM_DISK}
-        data={(domains).map((domain) => ({
-          ...domain,
-          icon: status2Icon(domain.status),
-          storageDomain: (<TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>),
-          domainType: domain?.domainType === 'data' 
-              ? '데이터'
-              : domain?.domainType === 'iso' 
-                ? 'ISO'
-                : 'EXPORT',
-          diskSize: sizeCheck(domain?.diskSize),
-          availableSize: sizeCheck(domain?.availableSize),
-          usedSize: sizeCheck(domain?.usedSize),
-        }))}
+        data={filteredData}
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery}
+        multiSelect={true}
+        onRowClick={(selectedRows) => setDomainsSelected(selectedRows)}
         shouldHighlight1stCol={true}
+        isLoading={isDomainsLoading} isError={isDomainsError} isSuccess={isDomainsSuccess}
       />
-    </div>
+      <SelectedIdView items={domainsSelected} />
+    </>
   );
 };
 

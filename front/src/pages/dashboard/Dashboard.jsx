@@ -258,10 +258,10 @@ const Dashboard = () => {
 
         <div className="dash-section f-btw">
           <div className="dash-section-contents">
-            <h1 className="dash-con-title">CPU</h1>
+            <h1 className="dash-con-title fs-16">CPU</h1>
             <div className="dash-status f-start">
-              <h1>{cpuAvailablePercentageComputed}</h1>
-              <span className="unit">%</span>
+              <h1 className="fs-24">{cpuAvailablePercentageComputed}</h1>
+              <span className="unit fs-18">%</span>
               <div>{Localization.kr.AVAILABLE} (총 {cpuCoreTotal} Core)</div>
             </div>
             <span>
@@ -276,7 +276,7 @@ const Dashboard = () => {
               </div>
               {vmCpu && <CpuBarChart vmCpu={vmCpu} />}
             </div>
-            <div className="wave-graph">
+            <div className="wave-graph fs-14">
               {/* <h2>Per CPU</h2> */}
               <SuperAreaChart per={host} type="cpu" />
             </div>
@@ -284,16 +284,16 @@ const Dashboard = () => {
 
 
           <div className="dash-section-contents">
-            <h1 className="dash-con-title">MEMORY</h1>
+            <h1 className="dash-con-title fs-16">MEMORY</h1>
             <div className="dash-status f-start">
-              <h1>{memAvailablePercentageComputed}</h1>
-              <span className="unit">GiB</span>
+              <h1 className="fs-24">{memAvailablePercentageComputed}</h1>
+              <span className="unit fs-18">GiB</span>
               <div>{Localization.kr.AVAILABLE}</div>
             </div>
             <span>
               사용중 {cpuMemory?.usedMemoryGB?.toFixed(1)} GiB / 총 {cpuMemory?.totalMemoryGB?.toFixed(1)} GiB
             </span>
-            <div className="graphs flex">
+            <div className="graphs f-start">
               <div
                 className="graph-wrap active-on-visible"
                 data-active-on-visible-callback-func-name="CircleRun"
@@ -303,22 +303,22 @@ const Dashboard = () => {
               {vmMemory && <MemoryBarChart vmMemory={vmMemory} />}
             </div>
 
-            <div className="wave-graph">
+            <div className="wave-graph fs-14">
               <SuperAreaChart per={host} type="memory" />
             </div>
           </div>
 
           <div className="dash-section-contents">
-            <h1 className="dash-con-title">STORAGE</h1>
+            <h1 className="dash-con-title fs-16">STORAGE</h1>
             <div className="dash-status f-start">
-              <h1>{storage?.freeGB}</h1>
-              <span className="unit">GiB</span>
+              <h1 className="fs-24">{storage?.freeGB}</h1>
+              <span className="unit fs-18">GiB</span>
               <div>{Localization.kr.AVAILABLE} (총 {storage?.totalGB} GiB)</div>
             </div>
             <span>
               USED {storage?.usedGB} GiB / Total {storage?.freeGB} GiB
             </span>
-            <div className="graphs flex">
+            <div className="graphs f-start">
               <div className="graph-wrap active-on-visible"
                 data-active-on-visible-callback-func-name="CircleRun"
               >
@@ -326,24 +326,24 @@ const Dashboard = () => {
               </div>
               {storageMemory && (<StorageMemoryBarChart storageMemory={storageMemory} />)}
             </div>
-            <div className="wave-graph">
+            <div className="wave-graph fs-14">
               <SuperAreaChart per={domain} type="domain" />
             </div>
           </div>
         </div>
         
-        <div className="bar-outer">
-          <div className="bar">
+        <div className="bar-outer v-btw">
+          <div className="bar f-btw fs-14">
             <div>
-              <span>CPU</span>
+              <span className="fs-18">CPU</span>
               <Grid className="grid-outer" type={"cpu"} data={vmMetricCpu} />
             </div>
             <div>
-              <span>MEMORY</span>
+              <span className="fs-18">MEMORY</span>
               <Grid className="grid-outer" type={"memory"} data={vmMetricMemory} />
             </div>
             <div>
-              <span>StorageDomain</span>
+              <span className="fs-18">StorageDomain</span>
               <Grid className="grid-outer" type={"domain"} data={storageMetric} />
             </div>
           </div>

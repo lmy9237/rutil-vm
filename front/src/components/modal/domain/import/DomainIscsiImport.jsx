@@ -119,7 +119,7 @@
 //     <div className="storage-popup-iSCSI">
 //       <div className="section-table-outer">
 //         <div className="target-search-outer">
-//           <label className="label-font-name">{Localization.kr.TARGET} {Localization.kr.SEARCH}</label>
+//           <label className="fs-16">{Localization.kr.TARGET} {Localization.kr.SEARCH}</label>
 
 //           <div className="input-inline-wrap">
 //             <LabelInput id="address" label="주소"

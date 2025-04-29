@@ -1,6 +1,6 @@
 .normal-search-box {
   border: var(--border-btn);
-  width:  var(--w-text-input);height: var(--h-text-input);
+  width: var(--w-text-input);height: var(--h-text-input);min-width: var(--w-text-input);
   border-radius: 1px;
 }
 .normal-search-box input {

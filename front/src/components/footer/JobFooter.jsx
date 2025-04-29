@@ -42,7 +42,7 @@ const JobFooter = ({
     status: e?.status,
     startTime: e?.startTime,
     endTime: e?.endTime,
-    timestamp: isNaN(e?.timestamp) ? 'N/A' : Localization.kr.renderTime(e?.timestamp),
+    timestamp: isNaN(e?.timestamp) ? Localization.kr.NOT_ASSOCIATED : Localization.kr.renderTime(e?.timestamp),
   }))), [jobs]);
 
   const FOOTER_TOP_HORIZ_BAR_HEIGHT = 40
@@ -97,7 +97,7 @@ const JobFooter = ({
       >
         {/* 상단 "최근작업" 바 */}
         <div
-          className="footer f-start"
+          className="footer f-start fs-16"
           style={{ height: `40px` }}
           onClick={(e) => {
             e.stopPropagation()
@@ -110,13 +110,13 @@ const JobFooter = ({
 
         {/* 테이블 */}
         <div
-          // className={`footer-content${footerVisible() ? " open" : ""}`}
           className={`footer-content v-center`}
           style={{ height: `${footerHeight - 40}px` }}
         >
           <div className="footer-nav">
-            <TablesOuter columns={TableColumnsInfo.JOB_HISTORY_COLUMNS}
-              style={{paddingLeft:'30px'}}
+            <TablesOuter target={"job"}
+              columns={TableColumnsInfo.JOB_HISTORY_COLUMNS}
+              style={{ paddingLeft:'30px' }}
               data={transformedData}
               onRowClick={(row) => setJobsSelected(row)}
               showSearchBox={false}

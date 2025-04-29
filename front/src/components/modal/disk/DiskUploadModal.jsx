@@ -157,8 +157,8 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "790px" }} 
     >
-      <div className="storage-upload-first f-btw">
-        <p>파일 선택</p>
+      <div className="storage-upload-first f-btw fs-14">
+        <p className="fs-16">파일 선택</p>
         <div>
           <input id="file"
             type="file"
@@ -180,7 +180,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
       </div>
 
       <div>
-        <div className="disk-option">디스크 옵션</div>
+        <div className="disk-option fs-16">디스크 옵션</div>
           <div className="disk-new-img" style={{ paddingTop: "0.4rem" }}>
             <div className="disk-new-img-left">
               <LabelInput id="size" label={Localization.kr.SIZE_ACTUAL}
@@ -249,7 +249,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
               />
             </div>
           
-            <div className="disk-new-img-right">
+            <div className="disk-new-img-right f-end">
               <div className='img-checkbox-outer'>
                 <LabelCheckbox label={Localization.kr.WIPE_AFTER_DELETE}
                   id="wipeAfterDelete"

@@ -1,11 +1,20 @@
-import React from "react";
-import { useNetworkInterfacesFromHost } from "../../../api/RQHook";
-import { checkZeroSizeToMbps } from "../../../util";
+import React, { useCallback } from "react";
+import toast from "react-hot-toast";
+import useGlobal from "../../../hooks/useGlobal";
+import useSearch from "../../../hooks/useSearch";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import SearchBox from "../../../components/button/SearchBox";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
+import { checkZeroSizeToMbps } from "../../../util";
+import { useNetworkInterfacesFromHost } from "../../../api/RQHook";
+import Logger from "../../../utils/Logger";
 
-const HostNetworkAdapter = ({ hostId }) => {
+const HostNetworkAdapter = ({
+  hostId
+}) => {
+  const { nicsSelecteed, setNicsSelected } = useGlobal()
   // const { data: host } = useHost(hostId);
   const { 
     data: hostNics = [],
@@ -55,23 +64,34 @@ const HostNetworkAdapter = ({ hostId }) => {
     txTotalSpeed: e?.txTotalSpeed?.toLocaleString() || "0",
     pkts: `${e?.rxTotalError} Pkts` || "1 Pkts",
   }));
+
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = useCallback(() => {
+    Logger.debug(`HostNetworkAdapter > handleRefresh ... `)
+    if (!refetchHostNics) return;
+    refetchHostNics()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
   
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      {/* <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-2 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
-      </div> */}
-      <br/>
+        {/**/}
+      </div>
       <TablesOuter target={"hostnic"}
         columns={TableColumnsInfo.NETWORK_ADAPTER_FROM_HOST}
-        data={transformedData}
+        data={filteredData}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
         shouldHighlight1stCol={true}
         multiSelect={true}
+        onRowClick={(selectedRows) => setNicsSelected(selectedRows)}
         refetch={refetchHostNics}
         isLoading={isHostNicsLoading} isError={isHostNicsError} isSuccess={isHostNicsSuccess}
       />
-      {/* <SelectedIdView items={hostDevicesSelected}/> */}
-    </div>
+      <SelectedIdView items={nicsSelecteed}/>
+    </>
   );
 }
 

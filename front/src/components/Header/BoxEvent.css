@@ -1,10 +1,8 @@
 .bell-box {
-  position: absolute;
+  position: absolute;top:var(--h-rutil-header);right: 0;
+  width: var(--w-bell-box);
   background-color: #ffffff;
   z-index: 200;
-  width: var(--w-bell-box);
-  top:var(--h-rutil-header);right: 0;
-  font-size: var(--fs-default);
   border: 1px solid rgb(204, 204, 204);
   border-radius: 2px;
   box-shadow: -3px 3px 10px rgba(0, 0, 0, 0.2); 
@@ -16,14 +14,12 @@
   height: auto; 
 }
 .bell-box > div {
-  font-size: var(--fs-16);
+  width:100%;
   border-bottom: 1px solid var(--color-table);
   overflow: overlay;
 }
 .bell-cate {
   height: 40px;
-  font-weight: 500;
-  font-size: var(--fs-16);
   overflow-y: hidden !important;
   /* background: linear-gradient(to bottom, rgba(200, 200, 200, 0.1), rgba(200, 200, 200, 0.3));  */
 }
@@ -49,32 +45,30 @@
   flex-direction: column;
 }
 .bell-btns {
-  display: flex;
   height: 48px;
 }
-.bell-btns>div{
+.bell-btns > div {
   width: 50%;
   cursor: pointer;
   color: var(--color-active);
-  font-size: var(--fs-14);
 }
 .bell-btns>div:hover{
   text-decoration: underline;
 }
 .bell-content {
-  width: 100%;padding: 12px 8px;
+  width: 100%;
+  padding: 12px 8px;
   gap: 2px;
   color: var(--color-nav);
-  font-size: var(--fs-default);
   border-bottom: 1px solid var(--color-table);
   transition: height 0.3s ease-in-out;
 }
 .bell-content:hover {
   background: #e3f7f9;
 }
-.bell-content .bell-icon {
-  height:20px;aspect-ratio:1/1;
-  
+.bell-content 
+.bell-icon {
+  width:20px;height:20px;aspect-ratio:1/1;
 }
 .bell-icon:hover {
   color: #1d1d1d !important;
@@ -85,15 +79,14 @@
 }
 .bell-mid {
   width:calc(100% - 55px);height:100%;
-  word-wrap: break-word; 
-  overflow-wrap: break-word;
-  white-space: normal; 
+  white-space: normal;
+  align-items:flex-start !important;
 }
 .bell-mid p { 
-  word-wrap: break-word;
-  word-break: break-all;
-  text-overflow: ellipsis;
-  width:100%;height: auto;
+  width: auto;
+  height: auto;max-height:32px;
+  word-wrap: break-word;word-break: break-all;
+  overflow-wrap: break-word;
 }
 /* bell-content가 활성화되었을 때 (내용에 따라 높이 자동 조절) */
 .bell-content.open {

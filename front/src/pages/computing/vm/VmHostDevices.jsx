@@ -53,14 +53,12 @@ const VmHostDevices = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
-  Logger.debug(`VmHostDevices ... `)
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
         {/* <HostActionButtons actionType = "default"/> */}
       </div>
-
       <TablesOuter target={"hostdevice"}
         columns={TableColumnsInfo.HOST_DEVICE_FROM_VM}
         data={filteredData}
@@ -72,9 +70,8 @@ const VmHostDevices = ({
         refetch={refetchHostDevices}
         isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
       />
-      
       <SelectedIdView items={hostDevicesSelected} />
-    </div>
+    </>
   );
 };
 

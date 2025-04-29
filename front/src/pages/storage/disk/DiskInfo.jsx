@@ -88,8 +88,8 @@ const DiskInfo = () => {
   Logger.debug("DiskInfo ...")
   return (
     <SectionLayout>
-      <HeaderButton titleIcon={rvi24HardDrive()}
-        title={disk?.alias}
+      <HeaderButton title={disk?.alias}
+        titleIcon={rvi24HardDrive()}
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
@@ -98,7 +98,7 @@ const DiskInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full info-content">
+        <div className="info-content v-start gap-8 w-full">
           <Path pathElements={pathData} basePath={`/storages/disks/${diskId}`}/>
           {renderSectionContent()}
         </div>

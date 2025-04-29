@@ -92,8 +92,8 @@ const TemplateInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton titleIcon={rvi24Template()}
-        title={template?.name}
+      <HeaderButton title={template?.name}
+        titleIcon={rvi24Template()}
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
@@ -102,10 +102,8 @@ const TemplateInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full info-content">
-          <Path pathElements={pathData} 
-            basePath={`/computing/templates/${templateId}`}
-          />
+        <div className="info-content v-start gap-8 w-full">
+          <Path pathElements={pathData} basePath={`/computing/templates/${templateId}`} />
           {renderSectionContent()}
         </div>
       </div>

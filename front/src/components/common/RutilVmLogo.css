@@ -2,7 +2,6 @@
 .rutil-vm-logo {
   flex-direction:column;
   width:140px;aspect-ratio:134/36;margin:10px;
-  margin-bottom: 50px;
 }
 .rutil-vm-logo.big {
   width: 240px !important;
@@ -15,9 +14,9 @@
 }
 .rutil-vm-logo figcaption { 
   width:100%;
-  font-size: 0.65rem; 
 }
 .rutil-vm-logo p {
   width:100%;
-  color: var(--color-logo-text);font-size:15px;font-weight:500;line-height:150%; 
+  color: var(--color-logo-text);
+  line-height:150%;
 }

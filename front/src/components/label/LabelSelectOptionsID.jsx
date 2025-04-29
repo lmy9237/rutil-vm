@@ -22,21 +22,6 @@ import "./LabelInput.css";
  * @returns {JSX.Element} LabelSelectOptionsID
  */
 
-const LabelSelectOptionId = ({
-  opt, 
-  value,
-  etcLabel,
-  handleOptionClick,
-}) => (
-  <div
-    key={opt.id}
-    className={`custom-option ${opt.id === value ? "selected" : ""}`}
-    onClick={() => handleOptionClick(opt.id)}
-  >
-    {opt.name}: {opt.id} {etcLabel}
-  </div>
-);
-
 const LabelSelectOptionsID = ({
   className = "",
   label,
@@ -70,7 +55,6 @@ const LabelSelectOptionsID = ({
   
     setOpen(false);
   }, [disabled, options, onChange]);
-  
   useClickOutside(wrapperRef, (e) => setOpen(false));
 
   const boxStyle = !label ? { width: "100%" } : undefined;
@@ -85,38 +69,38 @@ const LabelSelectOptionsID = ({
   }, [options, loading, value]);
 
   return (
-    <div className={`input-select custom-select-wrapper ${className}`} ref={wrapperRef}>
+    <div ref={wrapperRef}
+      className={`input-select custom-select-wrapper ${className}`}
+    >
       {label && <label htmlFor={id}>{label}</label>}
         <div
-          className={`custom-select-box f-btw ${disabled ? "disabled" : ""}`}
+          className={`custom-select-box f-start ${disabled ? "disabled" : ""}`}
           style={boxStyle}
           onClick={() => !disabled && setOpen(!open)}
         >
           <span>{selectedLabel}</span>
-          <RVI16 iconDef={open ? rvi16ChevronUp : rvi16ChevronDown} />
+          <RVI16 iconDef={open ? rvi16ChevronUp : rvi16ChevronDown()} />
         </div>
 
         {open && !loading && (
-          <div className="custom-options"  style={boxStyle} >
-            {options.length === 0 ? (
-              <div className="custom-option disabled">항목 없음</div>
-            ) : (
-              options.map((opt) => (
-                <LabelSelectOptionId
-                  opt={opt}
-                  value={value}
-                  etcLabel={etcLabel}
-                  handleOptionClick={handleOptionClick}
-                />
-              ))
-            )}
+          <div className="custom-options v-start" 
+            style={boxStyle}
+          >
+            {[...options].map((opt) => (
+              <LabelSelectOptionId
+                opt={opt}
+                value={value}
+                etcLabel={etcLabel}
+                handleOptionClick={handleOptionClick}
+              />
+            ))}
           </div>
         // */
         /*
         createPortal(
           <div className="custom-options" style={boxStyle} >
             {options.length === 0 ? (
-              <div className="custom-option disabled">항목 없음</div>
+              <div className="custom-option f-center disabled">항목 없음</div>
             ) : (
               options.map((opt) => (
                 <LabelSelectOptionId
@@ -133,6 +117,20 @@ const LabelSelectOptionsID = ({
     </div>
   );
 };
+
+const LabelSelectOptionId = ({
+  opt, 
+  value,
+  etcLabel,
+  handleOptionClick,
+}) => (
+  <div key={opt.id}
+    className={`custom-option f-start w-full ${opt.id === value ? "selected" : ""}`}
+    onClick={() => handleOptionClick(opt.id)}
+  >
+    {opt.name}: {opt.id} {etcLabel}
+  </div>
+);
 
 export default LabelSelectOptionsID;
 

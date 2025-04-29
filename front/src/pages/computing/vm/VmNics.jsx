@@ -13,15 +13,18 @@ import Localization from "../../../utils/Localization";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import NicActionButtons from "../../../components/dupl/NicActionButtons";
 import useClickOutside from "../../../hooks/useClickOutside";
-
+import "./Vm.css"
 /**
  * @name VmNics
  * @description 가상에 종속 된 네트워크 인터페이스 목록
- *
+ * (/computing/vms/<VM_ID>/nics)
+ * 
  * @param {string} vmId 가상머신 ID
  * @returns
  */
-const VmNics = ({ vmId }) => {
+const VmNics = ({ 
+  vmId
+}) => {
   const { activeModal, setActiveModal, } = useUIState()
   const { nicsSelected, setNicsSelected } = useGlobal()
 
@@ -62,12 +65,12 @@ const VmNics = ({ vmId }) => {
   useClickOutside(nicRef, (e) => setNicsSelected([])) /* 외부 창을 눌렀을 때 선택 해제 */
 
   return (
-    <div ref={nicRef} onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <NicActionButtons />
       </div>
 
-      <div className="network-interface-outer">
+      <div className="network-interface-outer w-full">
         {transformedData.length === 0 ? ( // NIC가 하나라도 있을 때 실행
           <p style={{textAlign: "center", color: "gray", padding: "20px", fontSize: "14px" }}>
             표시할 네트워크 인터페이스가 없습니다.
@@ -75,19 +78,15 @@ const VmNics = ({ vmId }) => {
         ) : (
           [...transformedData].map((nic, i) => (
             <div key={nic?.id}
-              className={`network_content2 ${nicsSelected[0]?.id === nic.id ? "selected" : ""}`}
+              className={`network_content2 w-full ${nicsSelected[0]?.id === nic.id ? "selected" : ""}`}
               onClick={() => {
-                setNicsSelected(nic)
-                setVisibleDetailId(nic.id);
+                setNicsSelected(nic);                
+                toggleDetails(nic.id);
               }} // NIC 선택 시 상태 업데이트
             >
-              <div className="network-content"
-                onClick={() => toggleDetails(nic.id)}
-              >
-                <div className="network-status">
-                  <RVI24 iconDef={visibleDetailId === nic.id ? rvi24ChevronDown() : rvi24ChevronRight()} 
-                    onClick={() => toggleDetails(nic.id)}
-                  />
+              <div className="network-content f-start w-full">
+                <div className="network-status f-start">
+                  <RVI24 iconDef={nicsSelected[0]?.id === nic.id ? rvi24ChevronDown() : rvi24ChevronRight()} />
                   <FontAwesomeIcon
                     icon={Boolean(nic?.linked) ? faArrowCircleUp : faArrowCircleDown}
                     style={{ color: Boolean(nic?.linked) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
@@ -100,44 +99,31 @@ const VmNics = ({ vmId }) => {
                   />
                   <span>{nic?.name}</span>
                 </div>
-                <div>
-                  <div>{Localization.kr.NETWORK} {Localization.kr.NAME}</div>
-                  <div>{nic?.networkVo?.name}</div>
-                </div>
-                <div>
-                  <div>IPv4</div>
-                  <div>{nic?.ipv4 || Localization.kr.NOT_ASSOCIATED}</div>
-                </div>
-                <div>
-                  <div>IPv6</div>
-                  <div>{nic?.ipv6 || Localization.kr.NOT_ASSOCIATED}</div>
-                </div>
-                <div style={{ paddingRight: "3%" }}>
-                  <div>MAC</div>
-                  <div>{nic?.macAddress}</div>
-                </div>
+                <VmNicStatus title={`${Localization.kr.NETWORK} ${Localization.kr.NAME}`} value={nic?.networkVo?.name}/>
+                <VmNicStatus title={"IPv4"} value={nic?.ipv4}/>
+                <VmNicStatus title={"IPv6"} value={nic?.ipv6}/>
+                <VmNicStatus title={"MAC"} value={nic?.macAddress}/>
               </div>
 
-              <div
-                className="network-content-detail"
-                style={{ display: (visibleDetailId === nic.id && nicsSelected[0]?.id === nic.id) ? "flex" : "none" }}
+              <div className="network-content-detail w-full"
+                style={{ display: (nicsSelected[0]?.id === nic.id) ? "flex" : "none" }}
               >
                 <div className="network-content-detail-box">
-                  <div className="font-bold">일반</div>
+                  <span className="fs-14 fw-700">일반</span>
                   <TablesRow
                     columns={TableColumnsInfo.NICS_FROM_VM} 
                     data={nic} 
                   />
                 </div>
                 <div className="network-content-detail-box">
-                  <div className="font-bold">통계</div>
+                  <span className="fs-14 fw-700">통계</span>
                   <TablesRow
                     columns={TableColumnsInfo.NICS_CALC_FROM_VM} 
                     data={nic} 
                   />
                 </div>
                 <div className="network-content-detail-box">
-                  <div className="font-bold">네트워크 필터 매개변수</div>
+                  <span className="fs-14 fw-700">네트워크 필터 매개변수</span>
                   <table className="snap-table">
                     <tbody></tbody>
                   </table>
@@ -176,7 +162,23 @@ const VmNics = ({ vmId }) => {
           />
         )} */}
       </Suspense>
-    </div>
+    </>
   );
 };
+
+const VmNicStatus = ({
+  title,
+  value,
+  ...props
+}) => {
+  return (
+    <div className="network-status v-start"
+      {...props}
+    >
+      <span className="network-status-name fw-700">{title}</span>
+      <span>{value || Localization.kr.NOT_ASSOCIATED}</span>
+    </div>
+  )
+}
+
 export default VmNics;

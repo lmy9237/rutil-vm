@@ -26,12 +26,12 @@ const AllVnic = () => {
       <HeaderButton titleIcon={rvi24Lan()}
         title={Localization.kr.VNIC_PROFILE}
       />
-      <div className="w-full section-content">
+      <div className="section-content v-start gap-8 w-full">
         <VnicProfileDupl
-          isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
           columns={TableColumnsInfo.VNIC_PROFILES}
           vnicProfiles={vnicProfiles || []}
           showSearchBox={true}
+          isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
         />
       </div>
     </SectionLayout>

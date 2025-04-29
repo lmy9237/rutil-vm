@@ -49,8 +49,8 @@ const DomainDiskSnapshots = ({
   }, [])
   
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <div className="header-right-btns">
           <ActionButton actionType="default" label={Localization.kr.REMOVE}
@@ -59,7 +59,6 @@ const DomainDiskSnapshots = ({
           />
         </div>
       </div>
-
       <TablesOuter target={"snapshot"}
         columns={TableColumnsInfo.DISK_SNAPSHOT_FROM_STORAGE_DOMAIN}
         data={filteredData}
@@ -70,9 +69,8 @@ const DomainDiskSnapshots = ({
         refetch={refetchDiskSnapshots}
         isLoading={isDiskSnapshotsLoading} isError={isDiskSnapshotsError} isSuccess={isDiskSnapshotsSuccess}
       />
-
       <SelectedIdView items={snapshotsSelected} />
-    </div>
+    </>
   );
 };
 

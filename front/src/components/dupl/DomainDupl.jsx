@@ -24,7 +24,7 @@ import Logger from "../../utils/Logger";
  * @returns {JSX.Element}
  */
 const DomainDupl = ({
-  domains = [], columns = [], showSearchBox = true,
+  domains = [], columns = [],
   actionType, sourceContext = "all", 
   refetch, isLoading, isError, isSuccess,
 }) => {
@@ -65,11 +65,6 @@ const DomainDupl = ({
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  
-  const handleNameClick = useCallback((id) => {
-    navigate(`/storages/domains/${id}`);
-  }, [navigate])
-  
   const handleRefresh = useCallback(() =>  {
     Logger.debug(`DomainDupl > handleRefresh ... `)
     if (!refetch) return;
@@ -77,17 +72,19 @@ const DomainDupl = ({
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
+  const handleNameClick = useCallback((id) => {
+    navigate(`/storages/domains/${id}`);
+  }, [navigate])
+
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         {sourceContext === "all" 
           ? <DomainActionButtons actionType={actionType} />
           : <DomainDataCenterActionButtons actionType={actionType} />
         }
       </div>
-
-      {/* 테이블 컴포넌트 */}
       <TablesOuter target={"domain"}
         columns={columns}
         data={filteredData} // ✅ 검색 필터링된 데이터 전달
@@ -99,7 +96,7 @@ const DomainDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={domainsSelected} />
-    </div>
+    </>
   );
 };
 

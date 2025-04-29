@@ -45,34 +45,36 @@ const DomainImportVms = ({ domainId }) => {
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
+  // TODO: ActionButtons 생성
+  // TODO: domainvm 관련 모달 생성
   return (
-    <>
-    <div className="dupl-header-group f-start">
-      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={refetchVms} />
-      <div className="header-right-btns">
-        <ActionButton label={Localization.kr.IMPORT}
-          actionType="default"
-          disabled={vmsSelected.length === 0} 
-          onClick={() => setActiveModal("domainvm:importVm")}
-        />
-        <ActionButton label={Localization.kr.REMOVE}
-          actionType="default"
-          disabled={vmsSelected.length === 0} 
-          onClick={() => setActiveModal("domainvm:remove")}
-        />
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={refetchVms} />
+        <div className="header-right-btns">
+          <ActionButton label={Localization.kr.IMPORT}
+            actionType="default"
+            disabled={vmsSelected.length === 0} 
+            onClick={() => setActiveModal("domainvm:importVm")}
+          />
+          <ActionButton label={Localization.kr.REMOVE}
+            actionType="default"
+            disabled={vmsSelected.length === 0} 
+            onClick={() => setActiveModal("domainvm:remove")}
+          />
+        </div>
       </div>
-    </div>
-    
-      <TablesOuter columns={TableColumnsInfo.VMS_IMPORT_FROM_STORAGE_DOMAIN}
+      <TablesOuter target={"vm"}
+        columns={TableColumnsInfo.VMS_IMPORT_FROM_STORAGE_DOMAIN}
         data={filteredData}
         shouldHighlight1stCol={true}
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         multiSelect={true}
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
-
       <SelectedIdView items={vmsSelected} />
-
       <Suspense fallback={<Loading />}>
         {/* 가상머신 가져오기 모달 -> DomainImporttemplates에서도 쓰고있어서 domainmodals에 어떻게 써야하나! */}
         {activeModal() === "domainvm:importVm" && (

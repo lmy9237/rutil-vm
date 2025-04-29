@@ -1,6 +1,4 @@
 .path {
-  font-size: var(--fs-14);
-  display:flex;justify-content:flex-start;align-items:center;
-  margin-bottom: 10px;
-  font-weight: 400;color: var(--color-nav);letter-spacing: var(--letter-28);
+  color: var(--color-nav);
+  letter-spacing: var(--letter-28);
 }

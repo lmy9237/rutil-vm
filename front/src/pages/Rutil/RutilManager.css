@@ -1,26 +1,5 @@
-
-.rutil-general-contents{
-   background:var(--color-white);
-   display:flex;
-   width: 100%;
-   padding: 0 30px;
-   padding: 24px 36px;
+.rutil-general-contents {
+  width: 100%;
+  background:var(--color-white);
+  gap:5px;
 }
-.rutil-general-contents>div:first-child{
-    display:flex;
-    margin-bottom: 9px;
-    border-right:var(--border-default);
-    padding-right: 36px;
-}
-.rutil-general-contents .info-table-outer{
-    width: 100% !important;
-    padding: 0  ;
-    padding-left: 16px;
-}
-/* .type-info-boxs{
-    border:var(--border-default);
-    padding:8px;
-}
-.type-info-box{
-    margin-bottom:0.2rem;
-} */

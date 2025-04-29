@@ -1,6 +1,5 @@
 .host-filter-btns {
   width: fit-content;height: var(--h-text-input);
-  font-size: var(--fs-default);
   border-radius: 1px;
   border: var(--border-btn-filter);
 }
@@ -10,7 +9,6 @@
   border-radius: 0;border:none;
   border-right: var(--border-btn-filter);
   color:var(--color-nav);
-  font-weight: 500;
   word-break: break-all;
 }
 .host-filter-btns button:last-child{
@@ -20,6 +18,5 @@
   background-color: #eceaea;
 }
 .host-filter-btns button.active {
-  font-weight: 700;
   color: var(--color-black);
 }

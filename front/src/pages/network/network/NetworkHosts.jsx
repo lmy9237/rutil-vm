@@ -1,7 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGlobal from "../../../hooks/useGlobal";
+import useSearch from "../../../hooks/useSearch";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import SearchBox from "../../../components/button/SearchBox";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
@@ -15,12 +17,8 @@ import {
   useDisconnectedHostsFromNetwork,
 } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
+import toast from "react-hot-toast";
 
-
-const connectionFilters = [
-  { key: "connected", label: "연결됨" },
-  { key: "disconnected", label: "연결 해제" },
-];
 
 /**
  * @name NetworkHosts
@@ -42,6 +40,7 @@ const NetworkHosts = ({
     isLoading: isConnectedHostsLoading,
     isError: isConnectedHostsError,
     isSuccess: isConnectedHostsSuccess,
+    refetch: refetchConnectedHosts,
   } = useConnectedHostsFromNetwork(networkId, (e) => ({ ...e }));
 
   const {
@@ -49,10 +48,16 @@ const NetworkHosts = ({
     isLoading: isDisconnectedHostsLoading,
     isError: isDisconnectedHostsError,
     isSuccess: isDisconnectedHostsSuccess,
+    refetch: refetchDisconnectedHosts,
   } = useDisconnectedHostsFromNetwork(networkId, (e) => ({ ...e }));
 
-  const selectedHostId = (!Array.isArray(hostsSelected) ? [] : hostsSelected).map((host) => host.id).join(", ");
+  const selectedHostId = [...hostsSelected][0]?.id
 
+  const connectionFilters = [
+    { key: "connected", label: "연결됨" },
+    { key: "disconnected", label: "연결 해제" },
+  ];
+  
   const transformHostData = (hosts) => {
     return hosts.map((host) => {
       const baseData = {
@@ -90,52 +95,54 @@ const NetworkHosts = ({
   
       return baseData;
     });
-  };
-  
-  Logger.debug(`NetworkHosts ... `)
-  return (
-    <>
-      <div className="header-right-btns no-search-box" style={{justifyContent:'space-between'}}>
-        <FilterButtons options={connectionFilters}  activeOption={activeFilter} onClick={setActiveFilter} />
-        <ActionButton
-          label={`${Localization.kr.HOST} ${Localization.kr.NETWORK} 설정`}
-          actionType="default"
-          onClick={() => {
-            if (selectedHostId) {
-              navigate(`/computing/hosts/${selectedHostId}/nics`);
-            }
-          }}
-          disabled={!selectedHostId}
-        />
-      </div>
-      
+  };  
+  // ✅ 검색 기능 적용
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(
+    activeFilter === "connected"
+      ? transformHostData(connectedHosts)
+      : transformHostData(disconnectedHosts)
+  );
+  const handleRefresh = useCallback(() =>  {
+    Logger.debug(`NetworkHosts > handleRefresh ... `)
+    activeFilter === "connected" ? refetchConnectedHosts() : refetchDisconnectedHosts()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
 
-      <TablesOuter
-        isLoading={activeFilter === "connected" ? isConnectedHostsLoading: isDisconnectedHostsLoading}
-        isError={activeFilter === "connected" ? isConnectedHostsError : isDisconnectedHostsError }
-        isSuccess={activeFilter === "connected" ? isConnectedHostsSuccess : isDisconnectedHostsSuccess }
+  return (
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <FilterButtons options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <div className="header-right-btns">
+          <ActionButton
+            label={`${Localization.kr.HOST} ${Localization.kr.NETWORK} 설정`}
+            actionType="default"
+            onClick={() => {
+              if (selectedHostId) {
+                navigate(`/computing/hosts/${selectedHostId}/nics`);
+              }
+            }}
+            disabled={!selectedHostId}
+          />
+        </div>
+      </div>
+
+      <TablesOuter target={"host"}
         columns={
           activeFilter === "connected"
             ? TableColumnsInfo.HOSTS_FROM_NETWORK
             : TableColumnsInfo.HOSTS_DISCONNECT_FROM_NETWORK
         }
-        data={
-          activeFilter === "connected"
-            ? transformHostData(connectedHosts)
-            : transformHostData(disconnectedHosts)
-        }
+        data={filteredData}
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery}
+        multiSelect={true}
+        shouldHighlight1stCol={true}
         onRowClick={(row) => setHostsSelected(row)}
-        // onContextMenuItems={(row) => [
-        //   <div className='right-click-menu-box'>
-        //     <button
-        //     onClick={() => setIsModalOpen(true)}
-        //     className='right-click-menu-btn'
-        //     disabled={!selectedHost} // selectedHost가 없으면 버튼 비활성화
-        //   >
-        //     호스트 네트워크 설정
-        //   </button>
-        // </div>
-        // ]}
+        refetch={activeFilter === "connected" ? refetchConnectedHosts : refetchDisconnectedHosts}
+        isLoading={activeFilter === "connected" ? isConnectedHostsLoading: isDisconnectedHostsLoading}
+        isError={activeFilter === "connected" ? isConnectedHostsError : isDisconnectedHostsError }
+        isSuccess={activeFilter === "connected" ? isConnectedHostsSuccess : isDisconnectedHostsSuccess }
       />
 
       <SelectedIdView items={hostsSelected} />

@@ -105,7 +105,7 @@ const NetworkHostModal = ({ isOpen, onClose, nicData, hostId }) => {
             </div>
             {Array.isArray(nicData) ? (
               nicData.map((nic, index) => (
-                <div key={nic.id || index} className="separation-left-content">
+                <div key={nic.id || index} className="separation-left-content f-btw">
                   <div className="interface">
                     {nic.bondingVo?.slaves?.length > 0 ? (
                       <>

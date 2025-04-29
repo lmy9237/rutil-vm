@@ -146,7 +146,7 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
           options={interfaceOptions}
           disabled={editMode}
         />
-        <div className="mac-address">사용자 지정 MAC 주소</div>
+        <div className="mac-address fs-18">사용자 지정 MAC 주소</div>
       </div>
 
       <div className="nic-toggle">

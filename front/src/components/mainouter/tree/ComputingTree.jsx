@@ -11,7 +11,6 @@ import {
   rvi16DataCenter,
   rvi16Cluster,
   rvi16DesktopSleep,
-  rvi16DesktopFlag,
   rvi16Pause,
 } from "../../icons/RutilVmIcons";
 import { useAllTreeNavigations } from "../../../api/RQHook";
@@ -49,7 +48,7 @@ const ComputingTree = ({}) => {
       {/* 첫 번째 레벨 (Rutil Manager) */}
       <TreeMenuItem level={1}
         title="Rutil Manager"
-        iconDef={rvi16Globe}
+        iconDef={rvi16Globe("currentColor")}
         // isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
         isSelected={() => location.pathname.includes("rutil") }
         isNextLevelVisible={secondVisibleComputing()}
@@ -65,7 +64,7 @@ const ComputingTree = ({}) => {
           <div key={dc?.id} className="tmi-g">
             <TreeMenuItem level={2}
               title={dc?.name}
-              iconDef={rvi16DataCenter}
+              iconDef={rvi16DataCenter("currentColor")}
               isSelected={() => location.pathname.includes(dc?.id)}
               isNextLevelVisible={isDataCenterOpen}
               isChevronVisible={hasClusters}
@@ -97,7 +96,7 @@ const ComputingTree = ({}) => {
                 <div key={cluster?.id} className="tmi-g">
                   <TreeMenuItem level={3}
                     title={cluster?.name}
-                    iconDef={rvi16Cluster}
+                    iconDef={rvi16Cluster("currentColor")}
                     isSelected={() => location.pathname.includes(cluster?.id)}
                     isNextLevelVisible={isClusterOpen}
                     isChevronVisible={hasHosts}
@@ -134,7 +133,7 @@ const ComputingTree = ({}) => {
                           <div key={host.id} className="tmi-g">
                             <TreeMenuItem level={4}
                               title={host.name}
-                              iconDef={rvi16Host}
+                              iconDef={rvi16Host("currentColor")}
                               isSelected={() => location.pathname.includes(host?.id)}
                               isNextLevelVisible={isHostOpen}
                               isChevronVisible={hasVMs}
@@ -165,9 +164,8 @@ const ComputingTree = ({}) => {
                               <div key={vm?.id} className="tmi-g">
                                 <TreeMenuItem level={5}
                                   title={vm?.name}
-                                  iconDef={rvi16Desktop}
+                                  iconDef={rvi16Desktop("currentColor")}
                                   // TODO: host에 붙어있지만 상태가 이상한 경우에 대한 조건처리
-                                  // iconDef={rvi16DesktopFlag()}
                                   isSelected={() => location.pathname.includes(vm?.id)}
                                   isNextLevelVisible={isHostOpen}
                                   isChevronVisible={false}
@@ -204,7 +202,7 @@ const ComputingTree = ({}) => {
                         <div key={vm?.id} className="tmi-g">
                           <TreeMenuItem level={4}
                             title={vm?.name}
-                            iconDef={vm?.status === "SUSPENDED" ? rvi16Pause : rvi16DesktopSleep}
+                            iconDef={vm?.status === "SUSPENDED" ? rvi16Pause : rvi16DesktopSleep("currentColor")}
                             isSelected={() => location.pathname.includes(vm?.id)}
                             isNextLevelVisible={false}
                             isChevronVisible={false}

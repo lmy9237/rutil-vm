@@ -32,8 +32,7 @@ const VmDupl = ({
     icon: (
       <div className="f-center" style={{ gap: "4px" }}>
         {status2Icon(vm?.status)}
-        {vm?.nextRun === true && <span> <RVI16 iconDef={rvi16Refresh()}/></span>} 
-        {/* 재시작여부 / 다음 실행시 새로운 설정이 적용되는 서버 TODO: 아이콘 추가 (rvi16ExclamationMark)*/} 
+        {vm?.nextRun === true && status2Icon("NEXT_RUN")}
       </div>
     ),
     iconSortKey: getStatusSortKey(vm?.status), 
@@ -90,12 +89,11 @@ const VmDupl = ({
   }, [])
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <VmActionButtons />
       </div>
-
       <TablesOuter target={"vm"}
         columns={columns}
         data={filteredData}
@@ -107,7 +105,7 @@ const VmDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={vmsSelected} />
-    </div>
+    </>
   );
 };
 

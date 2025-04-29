@@ -1,38 +1,26 @@
 .content-header {
+  border-radius: 3px;
+  width: var(--w-nav);
   border-right: var(--border-default);
 }
-.active {
-    transition: all 0.3s ease;
+.content-header > * {
+  height: 36px;
+  color: var(--color-nav);
+  cursor: pointer;
+  padding-left:20px;
+}
+.content-header span:hover {
+  background: var(--color-white);
+}
+.content-header span.active {
+  color: var(--color-primary);
+  background: var(--color-table) !important;
+  font-weight: 600;
 }
 
-.content-header-left {
-    border-radius: 3px;
-    width: var(--w-nav);
-}
-
-.content-header-left div {
-    position: relative;
-    font-size: var(--fs-14);
-    cursor: pointer;
-    color: var(--color-nav);
-    padding-left:20px;
-    height: 36px;
-}
-.content-header-left div:hover{
-    background: var(--color-white);
-}
-.content-header-left div.active {
-    color: var(--color-primary);
-    font-weight: 600;
-    background: var(--color-table) !important;
-}
-
-.content-header-left div.active::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 4px;
-    height: 100%;
-    background-color: var(--color-primary-hover);
+.content-header span.active::after {
+  width: 4px;height: 100%;
+  margin-left: auto;
+  background-color: var(--color-primary-hover);
+  content: '';
 }

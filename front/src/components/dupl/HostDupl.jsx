@@ -56,12 +56,11 @@ const HostDupl = ({
   }, [])
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}  onRefresh={handleRefresh}/>
         <HostActionButtons actionType="default"/>
       </div>
-
       <TablesOuter target={"host"}
         columns={columns}
         data={filteredData} 
@@ -76,7 +75,7 @@ const HostDupl = ({
         ]}*/
       />
       <SelectedIdView items={hostsSelected}/>
-    </div>
+    </>
   );
 };
 

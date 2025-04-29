@@ -2,6 +2,7 @@ import React, { useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
+import SelectedIdView from "../../../components/common/SelectedIdView";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
@@ -23,7 +24,7 @@ import Logger from "../../../utils/Logger";
  */
 const DomainVms = ({ domainId }) => {
   const navigate = useNavigate();
-  const { domainsSelected } = useGlobal()
+  const { vmsSelected, setVmsSelected, domainsSelected } = useGlobal()
 
   const {
     data: vms = [],
@@ -66,25 +67,22 @@ const DomainVms = ({ domainId }) => {
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
-  Logger.debug("DomainVms ...")
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-        {/* <EventActionButtons /> */}
-      </div>
-
-      <TablesOuter target={"unknown"} 
+    <>{/* v-start w-full으로 묶어짐*/}
+      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+      {/* <EventActionButtons /> */}
+      <TablesOuter target={"vm"} 
         columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}
         data={filteredData}
-        multiSelect={true}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery}
-        /*onRowClick={(selectedRows) => {setEventsSelected(selectedRows)}}*/
+        multiSelect={true}
+        onRowClick={(selectedRows) => {setVmsSelected(selectedRows)}}
         refetch={refetchVms}
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
-    </div>
+      <SelectedIdView items={vmsSelected} />
+    </>
   );
 };
 

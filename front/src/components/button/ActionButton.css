@@ -3,9 +3,8 @@ button.btn-action {
   height: var(--h-primary);
   margin-right: 4px;
   padding: 0 6.5px;
-  font-size: var(--fs-default);
   border-radius: 1px;
-  display: flex;justify-content: center;align-items: center;
+  display:flex;justify-content: center;align-items:center;
   border: var(--border-btn);
   letter-spacing: var(--letter-28);
 }
@@ -17,7 +16,6 @@ button.btn-action[disabled]{
 
 .btn-right-click { 
   height: 26px;
-  font-size: var(--fs-default);
   width: 100%;
   padding: 0 10px;
   color: black;

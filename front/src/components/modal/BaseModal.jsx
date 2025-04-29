@@ -32,7 +32,7 @@ const BaseModal = ({
   }, [])
 
   return (
-    <Modal className="Modal" overlayClassName="Overlay"
+    <Modal className="Modal" overlayClassName="Overlay f-center"
       // overlayClassName="Overlay newRolePopupOverlay" <-- DiskActionModal, DomainGetDiskModal
       isOpen={isOpen}
       onRequestClose={onClose}
@@ -41,20 +41,16 @@ const BaseModal = ({
     >
       <div className="modal" style={contentStyle}>
         <div className="popup-header f-btw">
-          <h1>
+          <h1 className="f-center fs-24 fw-500">
             {`${targetName} ${submitTitle}`}
           </h1>
-          <button onClick={onClose}>
-            <RVI24 iconDef={rvi24Close} className="ml-4"/>
-          </button>
+          <RVI24 className="btn" iconDef={rvi24Close} onClick={onClose}/>
         </div>
         <hr/>
         <div className="popup-contents">
           {(shouldWarn || promptText) && (
-            <div className="popup-contents-prompt">
-              {shouldWarn && (
-                <RVI24 iconDef={rvi24ErrorRed} className="error-icon mr-2" />
-              )}
+            <div className="popup-contents-prompt f-start fs-16">
+              {shouldWarn && (<RVI24 iconDef={rvi24ErrorRed} className="error-icon mr-2" />)}
               {promptText}
             </div>
           )}
@@ -63,7 +59,7 @@ const BaseModal = ({
 
         {/* 하단 버튼 */}
         <hr/>
-        <div className="edit-footer">
+        <div className="edit-footer f-end fs-14">
           {extraFooter ? (
             <>
               {extraFooter}

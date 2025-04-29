@@ -74,8 +74,7 @@ const Login = () => {
             <form className="v-center w-full" 
               onSubmit={doLogin}
             >
-              <IconInput className="login-input text-lg"
-                required type="text"
+              <IconInput className="login-input" required type="text"
                 iconDef={rvi16User()}
                 placeholder={Localization.kr.PLACEHOLDER_USERNAME}
                 value={username ?? ""}
@@ -84,15 +83,14 @@ const Login = () => {
                   setUsername(e.target.value);
                 }}
               />
-              <IconInput className="login-input text-lg"
-                required type="password"
+              <IconInput className="login-input" required type="password"
                 iconDef={rvi16Lock("#999999")}
                 placeholder={Localization.kr.PLACEHOLDER_PASSWORD}
                 value={password ?? ""}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button type="submit"
-                className="login-button f-center bgcolor-primary"
+                className="login-button f-center fs-14 bgcolor-primary"
                 disabled={isAuthLoading}
               >
                 {isAuthLoading ? (<>{Localization.kr.LOGIN} {Localization.kr.IN_PROGRESS}</>) : (<>{Localization.kr.LOGIN}</>)}

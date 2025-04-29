@@ -24,7 +24,6 @@ const LabelSelectOptions = ({
     onChange({ target: { value: optionValue } });
     setOpen(false);
   }/* useCallback 불가능 - 매번 랜더링 필요 */
-
   useClickOutside(selectRef, (e) => setOpen(false))
 
   const boxStyle = !label ? { width: "100%" } : undefined; // label이 없으면 100% width style 지정 
@@ -38,38 +37,23 @@ const LabelSelectOptions = ({
   return (
     <div className={`input-select custom-select-wrapper ${className}`} ref={selectRef}>
       {label && <div className="select-label">{label}</div>}
-      <div
-        className={`custom-select-box f-btw ${disabled ? "disabled" : ""}`}
+      <div className={`custom-select-box v-start w-full ${disabled ? "disabled" : ""}`}
         style={boxStyle} 
         onClick={() => !disabled && setOpen(!open)}
       >
         <span>{selectedLabel}</span>
-        <RVI16 iconDef={open ? rvi16ChevronUp : rvi16ChevronDown} />
+        <RVI16 iconDef={open ? rvi16ChevronUp() : rvi16ChevronDown()} />
       </div>
       {open && (
-        <div className="custom-options">
+        <div className="custom-options v-start">
           {options.map((opt) => (
             <LabelSelectOption 
-              // key={opt.value}
               opt={opt}
               value={value}
               handleOptionClick={handleOptionClick}
             />
           ))}
         </div>
-        /*
-        createPortal((
-          <div className="custom-options">
-            {options.map((opt) => (
-              <LabelSelectOption 
-                opt={opt}
-                value={value}
-                handleOptionClick={handleOptionClick}
-              />
-            ))}
-          </div>
-        ), document.querySelector(".modal"))
-        */
       )}
     </div>
   );
@@ -80,9 +64,8 @@ const LabelSelectOption = ({
   value,
   handleOptionClick,
 }) => (
-  <div
-    key={opt.value}
-    className={`custom-option ${opt.value === value ? "selected" : ""}`}
+  <div key={opt.value}
+    className={`custom-option f-start w-full ${opt.value === value ? "selected" : ""}`}
     onClick={() => handleOptionClick(opt.value)}
   >
     {opt.label}

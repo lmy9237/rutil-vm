@@ -56,7 +56,7 @@ const VmDiskDeleteModal = ({
     >
       {ids.map((diskId, index) => (
         <div key={diskId} className="disk-delete-checkbox f-btw">
-          <div className="disk-delete-label">{aliases[index]}</div>
+          <span className="disk-delete-label fs-18">{aliases[index]}</span>
           <LabelCheckbox label={`완전 ${Localization.kr.REMOVE}`}
             id={`diskDelete-${index}`}
             checked={detachOnlyList[index] || false}

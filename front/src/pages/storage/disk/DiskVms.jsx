@@ -1,8 +1,13 @@
-import React from "react";
-import { useAllVmsFromDisk } from "../../../api/RQHook";
+import React, { useCallback } from "react";
+import toast from "react-hot-toast";
+import useGlobal from "../../../hooks/useGlobal";
+import useSearch from "../../../hooks/useSearch";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import SearchBox from "../../../components/button/SearchBox";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TablesOuter from "../../../components/table/TablesOuter";
+import { useAllVmsFromDisk } from "../../../api/RQHook";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 
@@ -15,16 +20,18 @@ import Logger from "../../../utils/Logger";
  * @returns
  */
 const DiskVms = ({ diskId }) => {
+  const { vmsSelected, setVmsSelected } = useGlobal()
   const { 
     data: vms = [],
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
+    refetch: refetchVms,
   } = useAllVmsFromDisk(diskId, (e) => ({ 
     ...e
   }));
 
-  const transformedData = vms.map((vm) => ({
+  const transformedData = [...vms].map((vm) => ({
     ...vm,
     icon: status2Icon(vm?.status),
     _name: (
@@ -40,15 +47,32 @@ const DiskVms = ({ diskId }) => {
     ipv4: `${vm?.ipv4} ${vm?.ipv6}`,
   }));
 
-  Logger.debug("DiskVms ...")
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+  const handleRefresh = useCallback(() =>  {
+    Logger.debug(`DiskVms > handleRefresh ... `)
+    if (!refetchVms) return;
+    refetchVms()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
+
   return (
-    <>
-      <TablesOuter
-        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        {/*  */}
+      </div>
+      <TablesOuter target={"vm"}
         columns={TableColumnsInfo.VMS_FROM_DISK}
-        data={transformedData} // ✅ 검색 필터링된 데이터 사용
+        data={filteredData} // ✅ 검색 필터링된 데이터 사용
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery}
+        multiSelect={true}
+        onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         shouldHighlight1stCol={true}
+        refetch={refetchVms}
+        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
+      <SelectedIdView items={vmsSelected} />
     </>
   );
 };

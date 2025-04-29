@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import useUIState from "../../hooks/useUIState";
 import useGlobal from "../../hooks/useGlobal";
-import toast from "react-hot-toast";
 import useSearch from "../../hooks/useSearch";
 import NetworkActionButtons from "./NetworkActionButtons";
 import TablesOuter from "../table/TablesOuter";
@@ -10,7 +10,6 @@ import TableRowClick from "../table/TableRowClick";
 import SearchBox from "../button/SearchBox";
 import Localization from "../../utils/Localization";
 import SelectedIdView from "../common/SelectedIdView";
-import NetworkModals from "../modal/network/NetworkModals";
 import Logger from "../../utils/Logger";
 import "./Dupl.css";
 
@@ -23,7 +22,7 @@ import "./Dupl.css";
  * @returns {JSX.Element}
  */
 const NetworkDupl = ({
-  networks = [], columns = [], showSearchBox = true,
+  networks = [], columns = [],
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
@@ -72,13 +71,11 @@ const NetworkDupl = ({
   }, [])
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-start">
-        {showSearchBox && (<SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />)}
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
         <NetworkActionButtons />
       </div>
-
-      {/* 테이블 컴포넌트 */}
       <TablesOuter target={"network"}
         columns={columns}
         data={filteredData} 
@@ -91,7 +88,7 @@ const NetworkDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={networksSelected} />
-    </div>
+    </>
   );
 };
 

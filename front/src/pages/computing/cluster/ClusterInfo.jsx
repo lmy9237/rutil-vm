@@ -2,7 +2,7 @@ import React, { useState, useEffect, Suspense, useCallback, useMemo } from "reac
 import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
-import Loading from "../../../components/common/Loading";
+import SectionLayout from "../../../components/SectionLayout";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
@@ -16,7 +16,6 @@ import { rvi24Cluster } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import "./Cluster.css";
-import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name ClusterInfo
@@ -98,8 +97,8 @@ const ClusterInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton titleIcon={rvi24Cluster()}
-        title={cluster?.name}
+      <HeaderButton title={cluster?.name}
+        titleIcon={rvi24Cluster()}
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
@@ -108,9 +107,9 @@ const ClusterInfo = () => {
           activeSection={activeTab}
           handleSectionClick={handleTabClick}
         />
-        <div className="w-full info-content">
-          <Path pathElements={pathData} basePath={`/computing/clusters/${clusterId}`}/>
-          <Suspense fallback={<Loading />}>{renderSectionContent()}</Suspense>
+        <div className="info-content v-start gap-8 w-full">
+          <Path type="cluster" pathElements={pathData} basePath={`/computing/clusters/${clusterId}`}/>
+          {renderSectionContent()}
         </div>
       </div>
     </SectionLayout>

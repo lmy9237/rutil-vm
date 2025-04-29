@@ -76,18 +76,19 @@ const NetworkClusters = ({ networkId }) => {
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
-  Logger.debug("NetworkClusters ... ");
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <div className="dupl-header-group f-btw">
+    <>{/* v-start w-full으로 묶어짐*/}
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-        <ActionButton actionType="default"
-          label={`${Localization.kr.NETWORK} 관리`}
-          onClick={() => setActiveModal("network:manage")}
-        />
+        <div className="header-right-btns">
+          <ActionButton actionType="default"
+            label={`${Localization.kr.NETWORK} 관리`}
+            onClick={() => setActiveModal("network:manage")}
+          />
+        </div>
       </div>
-
-      <TablesOuter columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}    
+      <TablesOuter target={"cluster"}
+        columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}    
         data={filteredData}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setClustersSelected(selectedRows)}
@@ -116,7 +117,7 @@ const NetworkClusters = ({ networkId }) => {
           />
         )}
       </Suspense>
-    </div>
+    </>
   );
 };
 
