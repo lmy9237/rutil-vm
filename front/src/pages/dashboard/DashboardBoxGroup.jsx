@@ -54,15 +54,15 @@ const DashboardBox = ({
             <span className="txt down v-end">{cntDown}</span>
           </div>)}
           {alert && (<div className="box-detail-icon f-end">
-            <RVI16 className="box-icon sml" iconDef={severity2Icon("ALERT", true)} />
+            {severity2Icon("ALERT", true)}
             <span className="txt alert v-end">{alert}</span>
           </div>)}
           {error && (<div className="box-detail-icon f-end">
-            <RVI16 className="box-icon sml" iconDef={severity2Icon("ERROR", true)} />
+            {severity2Icon("ERROR", true)}
             <span className="txt error v-end">{error}</span>
           </div>)}
           {warning && (<div className="box-detail-icon f-end">
-            <RVI16 className="box-icon sml" iconDef={severity2Icon("WARNING", true)} />
+            {severity2Icon("WARNING", true)}
             <span className="txt warning f-start">{warning}</span>
           </div>)}
         </div>

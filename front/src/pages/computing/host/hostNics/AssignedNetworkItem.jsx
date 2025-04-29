@@ -14,7 +14,7 @@ const AssignedNetworkItem = ({
   return (
     <div className="container w-[41%] assigned-network-outer">
       <div
-        className="assigned-network"
+        className="assigned-network w-full"
         draggable
         onDragStart={onDragStart}
         onClick={onClick}

@@ -81,7 +81,7 @@ const BarChart = ({ names, percentages }) => {
       style: {
         colors: ["black"],
         fontSize: "13px",
-        fontWeight: "600",
+        fontWeight: "300",
       },
       formatter: function (val, opt) {
         const label = opt.w.globals.labels[opt.dataPointIndex];

@@ -58,8 +58,7 @@ const RadialBarChart = ({
           },
           value: {
             show: true,
-            fontSize: "30px",
-            fontWeight: "bold",
+            fontSize: "25px",
             color: "#111",
             offsetY: 10,
             formatter: (val) => {
@@ -82,7 +81,7 @@ const RadialBarChart = ({
       fillSeriesColor: false,
       theme: "light", // 'dark' 로 변경가능
       y: {
-        formatter: (val) => `${val}%`,
+        formatter: (val) => `${parseInt(val)}%`,
         title: {
           formatter: () => "", 
         },

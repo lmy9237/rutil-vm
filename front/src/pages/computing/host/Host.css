@@ -132,9 +132,6 @@
   border-radius: 1px;
 
 }
-.container:hover {
-  background: var(--color-input-disabled);
-}
 
 .interface-header {
   color: #1D1D1D;
@@ -175,7 +172,7 @@
 
 .assigned-network-outer,.empty-network-content{
   border: var(--border-default);
-  background-color: white;
+  background-color: rgb(255, 255, 255);
 }
 .assigned-network-content{
   display: flex;
@@ -184,13 +181,16 @@
 }
 
 .interface-outer{
-  background-color: #002a4f;
+  background-color: rgb(184, 13, 13);
+  /* background: var(--color-input-disabled); */
+  border: var(--border-default);
 }
 .interface-container-outer{
-  background: skyblue;
+  background-color: rgb(141, 197, 52);
 }
 .interface-container{
-  background: rgb(96, 167, 96);
+  border: var(--border-default);
+ background-color: rgb(117, 111, 111);
 }
 .separations{
   height: 100%;

@@ -52,7 +52,7 @@ const LabelInput = ({
       <label htmlFor={id}>{label}</label>
       <input
         id={id}
-        type={type}
+        type={isPasswordType && showPassword ? "text" : type}
         placeholder={label}
         value={value}
         autoFocus={autoFocus}

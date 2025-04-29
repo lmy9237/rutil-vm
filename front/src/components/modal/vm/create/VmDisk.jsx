@@ -89,8 +89,8 @@ const VmDisk = ({
             <div className="f-start">
               <span style={{ marginRight: "25px" }}>
                 <strong>{disk.isExisting ? "[기존] " : disk.isCreated ? "[생성] " : "[연결] "}</strong>
-                  {disk?.alias} ({(disk?.size || disk?.virtualSize) + ' GB'}) {disk?.bootable ? "[부팅]" : ""} 
-                 
+                {disk?.alias} ({(disk?.size || disk?.virtualSize) + ' GB'})
+                {disk?.bootable && " [부팅]"}
               </span>
             </div>
             {/*{disk?.storageDomainVo?.id} <- 연결되어있는 디스크아이디*/}

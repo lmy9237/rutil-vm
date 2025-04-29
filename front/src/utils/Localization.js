@@ -28,7 +28,7 @@ export const Localization = {
     NETWORK_FILTER: `네트워크 필터`,
     NICS: `네트워크 인터페이스`,
     VNIC: "vNIC",
-    VNIC_PROFILE: "VNIC 프로파일",
+    VNIC_PROFILE: "vNIC 프로파일",
     DOMAIN: "스토리지 도메인",
     DISK: "디스크",
     DISK_PROFILE: "디스크 프로파일",

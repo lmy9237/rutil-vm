@@ -28,6 +28,12 @@ select,
   border-radius: 1px;
   letter-spacing: -0.28px;
 }
+textarea{
+  width: 100%;
+  border: var(--border-default);
+  padding: 3px;
+  outline: none;
+}
 .input-container{
   position: relative;
 }
