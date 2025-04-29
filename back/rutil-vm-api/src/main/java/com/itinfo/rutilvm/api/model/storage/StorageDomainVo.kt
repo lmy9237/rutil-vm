@@ -114,8 +114,6 @@ fun StorageDomain.toStorageDomainMenu(conn: Connection): StorageDomainVo {
 	val storageDomainStatus = dataCenter?.let {
 		conn.findAttachedStorageDomainFromDataCenter(it.id(), storageDomain.id()).getOrNull()?.status()
 	}
-	log.info("dc: {}/{}", dataCenter?.id(), dataCenter?.name())
-	log.info("storageDomainStatus: {}", storageDomainStatus)
 
 	return StorageDomainVo.builder {
 		id { storageDomain.id() }
@@ -161,7 +159,7 @@ fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 		hostVo { host?.fromHostToIdentifiedVo() }
 		storageVo { storageDomain.storage().toStorageVo() }
 		diskProfileVos { storageDomain.diskProfiles().fromDiskProfilesToIdentifiedVos() }
-		diskImageVos { storageDomain.disks().fromDisksToIdentifiedVos() }
+		// diskImageVos { storageDomain.disks().fromDisksToIdentifiedVos() }
 	}
 }
 fun List<StorageDomain>.toStorageDomainInfoVos(conn: Connection): List<StorageDomainVo> =

@@ -45,18 +45,19 @@ const DomainDupl = ({
     _status: Localization.kr.renderStatus(domain?.status),
     hostedEngine: hostedEngineStatus2Icon(domain?.hostedEngine),
     domainType:
-      domain?.domainType === "data"
-        ? "데이터"
-        : domain?.domainType === "iso"
-          ? "ISO"
-          : "EXPORT",
+      domain?.type === "data"
+        ? `데이터 ${domain?.master === true ? "(마스터)": ""}`
+        : domain?.type === "iso"
+          ? `ISO ${domain?.master === true ? "(마스터)": ""}`
+          : `EXPORT ${domain?.master === true ? "(마스터)": ""}`,
     storageType:
-      domain?.storageType === "nfs"
+      domain?.storageVo?.type === "NFS"
         ? "NFS"
-        : domain?.storageType === "iscsi"
+        : domain?.storageVo?.type === "ISCSI"
             ? "iSCSI"
             : "Fibre Channel",
-    diskSize: checkZeroSizeToGiB(domain?.diskSize),
+    format: domain?.storageFormat,
+    size: checkZeroSizeToGiB(domain?.size),
     availableSize: checkZeroSizeToGiB(domain?.availableSize),
     usedSize: checkZeroSizeToGiB(domain?.usedSize),
     searchText: `${domain?.name} ${domain?.domainType} ${domain?.storageType} ${convertBytesToGB(domain?.diskSize)}GB`

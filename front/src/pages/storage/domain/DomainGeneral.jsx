@@ -18,13 +18,13 @@ const DomainGeneral = ({ domainId }) => {
 
   const tableRows = [
     { label: "ID", value: domain?.id },
-    { label: "크기", value: checkZeroSizeToGiB(domain?.diskSize) },
+    { label: "크기", value: checkZeroSizeToGiB(domain?.size) },
     { label: "사용 가능", value: checkZeroSizeToGiB(domain?.availableSize) },
     { label: "사용됨", value: checkZeroSizeToGiB(domain?.usedSize) },
     { label: "할당됨", value: checkZeroSizeToGiB(domain?.commitedSize) },
     {
       label: "오버 할당 비율",
-      value: overCommit(domain?.commitedSize, domain?.diskSize) + " %",
+      value: overCommit(domain?.commitedSize, domain?.size) + " %",
     },
     { label: "이미지 개수:", value: domain?.diskImageVos?.length || 0 },
     { label: "디스크 스냅샷 개수:", value: diskSnapshots?.length || 0 },
@@ -33,7 +33,7 @@ const DomainGeneral = ({ domainId }) => {
   
     { 
       label: "디스크 공간 부족 경고 표시", 
-      value: `${domain?.warning} % (${((convertBytesToGB(domain?.diskSize) / domain?.warning).toFixed(0))} GB)` 
+      value: `${domain?.warning} % (${((convertBytesToGB(domain?.size) / domain?.warning).toFixed(0))} GB)` 
     },
     { label: "심각히 부족한 디스크 공간의 동작 차단", value: `${domain?.spaceBlocker} GB`},
   ];

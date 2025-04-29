@@ -28,6 +28,7 @@ const DomainImportTemplates = ({
 
   const {
     data: templates = [],
+    refetch: templateRefetch,
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
@@ -51,7 +52,7 @@ const DomainImportTemplates = ({
   return (
     <>
       <div className="dupl-header-group f-start">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={templateRefetch} />
         <div className="header-right-btns">
           <ActionButton label={Localization.kr.IMPORT}
             actionType="default" 

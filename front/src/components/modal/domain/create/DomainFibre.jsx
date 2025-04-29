@@ -1,12 +1,13 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import Tables from '../../../table/Tables';
 import toast from 'react-hot-toast';
 import Logger from '../../../../utils/Logger';
 import { checkZeroSizeToGiB } from '../../../../util';
+import LabelCheckbox from '../../../label/LabelCheckbox';
 
 const DomainFibre = ({ 
-  editMode,
+  editMode, domain,
   fibres,
   lunId, setLunId,
   isFibresLoading, isFibresError, isFibresSuccess
@@ -14,71 +15,65 @@ const DomainFibre = ({
   Logger.debug("DomainFibre ...")
 
   const transFibreData = (isFibresLoading ? [] : fibres)?.map((f) => {
-    const fc = f?.logicalUnits?.[0];
+    const fc = f?.logicalUnitVos[0];
     if (!fc) return null;
   
     return {
       id: fc.id,
+      able: 
+        <LabelCheckbox
+          // checked={formState.wipeAfterDelete}
+          // onChange={handleInputCheck(setFormState, "wipeAfterDelete")}
+        />
+        // (fc.serial && fc.storageDomainId === "" && fc.status !== "USED")
+        //   ? "OK" 
+        //   : (fc.serial && fc.storageDomainId === "" && fc.status === "USED") 
+        //     ? "OVERWRITE" 
+        //     : "NO"
+      ,
       status: fc.status,
       size: checkZeroSizeToGiB(fc.size),
       paths: fc.paths,
       vendorId: fc.vendorId,
       productId: fc.productId,
       serial: fc.serial,
-      // abled: fc.storageDomainId === "" ? "OK" : "NO",
       storageDomainId: fc.storageDomainId
     };
   }).filter(Boolean);
   
-  // DomainCheckModal
-
   const handleRowClick = useCallback((row) => {
     const selectedRow = Array.isArray(row) ? row[0] : row;
-    
-    // ✅ serial 이 없거나 빈 문자열이면 클릭 막기
-    // if (!selectedRow?.serial || selectedRow.serial.trim() === "") {
-    if (!selectedRow?.serial) {
-      toast.error("선택할 수 없는 LUN입니다."); 
-      return;
-    }
-    if (selectedRow?.storageDomainId !== "") {
-      toast.error("선택할 수 없는 LUN입니다."); 
+
+    if (!selectedRow?.serial && selectedRow?.storageDomainId !== "") {
+      toast.error("선택할 수 없는 LUN입니다.");
       setLunId("");
       return;
     }
-    // if (selectedRow?.storageDomainId === "") {
-    //   toast.error(`${selectedRow?.status}`); 
-    //   return;
-    // }
-  
-    if (selectedRow && selectedRow.id) {
-      Logger.debug('선택한 LUN ID:', selectedRow.id);
-      setLunId(selectedRow.id);
+    if (selectedRow?.storageDomainId !== "") {
+      toast.error("이미 사용 중인 LUN입니다.");
+      setLunId(""); 
+      return;
     }
+    setLunId(selectedRow.id); // 명확한 선택 처리
   }, [setLunId]);
   
-
   return (
     <div className="storage-popup-iSCSI">
       <div className="section-table-outer">
-        {/* 편집 */}
-        {/* {editMode ? (
+        <br/>
+        {editMode ? (
           <Tables columns={TableColumnsInfo.FIBRE}
             data={transFibreData}
             // onRowClick={handleRowClick}
             isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}            
           />
-        ): ( */}
-        <>
-          <span>asdf {fibres[0]?.status}</span>
-
+        ): (
           <Tables columns={TableColumnsInfo.FIBRE}            
             data={transFibreData} 
             onRowClick={handleRowClick}
             isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}  
           />
-        </>
-        {/* )}  */}
+        )}
         <div><span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
       </div>
     </div>
