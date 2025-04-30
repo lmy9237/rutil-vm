@@ -3,7 +3,6 @@ import RadialBarChart from "../../components/Chart/RadialBarChart";
 import BarChartWrapper from "../../components/Chart/BarChartWrapper";
 import SuperAreaChart from "../../components/Chart/SuperAreaChart";
 import "./DashboardDetailStat.css";
-import Logger from "../../utils/Logger";
 
 /**
  * @name DashboardDetailStat

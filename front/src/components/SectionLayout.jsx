@@ -6,7 +6,6 @@ const SectionLayout = ({
   ...props
 }) => {
   const { asideVisible, asideWidthInPx } = useAsideState()
-
   return (
     <div id="section"
       {...props}

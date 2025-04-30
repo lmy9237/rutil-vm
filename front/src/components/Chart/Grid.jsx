@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Tooltip } from "react-tooltip"; // ✅ 툴팁 import
-import "react-tooltip/dist/react-tooltip.css"; // ✅ 스타일
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
+import "tippy.js/animations/shift-away.css";
 import Logger from "../../utils/Logger";
 import "./Grid.css";
 
@@ -10,12 +11,12 @@ const Grid = ({
   data = []
 }) => {
   const [gridData, setGridData] = useState([]);
-  const navigate = useNavigate();
   const tooltipId = useMemo(() => ("grid-tooltip"), []);
-
+  const numMax = 15
   useEffect(() => {
+    Logger.debug(`Grid > useEffect ... `)
     const filledData = [...data];
-    while (filledData.length < 15) {
+    while (filledData.length < numMax) {
       filledData.push({
         id: `placeholder-${filledData.length}`,
         cpuPercent: null,
@@ -29,6 +30,34 @@ const Grid = ({
     }
   }, [data, gridData]);
 
+  return (
+    <div className="grid-container f-center gap-4 w-full ">
+      {gridData.map((item, index) => (
+        (item.name === "") 
+          ? <GridItem type={type} item={item} index={index} />
+          : <Tippy content={<div className="v-center">{item.name || ""}</div>}
+              placement="top"
+              theme="dark-tooltip"
+              animation="shift-away"
+              arrow={true}
+            > 
+              <GridItem type={type} item={item} index={index} />
+            </Tippy>
+      ))}
+    </div>
+  );
+};
+
+const GridItem = forwardRef(({
+  type,
+  item,
+  index
+}, ref) => {
+  const navigate = useNavigate();
+  const hasAnyData = useMemo(() => 
+    item.cpuPercent !== null || item.memoryPercent !== null
+  , [item])
+
   const severity2Label = useCallback((value) => {
     Logger.debug(`Grid > severity2Label ... value: ${value}`)
     if (value === null) return "disabled";
@@ -39,9 +68,11 @@ const Grid = ({
     else if (value >= 90) return "crit";
   }, [])
 
-  const displayMetric = useCallback((type, item) => (
-    type==="cpu" ? item.cpuPercent : item.memoryPercent
-  ), []);
+  const useMetricByType = useMemo(() => (
+    type === "cpu" 
+      ? item?.cpuPercent
+      : item?.memoryPercent
+  ), [type, item]);
 
   const handleClick = useCallback((id) => {
     if (id && id.startsWith("placeholder")) return;
@@ -53,45 +84,25 @@ const Grid = ({
   }, []);
 
   return (
-    <div className="grid-container">
-      {gridData.map((item, index) => {
-        const hasAnyData = item.cpuPercent !== null || item.memoryPercent !== null;
-
-        return (
-          <div key={item.id || index}
-            className={
-              `grid-item f-center ${severity2Label(displayMetric(type, item))}${hasAnyData ? `` : ` disabled`}`
-            }
-            onClick={() => hasAnyData && handleClick(item.id)}
-            data-tooltip-id={tooltipId}
-            data-tooltip-content={item.name || ""}
-            data-tooltip-place="top"
-          >
-            {hasAnyData ? (
-              <>
-                <div>
-                  <div className="percent f-center">
-                    <h1 className="fs-14">{displayMetric(type, item)}</h1>
-                    <div className="percent unit">%</div>
-                  </div>
-                  <div className="grid-item-name fs-10">{item.name}</div>
-                </div>
-              </>
-            ) : (
-              <div className="percent" style={{ color: "rgb(0 0 0)" }}></div>
-            )}
+    <div key={item.id || index} ref={ref}
+      className={
+        `grid-item v-center ${severity2Label(useMetricByType)}`
+      }
+      onClick={() => hasAnyData && handleClick(item.id)}
+    >
+      {hasAnyData ? (
+        <>
+          <div className="percent f-center">
+            <h1 className="fs-14 fw-500">{useMetricByType}</h1>
+            <div className="percent unit">%</div>
           </div>
-        );
-      })}
-
-      {/* ✅ 툴팁 컴포넌트는 한 번만 선언 */}
-      <Tooltip id={tooltipId}
-        className="grid-tooltip"
-        effect="solid"
-        delayShow={100}
-      />
+          <div className="grid-item-name fs-10">{item.name}</div>
+        </>
+      ) : (
+        <div className="percent f-center" style={{ color: "rgb(0 0 0)" }}></div>
+      )}
     </div>
-  );
-};
+  )
+})
 
 export default Grid;

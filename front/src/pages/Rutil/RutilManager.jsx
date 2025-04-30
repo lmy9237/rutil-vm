@@ -52,8 +52,8 @@ const RutilManager = () => {
     { id: "hosts", label: Localization.kr.HOST },
     { id: "vms", label: Localization.kr.VM },
     { id: "templates", label: Localization.kr.TEMPLATE },
-    { id: "storageDomains", label: "스토리지 도메인" },
-    { id: "disks", label: "디스크" },
+    { id: "storageDomains", label: Localization.kr.DOMAIN },
+    { id: "disks", label: Localization.kr.DISK },
     { id: "networks", label: Localization.kr.NETWORK },
     { id: "vnicProfiles", label: Localization.kr.VNIC_PROFILE },
   ], []);

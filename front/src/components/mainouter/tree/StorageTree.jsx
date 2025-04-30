@@ -7,7 +7,7 @@ import TreeMenuItem from "./TreeMenuItem";
 import {
   rvi16Globe,
   rvi16DataCenter,
-  rvi16Cloud,
+  rvi16Storage,
 } from "../../icons/RutilVmIcons";
 import { useAllTreeNavigations } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
@@ -79,43 +79,43 @@ const StorageTree = ({}) => {
             
             {/* 세 번째 레벨 (Storage Domains) */}
             {isDataCentersOpen && [...dc?.storageDomains]?.map((domain) => {
-                const isDomainOpen = openDomainsStorage(domain?.id) || false;
-                const hasDisks = [...domain?.disks]?.length > 0;
+              const isDomainOpen = openDomainsStorage(domain?.id) || false;
+              const hasDisks = [...domain?.disks]?.length > 0;
 
-                return (
-                  <div key={domain?.id} className="tmi-g" id="tmi-domain">
-                    <TreeMenuItem
-                      level={3}
-                      title={domain?.name}
-                      iconDef={rvi16Cloud("currentColor")}
-                      isSelected={() => location.pathname.includes(domain?.id)}
-                      isNextLevelVisible={isDomainOpen}
-                      isChevronVisible={hasDisks}
-                      onChevronClick={() => toggleOpenDomainsStorage(domain?.id)}
-                      onClick={() => {
-                        setDatacentersSelected(dc)
-                        setDomainsSelected(domain)
-                        domain?.id && navigate(`/storages/domains/${domain?.id}`);
-                      }}
-                      onContextMenu={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setDatacentersSelected(dc)
-                        setDomainsSelected(domain)
-                        setContextMenu({
-                          mouseX: e.clientX,
-                          mouseY: e.clientY,
-                          item: {
-                            ...domain,
-                            level: 3,
-                          },
-                          treeType: "storage"
-                        }, "domain")
-                      }}
-                    />
-                  </div>
-                );
-              })}
+              return (
+                <div key={domain?.id} className="tmi-g" id="tmi-domain">
+                  <TreeMenuItem
+                    level={3}
+                    title={domain?.name}
+                    iconDef={rvi16Storage("currentColor")}
+                    isSelected={() => location.pathname.includes(domain?.id)}
+                    isNextLevelVisible={isDomainOpen}
+                    isChevronVisible={hasDisks}
+                    onChevronClick={() => toggleOpenDomainsStorage(domain?.id)}
+                    onClick={() => {
+                      setDatacentersSelected(dc)
+                      setDomainsSelected(domain)
+                      domain?.id && navigate(`/storages/domains/${domain?.id}`);
+                    }}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setDatacentersSelected(dc)
+                      setDomainsSelected(domain)
+                      setContextMenu({
+                        mouseX: e.clientX,
+                        mouseY: e.clientY,
+                        item: {
+                          ...domain,
+                          level: 3,
+                        },
+                        treeType: "storage"
+                      }, "domain")
+                    }}
+                  />
+                </div>
+              );
+            })}
           </div>
         );
       })}

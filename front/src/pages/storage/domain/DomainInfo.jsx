@@ -20,7 +20,7 @@ import {
   useOvfUpdateDomain,
   useRefreshLunDomain,
 } from "../../../api/RQHook";
-import { rvi24Cloud } from "../../../components/icons/RutilVmIcons";
+import { rvi24Cloud, rvi24Storage } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
@@ -123,7 +123,7 @@ const DomainInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton titleIcon={rvi24Cloud()} 
+      <HeaderButton titleIcon={rvi24Storage()} 
         title={domain?.name}
         buttons={sectionHeaderButtons}
         popupItems={popupItems}

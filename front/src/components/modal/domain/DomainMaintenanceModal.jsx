@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
-import LabelCheckbox from "../../label/LabelCheckbox";
+import toast from "react-hot-toast";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
+import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
-import toast from "react-hot-toast";
 import { useMaintenanceDomain } from "../../../api/RQHook";
-import useGlobal from "../../../hooks/useGlobal";
 
-const DomainMainttenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceModal
+const DomainMaintenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceModal
   isOpen,
   onClose
 }) => {
@@ -60,4 +60,4 @@ const DomainMainttenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceMo
   );
 };
 
-export default DomainMainttenanceModal;
+export default DomainMaintenanceModal;

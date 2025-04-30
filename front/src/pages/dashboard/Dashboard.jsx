@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import DashboardBoxGroup from "./DashboardBoxGroup";
 import RadialBarChart from "../../components/Chart/RadialBarChart";
 import BarChart from "../../components/Chart/BarChart";
 import SuperAreaChart from "../../components/Chart/SuperAreaChart";
@@ -11,8 +10,10 @@ import {
   rvi24Storage,
   rvi24Desktop,
   rvi24Event,
+  rvi16Announce,
+  rvi24DeveloperBoard,
+  rvi24Memory,
 } from "../../components/icons/RutilVmIcons";
-
 import {
   useDashboard,
   useDashboardCpuMemory,
@@ -30,6 +31,12 @@ import GridLegends from "../../components/Chart/GridLegends";
 import Localization from "../../utils/Localization";
 import "./Dashboard.css";
 import SectionLayout from "../../components/SectionLayout";
+import {
+  BoxesLayout,
+  BoxLayout,
+  BoxChartSummary,
+  BoxChartAllGraphs,
+} from "../../components/BoxesLayout";
 
 //#region: BarChart
 const BarChartWrapper = ({ data, keyName, keyPercent }) => {
@@ -203,60 +210,112 @@ const Dashboard = () => {
     cpuMemory?.freeMemoryGB?.toFixed(0)
   ), [cpuMemory])
 
-  ;
+  const boxItems = useMemo(() => [
+    {
+      iconDef: rvi24Datacenter(),
+      title: Localization.kr.DATA_CENTER,
+      cntTotal: dashboard?.datacenters ?? 0,
+      cntUp: dashboard?.datacentersUp === 0 ? "" : dashboard?.datacentersUp,
+      cntDown: dashboard?.datacentersDown === 0 ? "" : dashboard?.datacentersDown,
+      navigatePath: "/computing/rutil-manager/datacenters",
+    }, {
+      iconDef: rvi24Cluster(),
+      title: Localization.kr.CLUSTER,
+      cntTotal: dashboard?.clusters ?? 0,
+      navigatePath: "/computing/rutil-manager/clusters",
+    }, {
+      iconDef: rvi24Host(),
+      title: Localization.kr.HOST,
+      cntTotal: dashboard?.hosts ?? 0,
+      cntUp: dashboard?.hostsUp === 0 ? "" : dashboard?.hostsUp,
+      cntDown: dashboard?.hostsDown === 0 ? "" : dashboard?.hostsDown,
+      navigatePath: "/computing/rutil-manager/hosts",
+    }, {
+      iconDef: rvi24Storage(),
+      title: Localization.kr.DOMAIN,
+      cntTotal: dashboard?.storageDomains ?? 0,
+      navigatePath: "/computing/rutil-manager/storageDomains",
+    }, {
+      iconDef: rvi24Desktop(),
+      title: Localization.kr.VM,
+      cntTotal: dashboard?.vms ?? 0,
+      cntUp: dashboard?.vmsUp === 0 ? "" : dashboard?.vmsUp,
+      cntDown: dashboard?.vmsDown === 0 ? "" : dashboard?.vmsDown,
+      navigatePath: "/computing/rutil-manager/vms",
+    }, {
+      iconDef: rvi24Event(),
+      title: Localization.kr.EVENT,
+      cntTotal: dashboard?.events ?? 0,
+      alert: dashboard?.eventsAlert === 0 ? "" : dashboard?.eventsAlert,
+      error: dashboard?.eventsError === 0 ? "" : dashboard?.eventsError,
+      warning: dashboard?.eventsWarning === 0 ? "" : dashboard?.eventsWarning,
+      navigatePath: "/events",
+    },
+  ], [dashboard]);
 
   return (
     <>
       {/* 대시보드 section */}
-      <SectionLayout
-        style={{ backgroundColor: "#EFF1F5",padding:"6px",border:"none" }}
+      <SectionLayout 
+        style={{
+          backgroundColor: "#EFF1F5",padding:"6px",border:"none"
+        }}
       >
-        <DashboardBoxGroup
-          boxItems={[
-            {
-              iconDef: rvi24Datacenter(),
-              title: Localization.kr.DATA_CENTER,
-              cntTotal: dashboard?.datacenters ?? 0,
-              cntUp: dashboard?.datacentersUp === 0 ? "" : dashboard?.datacentersUp,
-              cntDown: dashboard?.datacentersDown === 0 ? "" : dashboard?.datacentersDown,
-              navigatePath: "/computing/rutil-manager/datacenters",
-            }, {
-              iconDef: rvi24Cluster(),
-              title: Localization.kr.CLUSTER,
-              cntTotal: dashboard?.clusters ?? 0,
-              navigatePath: "/computing/rutil-manager/clusters",
-            }, {
-              iconDef: rvi24Host(),
-              title: Localization.kr.HOST,
-              cntTotal: dashboard?.hosts ?? 0,
-              cntUp: dashboard?.hostsUp === 0 ? "" : dashboard?.hostsUp,
-              cntDown: dashboard?.hostsDown === 0 ? "" : dashboard?.hostsDown,
-              navigatePath: "/computing/rutil-manager/hosts",
-            }, {
-              iconDef: rvi24Storage(),
-              title: "스토리지 도메인",
-              cntTotal: dashboard?.storageDomains ?? 0,
-              navigatePath: "/computing/rutil-manager/storageDomains",
-            }, {
-              iconDef: rvi24Desktop(),
-              title: Localization.kr.VM,
-              cntTotal: dashboard?.vms ?? 0,
-              cntUp: dashboard?.vmsUp === 0 ? "" : dashboard?.vmsUp,
-              cntDown: dashboard?.vmsDown === 0 ? "" : dashboard?.vmsDown,
-              navigatePath: "/computing/rutil-manager/vms",
-            }, {
-              iconDef: rvi24Event(),
-              title: Localization.kr.EVENT,
-              cntTotal: dashboard?.events ?? 0,
-              alert: dashboard?.eventsAlert === 0 ? "" : dashboard?.eventsAlert,
-              error: dashboard?.eventsError === 0 ? "" : dashboard?.eventsError,
-              warning: dashboard?.eventsWarning === 0 ? "" : dashboard?.eventsWarning,
-              navigatePath: "/events",
-            },
-          ]}
-        />
+        {/* <DashboardBoxGroup boxItems={boxItems} /> */}
+        
+        <BoxesLayout>{/* 항목 별 상태 박스 */}
+          {[...boxItems].map(({
+            navigatePath, title, iconDef,
+            cntTotal, cntDown, cntUp,
+            alert, error, warning
+          }) => (
+            <BoxLayout 
+              navigatePath={navigatePath} title={title} iconDef={iconDef}
+              cntTotal={cntTotal} cntUp={cntUp} cntDown={cntDown}
+              alert={alert} error={error} warning={warning}
+            />
+          ))}
+        </BoxesLayout>
+        <BoxesLayout>{/* 그래프 박스 */}
+          <BoxLayout 
+            title={Localization.kr.CPU}
+            iconDef={rvi24DeveloperBoard()}
+          >
+            <BoxChartSummary
+              unit="Core"
+              total={cpuCoreTotal}
+              used={cpuCoreUsed}
+            >
+              <BoxChartAllGraphs type="cpu"/>
+            </BoxChartSummary>
+          </BoxLayout>
+          <BoxLayout
+            title={Localization.kr.MEMORY}
+            iconDef={rvi24Memory()}
+          >
+            <BoxChartSummary
+              unit="GiB"
+              total={cpuMemory?.totalMemoryGB?.toFixed(1)}
+              used={cpuMemory?.usedMemoryGB?.toFixed(1)}
+            >
+              <BoxChartAllGraphs type="memory"/>
+            </BoxChartSummary>
+          </BoxLayout>
+          <BoxLayout
+            title={Localization.kr.STORAGE}
+            iconDef={rvi24Storage()}
+          >
+            <BoxChartSummary
+              unit="GiB"
+              total={storage?.totalGB?.toFixed(1)}
+              used={storage?.usedGB?.toFixed(1)}
+            >
+              <BoxChartAllGraphs type="domain"/>
+            </BoxChartSummary>
+          </BoxLayout>
+        </BoxesLayout>
 
-        <div className="dash-section f-btw">
+        {/* <div className="dash-section f-btw">
           <div className="dash-section-contents">
             <h1 className="dash-con-title fs-16">CPU</h1>
             <div className="dash-status f-start">
@@ -277,11 +336,9 @@ const Dashboard = () => {
               {vmCpu && <CpuBarChart vmCpu={vmCpu} />}
             </div>
             <div className="wave-graph fs-14">
-              {/* <h2>Per CPU</h2> */}
               <SuperAreaChart per={host} type="cpu" />
             </div>
           </div>
-
 
           <div className="dash-section-contents">
             <h1 className="dash-con-title fs-16">MEMORY</h1>
@@ -330,7 +387,7 @@ const Dashboard = () => {
               <SuperAreaChart per={domain} type="domain" />
             </div>
           </div>
-        </div>
+        </div> 
         
         <div className="bar-outer v-btw">
           <div className="bar f-btw fs-14">
@@ -349,11 +406,11 @@ const Dashboard = () => {
           </div>
           <GridLegends />
         </div>
+        */}
       </SectionLayout>
       {/* 대시보드 section끝 */}
     </>
   );
 };
-//#endregion: Dashboard
 
 export default Dashboard;
