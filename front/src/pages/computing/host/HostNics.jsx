@@ -26,6 +26,7 @@ import Logger from "../../../utils/Logger";
 import InterfaceContainer from "./hostNics/InterfaceContainer";
 import AssignedNetworkItem from "./hostNics/AssignedNetworkItem";
 import UnassignedNetworkItem from "./hostNics/UnassignedNetworkItem";
+import SnapshotHostBackground from "../../../components/common/SnapshotHostBackground";
 
 const assignmentMethods = [
   { value: "none", label: "없음" },
@@ -487,153 +488,154 @@ const HostNics = ({ hostId }) => {
 
       <div className="py-3 font-bold underline">색깔 임시로 넣어놓았습니다.</div>
       
-      <div className="host-network-separation f-btw" style={{ position: "relative" }}>
-        <div className="flex separations">
-          <div className="network-separation-left">
-            <div className="f-btw mb-2">
+      <SnapshotHostBackground>
+        <div className="split-item">
+
+          <div className="single-container-wrapper">
+
+            <div className="group-span mb-4 flex">
               <div className="fs-18">인터페이스</div>
-              <div>할당된 논리 네트워크</div>
+              <div style={{width:"240px"}}></div>
+              <div className="fs-18">할당된 논리 네트워크</div>
             </div>
 
-            <div className="single-container-wrapper">
-              {nicDisplayList.map((nic) => {
-                const matchedNA = [...filteredNAData, ...tempAttachments].find(
-                  (na) => na.hostNicVo?.id === nic.id
-                );
-              
-                return (
-                  <div key={nic.id} className="nic-outer f-btw fs-14 mb-2">
-                    {(nic.bondingVo?.slaves?.length > 0 || !nic.name.startsWith('bond')) && (
-             <div className="interface-content-outer" onDragOver={(e) => e.preventDefault()} onDrop={() => drop(nic.id, "nic")}>
+            {nicDisplayList.map((nic) => {
+              const matchedNA = [...filteredNAData, ...tempAttachments].find(
+                (na) => na.hostNicVo?.id === nic.id
+              );
+            
+              return (
+                <div key={nic.id} className="nic-outer f-btw fs-14 mb-2" style={{background:'olive'}}>
+                  {(nic.bondingVo?.slaves?.length > 0 || !nic.name.startsWith('bond')) && (
+            <div className="interface-content-outer" onDragOver={(e) => e.preventDefault()} onDrop={() => drop(nic.id, "nic")}>
 
-             {nic.bondingVo?.slaves?.length > 1 ? (
-               // 💠 2개 이상: bonding UI
-               <div className="interface-outer container flex-col p-2 rounded" data-tooltip-id={`nic-tooltip-${nic.id}`} data-tooltip-html={generateNicTooltipHTML(nic)}>
-                 <div className="interface-content">
-                   <div className="f-start">
-                     <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
-                     {nic.name}
-                   </div>
-                   <RVI36 iconDef={rvi36Edit()} className="icon cursor-pointer" onClick={() => {
-                     setSelectedNic(nic);
-                     setIsEditMode(true);
-                     setIsBondingPopupOpen(true);
-                   }} />
-                 </div>
-                 <div className="w-full interface-container-outer" onDragOver={(e) => e.preventDefault()} onDrop={() => drop(nic.id, "bonding-group")}>
-                   {nic.bondingVo.slaves.map((slave) => (
-                     <div
-                       key={slave.id}
-                       className="interface-container container"
-                       draggable
-                       data-tooltip-id={`nic-tooltip-${slave.id}`}
-                       data-tooltip-html={generateNicTooltipHTML(slave)}
-                       onClick={() => {
-                         setSelectedSlave(slave);
-                         setSelectedNic(null);
-                       }}
-                       onDragStart={(e) => dragStart(e, slave, "nic", nic.id)}
-                     >
-                       <div className="flex gap-1">
-                         <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
-                         {slave.name}
-                       </div>
-                     </div>
-                   ))}
-                 </div>
-               </div>
-             ) : nic.bondingVo?.slaves?.length === 1 ? (
-               // 💠 슬레이브 1개만: 일반 NIC UI처럼
-               <div
-                 className="interface-container container"
-                 draggable
-                 data-tooltip-id={`nic-tooltip-${nic.bondingVo.slaves[0].id}`}
-                 data-tooltip-html={generateNicTooltipHTML(nic.bondingVo.slaves[0])}
-                 onClick={() => {
-                   setSelectedNic(nic.bondingVo.slaves[0]);
-                   setSelectedSlave(null);
-                 }}
-                 onDragStart={(e) => dragStart(e, nic.bondingVo.slaves[0], "container")}
-               >
-                 <div className="flex gap-1">
-                   <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
-                   {nic.bondingVo.slaves[0].name}
-                 </div>
-               </div>
-             ) : (
-               // 💠 본딩 아님: 일반 NIC
-               <InterfaceContainer
-                 nic={nic}
-                 onClick={() => {
-                   setSelectedNic(nic);
-                   setSelectedSlave(null);
-                 }}
-                 onDragStart={(e) => dragStart(e, nic, "container")}
-                 tooltipHTML={generateNicTooltipHTML(nic)}
-               />
-             )}
-           </div>
-           
-)}
-
-                    {/* 화살표 */}
-                    <div className="flex items-center justify-center">
-                      <RVI24 iconDef={rvi24CompareArrows()} className="icon" />
-                    </div>
-                 
-
-                    {matchedNA ? (
-                      <AssignedNetworkItem
-                        matchedNA={matchedNA}
-                        onClick={() => setSelectedNetwork(matchedNA)}
-                        onEdit={() => {
-                          setSelectedNetwork(matchedNA);
-                          setIsEditMode(true);
-                          setIsNetworkEditPopupOpen(true);
-                        }}
-                        onDragStart={(e) => dragStart(e, matchedNA.networkVo, "network", matchedNA.hostNicVo?.id)}
-                        tooltipHTML={generateNetworkTooltipHTML(matchedNA)}
-                      />
-                    ) : (
-                      <div className="empty-network-content container w-[41%] text-gray-400"
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation(); 
-                        drop(nic.id, "empty");
-                      }}
-                    >
-                        할당된 네트워크 없음
-                      </div>
-                    )}
+            {nic.bondingVo?.slaves?.length > 1 ? (
+              // 💠 2개 이상: bonding UI
+              <div className="interface-outer container flex-col p-2 rounded" data-tooltip-id={`nic-tooltip-${nic.id}`} data-tooltip-html={generateNicTooltipHTML(nic)}>
+                <div className="interface-content">
+                  <div className="f-start">
+                    <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
+                    {nic.name}
                   </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/*할당되지않은 네트워크 */}
-          <div
-            className="network-separation-right"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={() => drop(null, "unassigned")}
-          >
-            <div className="unassigned-network">
-              <span className="fs-18">할당되지 않은 논리 네트워크</span>
-            </div>
-            {[...transUnNetworkData]?.map((net) => (
-              <UnassignedNetworkItem
-                key={net.id}
-                network={net}
-                onDragStart={(e) => dragStart(e, net, "unassigned")}
+                  <RVI36 iconDef={rvi36Edit()} className="icon cursor-pointer" onClick={() => {
+                    setSelectedNic(nic);
+                    setIsEditMode(true);
+                    setIsBondingPopupOpen(true);
+                  }} />
+                </div>
+                <div className="w-full interface-container-outer" onDragOver={(e) => e.preventDefault()} onDrop={() => drop(nic.id, "bonding-group")}>
+                  {nic.bondingVo.slaves.map((slave) => (
+                    <div
+                      key={slave.id}
+                      className="interface-container container"
+                      draggable
+                      data-tooltip-id={`nic-tooltip-${slave.id}`}
+                      data-tooltip-html={generateNicTooltipHTML(slave)}
+                      onClick={() => {
+                        setSelectedSlave(slave);
+                        setSelectedNic(null);
+                      }}
+                      onDragStart={(e) => dragStart(e, slave, "nic", nic.id)}
+                    >
+                      <div className="flex gap-1">
+                        <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
+                        {slave.name}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : nic.bondingVo?.slaves?.length === 1 ? (
+              // 💠 슬레이브 1개만: 일반 NIC UI처럼
+              <div
+                className="interface-container container"
+                draggable
+                data-tooltip-id={`nic-tooltip-${nic.bondingVo.slaves[0].id}`}
+                data-tooltip-html={generateNicTooltipHTML(nic.bondingVo.slaves[0])}
+                onClick={() => {
+                  setSelectedNic(nic.bondingVo.slaves[0]);
+                  setSelectedSlave(null);
+                }}
+                onDragStart={(e) => dragStart(e, nic.bondingVo.slaves[0], "container")}
+              >
+                <div className="flex gap-1">
+                  <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
+                  {nic.bondingVo.slaves[0].name}
+                </div>
+              </div>
+            ) : (
+              // 💠 본딩 아님: 일반 NIC
+              <InterfaceContainer
+                nic={nic}
+                onClick={() => {
+                  setSelectedNic(nic);
+                  setSelectedSlave(null);
+                }}
+                onDragStart={(e) => dragStart(e, nic, "container")}
+                tooltipHTML={generateNicTooltipHTML(nic)}
               />
-            ))}
+            )}
+                </div>
+                
+      )}
+
+                  {/* 화살표 */}
+                  <div className="flex items-center justify-center">
+                    <RVI24 iconDef={rvi24CompareArrows()} className="icon" />
+                  </div>
+                
+
+                  {matchedNA ? (
+                    <AssignedNetworkItem
+                      matchedNA={matchedNA}
+                      onClick={() => setSelectedNetwork(matchedNA)}
+                      onEdit={() => {
+                        setSelectedNetwork(matchedNA);
+                        setIsEditMode(true);
+                        setIsNetworkEditPopupOpen(true);
+                      }}
+                      onDragStart={(e) => dragStart(e, matchedNA.networkVo, "network", matchedNA.hostNicVo?.id)}
+                      tooltipHTML={generateNetworkTooltipHTML(matchedNA)}
+                    />
+                  ) : (
+                    <div className="empty-network-content container w-[41%] text-gray-400"
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation(); 
+                      drop(nic.id, "empty");
+                    }}
+                  >
+                      할당된 네트워크 없음
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
-      </div>
+
+        {/*할당되지않은 네트워크 */}
+        <div
+          className="split-item"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={() => drop(null, "unassigned")}
+        >
+          <div className="unassigned-network">
+            <span className="fs-18">할당되지 않은 논리 네트워크</span>
+          </div>
+          {[...transUnNetworkData]?.map((net) => (
+            <UnassignedNetworkItem
+              key={net.id}
+              network={net}
+              onDragStart={(e) => dragStart(e, net, "unassigned")}
+            />
+          ))}
+        </div>
+      </SnapshotHostBackground>
 
       <LabelCheckbox id="connection" label="호스트와 Engine간의 연결을 확인" 
         value={connection}

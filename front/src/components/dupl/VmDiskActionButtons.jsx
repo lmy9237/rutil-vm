@@ -19,8 +19,8 @@ const VmDiskActionButtons = ({
     { type: "update", onBtnClick: () => setActiveModal("vmdisk:update"), label: Localization.kr.UPDATE, disabled: disksSelected.length !== 1, },
     { type: "remove", onBtnClick: () => setActiveModal("vmdisk:remove"), label: Localization.kr.REMOVE, disabled: disksSelected.length === 0 || isActive, },
     { type: "connect", onBtnClick: () => setActiveModal("vmdisk:connect"), label: Localization.kr.CONNECTION, },
-    { type: "activate", onBtnClick: () => setActiveModal("vmdisk:activate"), label: "활성", disabled: disksSelected.length === 0 || isActive , },
-    { type: "deactivate", onBtnClick: () => setActiveModal("vmdisk:deactivate"), label: "비활성", disabled: disksSelected.length === 0 || !isActive, },
+    { type: "activate", onBtnClick: () => setActiveModal("vmdisk:activate"), label: "활성", disabled: disksSelected.length === 0 || !isActive , },
+    { type: "deactivate", onBtnClick: () => setActiveModal("vmdisk:deactivate"), label: "비활성", disabled: disksSelected.length === 0 || isActive, },
     { type: "move", onBtnClick: () => setActiveModal("vmdisk:move"), label: Localization.kr.MOVE, disabled: disksSelected.length === 0 || isActive, },
   ];
 

@@ -165,6 +165,7 @@ const VmDiskConnectionModal = ({
               virtualSize: checkZeroSizeToGiB(attDisk?.virtualSize),
               actualSize: checkZeroSizeToGiB(attDisk?.actualSize),
               storageDomain: attDisk?.storageDomainVo?.name,
+              sharable: attDisk?.sharable ? "O" : "X",
               status: attDisk?.status === "UNINITIALIZED" ? "초기화되지 않음" : "UP",
               check: (
                 <input

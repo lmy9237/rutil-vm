@@ -86,9 +86,9 @@ const bootForm = {
 };
 
 const VmModal = ({ 
-  isOpen, onClose, editMode = false,
+  isOpen, onClose, editMode = false, copyMode = false,
 }) => {
-  const vLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+  const vLabel = editMode ? Localization.kr.UPDATE : (copyMode ? "복제" : Localization.kr.CREATE);
 
   const { vmsSelected } = useGlobal();
   const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);

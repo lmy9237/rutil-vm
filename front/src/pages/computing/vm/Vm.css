@@ -27,16 +27,15 @@
   width: 100%;
   border-bottom: 1px solid rgb(226, 226, 226);
   cursor: pointer;
+  padding: 12px;
 }
 .network-content:hover {
   background-color: #ebececd8;
 }
-.network-content > div:first-child {
-  padding: 10px;
-}
+
 .network-content > div {
-  width:25%;
   max-width:200px;
+  
 }
 .network-content > div:nth-child(n + 2) {
   text-align: center;

@@ -397,6 +397,7 @@ const Tables = ({
                   key={index}
                   onClick={() => handleSort(column)}
                   style={{
+                    textAlign: "center",
                     cursor: column.isIcon ? "default" : "pointer",
                     width: column.width ?? "auto",
                     ...(column?.style ?? {}),

@@ -61,8 +61,11 @@ const VmModals = ({
       <VmImportModal key={activeModal()} isOpen={activeModal() === "vm:import"}
         onClose={() => setActiveModal(null)} 
       />
-    ), copy: (
-      <></>
+    ), copy: ( // 수정필요
+      <VmModal key={activeModal()} isOpen={activeModal() === "vm:copy"} 
+        onClose={() => setActiveModal(null)}
+        copyMode
+      />
     ), migration: (
       <VmMigrationModal key={activeModal()} isOpen={activeModal() === "vm:migration"}
         onClose={() => setActiveModal(null)}
@@ -70,7 +73,7 @@ const VmModals = ({
     ), ova: (
       <VmExportOVAModal key={activeModal()} isOpen={activeModal() === "vm:ova"}
         onClose={() => setActiveModal(null)}  
-        selectedVm={vmsSelected} // TODO: 조건바꿔야함
+        selectedVm={vmsSelected} 
         vmId={vm?.id}
       />
     ), action: (

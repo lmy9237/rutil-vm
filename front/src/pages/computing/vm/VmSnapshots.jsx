@@ -21,6 +21,7 @@ import { convertBytesToMB } from "../../../util";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import Localization from "../../../utils/Localization";
 import "./VmSnapshots.css"
+import SnapshotHostBackground from "../../../components/common/SnapshotHostBackground";
 
 /**
  * @name VmSnapshots
@@ -90,62 +91,59 @@ const VmSnapshots = ({
           inPreview={inPreview}
         />
       </div>
-      <div className="snapshot-group-outer f-btw w-full">
-        <div  className="snapshot-group">
-          <div ref={snapshotItemRef}
-            className="vm-snap-item"
-          >
-            {/* 항상 현재 위치 표시 */}
-            <div className="snapshot-item f-start">
-              <RVI16 iconDef={rvi16ChevronDown()} />
-              <div className="snapshot-label f-center fs-14">
-                <RVI16
-                  iconDef={hasLockedSnapshot ? rvi16Lock() : rvi16Location} 
-                  className="mx-1.5"
-                />
-                {hasLockedSnapshot ? "잠겨있음" 
-                 : inPreview ? "스냅샷 미리보기 상태"
-                 : "현재 위치"}
-              </div>
-            </div>
-    
-            {isSnapshotsLoading && (<Loading/>)}
-
-            {!isSnapshotsLoading && transformedData?.length === 0 && (<></>)}
-
-            {[...transformedData]?.map((snapshot) => (
-              <div key={snapshot.id}
-                className={`snapshot-item f-start ${snapshotsSelected[0]?.id === snapshot.id ? "selected" : ""}`}
-                onClick={() => setSnapshotsSelected(snapshot)}
-              >
-                {/* 선택된 스냅샷이면 아래, 아니면 오른쪽 화살표 */}
-                <RVI16 iconDef={
-                  snapshotsSelected[0]?.id === snapshot.id 
-                    ? rvi16ChevronDown()
-                    : rvi16ChevronRight()
-                  }
-                  className="mx-1.5"
-                />
-                <div className='snapshot-label f-center'>
-                  {snapshot?._status}
-                  <RVI16 iconDef={snapshot?._persistMemory} className="mx-1.5" />
-                  {snapshot?.description}
-                </div>          
-              </div>
-            ))}
-          </div>
-          
-          <div className="vm-snap-item">
-            {snapshotsSelected.length > 0 ? (
-              <TablesRow columns={TableColumnsInfo.SNAPSHOT_INFO_FROM_VM}
-                data={snapshotsSelected[0]}
+      <SnapshotHostBackground>
+        <div ref={snapshotItemRef}
+          className="split-item"
+        >
+          {/* 항상 현재 위치 표시 */}
+          <div className="snapshot-item f-start">
+            <RVI16 iconDef={rvi16ChevronDown()} />
+            <div className="snapshot-label f-center fs-14">
+              <RVI16
+                iconDef={hasLockedSnapshot ? rvi16Lock() : rvi16Location} 
+                className="mx-1.5"
               />
-            ) : (
-              <></>
-            )}
+              {hasLockedSnapshot ? "잠겨있음" 
+                : inPreview ? "스냅샷 미리보기 상태"
+                : "현재 위치"}
+            </div>
           </div>
+  
+          {isSnapshotsLoading && (<Loading/>)}
+
+          {!isSnapshotsLoading && transformedData?.length === 0 && (<></>)}
+
+          {[...transformedData]?.map((snapshot) => (
+            <div key={snapshot.id}
+              className={`snapshot-item f-start ${snapshotsSelected[0]?.id === snapshot.id ? "selected" : ""}`}
+              onClick={() => setSnapshotsSelected(snapshot)}
+            >
+              {/* 선택된 스냅샷이면 아래, 아니면 오른쪽 화살표 */}
+              <RVI16 iconDef={
+                snapshotsSelected[0]?.id === snapshot.id 
+                  ? rvi16ChevronDown()
+                  : rvi16ChevronRight()
+                }
+                className="mx-1.5"
+              />
+              <div className='snapshot-label f-center'>
+                {snapshot?._status}
+                <RVI16 iconDef={snapshot?._persistMemory} className="mx-1.5" />
+                {snapshot?.description}
+              </div>          
+            </div>
+          ))}
         </div>
-      </div>
+        <div className="split-item">
+          {snapshotsSelected.length > 0 ? (
+            <TablesRow columns={TableColumnsInfo.SNAPSHOT_INFO_FROM_VM}
+              data={snapshotsSelected[0]}
+            />
+          ) : (
+            <></>
+          )}
+        </div>
+      </SnapshotHostBackground>
       <SelectedIdView items={snapshotsSelected} />
     </>
   );

@@ -84,7 +84,7 @@ const VmNics = ({
                 toggleDetails(nic.id);
               }} // NIC 선택 시 상태 업데이트
             >
-              <div className="network-content f-start w-full">
+              <div className="network-content f-start f-btw">
                 <div className="network-status f-start">
                   <RVI24 iconDef={nicsSelected[0]?.id === nic.id ? rvi24ChevronDown() : rvi24ChevronRight()} />
                   <FontAwesomeIcon

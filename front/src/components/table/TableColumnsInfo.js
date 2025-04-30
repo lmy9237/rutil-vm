@@ -528,7 +528,7 @@ const TableColumnsInfo = {
   DISK_SNAPSHOT_FROM_STORAGE_DOMAIN: [
     { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
     { header: Localization.kr.DATE_CREATED, accessor: 'creationDate', clickable: false },
-    { header: Localization.kr.DATE_CREATED, accessor: 'alias', clickable: false },
+    { header: '스냅샷 생성일', accessor: 'creationDate', clickable: false },
     { header: '디스크 별칭', accessor: 'alias', clickable: false },
     { header: `${Localization.kr.SNAPSHOT} ${Localization.kr.DESCRIPTION}`, accessor: 'description', clickable: false },
     { header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, accessor: 'storageDomainVo.name', clickable: false },
@@ -624,7 +624,7 @@ const TableColumnsInfo = {
     { header: '인터페이스', accessor: 'interface', clickable: false },
     { header: 'R/O', accessor: 'readonly', clickable: false, width: '5%'  },
     { header: 'bootable', accessor: 'bootable', clickable: false, width: '5%'  },
-    { header: 'i', accessor: 'b', clickable: false, width: '5%'  },
+    { header: '공유가능', accessor: 'sharable', clickable: false, width: '5%'  },
   ],
 // ---------------------------------------------------------------
 
@@ -784,7 +784,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.NAME, accessor: 'name', clickable: false }
   ],
   JOB_HISTORY_COLUMNS : [
-    { header: '작업명', accessor: 'description', style: { paddingLeft: "30px" }},
+    { header: '작업명', accessor: 'description', style: { paddingLeft: "20px" }},
     { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime'  , width:'5%'},
     { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime' , width:'5%'},
     { header: Localization.kr.STATUS,          accessor: 'status', width:'5%' },

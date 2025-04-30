@@ -24,7 +24,7 @@ const DomainGeneral = ({ domainId }) => {
     { label: "할당됨", value: checkZeroSizeToGiB(domain?.commitedSize) },
     {
       label: "오버 할당 비율",
-      value: overCommit(domain?.commitedSize, domain?.size) + " %",
+      value: overCommit(domain?.overCommit, domain?.size) + " %",
     },
     { label: "이미지 개수:", value: domain?.diskImageVos?.length || 0 },
     { label: "디스크 스냅샷 개수:", value: diskSnapshots?.length || 0 },

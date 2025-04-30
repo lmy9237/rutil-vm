@@ -129,14 +129,14 @@
   position: sticky;
   width: var(--thickness-border);height: 100%;
   cursor: col-resize;
-  background-color: var(--color-border-default);
+  background-color: #ffffff00; 
   z-index: 100;
   -webkit-user-select: none;
 }
 
 .resizer:hover {
   cursor: ew-resize;
-  background-color: var(--color-hover);
+  /* background-color: var(--color-hover); */
 }
 .resizer:active {
   cursor: col-resize;

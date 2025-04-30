@@ -1,29 +1,6 @@
 
-.snapshot-group {
-  height: 100%;
-  justify-content: space-between;
-  width: 100%;
-  display: flex;
-}
-.vm-snap-item {
-  width: auto;
-  padding: 20px;
-  border-radius: 8px;
-  min-height: 220px;
-  background: var(--color-white);
-}
-.vm-snap-item:first-child {
-  width: 60%;
-}
-.vm-snap-item:last-child {
-  width: 38%;
-  margin-left: 30px;
-}
-.snapshot-item {
-  cursor: pointer;
-  padding: 4px 20px;
-  background: none;
-}
+
+
 .snapshot-item.selected {
   background-color: #E2E5EB !important;
 }

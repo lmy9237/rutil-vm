@@ -10,7 +10,7 @@ const UnassignedNetworkItem = ({ network, onDragStart }) => {
       draggable
       onDragStart={onDragStart}
     >
-      <div className="flex text-left">
+      <div className="f-start text-left">
         {status2Icon(network?.status)}&nbsp;&nbsp;{network?.name}
         {network?.vlan === 0 ? "" : `(VLAN ${network?.vlan})`}
       </div>
