@@ -43,6 +43,30 @@ const logicalUnitFormState = {
   volumeGroupId: ""
 };
 
+const storageState = {
+  type: "",
+  address: "",
+  path: "",
+  nfsVersion: "",
+  volumeGroupVo: {
+    id: "",
+    logicalUnitVos: {
+      id: "",
+      address: "",
+      lunMapping: "",
+      paths: "",
+      port: "",
+      portal: "",
+      productId: "",
+      size: "",
+      status: "",
+      storageDomainId: "",
+      target: "",
+      vendorId: "",
+    }
+  },
+};
+
 // 주소, 포트  검색
 // const searchFormState = {
 //   target: "",
@@ -100,7 +124,6 @@ const DomainModal = ({
   const { data: domain } = useStroageDomain(domainId);
   const { mutate: addDomain } = useAddDomain(onSuccess, () => onClose());
   const { mutate: editDomain } = useEditDomain(onSuccess, () => onClose()); // 편집은 단순 이름, 설명 변경정도
-  
   const { 
     data: datacenters = [],
     isLoading: isDatacentersLoading 
@@ -109,8 +132,6 @@ const DomainModal = ({
     data: hosts = [],
     isLoading: isHostsLoading 
   } = useHostsFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
-
-  // 도메인 생성 - fc 목록 출력
   const {
     data: fibres = [],
     refetch: refetchFibres,
@@ -118,7 +139,6 @@ const DomainModal = ({
     isError: isFibresError, 
     isSuccess: isFibresSuccess
   } = useFibreFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
-  
   // const {
   //   data: storages = [],
   //   refetch: refetchStorages,
@@ -131,7 +151,6 @@ const DomainModal = ({
     if (!isOpen) return resetFormStates();
     if (editMode && domain) {
       const storage = domain?.storageVo;
-
       setFormState({
         id: domain?.id,
         domainType: domain?.type,
@@ -190,7 +209,6 @@ const DomainModal = ({
     }
   }, [hostVo?.id, isFibre, editMode, refetchFibres]);
   
-
   useEffect(() => {
     const options = storageTypeOptions(formState.domainType);
     setStorageTypes(options);
@@ -255,7 +273,7 @@ const DomainModal = ({
         dataCenterVo,
         hostVo,
         logicalUnits: logicalUnit ? [logicalUnit.id] : [],
-        ...(formState.storageType === "nfs" && { storageAddress, storagePath }),
+        ...(formState.storageType === "NFS" && { storageAddress, storagePath }),
       };
     }
   
@@ -358,11 +376,11 @@ const DomainModal = ({
 
       <div className="tab-content">
         <div className="storage-specific-content">
-          <LabelInputNum id="warning" label="디스크 공간 부족 경고 표시 (%)"
+          <LabelInputNum id="warning" label={`${Localization.kr.DISK} 공간 부족 경고 표시 (%)`}
             value={formState.warning}
             onChange={handleInputChange(setFormState, "warning")}
           />
-          <LabelInputNum id="spaceBlocker" label="심각히 부족한 디스크 공간의 동작 차단 (GB)"
+          <LabelInputNum id="spaceBlocker" label={`심각히 부족한 ${Localization.kr.DISK} 공간의 동작 차단 (GB)`}
             value={formState.spaceBlocker}
             onChange={handleInputChange(setFormState, "spaceBlocker")}
           />

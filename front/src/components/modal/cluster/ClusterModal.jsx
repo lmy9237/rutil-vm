@@ -63,7 +63,7 @@ const ClusterModal = ({
     data: networks = [], 
     isLoading: isNetworksLoading 
   } = useNetworksFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
-  
+
   useEffect(() => {
     if (!isOpen) {
       setFormState(initialFormState);
@@ -86,6 +86,7 @@ const ClusterModal = ({
     }
   }, [isOpen, editMode, cluster]);
 
+
   useEffect(() => {
     if (datacenterId) {
       const selected = datacenters.find(dc => dc.id === datacenterId);
@@ -99,9 +100,11 @@ const ClusterModal = ({
       setNetworkVo({id: "", name: ""});
     }
   }, [datacenterId, datacenters, editMode]);
-  
+
   useEffect(() => {
-    if (!editMode && networks && networks.length > 0) {
+    if (editMode && cluster?.networkVo?.id) {
+      setNetworkVo({id: cluster.networkVo.id, name: cluster.networkVo.name });
+    } else if (!editMode && networks && networks.length > 0) {
       const defaultNetwork = networks.find(n => n.name === "ovirtmgmt");
       const firstN = defaultNetwork || networks[0];
       setNetworkVo({ id: firstN.id, name: firstN.name });
@@ -153,7 +156,7 @@ const ClusterModal = ({
     >
       <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
         value={dataCenterVo.id}
-        disabled={editMode}
+        disabled={editMode && !!dataCenterVo.id}
         loading={isDataCentersLoading}
         options={datacenters}
         onChange={handleSelectIdChange(setDataCenterVo, datacenters) }
@@ -179,6 +182,7 @@ const ClusterModal = ({
         options={networks}
         onChange={handleSelectIdChange(setNetworkVo, networks)}
       />
+      <span>netowrk: {networkVo.name}</span>
       <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
         value={formState.cpuArc}
         options={CONSTANT.cpuArcs}

@@ -21,17 +21,6 @@ import Logger from "../../../utils/Logger";
 // 이 모달은 가상머신 생성에서 디스크 생성, 편집에서 사용될 예정
 // 또한 가상머신-디스크 에서 디스크 생성, 편집에서 사용될 예정
 
-const interfaceList = [
-  { value: "VIRTIO_SCSI", label: "VirtIO-SCSI" },
-  { value: "VIRTIO", label: "VirtIO" },
-  { value: "SATA", label: "SATA" },
-];
-
-const sparseList = [
-  { value: "true", label: "씬 프로비저닝" },
-  { value: "false", label: "사전 할당" },
-];
-
 const initialFormState = {
   id: "",
   size: "",
@@ -441,3 +430,14 @@ const VmDiskModal = ({
 };
 
 export default VmDiskModal;
+
+const interfaceList = [
+  { value: "VIRTIO_SCSI", label: "VirtIO-SCSI" },
+  { value: "VIRTIO", label: "VirtIO" },
+  { value: "SATA", label: "SATA" },
+];
+
+const sparseList = [
+  { value: "true", label: "씬 프로비저닝" },
+  { value: "false", label: "사전 할당" },
+];

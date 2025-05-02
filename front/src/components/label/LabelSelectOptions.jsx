@@ -5,6 +5,21 @@ import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import Logger from "../../utils/Logger";
 import "./LabelInput.css";
 
+/**
+ * @name LabelSelectOptions
+ * @description 레이블 선택란
+ *
+ * @prop {string} className
+ * @prop {string} label
+ * @prop {string} id
+ * @prop {string} value
+ * @prop {function} onChange
+ * @prop {boolean} disabled
+ * @prop {boolean} loading
+ * @prop {Array} options
+ *
+ * @returns {JSX.Element} LabelSelectOptions
+ */
 const LabelSelectOptions = ({
   className = "",
   label,
@@ -27,26 +42,34 @@ const LabelSelectOptions = ({
   useClickOutside(selectRef, (e) => setOpen(false))
 
   const boxStyle = !label ? { width: "100%" } : undefined; // label이 없으면 100% width style 지정 
+
   const selectedLabel = useMemo(() => {
     if (loading) return <Loading/>;
     if (options.length === 0) return "항목 없음";
-    const selected = options?.find(opt => opt.value === value)?.label || "선택하세요"
-    return selected ?? "선택하세요";
+    const selected = options?.find(opt => opt.value === value);
+    // return selected ? label : "선택하세요";
+    return selected ? selected.label : "선택하세요";
+
   }, [options, loading, value]);
 
   return (
     <div className={`input-select custom-select-wrapper ${className}`} ref={selectRef}>
       {label && <div className="select-label">{label}</div>}
-      <div className={`custom-select-box v-start w-full ${disabled ? "disabled" : ""}`}
+      {/* <div className={`custom-select-box v-start w-full ${disabled ? "disabled" : ""}`} */}
+      <div 
+        className={`custom-select-box f-start ${disabled ? "disabled" : ""}`}
         style={boxStyle} 
         onClick={() => !disabled && setOpen(!open)}
       >
         <span>{selectedLabel}</span>
         <RVI16 iconDef={open ? rvi16ChevronUp() : rvi16ChevronDown()} />
       </div>
-      {open && (
-        <div className="custom-options v-start">
-          {options.map((opt) => (
+      {open && !loading && (
+        <div 
+          className="custom-options v-start"
+          style={boxStyle}
+        >
+          {[...options].map((opt) => (
             <LabelSelectOption 
               opt={opt}
               value={value}

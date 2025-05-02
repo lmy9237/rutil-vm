@@ -69,9 +69,7 @@ const LabelSelectOptionsID = ({
   }, [options, loading, value]);
 
   return (
-    <div ref={wrapperRef}
-      className={`input-select custom-select-wrapper ${className}`}
-    >
+    <div className={`input-select custom-select-wrapper ${className}`} ref={wrapperRef}>
       {label && <label htmlFor={id}>{label}</label>}
         <div
           className={`custom-select-box f-start ${disabled ? "disabled" : ""}`}
@@ -79,11 +77,12 @@ const LabelSelectOptionsID = ({
           onClick={() => !disabled && setOpen(!open)}
         >
           <span>{selectedLabel}</span>
-          <RVI16 iconDef={open ? rvi16ChevronUp : rvi16ChevronDown()} />
+          <RVI16 iconDef={open ? rvi16ChevronUp() : rvi16ChevronDown()} />
         </div>
 
         {open && !loading && (
-          <div className="custom-options v-start" 
+          <div 
+            className="custom-options v-start" 
             style={boxStyle}
           >
             {[...options].map((opt) => (

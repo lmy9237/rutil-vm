@@ -441,7 +441,6 @@ const VmModal = ({
           <LabelSelectOptions label="칩셋/펌웨어 유형"
             value={formInfoState.osType}
             disabled={["PPC64", "S390X"].includes(architecture)}
-            // disabled={architecture === "PPC64" || architecture === "S390X"}
             options={chipsetOptionList}
             onChange={ handleInputChange(setFormInfoState, "osType") }
           />

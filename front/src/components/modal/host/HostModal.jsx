@@ -57,17 +57,16 @@ const HostModal = ({
   const { data: host } = useHost(hostId);
   const { mutate: addHost } = useAddHost(onSuccess, () => onClose());
   const { mutate: editHost } = useEditHost(onSuccess, () => onClose());
-
-  const {
-    data: dcClusters = [],
-    isLoading: isDcClustersLoading,
-  } = useClustersFromDataCenter(datacenterId, (e) => ({...e,}));
+  // const {
+  //   data: dcClusters = [],
+  //   isLoading: isDcClustersLoading,
+  // } = useClustersFromDataCenter(datacenterId, (e) => ({...e,}));
   const { 
     data: clusters = [], 
     isLoading: isClustersLoading 
   } = useAllClusters((e) => ({ ...e }));
 
-  const clusterOptions = datacenterId ? dcClusters : clusters;
+  // const clusterOptions = datacenterId ? dcClusters : clusters;
 
   useEffect(() => {
     if (!isOpen) {
@@ -91,15 +90,15 @@ const HostModal = ({
 
   useEffect(() => {
     if (clusterId) {
-      const selected = clusterOptions.find(c => c.id === clusterId);
+      const selected = clusters.find(c => c.id === clusterId);
       setClusterVo({id: selected?.id, name: selected?.name});
-    } else if (!editMode && clusterOptions && clusterOptions.length > 0) {
+    } else if (!editMode && clusters && clusters.length > 0) {
       // 만약 "Default"라는 이름이 있다면 우선 선택
-      const defaultC = clusterOptions.find(c => c.name === "Default");
-      const firstC = defaultC || clusterOptions[0];
+      const defaultC = clusters.find(c => c.name === "Default");
+      const firstC = defaultC || clusters[0];
       setClusterVo({ id: firstC.id, name: firstC.name });
     }
-  }, [clusterOptions, clusterId, editMode]);
+  }, [clusters, clusterId, editMode]);
 
   const validateForm = () => {
     const nameError = checkName(formState.name);
@@ -131,14 +130,13 @@ const HostModal = ({
       isOpen={isOpen} onClose={onClose}      
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px"}} 
-      // contentStyle={{ width: "730px", height: !editMode ? "600px" :"400px" }} 
     >
       <LabelSelectOptionsID label={`${Localization.kr.HOST} ${Localization.kr.CLUSTER}`}
         value={clusterVo.id}
         disabled={editMode}
-        loading={datacenterId ? isDcClustersLoading : isClustersLoading}
-        options={clusterOptions}
-        onChange={handleSelectIdChange(setClusterVo, clusterOptions)}
+        loading={isClustersLoading}
+        options={clusters}
+        onChange={handleSelectIdChange(setClusterVo, clusters)}
       />
       <hr />
       <LabelInput id="name" label={Localization.kr.NAME}
