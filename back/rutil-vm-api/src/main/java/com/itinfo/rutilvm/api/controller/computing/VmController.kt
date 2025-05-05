@@ -263,30 +263,6 @@ class VmController: BaseController() {
 	}
 
 
-	@Deprecated("필요없음")
-	@ApiOperation(
-		value="가상머신 게스트 목록",
-		notes="선택된 가상머신의 게스트 목록을 조회한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/{vmId}/guest")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun guest(
-		@PathVariable vmId: String? = null,
-	): ResponseEntity<GuestInfoVo?> {
-		if (vmId.isNullOrEmpty())
-			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		log.info("/computing/vms/{}/guest ... 가상머신 게스트", vmId)
-		return ResponseEntity.ok(iVm.findGuestFromVm(vmId))
-	}
-
-
 	//region: vmOp
 	@Autowired private lateinit var iVmOp: ItVmOperationService
 

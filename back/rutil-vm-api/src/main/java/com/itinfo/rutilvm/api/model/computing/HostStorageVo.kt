@@ -3,12 +3,8 @@ package com.itinfo.rutilvm.api.model.computing
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
 import com.itinfo.rutilvm.api.model.storage.LogicalUnitVo
-import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.storage.toLogicalUnitVos
-import org.ovirt.engine.sdk4.builders.HostStorageBuilder
-import org.ovirt.engine.sdk4.builders.LogicalUnitBuilder
-import org.ovirt.engine.sdk4.builders.VolumeGroupBuilder
 
 import org.ovirt.engine.sdk4.types.HostStorage
 import org.ovirt.engine.sdk4.types.StorageType

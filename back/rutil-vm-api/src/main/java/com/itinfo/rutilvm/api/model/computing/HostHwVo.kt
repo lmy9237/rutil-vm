@@ -8,7 +8,6 @@ import java.io.Serializable
 
 private val log = LoggerFactory.getLogger(HostHwVo::class.java)
 
-
 /**
  * [HostHwVo]
  * 호스트 하드웨어

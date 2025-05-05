@@ -129,7 +129,7 @@ class VmSnapshotServiceImpl(
 		log.info("addFromVm ... ")
 		val res: Result<Boolean> = conn.addSnapshotFromVm(
 			vmId,
-			snapshotVo.toSnapshotBuilder()
+			snapshotVo.toAddSnapshot()
 		)
 		return res.isSuccess
 	}

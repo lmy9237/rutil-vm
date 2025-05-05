@@ -76,7 +76,7 @@ class DataCenterVo (
 }
 
 /**
- * 데이터센터 아이디, 이름
+ * 데이터센터 id & name
  */
 fun DataCenter.toDataCenterIdName(): DataCenterVo = DataCenterVo.builder {
 	id { this@toDataCenterIdName.id() }
@@ -193,26 +193,26 @@ fun StorageDomain.toStorageDomainDataCenter(conn: Connection): List<DataCenterVo
  * 데이터센터 빌더
  */
 fun DataCenterVo.toDataCenterBuilder(): DataCenterBuilder = DataCenterBuilder()
-	.name(this@toDataCenterBuilder.name) // 이름
-	.description(this@toDataCenterBuilder.description) // 설명
-	.local(this@toDataCenterBuilder.storageType) // 스토리지 유형
+	.name(name)
+	.description(description)
+	.local(storageType)
 	.version(VersionBuilder().major(4).minor(7)) // 버전 고정
-	.quotaMode(this@toDataCenterBuilder.quotaMode)
-	.comment(this@toDataCenterBuilder.comment)
+	.quotaMode(quotaMode)
+	.comment(comment)
 
 /**
  * 데이터센터 생성 빌더
  */
-fun DataCenterVo.toAddDataCenterBuilder(): DataCenter =
-	this@toAddDataCenterBuilder.toDataCenterBuilder()
-		.build()
+fun DataCenterVo.toAddDataCenter(): DataCenter =
+	toDataCenterBuilder().build()
 
 /**
  * 데이터센터 편집 빌더
  */
-fun DataCenterVo.toEditDataCenterBuilder(): DataCenter =
-	this@toEditDataCenterBuilder.toDataCenterBuilder()
-		.id(this@toEditDataCenterBuilder.id)
+fun DataCenterVo.toEditDataCenter(): DataCenter {
+	return toDataCenterBuilder()
+		.id(this.id)
 		.build()
+}
 
 // endregion

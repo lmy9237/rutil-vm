@@ -101,38 +101,26 @@ fun LogicalUnit.toLogicalUnitVo(): LogicalUnitVo {
 fun List<LogicalUnit>.toLogicalUnitVos(): List<LogicalUnitVo> =
 	this@toLogicalUnitVos.map { it.toLogicalUnitVo() }
 
-
-fun LogicalUnit.toLogicalUnitVoBuilder(): LogicalUnitVo.Builder.() -> Unit = {
-	id { this@toLogicalUnitVoBuilder.id() }
-	discardMaxSize { this@toLogicalUnitVoBuilder.discardMaxSizeAsInteger() }
-	discardZeroesData { this@toLogicalUnitVoBuilder.discardZeroesData() }
-	paths { this@toLogicalUnitVoBuilder.pathsAsInteger() }
-	productId { this@toLogicalUnitVoBuilder.productId() }
-	serial { this@toLogicalUnitVoBuilder.serial() }
-	size { this@toLogicalUnitVoBuilder.size() }
-	status { this@toLogicalUnitVoBuilder.status() }
-	storageDomainId { this@toLogicalUnitVoBuilder.storageDomainId() }
-	vendorId { this@toLogicalUnitVoBuilder.vendorId() }
-	volumeGroupId { this@toLogicalUnitVoBuilder.volumeGroupId() }
+// iSCSI && FC
+fun LogicalUnit.toBlockLogicalUnitVo(): LogicalUnitVo = LogicalUnitVo.builder {
+	id { this@toBlockLogicalUnitVo.id() }
 }
+fun List<LogicalUnit>.toBlockLogicalUnitVos(): List<LogicalUnitVo> =
+	map { it.toBlockLogicalUnitVo() }
 
-// iSCSI
-fun LogicalUnit.toIscsiLogicalUnitVo(): LogicalUnitVo = LogicalUnitVo.builder {
-	this@toIscsiLogicalUnitVo.toLogicalUnitVoBuilder().invoke(this)
-	address { this@toIscsiLogicalUnitVo.address() }
-	port { this@toIscsiLogicalUnitVo.portAsInteger() }
-	portal { this@toIscsiLogicalUnitVo.portal() }
-	target { this@toIscsiLogicalUnitVo.target() }
-}
-fun List<LogicalUnit>.toIscsiLogicalUnitVos(): List<LogicalUnitVo> =
-	map { it.toIscsiLogicalUnitVo() }
+
+// fun LogicalUnit.toLogicalUnitVoBuilder(): LogicalUnitVo.Builder.() -> Unit = {
+// 	id { this@toLogicalUnitVoBuilder.id() }
+// 	paths { this@toLogicalUnitVoBuilder.pathsAsInteger() }
+// 	productId { this@toLogicalUnitVoBuilder.productId() }
+// 	size { this@toLogicalUnitVoBuilder.size() }
+// 	volumeGroupId { this@toLogicalUnitVoBuilder.volumeGroupId() }
+// }
 
 // Fibre
-fun LogicalUnit.toFibreLogicalUnitVo(): LogicalUnitVo = LogicalUnitVo.builder {
-	this@toFibreLogicalUnitVo.toLogicalUnitVoBuilder().invoke(this)
-	diskId { this@toFibreLogicalUnitVo.diskId() }
-}
-fun List<LogicalUnit>.toFibreLogicalUnitVos(): List<LogicalUnitVo> =
-	map { it.toFibreLogicalUnitVo() }
-
-
+// fun LogicalUnit.toFibreLogicalUnitVo(): LogicalUnitVo = LogicalUnitVo.builder {
+// 	id { this@toFibreLogicalUnitVo.id() }
+// 	diskId { this@toFibreLogicalUnitVo.diskId() }
+// }
+// fun List<LogicalUnit>.toFibreLogicalUnitVos(): List<LogicalUnitVo> =
+// 	map { it.toFibreLogicalUnitVo() }

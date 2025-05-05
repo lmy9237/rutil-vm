@@ -53,10 +53,10 @@ fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: Stri
 
 	// 스토리지 도메인이 생성되지 않았을 경우 예외 처리
 	storageAdded ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
-	log.info("attachStorageDomainToDataCenter--- storageAdded.id(): {} dataCenterId: {}", storageAdded.id(), dataCenterId)
 
 	// 스토리지 도메인을 데이터센터에 붙이는 작업
-	this.attachStorageDomainToDataCenter(dataCenterId, storageAdded.id()).onFailure { throw it }
+	log.info("attachStorageDomainToDataCenter--- storageAdded.id(): {} dataCenterId: {}", storageAdded.id(), dataCenterId)
+	this.attachStorageDomainToDataCenter(dataCenterId, storageAdded.id())
 
 	storageAdded
 }.onSuccess {
@@ -75,7 +75,7 @@ fun Connection.importStorageDomain(storageDomain: StorageDomain, dataCenterId: S
 	storageImported ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
 	// 스토리지 도메인을 데이터센터에 붙이는 작업
-	this.attachStorageDomainToDataCenter(dataCenterId, storageImported.id()).onFailure { throw it }
+	this.attachStorageDomainToDataCenter(dataCenterId, storageImported.id())
 
 	storageImported
 }.onSuccess {

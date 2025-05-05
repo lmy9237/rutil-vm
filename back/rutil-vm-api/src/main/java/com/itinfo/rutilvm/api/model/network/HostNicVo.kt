@@ -8,9 +8,7 @@ import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.Connection
-import org.ovirt.engine.sdk4.builders.BondingBuilder
 import org.ovirt.engine.sdk4.builders.HostNicBuilder
-import org.ovirt.engine.sdk4.builders.NetworkAttachmentBuilder
 import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
 import java.io.Serializable
@@ -24,8 +22,8 @@ private val log = LoggerFactory.getLogger(HostNicVo::class.java)
  * @property id [String]
  * @property name [String]
  * @property macAddress [String]
- * @property mtu [Int]
  * @property bridged [Boolean]
+ * @property mtu [Int]
  // * @property customConfiguration [Boolean]
  * @property status [NicStatus]
  * @property speed [BigInteger]
@@ -36,6 +34,7 @@ private val log = LoggerFactory.getLogger(HostNicVo::class.java)
  * @property rxTotalError [BigInteger]
  * @property txTotalError [BigInteger]
  * @property vlan [String]
+ * @property adAggregatorId [Int]
  * @property bootProtocol [BootProtocol]
  * @property ipv6BootProtocol [BootProtocol]
  * @property ip [IpVo]
@@ -51,7 +50,6 @@ class HostNicVo(
 	val macAddress: String = "",
 	val mtu: Int = 0,
 	val bridged: Boolean = false,
-	// val customConfiguration: Boolean = false,
 	val status: NicStatus = NicStatus.DOWN,
 	val speed: BigInteger = BigInteger.ZERO,
 	val rxSpeed: BigInteger = BigInteger.ZERO,
@@ -110,6 +108,9 @@ class HostNicVo(
 	}
 }
 
+/**
+ * 호스트 nic id & name
+ */
 fun HostNic.toHostNicIdName(): HostNicVo = HostNicVo.builder {
 	id { this@toHostNicIdName.id() }
 	name { this@toHostNicIdName.name() }
@@ -124,7 +125,6 @@ fun HostNic.toHostNicVo(conn: Connection): HostNicVo {
 		if (hostNic.networkPresent() && hostNic.network().idPresent()) conn.findNetwork(hostNic.network().id()).getOrNull()
 		else null
 	val bond: Bonding? = if(hostNic.bondingPresent()) hostNic.bonding() else null
-
 	val base: HostNic? =
 		if(hostNic.baseInterfacePresent()) {
 			conn.findAllHostNicsFromHost(hostNic.host().id()).getOrDefault(emptyList())
@@ -154,7 +154,6 @@ fun HostNic.toHostNicVo(conn: Connection): HostNicVo {
 		bondingVo { bond?.toBondingVo(conn, hostNic.host().id()) }
 		hostVo { hostNic.host().fromHostToIdentifiedVo() }
 		networkVo { network?.fromNetworkToIdentifiedVo() }
-		// networkVo { network?.toNetworkIdName() }
 	}
 }
 fun List<HostNic>.toHostNicVos(conn: Connection): List<HostNicVo> =
@@ -183,54 +182,28 @@ fun List<HostNic>.toSlaveHostNicVos(conn: Connection): List<HostNicVo> =
 	this@toSlaveHostNicVos.map { it.toSlaveHostNicVo(conn) }
 
 
+// region: builder
 
-// fun HostNic.toSetHostNicVo(conn: Connection): HostNicVo {
-// 	val host: Host? = conn.findHost(this@toSetHostNicVo.host().id())
-// 		.getOrNull()
-// 	val network: Network? =
-// 		if (this@toSetHostNicVo.networkPresent()) conn.findNetwork(this@toSetHostNicVo.network().id()).getOrNull()
-// 		else null
-//
-// 	return HostNicVo.builder {
-// 		id { this@toSetHostNicVo.id() }
-// 		name { this@toSetHostNicVo.name() }
-// 		bridged { this@toSetHostNicVo.bridged() }
-// 		status { this@toSetHostNicVo.status() }
-// 		hostVo { host?.fromHostToIdentifiedVo() }
-// 		networkVo { network?.fromNetworkToIdentifiedVo() }
-// 		bondingVo {
-// 			if(this@toSetHostNicVo.bondingPresent())
-// 				this@toSetHostNicVo.bonding().toBondingVo(conn, this@toSetHostNicVo.host().id())
-// 			else null
-// 		}
-// 	}
-// }
-// fun List<HostNic>.toSetHostNicVos(conn: Connection): List<HostNicVo> =
-// 	this@toSetHostNicVos.map { it.toSetHostNicVo(conn) }
+/**
+ * 호스트 네트워크 본딩 생성
+ */
+fun HostNicVo.toAddBond(): HostNic {
+	return HostNicBuilder()
+		.name(name) // bonding 이름
+		.bonding(bondingVo.toBonding() )
+		.build()
+}
 
-fun HostNicVo.toBondBuilder(): HostNic = HostNicBuilder()
-	.id(this@toBondBuilder.id)
-	.bonding( this@toBondBuilder.bondingVo.toBonding() )
-	.build()
 /**
- * 호스트 네트워크 생성_bonds
- * host_nic 빌더
+ * 호스트 네트워크 편집 modified_bonds
  */
-fun HostNicVo.toAddBondBuilder(): HostNic = HostNicBuilder()
-	.name(this@toAddBondBuilder.name) // bonding 이름
-	.bonding( this@toAddBondBuilder.bondingVo.toBonding() )
-	.build()
-/**
- * 호스트 네트워크 modified_bonds
- * host_nic 빌더
- */
-fun HostNicVo.toModifiedBondBuilder(): HostNic = HostNicBuilder()
-	.id(this@toModifiedBondBuilder.id) // hostNic id
-	.bonding( this@toModifiedBondBuilder.bondingVo.toBonding() )
-	.build()
+fun HostNicVo.toModifiedBond(): HostNic {
+	return HostNicBuilder()
+		.id(id) // hostNic id
+		.bonding(bondingVo.toBonding() )
+		.build()
+}
 fun List<HostNicVo>.toModifiedBonds(): List<HostNic> =
-	this@toModifiedBonds.map { it.toModifiedBondBuilder() }
+	this.map { it.toModifiedBond() }
 
-
-// fun HostNicVo.toModifiedBond(): HostNic =
-// 	this@toModifiedBond.toModifiedBondBuilder().build()
+// endregion

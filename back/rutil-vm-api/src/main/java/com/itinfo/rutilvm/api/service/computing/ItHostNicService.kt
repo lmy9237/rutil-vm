@@ -197,7 +197,7 @@ class ItHostNicServiceImpl(
 		log.info("addBondFromHost ... hostId: {}, hostNic: {}", hostId, hostNicVo)
 		val res: Result<Boolean> = conn.addBondFromHost(
 			hostId,
-			hostNicVo.toAddBondBuilder()
+			hostNicVo.toAddBond()
 		)
 		return res.isSuccess
 	}
@@ -207,7 +207,7 @@ class ItHostNicServiceImpl(
 		log.info("modifiedBondFromHost ... hostId: {}, hostNic: {}", hostId, hostNicVo)
 		val res: Result<Boolean> = conn.modifiedBondFromHost(
 			hostId,
-			hostNicVo.toBondBuilder()
+			hostNicVo.toModifiedBond()
 		)
 		return res.isSuccess
 	}
@@ -217,7 +217,7 @@ class ItHostNicServiceImpl(
 		log.info("removeBondFromHost ... hostId: {}", hostId)
 		val res: Result<Boolean> = conn.removeBondFromHost(
 			hostId,
-			hostNicVo.toBondBuilder()
+			hostNicVo.toModifiedBond()
 		)
 		return res.isSuccess
 	}

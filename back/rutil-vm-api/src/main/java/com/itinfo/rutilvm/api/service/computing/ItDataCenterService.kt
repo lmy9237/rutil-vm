@@ -37,6 +37,7 @@ interface ItDataCenterService {
 	 */
 	@Throws(Error::class)
 	fun findOne(dataCenterId: String): DataCenterVo?
+
 	/**
 	 * [ItDataCenterService.add]
 	 * 데이터센터 생성
@@ -167,15 +168,6 @@ interface ItDataCenterService {
 	 */
 	@Throws(Error::class)
 	fun findAllISOFromDataCenter(dataCenterId: String): List<IdentifiedVo>
-	/**
-	 * [ItDataCenterService.findAllVnicProfilesFromDataCenter]
-	 * 가상머신 생성 -  vnicprofile 목록 출력 (가상머신 생성, 네트워크 인터페이스 생성)
-	 *
-	 * @param dataCenterId [String] 데이터센터 Id
-	 * @return List<[VnicProfileVo]> VnicProfile 목록
-	 */
-	// @Throws(Error::class)
-	// fun findAllVnicProfilesFromDataCenter(dataCenterId: String): List<VnicProfileVo>
 
 	/**
 	 * [ItDataCenterService.dashboardComputing]
@@ -220,7 +212,7 @@ class DataCenterServiceImpl(
 	override fun add(dataCenterVo: DataCenterVo): DataCenterVo? {
 		log.info("add ... name: {}", dataCenterVo.name)
 		val res: DataCenter? = conn.addDataCenter(
-			dataCenterVo.toAddDataCenterBuilder()
+			dataCenterVo.toAddDataCenter()
 		).getOrNull()
 		return res?.toDataCenterIdName()
 	}
@@ -229,7 +221,7 @@ class DataCenterServiceImpl(
 	override fun update(dataCenterVo: DataCenterVo): DataCenterVo? {
 		log.info("update ... name: {}", dataCenterVo.name)
 		val res: DataCenter? = conn.updateDataCenter(
-			dataCenterVo.toEditDataCenterBuilder()
+			dataCenterVo.toEditDataCenter()
 		).getOrNull()
 		return res?.toDataCenterIdName()
 	}
@@ -266,14 +258,14 @@ class DataCenterServiceImpl(
 	override fun findAllVmsFromDataCenter(dataCenterId: String): List<VmViewVo> {
 		log.debug("findAllVmsFromDataCenter ... dataCenterId: {}", dataCenterId)
 		val res: List<Vm> = conn.findAllVmsFromDataCenter(dataCenterId).getOrDefault(emptyList())
-		return res.toVmMenus(conn) // 3.21
+		return res.toVmMenus(conn)
 	}
 
 	@Throws(Error::class)
 	override fun findAllStorageDomainsFromDataCenter(dataCenterId: String): List<StorageDomainVo> {
 		log.info("findAllStorageDomainsFromDataCenter ... dataCenterId: {}", dataCenterId)
 		val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
-		return res.toDcDomainMenus(conn) // 1.15
+		return res.toDcDomainMenus(conn)
 	}
 
 	@Throws(Error::class)
@@ -287,10 +279,8 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllDisksFromDataCenter(dataCenterId: String): List<DiskImageVo> {
 		log.info("findAllDisksFromDataCenter ... dataCenterId: {}", dataCenterId)
-		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
-		val res = storageDomains.flatMap { it.disks() ?: emptyList() }
-
-		return res.map { it.toDcDiskMenu(conn) } // 0.833
+		val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
+		return res.flatMap { it.disks() ?: emptyList() }.map { it.toDcDiskMenu(conn) }
 	}
 
 	@Throws(Error::class)
@@ -307,9 +297,12 @@ class DataCenterServiceImpl(
 		val dataCenter: DataCenter? = conn.findDataCenter(dataCenterId).getOrNull()
 		val res: List<Event> = conn.findAllEvents("sortby time desc")
 			.getOrDefault(emptyList())
-			.filter {(it.dataCenterPresent() && (
+			.filter {
+				(it.dataCenterPresent() && (
 					(it.dataCenter().idPresent() && it.dataCenter().id() == dataCenterId) ||
-					(it.dataCenter().namePresent() && it.dataCenter().name() == dataCenter?.name())))}
+					(it.dataCenter().namePresent() && it.dataCenter().name() == dataCenter?.name()))
+				)
+			}
 		return res.toEventVos()
 	}
 
@@ -343,7 +336,7 @@ class DataCenterServiceImpl(
 		log.info("findAllISOFromDataCenter ...  dataCenterId: {}", dataCenterId)
 		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
 		val res = storageDomains.flatMap { it.disks().filter { disk -> disk.contentType() == ISO && disk.status() == OK }}
- 		return res.fromDisksToIdentifiedVos() // 0.803
+ 		return res.fromDisksToIdentifiedVos()
 	}
 
 	// @Throws(Error::class)

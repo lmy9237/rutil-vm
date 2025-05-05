@@ -37,21 +37,15 @@ private val log = LoggerFactory.getLogger(NetworkVo::class.java)
  * @property usage [UsageVo]  management 기본이 체크된 상태 (true, 가상머신 네트워크 (기본) (usage))
  * @property vdsmName [String]
  * @property datacenterVo [IdentifiedVo]
-// * @property networkClusterVo []
  * @property openStackNetworkVo [OpenStackNetworkVo] 네트워크 공급자(한개만 있음) (생성시 여부(boolean)으로 처리,추가)
- *
- * 네트워크 생성시 필요
  * @property vlan [Int] vlan 태그 (태그 자체는 활성화를 해야 입력란이 생김)
 // * @proprety dnsList List<[String]> DNS 서버는 애매함
- *
- * 클러스터에서 출력될 내용
  * @property status [NetworkStatus] 네트워크 상태
  * @property display [Boolean] 클러스터-네트워크 관리
  * @property networkLabel [String] 네트워크 레이블
  * @property clusterVo [IdentifiedVo]
  * @property attached [Boolean] 할당 -> cluster-network-cluster<> 생성되고 아니면 cluster-network 에서 제외
  * @property required [Boolean] 클러스터-네트워크 관리 -> 필수(t,f)
- *
  * @property vnicProfileVos List<[IdentifiedVo]> vnicProfile
  * @property clusterVos List<[ClusterVo]> clusters  // networks clusters
  *
@@ -210,28 +204,26 @@ fun Network.toClusterNetworkMenu(): NetworkVo {
 fun List<Network>.toClusterNetworkMenus(): List<NetworkVo> =
 	this@toClusterNetworkMenus.map { it.toClusterNetworkMenu() }
 
-
+// region: builder
 /**
  * 네트워크 빌더
  * external provider 선택시 vlan, portisolation=false 선택되면 안됨
  * VnicProfile은 기본생성만 /qos는 제외항목, 네트워크필터도 vdsm으로 고정(?)
  */
 fun NetworkVo.toNetworkBuilder(): NetworkBuilder {
-	val network = this@toNetworkBuilder
-
 	val builder = NetworkBuilder()
-		.dataCenter(DataCenterBuilder().id(network.dataCenterVo.id).build())
-		.name(network.name)
-		.description(network.description)
-		.comment(network.comment)
-		.mtu(network.mtu)  // 제한수가 있음
-		.portIsolation(network.portIsolation)
+		.dataCenter(DataCenterBuilder().id(dataCenterVo.id).build())
+		.name(name)
+		.description(description)
+		.comment(comment)
+		.mtu(mtu)  // 제한수가 있음
+		.portIsolation(portIsolation)
 
-	if (network.usage.vm) {
+	if (usage.vm) {
 		builder.usages(NetworkUsage.VM)
 	}
-	if (network.vlan != 0) {
-		builder.vlan(VlanBuilder().id((network.vlan)))
+	if (vlan != 0) {
+		builder.vlan(VlanBuilder().id((vlan)))
 		// TODO: vlan 값이 0일 때 ovirt에서는 경고문구를 띄어줄 떄가 있다. 20번 ovrirtmgmt 참고
 	}
 	/*builder.vlan(
@@ -239,10 +231,9 @@ fun NetworkVo.toNetworkBuilder(): NetworkBuilder {
 			id(network.vlan)
 		}
 	)*/
-
-	if(network.dnsNameServers.isNotEmpty()){
+	if(dnsNameServers.isNotEmpty()){
 		builder.dnsResolverConfiguration(
-			DnsResolverConfigurationBuilder().nameServers(network.dnsNameServers).build()
+			DnsResolverConfigurationBuilder().nameServers(dnsNameServers).build()
 		)
 	}
 
@@ -251,11 +242,14 @@ fun NetworkVo.toNetworkBuilder(): NetworkBuilder {
 }
 
 // 필요 name, datacenter_id
-fun NetworkVo.toAddNetworkBuilder(): Network =
-	this@toAddNetworkBuilder.toNetworkBuilder().build()
+fun NetworkVo.toAddNetwork(): Network =
+	toNetworkBuilder().build()
 
-fun NetworkVo.toEditNetworkBuilder(): Network =
-	this@toEditNetworkBuilder.toNetworkBuilder().id(this@toEditNetworkBuilder.id).build()
+fun NetworkVo.toEditNetwork(): Network {
+	return toNetworkBuilder()
+		.id(id)
+		.build()
+}
 
 fun NetworkVo.toAddClusterAttach(conn: Connection, networkId: String) {
 	val network = conn.findNetwork(networkId)
@@ -299,11 +293,13 @@ private fun attachNetworkToCluster(conn: Connection, clusterVo: ClusterVo, netwo
 
 // 네트워크 레이블
 fun NetworkVo.toAddNetworkLabel(conn: Connection, networkId: String) {
-	if (this@toAddNetworkLabel.openStackNetworkVo.id.isEmpty() && this@toAddNetworkLabel.networkLabel.isNotEmpty()) {
+	if (openStackNetworkVo.id.isEmpty() && networkLabel.isNotEmpty()) {
 		conn.addNetworkLabelFromNetwork(
 			networkId,
-			NetworkLabelBuilder().id(this@toAddNetworkLabel.networkLabel).build()
+			NetworkLabelBuilder().id(networkLabel).build()
 		)
 	}
 }
 
+
+// endregion

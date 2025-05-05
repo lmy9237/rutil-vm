@@ -138,30 +138,10 @@ interface ItVmService {
 	 */
 	@Throws(Error::class)
 	fun findAllEventsFromVm(vmId: String): List<EventVo>
-
-	/**
-	 * [ItVmService.findGuestFromVm]
-	 * 가상머신 게스트 정보
-	 *
-	 * @param vmId [String] 가상머신 Id
-	 */
-	@Deprecated("필요없음")
-	@Throws(Error::class)
-	fun findGuestFromVm(vmId: String): GuestInfoVo?
-	/**
-	 * [ItVmService.findAllPermissionsFromVm]
-	 * 가상머신 권한
-	 *
-	 * @param vmId [String] 가상머신 Id
-	 */
-	@Deprecated("필요없음")
-	@Throws(Error::class)
-	fun findAllPermissionsFromVm(vmId: String): List<PermissionVo>
 }
 
 @Service
 class VmServiceImpl(
-
 ) : BaseService(), ItVmService {
 
 	@Throws(Error::class)
@@ -196,9 +176,9 @@ class VmServiceImpl(
 		}
 
 		val res: Vm? = conn.addVm(
-			vmCreateVo.toAddVmBuilder(),
+			vmCreateVo.toAddVm(),
 			vmCreateVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
-			vmCreateVo.nicVos.takeIf { it.isNotEmpty() }?.map { it.toVmNicBuilder() }, // NIC가 있는 경우만 전달
+			vmCreateVo.nicVos.takeIf { it.isNotEmpty() }?.map { it.toVmNic() }, // NIC가 있는 경우만 전달
 			vmCreateVo.connVo.id.takeIf { it.isNotEmpty() }  // ISO 설정이 있는 경우만 전달
 		).getOrNull()
 		return res?.toVmCreateVo(conn)
@@ -240,9 +220,9 @@ class VmServiceImpl(
 		}
 
 		val res: Vm? = conn.updateVm(
-			vmUpdateVo.toEditVmBuilder(),
+			vmUpdateVo.toEditVm(),
 			newDisks.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
-			newNics.map { it.toVmNicBuilder() }.takeIf { it.isNotEmpty() },
+			newNics.map { it.toVmNic() }.takeIf { it.isNotEmpty() },
 			vmUpdateVo.connVo.id.takeIf { it.isNotEmpty() }
 		).getOrNull()
 		return res?.toVmCreateVo(conn)
@@ -299,27 +279,6 @@ class VmServiceImpl(
 		val res: List<Event> = conn.findAllEvents("sortby time desc").getOrDefault(emptyList())
 			.filter { it.vmPresent() && it.vm().name() == vm.name() }
 		return res.toEventVos()
-	}
-
-	@Deprecated("필요없음")
-	@Throws(Error::class)
-	override fun findGuestFromVm(vmId: String): GuestInfoVo? {
-		log.info("findGuestFromVm ... vmId: {}", vmId)
-		val res: Vm = conn.findVm(vmId)
-			.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
-		if (!res.guestOperatingSystemPresent()) {
-			log.warn("게스트 운영 체제 정보가 없습니다.")
-			return null
-		}
-		return res.toGuestInfoVo()
-	}
-
-	@Deprecated("필요없음")
-	@Throws(Error::class)
-	override fun findAllPermissionsFromVm(vmId: String): List<PermissionVo> {
-		log.info("findAllPermissionsFromVm ... vmId: {}", vmId)
-		val res: List<Permission> = conn.findAllAssignedPermissionsFromVm(vmId).getOrDefault(emptyList())
-		return res.toPermissionVos(conn)
 	}
 
 

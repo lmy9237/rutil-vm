@@ -98,7 +98,6 @@ fun List<VnicProfile>.toCVnicProfileMenus(): List<VnicProfileVo> =
 	this@toCVnicProfileMenus.map { it.toCVnicProfileMenu() }
 
 
-
 fun VnicProfile.toVnicProfileMenu(conn: Connection): VnicProfileVo {
 	val vnic = this@toVnicProfileMenu
     val networkFilter: NetworkFilter? =
@@ -129,47 +128,44 @@ fun List<VnicProfile>.toVnicProfileMenus(conn: Connection): List<VnicProfileVo> 
 fun VnicProfileVo.toVnicProfileBuilder(): VnicProfileBuilder {
 	// 통과가 true 라면 마이그레이션 가능과 페일오버 vnic 기능 활성화,
 	// 반대로 네트워크 필터는
-	val vnic = this@toVnicProfileBuilder
 	val builder = VnicProfileBuilder()
-	if(vnic.passThrough == VnicPassThroughMode.ENABLED){
+	if(passThrough == VnicPassThroughMode.ENABLED){
 		builder
-			.passThrough(VnicPassThroughBuilder().mode(VnicPassThroughMode.fromValue(vnic.passThrough.toString())))
-			.migratable(vnic.migration)
-			.failover(VnicProfileBuilder().id(vnic.failOVer.id))
+			.passThrough(VnicPassThroughBuilder().mode(VnicPassThroughMode.fromValue(passThrough.toString())))
+			.migratable(migration)
+			.failover(VnicProfileBuilder().id(failOVer.id))
 	}else{
 		builder
-			.networkFilter(NetworkFilterBuilder().id(vnic.networkFilterVo.id))
-			.portMirroring(vnic.portMirroring)
+			.networkFilter(NetworkFilterBuilder().id(networkFilterVo.id))
+			.portMirroring(portMirroring)
 	}
 
 	log.info("VnicProfileVo: {}", this)
 	return builder
-		.name(vnic.name)
-		.network(NetworkBuilder().id(vnic.networkVo.id))
-		.description(vnic.description)
+		.name(name)
+		.network(NetworkBuilder().id(networkVo.id))
+		.description(description)
 }
 
 /**
  * vnicProfile 생성 빌더
  */
-fun VnicProfileVo.toAddVnicProfileBuilder(): VnicProfile =
-	this@toAddVnicProfileBuilder.toVnicProfileBuilder().build()
+fun VnicProfileVo.toAddVnicProfile(): VnicProfile =
+	toVnicProfileBuilder().build()
 
 /**
  * vnicProfile 편집 빌더
  */
-fun VnicProfileVo.toEditVnicProfileBuilder(): VnicProfile =
-	this@toEditVnicProfileBuilder.toVnicProfileBuilder().id(this@toEditVnicProfileBuilder.id).build()
+fun VnicProfileVo.toEditVnicProfile(): VnicProfile {
+	return toVnicProfileBuilder()
+		.id(id)
+		.build()
+}
 
 
 fun Nic.toVnicProfileVoFromNic(conn: Connection): VnicProfileVo {
-	val vnicProfile: VnicProfile? =
-		conn.findVnicProfile(this@toVnicProfileVoFromNic.vnicProfile().id())
-			.getOrNull()
-	val network: Network? =
-		vnicProfile?.network()?.let {
-			conn.findNetwork(it.id()).getOrNull()
-		}
+	val vnicProfile: VnicProfile? = conn.findVnicProfile(this@toVnicProfileVoFromNic.vnicProfile().id()).getOrNull()
+	val network: Network? = vnicProfile?.network()?.let { conn.findNetwork(it.id()).getOrNull() }
 
 	return VnicProfileVo.builder {
 		id { vnicProfile?.id() }

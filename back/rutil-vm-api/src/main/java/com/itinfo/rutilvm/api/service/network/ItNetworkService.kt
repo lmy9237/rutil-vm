@@ -163,7 +163,6 @@ interface ItNetworkService {
 
 @Service
 class NetworkServiceImpl(
-
 ): BaseService(), ItNetworkService {
 
 	@Throws(Error::class)
@@ -187,7 +186,7 @@ class NetworkServiceImpl(
 		log.info("dns ... {}", networkVo.dnsNameServers)
 
 		val res: Network = conn.addNetwork(
-			networkVo.toAddNetworkBuilder()
+			networkVo.toAddNetwork()
 		).getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
 
 		// 생성 후에 나온 network Id로 클러스터 네트워크 생성 및 레이블 생성 가능
@@ -200,7 +199,7 @@ class NetworkServiceImpl(
 	override fun update(networkVo: NetworkVo): NetworkVo? {
 		log.info("update ... networkName: {}", networkVo.name)
 		val res: Network? = conn.updateNetwork(
-			networkVo.toEditNetworkBuilder()
+			networkVo.toEditNetwork()
 		).getOrNull()
 		return res?.toNetworkIdName()
 	}

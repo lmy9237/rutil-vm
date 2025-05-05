@@ -2,9 +2,7 @@ package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
-import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
-import com.itinfo.rutilvm.api.model.fromStorageDomainsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.repository.*
@@ -38,6 +36,7 @@ interface ItHostService {
 	 */
 	@Throws(Error::class)
 	fun findOne(hostId: String): HostVo?
+
 	/**
 	 * [ItHostService.add]
 	 * 호스트 생성 (전원관리 제외)
@@ -94,8 +93,6 @@ interface ItHostService {
 	 */
 	@Throws(Error::class)
 	fun findAllEventsFromHost(hostId: String): List<EventVo>
-
-
 }
 
 @Service
@@ -129,7 +126,7 @@ class HostServiceImpl(
 	override fun add(hostVo: HostVo, deployHostedEngine: Boolean?): HostVo? {
 		log.info("add ... ")
 		val res: Host? = conn.addHost(
-			hostVo.toAddHostBuilder(),
+			hostVo.toAddHost(),
 			deployHostedEngine,
 		).getOrNull()
 		return res?.toHostVo(conn)
@@ -139,7 +136,7 @@ class HostServiceImpl(
 	override fun update(hostVo: HostVo): HostVo? {
 		log.info("update ... hostName: {}", hostVo.name)
 		val res: Host? = conn.updateHost(
-			hostVo.toEditHostBuilder()
+			hostVo.toEditHost()
 		).getOrNull()
 		return res?.toHostVo(conn)
 	}
@@ -174,7 +171,6 @@ class HostServiceImpl(
 		val res: List<Event> = conn.findAllEvents("host.name= ${host.name()}").getOrDefault(emptyList())
 		return res.toEventVos()
 	}
-
 
 	private fun calculateUsage(host: Host, hostNic: HostNic?): UsageDto? {
 		return if (host.status() == HostStatus.UP && hostNic != null) {

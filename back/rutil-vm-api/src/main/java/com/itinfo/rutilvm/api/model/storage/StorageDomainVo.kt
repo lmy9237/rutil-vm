@@ -185,6 +185,7 @@ fun StorageDomain.toDcDomainMenu(conn: Connection): StorageDomainVo {
 		usedSize { domain.used() }
 		availableSize { domain.available() }
 		size { domain.toDomainSize() }
+		storageVo { domain.storage().toStorageVo() }
 		dataCenterVo { if(domain.dataCenterPresent()) domain.dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo()}
 	}
 }
@@ -206,61 +207,63 @@ fun List<StorageDomain>.toActiveDomains(): List<StorageDomainVo> =
 // region: builder
 /**
  * 스토리지 도메인 생성 빌더
- * 기본
  */
 fun StorageDomainVo.toStorageDomainBuilder(): StorageDomainBuilder {
 	return StorageDomainBuilder()
-		.name(this.name)
-		.type(StorageDomainType.fromValue(this.type))
-		.description(this.description)
-		.comment(this.comment)
-		.warningLowSpaceIndicator(this.warning)
-		.criticalSpaceActionBlocker(this.spaceBlocker)  //디스크 공간 동작 차단
-		.dataCenters(*arrayOf(DataCenterBuilder().id(this.dataCenterVo.id).build()))
-		.host(HostBuilder().name(this.hostVo.name).build())
+		.name(name)
+		.type(StorageDomainType.fromValue(type))
+		.description(description)
+		.comment(comment)
+		.warningLowSpaceIndicator(warning)
+		.criticalSpaceActionBlocker(spaceBlocker)  //디스크 공간 동작 차단
+		.dataCenters(*arrayOf(DataCenterBuilder().id(dataCenterVo.id).build()))
+		.host(HostBuilder().name(hostVo.name).build())
 }
 
-fun StorageDomainVo.toAddStorageDomainBuilder(): StorageDomain {
-	log.info("toAddStorageDomainBuilder: {}", this)
-	return this.toStorageDomainBuilder()
+/**
+ * 도메인 생성
+ */
+fun StorageDomainVo.toAddStorageDomain(): StorageDomain {
+	log.info("toAddStorageDomain: {}", this)
+	return toStorageDomainBuilder()
 		.storage(
-			when (StorageType.fromValue(this@toAddStorageDomainBuilder.storageVo.type.value())) {
-				StorageType.NFS -> this@toAddStorageDomainBuilder.storageVo.toAddNFSBuilder()
-				StorageType.ISCSI -> this.storageVo.toAddISCSIBuilder()
-				StorageType.FCP -> this.storageVo.toAddFCPBuilder()
+			when (StorageType.fromValue(storageVo.type.value())) {
+				StorageType.NFS -> storageVo.toAddNFS()
+				StorageType.FCP, StorageType.ISCSI -> storageVo.toAddBlockStorage()
 				else -> throw IllegalArgumentException("Unsupported storage type")
 			}
 		)
 		.build()
 }
 
-
-// 도메인 가져오기 iscsi와 fc 모두
-fun StorageDomainVo.toImportStorageDomainBuilder(): StorageDomain {
-	log.info("toImportStorageDomainBuilder: {}", this)
-	return this.toStorageDomainBuilder()
-		.storage(storageVo.toImportFCPBuilder())
-		.id(this.id)
+/**
+ * 도메인 가져오기
+ * FC , ISCSI
+ */
+fun StorageDomainVo.toImportStorageDomain(): StorageDomain {
+	log.info("toImportStorageDomain: {}", this)
+	return toStorageDomainBuilder()
+		.storage(storageVo.toImportBlockStorage())
+		.id(id)
 		.build()
 }
 
 /**
- * 스토리지 도메인 편집 빌더
- * 기본
+ * 도메인 편집 빌더
  */
-fun StorageDomainVo.toEditStorageDomainBuilder(): StorageDomain {
+fun StorageDomainVo.toEditStorageDomain(): StorageDomain {
+	// toStorageDomainBuilder().id(id).build()
 	return StorageDomainBuilder()
-		.id(this@toEditStorageDomainBuilder.id)
-		.name(this@toEditStorageDomainBuilder.name)
-		.comment(this@toEditStorageDomainBuilder.comment)
-		.description(this@toEditStorageDomainBuilder.description)
-		.warningLowSpaceIndicator(this@toEditStorageDomainBuilder.warning)
-		.criticalSpaceActionBlocker(this@toEditStorageDomainBuilder.spaceBlocker)
+		.id(id)
+		.name(name)
+		.comment(comment)
+		.description(description)
+		.warningLowSpaceIndicator(warning)
+		.criticalSpaceActionBlocker(spaceBlocker)
 		.build()
 }
 
 // endregion
-
 
 
 // 데이터센터 찾기
@@ -290,14 +293,6 @@ fun StorageDomain.toDomainSize(): BigInteger? {
 	} else { null }
 }
 
-
-// fun HostStorage.toHostStorageVoByType(): HostStorageVo {
-// 	return when (this.type()) {
-// 		StorageType.ISCSI -> this.toIscsiStorageVo()
-// 		StorageType.FCP ->this.toFibreStorageVo()
-// 		else -> HostStorageVo()
-// 	}
-// }
 
 fun StorageDomain.toStorageDomainSize(): StorageDomainVo {
 	return StorageDomainVo.builder {

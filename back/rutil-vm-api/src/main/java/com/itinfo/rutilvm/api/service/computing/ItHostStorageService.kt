@@ -6,8 +6,8 @@ import com.itinfo.rutilvm.api.model.computing.toHostStorageVos
 import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
 import com.itinfo.rutilvm.api.model.storage.LogicalUnitVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.model.storage.toBlockLogicalUnitVos
 import com.itinfo.rutilvm.api.model.storage.toDiscoverIscsiDetailVo
-import com.itinfo.rutilvm.api.model.storage.toIscsiLogicalUnitVos
 import com.itinfo.rutilvm.api.model.storage.toStorageDomainInfoVos
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
@@ -20,7 +20,6 @@ import org.ovirt.engine.sdk4.types.StorageType
 import org.springframework.stereotype.Service
 
 interface ItHostStorageService {
-
 	/**
 	 * [ItHostStorageService.findAllFromHost]
 	 * 도메인 생성 -
@@ -104,7 +103,7 @@ class ItHostStorageServiceImpl(
 		log.info("findImportIscsiFromHost... hostId: {}", hostId)
 		val res: List<LogicalUnit> = conn.discoverIscsiFromHost(hostId, iscsiDetailVo.toDiscoverIscsiDetailVo()).getOrDefault(emptyList())
 			.map { it.logicalUnits() }.flatten()
-		return res.toIscsiLogicalUnitVos()
+		return res.toBlockLogicalUnitVos()
 	}
 
 	@Throws(Error::class)

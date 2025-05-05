@@ -75,7 +75,6 @@ interface ItHostOperationService {
      */
     @Throws(Error::class)
     fun globalHaDeactivate(hostId: String): Boolean
-
 	/**
 	 * [ItHostOperationService.refresh]
 	 * 호스트 관리 - 새로고침
@@ -95,14 +94,13 @@ interface ItHostOperationService {
 	 */
 	@Throws(Error::class)
 	fun commitNetConfig(hostId: String): Boolean
-
 }
 
 @Service
 class HostOperationServiceImpl(
 
 ): BaseService(), ItHostOperationService {
-    @Autowired private lateinit var propConfig: PropertiesConfig
+    // @Autowired private lateinit var propConfig: PropertiesConfig
 	@Autowired private lateinit var iHost: ItHostService
 	@Autowired private lateinit var certConfig: CertConfig
 

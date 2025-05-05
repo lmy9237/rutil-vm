@@ -84,53 +84,32 @@ fun List<HostStorage>.toGroupHostStorageVos(): List<StorageVo> =
 
 
 // NFS
-fun StorageVo.toAddNFSBuilder(): HostStorage {
+fun StorageVo.toAddNFS(): HostStorage {
 	return HostStorageBuilder()
-		.type(StorageType.fromValue(this.type.value()))
-		.address(this.address)
-		.path(this.path)
+		.type(StorageType.fromValue(type.value()))
+		.address(address)
+		.path(path)
 		.build()
 }
 
-// ISCSI
-fun StorageVo.toAddISCSIBuilder(): HostStorage {
+// ISCSI, FC
+fun StorageVo.toAddBlockStorage(): HostStorage {
 	return HostStorageBuilder()
-		.type(StorageType.fromValue(this.type.value()))
-		.logicalUnits(this.volumeGroupVo.logicalUnitVos.map {
+		.type(StorageType.fromValue(type.value()))
+		.logicalUnits(volumeGroupVo.logicalUnitVos.map {
 			LogicalUnitBuilder().id(it.id).build()
 		})
+		// .overrideLuns(true) // 생성 기능 강제 처리
 		.build()
 }
 
-// Fibre Channel
-fun StorageVo.toAddFCPBuilder(): HostStorage {
+fun StorageVo.toImportBlockStorage(): HostStorage {
 	return HostStorageBuilder()
-		.type(StorageType.fromValue(this.type.value()))
-		.logicalUnits(this.volumeGroupVo.logicalUnitVos.map {
-			LogicalUnitBuilder().id(it.id).build()
-		})
-		.overrideLuns(true)
-		// overrideLuns = 생성기능 강제 처리
-		// This operation might be unrecoverable and destructive.
-		// the following luns are alread in use,"
-		// 버튼 "approve operation"
-		// .volumeGroup(
-		// 	VolumeGroupBuilder().logicalUnits(
-		// 		this@toAddFCPBuilder.logicalUnits.map {
-		// 			LogicalUnitBuilder().id(it).build()
-		// 		}
-		// 	)
-		// )
-		.build()
-}
-
-fun StorageVo.toImportFCPBuilder(): HostStorage {
-	return HostStorageBuilder()
-		.type(StorageType.fromValue(this.type.value()))
-		.logicalUnits(this.volumeGroupVo.logicalUnitVos.map { logicalUnitVo ->
+		.type(StorageType.fromValue(type.value()))
+		.logicalUnits(volumeGroupVo.logicalUnitVos.map { logicalUnitVo ->
 			LogicalUnitBuilder().id(logicalUnitVo.id).build()
 		})
-		.volumeGroup(VolumeGroupBuilder().id(this.volumeGroupVo.id).build())
+		.volumeGroup(VolumeGroupBuilder().id(volumeGroupVo.id).build())
 		.build()
 		// .overrideLuns(true)
 		// overrideLuns = 생성기능 강제 처리
@@ -138,3 +117,36 @@ fun StorageVo.toImportFCPBuilder(): HostStorage {
 		// the following luns are alread in use,"
 		// 버튼 "approve operation"
 }
+
+
+// // ISCSI
+// fun StorageVo.toAddISCSIBuilder(): HostStorage {
+// 	return HostStorageBuilder()
+// 		.type(StorageType.fromValue(this.type.value()))
+// 		.logicalUnits(this.volumeGroupVo.logicalUnitVos.map {
+// 			LogicalUnitBuilder().id(it.id).build()
+// 		})
+// 		.build()
+// }
+//
+// // Fibre Channel
+// fun StorageVo.toAddFCPBuilder(): HostStorage {
+// 	return HostStorageBuilder()
+// 		.type(StorageType.fromValue(this.type.value()))
+// 		.logicalUnits(this.volumeGroupVo.logicalUnitVos.map {
+// 			LogicalUnitBuilder().id(it.id).build()
+// 		})
+// 		.overrideLuns(true)
+// 		// overrideLuns = 생성기능 강제 처리
+// 		// This operation might be unrecoverable and destructive.
+// 		// the following luns are alread in use,"
+// 		// 버튼 "approve operation"
+// 		// .volumeGroup(
+// 		// 	VolumeGroupBuilder().logicalUnits(
+// 		// 		this@toAddFCPBuilder.logicalUnits.map {
+// 		// 			LogicalUnitBuilder().id(it).build()
+// 		// 		}
+// 		// 	)
+// 		// )
+// 		.build()
+// }

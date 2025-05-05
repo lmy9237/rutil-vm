@@ -193,14 +193,14 @@ class ClusterServiceImpl(
 	override fun findOne(clusterId: String): ClusterVo? {
 		log.info("findOne ... clusterId: {}", clusterId)
 		val res: Cluster? = conn.findCluster(clusterId, follow = "networks").getOrNull()
-		return res?.toClusterInfo(conn) // 1 vo 수정전, 수정후 0.91
+		return res?.toClusterInfo(conn)
 	}
 
 	@Throws(Error::class)
 	override fun add(clusterVo: ClusterVo): ClusterVo? {
 		log.info("add ... ")
 		val res: Cluster? = conn.addCluster(
-			clusterVo.toAddClusterBuilder(conn)
+			clusterVo.toAddCluster(conn)
 		).getOrNull()
 		return res?.toClusterIdName()
 	}
@@ -209,7 +209,7 @@ class ClusterServiceImpl(
 	override fun update(clusterVo: ClusterVo): ClusterVo? {
 		log.info("update ... clusterName: {}", clusterVo.name)
 		val res: Cluster? = conn.updateCluster(
-			clusterVo.toEditClusterBuilder(conn)
+			clusterVo.toEditCluster(conn)
 		).getOrNull()
 		return res?.toClusterIdName()
 	}
@@ -252,7 +252,7 @@ class ClusterServiceImpl(
 	override fun addNetworkFromCluster(clusterId: String, networkVo: NetworkVo): NetworkVo? {
 		log.info("addNetworkFromCluster ... ")
 		val network: Network = conn.addNetwork(
-			networkVo.toAddNetworkBuilder()
+			networkVo.toAddNetwork()
 		).getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
 
 		// 네트워크를 생성하고 cluster 에 붙이는 방식
@@ -352,8 +352,6 @@ class ClusterServiceImpl(
 			itGraphService.hostPercent(host.id(), hostNic.id())
 		} else null
 	}
-
-
 
 	companion object {
 		private val log by LoggerDelegate()

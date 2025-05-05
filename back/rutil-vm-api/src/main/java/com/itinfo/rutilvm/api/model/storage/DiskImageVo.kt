@@ -415,34 +415,34 @@ fun DiskImageVo.toRegisterDiskBuilder(): Disk =
  */
 fun DiskImageVo.toDiskBuilder(): DiskBuilder {
 	return DiskBuilder()
-		.alias(this@toDiskBuilder.alias)
-		.description(this@toDiskBuilder.description)
-		.wipeAfterDelete(this@toDiskBuilder.wipeAfterDelete)
-		.shareable(this@toDiskBuilder.sharable)
-		.backup(if (this@toDiskBuilder.backup) DiskBackup.INCREMENTAL else DiskBackup.NONE)
-		.format(if (this@toDiskBuilder.backup) DiskFormat.COW else DiskFormat.RAW)
-		.sparse(this@toDiskBuilder.sparse)
-		.diskProfile(DiskProfileBuilder().id(this@toDiskBuilder.diskProfileVo.id).build())
+		.alias(this.alias)
+		.description(this.description)
+		.wipeAfterDelete(this.wipeAfterDelete)
+		.shareable(this.sharable)
+		.backup(if (this.backup) DiskBackup.INCREMENTAL else DiskBackup.NONE)
+		.format(if (this.backup) DiskFormat.COW else DiskFormat.RAW)
+		.sparse(this.sparse)
+		.diskProfile(DiskProfileBuilder().id(this.diskProfileVo.id).build())
 }
 
-fun DiskImageVo.toAddDiskBuilder(): Disk =
-	this@toAddDiskBuilder.toDiskBuilder()
-		.storageDomains(*arrayOf(StorageDomainBuilder().id(this@toAddDiskBuilder.storageDomainVo.id).build()))
-		.provisionedSize(this@toAddDiskBuilder.size)
+fun DiskImageVo.toAddDisk(): Disk =
+	this.toDiskBuilder()
+		.storageDomains(*arrayOf(StorageDomainBuilder().id(this.storageDomainVo.id).build()))
+		.provisionedSize(this.size)
 		.build()
 
-fun DiskImageVo.toEditDiskBuilder(): Disk =
-	this@toEditDiskBuilder.toDiskBuilder()
-		.id(this@toEditDiskBuilder.id)
-		.provisionedSize(this@toEditDiskBuilder.size.add(this@toEditDiskBuilder.appendSize))
+fun DiskImageVo.toEditDisk(): Disk =
+	this.toDiskBuilder()
+		.id(this.id)
+		.provisionedSize(this.size.add(this.appendSize))
 		.build()
 
 
 // 가상머신 스냅샷에서 디스크 포함할때 사용
 fun DiskImageVo.toAddSnapshotDisk(): Disk {
 	return DiskBuilder()
-		.id(this@toAddSnapshotDisk.id)
-		.imageId(this@toAddSnapshotDisk.imageId)
+		.id(this.id)
+		.imageId(this.imageId)
 		.build()
 }
 
@@ -456,21 +456,22 @@ fun DiskImageVo.toAddSnapshotDisk(): Disk {
  *  required: provisioned_size, alias, description, wipe_after_delete, shareable, backup, disk_profile.
  *
  */
-fun DiskImageVo.toUploadDiskBuilder(conn: Connection, fileSize: Long): Disk {
-	val storageDomain: StorageDomain = conn.findStorageDomain(this@toUploadDiskBuilder.storageDomainVo.id)
+fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
+	val storageDomain: StorageDomain = conn.findStorageDomain(this.storageDomainVo.id)
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toException()
 
 	return DiskBuilder()
 		.contentType(DiskContentType.ISO)
 		.provisionedSize(fileSize)
 		.sparse(storageDomain.storage().type() == StorageType.NFS)// storage가 nfs 면 씬, iscsi면 사전할당
-		.alias(this@toUploadDiskBuilder.alias)
-		.description(this@toUploadDiskBuilder.description)
-		.storageDomains(*arrayOf(StorageDomainBuilder().id(this@toUploadDiskBuilder.storageDomainVo.id).build()))
-		.diskProfile(DiskProfileBuilder().id(this@toUploadDiskBuilder.diskProfileVo.id).build())
-		.shareable(this@toUploadDiskBuilder.sharable)
-		.wipeAfterDelete(this@toUploadDiskBuilder.wipeAfterDelete)
+		.alias(this.alias)
+		.description(this.description)
+		.storageDomains(*arrayOf(StorageDomainBuilder().id(this.storageDomainVo.id).build()))
+		.diskProfile(DiskProfileBuilder().id(this.diskProfileVo.id).build())
+		.shareable(this.sharable)
+		.wipeAfterDelete(this.wipeAfterDelete)
 		.backup(DiskBackup.NONE) // 증분백업 되지 않음
 		.format(DiskFormat.RAW) // 이미지 업로드는 raw 형식만 가능 +front 처리?
 		.build()
 }
+

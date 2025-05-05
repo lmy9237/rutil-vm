@@ -70,7 +70,6 @@ interface ItVmNicService {
 
 @Service
 class VmNicServiceImpl(
-
 ) : BaseService(), ItVmNicService {
 
 	@Throws(Error::class)
@@ -81,7 +80,6 @@ class VmNicServiceImpl(
 		// return res.toNicVosFromVm(conn) // 1.142
 		return res.toNicVmMenus() // 1.0
 	}
-
 
 	@Throws(Error::class)
 	override fun findOneFromVm(vmId: String, nicId: String): NicVo? {
@@ -95,7 +93,7 @@ class VmNicServiceImpl(
 		log.info("addFromVm ... vmId: {}, nicVo: {}", vmId, nicVo)
 		val res: Nic? = conn.addNicFromVm(
 			vmId,
-			nicVo.toAddNicBuilder()
+			nicVo.toAddNic()
 		).getOrNull()
 		return res?.toNicIdName()
 	}
@@ -105,7 +103,7 @@ class VmNicServiceImpl(
 		log.info("updateFromVm ... vmId: {}, nicVo: {}", vmId, nicVo)
 		val res: Nic? = conn.updateNicFromVm(
 			vmId,
-			nicVo.toEditNicBuilder()
+			nicVo.toEditNic()
 		).getOrNull()
 		return res?.toNicIdName()
 	}

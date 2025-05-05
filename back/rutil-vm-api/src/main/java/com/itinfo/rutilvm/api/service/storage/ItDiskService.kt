@@ -263,7 +263,7 @@ class DiskServiceImpl(
     override fun add(image: DiskImageVo): DiskImageVo? {
         log.info("addDisk ... image: $image")
         val res: Disk? = conn.addDisk(
-            image.toAddDiskBuilder()
+            image.toAddDisk()
         ).getOrNull()
         return res?.toDiskIdName()
     }
@@ -272,7 +272,7 @@ class DiskServiceImpl(
     override fun update(image: DiskImageVo): DiskImageVo? {
         log.info("updateDisk ... image: $image")
         val res: Disk? = conn.updateDisk(
-            image.toEditDiskBuilder()
+            image.toEditDisk()
         ).getOrNull()
         return res?.toDiskIdName()
     }
@@ -322,7 +322,7 @@ class DiskServiceImpl(
 
         // 이미지 업로드해서 imageTransfer.id()를 알아낸다
 		val imageTransferId: String = conn.uploadSetDisk(
-			image.toUploadDiskBuilder(conn, file.size)
+			image.toUploadDisk(conn, file.size)
 		).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
 
         return uploadFileToTransferUrl(file, imageTransferId)

@@ -120,7 +120,7 @@ class VnicProfileServiceImpl(
         log.info("add ... ")
         val res: VnicProfile? = conn.addVnicProfileFromNetwork(
             vnicProfileVo.networkVo.id,
-            vnicProfileVo.toAddVnicProfileBuilder()
+            vnicProfileVo.toAddVnicProfile()
         ).getOrNull()
         return res?.toVnicProfileIdName()
     }
@@ -129,7 +129,7 @@ class VnicProfileServiceImpl(
     override fun update(vnicProfileVo: VnicProfileVo): VnicProfileVo? {
         log.info("update ... ")
         val res: VnicProfile? = conn.updateVnicProfile(
-			vnicProfileVo.toEditVnicProfileBuilder()
+			vnicProfileVo.toEditVnicProfile()
 		).getOrNull()
         return res?.toVnicProfileIdName()
     }

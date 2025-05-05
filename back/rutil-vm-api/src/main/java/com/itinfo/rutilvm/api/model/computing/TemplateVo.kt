@@ -176,35 +176,36 @@ fun List<Template>.toTemplateMenus(conn: Connection): List<TemplateVo> =
 
 
 fun Template.toTemplateInfo(conn: Connection): TemplateVo {
+	val template = this@toTemplateInfo
 	val cluster: Cluster? =
-		if(this@toTemplateInfo.clusterPresent()) { conn.findCluster(this@toTemplateInfo.cluster().id()).getOrNull() }
+		if(template.clusterPresent()) { conn.findCluster(template.cluster().id()).getOrNull() }
 		else { null }
 
 	return TemplateVo.builder {
-		id { this@toTemplateInfo.id() }
-		name { this@toTemplateInfo.name() }
-		comment { this@toTemplateInfo.comment()}
-		description { this@toTemplateInfo.description() }
-		status { this@toTemplateInfo.status() }
-		versionName { if (this@toTemplateInfo.versionPresent()) this@toTemplateInfo.version().versionName() else "" }
-		versionNum { if (this@toTemplateInfo.versionPresent()) this@toTemplateInfo.version().versionNumberAsInteger() else 0 }
-		creationTime { this@toTemplateInfo.creationTime() }
-		osSystem { if (this@toTemplateInfo.osPresent()) Os.findByCode(this@toTemplateInfo.os().type()).fullName else null }
-		chipsetFirmwareType { if (this@toTemplateInfo.bios().typePresent()) this@toTemplateInfo.bios().type().findBios() else null }
-		optimizeOption { this@toTemplateInfo.type().value() } // 최적화 옵션 this@toTemplateInfo.type().findVmType()
-		memorySize { this@toTemplateInfo.memory() }
-		cpuTopologyCore { this@toTemplateInfo.cpu().topology().coresAsInteger() }
-		cpuTopologySocket { this@toTemplateInfo.cpu().topology().socketsAsInteger() }
-		cpuTopologyThread { this@toTemplateInfo.cpu().topology().threadsAsInteger() }
+		id { template.id() }
+		name { template.name() }
+		comment { template.comment()}
+		description { template.description() }
+		status { template.status() }
+		versionName { if (template.versionPresent()) template.version().versionName() else "" }
+		versionNum { if (template.versionPresent()) template.version().versionNumberAsInteger() else 0 }
+		creationTime { template.creationTime() }
+		osSystem { if (template.osPresent()) Os.findByCode(template.os().type()).fullName else null }
+		chipsetFirmwareType { if (template.bios().typePresent()) template.bios().type().findBios() else null }
+		optimizeOption { template.type().value() } // 최적화 옵션 template.type().findVmType()
+		memorySize { template.memory() }
+		cpuTopologyCore { template.cpu().topology().coresAsInteger() }
+		cpuTopologySocket { template.cpu().topology().socketsAsInteger() }
+		cpuTopologyThread { template.cpu().topology().threadsAsInteger() }
 		cpuTopologyCnt {
-			this@toTemplateInfo.cpu().topology().coresAsInteger() *
-			this@toTemplateInfo.cpu().topology().socketsAsInteger() *
-			this@toTemplateInfo.cpu().topology().threadsAsInteger()
+			template.cpu().topology().coresAsInteger() *
+			template.cpu().topology().socketsAsInteger() *
+			template.cpu().topology().threadsAsInteger()
 		}
-		monitor { if(this@toTemplateInfo.displayPresent()) this@toTemplateInfo.display().monitorsAsInteger() else 0 }
-		ha { this@toTemplateInfo.highAvailability().enabled() }
-		priority { this@toTemplateInfo.highAvailability().priorityAsInteger() }
-		usb { this@toTemplateInfo.usb().enabled() }
+		monitor { if(template.displayPresent()) template.display().monitorsAsInteger() else 0 }
+		ha { template.highAvailability().enabled() }
+		priority { template.highAvailability().priorityAsInteger() }
+		usb { template.usb().enabled() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 	}
 }
@@ -217,7 +218,6 @@ fun Template.toStorageTemplate(conn: Connection): TemplateVo {
 		description { this@toStorageTemplate.description() }
 		creationTime { this@toStorageTemplate.creationTime() }
 		status { this@toStorageTemplate.status() }
-		// diskAttachmentVos {  }
 	}
 }
 fun List<Template>.toStorageTemplates(conn: Connection): List<TemplateVo> =
@@ -226,9 +226,6 @@ fun List<Template>.toStorageTemplates(conn: Connection): List<TemplateVo> =
 
 fun Template.toUnregisterdTemplate(): TemplateVo {
 	val template = this@toUnregisterdTemplate
-	// val diskCnt = if(template.diskAttachmentsPresent()){
-	// 	template.diskAttachments().size
-	// } else 0
 
 	return TemplateVo.builder {
 		id { template.id() }
@@ -248,49 +245,46 @@ fun List<Template>.toUnregisterdTemplates() =
 
 
 
-
+// region: builder
 /**
  * 템플릿 빌더
  */
 fun TemplateVo.toTemplateBuilder(): TemplateBuilder {
 	return TemplateBuilder()
-		.name(this@toTemplateBuilder.name)
-		.description(this@toTemplateBuilder.description)
-		.comment(this@toTemplateBuilder.comment)
-		.cluster(ClusterBuilder().id(this@toTemplateBuilder.clusterVo.id))
+		.name(name)
+		.description(description)
+		.comment(comment)
+		.cluster(ClusterBuilder().id(clusterVo.id))
 }
 
-fun TemplateVo.toAddTemplateBuilder(): Template {
-	val diskAttachments: List<DiskAttachment> =
-		this@toAddTemplateBuilder.diskAttachmentVos.map { disk ->
-			DiskAttachmentBuilder()
-				.disk(
-					DiskBuilder()
-						.id(disk.diskImageVo.id)
-						.alias(disk.diskImageVo.alias)
-						.format(disk.diskImageVo.format)
-						.sparse(false)
-						.storageDomains(*arrayOf(StorageDomainBuilder().id(disk.diskImageVo.storageDomainVo.id).build()))
-						.diskProfile(DiskProfileBuilder().id(disk.diskImageVo.diskProfileVo.id).build())
-						.build()
-				).build()
-		}
-	return this@toAddTemplateBuilder.toTemplateBuilder()
-		.vm(VmBuilder().id(this@toAddTemplateBuilder.vmVo.id).diskAttachments(diskAttachments).build())
-		.cpuProfile(CpuProfileBuilder().id(this@toAddTemplateBuilder.cpuProfileVo.id))
+fun TemplateVo.toAddTemplate(): Template {
+	val diskAttachments: List<DiskAttachment> = diskAttachmentVos.map { disk ->
+		DiskAttachmentBuilder()
+			.disk(
+				DiskBuilder()
+					.id(disk.diskImageVo.id)
+					.alias(disk.diskImageVo.alias)
+					.format(disk.diskImageVo.format)
+					.sparse(false)
+					.storageDomains(*arrayOf(StorageDomainBuilder().id(disk.diskImageVo.storageDomainVo.id).build()))
+					.diskProfile(DiskProfileBuilder().id(disk.diskImageVo.diskProfileVo.id).build())
+					.build()
+			).build()
+	}
+	return toTemplateBuilder()
+		.vm(VmBuilder().id(vmVo.id).diskAttachments(diskAttachments).build())
+		.cpuProfile(CpuProfileBuilder().id(cpuProfileVo.id))
 		.build()
 }
 
-fun TemplateVo.toEditTemplateBuilder(): Template {
-	return this@toEditTemplateBuilder.toTemplateBuilder()
-		.id(this@toEditTemplateBuilder.id)
-		.os(OperatingSystemBuilder().type(this@toEditTemplateBuilder.osSystem))
-		.bios(BiosBuilder().type(BiosType.fromValue(this@toEditTemplateBuilder.chipsetFirmwareType)))
-		.type(VmType.fromValue(this@toEditTemplateBuilder.optimizeOption))
+fun TemplateVo.toEditTemplate(): Template {
+	return toTemplateBuilder()
+		.id(id)
+		.os(OperatingSystemBuilder().type(osSystem))
+		.bios(BiosBuilder().type(BiosType.fromValue(chipsetFirmwareType)))
+		.type(VmType.fromValue(optimizeOption))
 		.build()
 }
-
-
 
 /**
  * <template>
@@ -308,3 +302,5 @@ fun TemplateVo.toEditTemplateBuilder(): Template {
  *   </vm>
  * </template>
  */
+
+// endregion

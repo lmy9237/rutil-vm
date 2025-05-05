@@ -1,15 +1,11 @@
 package com.itinfo.rutilvm.api.model.network
 
-import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromVnicProfileToIdentifiedVo
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.computing.*
-import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromNicsToIdentifiedVos
-import com.itinfo.rutilvm.api.model.fromVmToIdentifiedVo
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import org.ovirt.engine.sdk4.Connection
@@ -19,8 +15,11 @@ import org.ovirt.engine.sdk4.builders.VnicProfileBuilder
 import org.ovirt.engine.sdk4.types.*
 import org.ovirt.engine.sdk4.types.IpVersion.V4
 import org.ovirt.engine.sdk4.types.IpVersion.V6
+import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
+
+private val log = LoggerFactory.getLogger(NicVo::class.java)
 
 /**
  * [NicVo]
@@ -34,19 +33,9 @@ import java.math.BigInteger
  * @property linked [Boolean]		링크상태(link state) t(up)/f(down) -> nic 상태도 같이 변함
  * @property plugged [Boolean]		연결상태(card status) t(up)/f(down)
  * @property synced [Boolean]		동기화
- *
  * @property status [NicStatus]  링크상태인줄 알았는데 ?
- *
  * @property ipv4 [String]
  * @property ipv6 [String]
- * @property guestInterfaceName [String]
- *
- * @property networkVo [IdentifiedVo]
- * @property vnicProfileVo [IdentifiedVo]
- * @property vmViewVo [VmViewVo]
- * @property networkFilterVos List[IdentifiedVo]
- *
- * nic.statistics
  * @property speed [BigInteger] mbps
  * @property rxSpeed [BigInteger] mbps
  * @property txSpeed [BigInteger] mbps
@@ -54,6 +43,11 @@ import java.math.BigInteger
  * @property txTotalSpeed [BigInteger] byte
  * @property rxTotalError [BigInteger] byte
  * @property txTotalError [BigInteger] byte
+ * @property guestInterfaceName [String]
+ * @property networkVo [IdentifiedVo]
+ * @property vnicProfileVo [IdentifiedVo]
+ * @property vmViewVo [VmViewVo]
+ * @property networkFilterVos List[IdentifiedVo]
  *
  */
 class NicVo (
@@ -68,10 +62,6 @@ class NicVo (
 	val ipv4: String = "",
 	val ipv6: String = "",
 	val guestInterfaceName: String = "",
-	val networkVo: IdentifiedVo = IdentifiedVo(),
-	val vnicProfileVo: IdentifiedVo = IdentifiedVo(),
-	val vmViewVo: VmViewVo = VmViewVo(),
-	val networkFilterVos: List<NetworkFilterVo> = listOf(),
 	val speed: BigInteger = BigInteger.ZERO,
 	val rxSpeed: BigInteger = BigInteger.ZERO,
 	val txSpeed: BigInteger = BigInteger.ZERO,
@@ -79,6 +69,10 @@ class NicVo (
 	val txTotalSpeed: BigInteger = BigInteger.ZERO,
 	val rxTotalError: BigInteger = BigInteger.ZERO,
 	val txTotalError: BigInteger = BigInteger.ZERO,
+	val networkVo: IdentifiedVo = IdentifiedVo(),
+	val vnicProfileVo: IdentifiedVo = IdentifiedVo(),
+	val vmViewVo: VmViewVo = VmViewVo(),
+	val networkFilterVos: List<NetworkFilterVo> = listOf(),
 ) : Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -95,10 +89,6 @@ class NicVo (
 		private var bIpv4: String = "";fun ipv4(block: () -> String?) { bIpv4 = block() ?: "" }
 		private var bIpv6: String = "";fun ipv6(block: () -> String?) { bIpv6 = block() ?: "" }
 		private var bGuestInterfaceName: String = "";fun guestInterfaceName(block: () -> String?) { bGuestInterfaceName = block() ?: "" }
-		private var bNetworkVo: IdentifiedVo = IdentifiedVo();fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
-		private var bVnicProfileVo: IdentifiedVo = IdentifiedVo();fun vnicProfileVo(block: () -> IdentifiedVo?) { bVnicProfileVo = block() ?: IdentifiedVo()}
-		private var bVmViewVo: VmViewVo = VmViewVo(); fun vmVo(block: () -> VmViewVo?) { bVmViewVo = block() ?: VmViewVo() }
-		private var bNetworkFilterVos: List<NetworkFilterVo> = listOf(); fun networkFilterVos(block: () -> List<NetworkFilterVo>?) { bNetworkFilterVos = block() ?: listOf() }
 		private var bSpeed: BigInteger = BigInteger.ZERO;fun speed(block: () -> BigInteger?) { bSpeed = block() ?: BigInteger.ZERO }
 		private var bRxSpeed: BigInteger = BigInteger.ZERO;fun rxSpeed(block: () -> BigInteger?) { bRxSpeed = block() ?: BigInteger.ZERO }
 		private var bTxSpeed: BigInteger = BigInteger.ZERO;fun txSpeed(block: () -> BigInteger?) { bTxSpeed = block() ?: BigInteger.ZERO }
@@ -106,14 +96,16 @@ class NicVo (
 		private var bTxTotalSpeed: BigInteger = BigInteger.ZERO;fun txTotalSpeed(block: () -> BigInteger?) { bTxTotalSpeed = block() ?: BigInteger.ZERO }
 		private var bRxTotalError: BigInteger = BigInteger.ZERO;fun rxTotalError(block: () -> BigInteger?) { bRxTotalError = block() ?: BigInteger.ZERO }
 		private var bTxTotalError: BigInteger = BigInteger.ZERO;fun txTotalError(block: () -> BigInteger?) { bTxTotalError = block() ?: BigInteger.ZERO }
+		private var bNetworkVo: IdentifiedVo = IdentifiedVo();fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
+		private var bVnicProfileVo: IdentifiedVo = IdentifiedVo();fun vnicProfileVo(block: () -> IdentifiedVo?) { bVnicProfileVo = block() ?: IdentifiedVo()}
+		private var bVmViewVo: VmViewVo = VmViewVo(); fun vmVo(block: () -> VmViewVo?) { bVmViewVo = block() ?: VmViewVo() }
+		private var bNetworkFilterVos: List<NetworkFilterVo> = listOf(); fun networkFilterVos(block: () -> List<NetworkFilterVo>?) { bNetworkFilterVos = block() ?: listOf() }
 
-		fun build(): NicVo = NicVo(bId, bName, bInterface_, bMacAddress, bLinked, bPlugged, bSynced, bStatus, bIpv4, bIpv6, bGuestInterfaceName, bNetworkVo, bVnicProfileVo, bVmViewVo, bNetworkFilterVos, bSpeed, bRxSpeed, bTxSpeed, bRxTotalSpeed, bTxTotalSpeed, bRxTotalError, bTxTotalError)
+		fun build(): NicVo = NicVo(bId, bName, bInterface_, bMacAddress, bLinked, bPlugged, bSynced, bStatus, bIpv4, bIpv6, bGuestInterfaceName, bSpeed, bRxSpeed, bTxSpeed, bRxTotalSpeed, bTxTotalSpeed, bRxTotalError, bTxTotalError, bNetworkVo, bVnicProfileVo, bVmViewVo, bNetworkFilterVos, )
 	}
 
 	companion object {
-		private val log by LoggerDelegate()
-		inline fun builder(block: Builder.() -> Unit): NicVo =
-			Builder().apply(block).build()
+		inline fun builder(block: Builder.() -> Unit): NicVo = Builder().apply(block).build()
 	}
 }
 
@@ -221,22 +213,6 @@ fun Nic.toNicVo(conn: Connection): NicVo = NicVo.builder {
 	macAddress { if (this@toNicVo.macPresent()) this@toNicVo.mac().address() else null }
 }
 
-/**
- * [ReportedDevice].findVmIpv4
- * Vm ip 알아내기
- * @return
- */
-fun ReportedDevice.findVmIpv4(): String? {
-	return this@findVmIpv4.ips()?.firstOrNull { it.version() == V4 }?.address()
-}
-/**
- * [ReportedDevice].findVmIpv6]
- * Vm ip 알아내기
- * @return
- */
-fun ReportedDevice.findVmIpv6(): String? {
-	return this@findVmIpv6.ips()?.firstOrNull { it.version() == V6 }?.address()
-}
 
 fun Nic.toNicVoFromSnapshot(conn: Connection, vmId: String): NicVo {
 	val nic = this@toNicVoFromSnapshot
@@ -313,8 +289,6 @@ fun List<Nic>.toNetworkFromVms(conn: Connection): List<NicVo> =
 	this@toNetworkFromVms.map { it.toNicVoFromVm(conn) }
 
 
-
-
 // fun Vm.toVmViewVoFromNetwork(conn: Connection): VmViewVo {
 // 	val vm = this@toVmViewVoFromNetwork
 // 	val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
@@ -360,37 +334,58 @@ fun Nic.toNetworkVmMenu(conn: Connection): NicVo {
 fun NicVo.toNicBuilder(): NicBuilder {
 	val nicBuilder = NicBuilder()
 	nicBuilder
-		.name(this@toNicBuilder.name)
-		.vnicProfile(VnicProfileBuilder().id(this@toNicBuilder.vnicProfileVo.id))
-		.interface_(this@toNicBuilder.interface_)
-		.linked(this@toNicBuilder.linked)
-		.plugged(this@toNicBuilder.plugged)
-	if (this@toNicBuilder.macAddress.isNotEmpty()) {
-		nicBuilder.mac(MacBuilder().address(this@toNicBuilder.macAddress).build())
+		.name(name)
+		.vnicProfile(VnicProfileBuilder().id(vnicProfileVo.id))
+		.interface_(interface_)
+		.linked(linked)
+		.plugged(plugged)
+	if (macAddress.isNotEmpty()) {
+		nicBuilder.mac(MacBuilder().address(macAddress).build())
 	}
-	log.info("nicvo: {}", this)
 	return nicBuilder
 }
 
 /**
  * Nic 생성 빌더
  */
-fun NicVo.toAddNicBuilder(): Nic =
-	this@toAddNicBuilder.toNicBuilder().build()
+fun NicVo.toAddNic(): Nic =
+	toNicBuilder().build()
 
 /**
  * Nic 편집 빌더
  */
-fun NicVo.toEditNicBuilder(): Nic =
-	this@toEditNicBuilder.toNicBuilder().id(this@toEditNicBuilder.id).build()
+fun NicVo.toEditNic(): Nic {
+	return toNicBuilder()
+		.id(id)
+		.build()
+}
 
 
 // 가상머신 만들때 nic
-fun NicVo.toVmNicBuilder(): Nic = NicBuilder()
-	.name(this.name)
-	.vnicProfile(VnicProfileBuilder().id(this.vnicProfileVo.id).build())
-	.build()
+fun NicVo.toVmNic(): Nic {
+	return NicBuilder()
+		.name(name)
+		.vnicProfile(VnicProfileBuilder().id(vnicProfileVo.id).build())
+		.build()
+}
 
 
 // endregion
 
+
+/**
+ * [ReportedDevice].findVmIpv4
+ * Vm ip 알아내기
+ * @return
+ */
+fun ReportedDevice.findVmIpv4(): String? {
+	return this@findVmIpv4.ips()?.firstOrNull { it.version() == V4 }?.address()
+}
+/**
+ * [ReportedDevice].findVmIpv6]
+ * Vm ip 알아내기
+ * @return
+ */
+fun ReportedDevice.findVmIpv6(): String? {
+	return this@findVmIpv6.ips()?.firstOrNull { it.version() == V6 }?.address()
+}

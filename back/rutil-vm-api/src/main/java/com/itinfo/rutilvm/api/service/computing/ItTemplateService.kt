@@ -180,7 +180,7 @@ class TemplateServiceImpl(
 		log.info("add ... ")
 		val res: Template? = conn.addTemplate(
 			vmId,
-			templateVo.toAddTemplateBuilder()
+			templateVo.toAddTemplate()
 		).getOrNull()
 		return res?.toTemplateInfo(conn)
 	}
@@ -190,7 +190,7 @@ class TemplateServiceImpl(
 		log.info("update ... templateId: {}", templateVo)
 		val res: Template? = conn.updateTemplate(
 			templateVo.id,
-			templateVo.toEditTemplateBuilder()
+			templateVo.toEditTemplate()
 		).getOrNull()
 		return res?.toTemplateInfo(conn)
 	}
@@ -222,7 +222,7 @@ class TemplateServiceImpl(
 		log.info("addNicFromTemplate ... templateId: {}", templateId)
 		val res: Nic? = conn.addNicFromTemplate(
 			templateId,
-			nicVo.toAddNicBuilder()
+			nicVo.toAddNic()
 		).getOrNull()
 		return res?.toNicVoFromTemplate(conn)
 	}
@@ -232,7 +232,7 @@ class TemplateServiceImpl(
 		log.info("updateNicFromTemplate ... templateId: {}", templateId)
 		val res: Nic? = conn.updateNicFromTemplate(
 			templateId,
-			nicVo.toEditNicBuilder()
+			nicVo.toEditNic()
 		).getOrNull()
 		return res?.toNicVoFromTemplate(conn)
 	}

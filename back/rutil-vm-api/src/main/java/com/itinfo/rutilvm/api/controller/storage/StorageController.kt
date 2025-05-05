@@ -8,6 +8,7 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.DiskProfileVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.service.storage.ItStorageDatacenterService
 import com.itinfo.rutilvm.api.service.storage.ItStorageService
 
 import io.swagger.annotations.*
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/storages/domains")
 class StorageController: BaseController() {
 	@Autowired private lateinit var iDomain: ItStorageService
+	@Autowired private lateinit var iDomainDatacenter: ItStorageDatacenterService
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -249,7 +251,7 @@ class StorageController: BaseController() {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/dataCenters ... 스토리지 도메인 밑에 붙어있는 데이터센터 목록", storageDomainId)
-		return ResponseEntity.ok(iDomain.findAllDataCentersFromStorageDomain(storageDomainId))
+		return ResponseEntity.ok(iDomainDatacenter.findAllDataCentersFromStorageDomain(storageDomainId))
 	}
 
 	@ApiOperation(
@@ -266,7 +268,7 @@ class StorageController: BaseController() {
 	fun activeDatacenters(
 	): ResponseEntity<List<DataCenterVo>> {
 		log.info("/storages/datacenters ...")
-		return ResponseEntity.ok(iDomain.findAllDataCenterFromStorageDomain())
+		return ResponseEntity.ok(iDomainDatacenter.findAllDataCenterFromStorageDomain())
 	}
 
 	@ApiOperation(
@@ -288,7 +290,7 @@ class StorageController: BaseController() {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/hosts ... 스토리지 도메인 밑에 붙어있는 데이터센터가 가진 호스트 목록", storageDomainId)
-		return ResponseEntity.ok(iDomain.findAllHostsFromStorageDomain(storageDomainId))
+		return ResponseEntity.ok(iDomainDatacenter.findAllHostsFromStorageDomain(storageDomainId))
 	}
 
 	@ApiOperation(
@@ -314,7 +316,7 @@ class StorageController: BaseController() {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/{}/dataCenters/{}/attach ... 데이터센터 연결", storageDomainId, dataCenterId)
-		return ResponseEntity.ok(iDomain.attachFromDataCenter(dataCenterId, storageDomainId))
+		return ResponseEntity.ok(iDomainDatacenter.attachFromDataCenter(dataCenterId, storageDomainId))
 	}
 
 	@ApiOperation(
@@ -340,7 +342,7 @@ class StorageController: BaseController() {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/dataCenters/{}/detach ... 데이터센터 분리 detach", storageDomainId, dataCenterId)
-		return ResponseEntity.ok(iDomain.detachFromDataCenter(dataCenterId, storageDomainId))
+		return ResponseEntity.ok(iDomainDatacenter.detachFromDataCenter(dataCenterId, storageDomainId))
 	}
 
 	@ApiOperation(
@@ -366,7 +368,7 @@ class StorageController: BaseController() {
 		if (dataCenterId == null)
 			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/dataCenters/{}/activate ... 데이터센터 활성", storageDomainId, dataCenterId)
-		return ResponseEntity.ok(iDomain.activateFromDataCenter(dataCenterId, storageDomainId))
+		return ResponseEntity.ok(iDomainDatacenter.activateFromDataCenter(dataCenterId, storageDomainId))
 	}
 
 	@ApiOperation(
@@ -393,7 +395,7 @@ class StorageController: BaseController() {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/dataCenters/{}/maintenance ... 데이터센터 유지보수 maintenance", storageDomainId, dataCenterId)
-		return ResponseEntity.ok(iDomain.maintenanceFromDataCenter(dataCenterId, storageDomainId, ovf))
+		return ResponseEntity.ok(iDomainDatacenter.maintenanceFromDataCenter(dataCenterId, storageDomainId, ovf))
 	}
 
 

@@ -114,11 +114,11 @@ fun Snapshot.toSnapshotVo(): SnapshotVo {
 }
 
 
-fun SnapshotVo.toSnapshotBuilder(): Snapshot {
-    log.info("toSnapshotBuilder: {}", this)
+fun SnapshotVo.toAddSnapshot(): Snapshot {
+    log.info("toSnapshot: {}", this)
     return SnapshotBuilder()
-        .description(this@toSnapshotBuilder.description)
-        .persistMemorystate(this@toSnapshotBuilder.persistMemory) // 메모리 저장 t/f
+        .description(description)
+        .persistMemorystate(persistMemory) // 메모리 저장 t/f
 		.build()
 }
 

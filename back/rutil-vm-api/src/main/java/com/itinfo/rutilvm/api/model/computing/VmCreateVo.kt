@@ -145,6 +145,65 @@ class VmCreateVo (
     }
 }
 
+fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
+    val vm = this@toVmCreateVo
+    val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
+	val disk: Disk? = vm.cdroms().firstOrNull()?.file()?.id()?.let { conn.findDisk(it).getOrNull() }
+	val storageDomain: StorageDomain? =
+		if (vm.leasePresent()) { conn.findStorageDomain(vm.lease().storageDomain().id()).getOrNull() }
+		else null
+	val hosts = if (vm.placementPolicy().hostsPresent()) {
+		vm.placementPolicy().hosts().map { it }.fromHostsToIdentifiedVos()
+	} else listOf()
+    // val nics: List<Nic> = conn.findAllNicsFromVm(vm.id(), follow = "nics.vnicprofile").getOrDefault(listOf())
+    // val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
+    // val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vm.id()).getOrDefault(listOf())
+	// val cpuProfile = conn.findCpuProfile(vm.cpuProfile().id()).getOrNull()
+
+    return VmCreateVo.builder {
+		id { vm.id() }
+		name { vm.name() }
+		description { vm.description() }
+		comment { vm.comment() }
+		osSystem { vm.os().type() }
+		osType { vm.bios().type().value() }
+		optimizeOption { vm.type().value() }
+		memorySize { vm.memory() }
+		memoryMax { vm.memoryPolicy().max() }
+		memoryActual { vm.memoryPolicy().guaranteed() }
+		cpuTopologyCnt { calculateCpuTopology(vm) }
+		cpuTopologyCore { vm.cpu().topology().coresAsInteger() }
+		cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
+		cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
+		// timeOffset { vm.timeZone().name() }
+		cloudInit { vm.initializationPresent() }
+		script { if (vm.initializationPresent()) vm.initialization().customScript() else "" }
+		migrationMode { vm.placementPolicy().affinity().value() }
+		migrationEncrypt { vm.migration().encrypted() }
+		// migrationPolicy { vm. }
+		// parallelMigration { vm. }
+		ha { vm.highAvailability().enabled() }
+		priority { vm.highAvailability().priorityAsInteger() }
+		bootingMenu { vm.bios().bootMenu().enabled() }
+		firstDevice { vm.os().boot().devices().first().value() }
+		secDevice {
+			if (vm.os().boot().devices().size > 1) vm.os().boot().devices()[1].value()
+			else null
+		}
+		hostInCluster { !vm.placementPolicy().hostsPresent() }
+		hostVos { hosts }
+		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
+		cpuProfileVo { vm.cpuProfile().fromCpuProfileToIdentifiedVo() }
+		diskAttachmentVos { vm.diskAttachments().toDiskAttachmentVos(conn) }
+		connVo { disk?.fromDiskToIdentifiedVo() }
+		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
+		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
+		templateVo { template?.fromTemplateToIdentifiedVo() }
+		nicVos { vm.nics().toVmNics() } // TODO
+	}
+}
+
+
 fun VmCreateVo.toVmBuilder(): VmBuilder {
 	return VmBuilder().apply {
 		toVmInfoBuilder(this)
@@ -156,14 +215,14 @@ fun VmCreateVo.toVmBuilder(): VmBuilder {
 	}
 }
 
-fun VmCreateVo.toAddVmBuilder(): Vm =
+fun VmCreateVo.toAddVm(): Vm =
 	toVmBuilder()
 		.template(TemplateBuilder().id(templateVo.id))
 		.build()
 
-fun VmCreateVo.toEditVmBuilder(): Vm =
+fun VmCreateVo.toEditVm(): Vm =
 	toVmBuilder()
-		.id(this.id)
+		.id(id)
 		.bios(
 			BiosBuilder()
 				.type(BiosType.fromValue(osType))
@@ -226,75 +285,12 @@ fun VmCreateVo.toVmHaBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply 
 
 fun VmCreateVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	val bootDeviceList = mutableListOf(BootDevice.fromValue(firstDevice))
-	if (secDevice.isNotEmpty()) bootDeviceList.add(BootDevice.fromValue(secDevice))
+	if (secDevice.isNotEmpty())
+		bootDeviceList.add(BootDevice.fromValue(secDevice))
 	os(
 		OperatingSystemBuilder()
-		.type(osSystem)
-		.boot(BootBuilder().devices(bootDeviceList))
+			.type(osSystem)
+			.boot(BootBuilder().devices(bootDeviceList))
 	)
-	bios(
-		BiosBuilder()
-			.bootMenu(BootMenuBuilder().enabled(bootingMenu).build())
-	)
+	bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(bootingMenu).build()))
 }
-
-
-fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
-    val vm = this@toVmCreateVo
-    val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
-	val disk: Disk? = vm.cdroms().firstOrNull()?.file()?.id()?.let { conn.findDisk(it).getOrNull() }
-	val storageDomain: StorageDomain? =
-		if (vm.leasePresent()) { conn.findStorageDomain(vm.lease().storageDomain().id()).getOrNull() }
-		else null
-	val hosts = if (vm.placementPolicy().hostsPresent()) {
-		vm.placementPolicy().hosts().map { it }.fromHostsToIdentifiedVos()
-	} else listOf()
-    // val nics: List<Nic> = conn.findAllNicsFromVm(vm.id(), follow = "nics.vnicprofile").getOrDefault(listOf())
-    // val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
-    // val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vm.id()).getOrDefault(listOf())
-	// val cpuProfile = conn.findCpuProfile(vm.cpuProfile().id()).getOrNull()
-
-    return VmCreateVo.builder {
-		id { vm.id() }
-		name { vm.name() }
-		description { vm.description() }
-		comment { vm.comment() }
-		osSystem { vm.os().type() }
-		osType { vm.bios().type().value() }
-		optimizeOption { vm.type().value() }
-		memorySize { vm.memory() }
-		memoryMax { vm.memoryPolicy().max() }
-		memoryActual { vm.memoryPolicy().guaranteed() }
-		cpuTopologyCnt { calculateCpuTopology(vm) }
-		cpuTopologyCore { vm.cpu().topology().coresAsInteger() }
-		cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
-		cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
-		// timeOffset { vm.timeZone().name() }
-		cloudInit { vm.initializationPresent() }
-		script { if (vm.initializationPresent()) vm.initialization().customScript() else "" }
-		migrationMode { vm.placementPolicy().affinity().value() }
-		migrationEncrypt { vm.migration().encrypted() }
-		// migrationPolicy { vm. }
-		// parallelMigration { vm. }
-		ha { vm.highAvailability().enabled() }
-		priority { vm.highAvailability().priorityAsInteger() }
-		bootingMenu { vm.bios().bootMenu().enabled() }
-		firstDevice { vm.os().boot().devices().first().value() }
-		secDevice {
-			if (vm.os().boot().devices().size > 1) vm.os().boot().devices()[1].value()
-			else null
-		}
-		// deviceList { vm. }
-		hostInCluster { !vm.placementPolicy().hostsPresent() }
-		hostVos { hosts }
-		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
-		cpuProfileVo { vm.cpuProfile().fromCpuProfileToIdentifiedVo() }
-		diskAttachmentVos { vm.diskAttachments().toDiskAttachmentVos(conn) }
-		connVo { disk?.fromDiskToIdentifiedVo() }
-		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
-		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
-		templateVo { template?.fromTemplateToIdentifiedVo() }
-		nicVos { vm.nics().toVmNics() } // TODO
-	}
-}
-

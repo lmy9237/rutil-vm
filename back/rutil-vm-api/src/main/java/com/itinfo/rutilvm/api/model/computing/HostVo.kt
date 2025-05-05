@@ -74,7 +74,7 @@ private val log = LoggerFactory.getLogger(HostVo::class.java)
  * @property clusterVo [ClusterVo]
  * @property dataCenterVo [DataCenterVo]
  * @property hostNicVos List<[HostNicVo]>
- * @property vmVos List<[VmVo]>
+ * @property vmVos List<[IdentifiedVo]>
  * @property usageDto [UsageDto]
  */
 class HostVo (
@@ -100,7 +100,6 @@ class HostVo (
     val sshPassWord: String = "",
     val status: HostStatus = HostStatus.NON_RESPONSIVE,
     val transparentPage: Boolean = false,
-    val vmSizeVo: SizeVo = SizeVo(),
     val vmMigratingCnt: Int = 0,
     val vgpu: String = "", /*VgpuPlacement*/
     val memoryTotal: BigInteger = BigInteger.ZERO,
@@ -120,8 +119,9 @@ class HostVo (
     val hostSwVo: HostSwVo = HostSwVo(),
     val clusterVo: IdentifiedVo = IdentifiedVo(),
     val dataCenterVo: IdentifiedVo = IdentifiedVo(),
-    val hostNicVos: List<HostNicVo> = listOf(),
+    val vmSizeVo: SizeVo = SizeVo(),
     val vmVos: List<IdentifiedVo> = listOf(),
+    val hostNicVos: List<HostNicVo> = listOf(),
     val usageDto: UsageDto = UsageDto(),
 	// val certificate: HCertificateVo = HCertificateVo(),
 
@@ -157,9 +157,6 @@ class HostVo (
         private var bSshPassWord: String = ""; fun sshPassWord(block: () -> String?) { bSshPassWord = block() ?: "" }
         private var bStatus: HostStatus = HostStatus.NON_RESPONSIVE; fun status(block: () -> HostStatus?) { bStatus = block() ?: HostStatus.NON_RESPONSIVE }
         private var bTransparentPage: Boolean = false; fun transparentPage(block: () -> Boolean?) { bTransparentPage = block() ?: false }
-//        private var bVmTotalCnt: Int = 0; fun vmTotalCnt(block: () -> Int?) { bVmTotalCnt = block() ?: 0 }
-//        private var bVmActiveCnt: Int = 0; fun vmActiveCnt(block: () -> Int?) { bVmActiveCnt = block() ?: 0 }
-        private var bVmSizeVo: SizeVo = SizeVo(); fun vmSizeVo(block: () -> SizeVo?) { bVmSizeVo = block() ?: SizeVo() }
         private var bVmMigratingCnt: Int = 0; fun vmMigratingCnt(block: () -> Int?) { bVmMigratingCnt = block() ?: 0 }
         private var bVgpu: String = ""; fun vgpu(block: () -> String?) { bVgpu = block() ?: "" }
         private var bMemoryTotal: BigInteger = BigInteger.ZERO; fun memoryTotal (block: () -> BigInteger?) { bMemoryTotal = block() ?: BigInteger.ZERO}
@@ -179,11 +176,12 @@ class HostVo (
         private var bHostSwVo: HostSwVo = HostSwVo(); fun hostSwVo(block: () -> HostSwVo?) { bHostSwVo = block() ?: HostSwVo()}
         private var bClusterVo: IdentifiedVo = IdentifiedVo(); fun clusterVo(block: () -> IdentifiedVo?) { bClusterVo = block() ?: IdentifiedVo() }
         private var bDataCenterVo: IdentifiedVo = IdentifiedVo(); fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
-        private var bHostNicVos: List<HostNicVo> = listOf(); fun hostNicVos(block: () -> List<HostNicVo>?) { bHostNicVos = block() ?: listOf() }
+        private var bVmSizeVo: SizeVo = SizeVo(); fun vmSizeVo(block: () -> SizeVo?) { bVmSizeVo = block() ?: SizeVo() }
         private var bVmVos: List<IdentifiedVo> = listOf(); fun vmVos(block: () -> List<IdentifiedVo>?) { bVmVos = block() ?: listOf() }
+        private var bHostNicVos: List<HostNicVo> = listOf(); fun hostNicVos(block: () -> List<HostNicVo>?) { bHostNicVos = block() ?: listOf() }
         private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
 
-        fun build(): HostVo = HostVo(bId, bName, bComment, bAddress, bDevicePassThrough, bHostedActive, bHostedScore, bIscsi, bKdump, bKsm, bSeLinux, bHostedEngine, bHostedEngineVM, bSpmPriority, bSpmStatus, bSshFingerPrint, bSshPort, bSshPublicKey, bSshName, bSshPassWord, bStatus, bTransparentPage, /*bVmTotalCnt, bVmActiveCnt,*/ bVmSizeVo, bVmMigratingCnt, bVgpu, bMemoryTotal, bMemoryUsed, bMemoryFree, bMemoryMax, bMemoryShared, bSwapTotal, bSwapUsed, bSwapFree, bHugePage2048Free, bHugePage2048Total, bHugePage1048576Free, bHugePage1048576Total, bBootingTime, bHostHwVo, bHostSwVo, bClusterVo, bDataCenterVo, bHostNicVos, bVmVos, bUsageDto)
+        fun build(): HostVo = HostVo(bId, bName, bComment, bAddress, bDevicePassThrough, bHostedActive, bHostedScore, bIscsi, bKdump, bKsm, bSeLinux, bHostedEngine, bHostedEngineVM, bSpmPriority, bSpmStatus, bSshFingerPrint, bSshPort, bSshPublicKey, bSshName, bSshPassWord, bStatus, bTransparentPage, bVmMigratingCnt, bVgpu, bMemoryTotal, bMemoryUsed, bMemoryFree, bMemoryMax, bMemoryShared, bSwapTotal, bSwapUsed, bSwapFree, bHugePage2048Free, bHugePage2048Total, bHugePage1048576Free, bHugePage1048576Total, bBootingTime, bHostHwVo, bHostSwVo, bClusterVo, bDataCenterVo, bVmSizeVo, bVmVos, bHostNicVos, bUsageDto,)
     }
     companion object {
         inline fun builder(block: HostVo.Builder.() -> Unit): HostVo = HostVo.Builder().apply(block).build()
@@ -191,7 +189,7 @@ class HostVo (
 }
 
 /**
- * 호스트 id&name
+ * 호스트 id & name
  */
 fun Host.toHostIdName(): HostVo = HostVo.builder {
     id { this@toHostIdName.id() }
@@ -210,11 +208,8 @@ fun List<Host>.toHostsIdName(): List<HostVo> =
 fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
     val host = this@toHostMenu
     val dataCenter: DataCenter? = host.cluster().resolveDataCenter(conn)
-    val hostedVm =
-		conn.isHostedEngineVm(host.id())
-	val statistics: List<Statistic> =
-		conn.findAllStatisticsFromHost(host.id())
-			.getOrDefault(listOf())
+    val hostedVm = conn.isHostedEngineVm(host.id())
+	val statistics: List<Statistic> = conn.findAllStatisticsFromHost(host.id()).getOrDefault(emptyList())
 
     return HostVo.builder {
         id { host.id() }
@@ -244,7 +239,7 @@ fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
  */
 fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfigurationEntity): HostVo {
     val host = this@toHostInfo
-    val statistics: List<Statistic> = conn.findAllStatisticsFromHost(this@toHostInfo.id()).getOrDefault(listOf())
+    val statistics: List<Statistic> = conn.findAllStatisticsFromHost(this@toHostInfo.id()).getOrDefault(emptyList())
     val cluster: Cluster? = if(host.clusterPresent()) conn.findCluster(host.cluster().id()).getOrNull() else null
 
     return HostVo.builder {
@@ -252,7 +247,6 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
         name { host.name() }
         comment { host.comment() }
         status { host.status() }
-        clusterVo { cluster?.fromClusterToIdentifiedVo() }
         address { host.address() }
         hostedEngine { host.hostedEnginePresent() }
         hostedActive { if(host.hostedEnginePresent()) host.hostedEngine().active() else false }
@@ -280,6 +274,7 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
         bootingTime { Date(statistics.findBootTime() * 1000) }
         hostHwVo { host.toHostHwVo() }
         hostSwVo { host.toHostSwVo(hostConfigurationEntity) }
+		clusterVo { cluster?.fromClusterToIdentifiedVo() }
         vmSizeVo { host.findVmCntFromHost() }
     }
 }
@@ -291,7 +286,6 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
 fun Host.toNetworkHostMenu(conn: Connection, networkId: String): HostVo {
 	val host = this@toNetworkHostMenu
 	val filteredNics = host.nics().filter { it.networkPresent() && it.network().id() == networkId }
-
     return HostVo.builder {
         id { host.id() }
         name { host.name() }
@@ -303,7 +297,6 @@ fun Host.toNetworkHostMenu(conn: Connection, networkId: String): HostVo {
 }
 fun List<Host>.toNetworkHostMenus(conn: Connection, networkId: String): List<HostVo> =
     this@toNetworkHostMenus.map { it.toNetworkHostMenu(conn, networkId) }
-
 
 /**
  * 네트워크에서 호스트 볼때
@@ -321,40 +314,6 @@ fun Host.toNetworkDisConnectedHostMenu(): HostVo {
 fun List<Host>.toNetworkDisConnectedHostMenus(): List<HostVo> =
     this@toNetworkDisConnectedHostMenus.map { it.toNetworkDisConnectedHostMenu() }
 
-
-
-/**
- * 호스트 빌더
- */
-fun HostVo.toHostBuilder(): HostBuilder {
-    return HostBuilder()
-        .cluster(ClusterBuilder().id(this@toHostBuilder.clusterVo.id))
-        .name(this@toHostBuilder.name)
-        .comment(this@toHostBuilder.comment)
-        .address(this@toHostBuilder.address)
-        .ssh(SshBuilder().port(this@toHostBuilder.sshPort).build()) // 기본값이 22 포트 연결은 더 테스트 해봐야함(ovirt 내에서 한적은 없음)
-        .rootPassword(this@toHostBuilder.sshPassWord)   // 비밀번호 잘못되면 보여줄 코드?
-        .powerManagement(PowerManagementBuilder().enabled(false).build()) // 전원관리 비활성화 (기본)
-        .vgpuPlacement(VgpuPlacement.fromValue(this@toHostBuilder.vgpu))
-//        .spm(SpmBuilder().priority(this@toHostBuilder.spmPriority))
-//        .port() // ssh port가 22면 .ssh() 설정하지 않아도 알아서 지정됨. port 변경을 cmd 에서만 하심
-}
-
-/**
- * 호스트 생성 빌더
- */
-fun HostVo.toAddHostBuilder(): Host =
-    this@toAddHostBuilder.toHostBuilder().build()
-
-/**
- * 호스트 편집 빌더
- */
-fun HostVo.toEditHostBuilder(): Host = this@toEditHostBuilder.toHostBuilder()
-    .id(this@toEditHostBuilder.id)
-//    .os(OperatingSystemBuilder().customKernelCmdline("vfio_iommu_type1.allow_unsafe_interrupts=1").build()) //?
-    .build()
-
-
 /**
  * 호스트 전체 출력
  */
@@ -365,8 +324,8 @@ fun Host.toHostVo(conn: Connection): HostVo {
     val hostedVm = conn.isHostedEngineVm(host.id())
     val vms: List<Vm> = conn.findAllVms()
         .getOrDefault(listOf())
-        .filter { it.hostPresent() && it.host().id() == this@toHostVo.id() }
-    val hostNics: List<HostNic> = conn.findAllHostNicsFromHost(this@toHostVo.id()).getOrDefault(listOf())
+        .filter { it.hostPresent() && it.host().id() == this.id() }
+    val hostNics: List<HostNic> = conn.findAllHostNicsFromHost(this.id()).getOrDefault(listOf())
     val statistics: List<Statistic> = conn.findAllStatisticsFromHost(host.id()).getOrDefault(listOf())
 
     return HostVo.builder {
@@ -417,7 +376,6 @@ fun List<Host>.toHostVos(conn: Connection): List<HostVo> =
     this@toHostVos.map { it.toHostVo(conn) }
 
 
-
 /**
  * 해당 호스트가 hosted_engine 가상머신을 가졌는 지 여부
  * @param hostId [String]
@@ -428,3 +386,40 @@ fun Connection.isHostedEngineVm(hostId: String): Boolean {
         .getOrDefault(listOf())
         .any { it.origin() == "managed_hosted_engine" }
 }
+
+
+// region: builder
+/**
+ * 호스트 빌더
+ */
+fun HostVo.toHostBuilder(): HostBuilder {
+	return HostBuilder()
+		.cluster(ClusterBuilder().id(clusterVo.id))
+		.name(name)
+		.comment(comment)
+		.address(address)
+		.ssh(SshBuilder().port(sshPort).build()) // 기본값이 22 포트 연결은 더 테스트 해봐야함(ovirt 내에서 한적은 없음)
+		.rootPassword(sshPassWord)   // 비밀번호 잘못되면 보여줄 코드?
+		.powerManagement(PowerManagementBuilder().enabled(false).build()) // 전원관리 비활성화 (기본)
+		.vgpuPlacement(VgpuPlacement.fromValue(vgpu))
+//        .spm(SpmBuilder().priority(this@toHostBuilder.spmPriority))
+//        .port() // ssh port가 22면 .ssh() 설정하지 않아도 알아서 지정됨. port 변경을 cmd 에서만 하심
+}
+
+/**
+ * 호스트 생성 빌더
+ */
+fun HostVo.toAddHost(): Host =
+	toHostBuilder().build()
+
+/**
+ * 호스트 편집 빌더
+ */
+fun HostVo.toEditHost(): Host {
+	return HostBuilder()
+		.id(id)
+//    .os(OperatingSystemBuilder().customKernelCmdline("vfio_iommu_type1.allow_unsafe_interrupts=1").build()) //?
+		.build()
+}
+
+// endregion

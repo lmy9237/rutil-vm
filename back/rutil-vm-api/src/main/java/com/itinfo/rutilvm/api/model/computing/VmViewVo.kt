@@ -240,6 +240,9 @@ class VmViewVo (
     }
 }
 
+/**
+ * 가상머신 id & name
+ */
 fun Vm.toVmIdName(): VmViewVo = VmViewVo.builder {
 	id { this@toVmIdName.id() }
 	name { this@toVmIdName.name() }
@@ -294,53 +297,6 @@ fun List<Vm>.toVmMenus(conn: Connection): List<VmViewVo> =
 	this@toVmMenus.map { it.toVmMenu(conn) }
 
 
-fun Vm.toVmVoInfo(conn: Connection): VmViewVo {
-	val vm = this@toVmVoInfo
-	val cluster: Cluster? = conn.findCluster(vm.cluster().id()).getOrNull()
-	val dataCenter: DataCenter? = cluster?.dataCenter()?.id()?.let { conn.findDataCenter(it).getOrNull() }
-	val nics: List<Nic> = conn.findAllNicsFromVm(vm.id()).getOrDefault(listOf())
-	val host: Host? =
-		if (vm.hostPresent())
-			conn.findHost(vm.host().id()).getOrNull()
-		else if (!vm.hostPresent() && vm.placementPolicy().hostsPresent())
-			conn.findHost(vm.placementPolicy().hosts().first().id()).getOrNull()
-		else
-			null
-	val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
-	val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id()).getOrDefault(emptyList())
-
-	return VmViewVo.builder {
-		id { vm.id() }
-		name { vm.name() }
-		description { vm.description() }
-		osType { vm.os().type() }
-		biosType { vm.bios().type().toString() }
-		haPriority { vm.highAvailability().priorityAsInteger() }
-		osType { vm.type().toString() }
-		memorySize { vm.memory() }
-		memoryGuaranteed { vm.memoryPolicy().guaranteed() }
-		cpuTopologyCore { vm.cpu().topology().coresAsInteger() }
-		cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
-		cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
-		cpuTopologyCnt { calculateCpuTopology(vm) }
-		startPaused { vm.startPaused() }
-		deleteProtected { vm.deleteProtected() }
-		monitor { vm.display().monitorsAsInteger() }
-		usb { vm.usb().enabled() }
-		timeZone { vm.timeZone().name() }
-		status { vm.status() }
-		hostedEngineVm { vm.origin() == "managed_hosted_engine" }
-		upTime { statistics.findVmUptime() }
-		// ipv4 { nics.findVmIpv4(conn, vm.id()) }
-		// ipv6 { nics.findVmIpv6(conn, vm.id()) }
-		fqdn { vm.fqdn() }
-		hostVo { host?.fromHostToIdentifiedVo() }
-		clusterVo { cluster?.fromClusterToIdentifiedVo() }
-		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-		templateVo { template?.fromTemplateToIdentifiedVo() }
-		usageDto { statistics.toVmUsage() } // 메모리, cpu, 네트워크
-	}
-}
 
 fun Vm.toVmViewVo(conn: Connection): VmViewVo {
     val vm = this@toVmViewVo
