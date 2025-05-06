@@ -505,7 +505,7 @@ const HostNics = ({ hostId }) => {
               );
             
               return (
-                <div key={nic.id} className="nic-outer f-btw fs-14 mb-2" style={{background:'olive'}}>
+                <div key={nic.id} className="nic-outer f-btw fs-14 mb-2" >
                   {(nic.bondingVo?.slaves?.length > 0 || !nic.name.startsWith('bond')) && (
             <div className="interface-content-outer" onDragOver={(e) => e.preventDefault()} onDrop={() => drop(nic.id, "nic")}>
 

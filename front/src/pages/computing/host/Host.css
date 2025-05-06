@@ -148,3 +148,187 @@
   width: 50%;
   text-align: center;
 }
+
+
+/* 0507 추가 */
+/* 
+.host-network-boxs:hover{
+  background:#e6eefa;
+}
+
+.host-tabs {
+  width: fit-content;
+  margin-bottom: 16px;
+  border: 1px solid gray;border-radius: 4px;
+  overflow: hidden; 
+}
+  
+.host-tabs .tab-button {
+  padding: 0 40px;
+  border: none;
+  height: 32px;
+  color: var(--color-nav);
+  font-weight: 500;
+  border-right: 1px solid gray;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.host-tabs .tab-button:last-child {
+  border-right: none; 
+}
+  
+.host-tabs .tab-button.active {
+  background-color: var(--color-primary-hover);
+  color: white;
+  font-weight: 700;
+}
+
+.network-item {
+  padding: 15px;
+  margin-bottom: 10px;
+  border: var(--border-default);
+  border-radius: 1px;
+  background-color: white;
+  text-align: center;
+  cursor: pointer;
+  padding: 8px 16px;
+  align-self: stretch;
+}
+.network-item:hover {
+  border: 1.7px dashed #002a4f;
+  transform: scale(1); 
+}
+.network-separation-left > div:first-child > div {
+  width: 37%;
+  padding: 0.2rem;
+  text-align: center;
+}
+.separation-left-content {
+  border-bottom: 1px solid #a3a3a3;
+  padding: 16px 0;
+  margin-bottom: 7px;
+}
+.separation-left-content:last-child {
+  margin-bottom: 1rem;
+}
+.interface {
+  border: var(--border-default);
+  padding: 8px 10px;
+  width: 39%;
+  background: white;
+  border-radius: 1px;
+}
+.host-network-outer {
+  padding: 0.2rem;
+  height: 53.5vh;
+  overflow-y: auto; 
+  overflow-x: hidden;
+}
+.container {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  padding: 8px 16px;
+  margin-bottom: 6px;
+  border-radius: 1px;
+}
+
+.interface-header {
+  letter-spacing: -0.36px;
+  padding: 5px 0;
+}
+.unassigned-network {
+  text-align: center;
+  padding: 0.2rem;
+  margin-bottom: 15px;
+}
+
+.interface-content-outer{
+  width: 39%;
+}
+.interface-content{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.assigned-network-outer {
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  border: var(--border-default);
+  background-color: white;
+  width: 100%;  
+}
+
+
+.empty-network-content{
+  border: var(--border-default);
+  background-color: rgb(255, 255, 255);
+}
+.assigned-network-content{
+  display: flex;justify-content: space-between;
+  width: 100%;
+}
+
+.interface-outer{
+  background: var(--color-input-disabled);
+  border: var(--border-default);
+}
+
+.interface-container {
+  border: var(--border-default);
+  background: rgb(255, 255, 255);
+}
+.group-span {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.group-span > div{
+  text-align: center;
+}
+
+.split-layout-group {
+  display: flex;
+  width: 100%;
+  gap: 24px; 
+}
+
+.split-item-two-thirds {
+  width: 70%;
+  background-color: #f0f8ff;
+  padding: 16px; 
+  border-radius: 6px; 
+}
+
+.split-item-one-third {
+  width: 30%;
+  background-color: #f0f8ff;
+  padding: 16px; 
+  border-radius: 6px; 
+}
+
+.col-40 {
+  flex: 0 0 45%;
+  max-width: 40%;
+}
+
+.col-20 {
+  flex: 0 0 10%;
+  max-width: 20%;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+}
+
+.interface-content-outer,
+.assigned-network-section {
+  background-color: white;
+  border: 1px solid var(--border-default);
+  padding: 8px 16px;
+  box-sizing: border-box;
+} */

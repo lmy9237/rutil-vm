@@ -18,6 +18,7 @@ import Logger from "../../../utils/Logger";
 import "./Host.css";
 import SectionLayout from "../../../components/SectionLayout";
 import HostNetworkAdapter from "./HostNetworkAdapter";
+import HostNics2 from "./HostNics2";
 
 /**
  * @name HostInfo
@@ -93,6 +94,7 @@ const HostInfo = () => {
     const SectionComponent = {
       general: HostGeneral,
       vms: HostVms,
+      // nics: HostNics2,
       nics: HostNics,
       networkAdapter: HostNetworkAdapter,
       devices: HostDevices,
