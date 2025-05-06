@@ -34,6 +34,15 @@ const initialFormState = {
   spaceBlocker: "5",
 };
 
+// FC를 할때 필요한 정보
+const logicalUnitFormState = {
+  id: "", // logical_unit id
+  domainId: "",
+  target: "",
+  // vendorId: "",
+  volumeGroupId: ""
+};
+
 const storageState = {
   type: "",
   address: "",
@@ -42,11 +51,35 @@ const storageState = {
   volumeGroupVo: {
     id: "",
     logicalUnitVos: {
-      logicalUnitVo : {id: ""}
+      id: "",
+      address: "",
+      lunMapping: "",
+      paths: "",
+      port: "",
+      portal: "",
+      productId: "",
+      size: "",
+      status: "",
+      storageDomainId: "",
+      target: "",
+      vendorId: "",
     }
   },
 };
 
+// 주소, 포트  검색
+// const searchFormState = {
+//   target: "",
+//   address: "",
+//   port: 3260,
+// };
+
+// // 사용자 인증 이름, 암호 검색
+// const loginFormState = {
+//   chapName: "",
+//   chapPassword: "",
+//   useChap: false,
+// };
 
 const DomainModal = ({
   isOpen, onClose, editMode=false
@@ -58,19 +91,27 @@ const DomainModal = ({
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
 
   const [formState, setFormState] = useState(initialFormState); // 일반정보
+  const [logicalFormState, setLogicalFormState] = useState(logicalUnitFormState); // fc 정보
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [hostVo, setHostVo] = useState({ id: "", name: "" });
   const [storageTypes, setStorageTypes] = useState([]);
   const [nfsAddress, setNfsAddress] = useState(""); // nfs
   const [lunId, setLunId] = useState(""); // fibre 사용
-  const [lunIds, setLunIds] = useState([]);
+
+  const [isDomainCheckOpen, setDomainCheckOpen] = useState(false);
+  const [approveChecked, setApproveChecked] = useState(false);
+
+  // const [formSearchState, setFormSearchState] = useState(searchFormState); // 주소, 포트 입력
+  // const [fcResults, setFcResults] = useState([]); // 주소와 포트를 넣은 검색결과
 
   const resetFormStates = () => {
     setFormState(initialFormState);
+    // setFormSearchState(searchFormState);
     setHostVo({ id: "", name: "" });
     setStorageTypes([]);
     setNfsAddress("");
     setLunId("");
+    // setFcResults([]);
   };
 
   const isNfs = formState.storageType === "NFS";
@@ -98,7 +139,14 @@ const DomainModal = ({
     isError: isFibresError, 
     isSuccess: isFibresSuccess
   } = useFibreFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
-  
+  // const {
+  //   data: storages = [],
+  //   refetch: refetchStorages,
+  //   isLoading: isStoragesLoading,
+  //   isError: isStoragesError, 
+  //   isSuccess: isStoragesSuccess
+  // } = useStoragesFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
+
   useEffect(() => {
     if (!isOpen) return resetFormStates();
     if (editMode && domain) {
@@ -208,6 +256,10 @@ const DomainModal = ({
       return;
     }
   
+    submitDomain(); // 바로 submit
+  };
+
+  const submitDomain = () => {
     let dataToSubmit;
   
     if (editMode) {
@@ -215,29 +267,13 @@ const DomainModal = ({
     } else {
       const [storageAddress, storagePath] = nfsAddress.split(":");
       const logicalUnit = fibres.find((fLun) => fLun.id === lunId);
-      // const logicalUnits = fibres.filter(f => lunIds.includes(f.id));
-      const storageVo = isNfs
-        ? {
-            type: "NFS",
-            address: storageAddress,
-            path: storagePath,
-          }
-        : {
-            type: "FCP",
-            volumeGroupVo: {
-              logicalUnitVos: [
-                { id: logicalUnit.id }
-              ]
-              // logicalUnitVos: logicalUnits.map(lun => ({ id: lun.id })) //복수 lun
-            }
-          };
   
       dataToSubmit = {
         ...formState,
-        type: formState.domainType,
         dataCenterVo,
         hostVo,
-        storageVo
+        logicalUnits: logicalUnit ? [logicalUnit.id] : [],
+        ...(formState.storageType === "NFS" && { storageAddress, storagePath }),
       };
     }
   
@@ -247,8 +283,6 @@ const DomainModal = ({
       ? editDomain({ domainId: formState.id, domainData: dataToSubmit })
       : addDomain(dataToSubmit);
   };
-  
-
 
   return (
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={dLabel}
@@ -286,7 +320,7 @@ const DomainModal = ({
           />
         </div>
         <hr/>
-
+        
         <div className="domain-new-right">
           <LabelInput id="name" label={Localization.kr.NAME}
             value={formState.name}
@@ -313,6 +347,20 @@ const DomainModal = ({
         />
       )}
 
+      {/* ISCSI 의 경우 / 편집이 되기는 하지만 밑의 테이블 readonly 와 path 문제가 잇음*/}
+      {/* {isIscsi && (
+        <DomainIscsi  
+          editMode={editMode}
+          iscsiResults={iscsiResults}
+          lunId={lunId} setLunId={setLunId}
+          hostVo={hostVo}
+          formSearchState={formSearchState} setFormSearchState={setFormSearchState}
+          refetchIscsis={refetchIscsis}
+          isIscsisLoading={isIscsisLoading} isIscsisError={isIscsisError} isIscsisSuccess={isIscsisSuccess}
+          importIscsiFromHostAPI={importIscsiFromHostAPI}
+        />      
+      )} */}
+
       {/* Firbre 의 경우 */}
       {isFibre && (
         <DomainFibre
@@ -320,6 +368,8 @@ const DomainModal = ({
           domain={domain}
           fibres={fibres}
           lunId={lunId} setLunId={setLunId}
+          hostVo={hostVo}
+          refetchFibres={refetchFibres}
           isFibresLoading={isFibresLoading} isFibresError={isFibresError} isFibresSuccess={isFibresSuccess}
         />
       )}
@@ -338,7 +388,7 @@ const DomainModal = ({
         </div>
       </div>
             
-      {/* <DomainCheckModal
+      <DomainCheckModal
         isOpen={isDomainCheckOpen}
         onClose={() => {
           setDomainCheckOpen(false);
@@ -348,7 +398,7 @@ const DomainModal = ({
           setDomainCheckOpen(false);
           submitDomain(); // 승인했으면 최종 등록
         }}
-      /> */}
+      />
     </BaseModal>
   );
 };
@@ -370,6 +420,7 @@ const storageTypeOptions = (dType) => {
     default: // data
       return [
         { value: "NFS", label: "NFS" },
+        // { value: "iscsi", label: "ISCSI" },
         { value: "FCP", label: "Fibre Channel" },
       ];
   }

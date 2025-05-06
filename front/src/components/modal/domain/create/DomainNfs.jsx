@@ -7,7 +7,7 @@ const DomainNfs = ({ editMode=false, nfsAddress, setNfsAddress }) => {
       <LabelInput label={"내보내기 경로"}
         value={nfsAddress}
         disabled={editMode}
-        onChange={(e) => { setNfsAddress(e.target.value) }} 
+        onChange={(e) => { setNfsAddress(e.target.value)}} 
       />
       {!editMode && (
         <div className="text-xs text-gray-500 my-2">
