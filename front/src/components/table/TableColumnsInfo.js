@@ -497,6 +497,7 @@ const TableColumnsInfo = {
   ],
   FIBRE: [
     { header: 'able', accessor: 'able', clickable: false },
+    { header: 'check', accessor: 'check', clickable: false },
     { header: 'status', accessor: 'status', clickable: false },
     { header: 'Lun ID', accessor: 'id', clickable: false },
     { header: 'size', accessor: 'size', clickable: false },
@@ -505,6 +506,14 @@ const TableColumnsInfo = {
     // { header: 'product ID', accessor: 'productId', clickable: false },
     { header: 'serial', accessor: 'serial', clickable: false },
     { header: 'storageDomainId', accessor: 'storageDomainId', clickable: false },
+  ],
+  UPDATE_FIBRE: [
+    { header: 'able', accessor: 'able', clickable: false },
+    { header: 'Lun ID', accessor: 'id', clickable: false },
+    { header: 'size', accessor: 'size', clickable: false },
+    { header: '#path', accessor: 'paths', clickable: false },
+    { header: 'vendor ID', accessor: 'vendorId', clickable: false },
+    { header: 'serial', accessor: 'serial', clickable: false },
   ],
   IMPORT_FIBRE: [
     { header: Localization.kr.NAME, accessor: 'name', clickable: true, width: '30%' },

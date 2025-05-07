@@ -1,71 +1,82 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import Tables from '../../../table/Tables';
-import toast from 'react-hot-toast';
 import Logger from '../../../../utils/Logger';
 import { checkZeroSizeToGiB } from '../../../../util';
 import LabelCheckbox from '../../../label/LabelCheckbox';
 
 const DomainFibre = ({ 
-  editMode, domain,
+  editMode, 
+  domain,
   fibres,
   lunId, setLunId,
   isFibresLoading, isFibresError, isFibresSuccess
 }) => {  
   Logger.debug("DomainFibre ...")
 
-  const transFibreData = (isFibresLoading ? [] : fibres)?.map((f) => {
-    const fc = f?.logicalUnitVos[0];
-    if (!fc) return null;
+  // 편집일 때
+  const transDomainData = useMemo(() => {
+    const storage = domain?.storageVo?.volumeGroupVo?.logicalUnitVos[0];
+    
+    if (!storage) return [];
   
-    return {
-      id: fc.id,
-      able: 
-        // <LabelCheckbox
-        //   // checked={formState.wipeAfterDelete}
-        //   // onChange={handleInputCheck(setFormState, "wipeAfterDelete")}
-        // />
-        (fc.serial && fc.storageDomainId === "" && fc.status !== "USED")
-          ? "OK" 
-          : (fc.serial && fc.storageDomainId === "" && fc.status === "USED") 
-            ? "OVERWRITE" 
-            : "NO"
-      ,
-      status: fc.status,
-      size: checkZeroSizeToGiB(fc.size),
-      paths: fc.paths,
-      vendorId: fc.vendorId,
-      productId: fc.productId,
-      serial: fc.serial,
-      storageDomainId: fc.storageDomainId
-    };
-  }).filter(Boolean);
-  
-  const handleRowClick = useCallback((row) => {
-    const selectedRow = Array.isArray(row) ? row[0] : row;
+    return [{
+      id: storage.id,
+      able: <LabelCheckbox checked disabled />,
+      status: storage.status,
+      size: checkZeroSizeToGiB(storage.size),
+      paths: storage.paths,
+      vendorId: storage.vendorId,
+      productId: storage.productId,
+      serial: storage.serial,
+      storageDomainId: storage.storageDomainId,
+    }];
+  }, [domain]);
 
-    // if (!selectedRow?.serial && selectedRow?.storageDomainId !== "") {
-    //   toast.error("선택할 수 없는 LUN입니다.");
-    //   setLunId("");
-    //   return;
-    // }
-    // if (selectedRow?.storageDomainId !== "") {
-    //   toast.error("이미 사용 중인 LUN입니다.");
-    //   setLunId(""); 
-    //   return;
-    // }
-    setLunId(selectedRow.id); // 명확한 선택 처리
-  }, [setLunId]);
+  // 생성일 때
+  const transFibreData = useMemo(() => {
+    if (isFibresLoading || !fibres) return [];
+
+    return fibres.map((f) => {
+      const fc = f?.logicalUnitVos[0];
+      if (!fc) return null;
+
+      // fc가 켜져있고 스토리지도메인에 연결되지 않았을때
+      const isSelectable = fc.serial && fc.storageDomainId === "";
+      const isUsed = fc.status === "USED";
+
+      return {
+        id: fc.id,
+        able: isSelectable ? (
+          <LabelCheckbox
+            checked={lunId === fc.id}
+            onChange={() => setLunId(prev => prev === fc.id ? "" : fc.id)}
+          />
+        ) : (
+          <LabelCheckbox checked disabled />
+        ),
+        status: fc.status,
+        check: isSelectable ? (isUsed ? "OVERWRITE" : "OK") : "NO",
+        size: checkZeroSizeToGiB(fc.size),
+        paths: fc.paths,
+        vendorId: fc.vendorId,
+        productId: fc.productId,
+        serial: fc.serial,
+        storageDomainId: fc.storageDomainId,
+      };
+    }).filter(Boolean);
+  }, [fibres, isFibresLoading, lunId, setLunId]);
   
   return (
     <div className="storage-popup-iSCSI">
       <div className="section-table-outer">
         <br/>
-        <Tables columns={TableColumnsInfo.FIBRE}            
-          data={transFibreData} 
-          onRowClick={editMode ? "" : handleRowClick }
-          isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}  
+        <Tables
+          columns={editMode ? TableColumnsInfo.UPDATE_FIBRE : TableColumnsInfo.FIBRE}
+          data={editMode ? transDomainData : transFibreData}
+          isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
         />
+        <br/>
         <div><span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
       </div>
     </div>

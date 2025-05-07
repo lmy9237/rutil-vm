@@ -45,6 +45,8 @@ const DomainInfo = () => {
 
   const isACTIVE = domain?.status === "ACTIVE";
   const isUNKNOWN = domain?.status === "UNKNOWN";
+  const isMaintenance = domain?.status === "MAINTENANCE";
+  const isUnattached = domain?.status === "UNATTACHED";
 
   const [activeTab, setActiveTab] = useState("general");
   useEffect(() => {
@@ -112,8 +114,8 @@ const DomainInfo = () => {
 
   const sectionHeaderButtons = useMemo(() => ([
     { type: "update", label: `도메인 ${Localization.kr.UPDATE}`, onClick: () => setActiveModal("domain:update") },
-    { type: "remove", label: Localization.kr.REMOVE, disabled: !isACTIVE, onClick: () => setActiveModal("domain:remove") },
-    { type: "destroy", label: Localization.kr.DESTROY, disabled: !isACTIVE, onClick: () => setActiveModal("domain:destroy") },
+    { type: "remove", label: Localization.kr.REMOVE, disabled: !isACTIVE || !isUnattached, onClick: () => setActiveModal("domain:remove") },
+    { type: "destroy", label: Localization.kr.DESTROY, disabled: !isACTIVE || !(isUnattached || isMaintenance), onClick: () => setActiveModal("domain:destroy") },
   ]), [isACTIVE]);
 
   const popupItems = useMemo(() => ([

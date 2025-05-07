@@ -63,18 +63,11 @@ const DomainModal = ({
   const [storageTypes, setStorageTypes] = useState([]);
   const [nfsAddress, setNfsAddress] = useState(""); // nfs
   const [lunId, setLunId] = useState(""); // fibre 사용
-  const [lunIds, setLunIds] = useState([]);
 
-  const resetFormStates = () => {
-    setFormState(initialFormState);
-    setHostVo({ id: "", name: "" });
-    setStorageTypes([]);
-    setNfsAddress("");
-    setLunId("");
-  };
+  const [isDomainCheckOpen, setDomainCheckOpen] = useState(false);
+  const [isOverwrite, setIsOverwrite] = useState(false);
+  const [selectedLunData, setSelectedLunData] = useState(null); // overwrite 일때 넘겨줄 값
 
-  const isNfs = formState.storageType === "NFS";
-  const isFibre = formState.storageType === "FCP";
 
   const onSuccess = () => {
     onClose();
@@ -90,17 +83,31 @@ const DomainModal = ({
   const {
     data: hosts = [],
     isLoading: isHostsLoading 
-  } = useHostsFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
+  } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
   const {
     data: fibres = [],
     refetch: refetchFibres,
     isLoading: isFibresLoading,
     isError: isFibresError, 
     isSuccess: isFibresSuccess
-  } = useFibreFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
+  } = useFibreFromHost(hostVo?.id, (e) => ({ ...e }));
   
+  const isNfs = formState.storageType === "NFS";
+  const isFibre = formState.storageType === "FCP";
+
+  const resetFormStates = () => {
+    setFormState(initialFormState);
+    setHostVo({ id: "", name: "" });
+    setStorageTypes([]);
+    setNfsAddress("");
+    setLunId("");
+  };
+
   useEffect(() => {
-    if (!isOpen) return resetFormStates();
+    if (!isOpen) {
+      resetFormStates();
+      return;
+    }
     if (editMode && domain) {
       const storage = domain?.storageVo;
       setFormState({
@@ -113,15 +120,23 @@ const DomainModal = ({
         warning: domain?.warning,
         spaceBlocker: domain?.spaceBlocker,
       });
-      setDataCenterVo({ id: domain?.dataCenterVo?.id, name: domain?.dataCenterVo?.name });
-      setHostVo({ id: domain?.hostVo?.id, name: domain?.hostVo?.name });
+      setDataCenterVo({ 
+        id: domain?.dataCenterVo?.id, 
+        name: domain?.dataCenterVo?.name 
+      });
+      setHostVo({ 
+        id: domain?.hostVo?.id,
+        name: domain?.hostVo?.name 
+      });
       
-      if (storage?.type === "NFS") { 
-        setNfsAddress(storage?.address + storage?.path);
-      } else if(storage?.type === "FCP") {
+      if (storage.type === "NFS") { 
+        setNfsAddress(`${storage?.address}:${storage?.path}`);
+      } else if(storage.type === "FCP") {
         setLunId(storage?.volumeGroupVo?.logicalUnitVos[0]?.id);
       }
-    }    
+    } else {
+      resetFormStates();
+    }
   }, [isOpen, editMode, domain]);
 
   useEffect(() => {
@@ -170,9 +185,11 @@ const DomainModal = ({
   }, [formState.domainType, editMode]);
 
   useEffect(() => {
-    setNfsAddress("");
-    setLunId("");
-  }, [formState.storageType]);
+    if(!editMode){
+      setNfsAddress("");
+      setLunId("");
+    }
+  }, [editMode, formState.storageType]);
 
   const validateForm = () => {
     const nameError = checkName(formState.name);
@@ -188,9 +205,12 @@ const DomainModal = ({
     
     if (isFibre) {
       if (!lunId) return "LUN을 반드시 선택해주세요."; // 🔥 추가된 부분
-      const selectedLogicalUnit = fibres.find((fLun) => fLun.id === lunId);
+      const selectedLogicalUnit = fibres
+        .map(f => f.logicalUnitVos[0])
+        .find(lun => lun?.id === lunId);
+        
       if (!selectedLogicalUnit) return "선택한 LUN 정보가 올바르지 않습니다."; // 추가 방어로직
-      if (selectedLogicalUnit.storageDomainId !== "") {
+      if (!editMode && selectedLogicalUnit.storageDomainId !== "") {
         return "이미 다른 도메인에서 사용 중인 LUN은 선택할 수 없습니다."; // 더 명확한 메시지
       }
     }
@@ -202,53 +222,53 @@ const DomainModal = ({
     const error = validateForm();
     if (error) return toast.error(error);
   
-    const usedLun = fibres.find((fLun) => fLun.status === "USED");
-    if (usedLun) {
-      setDomainCheckOpen(true); // 🔥 확인 모달 열기
+    const selectedLogicalUnit = fibres
+      .map(f => f.logicalUnitVos[0])
+      .find(lun => lun?.id === lunId);
+
+    if (selectedLogicalUnit.status === "USED") {
+      setSelectedLunData(selectedLogicalUnit);
+      setIsOverwrite(true);
+      setDomainCheckOpen(true); // 확인 모달 열기
       return;
     }
+
+    submitDomain(); // 바로 제출
+  };
+
+  const submitDomain = () => {
+    const [storageAddress, storagePath] = nfsAddress.split(":");
+    const logicalUnit = fibres
+      .map(f => f.logicalUnitVos[0])
+      .find(lun => lun?.id === lunId);
   
-    let dataToSubmit;
+    const storageVo = isNfs
+      ? { type: "NFS", address: storageAddress, path: storagePath }
+      : {
+          type: "FCP",
+          volumeGroupVo: { logicalUnitVos: [{ id: logicalUnit.id }] }
+        };
   
-    if (editMode) {
-      dataToSubmit = { ...formState };
-    } else {
-      const [storageAddress, storagePath] = nfsAddress.split(":");
-      const logicalUnit = fibres.find((fLun) => fLun.id === lunId);
-      // const logicalUnits = fibres.filter(f => lunIds.includes(f.id));
-      const storageVo = isNfs
-        ? {
-            type: "NFS",
-            address: storageAddress,
-            path: storagePath,
-          }
-        : {
-            type: "FCP",
-            volumeGroupVo: {
-              logicalUnitVos: [
-                { id: logicalUnit.id }
-              ]
-              // logicalUnitVos: logicalUnits.map(lun => ({ id: lun.id })) //복수 lun
-            }
-          };
-  
-      dataToSubmit = {
-        ...formState,
-        type: formState.domainType,
-        dataCenterVo,
-        hostVo,
-        storageVo
-      };
-    }
+    const dataToSubmit = {
+      ...formState,
+      type: formState.domainType,
+      dataCenterVo,
+      hostVo,
+      storageVo
+    };
   
     Logger.debug(`DomainModal > submitDomain ... dataToSubmit:`, dataToSubmit);
+
+    const onSubmitSuccess = () => {
+      onClose();  // 🔥 모달 닫기
+      toast.success(`${Localization.kr.DOMAIN} ${dLabel} ${Localization.kr.FINISHED}`);
+    };
   
     editMode
-      ? editDomain({ domainId: formState.id, domainData: dataToSubmit })
-      : addDomain(dataToSubmit);
+      ? editDomain({ domainId: formState.id, domainData: dataToSubmit }, { onSuccess: onSubmitSuccess })
+      : addDomain(dataToSubmit, { onSuccess: onSubmitSuccess });
   };
   
-
 
   return (
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={dLabel}
@@ -317,7 +337,7 @@ const DomainModal = ({
       {isFibre && (
         <DomainFibre
           editMode={editMode}
-          domain={domain}
+          domain={editMode? domain : ""} 
           fibres={fibres}
           lunId={lunId} setLunId={setLunId}
           isFibresLoading={isFibresLoading} isFibresError={isFibresError} isFibresSuccess={isFibresSuccess}
@@ -338,17 +358,19 @@ const DomainModal = ({
         </div>
       </div>
             
-      {/* <DomainCheckModal
+      <DomainCheckModal
         isOpen={isDomainCheckOpen}
         onClose={() => {
           setDomainCheckOpen(false);
-          setApproveChecked(false);
+          setIsOverwrite(false);
+          setSelectedLunData(null);
         }}
+        domain={selectedLunData}
         onApprove={() => {
           setDomainCheckOpen(false);
           submitDomain(); // 승인했으면 최종 등록
         }}
-      /> */}
+      />
     </BaseModal>
   );
 };

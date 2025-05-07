@@ -233,6 +233,7 @@ fun StorageDomainVo.toAddStorageDomain(): StorageDomain {
 				else -> throw IllegalArgumentException("Unsupported storage type")
 			}
 		)
+		.wipeAfterDelete(false) // 덮어쓰기 시 필수
 		.build()
 }
 

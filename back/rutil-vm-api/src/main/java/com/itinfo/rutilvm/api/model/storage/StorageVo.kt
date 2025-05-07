@@ -99,7 +99,7 @@ fun StorageVo.toAddBlockStorage(): HostStorage {
 		.logicalUnits(volumeGroupVo.logicalUnitVos.map {
 			LogicalUnitBuilder().id(it.id).build()
 		})
-		// .overrideLuns(true) // 생성 기능 강제 처리
+		.overrideLuns(true) // 생성 기능 강제 처리
 		.build()
 }
 

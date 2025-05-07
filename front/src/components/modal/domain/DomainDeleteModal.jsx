@@ -9,6 +9,7 @@ import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import Localization from "../../../utils/Localization";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import useGlobal from "../../../hooks/useGlobal";
+import { handleSelectIdChange } from "../../label/HandleInput";
 
 const DomainDeleteModal = ({ isOpen, onClose }) => {
   const { domainsSelected } = useGlobal()
@@ -56,14 +57,11 @@ const DomainDeleteModal = ({ isOpen, onClose }) => {
         />
       </div>
       <LabelSelectOptionsID id="host" label={Localization.kr.HOST}
-        value={hostVo}
+        value={hostVo.id}
         loading={isHostsLoading}
         options={hosts}
         disabled={!format}
-        onChange={(e) => {
-          const selected = hosts.find(h => h.id === e.target.value);
-          if (selected) setHostVo({ id: selected.id, name: selected.name });
-        }}
+        onChange={handleSelectIdChange(setHostVo, hosts)}
       />
     </BaseModal>
   );

@@ -27,10 +27,9 @@ const DomainActionButtons = ({
   const basicActions = [
     { type: "create",  onBtnClick: () => setActiveModal("domain:create"),  label: Localization.kr.CREATE,  disabled: isContextMenu && domainsSelected.length > 0},
     { type: "import",  onBtnClick: () => setActiveModal("domain:import"),  label: Localization.kr.IMPORT,  disabled: domainsSelected.length > 0 || isMaintenance, },
-    { type: "update",  onBtnClick: () => setActiveModal("domain:update"),  label: Localization.kr.UPDATE,  disabled: domainsSelected.length !== 1 || isMaintenance, },
-    { type: "remove",  onBtnClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length === 0 || !isUnattached  },
-    // { type: "remove",  onBtnClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length === 0 || isLocked || isMaintenance || !isUnknown,  },
-    { type: "destory", onBtnClick: () => setActiveModal("domain:destroy"), label: Localization.kr.DESTROY, disabled: domainsSelected.length !== 1 || !isUnattached || isMaintenance,  },
+    { type: "update",  onBtnClick: () => setActiveModal("domain:update"),  label: Localization.kr.UPDATE,  disabled: domainsSelected.length !== 1 || isUnattached, },
+    { type: "remove",  onBtnClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length !== 1 || !isUnattached, },
+    { type: "destory", onBtnClick: () => setActiveModal("domain:destroy"), label: Localization.kr.DESTROY, disabled: domainsSelected.length !== 1 || !(isUnattached || isMaintenance),  },
   ];
 
   return (
