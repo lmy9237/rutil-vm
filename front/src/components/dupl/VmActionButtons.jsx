@@ -87,7 +87,7 @@ const VmActionButtons = ({
           />
           <div ref={dropdownRef} className="dropdown-container">
             <ActionButton
-              iconDef={activeDropdown ? rvi16ChevronUp() : rvi16ChevronDown()}
+              iconDef={activeDropdown ? rvi16ChevronUp("black") : rvi16ChevronDown("black")}
               label={Localization.kr.MANAGEMENT}
               onClick={toggleDropdown}
             />

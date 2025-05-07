@@ -45,18 +45,16 @@ textarea{
 .custom-select-box svg {
   flex-shrink: 0;margin-left:auto;
 }
-/* .custom-select-box span {
-  width: 300px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-} */
 .custom-select-box span {
   width: auto;
-  max-width: 100%;
+  max-width: 310px;
+  white-space: nowrap;   
+  overflow: hidden;       
+  text-overflow: ellipsis; 
+  /* max-width: 100%;
   white-space: normal;
   overflow: visible;
-  text-overflow: unset;
+  text-overflow: unset; */
 }
 
 .input-checkbox {

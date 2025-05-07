@@ -59,6 +59,7 @@
   width: 100%;
   padding: 12px 8px;
   gap: 2px;
+  background-color: antiquewhite;
   color: var(--color-nav);
   border-bottom: 1px solid var(--color-table);
   transition: height 0.3s ease-in-out;
@@ -82,11 +83,12 @@
   white-space: normal;
   align-items:flex-start !important;
 }
-.bell-mid p { 
-  width: auto;
-  height: auto;max-height:32px;
-  word-wrap: break-word;word-break: break-all;
-  overflow-wrap: break-word;
+.bell-mid p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  white-space: normal !important; 
 }
 /* bell-content가 활성화되었을 때 (내용에 따라 높이 자동 조절) */
 .bell-content.open {

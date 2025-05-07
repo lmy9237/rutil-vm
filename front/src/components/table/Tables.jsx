@@ -354,18 +354,23 @@ const Tables = ({
                     }}
                   >
                   <Tippy
-                    content={<div className="v-start w-full">{getCellTooltipContent(cellValue)}</div>}
+                    appendTo={() => document.body}
+                    content={<div className="v-start w-full tooltip-content">{getCellTooltipContent(cellValue)}</div>}
                     delay={[200, 0]}
                     placement="top"
                     animation="shift-away"
                     theme="dark-tooltip"
+                    className="tippy-box"
                     arrow={true}
+                
+                    zIndex={9999} 
                     disabled={!tooltips[`${globalIndex}-${colIndex}`]}
                   >
                     <div className="cell-ellipsis" style={{ textAlign: isTableRowClick ? "left" : shouldCenter ? "center" : "left" }}>
                       {isJSX ? (
                         isTableRowClick ? (
-                          cellValue  
+                          // ✅ 문제 해결 핵심: f-center 적용하지 않음
+                          cellValue
                         ) : (
                           <div className="f-center">{cellValue}</div> 
                         )

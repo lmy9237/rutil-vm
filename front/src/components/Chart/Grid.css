@@ -26,6 +26,7 @@
   z-index: 1;
 }
 .grid-item-name {
+  max-width: 70px;
   text-align: center;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
 }
 #grid-tooltip {

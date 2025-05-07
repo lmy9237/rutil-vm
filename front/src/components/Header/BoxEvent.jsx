@@ -205,7 +205,8 @@ const BoxEventItem = ({
         </span>
       )}
         <div className="bell-mid v-start">
-          <p className="v-start truncate">{event?.description}</p>
+          {/* <p className="v-start truncate">{event?.description}</p> */}
+          <p className="v-start">{event?.description}</p>
           <div className="mt-0.5">{event?.time}</div>
         </div>
       <span className="bell-icon bell-icon-trash f-center">

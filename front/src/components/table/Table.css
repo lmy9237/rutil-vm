@@ -124,12 +124,18 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
 }
 /* tippy 툴팁 */
-.tippy-box[data-theme~='dark-tooltip'] {
+.tooltip-content {
+  max-width: 600px !important;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tippy-box{
   color: #fff;                  
   padding: 6px;
+  height: auto;
+  max-width: none !important; 
   border-radius: 4px;  
-  word-break: break-all;   
-  white-space: pre-wrap;   
   overflow-wrap: break-word;
 }
 

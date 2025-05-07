@@ -15,6 +15,7 @@ const AreaChart = ({
       zoom: {
         enabled: false, // ✅ 줌 비활성화
       },
+      redrawOnParentResize: true,
     },
     colors: ["#1597E5", "#69DADB", "rgb(177, 143, 216)"],
     dataLabels: {
@@ -66,80 +67,81 @@ const AreaChart = ({
   
 
   // 반응형 차트 크기 조정
-  const [chartSize, setChartSize] = useState({
-    width: "100%", // 부모 div의 100% 사용
-    height: "30vh", // 뷰포트 높이의 30% 사용
-  });
+  // const [chartSize, setChartSize] = useState({
+  //   width: "100%", // 부모 div의 100% 사용
+  //   height: "30vh", // 뷰포트 높이의 30% 사용
+  // });
 
   // 부모 div 크기에 맞춰 차트 크기 조정
-  const updateChartSize = useCallback(() => {
-    if (chartContainerRef.current) {
-      const containerWidth = chartContainerRef.current.clientWidth;
+  // const updateChartSize = useCallback(() => {
+  //   if (chartContainerRef.current) {
+  //     const containerWidth = chartContainerRef.current.clientWidth;
 
-      let width = Math.max(containerWidth * 0.9, 210); // 기본 너비
-      let height = Math.max(window.innerHeight * 0.14, 100); // 기본 높이
+  //     let width = Math.max(containerWidth * 0.9, 210); // 기본 너비
+  //     let height = Math.max(window.innerHeight * 0.14, 100); // 기본 높이
 
-      if (window.innerWidth >= 2200) {
-        width = Math.max(containerWidth * 1, 570); // 🔥 2000px 이상일 때 더 크게
-        height = Math.max(window.innerHeight * 0.21, 230);
-      }
+  //     if (window.innerWidth >= 2200) {
+  //       width = Math.max(containerWidth * 1, 570); // 🔥 2000px 이상일 때 더 크게
+  //       height = Math.max(window.innerHeight * 0.21, 230);
+  //     }
 
-      setChartSize({ width: `${width}px`, height: `${height}px` });
-    }
-  }, [chartContainerRef]);
+  //     setChartSize({ width: `${width}px`, height: `${height}px` });
+  //   }
+  // }, [chartContainerRef]);
 
   // side바에따라 그래프 겹치는 것 방지
-  useEffect(() => {
-    updateChartSize();
-  }, [datetimes, series]);
+  // useEffect(() => {
+  //   updateChartSize();
+  // }, [datetimes, series]);
 
-  useEffect(() => {
-    updateChartSize();
+  // useEffect(() => {
+  //   updateChartSize();
   
-    const resizeTimer = setTimeout(() => {
-      updateChartSize();
-    }, 200); // DOM 렌더 후 0.2초 뒤에 한 번 더
+  //   const resizeTimer = setTimeout(() => {
+  //     updateChartSize();
+  //   }, 200); // DOM 렌더 후 0.2초 뒤에 한 번 더
   
-    return () => clearTimeout(resizeTimer);
-  }, [datetimes, series]);
+  //   return () => clearTimeout(resizeTimer);
+  // }, [datetimes, series]);
 
-  useEffect(() => {
-    if (!chartContainerRef.current) return;
+  // useEffect(() => {
+  //   if (!chartContainerRef.current) return;
   
-    const observer = new ResizeObserver(() => {
-      updateChartSize();
-    });
+  //   const observer = new ResizeObserver(() => {
+  //     updateChartSize();
+  //   });
   
-    observer.observe(chartContainerRef.current);
+  //   observer.observe(chartContainerRef.current);
   
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     observer.disconnect();
+  //   };
+  // }, []);
   
   
-  // 창 크기 변경 시 차트 크기 업데이트
-  useEffect(() => {
-    updateChartSize();
-    window.addEventListener("resize", updateChartSize);
+  // // 창 크기 변경 시 차트 크기 업데이트
+  // useEffect(() => {
+  //   updateChartSize();
+  //   window.addEventListener("resize", updateChartSize);
 
-    return () => {
-      window.removeEventListener("resize", updateChartSize);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("resize", updateChartSize);
+  //   };
+  // }, []);
 
   return (
-    <div ref={chartContainerRef} 
-      style={{ width: "100%", maxWidth: "900px", minWidth: "300px" }}
-    >
-      <ReactApexChart id="chart"
+      <ReactApexChart
+        id="chart-area"  /* css id,class 둘다 먹힘 */
+        className="chart-area"
         options={options}
         series={series}
         type="area"
-        width={chartSize.width}
-        height={chartSize.height}
+        width="100%" // 부모 기준
+        height="100%" // 부모 기준
+        // width={chartSize.width}
+        // height={chartSize.height}
       />
-    </div>
+ 
   );
 };
 

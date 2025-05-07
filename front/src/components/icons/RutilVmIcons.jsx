@@ -299,7 +299,7 @@ export const rvi16RebootLined = (accentColor="#717171") => (<path d="M5.33335 13
 
 
 export const RVI16 = forwardRef(({
-  iconDef, width=16, height=16, currentColor='#999999', 
+  iconDef, width=16, height=16, currentColor="currentColor", 
   ...props
 }, ref) => {
   return (

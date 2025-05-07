@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import RadialBarChart from "./Chart/RadialBarChart";
 import BarChart from "./Chart/BarChart";
@@ -178,23 +178,55 @@ export const BoxChartSummary = ({
 
 export const BoxChartAllGraphs = ({
   type,
-}) => (
-  <>
+}) => {
+  const chartContainerRef = useRef()
+  const [chartSize, setChartSize] = useState({
+    /*width: "100%", */
+    height: "450px",
+  });
+
+  const updateChartSize = () => {
+    if (chartContainerRef.current) {
+      const containerWidth = chartContainerRef.current.clientWidth;
+
+      // let width = Math.max(containerWidth * 0.8, 200); // 기본 너비
+      let height = Math.max(window.innerHeight * 0.2, 200); // 기본 높이
+
+      if (window.innerWidth >= 2000) {
+        // width = Math.max(containerWidth * 1, 280); 
+        height = Math.max(window.innerHeight * 0.3, 300);
+      }
+
+      setChartSize({ /*width: `${width}px`,*/ height: `${height}px` });
+    }
+  };
+
+  useEffect(() => {
+    updateChartSize();
+    window.addEventListener("resize", updateChartSize);
+
+    return () => {
+      window.removeEventListener("resize", updateChartSize);
+    };
+  }, []);
+  
+  return (<>
     <div id={`graphs-${type}`}
       className="graphs v-start w-full"
     >
       <div 
-        className="active-on-visible f-btw w-full"
-        data-active-on-visible-callback-func-name="CircleRun"
+        ref={chartContainerRef}
+        className="graphs-horizontal active-on-visible f-start w-full"
+        style={{ height: chartSize.height, }}
       >
         <RadialChartAll type={type}/>
-        <BarChartAll type={type}/>
+        <BarChartAll className="ml-auto" type={type}/>
       </div>
       <WaveChartCpu type={type}/>
       <BoxGrids type={type} />
     </div>
-  </>
-)
+  </>)
+}
 
 const RadialChartAll = ({
   type
@@ -236,6 +268,7 @@ const RadialChartAll = ({
 
 const BarChartAll = ({
   type,
+  ...props
 }) => {
   const {
     data: vmCpu = [],
@@ -290,6 +323,7 @@ const BarChartAll = ({
       data={_data}
       keyName="name"
       keyPercent={_keyPercent}
+      {...props}
     />
   )
 };
@@ -336,7 +370,8 @@ const WaveChartCpu = ({
 const BarChartWrapper = ({ 
   data, 
   keyName, 
-  keyPercent
+  keyPercent,
+  ...props
 }) => {
   const names = useMemo(() => 
     [...data]?.map((e) => e[keyName]) ?? []
@@ -346,7 +381,7 @@ const BarChartWrapper = ({
     [...data]?.map((e) => e[keyPercent]) ?? []
   , [data, keyPercent]);
 
-  return <BarChart names={names} percentages={percentages} />;
+  return <BarChart names={names} percentages={percentages} {...props} />;
 };
 
 const BoxGrids = ({

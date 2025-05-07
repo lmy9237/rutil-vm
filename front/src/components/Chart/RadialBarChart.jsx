@@ -5,6 +5,7 @@ import "./RadialBarChart.css";
 const RadialBarChart = ({ 
   percentage=0
 }) => {
+  /*
   const chartContainerRef = useRef(null);
 
   const [chartSize, setChartSize] = useState({
@@ -35,13 +36,13 @@ const RadialBarChart = ({
       window.removeEventListener("resize", updateChartSize);
     };
   }, []);
+  */
 
   const [series, setSeries] = useState([0]);
   const [chartOptions, setChartOptions] = useState({
     chart: {
-      offsetY: -5,
-      offsetX: -20,
       type: "radialBar",
+      redrawOnParentResize: true,
     },
     plotOptions: {
       radialBar: {
@@ -60,12 +61,12 @@ const RadialBarChart = ({
             show: true,
             fontSize: "25px",
             color: "#111",
-            offsetY: 10,
             formatter: (val) => {
               return parseInt(val) + "%";
             },
           },
         },
+        
         track: {
           background: "#e7e7e7",
           strokeWidth: "100%",
@@ -88,7 +89,6 @@ const RadialBarChart = ({
       },
     },
     labels: [],
-
     colors: ["#FF4560"],
   });
 
@@ -124,17 +124,20 @@ const RadialBarChart = ({
   }, [percentage]);
 
   return (
-    <div ref={chartContainerRef} style={{ width: "100%", maxWidth: "600px", minWidth: "150px" }}>
-      <div id="donut_chart">
-        <ReactApexChart
+    // <div ref={chartContainerRef} style={{ width: "100%", maxWidth: "600px", minWidth: "150px" }}>
+    //   <div id="donut_chart">
+        <ReactApexChart type="radialBar" 
+          id="chart-radial" /* css id,class 둘다 먹힘 */
+          className="chart-radial"
           options={chartOptions}
           series={series}
-          width={chartSize.width}
-          height={chartSize.height || "250px"}
-          type="radialBar"
+          // width={chartSize.width}
+          // height={chartSize.height || "250px"}
+          width="100%" // 부모 기준
+          height="100%" // 부모 기준
         />
-      </div>
-    </div>
+    /* </div>
+    </div> */
   );
 };
 

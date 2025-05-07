@@ -2,29 +2,33 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
 import "./BarChart.css";
 
-const BarChart = ({ names, percentages }) => {
+const BarChart = ({ 
+  names,
+  percentages,
+  ...props
+}) => {
   const chartContainerRef = useRef(null);
-  const [chartSize, setChartSize] = useState(
-    {
-      width: "100%", // 부모 div의 100% 사용
-    }
-  );
+  // const [chartSize, setChartSize] = useState(
+  //   {
+  //     width: "100%", // 부모 div의 100% 사용
+  //   }
+  // );
 
-  const updateChartSize = () => {
-    if (chartContainerRef.current) {
-      const containerWidth = chartContainerRef.current.clientWidth;
+  // const updateChartSize = () => {
+  //   if (chartContainerRef.current) {
+  //     const containerWidth = chartContainerRef.current.clientWidth;
   
-      let width = Math.max(containerWidth * 0.5, 230); // 기본 width
-      let height = 184; // ✅ 기본 고정 height (px)
+  //     let width = Math.max(containerWidth * 0.5, 230); // 기본 width
+  //     let height = 184; // ✅ 기본 고정 height (px)
   
-      if (window.innerWidth >= 2000) {
-        width = Math.max(containerWidth * 0.9, 650);
-        height = 260; // ✅ 화면 크면 height도 고정 증가
-      }
+  //     if (window.innerWidth >= 2000) {
+  //       width = Math.max(containerWidth * 0.9, 650);
+  //       height = 260; // ✅ 화면 크면 height도 고정 증가
+  //     }
   
-      setChartSize({ width: `${width}px`, height: `${height}px` });
-    }
-  };
+  //     setChartSize({ width: `${width}px`, height: `${height}px` });
+  //   }
+  // };
   useEffect(() => {
     const paddedNames = [...names];
     const paddedPercentages = [...percentages];
@@ -44,14 +48,14 @@ const BarChart = ({ names, percentages }) => {
       },
     }));
   }, [names, percentages]);
-  useEffect(() => {
-    updateChartSize();
-    window.addEventListener("resize", updateChartSize);
+  // useEffect(() => {
+  //   updateChartSize();
+  //   window.addEventListener("resize", updateChartSize);
 
-    return () => {
-      window.removeEventListener("resize", updateChartSize);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("resize", updateChartSize);
+  //   };
+  // }, []);
 
   const [series, setSeries] = useState([{ data: percentages }]);
   const [chartOptions, setChartOptions] = useState({
@@ -59,7 +63,7 @@ const BarChart = ({ names, percentages }) => {
       offsetY: -15,
       offsetX: -55,
       type: "bar",
-  
+      redrawOnParentResize: true,
     },
     grid: {
       show: false,
@@ -139,16 +143,19 @@ const BarChart = ({ names, percentages }) => {
 
 
   return (
-    <div ref={chartContainerRef} style={{ width: "100%", maxWidth: "900px", minWidth: "100px" }}>
-      <div id="bar-chart">
-        <ReactApexChart type="bar"
+        
+        <ReactApexChart type="bar" 
+          id="chart-bar" /* css id는 먹히지만 class명은 안먹힘 */
+          className="chart-bar"
           options={chartOptions}
           series={series}
-          width={chartSize.width}
-          height={chartSize.height || "250px"}
+          width="100%" // 부모 기준
+          height="100%" // 부모 기준
+          // width={chartSize.width}
+          // height={chartSize.height || "250px"}
+          {...props}
         />
-      </div>
-    </div>
+    
   );
 };
 

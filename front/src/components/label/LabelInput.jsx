@@ -60,6 +60,7 @@ const LabelInput = ({
         onInvalid={onInvalid}
         disabled={props.disabled}
         required={required}
+        autoComplete={props.autoComplete} // 크롬업데이트안뜨게(확인못해봄)
       />
       {isPasswordType && (
         <FontAwesomeIcon
