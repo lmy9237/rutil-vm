@@ -59,7 +59,7 @@
   width: 100%;
   padding: 12px 8px;
   gap: 2px;
-  background-color: antiquewhite;
+  /*background-color: antiquewhite;*/
   color: var(--color-nav);
   border-bottom: 1px solid var(--color-table);
   transition: height 0.3s ease-in-out;

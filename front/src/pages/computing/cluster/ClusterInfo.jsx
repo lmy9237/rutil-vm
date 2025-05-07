@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Suspense, useCallback, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import SectionLayout from "../../../components/SectionLayout";
@@ -33,6 +33,7 @@ import "./Cluster.css";
  */
 const ClusterInfo = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id: clusterId, section } = useParams();
   const {
     data: cluster,

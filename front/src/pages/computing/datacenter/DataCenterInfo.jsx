@@ -54,22 +54,25 @@ const DataCenterInfo = () => {
     setSourceContext("fromDatacenter")
   }, [dataCenter]);
 
-  const handleTabClick = useCallback((tab) => {
-    Logger.debug(`DataCenterInfo > handleTabClick ... tab: ${tab}`)
+  const homePath = useMemo(() => {
     // 현재 경로에서 섹션 추출: computing, storages, networks 중 하나
     const section = location.pathname.split("/")[1]; // 첫 번째 세그먼트가 섹션 정보
+    Logger.debug(`DataCenterInfo > homePath ... section: ${section}`)
 
     // 섹션이 유효한 값인지 확인 (예외 처리 포함)
     const validSections = ["computing", "storages", "networks"];
     const currentSection = validSections.includes(section)
       ? section
       : "computing"; // 기본값을 'computing'으로 설정
+    return `/${currentSection}/datacenters/${dataCenterId}`
+  }, [location, dataCenterId])
 
-    // 동적 경로 생성 및 이동
-    const path = `/${currentSection}/datacenters/${dataCenterId}/${tab}`;
+  const handleTabClick = useCallback((tab) => {
+    Logger.debug(`DataCenterInfo > handleTabClick ... tab: ${tab}`)
+    const path = `${homePath}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  }, [dataCenterId]);
+  }, [homePath]);
 
   const sections = useMemo(() => ([
     { id: "clusters", label: Localization.kr.CLUSTER },
@@ -121,7 +124,10 @@ const DataCenterInfo = () => {
           handleSectionClick={handleTabClick}
         />
         <div className="info-content v-start gap-8 w-full">
-          <Path type={"datacenter"} pathElements={pathData} basePath={`/computing/datacenters/${dataCenterId}/clusters`}/>
+          <Path type={"datacenter"}
+            pathElements={pathData}
+            basePath={`${homePath}/clusters`}
+          />
           {renderSectionContent()}
         </div>
       </div>

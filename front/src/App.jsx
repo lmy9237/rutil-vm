@@ -125,7 +125,6 @@ const App = () => {
               <Route path="/" element={<Dashboard />} />
               <Route path="computing/rutil-manager" element={<RutilManager />} />
               <Route path="computing/rutil-manager/:section" element={<RutilManager />}  />
-
               <Route path="computing/datacenters/:id/:section" element={<DataCenterInfo />} />
 
               <Route path="computing/clusters/:id" element={<ClusterInfo />} />

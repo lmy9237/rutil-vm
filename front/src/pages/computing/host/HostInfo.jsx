@@ -15,10 +15,10 @@ import Localization from "../../../utils/Localization";
 import { rvi24Host } from "../../../components/icons/RutilVmIcons";
 import { useHost } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
-import "./Host.css";
 import SectionLayout from "../../../components/SectionLayout";
 import HostNetworkAdapter from "./HostNetworkAdapter";
 import HostNics2 from "./HostNics2";
+import "./Host.css";
 
 /**
  * @name HostInfo
