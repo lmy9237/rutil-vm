@@ -4,10 +4,9 @@ import "./AreaChart.css";
 
 const AreaChart = ({ 
   series,
-  datetimes
+  datetimes,
+  ...props
 }) => {
-  const chartContainerRef = useRef(null);
-
   const [options, setOptions] = useState({
     chart: {
       type: "area",
@@ -130,18 +129,15 @@ const AreaChart = ({
   // }, []);
 
   return (
-      <ReactApexChart
-        id="chart-area"  /* css id,class 둘다 먹힘 */
-        className="chart-area"
-        options={options}
-        series={series}
-        type="area"
-        width="100%" // 부모 기준
-        height="100%" // 부모 기준
-        // width={chartSize.width}
-        // height={chartSize.height}
-      />
- 
+    <ReactApexChart type="area" id="chart-area"  /* css id,class 둘다 먹힘 */
+      options={options}
+      series={series}
+      // width="100%"
+      height="100%"
+      {...props}
+      // width={chartSize.width}
+      // height={chartSize.height}
+    />
   );
 };
 

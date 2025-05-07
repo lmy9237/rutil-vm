@@ -26,38 +26,17 @@
   padding: 6px 20px;
   background-color: var(--color-white);
 }
-.bar {
-  display: flex;
-  flex-wrap: wrap;       /* ✅ 다시 wrap 허용 */
-  gap: 37px;             /* ✅ 간격 명확히 지정 */
-}
-.bar > div {
-  flex: 1 1 calc(33.333% - 16px); /* 3개 기준 */
-  max-width: calc(32.333% - 16px);
-  min-width: 260px;   
-  margin-bottom: 30px;
-  /* background-color: #ffff00; */
-  padding: 0 10px;
-  box-sizing: border-box;
-}
-.bar span {
-  font-weight: 600;
-  display: block;
-  margin: 9px 0;
-  width: 100%;
-}
-.wave-graph > h2 {
-  margin-left: 9px;margin-bottom: 5px;
+.graph-wave > h2 {
   color: #000000;
 }
 /*차트위에 아이콘 제거*/
 .apexcharts-menu-icon,
 .apexcharts-toolbar > div {
-  display: none;
+  /*display: none;*/
 }
 .apexcharts-legend.apx-legend-position-bottom.apexcharts-align-center,
 .apexcharts-legend.apx-legend-position-top.apexcharts-align-center {
-  display: none;
+  /*display: none;*/
 }
 @media screen and (min-width: 2800px) {
   .dash-section{

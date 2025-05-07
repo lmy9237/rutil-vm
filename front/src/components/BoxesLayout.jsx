@@ -55,7 +55,7 @@ export const BoxLayout = ({
   const navigate = useNavigate();
   
   return (
-    <div className={`box${!cntTotal ? " box-graph" : ""} v-start ${!cntTotal ? "gap-2" : "gap-8"} h-full`}
+    <div className={`box${!cntTotal ? " box-graph" : ""} v-start ${!cntTotal ? "gap-2" : "gap-8"}`}
       onClick={() => navigatePath && navigate(navigatePath)}
       {...props}
     >
@@ -179,10 +179,10 @@ export const BoxChartSummary = ({
 export const BoxChartAllGraphs = ({
   type,
 }) => {
+  /*
   const chartContainerRef = useRef()
   const [chartSize, setChartSize] = useState({
-    /*width: "100%", */
-    height: "450px",
+    width: "50%",
   });
 
   const updateChartSize = () => {
@@ -197,7 +197,7 @@ export const BoxChartAllGraphs = ({
         height = Math.max(window.innerHeight * 0.3, 300);
       }
 
-      setChartSize({ /*width: `${width}px`,*/ height: `${height}px` });
+      setChartSize({ height: `${height}px` });
     }
   };
 
@@ -209,15 +209,14 @@ export const BoxChartAllGraphs = ({
       window.removeEventListener("resize", updateChartSize);
     };
   }, []);
-  
+  */
+
   return (<>
     <div id={`graphs-${type}`}
-      className="graphs v-start w-full"
+      className="graphs v-center w-full"
     >
       <div 
-        ref={chartContainerRef}
-        className="graphs-horizontal active-on-visible f-start w-full"
-        style={{ height: chartSize.height, }}
+        className="graphs-horizontal f-start w-full"
       >
         <RadialChartAll type={type}/>
         <BarChartAll className="ml-auto" type={type}/>
@@ -360,7 +359,7 @@ const WaveChartCpu = ({
   }, [type, host, domain])
 
   return (
-    <div className="wave-graph fs-14 w-full">
+    <div className="graph-wave fs-14 w-full">
       {/* <h2>Per CPU</h2> */}
       <SuperAreaChart type={type} per={_per} />
     </div>

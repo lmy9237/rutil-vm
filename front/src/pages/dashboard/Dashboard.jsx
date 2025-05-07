@@ -253,9 +253,9 @@ const Dashboard = () => {
     <>
       {/* 대시보드 section */}
       <SectionLayout 
-        className="section-dashboard v-start h-full"
+        className="section-dashboard v-start gap-4 h-full"
         style={{
-          backgroundColor: "#EFF1F5", padding:"6px"
+          backgroundColor: "#EFF1F5"
         }}
       >
         {/* <DashboardBoxGroup boxItems={boxItems} /> */}
@@ -324,14 +324,13 @@ const Dashboard = () => {
             </span>
             <div className="graphs flex">
               <div
-                className="graph-wrap active-on-visible"
-                data-active-on-visible-callback-func-name="CircleRun"
+                className="graph-wrap"
               >
                 {cpuMemory && (<RadialBarChart percentage={cpuMemory?.totalCpuUsagePercent ?? 0} />)}
               </div>
               {vmCpu && <CpuBarChart vmCpu={vmCpu} />}
             </div>
-            <div className="wave-graph fs-14">
+            <div className="graph-wave fs-14">
               <SuperAreaChart per={host} type="cpu" />
             </div>
           </div>
@@ -348,15 +347,14 @@ const Dashboard = () => {
             </span>
             <div className="graphs f-start">
               <div
-                className="graph-wrap active-on-visible"
-                data-active-on-visible-callback-func-name="CircleRun"
+                className="graph-wrap"
               >
                 {cpuMemory && (<RadialBarChart percentage={cpuMemory?.totalMemoryUsagePercent} />)}
               </div>
               {vmMemory && <MemoryBarChart vmMemory={vmMemory} />}
             </div>
 
-            <div className="wave-graph fs-14">
+            <div className="graph-wave fs-14">
               <SuperAreaChart per={host} type="memory" />
             </div>
           </div>
@@ -372,14 +370,13 @@ const Dashboard = () => {
               USED {storage?.usedGB} GiB / Total {storage?.freeGB} GiB
             </span>
             <div className="graphs f-start">
-              <div className="graph-wrap active-on-visible"
-                data-active-on-visible-callback-func-name="CircleRun"
+              <div className="graph-wrap"
               >
                 {storage && (<RadialBarChart percentage={storage?.usedPercent || 0} />)}
               </div>
               {storageMemory && (<StorageMemoryBarChart storageMemory={storageMemory} />)}
             </div>
-            <div className="wave-graph fs-14">
+            <div className="graph-wave fs-14">
               <SuperAreaChart per={domain} type="domain" />
             </div>
           </div>

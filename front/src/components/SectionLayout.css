@@ -1,8 +1,9 @@
 #section {
-  width: calc(100% - var(--w-aside-menu));height:100%;
+  width: calc(100% - var(--w-aside-menu));
+  height:100%;
+  overflow-x: hidden;
   overflow-y: auto;
   background-color: white;
-  overflow-x: hidden;
   border-left: var(--border-default);
 }
 .content-outer {
@@ -10,7 +11,18 @@
   width: 100%;
   height: calc(100% - var(--h-section-header));
 }
-.section-dashboard {}
+.section-dashboard {
+  padding: 6px;
+}
 .section-dashboard .dash-boxes:last-child {
+  height: calc(100% - var(--h-dash-nav-box) + 8px);
+}
+.section-dashboard .dash-boxes:last-child > * {
   height: 100%;
+}
+
+@media screen and (max-width:1500px) {
+  .section-dashboard .dash-boxes:last-child {
+    
+  }
 }

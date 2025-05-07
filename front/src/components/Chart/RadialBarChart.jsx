@@ -3,7 +3,8 @@ import ReactApexChart from "react-apexcharts";
 import "./RadialBarChart.css";
 
 const RadialBarChart = ({ 
-  percentage=0
+  percentage=0,
+  ...props
 }) => {
   /*
   const chartContainerRef = useRef(null);
@@ -121,13 +122,12 @@ const RadialBarChart = ({
     // <div ref={chartContainerRef} style={{ width: "100%", maxWidth: "600px", minWidth: "150px" }}>
     //   <div id="donut_chart">
         <ReactApexChart type="radialBar" 
-          id="chart-radial" /* css id,class 둘다 먹힘 */
-          className="chart-radial"
+          id="chart-radial" /* css id,class 둘다 먹힘 */          
           options={chartOptions}
           series={series}
-          width="100%" // 부모 기준
           height="100%" // 부모 기준
-        />
+          {...props}
+      />
     /* </div>
     </div> */
   );

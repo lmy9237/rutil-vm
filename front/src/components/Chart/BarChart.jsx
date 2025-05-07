@@ -143,19 +143,15 @@ const BarChart = ({
 
 
   return (
-        
-        <ReactApexChart type="bar" 
-          id="chart-bar" /* css id는 먹히지만 class명은 안먹힘 */
-          className="chart-bar"
-          options={chartOptions}
-          series={series}
-          width="100%" // 부모 기준
-          height="100%" // 부모 기준
-          // width={chartSize.width}
-          // height={chartSize.height || "250px"}
-          {...props}
-        />
-    
+    <ReactApexChart type="bar" 
+      id="chart-bar" /* css id는 먹히지만 class명은 안먹힘 */
+      options={chartOptions}
+      series={series}
+      height="100%" // 부모 기준
+      // width={chartSize.width}
+      // height={chartSize.height || "250px"}
+      {...props}
+    />
   );
 };
 

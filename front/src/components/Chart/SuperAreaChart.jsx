@@ -4,7 +4,8 @@ import Localization from "../../utils/Localization";
 
 const SuperAreaChart = ({ 
   per,
-  type
+  type,
+  ...props
 }) => {
   const [series, setSeries] = useState([]);
   const [datetimes, setDatetimes] = useState([]);
@@ -62,7 +63,9 @@ const SuperAreaChart = ({
     }
   }, [per, type]);
 
-  return <AreaChart series={series} datetimes={datetimes} />;
+  return (
+    <AreaChart series={series} datetimes={datetimes} />
+  );
 };
 
 export default React.memo(SuperAreaChart);

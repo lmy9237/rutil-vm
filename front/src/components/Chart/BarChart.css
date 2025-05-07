@@ -1,8 +1,13 @@
 /* BarChart.css */
+#chart-bar {
+  width: 45%;
+  flex: 1;
+}
+
 .apex-tooltip {
-    padding: 6px 10px;
-    border-radius: 4px;
-    background: #333;
-    color: #fff;
-    white-space: nowrap;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: #333;
+  color: #fff;
+  white-space: nowrap;
 }

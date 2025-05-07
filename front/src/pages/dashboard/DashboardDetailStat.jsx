@@ -24,8 +24,7 @@ const DashboardDetailStat = ({ title, totalPercentage }) => {
       <h1 className="fs-16">{title}</h1>
       <div className="graphs">
         <div
-          className="graph-wrap active-on-visible"
-          data-active-on-visible-callback-func-name="CircleRun"
+          className="graph-wrap"
         >
           <CpuApexChart cpu={totalPercentage ?? 0} />{" "}
           {/* ApexChart 컴포넌트를 여기에 삽입 */}
@@ -35,7 +34,7 @@ const DashboardDetailStat = ({ title, totalPercentage }) => {
         </div>
       </div>
       <span>USED 64 Core / Total 192 Core</span>
-      <div className="wave-graph">
+      <div className="graph-wave">
         <h2 className="fs-14">Per CPU</h2>
         <div>
           <SuperAreaChart /> {/* AreaChart 컴포넌트를 여기에 삽입 */}
