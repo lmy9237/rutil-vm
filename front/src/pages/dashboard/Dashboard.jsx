@@ -1,8 +1,5 @@
 import React, { useMemo } from "react";
-import RadialBarChart from "../../components/Chart/RadialBarChart";
 import BarChart from "../../components/Chart/BarChart";
-import SuperAreaChart from "../../components/Chart/SuperAreaChart";
-import Grid from "../../components/Chart/Grid";
 import {
   rvi24Cluster,
   rvi24Datacenter,
@@ -10,7 +7,6 @@ import {
   rvi24Storage,
   rvi24Desktop,
   rvi24Event,
-  rvi16Announce,
   rvi24DeveloperBoard,
   rvi24Memory,
 } from "../../components/icons/RutilVmIcons";
@@ -257,12 +253,12 @@ const Dashboard = () => {
     <>
       {/* 대시보드 section */}
       <SectionLayout 
+        className="section-dashboard v-start h-full"
         style={{
-          backgroundColor: "#EFF1F5",padding:"6px",border:"none"
+          backgroundColor: "#EFF1F5", padding:"6px"
         }}
       >
         {/* <DashboardBoxGroup boxItems={boxItems} /> */}
-        
         <BoxesLayout>{/* 항목 별 상태 박스 */}
           {[...boxItems].map(({
             navigatePath, title, iconDef,

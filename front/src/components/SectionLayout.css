@@ -10,3 +10,7 @@
   width: 100%;
   height: calc(100% - var(--h-section-header));
 }
+.section-dashboard {}
+.section-dashboard .dash-boxes:last-child {
+  height: 100%;
+}

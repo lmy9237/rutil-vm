@@ -18,7 +18,7 @@
   text-align: center;
 }
 .box.box-graph {
-  min-height: calc(100% - var(--h-dash-boxs-bar)) !important;
+  /*min-height: calc(100% - var(--h-dash-boxs-bar)) !important;*/
   flex: 1 1 calc(100% / 3 - 8px) !important;/* 한 줄에 3개씩 총 1줄*/
   width: calc(100% / 3 - 8px) !important; /* 1열 */
   cursor: default;

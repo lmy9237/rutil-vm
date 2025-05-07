@@ -55,7 +55,7 @@ export const BoxLayout = ({
   const navigate = useNavigate();
   
   return (
-    <div className={`box${!cntTotal ? " box-graph" : ""} v-btw ${!cntTotal ? "gap-2" : "gap-8"}`}
+    <div className={`box${!cntTotal ? " box-graph" : ""} v-start ${!cntTotal ? "gap-2" : "gap-8"} h-full`}
       onClick={() => navigatePath && navigate(navigatePath)}
       {...props}
     >
@@ -63,7 +63,7 @@ export const BoxLayout = ({
         <BoxTitle title={title} iconDef={iconDef}/>
       }
       {cntTotal && 
-        <BoxDetail
+        <BoxDetail 
           cntTotal={cntTotal} cntUp={cntUp} cntDown={cntDown} 
           alert={alert} error={error} warning={warning} 
         />}
@@ -103,7 +103,7 @@ export const BoxDetail = ({
   ...props
 }) => {
   return (
-    <div className={`box-detail f-end gap-8`}
+    <div className={`box-detail f-end gap-8 w-full`}
       {...props}
     >
       {cntTotal && (<>
@@ -149,7 +149,7 @@ export const BoxChartSummary = ({
 
   return (
     <>
-      <div className="box-detail f-start gap-8"
+      <div className="box-detail f-start gap-8 w-full"
         {...props}
       >
         <div className="box-status v-start">

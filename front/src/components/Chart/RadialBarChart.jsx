@@ -49,24 +49,18 @@ const RadialBarChart = ({
         hollow: {
           size: "85%",
         },
-        track: {
-          margin: 0,
-        },
         dataLabels: {
           show: true,
           name: {
             show: false,
           },
           value: {
-            show: true,
-            fontSize: "25px",
             color: "#111",
             formatter: (val) => {
               return parseInt(val) + "%";
             },
           },
         },
-        
         track: {
           background: "#e7e7e7",
           strokeWidth: "100%",
@@ -131,8 +125,6 @@ const RadialBarChart = ({
           className="chart-radial"
           options={chartOptions}
           series={series}
-          // width={chartSize.width}
-          // height={chartSize.height || "250px"}
           width="100%" // 부모 기준
           height="100%" // 부모 기준
         />
