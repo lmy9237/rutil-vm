@@ -17,7 +17,10 @@ import Logger from "../../../utils/Logger";
  *
  * @returns
  */
-const DomainAttachModal = ({ isOpen, onClose }) => {
+const DomainAttachModal = ({
+  isOpen,
+  onClose
+}) => {
   const {
     datacentersSelected, setDatacentersSelected, 
     domainsSelected, setDomainsSelected,
@@ -25,7 +28,9 @@ const DomainAttachModal = ({ isOpen, onClose }) => {
   } = useGlobal()
 
   // fromDatacenter 는 데이터센터에서 바라보는 도메인, fromDomain 는 도메인에서 바라보는 데이터센터
-  const title = sourceContext === "fromDomain" ? `${Localization.kr.DATA_CENTER}` : `${Localization.kr.DOMAIN}`;
+  const title = sourceContext === "fromDomain" 
+    ? `${Localization.kr.DATA_CENTER}` 
+    : `${Localization.kr.DOMAIN}`;
   const label = sourceContext === "fromDomain"
 
   const onSuccess = () => {
@@ -50,13 +55,13 @@ const DomainAttachModal = ({ isOpen, onClose }) => {
     mutate: attachDomain 
   } = useAttachDomain(onSuccess, () => onClose());
 
-  const transformedDataCenterData = datacenters.map((dc) => ({
+  const transformedDataCenterData = [...datacenters].map((dc) => ({
     ...dc,
     name: dc?.name,
     storageType: dc?.storageType ? "로컬" : "공유됨",
   }));
 
-  const transformedDomainData = domains
+  const transformedDomainData = [...domains]
     .filter((d) => d.dataCenterVo.id === "") // 데이터센터가 없는것만
     .map((domain) => ({
       ...domain,
@@ -66,7 +71,8 @@ const DomainAttachModal = ({ isOpen, onClose }) => {
         domain?.domainType === "data"
           ? "데이터"
           : domain?.domainType === "iso"
-            ? "ISO" : "EXPORT",
+            ? "ISO" 
+            : "EXPORT",
       storageType:
         domain?.storageType === "nfs"
           ? "NFS"

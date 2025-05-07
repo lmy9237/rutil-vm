@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import useSearch from "../../../hooks/useSearch";
 import useGlobal from "../../../hooks/useGlobal";
 import SearchBox from "../../../components/button/SearchBox";
@@ -34,20 +34,29 @@ const DiskDomains = ({
     ...e,
   }));
   
-  const transformedData = [...domains].map((domain) => ({
-    ...domain,
-    status: domain?.status === 'ACTIVE' ? '활성화' : '비활성화',
-    icon: status2Icon(domain.status),
-    storageDomain: (<TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>),
-    domainType: domain?.domainType === 'data' 
-        ? '데이터'
-        : domain?.domainType === 'iso' 
-          ? 'ISO'
-          : 'EXPORT',
-    diskSize: sizeCheck(domain?.diskSize),
-    availableSize: sizeCheck(domain?.availableSize),
-    usedSize: sizeCheck(domain?.usedSize),
-  }))
+  const sizeCheck = (size=0) => {
+    Logger.debug(`DiskDomains > sizeCheck ... size: ${size}`)
+    return (size === 0) 
+      ? 'N/A' 
+      : `${convertBytesToGB(size)} GB`;
+  };
+  
+  const transformedData = useMemo(() => 
+    [...domains].map((domain) => ({
+      ...domain,
+      status: domain?.status === 'ACTIVE' ? '활성화' : '비활성화',
+      icon: status2Icon(domain.status),
+      storageDomain: (<TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>),
+      domainType: domain?.domainType === 'data' 
+          ? '데이터'
+          : domain?.domainType === 'iso' 
+            ? 'ISO'
+            : 'EXPORT',
+      diskSize: sizeCheck(domain?.diskSize || 0),
+      availableSize: sizeCheck(domain?.availableSize || 0),
+      usedSize: sizeCheck(domain?.usedSize || 0),
+    }))
+  , [domains])
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   const handleRefresh = useCallback(() =>  {
@@ -56,13 +65,6 @@ const DiskDomains = ({
     refetchDomains()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
-  
-  const sizeCheck = (size) => {
-    Logger.debug(`DiskDomains > sizeCheck ... size: ${size}`)
-    return (size === 0) 
-      ? 'N/A' 
-      : `${convertBytesToGB(size)} GB`;
-  };
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
