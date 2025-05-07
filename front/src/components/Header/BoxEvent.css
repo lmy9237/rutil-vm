@@ -83,12 +83,10 @@
   white-space: normal;
   align-items:flex-start !important;
 }
-.bell-mid p {
+.bell-mid p { 
+  /*height: auto;max-height:32px;*/
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  white-space: normal !important; 
 }
 /* bell-content가 활성화되었을 때 (내용에 따라 높이 자동 조절) */
 .bell-content.open {

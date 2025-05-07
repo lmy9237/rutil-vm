@@ -7,7 +7,6 @@ import IconButton from "../Input/IconButton";
 import StatusBadge from "../common/StatusBadge";
 import PopupBox from "../common/PopupBox";
 import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
 import "./HeaderButton.css";
 
 /**
@@ -57,9 +56,10 @@ const HeaderButton = ({
   }, []);
 
   // compact일 때는 모든 버튼을 popupItems로 이동
-  const allPopupItems = isCompactMode ? [...buttons, ...popupItems] : popupItems;
+  const allPopupItems = isCompactMode 
+    ? [...buttons, ...popupItems] 
+    : popupItems;
 
-  Logger.debug("HeaderButton ...");
   return (
     <div className="section-header f-btw">
       <div className="section-header-left f-btw">

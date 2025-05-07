@@ -16,6 +16,9 @@
 .section-header-left h1.inverse {
   color:var(--color-white)
 }
+.section-header-title {
+  
+}
 .article-nav {
   flex-wrap: wrap;
   min-height: var(--h-right-btn);
