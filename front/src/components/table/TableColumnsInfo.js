@@ -516,8 +516,10 @@ const TableColumnsInfo = {
     { header: 'serial', accessor: 'serial', clickable: false },
   ],
   IMPORT_FIBRE: [
+    { header: 'check', accessor: 'check', clickable: false },
+    { header: 'status', accessor: 'status', clickable: false },
     { header: Localization.kr.NAME, accessor: 'name', clickable: true, width: '30%' },
-    { header: 'id', accessor: 'id', clickable: true },
+    { header: '스토리지 Id (VG 이름)', accessor: 'volumeGroupId', clickable: true },
   ],
   DISKS_FROM_STORAGE_DOMAIN: [
     { header: Localization.kr.ALIAS, accessor: '_alias', clickable: false , width: '16%' },

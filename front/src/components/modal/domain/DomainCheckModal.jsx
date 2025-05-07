@@ -4,7 +4,9 @@ import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
 import toast from "react-hot-toast";
 
-const DomainCheckModal = ({ isOpen, onClose, domain, onApprove }) => {
+const DomainCheckModal = ({ 
+  isOpen, onClose, mode, domain, onApprove 
+}) => {
   const [approved, setApproved] = useState(false);
 
   const handleSubmit = () => {
