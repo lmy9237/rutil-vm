@@ -5,7 +5,7 @@ import Localization from "../../../utils/Localization";
 import toast from "react-hot-toast";
 
 const DomainCheckModal = ({ 
-  isOpen, onClose, mode, domain, onApprove 
+  isOpen, onClose, domain, onApprove 
 }) => {
   const [approved, setApproved] = useState(false);
 

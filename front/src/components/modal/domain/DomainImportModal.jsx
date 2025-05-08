@@ -18,7 +18,6 @@ import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import useGlobal from "../../../hooks/useGlobal";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import DomainCheckModal from "./DomainCheckModal";
 
 // 일반 정보
 const initialFormState = {
@@ -45,12 +44,8 @@ const DomainImportModal = ({
   const [storageTypes, setStorageTypes] = useState([]);
   const [nfsAddress, setNfsAddress] = useState(""); // nfs
   const [id, setId] = useState(""); // fibre 사용 id
-  const [vgId, setVgId] = useState(""); // fibre 사용 f?.storageVo.volumeGroupVo?.id
 
-  const [fibres, setFibres] = useState([]);
-
-  const [isDomainCheckOpen, setDomainCheckOpen] = useState(false);
-  const [selectedLunData, setSelectedLunData] = useState(null); // overwrite 일때 넘겨줄 값
+  // const [fibres, setFibres] = useState([]);
 
   const onSuccess = () => {
     onClose();
@@ -67,15 +62,11 @@ const DomainImportModal = ({
     isLoading: isHostsLoading 
   } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
   const { 
-    mutate: searchFc, 
+    data: fibres = [], 
     isLoading: isFibresLoading,
     isError: isFibresError, 
     isSuccess: isFibresSuccess
-  } = useSearchFcFromHost(setFibres, (error) => console.error(error));
-  
-  useEffect(() => {
-    Logger.debug("가져온 FC 데이터:", fibres);
-  }, [fibres]);
+  } = useSearchFcFromHost(hostVo?.id, (e) => ({ ...e }));
   
   
   const isNfs = formState.storageType === "NFS";
@@ -123,15 +114,8 @@ const DomainImportModal = ({
       const firstH = hosts[0];
       setHostVo({ id: firstH.id, name: firstH.name });
     }
-  }, [hosts]);  
-  
-  useEffect(() => {
-    if (isFibre && hostVo?.id) {
-      searchFc({ hostId: hostVo.id });
-    }
-  }, [hostVo?.id, isFibre, searchFc]);
-  
-  
+  }, [hosts]);
+
   useEffect(() => {
     const options = storageTypeOptions(formState.domainType);
     setStorageTypes(options);
@@ -165,12 +149,7 @@ const DomainImportModal = ({
     const error = validateForm();
     if (error) return toast.error(error);
 
-    setDomainCheckOpen(true); // 확인 모달 열기
 
-    submitDomain(); // 바로 제출
-  };
-
-  const submitDomain = () => {
     const storageVo = isNfs
       ? (() => {
           const [storageAddress, storagePath] = nfsAddress.split(":");
@@ -181,7 +160,18 @@ const DomainImportModal = ({
           return {
             type: "FCP",
             id: selectedFibre.id,
-            volumeGroupVo: { id: selectedFibre.storageVo.volumeGroupVo.id, logicalUnitVos: [{ id: selectedFibre.storageVo.volumeGroupVo.logicalUnitVos[0].id }] }
+            volumeGroupVo: { 
+              id: selectedFibre.storageVo.volumeGroupVo.id, 
+              logicalUnitVos: [
+                { 
+                  id: selectedFibre.storageVo.volumeGroupVo.logicalUnitVos[0].id,
+                  serial: selectedFibre.storageVo.volumeGroupVo.logicalUnitVos[0].serial,
+                  status: selectedFibre.storageVo.volumeGroupVo.logicalUnitVos[0].status,
+                  vendorId: selectedFibre.storageVo.volumeGroupVo.logicalUnitVos[0].vendorId,
+                  volumeGroupId: selectedFibre.storageVo.volumeGroupVo.logicalUnitVos[0].volumeGroupId,
+                }
+              ] 
+            }
           };
         })();
         
@@ -202,8 +192,7 @@ const DomainImportModal = ({
     };
   
     importDomain(dataToSubmit, { onSuccess: onSubmitSuccess });
-  };
-  
+  };  
 
   return (
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={"가져오기"}
@@ -268,7 +257,6 @@ const DomainImportModal = ({
         <DomainImportFibre
           fibres={fibres}
           id={id} setId={setId}
-          // vgId={vgId} setVgId={setVgId}
           isFibresLoading={isFibresLoading} isFibresError={isFibresError} isFibresSuccess={isFibresSuccess}
         />
       )}
@@ -286,18 +274,6 @@ const DomainImportModal = ({
           />
         </div>
       </div>
-      <DomainCheckModal
-        isOpen={isDomainCheckOpen}
-        onClose={() => {
-          setDomainCheckOpen(false);
-          setSelectedLunData(null);
-        }}
-        domain={selectedLunData}
-        onApprove={() => {
-          setDomainCheckOpen(false);
-          submitDomain(); // 승인했으면 최종 등록
-        }}
-      />
     </BaseModal>
   );
 };

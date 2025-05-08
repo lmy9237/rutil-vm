@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.model.storage.StorageDomainVo.Companion
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
@@ -312,12 +313,6 @@ class StorageServiceImpl(
 	override fun import(storageDomainVo: StorageDomainVo): StorageDomainVo? {
 		log.info("import ... storageDomain name: {}", storageDomainVo.name)
 
-		// NFS 라면 생성 함수로(?)
-		if (storageDomainVo.storageVo.type == StorageType.NFS) {
-			return add(storageDomainVo)
-		}
-
-		// ISCSI, FCP 는 가져오기  addBlockDomain
 		val res: StorageDomain? = conn.importStorageDomain(
 			storageDomainVo.toImportStorageDomain(),
 			storageDomainVo.dataCenterVo.id

@@ -82,35 +82,50 @@ fun List<HostStorage>.toGroupHostStorageVos(): List<StorageVo> =
 	this@toGroupHostStorageVos.map { it.toGroupHostStorageVo() }
 
 
+fun StorageVo.toHostStorageBuilder(): HostStorageBuilder {
+	return HostStorageBuilder()
+		.type(StorageType.fromValue(type.value()))
+}
 
 // NFS
 fun StorageVo.toAddNFS(): HostStorage {
-	return HostStorageBuilder()
-		.type(StorageType.fromValue(type.value()))
+	return toHostStorageBuilder()
 		.address(address)
 		.path(path)
+		.overrideLuns(true) // 덮어쓰기
 		.build()
 }
 
 // ISCSI, FC
 fun StorageVo.toAddBlockStorage(): HostStorage {
-	return HostStorageBuilder()
-		.type(StorageType.fromValue(type.value()))
+	return toHostStorageBuilder()
 		.logicalUnits(volumeGroupVo.logicalUnitVos.map {
 			LogicalUnitBuilder().id(it.id).build()
 		})
-		.overrideLuns(true) // 생성 기능 강제 처리
+		.overrideLuns(true) // 덮어쓰기
+		.build()
+}
+
+fun StorageVo.toImportNFS(): HostStorage {
+	return toHostStorageBuilder()
+		.address(address)
+		.path(path)
+		.overrideLuns(false) // 덮어쓰기 방지
 		.build()
 }
 
 fun StorageVo.toImportBlockStorage(): HostStorage {
-	return HostStorageBuilder()
-		.type(StorageType.fromValue(type.value()))
+	return toHostStorageBuilder()
 		.volumeGroup(VolumeGroupBuilder().id(volumeGroupVo.id).build())
 		.logicalUnits(volumeGroupVo.logicalUnitVos.map {
-			LogicalUnitBuilder().id(it.id).build()
+			LogicalUnitBuilder()
+				.id(it.id)
+				.serial(it.serial)
+				.vendorId(it.vendorId)
+				.volumeGroupId(it.volumeGroupId)
+				.build()
 		})
-		.overrideLuns(true)  //생성기능 강제 처리
+		.overrideLuns(false)  // 덮어쓰기 방지
 		.build()
 }
 
@@ -122,27 +137,5 @@ fun StorageVo.toImportBlockStorage(): HostStorage {
 // 		.logicalUnits(this.volumeGroupVo.logicalUnitVos.map {
 // 			LogicalUnitBuilder().id(it.id).build()
 // 		})
-// 		.build()
-// }
-//
-// // Fibre Channel
-// fun StorageVo.toAddFCPBuilder(): HostStorage {
-// 	return HostStorageBuilder()
-// 		.type(StorageType.fromValue(this.type.value()))
-// 		.logicalUnits(this.volumeGroupVo.logicalUnitVos.map {
-// 			LogicalUnitBuilder().id(it.id).build()
-// 		})
-// 		.overrideLuns(true)
-// 		// overrideLuns = 생성기능 강제 처리
-// 		// This operation might be unrecoverable and destructive.
-// 		// the following luns are alread in use,"
-// 		// 버튼 "approve operation"
-// 		// .volumeGroup(
-// 		// 	VolumeGroupBuilder().logicalUnits(
-// 		// 		this@toAddFCPBuilder.logicalUnits.map {
-// 		// 			LogicalUnitBuilder().id(it).build()
-// 		// 		}
-// 		// 	)
-// 		// )
 // 		.build()
 // }

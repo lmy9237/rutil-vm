@@ -7,7 +7,6 @@ import LabelCheckbox from '../../../label/LabelCheckbox';
 const DomainImportFibre = ({ 
   fibres,
   id, setId,
-  // vgId, setVgId,
   isFibresLoading, isFibresError, isFibresSuccess
 }) => {  
   Logger.debug("DomainImportFibre ...")

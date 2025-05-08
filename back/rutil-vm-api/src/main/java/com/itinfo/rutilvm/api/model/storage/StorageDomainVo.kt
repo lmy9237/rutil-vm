@@ -140,12 +140,17 @@ fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 	val storageDomain = this@toStorageDomainInfoVo
 	val dataCenter: DataCenter? = resolveDataCenter(conn)
 	val host: Host? = findHostFromStorageDomain(conn)
+	val storageDomainStatus = dataCenter?.let {
+		conn.findAttachedStorageDomainFromDataCenter(it.id(), storageDomain.id()).getOrNull()?.status()
+	}
+
 	return StorageDomainVo.builder {
 		id { storageDomain.id() }
 		name { storageDomain.name() }
 		description { storageDomain.description() }
 		comment { storageDomain.comment() }
 		type { storageDomain.type().value() }
+		status { storageDomainStatus }
 		master { if(storageDomain.masterPresent()) storageDomain.master() else false}
 		storageFormat { storageDomain.storageFormat() }
 		size { storageDomain.toDomainSize() }
@@ -232,21 +237,51 @@ fun StorageDomainVo.toAddStorageDomain(): StorageDomain {
 				else -> throw IllegalArgumentException("Unsupported storage type")
 			}
 		)
-		.wipeAfterDelete(false) // 덮어쓰기 시 필수
+		// .wipeAfterDelete(false) // 삭제 후 초기화
 		.build()
 }
 
 /**
  * 도메인 가져오기
- * FC , ISCSI
  */
 fun StorageDomainVo.toImportStorageDomain(): StorageDomain {
 	log.info("toImportStorageDomain: {}", this)
-	return toStorageDomainBuilder()
-		.storage(storageVo.toImportBlockStorage())
-		.id(id)
+	val builder = toStorageDomainBuilder().import_(true)
+	if (storageVo.type != StorageType.NFS) builder.id(id)
+
+	return builder
+		.storage(
+			when (StorageType.fromValue(storageVo.type.value())) {
+				StorageType.NFS -> storageVo.toImportNFS()
+				StorageType.FCP, StorageType.ISCSI -> storageVo.toImportBlockStorage()
+				else -> throw IllegalArgumentException("Unsupported storage type")
+			}
+		)
 		.build()
 }
+
+// /**
+//  * 도메인 가져오기
+//  * NFS
+//  */
+// fun StorageDomainVo.toImportNfs(): StorageDomain {
+// 	log.info("toImportNfs: {}", this)
+// 	return toStorageDomainBuilder()
+// 		.storage(storageVo.toImportNFS())
+// 		.id(id)
+// 		.build()
+// }
+// /**
+//  * 도메인 가져오기
+//  * FC , ISCSI
+//  */
+// fun StorageDomainVo.toImportBlockStorage(): StorageDomain {
+// 	log.info("toImportBlockStorage: {}", this)
+// 	return toStorageDomainBuilder()
+// 		.storage(storageVo.toImportBlockStorage())
+// 		.id(id)
+// 		.build()
+// }
 
 /**
  * 도메인 편집 빌더

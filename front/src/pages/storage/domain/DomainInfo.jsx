@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
-import DomainModals from "../../../components/modal/domain/DomainModals";
 import DomainGeneral from "./DomainGeneral";
 import DomainDatacenters from "./DomainDatacenters";
 import DomainVms from "./DomainVms";
@@ -54,18 +53,39 @@ const DomainInfo = () => {
     setSourceContext("fromDomain")
   }, [domain])
 
-  const sections = useMemo(() => ([
-    { id: "general", label: Localization.kr.GENERAL },
-    { id: "datacenters", label: Localization.kr.DATA_CENTER },
-    { id: "vms", label: Localization.kr.VM },
-    { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}` },
-    { id: "templates", label: Localization.kr.TEMPLATE },
-    { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}` },
-    { id: "disks", label: Localization.kr.DISK },
-    { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}` },
-    { id: "diskSnapshots", label: "디스크 스냅샷" },
-    { id: "events", label: Localization.kr.EVENT },
-  ]), []);
+  // const sections = useMemo(() => ([
+  //   { id: "general", label: Localization.kr.GENERAL },
+  //   { id: "datacenters", label: Localization.kr.DATA_CENTER },
+  //   { id: "vms", label: Localization.kr.VM },
+  //   { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}` },
+  //   { id: "templates", label: Localization.kr.TEMPLATE },
+  //   { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}` },
+  //   { id: "disks", label: Localization.kr.DISK },
+  //   { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}` },
+  //   { id: "diskSnapshots", label: "디스크 스냅샷" },
+  //   { id: "events", label: Localization.kr.EVENT },
+  // ]), []);
+  
+  const sections = useMemo(() => {
+    const baseSections = [
+      { id: "general", label: Localization.kr.GENERAL },
+      { id: "datacenters", label: Localization.kr.DATA_CENTER },
+      { id: "vms", label: Localization.kr.VM },
+      { id: "templates", label: Localization.kr.TEMPLATE },
+      { id: "disks", label: Localization.kr.DISK },
+      { id: "diskSnapshots", label: "디스크 스냅샷" },
+      { id: "events", label: Localization.kr.EVENT },
+    ];
+  
+    if (domain?.status !== "UNATTACHED") {
+      baseSections.splice(3, 0, { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}` });
+      baseSections.splice(5, 0, { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}` });
+      baseSections.splice(7, 0, { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}` });
+    }
+  
+    return baseSections;
+  }, [domain?.status]);
+  
 
   const pathData = useMemo(() => ([
     domain?.name,
@@ -127,6 +147,7 @@ const DomainInfo = () => {
     <SectionLayout>
       <HeaderButton titleIcon={rvi24Storage()} 
         title={domain?.name}
+        status={Localization.kr.renderStatus(domain?.status)}
         buttons={sectionHeaderButtons}
         popupItems={popupItems}
       />

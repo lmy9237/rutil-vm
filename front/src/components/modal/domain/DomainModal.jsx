@@ -68,6 +68,8 @@ const DomainModal = ({
   const [isOverwrite, setIsOverwrite] = useState(false);
   const [selectedLunData, setSelectedLunData] = useState(null); // overwrite 일때 넘겨줄 값
 
+  const isNfs = formState.storageType === "NFS";
+  const isFibre = formState.storageType === "FCP";
 
   const onSuccess = () => {
     onClose();
@@ -90,10 +92,7 @@ const DomainModal = ({
     isLoading: isFibresLoading,
     isError: isFibresError, 
     isSuccess: isFibresSuccess
-  } = useFibreFromHost(hostVo?.id, (e) => ({ ...e }));
-  
-  const isNfs = formState.storageType === "NFS";
-  const isFibre = formState.storageType === "FCP";
+  } = useFibreFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
 
   const resetFormStates = () => {
     setFormState(initialFormState);
@@ -152,30 +151,30 @@ const DomainModal = ({
   }, [datacenterId, datacenters, editMode]);
 
   useEffect(() => {
+    if (!editMode && hosts && hosts.length > 0 && !hostVo.id) {
+      const firstH = hosts[0];
+      setHostVo({ id: firstH.id, name: firstH.name });
+    }
+  }, [hosts, editMode, hostVo.id]);
+
+  useEffect(() => {
     if (!editMode && dataCenterVo.id) {
       setFormState((prev) => ({ ...initialFormState, domainType: prev.domainType }));
       setStorageTypes(storageTypeOptions(initialFormState.domainType));
       setNfsAddress("");
       setLunId("");
-      refetchFibres();
-    }
-  }, [dataCenterVo, editMode, refetchFibres]);
-  
-  useEffect(() => {
-    if (!editMode && hosts && hosts.length > 0) {
-      const firstH = hosts[0];
-      setHostVo({ id: firstH.id, name: firstH.name });
-    }
-  }, [hosts, editMode]);  
-  
-  useEffect(() => {
-    if (!editMode && isFibre) {
       if (hostVo?.id) {
         refetchFibres();
       }
     }
-  }, [hostVo?.id, isFibre, editMode, refetchFibres]);
+  }, [dataCenterVo, editMode, hostVo?.id, refetchFibres]);
   
+  useEffect(() => {
+    if (!editMode && isFibre && hostVo?.id) {
+      refetchFibres();
+    }
+  }, [hostVo?.id, isFibre, editMode, refetchFibres]);
+
   useEffect(() => {
     const options = storageTypeOptions(formState.domainType);
     setStorageTypes(options);
@@ -334,7 +333,7 @@ const DomainModal = ({
       )}
 
       {/* Firbre 의 경우 */}
-      {isFibre && (
+      {isFibre && hostVo?.id && (
         <DomainFibre
           editMode={editMode}
           domain={editMode? domain : ""} 

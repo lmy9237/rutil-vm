@@ -1462,8 +1462,24 @@ export const useSearchIscsiFromHost = (
  * @see ApiManager.findSearchFcFromHost
  */
 export const useSearchFcFromHost = (
+  hostId,
+  mapPredicate,
   postSuccess=()=>{},postError
-) => {
+) => useQuery({
+  refetchOnWindowFocus: true,
+  queryKey: ['searchFcFromHost', hostId], 
+  queryFn: async () => {
+    const res = await ApiManager.findSearchFcFromHost(hostId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useSearchFcFromHost ... hostId: ${hostId}, res: `, _res);
+    return _res; // 데이터 가공 후 반환
+  },
+  enabled: !!hostId,
+});
+/*
+=> {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ hostId }) => {
@@ -1485,7 +1501,7 @@ export const useSearchFcFromHost = (
     },
   });
 };
-
+*/
 
 /**
  * @name useLoginIscsiFromHost

@@ -69,7 +69,7 @@ fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: Stri
 fun Connection.importStorageDomain(storageDomain: StorageDomain, dataCenterId: String): Result<StorageDomain?> = runCatching {
 	log.info("importStorageDomain--- dataCenterId: {}", dataCenterId)
 	val storageImported: StorageDomain? =
-		this.srvStorageDomains().addBlockDomain().storageDomain(storageDomain).send().storageDomain()
+		this.srvStorageDomains().add().storageDomain(storageDomain).send().storageDomain()
 
 	// 스토리지 도메인이 생성되지 않았을 경우 예외 처리
 	storageImported ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()

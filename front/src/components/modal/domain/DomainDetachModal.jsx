@@ -19,10 +19,11 @@ const DomainDetachModal = ({ isOpen, onClose }) => {
   const label = sourceContext === "fromDomain"
 
   const onSuccess = () => {
-    onClose();
+    // onClose();
     toast.success(`${title} 분리 완료`);
   };
-  const { mutate: detachDomain } = useDetachDomain(onSuccess, () => onClose());
+  const { mutate: detachDomain } = useDetachDomain(onSuccess);
+  // const { mutate: detachDomain } = useDetachDomain(onSuccess, () => onClose());
 
   const { data: vms = [] } = useAllVMsFromDomain(domainsSelected[0]?.id, (e) => ({ ...e, }));
   const { data: templates = [] } = useAllTemplatesFromDomain(domainsSelected[0]?.id, (e) => ({ ...e }));
@@ -33,6 +34,7 @@ const DomainDetachModal = ({ isOpen, onClose }) => {
   const transformedSnapshotData = diskSnapshots.map((vm) => ({ name: vm?.name }));
     
   const handleFormSubmit = () => {
+    onClose();
     detachDomain({ dataCenterId: datacentersSelected[0].id, domainId: domainsSelected[0]?.id });
   };
 
