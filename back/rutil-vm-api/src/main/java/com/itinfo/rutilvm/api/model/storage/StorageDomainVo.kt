@@ -152,7 +152,6 @@ fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 		usedSize { storageDomain.used() }
 		availableSize { storageDomain.available() }
 		commitedSize { storageDomain.committed() }
-		// overCommit {  }
 		warning { storageDomain.warningLowSpaceIndicatorAsInteger() }
 		spaceBlocker { storageDomain.criticalSpaceActionBlockerAsInteger() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }

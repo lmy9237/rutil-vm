@@ -11,7 +11,6 @@ import {
   useImportDomain,
   useAllDataCenters,
   useHostsFromDataCenter,
-  useFibreFromHost,
   useSearchFcFromHost,
 } from "../../../api/RQHook";
 import { checkName } from "../../../util";
@@ -45,10 +44,12 @@ const DomainImportModal = ({
   const [hostVo, setHostVo] = useState({ id: "", name: "" });
   const [storageTypes, setStorageTypes] = useState([]);
   const [nfsAddress, setNfsAddress] = useState(""); // nfs
-  const [lunId, setLunId] = useState(""); // fibre 사용
+  const [id, setId] = useState(""); // fibre 사용 id
+  const [vgId, setVgId] = useState(""); // fibre 사용 f?.storageVo.volumeGroupVo?.id
+
+  const [fibres, setFibres] = useState([]);
 
   const [isDomainCheckOpen, setDomainCheckOpen] = useState(false);
-  const [isOverwrite, setIsOverwrite] = useState(false);
   const [selectedLunData, setSelectedLunData] = useState(null); // overwrite 일때 넘겨줄 값
 
   const onSuccess = () => {
@@ -56,14 +57,6 @@ const DomainImportModal = ({
     toast.success(`${Localization.kr.DOMAIN} 가져오기 ${Localization.kr.FINISHED}`);
   };
   const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose());
-  // const { mutate: searchFc } = useSearchFcFromHost(onSuccess, () => onClose());
-  const {
-    data: fibres = [],
-    refetch: refetchFibres,
-    isLoading: isFibresLoading,
-    isError: isFibresError,
-    isSuccess: isFibresSuccess,
-  } = useSearchFcFromHost(hostVo?.id);
   
   const { 
     data: datacenters = [],
@@ -73,24 +66,17 @@ const DomainImportModal = ({
     data: hosts = [],
     isLoading: isHostsLoading 
   } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
+  const { 
+    mutate: searchFc, 
+    isLoading: isFibresLoading,
+    isError: isFibresError, 
+    isSuccess: isFibresSuccess
+  } = useSearchFcFromHost(setFibres, (error) => console.error(error));
   
-  // importIscsiFromHostAPI(
-    //       { hostId: hostVo?.id, iscsiData: formSearchState },
-    //       { 
-    //         onSuccess: (data) => {
-    //           setIscsiResults(data);
-    //           // setIsIscsisLoading(false);
-    //           // setIsIscsisSuccess(true);
-    //           // setIsIscsisError(false);
-    //         },
-    //         onError: (error) => {
-    //           toast.error("iSCSI 가져오기 실패");
-    //         //   setIsIscsisLoading(false);
-    //         //   setIsIscsisSuccess(false);
-    //         //   setIsIscsisError(true);
-    //         },
-    //       }
-    //     );
+  useEffect(() => {
+    Logger.debug("가져온 FC 데이터:", fibres);
+  }, [fibres]);
+  
   
   const isNfs = formState.storageType === "NFS";
   const isFibre = formState.storageType === "FCP";
@@ -100,7 +86,7 @@ const DomainImportModal = ({
     setHostVo({ id: "", name: "" });
     setStorageTypes([]);
     setNfsAddress("");
-    setLunId("");
+    setId("");
   };
 
   useEffect(() => {
@@ -127,10 +113,10 @@ const DomainImportModal = ({
       setFormState((prev) => ({ ...initialFormState, domainType: prev.domainType }));
       setStorageTypes(storageTypeOptions(initialFormState.domainType));
       setNfsAddress("");
-      setLunId("");
-      refetchFibres();
+      setId("");
+      // refetchFibres();
     }
-  }, [dataCenterVo, refetchFibres]);
+  }, [dataCenterVo]);
   
   useEffect(() => {
     if (hosts && hosts.length > 0) {
@@ -140,12 +126,11 @@ const DomainImportModal = ({
   }, [hosts]);  
   
   useEffect(() => {
-    if (isFibre) {
-      if (hostVo?.id) {
-        refetchFibres();
-      }
+    if (isFibre && hostVo?.id) {
+      searchFc({ hostId: hostVo.id });
     }
-  }, [hostVo?.id, isFibre, refetchFibres]);
+  }, [hostVo?.id, isFibre, searchFc]);
+  
   
   useEffect(() => {
     const options = storageTypeOptions(formState.domainType);
@@ -157,7 +142,7 @@ const DomainImportModal = ({
 
   useEffect(() => {
     setNfsAddress("");
-    setLunId("");    
+    setId("");    
   }, [formState.storageType]);
 
   const validateForm = () => {
@@ -170,19 +155,8 @@ const DomainImportModal = ({
     if (isNfs && !nfsAddress) return "경로를 입력해주세요.";
     if (isNfs && (!nfsAddress.includes(':') || !nfsAddress.includes('/'))){
       return "주소입력이 잘못되었습니다."
-    }
-    
-    if (isFibre) {
-      if (!lunId) return "LUN을 반드시 선택해주세요."; // 🔥 추가된 부분
-      const selectedLogicalUnit = fibres
-        .map(f => f.logicalUnitVos[0])
-        .find(lun => lun?.id === lunId);
-        
-      if (!selectedLogicalUnit) return "선택한 LUN 정보가 올바르지 않습니다."; // 추가 방어로직
-      if (selectedLogicalUnit.storageDomainId !== "") {
-        return "이미 다른 도메인에서 사용 중인 LUN은 선택할 수 없습니다."; // 더 명확한 메시지
-      }
-    }
+    }    
+    if (isFibre && !id) return "id을 반드시 선택해주세요."; // 🔥 추가된 부분
 
     return null;
   };
@@ -190,33 +164,30 @@ const DomainImportModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) return toast.error(error);
-  
-    const selectedLogicalUnit = fibres
-      .map(f => f.logicalUnitVos[0])
-      .find(lun => lun?.id === lunId);
 
-    if (selectedLogicalUnit.status === "USED") {
-      setSelectedLunData(selectedLogicalUnit);
-      setIsOverwrite(true);
-      setDomainCheckOpen(true); // 확인 모달 열기
-      return;
-    }
+    setDomainCheckOpen(true); // 확인 모달 열기
 
     submitDomain(); // 바로 제출
   };
 
   const submitDomain = () => {
-    const [storageAddress, storagePath] = nfsAddress.split(":");
-    const logicalUnit = fibres
-      .map(f => f.logicalUnitVos[0])
-      .find(lun => lun?.id === lunId);
-  
     const storageVo = isNfs
-      ? { type: "NFS", address: storageAddress, path: storagePath }
-      : { type: "FCP", volumeGroupVo: { logicalUnitVos: [{ id: logicalUnit.id }] }};
-  
+      ? (() => {
+          const [storageAddress, storagePath] = nfsAddress.split(":");
+          return { type: "NFS", address: storageAddress, path: storagePath };
+        })()
+      : (() => {
+          const selectedFibre = fibres.find((f) => f.id === id);
+          return {
+            type: "FCP",
+            id: selectedFibre.id,
+            volumeGroupVo: { id: selectedFibre.storageVo.volumeGroupVo.id, logicalUnitVos: [{ id: selectedFibre.storageVo.volumeGroupVo.logicalUnitVos[0].id }] }
+          };
+        })();
+        
     const dataToSubmit = {
       ...formState,
+      id: isFibre ? id : "",
       type: formState.domainType,
       dataCenterVo,
       hostVo,
@@ -226,7 +197,7 @@ const DomainImportModal = ({
     Logger.debug(`DomainModal > submitDomain ... dataToSubmit:`, dataToSubmit);
 
     const onSubmitSuccess = () => {
-      onClose();  // 🔥 모달 닫기
+      onClose();
       toast.success(`${Localization.kr.DOMAIN} 가져오기 ${Localization.kr.FINISHED}`);
     };
   
@@ -296,7 +267,8 @@ const DomainImportModal = ({
       {isFibre && (
         <DomainImportFibre
           fibres={fibres}
-          lunId={lunId} setLunId={setLunId}
+          id={id} setId={setId}
+          // vgId={vgId} setVgId={setVgId}
           isFibresLoading={isFibresLoading} isFibresError={isFibresError} isFibresSuccess={isFibresSuccess}
         />
       )}
@@ -318,7 +290,6 @@ const DomainImportModal = ({
         isOpen={isDomainCheckOpen}
         onClose={() => {
           setDomainCheckOpen(false);
-          setIsOverwrite(false);
           setSelectedLunData(null);
         }}
         domain={selectedLunData}

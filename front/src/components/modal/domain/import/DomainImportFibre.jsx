@@ -2,12 +2,12 @@ import React, { useMemo } from 'react';
 import TableColumnsInfo from '../../../table/TableColumnsInfo';
 import Tables from '../../../table/Tables';
 import Logger from '../../../../utils/Logger';
-import { checkZeroSizeToGiB } from '../../../../util';
 import LabelCheckbox from '../../../label/LabelCheckbox';
 
 const DomainImportFibre = ({ 
   fibres,
-  lunId, setLunId,
+  id, setId,
+  // vgId, setVgId,
   isFibresLoading, isFibresError, isFibresSuccess
 }) => {  
   Logger.debug("DomainImportFibre ...")
@@ -16,32 +16,23 @@ const DomainImportFibre = ({
     if (isFibresLoading || !fibres) return [];
 
     return fibres.map((f) => {
-      const fc = f?.logicalUnitVos[0];
-      if (!fc) return null;
-
-      // fc가 켜져있고 스토리지도메인에 연결되지 않았을때
-      const isSelectable = fc.serial && fc.storageDomainId === "";
-      const isUsed = fc.status === "USED";
+      if (!f) return null;
 
       return {
-        id: fc.id,
         able: 
           <LabelCheckbox
-            checked={lunId === fc.id}
-            onChange={() => setLunId(prev => prev === fc.id ? "" : fc.id)}
+            checked={id === f.id}
+            onChange={() => 
+                setId(prev => prev === f.id ? "" : f.id)
+                // setVgId(prev => prev === f?.storageVo.volumeGroupVo?.id ? "" : f?.storageVo.volumeGroupVo?.id)
+            }
           />
         ,
-        status: fc.status,
-        check: isSelectable ? (isUsed ? "OVERWRITE" : "OK") : "NO",
-        size: checkZeroSizeToGiB(fc.size),
-        paths: fc.paths,
-        vendorId: fc.vendorId,
-        productId: fc.productId,
-        serial: fc.serial,
-        storageDomainId: fc.storageDomainId,
+        name: f.name,        
+        id: f?.id,
       };
     }).filter(Boolean);
-  }, [fibres, isFibresLoading, lunId, setLunId]);
+  }, [fibres, isFibresLoading, id, setId]);
   
   return (
     <div className="storage-popup-iSCSI">
@@ -53,7 +44,7 @@ const DomainImportFibre = ({
           isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
         />
         <br/>
-        <div><span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
+        <div><span style={{ fontSize: '22px' }}>id: {id} <br/> </span> </div>
       </div>
     </div>
   )

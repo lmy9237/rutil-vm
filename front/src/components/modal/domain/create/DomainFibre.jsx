@@ -17,7 +17,6 @@ const DomainFibre = ({
   // 편집일 때
   const transDomainData = useMemo(() => {
     const storage = domain?.storageVo?.volumeGroupVo?.logicalUnitVos[0];
-    
     if (!storage) return [];
   
     return [{

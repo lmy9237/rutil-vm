@@ -106,16 +106,12 @@ fun StorageVo.toAddBlockStorage(): HostStorage {
 fun StorageVo.toImportBlockStorage(): HostStorage {
 	return HostStorageBuilder()
 		.type(StorageType.fromValue(type.value()))
-		.logicalUnits(volumeGroupVo.logicalUnitVos.map { logicalUnitVo ->
-			LogicalUnitBuilder().id(logicalUnitVo.id).build()
-		})
 		.volumeGroup(VolumeGroupBuilder().id(volumeGroupVo.id).build())
+		.logicalUnits(volumeGroupVo.logicalUnitVos.map {
+			LogicalUnitBuilder().id(it.id).build()
+		})
+		.overrideLuns(true)  //생성기능 강제 처리
 		.build()
-		// .overrideLuns(true)
-		// overrideLuns = 생성기능 강제 처리
-		// This operation might be unrecoverable and destructive.
-		// the following luns are alread in use,"
-		// 버튼 "approve operation"
 }
 
 

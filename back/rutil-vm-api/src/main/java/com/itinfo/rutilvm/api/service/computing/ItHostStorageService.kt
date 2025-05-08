@@ -6,8 +6,12 @@ import com.itinfo.rutilvm.api.model.computing.toHostStorageVos
 import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
 import com.itinfo.rutilvm.api.model.storage.LogicalUnitVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.model.storage.StorageVo
+import com.itinfo.rutilvm.api.model.storage.VolumeGroupVo
 import com.itinfo.rutilvm.api.model.storage.toBlockLogicalUnitVos
 import com.itinfo.rutilvm.api.model.storage.toDiscoverIscsiDetailVo
+import com.itinfo.rutilvm.api.model.storage.toLogicalUnitVos
+import com.itinfo.rutilvm.api.model.storage.toStorageDomainInfoVo
 import com.itinfo.rutilvm.api.model.storage.toStorageDomainInfoVos
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
@@ -109,8 +113,55 @@ class ItHostStorageServiceImpl(
 	@Throws(Error::class)
 	override fun findUnregisterDomainFromHost(hostId: String): List<StorageDomainVo> {
 		log.info("findUnregisterDomainFromHost... hostId: {}", hostId)
+		val fibres: List<HostStorage> = conn.findAllHostStoragesFromHost(hostId).getOrDefault(emptyList())
+			.filter { it.type() == StorageType.FCP && it.logicalUnits().first().volumeGroupIdPresent() } // 기본 한개라는 가정하에
+
 		val res: List<StorageDomain> = conn.unRegisteredStorageDomainsFromHost(hostId).getOrDefault(emptyList())
-		return res.toStorageDomainInfoVos(conn)
+
+		return res.map { storageDomain ->
+			val storageDomainVo = storageDomain.toStorageDomainInfoVo(conn)
+
+			val matchVgId = fibres.find { fibre ->
+				fibre.logicalUnits().firstOrNull()?.volumeGroupId() == storageDomainVo.storageVo.volumeGroupVo.id
+			}
+
+			if (matchVgId != null) {
+				StorageDomainVo.builder {
+					id { storageDomainVo.id }
+					name { storageDomainVo.name }
+					description { storageDomainVo.description }
+					comment { storageDomainVo.comment }
+					type { storageDomainVo.type }
+					master { storageDomainVo.master }
+					storageFormat { storageDomainVo.storageFormat }
+					size { storageDomainVo.size }
+					usedSize { storageDomainVo.usedSize }
+					availableSize { storageDomainVo.availableSize }
+					commitedSize { storageDomainVo.commitedSize }
+					warning { storageDomainVo.warning }
+					spaceBlocker { storageDomainVo.spaceBlocker }
+					dataCenterVo { storageDomainVo.dataCenterVo }
+					hostVo { storageDomainVo.hostVo }
+					storageVo {
+						StorageVo.builder {
+							type { storageDomainVo.storageVo.type }
+							address { storageDomainVo.storageVo.address }
+							path { storageDomainVo.storageVo.path }
+							nfsVersion { storageDomainVo.storageVo.nfsVersion }
+							volumeGroupVo {
+								VolumeGroupVo.builder {
+									id { storageDomainVo.storageVo.volumeGroupVo.id }
+									logicalUnitVos { matchVgId.logicalUnits().toLogicalUnitVos() }
+								}
+							}
+						}
+					}
+					diskProfileVos { storageDomainVo.diskProfileVos }
+				}
+			} else {
+				storageDomainVo
+			}
+		}
 	}
 
     companion object {

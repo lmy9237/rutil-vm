@@ -1474,8 +1474,9 @@ export const useSearchFcFromHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useSearchFcFromHost ... res: `, res);
+      toast.success(`[200] FC ${Localization.kr.IMPORT} 요청성공`)
       queryClient.invalidateQueries(['fcsFromHost'])
-      postSuccess();
+      postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
