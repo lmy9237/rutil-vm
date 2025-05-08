@@ -670,6 +670,8 @@ export const status2Icon = (
     case "SAVING_STATE": 
     case "RESTORING_STATE": 
     case "WAIT_FOR_LAUNCH":
+    case "DETACHING":
+    case "ACTIVATING":
     case "MIGRATING":                               iconDef = rvi16RebootLined();break;
     case "REBOOT": 
     case "REBOOT_IN_PROGRESS":

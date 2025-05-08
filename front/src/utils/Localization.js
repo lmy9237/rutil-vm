@@ -126,6 +126,7 @@ export const Localization = {
       if (_status === "OK")                 return "양호";
       if (_status === "UP" || _status === "UNASSIGNED")  return "실행 중";
       else if (_status === "ACTIVE")        return "활성화";
+      else if (_status === "ACTIVATING")    return "활성화 중";
       else if (_status === "INSTALLING")    return "설치 중";
       else if (_status === "DOWN")          return "중지";
       else if (_status === "INACTIVE")      return "비활성화";
@@ -144,6 +145,7 @@ export const Localization = {
       else if (_status === "NON_OPERATIONAL") return "비 가동 중";
       else if (_status === "NON_RESPONSIVE") return "응답하지 않음";
       else if (_status === "UNATTACHED")  return "연결 해제";
+      else if (_status === "DETACHING")  return "분리 중";
       else if (_status === "RESTORING_STATE")  return "복구 중";
       else if (_status === "MIGRATING")  return "마이그레이션 중";
       else if (_status === "LOCKED")  return "잠김";

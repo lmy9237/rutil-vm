@@ -31,10 +31,11 @@ const TemplateModals = ({
     ), addVm: (
       <VmModal isOpen={activeModal() === "vm:create"}
         onClose={() => setActiveModal(null)}
+        templateId={template?.id}
       />
     ),
   };
-
+  console.log("🔥 TemplateModals received template:", template);
   return (
     <>
       {Object.keys(modals).filter((key) => 

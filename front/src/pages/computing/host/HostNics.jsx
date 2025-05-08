@@ -197,41 +197,39 @@ const HostNics = ({ hostId }) => {
     }
     if (source === "container" && targetType === "nic") {
       const sourceNic = nicDisplayList.find((nic) => nic.id === item.id);
-      const targetNic = nics.find((nic) => nic.id === targetId); // nicDisplayList❌ → nics⭕ 고침
-      
-      if (!sourceNic || !targetNic) {
-        dragItem.current = null;
-        return;
-      }
-
-      const sourceHasNetwork = [...filteredNAData, ...tempAttachments].some(
-        (na) => na.hostNicVo?.id === sourceNic.id
-      );
-
+      const targetNic = nics.find((nic) => nic.id === targetId);
+      if (!sourceNic || !targetNic) return (dragItem.current = null);
+    
       const targetIsBonding = targetNic?.bondingVo?.slaves?.length > 0;
       const targetNicIds = targetIsBonding
         ? targetNic.bondingVo.slaves.map(slave => slave.id)
         : [targetNic.id];
-
-      const targetHasNetwork = [...filteredNAData, ...tempAttachments].some(
-        (na) => targetNicIds.includes(na.hostNicVo?.id)
-      );
-
-      if (sourceHasNetwork && targetHasNetwork) {
+    
+      const allNA = [...filteredNAData, ...tempAttachments];
+    
+      const sourceNonVlanCount = allNA.filter(
+        na => na.hostNicVo?.id === sourceNic.id && !na.networkVo?.vlan
+      ).length;
+    
+      const targetNonVlanCount = allNA.filter(
+        na => targetNicIds.includes(na.hostNicVo?.id) && !na.networkVo?.vlan
+      ).length;
+    
+      if (sourceNonVlanCount > 0 && targetNonVlanCount > 0) {
         alert("하나의 인터페이스에 둘 이상의 비-VLAN 네트워크를 사용할 수 없습니다.");
         dragItem.current = null;
         return;
       }
-
-      // ⬇️ 여기부터 정상 모달 띄우기 등 네 흐름
+    
+      // 정상 케이스: 모달 띄움
       setSelectedNic(targetNic);
       setIsEditMode(false);
       setSelectedSlave(sourceNic);
       setIsBondingPopupOpen(true);
-
       dragItem.current = null;
       return;
     }
+    
 
     if (source === "nic" && targetType === "nic") {
       const sourceSlave = nics.flatMap(nic => nic.bondingVo?.slaves || []).find(slave => slave.id === item.id);
@@ -244,36 +242,32 @@ const HostNics = ({ hostId }) => {
       }
     
       // 슬레이브가 하나만 남은 본딩 그룹에서 나가는 경우
-      if (sourceBonding && sourceBonding.bondingVo.slaves.length === 1) {
-        // 여기서 슬레이브 단독 NIC 취급
-        const sourceHasNetwork = [...filteredNAData, ...tempAttachments].some(na => na.hostNicVo?.id === sourceSlave.id);
-        const targetHasNetwork = [...filteredNAData, ...tempAttachments].some(na => na.hostNicVo?.id === targetNic.id);
-    
-        if (sourceHasNetwork && targetHasNetwork) {
-          alert("하나의 인터페이스에 둘 이상의 비-VLAN 네트워크를 사용할 수 없습니다.");
-          dragItem.current = null;
-          return;
-        }
-    
-        // 모달 열기
-        setSelectedNic(targetNic);
-        setSelectedSlave(sourceSlave);
-        setIsEditMode(false);
-        setIsBondingPopupOpen(true);
-    
-        // 원래 bonding NIC에서 슬레이브 제거
-        setNics((prevNics) => {
-          const newNics = JSON.parse(JSON.stringify(prevNics));
-          const bonding = newNics.find(nic => nic.id === sourceBonding.id);
-          if (bonding) {
-            bonding.bondingVo.slaves = [];
-          }
-          return newNics;
-        });
-    
-        dragItem.current = null;
-        return;
-      }
+// 슬레이브가 하나만 남은 본딩 그룹에서 나가는 경우
+if (sourceBonding && sourceBonding.bondingVo.slaves.length === 1) {
+  const lastSlave = sourceBonding.bondingVo.slaves[0];
+
+  setNics((prevNics) => {
+    const newNics = prevNics
+      .filter(nic => nic.id !== sourceBonding.id) // 💥 기존 bonding NIC 제거
+      .filter(nic => nic.id !== lastSlave.id)     // 💥 중복 방지용 제거
+
+    // 💥 단일 NIC로 다시 추가
+    newNics.push({
+      ...lastSlave,
+      bondingVo: null,
+    });
+
+    return newNics;
+  });
+
+  // 👉 타겟 bonding 처리도 여기에 같이 할 수도 있음
+
+  dragItem.current = null;
+  return;
+}
+
+
+      
     
       // 나머지 경우 (본딩 그룹 → 본딩 그룹 이동)
       const isTargetBonding = targetNic.bondingVo?.slaves?.length > 0;
@@ -346,16 +340,15 @@ const HostNics = ({ hostId }) => {
       pkts: `${e?.rxTotalError} Pkts` || "1 Pkts",
     }));
 
-    const expectHostNicData = [...transformedData]?.map((nic) => {
-      if (nic.bondingVo?.slaves?.length > 0) {
-        const enrichedSlaves = [...nic?.bondingVo?.slaves]?.map((slave) => {
+    const expectHostNicData = transformedData.map((nic) => {
+      const slaves = nic.bondingVo?.slaves || [];
+    
+      if (slaves.length > 1) {
+        const enrichedSlaves = slaves.map((slave) => {
           const fullSlave = transformedData.find(item => item.id === slave.id);
-          return {
-            ...slave,
-            ...fullSlave,
-          };
+          return { ...slave, ...fullSlave };
         });
-
+    
         return {
           ...nic,
           bondingVo: {
@@ -364,8 +357,14 @@ const HostNics = ({ hostId }) => {
           },
         };
       }
-      return nic;
+    
+      // 💥 슬레이브가 1개 이하면 bonding 제거 (중요!)
+      return {
+        ...nic,
+        bondingVo: null,
+      };
     });
+    
 
     setNics(expectHostNicData);  
     setTempNics(expectHostNicData);   
@@ -373,8 +372,11 @@ const HostNics = ({ hostId }) => {
 
   // 본딩 슬레이브에 있는 아이디값 출력
   const [nics, setNics] = useState([]);
-  const bondingSlaveIds = nics.flatMap(nic => nic.bondingVo?.slaves?.map(slave => slave.id) || []);
-  const nicDisplayList = nics.filter(nic => !bondingSlaveIds.includes(nic.id));
+  const bondingSlaveIds = nics
+  .filter(nic => nic.bondingVo?.slaves?.length > 1)
+  .flatMap(nic => nic.bondingVo.slaves.map(slave => slave.id));
+
+const nicDisplayList = nics.filter(nic => !bondingSlaveIds.includes(nic.id));
 
 
   // 네트워크 결합 데이터 변환
@@ -598,7 +600,7 @@ const HostNics = ({ hostId }) => {
                       tooltipHTML={generateNetworkTooltipHTML(matchedNA)}
                     />
                   ) : (
-                    <div className="empty-network-content container w-[41%] text-gray-400"
+                    <div className="empty-network-content container w-[44%] text-gray-400"
                     onDragOver={(e) => {
                       e.preventDefault();
                       e.stopPropagation();

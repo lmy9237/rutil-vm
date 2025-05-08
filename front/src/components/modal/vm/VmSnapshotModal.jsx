@@ -55,7 +55,7 @@ const VmSnapshotModal = ({
       onSubmit={handleFormSubmit}
       contentStyle={{ minWidth: "500px"}} 
     >
-      <div>
+      <div className="min-h-[150px]">
         <LabelInput id="description" label={Localization.kr.DESCRIPTION}
           value={formState.description} 
           onChange={(e) => setFormState((prev) => ({ ...prev, description: e.target.value }))}

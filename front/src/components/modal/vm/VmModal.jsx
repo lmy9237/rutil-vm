@@ -86,13 +86,13 @@ const bootForm = {
 };
 
 const VmModal = ({ 
-  isOpen, onClose, editMode = false, copyMode = false,
+  isOpen, onClose, editMode = false, copyMode = false, templateId ,
 }) => {
   const vLabel = editMode ? Localization.kr.UPDATE : (copyMode ? "복제" : Localization.kr.CREATE);
 
   const { vmsSelected } = useGlobal();
   const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
-
+  console.log("💡 VmModal > props.templateId 템플릿id 안찍힘:", templateId); // 🔍 여기에 찍기
   const [selectedModalTab, setSelectedModalTab] = useState("common");
 
   const [formInfoState, setFormInfoState] = useState(infoform);
@@ -308,10 +308,17 @@ const VmModal = ({
   }, [isOpen, clusters, editMode]);
 
   useEffect(() => {
-    if (!editMode && templates && templates.length > 0) {
-      setTemplateVo({id: CONSTANT.templateIdDefault});
+    if (!editMode && isOpen && templates.length > 0) {
+      if (templateId) {
+        const found = templates.find(t => t.id === templateId);
+        if (found) {
+          setTemplateVo({ id: found.id, name: found.name });
+        }
+      } else {
+        setTemplateVo({ id: CONSTANT.templateIdDefault });
+      }
     }
-  }, [isOpen, templates, editMode]);
+  }, [isOpen, templates, editMode, templateId]);
   
   // 템플릿항목 숨기는 조건건
   const isTemplateHidden = editMode && templateVo.id === CONSTANT.templateIdDefault;

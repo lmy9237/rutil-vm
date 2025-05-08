@@ -96,7 +96,7 @@ const HostGeneral = ({
   // ]), [tabs, activeTab])
   
   return (
-    <div>
+    <div className="w-[60%]">
       <div className="host-tabs f-start fs-14">
         {[...tabs].map(({ tab, label }, i) => (
           <button key={tab}

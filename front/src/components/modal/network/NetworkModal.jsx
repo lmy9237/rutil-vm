@@ -32,7 +32,6 @@ const initialFormState = {
   vlan: "0",
   usageVm: true,
   portIsolation: false,
-  dnsEnabled: false,
   useCustomMtu: false,      // ✅ 추가
   customMtu: "",            // ✅ 추가
 };
@@ -90,10 +89,10 @@ const NetworkModal = ({
         vlanEnabled: network?.vlan != null && network?.vlan > 0,
         usageVm: network?.usage?.vm,
         portIsolation: network?.portIsolation || false,
-        dnsEnabled: (network?.dnsNameServers || [])?.length !== 0,
+       
       });
       setDataCenterVo({ id: network?.dataCenterVo?.id, name: network?.dataCenterVo?.name });
-      setDnsServers(network?.dnsNameServers)
+      setDnsServers(network?.dnsNameServers || []); 
     }
   }, [isOpen, editMode, network]);  
 
@@ -320,14 +319,11 @@ const NetworkModal = ({
 
         <div id="dns-settings-group" class="f-center">
           <LabelCheckbox id="dns-settings" label="DNS 설정"
-            checked={formState.dnsEnabled}
+            checked={dnsServers.length > 0}
             onChange={(e) => {
               const isChecked = e.target.checked;
-              setFormState((prev) => ({  ...prev, dnsEnabled: isChecked }))
               setDnsServers(isChecked ? [""] : []);
-              if (!isChecked) {
-                setDnsHiddenBoxVisible(false); // 체크 해제 시 숨김 박스도 닫기
-              }
+              if (!isChecked) setDnsHiddenBoxVisible(false);
             }}
           />
         </div>
@@ -379,34 +375,34 @@ const NetworkModal = ({
           }
           </>
         )} */}
-        {formState.dnsEnabled && (
-          <>
-            <div className="font-bold"> DNS 서버 </div>
-            <DynamicInputList
-              // values={dnsServers.map((value) => ({ value }))}
-              values={dnsServers.map((dns) => ({ value: dns }))}
-              inputType="text"
-              showLabel={false}
-              onChange={(index, value) => {
-                const updated = [...dnsServers];
-                updated[index] = value;
-                setDnsServers(updated);
-              }}
-              onAdd={() => setDnsServers((prev) => [...prev, ""])}
-              onRemove={(index) => {
-                const updated = [...dnsServers];
-                updated.splice(index, 1);
-                setDnsServers(updated);
-              }}
-            />
-          </>
-        )}
+    {dnsServers.length > 0 && (
+      <>
+        <div className="font-bold"> DNS 서버 </div>
+        <DynamicInputList
+          values={dnsServers.map((dns) => ({ value: dns }))}
+          inputType="text"
+          showLabel={false}
+          onChange={(index, value) => {
+            const updated = [...dnsServers];
+            updated[index] = value;
+            setDnsServers(updated);
+          }}
+          onAdd={() => setDnsServers((prev) => [...prev, ""])}
+          onRemove={(index) => {
+            const updated = [...dnsServers];
+            updated.splice(index, 1);
+            setDnsServers(updated);
+          }}
+        />
+      </>
+    )}
+
 
         
         {!editMode && (
           <div className=" py-3">
             <hr />
-            <span className="mt-3 block font-bold">클러스터에서 네트워크를 연결/분리</span>
+            <span className="my-3 block font-bold">클러스터에서 네트워크를 연결/분리</span>
             <TablesOuter
               isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
               columns={[

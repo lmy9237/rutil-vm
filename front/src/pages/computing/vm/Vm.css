@@ -4,7 +4,7 @@
   align-items:flex-start !important;
 }
 .detail-general-box {
-  width: 550px !important;height:auto;min-height:460px;
+  width: 550px !important;height:auto;min-height:486px;
   padding: 24px;
   border-radius: 8px;
   background:var(--color-white);

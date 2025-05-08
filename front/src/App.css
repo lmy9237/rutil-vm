@@ -229,11 +229,14 @@ svg.btn { cursor: pointer; }
   text-align: left;
   border-radius:0 !important;
 }
-
 .context-menu-item {
+  /* position: fixed; */
+  background: white;
   border: var(--border-btn);
   border-radius: 4px;
+  overflow: hidden; 
 }
+
 .select-box {
   display: flex;
   justify-content: space-between;

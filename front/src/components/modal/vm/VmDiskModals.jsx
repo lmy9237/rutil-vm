@@ -51,7 +51,7 @@ const VmDiskModals = ({
         onClose={() => setActiveModal(null)}  
         editMode
         diskType={true}
-        vmId={vmId || ""}
+        vmId={disk?.vmVo?.id || ""}
         diskAttachmentId={disk?.id || ""}
         hasBootableDisk={hasBootableDisk}
       />

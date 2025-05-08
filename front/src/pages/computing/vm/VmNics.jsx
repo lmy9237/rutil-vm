@@ -66,74 +66,75 @@ const VmNics = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start gap-4 w-full">
-        <NicActionButtons />
-      </div>
+      <div ref={nicRef} className="w-full "> 
+        <div className="dupl-header-group f-start gap-4 w-full">
+          <NicActionButtons />
+        </div>
 
-      <div className="network-interface-outer w-full">
-        {transformedData.length === 0 ? ( // NIC가 하나라도 있을 때 실행
-          <p style={{textAlign: "center", color: "gray", padding: "20px", fontSize: "14px" }}>
-            표시할 네트워크 인터페이스가 없습니다.
-          </p>
-        ) : (
-          [...transformedData].map((nic, i) => (
-            <div key={nic?.id}
-              className={`network_content2 w-full ${nicsSelected[0]?.id === nic.id ? "selected" : ""}`}
-              onClick={() => {
-                setNicsSelected(nic);                
-                toggleDetails(nic.id);
-              }} // NIC 선택 시 상태 업데이트
-            >
-              <div className="network-content f-start f-btw">
-                <div className="network-status f-start">
-                  <RVI24 iconDef={nicsSelected[0]?.id === nic.id ? rvi24ChevronDown() : rvi24ChevronRight()} />
-                  <FontAwesomeIcon
-                    icon={Boolean(nic?.linked) ? faArrowCircleUp : faArrowCircleDown}
-                    style={{ color: Boolean(nic?.linked) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
-                    fixedWidth
-                  />
-                  <FontAwesomeIcon
-                    icon={Boolean(nic?.plugged) ? faPlug : faPlugCircleXmark}
-                    style={{ color: Boolean(nic?.plugged) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
-                    fixedWidth
-                  />
-                  <span>{nic?.name}</span>
-                </div>
-                <VmNicStatus title={`${Localization.kr.NETWORK} ${Localization.kr.NAME}`} value={nic?.networkVo?.name}/>
-                <VmNicStatus title={"IPv4"} value={nic?.ipv4}/>
-                <VmNicStatus title={"IPv6"} value={nic?.ipv6}/>
-                <VmNicStatus title={"MAC"} value={nic?.macAddress}/>
-              </div>
-
-              <div className="network-content-detail w-full"
-                style={{ display: (nicsSelected[0]?.id === nic.id) ? "flex" : "none" }}
+        <div className="network-interface-outer w-full">
+          {transformedData.length === 0 ? ( // NIC가 하나라도 있을 때 실행
+            <p style={{textAlign: "center", color: "gray", padding: "20px", fontSize: "14px" }}>
+              표시할 네트워크 인터페이스가 없습니다.
+            </p>
+          ) : (
+            [...transformedData].map((nic, i) => (
+              <div key={nic?.id}
+                className={`network_content2 w-full ${nicsSelected[0]?.id === nic.id ? "selected" : ""}`}
+                onClick={() => {
+                  setNicsSelected(nic);                
+                  toggleDetails(nic.id);
+                }} // NIC 선택 시 상태 업데이트
               >
-                <div className="network-content-detail-box">
-                  <span className="fs-14 fw-700">일반</span>
-                  <TablesRow
-                    columns={TableColumnsInfo.NICS_FROM_VM} 
-                    data={nic} 
-                  />
+                <div className="network-content f-start f-btw">
+                  <div className="network-status f-start">
+                    <RVI24 iconDef={nicsSelected[0]?.id === nic.id ? rvi24ChevronDown() : rvi24ChevronRight()} />
+                    <FontAwesomeIcon
+                      icon={Boolean(nic?.linked) ? faArrowCircleUp : faArrowCircleDown}
+                      style={{ color: Boolean(nic?.linked) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
+                      fixedWidth
+                    />
+                    <FontAwesomeIcon
+                      icon={Boolean(nic?.plugged) ? faPlug : faPlugCircleXmark}
+                      style={{ color: Boolean(nic?.plugged) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
+                      fixedWidth
+                    />
+                    <span>{nic?.name}</span>
+                  </div>
+                  <VmNicStatus title={`${Localization.kr.NETWORK} ${Localization.kr.NAME}`} value={nic?.networkVo?.name}/>
+                  <VmNicStatus title={"IPv4"} value={nic?.ipv4}/>
+                  <VmNicStatus title={"IPv6"} value={nic?.ipv6}/>
+                  <VmNicStatus title={"MAC"} value={nic?.macAddress}/>
                 </div>
-                <div className="network-content-detail-box">
-                  <span className="fs-14 fw-700">통계</span>
-                  <TablesRow
-                    columns={TableColumnsInfo.NICS_CALC_FROM_VM} 
-                    data={nic} 
-                  />
-                </div>
-                <div className="network-content-detail-box">
-                  <span className="fs-14 fw-700">네트워크 필터 매개변수</span>
-                  <table className="snap-table">
-                    <tbody></tbody>
-                  </table>
+
+                <div className="network-content-detail w-full"
+                  style={{ display: (nicsSelected[0]?.id === nic.id) ? "flex" : "none" }}
+                >
+                  <div className="network-content-detail-box">
+                    <span className="fs-14 fw-700">일반</span>
+                    <TablesRow
+                      columns={TableColumnsInfo.NICS_FROM_VM} 
+                      data={nic} 
+                    />
+                  </div>
+                  <div className="network-content-detail-box">
+                    <span className="fs-14 fw-700">통계</span>
+                    <TablesRow
+                      columns={TableColumnsInfo.NICS_CALC_FROM_VM} 
+                      data={nic} 
+                    />
+                  </div>
+                  <div className="network-content-detail-box">
+                    <span className="fs-14 fw-700">네트워크 필터 매개변수</span>
+                    <table className="snap-table">
+                      <tbody></tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
-      
       <SelectedIdView items={nicsSelected} />
       
       <Suspense>

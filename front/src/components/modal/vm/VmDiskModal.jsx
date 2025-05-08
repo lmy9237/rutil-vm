@@ -60,6 +60,7 @@ const VmDiskModal = ({
   onCreateDisk,
   onClose,  
 }) => {
+  
   const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [activeTab, setActiveTab] = useState("img");
   const handleTabClick = useCallback((tab) => { 
@@ -79,11 +80,7 @@ const VmDiskModal = ({
   
   // 디스크 데이터 가져오기
   const { data: diskAttachment } = useDiskAttachmentFromVm(vmId, diskAttachmentId);
-  useEffect(() => {
-    console.log("🧩 diskAttachment raw data: ", vmId);
-    console.log("🧩 diskAttachment raw data: ", diskAttachmentId);
-    console.log("🧩 diskAttachment raw data: ", diskAttachment);
-  }, [vmId,diskAttachmentId,diskAttachment]);
+
   // 선택한 데이터센터가 가진 도메인 가져오기
   const {
     data: domains = [], 

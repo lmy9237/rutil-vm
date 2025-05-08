@@ -12,7 +12,7 @@
 .dynamic-select-outer .custom-options{
   width: 100%;
 }
-.dynamic-btns {
+.dynamic-btns,.nic-label {
   min-width: 71px;
 }
 /*

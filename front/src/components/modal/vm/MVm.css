@@ -92,7 +92,7 @@
   padding: 3px;
 }
 .host-option-item {
-  padding-left: 6px;
+  padding: 3px;
 }
 .host-option-item.selected {
   background: var(--color-white);

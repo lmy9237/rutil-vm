@@ -10,8 +10,8 @@ button.btn-action {
 }
 
 button.btn-action[disabled]{
-    background-color: white;
-    color: #888888;
+  background-color: white;
+  color: #888888;
 }
 
 .btn-right-click { 
@@ -26,8 +26,7 @@ button.btn-action[disabled]{
   border-radius: 0 !important;
 }
 .btn-right-click[disabled]{
-  /* background-color: white; */
-  width: 99%;
+  width: 100%;
   color: #888888 !important;
   border: none !important;
 }
