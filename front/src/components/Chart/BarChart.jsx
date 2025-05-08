@@ -7,7 +7,7 @@ const BarChart = ({
   percentages,
   ...props
 }) => {
-  const chartContainerRef = useRef(null);
+  // const chartContainerRef = useRef(null);
   // const [chartSize, setChartSize] = useState(
   //   {
   //     width: "100%", // 부모 div의 100% 사용
@@ -60,20 +60,22 @@ const BarChart = ({
   const [series, setSeries] = useState([{ data: percentages }]);
   const [chartOptions, setChartOptions] = useState({
     chart: {
-      offsetY: -15,
-      offsetX: -55,
       type: "bar",
       redrawOnParentResize: true,
+      /*offsetY: -15,
+      offsetX: -55,*/
+      
     },
     grid: {
       show: false,
     },
     plotOptions: {
       bar: {
-        barHeight: "100%",
+        barHeight: "95%",
+        columnWidth: "10px",
         distributed: true,
         horizontal: true,
-        borderRadius: 3,
+        borderRadius: 1,
         dataLabels: {
           position: "bottom",
         },
@@ -85,7 +87,6 @@ const BarChart = ({
       textAnchor: "start",
       style: {
         colors: ["black"],
-        fontSize: "13px",
         fontWeight: "300",
       },
       formatter: function (val, opt) {
@@ -126,9 +127,6 @@ const BarChart = ({
       },
       y: {
         title: {
-          formatter: function () {
-            return "";
-          },
         },
       },
       custom: function({ series, seriesIndex, dataPointIndex, w }) {
@@ -139,8 +137,6 @@ const BarChart = ({
       },
     },
   });
-
-
 
   return (
     <ReactApexChart type="bar" 

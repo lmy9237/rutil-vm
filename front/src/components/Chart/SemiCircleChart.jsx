@@ -11,7 +11,7 @@ const SemiCircleChart = ({ names, percentage }) => {
   const chartOptions = {
     chart: {
       type: "radialBar",
-      offsetY: -20,
+      /*offsetY: -20,*/
       sparkline: {
         enabled: true,
       },

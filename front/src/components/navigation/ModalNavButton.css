@@ -1,13 +1,14 @@
-/*팝업 왼쪽nav*/
-.active-tab {
+/* 모달 왼쪽nav */
+.tab {
+  color: black;
+}
+.tab.active {
   background: var(--color-hover);
   font-weight: 600 !important;
   color: var(--color-primary);
-  border-right:  2px solid var(--color-primary-hover);
+  border-right: 2px solid var(--color-primary-hover);
 }
-.inactive-tab {
-  color: black;
-}
+
 .network-backup-edit {
   width: 48%;
 }

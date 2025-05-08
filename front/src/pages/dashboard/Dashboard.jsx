@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import useAsideState from "../../hooks/useAsideState";
 import BarChart from "../../components/Chart/BarChart";
 import {
   rvi24Cluster,
@@ -23,9 +24,7 @@ import {
   useDashboardMetricVmCpu,
   useDashboardMetricVmMemory,
 } from "../../api/RQHook";
-import GridLegends from "../../components/Chart/GridLegends";
 import Localization from "../../utils/Localization";
-import "./Dashboard.css";
 import SectionLayout from "../../components/SectionLayout";
 import {
   BoxesLayout,
@@ -33,8 +32,9 @@ import {
   BoxChartSummary,
   BoxChartAllGraphs,
 } from "../../components/BoxesLayout";
+import "./Dashboard.css";
 
-//#region: BarChart
+/*
 const BarChartWrapper = ({ data, keyName, keyPercent }) => {
   const names = useMemo(() => 
     data?.map((e) => e[keyName]) ?? []
@@ -56,10 +56,13 @@ const MemoryBarChart = ({ vmMemory }) => (
 const StorageMemoryBarChart = ({ storageMemory }) => (
   <BarChartWrapper data={storageMemory} keyName="name" keyPercent="memoryPercent" />
 );
-//#endregion: BarChart
+*/
 
 //#region: Dashboard
 const Dashboard = () => {
+  const { 
+    asideVisible, setAsideWidthInPx
+  } = useAsideState()
   const {
     data: dashboard,
     status: dashboardStatus,
@@ -254,9 +257,6 @@ const Dashboard = () => {
       {/* 대시보드 section */}
       <SectionLayout 
         className="section-dashboard v-start gap-4 h-full"
-        style={{
-          backgroundColor: "#EFF1F5"
-        }}
       >
         {/* <DashboardBoxGroup boxItems={boxItems} /> */}
         <BoxesLayout>{/* 항목 별 상태 박스 */}

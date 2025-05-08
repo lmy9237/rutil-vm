@@ -13,7 +13,6 @@ import {
   severity2Icon,
 } from "./icons/RutilVmIcons";
 import {
-  useDashboard,
   useDashboardCpuMemory,
   useDashboardStorage,
   useDashboardStorageMemory,
@@ -26,8 +25,11 @@ import {
   useDashboardMetricVmMemory,
 } from "../api/RQHook";
 import Localization from "../utils/Localization";
+import Logger from "../utils/Logger";
 import "./BoxesLayout.css"
 
+const HEIGHT_GRAPH_HORIZ = '280px'
+// const HEIGHT_PERCENT_GRAPH_HORIZ = 50
 /**
  * @name BoxesLayout
  * @description 박스 레이아웃
@@ -39,7 +41,7 @@ export const BoxesLayout = ({
   ...props
 }) => {
   return (
-    <div className="dash-boxes w-full f-btw gap-4"
+    <div className="dash-boxes f-btw gap-4"
       {...props}
     >
       {props.children}
@@ -179,50 +181,52 @@ export const BoxChartSummary = ({
 export const BoxChartAllGraphs = ({
   type,
 }) => {
-  /*
-  const chartContainerRef = useRef()
-  const [chartSize, setChartSize] = useState({
-    width: "50%",
-  });
+  // const chartContainerRef = useRef()
+  const [heightGraphRest, setHeightGraphRest] = useState(150);
 
-  const updateChartSize = () => {
-    if (chartContainerRef.current) {
-      const containerWidth = chartContainerRef.current.clientWidth;
+  const updateHeightGraphRest = () => {
+    Logger.debug(`BoxChartAllGraphs > updateHeightGraphRest ... window.innerHeight: ${window.innerHeight}m `)
+    // let width = Math.max(containerWidth * 0.8, 200); // 기본 너비
+    let heightSubstract = 64+40+110+4+28+32+HEIGHT_GRAPH_HORIZ
+    let height = Math.max((window.innerHeight - heightSubstract)/2, 200); // 기본 높이
 
-      // let width = Math.max(containerWidth * 0.8, 200); // 기본 너비
-      let height = Math.max(window.innerHeight * 0.2, 200); // 기본 높이
-
-      if (window.innerWidth >= 2000) {
-        // width = Math.max(containerWidth * 1, 280); 
-        height = Math.max(window.innerHeight * 0.3, 300);
-      }
-
-      setChartSize({ height: `${height}px` });
+    if (window.innerWidth >= 2000) {
+      // width = Math.max(containerWidth * 1, 280); 
+      height = Math.max((window.innerHeight - heightSubstract)/2, 200); // 기본 높이
+      // height = Math.max(window.innerHeight * 0.3, 300);
     }
+
+    setHeightGraphRest(height);
   };
 
   useEffect(() => {
-    updateChartSize();
-    window.addEventListener("resize", updateChartSize);
-
-    return () => {
-      window.removeEventListener("resize", updateChartSize);
-    };
+    Logger.debug(`BoxChartAllGraphs > useEffect ... `)
+    updateHeightGraphRest();
   }, []);
-  */
 
   return (<>
     <div id={`graphs-${type}`}
-      className="graphs v-center w-full"
+      className="graphs v-center w-full mt-auto"
     >
       <div 
         className="graphs-horizontal f-start w-full"
+        style={{
+          height: `${HEIGHT_GRAPH_HORIZ}px`,
+        }}
       >
         <RadialChartAll type={type}/>
         <BarChartAll className="ml-auto" type={type}/>
       </div>
-      <WaveChartCpu type={type}/>
-      <BoxGrids type={type} />
+      <WaveChartCpu type={type} heightInn={heightGraphRest}
+        style={{
+          height: `${heightGraphRest}px`,
+        }}
+      />
+      <BoxGrids type={type}
+        style={{
+          height: `${heightGraphRest}px`,
+        }}
+      />
     </div>
   </>)
 }
@@ -261,7 +265,15 @@ const RadialChartAll = ({
   ), [type, cpuMemory, storage])
 
   return (
-    <RadialBarChart percentage={_percentage} />
+    <div className="graph-chart-all f-center h-auto"
+      style={{
+        height: `${HEIGHT_GRAPH_HORIZ}px`,
+      }}
+    >
+      <RadialBarChart 
+        percentage={_percentage} 
+      />
+    </div>
   )
 }
 
@@ -318,36 +330,44 @@ const BarChartAll = ({
   }, [type])
 
   return (
-    <BarChartWrapper 
-      data={_data}
-      keyName="name"
-      keyPercent={_keyPercent}
-      {...props}
-    />
+    <div className="graph-chart-all f-center"
+      style={{
+        height: `${HEIGHT_GRAPH_HORIZ}px`,
+      }}
+    >
+      <BarChartWrapper 
+        data={_data}
+        keyName="name"
+        keyPercent={_keyPercent}
+        {...props}
+      />
+    </div>
   )
 };
 
 const WaveChartCpu = ({
-  type
+  type,
+  heightInn,
+  ...props
 }) => {
   const {
     data: host,
-    status: hostStatus,
-    isRefetching: isHostRefetching,
+    /*isRefetching: isHostRefetching,
     refetch: hossRefetch,
     isError: isHostError,
     error: hostError,
     isLoading: isHostLoading,
+    */
   } = useDashboardHosts();
   
   const {
     data: domain,
-    status: domainStatus,
+    /*
     isRefetching: isDomainRefetching,
     refetch: domainRefetch,
     isError: isDomainError,
     error: domainError,
-    isLoading: isDomainLoading,
+    isLoading: isDomainLoading,*/
   } = useDashboardDomain();
 
   const _per = useMemo(() => {
@@ -359,9 +379,11 @@ const WaveChartCpu = ({
   }, [type, host, domain])
 
   return (
-    <div className="graph-wave fs-14 w-full">
+    <div className="graph-sub graph-wave w-full"
+      {...props}
+    >
       {/* <h2>Per CPU</h2> */}
-      <SuperAreaChart type={type} per={_per} />
+      <SuperAreaChart type={type} per={_per} heightInn={heightInn} />
     </div>
   )
 }
@@ -380,15 +402,20 @@ const BarChartWrapper = ({
     [...data]?.map((e) => e[keyPercent]) ?? []
   , [data, keyPercent]);
 
-  return <BarChart names={names} percentages={percentages} {...props} />;
+  return <BarChart 
+    names={names}
+    percentages={percentages}
+    {...props} 
+  />;
 };
 
 const BoxGrids = ({
   type,
+  heightInn,
   ...props
 }) => {
   return (
-    <div className="boxes-grid w-full"
+    <div className="graph-sub boxes-grid v-start w-full"
       {...props}
     >
       {type ? <BoxGrid type={type} />
@@ -447,11 +474,11 @@ const BoxGrid = ({
   }, [type, vmMetricCpu, vmMetricMemory, storageMetric])
 
   return (
-    <div className="box-grid w-full"
+    <div className="box-grid gap-4 f-start w-full h-full"
       {...props}
     >
       {/* <span className="fs-18">StorageDomain</span> */}
-      <Grid className="grid-outer" type={type} data={_data} />
+      <Grid type={type} data={_data} />
     </div>
     
   )

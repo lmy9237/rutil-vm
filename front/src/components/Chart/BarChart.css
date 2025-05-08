@@ -1,7 +1,8 @@
 /* BarChart.css */
 #chart-bar {
-  width: 45%;
-  flex: 1;
+  min-width: 40%;
+  aspect-ratio:1/1;
+  flex: 1 0.5;
 }
 
 .apex-tooltip {

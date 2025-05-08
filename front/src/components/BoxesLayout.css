@@ -4,10 +4,16 @@
   width: 100%;
   flex-wrap: wrap;
 }
+.dash-boxes:last-child {
+  height: calc(100% - var(--h-dash-nav-box) - 4px);
+  /*margin-top: auto;*/
+}
+.dash-boxes:last-child > * {
+  height: 100%;
+}
 .box {
   height: var(--h-dash-nav-box);
   flex: 1 1 calc(100% / 6 - 8px);
-  flex-wrap: wrap;
   padding: 20px;
   cursor: pointer;
   background: white;
@@ -17,16 +23,14 @@
   text-align: center;
 }
 .box.box-graph {
-  /*min-height: calc(100% - var(--h-dash-boxs-bar)) !important;*/
-  flex: 1 1 calc(100% / 3 - 8px) !important;/* 한 줄에 3개씩 총 1줄*/
-  width: calc(100% / 3 - 8px) !important; /* 1열 */
+  /* min-height: calc(100% - var(--h-dash-boxs-bar)) !important; */
+  flex-grow: 1;
+  width: calc(100% / 3 - 8px); /* 1열 */
   cursor: default;
 }
-/* 
-.box:hover {
+.box:not(.box-graph):hover {
   border: var(--border-box);
 }
-*/
 .box > span {
   width: 100%;
   color: black;
@@ -48,6 +52,12 @@
 .box-icon.sml {
   width:var(--w-icon-tree);height:var(--h-icon-tree);
 }
+.box-icon-title {
+  height:var(--h-text-input);
+}
+.box-detail {
+  height:calc(4px + var(--h-text-input));
+}
 .box-detail,
 .box-status-metric {
   align-items:flex-end !important;
@@ -57,7 +67,6 @@
 }
 .box-detail > h1 {
   line-height: 27px;
-  color: black;
 }
 .box-status > hr { color: black; }
 .box-detail-icons {}
@@ -67,28 +76,48 @@
 .warning { color: #FBA80E }
 
 .graphs {
-  height: calc(100% - 28px - 32px - 4px - 40px);
+  height: calc(100% - 28px - 32px - 4px);
 }
 .graphs-horizontal { 
   position: inherit;
   gap: 16px;
-  height: 50%;
+  /*aspect-ratio: 7/2;*/
 }
-.graph-wave, .boxes-grid {
-  height: 25%;
+.graph-sub  {
+  height: 28%;
+}
+.graph-chart-all {
+  width: 44%;
+  aspect-ratio: 1/1;
+}
+.graph-chart-all:last-child {
+  width: 50%;
+}
+.boxes-grid {
+  align-items:flex-start !important;
+}
+.box-grid {
+  flex-wrap: wrap;
 }
 
 @media screen and (max-width:1500px) {
   .dash-boxes {
     height: calc(2 * var(--h-dash-nav-box));
   }
+  .dash-boxes:last-child {
+    width: calc(100% - 48px);
+    height: calc(100% - (2 * var(--h-dash-nav-box)));
+  }
   .box {
     flex: 1 1 calc(100% / 3 - 8px);/* 한 줄에 3개씩 총 2줄*/
   }
   .box.box-graph {/* 한 줄에 3개씩 총 2줄*/
-    /* flex: 1 1 calc(100% - 8px) !important;
+    min-width: 480px;
+    /*
+    flex: 1 1 calc(100% - 48px) !important;
     width: calc(100% - 8px); 
-    height: calc(100% - (2 * var(--h-dash-nav-box)));*/
+    height: calc(100% - (2 * var(--h-dash-nav-box)));
+    */
   }
 }
 

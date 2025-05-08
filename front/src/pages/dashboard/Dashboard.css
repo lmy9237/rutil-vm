@@ -63,9 +63,6 @@
     flex: 1 1 100% !important;
     max-width: 100% !important;
   }
-  .grid-container{
-    width: 48%;
-  }
   .dash-section-contents {
     width: 100% !important;
     max-width: 560px;
@@ -74,7 +71,5 @@
   }
 }
 @media screen and (max-width: 1150px) {
-  .grid-container{
-    width: 60%;
-  }
+  
 }

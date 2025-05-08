@@ -17,7 +17,7 @@ select,.input-select select,
 .custom-select-box {
   width:55%;height:var(--h-input);
   border:var(--border-default);border-radius:1px;
-  padding: 2px;
+  text-indent: 4px;
   color: var(--color-black);
   outline: none;
   cursor: pointer;

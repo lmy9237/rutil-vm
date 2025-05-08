@@ -89,6 +89,7 @@ html {
   --letter-28: -0.28px;
 }
 * {
+  position: relative;
   margin: 0;padding: 0;box-sizing: border-box;
   font-family: "Pretendard", sans-serif;
   font-style:normal;font-weight:normal;font-size:var(--fs-default);line-height:var(--fs-default);

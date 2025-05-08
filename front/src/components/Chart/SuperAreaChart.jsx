@@ -5,6 +5,7 @@ import Localization from "../../utils/Localization";
 const SuperAreaChart = ({ 
   per,
   type,
+  heightInn,
   ...props
 }) => {
   const [series, setSeries] = useState([]);
@@ -64,7 +65,9 @@ const SuperAreaChart = ({
   }, [per, type]);
 
   return (
-    <AreaChart series={series} datetimes={datetimes} />
+    <AreaChart 
+      series={series} datetimes={datetimes} heightInn={heightInn}
+    />
   );
 };
 

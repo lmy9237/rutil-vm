@@ -1,15 +1,7 @@
-/* 기본 모달 스타일 */
-.Modal {
-    z-index: 1000;
-  }
-  .Overlay {
-    z-index: 999;
-  }
-  
-  /* 새 역할 모달 */
-  .Modal.newRolePopup {
-    z-index: 1100;
-  }
+/* 새 역할 모달 */
+.Modal.newRolePopup {
+  z-index: 1100;
+}
   
   .Overlay.newRolePopupOverlay {
     z-index: 1099;
@@ -52,7 +44,7 @@
   }
   
   /*계정설정 팝업*/
-  .user_sessionInfo_popup{
+  .user_sessionInfo_popup {
     position: absolute;
     box-sizing: border-box;
     border-radius: 4px;
@@ -128,23 +120,20 @@
   transform: translate(-50%, -50%);
   box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); /*x y 번짐 색상*/
 }
-  /*설정(설정->스케줄링 정책)*/
-#setting_system_form  .setting_part_nav,
+/* 설정(설정->스케줄링 정책) */
+#setting_system_form .setting_part_nav,
 #setting_schedule_form .setting_part_nav,
 #setting_instant_form .setting_part_nav,
-#setting_mac_form .setting_part_nav
-{
+#setting_mac_form .setting_part_nav {
   display: flex;
   justify-content: right;
 }
-  /*설정(설정->스케줄링 정책->새로만들기 팝업)*/
-.setting_schedule_new_outer{
+/* 설정(설정->스케줄링 정책->새로만들기 팝업) */
+.setting_schedule_new_outer {
   display: none;
   position: absolute; /* 시작 지점을 버튼 위, 0픽셀부터 시작하려고 주는 것*/
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0;left: 0;
+  width: 100%;height: 100%;
   background: rgba(0, 0, 0, 0.5);
 }
 .setting_schedule_new_popup{
@@ -152,11 +141,9 @@
   box-sizing: border-box;
   border-radius: 4px;
   background: #fff;
-  top: 50%;
-  height: 85%;
-  width: 61%;
+  top: 50%;left: 50%;
+  width: 61%;height: 85%;
   z-index: 3;
-  left: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2); /*x y 번짐 색상*/
 }
@@ -192,9 +179,9 @@
   display: block;
   margin-bottom: 0.1rem;
 }
-.schedule_boxs{
-  overflow-y: auto; /* 세로 스크롤 추가 */
-  overflow-x: hidden; /* 가로 스크롤 숨김 */
+.schedule_boxs {
+  overflow-y: auto;/* 세로 스크롤 추가 */
+  overflow-x: hidden;/* 가로 스크롤 숨김 */
   height: 80%;
 }
 .schedule_boxs>div{

@@ -11,17 +11,6 @@
   height: calc(100% - var(--h-section-header));
 }
 .section-dashboard {
-  padding: 6px;
-}
-.section-dashboard .dash-boxes:last-child {
-  height: calc(100% - var(--h-dash-nav-box) + 8px);
-}
-.section-dashboard .dash-boxes:last-child > * {
-  height: 100%;
-}
-
-@media screen and (max-width:1500px) {
-  .section-dashboard .dash-boxes:last-child {
-    
-  }
+  background-color: #EFF1F5;
+  padding: 4px;
 }

@@ -11,7 +11,6 @@ const Grid = ({
   data = []
 }) => {
   const [gridData, setGridData] = useState([]);
-  const tooltipId = useMemo(() => ("grid-tooltip"), []);
   const numMax = 15
   useEffect(() => {
     Logger.debug(`Grid > useEffect ... `)
@@ -30,22 +29,20 @@ const Grid = ({
     }
   }, [data, gridData]);
 
-  return (
-    <div className="grid-container f-center gap-4 w-full ">
-      {gridData.map((item, index) => (
-        (item.name === "") 
-          ? <GridItem type={type} item={item} index={index} />
-          : <Tippy content={<div className="v-center">{item.name || ""}</div>}
-              placement="top"
-              theme="dark-tooltip"
-              animation="shift-away"
-              arrow={true}
-            > 
-              <GridItem type={type} item={item} index={index} />
-            </Tippy>
-      ))}
-    </div>
-  );
+  return (<>
+    {[...gridData].map((item, index) => (
+      (item.name === "") 
+        ? <GridItem type={type} item={item} index={index} />
+        : <Tippy content={<div className="v-center">{item.name || ""}</div>}
+            placement="top"
+            theme="dark-tooltip"
+            animation="shift-away"
+            arrow={true}
+          > 
+            <GridItem type={type} item={item} index={index} />
+          </Tippy>
+    ))}
+  </>);
 };
 
 const GridItem = forwardRef(({

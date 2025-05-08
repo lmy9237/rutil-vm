@@ -31,7 +31,10 @@ const initialFormState = {
   // sharable: false,
 };
 
-const DiskUploadModal = ({ isOpen, onClose }) => {
+const DiskUploadModal = ({ 
+  isOpen,
+  onClose
+}) => {
   const [formState, setFormState] = useState(initialFormState);
   const [file, setFile] = useState(null);
 
@@ -41,7 +44,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
   const [hostVo, setHostVo] = useState({id: "", name: "" });
 
   const { mutate: uploadDisk } = useUploadDisk((progress, toastId) => {
-    onClose()
+    /*if (progress < 1) onClose()*/
     toast.loading(`디스크 업로드 중 ... ${progress}%`, {
       id: toastId,
     });
@@ -149,6 +152,7 @@ const DiskUploadModal = ({ isOpen, onClose }) => {
 
     Logger.debug(`DiskUploadModal > 디스크 업로드 데이터 ${diskData}`);
     uploadDisk(diskData);
+    onClose();
   };
 
   return (

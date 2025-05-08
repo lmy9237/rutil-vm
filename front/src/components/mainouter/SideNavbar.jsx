@@ -49,7 +49,7 @@ const SideNavbar = () => {
   ];
 
   return (
-    <div id="aside" className="aside f-center fs-24">
+    <div id="aside" className="aside f-center fs-24 w-full">
       <div className="nav f-start">
         {sections.map(({ iconDef, id, link }) => (
           <Link key={id} to={link} 

@@ -13,7 +13,7 @@ const ModalNavButton = ({
         <div
           key={tab.id}
           id={`${tab.id}_tab`}
-          className={`f-center ${activeTab === tab.id ? "active-tab" : "inactive-tab"}`}
+          className={`tab f-center ${activeTab === tab.id ? " active" : ""}`}
           onClick={() => onTabClick(tab.id)}
         >
           {tab.label}

@@ -5,6 +5,7 @@ import "./AreaChart.css";
 const AreaChart = ({ 
   series,
   datetimes,
+  heightInn,
   ...props
 }) => {
   const [options, setOptions] = useState({
@@ -133,7 +134,7 @@ const AreaChart = ({
       options={options}
       series={series}
       // width="100%"
-      height="100%"
+      height={heightInn || "100%"}
       {...props}
       // width={chartSize.width}
       // height={chartSize.height}
