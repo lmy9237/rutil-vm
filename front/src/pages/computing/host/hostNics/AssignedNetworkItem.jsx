@@ -12,7 +12,7 @@ const AssignedNetworkItem = ({
   const isUp = matchedNA.status === "UP";
 
   return (
-    <div className="container w-[41%] assigned-network-outer">
+    <div className="container w-[44%] assigned-network-outer">
       <div
         className="assigned-network w-full"
         draggable

@@ -6,6 +6,7 @@ import VmDiskModal from "./VmDiskModal";
 import VmDiskActionModal from "./VmDiskActionModal";
 import VmDiskDeleteModal from "./VmDiskDeleteModal";
 import { useDisksFromVM, useVm } from "../../../api/RQHook";
+import DiskActionModal from "../disk/DiskActionModal";
 
 
 /**
@@ -33,6 +34,8 @@ const VmDiskModals = ({
     return da && da?.diskImageVo?.alias?.includes(`${vm?.name}_D`)
   })?.length+1 || 1;
 
+  const ACTIONS = ["vmdisk:move", "vmdisk:copy"]; 
+  
   const modals = {
     create: (
       <VmDiskModal isOpen={activeModal() === "vmdisk:create"}
@@ -69,19 +72,24 @@ const VmDiskModals = ({
     ), activate: (
       <VmDiskActionModal isOpen={activeModal() === "vmdisk:activate"}
         onClose={() => setActiveModal(null)}  
-        action={"activate"}
+        action={"vmdisk:activate"}
         vmId={vmId}
         data={disksSelected}
       />
     ), deactivate: (
       <VmDiskActionModal isOpen={activeModal() === "vmdisk:deactivate"}
         onClose={() => setActiveModal(null)}  
-        action={"deactivate"}
+        action={"vmdisk:deactivate"}
         vmId={vmId}
         data={disksSelected}
       />
     ), move: (
       <></>
+      // <DiskActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}
+      //   onClose={() => setActiveModal(null)}
+      //   action={activeModal}
+      //   data={disksSelected}
+      // />
     ),
   };
 

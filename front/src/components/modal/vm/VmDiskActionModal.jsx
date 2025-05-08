@@ -67,7 +67,7 @@ const VmDiskActionModal = ({
   return (
     <BaseModal targetName={`${Localization.kr.VM} ${Localization.kr.DISK}`} submitTitle={contentLabel}
       isOpen={isOpen} onClose={onClose}
-      promptText={`${aliases.join(", ")} 를(을) ${contentLabel}하시겠습니까?`}
+      promptText={`${aliases.join(", ")} 를(을) ${contentLabel} 하시겠습니까?`}
       onSubmit={handleFormSubmit}contentStyle={{ width: "630px" }} 
       shouldWarn={true}
     >

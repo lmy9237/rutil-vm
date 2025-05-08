@@ -25,7 +25,7 @@ import { getStatusSortKey } from "../icons/GetStatusSortkey";
  */
 const VmDiskDupl = ({ 
   vmDisks = [], showSearchBox=true, 
-  refetch, isLoading, isError, isSuccess,
+  refetch, isLoading, isError, isSuccess,vmId
 }) => {
   const navigate = useNavigate();
   const { vmsSelected, setVmsSelected, disksSelected, setDisksSelected } = useGlobal(); // 다중 선택된 디스크
