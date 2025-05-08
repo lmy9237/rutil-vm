@@ -6,7 +6,6 @@
 } */
 .footer {
   width:100%;height: var(--h-rutil-footer);
-  border-top: var(--border-default);
   background:var(--color-primary-white);
   box-shadow: 0px -2px 4px 0px rgba(0, 0, 0, 0.1);
   cursor: pointer;
@@ -52,16 +51,18 @@
 
 .footer-resizer {
   position: sticky;
-  height: 6px; width: 100%;
-  /* height: var(--thickness-border); */
-  cursor: row-resize;
-  background-color: #ffffff00; 
-  /*background-color: #2ecc71;*/
+  width:100%;height:var(--thickness-border);
+  cursor:row-resize;
+  background-color: #cfcfcf;
   z-index: 100;
   -webkit-user-select: none;
+  border-bottom: var(--border-default);
 }
   
 .footer-resizer:hover {
+  cursor: ns-resize;
   background-color: var(--color-hover);
 }
-  
+.footer-resizer:active {
+  cursor: row-resize;
+}

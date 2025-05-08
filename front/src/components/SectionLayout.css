@@ -1,10 +1,9 @@
 #section {
-  width: calc(100% - var(--w-aside-menu));
-  height:100%;
+  width: calc(100% - var(--w-aside-menu));height:100%;
   overflow-x: hidden;
   overflow-y: auto;
   background-color: white;
-  border-left: var(--border-default);
+  /*border-left: var(--border-default);*/
 }
 .content-outer {
   display: flex;

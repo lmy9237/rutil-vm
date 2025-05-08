@@ -7,7 +7,7 @@ html {
   --h-icon-nav: 40px;
   --h-icon-tree: 16px;
   --h-input:24px;
-  --h-tmi: 24px; /* 트리메뉴 높이 */
+  --h-tmi: 24px;          /* 트리메뉴 높이 */
   --h-rutil-header: 64px;
   --h-rutil-footer: 36px; /*section-footer 높이 */
   --h-rutil-footer-content: 20px;
@@ -27,7 +27,7 @@ html {
   --h-modal-footer: 60px;                /* 모달 푸터 부분 높이 */
   --h-right-btn: 30px;
   --h-dash-boxs-bar:380px;               /* 대시보드 section 안에 박스와bar 높이를 합친것*/
-  --h-modal-content: calc(var(--h-modal) - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
+  /*--h-modal-content: calc(var(--h-modal) - var(--h-modal-footer) - var(--h-modal-header));*//* 모달 내용 부분 높이 */
   --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
   --w-aside-menu:243px;     
   --w-icon: var(--h-icon);
@@ -63,15 +63,15 @@ html {
   --color-active:#449bff; /*0*/
   --color-border-default:#cfcfcf;
 
-  --color-primary: #020B79;;           /* 메인색 */
+  --color-primary: #020B79;;         /* 메인색 */
   --color-primary-hover: #2E379D;    /*0*/        
   --color-primary-white: #FFF;       /*0*/ 
-  --color-primary-h: #0b4db5;    /*0*/       
-  --color-bg-tooltip: #333333;        /* 툴팁 */
+  --color-primary-h: #0b4db5;        /*0*/       
+  --color-bg-tooltip: #333333;       /* 툴팁 */
   --color-hover:#E7F2FF; /*0*/ 
   
   --border-w: 1px; /* 테두리 두깨 */
-  --thickness-border: 2px;
+  --thickness-border: 0.8px;
   --br-default:5px;
   --border-default: var(--border-w) solid var(--color-border-default);
   --border-box: var(--border-w) solid var(--color-black);

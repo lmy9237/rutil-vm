@@ -6,6 +6,7 @@
 .normal-search-box input {
   width: calc(100% - var(--h-text-input)) !important; border:none !important;
   height: 100%;
+  text-indent: 4px;
 }
 .btn-search-box {
   width: var(--h-text-input);height: 100%;cursor: pointer;

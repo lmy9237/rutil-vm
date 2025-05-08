@@ -19,7 +19,7 @@
   float:left;
   overflow:hidden;
 }
-.tmi:hover{
+.tmi:hover {
   background: var(--color-white);
 }
 .tmi.active {
