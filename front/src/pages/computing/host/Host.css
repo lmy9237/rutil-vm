@@ -100,7 +100,7 @@
 }
 
 .interface-header {
-  color: #1D1D1D;
+  color: var(--color-black);
   letter-spacing: -0.36px;
   padding: 5px 0;
 }

@@ -3,9 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import SectionLayout from "../../../components/SectionLayout";
-import NavButton from "../../../components/navigation/NavButton";
+import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../../components/button/HeaderButton";
-import { useTemplate } from "../../../api/RQHook";
 import Path from "../../../components/Header/Path";
 import TemplateGeneral from "./TemplateGeneral";
 import TemplateVms from "./TemplateVms";
@@ -13,6 +12,7 @@ import TemplateEvents from "./TemplateEvents";
 import TemplateNics from "./TemplateNics";
 import TemplateDisks from "./TemplateDisks";
 import Localization from "../../../utils/Localization";
+import { useTemplate } from "../../../api/RQHook";
 import { rvi24Template } from "../../../components/icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 
@@ -51,19 +51,19 @@ const TemplateInfo = () => {
     setActiveTab(tab);
   }, [templateId]);
 
-  const sections = useMemo(() => ([
-    { id: "general", label: Localization.kr.GENERAL },
-    { id: "vms", label: Localization.kr.VM },
-    { id: "nics", label: Localization.kr.NICS },
-    { id: "disks", label: "디스크" },
-    // { id: "storageDomains", label: "스토리지" },
-    { id: "events", label: Localization.kr.EVENT },
+  const tabs = useMemo(() => ([
+    { id: "general",  label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
+    { id: "vms",      label: Localization.kr.VM, onClick: () => handleTabClick("vms") },
+    { id: "nics",     label: Localization.kr.NICS, onClick: () => handleTabClick("nics") },
+    { id: "disks",    label: Localization.kr.DISK, onClick: () => handleTabClick("disks") },
+    // { id: "storageDomains", label: Localization.kr.DOMAIN, onClick: () => handleTabClick("storageDomains") },
+    { id: "events",   label: Localization.kr.EVENT, onClick: () => handleTabClick("events") },
   ]), []);
 
   const pathData = useMemo(() => ([
     template?.name,
-    sections.find((section) => section.id === activeTab)?.label,
-  ]), [template, sections, activeTab]);
+    [...tabs].find((section) => section.id === activeTab)?.label,
+  ]), [template, tabs, activeTab]);
 
   useEffect(() => {
     setActiveTab(section || "general");
@@ -87,7 +87,7 @@ const TemplateInfo = () => {
   const sectionHeaderButtons = useMemo(() => [
     { type: "update", onClick: () => setActiveModal("template:update"), label: Localization.kr.UPDATE,  },
     { type: "remove", onClick: () => setActiveModal("template:remove"), label: Localization.kr.REMOVE,  },
-    { type: "addVm",  onClick: () => setActiveModal("vm:create"),  label: `새 ${Localization.kr.VM}`, },
+    { type: "addVm",  onClick: () => setActiveModal("vm:create"),       label: `새 ${Localization.kr.VM}`, },
   ], [])
 
   return (
@@ -97,12 +97,12 @@ const TemplateInfo = () => {
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
-        <NavButton
-          sections={sections}
-          activeSection={activeTab}
-          handleSectionClick={handleTabClick}
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
+          tabs={tabs}
+          tabActive={activeTab} setTabActive={setActiveTab}
         />
-        <div className="info-content v-start gap-8 w-full">
+        <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} basePath={`/computing/templates/${templateId}`} />
           {renderSectionContent()}
         </div>

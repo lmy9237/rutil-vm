@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import NavButton from "../../../components/navigation/NavButton";
+import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
 import DiskGeneral from "./DiskGeneral";
@@ -23,9 +23,8 @@ import useGlobal from "../../../hooks/useGlobal";
  */
 const DiskInfo = () => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal, } = useUIState()
-  const { disksSelected, setDisksSelected } = useGlobal()
-
+  const { setActiveModal, } = useUIState()
+  const { setDisksSelected } = useGlobal()
   const { id: diskId, section } = useParams();
   const {
     data: disk,
@@ -43,10 +42,10 @@ const DiskInfo = () => {
     setDisksSelected(disk)
   }, [disk]);
 
-  const sections = useMemo(() => ([
-    { id: "general", label: Localization.kr.GENERAL },
-    { id: "vms", label: "가상머신" },
-    { id: "domains", label: "스토리지" },
+  const tabs = useMemo(() => ([
+    { id: "general",  label: Localization.kr.GENERAL,  onClick: () => handleTabClick("general") },
+    { id: "vms",      label: Localization.kr.VM,       onClick: () => handleTabClick("vms") },
+    { id: "domains",  label: Localization.kr.DOMAIN,   onClick: () => handleTabClick("domains") },
   ]), []);
 
   useEffect(() => {
@@ -64,8 +63,8 @@ const DiskInfo = () => {
   
   const pathData = useMemo(() => ([
     disk?.alias,
-    sections.find((section) => section.id === activeTab)?.label,
-  ]), [disk, sections, activeTab]);
+    tabs.find((section) => section.id === activeTab)?.label,
+  ]), [disk, tabs, activeTab]);
 
   const renderSectionContent = useCallback(() => {
     Logger.debug(`DiskInfo > renderSectionContent ...`)
@@ -85,7 +84,6 @@ const DiskInfo = () => {
     // { type: 'upload', label: '업로드', onClick: () => setActiveModal("disk:restart") },
   ];
 
-  Logger.debug("DiskInfo ...")
   return (
     <SectionLayout>
       <HeaderButton title={disk?.alias}
@@ -93,12 +91,12 @@ const DiskInfo = () => {
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
-        <NavButton
-          sections={sections}
-          activeSection={activeTab}
-          handleSectionClick={handleTabClick}
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
+          tabs={tabs}
+          tabActive={activeTab} setTabActive={setActiveTab}
         />
-        <div className="info-content v-start gap-8 w-full">
+        <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} basePath={`/storages/disks/${diskId}`}/>
           {renderSectionContent()}
         </div>

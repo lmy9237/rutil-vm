@@ -44,7 +44,7 @@ const SideNavbar = () => {
     { iconDef: rvi24Network("currentColor"),      id: "network",   link: "/networks",  },
     { iconDef: rvi24Storage("currentColor"),      id: "storage",   link: "/storages/domains",  },
     // 추가가 필요할 시 주석 해제
-    // { iconDef: rvi24Gear("#9999999"),          id: "settings",  link: "/settings/session",  },
+    // { iconDef: rvi24Gear("currentColor"),         id: "settings",  link: "/settings/session",  },
     { iconDef: rvi24Event("currentColor"),        id: "event",     link: "/events",  },
   ];
 

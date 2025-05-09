@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import SectionLayout from "../../../components/SectionLayout";
-import NavButton from "../../../components/navigation/NavButton";
+import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
 import ClusterGeneral from "./ClusterGeneral";
@@ -41,8 +41,8 @@ const ClusterInfo = () => {
     isError: isClusterError,
     isSuccess: isClusterSuccess,
   } = useCluster(clusterId, (e) => ({ ...e }));
-  const { activeModal, setActiveModal, } = useUIState()
-  const { clustersSelected, setClustersSelected } = useGlobal()
+  const {  setActiveModal, } = useUIState()
+  const { setClustersSelected } = useGlobal()
   const [activeTab, setActiveTab] = useState("general");
 
   useEffect(() => {
@@ -51,6 +51,14 @@ const ClusterInfo = () => {
     }
     setClustersSelected(cluster)
   }, [cluster, navigate]);
+
+  const tabs = useMemo(() => ([
+    { id: "general",  label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
+    { id: "hosts",    label: Localization.kr.HOST,    onClick: () => handleTabClick("hosts") },
+    { id: "vms",      label: Localization.kr.VM,      onClick: () => handleTabClick("vms") },
+    { id: "networks", label: "논리 네트워크", onClick: () => handleTabClick("networks") },
+    { id: "events",   label: Localization.kr.EVENT,   onClick: () => handleTabClick("events") },
+  ]), []);
 
   const handleTabClick = useCallback((tab) => {
     Logger.debug(`ClusterInfo > handleTabClick ... tab: ${tab}`)
@@ -62,17 +70,9 @@ const ClusterInfo = () => {
     setActiveTab(tab);
   }, []);
 
-  const sections = useMemo(() => ([
-    { id: "general", label: Localization.kr.GENERAL },
-    { id: "hosts", label: Localization.kr.HOST },
-    { id: "vms", label: Localization.kr.VM },
-    { id: "networks", label: "논리 네트워크" },
-    { id: "events", label: Localization.kr.EVENT },
-  ]), []);
-
   const pathData = useMemo(() => ([
     cluster?.name,
-    sections.find((section) => section.id === activeTab)?.label,
+    tabs.find((section) => section.id === activeTab)?.label,
   ]), [activeTab, cluster])
 
   useEffect(() => {
@@ -103,12 +103,12 @@ const ClusterInfo = () => {
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
-        <NavButton
-          sections={sections}
-          activeSection={activeTab}
-          handleSectionClick={handleTabClick}
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
+          tabs={tabs}
+          tabActive={activeTab} setTabActive={setActiveTab}
         />
-        <div className="info-content v-start gap-8 w-full">
+        <div className="info-content v-start gap-8 w-full h-full">
           <Path type="cluster" pathElements={pathData} basePath={`/computing/clusters/${clusterId}`}/>
           {renderSectionContent()}
         </div>

@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import SectionLayout from "../../../components/SectionLayout";
+import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
 import Path from "../../../components/Header/Path";
-import NavButton from "../../../components/navigation/NavButton";
 import VnicProfileVms from "./VnicProfileVms";
 import VnicProfileTemplates from "./VnicProfileTemplates";
 import Localization from "../../../utils/Localization";
@@ -39,9 +39,9 @@ const VnicProfileInfo = () => {
     setVnicProfilesSelected(vnicProfile)
   }, [isVnicProfileError, isVnicProfileLoading, vnicProfile]);
 
-  const sections = useMemo(() => [
-    { id: 'vms', label: Localization.kr.VM },
-    { id: 'templates', label: Localization.kr.TEMPLATE },
+  const tabs = useMemo(() => [
+    { id: 'vms',        label: Localization.kr.VM,        onClick: () => handleTabClick("vms") },
+    { id: 'templates',  label: Localization.kr.TEMPLATE,  onClick: () => handleTabClick("templates") },
   ], []);
 
   const handleTabClick = useCallback((tab) => {
@@ -58,8 +58,8 @@ const VnicProfileInfo = () => {
 
   const pathData = useMemo(() => ([
     vnicProfile?.name, 
-    sections.find((section) => section.id === activeTab)?.label
-  ]), [vnicProfile, sections, activeTab]);
+    tabs.find((section) => section.id === activeTab)?.label
+  ]), [vnicProfile, tabs , activeTab]);
 
   const renderSectionContent = useCallback(() => {
     const SectionComponent = {
@@ -81,11 +81,12 @@ const VnicProfileInfo = () => {
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
-        <NavButton sections={sections}
-          activeSection={activeTab} 
-          handleSectionClick={handleTabClick} 
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
+          tabs={tabs}
+          tabActive={activeTab} setTabActive={setActiveTab}
         />
-        <div className="info-content v-start gap-8 w-full">
+        <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} basePath={`/vnicProfiles/${vnicProfileId}/vms`}/>
           {renderSectionContent()}
         </div>

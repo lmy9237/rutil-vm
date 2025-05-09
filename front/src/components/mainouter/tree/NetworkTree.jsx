@@ -79,7 +79,7 @@ const NetworkTree = ({}) => {
               <div key={network.id} style={{ position: "relative" }}>
                 <TreeMenuItem level={3}
                   title={network.name}
-                  iconDef={rvi16Network}
+                  iconDef={rvi16Network()}
                   isSelected={() => location.pathname.includes(network.id)}
                   isNextLevelVisible={false}
                   isChevronVisible={false}

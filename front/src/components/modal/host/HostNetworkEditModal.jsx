@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
-import ModalNavButton from "../../navigation/ModalNavButton";
+import TabNavButtonGroup from "../../common/TabNavButtonGroup";
 import Localization from "../../../utils/Localization";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
-
-// 탭 메뉴
-const tabs = [
-  { id: "ipv4", label: "IPv4" },
-  { id: "ipv6", label: "IPv6" },
-  { id: "dns", label: "DNS 설정" },
-];
 
 // ipv4 부트 프로토콜
 const ipv4Options = [
@@ -42,8 +35,14 @@ const HostNetworkEditModal = ({
   dnsState, 
   setDnsState 
 }) => {
-  Logger.debug(`networkAttachment 데이터: ${JSON.stringify(networkAttachment, null, 2)}`);
   const [selectedModalTab, setSelectedModalTab] = useState("ipv4");  
+  // 탭 메뉴
+  const tabs = useMemo(() => [
+    { id: "ipv4",  label: "IPv4",    onClick: () => setSelectedModalTab("ipv4") },
+    { id: "ipv6",  label: "IPv6",    onClick: () => setSelectedModalTab("ipv6") },
+    { id: "dns",   label: "DNS 설정", onClick: () => setSelectedModalTab("dns") },
+  ], []);
+  
   const [formState, setFormState] = useState(initialFormState);
     
   const [networkVo, setNetworkVo] = useState({ id: "", name: "" });
@@ -96,10 +95,10 @@ const HostNetworkEditModal = ({
       contentStyle={{ width: "800px" , height: "430px" }} 
     >
       <div className="popup-content-outer flex">
-        <ModalNavButton
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
           tabs={tabs}
-          activeTab={selectedModalTab}
-          onTabClick={setSelectedModalTab}
+          tabActive={selectedModalTab}
         />
 
         <div className="backup-edit-content">

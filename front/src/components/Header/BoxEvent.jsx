@@ -87,14 +87,14 @@ const BoxEvent = ({
     >
       <div className="bell-cate f-btw fs-16">
         <span className="bell-header-icon f-center">
-        <RVI16 iconDef={eventBoxExpanded() ? rvi16ArrowRight : rvi16ArrowLeft}
+        <RVI16 iconDef={eventBoxExpanded() ? rvi16ArrowRight() : rvi16ArrowLeft()}
           className="hover-icon"
           onClick={() => toggleEventBoxExpanded()}
         />
         </span>
         통지함
         <span className="bell-header-icon f-center">
-        <RVI16 iconDef={rvi16CloseMenu}
+        <RVI16 iconDef={rvi16CloseMenu()}
           className="hover-icon"
           onClick={() => setEventBoxVisible(false)}
         />

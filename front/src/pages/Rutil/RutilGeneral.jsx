@@ -20,7 +20,7 @@ const RutilGeneral = () => {
     { label: Localization.kr.CLUSTER, value: dashboard?.clusters ?? 0 },
     { label: Localization.kr.HOST, value: dashboard?.hosts ?? 0 },
     { label: Localization.kr.VM, value: `${dashboard?.vmsUp ?? 0} / ${dashboard?.vms ?? 0}` },
-    { label: "스토리지 도메인", value: dashboard?.storageDomains ?? 0 },
+    { label: Localization.kr.DOMAIN, value: dashboard?.storageDomains ?? 0 },
     { label: `부팅${Localization.kr.TIME}(${Localization.kr.UP_TIME})`, value: dashboard?.bootTime ?? "" },
   ], [dashboard]);
 

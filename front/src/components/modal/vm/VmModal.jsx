@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
+import TabNavButtonGroup from "../../common/TabNavButtonGroup";
 import BaseModal from "../BaseModal";
 import {
   useFindEditVmById,  
@@ -25,7 +26,6 @@ import VmBoot from './create/VmBoot';
 import LabelSelectOptions from '../../label/LabelSelectOptions';
 import LabelSelectOptionsID from '../../label/LabelSelectOptionsID';
 import { checkName } from "../../../util";
-import ModalNavButton from "../../navigation/ModalNavButton";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import './MVm.css';
@@ -92,9 +92,16 @@ const VmModal = ({
 
   const { vmsSelected } = useGlobal();
   const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
-  console.log("💡 VmModal > props.templateId 템플릿id 안찍힘:", templateId); // 🔍 여기에 찍기
   const [selectedModalTab, setSelectedModalTab] = useState("common");
-
+  const tabs = useMemo(() => [
+    { id: "common",    label: Localization.kr.GENERAL, onClick: () => setSelectedModalTab("common") },
+    { id: "system",    label: Localization.kr.SYSTEM,  onClick: () => setSelectedModalTab("system") },
+    { id: "beginning", label: "초기 실행", onClick: () => setSelectedModalTab("beginning") },
+    { id: "host",      label: Localization.kr.HOST,    onClick: () => setSelectedModalTab("host") },
+    { id: "ha",        label: Localization.kr.HA,      onClick: () => setSelectedModalTab("ha") },
+    { id: "boot",      label: "부트 옵션", onClick: () => setSelectedModalTab("boot") },
+  ], []);
+  
   const [formInfoState, setFormInfoState] = useState(infoform);
   const [formSystemState, setFormSystemState] = useState(systemForm);
   const [formCloudState, setFormCloudState] = useState(cloudForm);
@@ -415,11 +422,11 @@ const VmModal = ({
       contentStyle={{ width: "850px", height: "730px" }}  
     >
       <div className="popup-content-outer flex">
-      <ModalNavButton
-        tabs={tabs}
-        activeTab={selectedModalTab}
-        onTabClick={setSelectedModalTab}
-      />
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup 
+          tabs={tabs}
+          tabActive={selectedModalTab}
+        />
 
       <div className="vm-edit-select-tab">
         <div className="edit-first-content pb-0.5">
@@ -498,7 +505,7 @@ const VmModal = ({
             setFormHostState={setFormHostState}
           />
         )}
-        {selectedModalTab === "ha_mode" && (
+        {selectedModalTab === "ha" && (
           <VmHa
             editMode={editMode}
             domains={domains}
@@ -506,7 +513,7 @@ const VmModal = ({
             setFormHaState={setFormHaState}
           />
         )}
-        {selectedModalTab === "boot_outer" && (
+        {selectedModalTab === "boot" && (
           <VmBoot
             isos={isos}
             isIsoLoading={isIsoLoading}
@@ -521,16 +528,6 @@ const VmModal = ({
 };
 
 export default VmModal;
-
-// 탭 메뉴
-const tabs = [
-  { id: "common", label: Localization.kr.GENERAL },
-  { id: "system", label: "시스템" },
-  { id: "beginning", label: "초기 실행" },
-  { id: "host", label: Localization.kr.HOST },
-  { id: "ha_mode", label: Localization.kr.HA },
-  { id: "boot_outer", label: "부트 옵션" },
-];
 
 // 칩셋 옵션
 const chipsetOptionList = [

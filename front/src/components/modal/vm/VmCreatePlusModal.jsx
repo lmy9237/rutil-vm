@@ -72,7 +72,7 @@ const VmCreatePlusModal = ({ isOpen, onRequestClose }) => {
                 </select>
               </div>
               <div className="img_select_box">
-                <label htmlFor="os">스토리지 도메인</label>
+                <label htmlFor="os">{Localization.kr.DOMAIN}</label>
                 <select id="os">
                   <option value="linux">Linux</option>
                 </select>

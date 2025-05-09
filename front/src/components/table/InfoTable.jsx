@@ -9,7 +9,7 @@ import "./InfoTable.css";
 const InfoTable = ({ 
   tableRows
 }) => (
-  <table className="info-table">
+  <table className="info-table w-full">
     <tbody>
       {tableRows.map((row, index) => (
         <InfoTableRow row={row} index={index} />

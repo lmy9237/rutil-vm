@@ -9,10 +9,11 @@
   text-indent: 4px;
 }
 .btn-search-box {
-  width: var(--h-text-input);height: 100%;cursor: pointer;
+  width: var(--h-text-input);height: 100%;
+  cursor: pointer;
 }
 .btn-search-box:hover {
-  color: black;
+  color: var(--color-black);
 }
 .btn-refresh {
   border: var(--border-btn);

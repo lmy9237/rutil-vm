@@ -1,8 +1,11 @@
-import { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
+import CONSTANT from "../../Constants";
 
-const SemiCircleChart = ({ names, percentage }) => {
-  let color = "#E71825"; // 빨강 (80 이상)
+const SemiCircleChart = ({
+  names, 
+  percentage
+}) => {
+  let color = CONSTANT.color.alert; // 빨강 (80 이상)
   if (percentage < 50) {
     color = "#8FC855"; // 초록
   } else if (percentage < 80) {

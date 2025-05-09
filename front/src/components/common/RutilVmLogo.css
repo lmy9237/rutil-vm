@@ -1,7 +1,8 @@
 /* components/common/RutilVmLogo.css */
 .rutil-vm-logo {
   flex-direction:column;
-  width:140px;aspect-ratio:134/36;margin:10px;
+  width:134px;aspect-ratio:134/36;
+  margin:10px;
 }
 .rutil-vm-logo.big {
   width: 240px !important;

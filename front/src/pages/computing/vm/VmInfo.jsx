@@ -4,9 +4,8 @@ import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import { openNewTab } from "../../../navigation";
 import SectionLayout from "../../../components/SectionLayout";
-import Loading from "../../../components/common/Loading";
+import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../../components/button/HeaderButton";
-import NavButton from "../../../components/navigation/NavButton";
 import Path from "../../../components/Header/Path";
 import VmGeneral from "./VmGeneral";
 import VmNics from "./VmNics";
@@ -64,14 +63,14 @@ const VmInfo = () => {
     setVmsSelected(vm)
   }, [vm]);
 
-  const sections = useMemo(() => ([
-    { id: "general",      label: Localization.kr.GENERAL },
-    { id: "nics",         label: Localization.kr.NICS },
-    { id: "disks",        label: Localization.kr.DISK },
-    { id: "snapshots",    label: Localization.kr.SNAPSHOT },
-    { id: "applications", label: "애플리케이션" },
-    { id: "hostDevices",  label: `${Localization.kr.HOST} 장치` },
-    { id: "events",       label: Localization.kr.EVENT },
+  const tabs = useMemo(() => ([
+    { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
+    { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
+    { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
+    { id: "snapshots",    label: Localization.kr.SNAPSHOT,    onClick: () => handleTabClick("snapshots") },
+    { id: "applications", label: Localization.kr.APPLICATION, onClick: () => handleTabClick("applications") },
+    { id: "hostDevices",  label: Localization.kr.HOST_DEVICE, onClick: () => handleTabClick("hostDevices") },
+    { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
   ]), []);
 
   useEffect(() => {
@@ -89,8 +88,8 @@ const VmInfo = () => {
 
   const pathData = useMemo(() => ([
     vm?.name,
-    sections.find((section) => section.id === activeTab)?.label,
-  ]), [vm, sections, activeTab]);
+    tabs.find((section) => section.id === activeTab)?.label,
+  ]), [vm, tabs, activeTab]);
 
     // 탭 메뉴 관리
   const renderSectionContent = useCallback(() => {
@@ -118,7 +117,7 @@ const VmInfo = () => {
     { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE, disabled: !isUp },
     { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: "스냅샷 생성", disabled: !(isUp || isDown) },
     { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: !isUp },
-  ]), [vm]);
+  ]), [vm, vmId]);
 
   const popupItems = [
     /* { type: "import",  onClick: () => setActiveModal("vm:import"),  label: Localization.kr.IMPORT, }, */
@@ -137,11 +136,12 @@ const VmInfo = () => {
         popupItems={popupItems}
       />
       <div className="content-outer">
-        <NavButton sections={sections}
-          activeSection={activeTab}
-          handleSectionClick={handleTabClick}
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
+          tabs={tabs}
+          tabActive={activeTab} setTabActive={setActiveTab}
         />
-        <div className="info-content v-start gap-8 w-full">
+        <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} basePath={`/computing/vms/${vmId}`}/>
           {renderSectionContent()}
         </div>

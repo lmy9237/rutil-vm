@@ -1,50 +1,55 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import SectionLayout from "../../components/SectionLayout";
+import TabNavButtonGroup from "../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../components/button/HeaderButton";
-import NavButton from "../../components/navigation/NavButton";
 import Path from "../../components/Header/Path";
 import SettingUsers from "./SettingUsers";
 import SettingSessions from "./SettingSessions";
 import SettingCertificates from "./SettingCertificates";
 import { rvi24Gear } from "../../components/icons/RutilVmIcons";
-import "./Setting.css";
 import Localization from "../../utils/Localization";
-import SectionLayout from "../../components/SectionLayout";
+import Logger from "../../utils/Logger";
+import "./Setting.css";
 
 /**
  * @name SettingInfo
  * @description 관리
- *
+ * (/settings/:sectionId)
  * @returns {JSX.Element} SettingInfo
+ * 
+ * @see App
  */
 const SettingInfo = () => {
-  const { section } = useParams();
   const navigate = useNavigate();
+  const { section } = useParams();
   const [activeTab, setActiveTab] = useState(section || "users"); // 초기값 설정
 
-  const sections = [
-    { id: "users", label: "사용자" },
-    { id: "sessions", label: "활성 사용자 세션" },
-    { id: "licenses", label: "라이센싱" },
+  const tabs = useMemo(() => [
+    { id: "users",       label: Localization.kr.USER, onClick: () => handleTabClick("users") },
+    { id: "sessions",    label: "활성 사용자 세션",     onClick: () => handleTabClick("sessions") },
+    { id: "licenses",    label: "라이센싱",            onClick: () => handleTabClick("licenses") },
     // { id: "firewall", label: "방화벽" },
-    { id: "certificate", label: "인증서" },
+    { id: "certificate", label: "인증서",              onClick: () => handleTabClick("certificate") },
     // { id: 'app_settings', label: '설정' },
     // { id: 'user_sessionInfo', label: '계정설정' },
-  ];
+  ], []);
 
   useEffect(() => {
     setActiveTab(!section ? "users" : section);
   }, [section]);
 
-  const handleTabClick = (tab) => {
-    const path = tab === "users" ? `/setting/users` : `/setting/${tab}`;
-    navigate(`/settings/${tab}`);
+  const handleTabClick = useCallback((tab) => {
+    Logger.debug(`SettingInfo > handleTabClick ... tab: ${tab}`)
+    const path = `/settings/${tab}`;
+    navigate(path);
     setActiveTab(tab);
-  };
-  const pathData = [
+  }, []);
+  
+  const pathData = useMemo(() => [
     Localization.kr.MANAGEMENT,
-    sections.find((section) => section.id === activeTab)?.label,
-  ];
+    [...tabs].find((tab) => tab?.id === activeTab)?.label,
+  ], [tabs, activeTab]);
 
   const sectionComponents = {
     users: SettingUsers,
@@ -66,12 +71,12 @@ const SettingInfo = () => {
         additionalText="목록이름"
       />
       <div className="content-outer">
-        <NavButton
-          sections={sections}
-          activeSection={activeTab}
-          handleSectionClick={handleTabClick}
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
+          tabs={tabs}
+          tabActive={activeTab} setTabActive={setActiveTab}
         />
-        <div className="info-content v-start gap-8 w-full">
+        <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} />
           {renderSectionContent()}
         </div>

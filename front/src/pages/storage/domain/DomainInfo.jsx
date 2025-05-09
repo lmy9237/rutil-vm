@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import NavButton from "../../../components/navigation/NavButton";
+import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
 import DomainGeneral from "./DomainGeneral";
@@ -66,21 +66,21 @@ const DomainInfo = () => {
   //   { id: "events", label: Localization.kr.EVENT },
   // ]), []);
   
-  const sections = useMemo(() => {
+  const tabs = useMemo(() => {
     const baseSections = [
-      { id: "general", label: Localization.kr.GENERAL },
-      { id: "datacenters", label: Localization.kr.DATA_CENTER },
-      { id: "vms", label: Localization.kr.VM },
-      { id: "templates", label: Localization.kr.TEMPLATE },
-      { id: "disks", label: Localization.kr.DISK },
-      { id: "diskSnapshots", label: "디스크 스냅샷" },
-      { id: "events", label: Localization.kr.EVENT },
+      { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
+      { id: "datacenters",  label: Localization.kr.DATA_CENTER, onClick: () => handleTabClick("datacenters") },
+      { id: "vms",          label: Localization.kr.VM,          onClick: () => handleTabClick("vms") },
+      { id: "templates",    label: Localization.kr.TEMPLATE,    onClick: () => handleTabClick("templates") },
+      { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
+      { id: "diskSnapshots", label: "디스크 스냅샷",    onClick: () => handleTabClick("diskSnapshots") },
+      { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
     ];
   
     if (domain?.status !== "UNATTACHED") {
-      baseSections.splice(3, 0, { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}` });
-      baseSections.splice(5, 0, { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}` });
-      baseSections.splice(7, 0, { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}` });
+      baseSections.splice(3, 0, { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importVms") });
+      baseSections.splice(5, 0, { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importTemplates") });
+      baseSections.splice(7, 0, { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importDisks") });
     }
   
     return baseSections;
@@ -89,8 +89,8 @@ const DomainInfo = () => {
 
   const pathData = useMemo(() => ([
     domain?.name,
-    sections.find((section) => section.id === activeTab)?.label,
-  ]), [domain, sections, activeTab]);
+    [...tabs].find((section) => section.id === activeTab)?.label,
+  ]), [domain, tabs, activeTab]);
 
   const handleTabClick = useCallback((tab) => {
     const path = tab === "general"
@@ -152,12 +152,12 @@ const DomainInfo = () => {
         popupItems={popupItems}
       />
       <div className="content-outer">
-        <NavButton
-          sections={sections}
-          activeSection={activeTab}
-          handleSectionClick={handleTabClick}
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
+          tabs={tabs}
+          tabActive={activeTab} setTabActive={setActiveTab}
         />
-        <div className="info-content v-start gap-8 w-full">
+        <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} basePath={`/storages/domains/${domainId}`} />
           {renderSectionContent()}          
         </div>

@@ -2,21 +2,21 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
-import NavButton from "../../../components/navigation/NavButton";
+import SectionLayout from "../../../components/SectionLayout";
+import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
 import HostGeneral from "./HostGeneral";
 import HostVms from "./HostVms";
 import HostNics from "./HostNics";
+import HostNics2 from "./HostNics2";
 import HostDevices from "./HostDevices";
+import HostNetworkAdapter from "./HostNetworkAdapter";
 import HostEvents from "./HostEvents";
 import Localization from "../../../utils/Localization";
 import { rvi24Host } from "../../../components/icons/RutilVmIcons";
 import { useHost } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
-import SectionLayout from "../../../components/SectionLayout";
-import HostNetworkAdapter from "./HostNetworkAdapter";
-import HostNics2 from "./HostNics2";
 import "./Host.css";
 
 /**
@@ -69,19 +69,19 @@ const HostInfo = () => {
     setActiveTab(tab);
   }, [navigate, activeTab, hostId]);
 
-  const sections = useMemo(() => ([
-    { id: "general", label: Localization.kr.GENERAL },
-    { id: "vms", label: Localization.kr.VM },
-    { id: "nics", label: Localization.kr.NICS },
-    { id: "nics2", label: `${Localization.kr.NICS}2` },
-    { id: "networkAdapter", label: "네트워크 어댑터" },
-    { id: "devices", label: `${Localization.kr.HOST} 장치` },
-    { id: "events", label: Localization.kr.EVENT },
+  const tabs = useMemo(() => ([
+    { id: "general",        label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
+    { id: "vms",            label: Localization.kr.VM,      onClick: () => handleTabClick("vms") },
+    { id: "nics",           label: Localization.kr.NICS,    onClick: () => handleTabClick("nics") },
+    { id: "nics2",           label: `${Localization.kr.NICS}2`,    onClick: () => handleTabClick("nics2") },
+    { id: "networkAdapter", label: "네트워크 어댑터",          onClick: () => handleTabClick("networkAdapter") },
+    { id: "devices",        label: `${Localization.kr.HOST} 장치`, onClick: () => handleTabClick("devices") },
+    { id: "events",         label: Localization.kr.EVENT,    onClick: () => handleTabClick("events") },
   ]), [])
 
   const pathData = useMemo(() => ([
     host?.name,
-    sections.find((section) => section.id === activeTab)?.label,
+    [...tabs].find((section) => section.id === activeTab)?.label,
   ]), [host]);  
 
   useEffect(() => {
@@ -128,12 +128,12 @@ const HostInfo = () => {
         popupItems={popupItems}
       />
       <div className="content-outer">
-        <NavButton
-          sections={sections}
-          activeSection={activeTab}
-          handleSectionClick={handleTabClick}
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
+          tabs={tabs}
+          tabActive={activeTab} setTabActive={setActiveTab}
         />
-        <div className="info-content v-start gap-8 w-full">
+        <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} basePath={`/computing/hosts/${hostId}`} />
           {renderSectionContent()}
         </div>

@@ -33,7 +33,7 @@
 }
 .box > span {
   width: 100%;
-  color: black;
+  color: var(--color-black);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -68,12 +68,11 @@
 .box-detail > h1 {
   line-height: 27px;
 }
-.box-status > hr { color: black; }
+.box-status > hr { color: var(--color-black); }
 .box-detail-icons {}
-.down { color: #999999 }
-.up,.alert { color: #E71825 }
-.error { color: #FF7925 }
-.warning { color: #FBA80E }
+.up,.alert { color: var(--color-alert); }
+.error { color: var(--color-orange); }
+.warning { color: var(--color-yellow); }
 
 .graphs {
   height: calc(100% - 28px - 32px - 4px);

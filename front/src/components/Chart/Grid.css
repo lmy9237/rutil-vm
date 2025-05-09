@@ -20,7 +20,8 @@
   z-index: 1;
 }
 .grid-item-name {
-  text-align: center;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
+  text-align: center;
+  white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
 }
 #grid-tooltip {
   background-color: #333;

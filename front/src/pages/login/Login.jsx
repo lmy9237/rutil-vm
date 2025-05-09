@@ -11,6 +11,7 @@ import { useAuthenticate } from "../../api/RQHook";
 import "./Login.css";
 
 import backgroundImg from "./img/background-img.png";
+import CONSTANT from "../../Constants";
 // import backgroundImg from "./img/background-img2.jpg";
 
 
@@ -84,7 +85,7 @@ const Login = () => {
                 }}
               />
               <IconInput className="login-input" required type="password"
-                iconDef={rvi16Lock("#999999")}
+                iconDef={rvi16Lock(CONSTANT.color.down)}
                 placeholder={Localization.kr.PLACEHOLDER_PASSWORD}
                 value={password ?? ""}
                 onChange={(e) => setPassword(e.target.value)}

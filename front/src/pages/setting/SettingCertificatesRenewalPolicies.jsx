@@ -1,15 +1,13 @@
 import React from "react";
-import "./SettingCertificatesRenewalPolicies.css"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faExclamationTriangle,
-} from "@fortawesome/free-solid-svg-icons";
-import Logger from "../../utils/Logger";
+  severity2Icon,
+} from "../../components/icons/RutilVmIcons";
+import "./SettingCertificatesRenewalPolicies.css"
+
 /**
  * @name SettingCertificatesRenewalPolicies
  * @description 인증서 재갱신 정책
  * 
- * @author 이찬희 (@chanhi2000)
  * @returns {JSX.Element} SettingCertificatesRenewalPolicies
  */
 const SettingCertificatesRenewalPolicies = () => {
@@ -21,16 +19,14 @@ const SettingCertificatesRenewalPolicies = () => {
     "Failure to renew the certificates may result in the inability to access the web interface and disruption of certain services, so it is crucial to renew them in advance.",
   ];
 
-  Logger.debug("SettingCertificatesRenewalPolicies ...");
   return (
     <details>
       <summary className="fs-16">
-        <FontAwesomeIcon icon={faExclamationTriangle} fixedWidth />
-        인증서 재갱신 정책
+        <p className="f-start">{severity2Icon("WARNING", true)}인증서 재갱신 정책</p>
       </summary>
       <br/>
       <ul>
-        {msgs.map((e) => (<li>{e}</li>))}
+        {[...msgs].map((e) => (<li>{e}</li>))}
       </ul>
     </details>
   );

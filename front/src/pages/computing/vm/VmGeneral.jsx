@@ -107,7 +107,7 @@ const VmGeneral = ({
         </div>
 
         <div className="detail-general-box v-start gap-8">
-          <h1 className="f-start fs-16 fw-500 w-full">{Localization.kr.VM} 하드웨어</h1>
+          <h1 className="f-start fs-16 fw-500 w-full">{Localization.kr.VM} {Localization.kr.HARDWARE}</h1>
           <hr className="w-full"/>
           <InfoTable tableRows={hardwareTableRows} />
         </div>

@@ -2,7 +2,8 @@ import React, { useState, useEffect, Suspense, useCallback, useMemo } from "reac
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
-import NavButton from "../../../components/navigation/NavButton";
+import SectionLayout from "../../../components/SectionLayout";
+import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
 import DataCenterClusters from "./DataCenterClusters";
@@ -15,7 +16,6 @@ import Localization from "../../../utils/Localization";
 import { rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
 import { useDataCenter } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
-import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name DataCenterInfo
@@ -74,18 +74,18 @@ const DataCenterInfo = () => {
     setActiveTab(tab);
   }, [homePath]);
 
-  const sections = useMemo(() => ([
-    { id: "clusters", label: Localization.kr.CLUSTER },
-    { id: "hosts", label: Localization.kr.HOST },
-    { id: "vms", label: Localization.kr.VM },
-    { id: "storageDomains", label: "스토리지" },
-    { id: "network", label: "논리 네트워크" },
-    { id: "events", label: Localization.kr.EVENT },
+  const tabs = useMemo(() => ([
+    { id: "clusters",       label: Localization.kr.CLUSTER, onClick: () => handleTabClick("clusters") },
+    { id: "hosts",          label: Localization.kr.HOST,    onClick: () => handleTabClick("hosts") },
+    { id: "vms",            label: Localization.kr.VM,      onClick: () => handleTabClick("vms") },
+    { id: "storageDomains", label: Localization.kr.DOMAIN,  onClick: () => handleTabClick("storageDomains") },
+    { id: "network",        label: "논리 네트워크", onClick: () => handleTabClick("network") },
+    { id: "events",         label: Localization.kr.EVENT,   onClick: () => handleTabClick("events") },
   ]), []);
 
   const pathData = useMemo(() => ([
     dataCenter?.name,
-    sections.find((section) => section.id === activeTab)?.label,
+    tabs.find((section) => section.id === activeTab)?.label,
   ]), [dataCenter, activeTab]);
 
   useEffect(() => {
@@ -118,12 +118,12 @@ const DataCenterInfo = () => {
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
-        <NavButton
-          sections={sections}
-          activeSection={activeTab}
-          handleSectionClick={handleTabClick}
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
+          tabs={tabs}
+          tabActive={activeTab} setTabActive={setActiveTab}
         />
-        <div className="info-content v-start gap-8 w-full">
+        <div className="info-content v-start gap-8 w-full h-full">
           <Path type={"datacenter"}
             pathElements={pathData}
             basePath={`${homePath}/clusters`}

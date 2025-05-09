@@ -64,7 +64,7 @@
   width:20px;height:20px;aspect-ratio:1/1;
 }
 .bell-icon:hover {
-  color: #1d1d1d !important;
+  color: var(--color-black) !important;
 }
 .bell-icon.bell-icon-trash {
   margin-left: auto;
@@ -111,7 +111,7 @@
   color: var(--color-primary-h);
 }
 .trash-icon:hover {
-  color: #1d1d1d !important;
+  color: var(--color-black) !important;
 }
 .logo-outer {
   cursor: pointer;

@@ -86,9 +86,9 @@ const HostGeneral = ({
   ]), [host]);
 
   const tabs = useMemo(() => ([
-    { tab: "general", label: Localization.kr.GENERAL, tableRows: renderGeneralTab },
-    { tab: "hardware", label: "하드웨어", tableRows: renderHardwareTab },
-    { tab: "software", label: "소프트웨어", tableRows: renderSoftwareTab },
+    { tab: "general",  label: Localization.kr.GENERAL,  tableRows: renderGeneralTab },
+    { tab: "hardware", label: Localization.kr.HARDWARE, tableRows: renderHardwareTab },
+    { tab: "software", label: Localization.kr.SOFTWARE, tableRows: renderSoftwareTab },
   ]), [renderGeneralTab, renderHardwareTab, renderSoftwareTab]);
 
   // const rows4ActiveTab = useMemo(() => ([

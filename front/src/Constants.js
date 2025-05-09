@@ -129,6 +129,19 @@ const CONSTANT = {
   chipsetOptions: chipsetOptions(),
   cpuArcs: cpuArcs(),
   domainTypeOptions: domainTypeOptions(),
+
+  color: {
+    logo: "#8CC453",
+    logText: "#4679BC",
+    black: "#1D1D1D",
+    down: "#999999",
+    alert: "#E71825",
+    orange: "#FF7925",
+    yellow: "#FBA80E",
+    blue: "#1D56BC",
+    blue1: '#0A7CFF',
+    primary: "#020B79",
+  }
 }
 
 export default CONSTANT;

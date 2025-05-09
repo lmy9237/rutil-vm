@@ -8,8 +8,8 @@ import SelectedIdView from "../../components/common/SelectedIdView";
 import TablesOuter from "../../components/table/TablesOuter";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import { useAllCerts } from "../../api/RQHook";
-import SettingCertificatesRenewalPolicies from "./SettingCertificatesRenewalPolicies";
 import Logger from "../../utils/Logger";
+import SettingCertificatesRenewalPolicies from "./SettingCertificatesRenewalPolicies";
 
 /**
  * @name SettingCertificates

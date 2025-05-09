@@ -1,24 +1,22 @@
-.content-header {
-  border-radius: 3px;
-  width: var(--w-nav);
+/* NavButtonGroup.css */
+.btn-tab-nav-group {
+  width: var(--w-btn-tab-nav);
   border-right: var(--border-default);
 }
-.content-header > * {
-  height: 36px;
+.btn-tab-nav {
+  width:100%;height: var(--h-btn-tab-nav);
   color: var(--color-nav);
+  padding-left: var(--p-btn-tab-nav);
   cursor: pointer;
-  padding-left:20px;
 }
-.content-header span:hover {
+.btn-tab-nav:hover {
   background: var(--color-white);
 }
-.content-header span.active {
+.btn-tab-nav.active {
   color: var(--color-primary);
   background: var(--color-table) !important;
-  font-weight: 600;
 }
-
-.content-header span.active::after {
+.btn-tab-nav.active::after {
   width: 4px;height: 100%;
   margin-left: auto;
   background-color: var(--color-primary-hover);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import NavButton from "../../components/navigation/NavButton";
+import TabNavButtonGroup from "../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../components/button/HeaderButton";
 import Path from "../../components/Header/Path";
 import RutilGeneral from "./RutilGeneral";
@@ -45,17 +45,17 @@ const RutilManager = () => {
   const rootPath = location.pathname.split("/").slice(0, 2).join("/"); // '/computing' 또는 '/networks' 등 추출
 
   // Header와 Sidebar에 쓰일 섹션과 버튼 정보
-  const sections = useMemo(() => [
-    { id: "info", label: Localization.kr.GENERAL },
-    { id: "datacenters", label: Localization.kr.DATA_CENTER },
-    { id: "clusters", label: Localization.kr.CLUSTER },
-    { id: "hosts", label: Localization.kr.HOST },
-    { id: "vms", label: Localization.kr.VM },
-    { id: "templates", label: Localization.kr.TEMPLATE },
-    { id: "storageDomains", label: Localization.kr.DOMAIN },
-    { id: "disks", label: Localization.kr.DISK },
-    { id: "networks", label: Localization.kr.NETWORK },
-    { id: "vnicProfiles", label: Localization.kr.VNIC_PROFILE },
+  const tabs = useMemo(() => [
+    { id: "info", label: Localization.kr.GENERAL, onClick: () => handleTabClick("info") },
+    { id: "datacenters", label: Localization.kr.DATA_CENTER, onClick: () => handleTabClick("datacenters") },
+    { id: "clusters", label: Localization.kr.CLUSTER, onClick: () => handleTabClick("clusters") },
+    { id: "hosts", label: Localization.kr.HOST, onClick: () => handleTabClick("hosts") },
+    { id: "vms", label: Localization.kr.VM, onClick: () => handleTabClick("vms") },
+    { id: "templates", label: Localization.kr.TEMPLATE, onClick: () => handleTabClick("templates") },
+    { id: "storageDomains", label: Localization.kr.DOMAIN, onClick: () => handleTabClick("storageDomains") },
+    { id: "disks", label: Localization.kr.DISK, onClick: () => handleTabClick("disks") },
+    { id: "networks", label: Localization.kr.NETWORK, onClick: () => handleTabClick("networks") },
+    { id: "vnicProfiles", label: Localization.kr.VNIC_PROFILE, onClick: () => handleTabClick("vnicProfiles") },
   ], []);
 
   // section이 변경될때 tab도 같이 변경
@@ -73,8 +73,8 @@ const RutilManager = () => {
 
   const pathData = useMemo(() => [
     "Rutil Manager",
-    sections.find((section) => section.id === activeTab)?.label,
-  ], [sections, activeTab]);
+    tabs.find((section) => section.id === activeTab)?.label,
+  ], [tabs, activeTab]);
 
   const renderSectionContent = useCallback(() => {
     Logger.debug(`RutilManager > renderSectionContent ...`)
@@ -100,12 +100,12 @@ const RutilManager = () => {
         titleIcon={rvi24Globe()}
       />
       <div className="content-outer">
-        <NavButton
-          sections={sections}
-          activeSection={activeTab}
-          handleSectionClick={handleTabClick}
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
+          tabs={tabs}
+          tabActive={activeTab} setTabActive={setActiveTab}
         />
-        <div className="info-content v-start gap-8 w-full">
+        <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} />
           {renderSectionContent()}
         </div>

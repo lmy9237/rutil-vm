@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
 import "./RadialBarChart.css";
+import CONSTANT from "../../Constants";
 
 const RadialBarChart = ({ 
   percentage=0,
@@ -90,7 +91,7 @@ const RadialBarChart = ({
   useEffect(() => {
     setSeries([percentage]);
 
-    let color = "#E71825";
+    let color = CONSTANT.color.alert;
     if (percentage < 50) {
       color = "#8FC855";
     } else if (percentage < 80) {

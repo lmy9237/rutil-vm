@@ -9,7 +9,8 @@ html {
   --h-input:24px;
   --h-tmi: 24px;          /* 트리메뉴 높이 */
   --h-rutil-header: 64px;
-  --h-rutil-footer: 36px; /*section-footer 높이 */
+  --h-rutil-footer: 36px; /* section-footer 높이 */
+  --h-btn-tab-nav: 36px; /* 왼쪽 네비게이션 버튼 높이 */
   --h-rutil-footer-content: 20px;
   --h-rutil-footer-open: calc(var(--h-rutil-footer) + var(--h-rutil-footer-content));
   --h-rutil-content: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer));
@@ -25,6 +26,7 @@ html {
   --h-modal-max: 730px;                  /* 모달 전체 최고 높이 */
   --h-modal-header: 55px;                /* 모달 헤더 부분 높이 */
   --h-modal-footer: 60px;                /* 모달 푸터 부분 높이 */
+  --w-btn-tab-nav: 160px; /* nav넓이*/
   --h-right-btn: 30px;
   --h-dash-boxs-bar:380px;               /* 대시보드 section 안에 박스와bar 높이를 합친것*/
   /*--h-modal-content: calc(var(--h-modal) - var(--h-modal-footer) - var(--h-modal-header));*//* 모달 내용 부분 높이 */
@@ -33,7 +35,6 @@ html {
   --w-icon: var(--h-icon);
   --w-icon-nav: var(--h-icon-nav);
   --w-icon-tree: var(--h-icon-tree);
-  --w-nav: 160px; /* nav넓이*/
   --w-text-input: 280px;
   --w-bell-box: 300px;
   --w-bell-box-expanded: 700px;
@@ -48,22 +49,28 @@ html {
   --p-tmi-4-wc: calc(48px + 20px);
   --p-tmi-5:    calc(88px + 20px);
   --p-tmi-5-wc: calc(68px + 20px);
+  --p-btn-tab-nav: 20px;
 
-  --color-black:#1D1D1D;     
+  --color-black:#1D1D1D;
+  --color-down: #999999; 
   --color-nav: #555;
   --color-white:#f0f0f0; /*0*/   
   --color-gray:#717171; /*0*/      
   --color-gray-4: #C6C6C6; /*0버튼색*/
-  --color-gray-disabled: #6d6d6d;     /* 비활성화 색 */
-  --color-input-disabled:#EDEDED; /*0*/
+  --color-gray-disabled: #6d6d6d; /* 비활성화 색 */
+  --color-input-disabled:#EDEDED; /* 0 */
+  --color-logo:#8CC453;
+  --color-logo-text:#4679BC; /*0*/
   --color-blue:#1D56BC; /*0*/
   --color-blue-1:#0A7CFF;/*0*/
   --color-table:#E2E5EB;/*0*/
-  --color-logo-text:#4679BC; /*0*/
   --color-active:#449bff; /*0*/
   --color-border-default:#cfcfcf;
+  --color-alert: #E71825;
+  --color-orange: #FF7925;
+  --color-yellow: #FBA80E;
 
-  --color-primary: #020B79;;         /* 메인색 */
+  --color-primary: #020B79;         /* 메인색 */
   --color-primary-hover: #2E379D;    /*0*/        
   --color-primary-white: #FFF;       /*0*/ 
   --color-primary-h: #0b4db5;        /*0*/       
@@ -200,6 +207,7 @@ svg.btn { cursor: pointer; }
 .gap-16 { gap: 16px; }
 .gap-18 { gap: 18px; }
 
+.down { color: var(--color-down) }
 .dash-boxs+.bar+.dash-section {
   height: 100%;
 }
@@ -208,14 +216,15 @@ svg.btn { cursor: pointer; }
 }
 .section-content {
   height: calc(100% - var(--h-section-header));
-  padding: 15px;
 }
 .info-content {
-  width: calc(100% - var(--w-nav));height: 100%;
-  padding: 14px 15px;
+  width: calc(100% - var(--w-btn-tab-nav));
   overflow-y: auto;
 }
-.section-content,.info-content { align-items:flex-start !important; }
+.section-content,.info-content { 
+  padding: 14px;
+  align-items:flex-start !important;
+}
 .dropdown-menu {
   position: absolute;right:17px;
   width: 230px !important;

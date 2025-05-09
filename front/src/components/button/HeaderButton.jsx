@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import useClickOutside from "../../hooks/useClickOutside";
-import { RVI24 } from "../icons/RutilVmIcons";
+import {
+  RVI16, RVI24,
+  rvi16DotsVertical,
+} from "../icons/RutilVmIcons";
 import IconButton from "../Input/IconButton";
 import StatusBadge from "../common/StatusBadge";
 import PopupBox from "../common/PopupBox";
@@ -68,8 +69,11 @@ const HeaderButton = ({
         {status && (
           <StatusBadge
             status={
-              status === Localization.kr.UP ? "running" :
-              status === "중지" ? "stopped" : "default"
+              [Localization.kr.UP, Localization.kr.ACTIVATE].includes(status) 
+                ? "running" 
+                : status === Localization.kr.DOWN 
+                  ? "stopped"
+                  : "default"
             }
             text={status}
           />
@@ -92,9 +96,10 @@ const HeaderButton = ({
             className="popup-container"
             ref={popupBoxRef}
           >
-            <button className="popup-btn" onClick={togglePopupBox}>
-              <FontAwesomeIcon icon={faEllipsisV} fixedWidth />
-            </button>
+            <IconButton className="popup-btn" 
+              iconDef={rvi16DotsVertical()}
+              onClick={togglePopupBox}
+            />
             <PopupBox
               isVisible={isPopupBoxVisible}
               items={[...allPopupItems]}

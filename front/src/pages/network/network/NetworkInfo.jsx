@@ -1,7 +1,9 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
-import NavButton from "../../../components/navigation/NavButton";
+import useGlobal from "../../../hooks/useGlobal";
+import SectionLayout from "../../../components/SectionLayout";
+import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
 import NetworkModals from "../../../components/modal/network/NetworkModals";
@@ -14,8 +16,7 @@ import NetworkClusters from "./NetworkClusters";
 import Localization from "../../../utils/Localization";
 import { useNetwork } from "../../../api/RQHook";
 import { rvi24Network } from "../../../components/icons/RutilVmIcons";
-import useGlobal from "../../../hooks/useGlobal";
-import SectionLayout from "../../../components/SectionLayout";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name NetworkInfo
@@ -44,33 +45,35 @@ const NetworkInfo = () => {
     setNetworksSelected(network)
   }, [network, navigate]);
 
-  const sections = [
-    { id: "general", label: Localization.kr.GENERAL },
-    { id: "vnicProfiles", label: Localization.kr.VNIC_PROFILE },
-    { id: "clusters", label: Localization.kr.CLUSTER },
-    { id: "hosts", label: Localization.kr.HOST },
-    { id: "vms", label: Localization.kr.VM },
-    { id: "templates", label: Localization.kr.TEMPLATE },
-  ];
+  const tabs = useMemo(() => [
+    { id: "general",       label: Localization.kr.GENERAL,      onClick: () => handleTabClick("general") },
+    { id: "vnicProfiles",  label: Localization.kr.VNIC_PROFILE, onClick: () => handleTabClick("vnicProfiles") },
+    { id: "clusters",      label: Localization.kr.CLUSTER,      onClick: () => handleTabClick("clusters") },
+    { id: "hosts",         label: Localization.kr.HOST,         onClick: () => handleTabClick("hosts") },
+    { id: "vms",           label: Localization.kr.VM,           onClick: () => handleTabClick("vms") },
+    { id: "templates",     label: Localization.kr.TEMPLATE,     onClick: () => handleTabClick("templates") },
+  ], []);
 
   useEffect(() => {
     setActiveTab(section || "general");
   }, [section]);
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = useCallback((tab) => {
     const path =
       tab === "general"
         ? `/networks/${networkId}`
         : `/networks/${networkId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  };
-  const pathData = [
+  }, [networkId]);
+  
+  const pathData = useMemo(() => [
     network?.name,
-    sections.find((section) => section.id === activeTab)?.label,
-  ];
+    tabs.find((section) => section.id === activeTab)?.label,
+  ], [network, tabs, activeTab]);
 
   const renderSectionContent = useCallback(() => {
+    Logger.debug(`NetworkInfo > renderSectionContent ...`)
     const SectionComponent = {
       general: NetworkGeneral,
       vnicProfiles: NetworkVnicProfiles,
@@ -94,12 +97,12 @@ const NetworkInfo = () => {
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
-        <NavButton
-          sections={sections}
-          activeSection={activeTab}
-          handleSectionClick={handleTabClick}
+        {/* 왼쪽 네비게이션 */}
+        <TabNavButtonGroup
+          tabs={tabs}
+          tabActive={activeTab} setTabActive={setActiveTab}
         />
-        <div className="info-content v-start gap-8 w-full">
+        <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} basePath={`/networks/${networkId}`} />
           {renderSectionContent()}
         </div>

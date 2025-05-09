@@ -55,8 +55,10 @@ const SettingUsers = () => {
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-      <SettingUsersActionButtons />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SettingUsersActionButtons />
+      </div>
       <TablesOuter target={"user"}
         columns={TableColumnsInfo.SETTING_USER}
         data={filteredData}

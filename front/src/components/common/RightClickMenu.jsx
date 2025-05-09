@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import useContextMenu from "../../hooks/useContextMenu";
 import useGlobal from "../../hooks/useGlobal";
 import useClickOutside from "../../hooks/useClickOutside";
@@ -28,7 +28,7 @@ import VmDiskModals from "../modal/vm/VmDiskModals";
 import DiskModals from "../modal/disk/DiskModals";
 import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
 import VmSnapshotModals from "../modal/vm/VmSnapshotModals";
-
+import "./RightClickMenu.css"
 /**
  * @name RightClickMenu
  * @description 우클릭 했을 때 나오는 메뉴에 대한 UI

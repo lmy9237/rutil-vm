@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense, useMemo } from "react";
+import { Tooltip } from "react-tooltip";
 import { checkZeroSizeToMbps } from "../../../util";
 import {
   RVI16,rvi16TriangleDown, rvi16TriangleUp,
@@ -21,7 +22,6 @@ import {
 import Localization from "../../../utils/Localization";
 import "./HostNic.css";
 import Logger from "../../../utils/Logger";
-import { Tooltip } from "react-tooltip";
 
 const HostNics2 = ({ hostId }) => {
   const { data: host } = useHost(hostId);
@@ -590,7 +590,7 @@ const HostNics2 = ({ hostId }) => {
                 {status2Icon(net?.status)}&nbsp;&nbsp;{net?.name}
                 {net?.vlan === 0 ? "" : `(VLAN ${net?.vlan})`}
               </div>
-              <RVI16 iconDef={rvi16VirtualMachine} className="icon" />
+              <RVI16 iconDef={rvi16VirtualMachine()} className="icon" />
             </div>
           ))}
         </div>

@@ -1,3 +1,4 @@
+/* SettingCertificatesRenewalPolicies.css */
 ul { margin: 0 30px !important; }
 li { color: var(--color-border-default); }
 details {
@@ -8,4 +9,3 @@ details {
 details[open] summary {
   border-bottom: var(--border-default);
 }
-  

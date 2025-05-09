@@ -13,7 +13,7 @@
   width:var(--w-icon-tree) !important;
   aspect-ratio:1/1;
   flex-shrink: 0;
-  color: #999999
+  color: var(--color-down)
 }
 .tmi span {
   float:left;

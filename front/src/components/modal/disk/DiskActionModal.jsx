@@ -101,7 +101,7 @@ const DiskActionModal = ({
         if (availableDomains.length > 0) {
           selectedDomainId = availableDomains[0].id;
         } else {
-          toast.error(`선택한 ${disk.alias || "디스크"} 스토리지 도메인이 없습니다.`);
+          toast.error(`선택한 ${disk.alias || "디스크"} ${Localization.kr.DOMAIN}이 없습니다.`);
           return;
         }
       }

@@ -34,7 +34,6 @@ import Event from "./pages/event/Event";
 import SettingInfo from "./pages/setting/SettingInfo";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "pretendard/dist/web/static/pretendard.css";
-import Logger from "./utils/Logger";
 import "./App.css";
 
 const App = () => {

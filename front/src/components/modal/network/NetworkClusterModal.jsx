@@ -17,48 +17,6 @@ const NetworkClusterModal = ({
     isSuccess: isClustersSuccess,
   } = useAllClustersFromNetwork(networkId);
 
-  // 삭제예정
-/*
-  const transformedData = clusters.map((cluster) => ({
-    name: cluster?.name,
-    connect: cluster?.connected 
-      ? <input type="checkbox" checked disabled /> 
-      : <input type="checkbox" disabled />,
-    status: clusterStatus2Icon(cluster?.networkVo?.status, cluster?.connected),
-    required: cluster?.networkVo?.required 
-      ? <input type="checkbox" checked disabled /> 
-      : <input type="checkbox" disabled />,
-    allAssigned: cluster?.connected 
-      ? <input type="checkbox" checked disabled /> 
-      : <input type="checkbox" disabled />,
-    allRequired: cluster?.networkVo?.required 
-      ? <input type="checkbox" checked disabled /> 
-      : <input type="checkbox" disabled />,
-    vmNetMgmt: cluster?.networkVo?.usage?.vm 
-      ? <RVI16 iconDef={rvi16VirtualMachine} /> 
-      : null,
-    networkOutput: cluster?.networkVo?.usage?.display 
-      ? <input type="checkbox" checked disabled /> 
-      : <input type="checkbox" disabled />,
-    migrationNetwork: cluster?.networkVo?.usage?.migration 
-      ? <input type="checkbox" checked disabled /> 
-      : <input type="checkbox" disabled />,
-    glusterNetwork: cluster?.networkVo?.usage?.gluster 
-      ? <input type="checkbox" checked disabled /> 
-      : <input type="checkbox" disabled />,
-    defaultRouting: cluster?.networkVo?.usage?.defaultRoute 
-      ? <input type="checkbox" checked disabled /> 
-      : <input type="checkbox" disabled />,
-    networkRole: [
-      cluster?.networkVo?.usage?.management ? '관리' : null,
-      cluster?.networkVo?.usage?.display ? '출력' : null,
-      cluster?.networkVo?.usage?.migration ? Localization.kr.MIGRATION : null,
-      cluster?.networkVo?.usage?.gluster ? '글러스터' : null,
-      cluster?.networkVo?.usage?.defaultRoute ? '기본라우팅' : null,
-    ].filter(Boolean).join('/'),
-  })); 
-*/
-
   // 데이터 변환
   const transformedData = [...clusters].map((c) => ({
     name: c?.name,
@@ -67,7 +25,7 @@ const NetworkClusterModal = ({
     required: <input type="checkbox" checked={c?.networkVo?.required} disabled />,
     allAssigned: <input type="checkbox" checked={c?.connected} disabled />,
     allRequired: <input type="checkbox" checked={c?.networkVo?.required} disabled />,
-    vmNetMgmt: c?.networkVo?.usage?.vm ? <RVI16 iconDef={rvi16VirtualMachine} /> : null,
+    vmNetMgmt: c?.networkVo?.usage?.vm ? <RVI16 iconDef={rvi16VirtualMachine()} /> : null,
     networkOutput: <input type="checkbox" checked={c?.networkVo?.usage?.display} disabled />,
     migrationNetwork: <input type="checkbox" checked={c?.networkVo?.usage?.migration} disabled />,
     glusterNetwork: <input type="checkbox" checked={c?.networkVo?.usage?.gluster} disabled />,

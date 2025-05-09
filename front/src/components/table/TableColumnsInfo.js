@@ -138,7 +138,7 @@ const TableColumnsInfo = {
   ],
   IMPORT_NETWORKS: [
     { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
-    { header: '', accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
+    { header: Localization.kr.RESET, accessor: "nextRun", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.ENGINE, clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN, },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '20%' },
   ],
@@ -310,7 +310,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.SIZE_VIRTUAL, accessor: 'virtualSize', clickable: true},
     { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
     { header: Localization.kr.STATUS, accessor: 'status', clickable: false },
-    { header: '스토리지 도메인', accessor: 'storageDomainName', clickable: false,align:"left" },
+    { header: Localization.kr.DOMAIN, accessor: 'storageDomainName', clickable: false,align:"left" },
     { header: Localization.kr.SPARSE, accessor: 'policy', clickable: false },
     { header: '인터페이스', accessor: 'interfaceType', clickable: false },
     { header: '유형', accessor: 'storageType', clickable: false },
@@ -527,7 +527,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.SIZE_VIRTUAL, accessor: 'virtualSize', clickable: false },
     { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
     { header: Localization.kr.SPARSE, accessor: 'sparse', clickable: false },
-    // { header: '스토리지 도메인', accessor: 'storageDomain', clickable: false },
+    // { header: Localization.kr.DOMAIN, accessor: 'storageDomain', clickable: false },
     // { header: Localization.kr.DATE_CREATED, accessor: 'creationDate', clickable: false },
     { header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, accessor: 'connect', clickable: false },
     // { header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}(템플릿)`, accessor: 'connectTemplate', clickable: false },
@@ -599,8 +599,8 @@ const TableColumnsInfo = {
     { header: Localization.kr.ALIAS, accessor: '_alias', clickable: true },
     { header: 'ID', accessor: 'id', clickable: false },
     // { header: Localization.kr.IS_SHARABLE, accessor: 'icon1', clickable: false },
-    { header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, accessor: 'connect', clickable: false ,align: "left",  },
-    { header: '스토리지 도메인', accessor: 'storageDomain', clickable: false },
+    { header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, accessor: 'connect', clickable: false ,align: "left", },
+    { header: Localization.kr.DOMAIN, accessor: 'storageDomain', clickable: false },
     { header: Localization.kr.SIZE_VIRTUAL, accessor: 'virtualSize', clickable: false },
     { header: Localization.kr.STATUS, accessor: 'status', clickable: false },
     { header: '유형', accessor: 'storageType', clickable: false },
@@ -630,13 +630,13 @@ const TableColumnsInfo = {
     { header: 'ID', accessor: 'id', clickable: false },
     { header: Localization.kr.SIZE_VIRTUAL, accessor: 'virtualSize', clickable: false },
     { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
-    { header: '스토리지 도메인', accessor: 'storageDomain', clickable: false, width: '15%'  },
+    { header: Localization.kr.DOMAIN, accessor: 'storageDomain', clickable: false, width: '15%'  },
     { header: '인터페이스', accessor: 'interface', clickable: false },
     { header: 'R/O', accessor: 'readonly', clickable: false, width: '5%'  },
     { header: 'bootable', accessor: 'bootable', clickable: false, width: '5%'  },
     { header: '공유가능', accessor: 'sharable', clickable: false, width: '5%'  },
   ],
-// ---------------------------------------------------------------
+  // ---------------------------------------------------------------
 
 
   LUNS: [

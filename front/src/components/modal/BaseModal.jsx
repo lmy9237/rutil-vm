@@ -33,7 +33,6 @@ const BaseModal = ({
 
   return (
     <Modal className="Modal" overlayClassName="Overlay f-center"
-      // overlayClassName="Overlay newRolePopupOverlay" <-- DiskActionModal, DomainGetDiskModal
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel={targetName}
@@ -50,7 +49,7 @@ const BaseModal = ({
         <div className="popup-contents">
           {(shouldWarn || promptText) && (
             <div className="popup-contents-prompt f-start fs-16">
-              {shouldWarn && (<RVI24 iconDef={rvi24ErrorRed} className="error-icon mr-2" />)}
+              {shouldWarn && (<RVI24 iconDef={rvi24ErrorRed()} className="error-icon mr-2" />)}
               {promptText}
             </div>
           )}

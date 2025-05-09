@@ -100,7 +100,7 @@ const VmSnapshots = ({
             <RVI16 iconDef={rvi16ChevronDown()} />
             <div className="snapshot-label f-center fs-14">
               <RVI16
-                iconDef={hasLockedSnapshot ? rvi16Lock() : rvi16Location} 
+                iconDef={hasLockedSnapshot ? rvi16Lock() : rvi16Location()} 
                 className="mx-1.5"
               />
               {hasLockedSnapshot ? "잠겨있음" 

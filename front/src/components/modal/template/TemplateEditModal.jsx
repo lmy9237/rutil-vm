@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
-import { useEditTemplate, useTemplate } from "../../../api/RQHook";
-import ModalNavButton from "../../navigation/ModalNavButton";
+import TabNavButtonGroup from "../../common/TabNavButtonGroup";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
+import { useEditTemplate, useTemplate } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import "./MTemplate.css";
@@ -43,8 +43,8 @@ const TemplateEditModal = ({
     { value: 3, label: "3개" },
   ];
   const tabs = useMemo(() => ([
-    { id: "general", label: Localization.kr.GENERAL },
-    { id: "console", label: Localization.kr.CONSOLE },
+    { id: "general", label: Localization.kr.GENERAL, onClick: () => setActiveTab("general") },
+    { id: "console", label: Localization.kr.CONSOLE, onClick: () => setActiveTab("console") },
   ]), []);
 
   useEffect(() => {
@@ -53,10 +53,6 @@ const TemplateEditModal = ({
     }
   }, [isOpen]);
   const [activeTab, setActiveTab] = useState("general");
-
-  const handleTabClick = useCallback((tab) => {
-    setActiveTab(tab);
-  }, []);
 
   //해당데이터 상세정보 가져오기
   const { data: templateData } = useTemplate(templateId);
@@ -139,7 +135,10 @@ const TemplateEditModal = ({
   
       <div className="popup-content-outer flex">
         {/* 왼쪽 네비게이션 */}
-        <ModalNavButton tabs={tabs} activeTab={activeTab} onTabClick={handleTabClick} />
+        <TabNavButtonGroup 
+          tabs={tabs} 
+          tabActive={activeTab}
+        />
 
         <div className="backup-edit-content">
           <div>

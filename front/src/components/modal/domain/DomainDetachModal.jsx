@@ -1,8 +1,13 @@
 import toast from "react-hot-toast";
-import BaseModal from "../BaseModal";
-import { useAllDiskSnapshotsFromDomain, useAllTemplatesFromDomain, useAllVMsFromDomain, useDetachDomain } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
 import useGlobal from "../../../hooks/useGlobal";
+import BaseModal from "../BaseModal";
+import {
+  useAllDiskSnapshotsFromDomain,
+  useAllTemplatesFromDomain,
+  useAllVMsFromDomain,
+  useDetachDomain,
+} from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name DomainDetachModal
@@ -11,7 +16,10 @@ import useGlobal from "../../../hooks/useGlobal";
  * @prop {boolean} isOpen
  * @returns
  */
-const DomainDetachModal = ({ isOpen, onClose }) => {
+const DomainDetachModal = ({ 
+  isOpen, 
+  onClose
+}) => {
   const {
     datacentersSelected, domainsSelected, sourceContext
   } = useGlobal()
@@ -87,8 +95,8 @@ const DomainDetachModal = ({ isOpen, onClose }) => {
       {/* TODO: 가상머신과 템플릿, 스냅샷이 있으면 경고문구를 보여줘야하는데 기준을 잡던가 해야됨요 */}
       {/* {!label && ( */}
         <div className="destroy-text"> 가상머신, 템플릿, 스냅샷이 있으면 안됨요.
-          스토리지 도메인에는 다른 스토리지 도메인에 디스크가 있는 다음 VM/템플릿에 대한 리스가 포함되어 있습니다.
-          스토리지 도메인 제거를 진행하기 전에 해당 VM/템플릿 리스를 수동으로 제거하거나 이동하는 것을 고려해 주세요.
+          {Localization.kr.DOMAIN}에는 다른 {Localization.kr.DOMAIN}에 디스크가 있는 다음 VM/템플릿에 대한 리스가 포함되어 있습니다.
+          {Localization.kr.DOMAIN} 제거를 진행하기 전에 해당 VM/템플릿 리스를 수동으로 제거하거나 이동하는 것을 고려해 주세요.
         </div>
       {/* )} */}
 
