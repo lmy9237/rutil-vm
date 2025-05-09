@@ -1,4 +1,5 @@
-/* 호스트 네트워크 인터페이스 */ 
+/* 0507 추가 */
+
 .host-network-boxs:hover{
   background:#e6eefa;
 }
@@ -30,23 +31,6 @@
   font-weight: 700;
 }
 
-
-/*호스트 네트워크 설정 */
-/* .network-separation-left {
-  width: 78%;
-  background-color: var(--color-white);
-  border-radius: 1px ;
-  min-height: 45vh;
-  padding: 16px;
-}
-.network-separation-right {
-  width: 33%;
-  padding: 0 11px;
-  background-color: var(--color-white);
-  margin-left: 30px;
-  padding: 14px;
-} */
-
 .network-item {
   padding: 15px;
   margin-bottom: 10px;
@@ -60,7 +44,7 @@
 }
 .network-item:hover {
   border: 1.7px dashed #002a4f;
-  transform: scale(1); /* 크기 10% 증가 */
+  transform: scale(1); 
 }
 .network-separation-left > div:first-child > div {
   width: 37%;
@@ -85,8 +69,8 @@
 .host-network-outer {
   padding: 0.2rem;
   height: 53.5vh;
-  overflow-y: auto; /* 세로 스크롤 추가 */
-  overflow-x: hidden; /* 가로 스크롤 숨김 */
+  overflow-y: auto; 
+  overflow-x: hidden;
 }
 .container {
   display: flex;
@@ -96,11 +80,9 @@
   padding: 8px 16px;
   margin-bottom: 6px;
   border-radius: 1px;
-
 }
 
 .interface-header {
-  color: #1D1D1D;
   letter-spacing: -0.36px;
   padding: 5px 0;
 }
@@ -110,19 +92,25 @@
   margin-bottom: 15px;
 }
 
-
-
-/*네트워크인터페이스 */
-.interface-content-outer{
+.interface-content-outer2{
   width: 39%;
 }
+
 .interface-content{
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
 
-.assigned-network-outer,.empty-network-content{
+.assigned-network-outer {
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  border: var(--border-default);
+  background-color: white;
+  width: 100%;  
+}
+
+.empty-network-content{
   border: var(--border-default);
   background-color: rgb(255, 255, 255);
 }
@@ -132,20 +120,55 @@
 }
 
 .interface-outer{
-  background-color: rgb(184, 13, 13);
-  /* background: var(--color-input-disabled); */
+  background: var(--color-input-disabled);
   border: var(--border-default);
-}
-.interface-container-outer {
-  background-color: rgb(141, 197, 52);
-}
-.interface-container {
-  border: var(--border-default);
-  background-color: rgb(117, 111, 111);
 }
 
-.group-span>div{
-  width: 50%;
+.interface-container {
+  border: var(--border-default);
+  background: rgb(255, 255, 255);
+}
+.group-span {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.group-span > div{
   text-align: center;
 }
 
+.split-layout-group {
+  display: flex;
+  width: 100%;
+  gap: 24px; 
+}
+
+.split-item-two-thirds {
+  width: 70%;
+  background-color: #f0f8ff;
+  padding: 16px; 
+  border-radius: 6px; 
+}
+
+.split-item-one-third {
+  width: 30%;
+  background-color: #f0f8ff;
+  padding: 16px; 
+  border-radius: 6px; 
+}
+
+.col-40 {
+  flex: 0 0 45%;
+  max-width: 40%;
+}
+
+.col-20 {
+  flex: 0 0 10%;
+  max-width: 20%;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+}

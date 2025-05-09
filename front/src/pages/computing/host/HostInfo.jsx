@@ -1,10 +1,9 @@
-import { useState, useEffect, Suspense, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import NavButton from "../../../components/navigation/NavButton";
 import HeaderButton from "../../../components/button/HeaderButton";
-import Loading from "../../../components/common/Loading";
 import Path from "../../../components/Header/Path";
 import HostGeneral from "./HostGeneral";
 import HostVms from "./HostVms";
@@ -74,6 +73,7 @@ const HostInfo = () => {
     { id: "general", label: Localization.kr.GENERAL },
     { id: "vms", label: Localization.kr.VM },
     { id: "nics", label: Localization.kr.NICS },
+    { id: "nics2", label: `${Localization.kr.NICS}2` },
     { id: "networkAdapter", label: "네트워크 어댑터" },
     { id: "devices", label: `${Localization.kr.HOST} 장치` },
     { id: "events", label: Localization.kr.EVENT },
@@ -94,8 +94,8 @@ const HostInfo = () => {
     const SectionComponent = {
       general: HostGeneral,
       vms: HostVms,
-      // nics: HostNics2,
       nics: HostNics,
+      nics2: HostNics2,
       networkAdapter: HostNetworkAdapter,
       devices: HostDevices,
       events: HostEvents,

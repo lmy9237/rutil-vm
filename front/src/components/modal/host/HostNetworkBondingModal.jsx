@@ -6,13 +6,6 @@ import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
 import { useAddBonding, useNetworkInterfaceFromHost } from "../../../api/RQHook";
 
-const optionList = [
-  { value: "1", label: "(Mode 1) Active-Backup" },
-  { value: "2", label: "(Mode 2) Load balance (balance-xor)" },
-  { value: "3", label: "(Mode 3) Broadcast" },
-  { value: "4", label: "(Mode 4) Dynamic link aggregation (802.3ad)" }
-];
-
 const HostNetworkBondingModal = ({ 
   isOpen, 
   editmode = false,
@@ -80,3 +73,10 @@ const HostNetworkBondingModal = ({
 };
 
 export default HostNetworkBondingModal;
+
+const optionList = [
+  { value: "1", label: "(Mode 1) Active-Backup" },
+  { value: "2", label: "(Mode 2) Load balance (balance-xor)" },
+  { value: "3", label: "(Mode 3) Broadcast" },
+  { value: "4", label: "(Mode 4) Dynamic link aggregation (802.3ad)" }
+];
