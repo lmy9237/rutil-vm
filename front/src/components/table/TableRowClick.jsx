@@ -36,7 +36,7 @@ const TableRowClick = ({ type, id, children, style }) => {
   };
 
   return (
-    <div style={{ textAlign: "left" }}>
+    // <div style={{ textAlign: "left" }}>
       <span
         className="row-click"
         data-rowclick 
@@ -49,7 +49,7 @@ const TableRowClick = ({ type, id, children, style }) => {
       >
         {children}
       </span>
-    </div>
+    // </div>
   );
 };
 

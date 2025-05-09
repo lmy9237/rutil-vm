@@ -104,7 +104,7 @@ class EventController: BaseController() {
 		}
 		return ResponseEntity.ok(iEvent.remove(eventIds2Remove.eventIds))
 	}
-	class BodyEventIds(val eventIds: List<String>): Serializable
+	data class BodyEventIds(val eventIds: List<String> = listOf()): Serializable
 
     companion object {
         private val log by LoggerDelegate()

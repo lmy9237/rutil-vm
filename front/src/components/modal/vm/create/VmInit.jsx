@@ -39,7 +39,7 @@ const VmInit = ({ formCloudState, setFormCloudState }) => {
                 onClick={toggleDomainHiddenBox}
                 fixedWidth
               />
-              <span>사용자 지정 스크립트</span>
+              <span className="mb-1">사용자 지정 스크립트</span>
             </div>
             <div >
               <textarea name="content" cols="40" rows="8"

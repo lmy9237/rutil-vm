@@ -30,7 +30,23 @@ const Grid = ({
   }, [data, gridData]);
 
   return (<>
-    {[...gridData].map((item, index) => (
+    <div className="grid-matrix">
+      {[...gridData].map((item, index) => (
+        (item.name === "") 
+          ? <GridItem key={item.id} type={type} item={item} index={index} />
+          : <Tippy
+              key={item.id}
+              content={<div className="v-center">{item.name || ""}</div>}
+              placement="top"
+              theme="dark-tooltip"
+              animation="shift-away"
+              arrow={true}
+            >
+              <GridItem type={type} item={item} index={index} />
+            </Tippy>
+      ))}
+    </div>
+      {/*    {[...gridData].map((item, index) => (
       (item.name === "") 
         ? <GridItem type={type} item={item} index={index} />
         : <Tippy content={<div className="v-center">{item.name || ""}</div>}
@@ -41,7 +57,7 @@ const Grid = ({
           > 
             <GridItem type={type} item={item} index={index} />
           </Tippy>
-    ))}
+    ))} */}
   </>);
 };
 

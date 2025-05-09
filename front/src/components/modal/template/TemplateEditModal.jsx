@@ -27,6 +27,7 @@ const TemplateEditModal = ({
   const [deleteProtected, setDeleteProtected] = useState(false); // 일시정지상태에서시작
   const [clsuterVoId, setClsuterVoId] = useState("");
   const [clsuterVoName, setClsuterVoName] = useState("");
+  const [monitor, setMonitor] = useState(1); // 숫자 타입
 
   const { mutate: editTemplate } = useEditTemplate();
   
@@ -36,7 +37,11 @@ const TemplateEditModal = ({
     { value: "high_performance", label: "고성능" },
     { value: "server", label: "서버" },
   ]);
-
+  const monitorOptions = [
+    { value: 1, label: "1개" },
+    { value: 2, label: "2개" },
+    { value: 3, label: "3개" },
+  ];
   const tabs = useMemo(() => ([
     { id: "general", label: Localization.kr.GENERAL },
     { id: "console", label: Localization.kr.CONSOLE },
@@ -71,6 +76,7 @@ const TemplateEditModal = ({
         setStateless(template?.stateless || false); // 상태비저장
         setClsuterVoId(template.clusterVo?.id || "");
         setClsuterVoName(template.clusterVo?.name || "");
+        setMonitor(Number(template?.monitor ?? 1)); // ✅
         setStartPaused(template?.startPaused || false);  // 일시정지 모드에서 시작
         setDeleteProtected(template?.deleteProtected || false); //  삭제 방지
         setSelectedOptimizeOption(template?.optimizeOption || "server");
@@ -99,6 +105,7 @@ const TemplateEditModal = ({
       stateless,
       startPaused,
       deleteProtected,
+      monitor: Number(monitor)
     };
     
     Logger.debug(`템플릿: ${JSON.stringify(dataToSubmit, null, 2)}`);
@@ -193,17 +200,19 @@ const TemplateEditModal = ({
             </>
           )}
           {activeTab  === "console" && (
-            <>
-              <div className="p-1">
-                <div className="graphic-console">그래픽 콘솔</div>
-                <div className="monitor f-btw">
-                  <label htmlFor="monitor-select">모니터</label>
-                  <select id="monitor-select">
-                    <option value="1">값 고쳐야함!</option>
-                  </select>
-                </div>
-              </div>
-            </>
+            <div className="p-1">
+            <div className="graphic-console">그래픽 콘솔</div>
+            <div className="monitor f-btw">
+              <LabelSelectOptions
+                id="monitor"
+                label="모니터 수"
+                value={monitor} 
+                onChange={(e) => setMonitor(Number(e.target.value))}
+                options={monitorOptions}
+                disabled
+              />
+            </div>
+          </div>
           )}
         </div>
       </div>

@@ -5010,7 +5010,32 @@ export const useRemoveEvent = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvent ... res: `, res);
       toast.success(`[200] ${Localization.kr.EVENT} ${Localization.kr.REMOVE} 요청완료`)
-      queryClient.invalidateQueries(['allEvents','allNotiEvents','allEventsNormal']);
+      queryClient.invalidateQueries([QK.DASHBOARD,'allEvents','allNotiEvents','allEventsNormal']);
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  })
+}
+
+export const useRemoveEvents = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (eventIds=[]) => {
+      const res = await ApiManager.removeEvents({ eventIds });
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > removeEvents ... eventIds: ${eventIds}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > removeEvents ... res: `, res);
+      toast.success(`[200] ${Localization.kr.EVENT} ${Localization.kr.REMOVE} 요청완료`)
+      queryClient.invalidateQueries([QK.DASHBOARD,'allEvents','allNotiEvents','allEventsNormal']);
       postSuccess(res);
     },
     onError: (error) => {

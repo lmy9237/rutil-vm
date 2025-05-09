@@ -13,7 +13,7 @@ import {
   rvi24DownArrow,
   severity2Icon,
 } from "../icons/RutilVmIcons";
-import { useAllEventsNormal, useAllNotiEvents, useRemoveEvent } from "../../api/RQHook";
+import { useAllEventsNormal, useAllNotiEvents, useRemoveEvent, useRemoveEvents } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 import "./BoxEvent.css";
 
@@ -74,6 +74,8 @@ const BoxEvent = ({
     return window.innerHeight - footerHeightInPx() - headerHeight;
 }, [footerHeightInPx])
   
+  // 모두 삭제
+  const { mutate: removeEvents } = useRemoveEvents(() => {}, () => {});
   return (
     <div  ref={bellBoxRef}
       className={`bell-box fs-16 ${eventBoxExpanded() ? "expanded" : ""}`}
@@ -124,7 +126,16 @@ const BoxEvent = ({
           </div>
 
           <div className="bell-btns f-center">
-            <div className="f-center fs-14">모두 삭제</div>
+            <div
+                className="f-center fs-14"
+                onClick={() => {
+                  const ids = [...notiEvents].map(e => e.id);
+                  if (ids.length === 0) return;
+                  removeEvents(ids); 
+                }}
+              >
+                모두 삭제
+              </div>
             <div className="f-center fs-14">모두 출력</div>
           </div>
         </>
@@ -156,7 +167,16 @@ const BoxEvent = ({
           </div>
 
           <div className="bell-btns f-center">
-            <div className="f-center fs-14">모두 삭제</div>
+            <div
+              className="f-center fs-14"
+              onClick={() => {
+                const ids = [...eventsNormal].map(e => e.id);
+                if (ids.length === 0) return;
+                removeEvents(ids);
+              }}
+            >
+              모두 삭제
+            </div>
             <div className="f-center fs-14">모두 출력</div>
           </div>
         </>

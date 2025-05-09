@@ -176,7 +176,7 @@ const VmSystem = ({
         />
 
         <button className="btn-toggle-cpu" onClick={toggleCpuDetail}>
-          <RVI16 iconDef={showCpuDetail ? rvi16ChevronUp() : rvi16ChevronDown()} 
+          <RVI16 iconDef={showCpuDetail ? rvi16ChevronUp("#1D1D1D") : rvi16ChevronDown("#1D1D1D")} 
             className="mr-1.5"
           />
           {showCpuDetail ? "CPU 상세 옵션 닫기" : "CPU 상세 옵션 열기"}

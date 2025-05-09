@@ -28,7 +28,7 @@ import Localization from "../utils/Localization";
 import Logger from "../utils/Logger";
 import "./BoxesLayout.css"
 
-const HEIGHT_GRAPH_HORIZ = '280px'
+const HEIGHT_GRAPH_HORIZ = 280
 // const HEIGHT_PERCENT_GRAPH_HORIZ = 50
 /**
  * @name BoxesLayout
@@ -64,7 +64,7 @@ export const BoxLayout = ({
       {title && 
         <BoxTitle title={title} iconDef={iconDef}/>
       }
-      {cntTotal && 
+      {cntTotal !== undefined && 
         <BoxDetail 
           cntTotal={cntTotal} cntUp={cntUp} cntDown={cntDown} 
           alert={alert} error={error} warning={warning} 
@@ -108,7 +108,7 @@ export const BoxDetail = ({
     <div className={`box-detail f-end gap-8 w-full`}
       {...props}
     >
-      {cntTotal && (<>
+      {cntTotal !== undefined && (<>
         <div className="box-detail-icons f-end fw-500 gap-2">
           {cntUp && (<div className="box-detail-icon f-end">
             <RVI16 className="box-icon sml" iconDef={rvi16DiagonalUp()} />
@@ -201,7 +201,8 @@ export const BoxChartAllGraphs = ({
 
   useEffect(() => {
     Logger.debug(`BoxChartAllGraphs > useEffect ... `)
-    updateHeightGraphRest();
+    window.addEventListener("resize", updateHeightGraphRest);
+    return () => window.removeEventListener("resize", updateHeightGraphRest);;
   }, []);
 
   return (<>

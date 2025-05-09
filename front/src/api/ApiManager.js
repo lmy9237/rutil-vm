@@ -2986,6 +2986,17 @@ const ApiManager = {
     method: "DELETE", 
     url: ENDPOINTS.FIND_EVENT(eventId),
   }),
+
+  /**
+   * @name ApiManager.removeEvents
+   * @param {string} eventId (제거 할) 이벤트 목록(모두삭제)
+   * @returns 
+   */
+  removeEvents: async ({ eventIds = [] }) => makeAPICall({
+    method: "DELETE", 
+    url: ENDPOINTS.FIND_ALL_EVENTS(),
+    data: { eventIds }
+  }),
   //#endregion: event
 
   //#region: Job

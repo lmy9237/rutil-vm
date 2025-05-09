@@ -1,6 +1,6 @@
 import React from "react";
 import { useAllDisksFromDomain, useAllDiskSnapshotsFromDomain, useStroageDomain } from "../../../api/RQHook";
-import { checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
+import { calculateOvercommitRatio, checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
 import InfoTable from "../../../components/table/InfoTable";
 
 const overCommit = (commit, disk) => ((commit / disk) * 100).toFixed(0);
@@ -25,7 +25,7 @@ const DomainGeneral = ({ domainId }) => {
     { label: "할당됨", value: checkZeroSizeToGiB(domain?.commitedSize) },
     {
       label: "오버 할당 비율",
-      value: overCommit(domain?.overCommit, domain?.size) + " %",
+      value: calculateOvercommitRatio(domain?.commitedSize, domain?.size),
     },
     { label: "이미지 개수", value: disks?.length || 0 },
     ...(diskSnapshots?.length > 0

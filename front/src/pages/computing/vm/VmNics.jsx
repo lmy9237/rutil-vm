@@ -66,7 +66,9 @@ const VmNics = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div ref={nicRef} className="w-full "> 
+      <div className="network-interface-group w-full"
+        ref={nicRef} 
+      > 
         <div className="dupl-header-group f-start gap-4 w-full">
           <NicActionButtons />
         </div>

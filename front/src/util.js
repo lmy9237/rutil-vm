@@ -157,6 +157,22 @@ export function checkZeroSizeToGiB(size) {
 }
 
 /**
+ * @name calculateOvercommitRatio
+ * @description commitedSize와 size 기반 오버커밋 비율 계산
+ *
+ * @param {number} commitedSize 논리적으로 할당된 용량 (bytes)
+ * @param {number} totalSize 총 물리 용량 (bytes)
+ * @returns {string} 오버커밋 비율 = (논리 할당량 / 실제 물리 크기) * 100
+ */
+export function calculateOvercommitRatio(commitedSize, totalSize) {
+  if (!totalSize || isNaN(commitedSize) || isNaN(totalSize)) return "N/A";
+  const ratio = (commitedSize / totalSize) * 100;
+  const formatted = ratio.toFixed(1);
+  Logger.debug(`util > calculateOvercommitRatio ... commited: ${commitedSize}, total: ${totalSize}, ratio: ${formatted}%`);
+  return `${formatted}%`;
+}
+
+/**
  * @name checkZeroSizeToMB
  * @description 
  * 
