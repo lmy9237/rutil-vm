@@ -30,6 +30,104 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## 0.3.1 - 2025-05-09
+
+- [`api-v0.3.1`][api-v0.3.1]: 백엔드
+- [`web-v0.3.1`][web-v0.3.1]: 프론트앤드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+  - `${back}${front}`: 호스트 > 네트워크 어댑터 페이지 추가
+  - `${back}${front}`: 가상머신 목록에 > 스냅샷 여부 코드 추가
+  - `${back}${front}`: 스토리지도메인 생성/편집 Modal > 기능 구현 완료 (nfs, fc)
+  - `${back}${front}`: 스토리지도메인 Modal > `DomainImportModal` 가져오기 기능 구현 완료 (nfs, fc)
+- [@lmy9237][lmy9237]
+  - `${front}`: 가상머신 Aciton 버튼 헤더: 가상머신 복제 버튼 활성화 및 기능 개발
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - `${front}`: Aside 메뉴 처음 페이지에서 열리게 수정
+  - `${front}`: 트리메뉴아이콘 추가: 가상머신 일시정지 `rvi16Pause`
+  - `${front}`: Footer 높이에 따른 이벤트창 높이 조절
+  - `${front}`: Footer 미쳐 날뛰는 현상
+  - `${front}`: Disk 상태에 때른 버튼 활성화/비활성화 버튼 처리
+  - `${front}`: 호스트 > `INSTALLING`에 대해서 편집버튼 비활성화
+  - `${front}`: 기본글자크기 조절 `12px`
+  - `${front}`: 호스트 > 버튼문구 변경: `호스트 재부팅 확인` -> `호스트 재부팅 상태 확인`
+  - `${front}`: 가상머신 > 스냅샷 생성버튼 언제든 활성화
+  - `${front}`: 스토리지도메인 > `가상머신 가져오기` 버튼 모달연결
+  - `${front}`: 대시보드 스타일 전면수정
+  - `${front}`: 스토리지 > 디스크 > 상세 > 스토리지 > 도메인 목록 
+- [@dhj27][dhj27]
+  - `${back}${front}`: 스토리지 도메인 편집에서 호스트 출력
+  - `${front}${back}`: 가상머신 생성/편집 모달 > BIOS 부팅메뉴 코드 수정
+  - `${back}`: LogicalUnit iscsi와 fc 상관없이 출력되게 코드 수정
+  - `${back}`: 스토리지도메인 vo 개선
+  - `${front}`: 가상머신 NIC 모달 편집 (토글버튼, select박스)
+  - `${front}`: 가상머신 NIC 페이지 수정
+  - `${front}`: 템플릿 모달 수정
+  - `${front}`: DomainCheckModal 수정
+  - `${front}`: DomainInfo에 Domain 상태 값 추가
+  - `${front}`: Domain 상태에 따른 DomainInfo Tab 메뉴 변경
+  - `${front}`: `RQHook` 관리 > `searchFc`
+- [@lmy9237][lmy9237]
+  - `${front}`: Footer 작업명 컬럼명 아이콘과 줄 맞추기 
+  - `${front}`: 비밀번호 눈 표시 (비번 안보임)
+  - `${front}`: 원그래프 소수점 자르기
+  - `${front}`: 가상머신 호스트 > 특정호스트 색 다 채우기
+  - `${front}`: input 비밀번호 눈표시 (미리보기) 추가 (모달, 로그인페이지)
+  - `${front}`: 호스트 상세페이지 > 부팅시간 데이터 안뜸
+  - `${front}`: 가상머신 > 스냅샷 유무 컬럼 추가
+  - `${front}`: 가상머신 일시중지 일 때 시작버튼 활성화
+  - `${front}`: 막대그래프 크기고정 > 큰화면일때 높이 수정
+  - `${front}`: 스토리지도메인 action 이동/복사 버튼 기능 개발(모달필요)
+  - `${front}`: 가상 디스크 편집 아이콘 빼기(임시)
+  - `${front}`: 데이터센터 > 호스트 > 관리 Action 버튼 눌렀을 때 `글로벌 HA 유지관리를 비활성화` 문구가 2줄로 되어 범위가 넘어가는 현상
+  - `${front}`: 가상머신 Action버튼: 재부팅 및 시작 등 Action버튼에 대한 넓이 처리 (공백이 많음)
+  - `${front}`: 호스트 Action 버튼 활성화 처리: `인증서 등록` 은 유지보수모드 일 때  만 활성화
+  - `${front}`: 대시보드 > 이벤트 세부 count 아이콘 누락
+  - `${front}`: 대시보드 > 가로바 그래프 제목 글자 굵기 해제
+  - `${front}`: 대시보드 > 원그래프 사용가능 Font 크기
+  - `${front}`: 네트워크 생성/편집: `DNS 설정` 문구 폰트처리
+  - `${front}`:`Localization`수정 `VNIC` > `vNIC`
+  - `${front}`: 드레그선 굵기 > 얇게
+  - `${front}`: 가상머신 생성/편집 모달 > 부팅 가능한 것만 [ 부팅 ] 라벨 표시
+  - `${front}`: 가상머신 목록 > 재설정 필요 아이콘: `rvi16refresh`
+      - 위치: 상태 안 (아이콘 2개표출)
+  - `${front}`: `TableRowColumn` 값/텍스트 정렬 처리 기능 추가
+      - 컬럼 : 가운데정렬
+      - 긴 항목: 왼쪽 정렬 (이름, 설명, 코멘트)
+      - 짧은 항목: 가운데 정렬 (상태, 유형, 크기, etc.)
+  - `${front}`: 가상머신 스냅샷, 호스트 네트워크 인터페이스 컴포넌트분리
+  - `${front}`: 네트워크 가상머신 버튼 위치
+  - `${front}`:  가상머신 생성/편집 > 디스크생성 별칭 자동으로 만들기
+      - 생성에서만
+      - 가상머신에 이름에 맞춰
+      - 가상머신 이름이 없을 경우 `_Disk1` 표시 안하도록
+  - `${front}`: 가상머신 > 디스크 action버튼 활성/비활성화 예
+  - `${front}`: 모달 선두께 통일
+  - `${front}`: 관리버튼 화살표 색상수정
+  - `${front}`: select박스 텍스트 넘치는 것 수정
+  - `${front}`: 우클릭메뉴박스 선 잘리는문제 수정
+  - `${front}`: 스냅샷모달 스크롤빼기
+  - `${front}`: 템플릿 편집 모니터수 수정
+  - `${front}`: 스토리지 도메인 상태 아이콘 문제        
+  - `${front}`: 가상머신 > 디스크 모달 제목 및 내용 오출력 (편집)
+  - `${front}`: 이벤트 텍스트짤림
+  - `${front}`: 툴팁 잘리는 것 수정
+  - `${front}`: 가상머신 생성/편집 > VNIC 오와 열
+
+### Removed
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+
+---
+
 ## 0.3.0 - 2025-04-25
 
 - [`api-v0.3.0`][api-v0.3.0]: 백엔드
@@ -127,13 +225,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `${front}`: 상세페이지정보 화면 줄이면 td줄바뀌는것 한줄로수정
   - `${front}`: 디스크 연결대상컬럼 text 왼쪽정렬하기
   - `${front}`: RutilVmIcon: tooltip > Tippy 적용
-  - `${front}`: 템플릿→네트워크 인터페이스 버튼
+  - `${front}`: 템플릿>네트워크 인터페이스 버튼
   - `${front}`: 가상머신 생성/편집 > 호스트 선택에 따른 순서 적용 (GOOD, ID대신 **명칭**으로)
   - `${front}`: 상세페이지 이름 길어졌을 때 버튼들 찌그러지는 것 수정(e.g. 가상머신)
   - `${front}`: JobFooter 높이 조절 끝까지 (밑으로)
-  - `${front}`:  nav 우클릭박스 완성(모달열릴때 contextmenu 안 닫힘) → 수정
+  - `${front}`:  nav 우클릭박스 완성(모달열릴때 contextmenu 안 닫힘) > 수정
   - `${front}`:  템플릿 네트워크인터페이스 nic모달로 바꾸기 (NICMODAL.jsx참고)
-  - `${front}`:  테이블 글씨 잘리는것 → …으로 표시 tippy 수정
+  - `${front}`:  테이블 글씨 잘리는것 > …으로 표시 tippy 수정
   - `${front}`: VM 상세 > 스냅샷 페이지
       - 맨 위 정보 표출 필요여부 (@문용규 협의 후 적용진행)
       - 정렬 순서 선택필요 @문용규 (내림차순 5,4,3,2,1 / 오름차순 1,2,3,4,5,)
@@ -142,7 +240,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       - `상태`, `시작시간`, `종료시간`: 컬럼 넓이 px로 지정 (총 소요시간도 적절하게 px로)
       - `작업명` 컬럼을 나머지 영역으로 잡아 지정
   - `${front}`: 마이그레이션 디자인 수정
-  - `${front}`:  마이그레이션모달 오류(VmMigrationModal.jsx:98 Uncaught TypeError: selectedVms.map is not a function)  selectedVms.map((vm) → 수정
+  - `${front}`:  마이그레이션모달 오류(VmMigrationModal.jsx:98 Uncaught TypeError: selectedVms.map is not a function)  selectedVms.map((vm) > 수정
   - `${front}`:  논리네트워크 생성 Modal > input처리 (Toggle버튼 추가)
   - `${front}`:  논리네트워크 생성 Modal > 표를 감싸는 border처리
   - `${front}`:  테이블 툴팁 오류 재수정
@@ -157,11 +255,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `${front}`:  그리드박스 %색상표 앞쪽으로 옮기기
   - `${front}`:  그리드박스 텍스트 괄호빼기
   - `${front}`:  모달 확인 취소버튼 밑으로 내리기
-  - `${front}`:  select 글씨 짤림→  …으로 보이게수정
+  - `${front}`:  select 글씨 짤림>  …으로 보이게수정
   - `${front}`:  그리드박스 0 프로일때 마우스 설정
   - `${front}`:  모달 폰트사이즈 통일
   - `${front}`:  모달 구분선 색상통일
-  - `${front}`:  가상머신 일반 → nic인덱스 숫자수정
+  - `${front}`:  가상머신 일반 > nic인덱스 숫자수정
   - `${front}`:  테이블 컬럼 데이터 숫자는 가운데 정렬
   - `${front}`:  탭이 있는 Modal 에 대해
       - hover했을 때 회색으로
@@ -176,16 +274,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `${front}`:  vnic모달 체크박스 ‘통과, 마이그레이션’ 조건,  네트워크 모달 ‘ 가상머신 네트워크’ 조건 수정
   - `${front}`:  Header버튼의 활성화/비활성화에 따른 스타일 처리
   - `${front}`:  상세화면 값 렌더링(ex이름) 문제
-  - `${front}`:  템플릿 생성/편집 모달 > 텍스트 폰트처리 → 작게
+  - `${front}`:  템플릿 생성/편집 모달 > 텍스트 폰트처리 > 작게
   - `${front}`:  toast 글씨 넘치는 문제 수정
   - `${front}`:  로그인 버튼 사라짐 (스타일 문제)
   - `${front}`:  호스트Action버튼 범위초과 (스타일 문제)
-  - `${front}`:  도메인 → 데이터센터 연결모달 padding값 주기 너무 딱 달라붙어있음
+  - `${front}`:  도메인 > 데이터센터 연결모달 padding값 주기 너무 딱 달라붙어있음
   - `${front}`:  host-fileter-btn  보더테두리 1px로 줄이기, 가로 padding값 추가
-  - `${front}`:  도메인 → 템플릿 가져오기 action버튼 항목선택해야지만 활성화
+  - `${front}`:  도메인 > 템플릿 가져오기 action버튼 항목선택해야지만 활성화
   - `${front}`:  사용자 비번변경 모달사이즈 줄이기
   - `${front}`:  Storage Domain > Template 목록 출력 불량
-  - `${front}`:  rutilVm → 디스크 → 표 짤림 문제
+  - `${front}`:  rutilVm > 디스크 > 표 짤림 문제
   - `${front}`:  템플릿 생성 - 표 크기 문제
   - `${front}`:  로그인 페이지 디자인 
 
@@ -226,7 +324,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Job / Steps UI 적용
 - [@lmy9237][lmy9237]
   - `${front}`: 테이블 아이콘 + React Element으로 구성 된 내용 (e.g. hyperlink 있는 이름) 정렬기능 추가
-  - `${front}`: 호스트 유지보수된것  활성(UNASSIGNED)→상태(툴팁),아이콘추가
+  - `${front}`: 호스트 유지보수된것  활성(UNASSIGNED)>상태(툴팁),아이콘추가
   - `${front}`: Storage Doamin > `UNKNOWN` ”알 수 없음” 상태 값 추가
   - `${front}`: 계정설정 모달창추가(비밀번호변경)
   - `${front}`: 왼쪽메뉴 우클릭박스 네트워크,데이터센터 모달 기능추가
@@ -235,7 +333,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - 복구중 (`RESTORING_STATE`) 
     - 마이그레이션 중 (`MIGRATIONG`)
     - 일시중지 중 (`SAVING_STATE`),
-    - 재설정,재부팅 (`REBOOT_IN_PROGRESS`) 대기→상태(툴팁),아이콘추가
+    - 재설정,재부팅 (`REBOOT_IN_PROGRESS`) 대기>상태(툴팁),아이콘추가
 
 ### Changed/Fixed
 
@@ -249,8 +347,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `${front}`: VM 생성/편집 > 총 가상 CPU 에 값에 반응
 - [@dhj27][dhj27]
   - Host Network interface > 상세 항목을 표출
-    - HostNic  → 항목: Rx/Tx Speed 등
-    - NetworkAttachment → ip, mac
+    - HostNic  > 항목: Rx/Tx Speed 등
+    - NetworkAttachment > ip, mac
   - VM 편집에서 총 가상 CPU 값 표기
   - 가상머신 액션 버튼에 이벤트 onsuccess(), onclose() 넣기
   - VM 스냅샷 생성 모달 창 이름 표시  
@@ -285,7 +383,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [front]  input css 정리
   - [front]  호스트 유지보수 모드에서 재시작 버튼 활성화
   - [front] 대시보드 그래프 aside바에따라 겹치는 것 방지
-  - [front] 툴팁 값 불량 정정(하이퍼링크) + 기존 tootip 스타일때문에 css안먹는 문제로 tootip → tippy로 변경
+  - [front] 툴팁 값 불량 정정(하이퍼링크) + 기존 tootip 스타일때문에 css안먹는 문제로 tootip > tippy로 변경
 
 ### Removed 
 
@@ -500,7 +598,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@lmy9237][lmy9237]
   - Hover색 설정: Tree Navigation
   - Hover색 설정: 상세화면 Sub메뉴
-  - Paging Table 기본 개수 설정 (20) → 페이징테이블 컴포넌트안씀
+  - Paging Table 기본 개수 설정 (20) > 페이징테이블 컴포넌트안씀
   - 사이즈: nav바 길이 끝까지 안 가는것 수정
   - VM 일반페이지 넓이 줄어들 때, 항목쪽 텍스트 2줄 되는 현상 해소
   - rutil manager페이지에서 Tree Navigtaion 선택 상태 해제 현상 해소
@@ -524,9 +622,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - 템플릿 생성/편집 Modal (`TemplateModal`)
     - nic 생성/평집 Modal (`NicModal`)
   - VM > 상세화면 상태 태그 (`SUSPENDED` 및 그 외 에 대한 설정)
-  - Footer 뷰 높이 `--h-rutil-footer` : `48px` → `36px`
+  - Footer 뷰 높이 `--h-rutil-footer` : `48px` > `36px`
   - RutilVM 로고 width: `120px`
-  - Dashboard > 박스 총 숫자 → `font-size: var(--f-big)`으로 `font-weight: 700`
+  - Dashboard > 박스 총 숫자 > `font-size: var(--f-big)`으로 `font-weight: 700`
   - Dashboard > 그리드 커서 hover에서 tooltip으로 항목 명 표출(질문)
   - 가상머신 디스크편집안나오는것수정
   - Dashboard 전체화면 padding **상, 우, 하** 쪽 감소 (`left`만 좀 작게 나오는데 그게 적당한 사이즈로 판단
@@ -872,18 +970,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
-[web-v0.3.0]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.6...web-v0.3.0
-[web-v0.2.6]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.5...web-v0.2.6
+[web-v0.3.1]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.0...web-v0.3.1
+[api-v0.3.1]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.0...api-v0.3.1
+[web-v0.3.0]: https://github.com/ititcloud/rutil-vm/compare/web-v0.2.6...web-v0.3.0
+[api-v0.3.0]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.6...api-v0.3.0
+[web-v0.2.6]: https://github.com/ititcloud/rutil-vm/compare/web-v0.2.5...web-v0.2.6
 [api-v0.2.6]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.5...api-v0.2.6
-[web-v0.2.5]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.4...web-v0.2.5
+[web-v0.2.5]: https://github.com/ititcloud/rutil-vm/compare/web-v0.2.4...web-v0.2.5
 [api-v0.2.5]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.4...api-v0.2.5
-[web-v0.2.4]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.3...web-v0.2.4
+[web-v0.2.4]: https://github.com/ititcloud/rutil-vm/compare/web-v0.2.3...web-v0.2.4
 [api-v0.2.4]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.3...api-v0.2.4
-[web-v0.2.3]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.2...web-v0.2.3
+[web-v0.2.3]: https://github.com/ititcloud/rutil-vm/compare/web-v0.2.2...web-v0.2.3
 [api-v0.2.3]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.2...api-v0.2.3
-[web-v0.2.2]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.1...web-v0.2.2
+[web-v0.2.2]: https://github.com/ititcloud/rutil-vm/compare/web-v0.2.1...web-v0.2.2
 [api-v0.2.2]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.1...api-v0.2.2
-[web-v0.2.1]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.0-beta2...web-v0.2.1
+[web-v0.2.1]: https://github.com/ititcloud/rutil-vm/compare/web-v0.2.0-beta2...web-v0.2.1
 [api-v0.2.1]: https://github.com/ititcloud/rutil-vm/compare/api-v0.2.0-beta2...api-v0.2.1
 [api-v0.2.0-beta2]: https://github.com/ititcloud/rutil-vm/tree/api-v0.2.0-beta2
 
