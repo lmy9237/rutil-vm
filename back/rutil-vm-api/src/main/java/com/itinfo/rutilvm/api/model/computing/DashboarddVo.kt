@@ -9,12 +9,13 @@ import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
 import java.io.Serializable
+import java.math.BigDecimal
 import java.util.Date
 
-private val log = LoggerFactory.getLogger(DashBoardVo::class.java)
+private val log = LoggerFactory.getLogger(DashboarddVo::class.java)
 
 /**
- * [DashBoardVo]
+ * [DashboarddVo]
  * 대시보드 그래프
  *
  * @property datacenters
@@ -31,9 +32,9 @@ private val log = LoggerFactory.getLogger(DashBoardVo::class.java)
  * @property eventsAlert
  * @property eventsError
  * @property eventsWarning
- * @property bootTime
+ * @property dateCreated 최초생성시간
  */
-class DashBoardVo (
+class DashboarddVo (
     val datacenters: Int = 0,
     val datacentersUp: Int = 0,
     val datacentersDown: Int = 0,
@@ -49,7 +50,8 @@ class DashBoardVo (
     val eventsAlert: Int = 0,
     val eventsError: Int = 0,
     val eventsWarning: Int = 0,
-	private val _bootTime: Date? = null,
+	private val _dateCreated: Date? = null,
+	private val _timeElapsed: BigDecimal? = BigDecimal.ZERO,
     val version: String = "",
 	val releaseDate: String = "",
 
@@ -57,8 +59,16 @@ class DashBoardVo (
     override fun toString(): String =
         gson.toJson(this)
 
-	val bootTime: String
-		get() = ovirtDf.formatEnhanced(_bootTime)
+	val dateCreated: String
+		get() = ovirtDf.formatEnhanced(_dateCreated)
+
+	val timeElapsedInMilli: Long
+		get() = _timeElapsed?.toLong()?.times(1000L) ?: 0L
+	val dateBooted: String
+		get() = if (timeElapsedInMilli <= 0L) "N/A"
+			else ovirtDf.formatEnhanced(
+				Date((Date().time - timeElapsedInMilli))
+			)
 
     class Builder {
         private var bDatacenters: Int = 0; fun datacenters(block: () -> Int?) { bDatacenters = block() ?: 0}
@@ -76,22 +86,23 @@ class DashBoardVo (
         private var bEventAlert: Int = 0; fun eventsAlert(block: () -> Int?) { bEventAlert = block() ?: 0}
         private var bEventError: Int = 0; fun eventsError(block: () -> Int?) { bEventError = block() ?: 0}
         private var bEventsWarning: Int = 0; fun eventsWarning(block: () -> Int?) { bEventsWarning = block() ?: 0}
-        private var bBootTime: Date? = null; fun bootTime(block: () -> Date?) {bBootTime = block() }
+        private var bDateCreated: Date? = null; fun dateCreated(block: () -> Date?) { bDateCreated = block() }
+		private var bTimeElapsed: BigDecimal = BigDecimal.ZERO; fun timeElapsed(block: () -> BigDecimal?) { bTimeElapsed = block() ?: BigDecimal.ZERO }
         private var bVersion: String = ""; fun version(block: () -> String?) { bVersion = block() ?: "" }
         private var bReleaseDate: String = ""; fun releaseDate(block: () -> String?) { bReleaseDate = block() ?: "" }
 
-        fun build(): DashBoardVo = DashBoardVo(bDatacenters, bDatacentersUp, bDatacentersDown, bClusters, bHosts, bHostsUp, bHostsDown, bVms, bVmsUp, bVmsDown, bStorageDomains, bEvents, bEventAlert, bEventError, bEventsWarning, bBootTime, bVersion, bReleaseDate)
+        fun build(): DashboarddVo = DashboarddVo(bDatacenters, bDatacentersUp, bDatacentersDown, bClusters, bHosts, bHostsUp, bHostsDown, bVms, bVmsUp, bVmsDown, bStorageDomains, bEvents, bEventAlert, bEventError, bEventsWarning, bDateCreated, bTimeElapsed, bVersion, bReleaseDate)
     }
 
     companion object {
-        inline fun builder(block: DashBoardVo.Builder.() -> Unit): DashBoardVo = DashBoardVo.Builder().apply(block).build()
+        inline fun builder(block: DashboarddVo.Builder.() -> Unit): DashboarddVo = DashboarddVo.Builder().apply(block).build()
     }
 }
 
-fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashBoardVo {
+fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashboarddVo {
     val allDataCenters = this@toDashboardVo.findAllDataCenters().getOrDefault(listOf())
     val allHosts = this@toDashboardVo.findAllHosts().getOrDefault(listOf())
-    val allVms = this@toDashboardVo.findAllVms().getOrDefault(listOf())
+    val allVms = this@toDashboardVo.findAllVms(follow="statistics").getOrDefault(listOf())
     val allClusters = this@toDashboardVo.findAllClusters().getOrDefault(listOf())
     val allStorageDomains = this@toDashboardVo.findAllStorageDomains().getOrDefault(listOf())
     val allEvents = this@toDashboardVo.findAllEvents("time > Today sortby time desc").getOrDefault(listOf())
@@ -120,10 +131,13 @@ fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashBoardVo {
     val eventsWarning = allEvents.count { it.severity() == LogSeverity.WARNING }
     val eventsTotal = eventsAlert + eventsError + eventsWarning
 
-    // 관리형 호스티드 엔진 VM의 생성 시간 가져오기
-    val date = allVms.firstOrNull { it.origin() == "managed_hosted_engine" }?.creationTime()
+    // 관리형 호스티드 엔진 VM의  최초생성 시간 가져오기
+	val vmHostedEngine: Vm? = allVms.firstOrNull { it.origin() == "managed_hosted_engine" }
+	val timeElapsed: BigDecimal = vmHostedEngine?.statistics()?.firstOrNull {
+		it.name() == "elapsed.time"
+	}?.values()?.firstOrNull()?.datum() ?: BigDecimal.ZERO
 
-    return DashBoardVo.builder {
+    return DashboarddVo.builder {
         datacenters { dataCenters }
         datacentersUp { dataCentersUp }
         datacentersDown { dataCentersDown }
@@ -139,7 +153,8 @@ fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashBoardVo {
         eventsAlert { eventsAlert }
         eventsError { eventsError }
         eventsWarning { eventsWarning }
-        bootTime { date }
+		dateCreated { vmHostedEngine?.creationTime() }
+		timeElapsed { timeElapsed }
         version { propConfig.version }
         releaseDate { propConfig.releaseDate }
     }

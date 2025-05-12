@@ -2,7 +2,7 @@ package com.itinfo.rutilvm.api.controller.computing
 
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.api.model.computing.DashBoardVo
+import com.itinfo.rutilvm.api.model.computing.DashboarddVo
 import com.itinfo.rutilvm.api.repository.history.dto.HostUsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.LineDto
 import com.itinfo.rutilvm.api.repository.history.dto.StorageUsageDto
@@ -30,7 +30,7 @@ class GraphController {
 	)
 	@GetMapping
 	@ResponseBody
-	fun dashboard(): ResponseEntity<DashBoardVo> {
+	fun dashboard(): ResponseEntity<DashboarddVo> {
 		log.info("----- 대시보드")
 		return ResponseEntity.ok(graph.getDashboard())
 	}

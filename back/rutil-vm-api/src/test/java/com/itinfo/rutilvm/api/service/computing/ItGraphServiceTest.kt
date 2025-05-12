@@ -1,7 +1,7 @@
 package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.api.model.computing.DashBoardVo
+import com.itinfo.rutilvm.api.model.computing.DashboarddVo
 import com.itinfo.rutilvm.api.model.computing.SizeVo
 import com.itinfo.rutilvm.api.repository.history.dto.HostUsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.LineDto
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.util.*
 
 @SpringBootTest
 class ItGraphServiceTest {
@@ -51,7 +50,7 @@ class ItGraphServiceTest {
     @Test
     fun should_getDashboard() {
         log.debug("should_getDashboard ... ")
-        val result: DashBoardVo =
+        val result: DashboarddVo =
             service.getDashboard()
 
         assertThat(result, `is`(not(nullValue())))

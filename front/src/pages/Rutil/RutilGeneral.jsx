@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 import RutilVmLogo from "../../components/common/RutilVmLogo";
-import { useDashboard } from "../../api/RQHook";
-import Localization from "../../utils/Localization";
 import InfoTable from "../../components/table/InfoTable";
+import Localization from "../../utils/Localization";
+import { useDashboard } from "../../api/RQHook";
+
 
 /**
  * @name RutilGeneral
@@ -21,7 +22,8 @@ const RutilGeneral = () => {
     { label: Localization.kr.HOST, value: dashboard?.hosts ?? 0 },
     { label: Localization.kr.VM, value: `${dashboard?.vmsUp ?? 0} / ${dashboard?.vms ?? 0}` },
     { label: Localization.kr.DOMAIN, value: dashboard?.storageDomains ?? 0 },
-    { label: `부팅${Localization.kr.TIME}(${Localization.kr.UP_TIME})`, value: dashboard?.bootTime ?? "" },
+    { label: Localization.kr.DATE_CREATED, value: dashboard?.dateCreated ?? "N/A" },
+    { label: `부팅${Localization.kr.TIME} (${Localization.kr.UP_TIME})`, value: dashboard?.dateBooted ?? "N/A" },
   ], [dashboard]);
 
   return (

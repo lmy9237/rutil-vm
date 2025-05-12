@@ -21,9 +21,9 @@ interface ItGraphService {
 	/**
 	 * 전체 사용량 정보 개수 (전체, up, down)
 	 * 데이터센터, 클러스터, 호스트, 가상머신, 스토리지 도메인, 이벤트
-	 * @return [DashBoardVo]
+	 * @return [DashboarddVo]
 	 */
-	fun getDashboard(): DashBoardVo
+	fun getDashboard(): DashboarddVo
 	/**
 	 * 전체 사용량 - Host (CPU, Memory  % )
 	 * 원 그래프
@@ -148,7 +148,7 @@ class GraphServiceImpl(
 		return conn.findDataCenterCnt()
 	}
 
-	override fun getDashboard(): DashBoardVo {
+	override fun getDashboard(): DashboarddVo {
 		log.info("getDashboard ... ")
 		return conn.toDashboardVo(propConfig)
 	}
