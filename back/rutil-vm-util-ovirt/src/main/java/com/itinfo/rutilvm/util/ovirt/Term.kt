@@ -23,6 +23,7 @@ enum class Term(
 	EXTERNAL_VM("외부 가상머신"),
 	CONSOLE("콘솔"),
 	TICKET("티켓"),
+	REMOTE_VIEWER("원격뷰어"),
 	SNAPSHOT("스냅샷"),
 	VNIC("가상머신 NIC"),
 	VNIC_PROFILE("가상머신 NIC 프로필"),

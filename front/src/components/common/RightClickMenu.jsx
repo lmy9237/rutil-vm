@@ -10,9 +10,9 @@ import TemplateModals from "../modal/template/TemplateModals";
 import NetworkModals from "../modal/network/NetworkModals";
 import DomainModals from "../modal/domain/DomainModals";
 import EventModals from "../modal/event/EventModals";
+import JobModals from "../modal/job/JobModals";
 import SettingUsersModals from "../modal/settings/SettingUsersModals";
 import SettingUserSessionsModal from "../modal/settings/SettingUserSessionsModal";
-
 import DataCenterActionButtons from "../dupl/DataCenterActionButtons";
 import ClusterActionButtons from "../dupl/ClusterActionButtons"
 import HostActionButtons from "../dupl/HostActionButtons";
@@ -24,6 +24,7 @@ import DiskActionButtons from "../dupl/DiskActionButtons";
 import VmDiskActionButtons from "../dupl/VmDiskActionButtons";
 import SettingUsersActionButtons from "../dupl/SettingUsersActionButtons"
 import EventActionButtons from "../dupl/EventActionButtons"
+import JobActionButtons from "../dupl/JobActionButtons";
 import VmDiskModals from "../modal/vm/VmDiskModals";
 import DiskModals from "../modal/disk/DiskModals";
 import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
@@ -51,6 +52,7 @@ const RightClickMenu = () => {
     domainsSelected, // setDomainsSelected,
     disksSelected, // setDisksSelected,
     eventsSelected, // setEventsSelected,
+    jobsSelected, // setJobsSelected,
     usersSelected, // setUsersSelected,
     usersessionsSelected, // setUsersessionsSelected,
     sourceContext,
@@ -86,6 +88,7 @@ const RightClickMenu = () => {
       <DiskModals disk={disksSelected[0] ?? null} />
       <VmDiskModals disk={disksSelected[0] ?? null} />
       <EventModals event={eventsSelected[0] ?? null}/>
+      <JobModals job={jobsSelected[0] ?? null} />
       <SettingUsersModals user={usersSelected[0] ?? null} />
       <SettingUserSessionsModal usersession={usersessionsSelected[0] ?? null} />
       {(contextMenu() !== null && 
@@ -150,6 +153,10 @@ const RightClickMenu = () => {
             />
           ) : (contextMenuType() === "event") ? (
             <EventActionButtons actionType={"context"}
+              status={contextMenu()?.item?.status}
+            />
+          ) : (contextMenuType() === "job") ? (
+            <JobActionButtons actionType={"context"}
               status={contextMenu()?.item?.status}
             />
           ) : null}

@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+import toast from "react-hot-toast";
 import useSearch from "../../../hooks/useSearch";
 import useGlobal from "../../../hooks/useGlobal";
 import SearchBox from "../../../components/button/SearchBox";
@@ -9,8 +10,8 @@ import TableRowClick from '../../../components/table/TableRowClick';
 import { convertBytesToGB } from '../../../util';
 import { useAllStorageDomainsFromDisk } from "../../../api/RQHook";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
-import toast from "react-hot-toast";
 
 /**
  * @name DiskDomains
@@ -37,7 +38,7 @@ const DiskDomains = ({
   const sizeCheck = (size=0) => {
     Logger.debug(`DiskDomains > sizeCheck ... size: ${size}`)
     return (size === 0) 
-      ? 'N/A' 
+      ? Localization.kr.NOT_ASSOCIATED
       : `${convertBytesToGB(size)} GB`;
   };
   

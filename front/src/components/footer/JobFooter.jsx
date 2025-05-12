@@ -7,8 +7,8 @@ import TablesOuter from "../table/TablesOuter";
 import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
 import { useAllJobs } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
-import "./JobFooter.css";
 import Localization from "../../utils/Localization";
+import "./JobFooter.css";
 
 /**
  * @name JobFooter

@@ -36,9 +36,9 @@ const ClusterGeneral = ({ clusterId }) => {
     { label: `${Localization.kr.CLUSTER} CPU 유형`, value: cluster?.cpuType },
     { label: "최대 메모리 오버 커밋", value: `${cluster?.memoryOverCommit}%` },
     { label: "칩셋/펌웨어 유형", value: renderBiosType(cluster?.biosType) },
-    // { label: "총 볼륨 수", value: "해당 없음" },
-    // { label: "Up 상태의 볼륨 수", value: "해당 없음" },
-    // { label: "Down 상태의 볼륨 수", value: "해당 없음" },
+    // { label: "총 볼륨 수", value: Localization.kr.NOT_ASSOCIATED },
+    // { label: "Up 상태의 볼륨 수", value: Localization.kr.NOT_ASSOCIATED },
+    // { label: "Down 상태의 볼륨 수", value: Localization.kr.NOT_ASSOCIATED },
     { label: `${Localization.kr.VM} 수`, value: cluster?.vmSize?.allCnt },
   ];
 

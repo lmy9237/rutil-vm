@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
   useAddVnicProfile,
@@ -10,14 +11,13 @@ import {
   useVnicProfile,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import "./MVnic.css";
 import { checkKoreanName, checkName } from "../../../util";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Logger from "../../../utils/Logger";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import useGlobal from "../../../hooks/useGlobal";
+import "./MVnic.css";
 
 const initialFormState = {
   id: "",
@@ -29,7 +29,9 @@ const initialFormState = {
 };
 
 const VnicProfileModal = ({
-  isOpen, onClose, editMode = false,
+  isOpen, 
+  onClose, 
+  editMode = false,
 }) => {
   const vLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
@@ -86,9 +88,10 @@ const VnicProfileModal = ({
     setNetworkVo({id: vnic?.networkVo?.id, name: vnic?.networkVo?.name});
   }, [isOpen, editMode, vnic]);
 
-  console.log("&& networkFilterVo ", networkFilterVo);
+  Logger.debug("VnicProfileModal.networkFilterVo ", networkFilterVo);
 
   useEffect(() => {
+    Logger.debug(`VnicProfileModal > useEffect ... editMode: ${editMode}, datacenterId: ${datacenterId}`)
     if (datacenterId) {
       const selected = datacenters.find(dc => dc.id === datacenterId);
       setDataCenterVo({ id: selected?.id, name: selected?.name });
@@ -101,7 +104,8 @@ const VnicProfileModal = ({
   }, [datacenterId, datacenters, editMode]);
   
   useEffect(() => {
-    if(networkId) {
+    Logger.debug(`VnicProfileModal > useEffect ... editMode: ${editMode}, networkId: ${networkId}`)
+    if (networkId) {
       const selected = networks.find(n => n.id === networkId);
       setNetworkVo({id: selected?.id, name: selected?.name});
     } else if (!editMode && networks && networks.length > 0) {
@@ -112,6 +116,7 @@ const VnicProfileModal = ({
   }, [networkId, networks, editMode]);
   
   useEffect(() => {
+    Logger.debug(`VnicProfileModal > useEffect ... editMode: ${editMode}, nFilters.length: ${nFilters.length}`)
     if (!editMode && nFilters && nFilters.length > 0) {
       const defaultNF = nFilters.find(nf => nf.name === "vdsm-no-mac-spoofing");
       const firstNF = defaultNF || nFilters[0];

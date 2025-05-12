@@ -138,23 +138,8 @@ const BarChart = ({
   });
 
   return (
-    <div
-      style={{
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          height: "90%",
-          aspectRatio: "1 / 1",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+    // <div className="f-center w-full">
+      <div className="f-center h-full">
         <ReactApexChart type="bar" 
           id="chart-bar" /* css id는 먹히지만 class명은 안먹힘 */
           options={chartOptions}
@@ -165,7 +150,7 @@ const BarChart = ({
           {...props}
         />
       </div>
-    </div>
+    // </div>
   );
 };
 

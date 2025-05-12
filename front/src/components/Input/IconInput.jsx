@@ -3,12 +3,13 @@ import { RVI16 } from "../icons/RutilVmIcons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./../label/LabelInput.css"; // Import the CSS file
+import Localization from "../../utils/Localization";
 import "./IconInput.css"; // Import the CSS file
 
 const IconInput = ({
   iconDef,
   type = "text",
-  placeholder = "Enter text...",
+  placeholder = Localization.kr.PLACEHOLDER,
   ...props
 }) => {
   const isPassword = useMemo(() => type === "password")
@@ -17,7 +18,9 @@ const IconInput = ({
     setShowPassword((prev) => !prev);
   };
   return (
-    <div className="icon-input-container" style={{ position: "relative" }}>
+    <div 
+      className="icon-input-container" 
+    >
       {iconDef && (
         <span className="icon-container">
           <RVI16 iconDef={iconDef} />

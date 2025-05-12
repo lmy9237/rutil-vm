@@ -72,7 +72,7 @@ const GridItem = forwardRef(({
   , [item])
 
   const severity2Label = useCallback((value) => {
-    Logger.debug(`Grid > severity2Label ... value: ${value}`)
+    // Logger.debug(`Grid > severity2Label ... value: ${value}`)
     if (value === null) return "disabled";
     if (value === 0) return "empty";
     if (value < 65) return "okay";

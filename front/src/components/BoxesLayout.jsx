@@ -28,7 +28,7 @@ import Localization from "../utils/Localization";
 import Logger from "../utils/Logger";
 import "./BoxesLayout.css"
 
-const HEIGHT_GRAPH_HORIZ = 280
+const HEIGHT_GRAPH_HORIZ = 240
 // const HEIGHT_PERCENT_GRAPH_HORIZ = 50
 /**
  * @name BoxesLayout
@@ -38,10 +38,46 @@ const HEIGHT_GRAPH_HORIZ = 280
  */
 export const BoxesLayout = ({
   // items=[],
+  isLast,
   ...props
 }) => {
+  const [heightDashBoxes, setHeightDashBoxes] = useState(480);
+
+  const updateHeightDashBoxes = () => {
+    Logger.debug(`BoxChartAllGraphs > updateHeightGraphRest ... window.innerHeight: ${window.innerHeight}`)
+    // let width = Math.max(containerWidth * 0.8, 200); // 기본 너비
+    let heightSubstract = 64+40+110+4
+    // let height = Math.max((window.innerHeight - heightSubstract) / 2, 200); // 기본 높이
+    let height = window.innerHeight - heightSubstract
+
+    if (window.innerWidth >= 2000) {
+      // width = Math.max(containerWidth * 1, 280); 
+      height = window.innerHeight - heightSubstract
+      // height = Math.max(window.innerHeight * 0.3, 300);
+    }
+
+    setHeightDashBoxes(height);
+  }
+  
+  useEffect(() => {
+    setHeightDashBoxes()
+  }, [])
+
+  useEffect(() => {
+    Logger.debug(`BoxChartAllGraphs > useEffect ... `)
+    window.addEventListener("resize", updateHeightDashBoxes);
+    return () => window.removeEventListener("resize", updateHeightDashBoxes);;
+  }, []);
+
+
+  const style = isLast ? {
+    height: `${heightDashBoxes}px`
+  } : {}
+
   return (
-    <div className="dash-boxes f-btw gap-4"
+    <div 
+      className={`dash-boxes f-btw gap-4${isLast ? " dash-boxes-last" : ""}`}
+      style={style}
       {...props}
     >
       {props.children}
@@ -52,6 +88,7 @@ export const BoxesLayout = ({
 export const BoxLayout = ({
   navigatePath=null, title, iconDef,
   cntTotal=null, cntUp=null, cntDown=null, alert=null, error=null, warning=null,
+  isLast=false,
   ...props
 }) => {
   const navigate = useNavigate();
@@ -64,7 +101,7 @@ export const BoxLayout = ({
       {title && 
         <BoxTitle title={title} iconDef={iconDef}/>
       }
-      {cntTotal !== undefined && 
+      {cntTotal !== undefined && cntTotal !== null &&
         <BoxDetail 
           cntTotal={cntTotal} cntUp={cntUp} cntDown={cntDown} 
           alert={alert} error={error} warning={warning} 
@@ -185,19 +222,23 @@ export const BoxChartAllGraphs = ({
   const [heightGraphRest, setHeightGraphRest] = useState(150);
 
   const updateHeightGraphRest = () => {
-    Logger.debug(`BoxChartAllGraphs > updateHeightGraphRest ... window.innerHeight: ${window.innerHeight}m `)
+    Logger.debug(`BoxChartAllGraphs > updateHeightGraphRest ... window.innerHeight: ${window.innerHeight}`)
     // let width = Math.max(containerWidth * 0.8, 200); // 기본 너비
-    let heightSubstract = 64+40+110+4+28+32+HEIGHT_GRAPH_HORIZ
-    let height = Math.max((window.innerHeight - heightSubstract)/2, 200); // 기본 높이
+    let heightSubstract = 64+40+110+4+28+32+20+20+8+8+HEIGHT_GRAPH_HORIZ
+    // let height = Math.max((window.innerHeight - heightSubstract) / 2, 200); // 기본 높이
+    let height = (window.innerHeight - heightSubstract) / 2
 
     if (window.innerWidth >= 2000) {
       // width = Math.max(containerWidth * 1, 280); 
-      height = Math.max((window.innerHeight - heightSubstract)/2, 200); // 기본 높이
+      height = (window.innerHeight - heightSubstract) / 2
       // height = Math.max(window.innerHeight * 0.3, 300);
     }
 
     setHeightGraphRest(height);
   };
+  useEffect(() => {
+    updateHeightGraphRest()
+  }, [])
 
   useEffect(() => {
     Logger.debug(`BoxChartAllGraphs > useEffect ... `)
@@ -266,13 +307,11 @@ const RadialChartAll = ({
   ), [type, cpuMemory, storage])
 
   return (
-    <div className="graph-chart-all f-center h-auto"
+    <div className="graph-chart-all v-center"
       style={{
+        width: `${HEIGHT_GRAPH_HORIZ}px`,
         height: `${HEIGHT_GRAPH_HORIZ}px`,
-           display: "flex",
-    alignItems: "center",     // 수직 가운데
-    justifyContent: "center", // 수평 가운데
-    background:"olive"
+        background: import.meta.env.DEV ? "olive" : ""
       }}
     >
       <RadialBarChart 
@@ -338,7 +377,6 @@ const BarChartAll = ({
     <div className="graph-chart-all f-center"
       style={{
         height: `${HEIGHT_GRAPH_HORIZ}px`,
-        
       }}
     >
       <BarChartWrapper 

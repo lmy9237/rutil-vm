@@ -9,9 +9,9 @@
   height: auto;
 }
 .dash-boxes:last-child {
-  height: calc(100% - var(--h-dash-nav-box) - 4px);
-  /*margin-top: auto;*/
-    background-color: pink ;
+  /* height: calc(100% - var(--h-dash-nav-box) - 4px);
+  margin-top: auto;*/
+  background-color: pink ;
 }
 .dash-boxes:last-child > * {
   height: 100%;
@@ -98,7 +98,7 @@
   aspect-ratio: 1/1;
 }
 .graph-chart-all:last-child {
-  width: 50%;
+  /*width: 50%;*/
 }
 .boxes-grid {
   align-items:flex-start !important;

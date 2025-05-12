@@ -272,7 +272,7 @@ const Dashboard = () => {
             />
           ))}
         </BoxesLayout>
-        <BoxesLayout>{/* 그래프 박스 */}
+        <BoxesLayout isLast={true}>{/* 그래프 박스 */}
           <BoxLayout 
             title={Localization.kr.CPU}
             iconDef={rvi24DeveloperBoard()}

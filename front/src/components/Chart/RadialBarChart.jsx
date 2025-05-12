@@ -44,7 +44,7 @@ const RadialBarChart = ({
   const [chartOptions, setChartOptions] = useState({
     chart: {
       type: "radialBar",
-      redrawOnParentResize: true,
+      // redrawOnParentResize: true,
     },
     plotOptions: {
       radialBar: {
@@ -121,26 +121,12 @@ const RadialBarChart = ({
 
   return (
     /* css로 빼기 */
-    <div
-      style={{
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          height: "90%",
-          aspectRatio: "1 / 1",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+    // <div className="f-center w-full">
+      <div 
+        className="f-center w-full h-full"
       >
-        <ReactApexChart
+        <ReactApexChart id="chart-radial"
           type="radialBar"
-          id="chart-radial"
           options={chartOptions}
           series={series}
           height="100%"
@@ -148,10 +134,8 @@ const RadialBarChart = ({
           {...props}
         />
       </div>
-    </div>
+    // </div>
 
-    //     // <div ref={chartContainerRef} style={{ width: "100%", maxWidth: "600px", minWidth: "150px" }}>
-    // //   <div id="donut_chart">
     //     <ReactApexChart type="radialBar" 
     //       id="chart-radial" /* css id,class 둘다 먹힘 */          
     //       options={chartOptions}
@@ -159,8 +143,7 @@ const RadialBarChart = ({
     //       height="100%" // 부모 기준
     //       {...props}
     //   />
-    // /* </div>
-    // </div> */
+    
   );
 };
 

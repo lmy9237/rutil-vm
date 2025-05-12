@@ -50,8 +50,7 @@ const LabelInput = ({
   return (
     <div className={`input-container ${cNameByType()} ${className}`}>
       <label htmlFor={id}>{label}</label>
-      <input
-        id={id}
+      <input id={id}
         type={isPasswordType && showPassword ? "text" : type}
         placeholder={label}
         value={value}
@@ -63,8 +62,7 @@ const LabelInput = ({
         autoComplete={props.autoComplete} // 크롬업데이트안뜨게(확인못해봄)
       />
       {isPasswordType && (
-        <FontAwesomeIcon
-          icon={showPassword ? faEyeSlash : faEye}
+        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye}
           onClick={handleTogglePassword}
           className="password-toggle-icon fs-14"
         />

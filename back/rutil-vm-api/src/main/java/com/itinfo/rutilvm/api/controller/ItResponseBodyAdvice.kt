@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.response.Res
 
 import org.springframework.core.MethodParameter
+import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.server.ServerHttpRequest
@@ -50,7 +51,7 @@ class ItResponseBodyAdvice: ResponseBodyAdvice<Any> {
 		return when(servletResponse.status) {
 			in 200 .. 299 -> {
 //				log.info("... 성공")
-				Res.safely<Any?> { body }
+				body as? Resource /* 파일 다운로드 할 때 */?: Res.safely<Any?> { body }
 			}
 			else -> {
 				log.error("... 실패")

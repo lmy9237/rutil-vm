@@ -768,7 +768,6 @@ fun Connection.expectDiskStatus(vmId: String, diskAttachmentId: String, activeSt
 	}
 }
 
-
 private fun Connection.srvVmGraphicsConsolesFromVm(vmId: String): VmGraphicsConsolesService =
 	this.srvVm(vmId).graphicsConsolesService()
 
@@ -803,6 +802,15 @@ fun Connection.findTicketFromVmGraphicsConsole(vmId: String, graphicsConsoleId: 
 	Term.CONSOLE.logSuccessWithin(Term.TICKET, "발행", vmId)
 }.onFailure {
 	Term.CONSOLE.logFailWithin(Term.TICKET, "발행", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.generateRemoteViewerConnectionFile(vmId: String, graphicsConsoleId: String): Result<String?> = runCatching {
+	this.srvVmGraphicsConsoleFromVm(vmId, graphicsConsoleId).remoteViewerConnectionFile().send().remoteViewerConnectionFile()
+}.onSuccess {
+	Term.CONSOLE.logSuccessWithin(Term.REMOTE_VIEWER, "다운로드", vmId)
+}.onFailure {
+	Term.CONSOLE.logFailWithin(Term.REMOTE_VIEWER, "다운로드", it, vmId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 

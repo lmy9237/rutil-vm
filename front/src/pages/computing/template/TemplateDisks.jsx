@@ -46,11 +46,11 @@ const TemplateDisks = ({
       ),
       virtualSize: checkZeroSizeToGiB(disk?.virtualSize),
       actualSize: checkZeroSizeToGiB(disk?.actualSize),
-      creationTime: disk?.createDate || 'N/A',
+      creationTime: disk?.createDate || Localization.kr.NOT_ASSOCIATED,
       storageDomainId: disk?.storageDomainVo?.id,
       storageDomainName: disk?.storageDomainVo ? (
         <StorageDomainWithTooltip domainId={disk.storageDomainVo.id} />
-      ) : 'N/A',
+      ) : Localization.kr.NOT_ASSOCIATED,
       storageType: disk?.storageType || 'Unknown',
       status: disk?.status || 'Unknown',
       policy: disk?.sparse ? '씬 프로비저닝' : '사전 할당',

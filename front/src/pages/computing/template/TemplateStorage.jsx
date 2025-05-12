@@ -102,12 +102,6 @@
 //                     onClick={() => toggleRow(storage.id)}
 //                     style={{ cursor: "pointer" }}
 //                   >
-//                     <FontAwesomeIcon
-//                       icon={
-//                         isRowExpanded[storage.id] ? faMinusCircle : faPlusCircle
-//                       }
-//                       fixedWidth
-//                     />
 //                     {storage.name}
 //                   </td>
 //                   <td>{storage.domainType}</td>

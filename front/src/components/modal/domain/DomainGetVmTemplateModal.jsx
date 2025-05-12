@@ -71,7 +71,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
     { label: Localization.kr.HA, value: "예" },
     { label: "우선 순위", value: "중간" },
     { label: "USB", value: "사용" },
-    { label: "소스", value: "N/A" },
+    { label: "소스", value: Localization.kr.NOT_ASSOCIATED },
     { label: Localization.kr.STATELESS, value: "아니오" },
   ];
   const filterOptions = [
@@ -182,12 +182,12 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
                   ) : (
                     // ✅ 템플릿 모드일 때 렌더링
                     <>
-                      <td>{item.alias || "N/A"}</td>  {/* 별칭 */}
-                      <td>{item.virtualSize || "N/A"}</td>  {/* 가상 크기 */}
+                      <td>{item.alias || Localization.kr.NOT_ASSOCIATED}</td>  {/* 별칭 */}
+                      <td>{item.virtualSize || Localization.kr.NOT_ASSOCIATED}</td>  {/* 가상 크기 */}
                       <td>4 GB</td>  {/* 메모리 (임시값) */}
                       <td>4</td>  {/* CPU (임시값) */}
                       <td>x86_64</td>  {/* 아키텍처 */}
-                      <td>{item.virtualSize || "N/A"}</td>  {/* 디스크 */}
+                      <td>{item.virtualSize || Localization.kr.NOT_ASSOCIATED}</td>  {/* 디스크 */}
                       <td>
                         <select>
                           <option value="cluster-01">Cluster-01</option>

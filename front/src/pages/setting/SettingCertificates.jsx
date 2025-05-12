@@ -7,9 +7,11 @@ import SearchBox from "../../components/button/SearchBox"; // ✅ 검색창 추�
 import SelectedIdView from "../../components/common/SelectedIdView";
 import TablesOuter from "../../components/table/TablesOuter";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
+import SettingCertificatesRenewalPolicies from "./SettingCertificatesRenewalPolicies";
 import { useAllCerts } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
-import SettingCertificatesRenewalPolicies from "./SettingCertificatesRenewalPolicies";
+import Localization from "../../utils/Localization";
+
 
 /**
  * @name SettingCertificates
@@ -33,8 +35,8 @@ const SettingCertificates = () => {
 
   const transformedData = [...certs].map((e) => ({
     ...e,
-    notAfter: e.notAfter ?? 'N/A',
-    dday: (e.daysRemaining > 0) ? `${e.daysRemaining} 일 남음` : 'N/A'
+    notAfter: e.notAfter ?? Localization.kr.NOT_ASSOCIATED,
+    dday: (e.daysRemaining > 0) ? `${e.daysRemaining} 일 남음` : Localization.kr.NOT_ASSOCIATED
   }))
   
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);

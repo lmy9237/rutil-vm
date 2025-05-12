@@ -35,7 +35,7 @@ const TemplateModals = ({
       />
     ),
   };
-  console.log("🔥 TemplateModals received template:", template);
+  
   return (
     <>
       {Object.keys(modals).filter((key) => 

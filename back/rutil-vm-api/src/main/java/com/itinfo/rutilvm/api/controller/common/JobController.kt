@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -115,6 +116,29 @@ class JobController: BaseController() {
 			throw ErrorPattern.JOB_ID_NOT_FOUND.toException()
 		log.info("/jobs/{}/end ... 작업 종료", jobId)
 		return ResponseEntity.ok(iJob.end(jobId))
+	}
+
+	@ApiOperation(
+		httpMethod="DELETE",
+		value = "작업 정보 제거",
+		notes = "선택된 작업의 정보를 제거한다."
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="jobId", value="작업 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@DeleteMapping("/{jobId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun remove(
+		@PathVariable jobId: String? = null,
+	): ResponseEntity<Boolean?> {
+		if (jobId.isNullOrEmpty())
+			throw ErrorPattern.JOB_ID_NOT_FOUND.toException()
+		log.info("/jobs/{} ... 작업 제거", jobId)
+		return ResponseEntity.ok(iJob.remove(jobId))
 	}
 
 	companion object {

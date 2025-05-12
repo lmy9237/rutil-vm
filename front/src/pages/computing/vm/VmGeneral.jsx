@@ -74,7 +74,7 @@ const VmGeneral = ({
                 {vm?.hostVo?.name}
               </TableRowClick>
             </>
-          ) : ("N/A")}
+          ) : (Localization.kr.NOT_ASSOCIATED)}
         </div>
       ),
     }

@@ -29,7 +29,7 @@ const TemplateGeneral = ({ templateId }) => {
     { label: Localization.kr.HA, value: template?.ha ? "예" : "아니오" },
     { label: "우선 순위", value: template?.priority },
     { label: "USB", value: template?.usb ? "사용" : "사용 안 함" },
-    { label: "소스", value: "N/A" },
+    { label: "소스", value: Localization.kr.NOT_ASSOCIATED },
     { label: Localization.kr.STATELESS, value: template?.stateless ? "예" : "아니오" },
   ];
 

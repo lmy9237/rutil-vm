@@ -7,6 +7,7 @@ import SearchBox from "../../../components/button/SearchBox";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { useHostDevicesFromVM } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -34,13 +35,13 @@ const VmHostDevices = ({
   
   const transformedData = useMemo(() => ([...hostDevices]?.map((e) => ({
     ...e,
-    name: e?.name ?? "N/A",
-    capability: e?.capability ?? "N/A",
-    vendorName: e?.vendorName ?? "N/A",
-    productName: e?.productName ?? "N/A",
-    driver: e?.driver ?? "N/A",
-    // currentlyUsed: hostDevice?.currentlyUsed ?? 'Unknown',
-    // connectedToVM: hostDevice?.connectedToVM ?? 'Unknown',
+    name: e?.name ?? Localization.kr.NOT_ASSOCIATED,
+    capability: e?.capability ?? Localization.kr.NOT_ASSOCIATED,
+    vendorName: e?.vendorName ?? Localization.kr.NOT_ASSOCIATED,
+    productName: e?.productName ?? Localization.kr.NOT_ASSOCIATED,
+    driver: e?.driver ?? Localization.kr.NOT_ASSOCIATED,
+    // currentlyUsed: hostDevice?.currentlyUsed ?? Localization.kr.NOT_ASSOCIATED,
+    // connectedToVM: hostDevice?.connectedToVM ?? Localization.kr.NOT_ASSOCIATED,
     // iommuGroup: hostDevice?.iommuGroup ?? Localization.kr.NOT_ASSOCIATED,
     // mdevType: hostDevice?.mdevType ?? Localization.kr.NOT_ASSOCIATED,
   }))), [hostDevices])

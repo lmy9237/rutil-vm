@@ -16,6 +16,7 @@ import com.itinfo.rutilvm.util.ovirt.findAllVmGraphicsConsolesFromVm
 import com.itinfo.rutilvm.util.ovirt.findTicketFromVmGraphicsConsole
 import com.itinfo.rutilvm.util.ovirt.findVm
 import com.itinfo.rutilvm.util.ovirt.findVmGraphicsConsoleFromVm
+import com.itinfo.rutilvm.util.ovirt.generateRemoteViewerConnectionFile
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.GraphicsConsole
 import org.ovirt.engine.sdk4.types.Ticket
@@ -24,6 +25,14 @@ import org.ovirt.engine.sdk4.types.VmStatus
 import org.springframework.stereotype.Service
 
 interface ItVmGraphicsConsolesService {
+	/**
+	 * [ItVmOperationService.generateRemoteViewerConnection]
+	 * 가상머신 그래픽 콘솔 원격 클라이언트 접속 파일 (console.vv) 다운로드
+	 *
+	 * @param vmId [String] 가상머신 Id
+	 */
+	@Throws(Error::class)
+	fun generateRemoteViewerConnection(vmId: String): String?
 	/**
 	 * [ItVmOperationService.earnGCTicketFromVm]
 	 * 가상머신 그래픽 콘솔 구성
@@ -66,6 +75,20 @@ interface ItVmGraphicsConsolesService {
 class VmGraphicsConsolesServiceImpl(
 
 ) : BaseService(), ItVmGraphicsConsolesService {
+	override fun generateRemoteViewerConnection(vmId: String): String? {
+		log.info("generateRemoteViewerConnection ... vmId: {}", vmId)
+		val vm: Vm = conn.findVm(vmId).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
+		if (vm.statusPresent() && vm.status() !== VmStatus.UP) {
+			log.error("generateRemoteViewerConnection ... vmId: {}\nThis vm is NOT running!", vmId)
+			throw ErrorPattern.VM_STATUS_UP.toError()
+		}
+		val graphicsConsole: GraphicsConsole =
+			conn.findAllVmGraphicsConsolesFromVm(vmId).getOrDefault(listOf()).firstOrNull()
+				?: throw ErrorPattern.CONSOLE_NOT_FOUND.toException() // VmStatus가 UP 상태 일 경우 하나 이상은 있어야 정상.
+		val res: String? = conn.generateRemoteViewerConnectionFile(vmId, graphicsConsole.id()).getOrDefault("")
+		return res
+	}
+
 	@Throws(Error::class)
 	override fun earnGCTicketFromVm(vmId: String): AggregateConsoleVo? {
 		log.info("earnGCTicketFromVm ... vmId: {}", vmId)

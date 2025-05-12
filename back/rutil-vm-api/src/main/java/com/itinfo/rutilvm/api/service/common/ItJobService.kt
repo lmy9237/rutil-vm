@@ -7,12 +7,15 @@ import com.itinfo.rutilvm.api.model.common.JobVo
 import com.itinfo.rutilvm.api.model.common.toJob
 import com.itinfo.rutilvm.api.model.common.toJobVo
 import com.itinfo.rutilvm.api.model.common.toJobVos
+import com.itinfo.rutilvm.api.repository.engine.JobsRepository
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.addJob
 import com.itinfo.rutilvm.util.ovirt.endJob
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.findAllJobs
 import com.itinfo.rutilvm.util.ovirt.findJob
 import org.ovirt.engine.sdk4.types.Job
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 interface ItJobService {
@@ -61,12 +64,23 @@ interface ItJobService {
 	 */
 	@Throws(Error::class)
 	fun end(jobId: String): Boolean?
+	/**
+	 * [ItJobService.remove]
+	 * 작업 제거
+	 *
+	 * @param jobId [String]
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class)
+	fun remove(jobId: String): Boolean?
 }
 
 @Service
 class JobServiceImpl(
 
 ) : BaseService(), ItJobService {
+	@Autowired private lateinit var rJobs: JobsRepository
+
 	@Throws(Error::class)
 	override fun findAll(): List<JobVo> {
 		log.info("findAll ...")
@@ -91,6 +105,18 @@ class JobServiceImpl(
 	override fun end(jobId: String): Boolean? {
 		log.info("end ... jobId: {}", jobId)
 		val res: Boolean? = conn.endJob(jobId).getOrNull()
+		return res
+	}
+
+	override fun remove(jobId: String): Boolean? {
+		log.info("remove ... jobId: {}", jobId)
+		val res: Boolean? = try {
+			rJobs.deleteById(jobId.toUUID())
+			true
+		} catch (e: IllegalArgumentException) {
+			log.error("something went WRONG ... reason: {}", e.localizedMessage)
+			false
+		}
 		return res
 	}
 

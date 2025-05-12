@@ -9,14 +9,29 @@ const ActionButtonGroup = ({
 }) => {
   return (
     <div className={actionType === "context" ? "right-click-menu-box" : "header-right-btns"}>
-      {actions.map(({type, label, disabled, onBtnClick }) => (
+      {actions.map(({
+        type, 
+        label, 
+        disabled, 
+        onBtnClick, 
+        subactions = [],
+      }) => (<>
         <ActionButton key={type}
           actionType={actionType}
           disabled={disabled}
           label={label}
           onClick={onBtnClick}
         />
-      ))}
+        {/* {[...subactions]?.map(({ type, label, disabled, onBtnClick }) => (
+          <button key={type}
+            className="btn-right-click dropdown-item"
+            disabled={disabled}
+            onClick={onBtnClick}
+          >
+            {label}
+          </button>
+        ))} */}
+      </>))}
       {props.children}
     </div>
   )

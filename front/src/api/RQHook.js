@@ -3,6 +3,7 @@ import ApiManager from "./ApiManager";
 import toast from "react-hot-toast";
 import Logger from "../utils/Logger";
 import Localization from "../utils/Localization";
+import { triggerDownload } from "../util";
 
 //#region: 쿼리Key
 const QK = {
@@ -1949,7 +1950,7 @@ export const useSnapshotDetailFromVM = (
   queryKey: ['snapshotDetailFromVM', vmId, snapshotId], // snapshotId 추가
   queryFn: async () => {
     if (!vmId || !snapshotId) {
-      console.warn('Missing VM ID or Snapshot ID');
+      Logger.warn('RQHook > useSnapshotDetailFromVM ... Missing VM ID or Snapshot ID');
       return {};
     }
     const res = await ApiManager.findSnapshotFromVm(vmId, snapshotId); 
@@ -2257,6 +2258,39 @@ export const useVmConsoleAccessInfo = (
   },
   enabled: !!vmId
 })
+
+/**
+ * @name useRemoteViewerConnectionFileFromVm
+ * @description 가상머신 원격 뷰어 접속파일 다운로드 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.activateHost
+ */
+export const useRemoteViewerConnectionFileFromVm = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
+  return useMutation({ 
+    mutationFn: async (vmId) => {
+      const res = await ApiManager.generateVmRemoteViewerConnectionFile(vmId)
+      Logger.debug(`RQHook > useRemoteViewerConnectionFileFromVm ... vmId: ${vmId}`);
+      return res;
+    },
+    onSuccess: (res, {vmId}) => {
+      Logger.debug(`RQHook > useRemoteViewerConnectionFileFromVm ... res: `, res);
+      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.CONSOLE} 원격 뷰어 접속파일 다운로드 요청완료`)
+      triggerDownload(res, "console.vv")
+      queryClient.invalidateQueries('allVMs');
+      queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
+      postSuccess();
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+}
 
 /**
  * @name useAddVm
@@ -5121,8 +5155,8 @@ export const useAddJob = (
 }
 
 /**
- * @name useAddJob
- * @description 작업 생성 useQuery훅
+ * @name useEndJob
+ * @description 작업 종료료 useQuery훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
@@ -5134,11 +5168,42 @@ export const useEndJob = (
     mutationFn: async ({ jobId }) => {
       const res = await ApiManager.endJob(jobId)
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useAddJob ... jobId: ${jobId}`);
+      Logger.debug(`RQHook > useEndJob ... jobId: ${jobId}`);
       return _res;
     },
     onSuccess: (res, { jobId }) => {
-      Logger.debug(`RQHook > useAddJob ... res: `, res);
+      Logger.debug(`RQHook > useEndJob ... res: `, res);
+      queryClient.invalidateQueries('allJobs');
+      queryClient.invalidateQueries(['job', jobId]); // 수정된 네트워크 상세 정보 업데이트
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  })
+}
+
+/**
+ * @name useRemoveJob
+ * @description 작업 제거거 useQuery훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
+export const useRemoveJob = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (jobId) => {
+      const res = await ApiManager.removeJob(jobId)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useRemoveJob ... jobId: ${jobId}`);
+      return _res;
+    },
+    onSuccess: (res, { jobId }) => {
+      Logger.debug(`RQHook > useRemoveJob ... res: `, res);
       queryClient.invalidateQueries('allJobs');
       queryClient.invalidateQueries(['job', jobId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);

@@ -233,7 +233,7 @@ export const validateUsername = (username, oneUser) => {
  * @returns {*} (문제있을 경우) 메시지
  */
 export const validatePw = (password, repassword) => {
-  Logger.debug("SettingUsersModal > validatePw ... ");
+  Logger.debug("util > validatePw ... ");
   if (!password) {
     Logger.error("SettingUsersModal > validateForm ... password EMPTY ");
     return "비밀번호를 입력해주세요.";
@@ -247,6 +247,20 @@ export const validatePw = (password, repassword) => {
     return "비밀번호가 같지 않습니다.";
   }
   return null;
+}
+
+export const triggerDownload = (
+  blobData, filename
+) => {
+  Logger.debug(`util > triggerDownload ... filename: ${filename}`);
+  const url = window.URL.createObjectURL(new Blob([blobData]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute("download", filename || 'console.vv'); // Fallback filename
+  document.body.appendChild(link);
+  link.click();
+  link.parentNode.removeChild(link);
+  window.URL.revokeObjectURL(url); // Clean up
 }
 
 

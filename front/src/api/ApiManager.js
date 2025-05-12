@@ -22,13 +22,19 @@ axios.interceptors.request.use(config => {
  * @returns 결과값
  */
 // const makeAPICall = async ({method = "GET", url, data, defaultValues}) => {
-const makeAPICall = async ({method = "GET", url, data}) => {
+const makeAPICall = async ({
+  method = "GET", 
+  responseType = "json",
+  url,
+  data,
+}) => {
   try {
     const res = await axios({
       method: method,
       url: url,
       // TODO: access_token으로 모든 API 처리하기
       data: method === "GET" ? null : data,
+      responseType: responseType
     });
     res.headers.get(`access_token`) && localStorage.setItem('token', res.headers.get(`access_token`)) // 로그인이 처음으로 성공했을 때 진행
     return res.data
@@ -1710,6 +1716,21 @@ const ApiManager = {
       url: ENDPOINTS.CONSOLE_VM(vmId),  // ID를 URL에 포함
     });
   },
+  
+  /**
+   * @name ApiManager.generateVmRemoteViewerConnectionFile
+   * @description 가상머신의 그래픽 콘솔 접속을 위한 원격 뷰어 파일 생성 (console.vv)
+   * 
+   * @param {String} vmId
+   * @returns {Promise<Object>} 
+   */
+  generateVmRemoteViewerConnectionFile: async (vmId) => {
+    return makeAPICall({
+      method: "GET",
+      url: ENDPOINTS.REMOTE_VIEWER_CONNECTION_FILE_VM(vmId),  // ID를 URL에 포함
+      ressponseType: "blob",
+    });
+  },
   //#endregion: VM ----------------------------------------------
 
 
@@ -1795,8 +1816,6 @@ const ApiManager = {
    * @returns {Promise<Object>}
    */
   editNicFromTemplate: async (templateId, nicId, nicData) => {
-    console.log(`🔍 Sending PUT request: /api/v1/computing/templates/${templateId}/nics/${nicId}`);
-
     return makeAPICall({
       method: "PUT",
       url: ENDPOINTS.EDIT_NICS_FROM_TEMPLATE(templateId, nicId), // nicId가 올바르게 전달되도록 수정
@@ -1812,8 +1831,6 @@ const ApiManager = {
    * @returns {Promise<Object>}
    */
     deleteNicFromTemplate: async (templateId, nicId,detachOnly) => {
-      console.log('🚀 DELETE NIC 요청 데이터:', { templateId, nicId,detachOnly });
-    
       return makeAPICall({
         method: "DELETE",
         url: ENDPOINTS.DELETE_NICS_FROM_TEMPLATE(templateId, nicId,detachOnly),
@@ -3042,6 +3059,16 @@ const ApiManager = {
   endJob: async(jobId) => makeAPICall({
     method: "PUT", 
     url: ENDPOINTS.END_JOB(jobId),
+  }),
+  /**
+   * @name ApiManager.removeJob
+   * @description (외부) 작업 제거거
+   * 
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  removeJob: async(jobId) => makeAPICall({
+    method: "DELETE", 
+    url: ENDPOINTS.FIND_JOB(jobId),
   }),
   //#endregion: Job
 

@@ -66,8 +66,6 @@
 //   const handleLoginIscsi = () => {
 //     if (!selectedTarget) return toast.error('항목을 선택해주세요.');
 
-//     console.log("로그인 시 사용할 target:", formSearchState.target); // 확인용 로그
-
 //     loginIscsiFromHostAPI({ hostId: hostVo?.id, iscsiData: formSearchState }, {
 //       onSuccess: (data) => { setIscsiResults(data) },
 //       onError: (error) => { toast.error('iSCSI 로그인 실패:', error) },

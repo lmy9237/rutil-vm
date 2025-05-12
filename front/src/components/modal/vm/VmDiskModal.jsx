@@ -60,7 +60,6 @@ const VmDiskModal = ({
   onCreateDisk,
   onClose,  
 }) => {
-  
   const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   const [activeTab, setActiveTab] = useState("img");
   const handleTabClick = useCallback((tab) => { 

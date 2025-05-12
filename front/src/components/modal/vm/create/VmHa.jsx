@@ -3,6 +3,7 @@ import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import LabelCheckbox from "../../../label/LabelCheckbox";
 import Localization from "../../../../utils/Localization";
+import Logger from "../../../../utils/Logger";
 
 const priorityList = [
   { value: 1, label: "낮음" },
@@ -10,9 +11,14 @@ const priorityList = [
   { value: 100, label: "높음" },
 ];
 
-const VmHa = ({ editMode, domains, formHaState, setFormHaState }) => {
-
+const VmHa = ({
+  editMode,
+  domains,
+  formHaState,
+  setFormHaState
+}) => {
   useEffect(() => {
+    Logger.debug(`VmHa > useEffect ... `)
     // 편집 모드가 아니고, domains가 있을 경우 기본값 설정
     if (!editMode && domains.length > 0) {
       setFormHaState((prev) => ({

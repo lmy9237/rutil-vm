@@ -262,7 +262,6 @@ const VmModal = ({
   }, [isOpen, editMode, vm]);
 
   // 클러스터 변경에 따른 결과
-  console.log("###osSystem", formInfoState.osSystem);
   useEffect(() => {
     if (!clusterVo.id || clusters.length === 0) {
       return;
@@ -405,10 +404,6 @@ const VmModal = ({
     // 디스크  연결은 id값 보내기 생성은 객체로 보내기
     const error = validateForm();
     if (error) return toast.error(error);
-    console.log("formHaState: ", formHaState);
-    console.log("dataToSubmit.storageDomainVo: ", dataToSubmit.storageDomainVo);
-    console.log(" 전체 dataToSubmit: ", dataToSubmit);
-  
     Logger.debug(`VmModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
     editMode
       ? editVM({ vmId: vmId, vmData: dataToSubmit })

@@ -16,15 +16,18 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 interface ItGraphService {
-
 	fun getDataCenters(): SizeVo
 	/**
+	 * [ItGraphService.getDashboard]
+	 *
 	 * 전체 사용량 정보 개수 (전체, up, down)
 	 * 데이터센터, 클러스터, 호스트, 가상머신, 스토리지 도메인, 이벤트
 	 * @return [DashboarddVo]
 	 */
 	fun getDashboard(): DashboarddVo
 	/**
+	 * [ItGraphService.totalCpuMemory]
+	 *
 	 * 전체 사용량 - Host (CPU, Memory  % )
 	 * 원 그래프
 	 * 5분마다 한번씩 불려지게 해야함
@@ -141,7 +144,6 @@ class GraphServiceImpl(
 	@Autowired private lateinit var vmSamplesHistoryRepository: VmSamplesHistoryRepository
 	@Autowired private lateinit var vmInterfaceSamplesHistoryRepository: VmInterfaceSamplesHistoryRepository
 	@Autowired private lateinit var storageDomainSamplesHistoryRepository: StorageDomainSamplesHistoryRepository
-
 
 	override fun getDataCenters(): SizeVo {
 		log.info("getDataCenters ... ")

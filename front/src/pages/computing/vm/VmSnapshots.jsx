@@ -6,6 +6,7 @@ import Loading from "../../../components/common/Loading";
 import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VmSnapshotActionButtons from "../../../components/dupl/VmSnapshotActionButtons";
+import SnapshotHostBackground from "../../../components/common/SnapshotHostBackground";
 import {
   RVI16,
   rvi16ChevronDown,
@@ -19,9 +20,9 @@ import {
 import { useSnapshotsFromVM, useVm } from "../../../api/RQHook";
 import { convertBytesToMB } from "../../../util";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import CONSTANT from "../../../Constants";
 import Localization from "../../../utils/Localization";
 import "./VmSnapshots.css"
-import SnapshotHostBackground from "../../../components/common/SnapshotHostBackground";
 
 /**
  * @name VmSnapshots
@@ -32,7 +33,7 @@ import SnapshotHostBackground from "../../../components/common/SnapshotHostBackg
 const VmSnapshots = ({
   vmId
 }) => {
-  const { activeModal, setActiveModal, } = useUIState()
+  const { activeModal, setActiveModal } = useUIState()
   const { setVmsSelected, snapshotsSelected, setSnapshotsSelected } = useGlobal()
 
   const {
@@ -58,7 +59,9 @@ const VmSnapshots = ({
     created: snapshot?.date ?? "현재",
     interface_: snapshot?.interface_,
     persistMemory: snapshot?.persistMemory ? "포함" : "비포함",
-    _persistMemory: snapshot?.persistMemory ? rvi16DesktopFlag("#0A7CFF") : rvi16Desktop(),
+    _persistMemory: snapshot?.persistMemory 
+      ? rvi16DesktopFlag(CONSTANT.color.blue1) 
+      : rvi16Desktop(),
     cpuCore: `${snapshot?.vmViewVo?.cpuTopologyCnt} (${snapshot?.vmViewVo?.cpuTopologyCore}:${snapshot?.vmViewVo?.cpuTopologySocket}:${snapshot?.vmViewVo?.cpuTopologyThread})`,
     memorySize: convertBytesToMB(snapshot?.vmViewVo?.memorySize) + " MB" ?? "",
     memoryActual: convertBytesToMB(snapshot?.vmViewVo?.memoryGuaranteed) + " MB" ?? "",
@@ -113,7 +116,9 @@ const VmSnapshots = ({
 
           {!isSnapshotsLoading && transformedData?.length === 0 && (<></>)}
 
-          {[...transformedData]?.map((snapshot) => (
+          {[...transformedData]?.filter((snapshot) => 
+            !/(Active\sVM)|(before\sthe\spreview)/g.test(snapshot?.description) /* Active VM 뭐시기 뭐시기 제외 */
+          ).map((snapshot) => (
             <div key={snapshot.id}
               className={`snapshot-item f-start ${snapshotsSelected[0]?.id === snapshot.id ? "selected" : ""}`}
               onClick={() => setSnapshotsSelected(snapshot)}
