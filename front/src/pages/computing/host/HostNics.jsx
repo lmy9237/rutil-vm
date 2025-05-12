@@ -11,7 +11,7 @@ import {
 } from "../../../components/icons/RutilVmIcons";
 import Loading from "../../../components/common/Loading";
 import HostNetworkEditModal from "../../../components/modal/host/HostNetworkEditModal";
-import HostNetworkBondingModal from "../../../components/modal/host/HostNetworkBondingModal";
+import HostBondingModal from "../../../components/modal/host/HostBondingModal";
 import LabelCheckbox from "../../../components/label/LabelCheckbox";
 import ActionButton from "../../../components/button/ActionButton";
 import {
@@ -640,7 +640,7 @@ const HostNics = ({ hostId }) => {
       />
 
       <Suspense fallback={<Loading />}>
-        <HostNetworkBondingModal
+        <HostBondingModal
           isOpen={isBondingPopupOpen}
           editmode={isEditMode} 
           hostId={hostId}

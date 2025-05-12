@@ -1212,8 +1212,8 @@ export const useAddBonding = (
 ) => {
   const queryClient = useQueryClient();  // 캐싱된 데이터를 리패칭할 때 사용
   return useMutation({
-    mutationFn: async (hostNicData) => {
-      const res = await ApiManager.addBonding(hostNicData);
+    mutationFn: async ({ hostId, bonding }) => {
+      const res = await ApiManager.addBonding(hostId, bonding);
       return validate(res)
     },
     onSuccess: (res) => {

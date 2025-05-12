@@ -18,6 +18,8 @@ import { rvi24Host } from "../../../components/icons/RutilVmIcons";
 import { useHost } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import "./Host.css";
+import HostNics3 from "./HostNics3";
+import HostNics4 from "./HostNics4";
 
 /**
  * @name HostInfo
@@ -74,6 +76,8 @@ const HostInfo = () => {
     { id: "vms",            label: Localization.kr.VM,      onClick: () => handleTabClick("vms") },
     { id: "nics",           label: Localization.kr.NICS,    onClick: () => handleTabClick("nics") },
     { id: "nics2",           label: `${Localization.kr.NICS}2`,    onClick: () => handleTabClick("nics2") },
+    { id: "nics3",           label: `${Localization.kr.NICS}3`,    onClick: () => handleTabClick("nics3") },
+    { id: "nics4",           label: `${Localization.kr.NICS}4`,    onClick: () => handleTabClick("nics4") },
     { id: "networkAdapter", label: "네트워크 어댑터",          onClick: () => handleTabClick("networkAdapter") },
     { id: "devices",        label: `${Localization.kr.HOST} 장치`, onClick: () => handleTabClick("devices") },
     { id: "events",         label: Localization.kr.EVENT,    onClick: () => handleTabClick("events") },
@@ -96,6 +100,8 @@ const HostInfo = () => {
       vms: HostVms,
       nics: HostNics,
       nics2: HostNics2,
+      nics3: HostNics3,
+      nics4: HostNics4,
       networkAdapter: HostNetworkAdapter,
       devices: HostDevices,
       events: HostEvents,

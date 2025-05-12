@@ -54,7 +54,15 @@ fun Connection.findAllStorageDomainsFromDisk(diskId: String): Result<List<Storag
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun List<Disk>.nameDuplicateDisk(diskName: String, diskId: String? = null): Boolean =
+	this.filter { it.id() != diskId }.any { it.name() == diskName }
+
 fun Connection.addDisk(disk: Disk): Result<Disk?> = runCatching {
+	// if (this.findAllDisks().getOrDefault(emptyList())
+	// 		.nameDuplicateDisk(disk.name())) {
+	// 	throw ErrorPattern.CLUSTER_DUPLICATE.toError()
+	// }
+
 	val diskAdded: Disk? =
 		this.srvAllDisks().add().disk(disk).send().disk()
 
@@ -67,6 +75,11 @@ fun Connection.addDisk(disk: Disk): Result<Disk?> = runCatching {
 }
 
 fun Connection.updateDisk(disk: Disk): Result<Disk?> = runCatching {
+	// if (this.findAllDisks().getOrDefault(emptyList())
+	// 		.nameDuplicateDisk(disk.name())) {
+	// 	throw ErrorPattern.CLUSTER_DUPLICATE.toError()
+	// }
+
 	val diskUpdated: Disk? =
 		this.srvDisk(disk.id()).update().disk(disk).send().disk()
 

@@ -5,14 +5,10 @@ import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
 import { useAddBonding, useNetworkInterfaceFromHost } from "../../../api/RQHook";
+import { checkName } from "../../../util";
+import Logger from "../../../utils/Logger";
 
-const HostNetworkBondingModal = ({ 
-  isOpen, 
-  editmode = false,
-  hostId,
-  nicId,
-  onClose, 
-}) => {
+const HostBondingModal = ({ editmode = false, isOpen, onClose, hostId, nicId }) => {
   const bLabel = editmode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   
   const onSuccess = () => {
@@ -22,9 +18,10 @@ const HostNetworkBondingModal = ({
   const { mutate: addBonding } = useAddBonding(onSuccess, () => onClose());
 
   const { data: hostNic = [] } = useNetworkInterfaceFromHost(hostId, nicId);
-
+  
   const [name, setName] = useState("");
   const [options, setOptions] = useState([]);
+  const [option, setOption] = useState("");
   const [mode, setMode] = useState("");
 
   const initializeOptions = (bonding) => {
@@ -46,10 +43,27 @@ const HostNetworkBondingModal = ({
     }
   }, [editmode, hostNic]);
 
+  const validateForm = () => {
+    const nameError = checkName(name);
+    if (nameError) return nameError;
+
+    return null;
+  };
+
+  const handleFormSubmit = () => {
+    const error = validateForm();
+    if (error) return toast.error(error);
+
+    const dataToSubmit = { name, option, mode };
+
+    Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터 출력
+    addBonding({ hostId: hostId, bonding: dataToSubmit })      
+  };
+
   return (
     <BaseModal targetName={!editmode ? `새 본딩 ${Localization.kr.CREATE}` : `본딩 ${name} ${Localization.kr.UPDATE}`} submitTitle={""}
       isOpen={isOpen} onClose={onClose}
-      onSubmit={() => {}}
+      onSubmit={handleFormSubmit}
       contentStyle={{ width: "500px" }}
     >
       <LabelInput id="bonding_name" label="본딩이름"        
@@ -57,9 +71,10 @@ const HostNetworkBondingModal = ({
         disabled={editmode}
         onChange={(e) => setName(e.target.value)}
       />
-      <LabelSelectOptions id="bonding_mode" label="본딩모드"        
+      <LabelSelectOptions id="bonding_mode" label="본딩모드(우선mode고정)"        
         value={options.find(opt => opt.name === "mode")?.value || ""}
         options={optionList}
+        disabled={editmode}
         onChange={(e) => {
           setOptions(prev => prev.map(opt => opt.name === "mode" ? { ...opt, value: e.target.value } : opt ));
         }}
@@ -72,7 +87,7 @@ const HostNetworkBondingModal = ({
   );
 };
 
-export default HostNetworkBondingModal;
+export default HostBondingModal;
 
 const optionList = [
   { value: "1", label: "(Mode 1) Active-Backup" },
