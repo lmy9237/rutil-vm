@@ -46,7 +46,7 @@ const DiskInfo = () => {
     { id: "general",  label: Localization.kr.GENERAL,  onClick: () => handleTabClick("general") },
     { id: "vms",      label: Localization.kr.VM,       onClick: () => handleTabClick("vms") },
     { id: "domains",  label: Localization.kr.DOMAIN,   onClick: () => handleTabClick("domains") },
-  ]), []);
+  ]), [diskId]);
 
   useEffect(() => {
     setActiveTab(section || "general");

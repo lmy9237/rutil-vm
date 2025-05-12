@@ -53,12 +53,12 @@ const TemplateInfo = () => {
 
   const tabs = useMemo(() => ([
     { id: "general",  label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
-    { id: "vms",      label: Localization.kr.VM, onClick: () => handleTabClick("vms") },
-    { id: "nics",     label: Localization.kr.NICS, onClick: () => handleTabClick("nics") },
-    { id: "disks",    label: Localization.kr.DISK, onClick: () => handleTabClick("disks") },
+    { id: "vms",      label: Localization.kr.VM,      onClick: () => handleTabClick("vms") },
+    { id: "nics",     label: Localization.kr.NICS,    onClick: () => handleTabClick("nics") },
+    { id: "disks",    label: Localization.kr.DISK,    onClick: () => handleTabClick("disks") },
     // { id: "storageDomains", label: Localization.kr.DOMAIN, onClick: () => handleTabClick("storageDomains") },
-    { id: "events",   label: Localization.kr.EVENT, onClick: () => handleTabClick("events") },
-  ]), []);
+    { id: "events",   label: Localization.kr.EVENT,   onClick: () => handleTabClick("events") },
+  ]), [templateId]);
 
   const pathData = useMemo(() => ([
     template?.name,

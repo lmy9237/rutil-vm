@@ -71,7 +71,7 @@ const VmInfo = () => {
     { id: "applications", label: Localization.kr.APPLICATION, onClick: () => handleTabClick("applications") },
     { id: "hostDevices",  label: Localization.kr.HOST_DEVICE, onClick: () => handleTabClick("hostDevices") },
     { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
-  ]), []);
+  ]), [vmId]);
 
   useEffect(() => {
     setActiveTab(section || "general");

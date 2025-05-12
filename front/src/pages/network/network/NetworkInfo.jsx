@@ -52,7 +52,7 @@ const NetworkInfo = () => {
     { id: "hosts",         label: Localization.kr.HOST,         onClick: () => handleTabClick("hosts") },
     { id: "vms",           label: Localization.kr.VM,           onClick: () => handleTabClick("vms") },
     { id: "templates",     label: Localization.kr.TEMPLATE,     onClick: () => handleTabClick("templates") },
-  ], []);
+  ], [networkId]);
 
   useEffect(() => {
     setActiveTab(section || "general");

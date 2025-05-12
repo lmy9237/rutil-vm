@@ -84,7 +84,7 @@ const DomainInfo = () => {
     }
   
     return baseSections;
-  }, [domain?.status]);
+  }, [domainId, domain?.status]);
   
 
   const pathData = useMemo(() => ([

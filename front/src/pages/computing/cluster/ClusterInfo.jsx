@@ -58,7 +58,7 @@ const ClusterInfo = () => {
     { id: "vms",      label: Localization.kr.VM,      onClick: () => handleTabClick("vms") },
     { id: "networks", label: "논리 네트워크", onClick: () => handleTabClick("networks") },
     { id: "events",   label: Localization.kr.EVENT,   onClick: () => handleTabClick("events") },
-  ]), []);
+  ]), [clusterId]);
 
   const handleTabClick = useCallback((tab) => {
     Logger.debug(`ClusterInfo > handleTabClick ... tab: ${tab}`)

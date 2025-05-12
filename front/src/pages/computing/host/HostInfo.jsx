@@ -77,7 +77,7 @@ const HostInfo = () => {
     { id: "networkAdapter", label: "네트워크 어댑터",          onClick: () => handleTabClick("networkAdapter") },
     { id: "devices",        label: `${Localization.kr.HOST} 장치`, onClick: () => handleTabClick("devices") },
     { id: "events",         label: Localization.kr.EVENT,    onClick: () => handleTabClick("events") },
-  ]), [])
+  ]), [hostId])
 
   const pathData = useMemo(() => ([
     host?.name,

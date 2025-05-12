@@ -27,10 +27,10 @@ const SettingInfo = () => {
 
   const tabs = useMemo(() => [
     { id: "users",       label: Localization.kr.USER, onClick: () => handleTabClick("users") },
-    { id: "sessions",    label: "활성 사용자 세션",     onClick: () => handleTabClick("sessions") },
-    { id: "licenses",    label: "라이센싱",            onClick: () => handleTabClick("licenses") },
+    { id: "sessions",    label: "활성 사용자 세션",      onClick: () => handleTabClick("sessions") },
+    { id: "licenses",    label: "라이센싱",             onClick: () => handleTabClick("licenses") },
     // { id: "firewall", label: "방화벽" },
-    { id: "certificate", label: "인증서",              onClick: () => handleTabClick("certificate") },
+    { id: "certificate", label: "인증서",               onClick: () => handleTabClick("certificate") },
     // { id: 'app_settings', label: '설정' },
     // { id: 'user_sessionInfo', label: '계정설정' },
   ], []);

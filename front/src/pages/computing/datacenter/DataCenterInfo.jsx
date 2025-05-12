@@ -81,7 +81,7 @@ const DataCenterInfo = () => {
     { id: "storageDomains", label: Localization.kr.DOMAIN,  onClick: () => handleTabClick("storageDomains") },
     { id: "network",        label: "논리 네트워크", onClick: () => handleTabClick("network") },
     { id: "events",         label: Localization.kr.EVENT,   onClick: () => handleTabClick("events") },
-  ]), []);
+  ]), [dataCenterId]);
 
   const pathData = useMemo(() => ([
     dataCenter?.name,
