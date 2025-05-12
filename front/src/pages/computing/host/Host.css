@@ -148,4 +148,8 @@
   width: 50%;
   text-align: center;
 }
-
+.host-graph{
+  min-width: 40%;
+  font-weight: 600;
+  font-size: var(--fs-14);
+}

@@ -110,8 +110,12 @@ const HostGeneral = ({
       <InfoTable tableRows={tabs.find(({ tab }) => tab === activeTab)?.tableRows || []} />
       <br/>
       <div className="f-btw" style={{ gap: "20px" }}>
-        cpu <SuperAreaChart key={`${hostId}-cpu`} per={hostPer} type="cpu" />
-        memory <SuperAreaChart key={`${hostId}-memory`} per={hostPer} type="memory" />
+        <div className="host-graph">
+          cpu <SuperAreaChart key={`${hostId}-cpu`} per={hostPer} type="cpu" />
+        </div>
+        <div className="host-graph">
+          memory <SuperAreaChart key={`${hostId}-memory`} per={hostPer} type="memory" />
+        </div>
       </div>
     </div>
   );

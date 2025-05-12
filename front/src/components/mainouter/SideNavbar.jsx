@@ -21,8 +21,8 @@ const SideNavbar = () => {
   useEffect(() => {
     const path = location.pathname;
     if (path.includes("/computing"))     handleClick("computing");
-    else if (path.includes("/networks")) handleClick("network");
     else if (path.includes("/storages")) handleClick("storage");
+    else if (path.includes("/networks")) handleClick("network");
     else if (path.includes("/events"))   handleClick("event");
     else if (path.includes("/settings")) handleClick("settings"); // /settings가 들어가 있을 때
     else                                 handleClick("dashboard");

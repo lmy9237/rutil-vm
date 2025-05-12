@@ -269,6 +269,10 @@ const RadialChartAll = ({
     <div className="graph-chart-all f-center h-auto"
       style={{
         height: `${HEIGHT_GRAPH_HORIZ}px`,
+           display: "flex",
+    alignItems: "center",     // 수직 가운데
+    justifyContent: "center", // 수평 가운데
+    background:"olive"
       }}
     >
       <RadialBarChart 
@@ -334,6 +338,7 @@ const BarChartAll = ({
     <div className="graph-chart-all f-center"
       style={{
         height: `${HEIGHT_GRAPH_HORIZ}px`,
+        
       }}
     >
       <BarChartWrapper 
@@ -475,7 +480,7 @@ const BoxGrid = ({
   }, [type, vmMetricCpu, vmMetricMemory, storageMetric])
 
   return (
-    <div className="box-grid gap-4 f-start w-full h-full"
+    <div className="box-grid gap-4 f-start w-full h-full mb-3"
       {...props}
     >
       {/* <span className="fs-18">StorageDomain</span> */}

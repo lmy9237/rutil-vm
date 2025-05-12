@@ -3,6 +3,7 @@
   min-width: 40%;
   aspect-ratio:1/1;
   flex: 1 0.5;
+  height: 100% !important;
 }
 
 .apex-tooltip {

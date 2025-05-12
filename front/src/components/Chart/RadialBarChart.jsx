@@ -120,17 +120,47 @@ const RadialBarChart = ({
   }, [percentage]);
 
   return (
-    // <div ref={chartContainerRef} style={{ width: "100%", maxWidth: "600px", minWidth: "150px" }}>
-    //   <div id="donut_chart">
-        <ReactApexChart type="radialBar" 
-          id="chart-radial" /* css id,class 둘다 먹힘 */          
+    /* css로 빼기 */
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          height: "90%",
+          aspectRatio: "1 / 1",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ReactApexChart
+          type="radialBar"
+          id="chart-radial"
           options={chartOptions}
           series={series}
-          height="100%" // 부모 기준
+          height="100%"
+          width="100%"
           {...props}
-      />
-    /* </div>
-    </div> */
+        />
+      </div>
+    </div>
+
+    //     // <div ref={chartContainerRef} style={{ width: "100%", maxWidth: "600px", minWidth: "150px" }}>
+    // //   <div id="donut_chart">
+    //     <ReactApexChart type="radialBar" 
+    //       id="chart-radial" /* css id,class 둘다 먹힘 */          
+    //       options={chartOptions}
+    //       series={series}
+    //       height="100%" // 부모 기준
+    //       {...props}
+    //   />
+    // /* </div>
+    // </div> */
   );
 };
 

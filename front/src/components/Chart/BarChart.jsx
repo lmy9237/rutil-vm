@@ -62,9 +62,8 @@ const BarChart = ({
     chart: {
       type: "bar",
       redrawOnParentResize: true,
-      /*offsetY: -15,
-      offsetX: -55,*/
-      
+      // offsetY: -15,
+      // offsetX: -35,
     },
     grid: {
       show: false,
@@ -139,15 +138,34 @@ const BarChart = ({
   });
 
   return (
-    <ReactApexChart type="bar" 
-      id="chart-bar" /* css id는 먹히지만 class명은 안먹힘 */
-      options={chartOptions}
-      series={series}
-      height="100%" // 부모 기준
-      // width={chartSize.width}
-      // height={chartSize.height || "250px"}
-      {...props}
-    />
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          height: "90%",
+          aspectRatio: "1 / 1",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ReactApexChart type="bar" 
+          id="chart-bar" /* css id는 먹히지만 class명은 안먹힘 */
+          options={chartOptions}
+          series={series}
+          height="100%" // 부모 기준
+          // width={chartSize.width}
+          // height={chartSize.height || "250px"}
+          {...props}
+        />
+      </div>
+    </div>
   );
 };
 

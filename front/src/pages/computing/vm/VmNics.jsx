@@ -69,7 +69,7 @@ const VmNics = ({
       <div className="network-interface-group w-full"
         ref={nicRef} 
       > 
-        <div className="dupl-header-group f-start gap-4 w-full">
+        <div className="dupl-header-group f-start gap-4 w-full mb-2">
           <NicActionButtons />
         </div>
 
@@ -82,11 +82,20 @@ const VmNics = ({
             [...transformedData].map((nic, i) => (
               <div key={nic?.id}
                 className={`network_content2 w-full ${nicsSelected[0]?.id === nic.id ? "selected" : ""}`}
-                onClick={() => {
-                  setNicsSelected(nic);                
+                onClick={(e) => {
+                  if (e.target.closest(".network-content-detail")) return;
+                  const isSelected = nicsSelected[0]?.id === nic.id;
+                  const isModalOpen = ["nic:create", "nic:update"].includes(activeModal());
+
+                  if (isSelected && !isModalOpen) {
+                    setNicsSelected([]);
+                  } else {
+                    setNicsSelected(nic);
+                  }
+
                   toggleDetails(nic.id);
-                }} // NIC 선택 시 상태 업데이트
-              >
+                }}
+                >
                 <div className="network-content f-start f-btw">
                   <div className="network-status f-start">
                     <RVI24 iconDef={nicsSelected[0]?.id === nic.id ? rvi24ChevronDown() : rvi24ChevronRight()} />

@@ -300,7 +300,11 @@ const Tables = ({
                 (typeof cellValue === "string" && (cellValue.trim().toLowerCase().endsWith("gib") || cellValue.trim().endsWith("%"))) || // GiB나 % 끝나는 문자열
                 isForceCenter;
 
-                const columnAlign = column?.align ?? (shouldCenter ? "center" : "left");
+                let determinedAlign = column?.align ?? (shouldCenter ? "center" : "left");
+                if (isTableRowClick) {
+                  determinedAlign = "left";
+                }
+                
             
                 return (
                   <td
@@ -315,7 +319,7 @@ const Tables = ({
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      textAlign: columnAlign,
+                      textAlign: determinedAlign, 
                       verticalAlign: "middle",
                       cursor:
                         cellValue && clickableColumnIndex.includes(colIndex)
@@ -369,7 +373,6 @@ const Tables = ({
                     <div className="cell-ellipsis" style={{ textAlign: isTableRowClick ? "left" : shouldCenter ? "center" : "left" }}>
                       {isJSX ? (
                         isTableRowClick ? (
-                          // ✅ 문제 해결 핵심: f-center 적용하지 않음
                           cellValue
                         ) : (
                           <div className="f-center">{cellValue}</div> 

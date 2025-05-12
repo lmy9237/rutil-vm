@@ -14,7 +14,7 @@ const GridLegends = () => {
       {legends.map(({ type, value }) => (
         <div className="legend-item f-center">
           <span className={`legend ${type} fs-8`} />
-          <span className="fs-8">{value}</span>
+          <span className="fs-13">{value}</span>
         </div>
       ))}
     </div>

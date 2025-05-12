@@ -4,9 +4,14 @@
   width: 100%;
   flex-wrap: wrap;
 }
+.dash-boxes:first-child{
+  background-color: blue ;
+  height: auto;
+}
 .dash-boxes:last-child {
   height: calc(100% - var(--h-dash-nav-box) - 4px);
   /*margin-top: auto;*/
+    background-color: pink ;
 }
 .dash-boxes:last-child > * {
   height: 100%;
@@ -25,9 +30,12 @@
 .box.box-graph {
   /* min-height: calc(100% - var(--h-dash-boxs-bar)) !important; */
   flex-grow: 1;
+
   width: calc(100% / 3 - 8px); /* 1열 */
   cursor: default;
+  background-color: yellow;
 }
+
 .box:not(.box-graph):hover {
   border: var(--border-box);
 }
@@ -108,6 +116,7 @@
 }
 .grid-item {
   display: flex;
+  width: 100%;
   flex-direction: column;
   justify-content: center;
   text-align: center;
@@ -116,12 +125,15 @@
   height: 100%;
   cursor: pointer;
 }
+.graphs-horizontal{
+  background-color: blueviolet;
+}
 @media screen and (max-width:1500px) {
   .dash-boxes {
     height: calc(2 * var(--h-dash-nav-box));
   }
   .dash-boxes:last-child {
-    width: calc(100% - 48px);
+    /* width: calc(100% - 48px); */
     height: calc(100% - (2 * var(--h-dash-nav-box)));
   }
   .box {
@@ -129,6 +141,7 @@
   }
   .box.box-graph {/* 한 줄에 3개씩 총 2줄*/
     min-width: 480px;
+    height: auto;
     /*
     flex: 1 1 calc(100% - 48px) !important;
     width: calc(100% - 8px); 
