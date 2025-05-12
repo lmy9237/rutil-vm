@@ -14,7 +14,7 @@ import Home from "./components/Home";
 import Login from "./pages/login/Login";
 import VmVnc from "./pages/computing/vm/VmVnc";
 import Dashboard from "./pages/dashboard/Dashboard";
-import RutilManager from "./pages/Rutil/RutilManager";
+import RutilManager from "./pages/rutil-manager/RutilManager";
 import DataCenterInfo from "./pages/computing/datacenter/DataCenterInfo";
 import ClusterInfo from "./pages/computing/cluster/ClusterInfo";
 import HostInfo from "./pages/computing/host/HostInfo";

@@ -6,12 +6,13 @@ import { useAllDataCenters } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 
 /**
- * @name DataCenters
+ * @name RutilDataCenters
  * @description 데이터센터 전체
- *
+ * 경로: <메뉴>/rutil-manager/datacenters
+ * 
  * @returns {JSX.Element} DataCenters
  */
-const DataCenters = () => {
+const RutilDataCenters = () => {
   const { setDatacentersSelected } = useGlobal()
 
   const {
@@ -24,7 +25,7 @@ const DataCenters = () => {
 
   useEffect(() => {
     return () => {
-      Logger.debug("DataCenters > useEffect ... CLEANING UP");
+      Logger.debug("RutilDataCenters > useEffect ... CLEANING UP");
       setDatacentersSelected([])
     }
   }, []);
@@ -38,4 +39,4 @@ const DataCenters = () => {
   );
 };
 
-export default DataCenters;
+export default RutilDataCenters;

@@ -6,12 +6,13 @@ import { useAllVnicProfiles } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 
 /**
- * @name VnicProfiles
+ * @name RutilVnicProfiles
  * @description VnicProfiles
- *
+ * 경로: <메뉴>/rutil-manager/vnicProfiles
+ * 
  * @returns {JSX.Element} VnicProfiles
  */
-const VnicProfiles = () => {
+const RutilVnicProfiles = () => {
   const { setVnicProfilesSelected } = useGlobal()
 
   const {
@@ -24,7 +25,7 @@ const VnicProfiles = () => {
   
   useEffect(() => {
     return () => {
-      Logger.debug("VnicProfiles > useEffect ... CLEANING UP");
+      Logger.debug("RutilVnicProfiles > useEffect ... CLEANING UP");
       setVnicProfilesSelected([])
     }
   }, []);
@@ -38,4 +39,4 @@ const VnicProfiles = () => {
   );
 };
 
-export default VnicProfiles;
+export default RutilVnicProfiles;

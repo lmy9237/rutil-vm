@@ -6,12 +6,13 @@ import { useAllHosts } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 
 /**
- * @name Hosts
+ * @name RutilHosts
  * @description 호스트 목록 페이지
+ * 경로: <메뉴>/rutil-manager/hosts
  *
- * @returns {JSX.Element} Disks
+ * @returns {JSX.Element} RutilHosts
  */
-const Hosts = () => {
+const RutilHosts = () => {
   const { setHostsSelected } = useGlobal()
 
   const {
@@ -24,7 +25,7 @@ const Hosts = () => {
 
   useEffect(() => {
     return () => {
-      Logger.debug("Hosts > useEffect ... CLEANING UP");
+      Logger.debug("RutilHosts > useEffect ... CLEANING UP");
       setHostsSelected([])
     }
   }, []);
@@ -38,4 +39,4 @@ const Hosts = () => {
   );
 };
 
-export default Hosts;
+export default RutilHosts;

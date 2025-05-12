@@ -6,12 +6,13 @@ import { useAllClusters } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 
 /**
- * @name Clusters
+ * @name RutilClusters
  * @description 클러스터 전체
+ * 경로: <메뉴>/rutil-manager/clusters
  *
- * @returns {JSX.Element} Clusters
+ * @returns {JSX.Element} RutilClusters
  */
-const Clusters = () => {
+const RutilClusters = () => {
   const { setClustersSelected } = useGlobal()
 
   const {
@@ -24,12 +25,11 @@ const Clusters = () => {
 
   useEffect(() => {
     return () => {
-      Logger.debug("Clusters > useEffect ... CLEANING UP");
+      Logger.debug("RutilClusters > useEffect ... CLEANING UP");
       setClustersSelected([])
     }
   }, [])
 
-  Logger.debug(`Clusters ... `)
   return (
     <ClusterDupl columns={TableColumnsInfo.CLUSTERS}
       clusters={clusters}
@@ -39,4 +39,4 @@ const Clusters = () => {
   );
 };
 
-export default Clusters;
+export default RutilClusters;

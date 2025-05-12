@@ -6,12 +6,13 @@ import { useAllDisks } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 
 /**
- * @name Disks
+ * @name RutilDisks
  * @description 디스크 목록 페이지
- *
- * @returns {JSX.Element} Disks
+ * 경로: <메뉴>/rutil-manager/disks
+ * 
+ * @returns {JSX.Element} RutilDisks
  */
-const Disks = () => {
+const RutilDisks = () => {
   const { setDisksSelected } = useGlobal()
 
   const {
@@ -38,4 +39,4 @@ const Disks = () => {
   );
 };
 
-export default Disks;
+export default RutilDisks;

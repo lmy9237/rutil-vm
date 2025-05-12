@@ -4,15 +4,15 @@ import TabNavButtonGroup from "../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../components/button/HeaderButton";
 import Path from "../../components/Header/Path";
 import RutilGeneral from "./RutilGeneral";
-import DataCenters from "./DataCenters";
-import Clusters from "./Clusters";
-import Hosts from "./Hosts";
-import Vms from "./Vms";
-import Templates from "./Templates";
-import StorageDomains from "./StorageDomains";
-import Disks from "./Disks";
-import Networks from "./Networks";
-import VnicProfiles from "./VnicProfiles";
+import RutilDataCenters from "./RutilDataCenters";
+import RutilClusters from "./RutilClusters";
+import RutilHosts from "./RutilHosts";
+import RutilVms from "./RutilVms";
+import RutilTemplates from "./RutilTemplates";
+import RutilStorageDomains from "./RutilStorageDomains";
+import RutilDisks from "./RutilDisks";
+import RutilNetworks from "./RutilNetworks";
+import RutilVnicProfiles from "./RutilVnicProfiles";
 import Localization from "../../utils/Localization";
 import { rvi24Globe } from "../../components/icons/RutilVmIcons";
 import SectionLayout from "../../components/SectionLayout";
@@ -26,15 +26,15 @@ import "./RutilManager.css";
  * @returns {JSX.Element} Rutil Manager 창
  * 
  * @see RutilGeneral
- * @see DataCenters
- * @see Clusters
- * @see Hosts
- * @see Vms
- * @see Templates
- * @see StorageDomains
- * @see Disks
- * @see Networks
- * @see VnicProfiles
+ * @see RutilDataCenters
+ * @see RutilClusters
+ * @see RutilHosts
+ * @see RutilVms
+ * @see RutilTemplates
+ * @see RutilStorageDomains
+ * @see RutilDisks
+ * @see RutilNetworks
+ * @see RutilVnicProfiles
  */
 const RutilManager = () => {
   const { section } = useParams();
@@ -42,21 +42,23 @@ const RutilManager = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("info"); // 기본 탭은 info로
 
-  const rootPath = location.pathname.split("/").slice(0, 2).join("/"); // '/computing' 또는 '/networks' 등 추출
+  const rootPath = useMemo(() => 
+    location.pathname.split("/").slice(0, 2).join("/")
+  , [location]) // '/computing' 또는 '/networks' 등 추출
 
   // Header와 Sidebar에 쓰일 섹션과 버튼 정보
   const tabs = useMemo(() => [
-    { id: "info", label: Localization.kr.GENERAL, onClick: () => handleTabClick("info") },
-    { id: "datacenters", label: Localization.kr.DATA_CENTER, onClick: () => handleTabClick("datacenters") },
-    { id: "clusters", label: Localization.kr.CLUSTER, onClick: () => handleTabClick("clusters") },
-    { id: "hosts", label: Localization.kr.HOST, onClick: () => handleTabClick("hosts") },
-    { id: "vms", label: Localization.kr.VM, onClick: () => handleTabClick("vms") },
-    { id: "templates", label: Localization.kr.TEMPLATE, onClick: () => handleTabClick("templates") },
-    { id: "storageDomains", label: Localization.kr.DOMAIN, onClick: () => handleTabClick("storageDomains") },
-    { id: "disks", label: Localization.kr.DISK, onClick: () => handleTabClick("disks") },
-    { id: "networks", label: Localization.kr.NETWORK, onClick: () => handleTabClick("networks") },
-    { id: "vnicProfiles", label: Localization.kr.VNIC_PROFILE, onClick: () => handleTabClick("vnicProfiles") },
-  ], []);
+    { id: "info",           label: Localization.kr.GENERAL,      onClick: () => handleTabClick("info") },
+    { id: "datacenters",    label: Localization.kr.DATA_CENTER,  onClick: () => handleTabClick("datacenters") },
+    { id: "clusters",       label: Localization.kr.CLUSTER,      onClick: () => handleTabClick("clusters") },
+    { id: "hosts",          label: Localization.kr.HOST,         onClick: () => handleTabClick("hosts") },
+    { id: "vms",            label: Localization.kr.VM,           onClick: () => handleTabClick("vms") },
+    { id: "templates",      label: Localization.kr.TEMPLATE,     onClick: () => handleTabClick("templates") },
+    { id: "storageDomains", label: Localization.kr.DOMAIN,       onClick: () => handleTabClick("storageDomains") },
+    { id: "disks",          label: Localization.kr.DISK,         onClick: () => handleTabClick("disks") },
+    { id: "networks",       label: Localization.kr.NETWORK,      onClick: () => handleTabClick("networks") },
+    { id: "vnicProfiles",   label: Localization.kr.VNIC_PROFILE, onClick: () => handleTabClick("vnicProfiles") },
+  ], [rootPath]);
 
   // section이 변경될때 tab도 같이 변경
   useEffect(() => {
@@ -80,15 +82,15 @@ const RutilManager = () => {
     Logger.debug(`RutilManager > renderSectionContent ...`)
     const sectionComponents = {
       info: RutilGeneral,
-      datacenters: DataCenters,
-      clusters: Clusters,
-      hosts: Hosts,
-      vms: Vms,
-      templates: Templates,
-      storageDomains: StorageDomains,
-      disks: Disks,
-      networks: Networks,
-      vnicProfiles: VnicProfiles,
+      datacenters: RutilDataCenters,
+      clusters: RutilClusters,
+      hosts: RutilHosts,
+      vms: RutilVms,
+      templates: RutilTemplates,
+      storageDomains: RutilStorageDomains,
+      disks: RutilDisks,
+      networks: RutilNetworks,
+      vnicProfiles: RutilVnicProfiles,
     };
     const SectionComponent = sectionComponents[activeTab] || RutilGeneral;
     return <SectionComponent />;
@@ -96,9 +98,7 @@ const RutilManager = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton title="Rutil Manager"
-        titleIcon={rvi24Globe()}
-      />
+      <HeaderButton title="Rutil Manager" titleIcon={rvi24Globe()} />
       <div className="content-outer">
         {/* 왼쪽 네비게이션 */}
         <TabNavButtonGroup

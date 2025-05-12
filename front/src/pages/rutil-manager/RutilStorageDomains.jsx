@@ -6,15 +6,16 @@ import { useAllStorageDomains } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 
 /**
- * @name StorageDomains
+ * @name RutilStorageDomains
  * @description 스토리지 도메인 전체
+ * 경로: <메뉴>/rutil-manager/storageDomains
  *
- * @returns {JSX.Element} StorageDomains
+ * @returns {JSX.Element} RutilStorageDomains
  */
-const StorageDomains = () => {
+const RutilStorageDomains = () => {
   const { setDomainsSelected } = useGlobal()
 
-  const {
+  const { 
     data: storageDomains = [],
     isLoading: isStorageDomainsLoading,
     isError: isStorageDomainsError,
@@ -24,7 +25,7 @@ const StorageDomains = () => {
 
   useEffect(() => {
     return () => {
-      Logger.debug("Hosts > useEffect ... CLEANING UP");
+      Logger.debug("RutilStorageDomains > useEffect ... CLEANING UP");
       setDomainsSelected([])
     }
   }, []);
@@ -39,4 +40,4 @@ const StorageDomains = () => {
   );
 };
 
-export default StorageDomains;
+export default RutilStorageDomains;

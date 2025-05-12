@@ -6,12 +6,13 @@ import NetworkDupl from "../../components/dupl/NetworkDupl";
 import Logger from "../../utils/Logger";
 
 /**
- * @name Networks
+ * @name RutilNetworks
  * @description 네트워크 전체
+ * 경로: <메뉴>/rutil-manager/networks
  *
- * @returns
+ * @returns {JSX.Element} RutilNetworks
  */
-const Networks = () => {
+const RutilNetworks = () => {
   const { setNetworksSelected } = useGlobal()
 
   const {
@@ -24,7 +25,7 @@ const Networks = () => {
   
   useEffect(() => {
     return () => {
-      Logger.debug("Networks > useEffect ... CLEANING UP");
+      Logger.debug("RutilNetworks > useEffect ... CLEANING UP");
       setNetworksSelected([])
     }
   }, []);
@@ -38,4 +39,4 @@ const Networks = () => {
   );
 };
 
-export default Networks;
+export default RutilNetworks;

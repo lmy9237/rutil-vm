@@ -6,12 +6,15 @@ import { useAllTemplates } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 
 /**
- * @name Templates
+ * @name RutilTemplates
  * @description 탬플릿 전체
+ * 경로: <메뉴>/rutil-manager/templates
  *
- * @returns
+ * @returns {JSX.Element} RutilTemplates
  */
-const Templates = () => {
+const RutilTemplates = ({
+
+}) => {
   const { setTemplatesSelected } = useGlobal()
   const {
     data: templates = [],
@@ -37,4 +40,4 @@ const Templates = () => {
   );
 };
 
-export default Templates;
+export default RutilTemplates;

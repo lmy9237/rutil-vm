@@ -8,8 +8,9 @@ import { useDashboard } from "../../api/RQHook";
 /**
  * @name RutilGeneral
  * @description RutilManager > 일반
- *
- * @returns {JSX.Element} Info
+ * 경로: <메뉴>/rutil-manager
+ * 
+ * @returns {JSX.Element} RutilGeneral
  */
 const RutilGeneral = () => {
   const {

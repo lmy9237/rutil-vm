@@ -6,12 +6,13 @@ import { useAllVMs } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 
 /**
- * @name Vms
+ * @name RutilVms
  * @description 가상머신 전체
+ * 경로: <메뉴>/rutil-manager/vms
  *
- * @returns {JSX.Element} Vms
+ * @returns {JSX.Element} RutilVms
  */
-const Vms = () => {
+const RutilVms = () => {
   const { setVmsSelected } = useGlobal()
   
   const {
@@ -24,7 +25,7 @@ const Vms = () => {
   
   useEffect(() => {
     return () => {
-      Logger.debug("Vms > useEffect ... CLEANING UP");
+      Logger.debug("RutilVms > useEffect ... CLEANING UP");
       setVmsSelected([])
     }
   }, []);
@@ -38,4 +39,4 @@ const Vms = () => {
   );
 };
 
-export default Vms;
+export default RutilVms;
