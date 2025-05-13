@@ -7,6 +7,7 @@ import useUIState from "../../hooks/useUIState";
 import Logger from "../../utils/Logger";
 import useGlobal from "../../hooks/useGlobal";
 import useClickOutside from "../../hooks/useClickOutside";
+import CONSTANT from "../../Constants";
 
 /**
  * @name HostActionButtons
@@ -32,6 +33,7 @@ const HostActionButtons = ({ actionType = "default" }) => {
   const isMaintenance = selected1st?.status === "MAINTENANCE";
   const isInstalling = selected1st?.status === "INSTALLING";
 
+
   const basicActions = useMemo(() => [
     { type: "create", onBtnClick: () => setActiveModal("host:create"), label: Localization.kr.CREATE, disabled: isContextMenu && hostsSelected.length > 0, },
     { type: "update", onBtnClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: hostsSelected.length !== 1  || isInstalling, },
@@ -48,7 +50,7 @@ const HostActionButtons = ({ actionType = "default" }) => {
     { type: "haOn", onBtnClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: hostsSelected.length === 0 || !isUp || !isMaintenance || isInstalling , },
     { type: "haOff", onBtnClick: () => setActiveModal("host:haOff"), label: "글로벌 HA 유지 관리를 비활성화", disabled: hostsSelected.length === 0 || !isUp || isInstalling  },
   ], [actionType, hostsSelected]);
-
+  const isMgmtDisabled = manageActions.every(a => a.disabled);
   Logger.debug(`HostActionButtons ... `)
   return (
     <ActionButtonGroup
@@ -67,10 +69,19 @@ const HostActionButtons = ({ actionType = "default" }) => {
       ) : (
         <div className="dropdown-container">
           <ActionButton
-            iconDef={activeDropdown ? rvi16ChevronUp("black") : rvi16ChevronDown("black")}
+            iconDef={
+              activeDropdown
+                ? rvi16ChevronUp(isMgmtDisabled ? CONSTANT.color.down : CONSTANT.color.black)
+                : rvi16ChevronDown(isMgmtDisabled ? CONSTANT.color.down : CONSTANT.color.black)
+            }
             label={Localization.kr.MANAGEMENT}
-            onClick={toggleDropdown}
+            disabled={isMgmtDisabled}
+            onClick={() => {
+              if (isMgmtDisabled) return;
+              toggleDropdown();
+            }}
           />
+
           {activeDropdown && (
             <div className="right-click-menu-box context-menu-item dropdown-menu"
               ref={activeDropdownRef}
@@ -80,6 +91,7 @@ const HostActionButtons = ({ actionType = "default" }) => {
                   disabled={disabled}
                   className="btn-right-click dropdown-item"
                   onClick={onBtnClick}
+                  
                 >
                   {label}
                 </button>

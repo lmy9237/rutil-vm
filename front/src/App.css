@@ -226,7 +226,7 @@ svg.btn { cursor: pointer; }
   align-items:flex-start !important;
 }
 .dropdown-menu {
-  position: absolute;right:17px;
+  position: absolute;right:4px;
   width: 230px !important;
   background: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);

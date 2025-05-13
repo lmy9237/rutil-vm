@@ -94,7 +94,7 @@ export const BoxLayout = ({
   const navigate = useNavigate();
   
   return (
-    <div className={`box${!cntTotal ? " box-graph" : ""} v-start ${!cntTotal ? "gap-2" : "gap-8"}`}
+    <div className={`box${cntTotal === null || cntTotal === undefined ? " box-graph" : ""} v-start ${cntTotal === null || cntTotal === undefined ? "gap-2" : "gap-8"}`}
       onClick={() => navigatePath && navigate(navigatePath)}
       {...props}
     >
@@ -193,19 +193,19 @@ export const BoxChartSummary = ({
       >
         <div className="box-status v-start">
           <h1 className="fs-24">{availablePercentageComputed}%</h1>
-          <span className="fs-8">{Localization.kr.AVAILABLE}</span>
+          <span className="fs-12">{Localization.kr.AVAILABLE}</span>
           {/* (총 {total} {unit}) */}
         </div>
         <div className="box-status v-start">
           <div className="box-status-metric f-start gap-2">
             <span className="fs-14">{used}</span>
-            <span className="fs-8">(사용 중 {unit})</span>
+            <span className="fs-12">(사용 중 {unit})</span>
           </div>
           {/* (총 {total} {unit}) */}
           <hr className="w-full"/>
           <div className="box-status-metric f-start">
             <span className="fs-14">{total}</span>
-            <span className="fs-8">(총 {unit})</span>
+            <span className="fs-12">(총 {unit})</span>
           </div>
         </div>
         
@@ -215,66 +215,97 @@ export const BoxChartSummary = ({
   )
 }
 
-export const BoxChartAllGraphs = ({
-  type,
-}) => {
-  // const chartContainerRef = useRef()
+// export const BoxChartAllGraphs = ({
+//   type,
+// }) => {
+//   // const chartContainerRef = useRef()
+//   const [heightGraphRest, setHeightGraphRest] = useState(150);
+
+//   const updateHeightGraphRest = () => {
+//     Logger.debug(`BoxChartAllGraphs > updateHeightGraphRest ... window.innerHeight: ${window.innerHeight}`)
+//     // let width = Math.max(containerWidth * 0.8, 200); // 기본 너비
+//     let heightSubstract = 64+40+110+4+28+32+20+20+8+8+HEIGHT_GRAPH_HORIZ
+//     // let height = Math.max((window.innerHeight - heightSubstract) / 2, 200); // 기본 높이
+//     let height = (window.innerHeight - heightSubstract) / 2
+
+//     if (window.innerWidth >= 2000) {
+//       // width = Math.max(containerWidth * 1, 280); 
+//       height = (window.innerHeight - heightSubstract) / 2
+//       // height = Math.max(window.innerHeight * 0.3, 300);
+//     }
+
+//     setHeightGraphRest(height);
+//   };
+//   useEffect(() => {
+//     updateHeightGraphRest()
+//   }, [])
+
+//   useEffect(() => {
+//     Logger.debug(`BoxChartAllGraphs > useEffect ... `)
+//     window.addEventListener("resize", updateHeightGraphRest);
+//     return () => window.removeEventListener("resize", updateHeightGraphRest);;
+//   }, []);
+
+//   return (<>
+//     <div id={`graphs-${type}`}
+//       className="graphs v-center w-full mt-auto"
+//     >
+//       <div 
+//         className="graphs-horizontal f-start w-full"
+//         style={{
+//           height: `${HEIGHT_GRAPH_HORIZ}px`,
+//         }}
+//       >
+//         <RadialChartAll type={type}/>
+//         <BarChartAll className="ml-auto" type={type}/>
+//       </div>
+//       <WaveChartCpu type={type} heightInn={heightGraphRest}
+//         style={{
+//           height: `${heightGraphRest}px`,
+//         }}
+//       />
+//       <BoxGrids type={type}
+//         style={{
+//           height: `${heightGraphRest}px`,
+//         }}
+//       />
+//     </div>
+//   </>)
+// }
+export const BoxChartAllGraphs = ({ type }) => {
+  const [heightGraphHoriz, setHeightGraphHoriz] = useState(250); // 동적 높이
   const [heightGraphRest, setHeightGraphRest] = useState(150);
 
   const updateHeightGraphRest = () => {
-    Logger.debug(`BoxChartAllGraphs > updateHeightGraphRest ... window.innerHeight: ${window.innerHeight}`)
-    // let width = Math.max(containerWidth * 0.8, 200); // 기본 너비
-    let heightSubstract = 64+40+110+4+28+32+20+20+8+8+HEIGHT_GRAPH_HORIZ
-    // let height = Math.max((window.innerHeight - heightSubstract) / 2, 200); // 기본 높이
-    let height = (window.innerHeight - heightSubstract) / 2
+    const isWide = window.innerWidth >= 2000;
+    const newHoriz = isWide ? 360 : 240;
+    setHeightGraphHoriz(newHoriz);
 
-    if (window.innerWidth >= 2000) {
-      // width = Math.max(containerWidth * 1, 280); 
-      height = (window.innerHeight - heightSubstract) / 2
-      // height = Math.max(window.innerHeight * 0.3, 300);
-    }
-
+    const heightSubstract = 64 + 40 + 110 + 4 + 28 + 32 + 20 + 20 + 8 + 8 + newHoriz;
+    const height = (window.innerHeight - heightSubstract) / 2;
     setHeightGraphRest(height);
   };
-  useEffect(() => {
-    updateHeightGraphRest()
-  }, [])
 
   useEffect(() => {
-    Logger.debug(`BoxChartAllGraphs > useEffect ... `)
+    updateHeightGraphRest();
     window.addEventListener("resize", updateHeightGraphRest);
-    return () => window.removeEventListener("resize", updateHeightGraphRest);;
+    return () => window.removeEventListener("resize", updateHeightGraphRest);
   }, []);
 
-  return (<>
-    <div id={`graphs-${type}`}
-      className="graphs v-center w-full mt-auto"
-    >
-      <div 
-        className="graphs-horizontal f-start w-full"
-        style={{
-          height: `${HEIGHT_GRAPH_HORIZ}px`,
-        }}
-      >
-        <RadialChartAll type={type}/>
-        <BarChartAll className="ml-auto" type={type}/>
+  return (
+    <div id={`graphs-${type}`} className="graphs v-center w-full mt-auto">
+      <div className="graphs-horizontal f-start w-full" style={{ height: `${heightGraphHoriz}px` }}>
+        <RadialChartAll type={type} size={heightGraphHoriz} />
+        <BarChartAll type={type} size={heightGraphHoriz} className="ml-auto" />
       </div>
-      <WaveChartCpu type={type} heightInn={heightGraphRest}
-        style={{
-          height: `${heightGraphRest}px`,
-        }}
-      />
-      <BoxGrids type={type}
-        style={{
-          height: `${heightGraphRest}px`,
-        }}
-      />
+      <WaveChartCpu type={type} heightInn={heightGraphRest} style={{ height: `${heightGraphRest}px` }} />
+      <BoxGrids type={type} style={{ height: `${heightGraphRest}px` }} />
     </div>
-  </>)
-}
+  );
+};
 
 const RadialChartAll = ({
-  type
+  type , size
 }) => {
   const {
     data: cpuMemory,
@@ -307,11 +338,13 @@ const RadialChartAll = ({
   ), [type, cpuMemory, storage])
 
   return (
-    <div className="graph-chart-all v-center"
+    <div className="graph-chart-all v-center radial-graph"
       style={{
-        width: `${HEIGHT_GRAPH_HORIZ}px`,
-        height: `${HEIGHT_GRAPH_HORIZ}px`,
-        background: import.meta.env.DEV ? "olive" : ""
+          width: `${size}px`,
+          height: `${size}px`,
+        // width: `${HEIGHT_GRAPH_HORIZ}px`,
+        // height: `${HEIGHT_GRAPH_HORIZ}px`,
+        // background: import.meta.env.DEV ? "olive" : ""
       }}
     >
       <RadialBarChart 
@@ -322,7 +355,7 @@ const RadialChartAll = ({
 }
 
 const BarChartAll = ({
-  type,
+  type, size,
   ...props
 }) => {
   const {
@@ -376,7 +409,8 @@ const BarChartAll = ({
   return (
     <div className="graph-chart-all f-center"
       style={{
-        height: `${HEIGHT_GRAPH_HORIZ}px`,
+         height: `${size}px`,
+        // height: `${HEIGHT_GRAPH_HORIZ}px`,
       }}
     >
       <BarChartWrapper 

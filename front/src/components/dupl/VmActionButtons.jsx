@@ -40,7 +40,9 @@ const VmActionButtons = ({
   const isPoweringUp = selected1st?.status === "POWERING_UP";
   const isTemplate = selected1st?.status === "SUSPENDED" || selected1st?.status === "UP";
 
+
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "UP");
+    const isConsoleDisabled = !allUp;
   const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "DOWN");
   const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "SUSPENDED");
   const allDownOrSuspended = vmsSelected.length > 0 && vmsSelected.every(vm => 
@@ -108,7 +110,11 @@ const VmActionButtons = ({
             className="dropdown-container"
           >
             <ActionButton
-              iconDef={consoleDropdownActive ? rvi16ChevronUp(CONSTANT.color.black) : rvi16ChevronDown(CONSTANT.color.black)}
+              iconDef={
+                consoleDropdownActive 
+                  ? rvi16ChevronUp(isConsoleDisabled ? CONSTANT.color.down : CONSTANT.color.black)
+                  : rvi16ChevronDown(isConsoleDisabled ? CONSTANT.color.down : CONSTANT.color.black)
+              }
               label={Localization.kr.CONSOLE}
               disabled={!allUp}
               onClick={toggleConsoleDropdown}

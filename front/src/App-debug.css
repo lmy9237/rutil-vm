@@ -1,3 +1,4 @@
+/*
 html {
   --debug-outline: 1px dashed magenta;
   background-color: #0b4db5;
@@ -7,4 +8,22 @@ html {
 *::before,
 *::after {
   outline: var(--debug-outline);
+}
+*/
+
+/*대시보드 그레프 색깔*/
+.graphs-horizontal{
+  background-color: blueviolet;
+}
+.box.box-graph{
+  background-color: yellow;
+}
+.radial-graph{
+  background: olive;
+}
+.dash-boxes:first-child{
+  background-color: blue;
+}
+.dash-boxes:last-child{
+  background-color: pink ;
 }

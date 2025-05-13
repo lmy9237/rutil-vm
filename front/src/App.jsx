@@ -35,6 +35,7 @@ import SettingInfo from "./pages/setting/SettingInfo";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "pretendard/dist/web/static/pretendard.css";
 import "./App.css";
+// import "./App-debug.css";
 
 const App = () => {
   //#region: 웹소켓연결
