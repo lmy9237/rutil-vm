@@ -1200,6 +1200,35 @@ export const useNetworkAttachmentFromHost = (
   enabled: !!hostId
 })
 
+/**
+ * @name useEditHostNetworkFromHost
+ * @description 호스트 네트워크 수정 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.editNetworkAttachmentFromHost
+ */
+export const useEditHostNetworkFromHost = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();  
+  return useMutation({
+    mutationFn: async ({ hostId, networkAttachmentId, networkAttachmentData }) => {
+      const res = await ApiManager.editNetworkAttachmentFromHost(hostId, networkAttachmentId, networkAttachmentData);
+      return validate(res)
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditHostNetworkFromHost ... res: `, res);
+      toast.success(`${Localization.kr.HOST} ${Localization.kr.NETWORK} ${Localization.kr.UPDATE} 요청완료`)
+      queryClient.invalidateQueries('NetworkAttachmentsFromHost');
+      postSuccess();
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
 
 /**
  * @name useAddBonding

@@ -137,6 +137,7 @@ class ItHostNicServiceImpl(
     override fun findAllFromHost(hostId: String): List<HostNicVo> {
         log.info("findAllFromHost ... hostId: {}", hostId)
 		val res: List<HostNic> = conn.findAllHostNicsFromHost(hostId, follow = "host,statistics").getOrDefault(emptyList())
+			.filter { !it.baseInterfacePresent() } // 네트워크에 vlan있으면 baseinterface가 만들어짐
 		return res.toHostNicVos(conn)
     }
 
@@ -167,7 +168,7 @@ class ItHostNicServiceImpl(
 		val res: Result<Boolean> = conn.updateNetworkAttachmentFromHost(
 			hostId,
 			networkAttachmentId,
-			networkAttachmentVo.toModifiedNetworkAttachmentBuilder()
+			networkAttachmentVo.toModifiedNetworkAttachment()
 		)
 		return res.isSuccess
 	}
@@ -177,7 +178,7 @@ class ItHostNicServiceImpl(
 		log.info("removeNetworkAttachmentFromHost ... hostId: {}, networkAttachmentVo: {}", hostId, networkAttachmentVo)
 		val res: Result<Boolean> = conn.removeNetworkAttachmentFromHost(
 			hostId,
-			networkAttachmentVo.toModifiedNetworkAttachmentBuilder()
+			networkAttachmentVo.toModifiedNetworkAttachment()
 		)
 		return res.isSuccess
 	}

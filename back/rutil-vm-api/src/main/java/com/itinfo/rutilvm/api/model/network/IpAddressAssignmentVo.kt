@@ -45,7 +45,7 @@ fun List<IpAddressAssignment>.toIpAddressAssignmentVos(): List<IpAddressAssignme
  */
 fun IpAddressAssignmentVo.toIpAddressAssignment(): IpAddressAssignment {
     return IpAddressAssignmentBuilder()
-        .assignmentMethod(BootProtocol.fromValue(this@toIpAddressAssignment.assignmentMethod))
+        .assignmentMethod(BootProtocol.fromValue(this.assignmentMethod))
         .ip(this.ipVo.toIpBuilder())
         .build()
 }

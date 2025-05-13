@@ -102,21 +102,36 @@
   width: 100%;
 }
 
-.assigned-network-outer {
-  box-sizing: border-box;
-  padding: 0.5rem 1rem;
-  border: var(--border-default);
+.network-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* .assigned-network-outer {
+  margin-bottom: 6px;
+  border: 1px solid var(--border-default);
   background-color: white;
-  width: 100%;  
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+} */
+
+.assigned-network-outer {
+  border: var(--border-default);
+} 
+
+.assigned-network-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  min-height: 38px; /* matchNetwork와 높이 맞춤 */
+  background-color: #fff;
 }
 
 .empty-network-content{
   border: var(--border-default);
   background-color: rgb(255, 255, 255);
-}
-.assigned-network-content{
-  display: flex;justify-content: space-between;
-  width: 100%;
 }
 
 .interface-outer{

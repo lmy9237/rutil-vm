@@ -753,6 +753,23 @@ const ApiManager = {
     url: ENDPOINTS.FIND_NETWORK_ATTACHMENT_FROM_HOST(hostId, networkAttachmentId), 
   }),
 
+  
+  /**
+   * @name ApiManager.editNetworkAttachmentFromHost
+   * @description 
+   *
+   * @param {string} hostId
+   * @param {string} networkAttachmentId
+   * @returns 
+   * 
+   * @see
+   */
+  editNetworkAttachmentFromHost : async (hostId, networkAttachmentId, networkAttachmentData) => makeAPICall({
+    method: "PUT", 
+    url: ENDPOINTS.EDIT_NETWORK_ATTACHMENT_FROM_HOST(hostId, networkAttachmentId), 
+    data: networkAttachmentData
+  }),
+
   /**
    * @name ApiManager.addBonding
    * @description 새 Bonding 생성

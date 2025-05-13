@@ -40,8 +40,9 @@ fun Ip.toIp(): IpVo {
 }
 
 fun IpVo.toIpBuilder(): Ip = IpBuilder()
-	.address(this@toIpBuilder.address)
-	.netmask(this@toIpBuilder.netmask)
+   	.version(this.version)
+	.address(this.address)
+   	.gateway(this.gateway)
+	.netmask(this.netmask)
 	.build()
-//        .gateway(this@toIpBuilder.gateway)
-//        .version(this@toIpBuilder.version)
+
