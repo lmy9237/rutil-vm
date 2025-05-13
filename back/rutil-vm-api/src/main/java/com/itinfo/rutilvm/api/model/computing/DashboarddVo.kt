@@ -1,9 +1,9 @@
 package com.itinfo.rutilvm.api.model.computing
 
 import com.itinfo.rutilvm.api.configuration.PropertiesConfig
-import com.itinfo.rutilvm.api.formatEnhanced
+import com.itinfo.rutilvm.common.formatEnhanced
 import com.itinfo.rutilvm.common.gson
-import com.itinfo.rutilvm.api.ovirtDf
+import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.*

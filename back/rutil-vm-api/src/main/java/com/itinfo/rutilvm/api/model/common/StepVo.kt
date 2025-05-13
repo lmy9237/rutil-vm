@@ -1,7 +1,7 @@
 package com.itinfo.rutilvm.api.model.common
 
-import com.itinfo.rutilvm.api.formatEnhanced
-import com.itinfo.rutilvm.api.ovirtDf
+import com.itinfo.rutilvm.common.formatEnhanced
+import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.types.ExternalSystemType
 import org.ovirt.engine.sdk4.types.Step

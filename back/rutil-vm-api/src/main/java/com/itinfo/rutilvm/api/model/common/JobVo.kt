@@ -1,7 +1,7 @@
 package com.itinfo.rutilvm.api.model.common
 
-import com.itinfo.rutilvm.api.formatEnhanced
-import com.itinfo.rutilvm.api.ovirtDf
+import com.itinfo.rutilvm.common.formatEnhanced
+import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.common.differenceInMillis
 import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.builders.JobBuilder
@@ -10,7 +10,6 @@ import org.ovirt.engine.sdk4.types.JobStatus
 import org.ovirt.engine.sdk4.types.JobStatus.UNKNOWN
 import java.io.Serializable
 import java.util.*
-import java.time.Duration
 
 /**
  * [JobVo]

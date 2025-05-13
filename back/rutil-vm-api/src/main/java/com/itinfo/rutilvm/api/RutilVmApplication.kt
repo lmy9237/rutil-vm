@@ -63,8 +63,6 @@ class RutilVmApplication: SpringBootServletInitializer() {
 }
 
 const val GB = 1073741824.0 // gb 변환
-const val OVIRT_API_DATE_FORMAT = "yyyy. MM. dd. HH:mm:ss"
-val ovirtDf = SimpleDateFormat(OVIRT_API_DATE_FORMAT)
 
 private const val DEFAULT_TIME_SLEEP_IN_MILLI = 500L
 private const val DEFAULT_TIME_LONG_SLEEP_IN_MILLI = 5000L
@@ -73,9 +71,6 @@ fun doSleep(timeInMilli: Long = DEFAULT_TIME_SLEEP_IN_MILLI) {
 	log.info("... doSleep($timeInMilli)")
 	try { Thread.sleep(timeInMilli) } catch (e: InterruptedException) { log.error(e.localizedMessage) }
 }
-
-fun SimpleDateFormat.formatEnhanced(date: Date?): String
-	= if (date == null) "" else this.format(date)
 
 fun doLongSleep() =
 	doSleep(DEFAULT_TIME_LONG_SLEEP_IN_MILLI)

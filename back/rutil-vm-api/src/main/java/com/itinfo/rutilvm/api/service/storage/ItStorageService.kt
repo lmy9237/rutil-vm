@@ -2,23 +2,21 @@ package com.itinfo.rutilvm.api.service.storage
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
-import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.storage.*
-import com.itinfo.rutilvm.api.model.storage.StorageDomainVo.Companion
+import com.itinfo.rutilvm.api.repository.engine.DetailedDiskSnapshot
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
+import com.itinfo.rutilvm.api.repository.engine.ImageRepository
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import org.ovirt.engine.sdk4.builders.*
-import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 
-import javax.net.ssl.*
 import kotlin.Error
 
 interface ItStorageService {
@@ -452,6 +450,8 @@ class StorageServiceImpl(
 		return res.isSuccess
 	}
 
+	@Autowired private lateinit var rImage: ImageRepository
+
 	@Throws(Error::class)
 	override fun findAllDiskSnapshotsFromStorageDomain(storageDomainId: String): List<SnapshotDiskVo> {
 		log.info("findAllDiskSnapshotsFromStorageDomain ... storageDomainId: {}", storageDomainId)
@@ -461,7 +461,9 @@ class StorageServiceImpl(
 		val res = diskSnapshots.filter { diskSnapshot ->
 			allVms.any { vm -> conn.findSnapshotFromVm(vm.id(), diskSnapshot.snapshot().id()).getOrNull() != null }
 		}
-		return res.toSnapshotDiskVos()
+		val rDiskSnapshots: List<DetailedDiskSnapshot> = rImage.findDiskSnapshotsByStorageDomain(storageDomainId.toUUID())
+		log.info("findAllDiskSnapshotsFromStorageDomain ... storageDomainId: {}, rDiskSnapshots: {}", storageDomainId, rDiskSnapshots)
+		return res.toSnapshotDiskVos(rDiskSnapshots)
 	}
 
 

@@ -538,12 +538,12 @@ const TableColumnsInfo = {
   DISK_SNAPSHOT_FROM_STORAGE_DOMAIN: [
     { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
     { header: Localization.kr.DATE_CREATED, accessor: 'creationDate', clickable: false },
-    { header: '스냅샷 생성일', accessor: 'creationDate', clickable: false },
+    { header: `${Localization.kr.SNAPSHOT} 생성일`, accessor: 'vmSnapshotCreationDate', clickable: false },
     { header: '디스크 별칭', accessor: 'alias', clickable: false },
-    { header: `${Localization.kr.SNAPSHOT} ${Localization.kr.DESCRIPTION}`, accessor: 'description', clickable: false },
-    { header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, accessor: 'storageDomainVo.name', clickable: false },
+    { header: `${Localization.kr.SNAPSHOT} ${Localization.kr.DESCRIPTION}`, accessor: 'vmSnapshotDescription', clickable: false },
+    { header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, accessor: 'vmNameConnected', clickable: false },
     { header: Localization.kr.STATUS, accessor: 'status', clickable: false },
-    { header: '디스크 스냅샷 ID', accessor: 'id', clickable: false },
+    { header: `${Localization.kr.DISK} ${Localization.kr.SNAPSHOT} ID`, accessor: 'id', clickable: false },
   ],
 
   GET_VMS_TEMPLATES: [

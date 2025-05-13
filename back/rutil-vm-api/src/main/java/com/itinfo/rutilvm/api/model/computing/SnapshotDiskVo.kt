@@ -1,12 +1,19 @@
 package com.itinfo.rutilvm.api.model.computing
 
+import com.itinfo.rutilvm.common.formatEnhanced
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.common.ovirtDf
+import com.itinfo.rutilvm.api.repository.engine.DetailedDiskSnapshot
+import com.itinfo.rutilvm.api.repository.engine.entity.VmSnapshotEntity
+import com.itinfo.rutilvm.common.ovirtDf
 
 import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
+import java.sql.Timestamp
+import java.time.LocalDateTime
 
 private val log = LoggerFactory.getLogger(SnapshotDiskVo::class.java)
 
@@ -30,7 +37,7 @@ private val log = LoggerFactory.getLogger(SnapshotDiskVo::class.java)
  * @property status [DiskStatus]
  * @property storageType [DiskStorageType]
  * @property wipeAfterDelete [Boolean]
- * @property snapshotVo [SnapshotVo]
+ * // @property snapshotVo [SnapshotVo]
  * @property storageDomainVo [IdentifiedVo]
  * DiskInterface
  */
@@ -52,11 +59,18 @@ class SnapshotDiskVo (
     val status: DiskStatus = DiskStatus.LOCKED,
     val storageType: DiskStorageType = DiskStorageType.IMAGE,
     val wipeAfterDelete: Boolean = false,
-    val snapshotVo: IdentifiedVo = IdentifiedVo(),
+	private val _creationDate: LocalDateTime? = null,
+	val vmSnapshot: VmSnapshotEntity? = null,
+	val vm: IdentifiedVo = IdentifiedVo(),
     val storageDomainVo: IdentifiedVo = IdentifiedVo(),
+): Serializable {
+    override fun toString(): String =
+		gson.toJson(this)
 
-    ): Serializable {
-    override fun toString(): String = gson.toJson(this)
+	val creationDate: String
+		get() = ovirtDf.formatEnhanced(Timestamp.valueOf(_creationDate))
+	val vmSnapshotCreationDate: String
+		get() = ovirtDf.formatEnhanced(Timestamp.valueOf(vmSnapshot?.creationDate))
 
     class Builder {
         private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: "" }
@@ -75,11 +89,14 @@ class SnapshotDiskVo (
         private var bSparse: Boolean = false; fun sparse(block: () -> Boolean?) { bSparse = block() ?: false }
         private var bStatus: DiskStatus = DiskStatus.LOCKED; fun status(block: () -> DiskStatus?) { bStatus = block() ?: DiskStatus.LOCKED }
         private var bStorageType: DiskStorageType = DiskStorageType.IMAGE; fun storageType(block: () -> DiskStorageType?) { bStorageType = block() ?: DiskStorageType.IMAGE }
-        private var bWipeAfterDelete: Boolean = false; fun wipeAfterDelete(block: () -> Boolean?) { bWipeAfterDelete = block() ?: false }
-        private var bSnapshotVo: IdentifiedVo =  IdentifiedVo(); fun snapshotVo(block: () -> IdentifiedVo?) { bSnapshotVo = block() ?: IdentifiedVo() }
+		private var bWipeAfterDelete: Boolean = false;fun wipeAfterDelete(block: () -> Boolean?) { bWipeAfterDelete = block() ?: false }
+		private var bCreationDate: LocalDateTime? = null;fun creationDate(block: () -> LocalDateTime?) { bCreationDate = block() }
+		private var bVmSnapshot: VmSnapshotEntity? = null;fun vmSnapshot(block: () -> VmSnapshotEntity?) { bVmSnapshot = block() }
+		private var bVm: IdentifiedVo =  IdentifiedVo(); fun vm(block: () -> IdentifiedVo?) { bVm = block() ?: IdentifiedVo() }
+		// private var bSnapshotVo: IdentifiedVo =  IdentifiedVo(); fun snapshotVo(block: () -> IdentifiedVo?) { bSnapshotVo = block() ?: IdentifiedVo() }
         private var bStorageDomainVo: IdentifiedVo = IdentifiedVo(); fun storageDomainVo(block: () -> IdentifiedVo?) { bStorageDomainVo = block() ?: IdentifiedVo() }
 
-        fun build(): SnapshotDiskVo = SnapshotDiskVo(bId, bName, bDescription, bAlias, bBackup, bContentType, bFormat, bInterface_, bImageId, bPropagateErrors, bActualSize, bProvisionedSize, bShareable, bSparse, bStatus, bStorageType, bWipeAfterDelete, bSnapshotVo, bStorageDomainVo,)
+        fun build(): SnapshotDiskVo = SnapshotDiskVo(bId, bName, bDescription, bAlias, bBackup, bContentType, bFormat, bInterface_, bImageId, bPropagateErrors, bActualSize, bProvisionedSize, bShareable, bSparse, bStatus, bStorageType, bWipeAfterDelete, bCreationDate, bVmSnapshot, bVm, /*bSnapshotVo,*/ bStorageDomainVo,)
     }
 
     companion object {
@@ -95,12 +112,14 @@ fun List<Disk>.toSnapshotDisksIdName(): List<SnapshotDiskVo> =
     this@toSnapshotDisksIdName.map { it.toSnapshotDiskIdName() }
 
 
-fun DiskSnapshot.toSnapshotDiskVo(): SnapshotDiskVo {
+fun DiskSnapshot.toSnapshotDiskVo(detailDiskSnapshot: DetailedDiskSnapshot?): SnapshotDiskVo {
     return SnapshotDiskVo.builder {
         id { this@toSnapshotDiskVo.id() }
         name { this@toSnapshotDiskVo.name() }
-        description { this@toSnapshotDiskVo.description() }
-        alias { this@toSnapshotDiskVo.alias() }
+        description {
+			if (this@toSnapshotDiskVo.descriptionPresent()) this@toSnapshotDiskVo.description() else detailDiskSnapshot?.vmSnapshotDescription ?: ""
+		}
+		alias { this@toSnapshotDiskVo.alias() }
         backup { this@toSnapshotDiskVo.backup() }
         contentType { this@toSnapshotDiskVo.contentType() }
         format { this@toSnapshotDiskVo.format() }
@@ -113,30 +132,43 @@ fun DiskSnapshot.toSnapshotDiskVo(): SnapshotDiskVo {
         status { this@toSnapshotDiskVo.status() }
         storageType { this@toSnapshotDiskVo.storageType() }
         wipeAfterDelete { this@toSnapshotDiskVo.wipeAfterDelete() }
+		creationDate { detailDiskSnapshot?.diskSnapshotImageCreationDate }
+		vmSnapshot {
+			VmSnapshotEntity.builder {
+				snapshotId { detailDiskSnapshot?.vmSnapshotId }
+				description { detailDiskSnapshot?.vmSnapshotDescription }
+				creationDate { detailDiskSnapshot?.vmSnapshotCreationDate }
+			}
+		}
+		vm { IdentifiedVo.builder {
+			id { detailDiskSnapshot?.connectedVmId.toString() }
+			name { detailDiskSnapshot?.connectedVmName }
+		}}
     }
 }
-fun List<DiskSnapshot>.toSnapshotDiskVos(): List<SnapshotDiskVo> =
-    this@toSnapshotDiskVos.map { it.toSnapshotDiskVo() }
+fun List<DiskSnapshot>.toSnapshotDiskVos(detailDiskSnapshots: List<DetailedDiskSnapshot?>): List<SnapshotDiskVo> =
+    this@toSnapshotDiskVos.zip(detailDiskSnapshots) { ds, dds ->
+		ds.toSnapshotDiskVo(dds)
+	}
 
 fun Disk.toSnapshotDiskVoFromVm(): SnapshotDiskVo {
-    val disk = this@toSnapshotDiskVoFromVm
     return SnapshotDiskVo.builder {
-        id { disk.id() }
-        name { disk.name() }
-        description { disk.description() }
-        alias { disk.alias() }
-        backup { disk.backup() }
-        contentType { disk.contentType() }
-        format { disk.format() }
-        imageId { disk.imageId()}
-        propagateErrors { disk.propagateErrors() }
-        actualSize { disk.actualSize() }
-        provisionedSize { disk.provisionedSize() }
-        shareable { disk.shareable() }
-        sparse { disk.sparse() }
-        status { disk.status() }
-        storageType { disk.storageType() }
-        wipeAfterDelete { disk.wipeAfterDelete() }
+        id { this@toSnapshotDiskVoFromVm.id() }
+        name { this@toSnapshotDiskVoFromVm.name() }
+        description { this@toSnapshotDiskVoFromVm.description() }
+        alias { this@toSnapshotDiskVoFromVm.alias() }
+        backup { this@toSnapshotDiskVoFromVm.backup() }
+        contentType { this@toSnapshotDiskVoFromVm.contentType() }
+        format { this@toSnapshotDiskVoFromVm.format() }
+        imageId { this@toSnapshotDiskVoFromVm.imageId()}
+        propagateErrors { this@toSnapshotDiskVoFromVm.propagateErrors() }
+        actualSize { this@toSnapshotDiskVoFromVm.actualSize() }
+        provisionedSize { this@toSnapshotDiskVoFromVm.provisionedSize() }
+        shareable { this@toSnapshotDiskVoFromVm.shareable() }
+        sparse { this@toSnapshotDiskVoFromVm.sparse() }
+        status { this@toSnapshotDiskVoFromVm.status() }
+        storageType { this@toSnapshotDiskVoFromVm.storageType() }
+        wipeAfterDelete { this@toSnapshotDiskVoFromVm.wipeAfterDelete() }
     }
 }
 fun List<Disk>.toSnapshotDiskVoFromVms(): List<SnapshotDiskVo> =

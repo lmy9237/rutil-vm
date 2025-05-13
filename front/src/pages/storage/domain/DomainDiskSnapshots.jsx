@@ -37,6 +37,8 @@ const DomainDiskSnapshots = ({
   const transformedData = useMemo(() => [...diskSnapshots].map((e) => ({
     ...e,
     actualSize: checkZeroSizeToGiB(e?.actualSize),
+    vmSnapshotDescription: e?.vmSnapshot?.description ?? "",
+    vmNameConnected: e?.vm?.name ?? "",
     // actualSize: `${convertBytesToGB(e?.actualSize)} GB`,
   })), [diskSnapshots])
 

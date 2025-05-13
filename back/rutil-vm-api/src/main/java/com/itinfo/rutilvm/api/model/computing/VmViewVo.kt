@@ -1,9 +1,9 @@
 package com.itinfo.rutilvm.api.model.computing
 
-import com.itinfo.rutilvm.api.formatEnhanced
+import com.itinfo.rutilvm.common.formatEnhanced
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
-import com.itinfo.rutilvm.api.ovirtDf
+import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.common.toTimeElapsedKr

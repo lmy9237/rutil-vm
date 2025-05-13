@@ -1,6 +1,6 @@
 package com.itinfo.rutilvm.api.model.computing;
 
-import com.itinfo.rutilvm.api.formatEnhanced
+import com.itinfo.rutilvm.common.formatEnhanced
 import com.itinfo.rutilvm.util.ovirt.findBios
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.Os
@@ -9,7 +9,7 @@ import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
-import com.itinfo.rutilvm.api.ovirtDf
+import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findDataCenter
 
