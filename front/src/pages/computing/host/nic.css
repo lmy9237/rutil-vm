@@ -1,34 +1,9 @@
-body {
-  font-family: sans-serif;
-  margin: 20px;
-  background-color: #f4f7f6;
-}
-
-.App {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-h1, h2 {
-  color: #333;
-  text-align: center;
-}
-
-.main-content {
-  display: flex;
-  justify-content: space-around;
-  gap: 20px; /* 컬럼 사이 간격 */
-  margin-top: 20px;
-}
-
-.column {
+/* .column {
   flex: 1;
   background-color: #e9ecef;
   padding: 15px;
   border-radius: 5px;
-  min-width: 250px; /* 최소 너비 */
+  min-width: 250px;
 }
 
 .list-container h3 {
@@ -47,13 +22,8 @@ h1, h2 {
   transition: background-color 0.2s ease;
 }
 
-/* 각 타입별 기본 스타일 (선택적) */
-/* .drop-zone.nic { border-color: #007bff; }
-.drop-zone.network { border-color: #28a745; }
-.drop-zone.attchNetwork { border-color: #fd7e14; } */
-
 .drop-zone.drag-over {
-  background-color: #d4edda; /* 유효한 드롭 대상일 때 배경색 변경 */
+  background-color: #d4edda;
   border-color: #28a745;
 }
 
@@ -94,11 +64,11 @@ h1, h2 {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #6c757d; /* 기본 비활성 색상 */
+  background-color: #6c757d;
   color: white;
   transition: background-color 0.3s ease;
 }
 
 .action-button.active {
-  background-color: #007bff; /* 활성 색상 */
-}
+  background-color: #007bff;
+} */
