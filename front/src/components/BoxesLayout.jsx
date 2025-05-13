@@ -41,7 +41,9 @@ export const BoxesLayout = ({
   isLast,
   ...props
 }) => {
-  const [heightDashBoxes, setHeightDashBoxes] = useState(480);
+  const [styleDashBoxes, setStyleDashBoxes] = useState({
+    height: '480px',
+  });
 
   const updateHeightDashBoxes = () => {
     Logger.debug(`BoxChartAllGraphs > updateHeightGraphRest ... window.innerHeight: ${window.innerHeight}`)
@@ -56,28 +58,26 @@ export const BoxesLayout = ({
       // height = Math.max(window.innerHeight * 0.3, 300);
     }
 
-    setHeightDashBoxes(height);
+    setStyleDashBoxes({ height: `${height}px` });
   }
   
   useEffect(() => {
-    setHeightDashBoxes()
+    Logger.debug(`BoxChartAllGraphs > useEffect ... (initial)`)
+    if (!isLast) return;
+    updateHeightDashBoxes()
   }, [])
 
   useEffect(() => {
     Logger.debug(`BoxChartAllGraphs > useEffect ... `)
+    if (!isLast) return;
     window.addEventListener("resize", updateHeightDashBoxes);
     return () => window.removeEventListener("resize", updateHeightDashBoxes);;
   }, []);
 
-
-  const style = isLast ? {
-    height: `${heightDashBoxes}px`
-  } : {}
-
   return (
     <div 
       className={`dash-boxes f-btw gap-4${isLast ? " dash-boxes-last" : ""}`}
-      style={style}
+      style={styleDashBoxes}
       {...props}
     >
       {props.children}
