@@ -23,7 +23,10 @@ const SidebarTree = () => {
       {tmiLastSelected === "computing" && <ComputingTree />} 
       {tmiLastSelected === "network" && <NetworkTree />}
       {tmiLastSelected === "storage" && <StorageTree />}
-      {(tmiLastSelected === "event" || tmiLastSelected === "dashboard") && (renderedPreviously)}
+      {(tmiLastSelected === "event" || 
+        tmiLastSelected === "dashboard" || 
+        tmiLastSelected === "settings"
+      ) && (renderedPreviously)}
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import useAsideState from "../../hooks/useAsideState";
 import useBoxState from "../../hooks/useBoxState";
+import useTmi from "../../hooks/useTmi";
 import BoxEvent from "./BoxEvent";
 import BoxUser from "./BoxUser";
 import {
@@ -34,6 +35,9 @@ const Header = () => {
     eventBoxVisible, toggleEventBoxVisible,
     loginBoxVisible, toggleLoginBoxVisible,
   } = useBoxState()
+  const {
+    setTmiLastSelected
+  } = useTmi();
 
   Logger.debug(`Header ...`)
   return (
@@ -59,7 +63,10 @@ const Header = () => {
         />
         {/* 설정 */}
         <TopMenuIcon iconDef={rvi24Gear("white")}
-          onClick={() => navigate("/settings/users")}
+          onClick={(e) => {
+            navigate("/settings/users")
+            setTmiLastSelected("settings")
+          }}
         />
         {/* 알림 */}
         <TopMenuIcon
