@@ -34,8 +34,12 @@ const VmNics = ({
     isError: isNicsError,
     Success: isNicsSuccess,
   } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
-  
-  const transformedData = [...nics].map((nic) => ({
+
+  const sortedNics = [...nics].sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
+
+  const transformedData = sortedNics.map((nic) => ({
     ...nic,
     id: nic?.id,
     name: nic?.name,

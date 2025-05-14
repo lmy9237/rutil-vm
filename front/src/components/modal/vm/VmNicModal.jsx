@@ -7,25 +7,15 @@ import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
 import {
   useAddNicFromVM,
-  useAllVnicProfiles,
+  useAllvnicFromCluster,
   useEditNicFromVM,
   useNetworkInterfaceFromVM,
+  useVm,
 } from "../../../api/RQHook";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
 import useGlobal from "../../../hooks/useGlobal";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-
-// 유형
-const interfaceOptions = [
-  { value: "E1000", label: "e1000" },
-  { value: "E1000E", label: "e1000e" },
-  { value: "PCI_PASSTHROUGH", label: "pci_passthrough" },
-  { value: "RTL8139", label: "rtl8139" },
-  { value: "RTL8139_VIRTIO", label: "rtl8139_virtio" },
-  { value: "SPAPR_VLAN", label: "spapr_vlan" },
-  { value: "VIRTIO", label: "virtio" },
-];
 
 const initialFormState = {
   id: "",
@@ -33,7 +23,7 @@ const initialFormState = {
   linked: true, 
   plugged: true,
   macAddress: "",
-  interface_: "VIRTIO" || interfaceOptions[6].value,
+  interface_: "VIRTIO",
 };
 
 const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
@@ -46,20 +36,28 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
   const [formInfoState, setFormInfoState] = useState(initialFormState);
   const [vnicProfileVo, setVnicProfileVo] = useState({ id: "", name: "" });
 
+  // 편집 모드이고 vnic프로파일 존재하는 조건
+  const [isProfileOriginallySet, setIsProfileOriginallySet] = useState(false);
+  const isInterfaceDisabled = editMode && isProfileOriginallySet;
+
   const onSuccess = () => {
     onClose();
     toast.success(`nic ${nLabel} 완료`);
   };
+  const { data: vm } = useVm(vmId);
   const { data: nicsdetail } = useNetworkInterfaceFromVM(vmId, nicId);
+  const { data: vnics = [], isLoading: isNicsLoading } = useAllvnicFromCluster(vm.clusterVo?.id, (e) => ({ ...e }));
   const { mutate: addNicFromVM } = useAddNicFromVM(onSuccess, () => onClose());
   const { mutate: editNicFromVM } = useEditNicFromVM(onSuccess, () => onClose());
 
-  // 모든 vnic프로파일 목록
-  // TODO: 수정필요
-  const {
-    data: vnics,
-    isLoading: vnicLoading
-  } = useAllVnicProfiles((e) => ({...e}));
+
+  const filteredInterfaceOptions = useMemo(() => {
+    const selectedVnicProfile = vnics.find((v) => v.id === vnicProfileVo.id);
+    if (selectedVnicProfile?.passThrough === "ENABLED") {
+      return interfaceOptions.filter((opt) => opt.value === "PCI_PASSTHROUGH");
+    }
+    return interfaceOptions;
+  }, [vnics, vnicProfileVo]);
 
   const handleRadioChange = (field, value) => {
     Logger.debug(`NicModal > handleRadioChange ... field: ${field}, value: ${value}`);
@@ -84,6 +82,9 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
         id: nicsdetail?.vnicProfileVo?.id,
         name: nicsdetail?.vnicProfileVo?.name,
       });
+
+      // 최초 프로파일 존재 여부 저장
+      setIsProfileOriginallySet(!!nicsdetail?.vnicProfileVo?.id);
     }
   }, [isOpen, editMode, nicsdetail]);
 
@@ -95,11 +96,16 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
     }
   }, [vnics, editMode]);
 
-  const dataToSubmit = {
-    ...formInfoState,
-    vnicProfileVo: { id: vnicProfileVo.id },
-  };
+  useEffect(() => {
+    const selectedVnicProfile = vnics.find((v) => v.id === vnicProfileVo.id);
+    if (selectedVnicProfile?.passThrough === "ENABLED") {
+      setFormInfoState(prev => ({ ...prev, interface_: "PCI_PASSTHROUGH" }));
+    } else {
+      setFormInfoState(prev => ({ ...prev, interface_: "VIRTIO" }));
+    }
+  }, [vnicProfileVo, vnics]);
 
+  
   const validateForm = () => {
     if (!formInfoState.name) return `${Localization.kr.NAME}을 입력해주세요.`;
     return null;
@@ -109,17 +115,16 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
     const error = validateForm();
     if (error) return toast.error(error);
 
-    
-    const onError = (err) => toast.error(`Error ${nLabel} nic: ${err}`);
+    const dataToSubmit = {
+      ...formInfoState,
+      vnicProfileVo: { id: vnicProfileVo.id },
+    };
 
-    Logger.debug(`NicModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`)
+    Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터 출력
 
     editMode
-      ? editNicFromVM(
-          { vmId, nicId, nicData: dataToSubmit },
-          { onSuccess, onError }
-        )
-      : addNicFromVM({ vmId, nicData: dataToSubmit }, { onSuccess, onError });
+      ? editNicFromVM({ vmId, nicId, nicData: dataToSubmit })
+      : addNicFromVM({ vmId, nicData: dataToSubmit });
   };
 
   return (
@@ -133,18 +138,28 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
           value={formInfoState.name}
           onChange={handleInputChange(setFormInfoState, "name")}
         />
-        <LabelSelectOptionsID label="프로파일"
+        {/* <LabelSelectOptionsID label="프로파일"
           value={vnicProfileVo?.id}
-          loading={vnicLoading}
+          loading={isNicsLoading}
           options={vnics}
           onChange={handleSelectIdChange(setVnicProfileVo, vnics)}
-          // etcLabel={} // 네트워크명
+          // etcLabel={networkVo?.name} // 네트워크명
+        /> */}
+        <LabelSelectOptions label="프로파일"
+          value={vnicProfileVo?.id}
+          loading={isNicsLoading}
+          onChange={(e) => setVnicProfileVo({id: e.target.value})}
+          options={vnics.map(opt => ({
+            value: opt.id,
+            label: `${opt.name} [네트워크: ${opt.networkVo?.name || ""}]`
+          }))}
         />
         <LabelSelectOptions label="유형"
           value={formInfoState.interface_}
           onChange={handleInputChange(setFormInfoState, "interface_")}
-          options={interfaceOptions}
-          disabled={editMode}
+          options={filteredInterfaceOptions}
+          // disabled={!!vnicProfileVo?.id}
+          disabled={isInterfaceDisabled}
         />
         <div className="mac-address fs-18">사용자 지정 MAC 주소</div>
       </div>
@@ -193,3 +208,18 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
 };
 
 export default VmNicModal;
+
+// 유형
+const interfaceOptions = [
+  { value: "E1000", label: "e1000" },
+  { value: "E1000E", label: "e1000e" },
+  { value: "PCI_PASSTHROUGH", label: "pci_passthrough" },
+  { value: "RTL8139", label: "rtl8139" },
+  { value: "RTL8139_VIRTIO", label: "rtl8139_virtio" },
+  { value: "SPAPR_VLAN", label: "spapr_vlan" },
+  { value: "VIRTIO", label: "virtio" },
+];
+
+const pciPassthroughOption = [
+  { value: "PCI_PASSTHROUGH", label: "pci_passthrough" }
+];

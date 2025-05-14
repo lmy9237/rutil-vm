@@ -92,6 +92,7 @@ fun List<VnicProfile>.toVnicProfileToVmVos(conn: Connection): List<VnicProfileVo
 fun VnicProfile.toCVnicProfileMenu(): VnicProfileVo = VnicProfileVo.builder {
 	id { this@toCVnicProfileMenu.id() }
 	name { this@toCVnicProfileMenu.name() }
+	passThrough { this@toCVnicProfileMenu.passThrough().mode() }
 	networkVo { this@toCVnicProfileMenu.network().fromNetworkToIdentifiedVo() }
 }
 fun List<VnicProfile>.toCVnicProfileMenus(): List<VnicProfileVo> =

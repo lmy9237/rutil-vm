@@ -155,7 +155,7 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
 	val hosts = if (vm.placementPolicy().hostsPresent()) {
 		vm.placementPolicy().hosts().map { it }.fromHostsToIdentifiedVos()
 	} else listOf()
-    // val nics: List<Nic> = conn.findAllNicsFromVm(vm.id(), follow = "nics.vnicprofile").getOrDefault(listOf())
+    // val nics: List<Nic> = conn.findAllNicsFromVm(vm.id(), follow = "vnicprofile").getOrDefault(listOf())
     // val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
     // val diskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vm.id()).getOrDefault(listOf())
 	// val cpuProfile = conn.findCpuProfile(vm.cpuProfile().id()).getOrNull()
@@ -199,7 +199,7 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
 		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
 		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
 		templateVo { template?.fromTemplateToIdentifiedVo() }
-		nicVos { vm.nics().toVmNics() } // TODO
+		nicVos { vm.nics().toVmNics(conn) } // TODO
 	}
 }
 

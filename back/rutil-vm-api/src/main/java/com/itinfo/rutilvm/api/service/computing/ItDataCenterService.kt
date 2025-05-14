@@ -6,6 +6,8 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.fromDisksToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
+import com.itinfo.rutilvm.api.model.network.VnicProfileVo
+import com.itinfo.rutilvm.api.model.network.toCVnicProfileMenus
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
@@ -168,7 +170,15 @@ interface ItDataCenterService {
 	 */
 	@Throws(Error::class)
 	fun findAllISOFromDataCenter(dataCenterId: String): List<IdentifiedVo>
-
+	// /**
+	//  * [ItDataCenterService.findAllVnicProfilesFromDataCenter]
+	//  * 가상머신 생성 - VnicProfile 목록
+	//  *
+	//  * @param dataCenterId [String] 데이터센터 Id
+	//  * @return List<[VnicProfileVo]> VnicProfile 목록
+	//  */
+	// @Throws(Error::class)
+	// fun findAllVnicProfilesFromDataCenter(dataCenterId: String): List<VnicProfileVo>
 	/**
 	 * [ItDataCenterService.dashboardComputing]
 	 * 대시보드 컴퓨팅 목록
@@ -352,7 +362,7 @@ class DataCenterServiceImpl(
 	// 	// 		.getOrDefault(emptyList())
 	// 	// 	}
 	// 	// return a.toVnicProfileToVmVos(conn) // 1.813
-	// 	return res.toDcVnicProfileMenus() // 0.749
+	// 	return res.toCVnicProfileMenus() // 0.749
 	// }
 
 	@Throws(Error::class)

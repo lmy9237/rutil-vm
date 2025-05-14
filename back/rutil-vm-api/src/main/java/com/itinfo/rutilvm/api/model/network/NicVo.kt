@@ -120,21 +120,30 @@ fun List<Nic>.toNicIdNames(): List<NicVo> =
 	this@toNicIdNames.map { it.toNicIdName() }
 
 
-fun Nic.toVmNic(): NicVo = NicVo.builder {
-	id { this@toVmNic.id() }
-	name { this@toVmNic.name() }
-	plugged { this@toVmNic.plugged() }
-	linked { this@toVmNic.linked() }
-	networkVo { this@toVmNic.vnicProfile().network().fromNetworkToIdentifiedVo() }
-	vnicProfileVo { this@toVmNic.vnicProfile().fromVnicProfileToIdentifiedVo() }
+fun Nic.toVmNic(conn: Connection): NicVo {
+	val vnicProfile: VnicProfile? =
+		if(this@toVmNic.vnicProfilePresent()) conn.findVnicProfile(this@toVmNic.vnicProfile().id()).getOrNull()
+		else null
+	val network: Network? = vnicProfile?.network()?.let { conn.findNetwork(it.id()).getOrNull() }
+
+	return NicVo.builder {
+		id { this@toVmNic.id() }
+		name { this@toVmNic.name() }
+		plugged { this@toVmNic.plugged() }
+		linked { this@toVmNic.linked() }
+		vnicProfileVo { vnicProfile?.fromVnicProfileToIdentifiedVo() }
+		networkVo { network?.fromNetworkToIdentifiedVo() }
+	}
 }
-fun List<Nic>.toVmNics(): List<NicVo> =
-	this@toVmNics.map { it.toVmNic() }
+fun List<Nic>.toVmNics(conn: Connection): List<NicVo> =
+	this@toVmNics.map { it.toVmNic(conn) }
 
 
 fun Nic.toNicVoFromVm(conn: Connection): NicVo {
 	val nic = this@toNicVoFromVm
-	val vnicProfile: VnicProfile? = conn.findVnicProfile(nic.vnicProfile().id()).getOrNull()
+	val vnicProfile: VnicProfile? =
+		if(nic.vnicProfilePresent()) conn.findVnicProfile(nic.vnicProfile().id()).getOrNull()
+		else null
 	val network: Network? = vnicProfile?.network()?.let { conn.findNetwork(it.id()).getOrNull() }
 	val rd: ReportedDevice? = nic.reportedDevices().firstOrNull { reportedDevice ->
 		nic.macPresent() && reportedDevice.mac()?.address() == nic.mac().address()
