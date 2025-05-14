@@ -1457,6 +1457,7 @@ export const useFibreFromHost = (
  * 
  * @see ApiManager.findSearchIscsiFromHost
  */
+//TODO: 변경필요 useSearchFcFromHost 참고
 export const useSearchIscsiFromHost = (
   postSuccess=()=>{},postError
 ) => {
@@ -1543,6 +1544,7 @@ export const useSearchFcFromHost = (
  * 
  * @see ApiManager.findLoginIscsiFromHost
  */
+//TODO: 변경필요 useSearchFcFromHost 참고
 export const useLoginIscsiFromHost = (
   postSuccess=()=>{},postError
 ) => {
@@ -4170,6 +4172,7 @@ export const useAllUnregisteredDisksFromDomain = (storageDomainId,
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
+//TODO: 변경필요 useSearchFcFromHost 참고
 export const useRegisteredDiskFromDomain = (
   postSuccess=()=>{},postError
 ) => {

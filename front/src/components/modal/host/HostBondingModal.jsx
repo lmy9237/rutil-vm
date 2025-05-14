@@ -8,7 +8,11 @@ import { useAddBonding, useNetworkInterfaceFromHost } from "../../../api/RQHook"
 import { checkName } from "../../../util";
 import Logger from "../../../utils/Logger";
 
-const HostBondingModal = ({ editmode = false, isOpen, onClose, hostId, nicId }) => {
+const HostBondingModal = ({ 
+  editmode = false, isOpen, onClose, 
+  hostId,
+  nicIds = []
+}) => {
   const bLabel = editmode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   
   const onSuccess = () => {
@@ -16,8 +20,7 @@ const HostBondingModal = ({ editmode = false, isOpen, onClose, hostId, nicId }) 
     toast.success(`${Localization.kr.HOST} 본딩 ${bLabel} 완료`);
   };
   const { mutate: addBonding } = useAddBonding(onSuccess, () => onClose());
-
-  const { data: hostNic = [] } = useNetworkInterfaceFromHost(hostId, nicId);
+  const { data: hostNic = {} } = useNetworkInterfaceFromHost(hostId, editmode ? nicIds[0] : null);
   
   const [name, setName] = useState("");
   const [options, setOptions] = useState([]);
@@ -25,23 +28,25 @@ const HostBondingModal = ({ editmode = false, isOpen, onClose, hostId, nicId }) 
   const [mode, setMode] = useState("");
 
   const initializeOptions = (bonding) => {
-    if (!bonding || !bonding.bondingVo) return;
-    const bondingOptions = [...bonding?.bondingVo?.optionVos];
+    if (!bonding?.bondingVo) return;
     setOptions(
-      [...bondingOptions].map(option => ({
+      bonding.bondingVo.optionVos.map(option => ({
         name: option.name,
         value: option.value,
         type: option.type
       }))
     );
-  };
+  };  
   
   useEffect(() => {
-    if (editmode && hostNic?.name) {
-      setName(hostNic.name);
-      initializeOptions(hostNic);
-    }
-  }, [editmode, hostNic]);
+    if(!editmode){
+      setName("");
+      setOption();
+    } else if (editmode && hostNic?.name) {
+    setName(hostNic.name);
+    initializeOptions(hostNic);
+  }
+}, [editmode, hostNic?.name]);
 
   const validateForm = () => {
     const nameError = checkName(name);
@@ -54,7 +59,13 @@ const HostBondingModal = ({ editmode = false, isOpen, onClose, hostId, nicId }) 
     const error = validateForm();
     if (error) return toast.error(error);
 
-    const dataToSubmit = { name, option, mode };
+    const dataToSubmit = { 
+      name,
+      bondingVo: {
+        // optionVos: options,
+        slaves: nicIds.map((nic) => ({ id: nic?.id }))
+      }
+     };
 
     Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터 출력
     addBonding({ hostId: hostId, bonding: dataToSubmit })      
@@ -66,6 +77,7 @@ const HostBondingModal = ({ editmode = false, isOpen, onClose, hostId, nicId }) 
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "500px" }}
     >
+      <span>nicids {editmode ? hostNic?.id : nicIds?.map((e) => `${e.id}, `)}</span>
       <LabelInput id="bonding_name" label="본딩이름"        
         value={name}
         disabled={editmode}

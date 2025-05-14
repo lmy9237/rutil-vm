@@ -781,7 +781,7 @@ const ApiManager = {
   addBonding: async (hostId, hostNicData) => {
     return makeAPICall({
       method: "POST",
-      url: ENDPOINTS.ADD_BONDING_HOST_NIC_FROM_HOST(),
+      url: ENDPOINTS.ADD_BONDING_HOST_NIC_FROM_HOST(hostId),
       data: hostNicData, // POST 요청 시 전송할 데이터
     });
   },
