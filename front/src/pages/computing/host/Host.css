@@ -30,23 +30,6 @@
   font-weight: 700;
 }
 
-
-/*호스트 네트워크 설정 */
-/* .network-separation-left {
-  width: 78%;
-  background-color: var(--color-white);
-  border-radius: 1px ;
-  min-height: 45vh;
-  padding: 16px;
-}
-.network-separation-right {
-  width: 33%;
-  padding: 0 11px;
-  background-color: var(--color-white);
-  margin-left: 30px;
-  padding: 14px;
-} */
-
 .network-item {
   padding: 15px;
   margin-bottom: 10px;
@@ -85,8 +68,8 @@
 .host-network-outer {
   padding: 0.2rem;
   height: 53.5vh;
-  overflow-y: auto; /* 세로 스크롤 추가 */
-  overflow-x: hidden; /* 가로 스크롤 숨김 */
+  overflow-y: auto; 
+  overflow-x: hidden; 
 }
 .container {
   display: flex;
@@ -122,7 +105,8 @@
   width: 100%;
 }
 
-.assigned-network-outer,.empty-network-content{
+.assigned-network-outer,
+.empty-network-content{
   border: var(--border-default);
   background-color: rgb(255, 255, 255);
 }
@@ -133,7 +117,6 @@
 
 .interface-outer{
   background-color: rgb(184, 13, 13);
-  /* background: var(--color-input-disabled); */
   border: var(--border-default);
 }
 .interface-container-outer {

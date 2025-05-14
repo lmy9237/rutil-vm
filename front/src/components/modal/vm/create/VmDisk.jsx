@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import Loading from "../../../common/Loading";
 import { useDisksFromVM } from "../../../../api/RQHook";
 import ActionButton from "../../../button/ActionButton";
-import { RVI36, rvi36Edit, rvi36Trash } from "../../../icons/RutilVmIcons";
+import { RVI36, rvi36Trash } from "../../../icons/RutilVmIcons";
 import Localization from "../../../../utils/Localization";
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
@@ -67,7 +67,7 @@ const VmDisk = ({
 
   return (
     <>
-      <div className="instance-image center py-2">
+      <div className="instance-image center py-4">
         <div className="font-bold">가상 디스크</div>
         <div className="f-end">
           <ActionButton label={Localization.kr.CONNECTION}
@@ -83,7 +83,7 @@ const VmDisk = ({
         </div>
       </div>
 
-      <div className="disk-list-container">
+      <div className="pb-3">
         {diskListState.length > 0 && diskListState.map((disk, index) => (
           <div key={index} className="disk-item f-btw  mb-0.5">
             <div className="f-start">
@@ -128,7 +128,6 @@ const VmDisk = ({
             editMode={!!editDisk} 
             editingDisk={editDisk}
             vmName={editDisk ? editDisk.alias : `${vmName}`}
-            // vmName={editDisk ? editDisk.alias : `${vmName}_Disk${getNextDiskIndex}`}
             dataCenterId={dataCenterId}
             hasBootableDisk={hasBootableDiskList}
             onCreateDisk={handleCreateDisk}

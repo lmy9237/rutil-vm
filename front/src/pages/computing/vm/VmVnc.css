@@ -1,9 +1,6 @@
 .section-vnc {
   background-color: var(--color-black);
 }
-.section-vnc .section-header {
-  
-}
 .section-vnc .section-vnc-content {
   width:100%;height: calc(100% - var(--h-section-header));
   background: var(--color-black);

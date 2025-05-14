@@ -130,7 +130,7 @@ const TemplateEditModal = ({
       targetName={"템플릿"}
       submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "800px", height: "470px" }} 
+      contentStyle={{ width: "800px", height: "450px" }} 
     >
   
       <div className="popup-content-outer flex">
@@ -140,82 +140,73 @@ const TemplateEditModal = ({
           tabActive={activeTab}
         />
 
-        {/* css정리필요 */}
-        <div className="vm-edit-select-tab">
-          <div className="edit-first-content pb-0.5">
-            <div>
+        <div className="w-full px-7">
+          <div>
+            <LabelSelectOptions
+              id="optimization"
+              label="최적화 옵션"
+              value={selectedOptimizeOption}
+              onChange={(e) => setSelectedOptimizeOption(e.target.value)}
+              options={optimizeOption}
+            />
+          </div>
+          <hr/>
+          {activeTab  === "general" && (
+            <>
+              <LabelInput id="template_name"
+                label={Localization.kr.NAME}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                autoFocus
+              />
+              <LabelInput id="description"
+                label={Localization.kr.DESCRIPTION}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <LabelInput id="comment"
+                label={Localization.kr.COMMENT}
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+     
+              <LabelCheckbox id="stateless"
+                label={Localization.kr.STATELESS}
+                checked={stateless}
+                onChange={(e) => setStateless(e.target.checked)}
+              />
+              
+              <LabelCheckbox
+                id="start_in_pause_mode"
+                label="일시정지 모드에서 시작"
+                checked={startPaused}
+                onChange={(e) => setStartPaused(e.target.checked)}
+              />
+
+              <LabelCheckbox
+                id="prevent_deletion"
+                label="삭제 방지"
+                checked={deleteProtected}
+                onChange={(e) => setDeleteProtected(e.target.checked)}
+              />
+           
+            </>
+          )}
+          {activeTab  === "console" && (
+            <div className="p-1">
+            <div className="graphic-console font-bold pt-3">그래픽 콘솔</div>
+            <div className="monitor f-btw">
               <LabelSelectOptions
-                id="optimization"
-                label="최적화 옵션"
-                value={selectedOptimizeOption}
-                onChange={(e) => setSelectedOptimizeOption(e.target.value)}
-                options={optimizeOption}
+                id="monitor"
+                label="모니터 수"
+                value={monitor} 
+                onChange={(e) => setMonitor(Number(e.target.value))}
+                options={monitorOptions}
+                disabled
               />
             </div>
-            <hr/>
-            {activeTab  === "general" && (
-              <>
-              <div className="template-edit-texts">
-                <LabelInput id="template_name"
-                  label={Localization.kr.NAME}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  autoFocus
-                />
-                <LabelInput id="description"
-                  label={Localization.kr.DESCRIPTION}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-                <LabelInput id="comment"
-                  label={Localization.kr.COMMENT}
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
-              </div>
-
-              <div >
-                <LabelCheckbox id="stateless"
-                  className="t-new-checkbox"
-                  label={Localization.kr.STATELESS}
-                  checked={stateless}
-                  onChange={(e) => setStateless(e.target.checked)}
-                />
-                
-                <LabelCheckbox
-                  className="t-new-checkbox"
-                  id="start_in_pause_mode"
-                  label="일시정지 모드에서 시작"
-                  checked={startPaused}
-                  onChange={(e) => setStartPaused(e.target.checked)}
-                />
-
-                <LabelCheckbox
-                  className="t-new-checkbox"
-                  id="prevent_deletion"
-                  label="삭제 방지"
-                  checked={deleteProtected}
-                  onChange={(e) => setDeleteProtected(e.target.checked)}
-                />
-              </div>
-              </>
-            )}
-            {activeTab  === "console" && (
-              <div className="p-1">
-              <div className="graphic-console">그래픽 콘솔</div>
-              <div className="monitor f-btw">
-                <LabelSelectOptions
-                  id="monitor"
-                  label="모니터 수"
-                  value={monitor} 
-                  onChange={(e) => setMonitor(Number(e.target.value))}
-                  options={monitorOptions}
-                  disabled
-                />
-              </div>
-            </div>
-            )}
           </div>
+          )}
         </div>
       </div>
     </BaseModal>

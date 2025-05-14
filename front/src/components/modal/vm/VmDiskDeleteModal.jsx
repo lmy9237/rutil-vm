@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import { useDeleteDiskFromVM } from "../../../api/RQHook";
@@ -55,8 +55,8 @@ const VmDiskDeleteModal = ({
       shouldWarn={true}
     >
       {ids.map((diskId, index) => (
-        <div key={diskId} className="disk-delete-checkbox f-btw">
-          <span className="disk-delete-label fs-18">{aliases[index]}</span>
+        <div key={diskId} className="f-btw">
+          <span className="fs-16 p-3.5 w-full">{aliases[index]}</span>
           <LabelCheckbox label={`완전 ${Localization.kr.REMOVE}`}
             id={`diskDelete-${index}`}
             checked={detachOnlyList[index] || false}

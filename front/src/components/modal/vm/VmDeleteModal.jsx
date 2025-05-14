@@ -92,8 +92,8 @@ const VmDeleteModal = ({ isOpen, onClose, data }) => {
         const isDisabled = disks.length === 0;
 
         return (
-          <div key={vmId} className="disk-delete-checkbox f-btw">
-            <span className="disk-delete-label fs-18">{names[index]}</span>
+          <div key={vmId} className="f-btw">
+            <span className="fs-16 p-3.5 w-full">{names[index]}</span>
             <LabelCheckbox id={`diskDelete-${vmId}`} 
               label={`${Localization.kr.DISK} ${Localization.kr.REMOVE}`}               
               checked={detachOnlyList[vmId] || false}

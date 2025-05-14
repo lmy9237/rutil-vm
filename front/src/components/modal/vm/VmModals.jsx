@@ -73,8 +73,7 @@ const VmModals = ({
     ), ova: (
       <VmExportOVAModal key={activeModal()} isOpen={activeModal() === "vm:ova"}
         onClose={() => setActiveModal(null)}  
-        selectedVm={vmsSelected} 
-        vmId={vm?.id}
+        selectedVms={vmsSelected} 
       />
     ), action: (
       <VmActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}

@@ -133,6 +133,7 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px" }}
     >
+
       <div className="network-popup-content">
         <LabelInput id="name" label={Localization.kr.NAME}
           value={formInfoState.name}
@@ -161,7 +162,7 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
           // disabled={!!vnicProfileVo?.id}
           disabled={isInterfaceDisabled}
         />
-        <div className="mac-address fs-18">사용자 지정 MAC 주소</div>
+        <div className="mac-address fs-12 font-bold py-2 mt-2">사용자 지정 MAC 주소</div>
       </div>
 
       <div className="nic-toggle">

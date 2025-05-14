@@ -281,7 +281,6 @@ const TemplateModal = ({
                       <td>{checkZeroSizeToGiB(disk.diskImageVo?.virtualSize)}</td>
                       <td >
                         <LabelSelectOptions id={`diskFormat-${index}`}
-                          className="template-select"
                           value={disk.diskImageVo?.format}
                           options={formats}
                           onChange={(e) => handleDiskChange(index, "format", e.target.value)}
@@ -291,7 +290,7 @@ const TemplateModal = ({
                         <LabelSelectOptionsID
                           value={disk.diskImageVo?.storageDomainVo?.id}
                           loading={isDomainsLoading}
-                          className="template-select object"
+                          className="object"
                           options={domains.filter((d) => d.status === "ACTIVE")}
                           onChange={(e) => {
                             const selected = domains.find(d => d.id === e.target.value);
@@ -318,7 +317,6 @@ const TemplateModal = ({
                         <LabelSelectOptionsID
                           value={disk.diskImageVo?.diskProfileVo?.id}
                           loading={false}
-                          className="template-select"
                           options={diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || []}
                           onChange={(e) => {
                             const selected = (diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || []).find(d => d.id === e.target.value);

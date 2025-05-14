@@ -61,7 +61,7 @@ const DomainGetDiskModal = ({
       contentStyle={{ width: "880px" }} 
     >
       {/* <div className="disk-move-popup modal"> */}
-      <div className="section-table-outer p-0.5">
+      <div className="section-table-outer ">
         <span style={{ fontWeight: "800" }}>디스크 할당:</span>
         <table>
           <thead>

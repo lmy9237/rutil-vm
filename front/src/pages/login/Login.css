@@ -9,7 +9,7 @@
   height: 450px;
   gap:5px;
   padding: 0px 25px;
-  background: white;
+  background: var(--color-primary-white);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); 
   border-radius: 9px; 
 }
@@ -18,7 +18,7 @@
   width:100%;max-width:400px;
   margin-top: 20px;
   padding: 12px;
-  color: white;
+  color: var(--color-primary-white);
   border: none;border-radius: 3px;
   background-color:var(--color-primary);
   cursor: pointer;

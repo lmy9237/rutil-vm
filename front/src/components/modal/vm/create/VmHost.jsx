@@ -51,8 +51,8 @@ const VmHost = ({
           </div>
 
           {/* 특정 호스트 선택 */}
-          <div id="select-host" >
-            <div className="f-center  h-4">
+          <div className="select-host" >
+            <div className="f-center h-4">
               <input
                 className="form-check-input"
                 type="radio"
@@ -85,7 +85,7 @@ const VmHost = ({
                   return (
                     <div
                       key={host.id}
-                      className={`host-option-item ${isSelected ? "selected" : ""}`}
+                      className={`host-option-item p-1 ${isSelected ? "selected" : ""}`}
                       onClick={() => {
                         const updated = isSelected
                           ? formHostState.hostVos.filter((h) => h.id !== host.id) // 제거

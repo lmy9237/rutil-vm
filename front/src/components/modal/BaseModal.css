@@ -24,7 +24,6 @@
   border: none;
   cursor: pointer;
 }
-/*footer*/
 .popup-contents {
   height: var(--h-modal-content);
   max-height: calc(var(--h-modal) - 10px);
@@ -37,7 +36,6 @@
 /*footer*/
 .edit-footer {
   width: 100%;height: var(--h-modal-footer);
-  background-color: white;
 }
 .edit-footer button {
   height: var(--h-32);
@@ -46,7 +44,6 @@
   border: var(--border-default);
   cursor: pointer;
   border-radius: 4px;
-  letter-spacing: -0.32px;
 }
 .edit-footer button.action {
   background-color: var(--color-primary-hover);
@@ -62,10 +59,3 @@
 .edit-footer button.cancel:hover{
   background-color: var(--color-white);
 }
-/*
-.edit-footer button:first-child,
-.edit-footer button:nth-child(3) {
-  background-color: rgb(218, 218, 218);
-  border: var(--border-default);
-}
-*/

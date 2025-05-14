@@ -1,14 +1,4 @@
-.graphic-console{
-  font-style: normal;font-weight: 700; 
-  padding: 8px 0;
-}
-.template-select{
-  max-width: 150px !important;
-}
 .object{
   max-width: 220px !important;
-}
-.template-select .custom-options{
-  width: 100% !important;
 }
 

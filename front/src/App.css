@@ -29,7 +29,6 @@ html {
   --w-btn-tab-nav: 160px; /* nav넓이*/
   --h-right-btn: 30px;
   --h-dash-boxs-bar:380px;               /* 대시보드 section 안에 박스와bar 높이를 합친것*/
-  /*--h-modal-content: calc(var(--h-modal) - var(--h-modal-footer) - var(--h-modal-header));*//* 모달 내용 부분 높이 */
   --h-modal-content: calc(100% - var(--h-modal-footer) - var(--h-modal-header)); /* 모달 내용 부분 높이 */
   --w-aside-menu:243px;     
   --w-icon: var(--h-icon);
@@ -92,6 +91,7 @@ html {
   --fs-14: 14px;
   --fs-16: 16px;
   --fs-18: 18px;
+  --fs-22: 22px;
   --fs-24: 24px;
   --letter-28: -0.28px;
 }
@@ -132,8 +132,11 @@ body {
 .fs-16,.fs-16 > * {/*폰트16ㅔx*/
   font-size:var(--fs-16) !important;line-height:var(--fs-16) !important;
 }
-.fs-18,.fs-18 > * {/*폰트16px*/
+.fs-18,.fs-18 > * {/*폰트18px*/
   font-size:var(--fs-18) !important;line-height:var(--fs-18) !important;
+}
+.fs-22,.fs-22 > * {/*폰트22px*/
+  font-size:var(--fs-22) !important;line-height:var(--fs-22) !important;
 }
 .fs-24,.fs-24 > * {/*폰트24px*/
   font-size:var(--fs-24) !important;line-height:var(--fs-24) !important;
@@ -240,7 +243,6 @@ svg.btn { cursor: pointer; }
   border-radius:0 !important;
 }
 .context-menu-item {
-  /* position: fixed; */
   background: white;
   border: var(--border-btn);
   border-radius: 4px;
@@ -267,16 +269,8 @@ svg.btn { cursor: pointer; }
 .no-search-box{
   margin-bottom: 15px;
 }
-/* 새로만들기 */
-.network-popup-content > div {
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 1.3%;
-}
-.host-btn-outer {
-  width: 100%;
-  padding: 0.5rem 0.3rem;
-}
 .toast {
   max-width: 800px;
 }
+
+

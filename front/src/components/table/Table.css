@@ -1,3 +1,38 @@
+/*
+.search-box button {
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border: var(--border-default);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+  .paging-btns {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  height: 4vh;
+}
+.paging-btns span {
+  display: block;
+  margin: 0 0.2rem;
+}
+.search-box {
+  width: 40%;
+  display: flex;
+  margin-bottom: 0.15rem;
+}
+.search-box input {
+  width: 500px !important;height: 30px !important;
+  width: 92%;
+  outline: none;
+}
+.search-box > button {
+  width: 5%;height: 30px !important;
+  cursor: pointer;
+}
+*/
 /* Tables.css */
 .custom-table td,
 .custom-table th {
@@ -17,41 +52,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/*search-box*/
-.search-box button {
-  padding: 5px 10px;
-  background-color: #f0f0f0;
-  border: var(--border-default);
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.search-box {
-  width: 40%;
-  display: flex;
-  margin-bottom: 0.15rem;
-}
-.search-box input {
-  width: 500px !important;height: 30px !important;
-  width: 92%;
-  outline: none;
-}
-.search-box > button {
-  width: 5%;height: 30px !important;
-  cursor: pointer;
-}
-.paging-btns {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  height: 4vh;
-}
-.paging-btns span {
-  display: block;
-  margin: 0 0.2rem;
 }
 
 .paging-arrows {
@@ -108,8 +108,8 @@
 .section-table-outer > h1 {
   padding: 10px 0;
 }
-/*tablerowclick*/
 .row-click {
+  /* color: rgb(9, 83, 153)*/
   color: var(--color-primary);
   cursor: pointer;
 }
@@ -130,8 +130,7 @@
   word-break: break-word;
 }
 
-.tippy-box{
-  color: #fff;                  
+.tippy-box{    
   padding: 6px;
   height: auto;
   max-width: none !important; 

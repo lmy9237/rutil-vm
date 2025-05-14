@@ -29,15 +29,6 @@
 .graph-wave > h2 {
   color: #000000;
 }
-/*차트위에 아이콘 제거*/
-.apexcharts-menu-icon,
-.apexcharts-toolbar > div {
-  /*display: none;*/
-}
-.apexcharts-legend.apx-legend-position-bottom.apexcharts-align-center,
-.apexcharts-legend.apx-legend-position-top.apexcharts-align-center {
-  /*display: none;*/
-}
 @media screen and (min-width: 2800px) {
   .dash-section{
     min-height: calc(100% - 38.5%);

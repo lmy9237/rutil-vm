@@ -40,7 +40,7 @@ const BaseModal = ({
     >
       <div className="modal" style={contentStyle}>
         <div className="popup-header f-btw">
-          <h1 className="f-center fs-24 fw-500">
+          <h1 className="f-center fs-22 fw-500">
             {`${targetName} ${submitTitle}`}
           </h1>
           <RVI24 className="btn" iconDef={rvi24Close} onClick={onClose}/>

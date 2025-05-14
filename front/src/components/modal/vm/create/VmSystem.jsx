@@ -175,7 +175,7 @@ const VmSystem = ({
           onChange={handleCpuChange}
         />
 
-        <button className="btn-toggle-cpu" onClick={toggleCpuDetail}>
+        <button className="btn-toggle-cpu p-1" onClick={toggleCpuDetail}>
           <RVI16 iconDef={showCpuDetail ? rvi16ChevronUp("#1D1D1D") : rvi16ChevronDown("#1D1D1D")} 
             className="mr-1.5"
           />

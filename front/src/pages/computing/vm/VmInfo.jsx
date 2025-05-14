@@ -121,8 +121,8 @@ const VmInfo = () => {
 
   const popupItems = [
     /* { type: "import",  onClick: () => setActiveModal("vm:import"),  label: Localization.kr.IMPORT, }, */
-    { type: "copyVm",    onClick: () => setActiveModal("vm:copyVm"), label: `${Localization.kr.VM} 복제` },
-    { type: "delete",    onClick: () => setActiveModal("vm:delete"), label: Localization.kr.REMOVE, disabled: !isDown, },
+    { type: "copyVm",    onClick: () => setActiveModal("vm:copy"), label: `${Localization.kr.VM} 복제` },
+    { type: "remove",    onClick: () => setActiveModal("vm:remove"), label: Localization.kr.REMOVE, disabled: !isDown, },
     { type: "templates", onClick: () => setActiveModal("vm:templates"), label: "템플릿 생성", disabled: !isDown, }, 
     { type: "ova",       onClick: () => setActiveModal("vm:ova"), label: "OVA로 내보내기",  disabled: !isDown, },
   ];

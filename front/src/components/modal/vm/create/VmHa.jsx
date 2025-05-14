@@ -36,7 +36,6 @@ const VmHa = ({
 
   return (
     <>
-      <div className="ha-mode-second-content">
       <LabelCheckbox id="ha_mode_box" label={Localization.kr.HA}
           checked={formHaState.ha}
           onChange={(e) => {
@@ -46,10 +45,10 @@ const VmHa = ({
               ha: isChecked,
               storageDomainVo: { id: "", name: "" }, 
             }));
-          }}
-        />
-        <LabelSelectOptionsID
-          label={`${Localization.kr.VM} 임대 대상 ${Localization.kr.DOMAIN}`}
+        }}
+      />
+      <LabelSelectOptionsID
+        label={`${Localization.kr.VM} 임대 대상 ${Localization.kr.DOMAIN}`}
           value={formHaState.storageDomainVo.id}
           disabled={!formHaState.ha}  // ha가 체크되어야만 활성화됨
           onChange={(e) => {
@@ -71,8 +70,8 @@ const VmHa = ({
           options={[
             { id: "", name: "도메인 없음" },  
             ...domains
-          ]}
-        />
+        ]}
+      />
         {/* <div>
         <div>
           <span>재개 동작</span>
@@ -86,16 +85,12 @@ const VmHa = ({
           <option value="강제 종료">강제 종료</option>
         </select>
       </div> */}
-
-        <div className="py-2 font-bold">실행/{Localization.kr.MIGRATION} 큐에서 우선순위 </div> 
-        <div className="ha-mode-article">
-          <LabelSelectOptions label="우선 순위"
-            value={formHaState.priority}
-            options={priorityList}
-            onChange={(e) =>setFormHaState((prev) => ({ ...prev, priority: e.target.value }))}
-          />
-        </div>
-      </div>
+      <div className="py-2 font-bold">실행/{Localization.kr.MIGRATION} 큐에서 우선순위 </div> 
+      <LabelSelectOptions label="우선 순위"
+        value={formHaState.priority}
+        options={priorityList}
+        onChange={(e) =>setFormHaState((prev) => ({ ...prev, priority: e.target.value }))}
+      />
     </>
   );
 };

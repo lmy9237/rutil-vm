@@ -133,7 +133,7 @@ const DiskActionModal = ({
       contentStyle={{ width: "800px" }}
     >
     <div className="py-3">
-      <div className="section-table-outer p-0.5">
+      <div className="section-table-outer">
         <h1 className="fs-16">디스크 할당:</h1>
         <table>
           <thead>

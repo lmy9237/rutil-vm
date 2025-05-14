@@ -155,105 +155,102 @@ const TemplateNeworkNewInterModal = ({
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px" }}
     >
-      {/* <div className="new-network-interface modal"> */}
-      <div className="network-popup-content">
-        <div className="input_box pt-1">
-          <span>{Localization.kr.NAME}</span>
-          <input type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={Localization.kr.NAME}
-          />
-        </div>
-        <div className="select_box">
-          <label htmlFor="profile">프로파일</label>
-          <select
-            id="profile"
-            value={vnicProfileVoId} // vnicProfileVoId를 상태로 연결
-            onChange={(e) => {
-              setVnicProfileVoId(e.target.value); // 선택된 프로파일 ID 업데이트
-              const selectedVnic = vnics?.find(
-                (vnic) => vnic.id === e.target.value
-              );
-              setVnicProfileVoName(selectedVnic ? selectedVnic.name : ""); // 선택된 프로파일 이름 업데이트
-            }}
-          >
-            <option value="">프로파일을 선택하세요</option>
-            {vnics?.map((vnic) => (
-              <option key={vnic.id} value={vnic.id}>
-                {vnic.name} {/* 각 프로파일의 이름을 표시 */}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="select_box">
-          <label htmlFor="type">유형</label>
-          <select
-            id="type"
-            value={selectedInterface} // 선택된 값을 상태로 연결
-            onChange={(e) => setSelectedInterface(e.target.value)} // 선택 시 상태 업데이트
-          >
-            {interfaceOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label} {/* 화면에 표시될 한글 */}
-              </option>
-            ))}
-          </select>
-          <span>선택된 유형: {selectedInterface}</span>
-        </div>
-        <div className="plug-radio-btn">
-          <span>링크 {Localization.kr.STATUS}</span>
-          <div className="radio-outer">
-            <div>
-              <input
-                type="radio"
-                name="status"
-                id="status_up"
-                checked={linked === true}
-                onChange={() => setLinked(true)}
-              />
-              <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
-              <label htmlFor="status_up">Up</label>
-            </div>
-            <div>
-              <input
-                type="radio"
-                name="status"
-                id="status_down"
-                checked={linked === false}
-                onChange={() => setLinked(false)}
-              />
-              <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
-              <label htmlFor="status_down">Down</label>
-            </div>
+      <div className="input_box pt-1">
+        <span>{Localization.kr.NAME}</span>
+        <input type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={Localization.kr.NAME}
+        />
+      </div>
+      <div className="select_box">
+        <label htmlFor="profile">프로파일</label>
+        <select
+          id="profile"
+          value={vnicProfileVoId} // vnicProfileVoId를 상태로 연결
+          onChange={(e) => {
+            setVnicProfileVoId(e.target.value); // 선택된 프로파일 ID 업데이트
+            const selectedVnic = vnics?.find(
+              (vnic) => vnic.id === e.target.value
+            );
+            setVnicProfileVoName(selectedVnic ? selectedVnic.name : ""); // 선택된 프로파일 이름 업데이트
+          }}
+        >
+          <option value="">프로파일을 선택하세요</option>
+          {vnics?.map((vnic) => (
+            <option key={vnic.id} value={vnic.id}>
+              {vnic.name} {/* 각 프로파일의 이름을 표시 */}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="select_box">
+        <label htmlFor="type">유형</label>
+        <select
+          id="type"
+          value={selectedInterface} // 선택된 값을 상태로 연결
+          onChange={(e) => setSelectedInterface(e.target.value)} // 선택 시 상태 업데이트
+        >
+          {interfaceOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label} {/* 화면에 표시될 한글 */}
+            </option>
+          ))}
+        </select>
+        <span>선택된 유형: {selectedInterface}</span>
+      </div>
+      <div className="plug-radio-btn">
+        <span>링크 {Localization.kr.STATUS}</span>
+        <div className="radio-outer">
+          <div>
+            <input
+              type="radio"
+              name="status"
+              id="status_up"
+              checked={linked === true}
+              onChange={() => setLinked(true)}
+            />
+            <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
+            <label htmlFor="status_up">Up</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="status"
+              id="status_down"
+              checked={linked === false}
+              onChange={() => setLinked(false)}
+            />
+            <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
+            <label htmlFor="status_down">Down</label>
           </div>
         </div>
+      </div>
 
-        <div className="plug-radio-btn">
-          <span>카드 {Localization.kr.STATUS}</span>
-          <div className="radio-outer">
-            <div>
-              <input
-                type="radio"
-                name="plugged_status"
-                id="plugged"
-                checked={plugged === true}
-                onChange={() => setPlugged(true)}
-              />
-              <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
-              <label htmlFor="plugged">연결됨</label>
-            </div>
-            <div>
-              <input
-                type="radio"
-                name="plugged_status"
-                id="unplugged"
-                checked={plugged === false}
-                onChange={() => setPlugged(false)}
-              />
-              <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
-              <label htmlFor="unplugged">분리</label>
-            </div>
+      <div className="plug-radio-btn">
+        <span>카드 {Localization.kr.STATUS}</span>
+        <div className="radio-outer">
+          <div>
+            <input
+              type="radio"
+              name="plugged_status"
+              id="plugged"
+              checked={plugged === true}
+              onChange={() => setPlugged(true)}
+            />
+            <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
+            <label htmlFor="plugged">연결됨</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="plugged_status"
+              id="unplugged"
+              checked={plugged === false}
+              onChange={() => setPlugged(false)}
+            />
+            <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
+            <label htmlFor="unplugged">분리</label>
           </div>
         </div>
       </div>

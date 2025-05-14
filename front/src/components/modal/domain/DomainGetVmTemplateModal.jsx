@@ -121,7 +121,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
       contentStyle={{ width: "880px" }} 
     >
       <div className="mb-1">
-        <div className="section-table-outer p-0.5">
+        <div className="section-table-outer">
           <table>
             <thead>
               <tr>

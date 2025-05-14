@@ -89,7 +89,6 @@ const VmGeneral = ({
     { label: " 할당할 실제 메모리", value: `${convertBytesToMB(vm?.memoryGuaranteed ?? 0)}  MB` },
     { label: "", value: "" },
     { label: "게스트", value: "" },
-    // { label: "- 에이전트", value: "" },
     { label: "- 아키텍처", value: vm?.guestArc },
     { label: "- 운영 시스템", value: vm?.guestOsType },
     { label: "- 커널 버전", value: vm?.guestKernelVer },
@@ -99,7 +98,6 @@ const VmGeneral = ({
   return (
     <>
       <div className="vm-detail-general-boxs f-start w-full">
-        {/* TODO: preview일 때 canvas 만 표출 되는 기능 개발 */}
         <div className="detail-general-box v-start gap-8">
           <h1 className="f-start fs-16 fw-500 w-full">{Localization.kr.GENERAL}</h1>
           <hr className="w-full"/>
