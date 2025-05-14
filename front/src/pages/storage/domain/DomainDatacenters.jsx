@@ -59,9 +59,7 @@ const DomainDatacenters = ({ domainId }) => {
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
-        <DomainDataCenterActionButtons actionType="default"
-          status={transformedData[0]?.domainStatus}
-        />
+        <DomainDataCenterActionButtons actionType="default" />
       </div>
       <TablesOuter target={"datacenter"}
         columns={TableColumnsInfo.DATACENTERS_FROM_STORAGE_DOMAIN}

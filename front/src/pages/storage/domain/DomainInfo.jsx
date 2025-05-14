@@ -73,7 +73,7 @@ const DomainInfo = () => {
       { id: "vms",          label: Localization.kr.VM,          onClick: () => handleTabClick("vms") },
       { id: "templates",    label: Localization.kr.TEMPLATE,    onClick: () => handleTabClick("templates") },
       { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
-      { id: "diskSnapshots", label: "디스크 스냅샷",    onClick: () => handleTabClick("diskSnapshots") },
+      { id: "diskSnapshots", label: "디스크 스냅샷",               onClick: () => handleTabClick("diskSnapshots") },
       { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
     ];
   
@@ -133,15 +133,15 @@ const DomainInfo = () => {
   }, [domainId]);
 
   const sectionHeaderButtons = useMemo(() => ([
-    { type: "update", label: `도메인 ${Localization.kr.UPDATE}`, onClick: () => setActiveModal("domain:update") },
-    { type: "remove", label: Localization.kr.REMOVE, disabled: !isACTIVE || !isUnattached, onClick: () => setActiveModal("domain:remove") },
-    { type: "destroy", label: Localization.kr.DESTROY, disabled: !isACTIVE || !(isUnattached || isMaintenance), onClick: () => setActiveModal("domain:destroy") },
-  ]), [isACTIVE]);
+    { type: "update",   label: `${Localization.kr.DOMAIN} ${Localization.kr.UPDATE}`, onClick: () => setActiveModal("domain:update"), },
+    { type: "remove",   label: Localization.kr.REMOVE,                                onClick: () => setActiveModal("domain:remove"),   disabled: !isACTIVE || !isUnattached,  },
+    { type: "destroy",  label: Localization.kr.DESTROY,                               onClick: () => setActiveModal("domain:destroy"),  disabled: isACTIVE || !(isMaintenance || isUnattached), },
+  ]), [domain?.status]);
 
   const popupItems = useMemo(() => ([
-    { type: "updateOvf", label: "OVF 업데이트", onClick: handleUpdateOvf },
-    { type: "refreshlun", label: "디스크 검사", onClick: handleRefresh },
-  ]), []);
+    { type: "updateOvf", label: "OVF 업데이트", onClick: handleUpdateOvf,  disabled: !isACTIVE || (isMaintenance || isUnattached) },
+    { type: "refreshlun", label: "디스크 검사", onClick: handleRefresh,     disabled: !isACTIVE || (isMaintenance || isUnattached) },
+  ]), [domain?.status]);
 
   return (
     <SectionLayout>

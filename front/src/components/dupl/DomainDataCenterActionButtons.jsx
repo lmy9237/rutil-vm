@@ -11,16 +11,18 @@ const DomainDataCenterActionButtons = ({
   const { setActiveModal } = useUIState();
   const { domainsSelected } = useGlobal()
 
-  const domain1st = useMemo(() => [...domainsSelected][0], [domainsSelected])
+  const domain1st = useMemo(() => 
+    [...domainsSelected][0]
+  , [domainsSelected])
 
   const isActive = domain1st?.status === "ACTIVE";
   const isMaintenance = domain1st?.status === "MAINTENANCE";
   const isLocked = domain1st?.status === "LOCKED";
 
   const basicActions = [
-    { type: "attach", onBtnClick: () => setActiveModal("domain:attach"), label: "연결", }, // 연결 disabled 조건 구하기 disabled: domainsSelected.length === 0 데이터센터가 없을때
-    { type: "detach", onBtnClick: () => setActiveModal("domain:detach"), label: "분리", disabled: domainsSelected.length === 0 || isLocked || isActive, },
-    { type: "activate", onBtnClick: () => setActiveModal("domain:activate"), label: "활성", disabled: domainsSelected.length === 0 || isLocked || isActive, },
+    { type: "attach", onBtnClick: () => setActiveModal("domain:attach"), label: "연결", disabled: domainsSelected.length > 0 || isActive || !isMaintenance }, // 연결 disabled 조건 구하기 disabled: domainsSelected.length === 0 데이터센터가 없을때
+    { type: "detach", onBtnClick: () => setActiveModal("domain:detach"), label: "분리", disabled: domainsSelected.length === 0 || isLocked || isActive || !isMaintenance, },
+    { type: "activate", onBtnClick: () => setActiveModal("domain:activate"), label: "활성", disabled: domainsSelected.length === 0 || isLocked || isActive || !isMaintenance, },
     { type: "maintenance", onBtnClick: () => setActiveModal("domain:maintenance"), label: "유지보수", disabled: domainsSelected.length === 0 || isLocked || isMaintenance, },
   ];
  
