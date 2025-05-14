@@ -6,6 +6,11 @@ import DataCenterModals from "../modal/datacenter/DataCenterModals";
 import ClusterModals from "../modal/cluster/ClusterModals";
 import HostModals from "../modal/host/HostModals";
 import VmModals from "../modal/vm/VmModals";
+import VmDiskModals from "../modal/vm/VmDiskModals";
+import DiskModals from "../modal/disk/DiskModals";
+import DiskSnapshotModals from "../modal/disk/DiskSnapshotModals";
+import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
+import VmSnapshotModals from "../modal/vm/VmSnapshotModals";
 import TemplateModals from "../modal/template/TemplateModals";
 import NetworkModals from "../modal/network/NetworkModals";
 import DomainModals from "../modal/domain/DomainModals";
@@ -25,11 +30,8 @@ import VmDiskActionButtons from "../dupl/VmDiskActionButtons";
 import SettingUsersActionButtons from "../dupl/SettingUsersActionButtons"
 import EventActionButtons from "../dupl/EventActionButtons"
 import JobActionButtons from "../dupl/JobActionButtons";
-import VmDiskModals from "../modal/vm/VmDiskModals";
-import DiskModals from "../modal/disk/DiskModals";
-import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
-import VmSnapshotModals from "../modal/vm/VmSnapshotModals";
 import "./RightClickMenu.css"
+import DiskSnapshotActionButtons from "../dupl/DiskSnapshotActionButtons";
 /**
  * @name RightClickMenu
  * @description 우클릭 했을 때 나오는 메뉴에 대한 UI
@@ -63,6 +65,7 @@ const RightClickMenu = () => {
     "application",
     "usersession", // 활성화 세션
     "cert", // 인증서
+    "disksnapshot", // NOTE: 삭제처리를 직접 하지 않음으로 기능 배제
     "iscsi",
     "fcp",
   ]), [])
@@ -86,6 +89,7 @@ const RightClickMenu = () => {
       <VnicProfileModals vnicProfile={vnicProfilesSelected[0] ?? null} />
       <DomainModals domain={domainsSelected[0] ?? null} sourceContext={sourceContext} />
       <DiskModals disk={disksSelected[0] ?? null} />
+      <DiskSnapshotModals shot={snapshotsSelected[0] ?? null} />
       <VmDiskModals disk={disksSelected[0] ?? null} />
       <EventModals event={eventsSelected[0] ?? null}/>
       <JobModals job={jobsSelected[0] ?? null} />
@@ -141,6 +145,10 @@ const RightClickMenu = () => {
             />
           ) : (contextMenuType() === "disk") ? (
             <DiskActionButtons actionType={"context"} 
+              status={contextMenu()?.item?.status}
+            />
+          ) : (contextMenuType() === "disksnapshot") ? (
+            <DiskSnapshotActionButtons actionType={"context"} 
               status={contextMenu()?.item?.status}
             />
           ) : (contextMenuType() === "vmdisk") ? (

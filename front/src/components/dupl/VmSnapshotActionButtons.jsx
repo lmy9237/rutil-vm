@@ -36,7 +36,7 @@ const VmSnapshotActionButtons = ({
     { type: "remove",   onBtnClick: () => setActiveModal("vmsnapshot:remove"),  label: Localization.kr.REMOVE,  disabled: isVmUp || isVmPause || hasLocked || inPreview || vmsSelected.length === 0 || snapshotsSelected.length === 0, },
   ]), [hasLocked, snapshotsSelected, vmsSelected]);
 
-  Logger.debug(`VmSnapshotActionButtons ... datacentersSelected.length: ${vmsSelected.length}, isContextMenu: ${isContextMenu} `)
+  Logger.debug(`VmSnapshotActionButtons ... vmsSelected.length: ${vmsSelected.length}, isContextMenu: ${isContextMenu} `)
   return (
     <ActionButtonGroup actionType={actionType} actions={basicActions} />
   );

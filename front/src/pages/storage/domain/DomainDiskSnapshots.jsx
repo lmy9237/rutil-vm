@@ -12,6 +12,7 @@ import ActionButton from "../../../components/button/ActionButton";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import DiskSnapshotActionButtons from "../../../components/dupl/DiskSnapshotActionButtons";
 
 /**
  * @name DomainDiskSnapshots
@@ -54,14 +55,9 @@ const DomainDiskSnapshots = ({
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-        <div className="header-right-btns">
-          <ActionButton actionType="default" label={Localization.kr.REMOVE}
-            disabled={snapshotsSelected.length === 0}  // 선택된 항목이 없으면 비활성화
-            onClick={() => setActiveModal("vmsnapshot:remove")}
-          />
-        </div>
+        <DiskSnapshotActionButtons />
       </div>
-      <TablesOuter target={"snapshot"}
+      <TablesOuter target={"disksnapshot"}
         columns={TableColumnsInfo.DISK_SNAPSHOT_FROM_STORAGE_DOMAIN}
         data={filteredData}
         searchQuery={searchQuery}
