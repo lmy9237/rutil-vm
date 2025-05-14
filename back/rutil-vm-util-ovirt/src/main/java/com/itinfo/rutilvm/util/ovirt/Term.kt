@@ -27,6 +27,7 @@ enum class Term(
 	SNAPSHOT("스냅샷"),
 	VNIC("가상머신 NIC"),
 	VNIC_PROFILE("가상머신 NIC 프로필"),
+	DNS("DNS"),
 	HOST("호스트"),
 	HOST_NIC("호스트 NIC"),
 	HOST_CPU_UNIT("호스트 CPU 유닛"),

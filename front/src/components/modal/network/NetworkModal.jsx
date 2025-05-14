@@ -38,7 +38,9 @@ const initialFormState = {
 
 //  Fault reason is "Operation Failed". Fault detail is "[Cannot edit Network. This logical network is used by host: rutilvm-dev.host04
 const NetworkModal = ({
-  isOpen, onClose, editMode = false,
+  isOpen,
+  onClose, 
+  editMode = false,
 }) => {
   const nLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   

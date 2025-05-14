@@ -9,14 +9,18 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.fromNetworkFiltersToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromOpenStackNetworkProviderToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.*
-import com.itinfo.rutilvm.api.model.setting.PermissionVo
-import com.itinfo.rutilvm.api.model.setting.toPermissionVos
+import com.itinfo.rutilvm.api.repository.engine.NetworkRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.DnsResolverConfigurationEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.NetworkEntity
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 
-import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.types.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 import kotlin.Error
 
 interface ItNetworkService {
@@ -165,6 +169,8 @@ interface ItNetworkService {
 class NetworkServiceImpl(
 ): BaseService(), ItNetworkService {
 
+	@Autowired private lateinit var rNetwork: NetworkRepository
+
 	@Throws(Error::class)
 	override fun findAll(): List<NetworkVo> {
 		log.info("findAll ... ")
@@ -179,12 +185,10 @@ class NetworkServiceImpl(
 		return res?.toNetworkVo(conn)
 	}
 
-	// dc 다르면 중복명 가능
 	@Throws(Error::class)
+	@Transactional("engineTransactionManager")
 	override fun add(networkVo: NetworkVo): NetworkVo? {
 		log.info("addNetwork ... {}", networkVo)
-		log.info("dns ... {}", networkVo.dnsNameServers)
-
 		val res: Network = conn.addNetwork(
 			networkVo.toAddNetwork()
 		).getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
@@ -192,16 +196,49 @@ class NetworkServiceImpl(
 		// 생성 후에 나온 network Id로 클러스터 네트워크 생성 및 레이블 생성 가능
 		networkVo.toAddClusterAttach(conn, res.id())	// 클러스터 연결, 필수 선택
 //		networkVo.toAddNetworkLabel(conn, res.id()) // 네트워크 레이블
+		applyDnsNameServers(networkVo.dnsNameServers, res.id().toUUID())
 		return res.toNetworkIdName()
 	}
 
 	@Throws(Error::class)
+	@Transactional("engineTransactionManager")
 	override fun update(networkVo: NetworkVo): NetworkVo? {
 		log.info("update ... networkName: {}", networkVo.name)
 		val res: Network? = conn.updateNetwork(
 			networkVo.toEditNetwork()
 		).getOrNull()
+		applyDnsNameServers(networkVo.dnsNameServers, networkVo.id.toUUID())
 		return res?.toNetworkIdName()
+	}
+
+	@Transactional("engineTransactionManager")
+	private fun applyDnsNameServers(
+		dnsNameServers: List<String>,
+		networkId: UUID
+	) {
+		log.info("updateDnsNameServers ... dnsNameServers: {} networkId: {}", dnsNameServers, networkId)
+		val network2UpdateDns: NetworkEntity = rNetwork.findByIdWithDnsConfiguration(networkId)
+			?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		var dnsConfig: DnsResolverConfigurationEntity? = network2UpdateDns.dnsConfiguration
+		if (dnsNameServers.isEmpty()) {
+			if (dnsConfig != null) {
+				network2UpdateDns.dnsConfiguration = null
+				log.info("네트워크 ${network2UpdateDns.name}에서 DNS 설정 제거 진행완료")
+			}
+		} else {
+			if (dnsConfig == null) {
+				dnsConfig = DnsResolverConfigurationEntity.builder {
+					id { UUID.randomUUID() }
+				}
+				network2UpdateDns.dnsConfiguration = dnsConfig // Associate the new configuration with the network
+			}
+			dnsConfig.nameServers.clear()
+			dnsNameServers.forEachIndexed { index, ip ->
+				dnsConfig.addNameServer(ip, (index+1).toShort()) // Assuming addNameServer handles creating NameServerEntity
+			}
+			log.info("네트워크 ${network2UpdateDns.name} 에 추가 된 DNS servers: $dnsNameServers ")
+		}
+		rNetwork.save(network2UpdateDns)
 	}
 
 	@Throws(Error::class)

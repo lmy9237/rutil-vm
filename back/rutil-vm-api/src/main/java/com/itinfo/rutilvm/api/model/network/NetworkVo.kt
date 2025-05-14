@@ -39,7 +39,7 @@ private val log = LoggerFactory.getLogger(NetworkVo::class.java)
  * @property datacenterVo [IdentifiedVo]
  * @property openStackNetworkVo [OpenStackNetworkVo] 네트워크 공급자(한개만 있음) (생성시 여부(boolean)으로 처리,추가)
  * @property vlan [Int] vlan 태그 (태그 자체는 활성화를 해야 입력란이 생김)
-// * @proprety dnsList List<[String]> DNS 서버는 애매함
+ * @property dnsNameServers List<[String]> DNS 서버는 애매함
  * @property status [NetworkStatus] 네트워크 상태
  * @property display [Boolean] 클러스터-네트워크 관리
  * @property networkLabel [String] 네트워크 레이블
@@ -230,13 +230,16 @@ fun NetworkVo.toNetworkBuilder(): NetworkBuilder {
 		VlanBuilder().apply {
 			id(network.vlan)
 		}
-	)*/
-	if(dnsNameServers.isNotEmpty()){
+	)
+	*/
+	/*
+	NOTE: 사용불가 되지 않는 기능
+	if (dnsNameServers.isNotEmpty()) {
 		builder.dnsResolverConfiguration(
 			DnsResolverConfigurationBuilder().nameServers(dnsNameServers).build()
 		)
 	}
-
+	*/
 	log.info("NetworkVo: {}", this)
 	return builder
 }

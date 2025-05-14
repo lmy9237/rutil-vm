@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.util.ovirt.error.*
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.Connection
+import org.ovirt.engine.sdk4.builders.Builders
 import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
 
@@ -65,7 +66,6 @@ fun Connection.updateNetwork(network: Network): Result<Network?> = runCatching {
 
 fun Connection.removeNetwork(networkId: String): Result<Boolean> = runCatching {
 	checkNetworkExists(networkId)
-
 	this.srvNetwork(networkId).remove().send()
 	true
 
@@ -75,7 +75,6 @@ fun Connection.removeNetwork(networkId: String): Result<Boolean> = runCatching {
 	Term.NETWORK.logFail("삭제", it, networkId)
 	throw if (it is Error) it.toItCloudException() else it
 }
-
 
 fun Connection.srvVnicProfilesFromNetwork(networkId: String): AssignedVnicProfilesService =
 	this.srvNetwork(networkId).vnicProfilesService()
