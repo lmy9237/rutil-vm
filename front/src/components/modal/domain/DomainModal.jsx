@@ -34,20 +34,6 @@ const initialFormState = {
   spaceBlocker: "5",
 };
 
-const storageState = {
-  type: "",
-  address: "",
-  path: "",
-  nfsVersion: "",
-  volumeGroupVo: {
-    id: "",
-    logicalUnitVos: {
-      logicalUnitVo : {id: ""}
-    }
-  },
-};
-
-
 const DomainModal = ({
   isOpen, onClose, editMode=false
 }) => {
@@ -221,15 +207,17 @@ const DomainModal = ({
     const error = validateForm();
     if (error) return toast.error(error);
   
-    const selectedLogicalUnit = fibres
-      .map(f => f.logicalUnitVos[0])
-      .find(lun => lun?.id === lunId);
+    if(isFibre && !editMode) {
+      const selectedLogicalUnit = fibres
+        .map(f => f.logicalUnitVos[0])
+        .find(lun => lun?.id === lunId);
 
-    if (selectedLogicalUnit.status === "USED") {
-      setSelectedLunData(selectedLogicalUnit);
-      setIsOverwrite(true);
-      setDomainCheckOpen(true); // 확인 모달 열기
-      return;
+      if (selectedLogicalUnit.status === "USED") {
+        setSelectedLunData(selectedLogicalUnit);
+        setIsOverwrite(true);
+        setDomainCheckOpen(true); // 확인 모달 열기
+        return;
+      }
     }
 
     submitDomain(); // 바로 제출
