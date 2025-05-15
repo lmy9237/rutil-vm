@@ -12,23 +12,24 @@ import { useDeleteDataCenter } from "../../../api/RQHook";
  * 
  * @returns {JSX.Element} DataCenterModals
  */
-const DataCenterModals = () => {
-  const { activeModal, setActiveModal } = useUIState()
+const DataCenterModals = ({
+}) => {
+  const { activeModal, closeModal } = useUIState()
   const { datacentersSelected } = useGlobal()
 
   const modals = {
     create: (
-      <DataCenterModal key={activeModal()} isOpen={activeModal() === "datacenter:create"} 
-        onClose={() => setActiveModal(null)}
+      <DataCenterModal key={activeModal()} isOpen={activeModal().includes("datacenter:create")} 
+        onClose={() => closeModal("datacenter:create")}
       />
     ), update: (
-      <DataCenterModal key={activeModal()} isOpen={activeModal() === "datacenter:update"}
-        onClose={() => setActiveModal(null)}
+      <DataCenterModal key={activeModal()} isOpen={activeModal().includes("datacenter:update")}
+        onClose={() => closeModal("datacenter:update")}
         editMode
       />
     ), remove: (
-      <DeleteModal key={activeModal()} isOpen={activeModal() === "datacenter:remove"}
-        onClose={() => setActiveModal(null)}
+      <DeleteModal key={activeModal()} isOpen={activeModal().includes("datacenter:remove")}
+        onClose={() => closeModal("datacenter:remove")}
         label={Localization.kr.DATA_CENTER}
         data={datacentersSelected}
         api={useDeleteDataCenter()}
@@ -40,7 +41,7 @@ const DataCenterModals = () => {
   return (
     <>
       {Object.keys(modals).filter((key) => 
-        activeModal() === `datacenter:${key}`
+        activeModal().includes(`datacenter:${key}`)
       ).map((key) => 
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       )}

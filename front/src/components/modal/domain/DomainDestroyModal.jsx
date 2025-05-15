@@ -5,17 +5,19 @@ import Localization from "../../../utils/Localization";
 import { useDestroyDomain } from "../../../api/RQHook";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
+import useUIState from "../../../hooks/useUIState";
 
-const DomainDestroyModal = ({ isOpen, onClose }) => {
+const DomainDestroyModal = ({ 
+  isOpen,
+  onClose,
+}) => {
+  // const { closeModal } = useUIState()
   const { domainsSelected } = useGlobal()
   const domain = useMemo(() => [...domainsSelected][0], [domainsSelected]);
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.DOMAIN} ${Localization.kr.DESTROY} 완료`);
-  };
-  const { mutate: destroyDomain } = useDestroyDomain(onSuccess, () => onClose()); // 파괴를 여기서
-
+  const {
+    mutate: destroyDomain
+  } = useDestroyDomain(onClose, onClose); // 파괴를 여기서
   const [approved, setApproved] = useState(false);
 
   const handleSubmit = () => {

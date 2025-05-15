@@ -43,7 +43,7 @@ const App = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const { setFooterVisible, footerJobRefetchInterval, setFoooterJobRefetchInterval } = useFooterState()
-  const { setActiveModal, } = useUIState()
+  const { closeModal, } = useUIState()
   const { setAsideVisible } = useAsideState()
   const { setLoginBoxVisible, setEventBoxVisible, } = useBoxState()
   const { setTmiLastSelected } = useTmi()
@@ -52,7 +52,7 @@ const App = () => {
     if (!footerJobRefetchInterval() || footerJobRefetchInterval() === 0) {
       setFoooterJobRefetchInterval(5000)
     }
-    setActiveModal(null)
+    closeModal()
     setAsideVisible(true)
     setEventBoxVisible(false)
     setLoginBoxVisible(false)

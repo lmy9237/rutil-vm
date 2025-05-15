@@ -4,7 +4,6 @@ const EventModal = ({
   isOpen,
   editMode = false,
   eventId,
-  onClose,
 }) => {
   
 }

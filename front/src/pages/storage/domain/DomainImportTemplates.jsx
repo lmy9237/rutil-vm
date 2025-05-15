@@ -93,16 +93,15 @@ const DomainImportTemplates = ({
       <SelectedIdView items={templatesSelected} />
 
       {/* 가져오기 모달 -> DomainImportVms에서도 쓰고있어서 domainmodals에 어떻게 써야하나! */}
-      {activeModal() === "domaintemplate:importVm" && (
+      {activeModal().includes("domaintemplate:importVm")  && (
         <DomainGetVmTemplateModal
           isOpen={true}
           type="template"
           data={templatesSelected}
-          onClose={() => setActiveModal(null)}
         />
       )}
 
-      {activeModal() === "domaintemplate:remove" && (
+      {activeModal().includes("domaintemplate:remove")  && (
         <DeleteModal contentLabel={Localization.kr.TEMPLATE}
           isOpen={true}
           type="DataCenter"

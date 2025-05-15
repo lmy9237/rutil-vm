@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import LabelInputNum from "../../label/LabelInputNum";
+import DynamicInputList from "../../label/DynamicInputList";
+import ToggleSwitchButton from "../../button/ToggleSwitchButton";
+import TablesOuter from "../../table/TablesOuter";
+import { handleInputChange, handleInputCheck, handleSelectIdChange } from "../../label/HandleInput";
 import { checkName } from "../../../util";
 import {
   useAllDataCenters,
@@ -14,13 +20,8 @@ import {
   useNetwork,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import TablesOuter from "../../table/TablesOuter";
 import Logger from "../../../utils/Logger";
-import DynamicInputList from "../../label/DynamicInputList";
-import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import "./MNetwork.css";
-import useGlobal from "../../../hooks/useGlobal";
-import { handleInputChange, handleInputCheck, handleSelectIdChange } from "../../label/HandleInput";
 
 const initialFormState = {
   id: "",
@@ -39,10 +40,13 @@ const initialFormState = {
 //  Fault reason is "Operation Failed". Fault detail is "[Cannot edit Network. This logical network is used by host: rutilvm-dev.host04
 const NetworkModal = ({
   isOpen,
-  onClose, 
+  onClose,
   editMode = false,
 }) => {
-  const nLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+  // const { closeModal } = useUIState()
+  const nLabel = editMode 
+    ? Localization.kr.UPDATE
+    : Localization.kr.CREATE;
   
   const { networksSelected, datacentersSelected } = useGlobal()
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
@@ -53,13 +57,9 @@ const NetworkModal = ({
   const [clusterVoList, setClusterVoList] = useState([]);
   const [dnsServers, setDnsServers] = useState([]);
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.NETWORK} ${nLabel} 완료`);
-  };
   const { data: network } = useNetwork(networkId);
-  const { mutate: addNetwork } = useAddNetwork(onSuccess, () => onClose());
-  const { mutate: editNetwork } = useEditNetwork(onSuccess, () => onClose());
+  const { mutate: addNetwork } = useAddNetwork(onClose, onClose);
+  const { mutate: editNetwork } = useEditNetwork(onClose, onClose);
 
   const { 
     data: datacenters = [], 
@@ -160,7 +160,7 @@ const NetworkModal = ({
       dnsNameServers: dnsServers
     };
 
-    Logger.debug(`NetworkModal > handleFormSubmit ... dataToSubmit: ${dataToSubmit}`); // 데이터를 확인하기 위한 로그
+    Logger.debug(`NetworkModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit); // 데이터를 확인하기 위한 로그
     editMode
       ? editNetwork({ networkId: formState.id, networkData: dataToSubmit })
       : addNetwork(dataToSubmit);
@@ -168,7 +168,7 @@ const NetworkModal = ({
 
   return (
     <BaseModal targetName={`논리 ${Localization.kr.NETWORK}`} submitTitle={nLabel}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "770px"}}
     >
@@ -229,7 +229,7 @@ const NetworkModal = ({
             }));
           }}
       />
-        <LabelCheckbox id="portIsolation" label="포트 분리"          
+        <LabelCheckbox id="portIsolation" label={`포트 ${Localization.kr.DETACH}`}
           checked={formState.portIsolation}
           className="mb-3"
           disabled={editMode || !formState.usageVm} // 가상 머신 네트워크가 비활성화되면 비활성화(??)

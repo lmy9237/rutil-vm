@@ -418,6 +418,8 @@ fun HostVo.toAddHost(): Host =
 fun HostVo.toEditHost(): Host {
 	return HostBuilder()
 		.id(id)
+		.name(name) // 필수값
+		.comment(comment) // 필수값
 //    .os(OperatingSystemBuilder().customKernelCmdline("vfio_iommu_type1.allow_unsafe_interrupts=1").build()) //?
 		.build()
 }

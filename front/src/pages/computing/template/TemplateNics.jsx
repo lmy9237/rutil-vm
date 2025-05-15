@@ -83,45 +83,22 @@ const TemplateNics = ({
       <SelectedIdView items={vnicProfilesSelected}/>
 
       {/* TODO: VmNicModals 생성: nic 모달창 */}
-      {activeModal() === "nic:create" && (
-        <VmNicModal key={activeModal()} isOpen={activeModal() === "nic:create"}
-          onClose={() => setActiveModal(null)}
+      {activeModal().includes("nic:create") && (
+        <VmNicModal key={activeModal()} isOpen={activeModal().includes("nic:create")}
           vmId={templateId}   // ✅ templateId를 vmId처럼 넘김
           nicId={null}
         />
       )}
-      {activeModal() === "nic:edit" && (
-        <VmNicModal key={activeModal()} isOpen={activeModal() === "nic:updateedit"}
-          onClose={() => setActiveModal(null)}
-          editMode
+      {activeModal().includes("nic:update") && (
+        <VmNicModal key={activeModal()} isOpen={activeModal().includes("nic:update")} editMode
           vmId={templateId}   // ✅ templateId를 vmId처럼 넘김
           nicId={vnicProfilesSelected[0]?.id}
         />
       )}
-      {/* <Suspense fallback={<Loading />}>
-        {activeModal() === "create" && (
-          <TemplateNeworkNewInterModal
-            isOpen={true}
-            onClose={() => setActiveModal(null)}
-            editMode={false}
-            templateId={templateId}
-            nicData={selectedVnicProfiles[0]} // 수정 시 첫 번째 항목 전달
-          />
-        )}
-        {activeModal() === "edit" && (
-          <TemplateNeworkNewInterModal
-            isOpen={true}
-            onClose={() => setActiveModal(null)}
-            editMode={true}
-            templateId={templateId}
-            nicData={selectedVnicProfiles[0]} // 수정 시 첫 번째 항목 전달
-          />
-        )}
-
-        {activeModal() === "delete" && (
+      {/* 
+        {activeModal().includes("nic:remove") && (
           <TemplateNicDeleteModal
-            isOpen={true}
-            onClose={() => setActiveModal(null)}
+            isOpen={activeModal().includes("nic:remove")}
             data={selectedVnicProfiles[0]} // 선택된 NIC 데이터 전달
             templateId={templateId}
           />

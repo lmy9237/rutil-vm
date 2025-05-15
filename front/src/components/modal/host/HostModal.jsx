@@ -18,6 +18,7 @@ import Logger from "../../../utils/Logger";
 import useGlobal from "../../../hooks/useGlobal";
 import "./MHost.css";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import useUIState from "../../../hooks/useUIState";
 
 const initialFormState = {
   id: "",
@@ -38,8 +39,11 @@ const initialFormState = {
  * @returns
  */
 const HostModal = ({ 
-  isOpen, onClose, editMode=false
+  isOpen,
+  onClose,
+  editMode=false
 }) => {
+  // const { closeModal } = useUIState()
   const hLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
   const { datacentersSelected, clustersSelected, hostsSelected } = useGlobal();
@@ -50,13 +54,9 @@ const HostModal = ({
   const [formState, setFormState] = useState(initialFormState);
   const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.HOST} ${hLabel} ${Localization.kr.FINISHED}`);
-  };
   const { data: host } = useHost(hostId);
-  const { mutate: addHost } = useAddHost(onSuccess, () => onClose());
-  const { mutate: editHost } = useEditHost(onSuccess, () => onClose());
+  const { mutate: addHost } = useAddHost(onClose, onClose);
+  const { mutate: editHost } = useEditHost(onClose, onClose);
   // const {
   //   data: dcClusters = [],
   //   isLoading: isDcClustersLoading,
@@ -110,6 +110,7 @@ const HostModal = ({
   };
 
   const handleFormSubmit = () => {
+    Logger.debug(`HostModal > handleFormSubmit ... `)
     const error = validateForm();
     if (error) return toast.error(error);
 
@@ -127,7 +128,7 @@ const HostModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.HOST} submitTitle={hLabel}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px"}} 
     >

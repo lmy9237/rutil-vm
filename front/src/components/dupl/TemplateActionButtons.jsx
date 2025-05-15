@@ -8,7 +8,7 @@ import CONSTANT from "../../Constants";
 const TemplateActionButtons = ({
   actionType = "default",
 }) => {
-  const { activeModal, setActiveModal, } = useUIState()
+  const { setActiveModal, } = useUIState()
   const { templatesSelected } = useGlobal()
 
   const hasDefaultTemplate = 

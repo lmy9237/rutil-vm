@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import VmDiskConnectionModal from "./VmDiskConnectionModal";
@@ -18,11 +18,12 @@ import DiskActionModal from "../disk/DiskActionModal";
  */
 const VmDiskModals = ({
   disk,
-  vmId,
 }) => {
-  const { activeModal, setActiveModal } = useUIState()
-  const { disksSelected, setDisksSelected } = useGlobal()
-
+  const { activeModal, closeModal } = useUIState()
+  const { vmsSelected, disksSelected, setDisksSelected } = useGlobal()
+  const vmId = useMemo(() => 
+    vmsSelected[0]?.id ?? ""
+  , [vmsSelected])
   const { data: vm }  = useVm(vmId);
   const { data: diskAttachments = [] } = useDisksFromVM(vmId);
 
@@ -34,12 +35,15 @@ const VmDiskModals = ({
     return da && da?.diskImageVo?.alias?.includes(`${vm?.name}_D`)
   })?.length+1 || 1;
 
-  const ACTIONS = ["vmdisk:move", "vmdisk:copy"]; 
+  const ACTIONS = [
+    "vmdisk:move",
+    "vmdisk:copy"
+  ];
   
   const modals = {
     create: (
-      <VmDiskModal isOpen={activeModal() === "vmdisk:create"}
-        onClose={() => setActiveModal(null)}
+      <VmDiskModal isOpen={activeModal().includes("vmdisk:create")}
+        onClose={() => closeModal("vmdisk:create")}
         diskType={true}
         vmId={vmId || ""}
         vmName={`${vm?.name}_Disk${diskCount}`}
@@ -47,38 +51,37 @@ const VmDiskModals = ({
         hasBootableDisk={hasBootableDisk}
       />
     ), update: (
-      <VmDiskModal isOpen={activeModal() === "vmdisk:update"}
-        onClose={() => setActiveModal(null)}  
-        editMode
+      <VmDiskModal isOpen={activeModal().includes("vmdisk:update")} editMode
+        onClose={() => closeModal("vmdisk:update")}
         diskType={true}
         vmId={disk?.vmVo?.id || ""}
         diskAttachmentId={disk?.id || ""}
         hasBootableDisk={hasBootableDisk}
       />
     ), remove: (
-      <VmDiskDeleteModal isOpen={activeModal() === "vmdisk:remove"}
-        onClose={() => setActiveModal(null)}  
+      <VmDiskDeleteModal isOpen={activeModal().includes("vmdisk:remove")}
+        onClose={() => closeModal("vmdisk:remove")}
         vmId={vmId || ""}
         data={disksSelected}
       />
     ), connect: (
-      <VmDiskConnectionModal isOpen={activeModal() === "vmdisk:connect"}
-        onClose={() => setActiveModal(null)}  
+      <VmDiskConnectionModal isOpen={activeModal().includes("vmdisk:connect")}
+        onClose={() => closeModal("vmdisk:connect")}
         diskType={true}
         vmId={vmId}
         dataCenterId={vm?.dataCenterVo?.id || ""}
         hasBootableDisk={hasBootableDisk}
       />
     ), activate: (
-      <VmDiskActionModal isOpen={activeModal() === "vmdisk:activate"}
-        onClose={() => setActiveModal(null)}  
+      <VmDiskActionModal isOpen={activeModal().includes("vmdisk:activate")}
+        onClose={() => closeModal("vmdisk:activate")}
         action={"vmdisk:activate"}
         vmId={vmId}
         data={disksSelected}
       />
     ), deactivate: (
-      <VmDiskActionModal isOpen={activeModal() === "vmdisk:deactivate"}
-        onClose={() => setActiveModal(null)}  
+      <VmDiskActionModal isOpen={activeModal().includes("vmdisk:deactivate")}
+        onClose={() => closeModal("vmdisk:deactivate")}
         action={"vmdisk:deactivate"}
         vmId={vmId}
         data={disksSelected}
@@ -86,7 +89,6 @@ const VmDiskModals = ({
     ), move: (
       <></>
       // <DiskActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}
-      //   onClose={() => setActiveModal(null)}
       //   action={activeModal}
       //   data={disksSelected}
       // />
@@ -96,7 +98,7 @@ const VmDiskModals = ({
   return (
     <>
       {Object.keys(modals).filter((key) => 
-        activeModal() === `vmdisk:${key}`
+        activeModal().includes(`vmdisk:${key}`)
       ).map((key) => (
           <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}

@@ -105,8 +105,9 @@ fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashboarddVo {
     val allVms = this@toDashboardVo.findAllVms(follow="statistics").getOrDefault(listOf())
     val allClusters = this@toDashboardVo.findAllClusters().getOrDefault(listOf())
     val allStorageDomains = this@toDashboardVo.findAllStorageDomains().getOrDefault(listOf())
-    val allEvents = this@toDashboardVo.findAllEvents("time > Today sortby time desc").getOrDefault(listOf())
-
+//	val allEvents = this@toDashboardVo.findAllEvents("time > Today  sortby time desc").getOrDefault(listOf())
+	val allEvents = this@toDashboardVo.findAllEvents("severity > normal and time > Today sortby time desc")
+		.getOrDefault(listOf())
     // 각 상태별 카운트를 필터링하여 계산
     val dataCenters = allDataCenters.size
     val dataCentersUp = allDataCenters.count { it.status() == DataCenterStatus.UP }

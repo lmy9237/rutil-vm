@@ -1,5 +1,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import TablesOuter from "../../table/TablesOuter";
@@ -27,15 +28,18 @@ const interfaceList = [
  */
 const VmDiskConnectionModal = ({
   isOpen,
+  onClose,
   diskType = true,  // t=disk페이지에서 생성 f=vm만들때 같이 생성
   vmId,
   dataCenterId,
   hasBootableDisk, // 부팅가능한 디스크 여부
   onSelectDisk,
   existingDisks,
-  onClose,
 }) => {
-  const { mutate: connDiskListVm } = useConnDiskListFromVM();
+  // const { closeModal } = useUIState()
+  const {
+    mutate: connDiskListVm
+  } = useConnDiskListFromVM();
   // const { } = useConnDiskFromVM(vmId, )
   // 데이터센터 밑에 잇는 디스크 목록 검색
   const { 
@@ -82,7 +86,8 @@ const VmDiskConnectionModal = ({
       }).filter(Boolean);
   
       onSelectDisk(selectedDiskLists); // 선택된 디스크를 VmDisk에 전달
-      onClose();
+      // closeModal("vmdisk:connect");
+      onClose()
     } else {
       toast.error("디스크를 선택하세요!");
     }
@@ -107,17 +112,8 @@ const VmDiskConnectionModal = ({
       })
 
       Logger.debug("VmDiskConnectionModal > handleFormSubmit ... ", selectedDiskLists);
-      const onSuccess = () => {
-        onClose();
-        toast.success(`가상머신 디스크 연결 완료`);
-      };
-      const onError = (err) => toast.error(`Error 연결 disk: ${err}`);
-  
-      connDiskListVm(
-        { vmId, diskAttachmentList: selectedDiskLists}, 
-        { onSuccess, onError }
-      )
-      onClose();
+      connDiskListVm({ vmId, diskAttachmentList: selectedDiskLists})
+      // closeModal();
     } else {
       toast.error("디스크를 선택하세요!");
     }
@@ -132,7 +128,7 @@ const VmDiskConnectionModal = ({
   };
 
   return (
-    <BaseModal targetName={`가상 ${Localization.kr.DISK}`} submitTitle={"연결"}
+    <BaseModal targetName={`가상 ${Localization.kr.DISK}`} submitTitle={Localization.kr.CONNECTION}
       isOpen={isOpen} onClose={onClose}
       onSubmit={diskType? handleFormSubmit : handleOkClick}
       contentStyle={{ width: "1000px"}} 

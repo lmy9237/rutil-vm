@@ -1,8 +1,9 @@
-import BaseModal from "../BaseModal";
-import { useDeleteSnapshot } from "../../../api/RQHook";
 import { useMemo } from "react";
 import toast from "react-hot-toast";
+import BaseModal from "../BaseModal";
+import { useDeleteSnapshot } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import useUIState from "../../../hooks/useUIState";
 
 /**
  * @name VmSnapshotDeleteModal
@@ -11,12 +12,16 @@ import Localization from "../../../utils/Localization";
  * @param {boolean} isOpen ...
  * @returns 
  */
-const VmSnapshotDeleteModal = ({ isOpen, onClose, data, vmId }) => {
-  const onSuccess = () => {
-    toast.success(`스냅샷 삭제 완료`);
-    onClose();
-  };
-  const { mutate: deleteSnapshot } = useDeleteSnapshot(onSuccess, () => onClose()); 
+const VmSnapshotDeleteModal = ({ 
+  isOpen, 
+  onClose,
+  data, 
+  vmId
+}) => {
+  // const { closeModal } = useUIState()
+  const {
+    mutate: deleteSnapshot 
+  } = useDeleteSnapshot(onClose, onClose); 
 
   const { ids, descriptions } = useMemo(() => {
     if (!data) return { ids: [], descriptions: [] };
@@ -43,8 +48,7 @@ const VmSnapshotDeleteModal = ({ isOpen, onClose, data, vmId }) => {
       promptText={`${descriptions.join(", ")} 를(을) ${Localization.kr.REMOVE}하시겠습니까?`}
       contentStyle={{ width: "600px" }}
       shouldWarn={true}
-    >     
-    </BaseModal>
+    />
   );
 };
 

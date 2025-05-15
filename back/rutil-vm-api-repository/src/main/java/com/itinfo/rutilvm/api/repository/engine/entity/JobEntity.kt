@@ -2,13 +2,24 @@ package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Type
+import org.hibernate.annotations.UpdateTimestamp
 import org.slf4j.LoggerFactory
-import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.UUID
+import java.io.Serializable
+import java.math.BigInteger
+import javax.persistence.CascadeType
+// Or jakarta.persistence.* for newer Spring Boot
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.Lob
+import javax.persistence.ManyToMany
+import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 private val log = LoggerFactory.getLogger(JobEntity::class.java)
@@ -35,22 +46,74 @@ private val log = LoggerFactory.getLogger(JobEntity::class.java)
 @Table(name="job", schema = "public")
 class JobEntity(
 	@Id
-	@Column(unique = true, nullable = true)
+	@Column(name="job_id", unique = true, nullable = true)
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	val jobId: UUID? = null,
 	val actionType: String? = "",
+	@Lob
+	@Type(type="org.hibernate.type.TextType")
 	val description: String? = "",
 	val status: String? = "",
+	@Column(name="owner_id", unique = true, nullable = true)
+	@Type(type="org.hibernate.type.PostgresUUIDType")
 	val ownerId: UUID? = null,
 	val visible: Boolean? = true,
 	val startTime: LocalDateTime? = null,
 	val endTime: LocalDateTime? = null,
+	@UpdateTimestamp
 	val lastUpdateTime: LocalDateTime? = null,
 	val correlationId: String? = "",
 	val isExternal: Boolean? = false,
 	val isAutoCleared: Boolean? = true,
 	val engineSessionSeqId: Int? = null,
+
+	@OneToMany(
+		mappedBy="job",
+		cascade=[CascadeType.ALL], // Corresponds to ON DELETE CASCADE
+		orphanRemoval=true,
+		fetch=FetchType.LAZY
+	)
+	val steps: MutableSet<StepEntity> = mutableSetOf(),
+
+	@OneToMany(
+		mappedBy="job",
+		cascade=[CascadeType.ALL], // Corresponds to ON DELETE CASCADE
+		orphanRemoval=true,
+		fetch= FetchType.LAZY
+	)
+	val subjectEntities: MutableSet<JobSubjectEntity> = mutableSetOf()
 ): Serializable {
+	// Helper methods for bidirectional relationship management
+	fun addStep(step: StepEntity) {
+		steps.add(step)
+		step.job = this
+	}
+
+	fun removeStep(step: StepEntity) {
+		steps.remove(step)
+		step.job = null
+	}
+
+	fun addSubjectEntity(subjectEntity: JobSubjectEntity) {
+		subjectEntities.add(subjectEntity)
+		subjectEntity.job = this
+	}
+
+	fun removeSubjectEntity(subjectEntity: JobSubjectEntity) {
+		subjectEntities.remove(subjectEntity)
+		subjectEntity.job = null
+	}
+
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (javaClass != other?.javaClass) return false
+		other as JobEntity
+		return jobId == other.jobId
+	}
+
+	override fun hashCode(): Int =
+		jobId.hashCode()
+
 	override fun toString(): String =
 		gson.toJson(this)
 

@@ -37,9 +37,13 @@ class EventServiceImpl (
 ): BaseService(), ItEventService {
 
     @Throws(Error::class)
-    override fun findAll(severityThreshold: String?, pageNo: Int?, size: Int?): List<EventVo> {
+    override fun findAll(
+		severityThreshold: String?,
+		pageNo: Int?,
+		size: Int?
+	): List<EventVo> {
 		val max: Int = size ?: 1000
-		var searchQuery = "${if (severityThreshold != null) "severity > $severityThreshold " else ""}sortby time desc"
+		var searchQuery = "${if (severityThreshold != null) "severity >= $severityThreshold " else ""}sortby time desc"
 		if (pageNo != null) searchQuery += " page $pageNo"
 		log.info("findAll ... max: {}, searchQuery: {}", max, searchQuery)
         val res: List<Event> =

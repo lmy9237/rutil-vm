@@ -1,28 +1,30 @@
 import { useMemo, useState } from "react";
+import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
-import toast from "react-hot-toast";
 import { useCommitNetConfigHost } from "../../../api/RQHook";
-import useGlobal from "../../../hooks/useGlobal";
 
 const HostCommitNetModal = ({ 
-  isOpen, onClose 
+  isOpen,
+  onClose,
 }) => {
+  // const { closeModal } = useUIState()
   const { hostsSelected } = useGlobal()
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected])
   const host = useMemo(() => [...hostsSelected][0], [hostsSelected])
   const [approved, setApproved] = useState(false);
   
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.HOST} 재부팅 ${Localization.kr.FINISHED}`);
-  };
-  const { mutate: commitNetConfigHost } = useCommitNetConfigHost(onSuccess, () => onClose());
+  const {
+    mutate: commitNetConfigHost
+  } = useCommitNetConfigHost(onClose, onClose);
 
   const handleSubmit = () => {
-    if (!approved) { return toast.error("확인버튼이 필요합니다") }
-
+    if (!approved) {
+      return toast.error("확인버튼이 필요합니다")
+    }
     commitNetConfigHost( hostId );
   };
 

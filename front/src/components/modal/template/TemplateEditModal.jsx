@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import TabNavButtonGroup from "../../common/TabNavButtonGroup";
 import LabelInput from "../../label/LabelInput";
@@ -8,13 +9,15 @@ import LabelSelectOptions from "../../label/LabelSelectOptions";
 import { useEditTemplate, useTemplate } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import useGlobal from "../../../hooks/useGlobal";
 
 const TemplateEditModal = ({
   isOpen,
-  editMode = false,
-  templateId,
   onClose,
+  editMode = false,
 }) => {
+  // const { closeModal } = useUIState()
+  const { templatesSelected } = useGlobal()
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -28,7 +31,7 @@ const TemplateEditModal = ({
   const [clsuterVoName, setClsuterVoName] = useState("");
   const [monitor, setMonitor] = useState(1); // 숫자 타입
 
-  const { mutate: editTemplate } = useEditTemplate();
+  const { mutate: editTemplate } = useEditTemplate(onClose, onClose);
   
   // 최적화옵션(영어로 값바꿔야됨)
   const [optimizeOption, setOptimizeOption] = useState([
@@ -54,7 +57,7 @@ const TemplateEditModal = ({
   const [activeTab, setActiveTab] = useState("general");
 
   //해당데이터 상세정보 가져오기
-  const { data: templateData } = useTemplate(templateId);
+  const { data: templateData } = useTemplate(templatesSelected[0]?.id);
   const [selectedOptimizeOption, setSelectedOptimizeOption] = useState("server"); // 칩셋 선택
  // const [selectedChipset, setSelectedChipset] = useState("Q35_OVMF"); // 칩셋 선택
 
@@ -103,31 +106,20 @@ const TemplateEditModal = ({
       monitor: Number(monitor)
     };
     
-    Logger.debug(`템플릿: ${JSON.stringify(dataToSubmit, null, 2)}`);
+    Logger.debug(`TemplateEditModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
     if (editMode) {
       dataToSubmit.id = id;
-      editTemplate(
-        {
-          templateId: id,
-          templateData: dataToSubmit,
-        }, {
-          onSuccess: () => {
-            onClose();
-            toast.success("템플릿 편집 완료");
-          },
-          onError: (error) => {
-            toast.error("Error editing cluster:", error);
-          },
-        }
-      );
+      editTemplate({
+        templateId: id,
+        templateData: dataToSubmit,
+      });
     }
   };
 
   return (
     
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"템플릿"}
-      submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
+    <BaseModal targetName={Localization.kr.TEMPLATE} submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "800px", height: "450px" }} 
     >
@@ -150,7 +142,7 @@ const TemplateEditModal = ({
             />
           </div>
           <hr/>
-          {activeTab  === "general" && (
+          {activeTab === "general" && (
             <>
               <LabelInput id="template_name"
                 label={Localization.kr.NAME}

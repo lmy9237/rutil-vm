@@ -8,27 +8,26 @@ import Localization from "../../../utils/Localization";
 import { useDeleteNetwork } from "../../../api/RQHook";
 
 const NetworkModals = ({ }) => {
-  const { activeModal, setActiveModal } = useUIState()
+  const { activeModal, closeModal } = useUIState()
   const { networksSelected } = useGlobal()
   
   const modals = {
     create: (
-      <NetworkModal key={activeModal()} isOpen={activeModal() === "network:create"} 
-        onClose={() => setActiveModal(null)} 
+      <NetworkModal key={"network:create"} isOpen={activeModal().includes("network:create")} 
+        onClose={() => closeModal("network:create")}
       />
     ), update: (
-      <NetworkModal key={activeModal()} isOpen={activeModal() === "network:update"}
-        onClose={() => setActiveModal(null)}
-        editMode
+      <NetworkModal key={"network:update"} isOpen={activeModal().includes("network:update")} editMode 
+        onClose={() => closeModal("network:update")}
       />
     ), import: (
-      <NetworkImportModal key={activeModal()} isOpen={activeModal() === "network:import"}
-        onClose={() => setActiveModal(null)}
+      <NetworkImportModal key={"network:import"} isOpen={activeModal().includes("network:import")}
+        onClose={() => closeModal("network:import")}
         data={networksSelected}
       />
     ), remove: (
-      <DeleteModal key={activeModal()} isOpen={activeModal() === "network:remove"}
-        onClose={() => setActiveModal(null)}
+      <DeleteModal key={"network:remove"} isOpen={activeModal().includes("network:remove")}
+        onClose={() => closeModal("network:remove")}
         label={Localization.kr.NETWORK}
         data={networksSelected}
         api={useDeleteNetwork()}
@@ -40,7 +39,7 @@ const NetworkModals = ({ }) => {
   return (
     <>
       {Object.keys(modals).filter((key) => 
-        activeModal() === `network:${key}`
+        activeModal().includes(`network:${key}`)
       ).map((key) => (
           <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}   

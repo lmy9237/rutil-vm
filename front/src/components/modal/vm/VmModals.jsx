@@ -29,66 +29,62 @@ const VmModals = ({
     "vm:shutdown",
     "vm:powerOff",
   ]), [])
-  const { activeModal, setActiveModal, } = useUIState()
+  const { activeModal, closeModal, } = useUIState()
   const { vmsSelected } = useGlobal()
 
   const modals = {
     create: (
-      <VmModal key={activeModal()} isOpen={activeModal() === "vm:create"}
-        onClose={() => setActiveModal(null)}
+      <VmModal key={"vm:create"} isOpen={activeModal().includes("vm:create")}
+        onClose={() => closeModal("vm:create")}
       />
     ), update: (
-      <VmModal key={activeModal()} isOpen={activeModal() === "vm:update"} 
-        onClose={() => setActiveModal(null)}
-        editMode
+      <VmModal key={"vm:update"} isOpen={activeModal().includes("vm:update")} editMode 
+        onClose={() => closeModal("vm:update")}
       />
     ), remove: (
-      <VmDeleteModal key={activeModal()} isOpen={activeModal() === "vm:remove"}
-        onClose={() => setActiveModal(null)}
-        data={vmsSelected} 
+      <VmDeleteModal key={"vm:remove"} isOpen={activeModal().includes("vm:remove")} 
+        onClose={() => closeModal("vm:remove")}
       />
     ), templates: (
-      <TemplateModal key={activeModal()} isOpen={activeModal() === "vm:templates"}
-        onClose={() => setActiveModal(null)}
-        selectedVm={vm} // TODO: 조건바꿔야함
-      />
+      <TemplateModal key={"vm:templates"} isOpen={activeModal().includes("vm:templates")}
+        onClose={() => closeModal("vm:templates")}
+      /> 
+      // NOTE: 안쓰는 것 같음
     ), snapshot: (
-      <VmSnapshotModal key={activeModal()} isOpen={activeModal() === "vm:snapshot"}
-        onClose={() => setActiveModal(null)}
-        selectedVm={vmsSelected} 
+      <VmSnapshotModal key={"vm:snapshot"} isOpen={activeModal().includes("vm:snapshot")} 
+        onClose={() => closeModal("vm:snapshot")}
       />
     ), import: (
-      <VmImportModal key={activeModal()} isOpen={activeModal() === "vm:import"}
-        onClose={() => setActiveModal(null)} 
+      <VmImportModal key={"vm:import"} isOpen={activeModal().includes("vm:import")} 
+        onClose={() => closeModal("vm:import")}
       />
     ), copy: ( // 수정필요
-      <VmModal key={activeModal()} isOpen={activeModal() === "vm:copy"} 
-        onClose={() => setActiveModal(null)}
-        copyMode
+      <VmModal key={"vm:copy"} isOpen={activeModal().includes("vm:copy")} 
+        onClose={() => closeModal("vm:copy")}
+        copyMode 
       />
     ), migration: (
-      <VmMigrationModal key={activeModal()} isOpen={activeModal() === "vm:migration"}
-        onClose={() => setActiveModal(null)}
+      <VmMigrationModal key={"vm:migration"} isOpen={activeModal().includes("vm:migration")} 
+        onClose={() => closeModal("vm:migration")}
       />
     ), ova: (
-      <VmExportOVAModal key={activeModal()} isOpen={activeModal() === "vm:ova"}
-        onClose={() => setActiveModal(null)}  
-        selectedVms={vmsSelected} 
+      <VmExportOVAModal key={"vm:ova"} isOpen={activeModal().includes("vm:ova")}
+        onClose={() => closeModal("vm:ova")}     
       />
     ), action: (
-      <VmActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}
-        onClose={() => setActiveModal(null)}
-        action={activeModal()}
+      <VmActionModal key={activeModal()[0]} isOpen={ACTIONS.includes(activeModal()[0])}
+        onClose={() => closeModal(activeModal()[0])}     
+        action={activeModal()[0]}
         data={vmsSelected}
       />
     ),
   };
 
-  Logger.debug(`VmModals ...`)
   return (
     <>
       {Object.keys(modals).filter((key) => 
-        activeModal() === `vm:${key}` || ACTIONS.includes(activeModal())
+        activeModal().includes(`vm:${key}`) ||
+        ACTIONS.includes(activeModal()[0])
       ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}

@@ -73,7 +73,7 @@
 //         <button disabled={!selectedStorageId}>삭제</button>
 //       </div>
 //       <span>선택된 ID: {selectedStorageId || "없음"}</span>
-//       <div ref={tableRef} className="section-table-outer">
+//       <div ref={tableRef} className="section-table-outer w-full">
 //         <table>
 //           <thead>
 //             <tr>

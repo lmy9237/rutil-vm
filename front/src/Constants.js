@@ -129,7 +129,9 @@ const CONSTANT = {
   chipsetOptions: chipsetOptions(),
   cpuArcs: cpuArcs(),
   domainTypeOptions: domainTypeOptions(),
-
+  regex: {
+    uuid: /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
+  },
   color: {
     logo: "#8CC453",
     logText: "#4679BC",

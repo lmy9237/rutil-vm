@@ -2,11 +2,16 @@ import BaseModal from "../BaseModal";
 import TablesOuter from '../../table/TablesOuter';
 import TableColumnsInfo from '../../table/TableColumnsInfo';
 import { useAllClustersFromNetwork } from '../../../api/RQHook';
+import {
+  clusterStatus2Icon, 
+  RVI16,
+  rvi16Install,
+  rvi16VirtualMachine
+} from "../../icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
-import { clusterStatus2Icon, RVI16, rvi16Install, rvi16VirtualMachine } from "../../icons/RutilVmIcons";
 
 const NetworkClusterModal = ({ 
-  isOpen, 
+  isOpen,
   onClose,
   networkId
 }) => {
@@ -41,16 +46,13 @@ const NetworkClusterModal = ({
   
 
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName={Localization.kr.NETWORK}
-      submitTitle={Localization.kr.MANAGEMENT}
+    <BaseModal targetName={Localization.kr.NETWORK} submitTitle={Localization.kr.MANAGEMENT}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={() => {}}
       contentStyle={{ width: "900px" }}
     >
       <div className="py-3">
-        <TablesOuter
+        <TablesOuter target={"cluster"}
           columns={TableColumnsInfo.CLUSTERS_POPUP} data={transformedData}
           onRowClick={() => {}}
           isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}

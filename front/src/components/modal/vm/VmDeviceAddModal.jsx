@@ -10,7 +10,6 @@ const VmDeviceAddModal = ({
   onClose,
   hostDevices
 }) => {
-  Logger.debug("VmDeviceAddModal ...")
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={`${Localization.kr.HOST} 장치`}

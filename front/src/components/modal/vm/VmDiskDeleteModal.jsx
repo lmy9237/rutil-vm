@@ -5,6 +5,7 @@ import { useDeleteDiskFromVM } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Logger from "../../../utils/Logger";
+import useUIState from "../../../hooks/useUIState";
 
 /**
  * @name VmDiskDeleteModal
@@ -15,18 +16,14 @@ import Logger from "../../../utils/Logger";
  */
 const VmDiskDeleteModal = ({ 
   isOpen, 
+  onClose,
   vmId, 
   data,
-  onClose, 
 }) => {
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.VM} ${Localization.kr.DISK} ${Localization.kr.REMOVE} 완료`);
-  };
-  const { mutate: deleteDisk } = useDeleteDiskFromVM(onSuccess, () => onClose());
+  // const { closeModal } = useUIState()
+  const { mutate: deleteDisk } = useDeleteDiskFromVM(onClose, onClose);
 
   Logger.debug(`VmDiskDeleteModal ... data: `, data);
-
   const { ids, aliases } = useMemo(() => {
     return {
       ids: [...data].map((item) => item?.id),

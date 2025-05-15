@@ -28,8 +28,6 @@ import Localization from "../utils/Localization";
 import Logger from "../utils/Logger";
 import "./BoxesLayout.css"
 
-const HEIGHT_GRAPH_HORIZ = 240
-// const HEIGHT_PERCENT_GRAPH_HORIZ = 50
 /**
  * @name BoxesLayout
  * @description 박스 레이아웃
@@ -98,7 +96,7 @@ export const BoxLayout = ({
       onClick={() => navigatePath && navigate(navigatePath)}
       {...props}
     >
-      {title && 
+      {title &&
         <BoxTitle title={title} iconDef={iconDef}/>
       }
       {cntTotal !== undefined && cntTotal !== null &&
@@ -147,23 +145,23 @@ export const BoxDetail = ({
     >
       {cntTotal !== undefined && (<>
         <div className="box-detail-icons f-end fw-500 gap-2">
-          {cntUp && (<div className="box-detail-icon f-end">
+          {cntUp && (<div className="box-detail-icon f-end gap-2">
             <RVI16 className="box-icon sml" iconDef={rvi16DiagonalUp()} />
             <span className="up v-end">{cntUp}</span>
           </div>)}
-          {cntDown && (<div className="box-detail-icon f-end fw-500">
+          {cntDown && (<div className="box-detail-icon f-end gap-2 fw-500">
             <RVI16 className="box-icon sml" iconDef={rvi16DiagonalDown()} />
             <span className="down v-end">{cntDown}</span>
           </div>)}
-          {alert && (<div className="box-detail-icon f-end fw-500">
+          {alert && (<div className="box-detail-icon f-end gap-2 fw-500">
             {severity2Icon("ALERT", true)}
             <span className="alert v-end">{alert}</span>
           </div>)}
-          {error && (<div className="box-detail-icon f-end fw-500 ">
+          {error && (<div className="box-detail-icon f-end gap-2 fw-500">
             {severity2Icon("ERROR", true)}
             <span className="error v-end">{error}</span>
           </div>)}
-          {warning && (<div className="box-detail-icon f-end fw-500 ">
+          {warning && (<div className="box-detail-icon f-end gap-2 fw-500 ">
             {severity2Icon("WARNING", true)}
             <span className="warning v-end">{warning}</span>
           </div>)}

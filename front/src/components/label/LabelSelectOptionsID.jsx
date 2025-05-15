@@ -69,7 +69,10 @@ const LabelSelectOptionsID = ({
   }, [options, loading, value]);
 
   return (
-    <div className={`input-select custom-select-wrapper ${className}`} ref={wrapperRef}>
+    <div
+      className={`input-select custom-select-wrapper ${className}`} 
+      ref={wrapperRef}
+    >
       {label && <label htmlFor={id}>{label}</label>}
         <div
           className={`custom-select-box f-start ${disabled ? "disabled" : ""}`}

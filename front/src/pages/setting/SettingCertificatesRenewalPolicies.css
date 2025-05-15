@@ -1,11 +1,17 @@
 /* SettingCertificatesRenewalPolicies.css */
+summary::-webkit-details-marker { display: none; }
+details>summary { list-style: none; }
+summary::before { content: ' ►'}
+details[open] summary::before { content: " ▼"; }
+summary { height: 36px; }
+
 ul { margin: 0 30px !important; }
 li { color: var(--color-border-default); }
 details {
-  border: var(--border-default);
-  border-radius: 4px;
+  border: var(--border-default);border-radius: 2px;
   padding: 8px;
+  align-items: flex-start !important;
 }
-details[open] summary {
-  border-bottom: var(--border-default);
+details > hr { 
+  margin: 4px 0; 
 }

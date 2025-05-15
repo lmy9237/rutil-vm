@@ -1,38 +1,3 @@
-/*
-.search-box button {
-  padding: 5px 10px;
-  background-color: #f0f0f0;
-  border: var(--border-default);
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-  .paging-btns {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  height: 4vh;
-}
-.paging-btns span {
-  display: block;
-  margin: 0 0.2rem;
-}
-.search-box {
-  width: 40%;
-  display: flex;
-  margin-bottom: 0.15rem;
-}
-.search-box input {
-  width: 500px !important;height: 30px !important;
-  width: 92%;
-  outline: none;
-}
-.search-box > button {
-  width: 5%;height: 30px !important;
-  cursor: pointer;
-}
-*/
 /* Tables.css */
 .custom-table td,
 .custom-table th {
@@ -55,7 +20,7 @@
 }
 
 .paging-arrows {
-  min-width: 100%;display:flex;align-items:center;justify-content:flex-end;flex-direction:row;
+  min-width: 100%;
 }
 .paging-arrows > button { border:none; }
 .paging-arrows > button:disabled,
@@ -65,13 +30,13 @@
 
 /*tablesOuter*/
 .section-table-outer {
-  width: 100%;position:relative;
+  width: 100%;/* TODO: 제거*/
+  position:relative;
 }
 .section-table-outer table {
-  width: 100%;
+  width: 100%;/* TODO: 제거*/
   border-collapse: collapse;
 }
-
 .section-table-outer table tbody tr:nth-child(even){
   background-color:var(--color-white);
 }
@@ -90,7 +55,6 @@
 .section-table-outer th {
   background-color: var(--color-table);
 }
-
 .section-table-outer input[type="checkbox"] {
   text-align: center;
 }
@@ -107,14 +71,6 @@
 }
 .section-table-outer > h1 {
   padding: 10px 0;
-}
-.row-click {
-  /* color: rgb(9, 83, 153)*/
-  color: var(--color-primary);
-  cursor: pointer;
-}
-.row-click:hover {
-  text-decoration: underline;
 }
 /*우클릭메뉴박스*/
 .my-context-menu{

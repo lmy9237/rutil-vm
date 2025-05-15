@@ -13,27 +13,22 @@ import Logger from "../../../utils/Logger";
 import "../domain/MDomain.css";
 
 const DiskActionModal = ({ 
-  data=[], // 배열일수도 한개만 들어올수도
   isOpen,
-  onClose
+  onClose,
+  data=[], // 배열일수도 한개만 들어올수도
 }) => {
-  const { activeModal } = useUIState()
-  const daLabel = activeModal() === "disk:move" 
+  const { activeModal, /*closeModal*/ } = useUIState()
+  const daLabel = activeModal().includes("disk:move")
     ? Localization.kr.MOVE 
-    : "복사";
+    : Localization.kr.COPY;
   const { disksSelected } = useGlobal()
   const [aliases, setAliases] = useState({});
   const [domainList, setDomainList] = useState({});
   const [targetDomains, setTargetDomains] = useState({});
 
   Logger.debug(`DiskActionModal ... disksSelected: `, disksSelected);
-
-  const onSuccess = () => {
-    onClose();
-    toast.success(`디스크 ${daLabel} 완료`);
-  };
-  const { mutate: copyDisk } = useCopyDisk(onSuccess, () => onClose());
-  const { mutate: moveDisk } = useMoveDisk(onSuccess, () => onClose());
+  const { mutate: copyDisk } = useCopyDisk(onClose, onClose);
+  const { mutate: moveDisk } = useMoveDisk(onClose, onClose);
 
 
   const getDomains = useQueries({
@@ -52,7 +47,7 @@ const DiskActionModal = ({
   });  
 
   useEffect(() => {
-    if (activeModal() === "disk:copy") {
+    if (activeModal().includes("disk:copy")) {
       const initialAliases = {};
       for (let i=0; i<disksSelected.length; i++) {
         const disk = disksSelected[i];
@@ -107,7 +102,7 @@ const DiskActionModal = ({
       }
   
       // 복사 or 이동 처리
-      if (activeModal() === "disk:copy") {
+      if (activeModal().includes("disk:copy")) {
         copyDisk({
           diskId: disk.id,
           diskImage: {
@@ -124,7 +119,6 @@ const DiskActionModal = ({
       }
     });
   };
-  
 
   return (
     <BaseModal targetName={Localization.kr.DISK} submitTitle={daLabel}
@@ -150,7 +144,7 @@ const DiskActionModal = ({
               [...disksSelected]?.map((disk, index) => (
                 <tr key={disk.id || index}>
                   <td>
-                    {activeModal() === "disk:move" ? (
+                    {activeModal().includes("disk:move") ? (
                       disk.alias
                     ) : (
                       <LabelInput label={""}

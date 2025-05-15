@@ -82,7 +82,7 @@ const HostGeneral = ({
     { label: "Open vSwitch 버전", value: host?.hostSwVo?.openVswitchVersion },
     { label: "Nmstate 버전", value: host?.hostSwVo?.nmstateVersion },
     { label: "VNC 암호화", value: "비활성화됨" },
-    { label: "OVN configured", value: "예" },
+    { label: "OVN configured", value: Localization.kr.YES },
   ]), [host]);
 
   const tabs = useMemo(() => ([

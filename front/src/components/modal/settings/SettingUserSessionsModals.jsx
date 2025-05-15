@@ -1,4 +1,5 @@
 import React from "react";
+import useUIState from "../../../hooks/useUIState";
 import SettingUserSessionsModal from "./SettingUserSessionsModal"
 import Logger from "../../../utils/Logger";
 
@@ -9,20 +10,22 @@ import Logger from "../../../utils/Logger";
  * @returns 
  */
 const SettingUserSessionsModals = ({
-  modalType, userSession, onClose 
 }) => {
-  const allModals = {
-    create:  (
-      <SettingUserSessionsModal isOpen={modalType==="endSession"} onClose={onClose} 
-        targetName={"사용자 세션"}
+  const { activeModal, closeModal } = useUIState()
+  const modals = {
+    end:  (
+      <SettingUserSessionsModal key={"usersession:end"} isOpen={activeModal().includes("usersession:end")} 
+        onClose={() => closeModal("usersession:end")}
       />
     ),
   }
-  Logger.debug("SettingUserSessionsModals ...")
+
   return (
     <>
-      {Object.keys(allModals).map((key) => (
-        <React.Fragment key={key}>{allModals[key]}</React.Fragment>
+      {Object.keys(modals).filter((key) =>
+        activeModal().includes(`usersession:${key}`)
+      ).map((key) => (
+        <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}
     </>
   );

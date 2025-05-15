@@ -23,12 +23,12 @@ const ACTIONS = {
 
 const VmActionModal = ({
   isOpen,
+  onClose,
   data,
-  onClose
 }) => {  
-  const { activeModal } = useUIState()
+  const { activeModal, closeModal } = useUIState()
   const { label = "", hook } = ACTIONS[activeModal()] || {};
-  const { mutate } = hook ? hook(onClose, onClose) : { mutate: null };
+  const { mutate } = hook ? hook(closeModal, closeModal) : { mutate: null };
 
   const { ids, names } = useMemo(() => {
     const list = [...data];

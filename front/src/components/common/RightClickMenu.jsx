@@ -30,8 +30,9 @@ import VmDiskActionButtons from "../dupl/VmDiskActionButtons";
 import SettingUsersActionButtons from "../dupl/SettingUsersActionButtons"
 import EventActionButtons from "../dupl/EventActionButtons"
 import JobActionButtons from "../dupl/JobActionButtons";
-import "./RightClickMenu.css"
 import DiskSnapshotActionButtons from "../dupl/DiskSnapshotActionButtons";
+import "./RightClickMenu.css"
+
 /**
  * @name RightClickMenu
  * @description 우클릭 했을 때 나오는 메뉴에 대한 UI
@@ -66,6 +67,7 @@ const RightClickMenu = () => {
     "usersession", // 활성화 세션
     "cert", // 인증서
     "disksnapshot", // NOTE: 삭제처리를 직접 하지 않음으로 기능 배제
+    "hostdevice", // 호스트 장치
     "iscsi",
     "fcp",
   ]), [])

@@ -1,0 +1,8 @@
+/* TableRowClick.css */
+.tr-clickable {
+  color: var(--color-primary);
+  cursor: pointer;
+}
+.tr-clickable:hover {
+  text-decoration: underline;
+}

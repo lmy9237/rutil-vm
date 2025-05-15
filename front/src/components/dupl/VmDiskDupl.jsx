@@ -14,6 +14,7 @@ import SelectedIdView from "../common/SelectedIdView";
 import { checkZeroSizeToGiB } from "../../util";
 import Logger from "../../utils/Logger";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
+import Localization from "../../utils/Localization";
 
 
 /**
@@ -44,9 +45,9 @@ const VmDiskDupl = ({
       ),
       connectionvm: vmsSelected[0]?.name || "",
       description: diskImage?.description,
-      bootable: d?.bootable ? "예" : "",
-      readOnly: d?.readOnly ? "예" : "",
-      sharable: diskImage?.sharable ? "예" : "",
+      bootable: d?.bootable ? Localization.kr.YES: "",
+      readOnly: d?.readOnly ? Localization.kr.YES : "",
+      sharable: diskImage?.sharable ? Localization.kr.YES : "",
       status: diskImage?.status,
       interface: d?.interface_,
       storageType: diskImage?.storageType,

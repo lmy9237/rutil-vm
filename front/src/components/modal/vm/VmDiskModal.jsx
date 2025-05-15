@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelInputNum from "../../label/LabelInputNum";
@@ -15,6 +17,7 @@ import {
   useVm,
 } from "../../../api/RQHook";
 import { checkKoreanName, convertBytesToGB, convertGBToBytes } from "../../../util";
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
@@ -49,36 +52,40 @@ const initialFormState = {
  */
 const VmDiskModal = ({
   isOpen,
+  onClose,
   editMode = false,
   diskType = true,  // t=disk페이지에서 생성 f=vm만들때 같이 생성
   vmId,
-  vmName, //가상머신 생성 디스크 이름
+  vmName, // 가상머신 생성 디스크 이름
   diskAttachmentId,
   dataCenterId,
   hasBootableDisk=false, // 부팅가능한 디스크 여부
   initialDisk,
   onCreateDisk,
-  onClose,  
 }) => {
-  const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+  // const { closeModal } = useUIState()
+  const { vmsSelected, disksSelected, setDisksSelected } = useGlobal()
+  const dLabel = editMode
+    ? Localization.kr.UPDATE 
+    : Localization.kr.CREATE;
   const [activeTab, setActiveTab] = useState("img");
   const handleTabClick = useCallback((tab) => { 
-    setActiveTab(tab) 
+    setActiveTab(tab);
   }, []);
   const [formState, setFormState] = useState(initialFormState);
   const [storageDomainVo, setStorageDomainVo] = useState({ id: "", name: "" });
   const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.VM} ${Localization.kr.DISK} ${dLabel} 완료`);
-  };
-  const { mutate: addDiskVm } = useAddDiskFromVM(onSuccess, () => onClose());
-  const { mutate: editDiskVm } = useEditDiskFromVM(onSuccess, () => onClose());
-  const { data: vm }  = useVm(vmId);
+  const { mutate: addDiskVm } = useAddDiskFromVM(onClose, onClose);
+  const { mutate: editDiskVm } = useEditDiskFromVM(onClose, onClose);
+  const {
+    data: vm 
+  } = useVm(vmsSelected[0]?.id);
   
   // 디스크 데이터 가져오기
-  const { data: diskAttachment } = useDiskAttachmentFromVm(vmId, diskAttachmentId);
+  const {
+    data: diskAttachment
+  } = useDiskAttachmentFromVm(vmId, diskAttachmentId);
 
   // 선택한 데이터센터가 가진 도메인 가져오기
   const {
@@ -96,7 +103,10 @@ const VmDiskModal = ({
 
   useEffect(() => {
     if (!editMode && isOpen && vmName) {
-      setFormState((prev) => ({ ...prev, alias: vmName }));
+      setFormState((prev) => ({ ...prev,
+        alias: vmName,
+        bootable: hasBootableDisk ? false : initialDisk?.bootable || true,
+       }));
     }
   }, [editMode, isOpen, vmName]); 
 
@@ -174,18 +184,20 @@ const VmDiskModal = ({
     }
   }, [editMode, initialDisk, hasBootableDisk]);
   
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
   const handleInputChangeCheck = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
+  };
+
+  /*
+  const handleInputChange = (field) => (e) => {
+    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   const handleSelectIdChange = (setVo, voList) => (e) => {
     const selected = voList.find((item) => item.id === e.target.value);
     if (selected) setVo({ id: selected.id, name: selected.name });
-  }; 
+  };
+  */ 
 
   const validateForm = useCallback(() => {
     Logger.debug(`VmDiskModal > validateForm ... `)
@@ -257,7 +269,6 @@ const VmDiskModal = ({
     };
     
     Logger.debug(`데이터 : ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터를 확인하기 위한 로그
-
     editMode
       ? editDiskVm({ vmId, diskAttachmentId: formState?.id, diskAttachment: dataToSubmit })
       : addDiskVm({ vmId, diskData: dataToSubmit });
@@ -265,7 +276,7 @@ const VmDiskModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.DISK} submitTitle={dLabel}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}
       onSubmit={diskType? handleFormSubmit : handleOkClick}
       contentStyle={{ width: "700px" }} 
     >
@@ -278,26 +289,22 @@ const VmDiskModal = ({
         >
           이미지
         </div>
-        {/* <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
-          직접 LUN
-        </div> */}
       </div>
       {/*이미지*/}
       {activeTab === "img" && (
         <div className="disk-new-img">
-          <div >              
+          <div>              
             <span>Bootable Disk: {hasBootableDisk ? "true" : "false"}</span>
-
             <LabelInputNum label="크기(GB)"
               value={formState.size}
               autoFocus
               disabled={editMode}
-              onChange={handleInputChange("size")}
+              onChange={handleInputChange(setFormState, "size")}
             />
             {editMode && (
               <LabelInputNum label="추가크기(GB)"
                 value={formState.appendSize}
-                onChange={handleInputChange("appendSize")}
+                onChange={handleInputChange(setFormState, "appendSize")}
               />
             )}
             <LabelInput id="alias" label={Localization.kr.ALIAS}
@@ -306,13 +313,13 @@ const VmDiskModal = ({
             />
             <LabelInput id="description" label={Localization.kr.DESCRIPTION}
               value={formState.description} 
-              onChange={handleInputChange("description")}
+              onChange={handleInputChange(setFormState, "description")}
             />
             <LabelSelectOptions label="인터페이스"
               value={formState.interface_}
               disabled={editMode}
               options={interfaceList}
-              onChange={handleInputChange("interface_")}
+              onChange={handleInputChange(setFormState, "interface_")}
             />
             <LabelSelectOptionsID label={Localization.kr.DOMAIN}
               value={storageDomainVo.id}
@@ -334,53 +341,44 @@ const VmDiskModal = ({
               onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true", }))}
             />
           </div>
-
-          <div className="disk-new-img-right f-end">
-            <div className='img-checkbox-outer'>
-              <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
-                checked={Boolean(formState.wipeAfterDelete)} 
-                onChange={handleInputChangeCheck("wipeAfterDelete")}
-              />
-            </div>
-            <div className='img-checkbox-outer'>
-              <LabelCheckbox id="bootable" label={Localization.kr.IS_BOOTABLE}
-                checked={!hasBootableDisk && Boolean(formState.bootable)}
-                disabled={hasBootableDisk} // 이미 부팅 디스크가 있으면 비활성화
-                onChange={handleInputChangeCheck("bootable")}
-              />
-            </div>
-            <div className='img-checkbox-outer'>
-              <LabelCheckbox id="sharable" label={Localization.kr.IS_SHARABLE}
-                checked={Boolean(formState.sharable)} 
-                disabled={editMode} 
-                onChange={handleInputChangeCheck("sharable")} 
-              />
-            </div>
-            <div className='img-checkbox-outer'>
-              <LabelCheckbox id="readOnly" label={Localization.kr.IS_READ_ONLY}
-                checked={Boolean(formState.readOnly)} 
-                disabled={editMode}
-                onChange={handleInputChangeCheck("readOnly")} 
-              />
-            </div>
-            {/* 
-            <LabelCheckbox 
-              label="취소 활성화" 
-              id="cancelActive" 
-              checked={Boolean(formState.cancelActive)} 
-              onChange={handleInputChangeCheck("cancelActive")}
+          <div className="img-checkbox-outer f-end gap-8">
+            <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
+              checked={Boolean(formState.wipeAfterDelete)} 
+              onChange={handleInputChangeCheck("wipeAfterDelete")}
+            />
+            <LabelCheckbox id="bootable" label={Localization.kr.IS_BOOTABLE}
+              checked={!hasBootableDisk && Boolean(formState.bootable)}
+              disabled={hasBootableDisk} // 이미 부팅 디스크가 있으면 비활성화
+              onChange={handleInputChangeCheck("bootable")}
+            />
+            <LabelCheckbox id="sharable" label={Localization.kr.IS_SHARABLE}
+              checked={Boolean(formState.sharable)} 
+              disabled={editMode} 
+              onChange={handleInputChangeCheck("sharable")} 
+            />
+            <LabelCheckbox id="readOnly" label={Localization.kr.IS_READ_ONLY}
+              checked={Boolean(formState.readOnly)} 
               disabled={editMode}
-            /> 
-            */}
-            <div className='img-checkbox-outer'>
-              <LabelCheckbox 
-                label="증분 백업 사용" 
-                id="backup" 
-                checked={Boolean(formState.backup)} 
-                onChange={handleInputChangeCheck("backup")}
-              />
-              </div>
+              onChange={handleInputChangeCheck("readOnly")} 
+            />
+            <LabelCheckbox 
+              label="증분 백업 사용" 
+              id="backup" 
+              checked={Boolean(formState.backup)} 
+              onChange={handleInputChangeCheck("backup")}
+            />
           </div>
+          {/* 
+          <LabelCheckbox 
+            label="취소 활성화" 
+            id="cancelActive" 
+            checked={Boolean(formState.cancelActive)} 
+            onChange={handleInputChangeCheck("cancelActive")}
+            disabled={editMode}
+          /> 
+          */}
+          <div className='img-checkbox-outer'>
+            </div>
         </div>
       )}
       {/* 직접LUN */}

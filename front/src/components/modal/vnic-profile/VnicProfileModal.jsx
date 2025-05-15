@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
@@ -10,13 +11,13 @@ import {
   useNetworksFromDataCenter,
   useVnicProfile,
 } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
 import { checkKoreanName, checkName } from "../../../util";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
-import Logger from "../../../utils/Logger";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 import "./MVnic.css";
 
 const initialFormState = {
@@ -30,12 +31,16 @@ const initialFormState = {
 
 const VnicProfileModal = ({
   isOpen, 
-  onClose, 
+  onClose,
   editMode = false,
 }) => {
-  const vLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
-
-  const { networksSelected, vnicProfilesSelected, datacentersSelected } = useGlobal();  
+  // const { closeModal } = useUIState()
+  const vLabel = editMode 
+    ? Localization.kr.UPDATE
+    : Localization.kr.CREATE;
+  const {
+    networksSelected, vnicProfilesSelected, datacentersSelected 
+  } = useGlobal();  
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
   const networkId = useMemo(() => [...networksSelected][0]?.id, [networksSelected]);
   const vnicProfileId = useMemo(() => [...vnicProfilesSelected][0]?.id, [vnicProfilesSelected]);
@@ -46,12 +51,8 @@ const VnicProfileModal = ({
   const [networkVo, setNetworkVo] = useState({ id: "", name: "" });
   const [networkFilterVo, setNetworkFilterVo] = useState({ id: "", name: "" });
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.VNIC_PROFILE} ${vLabel} ${Localization.kr.FINISHED}`);
-  };
-  const { mutate: addVnicProfile } = useAddVnicProfile(onSuccess, () => onClose());
-  const { mutate: editVnicProfile } = useEditVnicProfile(onSuccess, () => onClose());
+  const { mutate: addVnicProfile } = useAddVnicProfile(onClose, onClose);
+  const { mutate: editVnicProfile } = useEditVnicProfile(onClose, onClose);
 
   const { data: vnic } = useVnicProfile(vnicProfileId);
   const { 
@@ -154,7 +155,7 @@ const VnicProfileModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.VNIC_PROFILE} submitTitle={vLabel}
-      isOpen={isOpen} onClose={onClose}     
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px" }} 
     >

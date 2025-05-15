@@ -1,30 +1,34 @@
 import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import { useQueries } from "@tanstack/react-query";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import { useDeleteVm } from "../../../api/RQHook";
 import ApiManager from "../../../api/ApiManager";
-import "./MVm.css";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Logger from "../../../utils/Logger";
 import Localization from "../../../utils/Localization";
+import "./MVm.css";
+import useGlobal from "../../../hooks/useGlobal";
 
-const VmDeleteModal = ({ isOpen, onClose, data }) => {
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.VM} ${Localization.kr.REMOVE} 완료`);
-  };
-  const { mutate: deleteVm } = useDeleteVm(onSuccess, () => onClose());
+const VmDeleteModal = ({ 
+  isOpen,
+  onClose,
+}) => {
+  // const { closeModal } = useUIState()
+  const { vmsSelected } = useGlobal()
+  const {
+    mutate: deleteVm
+  } = useDeleteVm(onClose, onClose);
 
   const { ids, names } = useMemo(() => {
-    if (!data) return { ids: [], names: [] };
+    if (!vmsSelected) return { ids: [], names: [] };
     
-    const dataArray = Array.isArray(data) ? data : [data];
     return {
-      ids: dataArray.map((item) => item.id),
-      names: dataArray.map((item) => item.name || 'undefined'),
+      ids: [...vmsSelected].map((item) => item.id),
+      names: [...vmsSelected].map((item) => item.name || 'undefined'),
     };
-  }, [data]);
+  }, [vmsSelected]);
   const [detachOnlyList, setDetachOnlyList] = useState({});
 
   const diskQueries = useQueries({

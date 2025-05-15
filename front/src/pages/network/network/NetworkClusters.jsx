@@ -2,6 +2,7 @@ import React, { Suspense, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
 import Loading from "../../../components/common/Loading";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
@@ -15,7 +16,6 @@ import { clusterStatus2Icon } from "../../../components/icons/RutilVmIcons";
 import SearchBox from "../../../components/button/SearchBox";
 import { useAllClustersFromNetwork } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name NetworkClusters
@@ -110,9 +110,8 @@ const NetworkClusters = ({ networkId }) => {
 
       {/* 네트워크 관리창 */}
       <Suspense fallback={<Loading />}>
-        {activeModal() === "network:manage" && (
-          <NetworkClusterModal key={activeModal()} isOpen={activeModal() === "network:manage"}
-            onClose={() => setActiveModal(null)}
+        {activeModal().includes("network:manage")  && (
+          <NetworkClusterModal key={activeModal()} isOpen={activeModal().includes("network:manage")}
             networkId={networkId}
           />
         )}

@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
@@ -17,21 +17,17 @@ import Localization from "../../../utils/Localization";
  * @returns
  */
 const DomainDetachModal = ({ 
-  isOpen, 
-  onClose
+  isOpen,
+  onClose,
 }) => {
+  // const { closeModal } = useUIState()
   const {
     datacentersSelected, domainsSelected, sourceContext
   } = useGlobal()
   const title = sourceContext === "fromDomain" ? `${Localization.kr.DATA_CENTER}` : `${Localization.kr.DOMAIN}`;
   const label = sourceContext === "fromDomain"
 
-  const onSuccess = () => {
-    // onClose();
-    toast.success(`${title} 분리 완료`);
-  };
-  const { mutate: detachDomain } = useDetachDomain(onSuccess);
-  // const { mutate: detachDomain } = useDetachDomain(onSuccess, () => onClose());
+  const { mutate: detachDomain } = useDetachDomain(onClose, onClose);
 
   const { data: vms = [] } = useAllVMsFromDomain(domainsSelected[0]?.id, (e) => ({ ...e, }));
   const { data: templates = [] } = useAllTemplatesFromDomain(domainsSelected[0]?.id, (e) => ({ ...e }));
@@ -47,10 +43,10 @@ const DomainDetachModal = ({
   };
 
   return (
-    <BaseModal targetName={title} submitTitle={"분리"}
-      isOpen={isOpen} onClose={onClose}      
+    <BaseModal targetName={title} submitTitle={Localization.kr.DETACH}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      promptText={`다음 ${label ? `${Localization.kr.DATA_CENTER}에서` : ""}  ${Localization.kr.DOMAIN}를 분리 하시겠습니까?`}
+      promptText={`다음 ${label ? `${Localization.kr.DATA_CENTER}에서` : ""}  ${Localization.kr.DOMAIN}를 ${Localization.kr.DETACH} 하시겠습니까?`}
       contentStyle={{ width: "600px"}} 
       shouldWarn={true}
     >

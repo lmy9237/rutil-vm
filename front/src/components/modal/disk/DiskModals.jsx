@@ -17,33 +17,32 @@ const ACTIONS = [
 const DiskModals = ({ 
   disk,
 }) => {
-  const { activeModal, setActiveModal } = useUIState()
+  const { activeModal, closeModal } = useUIState()
   const { disksSelected } = useGlobal()
 
   const modals = {
     create: (
-      <DiskModal isOpen={activeModal() === "disk:create"}
-        onClose={() => setActiveModal(null)}
+      <DiskModal key={"disk:create"} isOpen={activeModal().includes("disk:create")}
+        onClose={() => closeModal("disk:create")}
       />
     ), update: (
-      <DiskModal key={activeModal()} isOpen={activeModal() === "disk:update"}
-        onClose={() => setActiveModal(null)}
-        editMode
+      <DiskModal key={"disk:update"} isOpen={activeModal().includes("disk:update")} editMode 
+        onClose={() => closeModal("disk:update")}
       />
     ), remove: (
-      <DeleteModal key={activeModal()} isOpen={activeModal() === "disk:remove"}
-        onClose={() => setActiveModal(null)}
+      <DeleteModal key={"disk:remove"} isOpen={activeModal().includes("disk:remove")}
+        onClose={() => closeModal("disk:remove")}
         label={Localization.kr.DISK}
         data={disksSelected}
-        api={useDeleteDisk(() => setActiveModal(null), () => setActiveModal(null))}
+        api={useDeleteDisk()}
       />
     ), upload: (
-      <DiskUploadModal key={activeModal()} isOpen={activeModal() === "disk:upload"} 
-        onClose={() => setActiveModal(null)}
+      <DiskUploadModal key={activeModal()} isOpen={activeModal().includes("disk:upload")} 
+        onClose={() => closeModal("disk:upload")}
       />
     ), action: (
-      <DiskActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}
-        onClose={() => setActiveModal(null)}
+      <DiskActionModal key={activeModal()[0]} isOpen={ACTIONS.includes(activeModal())}
+        onClose={() => closeModal(activeModal()[0])}
         action={activeModal}
         data={disksSelected}
       />
@@ -53,7 +52,7 @@ const DiskModals = ({
   return (
     <>
       {Object.keys(modals).filter((key) => 
-        activeModal() === `disk:${key}` || ACTIONS.includes(activeModal())
+        activeModal().includes(`disk:${key}`) || ACTIONS.includes(activeModal())
       ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}

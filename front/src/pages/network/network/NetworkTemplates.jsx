@@ -95,9 +95,8 @@ const NetworkTemplates = ({
       <SelectedIdView items={nicsSelected}/>
       {/* 모달 렌더링 */}
       <Suspense fallback={<Loading/>}>
-        {activeModal() === "template:remove" && (
-          <TemplateNicDeleteModal isOpen={activeModal() === "template:remove"}
-            onClose={() => setActiveModal(null)}
+        {activeModal().includes("template:remove") && (
+          <TemplateNicDeleteModal isOpen={activeModal().includes("template:remove")}
             data={modalData} // 선택된 NIC 데이터 전달
             templateId={selectedTemplateIds}
           />

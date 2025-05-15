@@ -59,7 +59,7 @@ private val log = LoggerFactory.getLogger(AuditLogEntity::class.java)
 class AuditLogEntity(
 	@Id
 	@Column(unique = true, nullable = true)
-	val auditLogId: Int = 0,
+	val auditLogId: Long = 0L,
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	val userId: UUID? = null,
 	val userName: String = "",
@@ -110,7 +110,7 @@ class AuditLogEntity(
 	override fun toString(): String = gson.toJson(this)
 
 	class Builder {
-		private var bAuditLogId: Int = 0;fun auditLogId(block: () ->  Int?) { bAuditLogId = block() ?: 0 }
+		private var bAuditLogId: Long = 0L;fun auditLogId(block: () ->  Long?) { bAuditLogId = block() ?: 0L }
 		private var bUserId: UUID? = null;fun userId(block: () ->  UUID?) { bUserId = block() }
 		private var bUserName: String = "";fun userName(block: () ->  String?) { bUserName = block() ?: "" }
 		private var bVmId: UUID? = null;fun vmId(block: () ->  UUID?) { bVmId = block() }
@@ -150,7 +150,7 @@ class AuditLogEntity(
 	}
 
 	companion object {
-		private const val DEFAULT_ORIGIN = "oVirt"
+		const val DEFAULT_ORIGIN = "oVirt"
 		inline fun builder(block: Builder.() -> Unit): AuditLogEntity = Builder().apply(block).build()
 	}
 }

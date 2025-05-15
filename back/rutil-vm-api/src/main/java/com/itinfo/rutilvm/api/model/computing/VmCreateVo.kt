@@ -153,7 +153,9 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
 		if (vm.leasePresent()) { conn.findStorageDomain(vm.lease().storageDomain().id()).getOrNull() }
 		else null
 	val hosts = if (vm.placementPolicy().hostsPresent()) {
-		vm.placementPolicy().hosts().map { it }.fromHostsToIdentifiedVos()
+		vm.placementPolicy().hosts().map {
+			it
+		}.fromHostsToIdentifiedVos()
 	} else listOf()
     // val nics: List<Nic> = conn.findAllNicsFromVm(vm.id(), follow = "vnicprofile").getOrDefault(listOf())
     // val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(vm.id()).getOrNull()?.firstOrNull()
@@ -271,7 +273,9 @@ fun VmCreateVo.toVmInitBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 fun VmCreateVo.toVmHostBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	val placementBuilder = VmPlacementPolicyBuilder()
 	if (!hostInCluster) {
-		placementBuilder.hosts(hostVos.map { HostBuilder().id(it.id).build() })
+		placementBuilder.hosts(hostVos.map { HostBuilder()
+			.id(it.id)
+			.build() })
 	}
 	placementPolicy(placementBuilder.affinity(VmAffinity.fromValue(migrationMode)))
 }

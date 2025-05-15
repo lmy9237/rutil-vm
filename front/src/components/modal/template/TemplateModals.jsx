@@ -10,27 +10,27 @@ import Localization from "../../../utils/Localization";
 const TemplateModals = ({
   template,
 }) => {
-  const { activeModal, setActiveModal, } = useUIState()
+  const { activeModal, closeModal, } = useUIState()
   const { templatesSelected } = useGlobal()
 
   const modals = {
     update: (
-      <TemplateEditModal isOpen={activeModal() === "template:update"}
-        onClose={() => setActiveModal(null)}  
+      <TemplateEditModal isOpen={activeModal().includes("template:update")}
+        onClose={() => closeModal("template:update")}
         editMode
         templateId={template?.id}
       />
     ), remove: (
-      <DeleteModal isOpen={activeModal() === "template:remove"}
-        onClose={() => setActiveModal(null)}
+      <DeleteModal isOpen={activeModal().includes("template:remove")}
+        onClose={() => closeModal("template:remove")}
         label={Localization.kr.TEMPLATE}
         data={templatesSelected}
         api={useDeleteTemplate()}
         // navigation={''}
       />
     ), addVm: (
-      <VmModal isOpen={activeModal() === "vm:create"}
-        onClose={() => setActiveModal(null)}
+      <VmModal isOpen={activeModal().includes("vm:create")}
+        onClose={() => closeModal("vm:create")}
         templateId={template?.id}
       />
     ),
@@ -39,7 +39,7 @@ const TemplateModals = ({
   return (
     <>
       {Object.keys(modals).filter((key) => 
-        activeModal() === `vm:${key}` || activeModal() === `template:${key}`
+        activeModal().includes(`vm:${key}`) || activeModal().includes(`template:${key}`)
       ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}

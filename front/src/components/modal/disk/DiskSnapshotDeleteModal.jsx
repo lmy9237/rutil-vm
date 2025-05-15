@@ -1,7 +1,7 @@
+import { useMemo } from "react";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import { useDeleteSnapshot } from "../../../api/RQHook";
-import { useMemo } from "react";
-import toast from "react-hot-toast";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
@@ -15,16 +15,15 @@ import Logger from "../../../utils/Logger";
  * NOTE: 삭제처리를 직접 하지 않음으로 기능 배제
  */
 const DiskSnapshotDeleteModal = ({ 
-  isOpen, 
-  onClose, 
+  isOpen,
+  onClose,
   data, 
   vmId
 }) => {
-  const onSuccess = () => {
-    toast.success(`스냅샷 삭제 완료`);
-    onClose();
-  };
-  const { mutate: deleteSnapshot } = useDeleteSnapshot(onSuccess, () => onClose()); 
+  // const { closeModal } = useUIState()
+  const {
+    mutate: deleteSnapshot
+  } = useDeleteSnapshot(onClose, onClose); 
 
   const { ids, descriptions } = useMemo(() => {
     if (!data) return { ids: [], descriptions: [] };
@@ -38,14 +37,12 @@ const DiskSnapshotDeleteModal = ({
   
   const handleDelete = () => {
     Logger.debug(`DiskSnapshotDeleteModal > handleDelete ... `)
-    if (!ids.length) return console.error('삭제할 스냅샷 ID가 없습니다.');    
-  
+    if (!ids.length)
+      return console.error('삭제할 스냅샷 ID가 없습니다.');    
     ids.forEach((snapshotId) => {
       deleteSnapshot({vmId, snapshotId});
     });
   };
-
-  
 
   return (
     <BaseModal targetName={Localization.kr.SNAPSHOT} submitTitle={Localization.kr.REMOVE}
@@ -54,8 +51,7 @@ const DiskSnapshotDeleteModal = ({
       promptText={`${descriptions.join(", ")} 를(을) ${Localization.kr.REMOVE}하시겠습니까?`}
       contentStyle={{ width: "600px" }}
       shouldWarn={true}
-    >     
-    </BaseModal>
+    />
   );
 };
 

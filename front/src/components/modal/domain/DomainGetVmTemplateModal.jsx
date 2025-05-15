@@ -10,6 +10,7 @@ import FilterButtons from "../../button/FilterButtons";
 import Localization from "../../../utils/Localization";
 import InfoTable from "../../table/InfoTable";
 import "./MDomain.css";
+import useUIState from "../../../hooks/useUIState";
 
 const initialFormState = {
   id: "",
@@ -29,7 +30,13 @@ const initialFormState = {
  *
  * @returns {JSX.Element} DomainGetVmTemplateModal
  */
-const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
+const DomainGetVmTemplateModal = ({ 
+  isOpen,
+  onClose,
+  type="vm", 
+  dcId, 
+}) => {
+  // const { closeModal } = useUIState()
   const isVmMode = type === "vm"; // true면 "가상머신", false면 "템플릿"
   const [formState, setFormState] = useState(initialFormState);
   const { data: datacenter } = useDataCenter(dcId);
@@ -68,7 +75,7 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
     { label: `설정된 ${Localization.kr.MEMORY}`, value: "4 GB" },
     { label: "CPU 코어 수", value: "4" },
     { label: "모니터 수", value: "1" },
-    { label: Localization.kr.HA, value: "예" },
+    { label: Localization.kr.HA, value: Localization.kr.YES },
     { label: "우선 순위", value: "중간" },
     { label: "USB", value: "사용" },
     { label: "소스", value: Localization.kr.NOT_ASSOCIATED },
@@ -108,15 +115,17 @@ const DomainGetVmTemplateModal = ({ isOpen, type = "vm", dcId, onClose }) => {
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) return toast.error(error);
-
-    onClose();
-    toast.success(`${isVmMode ? "가상머신" : "템플릿"} 가져오기 완료`);
+    onClose()
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={isVmMode ? "가상머신" : "템플릿"}
+    <BaseModal targetName={
+      isVmMode 
+        ? Localization.kr.VM
+        : Localization.kr.TEMPLATE
+      }
       submitTitle={Localization.kr.IMPORT}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "880px" }} 
     >

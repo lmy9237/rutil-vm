@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Logger from "../../utils/Logger";
+import "./TableRowClick.css"
 
 /**
  * @name TableRowClick
@@ -11,7 +12,11 @@ import Logger from "../../utils/Logger";
  *
  * @returns
  */
-const TableRowClick = ({ type, id, children, style }) => {
+const TableRowClick = ({ 
+  type, 
+  id, 
+  ...props
+}) => {
   const navigate = useNavigate();
 
   const handleClick = (e) => {
@@ -36,20 +41,17 @@ const TableRowClick = ({ type, id, children, style }) => {
   };
 
   return (
-    // <div style={{ textAlign: "left" }}>
-      <span
-        className="row-click"
-        data-rowclick 
-        onClick={handleClick}
-        style={{ 
-          textAlign: "left",
-          display: "inline-block", 
-          ...style, 
-        }}
-      >
-        {children}
-      </span>
-    // </div>
+    <span className="tr-clickable"
+      data-rowclick 
+      onClick={props.onClick ?? handleClick}
+      style={{ 
+        display: "inline-block", 
+        textAlign: "left",
+        ...props.style, 
+      }}
+    >
+      {props.children}
+    </span>
   );
 };
 

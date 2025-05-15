@@ -19,7 +19,6 @@ const DiskDupl = ({
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal } = useUIState();
   const { 
     disksSelected, setDisksSelected,
     diskProfilesSelected, setDiskProfilesSelected,

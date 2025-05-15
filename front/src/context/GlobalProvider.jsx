@@ -19,7 +19,7 @@ export const GlobalProvider = ({ children }) => {
     if (Array.isArray(newV))
       _setDatacentersSelected([...newV]);
     else if (!Array.isArray(newV) && typeof newV === "object")
-    _setDatacentersSelected([{...newV}]);
+      _setDatacentersSelected([{...newV}]);
   }
 
   const [clustersSelected, _setClustersSelected] = useState([]);

@@ -1,15 +1,22 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
-import toast from "react-hot-toast";
+import Logger from "../../../utils/Logger";
 
 const DomainCheckModal = ({ 
-  isOpen, onClose, domain, onApprove 
+  isOpen, 
+  onClose,
+  domain, 
+  onApprove
 }) => {
+  // const { closeModal } = useUIState()
   const [approved, setApproved] = useState(false);
 
   const handleSubmit = () => {
+    Logger.debug(`DomainCheckModal > handleSubmit ... `)
     if (!approved) {
       toast.error("작업을 승인해야 합니다."); 
       return;
@@ -18,8 +25,7 @@ const DomainCheckModal = ({
   };
 
   return (
-    <BaseModal
-      targetName={Localization.kr.DOMAIN} submitTitle={Localization.kr.OK}
+    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={Localization.kr.OK}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleSubmit}
       promptText="이 작업은 파괴적이며 복구할 수 없습니다!"

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import DomainNfs from "./create/DomainNfs";
 import DomainIscsi from "./create/DomainIscsi";
@@ -27,7 +28,7 @@ import Logger from "../../../utils/Logger";
 const domainTypes = [
   { value: "data", label: "데이터" },
   { value: "iso", label: "ISO" },
-  { value: "export", label: "내보내기" },
+  { value: "export", label: Localization.kr.EXPORT },
 ];
 
 // 일반 정보
@@ -69,11 +70,12 @@ const storageTypeOptions = (dType) => {
 
 const DomainModal = ({
   isOpen,
+  onClose,
   mode = "domain:create",
   domainId,
   datacenterId,
-  onClose,
 }) => {
+  // const { closeModal } = useUIState()
   const dLabel = mode === "domain:update" ? Localization.kr.UPDATE 
     : mode === "domain:import" ? Localization.kr.IMPORT 
     : Localization.kr.CREATE;
@@ -93,14 +95,10 @@ const DomainModal = ({
   const [iscsiSearchResults, setIscsiSearchResults] = useState([]); // 검색결과
   const [fcpSearchResults, setFcpSearchResults] = useState([]); // 검색결과
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.DOMAIN} ${dLabel} 완료`);
-  };
   const { data: domain } = useStroageDomain(domainId);
-  const { mutate: addDomain } = useAddDomain(onSuccess, () => onClose());
-  const { mutate: editDomain } = useEditDomain(onSuccess, () => onClose()); // 편집은 단순 이름, 설명 변경정도
-  const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose()); // 가져오기
+  const { mutate: addDomain } = useAddDomain(onClose, onClose);
+  const { mutate: editDomain } = useEditDomain(onClose, onClose); // 편집은 단순 이름, 설명 변경정도
+  const { mutate: importDomain } = useImportDomain(onClose, onClose); // 가져오기
   // const { mutate: loginIscsiFromHost } = useLoginIscsiFromHost(); // 가져오기 iscsi 로그인
   const { mutate: importIscsiFromHost } = useImportIscsiFromHost(); // 가져오기 iscsi
   const { mutate: importFcpFromHost } = useImportFcpFromHost(); // 가져오기 fibre
@@ -368,7 +366,7 @@ const DomainModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={dLabel}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px"}}
     >

@@ -1,9 +1,11 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import Loading from "../../../common/Loading";
-import { useDisksFromVM } from "../../../../api/RQHook";
+import useUIState from "../../../../hooks/useUIState";
 import ActionButton from "../../../button/ActionButton";
 import { RVI36, rvi36Trash } from "../../../icons/RutilVmIcons";
 import Localization from "../../../../utils/Localization";
+import { useDisksFromVM } from "../../../../api/RQHook";
+import Logger from "../../../../utils/Logger";
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
 
@@ -14,24 +16,34 @@ const VmDisk = ({
   dataCenterId,
   diskListState,
   setDiskListState,
-}) => {  
+}) => {
+  const { setActiveModal } = useUIState()
   // 가상머신 디스크 목록 가져오기
-  const { data: diskAttachments = [] } = useDisksFromVM(vm?.id);
+  const {
+    data: diskAttachments = []
+  } = useDisksFromVM(vm?.id);
   
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isConnectionPopupOpen, setIsConnectionPopupOpen] = useState(false);
 
   // 부팅가능한 디스크 있는지 검색
-  const hasBootableDisk = useMemo(() => diskAttachments?.some((diskAttachment) => diskAttachment?.bootable === true), [diskAttachments]);
-  const hasBootableDiskList = useMemo(() => diskListState?.some((d) => d?.bootable === true), [diskListState]);
- 
-  // 새 디스크 인덱스 계산
-  const getNextDiskIndex = useMemo(() => {
+  const hasBootableDisk = useMemo(() => 
+    diskAttachments?.some((diskAttachment) => diskAttachment?.bootable === true)
+  , [diskAttachments]);
+  const hasBootableDiskList = useMemo(() => 
+    diskListState?.some((d) => d?.bootable === true)
+  , [diskListState]);
+
+  const diskNameWthSuffix = () => { /* NOTE: useMemo 불가능 */
+    Logger.debug(`VmDisk > diskNameWthSuffix ... `)
+    if (vmName === "" || vmName === undefined || vmName === null) {
+      return ""
+    }
     const existingDiskNames = [
       ...diskAttachments.map((d) => d?.diskImageVo?.alias),
       ...diskListState.map((d) => d?.alias)
     ];
-    
+
     const regex = new RegExp(`^${vmName}_Disk(\\d+)$`);
     const existingIndexes = existingDiskNames
       .map(name => {
@@ -39,15 +51,16 @@ const VmDisk = ({
         return match ? parseInt(match[1], 10) : 0;
       })
       .filter(index => index > 0);
+    const i = existingIndexes.length > 0 ? Math.max(...existingIndexes) + 1 : 1;
 
-      return existingIndexes.length > 0 ? Math.max(...existingIndexes) + 1 : 1;
-  }, [diskAttachments, diskListState, vmName]);
-
+    return `${vmName}_Disk${i}`
+  }
 
   // 디스크 생성시 DiskListState에 들어갈 값(isCreated true)
   const handleCreateDisk = useCallback((newDisk) => {
-    setDiskListState((prevDisks) => [...prevDisks, { ...newDisk, isCreated: true, }]);
-  
+    setDiskListState((prevDisks) => 
+      [...prevDisks, { ...newDisk, isCreated: true, }]
+    );
     setIsCreatePopupOpen(false);
   }, [setDiskListState]);  
   
@@ -74,10 +87,12 @@ const VmDisk = ({
             actionType="default"
             className="instance-disk-btn"
             onClick={() => setIsConnectionPopupOpen(true)}
+            // onClick={() => setActiveModal("vmdisk:connect")}
           />
           <ActionButton label={Localization.kr.CREATE}
             actionType="default"
             className="instance-disk-btn"
+            // onClick={() => setActiveModal("vmdisk:create")}
             onClick={() => setIsCreatePopupOpen(true)}
           />
         </div>
@@ -96,12 +111,6 @@ const VmDisk = ({
             {/*{disk?.storageDomainVo?.id} <- 연결되어있는 디스크아이디*/}
             <div className="f-end">
               <span>편집/삭제 2차구현</span>
-              {/* <RVI36 
-                iconDef={rvi36Edit()} 
-                className="btn-icon"
-                currentColor="transparent"
-                onClick={() => setEditDisk(disk)}
-              /> */}
               <RVI36 
                 iconDef={rvi36Trash}
                 className="btn-icon"
@@ -124,10 +133,9 @@ const VmDisk = ({
           <VmDiskModal
             isOpen={true}
             diskType={false}
-            vmId={vm?.id || ""}
-            editMode={!!editDisk} 
-            editingDisk={editDisk}
-            vmName={editDisk ? editDisk.alias : `${vmName}`}
+            vmId={vm?.id}
+            editMode={!!editDisk}
+            vmName={editDisk ? editDisk.alias : `${diskNameWthSuffix()}`}
             dataCenterId={dataCenterId}
             hasBootableDisk={hasBootableDiskList}
             onCreateDisk={handleCreateDisk}
@@ -141,7 +149,7 @@ const VmDisk = ({
           <VmDiskConnectionModal
             isOpen={isConnectionPopupOpen}
             diskType={false}
-            vmId={vm?.id || ""}
+            vmId={vm?.id}
             dataCenterId={dataCenterId}
             hasBootableDisk={hasBootableDisk}
             onSelectDisk={handleConnDisk}

@@ -141,6 +141,29 @@ class JobController: BaseController() {
 		return ResponseEntity.ok(iJob.remove(jobId))
 	}
 
+	@ApiOperation(
+		httpMethod="DELETE",
+		value = "작업 목록 일괄제거",
+		notes = "선택된 작업목록를 일괄제거한다."
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="jobIds", value="작업 ID목록", dataTypeClass=List::class, required=true, paramType="body"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@DeleteMapping("/")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun removeMany(
+		@RequestBody jobIds: List<String>? = listOf(),
+	): ResponseEntity<Boolean?> {
+		if (jobIds.isNullOrEmpty())
+			throw ErrorPattern.JOB_ID_NOT_FOUND.toException()
+		log.info("/jobs/{} ... 작업 일괄제거", jobIds)
+		return ResponseEntity.ok(iJob.removeMany(jobIds))
+	}
+
 	companion object {
 		private val log by LoggerDelegate()
 	}

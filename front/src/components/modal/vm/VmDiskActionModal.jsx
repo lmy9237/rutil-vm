@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import {
   useActivateDiskFromVm,
@@ -20,28 +21,24 @@ import Localization from "../../../utils/Localization";
  */
 const VmDiskActionModal = ({
   isOpen, 
+  onClose,
   action, 
-  onClose, 
   vmId, 
   data 
 }) => {
+  // const { closeModal } = useUIState()
   const labelMap = {
     "vmdisk:deactivate": "비활성화",
     "vmdisk:activate": "활성화",
   };
   const contentLabel = useMemo(() => labelMap[action] || "", [action]);
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.VM} ${Localization.kr.DISK} ${contentLabel} 완료`);
-  };
-
-  const { mutate: activateDisk } = useActivateDiskFromVm(onSuccess, () => onClose());
-  const { mutate: deactivateDisk } = useDeactivateDiskFromVm(onSuccess, () => onClose());
+  const { mutate: activateDisk } = useActivateDiskFromVm(onClose, onClose);
+  const { mutate: deactivateDisk } = useDeactivateDiskFromVm(onClose, onClose);
 
   const actionMap = useMemo(() => ({
-      deactivate: deactivateDisk,
-      activate: activateDisk,
+      "vmdisk:deactivate": deactivateDisk,
+      "vmdisk:activate": activateDisk,
     }),[deactivateDisk, activateDisk]
   );
 
@@ -63,7 +60,6 @@ const VmDiskActionModal = ({
     ids.forEach((diskAttachId) => actionFn({ vmId: vmId, diskAttachmentId: diskAttachId }));
   };
 
-  Logger.debug(`VmDiskActionModal ... `)
   return (
     <BaseModal targetName={`${Localization.kr.VM} ${Localization.kr.DISK}`} submitTitle={contentLabel}
       isOpen={isOpen} onClose={onClose}

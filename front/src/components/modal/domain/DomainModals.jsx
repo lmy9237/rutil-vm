@@ -25,85 +25,61 @@ import DomainGetDiskModal from "./DomainGetDiskModal";
  * @see DomainAttachModal
  */
 const DomainModals = () => {
-  const { activeModal, setActiveModal, } = useUIState()
+  const { activeModal, closeModal } = useUIState()
   // const { domainsSelected } = useGlobal()
 
   const modals = {
     create: (
-      <DomainModal key={activeModal()} isOpen={activeModal() === "domain:create"}
-        onClose={() => setActiveModal(null)}
+      <DomainModal key={"domain:create"} isOpen={activeModal().includes("domain:create")}
+        onClose={() => closeModal("domain:create")}
       />
     ), update: (
-      <DomainModal key={activeModal()} isOpen={activeModal() === "domain:update"}
-        onClose={() => setActiveModal(null)}
+      <DomainModal key={"domain:update"} isOpen={activeModal().includes("domain:update")}
+        onClose={() => closeModal("domain:update")}
         editMode
-        mode={activeModal()}
+        mode={"domain:update"}
       />
     ), import: (
-      <DomainImportModal key={activeModal()} isOpen={activeModal() === "domain:import"}
-        onClose={() => setActiveModal(null)}
+      <DomainImportModal key={"domain:import"} isOpen={activeModal().includes("domain:import")} 
+        onClose={() => closeModal("domain:import")}
       />
     ), remove: (
-      <DomainDeleteModal key={activeModal()} isOpen={activeModal() === "domain:remove"}
-        onClose={() => setActiveModal(null)}
+      <DomainDeleteModal key={"domain:remove"} isOpen={activeModal().includes("domain:remove")}
+        onClose={() => closeModal("domain:remove")}
         deleteMode={true}
       />
     ), destroy: (
-      <DomainDestroyModal key={activeModal()} isOpen={activeModal() === "domain:destroy"}
-        onClose={() => setActiveModal(null)}
+      <DomainDestroyModal key={"domain:destroy"} isOpen={activeModal().includes("domain:destroy")} 
+        onClose={() => closeModal("domain:destroy")}
       />
     ), attach: (
-      <DomainAttachModal key={activeModal()} isOpen={activeModal() === "domain:attach"}
-        onClose={() => setActiveModal(null)}
+      <DomainAttachModal key={"domain:attach"} isOpen={activeModal().includes("domain:attach")}
+        onClose={() => closeModal("domain:attach")}
         actionType // true면 데이터센터에서 도메인를 바라봄 (도메인 목록이 뜸)
       />
-    ), activate: (
-      <DomainActivateModal isOpen={activeModal() === "domain:activate"}
-        onClose={() => setActiveModal(null)}
-      />
     ), detach: (
-      <DomainDetachModal isOpen={activeModal() === "domain:detach"}
-        onClose={() => setActiveModal(null)}
+      <DomainDetachModal key={"domain:detach"} isOpen={activeModal().includes("domain:detach")} 
+        onClose={() => closeModal("domain:detach")}
+      />
+    ), activate: (
+      <DomainActivateModal key={"domain:activate"} isOpen={activeModal().includes("domain:activate")} 
+        onClose={() => closeModal("domain:activate")}
       />
     ), importDisk: (
-      <DomainGetDiskModal key={activeModal()} isOpen={activeModal() === "domain:importDisk"}
-        onClose={() => setActiveModal(null)}
+      <DomainGetDiskModal key={"domain:importDisk"} isOpen={activeModal().includes("domain:importDisk")} 
+        onClose={() => closeModal("domain:importDisk")}
       />
     ), maintenance: (
-      <DomainMaintenanceModal key={activeModal()} isOpen={activeModal() === "domain:maintenance"}
-        onClose={() => setActiveModal()}
+      <DomainMaintenanceModal key={"domain:maintenance"} isOpen={activeModal().includes("domain:maintenance")} 
+        onClose={() => closeModal("domain:maintenance")}
       />
-      /*
-      <DomainCheckModal // 도메인 확인
-        isOpen={activeModal() === "maintenance"}
-        onClose={onClose}
-      />
-      */
     ),
-    /*
-    <CancelModal
-      isOpen={isCancelModalOpen}
-      onClose={() => setIsCancelModalOpen(false)}
-    />
-    <DomainDestroyModal
-      isOpen={isDomainDestroyModalOpen}
-      onClose={() => setIsDomainDestroyModalOpen(false)}
-    />
-    <DomainMainTenanceModal
-      isOpen={isDomainMainTenanceModalOpen}
-      onClose={() => setIsDomainMainTenanceModalOpen(false)}
-    />
-    <DomainCheckModal
-      isOpen={isDomainCheckModalOpen}
-      onClose={() => setIsDomainCheckModalOpen(false)}
-    />
-    */
   };
 
   return (
     <>
       {Object.keys(modals).filter((key) => 
-        activeModal() === `domain:${key}`
+        activeModal().includes(`domain:${key}`)
       ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}

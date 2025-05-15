@@ -12,7 +12,6 @@
 
 // const HostNetworkModal = ({
 //   isOpen,
-//   onClose,
 //   hostId
 // }) => {
 //   // 호스트 상세정보 조회로 클러스터id 뽑기
@@ -246,10 +245,6 @@
 //       // })),
 //     };
 
-//     // const onSuccess = () => {
-//     //   onClose();
-//     //   toast.success(`호스트 네트워크 설정 완료`);
-//     // };
 //     // const onError = (err) => toast.error(`Error 호스트 네트워크: ${err}`);
 
 //     // editHost(

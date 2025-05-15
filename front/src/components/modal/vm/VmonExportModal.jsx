@@ -12,8 +12,13 @@ import Logger from "../../../utils/Logger";
  *
  * @param {boolean} isOpen
  * @returns
+ * 
+ * TODO: 구현필요
  */
-const VmOnExportModal = ({ isOpen, onClose, selectedVm }) => {
+const VmOnExportModal = ({ 
+  isOpen, 
+  onClose,
+}) => {
   //모든 데이터센터 목록 가져오기
   const { data: datacenters } = useAllDataCenters((e) => ({
     ...e,
@@ -40,9 +45,8 @@ const VmOnExportModal = ({ isOpen, onClose, selectedVm }) => {
   }
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"디스크"}
-      submitTitle={"업로드"}
+    <BaseModal targetName={Localization.kr.DISK} submitTitle={Localization.kr.UPLOAD}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
     >
       {/* <div className="vm-bring-popup modal"> */}

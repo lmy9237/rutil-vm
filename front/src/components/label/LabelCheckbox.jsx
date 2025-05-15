@@ -14,7 +14,7 @@
  * @returns {JSX.Element} LabelInput
  */
 const LabelCheckbox = ({
-  className,
+  className="",
   label,
   id,
   autoFocus = false,

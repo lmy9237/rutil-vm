@@ -5,6 +5,8 @@ import TablesOuter from "../../table//TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useFindDiskListFromVM } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
+import useUIState from "../../../hooks/useUIState";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name VmConnectionPlusModal
@@ -20,6 +22,7 @@ const VmConnectionPlusModal = ({
   onSelectDisk = () => {},
   excludedDiskIds = [], // 제외할 디스크 ID 목록을 부모로부터 전달받음
 }) => {
+  const { closeModal } = useUIState()
   const [activeTab, setActiveTab] = useState("img");
   const [selectedDiskId, setSelectedDiskId] = useState(null);
   
@@ -52,9 +55,8 @@ const VmConnectionPlusModal = ({
     }
     
     const selectedDiskDetails = disks.find((disk) => disk.id === selectedDiskId);
-    
     onSelectDisk(selectedDiskId, selectedDiskDetails);
-    onClose();
+    closeModal()
   }, [selectedDiskId]);
 
 
@@ -64,9 +66,8 @@ const VmConnectionPlusModal = ({
   ), [rawDisks]);
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"가상 디스크"}
-      submitTitle={"연결"}
+    <BaseModal targetName={`가상 ${Localization.kr.DISK}`} submitTitle={Localization.kr.CONNECTION}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
     >
       {/* <div className="storage_disk_new_popup"> */}

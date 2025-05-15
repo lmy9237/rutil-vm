@@ -74,7 +74,7 @@
   line-height: 27px;
 }
 .box-status > hr { color: var(--color-black); }
-.box-detail-icons {}
+/*.box-detail-icons {}*/
 .up,.alert { color: var(--color-alert); }
 .error { color: var(--color-orange); }
 .warning { color: var(--color-yellow); }

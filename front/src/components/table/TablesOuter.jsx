@@ -25,7 +25,7 @@ const TablesOuter = ({
   // Logger.debug(`넘어오는 데이터: ${filteredData.length}개`);
   return (
     <>
-      <div className="section-table-outer">
+      <div className="section-table-outer w-full">
         <Tables target={target}
           columns={columns}
           data={filteredData} // ✅ 검색 필터링된 데이터 전달

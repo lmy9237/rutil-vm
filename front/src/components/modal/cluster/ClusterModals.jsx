@@ -13,22 +13,22 @@ import { useDeleteCluster } from "../../../api/RQHook";
  * @returns {JSX.Element} ClusterModals
  */
 const ClusterModals = () => {
-  const { activeModal, setActiveModal } = useUIState()
+  const { activeModal, closeModal } = useUIState()
   const { clustersSelected } = useGlobal()
 
   const modals = {
     create: (
-      <ClusterModal key={activeModal()} isOpen={activeModal() === "cluster:create"}
-        onClose={() => setActiveModal(null)}
+      <ClusterModal key={activeModal()} isOpen={activeModal().includes("cluster:create")} 
+        onClose={() => closeModal("cluster:create")}
       />
     ), update: (
-      <ClusterModal key={activeModal()} isOpen={activeModal() === "cluster:update"}
-        onClose={() => setActiveModal(null)}
+      <ClusterModal key={activeModal()} isOpen={activeModal().includes("cluster:update")}
+        onClose={() => closeModal("cluster:update")}
         editMode
       />
     ), remove: (
-      <DeleteModal key={activeModal()} isOpen={activeModal() === "cluster:remove"}
-        onClose={() => setActiveModal(null)}
+      <DeleteModal key={activeModal()} isOpen={activeModal().includes("cluster:remove")}
+        onClose={() => closeModal("cluster:remove")}
         label={Localization.kr.CLUSTER}
         data={clustersSelected}
         api={useDeleteCluster()}
@@ -39,7 +39,7 @@ const ClusterModals = () => {
   return (
     <>
       {Object.keys(modals).filter((key) => 
-        activeModal() === `cluster:${key}`
+        activeModal().includes(`cluster:${key}`)
       ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}

@@ -22,11 +22,8 @@ const VmConsoleModal = ({
 
   Logger.debug(`... wsUrl: ${wsUrl}, address: ${vmConsoleAccessInfo?.address}, port: ${vmConsoleAccessInfo?.port}, ticket: ${vmConsoleAccessInfo?.token}`);
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName={`${Localization.kr.VM} 그래픽 ${Localization.kr.CONSOLE}`}
-      submitTitle={"연결"}
+    <BaseModal  targetName={`${Localization.kr.VM} 그래픽 ${Localization.kr.CONSOLE}`} submitTitle={Localization.kr.CONNECTION}
+      isOpen={isOpen} onClose={onClose}
       contentStyle={{
         width: "850px",
       }}

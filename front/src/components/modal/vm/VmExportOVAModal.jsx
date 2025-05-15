@@ -6,15 +6,22 @@ import Localization from "../../../utils/Localization";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import LabelInput from "../../label/LabelInput";
 import Logger from "../../../utils/Logger";
+import useGlobal from "../../../hooks/useGlobal";
+import useUIState from "../../../hooks/useUIState";
 
-const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
+const VmExportOVAModal = ({ 
+  isOpen,
+  onClose,
+}) => {
+  // const { closeModal } = useUIState()
+  const { vmsSelected } = useGlobal()
   const [host, setHost] = useState("#");
   const [directory, setDirectory] = useState("#");
 
   // 선택된 VM의 이름 처리 (여러 개일 경우 이름을 결합)
   const vmNames =
-    Array.isArray(selectedVms) && selectedVms.length > 0
-      ? selectedVms.map((vm) => vm.name).join(", ")
+    [...vmsSelected]?.length > 0
+      ? [...vmsSelected]?.map((vm) => vm.name).join(", ")
       : `선택된 ${Localization.kr.VM} 없음`;
   const [name, setName] = useState(vmNames);
 
@@ -46,11 +53,10 @@ const VmExportOVAModal = ({ isOpen, onClose, selectedVms }) => {
   }
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"가상 어플라이언스로 가상 머신"}
-      submitTitle={"내보내기"}
+    <BaseModal  targetName={`가상 어플라이언스로 ${Localization.kr.VM}`} submitTitle={Localization.kr.EXPORT}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "600px"}} 
+      contentStyle={{ width: "600px" }} 
     >
       {/* <div className="vm-ova-popup modal"> */}
       <LabelSelectOptions

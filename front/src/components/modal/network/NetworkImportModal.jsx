@@ -4,17 +4,18 @@ import BaseModal from "../BaseModal";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
 import TablesOuter from "../../table/TablesOuter";
-import TableColumnsInfo from "../../table/TableColumnsInfo";
 import { useAllNetworkProviders } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import "./MNetwork.css";
 import { RVI24, rvi24ChevronDown, rvi24ChevronUp, rvi24DownArrow } from "../../icons/RutilVmIcons";
+import useUIState from "../../../hooks/useUIState";
 
 const NetworkImportModal = ({
   isOpen,
   onClose,
   onSubmit 
 }) => {
+  // const { closeModal } = useUIState()
   const { networkProvidersSelected, setNetworkProvidersSelected } = useGlobal()
   const {
     data: networkProvider = [],
@@ -81,11 +82,9 @@ const NetworkImportModal = ({
   ]);
   const [selectAll, setSelectAll] = useState(false);
 
-  Logger.debug(`NetworkImportModal ...`)
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={Localization.kr.NETWORK}
-      submitTitle={Localization.kr.IMPORT}
+    <BaseModal targetName={Localization.kr.NETWORK} submitTitle={Localization.kr.IMPORT}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={onSubmit}
       contentStyle={{ width: "880px" }} 
     >

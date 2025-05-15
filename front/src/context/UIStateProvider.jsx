@@ -11,7 +11,7 @@ export const UIStateProvider = ({ children }) => {
 
   const initialState = JSON.parse(sessionStorage.getItem(KEY_UI_STATE)) ?? {
     [KEY_CURRENT_PAGE]: "",
-    [KEY_ACTIVE_MODAL]: null,
+    [KEY_ACTIVE_MODAL]: [],
   }
   const [sUIState, sSetUIState] = useState(initialState)
   const _UIState = () => Object.assign({}, sUIState, JSON.parse(sessionStorage.getItem(KEY_UI_STATE)))
@@ -34,13 +34,29 @@ export const UIStateProvider = ({ children }) => {
   //#endregion: 현재 위치 (in File)
 
   //#region: 활성화 된 모달
-  const activeModal = () => _UIState()[KEY_ACTIVE_MODAL] ?? null;
+  const activeModal = () => _UIState()[KEY_ACTIVE_MODAL] ?? [];
   const setActiveModal = (newV) => {
     Logger.debug(`UIStateProvider > setActiveModal ... newV: `, newV)
-    _setUIState({
-      ...sUIState,
-      [KEY_ACTIVE_MODAL]: newV
-    });
+    if (Array.isArray(newV))
+        // 빈 배열값을 주었을 때 초기화 하도록
+        _setUIState({
+          ...sUIState,
+          [KEY_ACTIVE_MODAL]: [...newV].length === 0 ? [] : [...newV],
+        })
+    else
+      // 문자열 값을 주었을 때 계속 추가 하도록
+      _setUIState({
+        ...sUIState,
+        [KEY_ACTIVE_MODAL]: [..._UIState()[KEY_ACTIVE_MODAL], newV]
+      });
+  }
+  const closeModal = (target=null) => {
+    if (target === null) // 비었을 떄, 빈 배열로
+      setActiveModal([])
+    else // 특정 문자열 값을 주었을 때, 그것만 제거
+      setActiveModal(
+        [..._UIState()[KEY_ACTIVE_MODAL]]?.filter((e) => e !== target)
+      )
   }
   //#endregion: 활성화 된 모달
 
@@ -49,7 +65,7 @@ export const UIStateProvider = ({ children }) => {
       {
         _setUIState,
         currentPage, setCurrentPage,
-        activeModal, setActiveModal,
+        activeModal, setActiveModal, closeModal
       }
     }>
       {children}

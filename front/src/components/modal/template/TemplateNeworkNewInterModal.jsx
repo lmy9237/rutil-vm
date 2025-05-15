@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlassWhiskey } from "@fortawesome/free-solid-svg-icons";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import {
   useAddNicFromTemplate,
@@ -15,10 +16,11 @@ import Logger from "../../../utils/Logger";
 const TemplateNeworkNewInterModal = ({
   isOpen,
   onClose,
-  editMode = false,
+  editMode=false,
   nicData,
   templateId,
 }) => {
+  // const { closeModal } = useUIState()
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [profile, setProfile] = useState("");
@@ -30,8 +32,8 @@ const TemplateNeworkNewInterModal = ({
   const [macAddress, setMacAddress] = useState("");
   const [connectionStatus, setConnectionStatus] = useState("connected");
 
-  const { mutate: addNicFromTemplate } = useAddNicFromTemplate();
-  const { mutate: editNicFromTemplate } = useEditNicFromTemplate();
+  const { mutate: addNicFromTemplate } = useAddNicFromTemplate(onClose, onClose);
+  const { mutate: editNicFromTemplate } = useEditNicFromTemplate(onClose, onClose);
 
   // 유형
   const interfaceOptions = [
@@ -110,46 +112,21 @@ const TemplateNeworkNewInterModal = ({
     Logger.debug(`TemplateNetworkNewInterModal > handleFormSubmit ... dataToSubmit: ${JSON.stringify(dataToSubmit, null, 2)}`);
 
     if (editMode && nicData) {
-      editNicFromTemplate(
-        {
-          templateId,
-          nicId: nicData.id,
-          nicData: dataToSubmit,
-        },
-        {
-          onSuccess: () => {
-            toast.success("템플릿 네트워크인터페이스 편집 완료");
-            onClose();
-          },
-          onError: (error) => {
-            toast.error("Error editing network:", error);
-          },
-        }
-      );
+      editNicFromTemplate({
+        templateId,
+        nicId: nicData.id,
+        nicData: dataToSubmit,
+      });
     } else {
-      addNicFromTemplate(
-        {
-          templateId,
-          nicData: dataToSubmit,
-        },
-        {
-          onSuccess: () => {
-            onClose();
-            toast.success("템플릿 네트워크인터페이스 생성 완료");
-          },
-          onError: (error) => {
-            toast.error("Error adding network:", error);
-          },
-        }
-      );
+      addNicFromTemplate({ 
+        templateId,
+        nicData: dataToSubmit
+      });
     }
   };
 
-  Logger.debug("TemplateNeworkNewInterModal ...");
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
+    <BaseModal isOpen={isOpen} onClose={onClose}
       targetName={Localization.kr.NICS}
       submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
       onSubmit={handleFormSubmit}
@@ -250,7 +227,7 @@ const TemplateNeworkNewInterModal = ({
               onChange={() => setPlugged(false)}
             />
             <FontAwesomeIcon icon={faGlassWhiskey} fixedWidth />
-            <label htmlFor="unplugged">분리</label>
+            <label htmlFor="unplugged">{Localization.kr.DETACH}</label>
           </div>
         </div>
       </div>

@@ -18,13 +18,19 @@ const VmHost = ({
   // hostVos 값이 있으면 hostInCluster를 false로 설정, 없으면 true
   useEffect(() => {
     if (formHostState.hostVos.length > 0) {
-      setFormHostState((prev) => ({ ...prev, hostInCluster: false }));
+      setFormHostState((prev) => ({ 
+        ...prev,
+        // hostVos: hosts.filter((h) => prev.hostVos.map((hh) => hh?.id).includes(h?.id)),
+        hostInCluster: false 
+      }));
     } else {
-      setFormHostState((prev) => ({ ...prev, hostInCluster: true }));
+      setFormHostState((prev) => ({ 
+        ...prev,
+        hostInCluster: true
+      }));
     }
-  }, [formHostState.hostVos, setFormHostState]);
+  }, [hosts, formHostState.hostVos, setFormHostState]);
 
-  Logger.debug("VmHost ...")
   return (
     <div className="host-second-content">
       <div className="py-2">
@@ -79,38 +85,39 @@ const VmHost = ({
                 }}
                 disabled={formHostState.hostInCluster}
               >
-              <div className="host-select-list">
-                {hosts.map((host) => {
-                  const isSelected = formHostState.hostVos.some((h) => h.id === host.id);
-                  return (
-                    <div
-                      key={host.id}
-                      className={`host-option-item p-1 ${isSelected ? "selected" : ""}`}
-                      onClick={() => {
-                        const updated = isSelected
-                          ? formHostState.hostVos.filter((h) => h.id !== host.id) // 제거
-                          : [...formHostState.hostVos, host]; // 추가
+                <div className="host-select-list">
+                  {hosts.map((host) => {
+                    const isSelected = formHostState.hostVos.some((h) => h.id === host.id);
+                    return (
+                      <div
+                        key={host.id}
+                        className={`host-option-item p-1 ${isSelected ? "selected" : ""}`}
+                        onClick={() => {
+                          const updated = isSelected
+                            ? formHostState.hostVos.filter((h) => h.id !== host.id) // 제거
+                            : [...formHostState.hostVos, host]; // 추가
 
-                        setFormHostState((prev) => ({
-                          ...prev,
-                          hostVos: updated,
-                        }));
-                      }}
-             
-                    >
-                      {host.name}
-                    </div>
-                  );
-                })}
-              </div>
-
+                          setFormHostState((prev) => ({
+                            ...prev,
+                            hostVos: updated,
+                          }));
+                        }}
+                      >
+                        {host.name}
+                      </div>
+                    );
+                  })}
+                </div>
               </select>
-
               <div style={{ marginTop: "10px" }}>
                 <label>선택된 호스트:</label>
-                <span style={{ marginLeft: "10px", fontWeight: "bold" }}>
+                <span style={{ 
+                  marginLeft: "10px",
+                  fontWeight: "bold"
+                  }}
+                >
                   {formHostState.hostVos && formHostState.hostVos.length > 0
-                    ? formHostState.hostVos.map((host) => host.name).join(", ") // id는 host.id로 출력
+                    ? formHostState.hostVos.map((h) => h?.name).join(", ") // id는 host.id로 출력
                     : "선택된 호스트가 없습니다."}
                 </span>
               </div>

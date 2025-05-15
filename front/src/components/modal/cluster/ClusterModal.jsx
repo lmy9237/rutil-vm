@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
@@ -16,7 +18,6 @@ import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import CONSTANT from "../../../Constants";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import useGlobal from "../../../hooks/useGlobal";
 
 const initialFormState = {
   id: "",
@@ -30,8 +31,11 @@ const initialFormState = {
 };
 
 const ClusterModal = ({
-  isOpen, onClose, editMode = false,
+  isOpen, 
+  onClose,
+  editMode = false,
 }) => {
+  // const { closeModal } = useUIState()
   const cLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
   const { datacentersSelected, clustersSelected } = useGlobal()
@@ -47,13 +51,9 @@ const ClusterModal = ({
     ? biosTypeOptions.filter(opt => opt.value !== "CLUSTER_DEFAULT")
     : biosTypeOptions;
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.CLUSTER} ${cLabel} ${Localization.kr.FINISHED}`);
-  };
   const { data: cluster } = useCluster(clusterId);
-  const { mutate: addCluster } = useAddCluster(onSuccess, () => onClose());
-  const { mutate: editCluster } = useEditCluster(onSuccess, () => onClose());
+  const { mutate: addCluster } = useAddCluster(onClose, onClose);
+  const { mutate: editCluster } = useEditCluster(onClose, onClose);
   const { 
     data: datacenters = [], 
     isLoading: isDataCentersLoading 
@@ -70,7 +70,8 @@ const ClusterModal = ({
       setNetworkVo({id: "", name: ""});
     }
     if (editMode && cluster) {
-      setFormState({
+      setFormState((prev) => ({
+        ...prev,
         id: cluster?.id,
         name: cluster?.name,
         description: cluster?.description,
@@ -79,7 +80,7 @@ const ClusterModal = ({
         cpuType: cluster?.cpuType,
         biosType: cluster?.biosType,
         errorHandling: cluster?.errorHandling,
-      });
+      }));
       setDataCenterVo({id: cluster?.dataCenterVo?.id, name: cluster?.dataCenterVo?.name});
       setNetworkVo({id: cluster?.networkVo?.id, name: cluster?.networkVo?.name});
     }
@@ -119,8 +120,8 @@ const ClusterModal = ({
     }
   }, [formState.cpuArc, editMode]);
   
-  
   const validateForm = () => {
+    Logger.debug(`ClusterModal > validateForm ...`)
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
 
@@ -140,8 +141,7 @@ const ClusterModal = ({
       networkVo,
     };
 
-    Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터 출력
-
+    Logger.debug(`ClusterModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit)
     editMode
       ? editCluster({ clusterId: formState.id, clusterData: dataToSubmit })
       : addCluster(dataToSubmit);
@@ -149,7 +149,7 @@ const ClusterModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.CLUSTER} submitTitle={cLabel}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px" }} 
     >

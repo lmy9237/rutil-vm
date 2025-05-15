@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
 import "./PopupBox.css"; 
 
-const PopupBox = ({ isVisible, items, onClose }) => {
+const PopupBox = ({ 
+  isVisible,
+  items,
+  onClose
+}) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       const popupBox = document.querySelector(".popup-box");

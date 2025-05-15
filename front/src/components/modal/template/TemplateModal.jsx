@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
   useAddTemplate,
@@ -20,7 +22,6 @@ import { useQueries } from "@tanstack/react-query";
 import ApiManager from "../../../api/ApiManager";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 
-
 const initialFormState = {
   name: "",
   description: "",
@@ -36,8 +37,11 @@ const initialFormState = {
 const TemplateModal = ({
   isOpen,
   onClose,
-  selectedVm,
 }) => {
+  // const { closeModal } = useUIState()
+  const { vmsSelected } = useGlobal()
+  const vmSelected = useMemo(() => vmsSelected[0], [vmsSelected])
+  
   const [formState, setFormState] = useState(initialFormState);
 
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
@@ -47,11 +51,7 @@ const TemplateModal = ({
   const [diskVoList, setDiskVoList] = useState([]);
   const [diskProfilesList, setDiskProfilesList] = useState([]);
   
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.TEMPLATE} 생성 완료`);
-  };
-  const { mutate: addTemplate } = useAddTemplate(onSuccess, () => onClose());
+  const { mutate: addTemplate } = useAddTemplate(onClose, onClose);
 
   // 데이터센터 ID 기반으로 클러스터 목록 가져오기
   const {
@@ -68,7 +68,7 @@ const TemplateModal = ({
   // 가상머신에 연결되어있는 디스크
   const {
     data: disks = [],
-  } = useDisksFromVM(selectedVm?.id, (e) => ({ ...e }));
+  } = useDisksFromVM(vmSelected?.id, (e) => ({ ...e }));
 
   // 데이터센터 ID 기반으로 스토리지목록 가져오기
   const {
@@ -93,23 +93,22 @@ const TemplateModal = ({
 
   Logger.debug(`TemplateModal > domains: `, domains);
   Logger.debug(`TemplateModal > disks: `, disks);
-
   useEffect(() => {
-    if (isOpen && selectedVm?.dataCenterVo?.id) {
+    if (isOpen && vmSelected?.dataCenterVo?.id) {
       setDataCenterVo({
-        id: selectedVm?.dataCenterVo?.id,
-        name: selectedVm?.dataCenterVo?.name || "",
+        id: vmSelected?.dataCenterVo?.id,
+        name: vmSelected?.dataCenterVo?.name || "",
       });
       setFormState((prev) => ({
-        ...prev, name: `${selectedVm?.name || ""}_temp`
+        ...prev, name: `${vmSelected?.name || ""}_temp`
       }));
     }
-  }, [isOpen, selectedVm]);
+  }, [isOpen, vmsSelected]);
 
   useEffect(() => {
     if (!isOpen) {
       setFormState(initialFormState);
-      setDataCenterVo({ id: selectedVm?.dataCenterVo?.id });
+      setDataCenterVo({ id: vmsSelected?.dataCenterVo?.id });
     }
   }, [isOpen]);
 
@@ -164,16 +163,16 @@ const TemplateModal = ({
     }
   }, [getDiskProfiles, domains]); 
 
-  // const handleInputChange = (field) => (e) => {
-  //   setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  // };
+  /*
+  const handleInputChange = (field) => (e) => {
+    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
+  };
 
-  // const handleSelectIdChange = (setVo, voList) => (e) => {
-  //   const selected = voList.find((item) => item.id === e.target.value);
-  //   if (selected) setVo({ id: selected.id, name: selected.name });
-  // };
-
-
+  const handleSelectIdChange = (setVo, voList) => (e) => {
+    const selected = voList.find((item) => item.id === e.target.value);
+    if (selected) setVo({ id: selected.id, name: selected.name });
+  };
+  */
   const handleDiskChange = (index, field, value, nested = false) => {
     setDiskVoList((prev) => {
       const updated = [...prev];
@@ -205,7 +204,7 @@ const TemplateModal = ({
       ...formState,
       clusterVo,
       cpuProfileVo,
-      vmVo: { id: selectedVm.id, name: selectedVm?.name },
+      vmVo: { id: vmsSelected.id, name: vmsSelected?.name },
 
       diskAttachmentVos: diskVoList.map((disk) => ({
         diskImageVo: {
@@ -219,8 +218,7 @@ const TemplateModal = ({
     };
 
     Logger.debug(`TemplateModal > dataToSubmit ... 템플릿 생성데이터: ${dataToSubmit}`);
-
-    addTemplate({ vmId: selectedVm.id, templateData: dataToSubmit });
+    addTemplate({ vmId: vmSelected.id, templateData: dataToSubmit });
   };
 
   return (

@@ -8,8 +8,6 @@
 const SettingUserSessionsModal = ({
   usersession
 }) => {
-
-  
   return (
     <>
     </>

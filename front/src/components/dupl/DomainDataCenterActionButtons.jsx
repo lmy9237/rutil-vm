@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 import useGlobal from "../../hooks/useGlobal";
 import useUIState from "../../hooks/useUIState";
+import Localization from "../../utils/Localization";
 
 const DomainDataCenterActionButtons = ({
   actionType = "default",
@@ -20,10 +21,10 @@ const DomainDataCenterActionButtons = ({
   const isLocked = domain1st?.status === "LOCKED";
 
   const basicActions = [
-    { type: "attach", onBtnClick: () => setActiveModal("domain:attach"), label: "연결", disabled: domainsSelected.length > 0 || isActive || !isMaintenance }, // 연결 disabled 조건 구하기 disabled: domainsSelected.length === 0 데이터센터가 없을때
-    { type: "detach", onBtnClick: () => setActiveModal("domain:detach"), label: "분리", disabled: domainsSelected.length === 0 || isLocked || isActive || !isMaintenance, },
-    { type: "activate", onBtnClick: () => setActiveModal("domain:activate"), label: "활성", disabled: domainsSelected.length === 0 || isLocked || isActive || !isMaintenance, },
-    { type: "maintenance", onBtnClick: () => setActiveModal("domain:maintenance"), label: "유지보수", disabled: domainsSelected.length === 0 || isLocked || isMaintenance, },
+    { type: "attach", onBtnClick: () => setActiveModal("domain:attach"), label: Localization.kr.ATTACH, disabled: domainsSelected.length > 0 || isActive || !isMaintenance }, // 연결 disabled 조건 구하기 disabled: domainsSelected.length === 0 데이터센터가 없을때
+    { type: "detach", onBtnClick: () => setActiveModal("domain:detach"), label: Localization.kr.DETACH, disabled: domainsSelected.length === 0 || isLocked || isActive || !isMaintenance, },
+    { type: "activate", onBtnClick: () => setActiveModal("domain:activate"), label: Localization.kr.ACTIVATE, disabled: domainsSelected.length === 0 || isLocked || isActive || !isMaintenance, },
+    { type: "maintenance", onBtnClick: () => setActiveModal("domain:maintenance"), label: Localization.kr.MAINTENANCE, disabled: domainsSelected.length === 0 || isLocked || isMaintenance, },
   ];
  
   return (

@@ -794,11 +794,12 @@ const TableColumnsInfo = {
     { header: Localization.kr.NAME, accessor: 'name', clickable: false }
   ],
   JOB_HISTORY_COLUMNS : [
-    { header: '작업명', accessor: 'description', style: { paddingLeft: "20px" }},
-    { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime'  , width:'5%'},
-    { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime' , width:'5%'},
+    { header: '작업명', accessor: '_description', style: { paddingLeft: "20px" }},
+    { header: '세부작업', accessor: 'numSteps', width:'10px' },
+    { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime', width:'140px'},
+    { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime',  width:'140px'},
     { header: Localization.kr.STATUS,          accessor: 'status', width:'5%' },
-    { header: Localization.kr.TIMESTAMP,       accessor: 'timestamp' , width:'30%' },
+    { header: Localization.kr.TIMESTAMP,       accessor: 'timestamp' , width:'100px' },
   ],
   // 사용자
   SETTING_USER: [

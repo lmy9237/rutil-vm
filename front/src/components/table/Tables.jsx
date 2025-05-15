@@ -394,8 +394,8 @@ const Tables = ({
 
   return (
     <>
-      <div className="w-full overflow-y-hidden ">
-        <table className="custom-table" 
+      <div className="w-full overflow-y-hidden">
+        <table className="custom-table w-full" 
           ref={tableRef}
         >
           <thead>
@@ -426,7 +426,7 @@ const Tables = ({
       </div>
       {/*페이지버튼 */}
       {sortedData.length > itemsPerPage && (   
-        <div className="paging-arrows my-2">
+        <div className="paging-arrows f-end my-2">
           <PagingButton type="prev"
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}

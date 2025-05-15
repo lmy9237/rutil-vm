@@ -1,5 +1,7 @@
 import { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
   useDeactivateHost,
@@ -9,7 +11,6 @@ import {
   useRefreshHost,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name HostActionModal
@@ -19,16 +20,15 @@ import useGlobal from "../../../hooks/useGlobal";
  * @returns 
  */
 const HostActionModal = ({ 
-  isOpen, onClose, action
+  isOpen, 
+  onClose,
+  action
 }) => {  
+  // const { closeModal } = useUIState()
   const { label = "", hook } = ACTIONS[action] || {};
   const { hostsSelected } = useGlobal()
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.HOST} ${label} ${Localization.kr.FINISHED}`);
-  };
-  const { mutate } = hook ? hook(onSuccess, onClose) : { mutate: null };
+  const { mutate } = hook ? hook(onClose, onClose) : { mutate: null };
 
   const { ids, names } = useMemo(() => {
     return {
@@ -46,7 +46,7 @@ const HostActionModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.HOST} submitTitle={label}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleSubmit}
       promptText={`${names.join(", ")} 를(을) ${label} 하시겠습니까?`}
       contentStyle={{ width: "630px" }} 
@@ -58,10 +58,10 @@ const HostActionModal = ({
 export default HostActionModal;
 
 const ACTIONS = {
-  "host:deactivate": { label: "유지보수", hook: useDeactivateHost },
-  "host:activate": { label: "활성화", hook: useActivateHost },
-  "host:restart": { label: "재시작", hook: useRestartHost },
-  "host:refresh": { label: "새로고침", hook: useRefreshHost },
+  "host:deactivate": { label: Localization.kr.MAINTENANCE, hook: useDeactivateHost },
+  "host:activate": { label: Localization.kr.ACTIVATE, hook: useActivateHost },
+  "host:restart": { label: Localization.kr.RESTART, hook: useRestartHost },
+  "host:refresh": { label: Localization.kr.REFRESH, hook: useRefreshHost },
   "host:enrollCert": { label: "인증서 등록", hook: useEnrollHostCertificate },
   "host:haOn": { label: "HA 활성화" },
   "host:haOff": { label: "HA 비활성화" },

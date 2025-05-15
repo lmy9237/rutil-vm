@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelCheckbox from "../../label/LabelCheckbox";
@@ -7,18 +7,15 @@ import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import { useMaintenanceDomain } from "../../../api/RQHook";
 
-const DomainMaintenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceModal
+const DomainMaintenanceModal = ({
   isOpen,
-  onClose
+  onClose,
 }) => {
+  // const { closeModal } = useUIState()
   const { datacentersSelected, domainsSelected } = useGlobal()
   // 만약 가상머신에 대한 임대가 포함되어 있다면 유지보수 불가능
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.DOMAIN} 유지보수 완료`);
-  }; 
-  const { mutate: maintenanceDomain } = useMaintenanceDomain(onSuccess, () => onClose());
+  const { mutate: maintenanceDomain } = useMaintenanceDomain(onClose, onClose);
 
   const { ids, names } = useMemo(() => {
     if (!domainsSelected) return { ids: [], names: [] };
@@ -31,7 +28,7 @@ const DomainMaintenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceMod
   const [ignoreOVF, setIgnoreOVF] = useState(false);
 
   const handleSubmit = () => {
-    Logger.debug("OVF 무시:", ignoreOVF);
+    Logger.debug("DomainMaintenanceModal > handleSubmit ... OVF 무시:", ignoreOVF);
 
     [...ids]?.forEach((domainId) => {
       maintenanceDomain({ domainId, dataCenterId: datacentersSelected[0]?.id, ovf: ignoreOVF });
@@ -39,9 +36,9 @@ const DomainMaintenanceModal = ({  // TODO: 이름수정 -> DomainMaintenanceMod
   };
 
   return (
-    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={Localization.kr.MANAGEMENT}
-      isOpen={isOpen} onClose={onClose}      
-      promptText={`다음의 ${Localization.kr.DOMAIN}을 유지 ${Localization.kr.MANAGEMENT} 모드로 설정하시겠습니까?`}
+    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={Localization.kr.MAINTENANCE}
+      isOpen={isOpen} onClose={onClose}
+      promptText={`다음의 ${Localization.kr.DOMAIN}을 ${Localization.kr.MAINTENANCE} 모드로 설정하시겠습니까?`}
       onSubmit={handleSubmit}
       contentStyle={{ width: "600px" }}
       shouldWarn={true}      

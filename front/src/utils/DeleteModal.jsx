@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import useUIState from "../hooks/useUIState";
 import BaseModal from "../components/modal/BaseModal";
 import Logger from "./Logger";
 import { RVI16, rvi16ChevronRight } from "../components/icons/RutilVmIcons";
@@ -8,12 +9,12 @@ import Localization from "./Localization";
 
 const DeleteModal = ({
   isOpen=false, 
-  onClose, 
+  onClose,
   label="", 
   data, 
   api, 
-  navigation
 }) => {
+  // const { closeModal } = useUIState()
   const navigate = useNavigate();
   const { mutate: deleteApi } = api;
 
@@ -31,6 +32,7 @@ const DeleteModal = ({
   }, [data]);
 
   const handleFormSubmit = () => {
+    onClose();
     if (!ids.length) {
       Logger.error(`${Localization.kr.REMOVE}할 ${label} ID가 없습니다.`);
       return;
@@ -40,34 +42,29 @@ const DeleteModal = ({
       deleteApi(id, {
         onSuccess: () => {
           if (ids.length === 1 || index === ids.length - 1) {
-            onClose();
-            toast.success(`[200] ${label} ${Localization.kr.REMOVE} 요청완료`);
-  
             const currentPath = location.pathname;
             const uuidRegex = /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
   
             if (uuidRegex.test(currentPath)) {
-              // UUID가 포함된 상세 경로 → 상위 경로로 이동
-              const parentPath = currentPath.replace(uuidRegex, "");
-              navigate(parentPath);
+              // UUID가 포함된 상세 경로 → 
+              // 최상위 경로로 이동 (RutilManager)
+              const parentPath = currentPath.split("/")[1]
+              navigate(`/${parentPath}/rutil-manager`); // 일단 오류가 안나도록 보정
             }
             // UUID가 없으면 아무 것도 하지 않음 → 현재 화면 유지
           }
         },
         onError: (error) => {
-          toast.error(`${label} ${Localization.kr.REMOVE} 요청완료: ${error.message}`);
+          toast.error(`${label} ${Localization.kr.REMOVE} 요청실패: ${error.message}`);
         },
       });
     });
   };
   
-  Logger.debug("DeleteModal ...")
   return (
-    <BaseModal
+    <BaseModal targetName={label} submitTitle={Localization.kr.REMOVE}
       isOpen={isOpen} onClose={onClose}
-      targetName={label}
       shouldWarn={true}
-      submitTitle={Localization.kr.REMOVE}
       promptText={`다음 항목을 ${Localization.kr.REMOVE}하시겠습니까?`}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "660px" }}

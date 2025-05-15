@@ -16,6 +16,7 @@ import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
 import useGlobal from "../../../hooks/useGlobal";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import useUIState from "../../../hooks/useUIState";
 
 const initialFormState = {
   id: "",
@@ -26,8 +27,15 @@ const initialFormState = {
   interface_: "VIRTIO",
 };
 
-const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
-  const nLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+const VmNicModal = ({ 
+  isOpen,
+  onClose,
+  editMode=false,
+}) => {
+  // const { closeModal } = useUIState()
+  const nLabel = editMode 
+    ? Localization.kr.UPDATE
+    : Localization.kr.CREATE;
 
   const { vmsSelected, nicsSelected } = useGlobal();
   const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
@@ -40,15 +48,11 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
   const [isProfileOriginallySet, setIsProfileOriginallySet] = useState(false);
   const isInterfaceDisabled = editMode && isProfileOriginallySet;
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`nic ${nLabel} 완료`);
-  };
   const { data: vm } = useVm(vmId);
   const { data: nicsdetail } = useNetworkInterfaceFromVM(vmId, nicId);
   const { data: vnics = [], isLoading: isNicsLoading } = useAllvnicFromCluster(vm.clusterVo?.id, (e) => ({ ...e }));
-  const { mutate: addNicFromVM } = useAddNicFromVM(onSuccess, () => onClose());
-  const { mutate: editNicFromVM } = useEditNicFromVM(onSuccess, () => onClose());
+  const { mutate: addNicFromVM } = useAddNicFromVM(onClose, onClose);
+  const { mutate: editNicFromVM } = useEditNicFromVM(onClose, onClose);
 
 
   const filteredInterfaceOptions = useMemo(() => {
@@ -120,7 +124,7 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
       vnicProfileVo: { id: vnicProfileVo.id },
     };
 
-    Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터 출력
+    Logger.debug(`VmNicModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit); // 데이터 출력
 
     editMode
       ? editNicFromVM({ vmId, nicId, nicData: dataToSubmit })
@@ -129,7 +133,7 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
 
   return (
     <BaseModal targetName={Localization.kr.NICS} submitTitle={nLabel}
-      isOpen={isOpen} onClose={onClose}       
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px" }}
     >
@@ -176,7 +180,7 @@ const VmNicModal = ({ isOpen, onClose, editMode = false, }) => {
         <ToggleSwitchButton id="plugged-toggle" label="카드 상태"
           checked={formInfoState.plugged}
           onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}
-          tType="연결됨" fType="분리"
+          tType="연결됨" fType={Localization.kr.DETACH}
         />
       </div>
       {/* <div>

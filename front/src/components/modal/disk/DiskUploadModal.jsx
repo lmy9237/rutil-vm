@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
 import { checkName, convertBytesToGB } from "../../../util";
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import Logger from "../../../utils/Logger";
 import {
@@ -33,8 +35,9 @@ const initialFormState = {
 
 const DiskUploadModal = ({ 
   isOpen,
-  onClose
+  onClose,
 }) => {
+  // const { closeModal } = useUIState()
   const [formState, setFormState] = useState(initialFormState);
   const [file, setFile] = useState(null);
 
@@ -107,18 +110,9 @@ const DiskUploadModal = ({
     }
   }, [hosts]);
 
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
   const handleInputChangeCheck = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
   };
-
-  const handleSelectIdChange = (setVo, voList) => (e) => {
-    const selected = voList.find((item) => item.id === e.target.value);
-    if (selected) setVo({ id: selected.id, name: selected.name });
-  }; 
 
   const validateForm = () => {
     const nameError = checkName(formState.alias);
@@ -156,7 +150,7 @@ const DiskUploadModal = ({
   };
 
   return (
-    <BaseModal targetName={Localization.kr.DISK} submitTitle={"업로드"}
+    <BaseModal targetName={Localization.kr.DISK} submitTitle={Localization.kr.UPLOAD}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "790px" }} 
@@ -190,16 +184,16 @@ const DiskUploadModal = ({
               <LabelInput id="size" label={Localization.kr.SIZE_ACTUAL}
                 type="number"
                 value={sizeToGB(formState.size)}
-                onChange={handleInputChange("size")}
+                onChange={handleInputChange(setFormState, "size")}
                 disabled
               />
               <LabelInput label={Localization.kr.ALIAS}
                 value={formState.alias}
-                onChange={handleInputChange("alias")}
+                onChange={handleInputChange(setFormState, "alias")}
               />
               <LabelInput label={Localization.kr.DESCRIPTION}
                 value={formState.description}
-                onChange={handleInputChange("description")}
+                onChange={handleInputChange(setFormState, "description")}
               />
               <LabelSelectOptionsID
                 label={Localization.kr.DATA_CENTER}
@@ -219,8 +213,8 @@ const DiskUploadModal = ({
                 //   if (selected) setDomainVo({ id: selected.id, name: selected.name });
                 // }}
               />
-              {/* <div className='input-select custom-select-wrapper'>
-                <label className="">스토리지 도메인</label>
+              {/*<div className="input-select custom-select-wrapper">
+                <label>스토리지 도메인</label>
                 <select 
                   value={domainVo.id} 
                   onChange={handleSelectIdChange(setDomainVo, domains)}
@@ -236,7 +230,6 @@ const DiskUploadModal = ({
                   )}
                 </select>
               </div> */}
-
               <LabelSelectOptionsID
                 label="디스크 프로파일"
                 value={diskProfileVo.id}

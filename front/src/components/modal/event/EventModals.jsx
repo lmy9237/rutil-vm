@@ -14,23 +14,23 @@ import { useRemoveEvent } from "../../../api/RQHook";
 const EventModals = ({
   event,
 }) => {
-  const { activeModal, setActiveModal } = useUIState();
+  const { activeModal, closeModal } = useUIState();
   const { eventsSelected } = useGlobal();
 
   const modals = {
     remove: (
-      <DeleteModal key={activeModal()} isOpen={activeModal() === "event:remove"}
+      <DeleteModal key={"event:remove"} isOpen={activeModal().includes("event:remove")}
+        onClose={() => closeModal("event:remove")}
         label={Localization.kr.EVENT}
         data={eventsSelected}
         api={useRemoveEvent()}
-        onClose={() => setActiveModal(null)}
       />
     ),
   };
     return (
       <>
         {Object.keys(modals).filter((key) => 
-          activeModal() === `event:${key}`
+          activeModal().includes(`event:${key}`)
         ).map((key) => (
           <React.Fragment key={key}>{modals[key]}</React.Fragment>
         ))}

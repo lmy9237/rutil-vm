@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import { useRegisteredDiskFromDomain } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
@@ -8,11 +9,12 @@ import "../domain/MDomain.css";
 
 const DomainGetDiskModal = ({
   isOpen,
+  onClose,
   domainId,
   data,
-  onClose
 }) => {
-  const { mutate: registerDisk } = useRegisteredDiskFromDomain();
+  // const { closeModal } = useUIState()
+  const { mutate: registerDisk } = useRegisteredDiskFromDomain(onClose, onClose);
 
   Logger.debug(`DomainGetDiskModal, domainId: ${domainId}, data: `, data);
   const { ids } = useMemo(() => {
@@ -35,28 +37,12 @@ const DomainGetDiskModal = ({
         `DomainGetDiskModal > handleFormSubmit ... domainId: ${domainId}, diskId: ${diskId}`
       );
 
-      registerDisk(
-        { storageDomainId: domainId, diskId },
-        {
-          onSuccess: () => {
-            if (ids.length === 1 || index === ids.length - 1) {
-              onClose();
-              toast.success("디스크 불러오기 성공");
-            }
-          },
-          onError: (error) => {
-            toast.error(`디스크 불러오기 오류:`, error);
-          },
-        }
-      );
+      registerDisk({ storageDomainId: domainId, diskId });
     });
   };
   return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName={"디스크"}
-      submitTitle={"불러오기"}
+    <BaseModal targetName={Localization.kr.DISK} submitTitle={Localization.kr.IMPORT}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "880px" }} 
     >

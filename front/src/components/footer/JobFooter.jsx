@@ -1,6 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import useGlobal from "../../hooks/useGlobal";
 import useFooterState from "../../hooks/useFooterState";
+import { BadgeStatus, BadgeNumber } from "../common/Badges";
+import Spinner from "../common/Spinner";
+import Loading from "../common/Loading";
 import SelectedIdView from "../common/SelectedIdView";
 import TableColumnsInfo from "../table/TableColumnsInfo";
 import TablesOuter from "../table/TablesOuter";
@@ -8,6 +12,7 @@ import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
 import { useAllJobs } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 import Localization from "../../utils/Localization";
+import TableRowClick from "../table/TableRowClick";
 import "./JobFooter.css";
 
 /**
@@ -38,13 +43,36 @@ const JobFooter = ({
   const transformedData = useMemo(() => ([...jobs].map((e) => ({
     ...e,
     isFinished: e?.status === "FINISHED" || e?.status === "FAILED" ,
-    description: e?.description,
-    status: e?.status,
+    _description: [...e?.steps]?.length > 1 ? (
+      <TableRowClick type="job" id={e?.id} onClick={() => handleDescriptionClick(e)}>
+        {e?.description}
+      </TableRowClick>
+    ) : e?.description,
+    // steps: e?.steps,
+    numSteps: [...e?.steps]?.length > 1 
+      ? <BadgeNumber 
+        text={[...e?.steps].length} 
+        status={e?.status === "FAILED" ? "alert" : "number"}
+      /> : "",
+    status: (e?.status === "FINISHED" || e?.status === "FAILED") 
+      ? <BadgeStatus status={
+        e?.status === "FINISHED" 
+          ? "running"
+          : "default"
+      } text={e?.status} />
+      : <Spinner />,
     startTime: e?.startTime,
-    endTime: e?.endTime,
-    timestamp: isNaN(e?.timestamp) ? Localization.kr.NOT_ASSOCIATED : Localization.kr.renderTime(e?.timestamp),
+    endTime: e?.endTime === "" 
+      ? Localization.kr.NOT_ASSOCIATED
+      : e?.endTime,
+    timestamp: isNaN(e?.timestamp) 
+      ? Localization.kr.NOT_ASSOCIATED
+      : Localization.kr.renderTime(e?.timestamp),
   }))), [jobs]);
-
+ 
+  const handleDescriptionClick = useCallback((job) => {
+    toast.success(job?.description)
+  }, [jobs])
   const FOOTER_TOP_HORIZ_BAR_HEIGHT = 40
   const [footerHeight, setFooterHeight] = useState(FOOTER_TOP_HORIZ_BAR_HEIGHT)
   const handleMouseDown = (mouseDownEvent) => {
@@ -91,7 +119,6 @@ const JobFooter = ({
         style={{ bottom: `${footerHeight}px` }}
       />
       <div
-        // className={`footer-outer v-start${footerVisible() ? " open" : ""}`}
         className={`footer-outer v-start w-full`}
         style={{ height: `${footerHeight}px` }}
       >
@@ -118,8 +145,9 @@ const JobFooter = ({
               columns={TableColumnsInfo.JOB_HISTORY_COLUMNS}
               style={{ paddingLeft:'30px' }}
               data={transformedData}
-              onRowClick={(row) => setJobsSelected(row)}
               showSearchBox={false}
+              onRowClick={(row) => setJobsSelected(row)}
+              onClickableColumnClick={(row) => handleDescriptionClick(row)}
               isLoading={isJobsLoading} isError={isJobsError} isSuccess={isJobsSuccess}
             />
             <SelectedIdView items={jobsSelected} />

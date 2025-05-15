@@ -48,7 +48,7 @@ const VmActionButtons = ({
   const allDownOrSuspended = vmsSelected.length > 0 && vmsSelected.every(vm => 
     vm.status === "DOWN" || vm.status === "SUSPENDED"
   );
-  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.some(vm => vm?.status === "UP" || vm?.status === "POWERING_DOWN");
+  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.some(vm => vm?.status === "UP" || vm?.status === "POWERING_DOWN" || vm?.status === "SUSPENDED");
   const { mutate: downloadRemoteViewerConnectionFileFromVm } = useRemoteViewerConnectionFileFromVm()
   const downloadRemoteViewerConnectionFile = (e) => {
     Logger.debug(`VmActionButtons > downloadRemoteViewerConnectionFile ... `)
@@ -61,7 +61,7 @@ const VmActionButtons = ({
     { type: "copy", onBtnClick: () => setActiveModal("vm:copy"), label: `${Localization.kr.VM} 복제`, disabled: vmsSelected.length !== 1 || allPause },
     { type: "remove", onBtnClick: () => setActiveModal("vm:remove"), label: Localization.kr.REMOVE, disabled: vmsSelected.length === 0 || !isDown },
     { type: "templates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
-    { type: "ova", label: "ova로 내보내기", disabled: vmsSelected.length !== 1 || !isDown },
+    { type: "ova", label: `ova로 ${Localization.kr.EXPORT}`, disabled: vmsSelected.length !== 1 || !isDown },
   ];
 
   const consoleActions = [
@@ -70,17 +70,17 @@ const VmActionButtons = ({
   ]
   
   const basicActions = [
-    { type: "create",     onBtnClick: () => setActiveModal("vm:create"), label: Localization.kr.CREATE, disabled: isContextMenu && vmsSelected.length > 0 },
-    { type: "update",     onBtnClick: () => setActiveModal("vm:update"), label: Localization.kr.UPDATE, disabled: vmsSelected.length !== 1 },
-    { type: "start",      onBtnClick: () => setActiveModal("vm:start"), label: Localization.kr.START, disabled: !(allDown || allPause) },
-    { type: "pause",      onBtnClick: () => setActiveModal("vm:pause"), label: Localization.kr.PAUSE, disabled: !allUp },
-    { type: "reboot",     onBtnClick: () => setActiveModal("vm:reboot"), label: Localization.kr.REBOOT, disabled: !allUp },
-    { type: "reset",      onBtnClick: () => setActiveModal("vm:reset"), label: Localization.kr.RESET, disabled: !allUp },
-    { type: "shutdown",   onBtnClick: () => setActiveModal("vm:shutdown"), label: Localization.kr.END, disabled: vmsSelected.length === 0 || !allUp },
-    { type: "powerOff",   onBtnClick: () => setActiveModal("vm:powerOff"), label: Localization.kr.POWER_OFF, disabled: vmsSelected.length === 0 || !allOkay2PowerDown  },
-    { type: "console",    onBtnClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE, disabled: !allUp, subactions: consoleActions},
-    { type: "migration",  onBtnClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION, disabled: !allUp },
-    { type: "snapshot",   onBtnClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`,  disabled: vmsSelected.length === 0 },
+    { type: "create",     onBtnClick: () => setActiveModal("vm:create"),      label: Localization.kr.CREATE,                                  disabled: isContextMenu && vmsSelected.length > 0 },
+    { type: "update",     onBtnClick: () => setActiveModal("vm:update"),      label: Localization.kr.UPDATE,                                  disabled: vmsSelected.length !== 1 },
+    { type: "start",      onBtnClick: () => setActiveModal("vm:start"),       label: Localization.kr.START,                                   disabled: !(isDown || isPause || isMaintenance) },
+    { type: "pause",      onBtnClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
+    { type: "reboot",     onBtnClick: () => setActiveModal("vm:reboot"),      label: Localization.kr.REBOOT,                                  disabled: !allUp },
+    { type: "reset",      onBtnClick: () => setActiveModal("vm:reset"),       label: Localization.kr.RESET,                                   disabled: !allUp },
+    { type: "shutdown",   onBtnClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
+    { type: "powerOff",   onBtnClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
+    { type: "console",    onBtnClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: !allUp, subactions: consoleActions},
+    { type: "migration",  onBtnClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION,                               disabled: !allUp },
+    { type: "snapshot",   onBtnClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 },
     { type: "template",   onBtnClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE },
   ];
 

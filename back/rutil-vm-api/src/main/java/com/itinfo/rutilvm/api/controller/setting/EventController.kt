@@ -41,8 +41,8 @@ class EventController: BaseController() {
     )
 	@ApiImplicitParams(
 		ApiImplicitParam(name="severityThreshold", value="심각도 상위범위", dataTypeClass=String::class, required=false, paramType="query"),
-		ApiImplicitParam(name="pageNo", value="보여줄 페이지 번호", dataTypeClass=Int::class, required=false, paramType="query"),
-		ApiImplicitParam(name="size", value="페이지 당 보여줄 개수", dataTypeClass=Int::class, required=false, paramType="query"),
+		ApiImplicitParam(name="pageNo", value="보여줄 페이지 번호", dataTypeClass=Int::class, example ="1", required=false, paramType="query"),
+		ApiImplicitParam(name="size", value="페이지 당 보여줄 개수", dataTypeClass=Int::class, example="20", required=false, paramType="query"),
 	)
     @ApiResponses(
         ApiResponse(code = 200, message = "OK")
@@ -52,10 +52,10 @@ class EventController: BaseController() {
     @ResponseStatus(HttpStatus.OK)
     fun events(
 		@RequestParam(required=false) severityThreshold: String? = null,
-		@RequestParam(required=false) pageNo: Int? = null,
+		@RequestParam(required=false) pageNo: Int? = 1,
 		@RequestParam(required=false) size: Int? = 20,
 	): ResponseEntity<List<EventVo>> {
-        log.info("/events ... severityThreshold: {}, pageNo: {}, size: {}, 이벤트 목록", severityThreshold ?: "없음", pageNo ?: "없음", size ?: "없음")
+        log.info("/events ... severityThreshold: {}, pageNo: {}, size: {}, 이벤트 목록", severityThreshold, pageNo, size)
 		return ResponseEntity.ok(iEvent.findAll(severityThreshold, pageNo, size))
     }
 

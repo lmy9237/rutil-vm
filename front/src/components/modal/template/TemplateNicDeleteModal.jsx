@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle, } from "@fortawesome/free-solid-svg-icons";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import { useDeleteNetworkFromTemplate } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
@@ -12,9 +13,10 @@ const TemplateNicDeleteModal = ({
   data,
   templateId
 }) => {
+  const { closeModal } = useUIState()
   const [ids, setIds] = useState([]);
   const [names, setNames] = useState([]);
-  const { mutateAsync: deleteNicFromTemplate } = useDeleteNetworkFromTemplate(); 
+  const { mutateAsync: deleteNicFromTemplate } = useDeleteNetworkFromTemplate(closeModal, closeModal); 
   
   useEffect(() => {
     if (Array.isArray(data)) {
@@ -46,15 +48,11 @@ const TemplateNicDeleteModal = ({
       }
     }
     Logger.debug("✅ All NIC deletion attempts completed.");
-    onClose();
   };
   
-  Logger.debug("TemplateNicDeleteModal ...")
   return (
-    <BaseModal 
-      isOpen={isOpen}
-      onClose={onClose}
-      targetName={"NIC"}
+    <BaseModal isOpen={isOpen} onClose={onClose}
+      targetName={`${Localization.kr.TEMPLATE} ${Localization.kr.NICS}`}
       submitTitle={Localization.kr.REMOVE}
       onSubmit={handleFormSubmit}
     >

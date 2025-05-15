@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelInputNum from "../../label/LabelInputNum";
@@ -15,10 +17,9 @@ import {
   useAllDiskProfilesFromDomain,
 } from "../../../api/RQHook";
 import { checkName, convertBytesToGB } from "../../../util";
+import { handleInputChange, handleInputCheck, handleSelectIdChange } from "../../label/HandleInput";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
-import { handleInputChange, handleInputCheck, handleSelectIdChange } from "../../label/HandleInput";
 
 const initialFormState = {
   id: "",
@@ -36,8 +37,15 @@ const initialFormState = {
   cancelActive: false, // vm 취소 활성화
 };
 
-const DiskModal = ({ isOpen, editMode = false, onClose }) => {
-  const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+const DiskModal = ({ 
+  isOpen, 
+  onClose,
+  editMode = false, 
+}) => {
+  // const { closeModal } = useUIState()
+  const dLabel = editMode 
+    ? Localization.kr.UPDATE
+    : Localization.kr.CREATE;
 
   const { disksSelected } = useGlobal();
   const diskId = useMemo(() => [...disksSelected][0]?.id, [disksSelected]);
@@ -47,12 +55,8 @@ const DiskModal = ({ isOpen, editMode = false, onClose }) => {
   const [domainVo, setDomainVo] = useState({ id: "", name: "" });
   const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
   
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.DISK} ${dLabel} 완료`);
-  };
-  const { mutate: addDisk } = useAddDisk(onSuccess, () => onClose());
-  const { mutate: editDisk } = useEditDisk(onSuccess, () => onClose());
+  const { mutate: addDisk } = useAddDisk(onClose, onClose);
+  const { mutate: editDisk } = useEditDisk(onClose, onClose);
 
   const { data: disk } = useDisk(diskId);
   diskId && Logger.debug(`DiskModal.diskId: ${diskId}`);
@@ -128,6 +132,7 @@ const DiskModal = ({ isOpen, editMode = false, onClose }) => {
   };
 
   const validateForm = () => {
+    Logger.debug(`DiskModal > validateForm ... `); // 데이터를 확인하기 위한 로그
     const nameError = checkName(formState.alias);
     if (nameError) return nameError;
 
@@ -156,8 +161,7 @@ const DiskModal = ({ isOpen, editMode = false, onClose }) => {
       diskProfileVo,
     };
 
-    Logger.debug(`DiskModal > dataToSubmit ... ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터를 확인하기 위한 로그
-
+    Logger.debug(`DiskModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit); // 데이터를 확인하기 위한 로그
     editMode
       ? editDisk({ diskId: formState.id, diskData: dataToSubmit })
       : addDisk(dataToSubmit);
@@ -165,7 +169,7 @@ const DiskModal = ({ isOpen, editMode = false, onClose }) => {
 
   return (
     <BaseModal targetName={Localization.kr.DISK} submitTitle={dLabel}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "640px" }}
     >

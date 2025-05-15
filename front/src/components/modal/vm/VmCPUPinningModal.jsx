@@ -9,12 +9,13 @@ import BaseModal from "../BaseModal";
  * @returns 
  * @deprecated NOT USED 
  */
-const VmCPUPinningModal = ({ isOpen, onClose }) => {
-  Logger.debug("VmCPUPinningModal ...")
+const VmCPUPinningModal = ({
+  isOpen,
+  onClose,
+}) => {
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}
-      targetName={"CPU Pinning"}
-      submitTitle={"OK"}
+    <BaseModal targetName={"CPU Pinning"} submitTitle={"OK"}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={() => {}}
     >
       {/* <div className="device-view-popup-outer modal"> */}

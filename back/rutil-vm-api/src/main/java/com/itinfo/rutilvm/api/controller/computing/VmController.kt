@@ -1363,7 +1363,7 @@ class VmController: BaseController() {
 	@ApiImplicitParams(
 		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
 		ApiImplicitParam(name="graphicConsoleId", value="그래픽 콘솔 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="expiry", value="콘솔 접근 만료시간 (초)", dataTypeClass=Long::class, defaultValue="7200", required=true, paramType="query"),
+		ApiImplicitParam(name="expiry", value="콘솔 접근 만료시간 (초)", dataTypeClass=Int::class, example="7200", required=true, paramType="query"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED"),
@@ -1375,14 +1375,14 @@ class VmController: BaseController() {
 	fun publishTicket(
 		@PathVariable vmId: String? = null,
 		@PathVariable graphicConsoleId: String? = null,
-		@RequestParam expiry: Long? = 7200L,
+		@RequestParam expiry: Int? = 7200,
 	): ResponseEntity<TicketVo> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		if (graphicConsoleId.isNullOrEmpty())
 			throw ErrorPattern.CONSOLE_ID_NOT_FOUND.toException()
 		log.info("/computing/vms/{}/graphicsconsoles/{}/ticket ... 가상머신 콘솔 접근 티켓발행", vmId, graphicConsoleId)
-		return ResponseEntity.ok(iVmGraphicsConsoles.publishTicket(vmId, graphicConsoleId, expiry))
+		return ResponseEntity.ok(iVmGraphicsConsoles.publishTicket(vmId, graphicConsoleId, expiry?.toLong()))
 	}
 
 

@@ -1,6 +1,8 @@
 import Logger from "../../utils/Logger";
 
 /**
+ * @name handleInputChange
+ * 
  * 일반 input 필드용 핸들러 생성
  */
 export function handleInputChange(setState, field) {
@@ -8,7 +10,6 @@ export function handleInputChange(setState, field) {
     const value = e?.target?.value ?? e?.id ?? e;
     // TODO: LabelSelectOptionsID에서 처리 될 때는 event를 넘기지 않음
     // 어떤 곳에서는 selecftIdChange를 쓸때 vo대신 prop을 바꿈
-    // 하나로 통합 필요
     Logger.debug(`handleInputChange ... field: ${field}, value: ${value}`)
     setState((prev) => ({ ...prev, [field]: value }));
   };

@@ -18,7 +18,7 @@ import Localization from "../../../utils/Localization";
  */
 const VmSnapshotActionModal = ({
   isOpen, 
-  onClose
+  onClose,
 }) => {
   const ACTIONS = useMemo(() => ({
     "vmsnapshot:preview": { label: Localization.kr.PREVIEW, hook: usePreviewSnapshot },
@@ -26,7 +26,7 @@ const VmSnapshotActionModal = ({
     "vmsnapshot:undo": { label: Localization.kr.UNDO, hook: useUndoSnapshot },
   }), [])
 
-  const { activeModal, setActiveModal } = useUIState()
+  const { activeModal } = useUIState()
   const { vmsSelected, snapshotsSelected } = useGlobal()
   const vmSelected1st = [...vmsSelected][0] ?? null
 
@@ -41,7 +41,7 @@ const VmSnapshotActionModal = ({
   }, [snapshotsSelected]);
 
   const promptTextByAction = useMemo(() => (
-    (activeModal() === "vmsnapshot:undo") /* 되돌리기 */
+    (activeModal().includes("vmsnapshot:undo")) /* 되돌리기 */
       ? `전 상태로 ${label} 하시겠습니까 ?`
       : `${Localization.kr.SNAPSHOT} "${names.join(", ")}" 를(을) ${label} 하시겠습니까?`
   ), [names, label])
@@ -51,7 +51,7 @@ const VmSnapshotActionModal = ({
     if (!ids.length) return toast.error("ID가 없습니다.");
 
     ids.forEach((id) => {
-      if (activeModal() === "vmsnapshot:preview") /* 미리보기 */
+      if (activeModal().includes("vmsnapshot:preview")) /* 미리보기 */
         mutate({ vmId: vmSelected1st?.id, snapshotId: id})
       else 
         mutate({ vmId: vmSelected1st?.id })

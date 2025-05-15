@@ -53,24 +53,3 @@
 .popup-btn {
   margin-right: 0 !important;
 }
-.status-label {
-  height: 24px;padding: 12px;
-  border-radius: 18px;
-  font-weight: 500;
-  line-height: normal;
-  white-space: nowrap;
-}
-.status-label.running {
-  color: #006e18;
-  background-color: #e3f3e6;
-  font-weight: bold;
-}
-
-.status-label.stopped {
-  color: #e3722b;
-  background-color: #ffebd7;
-}
-.status-label.default {
-  color: var(--color-nav);
-  background-color: var(--color-input-disabled);
-}

@@ -109,7 +109,6 @@ const NetworkVms = ({
             isOpen={isDeleteModalOpen}
             onRequestClose={() => toggleDeleteModal(false)}
             data={modalData}
-            onClose={() => toggleDeleteModal(false)}
           />
         )}
       </Suspense> */}

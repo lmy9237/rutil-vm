@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import DiskSnapshotDeleteModal from "./DiskSnapshotDeleteModal";
-import Logger from "../../../utils/Logger";
 
 /**
  * @name DiskSnapshotModals
@@ -13,25 +12,20 @@ import Logger from "../../../utils/Logger";
  * @see VmSnapshotActionButtons
  */
 const DiskSnapshotModals = ({
-
 }) => {
   const ACTIONS = useMemo(() => ([
     "vmsnapshot:preview",
     "vmsnapshot:commit",
     "vmsnapshot:undo",
   ]), [])
-  const { activeModal, setActiveModal } = useUIState()
+  const { activeModal, closeModal } = useUIState()
   const { vmsSelected, snapshotsSelected, setSnapshotsSelected } = useGlobal()
-  const onModalClose = () => {
-    setActiveModal(null)
-    setSnapshotsSelected([])
-  }
   const modals = {
     remove: (
-      <DiskSnapshotDeleteModal isOpen={activeModal() === "disksnapshot:remove"}
+      <DiskSnapshotDeleteModal key={"disksnapshot:remove"} isOpen={activeModal().includes("disksnapshot:remove")}
+        onClose={() => closeModal("disksnapshot:remove")}
         vmId={vmsSelected[0]?.id}
         data={snapshotsSelected}
-        onClose={onModalClose}
       />
     )
   }
@@ -39,7 +33,7 @@ const DiskSnapshotModals = ({
   return (
     <>
       {Object.keys(modals).filter((key) => 
-        activeModal() === `disksnapshot:${key}` || ACTIONS.includes(activeModal())
+        activeModal().includes(`disksnapshot:${key}`) || ACTIONS.includes(activeModal())
       ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}

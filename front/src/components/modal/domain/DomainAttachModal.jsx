@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
@@ -19,8 +19,9 @@ import Logger from "../../../utils/Logger";
  */
 const DomainAttachModal = ({
   isOpen,
-  onClose
+  onClose,
 }) => {
+  // const { closeModal } = useUIState()
   const {
     datacentersSelected, setDatacentersSelected, 
     domainsSelected, setDomainsSelected,
@@ -32,11 +33,6 @@ const DomainAttachModal = ({
     ? `${Localization.kr.DATA_CENTER}` 
     : `${Localization.kr.DOMAIN}`;
   const label = sourceContext === "fromDomain"
-
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${title} 연결 완료`);
-  };
   
   const {
     data: domains = [],
@@ -53,7 +49,7 @@ const DomainAttachModal = ({
 
   const {
     mutate: attachDomain 
-  } = useAttachDomain(onSuccess, () => onClose());
+  } = useAttachDomain(onClose, onClose);
 
   const transformedDataCenterData = [...datacenters].map((dc) => ({
     ...dc,
@@ -85,7 +81,6 @@ const DomainAttachModal = ({
 
   const handleFormSubmit = () => {
     Logger.debug(`DomainAttachModal > handleFormSubmit ... `)
-
     attachDomain(
       { dataCenterId: datacentersSelected[0]?.id, storageDomainId: domainsSelected[0]?.id }
     )

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
@@ -17,17 +18,14 @@ const initialFormState = {
 
 const VmSnapshotModal = ({
   isOpen,
-  onClose
+  onClose,
 }) => {
   const [formState, setFormState] = useState(initialFormState);
+  // const { closeModal } = useUIState();
   const { vmsSelected } = useGlobal(); // ✅ vmsSelected 직접 읽기
   const selectedVm = vmsSelected?.[0] ?? null; // ✅ 첫 번째 VM 기준으로
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.SNAPSHOT} 생성 완료`);
-  };
-  const { mutate: addSnapshotFromVM } = useAddSnapshotFromVM(onSuccess, () => onClose());
+  const { mutate: addSnapshotFromVM } = useAddSnapshotFromVM(onClose, onClose);
   
   useEffect(() => {
     if (isOpen  && selectedVm) {

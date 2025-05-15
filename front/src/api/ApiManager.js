@@ -2,6 +2,7 @@ import ENDPOINTS from "./Endpoints"
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import Logger from "../utils/Logger";
+import useUIState from "../hooks/useUIState";
 
 if (process.env.NODE_ENV === 'production') {
   Logger.info("THIS IS PRODUCTION !!!")
@@ -3079,13 +3080,24 @@ const ApiManager = {
   }),
   /**
    * @name ApiManager.removeJob
-   * @description (외부) 작업 제거거
+   * @description 작업 제거
    * 
    * @returns {Promise<Object>} API 응답 결과
    */
   removeJob: async(jobId) => makeAPICall({
     method: "DELETE", 
     url: ENDPOINTS.FIND_JOB(jobId),
+  }),
+  /**
+   * @name ApiManager.removeJobs
+   * @description (외부) 작업목록 일괄제거
+   * 
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  removeJobs: async(jobIds=[]) => makeAPICall({
+    method: "DELETE", 
+    url: ENDPOINTS.FIND_ALL_JOBS(),
+    data: jobIds
   }),
   //#endregion: Job
 

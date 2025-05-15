@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import LabelInput from "../../label/LabelInput";
 import TabNavButtonGroup from "../../common/TabNavButtonGroup";
 import Localization from "../../../utils/Localization";
@@ -8,13 +11,14 @@ import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import { useEditHostNetworkFromHost } from "../../../api/RQHook";
-import toast from "react-hot-toast";
-import useGlobal from "../../../hooks/useGlobal";
 
 
 const HostNetworkEditModal = ({ 
-  isOpen, onClose, networkAttachment
+  isOpen, 
+  onClose,
+  networkAttachment
 }) => {
+  // const { closeModal } = useUIState()
   const { hostsSelected } = useGlobal();
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
   const hostName = useMemo(() => [...hostsSelected][0]?.name, [hostsSelected]);
@@ -27,11 +31,7 @@ const HostNetworkEditModal = ({
     { id: "dns",   label: "DNS 설정", onClick: () => setSelectedModalTab("dns") },
   ], []);
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.HOST} ${Localization.kr.NETWORK} ${Localization.kr.UPDATE} ${Localization.kr.FINISHED}`);
-  };
-  const { mutate: editNetworkAttach} = useEditHostNetworkFromHost(onSuccess, () => onClose())
+  const { mutate: editNetworkAttach} = useEditHostNetworkFromHost(onClose, onClose)
   
   const [id, setId] = useState("");
   const [inSync, setInSync] = useState(false);
@@ -134,7 +134,7 @@ const HostNetworkEditModal = ({
 
   return (
     <BaseModal targetName={`${Localization.kr.NETWORK} ${networkVo?.name}`} submitTitle={Localization.kr.UPDATE}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "800px" , height: "430px" }} 
     >

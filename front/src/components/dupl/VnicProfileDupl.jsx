@@ -1,14 +1,16 @@
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch"; 
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import VnicProfileActionButtons from "./VnicProfileActionButtons";
 import SearchBox from "../button/SearchBox";  
 import SelectedIdView from "../common/SelectedIdView";
+import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
-import useGlobal from "../../hooks/useGlobal";
+
 
 /**
  * @name VnicProfileDupl
@@ -42,7 +44,7 @@ const VnicProfileDupl = ({
         {vnic?.dataCenterVo?.name}
       </TableRowClick>
     ),
-    passThrough: vnic?.passThrough === "DISABLED" ? "아니요" : "예",
+    passThrough: vnic?.passThrough === "DISABLED" ? "아니요" : Localization.kr.YES,
     networkFilter: vnic?.networkFilterVo?.name || "-",
     searchText: `${vnic?.name} ${vnic?.networkVo?.name || ""} ${vnic?.dataCenterVo?.name || ""} ${vnic?.networkFilterVo?.name || ""}`
   }));

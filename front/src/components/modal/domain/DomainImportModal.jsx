@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import DomainImportNfs from "./import/DomainImportNfs";
 import DomainImportFibre from "./import/DomainImportFibre";
@@ -16,7 +18,6 @@ import {
 import { checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 
 // 일반 정보
@@ -33,8 +34,10 @@ const initialFormState = {
 
 
 const DomainImportModal = ({
-  isOpen, onClose
+  isOpen,
+  onClose,
 }) => {
+  // const { closeModal } = useUIState()
   const { datacentersSelected } = useGlobal()
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
 
@@ -47,11 +50,7 @@ const DomainImportModal = ({
 
   // const [fibres, setFibres] = useState([]);
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.DOMAIN} 가져오기 ${Localization.kr.FINISHED}`);
-  };
-  const { mutate: importDomain } = useImportDomain(onSuccess, () => onClose());
+  const { mutate: importDomain } = useImportDomain(onClose, onClose);
   
   const { 
     data: datacenters = [],
@@ -185,18 +184,17 @@ const DomainImportModal = ({
     };
   
     Logger.debug(`DomainModal > submitDomain ... dataToSubmit:`, dataToSubmit);
-
     const onSubmitSuccess = () => {
       onClose();
-      toast.success(`${Localization.kr.DOMAIN} 가져오기 ${Localization.kr.FINISHED}`);
+      toast.success(`${Localization.kr.DOMAIN} ${Localization.kr.IMPORT} ${Localization.kr.FINISHED}`);
     };
   
     importDomain(dataToSubmit, { onSuccess: onSubmitSuccess });
   };  
 
   return (
-    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={"가져오기"}
-      isOpen={isOpen} onClose={onClose}      
+    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={Localization.kr.IMPORT}
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px"}}
     >
@@ -284,7 +282,7 @@ export default DomainImportModal;
 const domainTypes = [
   { value: "data", label: "데이터" },
   { value: "iso", label: "ISO" },
-  { value: "export", label: "내보내기" },
+  { value: "export", label: Localization.kr.EXPORT },
 ];
 
 const storageTypeOptions = (dType) => {

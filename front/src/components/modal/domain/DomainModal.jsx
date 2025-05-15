@@ -21,6 +21,7 @@ import Logger from "../../../utils/Logger";
 import useGlobal from "../../../hooks/useGlobal";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import DomainCheckModal from "./DomainCheckModal";
+import useUIState from "../../../hooks/useUIState";
 
 // 일반 정보
 const initialFormState = {
@@ -35,11 +36,16 @@ const initialFormState = {
 };
 
 const DomainModal = ({
-  isOpen, onClose, editMode=false
+  isOpen,
+  onClose,
+  editMode=false
 }) => {
-  const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
-
+  // const { closeModal } = useUIState()
   const { datacentersSelected, domainsSelected } = useGlobal()
+  const dLabel = editMode 
+    ? Localization.kr.UPDATE 
+    : Localization.kr.CREATE;
+
   const domainId = useMemo(() => [...domainsSelected][0]?.id, [domainsSelected]);
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
 
@@ -57,13 +63,9 @@ const DomainModal = ({
   const isNfs = formState.storageType === "NFS";
   const isFibre = formState.storageType === "FCP";
 
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.DOMAIN} ${dLabel} ${Localization.kr.FINISHED}`);
-  };
   const { data: domain } = useStroageDomain(domainId);
-  const { mutate: addDomain } = useAddDomain(onSuccess, () => onClose());
-  const { mutate: editDomain } = useEditDomain(onSuccess, () => onClose()); // 편집은 단순 이름, 설명 변경정도
+  const { mutate: addDomain } = useAddDomain(onClose, onClose);
+  const { mutate: editDomain } = useEditDomain(onClose, onClose); // 편집은 단순 이름, 설명 변경정도
   const { 
     data: datacenters = [],
     isLoading: isDatacentersLoading 
@@ -245,7 +247,6 @@ const DomainModal = ({
     };
   
     Logger.debug(`DomainModal > submitDomain ... dataToSubmit:`, dataToSubmit);
-
     const onSubmitSuccess = () => {
       onClose();  // 🔥 모달 닫기
       toast.success(`${Localization.kr.DOMAIN} ${dLabel} ${Localization.kr.FINISHED}`);
@@ -259,7 +260,7 @@ const DomainModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={dLabel}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px"}}
     >
@@ -298,6 +299,7 @@ const DomainModal = ({
           <LabelInput id="name" label={Localization.kr.NAME}
             value={formState.name}
             onChange={handleInputChange(setFormState, "name")}
+            required={true}
             autoFocus
           />
           <LabelInput id="description" label={Localization.kr.DESCRIPTION}
@@ -368,7 +370,7 @@ export default DomainModal;
 const domainTypes = [
   { value: "data", label: "데이터" },
   { value: "iso", label: "ISO" },
-  { value: "export", label: "내보내기" },
+  { value: "export", label: Localization.kr.EXPORT },
 ];
 
 const storageTypeOptions = (dType) => {

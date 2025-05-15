@@ -1,10 +1,15 @@
 import React from 'react';
 import LabelInput from '../../../label/LabelInput';
+import Localization from '../../../../utils/Localization';
 
-const DomainNfs = ({ editMode=false, nfsAddress, setNfsAddress }) => {
+const DomainNfs = ({ 
+  editMode=false,
+  nfsAddress,
+  setNfsAddress
+}) => {
   return (
     <>
-      <LabelInput label={"내보내기 경로"}
+      <LabelInput label={`${Localization.kr.EXPORT} 경로`}
         value={nfsAddress}
         disabled={editMode}
         onChange={(e) => { setNfsAddress(e.target.value)}} 

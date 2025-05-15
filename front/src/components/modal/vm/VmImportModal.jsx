@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import BaseModal from "../BaseModal";
+import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import LabelInput from "../../label/LabelInput";
@@ -13,6 +14,7 @@ const VmImportModal = ({
   onClose,
   onSubmit
 }) => {
+  // const { closeModal } = useUIState()
   const { 
     networkProvidersSelected, setNetworkProvidersSelected,
     datacentersSelected, setDatacentersSelected,
@@ -203,9 +205,8 @@ const VmImportModal = ({
   );
 
   return (
-    <BaseModal targetName="가상머신"
+    <BaseModal targetName={Localization.kr.VM} submitTitle={step === 2 ? Localization.kr.IMPORT : "다음"}
       isOpen={isOpen} onClose={onClose}
-      submitTitle={step === 2 ? Localization.kr.IMPORT : "다음"}
       onSubmit={step === 2 ? onSubmit : goNext}
       contentStyle={{ width: "900px" }}
       extraFooter={

@@ -1,11 +1,12 @@
 import { useMemo } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
   useActivateDomain,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import useGlobal from "../../../hooks/useGlobal";
 
 /**
  * @name DomainActivateModal
@@ -15,13 +16,13 @@ import useGlobal from "../../../hooks/useGlobal";
  * @prop {boolean} isOpen
  * @returns
  */
-const DomainActivateModal = ({ isOpen, onClose }) => {
+const DomainActivateModal = ({ 
+  isOpen, 
+  onClose,
+}) => {
+  // const { closeModal } = useUIState()
   const { datacentersSelected, domainsSelected } = useGlobal()
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.DOMAIN} 활성화 완료`);
-  };
-  const { mutate: activateDomain } = useActivateDomain(onSuccess, () => onClose());
+  const { mutate: activateDomain } = useActivateDomain(onClose, onClose);
 
   const { ids, names } = useMemo(() => {
     if (!domainsSelected) return { ids: [], names: [] };
@@ -44,7 +45,7 @@ const DomainActivateModal = ({ isOpen, onClose }) => {
 
   return (
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={"활성"}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       promptText={`${names.join(", ")} 를(을) 활성화 하시겠습니까?`}
       contentStyle={{ width: "630px", height: "230px" }} 

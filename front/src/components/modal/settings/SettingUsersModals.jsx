@@ -15,29 +15,28 @@ import Localization from "../../../utils/Localization";
 const SettingUsersModals = ({
   user,
 }) => {
-  const { activeModal, setActiveModal } = useUIState()
+  const { activeModal, closeModal } = useUIState()
   const { usersSelected } = useGlobal()
 
   const modals = {
     create:  (
-      <SettingUsersModal key={activeModal()} isOpen={activeModal() === "user:create"} 
-        onClose={() => setActiveModal(null)} 
+      <SettingUsersModal key={"user:create"} isOpen={activeModal().includes("user:create")}
+        onClose={() => closeModal("user:create")}
       />
     ), update: (
-      <SettingUsersModal key={activeModal()} isOpen={activeModal() === "user:update"} 
-        onClose={() => setActiveModal(null)} 
-        editMode
+      <SettingUsersModal key={"user:update"} isOpen={activeModal().includes("user:update")} editMode
+        onClose={() => closeModal("user:update")}
         user={usersSelected[0]?.id ?? user?.id}
       />
     ), changePassword: (
-      <SettingUsersModal key={activeModal()} isOpen={activeModal() === "user:changePassword"} 
-        onClose={() => setActiveModal(null)} 
+      <SettingUsersModal key={"user:changePassword"} isOpen={activeModal().includes("user:changePassword")} 
+        onClose={() => closeModal("user:changePassword")}
         changePassword
         user={usersSelected[0]?.id ?? user?.id}
       />
     ), remove: (
-      <DeleteModal key={activeModal()} isOpen={activeModal() === "user:remove"}
-        onClose={() => setActiveModal(null)}
+      <DeleteModal key={"user:remove"} isOpen={activeModal().includes("user:remove")}
+        onClose={() => closeModal("user:remove")}
         label={Localization.kr.USER}
         data={usersSelected}
         api={useRemoveUser()}
@@ -48,7 +47,7 @@ const SettingUsersModals = ({
   return (
     <>
      {Object.keys(modals).filter((key) => 
-        activeModal() === `user:${key}`
+        activeModal().includes(`user:${key}`)
       ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}

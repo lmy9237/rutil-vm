@@ -44,7 +44,7 @@ const HostActionButtons = ({ actionType = "default" }) => {
     { type: "deactivate", onBtnClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: isInstalling || isNonOperational || !isUp },
     { type: "activate", onBtnClick: () => setActiveModal("host:activate"), label: "활성", disabled: hostsSelected.length === 0 || !isMaintenance || isUp || isInstalling },
     { type: "restart", onBtnClick: () => setActiveModal("host:restart"), label: "재시작", disabled: hostsSelected.length === 0 || isUp || isInstalling },
-    { type: "refresh", onBtnClick: () => setActiveModal("host:refresh"), label: "기능을 새로고침", disabled: hostsSelected.length === 0 || !isUp || isInstalling  },
+    { type: "refresh", onBtnClick: () => setActiveModal("host:refresh"), label: Localization.kr.REFRESH_CAPABILITIES, disabled: hostsSelected.length === 0 || !isUp || isInstalling  },
     { type: "commitNetHost", onBtnClick: () => setActiveModal("host:commitNetHost"), label: `${Localization.kr.HOST} 재부팅 ${Localization.kr.STATUS} 확인`, disabled: hostsSelected.length !== 1 || isUp || isInstalling  },
     { type: "enrollCert", onBtnClick: () => setActiveModal("host:enrollCert"), label: "인증서 등록", disabled: hostsSelected.length === 0 || isInstalling || !isMaintenance  },
     { type: "haOn", onBtnClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: hostsSelected.length === 0 || !isUp || !isMaintenance || isInstalling , },

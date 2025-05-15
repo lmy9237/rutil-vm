@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
   useAllHosts,
@@ -8,16 +10,15 @@ import {
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import Localization from "../../../utils/Localization";
 import LabelCheckbox from "../../label/LabelCheckbox";
-import useGlobal from "../../../hooks/useGlobal";
 import { handleSelectIdChange } from "../../label/HandleInput";
 
-const DomainDeleteModal = ({ isOpen, onClose }) => {
+const DomainDeleteModal = ({ 
+  isOpen,
+  onClose,
+}) => {
+  // const { closeModal } = useUIState()
   const { domainsSelected } = useGlobal()
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.DOMAIN} ${Localization.kr.REMOVE} 완료`);
-  };
-  const { mutate: deleteDomain } = useDeleteDomain(onSuccess, () => onClose());
+  const { mutate: deleteDomain } = useDeleteDomain(onClose, onClose);
   
   const [format, setFormat] = useState(false);
   const [hostVo, setHostVo] = useState({ id: "", name: "" });
@@ -35,10 +36,10 @@ const DomainDeleteModal = ({ isOpen, onClose }) => {
   }, [hosts]);
 
   const handleFormSubmit = () => {
-    deleteDomain(
-      { domainId: domainsSelected[0]?.id, 
-        format: format, 
-        hostName: hostVo.name }
+    deleteDomain({
+      domainId: domainsSelected[0]?.id, 
+      format: format, 
+      hostName: hostVo.name }
     );
   };
 

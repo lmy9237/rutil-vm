@@ -18,7 +18,7 @@ const NetworkGeneral = ({ networkId }) => {
     { label: "ID", value: network?.id },
     { label: Localization.kr.DESCRIPTION, value: network?.description },
     { label: "VDSM 이름", value: network?.vdsmName },
-    { label: `${Localization.kr.VM} 네트워크`, value: network?.usage?.vm ? "예" : "아니요" },
+    { label: `${Localization.kr.VM} 네트워크`, value: network?.usage?.vm ? Localization.kr.YES : Localization.kr.NO },
     { label: "VLAN 태그", value: network?.vlan === 0 ? "없음" : network?.vlan },
     { label: "MTU", value: network?.mtu === 0 ? "기본값 (1500)" : network?.mtu },
   ];

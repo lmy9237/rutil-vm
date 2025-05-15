@@ -54,7 +54,6 @@ const Header = () => {
       </div>
 
       <div id="header-right" className="f-end">
-        {/* 새로고침 */}
         <TopMenuIcon iconDef={rvi24Refresh("white")}
           onClick={() => {
             setFooterHeightInPx(40)

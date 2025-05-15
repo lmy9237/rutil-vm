@@ -3,6 +3,7 @@ package com.itinfo.rutilvm.api.repository.engine.entity
 import com.itinfo.rutilvm.api.ovirt.business.ProviderType
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Type
+import org.hibernate.annotations.UpdateTimestamp
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -56,6 +57,7 @@ class ProvidersEntity(
 	var authPassword: String? = "",
 	@Column(name="_create_date")
 	val createDate: LocalDateTime = LocalDateTime.now(),
+	@UpdateTimestamp
 	@Column(name="_update_date", nullable=true)
 	var updateDate: LocalDateTime? = null,
 	var customProperties: String? = "",

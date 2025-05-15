@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import Modal from "react-modal";
+import useUIState from "../../hooks/useUIState";
 import useContextMenu from "../../hooks/useContextMenu";
 import { RVI24, rvi24Close, rvi24ErrorRed } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
@@ -24,6 +25,8 @@ const BaseModal = ({
   extraFooter = null, 
   ...props
 }) => {
+  // const { closeModal } = useUIState()
+  // NOTE: 두개 이상 있을 때 하나만 닫기가 불가능 (기상머신 생성/편집 > 가상 디스크)
   const { clearAllContextMenu } = useContextMenu()
 
   useEffect(() => {

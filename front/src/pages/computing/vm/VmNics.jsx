@@ -153,19 +153,11 @@ const VmNics = ({
       <SelectedIdView items={nicsSelected} />
       
       <Suspense>
-        {activeModal() === "nic:create" && (
-          <VmNicModal key={activeModal()} isOpen={activeModal() === "nic:create"}
-            onClose={() => setActiveModal(null)}            
-            // vmId={vmId}
-          />
+        {activeModal().includes("nic:create") && (
+          <VmNicModal key={"nic:create"} isOpen={activeModal().includes("nic:create")} />
         )}
-        {activeModal() === "nic:update" && (
-          <VmNicModal key={activeModal()} isOpen={activeModal() === "nic:update"}
-            onClose={() => setActiveModal(null)}
-            editMode
-            // vmId={vmId}
-            // nicId={nicsSelected[0]?.id}
-          />
+        {activeModal().includes("nic:update") && (
+          <VmNicModal key={activeModal()} isOpen={activeModal().includes("nic:update")} editMode />
         )}
         {/* {activePopup === "delete" && selectedNics && (
           <DeleteModal

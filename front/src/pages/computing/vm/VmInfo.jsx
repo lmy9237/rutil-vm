@@ -53,6 +53,7 @@ const VmInfo = () => {
   const isDown = vm?.status === "DOWN";
   const isPause = vm?.status === "SUSPENDED";
   const isMaintenance = vm?.status === "MAINTENANCE";
+  const allOkay2PowerDown = vm?.status === "UP" || vm?.status === "POWERING_DOWN" || vm?.status === "SUSPENDED";
 
   const [activeTab, setActiveTab] = useState("general")
 
@@ -108,23 +109,23 @@ const VmInfo = () => {
 
   const sectionHeaderButtons = useMemo(() => ([
     { type: "update",    onClick: () => setActiveModal("vm:update"),        label: Localization.kr.UPDATE, },
-    { type: "start",     onClick: () => setActiveModal("vm:start"),         label: Localization.kr.START, disabled: !(isDown || isPause || isMaintenance) },
-    { type: "pause",     onClick: () => setActiveModal("vm:pause"),         label: Localization.kr.PAUSE, disabled: !isUp },
-    { type: "reboot",    onClick: () => setActiveModal("vm:reboot"),        label: Localization.kr.REBOOT, disabled: !isUp },
-    { type: "reset",     onClick: () => setActiveModal("vm:reset"),         label: Localization.kr.RESET, disabled: !isUp },
-    { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END, disabled:!isUp, },
-    { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF, disabled: !isUp  },
-    { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE, disabled: !isUp },
-    { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: "스냅샷 생성", disabled: !(isUp || isDown) },
+    { type: "start",     onClick: () => setActiveModal("vm:start"),         label: Localization.kr.START,       disabled: !(isDown || isPause || isMaintenance) },
+    { type: "pause",     onClick: () => setActiveModal("vm:pause"),         label: Localization.kr.PAUSE,       disabled: !isUp },
+    { type: "reboot",    onClick: () => setActiveModal("vm:reboot"),        label: Localization.kr.REBOOT,      disabled: !isUp },
+    { type: "reset",     onClick: () => setActiveModal("vm:reset"),         label: Localization.kr.RESET,       disabled: !isUp },
+    { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END,         disabled: !allOkay2PowerDown, },
+    { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF,   disabled: !allOkay2PowerDown  },
+    { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE,     disabled: !isUp },
+    { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`,                  disabled: !(isUp || isDown) },
     { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: !isUp },
   ]), [vm, vmId]);
 
   const popupItems = [
-    /* { type: "import",  onClick: () => setActiveModal("vm:import"),  label: Localization.kr.IMPORT, }, */
-    { type: "copyVm",    onClick: () => setActiveModal("vm:copy"), label: `${Localization.kr.VM} 복제` },
-    { type: "remove",    onClick: () => setActiveModal("vm:remove"), label: Localization.kr.REMOVE, disabled: !isDown, },
-    { type: "templates", onClick: () => setActiveModal("vm:templates"), label: "템플릿 생성", disabled: !isDown, }, 
-    { type: "ova",       onClick: () => setActiveModal("vm:ova"), label: "OVA로 내보내기",  disabled: !isDown, },
+    /* { type: "import",  onClick: () => setActiveModal("vm:import"),       label: Localization.kr.IMPORT, }, */
+    { type: "copyVm",    onClick: () => setActiveModal("vm:copy"),          label: `${Localization.kr.VM} 복제` },
+    { type: "remove",    onClick: () => setActiveModal("vm:remove"),        label: Localization.kr.REMOVE, disabled: !isDown, },
+    { type: "templates", onClick: () => setActiveModal("vm:templates"),     label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: !isDown, }, 
+    { type: "ova",       onClick: () => setActiveModal("vm:ova"),           label: "OVA로 내보내기",  disabled: !isDown, },
   ];
 
   return (

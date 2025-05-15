@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
@@ -7,22 +9,22 @@ import Localization from "../../../utils/Localization";
 import { useAddBonding, useNetworkInterfaceFromHost } from "../../../api/RQHook";
 import { checkName } from "../../../util";
 import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
 
 const HostBondingModal = ({ 
-  editmode = false, isOpen, onClose, 
+  isOpen,
+  onClose,
+  editmode = false, 
   nicIds = []
 }) => {
-  const bLabel = editmode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+  // const { closeModal } = useUIState()
+  const bLabel = editmode 
+    ? Localization.kr.UPDATE
+    : Localization.kr.CREATE;
 
   const { hostsSelected } = useGlobal();
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
   
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.HOST} 본딩 ${bLabel} 완료`);
-  };
-  const { mutate: addBonding } = useAddBonding(onSuccess, () => onClose());
+  const { mutate: addBonding } = useAddBonding(onClose, onClose);
   const { data: hostNic = {} } = useNetworkInterfaceFromHost(hostId, editmode ? nicIds[0] : null);
   
   const [name, setName] = useState("");
@@ -70,7 +72,7 @@ const HostBondingModal = ({
       }
      };
 
-    Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터 출력
+    Logger.debug(`handleFormSubmit ... dataToSubmit: `, dataToSubmit); // 데이터 출력
     addBonding({ hostId: hostId, bonding: dataToSubmit })      
   };
 

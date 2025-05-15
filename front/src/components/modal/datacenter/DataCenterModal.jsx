@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
@@ -13,7 +15,6 @@ import "./MDatacenter.css";
 import Localization from "../../../utils/Localization";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import { handleInputChange } from "../../label/HandleInput";
-import useGlobal from "../../../hooks/useGlobal";
 
 const initialFormState = {
   id: "",
@@ -33,23 +34,20 @@ const initialFormState = {
  * @returns
  */
 const DataCenterModal = ({ 
-  isOpen, onClose, editMode = false 
+  isOpen,
+  onClose,
+  editMode=false
 }) => {
+  // const { closeModal } = useUIState()
   const dcLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   
   const { datacentersSelected } = useGlobal()
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
 
   const [formState, setFormState] = useState(initialFormState);
-  
-// TODO: 제거 RQHook에서 처리하도록 구현
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.DATA_CENTER} ${dcLabel} ${Localization.kr.FINISHED}`);
-  };
   const { data: datacenter } = useDataCenter(datacenterId);
-  const { mutate: addDataCenter } = useAddDataCenter(onSuccess, () => onClose());
-  const { mutate: editDataCenter } = useEditDataCenter(onSuccess, () => onClose());
+  const { mutate: addDataCenter } = useAddDataCenter(onClose, onClose);
+  const { mutate: editDataCenter } = useEditDataCenter(onClose, onClose);
 
   // 모달 열릴때 초기화, 편집 정보넣기
   useEffect(() => {
@@ -91,7 +89,7 @@ const DataCenterModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.DATA_CENTER} submitTitle={dcLabel}
-      isOpen={isOpen} onClose={onClose}      
+      isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "473px" }} 
     >

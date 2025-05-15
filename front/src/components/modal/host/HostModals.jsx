@@ -14,35 +14,35 @@ import Localization from "../../../utils/Localization";
  * 
  * @returns {JSX.Element} HostModals
  */
-const HostModals = () => {
-  const { activeModal, setActiveModal } = useUIState()
+const HostModals = ({
+}) => {
+  const { activeModal, closeModal } = useUIState()
   const { hostsSelected } = useGlobal()
 
   const modals = {
     create: (
-      <HostModal key={activeModal()} isOpen={activeModal() === "host:create"}
-        onClose={() => setActiveModal(null)} 
+      <HostModal key={"host:create"} isOpen={activeModal().includes("host:create")} 
+        onClose={() => closeModal("host:create")}
       />
     ), update: (
-      <HostModal key={activeModal()} isOpen={activeModal() === "host:update"}
-        onClose={() => setActiveModal(null)} 
-        editMode
+      <HostModal key={"host:update"} isOpen={activeModal().includes("host:update")} editMode 
+        onClose={() => closeModal("host:update")}
       />
     ), remove: (
-      <DeleteModal key={activeModal()} isOpen={activeModal() === "host:remove"}
-        onClose={() => setActiveModal(null)} 
+      <DeleteModal key={"host:remove"} isOpen={activeModal().includes("host:remove")}
+        onClose={() => closeModal("host:remove")}
         label={Localization.kr.HOST}
         data={hostsSelected}
         api={useDeleteHost()}
       />
     ), action: (
-      <HostActionModal key={activeModal()} isOpen={ACTIONS.includes(activeModal())}
-        onClose={() => setActiveModal(null)} 
-        action={activeModal()}
+      <HostActionModal key={activeModal()[0]} isOpen={ACTIONS.includes(activeModal()[0])}
+        onClose={() => closeModal(activeModal()[0])}
+        action={activeModal()[0]}
       />
     ), commitNetHost: (
-      <HostCommitNetModal key={activeModal()} isOpen={activeModal() === "host:commitNetHost"}
-        onClose={() => setActiveModal(null)} 
+      <HostCommitNetModal key={"host:commitNetHost"} isOpen={activeModal().includes("host:commitNetHost")} 
+        onClose={() => closeModal("host:commitNetHost")}
       />
     )    
   };
@@ -50,7 +50,8 @@ const HostModals = () => {
   return (
     <>
       {Object.keys(modals).filter((key) => 
-        activeModal() === `host:${key}` || ACTIONS.includes(activeModal())
+        activeModal().includes(`host:${key}`) || 
+        ACTIONS.includes(activeModal()[0])
       ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}

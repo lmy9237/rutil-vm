@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import useBoxState from "../../hooks/useBoxState";
 import useClickOutside from "../../hooks/useClickOutside";
 import useFooterState from "../../hooks/useFooterState";
+import { BadgeNumber } from "../common/Badges";
 import {
   RVI24,
   RVI16,
@@ -13,7 +14,7 @@ import {
   rvi24DownArrow,
   severity2Icon,
 } from "../icons/RutilVmIcons";
-import { useAllEventsNormal, useAllNotiEvents, useRemoveEvent, useRemoveEvents } from "../../api/RQHook";
+import { useAllEventsNormal, useAllEventsAlert, useRemoveEvent, useRemoveEvents } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 import "./BoxEvent.css";
 
@@ -26,7 +27,7 @@ const BoxEvent = ({
   ...props
 }) => {
   const {
-    setEventBadgeNum,
+    eventBadgeNum, setEventBadgeNum,
     eventBoxVisible, setEventBoxVisible,
     eventBoxExpanded, toggleEventBoxExpanded,
     eventBoxSectionActive, setEventBoxSectionActive
@@ -44,17 +45,18 @@ const BoxEvent = ({
   } = useAllEventsNormal((e) => ({ ...e, }));
 
   const {
-    data: notiEvents = [],
-    isLoading: isNotiEventsLoading,
-    isError: isNotiEventsError,
-    isSuccess: isNotiEventsSuccess,
-    refetch: refetchNotiEvents
-  } = useAllNotiEvents((e) => ({ ...e, }));
+    data: eventAlerts = [],
+    isLoading: isEventAlertsLoading,
+    isError: isEventAlertsError,
+    isSuccess: isEventAlertsSuccess,
+    refetch: refetchEventAlerts
+  } = useAllEventsAlert((e) => ({ ...e, }));
 
   useEffect(() => {
-    const badgeNum = [...notiEvents]?.length ?? 0;
+    const badgeNum = [...eventAlerts]?.length ?? 0;
+    Logger.debug(`BoxEvent > useEffect ... eventBadgeNum: ${badgeNum}`)
     setEventBadgeNum(badgeNum);
-  }, [notiEvents])
+  }, [eventAlerts])
 
   const bellBoxRef = useRef(null);
   useClickOutside(bellBoxRef, (e) => {
@@ -70,12 +72,13 @@ const BoxEvent = ({
     63 /* 헤더 높이 */
   ), [])
   const currentEventBoxHeightInPx = useMemo(() => {
-    Logger.debug(`BoxEvent currentEventBoxHeightInPx ... window.innerHeight: ${window.innerHeight}, footerHeightInPx: ${footerHeightInPx()}`)
+    Logger.debug(`BoxEvent > currentEventBoxHeightInPx ... window.innerHeight: ${window.innerHeight}, footerHeightInPx: ${footerHeightInPx()}`)
     return window.innerHeight - footerHeightInPx() - headerHeight;
 }, [footerHeightInPx])
   
   // 모두 삭제
   const { mutate: removeEvents } = useRemoveEvents(() => {}, () => {});
+
   return (
     <div  ref={bellBoxRef}
       className={`bell-box fs-16 ${eventBoxExpanded() ? "expanded" : ""}`}
@@ -101,16 +104,19 @@ const BoxEvent = ({
         </span>
       </div>
       {/* 알림 탭 */}
-      <div className={`bell-cate bell-cate-section ${eventBoxSectionActive() === "알림" ? "active" : ""} f-start`}
+      <div className={`bell-cate bell-cate-section ${eventBoxSectionActive() === "알림" ? "active" : ""} f-start gap-4`}
         onClick={() => handleSectionClick("알림")}
       >
         <span className="bell-header-icon f-center">
           <RVI24 iconDef={eventBoxSectionActive() === "알림" 
-            ? rvi24DownArrow() 
-            : rvi24RightArrow()}
+            ? rvi24DownArrow(`${eventBoxSectionActive() === "알림" ? "currentColor" : "currentColor"}`) 
+            : rvi24RightArrow("currentColor")}
           />
         </span>
-        <span className="bell-section-title fs-16 ml-1">알림</span>
+        {(eventBadgeNum() > 0) && 
+          <BadgeNumber status={"alert"} text={eventBadgeNum()} />
+        }
+        <span className="bell-section-title fs-16">알림</span>
       </div>
 
       {/* 알림 내용 */}
@@ -122,14 +128,14 @@ const BoxEvent = ({
               height: currentEventBoxHeightInPx - bellHeaderHeights,
             }}
           >
-            <BoxEventItems events={notiEvents} />
+            <BoxEventItems events={eventAlerts} />
           </div>
 
           <div className="bell-btns f-center">
             <div
                 className="f-center fs-14"
                 onClick={() => {
-                  const ids = [...notiEvents].map(e => e.id);
+                  const ids = [...eventAlerts].map(e => e.id);
                   if (ids.length === 0) return;
                   removeEvents(ids); 
                 }}
@@ -143,15 +149,18 @@ const BoxEvent = ({
 
       {/* 이벤트 탭 */}
       <div
-        className={`bell-cate bell-cate-section ${eventBoxSectionActive === "이벤트" ? "active" : ""} f-start`}
+        className={`bell-cate bell-cate-section ${eventBoxSectionActive() === "이벤트" ? "active" : ""} f-start gap-4`}
         onClick={() => handleSectionClick("이벤트")}
       >
         <span className="bell-header-icon f-center">
           <RVI24
-            iconDef={eventBoxSectionActive() === "이벤트" ? rvi24DownArrow() : rvi24RightArrow()}
+            iconDef={eventBoxSectionActive() === "이벤트" 
+              ? rvi24DownArrow("currentColor") 
+              : rvi24RightArrow("currentColor")}
           />
         </span>
         <span className="bell-section-title fs-16 ml-1">이벤트</span>
+        
       </div>
 
       {/* 이벤트 내용 (알림 아래로 깔리도록 설정) */}

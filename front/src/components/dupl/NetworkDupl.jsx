@@ -26,7 +26,6 @@ const NetworkDupl = ({
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal } = useUIState()
   const { networksSelected, setNetworksSelected } = useGlobal()
 
   // 데이터를 변환 (검색 가능하도록 `searchText` 필드 추가)

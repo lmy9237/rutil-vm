@@ -20,11 +20,13 @@ const SettingCertificatesRenewalPolicies = () => {
   ];
 
   return (
-    <details>
-      <summary className="fs-16">
-        <p className="f-start">{severity2Icon("WARNING", true)}인증서 재갱신 정책</p>
+    <details className="v-start w-full">
+      <summary className="f-start fs-18 gap-2 w-full">
+        <h2 
+          className="f-start w-full"
+        >{severity2Icon("WARNING", true)}인증서 재갱신 정책</h2>
       </summary>
-      <br/>
+      <hr/>
       <ul>
         {[...msgs].map((e) => (<li>{e}</li>))}
       </ul>
