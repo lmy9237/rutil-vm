@@ -316,147 +316,146 @@ class HostController {
 		return ResponseEntity.ok(iHostNic.findNetworkAttachmentFromHost(hostId, networkAttachmentId))
 	}
 
-	@ApiOperation(
-		httpMethod="PUT",
-		value="호스트 네트워크 결합 편집",
-		notes="선택된 호스트의 네트워크 결합을 편집한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="networkAttachmentId", value="네트워크 결합 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="networkAttachmentVo", value="호스트", dataTypeClass=NetworkAttachmentVo::class, paramType="body")
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@PutMapping("/{hostId}/networkAttachments/{networkAttachmentId}")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun updateNetworkAttachment(
-		@PathVariable hostId: String? = null,
-		@PathVariable networkAttachmentId: String? = null,
-		@RequestBody networkAttachmentVo: NetworkAttachmentVo? = null
-	): ResponseEntity<Boolean> {
-		if (hostId.isNullOrEmpty())
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		if (networkAttachmentId.isNullOrEmpty())
-			throw ErrorPattern.NETWORK_ATTACHMENT_ID_NOT_FOUND.toException()
-		if (networkAttachmentVo == null)
-			throw ErrorPattern.NETWORK_ATTACHMENT_VO_NOT_FOUND.toException()
-		log.info("/computing/hosts/{}/networkAttachments/{} ... 호스트 네트워크 편집", hostId, networkAttachmentId)
-		return ResponseEntity.ok(iHostNic.updateNetworkAttachmentFromHost(hostId, networkAttachmentId, networkAttachmentVo))
-	}
+	// @ApiOperation(
+	// 	httpMethod="PUT",
+	// 	value="호스트 네트워크 결합 편집",
+	// 	notes="선택된 호스트의 네트워크 결합을 편집한다"
+	// )
+	// @ApiImplicitParams(
+	// 	ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// 	ApiImplicitParam(name="networkAttachmentId", value="네트워크 결합 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// 	ApiImplicitParam(name="networkAttachmentVo", value="호스트", dataTypeClass=NetworkAttachmentVo::class, paramType="body")
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 200, message = "OK")
+	// )
+	// @PutMapping("/{hostId}/networkAttachments/{networkAttachmentId}")
+	// @ResponseBody
+	// @ResponseStatus(HttpStatus.OK)
+	// fun updateNetworkAttachment(
+	// 	@PathVariable hostId: String? = null,
+	// 	@PathVariable networkAttachmentId: String? = null,
+	// 	@RequestBody networkAttachmentVo: NetworkAttachmentVo? = null
+	// ): ResponseEntity<Boolean> {
+	// 	if (hostId.isNullOrEmpty())
+	// 		throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+	// 	if (networkAttachmentId.isNullOrEmpty())
+	// 		throw ErrorPattern.NETWORK_ATTACHMENT_ID_NOT_FOUND.toException()
+	// 	if (networkAttachmentVo == null)
+	// 		throw ErrorPattern.NETWORK_ATTACHMENT_VO_NOT_FOUND.toException()
+	// 	log.info("/computing/hosts/{}/networkAttachments/{} ... 호스트 네트워크 편집", hostId, networkAttachmentId)
+	// 	return ResponseEntity.ok(iHostNic.updateNetworkAttachmentFromHost(hostId, networkAttachmentId, networkAttachmentVo))
+	// }
 
 
-	@ApiOperation(
-		httpMethod="DELETE",
-		value="호스트 네트워크 결합 삭제",
-		notes="선택된 호스트의 네트워크 결합을 삭제한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="networkAttachments", value="네트워크 결합목록", dataTypeClass=Array<NetworkAttachmentVo>::class, paramType="body")
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@DeleteMapping("/{hostId}/networkAttachments")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun deleteNetworkAttachment(
-		@PathVariable hostId: String? = null,
-		@RequestBody networkAttachmentVos: List<NetworkAttachmentVo>? = null
-	): ResponseEntity<Boolean> {
-		if (hostId.isNullOrEmpty())
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		if (networkAttachmentVos == null)
-			throw ErrorPattern.NETWORK_ATTACHMENT_VO_NOT_FOUND.toException()
-		log.info("/computing/hosts/{}/networkAttachments ... 호스트 네트워크 삭제", hostId)
-		return ResponseEntity.ok(iHostNic.removeNetworkAttachmentsFromHost(hostId, networkAttachmentVos))
-	}
+	// @ApiOperation(
+	// 	httpMethod="DELETE",
+	// 	value="호스트 네트워크 결합 삭제",
+	// 	notes="선택된 호스트의 네트워크 결합을 삭제한다"
+	// )
+	// @ApiImplicitParams(
+	// 	ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// 	ApiImplicitParam(name="networkAttachments", value="네트워크 결합목록", dataTypeClass=Array<NetworkAttachmentVo>::class, paramType="body")
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 200, message = "OK")
+	// )
+	// @DeleteMapping("/{hostId}/networkAttachments")
+	// @ResponseBody
+	// @ResponseStatus(HttpStatus.OK)
+	// fun deleteNetworkAttachment(
+	// 	@PathVariable hostId: String? = null,
+	// 	@RequestBody networkAttachmentVos: List<NetworkAttachmentVo>? = null
+	// ): ResponseEntity<Boolean> {
+	// 	if (hostId.isNullOrEmpty())
+	// 		throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+	// 	if (networkAttachmentVos == null)
+	// 		throw ErrorPattern.NETWORK_ATTACHMENT_VO_NOT_FOUND.toException()
+	// 	log.info("/computing/hosts/{}/networkAttachments ... 호스트 네트워크 삭제", hostId)
+	// 	return ResponseEntity.ok(iHostNic.removeNetworkAttachmentsFromHost(hostId, networkAttachmentVos))
+	// }
 
-	@ApiOperation(
-		httpMethod="POST",
-		value="호스트 네트워크 인터페이스 본딩",
-		notes="선택된 호스트 네트워크 인터페이스를 본딩한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="hostNicVo", value="호스트 네트워크 인터페이스", dataTypeClass=HostNicVo::class, paramType="body"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@PostMapping("/{hostId}/nics//bonding")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun addBonding(
-		@PathVariable hostId: String? = null,
-		@RequestBody hostNicVo: HostNicVo? = null,
-	): ResponseEntity<Boolean> {
-		if (hostId.isNullOrEmpty())
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		if (hostNicVo == null)
-			throw ErrorPattern.BONDING_VO_INVALID.toException()
-		log.info("/computing/hosts/{}/nics/bonding ... 호스트 nic 본딩 ", hostId)
-		return ResponseEntity.ok(iHostNic.addBondFromHost(hostId, hostNicVo))
-	}
+	// @ApiOperation(
+	// 	httpMethod="POST",
+	// 	value="호스트 네트워크 인터페이스 본딩",
+	// 	notes="선택된 호스트 네트워크 인터페이스를 본딩한다"
+	// )
+	// @ApiImplicitParams(
+	// 	ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// 	ApiImplicitParam(name="hostNicVo", value="호스트 네트워크 인터페이스", dataTypeClass=HostNicVo::class, paramType="body"),
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 200, message = "OK")
+	// )
+	// @PostMapping("/{hostId}/nics//bonding")
+	// @ResponseBody
+	// @ResponseStatus(HttpStatus.OK)
+	// fun addBonding(
+	// 	@PathVariable hostId: String? = null,
+	// 	@RequestBody hostNicVo: HostNicVo? = null,
+	// ): ResponseEntity<Boolean> {
+	// 	if (hostId.isNullOrEmpty())
+	// 		throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+	// 	if (hostNicVo == null)
+	// 		throw ErrorPattern.BONDING_VO_INVALID.toException()
+	// 	log.info("/computing/hosts/{}/nics/bonding ... 호스트 nic 본딩 ", hostId)
+	// 	return ResponseEntity.ok(iHostNic.addBondFromHost(hostId, hostNicVo))
+	// }
+	//
+	// @ApiOperation(
+	// 	httpMethod="PUT",
+	// 	value="호스트 네트워크 인터페이스 본딩 편집",
+	// 	notes="선택된 호스트 네트워크 인터페이스를 본딩을 편집한다 (모드만 편집 가능 / slave 이동과는 다른 작업) "
+	// )
+	// @ApiImplicitParams(
+	// 	ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// 	ApiImplicitParam(name="hostNicVo", value="호스트 네트워크 인터페이스", dataTypeClass=HostNicVo::class, paramType="body"),
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 200, message = "OK")
+	// )
+	// @PutMapping("/{hostId}/nics/bonding")
+	// @ResponseBody
+	// @ResponseStatus(HttpStatus.OK)
+	// fun updateBondings(
+	// 	@PathVariable hostId: String? = null,
+	// 	@RequestBody hostNicVo: HostNicVo? = null,
+	// ): ResponseEntity<Boolean> {
+	// 	if (hostId.isNullOrEmpty())
+	// 		throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+	// 	if (hostNicVo == null)
+	// 		throw ErrorPattern.BONDING_VO_INVALID.toException()
+	// 	log.info("/computing/hosts/{}/nics/bonding ... 호스트 nic 본딩 편집 ", hostId)
+	// 	return ResponseEntity.ok(iHostNic.modifiedBondFromHost(hostId, hostNicVo))
+	// }
+	//
+	// @ApiOperation(
+	// 	httpMethod="DELETE",
+	// 	value="호스트 네트워크 인터페이스 본딩 삭제",
+	// 	notes="선택된 호스트 네트워크 인터페이스의 본딩을 삭제한다"
+	// )
+	// @ApiImplicitParams(
+	// 	ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// 	ApiImplicitParam(name="hostNicVo", value="호스트 네트워크 인터페이스", dataTypeClass=HostNicVo::class, paramType="body"),
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 200, message = "OK")
+	// )
+	// @DeleteMapping("/{hostId}/nics/bonding")
+	// @ResponseBody
+	// @ResponseStatus(HttpStatus.OK)
+	// fun removeBonding(
+	// 	@PathVariable hostId: String? = null,
+	// 	@RequestBody hostNicVo: HostNicVo? = null,
+	// ): ResponseEntity<Boolean> {
+	// 	if (hostId.isNullOrEmpty())
+	// 		throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+	// 	if (hostNicVo == null)
+	// 		throw ErrorPattern.BONDING_VO_INVALID.toException()
+	// 	log.info("/computing/hosts/{}/nics/{}/bonding ... 호스트 nic 본딩 삭제 ", hostId, hostNicVo)
+	// 	return ResponseEntity.ok(iHostNic.removeBondFromHost(hostId, hostNicVo))
+	// }
 
-	@ApiOperation(
-		httpMethod="PUT",
-		value="호스트 네트워크 인터페이스 본딩 편집",
-		notes="선택된 호스트 네트워크 인터페이스를 본딩을 편집한다 (모드만 편집 가능 / slave 이동과는 다른 작업) "
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="hostNicVo", value="호스트 네트워크 인터페이스", dataTypeClass=HostNicVo::class, paramType="body"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@PutMapping("/{hostId}/nics/bonding")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun updateBondings(
-		@PathVariable hostId: String? = null,
-		@RequestBody hostNicVo: HostNicVo? = null,
-	): ResponseEntity<Boolean> {
-		if (hostId.isNullOrEmpty())
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		if (hostNicVo == null)
-			throw ErrorPattern.BONDING_VO_INVALID.toException()
-		log.info("/computing/hosts/{}/nics/bonding ... 호스트 nic 본딩 편집 ", hostId)
-		return ResponseEntity.ok(iHostNic.modifiedBondFromHost(hostId, hostNicVo))
-	}
-
-	@ApiOperation(
-		httpMethod="DELETE",
-		value="호스트 네트워크 인터페이스 본딩 삭제",
-		notes="선택된 호스트 네트워크 인터페이스의 본딩을 삭제한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="hostNicVo", value="호스트 네트워크 인터페이스", dataTypeClass=HostNicVo::class, paramType="body"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@DeleteMapping("/{hostId}/nics/bonding")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun removeBonding(
-		@PathVariable hostId: String? = null,
-		@RequestBody hostNicVo: HostNicVo? = null,
-	): ResponseEntity<Boolean> {
-		if (hostId.isNullOrEmpty())
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		if (hostNicVo == null)
-			throw ErrorPattern.BONDING_VO_INVALID.toException()
-		log.info("/computing/hosts/{}/nics/{}/bonding ... 호스트 nic 본딩 삭제 ", hostId, hostNicVo)
-		return ResponseEntity.ok(iHostNic.removeBondFromHost(hostId, hostNicVo))
-	}
-
-	// 이곳에서 slave연결과 network 등의 모든 작업을 실행할 수 있음
 	@ApiOperation(
 		httpMethod="POST",
 		value="호스트 네트워크 설정",

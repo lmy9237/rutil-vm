@@ -28,13 +28,9 @@ class IpAddressAssignmentVo (
 
 
 fun IpAddressAssignment.toIpAddressAssignmentVo(): IpAddressAssignmentVo {
-	val ip = this@toIpAddressAssignmentVo
 	return IpAddressAssignmentVo.builder {
-		assignmentMethod { ip.assignmentMethod().value() }
-		ipVo {
-			if(ip.ipPresent()) ip().toIp()
-			else IpVo()
-		}
+		assignmentMethod { this@toIpAddressAssignmentVo.assignmentMethod().value() }
+		ipVo { if(this@toIpAddressAssignmentVo.ipPresent()) ip().toIpVo() else null }
 	}
 }
 fun List<IpAddressAssignment>.toIpAddressAssignmentVos(): List<IpAddressAssignmentVo> =
@@ -46,7 +42,7 @@ fun List<IpAddressAssignment>.toIpAddressAssignmentVos(): List<IpAddressAssignme
 fun IpAddressAssignmentVo.toIpAddressAssignment(): IpAddressAssignment {
     return IpAddressAssignmentBuilder()
         .assignmentMethod(BootProtocol.fromValue(this.assignmentMethod))
-        .ip(this.ipVo.toIpBuilder())
+        .ip(this.ipVo.toIp())
         .build()
 }
 fun List<IpAddressAssignmentVo>.toIpAddressAssignments(): List<IpAddressAssignment> =

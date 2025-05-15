@@ -30,16 +30,16 @@ class IpVo (
     }
 }
 
-fun Ip.toIp(): IpVo {
+fun Ip.toIpVo(): IpVo {
     return IpVo.builder {
-        address { if (this@toIp.addressPresent()) this@toIp.address()  else null }
-        gateway { if (this@toIp.gatewayPresent()) this@toIp.gateway()  else null }
-        netmask { if(this@toIp.netmaskPresent()) this@toIp.netmask() else null }
-        version { if(this@toIp.versionPresent()) this@toIp.version() else null }
+        address { if (this@toIpVo.addressPresent()) this@toIpVo.address()  else null }
+        gateway { if (this@toIpVo.gatewayPresent()) this@toIpVo.gateway()  else null }
+        netmask { if(this@toIpVo.netmaskPresent()) this@toIpVo.netmask() else null }
+        version { if(this@toIpVo.versionPresent()) this@toIpVo.version() else null }
     }
 }
 
-fun IpVo.toIpBuilder(): Ip = IpBuilder()
+fun IpVo.toIp(): Ip = IpBuilder()
    	.version(this.version)
 	.address(this.address)
    	.gateway(this.gateway)

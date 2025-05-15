@@ -13,9 +13,7 @@ import useGlobal from "../../../hooks/useGlobal";
 
 
 const HostNetworkEditModal = ({ 
-  isOpen, onClose, networkAttachment, 
-  dnsState, 
-  setDnsState 
+  isOpen, onClose, networkAttachment
 }) => {
   const { hostsSelected } = useGlobal();
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
@@ -118,7 +116,7 @@ const HostNetworkEditModal = ({
     const dataToSubmit = {
       networkVo: networkVo, // { id, name }
       hostNicVo: {
-        name: networkAttachment?.hostNicVo?.name || "", // 반드시 name 필요
+        id: networkAttachment?.hostNicVo?.id || "",
       },
       ipAddressAssignments: ipAssignments,
       nameServerList: dnsServers,

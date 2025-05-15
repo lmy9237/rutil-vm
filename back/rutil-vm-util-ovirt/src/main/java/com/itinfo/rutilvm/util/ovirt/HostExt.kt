@@ -483,106 +483,107 @@ fun Connection.findNetworkAttachmentFromHost(hostId: String, networkAttachmentId
 // 	throw if (it is Error) it.toItCloudException() else it
 // }
 
-fun Connection.modifyNetworkAttachmentsFromHost(hostId: String, networkAttachments: List<NetworkAttachment>): Result<Boolean> = runCatching {
-	this.srvHost(hostId).setupNetworks().modifiedNetworkAttachments(networkAttachments).send()
-	this.srvHost(hostId).commitNetConfig().send()
+// fun Connection.modifyNetworkAttachmentsFromHost(hostId: String, networkAttachments: List<NetworkAttachment>): Result<Boolean> = runCatching {
+// 	this.srvHost(hostId).setupNetworks().modifiedNetworkAttachments(networkAttachments).send()
+// 	this.srvHost(hostId).commitNetConfig().send()
+//
+// 	true
+//
+// }.onSuccess {
+// 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "일괄편집", hostId)
+// }.onFailure {
+// 	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "일괄편집", it, hostId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
 
-	true
+// 호스트 네트워크에서 변경하는게 아닌
+// hostnic에 영향을 받는 지 봐야할 것 같음
+// fun Connection.updateNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String, networkAttachment: NetworkAttachment): Result<Boolean> = runCatching {
+// 	this.srvNetworkAttachmentFromHost(hostId, networkAttachmentId).update().attachment(networkAttachment).send()
+// 	this.srvHost(hostId).commitNetConfig().send()
+//
+// 	true
+//
+// }.onSuccess {
+// 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "편집", hostId)
+// }.onFailure {
+// 	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "편집", it, hostId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
+//
+// fun Connection.removeNetworkAttachmentFromHost(hostId: String, networkAttachment: NetworkAttachment): Result<Boolean> = runCatching {
+// 	this.srvHost(hostId).setupNetworks().removedNetworkAttachments(networkAttachment).send()
+// 	this.srvHost(hostId).commitNetConfig().send()
+//
+// 	true
+//
+// }.onSuccess {
+// 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "제거", hostId)
+// }.onFailure {
+// 	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "제거", it, hostId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
+//
+// fun Connection.removeNetworkAttachmentsFromHost(
+// 	hostId: String,
+// 	networkAttachments: List<NetworkAttachment> = listOf()
+// ): Result<Boolean> = runCatching {
+// 	this.srvHost(hostId).setupNetworks().removedNetworkAttachments(networkAttachments).send()
+// 	this.srvHost(hostId).commitNetConfig().send()
+//
+// 	true
+//
+// }.onSuccess {
+// 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "제거", hostId)
+// }.onFailure {
+// 	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "제거", it, hostId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
 
-}.onSuccess {
-	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "일괄편집", hostId)
-}.onFailure {
-	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "일괄편집", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-fun Connection.updateNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String, networkAttachment: NetworkAttachment): Result<Boolean> = runCatching {
-	this.srvNetworkAttachmentFromHost(hostId, networkAttachmentId).update().attachment(networkAttachment).send()
-	this.srvHost(hostId).commitNetConfig().send()
-
-	true
-
-}.onSuccess {
-	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "편집", hostId)
-}.onFailure {
-	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "편집", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-fun Connection.removeNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String): Result<Boolean> = runCatching {
-	this.srvNetworkAttachmentFromHost(hostId, networkAttachmentId).remove().send()
-	this.srvHost(hostId).commitNetConfig().send()
-
-	true
-
-}.onSuccess {
-	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "제거", hostId)
-}.onFailure {
-	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "제거", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-fun Connection.removeNetworkAttachmentFromHost(hostId: String, networkAttachment: NetworkAttachment): Result<Boolean> = runCatching {
-	this.srvHost(hostId).setupNetworks().removedNetworkAttachments(networkAttachment).send()
-	this.srvHost(hostId).commitNetConfig().send()
-
-	true
-
-}.onSuccess {
-	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "제거", hostId)
-}.onFailure {
-	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "제거", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-fun Connection.removeNetworkAttachmentsFromHost(
-	hostId: String,
-	networkAttachments: List<NetworkAttachment> = listOf()
-): Result<Boolean> = runCatching {
-	this.srvHost(hostId).setupNetworks().removedNetworkAttachments(networkAttachments).send()
-	this.srvHost(hostId).commitNetConfig().send()
-
-	true
-
-}.onSuccess {
-	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT, "제거", hostId)
-}.onFailure {
-	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT, "제거", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-fun Connection.addBondFromHost(hostId: String, hostNic: HostNic): Result<Boolean> = runCatching {
-	this.srvHost(hostId).setupNetworks().modifiedBonds(hostNic).send()
-	this.srvHost(hostId).commitNetConfig().send()
-	true
-}.onSuccess {
-	Term.HOST.logSuccessWithin(Term.BOND, "생성", hostId)
-}.onFailure {
-	Term.HOST.logFailWithin(Term.BOND, "생성", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-fun Connection.modifiedBondFromHost(hostId: String, hostNic: HostNic): Result<Boolean> = runCatching {
-	this.srvHost(hostId).setupNetworks().modifiedBonds(hostNic).send()
-	this.srvHost(hostId).commitNetConfig().send()
-	true
-}.onSuccess {
-	Term.HOST.logSuccessWithin(Term.BOND, "수정", hostId)
-}.onFailure {
-	Term.HOST.logFailWithin(Term.BOND, "수정", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
-
-fun Connection.removeBondFromHost(hostId: String, hostNic: HostNic): Result<Boolean> = runCatching {
-	this.srvHost(hostId).setupNetworks().removedBonds(hostNic).send()
-	this.srvHost(hostId).commitNetConfig().send()
-	true
-}.onSuccess {
-	Term.HOST.logSuccessWithin(Term.BOND, "제거", hostId)
-}.onFailure {
-	Term.HOST.logFailWithin(Term.BOND, "제거", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
-}
+// fun Connection.addBondFromHost(
+// 	hostId: String,
+// 	hostNic: HostNic,
+// 	networkAttach: NetworkAttachment? = null
+// ): Result<Boolean> = runCatching {
+// 	this.srvHost(hostId).setupNetworks().modifiedBonds(hostNic).apply {
+// 		if(networkAttach != null) modifiedNetworkAttachments(networkAttach)
+// 	}.send()
+// 	this.srvHost(hostId).commitNetConfig().send()
+// 	true
+// }.onSuccess {
+// 	Term.HOST.logSuccessWithin(Term.BOND, "생성", hostId)
+// }.onFailure {
+// 	Term.HOST.logFailWithin(Term.BOND, "생성", it, hostId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
+//
+// fun Connection.modifiedBondFromHost(
+// 	hostId: String,
+// 	hostNic: HostNic,
+// 	networkAttach: NetworkAttachment? = null
+// ): Result<Boolean> = runCatching {
+// 	this.srvHost(hostId).setupNetworks().modifiedBonds(hostNic).apply {
+// 		if(networkAttach != null) modifiedNetworkAttachments(networkAttach)
+// 	}.send()
+// 	this.srvHost(hostId).commitNetConfig().send()
+// 	true
+// }.onSuccess {
+// 	Term.HOST.logSuccessWithin(Term.BOND, "수정", hostId)
+// }.onFailure {
+// 	Term.HOST.logFailWithin(Term.BOND, "수정", it, hostId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
+//
+// fun Connection.removeBondFromHost(hostId: String, hostNic: HostNic): Result<Boolean> = runCatching {
+// 	this.srvHost(hostId).setupNetworks().removedBonds(hostNic).send()
+// 	this.srvHost(hostId).commitNetConfig().send()
+// 	true
+// }.onSuccess {
+// 	Term.HOST.logSuccessWithin(Term.BOND, "제거", hostId)
+// }.onFailure {
+// 	Term.HOST.logFailWithin(Term.BOND, "제거", it, hostId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
 
 fun Connection.setupNetworksFromHost(
 	hostId: String,
@@ -602,6 +603,7 @@ fun Connection.setupNetworksFromHost(
 	Term.HOST.logFailWithin(Term.BOND, "호스트 네트워크 설정", it, hostId)
 	throw if (it is Error) it.toItCloudException() else it
 }
+
 
 private fun Connection.srvFenceAgentsFromHost(hostId: String): FenceAgentsService =
 	this.srvHost(hostId).fenceAgentsService()

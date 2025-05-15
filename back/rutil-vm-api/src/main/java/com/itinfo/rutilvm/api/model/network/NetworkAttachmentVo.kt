@@ -84,26 +84,24 @@ fun List<NetworkAttachment>.toNetworkAttachmentVos(): List<NetworkAttachmentVo> 
  * 호스트 네트워크 modified_network_attachments
  * host_nic 빌더
  */
-fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment {
-	val builder = NetworkAttachmentBuilder()
+fun NetworkAttachmentVo.toNetworkAttachmentBuilder(): NetworkAttachmentBuilder =
+	NetworkAttachmentBuilder()
 		.network(NetworkBuilder().id(this.networkVo.id).build())
-		.hostNic(HostNicBuilder().id(this.hostNicVo.id).name(this.hostNicVo.name).build())
+
+fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment {
+	val builder = toNetworkAttachmentBuilder()
+		.hostNic(HostNicBuilder().id(this.hostNicVo.id).build())
 		.ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
 
-	if (this.nameServerList.isNotEmpty()) {
+	if (this.nameServerList != null) {
 		builder.dnsResolverConfiguration(
 			DnsResolverConfigurationBuilder().nameServers(this.nameServerList).build()
 		)
 	}
-
 	return builder.build()
 }
 
 // 여러개
 fun List<NetworkAttachmentVo>.toModifiedNetworkAttachments(): List<NetworkAttachment> =
     this@toModifiedNetworkAttachments.map { it.toModifiedNetworkAttachment() }
-
-
-// fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment =
-//     this@toModifiedNetworkAttachment.toModifiedNetworkAttachmentBuilder().build()
 

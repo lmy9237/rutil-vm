@@ -149,8 +149,8 @@ fun HostNic.toHostNicVo(conn: Connection): HostNicVo {
 		adAggregatorId { if(hostNic.adAggregatorIdPresent()) { hostNic.adAggregatorIdAsInteger() } else null }
 		bootProtocol { hostNic.bootProtocol() }
 		ipv6BootProtocol { hostNic.ipv6BootProtocol() }
-		ip { if(hostNic.ipPresent()) hostNic.ip().toIp() else null }
-		ipv6 { if(hostNic.ipv6Present()) hostNic.ipv6().toIp() else null }
+		ip { if(hostNic.ipPresent()) hostNic.ip().toIpVo() else null }
+		ipv6 { if(hostNic.ipv6Present()) hostNic.ipv6().toIpVo() else null }
 		bondingVo { bond?.toBondingVo(conn, hostNic.host().id()) }
 		hostVo { hostNic.host().fromHostToIdentifiedVo() }
 		networkVo { network?.fromNetworkToIdentifiedVo() }
@@ -187,10 +187,14 @@ fun List<HostNic>.toSlaveHostNicVos(conn: Connection): List<HostNicVo> =
 /**
  * 호스트 네트워크 본딩 생성
  */
-fun HostNicVo.toAddBond(): HostNic {
+fun HostNicVo.toHostNicBuilder(): HostNicBuilder {
 	return HostNicBuilder()
-		.name(name) // bonding 이름
 		.bonding(bondingVo.toBonding() )
+}
+
+fun HostNicVo.toAddBond(): HostNic {
+	return toHostNicBuilder()
+		.name(name) // bonding 이름
 		.build()
 }
 
@@ -198,9 +202,8 @@ fun HostNicVo.toAddBond(): HostNic {
  * 호스트 네트워크 편집 modified_bonds
  */
 fun HostNicVo.toModifiedBond(): HostNic {
-	return HostNicBuilder()
+	return toHostNicBuilder()
 		.id(id) // hostNic id
-		.bonding(bondingVo.toBonding() )
 		.build()
 }
 fun List<HostNicVo>.toModifiedBonds(): List<HostNic> =

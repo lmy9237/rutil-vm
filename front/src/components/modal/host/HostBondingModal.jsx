@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
@@ -7,13 +7,16 @@ import Localization from "../../../utils/Localization";
 import { useAddBonding, useNetworkInterfaceFromHost } from "../../../api/RQHook";
 import { checkName } from "../../../util";
 import Logger from "../../../utils/Logger";
+import useGlobal from "../../../hooks/useGlobal";
 
 const HostBondingModal = ({ 
   editmode = false, isOpen, onClose, 
-  hostId,
   nicIds = []
 }) => {
   const bLabel = editmode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+
+  const { hostsSelected } = useGlobal();
+  const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
   
   const onSuccess = () => {
     onClose();
@@ -74,7 +77,8 @@ const HostBondingModal = ({
   return (
     <BaseModal targetName={!editmode ? `새 본딩 ${Localization.kr.CREATE}` : `본딩 ${name} ${Localization.kr.UPDATE}`} submitTitle={""}
       isOpen={isOpen} onClose={onClose}
-      onSubmit={handleFormSubmit}
+      onSubmit={() => ({})}
+      // onSubmit={handleFormSubmit}
       contentStyle={{ width: "500px" }}
     >
       <span>nicids {editmode ? hostNic?.id : nicIds?.map((e) => `${e.id}, `)}</span>
