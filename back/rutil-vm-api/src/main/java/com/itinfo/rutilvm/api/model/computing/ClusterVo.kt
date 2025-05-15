@@ -254,7 +254,7 @@ fun ClusterVo.toClusterBuilder(conn: Connection): ClusterBuilder {
 		.virtService(true)
 		.glusterService(false)
 		.errorHandling(ErrorHandlingBuilder().onError(MigrateOnError.fromValue(errorHandling)))
-		// .externalNetworkProviders(conn.findAllOpenStackNetworkProviders().getOrDefault(listOf()).first())// 무조건 들어가게 해뒀음
+		.externalNetworkProviders(conn.findAllOpenStackNetworkProviders().getOrDefault(listOf()).first())// 무조건 들어가게 해뒀음
 		.fencingPolicy(
 			FencingPolicyBuilder()
 				.skipIfConnectivityBroken(SkipIfConnectivityBrokenBuilder().enabled(true))
