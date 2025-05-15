@@ -92,7 +92,7 @@ const NetworkImportModal = ({
       {/* 네트워크 공급자 목록 */}
       <LabelSelectOptions id="cluster"
         label="네트워크 공급자"
-        className="network-form-group f-btw"
+        className="f-btw "
         value={networkProvidersSelected}
         onChange={(e) => setNetworkProvidersSelected(e.target.value)}
         disabled={isDatacentersLoading}
@@ -144,7 +144,7 @@ const NetworkImportModal = ({
 
       {/* 가져올 네트워크 테이블 */}
       <div className="network-bring-table-outer">
-        <h1 className="font-bold">가져올 네트워크</h1>
+        <h1 className="font-bold ">가져올 네트워크</h1>
         <TablesOuter
           columns={importNetworkColumns}
           data={networkList.map((network) => ({

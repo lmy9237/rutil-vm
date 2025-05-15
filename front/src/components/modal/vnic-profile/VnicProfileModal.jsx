@@ -128,7 +128,7 @@ const VnicProfileModal = ({
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
 
-    if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
+    // if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`; -> 설명 유효성검사 삭제
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     if (!networkVo.id) return `${Localization.kr.NETWORK}를 선택해주세요.`;
     return null;
@@ -179,7 +179,7 @@ const VnicProfileModal = ({
       />
       <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
-        onChange={handleInputChange("description")}
+          onChange={handleInputChange(setFormState, "description")}
       />
       <LabelSelectOptionsID id="network-man" label={Localization.kr.NETWORK_FILTER}
         value={networkFilterVo.id}

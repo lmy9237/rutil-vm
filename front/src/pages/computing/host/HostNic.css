@@ -1,36 +1,4 @@
 /* 0507 추가 */
-
-.host-network-boxs:hover{
-  background:#e6eefa;
-}
-
-.host-tabs {
-  width: fit-content;
-  margin-bottom: 16px;
-  border: 1px solid gray;border-radius: 4px;
-  overflow: hidden; 
-}
-  
-.host-tabs .tab-button {
-  padding: 0 40px;
-  border: none;
-  height: 32px;
-  color: var(--color-nav);
-  font-weight: 500;
-  border-right: 1px solid gray;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.host-tabs .tab-button:last-child {
-  border-right: none; 
-}
-  
-.host-tabs .tab-button.active {
-  background-color: var(--color-primary-hover);
-  color: white;
-  font-weight: 700;
-}
-
 .network-item {
   padding: 15px;
   margin-bottom: 10px;
@@ -95,7 +63,9 @@
 .interface-content-outer2{
   width: 39%;
 }
-
+.interface-content-outer{
+  width: 39%;
+}
 .interface-content{
   display: flex;
   justify-content: space-between;
@@ -125,8 +95,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 14px;
-  min-height: 38px; /* matchNetwork와 높이 맞춤 */
-  background-color: #fff;
+  min-height: 38px; 
+  background-color: var(--color-primary-white);
 }
 
 .empty-network-content{
@@ -138,7 +108,9 @@
   background: var(--color-input-disabled);
   border: var(--border-default);
 }
-
+.interface-container-outer {
+  background-color: rgb(141, 197, 52);
+}
 .interface-container {
   border: var(--border-default);
   background: rgb(255, 255, 255);
@@ -149,7 +121,18 @@
   align-items: center;
 }
 
-.group-span > div{
+.assigned-network-outer,
+.empty-network-content{
+  border: var(--border-default);
+  background-color: rgb(255, 255, 255);
+}
+.assigned-network-content{
+  display: flex;justify-content: space-between;
+  width: 100%;
+}
+
+.group-span>div{
+  width: 50%;
   text-align: center;
 }
 

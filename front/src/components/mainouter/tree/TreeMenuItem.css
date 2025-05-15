@@ -2,6 +2,7 @@
 .tmi {/* a.k.a. tree menu item */
   height: var(--h-tmi);
   gap:4px;
+  cursor: pointer;
   color:var(--color-nav) !important;
   margin-left: 3px;
 }

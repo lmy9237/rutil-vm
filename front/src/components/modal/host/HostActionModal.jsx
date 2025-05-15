@@ -48,7 +48,7 @@ const HostActionModal = ({
     <BaseModal targetName={Localization.kr.HOST} submitTitle={label}
       isOpen={isOpen} onClose={onClose}      
       onSubmit={handleSubmit}
-      promptText={`${names.join(", ")} 를(을) ${label}하시겠습니까?`}
+      promptText={`${names.join(", ")} 를(을) ${label} 하시겠습니까?`}
       contentStyle={{ width: "630px" }} 
       shouldWarn={true}
     />
@@ -63,6 +63,6 @@ const ACTIONS = {
   "host:restart": { label: "재시작", hook: useRestartHost },
   "host:refresh": { label: "새로고침", hook: useRefreshHost },
   "host:enrollCert": { label: "인증서 등록", hook: useEnrollHostCertificate },
-  // "host:haOn": { label: "HA 활성화", hook:  },
-  // "host:haOff": { label: "HA 비활성화", hook:  },
+  "host:haOn": { label: "HA 활성화" },
+  "host:haOff": { label: "HA 비활성화" },
 };

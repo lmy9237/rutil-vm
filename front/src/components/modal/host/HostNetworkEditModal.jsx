@@ -210,13 +210,13 @@ const HostNetworkEditModal = ({
           )}
 
           {selectedModalTab === "dns" && (
-            <div className="host-plus-checkbox">
+            <>
               <div className="font-bold"> DNS 서버 </div>
                 {dnsServers.length !== 0 ?
                   (dnsServers.map((dns, index) => (
                   <div
                     key={index}
-                    className="network-form-group f-btw"
+                    className="f-btw"
                     style={{ width: "100%", padding: 0 }}
                   >
                     <LabelInput
@@ -250,7 +250,7 @@ const HostNetworkEditModal = ({
                   <span>t</span>
                 )
               }
-            </div>
+            </>
           )}
         </div>
       </div>

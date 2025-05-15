@@ -49,7 +49,7 @@ const VmActionModal = ({
     <BaseModal targetName={Localization.kr.VM} submitTitle={label}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleSubmit}
-      promptText={`${names.join(", ")} 를(을) ${label}하시겠습니까?`}
+      promptText={`${names.join(", ")} 를(을) ${label} 하시겠습니까?`}
       contentStyle={{ width: "650px" }}
       shouldWarn={true}
     />

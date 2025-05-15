@@ -1,12 +1,12 @@
 .box-user {
   position: absolute;
-  background-color: #ffffff;
+  background: var(--color-primary-white);
   z-index: 4;
   width: 138px;
   height: 58px;
   right: 0;
   border-radius: 4px;
-  border: 1px solid rgb(204, 204, 204);
+  border: var(--border-btn);
   top: 63px;
   border-radius: 3px;
 }

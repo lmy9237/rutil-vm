@@ -1,6 +1,5 @@
 .header {
   position:relative;width:100%;height:var(--h-rutil-header);
   background-color:var(--color-primary);
-  border-bottom: 1px solid #dfdfdf;
 }
 .header-left,.header-right { height:100%; }

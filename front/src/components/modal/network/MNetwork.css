@@ -1,14 +1,3 @@
-/*연필추가모달(outer는 app.css에있음)*/
-.host-plus-checkbox {
-  padding: 0.2rem;
-  display: flex;
-}
-.backup-edit-radiobox {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 5px 10px;
-}
 
 /*네트워크(가져오기)*/
 .network-bring-table-outer h1 {

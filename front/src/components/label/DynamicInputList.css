@@ -15,16 +15,3 @@
 .dynamic-btns,.nic-label {
   min-width: 71px;
 }
-/*
-.dynamic-btns > svg {
-  width: 26px;
-  height: var(--h-primary);
-  color: var(--color-gray);
-  align-items: center !important;
-  display: flex;
-}
-.dynamic-btns > svg:hover {
-  color: var(--color-black);
-  border: var(--border-btn);
-}
-*/

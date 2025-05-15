@@ -50,10 +50,6 @@ textarea{
   white-space: nowrap;   
   overflow: hidden;       
   text-overflow: ellipsis; 
-  /* max-width: 100%;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset; */
 }
 
 .input-checkbox {
@@ -85,7 +81,7 @@ input[type="radio"] {
   position: absolute;top: 75%;right: 0;
   min-width: 55%;
   max-height: 142px;
-  background: white;
+  background: var(--color-primary-white);
   border-top: none !important;
   border: var(--border-default);border-radius: 1px;
   z-index: 10;

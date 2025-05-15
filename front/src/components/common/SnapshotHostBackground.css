@@ -1,9 +1,4 @@
-.split-layout-group {
-  height: 100%;
-  justify-content: space-between;
-  width: 100%;
-  display: flex;
-}
+
 .split-item {
   width: auto;
   padding: 20px;

@@ -338,7 +338,7 @@ const NetworkModal = ({
               (dnsServers.map((dns, index) => (
               <div
                 key={index}
-                className="network-form-group f-btw"
+                className="f-btw"
                 style={{ width: "100%", padding: 0 }}
               >
                 <input

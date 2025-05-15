@@ -21,7 +21,7 @@ import {
   useNetworkInterfacesFromHost,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import "./Host.css";
+import "./HostNic.css";
 import Logger from "../../../utils/Logger";
 import InterfaceContainer from "./hostNics/InterfaceContainer";
 import AssignedNetworkItem from "./hostNics/AssignedNetworkItem";

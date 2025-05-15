@@ -92,7 +92,7 @@ const JobFooter = ({
       />
       <div
         // className={`footer-outer v-start${footerVisible() ? " open" : ""}`}
-        className={`footer-outer v-start`}
+        className={`footer-outer v-start w-full`}
         style={{ height: `${footerHeight}px` }}
       >
         {/* 상단 "최근작업" 바 */}
@@ -104,7 +104,7 @@ const JobFooter = ({
             toggleFooterVisible()
           }}
         >
-          <RVI24 iconDef={footerVisible() ? rvi24DownArrow() : rvi24ChevronUp()}/>
+          <RVI24 className="mx-5" iconDef={footerVisible() ? rvi24DownArrow() : rvi24ChevronUp()}/>
           <span>최근 작업</span>
         </div>
 
