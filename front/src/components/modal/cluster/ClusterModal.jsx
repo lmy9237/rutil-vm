@@ -15,7 +15,6 @@ import { checkKoreanName, checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import CONSTANT from "../../../Constants";
-import "./MCluster.css";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import useGlobal from "../../../hooks/useGlobal";
 

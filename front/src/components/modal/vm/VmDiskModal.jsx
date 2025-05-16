@@ -269,161 +269,161 @@ const VmDiskModal = ({
       onSubmit={diskType? handleFormSubmit : handleOkClick}
       contentStyle={{ width: "700px" }} 
     >
-      {/* <div className="storage-disk-new-popup modal"> */}
-        <div className="disk-new-nav">
-          <div
-            id="storage_img_btn"
-            onClick={() => handleTabClick("img")}
-            className={activeTab === "img" ? "active" : ""}
-          >
-            이미지
-          </div>
-          {/* <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
-            직접 LUN
-          </div> */}
+
+      <div className="disk-new-nav">
+        <div
+          id="storage_img_btn"
+          onClick={() => handleTabClick("img")}
+          className={activeTab === "img" ? "active" : ""}
+        >
+          이미지
         </div>
-        {/*이미지*/}
-        {activeTab === "img" && (
-          <div className="disk-new-img">
-            <div className="disk-new-img-left">              
-              <span>Bootable Disk: {hasBootableDisk ? "true" : "false"}</span>
+        {/* <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
+          직접 LUN
+        </div> */}
+      </div>
+      {/*이미지*/}
+      {activeTab === "img" && (
+        <div className="disk-new-img">
+          <div >              
+            <span>Bootable Disk: {hasBootableDisk ? "true" : "false"}</span>
 
-              <LabelInputNum label="크기(GB)"
-                value={formState.size}
-                autoFocus
-                disabled={editMode}
-                onChange={handleInputChange("size")}
+            <LabelInputNum label="크기(GB)"
+              value={formState.size}
+              autoFocus
+              disabled={editMode}
+              onChange={handleInputChange("size")}
+            />
+            {editMode && (
+              <LabelInputNum label="추가크기(GB)"
+                value={formState.appendSize}
+                onChange={handleInputChange("appendSize")}
               />
-              {editMode && (
-                <LabelInputNum label="추가크기(GB)"
-                  value={formState.appendSize}
-                  onChange={handleInputChange("appendSize")}
-                />
-              )}
-              <LabelInput id="alias" label={Localization.kr.ALIAS}
-                value={formState.alias} 
-                onChange={handleInputChange("alias")}
-              />
-              <LabelInput id="description" label={Localization.kr.DESCRIPTION}
-                value={formState.description} 
-                onChange={handleInputChange("description")}
-              />
-              <LabelSelectOptions label="인터페이스"
-                value={formState.interface_}
-                disabled={editMode}
-                options={interfaceList}
-                onChange={handleInputChange("interface_")}
-              />
-              <LabelSelectOptionsID label={Localization.kr.DOMAIN}
-                value={storageDomainVo.id}
-                disabled={editMode}
-                loading={isDomainsLoading}
-                options={domains}
-                onChange={handleSelectIdChange(setStorageDomainVo, domains)}
-              />
-              <LabelSelectOptionsID label={Localization.kr.DISK_PROFILE}
-                value={diskProfileVo.id}
-                loading={isDiskProfilesLoading}
-                options={diskProfiles}
-                onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles)}
-              />
-              <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
-                value={String(formState.sparse)}
-                disabled={editMode}
-                options={sparseList}
-                onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true", }))}
+            )}
+            <LabelInput id="alias" label={Localization.kr.ALIAS}
+              value={formState.alias} 
+              onChange={handleInputChange("alias")}
+            />
+            <LabelInput id="description" label={Localization.kr.DESCRIPTION}
+              value={formState.description} 
+              onChange={handleInputChange("description")}
+            />
+            <LabelSelectOptions label="인터페이스"
+              value={formState.interface_}
+              disabled={editMode}
+              options={interfaceList}
+              onChange={handleInputChange("interface_")}
+            />
+            <LabelSelectOptionsID label={Localization.kr.DOMAIN}
+              value={storageDomainVo.id}
+              disabled={editMode}
+              loading={isDomainsLoading}
+              options={domains}
+              onChange={handleSelectIdChange(setStorageDomainVo, domains)}
+            />
+            <LabelSelectOptionsID label={Localization.kr.DISK_PROFILE}
+              value={diskProfileVo.id}
+              loading={isDiskProfilesLoading}
+              options={diskProfiles}
+              onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles)}
+            />
+            <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
+              value={String(formState.sparse)}
+              disabled={editMode}
+              options={sparseList}
+              onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true", }))}
+            />
+          </div>
+
+          <div className="disk-new-img-right f-end">
+            <div className='img-checkbox-outer'>
+              <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
+                checked={Boolean(formState.wipeAfterDelete)} 
+                onChange={handleInputChangeCheck("wipeAfterDelete")}
               />
             </div>
-
-            <div className="disk-new-img-right f-end">
-              <div className='img-checkbox-outer'>
-                <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
-                  checked={Boolean(formState.wipeAfterDelete)} 
-                  onChange={handleInputChangeCheck("wipeAfterDelete")}
-                />
-              </div>
-              <div className='img-checkbox-outer'>
-                <LabelCheckbox id="bootable" label={Localization.kr.IS_BOOTABLE}
-                  checked={!hasBootableDisk && Boolean(formState.bootable)}
-                  disabled={hasBootableDisk} // 이미 부팅 디스크가 있으면 비활성화
-                  onChange={handleInputChangeCheck("bootable")}
-                />
-              </div>
-              <div className='img-checkbox-outer'>
-                <LabelCheckbox id="sharable" label={Localization.kr.IS_SHARABLE}
-                  checked={Boolean(formState.sharable)} 
-                  disabled={editMode} 
-                  onChange={handleInputChangeCheck("sharable")} 
-                />
-              </div>
-              <div className='img-checkbox-outer'>
-                <LabelCheckbox id="readOnly" label={Localization.kr.IS_READ_ONLY}
-                  checked={Boolean(formState.readOnly)} 
-                  disabled={editMode}
-                  onChange={handleInputChangeCheck("readOnly")} 
-                />
-              </div>
-              {/* 
+            <div className='img-checkbox-outer'>
+              <LabelCheckbox id="bootable" label={Localization.kr.IS_BOOTABLE}
+                checked={!hasBootableDisk && Boolean(formState.bootable)}
+                disabled={hasBootableDisk} // 이미 부팅 디스크가 있으면 비활성화
+                onChange={handleInputChangeCheck("bootable")}
+              />
+            </div>
+            <div className='img-checkbox-outer'>
+              <LabelCheckbox id="sharable" label={Localization.kr.IS_SHARABLE}
+                checked={Boolean(formState.sharable)} 
+                disabled={editMode} 
+                onChange={handleInputChangeCheck("sharable")} 
+              />
+            </div>
+            <div className='img-checkbox-outer'>
+              <LabelCheckbox id="readOnly" label={Localization.kr.IS_READ_ONLY}
+                checked={Boolean(formState.readOnly)} 
+                disabled={editMode}
+                onChange={handleInputChangeCheck("readOnly")} 
+              />
+            </div>
+            {/* 
+            <LabelCheckbox 
+              label="취소 활성화" 
+              id="cancelActive" 
+              checked={Boolean(formState.cancelActive)} 
+              onChange={handleInputChangeCheck("cancelActive")}
+              disabled={editMode}
+            /> 
+            */}
+            <div className='img-checkbox-outer'>
               <LabelCheckbox 
-                label="취소 활성화" 
-                id="cancelActive" 
-                checked={Boolean(formState.cancelActive)} 
-                onChange={handleInputChangeCheck("cancelActive")}
-                disabled={editMode}
-              /> 
-              */}
-              <div className='img-checkbox-outer'>
-                <LabelCheckbox 
-                  label="증분 백업 사용" 
-                  id="backup" 
-                  checked={Boolean(formState.backup)} 
-                  onChange={handleInputChangeCheck("backup")}
-                />
-               </div>
-            </div>
-          </div>
-        )}
-        {/* 직접LUN */}
-        {/* {activeTab === 'directlun' && (
-          <div id="storage-directlun-outer">
-            <div id="storage-lun-first">
-              <div className="disk-new-img-left">
-                <div className="img-input-box">
-                  <span>{Localization.kr.ALIAS}</span>
-                  <input type="text" />
-                </div>
-                <div className="img-input-box">
-                  <span>설명</span>
-                  <input type="text" />
-                </div>
-                <div className="img-select-box">
-                  <label htmlFor="os">{Localization.kr.DATA_CENTER}</label>
-                  <select id="os">
-                    <option value="linux">Linux</option>
-                  </select>
-                </div>
-                <div className="img-select-box">
-                  <label htmlFor="os">호스트</label>
-                  <select id="os">
-                    <option value="linux">Linux</option>
-                  </select>
-                </div>
-                <div className="img-select-box">
-                  <label htmlFor="os">스토리지 타입</label>
-                  <select id="os">
-                    <option value="linux">Linux</option>
-                  </select>
-                </div>
+                label="증분 백업 사용" 
+                id="backup" 
+                checked={Boolean(formState.backup)} 
+                onChange={handleInputChangeCheck("backup")}
+              />
               </div>
-              <div className="disk-new-img-right f-end">
-                <div>
-                  <input type="checkbox" className="shareable" />
-                  <label htmlFor="shareable">{Localization.kr.IS_SHARABLE}</label>
-                </div>
+          </div>
+        </div>
+      )}
+      {/* 직접LUN */}
+      {/* {activeTab === 'directlun' && (
+        <div id="storage-directlun-outer">
+          <div id="storage-lun-first">
+            <div>
+              <div className="img-input-box">
+                <span>{Localization.kr.ALIAS}</span>
+                <input type="text" />
+              </div>
+              <div className="img-input-box">
+                <span>설명</span>
+                <input type="text" />
+              </div>
+              <div className="img-select-box">
+                <label htmlFor="os">{Localization.kr.DATA_CENTER}</label>
+                <select id="os">
+                  <option value="linux">Linux</option>
+                </select>
+              </div>
+              <div className="img-select-box">
+                <label htmlFor="os">호스트</label>
+                <select id="os">
+                  <option value="linux">Linux</option>
+                </select>
+              </div>
+              <div className="img-select-box">
+                <label htmlFor="os">스토리지 타입</label>
+                <select id="os">
+                  <option value="linux">Linux</option>
+                </select>
+              </div>
+            </div>
+            <div className="disk-new-img-right f-end">
+              <div>
+                <input type="checkbox" className="shareable" />
+                <label htmlFor="shareable">{Localization.kr.IS_SHARABLE}</label>
               </div>
             </div>
           </div>
-        )} */}
+        </div>
+      )} */}
 
     </BaseModal>
   );

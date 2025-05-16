@@ -290,7 +290,6 @@ const TemplateModal = ({
                         <LabelSelectOptionsID
                           value={disk.diskImageVo?.storageDomainVo?.id}
                           loading={isDomainsLoading}
-                          className="object"
                           options={domains.filter((d) => d.status === "ACTIVE")}
                           onChange={(e) => {
                             const selected = domains.find(d => d.id === e.target.value);

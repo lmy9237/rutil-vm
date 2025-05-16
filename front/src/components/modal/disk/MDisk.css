@@ -2,25 +2,16 @@
 .disk-new-img-right {
   width: 100%;
 }
-.disk-new-img-right > .input-checkbox{
-  display: flex;
-}
-.disk-new-img-left { width: 100%; }
 .img-checkbox-outer {
   margin-left: 24px;
 }
 /*이미지,직접lun버튼*/
-.storage-disk-new-popup {
-  height: 74%;
-  width: 50%;
-}
 .disk-new-nav {
   width: 50%;
   display: flex;
 }
 .disk-new-nav > div {
   padding: 8px 0;
-  margin-right: 2%;
   cursor: pointer;
 }
 .disk-new-nav .active {

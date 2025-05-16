@@ -20,7 +20,7 @@ import Logger from "../../../utils/Logger";
 const HostDevices = ({
   hostId
 }) => {
-  const { hostsSelected, setHostsSelected, hostDevicesSelected, setHostDevicesSelected} = useGlobal()
+  const { hostDevicesSelected, setHostDevicesSelected} = useGlobal()
   const {
     data: hostDevices = [],
     isLoading: isHostDevicesLoading,

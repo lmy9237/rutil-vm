@@ -80,7 +80,7 @@ const VmActionButtons = ({
     { type: "powerOff",   onBtnClick: () => setActiveModal("vm:powerOff"), label: Localization.kr.POWER_OFF, disabled: vmsSelected.length === 0 || !allOkay2PowerDown  },
     { type: "console",    onBtnClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE, disabled: !allUp, subactions: consoleActions},
     { type: "migration",  onBtnClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION, disabled: !allUp },
-    { type: "snapshot",   onBtnClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}` },
+    { type: "snapshot",   onBtnClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`,  disabled: vmsSelected.length === 0 },
     { type: "template",   onBtnClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE },
   ];
 

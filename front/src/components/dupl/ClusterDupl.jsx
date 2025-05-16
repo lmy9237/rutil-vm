@@ -73,9 +73,6 @@ const ClusterDupl = ({
         onRowClick={(selectedRows) => setClustersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        /*onContextMenuItems={(row) => [
-          <ClusterActionButtons actionType="context"/>,
-        ]}*/
       />
       <SelectedIdView items={clustersSelected} />
     </>

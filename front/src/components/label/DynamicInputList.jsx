@@ -38,7 +38,7 @@ const DynamicInputList = ({
                 }))}
               />
             ) : (
-              <input
+            <input
                 type="text"
                 className="dynamic-text-input"
                 value={item.value || ""}

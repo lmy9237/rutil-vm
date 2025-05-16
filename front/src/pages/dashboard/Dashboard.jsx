@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import useAsideState from "../../hooks/useAsideState";
-import BarChart from "../../components/Chart/BarChart";
 import {
   rvi24Cluster,
   rvi24Datacenter,
@@ -32,7 +31,6 @@ import {
   BoxChartSummary,
   BoxChartAllGraphs,
 } from "../../components/BoxesLayout";
-import "./Dashboard.css";
 
 /*
 const BarChartWrapper = ({ data, keyName, keyPercent }) => {
@@ -311,95 +309,7 @@ const Dashboard = () => {
           </BoxLayout>
         </BoxesLayout>
 
-        {/* <div className="dash-section f-btw">
-          <div className="dash-section-contents">
-            <h1 className="dash-con-title fs-16">CPU</h1>
-            <div className="dash-status f-start">
-              <h1 className="fs-24">{cpuAvailablePercentageComputed}</h1>
-              <span className="unit fs-18">%</span>
-              <div>{Localization.kr.AVAILABLE} (총 {cpuCoreTotal} Core)</div>
-            </div>
-            <span>
-              {`${cpuCoreUsed}`} / {cpuCoreTotal} Core
-            </span>
-            <div className="graphs flex">
-              <div
-                className="graph-wrap"
-              >
-                {cpuMemory && (<RadialBarChart percentage={cpuMemory?.totalCpuUsagePercent ?? 0} />)}
-              </div>
-              {vmCpu && <CpuBarChart vmCpu={vmCpu} />}
-            </div>
-            <div className="graph-wave fs-14">
-              <SuperAreaChart per={host} type="cpu" />
-            </div>
-          </div>
-
-          <div className="dash-section-contents">
-            <h1 className="dash-con-title fs-16">MEMORY</h1>
-            <div className="dash-status f-start">
-              <h1 className="fs-24">{memAvailablePercentageComputed}</h1>
-              <span className="unit fs-18">GiB</span>
-              <div>{Localization.kr.AVAILABLE}</div>
-            </div>
-            <span>
-              사용중 {cpuMemory?.usedMemoryGB?.toFixed(1)} GiB / 총 {cpuMemory?.totalMemoryGB?.toFixed(1)} GiB
-            </span>
-            <div className="graphs f-start">
-              <div
-                className="graph-wrap"
-              >
-                {cpuMemory && (<RadialBarChart percentage={cpuMemory?.totalMemoryUsagePercent} />)}
-              </div>
-              {vmMemory && <MemoryBarChart vmMemory={vmMemory} />}
-            </div>
-
-            <div className="graph-wave fs-14">
-              <SuperAreaChart per={host} type="memory" />
-            </div>
-          </div>
-
-          <div className="dash-section-contents">
-            <h1 className="dash-con-title fs-16">STORAGE</h1>
-            <div className="dash-status f-start">
-              <h1 className="fs-24">{storage?.freeGB}</h1>
-              <span className="unit fs-18">GiB</span>
-              <div>{Localization.kr.AVAILABLE} (총 {storage?.totalGB} GiB)</div>
-            </div>
-            <span>
-              USED {storage?.usedGB} GiB / Total {storage?.freeGB} GiB
-            </span>
-            <div className="graphs f-start">
-              <div className="graph-wrap"
-              >
-                {storage && (<RadialBarChart percentage={storage?.usedPercent || 0} />)}
-              </div>
-              {storageMemory && (<StorageMemoryBarChart storageMemory={storageMemory} />)}
-            </div>
-            <div className="graph-wave fs-14">
-              <SuperAreaChart per={domain} type="domain" />
-            </div>
-          </div>
-        </div> 
-        
-        <div className="bar-outer v-btw">
-          <div className="bar f-btw fs-14">
-            <div>
-              <span className="fs-18">CPU</span>
-              <Grid className="grid-outer" type={"cpu"} data={vmMetricCpu} />
-            </div>
-            <div>
-              <span className="fs-18">MEMORY</span>
-              <Grid className="grid-outer" type={"memory"} data={vmMetricMemory} />
-            </div>
-            <div>
-              <span className="fs-18">StorageDomain</span>
-              <Grid className="grid-outer" type={"domain"} data={storageMetric} />
-            </div>
-          </div>
-          <GridLegends />
-        </div>
-        */}
+     
       </SectionLayout>
       {/* 대시보드 section끝 */}
     </>

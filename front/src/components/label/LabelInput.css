@@ -71,7 +71,7 @@ input[type="radio"] {
 
 .custom-select-box.disabled ,
 .custom-select.disabled {
-  color: #888888;
+  color: #b3b3b3;
   cursor: not-allowed;
 }
 .custom-select-select {

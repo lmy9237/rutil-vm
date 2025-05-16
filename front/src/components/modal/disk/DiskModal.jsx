@@ -184,7 +184,7 @@ const DiskModal = ({ isOpen, editMode = false, onClose }) => {
       {/*이미지*/}
       {activeTab === "img" && (
         <div className="disk-new-img">
-          <div className="disk-new-img-left">
+          <div>
             <LabelInputNum label="크기(GB)"
               value={formState.size}
               autoFocus={true}
@@ -263,7 +263,7 @@ const DiskModal = ({ isOpen, editMode = false, onClose }) => {
       {/* {activeTab === 'directlun' && (
         <div id="storage-directlun-outer">
           <div id="storage-lun-first">
-            <div className="disk-new-img-left">
+            <div>
               <div className="img-input-box">
                 <span>{Localization.kr.ALIAS}</span>
                 <input type="text" />

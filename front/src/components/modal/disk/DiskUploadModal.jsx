@@ -186,7 +186,7 @@ const DiskUploadModal = ({
       <div>
         <div className="disk-option fs-16">디스크 옵션</div>
           <div className="disk-new-img" style={{ paddingTop: "0.4rem" }}>
-            <div className="disk-new-img-left">
+            <div>
               <LabelInput id="size" label={Localization.kr.SIZE_ACTUAL}
                 type="number"
                 value={sizeToGB(formState.size)}
@@ -208,7 +208,7 @@ const DiskUploadModal = ({
                 options={datacenters}
                 onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
               />
-              {/* <LabelSelectOptionsID
+              <LabelSelectOptionsID
                 label="스토리지 도메인"
                 value={domainVo.id}
                 loading={isDomainsLoading}
@@ -218,8 +218,8 @@ const DiskUploadModal = ({
                 //   const selected = domains.find(d => d.id === e.target.value);
                 //   if (selected) setDomainVo({ id: selected.id, name: selected.name });
                 // }}
-              /> */}
-              <div className='input-select'>
+              />
+              {/* <div className='input-select custom-select-wrapper'>
                 <label className="">스토리지 도메인</label>
                 <select 
                   value={domainVo.id} 
@@ -235,7 +235,7 @@ const DiskUploadModal = ({
                     ))
                   )}
                 </select>
-              </div>
+              </div> */}
 
               <LabelSelectOptionsID
                 label="디스크 프로파일"

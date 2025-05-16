@@ -8,7 +8,6 @@ import LabelSelectOptions from "../../label/LabelSelectOptions";
 import { useEditTemplate, useTemplate } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
-import "./MTemplate.css";
 
 const TemplateEditModal = ({
   isOpen,
