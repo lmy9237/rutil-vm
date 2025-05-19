@@ -26,7 +26,17 @@
   font-weight: 700;
 }
 .host-graph{
-  min-width: 40%;
+  width: 100%;
   font-weight: 600;
   font-size: var(--fs-14);
+}
+
+.host-wrapper .info-table-wrapper{
+  height: 100%;
+}
+.graph-area {
+  width: 500px;
+  padding: 80px;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }

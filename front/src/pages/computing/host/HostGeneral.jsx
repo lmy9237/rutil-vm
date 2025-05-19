@@ -50,7 +50,7 @@ const HostGeneral = ({
     { label: "물리적 메모리", value: `${convertBytesToMB(host?.memoryTotal)} MB 합계 | ${convertBytesToMB(host?.memoryUsed)} MB 사용됨 | ${convertBytesToMB(host?.memoryFree)} MB ${Localization.kr.AVAILABLE}`, },
     { label: "Swap 크기", value: `${convertBytesToMB(host?.swapTotal)} MB 합계 | ${convertBytesToMB(host?.swapUsed)} MB 사용됨 | ${convertBytesToMB(host?.swapFree)} MB ${Localization.kr.AVAILABLE}`, },
     { label: "장치 통과", value: host?.devicePassThrough ? "활성" : "비활성" },
-    { label: "새로운 가상 머신의 스케줄링을 위한 최대 여유 메모리", value: `${convertBytesToMB(host?.memoryMax)} MB`, },
+    { label: "최대 여유 메모리", value: `${convertBytesToMB(host?.memoryMax)} MB`, },/*새로운 가상 머신의 스케줄링을 위한 최대 여유 메모리 */
     { label: "Huge Pages (size: free/total)", value: `2048: ${host?.hugePage2048Free}/${host?.hugePage2048Total}, 1048576: ${host?.hugePage1048576Free}/${host?.hugePage1048576Total}`, },
     { label: "SELinux 모드", value: host?.seLinux },
   ]), [host]);
@@ -96,7 +96,7 @@ const HostGeneral = ({
   // ]), [tabs, activeTab])
   
   return (
-    <div className="w-[60%]">
+    <div className="w-full h-ull">
       <div className="host-tabs f-start fs-14">
         {[...tabs].map(({ tab, label }, i) => (
           <button key={tab}
@@ -107,14 +107,16 @@ const HostGeneral = ({
           </button>
         ))}
       </div>
-      <InfoTable tableRows={tabs.find(({ tab }) => tab === activeTab)?.tableRows || []} />
-      <br/>
-      <div className="f-btw" style={{ gap: "20px" }}>
-        <div className="host-graph">
-          cpu <SuperAreaChart key={`${hostId}-cpu`} per={hostPer} type="cpu" />
-        </div>
-        <div className="host-graph">
-          memory <SuperAreaChart key={`${hostId}-memory`} per={hostPer} type="memory" />
+      <div className="f-btw  h-full host-wrapper">
+        <InfoTable tableRows={tabs.find(({ tab }) => tab === activeTab)?.tableRows || []} />
+      
+        <div className="graph-area">
+          <div className="host-graph">
+            cpu <SuperAreaChart key={`${hostId}-cpu`} per={hostPer} type="cpu" />
+          </div>
+          <div className="host-graph">
+            memory <SuperAreaChart key={`${hostId}-memory`} per={hostPer} type="memory" />
+          </div>
         </div>
       </div>
     </div>

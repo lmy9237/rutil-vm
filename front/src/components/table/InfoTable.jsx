@@ -9,13 +9,15 @@ import "./InfoTable.css";
 const InfoTable = ({ 
   tableRows
 }) => (
-  <table className="info-table w-full">
-    <tbody>
-      {tableRows.map((row, index) => (
-        <InfoTableRow row={row} index={index} />
-      ))}
-    </tbody>
-  </table>
+  <div className="info-table-wrapper w-full">
+    <table className="info-table w-full">
+      <tbody>
+        {tableRows.map((row, index) => (
+          <InfoTableRow row={row} index={index} />
+        ))}
+      </tbody>
+    </table>
+  </div>
 );
 
 const InfoTableRow = ({

@@ -1,15 +1,22 @@
-.info-table {
-  background:var(--color-white);
-  border-collapse:collapse;border-radius:8px;
+.info-table-wrapper {
+  padding: 12px 16px;
+  background: var(--color-white);
+  border-radius: 8px;
 }
-.info-table tbody:before,
-.info-table tbody:after {/* 세로 강제 Margin처리 */
+
+.info-table {
+  border-collapse:collapse;
+}
+
+/* .info-table tbody:before,
+.info-table tbody:after {
   content: '';display:block;height:10px !important;
+  
 }
 .info-table tr:before,
-.info-table tr:after {/* 가로 강제 Margin처리 */
+.info-table tr:after {
   content: '';display:block;width:10px !important;
-}
+} */
 .info-table th,
 .info-table td {
   padding: 10px 0;
@@ -17,7 +24,7 @@
   border: none;
 }
 .info-table th {
-  min-width: 28%;
+  width: 400px;
 }
 .info-table td {
   color: #757575;

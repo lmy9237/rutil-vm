@@ -121,7 +121,8 @@ const RadialBarChart = ({
 
   return (
     /* css로 빼기 */
-    // <div className="f-center w-full">
+    // <div className="f-center w-full">\
+    <>
       <div 
         className="f-center w-full h-full"
       >
@@ -134,6 +135,8 @@ const RadialBarChart = ({
           {...props}
         />
       </div>
+      <div>라벨위치</div>
+      </>
     // </div>
 
     //     <ReactApexChart type="radialBar" 

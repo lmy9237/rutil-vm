@@ -54,13 +54,16 @@ const JobFooter = ({
         text={[...e?.steps].length} 
         status={e?.status === "FAILED" ? "alert" : "number"}
       /> : "",
-    status: (e?.status === "FINISHED" || e?.status === "FAILED") 
-      ? <BadgeStatus status={
-        e?.status === "FINISHED" 
-          ? "running"
-          : "default"
-      } text={e?.status} />
-      : <Spinner />,
+    // status: (e?.status === "FINISHED" || e?.status === "FAILED") 
+    //   ? <BadgeStatus status={
+    //     e?.status === "FINISHED" 
+    //       ? "running"
+    //       : "default"
+    //   } text={e?.status} />
+    //   : <Spinner />,
+    status: (e?.status === "FINISHED" || e?.status === "FAILED")
+    ? (e?.status === "FINISHED" ? "성공" : "실패")
+    : <Spinner />,
     startTime: e?.startTime,
     endTime: e?.endTime === "" 
       ? Localization.kr.NOT_ASSOCIATED

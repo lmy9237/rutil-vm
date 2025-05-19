@@ -186,6 +186,18 @@ const VmDiskConnectionModal = ({
                   ))}
                 </select>
               ),
+              /*
+              컴포넌트로 빼면 옵션값이 안보이는문제
+              interface: ( 
+                <LabelSelectOptions
+                  id={`interface-select-${attDisk.id}`}
+                  value={selectedInterfaces[attDisk.id] || "VIRTIO_SCSI"}
+                  onChange={(event) => handleInterfaceChange(attDisk.id, event.target.value)}
+                  options={interfaceList}
+                  className="w-full"
+                />
+              ),
+              */
               readonly: (
                 <input
                   type="checkbox"
