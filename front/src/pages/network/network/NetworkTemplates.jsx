@@ -5,14 +5,15 @@ import useUIState from "../../../hooks/useUIState";
 import useSearch from "../../../hooks/useSearch";
 import Loading from "../../../components/common/Loading";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
+import ActionButton from "../../../components/button/ActionButton";
 import TablesOuter from '../../../components/table/TablesOuter';
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import SearchBox from "../../../components/button/SearchBox";
 import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
 import { useAllTemplatesFromNetwork } from "../../../api/RQHook";
-import ActionButton from "../../../components/button/ActionButton";
-import Logger from "../../../utils/Logger";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 /**
  * @name NetworkTemplates
@@ -25,7 +26,11 @@ const NetworkTemplates = ({
   networkId
 }) => {
   const { activeModal, setActiveModal } = useUIState()
-  const { networksSelected, nicsSelected, setNicsSelected } = useGlobal()
+  const {
+    datacentersSelected,
+    networksSelected,
+    nicsSelected, setNicsSelected
+  } = useGlobal()
   const [modalData, setModalData] = useState(null); // 모달에 전달할 데이터
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태 초기값 false
   
@@ -93,6 +98,10 @@ const NetworkTemplates = ({
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
       <SelectedIdView items={nicsSelected}/>
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.NETWORK}>${Localization.kr.NETWORK}>${networksSelected[0]?.name}`}
+        path={`networks-templates;name=${networksSelected[0]?.name};dataCenter=${datacentersSelected[0]?.name}`}
+      />
       {/* 모달 렌더링 */}
       <Suspense fallback={<Loading/>}>
         {activeModal().includes("template:remove") && (

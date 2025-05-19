@@ -2,13 +2,15 @@ import { useCallback } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
+import SelectedIdView from "../common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import { severity2Icon } from "../icons/RutilVmIcons";
 import SearchBox from "../button/SearchBox";
 import TablesOuter from "../table/TablesOuter";
-import SelectedIdView from "../common/SelectedIdView";
-import Logger from "../../utils/Logger";
 import EventActionButtons from "./EventActionButtons";
+import Localization from "../../utils/Localization";
+import Logger from "../../utils/Logger";
 
 /**
  * @name HostEvents
@@ -55,6 +57,7 @@ const EventDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={eventsSelected} />
+      <OVirtWebAdminHyperlink name={`${Localization.kr.EVENT}>${Localization.kr.EVENT}`} path="events" />
     </>
   );
 };

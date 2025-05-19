@@ -40,7 +40,9 @@ const ComputingTree = ({}) => {
   } = useGlobal();
 
   // ✅ API 호출 (컴퓨팅 트리 데이터)
-  const { data: navClusters = [] } = useAllTreeNavigations("cluster");
+  const {
+    data: navClusters = []
+  } = useAllTreeNavigations("cluster");
 
   Logger.debug(`ComputingTree ... `)
   return (

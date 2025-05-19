@@ -4,12 +4,14 @@ import toast from "react-hot-toast";
 import useUIState from "../../hooks/useUIState";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
+import SelectedIdView from "../common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
 import TemplateActionButtons from "./TemplateActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
-import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
+import Localization from "../../utils/Localization";
 
 const TemplateDupl = ({
   templates = [],  columns = [],
@@ -71,8 +73,11 @@ const TemplateDupl = ({
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
-
       <SelectedIdView items={templatesSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.TEMPLATE}`}
+        path="templates"
+      />
     </>
   );
 };

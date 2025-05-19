@@ -1,13 +1,14 @@
 import { useEffect, useMemo } from "react";
 import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import InfoTable from "../../../components/table/InfoTable";
 import SemiCircleChart from "../../../components/Chart/SemiCircleChart";
 import TableRowClick from "../../../components/table/TableRowClick";
 import { useVm } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
 import CONSTANT from "../../../Constants";
 import { convertBytesToMB } from "../../../util";
 import { RVI16, rvi16Cluster, rvi16Host } from "../../../components/icons/RutilVmIcons";
+import Localization from "../../../utils/Localization";
 import "./Vm.css"
 
 /**
@@ -21,7 +22,11 @@ import "./Vm.css"
 const VmGeneral = ({ 
   vmId
 }) => {
-  const { setVmsSelected, setClustersSelected, setHostsSelected } = useGlobal()
+  const {
+    vmsSelected, setVmsSelected, 
+    setClustersSelected,
+    setHostsSelected
+  } = useGlobal()
   const {
     data: vm,
     isLoading: isVmLoading,
@@ -128,7 +133,11 @@ const VmGeneral = ({
             </div>
           </div>
         </div>
-      </div>      
+      </div>
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
+        path={`vms-general;name=${vmsSelected[0]?.name}`} 
+      />
     </>
   );
 };

@@ -1,9 +1,8 @@
 import React, { useState, useEffect, Suspense, useMemo } from "react";
 import { Tooltip } from "react-tooltip";
-import { checkZeroSizeToMbps } from "../../../util";
-import {
-  RVI16,rvi16TriangleDown, rvi16TriangleUp,rvi16VirtualMachine, RVI24, rvi24CompareArrows, RVI36, rvi36Edit, status2Icon
-} from "../../../components/icons/RutilVmIcons";
+import toast from "react-hot-toast";
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import Loading from "../../../components/common/Loading";
 import HostNetworkEditModal from "../../../components/modal/host/HostNetworkEditModal";
 import HostBondingModal from "../../../components/modal/host/HostBondingModal";
@@ -15,12 +14,19 @@ import {
   useNetworkFromCluster,
   useNetworkInterfacesFromHost,
 } from "../../../api/RQHook";
+import { checkZeroSizeToMbps } from "../../../util";
+import {
+  RVI16,rvi16TriangleDown, rvi16TriangleUp,rvi16VirtualMachine, RVI24, rvi24CompareArrows, RVI36, rvi36Edit, status2Icon
+} from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 import "./HostNic.css";
-import toast from "react-hot-toast";
 
-const HostNics2 = ({ hostId }) => {
+const HostNics2 = ({
+  hostId
+}) => {
   const { data: host } = useHost(hostId);
+  const { hostsSelected, setHostsSelected } = useGlobal()
   const { data: hostNics = [] } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
   const { data: networkAttchments = [] } = useNetworkAttachmentsFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
@@ -645,7 +651,10 @@ const HostNics2 = ({ hostId }) => {
         value={setting}
         onChange={(e) => setSetting(e.target.checked)}
       />
-
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}>${hostsSelected[0]?.name}`}
+        path={`hosts-network_interfaces;name=${hostsSelected[0]?.name}`} 
+      />
       <Suspense fallback={<Loading />}>
         <HostBondingModal
           editmode={editBondingMode}

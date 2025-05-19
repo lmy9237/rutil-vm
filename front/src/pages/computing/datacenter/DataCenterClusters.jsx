@@ -1,8 +1,10 @@
 import React from "react";
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import ClusterDupl from "../../../components/dupl/ClusterDupl";
 import { useClustersFromDataCenter } from "../../../api/RQHook";
-import useGlobal from "../../../hooks/useGlobal";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name DataCenterClusters
@@ -15,6 +17,7 @@ import useGlobal from "../../../hooks/useGlobal";
 const DataCenterClusters = ({
   datacenterId
 }) => {
+  const { datacentersSelected } = useGlobal()
   const {
     data: clusters = [],
     isLoading: isClustersLoading,
@@ -24,11 +27,17 @@ const DataCenterClusters = ({
   } = useClustersFromDataCenter(datacenterId, (e) => ({...e,}));
 
   return (
-    <ClusterDupl columns={TableColumnsInfo.CLUSTERS_FROM_DATACENTER}
-      clusters={clusters}
-      refetch={refetchClusters}
-      isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
-    />
+    <>
+      <ClusterDupl columns={TableColumnsInfo.CLUSTERS_FROM_DATACENTER}
+        clusters={clusters}
+        refetch={refetchClusters}
+        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
+      />
+      <OVirtWebAdminHyperlink 
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.DATA_CENTER}>${datacentersSelected[0]?.name}`} 
+        path={`dataCenters-clusters;name=${datacentersSelected[0]?.name}`} 
+      />
+    </>
   );
 };
 

@@ -1,6 +1,9 @@
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import HostDupl from "../../../components/dupl/HostDupl";
 import { useHostsFromDataCenter } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -11,7 +14,10 @@ import Logger from "../../../utils/Logger";
  * @param {string} datacenterId 데이터센터 ID
  * @returns
  */
-const DataCenterHosts = ({ datacenterId }) => {
+const DataCenterHosts = ({
+  datacenterId
+}) => {
+  const { datacentersSelected } = useGlobal()
   const {
     data: hosts = [],
     isLoading: isHostsLoading,
@@ -19,13 +25,20 @@ const DataCenterHosts = ({ datacenterId }) => {
     isSuccess: isHostsSuccess,
     refetch: refetchHosts,
   } = useHostsFromDataCenter(datacenterId, (e) => ({ ...e }));
-  Logger.debug("DataCenterHosts ...")
+  
   return (
-    <HostDupl columns={TableColumnsInfo.HOSTS}
-      hosts={hosts}
-      refetch={refetchHosts}
-      isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
-    />
+    <>
+      <HostDupl columns={TableColumnsInfo.HOSTS}
+        hosts={hosts}
+        refetch={refetchHosts}
+        isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
+      />
+      {/* <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.DATA_CENTER}>${datacentersSelected[0]?.name}`}
+        path={`dataCenters-hosts;name=${datacentersSelected[0]?.name}`} 
+      /> */}
+      {/* NOTE: oVirt에서는 없음 */}
+    </>
   );
 };
 

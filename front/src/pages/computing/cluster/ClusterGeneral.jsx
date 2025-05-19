@@ -1,6 +1,7 @@
 import InfoTable from "../../../components/table/InfoTable";
 import Localization from "../../../utils/Localization";
 import { useCluster } from "../../../api/RQHook";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 
 /**
  * @name ClusterGeneral
@@ -10,7 +11,9 @@ import { useCluster } from "../../../api/RQHook";
  * @param {string} clusterId 클러스터ID
  * @returns
  */
-const ClusterGeneral = ({ clusterId }) => {
+const ClusterGeneral = ({
+  clusterId
+}) => {
   const {
     data: cluster,
     isLoading: isClusterLoading,
@@ -42,7 +45,14 @@ const ClusterGeneral = ({ clusterId }) => {
     { label: `${Localization.kr.VM} 수`, value: cluster?.vmSize?.allCnt },
   ];
 
-  return <InfoTable tableRows={tableRows} />;
+  return (
+    <>
+      <InfoTable tableRows={tableRows} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.CLUSTER}>${cluster?.name}`}
+        path={`clusters-general;name=${cluster?.name}`} />
+    </>
+  );
 };
 
 export default ClusterGeneral;

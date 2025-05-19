@@ -1,7 +1,10 @@
 import React from "react";
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { useVmsFromHost } from "../../../api/RQHook";
 import VmDupl from "../../../components/dupl/VmDupl";
+import { useVmsFromHost } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name HostVms
@@ -11,7 +14,10 @@ import VmDupl from "../../../components/dupl/VmDupl";
  * @param {string} hostId 호스트 ID
  * @returns
  */
-const HostVms = ({ hostId }) => {
+const HostVms = ({
+  hostId
+}) => {
+  const { hostsSelected } = useGlobal()
   const {
     data: vms = [],
     isLoading: isVmsLoading,
@@ -21,11 +27,17 @@ const HostVms = ({ hostId }) => {
   } = useVmsFromHost(hostId, (e) => ({ ...e }));
 
   return (
-    <VmDupl columns={TableColumnsInfo.VMS_FROM_HOST}
-      vms={vms}
-      refetch={refetchVms}
-      isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
-    />
+    <>
+      <VmDupl columns={TableColumnsInfo.VMS_FROM_HOST}
+        vms={vms}
+        refetch={refetchVms}
+        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+      />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}>${hostsSelected[0]?.name}`}
+        path={`hosts-virtual_machines;name=${hostsSelected[0]?.name}`} 
+      />
+    </>
   );
 };
 

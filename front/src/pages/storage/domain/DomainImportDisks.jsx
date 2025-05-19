@@ -4,12 +4,13 @@ import toast from "react-hot-toast";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DomainGetDiskModal from "../../../components/modal/domain/DomainGetDiskModal";
 import SearchBox from "../../../components/button/SearchBox";
 import ActionButton from "../../../components/button/ActionButton";
-import SelectedIdView from "../../../components/common/SelectedIdView";
 import { checkZeroSizeToGiB } from "../../../util";
 import Logger from "../../../utils/Logger";
 import { useAllUnregisteredDisksFromDomain } from "../../../api/RQHook";
@@ -27,7 +28,10 @@ const DomainImportDisks = ({
 }) => {
   const navigate = useNavigate()
   const { activeModal, setActiveModal, } = useUIState()
-  const { domainsSelected, disksSelected, setDisksSelected } = useGlobal()
+  const {
+    domainsSelected,
+    disksSelected, setDisksSelected
+  } = useGlobal()
 
   const {
     data: disks = [],
@@ -85,8 +89,11 @@ const DomainImportDisks = ({
         refetch={refetchDisks}
         isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
       />
-
       <SelectedIdView items={disksSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
+        path={`storage-disk_image_register;name=${domainsSelected[0]?.name}`}
+      />
     </>
   );
 };

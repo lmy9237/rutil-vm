@@ -2,8 +2,13 @@ import React, { useState, useEffect, Suspense, useMemo } from "react";
 import { Tooltip } from "react-tooltip";
 import { checkZeroSizeToMbps } from "../../../util";
 import {
-  RVI16,rvi16TriangleDown, rvi16TriangleUp,rvi16VirtualMachine, RVI24, rvi24CompareArrows, RVI36, rvi36Edit, status2Icon
+  RVI16, rvi16TriangleDown, rvi16TriangleUp, rvi16VirtualMachine,
+  RVI24, rvi24CompareArrows,
+  RVI36, rvi36Edit,
+  status2Icon
 } from "../../../components/icons/RutilVmIcons";
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import Loading from "../../../components/common/Loading";
 import HostNetworkEditModal from "../../../components/modal/host/HostNetworkEditModal";
 import HostBondingModal from "../../../components/modal/host/HostBondingModal";
@@ -46,8 +51,11 @@ const hostNetworkVo = {
   ],
 };
 
-const HostNics = ({ hostId }) => {
+const HostNics = ({
+  hostId
+}) => {
   const { data: host } = useHost(hostId);
+  const { hostsSelected } = useGlobal();
   const { data: hostNics = [] } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
   const { data: networkAttchments = [] } = useNetworkAttachmentsFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
@@ -805,9 +813,11 @@ const handleUnbondSlaveNic = (slaveNic, parentBond) => {
         value={setting}
         onChange={(e) => setSetting(e.target.checked)}
       />
-
       <span>h {modifiedBonds.map((e) => e.name)}</span>
-
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}>${hostsSelected[0]?.name}`}
+        path={`hosts-network_interfaces;name=${hostsSelected[0]?.name}`} 
+      />
       <Suspense fallback={<Loading />}>
         <HostBondingModal
           editmode={editBondingMode}
@@ -852,7 +862,6 @@ const assignmentMethods = [
   { value: "autoconf", label: "상태 비저장 주소 자동 설정" },
   { value: "dhcp", label: "DHCP" },
 ];
-
 
 // nic 툴팁
 const generateNicTooltipHTML = (nic) => { 
@@ -908,5 +917,3 @@ const generateNetworkTooltipHTML = (network) => {
       ${ipv6Section}
     </div>`;
 };
-
-

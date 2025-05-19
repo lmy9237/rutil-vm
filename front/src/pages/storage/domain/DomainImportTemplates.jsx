@@ -3,13 +3,14 @@ import toast from "react-hot-toast";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import DomainGetVmTemplateModal from "../../../components/modal/domain/DomainGetVmTemplateModal";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import DeleteModal from "../../../utils/DeleteModal";
 import SearchBox from "../../../components/button/SearchBox";
 import ActionButton from "../../../components/button/ActionButton";
-import SelectedIdView from "../../../components/common/SelectedIdView";
+import TablesOuter from "../../../components/table/TablesOuter";
+import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
+import DomainGetVmTemplateModal from "../../../components/modal/domain/DomainGetVmTemplateModal";
 import { checkZeroSizeToMB } from "../../../util";
 import { useAllUnregisteredTemplatesFromDomain } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
@@ -21,12 +22,17 @@ import Logger from "../../../utils/Logger";
  *
  * @prop {string} domainId 도메인ID
  * @returns {JSX.Element} DomainGetTemplates
+ * 
+ * @see DomainTemplates
  */
 const DomainImportTemplates = ({ 
   domainId
 }) => {
   const { activeModal, setActiveModal, } = useUIState();
-  const { templatesSelected, setTemplatesSelected } = useGlobal(); // 다중 선택된 데이터센터
+  const {
+    domainsSelected,
+    templatesSelected, setTemplatesSelected
+  } = useGlobal(); // 다중 선택된 데이터센터
 
   const {
     data: templates = [],
@@ -89,8 +95,11 @@ const DomainImportTemplates = ({
         refetch={refetchTemplates}
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
-
       <SelectedIdView items={templatesSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
+        path={`storage-template_register;name=${domainsSelected[0]?.name}`}
+      />
 
       {/* 가져오기 모달 -> DomainImportVms에서도 쓰고있어서 domainmodals에 어떻게 써야하나! */}
       {activeModal().includes("domaintemplate:importVm")  && (

@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch"; 
+import SelectedIdView from "../common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import VnicProfileActionButtons from "./VnicProfileActionButtons";
 import SearchBox from "../button/SearchBox";  
-import SelectedIdView from "../common/SelectedIdView";
 import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
-
 
 /**
  * @name VnicProfileDupl
@@ -24,7 +24,11 @@ const VnicProfileDupl = ({
   refetch, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { vnicProfilesSelected, setVnicProfilesSelected } = useGlobal();
+  const {
+    setDatacentersSelected,
+    setNetworksSelected,
+    vnicProfilesSelected, setVnicProfilesSelected
+  } = useGlobal();
 
   // ✅ 데이터 변환 (검색 가능하도록 `searchText` 필드 추가)
   const transformedData = [...vnicProfiles].map((vnic) => ({
@@ -75,11 +79,22 @@ const VnicProfileDupl = ({
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         multiSelect={true}
-        onRowClick={(selectedRows) => setVnicProfilesSelected(selectedRows)}
+        onRowClick={(selectedRows) => {
+          setVnicProfilesSelected(selectedRows)
+          setDatacentersSelected([...selectedRows].map((r) => ({
+            id: r?.dataCenterVo?.id,
+            name: r?.dataCenterVo?.name
+          })))
+          setNetworksSelected([...selectedRows].map((r) => ({
+            id: r?.networkVo?.id,
+            name: r?.networkVo?.name
+          })))
+        }}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={vnicProfilesSelected} />
+      <OVirtWebAdminHyperlink name={`${Localization.kr.NETWORK}>${Localization.kr.VNIC_PROFILE}`} path="vnicProfiles" />
     </>
   );
 };

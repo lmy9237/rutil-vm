@@ -1,6 +1,9 @@
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DomainDupl from "../../../components/dupl/DomainDupl";
 import { useDomainsFromDataCenter } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -11,7 +14,11 @@ import Logger from "../../../utils/Logger";
  * @param {string} datacenterId 데이터센터 ID
  * @returns
  */
-const DataCenterDomains = ({ datacenterId }) => {
+const DataCenterDomains = ({ 
+  datacenterId
+}) => {
+  const { datacentersSelected } = useGlobal()
+
   const {
     data: storageDomains = [],
     isLoading: isStorageDomainsLoading,
@@ -29,6 +36,10 @@ const DataCenterDomains = ({ datacenterId }) => {
         sourceContext={"fromDatacenter"}
         refetch={refetchStorageDomains}
         isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
+      />
+      <OVirtWebAdminHyperlink 
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.DATA_CENTER}>${datacentersSelected[0]?.name}`} 
+        path={`dataCenters-storage;name=${datacentersSelected[0]?.name}`} 
       />
     </>
   );

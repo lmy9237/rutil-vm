@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useCallback, useRef } from "react";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import useClickOutside from "../../../hooks/useClickOutside";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import Loading from "../../../components/common/Loading";
 import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
@@ -34,7 +35,10 @@ const VmSnapshots = ({
   vmId
 }) => {
   const { activeModal, setActiveModal } = useUIState()
-  const { setVmsSelected, snapshotsSelected, setSnapshotsSelected } = useGlobal()
+  const {
+    vmsSelected, setVmsSelected, 
+    snapshotsSelected, setSnapshotsSelected
+  } = useGlobal()
 
   const {
     data: vm = [],
@@ -150,6 +154,10 @@ const VmSnapshots = ({
         </div>
       </SnapshotHostBackground>
       <SelectedIdView items={snapshotsSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
+        path={`vms-snapshots;name=${vmsSelected[0]?.name}`} 
+      />
     </>
   );
 };

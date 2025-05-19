@@ -1,5 +1,10 @@
 import React, { Suspense, useState } from "react";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import useSearch from '../../../hooks/useSearch';
+import SelectedIdView from '../../../components/common/SelectedIdView';
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
+import Loading from '../../../components/common/Loading';
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DeleteModal from "../../../utils/DeleteModal";
@@ -7,12 +12,8 @@ import { useAllUnregisteredVMsFromDomain } from "../../../api/RQHook";
 import { checkZeroSizeToMB } from '../../../util';
 import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
 import ActionButton from '../../../components/button/ActionButton';
-import Loading from '../../../components/common/Loading';
-import Localization from '../../../utils/Localization';
-import SelectedIdView from '../../../components/common/SelectedIdView';
 import SearchBox from '../../../components/button/SearchBox';
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
+import Localization from '../../../utils/Localization';
 
 /**
  * @name DomainGetVms
@@ -31,7 +32,10 @@ const DomainImportVms = ({ domainId }) => {
   } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
 
   const { activeModal, setActiveModal, } = useUIState()
-  const { vmsSelected, setVmsSelected } = useGlobal(); // 다중 선택된 데이터센터
+  const {
+    vmsSelected, setVmsSelected,
+    domainsSelected,
+  } = useGlobal(); // 다중 선택된 데이터센터
 
   const transformedData = [...vms].map((vm) => ({
     ...vm,
@@ -75,6 +79,10 @@ const DomainImportVms = ({ domainId }) => {
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
+        path={`storage-vm_register;name=${domainsSelected[0]?.name}`}
+      />
       <Suspense fallback={<Loading />}>
         {/* 가상머신 가져오기 모달 -> DomainImporttemplates에서도 쓰고있어서 domainmodals에 어떻게 써야하나! */}
         {activeModal().includes("domainvm:importVm") && (

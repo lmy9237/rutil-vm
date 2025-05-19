@@ -1,15 +1,29 @@
 import React, { useMemo } from 'react';
-import TableColumnsInfo from '../../../table/TableColumnsInfo';
+import useGlobal from "../../../../hooks/useGlobal";
+import TableColumnsInfo from "../../../table/TableColumnsInfo";
+import SelectedIdView from "../../../common/SelectedIdView";
 import Tables from '../../../table/Tables';
-import Logger from '../../../../utils/Logger';
 import LabelCheckbox from '../../../label/LabelCheckbox';
+import Logger from '../../../../utils/Logger';
 
+/**
+ * @name DomainImportFibre
+ * @description 가져오기를 위한 Fibre Channel 스토리지 도메인 내 LUN 목록 출력
+ * 
+ * @param {boolean} editMode 편집여부
+ * @returns {JSX.Element} DomainImportFibre
+ * 
+ * @see DomainImportModal
+ */
 const DomainImportFibre = ({ 
   fibres,
   id, setId,
   isFibresLoading, isFibresError, isFibresSuccess
-}) => {  
-  Logger.debug("DomainImportFibre ...")
+}) => {
+  const {
+    hostsSelected, 
+    lunsSelected, setLunsSelected
+  } = useGlobal()
 
   const transFibreData = useMemo(() => {
     if (isFibresLoading || !fibres) return [];
@@ -40,10 +54,10 @@ const DomainImportFibre = ({
         <Tables
           columns={TableColumnsInfo.IMPORT_FIBRE}
           data={transFibreData}
+          onRowClick={(selectedRows) => setLunsSelected(selectedRows)}
           isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
         />
-        <br/>
-        <div><span style={{ fontSize: '22px' }}>id: {id} <br/> </span> </div>
+        <SelectedIdView items={lunsSelected} />
       </div>
     </div>
   )

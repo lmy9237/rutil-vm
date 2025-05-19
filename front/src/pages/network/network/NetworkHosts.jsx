@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import SearchBox from "../../../components/button/SearchBox";
 import TablesOuter from "../../../components/table/TablesOuter";
@@ -32,7 +33,11 @@ const NetworkHosts = ({
   networkId
 }) => {
   const navigate = useNavigate();
-  const { hostsSelected, setHostsSelected, } = useGlobal()
+  const {
+    datacentersSelected,
+    networksSelected,
+    hostsSelected, setHostsSelected,
+  } = useGlobal()
   const [activeFilter, setActiveFilter] = useState("connected");
 
   const {
@@ -144,8 +149,11 @@ const NetworkHosts = ({
         isError={activeFilter === "connected" ? isConnectedHostsError : isDisconnectedHostsError }
         isSuccess={activeFilter === "connected" ? isConnectedHostsSuccess : isDisconnectedHostsSuccess }
       />
-
       <SelectedIdView items={hostsSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.NETWORK}>${Localization.kr.NETWORK}>${networksSelected[0]?.name}`}
+        path={`networks-hosts;name=${networksSelected[0]?.name};dataCenter=${datacentersSelected[0]?.name}`}
+      />
     </>
   );
 };

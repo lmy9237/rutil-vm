@@ -1,6 +1,9 @@
 import React from "react";
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import VmDiskDupl from "../../../components/dupl/VmDiskDupl";
 import { useDisksFromVM } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name VmDisks
@@ -13,6 +16,10 @@ const VmDisks = ({
   vmId
 }) => {
   const {
+    vmsSelected
+  } = useGlobal()
+  
+  const {
     data: disks = [],
     isLoading: isDisksLoading,
     isError: isDisksError,
@@ -21,11 +28,17 @@ const VmDisks = ({
   } = useDisksFromVM(vmId, (e) => ({ ...e }));
   
   return (
-    <VmDiskDupl 
-      vmDisks={disks} 
-      refetch={refetchDisks}
-      isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
-    />
+    <>
+      <VmDiskDupl 
+        vmDisks={disks}
+        refetch={refetchDisks}
+        isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
+      />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
+        path={`vms-disks;name=${vmsSelected[0]?.name}`} 
+      />
+    </>
   );
 };
 

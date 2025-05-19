@@ -3,16 +3,17 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가;
+import SelectedIdView from "../common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
 import DomainActionButtons from "./DomainActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import SearchBox from "../button/SearchBox"; // ✅ 검색 UI 추가
+import DomainDataCenterActionButtons from "./DomainDataCenterActionButtons";
 import { checkZeroSizeToGiB, convertBytesToGB } from "../../util";
-import Localization from "../../utils/Localization";
 import TableRowClick from "../table/TableRowClick";
 import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
-import SelectedIdView from "../common/SelectedIdView";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
-import DomainDataCenterActionButtons from "./DomainDataCenterActionButtons";
+import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
 
 /**
@@ -96,6 +97,7 @@ const DomainDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={domainsSelected} />
+      <OVirtWebAdminHyperlink name={`${Localization.kr.COMPUTING}>${Localization.kr.DOMAIN}`} path="storage" />
     </>
   );
 };

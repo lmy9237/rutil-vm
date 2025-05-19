@@ -1,7 +1,9 @@
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import HostDupl from "../../../components/dupl/HostDupl";
 import { useHostsFromCluster } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name ClusterHosts
@@ -11,7 +13,10 @@ import Logger from "../../../utils/Logger";
  * @param {string} clusterId 클러스터ID
  * @returns
  */
-const ClusterHosts = ({ clusterId }) => {
+const ClusterHosts = ({
+  clusterId
+}) => {
+  const { clustersSelected } = useGlobal()
   const {
     data: hosts = [],
     isLoading: isHostsLoading,
@@ -27,6 +32,10 @@ const ClusterHosts = ({ clusterId }) => {
         clusterId={clusterId}
         refetch={refetchHosts}
         isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
+      />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.CLUSTER}>${clustersSelected[0]?.name}`}
+        path={`clusters-hosts;name=${clustersSelected[0]?.name}`}
       />
     </>
   );

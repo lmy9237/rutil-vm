@@ -5,8 +5,8 @@ summary::before { content: ' ►'}
 details[open] summary::before { content: " ▼"; }
 summary { height: 36px; }
 
-ul { margin: 0 30px !important; }
-li { color: var(--color-border-default); }
+details ul { margin: 0 30px !important; }
+details ul li { color: var(--color-border-default); }
 details {
   border: var(--border-default);border-radius: 2px;
   padding: 8px;

@@ -1,15 +1,17 @@
 import React, { useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import SearchBox from "../../../components/button/SearchBox";
 import { useAllVMsFromDomain } from "../../../api/RQHook";
 import { checkZeroSizeToGiB } from "../../../util";
-import { useNavigate } from "react-router-dom";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -24,7 +26,10 @@ import Logger from "../../../utils/Logger";
  */
 const DomainVms = ({ domainId }) => {
   const navigate = useNavigate();
-  const { vmsSelected, setVmsSelected, domainsSelected } = useGlobal()
+  const {
+    vmsSelected, setVmsSelected,
+    domainsSelected,
+  } = useGlobal()
 
   const {
     data: vms = [],
@@ -82,6 +87,10 @@ const DomainVms = ({ domainId }) => {
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
+        path={`storage-virtual_machines;name=${domainsSelected[0]?.name}`}
+      />
     </>
   );
 };

@@ -1,7 +1,10 @@
 import React from "react";
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import NetworkDupl from "../../../components/dupl/NetworkDupl";
 import { useNetworksFromDataCenter } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -12,7 +15,10 @@ import Logger from "../../../utils/Logger";
  * @param {string} datacenterId 데이터센터 ID
  * @returns
  */
-const DataCenterNetworks = ({ datacenterId }) => {
+const DataCenterNetworks = ({
+  datacenterId
+}) => {
+  const { datacentersSelected } = useGlobal()
   const {
     data: networks = [],
     isLoading: isNetworksLoading,
@@ -21,13 +27,18 @@ const DataCenterNetworks = ({ datacenterId }) => {
     refetch: refetchNetworks,
   } = useNetworksFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  Logger.debug("DataCenterNetworks ...");
   return (
-    <NetworkDupl columns={TableColumnsInfo.NETWORK_FROM_DATACENTER}
-      networks={networks}
-      refetch={refetchNetworks}
-      isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
-    />
+    <>
+      <NetworkDupl columns={TableColumnsInfo.NETWORK_FROM_DATACENTER}
+        networks={networks}
+        refetch={refetchNetworks}
+        isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
+      />
+      <OVirtWebAdminHyperlink 
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.DATA_CENTER}>${datacentersSelected[0]?.name}`} 
+        path={`dataCenters-logical_networks;name=${datacentersSelected[0]?.name}`} 
+      />
+    </>
   );
 };
 

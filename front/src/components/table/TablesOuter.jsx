@@ -20,7 +20,9 @@ const TablesOuter = ({
   clickableColumnIndex,
   onClickableColumnClick,
 }) => {
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(data, columns); // ✅ 검색 기능 추가
+  const {
+    searchQuery, setSearchQuery, filteredData
+  } = useSearch(data, columns); // ✅ 검색 기능 추가
 
   // Logger.debug(`넘어오는 데이터: ${filteredData.length}개`);
   return (

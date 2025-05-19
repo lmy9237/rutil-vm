@@ -1,7 +1,10 @@
 import React from "react";
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
+import InfoTable from "../../../components/table/InfoTable";
 import { useAllDisksFromDomain, useAllDiskSnapshotsFromDomain, useStroageDomain } from "../../../api/RQHook";
 import { calculateOvercommitRatio, checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
-import InfoTable from "../../../components/table/InfoTable";
+import Localization from "../../../utils/Localization";
 
 const overCommit = (commit, disk) => ((commit / disk) * 100).toFixed(0);
 
@@ -12,7 +15,12 @@ const overCommit = (commit, disk) => ((commit / disk) * 100).toFixed(0);
  * @prop {string} domainId 도메인ID
  * @returns {JSX.Element} DomainGeneral
  */
-const DomainGeneral = ({ domainId }) => {
+const DomainGeneral = ({
+  domainId
+}) => {
+  const {
+    domainsSelected
+  } = useGlobal()
   const { data: domain } = useStroageDomain(domainId);
   const { data: diskSnapshots = [] } = useAllDiskSnapshotsFromDomain(domainId, (e) => ({ ...e }));
   const { data: disks = [] } = useAllDisksFromDomain(domainId, (e) => ({ ...e }));
@@ -41,7 +49,15 @@ const DomainGeneral = ({ domainId }) => {
     { label: "심각히 부족한 디스크 공간의 동작 차단", value: `${domain?.spaceBlocker} GB`},
   ];
 
-  return <InfoTable tableRows={tableRows} />;
+  return (
+    <>
+      <InfoTable tableRows={tableRows} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
+        path={`storage-general;name=${domainsSelected[0]?.name}`}
+      />
+    </>
+  );
 };
 
 export default DomainGeneral;

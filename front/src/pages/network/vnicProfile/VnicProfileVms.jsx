@@ -2,12 +2,14 @@ import { useCallback } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import SearchBox from "../../../components/button/SearchBox";
 import { useAllVmsFromVnicProfiles } from "../../../api/RQHook";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -20,7 +22,12 @@ import Logger from "../../../utils/Logger";
 const VnicProfileVms = ({
   vnicProfileId
 }) => {
-  const { vmsSelected, setVmsSelected } = useGlobal()
+  const {
+    vnicProfilesSelected,
+    datacentersSelected,
+    networksSelected,
+    vmsSelected, setVmsSelected,
+  } = useGlobal()
   const {
     isLoading: isVmsLoading,
     isError: isVmsError,
@@ -64,6 +71,10 @@ const VnicProfileVms = ({
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.NETWORK}>${Localization.kr.VNIC_PROFILE}>${vnicProfilesSelected[0]?.name}`}
+        path={`vnicProfiles-virtual_machines;name=${vnicProfilesSelected[0]?.name};dataCenter=${datacentersSelected[0]?.name};network=${networksSelected[0]?.name}`}
+      />
     </>
   );
 };

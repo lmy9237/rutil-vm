@@ -322,7 +322,7 @@ const DomainModal = ({
         />
       )}
 
-      {/* Firbre 의 경우 */}
+      {/* Fibre 의 경우 */}
       {isFibre && hostVo?.id && (
         <DomainFibre
           editMode={editMode}

@@ -1,0 +1,8 @@
+/* OVirtWebAdminHyperlink.css */
+.ovirt-webadmin-hrefs-group,
+.ovirt-webadmin-hrefs-title {
+  align-items:flex-end !important;
+}
+ul.ovirt-webadmin-hrefs > li {
+  cursor: pointer;
+}

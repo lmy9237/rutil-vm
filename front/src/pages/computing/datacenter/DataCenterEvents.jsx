@@ -1,6 +1,9 @@
 import React from "react";
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import EventDupl from "../../../components/dupl/EventDupl";
 import { useEventsFromDataCenter } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -11,7 +14,10 @@ import Logger from "../../../utils/Logger";
  * @param {string} datacenterId 데이터센터 ID
  * @returns
  */
-const DataCenterEvents = ({ datacenterId }) => {
+const DataCenterEvents = ({
+  datacenterId
+}) => {
+  const { datacentersSelected } = useGlobal()
   const {
     data: events = [],
     isLoading: isEventsLoading,
@@ -20,12 +26,17 @@ const DataCenterEvents = ({ datacenterId }) => {
     refetch: refetchEvents
   } = useEventsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  Logger.debug("DataCenterEvents ...")
   return (
-    <EventDupl events={events}
-      refetch={refetchEvents}
-      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-    />
+    <>
+      <EventDupl events={events}
+        refetch={refetchEvents}
+        isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+      />
+      <OVirtWebAdminHyperlink 
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.DATA_CENTER}>${datacentersSelected[0]?.name}`} 
+        path={`dataCenters-events;name=${datacentersSelected[0]?.name}`} 
+      />
+    </>
   );
 };
 

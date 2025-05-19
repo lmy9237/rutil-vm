@@ -2,7 +2,9 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useUIState from "../../hooks/useUIState";
+import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
+import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import DiskActionButtons from "./DiskActionButtons";
@@ -11,8 +13,8 @@ import { status2Icon } from "../icons/RutilVmIcons";
 import SelectedIdView from "../common/SelectedIdView";
 import { checkZeroSizeToGiB } from "../../util";
 import { useCdromsDisks } from "../../api/RQHook";
+import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
-import useGlobal from "../../hooks/useGlobal";
 
 const DiskDupl = ({
   disks = [], columns = [],
@@ -115,6 +117,7 @@ const DiskDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={disksSelected} />
+      <OVirtWebAdminHyperlink name={`${Localization.kr.COMPUTING}>${Localization.kr.DISK}`} path="disks" />
     </>
   );
 };

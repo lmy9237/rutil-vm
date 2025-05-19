@@ -1,5 +1,8 @@
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import EventDupl from "../../../components/dupl/EventDupl";
-import { useAllEventsFromVM } from '../../../api/RQHook';
+import { useAllEventsFromVM } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -10,7 +13,13 @@ import Logger from "../../../utils/Logger";
  * @param {string} clusterId 가상머신ID
  * @returns
  */
-const VmEvents = ({ vmId }) => {
+const VmEvents = ({
+  vmId
+}) => {
+  const { 
+    vmsSelected,
+  } = useGlobal();
+  
   const {
     data: events = [],
     isLoading: isEventsLoading,
@@ -20,10 +29,16 @@ const VmEvents = ({ vmId }) => {
   } = useAllEventsFromVM(vmId, (e) => ({ ...e }));
 
   return (
-    <EventDupl events={events}
-      refetch={refetchEvents}
-      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-    />
+    <>
+      <EventDupl events={events}
+        refetch={refetchEvents}
+        isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+      />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
+        path={`vms-events;name=${vmsSelected[0]?.name}`} 
+      />
+    </>
   );
 };
 

@@ -2,11 +2,13 @@ import { useCallback } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import SearchBox from "../../../components/button/SearchBox";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import { useApplicationsFromVM } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -16,8 +18,13 @@ import Logger from "../../../utils/Logger";
  * @prop {string} vmId 가상머신 ID
  * @returns {JSX.Element} VmApplications
  */
-const VmApplications = ({ vmId }) => {
-  const { applicationsSelected, setApplicationsSelected } = useGlobal()
+const VmApplications = ({
+  vmId
+}) => {
+  const {
+    vmsSelected, setVmsSelected, 
+    applicationsSelected, setApplicationsSelected
+  } = useGlobal()
   const {
     data: applications = [],
     isLoading: isApplicationsLoading,
@@ -55,6 +62,10 @@ const VmApplications = ({ vmId }) => {
         isLoading={isApplicationsLoading} isError={isApplicationsError} isSuccess={isApplicationsSuccess}
       />
       <SelectedIdView items={applicationsSelected}/>
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
+        path={`vms-applications;name=${vmsSelected[0]?.name}`} 
+      />
     </>
   );
 };

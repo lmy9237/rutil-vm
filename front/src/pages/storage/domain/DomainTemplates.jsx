@@ -3,12 +3,14 @@ import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
 import SelectedIdView from "../../../components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import SearchBox from "../../../components/button/SearchBox";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import { useAllTemplatesFromDomain } from "../../../api/RQHook";
 import { checkZeroSizeToGiB } from "../../../util";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -19,11 +21,15 @@ import Logger from "../../../utils/Logger";
  * @returns {JSX.Element} DomainTemplates
  *
  * @see DomainGetVms
+ * @see DomainImportTemplates
  */
 const DomainTemplates = ({
   domainId
 }) => {
-  const { domainsSelected, templatesSelected, setTemplatesSelected } = useGlobal()
+  const {
+    domainsSelected,
+    templatesSelected, setTemplatesSelected 
+  } = useGlobal()
   const {
     data: templates = [],
     isLoading: isTemplatesLoading,
@@ -71,6 +77,10 @@ const DomainTemplates = ({
         isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
       <SelectedIdView items={templatesSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
+        path={`storage-templates;name=${domainsSelected[0]?.name}`}
+      />
     </>
   );
 };

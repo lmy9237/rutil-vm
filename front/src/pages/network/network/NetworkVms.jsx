@@ -1,20 +1,21 @@
 import { useCallback, useState } from "react";
+import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
+import useSearch from "../../../hooks/useSearch";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
+import SearchBox from "../../../components/button/SearchBox";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
-import { useAllVmsFromNetwork } from "../../../api/RQHook";
-import { checkZeroSizeToMbps } from "../../../util";
 import FilterButtons from "../../../components/button/FilterButtons";
 import ActionButton from "../../../components/button/ActionButton";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import SelectedIdView from "../../../components/common/SelectedIdView";
-import useGlobal from "../../../hooks/useGlobal";
+import { checkZeroSizeToMbps } from "../../../util";
+import { useAllVmsFromNetwork } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import useUIState from "../../../hooks/useUIState";
 import Logger from "../../../utils/Logger";
-import useSearch from "../../../hooks/useSearch";
-import SearchBox from "../../../components/button/SearchBox";
-import toast from "react-hot-toast";
 
 /**
  * @name NetworkVms
@@ -26,7 +27,11 @@ import toast from "react-hot-toast";
 const NetworkVms = ({
   networkId
 }) => {
-  const { vmsSelected, setVmsSelected } = useGlobal()
+  const {
+    datacentersSelected,
+    networksSelected,
+    vmsSelected, setVmsSelected
+  } = useGlobal()
   const { activeModal, setActiveModal } = useUIState()
   const {
     data: vms = [],
@@ -102,16 +107,10 @@ const NetworkVms = ({
         isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
-      {/* nic 를 삭제하는 코드를 넣어야함 */}
-      {/* <Suspense>
-        {isDeleteModalOpen && (
-          <VmDeleteModal
-            isOpen={isDeleteModalOpen}
-            onRequestClose={() => toggleDeleteModal(false)}
-            data={modalData}
-          />
-        )}
-      </Suspense> */}
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.NETWORK}>${Localization.kr.NETWORK}>${networksSelected[0]?.name}`}
+        path={`networks-virtual_machines;name=${networksSelected[0]?.name};dataCenter=${datacentersSelected[0]?.name}`}
+      />
     </>
   );
 };

@@ -2,15 +2,16 @@ import React, { useCallback } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import SearchBox from "../../../components/button/SearchBox";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import Localization from "../../../utils/Localization";
 import DomainDataCenterActionButtons from "../../../components/dupl/DomainDataCenterActionButtons";
 import { useAllDataCentersFromDomain } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -20,8 +21,13 @@ import Logger from "../../../utils/Logger";
  * @prop {string} domainId 도메인ID
  * @returns {JSX.Element} DomainDatacenters
  */
-const DomainDatacenters = ({ domainId }) => {
-  const { datacentersSelected, setDatacentersSelected, } = useGlobal()
+const DomainDatacenters = ({
+  domainId
+}) => {
+  const {
+    domainsSelected,
+    datacentersSelected, setDatacentersSelected
+  } = useGlobal()
 
   const {
     data: datacenters = [],
@@ -71,7 +77,11 @@ const DomainDatacenters = ({ domainId }) => {
         shouldHighlight1stCol={true}
         isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
       />
-      <SelectedIdView items={datacentersSelected} /><br/>
+      <SelectedIdView items={datacentersSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
+        path={`storage-data_center;name=${domainsSelected[0]?.name}`}
+      />
     </>
   );
 };

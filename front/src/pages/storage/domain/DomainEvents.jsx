@@ -1,5 +1,8 @@
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import EventDupl from "../../../components/dupl/EventDupl";
 import { useAllEventsFromDomain } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name DomainEvents
@@ -9,7 +12,13 @@ import { useAllEventsFromDomain } from "../../../api/RQHook";
  * @prop {string} domainId 도메인ID
  * @returns {JSX.Element} DomainEvents
  */
-const DomainEvents = ({ domainId }) => {
+const DomainEvents = ({
+  domainId
+}) => {
+  const {
+    domainsSelected,
+  } = useGlobal();
+
   const {
     data: events = [],
     isLoading: isEventsLoading,
@@ -21,10 +30,16 @@ const DomainEvents = ({ domainId }) => {
   }));
 
   return (
-    <EventDupl events={events}
-      refetch={refetchEvents}
-      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-    />
+    <>
+      <EventDupl events={events}
+        refetch={refetchEvents}
+        isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+      />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
+        path={`storage-events;name=${domainsSelected[0]?.name}`}
+      />
+    </>
   );
 };
 

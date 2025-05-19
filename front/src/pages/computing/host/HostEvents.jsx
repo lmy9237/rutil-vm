@@ -1,5 +1,8 @@
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import EventDupl from "../../../components/dupl/EventDupl";
 import { useEventsFromHost } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -10,7 +13,10 @@ import Logger from "../../../utils/Logger";
  * @param {string} hostId 호스트 ID
  * @returns
  */
-const HostEvents = ({ hostId }) => {
+const HostEvents = ({
+  hostId
+}) => {
+  const { hostsSelected } = useGlobal()
   const {
     data: events = [],
     isLoading: isEventsLoading,
@@ -19,12 +25,17 @@ const HostEvents = ({ hostId }) => {
     refetch: refetchEvents,
   } = useEventsFromHost(hostId, (e) => ({ ...e }));
 
-  Logger.debug("HostEvents ...");
   return (
-    <EventDupl events={events}
-      refetch={refetchEvents}
-      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-    />
+    <>
+      <EventDupl events={events}
+        refetch={refetchEvents}
+        isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+      />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}>${hostsSelected[0]?.name}`}
+        path={`hosts-events;name=${hostsSelected[0]?.name}`} 
+      />
+    </>
   );
 };
 

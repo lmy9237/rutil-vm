@@ -4,10 +4,12 @@ import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
 import SearchBox from "../../components/button/SearchBox"; // ✅ 검색창 추가
 import SelectedIdView from "../../components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../../components/common/OVirtWebAdminHyperlink";
 import TablesOuter from "../../components/table/TablesOuter";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
 import SettingUserSessionsActionButtons from "./SettingUserSessionsActionButtons";
 import { useAllUserSessions } from "../../api/RQHook";
+import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
 
 /**
@@ -17,7 +19,9 @@ import Logger from "../../utils/Logger";
  * @returns {JSX.Element} SettingSessions
  */
 const SettingSessions = () => {
-  const { usersessionsSelected, setUsersessionsSelected } = useGlobal()
+  const {
+    usersessionsSelected, setUsersessionsSelected
+  } = useGlobal()
 
   const {
     data: userSessions = [],
@@ -55,6 +59,10 @@ const SettingSessions = () => {
         isLoading={isUserSessionsLoading} isError={isUserSessionsError} isSuccess={isUserSessionsSuccess}
       />
       <SelectedIdView items={usersessionsSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.MANAGEMENT}>${Localization.kr.USER_SESSION}`}
+        path={`sessions`}
+      />
     </>
   );
 };

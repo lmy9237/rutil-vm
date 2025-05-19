@@ -1,6 +1,8 @@
 import React from "react";
-import { useNetwork } from "../../../api/RQHook";
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import InfoTable from "../../../components/table/InfoTable";
+import { useNetwork } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 
 /**
@@ -10,7 +12,13 @@ import Localization from "../../../utils/Localization";
  * @prop {string} networkId 네트워크 ID
  * @returns {JSX.Element} NetworkGeneral
  */
-const NetworkGeneral = ({ networkId }) => {
+const NetworkGeneral = ({
+  networkId
+}) => {
+  const {
+    datacentersSelected,
+    networksSelected,
+  } = useGlobal()
   const { data: network } = useNetwork(networkId);
 
   const tableRows = [
@@ -23,7 +31,15 @@ const NetworkGeneral = ({ networkId }) => {
     { label: "MTU", value: network?.mtu === 0 ? "기본값 (1500)" : network?.mtu },
   ];
 
-  return <InfoTable tableRows={tableRows} />;
+  return (
+    <>
+      <InfoTable tableRows={tableRows} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.NETWORK}>${Localization.kr.NETWORK}>${networksSelected[0]?.name}`}
+        path={`networks-general;name=${networksSelected[0]?.name};dataCenter=${datacentersSelected[0]?.name}`}
+      />
+    </>
+  );
 };
 
 export default NetworkGeneral;

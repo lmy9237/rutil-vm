@@ -1,12 +1,14 @@
 import React, { useCallback } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import useSearch from "../../../hooks/useSearch";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import SearchBox from "../../../components/button/SearchBox";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { useHostDevicesFromHost } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -20,7 +22,10 @@ import Logger from "../../../utils/Logger";
 const HostDevices = ({
   hostId
 }) => {
-  const { hostDevicesSelected, setHostDevicesSelected} = useGlobal()
+  const { 
+    hostsSelected,
+    hostDevicesSelected, setHostDevicesSelected
+  } = useGlobal()
   const {
     data: hostDevices = [],
     isLoading: isHostDevicesLoading,
@@ -55,6 +60,10 @@ const HostDevices = ({
         isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
       />
       <SelectedIdView items={hostDevicesSelected}/>
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}>${hostsSelected[0]?.name}`}
+        path={`hosts-devices;name=${hostsSelected[0]?.name}`} 
+      />
     </>
   );
 };

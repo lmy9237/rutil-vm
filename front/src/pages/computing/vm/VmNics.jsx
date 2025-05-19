@@ -1,18 +1,19 @@
 import React, { useState, Suspense, useRef } from "react";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
-import { useNetworkInterfacesFromVM } from "../../../api/RQHook";
-import VmNicModal from "../../../components/modal/vm/VmNicModal";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
+import useClickOutside from "../../../hooks/useClickOutside";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
+import VmNicModal from "../../../components/modal/vm/VmNicModal";
+import NicActionButtons from "../../../components/dupl/NicActionButtons";
+import { useNetworkInterfacesFromVM } from "../../../api/RQHook";
 import { checkZeroSizeToMbps } from "../../../util";
 import { RVI24, rvi24ChevronDown, rvi24ChevronRight } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import NicActionButtons from "../../../components/dupl/NicActionButtons";
-import useClickOutside from "../../../hooks/useClickOutside";
 import "./Vm.css"
 /**
  * @name VmNics
@@ -26,7 +27,10 @@ const VmNics = ({
   vmId
 }) => {
   const { activeModal, setActiveModal, } = useUIState()
-  const { nicsSelected, setNicsSelected } = useGlobal()
+  const {
+    vmsSelected,
+    nicsSelected, setNicsSelected
+  } = useGlobal()
 
   const {
     data: nics = [],
@@ -151,7 +155,10 @@ const VmNics = ({
         </div>
       </div>
       <SelectedIdView items={nicsSelected} />
-      
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
+        path={`vms-network_interfaces;name=${vmsSelected[0]?.name}`} 
+      />
       <Suspense>
         {activeModal().includes("nic:create") && (
           <VmNicModal key={"nic:create"} isOpen={activeModal().includes("nic:create")} />

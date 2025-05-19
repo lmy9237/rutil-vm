@@ -1,8 +1,10 @@
 import React from "react";
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VnicProfileDupl from "../../../components/dupl/VnicProfileDupl";
 import { useAllVnicProfilesFromNetwork } from "../../../api/RQHook";
-import useGlobal from "../../../hooks/useGlobal";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name NetworkVnicProfiles
@@ -14,7 +16,11 @@ import useGlobal from "../../../hooks/useGlobal";
 const NetworkVnicProfiles = ({ 
   networkId
 }) => {
-  const { networksSelected } = useGlobal() 
+  const { 
+    datacentersSelected,
+    networksSelected
+  } = useGlobal();
+  
   const {
     data: vnicProfiles = [],
     isLoading: isVnicProfilesLoading,
@@ -28,6 +34,10 @@ const NetworkVnicProfiles = ({
         vnicProfiles={vnicProfiles}
         networkId={networkId}
         isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
+      />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.NETWORK}>${Localization.kr.NETWORK}>${networksSelected[0]?.name}`}
+        path={`networks-profiles;name=${networksSelected[0]?.name};dataCenter=${datacentersSelected[0]?.name}`}
       />
     </>
   );

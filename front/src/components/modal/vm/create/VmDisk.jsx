@@ -1,11 +1,14 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from "react";
-import Loading from "../../../common/Loading";
 import useUIState from "../../../../hooks/useUIState";
+import useGlobal from "../../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../../components/common/OVirtWebAdminHyperlink";
+import Loading from "../../../common/Loading";
 import ActionButton from "../../../button/ActionButton";
 import { RVI36, rvi36Trash } from "../../../icons/RutilVmIcons";
-import Localization from "../../../../utils/Localization";
 import { useDisksFromVM } from "../../../../api/RQHook";
+import Localization from "../../../../utils/Localization";
 import Logger from "../../../../utils/Logger";
+
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
 
@@ -18,6 +21,9 @@ const VmDisk = ({
   setDiskListState,
 }) => {
   const { setActiveModal } = useUIState()
+  const {
+    vmsSelected,
+  } = useGlobal()
   // 가상머신 디스크 목록 가져오기
   const {
     data: diskAttachments = []
@@ -127,6 +133,10 @@ const VmDisk = ({
           </div>     
         ))}
       </div>
+      {/* <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
+        path={`vms-network_interfaces;name=${vmsSelected[0]?.name}`} 
+      /> */}
       <hr/>
       <Suspense fallback={<Loading/>}>
         {(isCreatePopupOpen || editDisk) && (

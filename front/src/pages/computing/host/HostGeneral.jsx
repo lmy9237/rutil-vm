@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useDashboardHost, useHost } from "../../../api/RQHook";
 import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import { convertBytesToMB } from "../../../util";
 import InfoTable from "../../../components/table/InfoTable";
 import SuperAreaChart from "../../../components/Chart/SuperAreaChart";
+import { useDashboardHost, useHost } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import "./Host.css";
 
@@ -107,9 +108,12 @@ const HostGeneral = ({
           </button>
         ))}
       </div>
-      <div className="f-btw  h-full host-wrapper">
-        <InfoTable tableRows={tabs.find(({ tab }) => tab === activeTab)?.tableRows || []} />
-      
+      <div className="host-wrapper f-btw h-full">
+        <InfoTable tableRows={
+          tabs.find(({ tab }) => 
+            tab === activeTab
+          )?.tableRows || []
+        }/>
         <div className="graph-area">
           <div className="host-graph">
             cpu <SuperAreaChart key={`${hostId}-cpu`} per={hostPer} type="cpu" />
@@ -119,6 +123,10 @@ const HostGeneral = ({
           </div>
         </div>
       </div>
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}>${hostsSelected[0]?.name}`}
+        path={`hosts-general;name=${hostsSelected[0]?.name}`} 
+      />
     </div>
   );
 };

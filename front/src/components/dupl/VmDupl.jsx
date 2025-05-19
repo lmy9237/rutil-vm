@@ -5,11 +5,13 @@ import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
 import useGlobal from "../../hooks/useGlobal";
 import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import SelectedIdView from "../common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import VmActionButtons from "./VmActionButtons";
 import { hostedEngineStatus2Icon, RVI16, rvi16Refresh, status2Icon } from "../icons/RutilVmIcons";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
+import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
 
 /**
@@ -105,6 +107,10 @@ const VmDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={vmsSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}`}
+        path="vms"
+      />
     </>
   );
 };

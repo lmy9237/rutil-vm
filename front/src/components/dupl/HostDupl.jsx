@@ -3,13 +3,15 @@ import { useNavigate } from "react-router-dom";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
 import toast from "react-hot-toast";
+import SelectedIdView from "../common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
+import SearchBox from "../button/SearchBox";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import HostActionButtons from "./HostActionButtons";
-import SearchBox from "../button/SearchBox";
 import { status2Icon, hostedEngineStatus2Icon } from "../icons/RutilVmIcons";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
-import SelectedIdView from "../common/SelectedIdView";
+import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
 
 const HostDupl = ({
@@ -75,6 +77,10 @@ const HostDupl = ({
         ]}*/
       />
       <SelectedIdView items={hostsSelected}/>
+      <OVirtWebAdminHyperlink 
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}`} 
+        path="hosts"
+      />
     </>
   );
 };

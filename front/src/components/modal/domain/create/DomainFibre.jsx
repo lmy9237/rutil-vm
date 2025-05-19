@@ -1,18 +1,42 @@
-import React, { useMemo } from 'react';
-import TableColumnsInfo from '../../../table/TableColumnsInfo';
-import Tables from '../../../table/Tables';
-import Logger from '../../../../utils/Logger';
-import { checkZeroSizeToGiB } from '../../../../util';
-import LabelCheckbox from '../../../label/LabelCheckbox';
+import React, { useMemo } from "react";
+import useGlobal from "../../../../hooks/useGlobal";
+import SelectedIdView from "../../../common/SelectedIdView";
+import LabelCheckbox from "../../../label/LabelCheckbox";
+import TableColumnsInfo from "../../../table/TableColumnsInfo";
+import Tables from "../../../table/Tables";
+import { checkZeroSizeToGiB } from "../../../../util";
+import Logger from "../../../../utils/Logger";
 
+/**
+ * @name DomainFibre
+ * @description 생성을 위한 Fibre Channel 스토리지 도메인 내 LUN 목록 출력
+ * 
+ * @param {boolean} editMode 편집여부
+ * @returns {JSX.Element} DomainFibre
+ * 
+ * @see DomainModal
+ */
 const DomainFibre = ({ 
-  editMode, 
+  editMode,
   domain,
   fibres,
   lunId, setLunId,
   isFibresLoading, isFibresError, isFibresSuccess
-}) => {  
-  Logger.debug("DomainFibre ...")
+}) => {
+  const {
+    hostsSelected, 
+    lunsSelected, setLunsSelected
+  } = useGlobal()
+  
+  /*
+  const {
+    data: fibres = [],
+    refetch: refetchFibres,
+    isLoading: isFibresLoading,
+    isError: isFibresError, 
+    isSuccess: isFibresSuccess
+  } = useFibreFromHost(hostId || undefined, (e) => ({ ...e }));
+  */
 
   // 편집일 때
   const transDomainData = useMemo(() => {
@@ -36,7 +60,7 @@ const DomainFibre = ({
   const transFibreData = useMemo(() => {
     if (isFibresLoading || !fibres) return [];
 
-    return fibres.map((f) => {
+    return [...fibres].map((f) => {
       const fc = f?.logicalUnitVos[0];
       if (!fc) return null;
 
@@ -70,13 +94,19 @@ const DomainFibre = ({
     <div className="storage-popup-iSCSI">
       <div className="section-table-outer">
         <br/>
-        <Tables
-          columns={editMode ? TableColumnsInfo.UPDATE_FIBRE : TableColumnsInfo.FIBRE}
-          data={editMode ? transDomainData : transFibreData}
+        <Tables target={"lun"}
+          columns={editMode 
+            ? TableColumnsInfo.UPDATE_FIBRE
+            : TableColumnsInfo.FIBRE
+          }
+          data={editMode 
+            ? transDomainData
+            : transFibreData
+          }
+          onRowClick={(selectedRows) => setLunsSelected(selectedRows)}
           isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
         />
-        <br/>
-        <div><span style={{ fontSize: '22px' }}>id: {lunId}</span> </div>
+        <SelectedIdView items={lunsSelected} />
       </div>
     </div>
   )

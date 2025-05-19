@@ -1,6 +1,8 @@
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import EventDupl from "../../../components/dupl/EventDupl";
-import Logger from "../../../utils/Logger";
 import { useEventFromCluster } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 
 /**
  * @name ClusterEvents
@@ -10,23 +12,32 @@ import { useEventFromCluster } from "../../../api/RQHook";
  * @param {string} clusterId 클러스터ID
  * @returns
  */
-const ClusterEvents = ({ clusterId }) => {
+const ClusterEvents = ({
+  clusterId
+}) => {
+  const {
+    clustersSelected
+  } = useGlobal()
+  
   const {
     data: events = [],
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
     refetch: refetchEvents
-  } = useEventFromCluster(clusterId, (e) => ({ 
-    ...e
-  }));
+  } = useEventFromCluster(clusterId, (e) => ({ ...e }));
 
-  Logger.debug("ClusterEvents ...");
   return (
-    <EventDupl events={events}
-      refetch={refetchEvents}
-      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-    />
+    <>
+      <EventDupl events={events}
+        refetch={refetchEvents}
+        isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+      />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.CLUSTER}>${clustersSelected[0]?.name}`}
+        path={`clusters-events;name=${clustersSelected[0]?.name}`} 
+      />
+    </>
   );
 };
 

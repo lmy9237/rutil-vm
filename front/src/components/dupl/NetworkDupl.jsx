@@ -4,12 +4,13 @@ import toast from "react-hot-toast";
 import useUIState from "../../hooks/useUIState";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
+import SelectedIdView from "../common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
 import NetworkActionButtons from "./NetworkActionButtons";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import SearchBox from "../button/SearchBox";
 import Localization from "../../utils/Localization";
-import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
 import "./Dupl.css";
 
@@ -87,6 +88,7 @@ const NetworkDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={networksSelected} />
+      <OVirtWebAdminHyperlink name={`${Localization.kr.NETWORK}>${Localization.kr.NETWORK}`} path="networks" />
     </>
   );
 };

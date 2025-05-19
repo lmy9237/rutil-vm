@@ -2,13 +2,15 @@ import { useCallback } from "react"
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import SearchBox from "../../../components/button/SearchBox";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
 import TablesOuter from "../../../components/table/TablesOuter";
 import { useAllTemplatesFromVnicProfiles } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
-import SelectedIdView from "../../../components/common/SelectedIdView";
 
 /**
  * @name VnicProfileTemplates
@@ -20,7 +22,12 @@ import SelectedIdView from "../../../components/common/SelectedIdView";
 const VnicProfileTemplates = ({ 
   vnicProfileId
 }) => {
-  const { templatesSelected, setTemplatesSelected } = useGlobal()
+  const {
+    vnicProfilesSelected,
+    datacentersSelected,
+    networksSelected,
+    templatesSelected, setTemplatesSelected
+  } = useGlobal()
   const { 
     data: templates = [],
     isSuccess: isTemplatesSuccess,
@@ -65,6 +72,10 @@ const VnicProfileTemplates = ({
         isLoading={isTemplateLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
       <SelectedIdView items={templatesSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.NETWORK}>${Localization.kr.VNIC_PROFILE}>${vnicProfilesSelected[0]?.name}`}
+        path={`vnicProfiles-templates;name=${vnicProfilesSelected[0]?.name};dataCenter=${datacentersSelected[0]?.name};network=${networksSelected[0]?.name}`}
+      />
     </>
   );
 };

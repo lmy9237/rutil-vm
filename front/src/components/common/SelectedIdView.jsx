@@ -4,7 +4,8 @@ import Logger from "../../utils/Logger";
 
 /**
  * @name SelectedIdView
- * 
+ * @description 선택된 항목의 ID 표출 (개발용)
+ *  
  * @param {Array} items 목록
  * @returns {JSX.Element} ID표출 뷰
  */

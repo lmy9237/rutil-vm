@@ -3,16 +3,17 @@ import toast from "react-hot-toast";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
+import SelectedIdView from "../../../components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import SearchBox from "../../../components/button/SearchBox";
+import DiskSnapshotActionButtons from "../../../components/dupl/DiskSnapshotActionButtons";
 import { checkZeroSizeToGiB } from "../../../util";
 import { useAllDiskSnapshotsFromDomain } from "../../../api/RQHook";
 import ActionButton from "../../../components/button/ActionButton";
-import SelectedIdView from "../../../components/common/SelectedIdView";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
-import DiskSnapshotActionButtons from "../../../components/dupl/DiskSnapshotActionButtons";
 
 /**
  * @name DomainDiskSnapshots
@@ -24,8 +25,11 @@ import DiskSnapshotActionButtons from "../../../components/dupl/DiskSnapshotActi
 const DomainDiskSnapshots = ({ 
   domainId
 }) => {
-  const { activeModal, setActiveModal } = useUIState()
-  const { domainsSelected, snapshotsSelected, setSnapshotsSelected } = useGlobal()
+  const { activeModal, setActiveModal } = useUIState();
+  const {
+    domainsSelected,
+    snapshotsSelected, setSnapshotsSelected
+  } = useGlobal();
 
   const { 
     data: diskSnapshots = [], 
@@ -68,6 +72,10 @@ const DomainDiskSnapshots = ({
         isLoading={isDiskSnapshotsLoading} isError={isDiskSnapshotsError} isSuccess={isDiskSnapshotsSuccess}
       />
       <SelectedIdView items={snapshotsSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
+        path={`storage-snapshots;name=${domainsSelected[0]?.name}`}
+      />
     </>
   );
 };

@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
 import SelectedIdView from "../../components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../../components/common/OVirtWebAdminHyperlink";
 import SearchBox from "../../components/button/SearchBox";
 import SettingUsersActionButtons from "../../components/dupl/SettingUsersActionButtons";
 import TableColumnsInfo from "../../components/table/TableColumnsInfo";
@@ -13,6 +14,7 @@ import {
   rvi16Superuser,
 } from "../../components/icons/RutilVmIcons";
 import { useAllUsers } from "../../api/RQHook";
+import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
 
 /**
@@ -23,7 +25,9 @@ import Logger from "../../utils/Logger";
  */
 const SettingUsers = () => {
   const navigate = useNavigate()
-  const { usersSelected, setUsersSelected } = useGlobal();
+  const {
+    usersSelected, setUsersSelected
+  } = useGlobal();
   
   const { 
     data: users = [],
@@ -74,6 +78,10 @@ const SettingUsers = () => {
         ]}*/
       />
       <SelectedIdView items={usersSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.MANAGEMENT}>${Localization.kr.USER}`}
+        path={`users`}
+      />
     </>
   );
 };

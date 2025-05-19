@@ -33,15 +33,15 @@ const QK = {
  * @see ApiManager.findAllTreeNaviations
  */
 export const useAllTreeNavigations = (
-  type="none", 
-  mapPredicate=(e) => ({ ...e }),
+  type = "none",
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: [QK.ALL_TREE_NAVIGATIONS, type],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
   queryFn: async () => {
     const res = await ApiManager.findAllTreeNaviations(type);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useAllTreeNavigations ... type: ${type}, res: `, _res);
     return _res;
@@ -52,7 +52,7 @@ export const useAllTreeNavigations = (
 
 //#region: Dashboard
 export const useDashboard = (
-  
+
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: [QK.DASHBOARD],
@@ -65,7 +65,7 @@ export const useDashboard = (
 });
 
 export const useDashboardCpuMemory = (
-  
+
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: [QK.DASHBOARD_CPU_MEMORY],
@@ -91,7 +91,7 @@ export const useDashboardStorage = (
 });
 
 export const useDashboardHosts = (
-  
+
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: [QK.DASHBOARD_HOSTS],
@@ -104,14 +104,14 @@ export const useDashboardHosts = (
 });
 
 export const useDashboardDomain = (
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: [QK.DASHBOARD_DOMAIN],
   queryFn: async () => {
     const res = await ApiManager.getDomain()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useDashboardDomain ... res: `, _res);
     return _res
@@ -120,14 +120,14 @@ export const useDashboardDomain = (
 
 export const useDashboardHost = (
   hostId,
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: [QK.DASHBOARD_HOST],
   queryFn: async () => {
     const res = await ApiManager.getHost(hostId)
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useDashboardHost ... hostId: ${hostId}, res: `, _res);
     return _res;
@@ -136,14 +136,14 @@ export const useDashboardHost = (
 });
 
 export const useDashboardVmCpu = (
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: [QK.DASHBOARD_VM_CPU],
   queryFn: async () => {
     const res = await ApiManager.getVmCpu();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useDashboardVmCpu ... res: `, _res);
     return _res;
@@ -152,14 +152,14 @@ export const useDashboardVmCpu = (
 });
 
 export const useDashboardVmMemory = (
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardVmMemory'],
   queryFn: async () => {
     const res = await ApiManager.getVmMemory()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useDashboardVmMemory ... res: `, _res);
     return _res;
@@ -168,14 +168,14 @@ export const useDashboardVmMemory = (
 });
 
 export const useDashboardStorageMemory = (
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardStorageMemory'],
   queryFn: async () => {
     const res = await ApiManager.getStorageMemory()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useDashboardStorageMemory ... res: `, _res);
     return _res
@@ -184,14 +184,14 @@ export const useDashboardStorageMemory = (
 });
 
 export const useDashboardPerVmCpu = (
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardPerVmCpu'],
   queryFn: async () => {
     const res = await ApiManager.getPerVmCpu()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > dashboardPerVmCpu ... res: `, _res);
     return _res
@@ -199,14 +199,14 @@ export const useDashboardPerVmCpu = (
 });
 
 export const useDashboardPerVmMemory = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardPerVmMemory'],
   queryFn: async () => {
     const res = await ApiManager.getPerVmMemory()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > dashboardPerVmMemory ... res: `, _res);
     return _res
@@ -214,7 +214,7 @@ export const useDashboardPerVmMemory = (
   }
 });
 export const useDashboardPerVmNetwork = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardPerVmNetwork'],
@@ -222,7 +222,7 @@ export const useDashboardPerVmNetwork = (
     Logger.debug(`dashboardPerVmNetwork ...`);
     const res = await ApiManager.getPerVmNetwork()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > dashboardPerVmNetwork ... res: `, _res);
     return _res
@@ -231,7 +231,7 @@ export const useDashboardPerVmNetwork = (
 });
 
 export const useDashboardMetricVmCpu = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardMetricVmCpu'],
@@ -239,35 +239,35 @@ export const useDashboardMetricVmCpu = (
     Logger.debug(`useDashboardMetricVmCpu ...`);
     const res = await ApiManager.getMetricVmCpu()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useDashboardMetricVmCpu ... res: `, _res);
     return _res
   }
 });
 export const useDashboardMetricVmMemory = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardMetricVmMemory'],
   queryFn: async () => {
     const res = await ApiManager.getMetricVmMemory()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useDashboardMetricVmMemory ... res: `, _res);
     return _res
   }
 });
 export const useDashboardMetricStorage = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['dashboardMetricStorage'],
   queryFn: async () => {
     const res = await ApiManager.getMetricStorage()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useDashboardMetricStorage ... res: `, _res);
     return _res
@@ -286,14 +286,14 @@ export const useDashboardMetricStorage = (
  * @see ApiManager.findAllDataCenters
  */
 export const useAllDataCenters = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allDataCenters'],
   queryFn: async () => {
     const res = await ApiManager.findAllDataCenters();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useAllDataCenters ... res: `, _res);
     return _res;
@@ -317,7 +317,7 @@ export const useDataCenter = (
     Logger.debug(`RQHook > useDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
-  enabled: !!dataCenterId, 
+  enabled: !!dataCenterId,
 });
 
 /**
@@ -332,12 +332,12 @@ export const useDataCenter = (
  */
 export const useClustersFromDataCenter = (
   dataCenterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['clustersFromDataCenter', dataCenterId], 
+  queryKey: ['clustersFromDataCenter', dataCenterId],
   queryFn: async () => {
-    const res = await ApiManager.findAllClustersFromDataCenter(dataCenterId); 
+    const res = await ApiManager.findAllClustersFromDataCenter(dataCenterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공 
       : validate(res) ?? []
@@ -359,20 +359,20 @@ export const useClustersFromDataCenter = (
  */
 export const useHostsFromDataCenter = (
   dataCenterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['hostsFromDataCenter', dataCenterId], 
+  queryKey: ['hostsFromDataCenter', dataCenterId],
   queryFn: async () => {
     // if(dataCenterId === '') return [];
-    const res = await ApiManager.findAllHostsFromDataCenter(dataCenterId); 
+    const res = await ApiManager.findAllHostsFromDataCenter(dataCenterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useHostsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res
   },
-  enabled: !!dataCenterId, 
+  enabled: !!dataCenterId,
 });
 /**
  * @name useVMsFromDataCenter
@@ -386,13 +386,13 @@ export const useHostsFromDataCenter = (
  */
 export const useVMsFromDataCenter = (
   dataCenterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['vmsFromDataCenter', dataCenterId], 
+  queryKey: ['vmsFromDataCenter', dataCenterId],
   queryFn: async () => {
-    const res = await ApiManager.findAllVmsFromDataCenter(dataCenterId); 
-    const _res = mapPredicate 
+    const res = await ApiManager.findAllVmsFromDataCenter(dataCenterId);
+    const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? []; // 데이터 가공
     Logger.debug(`RQHook > useVMsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
@@ -414,12 +414,12 @@ export const useVMsFromDataCenter = (
  */
 export const useDomainsFromDataCenter = (
   dataCenterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['domainsFromDataCenter', dataCenterId], 
+  queryKey: ['domainsFromDataCenter', dataCenterId],
   queryFn: async () => {
-    const res = await ApiManager.findAllDomainsFromDataCenter(dataCenterId); 
+    const res = await ApiManager.findAllDomainsFromDataCenter(dataCenterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -440,12 +440,12 @@ export const useDomainsFromDataCenter = (
  */
 export const useNetworksFromDataCenter = (
   dataCenterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['networksFromDataCenter', dataCenterId], 
+  queryKey: ['networksFromDataCenter', dataCenterId],
   queryFn: async () => {
-    const res = await ApiManager.findAllNetworksFromDataCenter(dataCenterId); 
+    const res = await ApiManager.findAllNetworksFromDataCenter(dataCenterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -466,12 +466,12 @@ export const useNetworksFromDataCenter = (
  */
 export const useEventsFromDataCenter = (
   dataCenterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['eventsFromDataCenter', dataCenterId], 
+  queryKey: ['eventsFromDataCenter', dataCenterId],
   queryFn: async () => {
-    const res = await ApiManager.findAllEventsFromDataCenter(dataCenterId); 
+    const res = await ApiManager.findAllEventsFromDataCenter(dataCenterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -492,19 +492,19 @@ export const useEventsFromDataCenter = (
  */
 export const useFindTemplatesFromDataCenter = (
   dataCenterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['templatesFromDataCenter', dataCenterId ], 
+  queryKey: ['templatesFromDataCenter', dataCenterId],
   queryFn: async () => {
-    const res = await ApiManager.findTemplatesFromDataCenter(dataCenterId); 
+    const res = await ApiManager.findTemplatesFromDataCenter(dataCenterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useFindTemplatesFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
-  enabled: !!dataCenterId, 
+  enabled: !!dataCenterId,
 });
 /**
  * @name useAllAttachedDisksFromDataCenter
@@ -518,19 +518,19 @@ export const useFindTemplatesFromDataCenter = (
  */
 export const useAllAttachedDisksFromDataCenter = (
   dataCenterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allAttachedDisksFromDataCenter', dataCenterId ], 
+  queryKey: ['allAttachedDisksFromDataCenter', dataCenterId],
   queryFn: async () => {
-    const res = await ApiManager.findAllAttachedDisksFromDataCenter(dataCenterId); 
+    const res = await ApiManager.findAllAttachedDisksFromDataCenter(dataCenterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useAllAttachedDisksFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
-  enabled: !!dataCenterId, 
+  enabled: !!dataCenterId,
 });
 
 /**
@@ -545,19 +545,19 @@ export const useAllAttachedDisksFromDataCenter = (
  */
 export const useCDFromDataCenter = (
   dataCenterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['CDFromDataCenter', dataCenterId], 
+  queryKey: ['CDFromDataCenter', dataCenterId],
   queryFn: async () => {
-    const res = await ApiManager.findAllISOFromDataCenter(dataCenterId); 
+    const res = await ApiManager.findAllISOFromDataCenter(dataCenterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useCDFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res
   },
-  enabled: !!dataCenterId, 
+  enabled: !!dataCenterId,
 });
 /**
  * @name useAddDataCenter
@@ -567,12 +567,13 @@ export const useCDFromDataCenter = (
  * @see ApiManager.addDataCenter
  */
 export const useAddDataCenter = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async (dataCenterData) => {
+      closeModal()
       const res = await ApiManager.addDataCenter(dataCenterData)
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useAddDataCenter ... dataCenterData: ${JSON.stringify(dataCenterData, null, 2)}`)
@@ -599,13 +600,13 @@ export const useAddDataCenter = (
  * @see ApiManager.editDataCenter
  */
 export const useEditDataCenter = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
-  const queryClient = useQueryClient();  
+  const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async ({ dataCenterId, dataCenterData }) => {
-      closeModal()
+      closeModal();
       const res = await ApiManager.editDataCenter(dataCenterId, dataCenterData);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useEditDataCenter ... dataCenterId: ${dataCenterId}, dataCenterData: ${JSON.stringify(dataCenterData, null, 2)}`)
@@ -632,11 +633,11 @@ export const useEditDataCenter = (
  * @see ApiManager.deleteDataCenter
  */
 export const useDeleteDataCenter = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({ 
+  return useMutation({
     mutationFn: async (dataCenterId) => {
       closeModal();
       const res = await ApiManager.deleteDataCenter(dataCenterId);
@@ -670,7 +671,7 @@ export const useDeleteDataCenter = (
  * @see ApiManager.findAllClusters
  */
 export const useAllClusters = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allClusters'],
@@ -691,7 +692,7 @@ export const useAllClusters = (
  * @see ApiManager.findAllUpClusters
  */
 export const useAllUpClusters = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allClusters'],
@@ -724,7 +725,7 @@ export const useCluster = (
     Logger.debug(`RQHook > useCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
-  enabled: !!clusterId, 
+  enabled: !!clusterId,
   staleTime: 0,  // 항상 최신 데이터를 유지
   cacheTime: 0,  // 캐시를 유지하지 않고 매번 새로운 데이터를 요청
 });
@@ -740,12 +741,12 @@ export const useCluster = (
  */
 export const useNetworkFromCluster = (
   clusterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['networkFromCluster', clusterId], 
+  queryKey: ['networkFromCluster', clusterId],
   queryFn: async () => {
-    const res = await ApiManager.findNetworksFromCluster(clusterId); 
+    const res = await ApiManager.findNetworksFromCluster(clusterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -766,19 +767,19 @@ export const useNetworkFromCluster = (
  */
 export const useHostsFromCluster = (
   clusterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['hostsFromCluster', clusterId], 
+  queryKey: ['hostsFromCluster', clusterId],
   queryFn: async () => {
-    const res = await ApiManager.findHostsFromCluster(clusterId); 
+    const res = await ApiManager.findHostsFromCluster(clusterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useHostsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res;
   },
-  enabled: !!clusterId, 
+  enabled: !!clusterId,
   staleTime: 0,
   cacheTime: 0,
 })
@@ -794,20 +795,20 @@ export const useHostsFromCluster = (
  */
 export const useVMsFromCluster = (
   clusterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['vmsFromCluster', clusterId], 
+  queryKey: ['vmsFromCluster', clusterId],
   queryFn: async () => {
     Logger.debug(`useVMsFromCluster ... ${clusterId}`);
-    const res = await ApiManager.findVMsFromCluster(clusterId); 
+    const res = await ApiManager.findVMsFromCluster(clusterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useVMsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res;
   },
-  enabled: !!clusterId, 
+  enabled: !!clusterId,
 })
 /**
  * @name usePermissionsFromCluster
@@ -820,20 +821,20 @@ export const useVMsFromCluster = (
  * @see ApiManager.findPermissionsFromCluster
  */
 export const usePermissionsFromCluster = (
-  clusterId, 
-  mapPredicate=(e) => ({ ...e })
+  clusterId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['permissionsFromCluster', clusterId], 
+  queryKey: ['permissionsFromCluster', clusterId],
   queryFn: async () => {
-    const res = await ApiManager.findPermissionsFromCluster(clusterId); 
+    const res = await ApiManager.findPermissionsFromCluster(clusterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > usePermissionsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
-  enabled: !!clusterId, 
+  enabled: !!clusterId,
 })
 
 /**
@@ -847,20 +848,20 @@ export const usePermissionsFromCluster = (
  * @see ApiManager.findCpuProfilesFromCluster
  */
 export const useCpuProfilesFromCluster = (
-  clusterId, 
-  mapPredicate=(e) => ({ ...e })
+  clusterId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['cpuProfilesFromCluster', clusterId], 
+  queryKey: ['cpuProfilesFromCluster', clusterId],
   queryFn: async () => {
-    const res = await ApiManager.findCpuProfilesFromCluster(clusterId); 
+    const res = await ApiManager.findCpuProfilesFromCluster(clusterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useCpuProfilesFromCluster ... ${clusterId}, res: `, _res);
     return _res
   },
-  enabled: !!clusterId, 
+  enabled: !!clusterId,
   staleTime: 0,
   cacheTime: 0,
 })
@@ -877,19 +878,19 @@ export const useCpuProfilesFromCluster = (
  */
 export const useOsSystemsFromCluster = (
   clusterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['osSystemsFromCluster', clusterId], 
+  queryKey: ['osSystemsFromCluster', clusterId],
   queryFn: async () => {
-    const res = await ApiManager.findOsSystemsFromCluster(clusterId); 
+    const res = await ApiManager.findOsSystemsFromCluster(clusterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useOsSystemsFromCluster ... ${clusterId}, res: `, _res);
     return _res
   },
-  enabled: !!clusterId, 
+  enabled: !!clusterId,
   staleTime: 0,
   cacheTime: 0,
 })
@@ -906,19 +907,19 @@ export const useOsSystemsFromCluster = (
  */
 export const useAllvnicFromCluster = (
   clusterId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllnicFromVM', clusterId], 
+  queryKey: ['AllnicFromVM', clusterId],
   queryFn: async () => {
-    const res = await ApiManager.findVNicFromCluster(clusterId); 
+    const res = await ApiManager.findVNicFromCluster(clusterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useAllvnicFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
-  enabled: !!clusterId, 
+  enabled: !!clusterId,
   staleTime: 0,
   cacheTime: 0,
 })
@@ -934,20 +935,20 @@ export const useAllvnicFromCluster = (
  * @see ApiManager.findEventsFromCluster
  */
 export const useEventFromCluster = (
-  clusterId, 
-  mapPredicate=(e) => ({ ...e })
+  clusterId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['eventsFromCluster', clusterId], 
+  queryKey: ['eventsFromCluster', clusterId],
   queryFn: async () => {
-    const res = await ApiManager.findEventsFromCluster(clusterId); 
+    const res = await ApiManager.findEventsFromCluster(clusterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useEventFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
-  enabled: !!clusterId, 
+  enabled: !!clusterId,
 })
 
 /**
@@ -958,7 +959,7 @@ export const useEventFromCluster = (
  * @see ApiManager.addCluster
  */
 export const useAddCluster = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -966,7 +967,9 @@ export const useAddCluster = (
     mutationFn: async (clusterData) => {
       closeModal();
       const res = await ApiManager.addCluster(clusterData);
-      return validate(res)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddCluster ... clusterData: ${clusterData}`)
+      return _res
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddCluster ... res: `, res);
@@ -989,15 +992,17 @@ export const useAddCluster = (
  * @see ApiManager.editCluster
  */
 export const useEditCluster = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
-  const queryClient = useQueryClient();  
+  const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async ({ clusterId, clusterData }) => {
       closeModal();
       const res = await ApiManager.editCluster(clusterId, clusterData);
-      return validate(res)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditCluster ... clusterId: ${clusterId}, clusterData: `, clusterData)
+      return _res;
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditCluster ... res: `, res);
@@ -1020,16 +1025,18 @@ export const useEditCluster = (
  * @see ApiManager.deleteCluster
  */
 export const useDeleteCluster = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { setClustersSelected } = useGlobal()
   const { closeModal } = useUIState();
-  return useMutation({ 
+  return useMutation({
     mutationFn: async (clusterId) => {
       closeModal();
-      const res = await ApiManager.deleteCluster(clusterId)
-      return validate(res)
+      const res = await ApiManager.deleteCluster(clusterId);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useEditCluster ... clusterId: ${clusterId}`)
+      return _res;
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteCluster ... res: `, res);
@@ -1057,7 +1064,7 @@ export const useDeleteCluster = (
  * @see ApiManager.findAllHosts
  */
 export const useAllHosts = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allHosts'],
@@ -1106,12 +1113,12 @@ export const useHost = (
  */
 export const useVmsFromHost = (
   hostId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['vmFromHost', hostId], 
+  queryKey: ['vmFromHost', hostId],
   queryFn: async () => {
-    const res = await ApiManager.findVmsFromHost(hostId); 
+    const res = await ApiManager.findVmsFromHost(hostId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -1132,12 +1139,12 @@ export const useVmsFromHost = (
  */
 export const useNetworkInterfacesFromHost = (
   hostId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['NetworkInterfacesFromHost', hostId], 
+  queryKey: ['NetworkInterfacesFromHost', hostId],
   queryFn: async () => {
-    const res = await ApiManager.findHostNicsFromHost(hostId); 
+    const res = await ApiManager.findHostNicsFromHost(hostId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -1160,9 +1167,9 @@ export const useNetworkInterfaceFromHost = (
   hostId, nicId
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['NetworkInterfaceFromHost', hostId, nicId], 
+  queryKey: ['NetworkInterfaceFromHost', hostId, nicId],
   queryFn: async () => {
-    const res = await ApiManager.findHostNicFromHost(hostId, nicId); 
+    const res = await ApiManager.findHostNicFromHost(hostId, nicId);
     const _res = validate(res) ?? {}
     Logger.debug(`RQHook > useNetworkInterfaceFromHost ... hostId: ${hostId} nicId: ${nicId},  res: `, _res);
     return _res
@@ -1181,12 +1188,12 @@ export const useNetworkInterfaceFromHost = (
  */
 export const useNetworkAttachmentsFromHost = (
   hostId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['NetworkAttachmentsFromHost', hostId], 
+  queryKey: ['NetworkAttachmentsFromHost', hostId],
   queryFn: async () => {
-    const res = await ApiManager.findNetworkAttachmentsFromHost(hostId); 
+    const res = await ApiManager.findNetworkAttachmentsFromHost(hostId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -1209,9 +1216,9 @@ export const useNetworkAttachmentFromHost = (
   hostId, networkAttachmentId
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['NetworkAttachmentsFromHost', hostId, networkAttachmentId], 
+  queryKey: ['NetworkAttachmentsFromHost', hostId, networkAttachmentId],
   queryFn: async () => {
-    const res = await ApiManager.findNetworkAttachmentFromHost(hostId, networkAttachmentId); 
+    const res = await ApiManager.findNetworkAttachmentFromHost(hostId, networkAttachmentId);
     const _res = validate(res) ?? {}
     Logger.debug(`RQHook > useNetworkAttachmentFromHost ... hostId: ${hostId} networkAttachmentId: ${networkAttachmentId},  res: `, _res);
     return _res
@@ -1229,13 +1236,15 @@ export const useNetworkAttachmentFromHost = (
 export const useSetupNetworksFromHost = (
   postSuccess=()=>{},postError
 ) => {
-  const queryClient = useQueryClient();  
+  const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async ({ hostId, hostNetwork }) => {
       closeModal();
       const res = await ApiManager.setupHostNicsFromHost(hostId, hostNetwork);
-      return validate(res)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useSetupNetworksFromHost ... hostId: ${hostId}, hostNetwork: `, hostNetwork)
+      return _res
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useSetupNetworksFromHost ... res: `, res);
@@ -1258,30 +1267,34 @@ export const useSetupNetworksFromHost = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.editNetworkAttachmentFromHost
  */
-// export const useEditHostNetworkFromHost = (
-//   postSuccess=()=>{},postError
-// ) => {
-//   const queryClient = useQueryClient();  
-//   const { closeModal } = useUIState();
-//   return useMutation({
-//     mutationFn: async ({ hostId, networkAttachmentId, networkAttachmentData }) => {
-//       closeModal();
-//       const res = await ApiManager.editNetworkAttachmentFromHost(hostId, networkAttachmentId, networkAttachmentData);
-//       return validate(res)
-//     },
-//     onSuccess: (res) => {
-//       Logger.debug(`RQHook > useEditHostNetworkFromHost ... res: `, res);
-//       toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} ${Localization.kr.UPDATE} 요청완료`)
-//       queryClient.invalidateQueries('NetworkAttachmentsFromHost');
-//       postSuccess(res);
-//     },
-//     onError: (error) => {
-//       Logger.error(error.message);
-//       toast.error(error.message);
-//       postError && postError(error);
-//     },
-//   });
-// };
+/*
+export const useEditHostNetworkFromHost = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();  
+  const { closeModal } = useUIState();
+  return useMutation({
+    mutationFn: async ({ hostId, networkAttachmentId, networkAttachmentData }) => {
+      closeModal();
+      const res = await ApiManager.editNetworkAttachmentFromHost(hostId, networkAttachmentId, networkAttachmentData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditHostNetworkFromHost ... hostId: ${hostId}, networkAttachmentId: ${networkAttachmentId}, networkAttachmentData: `, networkAttachmentData)
+      return _res
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditHostNetworkFromHost ... res: `, res);
+      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} ${Localization.kr.UPDATE} 요청완료`)
+      queryClient.invalidateQueries('NetworkAttachmentsFromHost');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+*/
 /*
 /**
  * @name useAddBonding
@@ -1290,31 +1303,35 @@ export const useSetupNetworksFromHost = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.addBonding
  */
-// export const useAddBonding = (
-//   postSuccess=()=>{},postError
-// ) => {
-//   const queryClient = useQueryClient();
-//   const { closeModal } = useUIState();
-//   return useMutation({
-//     mutationFn: async ({ hostId, bonding }) => {
-//       closeModal();
-//       const res = await ApiManager.addBonding(hostId, bonding);
-//       return validate(res)
-//     },
-//     onSuccess: (res) => {
-//       Logger.debug(`RQHook > useAddBonding ... res: `, res);
-//       toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.CREATE} 요청완료`)
-//       queryClient.invalidateQueries('NetworkInterfacesFromHost');
-//       postSuccess(res);
-//     },
-//     onError: (error) => {
-//       Logger.error(error.message);
-//       toast.error(error.message);
-//       closeModal();
-//       postError && postError(error);
-//     },
-//   });
-// };
+/*
+export const useAddBonding = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  return useMutation({
+    mutationFn: async ({ hostId, bonding }) => {
+      closeModal();
+      const res = await ApiManager.addBonding(hostId, bonding);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useAddBonding ... hostId: ${hostId}, bonding: `, bonding);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddBonding ... res: `, res);
+      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.CREATE} 요청완료`)
+      queryClient.invalidateQueries('NetworkInterfacesFromHost');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      closeModal();
+      postError && postError(error);
+    },
+  });
+};
+*/
 /**
  * @name useEditBonding
  * @description 호스트 네트워크 본딩 수정 useMutation 훅
@@ -1322,30 +1339,34 @@ export const useSetupNetworksFromHost = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.editCluster
  */
-// export const useEditBonding = (
-//   postSuccess=()=>{},postError
-// ) => {
-//   const queryClient = useQueryClient();  
-//   const { closeModal } = useUIState();
-//   return useMutation({
-//     mutationFn: async ({ hostId, hostNicData }) => {
-//       closeModal();
-//       const res = await ApiManager.editBonding(hostId, hostNicData);
-//       return validate(res)
-//     },
-//     onSuccess: (res) => {
-//       Logger.debug(`RQHook > useEditBonding ... res: `, res);
-//       toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.UPDATE} 요청완료`)
-//       queryClient.invalidateQueries('NetworkInterfacesFromHost');
-//       postSuccess(res);
-//     },
-//     onError: (error) => {
-//       Logger.error(error.message);
-//       toast.error(error.message);
-//       postError && postError(error);
-//     },
-//   });
-// };
+/*
+export const useEditBonding = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();  
+  const { closeModal } = useUIState();
+  return useMutation({
+    mutationFn: async ({ hostId, hostNicData }) => {
+      closeModal();
+      const res = await ApiManager.editBonding(hostId, hostNicData);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useEditBonding ... hostId: ${hostId}, hostNicData: `, hostNicData);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditBonding ... res: `, res);
+      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.UPDATE} 요청완료`)
+      queryClient.invalidateQueries('NetworkInterfacesFromHost');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+*/
 /**
  * @name useDeleteBonding
  * @description 호스트 네트워크 본딩 삭제 useMutation 훅
@@ -1353,31 +1374,34 @@ export const useSetupNetworksFromHost = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.deleteCluster
  */
-// export const useDeleteBonding = (
-//   postSuccess=()=>{},postError
-// ) => {
-//   const queryClient = useQueryClient();
-//   const { closeModal } = useUIState();
-//   return useMutation({ 
-//     mutationFn: async (hostId, hostNicData) => {
-//       closeModal();
-//       const res = await ApiManager.deleteBonding(hostId, hostNicData)
-//       return validate(res)
-//     },
-//     onSuccess: (res) => {
-//       Logger.debug(`RQHook > useDeleteBonding ... res: `, res);
-//       toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.REMOVE} 요청완료`)
-//       queryClient.invalidateQueries('NetworkInterfacesFromHost');
-//       postSuccess(res);
-//     },
-//     onError: (error) => {
-//       Logger.error(error.message);
-//       toast.error(error.message);
-//       postError && postError(error);
-//     },
-//   });
-// };
-
+/*
+export const useDeleteBonding = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  return useMutation({ 
+    mutationFn: async (hostId, hostNicData) => {
+      closeModal();
+      const res = await ApiManager.deleteBonding(hostId, hostNicData);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useDeleteBonding ... hostId: ${hostId}, hostNicData: `, hostNicData);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteBonding ... res: `, res);
+      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.REMOVE} 요청완료`)
+      queryClient.invalidateQueries('NetworkInterfacesFromHost');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+*/
 /**
  * @name useHostDevicesFromHost
  * @description 호스트 내 호스트장치 목록조회 useQuery훅
@@ -1390,12 +1414,12 @@ export const useSetupNetworksFromHost = (
  */
 export const useHostDevicesFromHost = (
   hostId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['hostDevicesFromHost', hostId], 
+  queryKey: ['hostDevicesFromHost', hostId],
   queryFn: async () => {
-    const res = await ApiManager.findHostdevicesFromHost(hostId); 
+    const res = await ApiManager.findHostdevicesFromHost(hostId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -1416,10 +1440,10 @@ export const useHostDevicesFromHost = (
  */
 export const useEventsFromHost = (
   hostId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['eventsFromHost', hostId], 
+  queryKey: ['eventsFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findEventsFromHost(hostId);
     const _res = mapPredicate
@@ -1443,10 +1467,10 @@ export const useEventsFromHost = (
  */
 export const useStoragesFromHost = (
   hostId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['storagesFromHost', hostId], 
+  queryKey: ['storagesFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findAllStoragesFromHost(hostId);
     const _res = mapPredicate
@@ -1469,10 +1493,10 @@ export const useStoragesFromHost = (
  */
 export const useIscsiFromHost = (
   hostId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['iscsiFromHost', hostId], 
+  queryKey: ['iscsiFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findAllIscsiFromHost(hostId);
     const _res = mapPredicate
@@ -1495,15 +1519,15 @@ export const useIscsiFromHost = (
  */
 export const useFibreFromHost = (
   hostId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['fibreFromHost', hostId], 
-  queryFn: async () => {    
+  queryKey: ['fibreFromHost', hostId],
+  queryFn: async () => {
     const res = await ApiManager.findAllFibreFromHost(hostId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? []; 
+      : validate(res) ?? [];
     Logger.debug(`RQHook > useFibreFromHost ... hostId: ${hostId}, res: `, _res);
     return _res
   },
@@ -1521,16 +1545,16 @@ export const useFibreFromHost = (
  */
 //TODO: 변경필요 useSearchFcFromHost 참고
 export const useSearchIscsiFromHost = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async ({hostId, iscsiData}) => {
+    mutationFn: async ({ hostId, iscsiData }) => {
       closeModal();
       const res = await ApiManager.findSearchIscsiFromHost(hostId, iscsiData);
-      const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useSearchIscsiFromHost ... hostId: ${hostId}, iscsiData: `, iscsiData)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useSearchIscsiFromHost ... hostId: ${hostId}, iscsiData: `, iscsiData);
       return _res;
     },
     onSuccess: (res) => {
@@ -1538,7 +1562,7 @@ export const useSearchIscsiFromHost = (
       toast.success(`[200] iSCSI ${Localization.kr.IMPORT} 요청성공`)
       queryClient.invalidateQueries(['iscsiFromHost']);
       postSuccess(res);
-    },    
+    },
     onError: (error) => {
       Logger.error(error.message);
       toast.error(`${error.message}`);
@@ -1559,10 +1583,10 @@ export const useSearchIscsiFromHost = (
 export const useSearchFcFromHost = (
   hostId,
   mapPredicate,
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['searchFcFromHost', hostId], 
+  queryKey: ['searchFcFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findSearchFcFromHost(hostId);
     const _res = mapPredicate
@@ -1581,8 +1605,8 @@ export const useSearchFcFromHost = (
     mutationFn: async ({ hostId }) => {
       closeModal();
       const res = await ApiManager.findSearchFcFromHost(hostId);
-      const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useSearchFcFromHost ... hostId: ${hostId}`)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useSearchFcFromHost ... hostId: ${hostId}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -1612,16 +1636,16 @@ export const useSearchFcFromHost = (
  */
 //TODO: 변경필요 useSearchFcFromHost 참고
 export const useLoginIscsiFromHost = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async ({ hostId, iscsiData }) => {
-      // closeModal();
+      closeModal();
       const res = await ApiManager.findLoginIscsiFromHost(hostId, iscsiData);
-      const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useLoginIscsiFromHost ... hostId: ${hostId}`)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useLoginIscsiFromHost ... hostId: ${hostId}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -1646,7 +1670,7 @@ export const useLoginIscsiFromHost = (
  * @see ApiManager.addHost
  */
 export const useAddHost = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -1654,8 +1678,8 @@ export const useAddHost = (
     mutationFn: async ({ hostData, deployHostedEngine }) => {
       closeModal();
       const res = await ApiManager.addHost(hostData, deployHostedEngine);
-      const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useLoginIscsiFromHost ... deployHostedEngine: ${deployHostedEngine}, hostData: `, hostData)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useLoginIscsiFromHost ... deployHostedEngine: ${deployHostedEngine}, hostData: `, hostData);
       return _res;
     },
     onSuccess: (res) => {
@@ -1679,16 +1703,16 @@ export const useAddHost = (
  * @see ApiManager.editHost
  */
 export const useEditHost = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
-  const queryClient = useQueryClient();  
+  const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async ({ hostId, hostData }) => {
       closeModal();
       const res = await ApiManager.editHost(hostId, hostData)
-      const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useEditHost ... hostId: ${hostId}, hostData: ${JSON.stringify(hostData, null ,2)}`)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useEditHost ... hostId: ${hostId}, hostData: `, hostData);
       return _res;
     },
     onSuccess: (res) => {
@@ -1712,11 +1736,11 @@ export const useEditHost = (
  * @see ApiManager.deleteHost
  */
 export const useDeleteHost = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({ 
+  return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.deleteHost(hostId)
@@ -1746,7 +1770,7 @@ export const useDeleteHost = (
  * @see ApiManager.deactivateHost
  */
 export const useDeactivateHost = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -1754,8 +1778,8 @@ export const useDeactivateHost = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.deactivateHost(hostId);
-      const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useDeactivateHost ... hostId: ${hostId}`)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useDeactivateHost ... hostId: ${hostId}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -1780,7 +1804,7 @@ export const useDeactivateHost = (
  * @see ApiManager.activateHost
  */
 export const useActivateHost = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -1788,8 +1812,8 @@ export const useActivateHost = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.activateHost(hostId)
-      const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useActivateHost ... hostId: ${hostId}`)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useActivateHost ... hostId: ${hostId}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -1814,7 +1838,7 @@ export const useActivateHost = (
  * @see ApiManager.restartHost
  */
 export const useRestartHost = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -1822,8 +1846,8 @@ export const useRestartHost = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.restartHost(hostId);
-      const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useRestartHost ... hostId: ${hostId}`)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useRestartHost ... hostId: ${hostId}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -1848,7 +1872,7 @@ export const useRestartHost = (
  * @see ApiManager.enrollHostCertificate
  */
 export const useEnrollHostCertificate = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -1856,8 +1880,8 @@ export const useEnrollHostCertificate = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.enrollHostCertificate(hostId);
-      const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useEnrollHostCertificate ... hostId: ${hostId}`)
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useEnrollHostCertificate ... hostId: ${hostId}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -1883,16 +1907,16 @@ export const useEnrollHostCertificate = (
  * @see ApiManager.refreshHost
  */
 export const useRefreshHost = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
-      const res = await ApiManager.refreshHost(hostId)
-      const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useRefreshHost ... hostId: ${hostId}`)
+      const res = await ApiManager.refreshHost(hostId);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useRefreshHost ... hostId: ${hostId}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -1917,7 +1941,7 @@ export const useRefreshHost = (
  * @see ApiManager.commitNetConfigHost
  */
 export const useCommitNetConfigHost = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -1954,7 +1978,7 @@ export const useCommitNetConfigHost = (
  * @see ApiManager.findAllVMs
  */
 export const useAllVMs = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allVMs'],
@@ -1962,7 +1986,7 @@ export const useAllVMs = (
     const res = await ApiManager.findAllVMs()
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? []; 
+      : validate(res) ?? [];
     Logger.debug(`RQHook > useAllVMs ... res: `, _res);
     return _res;
 
@@ -2022,19 +2046,19 @@ export const useFindEditVmById = (
  */
 export const useDisksFromVM = (
   vmId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['disksFromVM', vmId], 
+  queryKey: ['disksFromVM', vmId],
   queryFn: async () => {
-    const res = await ApiManager.findDisksFromVM(vmId); 
+    const res = await ApiManager.findDisksFromVM(vmId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useDisksFromVM ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
-  enabled: !!vmId, 
+  enabled: !!vmId,
 });
 /**
  * @name useSnapshotsFromVM
@@ -2048,20 +2072,20 @@ export const useDisksFromVM = (
  */
 export const useSnapshotsFromVM = (
   vmId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['SnapshotFromVM', vmId], 
+  queryKey: ['SnapshotFromVM', vmId],
   queryFn: async () => {
     Logger.debug(`useSnapshotFromVM ... ${vmId}`);
-    const res = await ApiManager.findSnapshotsFromVM(vmId); 
+    const res = await ApiManager.findSnapshotsFromVM(vmId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useDisksFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
-  enabled: !!vmId, 
+  enabled: !!vmId,
 });
 
 /**
@@ -2085,8 +2109,8 @@ export const useSnapshotDetailFromVM = (
       Logger.warn('RQHook > useSnapshotDetailFromVM ... Missing VM ID or Snapshot ID');
       return {};
     }
-    const res = await ApiManager.findSnapshotFromVm(vmId, snapshotId); 
-    const _res = validate(res) ?? {}; 
+    const res = await ApiManager.findSnapshotFromVm(vmId, snapshotId);
+    const _res = validate(res) ?? {};
     Logger.debug(`RQHook > useSnapshotDetailFromVM ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
@@ -2101,12 +2125,12 @@ export const useSnapshotDetailFromVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddSnapshotFromVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async ({vmId, snapshotData}) => {
+    mutationFn: async ({ vmId, snapshotData }) => {
       closeModal();
       const res = await ApiManager.addSnapshotFromVM(vmId, snapshotData)
       const _res = validate(res) ?? {};
@@ -2116,7 +2140,7 @@ export const useAddSnapshotFromVM = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddSnapshotFromVM ... res: ${JSON.stringify(res)}`)
       toast.success(`[200] ${Localization.kr.VM}에서 ${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE} 요청완료`)
-      queryClient.invalidateQueries(['snapshotFromVM','snapshotDetailFromVM']); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
+      queryClient.invalidateQueries(['snapshotFromVM', 'snapshotDetailFromVM']); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess(res);
     },
     onError: (error) => {
@@ -2134,7 +2158,7 @@ export const useAddSnapshotFromVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDeleteSnapshot = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
   const { closeModal } = useUIState();
@@ -2161,7 +2185,7 @@ export const useDeleteSnapshot = (
 };
 
 export const usePreviewSnapshot = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
   const { closeModal } = useUIState();
@@ -2188,16 +2212,16 @@ export const usePreviewSnapshot = (
 };
 
 export const useCommitSnapshot = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async ({ vmId }) => {
+      closeModal();
       const res = await ApiManager.commitSnapshotFromVM(vmId);
       const _res = validate(res) ?? {};
-      Logger.debug(`RQHook > useCommitSnapshot ... vmId: ${vmId}`)
+      Logger.debug(`RQHook > useCommitSnapshot ... vmId: ${vmId}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -2215,13 +2239,13 @@ export const useCommitSnapshot = (
 };
 
 export const useUndoSnapshot = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async ({ vmId }) => {
+      closeModal();
       const res = await ApiManager.undoSnapshotFromVM(vmId);
       const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useUndoSnapshot ... vmId: ${vmId}`)
@@ -2252,20 +2276,20 @@ export const useUndoSnapshot = (
  * @see ApiManager.findHostdevicesFromVM
  */
 export const useHostDevicesFromVM = (
-  vmId, 
-  mapPredicate=(e) => ({ ...e })
+  vmId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['hostDevicesFromVM', vmId], 
+  queryKey: ['hostDevicesFromVM', vmId],
   queryFn: async () => {
-    const res = await ApiManager.findHostdevicesFromVM(vmId); 
+    const res = await ApiManager.findHostdevicesFromVM(vmId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useHostDevicesFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
-  enabled: !!vmId, 
+  enabled: !!vmId,
   staleTime: 0,
   cacheTime: 0,
 });
@@ -2282,19 +2306,19 @@ export const useHostDevicesFromVM = (
  */
 export const useNetworkInterfacesFromVM = (
   vmId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['networkInterfacesFromVM', vmId], 
+  queryKey: ['networkInterfacesFromVM', vmId],
   queryFn: async () => {
-    const res = await ApiManager.findNicsFromVM(vmId); 
+    const res = await ApiManager.findNicsFromVM(vmId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useNetworkInterfacesFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
-  enabled: !!vmId, 
+  enabled: !!vmId,
 });
 
 /**
@@ -2314,14 +2338,14 @@ export const useNetworkInterfaceFromVM = (
   nicId
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['networkInterfaceFromVM', vmId], 
+  queryKey: ['networkInterfaceFromVM', vmId],
   queryFn: async () => {
-    const res = await ApiManager.findNicFromVM(vmId, nicId); 
+    const res = await ApiManager.findNicFromVM(vmId, nicId);
     const _res = validate(res) ?? {}
     Logger.debug(`RQHook > useNetworkInterfaceFromVM ... vmId: ${vmId}, nicId: ${nicId}, res: `, _res);
     return _res
   },
-  enabled: !!vmId && !!nicId, 
+  enabled: !!vmId && !!nicId,
   staleTime: 0,
   cacheTime: 0,
 });
@@ -2338,19 +2362,19 @@ export const useNetworkInterfaceFromVM = (
  */
 export const useApplicationsFromVM = (
   vmId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['ApplicationFromVM', vmId], 
+  queryKey: ['ApplicationFromVM', vmId],
   queryFn: async () => {
-    const res = await ApiManager.findApplicationsFromVM(vmId); 
+    const res = await ApiManager.findApplicationsFromVM(vmId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useApplicationsFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
-  enabled: !!vmId, 
+  enabled: !!vmId,
   staleTime: 0,
   cacheTime: 0,
 });
@@ -2366,10 +2390,10 @@ export const useApplicationsFromVM = (
  */
 export const useAllEventsFromVM = (
   vmId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allEventFromVM', vmId], 
+  queryKey: ['allEventFromVM', vmId],
   queryFn: async () => {
     const res = await ApiManager.findEventsFromVM(vmId);
     const _res = mapPredicate
@@ -2391,7 +2415,7 @@ export const useVmConsoleAccessInfo = (
   vmId
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['vmConsoleAccessInfo', vmId], 
+  queryKey: ['vmConsoleAccessInfo', vmId],
   queryFn: async () => {
     const res = await ApiManager.findVmConsoleAccessInfo(vmId);
     const _res = validate(res) ?? {}
@@ -2409,18 +2433,19 @@ export const useVmConsoleAccessInfo = (
  * @see ApiManager.activateHost
  */
 export const useRemoteViewerConnectionFileFromVm = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
-  return useMutation({ 
+  return useMutation({
     mutationFn: async (vmId) => {
-      const res = await ApiManager.generateVmRemoteViewerConnectionFile(vmId)
+      closeModal();
+      const res = await ApiManager.generateVmRemoteViewerConnectionFile(vmId);
+      const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useRemoteViewerConnectionFileFromVm ... vmId: ${vmId}`);
-      return res;
+      return _res;
     },
-    onSuccess: (res, {vmId}) => {
+    onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useRemoteViewerConnectionFileFromVm ... res: `, res);
       toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.CONSOLE} 원격 뷰어 접속파일 다운로드 요청완료`)
       triggerDownload(res, "console.vv")
@@ -2443,11 +2468,13 @@ export const useRemoteViewerConnectionFileFromVm = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddVm = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async (vmData) => {
+      closeModal();
       const res = await ApiManager.addVM(vmData)
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useAddVm ... vmData: `, vmData);
@@ -2456,7 +2483,7 @@ export const useAddVm = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddVm ... res: `, res);
       toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.CREATE} 요청완료`)
-      queryClient.invalidateQueries('allVMs'); 
+      queryClient.invalidateQueries('allVMs');
       postSuccess(res);
     },
     onError: (error) => {
@@ -2473,18 +2500,19 @@ export const useAddVm = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useEditVm = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async ({ vmId, vmData }) => {
+      closeModal();
       const res = await ApiManager.editVM(vmId, vmData);
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useEditVm ... vmData: ${JSON.stringify(vmData, null, 2)}`);
+      Logger.debug(`RQHook > useEditVm ... vmData: `, vmData);
       return _res;
     },
-    onSuccess: (res,{vmId}) => {
+    onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useEditVm ... res: `, res);
       toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.UPDATE} 요청완료`)
       queryClient.invalidateQueries('allVMs');
@@ -2506,19 +2534,19 @@ export const useEditVm = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDeleteVm = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
-  return useMutation({ 
+  return useMutation({
     mutationFn: async ({ vmId, detachOnly }) => {
-      const res = await ApiManager.deleteVM(vmId, detachOnly)
-      const _res = validate(res) ?? {}
+      closeModal();
+      const res = await ApiManager.deleteVM(vmId, detachOnly);
+      const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useDeleteVm ... vmId: ${vmId}, detachOnly: ${detachOnly}`);
       return _res;
     },
-    onSuccess: (res,{vmId}) => {
+    onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useDeleteVm ... res: `, res);
       toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.REMOVE} 요청완료`)
       queryClient.invalidateQueries('allVMs');
@@ -2542,15 +2570,15 @@ export const useDeleteVm = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useStartVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async (vmId) => {
+      closeModal();
       const res = await ApiManager.startVM(vmId);
-      const _res = validate(res) ?? {}
+      const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useStartVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2564,7 +2592,7 @@ export const useStartVM = (
       Logger.error(error.message);
       toast.error(error.message);
       postError && postError(error);
-    }, 
+    },
   });
 };
 /**
@@ -2574,15 +2602,15 @@ export const useStartVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const usePauseVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async (vmId) => {
+      closeModal();
       const res = await ApiManager.pauseVM(vmId);
-      const _res = validate(res) ?? {}
+      const _res = validate(res) ?? {};
       Logger.debug(`RQHook > usePauseVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2607,15 +2635,15 @@ export const usePauseVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useShutdownVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async (vmId) => {
+      closeModal();
       const res = await ApiManager.shutdownVM(vmId);
-      const _res = validate(res) ?? {}
+      const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useShutdownVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2639,15 +2667,15 @@ export const useShutdownVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const usePowerOffVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
-    mutationFn: async (vmId) => { 
-      const res = await ApiManager.powerOffVM(vmId)
-      const _res = validate(res) ?? {}
+    mutationFn: async (vmId) => {
+      closeModal();
+      const res = await ApiManager.powerOffVM(vmId);
+      const _res = validate(res) ?? {};
       Logger.debug(`RQHook > usePowerOffVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2661,7 +2689,7 @@ export const usePowerOffVM = (
       Logger.error(error.message);
       toast.error(error.message);
       postError && postError(error);
-    },  
+    },
   });
 };
 
@@ -2672,15 +2700,15 @@ export const usePowerOffVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useRebootVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async (vmId) => {
-      const res = await ApiManager.rebootVM(vmId)
-      const _res = validate(res) ?? {}
+      closeModal()
+      const res = await ApiManager.rebootVM(vmId);
+      const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useRebootVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2694,7 +2722,7 @@ export const useRebootVM = (
       Logger.error(error.message);
       toast.error(error.message);
       postError && postError(error);
-    }, 
+    },
   });
 };
 /**
@@ -2704,15 +2732,15 @@ export const useRebootVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useResetVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
-    mutationFn: async (vmId) => { 
-      const res = await ApiManager.resetVM(vmId)
-      const _res = validate(res) ?? {}
+    mutationFn: async (vmId) => {
+      closeModal()
+      const res = await ApiManager.resetVM(vmId);
+      const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useResetVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2726,7 +2754,7 @@ export const useResetVM = (
       Logger.error(error.message);
       toast.error(error.message);
       postError && postError(error);
-    }, 
+    },
   });
 };
 
@@ -2745,9 +2773,9 @@ export const useHostsForMigration = (
   mapPredicate
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['HostsForMigration', vmId], 
+  queryKey: ['HostsForMigration', vmId],
   queryFn: async () => {
-    const res = await ApiManager.migrateHostsFromVM(vmId); 
+    const res = await ApiManager.migrateHostsFromVM(vmId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -2764,15 +2792,15 @@ export const useHostsForMigration = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useMigration = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async ({ vmId, vm, affinityClosure }) => {
+      closeModal()
       const res = await ApiManager.migrateVM(vmId, vm, affinityClosure);
-      const _res = validate(res) ?? {}
+      const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useMigration ... vmId: ${vmId}, vm: ${vm}, affinityClosure: ${affinityClosure}`);
       return _res
     },
@@ -2797,13 +2825,13 @@ export const useMigration = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useExportVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async (vmId) => {
+      closeModal();
       const res = await ApiManager.exportVM(vmId);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useExportVM ... vmId: ${vmId}`);
@@ -2830,13 +2858,13 @@ export const useExportVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddNicFromVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async ({ vmId, nicData }) => {
+      closeModal();
       const res = await ApiManager.addNicFromVM(vmId, nicData);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useAddNicFromVM ... vmId: ${vmId}, nicData: ${nicData}`);
@@ -2864,13 +2892,13 @@ export const useAddNicFromVM = (
  * @todo 수정해야됨
  */
 export const useEditNicFromVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async ({ vmId, nicId, nicData }) => {
+      closeModal();
       const res = await ApiManager.editNicFromVM(vmId, nicId, nicData);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useEditNicFromVM ... vmId: ${vmId}, nicId: ${nicId}, nicData: ${nicData}`);
@@ -2880,7 +2908,7 @@ export const useEditNicFromVM = (
       Logger.debug(`RQHook > useEditNicFromVM ... res: `, res);
       toast.success(`[200] ${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.UPDATE} 요청완료`)
       queryClient.invalidateQueries('NetworkInterfaceByVMId,NetworkInterfaceFromVM');
-      postSuccess(res);      
+      postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
@@ -2897,13 +2925,14 @@ export const useEditNicFromVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDeleteNetworkInterface = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   // closeModal();
   return useMutation({
     mutationFn: async ({ vmId, nicId }) => {
+      closeModal();
       const res = await ApiManager.deleteNicFromVM(vmId, nicId);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useDeleteNetworkInterface ... vmId: ${vmId}, nicId: ${nicId}`);
@@ -2952,13 +2981,13 @@ export const useDiskAttachmentFromVm = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddDiskFromVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async ({ vmId, diskData }) => {
+      closeModal();
       const res = await ApiManager.addDiskFromVM(vmId, diskData);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useAddDiskFromVM ... vmId: ${vmId}, diskData: ${JSON.stringify(diskData, null, 2)}`);
@@ -2985,13 +3014,13 @@ export const useAddDiskFromVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useEditDiskFromVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId, diskAttachment }) => {
+      closeModal();
       const res = await ApiManager.editDiskFromVM(vmId, diskAttachmentId, diskAttachment);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useEditDiskFromVM ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, diskAttachment: ${JSON.stringify(diskAttachment, null, 2)}`);
@@ -3018,11 +3047,13 @@ export const useEditDiskFromVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDeleteDiskFromVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId, detachOnly }) => {
+      closeModal();
       const res = await ApiManager.deleteDiskFromVM(vmId, diskAttachmentId, detachOnly);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useDeleteDiskFromVM ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, detachOnly: ${detachOnly}`);
@@ -3050,11 +3081,13 @@ export const useDeleteDiskFromVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useConnDiskFromVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async ({ vmId, diskAttachment }) => {
+      closeModal();
       const res = await ApiManager.attachDiskFromVM(vmId, diskAttachment);
       const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useConnDiskFromVM ... vmId: ${vmId}, diskAttachment: ${JSON.stringify(diskAttachment, null, 2)}`);
@@ -3063,7 +3096,7 @@ export const useConnDiskFromVM = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useConnDiskFromVM ... res: `, res);
       toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.CONNECTION} 요청완료`)
-      queryClient.invalidateQueries(['allDisksFromVm']); 
+      queryClient.invalidateQueries(['allDisksFromVm']);
       postSuccess(res);
     },
     onError: (error) => {
@@ -3081,7 +3114,7 @@ export const useConnDiskFromVM = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useConnDiskListFromVM = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -3116,7 +3149,7 @@ export const useConnDiskListFromVM = (
  * @see ApiManager.deactivateHost
  */
 export const useDeactivateDiskFromVm = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -3148,7 +3181,7 @@ export const useDeactivateDiskFromVm = (
  * @see ApiManager.activateHost
  */
 export const useActivateDiskFromVm = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -3168,7 +3201,7 @@ export const useActivateDiskFromVm = (
       Logger.error(error.message);
       toast.error(error.message);
       postError && postError(error);
-    }, 
+    },
   });
 };
 
@@ -3207,14 +3240,14 @@ export const useFindDiskFromVM = (vmId,diskId) => useQuery({
  * @param {function} mapPredicate 객체 변형 처리
  */
 export const useAllTemplates = (
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allTemplates'],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplates()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useAllTemplates ... res: `, _res);
     return _res;
@@ -3231,10 +3264,10 @@ export const useAllTemplates = (
 export const useTemplate = (
   templateId
 ) => useQuery({
-  queryKey: ['template',templateId],
+  queryKey: ['template', templateId],
   queryFn: async () => {
     const res = await ApiManager.findTemplate(templateId);
-    const _res =  validate(res) ?? {};
+    const _res = validate(res) ?? {};
     Logger.debug(`RQHook > useTemplate ... templateId: ${templateId} res: `, _res);
     return _res;
   },
@@ -3255,14 +3288,14 @@ export const useTemplate = (
  */
 export const useAllVmsFromTemplate = (
   templateId,
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllVmsFromTemplate', templateId], 
+  queryKey: ['AllVmsFromTemplate', templateId],
   queryFn: async () => {
-    const res = await ApiManager.findVMsFromTemplate(templateId); 
+    const res = await ApiManager.findVMsFromTemplate(templateId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useAllVmsFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
@@ -3282,14 +3315,14 @@ export const useAllVmsFromTemplate = (
  */
 export const useAllNicsFromTemplate = (
   templateId,
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allNicsFromTemplate', templateId], 
+  queryKey: ['allNicsFromTemplate', templateId],
   queryFn: async () => {
     const res = await ApiManager.findNicsFromTemplate(templateId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useAllVmsFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
@@ -3311,14 +3344,14 @@ export const useAllNicsFromTemplate = (
  */
 export const useAllDisksFromTemplate = (
   templateId,
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allDisksFromTemplate', templateId], 
+  queryKey: ['allDisksFromTemplate', templateId],
   queryFn: async () => {
-    const res = await ApiManager.findDisksFromTemplate(templateId); 
+    const res = await ApiManager.findDisksFromTemplate(templateId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useAllDisksFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
@@ -3338,14 +3371,14 @@ export const useAllDisksFromTemplate = (
  */
 export const useAllStoragesFromTemplate = (
   templateId,
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllStoragesFromTemplate', templateId], 
+  queryKey: ['AllStoragesFromTemplate', templateId],
   queryFn: async () => {
     const res = await ApiManager.findStorageDomainsFromTemplate(templateId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useAllDisksFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
@@ -3368,14 +3401,14 @@ export const useAllStoragesFromTemplate = (
  */
 export const useAllEventFromTemplate = (
   templateId,
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allEventFromTemplate', templateId], 
+  queryKey: ['allEventFromTemplate', templateId],
   queryFn: async () => {
     const res = await ApiManager.findEventsFromTemplate(templateId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] 
+      ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useAllEventFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
@@ -3390,7 +3423,7 @@ export const useAllEventFromTemplate = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddTemplate = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -3422,9 +3455,9 @@ export const useAddTemplate = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useEditTemplate = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
-  const queryClient = useQueryClient();  
+  const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async ({ templateId, templateData }) => {
@@ -3434,7 +3467,7 @@ export const useEditTemplate = (
       Logger.debug(`RQHook > useEditTemplate ... templateId: ${templateId}, templateData: ${JSON.stringify(templateData, null, 2)}`)
       return _res;
     },
-    onSuccess: (res,{ templateId }) => {
+    onSuccess: (res, { templateId }) => {
       Logger.debug(`RQHook > useEditTemplate ... res: `, res)
       toast.success(`[200] ${Localization.kr.TEMPLATE} ${Localization.kr.UPDATE} 요청완료`)
       queryClient.invalidateQueries('allTemplates');
@@ -3455,11 +3488,11 @@ export const useEditTemplate = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDeleteTemplate = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({ 
+  return useMutation({
     mutationFn: async (templateId) => {
       closeModal();
       const res = await ApiManager.deleteTemplate(templateId);
@@ -3467,7 +3500,7 @@ export const useDeleteTemplate = (
       Logger.debug(`RQHook > useDeleteTemplate ... templateId: ${templateId}`)
       return _res;
     },
-    onSuccess: (res,{templateId}) => {
+    onSuccess: (res, { templateId }) => {
       Logger.debug(`RQHook > useEditTemplate ... res: `, res)
       toast.success(`[200] ${Localization.kr.TEMPLATE} ${Localization.kr.REMOVE} 요청완료`)
       queryClient.invalidateQueries('allTemplates');
@@ -3488,7 +3521,7 @@ export const useDeleteTemplate = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddNicFromTemplate = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -3500,7 +3533,7 @@ export const useAddNicFromTemplate = (
       Logger.debug(`RQHook > useAddNicFromTemplate ... templateId: ${templateId}, nicData: ${JSON.stringify(nicData, null, 2)}`)
       return _res;
     },
-    onSuccess: (res,{templateId}) => {
+    onSuccess: (res, { templateId }) => {
       Logger.debug(`RQHook > useAddNicFromTemplate ... res: `, res)
       toast.success(`[200] ${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.CREATE} 요청완료`)
       queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
@@ -3521,7 +3554,7 @@ export const useAddNicFromTemplate = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useEditNicFromTemplate = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -3533,7 +3566,7 @@ export const useEditNicFromTemplate = (
       Logger.debug(`RQHook > useEditNicFromTemplate ... templateId: ${templateId}, nicId: ${nicId}, nicData: ${JSON.stringify(nicData, null, 2)}`)
       return _res;
     },
-    onSuccess: (res,{templateId}) => {
+    onSuccess: (res, { templateId }) => {
       Logger.debug(`RQHook > useEditNicFromTemplate ... res: `, res)
       toast.success(`[200] ${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.UPDATE} 요청완료`)
       queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
@@ -3556,7 +3589,7 @@ export const useEditNicFromTemplate = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDeleteNetworkFromTemplate = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -3568,7 +3601,7 @@ export const useDeleteNetworkFromTemplate = (
       Logger.debug(`RQHook > useEditNicFromTemplate ... templateId: ${templateId}, nicId: ${nicId}, detachOnly: ${detachOnly}`)
       return _res;
     },
-    onSuccess: (res,{templateId}) => {
+    onSuccess: (res, { templateId }) => {
       Logger.debug(`RQHook > useEditNicFromTemplate ... res: `, res)
       toast.success(`[200] ${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.REMOVE} 요청완료`)
       queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
@@ -3593,7 +3626,7 @@ export const useDeleteNetworkFromTemplate = (
  * @returns useQuery훅
  */
 export const useAllNetworks = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allNetworks'],
@@ -3639,7 +3672,7 @@ export const useNetwork = (
  */
 export const useAllClustersFromNetwork = (
   networkId,
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['clustersFromNetwork', networkId],
@@ -3665,10 +3698,10 @@ export const useAllClustersFromNetwork = (
  */
 export const useConnectedHostsFromNetwork = (
   networkId,
-  mapPredicate=(e) => ({ ...e }),
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['connectedHostsFromNetwork', networkId], 
+  queryKey: ['connectedHostsFromNetwork', networkId],
   queryFn: async () => {
     const res = await ApiManager.findConnectedHostsFromNetwork(networkId);
     const _res = mapPredicate
@@ -3677,7 +3710,7 @@ export const useConnectedHostsFromNetwork = (
     Logger.debug(`RQHook > useConnectedHostsFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
-  enabled: !!networkId, 
+  enabled: !!networkId,
   staleTime: 0,
   cacheTime: 0,
   //staleTime: 60000, // 1분 동안 데이터 재요청 방지
@@ -3694,11 +3727,11 @@ export const useConnectedHostsFromNetwork = (
  * @see ApiManager.findDisconnectedHostsFromNetwork
  */
 export const useDisconnectedHostsFromNetwork = (
-  networkId, 
-  mapPredicate=(e) => ({ ...e }),
+  networkId,
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['disconnectedHostsFromNetwork', networkId], 
+  queryKey: ['disconnectedHostsFromNetwork', networkId],
   queryFn: async () => {
     const res = await ApiManager.findDisconnectedHostsFromNetwork(networkId);
     const _res = mapPredicate
@@ -3707,7 +3740,7 @@ export const useDisconnectedHostsFromNetwork = (
     Logger.debug(`RQHook > useDisconnectedHostsFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
-  enabled: !!networkId, 
+  enabled: !!networkId,
   staleTime: 0,
   cacheTime: 0,
   //staleTime: 60000, // 1분 동안 데이터 재요청 방지
@@ -3724,14 +3757,14 @@ export const useDisconnectedHostsFromNetwork = (
  * @see ApiManager.findAllVmsFromNetwork
  */
 export const useAllVmsFromNetwork = (
-  networkId, 
-  mapPredicate=(e) => ({ ...e }),
+  networkId,
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['vmFromNetwork', networkId], 
+  queryKey: ['vmFromNetwork', networkId],
   queryFn: async () => {
     Logger.debug(`useAllVmsFromNetwork ... ${networkId}`);
-    const res = await ApiManager.findAllVmsFromNetwork(networkId); 
+    const res = await ApiManager.findAllVmsFromNetwork(networkId);
     return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
   enabled: !!networkId,
@@ -3747,11 +3780,11 @@ export const useAllVmsFromNetwork = (
  * @see ApiManager.findAllTemplatesFromNetwork
  */
 export const useAllTemplatesFromNetwork = (
-  networkId, 
-  mapPredicate=(e) => ({ ...e }),
+  networkId,
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['templateFromNetwork', networkId], 
+  queryKey: ['templateFromNetwork', networkId],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplatesFromNetwork(networkId);
     const _res = mapPredicate
@@ -3774,8 +3807,8 @@ export const useAllTemplatesFromNetwork = (
  * @see ApiManager.findAllVnicProfilesFromNetwork
  */
 export const useAllVnicProfilesFromNetwork = (
-  networkId, 
-  mapPredicate=(e) => ({ ...e }),
+  networkId,
+  mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['vnicProfilesFromNetwork', networkId],
@@ -3787,7 +3820,7 @@ export const useAllVnicProfilesFromNetwork = (
     Logger.debug(`RQHook > useAllVnicProfilesFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
-  enabled: !!networkId, 
+  enabled: !!networkId,
 });
 /**
  * @name useAddNetwork
@@ -3796,7 +3829,7 @@ export const useAllVnicProfilesFromNetwork = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddNetwork = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -3828,7 +3861,7 @@ export const useAddNetwork = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useEditNetwork = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -3862,11 +3895,11 @@ export const useEditNetwork = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDeleteNetwork = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({ 
+  return useMutation({
     mutationFn: async (networkId) => {
       closeModal();
       const res = await ApiManager.deleteNetwork(networkId)
@@ -3896,7 +3929,7 @@ export const useDeleteNetwork = (
  * @returns useQuery훅
  */
 export const useAllNetworkProviders = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allNetworkProviders'],
@@ -3921,7 +3954,7 @@ export const useAllNetworkProviders = (
  * @see ApiManager.findAllVnicProfiles
  */
 export const useAllVnicProfiles = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allVnicProfiles'],
@@ -3965,8 +3998,8 @@ export const useVnicProfile = (vnicId) => useQuery({
  * 
  * @see ApiManager.findAllVmsFromVnicProfiles
  */
-export const useAllVmsFromVnicProfiles = (vnicProfileId, 
-  mapPredicate=(e) => ({ ...e })
+export const useAllVmsFromVnicProfiles = (vnicProfileId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['AllVmsFromVnicProfiles', vnicProfileId],
@@ -3978,7 +4011,7 @@ export const useAllVmsFromVnicProfiles = (vnicProfileId,
     Logger.debug(`RQHook > useAllVmsFromVnicProfiles ... vnicProfileId: ${vnicProfileId}, res: `, _res);
     return _res;
   },
-  enabled: !!vnicProfileId, 
+  enabled: !!vnicProfileId,
 });
 
 /**
@@ -3991,13 +4024,13 @@ export const useAllVmsFromVnicProfiles = (vnicProfileId,
  * 
  * @see ApiManager.findAllTemplatesFromVnicProfiles
  */
-export const useAllTemplatesFromVnicProfiles = (vnicProfileId, 
-  mapPredicate=(e) => ({ ...e })
+export const useAllTemplatesFromVnicProfiles = (vnicProfileId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllTemplatesFromVnicProfiles', vnicProfileId], 
+  queryKey: ['AllTemplatesFromVnicProfiles', vnicProfileId],
   queryFn: async () => {
-    const res = await ApiManager.findAllTemplatesFromVnicProfiles(vnicProfileId); 
+    const res = await ApiManager.findAllTemplatesFromVnicProfiles(vnicProfileId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -4017,7 +4050,7 @@ export const useAllTemplatesFromVnicProfiles = (vnicProfileId,
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddVnicProfile = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -4049,9 +4082,9 @@ export const useAddVnicProfile = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useEditVnicProfile = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
-  const queryClient = useQueryClient();  
+  const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async ({ vnicId, vnicData }) => {
@@ -4082,7 +4115,7 @@ export const useEditVnicProfile = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDeleteVnicProfile = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -4118,7 +4151,7 @@ export const useDeleteVnicProfile = (
  * @see ApiManager.findAllNetworkFilters
  */
 export const useNetworkFilters = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allNetworkFilters'],
@@ -4143,7 +4176,7 @@ export const useNetworkFilters = (
  * @returns useQuery훅
  */
 export const useAllStorageDomains = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allStorageDomains'],
@@ -4186,11 +4219,11 @@ export const useStroageDomain = (storageDomainId) => useQuery({
  * @see ApiManager.findActiveDomainFromDataCenter
  */
 export const useAllActiveDomainsFromDataCenter = (
-  dataCenterId, 
-  mapPredicate=(e) => ({ ...e })
+  dataCenterId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllActiveDomainsFromDataCenter', dataCenterId], 
+  queryKey: ['AllActiveDomainsFromDataCenter', dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.findActiveDomainFromDataCenter(dataCenterId);
     const _res = mapPredicate
@@ -4214,10 +4247,10 @@ export const useAllActiveDomainsFromDataCenter = (
  */
 export const useAllDataCentersFromDomain = (
   storageDomainId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allDataCentersFromDomain', storageDomainId], 
+  queryKey: ['allDataCentersFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllDataCentersFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -4240,7 +4273,7 @@ export const useAllDataCentersFromDomain = (
  */
 export const useAllHostsFromDomain = (
   storageDomainId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   queryKey: ['allHostsFromDomain', storageDomainId],
   queryFn: async () => {
@@ -4264,11 +4297,11 @@ export const useAllHostsFromDomain = (
  * 
  * @see ApiManager.findAllVMsFromDomain
  */
-export const useAllVMsFromDomain = (storageDomainId, 
-  mapPredicate=(e) => ({ ...e })
+export const useAllVMsFromDomain = (storageDomainId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allVMsFromDomain', storageDomainId], 
+  queryKey: ['allVMsFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllVMsFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -4292,8 +4325,8 @@ export const useAllVMsFromDomain = (storageDomainId,
  * 
  * @see ApiManager.findAllUnregisterdVMsFromDomain
  */
-export const useAllUnregisteredVMsFromDomain = (storageDomainId, 
-  mapPredicate=(e) => ({ ...e })
+export const useAllUnregisteredVMsFromDomain = (storageDomainId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   // queryKey: ['AllVMFromDomain', storageDomainId], 
@@ -4319,11 +4352,11 @@ export const useAllUnregisteredVMsFromDomain = (storageDomainId,
  * 
  * @see ApiManager.findAllDataCenterFromDomain
  */
-export const useAllDisksFromDomain = (storageDomainId, 
-  mapPredicate=(e) => ({ ...e })
+export const useAllDisksFromDomain = (storageDomainId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allDisksFromDomain', storageDomainId], 
+  queryKey: ['allDisksFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllDisksFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -4344,11 +4377,11 @@ export const useAllDisksFromDomain = (storageDomainId,
  * 
  * @see ApiManager.findAllUnregisteredDisksFromDomain
  */
-export const useAllUnregisteredDisksFromDomain = (storageDomainId, 
-  mapPredicate=(e) => ({ ...e })
+export const useAllUnregisteredDisksFromDomain = (storageDomainId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allUnregisteredDisksFromDomain', storageDomainId], 
+  queryKey: ['allUnregisteredDisksFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllUnregisteredDisksFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -4367,12 +4400,12 @@ export const useAllUnregisteredDisksFromDomain = (storageDomainId,
  */
 //TODO: 변경필요 useSearchFcFromHost 참고
 export const useRegisteredDiskFromDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async ({storageDomainId, diskId}) => {
+    mutationFn: async ({ storageDomainId, diskId }) => {
       closeModal();
       const res = await ApiManager.registeredDiskFromDomain(storageDomainId, diskId);
       const _res = validate(res) ?? {}
@@ -4399,12 +4432,12 @@ export const useRegisteredDiskFromDomain = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDeletRegisteredDiskFromDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({ 
-    mutationFn: async ({storageDomainId, diskId}) => {
+  return useMutation({
+    mutationFn: async ({ storageDomainId, diskId }) => {
       closeModal();
       const res = await ApiManager.deleteRegisteredDiskFromDomain(storageDomainId, diskId);
       const _res = validate(res) ?? {}
@@ -4436,10 +4469,10 @@ export const useDeletRegisteredDiskFromDomain = (
  */
 export const useAllTemplatesFromDomain = (
   storageDomainId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allTemplatesFromDomain', storageDomainId], 
+  queryKey: ['allTemplatesFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplatesFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -4461,11 +4494,11 @@ export const useAllTemplatesFromDomain = (
  * @see ApiManager.findAllUnregisteredTemplatesFromDomain
  */
 export const useAllUnregisteredTemplatesFromDomain = (
-  storageDomainId, 
-  mapPredicate=(e) => ({ ...e })
+  storageDomainId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allUnregisteredTemplatesFromDomain', storageDomainId], 
+  queryKey: ['allUnregisteredTemplatesFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllUnregisteredTemplatesFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -4487,8 +4520,8 @@ export const useAllUnregisteredTemplatesFromDomain = (
  * @see ApiManager.findAllDataCenterFromDomain
  */
 export const useAllDiskProfilesFromDomain = (
-  storageDomainId, 
-  mapPredicate=(e) => ({ ...e })
+  storageDomainId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allDiskProfilesFromDomain', storageDomainId],
@@ -4513,11 +4546,11 @@ export const useAllDiskProfilesFromDomain = (
  * @see ApiManager.findAllDataCenterFromDomain
  */
 export const useAllDiskSnapshotsFromDomain = (
-  storageDomainId, 
-  mapPredicate=(e) => ({ ...e })
+  storageDomainId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllDiskSnapshotFromDomain', storageDomainId], 
+  queryKey: ['AllDiskSnapshotFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllDiskSnapshotsFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -4541,13 +4574,13 @@ export const useAllDiskSnapshotsFromDomain = (
  * @see ApiManager.findAllDataCenterFromDomain
  */
 export const useAllEventsFromDomain = (
-  storageDomainId, 
-  mapPredicate=(e) => ({ ...e })
+  storageDomainId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['AllEventFromDomain', storageDomainId], 
+  queryKey: ['AllEventFromDomain', storageDomainId],
   queryFn: async () => {
-    if(storageDomainId === '') return [];
+    if (storageDomainId === '') return [];
     const res = await ApiManager.findAllEventsFromDomain(storageDomainId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
@@ -4567,10 +4600,10 @@ export const useAllEventsFromDomain = (
  * @see ApiManager.findActiveDataCenters
  */
 export const useAllActiveDataCenters = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allActiveDataCenters'], 
+  queryKey: ['allActiveDataCenters'],
   queryFn: async () => {
     const res = await ApiManager.findActiveDataCenters();
     const _res = mapPredicate
@@ -4588,16 +4621,16 @@ export const useAllActiveDataCenters = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async (domainData) => {
-      closeModal()
+      closeModal();
       const res = await ApiManager.addDomain(domainData);
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useAddDomain ... domainData: ${JSON.stringify(domainData, null ,2)}`);
+      Logger.debug(`RQHook > useAddDomain ... domainData: ${JSON.stringify(domainData, null, 2)}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -4621,14 +4654,16 @@ export const useAddDomain = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useImportDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async (domainData) => {
+      closeModal();
       const res = await ApiManager.importDomain(domainData)
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useImportDomain ... domainData: ${JSON.stringify(domainData, null ,2)}`);
+      Logger.debug(`RQHook > useImportDomain ... domainData: ${JSON.stringify(domainData, null, 2)}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -4651,7 +4686,7 @@ export const useImportDomain = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useEditDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -4660,7 +4695,7 @@ export const useEditDomain = (
       closeModal();
       const res = await ApiManager.editDomain(domainId, domainData)
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useEditDomain ... domainId: ${domainId}, domainData: ${JSON.stringify(domainData, null ,2)}`);
+      Logger.debug(`RQHook > useEditDomain ... domainId: ${domainId}, domainData: ${JSON.stringify(domainData, null, 2)}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -4684,17 +4719,19 @@ export const useEditDomain = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDeleteDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
-  return useMutation({ 
-    mutationFn: async ({domainId, format, hostName }) => {
+  const { closeModal } = useUIState();
+  return useMutation({
+    mutationFn: async ({ domainId, format, hostName }) => {
+      closeModal();
       const res = await ApiManager.deleteDomain(domainId, format, hostName);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useDeleteDomain ... domainId: ${domainId}, format: ${format}, hostName: ${hostName}`);
       return _res;
     },
-    onSuccess: (res) => {      
+    onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteDomain ... res: `, res);
       toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.REMOVE} 요청완료`);
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
@@ -4715,11 +4752,13 @@ export const useDeleteDomain = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDestroyDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async (storageDomainId) => {
+      closeModal();
       const res = await ApiManager.destroyDomain(storageDomainId);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useDestroyDomain ... storageDomainId: ${storageDomainId}`);
@@ -4746,11 +4785,13 @@ export const useDestroyDomain = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useRefreshLunDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async (domainId) => {
+      closeModal();
       const res = await ApiManager.refreshLunDomain(domainId);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useRefreshLunDomain ... domainId: ${domainId}`);
@@ -4777,11 +4818,13 @@ export const useRefreshLunDomain = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useOvfUpdateDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async (domainId) => {
+      closeModal();
       const res = await ApiManager.updateOvfDomain(domainId);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useOvfUpdateDomain ... domainId: ${domainId}`);
@@ -4808,11 +4851,13 @@ export const useOvfUpdateDomain = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useActivateDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async ({domainId, dataCenterId}) => {
+    mutationFn: async ({ domainId, dataCenterId }) => {
+      closeModal();
       const res = await ApiManager.activateDomain(domainId, dataCenterId);
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useActivateDomain ... domainId: ${domainId}, dataCenterId: ${dataCenterId}`);
@@ -4839,12 +4884,12 @@ export const useActivateDomain = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAttachDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async ({storageDomainId, dataCenterId}) => {
+    mutationFn: async ({ storageDomainId, dataCenterId }) => {
       closeModal();
       const res = await ApiManager.attachDomain(storageDomainId, dataCenterId);
       const _res = validate(res) ?? {}
@@ -4872,12 +4917,12 @@ export const useAttachDomain = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDetachDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async ({domainId, dataCenterId}) => {
+    mutationFn: async ({ domainId, dataCenterId }) => {
       closeModal();
       const res = await ApiManager.detachDomain(domainId, dataCenterId);
       const _res = validate(res) ?? {}
@@ -4888,14 +4933,11 @@ export const useDetachDomain = (
       Logger.debug(`RQHook > useDetachDomain ... res: `, res);
       toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.DETACH} 요청완료`);
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
-
-      closeModal();
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       toast.error(error.message);
-      closeModal();
       postError && postError(error);
     },
   });
@@ -4908,12 +4950,12 @@ export const useDetachDomain = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useMaintenanceDomain = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async ({domainId, dataCenterId, ovf}) => {
+    mutationFn: async ({ domainId, dataCenterId, ovf }) => {
       closeModal();
       const res = await ApiManager.maintenanceDomain(domainId, dataCenterId, ovf);
       const _res = validate(res) ?? {}
@@ -4924,13 +4966,11 @@ export const useMaintenanceDomain = (
       Logger.debug(`RQHook > useMaintenanceDomain ... res: `, res);
       toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.MAINTENANCE} 요청완료`);
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
-      closeModal();
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       toast.error(error.message);
-      closeModal();
       postError && postError(error);
     },
   });
@@ -4946,7 +4986,7 @@ export const useMaintenanceDomain = (
  * @returns useQuery훅
  */
 export const useAllDisks = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allDisks'],
@@ -5007,11 +5047,11 @@ export const useDisk = (
  * @see ApiManager.findAllVmsFromDisk
  */
 export const useAllVmsFromDisk = (
-  diskId, 
-  mapPredicate=(e) => ({ ...e })
+  diskId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allVmsFromDisk', diskId], 
+  queryKey: ['allVmsFromDisk', diskId],
   queryFn: async () => {
     const res = await ApiManager.findAllVmsFromDisk(diskId);
     const _res = mapPredicate
@@ -5034,13 +5074,13 @@ export const useAllVmsFromDisk = (
  * @see ApiManager.findAllStorageDomainsFromDisk
  */
 export const useAllStorageDomainsFromDisk = (
-  diskId, 
-  mapPredicate=(e) => ({ ...e })
+  diskId,
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
-  queryKey: ['allStorageDomainsFromDisk', diskId], 
+  queryKey: ['allStorageDomainsFromDisk', diskId],
   queryFn: async () => {
-    const res = await ApiManager.findAllStorageDomainsFromDisk(diskId); 
+    const res = await ApiManager.findAllStorageDomainsFromDisk(diskId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -5057,14 +5097,16 @@ export const useAllStorageDomainsFromDisk = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddDisk = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async (diskData) => {
+      closeModal();
       const res = await ApiManager.addDisk(diskData);
       const _res = validate(res) ?? {};
-      Logger.debug(`RQHook > useAddDisk ... diskData: ${JSON.stringify(diskData, null ,2)}`);
+      Logger.debug(`RQHook > useAddDisk ... diskData: ${JSON.stringify(diskData, null, 2)}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -5087,14 +5129,16 @@ export const useAddDisk = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useEditDisk = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
-  const queryClient = useQueryClient();  
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async ({ diskId, diskData }) => {
+      closeModal();
       const res = await ApiManager.editDisk(diskId, diskData);
       const _res = validate(res) ?? {};
-      Logger.debug(`RQHook > useEditDisk ... diskId: ${diskId}, diskData: ${JSON.stringify(diskData, null ,2)}`);
+      Logger.debug(`RQHook > useEditDisk ... diskId: ${diskId}, diskData: ${JSON.stringify(diskData, null, 2)}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -5117,11 +5161,13 @@ export const useEditDisk = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useDeleteDisk = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
-  return useMutation({ 
+  const { closeModal } = useUIState();
+  return useMutation({
     mutationFn: async (diskId) => {
+      closeModal();
       const res = await ApiManager.deleteDisk(diskId);
       const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useDeleteDisk ... diskId: ${diskId}`);
@@ -5147,11 +5193,13 @@ export const useDeleteDisk = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useUploadDisk = (
-  inProgress=()=>{},postSuccess=()=>{},postError
+  inProgress = () => { }, postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async (diskData) => {
+      closeModal();
       const res = await ApiManager.uploadDisk(diskData, inProgress);
       const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useUploadDisk ... diskData: ${JSON.stringify(diskData, null, 2)}`);
@@ -5177,11 +5225,13 @@ export const useUploadDisk = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useMoveDisk = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async ({diskId, storageDomainId}) => {
+    mutationFn: async ({ diskId, storageDomainId }) => {
+      closeModal();
       const res = await ApiManager.moveDisk(diskId, storageDomainId)
       const _res = validate(res) ?? {};
       // Logger.debug(`RQHook > useMoveDisk ... diskData: ${JSON.stringify(diskId, storageDomainId, null, 2)}`);
@@ -5190,7 +5240,7 @@ export const useMoveDisk = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useMoveDisk ... res: `, res);
       toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.MOVE} 요청완료`);
-      queryClient.invalidateQueries('allDisks'); 
+      queryClient.invalidateQueries('allDisks');
       postSuccess(res);
     },
     onError: (error) => {
@@ -5207,11 +5257,13 @@ export const useMoveDisk = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useCopyDisk = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async ({diskId, diskImage}) => {
+    mutationFn: async ({ diskId, diskImage }) => {
+      closeModal();
       const res = await ApiManager.copyDisk(diskId, diskImage)
       const _res = validate(res) ?? {};
       Logger.debug(`RQHook > useCopyDisk ... diskImage: ${JSON.stringify(diskImage, null, 2)}`);
@@ -5220,8 +5272,7 @@ export const useCopyDisk = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useCopyDisk ... res: `, res);
       toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.COPY} 요청완료`)
-      queryClient.invalidateQueries('allDisks'); 
-
+      queryClient.invalidateQueries('allDisks');
       postSuccess(res);
     },
     onError: (error) => {
@@ -5240,9 +5291,9 @@ export const useCopyDisk = (
  * @returns useQuery훅
  */
 export const useAllEvents = ({
-  severityThreshold=null,
-  pageNo=null, size=null,
-  mapPredicate=(e) => ({ ...e })
+  severityThreshold = null,
+  pageNo = null, size = null,
+  mapPredicate = (e) => ({ ...e })
 }) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allEvents'],
@@ -5263,7 +5314,7 @@ export const useAllEvents = ({
  * @returns useQuery훅
  */
 export const useAllEventsNormal = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allEventsNormal'],
@@ -5278,7 +5329,7 @@ export const useAllEventsNormal = (
 });
 
 export const useAllEventsAlert = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allNotiEvents'],
@@ -5293,7 +5344,7 @@ export const useAllEventsAlert = (
 });
 
 export const useRemoveEvent = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -5308,7 +5359,7 @@ export const useRemoveEvent = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvent ... res: `, res);
       toast.success(`[200] ${Localization.kr.EVENT} ${Localization.kr.REMOVE} 요청완료`)
-      queryClient.invalidateQueries([QK.DASHBOARD,'allEvents','allNotiEvents','allEventsNormal']);
+      queryClient.invalidateQueries([QK.DASHBOARD, 'allEvents', 'allNotiEvents', 'allEventsNormal']);
       closeModal();
       postSuccess(res);
     },
@@ -5322,12 +5373,12 @@ export const useRemoveEvent = (
 }
 
 export const useRemoveEvents = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async (eventIds=[]) => {
+    mutationFn: async (eventIds = []) => {
       closeModal();
       const res = await ApiManager.removeEvents({ eventIds });
       const _res = validate(res) ?? {}
@@ -5337,7 +5388,7 @@ export const useRemoveEvents = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvents ... res: `, res);
       toast.success(`[200] ${Localization.kr.EVENT} ${Localization.kr.REMOVE} 요청완료`)
-      queryClient.invalidateQueries([QK.DASHBOARD,'allEvents','allNotiEvents','allEventsNormal']);
+      queryClient.invalidateQueries([QK.DASHBOARD, 'allEvents', 'allNotiEvents', 'allEventsNormal']);
       closeModal();
       postSuccess(res);
     },
@@ -5353,8 +5404,8 @@ export const useRemoveEvents = (
 
 //#region: job
 export const useAllJobs = (
-  mapPredicate=(e) => ({ ...e })
-  ,refetchInterval=5000,
+  mapPredicate = (e) => ({ ...e })
+  , refetchInterval = 5000,
 ) => {
   return useQuery({
     refetchOnWindowFocus: true,
@@ -5379,7 +5430,7 @@ export const useAllJobs = (
  */
 export const useJob = (
   jobId,
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['job', jobId],
@@ -5399,7 +5450,7 @@ export const useJob = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddJob = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -5409,7 +5460,7 @@ export const useAddJob = (
       const res = await ApiManager.addJob(job)
       const _res = validate(res) ?? {}
       toast.success(`[200] 작업 생성 요청 성공`)
-      Logger.debug(`RQHook > useAddJob ... job: ${JSON.stringify(job, null ,2)}`);
+      Logger.debug(`RQHook > useAddJob ... job: ${JSON.stringify(job, null, 2)}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -5436,7 +5487,7 @@ export const useAddJob = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useEndJob = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -5472,7 +5523,7 @@ export const useEndJob = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useRemoveJob = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -5489,13 +5540,11 @@ export const useRemoveJob = (
       toast.success(`[200] ${Localization.kr.JOB} ${Localization.kr.REMOVE} 요청완료`)
       queryClient.invalidateQueries('allJobs');
       queryClient.invalidateQueries(['job', jobId]); // 수정된 네트워크 상세 정보 업데이트
-      closeModal();
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       toast.error(error.message);
-      closeModal();
       postError && postError(error);
     },
   })
@@ -5508,7 +5557,7 @@ export const useRemoveJob = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useRemoveJobs = (
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -5547,7 +5596,7 @@ export const useRemoveJobs = (
  * @returns useQuery훅
  */
 export const useAllUsers = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allUsers'],
@@ -5569,7 +5618,7 @@ export const useAllUsers = (
  */
 export const useUser = (
   username,
-  exposeDetail=false
+  exposeDetail = false
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['user'],
@@ -5589,8 +5638,8 @@ export const useUser = (
  * @returns useQuery훅
  */
 export const useAuthenticate = (
-  username, password, 
-  postSuccess=()=>{},postError
+  username, password,
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -5606,13 +5655,11 @@ export const useAuthenticate = (
       Logger.debug(`RQHook > useAuthenticate ... res: `, res);
       if (!res) throw Error("[403] 로그인에 실패했습니다. 사용자ID 또는 비밀번호가 다릅니다.")
       queryClient.invalidateQueries('allUsers,user');
-      closeModal();
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       toast.error(error.message);
-      closeModal();
       postError && postError(error);
     },
   })
@@ -5626,7 +5673,7 @@ export const useAuthenticate = (
  */
 export const useAddUser = (
   user,
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -5635,7 +5682,7 @@ export const useAddUser = (
       closeModal();
       const res = await ApiManager.addUser(user)
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useAddUser ... user: ${JSON.stringify(user, null ,2)}`);
+      Logger.debug(`RQHook > useAddUser ... user: ${JSON.stringify(user, null, 2)}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -5643,13 +5690,11 @@ export const useAddUser = (
       toast.success(`[200] ${Localization.kr.USER} ${Localization.kr.CREATE} 요청완료`)
       queryClient.invalidateQueries('allUsers,user');
       queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
-      closeModal();
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       toast.error(error.message);
-      closeModal();
       postError && postError(error);
     },
   })
@@ -5662,7 +5707,7 @@ export const useAddUser = (
  */
 export const useEditUser = (
   user,
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -5670,7 +5715,7 @@ export const useEditUser = (
     mutationFn: async () => {
       const res = await ApiManager.editUser(user)
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useEditUser ... user: ${JSON.stringify(user, null ,2)}`);
+      Logger.debug(`RQHook > useEditUser ... user: ${JSON.stringify(user, null, 2)}`);
       return _res;
     },
     onSuccess: (res) => {
@@ -5678,27 +5723,26 @@ export const useEditUser = (
       toast.success(`[200] ${Localization.kr.USER} ${Localization.kr.UPDATE} 요청완료`)
       queryClient.invalidateQueries('allUsers');
       queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
-      closeModal();
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       toast.error(error.message);
-      closeModal();
       postError && postError(error);
     },
   });
 };
 export const useUpdatePasswordUser = (
-  username, 
+  username,
   pwCurrent, pwNew,
-  force=false,
-  postSuccess=()=>{},postError
+  force = false,
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async () => {
+      closeModal();
       const res = await ApiManager.updatePassword(username, pwCurrent, pwNew, force)
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useChangePasswordUser ... username: ${username}, force: ${force}`);
@@ -5710,13 +5754,11 @@ export const useUpdatePasswordUser = (
       toast.success(`[200] ${Localization.kr.USER} 비밀번호 ${Localization.kr.UPDATE} 요청완료`)
       queryClient.invalidateQueries('allUsers');
       queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
-      closeModal();
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       toast.error(error.message);
-      closeModal();
       postError && postError(error);
     },
   });
@@ -5729,12 +5771,13 @@ export const useUpdatePasswordUser = (
  */
 export const useRemoveUser = (
   username,
-  postSuccess=()=>{},postError
+  postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
     mutationFn: async (username) => {
+      closeModal();
       const res = await ApiManager.removeUser(username)
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useRemoveUser ... username: ${username}`);
@@ -5745,13 +5788,11 @@ export const useRemoveUser = (
       toast.success(`[200] ${Localization.kr.USER} ${Localization.kr.REMOVE} 요청완료`)
       queryClient.invalidateQueries('allUsers,user');
       queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
-      closeModal();
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       toast.error(error.message);
-      closeModal();
       postError && postError(error);
     },
   })
@@ -5767,8 +5808,8 @@ export const useRemoveUser = (
  * @returns useQuery훅
  */
 export const useAllUserSessions = (
-  username="",
-  mapPredicate=(e) => ({ ...e })
+  username = "",
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allUserSessions'],
@@ -5785,7 +5826,7 @@ export const useAllUserSessions = (
 
 //#region: Certificate(s)
 export const useAllCerts = (
-  mapPredicate=(e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchOnWindowFocus: true,
   queryKey: ['allCerts'],

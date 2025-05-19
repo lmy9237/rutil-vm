@@ -4,17 +4,18 @@ import toast from "react-hot-toast";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import useSearch from "../../../hooks/useSearch";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import Loading from "../../../components/common/Loading";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TablesOuter from "../../../components/table/TablesOuter";
 import ActionButton from "../../../components/button/ActionButton";
 import TableRowClick from "../../../components/table/TableRowClick";
 import NetworkClusterModal from "../../../components/modal/network/NetworkClusterModal";
-import Localization from "../../../utils/Localization";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import { clusterStatus2Icon } from "../../../components/icons/RutilVmIcons";
 import SearchBox from "../../../components/button/SearchBox";
 import { useAllClustersFromNetwork } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -24,10 +25,16 @@ import Logger from "../../../utils/Logger";
  * @prop {string} networkId 네트워크 ID
  * @returns {JSX.Element} NetworkClusters
  */
-const NetworkClusters = ({ networkId }) => {
+const NetworkClusters = ({
+  networkId
+}) => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal } = useUIState()
-  const { clustersSelected, setClustersSelected } = useGlobal()
+  const { 
+    datacentersSelected,
+    networksSelected,
+    clustersSelected, setClustersSelected
+  } = useGlobal()
 
   const {
     data: clusters = [],
@@ -105,9 +112,11 @@ const NetworkClusters = ({ networkId }) => {
         ]}
         isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
       />
-
       <SelectedIdView item={clustersSelected}/>
-
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.NETWORK}>${Localization.kr.NETWORK}>${networksSelected[0]?.name}`}
+        path={`networks-clusters;name=${networksSelected[0]?.name};dataCenter=${datacentersSelected[0]?.name}`}
+      />
       {/* 네트워크 관리창 */}
       <Suspense fallback={<Loading />}>
         {activeModal().includes("network:manage")  && (

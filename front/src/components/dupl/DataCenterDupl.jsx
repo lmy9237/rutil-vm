@@ -3,15 +3,16 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch";
+import SelectedIdView from "../common/SelectedIdView";
+import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
 import TablesOuter from "../table/TablesOuter";
 import SearchBox from "../button/SearchBox"; 
 import DataCenterActionButtons from "./DataCenterActionButtons";
+import { getStatusSortKey } from "../icons/GetStatusSortkey";
 import TableRowClick from "../table/TableRowClick";
 import { status2Icon } from "../icons/RutilVmIcons";
 import Localization from "../../utils/Localization";
-import SelectedIdView from "../common/SelectedIdView";
 import Logger from "../../utils/Logger";
-import { getStatusSortKey } from "../icons/GetStatusSortkey";
 
 /**
  * @name DataCenterDupl
@@ -76,6 +77,7 @@ const DataCenterDupl = ({
         isLoading={isLoading} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={datacentersSelected} />
+      <OVirtWebAdminHyperlink name={`${Localization.kr.COMPUTING}>${Localization.kr.DATA_CENTER}`} path="dataCenters" />
     </>
   );
 };
