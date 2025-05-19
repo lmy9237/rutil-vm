@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
-import "./RadialBarChart.css";
 import CONSTANT from "../../Constants";
+import "./RadialBarChart.css";
 
-const RadialBarChart = ({ 
+const RadialBarChart = ({
+  label="라벨위치",
   percentage=0,
   ...props
 }) => {
@@ -46,27 +47,27 @@ const RadialBarChart = ({
       type: "radialBar",
       // redrawOnParentResize: true,
     },
+    labels: [label],
+    colors: ["#FF4560"],
     plotOptions: {
       radialBar: {
         hollow: {
-          size: "85%",
+          size: "100",
         },
         dataLabels: {
           show: true,
           name: {
-            show: false,
+            color: CONSTANT.color.black,
           },
           value: {
-            color: "#111",
-            formatter: (val) => {
-              return parseInt(val) + "%";
-            },
+            color: CONSTANT.color.black,
+            formatter: (val) => `${parseInt(val)}%`,
           },
         },
         track: {
-          background: "#e7e7e7",
           strokeWidth: "100%",
-          margin: -3,
+          /*background: "#e7e7e7",*/
+          margin: -10,
         },
         stroke: {
           lineCap: "round",
@@ -80,27 +81,17 @@ const RadialBarChart = ({
       y: {
         formatter: (val) => `${parseInt(val)}%`,
         title: {
-          formatter: () => "", 
+          formatter: () => "",
         },
       },
     },
-    labels: [],
-    colors: ["#FF4560"],
   });
 
   useEffect(() => {
     setSeries([percentage]);
-
-    let color = CONSTANT.color.alert;
-    if (percentage < 50) {
-      color = "#8FC855";
-    } else if (percentage < 80) {
-      color = "#F49153";
-    }
-
     setChartOptions((prevOptions) => ({
       ...prevOptions,
-      colors: [color],
+      colors: [CONSTANT.color.byPercentage(percentage)],
       plotOptions: {
         ...prevOptions.plotOptions,
         radialBar: {
@@ -121,7 +112,6 @@ const RadialBarChart = ({
 
   return (
     /* css로 빼기 */
-    // <div className="f-center w-full">\
     <>
       <div 
         className="f-center w-full h-full"
@@ -135,10 +125,7 @@ const RadialBarChart = ({
           {...props}
         />
       </div>
-      <div>라벨위치</div>
       </>
-    // </div>
-
     //     <ReactApexChart type="radialBar" 
     //       id="chart-radial" /* css id,class 둘다 먹힘 */          
     //       options={chartOptions}

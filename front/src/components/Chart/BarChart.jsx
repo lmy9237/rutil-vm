@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
 import "./BarChart.css";
+import CONSTANT from "../../Constants";
 
 const BarChart = ({ 
   names,
@@ -38,25 +39,24 @@ const BarChart = ({
     //   paddedNames.push("");           
     //   paddedPercentages.push(0);    
     // }
-
     // 색상 매핑
     const getColor = (val) => {
-      if (val< 50) return "#8FC855";  
-      if (val < 80) return "#F49153";    
+      if (val < 50) return "#8FC855";
+      if (val < 80) return CONSTANT.color.warn;
       // if (val >= 65) return "#FFC58A";    
-      return "#E7F2FF";                   
+      return CONSTANT.color.ok;
     };
-    const dynamicColors = paddedPercentages.map(getColor);
+    const dynamicColors = paddedPercentages.map((e) => CONSTANT.color.byPercentage(e));
     while (paddedNames.length < 3) {
-    paddedNames.push("");
-    paddedPercentages.push(0);
-    dynamicColors.push("transparent"); // 색도 빈 항목용
-  }
+      paddedNames.push("");
+      paddedPercentages.push(0);
+      dynamicColors.push("transparent"); // 색도 빈 항목용
+    }
 
     setSeries([{ data: paddedPercentages }]);
     setChartOptions((prevOptions) => ({
       ...prevOptions,
-          colors: dynamicColors,
+      colors: dynamicColors,
       xaxis: {
         ...prevOptions.xaxis,
         categories: paddedNames,
@@ -105,7 +105,7 @@ const BarChart = ({
       formatter: function (val, opt) {
         const label = opt.w.globals.labels[opt.dataPointIndex];
         if (val === 0 && !label) return ""; 
-        return `${label}: ${val}`;
+        return `${label}: ${val}%`;
       },
       offsetX: 0,
  
@@ -142,7 +142,12 @@ const BarChart = ({
         title: {
         },
       },
-      custom: function({ series, seriesIndex, dataPointIndex, w }) {
+      custom: function({ 
+        series, 
+        seriesIndex, 
+        dataPointIndex,
+        w
+      }) {
         const label = w.globals.labels[dataPointIndex];
         const value = series[seriesIndex][dataPointIndex];
         if (!label) return ""; // 빈 항목이면 툴팁 안 뜸
@@ -152,19 +157,17 @@ const BarChart = ({
   });
 
   return (
-    // <div className="f-center w-full">
-      <div className="f-center h-full">
-        <ReactApexChart type="bar" 
-          id="chart-bar" /* css id는 먹히지만 class명은 안먹힘 */
-          options={chartOptions}
-          series={series}
-          height="80%" // 부모 기준
-          // width={chartSize.width}
-          // height={chartSize.height || "250px"}
-          {...props}
-        />
-      </div>
-    // </div>
+    <div className="f-center h-full">
+      <ReactApexChart type="bar" 
+        id="chart-bar" /* css id는 먹히지만 class명은 안먹힘 */
+        options={chartOptions}
+        series={series}
+        height="80%" // 부모 기준
+        // width={chartSize.width}
+        // height={chartSize.height || "250px"}
+        {...props}
+      />
+    </div>
   );
 };
 

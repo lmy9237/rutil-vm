@@ -303,7 +303,7 @@ export const BoxChartAllGraphs = ({ type }) => {
 };
 
 const RadialChartAll = ({
-  type , size
+  type, size
 }) => {
   const {
     data: cpuMemory,
@@ -335,6 +335,16 @@ const RadialChartAll = ({
           : 0
   ), [type, cpuMemory, storage])
 
+  const _label = useMemo(() => 
+    type === "cpu"
+      ? "호스트 CPU 평균 사용율"
+      : type === "memory" 
+        ? "호스트 메모리 평균 사용율"
+        : type === "domain"
+          ? "스토리지 사용율"
+          : ""
+  , [type, cpuMemory, storage])
+
   return (
     <div className="graph-chart-all v-center radial-graph"
       style={{
@@ -346,6 +356,7 @@ const RadialChartAll = ({
       }}
     >
       <RadialBarChart 
+        label={_label}
         percentage={_percentage} 
       />
     </div>

@@ -133,6 +133,9 @@ const CONSTANT = {
     uuid: /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
   },
   color: {
+    ok: "#E7F2FF",
+    ok2: "#8FC855",
+    warn: "#F46C53",
     logo: "#8CC453",
     logText: "#4679BC",
     black: "#1D1D1D",
@@ -143,6 +146,12 @@ const CONSTANT = {
     blue: "#1D56BC",
     blue1: '#0A7CFF',
     primary: "#020B79",
+    byPercentage(percentage) {
+      let color = CONSTANT.color.alert;
+      if (percentage < 50)      color = CONSTANT.color.ok2;
+      else if (percentage < 80) color = CONSTANT.color.warn;
+      return color
+    }
   }
 }
 
