@@ -34,6 +34,7 @@ enum class Term(
 	HOST_DEVICES("호스트 장비"),
 	EXTERNAL_HOST_PROVIDER("외부 호스트 공급자"),
 	CLUSTER("클러스터"),
+	CLUSTER_LEVEL("클러스터 레벨"),
 	TEMPLATE("탬플릿"),
 	WATCHDOG("워치독"),
 	FENCE_AGENT("펜스 에이전트"),

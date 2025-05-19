@@ -56,6 +56,9 @@ const RadialBarChart = ({
         },
         dataLabels: {
           show: true,
+          textAnchor: "start",
+          distributed: false,
+          offsetY: 90,
           name: {
             color: CONSTANT.color.black,
           },

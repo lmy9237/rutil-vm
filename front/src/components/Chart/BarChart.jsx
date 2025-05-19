@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
-import "./BarChart.css";
 import CONSTANT from "../../Constants";
+import "./BarChart.css";
 
 const BarChart = ({ 
   names,
@@ -39,13 +39,6 @@ const BarChart = ({
     //   paddedNames.push("");           
     //   paddedPercentages.push(0);    
     // }
-    // 색상 매핑
-    const getColor = (val) => {
-      if (val < 50) return "#8FC855";
-      if (val < 80) return CONSTANT.color.warn;
-      // if (val >= 65) return "#FFC58A";    
-      return CONSTANT.color.ok;
-    };
     const dynamicColors = paddedPercentages.map((e) => CONSTANT.color.byPercentage(e));
     while (paddedNames.length < 3) {
       paddedNames.push("");
@@ -107,8 +100,6 @@ const BarChart = ({
         if (val === 0 && !label) return ""; 
         return `${label}: ${val}%`;
       },
-      offsetX: 0,
- 
     },
     stroke: {
       width: 1,

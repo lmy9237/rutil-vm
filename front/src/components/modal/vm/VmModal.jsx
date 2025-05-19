@@ -86,9 +86,17 @@ const bootForm = {
 };
 
 const VmModal = ({ 
-  isOpen, onClose, editMode = false, copyMode = false, templateId ,
+  isOpen, 
+  onClose, 
+  editMode=false,
+  copyMode=false,
+  templateId,
 }) => {
-  const vLabel = editMode ? Localization.kr.UPDATE : (copyMode ? "복제" : Localization.kr.CREATE);
+  const vLabel = editMode 
+    ? Localization.kr.UPDATE
+    : copyMode 
+      ? "복제" 
+      : Localization.kr.CREATE;
 
   const { vmsSelected } = useGlobal();
   const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
@@ -155,9 +163,8 @@ const VmModal = ({
   } = useHostsFromCluster(clusterVo.id, (e) => ({ ...e }));
   const { 
     data: osList = [], 
-    isLoading: isOssLoading 
+    isLoading: isOsListLoading
   } = useOsSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
-  
   const { 
     data: domains = [], 
     isLoading: isDomainsLoading 

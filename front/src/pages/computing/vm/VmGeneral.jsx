@@ -4,10 +4,10 @@ import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHype
 import InfoTable from "../../../components/table/InfoTable";
 import SemiCircleChart from "../../../components/Chart/SemiCircleChart";
 import TableRowClick from "../../../components/table/TableRowClick";
-import { useVm } from "../../../api/RQHook";
 import CONSTANT from "../../../Constants";
 import { convertBytesToMB } from "../../../util";
 import { RVI16, rvi16Cluster, rvi16Host } from "../../../components/icons/RutilVmIcons";
+import { useVm, useOsSystemsFromCluster } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import "./Vm.css"
 
@@ -24,7 +24,7 @@ const VmGeneral = ({
 }) => {
   const {
     vmsSelected, setVmsSelected, 
-    setClustersSelected,
+    clustersSelected, setClustersSelected,
     setHostsSelected
   } = useGlobal()
   const {
@@ -34,6 +34,11 @@ const VmGeneral = ({
     isSuccess: isVmSuccess,
   } = useVm(vmId);
 
+  const { 
+    data: osList = [], 
+    isLoading: isOsListLoading
+  } = useOsSystemsFromCluster(clustersSelected[0]?.id, (e) => ({ ...e }));
+  
   useEffect(() => {
     if (vm?.hostVo)
       setHostsSelected(vm?.hostVo)
@@ -43,8 +48,9 @@ const VmGeneral = ({
   }, [vm])
 
   const osLabel = useMemo(() => (
-    CONSTANT.osOptions.find((e) => e.value === vm?.osType)?.label || vm?.osSystem
-  ), [vm])
+    osList.find((e) => e?.name === vm?.osType)
+      ?.description || vm?.osSystem
+  ), [vmId, vm])
     
   const chipsetLabel = useMemo(() => (
     CONSTANT.chipsetOptions.find((option) => option.value === vm?.biosType)?.label || vm?.chipsetFirmwareType

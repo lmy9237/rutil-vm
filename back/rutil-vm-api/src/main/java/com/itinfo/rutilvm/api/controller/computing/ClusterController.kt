@@ -342,7 +342,6 @@ class ClusterController: BaseController() {
 		return ResponseEntity.ok(iCluster.findAllEventsFromCluster(clusterId))
 	}
 
-
 	@ApiOperation(
 		httpMethod="GET",
 		value="가상머신 생성창 - 운영시스템 목록",
@@ -358,6 +357,29 @@ class ClusterController: BaseController() {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun osSystem(
+		@PathVariable clusterId: String? = null
+	): ResponseEntity<List<OsVo>> {
+		if (clusterId.isNullOrEmpty())
+			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
+		log.info("/computing/clusters/{}/osSystems ... 클러스터 운영시스템 목록", clusterId)
+		return ResponseEntity.ok(iCluster.findAllOsSystemFromCluster(clusterId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="클러스터 레벨 목록",
+		notes="클러스터 레벨 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="levelId", value="레벨 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/levels")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun clusterLevels(
 		@PathVariable clusterId: String? = null
 	): ResponseEntity<List<OsVo>> {
 		if (clusterId.isNullOrEmpty())

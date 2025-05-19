@@ -148,7 +148,6 @@ interface ItClusterService {
 	 */
 	@Throws(Error::class)
 	fun findAllEventsFromCluster(clusterId: String): List<EventVo>
-
 	/**
 	 * [ItClusterService.findAllOsSystemFromCluster]
 	 * 가상머신 operation system
