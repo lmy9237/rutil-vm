@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
-import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import LabelInput from "../../label/LabelInput";
 import TabNavButtonGroup from "../../common/TabNavButtonGroup";
@@ -10,7 +9,6 @@ import LabelSelectOptions from "../../label/LabelSelectOptions";
 import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
-import { useEditHostNetworkFromHost } from "../../../api/RQHook";
 
 
 const HostNetworkEditModal = ({ 
@@ -31,7 +29,7 @@ const HostNetworkEditModal = ({
     { id: "dns",   label: "DNS 설정", onClick: () => setSelectedModalTab("dns") },
   ], []);
 
-  const { mutate: editNetworkAttach} = useEditHostNetworkFromHost(onClose, onClose)
+  // const { mutate: editNetworkAttach} = useEditHostNetworkFromHost(onClose, onClose)
   
   const [id, setId] = useState("");
   const [inSync, setInSync] = useState(false);
@@ -124,11 +122,11 @@ const HostNetworkEditModal = ({
 
     Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`);
 
-    editNetworkAttach({
-      hostId: hostId,
-      networkAttachmentId: networkAttachment.id,
-      networkAttachmentData: dataToSubmit,
-    });
+    // editNetworkAttach({
+    //   hostId: hostId,
+    //   networkAttachmentId: networkAttachment.id,
+    //   networkAttachmentData: dataToSubmit,
+    // });
   };
 
 

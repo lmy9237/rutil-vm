@@ -69,7 +69,9 @@ fun Bonding.toBondingVo(conn: Connection, hostId: String): BondingVo {
 fun BondingVo.toBondingBuilder(): BondingBuilder {
     return BondingBuilder()
         .options(toDefaultOption()) // 기본 옵션지정 mode1
-        .slaves(this@toBondingBuilder.slaves.map { HostNicBuilder().id(it.id).build() })
+		.slaves(this.slaves.map { slave ->
+			HostNicBuilder().id(slave.id).build()
+		})
 }
 
 // 호스트 네트워크 설정 - 본딩 인터페이스 생성

@@ -81,27 +81,41 @@ fun List<NetworkAttachment>.toNetworkAttachmentVos(): List<NetworkAttachmentVo> 
 
 
 /**
- * 호스트 네트워크 modified_network_attachments
- * host_nic 빌더
+ * 호스트 네트워크 수정 modified_network_attachments
  */
-fun NetworkAttachmentVo.toNetworkAttachmentBuilder(): NetworkAttachmentBuilder =
-	NetworkAttachmentBuilder()
-		.network(NetworkBuilder().id(this.networkVo.id).build())
-
 fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment {
-	val builder = toNetworkAttachmentBuilder()
-		.hostNic(HostNicBuilder().id(this.hostNicVo.id).build())
-		.ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
+	// val builder = NetworkAttachmentBuilder()
+	// 	.network(NetworkBuilder().id(this.networkVo.id).build())
+	// 	.hostNic(HostNicBuilder().id(this.hostNicVo.id).build())
+	// 	.ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
+	//
+	// DNS가 있다는 전제하에
+	// if (this.nameServerList != null) {
+	// 	builder.dnsResolverConfiguration(
+	// 		DnsResolverConfigurationBuilder().nameServers(this.nameServerList).build()
+	// 	)
+	// }
 
-	if (this.nameServerList != null) {
-		builder.dnsResolverConfiguration(
-			DnsResolverConfigurationBuilder().nameServers(this.nameServerList).build()
-		)
-	}
-	return builder.build()
+	return NetworkAttachmentBuilder()
+		.network(NetworkBuilder().id(this.networkVo.id).build())
+		.hostNic(HostNicBuilder().name(this.hostNicVo.name).build())
+		.ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
+		.build()
 }
 
 // 여러개
 fun List<NetworkAttachmentVo>.toModifiedNetworkAttachments(): List<NetworkAttachment> =
-    this@toModifiedNetworkAttachments.map { it.toModifiedNetworkAttachment() }
+    this.map { it.toModifiedNetworkAttachment() }
 
+/**
+ * 호스트 네트워크 remove_network_attachments
+ */
+fun NetworkAttachmentVo.toRemoveNetworkAttachment(): NetworkAttachment {
+	return NetworkAttachmentBuilder()
+		.id(this.id)
+		// .network(NetworkBuilder().id(this.networkVo.id).build())
+		// .hostNic(HostNicBuilder().id(this.hostNicVo.id).build())
+		.build()
+}
+fun List<NetworkAttachmentVo>.toRemoveNetworkAttachments(): List<NetworkAttachment> =
+	this.map { it.toRemoveNetworkAttachment() }

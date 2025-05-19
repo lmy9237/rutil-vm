@@ -1220,26 +1220,26 @@ export const useNetworkAttachmentFromHost = (
 })
 
 /**
- * @name useEditHostNetworkFromHost
- * @description 호스트 네트워크 수정 useMutation 훅
+ * @name useSetupNetworksFromHost
+ * @description 호스트 인터페이스 수정 useMutation 훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.editNetworkAttachmentFromHost
  */
-export const useEditHostNetworkFromHost = (
+export const useSetupNetworksFromHost = (
   postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient();  
   const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async ({ hostId, networkAttachmentId, networkAttachmentData }) => {
+    mutationFn: async ({ hostId, hostNetwork }) => {
       closeModal();
-      const res = await ApiManager.editNetworkAttachmentFromHost(hostId, networkAttachmentId, networkAttachmentData);
+      const res = await ApiManager.setupHostNicsFromHost(hostId, hostNetwork);
       return validate(res)
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useEditHostNetworkFromHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} ${Localization.kr.UPDATE} 요청완료`)
+      Logger.debug(`RQHook > useSetupNetworksFromHost ... res: `, res);
+      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NICS} ${Localization.kr.UPDATE} 요청완료`)
       queryClient.invalidateQueries('NetworkAttachmentsFromHost');
       postSuccess(res);
     },
@@ -1252,37 +1252,69 @@ export const useEditHostNetworkFromHost = (
 };
 
 /**
+ * @name useEditHostNetworkFromHost
+ * @description 호스트 네트워크 수정 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.editNetworkAttachmentFromHost
+ */
+// export const useEditHostNetworkFromHost = (
+//   postSuccess=()=>{},postError
+// ) => {
+//   const queryClient = useQueryClient();  
+//   const { closeModal } = useUIState();
+//   return useMutation({
+//     mutationFn: async ({ hostId, networkAttachmentId, networkAttachmentData }) => {
+//       closeModal();
+//       const res = await ApiManager.editNetworkAttachmentFromHost(hostId, networkAttachmentId, networkAttachmentData);
+//       return validate(res)
+//     },
+//     onSuccess: (res) => {
+//       Logger.debug(`RQHook > useEditHostNetworkFromHost ... res: `, res);
+//       toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} ${Localization.kr.UPDATE} 요청완료`)
+//       queryClient.invalidateQueries('NetworkAttachmentsFromHost');
+//       postSuccess(res);
+//     },
+//     onError: (error) => {
+//       Logger.error(error.message);
+//       toast.error(error.message);
+//       postError && postError(error);
+//     },
+//   });
+// };
+/*
+/**
  * @name useAddBonding
  * @description 호스트 네트워크 본딩 생성 useMutation 훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.addBonding
  */
-export const useAddBonding = (
-  postSuccess=()=>{},postError
-) => {
-  const queryClient = useQueryClient();
-  const { closeModal } = useUIState();
-  return useMutation({
-    mutationFn: async ({ hostId, bonding }) => {
-      closeModal();
-      const res = await ApiManager.addBonding(hostId, bonding);
-      return validate(res)
-    },
-    onSuccess: (res) => {
-      Logger.debug(`RQHook > useAddBonding ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.CREATE} 요청완료`)
-      queryClient.invalidateQueries('NetworkInterfacesFromHost');
-      postSuccess(res);
-    },
-    onError: (error) => {
-      Logger.error(error.message);
-      toast.error(error.message);
-      closeModal();
-      postError && postError(error);
-    },
-  });
-};
+// export const useAddBonding = (
+//   postSuccess=()=>{},postError
+// ) => {
+//   const queryClient = useQueryClient();
+//   const { closeModal } = useUIState();
+//   return useMutation({
+//     mutationFn: async ({ hostId, bonding }) => {
+//       closeModal();
+//       const res = await ApiManager.addBonding(hostId, bonding);
+//       return validate(res)
+//     },
+//     onSuccess: (res) => {
+//       Logger.debug(`RQHook > useAddBonding ... res: `, res);
+//       toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.CREATE} 요청완료`)
+//       queryClient.invalidateQueries('NetworkInterfacesFromHost');
+//       postSuccess(res);
+//     },
+//     onError: (error) => {
+//       Logger.error(error.message);
+//       toast.error(error.message);
+//       closeModal();
+//       postError && postError(error);
+//     },
+//   });
+// };
 /**
  * @name useEditBonding
  * @description 호스트 네트워크 본딩 수정 useMutation 훅
@@ -1290,30 +1322,30 @@ export const useAddBonding = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.editCluster
  */
-export const useEditBonding = (
-  postSuccess=()=>{},postError
-) => {
-  const queryClient = useQueryClient();  
-  const { closeModal } = useUIState();
-  return useMutation({
-    mutationFn: async ({ hostId, hostNicData }) => {
-      closeModal();
-      const res = await ApiManager.editBonding(hostId, hostNicData);
-      return validate(res)
-    },
-    onSuccess: (res) => {
-      Logger.debug(`RQHook > useEditBonding ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.UPDATE} 요청완료`)
-      queryClient.invalidateQueries('NetworkInterfacesFromHost');
-      postSuccess(res);
-    },
-    onError: (error) => {
-      Logger.error(error.message);
-      toast.error(error.message);
-      postError && postError(error);
-    },
-  });
-};
+// export const useEditBonding = (
+//   postSuccess=()=>{},postError
+// ) => {
+//   const queryClient = useQueryClient();  
+//   const { closeModal } = useUIState();
+//   return useMutation({
+//     mutationFn: async ({ hostId, hostNicData }) => {
+//       closeModal();
+//       const res = await ApiManager.editBonding(hostId, hostNicData);
+//       return validate(res)
+//     },
+//     onSuccess: (res) => {
+//       Logger.debug(`RQHook > useEditBonding ... res: `, res);
+//       toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.UPDATE} 요청완료`)
+//       queryClient.invalidateQueries('NetworkInterfacesFromHost');
+//       postSuccess(res);
+//     },
+//     onError: (error) => {
+//       Logger.error(error.message);
+//       toast.error(error.message);
+//       postError && postError(error);
+//     },
+//   });
+// };
 /**
  * @name useDeleteBonding
  * @description 호스트 네트워크 본딩 삭제 useMutation 훅
@@ -1321,31 +1353,30 @@ export const useEditBonding = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  * @see ApiManager.deleteCluster
  */
-export const useDeleteBonding = (
-  postSuccess=()=>{},postError
-) => {
-  const queryClient = useQueryClient();
-  const { closeModal } = useUIState();
-  return useMutation({ 
-    mutationFn: async (hostId, hostNicData) => {
-      closeModal();
-      const res = await ApiManager.deleteBonding(hostId, hostNicData)
-      return validate(res)
-    },
-    onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteBonding ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.REMOVE} 요청완료`)
-      queryClient.invalidateQueries('NetworkInterfacesFromHost');
-      postSuccess(res);
-    },
-    onError: (error) => {
-      Logger.error(error.message);
-      toast.error(error.message);
-      postError && postError(error);
-    },
-  });
-};
-
+// export const useDeleteBonding = (
+//   postSuccess=()=>{},postError
+// ) => {
+//   const queryClient = useQueryClient();
+//   const { closeModal } = useUIState();
+//   return useMutation({ 
+//     mutationFn: async (hostId, hostNicData) => {
+//       closeModal();
+//       const res = await ApiManager.deleteBonding(hostId, hostNicData)
+//       return validate(res)
+//     },
+//     onSuccess: (res) => {
+//       Logger.debug(`RQHook > useDeleteBonding ... res: `, res);
+//       toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.REMOVE} 요청완료`)
+//       queryClient.invalidateQueries('NetworkInterfacesFromHost');
+//       postSuccess(res);
+//     },
+//     onError: (error) => {
+//       Logger.error(error.message);
+//       toast.error(error.message);
+//       postError && postError(error);
+//     },
+//   });
+// };
 
 /**
  * @name useHostDevicesFromHost

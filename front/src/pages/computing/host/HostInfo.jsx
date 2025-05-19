@@ -8,8 +8,6 @@ import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
 import HostGeneral from "./HostGeneral";
 import HostVms from "./HostVms";
-import HostNics from "./HostNics";
-import HostNics2 from "./HostNics2";
 import HostDevices from "./HostDevices";
 import HostNetworkAdapter from "./HostNetworkAdapter";
 import HostEvents from "./HostEvents";
@@ -18,6 +16,7 @@ import { rvi24Host } from "../../../components/icons/RutilVmIcons";
 import { useHost } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import "./Host.css";
+import HostNics from "./HostNics";
 
 /**
  * @name HostInfo
@@ -73,7 +72,6 @@ const HostInfo = () => {
     { id: "general",        label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
     { id: "vms",            label: Localization.kr.VM,      onClick: () => handleTabClick("vms") },
     { id: "nics",           label: Localization.kr.NICS,    onClick: () => handleTabClick("nics") },
-    { id: "nics2",           label: `${Localization.kr.NICS}2`,    onClick: () => handleTabClick("nics2") },
     { id: "networkAdapter", label: "네트워크 어댑터",          onClick: () => handleTabClick("networkAdapter") },
     { id: "devices",        label: `${Localization.kr.HOST} 장치`, onClick: () => handleTabClick("devices") },
     { id: "events",         label: Localization.kr.EVENT,    onClick: () => handleTabClick("events") },
@@ -95,7 +93,6 @@ const HostInfo = () => {
       general: HostGeneral,
       vms: HostVms,
       nics: HostNics,
-      nics2: HostNics2,
       networkAdapter: HostNetworkAdapter,
       devices: HostDevices,
       events: HostEvents,

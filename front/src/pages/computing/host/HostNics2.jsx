@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense, useMemo } from "react";
+import React, { useState, useEffect, Suspense, useMemo } from "react";
 import { Tooltip } from "react-tooltip";
 import { checkZeroSizeToMbps } from "../../../util";
 import {

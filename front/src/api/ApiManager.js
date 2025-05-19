@@ -753,8 +753,23 @@ const ApiManager = {
     method: "GET", 
     url: ENDPOINTS.FIND_NETWORK_ATTACHMENT_FROM_HOST(hostId, networkAttachmentId), 
   }),
-
   
+  /**
+   * @name ApiManager.setupHostNicsFromHost
+   * @description 
+   *
+   * @param {string} hostId
+   * @param {string} hostNetwork
+   * @returns 
+   * 
+   * @see
+   */
+  setupHostNicsFromHost : async (hostId, hostNetwork) => makeAPICall({
+    method: "POST", 
+    url: ENDPOINTS.SETUP_HOST_NICS_FROM_HOST(hostId), 
+    data: hostNetwork
+  }),
+
   /**
    * @name ApiManager.editNetworkAttachmentFromHost
    * @description 
@@ -765,11 +780,11 @@ const ApiManager = {
    * 
    * @see
    */
-  editNetworkAttachmentFromHost : async (hostId, networkAttachmentId, networkAttachmentData) => makeAPICall({
-    method: "PUT", 
-    url: ENDPOINTS.EDIT_NETWORK_ATTACHMENT_FROM_HOST(hostId, networkAttachmentId), 
-    data: networkAttachmentData
-  }),
+  // editNetworkAttachmentFromHost : async (hostId, networkAttachmentId, networkAttachmentData) => makeAPICall({
+  //   method: "PUT", 
+  //   url: ENDPOINTS.EDIT_NETWORK_ATTACHMENT_FROM_HOST(hostId, networkAttachmentId), 
+  //   data: networkAttachmentData
+  // }),
 
   /**
    * @name ApiManager.addBonding
@@ -779,13 +794,13 @@ const ApiManager = {
    * @param {Object} hostNicData - 추가할 본딩 정보
    * @returns {Promise<Object>} API 응답 결과
    */
-  addBonding: async (hostId, hostNicData) => {
-    return makeAPICall({
-      method: "POST",
-      url: ENDPOINTS.ADD_BONDING_HOST_NIC_FROM_HOST(hostId),
-      data: hostNicData, // POST 요청 시 전송할 데이터
-    });
-  },
+  // addBonding: async (hostId, hostNicData) => {
+  //   return makeAPICall({
+  //     method: "POST",
+  //     url: ENDPOINTS.ADD_BONDING_HOST_NIC_FROM_HOST(hostId),
+  //     data: hostNicData, // POST 요청 시 전송할 데이터
+  //   });
+  // },
   /**
    * @name ApiManager.editBonding
    * @description Bonding 편집
@@ -794,13 +809,13 @@ const ApiManager = {
    * @param {Object} hostNicData - 추가할 본딩 정보
    * @returns {Promise<Object>} API 응답 결과
    */
-  editBonding: async (hostId, hostNicData) => {
-    return makeAPICall({
-      method: "PUT",
-      url: ENDPOINTS.EDIT_BONDING_HOST_NICS_FROM_HOST(hostId),
-      data: hostNicData, // PUT 요청 시 전송할 데이터
-    });
-  },
+  // editBonding: async (hostId, hostNicData) => {
+  //   return makeAPICall({
+  //     method: "PUT",
+  //     url: ENDPOINTS.EDIT_BONDING_HOST_NICS_FROM_HOST(hostId),
+  //     data: hostNicData, // PUT 요청 시 전송할 데이터
+  //   });
+  // },
   /**
    * @name ApiManager.deleteBonding
    * @description Bonding 삭제
@@ -808,28 +823,14 @@ const ApiManager = {
    * @param {String} hostId - 호스트 ID
    * @returns {Promise<Object>} API 응답 결과
    */
-  deleteBonding: async (hostId) => {
-    return makeAPICall({
-      method: "DELETE",
-      url: ENDPOINTS.DELETE_BONDING_HOST_NICS_FROM_HOST(hostId),  // ID를 URL에 포함
-      data: hostId
-    });
-  },
+  // deleteBonding: async (hostId) => {
+  //   return makeAPICall({
+  //     method: "DELETE",
+  //     url: ENDPOINTS.DELETE_BONDING_HOST_NICS_FROM_HOST(hostId),  // ID를 URL에 포함
+  //     data: hostId
+  //   });
+  // },
 
-  /**
-   * @name ApiManager.setupHostNicsFromHost
-   * @description 
-   *
-   * @param {string} hostId
-   * @returns 
-   * 
-   * @see
-   */
-  setupHostNicsFromHost : async (hostId, hostNicData) => makeAPICall({
-    method: "POST", 
-    url: ENDPOINTS.SETUP_HOST_NICS_FROM_HOST(hostId), 
-    data: hostNicData
-  }),
   /**
    * @name ApiManager.findHostdevicesFromHost
    * @description 호스트 장치 목록

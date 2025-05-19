@@ -162,66 +162,6 @@ class ItHostNicServiceImpl(
 		return res?.toNetworkAttachmentVo()
 	}
 
-	// @Throws(Error::class)
-	// override fun updateNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String, networkAttachmentVo: NetworkAttachmentVo): Boolean {
-	// 	log.info("updateNetworkAttachmentFromHost ... hostId: {}, networkAttachmentId: {}, networkAttachmentVo: {}", hostId, networkAttachmentId, networkAttachmentVo)
-	// 	val res: Result<Boolean> = conn.updateNetworkAttachmentFromHost(
-	// 		hostId,
-	// 		networkAttachmentId,
-	// 		networkAttachmentVo.toModifiedNetworkAttachment()
-	// 	)
-	// 	return res.isSuccess
-	// }
-	//
-	// @Throws(Error::class)
-	// override fun removeNetworkAttachmentFromHost(hostId: String, networkAttachmentVo: NetworkAttachmentVo): Boolean {
-	// 	log.info("removeNetworkAttachmentFromHost ... hostId: {}, networkAttachmentVo: {}", hostId, networkAttachmentVo)
-	// 	val res: Result<Boolean> = conn.removeNetworkAttachmentFromHost(
-	// 		hostId,
-	// 		networkAttachmentVo.toModifiedNetworkAttachment()
-	// 	)
-	// 	return res.isSuccess
-	// }
-
-	// @Throws(Error::class)
-	// override fun removeNetworkAttachmentsFromHost(hostId: String, networkAttachmentVos: List<NetworkAttachmentVo>): Boolean {
-	// 	log.info("removeNetworkAttachmentsFromHost ... hostId: {}, networkAttachmentVos: {}", hostId, networkAttachmentVos)
-	// 	val res: Result<Boolean> = conn.removeNetworkAttachmentsFromHost(
-	// 		hostId,
-	// 		networkAttachmentVos.toModifiedNetworkAttachments()
-	// 	)
-	// 	return res.isSuccess
-	// }
-
-	// @Throws(Error::class)
-	// override fun addBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean {
-	// 	log.info("addBondFromHost ... hostId: {}, hostNic: {}", hostId, hostNicVo)
-	// 	val res: Result<Boolean> = conn.modifiedBondFromHost(
-	// 		hostId,
-	// 		hostNicVo.toAddBond()
-	// 	)
-	// 	return res.isSuccess
-	// }
-	//
-	// @Throws(Error::class)
-	// override fun modifiedBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean {
-	// 	log.info("modifiedBondFromHost ... hostId: {}, hostNic: {}", hostId, hostNicVo)
-	// 	val res: Result<Boolean> = conn.modifiedBondFromHost(
-	// 		hostId,
-	// 		hostNicVo.toModifiedBond()
-	// 	)
-	// 	return res.isSuccess
-	// }
-	//
-	// @Throws(Error::class)
-	// override fun removeBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean {
-	// 	log.info("removeBondFromHost ... hostId: {}", hostId)
-	// 	val res: Result<Boolean> = conn.removeBondFromHost(
-	// 		hostId,
-	// 		hostNicVo.toModifiedBond()
-	// 	)
-	// 	return res.isSuccess
-	// }
 
 	@Throws(Error::class)
 	override fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean {
@@ -229,7 +169,9 @@ class ItHostNicServiceImpl(
 		val res: Result<Boolean> = conn.setupNetworksFromHost(
 			hostId,
 			hostNetworkVo.bonds.toModifiedBonds(),
-			hostNetworkVo.networkAttachments.toModifiedNetworkAttachments()
+			hostNetworkVo.bonds.toRemoveBonds(),
+			hostNetworkVo.networkAttachments.toModifiedNetworkAttachments(),
+			hostNetworkVo.networkAttachments.toRemoveNetworkAttachments()
 		)
 		return res.isSuccess
 	}

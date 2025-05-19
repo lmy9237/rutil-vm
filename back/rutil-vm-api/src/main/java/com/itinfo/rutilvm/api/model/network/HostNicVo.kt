@@ -185,28 +185,25 @@ fun List<HostNic>.toSlaveHostNicVos(conn: Connection): List<HostNicVo> =
 // region: builder
 
 /**
- * 호스트 네트워크 본딩 생성
- */
-fun HostNicVo.toHostNicBuilder(): HostNicBuilder {
-	return HostNicBuilder()
-		.bonding(bondingVo.toBonding() )
-}
-
-fun HostNicVo.toAddBond(): HostNic {
-	return toHostNicBuilder()
-		.name(name) // bonding 이름
-		.build()
-}
-
-/**
- * 호스트 네트워크 편집 modified_bonds
+ * 호스트 네트워크 생성/편집 modified_bonds
  */
 fun HostNicVo.toModifiedBond(): HostNic {
-	return toHostNicBuilder()
-		.id(id) // hostNic id
-		.build()
+	return HostNicBuilder()
+			.name(name)
+			.bonding(bondingVo.toBonding())
+			.build()
 }
 fun List<HostNicVo>.toModifiedBonds(): List<HostNic> =
 	this.map { it.toModifiedBond() }
+
+/**
+ * 호스트 본딩 삭제 remove_bonds
+ */
+fun HostNicVo.toRemoveBond(): HostNic {
+	return HostNicBuilder().id(id).build()
+}
+
+fun List<HostNicVo>.toRemoveBonds(): List<HostNic> =
+	this.map { it.toRemoveBond() }
 
 // endregion
