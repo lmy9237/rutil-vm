@@ -33,7 +33,8 @@ const SearchBox = ({
         {onRefresh && (
           <IconButton iconDef={rvi16Refresh("#717171")} 
             className="btn-refresh f-center"
-            onClick={() => onRefresh()}
+            // onClick={() => onRefresh()}
+            onClick={() =>  window.location.reload()}
           />
         )}
         {/* END: 다시 로딩 */}

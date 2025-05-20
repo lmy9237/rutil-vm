@@ -10,11 +10,12 @@ import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VmNicModal from "../../../components/modal/vm/VmNicModal";
 import NicActionButtons from "../../../components/dupl/NicActionButtons";
-import { useNetworkInterfacesFromVM } from "../../../api/RQHook";
+import { useDeleteNetworkInterface, useNetworkInterfacesFromVM } from "../../../api/RQHook";
 import { checkZeroSizeToMbps } from "../../../util";
 import { RVI24, rvi24ChevronDown, rvi24ChevronRight } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
 import "./Vm.css"
+import DeleteModal from "../../../utils/DeleteModal";
 /**
  * @name VmNics
  * @description 가상에 종속 된 네트워크 인터페이스 목록
@@ -26,7 +27,7 @@ import "./Vm.css"
 const VmNics = ({ 
   vmId
 }) => {
-  const { activeModal, setActiveModal, } = useUIState()
+  const { activeModal, closeModal, } = useUIState()
   const {
     vmsSelected,
     nicsSelected, setNicsSelected
@@ -71,7 +72,7 @@ const VmNics = ({
 
   const nicRef = useRef()
   useClickOutside(nicRef, (e) => setNicsSelected([])) /* 외부 창을 눌렀을 때 선택 해제 */
-
+  const { mutate: deleteNic } = useDeleteNetworkInterface(); 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="network-interface-group w-full"
@@ -161,11 +162,21 @@ const VmNics = ({
       />
       <Suspense>
         {activeModal().includes("nic:create") && (
-          <VmNicModal key={"nic:create"} isOpen={activeModal().includes("nic:create")} />
+          <VmNicModal isOpen onClose={() => closeModal("nic:create")} />
         )}
         {activeModal().includes("nic:update") && (
-          <VmNicModal key={activeModal()} isOpen={activeModal().includes("nic:update")} editMode />
+          <VmNicModal isOpen editMode onClose={() => closeModal("nic:update")} />
         )}
+        {activeModal().includes("nic:remove") && (
+            <DeleteModal
+              isOpen
+              onClose={() => closeModal("nic:remove")}
+              label={Localization.kr.NICS}
+              data={nicsSelected}
+              vmId={vmId}
+            api={{ mutate: deleteNic }}
+            />
+          )}
         {/* {activePopup === "delete" && selectedNics && (
           <DeleteModal
             isOpen

@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
@@ -260,8 +259,8 @@ const TemplateModal = ({
               <table>
                 <thead>
                   <tr>
-                    <th style={{width:"30%"}}>{Localization.kr.ALIAS}</th>
-                    <th style={{width:"20%"}}>가상 크기</th>
+                    <th >{Localization.kr.ALIAS}</th>
+                    <th>가상 크기</th>
                     <th >포맷</th>
                     <th >{Localization.kr.TARGET}</th>
                     <th >{Localization.kr.DISK_PROFILE}</th>
@@ -286,6 +285,7 @@ const TemplateModal = ({
                       </td>
                       <td>
                         <LabelSelectOptionsID
+                          className="template-input max-w-[230px]"
                           value={disk.diskImageVo?.storageDomainVo?.id}
                           loading={isDomainsLoading}
                           options={domains.filter((d) => d.status === "ACTIVE")}
@@ -312,6 +312,7 @@ const TemplateModal = ({
                       </td>
                       <td>
                         <LabelSelectOptionsID
+                          className="template-input max-w-[230px]"
                           value={disk.diskImageVo?.diskProfileVo?.id}
                           loading={false}
                           options={diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || []}

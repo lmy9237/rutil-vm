@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
 import {
@@ -138,37 +137,40 @@ const VmNicModal = ({
       contentStyle={{ width: "690px" }}
     >
 
-      <div className="network-popup-content">
-        <LabelInput id="name" label={Localization.kr.NAME}
-          value={formInfoState.name}
-          onChange={handleInputChange(setFormInfoState, "name")}
-        />
-        {/* <LabelSelectOptionsID label="프로파일"
-          value={vnicProfileVo?.id}
-          loading={isNicsLoading}
-          options={vnics}
-          onChange={handleSelectIdChange(setVnicProfileVo, vnics)}
-          // etcLabel={networkVo?.name} // 네트워크명
-        /> */}
-        <LabelSelectOptions label="프로파일"
-          value={vnicProfileVo?.id}
-          loading={isNicsLoading}
-          onChange={(e) => setVnicProfileVo({id: e.target.value})}
-          options={vnics.map(opt => ({
-            value: opt.id,
-            label: `${opt.name} [네트워크: ${opt.networkVo?.name || ""}]`
-          }))}
-        />
-        <LabelSelectOptions label="유형"
-          value={formInfoState.interface_}
-          onChange={handleInputChange(setFormInfoState, "interface_")}
-          options={filteredInterfaceOptions}
-          // disabled={!!vnicProfileVo?.id}
-          disabled={isInterfaceDisabled}
-        />
-        <div className="mac-address fs-12 font-bold py-2 mt-2">사용자 지정 MAC 주소</div>
-      </div>
-
+      <LabelInput id="name" label={Localization.kr.NAME}
+        value={formInfoState.name}
+        onChange={handleInputChange(setFormInfoState, "name")}
+      />
+      {/* <LabelSelectOptionsID label="프로파일"
+        value={vnicProfileVo?.id}
+        loading={isNicsLoading}
+        options={vnics}
+        onChange={handleSelectIdChange(setVnicProfileVo, vnics)}
+        // etcLabel={networkVo?.name} // 네트워크명
+      /> */}
+      <LabelSelectOptions label="프로파일"
+        value={vnicProfileVo?.id}
+        loading={isNicsLoading}
+        onChange={(e) => setVnicProfileVo({id: e.target.value})}
+        options={vnics.map(opt => ({
+          value: opt.id,
+          label: `${opt.name} [네트워크: ${opt.networkVo?.name || ""}]`
+        }))}
+      />
+      <LabelSelectOptions label="유형"
+        value={formInfoState.interface_}
+        onChange={handleInputChange(setFormInfoState, "interface_")}
+        options={filteredInterfaceOptions}
+        // disabled={!!vnicProfileVo?.id}
+        disabled={isInterfaceDisabled}
+      />
+      {/* <LabelInput
+        id="macAddress"
+        label="MAC 주소"
+        placeholder="00:1A:4B:16:01:59"
+        value={formInfoState.macAddress}
+        onChange={handleInputChange(setFormInfoState, "macAddress")}
+      /> */}
       <div className="nic-toggle">
         <ToggleSwitchButton id="linked-toggle" label="링크 상태"
           checked={formInfoState.linked}

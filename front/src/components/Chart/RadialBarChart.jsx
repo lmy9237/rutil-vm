@@ -60,9 +60,12 @@ const RadialBarChart = ({
           distributed: false,
           offsetY: 90,
           name: {
+            offsetY: -10, 
             color: CONSTANT.color.black,
           },
           value: {
+            offsetY: 10, 
+            fontSize: '24px',
             color: CONSTANT.color.black,
             formatter: (val) => `${parseInt(val)}%`,
           },

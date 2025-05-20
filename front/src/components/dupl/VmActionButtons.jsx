@@ -88,9 +88,10 @@ const VmActionButtons = ({
   return (
     <ActionButtonGroup 
       actionType={actionType}
-      actions={basicActions.filter((e) => 
-        e.type !== "console"
-      )}
+      // actions={basicActions.filter((e) => 
+      //   e.type !== "console"
+      // )}
+      actions={basicActions}
     >
       {isContextMenu ? (
         manageActions.map(({ type, label, disabled }) => (
@@ -130,7 +131,10 @@ const VmActionButtons = ({
                 }) => (
                   <button key={type}
                     disabled={disabled}
-                    onClick={onBtnClick}
+                    onClick={(e) => {
+                      setConsoleDropdownActive(false); 
+                      onBtnClick(e); 
+                    }}
                     className="btn-right-click dropdown-item"
                   >
                     {label}

@@ -11,7 +11,6 @@
 }
 .split-item:last-child {
   width: 38%;
-  margin-left: 30px;
 }
 .snapshot-item {
   cursor: pointer;

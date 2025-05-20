@@ -187,7 +187,7 @@ const VmDiskConnectionModal = ({
                 </select>
               ),
               /*
-              컴포넌트로 빼면 옵션값이 안보이는문제
+              // TODO: 컴포넌트로 빼면 옵션값이 테이블셀 안에 가려져서 안보이는 문제
               interface: ( 
                 <LabelSelectOptions
                   id={`interface-select-${attDisk.id}`}

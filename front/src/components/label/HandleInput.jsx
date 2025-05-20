@@ -19,7 +19,7 @@ export function handleInputChange(setState, field) {
 export function handleInputCheck(setState, field) {
   return (e) => {
     const value = e?.target?.checked ?? e?.id ?? e;
-    Logger.debug(`handleInputCheck ... field: ${field}, value: ${value}`)
+    Logger.debug(`handleInputCheck ... field: ${field}, value: ${value}`) 
     setState((prev) => ({ ...prev, [field]: value }));
   };
 }

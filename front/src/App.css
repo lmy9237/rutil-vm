@@ -150,14 +150,13 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box !important;
-  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-line-clamp: 2; 
           line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 .txt-multiline { white-space: initial !important; }
 
 hr {
-  /* height: var(--border-w); */
   height: var(--border-w);
   background-color: var(--color-border-default);
 }
@@ -182,7 +181,6 @@ input[disabled] {
 }
 svg.btn { cursor: pointer; }
 .popup-content-outer {
-  /* height: var(--h-modal-content); */
   overflow-x: hidden;overflow-y: auto;
   height: 100%;
 }
@@ -231,7 +229,7 @@ svg.btn { cursor: pointer; }
 .dropdown-menu {
   position: absolute;right:4px;
   width: 230px !important;
-  background: white;
+  background: var(--color-primary-white);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 100;
 }
@@ -242,8 +240,9 @@ svg.btn { cursor: pointer; }
   text-align: left;
   border-radius:0 !important;
 }
+
 .context-menu-item {
-  background: white;
+  background: var(--color-primary-white);
   border: var(--border-btn);
   border-radius: 4px;
   overflow: hidden; 
@@ -272,5 +271,3 @@ svg.btn { cursor: pointer; }
 .toast {
   max-width: 800px;
 }
-
-

@@ -182,7 +182,6 @@ const HostModal = ({
 
       <ToggleSwitchButton label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
         checked={formState.hostedEngine}
-        disabled={editMode}
         onChange={() => setFormState((prev) => ({ ...prev, hostedEngine: !formState.hostedEngine }))}
         tType={"배포"} fType={"없음"}
       />

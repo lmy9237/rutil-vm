@@ -64,6 +64,18 @@ const VmSnapshotModal = ({
           onChange={() => setFormState((prev) => ({ ...prev, persistMemory: !prev.persistMemory }))} // ✅ true/false로 변경
           tType={"저장"} fType={"저장안함"}
         />
+        {/* vm 상태와 상관없는 toggle버튼
+        <ToggleSwitchButton
+          label={`${Localization.kr.MEMORY} 저장`}
+          checked={formState.persistMemory}     
+          onChange={() =>
+            setFormState((prev) => ({
+              ...prev,
+              persistMemory: !prev.persistMemory,
+            }))
+          }
+          tType={"저장"} fType={"저장안함"}
+        /> */}
         <br/>
         {["DOWN"].includes(selectedVm?.status) 
           ? <span></span> 

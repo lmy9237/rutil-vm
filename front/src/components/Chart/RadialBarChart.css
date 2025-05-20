@@ -1,7 +1,11 @@
 /* RadialBarChart.css */
-#chart-radial {
+#chart-radial text.apexcharts-datalabel-value {
+  font-family: "Pretendard", sans-serif !important;
+  font-size: 28px;
+  dominant-baseline: middle;
+  alignment-baseline: middle;
+  transform: translateY(-10px); /* 👈 수직 위치 조정 */
 }
-
 #chart-radial text.apexcharts-text.apexcharts-datalabel-value { /* RadialBar 차트 그래프 폰트: 수치값 폰트 */
   font-family: "Pretendard", sans-serif !important;
   font-size: 28px;

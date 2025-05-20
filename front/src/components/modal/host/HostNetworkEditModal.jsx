@@ -143,7 +143,7 @@ const HostNetworkEditModal = ({
           tabActive={selectedModalTab}
         />
 
-        <div className="backup-edit-content">
+        <div className="w-full px-4">
           <ToggleSwitchButton label={`${Localization.kr.NETWORK} 동기화 (임시)`}
             checked={inSync}
             disabled={true}

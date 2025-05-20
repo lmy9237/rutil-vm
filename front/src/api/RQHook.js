@@ -2932,6 +2932,7 @@ export const useDeleteNetworkInterface = (
   // closeModal();
   return useMutation({
     mutationFn: async ({ vmId, nicId }) => {
+      console.log("ㅇㅇㅇㅇㅇㅇㅇㅇㅇ[DeleteNIC] Called with vmId:", vmId, "nicId:", nicId);
       closeModal();
       const res = await ApiManager.deleteNicFromVM(vmId, nicId);
       const _res = validate(res) ?? {}
