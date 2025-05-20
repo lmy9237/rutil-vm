@@ -21,6 +21,7 @@ const RutilClusters = () => {
     isError: isClustersError,
     isSuccess: isClustersSuccess,
     refetch: refetchClusters,
+    isRefetching: isClustersRefetching,
   } = useAllClusters((e) => ({ ...e }));
 
   useEffect(() => {
@@ -33,7 +34,7 @@ const RutilClusters = () => {
   return (
     <ClusterDupl columns={TableColumnsInfo.CLUSTERS}
       clusters={clusters}
-      refetch={refetchClusters}
+      refetch={refetchClusters} isRefetching={isClustersRefetching}
       isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
     />
   );

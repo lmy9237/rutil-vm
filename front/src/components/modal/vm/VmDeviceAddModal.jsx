@@ -1,10 +1,19 @@
 import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
-import "./MVm.css";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
+import "./MVm.css";
 
+/**
+ * @name VmDeviceAddModal
+ * @description ...
+ * 
+ * @param {*} param0 
+ * @returns {JSX.Element} VmDeviceAddModal
+ * 
+ * TODO: 사용안함, 제거필요
+ */
 const VmDeviceAddModal = ({ 
   isOpen,
   onClose,
@@ -43,7 +52,7 @@ const VmDeviceAddModal = ({
       <div className="p-1">
         <span className="font-bold">사용 가능한 호스트 장치</span>
         <div className="able-host-device-table">
-          <TablesOuter
+          <TablesOuter target={"hostdevices"}
             columns={TableColumnsInfo.ALL_DISK}
             data={hostDevices}
             onRowClick={() => {}}
@@ -54,7 +63,7 @@ const VmDeviceAddModal = ({
       <div className="p-1">
         <span className="font-bold">연결 호스트 장치</span>
         <div className="able-host-device-table">
-          <TablesOuter
+          <TablesOuter target={"hostdevices"}
             columns={TableColumnsInfo.ALL_DISK}
             data={hostDevices}
             onRowClick={() => {}}

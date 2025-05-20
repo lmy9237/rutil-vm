@@ -12,10 +12,10 @@ import java.io.Serializable
 import java.math.BigDecimal
 import java.util.Date
 
-private val log = LoggerFactory.getLogger(DashboarddVo::class.java)
+private val log = LoggerFactory.getLogger(DashboardVo::class.java)
 
 /**
- * [DashboarddVo]
+ * [DashboardVo]
  * 대시보드 그래프
  *
  * @property datacenters
@@ -34,7 +34,7 @@ private val log = LoggerFactory.getLogger(DashboarddVo::class.java)
  * @property eventsWarning
  * @property dateCreated 최초생성시간
  */
-class DashboarddVo (
+class DashboardVo (
     val datacenters: Int = 0,
     val datacentersUp: Int = 0,
     val datacentersDown: Int = 0,
@@ -91,15 +91,15 @@ class DashboarddVo (
         private var bVersion: String = ""; fun version(block: () -> String?) { bVersion = block() ?: "" }
         private var bReleaseDate: String = ""; fun releaseDate(block: () -> String?) { bReleaseDate = block() ?: "" }
 
-        fun build(): DashboarddVo = DashboarddVo(bDatacenters, bDatacentersUp, bDatacentersDown, bClusters, bHosts, bHostsUp, bHostsDown, bVms, bVmsUp, bVmsDown, bStorageDomains, bEvents, bEventAlert, bEventError, bEventsWarning, bDateCreated, bTimeElapsed, bVersion, bReleaseDate)
+        fun build(): DashboardVo = DashboardVo(bDatacenters, bDatacentersUp, bDatacentersDown, bClusters, bHosts, bHostsUp, bHostsDown, bVms, bVmsUp, bVmsDown, bStorageDomains, bEvents, bEventAlert, bEventError, bEventsWarning, bDateCreated, bTimeElapsed, bVersion, bReleaseDate)
     }
 
     companion object {
-        inline fun builder(block: DashboarddVo.Builder.() -> Unit): DashboarddVo = DashboarddVo.Builder().apply(block).build()
+        inline fun builder(block: DashboardVo.Builder.() -> Unit): DashboardVo = DashboardVo.Builder().apply(block).build()
     }
 }
 
-fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashboarddVo {
+fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashboardVo {
     val allDataCenters = this@toDashboardVo.findAllDataCenters().getOrDefault(listOf())
     val allHosts = this@toDashboardVo.findAllHosts().getOrDefault(listOf())
     val allVms = this@toDashboardVo.findAllVms(follow="statistics").getOrDefault(listOf())
@@ -138,7 +138,7 @@ fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashboarddVo {
 		it.name() == "elapsed.time"
 	}?.values()?.firstOrNull()?.datum() ?: BigDecimal.ZERO
 
-    return DashboarddVo.builder {
+    return DashboardVo.builder {
         datacenters { dataCenters }
         datacentersUp { dataCentersUp }
         datacentersDown { dataCentersDown }

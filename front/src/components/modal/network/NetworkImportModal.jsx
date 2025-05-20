@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import useGlobal from "../../../hooks/useGlobal";
+import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import Localization from "../../../utils/Localization";
 import TablesOuter from "../../table/TablesOuter";
+import { RVI24, rvi24ChevronDown, rvi24ChevronUp, rvi24DownArrow } from "../../icons/RutilVmIcons";
 import { useAllNetworkProviders } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import "./MNetwork.css";
-import { RVI24, rvi24ChevronDown, rvi24ChevronUp, rvi24DownArrow } from "../../icons/RutilVmIcons";
-import useUIState from "../../../hooks/useUIState";
 
 const NetworkImportModal = ({
   isOpen,
@@ -16,13 +16,16 @@ const NetworkImportModal = ({
   onSubmit 
 }) => {
   // const { closeModal } = useUIState()
-  const { networkProvidersSelected, setNetworkProvidersSelected } = useGlobal()
+  const {
+    networkProvidersSelected, setNetworkProvidersSelected
+  } = useGlobal()
   const {
     data: networkProvider = [],
     isLoading: isDatacentersLoading
   } = useAllNetworkProviders();
   const providerNetworkColumns = [
     {
+      accessor: "select", 
       header: (
         <input
           type="checkbox"
@@ -30,16 +33,15 @@ const NetworkImportModal = ({
           onChange={() => {}} // 임시: 아무것도 안 함
         />
       ),
-      accessor: "select",
       width: "50px",
     },
-    { header: "이름", accessor: "name" },
-    { header: "공급자의 네트워크 ID", accessor: "networkId" },
+    { accessor: "name",      header: "이름",  },
+    { accessor: "networkId", header: "공급자의 네트워크 ID", },
   ];
-  
   
   const importNetworkColumns = [
     {
+      accessor: "select",
       header: (
         <input
           type="checkbox"
@@ -47,13 +49,13 @@ const NetworkImportModal = ({
           onChange={() => {}} // 임시
         />
       ),
-      accessor: "select",
       width: "50px",
     },
-    { header: "이름", accessor: "name" },
-    { header: "공급자의 네트워크 ID", accessor: "networkId" },
-    { header: "데이터 센터", accessor: "dataCenter" },
+    { accessor: "name",       header: "이름" },
+    { accessor: "networkId",  header: "공급자의 네트워크 ID", },
+    { accessor: "dataCenter", header: "데이터 센터", },
     {
+      accessor: "allowAll",
       header: (
         <div className="flex items-center">
           <input
@@ -64,7 +66,6 @@ const NetworkImportModal = ({
           <label htmlFor="allow_all" className="ml-1">모두 허용</label>
         </div>
       ),
-      accessor: "allowAll",
       width: "50px",
     },
   ];
@@ -110,7 +111,7 @@ const NetworkImportModal = ({
       {/* 공급자 네트워크 테이블 */}
       <div className="network-bring-table-outer">
         <h1 className="font-bold">공급자 네트워크</h1>
-        <TablesOuter
+        <TablesOuter 
           columns={providerNetworkColumns}
           data={providerNetworks.map((provider) => ({
             id: provider.id,
@@ -144,9 +145,9 @@ const NetworkImportModal = ({
       {/* 가져올 네트워크 테이블 */}
       <div className="network-bring-table-outer">
         <h1 className="font-bold ">가져올 네트워크</h1>
-        <TablesOuter
+        <TablesOuter target={"network"}
           columns={importNetworkColumns}
-          data={networkList.map((network) => ({
+          data={[...networkList].map((network) => ({
             id: network.id,
             select: (
               <div className="flex items-center">
@@ -185,7 +186,6 @@ const NetworkImportModal = ({
             ),
           }))}
         />
-
       </div>
     </BaseModal>
   );

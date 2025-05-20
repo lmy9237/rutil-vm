@@ -24,13 +24,14 @@ const DataCenterHosts = ({
     isError: isHostsError,
     isSuccess: isHostsSuccess,
     refetch: refetchHosts,
+    isRefetching: isHostsRefetching,
   } = useHostsFromDataCenter(datacenterId, (e) => ({ ...e }));
   
   return (
     <>
       <HostDupl columns={TableColumnsInfo.HOSTS}
         hosts={hosts}
-        refetch={refetchHosts}
+        refetch={refetchHosts} isRefetching={isHostsRefetching}
         isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
       />
       {/* <OVirtWebAdminHyperlink

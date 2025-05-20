@@ -26,13 +26,15 @@ const NetworkVnicProfiles = ({
     isLoading: isVnicProfilesLoading,
     isError: isVnicProfilesError,
     isSuccess: isVnicProfilesSuccess,
+    refetch: refetchVnicProfiles,
+    isRefetching: isVnicProfilesRefetching,
   } = useAllVnicProfilesFromNetwork(networkId, (e) => ({ ...e }));
 
   return (
     <>
       <VnicProfileDupl columns={TableColumnsInfo.VNIC_PROFILES_FROM_NETWORK}
-        vnicProfiles={vnicProfiles}
-        networkId={networkId}
+        vnicProfiles={vnicProfiles || []}
+        refetch={refetchVnicProfiles} isRefetching={isVnicProfilesRefetching}
         isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
       />
       <OVirtWebAdminHyperlink

@@ -4,9 +4,9 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DiskDupl from "../../../components/dupl/DiskDupl";
 import { useAllDisks } from "../../../api/RQHook";
 import { rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
-import Logger from "../../../utils/Logger";
 import SectionLayout from "../../../components/SectionLayout";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 
 const AllDisk = () => {
   const {
@@ -15,6 +15,7 @@ const AllDisk = () => {
     isError: isDisksError,
     isSuccess: isDisksSuccess,
     refetch: refetchDisks,
+    isRefetching: isDisksRefetching,
   } = useAllDisks((e) => ({ ...e }));
 
   return (
@@ -24,9 +25,8 @@ const AllDisk = () => {
       />
       <div className="section-content v-start gap-8 w-full">
         <DiskDupl columns={TableColumnsInfo.DISKS}
-          disks={disks} 
-          showSearchBox={true}
-          refetch={refetchDisks}
+          disks={disks}
+          refetch={refetchDisks} isRefetching={isDisksRefetching}
           isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
         />
       </div>

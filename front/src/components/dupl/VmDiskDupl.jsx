@@ -12,10 +12,9 @@ import FilterButtons from "../button/FilterButtons";
 import TableColumnsInfo from "../table/TableColumnsInfo";
 import SelectedIdView from "../common/SelectedIdView";
 import { checkZeroSizeToGiB } from "../../util";
-import Logger from "../../utils/Logger";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
+import Logger from "../../utils/Logger";
 import Localization from "../../utils/Localization";
-
 
 /**
  * @name VmDiskDupl
@@ -26,10 +25,13 @@ import Localization from "../../utils/Localization";
  */
 const VmDiskDupl = ({ 
   vmDisks = [], showSearchBox=true, 
-  refetch, isLoading, isError, isSuccess,vmId
+  refetch, isRefetching, isLoading, isError, isSuccess
 }) => {
   const navigate = useNavigate();
-  const { vmsSelected, setVmsSelected, disksSelected, setDisksSelected } = useGlobal(); // 다중 선택된 디스크
+  const {
+    vmsSelected, setVmsSelected,
+    disksSelected, setDisksSelected,
+  } = useGlobal(); // 다중 선택된 디스크
 
   const transformedData = [...vmDisks].map((d) => {
     const diskImage = d?.diskImageVo;
@@ -104,10 +106,7 @@ const VmDiskDupl = ({
         multiSelect={true}
         onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        /*onContextMenuItems={(row) => [ // 마우스 버튼
-          <VmDiskActionButtons actionType="context" />
-        ]}*/
+        isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={disksSelected} />
     </>

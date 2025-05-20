@@ -9,12 +9,13 @@ import { useConnDiskListFromVM, useAllAttachedDisksFromDataCenter } from "../../
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import SelectedIdView from "../../common/SelectedIdView";
+import useGlobal from "../../../hooks/useGlobal";
 
 // 인터페이스 목록
 const interfaceList = [
   { value: "VIRTIO_SCSI", label: "VirtIO-SCSI" },
-  { value: "VIRTIO", label: "VirtIO" },
-  { value: "SATA", label: "SATA" },
+  { value: "VIRTIO",      label: "VirtIO" },
+  { value: "SATA",        label: "SATA" },
 ];
 
 /**
@@ -36,27 +37,100 @@ const VmDiskConnectionModal = ({
   onSelectDisk,
   existingDisks,
 }) => {
-  // const { closeModal } = useUIState()
+  const {
+    disksSelected, setDisksSelected
+  } = useGlobal()
+
+  const [selectedDisks, setSelectedDisks] = useState([]); // 디스크 목록
+  const [selectedInterfaces, setSelectedInterfaces] = useState({}); // 인터페이스
+  const [selectedReadOnly, setSelectedReadOnly] = useState({}); // 읽기전용
+  const [selectedBootable, setSelectedBootable] = useState({}); // 부팅가능
+  const [activeTab, setActiveTab] = useState("img");
+  const existingDiskIds = new Set(existingDisks?.map(disk => disk.id));
+
   const {
     mutate: connDiskListVm
   } = useConnDiskListFromVM();
-  // const { } = useConnDiskFromVM(vmId, )
+  
+  // 기존에 연결된 디스크 ID 목록 생성
+
   // 데이터센터 밑에 잇는 디스크 목록 검색
   const { 
     data: attDisks = [],
     isLoading: isAttDisksLoading,
     isError: isAttDisksError,
     isSuccess: isAttDisksSuccess,
+    isRefetching: isAttDisksRefetching,
   } = useAllAttachedDisksFromDataCenter(dataCenterId, (e) => ({ ...e }));
 
-  const [activeTab, setActiveTab] = useState("img");
-  const [selectedDisks, setSelectedDisks] = useState([]); // 디스크 목록
-  const [selectedInterfaces, setSelectedInterfaces] = useState({}); // 인터페이스
-  const [selectedReadOnly, setSelectedReadOnly] = useState({}); // 읽기전용
-  const [selectedBootable, setSelectedBootable] = useState({}); // 부팅가능
-
-  // 기존에 연결된 디스크 ID 목록 생성
-  const existingDiskIds = new Set(existingDisks?.map(disk => disk.id));
+  const transformedData = [...attDisks].map((attDisk) => ({
+    ...attDisk,
+    alias: attDisk?.alias,  // alias 추가
+    virtualSize: checkZeroSizeToGiB(attDisk?.virtualSize),
+    actualSize: checkZeroSizeToGiB(attDisk?.actualSize),
+    storageDomain: attDisk?.storageDomainVo?.name,
+    sharable: attDisk?.sharable ? "O" : "X",
+    status: attDisk?.status === "UNINITIALIZED" 
+      ? "초기화되지 않음" 
+      : "UP",
+    check: (
+      attDisk?.id && <input type="checkbox"
+        checked={selectedDisks.includes(attDisk?.id)}
+        disabled={existingDiskIds.has(attDisk?.id)}
+        onChange={() => handleCheckboxChange(attDisk?.id)}
+      />
+    ),
+    interface: (
+      attDisk?.id && <select id={`interface-select-${attDisk?.id}`} 
+        value={selectedInterfaces[attDisk?.id] || "VIRTIO_SCSI"}
+        onChange={(event) => {
+          handleInterfaceChange(attDisk?.id, event.target.value); //  디스크 ID를 전달
+        }}
+      >
+        {interfaceList.map((iface) => (
+          <option key={iface.value} value={iface.value}>
+            {iface.label}
+          </option>
+        ))}
+      </select>
+    ),
+    /*
+    // TODO: 컴포넌트로 빼면 옵션값이 테이블셀 안에 가려져서 안보이는 문제
+    interface: ( 
+      <LabelSelectOptions
+        id={`interface-select-${attDisk.id}`}
+        value={selectedInterfaces[attDisk.id] || "VIRTIO_SCSI"}
+        onChange={(event) => handleInterfaceChange(attDisk.id, event.target.value)}
+        options={interfaceList}
+        className="w-full"
+      />
+    ),
+    */
+    readonly: (
+      attDisk?.id && <input type="checkbox" id={`readonly-${attDisk?.id}`}
+        checked={selectedReadOnly[attDisk?.id] || false} // 개별 디스크 상태 유지
+        onChange={() => {
+          setSelectedReadOnly((prev) => ({
+            ...prev,
+            [attDisk?.id]: !prev[attDisk?.id],
+          }));
+        }}
+        // disabled={selectedInterfaces[attDisk.id] === "SATA"}
+      />
+    ),
+    bootable: (
+      attDisk?.id && <input type="checkbox" id={`os-${attDisk?.id}`}
+        checked={selectedBootable[attDisk?.id] || false} // ✅ 개별 디스크 상태 유지
+        onChange={() => {
+          setSelectedBootable((prev) => ({
+            ...prev,
+            [attDisk?.id]: !prev[attDisk?.id],
+          }));
+        }}
+        disabled={hasBootableDisk}
+      />
+    ),
+  }));
 
   // 인터페이스 변경
   const handleInterfaceChange = (diskId, newInterface) => {
@@ -69,57 +143,57 @@ const VmDiskConnectionModal = ({
   
   // 가상머신 생성 - 디스크 연결
   const handleOkClick = () => {
-    if (selectedDisks.length > 0) {
-      const selectedDiskLists = selectedDisks.map((diskId) => {
-        const diskDetails = attDisks.find((disk) => disk?.id === diskId);
-
-        if (!diskDetails) return null;
-        return {
-          id: diskId,
-          alias: diskDetails.alias,  // 디스크 이름 추가
-          size: convertBytesToGB(diskDetails.virtualSize), // GB 변환
-          interface_: selectedInterfaces[diskId] || "VIRTIO_SCSI",
-          readOnly: selectedReadOnly[diskId] || false,
-          bootable: selectedBootable[diskId] || false,
-          isCreated: false, // 🚀 연결된 디스크 표시
-        };
-      }).filter(Boolean);
-  
-      onSelectDisk(selectedDiskLists); // 선택된 디스크를 VmDisk에 전달
-      // closeModal("vmdisk:connect");
-      onClose()
-    } else {
+    if (selectedDisks?.length === 0) {
       toast.error("디스크를 선택하세요!");
+      return;
     }
+
+    const selectedDiskLists = [...selectedDisks].map((d) => {
+      const diskDetails = [...attDisks]?.find((disk) => disk?.id === d?.id);
+      if (!diskDetails) return null;
+      return {
+        id: d?.id,
+        alias: diskDetails.alias,  // 디스크 이름 추가
+        size: convertBytesToGB(diskDetails.virtualSize), // GB 변환
+        interface_: selectedInterfaces[d?.id] || "VIRTIO_SCSI",
+        readOnly: selectedReadOnly[d?.id] || false,
+        bootable: selectedBootable[d?.id] || false,
+        isCreated: false, // 🚀 연결된 디스크 표시
+      };
+    }).filter(Boolean);
+    onSelectDisk(selectedDiskLists); // 선택된 디스크를 VmDisk에 전달
+    onClose()
   };
   
 
   // 가상머신 - 디스크 연결하기
   const handleFormSubmit = () => {
-    if (selectedDisks.length > 0) {
-      const selectedDiskLists = selectedDisks.map((diskId) => {
-        const diskDetails = attDisks.find((disk) => disk?.id === diskId);
-        if (!diskDetails) return null; // 선택된 디스크가 존재할 경우에만 추가
-        return {
-          interface_: selectedInterfaces[diskId] || "VIRTIO_SCSI",
-          readOnly: selectedReadOnly[diskId] || false,
-          bootable: selectedBootable[diskId] || false,
-          diskImageVo: {
-            id:diskId,
-          },
-          isCreated: false, // 🚀 연결된 디스크는 isCreated: false
-        };
-      })
-
-      Logger.debug("VmDiskConnectionModal > handleFormSubmit ... ", selectedDiskLists);
-      connDiskListVm({ vmId, diskAttachmentList: selectedDiskLists})
-      // closeModal();
-    } else {
+    if (selectedDisks?.length === 0) {
       toast.error("디스크를 선택하세요!");
+      return;
     }
+    
+    const selectedDiskLists = [...selectedDisks].map((d) => {
+      const diskDetails = attDisks.find((disk) => disk?.id === d?.id);
+      if (!diskDetails) return null; // 선택된 디스크가 존재할 경우에만 추가
+      return {
+        interface_: selectedInterfaces[d?.id] || "VIRTIO_SCSI",
+        readOnly: selectedReadOnly[d?.id] || false,
+        bootable: selectedBootable[d?.id] || false,
+        diskImageVo: {
+          id: d?.id,
+        },
+        isCreated: false, // 🚀 연결된 디스크는 isCreated: false
+      };
+    })
+
+    Logger.debug("VmDiskConnectionModal > handleFormSubmit ... ", selectedDiskLists);
+    connDiskListVm({ vmId, diskAttachmentList: selectedDiskLists})
+    // closeModal();
   };
 
   const handleCheckboxChange = (diskId) => {
+    Logger.debug(`VmDiskConnectionModal > handleCheckboxChange ... diskId: ${diskId}`)
     setSelectedDisks((prev) =>
       prev.includes(diskId)
         ? prev.filter((id) => id !== diskId)
@@ -128,14 +202,17 @@ const VmDiskConnectionModal = ({
   };
 
   return (
-    <BaseModal targetName={`가상 ${Localization.kr.DISK}`} submitTitle={Localization.kr.CONNECTION}
+    <BaseModal targetName={`가상 ${Localization.kr.DISK}`}
+      submitTitle={Localization.kr.CONNECTION}
       isOpen={isOpen} onClose={onClose}
-      onSubmit={diskType? handleFormSubmit : handleOkClick}
+      onSubmit={diskType
+        ? handleFormSubmit
+        : handleOkClick
+      }
       contentStyle={{ width: "1000px"}} 
     >
       <div className="disk-new-nav">
-        <div
-          id="storage-img-btn"
+        <div id="storage-img-btn"
           onClick={() => setActiveTab("img")}
           className={activeTab === "img" ? "active" : ""}
         >
@@ -150,85 +227,18 @@ const VmDiskConnectionModal = ({
         </div> */}
       </div>
       <br/>
-      {/* <span> vm: {vmId}<br/>size: {attDisks.length}<br/> dc: {dataCenterId}<br/></span> */}
-        <>
-          <TablesOuter
-            isLoading={isAttDisksLoading} isErzror={isAttDisksError} isSuccess={isAttDisksSuccess}
-            columns={activeTab === "img" ? TableColumnsInfo.VIRTUAL_DISK : TableColumnsInfo.VMS_STOP}
-            data={attDisks.length > 0 ? attDisks.map((attDisk) => ({
-              ...attDisk,
-              alias: attDisk?.alias,  // alias 추가
-              virtualSize: checkZeroSizeToGiB(attDisk?.virtualSize),
-              actualSize: checkZeroSizeToGiB(attDisk?.actualSize),
-              storageDomain: attDisk?.storageDomainVo?.name,
-              sharable: attDisk?.sharable ? "O" : "X",
-              status: attDisk?.status === "UNINITIALIZED" ? "초기화되지 않음" : "UP",
-              check: (
-                <input
-                  type="checkbox"
-                  checked={selectedDisks.includes(attDisk.id)}
-                  disabled={existingDiskIds.has(attDisk.id)}
-                  onChange={() => handleCheckboxChange(attDisk.id)}
-                />
-              ),
-              interface: (
-                <select
-                  id={`interface-select-${attDisk.id}`}
-                  value={selectedInterfaces[attDisk.id] || "VIRTIO_SCSI"}
-                  onChange={(event) => {
-                    handleInterfaceChange(attDisk.id, event.target.value); //  디스크 ID를 전달
-                  }}
-                >
-                  {interfaceList.map((iface) => (
-                    <option key={iface.value} value={iface.value}>
-                      {iface.label}
-                    </option>
-                  ))}
-                </select>
-              ),
-              /*
-              // TODO: 컴포넌트로 빼면 옵션값이 테이블셀 안에 가려져서 안보이는 문제
-              interface: ( 
-                <LabelSelectOptions
-                  id={`interface-select-${attDisk.id}`}
-                  value={selectedInterfaces[attDisk.id] || "VIRTIO_SCSI"}
-                  onChange={(event) => handleInterfaceChange(attDisk.id, event.target.value)}
-                  options={interfaceList}
-                  className="w-full"
-                />
-              ),
-              */
-              readonly: (
-                <input
-                  type="checkbox"
-                  id={`readonly-${attDisk.id}`}
-                  checked={selectedReadOnly[attDisk.id] || false} // 개별 디스크 상태 유지
-                  onChange={() => {
-                    setSelectedReadOnly((prev) => ({
-                      ...prev, [attDisk.id]: !prev[attDisk.id],
-                    }));
-                  }}
-                  // disabled={selectedInterfaces[attDisk.id] === "SATA"}
-                />
-              ),
-              bootable: (
-                <input
-                  type="checkbox"
-                  id={`os-${attDisk.id}`}
-                  checked={selectedBootable[attDisk.id] || false} // ✅ 개별 디스크 상태 유지
-                  onChange={() => {
-                    setSelectedBootable((prev) => ({
-                      ...prev, [attDisk.id]: !prev[attDisk.id],
-                    }));
-                  }}
-                  disabled={hasBootableDisk}
-                />
-              ),
-            })):[]
+      <>
+        <TablesOuter target={"disk"}
+          columns={activeTab === "img" 
+            ? TableColumnsInfo.VIRTUAL_DISK
+            : TableColumnsInfo.VMS_STOP
           }
-          />
-        </>
-        <SelectedIdView items={selectedDisks} />
+          data={transformedData}
+          onRowClick={(row) => setDisksSelected(row)}
+          isLoading={isAttDisksLoading} isRefetching={isAttDisksRefetching} isErzror={isAttDisksError} isSuccess={isAttDisksSuccess}
+        />
+        <SelectedIdView items={disksSelected} />
+      </>
     </BaseModal>
   );
 };

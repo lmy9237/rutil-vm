@@ -22,6 +22,7 @@ const RutilTemplates = ({
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
     refetch: refetchTemplates,
+    isRefetching: isTemplatesRefetching,
   } = useAllTemplates((e) => ({ ...e }));
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const RutilTemplates = ({
   return (
     <TemplateDupl columns={TableColumnsInfo.TEMPLATES}
       templates={templates}
-      refetch={refetchTemplates}
+      refetch={refetchTemplates} isRefetching={isTemplatesRefetching}
       isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
     />
   );

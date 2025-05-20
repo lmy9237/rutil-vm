@@ -1,4 +1,3 @@
-import React from "react";
 import useGlobal from "../../../hooks/useGlobal";
 import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import VmDiskDupl from "../../../components/dupl/VmDiskDupl";
@@ -25,13 +24,14 @@ const VmDisks = ({
     isError: isDisksError,
     isSuccess: isDisksSuccess,
     refetch: refetchDisks,
+    isRefetching: isDisksRefetching,
   } = useDisksFromVM(vmId, (e) => ({ ...e }));
   
   return (
     <>
       <VmDiskDupl 
         vmDisks={disks}
-        refetch={refetchDisks}
+        refetch={refetchDisks} isRefetching={isDisksRefetching}
         isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
       />
       <OVirtWebAdminHyperlink

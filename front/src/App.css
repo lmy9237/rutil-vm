@@ -223,7 +223,7 @@ svg.btn { cursor: pointer; }
   overflow-y: auto;
 }
 .section-content,.info-content { 
-  padding: 14px;
+  padding: 10px;
   align-items:flex-start !important;
 }
 .dropdown-menu {

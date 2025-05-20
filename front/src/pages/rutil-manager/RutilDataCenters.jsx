@@ -21,6 +21,7 @@ const RutilDataCenters = () => {
     isError: isDataCentersError,
     isSuccess: isDataCentersSuccess,
     refetch: refetchDataCenters,
+    isRefetching: isDataCentersRefetching,
   } = useAllDataCenters((e) => ({ ...e }));
 
   useEffect(() => {
@@ -33,7 +34,7 @@ const RutilDataCenters = () => {
   return (
     <DataCenterDupl columns={TableColumnsInfo.DATACENTERS}
       datacenters={datacenters}
-      refetch={refetchDataCenters}
+      refetch={refetchDataCenters} isRefetching={isDataCentersRefetching}
       isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
     />
   );

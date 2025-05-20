@@ -23,13 +23,14 @@ const DataCenterEvents = ({
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
-    refetch: refetchEvents
+    refetch: refetchEvents,
+    isRefetching: isEventsRefetching,
   } = useEventsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
   return (
     <>
       <EventDupl events={events}
-        refetch={refetchEvents}
+        refetch={refetchEvents} isRefetching={isEventsRefetching}
         isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
       />
       <OVirtWebAdminHyperlink 

@@ -32,6 +32,7 @@ const HostDevices = ({
     isError: isHostDevicesError,
     isSuccess: isHostDevicesSuccess,
     refetch: refetchHostDevices,
+    isRefetching: isHostDevicesRefetching,
   } = useHostDevicesFromHost(hostId, (e) => ({ ...e }));
   
   const transformedData = [...hostDevices]?.map((e) => ({ ...e }))
@@ -51,13 +52,11 @@ const HostDevices = ({
       <TablesOuter target={"hostdevice"}
         columns={TableColumnsInfo.DEVICE_FROM_HOST}
         data={filteredData}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         shouldHighlight1stCol={true}
         multiSelect={true}
         onRowClick={(selectedRows) => setHostDevicesSelected(selectedRows)}
-        refetch={refetchHostDevices}
-        isLoading={isHostDevicesLoading} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
+        isLoading={isHostDevicesLoading} isRefetching={isHostDevicesRefetching} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
       />
       <SelectedIdView items={hostDevicesSelected}/>
       <OVirtWebAdminHyperlink

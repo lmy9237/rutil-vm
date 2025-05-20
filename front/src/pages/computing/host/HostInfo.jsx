@@ -8,6 +8,7 @@ import HeaderButton from "../../../components/button/HeaderButton";
 import Path from "../../../components/Header/Path";
 import HostGeneral from "./HostGeneral";
 import HostVms from "./HostVms";
+import HostNics from "./HostNics";
 import HostDevices from "./HostDevices";
 import HostNetworkAdapter from "./HostNetworkAdapter";
 import HostEvents from "./HostEvents";
@@ -16,7 +17,6 @@ import { rvi24Host } from "../../../components/icons/RutilVmIcons";
 import { useHost } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
 import "./Host.css";
-import HostNics from "./HostNics";
 
 /**
  * @name HostInfo

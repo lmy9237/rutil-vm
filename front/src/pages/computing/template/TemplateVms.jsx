@@ -29,6 +29,7 @@ const TemplateVms = ({
     isError: isVmsError,
     isSuccess: isVmsSuccess,
     refetch: refetchVms,
+    isRefetching: isVmsRefetching,
   } = useAllVmsFromTemplate(templateId, (e) => ({ ...e }));
 
   const transformedData = vms.map((e) => ({
@@ -64,13 +65,11 @@ const TemplateVms = ({
       <TablesOuter target={"vm"}
         columns={TableColumnsInfo.VMS_FROM_TEMPLATE}
         data={filteredData}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
-        refetch={refetchVms}
-        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+        isLoading={isVmsLoading} isRefetching={isVmsRefetching} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
     </>

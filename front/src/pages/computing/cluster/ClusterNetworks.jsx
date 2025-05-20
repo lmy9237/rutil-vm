@@ -24,14 +24,14 @@ const ClusterNetworks = ({
     isError: isNetworksError,
     isSuccess: isNetworksSuccess,
     refetch: refetchNetworks,
+    isRefetching: isNetworksRefetching,
   } = useNetworkFromCluster(clusterId, (e) => ({ ...e }));
 
   return (
     <>
-      <NetworkDupl
-        columns={TableColumnsInfo.NETWORK_FROM_CLUSTER}
+      <NetworkDupl columns={TableColumnsInfo.NETWORK_FROM_CLUSTER}
         networks={networks}
-        refetch={refetchNetworks}
+        refetch={refetchNetworks} isRefetching={isNetworksRefetching}
         isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
       />
       <OVirtWebAdminHyperlink

@@ -18,7 +18,8 @@ const AllEvents = () => {
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
-    refetch: refetchEvents
+    refetch: refetchEvents,
+    isRefetching: isEventsRefetching,
   } = useAllEvents({
     mapPredicate: (e) => ({
       ...e,
@@ -38,7 +39,7 @@ const AllEvents = () => {
       <div className="content-outer">
         <div className="section-content v-start gap-8 w-full">
           <EventDupl events={events}
-            refetch={refetchEvents}
+            refetch={refetchEvents} isRefetching={isEventsRefetching}
             isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
           />
         </div>

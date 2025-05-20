@@ -40,7 +40,8 @@ const DomainImportTemplates = ({
     isLoading: isTemplatesLoading,
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
-    refetch: refetchTemplates
+    refetch: refetchTemplates,
+    isRefetching: isTemplatesRefetching,
   } = useAllUnregisteredTemplatesFromDomain(domainId, (e) => ({ ...e }));
 
   const transformedData = [...templates].map((t) => ({
@@ -92,8 +93,7 @@ const DomainImportTemplates = ({
         multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
-        refetch={refetchTemplates}
-        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
+        isLoading={isTemplatesLoading} isRefetching={isTemplatesRefetching} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
       <SelectedIdView items={templatesSelected} />
       <OVirtWebAdminHyperlink

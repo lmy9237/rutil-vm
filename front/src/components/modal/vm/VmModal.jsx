@@ -25,12 +25,12 @@ import VmHa from './create/VmHa';
 import VmBoot from './create/VmBoot';
 import LabelSelectOptions from '../../label/LabelSelectOptions';
 import LabelSelectOptionsID from '../../label/LabelSelectOptionsID';
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import { checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
-import './MVm.css';
 import CONSTANT from "../../../Constants";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import './MVm.css';
 
 // 일반
 const infoform = {
@@ -297,7 +297,7 @@ const VmModal = ({
   useEffect(() => {
     const hasSelectedNic = nicListState.some(nic => nic?.vnicProfileVo?.id);
     if (hasSelectedNic) {
-      Logger.debug("VmModal.닉상태 (선택됨):", nicListState);
+      Logger.debug("VmModal > useEffect ... nicListState", nicListState);
     }
   }, [nicListState]);
 

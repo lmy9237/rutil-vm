@@ -27,9 +27,8 @@ const DiskVms = ({ diskId }) => {
     isError: isVmsError,
     isSuccess: isVmsSuccess,
     refetch: refetchVms,
-  } = useAllVmsFromDisk(diskId, (e) => ({ 
-    ...e
-  }));
+    isRefetching: isVmsRefetching,
+  } = useAllVmsFromDisk(diskId, (e) => ({  ...e }));
 
   const transformedData = [...vms].map((vm) => ({
     ...vm,
@@ -64,13 +63,11 @@ const DiskVms = ({ diskId }) => {
       <TablesOuter target={"vm"}
         columns={TableColumnsInfo.VMS_FROM_DISK}
         data={filteredData} // ✅ 검색 필터링된 데이터 사용
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
-        onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         shouldHighlight1stCol={true}
-        refetch={refetchVms}
-        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+        onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
+        isLoading={isVmsLoading} isRefetching={isVmsRefetching} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
     </>

@@ -31,6 +31,7 @@ const DiskDomains = ({
     isError: isDomainsError,
     isSuccess: isDomainsSuccess,
     refetch: refetchDomains,
+    isRefetching: isDomainsRefetching,
   } = useAllStorageDomainsFromDisk(diskId, (e) => ({
     ...e,
   }));
@@ -81,7 +82,7 @@ const DiskDomains = ({
         multiSelect={true}
         onRowClick={(selectedRows) => setDomainsSelected(selectedRows)}
         shouldHighlight1stCol={true}
-        isLoading={isDomainsLoading} isError={isDomainsError} isSuccess={isDomainsSuccess}
+        isLoading={isDomainsLoading} isRefetching={isDomainsRefetching} isError={isDomainsError} isSuccess={isDomainsSuccess}
       />
       <SelectedIdView items={domainsSelected} />
     </>

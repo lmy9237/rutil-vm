@@ -70,7 +70,8 @@ const NetworkModal = ({
     data: clusters = [], 
     isLoading: isClustersLoading,
     isError: isClustersError,
-    isSuccess: isClustersSuccess
+    isSuccess: isClustersSuccess,
+    isRefetching: isClustersRefetching,
   } = useClustersFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
 
   useEffect(() => {
@@ -406,7 +407,6 @@ const NetworkModal = ({
             <hr />
             <span className="my-3 block font-bold">클러스터에서 네트워크를 연결/분리</span>
             <TablesOuter
-              isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
               columns={[
                 { header: Localization.kr.NAME, accessor: 'name', clickable: false },
                 {
@@ -506,6 +506,7 @@ const NetworkModal = ({
                   </div>
                 ),
               }))}
+              isLoading={isClustersLoading} isRefetching={isClustersRefetching} isError={isClustersError} isSuccess={isClustersSuccess}
             />
           </div>
         )}

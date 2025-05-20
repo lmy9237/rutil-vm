@@ -28,7 +28,8 @@ const SettingSessions = () => {
     isLoading: isUserSessionsLoading,
     isError: isUserSessionsError,
     isSuccess: isUserSessionsSuccess,
-    refetch: refetchUserSessios
+    refetch: refetchUserSessios,
+    isRefetching: isUserSessionsRefetching,
   } = useAllUserSessions("");
 
   const transformedData = [...userSessions]?.map((session) => ({
@@ -52,11 +53,10 @@ const SettingSessions = () => {
       <TablesOuter target={"usersession"}
         columns={TableColumnsInfo.ACTIVE_USER_SESSION}
         data={filteredData}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(row) => setUsersessionsSelected(row)}
         /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
-        isLoading={isUserSessionsLoading} isError={isUserSessionsError} isSuccess={isUserSessionsSuccess}
+        isLoading={isUserSessionsLoading} isRefetching={isUserSessionsRefetching}  isError={isUserSessionsError} isSuccess={isUserSessionsSuccess}
       />
       <SelectedIdView items={usersessionsSelected} />
       <OVirtWebAdminHyperlink

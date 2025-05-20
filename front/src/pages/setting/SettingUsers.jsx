@@ -35,13 +35,14 @@ const SettingUsers = () => {
     isError: isUsersError,
     isSuccess: isUsersSuccess,
     refetch: refetchUsers,
+    isRefetching: isUsersRefetching,
   } = useAllUsers((e) => ({ ...e  }));
   
   const transformedData = [...users].map((e) => ({
     ...e,
     icon: (<RVI16 iconDef={rvi16Superuser}/>),
-    isDisabled: (e.disabled),
-    _isDisabled: (e.disabled) ? 'DISABLED' : 'AVAILABLE',
+    isDisabled: e?.disabled,
+    _isDisabled: e?.disabled ? 'DISABLED' : 'AVAILABLE',
   }))
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, TableColumnsInfo.SETTING_USER);
@@ -72,7 +73,7 @@ const SettingUsers = () => {
         /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setUsersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        isLoading={isUsersLoading} isError={isUsersError} isSuccess={isUsersSuccess}
+        isLoading={isUsersLoading} isRefetching={isUsersRefetching} isError={isUsersError} isSuccess={isUsersSuccess}
         /*onContextMenuItems={(row) => [
           <SettingUsersActionButtons actionType="context" />,
         ]}*/

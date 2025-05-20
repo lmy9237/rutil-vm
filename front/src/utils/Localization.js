@@ -44,7 +44,8 @@ export const Localization = {
     SIZE_TOTAL: "총 공간",
     SIZE_VIRTUAL: "가상 크기",
     SIZE_ACTUAL: "실제 크기",
-    IP_ADDRESS: "IP 주소",
+    ADDRESS: "주소",
+    IP_ADDRESS: `IP 주소`,
     CONNECTION: "연결",
     ATTACH: "연결",
     DETACH: "분리",
@@ -127,24 +128,76 @@ export const Localization = {
 
     renderTime(milliseconds) {
       Logger.debug(`Localization > renderTime ... milliseconds: ${milliseconds}`)
-      const hours = Math.floor(milliseconds / 3600000);
-      const minutes = Math.floor((milliseconds % 3600000) / 60000);
-      const seconds = Math.ceil((milliseconds % 60000) / 1000);
-    
+      // Handle invalid or zero input
+      if (isNaN(milliseconds) || milliseconds <= 0) {
+        return "0초"; // Or you could return an empty string "" or throw an error
+      }
+
+      const MS_IN_SECOND = 1000;
+      const MS_IN_MINUTE = MS_IN_SECOND * 60;
+      const MS_IN_HOUR = MS_IN_MINUTE * 60;
+      const MS_IN_DAY = MS_IN_HOUR * 24;
+      const MS_IN_YEAR = MS_IN_DAY * 365; // Approximate, doesn't account for leap years
+
+      let remainingMilliseconds = milliseconds;
+
+      const years = Math.floor(remainingMilliseconds / MS_IN_YEAR);
+      remainingMilliseconds %= MS_IN_YEAR;
+
+      const days = Math.floor(remainingMilliseconds / MS_IN_DAY);
+      remainingMilliseconds %= MS_IN_DAY;
+
+      const hours = Math.floor(remainingMilliseconds / MS_IN_HOUR);
+      remainingMilliseconds %= MS_IN_HOUR;
+
+      const minutes = Math.floor(remainingMilliseconds / MS_IN_MINUTE);
+      remainingMilliseconds %= MS_IN_MINUTE;
+
+      // Using Math.ceil for seconds as in your original code
+      // This means even 1ms will show as 1초. If you prefer 0초 for <1000ms, use Math.floor.
+      const seconds = Math.ceil(remainingMilliseconds / MS_IN_SECOND);
+
       let result = "";
-    
-      if (hours > 0) result += `${hours}시간 `;
-      if (minutes > 0) result += `${minutes}분 `;
-      if (seconds > 0 || hours > 0 || minutes > 0) result += `${seconds}초`;
-    
+      let hasHigherUnits = false;
+
+      if (years > 0) {
+        result += `${years}년 `;
+        hasHigherUnits = true;
+      }
+      if (days > 0) {
+        result += `${days}일 `;
+        hasHigherUnits = true;
+      }
+      if (hours > 0) {
+        result += `${hours}시간 `;
+        hasHigherUnits = true;
+      }
+      if (minutes > 0) {
+        result += `${minutes}분 `;
+        hasHigherUnits = true;
+      }
+
+      // Always show seconds if it's the only unit, or if other units are present,
+      // or if the original millisecond value was non-zero (covered by the initial check and seconds calculation)
+      // The `hasHigherUnits` check ensures "0초" is appended if there are, for example, hours but 0 minutes and 0 seconds.
+      if (seconds > 0 || hasHigherUnits) {
+        result += `${seconds}초`;
+      } else if (!hasHigherUnits && seconds === 0 && milliseconds > 0){
+        // This case handles inputs like 500ms which would ceil to 1초.
+        // If seconds somehow became 0 after Math.ceil (e.g. if input was 0.1ms, which is unlikely with integer ms)
+        // and no higher units, but original ms was >0, we might still want to show 0초 or 1초 based on rounding.
+        // Given Math.ceil, if milliseconds > 0, seconds will be >= 1. So this specific 'else if' is mostly redundant
+        // unless Math.ceil was changed to Math.floor and you wanted to explicitly show "0초" for small ms values.
+        // For now, with Math.ceil, this branch is unlikely to be hit if ms > 0.
+      }
       return result.trim();
     },
 
     renderStatus(status = "") {
       const _status = status?.toUpperCase() ?? "";
       if (_status === "OK")                 return "양호";
-      if (_status === "UP" || _status === "UNASSIGNED")  return "실행 중";
-      else if (_status === "ACTIVE")        return "활성화";
+      if (_status === "UP" || _status === "UNASSIGNED")  return Localization.kr.UP;
+      else if (_status === "ACTIVE")        return Localization.kr.ACTIVATE;
       else if (_status === "ACTIVATING")    return "활성화 중";
       else if (_status === "INSTALLING")    return "설치 중";
       else if (_status === "DOWN")          return "중지";

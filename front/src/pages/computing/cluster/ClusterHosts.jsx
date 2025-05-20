@@ -23,6 +23,7 @@ const ClusterHosts = ({
     isError: isHostsError,
     isSuccess: isHostsSuccess,
     refetch: refetchHosts,
+    isRefetching: isHostsRefetching,
   } = useHostsFromCluster(clusterId, (e) => ({ ...e }));
 
   return (
@@ -30,7 +31,7 @@ const ClusterHosts = ({
       <HostDupl columns={TableColumnsInfo.HOSTS}
         hosts={hosts}
         clusterId={clusterId}
-        refetch={refetchHosts}
+        refetch={refetchHosts} isRefetching={isHostsRefetching}
         isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
       />
       <OVirtWebAdminHyperlink

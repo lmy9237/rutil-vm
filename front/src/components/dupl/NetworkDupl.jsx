@@ -12,7 +12,7 @@ import TableRowClick from "../table/TableRowClick";
 import SearchBox from "../button/SearchBox";
 import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
-import "./Dupl.css";
+import "./Dupl.css"; // NOTE: 제거필요여부 확인 필요
 
 /**
  * @name NetworkDupl
@@ -24,10 +24,12 @@ import "./Dupl.css";
  */
 const NetworkDupl = ({
   networks = [], columns = [],
-  refetch, isLoading, isError, isSuccess,
+  refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { networksSelected, setNetworksSelected } = useGlobal()
+  const {
+    networksSelected, setNetworksSelected
+  } = useGlobal()
 
   // 데이터를 변환 (검색 가능하도록 `searchText` 필드 추가)
   const transformedData = [...networks].map((network) => ({
@@ -79,16 +81,18 @@ const NetworkDupl = ({
       <TablesOuter target={"network"}
         columns={columns}
         data={filteredData} 
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true} 
         /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setNetworksSelected(selectedRows)} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={networksSelected} />
-      <OVirtWebAdminHyperlink name={`${Localization.kr.NETWORK}>${Localization.kr.NETWORK}`} path="networks" />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.NETWORK}>${Localization.kr.NETWORK}`}
+        path="networks"
+      />
     </>
   );
 };

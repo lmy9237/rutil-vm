@@ -1,7 +1,7 @@
 package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.api.model.computing.DashboarddVo
+import com.itinfo.rutilvm.api.model.computing.DashboardVo
 import com.itinfo.rutilvm.api.model.computing.SizeVo
 import com.itinfo.rutilvm.api.repository.history.dto.HostUsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.LineDto
@@ -50,7 +50,7 @@ class ItGraphServiceTest {
     @Test
     fun should_getDashboard() {
         log.debug("should_getDashboard ... ")
-        val result: DashboarddVo =
+        val result: DashboardVo =
             service.getDashboard()
 
         assertThat(result, `is`(not(nullValue())))

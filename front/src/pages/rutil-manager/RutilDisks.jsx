@@ -21,6 +21,7 @@ const RutilDisks = () => {
     isError: isDisksError,
     isSuccess: isDisksSuccess,
     refetch: refetchDisks,
+    isRefetching: isDisksRefetching,
   } = useAllDisks((e) => ({ ...e }));
   
   useEffect(() => {
@@ -33,7 +34,7 @@ const RutilDisks = () => {
   return (
     <DiskDupl columns={TableColumnsInfo.DISKS}
       disks={disks}
-      refetch={refetchDisks}
+      refetch={refetchDisks} isRefetching={isDisksRefetching}
       isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
     />
   );

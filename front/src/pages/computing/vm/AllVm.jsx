@@ -21,6 +21,7 @@ const AllVm = () => {
     isError: isVmsError,
     isSuccess: isVmsSuccess,
     refetch: refetchVms,
+    isRefetching: isVmsRefetching,
   } = useAllVMs((e) => ({ ...e }));
 
   return (
@@ -32,7 +33,7 @@ const AllVm = () => {
         <VmDupl columns={TableColumnsInfo.VMS}
           vms={vms}
           showSearchBox={true}
-          refetch={refetchVms}
+          refetch={refetchVms} isRefetching={isVmsRefetching}
           isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         />
       </div>

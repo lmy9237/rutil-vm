@@ -21,6 +21,7 @@ const RutilVms = () => {
     isError: isVmsError,
     isSuccess: isVmsSuccess,
     refetch: refetchVms,
+    isRefetching: isVmsRefetching,
   } = useAllVMs((e) => ({ ...e }));
   
   useEffect(() => {
@@ -33,7 +34,7 @@ const RutilVms = () => {
   return (
     <VmDupl columns={TableColumnsInfo.VMS}
       vms={vms}
-      refetch={refetchVms}
+      refetch={refetchVms} isRefetching={isVmsRefetching}
       isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
     />
   );

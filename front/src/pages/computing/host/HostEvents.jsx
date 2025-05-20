@@ -23,12 +23,13 @@ const HostEvents = ({
     isError: isEventsError,
     isSuccess: isEventsSuccess,
     refetch: refetchEvents,
+    isRefetching: isEventsRefetching,
   } = useEventsFromHost(hostId, (e) => ({ ...e }));
 
   return (
     <>
       <EventDupl events={events}
-        refetch={refetchEvents}
+        refetch={refetchEvents} isRefetching={isEventsRefetching}
         isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
       />
       <OVirtWebAdminHyperlink

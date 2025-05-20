@@ -21,14 +21,17 @@ import Localization from "../../utils/Localization";
  */
 const SettingCertificates = () => {
   const { activeModal, setActiveModal } = useUIState();
-  const { certsSelected, setCertsSelected } = useGlobal();
+  const {
+    certsSelected, setCertsSelected
+  } = useGlobal();
     
   const {
     data: certs = [],
     isLoading: isCertsLoading,
     isError: isCertsError,
     isSuccess: isCertsSuccess,
-    refetch: refetchCerts
+    refetch: refetchCerts,
+    isRefetching: isCertsRefetching,
   } = useAllCerts((e) => ({
       ...e,
   }));
@@ -55,12 +58,11 @@ const SettingCertificates = () => {
       </div>
       <TablesOuter target={"cert"}
         columns={TableColumnsInfo.SETTING_CERTIFICATES}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         data={filteredData}
         onRowClick={(row) => setCertsSelected(row)}
         /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
-        isLoading={isCertsLoading} isError={isCertsError} isSuccess={isCertsSuccess}
+        isLoading={isCertsLoading} isRefetching={isCertsRefetching} isError={isCertsError} isSuccess={isCertsSuccess}
       />
       <SelectedIdView items={certsSelected} />
       <br/>

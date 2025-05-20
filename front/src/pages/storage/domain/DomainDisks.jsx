@@ -25,13 +25,14 @@ const DomainDisks = ({
     isError: isDisksError,
     isSuccess: isDisksSuccess,
     refetch: refetchDisks,
+    isRefetching: isDisksRefetching,
   } = useAllDisksFromDomain(domainId, (e) => ({ ...e }));
 
   return (
     <>
       <DiskDupl columns={TableColumnsInfo.DISKS_FROM_STORAGE_DOMAIN}
         disks={disks}
-        refetch={refetchDisks}
+        refetch={refetchDisks} isRefetching={isDisksRefetching}
         isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
       />
       <OVirtWebAdminHyperlink

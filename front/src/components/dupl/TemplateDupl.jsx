@@ -15,11 +15,13 @@ import Localization from "../../utils/Localization";
 
 const TemplateDupl = ({
   templates = [],  columns = [],
-  refetch, isLoading, isError, isSuccess,
+  refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal } = useUIState()
-  const { templatesSelected, setTemplatesSelected } = useGlobal();
+  const {
+    templatesSelected, setTemplatesSelected
+  } = useGlobal();
 
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
   const transformedData = [...templates].map((temp) => ({
@@ -71,7 +73,7 @@ const TemplateDupl = ({
         /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={templatesSelected} />
       <OVirtWebAdminHyperlink

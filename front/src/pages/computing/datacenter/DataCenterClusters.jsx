@@ -17,20 +17,24 @@ import Localization from "../../../utils/Localization";
 const DataCenterClusters = ({
   datacenterId
 }) => {
-  const { datacentersSelected } = useGlobal()
+  const {
+    datacentersSelected
+  } = useGlobal()
+
   const {
     data: clusters = [],
     isLoading: isClustersLoading,
     isError: isClustersError,
     isSuccess: isClustersSuccess,
     refetch: refetchClusters,
+    isRefetching: isClustersRefetching,
   } = useClustersFromDataCenter(datacenterId, (e) => ({...e,}));
 
   return (
     <>
       <ClusterDupl columns={TableColumnsInfo.CLUSTERS_FROM_DATACENTER}
         clusters={clusters}
-        refetch={refetchClusters}
+        refetch={refetchClusters} isRefetching={isClustersRefetching}
         isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
       />
       <OVirtWebAdminHyperlink 

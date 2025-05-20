@@ -37,6 +37,7 @@ const DomainVms = ({ domainId }) => {
     isError: isVmsError,
     isSuccess: isVmsSuccess,
     refetch: refetchVms,
+    isRetching, isVmsRefetching,
   } = useAllVMsFromDomain(domainId ?? domainsSelected[0]?.id, (e) => ({ ...e, }));
 
   const transformedData = useMemo(() => [...vms].map((vm) => ({
@@ -83,7 +84,7 @@ const DomainVms = ({ domainId }) => {
         setSearchQuery={setSearchQuery}
         multiSelect={true}
         onRowClick={(selectedRows) => {setVmsSelected(selectedRows)}}
-        refetch={refetchVms}
+        refetch={refetchVms} isRefetching={isVmsRefetching}
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />

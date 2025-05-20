@@ -25,10 +25,12 @@ import Logger from "../../utils/Logger";
  */
 const DataCenterDupl = ({
   datacenters = [], columns = [],
-  refetch, isLoading, isError, isSuccess,
+  refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { datacentersSelected, setDatacentersSelected } = useGlobal();
+  const {
+    datacentersSelected, setDatacentersSelected
+  } = useGlobal();
 
   const transformedData = [...datacenters].map((dc) => {
     const status = dc?.status; //  먼저 선언해줌
@@ -69,12 +71,11 @@ const DataCenterDupl = ({
       <TablesOuter target={"datacenter"}
         columns={columns}
         data={filteredData} 
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         onRowClick={(selectedRows) => setDatacentersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={datacentersSelected} />
       <OVirtWebAdminHyperlink name={`${Localization.kr.COMPUTING}>${Localization.kr.DATA_CENTER}`} path="dataCenters" />

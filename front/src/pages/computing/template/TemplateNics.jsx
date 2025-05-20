@@ -6,7 +6,7 @@ import useSearch from "../../../hooks/useSearch";
 import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
-import NicActionButtons from "../../../components/dupl/NicActionButtons";
+import VmNicActionButtons from "../../../components/dupl/VmNicActionButtons";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import { status2Icon } from "../../../components/icons/RutilVmIcons";
 import SearchBox from "../../../components/button/SearchBox";
@@ -25,13 +25,16 @@ const TemplateNics = ({
   refetch,
 }) => {
   const { activeModal, setActiveModal, } = useUIState()
-  const { vnicProfilesSelected, setVnicProfilesSelected } = useGlobal()
+  const {
+    vnicProfilesSelected, setVnicProfilesSelected
+  } = useGlobal()
   const {
     data: vnicProfiles = [],
     isLoading: isVnicProfilesLoading,
     isError: isVnicProfilesError,
     isSuccess: isVnicProfilesSuccess,
     refetch: refetchVnicProfiles,
+    isRefetching: isVnicProfilesRefetching,
   } = useAllNicsFromTemplate(templateId, (e) => ({ ...e }));
 
   const columns = TableColumnsInfo.NICS_FROM_TEMPLATE;
@@ -65,36 +68,18 @@ const TemplateNics = ({
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
-        <NicActionButtons
-          isEditDisabled={vnicProfilesSelected.length !== 1}
-        />
+        <VmNicActionButtons />
       </div>
       <TablesOuter target={"vnicprofile"}
         columns={columns}
         data={filteredData}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setVnicProfilesSelected(selectedRows)}
-        refetch={refetchVnicProfiles}
-        isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
+        isLoading={isVnicProfilesLoading} isRefetching={isVnicProfilesRefetching}  isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
       />
       <SelectedIdView items={vnicProfilesSelected}/>
-
-      {/* TODO: VmNicModals 생성: nic 모달창 */}
-      {activeModal().includes("nic:create") && (
-        <VmNicModal key={activeModal()} isOpen={activeModal().includes("nic:create")}
-          vmId={templateId}   // ✅ templateId를 vmId처럼 넘김
-          nicId={null}
-        />
-      )}
-      {activeModal().includes("nic:update") && (
-        <VmNicModal key={activeModal()} isOpen={activeModal().includes("nic:update")} editMode
-          vmId={templateId}   // ✅ templateId를 vmId처럼 넘김
-          nicId={vnicProfilesSelected[0]?.id}
-        />
-      )}
       {/* 
         {activeModal().includes("nic:remove") && (
           <TemplateNicDeleteModal

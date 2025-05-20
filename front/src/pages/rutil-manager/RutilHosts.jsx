@@ -21,6 +21,7 @@ const RutilHosts = () => {
     isError: isHostsError,
     isSuccess: isHostsSuccess,
     refetch: refetchHosts,
+    isRefetching: isHostsRefetching,
   } = useAllHosts((e) => ({ ...e }));
 
   useEffect(() => {
@@ -33,7 +34,7 @@ const RutilHosts = () => {
   return (
     <HostDupl columns={TableColumnsInfo.HOSTS}
       hosts={hosts}
-      refetch={refetchHosts}
+      refetch={refetchHosts} isRefetching={isHostsRefetching}
       isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
     />
   );

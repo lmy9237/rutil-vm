@@ -38,7 +38,8 @@ const NetworkVms = ({
     isLoading: isNicsLoading,
     isError: isNicsError,
     isSuccess: isNicsSuccess,
-    refetch: refetchVms,
+    refetch: refetchNics,
+    isRefetching: isNicsRefetching,
   } = useAllVmsFromNetwork(networkId, (e) => ({ ...e }));
 
   const [activeFilter, setActiveFilter] = useState("running");
@@ -78,8 +79,8 @@ const NetworkVms = ({
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedFilteredData);
   const handleRefresh = useCallback(() =>  {
     Logger.debug(`NetworkVms > handleRefresh ... `)
-    if (!refetchVms) return;
-    refetchVms()
+    if (!refetchNics) return;
+    refetchNics()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
@@ -104,7 +105,7 @@ const NetworkVms = ({
         }
         data={filteredData}
         onRowClick={(rows) => setVmsSelected(rows)}
-        isLoading={isNicsLoading} isError={isNicsError} isSuccess={isNicsSuccess}
+        isLoading={isNicsLoading} isRefetching={isNicsRefetching} isError={isNicsError} isSuccess={isNicsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
       <OVirtWebAdminHyperlink

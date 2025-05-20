@@ -34,6 +34,7 @@ const VnicProfileTemplates = ({
     isError: isTemplatesError,
     isLoading: isTemplateLoading,
     refetch: refetchTemplates,
+    isRefetching: isTemplatesRefetching,
   } = useAllTemplatesFromVnicProfiles(vnicProfileId, (e) => ({ 
     ...e
   }));
@@ -68,8 +69,7 @@ const VnicProfileTemplates = ({
         setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
         multiSelect={true}
-        refetch={refetchTemplates}
-        isLoading={isTemplateLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
+        isLoading={isTemplateLoading} isRefetching={isTemplatesRefetching} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
       <SelectedIdView items={templatesSelected} />
       <OVirtWebAdminHyperlink

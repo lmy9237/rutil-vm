@@ -1,7 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import useUIState from "../../hooks/useUIState";
 import useGlobal from "../../hooks/useGlobal";
 import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
 import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
@@ -18,7 +17,7 @@ import Logger from "../../utils/Logger";
 
 const DiskDupl = ({
   disks = [], columns = [],
-  refetch, isLoading, isError, isSuccess,
+  refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const { 
@@ -26,7 +25,8 @@ const DiskDupl = ({
     diskProfilesSelected, setDiskProfilesSelected,
   } = useGlobal()
     
-  const diskIds = useMemo(() => ([...disks].map((d) => d.id)
+  const diskIds = useMemo(() => (
+    [...disks].map((d) => d.id)
   ), [disks]);
 
   const {
@@ -108,13 +108,12 @@ const DiskDupl = ({
       <TablesOuter target={"disk"}
         columns={columns}
         data={filteredData} // ✅ 검색된 데이터만 표시
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={disksSelected} />
       <OVirtWebAdminHyperlink name={`${Localization.kr.COMPUTING}>${Localization.kr.DISK}`} path="disks" />

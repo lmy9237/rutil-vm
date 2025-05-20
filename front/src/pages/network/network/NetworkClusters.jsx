@@ -42,6 +42,7 @@ const NetworkClusters = ({
     isError: isClustersError,
     isSuccess: isClustersSuccess,
     refetch: refetchClusters,
+    isRefetching: isClustersRefetching,
   } = useAllClustersFromNetwork(networkId, (e) => ({ ...e }));
 
   const transformedData = clusters.map((cluster) => ({
@@ -100,6 +101,7 @@ const NetworkClusters = ({
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setClustersSelected(selectedRows)}
         multiSelect={false}
+        // TODO: 처리방식 변경
         onContextMenuItems={(row) => [
           <div className="right-click-menu-box">
             <button
@@ -110,7 +112,7 @@ const NetworkClusters = ({
             </button>
           </div>,
         ]}
-        isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
+        isLoading={isClustersLoading} isRefetching={isClustersRefetching} isError={isClustersError} isSuccess={isClustersSuccess}
       />
       <SelectedIdView item={clustersSelected}/>
       <OVirtWebAdminHyperlink

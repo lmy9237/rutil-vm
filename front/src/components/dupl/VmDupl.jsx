@@ -9,7 +9,11 @@ import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
 import TablesOuter from "../table/TablesOuter";
 import TableRowClick from "../table/TableRowClick";
 import VmActionButtons from "./VmActionButtons";
-import { hostedEngineStatus2Icon, RVI16, rvi16Refresh, status2Icon } from "../icons/RutilVmIcons";
+import { 
+  hostedEngineStatus2Icon,
+  RVI16, rvi16Refresh,
+  status2Icon
+} from "../icons/RutilVmIcons";
 import { getStatusSortKey } from "../icons/GetStatusSortkey";
 import Localization from "../../utils/Localization";
 import Logger from "../../utils/Logger";
@@ -24,10 +28,12 @@ import Logger from "../../utils/Logger";
  */
 const VmDupl = ({
   vms = [], columns = [], 
-  refetch, isLoading, isError, isSuccess,
+  refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { vmsSelected, setVmsSelected } = useGlobal();
+  const {
+    vmsSelected, setVmsSelected
+  } = useGlobal();
 
   const transformedData = [...vms].map((vm) => ({
     ...vm,
@@ -104,7 +110,7 @@ const VmDupl = ({
         multiSelect={true}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={vmsSelected} />
       <OVirtWebAdminHyperlink

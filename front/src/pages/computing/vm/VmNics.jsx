@@ -3,17 +3,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
+import useContextMenu from "../../../hooks/useContextMenu";
 import useClickOutside from "../../../hooks/useClickOutside";
 import SelectedIdView from "../../../components/common/SelectedIdView";
 import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TablesRow from "../../../components/table/TablesRow";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import VmNicModal from "../../../components/modal/vm/VmNicModal";
-import NicActionButtons from "../../../components/dupl/NicActionButtons";
-import { useDeleteNetworkInterface, useNetworkInterfacesFromVM } from "../../../api/RQHook";
+import NicActionButtons from "../../../components/dupl/VmNicActionButtons";
+import { useNetworkInterfacesFromVM } from "../../../api/RQHook";
 import { checkZeroSizeToMbps } from "../../../util";
 import { RVI24, rvi24ChevronDown, rvi24ChevronRight } from "../../../components/icons/RutilVmIcons";
 import Localization from "../../../utils/Localization";
+import Logger from "../../../utils/Logger";
 import "./Vm.css"
 import DeleteModal from "../../../utils/DeleteModal";
 /**
@@ -29,6 +31,9 @@ const VmNics = ({
 }) => {
   const { activeModal, closeModal, } = useUIState()
   const {
+    contextMenu, setContextMenu
+  } = useContextMenu()
+  const {
     vmsSelected,
     nicsSelected, setNicsSelected
   } = useGlobal()
@@ -40,11 +45,9 @@ const VmNics = ({
     Success: isNicsSuccess,
   } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
 
-  const sortedNics = [...nics].sort((a, b) => {
-    return a.name.localeCompare(b.name);
-  });
+  // const sortedNics = [...nics].sort((a, b) => a.name.localeCompare(b.name));
 
-  const transformedData = sortedNics.map((nic) => ({
+  const transformedData = [...nics].sort((a, b) => a.name.localeCompare(b.name)).map((nic) => ({
     ...nic,
     id: nic?.id,
     name: nic?.name,
@@ -69,10 +72,23 @@ const VmNics = ({
 
   const [visibleDetailId, setVisibleDetailId] = useState(null);
   const toggleDetails = (id) => { setVisibleDetailId((prev) => (prev === id ? null : id))};
+  
+  const handleContextMenu = (e, rowIndex) => {
+    Logger.debug(`VmNic > handleContextMenu ... rowIndex: ${rowIndex}, e: `, e)
+    e.preventDefault();
+  
+    setContextMenu({
+      mouseX: e.clientX,
+      mouseY: e.clientY,
+      item: {
+        ...nicsSelected,
+      },
+    }, "nic");
+  };
 
   const nicRef = useRef()
   useClickOutside(nicRef, (e) => setNicsSelected([])) /* 외부 창을 눌렀을 때 선택 해제 */
-  const { mutate: deleteNic } = useDeleteNetworkInterface(); 
+
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="network-interface-group w-full"
@@ -95,16 +111,15 @@ const VmNics = ({
                   if (e.target.closest(".network-content-detail")) return;
                   const isSelected = nicsSelected[0]?.id === nic.id;
                   const isModalOpen = ["nic:create", "nic:update"].includes(activeModal());
-
                   if (isSelected && !isModalOpen) {
                     setNicsSelected([]);
                   } else {
                     setNicsSelected(nic);
                   }
-
                   toggleDetails(nic.id);
                 }}
-                >
+                // onContextMenu={(e) => handleContextMenu(e, i)}
+              >
                 <div className="network-content f-start f-btw">
                   <div className="network-status f-start">
                     <RVI24 iconDef={nicsSelected[0]?.id === nic.id ? rvi24ChevronDown() : rvi24ChevronRight()} />
@@ -160,34 +175,6 @@ const VmNics = ({
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
         path={`vms-network_interfaces;name=${vmsSelected[0]?.name}`} 
       />
-      <Suspense>
-        {activeModal().includes("nic:create") && (
-          <VmNicModal isOpen onClose={() => closeModal("nic:create")} />
-        )}
-        {activeModal().includes("nic:update") && (
-          <VmNicModal isOpen editMode onClose={() => closeModal("nic:update")} />
-        )}
-        {activeModal().includes("nic:remove") && (
-            <DeleteModal
-              isOpen
-              onClose={() => closeModal("nic:remove")}
-              label={Localization.kr.NICS}
-              data={nicsSelected}
-              vmId={vmId}
-            api={{ mutate: deleteNic }}
-            />
-          )}
-        {/* {activePopup === "delete" && selectedNics && (
-          <DeleteModal
-            isOpen
-            type="NetworkInterface"
-            onRequestClose={closePopup}
-            contentLabel={Localization.kr.NICS}
-            data={selectedNics}
-            vmId={vmId}
-          />
-        )} */}
-      </Suspense>
     </>
   );
 };

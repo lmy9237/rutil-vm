@@ -6,7 +6,6 @@ import VmDiskModal from "./VmDiskModal";
 import VmDiskActionModal from "./VmDiskActionModal";
 import VmDiskDeleteModal from "./VmDiskDeleteModal";
 import { useDisksFromVM, useVm } from "../../../api/RQHook";
-import DiskActionModal from "../disk/DiskActionModal";
 
 
 /**
@@ -20,7 +19,10 @@ const VmDiskModals = ({
   disk,
 }) => {
   const { activeModal, closeModal } = useUIState()
-  const { vmsSelected, disksSelected, setDisksSelected } = useGlobal()
+  const {
+    vmsSelected,
+    disksSelected, setDisksSelected
+  } = useGlobal()
   const vmId = useMemo(() => 
     vmsSelected[0]?.id ?? ""
   , [vmsSelected])
@@ -34,11 +36,6 @@ const VmDiskModals = ({
   const diskCount = diskAttachments.filter((da) => {
     return da && da?.diskImageVo?.alias?.includes(`${vm?.name}_D`)
   })?.length+1 || 1;
-
-  const ACTIONS = [
-    "vmdisk:move",
-    "vmdisk:copy"
-  ];
   
   const modals = {
     create: (

@@ -31,6 +31,7 @@ const VmApplications = ({
     isError: isApplicationsError,
     isSuccess: isApplicationsSuccess,
     refetch: refetchApplications,
+    isRefetching: isApplicationsRefetching,
   } = useApplicationsFromVM(vmId, (e) => ({ ...e }));
 
   const transformedData = [...applications]?.map((e) => ({
@@ -53,13 +54,11 @@ const VmApplications = ({
       <TablesOuter target={"application"}
         columns={TableColumnsInfo.APPLICATIONS_FROM_VM}
         data={filteredData}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         onRowClick={(selectedRows) => setApplicationsSelected(selectedRows)}
         /* onClickableColumnClick={(row) => handleNameClick(row.id)} */
-        refetch={refetchApplications}
-        isLoading={isApplicationsLoading} isError={isApplicationsError} isSuccess={isApplicationsSuccess}
+        isLoading={isApplicationsLoading} isRefetching={isApplicationsRefetching} isError={isApplicationsError} isSuccess={isApplicationsSuccess}
       />
       <SelectedIdView items={applicationsSelected}/>
       <OVirtWebAdminHyperlink

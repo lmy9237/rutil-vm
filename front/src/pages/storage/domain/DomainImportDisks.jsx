@@ -39,6 +39,7 @@ const DomainImportDisks = ({
     isError: isDisksError,
     isSuccess: isDisksSuccess,
     refetch: refetchDisks,
+    isRefetching: isDisksRefetching,
   } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
 
   const transformedData = useMemo(() => [...disks].map((disk) => ({
@@ -86,8 +87,7 @@ const DomainImportDisks = ({
         multiSelect={true}
         onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
         shouldHighlight1stCol={true}
-        refetch={refetchDisks}
-        isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
+        isLoading={isDisksLoading} isRefetching={isDisksRefetching} isError={isDisksError} isSuccess={isDisksSuccess}
       />
       <SelectedIdView items={disksSelected} />
       <OVirtWebAdminHyperlink

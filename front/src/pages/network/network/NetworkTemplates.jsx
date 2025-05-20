@@ -40,6 +40,7 @@ const NetworkTemplates = ({
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
     refetch: refetchTemplates,
+    isRefetching: isTemplatesRefetching,
   } = useAllTemplatesFromNetwork(networkId, (e) => ({ ...e }));
 
   const transformedData = useMemo(() => [...templates].map((e) => ({
@@ -89,13 +90,11 @@ const NetworkTemplates = ({
       <TablesOuter target={"template"}
         columns={TableColumnsInfo.TEMPLATES_FROM_NETWORK}
         data={filteredData}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => nicsSelected(selectedRows)} // 선택된 항목 업데이트
-        refetch={refetchTemplates}
-        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
+        isLoading={isTemplatesLoading} isRefetching={isTemplatesRefetching} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
       <SelectedIdView items={nicsSelected}/>
       <OVirtWebAdminHyperlink

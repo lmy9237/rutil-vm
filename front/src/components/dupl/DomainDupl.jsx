@@ -27,7 +27,7 @@ import Logger from "../../utils/Logger";
 const DomainDupl = ({
   domains = [], columns = [],
   actionType, sourceContext = "all", 
-  refetch, isLoading, isError, isSuccess,
+  refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   // sourceContext: all = 전체목록 fromDomain = 도메인에서 데이터센터 fromDatacenter = 데이터센터에서 도메인
   const navigate = useNavigate();
@@ -90,11 +90,10 @@ const DomainDupl = ({
         columns={columns}
         data={filteredData} // ✅ 검색 필터링된 데이터 전달
         multiSelect={true}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
         onRowClick={(selectedRows) => setDomainsSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={domainsSelected} />
       <OVirtWebAdminHyperlink name={`${Localization.kr.COMPUTING}>${Localization.kr.DOMAIN}`} path="storage" />

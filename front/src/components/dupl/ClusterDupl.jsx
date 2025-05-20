@@ -23,11 +23,13 @@ import Logger from "../../utils/Logger";
  * @returns
  */
 const ClusterDupl = ({
-  clusters = [], columns = [], showSearchBox=true,
-  refetch, isLoading, isError, isSuccess,
+  clusters = [], columns = [],
+  refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { clustersSelected, setClustersSelected } = useGlobal();
+  const {
+    clustersSelected, setClustersSelected
+  } = useGlobal();
 
   const transformedData = [...clusters].map((cluster) => ({
     ...cluster,
@@ -64,17 +66,16 @@ const ClusterDupl = ({
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-        <ClusterActionButtons actionType="default"/>
+        <ClusterActionButtons />
       </div>
       <TablesOuter target={"cluster"}
         columns={columns}
         data={filteredData}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
         multiSelect={true}
         onRowClick={(selectedRows) => setClustersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={clustersSelected} />
       <OVirtWebAdminHyperlink name={`${Localization.kr.COMPUTING}>${Localization.kr.CLUSTER}`} path="clusters" />

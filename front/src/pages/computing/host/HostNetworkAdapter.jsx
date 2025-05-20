@@ -22,6 +22,7 @@ const HostNetworkAdapter = ({
     isError: isHostNicsError,
     isSuccess: isHostNicsSuccess,
     refetch: refetchHostNics,
+    isRefetching: isHostNicsRefetching,
   } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
 
   const transformedData = hostNics.map((e) => ({
@@ -82,13 +83,11 @@ const HostNetworkAdapter = ({
       <TablesOuter target={"hostnic"}
         columns={TableColumnsInfo.NETWORK_ADAPTER_FROM_HOST}
         data={filteredData}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         shouldHighlight1stCol={true}
         multiSelect={true}
         onRowClick={(selectedRows) => setNicsSelected(selectedRows)}
-        refetch={refetchHostNics}
-        isLoading={isHostNicsLoading} isError={isHostNicsError} isSuccess={isHostNicsSuccess}
+        isLoading={isHostNicsLoading} isRefetching={isHostNicsRefetching} isError={isHostNicsError} isSuccess={isHostNicsSuccess}
       />
       <SelectedIdView items={nicsSelecteed}/>
     </>

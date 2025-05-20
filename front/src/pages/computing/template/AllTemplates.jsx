@@ -21,6 +21,7 @@ const AllTemplates = () => {
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
     refetch: refetchTemplates,
+    isRefetching: isTemplatesRefetching,
   } = useAllTemplates((e) => ({ ...e }));
 
   return (
@@ -32,7 +33,7 @@ const AllTemplates = () => {
         <TemplateDupl columns={TableColumnsInfo.TEMPLATES}
           templates={templates}
           showSearchBox={true}
-          refetch={refetchTemplates}
+          refetch={refetchTemplates} isRefetching={isTemplatesRefetching}
           isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         />
       </div>

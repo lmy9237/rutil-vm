@@ -153,18 +153,14 @@ const VmDisk = ({
             }}
           />
         )}
-        {isConnectionPopupOpen && (
-          <VmDiskConnectionModal
-            isOpen={isConnectionPopupOpen}
-            diskType={false}
-            vmId={vm?.id}
-            dataCenterId={dataCenterId}
-            hasBootableDisk={hasBootableDisk}
-            onSelectDisk={handleConnDisk}
-            existingDisks={diskListState}
-            onClose={() => setIsConnectionPopupOpen(false)}
-          />
-        )}
+        {isConnectionPopupOpen && (<VmDiskConnectionModal isOpen={isConnectionPopupOpen}
+          diskType={false}
+          vmId={vm?.id} dataCenterId={dataCenterId}
+          hasBootableDisk={hasBootableDisk}
+          onSelectDisk={handleConnDisk}
+          existingDisks={diskListState}
+          onClose={() => setIsConnectionPopupOpen(false)}
+        />)}
       </Suspense>
     </>
   );

@@ -100,7 +100,7 @@ const VmOnExportModal = ({
       <div className="vm-bring-table">
         <div>
           <div className="font-bold">소스 상의 가상 머신</div>
-          <TablesOuter
+          <TablesOuter target={"vm"}
             columns={TableColumnsInfo.VM_BRING_POPUP}
             data={[]}
             onRowClick={() => Logger.debug("Row clicked")}
@@ -108,7 +108,7 @@ const VmOnExportModal = ({
         </div>
         <div>
           <div className="font-bold">가져오기할 가상 머신</div>
-          <TablesOuter
+          <TablesOuter target={"vm"}
             columns={TableColumnsInfo.VM_BRING_POPUP}
             data={[]}
             onRowClick={() => Logger.debug("Row clicked")}

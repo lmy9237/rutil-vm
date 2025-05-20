@@ -29,6 +29,7 @@ const DomainImportVms = ({ domainId }) => {
     isError: isVmsError,
     isSuccess: isVmsSuccess,
     refetch: refetchVms,
+    isRefetching: isVmsRefetching,
   } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
 
   const { activeModal, setActiveModal, } = useUIState()
@@ -76,7 +77,7 @@ const DomainImportVms = ({ domainId }) => {
         setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         multiSelect={true}
-        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+        isLoading={isVmsLoading} isRefetching={isVmsRefetching} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
       <OVirtWebAdminHyperlink

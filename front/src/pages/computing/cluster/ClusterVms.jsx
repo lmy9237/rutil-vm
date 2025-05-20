@@ -23,13 +23,14 @@ const ClusterVms = ({
     isError: isVmsError,
     isSuccess: isVmsSuccess,
     refetch: refetchVms,
+    isRefetching: isVmsRefetching,
   } = useVMsFromCluster(clusterId, (e) => ({ ...e }));
 
   return (
     <>
       <VmDupl columns={TableColumnsInfo.VMS}
         vms={vms}
-        refetch={refetchVms}
+        refetch={refetchVms} isRefetching={isVmsRefetching}
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <OVirtWebAdminHyperlink

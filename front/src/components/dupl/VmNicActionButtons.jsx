@@ -4,7 +4,7 @@ import useGlobal from "../../hooks/useGlobal";
 import ActionButtonGroup from "../button/ActionButtonGroup";
 import Localization from "../../utils/Localization";
 
-const NicActionButtons = ({
+const VmNicActionButtons = ({
   actionType = "default",
 }) => {
   const { setActiveModal } = useUIState()
@@ -15,11 +15,11 @@ const NicActionButtons = ({
     { type: "create", onBtnClick: () => setActiveModal("nic:create"), label: Localization.kr.CREATE, disabled: isContextMenu && nicsSelected.length > 0, },
     { type: "update", onBtnClick: () => setActiveModal("nic:update"), label: Localization.kr.UPDATE, disabled: nicsSelected.length !== 1, },
     { type: "remove", onBtnClick: () => setActiveModal("nic:remove"), label: Localization.kr.REMOVE, disabled: nicsSelected.length === 0, },
-  ]), [nicsSelected]);
+  ]), [actionType, nicsSelected]);
 
   return (
     <ActionButtonGroup actionType={actionType} actions={basicActions}/>
   );
 };
 
-export default NicActionButtons;
+export default VmNicActionButtons;

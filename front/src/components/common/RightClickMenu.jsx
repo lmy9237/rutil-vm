@@ -7,6 +7,7 @@ import ClusterModals from "../modal/cluster/ClusterModals";
 import HostModals from "../modal/host/HostModals";
 import VmModals from "../modal/vm/VmModals";
 import VmDiskModals from "../modal/vm/VmDiskModals";
+import VmNicModals from "../modal/vm/VmNicModals";
 import DiskModals from "../modal/disk/DiskModals";
 import DiskSnapshotModals from "../modal/disk/DiskSnapshotModals";
 import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
@@ -22,11 +23,12 @@ import DataCenterActionButtons from "../dupl/DataCenterActionButtons";
 import ClusterActionButtons from "../dupl/ClusterActionButtons"
 import HostActionButtons from "../dupl/HostActionButtons";
 import VmActionButtons from "../dupl/VmActionButtons";
-import TemmplateActionButtons from "../dupl/TemplateActionButtons";
+import VmDiskActionButtons from "../dupl/VmDiskActionButtons";
+import VmNicActionButtons from "../dupl/VmNicActionButtons";
+import TemplateActionButtons from "../dupl/TemplateActionButtons";
 import NetworkActionButtons from "../dupl/NetworkActionButtons"
 import DomainActionButtons from "../dupl/DomainActionButtons";
 import DiskActionButtons from "../dupl/DiskActionButtons";
-import VmDiskActionButtons from "../dupl/VmDiskActionButtons";
 import SettingUsersActionButtons from "../dupl/SettingUsersActionButtons"
 import EventActionButtons from "../dupl/EventActionButtons"
 import JobActionButtons from "../dupl/JobActionButtons";
@@ -54,6 +56,7 @@ const RightClickMenu = () => {
     vnicProfilesSelected, // setVnicProfilesSelected,
     domainsSelected, // setDomainsSelected,
     disksSelected, // setDisksSelected,
+    nicsSelected, // setNicsSelected
     eventsSelected, // setEventsSelected,
     jobsSelected, // setJobsSelected,
     usersSelected, // setUsersSelected,
@@ -93,6 +96,7 @@ const RightClickMenu = () => {
       <DiskModals disk={disksSelected[0] ?? null} />
       <DiskSnapshotModals shot={snapshotsSelected[0] ?? null} />
       <VmDiskModals disk={disksSelected[0] ?? null} />
+      <VmNicModals nic={nicsSelected[0] ?? null} />
       <EventModals event={eventsSelected[0] ?? null}/>
       <JobModals job={jobsSelected[0] ?? null} />
       <SettingUsersModals user={usersSelected[0] ?? null} />
@@ -130,7 +134,7 @@ const RightClickMenu = () => {
               status={contextMenu()?.item?.status}
             />
           ) : (contextMenuType() === "template") ? (
-            <TemmplateActionButtons actionType={"context"} 
+            <TemplateActionButtons actionType={"context"} 
               status={contextMenu()?.item?.status}
             />
           ) : (contextMenuType() === "network") ? 
@@ -155,6 +159,10 @@ const RightClickMenu = () => {
             />
           ) : (contextMenuType() === "vmdisk") ? (
             <VmDiskActionButtons actionType={"context"} 
+              status={contextMenu()?.item?.status}
+            />
+          ) : (contextMenuType() === "nic") ? (
+            <VmNicActionButtons actionType={"context"} 
               status={contextMenu()?.item?.status}
             />
           ) : (contextMenuType() === "user") ? (

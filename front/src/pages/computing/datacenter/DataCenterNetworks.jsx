@@ -25,13 +25,14 @@ const DataCenterNetworks = ({
     isError: isNetworksError,
     isSuccess: isNetworksSuccess,
     refetch: refetchNetworks,
+    isRefetching: isNetworksRefetching,
   } = useNetworksFromDataCenter(datacenterId, (e) => ({ ...e }));
 
   return (
     <>
       <NetworkDupl columns={TableColumnsInfo.NETWORK_FROM_DATACENTER}
         networks={networks}
-        refetch={refetchNetworks}
+        refetch={refetchNetworks} isRefetching={isNetworksRefetching}
         isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
       />
       <OVirtWebAdminHyperlink 

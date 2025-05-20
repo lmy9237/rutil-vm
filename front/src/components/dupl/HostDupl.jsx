@@ -16,7 +16,7 @@ import Logger from "../../utils/Logger";
 
 const HostDupl = ({
   hosts = [], columns = [],
-  refetch, isLoading, isError, isSuccess,
+  refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
   const { hostsSelected, setHostsSelected } = useGlobal();
@@ -66,15 +66,11 @@ const HostDupl = ({
       <TablesOuter target={"host"}
         columns={columns}
         data={filteredData} 
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         onRowClick={(selectedRows) => setHostsSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
-        /*onContextMenuItems={(row) => [
-          <HostActionButtons actionType="context" status={row?.status} />,
-        ]}*/
+        isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={hostsSelected}/>
       <OVirtWebAdminHyperlink 

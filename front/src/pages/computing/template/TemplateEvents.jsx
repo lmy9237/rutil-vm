@@ -1,5 +1,8 @@
+import useGlobal from "../../../hooks/useGlobal";
+import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import EventDupl from "../../../components/dupl/EventDupl";
 import { useAllEventFromTemplate } from "../../../api/RQHook";
+import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
 /**
@@ -10,21 +13,33 @@ import Logger from "../../../utils/Logger";
  * @param {string} templateId 탬플릿ID
  * @returns
  */
-const TemplateEvents = ({ templateId }) => {
+const TemplateEvents = ({
+  templateId
+}) => {
+  const {
+    templatesSelected
+  } = useGlobal()
+
   const {
     data: events = [],
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
-    refetch: refetchEvents
+    refetch: refetchEvents,
+    isRefetching: isEventsRefetching,
   } = useAllEventFromTemplate(templateId, (e) => ({ ...e }));
 
-  Logger.debug("TemplateEvents ...");
   return (
-    <EventDupl events={events}
-      refetch={refetchEvents}
-      isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
-    />
+    <>
+      <EventDupl events={events}
+        refetch={refetchEvents} isRefetching={isEventsRefetching}
+        isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
+      />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.TEMPLATE}>${templatesSelected[0]?.name}`}
+        path={`templates-events;name=${templatesSelected[0]?.name}`} 
+      />
+    </>
   );
 };
 

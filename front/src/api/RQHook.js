@@ -7,6 +7,7 @@ import Logger from "../utils/Logger";
 import Localization from "../utils/Localization";
 import { triggerDownload } from "../util";
 
+const DEFAULT_REFETCH_INTERVAL_IN_MILLI = 2 * 60 * 1000; // 2분
 
 //#region: 쿼리Key
 const QK = {
@@ -36,7 +37,7 @@ export const useAllTreeNavigations = (
   type = "none",
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_TREE_NAVIGATIONS, type],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
   queryFn: async () => {
     const res = await ApiManager.findAllTreeNaviations(type);
@@ -54,7 +55,7 @@ export const useAllTreeNavigations = (
 export const useDashboard = (
 
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD],
   queryFn: async () => {
     const res = await ApiManager.getDashboard()
@@ -67,7 +68,7 @@ export const useDashboard = (
 export const useDashboardCpuMemory = (
 
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD_CPU_MEMORY],
   queryFn: async () => {
     const res = await ApiManager.getCpuMemory()
@@ -80,7 +81,7 @@ export const useDashboardCpuMemory = (
 export const useDashboardStorage = (
 
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD_STORAGE],
   queryFn: async () => {
     const res = await ApiManager.getStorage()
@@ -93,7 +94,7 @@ export const useDashboardStorage = (
 export const useDashboardHosts = (
 
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD_HOSTS],
   queryFn: async () => {
     const res = await ApiManager.getHosts()
@@ -106,7 +107,7 @@ export const useDashboardHosts = (
 export const useDashboardDomain = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD_DOMAIN],
   queryFn: async () => {
     const res = await ApiManager.getDomain()
@@ -122,7 +123,7 @@ export const useDashboardHost = (
   hostId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD_HOST],
   queryFn: async () => {
     const res = await ApiManager.getHost(hostId)
@@ -138,7 +139,7 @@ export const useDashboardHost = (
 export const useDashboardVmCpu = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD_VM_CPU],
   queryFn: async () => {
     const res = await ApiManager.getVmCpu();
@@ -154,7 +155,7 @@ export const useDashboardVmCpu = (
 export const useDashboardVmMemory = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['dashboardVmMemory'],
   queryFn: async () => {
     const res = await ApiManager.getVmMemory()
@@ -170,7 +171,7 @@ export const useDashboardVmMemory = (
 export const useDashboardStorageMemory = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['dashboardStorageMemory'],
   queryFn: async () => {
     const res = await ApiManager.getStorageMemory()
@@ -186,7 +187,7 @@ export const useDashboardStorageMemory = (
 export const useDashboardPerVmCpu = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['dashboardPerVmCpu'],
   queryFn: async () => {
     const res = await ApiManager.getPerVmCpu()
@@ -201,7 +202,7 @@ export const useDashboardPerVmCpu = (
 export const useDashboardPerVmMemory = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['dashboardPerVmMemory'],
   queryFn: async () => {
     const res = await ApiManager.getPerVmMemory()
@@ -216,7 +217,7 @@ export const useDashboardPerVmMemory = (
 export const useDashboardPerVmNetwork = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['dashboardPerVmNetwork'],
   queryFn: async () => {
     Logger.debug(`dashboardPerVmNetwork ...`);
@@ -233,7 +234,7 @@ export const useDashboardPerVmNetwork = (
 export const useDashboardMetricVmCpu = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['dashboardMetricVmCpu'],
   queryFn: async () => {
     Logger.debug(`useDashboardMetricVmCpu ...`);
@@ -248,7 +249,7 @@ export const useDashboardMetricVmCpu = (
 export const useDashboardMetricVmMemory = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['dashboardMetricVmMemory'],
   queryFn: async () => {
     const res = await ApiManager.getMetricVmMemory()
@@ -262,7 +263,7 @@ export const useDashboardMetricVmMemory = (
 export const useDashboardMetricStorage = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['dashboardMetricStorage'],
   queryFn: async () => {
     const res = await ApiManager.getMetricStorage()
@@ -288,7 +289,7 @@ export const useDashboardMetricStorage = (
 export const useAllDataCenters = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allDataCenters'],
   queryFn: async () => {
     const res = await ApiManager.findAllDataCenters();
@@ -309,7 +310,7 @@ export const useAllDataCenters = (
 export const useDataCenter = (
   dataCenterId,
 ) => useQuery({
-  refetchOnWindowFocus: true,  // 윈도우가 포커스될 때마다 데이터 리프레시
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,  // 윈도우가 포커스될 때마다 데이터 리프레시
   queryKey: ['dataCenter', dataCenterId],  // queryKey에 dataCenterId를 포함시켜 dataCenterId가 변경되면 다시 요청
   queryFn: async () => {
     const res = await ApiManager.findDataCenter(dataCenterId);  // dataCenterId에 따라 API 호출
@@ -334,7 +335,7 @@ export const useClustersFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['clustersFromDataCenter', dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.findAllClustersFromDataCenter(dataCenterId);
@@ -361,7 +362,7 @@ export const useHostsFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['hostsFromDataCenter', dataCenterId],
   queryFn: async () => {
     // if(dataCenterId === '') return [];
@@ -388,7 +389,7 @@ export const useVMsFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['vmsFromDataCenter', dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.findAllVmsFromDataCenter(dataCenterId);
@@ -416,7 +417,7 @@ export const useDomainsFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['domainsFromDataCenter', dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.findAllDomainsFromDataCenter(dataCenterId);
@@ -442,7 +443,7 @@ export const useNetworksFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['networksFromDataCenter', dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.findAllNetworksFromDataCenter(dataCenterId);
@@ -468,7 +469,7 @@ export const useEventsFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['eventsFromDataCenter', dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.findAllEventsFromDataCenter(dataCenterId);
@@ -494,7 +495,7 @@ export const useFindTemplatesFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['templatesFromDataCenter', dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.findTemplatesFromDataCenter(dataCenterId);
@@ -520,7 +521,7 @@ export const useAllAttachedDisksFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allAttachedDisksFromDataCenter', dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.findAllAttachedDisksFromDataCenter(dataCenterId);
@@ -547,7 +548,7 @@ export const useCDFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['CDFromDataCenter', dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.findAllISOFromDataCenter(dataCenterId);
@@ -673,7 +674,7 @@ export const useDeleteDataCenter = (
 export const useAllClusters = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allClusters'],
   queryFn: async () => {
     const res = await ApiManager.findAllClusters()
@@ -694,7 +695,7 @@ export const useAllClusters = (
 export const useAllUpClusters = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allClusters'],
   queryFn: async () => {
     const res = await ApiManager.findAllUpClusters()
@@ -717,7 +718,7 @@ export const useAllUpClusters = (
 export const useCluster = (
   clusterId
 ) => useQuery({
-  refetchOnWindowFocus: true,  // 윈도우 포커스 시 데이터 리프레시
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,  // 윈도우 포커스 시 데이터 리프레시
   queryKey: ['cluster', clusterId],  // queryKey에 clusterId를 포함시켜 clusterId가 변경되면 다시 요청
   queryFn: async () => {
     const res = await ApiManager.findCluster(clusterId);
@@ -743,7 +744,7 @@ export const useNetworkFromCluster = (
   clusterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['networkFromCluster', clusterId],
   queryFn: async () => {
     const res = await ApiManager.findNetworksFromCluster(clusterId);
@@ -769,7 +770,7 @@ export const useHostsFromCluster = (
   clusterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['hostsFromCluster', clusterId],
   queryFn: async () => {
     const res = await ApiManager.findHostsFromCluster(clusterId);
@@ -797,7 +798,7 @@ export const useVMsFromCluster = (
   clusterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['vmsFromCluster', clusterId],
   queryFn: async () => {
     Logger.debug(`useVMsFromCluster ... ${clusterId}`);
@@ -824,7 +825,7 @@ export const usePermissionsFromCluster = (
   clusterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['permissionsFromCluster', clusterId],
   queryFn: async () => {
     const res = await ApiManager.findPermissionsFromCluster(clusterId);
@@ -851,7 +852,7 @@ export const useCpuProfilesFromCluster = (
   clusterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['cpuProfilesFromCluster', clusterId],
   queryFn: async () => {
     const res = await ApiManager.findCpuProfilesFromCluster(clusterId);
@@ -880,7 +881,7 @@ export const useOsSystemsFromCluster = (
   clusterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['osSystemsFromCluster', clusterId],
   queryFn: async () => {
     const res = await ApiManager.findOsSystemsFromCluster(clusterId);
@@ -909,7 +910,7 @@ export const useAllvnicFromCluster = (
   clusterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['AllnicFromVM', clusterId],
   queryFn: async () => {
     const res = await ApiManager.findVNicFromCluster(clusterId);
@@ -938,7 +939,7 @@ export const useEventFromCluster = (
   clusterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['eventsFromCluster', clusterId],
   queryFn: async () => {
     const res = await ApiManager.findEventsFromCluster(clusterId);
@@ -1066,7 +1067,7 @@ export const useDeleteCluster = (
 export const useAllHosts = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allHosts'],
   queryFn: async () => {
     const res = await ApiManager.findAllHosts()
@@ -1089,7 +1090,7 @@ export const useAllHosts = (
 export const useHost = (
   hostId
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['HostById', hostId], // TODO: host로 변경
   queryFn: async () => {
     const res = await ApiManager.findHost(hostId)
@@ -1115,7 +1116,7 @@ export const useVmsFromHost = (
   hostId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['vmFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findVmsFromHost(hostId);
@@ -1141,7 +1142,7 @@ export const useNetworkInterfacesFromHost = (
   hostId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['NetworkInterfacesFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findHostNicsFromHost(hostId);
@@ -1166,7 +1167,7 @@ export const useNetworkInterfacesFromHost = (
 export const useNetworkInterfaceFromHost = (
   hostId, nicId
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['NetworkInterfaceFromHost', hostId, nicId],
   queryFn: async () => {
     const res = await ApiManager.findHostNicFromHost(hostId, nicId);
@@ -1190,7 +1191,7 @@ export const useNetworkAttachmentsFromHost = (
   hostId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['NetworkAttachmentsFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findNetworkAttachmentsFromHost(hostId);
@@ -1215,7 +1216,7 @@ export const useNetworkAttachmentsFromHost = (
 export const useNetworkAttachmentFromHost = (
   hostId, networkAttachmentId
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['NetworkAttachmentsFromHost', hostId, networkAttachmentId],
   queryFn: async () => {
     const res = await ApiManager.findNetworkAttachmentFromHost(hostId, networkAttachmentId);
@@ -1416,7 +1417,7 @@ export const useHostDevicesFromHost = (
   hostId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['hostDevicesFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findHostdevicesFromHost(hostId);
@@ -1442,7 +1443,7 @@ export const useEventsFromHost = (
   hostId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['eventsFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findEventsFromHost(hostId);
@@ -1469,7 +1470,7 @@ export const useStoragesFromHost = (
   hostId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['storagesFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findAllStoragesFromHost(hostId);
@@ -1495,7 +1496,7 @@ export const useIscsiFromHost = (
   hostId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['iscsiFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findAllIscsiFromHost(hostId);
@@ -1521,7 +1522,7 @@ export const useFibreFromHost = (
   hostId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['fibreFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findAllFibreFromHost(hostId);
@@ -1585,7 +1586,7 @@ export const useSearchFcFromHost = (
   mapPredicate,
   postSuccess=()=>{}, postError
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['searchFcFromHost', hostId],
   queryFn: async () => {
     const res = await ApiManager.findSearchFcFromHost(hostId);
@@ -1980,7 +1981,7 @@ export const useCommitNetConfigHost = (
 export const useAllVMs = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allVMs'],
   queryFn: async () => {
     const res = await ApiManager.findAllVMs()
@@ -2048,7 +2049,7 @@ export const useDisksFromVM = (
   vmId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['disksFromVM', vmId],
   queryFn: async () => {
     const res = await ApiManager.findDisksFromVM(vmId);
@@ -2074,7 +2075,7 @@ export const useSnapshotsFromVM = (
   vmId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['SnapshotFromVM', vmId],
   queryFn: async () => {
     Logger.debug(`useSnapshotFromVM ... ${vmId}`);
@@ -2102,7 +2103,7 @@ export const useSnapshotsFromVM = (
 export const useSnapshotDetailFromVM = (
   vmId, snapshotId
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['snapshotDetailFromVM', vmId, snapshotId], // snapshotId 추가
   queryFn: async () => {
     if (!vmId || !snapshotId) {
@@ -2279,7 +2280,7 @@ export const useHostDevicesFromVM = (
   vmId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['hostDevicesFromVM', vmId],
   queryFn: async () => {
     const res = await ApiManager.findHostdevicesFromVM(vmId);
@@ -2308,7 +2309,7 @@ export const useNetworkInterfacesFromVM = (
   vmId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['networkInterfacesFromVM', vmId],
   queryFn: async () => {
     const res = await ApiManager.findNicsFromVM(vmId);
@@ -2337,7 +2338,7 @@ export const useNetworkInterfaceFromVM = (
   vmId,
   nicId
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['networkInterfaceFromVM', vmId],
   queryFn: async () => {
     const res = await ApiManager.findNicFromVM(vmId, nicId);
@@ -2364,7 +2365,7 @@ export const useApplicationsFromVM = (
   vmId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['ApplicationFromVM', vmId],
   queryFn: async () => {
     const res = await ApiManager.findApplicationsFromVM(vmId);
@@ -2392,7 +2393,7 @@ export const useAllEventsFromVM = (
   vmId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allEventFromVM', vmId],
   queryFn: async () => {
     const res = await ApiManager.findEventsFromVM(vmId);
@@ -2414,7 +2415,7 @@ export const useAllEventsFromVM = (
 export const useVmConsoleAccessInfo = (
   vmId
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['vmConsoleAccessInfo', vmId],
   queryFn: async () => {
     const res = await ApiManager.findVmConsoleAccessInfo(vmId);
@@ -2772,7 +2773,7 @@ export const useHostsForMigration = (
   vmId,
   mapPredicate
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['HostsForMigration', vmId],
   queryFn: async () => {
     const res = await ApiManager.migrateHostsFromVM(vmId);
@@ -2965,7 +2966,7 @@ export const useDeleteNetworkInterface = (
 export const useDiskAttachmentFromVm = (
   vmId, diskAttachmentId
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['diskAttachmentFromVm', vmId, diskAttachmentId],
   queryFn: async () => {
     const res = await ApiManager.findDiskattachmentFromVM(vmId, diskAttachmentId);
@@ -3220,7 +3221,7 @@ export const useActivateDiskFromVm = (
  */
 /*
 export const useFindDiskFromVM = (vmId,diskId) => useQuery({
-   refetchOnWindowFocus: true,
+   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
    queryKey: ['FindDiskFromVM', vmId], 
    queryFn: async () => {
      Logger.debug(`useFindDiskFromVM vm아이디... ${vmId}`);
@@ -3243,7 +3244,7 @@ export const useFindDiskFromVM = (vmId,diskId) => useQuery({
 export const useAllTemplates = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allTemplates'],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplates()
@@ -3291,7 +3292,7 @@ export const useAllVmsFromTemplate = (
   templateId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['AllVmsFromTemplate', templateId],
   queryFn: async () => {
     const res = await ApiManager.findVMsFromTemplate(templateId);
@@ -3318,7 +3319,7 @@ export const useAllNicsFromTemplate = (
   templateId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allNicsFromTemplate', templateId],
   queryFn: async () => {
     const res = await ApiManager.findNicsFromTemplate(templateId);
@@ -3347,7 +3348,7 @@ export const useAllDisksFromTemplate = (
   templateId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allDisksFromTemplate', templateId],
   queryFn: async () => {
     const res = await ApiManager.findDisksFromTemplate(templateId);
@@ -3374,7 +3375,7 @@ export const useAllStoragesFromTemplate = (
   templateId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['AllStoragesFromTemplate', templateId],
   queryFn: async () => {
     const res = await ApiManager.findStorageDomainsFromTemplate(templateId);
@@ -3404,7 +3405,7 @@ export const useAllEventFromTemplate = (
   templateId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allEventFromTemplate', templateId],
   queryFn: async () => {
     const res = await ApiManager.findEventsFromTemplate(templateId);
@@ -3629,7 +3630,7 @@ export const useDeleteNetworkFromTemplate = (
 export const useAllNetworks = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allNetworks'],
   queryFn: async () => {
     const res = await ApiManager.findAllNetworks();
@@ -3675,7 +3676,7 @@ export const useAllClustersFromNetwork = (
   networkId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['clustersFromNetwork', networkId],
   queryFn: async () => {
     const res = await ApiManager.findAllClustersFromNetwork(networkId);
@@ -3701,7 +3702,7 @@ export const useConnectedHostsFromNetwork = (
   networkId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['connectedHostsFromNetwork', networkId],
   queryFn: async () => {
     const res = await ApiManager.findConnectedHostsFromNetwork(networkId);
@@ -3731,7 +3732,7 @@ export const useDisconnectedHostsFromNetwork = (
   networkId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['disconnectedHostsFromNetwork', networkId],
   queryFn: async () => {
     const res = await ApiManager.findDisconnectedHostsFromNetwork(networkId);
@@ -3761,7 +3762,7 @@ export const useAllVmsFromNetwork = (
   networkId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['vmFromNetwork', networkId],
   queryFn: async () => {
     Logger.debug(`useAllVmsFromNetwork ... ${networkId}`);
@@ -3784,7 +3785,7 @@ export const useAllTemplatesFromNetwork = (
   networkId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['templateFromNetwork', networkId],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplatesFromNetwork(networkId);
@@ -3811,7 +3812,7 @@ export const useAllVnicProfilesFromNetwork = (
   networkId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['vnicProfilesFromNetwork', networkId],
   queryFn: async () => {
     const res = await ApiManager.findAllVnicProfilesFromNetwork(networkId);
@@ -3932,7 +3933,7 @@ export const useDeleteNetwork = (
 export const useAllNetworkProviders = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allNetworkProviders'],
   queryFn: async () => {
     const res = await ApiManager.findAllNetworkProviders();
@@ -3957,7 +3958,7 @@ export const useAllNetworkProviders = (
 export const useAllVnicProfiles = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allVnicProfiles'],
   queryFn: async () => {
     const res = await ApiManager.findAllVnicProfiles();
@@ -4002,7 +4003,7 @@ export const useVnicProfile = (vnicId) => useQuery({
 export const useAllVmsFromVnicProfiles = (vnicProfileId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['AllVmsFromVnicProfiles', vnicProfileId],
   queryFn: async () => {
     const res = await ApiManager.findAllVmsFromVnicProfiles(vnicProfileId);
@@ -4028,7 +4029,7 @@ export const useAllVmsFromVnicProfiles = (vnicProfileId,
 export const useAllTemplatesFromVnicProfiles = (vnicProfileId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['AllTemplatesFromVnicProfiles', vnicProfileId],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplatesFromVnicProfiles(vnicProfileId);
@@ -4154,7 +4155,7 @@ export const useDeleteVnicProfile = (
 export const useNetworkFilters = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allNetworkFilters'],
   queryFn: async () => {
     const res = await ApiManager.findAllNetworkFilters();
@@ -4179,7 +4180,7 @@ export const useNetworkFilters = (
 export const useAllStorageDomains = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allStorageDomains'],
   queryFn: async () => {
     const res = await ApiManager.findAllStorageDomains()
@@ -4223,7 +4224,7 @@ export const useAllActiveDomainsFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['AllActiveDomainsFromDataCenter', dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.findActiveDomainFromDataCenter(dataCenterId);
@@ -4250,7 +4251,7 @@ export const useAllDataCentersFromDomain = (
   storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allDataCentersFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllDataCentersFromDomain(storageDomainId);
@@ -4301,7 +4302,7 @@ export const useAllHostsFromDomain = (
 export const useAllVMsFromDomain = (storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allVMsFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllVMsFromDomain(storageDomainId);
@@ -4329,7 +4330,7 @@ export const useAllVMsFromDomain = (storageDomainId,
 export const useAllUnregisteredVMsFromDomain = (storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   // queryKey: ['AllVMFromDomain', storageDomainId], 
   queryFn: async () => {
     const res = await ApiManager.findAllUnregisterdVMsFromDomain(storageDomainId);
@@ -4356,7 +4357,7 @@ export const useAllUnregisteredVMsFromDomain = (storageDomainId,
 export const useAllDisksFromDomain = (storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allDisksFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllDisksFromDomain(storageDomainId);
@@ -4381,7 +4382,7 @@ export const useAllDisksFromDomain = (storageDomainId,
 export const useAllUnregisteredDisksFromDomain = (storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allUnregisteredDisksFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllUnregisteredDisksFromDomain(storageDomainId);
@@ -4472,7 +4473,7 @@ export const useAllTemplatesFromDomain = (
   storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allTemplatesFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplatesFromDomain(storageDomainId);
@@ -4498,7 +4499,7 @@ export const useAllUnregisteredTemplatesFromDomain = (
   storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allUnregisteredTemplatesFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllUnregisteredTemplatesFromDomain(storageDomainId);
@@ -4524,7 +4525,7 @@ export const useAllDiskProfilesFromDomain = (
   storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allDiskProfilesFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllDiskProfilesFromDomain(storageDomainId);
@@ -4550,7 +4551,7 @@ export const useAllDiskSnapshotsFromDomain = (
   storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['AllDiskSnapshotFromDomain', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllDiskSnapshotsFromDomain(storageDomainId);
@@ -4578,7 +4579,7 @@ export const useAllEventsFromDomain = (
   storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['AllEventFromDomain', storageDomainId],
   queryFn: async () => {
     if (storageDomainId === '') return [];
@@ -4603,7 +4604,7 @@ export const useAllEventsFromDomain = (
 export const useAllActiveDataCenters = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allActiveDataCenters'],
   queryFn: async () => {
     const res = await ApiManager.findActiveDataCenters();
@@ -4989,7 +4990,7 @@ export const useMaintenanceDomain = (
 export const useAllDisks = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allDisks'],
   queryFn: async () => {
     const res = await ApiManager.findAllDisks()
@@ -5051,7 +5052,7 @@ export const useAllVmsFromDisk = (
   diskId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allVmsFromDisk', diskId],
   queryFn: async () => {
     const res = await ApiManager.findAllVmsFromDisk(diskId);
@@ -5078,7 +5079,7 @@ export const useAllStorageDomainsFromDisk = (
   diskId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allStorageDomainsFromDisk', diskId],
   queryFn: async () => {
     const res = await ApiManager.findAllStorageDomainsFromDisk(diskId);
@@ -5296,7 +5297,7 @@ export const useAllEvents = ({
   pageNo = null, size = null,
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allEvents'],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents(severityThreshold, pageNo, size)
@@ -5317,7 +5318,7 @@ export const useAllEvents = ({
 export const useAllEventsNormal = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allEventsNormal'],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents(null, 1, 100)
@@ -5332,7 +5333,7 @@ export const useAllEventsNormal = (
 export const useAllEventsAlert = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allNotiEvents'],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents("alert", 1, 20)
@@ -5406,11 +5407,9 @@ export const useRemoveEvents = (
 //#region: job
 export const useAllJobs = (
   mapPredicate = (e) => ({ ...e })
-  , refetchInterval = 5000,
 ) => {
   return useQuery({
-    refetchOnWindowFocus: true,
-    refetchInterval: refetchInterval, // 5초
+    refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
     queryKey: ['allJobs'],
     queryFn: async () => {
       const res = await ApiManager.findAllJobs()
@@ -5433,7 +5432,7 @@ export const useJob = (
   jobId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['job', jobId],
   queryFn: async () => {
     const res = await ApiManager.findJob(jobId)
@@ -5599,7 +5598,7 @@ export const useRemoveJobs = (
 export const useAllUsers = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allUsers'],
   queryFn: async () => {
     const res = await ApiManager.findAllUsers();
@@ -5621,7 +5620,7 @@ export const useUser = (
   username,
   exposeDetail = false
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['user'],
   queryFn: async () => {
     const res = await ApiManager.findUser(username, exposeDetail)
@@ -5812,7 +5811,7 @@ export const useAllUserSessions = (
   username = "",
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allUserSessions'],
   queryFn: async () => {
     const res = await ApiManager.findAllUserSessions(username)
@@ -5829,7 +5828,7 @@ export const useAllUserSessions = (
 export const useAllCerts = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allCerts'],
   queryFn: async () => {
     Logger.debug(`useUser ...`);
@@ -5844,7 +5843,7 @@ export const useAllCerts = (
 export const useCert = (
   id
 ) => useQuery({
-  refetchOnWindowFocus: true,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['cert'],
   queryFn: async () => {
     Logger.debug(`useCert ... id: ${id}`);

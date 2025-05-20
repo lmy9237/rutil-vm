@@ -132,7 +132,7 @@ const VmDiskModal = ({
     if (!isOpen) {
       setFormState((prev) => ({
         ...initialFormState,
-        alias: vmName || "",
+        alias: vmName || "", 
         bootable: hasBootableDisk ? false : initialFormState.bootable
       }));
       setStorageDomainVo({ id: domains[0]?.id, name: domains[0]?.name });
@@ -310,7 +310,7 @@ const VmDiskModal = ({
             )}
             <LabelInput id="alias" label={Localization.kr.ALIAS}
               value={formState.alias} 
-              onChange={handleInputChange("alias")}
+              onChange={handleInputChange(setFormState, "alias")}
             />
             <LabelInput id="description" label={Localization.kr.DESCRIPTION}
               value={formState.description} 

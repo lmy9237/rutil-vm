@@ -21,6 +21,7 @@ const RutilNetworks = () => {
     isError: isNetworksError,
     isSuccess: isNetworksSuccess,
     refetch: refetchNetworks,
+    isRefetching: isNetworksRefetching,
   } = useAllNetworks((e) => ({ ...e }));
   
   useEffect(() => {
@@ -33,7 +34,7 @@ const RutilNetworks = () => {
   return (
     <NetworkDupl columns={TableColumnsInfo.NETWORKS}
       networks={networks}
-      refetch={refetchNetworks}
+      refetch={refetchNetworks} isRefetching={isNetworksRefetching}
       isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
     />
   );

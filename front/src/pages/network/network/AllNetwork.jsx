@@ -22,6 +22,7 @@ const AllNetwork = () => {
     isError: isNetworksError,
     isSuccess: isNetworksSuccess,
     refetch: refetchNetworks,
+    isRefetching: isNetworksRefetching,
   } = useAllNetworks((e) => ({ ...e }));
 
   return (
@@ -33,7 +34,7 @@ const AllNetwork = () => {
         <NetworkDupl columns={TableColumnsInfo.NETWORKS}
           networks={networks}
           showSearchBox={true}
-          refetch={refetchNetworks}
+          refetch={refetchNetworks} isRefetching={isNetworksRefetching}
           isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
         />
       </div>

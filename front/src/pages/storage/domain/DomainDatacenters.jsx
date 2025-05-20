@@ -35,6 +35,7 @@ const DomainDatacenters = ({
     isError: isDataCentersError,
     isSuccess: isDataCentersSuccess,
     refetch: refetchDataCenters,
+    isRefetching: isDataCentersRefetching,
   } = useAllDataCentersFromDomain(domainId, (e) => ({ ...e }));
 
   const transformedData = [...datacenters].map((datacenter) => ({
@@ -75,7 +76,7 @@ const DomainDatacenters = ({
         multiSelect={true}
         onRowClick={(selectedRows) => setDatacentersSelected(selectedRows)}
         shouldHighlight1stCol={true}
-        isLoading={isDataCentersLoading} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
+        isLoading={isDataCentersLoading} isRefetching={isDataCentersRefetching} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
       />
       <SelectedIdView items={datacentersSelected} />
       <OVirtWebAdminHyperlink

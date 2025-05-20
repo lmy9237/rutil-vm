@@ -24,10 +24,9 @@ const Tables = ({
   onRowClick = () => {},
   clickableColumnIndex = [],
   onClickableColumnClick = () => {},
-  refetch,
-  isLoading = null, isError = false, isSuccess,
-  searchQuery = "",  // ✅ 기본값 추가
-  setSearchQuery = () => {}, // ✅ 기본값 추가
+  isRefetching=null,
+  isLoading=null, isError=false, isSuccess,
+  searchQuery="", setSearchQuery=()=>{},
 }) => {
   const {
     contextMenu, setContextMenu
@@ -255,7 +254,7 @@ const Tables = ({
 
 
   const renderTableBody = useCallback(() => {
-    if (isLoading) {
+    if (isLoading || isRefetching) {
       // 로딩중일 때
       return <TableRowLoading colLen={columns.length} />;
     } else if (!isLoading && isSuccess) {

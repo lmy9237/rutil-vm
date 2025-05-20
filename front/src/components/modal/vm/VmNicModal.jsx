@@ -1,9 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
+import useUIState from "../../../hooks/useUIState";
+import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
-import Localization from "../../../utils/Localization";
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import {
   useAddNicFromVM,
   useAllvnicFromCluster,
@@ -13,9 +15,7 @@ import {
 } from "../../../api/RQHook";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import useUIState from "../../../hooks/useUIState";
+import Localization from "../../../utils/Localization";
 
 const initialFormState = {
   id: "",
@@ -47,12 +47,17 @@ const VmNicModal = ({
   const [isProfileOriginallySet, setIsProfileOriginallySet] = useState(false);
   const isInterfaceDisabled = editMode && isProfileOriginallySet;
 
-  const { data: vm } = useVm(vmId);
+  const {
+    data: vm
+  } = useVm(vmId);
   const { data: nicsdetail } = useNetworkInterfaceFromVM(vmId, nicId);
-  const { data: vnics = [], isLoading: isNicsLoading } = useAllvnicFromCluster(vm.clusterVo?.id, (e) => ({ ...e }));
+  const { 
+    data: vnics=[],
+    isLoading: isNicsLoading
+  } = useAllvnicFromCluster(vm?.clusterVo?.id, (e) => ({ ...e }));
+
   const { mutate: addNicFromVM } = useAddNicFromVM(onClose, onClose);
   const { mutate: editNicFromVM } = useEditNicFromVM(onClose, onClose);
-
 
   const filteredInterfaceOptions = useMemo(() => {
     const selectedVnicProfile = vnics.find((v) => v.id === vnicProfileVo.id);
@@ -136,7 +141,6 @@ const VmNicModal = ({
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px" }}
     >
-
       <LabelInput id="name" label={Localization.kr.NAME}
         value={formInfoState.name}
         onChange={handleInputChange(setFormInfoState, "name")}

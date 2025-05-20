@@ -22,7 +22,7 @@ import Logger from "../../utils/Logger";
  */
 const EventDupl = ({
   events = [],
-  refetch, isLoading, isError, isSuccess,
+  refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const { eventsSelected, setEventsSelected } = useGlobal()
   const transformedData = [...events].map((e) => ({
@@ -49,12 +49,11 @@ const EventDupl = ({
         columns={TableColumnsInfo.EVENTS}
         data={filteredData}
         multiSelect={true}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
         /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => {setEventsSelected(selectedRows)}}
         /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
-        isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+        isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={eventsSelected} />
       <OVirtWebAdminHyperlink name={`${Localization.kr.EVENT}>${Localization.kr.EVENT}`} path="events" />

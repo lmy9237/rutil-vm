@@ -24,13 +24,14 @@ const HostVms = ({
     isError: isVmsError,
     isSuccess: isVmsSuccess,
     refetch: refetchVms,
+    isRefetching: isVmsRefetching,
   } = useVmsFromHost(hostId, (e) => ({ ...e }));
 
   return (
     <>
       <VmDupl columns={TableColumnsInfo.VMS_FROM_HOST}
         vms={vms}
-        refetch={refetchVms}
+        refetch={refetchVms} isRefetching={isVmsRefetching}
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <OVirtWebAdminHyperlink

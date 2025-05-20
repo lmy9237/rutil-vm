@@ -20,6 +20,7 @@ const AllDomain = () => {
     isError: isStorageDomainsError,
     isSuccess: isStorageDomainsSuccess,
     refetch: refetchStorageDomains,
+    isRefetching: isStorageDomainsRefetching,
   } = useAllStorageDomains((e) => ({ ...e }));
 
   return (
@@ -31,7 +32,7 @@ const AllDomain = () => {
         <DomainDupl columns={TableColumnsInfo.STORAGE_DOMAINS}
           domains={storageDomains}
           actionType
-          refetch={refetchStorageDomains}
+          refetch={refetchStorageDomains} isRefetching={isStorageDomainsRefetching}
           isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
         />
       </div>

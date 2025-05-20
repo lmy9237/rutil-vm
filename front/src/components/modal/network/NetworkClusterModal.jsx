@@ -20,6 +20,8 @@ const NetworkClusterModal = ({
     isLoading: isClustersLoading,
     isError: isClustersError,
     isSuccess: isClustersSuccess,
+    refetch: refetchClusters,
+    isRefetching: isClustersRefetching,
   } = useAllClustersFromNetwork(networkId);
 
   // 데이터 변환
@@ -53,9 +55,10 @@ const NetworkClusterModal = ({
     >
       <div className="py-3">
         <TablesOuter target={"cluster"}
-          columns={TableColumnsInfo.CLUSTERS_POPUP} data={transformedData}
-          onRowClick={() => {}}
-          isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
+          columns={TableColumnsInfo.CLUSTERS_POPUP}
+          data={transformedData}
+          onRowClick={(selectedRows) => {}}
+          isLoading={isClustersLoading} isRefetching={isClustersRefetching} isError={isClustersError} isSuccess={isClustersSuccess}
         />
       </div>
     </BaseModal>

@@ -37,6 +37,7 @@ const DomainDiskSnapshots = ({
     isSuccess: isDiskSnapshotsSuccess,
     isError: isDiskSnapshotsError,
     refetch: refetchDiskSnapshots,
+    isRefetching: isDiskSnapshotsRefetching,
   } = useAllDiskSnapshotsFromDomain(domainId ?? domainsSelected[0]?.id, (e) => ({ ...e }));
 
   const transformedData = useMemo(() => [...diskSnapshots].map((e) => ({
@@ -68,8 +69,7 @@ const DomainDiskSnapshots = ({
         setSearchQuery={setSearchQuery}
         multiSelect={true}
         onRowClick={(selectedRows) => setSnapshotsSelected(selectedRows)}
-        refetch={refetchDiskSnapshots}
-        isLoading={isDiskSnapshotsLoading} isError={isDiskSnapshotsError} isSuccess={isDiskSnapshotsSuccess}
+        isLoading={isDiskSnapshotsLoading} isRefetching={isDiskSnapshotsRefetching} isError={isDiskSnapshotsError} isSuccess={isDiskSnapshotsSuccess}
       />
       <SelectedIdView items={snapshotsSelected} />
       <OVirtWebAdminHyperlink

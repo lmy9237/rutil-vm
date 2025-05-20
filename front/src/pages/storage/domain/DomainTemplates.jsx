@@ -36,6 +36,7 @@ const DomainTemplates = ({
     isError: isTemplatesError,
     isSuccess: isTemplatesSuccess,
     refetch: refetchTemplates,
+    isRefetching: isTemplatesRefetching,
   } = useAllTemplatesFromDomain(domainId ?? domainsSelected[0]?.id, (e) => ({ ...e }));
 
   const transformedData = useMemo(() => [...templates].map((t) => ({
@@ -73,8 +74,7 @@ const DomainTemplates = ({
         setSearchQuery={setSearchQuery}
         multiSelect={true}
         onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
-        refetch={refetchTemplates}
-        isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
+        isLoading={isTemplatesLoading} isRefetching={isTemplatesRefetching} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
       <SelectedIdView items={templatesSelected} />
       <OVirtWebAdminHyperlink

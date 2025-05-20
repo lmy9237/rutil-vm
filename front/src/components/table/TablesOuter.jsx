@@ -11,7 +11,7 @@ import "./Table.css";
  */
 const TablesOuter = ({
   target,
-  isLoading, isError, isSuccess,
+  isRefetching, isLoading, isError, isSuccess,
   columns = [],
   data = [],
   showSearchBox = false,
@@ -31,14 +31,14 @@ const TablesOuter = ({
         <Tables target={target}
           columns={columns}
           data={filteredData} // ✅ 검색 필터링된 데이터 전달
-          searchQuery={searchQuery} // ✅ 검색어 전달
-          setSearchQuery={setSearchQuery} // ✅ 검색어 변경 함수 전달
+          searchQuery={searchQuery} setSearchQuery={setSearchQuery}
           showSearchBox={showSearchBox}
           onRowClick={onRowClick}
           clickableColumnIndex={clickableColumnIndex}
           shouldHighlight1stCol={shouldHighlight1stCol}
           // onContextMenuItems={onContextMenuItems}
           onClickableColumnClick={onClickableColumnClick}
+          isRefetching={isRefetching}
           isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         />
       </div>

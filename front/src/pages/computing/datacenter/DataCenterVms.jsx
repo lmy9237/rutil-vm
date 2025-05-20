@@ -19,13 +19,13 @@ const DataCenterVms = ({ datacenterId }) => {
     isError: isVmsError,
     isSuccess: isVmsSuccess,
     refetch: refetchVms,
+    isRefetching: isVmsRefetching,
   } = useVMsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
-  Logger.debug("DataCenterVms ...");
   return (
     <VmDupl columns={TableColumnsInfo.VMS}
       vms={vms}
-      refetch={refetchVms}
+      refetch={refetchVms} isRefetching={isVmsRefetching}
       isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
     />
   );

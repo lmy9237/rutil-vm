@@ -32,6 +32,7 @@ const TemplateDisks = ({
     isError: isDisksError,
     isSuccess: isDisksSuccess,
     refetch: refetchDisks,
+    isRefetching: isDisksRefetching,
   } = useAllDisksFromTemplate(templateId, ((e) => ({...e})));
   
   const transformedData = [...disks].map((e) => {
@@ -74,13 +75,11 @@ const TemplateDisks = ({
       <TablesOuter target={"disk"}
         columns={TableColumnsInfo.DISKS_FROM_TEMPLATE}
         data={filteredData}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(rows) => setDisksSelected(rows)}
-        refetch={refetchDisks}
-        isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
+        isLoading={isDisksLoading} isRefetching={isDisksRefetching} isError={isDisksError} isSuccess={isDisksSuccess}
       />
       <SelectedIdView items={disksSelected} />
     </>

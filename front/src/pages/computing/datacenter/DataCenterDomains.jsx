@@ -25,6 +25,7 @@ const DataCenterDomains = ({
     isError: isStorageDomainsError,
     isSuccess: isStorageDomainsSuccess,
     refetch: refetchStorageDomains,
+    isRefetching: isStorageDomainsRefetching,
   } = useDomainsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
   return (
@@ -34,7 +35,7 @@ const DataCenterDomains = ({
         actionType={false}
         datacenterId={datacenterId}
         sourceContext={"fromDatacenter"}
-        refetch={refetchStorageDomains}
+        refetch={refetchStorageDomains} isRefetching={isStorageDomainsRefetching}
         isLoading={isStorageDomainsLoading} isError={isStorageDomainsError} isSuccess={isStorageDomainsSuccess}
       />
       <OVirtWebAdminHyperlink 

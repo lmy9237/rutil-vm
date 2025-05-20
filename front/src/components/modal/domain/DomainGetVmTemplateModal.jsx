@@ -34,7 +34,7 @@ const DomainGetVmTemplateModal = ({
   isOpen,
   onClose,
   type="vm", 
-  dcId, 
+  dcId,
 }) => {
   // const { closeModal } = useUIState()
   const isVmMode = type === "vm"; // true면 "가상머신", false면 "템플릿"
@@ -216,7 +216,6 @@ const DomainGetVmTemplateModal = ({
       <div className="filter-table">
         {/* 필터 버튼 */}
         <FilterButtons options={filterOptions} activeOption={activeFilter} onClick={setActiveFilter} />
-
         {/* 섹션 변경 */}
         {activeFilter === "general" && (
           <div className="get-template-info f-btw three-columns">
@@ -232,8 +231,9 @@ const DomainGetVmTemplateModal = ({
         )}
 
         {activeFilter === "disk" && (
-          <TablesOuter
+          <TablesOuter target={"disk"}
             columns={TableColumnsInfo.GET_DISK_TEMPLATES}
+            date={[]}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
             multiSelect={true}
@@ -241,8 +241,9 @@ const DomainGetVmTemplateModal = ({
         )}
 
         {activeFilter === "network" && (
-          <TablesOuter
+          <TablesOuter target={"network"}
             columns={TableColumnsInfo.NETWORK_INTERFACE_FROM_HOST}
+            date={[]}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
             multiSelect={true}

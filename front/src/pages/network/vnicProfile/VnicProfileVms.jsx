@@ -34,6 +34,7 @@ const VnicProfileVms = ({
     isSuccess: isVmsSuccess,
     data: vms = [],
     refetch: refetchVms,
+    isRefetching: isVmsRefetching,
   } = useAllVmsFromVnicProfiles(vnicProfileId, (e) => ({ ...e }));
 
   const transformedData = vms.map((vm) => ({
@@ -67,8 +68,7 @@ const VnicProfileVms = ({
         multiSelect={true}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         shouldHighlight1stCol={true}
-        refetch={refetchVms}
-        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+        isLoading={isVmsLoading} isRefetching={isVmsRefetching} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
       <OVirtWebAdminHyperlink

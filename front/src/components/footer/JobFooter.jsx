@@ -1,18 +1,19 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../hooks/useGlobal";
+import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
 import useFooterState from "../../hooks/useFooterState";
-import { BadgeStatus, BadgeNumber } from "../common/Badges";
 import Spinner from "../common/Spinner";
-import Loading from "../common/Loading";
 import SelectedIdView from "../common/SelectedIdView";
-import TableColumnsInfo from "../table/TableColumnsInfo";
+import { BadgeStatus, BadgeNumber } from "../common/Badges";
+import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
 import TablesOuter from "../table/TablesOuter";
+import TableColumnsInfo from "../table/TableColumnsInfo";
+import TableRowClick from "../table/TableRowClick";
 import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
 import { useAllJobs } from "../../api/RQHook";
 import Logger from "../../utils/Logger";
 import Localization from "../../utils/Localization";
-import TableRowClick from "../table/TableRowClick";
 import "./JobFooter.css";
 
 /**
@@ -36,7 +37,8 @@ const JobFooter = ({
     isLoading: isJobsLoading,
     isError: isJobsError,
     isSuccess: isJobsSuccess,
-    refetch: refetchJobs
+    refetch: refetchJobs,
+    isRefetching: isJobsRefetching,
   } = useAllJobs((e) => ({ ...e }), parseInt(footerJobRefetchInterval()))
 
   // job 데이터 변환
@@ -54,13 +56,15 @@ const JobFooter = ({
         text={[...e?.steps].length} 
         status={e?.status === "FAILED" ? "alert" : "number"}
       /> : "",
-    // status: (e?.status === "FINISHED" || e?.status === "FAILED") 
-    //   ? <BadgeStatus status={
-    //     e?.status === "FINISHED" 
-    //       ? "running"
-    //       : "default"
-    //   } text={e?.status} />
-    //   : <Spinner />,
+    /* 
+    status: (e?.status === "FINISHED" || e?.status === "FAILED") 
+      ? <BadgeStatus status={
+        e?.status === "FINISHED" 
+          ? "running"
+          : "default"
+      } text={e?.status} />
+      : <Spinner />,
+    */
     status: (e?.status === "FINISHED" || e?.status === "FAILED")
     ? (e?.status === "FINISHED" ? "성공" : "실패")
     : <Spinner />,
@@ -107,6 +111,7 @@ const JobFooter = ({
   }, [footerVisible, footerHeight])
 
   useEffect(() => {
+    Logger.debug(`JobFooter > useEffect ... footerHeight: ${footerHeight}`)
     if (footerHeight !== footerHeightInPx()) setTimeout(() => {
       return () => {
         setFooterHeightInPx(footerHeight)
@@ -114,6 +119,14 @@ const JobFooter = ({
     }, 300)
   }, [footerHeight])
 
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+
+  const handleRefresh = useCallback(() =>  {
+    Logger.debug(`JobFooter > handleRefresh ... `)
+    if (!refetchJobs) return;
+    refetchJobs()
+    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+  }, [])
   return (
     <>
       {/* 드래그바 */}
@@ -140,18 +153,24 @@ const JobFooter = ({
 
         {/* 테이블 */}
         <div
-          className={`footer-content v-center`}
+          className={`footer-content v-center w-full`}
           style={{ height: `${footerHeight - 40}px` }}
         >
-          <div className="footer-nav">
+          <div className="footer-nav v-start gap-8 w-full h-full">
+            <div className="dupl-header-group f-start gap-4 w-full">
+              {transformedData.length > 0 && 
+                <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+              }
+              {/*  */}
+            </div>
             <TablesOuter target={"job"}
               columns={TableColumnsInfo.JOB_HISTORY_COLUMNS}
               style={{ paddingLeft:'30px' }}
-              data={transformedData}
-              showSearchBox={false}
+              data={filteredData}
+              searchQuery={searchQuery} setSearchQuery={setSearchQuery}
               onRowClick={(row) => setJobsSelected(row)}
               onClickableColumnClick={(row) => handleDescriptionClick(row)}
-              isLoading={isJobsLoading} isError={isJobsError} isSuccess={isJobsSuccess}
+              isLoading={isJobsLoading} isRefetching={isJobsRefetching} isError={isJobsError} isSuccess={isJobsSuccess}
             />
             <SelectedIdView items={jobsSelected} />
           </div>

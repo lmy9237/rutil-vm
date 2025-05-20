@@ -46,6 +46,7 @@ const NetworkHosts = ({
     isError: isConnectedHostsError,
     isSuccess: isConnectedHostsSuccess,
     refetch: refetchConnectedHosts,
+    isRefetching: isConnectedHostsRefetching
   } = useConnectedHostsFromNetwork(networkId, (e) => ({ ...e }));
 
   const {
@@ -54,6 +55,7 @@ const NetworkHosts = ({
     isError: isDisconnectedHostsError,
     isSuccess: isDisconnectedHostsSuccess,
     refetch: refetchDisconnectedHosts,
+    isRefetching: isDisconnectedHostsRefetching
   } = useDisconnectedHostsFromNetwork(networkId, (e) => ({ ...e }));
 
   const selectedHostId = [...hostsSelected][0]?.id
@@ -109,7 +111,9 @@ const NetworkHosts = ({
   );
   const handleRefresh = useCallback(() =>  {
     Logger.debug(`NetworkHosts > handleRefresh ... `)
-    activeFilter === "connected" ? refetchConnectedHosts() : refetchDisconnectedHosts()
+    activeFilter === "connected" 
+      ? refetchConnectedHosts()
+      : refetchDisconnectedHosts()
     import.meta.env.DEV && toast.success("다시 조회 중 ...")
   }, [])
 
@@ -139,12 +143,11 @@ const NetworkHosts = ({
             : TableColumnsInfo.HOSTS_DISCONNECT_FROM_NETWORK
         }
         data={filteredData}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(row) => setHostsSelected(row)}
-        refetch={activeFilter === "connected" ? refetchConnectedHosts : refetchDisconnectedHosts}
+        isRefetching={activeFilter === "connected" ? isConnectedHostsRefetching : isDisconnectedHostsRefetching}
         isLoading={activeFilter === "connected" ? isConnectedHostsLoading: isDisconnectedHostsLoading}
         isError={activeFilter === "connected" ? isConnectedHostsError : isDisconnectedHostsError }
         isSuccess={activeFilter === "connected" ? isConnectedHostsSuccess : isDisconnectedHostsSuccess }

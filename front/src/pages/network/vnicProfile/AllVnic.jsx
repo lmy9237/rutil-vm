@@ -19,6 +19,8 @@ const AllVnic = () => {
     isLoading: isVnicProfilesLoading,
     isError: isVnicProfilesError,
     isSuccess: isVnicProfilesSuccess,
+    refetch: refetchVnicProfiles,
+    isRefetching: isVnicProfilesRefetching,
   } = useAllVnicProfiles((e) => ({ ...e }));
 
   return (
@@ -27,10 +29,9 @@ const AllVnic = () => {
         title={Localization.kr.VNIC_PROFILE}
       />
       <div className="section-content v-start gap-8 w-full">
-        <VnicProfileDupl
-          columns={TableColumnsInfo.VNIC_PROFILES}
+        <VnicProfileDupl columns={TableColumnsInfo.VNIC_PROFILES}
           vnicProfiles={vnicProfiles || []}
-          showSearchBox={true}
+          refetch={refetchVnicProfiles} isRefetching={isVnicProfilesRefetching}
           isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
         />
       </div>

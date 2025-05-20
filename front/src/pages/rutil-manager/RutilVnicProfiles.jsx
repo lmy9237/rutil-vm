@@ -13,7 +13,9 @@ import Logger from "../../utils/Logger";
  * @returns {JSX.Element} VnicProfiles
  */
 const RutilVnicProfiles = () => {
-  const { setVnicProfilesSelected } = useGlobal()
+  const {
+    setVnicProfilesSelected
+  } = useGlobal()
 
   const {
     data: vnicProfiles = [],
@@ -21,6 +23,7 @@ const RutilVnicProfiles = () => {
     isError: isVnicProfilesError,
     isSuccess: isVnicProfilesSuccess,
     refetch: refetchVnicProfiles,
+    isRefetching: isVnicProfilesRefetching,
   } = useAllVnicProfiles((e) => ({ ...e }));
   
   useEffect(() => {
@@ -33,7 +36,7 @@ const RutilVnicProfiles = () => {
   return (
     <VnicProfileDupl columns={TableColumnsInfo.VNIC_PROFILES}
       vnicProfiles={vnicProfiles}
-      refetch={refetchVnicProfiles}
+      refetch={refetchVnicProfiles} isRefetching={isVnicProfilesRefetching}
       isLoading={isVnicProfilesLoading} isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
     />
   );
