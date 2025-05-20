@@ -88,14 +88,20 @@ fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment {
 	// 	.network(NetworkBuilder().id(this.networkVo.id).build())
 	// 	.hostNic(HostNicBuilder().id(this.hostNicVo.id).build())
 	// 	.ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
-	//
 	// DNS가 있다는 전제하에
 	// if (this.nameServerList != null) {
 	// 	builder.dnsResolverConfiguration(
 	// 		DnsResolverConfigurationBuilder().nameServers(this.nameServerList).build()
 	// 	)
 	// }
-
+	// val builder = NetworkAttachmentBuilder()
+	// if(this.id.isNotEmpty()) builder.id(this.id)
+	//
+	// return builder
+	// 	.network(NetworkBuilder().id(this.networkVo.id).build())
+	// 	.hostNic(HostNicBuilder().name(this.hostNicVo.name).build())
+	// 	.ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
+	// 	.build()
 	return NetworkAttachmentBuilder()
 		.network(NetworkBuilder().id(this.networkVo.id).build())
 		.hostNic(HostNicBuilder().name(this.hostNicVo.name).build())

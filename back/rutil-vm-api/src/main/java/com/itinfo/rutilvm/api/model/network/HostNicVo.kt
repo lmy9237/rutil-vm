@@ -200,7 +200,7 @@ fun List<HostNicVo>.toModifiedBonds(): List<HostNic> =
  * 호스트 본딩 삭제 remove_bonds
  */
 fun HostNicVo.toRemoveBond(): HostNic {
-	return HostNicBuilder().id(id).build()
+	return HostNicBuilder().name(name).build()
 }
 
 fun List<HostNicVo>.toRemoveBonds(): List<HostNic> =

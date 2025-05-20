@@ -1,7 +1,6 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import useUIState from "../../../../hooks/useUIState";
 import useGlobal from "../../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../../components/common/OVirtWebAdminHyperlink";
 import Loading from "../../../common/Loading";
 import ActionButton from "../../../button/ActionButton";
 import { RVI36, rvi36Trash } from "../../../icons/RutilVmIcons";
@@ -14,11 +13,9 @@ const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
 
 const VmDisk = ({
   editMode=false,
-  vm,
-  vmName,
+  vm, vmName,
   dataCenterId,
-  diskListState,
-  setDiskListState,
+  diskListState, setDiskListState,
 }) => {
   const { setActiveModal } = useUIState()
   const {
@@ -36,6 +33,7 @@ const VmDisk = ({
   const hasBootableDisk = useMemo(() => 
     diskAttachments?.some((diskAttachment) => diskAttachment?.bootable === true)
   , [diskAttachments]);
+  
   const hasBootableDiskList = useMemo(() => 
     diskListState?.some((d) => d?.bootable === true)
   , [diskListState]);

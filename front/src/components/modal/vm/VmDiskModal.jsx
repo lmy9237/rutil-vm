@@ -209,6 +209,7 @@ const VmDiskModal = ({
     return null;
   }, [formState, storageDomainVo, diskProfileVo]);
 
+  // 가상머신 생성 - 가상머신 디스크 생성
   const handleOkClick = useCallback(() => {
     Logger.debug(`VmDiskModal > handleOkClick ... `)
     const error = validateForm();
@@ -235,7 +236,7 @@ const VmDiskModal = ({
     onClose();
   }, [formState, storageDomainVo, diskProfileVo]);
 
-
+  // 가상머신 - 디스크 생성
   const handleFormSubmit = useCallback(() => {
     Logger.debug(`VmDiskModal > handleFormSubmit ... `)
     const error = validateForm();
@@ -377,8 +378,7 @@ const VmDiskModal = ({
             disabled={editMode}
           /> 
           */}
-          <div className='img-checkbox-outer'>
-            </div>
+          <div className='img-checkbox-outer'></div>
         </div>
       )}
       {/* 직접LUN */}

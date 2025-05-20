@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
@@ -9,46 +9,45 @@ import { useNetworkInterfaceFromHost } from "../../../api/RQHook";
 import { checkName } from "../../../util";
 import Logger from "../../../utils/Logger";
 
+
 const HostBondingModal = ({ 
-  isOpen,
-  onClose,
   editmode = false, 
+  isOpen, onClose,
   nicIds = [],
   onBondingCreated
 }) => {
-  // const { closeModal } = useUIState()
-  const bLabel = editmode ? Localization.kr.UPDATE : Localization.kr.CREATE;
-
   const { hostsSelected } = useGlobal();
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
+  const bLabel = editmode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   
   const { data: hostNic = {} } = useNetworkInterfaceFromHost(hostId, editmode ? nicIds[0] : null);
   
   const [name, setName] = useState("");
-  const [options, setOptions] = useState([]);
-  const [option, setOption] = useState("");
-  const [mode, setMode] = useState("");
+  // const [options, setOptions] = useState([]);
+  // const [option, setOption] = useState("");
+  // const [mode, setMode] = useState("");
 
-  const initializeOptions = (bonding) => {
-    if (!bonding?.bondingVo) return;
-    setOptions(
-      bonding.bondingVo.optionVos.map(option => ({
-        name: option.name,
-        value: option.value,
-        type: option.type
-      }))
-    );
-  };  
+  // const initializeOptions = (hostNic) => {
+  //   if (!hostNic?.bondingVo) return;
+  //   setOptions(
+  //     hostNic.bondingVo.optionVos.map(option => ({
+  //       name: option.name,
+  //       value: option.value,
+  //       type: option.type
+  //     }))
+  //   );
+  // };  
+
   
   useEffect(() => {
     if(!editmode){
       setName("");
-      setOption();
-    } else if (editmode && hostNic?.name) {
-    setName(hostNic.name);
-    initializeOptions(hostNic);
-  }
-}, [editmode, hostNic?.name]);
+      // setOption();
+    } else {
+      setName(hostNic.name);
+      // initializeOptions(hostNic);
+    }
+  }, [editmode]);
 
   const validateForm = () => {
     const nameError = checkName(name);
@@ -57,46 +56,49 @@ const HostBondingModal = ({
     return null;
   };
 
-  const handleFormSubmit = () => {
+  const handleOkClick = () => {
     const error = validateForm();
     if (error) return toast.error(error);
 
-    const dataToBonding = { 
+    const newBonding = { 
       name,
-      bondingVo: {
+      bondingVo: { 
         slaves: nicIds.map((nic) => ({ id: nic?.id }))
       }
-     };
+    };
 
-    Logger.debug(`handleFormSubmit ... dataToSubmit: `, dataToBonding); // 데이터 출력
-    onBondingCreated?.(dataToBonding);
+    Logger.debug(`handleFormSubmit ... dataToSubmit: `, newBonding); // 데이터 출력
+    onBondingCreated(newBonding);
     onClose();
   };
 
   return (
-    <BaseModal targetName={bLabel} submitTitle={""}
+    <BaseModal targetName={`본딩 ${bLabel}`} submitTitle={""}
       isOpen={isOpen} onClose={onClose}
-      onSubmit={handleFormSubmit}
+      onSubmit={handleOkClick}
       contentStyle={{ width: "500px" }}
     >
-      <span>nicids {editmode ? hostNic?.id : nicIds?.map((e) => `${e.id}, `)}</span>
-      <LabelInput id="bonding_name" label="본딩이름"        
+      <span style={{ marginLeft: "4px", color: "#888", fontSize: "9px"}}>nicids {editmode ? hostNic?.id : nicIds?.map((e) => `${e.id} /`)}</span>
+      <LabelInput id="bonding_name" label={Localization.kr.NAME}        
         value={name}
         disabled={editmode}
         onChange={(e) => setName(e.target.value)}
       />
-      <LabelSelectOptions id="bonding_mode" label="본딩모드(우선mode고정)"        
-        value={options.find(opt => opt.name === "mode")?.value || ""}
-        options={optionList}
+      <LabelSelectOptions id="bonding_mode" label="본딩모드(편집가능)"        
         disabled={editmode}
-        onChange={(e) => {
-          setOptions(prev => prev.map(opt => opt.name === "mode" ? { ...opt, value: e.target.value } : opt ));
-        }}
+        value={optionList[0].value}
+        options={optionList}
+        // value={options.find(opt => opt.name === "mode")?.value || ""}
+        // options={optionList}
+        // disabled={editmode}
+        // onChange={(e) => {
+        //   setOptions(prev => prev.map(opt => opt.name === "mode" ? { ...opt, value: e.target.value } : opt ));
+        // }}
       />
-      <LabelInput id="user_mode" label="사용자 정의 모드"        
+      {/* <LabelInput id="user_mode" label="사용자 정의 모드"        
         value={mode}
         onChange={(e) => setMode(e.target.value)}
-      />
+      /> */}
     </BaseModal>
   );
 };
@@ -105,7 +107,7 @@ export default HostBondingModal;
 
 const optionList = [
   { value: "1", label: "(Mode 1) Active-Backup" },
-  { value: "2", label: "(Mode 2) Load balance (balance-xor)" },
-  { value: "3", label: "(Mode 3) Broadcast" },
-  { value: "4", label: "(Mode 4) Dynamic link aggregation (802.3ad)" }
+  // { value: "2", label: "(Mode 2) Load balance (balance-xor)" },
+  // { value: "3", label: "(Mode 3) Broadcast" },
+  // { value: "4", label: "(Mode 4) Dynamic link aggregation (802.3ad)" }
 ];
