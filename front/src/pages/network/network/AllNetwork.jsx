@@ -33,7 +33,6 @@ const AllNetwork = () => {
       <div className="section-content v-start gap-8 w-full">
         <NetworkDupl columns={TableColumnsInfo.NETWORKS}
           networks={networks}
-          showSearchBox={true}
           refetch={refetchNetworks} isRefetching={isNetworksRefetching}
           isLoading={isNetworksLoading} isError={isNetworksError} isSuccess={isNetworksSuccess}
         />

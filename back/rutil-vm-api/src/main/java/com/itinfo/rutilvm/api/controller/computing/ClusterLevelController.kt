@@ -55,7 +55,6 @@ class ClusterLevelController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun findAllCpuTypesByArchitecture(
-		@PathVariable(required = true) levelId: String
 	): ResponseEntity<Map<Architecture?, List<CpuTypeVo>>> {
 		log.info("/computing/clusterlevels/arch ... 아키텍쳐 별 CPU 유형정보")
 		return ResponseEntity.ok(iClusterLevel.findAllCpuTypesByArchitecture())

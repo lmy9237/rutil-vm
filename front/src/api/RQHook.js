@@ -1,8 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import ApiManager from "./ApiManager";
-import useUIState from "../hooks/useUIState";
-import useGlobal from "../hooks/useGlobal";
 import toast from "react-hot-toast";
+import ApiManager from "./ApiManager";
+import useAuth from "@/hooks/useAuth";
+import useUIState from "@/hooks/useUIState";
+import useGlobal from "@/hooks/useGlobal";
 import Logger from "../utils/Logger";
 import Localization from "../utils/Localization";
 import { triggerDownload } from "../util";
@@ -5638,22 +5639,26 @@ export const useUser = (
  * @returns useQuery훅
  */
 export const useAuthenticate = (
-  username, password,
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
+  const { setAuth } = useAuth();
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({username, password}) => {
       closeModal();
       const res = await ApiManager.authenticate(username, password)
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useAuthenticate ... username: ${username}, password: ${password}`);
       return _res;
     },
-    onSuccess: (res) => {
+    onSuccess: (res, {username}) => {
       Logger.debug(`RQHook > useAuthenticate ... res: `, res);
       if (!res) throw Error("[403] 로그인에 실패했습니다. 사용자ID 또는 비밀번호가 다릅니다.")
+      setAuth({ 
+        username: username,
+        isUserAuthenticated: res,
+      })
       queryClient.invalidateQueries('allUsers,user');
       postSuccess(res);
     },

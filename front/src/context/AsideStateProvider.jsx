@@ -8,7 +8,7 @@ export const AsideStateProvider = ({ children }) => {
   const KEY_ASIDE_WIDTH_IN_PX = "asideWidthInPx"                 /* aside 넓이 */
   
   const initialState = JSON.parse(sessionStorage.getItem(KEY_ASIDE_STATE)) ?? {
-    [KEY_ASIDE_WIDTH_IN_PX]: 0,
+    [KEY_ASIDE_WIDTH_IN_PX]: 236, /* 열렸을 때 */
   }
   const [sAsideState, sSetAsideState] = useState(initialState)
   const _asideState = useMemo(() => 

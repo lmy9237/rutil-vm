@@ -10,6 +10,7 @@ const IconInput = ({
   iconDef,
   type = "text",
   placeholder = Localization.kr.PLACEHOLDER,
+  register, target, options={},
   ...props
 }) => {
   const isPassword = useMemo(() => type === "password")
@@ -26,11 +27,11 @@ const IconInput = ({
           <RVI16 iconDef={iconDef} />
         </span>
       )}
-      <input
+      <input 
         type={isPassword ? (showPassword ? "text" : "password") : type}
         className="icon-input"
         placeholder={placeholder}
-        {...props}
+        {...register(target, options)}
       />
       {isPassword && (
         <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye}

@@ -53,7 +53,7 @@ const App = () => {
       setFoooterJobRefetchInterval(5000)
     }
     closeModal()
-    setAsideVisible(true)
+    // setAsideVisible(true)
     setEventBoxVisible(false)
     setLoginBoxVisible(false)
     setFooterVisible(false)
