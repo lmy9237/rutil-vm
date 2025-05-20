@@ -166,12 +166,18 @@ class ItHostNicServiceImpl(
 	@Throws(Error::class)
 	override fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean {
 		log.info("setUpNetworksFromHost ... hostId: {}, hostNetworkVo: {}", hostId, hostNetworkVo)
+
+		log.info("toModifiedBonds {}", hostNetworkVo.bonds.toModifiedBonds().size)
+		log.info("toRemoveBonds {}", hostNetworkVo.bondsToRemove.toRemoveBonds().size)
+		log.info("toModifiedNetworkAttachments {}", hostNetworkVo.networkAttachments.toModifiedNetworkAttachments().size)
+		log.info("toRemoveNetworkAttachments {}", hostNetworkVo.networkAttachmentsToRemove.toRemoveNetworkAttachments().size)
+
 		val res: Result<Boolean> = conn.setupNetworksFromHost(
 			hostId,
 			hostNetworkVo.bonds.toModifiedBonds(),
-			hostNetworkVo.bonds.toRemoveBonds(),
+			hostNetworkVo.bondsToRemove.toRemoveBonds(),
 			hostNetworkVo.networkAttachments.toModifiedNetworkAttachments(),
-			hostNetworkVo.networkAttachments.toRemoveNetworkAttachments()
+			hostNetworkVo.networkAttachmentsToRemove.toRemoveNetworkAttachments()
 		)
 		return res.isSuccess
 	}

@@ -480,6 +480,10 @@ fun Connection.setupNetworksFromHost(
 	modifiedNetworkAttachments: List<NetworkAttachment> = listOf(),
 	removedNetworkAttachments: List<NetworkAttachment> = listOf()
 ): Result<Boolean> = runCatching {
+	log.info("modifiedBonds: {}", modifiedBonds.size)
+	log.info("removedBonds: {}", removedBonds.size)
+	log.info("modifiedNetworkAttachments: {}", modifiedNetworkAttachments.size)
+	log.info("removedNetworkAttachments: {}", removedNetworkAttachments.size)
 	this.srvHost(hostId).setupNetworks().apply {
 		if(modifiedBonds.isNotEmpty()) modifiedBonds(modifiedBonds)
 		if(removedBonds.isNotEmpty()) removedBonds(removedBonds)

@@ -1239,11 +1239,11 @@ export const useSetupNetworksFromHost = (
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   return useMutation({
-    mutationFn: async ({ hostId, hostNetwork }) => {
+    mutationFn: async ({ hostId, hostNetworkVo }) => {
       closeModal();
-      const res = await ApiManager.setupHostNicsFromHost(hostId, hostNetwork);
+      const res = await ApiManager.setupHostNicsFromHost(hostId, hostNetworkVo);
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useSetupNetworksFromHost ... hostId: ${hostId}, hostNetwork: `, hostNetwork)
+      Logger.debug(`RQHook > useSetupNetworksFromHost ... hostId: ${hostId}, hostNetworkVo: `, hostNetworkVo)
       return _res
     },
     onSuccess: (res) => {
