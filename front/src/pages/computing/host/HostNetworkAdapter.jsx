@@ -10,6 +10,7 @@ import TableRowClick from "../../../components/table/TableRowClick";
 import { checkZeroSizeToMbps } from "../../../util";
 import { useNetworkInterfacesFromHost } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
+import { RVI16, rvi16TriangleDown, rvi16TriangleUp } from "@/components/icons/RutilVmIcons";
 
 const HostNetworkAdapter = ({
   hostId
@@ -25,7 +26,9 @@ const HostNetworkAdapter = ({
     isRefetching: isHostNicsRefetching,
   } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
 
-  const transformedData = hostNics.map((e) => ({
+  const transformedData = hostNics
+  .sort((a, b) => { return a.name.localeCompare(b.name) })
+  .map((e) => ({
     ...e,
     id: e?.id,
     name: e?.name,
@@ -52,7 +55,7 @@ const HostNetworkAdapter = ({
     macAddress: e?.macAddress,
     mtu: e?.mtu,
     autoNegotiation: "자동 협상",
-    status: e?.status,
+    icon: <RVI16 iconDef={e?.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />,
     network: (
       <TableRowClick type="network" id={e?.networkVo?.id}>
         {e?.networkVo?.name}
@@ -75,10 +78,9 @@ const HostNetworkAdapter = ({
   }, [])
   
   return (
-    <>{/* v-start w-full으로 묶어짐*/}
+    <>
       <div className="dupl-header-group f-start gap-2 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
-        {/**/}
       </div>
       <TablesOuter target={"hostnic"}
         columns={TableColumnsInfo.NETWORK_ADAPTER_FROM_HOST}

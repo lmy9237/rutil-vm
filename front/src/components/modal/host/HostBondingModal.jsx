@@ -13,14 +13,19 @@ import Logger from "../../../utils/Logger";
 const HostBondingModal = ({ 
   editmode = false, 
   isOpen, onClose,
-  nicIds = [],
+  nicData = null,
   onBondingCreated
 }) => {
   const { hostsSelected } = useGlobal();
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
   const bLabel = editmode ? Localization.kr.UPDATE : Localization.kr.CREATE;
-  
-  const { data: hostNic = {} } = useNetworkInterfaceFromHost(hostId, editmode ? nicIds[0] : null);
+
+  // const { data: hostNic = {} } = useNetworkInterfaceFromHost(hostId, editmode ? nicData[0].id : null);
+  const { data: hostNic = {} } = useNetworkInterfaceFromHost(
+    hostId, 
+    editmode && nicData?.length ? nicData[0].id : null
+  );
+
   
   const [name, setName] = useState("");
   // const [options, setOptions] = useState([]);
@@ -62,13 +67,11 @@ const HostBondingModal = ({
 
     const newBonding = { 
       name,
-      bondingVo: { 
-        slaves: nicIds.map((nic) => ({ id: nic?.id }))
-      }
+      bondingVo: { slaves: nicData.map((nic) => ({ id: nic?.id })) }
     };
 
-    Logger.debug(`handleFormSubmit ... dataToSubmit: `, newBonding); // 데이터 출력
-    onBondingCreated(newBonding);
+    Logger.debug(`handleFormSubmit ... dataToSubmit: `, newBonding); 
+    onBondingCreated(newBonding, nicData); // nicData 추가 전달!
     onClose();
   };
 
@@ -78,7 +81,12 @@ const HostBondingModal = ({
       onSubmit={handleOkClick}
       contentStyle={{ width: "500px" }}
     >
-      <span style={{ marginLeft: "4px", color: "#888", fontSize: "9px"}}>nicids {editmode ? hostNic?.id : nicIds?.map((e) => `${e.id} /`)}</span>
+      <span>nicdata{" "} {editmode ? hostNic?.id : nicData?.map((e) => `${e.id} /`).join("")}</span><br/>
+      <span>network{" "} {editmode ? hostNic?.id : nicData?.map((nic) =>
+        nic.networks?.map((network) => `${network.networkVo?.name || network.name}`).join(", ")
+      ).join(" / ")}</span>
+
+      {/* <span style={{ marginLeft: "4px", color: "#888", fontSize: "9px"}}>nicids {editmode ? hostNic?.id : nicData?.map((e) => `${e.id} /`)}</span> */}
       <LabelInput id="bonding_name" label={Localization.kr.NAME}        
         value={name}
         disabled={editmode}

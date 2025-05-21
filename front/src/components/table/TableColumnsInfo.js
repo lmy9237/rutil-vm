@@ -94,6 +94,7 @@ const TableColumnsInfo = {
   ],
   NETWORK_ADAPTER_FROM_HOST:[
     // { header: "", accessor: "icon", width: DEFAULT_WIDTH_ICON_COLUMN },
+    { accessor: "icon", header: Localization.kr.STATUS, clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'name' }, // 인터페이스 이름
     { header: Localization.kr.SPEED_RX, accessor: 'rxSpeed' }, // Rx 속도
     { header: Localization.kr.SPEED_TX, accessor: 'txSpeed' }, // Tx 속도
