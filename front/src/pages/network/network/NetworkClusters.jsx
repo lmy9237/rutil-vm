@@ -1,22 +1,23 @@
 import React, { Suspense, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import useSearch from "../../../hooks/useSearch";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import Loading from "../../../components/common/Loading";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import TablesOuter from "../../../components/table/TablesOuter";
-import ActionButton from "../../../components/button/ActionButton";
-import TableRowClick from "../../../components/table/TableRowClick";
-import NetworkClusterModal from "../../../components/modal/network/NetworkClusterModal";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import { clusterStatus2Icon } from "../../../components/icons/RutilVmIcons";
-import SearchBox from "../../../components/button/SearchBox";
-import { useAllClustersFromNetwork } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
+import useSearch               from "@/hooks/useSearch";
+import Loading                 from "@/components/common/Loading";
+import SelectedIdView          from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
+import { ActionButton }        from "@/components/button/ActionButtons";
+import SearchBox               from "@/components/button/SearchBox";
+import TableColumnsInfo        from "@/components/table/TableColumnsInfo";
+import TablesOuter             from "@/components/table/TablesOuter";
+import TableRowClick           from "@/components/table/TableRowClick";
+import NetworkClusterModal     from "@/components/modal/network/NetworkClusterModal";
+import { clusterStatus2Icon }  from "@/components/icons/RutilVmIcons";
+import {
+  useAllClustersFromNetwork
+} from "@/api/RQHook";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 /**
  * @name NetworkClusters
@@ -77,17 +78,10 @@ const NetworkClusters = ({
     navigate(`/networks/${id}`);
   }, [navigate])
 
-  const handleRefresh = useCallback(() => {
-    Logger.debug(`NetworkDupl > handleRefresh ... `)
-    if (!refetchClusters) return;
-    refetchClusters()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
-
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchClusters} />
         <div className="header-right-btns">
           <ActionButton actionType="default"
             label={`${Localization.kr.NETWORK} 관리`}

@@ -1,21 +1,21 @@
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useGlobal from "../../hooks/useGlobal";
-import useSearch from "../../hooks/useSearch";
-import SelectedIdView from "../../components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../../components/common/OVirtWebAdminHyperlink";
-import SearchBox from "../../components/button/SearchBox";
-import SettingUsersActionButtons from "../../components/dupl/SettingUsersActionButtons";
-import TableColumnsInfo from "../../components/table/TableColumnsInfo";
-import TablesOuter from "../../components/table/TablesOuter";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import SettingUsersActionButtons from "@/components/dupl/SettingUsersActionButtons";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import {
   RVI16,
   rvi16Superuser,
-} from "../../components/icons/RutilVmIcons";
-import { useAllUsers } from "../../api/RQHook";
-import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
+} from "@/components/icons/RutilVmIcons";
+import { useAllUsers } from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name SettingUsers
@@ -50,18 +50,11 @@ const SettingUsers = () => {
   const handleNameClick = useCallback((id) => {
     navigate(`/networks/${id}`);
   }, [navigate])
-    
-  const handleRefresh = useCallback(() => {
-    Logger.debug(`SettingUsers > handleRefresh ... `)
-    if (!refetchUsers) return;
-    refetchUsers()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchUsers} />
         <SettingUsersActionButtons />
       </div>
       <TablesOuter target={"user"}

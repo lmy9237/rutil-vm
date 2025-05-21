@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
+import { useToast }           from "@/hooks/use-toast";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
 import BaseModal from "../BaseModal";
-import LabelInput from "../../label/LabelInput";
-import LabelInputNum from "../../label/LabelInputNum";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import LabelCheckbox from "../../label/LabelCheckbox";
+import LabelInput             from "@/components/label/LabelInput";
+import LabelInputNum          from "@/components/label/LabelInputNum";
+import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
+import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
+import LabelCheckbox          from "@/components/label/LabelCheckbox";
+import { handleInputChange, handleInputCheck, handleSelectIdChange } from "../../label/HandleInput";
 import {
   useDisk,
   useAddDisk,
@@ -17,9 +18,8 @@ import {
   useAllDiskProfilesFromDomain,
 } from "../../../api/RQHook";
 import { checkName, convertBytesToGB } from "../../../util";
-import { handleInputChange, handleInputCheck, handleSelectIdChange } from "../../label/HandleInput";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 const initialFormState = {
   id: "",
@@ -42,6 +42,7 @@ const DiskModal = ({
   onClose,
   editMode = false, 
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const dLabel = editMode 
     ? Localization.kr.UPDATE
@@ -124,7 +125,11 @@ const DiskModal = ({
       if (value === "" || /^\d*$/.test(value)) {
         setFormState((prev) => ({ ...prev, [field]: value }));
       } else {
-        toast.error("숫자만 입력해주세요.");
+        toast({
+          variant: "destructive",
+          title: "불량한 입력 값",
+          description: `숫자만 입력해주세요.`,
+        })
       }
     } else {
       setFormState((prev) => ({ ...prev, [field]: value }));
@@ -145,7 +150,14 @@ const DiskModal = ({
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
     // GB -> Bytes 변환
     const sizeToBytes =  parseInt(formState.size, 10) * 1024 * 1024 * 1024;

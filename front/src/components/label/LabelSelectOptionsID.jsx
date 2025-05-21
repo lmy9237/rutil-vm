@@ -1,6 +1,14 @@
-import { useMemo } from "react";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import Loading from "../common/Loading";
+import { useMemo, useState } from "react";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from "@/components/ui/select";
+import Loading                from "@/components/common/Loading";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./LabelInput.css";
 
 const LabelSelectOptionsID = ({
@@ -13,31 +21,37 @@ const LabelSelectOptionsID = ({
   loading,
   options = [],
   etcLabel = "",
-  placeholderLabel="선택하세요",
+  placeholderLabel=Localization.kr.PLACEHOLDER_SELECT,
   placeholderValue="none", // SelectItem에 들어갈 내용이 null이거나 비어있으면 오류가 남
 }) => {
+
+  const OPTION_EMPTY = { id: placeholderValue, name: placeholderLabel }
+  const _options = [
+    OPTION_EMPTY,
+    ...options
+  ]
+
   const selectedLabel = useMemo(() => {
     if (loading) return <Loading />;
-    if (options.length === 0) return "항목 없음";
+    if (options.length === 0) return Localization.kr.NO_ITEM;
 
-    const selected = options.find((opt) => opt.id === value);
-    return selected ? `${selected.name}: ${selected.id} ${etcLabel}` : placeholderLabel;
+    const selected = _options.find((opt) => opt.id === value);
+    return (selected === undefined || selected?.id === placeholderValue)
+      ? placeholderLabel
+      : `${selected.name}: ${selected.id} ${etcLabel}`
   }, [loading, options, value, etcLabel]);
 
   const handleValueChange = (selectedId) => {
-    const selectedOption = options.find((opt) => opt.id === selectedId);
-    if (selectedOption) {
+    const selectedOption = _options.find((opt) => opt.id === selectedId);
+    if (selectedId === placeholderValue) {
+      onChange?.(OPTION_EMPTY)
+    } else if (selectedOption) {
       onChange?.(selectedOption);
     }
   };
 
-  const placeholderSelectItem = {
-    label: placeholderLabel,
-    value: placeholderValue,
-  }
-
   return (
-    <div className={`input-select custom-select-wrapper ${className}`}>
+    <div className={`input-select custom-select-wrapper f-start ${className}`}>
       {label && <label htmlFor={id} className="select-label">{label}</label>}
 
       {loading ? (
@@ -45,22 +59,28 @@ const LabelSelectOptionsID = ({
           <Loading />
         </div>
       ) : (
-        <Select value={value} onValueChange={handleValueChange} disabled={disabled} position="popper">
-          <SelectTrigger
-            id={id}
-            className="w-full h-10 px-0.5 py-2 border rounded-md text-left flex items-center justify-between"
+        <Select
+          value={value} 
+          onValueChange={handleValueChange} 
+          disabled={disabled}
+          position="popper"
+        >
+          <SelectTrigger id={id}
+            className="custom-select-box f-start w-full text-left"
           >
             <SelectValue placeholder={placeholderLabel}>{selectedLabel}</SelectValue>
           </SelectTrigger>
           <SelectContent className="z-[9999]">
             {options.length === 0 ? (
-              <SelectItem value="__none__" disabled>항목 없음</SelectItem>
+              <SelectItem value="__none__" disabled>{Localization.kr.NO_ITEM}</SelectItem>
             ) : (
-              [placeholderSelectItem, ...options].map((opt) => (
-                <SelectItem key={opt.id} value={opt.id}>
-                  {opt.name}: {opt.id} {etcLabel}
-                </SelectItem>
-              ))
+              <>
+                {[..._options].map((opt) => (
+                  <SelectItem key={opt.id} value={opt.id}>
+                    {opt.name}: {opt.id} {etcLabel}
+                  </SelectItem>
+                ))}
+              </>
             )}
           </SelectContent>
         </Select>
@@ -70,15 +90,14 @@ const LabelSelectOptionsID = ({
 };
 
 export default LabelSelectOptionsID;
-
-
-// import { useState, useRef, useCallback, useMemo } from "react";
-// import useClickOutside from "../../hooks/useClickOutside"; // ✅ import 추가
-// import Loading from "../common/Loading";
-// import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
-// import Logger from "../../utils/Logger";
-// import "./LabelInput.css";
-
+/*
+import { useState, useRef, useMemo } from "react";
+import useClickOutside from "../../hooks/useClickOutside";
+import Loading from "../common/Loading";
+import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
+import Logger from "../../utils/Logger";
+import "./LabelInput.css";
+*/
 // /**
 //  * @name LabelSelectOptionsID
 //  * @description 레이블 선택란 (ID)
@@ -135,11 +154,11 @@ export default LabelSelectOptionsID;
 
 //   const selectedLabel = useMemo(() => {
 //     if (loading) return <Loading/>;
-//     if (options.length === 0) return "항목 없음";
+//     if (options.length === 0) return Localization.kr.NO_ITEM;
 //     const selected = options.find((opt) => opt.id === value);
 //     return selected
 //       ? `${selected.name}: ${selected.id} ${etcLabel}`
-//       : "선택하세요";
+//       : Localization.kr.PLACEHOLDER_SELECT;
 //   }, [options, loading, value]);
 
 //   return (
@@ -176,7 +195,7 @@ export default LabelSelectOptionsID;
 //         createPortal(
 //           <div className="custom-options" style={boxStyle} >
 //             {options.length === 0 ? (
-//               <div className="custom-option f-center disabled">항목 없음</div>
+//               <div className="custom-option f-center disabled">{Localization.kr.NO_ITEM}</div>
 //             ) : (
 //               options.map((opt) => (
 //                 <LabelSelectOptionId

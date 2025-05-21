@@ -1,9 +1,11 @@
 import React from "react";
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import InfoTable from "../../../components/table/InfoTable";
-import { useNetwork } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import useGlobal              from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import InfoTable              from "@/components/table/InfoTable";
+import {
+  useNetwork
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
 
 /**
  * @name NetworkGeneral

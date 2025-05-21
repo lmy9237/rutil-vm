@@ -1,20 +1,19 @@
 import React, { useCallback } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import useSearch from "../../../hooks/useSearch";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import DeleteModal from "../../../utils/DeleteModal";
-import SearchBox from "../../../components/button/SearchBox";
-import ActionButton from "../../../components/button/ActionButton";
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import DomainGetVmTemplateModal from "../../../components/modal/domain/DomainGetVmTemplateModal";
-import { checkZeroSizeToMB } from "../../../util";
-import { useAllUnregisteredTemplatesFromDomain } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import useUIState                                from "@/hooks/useUIState";
+import useGlobal                                 from "@/hooks/useGlobal";
+import useSearch                                 from "@/hooks/useSearch";
+import SelectedIdView                            from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink                    from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                                 from "@/components/button/SearchBox";
+import { ActionButton }                          from "@/components/button/ActionButtons";
+import TablesOuter                               from "@/components/table/TablesOuter";
+import TableColumnsInfo                          from "@/components/table/TableColumnsInfo";
+import DomainGetVmTemplateModal                  from "@/components/modal/domain/DomainGetVmTemplateModal";
+import { useAllUnregisteredTemplatesFromDomain } from "@/api/RQHook";
+import { checkZeroSizeToMB } from "@/util";
+import DeleteModal from "@/utils/DeleteModal";
+import Localization from "@/utils/Localization";
+import Logger from "@/utils/Logger";
 
 /**
  * @name DomainImportTemplates
@@ -59,19 +58,13 @@ const DomainImportTemplates = ({
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`EventDupl > handleRefresh ... `)
-    if (!refetchTemplates) return;
-    refetchTemplates()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   // TODO: ActionButtons 생성
   // TODO: TemplateModals 생성
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchTemplates} />
         <div className="header-right-btns">
           <ActionButton label={Localization.kr.IMPORT}
             actionType="default" 

@@ -21,9 +21,12 @@ const VmDiskDeleteModal = ({
   data,
 }) => {
   // const { closeModal } = useUIState()
-  const { mutate: deleteDisk } = useDeleteDiskFromVM(onClose, onClose);
+  const {
+    mutate: deleteDisk
+  } = useDeleteDiskFromVM(onClose, onClose);
 
-  Logger.debug(`VmDiskDeleteModal ... data: `, data);
+
+
   const { ids, aliases } = useMemo(() => {
     return {
       ids: [...data].map((item) => item?.id),
@@ -33,11 +36,24 @@ const VmDiskDeleteModal = ({
 
   const [detachOnlyList, setDetachOnlyList] = useState([false]); // 디스크 완전삭제
 
+  const validateForm = () => {
+    Logger.debug(`VmDiskDeleteModal > validateForm ... `)
+    if (!ids.length) return `삭제할 ${Localization.kr.DISK} ID가 없습니다.`
+    return null
+  }
+
   const handleFormSubmit = useCallback(() => {
-    if (!ids.length) {
-      return toast.error(`삭제할 ${Localization.kr.DISK} ID가 없습니다.`)
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
     }
 
+    Logger.debug(`VmDiskDeleteModal ... data: `, data);
     [...ids]?.forEach((diskAttachmentId, index) => {
       deleteDisk({ vmId, diskAttachmentId, detachOnly: detachOnlyList[index] });
     });

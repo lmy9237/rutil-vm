@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
-import Logger from "../../utils/Logger";
+import Logger from "@/utils/Logger";
 import "./Grid.css";
 
 const Grid = ({ 

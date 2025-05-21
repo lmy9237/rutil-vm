@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { Link, useLocation, } from "react-router-dom";
-import useTmi from "../../hooks/useTmi";
+import useTmi                 from "@/hooks/useTmi";
 import {
   RVI24,
   rvi24Desktop,
   rvi24Network,
   rvi24Storage,
   rvi24Event,
-} from "../icons/RutilVmIcons";
-import Logger from "../../utils/Logger";
+} from "@/components/icons/RutilVmIcons";
+import Logger                 from "@/utils/Logger";
 import "./MainOuter.css";
 
 const SideNavbar = () => {

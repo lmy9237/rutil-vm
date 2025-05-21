@@ -1,15 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import SectionLayout from "../../components/SectionLayout";
-import TabNavButtonGroup from "../../components/common/TabNavButtonGroup";
-import HeaderButton from "../../components/button/HeaderButton";
-import Path from "../../components/Header/Path";
-import SettingUsers from "./SettingUsers";
-import SettingSessions from "./SettingSessions";
-import SettingCertificates from "./SettingCertificates";
-import { rvi24Gear } from "../../components/icons/RutilVmIcons";
-import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
+import SectionLayout          from "@/components/SectionLayout";
+import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
+import HeaderButton           from "@/components/button/HeaderButton";
+import Path                   from "@/components/Header/Path";
+import SettingUsers           from "./SettingUsers";
+import SettingSessions        from "./SettingSessions";
+import SettingCertificates    from "./SettingCertificates";
+import {
+  rvi24Gear
+} from "@/components/icons/RutilVmIcons";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./Setting.css";
 
 /**

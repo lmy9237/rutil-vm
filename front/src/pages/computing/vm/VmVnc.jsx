@@ -1,11 +1,15 @@
 import React, { useRef } from "react";
 import { useParams } from "react-router-dom";
-import HeaderButton from '../../../components/button/HeaderButton';
-import Vnc from "../../../components/Vnc";
-import { rvi24Desktop } from '../../../components/icons/RutilVmIcons';
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
-import { useVm } from "../../../api/RQHook";
+import HeaderButton           from "@/components/button/HeaderButton";
+import Vnc                    from "@/components/Vnc";
+import {
+  rvi24Desktop
+} from "@/components/icons/RutilVmIcons";
+import {
+  useVm
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./VmVnc.css"
 
 /**

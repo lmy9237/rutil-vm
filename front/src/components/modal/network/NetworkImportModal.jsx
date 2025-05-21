@@ -27,9 +27,7 @@ const NetworkImportModal = ({
     {
       accessor: "select", 
       header: (
-        <input
-          type="checkbox"
-          id="provider_select_all"
+        <input type="checkbox" id="provider_select_all"
           onChange={() => {}} // 임시: 아무것도 안 함
         />
       ),
@@ -111,8 +109,7 @@ const NetworkImportModal = ({
       {/* 공급자 네트워크 테이블 */}
       <div className="network-bring-table-outer">
         <h1 className="font-bold">공급자 네트워크</h1>
-        <TablesOuter 
-          columns={providerNetworkColumns}
+        <TablesOuter columns={providerNetworkColumns}
           data={providerNetworks.map((provider) => ({
             id: provider.id,
             select: (

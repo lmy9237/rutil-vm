@@ -1,8 +1,11 @@
 import React, { forwardRef,  } from 'react'
 import { VncScreen } from 'react-vnc'
-import { useVmConsoleAccessInfo } from "../api/RQHook";
-import Logger from '../utils/Logger';
-import CONSTANT from '../Constants';
+import CONSTANT from '@/Constants';
+import {
+  useVmConsoleAccessInfo
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./Vnc.css"
 
 const Vnc = forwardRef(({

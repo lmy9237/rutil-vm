@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
-import HeaderButton from "../../../components/button/HeaderButton";
-import Path from "../../../components/Header/Path";
-import DiskGeneral from "./DiskGeneral";
-import DiskVms from "./DiskVms";
-import DiskDomains from "./DiskDomains";
-import Localization from "../../../utils/Localization";
-import { useDisk } from "../../../api/RQHook";
-import { rvi24HardDrive } from "../../../components/icons/RutilVmIcons";
-import Logger from "../../../utils/Logger";
-import useUIState from "../../../hooks/useUIState";
-import SectionLayout from "../../../components/SectionLayout";
-import useGlobal from "../../../hooks/useGlobal";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import SectionLayout          from "@/components/SectionLayout";
+import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
+import HeaderButton           from "@/components/button/HeaderButton";
+import Path                   from "@/components/Header/Path";
+import { rvi24HardDrive }     from "@/components/icons/RutilVmIcons";
+import {
+  useDisk
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
+import DiskGeneral            from "./DiskGeneral";
+import DiskVms                from "./DiskVms";
+import DiskDomains            from "./DiskDomains";
 
 /**
  * @name DiskDomains
@@ -79,9 +81,9 @@ const DiskInfo = () => {
   const sectionHeaderButtons = [
     { type: "update", label: Localization.kr.UPDATE, onClick: () => setActiveModal("disk:update") },
     { type: "remove", label: Localization.kr.REMOVE, onClick: () => setActiveModal("disk:remove") },
-    { type: "move", label: Localization.kr.MOVE, onClick: () => setActiveModal("disk:move") },
-    { type: "copy", label: Localization.kr.COPY, onClick: () => setActiveModal("disk:copy") },
-    // { type: 'upload', label: '업로드', onClick: () => setActiveModal("disk:restart") },
+    { type: "move", label: Localization.kr.MOVE,     onClick: () => setActiveModal("disk:move") },
+    { type: "copy", label: Localization.kr.COPY,     onClick: () => setActiveModal("disk:copy") },
+    // { type: 'upload', label: Localization.kr.UPDATE, onClick: () => setActiveModal("disk:restart") },
   ];
 
   return (

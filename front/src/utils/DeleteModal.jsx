@@ -1,11 +1,13 @@
 import React, { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useUIState from "../hooks/useUIState";
-import BaseModal from "../components/modal/BaseModal";
-import Logger from "./Logger";
-import { RVI16, rvi16ChevronRight } from "../components/icons/RutilVmIcons";
-import Localization from "./Localization";
+import useUIState             from "@/hooks/useUIState";
+import BaseModal              from "@/components/modal/BaseModal";
+import {
+  RVI16,
+  rvi16ChevronRight,
+} from "@/components/icons/RutilVmIcons";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 const DeleteModal = ({
   isOpen=false, 
@@ -53,9 +55,6 @@ const DeleteModal = ({
             }
             // UUID가 없으면 아무 것도 하지 않음 → 현재 화면 유지
           }
-        },
-        onError: (error) => {
-          toast.error(`${label} ${Localization.kr.REMOVE} 요청실패: ${error.message}`);
         },
       });
     });

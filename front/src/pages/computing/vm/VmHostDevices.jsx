@@ -1,15 +1,18 @@
 import React, { useCallback, useMemo } from "react";
-import toast from "react-hot-toast";
-import useGlobal from "../../../hooks/useGlobal";
-import useSearch from "../../../hooks/useSearch";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import SearchBox from "../../../components/button/SearchBox";
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { useHostDevicesFromVM } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import {
+  useHostDevicesFromVM
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name VmHostDevices
@@ -49,17 +52,11 @@ const VmHostDevices = ({
   }))), [hostDevices])
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() => {
-    Logger.debug(`HostDevices > handleRefresh ... `)
-    if (!refetchHostDevices) return;
-    refetchHostDevices()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchHostDevices}/>
         {/* <HostActionButtons actionType = "default"/> */}
       </div>
       <TablesOuter target={"hostdevice"}

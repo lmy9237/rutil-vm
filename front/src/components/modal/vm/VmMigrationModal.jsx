@@ -1,22 +1,28 @@
 import { useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
 import { useQueries } from "@tanstack/react-query";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
+import { useToast }            from "@/hooks/use-toast";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
+import BaseModal               from "../BaseModal";
 import LabelCheckbox from "../../label/LabelCheckbox";
-import Localization from "../../../utils/Localization";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import ApiManager from "../../../api/ApiManager";
-import { useMigration } from "../../../api/RQHook";
+import ApiManager from "@/api/ApiManager";
+import {
+  useMigration 
+} from "@/api/RQHook";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 const VmMigrationModal = ({ 
   isOpen, 
   onClose,
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const { vmsSelected } = useGlobal() 
-  const { mutate: migration } = useMigration(onClose, onClose);
+  const {
+    mutate: migration
+  } = useMigration(onClose, onClose);
 
   const [vmStates, setVmStates] = useState({});
 
@@ -32,6 +38,7 @@ const VmMigrationModal = ({
   }, [vmsSelected]);
 
   useEffect(() => {
+    Logger.debug(`VmMigrationModal > useEffect ...`)
     if (!isOpen || !vmsSelected) return;
 
     const initialState = {};
@@ -67,6 +74,7 @@ const VmMigrationModal = ({
   });    
 
   const handleFormSubmit = () => {
+    Logger.debug(`VmMigrationModal > handleFormSubmit ...`)
     vmsSelected.forEach((vm) => {
       const { isCluster, clusterVo, hostVo, affinityClosure } = vmStates[vm.id] || {};
       const payload = {
@@ -81,8 +89,15 @@ const VmMigrationModal = ({
   
   // 기준 VM (첫 번째) 기준
   const referenceVM = vmsSelected[0];
-  const vmState = referenceVM ? vmStates[referenceVM.id] : {};
-  const { isCluster, clusterVo, hostVo, affinityClosure } = vmState || {};
+  const vmState = referenceVM 
+    ? vmStates[referenceVM.id]
+    : {};
+  const { 
+    isCluster, 
+    clusterVo, 
+    hostVo, 
+    affinityClosure
+  } = vmState || {};
   const hostQuery = hostQueries[0];
   const hostList = hostQuery?.data || [];
   const ableHost = hostList.filter((h) => h.id !== referenceVM?.hostVo?.id);

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import AreaChart from "./AreaChart";
-import Localization from "../../utils/Localization";
+import AreaChart from "@/components/Chart/AreaChart";
+import Localization from "@/utils/Localization";
 
 const SuperAreaChart = ({ 
   per,

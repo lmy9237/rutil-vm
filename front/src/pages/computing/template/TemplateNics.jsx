@@ -1,17 +1,18 @@
 import { useCallback } from "react"
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import useSearch from "../../../hooks/useSearch";
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import TableRowClick from "../../../components/table/TableRowClick";
-import VmNicActionButtons from "../../../components/dupl/VmNicActionButtons";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import { status2Icon } from "../../../components/icons/RutilVmIcons";
-import SearchBox from "../../../components/button/SearchBox";
-import VmNicModal from "../../../components/modal/vm/VmNicModal";
-import { useAllNicsFromTemplate } from "../../../api/RQHook";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import { status2Icon }        from "@/components/icons/RutilVmIcons";
+import VmNicActionButtons     from "@/components/dupl/VmNicActionButtons";
+import {
+  useAllNicsFromTemplate
+} from "@/api/RQHook";
 
 /**
  * @name TemplateNics
@@ -22,7 +23,6 @@ import { useAllNicsFromTemplate } from "../../../api/RQHook";
  */
 const TemplateNics = ({ 
   templateId,
-  refetch,
 }) => {
   const { activeModal, setActiveModal, } = useUIState()
   const {
@@ -38,7 +38,7 @@ const TemplateNics = ({
   } = useAllNicsFromTemplate(templateId, (e) => ({ ...e }));
 
   const columns = TableColumnsInfo.NICS_FROM_TEMPLATE;
-  const transformedData = (!Array.isArray(vnicProfiles) ? [] : vnicProfiles).map((nic) => ({
+  const transformedData = [...vnicProfiles]?.map((nic) => ({
       ...nic,
       status: status2Icon(nic?.linked ? "UP" : "DOWN"),
       network: (
@@ -58,16 +58,11 @@ const TemplateNics = ({
     }))
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
-  const handleRefresh = useCallback(() => {
-    if (!refetch) return;
-    refetch()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchVnicProfiles}/>
         <VmNicActionButtons />
       </div>
       <TablesOuter target={"vnicprofile"}

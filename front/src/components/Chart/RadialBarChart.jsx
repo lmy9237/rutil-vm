@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
-import CONSTANT from "../../Constants";
+import CONSTANT from "@/Constants";
 import "./RadialBarChart.css";
 
 const RadialBarChart = ({
@@ -41,7 +41,7 @@ const RadialBarChart = ({
   }, []);
   */
 
-  const [series, setSeries] = useState([0]);
+  const [series, setSeries] = useState([percentage]);
   const [chartOptions, setChartOptions] = useState({
     chart: {
       type: "radialBar",
@@ -58,15 +58,14 @@ const RadialBarChart = ({
           show: true,
           textAnchor: "start",
           distributed: false,
-          offsetY: 90,
           name: {
             offsetY: -10, 
             color: CONSTANT.color.black,
           },
           value: {
             offsetY: 10, 
-            fontSize: '24px',
             color: CONSTANT.color.black,
+            fontSize: '24px',
             formatter: (val) => `${parseInt(val)}%`,
           },
         },

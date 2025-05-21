@@ -1,6 +1,6 @@
 import React from "react"
-import Spinner from "./Spinner";
-import Localization from "../../utils/Localization";
+import Spinner      from "@/components/common/Spinner";
+import Localization from "@/utils/Localization";
 import "./Loading.css";
 
 const Loading = () => (

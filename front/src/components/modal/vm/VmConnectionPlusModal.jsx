@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import toast from "react-hot-toast";
+import { useToast }           from "@/hooks/use-toast";
 import BaseModal from "../BaseModal";
 import TablesOuter from "../../table//TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
@@ -22,6 +22,7 @@ const VmConnectionPlusModal = ({
   onSelectDisk = () => {},
   excludedDiskIds = [], // 제외할 디스크 ID 목록을 부모로부터 전달받음
 }) => {
+  const { toast } = useToast();
   const { closeModal } = useUIState()
   const [activeTab, setActiveTab] = useState("img");
   const [selectedDiskId, setSelectedDiskId] = useState(null);
@@ -47,17 +48,28 @@ const VmConnectionPlusModal = ({
     setActiveTab(tab);
   }, []);
 
-  const handleFormSubmit = useCallback(() => {
-    Logger.debug("VmConnectionPlusModal > handleFormSubmit ... ")
-    if (!selectedDiskId) {
-      toast.error("디스크를 선택하세요!");
+  const validateForm = () => {
+    Logger.debug(`VmConnectionPlusModal > validateForm ... `)
+    if (!selectedDiskId) return `${Localization.kr.DISK}를 ${Localization.kr.PLACEHOLDER_SELECT}`
+    return null
+  }
+
+  const handleFormSubmit = () => {
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
       return;
     }
     
+    Logger.debug("VmConnectionPlusModal > handleFormSubmit ... ")
     const selectedDiskDetails = disks.find((disk) => disk.id === selectedDiskId);
     onSelectDisk(selectedDiskId, selectedDiskDetails);
     closeModal()
-  }, [selectedDiskId]);
+  };
 
 
   // 제외된 디스크 ID를 필터링

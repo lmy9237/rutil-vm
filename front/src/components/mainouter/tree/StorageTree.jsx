@@ -1,16 +1,18 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import useContextMenu from "../../../hooks/useContextMenu";
-import useTmi from "../../../hooks/useTmi";
-import useGlobal from "../../../hooks/useGlobal";
-import TreeMenuItem from "./TreeMenuItem";
+import useGlobal              from "@/hooks/useGlobal";
+import useTmi                 from "@/hooks/useTmi";
+import useContextMenu         from "@/hooks/useContextMenu";
 import {
   rvi16Globe,
   rvi16DataCenter,
   rvi16Storage,
-} from "../../icons/RutilVmIcons";
-import { useAllTreeNavigations } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
+} from "@/components/icons/RutilVmIcons";
+import {
+  useAllTreeNavigations,
+} from "@/api/RQHook";
+import Logger                 from "@/utils/Logger";
+import TreeMenuItem           from "./TreeMenuItem";
 
 const StorageTree = ({}) => {
   const navigate = useNavigate();
@@ -38,8 +40,16 @@ const StorageTree = ({}) => {
         isNextLevelVisible={secondVisibleStorage()}
         isChevronVisible={true}
         onChevronClick={() => toggleSecondVisibleStorage()}
-        onClick={() => {
-          navigate("/storages/rutil-manager");
+        onClick={() => navigate("/storages/rutil-manager")}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setContextMenu({
+            mouseX: e.clientX,
+            mouseY: e.clientY,
+            item: {
+            },
+            treeType: "storage"
+          }, "rutil-manager");
         }}
       />
 

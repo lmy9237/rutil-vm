@@ -1,18 +1,19 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
+import { useToast }            from "@/hooks/use-toast";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import { useAllHosts } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import LabelInput from "../../label/LabelInput";
 import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
-import useUIState from "../../../hooks/useUIState";
 
 const VmExportOVAModal = ({ 
   isOpen,
   onClose,
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const { vmsSelected } = useGlobal()
   const [host, setHost] = useState("#");
@@ -24,22 +25,26 @@ const VmExportOVAModal = ({
       ? [...vmsSelected]?.map((vm) => vm.name).join(", ")
       : `선택된 ${Localization.kr.VM} 없음`;
   const [name, setName] = useState(vmNames);
-
+  const validateForm = () => {
+    Logger.debug(`VmExportOVAModal > validateForm ... `)
+    if (!host || host === "#") return `${Localization.kr.HOST}를 ${Localization.kr.PLACEHOLDER_SELECT}.`;
+    if (!directory || directory === "#") return "디렉토리를 입력하세요."
+    if (!name) return `${Localization.kr.NAME}을 입력하세요.`
+    return null;
+  };
   const handleFormSubmit = () => {
-    if (!host || host === "#") {
-      toast.error(`${Localization.kr.HOST}를 선택하세요.`);
-      return;
-    }
-    if (!directory || directory === "#") {
-      toast.error("디렉토리를 입력하세요.");
-      return;
-    }
-    if (!name) {
-      toast.error(`${Localization.kr.NAME}을 입력하세요.`);
+    Logger.debug(`VmExportOVAModal > handleFormSubmit ... `)
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
       return;
     }
 
-    Logger.debug("Exporting OVA:", { host, directory, name });
+    Logger.debug("VmExportOVAModal > handleFormSubmit ... OVA:", { host, directory, name });
     onClose(); // 모달 닫기
   };
 
@@ -61,25 +66,21 @@ const VmExportOVAModal = ({
       {/* <div className="vm-ova-popup modal"> */}
       <LabelSelectOptions
         id="host_select"
-        label="호스트"
+        label={Localization.kr.HOST}
         value={host}
         onChange={(e) => setHost(e.target.value)}
         options={[
-          { value: "#", label: "호스트를 선택하세요" },
+          { value: "#", label: `${Localization.kr.HOST}를 ${Localization.kr.PLACEHOLDER_SELECT}` },
           ...hosts?.map((h) => ({ value: h.name, label: h.name })) || [],
         ]}
       />
 
-      <LabelInput
-        id="directory"
-        label="디렉토리"
+      <LabelInput id="directory" label="디렉토리"
         value={directory}
         onChange={(e) => setDirectory(e.target.value)}
       />
 
-      <LabelInput
-        id="name"
-        label="이름"
+      <LabelInput id="name" label={Localization.kr.NAME}
         value={name}
         onChange={(e) => setName(e.target.value)}
       />

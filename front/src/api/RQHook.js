@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import ApiManager from "./ApiManager";
-import useAuth from "@/hooks/useAuth";
-import useUIState from "@/hooks/useUIState";
-import useGlobal from "@/hooks/useGlobal";
-import Logger from "../utils/Logger";
-import Localization from "../utils/Localization";
-import { triggerDownload } from "../util";
+import { useToast }           from "@/hooks/use-toast";
+import useAuth                from "@/hooks/useAuth";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import ApiManager             from "@/api/ApiManager";
+import { triggerDownload }    from "@/util";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 const DEFAULT_REFETCH_INTERVAL_IN_MILLI = 2 * 60 * 1000; // 2분
 
@@ -573,6 +573,8 @@ export const useAddDataCenter = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
+  const { toast } = useToast()
+
   return useMutation({
     mutationFn: async (dataCenterData) => {
       closeModal()
@@ -583,7 +585,10 @@ export const useAddDataCenter = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddDataCenter ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DATA_CENTER} ${Localization.kr.CREATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DATA_CENTER} ${Localization.kr.CREATE} 요청완료`,
+      })
       queryClient.invalidateQueries('allDataCenters'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess()
     },
@@ -606,6 +611,7 @@ export const useEditDataCenter = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
+  const { toast } = useToast();
   return useMutation({
     mutationFn: async ({ dataCenterId, dataCenterData }) => {
       closeModal();
@@ -616,7 +622,10 @@ export const useEditDataCenter = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditDataCenter ... res: `, res)
-      toast.success(`[200] ${Localization.kr.DATA_CENTER} ${Localization.kr.UPDATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DATA_CENTER} ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('allDataCenters');
       postSuccess(res);
     },
@@ -639,7 +648,8 @@ export const useDeleteDataCenter = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (dataCenterId) => {
       closeModal();
       const res = await ApiManager.deleteDataCenter(dataCenterId);
@@ -649,7 +659,10 @@ export const useDeleteDataCenter = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteDataCenter ... res: `, res)
-      toast.success(`[200] ${Localization.kr.DATA_CENTER} ${Localization.kr.REMOVE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `[200] ${Localization.kr.DATA_CENTER} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries('allDataCenters');
       postSuccess()
     },
@@ -965,7 +978,8 @@ export const useAddCluster = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (clusterData) => {
       closeModal();
       const res = await ApiManager.addCluster(clusterData);
@@ -975,7 +989,10 @@ export const useAddCluster = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddCluster ... res: `, res);
-      toast.success(`[200] ${Localization.kr.CLUSTER} ${Localization.kr.CREATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.CLUSTER} ${Localization.kr.CREATE} 요청완료`
+      })
       queryClient.invalidateQueries(`allClusters,clustersFromDataCenter,${QK.ALL_TREE_NAVIGATIONS}`);
       postSuccess(res);
     },
@@ -998,7 +1015,8 @@ export const useEditCluster = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ clusterId, clusterData }) => {
       closeModal();
       const res = await ApiManager.editCluster(clusterId, clusterData);
@@ -1008,7 +1026,10 @@ export const useEditCluster = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditCluster ... res: `, res);
-      toast.success(`[200] ${Localization.kr.CLUSTER} ${Localization.kr.UPDATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `[200] ${Localization.kr.CLUSTER} ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('allClusters,clustersFromDataCenter');
       postSuccess(res);
     },
@@ -1032,7 +1053,8 @@ export const useDeleteCluster = (
   const queryClient = useQueryClient()
   const { setClustersSelected } = useGlobal()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (clusterId) => {
       closeModal();
       const res = await ApiManager.deleteCluster(clusterId);
@@ -1042,7 +1064,10 @@ export const useDeleteCluster = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteCluster ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DATA_CENTER} ${Localization.kr.REMOVE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DATA_CENTER} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.removeQueries(`allClusters,clustersFromDataCenter,${QK.ALL_TREE_NAVIGATIONS}`);
       queryClient.invalidateQueries(QK.ALL_TREE_NAVIGATIONS)
       setClustersSelected([])
@@ -1240,7 +1265,8 @@ export const useSetupNetworksFromHost = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ hostId, hostNetworkVo }) => {
       closeModal();
       const res = await ApiManager.setupHostNicsFromHost(hostId, hostNetworkVo);
@@ -1250,7 +1276,10 @@ export const useSetupNetworksFromHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useSetupNetworksFromHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NICS} ${Localization.kr.UPDATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.NICS} ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('NetworkAttachmentsFromHost');
       postSuccess(res);
     },
@@ -1275,7 +1304,8 @@ export const useEditHostNetworkFromHost = (
 ) => {
   const queryClient = useQueryClient();  
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ hostId, networkAttachmentId, networkAttachmentData }) => {
       closeModal();
       const res = await ApiManager.editNetworkAttachmentFromHost(hostId, networkAttachmentId, networkAttachmentData);
@@ -1285,7 +1315,10 @@ export const useEditHostNetworkFromHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditHostNetworkFromHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} ${Localization.kr.UPDATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.NETWORK} ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('NetworkAttachmentsFromHost');
       postSuccess(res);
     },
@@ -1311,7 +1344,8 @@ export const useAddBonding = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ hostId, bonding }) => {
       closeModal();
       const res = await ApiManager.addBonding(hostId, bonding);
@@ -1321,7 +1355,10 @@ export const useAddBonding = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddBonding ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.CREATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.CREATE} 요청완료`
+      })
       queryClient.invalidateQueries('NetworkInterfacesFromHost');
       postSuccess(res);
     },
@@ -1347,7 +1384,8 @@ export const useEditBonding = (
 ) => {
   const queryClient = useQueryClient();  
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ hostId, hostNicData }) => {
       closeModal();
       const res = await ApiManager.editBonding(hostId, hostNicData);
@@ -1357,7 +1395,10 @@ export const useEditBonding = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditBonding ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.UPDATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('NetworkInterfacesFromHost');
       postSuccess(res);
     },
@@ -1382,7 +1423,8 @@ export const useDeleteBonding = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({ 
+  const { toast } = useToast()
+    return useMutation({ 
     mutationFn: async (hostId, hostNicData) => {
       closeModal();
       const res = await ApiManager.deleteBonding(hostId, hostNicData);
@@ -1392,7 +1434,10 @@ export const useDeleteBonding = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteBonding ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.REMOVE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.REMOVE} 요청완료`
+      })  
       queryClient.invalidateQueries('NetworkInterfacesFromHost');
       postSuccess(res);
     },
@@ -1551,7 +1596,8 @@ export const useSearchIscsiFromHost = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ hostId, iscsiData }) => {
       closeModal();
       const res = await ApiManager.findSearchIscsiFromHost(hostId, iscsiData);
@@ -1561,7 +1607,10 @@ export const useSearchIscsiFromHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useSearchIscsiFromHost ... res: `, res);
-      toast.success(`[200] iSCSI ${Localization.kr.IMPORT} 요청성공`)
+      toast({
+        title: `API 요청성공`,
+        description: `[200] iSCSI ${Localization.kr.IMPORT} 요청성공`
+      })
       queryClient.invalidateQueries(['iscsiFromHost']);
       postSuccess(res);
     },
@@ -1603,7 +1652,8 @@ export const useSearchFcFromHost = (
 => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ hostId }) => {
       closeModal();
       const res = await ApiManager.findSearchFcFromHost(hostId);
@@ -1613,7 +1663,10 @@ export const useSearchFcFromHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useSearchFcFromHost ... res: `, res);
-      toast.success(`[200] FC ${Localization.kr.IMPORT} 요청성공`)
+      toast({
+        title: `API 요청성공`,
+        description: `[200] FC ${Localization.kr.IMPORT} 요청성공`
+      })
       queryClient.invalidateQueries(['fcsFromHost']);
       postSuccess(res);
     },
@@ -1642,7 +1695,8 @@ export const useLoginIscsiFromHost = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ hostId, iscsiData }) => {
       closeModal();
       const res = await ApiManager.findLoginIscsiFromHost(hostId, iscsiData);
@@ -1652,7 +1706,10 @@ export const useLoginIscsiFromHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useLoginIscsiFromHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.IMPORT} iscsi ${Localization.kr.LOGIN} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.IMPORT} iscsi ${Localization.kr.LOGIN} 요청완료`
+      })
       queryClient.invalidateQueries(['iscsiFromHost']);
       postSuccess(res);
     },
@@ -1676,7 +1733,8 @@ export const useAddHost = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ hostData, deployHostedEngine }) => {
       closeModal();
       const res = await ApiManager.addHost(hostData, deployHostedEngine);
@@ -1686,7 +1744,10 @@ export const useAddHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.CREATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.CREATE} 요청완료`
+      })
       queryClient.invalidateQueries('allHosts'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화   
       postSuccess(res);
     },
@@ -1709,7 +1770,8 @@ export const useEditHost = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ hostId, hostData }) => {
       closeModal();
       const res = await ApiManager.editHost(hostId, hostData)
@@ -1719,7 +1781,10 @@ export const useEditHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.UPDATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('allHosts');
       postSuccess(res);
     },
@@ -1742,7 +1807,8 @@ export const useDeleteHost = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.deleteHost(hostId)
@@ -1752,7 +1818,10 @@ export const useDeleteHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.REMOVE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries('allHosts');
       postSuccess(res);
     },
@@ -1776,7 +1845,8 @@ export const useDeactivateHost = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.deactivateHost(hostId);
@@ -1786,7 +1856,10 @@ export const useDeactivateHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeactivateHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.MAINTENANCE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.MAINTENANCE} 요청완료`
+      })
       queryClient.invalidateQueries('allHosts');
       postSuccess(res);
     },
@@ -1810,7 +1883,8 @@ export const useActivateHost = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.activateHost(hostId)
@@ -1820,7 +1894,10 @@ export const useActivateHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useActivateHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.ACTIVATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.ACTIVATE} 요청완료`
+      })
       queryClient.invalidateQueries('allHosts');
       postSuccess(res);
     },
@@ -1844,7 +1921,8 @@ export const useRestartHost = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.restartHost(hostId);
@@ -1854,7 +1932,10 @@ export const useRestartHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRestartHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.RESTART} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.RESTART} 요청완료`
+      })
       queryClient.invalidateQueries('allHosts');
       postSuccess(res);
     },
@@ -1878,7 +1959,8 @@ export const useEnrollHostCertificate = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.enrollHostCertificate(hostId);
@@ -1888,7 +1970,10 @@ export const useEnrollHostCertificate = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEnrollHostCertificate ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} 인증서 등록 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} 인증서 등록 요청완료`
+      })
       queryClient.invalidateQueries('allHosts');
       postSuccess(res);
     },
@@ -1913,7 +1998,8 @@ export const useRefreshHost = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.refreshHost(hostId);
@@ -1923,7 +2009,10 @@ export const useRefreshHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRefreshHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} 기능을 ${Localization.kr.REFRESH} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} 기능을 ${Localization.kr.REFRESH} 요청완료`
+      })
       queryClient.invalidateQueries('allHosts');
       postSuccess(res);
     },
@@ -1947,7 +2036,8 @@ export const useCommitNetConfigHost = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.commitNetConfigHost(hostId)
@@ -1957,7 +2047,11 @@ export const useCommitNetConfigHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > usecommitNetConfigHost ... res: `, res);
-      toast.success(`[200] ${Localization.kr.HOST} ${Localization.kr.REBOOT} 확인 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} ${Localization.kr.REBOOT} 확인 요청완료`
+      })
       queryClient.invalidateQueries('allHosts');
       postSuccess(res);
     },
@@ -2131,7 +2225,8 @@ export const useAddSnapshotFromVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, snapshotData }) => {
       closeModal();
       const res = await ApiManager.addSnapshotFromVM(vmId, snapshotData)
@@ -2141,7 +2236,11 @@ export const useAddSnapshotFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddSnapshotFromVM ... res: ${JSON.stringify(res)}`)
-      toast.success(`[200] ${Localization.kr.VM}에서 ${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM}에서 ${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE} 요청완료`
+      })
       queryClient.invalidateQueries(['snapshotFromVM', 'snapshotDetailFromVM']); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess(res);
     },
@@ -2164,7 +2263,8 @@ export const useDeleteSnapshot = (
 ) => {
   const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, snapshotId }) => {
       closeModal();
       const res = await ApiManager.deleteSnapshotFromVM(vmId, snapshotId);
@@ -2174,7 +2274,11 @@ export const useDeleteSnapshot = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteSnapshot ... res: `, res)
-      toast.success(`[200] ${Localization.kr.SNAPSHOT} ${Localization.kr.REMOVE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.SNAPSHOT} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
       postSuccess(res);
     },
@@ -2191,7 +2295,8 @@ export const usePreviewSnapshot = (
 ) => {
   const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, snapshotId }) => {
       closeModal();
       const res = await ApiManager.previewSnapshotFromVM(vmId, snapshotId);
@@ -2201,7 +2306,11 @@ export const usePreviewSnapshot = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > usePreviewSnapshot ... res: `, res)
-      toast.success(`[200] ${Localization.kr.SNAPSHOT} ${Localization.kr.PREVIEW} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.SNAPSHOT} ${Localization.kr.PREVIEW} 요청완료`
+      })
       queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
       postSuccess(res);
     },
@@ -2218,7 +2327,8 @@ export const useCommitSnapshot = (
 ) => {
   const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId }) => {
       closeModal();
       const res = await ApiManager.commitSnapshotFromVM(vmId);
@@ -2228,7 +2338,11 @@ export const useCommitSnapshot = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useCommitSnapshot ... res: `, res)
-      toast.success(`[200] ${Localization.kr.SNAPSHOT} ${Localization.kr.COMMENT} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.SNAPSHOT} ${Localization.kr.COMMENT} 요청완료`
+      })
       queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
       postSuccess(res);
     },
@@ -2245,7 +2359,8 @@ export const useUndoSnapshot = (
 ) => {
   const queryClient = useQueryClient(); // Query 캐싱을 위한 클라이언트
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId }) => {
       closeModal();
       const res = await ApiManager.undoSnapshotFromVM(vmId);
@@ -2255,7 +2370,11 @@ export const useUndoSnapshot = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useUndoSnapshot ... res: `, res)
-      toast.success(`[200] ${Localization.kr.SNAPSHOT} ${Localization.kr.UNDO} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.SNAPSHOT} ${Localization.kr.UNDO} 요청완료`
+      })
       queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
       postSuccess(res);
     },
@@ -2439,17 +2558,23 @@ export const useRemoteViewerConnectionFileFromVm = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.generateVmRemoteViewerConnectionFile(vmId);
-      const _res = validate(res) ?? {};
+      // const _res = validate(res) ?? {};
+      // 파일에 넣을 텍스트 파일을 전달
       Logger.debug(`RQHook > useRemoteViewerConnectionFileFromVm ... vmId: ${vmId}`);
-      return _res;
+      return res;
     },
     onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useRemoteViewerConnectionFileFromVm ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.CONSOLE} 원격 뷰어 접속파일 다운로드 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.CONSOLE} 원격 뷰어 접속파일 다운로드 요청완료`
+      })
       triggerDownload(res, "console.vv")
       queryClient.invalidateQueries('allVMs');
       queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
@@ -2474,7 +2599,8 @@ export const useAddVm = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (vmData) => {
       closeModal();
       const res = await ApiManager.addVM(vmData)
@@ -2484,7 +2610,11 @@ export const useAddVm = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddVm ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.CREATE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.CREATE} 요청완료`
+      })
       queryClient.invalidateQueries('allVMs');
       postSuccess(res);
     },
@@ -2506,7 +2636,8 @@ export const useEditVm = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, vmData }) => {
       closeModal();
       const res = await ApiManager.editVM(vmId, vmData);
@@ -2516,7 +2647,11 @@ export const useEditVm = (
     },
     onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useEditVm ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.UPDATE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('allVMs');
       queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
@@ -2540,7 +2675,8 @@ export const useDeleteVm = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, detachOnly }) => {
       closeModal();
       const res = await ApiManager.deleteVM(vmId, detachOnly);
@@ -2550,7 +2686,11 @@ export const useDeleteVm = (
     },
     onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useDeleteVm ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.REMOVE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries('allVMs');
       queryClient.invalidateQueries('allDisksFromVm');
       queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
@@ -2576,7 +2716,8 @@ export const useStartVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.startVM(vmId);
@@ -2586,7 +2727,11 @@ export const useStartVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useStartVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.START} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.START} 요청완료`
+      })
       queryClient.invalidateQueries('allVMs');
       postSuccess(res);
     },
@@ -2608,7 +2753,8 @@ export const usePauseVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.pauseVM(vmId);
@@ -2618,7 +2764,11 @@ export const usePauseVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > usePauseVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.PAUSE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.PAUSE} 요청완료`
+      })
       queryClient.invalidateQueries('allVMs');
       postSuccess(res);
     },
@@ -2641,7 +2791,8 @@ export const useShutdownVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.shutdownVM(vmId);
@@ -2651,7 +2802,11 @@ export const useShutdownVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useShutdownVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.END} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.END} 요청완료`
+      })
       queryClient.invalidateQueries('allVMs');
       postSuccess(res);
     },
@@ -2673,7 +2828,8 @@ export const usePowerOffVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.powerOffVM(vmId);
@@ -2683,7 +2839,11 @@ export const usePowerOffVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > usePowerOffVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.POWER_OFF} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.POWER_OFF} 요청완료`
+      })
       queryClient.invalidateQueries('allVMs');
       postSuccess(res);
     },
@@ -2706,7 +2866,8 @@ export const useRebootVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (vmId) => {
       closeModal()
       const res = await ApiManager.rebootVM(vmId);
@@ -2716,7 +2877,11 @@ export const useRebootVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRebootVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.REBOOT} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.REBOOT} 요청완료`
+      })
       queryClient.invalidateQueries('allVMs');
       postSuccess(res);
     },
@@ -2738,7 +2903,8 @@ export const useResetVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (vmId) => {
       closeModal()
       const res = await ApiManager.resetVM(vmId);
@@ -2748,7 +2914,11 @@ export const useResetVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useResetVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.RESET} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.RESET} 요청완료`
+      })
       queryClient.invalidateQueries('allVMs');
       postSuccess(res);
     },
@@ -2798,7 +2968,8 @@ export const useMigration = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, vm, affinityClosure }) => {
       closeModal()
       const res = await ApiManager.migrateVM(vmId, vm, affinityClosure);
@@ -2808,7 +2979,11 @@ export const useMigration = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useMigration ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.MIGRATION} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.MIGRATION} 요청완료`
+      })
       queryClient.invalidateQueries(['hostsForMigration', 'allVms']);
       postSuccess(res);
     },
@@ -2831,7 +3006,8 @@ export const useExportVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.exportVM(vmId);
@@ -2841,7 +3017,11 @@ export const useExportVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useExportVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM} ${Localization.kr.EXPORT} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM} ${Localization.kr.EXPORT} 요청완료`
+        })
       queryClient.invalidateQueries('allVMs');
       postSuccess(res);
     },
@@ -2864,7 +3044,8 @@ export const useAddNicFromVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, nicData }) => {
       closeModal();
       const res = await ApiManager.addNicFromVM(vmId, nicData);
@@ -2874,7 +3055,11 @@ export const useAddNicFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddNicFromVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.CREATE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.CREATE} 요청완료`
+        })
       queryClient.invalidateQueries('NetworkInterfaceFromVM');
       postSuccess(res);
     },
@@ -2898,7 +3083,8 @@ export const useEditNicFromVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, nicId, nicData }) => {
       closeModal();
       const res = await ApiManager.editNicFromVM(vmId, nicId, nicData);
@@ -2908,7 +3094,11 @@ export const useEditNicFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditNicFromVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.UPDATE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.UPDATE} 요청완료`
+        })
       queryClient.invalidateQueries('NetworkInterfaceByVMId,NetworkInterfaceFromVM');
       postSuccess(res);
     },
@@ -2931,7 +3121,8 @@ export const useDeleteNetworkInterface = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  // closeModal();
+  const { toast } = useToast()
+    // closeModal();
   return useMutation({
     mutationFn: async ({ vmId, nicId }) => {
       console.log("ㅇㅇㅇㅇㅇㅇㅇㅇㅇ[DeleteNIC] Called with vmId:", vmId, "nicId:", nicId);
@@ -2943,7 +3134,11 @@ export const useDeleteNetworkInterface = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteNetworkInterface ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.REMOVE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.REMOVE} 요청완료`
+        })
       queryClient.invalidateQueries('NetworkInterfaceFromVM');
       postSuccess(res);
     },
@@ -2988,7 +3183,8 @@ export const useAddDiskFromVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, diskData }) => {
       closeModal();
       const res = await ApiManager.addDiskFromVM(vmId, diskData);
@@ -2998,7 +3194,11 @@ export const useAddDiskFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddDiskFromVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.CREATE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} ${Localization.kr.CREATE} 요청완료`
+        })
       queryClient.invalidateQueries('disksFromVM');
       postSuccess(res);
     },
@@ -3021,7 +3221,8 @@ export const useEditDiskFromVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId, diskAttachment }) => {
       closeModal();
       const res = await ApiManager.editDiskFromVM(vmId, diskAttachmentId, diskAttachment);
@@ -3031,7 +3232,11 @@ export const useEditDiskFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditDiskFromVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.UPDATE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} ${Localization.kr.UPDATE} 요청완료`
+        })
       queryClient.invalidateQueries('disksFromVM');
       postSuccess(res);
     },
@@ -3054,7 +3259,8 @@ export const useDeleteDiskFromVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId, detachOnly }) => {
       closeModal();
       const res = await ApiManager.deleteDiskFromVM(vmId, diskAttachmentId, detachOnly);
@@ -3064,7 +3270,11 @@ export const useDeleteDiskFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteDiskFromVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.REMOVE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} ${Localization.kr.REMOVE} 요청완료`
+        })
       queryClient.invalidateQueries('allDisksFromVm');
       postSuccess(res);
     },
@@ -3088,7 +3298,8 @@ export const useConnDiskFromVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, diskAttachment }) => {
       closeModal();
       const res = await ApiManager.attachDiskFromVM(vmId, diskAttachment);
@@ -3098,7 +3309,10 @@ export const useConnDiskFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useConnDiskFromVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.CONNECTION} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} ${Localization.kr.CONNECTION} 요청완료`
+      })
       queryClient.invalidateQueries(['allDisksFromVm']);
       postSuccess(res);
     },
@@ -3121,7 +3335,8 @@ export const useConnDiskListFromVM = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, diskAttachmentList }) => {
       const res = await ApiManager.attachDisksFromVM(vmId, diskAttachmentList);
       const _res = validate(res) ?? {};
@@ -3130,7 +3345,10 @@ export const useConnDiskListFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useConnDiskListFromVM ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} 일괄 ${Localization.kr.CONNECTION} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} 일괄 ${Localization.kr.CONNECTION} 요청완료`
+      })
       queryClient.invalidateQueries('allDisksFromVm');
       // closeModal("vmdisk:connect")
       postSuccess(res);
@@ -3155,6 +3373,7 @@ export const useDeactivateDiskFromVm = (
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId }) => {
       const res = await ApiManager.deactivateDisksFromVM(vmId, diskAttachmentId);
@@ -3164,7 +3383,10 @@ export const useDeactivateDiskFromVm = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeactivateDiskFromVm ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} 일괄 ${Localization.kr.MAINTENANCE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} 일괄 ${Localization.kr.MAINTENANCE} 요청완료`
+      })
       queryClient.invalidateQueries('allDisksFromVm');
       postSuccess(res);
     },
@@ -3187,6 +3409,7 @@ export const useActivateDiskFromVm = (
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
+  const { toast } = useToast()
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId }) => {
       const res = await ApiManager.activateDisksFromVM(vmId, diskAttachmentId);
@@ -3196,7 +3419,10 @@ export const useActivateDiskFromVm = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useActivateDiskFromVm ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} 일괄 ${Localization.kr.ACTIVATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} 일괄 ${Localization.kr.ACTIVATE} 요청완료`
+      })
       queryClient.invalidateQueries('allDisksFromVm');
       postSuccess(res);
     },
@@ -3430,7 +3656,8 @@ export const useAddTemplate = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vmId, templateData }) => {
       closeModal();
       const res = await ApiManager.addTemplate(vmId, templateData)
@@ -3440,7 +3667,11 @@ export const useAddTemplate = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddTemplate ... res: `, res)
-      toast.success(`[200] ${Localization.kr.TEMPLATE} ${Localization.kr.CREATE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE} 요청완료`
+        })
       queryClient.invalidateQueries('allTemplates');
       postSuccess(res);
     },
@@ -3462,7 +3693,8 @@ export const useEditTemplate = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ templateId, templateData }) => {
       closeModal();
       const res = await ApiManager.editTemplate(templateId, templateData);
@@ -3472,7 +3704,11 @@ export const useEditTemplate = (
     },
     onSuccess: (res, { templateId }) => {
       Logger.debug(`RQHook > useEditTemplate ... res: `, res)
-      toast.success(`[200] ${Localization.kr.TEMPLATE} ${Localization.kr.UPDATE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.TEMPLATE} ${Localization.kr.UPDATE} 요청완료`
+        })
       queryClient.invalidateQueries('allTemplates');
       queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess(res);
@@ -3495,7 +3731,8 @@ export const useDeleteTemplate = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (templateId) => {
       closeModal();
       const res = await ApiManager.deleteTemplate(templateId);
@@ -3505,7 +3742,11 @@ export const useDeleteTemplate = (
     },
     onSuccess: (res, { templateId }) => {
       Logger.debug(`RQHook > useEditTemplate ... res: `, res)
-      toast.success(`[200] ${Localization.kr.TEMPLATE} ${Localization.kr.REMOVE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.TEMPLATE} ${Localization.kr.REMOVE} 요청완료`
+        })
       queryClient.invalidateQueries('allTemplates');
       queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess(res);
@@ -3528,7 +3769,8 @@ export const useAddNicFromTemplate = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ templateId, nicData }) => {
       closeModal();
       const res = await ApiManager.addNicFromTemplate(templateId, nicData);
@@ -3538,7 +3780,11 @@ export const useAddNicFromTemplate = (
     },
     onSuccess: (res, { templateId }) => {
       Logger.debug(`RQHook > useAddNicFromTemplate ... res: `, res)
-      toast.success(`[200] ${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.CREATE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.CREATE} 요청완료`
+        })
       queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
       queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess(res);
@@ -3561,7 +3807,8 @@ export const useEditNicFromTemplate = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ templateId, nicId, nicData }) => {
       closeModal();
       const res = await ApiManager.editNicFromTemplate(templateId, nicId, nicData);
@@ -3571,7 +3818,11 @@ export const useEditNicFromTemplate = (
     },
     onSuccess: (res, { templateId }) => {
       Logger.debug(`RQHook > useEditNicFromTemplate ... res: `, res)
-      toast.success(`[200] ${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.UPDATE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.UPDATE} 요청완료`
+        })
       queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
       queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess(res);
@@ -3596,7 +3847,8 @@ export const useDeleteNetworkFromTemplate = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ templateId, nicId, detachOnly }) => {
       closeModal();
       const res = await ApiManager.deleteNicFromTemplate(templateId, nicId, detachOnly);
@@ -3606,7 +3858,11 @@ export const useDeleteNetworkFromTemplate = (
     },
     onSuccess: (res, { templateId }) => {
       Logger.debug(`RQHook > useEditNicFromTemplate ... res: `, res)
-      toast.success(`[200] ${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.REMOVE} 요청완료`)
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.REMOVE} 요청완료`
+        })
       queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
       queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
       postSuccess(res);
@@ -3836,7 +4092,8 @@ export const useAddNetwork = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (networkData) => {
       closeModal();
       const res = await ApiManager.addNetwork(networkData);
@@ -3846,7 +4103,11 @@ export const useAddNetwork = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddNetwork ... res: `, res)
-      toast.success(`[200] ${Localization.kr.NETWORK} ${Localization.kr.CREATE} 요청완료`);
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.NETWORK} ${Localization.kr.CREATE} 요청완료`
+      });
       queryClient.invalidateQueries('allNetworks'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess(res);
     },
@@ -3868,7 +4129,8 @@ export const useEditNetwork = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ networkId, networkData }) => {
       closeModal();
       const res = await ApiManager.editNetwork(networkId, networkData);
@@ -3878,7 +4140,10 @@ export const useEditNetwork = (
     },
     onSuccess: (res, { networkId }) => {
       Logger.debug(`RQHook > useEditNetwork ... res: `, res)
-      toast.success(`[200] ${Localization.kr.NETWORK} ${Localization.kr.UPDATE} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.NETWORK} ${Localization.kr.UPDATE} 요청완료`
+      });
       queryClient.invalidateQueries('allNetworks'); // 전체 네트워크 목록 업데이트
       queryClient.invalidateQueries(['networkById', networkId]); // 수정된 네트워크 상세 정보 업데이트postSuccess(res);
     },
@@ -3902,7 +4167,8 @@ export const useDeleteNetwork = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (networkId) => {
       closeModal();
       const res = await ApiManager.deleteNetwork(networkId)
@@ -3912,7 +4178,10 @@ export const useDeleteNetwork = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteNetwork ... res: `, res)
-      toast.success(`[200] ${Localization.kr.NETWORK} ${Localization.kr.REMOVE} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.NETWORK} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries('allNetworks');
       postSuccess(res);
     },
@@ -4057,7 +4326,8 @@ export const useAddVnicProfile = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (vnicData) => {
       closeModal();
       const res = await ApiManager.addVnicProfiles(vnicData);
@@ -4067,7 +4337,10 @@ export const useAddVnicProfile = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddVnicProfile ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VNIC_PROFILE} ${Localization.kr.CREATE} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VNIC_PROFILE} ${Localization.kr.CREATE} 요청완료`
+      });
       queryClient.invalidateQueries('allVnicProfiles');
       postSuccess(res);
     },
@@ -4089,7 +4362,8 @@ export const useEditVnicProfile = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ vnicId, vnicData }) => {
       closeModal()
       const res = await ApiManager.editVnicProfiles(vnicId, vnicData);
@@ -4099,7 +4373,10 @@ export const useEditVnicProfile = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditVnicProfile ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VNIC_PROFILE} ${Localization.kr.UPDATE} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VNIC_PROFILE} ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('allVnicProfiles');
       postSuccess(res);
     },
@@ -4122,7 +4399,8 @@ export const useDeleteVnicProfile = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (vnicProfileId) => {
       closeModal();
       const res = await ApiManager.deleteVnicProfiles(vnicProfileId);
@@ -4132,7 +4410,11 @@ export const useDeleteVnicProfile = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteVnicProfile ... res: `, res);
-      toast.success(`[200] ${Localization.kr.VNIC_PROFILE} ${Localization.kr.REMOVE} 요청완료`);
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.VNIC_PROFILE} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries('allVnicProfiles');
       postSuccess(res);
     },
@@ -4428,7 +4710,8 @@ export const useRegisteredDiskFromDomain = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ storageDomainId, diskId }) => {
       closeModal();
       const res = await ApiManager.registeredDiskFromDomain(storageDomainId, diskId);
@@ -4438,7 +4721,11 @@ export const useRegisteredDiskFromDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRegisteredDiskFromDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.DISK} ${Localization.kr.IMPORT} 요청완료`);
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.DISK} ${Localization.kr.IMPORT} 요청완료`,
+      })
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess(res);
     },
@@ -4460,7 +4747,8 @@ export const useDeletRegisteredDiskFromDomain = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ storageDomainId, diskId }) => {
       closeModal();
       const res = await ApiManager.deleteRegisteredDiskFromDomain(storageDomainId, diskId);
@@ -4470,7 +4758,11 @@ export const useDeletRegisteredDiskFromDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeletRegisteredDiskFromDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.DISK} ${Localization.kr.IMPORT} ${Localization.kr.REMOVE} 요청완료`);
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.DISK} ${Localization.kr.IMPORT} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess(res);
     },
@@ -4649,7 +4941,8 @@ export const useAddDomain = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (domainData) => {
       closeModal();
       const res = await ApiManager.addDomain(domainData);
@@ -4659,7 +4952,10 @@ export const useAddDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.CREATE} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.CREATE} 요청완료`
+      })
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess(res);
     },
@@ -4682,7 +4978,8 @@ export const useImportDomain = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (domainData) => {
       closeModal();
       const res = await ApiManager.importDomain(domainData)
@@ -4692,7 +4989,11 @@ export const useImportDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useImportDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.IMPORT} 요청완료`);
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.IMPORT} 요청완료`
+      })
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess(res);
     },
@@ -4714,7 +5015,8 @@ export const useEditDomain = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ domainId, domainData }) => {
       closeModal();
       const res = await ApiManager.editDomain(domainId, domainData)
@@ -4724,7 +5026,10 @@ export const useEditDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.UPDATE} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess(res);
     },
@@ -4747,7 +5052,8 @@ export const useDeleteDomain = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ domainId, format, hostName }) => {
       closeModal();
       const res = await ApiManager.deleteDomain(domainId, format, hostName);
@@ -4757,7 +5063,11 @@ export const useDeleteDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.REMOVE} 요청완료`);
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess(res);
     },
@@ -4780,7 +5090,8 @@ export const useDestroyDomain = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (storageDomainId) => {
       closeModal();
       const res = await ApiManager.destroyDomain(storageDomainId);
@@ -4790,7 +5101,11 @@ export const useDestroyDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDestroyDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.DESTROY} 요청완료`);
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.DESTROY} 요청완료`
+      })
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess(res);
     },
@@ -4813,7 +5128,8 @@ export const useRefreshLunDomain = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (domainId) => {
       closeModal();
       const res = await ApiManager.refreshLunDomain(domainId);
@@ -4823,7 +5139,11 @@ export const useRefreshLunDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRefreshLunDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.DISK} 검사 요청완료`);
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.DISK} 검사 요청완료`
+      })
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess(res);
     },
@@ -4846,7 +5166,8 @@ export const useOvfUpdateDomain = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (domainId) => {
       closeModal();
       const res = await ApiManager.updateOvfDomain(domainId);
@@ -4856,7 +5177,11 @@ export const useOvfUpdateDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useOvfUpdateDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.DISK} ovf ${Localization.kr.UPDATE} 요청완료`);
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.DISK} ovf ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('allStorageDomains');
       postSuccess(res);
     },
@@ -4879,7 +5204,8 @@ export const useActivateDomain = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ domainId, dataCenterId }) => {
       closeModal();
       const res = await ApiManager.activateDomain(domainId, dataCenterId);
@@ -4889,7 +5215,11 @@ export const useActivateDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useActivateDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.ACTIVATE} 요청완료`);
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.ACTIVATE} 요청완료`
+      })
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess(res);
     },
@@ -4912,7 +5242,8 @@ export const useAttachDomain = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ storageDomainId, dataCenterId }) => {
       closeModal();
       const res = await ApiManager.attachDomain(storageDomainId, dataCenterId);
@@ -4922,7 +5253,10 @@ export const useAttachDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAttachDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.ATTACH} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.ATTACH} 요청완료`
+      })
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess(res);
     },
@@ -4945,7 +5279,8 @@ export const useDetachDomain = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ domainId, dataCenterId }) => {
       closeModal();
       const res = await ApiManager.detachDomain(domainId, dataCenterId);
@@ -4955,7 +5290,10 @@ export const useDetachDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDetachDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.DETACH} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.DETACH} 요청완료`
+      });
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess(res);
     },
@@ -4978,7 +5316,8 @@ export const useMaintenanceDomain = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ domainId, dataCenterId, ovf }) => {
       closeModal();
       const res = await ApiManager.maintenanceDomain(domainId, dataCenterId, ovf);
@@ -4988,7 +5327,10 @@ export const useMaintenanceDomain = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useMaintenanceDomain ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DOMAIN} ${Localization.kr.MAINTENANCE} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DOMAIN} ${Localization.kr.MAINTENANCE} 요청완료`
+      });
       queryClient.invalidateQueries('allStorageDomains,domainsFromDataCenter');
       postSuccess(res);
     },
@@ -5125,7 +5467,8 @@ export const useAddDisk = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (diskData) => {
       closeModal();
       const res = await ApiManager.addDisk(diskData);
@@ -5135,7 +5478,10 @@ export const useAddDisk = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddDisk ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.CREATE} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} ${Localization.kr.CREATE} 요청완료`
+      });
       queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
       postSuccess(res);
     },
@@ -5157,7 +5503,8 @@ export const useEditDisk = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ diskId, diskData }) => {
       closeModal();
       const res = await ApiManager.editDisk(diskId, diskData);
@@ -5167,7 +5514,10 @@ export const useEditDisk = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditDisk ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.UPDATE} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} ${Localization.kr.UPDATE} 요청완료`
+      });
       queryClient.invalidateQueries('allDisks');
       postSuccess(res);
     },
@@ -5189,7 +5539,8 @@ export const useDeleteDisk = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (diskId) => {
       closeModal();
       const res = await ApiManager.deleteDisk(diskId);
@@ -5199,7 +5550,10 @@ export const useDeleteDisk = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteDisk ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.REMOVE} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} ${Localization.kr.REMOVE} 요청완료`
+      });
       queryClient.invalidateQueries('allDisks');
       postSuccess(res);
     },
@@ -5221,7 +5575,8 @@ export const useUploadDisk = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (diskData) => {
       closeModal();
       const res = await ApiManager.uploadDisk(diskData, inProgress);
@@ -5231,7 +5586,10 @@ export const useUploadDisk = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useUploadDisk ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.UPLOAD} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} ${Localization.kr.UPLOAD} 요청완료`
+      })
       queryClient.invalidateQueries('allDisks'); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화
       postSuccess(res);
     },
@@ -5253,7 +5611,8 @@ export const useMoveDisk = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ diskId, storageDomainId }) => {
       closeModal();
       const res = await ApiManager.moveDisk(diskId, storageDomainId)
@@ -5263,7 +5622,10 @@ export const useMoveDisk = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useMoveDisk ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.MOVE} 요청완료`);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} ${Localization.kr.MOVE} 요청완료`
+      });
       queryClient.invalidateQueries('allDisks');
       postSuccess(res);
     },
@@ -5285,7 +5647,8 @@ export const useCopyDisk = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ diskId, diskImage }) => {
       closeModal();
       const res = await ApiManager.copyDisk(diskId, diskImage)
@@ -5295,7 +5658,10 @@ export const useCopyDisk = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useCopyDisk ... res: `, res);
-      toast.success(`[200] ${Localization.kr.DISK} ${Localization.kr.COPY} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.DISK} ${Localization.kr.COPY} 요청완료`
+      })
       queryClient.invalidateQueries('allDisks');
       postSuccess(res);
     },
@@ -5372,7 +5738,8 @@ export const useRemoveEvent = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (eventId) => {
       closeModal();
       const res = await ApiManager.removeEvent(eventId)
@@ -5382,7 +5749,10 @@ export const useRemoveEvent = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvent ... res: `, res);
-      toast.success(`[200] ${Localization.kr.EVENT} ${Localization.kr.REMOVE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.EVENT} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries([QK.DASHBOARD, 'allEvents', 'allNotiEvents', 'allEventsNormal']);
       closeModal();
       postSuccess(res);
@@ -5401,7 +5771,8 @@ export const useRemoveEvents = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (eventIds = []) => {
       closeModal();
       const res = await ApiManager.removeEvents({ eventIds });
@@ -5411,7 +5782,10 @@ export const useRemoveEvents = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvents ... res: `, res);
-      toast.success(`[200] ${Localization.kr.EVENT} ${Localization.kr.REMOVE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.EVENT} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries([QK.DASHBOARD, 'allEvents', 'allNotiEvents', 'allEventsNormal']);
       closeModal();
       postSuccess(res);
@@ -5476,18 +5850,21 @@ export const useAddJob = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (job) => {
       closeModal();
       const res = await ApiManager.addJob(job)
       const _res = validate(res) ?? {}
-      toast.success(`[200] 작업 생성 요청 성공`)
       Logger.debug(`RQHook > useAddJob ... job: ${JSON.stringify(job, null, 2)}`);
       return _res;
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddJob ... res: `, res);
-      toast.success(`[200] ${Localization.kr.JOB} ${Localization.kr.CREATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.JOB} ${Localization.kr.CREATE} 요청완료`
+      })
       queryClient.invalidateQueries('allJobs');
       queryClient.invalidateQueries(['job', res.id]); // 수정된 네트워크 상세 정보 업데이트
       closeModal();
@@ -5513,7 +5890,8 @@ export const useEndJob = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async ({ jobId }) => {
       closeModal();
       const res = await ApiManager.endJob(jobId)
@@ -5523,7 +5901,10 @@ export const useEndJob = (
     },
     onSuccess: (res, { jobId }) => {
       Logger.debug(`RQHook > useEndJob ... res: `, res);
-      toast.success(`[200] ${Localization.kr.JOB} ${Localization.kr.END} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.JOB} ${Localization.kr.END} 요청완료`
+      })
       queryClient.invalidateQueries('allJobs');
       queryClient.invalidateQueries(['job', jobId]); // 수정된 네트워크 상세 정보 업데이트
       closeModal();
@@ -5549,7 +5930,8 @@ export const useRemoveJob = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (jobId) => {
       closeModal();
       const res = await ApiManager.removeJob(jobId)
@@ -5559,7 +5941,10 @@ export const useRemoveJob = (
     },
     onSuccess: (res, { jobId }) => {
       Logger.debug(`RQHook > useRemoveJob ... res: `, res);
-      toast.success(`[200] ${Localization.kr.JOB} ${Localization.kr.REMOVE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.JOB} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries('allJobs');
       queryClient.invalidateQueries(['job', jobId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
@@ -5583,7 +5968,8 @@ export const useRemoveJobs = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (jobIds) => {
       closeModal();
       const res = await ApiManager.removeJob(jobIds)
@@ -5593,7 +5979,10 @@ export const useRemoveJobs = (
     },
     onSuccess: (res, { jobIds }) => {
       Logger.debug(`RQHook > removeJobs ... res: `, res);
-      toast.success(`[200] ${Localization.kr.JOB} 일괄${Localization.kr.REMOVE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.JOB} 일괄${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries('allJobs');
       closeModal();
       postSuccess(res);
@@ -5664,7 +6053,8 @@ export const useAuthenticate = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  const { setAuth } = useAuth();
+  const { toast } = useToast()
+    const { setAuth } = useAuth();
   return useMutation({
     mutationFn: async ({username, password}) => {
       closeModal();
@@ -5703,7 +6093,8 @@ export const useAddUser = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async () => {
       closeModal();
       const res = await ApiManager.addUser(user)
@@ -5713,7 +6104,10 @@ export const useAddUser = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddUser ... res: `, res);
-      toast.success(`[200] ${Localization.kr.USER} ${Localization.kr.CREATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.USER} ${Localization.kr.CREATE} 요청완료`
+      })
       queryClient.invalidateQueries('allUsers,user');
       queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
@@ -5737,7 +6131,8 @@ export const useEditUser = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async () => {
       const res = await ApiManager.editUser(user)
       const _res = validate(res) ?? {}
@@ -5746,7 +6141,10 @@ export const useEditUser = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditUser ... res: `, res);
-      toast.success(`[200] ${Localization.kr.USER} ${Localization.kr.UPDATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.USER} ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('allUsers');
       queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
@@ -5766,7 +6164,8 @@ export const useUpdatePasswordUser = (
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async () => {
       closeModal();
       const res = await ApiManager.updatePassword(username, pwCurrent, pwNew, force)
@@ -5776,8 +6175,10 @@ export const useUpdatePasswordUser = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useChangePasswordUser ... res: `, res);
-      toast.success("사용자 비밀번호 변경 성공")
-      toast.success(`[200] ${Localization.kr.USER} 비밀번호 ${Localization.kr.UPDATE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.USER} 비밀번호 ${Localization.kr.UPDATE} 요청완료`
+      })
       queryClient.invalidateQueries('allUsers');
       queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
@@ -5801,7 +6202,8 @@ export const useRemoveUser = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
-  return useMutation({
+  const { toast } = useToast()
+    return useMutation({
     mutationFn: async (username) => {
       closeModal();
       const res = await ApiManager.removeUser(username)
@@ -5811,7 +6213,10 @@ export const useRemoveUser = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveUser ... res: `, res);
-      toast.success(`[200] ${Localization.kr.USER} ${Localization.kr.REMOVE} 요청완료`)
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.USER} ${Localization.kr.REMOVE} 요청완료`
+      })
       queryClient.invalidateQueries('allUsers,user');
       queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);

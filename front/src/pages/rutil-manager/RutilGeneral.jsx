@@ -1,9 +1,8 @@
 import { useMemo } from "react";
-import RutilVmLogo from "../../components/common/RutilVmLogo";
-import InfoTable from "../../components/table/InfoTable";
-import Localization from "../../utils/Localization";
-import { useDashboard } from "../../api/RQHook";
-
+import RutilVmLogo            from "@/components/common/RutilVmLogo";
+import InfoTable              from "@/components/table/InfoTable";
+import { useDashboard }       from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
 
 /**
  * @name RutilGeneral

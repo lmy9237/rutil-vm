@@ -1,4 +1,4 @@
-import useAsideState from "../hooks/useAsideState";
+import useAsideState from "@/hooks/useAsideState";
 import "./SectionLayout.css"
 
 const SectionLayout = ({

@@ -1,15 +1,23 @@
 import { useState, useEffect, useCallback } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
+import { useToast }            from "@/hooks/use-toast";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
-import { handleInputChange, handleInputCheck } from "../../label/HandleInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
+import { 
+  handleInputChange, 
+  handleInputCheck,
+} from "../../label/HandleInput";
 import { validateUsername, validatePw } from "../../../util";
-import { useUser, useAddUser, useEditUser, useUpdatePasswordUser } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import { 
+  useUser, 
+  useAddUser, 
+  useEditUser, 
+  useUpdatePasswordUser
+} from "@/api/RQHook";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 import "./SettingsUserModal.css";
 
 const initialFormState = {
@@ -30,6 +38,7 @@ const SettingUsersModal = ({
   changePassword=false,
   user, 
 }) => {
+  const { toast } = useToast();
   const { usersSelected, setUsersSelected } = useGlobal()
   const [formState, setFormState] = useState(initialFormState);
   const {
@@ -67,21 +76,7 @@ const SettingUsersModal = ({
     });
   }, [isOpen, editMode, changePassword, userFound])
 
-  const handleFormSubmit = useCallback((e) => {
-    e.preventDefault();
-    Logger.debug("SettingUsersModal > handleFormSubmit ... ");
-    const error = validateForm(editMode);
-    if (error) {
-      toast.error(error);
-      return;
-    }
-
-    if (editMode) editUser();
-    else if (changePassword) changePasswordUser();
-    else addUser();
-  }, [editMode, changePassword, formState]);
-
-  const validateForm = useCallback((editMode) => {
+  const validateForm = () => {
     Logger.debug(`SettingUsersModal > validateForm ... editMode: ${editMode}`);
     let vUsername = validateUsername(formState.username);
     if (vUsername) return vUsername;
@@ -89,7 +84,25 @@ const SettingUsersModal = ({
     if (!editMode && vPassword) return vPassword;
     /* 추후 추가예정 */
     return null;
-  }, [editMode, changePassword, formState]);
+  }
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
+
+    Logger.debug("SettingUsersModal > handleFormSubmit ... ");
+    if (editMode) editUser();
+    else if (changePassword) changePasswordUser();
+    else addUser();
+  };
 
   return (
     <BaseModal targetName={Localization.kr.USER} submitTitle={editMode ? Localization.kr.UPDATE : changePassword ? "비밀번호 변경" : Localization.kr.CREATE}

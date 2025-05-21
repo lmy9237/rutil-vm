@@ -1,6 +1,13 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { RVI16, RVI12, rvi12ArrowRight, rvi16Cluster, rvi16DataCenter, rvi16Event } from "../icons/RutilVmIcons";
+import {
+  RVI16,
+  RVI12,
+  rvi12ArrowRight,
+  rvi16Cluster,
+  rvi16DataCenter,
+  rvi16Event
+} from "@/components/icons/RutilVmIcons";
 import "./Path.css"; // CSS 파일 분리
 
 /**

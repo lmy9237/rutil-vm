@@ -1,16 +1,20 @@
 import { useMemo, useState } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import LabelCheckbox from "../../label/LabelCheckbox";
-import Localization from "../../../utils/Localization";
-import { useCommitNetConfigHost } from "../../../api/RQHook";
+import { useToast }            from "@/hooks/use-toast";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
+import BaseModal               from "../BaseModal";
+import LabelCheckbox           from "../../label/LabelCheckbox";
+import {
+  useCommitNetConfigHost,
+} from "@/api/RQHook";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 const HostCommitNetModal = ({ 
   isOpen,
   onClose,
 }) => {
+  const { toast } = useToast()
   // const { closeModal } = useUIState()
   const { hostsSelected } = useGlobal()
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected])
@@ -21,10 +25,23 @@ const HostCommitNetModal = ({
     mutate: commitNetConfigHost
   } = useCommitNetConfigHost(onClose, onClose);
 
+  const validateForm = () => {
+    Logger.debug(`HostCommitNetModal > validateForm ... `);
+    if (!approved) return "확인버튼이 필요합니다"
+    return null;
+  }
+
   const handleSubmit = () => {
-    if (!approved) {
-      return toast.error("확인버튼이 필요합니다")
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
     }
+    Logger.debug(`HostCommitNetModal > handleSubmit ... hostId: ${hostId}`)
     commitNetConfigHost( hostId );
   };
 

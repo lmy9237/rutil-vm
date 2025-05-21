@@ -1,9 +1,11 @@
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import DiskDupl from "../../../components/dupl/DiskDupl";
-import { useAllDisksFromDomain } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import useGlobal              from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import DiskDupl               from "@/components/dupl/DiskDupl";
+import {
+  useAllDisksFromDomain
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
 
 /**
  * @name DomainDisks

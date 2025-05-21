@@ -1,6 +1,14 @@
-import { RVI16, rvi16Close, rvi16Refresh } from "../icons/RutilVmIcons";
-import Localization from "../../utils/Localization";
-import IconButton from "../Input/IconButton";
+import { useCallback, } from "react";
+// import toast from "react-hot-toast";
+import { useToast }           from "@/hooks/use-toast";
+import {
+  RVI16,
+  rvi16Close,
+  rvi16Refresh
+} from "@/components/icons/RutilVmIcons";
+import IconButton             from "@/components/Input/IconButton";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./SearchBox.css";
 
 /**
@@ -14,8 +22,21 @@ import "./SearchBox.css";
 const SearchBox = ({ 
   searchQuery,
   setSearchQuery,
-  onRefresh=null,
+  onRefresh=()=>{},
+  refetch=()=>{},
  }) => {
+  const { toast } = useToast();
+
+  const handleRefresh = useCallback((e) =>  {
+    Logger.debug(`SearchBox > handleRefresh ... `)
+    if (!refetch) return;
+    refetch()
+    import.meta.env.DEV && toast({ 
+      title: "API 조회",
+      description: "다시 조회 중 ..." 
+    })
+  }, [])
+  
   return (
     <>
       {/* START: 검색박스 */}
@@ -30,11 +51,11 @@ const SearchBox = ({
         />
         {/* END: 검색박스 */}
         {/* START: 다시 로딩 */}
-        {onRefresh && (
+        {(
           <IconButton iconDef={rvi16Refresh("#717171")} 
             className="btn-refresh f-center"
-            // onClick={() => onRefresh()}
-            onClick={() =>  window.location.reload()}
+            onClick={handleRefresh}
+            // onClick={() =>  window.location.reload()}
           />
         )}
         {/* END: 다시 로딩 */}

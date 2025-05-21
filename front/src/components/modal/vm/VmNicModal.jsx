@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
@@ -16,6 +15,7 @@ import {
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
 import Localization from "../../../utils/Localization";
+import { useToast } from "@/hooks/use-toast";
 
 const initialFormState = {
   id: "",
@@ -31,6 +31,7 @@ const VmNicModal = ({
   onClose,
   editMode=false,
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const nLabel = editMode 
     ? Localization.kr.UPDATE
@@ -121,7 +122,14 @@ const VmNicModal = ({
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
     const dataToSubmit = {
       ...formInfoState,

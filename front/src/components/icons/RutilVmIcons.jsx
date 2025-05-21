@@ -1,11 +1,11 @@
 import React, { forwardRef } from "react";
-import Localization from "../../utils/Localization";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
-import CONSTANT from "../../Constants";
+import CONSTANT               from "@/Constants";
+import Localization           from "@/utils/Localization";
 import "./RutilVmIcons.css";
 
 /**

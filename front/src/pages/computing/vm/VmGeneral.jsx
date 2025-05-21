@@ -1,14 +1,21 @@
 import { useEffect, useMemo } from "react";
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import InfoTable from "../../../components/table/InfoTable";
-import SemiCircleChart from "../../../components/Chart/SemiCircleChart";
-import TableRowClick from "../../../components/table/TableRowClick";
-import CONSTANT from "../../../Constants";
-import { convertBytesToMB } from "../../../util";
-import { RVI16, rvi16Cluster, rvi16Host } from "../../../components/icons/RutilVmIcons";
-import { useVm, useOsSystemsFromCluster } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import CONSTANT               from "@/Constants";
+import useGlobal              from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import InfoTable              from "@/components/table/InfoTable";
+import TableRowClick          from "@/components/table/TableRowClick";
+import SemiCircleChart        from "@/components/Chart/SemiCircleChart";
+import {
+  RVI16,
+  rvi16Cluster,
+  rvi16Host
+} from "@/components/icons/RutilVmIcons";
+import {
+  useVm,
+  useOsSystemsFromCluster,
+} from "@/api/RQHook";
+import { convertBytesToMB }   from "@/util";
+import Localization           from "@/utils/Localization";
 import "./Vm.css"
 
 /**

@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from "react";
-import { RVI16 } from "../icons/RutilVmIcons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { RVI16 }              from "@/components/icons/RutilVmIcons";
 import "./../label/LabelInput.css"; // Import the CSS file
-import Localization from "../../utils/Localization";
+import Localization           from "@/utils/Localization";
 import "./IconInput.css"; // Import the CSS file
 
 const IconInput = ({

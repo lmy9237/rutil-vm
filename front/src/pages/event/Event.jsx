@@ -1,9 +1,13 @@
-import HeaderButton from "../../components/button/HeaderButton";
-import EventDupl from "../../components/dupl/EventDupl";
-import Localization from "../../utils/Localization";
-import { rvi24Event } from "../../components/icons/RutilVmIcons";
-import { useAllEvents } from "../../api/RQHook";
-import SectionLayout from "../../components/SectionLayout";
+import SectionLayout from "@/components/SectionLayout";
+import HeaderButton  from "@/components/button/HeaderButton";
+import EventDupl     from "@/components/dupl/EventDupl";
+import {
+  rvi24Event
+} from "@/components/icons/RutilVmIcons";
+import {
+  useAllEvents
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
 
 /**
  * @name AllEvents

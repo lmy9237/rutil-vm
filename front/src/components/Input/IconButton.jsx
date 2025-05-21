@@ -1,4 +1,6 @@
-import { RVI16, rvi16QuestionMark } from "../icons/RutilVmIcons";
+import {
+  RVI16,
+} from "@/components/icons/RutilVmIcons";
 import "./IconButton.css";
 
 /**

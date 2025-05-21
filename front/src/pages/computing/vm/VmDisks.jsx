@@ -1,8 +1,11 @@
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import VmDiskDupl from "../../../components/dupl/VmDiskDupl";
-import { useDisksFromVM } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import useGlobal              from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import VmDiskDupl             from "@/components/dupl/VmDiskDupl";
+import {
+  useDisksFromVM
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name VmDisks

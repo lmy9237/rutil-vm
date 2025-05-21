@@ -1,17 +1,16 @@
 import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useUIState from "../../hooks/useUIState";
-import useGlobal from "../../hooks/useGlobal";
-import useSearch from "../../hooks/useSearch";
-import SelectedIdView from "../common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
-import NetworkActionButtons from "./NetworkActionButtons";
-import TablesOuter from "../table/TablesOuter";
-import TableRowClick from "../table/TableRowClick";
-import SearchBox from "../button/SearchBox";
-import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import NetworkActionButtons   from "@/components/dupl/NetworkActionButtons";
+import Localization           from "@/utils/Localization"; 
+import Logger                 from "@/utils/Logger";
 import "./Dupl.css"; // NOTE: 제거필요여부 확인 필요
 
 /**
@@ -64,19 +63,12 @@ const NetworkDupl = ({
   const handleNameClick = useCallback((id) => {
     navigate(`/networks/${id}`);
   }, [navigate])
-  
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`NetworkDupl > handleRefresh ... `)
-    if (!refetch) return;
-    refetch()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
-        <NetworkActionButtons />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
+         <NetworkActionButtons />
       </div>
       <TablesOuter target={"network"}
         columns={columns}

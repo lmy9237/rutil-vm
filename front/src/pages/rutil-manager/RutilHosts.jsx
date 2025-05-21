@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
-import useGlobal from "../../hooks/useGlobal";
-import TableColumnsInfo from "../../components/table/TableColumnsInfo";
-import HostDupl from "../../components/dupl/HostDupl";
-import { useAllHosts } from "../../api/RQHook";
-import Logger from "../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import HostDupl               from "@/components/dupl/HostDupl";
+import {
+  useAllHosts,
+} from "@/api/RQHook";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name RutilHosts

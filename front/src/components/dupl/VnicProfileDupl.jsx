@@ -1,16 +1,16 @@
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useGlobal from "../../hooks/useGlobal";
-import useSearch from "../../hooks/useSearch"; 
-import SelectedIdView from "../common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
-import TablesOuter from "../table/TablesOuter";
-import TableRowClick from "../table/TableRowClick";
+import useGlobal                from "@/hooks/useGlobal";
+import useSearch                from "@/hooks/useSearch";
+import SelectedIdView           from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink   from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                from "@/components/button/SearchBox";
+import TablesOuter              from "@/components/table/TablesOuter";
+import TableRowClick            from "@/components/table/TableRowClick";
+import TableColumnsInfo         from "@/components/table/TableColumnsInfo";
 import VnicProfileActionButtons from "./VnicProfileActionButtons";
-import SearchBox from "../button/SearchBox";  
-import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
+import Localization             from "@/utils/Localization";
+import Logger                   from "@/utils/Logger";
 
 /**
  * @name VnicProfileDupl
@@ -60,17 +60,10 @@ const VnicProfileDupl = ({
     navigate(`/vnicProfiles/${id}/vms`);
   }, [navigate])
 
-  const handleRefresh = useCallback(() => {
-    Logger.debug(`DiskDupl > handleRefresh ... `)
-    if (!refetch) return;
-    refetch()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
-
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
         <VnicProfileActionButtons />
       </div>
       <TablesOuter target={"vnicprofile"}

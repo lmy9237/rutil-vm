@@ -1,24 +1,27 @@
 import { useState, useEffect, useMemo } from "react";
-import toast from "react-hot-toast";
-import BaseModal from "../BaseModal";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import LabelInput from "../../label/LabelInput";
-import LabelInputNum from "../../label/LabelInputNum";
+import { useToast }           from "@/hooks/use-toast";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import BaseModal              from "../BaseModal";
+import ToggleSwitchButton     from "@/components/button/ToggleSwitchButton";
+import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
+import LabelInput             from "@/components/label/LabelInput";
+import LabelInputNum          from "@/components/label/LabelInputNum";
+import { 
+  handleInputChange, 
+  handleSelectIdChange
+} from "@/components/label/HandleInput";
 import {
   useAddHost,
   useEditHost,
   useHost,
   useAllClusters,
   useClustersFromDataCenter,
-} from "../../../api/RQHook";
-import { checkName } from "../../../util";
-import Localization from "../../../utils/Localization";
-import ToggleSwitchButton from "../../button/ToggleSwitchButton";
-import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
+} from "@/api/RQHook";
+import { checkName }           from "@/util";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 import "./MHost.css";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import useUIState from "../../../hooks/useUIState";
 
 const initialFormState = {
   id: "",
@@ -43,6 +46,7 @@ const HostModal = ({
   onClose,
   editMode=false
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const hLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
@@ -65,7 +69,6 @@ const HostModal = ({
     data: clusters = [], 
     isLoading: isClustersLoading 
   } = useAllClusters((e) => ({ ...e }));
-
   // const clusterOptions = datacenterId ? dcClusters : clusters;
 
   useEffect(() => {
@@ -101,6 +104,7 @@ const HostModal = ({
   }, [clusters, clusterId, editMode]);
 
   const validateForm = () => {
+    Logger.debug(`HostModal > validateForm ... `)
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
 
@@ -110,9 +114,15 @@ const HostModal = ({
   };
 
   const handleFormSubmit = () => {
-    Logger.debug(`HostModal > handleFormSubmit ... `)
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
     const dataToSubmit = {
       ...formState,
@@ -120,7 +130,6 @@ const HostModal = ({
     };
 
     Logger.debug(`HostModal > handleFormSubmit ... dataToSubmit: ${JSON.stringify(dataToSubmit, null , 2)}`); // 데이터를 확인하기 위한 로그
-    
     editMode
       ? editHost({ hostId: formState.id, hostData: dataToSubmit })
       : addHost({ hostData: dataToSubmit, deployHostedEngine: String(formState.hostedEngine), });

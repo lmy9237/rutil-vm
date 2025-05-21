@@ -1,20 +1,20 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useGlobal from "../../hooks/useGlobal";
-import useSearch from "../../hooks/useSearch";
-import VmDiskActionButtons from "./VmDiskActionButtons";
-import SearchBox from "../button/SearchBox";
-import { status2Icon } from "../icons/RutilVmIcons";
-import TablesOuter from "../table/TablesOuter";
-import TableRowClick from "../table/TableRowClick";
-import FilterButtons from "../button/FilterButtons";
-import TableColumnsInfo from "../table/TableColumnsInfo";
-import SelectedIdView from "../common/SelectedIdView";
-import { checkZeroSizeToGiB } from "../../util";
-import { getStatusSortKey } from "../icons/GetStatusSortkey";
-import Logger from "../../utils/Logger";
-import Localization from "../../utils/Localization";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import FilterButtons          from "@/components/button/FilterButtons";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import { status2Icon }        from "@/components/icons/RutilVmIcons";
+import { getStatusSortKey }   from "@/components/icons/GetStatusSortkey";
+import VmDiskActionButtons    from "@/components/dupl/VmDiskActionButtons";
+import { checkZeroSizeToGiB } from "@/util";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name VmDiskDupl
@@ -71,13 +71,6 @@ const VmDiskDupl = ({
     navigate(`/storages/disks/${id}`);
   }, [navigate])
 
-  const handleRefresh = useCallback(() => {
-    Logger.debug(`VmDiskDupl > handleRefresh ... `)
-    if (!refetch) return;
-    refetch()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
-
   const [activeDiskType, setActiveDiskType] = useState("all");
   const diskFilters = [
     { key: "all", label: "모두" },
@@ -95,7 +88,7 @@ const VmDiskDupl = ({
     <>
       <div className="dupl-header-group f-start gap-4 w-full">
         <FilterButtons options={diskFilters} activeOption={activeDiskType} onClick={setActiveDiskType} />
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
         <VmDiskActionButtons />
       </div>
       <TablesOuter target={"vmdisk"}

@@ -1,19 +1,20 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useGlobal from "../../hooks/useGlobal";
-import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
-import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
-import TablesOuter from "../table/TablesOuter";
-import TableRowClick from "../table/TableRowClick";
-import DiskActionButtons from "./DiskActionButtons";
-import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
-import { status2Icon } from "../icons/RutilVmIcons";
-import SelectedIdView from "../common/SelectedIdView";
-import { checkZeroSizeToGiB } from "../../util";
-import { useCdromsDisks } from "../../api/RQHook";
-import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import DiskActionButtons      from "@/components/dupl/DiskActionButtons";
+import { status2Icon }        from "@/components/icons/RutilVmIcons";
+import {
+  useCdromsDisks 
+} from "@/api/RQHook";
+import { checkZeroSizeToGiB } from "@/util";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 const DiskDupl = ({
   disks = [], columns = [],
@@ -86,13 +87,6 @@ const DiskDupl = ({
     navigate(`/storages/disks/${id}`)
   }, [navigate])
 
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`DiskDupl > handleRefresh ... `)
-    if (!refetch) return;
-    refetch()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
-
   useEffect(() => {
     Logger.debug(`DiskDupl > useEffect ... disksSelected: `, disksSelected)
     const diskProfileSelectedFound = [...disksSelected].map((e) => e?.diskProfileVo)
@@ -102,7 +96,7 @@ const DiskDupl = ({
   return (
     <>{/* v-start으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
         <DiskActionButtons />
       </div>
       <TablesOuter target={"disk"}

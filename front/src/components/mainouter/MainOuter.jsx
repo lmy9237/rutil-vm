@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import useAsideState from "../../hooks/useAsideState";
-import SideNavbar from "./SideNavbar";
-import SidebarTree from "./SidebarTree";
-import Logger from "../../utils/Logger";
+import useAsideState          from "@/hooks/useAsideState";
+import Logger                 from "@/utils/Logger";
 import "./MainOuter.css";
+import SideNavbar             from "./SideNavbar";
+import SidebarTree            from "./SidebarTree";
 
 /**
  * @name MainOuter

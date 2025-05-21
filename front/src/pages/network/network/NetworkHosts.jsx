@@ -1,24 +1,24 @@
 import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useGlobal from "../../../hooks/useGlobal";
-import useSearch from "../../../hooks/useSearch";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import SearchBox from "../../../components/button/SearchBox";
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableRowClick from "../../../components/table/TableRowClick";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { status2Icon } from "../../../components/icons/RutilVmIcons";
-import { checkZeroSizeToMbps } from "../../../util";
-import FilterButtons from "../../../components/button/FilterButtons";
-import ActionButton from "../../../components/button/ActionButton";
-import Localization from "../../../utils/Localization";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
+import useSearch               from "@/hooks/useSearch";
+import SelectedIdView          from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
+import FilterButtons           from "@/components/button/FilterButtons";
+import { ActionButton }        from "@/components/button/ActionButtons";
+import SearchBox               from "@/components/button/SearchBox";
+import TablesOuter             from "@/components/table/TablesOuter";
+import TableRowClick           from "@/components/table/TableRowClick";
+import TableColumnsInfo        from "@/components/table/TableColumnsInfo";
+import { status2Icon }         from "@/components/icons/RutilVmIcons";
 import {
   useConnectedHostsFromNetwork,
   useDisconnectedHostsFromNetwork,
-} from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
-import toast from "react-hot-toast";
+} from "@/api/RQHook";
+import { checkZeroSizeToMbps } from "@/util";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 
 /**
@@ -109,19 +109,17 @@ const NetworkHosts = ({
       ? transformHostData(connectedHosts)
       : transformHostData(disconnectedHosts)
   );
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`NetworkHosts > handleRefresh ... `)
-    activeFilter === "connected" 
-      ? refetchConnectedHosts()
-      : refetchDisconnectedHosts()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
         <FilterButtons options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          refetch={activeFilter === "connected" 
+            ? refetchConnectedHosts()
+            : refetchDisconnectedHosts()
+          }
+        />
         <div className="header-right-btns">
           <ActionButton
             label={`${Localization.kr.HOST} ${Localization.kr.NETWORK} 설정`}

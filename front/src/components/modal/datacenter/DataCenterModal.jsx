@@ -1,21 +1,24 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "react-hot-toast";
-import { Switch } from "@/components/ui/switch"
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import LabelInput from "../../label/LabelInput";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import { checkKoreanName, checkName } from "../../../util";
+import { useToast }           from "@/hooks/use-toast";
+import useGlobal              from "@/hooks/useGlobal";
+import useUIState             from "@/hooks/useUIState";
+import { Switch }             from "@/components/ui/switch"
+import BaseModal              from "@/components/modal/BaseModal";
+import LabelInput             from "@/components/label/LabelInput";
+import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
+import { handleInputChange }  from "@/components/label/HandleInput";
+import ToggleSwitchButton     from "@/components/button/ToggleSwitchButton";
 import {
   useAddDataCenter,
   useEditDataCenter,
   useDataCenter,
-} from "../../../api/RQHook";
+} from "@/api/RQHook";
+import {
+  checkKoreanName, checkName 
+} from "@/util";
+import Localization           from "@/utils/Localization";
 import "./MDatacenter.css";
-import Localization from "../../../utils/Localization";
-import ToggleSwitchButton from "../../button/ToggleSwitchButton";
-import { handleInputChange } from "../../label/HandleInput";
 
 const initialFormState = {
   id: "",
@@ -39,6 +42,7 @@ const DataCenterModal = ({
   onClose,
   editMode=false
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const dcLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
   
@@ -79,7 +83,14 @@ const DataCenterModal = ({
   // 제출
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
     const dataToSubmit = { ...formState };
 

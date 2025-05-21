@@ -1,16 +1,18 @@
 import React, { useCallback } from "react";
-import toast from "react-hot-toast";
-import useGlobal from "../../hooks/useGlobal";
-import useSearch from "../../hooks/useSearch";
-import SearchBox from "../../components/button/SearchBox"; // ✅ 검색창 추가
-import SelectedIdView from "../../components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../../components/common/OVirtWebAdminHyperlink";
-import TablesOuter from "../../components/table/TablesOuter";
-import TableColumnsInfo from "../../components/table/TableColumnsInfo";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import SettingUserSessionsActionButtons from "./SettingUserSessionsActionButtons";
-import { useAllUserSessions } from "../../api/RQHook";
-import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
+import {
+  useAllUserSessions
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name SettingSessions
@@ -37,17 +39,11 @@ const SettingSessions = () => {
   }))
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() => {
-    Logger.debug(`VmDupl > handleRefresh ... `)
-    if (!refetchUserSessios) return;
-    refetchUserSessios()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchUserSessios} />
         <SettingUserSessionsActionButtons />
       </div>
       <TablesOuter target={"usersession"}

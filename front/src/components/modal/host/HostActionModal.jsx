@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import toast from "react-hot-toast";
+import { useToast } from "@/hooks/use-toast";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
@@ -10,7 +10,8 @@ import {
   useEnrollHostCertificate,
   useRefreshHost,
 } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name HostActionModal
@@ -24,6 +25,7 @@ const HostActionModal = ({
   onClose,
   action
 }) => {  
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const { label = "", hook } = ACTIONS[action] || {};
   const { hostsSelected } = useGlobal()
@@ -37,12 +39,27 @@ const HostActionModal = ({
     };
   }, [hostsSelected]);
 
-  const handleSubmit = useCallback(() => {
-    if (!mutate) return toast.error(`알 수 없는 액션: ${action}`);
-    if (!ids.length) return toast.error("ID가 없습니다.");
+  const validateForm = () => {
+    Logger.debug(`HostActionModal > validateForm ...`)
+    if (!mutate) return `알 수 없는 액션: ${action}`;
+    if (!ids.length) return "ID가 없습니다.";
+    return null;
+  }
 
+  const handleSubmit = () => {
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
+
+    Logger.debug(`HostActionModal > handleSubmit ...`)
     ids.forEach((id) => mutate(id));
-  }, [mutate, ids]);
+  };
 
   return (
     <BaseModal targetName={Localization.kr.HOST} submitTitle={label}

@@ -50,13 +50,27 @@ const VmDiskActionModal = ({
     };
   }, [data]);
 
-  const handleFormSubmit = () => {
-    Logger.debug(`VmDiskActionModal > handleFormSubmit ... `)
-    if (!ids.length) return toast.error("ID가 없습니다.");
-
+  const validateForm = () => {
+    Logger.debug(`VmDiskActionModal > validateForm ... `)
+    if (!ids.length) return "ID가 없습니다.";
     const actionFn = actionMap[action];
-    if (!actionFn) return toast.error(`알 수 없는 액션: ${action}`);
+    if (!actionFn) return `알 수 없는 액션: ${action}`;
+    return null
+  }
+  
+  const handleFormSubmit = () => {
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
+    Logger.debug(`VmDiskActionModal > handleFormSubmit ... `)
+    const actionFn = actionMap[action];
     ids.forEach((diskAttachId) => actionFn({ vmId: vmId, diskAttachmentId: diskAttachId }));
   };
 

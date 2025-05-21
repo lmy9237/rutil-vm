@@ -1,20 +1,23 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import SectionLayout from "../../../components/SectionLayout";
-import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
-import HeaderButton from "../../../components/button/HeaderButton";
-import Path from "../../../components/Header/Path";
-import TemplateGeneral from "./TemplateGeneral";
-import TemplateVms from "./TemplateVms";
-import TemplateEvents from "./TemplateEvents";
-import TemplateNics from "./TemplateNics";
-import TemplateDisks from "./TemplateDisks";
-import Localization from "../../../utils/Localization";
-import { useTemplate } from "../../../api/RQHook";
-import { rvi24Template } from "../../../components/icons/RutilVmIcons";
-import Logger from "../../../utils/Logger";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SectionLayout          from "@/components/SectionLayout";
+import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
+import HeaderButton           from "@/components/button/HeaderButton";
+import Path                   from "@/components/Header/Path";
+import { rvi24Template }      from "@/components/icons/RutilVmIcons";
+import {
+  useTemplate
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
+import TemplateGeneral        from "./TemplateGeneral";
+import TemplateVms            from "./TemplateVms";
+import TemplateEvents         from "./TemplateEvents";
+import TemplateNics           from "./TemplateNics";
+import TemplateDisks          from "./TemplateDisks";
 
 /**
  * @name TemplateInfo

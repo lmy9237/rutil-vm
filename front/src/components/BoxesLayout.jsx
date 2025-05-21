@@ -1,17 +1,12 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import RadialBarChart from "./Chart/RadialBarChart";
-import BarChart from "./Chart/BarChart";
-import SuperAreaChart from "./Chart/SuperAreaChart";
-import Grid from "./Chart/Grid";
-import GridLegends from "./Chart/GridLegends";
 import {
   RVI16,
   rvi16DiagonalUp, 
   rvi16DiagonalDown, 
   RVI24,
   severity2Icon,
-} from "./icons/RutilVmIcons";
+} from "@/components/icons/RutilVmIcons";
 import {
   useDashboardCpuMemory,
   useDashboardStorage,
@@ -23,10 +18,15 @@ import {
   useDashboardHosts,
   useDashboardMetricVmCpu,
   useDashboardMetricVmMemory,
-} from "../api/RQHook";
-import Localization from "../utils/Localization";
-import Logger from "../utils/Logger";
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./BoxesLayout.css"
+import RadialBarChart         from "./Chart/RadialBarChart";
+import BarChart               from "./Chart/BarChart";
+import SuperAreaChart         from "./Chart/SuperAreaChart";
+import Grid                   from "./Chart/Grid";
+import GridLegends            from "./Chart/GridLegends";
 
 /**
  * @name BoxesLayout
@@ -337,11 +337,11 @@ const RadialChartAll = ({
 
   const _label = useMemo(() => 
     type === "cpu"
-      ? "호스트 CPU 평균 사용율"
+      ? "전체 호스트 CPU 평균 사용율"
       : type === "memory" 
-        ? "호스트 메모리 평균 사용율"
+        ? "전체 호스트 메모리 평균 사용율"
         : type === "domain"
-          ? "스토리지 사용율"
+          ? "전체 스토리지 사용율"
           : ""
   , [type, cpuMemory, storage])
 

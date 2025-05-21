@@ -1,10 +1,18 @@
 import React from "react";
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import InfoTable from "../../../components/table/InfoTable";
-import { useAllDisksFromDomain, useAllDiskSnapshotsFromDomain, useStroageDomain } from "../../../api/RQHook";
-import { calculateOvercommitRatio, checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
-import Localization from "../../../utils/Localization";
+import useGlobal              from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import InfoTable              from "@/components/table/InfoTable";
+import {
+  useAllDisksFromDomain,
+  useAllDiskSnapshotsFromDomain,
+  useStroageDomain 
+} from "@/api/RQHook";
+import {
+  calculateOvercommitRatio,
+  checkZeroSizeToGiB,
+  convertBytesToGB
+} from "@/util";
+import Localization           from "@/utils/Localization";
 
 const overCommit = (commit, disk) => ((commit / disk) * 100).toFixed(0);
 

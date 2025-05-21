@@ -114,7 +114,14 @@ const DomainGetVmTemplateModal = ({
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
     onClose()
   };
 

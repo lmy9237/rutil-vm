@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import useGlobal from "../../hooks/useGlobal";
-import TableColumnsInfo from "../../components/table/TableColumnsInfo";
-import DiskDupl from "../../components/dupl/DiskDupl";
-import { useAllDisks } from "../../api/RQHook";
-import Logger from "../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import DiskDupl               from "@/components/dupl/DiskDupl";
+import { useAllDisks }        from "@/api/RQHook";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name RutilDisks

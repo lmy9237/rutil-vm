@@ -1,19 +1,19 @@
 import React, { Suspense, useState } from "react";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import useSearch from '../../../hooks/useSearch';
-import SelectedIdView from '../../../components/common/SelectedIdView';
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import Loading from '../../../components/common/Loading';
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import DeleteModal from "../../../utils/DeleteModal";
-import { useAllUnregisteredVMsFromDomain } from "../../../api/RQHook";
-import { checkZeroSizeToMB } from '../../../util';
-import DomainGetVmTemplateModal from '../../../components/modal/domain/DomainGetVmTemplateModal';
-import ActionButton from '../../../components/button/ActionButton';
-import SearchBox from '../../../components/button/SearchBox';
-import Localization from '../../../utils/Localization';
+import useUIState from "@/hooks/useUIState";
+import useGlobal from "@/hooks/useGlobal";
+import useSearch from "@/hooks/useSearch";
+import SelectedIdView from '@/components/common/SelectedIdView';
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import Loading from '@/components/common/Loading';
+import { ActionButton } from '@/components/button/ActionButtons';
+import SearchBox from '@/components/button/SearchBox';
+import TablesOuter from "@/components/table/TablesOuter";
+import TableColumnsInfo from "@/components/table/TableColumnsInfo";
+import DomainGetVmTemplateModal from '@/components/modal/domain/DomainGetVmTemplateModal';
+import { useAllUnregisteredVMsFromDomain } from "@/api/RQHook";
+import { checkZeroSizeToMB } from '@/util';
+import DeleteModal from "@/utils/DeleteModal";
+import Localization from '@/utils/Localization';
 
 /**
  * @name DomainGetVms

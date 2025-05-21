@@ -197,7 +197,14 @@ const TemplateModal = ({
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
     const dataToSubmit = {
       ...formState,
@@ -216,7 +223,7 @@ const TemplateModal = ({
       })),
     };
 
-    Logger.debug(`TemplateModal > dataToSubmit ... 템플릿 생성데이터: ${dataToSubmit}`);
+    Logger.debug(`TemplateModal > dataToSubmit ... dataToSubmit: `, dataToSubmit);
     addTemplate({ vmId: vmSelected.id, templateData: dataToSubmit });
   };
 

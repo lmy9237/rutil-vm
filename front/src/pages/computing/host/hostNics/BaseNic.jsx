@@ -1,5 +1,9 @@
 import { Tooltip } from "react-tooltip";
-import { RVI16, rvi16TriangleDown, rvi16TriangleUp } from "../../../../components/icons/RutilVmIcons";
+import {
+  RVI16,
+  rvi16TriangleDown,
+  rvi16TriangleUp,
+} from "@/components/icons/RutilVmIcons";
 import NicToolTip from "./NicToolTip";
 
 const BaseNic = ({ 

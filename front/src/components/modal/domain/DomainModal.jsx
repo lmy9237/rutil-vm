@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import toast from "react-hot-toast";
+import { useToast } from "@/hooks/use-toast";
 import BaseModal from "../BaseModal";
 import DomainNfs from "./create/DomainNfs";
 import DomainFibre from "./create/DomainFibre";
@@ -41,6 +41,7 @@ const DomainModal = ({
   onClose,
   editMode=false
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const { datacentersSelected, domainsSelected } = useGlobal()
   const dLabel = editMode 
@@ -213,7 +214,13 @@ const DomainModal = ({
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+    }
   
     if(isFibre && !editMode) {
       const selectedLogicalUnit = fibres
@@ -253,14 +260,9 @@ const DomainModal = ({
     };
   
     Logger.debug(`DomainModal > submitDomain ... dataToSubmit:`, dataToSubmit);
-    const onSubmitSuccess = () => {
-      onClose();  // 🔥 모달 닫기
-      toast.success(`${Localization.kr.DOMAIN} ${dLabel} ${Localization.kr.FINISHED}`);
-    };
-  
     editMode
-      ? editDomain({ domainId: formState.id, domainData: dataToSubmit }, { onSuccess: onSubmitSuccess })
-      : addDomain(dataToSubmit, { onSuccess: onSubmitSuccess });
+      ? editDomain({ domainId: formState.id, domainData: dataToSubmit })
+      : addDomain(dataToSubmit);
   };
   
 

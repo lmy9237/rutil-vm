@@ -1,8 +1,8 @@
 import { fn } from '@storybook/test';
-import HeaderButton from './HeaderButton';
+import HeaderButton   from '@/components/button/HeaderButton';
+import Localization   from '@/utils/Localization';
+import Logger         from '@/utils/Logger';
 import { Subtitle } from '@storybook/blocks';
-import Localization from '../../utils/Localization';
-import Logger from '../../utils/Logger';
 
 export default {
   title: 'Example/HeaderButton',

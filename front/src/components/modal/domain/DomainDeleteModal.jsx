@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import BaseModal              from "../BaseModal";
 import {
   useAllHosts,
   useDeleteDomain,
-} from "../../../api/RQHook";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import Localization from "../../../utils/Localization";
-import LabelCheckbox from "../../label/LabelCheckbox";
-import { handleSelectIdChange } from "../../label/HandleInput";
+} from "@/api/RQHook";
+import LabelCheckbox          from "@/components/label/LabelCheckbox";
+import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
+import { handleSelectIdChange } from "@/components/label/HandleInput";
+import Localization           from "@/utils/Localization";
 
 const DomainDeleteModal = ({ 
   isOpen,

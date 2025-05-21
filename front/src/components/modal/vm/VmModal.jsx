@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import toast from "react-hot-toast";
-import useGlobal from "../../../hooks/useGlobal";
+import useGlobal    from "@/hooks/useGlobal";
+import { useToast } from "@/hooks/use-toast";
 import TabNavButtonGroup from "../../common/TabNavButtonGroup";
 import BaseModal from "../BaseModal";
 import {
@@ -92,6 +92,7 @@ const VmModal = ({
   copyMode=false,
   templateId,
 }) => {
+  const { toast } = useToast();
   const vLabel = editMode 
     ? Localization.kr.UPDATE
     : copyMode 
@@ -126,12 +127,8 @@ const VmModal = ({
   ]);
   const [diskListState, setDiskListState] = useState([]);
   
-  const onSuccess = () => {
-    onClose();
-    toast.success(`${Localization.kr.VM} ${vLabel} 완료`);
-  };
-  const { mutate: addVM } = useAddVm(onSuccess, () => onClose());
-  const { mutate: editVM } = useEditVm(onSuccess, () => onClose());
+  const { mutate: addVM } = useAddVm(onClose, onClose);
+  const { mutate: editVM } = useEditVm(onClose, onClose);
 
   // 가상머신 상세데이터 가져오기
   const { data: vm } = useFindEditVmById(vmId);
@@ -410,7 +407,15 @@ const VmModal = ({
   const handleFormSubmit = () => {
     // 디스크  연결은 id값 보내기 생성은 객체로 보내기
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
+    
     Logger.debug(`VmModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
     editMode
       ? editVM({ vmId: vmId, vmData: dataToSubmit })
@@ -451,14 +456,14 @@ const VmModal = ({
           )}
           <LabelSelectOptionsID id="os_system" label="운영 시스템"
             value={formInfoState.osSystem}
-            options={osList.map((opt) => ({id: opt.name, name: opt.description}))}
-            onChange={ handleInputChange(setFormInfoState, "osSystem") }
+            options={osList.map((opt) => ({ id: opt.name, name: opt.description }))}
+            onChange={handleInputChange(setFormInfoState, "osSystem") }
           />
           <LabelSelectOptions label="칩셋/펌웨어 유형"
             value={formInfoState.osType}
             disabled={["PPC64", "S390X"].includes(architecture)}
             options={chipsetOptionList}
-            onChange={ handleInputChange(setFormInfoState, "osType") }
+            onChange={handleInputChange(setFormInfoState, "osType") }
           />
           <LabelSelectOptions label="최적화 옵션"
             value={formInfoState.optimizeOption}

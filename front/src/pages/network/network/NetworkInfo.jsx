@@ -1,22 +1,25 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import SectionLayout from "../../../components/SectionLayout";
-import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
-import HeaderButton from "../../../components/button/HeaderButton";
-import Path from "../../../components/Header/Path";
-import NetworkModals from "../../../components/modal/network/NetworkModals";
-import NetworkGeneral from "./NetworkGeneral";
-import NetworkVnicProfiles from "./NetworkVnicProfiles";
-import NetworkHosts from "./NetworkHosts";
-import NetworkVms from "./NetworkVms";
-import NetworkTemplates from "./NetworkTemplates";
-import NetworkClusters from "./NetworkClusters";
-import Localization from "../../../utils/Localization";
-import { useNetwork } from "../../../api/RQHook";
-import { rvi24Network } from "../../../components/icons/RutilVmIcons";
-import Logger from "../../../utils/Logger";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import SectionLayout          from "@/components/SectionLayout";
+import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
+import HeaderButton           from "@/components/button/HeaderButton";
+import Path                   from "@/components/Header/Path";
+import {
+  rvi24Network
+} from "@/components/icons/RutilVmIcons";
+import {
+  useNetwork
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
+import NetworkGeneral         from "./NetworkGeneral";
+import NetworkVnicProfiles    from "./NetworkVnicProfiles";
+import NetworkHosts           from "./NetworkHosts";
+import NetworkVms             from "./NetworkVms";
+import NetworkTemplates       from "./NetworkTemplates";
+import NetworkClusters        from "./NetworkClusters";
 
 /**
  * @name NetworkInfo

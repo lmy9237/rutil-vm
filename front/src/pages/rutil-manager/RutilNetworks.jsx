@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
-import useGlobal from "../../hooks/useGlobal";
-import TableColumnsInfo from "../../components/table/TableColumnsInfo";
-import { useAllNetworks } from "../../api/RQHook";
-import NetworkDupl from "../../components/dupl/NetworkDupl";
-import Logger from "../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import NetworkDupl            from "@/components/dupl/NetworkDupl";
+import {
+  useAllNetworks
+} from "@/api/RQHook";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name RutilNetworks

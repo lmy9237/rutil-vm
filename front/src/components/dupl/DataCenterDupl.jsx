@@ -1,18 +1,18 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useGlobal from "../../hooks/useGlobal";
-import useSearch from "../../hooks/useSearch";
-import SelectedIdView from "../common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
-import TablesOuter from "../table/TablesOuter";
-import SearchBox from "../button/SearchBox"; 
-import DataCenterActionButtons from "./DataCenterActionButtons";
-import { getStatusSortKey } from "../icons/GetStatusSortkey";
-import TableRowClick from "../table/TableRowClick";
-import { status2Icon } from "../icons/RutilVmIcons";
-import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
+import { useToast }            from "@/hooks/use-toast";
+import useGlobal               from "@/hooks/useGlobal";
+import useSearch               from "@/hooks/useSearch";
+import SelectedIdView          from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox               from "@/components/button/SearchBox";
+import TablesOuter             from "@/components/table/TablesOuter";
+import TableRowClick           from "@/components/table/TableRowClick";
+import DataCenterActionButtons from "@/components/dupl/DataCenterActionButtons";
+import { getStatusSortKey }    from "@/components/icons/GetStatusSortkey";
+import { status2Icon }         from "@/components/icons/RutilVmIcons";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 /**
  * @name DataCenterDupl
@@ -28,6 +28,7 @@ const DataCenterDupl = ({
   refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const {
     datacentersSelected, setDatacentersSelected
   } = useGlobal();
@@ -59,7 +60,7 @@ const DataCenterDupl = ({
     Logger.debug(`DataCenterDupl > handleRefresh ... `)
     if (!refetch) return;
     refetch() 
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
+    import.meta.env.DEV && toast({ description: "다시 조회 중 ..." })
   }, [])
 
   return (

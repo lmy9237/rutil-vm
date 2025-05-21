@@ -1,18 +1,24 @@
 import React, { useCallback } from "react";
 import { Tooltip } from "react-tooltip";
-import toast from "react-hot-toast";
-import useSearch from "../../../hooks/useSearch";
-import useGlobal from "../../../hooks/useGlobal";
-import useUIState from "../../../hooks/useUIState";
-import SearchBox from "../../../components/button/SearchBox";
-import TableRowClick from "../../../components/table/TableRowClick";
-import { useAllDisksFromTemplate, useStroageDomain } from "../../../api/RQHook";
-import { checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import TablesOuter from "../../../components/table/TablesOuter";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import Logger from "../../../utils/Logger";
-import Localization from "../../../utils/Localization";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import {
+  useAllDisksFromTemplate,
+  useStroageDomain,
+} from "@/api/RQHook";
+import { 
+  checkZeroSizeToGiB,
+  convertBytesToGB,
+} from "@/util";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name TemplateDisks
@@ -59,17 +65,11 @@ const TemplateDisks = ({
   });
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`EventDupl > handleRefresh ... `)
-    if (!refetchDisks) return;
-    refetchDisks()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
-  
+
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchDisks}/>
         {/* <HostActionButtons actionType = "default"/> */}
       </div>
       <TablesOuter target={"disk"}

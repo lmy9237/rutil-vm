@@ -1,15 +1,17 @@
 import React, { useCallback } from "react";
-import useGlobal from "../../../hooks/useGlobal";
-import useSearch from "../../../hooks/useSearch";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableRowClick from "../../../components/table/TableRowClick";
-import { status2Icon } from "../../../components/icons/RutilVmIcons";
-import { useAllVmsFromTemplate } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
-import toast from "react-hot-toast";
-import SearchBox from "../../../components/button/SearchBox";
-import SelectedIdView from "../../../components/common/SelectedIdView";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import { status2Icon }        from "@/components/icons/RutilVmIcons";
+import {
+  useAllVmsFromTemplate
+} from "@/api/RQHook";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name TemplateVms
@@ -49,17 +51,11 @@ const TemplateVms = ({
   }));
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`EventDupl > handleRefresh ... `)
-    if (!refetchVms) return;
-    refetchVms()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   return (
     <>
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchVms} />
         {/*  */}
       </div>
       <TablesOuter target={"vm"}

@@ -1,12 +1,14 @@
 import React from "react";
-import SectionLayout from "../../../components/SectionLayout";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import TemplateDupl from "../../../components/dupl/TemplateDupl";
-import HeaderButton from "../../../components/button/HeaderButton";
-import { useAllTemplates } from "../../../api/RQHook";
-import { rvi24Template } from "../../../components/icons/RutilVmIcons";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import SectionLayout          from "@/components/SectionLayout";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import TemplateDupl           from "@/components/dupl/TemplateDupl";
+import HeaderButton           from "@/components/button/HeaderButton";
+import { rvi24Template }      from "@/components/icons/RutilVmIcons";
+import {
+  useAllTemplates
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name AllTemplates

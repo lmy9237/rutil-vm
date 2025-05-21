@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useMemo } from "react";
-import useCopyToClipboard from "../../hooks/useCopyToClipboard";
-import Logger from "../../utils/Logger";
+import useCopyToClipboard from "@/hooks/useCopyToClipboard";
+import Logger from "@/utils/Logger";
 
 /**
  * @name SelectedIdView

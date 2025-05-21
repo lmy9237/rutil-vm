@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import toast from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import { useDeleteSnapshot } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
@@ -35,7 +34,6 @@ const VmSnapshotDeleteModal = ({
   
   const handleDelete = () => {
     if (!ids.length) return console.error('삭제할 스냅샷 ID가 없습니다.');    
-  
     ids.forEach((snapshotId) => {
       deleteSnapshot({vmId, snapshotId});
     });

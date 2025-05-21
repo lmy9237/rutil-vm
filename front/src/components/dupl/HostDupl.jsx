@@ -1,18 +1,19 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useGlobal from "../../hooks/useGlobal";
-import useSearch from "../../hooks/useSearch";
-import toast from "react-hot-toast";
-import SelectedIdView from "../common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
-import SearchBox from "../button/SearchBox";
-import TablesOuter from "../table/TablesOuter";
-import TableRowClick from "../table/TableRowClick";
-import HostActionButtons from "./HostActionButtons";
-import { status2Icon, hostedEngineStatus2Icon } from "../icons/RutilVmIcons";
-import { getStatusSortKey } from "../icons/GetStatusSortkey";
-import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import HostActionButtons      from "@/components/dupl/HostActionButtons";
+import {
+  status2Icon, hostedEngineStatus2Icon
+} from "@/components/icons/RutilVmIcons";
+import { getStatusSortKey }   from "@/components/icons/GetStatusSortkey";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 const HostDupl = ({
   hosts = [], columns = [],
@@ -50,17 +51,10 @@ const HostDupl = ({
     navigate(`/computing/hosts/${id}`);
   }, [navigate])
 
-  const handleRefresh = useCallback(() => {
-    Logger.debug(`HostDupl > handleRefresh ... `)
-    if (!refetch) return;
-    refetch()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
-
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}  onRefresh={handleRefresh}/>
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
         <HostActionButtons actionType="default"/>
       </div>
       <TablesOuter target={"host"}

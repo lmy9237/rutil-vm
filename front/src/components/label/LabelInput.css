@@ -1,5 +1,5 @@
 .input-text,
-.input-select,
+/*.input-select,*/
 .input-container,
 .input-password,
 .input-number {
@@ -19,11 +19,10 @@ select,.input-select select,
   text-indent: 4px;
   color: var(--color-black);
   outline: none;
-  cursor: pointer;
   border-radius: 1px;
-  letter-spacing: -0.28px;
+  /* letter-spacing: -0.28px; */
 }
-textarea{
+textarea {
   width: 100%;
   border: var(--border-default);
   padding: 3px;
@@ -44,7 +43,7 @@ textarea{
 }
 .custom-select-box span {
   width: auto;
-  max-width: 310px;
+  max-width: 300px;
   white-space: nowrap;   
   overflow: hidden;       
   text-overflow: ellipsis; 
@@ -61,10 +60,18 @@ input[type="radio"] {
   display: flex;justify-content: center;align-items:center;
   cursor: pointer;
 }
-/*select박스*/
+/* select박스 */
+.custom-select-wrapper {
+  padding: 8px 0;
+}
 .custom-select-wrapper button,
+.input-container input {
+  width:330px;max-width:330px;
+  margin-left: auto;
+}
+
 .input-container button {
- width:55%;height:var(--h-input);
+  width:55%;height:var(--h-input);
   border:var(--border-default);border-radius:1px;
   text-indent: 4px;
   color: var(--color-black);
@@ -79,10 +86,8 @@ input[type="radio"] {
 
 /*임시*/
 
-/* .custom-select-wrapper {
-  position: relative;
-}
-  .input-container{
+/*
+.input-container {
   position: relative;
 }
 .custom-select-box.disabled ,

@@ -1,7 +1,7 @@
 import React from "react";
 import {
   severity2Icon,
-} from "../../components/icons/RutilVmIcons";
+} from "@/components/icons/RutilVmIcons";
 import "./SettingCertificatesRenewalPolicies.css"
 
 /**

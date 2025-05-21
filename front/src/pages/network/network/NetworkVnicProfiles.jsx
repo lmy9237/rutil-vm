@@ -1,10 +1,12 @@
 import React from "react";
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import VnicProfileDupl from "../../../components/dupl/VnicProfileDupl";
-import { useAllVnicProfilesFromNetwork } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import useGlobal              from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import VnicProfileDupl        from "@/components/dupl/VnicProfileDupl";
+import {
+  useAllVnicProfilesFromNetwork
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
 
 /**
  * @name NetworkVnicProfiles

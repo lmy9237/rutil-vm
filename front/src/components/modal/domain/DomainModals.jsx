@@ -1,15 +1,15 @@
 import React from "react";
-import useUIState from "../../../hooks/useUIState";
-import DomainModal from "./DomainModal";
-import DomainDeleteModal from "./DomainDeleteModal";
-import DomainAttachModal from "./DomainAttachModal";
-import DomainDestroyModal from "./DomainDestroyModal";
-import DomainCheckModal from "./DomainCheckModal";
-import DomainActivateModal from "./DomainActivateModal";
-import DomainDetachModal from "./DomainDetachModal";
-import DomainImportModal from "./DomainImportModal";
+import useUIState             from "@/hooks/useUIState";
+import DomainModal            from "./DomainModal";
+import DomainDeleteModal      from "./DomainDeleteModal";
+import DomainAttachModal      from "./DomainAttachModal";
+import DomainDestroyModal     from "./DomainDestroyModal";
+import DomainCheckModal       from "./DomainCheckModal";
+import DomainActivateModal    from "./DomainActivateModal";
+import DomainDetachModal      from "./DomainDetachModal";
+import DomainImportModal      from "./DomainImportModal";
 import DomainMaintenanceModal from "./DomainMaintenanceModal";
-import DomainGetDiskModal from "./DomainGetDiskModal";
+import DomainGetDiskModal     from "./DomainGetDiskModal";
 
 /**
  * @name DomainModals

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import toast from "react-hot-toast";
+import { useToast } from "@/hooks/use-toast";
 import useUIState from "../../../hooks/useUIState";
 import BaseModal from "../BaseModal";
 import { useRegisteredDiskFromDomain } from "../../../api/RQHook";
@@ -13,6 +13,7 @@ const DomainGetDiskModal = ({
   domainId,
   data,
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const { mutate: registerDisk } = useRegisteredDiskFromDomain(onClose, onClose);
 
@@ -25,10 +26,21 @@ const DomainGetDiskModal = ({
     };
   }, [data]);
 
+  const validateForm = () => {
+    Logger.debug(`DomainGetDiskModal > validateForm ...`);
+    if (ids.length === 0) return "불러올 디스크가 없습니다.";
+    return null
+  }
+
   // diskprofile 일단 생략
   const handleFormSubmit = () => {
-    if (ids.length === 0) {
-      toast.error("불러올 디스크가 없습니다.");
+    const error = validateForm()
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
       return;
     }
 

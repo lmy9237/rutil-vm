@@ -1,22 +1,28 @@
 import React, { useState, useEffect, Suspense, useMemo, useCallback } from "react";
-import toast from "react-hot-toast";
-import useGlobal from "../../../hooks/useGlobal";
-import { checkZeroSizeToMbps } from "../../../util";
-import { RVI24, rvi24CompareArrows } from "../../../components/icons/RutilVmIcons";
-import Loading from "../../../components/common/Loading";
-import HostNetworkEditModal from "../../../components/modal/host/HostNetworkEditModal";
-import HostBondingModal from "../../../components/modal/host/HostBondingModal";
-import LabelCheckbox from "../../../components/label/LabelCheckbox";
-import ActionButton from "../../../components/button/ActionButton";
+import { Tooltip } from "react-tooltip";
+import { useToast }            from "@/hooks/use-toast";
+import useGlobal               from "@/hooks/useGlobal";
+import {
+  RVI16, rvi16TriangleDown, rvi16TriangleUp, rvi16VirtualMachine,
+  RVI24, rvi24CompareArrows,
+  RVI36, rvi36Edit,
+  status2Icon
+} from "@/components/icons/RutilVmIcons";
+import Loading                 from "@/components/common/Loading";
+import HostNetworkEditModal    from "@/components/modal/host/HostNetworkEditModal";
+import HostBondingModal        from "@/components/modal/host/HostBondingModal";
+import LabelCheckbox           from "@/components/label/LabelCheckbox";
+import { ActionButton }        from "@/components/button/ActionButtons";
 import {
   useHost,
   useNetworkAttachmentsFromHost,
   useNetworkFromCluster,
   useNetworkInterfacesFromHost,
   useSetupNetworksFromHost,
-} from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+} from "@/api/RQHook";
+import { checkZeroSizeToMbps } from "@/util";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 import "./HostNic.css";
 import BondNic from "./hostNics/BondNic";
 import BaseNic from "./hostNics/BaseNic";
@@ -24,7 +30,10 @@ import MatchNetwork from "./hostNics/MatchNetwork";
 import NoneNetwork from "./hostNics/NoneNetwork";
 import ClusterNetworkList from "./hostNics/ClusterNetworkList";
 
-const HostNics = ({ hostId }) => {
+const HostNics = ({
+  hostId
+}) => {
+  const { toast } = useToast()
   const { hostsSelected } = useGlobal();
 
   const { data: host } = useHost(hostId);
@@ -225,7 +234,14 @@ const HostNics = ({ hostId }) => {
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
     const hostNetworkVo = {
       bonds: modifiedBonds.map(bond => ({
@@ -249,7 +265,6 @@ const HostNics = ({ hostId }) => {
     };
 
     Logger.debug(`hostSetup handleFormSubmit ... dataToSubmit: `, hostNetworkVo); // 데이터 출력
-
     setupNetwork({ hostId: hostId, hostNetworkVo: hostNetworkVo });
 
     setMovedItems({
@@ -346,7 +361,12 @@ const HostNics = ({ hostId }) => {
   // 할당되지 않은 네트워크 → NIC에 할당
   const handleDropUnassignedNetworkToNic = (draggedNetwork, nicId, nicName) => {    
     if (hasVlanConflict(draggedNetwork.vlan, nicId)) {
-      return toast.error("이미 VLAN이 없는 네트워크가 이 인터페이스에 연결되어 있습니다.");
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: "이미 VLAN이 없는 네트워크가 이 인터페이스에 연결되어 있습니다.",
+      });
+      return
     }
 
     // 드래그 되며 표시될 정보 지정
@@ -377,7 +397,6 @@ const HostNics = ({ hostId }) => {
     // 변경될 네트워크 목록에 값 추가
     updateModifiedNAs(newAttachment.hostNicVo, newAttachment.networkVo);
     setDragItemFlag(true);
-    toast.success("handleDropUnassignedNetworkToNic");
   };
 
 
@@ -396,11 +415,15 @@ const HostNics = ({ hostId }) => {
     // 같은 NIC에 연결된 상태라면 드롭 무시
     if (draggedNA.hostNicVo.id === nicId) {
       return;
-      // return toast.success("동일 인터페이스에 드롭하여 무시됨"); // DROP
     }
 
     if (hasVlanConflict(draggedNetwork.vlan, nicId)) {
-      return toast.error("이미 VLAN이 없는 네트워크가 이 인터페이스에 연결되어 있습니다.");
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: "이미 VLAN이 없는 네트워크가 이 인터페이스에 연결되어 있습니다.",
+      });
+      return;
     }
 
     const updatedNA = {
@@ -422,7 +445,7 @@ const HostNics = ({ hostId }) => {
 
     // 변경될 네트워크 목록에 값 추가
     setModifiedNAs(prev => [...prev, updatedNA]);
-    toast.success("handleDropBetweenNetworkToNic");
+    toast({ description: "handleDropBetweenNetworkToNic" });
   };
 
 
@@ -434,7 +457,14 @@ const HostNics = ({ hostId }) => {
   const handleDropAssignedNetworkToUnassigned = (draggedNetwork) => {
     // 드래그 된 네트워크. draggedNetwork.id는 networkVo.id를 의미함
     const draggedNA = findNetworkAttachment(draggedNetwork.id);
-    if (!draggedNA) {return toast.error("삭제할 네트워크 연결 정보를 찾을 수 없습니다.")}
+    if (!draggedNA) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: "삭제할 네트워크 연결 정보를 찾을 수 없습니다.",
+      });
+      return;
+    }
 
     const originalNetworkData = networks.find(net => net.id === draggedNetwork.id) || {};
 
@@ -471,8 +501,8 @@ const HostNics = ({ hostId }) => {
 
     setDragItemFlag(true);
     // 디버깅을 위해 draggedNA.id를 로깅
-    toast.success(`Network Attachment ID to remove: ${draggedNA.id}`);
-    toast.success("handleDropAssignedNetworkToUnassigned");
+    toast({ description: `Network Attachment ID to remove: ${draggedNA.id}`});
+    toast({ description: "handleDropAssignedNetworkToUnassigned" });
   };
 
 
@@ -487,12 +517,22 @@ const HostNics = ({ hostId }) => {
     const targetNic = baseItems.nic.find(n => n.id === targetId);  // 타겟 대상
 
     if (!targetNic || !sourceNic || sourceNic.id === targetNic.id) {
-      return toast.error("유효하지 않은 본딩 대상입니다.");
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: "유효하지 않은 본딩 대상입니다.",
+      });
+      return;
     }
 
     const isAlreadyBonded = nic => nic.name.startsWith("bond") || (nic.bondingVo?.slaves?.length > 0);
     if (isAlreadyBonded(sourceNic) || isAlreadyBonded(targetNic)) {
-      return toast.error("이미 본딩된 NIC는 다시 본딩할 수 없습니다.");
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: "이미 본딩된 NIC는 다시 본딩할 수 없습니다.",
+      });
+      return;
     }
 
     // VLAN 없는 네트워크 검사
@@ -506,7 +546,12 @@ const HostNics = ({ hostId }) => {
     const targetHasNoVlan = findNoVlanNetwork(targetNic.id);
 
     if (sourceHasNoVlan && targetHasNoVlan) {
-      return toast.error("하나의 인터페이스에 둘 이상의 비 VLAN 네트워크를 사용할 수 없습니다.");      
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: "하나의 인터페이스에 둘 이상의 비 VLAN 네트워크를 사용할 수 없습니다.",
+      });
+      return;
     }    
     setSelectedBond({
       nic1: {
@@ -521,7 +566,7 @@ const HostNics = ({ hostId }) => {
 
     setEditBondingMode(false); // 본딩 생성 모드
     setIsBondingPopup(true);   // 본딩 모달 오픈
-    toast.success("handleDropNicForBonding");
+    toast({ description: "handleDropNicForBonding" });
   };
 
 
@@ -533,7 +578,12 @@ const HostNics = ({ hostId }) => {
    */
   const handleAddBaseNicToBond = (dragged, targetBond) => {
     if (dragged.name.startsWith("bond") || (dragged.bondingVo?.slaves?.length > 0)) {
-      return toast.error("이미 본딩된 NIC는 추가할 수 없습니다.");
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: "이미 본딩된 NIC는 추가할 수 없습니다.",
+      });
+      return;
     }
 
     setBaseItems(prev => {
@@ -604,8 +654,8 @@ const HostNics = ({ hostId }) => {
     });
     //  여기도 네트워크 항목이 들어가야함
     setDragItemFlag(true);
-    toast.success(`${dragged.name}을(를) ${targetBond.name} 본딩에 추가했습니다.`);
-    toast.success('handleAddBaseNicToBond');
+    toast({ description: `${dragged.name}을(를) ${targetBond.name} 본딩에 추가했습니다.` });
+    toast({ description: 'handleAddBaseNicToBond' });
   };
 
   /**
@@ -664,11 +714,11 @@ const HostNics = ({ hostId }) => {
       // 본딩에 연결되어 있던 Network Attachment들도 삭제 목록(`removeNAs`)에 추가
       const naIdsToRemove = bondNetworks.map(na => ({ id: na.id })); // 각 NA의 고유 ID를 사용
       setRemoveNAs(prev => [...prev, ...naIdsToRemove]);
-      toast.success(`Following NAs will be removed: ${naIdsToRemove.map(n=>n.id).join(', ')}`); // 디버깅용
+      toast({ description: `Following NAs will be removed: ${naIdsToRemove.map(n=>n.id).join(', ')}` }); // 디버깅용
 
 
       setDragItemFlag(true);
-      toast.success("본딩 해제되어 각각의 NIC로 분리되었습니다. 할당된 네트워크는 해제되었습니다.");
+      toast({ description: "본딩 해제되어 각각의 NIC로 분리되었습니다. 할당된 네트워크는 해제되었습니다." });
     } else { // 3개 이상이면 해당 NIC만 본딩에서 분리하고 bond는 남김
       const remainSlaves = allSlaves.filter(s => s.id !== slaveNic.id);
 
@@ -699,7 +749,7 @@ const HostNics = ({ hostId }) => {
           : bond
       ));
       setDragItemFlag(true);
-      toast.success("선택한 NIC만 본딩에서 해제되었습니다.");
+      toast({ description: "선택한 NIC만 본딩에서 해제되었습니다."}); 
     }
   };
 
@@ -764,7 +814,7 @@ const HostNics = ({ hostId }) => {
 
     setDragItemFlag(true);
     setIsBondingPopup(false);
-    toast.success("본딩과 함께 네트워크가 이동되었습니다.");
+    toast({ description: "본딩과 함께 네트워크가 이동되었습니다." });
   }, [baseItems.nic, baseItems.networkAttachment]);
 
   
@@ -816,10 +866,12 @@ const HostNics = ({ hostId }) => {
         {/* 변경항목이 있다면 활성화 */}
         {dragItemFlag && (
           <>
-            <ActionButton actionType="default" label={Localization.kr.UPDATE} 
+            <ActionButton actionType="default" 
+              label={Localization.kr.UPDATE} 
               onClick={handleFormSubmit} // 버튼 클릭시 네트워크 업데이트
             />
-            <ActionButton actionType="default" label={Localization.kr.CANCEL}
+            <ActionButton actionType="default"
+              label={Localization.kr.CANCEL}
               onClick={() => {
                 setBaseItems({
                   nic: [...hostNics],

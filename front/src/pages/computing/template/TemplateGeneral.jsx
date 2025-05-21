@@ -1,7 +1,9 @@
-import { useTemplate } from "../../../api/RQHook";
-import InfoTable from "../../../components/table/InfoTable";
-import { convertBytesToGB } from "../../../util";
-import Localization from "../../../utils/Localization";
+import InfoTable from "@/components/table/InfoTable";
+import {
+  useTemplate
+} from "@/api/RQHook";
+import { convertBytesToGB }   from "@/util";
+import Localization           from "@/utils/Localization";
 
 /**
  * @name TemplateGeneral

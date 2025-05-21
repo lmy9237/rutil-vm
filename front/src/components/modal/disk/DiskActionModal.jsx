@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
-import toast from "react-hot-toast";
 import { useQueries } from "@tanstack/react-query";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import Localization from "../../../utils/Localization";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import LabelInput from "../../label/LabelInput";
-import ApiManager from "../../../api/ApiManager";
-import { useCopyDisk, useMoveDisk } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
+import { useToast }            from "@/hooks/use-toast";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import BaseModal              from "@/components/modal/BaseModal";
+import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
+import LabelInput             from "@/components/label/LabelInput";
+import ApiManager             from "@/api/ApiManager";
+import { 
+  useCopyDisk, 
+  useMoveDisk,
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "../domain/MDomain.css";
 
 const DiskActionModal = ({ 
@@ -17,7 +20,8 @@ const DiskActionModal = ({
   onClose,
   data=[], // 배열일수도 한개만 들어올수도
 }) => {
-  const { activeModal, /*closeModal*/ } = useUIState()
+  const { toast }  = useToast()
+  const { activeModal, } = useUIState()
   const daLabel = activeModal().includes("disk:move")
     ? Localization.kr.MOVE 
     : Localization.kr.COPY;
@@ -26,10 +30,12 @@ const DiskActionModal = ({
   const [domainList, setDomainList] = useState({});
   const [targetDomains, setTargetDomains] = useState({});
 
-  Logger.debug(`DiskActionModal ... disksSelected: `, disksSelected);
-  const { mutate: copyDisk } = useCopyDisk(onClose, onClose);
-  const { mutate: moveDisk } = useMoveDisk(onClose, onClose);
-
+  const {
+    mutate: copyDisk
+  } = useCopyDisk(onClose, onClose);
+  const {
+    mutate: moveDisk
+  } = useMoveDisk(onClose, onClose);
 
   const getDomains = useQueries({
     queries: [...disksSelected]?.map((disk) => ({
@@ -96,7 +102,11 @@ const DiskActionModal = ({
         if (availableDomains.length > 0) {
           selectedDomainId = availableDomains[0].id;
         } else {
-          toast.error(`선택한 ${disk.alias || "디스크"} ${Localization.kr.DOMAIN}이 없습니다.`);
+          toast({
+            variant: "destructive",
+            title: "문제가 발생하였습니다.",
+            description: `선택한 ${disk.alias || "디스크"} ${Localization.kr.DOMAIN}이 없습니다.`
+          });
           return;
         }
       }

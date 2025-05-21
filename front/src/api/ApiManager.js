@@ -1,8 +1,7 @@
 import ENDPOINTS from "./Endpoints"
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import Logger from "../utils/Logger";
-import useUIState from "../hooks/useUIState";
+import Logger from "@/utils/Logger";
 
 if (process.env.NODE_ENV === 'production') {
   Logger.info("THIS IS PRODUCTION !!!")
@@ -41,9 +40,13 @@ const makeAPICall = async ({
     return res.data
   } catch(e) {
     console.error(`Error handling endpoint '${url}':`, e);
-    // toast.error(`Error handling endpoint '${url}'\n${e.message}`)
     const err = e?.response?.data;
-    err && toast.error(`${err?.head?.message} [${err?.head?.code}]`)
+    err && toast({
+      variant: "destructive",
+      title: "API 오류가 발생하였습니다.",
+      description: `${err?.head?.message} [${err?.head?.code}]`,
+    });
+    // toast.error(`${err?.head?.message} [${err?.head?.code}]`)
     return err;
   }
 }
@@ -3003,7 +3006,12 @@ const ApiManager = {
       return res.data?.body
     } catch(e) {
       console.error(`Error fetching ':`, e);
-      toast.error(`Error fetching '\n${e.message}`)
+      toast({
+        variant: "destructive",
+        title: "API 오류가 발생하였습니다.",
+        description: `Error fetching '\n${e.message}`,
+      });
+      // toast.error(`Error fetching '\n${e.message}`)
     }
   },
   //#endregion: Disk

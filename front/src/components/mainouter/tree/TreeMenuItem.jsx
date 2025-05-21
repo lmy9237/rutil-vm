@@ -3,9 +3,9 @@ import {
   RVI16,
   rvi16ChevronDown,
   rvi16ChevronRight,
-} from "../../icons/RutilVmIcons";
+} from "@/components/icons/RutilVmIcons";
+import Logger           from "@/utils/Logger";
 import "./TreeMenuItem.css";
-import Logger from "../../../utils/Logger";
 
 const TreeMenuItem = ({
   level=1,

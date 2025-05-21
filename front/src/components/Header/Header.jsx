@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import useAsideState from "../../hooks/useAsideState";
-import useBoxState from "../../hooks/useBoxState";
-import useTmi from "../../hooks/useTmi";
-import BoxEvent from "./BoxEvent";
-import BoxUser from "./BoxUser";
+import useSearch              from "@/hooks/useSearch";
+import useAsideState          from "@/hooks/useAsideState";
+import useBoxState            from "@/hooks/useBoxState";
+import useFooterState         from "@/hooks/useFooterState";
+import useTmi                 from "@/hooks/useTmi";
 import {
   LogoIcon,
   TopMenuIcon,
@@ -14,10 +14,11 @@ import {
   rvi24Bell,
   rvi24PersonCircle,
   rvi24BellNew,
-} from "../icons/RutilVmIcons";
-import Logger from "../../utils/Logger";
+} from "@/components/icons/RutilVmIcons";
+import Logger                 from "@/utils/Logger";
 import "./Header.css";
-import useFooterState from "../../hooks/useFooterState";
+import BoxEvent               from "./BoxEvent";
+import BoxUser                from "./BoxUser";
 
 /**
  * @name Header

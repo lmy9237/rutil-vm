@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import useClickOutside from "../../hooks/useClickOutside";
+import useClickOutside from "@/hooks/useClickOutside";
 import {
   RVI16, RVI24,
   rvi16DotsVertical,
-} from "../icons/RutilVmIcons";
-import IconButton from "../Input/IconButton";
-import { BadgeStatus } from "../common/Badges";
-import PopupBox from "../common/PopupBox";
-import Localization from "../../utils/Localization";
+} from "@/components/icons/RutilVmIcons";
+import IconButton      from "@/components/Input/IconButton";
+import { BadgeStatus } from "@/components/common/Badges";
+import PopupBox        from "@/components/common/PopupBox";
+import Localization    from "@/utils/Localization";
 import "./HeaderButton.css";
 
 /**

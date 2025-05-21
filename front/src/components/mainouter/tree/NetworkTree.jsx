@@ -1,16 +1,18 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import useContextMenu from "../../../hooks/useContextMenu";
-import useGlobal from "../../../hooks/useGlobal";
-import useTmi from "../../../hooks/useTmi";
-import TreeMenuItem from "./TreeMenuItem";
+import useGlobal              from "@/hooks/useGlobal";
+import useTmi                 from "@/hooks/useTmi";
+import useContextMenu         from "@/hooks/useContextMenu";
 import {
   rvi16Globe,
   rvi16DataCenter,
   rvi16Network,
-} from "../../icons/RutilVmIcons";
-import { useAllTreeNavigations } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
+} from "@/components/icons/RutilVmIcons";
+import {
+  useAllTreeNavigations
+} from "@/api/RQHook";
+import Logger                 from "@/utils/Logger";
+import TreeMenuItem           from "./TreeMenuItem";
 
 const NetworkTree = ({}) => {
   const navigate = useNavigate();
@@ -36,8 +38,16 @@ const NetworkTree = ({}) => {
         isNextLevelVisible={secondVisibleNetwork()}
         onChevronClick={() => toggleSecondVisibleNetwork()}
         isChevronVisible={true}
-        onClick={() => {
-          navigate("/networks/rutil-manager");
+        onClick={() => navigate("/networks/rutil-manager")}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setContextMenu({
+            mouseX: e.clientX,
+            mouseY: e.clientY,
+            item: {
+            },
+            treeType: "network"
+          }, "rutil-manager");
         }}
       />
 

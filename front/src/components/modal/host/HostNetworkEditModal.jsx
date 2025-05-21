@@ -1,20 +1,23 @@
 import React, { useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
-import BaseModal from "../BaseModal";
-import useGlobal from "../../../hooks/useGlobal";
-import LabelInput from "../../label/LabelInput";
-import TabNavButtonGroup from "../../common/TabNavButtonGroup";
-import Localization from "../../../utils/Localization";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
-import Logger from "../../../utils/Logger";
-import ToggleSwitchButton from "../../button/ToggleSwitchButton";
+import { useToast }            from "@/hooks/use-toast";
+import useGlobal               from "@/hooks/useGlobal";
+import TabNavButtonGroup       from "@/components/common/TabNavButtonGroup";
+import ToggleSwitchButton      from "@/components/button/ToggleSwitchButton";
+import BaseModal               from "@/components/modal/BaseModal";
+import LabelInput              from "@/components/label/LabelInput";
+import LabelSelectOptions      from "@/components/label/LabelSelectOptions";
+import { 
+  RVI36, rvi36Add, rvi36Remove
+} from "@/components/icons/RutilVmIcons";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 const HostNetworkEditModal = ({ 
   isOpen, 
   onClose,
   networkAttachment
 }) => {
+  const { toast } = useToast()
   // const { closeModal } = useUIState()
   const { hostsSelected } = useGlobal();
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
@@ -76,13 +79,21 @@ const HostNetworkEditModal = ({
   }, [isOpen, networkAttachment]);  
 
   const validateForm = () => {
+    Logger.debug(`HostNetworkEditModal > validateForm ... `)
     // if (!networkVo.id) return `${Localization.kr.NETWORK}를 선택해주세요.`;
     return null;
   };
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
     const ipAssignments = [];
 
@@ -119,8 +130,7 @@ const HostNetworkEditModal = ({
       nameServerList: dnsServers,
     };
 
-    Logger.debug(`Form Data: ${JSON.stringify(dataToSubmit, null, 2)}`);
-
+    Logger.debug(`HostNetworkEditModal > validateForm ... dataToSubmit: `, dataToSubmit)
     // editNetworkAttach({
     //   hostId: hostId,
     //   networkAttachmentId: networkAttachment.id,

@@ -1,9 +1,8 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import useTmi from "../../../hooks/useTmi";
-import useGlobal from "../../../hooks/useGlobal";
-import useContextMenu from "../../../hooks/useContextMenu";
-import TreeMenuItem from "./TreeMenuItem";
+import useGlobal              from "@/hooks/useGlobal";
+import useTmi                 from "@/hooks/useTmi";
+import useContextMenu         from "@/hooks/useContextMenu";
 import {
   rvi16Globe,
   rvi16Host,
@@ -12,9 +11,12 @@ import {
   rvi16Cluster,
   rvi16DesktopSleep,
   rvi16Pause,
-} from "../../icons/RutilVmIcons";
-import { useAllTreeNavigations } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
+} from "@/components/icons/RutilVmIcons";
+import {
+  useAllTreeNavigations
+} from "@/api/RQHook";
+import Logger                 from "@/utils/Logger";
+import TreeMenuItem           from "./TreeMenuItem";
 
 /**
  * @name ComputingTree
@@ -56,6 +58,16 @@ const ComputingTree = ({}) => {
         isNextLevelVisible={secondVisibleComputing()}
         onChevronClick={() => toggleSecondVisibleComputing()}
         onClick={() => navigate("/computing/rutil-manager")}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setContextMenu({
+            mouseX: e.clientX,
+            mouseY: e.clientY,
+            item: {
+            },
+            treeType: "computing"
+          }, "rutil-manager");
+        }}
       />
 
       {/* 두 번째 레벨 (Data Center) */}

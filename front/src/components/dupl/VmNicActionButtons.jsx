@@ -1,25 +1,36 @@
 import React, { useMemo } from "react";
-import useUIState from "../../hooks/useUIState";
-import useGlobal from "../../hooks/useGlobal";
-import ActionButtonGroup from "../button/ActionButtonGroup";
-import Localization from "../../utils/Localization";
+import useUIState from "@/hooks/useUIState";
+import useGlobal from "@/hooks/useGlobal";
+import { ActionButtons } from "@/components/button/ActionButtons";
+import Localization from "@/utils/Localization";
 
+/**
+ * @name VmNicActionButtons
+ * @description 가상머신 논리 네트워크 관련 액션버튼
+ * 
+ * @returns {JSX.Element} VmNicActionButtons
+ * 
+ * @see ActionButtons
+ */
 const VmNicActionButtons = ({
-  actionType = "default",
+  actionType="default",
 }) => {
   const { setActiveModal } = useUIState()
   const { nicsSelected } = useGlobal()
-  const isContextMenu = actionType === "context";
+  const isContextMenu = useMemo(() => actionType === "context", [actionType])
 
+  const selected1st = [...nicsSelected][0] ?? null
   const basicActions = useMemo(() => ([
-    { type: "create", onBtnClick: () => setActiveModal("nic:create"), label: Localization.kr.CREATE, disabled: isContextMenu && nicsSelected.length > 0, },
-    { type: "update", onBtnClick: () => setActiveModal("nic:update"), label: Localization.kr.UPDATE, disabled: nicsSelected.length !== 1, },
-    { type: "remove", onBtnClick: () => setActiveModal("nic:remove"), label: Localization.kr.REMOVE, disabled: nicsSelected.length === 0, },
+    { type: "create", onClick: () => setActiveModal("nic:create"), label: Localization.kr.CREATE, disabled: isContextMenu && nicsSelected.length > 0, },
+    { type: "update", onClick: () => setActiveModal("nic:update"), label: Localization.kr.UPDATE, disabled: nicsSelected.length !== 1, },
+    { type: "remove", onClick: () => setActiveModal("nic:remove"), label: Localization.kr.REMOVE, disabled: nicsSelected.length === 0, },
   ]), [actionType, nicsSelected]);
 
   return (
-    <ActionButtonGroup actionType={actionType} actions={basicActions}/>
+    <ActionButtons actionType={actionType}
+      actions={basicActions}
+    />
   );
 };
 
-export default VmNicActionButtons;
+export default React.memo(VmNicActionButtons);

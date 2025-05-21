@@ -1,7 +1,7 @@
-import { useDisk } from "../../../api/RQHook";
-import InfoTable from "../../../components/table/InfoTable";
-import { checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
-import Localization from "../../../utils/Localization";
+import InfoTable from "@/components/table/InfoTable";
+import { useDisk } from "@/api/RQHook";
+import { checkZeroSizeToGiB, convertBytesToGB } from "@/util";
+import Localization           from "@/utils/Localization";
 
 /**
  * @name DiskGeneral
@@ -11,7 +11,9 @@ import Localization from "../../../utils/Localization";
  * @param {string} diskId 디스크ID
  * @returns
  */
-const DiskGeneral = ({ diskId }) => {
+const DiskGeneral = ({
+  diskId
+}) => {
   const {
     data: disk,
     isLoading: isDiskLoading,

@@ -1,17 +1,19 @@
 import { useCallback, useMemo } from "react";
-import toast from "react-hot-toast";
-import useSearch from "../../../hooks/useSearch";
-import useGlobal from "../../../hooks/useGlobal";
-import SearchBox from "../../../components/button/SearchBox";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import TablesOuter from '../../../components/table/TablesOuter';
-import TableRowClick from '../../../components/table/TableRowClick';
-import { convertBytesToGB } from '../../../util';
-import { useAllStorageDomainsFromDisk } from "../../../api/RQHook";
-import { status2Icon } from "../../../components/icons/RutilVmIcons";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import { status2Icon }        from "@/components/icons/RutilVmIcons";
+import {
+  useAllStorageDomainsFromDisk
+} from "@/api/RQHook";
+import { convertBytesToGB }   from "@/util";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name DiskDomains
@@ -61,17 +63,11 @@ const DiskDomains = ({
   , [domains])
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`DiskDomains > handleRefresh ... `)
-    if (!refetchDomains) return;
-    refetchDomains()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
-
+ 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchDomains} />
         {/*  */}
       </div>
       <TablesOuter target={"domain"}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
+import { useToast }            from "@/hooks/use-toast";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
   useAddVnicProfile,
@@ -16,8 +16,8 @@ import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import LabelInput from "../../label/LabelInput";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./MVnic.css";
 
 const initialFormState = {
@@ -34,6 +34,7 @@ const VnicProfileModal = ({
   onClose,
   editMode = false,
 }) => {
+  const { toast } = useToast()
   // const { closeModal } = useUIState()
   const vLabel = editMode 
     ? Localization.kr.UPDATE
@@ -126,6 +127,7 @@ const VnicProfileModal = ({
   }, [nFilters, editMode]);
 
   const validateForm = () => {
+    Logger.debug(`VnicProfileModal > validateForm ...`)
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
 
@@ -137,7 +139,14 @@ const VnicProfileModal = ({
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
     const dataToSubmit = {
       ...formState,

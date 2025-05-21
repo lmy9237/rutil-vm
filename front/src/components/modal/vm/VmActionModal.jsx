@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import BaseModal from "../BaseModal";
+import { useToast }           from "@/hooks/use-toast";
+import useUIState             from "@/hooks/useUIState";
+import BaseModal              from "../BaseModal";
 import {
   useStartVM,
   usePauseVM,
@@ -9,8 +9,9 @@ import {
   useShutdownVM,
   useRebootVM,
   useResetVM,
-} from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+} from "@/api/RQHook";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 const ACTIONS = {
   "vm:start": { label: Localization.kr.START, hook: useStartVM },
@@ -26,6 +27,7 @@ const VmActionModal = ({
   onClose,
   data,
 }) => {  
+  const { toast } = useToast();
   const { activeModal, closeModal } = useUIState()
   const { label = "", hook } = ACTIONS[activeModal()] || {};
   const { mutate } = hook ? hook(closeModal, closeModal) : { mutate: null };
@@ -38,10 +40,25 @@ const VmActionModal = ({
     };
   }, [data]);
 
-  const handleSubmit = () => {
-    if (!mutate) return toast.error(`알 수 없는 액션: ${activeModal()}`);
-    if (!ids.length) return toast.error("ID가 없습니다.");
+  const validateForm = () => {
+    Logger.debug(`VmActionModal > validateForm ... `)
+    if (!mutate) return `알 수 없는 액션: ${activeModal()}`;
+    if (!ids.length) return "ID가 없습니다.";
+    return null
+  }
 
+
+  const handleSubmit = () => {
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
+    Logger.debug(`VmActionModal > handleSubmit ... `)
     ids.forEach((id) => mutate(id));
   };
 

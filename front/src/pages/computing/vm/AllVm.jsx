@@ -1,11 +1,13 @@
 import React from "react";
-import SectionLayout from "../../../components/SectionLayout";
-import HeaderButton from "../../../components/button/HeaderButton";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import VmDupl from "../../../components/dupl/VmDupl";
-import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
-import { useAllVMs } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import SectionLayout          from "@/components/SectionLayout";
+import HeaderButton           from "@/components/button/HeaderButton";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import VmDupl                 from "@/components/dupl/VmDupl";
+import { rvi24Desktop }       from "@/components/icons/RutilVmIcons";
+import {
+  useAllVMs
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
 import "./Vm.css";
 
 /**

@@ -1,11 +1,15 @@
 import React from "react";
-import { useAllVnicProfiles } from "../../../api/RQHook";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import VnicProfileDupl from "../../../components/dupl/VnicProfileDupl";
-import Localization from "../../../utils/Localization";
-import { rvi24Flag, rvi24Lan } from "../../../components/icons/RutilVmIcons";
-import HeaderButton from "../../../components/button/HeaderButton";
-import SectionLayout from "../../../components/SectionLayout";
+import SectionLayout          from "@/components/SectionLayout";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import VnicProfileDupl        from "@/components/dupl/VnicProfileDupl";
+import HeaderButton           from "@/components/button/HeaderButton";
+import {
+  rvi24Flag, rvi24Lan 
+} from "@/components/icons/RutilVmIcons";
+import {
+  useAllVnicProfiles
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
 
 /**
  * @name AllVnic

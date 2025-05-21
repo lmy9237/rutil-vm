@@ -1,38 +1,40 @@
 import React, { useMemo, useRef } from "react";
-import useContextMenu from "../../hooks/useContextMenu";
-import useGlobal from "../../hooks/useGlobal";
-import useClickOutside from "../../hooks/useClickOutside";
-import DataCenterModals from "../modal/datacenter/DataCenterModals";
-import ClusterModals from "../modal/cluster/ClusterModals";
-import HostModals from "../modal/host/HostModals";
-import VmModals from "../modal/vm/VmModals";
-import VmDiskModals from "../modal/vm/VmDiskModals";
-import VmNicModals from "../modal/vm/VmNicModals";
-import DiskModals from "../modal/disk/DiskModals";
-import DiskSnapshotModals from "../modal/disk/DiskSnapshotModals";
-import VnicProfileModals from "../modal/vnic-profile/VnicProfileModals";
-import VmSnapshotModals from "../modal/vm/VmSnapshotModals";
-import TemplateModals from "../modal/template/TemplateModals";
-import NetworkModals from "../modal/network/NetworkModals";
-import DomainModals from "../modal/domain/DomainModals";
-import EventModals from "../modal/event/EventModals";
-import JobModals from "../modal/job/JobModals";
-import SettingUsersModals from "../modal/settings/SettingUsersModals";
-import SettingUserSessionsModal from "../modal/settings/SettingUserSessionsModal";
-import DataCenterActionButtons from "../dupl/DataCenterActionButtons";
-import ClusterActionButtons from "../dupl/ClusterActionButtons"
-import HostActionButtons from "../dupl/HostActionButtons";
-import VmActionButtons from "../dupl/VmActionButtons";
-import VmDiskActionButtons from "../dupl/VmDiskActionButtons";
-import VmNicActionButtons from "../dupl/VmNicActionButtons";
-import TemplateActionButtons from "../dupl/TemplateActionButtons";
-import NetworkActionButtons from "../dupl/NetworkActionButtons"
-import DomainActionButtons from "../dupl/DomainActionButtons";
-import DiskActionButtons from "../dupl/DiskActionButtons";
-import SettingUsersActionButtons from "../dupl/SettingUsersActionButtons"
-import EventActionButtons from "../dupl/EventActionButtons"
-import JobActionButtons from "../dupl/JobActionButtons";
-import DiskSnapshotActionButtons from "../dupl/DiskSnapshotActionButtons";
+import useContextMenu            from "@/hooks/useContextMenu";
+import useGlobal                 from "@/hooks/useGlobal";
+import useClickOutside           from "@/hooks/useClickOutside";
+import DataCenterModals          from "@/components/modal/datacenter/DataCenterModals";
+import ClusterModals             from "@/components/modal/cluster/ClusterModals";
+import HostModals                from "@/components/modal/host/HostModals";
+import VmModals                  from "@/components/modal/vm/VmModals";
+import VmDiskModals              from "@/components/modal/vm/VmDiskModals";
+import VmNicModals               from "@/components/modal/vm/VmNicModals";
+import VmSnapshotModals          from "@/components/modal/vm/VmSnapshotModals";
+import DiskModals                from "@/components/modal/disk/DiskModals";
+import DiskSnapshotModals        from "@/components/modal/disk/DiskSnapshotModals";
+import VnicProfileModals         from "@/components/modal/vnic-profile/VnicProfileModals";
+import TemplateModals            from "@/components/modal/template/TemplateModals";
+import NetworkModals             from "@/components/modal/network/NetworkModals";
+import DomainModals              from "@/components/modal/domain/DomainModals";
+import EventModals               from "@/components/modal/event/EventModals";
+import JobModals                 from "@/components/modal/job/JobModals";
+import SettingUsersModals        from "@/components/modal/settings/SettingUsersModals";
+import SettingUserSessionsModal  from "@/components/modal/settings/SettingUserSessionsModal";
+
+import RutilManagerActionButtons from "@/components/dupl/RutilManagerActionButtons";
+import DataCenterActionButtons   from "@/components/dupl/DataCenterActionButtons";
+import ClusterActionButtons      from "@/components/dupl/ClusterActionButtons"
+import HostActionButtons         from "@/components/dupl/HostActionButtons";
+import VmActionButtons           from "@/components/dupl/VmActionButtons";
+import VmDiskActionButtons       from "@/components/dupl/VmDiskActionButtons";
+import VmNicActionButtons        from "@/components/dupl/VmNicActionButtons";
+import TemplateActionButtons     from "@/components/dupl/TemplateActionButtons";
+import NetworkActionButtons      from "@/components/dupl/NetworkActionButtons"
+import DomainActionButtons       from "@/components/dupl/DomainActionButtons";
+import DiskActionButtons         from "@/components/dupl/DiskActionButtons";
+import SettingUsersActionButtons from "@/components/dupl/SettingUsersActionButtons"
+import EventActionButtons        from "@/components/dupl/EventActionButtons"
+import JobActionButtons          from "@/components/dupl/JobActionButtons";
+import DiskSnapshotActionButtons from "@/components/dupl/DiskSnapshotActionButtons";
 import "./RightClickMenu.css"
 
 /**
@@ -117,7 +119,10 @@ const RightClickMenu = () => {
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {(contextMenuType() === "datacenter") ? (
+          {(contextMenuType() === "rutil-manager") ? (
+            <RutilManagerActionButtons actionType="context" 
+            />
+          ) : (contextMenuType() === "datacenter") ? (
             <DataCenterActionButtons actionType="context"
               status={"single"}
             />

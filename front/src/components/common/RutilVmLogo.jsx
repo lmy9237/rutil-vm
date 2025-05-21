@@ -1,5 +1,5 @@
-import CONSTANT from "../../Constants";
-import { LogoIcon } from "../icons/RutilVmIcons"
+import CONSTANT from "@/Constants";
+import { LogoIcon } from "@/components/icons/RutilVmIcons"
 import "./RutilVmLogo.css"
 
 /**

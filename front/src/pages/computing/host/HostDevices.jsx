@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import toast from "react-hot-toast";
+import { useToast } from "@/hooks/use-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import useSearch from "../../../hooks/useSearch";
@@ -38,16 +38,9 @@ const HostDevices = ({
   const transformedData = [...hostDevices]?.map((e) => ({ ...e }))
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   
-  const handleRefresh = useCallback(() => {
-    Logger.debug(`HostDevices > handleRefresh ... `)
-    if (!refetchHostDevices) return;
-    refetchHostDevices()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
-
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
+      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchHostDevices}/>
       {/* <HostActionButtons actionType = "default"/> */}
       <TablesOuter target={"hostdevice"}
         columns={TableColumnsInfo.DEVICE_FROM_HOST}

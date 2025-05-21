@@ -1,13 +1,15 @@
 import React from "react";
-import HeaderButton from "../../../components/button/HeaderButton";
-import NetworkDupl from "../../../components/dupl/NetworkDupl";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { rvi24Network } from "../../../components/icons/RutilVmIcons";
-import Localization from "../../../utils/Localization";
-import { useAllNetworks } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
+import SectionLayout          from "@/components/SectionLayout";
+import HeaderButton           from "@/components/button/HeaderButton";
+import NetworkDupl            from "@/components/dupl/NetworkDupl";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import { rvi24Network }       from "@/components/icons/RutilVmIcons";
+import {
+  useAllNetworks
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./Network.css";
-import SectionLayout from "../../../components/SectionLayout";
 
 /**
  * @name AllNetwork

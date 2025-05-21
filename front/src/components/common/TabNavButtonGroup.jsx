@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Logger from "../../utils/Logger";
+import Logger from "@/utils/Logger";
 import "./TabNavButtonGroup.css";
 
 /**

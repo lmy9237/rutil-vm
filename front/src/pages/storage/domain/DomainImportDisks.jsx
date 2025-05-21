@@ -1,20 +1,23 @@
 import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import useSearch from "../../../hooks/useSearch";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import DomainGetDiskModal from "../../../components/modal/domain/DomainGetDiskModal";
-import SearchBox from "../../../components/button/SearchBox";
-import ActionButton from "../../../components/button/ActionButton";
-import { checkZeroSizeToGiB } from "../../../util";
-import Logger from "../../../utils/Logger";
-import { useAllUnregisteredDisksFromDomain } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
+import useSearch               from "@/hooks/useSearch";
+import Loading                 from "@/components/common/Loading";
+import SelectedIdView          from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
+import { ActionButton }        from "@/components/button/ActionButtons";
+import SearchBox               from "@/components/button/SearchBox";
+import TableColumnsInfo        from "@/components/table/TableColumnsInfo";
+import TablesOuter             from "@/components/table/TablesOuter";
+import TableRowClick           from "@/components/table/TableRowClick";
+import DomainGetDiskModal      from "@/components/modal/domain/DomainGetDiskModal";
+import {
+  useAllUnregisteredDisksFromDomain
+} from "@/api/RQHook";
+import { checkZeroSizeToGiB }  from "@/util";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 /**
  * @name DomainImportDisks
@@ -57,18 +60,11 @@ const DomainImportDisks = ({
     navigate(`/computing/templates/${id}`);
   }, [navigate])
 
-  const handleRefresh = useCallback(() => {
-    Logger.debug(`TemplateDupl > handleRefresh ... `)
-    if (!refetchDisks) return;
-    refetchDisks()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
-
   // TODO: ActionButtons 생성
   return (
     <>
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh}/>
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchDisks}/>
         <div className="header-right-btns">
           <ActionButton actionType="default" label={Localization.kr.IMPORT}
             disabled={disksSelected.length === 0} 

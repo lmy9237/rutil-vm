@@ -1,29 +1,32 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
-import HeaderButton from "../../../components/button/HeaderButton";
-import Path from "../../../components/Header/Path";
-import DomainGeneral from "./DomainGeneral";
-import DomainDatacenters from "./DomainDatacenters";
-import DomainVms from "./DomainVms";
-import DomainEvents from "./DomainEvents";
-import DomainDisks from "./DomainDisks";
-import DomainTemplates from "./DomainTemplates";
-import DomainDiskSnapshots from "./DomainDiskSnapshots";
-import Localization from "../../../utils/Localization";
-import DomainImportVms from "./DomainImportVms";
-import DomainImportTemplates from "./DomainImportTemplates";
-import DomainImportDisks from "./DomainImportDisks";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SectionLayout          from "@/components/SectionLayout";
+import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
+import HeaderButton           from "@/components/button/HeaderButton";
+import Path                   from "@/components/Header/Path";
+import {
+  rvi24Cloud, rvi24Storage 
+} from "@/components/icons/RutilVmIcons";
+import DomainGeneral          from "./DomainGeneral";
+import DomainDatacenters      from "./DomainDatacenters";
+import DomainVms              from "./DomainVms";
+import DomainEvents           from "./DomainEvents";
+import DomainDisks            from "./DomainDisks";
+import DomainTemplates        from "./DomainTemplates";
+import DomainDiskSnapshots    from "./DomainDiskSnapshots";
+import DomainImportVms        from "./DomainImportVms";
+import DomainImportTemplates  from "./DomainImportTemplates";
+import DomainImportDisks      from "./DomainImportDisks";
 import {
   useStroageDomain,
   useOvfUpdateDomain,
   useRefreshLunDomain,
-} from "../../../api/RQHook";
-import { rvi24Cloud, rvi24Storage } from "../../../components/icons/RutilVmIcons";
-import Logger from "../../../utils/Logger";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import SectionLayout from "../../../components/SectionLayout";
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name DomainInfo
@@ -135,7 +138,7 @@ const DomainInfo = () => {
   const sectionHeaderButtons = useMemo(() => ([
     { type: "update",   label: `${Localization.kr.DOMAIN} ${Localization.kr.UPDATE}`, onClick: () => setActiveModal("domain:update"), },
     { type: "remove",   label: Localization.kr.REMOVE,                                onClick: () => setActiveModal("domain:remove"),   disabled: !isACTIVE || !isUnattached,  },
-    // { type: "destroy",  label: Localization.kr.DESTROY,                               onClick: () => setActiveModal("domain:destroy"),  disabled: isACTIVE || !(isMaintenance || isUnattached), },
+    /* { type: "destroy",  label: Localization.kr.DESTROY,                               onClick: () => setActiveModal("domain:destroy"),  disabled: isACTIVE || !(isMaintenance || isUnattached), }, */
   ]), [domain?.status]);
 
   const popupItems = useMemo(() => ([

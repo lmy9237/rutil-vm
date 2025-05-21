@@ -1,5 +1,5 @@
 import ReactApexChart from "react-apexcharts";
-import CONSTANT from "../../Constants";
+import CONSTANT from "@/Constants";
 
 const SemiCircleChart = ({
   names, 

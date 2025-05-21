@@ -1,19 +1,21 @@
 import { Suspense, useState, useMemo, useCallback } from "react";
-import toast from "react-hot-toast";
-import useGlobal from "../../../hooks/useGlobal";
-import useUIState from "../../../hooks/useUIState";
-import useSearch from "../../../hooks/useSearch";
-import Loading from "../../../components/common/Loading";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import ActionButton from "../../../components/button/ActionButton";
-import TablesOuter from '../../../components/table/TablesOuter';
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import SearchBox from "../../../components/button/SearchBox";
-import TemplateNicDeleteModal from "../../../components/modal/template/TemplateNicDeleteModal";
-import { useAllTemplatesFromNetwork } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import { useNavigate } from "react-router-dom";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
+import useSearch               from "@/hooks/useSearch";
+import Loading                 from "@/components/common/Loading";
+import SelectedIdView          from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
+import { ActionButton }        from "@/components/button/ActionButtons";
+import SearchBox               from "@/components/button/SearchBox";
+import TablesOuter             from '@/components/table/TablesOuter';
+import TableColumnsInfo        from "@/components/table/TableColumnsInfo";
+import TemplateNicDeleteModal  from "@/components/modal/template/TemplateNicDeleteModal";
+import {
+  useAllTemplatesFromNetwork 
+} from "@/api/RQHook";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 /**
  * @name NetworkTemplates
@@ -68,17 +70,11 @@ const NetworkTemplates = ({
   }, []);
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`NetworkTemplates > handleRefresh ... `)
-    if (!refetchTemplates) return;
-    refetchTemplates()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchTemplates} />
         <div className="header-right-btns">
           {/* 제거 버튼에 openDeleteModal 핸들러 연결 */}
           <ActionButton actionType="default" label={Localization.kr.REMOVE}

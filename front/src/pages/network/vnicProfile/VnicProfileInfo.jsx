@@ -1,16 +1,20 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import SectionLayout from "../../../components/SectionLayout";
-import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
-import Path from "../../../components/Header/Path";
-import VnicProfileVms from "./VnicProfileVms";
-import VnicProfileTemplates from "./VnicProfileTemplates";
-import Localization from "../../../utils/Localization";
-import { useVnicProfile } from "../../../api/RQHook";
-import { rvi24Lan } from "../../../components/icons/RutilVmIcons";
-import HeaderButton from "../../../components/button/HeaderButton";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SectionLayout          from "@/components/SectionLayout";
+import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
+import Path                   from "@/components/Header/Path";
+import HeaderButton           from "@/components/button/HeaderButton";
+import { rvi24Lan }           from "@/components/icons/RutilVmIcons";
+import {
+  useVnicProfile
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
+import VnicProfileVms         from "./VnicProfileVms";
+import VnicProfileTemplates   from "./VnicProfileTemplates";
 
 /**
  * @name VnicProfileInfo

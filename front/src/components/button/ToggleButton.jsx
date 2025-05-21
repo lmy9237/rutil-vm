@@ -1,6 +1,6 @@
 import React, { useState } from "react"
+import CONSTANT from "@/Constants"
 import "./ToggleButton.css"
-import CONSTANT from "../../Constants"
 
 const ToggleButton = ({
   on="ON",

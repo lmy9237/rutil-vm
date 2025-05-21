@@ -1,32 +1,40 @@
-import React from "react";
-import useUIState from "../../hooks/useUIState";
-import ActionButtonGroup from "../button/ActionButtonGroup";
-import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
-import useGlobal from "../../hooks/useGlobal";
+import React, { useMemo } from "react";
+import useUIState from "@/hooks/useUIState";
+import useGlobal from "@/hooks/useGlobal";
+import { ActionButtons } from "@/components/button/ActionButtons";
+import Localization from "@/utils/Localization";
 
+/**
+ * @name DiskActionButtons
+ * @description 디스크 관련 액션버튼
+ * 
+ * @returns {JSX.Element} DiskActionButtons
+ * 
+ * @see ActionButtons
+ */
 const DiskActionButtons = ({
   actionType = "default",
 }) => {
   const { setActiveModal } = useUIState()
   const { disksSelected } = useGlobal()
-  const isContextMenu = actionType === "context";
+  const isContextMenu = useMemo(() => actionType === "context", [actionType])
 
   const selected1st = [...disksSelected][0] ?? null
 
   // 공유가능일때 이동,복사 버튼 비활성화(sharable)
   const basicActions = [
-    { type: "create", onBtnClick: () => setActiveModal("disk:create"), label: Localization.kr.CREATE, disabled: isContextMenu && disksSelected.length > 0, },
-    { type: "update", onBtnClick: () => setActiveModal("disk:update"), label: Localization.kr.UPDATE, disabled: disksSelected.length !== 1, },
-    { type: "remove", onBtnClick: () => setActiveModal("disk:remove"), label: Localization.kr.REMOVE, disabled: disksSelected.length === 0, },
-    { type: "move",   onBtnClick: () => setActiveModal("disk:move"),   label: Localization.kr.MOVE, disabled: disksSelected.length === 0 ||  selected1st?.sharable , },
-    { type: "copy",   onBtnClick: () => setActiveModal("disk:copy"),   label: Localization.kr.COPY, disabled: disksSelected.length === 0 ||  selected1st?.sharable  },
-    { type: "upload", onBtnClick: () => setActiveModal("disk:upload"), label: "업로드", disabled: isContextMenu && disksSelected.length > 0, },
+    { type: "create",  onClick: () => setActiveModal("disk:create"), label: Localization.kr.CREATE, disabled: isContextMenu && disksSelected.length > 0, },
+    { type: "upload",  onClick: () => setActiveModal("disk:upload"), label: Localization.kr.UPLOAD, disabled: isContextMenu && disksSelected.length > 0, },
+    { type: "update",  onClick: () => setActiveModal("disk:update"), label: Localization.kr.UPDATE, disabled: disksSelected.length !== 1, },
+    { type: "remove",  onClick: () => setActiveModal("disk:remove"), label: Localization.kr.REMOVE, disabled: disksSelected.length === 0, },
+    { type: "move",    onClick: () => setActiveModal("disk:move"),   label: Localization.kr.MOVE,   disabled: disksSelected.length === 0 ||  selected1st?.sharable , },
+    { type: "copy",    onClick: () => setActiveModal("disk:copy"),   label: Localization.kr.COPY,   disabled: disksSelected.length === 0 ||  selected1st?.sharable  },
   ];
 
-  Logger.debug(`DiskActionButtons ... `)
   return (
-    <ActionButtonGroup actionType={actionType} actions={basicActions} />
+    <ActionButtons actionType={actionType}
+      actions={basicActions}
+    />
   );
 };
 

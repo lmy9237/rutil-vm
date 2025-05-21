@@ -1,13 +1,17 @@
 import React, { useEffect, useMemo, useCallback, useRef } from "react";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import useClickOutside from "../../../hooks/useClickOutside";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import Loading from "../../../components/common/Loading";
-import TablesRow from "../../../components/table/TablesRow";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import VmSnapshotActionButtons from "../../../components/dupl/VmSnapshotActionButtons";
-import SnapshotHostBackground from "../../../components/common/SnapshotHostBackground";
+import CONSTANT               from "@/Constants";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import useClickOutside        from "@/hooks/useClickOutside";
+import Loading                from "@/components/common/Loading";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SnapshotHostBackground from "@/components/common/SnapshotHostBackground";
+import TablesRow              from "@/components/table/TablesRow";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import VmSnapshotActionButtons from "@/components/dupl/VmSnapshotActionButtons";
 import {
   RVI16,
   rvi16ChevronDown,
@@ -17,12 +21,13 @@ import {
   rvi16Location,
   rvi16Lock,
   status2Icon,
-} from "../../../components/icons/RutilVmIcons";
-import { useSnapshotsFromVM, useVm } from "../../../api/RQHook";
-import { convertBytesToMB } from "../../../util";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import CONSTANT from "../../../Constants";
-import Localization from "../../../utils/Localization";
+} from "@/components/icons/RutilVmIcons";
+import {
+  useSnapshotsFromVM,
+  useVm,
+} from "@/api/RQHook";
+import { convertBytesToMB }   from "@/util";
+import Localization           from "@/utils/Localization";
 import "./VmSnapshots.css"
 
 /**

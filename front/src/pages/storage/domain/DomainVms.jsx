@@ -1,18 +1,19 @@
 import React, { useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useGlobal from "../../../hooks/useGlobal";
-import useSearch from "../../../hooks/useSearch";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableRowClick from "../../../components/table/TableRowClick";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import SearchBox from "../../../components/button/SearchBox";
-import { useAllVMsFromDomain } from "../../../api/RQHook";
-import { checkZeroSizeToGiB } from "../../../util";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import {
+  useAllVMsFromDomain
+} from "@/api/RQHook";
+import { checkZeroSizeToGiB } from "@/util";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name DomainVms
@@ -66,16 +67,10 @@ const DomainVms = ({ domainId }) => {
   })), [vms]);
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`DomainVms > handleRefresh ... `)
-    if (!refetchVms) return;
-    refetchVms()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={isVmsRefetching} />
       {/* <EventActionButtons /> */}
       <TablesOuter target={"vm"} 
         columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}

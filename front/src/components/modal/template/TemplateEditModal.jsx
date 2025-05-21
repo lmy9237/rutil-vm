@@ -1,21 +1,25 @@
 import React, { useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import BaseModal from "../BaseModal";
-import TabNavButtonGroup from "../../common/TabNavButtonGroup";
-import LabelInput from "../../label/LabelInput";
-import LabelCheckbox from "../../label/LabelCheckbox";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import { useEditTemplate, useTemplate } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
+import { useToast }           from "@/hooks/use-toast";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import BaseModal              from "../BaseModal";
+import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
+import LabelInput             from "@/components/label/LabelInput";
+import LabelCheckbox          from "@/components/label/LabelCheckbox";
+import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
+import { 
+  useEditTemplate, 
+  useTemplate
+} from "@/api/RQHook";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 const TemplateEditModal = ({
   isOpen,
   onClose,
   editMode = false,
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const { templatesSelected } = useGlobal()
   const [id, setId] = useState("");
@@ -83,9 +87,20 @@ const TemplateEditModal = ({
     }
   }, [isOpen, templateData]);
 
+  const validateForm = () => {
+    Logger.debug(`TemplateEditModal > validateForm ... `)
+    if (name === "") return `${Localization.kr.NAME}을 입력해주세요.`
+    return null
+  }
+
   const handleFormSubmit = () => {
-    if (name === "") {
-      toast.error(`${Localization.kr.NAME}을 입력해주세요.`);
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
       return;
     }
     

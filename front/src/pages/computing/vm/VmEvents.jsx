@@ -1,9 +1,12 @@
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import EventDupl from "../../../components/dupl/EventDupl";
-import { useAllEventsFromVM } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import EventDupl              from "@/components/dupl/EventDupl";
+import {
+  useAllEventsFromVM
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
+
 
 /**
  * @name VmEvents

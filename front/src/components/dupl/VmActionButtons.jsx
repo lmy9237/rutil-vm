@@ -1,19 +1,31 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState from "../../hooks/useUIState";
-import useGlobal from "../../hooks/useGlobal";
-import useClickOutside from "../../hooks/useClickOutside";
-import { openNewTab } from "../../navigation";
-import { useRemoteViewerConnectionFileFromVm } from "../../api/RQHook";
-import { rvi16ChevronUp, rvi16ChevronDown } from "../icons/RutilVmIcons";
-import ActionButton from "../button/ActionButton";
-import ActionButtonGroup from "../button/ActionButtonGroup";
-import Localization from "../../utils/Localization";
-import CONSTANT from "../../Constants";
-import Logger from "../../utils/Logger";
+import CONSTANT         from "@/Constants";
+import useUIState       from "@/hooks/useUIState";
+import useGlobal        from "@/hooks/useGlobal";
+import useClickOutside  from "@/hooks/useClickOutside";
+import { openNewTab }   from "@/navigation";
+import { useRemoteViewerConnectionFileFromVm } from "@/api/RQHook";
+import { ActionButtons, ActionButton } from "@/components/button/ActionButtons";
+import {
+  RVI16,
+  rvi16Globe,
+  rvi16ChevronUp,
+  rvi16ChevronDown
+} from "@/components/icons/RutilVmIcons";
+import Localization from "@/utils/Localization";
+import Logger from "@/utils/Logger";
 
+/**
+ * @name VmActionButtons
+ * @description 가상머신 관련 액션버튼
+ * 
+ * @returns {JSX.Element} VmActionButtons
+ * 
+ * @see ActionButtons
+ */
 const VmActionButtons = ({ 
-  actionType = "default"
+  actionType="default"
 }) => {
   const navigate = useNavigate();
   const { setActiveModal, setContextMenu } = useUIState()
@@ -58,39 +70,35 @@ const VmActionButtons = ({
   
   const manageActions = [
     // { type: "import", label: Localization.kr.IMPORT, },
-    { type: "copy", onBtnClick: () => setActiveModal("vm:copy"), label: `${Localization.kr.VM} 복제`, disabled: vmsSelected.length !== 1 || allPause },
-    { type: "remove", onBtnClick: () => setActiveModal("vm:remove"), label: Localization.kr.REMOVE, disabled: vmsSelected.length === 0 || !isDown },
-    { type: "templates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
-    { type: "ova", label: `ova로 ${Localization.kr.EXPORT}`, disabled: vmsSelected.length !== 1 || !isDown },
+    { type: "copy",       onClick: () => setActiveModal("vm:copy"), label: `${Localization.kr.VM} 복제`, disabled: vmsSelected.length !== 1 || allPause },
+    { type: "remove",     onClick: () => setActiveModal("vm:remove"), label: Localization.kr.REMOVE, disabled: vmsSelected.length === 0 || !isDown },
+    { type: "templates",  onClick: () => {},                    label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
+    { type: "ova",        onClick: () => {},                    label: `ova로 ${Localization.kr.EXPORT}`, disabled: vmsSelected.length !== 1 || !isDown },
   ];
 
   const consoleActions = [
-    { type: "novnc",          onBtnClick: () => openNewTab("console", selected1st?.id), label: "noVNC", disabled: !allUp }, 
-    { type: "remoteviewer",   onBtnClick: (e) => downloadRemoteViewerConnectionFile(e), label: "네이티브 클라이언트", disabled: !allUp },
+    { type: "novnc",          onClick: () => openNewTab("console", selected1st?.id), label: "noVNC", disabled: !allUp }, 
+    { type: "remoteviewer",   onClick: (e) => downloadRemoteViewerConnectionFile(e), label: "네이티브 클라이언트", disabled: !allUp },
   ]
   
   const basicActions = [
-    { type: "create",     onBtnClick: () => setActiveModal("vm:create"),      label: Localization.kr.CREATE,                                  disabled: isContextMenu && vmsSelected.length > 0 },
-    { type: "update",     onBtnClick: () => setActiveModal("vm:update"),      label: Localization.kr.UPDATE,                                  disabled: vmsSelected.length !== 1 },
-    { type: "start",      onBtnClick: () => setActiveModal("vm:start"),       label: Localization.kr.START,                                   disabled: !(isDown || isPause || isMaintenance) },
-    { type: "pause",      onBtnClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
-    { type: "reboot",     onBtnClick: () => setActiveModal("vm:reboot"),      label: Localization.kr.REBOOT,                                  disabled: !allUp },
-    { type: "reset",      onBtnClick: () => setActiveModal("vm:reset"),       label: Localization.kr.RESET,                                   disabled: !allUp },
-    { type: "shutdown",   onBtnClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
-    { type: "powerOff",   onBtnClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
-    { type: "console",    onBtnClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: !allUp, subactions: consoleActions},
-    { type: "migration",  onBtnClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION,                               disabled: !allUp },
-    { type: "snapshot",   onBtnClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 },
-    { type: "template",   onBtnClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE },
+    { type: "create",     onClick: () => setActiveModal("vm:create"),      label: Localization.kr.CREATE,                                  disabled: isContextMenu && vmsSelected.length > 0 },
+    { type: "update",     onClick: () => setActiveModal("vm:update"),      label: Localization.kr.UPDATE,                                  disabled: vmsSelected.length !== 1 },
+    { type: "start",      onClick: () => setActiveModal("vm:start"),       label: Localization.kr.START,                                   disabled: !(isDown || isPause || isMaintenance) },
+    { type: "pause",      onClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
+    { type: "reboot",     onClick: () => setActiveModal("vm:reboot"),      label: Localization.kr.REBOOT,                                  disabled: !allUp },
+    { type: "reset",      onClick: () => setActiveModal("vm:reset"),       label: Localization.kr.RESET,                                   disabled: !allUp },
+    { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
+    { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
+    { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: !allUp, subactions: consoleActions},
+    { type: "migration",  onClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION,                               disabled: !allUp },
+    { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 },
+    { type: "template",   onClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE },
   ].filter(action => !(isContextMenu && action.type === "template"));
 
-
   return (
-    <ActionButtonGroup 
+    <ActionButtons 
       actionType={actionType}
-      // actions={basicActions.filter((e) => 
-      //   e.type !== "console"
-      // )}
       actions={basicActions}
     >
       {isContextMenu ? (
@@ -127,13 +135,13 @@ const VmActionButtons = ({
                   type,
                   label,
                   disabled,
-                  onBtnClick
+                  onClick
                 }) => (
                   <button key={type}
                     disabled={disabled}
                     onClick={(e) => {
                       setConsoleDropdownActive(false); 
-                      onBtnClick(e); 
+                      onClick(e); 
                     }}
                     className="btn-right-click dropdown-item"
                   >
@@ -169,7 +177,7 @@ const VmActionButtons = ({
           </div>
         </>
       )}
-    </ActionButtonGroup>
+    </ActionButtons>
   );
 };
 

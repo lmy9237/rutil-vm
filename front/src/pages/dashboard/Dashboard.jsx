@@ -1,5 +1,12 @@
 import React, { useMemo } from "react";
-import useAsideState from "../../hooks/useAsideState";
+import useAsideState from "@/hooks/useAsideState";
+import SectionLayout from "@/components/SectionLayout";
+import {
+  BoxesLayout,
+  BoxLayout,
+  BoxChartSummary,
+  BoxChartAllGraphs,
+} from "@/components/BoxesLayout";
 import {
   rvi24Cluster,
   rvi24Datacenter,
@@ -9,7 +16,7 @@ import {
   rvi24Event,
   rvi24DeveloperBoard,
   rvi24Memory,
-} from "../../components/icons/RutilVmIcons";
+} from "@/components/icons/RutilVmIcons";
 import {
   useDashboard,
   useDashboardCpuMemory,
@@ -22,39 +29,8 @@ import {
   useDashboardHosts,
   useDashboardMetricVmCpu,
   useDashboardMetricVmMemory,
-} from "../../api/RQHook";
-import Localization from "../../utils/Localization";
-import SectionLayout from "../../components/SectionLayout";
-import {
-  BoxesLayout,
-  BoxLayout,
-  BoxChartSummary,
-  BoxChartAllGraphs,
-} from "../../components/BoxesLayout";
-
-/*
-const BarChartWrapper = ({ data, keyName, keyPercent }) => {
-  const names = useMemo(() => 
-    data?.map((e) => e[keyName]) ?? []
-  , [data, keyName]);
-
-  const percentages = useMemo(() => 
-    data?.map((e) => e[keyPercent]) ?? []
-  , [data, keyPercent]);
-
-  return <BarChart names={names} percentages={percentages} />;
-};
-
-const CpuBarChart = ({ vmCpu }) => (
-  <BarChartWrapper data={vmCpu} keyName="name" keyPercent="cpuPercent" />
-);
-const MemoryBarChart = ({ vmMemory }) => (
-  <BarChartWrapper data={vmMemory} keyName="name" keyPercent="memoryPercent" />
-);
-const StorageMemoryBarChart = ({ storageMemory }) => (
-  <BarChartWrapper data={storageMemory} keyName="name" keyPercent="memoryPercent" />
-);
-*/
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
 
 //#region: Dashboard
 const Dashboard = () => {

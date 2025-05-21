@@ -1,14 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import LabelInput from "../../label/LabelInput";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import Localization from "../../../utils/Localization";
-import { useNetworkInterfaceFromHost } from "../../../api/RQHook";
-import { checkName } from "../../../util";
-import Logger from "../../../utils/Logger";
-
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useToast }            from "@/hooks/use-toast";
+import useGlobal               from "@/hooks/useGlobal";
+import BaseModal               from "@/components/modal/BaseModal";
+import LabelInput              from "@/components/label/LabelInput";
+import LabelSelectOptions      from "@/components/label/LabelSelectOptions";
+import {
+  useNetworkInterfaceFromHost
+} from "@/api/RQHook";
+import { checkName }           from "@/util";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 const HostBondingModal = ({ 
   editmode = false, 
@@ -16,11 +17,14 @@ const HostBondingModal = ({
   nicData = null,
   onBondingCreated
 }) => {
+  const { toast } = useToast();
   const { hostsSelected } = useGlobal();
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
   const bLabel = editmode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
-  const { data: hostNic = {} } = useNetworkInterfaceFromHost(hostId, editmode ? nicData?.[0].id : null);
+  const { 
+    data: hostNic = {}
+  } = useNetworkInterfaceFromHost(hostId, editmode ? nicData?.[0].id : null);
   
   const [name, setName] = useState("");
   // const [options, setOptions] = useState([]);
@@ -58,7 +62,14 @@ const HostBondingModal = ({
 
   const handleOkClick = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
     const newBonding = { 
       name,

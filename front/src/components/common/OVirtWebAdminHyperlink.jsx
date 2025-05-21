@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from "react";
-import CONSTANT from "../../Constants";
-import ActionButtonGroup from "../button/ActionButtonGroup";
+import CONSTANT from "@/Constants";
+import { ActionButtons } from "@/components/button/ActionButtons";
+import { RVI16, rvi16Globe } from "@/components/icons/RutilVmIcons";
 import "./OVirtWebAdminHyperlink.css"
-import { RVI16, rvi16Globe } from "../icons/RutilVmIcons";
 
 /**
  * @name OVirtWebAdminHyperlink
@@ -35,7 +35,7 @@ const OVirtWebAdminHyperlink = ({
 
   const actions = useMemo(() => 
     locales.map(({name, locale}) => ({
-      type: locale, onBtnClick: () => window.open(fullPath(locale), "_blank", "noopener,noreferrer"), label: `${name}`
+      type: locale, onClick: () => window.open(fullPath(locale), "_blank", "noopener,noreferrer"), label: `${name}`
     })
   ), [name, path])
 
@@ -48,7 +48,7 @@ const OVirtWebAdminHyperlink = ({
           >
             {_pageName}
           </span>
-          <ActionButtonGroup actions={actions} />
+          <ActionButtons actions={actions} />
         </div>
       }
     </>

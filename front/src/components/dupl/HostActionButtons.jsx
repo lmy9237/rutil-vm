@@ -1,22 +1,24 @@
 import React, { useMemo, useRef, useState } from "react";
-import ActionButtonGroup from "../button/ActionButtonGroup";
-import { rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
-import ActionButton from "../button/ActionButton";
-import Localization from "../../utils/Localization";
-import useUIState from "../../hooks/useUIState";
-import Logger from "../../utils/Logger";
-import useGlobal from "../../hooks/useGlobal";
-import useClickOutside from "../../hooks/useClickOutside";
-import CONSTANT from "../../Constants";
+import CONSTANT from "@/Constants";
+import useUIState from "@/hooks/useUIState";
+import useGlobal from "@/hooks/useGlobal";
+import useClickOutside from "@/hooks/useClickOutside";
+import { ActionButton, ActionButtons } from "@/components/button/ActionButtons";
+import { rvi16ChevronDown, rvi16ChevronUp } from "@/components/icons/RutilVmIcons";
+import Localization from "@/utils/Localization";
+import Logger from "@/utils/Logger";
 
 /**
  * @name HostActionButtons
- * @description ...
+ * @description 호스트 관련 액션버튼
  * 
- * @returns
+ * @returns {JSX.Element} HostActionButtons
  * 
+ * @see ActionButtons
  */
-const HostActionButtons = ({ actionType = "default" }) => {
+const HostActionButtons = ({ 
+  actionType="default"
+}) => {
   const { setActiveModal } = useUIState()
   const { hostsSelected } = useGlobal()
   const isContextMenu = actionType === "context";
@@ -35,33 +37,33 @@ const HostActionButtons = ({ actionType = "default" }) => {
 
 
   const basicActions = useMemo(() => [
-    { type: "create", onBtnClick: () => setActiveModal("host:create"), label: Localization.kr.CREATE, disabled: isContextMenu && hostsSelected.length > 0, },
-    { type: "update", onBtnClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: hostsSelected.length !== 1  || isInstalling, },
-    { type: "remove", onBtnClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: hostsSelected.length === 0 || !isMaintenance || isInstalling },
+    { type: "create",        onClick: () => setActiveModal("host:create"), label: Localization.kr.CREATE, disabled: isContextMenu && hostsSelected.length > 0, },
+    { type: "update",        onClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: hostsSelected.length !== 1  || isInstalling, },
+    { type: "remove",        onClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: hostsSelected.length === 0 || !isMaintenance || isInstalling },
   ], [actionType, hostsSelected]);
 
   const manageActions = useMemo(() => [
-    { type: "deactivate", onBtnClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: isInstalling || isNonOperational || !isUp },
-    { type: "activate", onBtnClick: () => setActiveModal("host:activate"), label: "활성", disabled: hostsSelected.length === 0 || !isMaintenance || isUp || isInstalling },
-    { type: "restart", onBtnClick: () => setActiveModal("host:restart"), label: "재시작", disabled: hostsSelected.length === 0 || isUp || isInstalling },
-    { type: "refresh", onBtnClick: () => setActiveModal("host:refresh"), label: Localization.kr.REFRESH_CAPABILITIES, disabled: hostsSelected.length === 0 || !isUp || isInstalling  },
-    { type: "commitNetHost", onBtnClick: () => setActiveModal("host:commitNetHost"), label: `${Localization.kr.HOST} 재부팅 ${Localization.kr.STATUS} 확인`, disabled: hostsSelected.length !== 1 || isUp || isInstalling  },
-    { type: "enrollCert", onBtnClick: () => setActiveModal("host:enrollCert"), label: "인증서 등록", disabled: hostsSelected.length === 0 || isInstalling || !isMaintenance  },
-    { type: "haOn", onBtnClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: hostsSelected.length === 0 || !isUp || !isMaintenance || isInstalling , },
-    { type: "haOff", onBtnClick: () => setActiveModal("host:haOff"), label: "글로벌 HA 유지 관리를 비활성화", disabled: hostsSelected.length === 0 || !isUp || isInstalling  },
+    { type: "deactivate",    onClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: isInstalling || isNonOperational || !isUp },
+    { type: "activate",      onClick: () => setActiveModal("host:activate"), label: "활성", disabled: hostsSelected.length === 0 || !isMaintenance || isUp || isInstalling },
+    { type: "restart",       onClick: () => setActiveModal("host:restart"), label: "재시작", disabled: hostsSelected.length === 0 || isUp || isInstalling },
+    { type: "refresh",       onClick: () => setActiveModal("host:refresh"), label: Localization.kr.REFRESH_CAPABILITIES, disabled: hostsSelected.length === 0 || !isUp || isInstalling  },
+    { type: "commitNetHost", onClick: () => setActiveModal("host:commitNetHost"), label: `${Localization.kr.HOST} 재부팅 ${Localization.kr.STATUS} 확인`, disabled: hostsSelected.length !== 1 || isUp || isInstalling  },
+    { type: "enrollCert",    onClick: () => setActiveModal("host:enrollCert"), label: "인증서 등록", disabled: hostsSelected.length === 0 || isInstalling || !isMaintenance  },
+    { type: "haOn",          onClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: hostsSelected.length === 0 || !isUp || !isMaintenance || isInstalling , },
+    { type: "haOff",         onClick: () => setActiveModal("host:haOff"), label: "글로벌 HA 유지 관리를 비활성화", disabled: hostsSelected.length === 0 || !isUp || isInstalling  },
   ], [actionType, hostsSelected]);
   const isMgmtDisabled = manageActions.every(a => a.disabled);
-  Logger.debug(`HostActionButtons ... `)
+  
   return (
-    <ActionButtonGroup
-      actionType={actionType} actions={basicActions}
+    <ActionButtons actionType={actionType} 
+      actions={basicActions}
     >
       {isContextMenu ? (
-        manageActions.map(({ type, onBtnClick, label, disabled }) => (
+        manageActions.map(({ type, onClick, label, disabled }) => (
           <button key={type}
             className="btn-right-click dropdown-item"
             disabled={disabled}
-            onClick={onBtnClick}
+            onClick={onClick}
           >
             {label}
           </button>
@@ -86,12 +88,11 @@ const HostActionButtons = ({ actionType = "default" }) => {
             <div className="right-click-menu-box context-menu-item dropdown-menu"
               ref={activeDropdownRef}
             >
-              {manageActions.map(({ type, onBtnClick, label, disabled }) => (
+              {manageActions.map(({ type, onClick, label, disabled }) => (
                 <button key={type}
                   disabled={disabled}
                   className="btn-right-click dropdown-item"
-                  onClick={onBtnClick}
-                  
+                  onClick={onClick}
                 >
                   {label}
                 </button>
@@ -100,7 +101,7 @@ const HostActionButtons = ({ actionType = "default" }) => {
           )}
         </div>
       )}
-    </ActionButtonGroup>
+    </ActionButtons>
   );
   
 };

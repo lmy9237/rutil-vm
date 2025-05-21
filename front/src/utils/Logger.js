@@ -1,4 +1,4 @@
-import CONSTANT from "../Constants";
+import CONSTANT from "@/Constants";
 
 let Logger = {
   label: `This is RutilVM's Logger`,

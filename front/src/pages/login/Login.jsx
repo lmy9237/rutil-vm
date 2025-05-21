@@ -1,16 +1,19 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import useAuth from "../../hooks/useAuth";
-import RutilVmLogo from "../../components/common/RutilVmLogo";
-import IconInput from "../../components/Input/IconInput";
-import Localization from "../../utils/Localization";
-import CompanyInfoFooter from "../../components/footer/CompanyInfoFooter";
-import { rvi16Lock, rvi16User } from "../../components/icons/RutilVmIcons";
-import { useAuthenticate } from "../../api/RQHook";
-import Logger from "../../utils/Logger";
-import backgroundImg from "./img/background-img.png";
-import CONSTANT from "../../Constants";
+import CONSTANT               from "@/Constants";
+import RutilVmLogo            from "@/components/common/RutilVmLogo";
+import IconInput              from "@/components/Input/IconInput";
+import CompanyInfoFooter      from "@/components/footer/CompanyInfoFooter";
+import {
+  rvi16Lock, rvi16User
+} from "@/components/icons/RutilVmIcons";
+import {
+  useAuthenticate
+} from "@/api/RQHook";
+import backgroundImg          from "./img/background-img.png";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./Login.css";
 
 

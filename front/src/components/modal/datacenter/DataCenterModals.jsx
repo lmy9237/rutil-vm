@@ -1,10 +1,13 @@
 import React from "react";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import DataCenterModal from "./DataCenterModal";
-import DeleteModal from "../../../utils/DeleteModal";
-import Localization from "../../../utils/Localization";
-import { useDeleteDataCenter } from "../../../api/RQHook";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import {
+  useDeleteDataCenter,
+} from "@/api/RQHook";
+import DeleteModal            from "@/utils/DeleteModal";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
+import DataCenterModal        from "./DataCenterModal";
 
 /**
  * @name DataCenterModals

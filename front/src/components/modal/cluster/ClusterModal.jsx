@@ -1,23 +1,30 @@
 import { useState, useEffect, useMemo } from "react";
-import { toast } from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import LabelInput from "../../label/LabelInput";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
+
+import { useToast }           from "@/hooks/use-toast";
+import CONSTANT               from "@/Constants";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import useContextMenu         from "@/hooks/useContextMenu";
+import BaseModal              from "@/components/modal/BaseModal";
+import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
+import LabelInput             from "@/components/label/LabelInput";
+import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
+import {
+  handleInputChange, handleSelectIdChange
+} from "@/components/label/HandleInput";
 import {
   useAddCluster,
   useEditCluster,
   useCluster,
   useAllDataCenters,
   useNetworksFromDataCenter,
-} from "../../../api/RQHook";
-import { checkKoreanName, checkName } from "../../../util";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
-import CONSTANT from "../../../Constants";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+} from "@/api/RQHook";
+import {
+  checkKoreanName,
+  checkName
+} from "@/util";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 const initialFormState = {
   id: "",
@@ -35,6 +42,7 @@ const ClusterModal = ({
   onClose,
   editMode = false,
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const cLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
@@ -133,7 +141,14 @@ const ClusterModal = ({
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
     const dataToSubmit = {
       ...formState,

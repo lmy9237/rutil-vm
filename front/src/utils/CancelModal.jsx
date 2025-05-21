@@ -1,6 +1,6 @@
-import BaseModal from "../components/modal/BaseModal";
-import useUIState from "../hooks/useUIState";
-import Localization from "./Localization";
+import useUIState             from "@/hooks/useUIState";
+import BaseModal              from "@/components/modal/BaseModal";
+import Localization           from "@/utils/Localization";
 
 const CancelModal = ({ 
   isOpen,

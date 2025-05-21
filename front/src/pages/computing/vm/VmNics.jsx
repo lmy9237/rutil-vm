@@ -1,23 +1,27 @@
 import React, { useState, Suspense, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import useContextMenu from "../../../hooks/useContextMenu";
-import useClickOutside from "../../../hooks/useClickOutside";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import TablesRow from "../../../components/table/TablesRow";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import VmNicModal from "../../../components/modal/vm/VmNicModal";
-import NicActionButtons from "../../../components/dupl/VmNicActionButtons";
-import { useNetworkInterfacesFromVM } from "../../../api/RQHook";
-import { checkZeroSizeToMbps } from "../../../util";
-import { RVI24, rvi24ChevronDown, rvi24ChevronRight } from "../../../components/icons/RutilVmIcons";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import useContextMenu         from "@/hooks/useContextMenu";
+import useClickOutside        from "@/hooks/useClickOutside";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import TablesRow              from "@/components/table/TablesRow";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import NicActionButtons       from "@/components/dupl/VmNicActionButtons";
+import {
+  useNetworkInterfacesFromVM
+} from "@/api/RQHook";
+import {
+  RVI24,
+  rvi24ChevronDown,
+  rvi24ChevronRight,
+} from "@/components/icons/RutilVmIcons";
+import { checkZeroSizeToMbps } from "@/util";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./Vm.css"
-import DeleteModal from "../../../utils/DeleteModal";
 /**
  * @name VmNics
  * @description 가상에 종속 된 네트워크 인터페이스 목록

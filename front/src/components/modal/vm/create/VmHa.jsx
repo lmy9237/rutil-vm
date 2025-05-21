@@ -1,11 +1,15 @@
 import { useEffect } from "react";
-import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
-import LabelSelectOptions from "../../../label/LabelSelectOptions";
-import LabelCheckbox from "../../../label/LabelCheckbox";
-import Localization from "../../../../utils/Localization";
-import Logger from "../../../../utils/Logger";
+import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
+import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
+import LabelCheckbox          from "@/components/label/LabelCheckbox";
+import { 
+  handleInputChange, 
+  handleSelectIdChange,
+} from "@/components/label/HandleInput";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
-const priorityList = [
+const priorities = [
   { value: 1, label: "낮음" },
   { value: 50, label: "중간" },
   { value: 100, label: "높음" },
@@ -37,41 +41,37 @@ const VmHa = ({
   return (
     <>
       <LabelCheckbox id="ha_mode_box" label={Localization.kr.HA}
-          checked={formHaState.ha}
-          onChange={(e) => {
-            const isChecked = e.target.checked;
-            setFormHaState((prev) => ({
-              ...prev,
-              ha: isChecked,
-              storageDomainVo: { id: "", name: "" }, 
-            }));
+        checked={formHaState.ha}
+        onChange={(e) => {
+          const isChecked = e.target.checked;
+          setFormHaState((prev) => ({
+            ...prev,
+            ha: isChecked,
+            storageDomainVo: { id: "", name: "" }, 
+          }));
         }}
       />
       <LabelSelectOptionsID
         label={`${Localization.kr.VM} 임대 대상 ${Localization.kr.DOMAIN}`}
-          value={formHaState.storageDomainVo.id}
-          disabled={!formHaState.ha}  // ha가 체크되어야만 활성화됨
-          onChange={(e) => {
-            const selectedDomain = [...domains]?.find((domain) => domain.id === (e?.target?.value ?? e?.id));
-            if (selectedDomain) {
-              setFormHaState((prev) => ({
-                ...prev, 
-                storageDomainVo: { id: selectedDomain.id, name: selectedDomain.name },
-              }));
-              // TODO:handleSelectIdChange를 쓰려면 특정 prop에 값 변경하는 처리가 있어야함
-            } else {
-              // '도메인 없음' 선택 시
-              setFormHaState((prev) => ({
-                ...prev,
-                storageDomainVo: { id: "", name: "" },
-              }));
-            }
-          }}
-          options={[
-            // TODO: SelectOptionID 값 보정필요
-            { id: "none", name: "도메인 없음" },  
-            ...domains
-        ]}
+        value={formHaState.storageDomainVo.id}
+        disabled={!formHaState.ha}  // ha가 체크되어야만 활성화됨
+        options={[ ...domains ]}
+        onChange={(e) => {
+          const selectedDomain = [...domains]?.find((domain) => domain.id === (e?.target?.value ?? e?.id));
+          if (selectedDomain) {
+            setFormHaState((prev) => ({
+              ...prev, 
+              storageDomainVo: { id: selectedDomain.id, name: selectedDomain.name },
+            }));
+            // TODO:handleSelectIdChange를 쓰려면 특정 prop에 값 변경하는 처리가 있어야함
+          } else {
+            // '도메인 없음' 선택 시
+            setFormHaState((prev) => ({
+              ...prev,
+              storageDomainVo: { id: "", name: "" },
+            }));
+          }
+        }}
       />
         {/* <div>
         <div>
@@ -86,11 +86,15 @@ const VmHa = ({
           <option value="강제 종료">강제 종료</option>
         </select>
       </div> */}
-      <div className="py-2 font-bold">실행/{Localization.kr.MIGRATION} 큐에서 우선순위 </div> 
+      <div className="py-2 font-bold">실행/{Localization.kr.MIGRATION} 큐에서 우선순위</div> 
       <LabelSelectOptions label="우선 순위"
         value={formHaState.priority}
-        options={priorityList}
-        onChange={(e) =>setFormHaState((prev) => ({ ...prev, priority: e.target.value }))}
+        options={priorities}
+        // onChange={handleInputChange(setFormHaState, "priority")}
+        onChange={(e) =>setFormHaState((prev) => ({ 
+          ...prev,
+          priority: e.target.value
+        }))}
       />
     </>
   );

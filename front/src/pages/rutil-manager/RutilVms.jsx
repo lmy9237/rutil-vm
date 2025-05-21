@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
-import useGlobal from "../../hooks/useGlobal";
-import VmDupl from "../../components/dupl/VmDupl";
-import TableColumnsInfo from "../../components/table/TableColumnsInfo";
-import { useAllVMs } from "../../api/RQHook";
-import Logger from "../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import VmDupl                 from "@/components/dupl/VmDupl";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import {
+  useAllVMs
+} from "@/api/RQHook";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name RutilVms

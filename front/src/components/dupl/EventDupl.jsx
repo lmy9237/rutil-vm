@@ -1,16 +1,17 @@
 import { useCallback } from "react";
-import toast from "react-hot-toast";
-import useGlobal from "../../hooks/useGlobal";
-import useSearch from "../../hooks/useSearch";
-import SelectedIdView from "../common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
-import TableColumnsInfo from "../../components/table/TableColumnsInfo";
-import { severity2Icon } from "../icons/RutilVmIcons";
-import SearchBox from "../button/SearchBox";
-import TablesOuter from "../table/TablesOuter";
-import EventActionButtons from "./EventActionButtons";
-import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import EventActionButtons     from "@/components/dupl/EventActionButtons";
+import {
+  severity2Icon
+} from "@/components/icons/RutilVmIcons";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name HostEvents
@@ -32,17 +33,11 @@ const EventDupl = ({
   
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`EventDupl > handleRefresh ... `)
-    if (!refetch) return;
-    refetch()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
         <EventActionButtons />
       </div>
       <TablesOuter target={"event"}

@@ -10,11 +10,13 @@ import Logger from "../../../utils/Logger";
 import Localization from "../../../utils/Localization";
 import "./MVm.css";
 import useGlobal from "../../../hooks/useGlobal";
+import { useToast } from "@/hooks/use-toast";
 
 const VmDeleteModal = ({ 
   isOpen,
   onClose,
 }) => {
+  const { toast } = useToast()
   // const { closeModal } = useUIState()
   const { vmsSelected } = useGlobal()
   const {
@@ -74,9 +76,24 @@ const VmDeleteModal = ({
     setDetachOnlyList((prevStates) => ({ ...prevStates, [vmId]: !prevStates[vmId] }));
   };
 
+  const validateForm = () => {
+    Logger.debug(`VmDeleteModal > validateForm ... `)
+    if (!ids.length) return "삭제할 가상머신이 없습니다."
+    return null
+  }
+  
   const handleFormSubmit = () => {
-    if (!ids.length) { return toast.error("삭제할 가상머신이 없습니다.") }
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
+    Logger.debug(`VmDeleteModal > validateForm ... `)
     ids.forEach((vmId) => {
       Logger.debug(`가상머신 삭제 ${vmId} : ${detachOnlyList[vmId]}`);
       deleteVm({ vmId, detachOnly: detachOnlyList[vmId] });

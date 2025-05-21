@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import useBoxState from "../../hooks/useBoxState";
-import useClickOutside from "../../hooks/useClickOutside";
-import useFooterState from "../../hooks/useFooterState";
-import { BadgeNumber } from "../common/Badges";
+import useBoxState            from "@/hooks/useBoxState";
+import useClickOutside        from "@/hooks/useClickOutside";
+import useFooterState         from "@/hooks/useFooterState";
+import { BadgeNumber }        from "@/components/common/Badges";
 import {
   RVI24,
   RVI16,
@@ -13,9 +13,14 @@ import {
   rvi24RightArrow,
   rvi24DownArrow,
   severity2Icon,
-} from "../icons/RutilVmIcons";
-import { useAllEventsNormal, useAllEventsAlert, useRemoveEvent, useRemoveEvents } from "../../api/RQHook";
-import Logger from "../../utils/Logger";
+} from "@/components/icons/RutilVmIcons";
+import { 
+  useAllEventsNormal,
+  useAllEventsAlert,
+  useRemoveEvent,
+  useRemoveEvents
+} from "@/api/RQHook";
+import Logger                 from "@/utils/Logger";
 import "./BoxEvent.css";
 
 /**

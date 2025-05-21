@@ -1,17 +1,18 @@
 import React, { useMemo, useCallback } from "react";
-import toast from "react-hot-toast";
-import useGlobal from "../../../hooks/useGlobal";
-import useSearch from "../../../hooks/useSearch";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import SearchBox from "../../../components/button/SearchBox";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableRowClick from "../../../components/table/TableRowClick";
-import { useAllTemplatesFromDomain } from "../../../api/RQHook";
-import { checkZeroSizeToGiB } from "../../../util";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import {
+  useAllTemplatesFromDomain
+} from "@/api/RQHook";
+import { checkZeroSizeToGiB } from "@/util";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name DomainTemplates
@@ -53,18 +54,12 @@ const DomainTemplates = ({
   })), [templates]);
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`EventDupl > handleRefresh ... `)
-    if (!refetchTemplates) return;
-    refetchTemplates()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
   
   // TODO: 필요하면 정리
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchTemplates} />
         {/* <EventActionButtons /> */}
       </div>
       <TablesOuter target={"template"} 

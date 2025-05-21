@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
-import useGlobal from "../../hooks/useGlobal";
-import TableColumnsInfo from "../../components/table/TableColumnsInfo";
-import ClusterDupl from "../../components/dupl/ClusterDupl";
-import { useAllClusters } from "../../api/RQHook";
-import Logger from "../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import ClusterDupl            from "@/components/dupl/ClusterDupl";
+import {
+  useAllClusters
+} from "@/api/RQHook";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name RutilClusters

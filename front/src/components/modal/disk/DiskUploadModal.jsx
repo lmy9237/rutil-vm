@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import BaseModal from "../BaseModal";
-import LabelInput from "../../label/LabelInput";
-import LabelCheckbox from "../../label/LabelCheckbox";
-import Localization from "../../../utils/Localization";
-import { checkName, convertBytesToGB } from "../../../util";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import Logger from "../../../utils/Logger";
+import { useToast }           from "@/hooks/use-toast";
+import useUIState             from "@/hooks/useUIState";
+import BaseModal              from "../BaseModal";
+import LabelInput             from "@/components/label/LabelInput";
+import LabelCheckbox          from "@/components/label/LabelCheckbox";
+import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
+import { 
+  handleInputChange,
+  handleSelectIdChange,
+} from "@/components/label/HandleInput";
 import {
   useAllActiveDataCenters,
   useAllActiveDomainsFromDataCenter,
   useAllDiskProfilesFromDomain,
   useHostsFromDataCenter,
   useUploadDisk,
-} from "../../../api/RQHook";
+} from "@/api/RQHook";
+import { 
+  checkName, 
+  convertBytesToGB,
+} from "@/util";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 import "../domain/MDomain.css";
 
 const sizeToGB = (data) => Math.ceil(data / Math.pow(1024, 3));
@@ -37,6 +44,7 @@ const DiskUploadModal = ({
   isOpen,
   onClose,
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const [formState, setFormState] = useState(initialFormState);
   const [file, setFile] = useState(null);
@@ -51,6 +59,7 @@ const DiskUploadModal = ({
     toast.loading(`디스크 업로드 중 ... ${progress}%`, {
       id: toastId,
     });
+    // TODO: 컴포넌트로 변경
   });
 
   // 전체 데이터센터 가져오기
@@ -127,7 +136,14 @@ const DiskUploadModal = ({
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
     const sizeToBytes = parseInt(formState.size, 10) * 1024 * 1024 * 1024;    
 
@@ -144,7 +160,7 @@ const DiskUploadModal = ({
     diskData.append("file", file); // file 추가
     diskData.append("diskImage", new Blob([JSON.stringify(dataToSubmit)], { type: "application/json" })); // JSON 데이터 추가
 
-    Logger.debug(`DiskUploadModal > 디스크 업로드 데이터 ${diskData}`);
+    Logger.debug(`DiskUploadModal > handleFormSubmit ... diskData: `, diskData);
     uploadDisk(diskData);
     onClose();
   };

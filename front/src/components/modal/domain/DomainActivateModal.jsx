@@ -1,17 +1,17 @@
 import { useMemo } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
+import { useToast }           from "@/hooks/use-toast";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import BaseModal              from "../BaseModal";
 import {
   useActivateDomain,
-} from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 /**
  * @name DomainActivateModal
  * @description 
- * action으로 type 전달
  *
  * @prop {boolean} isOpen
  * @returns
@@ -20,6 +20,7 @@ const DomainActivateModal = ({
   isOpen, 
   onClose,
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const { datacentersSelected, domainsSelected } = useGlobal()
   const { mutate: activateDomain } = useActivateDomain(onClose, onClose);
@@ -33,12 +34,24 @@ const DomainActivateModal = ({
     };
   }, [domainsSelected]);
   
+  const validateForm = () => {
+    Logger.debug(`DomainActivateModal > validateForm ... `)
+    if (!ids.length) return "실행할 도메인이 없습니다"
+    return null
+  }
   const handleFormSubmit = () => {
-    if (!ids.length) {
-      return toast.error("실행할 도메인이 없습니다.");
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
     }
 
-    [...ids]?.forEach((domainId) => {
+    Logger.debug(`DomainActivateModal > handleFormSubmit ... `)
+    ids.forEach((domainId) => {
       activateDomain({ domainId, dataCenterId: datacentersSelected[0]?.id });
     });
   };

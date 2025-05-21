@@ -1,5 +1,7 @@
 import React from "react";
-import { ItitinfoLogoIcon } from "../icons/RutilVmIcons";
+import {
+  ItitinfoLogoIcon
+} from "@/components/icons/RutilVmIcons";
 import "./CompanyInfoFooter.css"
 
 const CompanyInfoFooter = ({

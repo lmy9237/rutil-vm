@@ -7,7 +7,7 @@ import {
   rvi36Remove,
   rvi36RemoveHover,
   rvi36RemoveDisabled,
-} from "../icons/RutilVmIcons";
+} from "@/components/icons/RutilVmIcons";
 
 /**
  * @name DynamicButton
@@ -17,7 +17,11 @@ import {
  * @param {boolean} disabled - 버튼 비활성화 여부
  * @param {function} onClick - 클릭 핸들러
  */
-const DynamicButton = ({ type = "add", disabled = false, onClick }) => {
+const DynamicButton = ({ 
+  type="add",
+  disabled=false, 
+  onClick=()=>{},
+}) => {
   const [isHovering, setIsHovering] = useState(false);
 
   const handleMouseOver = () => setIsHovering(true);

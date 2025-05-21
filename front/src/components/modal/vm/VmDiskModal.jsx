@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
+import { useToast }            from "@/hooks/use-toast";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelInputNum from "../../label/LabelInputNum";
@@ -63,6 +63,7 @@ const VmDiskModal = ({
   initialDisk,
   onCreateDisk,
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const { vmsSelected, disksSelected, setDisksSelected } = useGlobal()
   const dLabel = editMode
@@ -213,7 +214,14 @@ const VmDiskModal = ({
   const handleOkClick = useCallback(() => {
     Logger.debug(`VmDiskModal > handleOkClick ... `)
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
  
     // const sizeToBytes = convertGBToBytes(parseInt(formState.size, 10));
 
@@ -240,7 +248,14 @@ const VmDiskModal = ({
   const handleFormSubmit = useCallback(() => {
     Logger.debug(`VmDiskModal > handleFormSubmit ... `)
     const error = validateForm();
-    if (error) return toast.error(error);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
  
     // GB -> Bytes 변환
     const sizeToBytes = convertGBToBytes(parseInt(formState.size, 10));

@@ -1,19 +1,24 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
-import useGlobal from "../../hooks/useGlobal";
-import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
-import useFooterState from "../../hooks/useFooterState";
-import Spinner from "../common/Spinner";
-import SelectedIdView from "../common/SelectedIdView";
-import { BadgeStatus, BadgeNumber } from "../common/Badges";
-import SearchBox from "../button/SearchBox"; // ✅ 검색창 추가
-import TablesOuter from "../table/TablesOuter";
-import TableColumnsInfo from "../table/TableColumnsInfo";
-import TableRowClick from "../table/TableRowClick";
-import { RVI24, rvi24ChevronUp, rvi24DownArrow } from "../icons/RutilVmIcons";
-import { useAllJobs } from "../../api/RQHook";
-import Logger from "../../utils/Logger";
-import Localization from "../../utils/Localization";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import useFooterState         from "@/hooks/useFooterState";
+import {
+  RVI24,
+  rvi24ChevronUp,
+  rvi24DownArrow
+} from "@/components/icons/RutilVmIcons";
+import Spinner                from "@/components/common/Spinner";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import { BadgeStatus, BadgeNumber } from "@/components/common/Badges";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import {
+  useAllJobs
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./JobFooter.css";
 
 /**
@@ -53,7 +58,7 @@ const JobFooter = ({
     // steps: e?.steps,
     numSteps: [...e?.steps]?.length > 1 
       ? <BadgeNumber 
-        text={[...e?.steps].length} 
+        text={`${[...e?.steps]?.filter((s) => s?.status === "FINISHED" || s?.status === "FAILED")?.length}/${[...e?.steps].length}`}
         status={e?.status === "FAILED" ? "alert" : "number"}
       /> : "",
     /* 
@@ -78,7 +83,7 @@ const JobFooter = ({
   }))), [jobs]);
  
   const handleDescriptionClick = useCallback((job) => {
-    toast.success(job?.description)
+    // toast({ description: job?.description})
   }, [jobs])
   const FOOTER_TOP_HORIZ_BAR_HEIGHT = 40
   const [footerHeight, setFooterHeight] = useState(FOOTER_TOP_HORIZ_BAR_HEIGHT)
@@ -121,12 +126,6 @@ const JobFooter = ({
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`JobFooter > handleRefresh ... `)
-    if (!refetchJobs) return;
-    refetchJobs()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
   return (
     <>
       {/* 드래그바 */}
@@ -159,7 +158,7 @@ const JobFooter = ({
           <div className="footer-nav v-start gap-8 w-full h-full">
             <div className="dupl-header-group f-start gap-4 w-full">
               {transformedData.length > 0 && 
-                <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+                <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchJobs} />
               }
               {/*  */}
             </div>

@@ -1,12 +1,15 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from "react";
-import useUIState from "../../../../hooks/useUIState";
-import useGlobal from "../../../../hooks/useGlobal";
-import Loading from "../../../common/Loading";
-import ActionButton from "../../../button/ActionButton";
-import { RVI36, rvi36Trash } from "../../../icons/RutilVmIcons";
-import { useDisksFromVM } from "../../../../api/RQHook";
-import Localization from "../../../../utils/Localization";
-import Logger from "../../../../utils/Logger";
+import useUIState            from "@/hooks/useUIState";
+import useGlobal             from "@/hooks/useGlobal";
+import Loading               from "@/components/common/Loading";
+import { ActionButton }      from "@/components/button/ActionButtons";
+import { RVI36, rvi36Trash } from "@/components/icons/RutilVmIcons";
+import {
+  useDisksFromVM
+} from "@/api/RQHook";
+import Localization          from "@/utils/Localization";
+import Logger                from "@/utils/Logger";
+
 
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));

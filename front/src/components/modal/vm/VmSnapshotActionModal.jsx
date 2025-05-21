@@ -1,14 +1,15 @@
 import React, { useCallback, useMemo } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
+import { useToast }           from "@/hooks/use-toast";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import BaseModal              from "../BaseModal";
 import {
   usePreviewSnapshot,
   useCommitSnapshot,
   useUndoSnapshot
-} from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+} from "@/api/RQHook";
+import Localization from "@/utils/Localization";
+import Logger from "@/utils/Logger";
 
 /**
  * @name VmSnapshotActionModal
@@ -20,6 +21,7 @@ const VmSnapshotActionModal = ({
   isOpen, 
   onClose,
 }) => {
+  const { toast } = useToast();
   const ACTIONS = useMemo(() => ({
     "vmsnapshot:preview": { label: Localization.kr.PREVIEW, hook: usePreviewSnapshot },
     "vmsnapshot:commit": { label: Localization.kr.COMMIT, hook: useCommitSnapshot },
@@ -46,17 +48,32 @@ const VmSnapshotActionModal = ({
       : `${Localization.kr.SNAPSHOT} "${names.join(", ")}" 를(을) ${label} 하시겠습니까?`
   ), [names, label])
 
-  const handleSubmit = useCallback(() => {
-    if (!mutate) return toast.error(`알 수 없는 액션: ${activeModal()}`);
-    if (!ids.length) return toast.error("ID가 없습니다.");
+  const validateForm = () => {
+    Logger.debug(`VmSnapshotActionModal > validateForm ... `)
+    if (!mutate) return `알 수 없는 액션: ${activeModal()[0]}`
+    if (!ids.length) return "ID가 없습니다.";
+    return null;
+  }
 
+  const handleSubmit = () => {
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
+
+    Logger.debug(`VmSnapshotActionModal > handleSubmit ... `)
     ids.forEach((id) => {
       if (activeModal().includes("vmsnapshot:preview")) /* 미리보기 */
         mutate({ vmId: vmSelected1st?.id, snapshotId: id})
       else 
         mutate({ vmId: vmSelected1st?.id })
     });
-  }, [ids, vmsSelected]);
+  }
 
   return (
     <BaseModal targetName={Localization.kr.SNAPSHOT} submitTitle={label}

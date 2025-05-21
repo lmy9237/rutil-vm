@@ -1,6 +1,6 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
+import { useToast }            from "@/hooks/use-toast";
+import useUIState              from "@/hooks/useUIState";
 import BaseModal from "../BaseModal";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
 import TablesOuter from "../../table/TablesOuter";
@@ -38,6 +38,8 @@ const VmDiskConnectionModal = ({
   onSelectDisk,
   existingDisks,
 }) => {
+  const { toast } = useToast();
+
   const {
     disksSelected, setDisksSelected
   } = useGlobal()
@@ -143,11 +145,17 @@ const VmDiskConnectionModal = ({
   
   // 가상머신 생성 - 디스크 연결
   const handleOkClick = () => {
-    if (selectedDisks?.length === 0) {
-      toast.error("디스크를 선택하세요!");
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
       return;
     }
 
+    Logger.debug(`VmDiskConnectionModal > handleFormSubmit ... `)
     const selectedDiskLists = [...selectedDisks].map((d) => {
       const diskDetails = [...attDisks]?.find((disk) => disk?.id === d?.id);
       if (!diskDetails) return null;
@@ -165,11 +173,22 @@ const VmDiskConnectionModal = ({
     onClose()
   };
   
+  const validateForm = () => {
+    Logger.debug(`VmDiskConnectionModal > validateForm ... `)
+    if (selectedDisks?.length === 0) return `${Localization.kr.DISK}를 ${Localization.kr.PLACEHOLDER_SELECT}!`
+    return null
+  }
 
   // 가상머신 - 디스크 연결하기
   const handleFormSubmit = () => {
-    if (selectedDisks?.length === 0) {
-      toast.error("디스크를 선택하세요!");
+    Logger.debug(`VmDiskConnectionModal > handleFormSubmit ... `)
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
       return;
     }
     

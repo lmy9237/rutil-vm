@@ -1,15 +1,18 @@
 import React, { useCallback } from "react";
-import toast from "react-hot-toast";
-import useGlobal from "../../../hooks/useGlobal";
-import useSearch from "../../../hooks/useSearch";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import SearchBox from "../../../components/button/SearchBox";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import TableRowClick from "../../../components/table/TableRowClick";
-import TablesOuter from "../../../components/table/TablesOuter";
-import { useAllVmsFromDisk } from "../../../api/RQHook";
-import { status2Icon } from "../../../components/icons/RutilVmIcons";
-import Logger from "../../../utils/Logger";
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import { status2Icon }        from "@/components/icons/RutilVmIcons";
+import {
+  useAllVmsFromDisk
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name DiskVms
@@ -19,7 +22,9 @@ import Logger from "../../../utils/Logger";
  * @param {string} diskId 디스크ID
  * @returns
  */
-const DiskVms = ({ diskId }) => {
+const DiskVms = ({
+  diskId
+}) => {
   const { vmsSelected, setVmsSelected } = useGlobal()
   const { 
     data: vms = [],
@@ -47,17 +52,11 @@ const DiskVms = ({ diskId }) => {
   }));
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`DiskVms > handleRefresh ... `)
-    if (!refetchVms) return;
-    refetchVms()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchVms} />
         {/*  */}
       </div>
       <TablesOuter target={"vm"}

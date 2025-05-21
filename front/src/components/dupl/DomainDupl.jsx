@@ -1,21 +1,22 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useGlobal from "../../hooks/useGlobal";
-import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가;
-import SelectedIdView from "../common/SelectedIdView";
-import OVirtWebAdminHyperlink from "../common/OVirtWebAdminHyperlink";
-import DomainActionButtons from "./DomainActionButtons";
-import TablesOuter from "../table/TablesOuter";
-import SearchBox from "../button/SearchBox"; // ✅ 검색 UI 추가
-import DomainDataCenterActionButtons from "./DomainDataCenterActionButtons";
-import { checkZeroSizeToGiB, convertBytesToGB } from "../../util";
-import TableRowClick from "../table/TableRowClick";
-import { hostedEngineStatus2Icon, status2Icon } from "../icons/RutilVmIcons";
-import { getStatusSortKey } from "../icons/GetStatusSortkey";
-import Localization from "../../utils/Localization";
-import Logger from "../../utils/Logger";
-
+import useGlobal              from "@/hooks/useGlobal";
+import useSearch              from "@/hooks/useSearch";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
+import TablesOuter            from "@/components/table/TablesOuter";
+import TableRowClick          from "@/components/table/TableRowClick";
+import DomainActionButtons    from "@/components/dupl/DomainActionButtons";
+import DomainDataCenterActionButtons from "@/components/dupl/DomainDataCenterActionButtons";
+import { 
+  hostedEngineStatus2Icon,
+  status2Icon
+} from "@/components/icons/RutilVmIcons";
+import { getStatusSortKey }   from "@/components/icons/GetStatusSortkey";
+import { checkZeroSizeToGiB, convertBytesToGB } from "@/util";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 /**
  * @name DomainDupl
  * @description 도메인 목록을 표시하는 컴포넌트 (검색 및 테이블 포함)
@@ -31,7 +32,9 @@ const DomainDupl = ({
 }) => {
   // sourceContext: all = 전체목록 fromDomain = 도메인에서 데이터센터 fromDatacenter = 데이터센터에서 도메인
   const navigate = useNavigate();
-  const { domainsSelected, setDomainsSelected } = useGlobal()
+  const {
+    domainsSelected, setDomainsSelected
+  } = useGlobal();
   
   // ✅ 데이터 변환 (검색을 위한 `searchText` 필드 추가)
   const transformedData = [...domains].map((domain) => ({
@@ -66,12 +69,6 @@ const DomainDupl = ({
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`DomainDupl > handleRefresh ... `)
-    if (!refetch) return;
-    refetch()
-    import.meta.env.DEV && toast.success("다시 조회 중 ...")
-  }, [])
 
   const handleNameClick = useCallback((id) => {
     navigate(`/storages/domains/${id}`);
@@ -80,7 +77,7 @@ const DomainDupl = ({
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
         {sourceContext === "all" 
           ? <DomainActionButtons actionType={actionType} />
           : <DomainDataCenterActionButtons actionType={actionType} />

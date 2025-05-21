@@ -119,8 +119,12 @@ export const Localization = {
     IN_PROGRESS: "중 ...",
     YES: "예",
     NO: "아니오",
+    NO_CONTENT: "내용 없음",
+    NO_ITEM: "항목 없음",
+    PRIORITY: "우선순위",
 
     PLACEHOLDER: "임력하세요.",
+    PLACEHOLDER_SELECT: "선택하세요.",
     PLACEHOLDER_SEARCH: "검색어를 입력하세요.",
     PLACEHOLDER_USERNAME: "사용자명",
     PLACEHOLDER_PASSWORD: "암호",

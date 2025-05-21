@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import ComputingTree from "./tree/ComputingTree";
-import NetworkTree from "./tree/NetworkTree";
-import StorageTree from "./tree/StorageTree";
-import useTmi from "../../hooks/useTmi";
+import useTmi              from "@/hooks/useTmi";
+import ComputingTree       from "./tree/ComputingTree";
+import NetworkTree         from "./tree/NetworkTree";
+import StorageTree         from "./tree/StorageTree";
 
 const SidebarTree = () => {
   const { tmiLastSelected } = useTmi()

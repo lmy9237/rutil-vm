@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
-import toast from "react-hot-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import DomainImportNfs from "./import/DomainImportNfs";
-import DomainImportFibre from "./import/DomainImportFibre";
-import LabelInputNum from "../../label/LabelInputNum";
+import { useToast } from "@/hooks/use-toast";
+import useUIState           from "../../../hooks/useUIState";
+import useGlobal            from "../../../hooks/useGlobal";
+import BaseModal            from "../BaseModal";
+import DomainImportNfs      from "./import/DomainImportNfs";
+import DomainImportFibre    from "./import/DomainImportFibre";
+import LabelInputNum        from "../../label/LabelInputNum";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import LabelInput from "../../label/LabelInput";
+import LabelSelectOptions   from "../../label/LabelSelectOptions";
+import LabelInput           from "../../label/LabelInput";
 import {
   useImportDomain,
   useAllDataCenters,
@@ -16,9 +16,9 @@ import {
   useSearchFcFromHost,
   useAllNfsStorageDomains,
 } from "../../../api/RQHook";
-import { checkName } from "../../../util";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import { checkName } from "@/util";
+import Localization from "@/utils/Localization";
+import Logger from "@/utils/Logger";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 
 // 일반 정보
@@ -38,6 +38,7 @@ const DomainImportModal = ({
   isOpen,
   onClose,
 }) => {
+  const { toast } = useToast();
   // const { closeModal } = useUIState()
   const { datacentersSelected } = useGlobal()
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
@@ -152,8 +153,15 @@ const DomainImportModal = ({
 
   const handleFormSubmit = () => {
     const error = validateForm();
-    if (error) return toast.error(error);
-
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      
+      return
+    };
 
     const storageVo = isNfs
       ? (() => {
@@ -190,12 +198,7 @@ const DomainImportModal = ({
     };
   
     Logger.debug(`DomainModal > submitDomain ... dataToSubmit:`, dataToSubmit);
-    const onSubmitSuccess = () => {
-      onClose();
-      toast.success(`${Localization.kr.DOMAIN} ${Localization.kr.IMPORT} ${Localization.kr.FINISHED}`);
-    };
-  
-    importDomain(dataToSubmit, { onSuccess: onSubmitSuccess });
+    importDomain(dataToSubmit);
   };  
 
   return (

@@ -1,12 +1,19 @@
 import { useState, useEffect, Suspense, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import { openNewTab } from "../../../navigation";
-import SectionLayout from "../../../components/SectionLayout";
-import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
-import HeaderButton from "../../../components/button/HeaderButton";
-import Path from "../../../components/Header/Path";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import { openNewTab }         from "@/navigation";
+import SectionLayout          from "@/components/SectionLayout";
+import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
+import HeaderButton           from "@/components/button/HeaderButton";
+import Path                   from "@/components/Header/Path";
+import { rvi24Desktop }       from "@/components/icons/RutilVmIcons";
+import {
+  useVm
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
+import "./Vm.css";
 import VmGeneral from "./VmGeneral";
 import VmNics from "./VmNics";
 import VmSnapshots from "./VmSnapshots";
@@ -14,11 +21,6 @@ import VmApplications from "./VmApplications";
 import VmHostDevices from "./VmHostDevices";
 import VmEvents from "./VmEvents";
 import VmDisks from "./VmDisks";
-import { useVm } from "../../../api/RQHook";
-import { rvi24Desktop } from "../../../components/icons/RutilVmIcons";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
-import "./Vm.css";
 
 /**
  * @name VmInfo

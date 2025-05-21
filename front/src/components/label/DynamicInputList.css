@@ -1,8 +1,11 @@
-.dynamic-select-outer{
+.dynamic-select-outer {
   width: 50%;
 }
-.dynamic-select{
-  width:55%;
+.dynamic-select-outer button {
+  width:260px;max-width:260px;
+}
+.dynamic-select {
+  width: 55%;
   border: var(--border-btn);border-radius: 1px;
   padding: 2px;
   outline: none;
@@ -12,6 +15,8 @@
 .dynamic-select-outer .custom-options{
   width: 100%;
 }
-.dynamic-btns,.nic-label {
-  min-width: 71px;
+.dynamic-btns,
+.nic-label {
+  width: 71px;
+  /* min-width: 71px; */
 }

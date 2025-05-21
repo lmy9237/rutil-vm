@@ -1,36 +1,44 @@
 import React, { useMemo } from "react";
-import ActionButtonGroup from "../button/ActionButtonGroup";
-import useGlobal from "../../hooks/useGlobal";
-import useUIState from "../../hooks/useUIState";
-import Localization from "../../utils/Localization";
+import useUIState from "@/hooks/useUIState";
+import useGlobal from "@/hooks/useGlobal";
+import { ActionButtons } from "@/components/button/ActionButtons";
+import Localization from "@/utils/Localization";
 
+/**
+ * @name DomainDataCenterActionButtons
+ * @description 도메인에 종속 된 데이터센터 관련 액션버튼
+ * 
+ * @returns {JSX.Element} DomainDataCenterActionButtons
+ * 
+ * @see ActionButtons
+ **/
 const DomainDataCenterActionButtons = ({
-  actionType = "default",
+  actionType="default",
 }) => {
   // 데이터센터-도메인: 연결(도메인), 분리, 활성, 유지보수
   // 도메인-데이터센터: 연결(데이터센터), 분리, 활성, 유지보수
   const { setActiveModal } = useUIState();
   const { domainsSelected } = useGlobal()
 
-  const domain1st = useMemo(() => 
-    [...domainsSelected][0]
-  , [domainsSelected])
+  const selected1st = useMemo(() => [...domainsSelected][0] ?? null, [domainsSelected])
 
-  const isActive = domain1st?.status === "ACTIVE";
-  const isMaintenance = domain1st?.status === "MAINTENANCE";
-  const isLocked = domain1st?.status === "LOCKED";
+  const isActive = selected1st?.status === "ACTIVE";
+  const isMaintenance = selected1st?.status === "MAINTENANCE";
+  const isLocked = selected1st?.status === "LOCKED";
 
   const basicActions = [
-    { type: "attach", onBtnClick: () => setActiveModal("domain:attach"), label: Localization.kr.ATTACH, disabled: domainsSelected.length > 0 || isActive || !isMaintenance }, // 연결 disabled 조건 구하기 disabled: domainsSelected.length === 0 데이터센터가 없을때
-    { type: "detach", onBtnClick: () => setActiveModal("domain:detach"), label: Localization.kr.DETACH, disabled: domainsSelected.length === 0 || isLocked || isActive || !isMaintenance, },
-    { type: "activate", onBtnClick: () => setActiveModal("domain:activate"), label: Localization.kr.ACTIVATE, disabled: domainsSelected.length === 0 || isLocked || isActive || !isMaintenance, },
-    { type: "maintenance", onBtnClick: () => setActiveModal("domain:maintenance"), label: Localization.kr.MAINTENANCE, disabled: domainsSelected.length === 0 || isLocked || isMaintenance, },
+    { type: "attach",      onClick: () => setActiveModal("domain:attach"), label: Localization.kr.ATTACH, disabled: domainsSelected.length > 0 || isActive || !isMaintenance }, // 연결 disabled 조건 구하기 disabled: domainsSelected.length === 0 데이터센터가 없을때
+    { type: "detach",      onClick: () => setActiveModal("domain:detach"), label: Localization.kr.DETACH, disabled: domainsSelected.length === 0 || isLocked || isActive || !isMaintenance, },
+    { type: "activate",    onClick: () => setActiveModal("domain:activate"), label: Localization.kr.ACTIVATE, disabled: domainsSelected.length === 0 || isLocked || isActive || !isMaintenance, },
+    { type: "maintenance", onClick: () => setActiveModal("domain:maintenance"), label: Localization.kr.MAINTENANCE, disabled: domainsSelected.length === 0 || isLocked || isMaintenance, },
   ];
  
   return (
     <>
-      <ActionButtonGroup actionType={actionType} actions={basicActions} />
-   </>
+      <ActionButtons actionType={actionType}
+        actions={basicActions}
+      />
+    </>
   );
 };
 
