@@ -68,7 +68,7 @@ const VmHa = ({
             }
           }}
           options={[
-            { id: "", name: "도메인 없음" },  
+            { id: "none", name: "도메인 없음" },  
             ...domains
         ]}
       />

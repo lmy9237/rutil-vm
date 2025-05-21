@@ -19,6 +19,7 @@
 .tmi span {
   float:left;
   overflow:hidden;
+  height: 13px;
 }
 .tmi:hover {
   background: var(--color-white);

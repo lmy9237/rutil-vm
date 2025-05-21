@@ -6,6 +6,7 @@ import NetworkImportModal from "./NetworkImportModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import Localization from "../../../utils/Localization";
 import { useDeleteNetwork } from "../../../api/RQHook";
+import NetworkClusterModal from "./NetworkClusterModal";
 
 const NetworkModals = ({ }) => {
   const { activeModal, closeModal } = useUIState()
@@ -34,6 +35,12 @@ const NetworkModals = ({ }) => {
         // navigation={''}
       />
     ), 
+    manage: (
+      <NetworkClusterModal key={"network:manage"} isOpen={activeModal().includes("network:manage")}
+        onClose={() => closeModal("network:manage")}
+        networkId={networksSelected?.[0]?.id}
+      />
+    ),
   };
 
   return (

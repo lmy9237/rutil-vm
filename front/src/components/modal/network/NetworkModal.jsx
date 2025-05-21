@@ -148,7 +148,7 @@ const NetworkModal = ({
     const dataToSubmit = {
       ...formState,
       dataCenterVo,
-      clusterVos: // 🔥 연결된 클러스터만 필터링      
+      clusterVos:    
         clusterVoList.filter((cluster) => cluster.isConnected).map((cluster) => ({
           id: cluster.id,
           name: cluster.name,
@@ -197,9 +197,9 @@ const NetworkModal = ({
         <hr />
 
         <div id="vlan-enabled-group"
-          className="f-center">
+          className="f-btw">
          <LabelCheckbox id="vlanEnabled" label="VLAN 태깅 활성화"
-            checked={formState.vlanEnabled} // ✅ 상태만 사용
+            checked={formState.vlanEnabled} 
             onChange={(e) =>
               setFormState((prev) => ({
                 ...prev,
@@ -208,7 +208,7 @@ const NetworkModal = ({
               }))
             }
           />
-          <div style={{width:"330px"}}>
+          <div style={{width:"55%"}} className="checkbox-number">
             <LabelInputNum id="vlan"
               placeholder="VLAN ID"
               value={formState.vlan}
@@ -229,7 +229,7 @@ const NetworkModal = ({
               portIsolation: isChecked ? prev.portIsolation : false, // 꺼질 땐 포트 분리도 같이 false
             }));
           }}
-      />
+        />
         <LabelCheckbox id="portIsolation" label={`포트 ${Localization.kr.DETACH}`}
           checked={formState.portIsolation}
           className="mb-3"
@@ -286,32 +286,40 @@ const NetworkModal = ({
             }}
             tType="사용자 정의" fType="기본값 (1500)"
           />
-
           <input
             type="number"
             className="ml-2"
             style={{ width: "150px" }}
-            min="68"
+            min="0"
             max="1500"
             step="1"
             value={formState.mtu}
             disabled={formState.mtu === 0}
             onChange={(e) => {
+              const value = e.target.value;
+              setFormState((prev) => ({
+                ...prev,
+                mtu: value,
+              }));
+            }}
+            onBlur={(e) => {
               let value = parseInt(e.target.value || "0", 10);
-              if (value <= 68) {
-                toast.error("MTU는 68이상의 값만 입력 가능합니다.");
-                return;
-              }
-              if (value > 1500) {
+
+              if (isNaN(value) || value < 68) {
+                toast.error("MTU는 68 이상의 값만 입력 가능합니다.");
+                value = 68;
+              } else if (value > 1500) {
+                toast.error("MTU는 최대 1500까지만 설정할 수 있습니다.");
                 value = 1500;
-                toast.error("MTU는 최대 1500까지만 설정할 수 있습니다."); 
               }
+
               setFormState((prev) => ({
                 ...prev,
                 mtu: value,
               }));
             }}
           />
+
         </div>
 
           
@@ -320,7 +328,7 @@ const NetworkModal = ({
           <span>DNS 수정 필요</span>
         </div>
 
-        <div id="dns-settings-group" class="f-center">
+        <div id="dns-settings-group" class="f-start">
           <LabelCheckbox id="dns-settings" label="DNS 설정"
             checked={dnsServers.length > 0}
             onChange={(e) => {

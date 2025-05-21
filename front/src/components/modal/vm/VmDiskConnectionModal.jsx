@@ -10,6 +10,7 @@ import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import SelectedIdView from "../../common/SelectedIdView";
 import useGlobal from "../../../hooks/useGlobal";
+import LabelSelectOptions from "@/components/label/LabelSelectOptions";
 
 // 인터페이스 목록
 const interfaceList = [
@@ -80,22 +81,21 @@ const VmDiskConnectionModal = ({
         onChange={() => handleCheckboxChange(attDisk?.id)}
       />
     ),
-    interface: (
-      attDisk?.id && <select id={`interface-select-${attDisk?.id}`} 
-        value={selectedInterfaces[attDisk?.id] || "VIRTIO_SCSI"}
-        onChange={(event) => {
-          handleInterfaceChange(attDisk?.id, event.target.value); //  디스크 ID를 전달
-        }}
-      >
-        {interfaceList.map((iface) => (
-          <option key={iface.value} value={iface.value}>
-            {iface.label}
-          </option>
-        ))}
-      </select>
-    ),
-    /*
-    // TODO: 컴포넌트로 빼면 옵션값이 테이블셀 안에 가려져서 안보이는 문제
+    // interface: (
+    //   attDisk?.id && <select id={`interface-select-${attDisk?.id}`} 
+    //     value={selectedInterfaces[attDisk?.id] || "VIRTIO_SCSI"}
+    //     onChange={(event) => {
+    //       handleInterfaceChange(attDisk?.id, event.target.value); //  디스크 ID를 전달
+    //     }}
+    //   >
+    //     {interfaceList.map((iface) => (
+    //       <option key={iface.value} value={iface.value}>
+    //         {iface.label}
+    //       </option>
+    //     ))}
+    //   </select>
+    // ),
+    
     interface: ( 
       <LabelSelectOptions
         id={`interface-select-${attDisk.id}`}
@@ -105,7 +105,7 @@ const VmDiskConnectionModal = ({
         className="w-full"
       />
     ),
-    */
+    
     readonly: (
       attDisk?.id && <input type="checkbox" id={`readonly-${attDisk?.id}`}
         checked={selectedReadOnly[attDisk?.id] || false} // 개별 디스크 상태 유지

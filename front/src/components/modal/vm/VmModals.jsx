@@ -11,6 +11,7 @@ import VmMigrationModal from "./VmMigrationModal";
 import VmImportModal from "./VmImportModal";
 import Logger from "../../../utils/Logger";
 import "./MVm.css";
+import { useParams } from "react-router-dom";
 
 /**
  * @name VmModals
@@ -31,11 +32,12 @@ const VmModals = ({
   ]), [])
   const { activeModal, closeModal, } = useUIState()
   const { vmsSelected } = useGlobal()
-
+  const { id: templateId } = useParams();
   const modals = {
     create: (
       <VmModal key={"vm:create"} isOpen={activeModal().includes("vm:create")}
         onClose={() => closeModal("vm:create")}
+        templateId={templateId}
       />
     ), update: (
       <VmModal key={"vm:update"} isOpen={activeModal().includes("vm:update")} editMode 
