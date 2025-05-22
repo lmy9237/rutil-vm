@@ -28,6 +28,109 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@lmy9237][lmy9237]
 -->
 
+
+## 0.3.2 - 2025-05-23
+
+- [`api-v0.3.2`][api-v0.3.2]: 백엔드
+- [`web-v0.3.2`][web-v0.3.2]: 프론트앤드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `${front}`: (개발용) oVirt 관련 페이지 링크 표출
+  - `${front}`/`${back}`: 최근작업 > 작업 제거 API 구성 및 적용
+- [@dhj27][dhj27]
+  - `${front}` 호스트 어댑터 status 추가
+- [@lmy9237][lmy9237]
+  - `${front}`: 가상머신 ova모달 input정보넣기
+  - `${front}`: 가상머신 상세페이지 action버튼 모달 추가
+  - `${front}`: 모달 안 하단에 위치한 dropdown 메뉴 선택이 안되는 현상(→ shadcn으로 변경)
+  - `${front}`: 우측메뉴 > 가상머신 > 콘솔 선택 메뉴 추가
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - `${front}`: 최근작업 > 세부작업 컬럼 내 데이터 표출 변경 (진행완료 건 / 전체 건)
+  - `${front}`: 테이블 이름/설명 컬럼 정렬 왼쪽
+  - `${back}`/`${front}`: 운영시스템 선택 목록 API 구성 및 재횔용
+  - `${back}`/`${front}`: 클러스터 레벨 정보 (CPU 아키텍처 정보) 조회 API 구성 및 적용 (데이터센터 모달)
+  - `${front}`: 각 목록 API 호출에 대해 재갱신 (refresh) 처리 연결
+  - `${front}`: 변경/제거 API 호출 후 모달 자동닫기 처리
+  - `${front}`: 대시보드 원 그래프
+     - 각 그래프에 대한 설명 추가
+     - 문구 변경 `총` 앞에 붙이기
+     - 처음 로딩 시 값 `0`으로 출력되는 문제 해소
+  - `${front}`: 트리메뉴에서 Rutil Manager 우클릭 시 탭 메뉴 구성
+  - `${front}`: Rutil Manager 상세정보에서 부팅시간 값 (UpTime 형태로) 출력되도록 보정
+  - `${front}`: 스냅샷 미리보기 상태에서 `active vm before the preview` 문구 가리기
+  - `${back}`: 도메인 목록 조회에서 "디스크 스냅샷 생성일자", "스냅샷설명", "연결대상" 항목 찾아 API 재구성 및 값 연결
+  - `${back}`:  네트워크 생성/편집 모달 - DNS 관리 API 안정화
+  - `${front}`/`${back}`: 가상머신 > 콘솔 remoteviewer 로 접근가능 파일 생성 API 구성 및 적용
+  - `${front}`: Select, SelectID input에서 발생하는 오류에 대한 로직 처리
+    - 데이터센터 > 클러스터: 생성/편집
+    - 가상머신: 생성/편집
+- [@dhj27][dhj27]
+  - `${back}${front}`: 호스트 네트워크
+  - `${back}${front}`: 스토리지 도메인 NFS 중복 검사 코드 추가
+  - `${back}`: 가상머신 네트워크 인터페이스 api 수정
+  - `${back}`: 가상머신 네트워크 인터페이스 에러 수정
+             - network 변경에 따른 vnicProfile, network 에러 해결 (follow문제)
+             - 네트워크 인터페이스 모달- vnicprofile passThrough 모드에 따른 유형 변화
+  - `${front}`: VmNics 이름 정렬 출력
+- [@lmy9237][lmy9237]
+  - `${front}`: 관리버튼 화살표 색상수정
+  - `${front}`: select박스 텍스트 넘치는 것 수정
+  - `${front}`: 우클릭메뉴박스 선 잘리는문제 수정
+  - `${front}`: 스냅샷모달 스크롤빼기
+  - `${front}`: 템플릿 편집 모니터수 수정
+  - `${front}`: 스토리지 도메인 상태 아이콘 문제        
+  - `${front}`: 가상머신 > 디스크 모달 제목 및 내용 오출력(편집)
+  - `${front}`: 이벤트 텍스트짤림 수정
+  - `${front}`: 툴팁 잘리는 것 수정
+  - `${front}`: 가상머신 생성/편집 > VNIC 오와 열 수정 
+  - `${front}`: 대시보드 이벤트박스 구조 수정
+  - `${front}`: 대시보드 아이콘 작아지는 것 수정
+  - `${front}`: 대시보드 작은박스들 한줄로 떨어지게 하는 것 막기
+  - `${front}`: 대시보드 그리드 박스 순서 가로로 변경
+  - `${front}`: 테이블 tablerowclick 왼쪽정렬(확인필요)
+  - `${front}`: 호스트 → 일반 → 그래프 잘리는 것 수정
+  - `${front}`: 네트워크 트리구조 아이콘 색빠지는 것 수정
+  - `${front}`: dropdown메뉴 색빠지는 것 수정
+  - `${front}`: 가상머신 action버튼 활성화 및 표출 조건수정
+  - `${front}`: input disabled 글씨 색 연하게
+  - `${front}`: 템플릿 eidtmodal 수정(크기 작아지는문제)
+  - `${front}`: 도메인 Rutil manager 네트워크 눌렀을 때 네트워크 버튼으로 활성화 되는 것 수정
+  - `${front}`: vnic 프로파일 편집 설명부분 입력안되는 것 수정 + 한글 유효성검사 삭제
+  - `${front}`: 네트워크 인터페이스 화살표 눌러도 토글 안됨
+  - `${front}`: 호스트 테이블 간격 수정( 그래프 옆으로 옮기기)
+  - `${front}`: 스토리지 도메인 파괴버튼없애기
+  - `${front}`: bar차트 굵기 얇게 + 수치에 따라 색깔 정해주기
+  - `${front}`: 대시보드: Grid: 가상머신 이름 넘치는 현상(크기고정)
+  - `${front}`: 최근작업 상태컬럼 크기조정(줄이기)
+  - `${front}`: 가상머신 스냅샷 > 세부항목 문구변경
+  - `${front}`: 토글 버튼 비활성화 상태에 대한 처리 (Host 모달) 
+  - `${front}`: 테이블 안 새로고침 버튼에 대한 기능 (뷰 활성화에 대한 표시 필요)
+  - `${front}`: 대시보드 원그래프 글씨 가운데정렬(현재 밑으로 내려가있음)
+  - `${front}`: 호스트 네트워크인터페이스 네트워크편집모달 찌그러짐
+  - `${front}`: 스토리지 도메인 생성/연결 모달 창 (FC) →
+      - ID 표출 은닉 (개발에서만 표출: SelectedIdView 활용)
+      - 작업승인 위치바꾸기  , 빨간글씨 왼쪽으로 , 모달크기 줄이기
+  - `${front}`: 디스크 할당 테이블 표출 불량 (내용이 넘쳐서 안보임)
+  - `${front}`: 가상머신 > 콘솔 (액션버튼): 선택 후 닫기
+  - `${front}`: 네트워크모달 사용자정의 input숫자 안지워지는 것(조건) 수정
+  - `${front}`: asidebar 글자 잘리는 것 수정 + 테이블 글씨 잘리는 것 수정
+  - `${front}`: 스토리지 도메인 > 디스크 액션버튼 > 디스크 화면: 디스크 목록 개수가 많아 질 때 밑으로 가면 Header부분이 짤리는    현상(.main-outer 의 스크롤 유무 질문드리기)
+  - `${front}`: 템플릿 부분 새 가상머신 눌렀을 때 기본값 해당 템플릿으로 설정(모달열릴때 templateid가 안들어감)
+  - `${front}`: 가상머신 > 디스크 액션버트 `이동` 버튼 선택 하나 이상 있을 때 활성화
+  - `${front}`: TMI > 가상머신 우클릭 > 액션버튼 탬플릿 버튼은 가리기
+  - `${front}`: 가상머신 >  스냅샷 메모리저장 토글 선택 시 (활성화/해제) 구현
+  - `${front}`: 도메인 → 도메인/템플릿  가져오기 → 모달창 UI수정
+
+### Removed 
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+
 ---
 
 ## 0.3.1 - 2025-05-09
@@ -970,6 +1073,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[web-v0.3.2]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.1...web-v0.3.2
+[api-v0.3.2]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.1...api-v0.3.2
 [web-v0.3.1]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.0...web-v0.3.1
 [api-v0.3.1]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.0...api-v0.3.1
 [web-v0.3.0]: https://github.com/ititcloud/rutil-vm/compare/web-v0.2.6...web-v0.3.0
