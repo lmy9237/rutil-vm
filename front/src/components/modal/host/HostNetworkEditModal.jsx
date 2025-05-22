@@ -10,7 +10,6 @@ import { RVI36, rvi36Add, rvi36Remove } from "../../icons/RutilVmIcons";
 import Logger from "../../../utils/Logger";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 
-
 const HostNetworkEditModal = ({ 
   isOpen, 
   onClose,
@@ -26,7 +25,7 @@ const HostNetworkEditModal = ({
   const tabs = useMemo(() => [
     { id: "ipv4",  label: "IPv4",    onClick: () => setSelectedModalTab("ipv4") },
     { id: "ipv6",  label: "IPv6",    onClick: () => setSelectedModalTab("ipv6") },
-    { id: "dns",   label: "DNS 설정", onClick: () => setSelectedModalTab("dns") },
+    // { id: "dns",   label: "DNS 설정", onClick: () => setSelectedModalTab("dns") },
   ], []);
 
   // const { mutate: editNetworkAttach} = useEditHostNetworkFromHost(onClose, onClose)

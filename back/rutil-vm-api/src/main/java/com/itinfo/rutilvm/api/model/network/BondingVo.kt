@@ -70,7 +70,7 @@ fun BondingVo.toBondingBuilder(): BondingBuilder {
     return BondingBuilder()
         .options(toDefaultOption()) // 기본 옵션지정 mode1
 		.slaves(this.slaves.map { slave ->
-			HostNicBuilder().id(slave.id).build()
+			HostNicBuilder().name(slave.name).build()
 		})
 }
 

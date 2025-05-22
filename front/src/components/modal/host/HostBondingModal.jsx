@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
@@ -20,12 +20,7 @@ const HostBondingModal = ({
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
   const bLabel = editmode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
-  // const { data: hostNic = {} } = useNetworkInterfaceFromHost(hostId, editmode ? nicData[0].id : null);
-  const { data: hostNic = {} } = useNetworkInterfaceFromHost(
-    hostId, 
-    editmode && nicData?.length ? nicData[0].id : null
-  );
-
+  const { data: hostNic = {} } = useNetworkInterfaceFromHost(hostId, editmode ? nicData?.[0].id : null);
   
   const [name, setName] = useState("");
   // const [options, setOptions] = useState([]);
@@ -52,7 +47,7 @@ const HostBondingModal = ({
       setName(hostNic.name);
       // initializeOptions(hostNic);
     }
-  }, [editmode]);
+  }, [isOpen, editmode]);
 
   const validateForm = () => {
     const nameError = checkName(name);

@@ -29,7 +29,7 @@ import java.io.Serializable
 class NetworkAttachmentVo (
     val id: String = "",
     val inSync : Boolean = false,
-    val ipAddressAssignments: List<IpAddressAssignmentVo>,
+    val ipAddressAssignments: List<IpAddressAssignmentVo> = listOf(),
     val hostVo: IdentifiedVo = IdentifiedVo(),
     val hostNicVo: IdentifiedVo = IdentifiedVo(),
     val networkVo: IdentifiedVo = IdentifiedVo(),
@@ -84,29 +84,17 @@ fun List<NetworkAttachment>.toNetworkAttachmentVos(): List<NetworkAttachmentVo> 
  * 호스트 네트워크 수정 modified_network_attachments
  */
 fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment {
-	// val builder = NetworkAttachmentBuilder()
-	// 	.network(NetworkBuilder().id(this.networkVo.id).build())
-	// 	.hostNic(HostNicBuilder().id(this.hostNicVo.id).build())
-	// 	.ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
-	// DNS가 있다는 전제하에
-	// if (this.nameServerList != null) {
-	// 	builder.dnsResolverConfiguration(
-	// 		DnsResolverConfigurationBuilder().nameServers(this.nameServerList).build()
-	// 	)
-	// }
-	// val builder = NetworkAttachmentBuilder()
-	// if(this.id.isNotEmpty()) builder.id(this.id)
-	//
-	// return builder
-	// 	.network(NetworkBuilder().id(this.networkVo.id).build())
-	// 	.hostNic(HostNicBuilder().name(this.hostNicVo.name).build())
-	// 	.ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
-	// 	.build()
-	return NetworkAttachmentBuilder()
+	val builder = NetworkAttachmentBuilder()
 		.network(NetworkBuilder().id(this.networkVo.id).build())
 		.hostNic(HostNicBuilder().name(this.hostNicVo.name).build())
-		.ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
-		.build()
+
+	if(this.ipAddressAssignments.isNotEmpty()){
+		builder.ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
+	}
+	// if (this.nameServerList != null) {
+	// 	builder.dnsResolverConfiguration(DnsResolverConfigurationBuilder().nameServers(this.nameServerList).build())
+	// }
+	return builder.build()
 }
 
 // 여러개
@@ -119,8 +107,6 @@ fun List<NetworkAttachmentVo>.toModifiedNetworkAttachments(): List<NetworkAttach
 fun NetworkAttachmentVo.toRemoveNetworkAttachment(): NetworkAttachment {
 	return NetworkAttachmentBuilder()
 		.id(this.id)
-		// .network(NetworkBuilder().id(this.networkVo.id).build())
-		// .hostNic(HostNicBuilder().id(this.hostNicVo.id).build())
 		.build()
 }
 fun List<NetworkAttachmentVo>.toRemoveNetworkAttachments(): List<NetworkAttachment> =

@@ -1,22 +1,27 @@
 import { Tooltip } from "react-tooltip";
 import { RVI16, rvi16TriangleDown, rvi16TriangleUp } from "../../../../components/icons/RutilVmIcons";
+import NicToolTip from "./NicToolTip";
 
-const BaseNic = ({ nic, generateNicTooltipHTML }) => {
+const BaseNic = ({ 
+  nic, 
+  handleDragStart, 
+  handleDrop, 
+  handleDragOver 
+}) => {
+
   return (
-    <div
+    <div className="interface-container container"
       key={nic.id}
-      className="interface-container container"
       data-tooltip-id={`nic-tooltip-${nic.id}`}
-      data-tooltip-html={generateNicTooltipHTML(nic)}
+      data-tooltip-html={NicToolTip(nic)}
       draggable
-      // onClick={() => {
-      //   setSelectedNic(nic);
-      //   setSelectedSlave(null);
-      // }}
-      // onDragStart={(e) => dragStart(e, nic, "container")}
+      onDragStart={(e) => handleDragStart(e, nic, "nic", "nic")}
+      onDrop={(e) => { handleDrop(e, "bond", nic.id, nic.name)}}
+      onDragOver={(e) => handleDragOver(e, "nic", "bond")}
     >
       <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
       {nic.name}
+      {/* {idView(nic)} */}
       <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
     </div>
   );

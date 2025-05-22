@@ -1,0 +1,68 @@
+import { Tooltip } from "react-tooltip";
+import { RVI16, rvi16TriangleDown, rvi16TriangleUp, RVI36, rvi36Edit } from "../../../../components/icons/RutilVmIcons";
+import NicToolTip from "./NicToolTip";
+
+const BondNic = ({ 
+  nic, 
+  dragItem, setDragItem,
+  setDragOverTarget,
+  handleDragStart,
+  setSelectedNic,
+  handleAddBaseNicToBond,
+  setEditBondingMode, 
+  setIsBondingPopup
+}) => {
+  const onlyBasicNic = dragItem && dragItem.type === "nic" && dragItem.list === "nic"; // base NIC만 드롭 허용
+
+  return (
+    <div className="interface-outer container flex-col p-2"
+      data-tooltip-id={`nic-tooltip-${nic.id}`}
+      data-tooltip-html={NicToolTip(nic)}
+      onDragOver={e => {
+        if (onlyBasicNic) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+        }
+      }}
+      onDrop={e => {
+        if (onlyBasicNic) {
+          handleAddBaseNicToBond(dragItem.item, nic);
+          setDragItem(null);
+          setDragOverTarget(null);
+        }
+      }}
+    >
+      <div className="interface-content">
+        <div className="f-start">{nic.name}</div>
+        <RVI36 className="icon cursor-pointer" iconDef={rvi36Edit()}
+          onClick={() => {
+            setSelectedNic(nic);
+            setEditBondingMode(true);
+            setIsBondingPopup(true);
+          }}
+        />
+      </div>
+      <div className="w-full interface-container-outer2" onDragOver={e => e.preventDefault()}>
+        {nic.bondingVo?.slaves.map((slave) => (
+          <div className="interface-container container"
+            key={slave.id}
+            // data-tooltip-id={`nic-tooltip-${slave.id}`}
+            // data-tooltip-html={NicToolTip(slave)}
+            draggable
+            onDragStart={e => handleDragStart(e, slave, "nic", "slave", nic)}
+          >
+            <div className="flex gap-1">
+              <RVI16 iconDef={slave.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
+              {slave.name}
+              {/* {idView(slave)} */}
+            </div>
+            <Tooltip id={`nic-tooltip-${slave.id}`} place="top" effect="solid" />
+          </div>
+        ))}
+      </div>
+      <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
+    </div>     
+  );
+};
+
+export default BondNic;

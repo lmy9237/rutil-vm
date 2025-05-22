@@ -1,13 +1,8 @@
 import React, { useState, useEffect, Suspense, useMemo, useCallback } from "react";
-import { Tooltip } from "react-tooltip";
 import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import { checkZeroSizeToMbps } from "../../../util";
-import {
-  RVI16, rvi16TriangleDown, rvi16TriangleUp, rvi16VirtualMachine,
-  RVI24, rvi24CompareArrows,
-  RVI36, rvi36Edit,
-} from "../../../components/icons/RutilVmIcons";
+import { RVI24, rvi24CompareArrows } from "../../../components/icons/RutilVmIcons";
 import Loading from "../../../components/common/Loading";
 import HostNetworkEditModal from "../../../components/modal/host/HostNetworkEditModal";
 import HostBondingModal from "../../../components/modal/host/HostBondingModal";
@@ -23,10 +18,11 @@ import {
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import "./HostNic.css";
-
-const idView = (data) => {
-  return(<span style={{ marginLeft: "4px", color: "#888", fontSize: "6px"}}>{data.id}</span>);
-};
+import BondNic from "./hostNics/BondNic";
+import BaseNic from "./hostNics/BaseNic";
+import MatchNetwork from "./hostNics/MatchNetwork";
+import NoneNetwork from "./hostNics/NoneNetwork";
+import ClusterNetworkList from "./hostNics/ClusterNetworkList";
 
 const HostNics = ({ hostId }) => {
   const { hostsSelected } = useGlobal();
@@ -59,8 +55,10 @@ const HostNics = ({ hostId }) => {
   
   // 드래그
   const [dragItemFlag, setDragItemFlag] = useState(false);    // 변경항목 있는지 확인
+  const [cancelFlag, setCancelFlag] = useState(false);        // 취소 버튼만
   const [dragItem, setDragItem] = useState(null);             // 드래그 되는 항목 { item, type, list('attach', 'detach'), parentBond }
   const [dragOverTarget, setDragOverTarget] = useState(null); // 드래그 되는 대상 { targetType, targetDestination }
+
 
   // 초기 값
   const [baseItems, setBaseItems] = useState({
@@ -186,10 +184,6 @@ const HostNics = ({ hostId }) => {
     })
   );
 
-  console.log('hostNics: ', hostNics);
-  console.log('networkAttachments: ', networkAttachments);
-  console.log('networks: ', networks);
-
   // 편집중이 아닐 때만!
   useEffect(() => {
     if (!dragItemFlag && hostNics.length > 0 && networkAttachments.length >= 0 && networks.length >= 0) {
@@ -205,6 +199,7 @@ const HostNics = ({ hostId }) => {
       });
       setDragItem(null);
       setDragItemFlag(false);
+      setCancelFlag(false);
       setDragOverTarget(null);
       setModifiedBonds([]);
       setRemoveBonds([]);
@@ -217,28 +212,83 @@ const HostNics = ({ hostId }) => {
   // movedItems 하나라도 항목이 있으면 버튼 활성화
   useEffect(() => {
     setDragItemFlag(Object.values(movedItems).some(list => list.length > 0));
+    // if(baseItems.networkAttachment.length === 0 && movedItems.networkAttachment.length === 0){
+    //   setDragItemFlag(false);
+    //   setCancelFlag(true);
+    // }
   }, [movedItems]);
 
-  // const validateForm = () => {
-  //   if (!dragItemFlag) return `변경항목이 없습니다`;
-  //   return null;
-  // };
+  const validateForm = () => {
+    
+    return null;
+  };
 
   const handleFormSubmit = () => {
-    // const error = validateForm();
-    // if (error) return toast.error(error);
+    const error = validateForm();
+    if (error) return toast.error(error);
 
     const hostNetworkVo = {
-      bonds: modifiedBonds,
-      bondsToRemove: removeBonds,
-      networkAttachments: modifiedNAs,
-      networkAttachmentsToRemove: removeNAs
+      bonds: modifiedBonds.map(bond => ({
+        name: bond.name,
+        bondingVo: {
+          slaves: bond.bondingVo.slaves.map(slave => ({ name: slave.name }))
+        }
+      })),
+      bondsToRemove: removeBonds.map(bond => ({
+        name: bond.name
+      })),
+      networkAttachments: modifiedNAs.map(na => ({
+        networkVo: { id: na.networkVo.id },
+        hostNicVo: { name: na.hostNicVo.name },
+        ipAddressAssignments: []
+      })),
+      networkAttachmentsToRemove: removeNAs.map(na => ({
+        id: na.id,
+      }))
+
     };
 
     Logger.debug(`hostSetup handleFormSubmit ... dataToSubmit: `, hostNetworkVo); // 데이터 출력
 
     setupNetwork({ hostId: hostId, hostNetworkVo: hostNetworkVo });
+
+    setMovedItems({
+      nic: [], 
+      networkAttachment: [], 
+      network: []
+    });
+    setDragItem(null);
+    setDragItemFlag(false);
+    setCancelFlag(false);
+    setModifiedBonds([]);
+    setRemoveBonds([]);
+    setModifiedNAs([]);
+    setRemoveNAs([]);
   };
+
+  // 네트워크를 추가하거나 이동시킬 때 호출되는 함수
+  const updateModifiedNAs = (hostNicVo, networkVo) => {
+    setModifiedNAs(prev => {
+      const existingEntry = prev.find(entry => entry.hostNicVo.name === hostNicVo.name);
+        if (existingEntry) {
+          // 이미 존재하는 경우, 네트워크 이름 추가
+          return prev.map(entry =>
+            entry.hostNicVo.name === hostNicVo.name
+              ? {
+                  ...entry,
+                  networkVo: Array.isArray(entry.networkVo)
+                    ? [...entry.networkVo, networkVo]
+                    : [entry.networkVo, networkVo]
+                }
+              : entry
+          );
+        } else {
+          // 신규 항목인 경우, 배열로 초기화
+          return [...prev, { hostNicVo, networkVo }];
+        }
+      });
+    };
+
 
   /**
    * 
@@ -280,21 +330,11 @@ const HostNics = ({ hostId }) => {
     return isVlanLess(networkVlan) && existingNAList.some(na => isVlanLess(na.networkVo?.vlan));
   };
   
-  // 실제 변경된 할당된 네트워크 정보들
-  // const getActualModifiedNAs = () => {
-  //   return modifiedNAs.filter(na =>
-  //     [...baseItems.networkAttachment, ...movedItems.networkAttachment].some(attached => 
-  //       attached.hostNicVo?.id === na.hostNicVo?.id && attached.networkVo?.id === na.networkVo?.id
-  //     )
-  //   );
-  // };
-
   // networkAttachment 찾는 함수
   const findNetworkAttachment = (networkId) => {
     return baseItems.networkAttachment.find(na => na.networkVo.id === networkId)
       ?? movedItems.networkAttachment.find(na => na.networkVo.id === networkId);
   };
-
 
   /**
    * 
@@ -335,7 +375,7 @@ const HostNics = ({ hostId }) => {
     }));
 
     // 변경될 네트워크 목록에 값 추가
-    setModifiedNAs(prev => [...prev, newAttachment]);
+    updateModifiedNAs(newAttachment.hostNicVo, newAttachment.networkVo);
     setDragItemFlag(true);
     toast.success("handleDropUnassignedNetworkToNic");
   };
@@ -355,7 +395,8 @@ const HostNics = ({ hostId }) => {
 
     // 같은 NIC에 연결된 상태라면 드롭 무시
     if (draggedNA.hostNicVo.id === nicId) {
-      return toast.success("동일 인터페이스에 드롭하여 무시됨"); // DROP
+      return;
+      // return toast.success("동일 인터페이스에 드롭하여 무시됨"); // DROP
     }
 
     if (hasVlanConflict(draggedNetwork.vlan, nicId)) {
@@ -391,9 +432,9 @@ const HostNics = ({ hostId }) => {
    * @returns 
    */
   const handleDropAssignedNetworkToUnassigned = (draggedNetwork) => {
-    // 드래그 된 네트워크
+    // 드래그 된 네트워크. draggedNetwork.id는 networkVo.id를 의미함
     const draggedNA = findNetworkAttachment(draggedNetwork.id);
-    if (!draggedNA) return;
+    if (!draggedNA) {return toast.error("삭제할 네트워크 연결 정보를 찾을 수 없습니다.")}
 
     const originalNetworkData = networks.find(net => net.id === draggedNetwork.id) || {};
 
@@ -407,22 +448,30 @@ const HostNics = ({ hostId }) => {
       usageVm: originalNetworkData?.usage?.vm || false,
     };
 
+    // --- 상태 업데이트 로직 ---
     // 지정된 할당된 네트워크에서 드래그 항목 제외
     setBaseItems(prev => ({
-      ...prev, 
+      ...prev,
+      // networkVo.id 기준으로 필터링하는 것이 맞음
       networkAttachment: prev.networkAttachment.filter(na => na.networkVo.id !== draggedNetwork.id)
     }));
 
     // 변경된 목록에 값 추가
     setMovedItems(prev => ({
       ...prev,
+      // networkVo.id 기준으로 필터링하는 것이 맞음
       networkAttachment: prev.networkAttachment.filter(na => na.networkVo.id !== draggedNetwork.id),
-      network: [...prev.network, restoredNetwork],
+      network: [...prev.network, restoredNetwork], // UI 표시용 restoredNetwork 추가
     }));
 
-    // 지워질 네트워크 할당에 값 추가
-    setRemoveNAs(prev => [...prev, restoredNetwork]);
+    // *** 여기가 핵심 수정 ***
+    // 지워질 네트워크 할당 목록에는 실제 Network Attachment의 ID를 가진 객체를 추가
+    // setRemoveNAs(prev => [...prev, restoredNetwork]); // 이전 코드 (문제 발생)
+    setRemoveNAs(prev => [...prev, { id: draggedNA.id }]); // 수정된 코드: draggedNA.id 사용!
+
     setDragItemFlag(true);
+    // 디버깅을 위해 draggedNA.id를 로깅
+    toast.success(`Network Attachment ID to remove: ${draggedNA.id}`);
     toast.success("handleDropAssignedNetworkToUnassigned");
   };
 
@@ -567,6 +616,7 @@ const HostNics = ({ hostId }) => {
   const handleDropBond = (slaveNic, parentBond) => {
     const allSlaves = parentBond.bondingVo.slaves || [];
 
+    // 1. 본딩에 연결된 Network Attachments 찾기
     const bondNetworks = [...baseItems.networkAttachment, ...movedItems.networkAttachment]
       .filter(na => na.hostNicVo?.id === parentBond.name || na.hostNicVo?.name === parentBond.name);
 
@@ -609,13 +659,17 @@ const HostNics = ({ hostId }) => {
       });
 
       setRemoveBonds(prev => [...prev, { id: parentBond.id, name: parentBond.name }]);
-      setRemoveNAs(prev => [...prev, ...bondNetworks]);
+
+      // *** 여기가 질문하신 내용의 핵심 구현부 ***
+      // 본딩에 연결되어 있던 Network Attachment들도 삭제 목록(`removeNAs`)에 추가
+      const naIdsToRemove = bondNetworks.map(na => ({ id: na.id })); // 각 NA의 고유 ID를 사용
+      setRemoveNAs(prev => [...prev, ...naIdsToRemove]);
+      toast.success(`Following NAs will be removed: ${naIdsToRemove.map(n=>n.id).join(', ')}`); // 디버깅용
+
+
       setDragItemFlag(true);
       toast.success("본딩 해제되어 각각의 NIC로 분리되었습니다. 할당된 네트워크는 해제되었습니다.");
-    } 
-
-    // 3개 이상이면 해당 NIC만 본딩에서 분리하고 bond는 남김
-    else {
+    } else { // 3개 이상이면 해당 NIC만 본딩에서 분리하고 bond는 남김
       const remainSlaves = allSlaves.filter(s => s.id !== slaveNic.id);
 
       setBaseItems(prev => {
@@ -649,7 +703,6 @@ const HostNics = ({ hostId }) => {
     }
   };
 
-
   
 
   /**
@@ -667,16 +720,24 @@ const HostNics = ({ hostId }) => {
     const bondNic = {
       name: newBond.name,  // 본딩 이름 (예: bond1)
       bondingVo: { slaves: slavesDetail },
-      // status: "UP",
     };
 
     // 기존 NIC의 네트워크 목록을 본딩 NIC에 연결하기 위한 처리
     const transferredNetworks = nicData.flatMap(nic =>
-      nic.networks?.map(network => ({
-        ...network,
-        hostNicVo: { id: bondNic.name, name: bondNic.name }
-      })) || []
+      nic.networks?.map(network => {
+        // 네트워크 id가 없으면 networks 배열에서 찾아서 넣기
+        let original = networks.find(n => n.name === network.name || n.id === network.id);
+        return {
+          ...network,
+          hostNicVo: { id: bondNic.name, name: bondNic.name },
+          networkVo: {
+            ...network.networkVo,
+            id: network.networkVo?.id || original?.id,
+          },
+        }
+      }) || []
     );
+
 
     setBaseItems(prev => {
       const newNicList = prev.nic.filter(nic => !slaveIds.includes(nic.id));
@@ -747,152 +808,6 @@ const HostNics = ({ hostId }) => {
     setDragItem(null);
     setDragOverTarget(null);
   };
-
-
-  // 본딩된 nic (nic 2개 이상: bonding)
-  const bondNic = (nic) => {
-    const onlyBasicNic = dragItem && dragItem.type === "nic" && dragItem.list === "nic"; // base NIC만 드롭 허용
-
-    return (
-      <div className="interface-outer container flex-col p-2"
-        data-tooltip-id={`nic-tooltip-${nic.id}`}
-        onDragOver={e => {
-          if (onlyBasicNic) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = "move";
-          }
-        }}
-        onDrop={e => {
-          if (onlyBasicNic) {
-            handleAddBaseNicToBond(dragItem.item, nic);
-            setDragItem(null);
-            setDragOverTarget(null);
-          }
-        }}
-      >
-        <div className="interface-content">
-          <div className="f-start">{nic.name}</div>
-          <RVI36 className="icon cursor-pointer" iconDef={rvi36Edit()}
-            onClick={() => {
-              setSelectedNic(nic);
-              setEditBondingMode(true);
-              setIsBondingPopup(true);
-            }}
-          />
-        </div>
-        <div className="w-full interface-container-outer2" onDragOver={e => e.preventDefault()}>
-          {nic.bondingVo?.slaves.map((slave) => (
-            <div className="interface-container container"
-              key={slave.id}
-              data-tooltip-id={`nic-tooltip-${slave.id}`}
-              data-tooltip-html={generateNicTooltipHTML(slave)}
-              draggable
-              onDragStart={e => handleDragStart(e, slave, "nic", "slave", nic)}
-            >
-              <div className="flex gap-1">
-                <RVI16 iconDef={slave.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
-                {slave.name}
-                {idView(slave)}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  // 단순 nic
-  const baseNic = (nic) => {
-
-    return (
-      <div className="interface-container container"
-        key={nic.id}
-        data-tooltip-id={`nic-tooltip-${nic.id}`}
-        data-tooltip-html={generateNicTooltipHTML(nic)}
-        draggable
-        onDragStart={(e) => handleDragStart(e, nic, "nic", "nic")}
-        onDrop={(e) => { handleDrop(e, "bond", nic.id, nic.name)}}
-        onDragOver={(e) => handleDragOver(e, "nic", "bond")}
-      >
-        <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
-        {nic.name}{idView(nic)}
-        <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
-      </div>
-    );
-  };
-
-  // 할당된 네트워크
-  const matchNetwork = (networkAttach, nicId, nicName) => {
-
-    return (
-      <div className="assigned-network-outer network-drop-target"
-        onDrop={(e) => handleDrop(e, "detach", nicId, nicName)}
-        onDragOver={(e) => handleDragOver(e, "network", "detach")}
-      >
-        <div className="assigned-network-content fs-14"
-          draggable
-          onDragStart={(e) => handleDragStart(e, networkAttach.networkVo, "network", "detach")}
-          onDragOver={(e) => e.preventDefault()} // 중요: 자식은 drop 대상 아님
-        >
-          <div className="f-start">
-            <RVI16 className="mr-1.5"
-              iconDef={networkAttach.networkVo?.status === "OPERATIONAL" ? rvi16TriangleUp(): rvi16TriangleDown()}
-            />
-            {networkAttach.networkVo?.name}
-            {idView(networkAttach.networkVo)}
-            {networkAttach.networkVo?.vlan === 0 ? "" : (
-              <span style={{ marginLeft: "4px", color: "#888" }}>(VLAN {networkAttach.networkVo.vlan})</span>
-            )}
-          </div>
-          <div className="right-section">
-            <RVI36 className="icon cursor-pointer"
-              iconDef={rvi36Edit()}
-              onClick={() => {
-                setSelectedNetwork(networkAttach);
-                setIsNetworkEditPopup(true);
-              }}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // 할당되지 않은 네트워크
-  const noneNetwork = (nicId, nicName) => {
-
-    return (
-      <div className="assigned-network-outer"
-        onDragOver={(e) => handleDragOver(e, "network", "detach")}
-        onDrop={(e) => {
-          e.preventDefault();
-          handleDrop(e, "network", "detach", nicId, nicName);
-          handleDrop(e, "detach", nicId, nicName);
-        }}
-      >
-        <div className="assigned-network-content fs-14">
-          <span className="text-gray-400">할당된 네트워크가 없음</span>
-        </div>
-      </div>
-    );
-  };
-
-  const clusterNetworkList = (net) => {
-
-    return (
-      <div className="network-item f-btw"
-        draggable
-        onDragStart={(e) => handleDragStart(e, net, "network", "attach")}
-      >
-        <div className="f-start text-left">
-           <RVI16 className="mr-1.5" iconDef={net?.status === "OPERATIONAL" ? rvi16TriangleUp() : rvi16TriangleDown()} />
-            [{net?.required}] {net?.name}
-            {net?.vlan === 0 ? "" : <span style={{ marginLeft: "4px", color: "#888" }}>(VLAN {net.vlan})</span>}
-        </div>
-        {net?.usageVm === true && <RVI16 iconDef={rvi16VirtualMachine()} className="icon" />}
-      </div>
-    )
-  }
   
   return (
     <>
@@ -979,8 +894,20 @@ const HostNics = ({ hostId }) => {
                   onDragOver={(e) => e.preventDefault()}
                 >
                   {nic.bondingVo?.slaves?.length > 0 
-                    ? bondNic(nic) 
-                    : baseNic(nic)
+                    ? <BondNic
+                        nic={nic}
+                        dragItem={dragItem}
+                        handleDragStart={handleDragStart}
+                        setSelectedNic={setSelectedNic}
+                        setEditBondingMode={setEditBondingMode}
+                        setIsBondingPopup={setIsBondingPopup}
+                      />
+                    : <BaseNic
+                        nic={nic}
+                        handleDragStart={handleDragStart}
+                        handleDrop={handleDrop}
+                        handleDragOver={handleDragOver}
+                      />
                   }
                 </div>
 
@@ -996,11 +923,25 @@ const HostNics = ({ hostId }) => {
                   {matchedNAs.length > 0 ? (
                     matchedNAs.map((na) => (
                       <React.Fragment key={`${nic.id}-${na.networkVo?.id}`}>
-                        {matchNetwork(na, nic.id, nic.name)}
+                        <MatchNetwork
+                          networkAttach={na}
+                          nicId={nic.id}
+                          nicName={nic.name}
+                          handleDrop={handleDrop}
+                          handleDragOver={handleDragOver}
+                          handleDragStart={handleDragStart}
+                          setSelectedNetwork={setSelectedNetwork}
+                          setIsNetworkEditPopup={setIsNetworkEditPopup}
+                        />
                       </React.Fragment>
                     ))
                   ) : (
-                    noneNetwork(nic.id, nic.name)
+                    <NoneNetwork
+                      nicId={nic.id}
+                      nicName={nic.name}
+                      handleDragOver={handleDragOver}
+                      handleDrop={handleDrop}
+                    />
                   )}
                 </div>
               </div>
@@ -1018,8 +959,8 @@ const HostNics = ({ hostId }) => {
             </div>
             <br/>
            {[...baseItems.network, ...movedItems.network].map((net) => 
-              clusterNetworkList(net))
-            }
+              <ClusterNetworkList net={net} handleDragStart={handleDragStart}/>
+           )}
           </div>
         </div>
       </div>
@@ -1033,11 +974,12 @@ const HostNics = ({ hostId }) => {
         onChange={(e) => setSetting(e.target.checked)}
       />
 
-      <br/>
-      <span>modifiedBonds: {modifiedBonds.map((e) => `[${e.name}: ${e.bondingVo.slaves.map((s) => s?.id)}]`)}</span><br/>
+      {/* <br/>
+      <span>modifiedBonds: {modifiedBonds.map((e) => `[${e.name}: ${e.bondingVo.slaves.map((s) => s?.name)}]`)}</span><br/>
       <span>removeBonds: {removeBonds.map((e) => `${e.name}, `)}</span><br/>
-      <span>modifiedNAs: {modifiedNAs.map((e) => `[${e.hostNicVo?.name}: ${e.networkVo?.name}]`)}</span><br/>
+      <span>modifiedNAs: {modifiedNAs.map(e => `[${e.hostNicVo.name}: ${Array.isArray(e.networkVo) ? e.networkVo.map(net => net.name).join(", ") : e.networkVo.name}]`)}</span><br/>
       <span>removeNAs: {removeNAs.map((e) => `${e.name}, `)}</span><br/>
+      <br/> */}
       
       <Suspense fallback={<Loading />}>
         <HostBondingModal
@@ -1049,23 +991,26 @@ const HostNics = ({ hostId }) => {
             setSelectedNic(null);
             setSelectedBond(null);
           }}
-          nicData={selectedBond
-            ? [
-                {
-                  ...selectedBond.nic1,
-                  networks: [...baseItems.networkAttachment, ...movedItems.networkAttachment]
-                    .filter(na => na.hostNicVo.id === selectedBond.nic1.id)
-                },
-                {
-                  ...selectedBond.nic2,
-                  networks: [...baseItems.networkAttachment, ...movedItems.networkAttachment]
-                    .filter(na => na.hostNicVo.id === selectedBond.nic2.id)
-                }
-              ]
-            : []
+          nicData={
+            editBondingMode 
+            ? selectedNic ? [selectedNic] : []
+            : selectedBond
+              ? [
+                  {
+                    ...selectedBond.nic1,
+                    networks: [...baseItems.networkAttachment, ...movedItems.networkAttachment]
+                      .filter(na => na.hostNicVo.id === selectedBond.nic1.id)
+                  },
+                  {
+                    ...selectedBond.nic2,
+                    networks: [...baseItems.networkAttachment, ...movedItems.networkAttachment]
+                      .filter(na => na.hostNicVo.id === selectedBond.nic2.id)
+                  }
+                ]
+              : []
           }
           onBondingCreated={createBondingData}
-        />        
+        />
         <HostNetworkEditModal
           isOpen={isNetworkEditPopup}
           networkAttachment={selectedNetwork}
@@ -1081,67 +1026,3 @@ const HostNics = ({ hostId }) => {
 }
 
 export default HostNics;
-
-
-const assignmentMethods = [
-  { value: "none", label: "없음" },
-  { value: "static", label: "정적" },
-  { value: "poly_dhcp_autoconf", label: "DHCP 및 상태 비저장 주소 자동 설정" },
-  { value: "autoconf", label: "상태 비저장 주소 자동 설정" },
-  { value: "dhcp", label: "DHCP" },
-];
-
-// nic 툴팁
-const generateNicTooltipHTML = (nic) => { 
-  return `
-    <div style="text-align: left;">
-      <strong>MAC:</strong> ${nic.macAddress || "없음"}<br/>
-      <strong>Rx 속도:</strong> ${nic.rxSpeed || "0"} Mbps<br/>
-      <strong>총 Rx:</strong> ${nic.rxTotalSpeed || "0"} 바이트<br/>
-      <strong>Tx 속도:</strong> ${nic.txSpeed || "0"} Mbps<br/>
-      <strong>총 Tx:</strong> ${nic.txTotalSpeed || "0"} 바이트<br/>
-      <strong>${nic.speed || "0"}Mbps / ${nic.pkts || "0 Pkts"}<br/>
-    </div>
-  `;
-};  
-
-// network 툴팁
-const generateNetworkTooltipHTML = (network) => {
-  const ipv4 = network?.ipAddressAssignments?.find(ip => ip?.ipVo?.version === "V4")?.ipVo || {};
-  const ipv6 = network?.ipAddressAssignments?.find(ip => ip?.ipVo?.version === "V6")?.ipVo || {};
-  const ipv4AssignmentMethod = network?.ipAddressAssignments?.find(ip => ip?.ipVo?.version === "V4")?.assignmentMethod || "없음";
-  const ipv6AssignmentMethod = network?.ipAddressAssignments?.find(ip => ip?.ipVo?.version === "V6")?.assignmentMethod || "없음";
-  const ipv4Method = assignmentMethods.find((method) => method.value === ipv4AssignmentMethod)?.label || ipv4AssignmentMethod?.value;
-  const ipv6Method = assignmentMethods.find((method) => method.value === ipv6AssignmentMethod)?.label || ipv6AssignmentMethod?.value;
-
-  const ipv4Section = ipv4?.gateway
-    ? `
-      <strong>IPv4:</strong><br/>
-      <strong>부트 프로토콜: </strong>${ipv4Method}<br/>
-      <strong>주소: </strong>${ipv4.address || "없음"}<br/>
-      <strong>서브넷: </strong>${ipv4.netmask || "없음"}<br/>
-      <strong>게이트웨이: </strong>${ipv4.gateway}<br/><br/>`
-    : `
-      <strong>IPv4:</strong><br/>
-      <strong>부트 프로토콜: </strong>${ipv4Method}<br/>
-    `;
-
-  // IPv6은 그대로 출력
-  const ipv6Section = ipv6?.gateway
-    ? `
-      <strong>IPv6:</strong><br/>
-      <strong>부트 프로토콜: </strong>${ipv6Method}<br/>
-      <strong>주소: </strong>${ipv6.address || "없음"}<br/>
-      <strong>서브넷: </strong>${ipv6.netmask || "없음"}<br/>
-      <strong>게이트웨이: </strong>${ipv6.gateway || "없음"}<br/>`
-    : `
-      <strong>IPv6:</strong><br/>
-      <strong>부트 프로토콜: </strong>${ipv6Method}<br/>
-    `;
-
-  return `
-    <div style="text-align: left;">
-      ${ipv4Section}
-      ${ipv6Section}
-    </div>`;
-};
