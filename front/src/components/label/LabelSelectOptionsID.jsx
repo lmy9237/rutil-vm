@@ -13,13 +13,15 @@ const LabelSelectOptionsID = ({
   loading,
   options = [],
   etcLabel = "",
+  placeholderLabel="선택하세요",
+  placeholderValue="none", // SelectItem에 들어갈 내용이 null이거나 비어있으면 오류가 남
 }) => {
   const selectedLabel = useMemo(() => {
     if (loading) return <Loading />;
     if (options.length === 0) return "항목 없음";
 
     const selected = options.find((opt) => opt.id === value);
-    return selected ? `${selected.name}: ${selected.id} ${etcLabel}` : "선택하세요";
+    return selected ? `${selected.name}: ${selected.id} ${etcLabel}` : placeholderLabel;
   }, [loading, options, value, etcLabel]);
 
   const handleValueChange = (selectedId) => {
@@ -28,6 +30,11 @@ const LabelSelectOptionsID = ({
       onChange?.(selectedOption);
     }
   };
+
+  const placeholderSelectItem = {
+    label: placeholderLabel,
+    value: placeholderValue,
+  }
 
   return (
     <div className={`input-select custom-select-wrapper ${className}`}>
@@ -43,13 +50,13 @@ const LabelSelectOptionsID = ({
             id={id}
             className="w-full h-10 px-0.5 py-2 border rounded-md text-left flex items-center justify-between"
           >
-            <SelectValue placeholder="선택하세요">{selectedLabel}</SelectValue>
+            <SelectValue placeholder={placeholderLabel}>{selectedLabel}</SelectValue>
           </SelectTrigger>
           <SelectContent className="z-[9999]">
             {options.length === 0 ? (
               <SelectItem value="__none__" disabled>항목 없음</SelectItem>
             ) : (
-              options.map((opt) => (
+              [placeholderSelectItem, ...options].map((opt) => (
                 <SelectItem key={opt.id} value={opt.id}>
                   {opt.name}: {opt.id} {etcLabel}
                 </SelectItem>

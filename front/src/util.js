@@ -263,4 +263,44 @@ export const triggerDownload = (
   window.URL.revokeObjectURL(url); // Clean up
 }
 
+/**
+ * @name isNameDuplicated
+ * @description 리스트에서 중복된 이름이 존재하는지 확인
+ *
+ * @param {string} name - 검사할 이름
+ * @param {Array<Record<string, any>>} list - 중복 검사 대상 리스트
+ * @param {string} key - 비교할 필드명 (기본값: 'name')
+ * @param {object} options - ignoreCase (기본 true), trim (기본 true)
+ * @returns {boolean} - 중복 여부
+ */
+export function isNameDuplicated(
+  name,
+  list,
+  key = "name",
+  options = { ignoreCase: true, trim: true }
+) {
+  const { ignoreCase, trim } = options;
+  const normalize = (str) =>
+    typeof str === "string" ? (trim ? str.trim() : str) : "";
+
+  const input = ignoreCase
+    ? normalize(name).toLowerCase()
+    : normalize(name);
+
+  const result = list.some((item) => {
+    const value = item?.[key];
+    if (!value) return false;
+
+    const compare = ignoreCase
+      ? normalize(value).toLowerCase()
+      : normalize(value);
+
+    return compare === input;
+  });
+
+  Logger.debug(
+    `util > isNameDuplicated ... name: ${name}, result: ${result}`
+  );
+  return result;
+}
 

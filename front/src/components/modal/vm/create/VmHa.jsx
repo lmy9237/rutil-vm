@@ -68,6 +68,7 @@ const VmHa = ({
             }
           }}
           options={[
+            // TODO: SelectOptionID 값 보정필요
             { id: "none", name: "도메인 없음" },  
             ...domains
         ]}

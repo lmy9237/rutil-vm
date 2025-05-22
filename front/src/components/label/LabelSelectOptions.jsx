@@ -33,6 +33,8 @@ const LabelSelectOptions = ({
   disabled,
   loading,
   options = [],
+  placeholderLabel="선택하세요",
+  placeholderValue="none", // SelectItem에 들어갈 내용이 null이거나 비어있으면 오류가 남
 }) => {
   const selectedLabel = useMemo(() => {
     if (loading) return <Loading />;
@@ -45,6 +47,11 @@ const LabelSelectOptions = ({
     onChange?.({ target: { value: val } });
   };
 
+  const placeholderSelectItem = {
+    label: placeholderLabel,
+    value: placeholderValue,
+  }
+
   return (
     <div className={`input-select custom-select-wrapper ${className}`}>
       {label && <div className="select-label">{label}</div>}
@@ -56,7 +63,7 @@ const LabelSelectOptions = ({
       ) : (
         <Select value={value} onValueChange={handleChange} disabled={disabled} position="popper">
           <SelectTrigger id={id} className="custom-select-box f-start">
-            <SelectValue placeholder="선택하세요">{selectedLabel}</SelectValue>
+            <SelectValue placeholder={placeholderLabel}>{selectedLabel}</SelectValue>
           </SelectTrigger>
           <SelectContent className="z-[9999]">
             {options.length === 0 ? (
@@ -64,7 +71,7 @@ const LabelSelectOptions = ({
                 항목 없음
               </SelectItem>
             ) : (
-              options.map((opt) => (
+              [placeholderSelectItem, ...options].map((opt) => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}
                 </SelectItem>

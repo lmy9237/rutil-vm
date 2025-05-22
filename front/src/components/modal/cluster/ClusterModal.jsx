@@ -116,7 +116,7 @@ const ClusterModal = ({
     setCpuOptions(options);
   
     if (!editMode) {
-      setFormState((prev) => ({ ...prev, cpuType: options[0].value || ""  }));
+      setFormState((prev) => ({ ...prev, cpuType: options[0]?.value || ""  }));
     }
   }, [formState.cpuArc, editMode]);
   
@@ -253,6 +253,7 @@ const cpuArcOptions = {
     { value: "IBM z14", label: "IBM z14" },
   ],
   UNDEFINED: [
+    // TODO: SelectOptionID 값 보정필요
     { value: "", label: "자동 감지" },
     { value: "Intel Nehalem Family", label: "Intel Nehalem Family" },
     { value: "Secure Intel Nehalem Family", label: "Secure Intel Nehalem Family" },

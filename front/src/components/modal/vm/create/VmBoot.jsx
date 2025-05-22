@@ -83,6 +83,7 @@ const firstDeviceOptionList = [
 ];
 
 const secDeviceOptionList = [
+  // TODO: SelectOptionID 값 보정필요
   { value: "none", label: "없음" },
   { value: "cdrom", label: "CD-ROM" },
   { value: "network", label: "네트워크(PXE)" },

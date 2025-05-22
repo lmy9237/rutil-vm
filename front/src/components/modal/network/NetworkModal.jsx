@@ -11,7 +11,7 @@ import DynamicInputList from "../../label/DynamicInputList";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import TablesOuter from "../../table/TablesOuter";
 import { handleInputChange, handleInputCheck, handleSelectIdChange } from "../../label/HandleInput";
-import { checkName } from "../../../util";
+import { checkName, isNameDuplicated } from "../../../util";
 import {
   useAllDataCenters,
   useClustersFromDataCenter,
@@ -48,7 +48,7 @@ const NetworkModal = ({
     ? Localization.kr.UPDATE
     : Localization.kr.CREATE;
   
-  const { networksSelected, datacentersSelected } = useGlobal()
+  const { networksSelected, datacentersSelected,networks, setNetworks } = useGlobal()
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
   const networkId = useMemo(() => [...networksSelected][0]?.id, [networksSelected])
 
@@ -138,7 +138,7 @@ const NetworkModal = ({
     if (nameError) return nameError;
 
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    return null;
+    
   };
 
   const handleFormSubmit = () => {
@@ -236,44 +236,6 @@ const NetworkModal = ({
           disabled={editMode || !formState.usageVm} // 가상 머신 네트워크가 비활성화되면 비활성화(??)
           onChange={handleInputCheck(setFormState, "portIsolation")}
         />
-
-        {/*삭제예정*/}
-        {/* <div className="f-start">
-          <input
-            type="radio"
-            checked={formState.mtu === 0} // 기본값 1500 선택됨
-            onChange={() => setFormState((prev) => ({ ...prev, mtu: 0 }))}
-          />
-          <label>기본값 (1500)</label>
-        </div> */}
-        {/* 
-        <div  className="f-btw ">
-        <div className="f-center">
-          <input
-            type="radio"
-            checked={formState.mtu !== 0}
-            onChange={() =>
-              setFormState((prev) => ({ ...prev, mtu: "" }))
-            }
-          />
-          <label>사용자 정의</label>
-      
-        </div>
-        <div className="mtu-text-input">
-            <input
-              type="number"
-              style={{ width: "100%" }}
-              min="68"
-              step="1"
-              disabled={formState.mtu === 0} // 기본값 선택 시 비활성화
-              value={formState.mtu === 0 ? "" : formState.mtu} // 기본값일 경우 빈 값 표시
-              onChange={(e) => {
-                const value = e.target.value;
-                setFormState((prev) => ({ ...prev, mtu: value }));
-              }}
-            />
-          </div>
-        </div> */}
           
         <div className="mtu-input-outer flex items-center gap-3">
           <ToggleSwitchButton id="mtuToggle" label="MTU 설정"
