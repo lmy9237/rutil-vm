@@ -215,7 +215,9 @@ const DomainGetVmTemplateModal = ({
 
       <div className="filter-table">
         {/* 필터 버튼 */}
-        <FilterButtons options={filterOptions} activeOption={activeFilter} onClick={setActiveFilter} />
+        <div className="mb-2">
+          <FilterButtons options={filterOptions} activeOption={activeFilter} onClick={setActiveFilter} />
+        </div>
         {/* 섹션 변경 */}
         {activeFilter === "general" && (
           <div className="get-template-info f-btw three-columns">

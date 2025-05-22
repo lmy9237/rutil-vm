@@ -36,13 +36,13 @@ const AllEvents = () => {
         openModal={[]}
         togglePopup={() => {}}
       />
-      <div className="content-outer">
+ 
         <div className="section-content v-start gap-8 w-full">
           <EventDupl events={events}
             refetch={refetchEvents} isRefetching={isEventsRefetching}
             isLoading={isEventsLoading} isError={isEventsError} isSuccess={isEventsSuccess}
           />
-        </div>
+
       </div>
     </SectionLayout>
   );

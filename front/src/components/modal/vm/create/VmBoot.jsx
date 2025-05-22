@@ -39,7 +39,7 @@ const VmBoot = ({
         />
       </div>
 
-      <div className="boot-checkboxs flex">
+      <div className="f-btw">
         <LabelCheckbox id="connectCdDvd" label="CD/DVD 연결"
           checked={formBootState.isCdDvdChecked}
           onChange={(e) => {
@@ -53,17 +53,19 @@ const VmBoot = ({
             }));
           }}
         />
-        <LabelSelectOptionsID
-          value={formBootState.connVo?.id}
-          disabled={!formBootState.isCdDvdChecked || isos.length === 0}
-          loading={isIsoLoading}
-          options={isos}
-          onChange={(e) => {
-            const selected = isos.find(i => i.id === (e?.target?.value ?? e?.id))
-            if (selected) setFormBootState((prev) => ({ ...prev, connVo: { id: selected.id, name: selected.name }}))
-            // TODO:handleSelectIdChange를 쓰려면 특정 prop에 값 변경하는 처리가 있어야함
-          }}
-        />
+        <div style={{width:"55%"}}>
+          <LabelSelectOptionsID
+            value={formBootState.connVo?.id}
+            disabled={!formBootState.isCdDvdChecked || isos.length === 0}
+            loading={isIsoLoading}
+            options={isos}
+            onChange={(e) => {
+              const selected = isos.find(i => i.id === (e?.target?.value ?? e?.id))
+              if (selected) setFormBootState((prev) => ({ ...prev, connVo: { id: selected.id, name: selected.name }}))
+              // TODO:handleSelectIdChange를 쓰려면 특정 prop에 값 변경하는 처리가 있어야함
+            }}
+          />
+        </div>
       </div>
 
       <LabelCheckbox id="enableBootMenu" label="부팅 메뉴를 활성화"

@@ -20,6 +20,12 @@ const DiskModals = ({
   const { activeModal, closeModal } = useUIState()
   const { disksSelected } = useGlobal()
 
+  /* 디스크 이동,복사 구분 */
+  const modalKey = typeof activeModal === "function" ? activeModal() : activeModal;
+  const modalValue = Array.isArray(modalKey) ? modalKey[0] : modalKey;
+  const isAction = ["disk:copy", "disk:move"].includes(modalValue);
+  const actionType = isAction ? modalValue.split(":")[1] : null;
+
   const modals = {
     create: (
       <DiskModal key={"disk:create"} isOpen={activeModal().includes("disk:create")}
@@ -41,9 +47,9 @@ const DiskModals = ({
         onClose={() => closeModal("disk:upload")}
       />
     ), action: (
-      <DiskActionModal key={activeModal()[0]} isOpen={ACTIONS.includes(activeModal())}
-        onClose={() => closeModal(activeModal()[0])}
-        action={activeModal}
+      <DiskActionModal key={modalValue} isOpen={isAction}
+        onClose={() => closeModal(modalValue)}
+        actionType={actionType}
         data={disksSelected}
       />
     ),
@@ -51,8 +57,8 @@ const DiskModals = ({
 
   return (
     <>
-      {Object.keys(modals).filter((key) => 
-        activeModal().includes(`disk:${key}`) || ACTIONS.includes(activeModal())
+      {Object.keys(modals).filter((key) =>
+        modalValue === `disk:${key}` || (key === "action" && isAction)
       ).map((key) => (
         <React.Fragment key={key}>{modals[key]}</React.Fragment>
       ))}

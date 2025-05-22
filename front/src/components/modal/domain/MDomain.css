@@ -27,10 +27,12 @@
 }
 .get-template-info>div{
   width: 44%;height: 100%;
-  background: var(--color-white);
+  background: none !important;
 }
 .get-template-info>div>div{
   display:flex;
+  min-height: 230px;
+  height: 100%;
   justify-content:space-between;
 }
 .filter-table{
@@ -51,20 +53,14 @@
 .target-search-outer{
   padding: 12px 0;
 }
-/* .use-chap-outer{
-  background: var(--color-white);
-  border-radius: 1px;
-  border: 1px solid var(--color-table);
-} */
 .use-chap-arrow {
-  background-color: var(--color-white); /* ✅ 토글영역에만 배경 */
+  background-color: var(--color-white); 
   height: 32px;
   display: flex;
   align-items: center;
   padding: 0 8px;
   padding-top: 8px;
   padding-bottom: 8px;
-  /* border: 1px solid var(--color-table); */
   border-radius: 2px;
 }
 .use-chap-content{

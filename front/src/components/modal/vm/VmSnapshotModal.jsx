@@ -22,8 +22,8 @@ const VmSnapshotModal = ({
 }) => {
   const [formState, setFormState] = useState(initialFormState);
   // const { closeModal } = useUIState();
-  const { vmsSelected } = useGlobal(); // ✅ vmsSelected 직접 읽기
-  const selectedVm = vmsSelected?.[0] ?? null; // ✅ 첫 번째 VM 기준으로
+  const { vmsSelected } = useGlobal(); // vmsSelected 직접 읽기
+  const selectedVm = vmsSelected?.[0] ?? null; // 첫 번째 VM 기준으로
 
   const { mutate: addSnapshotFromVM } = useAddSnapshotFromVM(onClose, onClose);
   
@@ -58,13 +58,14 @@ const VmSnapshotModal = ({
           value={formState.description} 
           onChange={(e) => setFormState((prev) => ({ ...prev, description: e.target.value }))}
         />
-        <ToggleSwitchButton label={`${Localization.kr.MEMORY} 저장`}
+        {/* <ToggleSwitchButton label={`${Localization.kr.MEMORY} 저장`}
           checked={["DOWN"].includes(selectedVm?.status) ? false: formState.persistMemory}
           disabled={["DOWN"].includes(selectedVm?.status)}
           onChange={() => setFormState((prev) => ({ ...prev, persistMemory: !prev.persistMemory }))} // ✅ true/false로 변경
           tType={"저장"} fType={"저장안함"}
         />
-        {/* vm 상태와 상관없는 toggle버튼
+        */}
+        {/* vm 상태와 상관없는 toggle버튼 */}
         <ToggleSwitchButton
           label={`${Localization.kr.MEMORY} 저장`}
           checked={formState.persistMemory}     
@@ -75,7 +76,7 @@ const VmSnapshotModal = ({
             }))
           }
           tType={"저장"} fType={"저장안함"}
-        /> */}
+        />
         <br/>
         {["DOWN"].includes(selectedVm?.status) 
           ? <span></span> 

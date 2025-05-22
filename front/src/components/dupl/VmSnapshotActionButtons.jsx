@@ -27,7 +27,7 @@ const VmSnapshotActionButtons = ({
   const isVmUp = useMemo(() => vmSelected1st?.status === "UP", [vmsSelected])
   const isVmPause = useMemo(() => vmSelected1st?.status === "SUSPENDED", [vmsSelected])
   const snapshotSelected1st =  [...snapshotsSelected][0] ?? null
-
+ 
   const basicActions = useMemo(() => ([
     { type: "create",   onBtnClick: () => setActiveModal("vmsnapshot:create"),  label: Localization.kr.CREATE,  disabled: hasLocked || (isContextMenu && snapshotsSelected.length > 0 ), },
     { type: "preview",  onBtnClick: () => setActiveModal("vmsnapshot:preview"), label: Localization.kr.PREVIEW, disabled: isVmUp || isVmPause || hasLocked || inPreview || snapshotsSelected.length === 0, },

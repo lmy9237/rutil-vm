@@ -130,6 +130,7 @@ const VmImportModal = ({
         />
       </div>
 
+      {/* select박스 값 보정필요  */}
       <div className="vm-import-form-item">
         <LabelSelectOptions id="allHosts"
           value=""
