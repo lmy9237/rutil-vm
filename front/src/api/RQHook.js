@@ -4193,6 +4193,27 @@ export const useAllStorageDomains = (
   }
 })
 /**
+ * @name useAllNfsStorageDomains
+ * @description 모든 NFS 스토리지 도메인 목록조회 useQuery훅
+ * 
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ */
+export const useAllNfsStorageDomains = (
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['allNfsStorageDomains'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllNfsStorageDomains()
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllNfsStorageDomains ... res: `, _res);
+    return _res;
+  }
+})
+/**
  * @name useStroageDomain
  * @description 도메인 상세조회 useQuery 훅
  * 

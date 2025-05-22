@@ -29,6 +29,14 @@ interface ItStorageService {
 	@Throws(Error::class)
 	fun findAll(): List<StorageDomainVo>
 	/**
+	 * [ItStorageService.findAllNfs]
+	 * 스토리지 도메인(NFS) 목록
+	 *
+	 * @return List<[StorageVo]> 스토리지 도메인 목록
+	 */
+	@Throws(Error::class)
+	fun findAllNfs(): List<StorageVo>
+	/**
 	 * [ItStorageService.findOne]
 	 * 데이터센터 - 스토리지 도메인 정보
 	 *
@@ -288,6 +296,14 @@ class StorageServiceImpl(
 		val res: List<StorageDomain> = conn.findAllStorageDomains().getOrDefault(emptyList())
 			.filter { it.storage().type() != StorageType.GLANCE }
 		return res.toStorageDomainsMenu(conn)
+	}
+
+	@Throws(Error::class)
+	override fun findAllNfs(): List<StorageVo> {
+		log.info("findAllNfs ...")
+		val res: List<StorageDomain> = conn.findAllStorageDomains().getOrDefault(emptyList())
+			.filter { it.storage().type() == StorageType.NFS }
+		return res.map { it.storage().toStorageVo() }
 	}
 
 	@Throws(Error::class)

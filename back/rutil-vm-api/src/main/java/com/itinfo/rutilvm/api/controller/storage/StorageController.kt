@@ -8,6 +8,7 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.DiskProfileVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.model.storage.StorageVo
 import com.itinfo.rutilvm.api.service.storage.ItStorageDatacenterService
 import com.itinfo.rutilvm.api.service.storage.ItStorageService
 
@@ -39,6 +40,22 @@ class StorageController: BaseController() {
 	fun storageDomains(): ResponseEntity<List<StorageDomainVo>> {
 		log.info("/storages/domains ... 스토리지 도메인 목록")
 		return ResponseEntity.ok(iDomain.findAll())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="스토리지 도메인 목록 (NFS) 조회",
+		notes="전체 스토리지 도메인 목록을 보여준다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/nfs")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun nfsStorageDomains(): ResponseEntity<List<StorageVo>> {
+		log.info("/storages/domains/nfs ... 스토리지 도메인 목록")
+		return ResponseEntity.ok(iDomain.findAllNfs())
 	}
 
 	@ApiOperation(

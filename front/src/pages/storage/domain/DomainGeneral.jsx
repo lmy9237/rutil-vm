@@ -40,7 +40,7 @@ const DomainGeneral = ({
       ? [{ label: "디스크 스냅샷 개수",value: diskSnapshots?.length || 0 }]
       : []),
     ...(domain?.storageVo?.type === "NFS"
-      ? [{ label: "경로", value: `${domain?.storageVo?.address}${domain?.storageVo?.path}` }]
+      ? [{ label: "경로", value: `${domain?.storageVo?.address}:${domain?.storageVo?.path}` }]
       : []),
     { 
       label: "디스크 공간 부족 경고 표시", 

@@ -23,6 +23,7 @@ class StorageVo(
     val type: StorageType = StorageType.NFS,
 	val address: String = "",
 	val path: String = "",
+	val originPath: String = "",
 	val nfsVersion: NfsVersion = NfsVersion.AUTO,
     val volumeGroupVo : VolumeGroupVo = VolumeGroupVo(),
 ): Serializable {
@@ -33,9 +34,10 @@ class StorageVo(
         private var bType: StorageType = StorageType.NFS;fun type(block: () -> StorageType?) { bType = block() ?: StorageType.NFS }
 		private var bAddress: String = "";fun address(block: () -> String?) { bAddress = block() ?: "" }
 		private var bPath: String = "";fun path(block: () -> String?) { bPath = block() ?: "" }
+		private var bOriginPath: String = "";fun originPath(block: () -> String?) { bOriginPath = block() ?: "" }
 		private var bNfsVersion: NfsVersion = NfsVersion.AUTO;fun nfsVersion(block: () -> NfsVersion?) { bNfsVersion = block() ?: NfsVersion.AUTO }
         private var bVolumeGroupVo: VolumeGroupVo = VolumeGroupVo();fun volumeGroupVo(block: () -> VolumeGroupVo?) { bVolumeGroupVo = block() ?: VolumeGroupVo() }
-        fun build(): StorageVo = StorageVo(bType, bAddress, bPath, bNfsVersion, bVolumeGroupVo)
+        fun build(): StorageVo = StorageVo(bType, bAddress, bPath, bOriginPath, bNfsVersion, bVolumeGroupVo)
     }
 
     companion object {
@@ -49,6 +51,10 @@ fun HostStorage.toStorageVo() : StorageVo {
 		type { storage.type() }
 		address { if(storage.addressPresent()) storage.address() else null }
 		path { if(storage.pathPresent()) storage.path() else null }
+		originPath {
+			if(storage.addressPresent() && storage.pathPresent()){ storage.address() + ":" + storage.path() }
+			else null
+		}
 		nfsVersion { if(storage.nfsVersionPresent()) storage.nfsVersion() else null}
 		volumeGroupVo { if(storage.volumeGroupPresent()) storage.volumeGroup().toVolumeGroupVo() else null }
 	}

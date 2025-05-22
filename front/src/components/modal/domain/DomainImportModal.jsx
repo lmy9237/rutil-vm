@@ -14,6 +14,7 @@ import {
   useAllDataCenters,
   useHostsFromDataCenter,
   useSearchFcFromHost,
+  useAllNfsStorageDomains,
 } from "../../../api/RQHook";
 import { checkName } from "../../../util";
 import Localization from "../../../utils/Localization";
@@ -60,6 +61,7 @@ const DomainImportModal = ({
     data: hosts = [],
     isLoading: isHostsLoading 
   } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
+  const { data: nfsList = [] } = useAllNfsStorageDomains((e) => ({ ...e }));
   const { 
     data: fibres = [], 
     isLoading: isFibresLoading,
@@ -139,6 +141,10 @@ const DomainImportModal = ({
     if (isNfs && (!nfsAddress.includes(':') || !nfsAddress.includes('/'))){
       return "주소입력이 잘못되었습니다."
     }    
+    if(isNfs) {
+      const duplicationNfs = nfsList.find(nfs => nfs?.originPath === nfsAddress);
+      if (duplicationNfs) return `${nfsAddress}는 이미 등록되어 있는 NFS입니다`
+    }
     if (isFibre && !id) return "id을 반드시 선택해주세요."; // 🔥 추가된 부분
 
     return null;

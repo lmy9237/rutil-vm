@@ -2304,7 +2304,18 @@ const ApiManager = {
   findAllStorageDomains: async () => makeAPICall({
     method: "GET", 
     url: ENDPOINTS.FIND_ALL_STORAGE_DOMAINS(),
-    // defaultValues: DEFAULT_VALUES.FIND_ALL_STORAGE_DOMAINS
+  }),
+  /**
+   * @name ApiManager.findAllNfsStorageDomains
+   * @description storagedomain Nfs 목록
+   *
+   * @returns 
+   * 
+   * @see
+   */
+  findAllNfsStorageDomains: async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_NFS_STORAGE_DOMAINS(),
   }),
   /**
    * @name ApiManager.findDomain
