@@ -7,8 +7,8 @@ const BondNic = ({
   dragItem, setDragItem,
   setDragOverTarget,
   handleDragStart,
-  setSelectedNic,
   handleAddBaseNicToBond,
+  setSelectedNic,
   setEditBondingMode, 
   setIsBondingPopup
 }) => {

@@ -485,10 +485,10 @@ fun Connection.setupNetworksFromHost(
 	log.info("modifiedNetworkAttachments: {}", modifiedNetworkAttachments.size)
 	log.info("removedNetworkAttachments: {}", removedNetworkAttachments.size)
 	this.srvHost(hostId).setupNetworks().apply {
-		if(modifiedBonds.isNotEmpty()) modifiedBonds(modifiedBonds)
 		if(removedBonds.isNotEmpty()) removedBonds(removedBonds)
-		if(modifiedNetworkAttachments.isNotEmpty()) modifiedNetworkAttachments(modifiedNetworkAttachments)
 		if(removedNetworkAttachments.isNotEmpty()) removedNetworkAttachments(removedNetworkAttachments)
+		if(modifiedBonds.isNotEmpty()) modifiedBonds(modifiedBonds)
+		if(modifiedNetworkAttachments.isNotEmpty()) modifiedNetworkAttachments(modifiedNetworkAttachments)
 	}.send()
 
 	this.srvHost(hostId).commitNetConfig().send()
