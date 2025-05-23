@@ -29,6 +29,14 @@ interface ItClusterLevelService {
 	@Throws(Error::class)
 	fun findAll(): List<ClusterLevelVo>
 	/**
+	 * [ItClusterLevelService.findAll]
+	 * 클러스터 레벨 ID 목록 전체 조회
+	 *
+	 * @return List<[ClusterLevelVo]> 클러스터 레벨 목록
+	 */
+	@Throws(Error::class)
+	fun findAllIds(): List<String>
+	/**
 	 * [ItClusterLevelService.findAllByArchitecture]
 	 * (아키텍쳐별로) 클러스터 레벨 목록 조회
 	 *
@@ -57,6 +65,8 @@ class ClusterLevelServiceImpl(
 		val res: List<ClusterLevel> = conn.findAllClusterLevels()
 			.getOrDefault(emptyList())
 		return res.toClusterLevelVos()
+			.sortedByDescending { it.id }
+
 	}
 
 	@Throws(Error::class)
@@ -66,7 +76,7 @@ class ClusterLevelServiceImpl(
 			.getOrDefault(emptyList())
 		return res.toClusterLevelVos().flatMap {
 			it.cpuTypes
-		}.groupBy {
+		}.sortedBy { it.level }.groupBy {
 			it.architecture
 		}
 	}
@@ -79,6 +89,9 @@ class ClusterLevelServiceImpl(
 		// ?: throw ErrorPattern.CLUSTER_LEVEL_
 		return res?.toClusterLevelVo()
 	}
+
+	override fun findAllIds(): List<String>
+		= findAll().map { it.id }.sortedByDescending { it }
 
 	companion object {
 		private val log by LoggerDelegate()

@@ -15,7 +15,6 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.FileSystemResource
-import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -24,11 +23,9 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
-import java.io.File
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
-import java.nio.file.Path
 
 @Controller
 @Api(tags = ["Computing", "Vm"])
@@ -427,21 +424,21 @@ class VmController: BaseController() {
 		notes="선택된 가상머신의 마이그레이션 가능한 호스트 목록을 조회한다"
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="vmIds", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="query"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping("/{vmId}/migrateHosts")
+	@GetMapping("/migratableHosts")
 	@ResponseBody
 //	@ResponseStatus(HttpStatus.CREATED)
-	fun migrateHosts(
-		@PathVariable vmId: String? = null,
+	fun migratableHosts(
+		@RequestParam vmIds: String? = "",
 	): ResponseEntity<List<IdentifiedVo>> {
-		if (vmId.isNullOrEmpty())
+		if (vmIds.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		log.info("/computing/vms/{}/migrateHosts ... 가상머신 호스트 목록 조회", vmId)
-		return ResponseEntity.ok(iVmOp.migrateHostList(vmId))
+		log.info("/computing/vms/migratableHosts vmIds: {}... (마이그레이션 가능한) 가상머신의 호스트 목록 조회", vmIds)
+		return ResponseEntity.ok(iVmOp.findMigratableHosts(vmIds.split(",")))
 	}
 
 	@ApiOperation(

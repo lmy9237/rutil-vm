@@ -139,7 +139,9 @@ class HostsController {
 	)
 	@GetMapping("/consolidateVms")
 	@ResponseBody
-	fun consolidateVms(@RequestBody hosts: List<String>): JSONObject {
+	fun consolidateVms(
+		@RequestBody hosts: List<String>
+	): JSONObject {
 		log.info("... consolidateVms[${hosts.size}]")
 		val result: List<ConsolidationVo> =
 			hostsService.maintenanceBeforeConsolidateVms(hosts)
@@ -416,7 +418,7 @@ class HostsController {
 			this[ItInfoConstant.RESULT_KEY] = "OK"
 		}
 	}
-	
+
 	companion object {
 		private val log by LoggerDelegate()
 	}

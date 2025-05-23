@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "react-hot-toast";
+import { useForm } from "react-hook-form";
 import { useToast }           from "@/hooks/use-toast";
 import useGlobal              from "@/hooks/useGlobal";
 import useUIState             from "@/hooks/useUIState";
@@ -13,11 +14,13 @@ import {
   useAddDataCenter,
   useEditDataCenter,
   useDataCenter,
+  useAllClusterLevels,
 } from "@/api/RQHook";
 import {
   checkKoreanName, checkName 
 } from "@/util";
 import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./MDatacenter.css";
 
 const initialFormState = {
@@ -44,16 +47,46 @@ const DataCenterModal = ({
 }) => {
   const { toast } = useToast();
   // const { closeModal } = useUIState()
-  const dcLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+  const dcLabel = editMode 
+    ? Localization.kr.UPDATE
+    : Localization.kr.CREATE;
   
   const { datacentersSelected } = useGlobal()
-  const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
+  const datacenterId = useMemo(() => 
+    [...datacentersSelected][0]?.id
+  , [datacentersSelected])
 
   const [formState, setFormState] = useState(initialFormState);
-  const { data: datacenter } = useDataCenter(datacenterId);
   const { mutate: addDataCenter } = useAddDataCenter(onClose, onClose);
   const { mutate: editDataCenter } = useEditDataCenter(onClose, onClose);
+  const {
+    data: datacenter,
+    isSuccess: isDataCenterSuccess,
+  } = useDataCenter(datacenterId);
+  const { 
+    data: clusterLevels=[],
+  } = useAllClusterLevels("id", (e) => e);
+  const clusterLevelsTransformed = [...clusterLevels].map((e) => (
+    { value: e, label: e, }
+  ))
 
+  /*
+  const { 
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      id: (editMode && isDataCenterSuccess) ?  datacenter?.id : "",
+      name: (editMode && isDataCenterSuccess) ? datacenter?.name : "",
+      comment: (editMode && isDataCenterSuccess) ? datacenter?.comment : "",
+      description: (editMode && isDataCenterSuccess) ? datacenter?.description : "",
+      storageType: (editMode && isDataCenterSuccess) ? Boolean(datacenter?.storageType) : false, // 공유됨이 false
+      version: (editMode && isDataCenterSuccess) ? datacenter?.version : "4.7",
+      quotaMode: (editMode && isDataCenterSuccess) ? datacenter?.quotaMode : "DISABLED",
+    }
+  })
+  */
   // 모달 열릴때 초기화, 편집 정보넣기
   useEffect(() => {
     if (!isOpen) {
@@ -71,17 +104,20 @@ const DataCenterModal = ({
       });
     }
   }, [isOpen, editMode, datacenter]);
-
+  
   // 값 검증
   const validateForm = () => {
+    Logger.debug(`Login > validateForm ... `)
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
     if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}은 영어만 입력가능합니다.`;
+    if (formState.quotaMode==="none") return `쿼터 모드를 선택해주세요.`
+    if (formState.version==="none") return `버전을 선택해주세요.`
     return null;
   };
 
   // 제출
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (dataToSubmit) => {
     const error = validateForm();
     if (error) {
       toast({
@@ -92,8 +128,8 @@ const DataCenterModal = ({
       return;
     }
 
-    const dataToSubmit = { ...formState };
-
+    Logger.debug(`Login > handleFormSubmit ... dataToSubmit: `, dataToSubmit)
+    // const dataToSubmit = { ...formState };
     editMode
       ? editDataCenter({ dataCenterId: formState.id, dataCenterData: dataToSubmit })
       : addDataCenter(dataToSubmit);
@@ -105,34 +141,44 @@ const DataCenterModal = ({
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "473px" }} 
     >
-      <LabelInput id="name" label={Localization.kr.NAME}
-        autoFocus
-        value={formState.name}
-        onChange={handleInputChange(setFormState, "name")}
-      />
-      <LabelInput id="description" label={Localization.kr.DESCRIPTION}
-        value={formState.description}
-        onChange={handleInputChange(setFormState, "description")}
-      />
-      <LabelInput id="comment" label={Localization.kr.COMMENT}
-        value={formState.comment}
-        onChange={handleInputChange(setFormState, "comment")}
-      />
-      <ToggleSwitchButton id="storage-type" label="스토리지 타입"
-        checked={formState.storageType}
-        onChange={() => setFormState((prev) => ({ ...prev, storageType: !formState.storageType }))}
-        tType="로컬" fType="공유됨"
-      />
-      <LabelSelectOptions id="quarter-mode" label="쿼터 모드"
-        value={formState.quotaMode}
-        onChange={handleInputChange(setFormState, "quotaMode")}
-        options={quotaModes}
-      />
-      <LabelSelectOptions id="version-compatible" label="호환버전"
-        value={formState.version}
-        onChange={handleInputChange(setFormState, "version")}
-        options={versions}
-      />
+      <form 
+      >
+        <LabelInput id="name" label={Localization.kr.NAME}
+          autoFocus required
+          value={formState.name}
+          onChange={handleInputChange(setFormState, "name")}
+          // register={register} target={"name"} options={{ required: true, maxLength: 30 }}
+        />
+        <LabelInput id="description" label={Localization.kr.DESCRIPTION}
+          value={formState.description}
+          onChange={handleInputChange(setFormState, "description")}
+          // register={register} target={"description"} options={{ required: true, maxLength: 30 }}
+        />
+        <LabelInput id="comment" label={Localization.kr.COMMENT}
+          value={formState.comment}
+          onChange={handleInputChange(setFormState, "comment")}
+          // register={register} target={"comment"} options={{ required: true, maxLength: 30 }}
+        />
+        <ToggleSwitchButton id="storage-type" label="스토리지 타입"
+          required
+          checked={formState.storageType}
+          onChange={() => setFormState((prev) => ({ 
+            ...prev,
+            storageType: !formState.storageType
+          }))}
+          tType="로컬" fType="공유됨"
+        />
+        <LabelSelectOptions id="quota-mode" label="쿼터 모드"
+          value={formState.quotaMode}
+          onChange={handleInputChange(setFormState, "quotaMode")}
+          options={quotaModes}
+        />
+        <LabelSelectOptions id="version-compatible" label="호환버전"
+          value={formState.version}
+          onChange={handleInputChange(setFormState, "version")}
+          options={clusterLevelsTransformed}
+        />
+      </form>
     </BaseModal>
   );
 };
@@ -144,5 +190,3 @@ const quotaModes = [
   { value: "AUDIT", label: "감사" },
   { value: "ENABLED", label: `${Localization.kr.ACTIVATE}` },
 ];
-
-const versions = [{ value: "4.7", label: 4.7 }];

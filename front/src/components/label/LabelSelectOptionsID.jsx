@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { forwardRef, useMemo, useState } from "react";
 import {
   Select,
   SelectTrigger,
@@ -11,7 +11,7 @@ import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./LabelInput.css";
 
-const LabelSelectOptionsID = ({
+const LabelSelectOptionsID = forwardRef(({
   className = "",
   label,
   id,
@@ -23,7 +23,7 @@ const LabelSelectOptionsID = ({
   etcLabel = "",
   placeholderLabel=Localization.kr.PLACEHOLDER_SELECT,
   placeholderValue="none", // SelectItem에 들어갈 내용이 null이거나 비어있으면 오류가 남
-}) => {
+}, ref) => {
 
   const OPTION_EMPTY = { id: placeholderValue, name: placeholderLabel }
   const _options = [
@@ -87,7 +87,7 @@ const LabelSelectOptionsID = ({
       )}
     </div>
   );
-};
+});
 
 export default LabelSelectOptionsID;
 /*

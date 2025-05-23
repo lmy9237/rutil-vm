@@ -1,5 +1,6 @@
 import { useCallback } from "react"
 import { useNavigate } from "react-router-dom";
+import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
@@ -30,6 +31,7 @@ const VmDupl = ({
   refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
+  const { activeModal } = useUIState();
   const {
     vmsSelected, setVmsSelected
   } = useGlobal();
@@ -101,7 +103,10 @@ const VmDupl = ({
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         multiSelect={true}
-        onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
+        onRowClick={(selectedRows) => {
+          if (activeModal().length > 0 || activeModal().includes("vm:migration")) return
+          setVmsSelected(selectedRows)
+        }}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />

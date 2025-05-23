@@ -133,15 +133,15 @@ class ItVmOperationServiceTest {
 
    /**
     * [should_migrateHostList]
-    * [ItVmOperationService.migrateHostList]에 대한 단위테스트
+    * [ItVmOperationService.findMigratableHosts]에 대한 단위테스트
     *
-    * @see ItVmOperationService.migrateHostList
+    * @see ItVmOperationService.findMigratableHosts
     */
    @Test
    fun should_migrateHostList() {
        log.debug("should_migrateHostList ... ")
        val result: List<IdentifiedVo> =
-           service.migrateHostList(apm)
+           service.findMigratableHosts(apm)
 
        assertThat(result, `is`(not(nullValue())))
        result.forEach { println(it) }

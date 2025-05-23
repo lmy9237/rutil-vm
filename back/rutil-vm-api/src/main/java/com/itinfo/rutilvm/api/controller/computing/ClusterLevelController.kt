@@ -24,11 +24,13 @@ import org.springframework.web.bind.annotation.*
 class ClusterLevelController {
 	@Autowired private lateinit var iClusterLevel: ItClusterLevelService
 
-
 	@ApiOperation(
 		httpMethod="GET",
-		value="클러스터 레벨 목록 조회",
-		notes="클러스터 레벨 목록을 조회한다"
+		value="클러스터 항목 별 목록 조회",
+		notes="클러스터 항목 별 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="category", value="클러스터 레벨 항목", dataTypeClass=String::class, required=false, paramType="query", example="arch,id"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
@@ -36,28 +38,15 @@ class ClusterLevelController {
 	@GetMapping
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	fun findAll(): ResponseEntity<List<ClusterLevelVo>> {
-		log.info("/computing/clusterlevels ... 클러스터레벨 목록")
-		return ResponseEntity.ok(iClusterLevel.findAll())
-	}
-
-	@ApiOperation(
-		httpMethod="GET",
-		value="아키텍쳐 별 CPU 유형조회",
-		notes="아키텍쳐 별 CPU 유형정보를 조회한다"
-	)
-	@ApiImplicitParams(
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/arch")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun findAllCpuTypesByArchitecture(
-	): ResponseEntity<Map<Architecture?, List<CpuTypeVo>>> {
-		log.info("/computing/clusterlevels/arch ... 아키텍쳐 별 CPU 유형정보")
-		return ResponseEntity.ok(iClusterLevel.findAllCpuTypesByArchitecture())
+	fun findAll(
+		@RequestParam(required=false) category: String?="",
+	): ResponseEntity<out Any> {
+		log.info("/computing/clusterlevels?category={} ... 클러스터 레벨 항목 별 목록", category)
+		return ResponseEntity.ok(when (category) {
+			"arch" -> iClusterLevel.findAllCpuTypesByArchitecture()
+			"id" -> iClusterLevel.findAllIds()
+			else -> iClusterLevel.findAll()
+		})
 	}
 
 	@ApiOperation(

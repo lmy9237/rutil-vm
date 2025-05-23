@@ -16,6 +16,7 @@ private val log = LoggerFactory.getLogger(ClusterLevelVo::class.java)
  * 클러스터 레벨 정보
  */
 class ClusterLevelVo(
+	val id: String = "",
 	val cpuTypes: List<CpuTypeVo> = listOf(),
 	val permits: List<PermitVo> = listOf()
 ): Serializable {
@@ -23,9 +24,10 @@ class ClusterLevelVo(
 		gson.toJson(this)
 
 	class Builder {
+		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bCpuTypes: List<CpuTypeVo> = listOf();fun cpuTypes(block: () -> List<CpuTypeVo>?) { bCpuTypes = block() ?: listOf() }
 		private var bPermits: List<PermitVo> = listOf();fun permits(block: () -> List<PermitVo>?) { bPermits = block() ?: listOf() }
-		fun build(): ClusterLevelVo = ClusterLevelVo(bCpuTypes, bPermits)
+		fun build(): ClusterLevelVo = ClusterLevelVo(bId, bCpuTypes, bPermits)
 	}
 
 	companion object {
@@ -94,6 +96,7 @@ fun List<Permit>.toPermitVos(): List<PermitVo> = this@toPermitVos.map {
 }
 
 fun ClusterLevel.toClusterLevelVo(): ClusterLevelVo = ClusterLevelVo.builder {
+	id { if (this@toClusterLevelVo.idPresent()) id() else "" }
 	cpuTypes { if (this@toClusterLevelVo.cpuTypesPresent()) cpuTypes().toCpuTypeVos() else listOf()  }
 	permits { if (this@toClusterLevelVo.permitsPresent()) permits().toPermitVos() else listOf() }
 }

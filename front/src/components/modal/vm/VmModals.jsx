@@ -68,6 +68,7 @@ const VmModals = ({
     ), migration: (
       <VmMigrationModal key={"vm:migration"} isOpen={activeModal().includes("vm:migration")} 
         onClose={() => closeModal("vm:migration")}
+        vmId={vmsSelected[0]?.id}
       />
     ), ova: (
       <VmExportOVAModal key={"vm:ova"} isOpen={activeModal().includes("vm:ova")}

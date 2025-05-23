@@ -11,6 +11,7 @@ import {
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./VmVnc.css"
+import CONSTANT from "@/Constants";
 
 /**
  * @name VmVnc
@@ -48,10 +49,11 @@ const VmVnc = ({
     { type: "screenshot", label: "스크린샷", onClick: () => takeScreenshot()}
   ]
 
-  Logger.debug("VmVnc ...")
   return (
-    <div className="section-vnc w-full h-full v-center">
-      <HeaderButton titleIcon={rvi24Desktop("#F8F8F8")}
+    <div
+      className="section-vnc w-full h-full v-center"
+    >
+      <HeaderButton titleIcon={rvi24Desktop(CONSTANT.color.white)}
         title={vm?.name ?? "RutilVM에 오신걸 환영합니다."}
         status={Localization.kr.renderStatus(vm?.status)}
         buttons={sectionHeaderButtons}

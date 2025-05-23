@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
@@ -21,6 +22,7 @@ const DiskDupl = ({
   refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
+  const { activeModal } = useUIState();
   const { 
     disksSelected, setDisksSelected,
     diskProfilesSelected, setDiskProfilesSelected,
@@ -105,7 +107,10 @@ const DiskDupl = ({
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         /*shouldHighlight1stCol={true}*/
-        onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
+        onRowClick={(selectedRows) => {
+          if (activeModal().length > 0) return
+          setDisksSelected(selectedRows)
+        }}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />

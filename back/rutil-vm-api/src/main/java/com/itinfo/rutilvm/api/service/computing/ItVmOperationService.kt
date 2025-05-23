@@ -11,6 +11,7 @@ import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.error.ItCloudException
 import org.ovirt.engine.sdk4.Error
+import org.ovirt.engine.sdk4.types.Cluster
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.Vm
 
@@ -73,14 +74,14 @@ interface ItVmOperationService {
 	fun reset(vmId: String): Boolean
 
 	/**
-	 * [ItVmOperationService.migrateHostList]
+	 * [ItVmOperationService.findMigratableHosts]
 	 * 마이그레이션 할 수 있는 호스트 목록
 	 *
-	 * @param vmId [String] 가상머신 Id
+	 * @param vmIds List<[String]> 가상머신 Id 목록
 	 * @return List<[IdentifiedVo]>
 	 */
 	@Throws(Error::class, ItCloudException::class)
-	fun migrateHostList(vmId: String): List<IdentifiedVo>
+	fun findMigratableHosts(vmIds: List<String>): List<IdentifiedVo>
 	/**
 	 * [ItVmOperationService.migrate]
 	 * 가상머신 - 마이그레이션
@@ -154,14 +155,22 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 	}
 
 	@Throws(Error::class, ItCloudException::class)
-	override fun migrateHostList(vmId: String): List<IdentifiedVo> {
-		log.info("migrateHostList ... vmId: {}", vmId)
-		val vm: Vm = conn.findVm(vmId)
+	override fun findMigratableHosts(vmIds: List<String>): List<IdentifiedVo> {
+		log.info("findMigratableHosts ... vmIds: {}", vmIds)
+		val searchQuery: String = vmIds.joinToString(" or ") { "id=${it}" }
+		val vms: List<Vm> = conn.findAllVms(searchQuery=searchQuery, follow="cluster")
 			.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
+		val clusters: List<Cluster> = vms.mapNotNull {
+			it.cluster()
+		}.distinctBy {
+			it.id()
+		}
+		if (clusters.isEmpty()) throw ErrorPattern.CLUSTER_NOT_FOUND.toException()
+		val clusterIds: List<String> = clusters.map { it.id() }
+
 		val res: List<Host> = conn.findAllHosts().getOrDefault(emptyList())
-			.filter { it.cluster().id() == vm.cluster().id() }
+			.filter { clusterIds.indexOf(it.cluster().id()) > -1 }
 			// 내 호스트랑 같은건 front 에서 처리
-			// .filter { it.cluster().id() == vm.cluster().id() && it.id() != vm.host().id() }
 		return res.fromHostsToIdentifiedVos()
 	}
 

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { forwardRef, useMemo } from "react";
 import {
   Select,
   SelectTrigger,
@@ -26,7 +26,7 @@ import "./LabelInput.css";
  *
  * @returns {JSX.Element}
  */
-const LabelSelectOptions = ({
+const LabelSelectOptions = forwardRef(({
   className = "",
   label,
   id,
@@ -37,7 +37,7 @@ const LabelSelectOptions = ({
   options = [],
   placeholderLabel=Localization.kr.PLACEHOLDER_SELECT,
   placeholderValue="none", // SelectItem에 들어갈 내용이 null이거나 비어있으면 오류가 남
-}) => {
+}, ref) => {
   
   const OPTION_EMPTY = { 
     label: placeholderLabel, 
@@ -106,7 +106,7 @@ const LabelSelectOptions = ({
       )}
     </div>
   );
-};
+});
 
 export default LabelSelectOptions;
 
@@ -118,93 +118,92 @@ import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import Logger from "../../utils/Logger";
 import "./LabelInput.css";
 */
-// /**
-//  * @name LabelSelectOptions
-//  * @description 레이블 선택란
-//  *
-//  * @prop {string} className
-//  * @prop {string} label
-//  * @prop {string} id
-//  * @prop {string} value
-//  * @prop {function} onChange
-//  * @prop {boolean} disabled
-//  * @prop {boolean} loading
-//  * @prop {Array} options
-//  *
-//  * @returns {JSX.Element} LabelSelectOptions
-//  */
-// const LabelSelectOptions = ({
-//   className = "",
-//   label,
-//   id,
-//   value,
-//   onChange,
-//   disabled,
-//   loading,
-//   options = [],
-// }) => {
-//   const [open, setOpen] = useState(false);
-//   const selectRef = useRef(null);
+/**
+ * @name LabelSelectOptions
+ * @description 레이블 선택란
+ *
+ * @prop {string} className
+ * @prop {string} label
+ * @prop {string} id
+ * @prop {string} value
+ * @prop {function} onChange
+ * @prop {boolean} disabled
+ * @prop {boolean} loading
+ * @prop {Array} options
+ *
+ * @returns {JSX.Element} LabelSelectOptions
+ */
+/*
+const LabelSelectOptions = ({
+  className = "",
+  label,
+  id,
+  value,
+  onChange,
+  disabled,
+  loading,
+  options = [],
+}) => {
+  const [open, setOpen] = useState(false);
+  const selectRef = useRef(null);
 
-//   const handleOptionClick = (optionValue) => {
-//     Logger.debug(`LabelSelectOptions > handleOptionClick ... optionValue: ${optionValue}`)
-//     if (disabled) return;
-//     onChange({ target: { value: optionValue } });
-//     setOpen(false);
-//   }/* useCallback 불가능 - 매번 랜더링 필요 */
-//   useClickOutside(selectRef, (e) => setOpen(false))
+  const handleOptionClick = (optionValue) => {
+    Logger.debug(`LabelSelectOptions > handleOptionClick ... optionValue: ${optionValue}`)
+    if (disabled) return;
+    onChange({ target: { value: optionValue } });
+    setOpen(false);
+  }
+  useClickOutside(selectRef, (e) => setOpen(false))
 
-//   const boxStyle = !label ? { width: "100%" } : undefined; // label이 없으면 100% width style 지정 
+  const boxStyle = !label ? { width: "100%" } : undefined; // label이 없으면 100% width style 지정 
 
-//   const selectedLabel = useMemo(() => {
-//     if (loading) return <Loading/>;
-//     if (options.length === 0) return Localization.kr.NO_ITEM;
-//     const selected = options?.find(opt => opt.value === value);
-//     return selected ? selected.label : Localization.kr.PLACEHOLDER_SELECT;
+  const selectedLabel = useMemo(() => {
+    if (loading) return <Loading/>;
+    if (options.length === 0) return Localization.kr.NO_ITEM;
+    const selected = options?.find(opt => opt.value === value);
+    return selected ? selected.label : Localization.kr.PLACEHOLDER_SELECT;
 
-//   }, [options, loading, value]);
+  }, [options, loading, value]);
 
-//   return (
-//     <div className={`input-select custom-select-wrapper ${className}`} ref={selectRef}>
-//       {label && <div className="select-label">{label}</div>}
-//       {/* <div className={`custom-select-box v-start w-full ${disabled ? "disabled" : ""}`} */}
-//       <div 
-//         className={`custom-select-box f-start ${disabled ? "disabled" : ""}`}
-//         style={boxStyle} 
-//         onClick={() => !disabled && setOpen(!open)}
-//       >
-//         <span>{selectedLabel}</span>
-//         <RVI16 iconDef={open ? rvi16ChevronUp() : rvi16ChevronDown()} />
-//       </div>
-//       {open && !loading && (
-//         <div 
-//           className="custom-options v-start"
-//           style={boxStyle}
-//         >
-//           {[...options].map((opt) => (
-//             <LabelSelectOption 
-//               opt={opt}
-//               value={value}
-//               handleOptionClick={handleOptionClick}
-//             />
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
+  return (
+    <div className={`input-select custom-select-wrapper ${className}`} ref={selectRef}>
+      {label && <div className="select-label">{label}</div>}
+      <div 
+        className={`custom-select-box f-start ${disabled ? "disabled" : ""}`}
+        style={boxStyle} 
+        onClick={() => !disabled && setOpen(!open)}
+      >
+        <span>{selectedLabel}</span>
+        <RVI16 iconDef={open ? rvi16ChevronUp() : rvi16ChevronDown()} />
+      </div>
+      {open && !loading && (
+        <div 
+          className="custom-options v-start"
+          style={boxStyle}
+        >
+          {[...options].map((opt) => (
+            <LabelSelectOption 
+              opt={opt}
+              value={value}
+              handleOptionClick={handleOptionClick}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
-// const LabelSelectOption = ({
-//   opt, 
-//   value,
-//   handleOptionClick,
-// }) => (
-//   <div key={opt.value}
-//     className={`custom-option f-start w-full ${opt.value === value ? "selected" : ""}`}
-//     onClick={() => handleOptionClick(opt.value)}
-//   >
-//     {opt.label}
-//   </div>
-// )
-
-// export default LabelSelectOptions;
+const LabelSelectOption = ({
+  opt, 
+  value,
+  handleOptionClick,
+}) => (
+  <div key={opt.value}
+    className={`custom-option f-start w-full ${opt.value === value ? "selected" : ""}`}
+    onClick={() => handleOptionClick(opt.value)}
+  >
+    {opt.label}
+  </div>
+)
+*/

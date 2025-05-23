@@ -443,7 +443,7 @@ const ApiManager = {
   },
   //#endregion: DataCenter
 
-  //#region : Cluster--------------------------------------------
+  //#region: Cluster
   /**
    * @name ApiManager.findAllClusters
    * @description 클러스터 목록 
@@ -658,8 +658,18 @@ const ApiManager = {
   },
   //#endregion: Cluster
 
+  //#region: Cluster Level
+  findAllClusterLevels: async (cateogry="") => makeAPICall({
+    method: "GET",
+    url: ENDPOINTS.FIND_ALL_CLUSTER_LEVELS(cateogry),
+  }),
+  findClusterLevel: async (clusterLevelId="") => makeAPICall({
+    method: "GET",
+    url: ENDPOINTS.FIND_CLUSTER_LEVEL(clusterLevelId),
+  }),
+  //#endregion: Cluster Level
 
-  //#region : Host--------------------------------------------
+  //#region: Host
   /**
    * @name ApiManager.findAllHosts
    * @description 호스트 목록 
@@ -1699,12 +1709,12 @@ const ApiManager = {
    * @name ApiManager.migrateHostsFromVM
    * @description 가상머신 마이그레이션 호스트목록
    * 
-   * @param {String} vmId 가상 머신 ID
+   * @param {String} vmIds 가상 머신 ID
    */
-  migrateHostsFromVM: async (vmId) => {
+  findAllMigratableHosts4Vms: async (vmIds) => {
     return makeAPICall({
       method: "GET",
-      url: ENDPOINTS.MIGRATE_HOST_LIST_VM(vmId),  // ID를 URL에 포함
+      url: ENDPOINTS.FIND_ALL_MIGRATABLE_HOSTS_4_VMS(vmIds.join(",")),  // ID를 URL에 포함
     });
   },
 

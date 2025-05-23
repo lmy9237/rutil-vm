@@ -64,6 +64,11 @@ const ENDPOINTS = {
   DELETE_CLUSTER: (clusterId) =>                                           `${ENDPOINT_API_V1}/computing/clusters/${clusterId}`, 
   // endregion: Cluster
 
+  // region: Cluster Level
+  FIND_ALL_CLUSTER_LEVELS: (category=""/* arch, id */) =>                  `${ENDPOINT_API_V1}/computing/clusterlevels?category=${category}`,
+  FIND_CLUSTER_LEVEL: (clusterLevelId) =>                                  `${ENDPOINT_API_V1}/computing/clusterlevels/${clusterLevelId}`,
+  // endregion: Cluster Level
+
   //#region: Host
   FIND_ALL_HOSTS: () =>                                                    `${ENDPOINT_API_V1}/computing/hosts`,
   FIND_HOST: (hostId) =>                                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}`, 
@@ -157,7 +162,7 @@ const ENDPOINTS = {
   EXPORT_VM: (vmId) =>                                                     `${ENDPOINT_API_V1}/computing/vms/${vmId}/export`, 
   CONSOLE_VM: (vmId) =>                                                    `${ENDPOINT_API_V1}/computing/vms/${vmId}/console`,
   REMOTE_VIEWER_CONNECTION_FILE_VM: (vmId) =>                              `${ENDPOINT_API_V1}/computing/vms/${vmId}/remoteviewerconnection`,
-  MIGRATE_HOST_LIST_VM: (vmId) =>                                          `${ENDPOINT_API_V1}/computing/vms/${vmId}/migrateHosts`, 
+  FIND_ALL_MIGRATABLE_HOSTS_4_VMS: (vmIds) =>                                   `${ENDPOINT_API_V1}/computing/vms/migratableHosts?vmIds=${vmIds}`, 
   MIGRATE_VM: (vmId, affinityClosure) => {
     let url = `${ENDPOINT_API_V1}/computing/vms/${vmId}/migrate`;
     const flag = affinityClosure === true || affinityClosure === 'true';

@@ -26,16 +26,11 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+  })
 
   const errRef = useRef();
-
   // 사용자 정보
-  /*
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  */
-  const [errMsg, setErrMsg] = useState('');
   const {
     mutate: authMutate,
   } = useAuthenticate((res) => {

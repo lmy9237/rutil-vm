@@ -64,7 +64,10 @@ const Tables = ({
     setSelectedRowIndex(null);
     setSelectedRows([]);
     if (typeof onRowClick === "function") onRowClick([]);
-  }, [".header-right-btns button", ".Overlay", "#right-click-menu-box"]);
+  }, [
+    ".header-right-btns button", ".Overlay", "#right-click-menu-box"
+    , "#modal-vm-migration"
+  ]);
 
   // 테이블 정렬기능
   const [sortedData, setSortedData] = useState(data);

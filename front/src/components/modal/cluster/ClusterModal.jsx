@@ -59,9 +59,9 @@ const ClusterModal = ({
     ? biosTypeOptions.filter(opt => opt.value !== "CLUSTER_DEFAULT")
     : biosTypeOptions;
 
-  const { data: cluster } = useCluster(clusterId);
   const { mutate: addCluster } = useAddCluster(onClose, onClose);
   const { mutate: editCluster } = useEditCluster(onClose, onClose);
+  const { data: cluster } = useCluster(clusterId);
   const { 
     data: datacenters = [], 
     isLoading: isDataCentersLoading 
@@ -122,9 +122,11 @@ const ClusterModal = ({
   useEffect(() => {
     const options = cpuArcOptions[formState.cpuArc] || [];
     setCpuOptions(options);
-  
     if (!editMode) {
-      setFormState((prev) => ({ ...prev, cpuType: options[0]?.value || ""  }));
+      setFormState((prev) => ({
+        ...prev,
+        cpuType: options[0]?.value || ""
+      }));
     }
   }, [formState.cpuArc, editMode]);
   
@@ -132,7 +134,6 @@ const ClusterModal = ({
     Logger.debug(`ClusterModal > validateForm ...`)
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
-
     if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}이 유효하지 않습니다.`;
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     if (!networkVo.id) return `${Localization.kr.NETWORK}를 선택해주세요.`;
@@ -153,6 +154,7 @@ const ClusterModal = ({
     const dataToSubmit = {
       ...formState,
       dataCenterVo,
+      biosType: formState?.biosType === "none" ? "" : formState?.biosType,
       networkVo,
     };
 
@@ -216,9 +218,11 @@ const ClusterModal = ({
           value={formState.biosType}
           options={biosTypeFiltered}
           onChange={handleInputChange(setFormState, "biosType")}
+          placeholderLabel="자동 감지"
+          placeholderValue="none"
         />
       )}
-      <LabelSelectOptions id="recovery_policy-type" label="복구정책"
+      <LabelSelectOptions id="error-handling" label="복구정책"
         value={formState.errorHandling}
         options={errorHandlingOptions}
         onChange={handleInputChange(setFormState, "errorHandling")}
@@ -268,8 +272,6 @@ const cpuArcOptions = {
     { value: "IBM z14", label: "IBM z14" },
   ],
   UNDEFINED: [
-    // TODO: SelectOptionID 값 보정필요
-    { value: "", label: "자동 감지" },
     { value: "Intel Nehalem Family", label: "Intel Nehalem Family" },
     { value: "Secure Intel Nehalem Family", label: "Secure Intel Nehalem Family" },
     { value: "Intel Westmere Family", label: "Intel Westmere Family" },

@@ -36,6 +36,8 @@ const VmBoot = ({
           value={formBootState.secDevice} 
           options={secDeviceOptionList}
           onChange={handleInputChange("secDevice")} 
+          placeholderLabel="없음"
+          placeholderValue="none"
         />
       </div>
 
@@ -85,8 +87,6 @@ const firstDeviceOptionList = [
 ];
 
 const secDeviceOptionList = [
-  // TODO: SelectOptionID 값 보정필요
-  { value: "none", label: "없음" },
   { value: "cdrom", label: "CD-ROM" },
   { value: "network", label: "네트워크(PXE)" },
 ];

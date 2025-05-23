@@ -1082,6 +1082,51 @@ export const useDeleteCluster = (
 };
 //#endregion: Cluster
 
+//#region: Cluster Level (클러스터레벨)
+/**
+ * @name useAllClusterLevels
+ * @description 클러스터 레벨 목록조회 useQuery훅
+ * 
+ * @param {string} cateogry 카테고리 (arch/id/빈값)
+ * @param {function} mapPredicate 객체 변형 처리
+ * @see ApiManager.findAllClusterLevels
+ */
+export const useAllClusterLevels = (
+  category="",
+  mapPredicate=(e)=>({ ...e })
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['allClusterLevels'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllClusterLevels(category)
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllClusterLevels ... res: `, _res);
+    return _res;
+  }
+})
+/**
+ * @name useAllUpClusters
+ * @description 클러스터 레벨 상세조회 useQuery훅
+ * 
+ * @param {string} clusterLevelId 클러스터 레벨 ID
+ * @see ApiManager.findClusterLevel
+ */
+export const useClusterLevel = (
+  clusterLevelId="",
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['allClusters'],
+  queryFn: async () => {
+    const res = await ApiManager.findClusterLevel(clusterLevelId)
+    const _res = validate(res) ?? {}
+    Logger.debug(`RQHook > useClusterLevel ... useClusterLevel: ${clusterLevelId}`)
+    return _res
+  }
+})
+//#endregion: Cluster Level (클러스터레벨)
+
 //#region: Host ----------------호스트---------------------
 /**
  * @name useAllHosts
@@ -2940,21 +2985,21 @@ export const useResetVM = (
  * 
  * @see ApiManager.migrateHostsFromVM
  */
-export const useHostsForMigration = (
-  vmId,
+export const useAllMigratableHosts4Vms = (
+  vmIds=[],
   mapPredicate
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['HostsForMigration', vmId],
+  queryKey: ['allMigratableHosts4Vms', ...vmIds],
   queryFn: async () => {
-    const res = await ApiManager.migrateHostsFromVM(vmId);
+    const res = await ApiManager.findAllMigratableHosts4Vms(vmIds);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useHostsForMigration ... vmId: ${vmId}, res: `, _res);
+    Logger.debug(`RQHook > useAllMigratableHosts4Vms ... vmIds: ${vmIds}, res: `, _res);
     return _res;
   },
-  enabled: !!vmId
+  enabled: !!vmIds
 })
 
 /**

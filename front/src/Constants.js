@@ -75,6 +75,7 @@ const CONSTANT = {
     warn: "#F46C53",
     logo: "#8CC453",
     logText: "#4679BC",
+    white: "#F8F8F8",
     black: "#1D1D1D",
     down: "#999999",
     alert: "#E71825",
