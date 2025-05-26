@@ -1,15 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
-import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { useToast }           from "@/hooks/use-toast";
-import useGlobal              from "@/hooks/useGlobal";
-import useUIState             from "@/hooks/useUIState";
-import { Switch }             from "@/components/ui/switch"
-import BaseModal              from "@/components/modal/BaseModal";
-import LabelInput             from "@/components/label/LabelInput";
-import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
-import { handleInputChange }  from "@/components/label/HandleInput";
-import ToggleSwitchButton     from "@/components/button/ToggleSwitchButton";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useGlobal                        from "@/hooks/useGlobal";
+import useUIState                       from "@/hooks/useUIState";
+import { Switch }                       from "@/components/ui/switch"
+import BaseModal                        from "@/components/modal/BaseModal";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import { handleInputChange }            from "@/components/label/HandleInput";
+import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
 import {
   useAddDataCenter,
   useEditDataCenter,
@@ -19,8 +18,8 @@ import {
 import {
   checkKoreanName, checkName 
 } from "@/util";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./MDatacenter.css";
 
 const initialFormState = {
@@ -45,7 +44,7 @@ const DataCenterModal = ({
   onClose,
   editMode=false
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const dcLabel = editMode 
     ? Localization.kr.UPDATE
@@ -107,7 +106,7 @@ const DataCenterModal = ({
   
   // 값 검증
   const validateForm = () => {
-    Logger.debug(`Login > validateForm ... `)
+    Logger.debug(`DataCenterModal > validateForm ... `)
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
     if (checkKoreanName(formState.description)) return `${Localization.kr.DESCRIPTION}은 영어만 입력가능합니다.`;
@@ -117,19 +116,16 @@ const DataCenterModal = ({
   };
 
   // 제출
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 
-  const dataToSubmit = { ...formState };
-    Logger.debug(`데이터센터Login > handleFormSubmit ... dataToSubmit: `, dataToSubmit)
+    const dataToSubmit = { ...formState };
+    Logger.debug(`DataCenterModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit)
     editMode
       ? editDataCenter({ dataCenterId: formState.id, dataCenterData: dataToSubmit })
       : addDataCenter(dataToSubmit);
@@ -138,7 +134,7 @@ const DataCenterModal = ({
   return (
     <BaseModal targetName={Localization.kr.DATA_CENTER} submitTitle={dcLabel}
       isOpen={isOpen} onClose={onClose}
-      onSubmit={() => handleFormSubmit()}
+      onSubmit={handleFormSubmit}
       contentStyle={{ width: "473px" }} 
     >
       <LabelInput id="name" label={Localization.kr.NAME}

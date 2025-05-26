@@ -46,7 +46,7 @@ const NetworkTree = ({}) => {
             mouseY: e.clientY,
             item: {
             },
-            treeType: "network"
+            treeType: "networks"
           }, "rutil-manager");
         }}
       />
@@ -79,7 +79,7 @@ const NetworkTree = ({}) => {
                     ...dc,
                     level: 2,
                   },
-                  treeType: "network"
+                  treeType: "networks"
                 }, "datacenter");
               }}
             />
@@ -110,7 +110,7 @@ const NetworkTree = ({}) => {
                         ...network,
                         level: 3,
                       },
-                      treeType: "network"
+                      treeType: "networks"
                     }, "network");
                   }}
                 />
@@ -123,4 +123,4 @@ const NetworkTree = ({}) => {
   );
 };
 
-export default React.memo(NetworkTree);
+export default NetworkTree;

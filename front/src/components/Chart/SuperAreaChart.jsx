@@ -48,12 +48,12 @@ const SuperAreaChart = ({
       }
 
       // 차트 시리즈 업데이트
-      setSeries([
-        {
-          name: type === "cpu" ? "CPU 사용률 (%)" : `${Localization.kr.MEMORY} 사용률 (%)`,
-          data: selectedData,
-        },
-      ]);
+      setSeries([{
+        name: type === "cpu" 
+          ? "CPU 사용률 (%)"
+          : `${Localization.kr.MEMORY} 사용률 (%)`,
+        data: selectedData,
+      }]);
 
       // 중복 없는 시간 리스트 생성 (오름차순 반영)
       const uniqueTimes = [...new Set(sortedData.map((item) => formatDate(item.historyDatetime)))];
@@ -66,9 +66,12 @@ const SuperAreaChart = ({
 
   return (
     <AreaChart 
-      series={series} datetimes={datetimes} heightInn={heightInn}
+      series={series} 
+      datetimes={datetimes} 
+      heightInn={heightInn}
+      {...props}
     />
   );
 };
 
-export default React.memo(SuperAreaChart);
+export default SuperAreaChart;

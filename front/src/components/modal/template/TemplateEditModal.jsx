@@ -1,25 +1,25 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useToast }           from "@/hooks/use-toast";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import BaseModal              from "../BaseModal";
-import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
-import LabelInput             from "@/components/label/LabelInput";
-import LabelCheckbox          from "@/components/label/LabelCheckbox";
-import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import TabNavButtonGroup                from "@/components/common/TabNavButtonGroup";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import { 
   useEditTemplate, 
   useTemplate
 } from "@/api/RQHook";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const TemplateEditModal = ({
   isOpen,
   onClose,
   editMode = false,
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const { templatesSelected } = useGlobal()
   const [id, setId] = useState("");
@@ -107,14 +107,11 @@ setDeleteProtected(Boolean(template?.deleteProtected));
     return null
   }
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
     

@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-
-import { useToast }           from "@/hooks/use-toast";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
 import CONSTANT               from "@/Constants";
 import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
@@ -42,7 +41,7 @@ const ClusterModal = ({
   onClose,
   editMode = false,
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const cLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
@@ -143,11 +142,7 @@ const ClusterModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 

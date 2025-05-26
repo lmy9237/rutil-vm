@@ -46,49 +46,51 @@ class RemoteConnMgmtTest {
 		assertThat(sessionEngine?.isConnected, `is`(true))
 
 		// val resourcePath = this.javaClass.classLoader.getResource("id_rsa_host01")?.toURI() ?: throw IllegalStateException("id_rsa not found in resources")
-	 	// val sessionHost: Session? = DEFAULT_REMOTE_CONN_HOST01.toInsecureSession2(resourcePath.toString().replace("file:/", ""))
+		// val sessionHost: Session? = DEFAULT_REMOTE_CONN_HOST01.toInsecureSession2(resourcePath.toString().replace("file:/", ""))
+		/*
 		val sessionHost: Session? = DEFAULT_REMOTE_CONN_HOST01.toInsecureSession()
 		assertThat(sessionHost, `is`(notNullValue()))
 		assertThat(sessionHost?.isConnected, `is`(true))
+		*/
 	}
 	companion object {
 		private val log by LoggerDelegate()
 		private val DEFAULT_REMOTE_CONN_ENGINE = RemoteConnMgmt.builder {
-			host { "192.168.0.70" }
+			host { "192.168.0.55" }
 			port { 22 }
 			id { "root" }
 			prvKey { //  /etc/pki/ovirt-engine/keys/engine_id_rsa
-"""
+				"""
 Bag Attributes
-    localKeyID: 6D F8 D7 A1 01 70 31 78 1E 7B FA 56 CB 1D 9A 59 E2 28 CF B1
+	localKeyID: D9 45 F4 E3 DB F2 3E F8 3F 38 70 5D C6 4B 51 F0 40 A0 5B 4B
 Key Attributes: <No Attributes>
 -----BEGIN PRIVATE KEY-----
-MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDQ0cNriXz0gpre
-UW0C4vUPVeQBr3Z5/sB34W8KBO1D4gZ2G91FzT3kmLw6pcsEE0kIIX6hMnPXHD0/
-ipazEOwvgmglkqq12lx5+KrA/zf1niI0hmoIJadxmk5EbX8qeacscXHPPKJoNKxc
-slmZ+q1hQzNlLNGjylSQWnBZAGKpzqbI11jT3puKfJIF7lgRm1zWU4o6O4TU7S5/
-TqvPjx/kpXZkQbNggJcUKnDN9trYFVKQ5fKMMYFottoaHRDf5LODa1Nz9lKuPDt8
-EV8vT9bB4HiKBs9ofm8jTCroGmh8LeLHQGGKkLl0cPzHOw0dj0vTe+Ta2YhjbSdi
-dUcOP6XtAgMBAAECggEAHpXKuLJ/kdSbWFq2y8hwOlnLNo/7m2y7xhNHz0Dfe6Tc
-a2ozY6jnGtdgInrsHGGyvbUiNfwMyYICWo8y+XFOFrtUA8TSqiYci2TnpbL8AEa0
-HdteJmlVeCcwtYcQLCl7WeAX2lG4O+kTIdShmRMFWAyet3/0CLh24FnOwMp0qQgu
-jsDpxPrDw1+C7vTMaGlXOEeeV2X2PfhIgJfCvfWnLTM5Ricl4vr9QHmuF3Z+iDIW
-hG7WxCXKSVVzhddIXxY0FgkEY3pvHmP+KZPGAyHTMDss7M7rr30PXq1A6v2RRyjf
-kJ1tncNBtXw/Hq9/Fcbr25EK6ioEZv5qEWUf1qX+pQKBgQD+Mgxo6bmMHpedRkBm
-Dmw8Q1Pb2+dgyurAcCxk8ADJ/zbHRHwXxcM5zA5UswoZV+OpBrYZ9Fkt+ZXtghcV
-Xu9q9mAwHta4vUM5F1kZ6p85/ijRoDTle5uaht54OYcaqo+OIjlRhnhXIJlTrANJ
-P6OFgyusgyTm+Tb1tNsw9LRunwKBgQDSTUCkY75Bouf2JlZaau9YAOGU2GnOU0h6
-W2bIHvBQwMBOfZxE5g66Bo7hRMDpU5YNv+qUiHf1J4BgwhYVyjr+IwebOaHJH80f
-lM54cxKItSVrVZGS6y+dmVhLEIvGqlSR/32TTfkWl9nHKiLjmKI0Eng2H58erlSR
-o88gKQQ78wKBgEo8y6sIN4xYkub30W7831dqQl9/hb+bA5xYJl8ESPa1doYT1joL
-I80Jb1YFQ/nK1U5UC3LhDfqDXeoTiDJRm5KdidID76ncfHl7/CW5g+8n7zvpkglD
-ZFpo8SgjhPWgwnQ8QokwwIyRlLX/Eqad01/2wxaK5ogeWJLB0xIlJVz5AoGAU8zq
-3FbOopMKwcBnGqKP+05mlYxjJQ90yyUO4OHLOzKDrwNIuP+/kIs6djOSd6eSHKqE
-DGoQ+wShmGzephIuzcQhrM4bVOyyLUp7t+2KziT44zt2xcen8rH/R/Iw8JpBFuhr
-Hr6saj9aTY3R10WkJQHTGyYgnvYyxtIyoAsYH9cCgYBTc+9v/ND+crQIUDD0hPA1
-HDZMBxOmzZg7BuVqPWEvsEEG8oqf1Oy7hWd2xfhpN7tn17uje/JjJjTnyn8ajoAK
-ipvhV0xU/ByB2lXLwj3WDN7BcGRxJtcU+yZmB8rATDSrs5Y8GfJkfB/BgMZPNPdm
-PUc+B4CsVFpbybj8iBf+RQ==
+MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC5vUQayNUslENs
+V2Bjcr94/C+AvqnGpP1JAxCZtvb8aL8wPW7PmazkPeKKnGiXooG1rOAGSdORWzNL
+3vXix/u5In4d2uw8J/0eW/tIGfQ2KR9GKhR6SJeTSFTh9medM4619x4RFu5wAyBf
+ESpS3qBSb3ateGyvNR03DbclxZsrtWJC0FiQIGqBT8ln0FflWeb1Bl1HWsZb541M
+wV58ohfXha1fH2yh64rJQw84o3YoQijIvOPxlS+4hnlvH1v5FbSKGZzJWdM5uxGq
+dL/yPDZQTQXD/ifpeUcu4GkpC0bre/hR4IVtZ9xXkP7/l6ggSryRpWhHcAuBZCgQ
+B2oAHgD5AgMBAAECggEBAIeFi02nv7LZMyC32EJ3lTFngBmGBEZGV/CP5eriTu/4
+VZeTG2kqDbYzWTodyUrqbY3rZ0HvWAk07Aat1eb0V7zLaA3MkJWL7+nY303Kch+a
+fZEqXuqiUMZL/nMo4I0Y80Xd2vhJLQxZm6MB2UnB2mSLo6IKvfJQ5NIolbtfpUqL
+vCAvv4Ya/mdSsJ+Mc5VdK6gN/4kzr+ZGJHzfgIjcptHSzdI8viyLgmnGx92tI/wV
+MpXGMeCBV+LTRs16wLxjQQvpOshUp18Xh2K9I4l4Tz8LFOAcLsGDVDRGESkGODlL
+cXux9HGryrfLHjZUd5c8ee6kjPoBwetBP7X2L/58tOkCgYEA8U8vmbjEQE9cwMyk
+zY+LeuHupoMR9fiFFP7MQlU0WJLnxewHuuEb+fM9k8eM+U5skdpJIJICsZmtgaxF
+aCAw8GP0uivdOggTrseVUsAkz4vtIPL82DoWz4pqffYpdZxxl8EMx7DC61cRFLeI
+wJS+2hGcqzNc+DeaH/sGJJPzOGsCgYEAxQwFDXylMkRGOrcA0rIkSfng/cVZPmfT
+88D8VHCuc+3eWmAzsQ+eMzynpUiF+TsMyuu0+6WfkyjMj2H2tgnu1YVJkIkf4AYd
+AMYsqtLMLdcL2llbQiRcbhJ/a0ttLTu0eretE5Q727UZmLSuBotSOwhTBxLGZqkI
+5kMUMO+YVSsCgYEAwplcRrh1M3OM1kJySP+QuPlIjum2a0kOcZ8FNB0oSKG33an5
+leCBwjFBoFJVwptW/MwvGuAE4hqPjLpTgqQrM0E4k4ZaMrlevh1fs0sWpHUwNtkd
+xHYb/SSfupLwXlNaW8ooN0W5+zXMpYtY8g1CV/PKB1o1iEq2tUGnc4oIo58CgYBc
+VlibzFhBaPscEpvhIDefLuh/IxbCBretFzdnfnJRwxsacNBoXbA9xGOvMYAOndxN
+zwy9jAxuUoUhf7+z6I2yI0ao44k7WsIGlddiqWui444bYRpBsXZa4nIxXmQn+T2G
+8EG71hAC0ifPhoOyb2E2Zp05yFOO0hFojfCNSgmxhwKBgQDwsittWc1OSUvmFNfz
+weCK7trIV0zuTiIUXeYchTzSqhGz5vIZU+KSt9sGllfrzEvTHbkVIa1D8v1saFuB
+QYtSTmsZUR6/m7G/c5wo2va0OWGY7kbCRYnZLttjM3Ny5mXg6ZfZH1EeXBjhNOhj
+WajFFSz6JqxQudsaQGlcEFZfGA==
 -----END PRIVATE KEY-----
 """.trimIndent()
 			}

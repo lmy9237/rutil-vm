@@ -129,6 +129,14 @@ export const Localization = {
     PLACEHOLDER_USERNAME: "사용자명",
     PLACEHOLDER_PASSWORD: "암호",
     NO_INFO: "🤷‍♂️ 내용이 없습니다",
+    
+    TITLE_API_FETCH: "API 조회",
+    REFETCH_IN_PROGRESS: "다시 조회 중 ...",
+    TITLE_API_SUCCESS: "API 요청 성공",
+    TITLE_API_ERROR: "API 요청 실패",
+    TITLE_SOMETHING_WENT_WRONG: "문제가 발생하였습니다",
+    REQ_COMPLETE: "요청완료",
+    ERR_OCCURRED: "오류발생",
 
     renderTime(milliseconds) {
       Logger.debug(`Localization > renderTime ... milliseconds: ${milliseconds}`)
@@ -204,6 +212,7 @@ export const Localization = {
       else if (_status === "ACTIVE")        return Localization.kr.ACTIVATE;
       else if (_status === "ACTIVATING")    return "활성화 중";
       else if (_status === "INSTALLING")    return "설치 중";
+      else if (_status === "INSTALL_FAILED")    return "설치 실패";
       else if (_status === "DOWN")          return "중지";
       else if (_status === "INACTIVE")      return "비활성화";
       else if (_status === "UNINITIALIZED") return "초기화되지 않음";

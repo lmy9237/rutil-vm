@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useToast }           from "@/hooks/use-toast";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import BaseModal              from "../BaseModal";
-import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
-import LabelInput             from "@/components/label/LabelInput";
-import LabelCheckbox          from "@/components/label/LabelCheckbox";
-import LabelInputNum          from "@/components/label/LabelInputNum";
-import DynamicInputList       from "@/components/label/DynamicInputList";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
+import LabelInputNum                    from "@/components/label/LabelInputNum";
+import DynamicInputList                 from "@/components/label/DynamicInputList";
 import {
   handleInputChange, 
   handleInputCheck, 
   handleSelectIdChange,
 } from "@/components/label/HandleInput";
-import ToggleSwitchButton     from "@/components/button/ToggleSwitchButton";
-import TablesOuter            from "@/components/table/TablesOuter";
+import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
+import TablesOuter                      from "@/components/table/TablesOuter";
 import {
   useAllDataCenters,
   useClustersFromDataCenter,
@@ -26,8 +26,8 @@ import {
   checkName, 
   isNameDuplicated
 } from "@/util";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./MNetwork.css";
 
 const initialFormState = {
@@ -50,7 +50,7 @@ const NetworkModal = ({
   onClose,
   editMode = false,
 }) => {
-  const { toast } = useToast()
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const nLabel = editMode 
     ? Localization.kr.UPDATE
@@ -153,11 +153,7 @@ const NetworkModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 
@@ -284,18 +280,10 @@ const NetworkModal = ({
               let value = parseInt(e.target.value || "0", 10);
 
               if (isNaN(value) || value < 68) {
-                toast({
-                  variant: "destructive",
-                  title: "문제가 발생하였습니다.",
-                  description: "MTU는 68 이상의 값만 입력 가능합니다.",
-                });
+                validationToast.fail("MTU는 68 이상의 값만 입력 가능합니다.");
                 value = 68;
               } else if (value > 1500) {
-                toast({
-                  variant: "destructive",
-                  title: "문제가 발생하였습니다.",
-                  description: "MTU는 최대 1500까지만 설정할 수 있습니다.",
-                });
+                validationToast.fail("MTU는 최대 1500까지만 설정할 수 있습니다.");
                 value = 1500;
               }
               setFormState((prev) => ({

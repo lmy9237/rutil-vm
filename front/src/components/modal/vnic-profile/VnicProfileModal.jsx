@@ -1,8 +1,15 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useToast }            from "@/hooks/use-toast";
-import useUIState              from "@/hooks/useUIState";
-import useGlobal               from "@/hooks/useGlobal";
-import BaseModal from "../BaseModal";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
+import {
+  handleInputChange,
+  handleSelectIdChange,
+} from "@/components/label/HandleInput";
 import {
   useAddVnicProfile,
   useAllDataCenters,
@@ -11,14 +18,13 @@ import {
   useNetworkFilters,
   useNetworksFromDataCenter,
   useVnicProfile,
-} from "../../../api/RQHook";
-import { checkKoreanName, checkName } from "../../../util";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import LabelInput from "../../label/LabelInput";
-import LabelCheckbox from "../../label/LabelCheckbox";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+} from "@/api/RQHook";
+import { 
+  checkKoreanName,
+  checkName,
+} from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./MVnic.css";
 
 const initialFormState = {
@@ -35,7 +41,7 @@ const VnicProfileModal = ({
   onClose,
   editMode = false,
 }) => {
-  const { toast } = useToast()
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const vLabel = editMode 
     ? Localization.kr.UPDATE
@@ -141,14 +147,11 @@ const VnicProfileModal = ({
     return null;
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 

@@ -2,9 +2,14 @@ package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.api.configuration.CertConfig
 import com.itinfo.rutilvm.api.model.cert.toRemoteConnMgmt
+import com.itinfo.rutilvm.api.model.common.JobVo
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.repository.engine.VdcOptionsRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.VdcOptionEntity
+import com.itinfo.rutilvm.api.repository.engine.findSshHostRebootCommandByVersion
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.api.service.common.ItJobService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.error.toError
@@ -15,6 +20,7 @@ import com.itinfo.rutilvm.util.ssh.model.rebootSystem
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.HostStatus
+import org.ovirt.engine.sdk4.types.JobStatus
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.net.UnknownHostException
@@ -104,7 +110,9 @@ class HostOperationServiceImpl(
 ): BaseService(), ItHostOperationService {
     // @Autowired private lateinit var propConfig: PropertiesConfig
 	@Autowired private lateinit var iHost: ItHostService
+	@Autowired private lateinit var vdcOptions: VdcOptionsRepository
 	@Autowired private lateinit var certConfig: CertConfig
+	@Autowired private lateinit var iJob: ItJobService
 
     @Throws(Error::class)
     override fun deactivate(hostId: String): Boolean {
@@ -122,10 +130,36 @@ class HostOperationServiceImpl(
 
     @Throws(UnknownHostException::class, Error::class)
     override fun restart(hostId: String): Boolean {
-        log.info("reStart ... hostId: {}", hostId)
 		val resHost2Reboot: HostVo? = iHost.findOne(hostId)
+		log.info("restart ... hostId: {}, ssh: {}", hostId, resHost2Reboot?.ssh)
 		val remoteConnMgmt: RemoteConnMgmt? = resHost2Reboot?.toRemoteConnMgmt(certConfig.ovirtSSHPrvKey)
-        val res: Result<Boolean>? = remoteConnMgmt?.rebootSystem()
+		/*
+		val res: Result<Boolean> = conn.rebootFromHost(
+			hostId, resHost2Reboot?.ssh?.toSsh()
+		)
+		*/
+		val vdcOption: VdcOptionEntity? = vdcOptions.findSshHostRebootCommandByVersion() // 기본 4.7
+		log.info("restart ... hostId: {}, vdcOption: {}", hostId, vdcOption)
+		val res: Result<Boolean>? =
+			if (vdcOption?.optionValue?.isEmpty() == false)
+				remoteConnMgmt?.rebootSystem(vdcOption.optionValue)
+			else	remoteConnMgmt?.rebootSystem()
+		// TODO: 이 명령어를 실행 후 최근 작업 및 다른 곳에서 추이를 확인 할 수 있는 기능 필요
+		/*
+		val jobAdded = iJob.add(JobVo.builder {
+			name {
+				"Finished '${vdcOption?.optionName}' for host '${resHost2Reboot?.name}'"
+			}
+			description { "" }
+			status {
+				if (res?.isSuccess == true)
+					JobStatus.STARTED
+				else
+					JobStatus.FAILED
+			}
+			autoCleared { true }
+		})
+		*/
         return res?.isSuccess == true
     }
 

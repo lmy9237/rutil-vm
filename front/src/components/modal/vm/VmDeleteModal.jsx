@@ -1,22 +1,23 @@
 import { useState, useEffect, useMemo } from "react";
-import toast from "react-hot-toast";
 import { useQueries } from "@tanstack/react-query";
-import useUIState from "../../../hooks/useUIState";
-import BaseModal from "../BaseModal";
-import { useDeleteVm } from "../../../api/RQHook";
-import ApiManager from "../../../api/ApiManager";
-import LabelCheckbox from "../../label/LabelCheckbox";
-import Logger from "../../../utils/Logger";
-import Localization from "../../../utils/Localization";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
+import {
+  useDeleteVm,
+} from "@/api/RQHook";
+import ApiManager                       from "@/api/ApiManager";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./MVm.css";
-import useGlobal from "../../../hooks/useGlobal";
-import { useToast } from "@/hooks/use-toast";
 
 const VmDeleteModal = ({ 
   isOpen,
   onClose,
 }) => {
-  const { toast } = useToast()
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const { vmsSelected } = useGlobal()
   const {
@@ -82,14 +83,11 @@ const VmDeleteModal = ({
     return null
   }
   
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 

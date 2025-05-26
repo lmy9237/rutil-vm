@@ -1,22 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
-import { useToast }            from "@/hooks/use-toast";
-import useUIState              from "@/hooks/useUIState";
-import useGlobal               from "@/hooks/useGlobal";
-import BaseModal               from "../BaseModal";
-import LabelCheckbox           from "@/components/label/LabelCheckbox";
-import LabelSelectOptionsID    from "@/components/label/LabelSelectOptionsID";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import {
   useAllMigratableHosts4Vms,
   useMigration
 } from "@/api/RQHook";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const VmMigrationModal = ({ 
   isOpen, 
   onClose,
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const { vmsSelected } = useGlobal()
   const {

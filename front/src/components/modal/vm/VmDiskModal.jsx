@@ -1,13 +1,17 @@
 import { useState, useEffect, useCallback } from "react";
-import { useToast }            from "@/hooks/use-toast";
-import useUIState              from "@/hooks/useUIState";
-import useGlobal               from "@/hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import LabelInput from "../../label/LabelInput";
-import LabelInputNum from "../../label/LabelInputNum";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import LabelCheckbox from "../../label/LabelCheckbox";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelInputNum                    from "@/components/label/LabelInputNum";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
+import { 
+  handleInputChange, 
+  handleSelectIdChange
+} from "@/components/label/HandleInput";
 import {
   useAllActiveDomainsFromDataCenter,
   useAllDiskProfilesFromDomain,
@@ -15,11 +19,14 @@ import {
   useEditDiskFromVM,
   useDiskAttachmentFromVm,
   useVm,
-} from "../../../api/RQHook";
-import { checkKoreanName, convertBytesToGB, convertGBToBytes } from "../../../util";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+} from "@/api/RQHook";
+import { 
+  checkKoreanName, 
+  convertBytesToGB, 
+  convertGBToBytes
+} from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 // 이 모달은 가상머신 생성에서 디스크 생성, 편집에서 사용될 예정
 // 또한 가상머신-디스크 에서 디스크 생성, 편집에서 사용될 예정
@@ -63,7 +70,7 @@ const VmDiskModal = ({
   initialDisk,
   onCreateDisk,
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const { vmsSelected, disksSelected, setDisksSelected } = useGlobal()
   const dLabel = editMode
@@ -211,17 +218,14 @@ const VmDiskModal = ({
   }, [formState, storageDomainVo, diskProfileVo]);
 
   // 가상머신 생성 - 가상머신 디스크 생성
-  const handleOkClick = useCallback(() => {
-    Logger.debug(`VmDiskModal > handleOkClick ... `)
+  const handleOkClick = useCallback((e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
+    Logger.debug(`VmDiskModal > handleOkClick ... `)
  
     // const sizeToBytes = convertGBToBytes(parseInt(formState.size, 10));
 
@@ -245,15 +249,11 @@ const VmDiskModal = ({
   }, [formState, storageDomainVo, diskProfileVo]);
 
   // 가상머신 - 디스크 생성
-  const handleFormSubmit = useCallback(() => {
-    Logger.debug(`VmDiskModal > handleFormSubmit ... `)
+  const handleFormSubmit = useCallback((e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
  
@@ -264,7 +264,7 @@ const VmDiskModal = ({
 
     const selectedDomain = domains.find((dm) => dm.id === storageDomainVo.id);
     const selectedDiskProfile = diskProfiles.find((dp) => dp.id === diskProfileVo.id);
-    Logger.debug(`VmDiskModal > handleFormSubmit ... Form Data: `, selectedDomain);
+    Logger.debug(`VmDiskModal > handleFormSubmit ... selectedDomain: `, selectedDomain);
 
     // 전송 객체
     const dataToSubmit = {
@@ -296,7 +296,6 @@ const VmDiskModal = ({
       onSubmit={diskType? handleFormSubmit : handleOkClick}
       contentStyle={{ width: "700px" }} 
     >
-
       <div className="disk-new-nav">
         <div
           id="storage_img_btn"

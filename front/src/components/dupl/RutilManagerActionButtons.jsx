@@ -21,12 +21,19 @@ const RutilManagerActionButtons = ({
   actionType="default"
 }) => {
   const location = useLocation();
-  const { clearAllContextMenu } = useContextMenu()
+  const { 
+    contextMenu,
+    clearAllContextMenu
+  } = useContextMenu()
   const navigate = useNavigate();
   const isContextMenu = useMemo(() => actionType === "context", [actionType])
   
-  const rootPath = useMemo(() => 
-    location.pathname.split("/").slice(0, 2).join("/")
+  const rootPath = useMemo(() => {
+    const _path = location.pathname.split("/").slice(0, 2).join("/")
+    return (_path === "/") 
+      ? `${_path}${contextMenu().treeType}`
+      : _path;
+  }
   , [location]) // '/computing' 또는 '/networks' 등 추출
 
   const basicActions = useMemo(() => [

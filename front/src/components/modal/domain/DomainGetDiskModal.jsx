@@ -1,10 +1,12 @@
 import React, { useMemo } from "react";
-import { useToast } from "@/hooks/use-toast";
-import useUIState from "../../../hooks/useUIState";
-import BaseModal from "../BaseModal";
-import { useRegisteredDiskFromDomain } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import BaseModal                        from "../BaseModal";
+import { 
+  useRegisteredDiskFromDomain
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "../domain/MDomain.css";
 
 const DomainGetDiskModal = ({
@@ -13,9 +15,11 @@ const DomainGetDiskModal = ({
   domainId,
   data,
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
-  const { mutate: registerDisk } = useRegisteredDiskFromDomain(onClose, onClose);
+  const {
+    mutate: registerDisk
+  } = useRegisteredDiskFromDomain(onClose, onClose);
 
   Logger.debug(`DomainGetDiskModal, domainId: ${domainId}, data: `, data);
   const { ids } = useMemo(() => {
@@ -36,11 +40,7 @@ const DomainGetDiskModal = ({
   const handleFormSubmit = () => {
     const error = validateForm()
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 

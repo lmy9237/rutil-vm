@@ -1,15 +1,15 @@
 import React, { useCallback, useMemo } from "react";
-import { useToast }           from "@/hooks/use-toast";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import BaseModal              from "../BaseModal";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
 import {
   usePreviewSnapshot,
   useCommitSnapshot,
   useUndoSnapshot
 } from "@/api/RQHook";
-import Localization from "@/utils/Localization";
-import Logger from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name VmSnapshotActionModal
@@ -21,7 +21,7 @@ const VmSnapshotActionModal = ({
   isOpen, 
   onClose, 
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   const ACTIONS = useMemo(() => ({
     "vmsnapshot:preview": { label: Localization.kr.PREVIEW, hook: usePreviewSnapshot },
     "vmsnapshot:commit": { label: Localization.kr.COMMIT, hook: useCommitSnapshot },
@@ -55,18 +55,15 @@ const VmSnapshotActionModal = ({
     return null;
   }
 
-  const handleSubmit = () => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 
-    Logger.debug(`VmSnapshotActionModal > handleSubmit ... `)
+    Logger.debug(`VmSnapshotActionModal > handleFormSubmit ... `)
     ids.forEach((id) => {
       if (activeModal().includes("vmsnapshot:preview")) /* 미리보기 */
         mutate({ vmId: vmSelected1st?.id, snapshotId: id})
@@ -78,7 +75,7 @@ const VmSnapshotActionModal = ({
   return (
     <BaseModal targetName={Localization.kr.SNAPSHOT} submitTitle={label}
       isOpen={isOpen} onClose={onClose}
-      onSubmit={handleSubmit}
+      onSubmit={handleFormSubmit}
       promptText={promptTextByAction}
       contentStyle={{ width: "650px" }}
       shouldWarn={true}

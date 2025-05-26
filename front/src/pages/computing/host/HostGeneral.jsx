@@ -1,11 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import { convertBytesToMB } from "../../../util";
-import InfoTable from "../../../components/table/InfoTable";
-import SuperAreaChart from "../../../components/Chart/SuperAreaChart";
-import { useDashboardHost, useHost } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import useGlobal               from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
+import InfoTable               from "@/components/table/InfoTable";
+import SuperAreaChart          from "@/components/Chart/SuperAreaChart";
+import { 
+  useDashboardHost, 
+  useHost
+} from "@/api/RQHook";
+import { convertBytesToMB }    from "@/util";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 import "./Host.css";
 
 /**
@@ -22,7 +26,10 @@ const HostGeneral = ({
   const [activeTab, setActiveTab] = useState("general");
   const { hostsSelected, setHostsSelected } = useGlobal()
 
-  const { data: host } = useHost(hostId);
+  const { 
+    data: host
+  } = useHost(hostId);
+
   const {
     data: hostPer,
     status: hostPerStatus,
@@ -116,10 +123,18 @@ const HostGeneral = ({
         }/>
         <div className="graph-area">
           <div className="host-graph">
-            cpu <SuperAreaChart key={`${hostId}-cpu`} per={hostPer} type="cpu" />
+            cpu <SuperAreaChart id={`${hostId}-cpu`}
+              key={`${hostId}-cpu`} 
+              per={hostPer} 
+              type="cpu"
+            />
           </div>
           <div className="host-graph">
-            memory <SuperAreaChart key={`${hostId}-memory`} per={hostPer} type="memory" />
+            memory <SuperAreaChart id={`${hostId}-memory`} 
+              key={`${hostId}-memory`} 
+              per={hostPer} 
+              type="memory"
+            />
           </div>
         </div>
       </div>

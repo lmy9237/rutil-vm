@@ -1,19 +1,21 @@
 import { useState } from "react";
-import { useToast }            from "@/hooks/use-toast";
-import useUIState              from "@/hooks/useUIState";
-import useGlobal               from "@/hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import { useAllHosts } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import LabelInput from "../../label/LabelInput";
-import Logger from "../../../utils/Logger";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import LabelInput                       from "@/components/label/LabelInput";
+import {
+  useAllHosts,
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const VmExportOVAModal = ({ 
   isOpen,
   onClose,
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const { vmsSelected } = useGlobal()
   const [host, setHost] = useState("#");
@@ -32,15 +34,11 @@ const VmExportOVAModal = ({
     if (!name) return `${Localization.kr.NAME}을 입력하세요.`
     return null;
   };
-  const handleFormSubmit = () => {
-    Logger.debug(`VmExportOVAModal > handleFormSubmit ... `)
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 
@@ -49,7 +47,9 @@ const VmExportOVAModal = ({
   };
 
   // 모든 호스트 목록 가져오기
-  const { data: hosts } = useAllHosts(toTableItemPredicateHosts);
+  const {
+    data: hosts
+  } = useAllHosts((toTableItemPredicateHosts));
 
   function toTableItemPredicateHosts(host) {
     return {

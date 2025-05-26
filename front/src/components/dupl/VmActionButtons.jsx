@@ -1,11 +1,15 @@
 import { useRef, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import CONSTANT         from "@/Constants";
+import { useValidationToast }     from "@/hooks/useSimpleToast";
 import useUIState       from "@/hooks/useUIState";
 import useGlobal        from "@/hooks/useGlobal";
 import useClickOutside  from "@/hooks/useClickOutside";
 import { openNewTab }   from "@/navigation";
-import { useRemoteViewerConnectionFileFromVm, useSnapshotsFromVM } from "@/api/RQHook";
+import { 
+  useRemoteViewerConnectionFileFromVm, 
+  useSnapshotsFromVM,
+} from "@/api/RQHook";
 import { ActionButtons, ActionButton } from "@/components/button/ActionButtons";
 import {
   RVI16,
@@ -15,8 +19,6 @@ import {
 } from "@/components/icons/RutilVmIcons";
 import Localization from "@/utils/Localization";
 import Logger from "@/utils/Logger";
-import toast from "react-hot-toast";
-import { useToast } from "@/hooks/use-toast";
 
 /**
  * @name VmActionButtons
@@ -30,10 +32,10 @@ const VmActionButtons = ({
   actionType="default"
 }) => {
   const navigate = useNavigate();
+  const { validationToast } = useValidationToast();
   const { setActiveModal, setContextMenu } = useUIState()
   const { vmsSelected } = useGlobal()
   const isContextMenu = actionType === "context";
-  const { toast } = useToast();
   
   const [mgmtDropdownActive, setMgmtDropdownActive] = useState(false);
   const toggleMgmtDropdown = () => setMgmtDropdownActive((prev) => !prev);
@@ -94,12 +96,8 @@ const VmActionButtons = ({
     { type: "create",     onClick: () => setActiveModal("vm:create"),      label: Localization.kr.CREATE,                                  disabled: isContextMenu && vmsSelected.length > 0 },
     { type: "update",     onClick: () => setActiveModal("vm:update"),      label: Localization.kr.UPDATE,                                  disabled: vmsSelected.length !== 1 },
     { type: "start",       onClick: () => {
-   if (hasPreviewSnapshot) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: "부팅 가능한 디스크가 최소 1개는 있어야 합니다.",
-      });
+    if (hasPreviewSnapshot) {
+      validationToast.fail("부팅 가능한 디스크가 최소 1개는 있어야 합니다.");
       return;
     }
     setActiveModal("vm:start");

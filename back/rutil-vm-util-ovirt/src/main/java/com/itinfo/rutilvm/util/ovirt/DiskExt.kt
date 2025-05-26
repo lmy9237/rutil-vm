@@ -93,7 +93,6 @@ fun Connection.updateDisk(disk: Disk): Result<Disk?> = runCatching {
 
 fun Connection.removeDisk(diskId: String): Result<Boolean> = runCatching {
 	checkDiskExists(diskId)
-
 	this.srvDisk(diskId).remove().send()
 	// this.expectDiskDeleted(diskId)
 	true

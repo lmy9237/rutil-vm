@@ -66,6 +66,7 @@ enum class ErrorPattern(
 	DISK_VO_INVALID("DISK-E003", Term.DISK, FailureType.BAD_REQUEST),
 	DISK_BOOT_OPTION("DISK-E004", Term.DISK, FailureType.CONFLICT),
 	DISK_DUPLICATE("DISK-E004", Term.DISK, FailureType.DUPLICATE),
+	DISK_CONFLICT("DISK-E005", Term.DISK, FailureType.CONFLICT),
 	DISK_PROFILE_ID_NOT_FOUND("DISK_PROFILE-E001", Term.DISK_PROFILE, FailureType.ID_NOT_FOUND),
 	DISK_PROFILE_NOT_FOUND("DISK_PROFILE-E002", Term.DISK_PROFILE, FailureType.NOT_FOUND),
 	DISK_PROFILE_VO_INVALID("DISK_PROFILE-E003", Term.DISK_PROFILE, FailureType.BAD_REQUEST),
@@ -196,6 +197,7 @@ fun ErrorPattern.toError(): Error {
 		// 특별한 추가 메시지 필요할 때
 		this == ErrorPattern.NIC_UNLINKED_REQUIRED ||
 		this == ErrorPattern.VM_CONFLICT_WHILE_PREVIEWING_SNAPSHOT ||
+		this == ErrorPattern.DISK_CONFLICT ||
 		this == ErrorPattern.DISK_ATTACHMENT_DUPLICATE ||
 		this == ErrorPattern.DISK_ATTACHMENT_NOT_BOOTABLE ||
 		this == ErrorPattern.SNAPSHOT_CONFLICT_WHILE_PREVIEWING_SNAPSHOT -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}}: $additional")
@@ -205,7 +207,6 @@ fun ErrorPattern.toError(): Error {
 		else -> Error(failureType.message)
 	}
 }
-
 
 /*
 fun ErrorPattern.toError(): Error {

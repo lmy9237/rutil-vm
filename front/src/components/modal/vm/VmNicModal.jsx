@@ -1,21 +1,24 @@
 import { useState, useEffect, useMemo } from "react";
-import useUIState              from "@/hooks/useUIState";
-import useGlobal               from "@/hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import LabelInput from "../../label/LabelInput";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import { 
+  handleInputChange, 
+  handleSelectIdChange,
+} from "@/components/label/HandleInput";
 import {
   useAddNicFromVM,
   useAllvnicFromCluster,
   useEditNicFromVM,
   useNetworkInterfaceFromVM,
   useVm,
-} from "../../../api/RQHook";
-import ToggleSwitchButton from "../../button/ToggleSwitchButton";
-import Logger from "../../../utils/Logger";
-import Localization from "../../../utils/Localization";
-import { useToast } from "@/hooks/use-toast";
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const initialFormState = {
   id: "",
@@ -31,7 +34,7 @@ const VmNicModal = ({
   onClose,
   editMode=false,
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const nLabel = editMode 
     ? Localization.kr.UPDATE
@@ -116,18 +119,16 @@ const VmNicModal = ({
 
   
   const validateForm = () => {
+    Logger.debug(`VmNicModal > validateForm ... `)
     if (!formInfoState.name) return `${Localization.kr.NAME}을 입력해주세요.`;
     return null;
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 

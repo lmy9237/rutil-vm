@@ -57,7 +57,10 @@ fun Connection.addHost(
 
 	log.info("배포작업: {}", deployHostedEngine)
 	val hostAdded: Host? =
-		srvHosts().add().deployHostedEngine(deployHostedEngine).reboot(true).activate(true).host(host).send().host()
+		srvHosts().add().deployHostedEngine(deployHostedEngine)
+			.reboot(true)
+			.activate(true)
+			.host(host).send().host()
 
 	// 상태 up 될때까지 기다리기
 //	this.expectHostStatus(hostAdded.id(), HostStatus.UP)
@@ -192,7 +195,6 @@ fun Connection.activateHost(hostId: String): Result<Boolean> = runCatching {
 fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
 	this.srvHost(hostId).refresh().send()
-
 	// if (!this.expectHostStatus(hostId, HostStatus.UP)) {
 	// 	throw Error("refresh Host 실패했습니다 ...")
 	// }
@@ -207,7 +209,6 @@ fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 fun Connection.commitNetConfigHost(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
 	this.srvHost(hostId).commitNetConfig().send()
-
 	// if (!this.expectHostStatus(hostId, HostStatus.UP)) {
 	// 	throw Error("refresh Host 실패했습니다 ...")
 	// }
@@ -231,6 +232,27 @@ fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun Connection.rebootFromHost(hostId: String, ssh: Ssh?=null): Result<Boolean> = runCatching {
+	checkHostExists(hostId)
+	this.srvHost(hostId)
+		/*
+		.fence().fenceType("restart")
+		.maintenanceAfterRestart(true)
+		*/
+		.upgrade()
+		.reboot(true)
+		// .ssh(ssh)
+		// .activate(true)
+		// .async(true)
+		.send()
+	true
+}.onSuccess {
+	Term.HOST.logSuccess("재부팅", hostId)
+}.onFailure {
+	Term.HOST.logFail("재부팅", it, hostId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
 	val host: Host = checkHost(hostId)
 	if (host.status() !== HostStatus.UP) {
@@ -241,6 +263,7 @@ fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatc
 		throw ErrorPattern.HOST_IS_GLOBAL_HA.toError()
 		// return Result.failure(Error("activeGlobalHaFromHost 실패 ... ${host.name()}가 이미 글로벌 HA 된 상태"))
 	}
+	TODO("ssh 로 구현")
 	true
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 ha 활성화")
@@ -251,7 +274,6 @@ fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatc
 
 fun Connection.deactiveGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
 	val host = checkHost(hostId)
-
 	TODO("ssh 로 구현")
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 ha 비활성화")

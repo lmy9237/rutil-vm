@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useToast } from "@/hooks/use-toast";
-import BaseModal from "../BaseModal";
-import DomainNfs from "./create/DomainNfs";
-import DomainFibre from "./create/DomainFibre";
-import LabelInputNum from "../../label/LabelInputNum";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import LabelInput from "../../label/LabelInput";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import DomainNfs                        from "./create/DomainNfs";
+import DomainFibre                      from "./create/DomainFibre";
+import DomainCheckModal                 from "./DomainCheckModal";
+import LabelInputNum                    from "@/components/label/LabelInputNum";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import LabelInput                       from "@/components/label/LabelInput";
+import { 
+  handleInputChange, 
+  handleSelectIdChange
+} from "@/components/label/HandleInput";
 import {
   useAddDomain,
   useAllDataCenters,
@@ -15,14 +22,10 @@ import {
   useHostsFromDataCenter,
   useFibreFromHost,
   useAllNfsStorageDomains,
-} from "../../../api/RQHook";
-import { checkName } from "../../../util";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
-import useGlobal from "../../../hooks/useGlobal";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import DomainCheckModal from "./DomainCheckModal";
-import useUIState from "../../../hooks/useUIState";
+} from "@/api/RQHook";
+import { checkName }                    from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 // 일반 정보
 const initialFormState = {
@@ -41,7 +44,7 @@ const DomainModal = ({
   onClose,
   editMode=false
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const { datacentersSelected, domainsSelected } = useGlobal()
   const dLabel = editMode 
@@ -182,6 +185,7 @@ const DomainModal = ({
   }, [editMode, formState.storageType]);
 
   const validateForm = () => {
+    Logger.debug(`DomainModal > validateForm ... `)
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
   
@@ -215,14 +219,12 @@ const DomainModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
+      return;
     }
   
-    if(isFibre && !editMode) {
+    Logger.debug(`DomainModal > handleFormSubmit ... `)
+    if (isFibre && !editMode) {
       const selectedLogicalUnit = fibres
         .map(f => f.logicalUnitVos[0])
         .find(lun => lun?.id === lunId);

@@ -1,6 +1,6 @@
 #!/bin/bash
-#
-# Last Edit : 202450415-02 (이찬희)
+# 
+# Last Edit : 20250529-01 (공개키 추가)
 
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Change engine repositories]"
 
@@ -97,9 +97,16 @@ fi
 # SSO 설정 파일에 alternate engine FQDN 값을 IP 주소로 설정
 sed -i "s/SSO_ALTERNATE_ENGINE_FQDNS=\"\"/SSO_ALTERNATE_ENGINE_FQDNS=\"${ip_address}\"/" /etc/ovirt-engine/engine.conf.d/11-setup-sso.conf
 
+# SSO 설정 중 콜백 경로 접두어 검사를 비활성화하는 설정
+echo 'SSO_CALLBACK_PREFIX_CHECK=false' | tee /etc/ovirt-engine/engine.conf.d/99-sso.conf
+
 # Apache와 ovirt engine 서비스 재시작
+echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Restart the httpd daemon]"
 systemctl restart httpd >/dev/null 2>&1
+echo "[ INFO  ] changed: [localhost]"
+echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Restart the engine daemon]"
 systemctl restart ovirt-engine >/dev/null 2>&1
+echo "[ INFO  ] changed: [localhost]"
 
 # 시스템에 "rutilvm" 사용자가 존재하지 않으면 생성
 if ! id "rutilvm" >/dev/null 2>&1; then
@@ -130,8 +137,10 @@ if [ ! -f "$RUTILVM_KEY" ]; then
     sudo -u "$RUTILVM_USER" mkdir -p "$RUTILVM_SSH_DIR"
     sudo -u "$RUTILVM_USER" chmod 700 "$RUTILVM_SSH_DIR"
     # 비밀번호 없이 RSA 키 생성
-    sudo -u "$RUTILVM_USER" ssh-keygen -t rsa -N "" -f "$RUTILVM_KEY"
+    sudo -u "$RUTILVM_USER" ssh-keygen -t rsa -b 4096 -m PKCS8 -N "" -f "$RUTILVM_KEY"
 fi
+
+curl -k -X GET "https://$(hostname -i):8443/ovirt-engine/services/pki-resource?resource=engine-certificate&format=OPENSSH-PUBKEY" >> $RUTILVM_SSH_DIR/authorized_keys
 
 # sshpass를 이용하여 SSH 공개키를 대상 호스트(자신의 호스트)로 복사하여 비밀번호 없이 로그인 가능하게 설정
 sshpass -p "$RUTILVM_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -i "$RUTILVM_KEY.pub" "$RUTILVM_USER@$HOST01_IP"
@@ -157,9 +166,10 @@ openssl pkcs12 -export \
 -passout pass:rutil-vm-api
 
 # PostgreSQL 데이터베이스에 rutil 역할을 생성 및 설정
-sudo -u postgres psql -d ovirt_engine_history -c "CREATE ROLE rutil WITH LOGIN ENCRYPTED PASSWORD 'rutil1!';"
-sudo -u postgres psql -c "ALTER ROLE rutil WITH LOGIN SUPERUSER CREATEDB CREATEROLE INHERIT;"
-sudo -u postgres psql -d engine -c "CREATE TABLE IF NOT EXISTS aaa_jdbc.refresh_token (uuid UUID PRIMARY KEY NOT NULL, external_id VARCHAR(512) NOT NULL, refresh_token VARCHAR(200) NOT NULL);"
+cd /tmp
+sudo -u postgres psql -d ovirt_engine_history -c "CREATE ROLE rutil WITH LOGIN ENCRYPTED PASSWORD 'rutil1!';"  > /dev/null 2>&1;
+sudo -u postgres psql -c "ALTER ROLE rutil WITH LOGIN SUPERUSER CREATEDB CREATEROLE INHERIT;"  > /dev/null 2>&1;
+sudo -u postgres psql -d engine -c "CREATE TABLE IF NOT EXISTS aaa_jdbc.refresh_token (uuid UUID PRIMARY KEY NOT NULL, external_id VARCHAR(512) NOT NULL, refresh_token VARCHAR(200) NOT NULL);"  > /dev/null 2>&1;
 
 # 사용할 docker-compose.yml 경로
 COMPOSE_FILE="/var/share/pkg/rutilvm/engine/containers/docker-compose.yml"
@@ -196,7 +206,7 @@ services:
       RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED: true
       RUTIL_VM_OVIRT_SSH_JSCH_CONNECTION_TIMEOUT: 60000
       RUTIL_VM_OVIRT_SSH_CERT_LOCATION: /app/tmp
-      RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION: /home/rutilvm/.ssh/id_rsa
+      RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION: /root/.ssh/id_rsa
       RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS: rutilvm@ENGINE_IP:22
       RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY: |
 OVIRT_ENGINE_PRIVATE_KEY
@@ -207,7 +217,7 @@ OVIRT_ENGINE_PRIVATE_KEY
       - /opt/rutilvm/rutil-vm-api/logs:/app/logs:rw
       - /opt/rutilvm/rutil-vm-api/certs:/app/certs:rw
       - /opt/rutilvm/rutil-vm-api/tmp:/app/tmp:rw
-      - /home/rutilvm/.ssh:/home/rutilvm/.ssh:rw
+      - /home/rutilvm/.ssh:/root/.ssh:rw
       - /etc/hosts:/etc/hosts:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
@@ -291,12 +301,12 @@ mv "$TMP_FILE" "$COMPOSE_FILE"
 
 # 로컬 저장소의 rpm 패키지들을 설치
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Start configuring the engine image]"
-yum -y localinstall /var/share/pkg/repositories/*.rpm >/dev/null 2>&1
+sudo -u "$RUTILVM_USER" yum -y localinstall /var/share/pkg/repositories/*.rpm >/dev/null 2>&1
 echo "[ INFO  ] ok: [localhost]"
 
 # docker 서비스를 활성화하고 시작
-systemctl enable docker >/dev/null 2>&1
-systemctl start docker >/dev/null 2>&1
+sudo -u "$RUTILVM_USER" systemctl enable docker >/dev/null 2>&1
+sudo -u "$RUTILVM_USER" systemctl start docker >/dev/null 2>&1
 
 # Docker 시작 후 안정성을 위해 5초 대기
 sleep 5s
@@ -461,13 +471,7 @@ chown postgres:postgres /var/lib/pgsql/data/pg_hba.conf
 systemctl restart postgresql
 echo "[ INFO  ] ok: [localhost]"
 
-echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Grant postgres DB permissions]"
-
-# postgres 사용자로 전환하여 DB 스크립트를 실행
-su - postgres --session-command '/var/lib/pgsql/rutilvm-db.sh' >/dev/null 2>&1
-echo "[ INFO  ] ok: [localhost]"
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Cockpit UI settings]"
-
 # 브랜딩 파일들이 위치한 경로와 복사 대상 경로 변수 선언
 brand_path="/var/share/pkg/rutilvm/engine/branding"
 ovirt_engine_brands="/usr/share/ovirt-engine/brands/ovirt.brand"

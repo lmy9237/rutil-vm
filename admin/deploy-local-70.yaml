@@ -24,7 +24,7 @@ services:
       RUTIL_VM_OVIRT_SSH_JSCH_CONNECTION_TIMEOUT: 60000
       RUTIL_VM_OVIRT_SSH_CERT_LOCATION: /app/tmp
       RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION: /root/.ssh/id_rsa
-      RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS: root@192.168.0.70:22
+      RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS: rutilvm@192.168.0.70:22
       RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY: |
         Bag Attributes
             localKeyID: 77 12 A1 5B 32 2A EA D2 EC 62 03 FE DC 95 CC A3 B2 B4 FA 38 
@@ -64,7 +64,8 @@ services:
       - ./rutil-vm-api/logs:/app/logs:rw
       - ./rutil-vm-api/certs:/app/certs:rw
       - ./rutil-vm-api/tmp:/app/tmp:rw
-      - /root/.ssh:/root/.ssh:rw
+      # - /root/.ssh:/root/.ssh:rw
+      - /home/rutilvm/.ssh:/root/.ssh:rw
       - /etc/hosts:/etc/hosts:ro
       - /etc/localtime:/etc/localtime:ro
     networks:

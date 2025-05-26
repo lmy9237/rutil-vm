@@ -48,7 +48,7 @@ const StorageTree = ({}) => {
             mouseY: e.clientY,
             item: {
             },
-            treeType: "storage"
+            treeType: "domains"
           }, "rutil-manager");
         }}
       />
@@ -82,7 +82,7 @@ const StorageTree = ({}) => {
                     ...dc,
                     level: 2,
                   },
-                  treeType: "storage",
+                  treeType: "domains",
                 }, "datacenter");
               }}
             />
@@ -119,7 +119,7 @@ const StorageTree = ({}) => {
                           ...domain,
                           level: 3,
                         },
-                        treeType: "storage"
+                        treeType: "domains"
                       }, "domain")
                     }}
                   />
@@ -133,4 +133,4 @@ const StorageTree = ({}) => {
   );
 };
 
-export default React.memo(StorageTree);
+export default StorageTree;

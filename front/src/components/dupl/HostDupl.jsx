@@ -34,7 +34,11 @@ const HostDupl = ({
     ha: host?.globalMaintenance === true ? "Y" : "N",
     icon: status2Icon(host?.status),
     iconSortKey: getStatusSortKey(host?.status),
-    _hostedEngine: hostedEngineStatus2Icon(host?.hostedEngineVM, host?.hostedEngine),
+    _hostedEngine: hostedEngineStatus2Icon(
+      host?.hostedEngineVM,
+      host?.hostedEngine,
+      host?.hostedEngine?.score === 0 /* HA점수가 0일 때 사용 불가능 */
+    ),
     status: host?.status,
     spmStatus: host?.spmStatus === "NONE" ? "보통" : host?.spmStatus,
     vmCnt: host?.vmSizeVo?.allCnt ?? "0",

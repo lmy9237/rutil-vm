@@ -82,6 +82,10 @@ fun ErrorPattern.toException(): ItCloudException {
 		ErrorPattern.CONSOLE_VO_INVALID,
 		ErrorPattern.TICKET_VO_INVALID, -> InvalidRequestException("[${code}] ${term.desc} ${failureType.message}")
 		ErrorPattern.OVIRTUSER_LOCKED, -> ResourceLockedException("[${code}] ${term.desc} ${failureType.message}")
+		ErrorPattern.NIC_UNLINKED_REQUIRED,
+		ErrorPattern.DISK_CONFLICT,
+		ErrorPattern.DISK_ATTACHMENT_DUPLICATE,
+		ErrorPattern.DISK_ATTACHMENT_NOT_BOOTABLE,
 		ErrorPattern.VM_CONFLICT_WHILE_PREVIEWING_SNAPSHOT -> ConflictException("[${code}] ${term.desc} ${failureType.message}: $additional")
 		else -> ItCloudException(failureType.message)
 	}

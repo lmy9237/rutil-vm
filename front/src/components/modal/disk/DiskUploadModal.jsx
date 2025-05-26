@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { useToast }           from "@/hooks/use-toast";
-import useUIState             from "@/hooks/useUIState";
-import BaseModal              from "../BaseModal";
-import LabelInput             from "@/components/label/LabelInput";
-import LabelCheckbox          from "@/components/label/LabelCheckbox";
-import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import { useToast }                     from "@/hooks/use-toast";
+import useUIState                       from "@/hooks/useUIState";
+import BaseModal                        from "../BaseModal";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import { 
   handleInputChange,
   handleSelectIdChange,
@@ -21,8 +22,8 @@ import {
   checkName, 
   convertBytesToGB,
 } from "@/util";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "../domain/MDomain.css";
 
 const sizeToGB = (data) => Math.ceil(data / Math.pow(1024, 3));

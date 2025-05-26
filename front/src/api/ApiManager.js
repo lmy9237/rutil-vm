@@ -39,7 +39,7 @@ const makeAPICall = async ({
     res.headers.get(`access_token`) && localStorage.setItem('token', res.headers.get(`access_token`)) // 로그인이 처음으로 성공했을 때 진행
     return res.data
   } catch(e) {
-    console.error(`Error handling endpoint '${url}':`, e);
+    Logger.debug(`Error handling endpoint '${url}':`, e);
     const err = e?.response?.data;
     err && toast({
       variant: "destructive",

@@ -1,8 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
-import useGlobal    from "@/hooks/useGlobal";
-import { useToast } from "@/hooks/use-toast";
-import TabNavButtonGroup from "../../common/TabNavButtonGroup";
-import BaseModal from "../BaseModal";
+import CONSTANT                         from "@/Constants";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useGlobal                        from "@/hooks/useGlobal";
+import TabNavButtonGroup                from "@/components/common/TabNavButtonGroup";
+import BaseModal                        from "../BaseModal";
+import LabelSelectOptions               from '@/components/label/LabelSelectOptions';
+import LabelSelectOptionsID             from '@/components/label/LabelSelectOptionsID';
+import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import {
   useFindEditVmById,  
   useAddVm,
@@ -15,7 +19,7 @@ import {
   useFindTemplatesFromDataCenter,
   useAllvnicFromCluster,
   useAllNicsFromTemplate, 
-} from '../../../api/RQHook';
+} from '@/api/RQHook';
 import VmCommon from './create/VmCommon';
 import VmNic from './create/VmNic';
 import VmDisk from './create/VmDisk';
@@ -24,13 +28,9 @@ import VmInit from './create/VmInit';
 import VmHost from './create/VmHost';
 import VmHa from './create/VmHa';
 import VmBoot from './create/VmBoot';
-import LabelSelectOptions from '../../label/LabelSelectOptions';
-import LabelSelectOptionsID from '../../label/LabelSelectOptionsID';
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import { checkName } from "../../../util";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
-import CONSTANT from "../../../Constants";
+import { checkName }                    from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import './MVm.css';
 
 // 일반
@@ -93,7 +93,7 @@ const VmModal = ({
   copyMode=false,
   templateId,
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   const vLabel = editMode 
     ? Localization.kr.UPDATE
     : copyMode 
@@ -441,15 +441,12 @@ const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
     return null;
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (e) => {
     // 디스크  연결은 id값 보내기 생성은 객체로 보내기
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
     

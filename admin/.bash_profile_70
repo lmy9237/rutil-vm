@@ -5,6 +5,8 @@ if [ -f ~/.bashrc ]; then
   . ~/.bashrc
 fi
 
+export PATH_ENGINE_ID_RSA=/etc/pki/ovirt-engine/keys/engine_id_rsa
+
 function certsCheck() {
     # 인증서 검사
     echo "This script will check certificate expiration dates"
@@ -47,19 +49,19 @@ function certsCheck() {
     for i in $hosts;
         do echo "Host: $i";
         echo "=================================================";
-        vdsm=`ssh -i  /etc/pki/ovirt-engine/keys/engine_id_rsa root@${i} 'openssl x509 -in /etc/pki/vdsm/certs/vdsmcert.pem -noout -enddate' | cut -d= -f2`
+        vdsm=`ssh -i  $PATH_ENGINE_ID_RSA root@${i} 'openssl x509 -in /etc/pki/vdsm/certs/vdsmcert.pem -noout -enddate' | cut -d= -f2`
         echo -e "  /etc/pki/vdsm/certs/vdsmcert.pem:              $vdsm";
 
-        spice=`ssh -i  /etc/pki/ovirt-engine/keys/engine_id_rsa root@${i} 'openssl x509 -in /etc/pki/vdsm/libvirt-spice/server-cert.pem -noout -enddate' | cut -d= -f2`
+        spice=`ssh -i  $PATH_ENGINE_ID_RSA root@${i} 'openssl x509 -in /etc/pki/vdsm/libvirt-spice/server-cert.pem -noout -enddate' | cut -d= -f2`
         echo -e "  /etc/pki/vdsm/libvirt-spice/server-cert.pem:   $spice";
 
-        vnc=`ssh -i  /etc/pki/ovirt-engine/keys/engine_id_rsa root@${i} 'openssl x509 -in /etc/pki/vdsm/libvirt-vnc/server-cert.pem -noout -enddate' | cut -d= -f2`
+        vnc=`ssh -i  $PATH_ENGINE_ID_RSA root@${i} 'openssl x509 -in /etc/pki/vdsm/libvirt-vnc/server-cert.pem -noout -enddate' | cut -d= -f2`
         echo -e "  /etc/pki/vdsm/libvirt-vnc/server-cert.pem:     $vnc";
 
-        libvirt=`ssh -i  /etc/pki/ovirt-engine/keys/engine_id_rsa root@${i} 'openssl x509 -in /etc/pki/libvirt/clientcert.pem -noout -enddate' | cut -d= -f2`
+        libvirt=`ssh -i  $PATH_ENGINE_ID_RSA root@${i} 'openssl x509 -in /etc/pki/libvirt/clientcert.pem -noout -enddate' | cut -d= -f2`
         echo -e "  /etc/pki/libvirt/clientcert.pem:               $libvirt";
 
-        migrate=`ssh -i  /etc/pki/ovirt-engine/keys/engine_id_rsa root@${i} 'openssl x509 -in /etc/pki/vdsm/libvirt-migrate/server-cert.pem -noout -enddate' | cut -d= -f2`
+        migrate=`ssh -i  $PATH_ENGINE_ID_RSA root@${i} 'openssl x509 -in /etc/pki/vdsm/libvirt-migrate/server-cert.pem -noout -enddate' | cut -d= -f2`
         echo -e "  /etc/pki/vdsm/libvirt-migrate/server-cert.pem: $migrate";
 
         echo;
@@ -67,14 +69,13 @@ function certsCheck() {
     done
 }
 
-
 export DOCKER_COMPOSE_FILENAME=deploy-local-70.yaml
 PATH=$PATH:$HOME/bin
 export RUTIL_VM_HOME=$HOME/rutil-vm
 export PATH
 
 # User specific environment and startup programs
-export DOCKER_REGISTRY_HOME=ititinfo.synology.me:50951
+export DOCKER_REGISTRY_HOME=ititinfo.synology.me:50951/ititcloud
 # export DOCKER_IMG_RUTIL_VM_API=$DOCKER_REGISTRY_HOME/ititcloud/rutil-vm-api
 export DOCKER_IMG_RUTIL_VM_API=rutil-vm-api
 export DOCKER_IMG_RUTIL_VM_API_VERSION=0.3.2
@@ -143,8 +144,12 @@ function loadDkw() {
   docker tag $DOCKER_IMG_RUTIL_VM_WSPROXY_CURRENT $DOCKER_IMG_RUTIL_VM_WSPROXY_LATEST;
 }
 
-function enginePrivateKey() {
-  cat /etc/pki/ovirt-engine/keys/engine_id_rsa
+function enginePki() {
+  cat $PATH_ENGINE_ID_RSA
+}
+
+function enginePub() {
+  curl -k -X GET "https://$(hostname -i):8443/ovirt-engine/services/pki-resource?resource=engine-certificate&format=OPENSSH-PUBKEY" 
 }
 
 function engineLog() {

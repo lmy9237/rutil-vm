@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useToast }           from "@/hooks/use-toast";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import LabelInput             from "@/components/label/LabelInput";
-import LabelInputNum          from "@/components/label/LabelInputNum";
-import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
-import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
-import LabelCheckbox          from "@/components/label/LabelCheckbox";
-import { handleInputChange, handleInputCheck, handleSelectIdChange } from "../../label/HandleInput";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelInputNum                    from "@/components/label/LabelInputNum";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
+import { 
+  handleInputChange, 
+  handleInputCheck, 
+  handleSelectIdChange,
+} from "../../label/HandleInput";
 import {
   useDisk,
   useAddDisk,
@@ -17,9 +21,9 @@ import {
   useAllActiveDomainsFromDataCenter,
   useAllDiskProfilesFromDomain,
 } from "../../../api/RQHook";
-import { checkName, convertBytesToGB } from "../../../util";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import { checkName, convertBytesToGB }  from "../../../util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const initialFormState = {
   id: "",
@@ -42,7 +46,7 @@ const DiskModal = ({
   onClose,
   editMode = false, 
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const dLabel = editMode 
     ? Localization.kr.UPDATE
@@ -125,11 +129,7 @@ const DiskModal = ({
       if (value === "" || /^\d*$/.test(value)) {
         setFormState((prev) => ({ ...prev, [field]: value }));
       } else {
-        toast({
-          variant: "destructive",
-          title: "불량한 입력 값",
-          description: `숫자만 입력해주세요.`,
-        })
+        validationToast.fail(`숫자만 입력해주세요.`)
       }
     } else {
       setFormState((prev) => ({ ...prev, [field]: value }));
@@ -151,11 +151,7 @@ const DiskModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 

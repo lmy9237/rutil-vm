@@ -137,7 +137,7 @@ export const rvi16ChevronUp = (accentColor=CONSTANT.color.down) => (<path fill={
 export const rvi16ChevronDown = (accentColor=CONSTANT.color.down) => (<path fill={accentColor} d="M13 5.9426L8 11L3 5.9426L3.9319 5L8 9.1148L12.0681 5L13 5.9426Z" />)
 export const rvi16ChevronRight = (accentColor=CONSTANT.color.down) => (<path fill={accentColor} d="M5.9426 3L11 8L5.9426 13L5 12.0681L9.1148 8L5 3.9319L5.9426 3Z" />)
 export const rvi16StarGold = (<path fill="#FFDE6A" d="M8 12.2516L12.635 15L11.405 9.82L15.5 6.33474L10.1075 5.87789L8 1L5.8925 5.87789L0.5 6.33474L4.5875 9.82L3.365 15L8 12.2516Z" />)
-export const rvi16Star = (<path fill="#C6C6C6" d="M8 12.2516L12.635 15L11.405 9.82L15.5 6.33474L10.1075 5.87789L8 1L5.8925 5.87789L0.5 6.33474L4.5875 9.82L3.365 15L8 12.2516Z" />)
+export const rvi16Star = (accentColor="#C6C6C6") => (<path fill={accentColor} d="M8 12.2516L12.635 15L11.405 9.82L15.5 6.33474L10.1075 5.87789L8 1L5.8925 5.87789L0.5 6.33474L4.5875 9.82L3.365 15L8 12.2516Z" />)
 export const rvi16Lock = (accentColor="#555555") => (<path fill={accentColor} d="M4.00002 14.6667C3.63335 14.6667 3.31946 14.5361 3.05835 14.275C2.79724 14.0139 2.66669 13.7 2.66669 13.3333V6.66666C2.66669 6.29999 2.79724 5.9861 3.05835 5.72499C3.31946 5.46388 3.63335 5.33332 4.00002 5.33332H4.66669V3.99999C4.66669 3.07777 4.99169 2.29166 5.64169 1.64166C6.29169 0.991656 7.0778 0.666656 8.00002 0.666656C8.92224 0.666656 9.70835 0.991656 10.3584 1.64166C11.0084 2.29166 11.3334 3.07777 11.3334 3.99999V5.33332H12C12.3667 5.33332 12.6806 5.46388 12.9417 5.72499C13.2028 5.9861 13.3334 6.29999 13.3334 6.66666V13.3333C13.3334 13.7 13.2028 14.0139 12.9417 14.275C12.6806 14.5361 12.3667 14.6667 12 14.6667H4.00002ZM8.00002 11.3333C8.36669 11.3333 8.68058 11.2028 8.94169 10.9417C9.2028 10.6805 9.33335 10.3667 9.33335 9.99999C9.33335 9.63332 9.2028 9.31944 8.94169 9.05832C8.68058 8.79721 8.36669 8.66666 8.00002 8.66666C7.63335 8.66666 7.31947 8.79721 7.05835 9.05832C6.79724 9.31944 6.66669 9.63332 6.66669 9.99999C6.66669 10.3667 6.79724 10.6805 7.05835 10.9417C7.31947 11.2028 7.63335 11.3333 8.00002 11.3333ZM6.00002 5.33332H10V3.99999C10 3.44443 9.80558 2.97221 9.41669 2.58332C9.0278 2.19443 8.55558 1.99999 8.00002 1.99999C7.44447 1.99999 6.97224 2.19443 6.58335 2.58332C6.19446 2.97221 6.00002 3.44443 6.00002 3.99999V5.33332Z" />)
 export const rvi16Install = (<path d="M5.33331 14V12.6667H2.66665C2.29998 12.6667 1.98609 12.5361 1.72498 12.275C1.46387 12.0139 1.33331 11.7 1.33331 11.3333V3.33333C1.33331 2.96667 1.46387 2.65278 1.72498 2.39167C1.98609 2.13056 2.29998 2 2.66665 2H7.99998V3.33333H2.66665V11.3333H13.3333V9.33333H14.6666V11.3333C14.6666 11.7 14.5361 12.0139 14.275 12.275C14.0139 12.5361 13.7 12.6667 13.3333 12.6667H10.6666V14H5.33331ZM11.3333 9.33333L7.99998 6L8.93331 5.06667L10.6666 6.78333V2H12V6.78333L13.7333 5.06667L14.6666 6L11.3333 9.33333Z" fill="#555555"/>);
 export const rvi16Monitor = (<path d="M5.33002 14V12.6667H2.66335C2.29669 12.6667 1.98279 12.5361 1.72168 12.275C1.46057 12.0139 1.33002 11.7 1.33002 11.3333V3.33333C1.33002 2.96667 1.46057 2.65278 1.72168 2.39167C1.98279 2.13056 2.29669 2 2.66335 2H13.33C13.6967 2 14.0106 2.13056 14.2717 2.39167C14.5328 2.65278 14.6634 2.96667 14.6634 3.33333V11.3333C14.6634 11.7 14.5328 12.0139 14.2717 12.275C14.0106 12.5361 13.6967 12.6667 13.33 12.6667H10.6634V14H5.33002ZM2.66335 11.3333H13.33V3.33333H2.66335V11.3333Z" fill="#555555"/>)
@@ -663,6 +663,8 @@ export const status2Icon = (
     case Localization.kr.renderStatus("DOWN"):
     case "INACTIVE":
     case Localization.kr.renderStatus("INACTIVE"):
+    case "INSTALL_FAILED":
+    case Localization.kr.renderStatus("INSTALL_FAILED"):
     case "UNINITIALIZED":                          iconDef = rvi16TriangleDown();break;
     case "POWERING_DOWN":                          iconDef = rvi16ArrowsDownRed;break;
     case "INITIALIZING":
@@ -729,16 +731,20 @@ export const clusterStatus2Icon = (status = "", connect=false) => {
  * 
  * @param {boolean} isHostedEngineVm 해당 가상머신이 호스트엔진에서 기동 여부
  * @param {boolean} isHostedEngine 호스트엔진일 경우
+ * @param {boolean} isBadScore HA 점수가 안좋을 때
+ * 
  * @returns {JSX.Element} 툴팁이 포함 된 아이콘
  */
-export const hostedEngineStatus2Icon = (isHostedEngineVm = false, isHostedEngine = false) => {
-  const iconDef = isHostedEngineVm ? rvi16StarGold : isHostedEngine ? rvi16Star : null;
+export const hostedEngineStatus2Icon = (isHostedEngineVm=false, isHostedEngine=false, isBadScore=false) => {
+  const iconDef = isHostedEngineVm ? rvi16StarGold : isBadScore ? rvi16Star(CONSTANT.color.alert) : isHostedEngine ? rvi16Star() : null;
 
   const tooltipContent = isHostedEngineVm
     ? <><span>호스트 엔진 가상머신</span><span>실행 중</span></>
-    : isHostedEngine
-    ? <><span>호스트 엔진 가상머신</span><span>실행 가능</span></>
-    : null;
+    : isBadScore
+      ? <><span>HA 점수로 인해</span><span>사용이 불가능</span></>
+      : isHostedEngine
+        ? <><span>호스트 엔진 가상머신</span><span>실행 가능</span></>
+        : null;
 
   if (!iconDef || !tooltipContent) return null;
 

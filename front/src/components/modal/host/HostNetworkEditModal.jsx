@@ -1,21 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useToast }            from "@/hooks/use-toast";
-import TabNavButtonGroup       from "@/components/common/TabNavButtonGroup";
-import ToggleSwitchButton      from "@/components/button/ToggleSwitchButton";
-import BaseModal               from "@/components/modal/BaseModal";
-import LabelInput              from "@/components/label/LabelInput";
-import LabelSelectOptions      from "@/components/label/LabelSelectOptions";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import TabNavButtonGroup                from "@/components/common/TabNavButtonGroup";
+import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
+import BaseModal                        from "@/components/modal/BaseModal";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import { 
   RVI36, rvi36Add, rvi36Remove
 } from "@/components/icons/RutilVmIcons";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const HostNetworkEditModal = ({ 
   isOpen, onClose,
   networkModalState, setNetworkModalState,
   onNetworkEdit
 }) => {
+  const { validationToast } = useValidationToast();
   const [selectedModalTab, setSelectedModalTab] = useState("ipv4");  
   const tabs = useMemo(() => [
     { id: "ipv4",  label: "IPv4",    onClick: () => setSelectedModalTab("ipv4") },
@@ -73,8 +74,21 @@ const HostNetworkEditModal = ({
     });
   };
 
+  
+  const validateForm = () => {
+    // if (!networkVo.id) return `${Localization.kr.NETWORK}를 선택해주세요.`;
+    return null;
+  };
+
 
   const handleOkClick = () => {
+    const error = validateForm();
+    if (error) {
+      validationToast.fail(error);
+      return;
+    }
+
+    // IpAssignments 배열 만들기
     const ipAssignments = [];
 
     if (networkModalState.ipv4Values.protocol && networkModalState.ipv4Values.protocol !== "none") {

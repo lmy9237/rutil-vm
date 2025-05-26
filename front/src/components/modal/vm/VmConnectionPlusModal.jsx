@@ -1,12 +1,14 @@
 import { useCallback, useMemo, useState } from "react";
-import { useToast }           from "@/hooks/use-toast";
-import BaseModal from "../BaseModal";
-import TablesOuter from "../../table//TablesOuter";
-import TableColumnsInfo from "../../table/TableColumnsInfo";
-import { useFindDiskListFromVM } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
-import useUIState from "../../../hooks/useUIState";
-import Localization from "../../../utils/Localization";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import BaseModal                        from "../BaseModal";
+import TablesOuter                      from "@/components/table//TablesOuter";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import { 
+  useFindDiskListFromVM,
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name VmConnectionPlusModal
@@ -22,7 +24,7 @@ const VmConnectionPlusModal = ({
   onSelectDisk = () => {},
   excludedDiskIds = [], // 제외할 디스크 ID 목록을 부모로부터 전달받음
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   const { closeModal } = useUIState()
   const [activeTab, setActiveTab] = useState("img");
   const [selectedDiskId, setSelectedDiskId] = useState(null);
@@ -54,14 +56,11 @@ const VmConnectionPlusModal = ({
     return null
   }
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
     

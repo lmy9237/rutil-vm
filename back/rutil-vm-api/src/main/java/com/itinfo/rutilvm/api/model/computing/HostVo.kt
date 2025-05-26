@@ -42,11 +42,6 @@ private val log = LoggerFactory.getLogger(HostVo::class.java)
  * @property hostedEngineVM [Boolean] Hosted Engine VM 여부 [ 금장, 은장, null ]
  * @property spmPriority [Int] spm 우선순위
  * @property spmStatus [SpmStatus] spm 상태
- * @property sshFingerPrint [String] ssh
- * @property sshPort [Int]
- * @property sshPublicKey[String]
- * @property sshName [String] 사용자 이름 (생성시 표시)
- * @property sshPassWord [String] 암호 (생성시)
  * @property status [HostStatus]
  * @property transparentPage [Boolean] 자동으로 페이지를 크게
  * @property vmTotalCnt [Int] summary
@@ -91,11 +86,7 @@ class HostVo (
 	val hostedEngineVM: Boolean = false,
     val spmPriority: Int = 0,
     val spmStatus: SpmStatus = SpmStatus.NONE,
-    val sshFingerPrint: String = "",
-    val sshPort: Int = 0,
-    val sshPublicKey: String = "",
-    val sshName: String = "",
-    val sshPassWord: String = "",
+	val ssh: SshVo? = SshVo(),
     val status: HostStatus = HostStatus.NON_RESPONSIVE,
     val transparentPage: Boolean = false,
     val vmMigratingCnt: Int = 0,
@@ -173,11 +164,7 @@ class HostVo (
         private var bHostedEngineVM: Boolean = false; fun hostedEngineVM(block: () -> Boolean?) { bHostedEngineVM = block() ?: false }
         private var bSpmPriority: Int = 0; fun spmPriority(block: () -> Int?) { bSpmPriority = block() ?: 0 }
         private var bSpmStatus: SpmStatus = SpmStatus.NONE; fun spmStatus(block: () -> SpmStatus?) { bSpmStatus = block() ?: SpmStatus.NONE }
-        private var bSshFingerPrint: String = ""; fun sshFingerPrint(block: () -> String?) { bSshFingerPrint = block() ?: "" }
-        private var bSshPort: Int = 0; fun sshPort(block: () -> Int?) { bSshPort = block() ?: 0 }
-        private var bSshPublicKey: String = ""; fun sshPublicKey(block: () -> String?) { bSshPublicKey = block() ?: "" }
-        private var bSshName: String = ""; fun sshName(block: () -> String?) { bSshName = block() ?: "" }
-        private var bSshPassWord: String = ""; fun sshPassWord(block: () -> String?) { bSshPassWord = block() ?: "" }
+        private var bSsh: SshVo? = null; fun ssh(block: () -> SshVo?) { bSsh = block() }
         private var bStatus: HostStatus = HostStatus.NON_RESPONSIVE; fun status(block: () -> HostStatus?) { bStatus = block() ?: HostStatus.NON_RESPONSIVE }
         private var bTransparentPage: Boolean = false; fun transparentPage(block: () -> Boolean?) { bTransparentPage = block() ?: false }
         private var bVmMigratingCnt: Int = 0; fun vmMigratingCnt(block: () -> Int?) { bVmMigratingCnt = block() ?: 0 }
@@ -204,7 +191,7 @@ class HostVo (
         private var bHostNicVos: List<HostNicVo> = listOf(); fun hostNicVos(block: () -> List<HostNicVo>?) { bHostNicVos = block() ?: listOf() }
         private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
 
-        fun build(): HostVo = HostVo(bId, bName, bComment, bAddress, bDevicePassThrough, bIscsi, bKdump, bKsm, bSeLinux, bHostedEngine, bHostedEngineVM, bSpmPriority, bSpmStatus, bSshFingerPrint, bSshPort, bSshPublicKey, bSshName, bSshPassWord, bStatus, bTransparentPage, bVmMigratingCnt, bVgpu, bMemoryTotal, bMemoryUsed, bMemoryFree, bMemoryMax, bMemoryShared, bSwapTotal, bSwapUsed, bSwapFree, bHugePage2048Free, bHugePage2048Total, bHugePage1048576Free, bHugePage1048576Total, bBootingTime, bHostHwVo, bHostSwVo, bClusterVo, bDataCenterVo, bVmSizeVo, bVmVos, bHostNicVos, bUsageDto,)
+        fun build(): HostVo = HostVo(bId, bName, bComment, bAddress, bDevicePassThrough, bIscsi, bKdump, bKsm, bSeLinux, bHostedEngine, bHostedEngineVM, bSpmPriority, bSpmStatus, bSsh, bStatus, bTransparentPage, bVmMigratingCnt, bVgpu, bMemoryTotal, bMemoryUsed, bMemoryFree, bMemoryMax, bMemoryShared, bSwapTotal, bSwapUsed, bSwapFree, bHugePage2048Free, bHugePage2048Total, bHugePage1048576Free, bHugePage1048576Total, bBootingTime, bHostHwVo, bHostSwVo, bClusterVo, bDataCenterVo, bVmSizeVo, bVmVos, bHostNicVos, bUsageDto,)
     }
     companion object {
         inline fun builder(block: HostVo.Builder.() -> Unit): HostVo = HostVo.Builder().apply(block).build()
@@ -248,6 +235,7 @@ fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
 		}
         hostedEngineVM { hostedVm }
         address { host.address() }
+		ssh { host.ssh().toSshVo() }
         clusterVo { host.cluster()?.fromClusterToIdentifiedVo() }
         dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
         vmSizeVo { host.findVmCntFromHost() }
@@ -281,7 +269,7 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
         kdump { host.kdumpStatus() }
         ksm { host.ksm().enabled() }
         seLinux { host.seLinux().mode() }
-        sshPort { host.ssh().portAsInteger() }
+		ssh { host.ssh().toSshVo() }
         spmPriority { host.spm().priorityAsInteger() }
         vgpu { host.vgpuPlacement().value() }
         transparentPage { host.transparentHugePages().enabled() }
@@ -367,9 +355,7 @@ fun Host.toHostVo(conn: Connection): HostVo {
         seLinux { host.seLinux().mode() }
         spmPriority { host.spm().priorityAsInteger() }
         spmStatus { host.spm().status() }
-        sshFingerPrint { host.ssh().fingerprint() }
-        sshPort { host.ssh().portAsInteger() }
-        sshPublicKey { host.ssh().publicKey() }
+		ssh { host.ssh().toSshVo() }
         status { host.status() }
         transparentPage { host.transparentHugePages().enabled() }
         vmSizeVo { host.findVmCntFromHost() }
@@ -416,25 +402,24 @@ fun Connection.isHostedEngineVm(hostId: String): Boolean {
 /**
  * 호스트 빌더
  */
-fun HostVo.toHostBuilder(): HostBuilder {
-	return HostBuilder()
-		.cluster(ClusterBuilder().id(clusterVo.id))
-		.name(name)
-		.comment(comment)
-		.address(address)
-		.ssh(SshBuilder().port(sshPort).build()) // 기본값이 22 포트 연결은 더 테스트 해봐야함(ovirt 내에서 한적은 없음)
-		.rootPassword(sshPassWord)   // 비밀번호 잘못되면 보여줄 코드?
-		.powerManagement(PowerManagementBuilder().enabled(false).build()) // 전원관리 비활성화 (기본)
-		.vgpuPlacement(VgpuPlacement.fromValue(vgpu))
-//        .spm(SpmBuilder().priority(this@toHostBuilder.spmPriority))
-//        .port() // ssh port가 22면 .ssh() 설정하지 않아도 알아서 지정됨. port 변경을 cmd 에서만 하심
-}
+fun HostVo.toHostBuilder(): HostBuilder = HostBuilder()
+	.name(name)
+	.comment(comment)
+	.address(address)
+	.cluster(ClusterBuilder().id(clusterVo.id))
+	.powerManagement(PowerManagementBuilder().enabled(false).build()) // 전원관리 비활성화 (기본)
+	.vgpuPlacement(VgpuPlacement.fromValue(vgpu))
+//		.spm(SpmBuilder().priority(this@toHostBuilder.spmPriority))
+//		.port() // ssh port가 22면 .ssh() 설정하지 않아도 알아서 지정됨. port 변경을 cmd 에서만 하심
 
 /**
+ * [HostVo.toAddHost]
  * 호스트 생성 빌더
  */
-fun HostVo.toAddHost(): Host =
-	toHostBuilder().build()
+fun HostVo.toAddHost(): Host = toHostBuilder()
+	.ssh(SshBuilder().port(ssh?.port).build()) // 기본값이 22 포트 연결은 더 테스트 해봐야함(ovirt 내에서 한적은 없음)
+	.rootPassword(ssh?.rootPassword)   // 비밀번호 잘못되면 보여줄 코드?
+	.build()
 
 /**
  * 호스트 편집 빌더

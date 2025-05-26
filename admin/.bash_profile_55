@@ -7,7 +7,6 @@ fi
 
 export PATH_ENGINE_ID_RSA=/etc/pki/ovirt-engine/keys/engine_id_rsa
 
-# RHV-M Certificates
 function certsCheck() {
     # 인증서 검사
     echo "This script will check certificate expiration dates"
@@ -70,7 +69,7 @@ function certsCheck() {
     done
 }
 
-export DOCKER_COMPOSE_FILENAME=deploy-local-20.yaml
+export DOCKER_COMPOSE_FILENAME=deploy-local-55.yaml
 PATH=$PATH:$HOME/bin
 export RUTIL_VM_HOME=$HOME/rutil-vm
 export PATH

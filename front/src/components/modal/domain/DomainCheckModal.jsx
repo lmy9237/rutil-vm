@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useToast }           from "@/hooks/use-toast";
-import useUIState             from "@/hooks/useUIState";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import LabelCheckbox          from "@/components/label/LabelCheckbox";
-import BaseModal              from "../BaseModal";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
+import BaseModal                        from "../BaseModal";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const DomainCheckModal = ({ 
   isOpen, 
@@ -14,7 +14,7 @@ const DomainCheckModal = ({
   onApprove
 }) => {
   // const { closeModal } = useUIState()
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   const [approved, setApproved] = useState(false);
 
   const validateForm = () => {
@@ -26,11 +26,7 @@ const DomainCheckModal = ({
   const handleSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
     Logger.debug(`DomainCheckModal > handleSubmit ... `)

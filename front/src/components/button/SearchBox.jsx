@@ -1,6 +1,5 @@
 import { useCallback, } from "react";
-// import toast from "react-hot-toast";
-import { useToast }           from "@/hooks/use-toast";
+import { useApiToast }           from "@/hooks/useSimpleToast";
 import {
   RVI16,
   rvi16Close,
@@ -25,16 +24,13 @@ const SearchBox = ({
   onRefresh=()=>{},
   refetch=()=>{},
  }) => {
-  const { toast } = useToast();
+  const { apiToast } = useApiToast();
 
   const handleRefresh = useCallback((e) =>  {
     Logger.debug(`SearchBox > handleRefresh ... `)
     if (!refetch) return;
     refetch()
-    import.meta.env.DEV && toast({ 
-      title: "API 조회",
-      description: "다시 조회 중 ..." 
-    })
+    import.meta.env.DEV && apiToast.refetch();
   }, [])
   
   return (

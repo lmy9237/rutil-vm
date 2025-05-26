@@ -1,23 +1,26 @@
 import { useState, useEffect, useCallback } from "react";
-import { useToast }            from "@/hooks/use-toast";
-import useUIState              from "@/hooks/useUIState";
-import useGlobal               from "@/hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import LabelInput from "../../label/LabelInput";
-import LabelCheckbox from "../../label/LabelCheckbox";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import { 
   handleInputChange, 
   handleInputCheck,
-} from "../../label/HandleInput";
-import { validateUsername, validatePw } from "../../../util";
+} from "@/components/label/HandleInput";
 import { 
   useUser, 
   useAddUser, 
   useEditUser, 
   useUpdatePasswordUser
 } from "@/api/RQHook";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import { 
+  validateUsername, 
+  validatePw,
+} from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./SettingsUserModal.css";
 
 const initialFormState = {
@@ -38,7 +41,7 @@ const SettingUsersModal = ({
   changePassword=false,
   user, 
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   const { usersSelected, setUsersSelected } = useGlobal()
   const [formState, setFormState] = useState(initialFormState);
   const {
@@ -90,11 +93,7 @@ const SettingUsersModal = ({
     e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 

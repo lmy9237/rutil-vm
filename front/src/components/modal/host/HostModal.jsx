@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
-import { useToast }           from "@/hooks/use-toast";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import BaseModal              from "../BaseModal";
-import ToggleSwitchButton     from "@/components/button/ToggleSwitchButton";
-import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
-import LabelInput             from "@/components/label/LabelInput";
-import LabelInputNum          from "@/components/label/LabelInputNum";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelInputNum                    from "@/components/label/LabelInputNum";
 import { 
   handleInputChange, 
   handleSelectIdChange
@@ -18,9 +18,9 @@ import {
   useAllClusters,
   useClustersFromDataCenter,
 } from "@/api/RQHook";
-import { checkName }           from "@/util";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import { checkName }                    from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./MHost.css";
 
 const initialFormState = {
@@ -29,9 +29,9 @@ const initialFormState = {
   comment: "",
   address: "",
   sshPort: "22",
-  sshPassWord: "",
+  sshRootPassword: "",
   vgpu: "consolidated",
-  hostedEngine: false,
+  deployHostedEngine: false,
 };
 
 /**
@@ -46,7 +46,7 @@ const HostModal = ({
   onClose,
   editMode=false
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const hLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
@@ -83,10 +83,10 @@ const HostModal = ({
         name: host?.name,
         comment: host?.comment,
         address: host?.address,
-        sshPort: host?.sshPort,
-        sshPassWord: host?.sshPassWord,
+        port: formState?.ssh?.port,
+        rootPassword: formState?.ssh?.rootPassword,
         vgpu: host?.vgpu,
-        hostedEngine: Boolean(host?.hostedEngine),
+        // hostedEngine: Boolean(host?.hostedEngine),
       });
       setClusterVo({id: host?.clusterVo?.id, name: host?.clusterVo?.name});
     }
@@ -109,7 +109,7 @@ const HostModal = ({
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
 
-    if (!editMode && !formState.sshPassWord) return "비밀번호를 입력해주세요.";
+    if (!editMode && !formState.sshRootPassword) return "비밀번호를 입력해주세요.";
     if (!clusterVo.id) return `${Localization.kr.CLUSTER}를 선택해주세요.`;
     return null;
   };
@@ -117,30 +117,30 @@ const HostModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 
     const dataToSubmit = {
       ...formState,
+      ssh: {
+        port: formState?.sshPort,
+        rootPassword: formState?.sshRootPassword,
+      },
       clusterVo,
     };
 
     Logger.debug(`HostModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit); // 데이터를 확인하기 위한 로그
     editMode
       ? editHost({ hostId: formState.id, hostData: dataToSubmit })
-      : addHost({ hostData: dataToSubmit, deployHostedEngine: String(formState.hostedEngine), });
+      : addHost({ hostData: dataToSubmit, deployHostedEngine: String(formState.deployHostedEngine), });
   };
 
   return (
     <BaseModal targetName={Localization.kr.HOST} submitTitle={hLabel}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "730px"}} 
+      contentStyle={{ width: "730px" }} 
     >
       <LabelSelectOptionsID label={`${Localization.kr.HOST} ${Localization.kr.CLUSTER}`}
         value={clusterVo.id}
@@ -177,10 +177,10 @@ const HostModal = ({
             <label>인증</label>
           </div>
           <LabelInput label="사용자 이름" value="root" disabled={true} />
-          <LabelInput id="sshPassWord" label="암호" 
+          <LabelInput id="sshRootPassword" label="암호" 
             type="password"           
-            value={formState.sshPassWord}
-            onChange={handleInputChange(setFormState, "sshPassWord")}
+            value={formState.sshRootPassword}
+            onChange={handleInputChange(setFormState, "sshRootPassword")}
           />
         </>
       )}
@@ -192,8 +192,8 @@ const HostModal = ({
       /> */}
 
       <ToggleSwitchButton label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
-        checked={formState.hostedEngine}
-        onChange={() => setFormState((prev) => ({ ...prev, hostedEngine: !formState.hostedEngine }))}
+        checked={formState.deployHostedEngine}
+        onChange={() => setFormState((prev) => ({ ...prev, deployHostedEngine: !formState.deployHostedEngine }))}
         disabled={editMode}
         tType={"배포"} fType={"없음"}
       />

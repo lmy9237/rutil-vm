@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useToast }           from "@/hooks/use-toast";
-import useUIState             from "@/hooks/useUIState";
-import BaseModal              from "../BaseModal";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import BaseModal                        from "../BaseModal";
 import {
   useStartVM,
   usePauseVM,
@@ -10,8 +10,8 @@ import {
   useRebootVM,
   useResetVM,
 } from "@/api/RQHook";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const ACTIONS = {
   "vm:start": { label: Localization.kr.START, hook: useStartVM },
@@ -27,7 +27,7 @@ const VmActionModal = ({
   onClose,
   data,
 }) => {  
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   const { activeModal, closeModal } = useUIState()
   const { label = "", hook } = ACTIONS[activeModal()] || {};
   const { mutate } = hook ? hook(closeModal, closeModal) : { mutate: null };
@@ -51,11 +51,7 @@ const VmActionModal = ({
   const handleSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
     Logger.debug(`VmActionModal > handleSubmit ... `)

@@ -1,20 +1,20 @@
 import { useMemo, useState } from "react";
-import { useToast }           from "@/hooks/use-toast";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import BaseModal              from "../BaseModal";
-import LabelCheckbox          from "@/components/label/LabelCheckbox";
-import Localization           from "@/utils/Localization";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import {
   useDestroyDomain
 } from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
 
 const DomainDestroyModal = ({ 
   isOpen,
   onClose,
 }) => {
   // const { closeModal } = useUIState()
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   const { domainsSelected } = useGlobal()
   const domain = useMemo(() => [...domainsSelected][0], [domainsSelected]);
 
@@ -25,11 +25,7 @@ const DomainDestroyModal = ({
 
   const handleSubmit = () => {
     if (!approved) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: "작업을 승인해야 합니다."
-      });
+      validationToast.fail("작업을 승인해야 합니다.");
       return;
     };
   

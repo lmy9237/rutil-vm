@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
-import { useToast } from "@/hooks/use-toast";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
 import {
   useDeactivateHost,
   useActivateHost,
@@ -11,9 +11,9 @@ import {
   useRefreshHost,
   useActivateGlobalHaHost,
   useDeactivateGlobalHaHost,
-} from "../../../api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name HostActionModal
@@ -27,7 +27,7 @@ const HostActionModal = ({
   onClose,
   action
 }) => {  
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const { label = "", hook } = ACTIONS[action] || {};
   const { hostsSelected } = useGlobal()
@@ -51,11 +51,7 @@ const HostActionModal = ({
   const handleSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 

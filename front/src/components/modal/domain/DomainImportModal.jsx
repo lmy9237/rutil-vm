@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useToast } from "@/hooks/use-toast";
-import useUIState           from "../../../hooks/useUIState";
-import useGlobal            from "../../../hooks/useGlobal";
-import BaseModal            from "../BaseModal";
-import DomainImportNfs      from "./import/DomainImportNfs";
-import DomainImportFibre    from "./import/DomainImportFibre";
-import LabelInputNum        from "../../label/LabelInputNum";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import LabelSelectOptions   from "../../label/LabelSelectOptions";
-import LabelInput           from "../../label/LabelInput";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import DomainImportNfs                  from "./import/DomainImportNfs";
+import DomainImportFibre                from "./import/DomainImportFibre";
+import LabelInputNum                    from "@/components/label/LabelInputNum";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import LabelInput                       from "@/components/label/LabelInput";
+import { 
+  handleInputChange, 
+  handleSelectIdChange,
+} from "@/components/label/HandleInput";
 import {
   useImportDomain,
   useAllDataCenters,
@@ -16,10 +20,9 @@ import {
   useSearchFcFromHost,
   useAllNfsStorageDomains,
 } from "../../../api/RQHook";
-import { checkName } from "@/util";
-import Localization from "@/utils/Localization";
-import Logger from "@/utils/Logger";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import { checkName }                    from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 // 일반 정보
 const initialFormState = {
@@ -38,7 +41,7 @@ const DomainImportModal = ({
   isOpen,
   onClose,
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const { datacentersSelected } = useGlobal()
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
@@ -154,12 +157,7 @@ const DomainImportModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
-      
+      validationToast.fail(error);
       return
     };
 

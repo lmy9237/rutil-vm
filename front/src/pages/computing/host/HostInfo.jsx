@@ -1,21 +1,25 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import SectionLayout from "../../../components/SectionLayout";
-import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
-import HeaderButton from "../../../components/button/HeaderButton";
-import Path from "../../../components/Header/Path";
-import HostGeneral from "./HostGeneral";
-import HostVms from "./HostVms";
-import HostNics from "./HostNics";
-import HostDevices from "./HostDevices";
-import HostNetworkAdapter from "./HostNetworkAdapter";
-import HostEvents from "./HostEvents";
-import Localization from "../../../utils/Localization";
-import { rvi24Host } from "../../../components/icons/RutilVmIcons";
-import { useHost } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
+import SectionLayout           from "@/components/SectionLayout";
+import TabNavButtonGroup       from "@/components/common/TabNavButtonGroup";
+import HeaderButton            from "@/components/button/HeaderButton";
+import Path                    from "@/components/Header/Path";
+import HostGeneral             from "./HostGeneral";
+import HostVms                 from "./HostVms";
+import HostNics                from "./HostNics";
+import HostDevices             from "./HostDevices";
+import HostNetworkAdapter      from "./HostNetworkAdapter";
+import HostEvents             from "./HostEvents";
+import {
+  rvi24Host
+} from "@/components/icons/RutilVmIcons";
+import { 
+  useHost
+} from "@/api/RQHook";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 import "./Host.css";
 
 /**

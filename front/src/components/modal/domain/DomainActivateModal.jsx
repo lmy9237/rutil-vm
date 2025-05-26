@@ -1,13 +1,13 @@
 import { useMemo } from "react";
-import { useToast }           from "@/hooks/use-toast";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import BaseModal              from "../BaseModal";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
 import {
   useActivateDomain,
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name DomainActivateModal
@@ -20,7 +20,7 @@ const DomainActivateModal = ({
   isOpen, 
   onClose,
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const { datacentersSelected, domainsSelected } = useGlobal()
   const { mutate: activateDomain } = useActivateDomain(onClose, onClose);
@@ -42,11 +42,7 @@ const DomainActivateModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 

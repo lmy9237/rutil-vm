@@ -1,16 +1,16 @@
 import React, { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast }           from "@/hooks/use-toast";
-import useAuth                from "@/hooks/useAuth";
-import useGlobal              from "@/hooks/useGlobal";
-import useBoxState            from "@/hooks/useBoxState";
-import useUIState             from "@/hooks/useUIState";
-import useClickOutside        from "@/hooks/useClickOutside";
-import useAsideState          from "@/hooks/useAsideState";
+import { useValidationToast }   from "@/hooks/useSimpleToast";
+import useAuth                  from "@/hooks/useAuth";
+import useGlobal                from "@/hooks/useGlobal";
+import useBoxState              from "@/hooks/useBoxState";
+import useUIState               from "@/hooks/useUIState";
+import useClickOutside          from "@/hooks/useClickOutside";
+import useAsideState            from "@/hooks/useAsideState";
 import {
   useUser
 } from "@/api/RQHook";
-import Logger                 from "@/utils/Logger";
+import Logger                   from "@/utils/Logger";
 import "./BoxUser.css";
 
 /**
@@ -20,7 +20,7 @@ import "./BoxUser.css";
  * @returns {JSX.Element} 
  */
 const BoxUser = ({}) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   const navigate = useNavigate();
   const { auth, setAuth } = useAuth();
   const { 
@@ -54,11 +54,7 @@ const BoxUser = ({}) => {
         <div onClick={(e) => {
           e.stopPropagation()
           if (!user) {
-            toast({
-              variant: "destructive",
-              title: "문제가 발생하였습니다.",
-              description: `사용자를 찾을 수 없습니다.`,
-            })
+            validationToast.fail(`사용자를 찾을 수 없습니다.`)
             return;
           } 
           setActiveModal("user:changePassword");

@@ -1,11 +1,12 @@
 import React from "react";
-import { useToast }            from "@/hooks/use-toast";
-import BaseModal               from "@/components/modal/BaseModal";
-import LabelInput              from "@/components/label/LabelInput";
-import LabelSelectOptions      from "@/components/label/LabelSelectOptions";
-import { checkName }           from "@/util";
-import Localization            from "@/utils/Localization";
-import { handleInputChange } from "@/components/label/HandleInput";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import BaseModal                        from "@/components/modal/BaseModal";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import { handleInputChange }            from "@/components/label/HandleInput";
+import { checkName }                    from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const HostBondingModal = ({ 
   editMode = false, 
@@ -14,8 +15,10 @@ const HostBondingModal = ({
   onBondingCreated,
   existingBondNames = []
 }) => {
-  const { toast } = useToast();
-  const bLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+  const { validationToast } = useValidationToast();
+  const bLabel = editMode 
+    ? Localization.kr.UPDATE
+    : Localization.kr.CREATE;
   
   // 본딩 이름 중복 체크 함수
   const isBondNameDuplicated = (name) => {
@@ -26,6 +29,7 @@ const HostBondingModal = ({
   };
 
   const validateForm = () => {
+    Logger.debug(`HostBondingModal > validateForm ... `)
     const nameError = checkName(bondModalState.name);
     if (nameError) return nameError;
 
@@ -40,16 +44,13 @@ const HostBondingModal = ({
   const handleOkClick = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
-
-    if (editMode) { 
-      // 수정 모드: 기존 bond + 옵션만 바꿔서 전달 
+  
+    Logger.debug(`HostBondingModal > handleOkClick ... `)
+    if (editMode) {
+      // 수정 모드: 기존 bond + 옵션만 바꿔서 전달
       const updatedBond = {
         ...bondModalState.editTarget,
         bondingVo: {

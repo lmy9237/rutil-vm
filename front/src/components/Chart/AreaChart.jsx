@@ -142,4 +142,4 @@ const AreaChart = ({
   );
 };
 
-export default React.memo(AreaChart);
+export default AreaChart;

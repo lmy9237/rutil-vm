@@ -1,16 +1,23 @@
 import { useState } from "react";
-import { useToast }            from "@/hooks/use-toast";
-import useUIState              from "@/hooks/useUIState";
-import BaseModal from "../BaseModal";
-import TableColumnsInfo from "../../table/TableColumnsInfo";
-import TablesOuter from "../../table/TablesOuter";
-import { checkZeroSizeToGiB, convertBytesToGB } from "../../../util";
-import { useConnDiskListFromVM, useAllAttachedDisksFromDataCenter } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
-import SelectedIdView from "../../common/SelectedIdView";
-import useGlobal from "../../../hooks/useGlobal";
-import LabelSelectOptions from "@/components/label/LabelSelectOptions";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import BaseModal                        from "../BaseModal";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import {
+  useConnDiskListFromVM,
+  useAllAttachedDisksFromDataCenter,
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
+
+import { 
+  checkZeroSizeToGiB,
+  convertBytesToGB,
+} from "@/util";
 
 // 인터페이스 목록
 const interfaceList = [
@@ -38,7 +45,7 @@ const VmDiskConnectionModal = ({
   onSelectDisk,
   existingDisks,
 }) => {
-  const { toast } = useToast();
+  const { validationToast } = useValidationToast();
 
   const {
     disksSelected, setDisksSelected
@@ -144,14 +151,11 @@ const VmDiskConnectionModal = ({
   };
   
   // 가상머신 생성 - 디스크 연결
-  const handleOkClick = () => {
+  const handleOkClick = (e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 
@@ -180,18 +184,15 @@ const VmDiskConnectionModal = ({
   }
 
   // 가상머신 - 디스크 연결하기
-  const handleFormSubmit = () => {
-    Logger.debug(`VmDiskConnectionModal > handleFormSubmit ... `)
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
     
+    Logger.debug(`VmDiskConnectionModal > handleFormSubmit ... `)
     const selectedDiskLists = [...selectedDisks].map((d) => {
       const diskDetails = attDisks.find((disk) => disk?.id === d?.id);
       if (!diskDetails) return null; // 선택된 디스크가 존재할 경우에만 추가

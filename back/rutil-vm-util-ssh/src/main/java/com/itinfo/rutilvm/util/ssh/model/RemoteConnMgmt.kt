@@ -6,6 +6,7 @@ import com.itinfo.rutilvm.util.ssh.util.SSHHelper
 import com.itinfo.rutilvm.util.ssh.util.executeAll
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Session
+import com.jcraft.jsch.UserInfo
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.util.*
@@ -95,14 +96,16 @@ fun RemoteConnMgmt.deactivateGlobalHA(): Result<Boolean> = runCatching {
  * [RemoteConnMgmt.rebootHostViaSSH]
  * SSH로 재시작
  */
-fun RemoteConnMgmt.rebootSystem(): Result<Boolean> = runCatching {
+fun RemoteConnMgmt.rebootSystem(command: String? = SSHHelper.SSH_COMMAND_RESTART): Result<Boolean> = runCatching {
 	log.info("rebootSystem ... ")
 	val session: Session? = toInsecureSession()
-	return session?.executeAll(listOf(SSHHelper.SSH_COMMAND_RESTART)) ?: throw Error("UNKNOWN ERROR!")
+	if (command.isNullOrEmpty())
+		throw Error("명령어가 없음")
+	return session?.executeAll(listOf(command)) ?: throw Error("UNKNOWN ERROR!")
 }.onSuccess {
-	log.info("SSH 재부팅 성공: {}", it)
+	log.info("SSH로 재부팅 성공: {}", it)
 }.onFailure {
-	log.error("SSH 재부팅 실패: {}", it.localizedMessage)
+	log.error("SSH로 재부팅 실패: {}", it.localizedMessage)
 	// throw if (it is Error) it.toItCloudException() else it
 	throw it
 }
@@ -116,6 +119,33 @@ fun RemoteConnMgmt.toInsecureSession(connectionTimeout: Int = 60000): Session? {
 		put("StrictHostKeyChecking", "no")
 		put("PreferredAuthentications", "publickey")
 	})
+	/*
+	session?.userInfo = object: UserInfo {
+		override fun getPassphrase(): String? {
+			TODO("Not yet implemented")
+		}
+
+		override fun getPassword(): String? {
+			TODO("Not yet implemented")
+		}
+
+		override fun promptPassword(message: String?): Boolean {
+			TODO("Not yet implemented")
+		}
+
+		override fun promptPassphrase(message: String?): Boolean {
+			TODO("Not yet implemented")
+		}
+
+		override fun promptYesNo(message: String?): Boolean {
+			TODO("Not yet implemented")
+		}
+
+		override fun showMessage(message: String?) {
+			TODO("Not yet implemented")
+		}
+	})
+	*/
 	return session?.also {
 		it.connect(connectionTimeout)
 	}

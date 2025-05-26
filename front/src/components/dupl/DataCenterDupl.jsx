@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast }            from "@/hooks/use-toast";
 import useGlobal               from "@/hooks/useGlobal";
 import useSearch               from "@/hooks/useSearch";
 import SelectedIdView          from "@/components/common/SelectedIdView";
@@ -28,7 +27,6 @@ const DataCenterDupl = ({
   refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const {
     datacentersSelected, setDatacentersSelected
   } = useGlobal();
@@ -56,17 +54,10 @@ const DataCenterDupl = ({
     navigate(`/computing/datacenters/${id}/clusters`);
   }, [navigate])
 
-  const handleRefresh = useCallback(() =>  {
-    Logger.debug(`DataCenterDupl > handleRefresh ... `)
-    if (!refetch) return;
-    refetch() 
-    import.meta.env.DEV && toast({ description: "다시 조회 중 ..." })
-  }, [])
-
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefresh} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
         <DataCenterActionButtons />
       </div>
       <TablesOuter target={"datacenter"}

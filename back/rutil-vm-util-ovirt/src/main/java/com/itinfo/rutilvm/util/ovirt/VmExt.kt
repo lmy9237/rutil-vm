@@ -92,7 +92,7 @@ fun Connection.suspendVm(vmId: String): Result<Boolean> = runCatching {
 }.onFailure {
 	Term.VM.logFail("일시정지", it, vmId)
 	throw if (it is Error)
-		if (it.message?.contains("409|review".toRegex()) == true)
+		if (it.message?.contains("review".toRegex()) == true)
 			ErrorPattern.VM_CONFLICT_WHILE_PREVIEWING_SNAPSHOT.toError()
 		else
 			it.toItCloudException()
