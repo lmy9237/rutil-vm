@@ -19,8 +19,6 @@ const HostBondingModal = ({
   const handleChangeName = (e) => setBondModalState(prev => ({ ...prev, name: e.target.value }));
   const handleChangeMode = (e) => setBondModalState(prev => ({ ...prev, optionMode: e.target.value }));
 
-  console.log("% bondModalState", bondModalState)
-
   const validateForm = () => {
     if(!editMode){
       const nameError = checkName(bondModalState.name);
@@ -31,42 +29,40 @@ const HostBondingModal = ({
   };
 
   const handleOkClick = () => {
-  const error = validateForm();
-  if (error) {
-    toast({
-      variant: "destructive",
-      title: "문제가 발생하였습니다.",
-      description: error,
-    });
-    return;
-  }
+    const error = validateForm();
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: error,
+      });
+      return;
+    }
 
-  if (editMode) {
-    // 수정 모드: 기존 bond + 옵션만 바꿔서 전달
-    const updatedBond = {
-      ...bondModalState.editTarget,
-      bondingVo: {
-        ...bondModalState.editTarget.bondingVo,
-        optionVos: [{ name: "mode", value: bondModalState.optionMode }],
-      }
-    };
-    onBondingCreated(updatedBond, [bondModalState.editTarget]); // nicData는 기존 bond 하나
-  } else {
-    // 생성 모드: 이름, option, slave NICs 전달
-    const nicArr = Array.isArray(bondModalState.editTarget) ? bondModalState.editTarget : [];
-    const newBond = {
-      name: bondModalState.name,
-      bondingVo: {
-        optionVos: [{ name: "mode", value: bondModalState.optionMode }],
-        slaveVos: nicArr.map(nic => ({ id: nic.id, name: nic.name })),
-      }
-    };
-    onBondingCreated(newBond, nicArr); // nicArr: NIC 2개
-  }
-
-  onClose();
-};
-
+    if (editMode) {
+      // 수정 모드: 기존 bond + 옵션만 바꿔서 전달
+      const updatedBond = {
+        ...bondModalState.editTarget,
+        bondingVo: {
+          ...bondModalState.editTarget.bondingVo,
+          optionVos: [{ name: "mode", value: bondModalState.optionMode }],
+        }
+      };
+      onBondingCreated(updatedBond, [bondModalState.editTarget]); // nicData는 기존 bond 하나
+    } else {
+      // 생성 모드: 이름, option, slave NICs 전달
+      const nicArr = Array.isArray(bondModalState.editTarget) ? bondModalState.editTarget : [];
+      const newBond = {
+        name: bondModalState.name,
+        bondingVo: {
+          optionVos: [{ name: "mode", value: bondModalState.optionMode }],
+          slaveVos: nicArr.map(nic => ({ id: nic.id, name: nic.name })),
+        }
+      };
+      onBondingCreated(newBond, nicArr); // nicArr: NIC 2개
+    }
+    onClose();
+  };
 
   return (
     <BaseModal targetName={`본딩 ${editMode ? bondModalState?.name : ""} ${bLabel}`} submitTitle={""}
@@ -74,7 +70,7 @@ const HostBondingModal = ({
       onSubmit={handleOkClick}
       contentStyle={{ width: "500px" }}
     >
-      <span>
+      {/* <span>
         nicdata{" "}
         {editMode
           ? bondModalState?.name
@@ -83,7 +79,7 @@ const HostBondingModal = ({
             : (bondModalState?.editTarget?.name || "")}
       </span>
       <span>name: {bondModalState?.name}</span><br/>
-      <span>optionMode: {bondModalState.optionMode}</span><br/>
+      <span>optionMode: {bondModalState.optionMode}</span><br/> */}
       <LabelInput id="bonding_name" label={Localization.kr.NAME}        
         value={bondModalState.name}
         onChange={handleChangeName}

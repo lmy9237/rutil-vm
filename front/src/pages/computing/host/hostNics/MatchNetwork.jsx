@@ -9,7 +9,7 @@ const MatchNetwork = ({
   handleDragOver, 
   handleDragStart, 
   setSelectedNetwork, 
-  setIsNetworkEditPopup 
+  onEditNetworkAttachment
 }) => {
 
   return (
@@ -30,8 +30,6 @@ const MatchNetwork = ({
             iconDef={networkAttach.networkVo?.status === "OPERATIONAL" ? rvi16TriangleUp(): rvi16TriangleDown()}
           />
           {networkAttach.networkVo?.name}
-          {/* <span>할당된{idView(networkAttach)}</span><br/> */}
-          {/* <span>비할당된{idView(networkAttach.networkVo)}</span><br/> */}
           {networkAttach.networkVo?.vlan === 0 ? "" : (
             <span style={{ marginLeft: "4px", color: "#888" }}>(VLAN {networkAttach.networkVo.vlan})</span>
           )}
@@ -41,7 +39,7 @@ const MatchNetwork = ({
             iconDef={rvi36Edit()}
             onClick={() => {
               setSelectedNetwork(networkAttach);
-              setIsNetworkEditPopup(true);
+              onEditNetworkAttachment(networkAttach);
             }}
           />
         </div>
