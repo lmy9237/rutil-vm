@@ -33,20 +33,16 @@ fun Option.toOptionVo(): OptionVo {
     return OptionVo.builder {
         name { this@toOptionVo.name() }
         value { this@toOptionVo.value() }
-        type { this@toOptionVo.type()?.takeIf { this@toOptionVo.typePresent() } }
-    }
+		type { if(this@toOptionVo.typePresent()) this@toOptionVo.type() else null }
+	}
 }
 fun List<Option>.toOptionVos(): List<OptionVo> =
     this@toOptionVos.map { it.toOptionVo() }
 
 
-// https://192.168.0.70/ovirt-engine/api/hosts/{id}/nics
-// (mode 1) Active-Backup
-// (mode 2) Load balance (balance-xor)
-// (mode 3) Broadcast
-// (mode 4) Dynamic link aggregation (802.3ad)
-// 사용자 정의 mode=1 miimon=100 primary=ens3f0np0
 // TODO: BondMode 유형 생성 필요 <package org.ovirt.engine.core.common.businessentities.network>
+// https://192.168.0.70/ovirt-engine/api/hosts/{id}/nics
+// 사용자 정의 mode=1 miimon=100 primary=ens3f0np0
 /*
 * BOND0("0", "balance-rr", "(Mode 0) Round-robin", false),
   BOND1("1", "active-backup", "(Mode 1) Active-Backup", true),
@@ -55,40 +51,24 @@ fun List<Option>.toOptionVos(): List<OptionVo> =
   BOND4("4", "802.3ad", "(Mode 4) Dynamic link aggregation (802.3ad)", true),
   BOND5("5", "balance-tlb", "(Mode 5) Adaptive transmit load balancing (balance-tlb)", false),
   BOND6("6", "balance-alb", "(Mode 6) Adaptive load balancing (balance-alb)", false);
-* */
-fun toDefaultModeOptionBuilder(): Option {
-    return OptionBuilder()
-        .name("mode")
-        .value("1")
-        .type("Active-Backup")
-        .build()
-}
-fun toDefaultMiimonOptionBuilder(): Option {
-    return OptionBuilder()
-        .name("miimon")
-        .value("100")
-        .build()
-}
-fun toDefaultPolicyOptionBuilder(): Option {
-    return OptionBuilder()
-        .name("xmit_hash_policy")
-        .value("2")
-        .build()
-}
-
-fun toDefaultOption(): List<Option> {
-    return listOf(
-        toDefaultModeOptionBuilder(),
-        toDefaultMiimonOptionBuilder()
-    )
-}
-
+**/
+// option builder
 fun OptionVo.toOption(): Option {
     return OptionBuilder()
-        .name(this@toOption.name)
-        .value(this@toOption.value)
+        .name(this.name)
+        .value(this.value)
         .build()
 }
 fun List<OptionVo>.toOptions(): List<Option> =
-    this@toOptions.map { it.toOption() }
+	this.map { it.toOption() }
+
+
+fun OptionVo.toOptionInfo(): Option {
+    return OptionBuilder()
+        .name(this.name)
+        .value(this.value)
+        .build()
+}
+fun List<OptionVo>.toOptionInfos(): List<Option> =
+    this.map { it.toOptionInfo() }
 

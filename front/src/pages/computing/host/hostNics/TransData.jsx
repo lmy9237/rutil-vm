@@ -7,29 +7,33 @@ import { checkZeroSizeToMbps } from "@/util";
  * @returns {Array}
  */
 export function transNic(hostNics = [], nicMap = {}) {
-  // 배열 보장 + undefined 방어
+  
   return (hostNics || [])
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .filter(
-      (nic) =>
-        !(hostNics || []).some((parent) =>
-          Array.isArray(parent.bondingVo?.slaves)
-            ? parent.bondingVo.slaves.some((slave) => slave.id === nic.id)
-            : false
-        )
+    .sort((a, b) => a?.name.localeCompare(b?.name))
+    .filter((nic) => !(hostNics || []).some((parent) =>
+      Array.isArray(parent.bondingVo?.slaveVos)
+        ? parent.bondingVo.slaveVos.some((slave) => slave.id === nic.id)
+        : false
+      )
     )
     .map((e) => ({
       ...e,
       bondingVo: {
-        activeSlave: {
-          id: e?.bondingVo?.activeSlave?.id,
-          name: e?.bondingVo?.activeSlave?.name,
+        activeSlaveVo: {
+          id: e?.bondingVo?.activeSlaveVo?.id,
+          name: e?.bondingVo?.activeSlaveVo?.name,
         },
-        slaves: Array.isArray(e?.bondingVo?.slaves)
-          ? e.bondingVo.slaves.map((slave) => ({
+        slaveVos: Array.isArray(e?.bondingVo?.slaveVos)
+          ? e.bondingVo.slaveVos.map((slave) => ({
               id: slave.id,
               name: slave.name,
               status: nicMap[slave.id]?.status,
+            }))
+          : [],
+        optionVos: Array.isArray(e?.bondingVo?.optionVos)
+          ? e.bondingVo.optionVos.map((option) => ({
+              name: option.name,
+              value: option.value,
             }))
           : [],
       },
@@ -84,7 +88,6 @@ export function transNA(networkAttachments = [], networks = []) {
 }
 
 
-
 /**
  * 할당되지 않은 네트워크 목록 반환
  * @param {Array} networks
@@ -95,7 +98,6 @@ export function transDetachNA(networks = [], networkAttachments = []) {
   const attachedIds = new Set(
     (networkAttachments || []).map((na) => na.networkVo?.id)
   );
-
   return (networks || [])
     .filter((net) => !attachedIds.has(net.id))
     .map((e) => ({

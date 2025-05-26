@@ -25,7 +25,6 @@ const BaseNic = ({
     >
       <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
       {nic.name}
-      {/* {idView(nic)} */}
       <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
     </div>
   );

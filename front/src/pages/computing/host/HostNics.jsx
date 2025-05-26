@@ -6,7 +6,6 @@ import {
 import Loading                 from "@/components/common/Loading";
 import HostNetworkEditModal    from "@/components/modal/host/HostNetworkEditModal";
 import HostBondingModal        from "@/components/modal/host/HostBondingModal";
-import LabelCheckbox           from "@/components/label/LabelCheckbox";
 import { ActionButton }        from "@/components/button/ActionButtons";
 import {
   useHost,
@@ -29,7 +28,6 @@ const HostNics = ({
   hostId
 }) => {
   const { toast } = useToast()
-  // const { hostsSelected } = useGlobal();
 
   const { data: host } = useHost(hostId);
   const { data: hostNics = [] } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
@@ -37,20 +35,55 @@ const HostNics = ({
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
   const { mutate: setupNetwork } = useSetupNetworksFromHost();
 
-  // 모달 오픈 관리
+  // 본딩 모달 관리
   const [isBondingPopup, setIsBondingPopup] = useState(false);   // 본딩 모달 오픈
   const [editBondingMode, setEditBondingMode] = useState(false); // 본딩 편집모드
+  const [bondModalState, setBondModalState] = useState({
+    name: "", optionMode: "1", userMode: "", editTarget: null
+  });
+
+  // 호스트 본딩 editMode
+  const onEditBonding = (bond) => {
+    setSelectedNic(bond); 
+    setBondModalState({
+      name: bond.name,
+      optionMode: bond.bondingVo.optionVos.find(opt=>opt.name==="mode")?.value ?? "1",
+      userMode: bond.bondingVo.optionVos.map(opt=>`${opt.name}=${opt.value}`).join(', ') || "",
+      editTarget: bond 
+    });
+    setEditBondingMode(true);
+    setIsBondingPopup(true);
+  }
+
+  // 호스트 본딩 !editMode
+  const onCreateBonding = (nic1, nic2) => {
+    const getNetworksForNic = (nicId) => 
+      [...baseItems.networkAttachment, ...movedItems.networkAttachment].filter(
+        na => na.hostNicVo?.id === nicId
+      );
+    setSelectedNic(null);
+    setBondModalState({
+      name: "", 
+      optionMode: "1", 
+      userMode: "", 
+      editTarget: [
+        { ...nic1, networks: getNetworksForNic(nic1.id) },
+        { ...nic2, networks: getNetworksForNic(nic2.id) }
+      ]
+    });
+    setEditBondingMode(false);
+    setIsBondingPopup(true);
+  }
+
+  // 호스트 네트워크 모달 관리
   const [isNetworkEditPopup, setIsNetworkEditPopup] = useState(false);  // 네트워크 편집 모달 오픈
+
 
   // 변경 정보
   const [modifiedBonds, setModifiedBonds] = useState([]); // 생성/수정 본딩
   const [removeBonds, setRemoveBonds] = useState([]);     // 삭제 본딩
   const [modifiedNAs, setModifiedNAs] = useState([]);     // 연결 네트워크
   const [removeNAs, setRemoveNAs] = useState([]);         // 삭제 네트워크
-
-  // checkbox
-  const [connection, setConnection] = useState(false); // 호스트와 Engine간의 연결을 확인
-  const [setting, setSetting] = useState(false); // 네트워크 설정 저장
 
   // 선택된 항목
   const [selectedNic, setSelectedNic] = useState(null);
@@ -63,15 +96,6 @@ const HostNics = ({
   const [dragItem, setDragItem] = useState(null);             // 드래그 되는 항목 { item, type, list('attach', 'detach'), parentBond }
   const [dragOverTarget, setDragOverTarget] = useState(null); // 드래그 되는 대상 { targetType, targetDestination }
 
-  function isNoChange(changes) {
-    return (
-      (!changes.modifiedBonds || changes.modifiedBonds.length === 0) &&
-      (!changes.removeBonds || changes.removeBonds.length === 0) &&
-      (!changes.modifiedNAs || changes.modifiedNAs.length === 0) &&
-      (!changes.removeNAs || changes.removeNAs.length === 0)
-    );
-  }
-
   // 초기 값
   const [baseItems, setBaseItems] = useState({
     nic: [...hostNics],
@@ -79,47 +103,47 @@ const HostNics = ({
     network: [...networks]
   });
 
-  // 변경 값
-  const [movedItems, setMovedItems] = useState({ 
+  // 이동 값
+  const [movedItems, setMovedItems] = useState({
     nic: [], 
     networkAttachment: [], 
     network: [] 
   });
 
   // hostNics를 id로 빠르게 찾을 수 있는 Map으로 변환
-  const nicMap = useMemo(() => {
-    return hostNics.reduce((map, nic) => {
-      map[nic.id] = nic;
-      return map;
-    }, {});
-  }, [hostNics]);
+  const nicMap = useMemo(() => hostNics.reduce((map, nic) => { map[nic.id] = nic; return map; }, {}), [hostNics]);
 
   // 네트워크 인터페이스 목록
   const transNicData = transNic(baseItems.nic, nicMap);
   const transNAData = transNA(networkAttachments, networks);
   const transDetachNetworkData = transDetachNA(networks, networkAttachments);
 
+  // 초기화
+  const resetState = useCallback(() => {
+    setBaseItems({
+      nic: [...hostNics],
+      networkAttachment: transNAData,
+      network: transDetachNetworkData,
+    });
+    setMovedItems({ 
+      nic: [], 
+      networkAttachment: [], 
+      network: [] 
+    });
+    setDragItem(null);
+    setDragItemFlag(false);
+    setCancelFlag(false);
+    setDragOverTarget(null);
+    setModifiedBonds([]);
+    setRemoveBonds([]);
+    setModifiedNAs([]);
+    setRemoveNAs([]);
+  }, [hostNics, transNAData, transDetachNetworkData]);
+
   // 초기화면 (!editMode)
   useEffect(() => {
     if (!dragItemFlag && hostNics.length > 0 && networkAttachments.length >= 0 && networks.length >= 0) {
-      setBaseItems({
-        nic: [...hostNics],
-        networkAttachment: transNAData,
-        network: transDetachNetworkData,
-      });
-      setMovedItems({
-        nic: [], 
-        networkAttachment: [], 
-        network: []
-      });
-      setDragItem(null);
-      setDragItemFlag(false);
-      setCancelFlag(false);
-      setDragOverTarget(null);
-      setModifiedBonds([]);
-      setRemoveBonds([]);
-      setModifiedNAs([]);
-      setRemoveNAs([]);
+      resetState();
     }
     // eslint-disable-next-line
   }, [hostId, hostNics, networkAttachments, networks]);
@@ -127,14 +151,14 @@ const HostNics = ({
   // 드래그 항목에 대한 cancelFlag 처리
   useEffect(() => {
     setCancelFlag(baseItems.networkAttachment.length === 0 && movedItems.networkAttachment.length === 0);
-  }, [movedItems]);
+  }, [baseItems, movedItems]);
   
 
   // 전송
   const handleFormSubmit = () => {
     // 본딩되는 slave NIC의 이름/ID 추출
     const bondedSlaveNames = modifiedBonds
-      .flatMap(bond => bond.bondingVo.slaves.map(s => s.name));
+      .flatMap(bond => bond.bondingVo.slaveVos.map(s => s.name));
 
     // "networkAttachments"에 slave NIC에 붙어있던 네트워크 제거
     const filteredModifiedNAs = modifiedNAs.filter(na =>
@@ -142,15 +166,14 @@ const HostNics = ({
       !(bondedSlaveNames.includes(na.hostNicVo.name) && !na.hostNicVo.name.startsWith("bond"))
     );
 
-    const filteredRemoveNAs = removeNAs.filter(
-      na => !modifiedNAs.some(mod => mod.id === na.id)
-    );
+    const filteredRemoveNAs = removeNAs.filter(na => !modifiedNAs.some(mod => mod.id === na.id));
     
     const hostNetworkVo = {
       bonds: modifiedBonds.map(bond => ({
         name: bond.name,
         bondingVo: {
-          slaves: bond.bondingVo.slaves.map(slave => ({ name: slave.name }))
+          slaveVos: bond.bondingVo.slaveVos.map(slave => ({ name: slave.name })),
+          optionVos: bond.bondingVo.optionVos.map(option => ({ name: option.name, value: option.value  }))
         }
       })),
       bondsToRemove: removeBonds.map(bond => ({ name: bond.name })),
@@ -165,10 +188,10 @@ const HostNics = ({
     Logger.debug(`hostSetup handleFormSubmit ... dataToSubmit: `, hostNetworkVo); // 데이터 출력
     setupNetwork({ hostId: hostId, hostNetworkVo: hostNetworkVo });
 
-    setMovedItems({
+    setMovedItems({ 
       nic: [], 
       networkAttachment: [], 
-      network: []
+      network: [] 
     });
     setDragItem(null);
     setDragItemFlag(false);
@@ -218,9 +241,12 @@ const HostNics = ({
 
   // networkAttachment 안의 networkVo 찾는 함수
   const findNetworkAttachment = (networkId) => {
-    return baseItems.networkAttachment.find(na => na.networkVo.id === networkId)
-      ?? movedItems.networkAttachment.find(na => na.networkVo.id === networkId);
+    return (
+      baseItems.networkAttachment.find(na => na?.networkVo?.id === networkId)
+      ?? movedItems.networkAttachment.find(na => na?.networkVo?.id === networkId)
+    );
   };
+
 
   
   // 변경 감지를 위한 유틸리티 함수들
@@ -240,36 +266,39 @@ const HostNics = ({
     
     // 현재 본딩된 NIC들 찾기
     const currentBonds = currentNics.filter(nic => 
-      nic.name.startsWith("bond") && nic.bondingVo?.slaves?.length > 0
+      nic.name.startsWith("bond") && nic.bondingVo?.slaveVos?.length > 0
     );
     
     // 초기 본딩된 NIC들 찾기
     const initialBonds = initialNics.filter(nic => 
-      nic.name.startsWith("bond") && nic.bondingVo?.slaves?.length > 0
+      nic.name.startsWith("bond") && nic.bondingVo?.slaveVos?.length > 0
     );
     
     currentBonds.forEach(currentBond => {
       const initialBond = initialBonds.find(nic => nic.name === currentBond.name);
-      
+
       if (!initialBond) {
-        // 새로 생성된 본딩
         newModifiedBonds.push(currentBond);
       } else {
-        // 기존 본딩에서 slave 구성이 변경되었는지 확인
-        const initialSlaveIds = new Set(initialBond.bondingVo?.slaves?.map(s => s.id) || []);
-        const currentSlaveIds = new Set(currentBond.bondingVo?.slaves?.map(s => s.id) || []);
-        
-        const hasChanges = initialSlaveIds.size !== currentSlaveIds.size ||
+        // 기존 slave 비교와 옵션(optionVos) 비교를 모두 반영
+        const initialSlaveIds = new Set(initialBond.bondingVo?.slaveVos?.map(s => s.id) || []);
+        const currentSlaveIds = new Set(currentBond.bondingVo?.slaveVos?.map(s => s.id) || []);
+        const hasSlaveChanges = initialSlaveIds.size !== currentSlaveIds.size ||
           [...initialSlaveIds].some(id => !currentSlaveIds.has(id)) ||
           [...currentSlaveIds].some(id => !initialSlaveIds.has(id));
-        
-        if (hasChanges) {
+
+        // 옵션이 바뀌었는지까지 체크(여기서만 true일 때만 추가)
+        const initialOption = initialBond.bondingVo?.optionVos?.find(opt => opt.name === "mode")?.value;
+        const currentOption = currentBond.bondingVo?.optionVos?.find(opt => opt.name === "mode")?.value;
+        const hasOptionChange = initialOption !== currentOption;
+
+        if (hasSlaveChanges || hasOptionChange) {
           newModifiedBonds.push(currentBond);
         }
       }
     });
-    
-    // *** 삭제된 본딩 찾기 - 여기가 핵심 수정 부분 ***
+
+    // 삭제된 본딩 찾기
     initialBonds.forEach(initialBond => {
       const currentBond = currentBonds.find(bond => bond.name === initialBond.name);
       if (!currentBond) {
@@ -319,12 +348,11 @@ const HostNics = ({
         na.networkVo.id === initialNA.networkVo.id
       );
       if (!naInCurrent && !stillExistsSomewhere) {
-        // 네트워크가 현재 어디에도 연결 안됨(진짜 해제)
+        // 네트워크가 현재 어디에도 연결 안됨
         if (initialNA.id) {
           newRemoveNAs.push({ id: initialNA.id });
         }
       }
-      // 만약 stillExistsSomewhere === true면, 다른 NIC로 이동된 것이므로 removeNAs에 추가하면 안됨!
     });
 
     return {
@@ -339,13 +367,19 @@ const HostNics = ({
   useEffect(() => {
     if (dragItemFlag) {
       const changes = compareAndExtractChanges();
+
       setModifiedBonds(changes.modifiedBonds);
       setRemoveBonds(changes.removeBonds);
       setModifiedNAs(changes.modifiedNAs);
       setRemoveNAs(changes.removeNAs);
 
       // 변경 사항이 없으면 dragItemFlag을 false로
-      if (isNoChange(changes)) {
+      if (
+        (!changes.modifiedBonds || changes.modifiedBonds.length === 0) &&
+        (!changes.removeBonds || changes.removeBonds.length === 0) &&
+        (!changes.modifiedNAs || changes.modifiedNAs.length === 0) &&
+        (!changes.removeNAs || changes.removeNAs.length === 0)
+      ) {
         setDragItemFlag(false);
       }
     }
@@ -398,19 +432,18 @@ const HostNics = ({
       // 이미 존재하는 경우, 네트워크 이름 추가
       if (prev.find(entry => entry.hostNicVo.name === newAttachment.hostNicVo.name)) { 
         return prev.map(entry => entry.hostNicVo.name === newAttachment.hostNicVo.name
-            ? {
-                ...entry,
-                networkVo: Array.isArray(entry.networkVo)
-                  ? [...entry.networkVo, newAttachment.networkVo]
-                  : [entry.networkVo, newAttachment.networkVo]
-              }
-            : entry
+          ? {
+              ...entry,
+              networkVo: Array.isArray(entry.networkVo)
+                ? [...entry.networkVo, newAttachment.networkVo]
+                : [entry.networkVo, newAttachment.networkVo]
+            }
+          : entry
         );
       } else { // 신규 항목인 경우, 배열로 초기화
         return [...prev, { hostNicVo: newAttachment.hostNicVo, networkVo: newAttachment.networkVo }];
       }
     });
-
     setDragItemFlag(true);
   };
 
@@ -424,12 +457,12 @@ const HostNics = ({
    */
   const handleDropBetweenNetworkToNic = (draggedNetwork, nicId, nicName) => {
     // 1. 기존 NA 찾기
-    const draggedNA = findNetworkAttachment(draggedNetwork.id);
+    const draggedNetworkId = draggedNetwork?.networkVo?.id || draggedNetwork?.id;
+    const draggedNA = findNetworkAttachment(draggedNetworkId);
     if (!draggedNA) return;
 
-    console.log('%% draggedNA', draggedNA);
     // 2. 이미 같은 NIC에 붙어있으면 무시
-    if (draggedNA.hostNicVo.id === nicId) {
+    if (draggedNA.hostNicVo?.id === nicId) {
       return;
     }
 
@@ -445,36 +478,40 @@ const HostNics = ({
     const updatedNA = {
       ...draggedNA,
       hostNicVo: { id: nicId, name: nicName },
-      // networkVo 등 필요한 필드 유지
     };
 
-    // 4. baseItems와 movedItems에서 기존 NA 제거
+    // 3. baseItems와 movedItems에서 기존 NA 제거 (방어 코드)
     setBaseItems(prev => ({
       ...prev,
-      networkAttachment: prev.networkAttachment.filter(
-        na => !(na.networkVo.id === draggedNetwork.id && na.hostNicVo.id === draggedNA.hostNicVo.id)
+      networkAttachment: prev.networkAttachment.filter(na =>
+        !(
+          na?.networkVo?.id === draggedNetworkId &&
+          na?.hostNicVo?.id === draggedNA?.hostNicVo?.id
+        )
       )
     }));
 
     setMovedItems(prev => ({
       ...prev,
       networkAttachment: [
-        ...prev.networkAttachment.filter(
-          na => !(na.networkVo.id === draggedNetwork.networkVo.id && na.hostNicVo.id === draggedNA.hostNicVo.id)
+        ...prev.networkAttachment.filter(na =>
+          !(
+            na?.networkVo?.id === draggedNetworkId &&
+            na?.hostNicVo?.id === draggedNA?.hostNicVo?.id
+          )
         ),
         updatedNA
       ]
     }));
 
-    console.log('%% modifiedNAs', modifiedNAs);
-
     setModifiedNAs(prev => [
-      ...prev.filter(na => na.id !== draggedNA.id),
+      ...prev.filter(na => na?.id !== draggedNA?.id),
       updatedNA
     ]);
     setDragItemFlag(true);
     toast({ description: "NIC간 네트워크 이동!" });
   };
+
 
 
   /**
@@ -547,7 +584,7 @@ const HostNics = ({
       return;
     }
 
-    const isAlreadyBonded = nic => nic.name.startsWith("bond") || (nic.bondingVo?.slaves?.length > 0);
+    const isAlreadyBonded = nic => nic.name.startsWith("bond") || (nic.bondingVo?.slaveVos?.length > 0);
     if (isAlreadyBonded(sourceNic) || isAlreadyBonded(targetNic)) {
       toast({
         variant: "destructive",
@@ -586,8 +623,7 @@ const HostNics = ({
       }
     });
 
-    setEditBondingMode(false); // 본딩 생성 모드
-    setIsBondingPopup(true);   // 본딩 모달 오픈
+    onCreateBonding(sourceNic, targetNic);
     toast({ description: "handleDropNicForBonding" });
   };
 
@@ -599,7 +635,7 @@ const HostNics = ({
    * @returns 
    */
   const handleAddBaseNicToBond = (dragged, targetBond) => {
-    if (dragged.name.startsWith("bond") || (dragged.bondingVo?.slaves?.length > 0)) {
+    if (dragged.name.startsWith("bond") || (dragged.bondingVo?.slaveVos?.length > 0)) {
       toast({
         variant: "destructive",
         title: "문제가 발생하였습니다.",
@@ -615,7 +651,7 @@ const HostNics = ({
       // 기존 slaves 복제 및 baseNic 추가
       const oldBond = prev.nic[bondIndex];
       const updatedSlaves = [
-        ...(oldBond.bondingVo?.slaves || []),
+        ...(oldBond.bondingVo?.slaveVos || []),
         {
           id: dragged.id,
           name: dragged.name,
@@ -628,7 +664,7 @@ const HostNics = ({
         ...oldBond,
         bondingVo: {
           ...oldBond.bondingVo,
-          slaves: updatedSlaves,
+          slaveVos: updatedSlaves,
         }
       };
 
@@ -648,8 +684,8 @@ const HostNics = ({
         ...updatedBond,
         bondingVo: {
           ...updatedBond.bondingVo,
-          slaves: [
-            ...(updatedBond.bondingVo?.slaves || []),
+          slaveVos: [
+            ...(updatedBond.bondingVo?.slaveVos || []),
             {
               id: dragged.id,
               name: dragged.name,
@@ -680,7 +716,7 @@ const HostNics = ({
    * @param {*} parentBond 
    */
   const handleDropBond = (slaveNic, parentBond) => {
-    const allSlaves = parentBond.bondingVo.slaves || [];
+    const allSlaves = parentBond.bondingVo.slaveVos || [];
 
     // 1. 본딩에 연결된 Network Attachments 찾기
     const bondNetworks = [...baseItems.networkAttachment, ...movedItems.networkAttachment]
@@ -696,7 +732,11 @@ const HostNics = ({
             name: s.name,
             status: s.status,
             macAddress: s.macAddress,
-            bondingVo: { activeSlave: null, slaves: [] }
+            bondingVo: { 
+              activeSlaveVo: null, 
+              slaveVos: [], 
+              optionVos: [] 
+            }
           }));
 
         const restoredNetworks = bondNetworks.map(na => {
@@ -743,12 +783,22 @@ const HostNics = ({
           name: slaveNic.name,
           status: slaveNic.status,
           macAddress: slaveNic.macAddress,
-          bondingVo: { activeSlave: null, slaves: [] }
+          bondingVo: { 
+            activeSlaveVo: null, 
+            slaveVos: [], 
+            optionVos: [] 
+          }
         }] : [];
 
         const newNics = prev.nic.map(nic =>
           nic.name === parentBond.name
-            ? { ...nic, bondingVo: { ...nic.bondingVo, slaves: remainSlaves } }
+            ? { ...nic, 
+                bondingVo: { 
+                  ...nic.bondingVo, 
+                  slaveVos: remainSlaves,
+                  optionVos: []
+                } 
+              }
             : nic
         );
 
@@ -760,7 +810,13 @@ const HostNics = ({
 
       setModifiedBonds(prev => prev.map(bond =>
         bond.name === parentBond.name
-          ? { ...bond, bondingVo: { ...bond.bondingVo, slaves: remainSlaves } }
+          ? { ...bond, 
+            bondingVo: { 
+              ...bond.bondingVo, 
+              slaveVos: remainSlaves,
+              optionVos: []
+            } 
+          }
           : bond
       ));
       setDragItemFlag(true);
@@ -768,12 +824,44 @@ const HostNics = ({
     }
   };
   
-
   /**
    * 본딩 시도시 열릴 모달에 들어갈 값
    */
   const createBondingData = useCallback((newBond, nicData) => {
-    const slaveIds = newBond.bondingVo.slaves.map(s => s.id);
+    if (editBondingMode && selectedNic) {
+      setBaseItems(prev => {
+        const nicsWithoutSelected = prev.nic.filter(nic => nic.name !== selectedNic.name && nic.id !== selectedNic.id);        return {
+          ...prev,
+          nic: [
+            ...nicsWithoutSelected,
+            { ...selectedNic, bondingVo: { ...selectedNic.bondingVo, optionVos: newBond.bondingVo.optionVos } }
+          ]
+        };
+      });
+      setModifiedBonds(prev => [
+        ...prev.filter(bond => bond.name !== newBond.name),
+        { ...selectedNic, bondingVo: { ...selectedNic.bondingVo, optionVos: newBond.bondingVo.optionVos } }
+      ]);
+      setDragItemFlag(true);
+      setIsBondingPopup(false);
+      toast({ description: "본딩 모드가 변경되었습니다." });
+      return;
+    }
+
+    if (!nicData) {
+      toast({
+        variant: "destructive",
+        title: "에러",
+        description: "본딩할 NIC 데이터가 없습니다.",
+      });
+      return;
+    }
+
+    const optionVoDetails = newBond.bondingVo.optionVos.map(option => ({
+      name : option.name,
+      value: option.value
+    }));
+    const slaveIds = newBond.bondingVo.slaveVos.map(s => s.id);
     const slavesDetail = baseItems.nic.filter(nic => slaveIds.includes(nic.id)).map(nic => ({
       id: nic.id,
       name: nic.name,
@@ -782,8 +870,11 @@ const HostNics = ({
     }));
 
     const bondNic = {
-      name: newBond.name,  // 본딩 이름 (예: bond1)
-      bondingVo: { slaves: slavesDetail },
+      name: newBond?.name,  // 본딩 이름 (예: bond1)
+      bondingVo: { 
+        optionVos: optionVoDetails,
+        slaveVos: slavesDetail
+      },
     };
 
     // 기존 NIC의 네트워크 목록을 본딩 NIC에 연결하기 위한 처리
@@ -803,15 +894,14 @@ const HostNics = ({
     );
 
     setBaseItems(prev => {
-      const newNicList = prev.nic.filter(nic => !slaveIds.includes(nic.id));
-
+      const filtered = prev.nic.filter(nic => nic.name !== bondNic.name && !slaveIds.includes(nic.id));
       const updatedNetworkAttachments = prev.networkAttachment
         .filter(na => !slaveIds.includes(na.hostNicVo?.id))  // 기존 NIC에 연결된 네트워크 제외
         .concat(transferredNetworks);  // 새 본딩 NIC으로 네트워크 옮김
 
       return {
         ...prev,
-        nic: [...newNicList, bondNic],
+        nic: [...filtered, bondNic],
         networkAttachment: updatedNetworkAttachments
       };
     });
@@ -830,7 +920,6 @@ const HostNics = ({
     setIsBondingPopup(false);
     toast({ description: "본딩과 함께 네트워크가 이동되었습니다." });
   }, [baseItems.nic, baseItems.networkAttachment]);
-
 
 
   /**
@@ -974,15 +1063,14 @@ const HostNics = ({
                 <div className="col-40 fs-18" 
                   onDragOver={(e) => e.preventDefault()}
                 >
-                  {nic.bondingVo?.slaves?.length > 0 
+                  {nic.bondingVo?.slaveVos?.length > 0 
                     ? <BondNic
                         nic={nic}
                         dragItem={dragItem}
                         handleDragStart={handleDragStart}
                         handleAddBaseNicToBond={handleAddBaseNicToBond}
                         setSelectedNic={setSelectedNic}
-                        setEditBondingMode={setEditBondingMode}
-                        setIsBondingPopup={setIsBondingPopup}
+                        onEditBonding={onEditBonding}
                       />
                     : <BaseNic
                         nic={nic}
@@ -1047,17 +1135,17 @@ const HostNics = ({
         </div>
       </div>
       <br/>
-      <LabelCheckbox id="connection" label={`${Localization.kr.HOST}와 Engine간의 연결을 확인`}
+      {/* <LabelCheckbox id="connection" label={`${Localization.kr.HOST}와 Engine간의 연결을 확인`}
         value={connection}
         onChange={(e) => setConnection(e.target.checked)}
       />
       <LabelCheckbox id="networkSetting" label={`${Localization.kr.NETWORK} 설정 저장`}
         value={setting}
         onChange={(e) => setSetting(e.target.checked)}
-      />
+      /> */}
 
       <br/>
-      <span>modifiedBonds: {modifiedBonds.map((e) => `[${e.name}: ${e.bondingVo.slaves.map((s) => s?.name)}]`)}</span><br/>
+      <span>modifiedBonds: {modifiedBonds.map((e) => `[${e.name}: ${e.bondingVo.slaveVos.map((s) => s?.name)}]`)}</span><br/>
       <span>removeBonds: {removeBonds.map((e) => `${e.name}, `)}</span><br/>
       <span>modifiedNAs: {modifiedNAs.map(e => `[${e.hostNicVo.name}: ${Array.isArray(e.networkVo) ? e.networkVo.map(net => net.name).join(", ") : e.networkVo.name}]`)}</span><br/>
       <span>removeNAs: {removeNAs.map((e) => `${e.id}, `)}</span><br/>
@@ -1065,32 +1153,20 @@ const HostNics = ({
       
       <Suspense fallback={<Loading />}>
         <HostBondingModal
-          editmode={editBondingMode}
+          editMode={editBondingMode}
           isOpen={isBondingPopup}
           onClose={() => {
             setIsBondingPopup(false);
-            setEditBondingMode(false);
-            setSelectedNic(null);
-            setSelectedBond(null);
+            // resetState();
+            // setBondModalState({
+            //   name: "",
+            //   optionMode: "1",
+            //   userMode: "",
+            //   editTarget: null
+            // });
           }}
-          nicData={
-            editBondingMode 
-            ? selectedNic ? [selectedNic] : []
-            : selectedBond
-              ? [
-                  {
-                    ...selectedBond.nic1,
-                    networks: [...baseItems.networkAttachment, ...movedItems.networkAttachment]
-                      .filter(na => na.hostNicVo.id === selectedBond.nic1.id)
-                  },
-                  {
-                    ...selectedBond.nic2,
-                    networks: [...baseItems.networkAttachment, ...movedItems.networkAttachment]
-                      .filter(na => na.hostNicVo.id === selectedBond.nic2.id)
-                  }
-                ]
-              : []
-          }
+          bondModalState={bondModalState}
+          setBondModalState={setBondModalState}
           onBondingCreated={createBondingData}
         />
         <HostNetworkEditModal

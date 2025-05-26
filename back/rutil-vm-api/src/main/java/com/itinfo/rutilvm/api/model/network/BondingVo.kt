@@ -19,23 +19,23 @@ private val log = LoggerFactory.getLogger(BondingVo::class.java)
 
 class BondingVo (
     val adPartnerMacAddress: String = "",
-    val activeSlave: IdentifiedVo = IdentifiedVo(),  // hostNicvo
+    val activeSlaveVo: IdentifiedVo = IdentifiedVo(),  // hostNicvo
     val optionVos: List<OptionVo> = listOf(),
-    val slaves: List<IdentifiedVo> = listOf(),  // hostNic
+    val slaveVos: List<IdentifiedVo> = listOf(),  // hostNic
 ): Serializable {
     override fun toString(): String = gson.toJson(this)
 
     class Builder{
         private var bAdPartnerMacAddress: String = ""; fun adPartnerMacAddress(block: () -> String?) { bAdPartnerMacAddress = block() ?: "" }
-        private var bActiveSlave: IdentifiedVo = IdentifiedVo(); fun activeSlave(block: () -> IdentifiedVo?) { bActiveSlave = block() ?: IdentifiedVo() }
+        private var bActiveSlaveVo: IdentifiedVo = IdentifiedVo(); fun activeSlaveVo(block: () -> IdentifiedVo?) { bActiveSlaveVo = block() ?: IdentifiedVo() }
         private var bOptionVos: List<OptionVo> = listOf(); fun optionVos(block: () -> List<OptionVo>?) { bOptionVos = block() ?: listOf() }
-        private var bSlaves: List<IdentifiedVo> = listOf(); fun slaves(block: () -> List<IdentifiedVo>?) { bSlaves = block() ?: listOf() }
+        private var bSlavesVos: List<IdentifiedVo> = listOf(); fun slaveVos(block: () -> List<IdentifiedVo>?) { bSlavesVos = block() ?: listOf() }
 
-        fun build(): BondingVo = BondingVo(bAdPartnerMacAddress, bActiveSlave, bOptionVos, bSlaves)
+        fun build(): BondingVo = BondingVo(bAdPartnerMacAddress, bActiveSlaveVo, bOptionVos, bSlavesVos)
     }
 
     companion object{
-        inline fun builder(block: BondingVo.Builder.() -> Unit): BondingVo =  BondingVo.Builder().apply(block).build()
+        inline fun builder(block: Builder.() -> Unit): BondingVo =  Builder().apply(block).build()
     }
 }
 
@@ -49,7 +49,7 @@ fun Bonding.toBondingVo(conn: Connection, hostId: String): BondingVo {
     } else listOf()
 
     return BondingVo.builder {
-        activeSlave {
+        activeSlaveVo {
             if (this@toBondingVo.activeSlavePresent()) {
                 val activeSlaveId = this@toBondingVo.activeSlave().id()
                 val nic = conn.findNicFromHost(hostId, activeSlaveId).getOrNull()
@@ -57,9 +57,11 @@ fun Bonding.toBondingVo(conn: Connection, hostId: String): BondingVo {
             } else null
         }
         optionVos {
-            if (this@toBondingVo.optionsPresent()) this@toBondingVo.options().toOptionVos() else listOf()
+            if (this@toBondingVo.optionsPresent()) {
+				this@toBondingVo.options().toOptionVos()
+			} else listOf()
         }
-        slaves { slaves }
+        slaveVos { slaves }
     }
 }
 
@@ -68,12 +70,10 @@ fun Bonding.toBondingVo(conn: Connection, hostId: String): BondingVo {
  */
 fun BondingVo.toBondingBuilder(): BondingBuilder {
     return BondingBuilder()
-        .options(toDefaultOption()) // 기본 옵션지정 mode1
-		.slaves(this.slaves.map { slave ->
-			HostNicBuilder().name(slave.name).build()
-		})
+        .options(this.optionVos.toOptions())
+		.slaves(this.slaveVos.map { HostNicBuilder().name(it.name).build() })
 }
 
 // 호스트 네트워크 설정 - 본딩 인터페이스 생성
 fun BondingVo.toBonding(): Bonding =
-    this@toBonding.toBondingBuilder().build()
+    this.toBondingBuilder().build()

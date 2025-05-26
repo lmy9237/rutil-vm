@@ -177,7 +177,7 @@ const ClusterModal = ({
         options={datacenters}
         onChange={handleSelectIdChange(setDataCenterVo, datacenters) }
       />
-      <hr />
+      {/* <hr /> */}
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
         value={formState.name}
@@ -198,7 +198,6 @@ const ClusterModal = ({
         options={networks}
         onChange={handleSelectIdChange(setNetworkVo, networks)}
       />
-      <span>netowrk: {networkVo.name}</span>
       <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
         value={formState.cpuArc}
         options={CONSTANT.cpuArcs}

@@ -1,5 +1,4 @@
-import React, { useCallback } from "react";
-import { useToast }            from "@/hooks/use-toast";
+import React from "react";
 import useGlobal               from "@/hooks/useGlobal";
 import useSearch               from "@/hooks/useSearch";
 import SelectedIdView from "../../../components/common/SelectedIdView";
@@ -9,7 +8,6 @@ import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import TableRowClick from "../../../components/table/TableRowClick";
 import { checkZeroSizeToMbps } from "../../../util";
 import { useNetworkInterfacesFromHost } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
 import { RVI16, rvi16TriangleDown, rvi16TriangleUp } from "@/components/icons/RutilVmIcons";
 
 const HostNetworkAdapter = ({

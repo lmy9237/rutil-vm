@@ -1,5 +1,4 @@
-import React, { useCallback } from "react";
-import { useToast } from "@/hooks/use-toast";
+import React from "react";
 import useGlobal from "../../../hooks/useGlobal";
 import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import useSearch from "../../../hooks/useSearch";
@@ -9,7 +8,6 @@ import TablesOuter from "../../../components/table/TablesOuter";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import { useHostDevicesFromHost } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
 
 /**
  * @name HostDevices
