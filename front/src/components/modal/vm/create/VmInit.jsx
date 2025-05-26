@@ -41,7 +41,7 @@ const VmInit = ({ formCloudState, setFormCloudState }) => {
               />
               <span className="mb-1">사용자 지정 스크립트</span>
             </div>
-            <div >
+            <div>
               <textarea name="content" cols="40" rows="8"
                 placeholder="여기에 스크립트를 입력하세요"
                 value={formCloudState.script} // script 상태와 바인딩

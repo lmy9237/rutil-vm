@@ -11,22 +11,20 @@
 }
 input[type="text"],
 input[type="number"],
-input[type="password"],
-select,.input-select select, 
-.custom-select-box {
+input[type="password"]
+/* select,.input-select select,  */
+/* .custom-select-box  */
+{
   width:55%;height:var(--h-input);
   border:var(--border-default);border-radius:1px;
   text-indent: 4px;
   color: var(--color-black);
-  outline: none;
   border-radius: 1px;
-  /* letter-spacing: -0.28px; */
 }
 textarea {
   width: 100%;
   border: var(--border-default);
   padding: 3px;
-  outline: none;
 }
 
 .password-toggle-icon {
@@ -49,7 +47,6 @@ textarea {
   text-overflow: ellipsis; 
 }
 .input-checkbox {
-  /* width: 100%; */
   width: 34%;
   padding:7px 0;
 }
@@ -66,8 +63,14 @@ input[type="radio"] {
 }
 .custom-select-wrapper button,
 .input-container input {
-  width:330px;max-width:330px;
-  margin-left: auto;
+    width: 330px;
+    max-width: 330px;
+    margin-left: auto;
+    height: var(--h-input);
+    /* border: var(--border-default); */
+    /* text-indent: 4px; */
+    border-radius: 1px;
+    color: var(--color-black);
 }
 
 .input-container button {

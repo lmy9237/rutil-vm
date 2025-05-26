@@ -31,11 +31,27 @@ const VmNic = ({
     setNicsState(updated);
   };
 
+  // const handleAdd = () => {
+  //   const newNic = {
+  //     id: "",
+  //     name: `nic${nicsState.length + 1}`,
+  //     vnicProfileVo: { id: "", },
+  //   };
+  //   setNicsState([...nicsState, newNic]);
+  // };
   const handleAdd = () => {
+    const lastIndex = Math.max(
+      0,
+      ...nicsState
+        .map(nic => parseInt(nic.name?.replace("nic", ""), 10))
+        .filter(n => !isNaN(n))
+    );
+    const nextName = `nic${lastIndex + 1}`;
+
     const newNic = {
       id: "",
-      name: `nic${nicsState.length + 1}`,
-      vnicProfileVo: { id: "", },
+      name: nextName,
+      vnicProfileVo: { id: "" },
     };
     setNicsState([...nicsState, newNic]);
   };

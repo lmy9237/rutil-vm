@@ -207,6 +207,9 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 		priority { template.highAvailability().priorityAsInteger() }
 		usb { template.usb().enabled() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
+		startPaused { template.startPaused() }
+		stateless { template.stateless() }
+		deleteProtected { template.deleteProtected() }
 	}
 }
 
@@ -283,6 +286,12 @@ fun TemplateVo.toEditTemplate(): Template {
 		.os(OperatingSystemBuilder().type(osSystem))
 		.bios(BiosBuilder().type(BiosType.fromValue(chipsetFirmwareType)))
 		.type(VmType.fromValue(optimizeOption))
+		.vm(
+			VmBuilder()
+				.stateless(stateless)
+				.startPaused(startPaused)
+				.deleteProtected(deleteProtected)
+		)
 		.build()
 }
 

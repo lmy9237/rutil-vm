@@ -5,7 +5,7 @@ import useUIState       from "@/hooks/useUIState";
 import useGlobal        from "@/hooks/useGlobal";
 import useClickOutside  from "@/hooks/useClickOutside";
 import { openNewTab }   from "@/navigation";
-import { useRemoteViewerConnectionFileFromVm } from "@/api/RQHook";
+import { useRemoteViewerConnectionFileFromVm, useSnapshotsFromVM } from "@/api/RQHook";
 import { ActionButtons, ActionButton } from "@/components/button/ActionButtons";
 import {
   RVI16,
@@ -15,6 +15,8 @@ import {
 } from "@/components/icons/RutilVmIcons";
 import Localization from "@/utils/Localization";
 import Logger from "@/utils/Logger";
+import toast from "react-hot-toast";
+import { useToast } from "@/hooks/use-toast";
 
 /**
  * @name VmActionButtons
@@ -31,6 +33,7 @@ const VmActionButtons = ({
   const { setActiveModal, setContextMenu } = useUIState()
   const { vmsSelected } = useGlobal()
   const isContextMenu = actionType === "context";
+  const { toast } = useToast();
   
   const [mgmtDropdownActive, setMgmtDropdownActive] = useState(false);
   const toggleMgmtDropdown = () => setMgmtDropdownActive((prev) => !prev);
@@ -67,7 +70,13 @@ const VmActionButtons = ({
     e.preventDefault();
     downloadRemoteViewerConnectionFileFromVm(selected1st?.id)
   }
-  
+
+  // 스냅샷 미리보기 있으면 가상머신 시작 취소
+  const { data: snapshots = [] } = useSnapshotsFromVM(selected1st?.id, (e) => ({ ...e }));
+  const hasPreviewSnapshot = useMemo(() => {
+    return snapshots.some(s => s.status === "in_preview");
+  }, [snapshots]);
+
   const manageActions = [
     // { type: "import", label: Localization.kr.IMPORT, },
     { type: "copy",       onClick: () => setActiveModal("vm:copy"), label: `${Localization.kr.VM} 복제`, disabled: vmsSelected.length !== 1 || allPause },
@@ -84,7 +93,17 @@ const VmActionButtons = ({
   const basicActions = [
     { type: "create",     onClick: () => setActiveModal("vm:create"),      label: Localization.kr.CREATE,                                  disabled: isContextMenu && vmsSelected.length > 0 },
     { type: "update",     onClick: () => setActiveModal("vm:update"),      label: Localization.kr.UPDATE,                                  disabled: vmsSelected.length !== 1 },
-    { type: "start",      onClick: () => setActiveModal("vm:start"),       label: Localization.kr.START,                                   disabled: !(isDown || isPause || isMaintenance) },
+    { type: "start",       onClick: () => {
+   if (hasPreviewSnapshot) {
+      toast({
+        variant: "destructive",
+        title: "문제가 발생하였습니다.",
+        description: "부팅 가능한 디스크가 최소 1개는 있어야 합니다.",
+      });
+      return;
+    }
+    setActiveModal("vm:start");
+  }, label: Localization.kr.START,                                   disabled: !(isDown || isPause || isMaintenance) },
     { type: "pause",      onClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
     { type: "reboot",     onClick: () => setActiveModal("vm:reboot"),      label: Localization.kr.REBOOT,                                  disabled: !allUp },
     { type: "reset",      onClick: () => setActiveModal("vm:reset"),       label: Localization.kr.RESET,                                   disabled: !allUp },

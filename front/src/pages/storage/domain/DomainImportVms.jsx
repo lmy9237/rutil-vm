@@ -57,15 +57,17 @@ const DomainImportVms = ({ domainId }) => {
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={refetchVms} />
         <div className="header-right-btns">
-          <ActionButton label={Localization.kr.IMPORT}
+          <ActionButton 
+            label="도메인에서 가져오기"
             actionType="default"
-            disabled={vmsSelected.length === 0} 
-            onClick={() => setActiveModal("domainvm:importVm")}
+            disabled={vmsSelected.length === 0}
+            onClick={() => setActiveModal("vm:domainvmimport")}
           />
-          <ActionButton label={Localization.kr.REMOVE}
+           <ActionButton
+            label={Localization.kr.REMOVE}
             actionType="default"
-            disabled={vmsSelected.length === 0} 
-            onClick={() => setActiveModal("domainvm:remove")}
+            disabled={vmsSelected.length === 0}
+            onClick={() => setActiveModal("vm:remove")}
           />
         </div>
       </div>
@@ -86,7 +88,7 @@ const DomainImportVms = ({ domainId }) => {
       />
       <Suspense fallback={<Loading />}>
         {/* 가상머신 가져오기 모달 -> DomainImporttemplates에서도 쓰고있어서 domainmodals에 어떻게 써야하나! */}
-        {activeModal().includes("domainvm:importVm") && (
+        {/* {activeModal().includes("domainvm:importVm") && (
           <DomainGetVmTemplateModal
             isOpen={true}
             data={vmsSelected}
@@ -98,7 +100,7 @@ const DomainImportVms = ({ domainId }) => {
             data={vmsSelected}
             onRequestClose={() => setActiveModal(null)}
           />
-        )}
+        )} */}
       </Suspense>
     </>
   );

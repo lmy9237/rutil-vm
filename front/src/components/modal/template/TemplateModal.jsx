@@ -269,11 +269,11 @@ const TemplateModal = ({
                     <th >{Localization.kr.ALIAS}</th>
                     <th>가상 크기</th>
                     <th >포맷</th>
-                    <th >{Localization.kr.TARGET}</th>
+                    <th style={{width:"240px"}}>{Localization.kr.TARGET}</th>
                     <th >{Localization.kr.DISK_PROFILE}</th>
                   </tr>
                 </thead>
-                <tbody>
+                {/* <tbody>
                   {diskVoList.map((disk, index) => (
                     <tr key={disk.id}>
                       <td>
@@ -331,7 +331,82 @@ const TemplateModal = ({
                       </td>
                     </tr>
                   ))}
+                </tbody> */}
+                <tbody>
+                  {diskVoList.map((disk, index) => {
+                    const storageDomainId = disk.diskImageVo?.storageDomainVo?.id || "";
+                    const diskProfileId = disk.diskImageVo?.diskProfileVo?.id || "";
+
+                    const availableDomains = domains.filter((d) => d.status === "ACTIVE");
+                    const selectedDomain = availableDomains.find((d) => d.id === storageDomainId);
+
+                    const profileOptions = diskProfilesList[storageDomainId] || [];
+                    const selectedProfile = profileOptions.find((p) => p.id === diskProfileId);
+
+                    return (
+                      <tr key={disk.id}>
+                        {/* 디스크 이름 */}
+                        <td>
+                          <LabelInput
+                            label=""
+                            value={disk.diskImageVo?.alias || ""}
+                            onChange={(e) => handleDiskChange(index, "alias", e.target.value)}
+                          />
+                        </td>
+
+                        {/* 가상 크기 */}
+                        <td>{checkZeroSizeToGiB(disk.diskImageVo?.virtualSize)}</td>
+
+                        {/* 포맷 */}
+                        <td>
+                          <LabelSelectOptions
+                            id={`diskFormat-${index}`}
+                            value={disk.diskImageVo?.format}
+                            options={formats}
+                            onChange={(e) => handleDiskChange(index, "format", e.target.value)}
+                          />
+                        </td>
+
+                        {/* 스토리지 도메인 선택 */}
+                        <td>
+                          <LabelSelectOptionsID
+                            className="template-input"
+                            value={selectedDomain?.id || ""}
+                            loading={isDomainsLoading}
+                            options={availableDomains}
+                            onChange={(selected) => {
+                              handleDiskChange(index, "storageDomainVo", selected, true);
+                              const newProfiles = diskProfilesList[selected.id] || [];
+                              if (newProfiles.length > 0) {
+                                handleDiskChange(index, "diskProfileVo", newProfiles[0], true);
+                              }
+                            }}
+                          />
+                          {selectedDomain && (
+                            <div className="text-xs text-gray-500 mt-1">
+                              사용 가능: {checkZeroSizeToGiB(selectedDomain.availableSize)} / 총 용량:{" "}
+                              {checkZeroSizeToGiB(selectedDomain.diskSize)}
+                            </div>
+                          )}
+                        </td>
+
+                        {/* 디스크 프로파일 선택 */}
+                        <td>
+                          <LabelSelectOptionsID
+                            className="template-input max-w-[130px]"
+                            value={selectedProfile?.id || ""}
+                            loading={false}
+                            options={profileOptions}
+                            onChange={(selected) =>
+                              handleDiskChange(index, "diskProfileVo", selected, true)
+                            }
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
+
               </table>
             </div>
         </>

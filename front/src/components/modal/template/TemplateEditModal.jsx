@@ -64,6 +64,19 @@ const TemplateEditModal = ({
   const { data: templateData } = useTemplate(templatesSelected[0]?.id);
   const [selectedOptimizeOption, setSelectedOptimizeOption] = useState("server"); // 칩셋 선택
  // const [selectedChipset, setSelectedChipset] = useState("Q35_OVMF"); // 칩셋 선택
+useEffect(() => {
+  if (isOpen && templateData) {
+    console.log("🧩 선택한 템플릿 정보:", templateData); 
+  }
+}, [isOpen, templateData]);
+
+useEffect(() => {
+  if (isOpen && templateData) {
+    console.log("🧩 templateData startPaused:", templateData.startPaused)
+    console.log("🧩 templateData stateless:", templateData.stateless)
+    console.log("🧩 templateData deleteProtected:", templateData.deleteProtected)
+  }
+}, [isOpen, templateData]);
 
   // 초기값설정
   useEffect(() => {
@@ -75,12 +88,13 @@ const TemplateEditModal = ({
         setDescription(template?.description || "");
         setComment(template?.comment || "");
         setOsSystem(template?.osSystem || "");
-        setStateless(template?.stateless || false); // 상태비저장
+      
         setClsuterVoId(template.clusterVo?.id || "");
         setClsuterVoName(template.clusterVo?.name || "");
         setMonitor(Number(template?.monitor ?? 1)); // ✅
-        setStartPaused(template?.startPaused || false);  // 일시정지 모드에서 시작
-        setDeleteProtected(template?.deleteProtected || false); //  삭제 방지
+ setStateless(Boolean(template?.stateless));
+setStartPaused(Boolean(template?.startPaused));
+setDeleteProtected(Boolean(template?.deleteProtected));
         setSelectedOptimizeOption(template?.optimizeOption || "server");
     //  setSelectedChipset(template?.chipsetFirmwareType || "Q35_OVMF");
       }

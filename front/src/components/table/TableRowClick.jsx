@@ -21,6 +21,9 @@ const TableRowClick = ({
 
   const handleClick = (e) => {
     Logger.debug("TableRowClick > handleClick ...");
+    if (!id) { // 빈칸이면 클릭x
+      return;
+    }
     e.stopPropagation(); // 테이블 row 클릭과 충돌 방지
 
     const paths = {
@@ -47,6 +50,7 @@ const TableRowClick = ({
       style={{ 
         display: "inline-block", 
         textAlign: "left",
+        cursor: id ? "pointer" : "default",
         ...props.style, 
       }}
     >

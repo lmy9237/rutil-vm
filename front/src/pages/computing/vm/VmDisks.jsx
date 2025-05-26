@@ -2,10 +2,13 @@ import useGlobal              from "@/hooks/useGlobal";
 import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import VmDiskDupl             from "@/components/dupl/VmDiskDupl";
 import {
-  useDisksFromVM
+  useDisksFromVM,
+  useSnapshotsFromVM
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
+import { useMemo } from "react";
+import Loading from "@/components/common/Loading";
 
 /**
  * @name VmDisks
@@ -30,13 +33,30 @@ const VmDisks = ({
     isRefetching: isDisksRefetching,
   } = useDisksFromVM(vmId, (e) => ({ ...e }));
   
+  // 스냅샷에서 미리보기(in_preview) 상태 확인
+  const {
+    data: snapshots = [],
+    isLoading: isSnapshotsLoading
+  } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
+
+  const hasPreviewSnapshot = useMemo(() => {
+    return snapshots.some(snap => snap?.status === "in_preview");
+  }, [snapshots]);
   return (
     <>
+     {isSnapshotsLoading ? (
+        <Loading />
+      ) : hasPreviewSnapshot ? (
+        <div className="text-center p-20 text-red-500 font-semibold w-full">
+          스냅샷 미리보기 상태에서는 디스크 정보를 표시할 수 없습니다.
+        </div>
+           ) : (
       <VmDiskDupl 
         vmDisks={disks}
         refetch={refetchDisks} isRefetching={isDisksRefetching}
         isLoading={isDisksLoading} isError={isDisksError} isSuccess={isDisksSuccess}
       />
+      )}
       <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
         path={`vms-disks;name=${vmsSelected[0]?.name}`} 

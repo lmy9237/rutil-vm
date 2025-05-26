@@ -19,7 +19,7 @@ import Logger from "@/utils/Logger";
  */
 const VmSnapshotActionModal = ({
   isOpen, 
-  onClose,
+  onClose, 
 }) => {
   const { toast } = useToast();
   const ACTIONS = useMemo(() => ({

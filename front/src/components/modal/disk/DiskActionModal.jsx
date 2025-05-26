@@ -168,15 +168,22 @@ const DiskActionModal = ({
                   </td>
                   <td>{disk?.virtualSize}</td>
                   <td>{disk.storageDomainVo?.name || ""}</td>
-                  <td>
-                    <LabelSelectOptionsID
+                  <td className="w-[230px]">
+                    {/* <LabelSelectOptionsID
                       value={targetDomains[disk.id] || ""}
                       options={domainList[disk.id] || []}
                       onChange={(e) => {
                         const selectedId = e.target.value;
                         setTargetDomains((prev) => ({ ...prev, [disk.id]: selectedId }));}}
+                    /> */}
+                    <LabelSelectOptionsID
+                     className="w-full"
+                      value={targetDomains[disk.id] || ""}
+                      options={domainList[disk.id] || []}
+                      onChange={(selected) => {
+                        setTargetDomains((prev) => ({ ...prev, [disk.id]: selected.id }));
+                      }}
                     />
-                    <span></span>
                   </td>
                 </tr>
               ))

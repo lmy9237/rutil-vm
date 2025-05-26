@@ -6,6 +6,7 @@ import VmModal from "../../modal/vm/VmModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteTemplate } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import DomainGetVmTemplateModal from "../domain/DomainGetVmTemplateModal";
 
 const TemplateModals = ({
   template,
@@ -33,7 +34,14 @@ const TemplateModals = ({
         onClose={() => closeModal("vm:create")}
         templateId={template?.id}
       />
-    ),
+    ), import: ( // 템플릿 가져오기모달 (도메인 상세페이지에 있음)
+      <DomainGetVmTemplateModal
+        isOpen={activeModal().includes("template:import")}
+        onClose={() => closeModal("template:import")}
+        type="template"
+      />
+  ),
+    
   };
   
   return (

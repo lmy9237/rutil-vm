@@ -36,7 +36,7 @@
 .main-outer {
   width: 100%;
   height: calc(var(--h-rutil-content) - 8px);
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 .main-outer.open {
   height: var(--h-rutil-content-footer-open) !important;
@@ -63,6 +63,7 @@
 .aside-popup {
   position: relative;
   overflow-y: auto;
+  height: calc(100% - var(--h-section-header));
 }
 
 /* 🔹본문 스타일 */
