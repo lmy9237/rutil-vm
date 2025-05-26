@@ -10,6 +10,7 @@ import com.itinfo.rutilvm.api.model.computing.HostStorageVo
 import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.model.storage.LogicalUnitVo
+import com.itinfo.rutilvm.api.ovirt.business.BondMode
 import com.itinfo.rutilvm.api.service.computing.ItHostNicService
 import com.itinfo.rutilvm.api.service.computing.ItHostOperationService
 import com.itinfo.rutilvm.api.service.computing.ItHostService

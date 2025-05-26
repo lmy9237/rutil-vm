@@ -2,6 +2,7 @@ package com.itinfo.rutilvm.api.controller.network
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.controller.BaseController
+import com.itinfo.rutilvm.api.controller.computing.HostController
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
@@ -14,6 +15,8 @@ import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.network.NetworkTemplateVo
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.network.OpenStackNetworkVo
+import com.itinfo.rutilvm.api.ovirt.business.BondMode
+import com.itinfo.rutilvm.api.ovirt.business.BondModeVo
 import com.itinfo.rutilvm.api.service.network.ItNetworkService
 import com.itinfo.rutilvm.api.service.network.ItVnicProfileService
 
@@ -385,6 +388,26 @@ class NetworkController: BaseController() {
 		return ResponseEntity.ok(iNetwork.findAllNetworkFilters())
 	}
 
+	@ApiOperation(
+		httpMethod="GET",
+		value="호스트 네트워크 본딩 옵션 목록 조회",
+		notes="호스트 네트워크 본딩 옵션 목록를 조회한다"
+	)
+	@ApiImplicitParams(
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/bondmodes")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun allBondModes(
+		// @RequestParam("isValidForVmNetwork") isValidForVmNetwork: Boolean = true,
+	): ResponseEntity<List<BondModeVo>> {
+		log.info("/networks/bondmodes ... 호스트 네트워크 본딩 옵션 목록")
+		return ResponseEntity.ok(iNetwork.findAllBondModes())
+	}
+
 
 //	@ApiOperation(
 //		httpMethod="GET",
@@ -459,8 +482,6 @@ class NetworkController: BaseController() {
 		log.info("/networks/{}/vnicProfiles ... vnicProfile 생성", networkId)
 		return ResponseEntity.ok(iVnic.add(vnicProfile))
 	}
-
-
 
 	companion object {
 		private val log by LoggerDelegate()

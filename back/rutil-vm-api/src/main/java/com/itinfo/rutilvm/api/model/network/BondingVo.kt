@@ -4,6 +4,9 @@ import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostNicToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostNicsToIdentifiedVos
+import com.itinfo.rutilvm.api.model.network.toBondMode
+import com.itinfo.rutilvm.api.model.network.toBondModeVo
+import com.itinfo.rutilvm.api.ovirt.business.BondModeVo
 import com.itinfo.rutilvm.util.ovirt.findNicFromHost
 
 import org.ovirt.engine.sdk4.Connection
@@ -12,6 +15,7 @@ import org.ovirt.engine.sdk4.builders.HostNicBuilder
 import org.ovirt.engine.sdk4.types.Bonding
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.HostNic
+import org.ovirt.engine.sdk4.types.Option
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 
@@ -23,7 +27,11 @@ class BondingVo (
     val optionVos: List<OptionVo> = listOf(),
     val slaveVos: List<IdentifiedVo> = listOf(),  // hostNic
 ): Serializable {
-    override fun toString(): String = gson.toJson(this)
+    override fun toString(): String =
+		gson.toJson(this)
+
+	val bondMode: BondModeVo?
+		get() = optionVos.toBondModeVo()
 
     class Builder{
         private var bAdPartnerMacAddress: String = ""; fun adPartnerMacAddress(block: () -> String?) { bAdPartnerMacAddress = block() ?: "" }
@@ -72,6 +80,13 @@ fun BondingVo.toBondingBuilder(): BondingBuilder {
     return BondingBuilder()
         .options(this.optionVos.toOptions())
 		.slaves(this.slaveVos.map { HostNicBuilder().name(it.name).build() })
+}
+
+fun BondingVo.toDefaultOptions(): List<Option> {
+	return listOf(
+		this@toDefaultOptions.optionVos.toBondMode().asOption(),
+		toDefaultMiimonOptionBuilder()
+	)
 }
 
 // 호스트 네트워크 설정 - 본딩 인터페이스 생성

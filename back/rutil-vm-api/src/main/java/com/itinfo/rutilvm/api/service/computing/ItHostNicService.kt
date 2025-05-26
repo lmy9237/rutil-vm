@@ -3,6 +3,7 @@ package com.itinfo.rutilvm.api.service.computing
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.*
+import com.itinfo.rutilvm.api.ovirt.business.BondMode
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 
@@ -161,7 +162,6 @@ class ItHostNicServiceImpl(
 		val res: NetworkAttachment? = conn.findNetworkAttachmentFromHost(hostId, networkAttachmentId, follow = "host,host_nic,network").getOrNull()
 		return res?.toNetworkAttachmentVo()
 	}
-
 
 	@Throws(Error::class)
 	override fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean {

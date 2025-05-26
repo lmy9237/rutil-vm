@@ -9,10 +9,13 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.fromNetworkFiltersToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromOpenStackNetworkProviderToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.*
+import com.itinfo.rutilvm.api.ovirt.business.BondMode
+import com.itinfo.rutilvm.api.ovirt.business.BondModeVo
 import com.itinfo.rutilvm.api.repository.engine.NetworkRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.DnsResolverConfigurationEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkEntity
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.api.service.computing.ItHostNicService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 
@@ -163,6 +166,14 @@ interface ItNetworkService {
 	 */
 	@Throws(Error::class)
 	fun findAllNetworkFilters(): List<IdentifiedVo>
+	/**
+	 * [ItNetworkService.findAllBondModes]
+	 * 호스트 네트워크 본딩 옵션 목록 조회
+	 *
+	 * @return List<[BondModeVo]> 호스트 네트워크 본딩 옵션 목록
+	 */
+	@Throws(Error::class)
+	fun findAllBondModes(): List<BondModeVo>
 }
 
 @Service
@@ -354,6 +365,13 @@ class NetworkServiceImpl(
 		log.info("findAllNetworkFilters ... ")
 		val res: List<NetworkFilter> = conn.findAllNetworkFilters().getOrDefault(emptyList())
 		return res.fromNetworkFiltersToIdentifiedVos()
+	}
+
+	@Throws(Error::class)
+	override fun findAllBondModes(): List<BondModeVo> {
+		log.info("findAllBondModes ... ")
+		val res: List<BondModeVo> = BondModeVo.allBondModes
+		return res
 	}
 
 

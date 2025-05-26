@@ -1,5 +1,8 @@
 package com.itinfo.rutilvm.api.model.network
 
+import com.itinfo.rutilvm.api.ovirt.business.BondMode
+import com.itinfo.rutilvm.api.ovirt.business.BondModeVo
+import com.itinfo.rutilvm.api.ovirt.business.toBondModeVo
 import com.itinfo.rutilvm.common.gson
 
 import org.ovirt.engine.sdk4.builders.OptionBuilder
@@ -14,13 +17,16 @@ class OptionVo (
     val value: String = "",
     val type: String = "",
 ) : Serializable {
+	val bondMode: BondMode? =
+		if (this.name == "mode") BondMode.forValue(this.value.toIntOrNull())
+		else BondMode.UNKNOWN
+
     override fun toString(): String = gson.toJson(this)
 
     class Builder {
         private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
         private var bValue: String = "";fun value(block: () -> String?) { bValue = block() ?: "" }
         private var bType: String = ""; fun type(block: () -> String?) { bType = block() ?: "" }
-
         fun build(): OptionVo = OptionVo(bName, bValue, bType)
     }
 
@@ -39,26 +45,51 @@ fun Option.toOptionVo(): OptionVo {
 fun List<Option>.toOptionVos(): List<OptionVo> =
     this@toOptionVos.map { it.toOptionVo() }
 
+fun List<OptionVo>.toBondMode(): BondMode =
+	BondMode.forValue(
+	this@toBondMode.firstOrNull { it.name == BondMode.MODE_FOR_SEARCH }?.value?.toIntOrNull() ?: -1
+	)
 
-// TODO: BondMode 유형 생성 필요 <package org.ovirt.engine.core.common.businessentities.network>
-// https://192.168.0.70/ovirt-engine/api/hosts/{id}/nics
-// 사용자 정의 mode=1 miimon=100 primary=ens3f0np0
+fun List<OptionVo>.toBondModeVo(): BondModeVo? =
+	this@toBondModeVo.toBondMode()
+		.toBondModeVo()
+
+fun BondMode.asOption(): Option {
+	return OptionBuilder()
+		.name(BondMode.MODE_FOR_SEARCH)
+		.value("${this@asOption.value}")
+		.type(this@asOption.description)
+		.build()
+}
 /*
-* BOND0("0", "balance-rr", "(Mode 0) Round-robin", false),
-  BOND1("1", "active-backup", "(Mode 1) Active-Backup", true),
-  BOND2("2", "balance-xor", "(Mode 2) Load balance (balance-xor)", true),
-  BOND3("3", "broadcast", "(Mode 3) Broadcast", true),
-  BOND4("4", "802.3ad", "(Mode 4) Dynamic link aggregation (802.3ad)", true),
-  BOND5("5", "balance-tlb", "(Mode 5) Adaptive transmit load balancing (balance-tlb)", false),
-  BOND6("6", "balance-alb", "(Mode 6) Adaptive load balancing (balance-alb)", false);
-**/
-// option builder
+fun toDefaultModeOptionBuilder(): Option {
+    return OptionBuilder()
+        .name("mode")
+        .value("1")
+        .type("Active-Backup")
+        .build()
+}
+*/
+fun toDefaultMiimonOptionBuilder(): Option {
+    return OptionBuilder()
+        .name("miimon")
+        .value("100")
+        .build()
+}
+fun toDefaultPolicyOptionBuilder(): Option {
+    return OptionBuilder()
+        .name("xmit_hash_policy")
+        .value("2")
+        .build()
+}
+
 fun OptionVo.toOption(): Option {
     return OptionBuilder()
         .name(this.name)
         .value(this.value)
         .build()
 }
+
 fun List<OptionVo>.toOptions(): List<Option> =
 	this.map { it.toOption() }
 
