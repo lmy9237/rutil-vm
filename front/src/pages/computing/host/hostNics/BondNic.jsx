@@ -4,13 +4,13 @@ import NicToolTip from "./NicToolTip";
 
 const BondNic = ({ 
   nic, 
-  dragItem, setDragItem,
-  setDragOverTarget,
+  dragItem,
   handleDragStart,
   handleAddBaseNicToBond,
-  onEditBonding
+  editBondingData
 }) => {
   const onlyBasicNic = dragItem && dragItem.type === "nic" && dragItem.list === "nic"; // base NIC만 드롭 허용
+  
   return (
     <div className="interface-outer container flex-col p-2"
       data-tooltip-id={`nic-tooltip-${nic.id}`}
@@ -24,15 +24,13 @@ const BondNic = ({
       onDrop={e => {
         if (onlyBasicNic) {
           handleAddBaseNicToBond(dragItem.item, nic);
-          setDragItem(null);
-          setDragOverTarget(null);
         }
       }}
     >
       <div className="interface-content">
         <div className="f-start">{nic.name}</div>
         <RVI36 className="icon cursor-pointer" iconDef={rvi36Edit()}
-          onClick={() => onEditBonding && onEditBonding(nic)}
+          onClick={() => editBondingData && editBondingData(nic)}
         />
       </div>
       <div className="w-full interface-container-outer2" onDragOver={e => e.preventDefault()}>

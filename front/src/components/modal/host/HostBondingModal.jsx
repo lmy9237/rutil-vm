@@ -5,7 +5,7 @@ import LabelInput              from "@/components/label/LabelInput";
 import LabelSelectOptions      from "@/components/label/LabelSelectOptions";
 import { checkName }           from "@/util";
 import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import { handleInputChange } from "@/components/label/HandleInput";
 
 const HostBondingModal = ({ 
   editMode = false, 
@@ -16,14 +16,9 @@ const HostBondingModal = ({
   const { toast } = useToast();
   const bLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
-  const handleChangeName = (e) => setBondModalState(prev => ({ ...prev, name: e.target.value }));
-  const handleChangeMode = (e) => setBondModalState(prev => ({ ...prev, optionMode: e.target.value }));
-
   const validateForm = () => {
-    if(!editMode){
-      const nameError = checkName(bondModalState.name);
-      if (nameError) return nameError;
-    }
+    const nameError = checkName(bondModalState.name);
+    if (nameError) return nameError;
 
     return null;
   };
@@ -39,7 +34,7 @@ const HostBondingModal = ({
       return;
     }
 
-    if (editMode) {
+    if (editMode) { 
       // 수정 모드: 기존 bond + 옵션만 바꿔서 전달
       const updatedBond = {
         ...bondModalState.editTarget,
@@ -49,8 +44,9 @@ const HostBondingModal = ({
         }
       };
       onBondingCreated(updatedBond, [bondModalState.editTarget]); // nicData는 기존 bond 하나
-    } else {
+    } else {  
       // 생성 모드: 이름, option, slave NICs 전달
+      // nicArr: NIC 2개
       const nicArr = Array.isArray(bondModalState.editTarget) ? bondModalState.editTarget : [];
       const newBond = {
         name: bondModalState.name,
@@ -59,7 +55,7 @@ const HostBondingModal = ({
           slaveVos: nicArr.map(nic => ({ id: nic.id, name: nic.name })),
         }
       };
-      onBondingCreated(newBond, nicArr); // nicArr: NIC 2개
+      onBondingCreated(newBond, nicArr);
     }
     onClose();
   };
@@ -70,25 +66,28 @@ const HostBondingModal = ({
       onSubmit={handleOkClick}
       contentStyle={{ width: "500px" }}
     >
-      {/* <span>
+      {/* 
+      <span>
         nicdata{" "}
         {editMode
           ? bondModalState?.name
           : Array.isArray(bondModalState?.editTarget)
             ? bondModalState.editTarget.map((e) => `${e.name} /`).join("")
             : (bondModalState?.editTarget?.name || "")}
-      </span>
+      </span> 
+      
+      <span>optionMode: {bondModalState.optionMode}</span><br/>
       <span>name: {bondModalState?.name}</span><br/>
-      <span>optionMode: {bondModalState.optionMode}</span><br/> */}
+      */}
       <LabelInput id="bonding_name" label={Localization.kr.NAME}        
         value={bondModalState.name}
-        onChange={handleChangeName}
+        onChange={handleInputChange(setBondModalState, "name")}
         disabled={editMode}
       />
       <LabelSelectOptions id="bonding_mode" label="본딩모드"
         value={bondModalState.optionMode}
         options={optionList}
-        onChange={handleChangeMode}
+        onChange={handleInputChange(setBondModalState, "optionMode")}
       />
       <LabelInput id="user_mode" label="사용자 정의 모드"        
         value={bondModalState.userMode}

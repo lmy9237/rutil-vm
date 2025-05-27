@@ -1,6 +1,5 @@
-
 const NoneNetwork = ({ 
-  nicId, nicName, 
+  nic, 
   handleDragOver, 
   handleDrop 
 }) => {
@@ -10,8 +9,8 @@ const NoneNetwork = ({
       onDragOver={(e) => handleDragOver(e, "network", "detach")}
       onDrop={(e) => {
         e.preventDefault();
-        handleDrop(e, "network", "detach", nicId, nicName);
-        handleDrop(e, "detach", nicId, nicName);
+        handleDrop(e, "network", "detach", nic);
+        handleDrop(e, "detach", nic);
       }}
     >
       <div className="assigned-network-content fs-14">

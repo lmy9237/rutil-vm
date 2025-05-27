@@ -20,7 +20,7 @@ const BaseNic = ({
       data-tooltip-html={NicToolTip(nic)}
       draggable
       onDragStart={(e) => handleDragStart(e, nic, "nic", "nic")}
-      onDrop={(e) => { handleDrop(e, "bond", nic.id, nic.name)}}
+      onDrop={(e) => { handleDrop(e, "bond", nic)}}
       onDragOver={(e) => handleDragOver(e, "nic", "bond")}
     >
       <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />

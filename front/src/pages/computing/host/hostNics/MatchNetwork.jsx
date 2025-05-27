@@ -4,21 +4,20 @@ import NetworkToolTip from "./NetworkToolTip";
 
 const MatchNetwork = ({ 
   networkAttach, 
-  nicId, nicName, 
+  nic, 
   handleDrop, 
   handleDragOver, 
   handleDragStart, 
   setSelectedNetwork, 
-  onEditNetworkAttachment
+  editNetworkAttachmentData
 }) => {
 
   return (
     <div className="assigned-network-outer network-drop-target"
-      onDrop={(e) => handleDrop(e, "detach", nicId, nicName)}
+      onDrop={(e) => handleDrop(e, "detach", nic)}
       onDragOver={(e) => handleDragOver(e, "network", "detach")}
       data-tooltip-id={`network-tooltip-${networkAttach.networkVo.id}`}
       data-tooltip-html={NetworkToolTip(networkAttach)}
-                          
     >
       <div className="assigned-network-content fs-14"
         draggable
@@ -39,7 +38,7 @@ const MatchNetwork = ({
             iconDef={rvi36Edit()}
             onClick={() => {
               setSelectedNetwork(networkAttach);
-              onEditNetworkAttachment(networkAttach);
+              editNetworkAttachmentData(networkAttach);
             }}
           />
         </div>

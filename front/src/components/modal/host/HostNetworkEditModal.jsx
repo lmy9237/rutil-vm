@@ -164,9 +164,11 @@ const HostNetworkEditModal = ({
             onChange={handleChangeInSync}
             tType={"동기화"} fType={"비동기화"}
           />
-          {/* <span>host {hostName} / {hostId}</span><br/> */}
-          {/* <span>nicname {networkModalState?.hostNicVo?.name}</span><br/> */}
-          {/* <span>network {networkModalState?.id}</span> */}
+          
+          <span>nicname {networkModalState?.hostNicVo?.id} {networkModalState?.hostNicVo?.name}</span><br/>
+          <span>network {networkModalState?.networkVo?.id} {networkModalState?.networkVo?.name}</span><br/>
+          {/* <span>ip {networkModalState?.ipAddressAssignments.map((e)=> e.ipVo?.address)}</span> */}
+          <span>ip {networkModalState?.ipv4Values?.address}</span>
           <hr/>
           {selectedModalTab === "ipv4" && (
             <div className="select-box-outer">
