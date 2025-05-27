@@ -19,6 +19,7 @@ const VmDisk = ({
   vm, vmName,
   dataCenterId,
   diskListState, setDiskListState,
+  disabled = false,// 기본템플릿이 아닐때는 버튼 disabled처리
 }) => {
   const { setActiveModal } = useUIState()
   const {
@@ -94,6 +95,7 @@ const VmDisk = ({
             actionType="default"
             className="instance-disk-btn"
             onClick={() => setIsConnectionPopupOpen(true)}
+            disabled={disabled}
             // onClick={() => setActiveModal("vmdisk:connect")}
           />
           <ActionButton label={Localization.kr.CREATE}
@@ -101,6 +103,7 @@ const VmDisk = ({
             className="instance-disk-btn"
             // onClick={() => setActiveModal("vmdisk:create")}
             onClick={() => setIsCreatePopupOpen(true)}
+            disabled={disabled}
           />
         </div>
       </div>

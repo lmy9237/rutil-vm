@@ -13,7 +13,8 @@ import {
   useAllActiveDomainsFromDataCenter,
   useOsSystemsFromCluster,
   useFindTemplatesFromDataCenter,
-  useAllvnicFromCluster, 
+  useAllvnicFromCluster,
+  useAllNicsFromTemplate, 
 } from '../../../api/RQHook';
 import VmCommon from './create/VmCommon';
 import VmNic from './create/VmNic';
@@ -170,6 +171,42 @@ const VmModal = ({
     data: isos = [], 
     isLoading: isIsoLoading 
   } = useCDFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
+
+
+  // 템플릿 id변경 시 NIC 초기화
+  const { data: vnicProfilesFromTemplate = [] } = useAllNicsFromTemplate(templateVo.id);
+  useEffect(() => {
+    if (!editMode && isOpen && templateVo.id) {
+      if (vnicProfilesFromTemplate.length > 0) {
+        // NIC 정보가 있을 때
+        const formatted = vnicProfilesFromTemplate.map((nic) => ({
+          id: "",
+          name: nic.name || "", // 기존 NIC 이름 유지
+          vnicProfileVo: {
+            id: nic.vnicProfileVo?.id || "",
+            name: nic.vnicProfileVo?.name || "",
+          },
+          networkVo: {
+            id: nic.networkVo?.id || "",
+            name: nic.networkVo?.name || "",
+          },
+        }));
+        setNicListState(formatted);
+      } else {
+        // NIC 정보가 없을 때 → 기본 nic1 세팅
+        setNicListState([
+          {
+            id: "",
+            name: "nic1",
+            vnicProfileVo: { id: "", name: "" },
+            networkVo: { id: "", name: "" }
+          }
+        ]);
+      }
+    }
+  }, [templateVo.id, isOpen, editMode, vnicProfilesFromTemplate]);
+const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
+
 
   // 초기값 설정
   useEffect(() => {
@@ -478,6 +515,7 @@ const VmModal = ({
               formInfoState={formInfoState}
               setFormInfoState={setFormInfoState}
             />
+            
             <VmDisk
               editMode={editMode}
               vm={vm}
@@ -485,6 +523,7 @@ const VmModal = ({
               dataCenterId={dataCenterVo.id}
               diskListState={diskListState}
               setDiskListState={setDiskListState}
+              disabled={isDiskDisabled} // 기본템플릿이 아닐때는 버튼 disabled처리
             />
             <VmNic
               editMode={editMode}

@@ -17,6 +17,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 14px;  
 }
 
 .paging-arrows {
@@ -29,12 +30,8 @@
 .paging-arrows > button:disabled > svg { color: var(--color-input-disabled); }
 
 /*tablesOuter*/
-.section-table-outer {
-  width: 100%;/* TODO: 제거*/
-  position:relative;
-}
 .section-table-outer table {
-  width: 100%;/* TODO: 제거*/
+  width: 100%; 
   border-collapse: collapse;
 }
 .section-table-outer table tbody tr:nth-child(even){

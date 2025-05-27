@@ -16,7 +16,8 @@ input[type="password"]
 /* .custom-select-box  */
 {
   width:55%;height:var(--h-input);
-  border:var(--border-default);border-radius:1px;
+  border:var(--border-default);
+  border-radius:1px;
   text-indent: 4px;
   color: var(--color-black);
   border-radius: 1px;

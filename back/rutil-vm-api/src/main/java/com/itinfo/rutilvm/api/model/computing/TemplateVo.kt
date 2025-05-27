@@ -286,12 +286,9 @@ fun TemplateVo.toEditTemplate(): Template {
 		.os(OperatingSystemBuilder().type(osSystem))
 		.bios(BiosBuilder().type(BiosType.fromValue(chipsetFirmwareType)))
 		.type(VmType.fromValue(optimizeOption))
-		.vm(
-			VmBuilder()
-				.stateless(stateless)
-				.startPaused(startPaused)
-				.deleteProtected(deleteProtected)
-		)
+		.stateless(stateless)
+		.startPaused(startPaused)
+		.deleteProtected(deleteProtected)
 		.build()
 }
 

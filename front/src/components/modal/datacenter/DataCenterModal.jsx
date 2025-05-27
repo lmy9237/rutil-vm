@@ -117,7 +117,7 @@ const DataCenterModal = ({
   };
 
   // 제출
-  const handleFormSubmit = (dataToSubmit) => {
+  const handleFormSubmit = () => {
     const error = validateForm();
     if (error) {
       toast({
@@ -128,8 +128,8 @@ const DataCenterModal = ({
       return;
     }
 
-    Logger.debug(`Login > handleFormSubmit ... dataToSubmit: `, dataToSubmit)
-    // const dataToSubmit = { ...formState };
+  const dataToSubmit = { ...formState };
+    Logger.debug(`데이터센터Login > handleFormSubmit ... dataToSubmit: `, dataToSubmit)
     editMode
       ? editDataCenter({ dataCenterId: formState.id, dataCenterData: dataToSubmit })
       : addDataCenter(dataToSubmit);
@@ -138,47 +138,44 @@ const DataCenterModal = ({
   return (
     <BaseModal targetName={Localization.kr.DATA_CENTER} submitTitle={dcLabel}
       isOpen={isOpen} onClose={onClose}
-      onSubmit={handleFormSubmit}
+      onSubmit={() => handleFormSubmit()}
       contentStyle={{ width: "473px" }} 
     >
-      <form 
-      >
-        <LabelInput id="name" label={Localization.kr.NAME}
-          autoFocus required
-          value={formState.name}
-          onChange={handleInputChange(setFormState, "name")}
-          // register={register} target={"name"} options={{ required: true, maxLength: 30 }}
-        />
-        <LabelInput id="description" label={Localization.kr.DESCRIPTION}
-          value={formState.description}
-          onChange={handleInputChange(setFormState, "description")}
-          // register={register} target={"description"} options={{ required: true, maxLength: 30 }}
-        />
-        <LabelInput id="comment" label={Localization.kr.COMMENT}
-          value={formState.comment}
-          onChange={handleInputChange(setFormState, "comment")}
-          // register={register} target={"comment"} options={{ required: true, maxLength: 30 }}
-        />
-        <ToggleSwitchButton id="storage-type" label="스토리지 타입"
-          required
-          checked={formState.storageType}
-          onChange={() => setFormState((prev) => ({ 
-            ...prev,
-            storageType: !formState.storageType
-          }))}
-          tType="로컬" fType="공유됨"
-        />
-        <LabelSelectOptions id="quota-mode" label="쿼터 모드"
-          value={formState.quotaMode}
-          onChange={handleInputChange(setFormState, "quotaMode")}
-          options={quotaModes}
-        />
-        <LabelSelectOptions id="version-compatible" label="호환버전"
-          value={formState.version}
-          onChange={handleInputChange(setFormState, "version")}
-          options={clusterLevelsTransformed}
-        />
-      </form>
+      <LabelInput id="name" label={Localization.kr.NAME}
+        autoFocus required
+        value={formState.name}
+        onChange={handleInputChange(setFormState, "name")}
+        // register={register} target={"name"} options={{ required: true, maxLength: 30 }}
+      />
+      <LabelInput id="description" label={Localization.kr.DESCRIPTION}
+        value={formState.description}
+        onChange={handleInputChange(setFormState, "description")}
+        // register={register} target={"description"} options={{ required: true, maxLength: 30 }}
+      />
+      <LabelInput id="comment" label={Localization.kr.COMMENT}
+        value={formState.comment}
+        onChange={handleInputChange(setFormState, "comment")}
+        // register={register} target={"comment"} options={{ required: true, maxLength: 30 }}
+      />
+      <ToggleSwitchButton id="storage-type" label="스토리지 타입"
+        required
+        checked={formState.storageType}
+        onChange={() => setFormState((prev) => ({ 
+          ...prev,
+          storageType: !formState.storageType
+        }))}
+        tType="로컬" fType="공유됨"
+      />
+      <LabelSelectOptions id="quota-mode" label="쿼터 모드"
+        value={formState.quotaMode}
+        onChange={handleInputChange(setFormState, "quotaMode")}
+        options={quotaModes}
+      />
+      <LabelSelectOptions id="version-compatible" label="호환버전"
+        value={formState.version}
+        onChange={handleInputChange(setFormState, "version")}
+        options={clusterLevelsTransformed}
+      />
     </BaseModal>
   );
 };

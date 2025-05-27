@@ -91,8 +91,13 @@ const VmNics = ({
   };
 
   const nicRef = useRef()
-  useClickOutside(nicRef, (e) => setNicsSelected([])) /* 외부 창을 눌렀을 때 선택 해제 */
 
+useClickOutside(nicRef, (e) => {
+  const isInsideModal = e.target.closest(".modal"); // BaseModal 안이면 무시
+  if (!isInsideModal) {
+    setNicsSelected([]);
+  }
+});
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="network-interface-group w-full"

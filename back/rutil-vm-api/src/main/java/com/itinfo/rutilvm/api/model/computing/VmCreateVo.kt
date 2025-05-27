@@ -214,6 +214,7 @@ fun VmCreateVo.toVmBuilder(): VmBuilder {
 		toVmHostBuilder(this)
 		toVmHaBuilder(this)
 		toVmBootBuilder(this)
+		// toVmNicBuilder(this)
 	}
 }
 
@@ -298,3 +299,8 @@ fun VmCreateVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 	)
 	bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(bootingMenu).build()))
 }
+// fun VmCreateVo.toVmNicBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
+// 	if (nicVos.isNotEmpty()) {
+// 		nics(nicVos.map { it.toVmNic() })
+// 	}
+// }

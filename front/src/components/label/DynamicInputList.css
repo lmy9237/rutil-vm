@@ -4,6 +4,7 @@
 .dynamic-select-outer>button {
   width:260px;max-width:260px;
 }
+
 .dynamic-select {
   width: 55%;
   border: var(--border-btn);border-radius: 1px;

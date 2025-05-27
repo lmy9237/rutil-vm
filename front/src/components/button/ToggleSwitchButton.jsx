@@ -1,6 +1,4 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import "./ToggleSwitchButton.css";
 
 const ToggleSwitchButton = ({
@@ -23,7 +21,7 @@ const ToggleSwitchButton = ({
           />
           <span className="slider round"></span>
         </label>
-        <span className="toggle-status f-end">{checked ? tType : fType}</span>
+        <span className="toggle-status f-start">{checked ? tType : fType}</span>
       </div>
     </div>
   )

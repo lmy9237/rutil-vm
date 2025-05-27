@@ -135,7 +135,7 @@ setDeleteProtected(Boolean(template?.deleteProtected));
       monitor: Number(monitor)
     };
     
-    Logger.debug(`TemplateEditModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
+    Logger.debug(`ddddddddddTemplateEditModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
     if (editMode) {
       dataToSubmit.id = id;
       editTemplate({
@@ -213,19 +213,17 @@ setDeleteProtected(Boolean(template?.deleteProtected));
             </>
           )}
           {activeTab  === "console" && (
-            <div className="p-1">
+           <>
             <div className="graphic-console font-bold pt-3">그래픽 콘솔</div>
-            <div className="monitor f-btw">
-              <LabelSelectOptions
-                id="monitor"
-                label="모니터 수"
-                value={monitor} 
-                onChange={(e) => setMonitor(Number(e.target.value))}
-                options={monitorOptions}
-                disabled
-              />
-            </div>
-          </div>
+            <LabelSelectOptions
+              id="monitor"
+              label="모니터 수"
+              value={monitor} 
+              onChange={(e) => setMonitor(Number(e.target.value))}
+              options={monitorOptions}
+              disabled
+            />
+          </>
           )}
         </div>
       </div>

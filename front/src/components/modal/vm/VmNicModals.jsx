@@ -21,6 +21,18 @@ const VmNicModals = ({
     vmsSelected, 
     nicsSelected, setNicsSelected
   } = useGlobal()
+
+  const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
+  const { mutate: deleteNetworkInterface } = useDeleteNetworkInterface();
+
+  const wrappedApi = {
+    mutate: (nicId, options) => {
+      if (!vmId || !nicId) {
+        return;
+      }
+      deleteNetworkInterface({ vmId, nicId }, options);
+    },
+  };
   
   const modals = {
     create: (
@@ -36,7 +48,8 @@ const VmNicModals = ({
         onClose={() => closeModal("nic:remove")}
         label={Localization.kr.NICS}
         data={nicsSelected}
-        api={useDeleteNetworkInterface()}
+        api= {wrappedApi} 
+        shouldRedirect={false} 
       />
     )
   }

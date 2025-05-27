@@ -15,6 +15,7 @@ const DeleteModal = ({
   label="", 
   data, 
   api, 
+  shouldRedirect = true 
 }) => {
   // const { closeModal } = useUIState()
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ const DeleteModal = ({
     ids.forEach((id, index) => {
       deleteApi(id, {
         onSuccess: () => {
+          if (!shouldRedirect) return; // 제거 후 경로 이동하는 것 방지(기본값은 true)
           if (ids.length === 1 || index === ids.length - 1) {
             const currentPath = location.pathname;
             const uuidRegex = /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
