@@ -223,9 +223,7 @@ fun Connection.commitNetConfigHost(hostId: String): Result<Boolean> = runCatchin
 fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
 	this.srvHost(hostId).enrollCertificate().async(true).send()
-
 	true
-
 }.onSuccess {
 	Term.HOST.logSuccess("인증서 등록", hostId)
 }.onFailure {

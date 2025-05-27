@@ -9,6 +9,8 @@ import {
   useRestartHost,
   useEnrollHostCertificate,
   useRefreshHost,
+  useActivateGlobalHaHost,
+  useDeactivateGlobalHaHost,
 } from "../../../api/RQHook";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
@@ -80,6 +82,6 @@ const ACTIONS = {
   "host:restart": { label: Localization.kr.RESTART, hook: useRestartHost },
   "host:refresh": { label: Localization.kr.REFRESH, hook: useRefreshHost },
   "host:enrollCert": { label: "인증서 등록", hook: useEnrollHostCertificate },
-  "host:haOn": { label: "HA 활성화" },
-  "host:haOff": { label: "HA 비활성화" },
+  "host:haOn": { label: "글로벌 HA 유지관리 활성화", hook: useActivateGlobalHaHost },
+  "host:haOff": { label: "글로벌 HA 유지관리 비활성화", hook: useDeactivateGlobalHaHost },
 };

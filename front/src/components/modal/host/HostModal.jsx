@@ -54,6 +54,7 @@ const HostModal = ({
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
   const clusterId = useMemo(() => [...clustersSelected][0]?.id, [clustersSelected]);
+  const isMaintenance = hostsSelected[0]?.status === "MAINTENANCE";
 
   const [formState, setFormState] = useState(initialFormState);
   const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
@@ -129,7 +130,7 @@ const HostModal = ({
       clusterVo,
     };
 
-    Logger.debug(`HostModal > handleFormSubmit ... dataToSubmit: ${JSON.stringify(dataToSubmit, null , 2)}`); // 데이터를 확인하기 위한 로그
+    Logger.debug(`HostModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit); // 데이터를 확인하기 위한 로그
     editMode
       ? editHost({ hostId: formState.id, hostData: dataToSubmit })
       : addHost({ hostData: dataToSubmit, deployHostedEngine: String(formState.hostedEngine), });
@@ -143,7 +144,8 @@ const HostModal = ({
     >
       <LabelSelectOptionsID label={`${Localization.kr.HOST} ${Localization.kr.CLUSTER}`}
         value={clusterVo.id}
-        disabled={editMode}
+        // disabled={editMode}
+        disabled={editMode && !isMaintenance}
         loading={isClustersLoading}
         options={clusters}
         onChange={handleSelectIdChange(setClusterVo, clusters)}
@@ -192,6 +194,7 @@ const HostModal = ({
       <ToggleSwitchButton label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
         checked={formState.hostedEngine}
         onChange={() => setFormState((prev) => ({ ...prev, hostedEngine: !formState.hostedEngine }))}
+        disabled={editMode}
         tType={"배포"} fType={"없음"}
       />
     </BaseModal>

@@ -105,9 +105,11 @@ const ENDPOINTS = {
   DEACTIVATE_HOST: (hostId) =>                                             `${ENDPOINT_API_V1}/computing/hosts/${hostId}/deactivate`, 
   RESTART_HOST: (hostId) =>                                                `${ENDPOINT_API_V1}/computing/hosts/${hostId}/restart`, 
   STOP_HOST: (hostId) =>                                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}/stop`, 
-  ENROLL_HOST_CERTIFICATE: (hostId) =>                                     `${ENDPOINT_API_V1}/computing/hosts/${hostId}/stop`, 
+  ENROLL_HOST_CERTIFICATE: (hostId) =>                                     `${ENDPOINT_API_V1}/computing/hosts/${hostId}/enrollCert`, 
   REFRESH_HOST: (hostId) =>                                                `${ENDPOINT_API_V1}/computing/hosts/${hostId}/refresh`, 
   COMMIT_NET_CONFIG_HOST: (hostId) =>                                      `${ENDPOINT_API_V1}/computing/hosts/${hostId}/commitNetConfig`, 
+  ACTIVATE_HA_HOST: (hostId) =>                                            `${ENDPOINT_API_V1}/computing/hosts/${hostId}/activateGlobal`,
+  DEACTIVATE_HA_HOST: (hostId) =>                                          `${ENDPOINT_API_V1}/computing/hosts/${hostId}/deactivateGlobal`,
   //#endregion: Host
 
   //#region: Vm

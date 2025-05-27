@@ -2,7 +2,7 @@ version: "3"
 
 services:
   rutil-vm-api:
-    image: ititinfo.synology.me:50951/ititcloud/rutil-vm-api:latest
+    image: rutil-vm-api:latest
     container_name: rutil-vm-api
     ports:
       - "6690:6690"    
@@ -77,7 +77,7 @@ services:
     restart: on-failure
 
   rutil-vm:
-    image: ititinfo.synology.me:50951/ititcloud/rutil-vm:latest
+    image: rutil-vm:latest
     container_name: rutil-vm
     ports:
       - "443:443"
@@ -103,7 +103,7 @@ services:
     restart: always
     
   rutil-vm-wsproxy:
-    image: ititinfo.synology.me:50951/ititcloud/rutil-vm-wsproxy:latest
+    image: rutil-vm-wsproxy:latest
     container_name: rutil-vm-wsproxy
     ports:
       - "9999:9999"

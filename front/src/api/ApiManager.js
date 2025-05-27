@@ -1005,12 +1005,12 @@ const ApiManager = {
     });
   },
   /**
-     * @name ApiManager.commitNetConfigHost
-     * @description 호스트 재시작
-     * 
-     * @param {String} hostId - 호스트 ID
-     * @returns {Promise<Object>} API 응답 결과
-     */
+    * @name ApiManager.commitNetConfigHost
+    * @description 호스트 재시작
+    * 
+    * @param {String} hostId - 호스트 ID
+    * @returns {Promise<Object>} API 응답 결과
+    */
   commitNetConfigHost: async (hostId) => {
     return makeAPICall({
       method: "POST",
@@ -1018,6 +1018,35 @@ const ApiManager = {
       data: hostId
     });
   },
+  /**
+    * @name ApiManager.activateGlobalHost
+    * @description 호스트 글로벌 HA 유지관리 활성화
+    * 
+    * @param {String} hostId - 호스트 ID
+    * @returns {Promise<Object>} API 응답 결과
+    */
+  activateGlobalHaHost: async (hostId) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.ACTIVATE_HA_HOST(hostId),  // ID를 URL에 포함
+      data: hostId
+    });
+  },
+  /**
+    * @name ApiManager.deactivateGlobalHost
+    * @description 호스트 글로벌 HA 유지관리 비활성화
+    * 
+    * @param {String} hostId - 호스트 ID
+    * @returns {Promise<Object>} API 응답 결과
+    */
+  deactivateGlobalHaHost: async (hostId) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.DEACTIVATE_HA_HOST(hostId),  // ID를 URL에 포함
+      data: hostId
+    });
+  },
+
 
   //#endregion: Host
 

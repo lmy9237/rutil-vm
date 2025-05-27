@@ -399,6 +399,78 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="POST",
+		value="호스트 새로고침 모드전환",
+		notes="호스트를 새로고침"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@PostMapping("/{hostId}/refresh")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun refresh(
+		@PathVariable hostId: String?
+	): ResponseEntity<Boolean> {
+		if (hostId.isNullOrEmpty())
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/refresh ... 호스트 새로고침", hostId)
+		return ResponseEntity.ok(iHostOp.refresh(hostId))
+	}
+
+	@ApiOperation(
+		httpMethod="POST",
+		value="호스트 재부팅 확인",
+		notes="호스트 재부팅 확인한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@PostMapping("/{hostId}/commitNetConfig")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun commitNetConfig(
+		@PathVariable hostId: String?
+	): ResponseEntity<Boolean> {
+		if (hostId.isNullOrEmpty())
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/commitNetConfig ... 호스트 재부팅 확인", hostId)
+		return ResponseEntity.ok(iHostOp.commitNetConfig(hostId))
+	}
+
+	@ApiOperation(
+		httpMethod="POST",
+		value="호스트 인증서등록",
+		notes="호스트에 인증서를 등록한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@PostMapping("/{hostId}/enrollCert")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun enrollCert(
+		@PathVariable hostId: String?
+	): ResponseEntity<Boolean> {
+		if (hostId.isNullOrEmpty())
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/enrollCert ... 호스트 인증서 등록", hostId)
+		return ResponseEntity.ok(iHostOp.enrollCertificate(hostId))
+	}
+
+	@ApiOperation(
+		httpMethod="POST",
 		value="호스트 재시작",
 		notes="호스트를 재시작 한다"
 	)
@@ -467,55 +539,6 @@ class HostController {
 			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
 		log.info("/computing/hosts/{}/deactivateGlobal ... 호스트 글로벌 HA 비활성화", hostId)
 		return ResponseEntity.ok(iHostOp.globalHaDeactivate(hostId))
-	}
-
-
-	@ApiOperation(
-		httpMethod="POST",
-		value="호스트 새로고침 모드전환",
-		notes="호스트를 새로고침"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 201, message = "CREATED"),
-		ApiResponse(code = 404, message = "NOT_FOUND")
-	)
-	@PostMapping("/{hostId}/refresh")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.CREATED)
-	fun refresh(
-		@PathVariable hostId: String?
-	): ResponseEntity<Boolean> {
-		if (hostId.isNullOrEmpty())
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		log.info("/computing/hosts/{}/refresh ... 호스트 새로고침", hostId)
-		return ResponseEntity.ok(iHostOp.refresh(hostId))
-	}
-
-	@ApiOperation(
-		httpMethod="POST",
-		value="호스트 재부팅 확인",
-		notes="호스트 재부팅 확인한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 201, message = "CREATED"),
-		ApiResponse(code = 404, message = "NOT_FOUND")
-	)
-	@PostMapping("/{hostId}/commitNetConfig")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.CREATED)
-	fun commitNetConfig(
-		@PathVariable hostId: String?
-	): ResponseEntity<Boolean> {
-		if (hostId.isNullOrEmpty())
-			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		log.info("/computing/hosts/{}/commitNetConfig ... 호스트 재부팅 확인", hostId)
-		return ResponseEntity.ok(iHostOp.commitNetConfig(hostId))
 	}
 	// endregion
 

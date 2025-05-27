@@ -134,7 +134,7 @@ class HostServiceImpl(
 
 	@Throws(Error::class)
 	override fun update(hostVo: HostVo): HostVo? {
-		log.info("update ... hostName: {}", hostVo.name)
+		log.info("update ... hostName: {}, clusterId: {}", hostVo.name, hostVo.clusterVo.id)
 		val res: Host? = conn.updateHost(
 			hostVo.toEditHost()
 		).getOrNull()

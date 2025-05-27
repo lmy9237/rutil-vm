@@ -289,4 +289,9 @@ fun ClusterVo.toEditCluster(conn: Connection): Cluster {
 		.build()
 }
 
+fun IdentifiedVo.toClusterIdentified(): Cluster = ClusterBuilder()
+	.id(this@toClusterIdentified.id)
+	.build()
+
+
 // endregion

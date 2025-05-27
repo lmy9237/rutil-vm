@@ -38,7 +38,7 @@ private val log = LoggerFactory.getLogger(HostVo::class.java)
  * @property kdump  [KdumpStatus]   kdumpStatus(disabled, enabled, unknown)
  * @property ksm [Boolean]  hosted engine
  * @property seLinux [SeLinuxMode] SeLinuxMode(disabled, enforcing, permissive)
- * @property hostedEngine [Boolean] Hosted Engine 이동 여부 [ 금장, 은장, null ]
+ * @property hostedEngine [HostedEngineVo] Hosted Engine 이동 여부 [ 금장, 은장, null ]
  * @property hostedEngineVM [Boolean] Hosted Engine VM 여부 [ 금장, 은장, null ]
  * @property spmPriority [Int] spm 우선순위
  * @property spmStatus [SpmStatus] spm 상태
@@ -83,14 +83,12 @@ class HostVo (
     val comment: String = "",
     val address: String = "",
     val devicePassThrough: Boolean = false,
-    val hostedActive: Boolean = false,
-    val hostedScore: Int = 0,
     val iscsi: String = "",
     val kdump: KdumpStatus = KdumpStatus.UNKNOWN,
     val ksm: Boolean = false,
     val seLinux: SeLinuxMode = SeLinuxMode.DISABLED,
-    val hostedEngine: Boolean = false,
-    val hostedEngineVM: Boolean = false,
+	val hostedEngine: HostedEngineVo? = null,
+	val hostedEngineVM: Boolean = false,
     val spmPriority: Int = 0,
     val spmStatus: SpmStatus = SpmStatus.NONE,
     val sshFingerPrint: String = "",
@@ -114,7 +112,7 @@ class HostVo (
     val hugePage2048Total: Int = 0,
     val hugePage1048576Free: Int = 0,
     val hugePage1048576Total: Int = 0,
-	private val _bootingTime:  Date? = null,
+	private val _bootingTime: Date? = null,
 	val hostHwVo: HostHwVo = HostHwVo(),
     val hostSwVo: HostSwVo = HostSwVo(),
     val clusterVo: IdentifiedVo = IdentifiedVo(),
@@ -131,8 +129,33 @@ class HostVo (
 
 	val bootingTime: String
 		get() = ovirtDf.formatEnhanced(_bootingTime)
+	val uptimeInMilli: Long
+		get() = Date().time - (_bootingTime?.time ?: 0L)
+
+	val isHostedEngine: Boolean
+		get() = hostedEngine != null
+	val hostedActive: Boolean
+		get() = hostedEngine?.active == true
+	val hostedConfigured: Boolean
+		get() = hostedEngine?.configured == true
+	val hostedScore: Int
+		get() = hostedEngine?.score ?: 0
+	val isGlobalMaintenance: Boolean
+		get() = hostedEngine?.globalMaintenance == true
+	val isLocalMaintenance: Boolean
+		get() = hostedEngine?.localMaintenance == true
+
 	val upTime: String
-		get() = _bootingTime?.differenceInMillis(Date())?.div(1000L)?.toTimeElapsedKr() ?: "N/A"
+		get() = if (
+			status == HostStatus.INSTALLING ||
+			status == HostStatus.INITIALIZING ||
+			status == HostStatus.INSTALLING_OS ||
+			status == HostStatus.INSTALL_FAILED ||
+			status == HostStatus.CONNECTING ||
+			status == HostStatus.NON_RESPONSIVE ||
+			status == HostStatus.REBOOT
+		) "N/A" else uptimeInMilli.div(1000L).toTimeElapsedKr()
+
 
     class Builder{
         private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: ""}
@@ -140,13 +163,13 @@ class HostVo (
         private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: ""}
         private var bAddress: String = ""; fun address(block: () -> String?) { bAddress = block() ?: ""}
         private var bDevicePassThrough: Boolean = false; fun devicePassThrough(block: () -> Boolean?) { bDevicePassThrough = block() ?: false}
-        private var bHostedActive: Boolean = false; fun hostedActive(block: () -> Boolean?) { bHostedActive = block() ?: false }
-        private var bHostedScore: Int = 0; fun hostedScore(block: () -> Int?) { bHostedScore = block() ?: 0 }
+        // private var bHostedActive: Boolean = false; fun hostedActive(block: () -> Boolean?) { bHostedActive = block() ?: false }
+		// private var bHostedScore: Int = 0; fun hostedScore(block: () -> Int?) { bHostedScore = block() ?: 0 }
         private var bIscsi: String = ""; fun iscsi (block: () -> String?) { bIscsi = block() ?: ""}
         private var bKdump: KdumpStatus = KdumpStatus.UNKNOWN; fun kdump (block: () -> KdumpStatus?) { bKdump = block() ?: KdumpStatus.UNKNOWN}
         private var bKsm: Boolean = false; fun ksm(block: () -> Boolean?) { bKsm = block() ?: false }
         private var bSeLinux: SeLinuxMode = SeLinuxMode.DISABLED; fun seLinux(block: () -> SeLinuxMode?) { bSeLinux = block() ?: SeLinuxMode.DISABLED }
-        private var bHostedEngine: Boolean = false; fun hostedEngine(block: () -> Boolean?) { bHostedEngine = block() ?: false }
+        private var bHostedEngine: HostedEngineVo? = null; fun hostedEngine(block: () -> HostedEngineVo?) { bHostedEngine = block() }
         private var bHostedEngineVM: Boolean = false; fun hostedEngineVM(block: () -> Boolean?) { bHostedEngineVM = block() ?: false }
         private var bSpmPriority: Int = 0; fun spmPriority(block: () -> Int?) { bSpmPriority = block() ?: 0 }
         private var bSpmStatus: SpmStatus = SpmStatus.NONE; fun spmStatus(block: () -> SpmStatus?) { bSpmStatus = block() ?: SpmStatus.NONE }
@@ -181,7 +204,7 @@ class HostVo (
         private var bHostNicVos: List<HostNicVo> = listOf(); fun hostNicVos(block: () -> List<HostNicVo>?) { bHostNicVos = block() ?: listOf() }
         private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
 
-        fun build(): HostVo = HostVo(bId, bName, bComment, bAddress, bDevicePassThrough, bHostedActive, bHostedScore, bIscsi, bKdump, bKsm, bSeLinux, bHostedEngine, bHostedEngineVM, bSpmPriority, bSpmStatus, bSshFingerPrint, bSshPort, bSshPublicKey, bSshName, bSshPassWord, bStatus, bTransparentPage, bVmMigratingCnt, bVgpu, bMemoryTotal, bMemoryUsed, bMemoryFree, bMemoryMax, bMemoryShared, bSwapTotal, bSwapUsed, bSwapFree, bHugePage2048Free, bHugePage2048Total, bHugePage1048576Free, bHugePage1048576Total, bBootingTime, bHostHwVo, bHostSwVo, bClusterVo, bDataCenterVo, bVmSizeVo, bVmVos, bHostNicVos, bUsageDto,)
+        fun build(): HostVo = HostVo(bId, bName, bComment, bAddress, bDevicePassThrough, bIscsi, bKdump, bKsm, bSeLinux, bHostedEngine, bHostedEngineVM, bSpmPriority, bSpmStatus, bSshFingerPrint, bSshPort, bSshPublicKey, bSshName, bSshPassWord, bStatus, bTransparentPage, bVmMigratingCnt, bVgpu, bMemoryTotal, bMemoryUsed, bMemoryFree, bMemoryMax, bMemoryShared, bSwapTotal, bSwapUsed, bSwapFree, bHugePage2048Free, bHugePage2048Total, bHugePage1048576Free, bHugePage1048576Total, bBootingTime, bHostHwVo, bHostSwVo, bClusterVo, bDataCenterVo, bVmSizeVo, bVmVos, bHostNicVos, bUsageDto,)
     }
     companion object {
         inline fun builder(block: HostVo.Builder.() -> Unit): HostVo = HostVo.Builder().apply(block).build()
@@ -217,7 +240,12 @@ fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
         comment { host.comment() }
         status { host.status() }
         ksm { host.ksm().enabled() }
-        hostedEngine { host.hostedEnginePresent() }
+        hostedEngine {
+			if (host.hostedEnginePresent())
+				host.hostedEngine().toHostedEngineVo()
+			else
+				null
+		}
         hostedEngineVM { hostedVm }
         address { host.address() }
         clusterVo { host.cluster()?.fromClusterToIdentifiedVo() }
@@ -248,9 +276,7 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
         comment { host.comment() }
         status { host.status() }
         address { host.address() }
-        hostedEngine { host.hostedEnginePresent() }
-        hostedActive { if(host.hostedEnginePresent()) host.hostedEngine().active() else false }
-        hostedScore { if(host.hostedEnginePresent()) host.hostedEngine().scoreAsInteger() else 0 }
+        hostedEngine { if (host.hostedEnginePresent()) host.hostedEngine().toHostedEngineVo() else null }
         iscsi { if(host.iscsiPresent()) host.iscsi().initiator() else "" }
         kdump { host.kdumpStatus() }
         ksm { host.ksm().enabled() }
@@ -334,9 +360,7 @@ fun Host.toHostVo(conn: Connection): HostVo {
         comment { host.comment() }
         address { host.address() }
         devicePassThrough { host.devicePassthrough().enabled() }
-        hostedEngine { host.hostedEnginePresent() }
-        hostedActive { if(host.hostedEnginePresent()) host.hostedEngine().active() else false }
-        hostedScore { if(host.hostedEnginePresent()) host.hostedEngine().scoreAsInteger() else 0 }
+		hostedEngine { if (host.hostedEnginePresent()) host.hostedEngine().toHostedEngineVo() else null }
         iscsi { if(host.iscsiPresent()) host.iscsi().initiator() else "" }
         kdump { host.kdumpStatus() }
         ksm { host.ksm().enabled() }
@@ -420,6 +444,7 @@ fun HostVo.toEditHost(): Host {
 		.id(id)
 		.name(name) // 필수값
 		.comment(comment) // 필수값
+		.cluster(clusterVo.toClusterIdentified()) // 필수값
 //    .os(OperatingSystemBuilder().customKernelCmdline("vfio_iommu_type1.allow_unsafe_interrupts=1").build()) //?
 		.build()
 }

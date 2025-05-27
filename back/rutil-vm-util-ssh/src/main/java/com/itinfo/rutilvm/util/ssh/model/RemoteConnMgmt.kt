@@ -64,18 +64,29 @@ open class RemoteConnMgmt(
 }
 
 /**
- * [RemoteConnMgmt.enableGlobalHA]
+ * [RemoteConnMgmt.activateGlobalHA]
  * SSH로 global HA 활성화
  *
  */
-fun RemoteConnMgmt.enableGlobalHA(): Result<Boolean> = runCatching {
+fun RemoteConnMgmt.activateGlobalHA(): Result<Boolean> = runCatching {
 	log.info("enableGlobalHA ... ")
 	val session: Session? = toInsecureSession()
 	return session?.executeAll(listOf(SSHHelper.SSH_COMMAND_SET_MAINTENANCE_ACTIVE)) ?: throw Error("UNKNOWN ERROR!")
 }.onSuccess {
-	log.info("SSH '글로벌 HA 활성화' 성공: {}", it)
+	log.info("SSH로 '글로벌 HA 활성화' 성공: {}", it)
 }.onFailure {
-	log.error("SSH '글로벌 HA 활성화' 실패: {}", it.localizedMessage)
+	log.error("SSH로 '글로벌 HA 활성화' 실패: {}", it.localizedMessage)
+	// throw if (it is Error) it.toItCloudException() else it
+	throw it
+}
+fun RemoteConnMgmt.deactivateGlobalHA(): Result<Boolean> = runCatching {
+	log.info("deactivateGlobalHA ... ")
+	val session: Session? = toInsecureSession()
+	return session?.executeAll(listOf(SSHHelper.SSH_COMMAND_SET_MAINTENANCE_DEACTIVE)) ?: throw Error("UNKNOWN ERROR!")
+}.onSuccess {
+	log.info("SSH로 '글로벌 HA 비활성화' 성공: {}", it)
+}.onFailure {
+	log.error("SSH로 '글로벌 HA 비활성화' 실패: {}", it.localizedMessage)
 	// throw if (it is Error) it.toItCloudException() else it
 	throw it
 }

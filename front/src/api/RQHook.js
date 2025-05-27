@@ -2107,6 +2107,81 @@ export const useCommitNetConfigHost = (
     },
   });
 };
+/**
+ * @name useActivateGlobalHaHost
+ * @description 호스트 글로벌 HA 유지관리 활성화 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.activateGlobalHaHost
+ */
+export const useActivateGlobalHaHost = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { toast } = useToast()
+    return useMutation({
+    mutationFn: async (hostId) => {
+      closeModal();
+      const res = await ApiManager.activateGlobalHaHost(hostId)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > ussActivateGlobalHaHost ... hostId: ${hostId}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > ussActivateGlobalHaHost ... res: `, res);
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} 글로벌 HA 유지관리 활성화 요청완료`
+      })
+      queryClient.invalidateQueries('allHosts');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+/**
+ * @name useDeactivateGlobalHaHost
+ * @description 호스트 글로벌 HA 유지관리 비활활성화 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.activateGlobalHaHost
+ */
+export const useDeactivateGlobalHaHost = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { toast } = useToast()
+    return useMutation({
+    mutationFn: async (hostId) => {
+      closeModal();
+      const res = await ApiManager.deactivateGlobalHaHost(hostId)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useDeactivateGlobalHaHost ... hostId: ${hostId}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeactivateGlobalHaHost ... res: `, res);
+      
+      toast({
+        title: `API 요청성공`,
+        description: `${Localization.kr.HOST} 글로벌 HA 유지관리 비활성화 요청완료`
+      })
+      queryClient.invalidateQueries('allHosts');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      toast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
 //#endregion: Host
 
 

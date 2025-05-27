@@ -54,7 +54,8 @@ const TableColumnsInfo = {
   ],
   HOSTS: [
     { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
-    { header: Localization.kr.ENGINE, accessor: "hostedEngine", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.ENGINE, accessor: "_hostedEngine", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: "HA", accessor: "ha", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '12%' },
     { header: `${Localization.kr.HOST} 이름/IP`, accessor: 'address', clickable: false, width: '12%' },
     { header: Localization.kr.COMMENT, accessor: 'comment', clickable: false, width: '12%' },
@@ -81,7 +82,7 @@ const TableColumnsInfo = {
     { accessor: 'networkUsage', header: Localization.kr.NETWORK,    clickable: false },
     { accessor: 'upTime',       header: Localization.kr.UP_TIME,    clickable: false},
   ],
-  NETWORK_INTERFACE_FROM_HOST:[
+  NETWORK_INTERFACE_FROM_HOST: [
     { header: "", accessor: "icon", width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'name' }, // 인터페이스 이름
     { header: 'MAC', accessor: 'macAddress' }, // MAC 주소
@@ -92,7 +93,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.SPEED, accessor: 'speed' }, // 총 Mbps
     { header: 'Pkts', accessor: 'pkts' } // 패킷 수
   ],
-  NETWORK_ADAPTER_FROM_HOST:[
+  NETWORK_ADAPTER_FROM_HOST: [
     // { header: "", accessor: "icon", width: DEFAULT_WIDTH_ICON_COLUMN },
     { accessor: "icon", header: Localization.kr.STATUS, clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'name' }, // 인터페이스 이름
@@ -107,7 +108,7 @@ const TableColumnsInfo = {
     // { header: Localization.kr.SPEED, accessor: 'speed' }, // 총 Mbps
     // { header: 'Pkts', accessor: 'pkts' } // 패킷 수
   ],
-  NETWORK_FROM_HOST:[
+  NETWORK_FROM_HOST: [
     // { header: Localization.kr.STATUS, accessor: "icon", width: DEFAULT_WIDTH_ICON_COLUMN }, // 아이콘
     { header: '관리되지 않음', accessor: 'bridged' }, 
     { header: 'VLAN', accessor: 'vlan' },

@@ -34,7 +34,8 @@ const HostActionButtons = ({
   const isNonOperational = selected1st?.status === "NON_OPERATIONAL";
   const isMaintenance = selected1st?.status === "MAINTENANCE";
   const isInstalling = selected1st?.status === "INSTALLING";
-
+  const isGlobalMaintenance = selected1st?.globalMaintenance === true
+  const isHostedConfigured = selected1st?.hostedConfigured === true
 
   const basicActions = useMemo(() => [
     { type: "create",        onClick: () => setActiveModal("host:create"), label: Localization.kr.CREATE, disabled: isContextMenu && hostsSelected.length > 0, },
@@ -43,14 +44,14 @@ const HostActionButtons = ({
   ], [actionType, hostsSelected]);
 
   const manageActions = useMemo(() => [
-    { type: "deactivate",    onClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: isInstalling || isNonOperational || !isUp },
+    { type: "deactivate",    onClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: hostsSelected.length === 0 || isInstalling || isMaintenance },
     { type: "activate",      onClick: () => setActiveModal("host:activate"), label: "활성", disabled: hostsSelected.length === 0 || !isMaintenance || isUp || isInstalling },
     { type: "restart",       onClick: () => setActiveModal("host:restart"), label: "재시작", disabled: hostsSelected.length === 0 || isUp || isInstalling },
     { type: "refresh",       onClick: () => setActiveModal("host:refresh"), label: Localization.kr.REFRESH_CAPABILITIES, disabled: hostsSelected.length === 0 || !isUp || isInstalling  },
     { type: "commitNetHost", onClick: () => setActiveModal("host:commitNetHost"), label: `${Localization.kr.HOST} 재부팅 ${Localization.kr.STATUS} 확인`, disabled: hostsSelected.length !== 1 || isUp || isInstalling  },
     { type: "enrollCert",    onClick: () => setActiveModal("host:enrollCert"), label: "인증서 등록", disabled: hostsSelected.length === 0 || isInstalling || !isMaintenance  },
-    { type: "haOn",          onClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: hostsSelected.length === 0 || !isUp || !isMaintenance || isInstalling , },
-    { type: "haOff",         onClick: () => setActiveModal("host:haOff"), label: "글로벌 HA 유지 관리를 비활성화", disabled: hostsSelected.length === 0 || !isUp || isInstalling  },
+    { type: "haOn",          onClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: hostsSelected.length === 0 || !isHostedConfigured || /*!isMaintenance ||*/ isGlobalMaintenance, },
+    { type: "haOff",         onClick: () => setActiveModal("host:haOff"), label: "글로벌 HA 유지 관리를 비활성화", disabled: hostsSelected.length === 0 || !isHostedConfigured || /*!isMaintenance ||*/ !isGlobalMaintenance },
   ], [actionType, hostsSelected]);
   const isMgmtDisabled = manageActions.every(a => a.disabled);
   

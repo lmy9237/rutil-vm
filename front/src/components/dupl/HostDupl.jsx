@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
@@ -20,6 +21,7 @@ const HostDupl = ({
   refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
+  const { activeModal } = useUIState();
   const { hostsSelected, setHostsSelected } = useGlobal();
 
   const transformedData = [...hosts]?.map((host) => ({
@@ -29,15 +31,17 @@ const HostDupl = ({
         {host?.name}
       </TableRowClick>
     ),
+    ha: host?.globalMaintenance === true ? "Y" : "N",
     icon: status2Icon(host?.status),
     iconSortKey: getStatusSortKey(host?.status),
-    hostedEngine: hostedEngineStatus2Icon(host?.hostedEngineVM, host?.hostedEngine),
+    _hostedEngine: hostedEngineStatus2Icon(host?.hostedEngineVM, host?.hostedEngine),
     status: host?.status,
     spmStatus: host?.spmStatus === "NONE" ? "보통" : host?.spmStatus,
     vmCnt: host?.vmSizeVo?.allCnt ?? "0",
     memoryUsage: host?.usageDto?.memoryPercent !== null ? `${host?.usageDto?.memoryPercent}%` : "",
     cpuUsage: host?.usageDto?.cpuPercent !== null ? `${host?.usageDto?.cpuPercent}%` : "",
     networkUsage: host?.usageDto?.networkPercent !== null ? `${host?.usageDto?.networkPercent}%` : "",
+    upTime: host?.status === "INSTALLING" ? Localization.kr.NOT_ASSOCIATED : host?.upTime,
     cluster: <TableRowClick type="cluster" id={host?.clusterVo?.id}>{host?.clusterVo?.name}</TableRowClick>,
     dataCenter: <TableRowClick type="datacenter" id={host?.dataCenterVo?.id}>{host?.dataCenterVo?.name}</TableRowClick>,
     // ✅ 검색 필드 추가
@@ -62,7 +66,10 @@ const HostDupl = ({
         data={filteredData} 
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
-        onRowClick={(selectedRows) => setHostsSelected(selectedRows)}
+        onRowClick={(selectedRows) => {
+          if (activeModal().length > 0 || activeModal().includes("vm:migration")) return
+          setHostsSelected(selectedRows)
+        }}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />

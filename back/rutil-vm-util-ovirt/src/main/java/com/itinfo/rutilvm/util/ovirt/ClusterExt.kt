@@ -115,7 +115,6 @@ fun Connection.expectClusterDeleted(clusterId: String, interval: Long = 1000L, t
 
 fun Connection.findAllHostsFromCluster(clusterId: String, follow: String = ""): Result<List<Host>> = runCatching {
 	checkClusterExists(clusterId)
-
 	this.findAllHosts(follow = follow).getOrDefault(emptyList())
 		.filter { it.cluster().id() == clusterId }
 
