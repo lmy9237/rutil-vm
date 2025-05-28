@@ -110,21 +110,21 @@ const HostNics = ({
   }, [baseItems, movedItems]);
   
 
-  useEffect(() => {
-    console.log("$ modifiedBonds: ", modifiedBonds);
-  }, [modifiedBonds]);
+  // useEffect(() => {
+  //   console.log("$ modifiedBonds: ", modifiedBonds);
+  // }, [modifiedBonds]);
 
-  useEffect(() => {
-    console.log("$ modifiedNAs: ", modifiedNAs);
-  }, [modifiedNAs]);
+  // useEffect(() => {
+  //   console.log("$ modifiedNAs: ", modifiedNAs);
+  // }, [modifiedNAs]);
 
-  useEffect(() => {
-    console.log("$ removeBonds: ", removeBonds);
-  }, [removeBonds]);
+  // useEffect(() => {
+  //   console.log("$ removeBonds: ", removeBonds);
+  // }, [removeBonds]);
 
-  useEffect(() => {
-    console.log("$ removeNAs: ", removeNAs);
-  }, [removeNAs]);
+  // useEffect(() => {
+  //   console.log("$ removeNAs: ", removeNAs);
+  // }, [removeNAs]);
 
 
   // 본딩 모달 관리
@@ -277,14 +277,14 @@ const HostNics = ({
           ?? (initialBond.bondingVo?.optionVos?.find(opt => opt.name === "mode")?.value);
         const hasOptionChange = initialOption !== currentOption;
 
-        console.log('$currentBond:', currentBond);
-        console.log('$initialSlaveNames:', initialSlaveNames);
-        console.log('$currentSlaveNames:', currentSlaveNames);
-        console.log('$hasSlaveChanges:', hasSlaveChanges);
+        // console.log('$currentBond:', currentBond);
+        // console.log('$initialSlaveNames:', initialSlaveNames);
+        // console.log('$currentSlaveNames:', currentSlaveNames);
+        // console.log('$hasSlaveChanges:', hasSlaveChanges);
 
-        console.log('$initialOption:', initialOption);
-        console.log('$currentOption:', currentOption);
-        console.log('$hasOptionChange:', hasOptionChange);
+        // console.log('$initialOption:', initialOption);
+        // console.log('$currentOption:', currentOption);
+        // console.log('$hasOptionChange:', hasOptionChange);
 
         if (hasSlaveChanges || hasOptionChange) {
           newModifiedBonds.push(currentBond);
@@ -623,8 +623,8 @@ const HostNics = ({
     const sourceNic = baseItems.nic.find(n => n.name === dragged.name); // 드래그 대상
     const targetNic = baseItems.nic.find(n => n.name === target.name);  // 타겟 대상
 
-    console.log("$ sourceNic", sourceNic);
-    console.log("$ targetNic", targetNic);
+    // console.log("$ sourceNic", sourceNic);
+    // console.log("$ targetNic", targetNic);
 
     // 드래그항목이나 타겟항목이 없고 드래그항목과 타겟항목의 아이디가 같다면 에러
     if (!targetNic || !sourceNic || sourceNic.name === targetNic.name) {
@@ -690,8 +690,8 @@ const HostNics = ({
       na => na.hostNicVo?.name === draggedNic.name
     );
 
-    console.log("$ draggedNic ", draggedNic);
-    console.log("$ targetBond ", targetBond);
+    // console.log("$ draggedNic ", draggedNic);
+    // console.log("$ targetBond ", targetBond);
 
     // VLAN 없는 네트워크 중복 방지 검사
     const hasNoVlanNetwork = (nic) => allNetworkAttachments
@@ -840,8 +840,6 @@ const HostNics = ({
             }
           }));
 
-        console.log('$networkAttachment 목록:', prev.networkAttachment);
-
         return {
           ...prev,
           nic: [
@@ -887,7 +885,7 @@ const HostNics = ({
           }
         }] : [];
 
-        console.log("$removeBaseNic: ", removeBaseNic);
+        // console.log("$removeBaseNic: ", removeBaseNic);
 
         const newNics = prev.nic.map(nic => nic.name === targetBond.name
           ? { 
@@ -937,8 +935,8 @@ const HostNics = ({
     }
 
     
-    console.log("$ draggedNic ", draggedNic);
-    console.log("$ targetBond ", targetBond);
+    // console.log("$ draggedNic ", draggedNic);
+    // console.log("$ targetBond ", targetBond);
   };
   
   /**
@@ -1010,7 +1008,7 @@ const HostNics = ({
 
     // 기존 NIC의 네트워크 목록을 본딩 NIC에 연결하기 위한 처리
     const transferredNetworks = nicData.flatMap(nic => {
-      console.log("$ nic.networks ", nic.name, nic.networks);;
+      // console.log("$ nic.networks ", nic.name, nic.networks);;
       return nic.networks?.map(network => {
         // network가 이미 networkAttachment 형식이면 그대로 복사
         let originalAttachment = ([...baseItems.networkAttachment, ...movedItems.networkAttachment].find(na =>
@@ -1031,8 +1029,8 @@ const HostNics = ({
       }) || []
     });
 
-    console.log("$transferredNetworks:", transferredNetworks);
-    console.log("$transferredNetworks(JSON):", JSON.stringify(transferredNetworks, null, 2));
+    // console.log("$transferredNetworks:", transferredNetworks);
+    // console.log("$transferredNetworks(JSON):", JSON.stringify(transferredNetworks, null, 2));
 
     setBaseItems(prev => {
       const filtered = prev.nic.filter(nic => nic.name !== bondNic.name && !slaveNames.includes(nic.name));
@@ -1040,7 +1038,7 @@ const HostNics = ({
         .filter(na => !slaveNames.includes(na.hostNicVo?.name))  // 기존 NIC에 연결된 네트워크 제외
         .concat(transferredNetworks);  // 새 본딩 NIC으로 네트워크 옮김
 
-        console.log("$updatedNetworkAttachments(JSON):", JSON.stringify(updatedNetworkAttachments, null, 2));
+        // console.log("$updatedNetworkAttachments(JSON):", JSON.stringify(updatedNetworkAttachments, null, 2));
         
       return {
         ...prev,
@@ -1274,13 +1272,14 @@ const HostNics = ({
         onChange={(e) => setSetting(e.target.checked)}
       /> */}
 
-      <br/>
+      {/* <br/>
       <span>modifiedBonds: {modifiedBonds.map((e) => `[${e.name}: ${e.bondingVo.slaveVos.map((s) => s?.name)}]`)}</span><br/>
       <span>removeBonds: {removeBonds.map((e) => `${e.name}, `)}</span><br/>
       <span>modifiedNAs: {modifiedNAs.map(e => `[${e.hostNicVo.name}: ${Array.isArray(e.networkVo) ? e.networkVo.map(net => net.name).join(", ") : e.networkVo.name}]`)}</span><br/>
       <span>removeNAs: {removeNAs.map((e) => `${e.id}`)}</span><br/>
       <br/>
-      
+       */}
+
       <Suspense fallback={<Loading />}>
         <HostBondingModal
           editMode={isBondingEditMode}
