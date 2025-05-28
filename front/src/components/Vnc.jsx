@@ -1,4 +1,4 @@
-import React, { forwardRef,  } from 'react'
+import React, { forwardRef, useEffect,  } from 'react'
 import { VncScreen } from 'react-vnc'
 import CONSTANT from '@/Constants';
 import {
@@ -14,7 +14,8 @@ const Vnc = forwardRef(({
   ...props
 }, ref) => {
   const { data: vmConsoleAccessInfo } = useVmConsoleAccessInfo(vmId);  
-  
+
+
   let wsUrl = `wss://${CONSTANT.baseUrl}/ws`;
   // let wsUrl = `wss://localhost/ws`;
   if (import.meta.env.PROD) {

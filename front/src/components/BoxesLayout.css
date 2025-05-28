@@ -7,10 +7,6 @@
 .dash-boxes:first-child{
   height: auto;
 }
-.dash-boxes:last-child {
-  /* height: calc(100% - var(--h-dash-nav-box) - 4px);
-  margin-top: auto;*/
-}
 .dash-boxes:last-child > * {
   height: 100%;
 }
@@ -19,8 +15,6 @@
   flex: 1 1 calc(100% / 6 - 8px);
   padding: 20px;
   cursor: pointer;
-  background: white;
-  /*box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.08);*/
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: var(--br-default);
   text-align: center;
@@ -31,7 +25,6 @@
   width: calc(100% / 3 - 8px); /* 1열 */
   cursor: default;
 }
-
 .box:not(.box-graph):hover {
   border: var(--border-box);
 }
@@ -67,14 +60,10 @@
 .box-status-metric {
   align-items:flex-end !important;
 }
-.box-graph .box-detail {
-  /*align-items:flex-start !important;*/
-}
 .box-detail > h1 {
   line-height: 27px;
 }
 .box-status > hr { color: var(--color-black); }
-/*.box-detail-icons {}*/
 .up,.alert { color: var(--color-alert); }
 .error { color: var(--color-orange); }
 .warning { color: var(--color-yellow); }
@@ -85,7 +74,6 @@
 .graphs-horizontal { 
   position: inherit;
   gap: 16px;
-  /*aspect-ratio: 7/2;*/
 }
 .graph-sub  {
   height: 28%;
@@ -93,9 +81,6 @@
 .graph-chart-all {
   width: 44%;
   aspect-ratio: 1/1;
-}
-.graph-chart-all:last-child {
-  /*width: 50%;*/
 }
 .boxes-grid {
   align-items:flex-start !important;
@@ -137,11 +122,6 @@
   .box.box-graph {/* 한 줄에 3개씩 총 2줄*/
     min-width: 480px;
     height: auto !important;
-    /*
-    flex: 1 1 calc(100% - 48px) !important;
-    width: calc(100% - 8px); 
-    height: calc(100% - (2 * var(--h-dash-nav-box)));
-    */
   }
 }
 

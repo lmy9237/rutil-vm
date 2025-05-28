@@ -19,5 +19,6 @@
 .dynamic-btns,
 .nic-label {
   width: 71px !important;
+  margin-top: 2px;
   /* min-width: 71px; */
 }

@@ -173,7 +173,6 @@ html {
   margin: 0;padding: 0;box-sizing: border-box;
   font-family: "Pretendard", sans-serif;
   font-style:normal;font-weight:normal;font-size:var(--fs-default);line-height:var(--fs-default);
-  /*word-wrap: break-word;word-break: break-all;*/
   white-space:nowrap;text-align:left;text-overflow:ellipsis;
   border:none;
 }

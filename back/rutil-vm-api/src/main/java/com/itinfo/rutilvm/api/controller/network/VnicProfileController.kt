@@ -30,6 +30,7 @@ class VnicProfileController: BaseController() {
     @ApiResponses(
         ApiResponse(code = 200, message = "OK")
     )
+
     @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)

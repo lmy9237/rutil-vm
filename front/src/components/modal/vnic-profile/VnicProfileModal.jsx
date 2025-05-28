@@ -6,6 +6,7 @@ import BaseModal from "../BaseModal";
 import {
   useAddVnicProfile,
   useAllDataCenters,
+  useAllVmsFromVnicProfiles,
   useEditVnicProfile,
   useNetworkFilters,
   useNetworksFromDataCenter,
@@ -69,6 +70,9 @@ const VnicProfileModal = ({
     data: nFilters = [], 
     isLoading: isNFiltersLoading 
   } = useNetworkFilters((e) => ({ ...e }));
+
+  const { data: vms = [] } = useAllVmsFromVnicProfiles(vnicProfileId);
+  const isVnicUsedByVm = vms.length > 0;
 
   useEffect(() => {
     if (!isOpen) {
@@ -150,7 +154,7 @@ const VnicProfileModal = ({
 
     const dataToSubmit = {
       ...formState,
-      formState,portMirroring: formState.passThrough === "ENABLED" ? false : formState.portMirroring,
+    portMirroring: formState.passThrough === "ENABLED" ? false : formState.portMirroring,
       dataCenterVo,
       networkVo,
       networkFilterVo,
@@ -202,6 +206,7 @@ const VnicProfileModal = ({
 
       <LabelCheckbox id="passThrough" label="통과"
         checked={formState.passThrough === "ENABLED"}
+        disabled={isVnicUsedByVm}
         onChange={(e) => {
           const isChecked = e.target.checked;
           setFormState((prev) => ({
@@ -209,13 +214,14 @@ const VnicProfileModal = ({
             passThrough: isChecked ? "ENABLED" : "DISABLED",
             networkFilter: isChecked ? null : prev.networkFilter, // Passthrough 활성화 시 네트워크 필터 제거
             portMirroring: isChecked ? false : prev.portMirroring, // Passthrough 활성화 시 포트 미러링 비활성화
+            migration: isChecked ? prev.migration : true,
           }));
         }}
       />
       <LabelCheckbox id="migration" 
         label={`${Localization.kr.MIGRATION} 가능`}
         checked={formState.migration}
-        disabled={formState.passThrough === "DISABLED"}
+        disabled={formState.passThrough === "DISABLED" || isVnicUsedByVm}
         onChange={(e) => {
           const isChecked = e.target.checked;
           setFormState((prev) => ({
@@ -242,7 +248,7 @@ const VnicProfileModal = ({
       </div> */}
       <LabelCheckbox id="portMirroring" label="포트 미러링"
         checked={formState.portMirroring}
-        disabled={formState.passThrough === "ENABLED"}
+        disabled={formState.passThrough === "ENABLED" || isVnicUsedByVm}
         onChange={(e) => { setFormState((prev) => ({...prev, portMirroring: e.target.checked})) }}
       />
     </BaseModal>

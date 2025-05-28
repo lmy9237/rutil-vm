@@ -19,14 +19,13 @@
   text-overflow: ellipsis;
   line-height: 14px;  
 }
-
 .paging-arrows {
   min-width: 100%;
 }
 .paging-arrows > button { border:none; }
 .paging-arrows > button:disabled,
 .paging-arrows > button:hover { border:none !important;background-color:transparent; }
-.paging-arrows > button > svg { color: white }
+.paging-arrows > button > svg { color: var(--color-primary-white) }
 .paging-arrows > button:disabled > svg { color: var(--color-input-disabled); }
 
 /*tablesOuter*/
@@ -71,10 +70,10 @@
 }
 /*우클릭메뉴박스*/
 .my-context-menu{
-    position: absolute;
-    background-color: white;
-    z-index: 3;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
+  position: absolute;
+  background-color: var(--color-primary-white);
+  z-index: 3;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
 }
 /* tippy 툴팁 */
 .tooltip-content {
