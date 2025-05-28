@@ -13,7 +13,7 @@ export function transNic(hostNics = [], nicMap = {}) {
     .filter((nic) => 
       !(hostNics || []).some((parent) =>
         Array.isArray(parent.bondingVo?.slaveVos)
-          ? parent.bondingVo.slaveVos.some((slave) => slave.id === nic.id)
+          ? parent.bondingVo.slaveVos.some((slave) => slave.name === nic.name)
           : false
         )
     )
@@ -28,7 +28,7 @@ export function transNic(hostNics = [], nicMap = {}) {
           ? e.bondingVo.slaveVos.map((slave) => ({
               id: slave.id,
               name: slave.name,
-              status: nicMap[slave.id]?.status,
+              status: nicMap[slave.name]?.status,
             }))
           : [],
         optionVos: Array.isArray(e?.bondingVo?.optionVos)
@@ -109,26 +109,40 @@ export function transDetachNA(networks = [], networkAttachments = []) {
 
 
 
-// 본딩 생성 시 모달에 넘길 값 생성 함수
+/**
+ * 본딩 생성 시 모달에 넘길 값 생성 함수
+ * @param {*} nic1 
+ * @param {*} nic2 
+ * @param {*} baseNetworkAttachments 
+ * @param {*} movedNetworkAttachments 
+ * @returns 
+ */
 export function getBondModalStateForCreate(nic1, nic2, baseNetworkAttachments = [], movedNetworkAttachments = []) {
   // NIC가 가지고 있는 네트워크 찾기 함수
-  const getNetworksFromNic = (nicId) => 
-    [...baseNetworkAttachments, ...movedNetworkAttachments].filter(
-      na => na.hostNicVo?.id === nicId
+  const getNetworksFromNic = (nic) => {
+    const arr = [...baseNetworkAttachments, ...movedNetworkAttachments].filter(
+      na => na.hostNicVo?.name === nic.name
     );
+    return Array.isArray(arr) ? arr : [];
+  };
 
   return {
     name: "",
     optionMode: "1",
     userMode: "",
     editTarget: [
-      { ...nic1, networks: getNetworksFromNic(nic1.id) },
-      { ...nic2, networks: getNetworksFromNic(nic2.id) }
+      { ...nic1, networks: getNetworksFromNic(nic1) },
+      { ...nic2, networks: getNetworksFromNic(nic2) }
     ]
   };
 }
 
-// 본딩 편집 시 모달에 넘길 값 생성 함수
+
+/**
+ * 본딩 편집 시 모달에 넘길 값 생성 함수
+ * @param {*} bond 
+ * @returns 
+ */
 export function getBondModalStateForEdit(bond) {
   return {
     name: bond.name,
@@ -139,7 +153,13 @@ export function getBondModalStateForEdit(bond) {
 }
 
 
-// 네트워크 어태치먼트 상태 변환 함수
+/**
+ * 네트워크 어태치먼트 상태 변환 함수
+ * @param {*} networkAttachment 
+ * @param {*} baseNetworkAttachments 
+ * @param {*} movedNetworkAttachments 
+ * @returns 
+ */
 export function getNetworkAttachmentModalState(networkAttachment, baseNetworkAttachments = [], movedNetworkAttachments = []) {
   let targetNA;
 
@@ -148,9 +168,9 @@ export function getNetworkAttachmentModalState(networkAttachment, baseNetworkAtt
     targetNA = [...baseNetworkAttachments].find(na => na.id === networkAttachment.id);
   } else {
     // 신규 할당
-    targetNA = [...movedNetworkAttachments].find(
-      na => na.hostNicVo?.id === networkAttachment.hostNicVo?.id &&
-            na.networkVo?.id === networkAttachment.networkVo?.id
+    targetNA = [...movedNetworkAttachments].find(na => 
+      na.hostNicVo?.name === networkAttachment.hostNicVo?.name &&
+        na.networkVo?.id === networkAttachment.networkVo?.id
     );
   }
 
