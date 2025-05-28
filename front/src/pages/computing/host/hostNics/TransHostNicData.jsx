@@ -75,6 +75,7 @@ export function transNA(networkAttachments = [], networks = []) {
     const networkFromCluster = (networks || []).find((net) => net.id === e?.networkVo?.id);
     return {
       ...e,
+      inSync: e?.inSync,
       networkVo: {
         id: e?.networkVo?.id,
         name: e?.networkVo?.name,
@@ -158,22 +159,33 @@ export function getBondModalStateForEdit(bond) {
  * @param {*} networkAttachment 
  * @param {*} baseNetworkAttachments 
  * @param {*} movedNetworkAttachments 
+ * @param {*} modifiedNAs 
  * @returns 
  */
-export function getNetworkAttachmentModalState(networkAttachment, baseNetworkAttachments = [], movedNetworkAttachments = []) {
-  let targetNA;
-
-  if (networkAttachment.id) {
-    // 기존 할당
-    targetNA = [...baseNetworkAttachments].find(na => na.id === networkAttachment.id);
-  } else {
-    // 신규 할당
-    targetNA = [...movedNetworkAttachments].find(na => 
-      na.hostNicVo?.name === networkAttachment.hostNicVo?.name &&
+export function getNetworkAttachmentModalState(
+  networkAttachment, 
+  baseNetworkAttachments = [], 
+  movedNetworkAttachments = [],
+  modifiedNAs = []
+) {
+  // 최신 편집값부터 찾기
+  let targetNA = modifiedNAs.find(na =>
+    na.hostNicVo?.name === networkAttachment.hostNicVo?.name &&
+    na.networkVo?.id === networkAttachment.networkVo?.id
+  )
+  // 없으면 기존 로직대로
+  if (!targetNA) {
+    if (networkAttachment.id) {
+      targetNA = [...baseNetworkAttachments].find(na => na.id === networkAttachment.id);
+    }
+    if (!targetNA) {
+      targetNA = [...movedNetworkAttachments].find(na =>
+        na.hostNicVo?.name === networkAttachment.hostNicVo?.name &&
         na.networkVo?.id === networkAttachment.networkVo?.id
-    );
+      );
+    }
   }
-
+  // 이하 동일
   return {
     id: targetNA?.id,
     inSync: targetNA?.inSync ?? false,
@@ -194,3 +206,4 @@ export function getNetworkAttachmentModalState(networkAttachment, baseNetworkAtt
     dnsServers: Array.isArray(targetNA?.dnsServers) ? [...targetNA.dnsServers] : [],
   };
 }
+

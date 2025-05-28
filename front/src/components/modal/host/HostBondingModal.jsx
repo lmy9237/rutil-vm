@@ -81,8 +81,7 @@ const HostBondingModal = ({
       onSubmit={handleOkClick}
       contentStyle={{ width: "500px" }}
     >
-      
-      <span>
+      {/* <span>
         nicdata{" "}
         {editMode
           ? bondModalState?.name
@@ -90,7 +89,7 @@ const HostBondingModal = ({
             ? bondModalState.editTarget.map((e) => `${e.name} /`).join("")
             : (bondModalState?.editTarget?.name || "")}
       </span> <br/>
-      <span>name: {bondModalState?.name}</span><br/>
+      <span>name: {bondModalState?.name}</span><br/> */}
      
       <LabelInput id="bonding_name" label={Localization.kr.NAME}        
         value={bondModalState.name}

@@ -177,7 +177,9 @@ const HostNics = ({
     setNetworkAttachmentModalState(
       getNetworkAttachmentModalState(
         networkAttachment,
-        baseItems.networkAttachment, movedItems.networkAttachment
+        baseItems.networkAttachment, 
+        movedItems.networkAttachment,
+        modifiedNAs  // 최신 변경값 전달
       )
     );
     setIsNetworkEditPopup(true);
@@ -599,11 +601,17 @@ const HostNics = ({
   // 네트워크 편집 데이터
   const editNetworkData = useCallback((networkEditData) => {
     setModifiedNAs(prev => [
-      ...prev.filter(na => !(na.networkVo?.id === networkEditData.networkVo?.id)),
+      ...prev.filter(
+        na => !(
+          na.networkVo?.id === networkEditData.networkVo?.id &&
+          na.hostNicVo?.name === networkEditData.hostNicVo?.name
+        )
+      ),
       networkEditData
     ]);
   }, []);
 
+  
 
   /**
    * NIC 본딩 생성을 위한 드롭(baseNic를 다른 baseNic로 드래그)

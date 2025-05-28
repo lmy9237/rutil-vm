@@ -53,70 +53,6 @@ interface ItHostNicService {
 	 */
 	@Throws(Error::class)
 	fun findNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String): NetworkAttachmentVo?
-	// /**
-	//  * [ItHostNicService.updateNetworkAttachmentFromHost]
-	//  * 호스트 네트워크 편집
-	//  *
-	//  * @param hostId [String] 호스트 Id
-	//  * @param networkAttachmentId [String] 네트워크 결합 Id
-	//  * @param networkAttachmentVo [NetworkAttachmentVo] 네트워크
-	//  * @return [Boolean] 아직미정
-	//  */
-	// @Throws(Error::class)
-	// fun updateNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String, networkAttachmentVo: NetworkAttachmentVo): Boolean
-	// /**
-	//  * [ItHostNicService.removeNetworkAttachmentFromHost]
-	//  * 호스트 네트워크 분리 (할당된 네트워크)
-	//  *
-	//  * @param hostId [String] 호스트 Id
-	//  * @param networkAttachmentVo [NetworkAttachmentVo] 네트워크 연결 옵션
-	//  * @return [Boolean] 아직미정
-	//  */
-	// @Throws(Error::class)
-	// fun removeNetworkAttachmentFromHost(hostId: String, networkAttachmentVo: NetworkAttachmentVo): Boolean
-	// /**
-	//  * [ItHostNicService.removeNetworkAttachmentsFromHost]
-	//  * 호스트 네트워크 분리 (할당된 네트워크)
-	//  *
-	//  * @param hostId [String] 호스트 Id
-	//  * @param networkAttachmentVos List<[NetworkAttachmentVo]> 네트워크 연결 옵션
-	//  * @return [Boolean] 아직미정
-	//  */
-	// @Throws(Error::class)
-	// fun removeNetworkAttachmentsFromHost(hostId: String, networkAttachmentVos: List<NetworkAttachmentVo>): Boolean
-
-    // /**
-    //  * [ItHostNicService.addBondFromHost]
-    //  * 호스트 네트워크 본딩 추가
-    //  *
-    //  * @param hostId [String] 호스트 Id
-    //  * @param hostNicVo [HostNic] bonding 옵션
-    //  * @return [Boolean]
-    //  */
-    // @Throws(Error::class)
-    // fun addBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean
-    // /**
-    //  * [ItHostNicService.modifiedBondFromHost]
-    //  * 호스트 네트워크 본딩 수정
-	//  * 본딩 이름은 변경불가 (cli 가능)
-	//  * 본딩 모드 변경가능 //TODO:본딩모드
-    //  *
-    //  * @param hostId [String] 호스트 Id
-    //  * @param hostNicVo [HostNic] bonding 옵션
-    //  * @return [Boolean] 아직미정
-    //  */
-    // @Throws(Error::class)
-    // fun modifiedBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean
-    // /**
-    //  * [ItHostNicService.removeBondFromHost]
-    //  * 호스트 네트워크 본딩 삭제
-    //  *
-    //  * @param hostId [String] 호스트 Id
-    //  * @param hostNicVo [HostNicVo] bonding 옵션
-    //  * @return [Boolean] 아직미정
-    //  */
-    // @Throws(Error::class)
-    // fun removeBondFromHost(hostId: String, hostNicVo: HostNicVo): Boolean
 
 	/**
 	 * [ItHostNicService.setUpNetworksFromHost]
@@ -176,7 +112,6 @@ class ItHostNicServiceImpl(
 		)
 		return res.isSuccess
 	}
-
 
     companion object {
         private val log by LoggerDelegate()

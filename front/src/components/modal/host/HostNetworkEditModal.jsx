@@ -16,8 +16,6 @@ const HostNetworkEditModal = ({
   networkModalState, setNetworkModalState,
   onNetworkEdit
 }) => {
-  const { toast } = useToast()
-
   const [selectedModalTab, setSelectedModalTab] = useState("ipv4");  
   const tabs = useMemo(() => [
     { id: "ipv4",  label: "IPv4",    onClick: () => setSelectedModalTab("ipv4") },
@@ -29,7 +27,9 @@ const HostNetworkEditModal = ({
     setSelectedModalTab("ipv4");
   },[isOpen])
 
-  const handleChangeInSync = (e) => setNetworkModalState(prev => ({ ...prev, inSync: e.target.value }));
+  const handleChangeInSync = (field, value) => {
+    setNetworkModalState((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleIpv4Change = (field, value) => {
     setNetworkModalState(prev => {
@@ -74,24 +74,7 @@ const HostNetworkEditModal = ({
   };
 
 
-  const validateForm = () => {
-    
-    // if (!networkVo.id) return `${Localization.kr.NETWORK}를 선택해주세요.`;
-    return null;
-  };
-
   const handleOkClick = () => {
-    const error = validateForm();
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
-      return;
-    }
-
-    // IpAssignments 배열 만들기
     const ipAssignments = [];
 
     if (networkModalState.ipv4Values.protocol && networkModalState.ipv4Values.protocol !== "none") {
@@ -138,10 +121,9 @@ const HostNetworkEditModal = ({
     };
 
     Logger.debug("HostNetworkEditModal > networkEditData:", networkEditData);
-
     // 부모로 넘김
     onNetworkEdit(networkEditData);
-    onClose(); // 오타 주의! (onclose → onClose)
+    onClose();
   };
 
 
@@ -160,15 +142,14 @@ const HostNetworkEditModal = ({
         <div className="w-full px-4">
           <ToggleSwitchButton label={`${Localization.kr.NETWORK} 동기화 (임시)`}
             checked={networkModalState.inSync}
-            disabled={true}
-            onChange={handleChangeInSync}
+            // disabled={true} 
+            // TODO: 비동기에 대한 엔지니어 의견 
+            onChange={() => handleChangeInSync("inSync", !networkModalState.inSync)}
             tType={"동기화"} fType={"비동기화"}
           />
           
-          <span>nicname {networkModalState?.hostNicVo?.id} {networkModalState?.hostNicVo?.name}</span><br/>
-          <span>network {networkModalState?.networkVo?.id} {networkModalState?.networkVo?.name}</span><br/>
-          {/* <span>ip {networkModalState?.ipAddressAssignments.map((e)=> e.ipVo?.address)}</span> */}
-          <span>ip {networkModalState?.ipv4Values?.address}</span>
+          {/* <span>nicname {networkModalState?.hostNicVo?.id} {networkModalState?.hostNicVo?.name}</span><br/> */}
+          {/* <span>network {networkModalState?.networkVo?.id} {networkModalState?.networkVo?.name}</span><br/> */}
           <hr/>
           {selectedModalTab === "ipv4" && (
             <div className="select-box-outer">

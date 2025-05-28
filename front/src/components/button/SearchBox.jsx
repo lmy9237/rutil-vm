@@ -46,7 +46,7 @@ const SearchBox = ({
           value={searchQuery || ""}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <RVI16 iconDef={rvi16Close}
+        <RVI16 iconDef={rvi16Close()}
           className="btn-search-box f-center" onClick={() => setSearchQuery("")}
         />
         {/* END: 검색박스 */}
