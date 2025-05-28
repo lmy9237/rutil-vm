@@ -24,6 +24,9 @@ import {
   useStroageDomain,
   useOvfUpdateDomain,
   useRefreshLunDomain,
+  useAllUnregisteredDisksFromDomain,
+  useAllUnregisteredVMsFromDomain,
+  useAllUnregisteredTemplatesFromDomain,
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
@@ -42,6 +45,10 @@ const DomainInfo = () => {
   const { setDomainsSelected, setSourceContext } = useGlobal()
 
   const { data: domain } = useStroageDomain(domainId);
+  const { data: vms = [] } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
+  const { data: templates = [] } = useAllUnregisteredTemplatesFromDomain(domainId, (e) => ({ ...e }));
+  const { data: disks = [] } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
+
   const { mutate: refreshDomain } = useRefreshLunDomain();
   const { mutate: ovfUpdateDomain } = useOvfUpdateDomain();
 
@@ -69,6 +76,8 @@ const DomainInfo = () => {
   //   { id: "events", label: Localization.kr.EVENT },
   // ]), []);
   
+  // TODO: 가져오기에 따른 탭 메뉴 활성화
+
   const tabs = useMemo(() => {
     const baseSections = [
       { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
@@ -85,7 +94,6 @@ const DomainInfo = () => {
       baseSections.splice(5, 0, { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importTemplates") });
       baseSections.splice(7, 0, { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importDisks") });
     }
-  
     return baseSections;
   }, [domainId, domain?.status]);
   
