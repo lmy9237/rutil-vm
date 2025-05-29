@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.service.computing
 
+import com.itinfo.rutilvm.api.configuration.CertConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
@@ -12,6 +13,8 @@ import com.itinfo.rutilvm.api.repository.history.entity.HostConfigurationEntity
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
+import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
+import com.itinfo.rutilvm.util.ssh.model.registerRutilvmPubkey2Host
 import org.ovirt.engine.sdk4.types.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -100,6 +103,7 @@ class HostServiceImpl(
 ): BaseService(), ItHostService {
 	@Autowired private lateinit var hostConfigurationRepository: HostConfigurationRepository
 	@Autowired private lateinit var itGraphService: ItGraphService
+	@Autowired private lateinit var certConfig: CertConfig
 
 	@Throws(Error::class)
 	override fun findAll(): List<HostVo> {
@@ -129,6 +133,15 @@ class HostServiceImpl(
 			hostVo.toAddHost(),
 			deployHostedEngine,
 		).getOrNull()
+		log.info("add ... registering rutilvm's pubkey to host's rutilvm begins")
+		log.debug("add ... sshRootPassword: {}", hostVo.ssh?.rootPassword)
+		val engineRemoteMgmt: RemoteConnMgmt? = certConfig.ovirtEngineSSH
+		engineRemoteMgmt?.registerRutilvmPubkey2Host(
+			hostVo.address,
+			hostVo.ssh?.rootPassword,
+			certConfig.ovirtSSHPubkey
+		)
+		log.info("add ... registering rutilvm's pubkey to host's rutilvm ends")
 		return res?.toHostVo(conn)
 	}
 

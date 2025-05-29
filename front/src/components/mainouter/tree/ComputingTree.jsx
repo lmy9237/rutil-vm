@@ -5,7 +5,7 @@ import useTmi                 from "@/hooks/useTmi";
 import useContextMenu         from "@/hooks/useContextMenu";
 import {
   rvi16Globe,
-  rvi16Host,
+  rvi16Wrench, rvi16Refresh, rvi16Host,
   rvi16Desktop,
   rvi16DataCenter,
   rvi16Cluster,
@@ -147,7 +147,12 @@ const ComputingTree = ({}) => {
                           <div key={host.id} className="tmi-g">
                             <TreeMenuItem level={4}
                               title={host.name}
-                              iconDef={rvi16Host("currentColor")}
+                              iconDef={host?.status === "MAINTENANCE"
+                                ? rvi16Wrench("currentColor")
+                                : host?.status === "PREPARING_FOR_MAINTENANCE" || host?.status === "REBOOT"
+                                  ? rvi16Refresh("currentColor")
+                                  : rvi16Host("currentColor")
+                              }
                               isSelected={() => location.pathname.includes(host?.id)}
                               isNextLevelVisible={isHostOpen}
                               isChevronVisible={hasVMs}
@@ -258,4 +263,4 @@ const ComputingTree = ({}) => {
   );
 };
 
-export default React.memo(ComputingTree);
+export default ComputingTree;

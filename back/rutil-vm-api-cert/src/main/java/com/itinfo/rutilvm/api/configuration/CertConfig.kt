@@ -44,7 +44,8 @@ open class CertConfig(
 
 	val ovirtSSHPrvKey: String?
 		get() = (try {  File(_ovirtSSHPrivateKeyLocation) } catch (e: IOException) { log.error("something went WRONG! ... reason: {}", e.localizedMessage);null })?.readText(Charsets.UTF_8)
-
+	val ovirtSSHPubkey: String?
+		get() = (try {  File("$_ovirtSSHPrivateKeyLocation.pub") } catch (e: IOException) { log.error("something went WRONG! ... reason: {}", e.localizedMessage);null })?.readText(Charsets.UTF_8)
 
 	@PostConstruct
 	fun init() {

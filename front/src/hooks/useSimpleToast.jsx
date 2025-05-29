@@ -22,6 +22,7 @@ export const useApiToast = () => {
   const ok = (description="") => {
     Logger.debug(`useApiToast > apiToast.ok ... description: ${description}`);
     toast({
+      variant: "success",
       title: Localization.kr.TITLE_API_SUCCESS,
       description: description || "..."
     })

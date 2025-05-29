@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 import javax.persistence.Lob
+import javax.persistence.PrimaryKeyJoinColumn
 import javax.persistence.Table
 
 /**
@@ -87,11 +88,38 @@ class VdsStaticEntity(
 	var vgpuPlacement: Int = 1,
 	var sshPublicKey: String? = "",
 	// Relationships
-	@OneToMany(mappedBy = "vdsStatic", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+	// One-to-One relationship to VdsDynamic
+	// VdsStatic is the "owner" of this relationship if VdsDynamic's PK is also its FK.
+	// 'mappedBy' indicates that the foreign key management is on the VdsDynamic side.
+	// However, since vds_dynamic.vds_id IS the PK and also the FK, it's a shared primary key scenario.
+	@OneToOne(
+		fetch=FetchType.LAZY,
+		cascade=[CascadeType.ALL]
+	) // Cascade if VdsDynamic lifecycle depends on VdsStatic
+	@JoinColumn(
+		name="vds_id",
+		referencedColumnName="vds_id",
+		insertable=false,
+		updatable=false
+	)
+	var vdsDynamic: VdsDynamicEntity? = null,
+	@OneToMany(
+		mappedBy="vdsStatic",
+		cascade=[CascadeType.ALL],
+		fetch=FetchType.LAZY,
+		orphanRemoval = true
+	)
 	var interfaces: MutableSet<VdsInterfaceEntity> = mutableSetOf(),
-	@OneToMany(mappedBy = "vdsStatic", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy="vdsStatic",
+		cascade=[CascadeType.ALL],
+		fetch=FetchType.LAZY,
+		orphanRemoval=true
+	)
 	var interfaceStatistics: MutableSet<VdsInterfaceStatisticsEntity> = mutableSetOf()
 ): Serializable {
+	override fun toString(): String =
+		gson.toJson(this)
+
 	fun addInterface(vdsInterface: VdsInterfaceEntity) {
 		interfaces.add(vdsInterface)
 		vdsInterface.vdsStatic = this

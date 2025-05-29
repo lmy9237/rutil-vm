@@ -2,14 +2,17 @@ package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.api.configuration.CertConfig
 import com.itinfo.rutilvm.api.model.cert.toRemoteConnMgmt
-import com.itinfo.rutilvm.api.model.common.JobVo
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.ovirt.business.VDSStatus
 import com.itinfo.rutilvm.api.repository.engine.VdcOptionsRepository
+import com.itinfo.rutilvm.api.repository.engine.VdsDynamicRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.VdcOptionEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.VdsDynamicEntity
 import com.itinfo.rutilvm.api.repository.engine.findSshHostRebootCommandByVersion
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.common.ItJobService
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.error.toError
@@ -20,9 +23,9 @@ import com.itinfo.rutilvm.util.ssh.model.rebootSystem
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.HostStatus
-import org.ovirt.engine.sdk4.types.JobStatus
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.net.UnknownHostException
 
 interface ItHostOperationService {
@@ -110,6 +113,7 @@ class HostOperationServiceImpl(
 ): BaseService(), ItHostOperationService {
     // @Autowired private lateinit var propConfig: PropertiesConfig
 	@Autowired private lateinit var iHost: ItHostService
+	@Autowired private lateinit var vdsDynamics: VdsDynamicRepository
 	@Autowired private lateinit var vdcOptions: VdcOptionsRepository
 	@Autowired private lateinit var certConfig: CertConfig
 	@Autowired private lateinit var iJob: ItJobService
@@ -128,10 +132,11 @@ class HostOperationServiceImpl(
         return res.isSuccess
     }
 
+	@Transactional("engineTransactionManager")
     @Throws(UnknownHostException::class, Error::class)
     override fun restart(hostId: String): Boolean {
 		val resHost2Reboot: HostVo? = iHost.findOne(hostId)
-		log.info("restart ... hostId: {}, ssh: {}", hostId, resHost2Reboot?.ssh)
+		// log.info("restart ... hostId: {}, ssh: {}", hostId, resHost2Reboot?.ssh)
 		val remoteConnMgmt: RemoteConnMgmt? = resHost2Reboot?.toRemoteConnMgmt(certConfig.ovirtSSHPrvKey)
 		/*
 		val res: Result<Boolean> = conn.rebootFromHost(
@@ -139,11 +144,17 @@ class HostOperationServiceImpl(
 		)
 		*/
 		val vdcOption: VdcOptionEntity? = vdcOptions.findSshHostRebootCommandByVersion() // 기본 4.7
-		log.info("restart ... hostId: {}, vdcOption: {}", hostId, vdcOption)
+		val vdsDynamic2Update: VdsDynamicEntity = vdsDynamics.findByVdsId(hostId.toUUID())
+			?: throw ErrorPattern.HOST_NOT_FOUND.toError()
+		vdsDynamic2Update.vdsStatus = VDSStatus.Reboot
 		val res: Result<Boolean>? =
 			if (vdcOption?.optionValue?.isEmpty() == false)
 				remoteConnMgmt?.rebootSystem(vdcOption.optionValue)
 			else	remoteConnMgmt?.rebootSystem()
+		log.info("restart ... hostId: {}, vdcOption: {}, vdsDynamic: {}", hostId, vdcOption, vdsDynamic2Update)
+		log.info("restart ... hostId: {}, vdcOption: {}, vdsDynamic2: {}", hostId, vdcOption, vdsDynamic2Update)
+
+		vdsDynamics.save(vdsDynamic2Update)
 		// TODO: 이 명령어를 실행 후 최근 작업 및 다른 곳에서 추이를 확인 할 수 있는 기능 필요
 		/*
 		val jobAdded = iJob.add(JobVo.builder {

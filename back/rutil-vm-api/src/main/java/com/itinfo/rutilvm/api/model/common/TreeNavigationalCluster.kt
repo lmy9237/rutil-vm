@@ -9,23 +9,25 @@ import com.itinfo.rutilvm.util.ovirt.findAllVmsFromCluster
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Cluster
 import org.ovirt.engine.sdk4.types.Host
+import org.ovirt.engine.sdk4.types.HostStatus
 import org.ovirt.engine.sdk4.types.Vm
+import org.ovirt.engine.sdk4.types.VmStatus
 import java.io.Serializable
 
 class TreeNavigationalCluster (
     id: String = "",
     name: String = "",
-    val hosts: List<TreeNavigational> = listOf(),
-    val vmDowns: List<TreeNavigational> = listOf(),
-): TreeNavigational(TreeNavigationalType.CLUSTER, id, name), Serializable {
+    val hosts: List<TreeNavigational<HostStatus>> = listOf(),
+    val vmDowns: List<TreeNavigational<VmStatus>> = listOf(),
+): TreeNavigational<Unit>(TreeNavigationalType.CLUSTER, id, name), Serializable {
     override fun toString(): String =
         gson.toJson(this)
 
     class Builder {
         private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
         private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
-        private var bHosts: List<TreeNavigational> = listOf(); fun hosts(block: () -> List<TreeNavigational>?) { bHosts = block() ?: listOf() }
-        private var bVmDowns: List<TreeNavigational> = listOf(); fun vmDowns(block: () -> List<TreeNavigational>?) { bVmDowns = block() ?: listOf() }
+        private var bHosts: List<TreeNavigational<HostStatus>> = listOf(); fun hosts(block: () -> List<TreeNavigational<HostStatus>>?) { bHosts = block() ?: listOf() }
+        private var bVmDowns: List<TreeNavigational<VmStatus>> = listOf(); fun vmDowns(block: () -> List<TreeNavigational<VmStatus>>?) { bVmDowns = block() ?: listOf() }
         fun build(): TreeNavigationalCluster = TreeNavigationalCluster(bId, bName, bHosts, bVmDowns)
     }
     companion object {

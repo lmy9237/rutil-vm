@@ -90,7 +90,8 @@ class HostController {
 	): ResponseEntity<HostVo?> {
 		if (host == null)
 			throw ErrorPattern.HOST_VO_INVALID.toException()
-		log.info("/computing/hosts?deployHostedEngine={} ... 호스트 생성\n{}", deployHostedEngine, host)
+		log.debug("/computing/hosts?deployHostedEngine={} ... 호스트 생성\n{}", deployHostedEngine, host)
+		log.info("/computing/hosts?deployHostedEngine={} ... 호스트 생성\n", deployHostedEngine)
 		return ResponseEntity.ok(iHost.add(host, deployHostedEngine))
 	}
 

@@ -40,4 +40,4 @@ fun HostVo.toCertManager(
 fun HostVo.toRemoteConnMgmt(
 	prvKey: String? = null,
 	connectionTimeout: Int = RemoteConnMgmt.DEFAULT_CONNECTION_TIMEOUT
-): RemoteConnMgmt = RemoteConnMgmt.asRemoteConnMgmt("root@${address}:22", prvKey, connectionTimeout)
+): RemoteConnMgmt = RemoteConnMgmt.asRemoteConnMgmt("rutilvm@${address}:22", prvKey, connectionTimeout)

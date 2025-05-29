@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api
 
+import com.itinfo.rutilvm.api.RutilVmApplication.Companion.ctx
 import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -35,12 +36,6 @@ class RutilVmApplication: SpringBootServletInitializer() {
 		@JvmStatic lateinit var ctx: ConfigurableApplicationContext
 
 		@JvmStatic
-		fun main(args: Array<String>) {
-			log.info("SPRING VERSION: ${SpringVersion.getVersion()}")
-			ctx = runApplication<RutilVmApplication>(*args)
-		}
-
-		@JvmStatic
 		fun shutdown() {
 			log.info("shutdown ...")
 			ctx.close()
@@ -60,6 +55,11 @@ class RutilVmApplication: SpringBootServletInitializer() {
 			log.info("reboot ... STARTED")
 		}
 	}
+}
+
+fun main(args: Array<String>) {
+	log.info("SPRING VERSION: ${SpringVersion.getVersion()}")
+	ctx = runApplication<RutilVmApplication>(*args)
 }
 
 const val GB = 1073741824.0 // gb 변환

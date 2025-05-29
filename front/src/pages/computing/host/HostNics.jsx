@@ -483,7 +483,7 @@ const HostNics = ({
 
     setDragItemFlag(true);
     toast({ 
-      variant: "info",
+      variant: "success",
       description: `handleDropUnassignedNetworkToNic  ${newAttachment.networkVo?.name}을(를) ${newAttachment.hostNicVo?.name} 본딩에 추가했습니다.`, 
     });
   };

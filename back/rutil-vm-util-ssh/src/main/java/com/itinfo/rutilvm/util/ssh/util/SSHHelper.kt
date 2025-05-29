@@ -20,6 +20,30 @@ class SSHHelper {
 		const val SSH_COMMAND_RESTART = "sudo -S reboot"
 		const val SSH_COMMAND_SET_MAINTENANCE_ACTIVE = "sudo hosted-engine --set-maintenance --mode=global"
 		const val SSH_COMMAND_SET_MAINTENANCE_DEACTIVE = "sudo hosted-engine --set-maintenance --mode=none"
+		const val RUTILVM_DIR_HOME_HOST = "/home/rutilvm"
+		const val RUTILVM_DIR_SSH_HOST = "${RUTILVM_DIR_HOME_HOST}/.ssh"
+		const val RUTILVM_SSH_APP_PUBKEY = "${RUTILVM_DIR_SSH_HOST}/id_rsa.pub"
+		/**
+		 * [SSHHelper.sshRegisterRutilvmPubkey2Host]
+		 * 엔진 rutilvm사용자의 (설치 당시 미리 만들어진) ssh 공개키를
+		 * 최종적으로 호스트의 rutilvm사용자의 authorized_keys에 등록하여
+		 * 비밀번호 없이 접근 가능하도록 만든 명령어
+		 *
+		 * 목적: 신규 등록한 호스트에 접근하여 등록처리
+		 *
+		 * @return [String] 조합 된 명령어
+		 */
+		fun registerRutilvmPubkey2Host(
+			targetHost: String? = "",
+			rootPassword4Host: String? = "",
+			pubkey2Add: String? = "",
+		): String {
+			// val _pubkey = if (pubkey2Add.isNullOrEmpty()) "cat $RUTILVM_SSH_APP_PUBKEY" else "echo $pubkey2Add"
+return """
+cat $RUTILVM_SSH_APP_PUBKEY | sshpass -p '${rootPassword4Host}' ssh root@${targetHost} "su - rutilvm -c 'mkdir -p $RUTILVM_DIR_SSH_HOST && touch $RUTILVM_DIR_SSH_HOST/authorized_keys && chown -R rutilvm:rutilvm $RUTILVM_DIR_SSH_HOST && chmod 700 $RUTILVM_DIR_SSH_HOST && chmod 600 $RUTILVM_DIR_SSH_HOST/authorized_keys && tee -a $RUTILVM_DIR_SSH_HOST/authorized_keys > /dev/null'"
+""".trimIndent()
+		}
+// cat $RUTILVM_SSH_APP_PUBKEY | sshpass -p '${rootPassword4Host}' ssh root@${targetHost} "su - rutilvm -c 'mkdir -p $RUTILVM_DIR_SSH_HOST && touch $RUTILVM_DIR_SSH_HOST/authorized_keys && chown -R rutilvm:rutilvm $RUTILVM_DIR_SSH_HOST && chmod 700 $RUTILVM_DIR_SSH_HOST && chmod 600 $RUTILVM_DIR_SSH_HOST/authorized_keys && tee -a $RUTILVM_DIR_SSH_HOST/authorized_keys > /dev/null'"
 	}
 
 	fun getInsecureSession(

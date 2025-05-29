@@ -131,6 +131,19 @@ cat ~/.ssh/id_rsa.pub
 # ssh-rsa <해시값> root@rutilvm-dev.ititinfo.com
 ```
 
+## Intellij Idea
+
+### Settings
+
+- `Build, Execution, Deployment` > `Compiler`: `Build project automatically` 활성화
+- `Build, Execution, Deployment` > `Compiler` > `Annotation Processors`: `Enable annotation processing` 활성화
+- `Advanced Settings`: `Compiler:Allow auto-make to start even if developed application is currently running` 활성화
+
+### Run/Debug Configuration
+
+- Kotlin
+  - Main class: `com.itinfo.rutilvm.api.RutilVmApplicationKt`
+
 ---
 
 ## 🐘Gradle

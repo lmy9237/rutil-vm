@@ -6,7 +6,6 @@ import com.itinfo.rutilvm.util.ssh.util.SSHHelper
 import com.itinfo.rutilvm.util.ssh.util.executeAll
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Session
-import com.jcraft.jsch.UserInfo
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.util.*
@@ -106,6 +105,26 @@ fun RemoteConnMgmt.rebootSystem(command: String? = SSHHelper.SSH_COMMAND_RESTART
 	log.info("SSH로 재부팅 성공: {}", it)
 }.onFailure {
 	log.error("SSH로 재부팅 실패: {}", it.localizedMessage)
+	// throw if (it is Error) it.toItCloudException() else it
+	throw it
+}
+
+fun RemoteConnMgmt.registerRutilvmPubkey2Host(
+	targetHost: String? = "",
+	rootPassword4Host: String? = "",
+	pubkey2Add: String? = "",
+): Result<Boolean> = runCatching {
+	log.info("registerRutilvmPubkey2Host ... ")
+	val session: Session? = toInsecureSession()
+	if (targetHost?.isEmpty() == true ||
+		rootPassword4Host?.isEmpty() == true)
+		throw Error("필수 값 없음")
+	val command: String = SSHHelper.registerRutilvmPubkey2Host(targetHost, rootPassword4Host, pubkey2Add)
+	return session?.executeAll(listOf(command)) ?: throw Error("UNKNOWN ERROR!")
+}.onSuccess {
+	log.info("SSH로 엔진rutilvm의 pubkey를 호스트rutilvm에 등록 성공: {}", it)
+}.onFailure {
+	log.error("SSH로 엔진rutilvm의 pubkey를 호스트rutilvm에 등록 실패: {}", it.localizedMessage)
 	// throw if (it is Error) it.toItCloudException() else it
 	throw it
 }
