@@ -13,6 +13,7 @@ import VmNicActionButtons     from "@/components/dupl/VmNicActionButtons";
 import {
   useAllNicsFromTemplate
 } from "@/api/RQHook";
+import VmNicModals from "@/components/modal/vm/VmNicModals";
 
 /**
  * @name TemplateNics
@@ -25,9 +26,14 @@ const TemplateNics = ({
   templateId,
 }) => {
   const { activeModal, setActiveModal, } = useUIState()
-  const {
-    vnicProfilesSelected, setVnicProfilesSelected
+  // const {
+  //   vnicProfilesSelected, setVnicProfilesSelected
+  // } = useGlobal()
+    const {
+    vmsSelected,
+    nicsSelected, setNicsSelected
   } = useGlobal()
+
   const {
     data: vnicProfiles = [],
     isLoading: isVnicProfilesLoading,
@@ -63,7 +69,7 @@ const TemplateNics = ({
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchVnicProfiles}/>
-        <VmNicActionButtons />
+        <VmNicActionButtons  type="template" resourceId={templateId}/>
       </div>
       <TablesOuter target={"vnicprofile"}
         columns={columns}
@@ -71,10 +77,14 @@ const TemplateNics = ({
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setVnicProfilesSelected(selectedRows)}
+        onRowClick={(selectedRows) => {
+          if (activeModal().length > 0) return;
+          setNicsSelected(selectedRows); // 선택된 NIC 저장
+        }}
         isLoading={isVnicProfilesLoading} isRefetching={isVnicProfilesRefetching}  isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
       />
-      <SelectedIdView items={vnicProfilesSelected}/>
+      <SelectedIdView items={nicsSelected}/>
+      <VmNicModals type="template" resourceId={templateId} />
       {/* 
         {activeModal().includes("nic:remove") && (
           <TemplateNicDeleteModal

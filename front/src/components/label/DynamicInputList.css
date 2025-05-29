@@ -1,6 +1,3 @@
-.dynamic-select-outer {
-  width: 50%;
-}
 .dynamic-select-outer>button {
   width:260px;max-width:260px;
 }
@@ -20,5 +17,4 @@
 .nic-label {
   width: 71px !important;
   margin-top: 2px;
-  /* min-width: 71px; */
 }

@@ -33,13 +33,13 @@
 }
 @media screen and (min-width: 2800px) {
   .grid-item {
-    width: calc(100% / 8 - 8px);
+    /* width: calc(100% / 8 - 8px); */
     flex: 1 1 calc(100% / 8 - 8px);
   }
 }
 @media screen and (max-width:1400px) {
   .grid-item {
-    width: calc(100% / 8 - 8px);
+    /* width: calc(100% / 8 - 8px); */
     flex: 1 1 calc(100% / 8 - 8px);
   }
 }

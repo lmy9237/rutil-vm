@@ -294,7 +294,6 @@ const TableColumnsInfo = {
     { header: Localization.kr.STATUS, accessor: 'status', clickable: false, width: '10%' },
     { header: Localization.kr.HOST, accessor: 'host', clickable: true, width: '15%' },
     { header: Localization.kr.UP_TIME, accessor: 'upTime', clickable: false, width: '20%' },
-    { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false, width: '25%' },
   ],
   NICS_FROM_TEMPLATE: [
     { header: '', accessor: 'status', clickable: false, width: '7%' },

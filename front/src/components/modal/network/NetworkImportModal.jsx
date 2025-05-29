@@ -94,16 +94,9 @@ const NetworkImportModal = ({
         value={networkProvidersSelected}
         onChange={(e) => setNetworkProvidersSelected(e.target.value)}
         disabled={isDatacentersLoading}
-        options={
-          isDatacentersLoading
-            ? [{ value: "", label: "로딩 중..." }]
-            : networkProvider.length > 0
-            ? networkProvider.map((provider) => ({
-                value: provider.name,
-                label: provider.name,
-              }))
-            : [{ value: "", label: "공급자 없음" }]
-        }
+        loading={isDatacentersLoading}
+        options={[...networkProvider]}
+        placeholderLabel={"공급자 없음"}
       />
 
       {/* 공급자 네트워크 테이블 */}

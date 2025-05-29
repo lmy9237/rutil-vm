@@ -1,7 +1,7 @@
 #section {
   width: calc(100% - var(--w-aside-menu));height:100%;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
   background-color: white;
   /*border-left: var(--border-default);*/
 }

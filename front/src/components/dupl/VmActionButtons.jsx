@@ -65,7 +65,9 @@ const VmActionButtons = ({
   const allDownOrSuspended = vmsSelected.length > 0 && vmsSelected.every(vm => 
     vm.status === "DOWN" || vm.status === "SUSPENDED"
   );
-  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.some(vm => vm?.status === "UP" || vm?.status === "POWERING_DOWN" || vm?.status === "SUSPENDED");
+  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.some(vm =>
+    ["UP", "POWERING_DOWN", "POWERING_UP", "SUSPENDED"].includes(vm?.status)
+  );
   const { mutate: downloadRemoteViewerConnectionFileFromVm } = useRemoteViewerConnectionFileFromVm()
   const downloadRemoteViewerConnectionFile = (e) => {
     Logger.debug(`VmActionButtons > downloadRemoteViewerConnectionFile ... `)
@@ -105,8 +107,10 @@ const VmActionButtons = ({
     { type: "pause",      onClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
     { type: "reboot",     onClick: () => setActiveModal("vm:reboot"),      label: Localization.kr.REBOOT,                                  disabled: !allUp },
     { type: "reset",      onClick: () => setActiveModal("vm:reset"),       label: Localization.kr.RESET,                                   disabled: !allUp },
-    { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
-    { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
+    { type: "shutdown", onClick: () => setActiveModal("vm:shutdown"), label: Localization.kr.END, disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
+    { type: "powerOff", onClick: () => setActiveModal("vm:powerOff"),label: Localization.kr.POWER_OFF,disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
+    // { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
+    // { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
     { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: !allUp, subactions: consoleActions},
     { type: "migration",  onClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION,                               disabled: !allUp },
     { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 },

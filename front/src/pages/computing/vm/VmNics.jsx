@@ -22,6 +22,7 @@ import { checkZeroSizeToMbps } from "@/util";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./Vm.css"
+import VmNicModals from "@/components/modal/vm/VmNicModals";
 /**
  * @name VmNics
  * @description 가상에 종속 된 네트워크 인터페이스 목록
@@ -104,7 +105,7 @@ useClickOutside(nicRef, (e) => {
         ref={nicRef} 
       > 
         <div className="dupl-header-group f-start gap-4 w-full mb-2">
-          <NicActionButtons />
+          <NicActionButtons  type="vm" resourceId={vmId}  />
         </div>
 
         <div className="network-interface-outer w-full">
@@ -184,7 +185,9 @@ useClickOutside(nicRef, (e) => {
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
         path={`vms-network_interfaces;name=${vmsSelected[0]?.name}`} 
       />
+      <VmNicModals type="vm" resourceId={vmId} />
     </>
+    
   );
 };
 
