@@ -63,7 +63,6 @@ export function transNic(hostNics = [], nicMap = {}) {
     }));
 }
 
-
 /**
  * 네트워크 어태치먼트와 클러스터 네트워크 정보 병합
  * @param {Array} networkAttachments
@@ -87,7 +86,6 @@ export function transNA(networkAttachments = [], networks = []) {
   });
 }
 
-
 /**
  * 할당되지 않은 네트워크 목록 반환
  * @param {Array} networks
@@ -103,7 +101,7 @@ export function transDetachNA(networks = [], networkAttachments = []) {
       name: e?.name,
       status: e?.status || "NON_OPERATIONAL",
       vlan: e?.vlan,
-      required: e?.required ? "필수" : "필수X",
+      required: e?.required,
       usageVm: !!e?.usage?.vm,
     }));
 }
@@ -160,32 +158,60 @@ export function getBondModalStateForEdit(bond) {
  * @param {*} baseNetworkAttachments 
  * @param {*} movedNetworkAttachments 
  * @param {*} modifiedNAs 
+ * @param {*} recentlyUnassignedNAs 
  * @returns 
  */
 export function getNetworkAttachmentModalState(
   networkAttachment, 
   baseNetworkAttachments = [], 
   movedNetworkAttachments = [],
-  modifiedNAs = []
+  modifiedNAs = [],
+  recentlyUnassignedNAs = {}
 ) {
-  // 최신 편집값부터 찾기
+  // 1. 최신 편집값 우선
   let targetNA = modifiedNAs.find(na =>
     na.hostNicVo?.name === networkAttachment.hostNicVo?.name &&
     na.networkVo?.id === networkAttachment.networkVo?.id
-  )
-  // 없으면 기존 로직대로
+  );
+  console.log('$ targetNA:', targetNA);
+  console.log('$ recentlyUnassignedNAs:', recentlyUnassignedNAs);
+
+  // 2. id 매칭
+  if (!targetNA && networkAttachment.id) {
+    targetNA = [...baseNetworkAttachments].find(na => na.id === networkAttachment.id);
+  }
+
+  // 3. (hostNicVo.name + networkVo.id) 매칭
   if (!targetNA) {
-    if (networkAttachment.id) {
-      targetNA = [...baseNetworkAttachments].find(na => na.id === networkAttachment.id);
-    }
-    if (!targetNA) {
-      targetNA = [...movedNetworkAttachments].find(na =>
-        na.hostNicVo?.name === networkAttachment.hostNicVo?.name &&
-        na.networkVo?.id === networkAttachment.networkVo?.id
-      );
+    targetNA = [...movedNetworkAttachments].find(na =>
+      na.hostNicVo?.name === networkAttachment.hostNicVo?.name &&
+      na.networkVo?.id === networkAttachment.networkVo?.id
+    );
+  }
+
+  // **4. recentlyUnassignedNAs에서 찾기**
+  if (!targetNA) {
+    // (1) 우선 networkVo.id+hostNicVo.name으로 매칭
+    const foundCache = Object.values(recentlyUnassignedNAs).find(
+      cache =>
+        cache.networkVo?.id === networkAttachment.networkVo?.id
+        // && cache.hostNicVo?.name === networkAttachment.hostNicVo?.name  // 주석: NIC가 바뀌었으니 name까지 비교하지 않는다!
+    );
+    if (foundCache) {
+      targetNA = {
+        ...foundCache,
+        hostNicVo: networkAttachment.hostNicVo, // 새로운 NIC 정보로 덮어씀
+        ipAddressAssignments: [...(foundCache.ipAddressAssignments || [])],
+        dnsServers: [...(foundCache.dnsServers || foundCache.nameServerList || [])]
+      };
     }
   }
-  // 이하 동일
+
+  // 5. fallback: networkAttachment 자체(최소화)
+  if (!targetNA) {
+    targetNA = networkAttachment;
+  }
+
   return {
     id: targetNA?.id,
     inSync: targetNA?.inSync ?? false,
@@ -206,4 +232,3 @@ export function getNetworkAttachmentModalState(
     dnsServers: Array.isArray(targetNA?.dnsServers) ? [...targetNA.dnsServers] : [],
   };
 }
-

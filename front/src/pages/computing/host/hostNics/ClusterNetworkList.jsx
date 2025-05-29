@@ -1,18 +1,18 @@
 import { RVI16, rvi16TriangleDown, rvi16TriangleUp, rvi16VirtualMachine } from "../../../../components/icons/RutilVmIcons";
 
-const ClusterNetworkList = ({ net, handleDragStart }) => {
+const ClusterNetworkList = ({ network, handleDragStart }) => {
 
   return (
     <div className="network-item f-btw"
       draggable
-      onDragStart={(e) => handleDragStart(e, net, "network", "attach")}
+      onDragStart={(e) => handleDragStart(e, network, "network", "attach")}
     >
       <div className="f-start text-left">
-        <RVI16 className="mr-1.5" iconDef={net?.status === "OPERATIONAL" ? rvi16TriangleUp() : rvi16TriangleDown()} />
-        [{net?.required}] {net?.name}
-        {net?.vlan === 0 ? "" : <span style={{ marginLeft: "4px", color: "#888" }}>(VLAN {net.vlan})</span>}
+        <RVI16 className="mr-1.5" iconDef={network?.status === "OPERATIONAL" ? rvi16TriangleUp() : rvi16TriangleDown()} />
+        [{network?.required === true ? "필수" : "필수X"}] {network?.name}
+        {network?.vlan === 0 ? "" : <span style={{ marginLeft: "4px", color: "#888" }}>(VLAN {network.vlan})</span>}
       </div>
-      {net?.usageVm === true && <RVI16 className="icon" iconDef={rvi16VirtualMachine()} />}
+      {network?.usageVm === true && <RVI16 className="icon" iconDef={rvi16VirtualMachine()} />}
     </div>
   );
 };

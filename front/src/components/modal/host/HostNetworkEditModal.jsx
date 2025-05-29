@@ -28,6 +28,10 @@ const HostNetworkEditModal = ({
     setSelectedModalTab("ipv4");
   },[isOpen])
 
+  useEffect(() =>{
+    console.log("$ networkModalState ", networkModalState)
+  },[isOpen])
+
   const handleChangeInSync = (field, value) => {
     setNetworkModalState((prev) => ({ ...prev, [field]: value }));
   };
@@ -76,7 +80,22 @@ const HostNetworkEditModal = ({
 
   
   const validateForm = () => {
-    // if (!networkVo.id) return `${Localization.kr.NETWORK}를 선택해주세요.`;
+    if (networkModalState.ipv4Values.protocol === "static") {
+      if(networkModalState.ipv4Values.address === "") {
+        return "ipv4의 IP를 입력해주세요"
+      }
+      if(networkModalState.ipv4Values.netmask === "") {
+        return "ipv4의 넷마스크를 입력해주세요"
+      }
+    }
+    if (networkModalState.ipv6Values.protocol === "static") {
+      if(networkModalState.ipv6Values.address === "") {
+        return "ipv6의 IP를 입력해주세요"
+      }
+      if(networkModalState.ipv6Values.netmask === "") {
+        return "ipv6의 넷마스크를 입력해주세요"
+      }
+    }
     return null;
   };
 
