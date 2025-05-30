@@ -646,6 +646,7 @@ export const RVI36 = ({
  */
 export const status2Icon = (
   status = "",
+  color2Override=null,
 ) => {
   // const tooltipId = `status-tooltip-${status}`;
   let iconDef = rvi16QuestionMark()
@@ -710,13 +711,91 @@ export const status2Icon = (
       >
         <RVI16 iconDef={iconDef} />
       </Tippy>
-      {/* <RVI16 iconDef={iconDef} data-tooltip-id={tooltipId}
-        data-tooltip-content={Localization.kr.renderStatus(status)}
-      />
-      {createPortal(<Tooltip id={tooltipId} effect="solid" middlewares={[]} className="custom-tooltip"/>, document.body)} */}
     </>
   )
 }
+
+
+/**
+ * @name status2TreeIcon
+ * @description 상태에 따른 RutilVM용 SVG 아이콘 출력 (트리메뉴용)
+ * 
+ * @param {string} status 상태코드
+ * @returns {JSX.Element} 툴팁이 포함 된 아이콘
+ */
+export const status2TreeIcon = (
+  type="", status = "",
+) => {
+  let iconDef = rvi16QuestionMark()
+  switch(status?.toUpperCase()) {
+    case "OK":
+    case "UP":
+    case Localization.kr.renderStatus("UP"):
+    case "ACTIVE":
+    case Localization.kr.renderStatus("ACTIVE"):   
+    case "OPERATIONAL":
+    case Localization.kr.renderStatus("OPERATIONAL"):  
+      if (type === "storage" || type === "domain")
+        iconDef = rvi16Storage("currentColor");
+      if (type === "disk")
+        iconDef = rvi16HardDrive("currentColor");
+      else if (type === "host")
+        iconDef = rvi16Host("currentColor");
+      else if (type === "vm")
+        iconDef = rvi16Desktop("currentColor");
+      break;
+    case "INSTALLING":
+    case Localization.kr.renderStatus("INSTALLING"):   iconDef = rvi16Install;break;
+    case "DOWN":
+    case Localization.kr.renderStatus("DOWN"):
+    case "INACTIVE":
+    case Localization.kr.renderStatus("INACTIVE"):
+    case "INSTALL_FAILED":
+    case Localization.kr.renderStatus("INSTALL_FAILED"):
+    case "UNINITIALIZED":                          iconDef = rvi16TriangleDown("currentColor");break;
+    case "POWERING_DOWN":                          iconDef = rvi16ArrowsDownRed;break;
+    case "INITIALIZING":
+    case "POWERING_UP":                            iconDef = rvi16ArrowsUpGreen;break;
+    case "MAINTENANCE":                            iconDef = rvi16Wrench("currentColor");break;
+    case "UNATTACHED":                             iconDef = rvi16Disconnected("currentColor");break;
+    case "UNASSIGNED": 
+    case "SAVING_STATE": 
+    case "RESTORING_STATE": 
+    case "WAIT_FOR_LAUNCH":
+    case "DETACHING":
+    case "ACTIVATING":
+    case "MIGRATING":                               iconDef = rvi16RebootLined("currentColor");break;
+    case "REBOOT": 
+    case "REBOOT_IN_PROGRESS":
+    case Localization.kr.renderStatus("REBOOT_IN_PROGRESS"):  
+    case "NEXT_RUN":
+    case "PREPARING_FOR_MAINTENANCE":               iconDef = rvi16Refresh("currentColor");break;
+    case "LOCKED":
+    case "IMAGE_LOCKED":                            iconDef = rvi16Lock("currentColor");break;
+    // case "MIGRATING":                              iconDef = rvi16RebootLined();break;
+    // case "REBOOT": 
+    // case "PREPARING_FOR_MAINTENANCE":              iconDef = rvi16Refresh();break;
+    // case "LOCKED":                                 iconDef = rvi16Lock();break;
+
+    case "IN_PREVIEW":                             iconDef = <FontAwesomeIcon icon={faEye} color="#777" size="sm" />;break; // 임시
+    case "SUSPENDED":                              iconDef = rvi16Pause;break;
+    case "NEXTRUN":                                iconDef = rvi16ExclamationMark("currentColor");break;
+    case "NON_RESPONSIVE":
+    case "NON_OPERATIONAL":                        iconDef = rvi16NonOperational("currentColor");break;
+    case "UNKNOWN":
+    default:                                       iconDef = rvi16QuestionMark("currentColor");break;
+  }
+
+  return iconDef
+}
+
+/**
+ * @name status2TreeIcon
+ * @description 상태에 따른 RutilVM용 SVG 아이콘 출력 (트리메뉴용)
+ * 
+ * @param {string} status 상태코드
+ * @returns {JSX.Element} 툴팁이 포함 된 아이콘
+ */
 export const clusterStatus2Icon = (status = "", connect=false) => {
   return (
     connect && (

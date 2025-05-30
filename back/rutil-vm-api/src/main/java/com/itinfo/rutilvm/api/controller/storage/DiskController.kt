@@ -14,7 +14,9 @@ import com.itinfo.rutilvm.api.service.storage.ItDiskService
 
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.buffer.DataBuffer
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.HTTP_VERSION_NOT_SUPPORTED
 import org.springframework.http.MediaType
@@ -22,8 +24,12 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
 import java.io.IOException
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 
 @Controller
 @Api(tags = ["Storage", "Disk"])
@@ -263,7 +269,7 @@ class DiskController: BaseController() {
 	@ApiOperation(
 		httpMethod="POST",
 		value="디스크 업로드",
-		notes="디스크 업로드를 업로드 한다"
+		notes="디스크 업로드를 한다"
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "file", value = "파일", dataTypeClass = MultipartFile::class, required=true, paramType="body"),
@@ -290,6 +296,30 @@ class DiskController: BaseController() {
 		}.then(Mono.just(ResponseEntity.ok(true))).onErrorResume {
 			Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false))
 		}
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="디스크 다운로드",
+		notes="디스크 다운로드를 한다"
+	)
+	@ApiImplicitParams(
+ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass = String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{diskId}/download")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@Throws(IdNotFoundException::class, InvalidRequestException::class, IOException::class)
+	fun download(
+		@PathVariable diskId: String? = "",
+	): Mono<ResponseEntity<Flux<DataBuffer>>> {
+		log.info("/storages/disks/{}/download ... 업로드", diskId)
+		if (diskId.isNullOrEmpty())
+			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
+		return iDisk.download(diskId)
 	}
 
 

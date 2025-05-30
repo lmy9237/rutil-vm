@@ -274,11 +274,12 @@ private fun Connection.srvDisksFromStorageDomain(storageId: String): StorageDoma
 
 fun Connection.findAllDisksFromStorageDomain(storageDomainId: String, follow: String = ""): Result<List<Disk>> = runCatching {
 	checkStorageDomainExists(storageDomainId)
-
+	val _follow = "storagedomain" +
+		if (follow.isNotEmpty()) ",$follow"
+		else ""
 	this.srvDisksFromStorageDomain(storageDomainId).list().apply {
-		if (follow.isNotEmpty()) follow(follow)
+		follow(_follow)
 	}.send().disks()
-
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
 }.onFailure {
@@ -288,9 +289,7 @@ fun Connection.findAllDisksFromStorageDomain(storageDomainId: String, follow: St
 
 fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): Result<List<Disk>> = runCatching {
 	checkStorageDomainExists(storageDomainId)
-
 	this.srvDisksFromStorageDomain(storageDomainId).list().unregistered(true).send().disks()
-
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "가져오기 목록조회", storageDomainId)
 }.onFailure {

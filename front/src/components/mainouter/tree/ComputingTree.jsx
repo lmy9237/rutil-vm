@@ -5,12 +5,15 @@ import useTmi                 from "@/hooks/useTmi";
 import useContextMenu         from "@/hooks/useContextMenu";
 import {
   rvi16Globe,
-  rvi16Wrench, rvi16Refresh, rvi16Host,
+  rvi16Wrench, rvi16Refresh, rvi16QuestionMark,
+
+  rvi16Host,
   rvi16Desktop,
   rvi16DataCenter,
   rvi16Cluster,
   rvi16DesktopSleep,
   rvi16Pause,
+  status2TreeIcon,
 } from "@/components/icons/RutilVmIcons";
 import {
   useAllTreeNavigations
@@ -147,11 +150,14 @@ const ComputingTree = ({}) => {
                           <div key={host.id} className="tmi-g">
                             <TreeMenuItem level={4}
                               title={host.name}
-                              iconDef={host?.status === "MAINTENANCE"
-                                ? rvi16Wrench("currentColor")
-                                : host?.status === "PREPARING_FOR_MAINTENANCE" || host?.status === "REBOOT"
-                                  ? rvi16Refresh("currentColor")
-                                  : rvi16Host("currentColor")
+                              iconDef={
+                                host?.status === "UNKNOWN" 
+                                  ? rvi16QuestionMark("currentColor")
+                                  : host?.status === "MAINTENANCE"
+                                    ? rvi16Wrench("currentColor")
+                                    : host?.status === "PREPARING_FOR_MAINTENANCE" || host?.status === "REBOOT"
+                                      ? rvi16Refresh("currentColor") // TODO: 새로 디자인 된 아이콘 추가 (호스트아이콘 우측하단 및 refresh 아이콘 배치, 이름 rvi16HostRefresh)
+                                      : rvi16Host("currentColor")
                               }
                               isSelected={() => location.pathname.includes(host?.id)}
                               isNextLevelVisible={isHostOpen}
@@ -183,7 +189,7 @@ const ComputingTree = ({}) => {
                               <div key={vm?.id} className="tmi-g">
                                 <TreeMenuItem level={5}
                                   title={vm?.name}
-                                  iconDef={rvi16Desktop("currentColor")}
+                                  iconDef={status2TreeIcon("vm", vm?.status)}
                                   // TODO: host에 붙어있지만 상태가 이상한 경우에 대한 조건처리
                                   isSelected={() => location.pathname.includes(vm?.id)}
                                   isNextLevelVisible={isHostOpen}

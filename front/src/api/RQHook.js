@@ -8,6 +8,7 @@ import { triggerDownload }    from "@/util";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 
+const DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT = 10 * 1000; // 10초
 const DEFAULT_REFETCH_INTERVAL_IN_MILLI = 2 * 60 * 1000; // 2분
 
 //#region: 쿼리Key
@@ -20,6 +21,9 @@ const QK = {
   DASHBOARD_DOMAIN: "dashboardDomain",
   DASHBOARD_HOST: "dashboardHost",
   DASHBOARD_VM_CPU: "dashboardVmCpu",
+  DASHBOARD_VM_MEMORY: "dashboardVmMemory",
+  DASHBOARD_STORAGE_MEMORY: "dashboardStorageMemory",
+  DASHBOARD_PER_VM_CPU: "dashboardPerVmCpu",
 }
 //#endregion: 쿼리Key
 
@@ -38,7 +42,7 @@ export const useAllTreeNavigations = (
   type = "none",
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT,
   queryKey: [QK.ALL_TREE_NAVIGATIONS, type],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
   queryFn: async () => {
     const res = await ApiManager.findAllTreeNaviations(type);
@@ -157,7 +161,7 @@ export const useDashboardVmMemory = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['dashboardVmMemory'],
+  queryKey: [QK.DASHBOARD_VM_MEMORY],
   queryFn: async () => {
     const res = await ApiManager.getVmMemory()
     const _res = mapPredicate
@@ -165,7 +169,6 @@ export const useDashboardVmMemory = (
       : validate(res) ?? []
     Logger.debug(`RQHook > useDashboardVmMemory ... res: `, _res);
     return _res;
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
   },
 });
 
@@ -173,7 +176,7 @@ export const useDashboardStorageMemory = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['dashboardStorageMemory'],
+  queryKey: [QK.DASHBOARD_STORAGE_MEMORY],
   queryFn: async () => {
     const res = await ApiManager.getStorageMemory()
     const _res = mapPredicate
@@ -181,7 +184,6 @@ export const useDashboardStorageMemory = (
       : validate(res) ?? []
     Logger.debug(`RQHook > useDashboardStorageMemory ... res: `, _res);
     return _res
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
   },
 });
 
@@ -189,7 +191,7 @@ export const useDashboardPerVmCpu = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['dashboardPerVmCpu'],
+  queryKey: [QK.DASHBOARD_PER_VM_CPU],
   queryFn: async () => {
     const res = await ApiManager.getPerVmCpu()
     const _res = mapPredicate
@@ -2599,7 +2601,6 @@ export const useRemoteViewerConnectionFileFromVm = (
     },
     onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useRemoteViewerConnectionFileFromVm ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.CONSOLE} 원격 뷰어 접속파일 다운로드 ${Localization.kr.REQ_COMPLETE}`)
       triggerDownload(res, "console.vv")
       queryClient.invalidateQueries('allVMs');
@@ -6024,6 +6025,7 @@ export const useEditUser = (
   const { apiToast } = useApiToast();
     return useMutation({
     mutationFn: async () => {
+      closeModal();
       const res = await ApiManager.editUser(user)
       const _res = validate(res) ?? {}
       Logger.debug(`RQHook > useEditUser ... user: ${JSON.stringify(user, null, 2)}`);

@@ -1,10 +1,8 @@
 package com.itinfo.rutilvm.api.service.storage
 
-import com.google.auto.service.AutoService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.common.JobVo
 import com.itinfo.rutilvm.api.model.computing.VmViewVo
 import com.itinfo.rutilvm.api.model.computing.toDiskVms
 import com.itinfo.rutilvm.api.model.fromTemplateCdromsToIdentifiedVos
@@ -12,30 +10,18 @@ import com.itinfo.rutilvm.api.model.fromVmCdromsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.common.ItJobService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
-import org.ovirt.engine.sdk4.builders.JobBuilder
 
-import org.ovirt.engine.sdk4.services.ImageTransferService
 import org.ovirt.engine.sdk4.types.*
+import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
-import java.net.URL
-import java.security.SecureRandom
-import java.security.cert.X509Certificate
-import java.util.*
-import javax.net.ssl.HostnameVerifier
-import javax.net.ssl.HttpsURLConnection
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
 
 interface ItDiskService {
 
@@ -170,6 +156,17 @@ interface ItDiskService {
      */
     @Throws(Error::class, IOException::class)
     fun upload(file: MultipartFile, image: DiskImageVo): Boolean
+	/**
+	 * [ItDiskService.download]
+	 * 디스크 이미지 다운로드
+	 * required: provisioned_size, alias, description, wipe_after_delete, shareable, backup, disk_profile.
+	 * @param diskId [String] 디스크ID
+	 *
+	 * @return [Flux]<[DataBuffer]> 성공결과
+	 * @throws IOException
+	 */
+	@Throws(Error::class, IOException::class)
+	fun download(diskId: String): Mono<ResponseEntity<Flux<DataBuffer>>>
     /**
      * [ItDiskService.refreshLun]
      * lun 새로고침
@@ -180,7 +177,6 @@ interface ItDiskService {
      */
     @Throws(Error::class)
     fun refreshLun(diskId: String, hostId: String): Boolean
-
     /**
      * [ItDiskService.findAllVmsFromDisk]
      * 스토리지도메인 - 가상머신
@@ -205,7 +201,6 @@ interface ItDiskService {
 @Service
 class DiskServiceImpl(
 ): BaseService(), ItDiskService {
-	@Autowired private lateinit var iJob: ItJobService
 
     @Throws(Error::class)
     override fun findAll(): List<DiskImageVo> {
@@ -314,99 +309,39 @@ class DiskServiceImpl(
         return res.isSuccess
     }
 
+
+	@Autowired private lateinit var iImageTransfer: ItImageTransferService
+
     @Throws(Error::class, IOException::class)
     override fun upload(file: MultipartFile, image: DiskImageVo): Boolean {
         log.info("uploadDisk ... file: {}, image:{}", file.name, image)
         if (file.isEmpty)
-			throw ErrorPattern.FILE_NOT_FOUND.toException() // 파일이 없으면 에러
+			throw ErrorPattern.FILE_NOT_FOUND.toException()
 
-        // 이미지 업로드해서 imageTransfer.id()를 알아낸다
-		val imageTransferId: String = conn.uploadSetDisk(
+        // 이미지 업로드해서 imageTransfer.id() 를 알아내고 그 ID를 이용해 파일을 전송해야 한다.
+		val imageTransferId: String = conn.findImageTransferId4DiskImageUpload(
 			image.toUploadDisk(conn, file.size)
-		).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
+		).getOrNull() ?: throw ErrorPattern.IMAGE_TRANSFER_NOT_FOUND.toException()
 
-        return uploadFileToTransferUrl(file, imageTransferId)
+        return iImageTransfer.uploadFile(file, imageTransferId)
     }
 
-    @Throws(Error::class)
-    fun uploadFileToTransferUrl(file: MultipartFile, imageTransferId: String): Boolean {
-        log.info("uploadFileToTransferUrl ... ")
-		val jobAdded = iJob.add(JobVo.builder {
-			name { "디스크 파일 업로드" }
-			description { "(RutilVM에서) 디스크 파일 업로드 <${imageTransferId}>" }
-			status { JobStatus.STARTED }
-			autoCleared { true }
-		})
-        val imageTransferService: ImageTransferService = conn.srvImageTransfer(imageTransferId)
-        val transferUrl = imageTransferService.get().send().imageTransfer().transferUrl()
-        log.info("uploadFileToTransferUrl ... transferUrl: $transferUrl")
+	@Throws(Error::class, IOException::class)
+	override fun download(diskId: String): Mono<ResponseEntity<Flux<DataBuffer>>> {
+		log.info("download ... diskId: {}", diskId)
+		val disk: Disk = conn.findDisk(diskId).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
+		val req4transferBuilder: ImageTransfer = disk.toImageTransfer()
+		val imageTransferId4Download: String = conn.findImageTransferId4DiskImageDownload(
+			diskId
+		).getOrNull() ?: throw ErrorPattern.IMAGE_TRANSFER_NOT_FOUND.toException()
+		return iImageTransfer.downloadFile(imageTransferId4Download, disk?.alias())
+	}
 
-		disableSSLVerification()
-        val url = URL(transferUrl)
-        (url.openConnection() as? HttpsURLConnection)?.apply {
-			allowUserInteraction = true
-			setRequestMethod("PUT")
-			setRequestProperty("PUT", url.path)
-			setRequestProperty("Content-Length", file.size.toString())
-			setFixedLengthStreamingMode(file.size)
-			setDoOutput(true)
-		}?.also { http ->
-			http.connect()
-			val bufferSize = calculateOptimalBufferSize(file.size)
-			val buffer = ByteArray(bufferSize)
-			val insBuffered: InputStream = BufferedInputStream(file.inputStream, bufferSize)
-			BufferedOutputStream(http.outputStream, bufferSize).use { outsBuffered ->
-				var bytesRead: Int
-				while (insBuffered.read(buffer).also { bytesRead = it } != -1) {
-					outsBuffered.write(buffer, 0, bytesRead)
-				}
-				outsBuffered.flush()
-			}.runCatching {
-
-			}
-			imageTransferService.finalize_().send()
-			http.disconnect()
-			jobAdded?.id?.let { id ->
-				log.info("uploadFileToTransferUrl ... 최근작업 ({}) 종료처리!", id)
-				iJob.end(id)
-			}
-			log.info("uploadFileToTransferUrl ... 완료!")
-		}
-        return true
-    }
-
-    private fun calculateOptimalBufferSize(fileSize: Long): Int {
-        return when {
-            fileSize > 5L * 1024 * 1024 * 1024 -> 4 * 1024 * 1024  // 4MB for files larger than 5GB
-            fileSize > 500L * 1024 * 1024 -> 2 * 1024 * 1024       // 2MB for files larger than 500MB
-            else -> 512 * 1024                                     // 512KB for smaller files
-        }
-    }
-
-    @Throws(Error::class)
-    fun disableSSLVerification() {
-        log.debug("disableSSLVerification")
-        val hostnameVerifier = HostnameVerifier { _, _ -> true }
-        val trustAllCerts = arrayOf<TrustManager>(
-            object : X509TrustManager {
-                override fun getAcceptedIssuers(): Array<X509Certificate>? {
-                    return null
-                }
-                override fun checkClientTrusted(certs: Array<X509Certificate>, authType: String) {}
-                override fun checkServerTrusted(certs: Array<X509Certificate>, authType: String) {}
-            }
-        )
-
-        val sc = SSLContext.getInstance("TLS")
-        sc.init(null, trustAllCerts, SecureRandom())
-        HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier)
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.socketFactory)
-    }
 
     @Throws(Error::class)
     override fun refreshLun(diskId: String, hostId: String): Boolean {
         log.info("refreshLun ... ")
-        // TODO HostId 구하는 방법
+        // TODO: hostId 구하는 방법
         val res: Result<Boolean> = conn.refreshLunDisk(diskId, hostId)
         return res.isSuccess
     }
@@ -414,7 +349,8 @@ class DiskServiceImpl(
     @Throws(Error::class)
     override fun findAllVmsFromDisk(diskId: String): List<VmViewVo> {
         log.info("findAllVmsFromDisk ... ")
-        val res: List<Vm> = conn.findAllVmsFromDisk(diskId).getOrDefault(emptyList())
+        val res: List<Vm> = conn.findAllVmsFromDisk(diskId)
+			.getOrDefault(emptyList())
         return res.toDiskVms(conn)
     }
 

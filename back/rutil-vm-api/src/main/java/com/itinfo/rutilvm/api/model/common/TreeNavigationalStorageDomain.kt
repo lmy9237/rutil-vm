@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.util.ovirt.findAllDisksFromStorageDomain
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
+import org.ovirt.engine.sdk4.types.DiskContentType
 import org.ovirt.engine.sdk4.types.DiskStatus
 import org.ovirt.engine.sdk4.types.StorageDomain
 import org.ovirt.engine.sdk4.types.StorageDomainStatus
@@ -31,18 +32,28 @@ class TreeNavigationalStorageDomain (
     }
 }
 
-fun StorageDomain.toNavigationalWithStorageDomains(/*conn: Connection*/): TreeNavigationalStorageDomain {
+fun StorageDomain.toNavigationalWithStorageDomains(conn: Connection?=null): TreeNavigationalStorageDomain {
     // 디스크 목록 출력삭제
-//    val disks: List<Disk> =
-//        conn.findAllDisksFromStorageDomain(this@toNavigationalWithStorageDomains.id())
-//            .getOrDefault(listOf())
+    val disks: List<Disk> =
+		conn?.findAllDisksFromStorageDomain(this@toNavigationalWithStorageDomains.id())
+			?.getOrDefault(emptyList())?.filterNot {
+				// 잡다한 유형들 다 제외
+				it.contentType() == DiskContentType.OVF_STORE ||
+				it.contentType() == DiskContentType.HOSTED_ENGINE_CONFIGURATION ||
+				it.contentType() == DiskContentType.HOSTED_ENGINE_METADATA ||
+				it.contentType() == DiskContentType.HOSTED_ENGINE_SANLOCK ||
+				it.contentType() == DiskContentType.MEMORY_DUMP_VOLUME ||
+				it.contentType() == DiskContentType.MEMORY_METADATA_VOLUME
+			}
+			?: listOf()
 
     return TreeNavigationalStorageDomain.builder {
         id { this@toNavigationalWithStorageDomains.id() }
         name { this@toNavigationalWithStorageDomains.name() }
-//        disks { disks.fromDisksToTreeNavigationals() }
+		status { this@toNavigationalWithStorageDomains.status() }
+        disks { disks.fromDisksToTreeNavigationals() }
     }
 }
 
-fun List<StorageDomain>.fromDisksToTreeNavigationals(/*conn: Connection*/): List<TreeNavigationalStorageDomain> =
-    this@fromDisksToTreeNavigationals.map { it.toNavigationalWithStorageDomains(/*conn*/) }
+fun List<StorageDomain>.fromDisksToTreeNavigationals(conn: Connection?=null): List<TreeNavigationalStorageDomain> =
+    this@fromDisksToTreeNavigationals.map { it.toNavigationalWithStorageDomains(conn) }

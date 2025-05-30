@@ -48,7 +48,9 @@ const DiskInfo = () => {
     { id: "general",  label: Localization.kr.GENERAL,  onClick: () => handleTabClick("general") },
     { id: "vms",      label: Localization.kr.VM,       onClick: () => handleTabClick("vms") },
     { id: "domains",  label: Localization.kr.DOMAIN,   onClick: () => handleTabClick("domains") },
-  ]), [diskId]);
+  ].filter((tab) => 
+    !(disk?.contentType === "OVF_STORE" && tab.id === "vms")) /* OVF_STORE 유형일 때 가상머신 탭 보여줄 필요 없음 */
+  ), [disk, diskId]);
 
   useEffect(() => {
     setActiveTab(section || "general");
@@ -79,10 +81,10 @@ const DiskInfo = () => {
   }, [activeTab, diskId]);
 
   const sectionHeaderButtons = [
-    { type: "update", label: Localization.kr.UPDATE, onClick: () => setActiveModal("disk:update") },
-    { type: "remove", label: Localization.kr.REMOVE, onClick: () => setActiveModal("disk:remove") },
-    { type: "move", label: Localization.kr.MOVE,     onClick: () => setActiveModal("disk:move") },
-    { type: "copy", label: Localization.kr.COPY,     onClick: () => setActiveModal("disk:copy") },
+    { type: "update", label: Localization.kr.UPDATE,   onClick: () => setActiveModal("disk:update") },
+    { type: "remove", label: Localization.kr.REMOVE,   onClick: () => setActiveModal("disk:remove") },
+    { type: "move",   label: Localization.kr.MOVE,     onClick: () => setActiveModal("disk:move") },
+    { type: "copy",   label: Localization.kr.COPY,     onClick: () => setActiveModal("disk:copy") },
     // { type: 'upload', label: Localization.kr.UPDATE, onClick: () => setActiveModal("disk:restart") },
   ];
 

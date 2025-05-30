@@ -262,8 +262,9 @@ const Tables = ({
       return <TableRowLoading colLen={columns.length} />;
     } else if (!isLoading && isSuccess) {
       // 데이터 가져오기 성공 후
-      Logger.debug(`Tables > renderTableBody ... isLoading: ${isLoading}, isSuccess: ${isSuccess}`)
-      return sortedData.length === 0 ? ( // 데이터 0건일 때
+      // Logger.debug(`Tables > renderTableBody ... isLoading: ${isLoading}, isSuccess: ${isSuccess}`)
+      return sortedData.length === 0 ? (
+        // 데이터 0건일 때
         <TableRowNoData colLen={columns.length} />
       ) : (
         // 데이터 있을 경우

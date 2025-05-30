@@ -175,8 +175,7 @@ const App = () => {
         </Route>
       </Routes>
 
-      <Toaster
-        position="bottom-right"
+      <Toaster position="bottom-right"
         reverseOrder={false}
         gutter={4}
         toastOptions={{

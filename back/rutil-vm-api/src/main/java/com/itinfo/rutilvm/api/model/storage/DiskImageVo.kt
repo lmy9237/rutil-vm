@@ -10,6 +10,7 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.DiskBuilder
 import org.ovirt.engine.sdk4.builders.DiskProfileBuilder
+import org.ovirt.engine.sdk4.builders.ImageTransferBuilder
 import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
 import org.ovirt.engine.sdk4.types.*
 import java.io.Serializable
@@ -214,7 +215,6 @@ fun Disk.toDomainDiskMenu(conn: Connection): DiskImageVo {
 fun List<Disk>.toDomainDiskMenus(conn: Connection): List<DiskImageVo> =
 	this@toDomainDiskMenus.map { it.toDomainDiskMenu(conn) }
 
-
 fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 	val disk = this@toDiskInfo
 	val storageDomain: StorageDomain? = conn.findStorageDomain(disk.storageDomains().first().id(), follow = "diskprofiles").getOrNull()
@@ -315,8 +315,6 @@ fun Disk.toDiskImageVo(conn: Connection): DiskImageVo {
 }
 fun List<Disk>.toDiskImageVos(conn: Connection): List<DiskImageVo> =
 	this@toDiskImageVos.map { it.toDiskImageVo(conn) }
-
-
 
 fun Disk.toDiskVo(conn: Connection, vmId: String): DiskImageVo {
 	val storageDomain: StorageDomain? = conn.findStorageDomain(this@toDiskVo.storageDomains().first().id()).getOrNull()
@@ -473,4 +471,3 @@ fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 		.format(DiskFormat.RAW) // 이미지 업로드는 raw 형식만 가능 +front 처리?
 		.build()
 }
-

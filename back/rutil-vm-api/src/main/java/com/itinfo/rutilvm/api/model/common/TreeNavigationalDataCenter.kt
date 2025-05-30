@@ -75,7 +75,7 @@ fun DataCenter.toNavigationalWithStorageDomains(conn: Connection): TreeNavigatio
     return TreeNavigationalDataCenter.builder {
         id { this@toNavigationalWithStorageDomains.id() }
         name { this@toNavigationalWithStorageDomains.name() }
-        storageDomains { storageDomains.fromDisksToTreeNavigationals(/*conn*/) }
+        storageDomains { storageDomains.fromDisksToTreeNavigationals(conn) }
     }
 }
 fun List<DataCenter>.toNavigationalsWithStorageDomains(conn: Connection): List<TreeNavigationalDataCenter> =

@@ -802,9 +802,9 @@ const TableColumnsInfo = {
   // 사용자
   SETTING_USER: [
     { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.USER_ID, accessor: 'username', clickable: false },
     { header: Localization.kr.NAME, accessor: 'firstName', clickable: false },
     { header: '성', accessor: 'surName', clickable: false },
-    { header: Localization.kr.USER_ID, accessor: 'username', clickable: false },
     { header: '비활성화 여부', accessor: '_isDisabled', clickable: false, width:'4%' },
     { header: '인증 공급자', accessor: 'authProvider', clickable: false },
     { header: '네임스페이스', accessor: 'namespace', clickable: false, width:'8%'  },

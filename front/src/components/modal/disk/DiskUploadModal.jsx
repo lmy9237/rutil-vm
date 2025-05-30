@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import toast from "react-hot-toast";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import { useToast }                     from "@/hooks/use-toast";
 import useUIState                       from "@/hooks/useUIState";
@@ -46,6 +45,7 @@ const DiskUploadModal = ({
   onClose,
 }) => {
   const { toast } = useToast();
+  const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
   const [formState, setFormState] = useState(initialFormState);
   const [file, setFile] = useState(null);
@@ -138,11 +138,7 @@ const DiskUploadModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 

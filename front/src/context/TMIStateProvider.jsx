@@ -14,6 +14,7 @@ export const TMIStateProvider = ({ children }) => {
   const KEY_TMI_OPEN_CLUSTER = "openCluster";
   const KEY_TMI_OPEN_HOST = "openHost";
   const KEY_TMI_OPEN_DOMAIN = "openDomain";
+  const KEY_TMI_OPEN_DISK = "openDisk";
 
   const initialState = JSON.parse(localStorage.getItem(KEY_TMI_STATE)) ?? {
     [KEY_TMI_LAST_SELECTED]: "",
@@ -41,6 +42,9 @@ export const TMIStateProvider = ({ children }) => {
         
       },
       [KEY_TMI_OPEN_DOMAIN]: {
+        
+      },
+      [KEY_TMI_OPEN_DISK]: {
         
       },
     }
@@ -100,6 +104,9 @@ export const TMIStateProvider = ({ children }) => {
           
         },
         [KEY_TMI_OPEN_DOMAIN]: {
+          
+        },
+        [KEY_TMI_OPEN_DISK]: {
           
         },
       }
@@ -230,7 +237,7 @@ export const TMIStateProvider = ({ children }) => {
       ...sTMIState,
       [tmiId] : {
         ..._browseTMI(tmiId),
-        [KEY_TMI_OPEN_HOST]: {
+        [KEY_TMI_OPEN_DOMAIN]: {
           ..._browseOpenDomains(tmiId),
           [target]: newV
         }
@@ -239,7 +246,32 @@ export const TMIStateProvider = ({ children }) => {
   }
   const _toggleOpenDomains = (tmiId, target) => {
     Logger.debug(`TMIStateProvider > _toggleOpenDomains ... tmiId: ${tmiId}, target: ${target}`)
-    _setOpenHosts(tmiId, target, !_openDomains(tmiId, target))
+    _setOpenDomains(tmiId, target, !_openDomains(tmiId, target))
+  }
+
+  const _browseOpenDisks = (tmiId=KEY_TMI_STORAGE) => _browseTMI(tmiId)[KEY_TMI_OPEN_DISK]
+  const _openDisks = (tmiId, target) => {
+    Logger.debug(`TMIStateProvider > _openDisks ... tmiId: ${tmiId}, target: ${target}`)
+    const _tmiFound = _browseOpenDisks(tmiId) ?? {}
+    const _openDisksState = _tmiFound ?? {}
+    return _openDisksState[target] ?? false;
+  }
+  const _setOpenDisks = (tmiId, target, newV) => {
+    Logger.debug(`TMIStateProvider > _setOpenDisks ... tmiId: ${tmiId}, target: ${target}, newV: ${newV}`)
+    setTMIState({ 
+      ...sTMIState,
+      [tmiId] : {
+        ..._browseTMI(tmiId),
+        [KEY_TMI_OPEN_DISK]: {
+          ..._browseOpenDisks(tmiId),
+          [target]: newV
+        }
+      }
+    });
+  }
+  const _toggleOpenDisks = (tmiId, target) => {
+    Logger.debug(`TMIStateProvider > _toggleOpenDisks ... tmiId: ${tmiId}, target: ${target}`)
+    _setOpenDisks(tmiId, target, !_openDisks(tmiId, target))
   }
 
   const openClustersComputing = (target) => _openClusters(KEY_TMI_COMPUTING, target)
@@ -261,6 +293,10 @@ export const TMIStateProvider = ({ children }) => {
   const openDomainsStorage = (target) => _openDomains(KEY_TMI_STORAGE, target)
   const setOpenDomainsStorage = (target, newV) => _setOpenDomains(KEY_TMI_STORAGE, target, newV)
   const toggleOpenDomainsStorage = (target) => _toggleOpenDomains(KEY_TMI_STORAGE, target)
+
+  const openDisksStorage = (target) => _openDisks(KEY_TMI_STORAGE, target)
+  const setOpenDisksStorage = (target, newV) => _setOpenDisks(KEY_TMI_STORAGE, target, newV)
+  const toggleOpenDisksStorage = (target) => _toggleOpenDisks(KEY_TMI_STORAGE, target)
   //#endregion: 트리메뉴 데이터센터 보관값
 
   return (
@@ -280,6 +316,7 @@ export const TMIStateProvider = ({ children }) => {
         
         openDataCentersStorage, setOpenDataCentersStorage, toggleDataCentersStorage,
         openDomainsStorage, setOpenDomainsStorage, toggleOpenDomainsStorage,
+        openDisksStorage, setOpenDisksStorage, toggleOpenDisksStorage,
       }
     }>
       {children}

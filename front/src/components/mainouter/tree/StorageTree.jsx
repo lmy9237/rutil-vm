@@ -6,7 +6,12 @@ import useContextMenu         from "@/hooks/useContextMenu";
 import {
   rvi16Globe,
   rvi16DataCenter,
+  rvi16Wrench,
+  rvi16Refresh,
   rvi16Storage,
+  rvi16QuestionMark,
+  rvi16Lock,
+  status2TreeIcon,
 } from "@/components/icons/RutilVmIcons";
 import {
   useAllTreeNavigations,
@@ -23,7 +28,7 @@ const StorageTree = ({}) => {
     openDataCentersStorage, toggleDataCentersStorage,
     openDomainsStorage, toggleOpenDomainsStorage,
   } = useTmi();
-  const { setDatacentersSelected, setDomainsSelected, } = useGlobal();
+  const { setDatacentersSelected, setDomainsSelected, setDisksSelected } = useGlobal();
 
   // ✅ API 호출 (스토리지 트리 데이터)
   const { data: navStorageDomains = [] } = useAllTreeNavigations("storagedomain");
@@ -91,13 +96,11 @@ const StorageTree = ({}) => {
             {isDataCentersOpen && [...dc?.storageDomains]?.map((domain) => {
               const isDomainOpen = openDomainsStorage(domain?.id) || false;
               const hasDisks = [...domain?.disks]?.length > 0;
-
               return (
                 <div key={domain?.id} className="tmi-g" id="tmi-domain">
-                  <TreeMenuItem
-                    level={3}
+                  <TreeMenuItem level={3}
                     title={domain?.name}
-                    iconDef={rvi16Storage("currentColor")}
+                    iconDef={status2TreeIcon("domain", domain?.status)}
                     isSelected={() => location.pathname.includes(domain?.id)}
                     isNextLevelVisible={isDomainOpen}
                     isChevronVisible={hasDisks}
@@ -123,6 +126,48 @@ const StorageTree = ({}) => {
                       }, "domain")
                     }}
                   />
+
+                  {/* 네 번째 레벨 (Disk(s)) */}
+                  {isDomainOpen && (
+                    <>
+                      {/* Disks */}
+                      {[...domain?.disks]?.map((disk) => (
+                        <div key={disk?.id} className="tmi-g" id="tmi-disk">
+                          <TreeMenuItem level={4}
+                            title={disk?.name}
+                            iconDef={status2TreeIcon("disk", disk?.status)}
+                            isSelected={() => location.pathname.includes(disk?.id)}
+                            isNextLevelVisible={isDomainOpen}
+                            isChevronVisible={false}
+                            onChevronClick={()=>{}}
+                            onClick={() => {
+                              setDatacentersSelected(dc)
+                              setDomainsSelected(domain)
+                              setDisksSelected(disk)
+                              // disk?.id && navigate(`/storages/domains/${domain?.id}/disks/${disk?.id}`);
+                              disk?.id && navigate(`/storages/disks/${disk?.id}`);
+                              
+                            }}
+                            onContextMenu={(e) => {
+                              e.preventDefault();
+                              setDatacentersSelected(dc)
+                              setDomainsSelected(domain)
+                              setDisksSelected(disk)
+                              setContextMenu({
+                                mouseX: e.clientX,
+                                mouseY: e.clientY,
+                                item: {
+                                  ...disk,
+                                  level: 4,
+                                },
+                                treeType: "domains"
+                              }, "disk");
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
               );
             })}

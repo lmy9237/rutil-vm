@@ -207,7 +207,8 @@ const Dashboard = () => {
       iconDef: rvi24Storage(),
       title: Localization.kr.DOMAIN,
       cntTotal: dashboard?.storageDomains ?? 0,
-      navigatePath: "/computing/rutil-manager/storageDomains",
+      // navigatePath: "/storages/rutil-manager/storageDomains",
+      navigatePath: "/storages/domains",
     }, {
       iconDef: rvi24Desktop(),
       title: Localization.kr.VM,

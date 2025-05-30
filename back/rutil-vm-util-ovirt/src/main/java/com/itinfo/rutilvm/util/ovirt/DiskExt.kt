@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.util.ovirt.error.*
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.DiskBuilder
+import org.ovirt.engine.sdk4.builders.ImageTransferBuilder
 import org.ovirt.engine.sdk4.internal.containers.ImageContainer
 import org.ovirt.engine.sdk4.internal.containers.ImageTransferContainer
 import org.ovirt.engine.sdk4.services.*
@@ -162,7 +163,6 @@ fun Connection.copyDisk(diskId: String, diskAlias: String, domainId: String): Re
 fun Connection.refreshLunDisk(diskId: String, hostId: String): Result<Boolean> = runCatching {
 	checkDiskExists(diskId)
 	val host = checkHost(hostId)
-
 	this.srvDisk(diskId).refreshLun().host(host).send()
 	true
 
@@ -173,33 +173,60 @@ fun Connection.refreshLunDisk(diskId: String, hostId: String): Result<Boolean> =
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun Connection.findImageTransferId4DiskImageDownload(
+	diskId: String
+): Result<String> = runCatching {
+	// 디스크 ok 상태여야 이미지 업로드 가능
+	this.expectDiskStatus(diskId)
+	val imageTransfer = preparedImageTransfer(diskId, ImageTransferDirection.DOWNLOAD)
+	checkImageTransferReady(imageTransfer)
+	log.info("findImageTransferId4DiskImageDownload ... imageTransfer.id(): {}", imageTransfer.id())
+	imageTransfer.id()
+}.onSuccess {
+	Term.DISK.logSuccess("파일 다운로드 준비")
+}.onFailure {
+	Term.DISK.logFail("파일 다운로드 준비")
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 // 디스크 이미지 업로드하기 위해 하는 세팅
-fun Connection.uploadSetDisk(disk: Disk): Result<String> = runCatching {
+fun Connection.findImageTransferId4DiskImageUpload(
+	disk: Disk
+): Result<String> = runCatching {
 	// 디스크 생성
 	val diskUpload: Disk =
 		this.addDisk(disk).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
 
 	// 디스크 ok 상태여야 이미지 업로드 가능
 	this.expectDiskStatus(diskUpload.id())
-
-	val imageTransfer = preparedImageTransfer(diskUpload.id())
+	val imageTransfer = preparedImageTransfer(diskUpload.id(), ImageTransferDirection.UPLOAD)
 	checkImageTransferReady(imageTransfer)
 	log.info("imageTransfer.id {}", imageTransfer.id())
-
 	imageTransfer.id()
 }.onSuccess {
-	Term.DISK.logSuccess("파일 업로드 준비완")
+	Term.DISK.logSuccess("파일 업로드 준비")
 }.onFailure {
-	Term.DISK.logFail("파일 업로드 준비X")
+	Term.DISK.logFail("파일 업로드 준비")
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-private fun Connection.preparedImageTransfer(diskId: String): ImageTransfer {
-	val imageTransferContainer = ImageTransferContainer().apply {
-		direction(ImageTransferDirection.UPLOAD)
-		image(ImageContainer().apply { id(diskId) })
+private fun Connection.preparedImageTransfer(
+	diskId: String,
+	direction: ImageTransferDirection = ImageTransferDirection.DOWNLOAD,
+): ImageTransfer {
+	val imageTransfer =
+		when(direction) {
+			ImageTransferDirection.DOWNLOAD -> {
+				val disk: Disk = this@preparedImageTransfer.findDisk(diskId)
+					.getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toError()
+				disk.toImageTransfer()
+			}
+			else -> ImageTransferContainer().apply {
+				direction(direction)
+				image(ImageContainer().apply { id(diskId) })
+			}
 	}
-	return addImageTransfer(imageTransferContainer)
+	return addImageTransfer(imageTransfer)
 		.getOrNull() ?: throw ErrorPattern.IMAGE_TRANSFER_NOT_FOUND.toError()
 }
 
@@ -223,29 +250,35 @@ private fun checkImageTransferReady(imageTransfer: ImageTransfer) {
 private fun Connection.srvAllImageTransfer(): ImageTransfersService =
 	systemService.imageTransfersService()
 
-private fun Connection.addImageTransfer(imageTransferContainer: ImageTransferContainer): Result<ImageTransfer?> = runCatching {
-	this.srvAllImageTransfer().add().imageTransfer(imageTransferContainer).send().imageTransfer()
+private fun Connection.addImageTransfer(
+	imageTransferContainer: ImageTransfer
+): Result<ImageTransfer?> = runCatching {
+	this.srvAllImageTransfer().add().apply {
+		imageTransfer(imageTransferContainer)
+	}
+	.send().imageTransfer()
 }.onSuccess {
-	Term.IMAGE_TRANSFER.logSuccess("업로드")
+	Term.IMAGE_TRANSFER.logSuccess("작업추가")
 }.onFailure {
-	Term.IMAGE_TRANSFER.logFail("업로드")
+	Term.IMAGE_TRANSFER.logFail("작업추가")
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.cancelImageTransfer(imageTransferId: String): Result<Boolean?> = runCatching {
+fun Connection.cancelImageTransfer(
+	imageTransferId: String
+): Result<Boolean?> = runCatching {
 	this.srvAllImageTransfer().imageTransferService(imageTransferId).cancel().send()
-
 	true
 }.onSuccess {
-	Term.IMAGE_TRANSFER.logSuccess("업로드 취소")
+	Term.IMAGE_TRANSFER.logSuccess("작업취소")
 }.onFailure {
-	Term.IMAGE_TRANSFER.logFail("업로드 취소")
+	Term.IMAGE_TRANSFER.logFail("작업취소")
 	throw if (it is Error) it.toItCloudException() else it
 }
 
 
-fun Connection.srvImageTransfer(imageId: String): ImageTransferService =
-	this.srvAllImageTransfer().imageTransferService(imageId)
+fun Connection.srvImageTransfer(imageTransferId: String): ImageTransferService =
+	this.srvAllImageTransfer().imageTransferService(imageTransferId)
 
 private fun Connection.findAllImageTransfers(): Result<List<ImageTransfer>> = runCatching {
 	this.srvAllImageTransfer().list().send().imageTransfer()
@@ -256,7 +289,7 @@ private fun Connection.findAllImageTransfers(): Result<List<ImageTransfer>> = ru
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-private fun Connection.findImageTransfer(imageId: String): Result<ImageTransfer?> = runCatching {
+fun Connection.findImageTransfer(imageId: String): Result<ImageTransfer?> = runCatching {
 	this.srvImageTransfer(imageId).get().send().imageTransfer()
 }.onSuccess {
 	Term.IMAGE_TRANSFER.logSuccess("상세조회")
@@ -318,3 +351,12 @@ fun Connection.findAllVmsFromDisk(diskId: String): Result<List<Vm>> = runCatchin
 	Term.DISK.logFailWithin(Term.VM, "목록조회", it, diskId)
 	throw if (it is Error) it.toItCloudException() else it
 }
+
+
+fun Disk.toImageTransfer(
+	direction: ImageTransferDirection = ImageTransferDirection.DOWNLOAD,
+): ImageTransfer = ImageTransferBuilder()
+	.disk(this@toImageTransfer)
+	.direction(direction)
+	.format(this@toImageTransfer.format())
+	.build()
