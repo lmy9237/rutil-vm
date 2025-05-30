@@ -671,6 +671,32 @@ class StorageController: BaseController() {
 	}
 
 	@ApiOperation(
+		httpMethod="GET",
+		value="스토리지 도메인 디스크 불러오기",
+		notes="선택된 스토리지 도메인의 디스크 불러오기 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{storageDomainId}/disks/{diskId}/unregistered")
+	@ResponseBody
+	fun unregisteredDisk(
+		@PathVariable("storageDomainId") storageDomainId: String? = null,
+		@PathVariable("diskId") diskId: String? = null,
+	): ResponseEntity<DiskImageVo> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		if (diskId == null)
+			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/disks/{}/unregistered ... 스토리지 도메인 밑에 붙어있는 Disk 불러오기", storageDomainId, diskId)
+		return ResponseEntity.ok(iDomainImport.findUnregisteredDiskFromStorageDomain(storageDomainId, diskId))
+	}
+
+	@ApiOperation(
 		httpMethod="POST",
 		value="스토리지 도메인 디스크 불러오기",
 		notes="스토리지 도메인 디스크 불러오기"

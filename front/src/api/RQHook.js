@@ -4623,12 +4623,38 @@ export const useAllUnregisteredDisksFromDomain = (storageDomainId,
   enabled: !!storageDomainId,
 })
 /**
+ * @name useUnregisteredDiskFromDomain
+ * @description 도메인 내 디스크 가져오기 한 항목 조회 useQuery훅
+ * 
+ * @param {string} storageDomainId 도메인ID
+ * @param {string} diskId 디스크 ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findUnregisteredDiskFromDomain
+ */
+export const useUnregisteredDiskFromDomain = (
+  storageDomainId, diskId,
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['unregisteredDiskFromDomain', storageDomainId, diskId],
+  queryFn: async () => {
+    const res = await ApiManager.findAllUnregisteredDisksFromDomain(storageDomainId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useUnregisteredDiskFromDomain ... storageDomainId: ${storageDomainId}, diskId: ${diskId} res: `, _res);
+    return _res;
+  },
+  enabled: !!storageDomainId  && !!diskId,
+})
+/**
  * @name useRegisteredDiskFromDomain
  * @description 도메인 디스크 불러오기
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-//TODO: 변경필요 useSearchFcFromHost 참고
 export const useRegisteredDiskFromDomain = (
   postSuccess=()=>{}, postError
 ) => {
@@ -4657,6 +4683,24 @@ export const useRegisteredDiskFromDomain = (
     },
   });
 };
+
+// export const useSearchFcFromHost = (
+//   hostId,
+//   mapPredicate,
+//   postSuccess=()=>{}, postError
+// ) => useQuery({
+//   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+//   queryKey: ['searchFcFromHost', hostId],
+//   queryFn: async () => {
+//     const res = await ApiManager.findSearchFcFromHost(hostId);
+//     const _res = mapPredicate
+//       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+//       : validate(res) ?? [];
+//     Logger.debug(`RQHook > useSearchFcFromHost ... hostId: ${hostId}, res: `, _res);
+//     return _res; // 데이터 가공 후 반환
+//   },
+//   enabled: !!hostId,
+// });
 /**
  * @name useDeletRegisteredDiskFromDomain
  * @description 도메인 디스크 불러오기 삭제

@@ -8,7 +8,7 @@ import SearchBox                                 from "@/components/button/Searc
 import { ActionButton }                          from "@/components/button/ActionButtons";
 import TablesOuter                               from "@/components/table/TablesOuter";
 import TableColumnsInfo                          from "@/components/table/TableColumnsInfo";
-import DomainGetVmTemplateModal                  from "@/components/modal/domain/DomainGetVmTemplateModal";
+import DomainGetVmTemplateModal                  from "@/components/modal/domain/DomainImportVmTemplateModal";
 import { useAllUnregisteredTemplatesFromDomain } from "@/api/RQHook";
 import { checkZeroSizeToMB } from "@/util";
 import DeleteModal from "@/utils/DeleteModal";

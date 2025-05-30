@@ -12,7 +12,7 @@ import VmImportModal from "./VmImportModal";
 import Logger from "../../../utils/Logger";
 import "./MVm.css";
 import { useParams } from "react-router-dom";
-import DomainGetVmTemplateModal from "../domain/DomainGetVmTemplateModal";
+import DomainGetVmTemplateModal from "../domain/DomainImportVmTemplateModal";
 
 /**
  * @name VmModals

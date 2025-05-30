@@ -298,6 +298,23 @@ fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+// fun Connection.findUnregisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): Result<Disk> = runCatching {
+// 	checkStorageDomainExists(storageDomainId)
+//
+// 	this.srvDisksFromStorageDomain(storageDomainId)
+// 		.diskService(diskId)
+// 		.get()
+// 		.unregistered(true)
+// 		.send()
+// 		.disk()
+//
+// }.onSuccess {
+// 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "가져오기 목록조회", storageDomainId)
+// }.onFailure {
+// 	Term.STORAGE_DOMAIN.logFailWithin(Term.DISK, "가져오기 목록조회", it, storageDomainId)
+// 	throw if (it is Error) it.toItCloudException() else it
+// }
+
 fun Connection.registeredDiskFromStorageDomain(storageDomainId: String, diskId: String): Result<Boolean> = runCatching {
 	this.srvDisksFromStorageDomain(storageDomainId)
 		.add()
@@ -314,6 +331,8 @@ fun Connection.registeredDiskFromStorageDomain(storageDomainId: String, diskId: 
 
 fun Connection.removeRegisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): Result<Boolean> = runCatching {
 	this.srvDisksFromStorageDomain(storageDomainId).diskService(diskId).remove().send()
+
+	// this.srvStorageDomains().storageDomainService(storageDomainId).disksService().list().unregistered(true).send() //이거같음
 	true
 
 }.onSuccess {

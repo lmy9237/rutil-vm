@@ -390,7 +390,6 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 
 fun Disk.toUnregisterdDisk(): DiskImageVo {
     val disk = this@toUnregisterdDisk
-//    val diskLink: Disk? = conn.findDisk(this@toUnregisterdDisk.id()).getOrNull()
     return DiskImageVo.builder {
         id { disk.id() }
         alias { disk.alias() }

@@ -89,6 +89,15 @@ interface ItStorageImportService {
 	@Throws(Error::class)
 	fun findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo>
 	/**
+	 * [ItStorageImportService.findUnregisteredDiskFromStorageDomain]
+	 * 스토리지 도메인 - 디스크 불러오기
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @param diskId [String] 디스크 Id
+	 */
+	@Throws(Error::class)
+	fun findUnregisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): DiskImageVo?
+	/**
 	 * [ItStorageImportService.registeredDiskFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 불러오기 - 가져오기
 	 *
@@ -173,6 +182,16 @@ class StorageImportServiceImpl(
 		val res: List<Disk> = conn.findAllUnregisteredDisksFromStorageDomain(storageDomainId)
 			.getOrDefault(emptyList())
 		return res.toUnregisterdDisks()
+	}
+
+	@Throws(Error::class)
+	override fun findUnregisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): DiskImageVo? {
+		log.info("findUnregisteredDiskFromStorageDomain ... storageDomainId: {}, diskId: {}", storageDomainId, diskId)
+		val res: Disk? = conn.findAllUnregisteredDisksFromStorageDomain(storageDomainId)
+			.getOrDefault(emptyList())
+			.firstOrNull { disk -> disk.id() == diskId }
+
+		return res?.toUnregisterdDisk()
 	}
 
 	@Throws(Error::class)

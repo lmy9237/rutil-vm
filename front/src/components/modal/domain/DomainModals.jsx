@@ -9,7 +9,7 @@ import DomainActivateModal    from "./DomainActivateModal";
 import DomainDetachModal      from "./DomainDetachModal";
 import DomainImportModal      from "./DomainImportModal";
 import DomainMaintenanceModal from "./DomainMaintenanceModal";
-import DomainGetDiskModal     from "./DomainGetDiskModal";
+import DomainGetDiskModal     from "./DomainImportDiskModal";
 
 /**
  * @name DomainModals

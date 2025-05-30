@@ -239,8 +239,10 @@ const ENDPOINTS = {
   
   FIND_VMS_FROM_STORAGE_DOMAINS: (storageDomainId) =>                      `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/vms`,
   FIND_UNREGISTERD_VMS_FROM_STORAGE_DOMAINS: (storageDomainId) =>          `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/vms/unregistered`,
+  FIND_UNREGISTERD_VM_FROM_STORAGE_DOMAINS: (storageDomainId, vmId) =>     `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/vms/${vmId}/unregistered`,
   FIND_DISKS_FROM_STORAGE_DOMAINS: (storageDomainId) =>                    `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/disks`,
   FIND_UNREGISTERD_DISKS_FROM_STORAGE_DOMAINS: (storageDomainId) =>        `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/disks/unregistered`,
+  FIND_UNREGISTERD_DISK_FROM_STORAGE_DOMAINS: (storageDomainId, diskId) => `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/disks/${diskId}/unregistered`,
   REGISTERD_DISK_FROM_STORAGE_DOMAINS: (storageDomainId, diskId) =>        `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/disks/${diskId}`,
   DELETE_REGISTERD_DISK_FROM_STORAGE_DOMAINS: (storageDomainId, diskId) => `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/disks/${diskId}`,
   FIND_TEMPLATES_FROM_STORAGE_DOMAINS: (storageDomainId) =>                `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}/templates`,

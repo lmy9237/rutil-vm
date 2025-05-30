@@ -2471,6 +2471,19 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.FIND_DISK_FROM_DOMAIN
   }),
   /**
+   * @name ApiManager.findUnregisteredDiskFromDomain
+   * @description 디스크 가져오기 한개 목록
+   *
+   * @param {string} storageDomainId
+   * @returns 
+   * 
+   * @see
+   */
+  findUnregisteredDiskFromDomain: async (storageDomainId, diskId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_UNREGISTERD_DISK_FROM_STORAGE_DOMAINS(storageDomainId, diskId),
+  }),
+  /**
    * @name ApiManager.registeredDiskFromDomain
    * @description
    * 

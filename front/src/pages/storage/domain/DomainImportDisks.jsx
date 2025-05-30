@@ -1,40 +1,39 @@
-import React, { useCallback, useMemo } from "react";
+import React, { Suspense, useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUIState              from "@/hooks/useUIState";
 import useGlobal               from "@/hooks/useGlobal";
 import useSearch               from "@/hooks/useSearch";
-import Loading                 from "@/components/common/Loading";
 import SelectedIdView          from "@/components/common/SelectedIdView";
 import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
 import { ActionButton }        from "@/components/button/ActionButtons";
 import SearchBox               from "@/components/button/SearchBox";
 import TableColumnsInfo        from "@/components/table/TableColumnsInfo";
 import TablesOuter             from "@/components/table/TablesOuter";
-import TableRowClick           from "@/components/table/TableRowClick";
-import DomainGetDiskModal      from "@/components/modal/domain/DomainGetDiskModal";
 import {
   useAllUnregisteredDisksFromDomain
 } from "@/api/RQHook";
 import { checkZeroSizeToGiB }  from "@/util";
 import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import Loading from "@/components/common/Loading";
+import DomainImportDiskModal from "@/components/modal/domain/DomainImportDiskModal";
 
 /**
  * @name DomainImportDisks
  * @description 도메인에 디스크 가져오기 목록
  *
  * @prop {string} domainId 도메인ID
- * @returns {JSX.Element} DomainGetDisks
+ * @returns {JSX.Element} DomainImportDisks
  */
 const DomainImportDisks = ({ 
   domainId
 }) => {
   const navigate = useNavigate()
-  const { activeModal, setActiveModal, } = useUIState()
   const {
     domainsSelected,
     disksSelected, setDisksSelected
   } = useGlobal()
+
+  const [isImportPopup, setIsImportPopup] = useState(false);     
 
   const {
     data: disks = [],
@@ -56,11 +55,7 @@ const DomainImportDisks = ({
   })), [disks]);
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleNameClick = useCallback((id) => {
-    navigate(`/computing/templates/${id}`);
-  }, [navigate])
 
-  // TODO: ActionButtons 생성
   return (
     <>
       <div className="dupl-header-group f-start gap-4 w-full">
@@ -68,11 +63,11 @@ const DomainImportDisks = ({
         <div className="header-right-btns">
           <ActionButton actionType="default" label={Localization.kr.IMPORT}
             disabled={disksSelected.length === 0} 
-            onClick={() => setActiveModal("domain:importDisk")}
+            onClick={() => setIsImportPopup(true)}
           />
           <ActionButton actionType="default" label={Localization.kr.REMOVE}
             disabled={disksSelected.length === 0} 
-            onClick={() => setActiveModal("disk:delete")}
+            onClick={() => ({})}
           />
         </div>
       </div>
@@ -90,6 +85,14 @@ const DomainImportDisks = ({
         name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
         path={`storage-disk_image_register;name=${domainsSelected[0]?.name}`}
       />
+      <Suspense fallback={<Loading />}>
+        <DomainImportDiskModal
+          isOpen={isImportPopup}
+          onClose={() => setIsImportPopup(false)}
+          domainId={domainId}
+          diskIds={disksSelected}
+        />
+      </Suspense>
     </>
   );
 };

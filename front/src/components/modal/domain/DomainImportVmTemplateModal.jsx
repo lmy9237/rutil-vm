@@ -23,14 +23,14 @@ const initialFormState = {
 };
 
 /**
- * @name DomainGetVmTemplateModal
+ * @name DomainImportVmTemplateModal
  * @description 도메인 - 데이터센터 연결 모달
  *
  * @prop {boolean} isOpen
  *
- * @returns {JSX.Element} DomainGetVmTemplateModal
+ * @returns {JSX.Element} DomainImportVmTemplateModal
  */
-const DomainGetVmTemplateModal = ({ 
+const DomainImportVmTemplateModal = ({ 
   isOpen,
   onClose,
   type="vm", 
@@ -263,4 +263,4 @@ const DomainGetVmTemplateModal = ({
   );
 };
 
-export default DomainGetVmTemplateModal;
+export default DomainImportVmTemplateModal;

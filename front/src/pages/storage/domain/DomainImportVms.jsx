@@ -9,7 +9,7 @@ import { ActionButton } from '@/components/button/ActionButtons';
 import SearchBox from '@/components/button/SearchBox';
 import TablesOuter from "@/components/table/TablesOuter";
 import TableColumnsInfo from "@/components/table/TableColumnsInfo";
-import DomainGetVmTemplateModal from '@/components/modal/domain/DomainGetVmTemplateModal';
+import DomainGetVmTemplateModal from '@/components/modal/domain/DomainImportVmTemplateModal';
 import { useAllUnregisteredVMsFromDomain } from "@/api/RQHook";
 import { checkZeroSizeToMB } from '@/util';
 import DeleteModal from "@/utils/DeleteModal";
