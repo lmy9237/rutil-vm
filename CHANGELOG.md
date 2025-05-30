@@ -22,12 +22,91 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [@chanhi2000][chanhi2000]
 - [@dhj27][dhj27]
 - [@lmy9237][lmy9237]
-### Removed 
+### Removed
 - [@chanhi2000][chanhi2000]
 - [@dhj27][dhj27]
 - [@lmy9237][lmy9237]
 -->
 
+
+## 0.3.3 - 2025-05-30
+
+- [`api-v0.3.3`][api-v0.3.3]: 백엔드
+- [`web-v0.3.3`][web-v0.3.3]: 프론트앤드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `${back}`: 호스트: 인증서 등록 API 개발
+  - `${back}`/`${front}`: 호스트 > HA 유지관리 활성화/비활성화 API 구현 및 적용
+  - `${front}`: 스토리지 트리메뉴 목록 구성: 도메인 내 디스크 목록 출력
+  - `${back}`: 디스크 이미지 다운로드 API (구현 중)
+- [@dhj27][dhj27]
+  - `${back}${front}`: StorageDomain
+    - 디스크 가져오기 한개만 가져오도록
+    - 디스크 가져오기 modal
+- [@lmy9237][lmy9237]
+  - `${front}`: 스냅샷이 미리보기중이면 디스크를 생성할 수 없음(생성했어도 미리보기를 키면 디스크가 일시적으로 사라짐) + 조건추가
+  - `${front}`: 가상머신 부팅가능한 디스크가없으면 실행안되는 문구 추가 + 조건추가
+  - `${front}`: 호스트 네트워크 할당되지않은 네트워크 filter버튼 추가
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - `${front}`: 호스트 편집 > 클러스터 변경 할 수 하도록 select box 활성화
+    - 이동 후 `NON_OPERATIONAL` 되는 장애처리 (
+    - 주의:  클러스터를 바꿀 호스트가 __엔진 가상머신 실행가능__ 대상 일 경우 다른 클러스터에서 활성화가 불가능. 같은 클러스터에 있도록 구성해야 함.
+  - `${front}`/`${back}`: 호스트 > `INSTALLING` 상태일 때 uptime 숫자 오류 (은닉처리)
+  - `${front}`: 트리메뉴 Rutil Manager (대시보드 시점에서) 우클릭 메뉴 진입 시 오류 (경로 충돌)
+   토스트 Progress 관련 상태에 대한 기능 추가 (미완)
+  - `${front}`: 사용자 목록 테이블 컬럼 순서 변경 (사용자 ID가 맨 앞)
+- [@dhj27][dhj27]
+  - `${front}`: 호스트 그래프 값 최신화 안됨
+  - `${back}${front}`: host nic [network의 insync 제외하곤 완료]
+    - Bonding Modal 수정
+    - NetworkAttachment Modal 수정 (insync 문제 제외)
+  - `${back}${front}`: StorageDomain
+    - 상태에 따른 가져오기 탭 변화
+    - modal 내보내기 경로 명칭 변경
+    - domain 연결 버튼 활성화
+    - 데이터센터 분리 오류 수정
+    - storage domain 가져오기
+- 가져오기 service 분리
+- [@lmy9237][lmy9237]
+  - `${front}`: vm모달 스타일 수정
+  - `${front}`: select박스 스타일 수정
+  - `${front}`: diskactionmodal  선택안되는 것 수정
+  - `${front}`: tablerowclick 빈칸일때 클릭방지(ex 가상머신목록 호스트)
+  - `${front}`: 도메인 → 템플릿가져오기,가상머신 가져오기
+    - 모달 안닫히는 것 수정
+    - 각각 템플릿,가상머신 modals에 추가함
+    - actionbutton 수정
+  - `${front}`: 템플릿 생성모달 input크기 + 선택 안되는 것 수정
+  - `${front}`: 템플릿편집  일반 체크박스  + 콘솔 (모니터수) 값 반영안되는 것 수정
+  - `${front}`: table글씨잘리는 것 수정
+  - `${front}`: 특정 템플릿으로 걸경우 nic이 자동으로 들어가게
+    - nic index 조건 수정
+  - `${front}`: Rutil Mangaer > Data Center 생성/편집 실패 수정
+    - 팝업은 생성 되나 적용 불가능
+  - `${front}`: 가상머신 nic삭제 기능 추가( + 삭제 후 경로 이상해지는 것 수정)
+  - `${front}`: 특정 템플릿일 때 가상머신 생성,연결이 불가능하게
+  - `${front}`: 가상머신 > 네트워크 인터페이스: 생성 모달 창
+    - 확인/취소 버튼 반응 X
+    - 사용자 지정 MAC주소 지정할 수 있도록 변경 (textbox)
+  - `${front}`: 스토리지 도메인 - 디스크 삭제 후 경로 문제 수정
+  - `${front}`: vNIC프로파일 생성 / 편집 → 통과버튼 이나 포트미러링 체크하면 오류표시 수정
+  - `${front}`: 토스트 글씨 잘리는 것 수정(넘치는 것 떨어지게)
+  - `${front}`: 가상머신 > VNC: 가상머신(콘솔)
+    - 시작 또는 재시작 중 … 생성되는 Toast (불허용 요청)
+    - 종료 시 생기는 문제 (불허용 요청)
+  - `${front}`: 호스트 네트워크 디자인변경
+  - `${front}`: nic 지정되지 않았으면 무한으로 +/- 버튼 뜰수 없음(DynamicInputList 수정)
+
+### Removed
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
 
 ## 0.3.2 - 2025-05-23
 
@@ -1073,6 +1152,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[web-v0.3.3]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.2...web-v0.3.3
+[api-v0.3.3]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.2...api-v0.3.3
 [web-v0.3.2]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.1...web-v0.3.2
 [api-v0.3.2]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.1...api-v0.3.2
 [web-v0.3.1]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.0...web-v0.3.1

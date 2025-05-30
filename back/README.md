@@ -184,8 +184,8 @@ cat ~/.ssh/id_rsa.pub
 > 🛠Build
 > 
 > ```sh
-> docker build -t ititcloud/rutil-vm-api:0.3.2 .
-> docker tag ititcloud/rutil-vm-api:0.3.2 ititcloud/rutil-vm-api:latest
+> docker build -t ititcloud/rutil-vm-api:0.3.3 .
+> docker tag ititcloud/rutil-vm-api:0.3.3 ititcloud/rutil-vm-api:latest
 > ```
 > 
 > ▶️Run
