@@ -3757,6 +3757,7 @@ export const useEditNicFromTemplate = (
   const { apiToast } = useApiToast();
     return useMutation({
     mutationFn: async ({ templateId, nicId, nicData }) => {
+        console.log("✅ ✅✅✅useEditNicFromTemplate 실행됨!");
       closeModal();
       const res = await ApiManager.editNicFromTemplate(templateId, nicId, nicData);
       const _res = validate(res) ?? {}

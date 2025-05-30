@@ -25,12 +25,11 @@ import VmNicModals from "@/components/modal/vm/VmNicModals";
 const TemplateNics = ({ 
   templateId,
 }) => {
-  const { activeModal, setActiveModal, } = useUIState()
-  // const {
-  //   vnicProfilesSelected, setVnicProfilesSelected
-  // } = useGlobal()
+  const { activeModal } = useUIState()
+  const {
+    vnicProfilesSelected, setVnicProfilesSelected
+  } = useGlobal()
     const {
-    vmsSelected,
     nicsSelected, setNicsSelected
   } = useGlobal()
 
@@ -79,7 +78,7 @@ const TemplateNics = ({
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => {
           if (activeModal().length > 0) return;
-          setNicsSelected(selectedRows); // 선택된 NIC 저장
+       setVnicProfilesSelected(selectedRows);
         }}
         isLoading={isVnicProfilesLoading} isRefetching={isVnicProfilesRefetching}  isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
       />

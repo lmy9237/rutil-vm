@@ -21,7 +21,7 @@ const VnicProfileActionButtons = ({
 
   const selected1st = [...vnicProfilesSelected][0] ?? null
   const basicActions = [
-    { type: "create", onClick: () => setActiveModal("vnicprofile:create"), label: Localization.kr.CREATE, disabled: vnicProfilesSelected.length > 0, },
+    { type: "create", onClick: () => setActiveModal("vnicprofile:create"), label: Localization.kr.CREATE },
     { type: "update", onClick: () => setActiveModal("vnicprofile:update"), label: Localization.kr.UPDATE, disabled: vnicProfilesSelected.length !== 1, },
     { type: "remove", onClick: () => setActiveModal("vnicprofile:remove"), label: Localization.kr.REMOVE, disabled: vnicProfilesSelected.length === 0, },
   ];

@@ -24,6 +24,7 @@ import MatchNetwork from "./hostNics/MatchNetwork";
 import NoneNetwork from "./hostNics/NoneNetwork";
 import ClusterNetworkList from "./hostNics/ClusterNetworkList";
 import { getBondModalStateForCreate, getBondModalStateForEdit, getNetworkAttachmentModalState, transDetachNA, transNA, transNic } from "./hostNics/TransHostNicData";
+import FilterButtons from "@/components/button/FilterButtons";
 
 const HostNics = ({
   hostId
@@ -140,7 +141,13 @@ const HostNics = ({
   //   console.log("$ recentlyUnassignedNAs: ", recentlyUnassignedNAs);
   // }, [recentlyUnassignedNAs]);
 
-
+  // 네트워크 필수,필요하지않음 분리버튼
+  const [networkFilter, setNetworkFilter] = useState('all');
+const filterOptions = [
+  { key: 'all', label: '전체' },
+  { key: 'required', label: '필수' },
+  { key: 'optional', label: '필요하지 않음' }
+];
   // 본딩 모달 관리
   const [isBondingPopup, setIsBondingPopup] = useState(false);       // 본딩 모달 오픈
   const [isBondingEditMode, setIsEditBondingMode] = useState(false); // 본딩 편집 모드
@@ -1143,7 +1150,7 @@ const HostNics = ({
   
   return (
     <>
-    <div className="w-[90%]">
+    <div className="w-full">
       <div className="header-right-btns">
         {/* 변경항목이 있다면 활성화 */}
         {!cancelFlag && dragItemFlag && (
@@ -1169,7 +1176,7 @@ const HostNics = ({
       <div className="f-btw w-full" style={{ padding: "inherit", position: "relative" }}>
         <div className="split-layout-group flex w-full">
           {/* 작업 탭 */}
-          <div className="split-item-two-thirds"
+          <div className="split-item split-item-two-thirds"
             onDragOver={e => {
               if (dragItem && dragItem.type === "nic" && dragItem.list === "slave") {
                 e.preventDefault();
@@ -1184,9 +1191,9 @@ const HostNics = ({
             }}
           >
             <div className="row group-span mb-4 items-center">
-              <div className="col-40 fs-18">인터페이스</div>
+              <div className="col-40 fs-16">인터페이스</div>
               <div className="col-20"></div>
-              <div className="col-40 fs-18">할당된 논리 네트워크</div>
+              <div className="col-40 fs-16">할당된 논리 네트워크</div>
             </div>
             <br/>
 
@@ -1197,7 +1204,7 @@ const HostNics = ({
             return (
               <div className="row group-span mb-4 items-center" key={nic.id} >
                 {/* 인터페이스 */}
-                <div className="col-40 fs-18" onDragOver={(e) => e.preventDefault()}>
+                <div className="col-40" onDragOver={(e) => e.preventDefault()}>
                   {nic.bondingVo?.slaveVos?.length > 0 
                     ? <BondNic
                         nic={nic}
@@ -1251,23 +1258,43 @@ const HostNics = ({
         </div>
 
         {/* 할당되지않은 네트워크 */}
-        <div className="split-item-one-third detachNetworkArea"
+        <div className="split-item split-item-one-third detachNetworkArea"
           onDragOver={(e) => handleDragOver(e, "network", "attach")}
           onDrop={(e) => handleDrop(e, "attach")}
         >
           <div className="unassigned-network text-center mb-4">
-            <span className="fs-18">할당되지 않은 논리 네트워크</span>
+            <span className="fs-16">할당되지 않은 논리 네트워크</span>
           </div>
+          <FilterButtons
+            options={filterOptions}
+            activeOption={networkFilter}
+            onClick={setNetworkFilter}
+          />
           <br/>
-          {[...baseItems.network, ...movedItems.network].map((network) => 
-          <>
-          {network.id}
-            <ClusterNetworkList 
-              network={network} 
-              handleDragStart={handleDragStart}
-            />
-            </>
-          )}
+          {/* {[...baseItems.network, ...movedItems.network]
+            .filter(network => 
+              networkFilter === 'required' ? network.required : !network.required
+            )
+            .map(network => (
+              <ClusterNetworkList
+                key={network.id}
+                network={network}
+                handleDragStart={handleDragStart}
+              />
+           ))} */}
+          {[...baseItems.network, ...movedItems.network]
+            .filter(network => {
+              if (networkFilter === 'required') return network.required;
+              if (networkFilter === 'optional') return !network.required;
+              return true;
+            })
+            .map(network => (
+              <ClusterNetworkList
+                key={network.id}
+                network={network}
+                handleDragStart={handleDragStart}
+              />
+          ))}
         </div>
       </div>
     </div>

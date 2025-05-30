@@ -121,7 +121,7 @@ const BoxEvent = ({
         {(eventBadgeNum() > 0) && 
           <BadgeNumber status={"alert"} text={eventBadgeNum()} />
         }
-        <span className="bell-section-title fs-16">알림</span>
+        <span className="bell-section-title fs-16 ml-1.5">알림</span>
       </div>
 
       {/* 알림 내용 */}

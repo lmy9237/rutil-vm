@@ -178,7 +178,7 @@ const Vnc = forwardRef(({
       return (
         <>
           {Localization.kr.VM}이{" "}
-          <strong>{Localization.kr.renderStatus(status)}</strong>(상태) 입니다. 콘솔을 사용할 수 없습니다.
+          <span className="text-red-600 font-bold text-[16px]">{Localization.kr.renderStatus(status)}</span>(상태) 입니다. 콘솔을 사용할 수 없습니다.
         </>
       );
     }
@@ -186,7 +186,7 @@ const Vnc = forwardRef(({
     // 그 외의 비정상 상태(질문??)
     return (
       <>
-        {Localization.kr.VM}이 현재 상태 (<strong>{Localization.kr.renderStatus(status)}</strong>)에서는 콘솔 연결이 제한됩니다.
+        {Localization.kr.VM}이 현재 상태 (<span className="text-green-600 font-bold text-[16px]">{Localization.kr.renderStatus(status)}</span>)에서는 콘솔 연결이 제한됩니다.
       </>
     );
   };

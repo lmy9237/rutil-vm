@@ -360,7 +360,7 @@ const NetworkModal = ({
         )} */}
     {dnsServers.length > 0 && (
       <>
-        <div className="font-bold"> DNS 서버 </div>
+        <div className="font-bold mt-1"> DNS 서버 </div>
         <DynamicInputList
           values={dnsServers.map((dns) => ({ value: dns }))}
           inputType="text"

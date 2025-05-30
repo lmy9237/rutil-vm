@@ -287,7 +287,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],
   VMS_FROM_TEMPLATE:[
-    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: '5%' },
     { header: Localization.kr.NAME, accessor: '_name', clickable: true, width: '10%' },
     { header: Localization.kr.IP_ADDRESS, accessor: 'ipv4', clickable: false, width: '10%' },
     { header: 'FQDN', accessor: 'fqdn', clickable: false, width: '10%' },

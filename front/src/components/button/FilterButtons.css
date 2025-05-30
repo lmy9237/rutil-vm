@@ -2,6 +2,7 @@
   width: fit-content;height: var(--h-text-input);
   border-radius: 1px;
   border: var(--border-btn-filter);
+  background-color: var(--color-primary-white);
 }
 .host-filter-btns button {
   min-width: 60px;height:100%;

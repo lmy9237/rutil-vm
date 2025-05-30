@@ -28,7 +28,7 @@ const BondNic = ({
       }}
     >
       <div className="interface-content">
-        <div className="f-start">{nic.name}</div>
+        <div className="f-start  fs-14">{nic.name}</div>
         <RVI36 className="icon cursor-pointer" iconDef={rvi36Edit()}
           onClick={() => editBondingData && editBondingData(nic)}
         />
@@ -42,7 +42,7 @@ const BondNic = ({
             draggable
             onDragStart={e => handleDragStart(e, slave, "nic", "slave", nic)}
           >
-            <div className="flex gap-1">
+            <div className="f-start gap-1">
               <RVI16 iconDef={slave.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
               {slave.name}
               {/* {idView(slave)} */}

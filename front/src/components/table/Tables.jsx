@@ -292,7 +292,7 @@ const Tables = ({
                 // const isBoolean = typeof cellValue === "boolean";
 
                 // 아이콘, 체크박스,상태,유형 등은 가운데, TableRowClick은 왼쪽
-                const isForceCenter = ["status", "storageType"].includes(column.accessor);
+                const isForceCenter = ["status", "storageType","snapshotExist"].includes(column.accessor);
                 
                 typeof cellValue === "string" &&
                 (cellValue.trim().toLowerCase().endsWith("gib") || cellValue.trim().endsWith("%"));

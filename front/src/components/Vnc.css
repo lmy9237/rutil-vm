@@ -2,8 +2,8 @@
   width:140px;aspect-ratio:1280/800;
 }
 .vnc-status-message {
-  color: #ccc;
+  color:var(--color-border-default);
   text-align: center;
   margin-top: 80px;
-  font-size:var(--fs-18);
+  font-size:var(--fs-16);
 }

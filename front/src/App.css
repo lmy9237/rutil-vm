@@ -359,6 +359,11 @@ svg.btn { cursor: pointer; }
 .btn-icon:hover {
   cursor: pointer;
 }
+.btn-icon[disabled] {
+  background-color: transparent !important;
+  border: none !important;
+  color: inherit !important;
+}
 .no-search-box{
   margin-bottom: 15px;
 }
