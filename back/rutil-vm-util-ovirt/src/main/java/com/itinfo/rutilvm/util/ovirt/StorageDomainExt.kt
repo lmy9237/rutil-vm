@@ -231,17 +231,19 @@ fun Connection.findAllUnregisteredVmsFromStorageDomain(storageDomainId: String):
 	this.srvVmsFromStorageDomain(storageDomainId).list().unregistered(true).send().vm()
 
 }.onSuccess {
-	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "목록조회", storageDomainId)
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "가져오기 목록조회", storageDomainId)
 }.onFailure {
-	Term.STORAGE_DOMAIN.logFailWithin(Term.VM, "목록조회", it, storageDomainId)
+	Term.STORAGE_DOMAIN.logFailWithin(Term.VM, "가져오기 목록조회", it, storageDomainId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
 fun Connection.registeredVmFromStorageDomain(storageDomainId: String, vm: Vm, allowPart: Boolean, badMac: Boolean): Result<Boolean> = runCatching {
 	checkStorageDomainExists(storageDomainId)
 
-	this.srvVmsFromStorageDomain(storageDomainId).vmService(vm.id()).register()
-		.vm(vm)
+	this.srvVmsFromStorageDomain(storageDomainId)
+		.vmService(vm.id())
+		.register()
+		.vm(vm) // disk 정보 필요
 		.allowPartialImport(allowPart) // 부분 허용 여부
 		.reassignBadMacs(badMac) // 불량 MAC 재배치 여부
 		.cluster(ClusterBuilder().id(vm.cluster().id()).build())
@@ -290,14 +292,17 @@ fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String
 	this.srvDisksFromStorageDomain(storageDomainId).list().unregistered(true).send().disks()
 
 }.onSuccess {
-	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "목록조회", storageDomainId)
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "가져오기 목록조회", storageDomainId)
 }.onFailure {
-	Term.STORAGE_DOMAIN.logFailWithin(Term.DISK, "목록조회", it, storageDomainId)
+	Term.STORAGE_DOMAIN.logFailWithin(Term.DISK, "가져오기 목록조회", it, storageDomainId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
 fun Connection.registeredDiskFromStorageDomain(storageDomainId: String, diskId: String): Result<Boolean> = runCatching {
-	this.srvDisksFromStorageDomain(storageDomainId).add().unregistered(true).disk(DiskBuilder().id(diskId).build()).send()
+	this.srvDisksFromStorageDomain(storageDomainId)
+		.add()
+		.disk(DiskBuilder().id(diskId).build())
+		.send()
 	true
 
 }.onSuccess {
@@ -349,19 +354,21 @@ fun Connection.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: St
 	this.srvTemplatesFromStorageDomain(storageDomainId).list().unregistered(true).send().templates()
 
 }.onSuccess {
-	Term.STORAGE_DOMAIN.logSuccessWithin(Term.TEMPLATE, "목록조회", storageDomainId)
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.TEMPLATE, "가져오기 목록조회", storageDomainId)
 }.onFailure {
-	Term.STORAGE_DOMAIN.logFailWithin(Term.TEMPLATE, "목록조회", it, storageDomainId)
+	Term.STORAGE_DOMAIN.logFailWithin(Term.TEMPLATE, "가져오기 목록조회", it, storageDomainId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
 fun Connection.registeredTemplateFromStorageDomain(storageDomainId: String, template: Template): Result<Boolean> = runCatching {
 	checkStorageDomainExists(storageDomainId)
 
-	this.srvTemplatesFromStorageDomain(storageDomainId).templateService(template.id())
+	this.srvTemplatesFromStorageDomain(storageDomainId)
+		.templateService(template.id())
 		.register()
 		.template(template)
 		.cluster(template.cluster()).send()
+
 	true
 
 }.onSuccess {

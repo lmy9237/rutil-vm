@@ -10,6 +10,7 @@ import com.itinfo.rutilvm.api.model.storage.DiskProfileVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.model.storage.StorageVo
 import com.itinfo.rutilvm.api.service.storage.ItStorageDatacenterService
+import com.itinfo.rutilvm.api.service.storage.ItStorageImportService
 import com.itinfo.rutilvm.api.service.storage.ItStorageService
 
 import io.swagger.annotations.*
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*
 class StorageController: BaseController() {
 	@Autowired private lateinit var iDomain: ItStorageService
 	@Autowired private lateinit var iDomainDatacenter: ItStorageDatacenterService
+	@Autowired private lateinit var iDomainImport: ItStorageImportService
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -457,7 +459,7 @@ class StorageController: BaseController() {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/domains/{}/vms/unregistered ... 스토리지 도메인 밑에 붙어있는 가상머신 가져오기 목록", storageDomainId)
-		return ResponseEntity.ok(iDomain.findAllUnregisteredVmsFromStorageDomain(storageDomainId))
+		return ResponseEntity.ok(iDomainImport.findAllUnregisteredVmsFromStorageDomain(storageDomainId))
 	}
 
 	@ApiOperation(
@@ -492,7 +494,7 @@ class StorageController: BaseController() {
 		if (vmViewVo == null)
 			throw ErrorPattern.VM_VO_INVALID.toException()
 		log.info("/storages/{}/vms/{} ... 스토리지 도메인 가상머신 불러오기", storageDomainId, vmId)
-		return ResponseEntity.ok(iDomain.registeredVmFromStorageDomain(storageDomainId, vmViewVo, allowPartialImport, reassignBadMacs))
+		return ResponseEntity.ok(iDomainImport.registeredVmFromStorageDomain(storageDomainId, vmViewVo, allowPartialImport, reassignBadMacs))
 	}
 
 	@ApiOperation(
@@ -519,7 +521,7 @@ class StorageController: BaseController() {
 		if (vmId == null)
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/vms/{} ... 스토리지 도메인 가상머신 불러오기 삭제", storageDomainId, vmId)
-		return ResponseEntity.ok(iDomain.removeUnregisteredVmFromStorageDomain(storageDomainId, vmId))
+		return ResponseEntity.ok(iDomainImport.removeUnregisteredVmFromStorageDomain(storageDomainId, vmId))
 	}
 
 	@ApiOperation(
@@ -563,7 +565,7 @@ class StorageController: BaseController() {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/templates/unregistered ... 스토리지 도메인 밑에 붙어있는 템플릿 목록", storageDomainId)
-		return ResponseEntity.ok(iDomain.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId))
+		return ResponseEntity.ok(iDomainImport.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId))
 	}
 
 	@ApiOperation(
@@ -594,7 +596,7 @@ class StorageController: BaseController() {
 		if (templateVo == null)
 			throw ErrorPattern.TEMPLATE_VO_INVALID.toException()
 		log.info("/storages/{}/templates/{} ... 스토리지 도메인 템플릿 불러오기", storageDomainId, templateId)
-		return ResponseEntity.ok(iDomain.registeredTemplateFromStorageDomain(storageDomainId, templateVo))
+		return ResponseEntity.ok(iDomainImport.registeredTemplateFromStorageDomain(storageDomainId, templateVo))
 	}
 
 	@ApiOperation(
@@ -621,7 +623,7 @@ class StorageController: BaseController() {
 		if (templateId == null)
 			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/vms/{} ... 스토리지 도메인 템플릿 불러오기 삭제", storageDomainId, templateId)
-		return ResponseEntity.ok(iDomain.removeUnregisteredTemplateFromStorageDomain(storageDomainId, templateId))
+		return ResponseEntity.ok(iDomainImport.removeUnregisteredTemplateFromStorageDomain(storageDomainId, templateId))
 	}
 
 	@ApiOperation(
@@ -665,7 +667,7 @@ class StorageController: BaseController() {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/disks/unregistered ... 스토리지 도메인 밑에 붙어있는 Disk 불러오기 목록", storageDomainId)
-		return ResponseEntity.ok(iDomain.findAllUnregisteredDisksFromStorageDomain(storageDomainId))
+		return ResponseEntity.ok(iDomainImport.findAllUnregisteredDisksFromStorageDomain(storageDomainId))
 	}
 
 	@ApiOperation(
@@ -692,7 +694,7 @@ class StorageController: BaseController() {
 		if (diskId == null)
 			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/disks/{} ... 스토리지 도메인 디스크 불러오기", storageDomainId, diskId)
-		return ResponseEntity.ok(iDomain.registeredDiskFromStorageDomain(storageDomainId, diskId))
+		return ResponseEntity.ok(iDomainImport.registeredDiskFromStorageDomain(storageDomainId, diskId))
 	}
 
 	@ApiOperation(
@@ -719,7 +721,7 @@ class StorageController: BaseController() {
 		if (diskId == null)
 			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/disks/{} ... 스토리지 도메인 디스크 불러오기 삭제", storageDomainId, diskId)
-		return ResponseEntity.ok(iDomain.removeUnregisteredDiskFromStorageDomain(storageDomainId, diskId))
+		return ResponseEntity.ok(iDomainImport.removeUnregisteredDiskFromStorageDomain(storageDomainId, diskId))
 	}
 
 	@ApiOperation(
@@ -784,29 +786,14 @@ class StorageController: BaseController() {
 		@PathVariable("storageDomainId") storageDomainId: String? = null
 	): ResponseEntity<List<EventVo>> {
 		checkDomain(storageDomainId)
-		// if (storageDomainId == null)
-		// 	throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-
 		log.info("/storages/{}/events ... Event(s) 목록", storageDomainId)
 		return ResponseEntity.ok(iDomain.findAllEventsFromStorageDomain(storageDomainId!!))
 	}
-
 
 	private fun checkDomain(id: String?) {
 		if (id.isNullOrEmpty()) throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 	}
 
-
-	private fun <T> respond(logMessage: String, action: () -> T): ResponseEntity<T> {
-		log.info(logMessage)
-		return ResponseEntity.ok(action())
-	}
-
-	private fun <T> validateAndRespond(value: String, logMessage: String, action: (String) -> T): ResponseEntity<T> {
-		require(value.isNotEmpty()) { throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException() }
-		log.info(logMessage)
-		return ResponseEntity.ok(action(value))
-	}
 	companion object {
 		private val log by LoggerDelegate()
 	}
