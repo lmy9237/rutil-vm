@@ -42,7 +42,6 @@ const DomainImportModal = ({
   onClose,
 }) => {
   const { validationToast } = useValidationToast();
-  // const { closeModal } = useUIState()
   const { datacentersSelected } = useGlobal()
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
 
@@ -52,8 +51,6 @@ const DomainImportModal = ({
   const [storageTypes, setStorageTypes] = useState([]);
   const [nfsAddress, setNfsAddress] = useState(""); // nfs
   const [id, setId] = useState(""); // fibre 사용 id
-
-  // const [fibres, setFibres] = useState([]);
 
   const { mutate: importDomain } = useImportDomain(onClose, onClose);
   

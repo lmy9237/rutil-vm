@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
 import SectionLayout          from "@/components/SectionLayout";
 import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
 import HeaderButton           from "@/components/button/HeaderButton";
@@ -45,9 +44,9 @@ const DomainInfo = () => {
   const { setDomainsSelected, setSourceContext } = useGlobal()
 
   const { data: domain } = useStroageDomain(domainId);
-  const { data: vms = [] } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
-  const { data: templates = [] } = useAllUnregisteredTemplatesFromDomain(domainId, (e) => ({ ...e }));
-  const { data: disks = [] } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
+  const { data: importVms = [], refetch: importVmsRefetch } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
+  const { data: importTemplates = [], refetch: importTemplatesRefetch } = useAllUnregisteredTemplatesFromDomain(domainId, (e) => ({ ...e }));
+  const { data: importDisks = [], refetch: importDisksRefetch } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
 
   const { mutate: refreshDomain } = useRefreshLunDomain();
   const { mutate: ovfUpdateDomain } = useOvfUpdateDomain();
@@ -59,8 +58,11 @@ const DomainInfo = () => {
 
   const [activeTab, setActiveTab] = useState("general");
   useEffect(() => {
-    setDomainsSelected(domain)
-    setSourceContext("fromDomain")
+    setDomainsSelected(domain);
+    setSourceContext("fromDomain");
+    importVmsRefetch();
+    importTemplatesRefetch();
+    importDisksRefetch();
   }, [domain])
 
   // const sections = useMemo(() => ([
@@ -76,8 +78,7 @@ const DomainInfo = () => {
   //   { id: "events", label: Localization.kr.EVENT },
   // ]), []);
   
-  // TODO: 가져오기에 따른 탭 메뉴 활성화
-
+  /* 가져오기에 따른 탭 메뉴 활성화 */
   const tabs = useMemo(() => {
     const baseSections = [
       { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
@@ -88,14 +89,17 @@ const DomainInfo = () => {
       { id: "diskSnapshots", label: "디스크 스냅샷",               onClick: () => handleTabClick("diskSnapshots") },
       { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
     ];
-  
+
+    // domain이 UNATTACHED 상태가 아니고, 데이터가 있는 경우만 import 탭 추가
     if (domain?.status !== "UNATTACHED") {
-      baseSections.splice(3, 0, { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importVms") });
-      baseSections.splice(5, 0, { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importTemplates") });
-      baseSections.splice(7, 0, { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importDisks") });
+      if (importVms.length > 0 || importTemplates.length > 0 || importDisks.length > 0) {
+        baseSections.splice(3, 0, { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importVms") });
+        baseSections.splice(5, 0, { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importTemplates") });
+        baseSections.splice(7, 0, { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importDisks") });
+      }
     }
     return baseSections;
-  }, [domainId, domain?.status]);
+  }, [domainId, domain?.status, importVms, importTemplates, importDisks]);
   
 
   const pathData = useMemo(() => ([

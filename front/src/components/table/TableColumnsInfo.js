@@ -469,7 +469,6 @@ const TableColumnsInfo = {
     { header: '스냅샷', accessor: 'snapshot', clickable: false },
     { header: Localization.kr.SIZE_VIRTUAL, accessor: 'virtualSize', clickable: false },
     { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
-    { header: '스냅샷', accessor: '', clickable: false },
     { header: Localization.kr.DATE_CREATED, accessor: 'creationTime', clickable: false },
   ],
   TARGETS_LUNS: [

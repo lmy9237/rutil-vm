@@ -326,7 +326,6 @@ class StorageServiceImpl(
 	@Throws(Error::class)
 	override fun import(storageDomainVo: StorageDomainVo): StorageDomainVo? {
 		log.info("import ... storageDomain name: {}", storageDomainVo.name)
-
 		val res: StorageDomain? = conn.importStorageDomain(
 			storageDomainVo.toImportStorageDomain(),
 			storageDomainVo.dataCenterVo.id

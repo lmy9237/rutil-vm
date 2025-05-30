@@ -221,7 +221,7 @@ fun StorageDomainVo.toStorageDomainBuilder(): StorageDomainBuilder {
 		.warningLowSpaceIndicator(warning)
 		.criticalSpaceActionBlocker(spaceBlocker)  //디스크 공간 동작 차단
 		.dataCenters(*arrayOf(DataCenterBuilder().id(dataCenterVo.id).build()))
-		.host(HostBuilder().name(hostVo.name).build())
+		.host(HostBuilder().id(hostVo.id).name(hostVo.name).build())
 }
 
 /**

@@ -167,12 +167,9 @@ fun Connection.findAttachedStorageDomainFromDataCenter(dataCenterId: String, sto
 
 fun Connection.attachStorageDomainToDataCenter(dataCenterId: String, storageDomainId: String): Result<Boolean> = runCatching {
 	this.srvAllAttachedStorageDomainsFromDataCenter(dataCenterId)
-		.add()
-		.storageDomain(StorageDomainBuilder().id(storageDomainId).build())
-		.send()
+		.add().storageDomain(StorageDomainBuilder().id(storageDomainId).build()).send()
 
 	true
-
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"연결", storageDomainId)
 }.onFailure {
@@ -181,10 +178,9 @@ fun Connection.attachStorageDomainToDataCenter(dataCenterId: String, storageDoma
 }
 
 fun Connection.detachStorageDomainToDataCenter(dataCenterId: String, storageDomainId: String): Result<Boolean> = runCatching {
-	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).remove()/*.async(true)*/.send()
+	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).remove().async(true).send()
 
 	true
-
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"분리", storageDomainId)
 }.onFailure {
@@ -198,8 +194,8 @@ fun Connection.activateStorageDomainToDataCenter(dataCenterId: String, storageDo
 
 	if(storageDomain.status() == StorageDomainStatus.ACTIVE){
 		throw ErrorPattern.STORAGE_DOMAIN_ACTIVE.toError()
-		// $storageDomainId 가 이미 활성 상태"
 	}
+	// 활성화
 	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).activate().send()
 	true
 
@@ -216,17 +212,15 @@ fun Connection.deactivateStorageDomainToDataCenter(dataCenterId: String, storage
 
 	if(storageDomain.status() == StorageDomainStatus.MAINTENANCE){
 		throw ErrorPattern.STORAGE_DOMAIN_MAINTENANCE.toError()
-		// throw Error("maintenance 실패 ... $storageDomainId 가 이미 유지관리 상태") // return 대신 throw
 	}
 
 	// force == ovf 업데이트 여부
 	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).deactivate().force(ovf).send()
 	true
-
 }.onSuccess {
-	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"비활성화", dataCenterId)
+	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"유지보수", dataCenterId)
 }.onFailure {
-	Term.DATACENTER.logFailWithin(Term.STORAGE_DOMAIN,"비활성화", it, dataCenterId)
+	Term.DATACENTER.logFailWithin(Term.STORAGE_DOMAIN,"유지보수", it, dataCenterId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 

@@ -1,11 +1,10 @@
 import React from 'react';
 import LabelInput from '../../../label/LabelInput';
-import Localization from '../../../../utils/Localization';
 
 const DomainImportNfs = ({ nfsAddress, setNfsAddress }) => {
   return (
     <>
-      <LabelInput label={`${Localization.kr.EXPORT} 경로` }
+      <LabelInput label={`NFS 공유 경로`}
         value={nfsAddress}
         onChange={(e) => { setNfsAddress(e.target.value) }} 
       />

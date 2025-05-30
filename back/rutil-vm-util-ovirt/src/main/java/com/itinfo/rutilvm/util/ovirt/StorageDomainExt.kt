@@ -55,7 +55,6 @@ fun Connection.addStorageDomain(storageDomain: StorageDomain, dataCenterId: Stri
 	storageAdded ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toError()
 
 	// 스토리지 도메인을 데이터센터에 붙이는 작업
-	log.info("attachStorageDomainToDataCenter--- storageAdded.id(): {} dataCenterId: {}", storageAdded.id(), dataCenterId)
 	this.attachStorageDomainToDataCenter(dataCenterId, storageAdded.id())
 
 	storageAdded
@@ -76,6 +75,7 @@ fun Connection.importStorageDomain(storageDomain: StorageDomain, dataCenterId: S
 
 	// 스토리지 도메인을 데이터센터에 붙이는 작업
 	this.attachStorageDomainToDataCenter(dataCenterId, storageImported.id())
+	// this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageImported.id()).deactivate().send()
 
 	storageImported
 }.onSuccess {

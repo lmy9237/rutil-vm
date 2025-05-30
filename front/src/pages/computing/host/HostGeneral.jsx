@@ -41,9 +41,14 @@ const HostGeneral = ({
   } = useDashboardHost(hostId);
 
   // 최신 데이터를 반영
+  // useEffect(() => {
+  //   if (host) setHostsSelected(host)
+  // }, [host, hostPer]);
+
   useEffect(() => {
     if (host) setHostsSelected(host)
-  }, [host, hostPer]);
+    hostPerRefetch();
+  }, [hostId]); // hostId가 변경될 때마다 실행
 
   const renderGeneralTab = useMemo(() => ([
     { label: `${Localization.kr.HOST} 이름/IP`, value: host?.name },
