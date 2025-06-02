@@ -20,7 +20,8 @@ data class StorageDomainStaticEntity(
 	val storageName: String? = "",
 	// other fields as needed
 ): Serializable {
-	override fun toString(): String = gson.toJson(this)
+	override fun toString(): String =
+		gson.toJson(this)
 
 	class Builder {
 		private var bId: UUID? = null;fun id(block: () -> UUID?) { bId = block() }

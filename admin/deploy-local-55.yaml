@@ -71,7 +71,7 @@ services:
     networks:
       - ovirt_network
     healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail https://localhost:6690 || exit 1"]
+      test: ["CMD-SHELL", "curl --silent --fail https://localhost:6690/actuator/health || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 3
