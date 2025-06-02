@@ -56,6 +56,14 @@ const DomainImportDiskModal = ({
 
   const validateForm = () => {
     if (!diskList.length) return "가져올 디스크가 없습니다.";
+    
+    for (const disk of diskList) {
+      const profileId = diskProfileList[disk.id];
+      if (!profileId || profileId.trim() === "none") {
+        return `"${disk.alias}" 디스크에 디스크 프로파일이 지정되지 않았습니다.`;
+      }
+    }
+
     return null;
   };
 

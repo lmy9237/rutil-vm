@@ -89,7 +89,6 @@ const DomainImportDisks = ({
         <DomainImportDiskModal
           isOpen={isImportPopup}
           onClose={() => setIsImportPopup(false)}
-          data={disksSelected}
         />
       </Suspense>
     </>
