@@ -29,7 +29,7 @@ const TemplateGeneral = ({ templateId }) => {
     { label: "CPU 코어 수",    value: template?.cpuTopologyCore },
     { label: "모니터 수",       value: template?.monitor },
     { label: Localization.kr.HA, value: template?.ha ? Localization.kr.YES : Localization.kr.NO },
-    { label: "우선 순위", value: template?.priority },
+    { label: "우선 순위", value: template?.haPriority },
     { label: "USB", value: template?.usb ? "사용" : "사용 안 함" },
     { label: "소스", value: Localization.kr.NOT_ASSOCIATED },
     { label: Localization.kr.STATELESS, value: template?.stateless ? Localization.kr.YES : Localization.kr.NO },

@@ -4,27 +4,25 @@ import { toast } from "react-hot-toast";
 import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
 import TableColumnsInfo from "../../table/TableColumnsInfo";
-import { useDataCenter } from "../../../api/RQHook";
 import { checkKoreanName } from "../../../util";
 import FilterButtons from "../../button/FilterButtons";
 import Localization from "../../../utils/Localization";
 import InfoTable from "../../table/InfoTable";
 import "./MDomain.css";
-import useUIState from "../../../hooks/useUIState";
+import useGlobal from "@/hooks/useGlobal";
+import { useValidationToast } from "@/hooks/useSimpleToast";
+import { useClustersFromDataCenter } from "@/api/RQHook";
 
 const initialFormState = {
   id: "",
   name: "",
   comment: "",
   description: "",
-  storageType: false,
-  version: "4.7",
-  quotaMode: "DISABLED",
 };
 
 /**
  * @name DomainImportVmTemplateModal
- * @description 도메인 - 데이터센터 연결 모달
+ * @description 도메인 가상머신/템플릿 가져오기 모달
  *
  * @prop {boolean} isOpen
  *
@@ -34,225 +32,251 @@ const DomainImportVmTemplateModal = ({
   isOpen,
   onClose,
   type="vm", 
-  dcId,
 }) => {
-  // const { closeModal } = useUIState()
   const isVmMode = type === "vm"; // true면 "가상머신", false면 "템플릿"
-  const [formState, setFormState] = useState(initialFormState);
-  const { data: datacenter } = useDataCenter(dcId);
+  const { validationToast } = useValidationToast();
+
   const [activeFilter, setActiveFilter] = useState("general");
-  const buttonClass = (filter) => `filter_button ${activeFilter === filter ? "active" : ""}`;
+  const { 
+    domainsSelected, 
+    vmsSelected, setVmsSelected, 
+    templatesSelected, setTemplatesSelected 
+  } = useGlobal();
+  
+  const [vmsList, setVmsList] = useState([]);
+  const [templateList, setTemplateList] = useState([]);
+  const [clusterList, setClusterList] = useState({}); // 해당 도메인이 가진 데이터센터가 가지고 있는 클러스터 리스트
+  
+  const {
+    data: clusters = [],
+    isLoading: isDcClustersLoading,
+  } = useClustersFromDataCenter(domainsSelected[0]?.dataCenterVo?.id, (e) => ({...e,}));
+
+  useEffect(() => {
+    if (isOpen && templatesSelected.length > 0) {
+      setTemplateList(templatesSelected);
+    }
+  }, [isOpen]);
+  
+  useEffect(() => {
+    if (templateList?.length && clusters.length) {
+      setClusterList((prev) => {
+        const next = { ...prev };
+        templateList.forEach(temp => {
+          if (!next[temp.id]) {
+            next[temp.id] = clusters[0].id;
+          }
+        });
+        return next;
+      });
+    }
+  }, [templateList, clusters]);
+
+  useEffect(()=>{
+    console.log("$ domainsSelected ", domainsSelected)
+    console.log("$ templatesSelected ", templatesSelected)
+  }, []);
+
 
   // 임시 데이터 (데이터가 없을 경우 기본값 사용)
   const placeholderData = [
     {
-      alias: "Disk-001",
+      alias: "001",
       virtualSize: "100GB",
       profiles: [
         { value: "profile1", label: "Profile A" },
         { value: "profile2", label: "Profile B" },
       ],
-    }, {
-      alias: "Disk-002",
-      virtualSize: "200GB",
-      profiles: [
-        { value: "profile3", label: "Profile C" },
-        { value: "profile4", label: "Profile D" },
-      ],
-    },
+    }
   ];
-  const tableRows = [
-    { label: "템플릿 ID", value: "TMP-12345" },
-    { label: Localization.kr.NAME, value: "기본 템플릿" },
-    { label: Localization.kr.DESCRIPTION, value: "예시" },
-    { label: `${Localization.kr.HOST} ${Localization.kr.DESCRIPTION}`, value: "Cluster-01" },
-    { label: "운영 시스템", value: "Linux" },
-    { label: "칩셋/펌웨어 유형", value: "UEFI" },
-    { label: "그래픽 프로토콜", value: "SPICE" },
-    { label: "비디오 유형", value: "QXL" },
-    { label: "최적화 옵션", value: "고성능" },
-    { label: "", value: "" },
-    { label: `설정된 ${Localization.kr.MEMORY}`, value: "4 GB" },
+
+  const templateTableRows = [
+    { label: "ID", value: "" },
+    { label: Localization.kr.NAME, value: "이름" },
+    { label: Localization.kr.DESCRIPTION, value: "설명" },
+    { label: `${Localization.kr.HOST} ${Localization.kr.CLUSTER}`, value: "Cluster-01" },
+    { label: "운영 시스템", value: "" },
+    { label: "칩셋/펌웨어 유형", value: "" },
+    { label: "그래픽 프로토콜", value: "" },
+    { label: "비디오 유형", value: "" },
+    { label: "최적화 옵션", value: "" },
+    { label: `설정된 ${Localization.kr.MEMORY}`, value: "" },
     { label: "CPU 코어 수", value: "4" },
     { label: "모니터 수", value: "1" },
-    { label: Localization.kr.HA, value: Localization.kr.YES },
-    { label: "우선 순위", value: "중간" },
-    { label: "USB", value: "사용" },
-    { label: "소스", value: Localization.kr.NOT_ASSOCIATED },
-    { label: Localization.kr.STATELESS, value: "아니오" },
+    { label: Localization.kr.HA, value: "" },
+    { label: "우선 순위", value: "" },
+    { label: "USB", value: "" },
+    { label: Localization.kr.STATELESS, value: "" },
   ];
-  const filterOptions = [
-    { key: "general", label: Localization.kr.GENERAL },
-    { key: "disk", label: "디스크" },
-    { key: "network", label: Localization.kr.NICS },
+
+  const vmTableRows = [
+    { label: "ID", value: "" },
+    { label: Localization.kr.NAME, value: "이름" },
+    { label: Localization.kr.DESCRIPTION, value: "설명" },
+    { label: `실행 ${Localization.kr.HOST}`, value: "Cluster-01" },
+    { label: `${Localization.kr.TEMPLATE}`, value: "Template" },
+    { label: "운영 시스템", value: "" },
+    { label: "칩셋/펌웨어 유형", value: "" },
+    { label: "그래픽 프로토콜", value: "" },
+    { label: "비디오 유형", value: "" },
+    { label: "최적화 옵션", value: "" },
+    { label: `설정된 ${Localization.kr.MEMORY}`, value: "" },
+    { label: "CPU 코어 수", value: "4" },
+    { label: "모니터 수", value: "1" },
+    { label: Localization.kr.HA, value: "" },
+    { label: "우선 순위", value: "" },
+    { label: "USB", value: "" },
+    { label: Localization.kr.STATELESS, value: "" },
   ];
   
-  useEffect(() => {
-    if (!isOpen) return setFormState(initialFormState);
-    if (datacenter) {
-      setFormState({
-        id: datacenter.id,
-        name: datacenter.name,
-        comment: datacenter.comment,
-        description: datacenter.description,
-        storageType: String(datacenter.storageType),
-        version: datacenter.version,
-        quotaMode: datacenter.quotaMode,
-      });
-    }
-  }, [isOpen, datacenter]);
-
-
   const validateForm = () => {
-    if (!formState.name) 
-      return `${Localization.kr.NAME}을 입력해주세요.`;
-    if (!checkKoreanName(formState.name)) 
-      return `${Localization.kr.NAME}이 유효하지 않습니다.`;
-    if (!checkKoreanName(formState.description)) return "영어만 입력가능.";
+    const nameError = checkName(formState.name);
+    if (nameError) return nameError;
+    
     return null;
   };
 
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
     onClose()
   };
 
   return (
-    <BaseModal targetName={
-      isVmMode 
-        ? Localization.kr.VM
-        : Localization.kr.TEMPLATE
-      }
+    <BaseModal targetName={ isVmMode ? Localization.kr.VM : Localization.kr.TEMPLATE}
       submitTitle={Localization.kr.IMPORT}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "880px" }} 
     >
-      <div className="mb-1">
-        <div className="section-table-outer">
-          <table>
-            <thead>
-              <tr>
+      <div className="section-table-outer">
+        {isVmMode ? (
+          <TablesOuter
+            columns={TableColumnsInfo.VMS_IMPORT_NAMES}
+            data={[]}
+            shouldHighlight1stCol={true}
+            onRowClick={{  }}
+            multiSelect={true}
+          />
+        ): (
+          <TablesOuter
+            columns={TableColumnsInfo.TEMPLATES_IMPORT_NAMES}
+            data={[]}
+            shouldHighlight1stCol={true}
+            onRowClick={{  }}
+            multiSelect={true}
+          />
+        )}
+        {/* <table>
+          <thead>
+            <tr>
+              {isVmMode ? (
+                <>
+                
+                  <th>{Localization.kr.NAME}</th>
+                  <th>{Localization.kr.MEMORY}</th>
+                  <th>CPU</th>
+                  <th>아키텍처</th>
+                  <th>{Localization.kr.DISK}</th>
+                  <th>불량 MAC 재배치</th>
+                  <th>부분 허용</th>
+                  <th>{Localization.kr.CLUSTER}</th>
+                </>
+              ): (
+                <>
+                  <th>{Localization.kr.ALIAS}</th>
+                  <th>{Localization.kr.MEMORY}</th>
+                  <th>CPU</th>
+                  <th>아키텍처</th>
+                  <th>{Localization.kr.DISK}</th>
+                  <th>{Localization.kr.CLUSTER}</th>
+                </>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {placeholderData.map((item, index) => (
+              <tr key={index}>
                 {isVmMode ? (
+                  // 가상머신 모드
                   <>
-                    <th>{Localization.kr.NAME}</th>
-                    <th>소스</th>
-                    <th>{Localization.kr.MEMORY}</th>
-                    <th>CPU</th>
-                    <th>아키텍처</th>
-                    <th>디스크</th>
-                    <th>불량 MAC 재배치</th>
-                    <th>부분 허용</th>
-                    <th>{Localization.kr.CLUSTER}</th>
+                    <td>{item.alias}</td>
+                    <td>{item.memory}</td>
+                    <td>{item.cpu }</td>
+                    <td>{item.architecture}</td> 
+                    <td>{item.disk}</td>
+                    <td>
+                      <div className="flex">
+                        <input type="checkbox" />  
+                        <label>재배치</label>
+                      </div>
+                    </td>
+                    <td>
+                      <input type="checkbox" /> 
+                    </td> 
+                    <td>
+                      <select>
+                        <option value="cluster-01">Cluster-01</option>
+                      </select>
+                    </td>
                   </>
                 ) : (
                   <>
-                    <th>{Localization.kr.ALIAS}</th>
-                    <th>가상 크기</th>
-                    <th>{Localization.kr.MEMORY}</th>
-                    <th>CPU</th>
-                    <th>아키텍처</th>
-                    <th>디스크</th>
-                    <th>{Localization.kr.CLUSTER}</th>
+                    <td>{item.alias}</td>
+                    <td>4 GB</td>
+                    <td>4</td>
+                    <td>x86_64</td>
+                    <td>디스크 개수</td>
+                    <td>
+                      <select>
+                        <option value="cluster-01">Cluster-01</option>
+                      </select>
+                    </td>
                   </>
                 )}
               </tr>
-            </thead>
-            <tbody>
-              {placeholderData.map((item, index) => (
-                <tr key={index}>
-                  {isVmMode ? (
-                    // ✅ 가상머신 모드일 때 렌더링
-                    <>
-                      <td>{item.alias || Localization.kr.NOT_ASSOCIATED}</td>  {/* 이름 */}
-                      <td>{item.source || "oVirt"}</td>  {/* 소스 */}
-                      <td>{item.memory || "1024 MB"}</td>  {/* 메모리 */}
-                      <td>{item.cpu || "1"}</td>  {/* CPU */}
-                      <td>{item.architecture || "x86_64"}</td>  {/* 아키텍처 */}
-                      <td>{item.disk || "1"}</td>  {/* 디스크 */}
-                      <td>
-                        <div className="flex">
-                          <input type="checkbox" />  {/* ✅ 불량 MAC 재배치 체크박스 */}
-                          <label>재배치</label>
-                        </div>
-                      </td>
-                      <td>
-                        <input type="checkbox" /> 
-                      </td>  {/* 부분 허용 */}
-                      <td>
-                        <select>
-                          <option value="default">Default</option>
-                          <option value="cluster-01">Cluster-01</option>
-                          <option value="cluster-02">Cluster-02</option>
-                        </select>
-                      </td>  {/* 클러스터 */}
-                    </>
-                  ) : (
-                    // ✅ 템플릿 모드일 때 렌더링
-                    <>
-                      <td>{item.alias || Localization.kr.NOT_ASSOCIATED}</td>  {/* 별칭 */}
-                      <td>{item.virtualSize || Localization.kr.NOT_ASSOCIATED}</td>  {/* 가상 크기 */}
-                      <td>4 GB</td>  {/* 메모리 (임시값) */}
-                      <td>4</td>  {/* CPU (임시값) */}
-                      <td>x86_64</td>  {/* 아키텍처 */}
-                      <td>{item.virtualSize || Localization.kr.NOT_ASSOCIATED}</td>  {/* 디스크 */}
-                      <td>
-                        <select>
-                          <option value="cluster-01">Cluster-01</option>
-                          <option value="cluster-02">Cluster-02</option>
-                          <option value="cluster-03">Cluster-03</option>
-                        </select>
-                      </td>  {/* 클러스터 */}
-                    </>
-                  )}
-                </tr>
-              ))}
-          </tbody>
-          </table>
-        </div>
-      </div>
+            ))}
+        </tbody>
+        </table> */}
 
+      </div>
+      <br/>
       <div className="filter-table">
-        {/* 필터 버튼 */}
         <div className="mb-2">
           <FilterButtons options={filterOptions} activeOption={activeFilter} onClick={setActiveFilter} />
         </div>
+
         {/* 섹션 변경 */}
         {activeFilter === "general" && (
           <div className="get-template-info f-btw three-columns">
             {Array.from({ length: 3 }, (_, groupIndex) => {
-              const splitRows = tableRows.filter((_, index) => index % 3 === groupIndex);
+              const splitRows = isVmMode
+                ? vmTableRows.filter((_, index) => index % 3 === groupIndex)
+                : templateTableRows.filter((_, index) => index % 3 === groupIndex);
               return (
-                <div key={groupIndex} className="info-table-wrapper">
+                // <div key={groupIndex} className="info-table-wrapper">
                   <InfoTable tableRows={splitRows} />
-                </div>
+                // </div>
               );
             })}
           </div>
         )}
-
         {activeFilter === "disk" && (
           <TablesOuter target={"disk"}
             columns={TableColumnsInfo.GET_DISK_TEMPLATES}
-            date={[]}
+            data={[]}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
             multiSelect={true}
           />
         )}
-
         {activeFilter === "network" && (
           <TablesOuter target={"network"}
             columns={TableColumnsInfo.NETWORK_INTERFACE_FROM_HOST}
-            date={[]}
+            data={[]}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
             multiSelect={true}
@@ -264,3 +288,9 @@ const DomainImportVmTemplateModal = ({
 };
 
 export default DomainImportVmTemplateModal;
+
+const filterOptions = [
+  { key: "general", label: Localization.kr.GENERAL },
+  { key: "disk", label: "디스크" },
+  { key: "network", label: Localization.kr.NICS },
+];

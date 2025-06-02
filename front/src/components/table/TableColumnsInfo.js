@@ -548,14 +548,29 @@ const TableColumnsInfo = {
   GET_VMS_TEMPLATES: [
     { header: Localization.kr.NAME, accessor: 'name', clickable: false, width: '10%' },
     { header: Localization.kr.MEMORY, accessor: 'memory', clickable: false },
-    { header: Localization.kr.CPU, accessor: Localization.kr.CPU, clickable: false },
+    { header: Localization.kr.CPU, accessor: "cpu", clickable: false },
     { header: '아키텍처', accessor: 'cpuArc', clickable: false },
     { header: '디스크', accessor: 'disk', clickable: false },
     { header: '생성 일자', accessor: 'creationTime', clickable: false },
-    // { header: '중지 일자', accessor: 'stopTime', clickable: false },
-    // { header: '내보낸 시점', accessor: 'exportedAt', clickable: false },
   ],  
-
+  TEMPLATES_IMPORT_NAMES: [
+    { header: Localization.kr.NAME, accessor: 'name', clickable: false, width: '10%' },
+    { header: Localization.kr.MEMORY, accessor: 'memory', clickable: false },
+    { header: Localization.kr.CPU, accessor: "cpu", clickable: false },
+    { header: '아키텍처', accessor: 'cpuArc', clickable: false },
+    { header: Localization.kr.DISK, accessor: 'disk', clickable: false },
+    { header: Localization.kr.CLUSTER, accessor: '', clickable: false },
+  ],  
+  VMS_IMPORT_NAMES: [
+    { header: Localization.kr.NAME, accessor: 'name', clickable: false, width: '10%' },
+    { header: Localization.kr.MEMORY, accessor: 'memory', clickable: false },
+    { header: Localization.kr.CPU, accessor: Localization.kr.CPU, clickable: false },
+    { header: '아키텍처', accessor: 'cpuArc', clickable: false },
+    { header: Localization.kr.DISK, accessor: 'disk', clickable: false },
+    { header: '불량 MAC 재배치', accessor: 'mac', clickable: false },
+    { header: '부분 허용', accessor: 'allow', clickable: false },
+    { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: false },
+  ],  
   VMS_IMPORT_FROM_STORAGE_DOMAIN: [
     { header: Localization.kr.NAME, accessor: 'name', clickable: false, width: '10%' },
     { header: Localization.kr.MEMORY, accessor: 'memory', clickable: false },

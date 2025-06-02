@@ -6,12 +6,19 @@ import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.Os
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
+import com.itinfo.rutilvm.api.model.fromCpuProfileToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
+import com.itinfo.rutilvm.api.model.fromDiskAttachmentsToIdentifiedVos
+import com.itinfo.rutilvm.api.model.fromDiskToIdentifiedVo
+import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
+import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
+import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findDataCenter
+import com.itinfo.rutilvm.util.ovirt.findHost
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.*
@@ -46,8 +53,9 @@ class TemplateVo(
 	private val _creationTime: Date? = null,
 	val deleteProtected: Boolean = false,
 	val monitor: Int = 0,
+	val displayType: DisplayType = DisplayType.VNC,
 	val ha: Boolean = false,
-	val priority: Int = 0,
+	val haPriority: Int = 0,
 	val ioThreadCnt: Int = 0,
 	val memorySize: BigInteger = BigInteger.ZERO,
 	val memoryBalloon: Boolean = false,
@@ -103,8 +111,9 @@ class TemplateVo(
 		private var bCreationTime: Date? = null; fun creationTime(block: () -> Date?) { bCreationTime = block() }
 		private var bDeleteProtected: Boolean = false; fun deleteProtected(block: () -> Boolean?) { bDeleteProtected = block() ?: false}
 		private var bMonitor: Int = 0; fun monitor(block: () -> Int?) { bMonitor = block() ?: 0}
+		private var bDisplayType: DisplayType = DisplayType.VNC; fun displayType(block: () -> DisplayType?) { bDisplayType = block() ?: DisplayType.VNC }
 		private var bHa: Boolean = false; fun ha(block: () -> Boolean?) { bHa = block() ?: false}
-		private var bPriority: Int = 0; fun priority(block: () -> Int?) { bPriority = block() ?: 0}
+		private var bHaPriority: Int = 0; fun haPriority(block: () -> Int?) { bHaPriority = block() ?: 0}
 		private var bIoThreadCnt: Int = 0; fun ioThreadCnt(block: () -> Int?) { bIoThreadCnt = block() ?: 0}
 		private var bMemorySize: BigInteger = BigInteger.ZERO; fun memorySize(block: () -> BigInteger?) { bMemorySize = block() ?: BigInteger.ZERO}
 		private var bMemoryBalloon: Boolean = false; fun memoryBalloon(block: () -> Boolean?) { bMemoryBalloon = block() ?: false}
@@ -137,7 +146,7 @@ class TemplateVo(
 		private var bCpuProfileVo: IdentifiedVo = IdentifiedVo(); fun cpuProfileVo(block: () -> IdentifiedVo?) { bCpuProfileVo = block() ?: IdentifiedVo()}
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
-		fun build(): TemplateVo = TemplateVo(bId,bName,bDescription,bComment,bChipsetFirmwareType,bCpuArc,bCpuTopologyCnt,bCpuTopologyCore,bCpuTopologySocket,bCpuTopologyThread,bCpuPinningPolicy,bCpuShare,bCreationTime,bDeleteProtected,bMonitor,bHa,bPriority,bIoThreadCnt,bMemorySize,bMemoryBalloon,bMemoryActual,bMemoryMax,bMigrationMode,bMigrationPolicy,bMigrationEncrypt,bParallelMigration,bMultiQue,bOrigin,bOsSystem,bDeviceList,bFirstDevice,bSecDevice,bPlacement,bStartPaused,bStateless,bTimeZone,bOptimizeOption,bUsb,bVirtSCSIEnable,bStatus,bVersionName,bVersionNum,bBaseTemplate,bClusterVo,bDataCenterVo,bVmVo,bCpuProfileVo,bNicVos,bDiskAttachmentVos,)
+		fun build(): TemplateVo = TemplateVo(bId,bName,bDescription,bComment,bChipsetFirmwareType,bCpuArc,bCpuTopologyCnt,bCpuTopologyCore,bCpuTopologySocket,bCpuTopologyThread,bCpuPinningPolicy,bCpuShare,bCreationTime,bDeleteProtected,bMonitor,bDisplayType,bHa,bHaPriority,bIoThreadCnt,bMemorySize,bMemoryBalloon,bMemoryActual,bMemoryMax,bMigrationMode,bMigrationPolicy,bMigrationEncrypt,bParallelMigration,bMultiQue,bOrigin,bOsSystem,bDeviceList,bFirstDevice,bSecDevice,bPlacement,bStartPaused,bStateless,bTimeZone,bOptimizeOption,bUsb,bVirtSCSIEnable,bStatus,bVersionName,bVersionNum,bBaseTemplate,bClusterVo,bDataCenterVo,bVmVo,bCpuProfileVo,bNicVos,bDiskAttachmentVos,)
 	}
 
 	companion object {
@@ -197,14 +206,11 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 		cpuTopologyCore { template.cpu().topology().coresAsInteger() }
 		cpuTopologySocket { template.cpu().topology().socketsAsInteger() }
 		cpuTopologyThread { template.cpu().topology().threadsAsInteger() }
-		cpuTopologyCnt {
-			template.cpu().topology().coresAsInteger() *
-			template.cpu().topology().socketsAsInteger() *
-			template.cpu().topology().threadsAsInteger()
-		}
+		cpuTopologyCnt { calculateCpuTopology(template) }
 		monitor { if(template.displayPresent()) template.display().monitorsAsInteger() else 0 }
+		displayType { if(template.displayPresent()) template.display().type() else DisplayType.VNC }
 		ha { template.highAvailability().enabled() }
-		priority { template.highAvailability().priorityAsInteger() }
+		haPriority { template.highAvailability().priorityAsInteger() }
 		usb { template.usb().enabled() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		startPaused { template.startPaused() }
@@ -231,16 +237,39 @@ fun Template.toUnregisterdTemplate(): TemplateVo {
 	val template = this@toUnregisterdTemplate
 
 	return TemplateVo.builder {
+		// id { template.id() }
+		// name { template.name() }
+		// description { template.description() }
+		// creationTime { template.creationTime() }
+		// cpuArc { template.cpu().architecture() }
+		// memorySize { template.memory() }
+		// cpuTopologyCnt {
+		// 	template.cpu().topology().coresAsInteger() *
+		// 		template.cpu().topology().socketsAsInteger() *
+		// 		template.cpu().topology().threadsAsInteger()
+		// }
+
 		id { template.id() }
 		name { template.name() }
-		creationTime { template.creationTime() }
+		description { template.description() }
+		comment { template.comment() }
+		// biosBootMenu { vm.bios().bootMenu() }
+		chipsetFirmwareType { template.bios().type().toString() }
 		cpuArc { template.cpu().architecture() }
+		cpuTopologyCnt { calculateCpuTopology(template) }
+		cpuTopologyCore { template.cpu().topology().coresAsInteger() }
+		cpuTopologySocket { template.cpu().topology().socketsAsInteger() }
+		cpuTopologyThread { template.cpu().topology().threadsAsInteger() }
+		osSystem { template.os().type() }
+		optimizeOption { template.type().toString() }
+		creationTime { template.creationTime() }
+		displayType { if(template.displayPresent()) template.display().type() else DisplayType.VNC }
+		monitor { if(template.displayPresent()) template.display().monitorsAsInteger() else 0 }
+		ha { template.highAvailability().enabled() }
+		haPriority { template.highAvailability().priorityAsInteger() }
 		memorySize { template.memory() }
-		cpuTopologyCnt {
-			template.cpu().topology().coresAsInteger() *
-				template.cpu().topology().socketsAsInteger() *
-				template.cpu().topology().threadsAsInteger()
-		}
+		usb { if(template.usbPresent()) template.usb().enabled() else false }
+		stateless { template.stateless() }
 	}
 }
 fun List<Template>.toUnregisterdTemplates() =
@@ -310,3 +339,7 @@ fun TemplateVo.toEditTemplate(): Template {
  */
 
 // endregion
+private fun calculateCpuTopology(template: Template): Int {
+	val topology = template.cpu().topology()
+	return topology.coresAsInteger() * topology.socketsAsInteger() * topology.threadsAsInteger()
+}

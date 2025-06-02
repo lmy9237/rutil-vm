@@ -1,11 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import BaseModal                        from "../BaseModal";
 import { 
   useAllDiskProfilesFromDomain,
-  useAllUnregisteredDisksFromDomain,
   useRegisteredDiskFromDomain,
-  useUnregisteredDiskFromDomain
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";

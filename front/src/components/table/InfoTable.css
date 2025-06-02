@@ -13,9 +13,9 @@
   vertical-align: top;
   border: none;
 }
-.info-table th {
+/* .info-table th {
   width: 400px;
-}
+} */
 .info-table td {
   color: #757575;
 }
