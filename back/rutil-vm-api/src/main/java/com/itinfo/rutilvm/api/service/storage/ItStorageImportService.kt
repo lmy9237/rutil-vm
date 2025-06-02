@@ -102,11 +102,11 @@ interface ItStorageImportService {
 	 * 스토리지 도메인 - 디스크 불러오기 - 가져오기
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
-	// * @param diskImageVo [DiskImageVo] 디스크
-	 * @return [Boolean]
+	 * @param diskImageVo [DiskImageVo] 디스크
+	 * @return [DiskImageVo]
 	 */
 	@Throws(Error::class)
-	fun registeredDiskFromStorageDomain(storageDomainId: String, diskId: String): Boolean
+	fun registeredDiskFromStorageDomain(storageDomainId: String, diskImageVo: DiskImageVo): DiskImageVo?
 	/**
 	 * [ItStorageImportService.removeUnregisteredDiskFromStorageDomain]
 	 * 스토리지 도메인 디스크 가져오기 삭제
@@ -195,10 +195,13 @@ class StorageImportServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun registeredDiskFromStorageDomain(storageDomainId: String, diskId: String): Boolean {
-		log.info("registeredDiskFromStorageDomain ... storageDomainId: {}, diskId: {}", storageDomainId, diskId)
-		val res: Result<Boolean> = conn.registeredDiskFromStorageDomain(storageDomainId, diskId)
-		return res.isSuccess
+	override fun registeredDiskFromStorageDomain(storageDomainId: String, diskImageVo: DiskImageVo): DiskImageVo? {
+		log.info("registeredDiskFromStorageDomain ... storageDomainId: {}, diskImageVo: {}", storageDomainId, diskImageVo)
+		val res: Disk? = conn.registeredDiskFromStorageDomain(
+			storageDomainId,
+			diskImageVo.toRegisterDiskBuilder()
+		).getOrNull()
+		return res?.toDiskIdName()
 	}
 
 	@Throws(Error::class)

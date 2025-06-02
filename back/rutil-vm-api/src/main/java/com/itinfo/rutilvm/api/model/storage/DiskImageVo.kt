@@ -401,10 +401,12 @@ fun Disk.toUnregisterdDisk(): DiskImageVo {
 fun List<Disk>.toUnregisterdDisks(): List<DiskImageVo> =
     this@toUnregisterdDisks.map { it.toUnregisterdDisk() }
 
-fun DiskImageVo.toRegisterDiskBuilder(): Disk =
-	this@toRegisterDiskBuilder.toDiskBuilder()
-		.id(this@toRegisterDiskBuilder.id)
+fun DiskImageVo.toRegisterDiskBuilder(): Disk {
+	return DiskBuilder()
+		.id(this.id)
+		.diskProfile(DiskProfileBuilder().id(diskProfileVo.id).build())
 		.build()
+}
 
 /**
  * 스토리지 - 디스크 생성

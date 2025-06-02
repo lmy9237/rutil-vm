@@ -4641,7 +4641,7 @@ export const useUnregisteredDiskFromDomain = (
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['unregisteredDiskFromDomain', storageDomainId, diskId],
   queryFn: async () => {
-    const res = await ApiManager.findAllUnregisteredDisksFromDomain(storageDomainId);
+    const res = await ApiManager.findUnregisteredDiskFromDomain(storageDomainId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -4663,11 +4663,11 @@ export const useRegisteredDiskFromDomain = (
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
     return useMutation({
-    mutationFn: async ({ storageDomainId, diskId }) => {
+    mutationFn: async ({ storageDomainId, diskImageVo }) => {
       closeModal();
-      const res = await ApiManager.registeredDiskFromDomain(storageDomainId, diskId);
+      const res = await ApiManager.registeredDiskFromDomain(storageDomainId, diskImageVo);
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useRegisteredDiskFromDomain ... storageDomainId: ${storageDomainId}, diskId: ${diskId}`);
+      Logger.debug(`RQHook > useRegisteredDiskFromDomain ... storageDomainId: ${storageDomainId}, diskImageVo: ${diskImageVo}`);
       return _res;
     },
     onSuccess: (res) => {

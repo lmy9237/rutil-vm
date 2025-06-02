@@ -11,88 +11,106 @@ import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "../domain/MDomain.css";
 import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
-import { handleSelectIdChange } from "@/components/label/HandleInput";
+import useGlobal from "@/hooks/useGlobal";
 
 const DomainImportDiskModal = ({
   isOpen,
   onClose,
-  domainId,
-  diskIds
 }) => {
   const { validationToast } = useValidationToast();
-
-  const {
-      data: disks = [],
-      isLoading: isDisksLoading,
-      isError: isDisksError,
-      isSuccess: isDisksSuccess,
-      refetch: refetchDisks,
-      isRefetching: isDisksRefetching,
-  } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
-  // const { data: disk } =  
-  //   useUnregisteredDiskFromDomain(domainId, diskIds, (e) => ({ ...e }));
-    
-  // useEffect(() =>{
-  //   console.log("$ disk", disk)
-  // }, []);
-
+  const { domainsSelected, disksSelected } = useGlobal()
+  
+  const [diskList, setDiskList] = useState([]);
+  const [diskProfileList, setDiskProfileList] = useState({});
+  
   const { 
-    data: diskProfiles = [], 
-    isLoading: isDiskProfilesLoading, 
-    isError: isDiskProfilesError,
-    isSuccess: isDiskProfilesSuccess
-  } = useAllDiskProfilesFromDomain(domainId, (e) => ({ ...e }));
-    
-  const { mutate: registerDisk } = useRegisteredDiskFromDomain(onClose, onClose);
+    data: diskProfiles = [],
+    isLoading: isDiskProfilesLoading,
+  } = useAllDiskProfilesFromDomain(domainsSelected[0]?.id, (e) => ({ ...e }));
 
-  const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
+  const { mutate: registerDisk } = useRegisteredDiskFromDomain(onClose, onClose);
+  
+  useEffect(() => {
+    if (isOpen && disksSelected.length > 0) {
+      setDiskList(disksSelected);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (diskList?.length && diskProfiles.length) {
+      setDiskProfileList((prev) => {
+        const next = { ...prev };
+        diskList.forEach(disk => {
+          if (!next[disk.id]) {
+            next[disk.id] = diskProfiles[0].id;
+          }
+        });
+        return next;
+      });
+    }
+  }, [diskList, diskProfiles]);
+
+  const handleDiskProfileChange = (diskId) => (selected) => {
+    setDiskProfileList(prev => ({ ...prev, [diskId]: selected.id }));
+  };
 
   const validateForm = () => {
-    
-    return null
-  }
+    if (!diskList.length) return "가져올 디스크가 없습니다.";
+    return null;
+  };
 
   const handleFormSubmit = () => {
-    const error = validateForm()
+    const error = validateForm();
     if (error) {
       validationToast.fail(error);
       return;
     }
+    
+    diskList.forEach((disk) => {
+      const profileId = diskProfileList[disk.id];
+      if (!profileId) return;
 
-    diskIds.forEach((diskId, index) => {
-      Logger.debug(`DomainGetDiskModal > handleFormSubmit ... domainId: ${domainId}, diskId: ${diskId}`);
-      registerDisk({ storageDomainId: domainId, diskId });
+      console.log("$ 디스크 submit:", domainsSelected[0]?.id, "disk ", disk.id, "profile ", profileId);
+
+      registerDisk({
+        storageDomainId: domainsSelected[0]?.id,
+        diskImageVo: {
+          id: disk?.id,
+          diskProfileVo: { id: profileId }
+        },
+      });
     });
   };
+
 
   return (
     <BaseModal targetName={Localization.kr.DISK} submitTitle={Localization.kr.IMPORT}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "880px" }} 
+      contentStyle={{ width: "780px" }} 
     >
       <div className="section-table-outer ">
-        <span style={{ fontWeight: "800" }}>디스크 할당:</span>
         <table>
           <thead>
             <tr>
               <th>{Localization.kr.ALIAS}</th>
-              <th>가상 크기</th>
-              {/* <th>디스크 프로파일</th> */}
+              <th>{Localization.kr.SIZE_VIRTUAL}</th>
+              <th>{Localization.kr.DISK_PROFILE}</th>
             </tr>
           </thead>
           <tbody>
-          {(Array.isArray(diskIds) ? diskIds : []).map((id, index) => (
-              <tr key={index}>
-                {/* <td>{disk.alias}</td> */}
-                {/* <td>{disk.virtualSize}</td> */}
-
-                <LabelSelectOptionsID label={Localization.kr.DISK_PROFILE}
-                  value={diskProfileVo.id}
-                  loading={isDiskProfilesLoading}
-                  options={diskProfiles}
-                  onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles)}
-                />
+            {Array.isArray(diskList) && diskList.map((disk) => (
+              <tr key={disk.id}>
+                <td>{disk.alias}</td>
+                <td>{disk.virtualSize}</td>
+                <td className="w-[230px]">
+                  <LabelSelectOptionsID
+                    value={diskProfileList[disk.id] || ""}
+                    loading={isDiskProfilesLoading}
+                    options={diskProfiles}
+                    onChange={handleDiskProfileChange(disk.id)}
+                  />
+                </td>
               </tr>
             ))}
           </tbody>

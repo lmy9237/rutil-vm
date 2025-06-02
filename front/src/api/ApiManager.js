@@ -2479,9 +2479,9 @@ const ApiManager = {
    * 
    * @see
    */
-  findUnregisteredDiskFromDomain: async (storageDomainId, diskId) => makeAPICall({
+  findUnregisteredDiskFromDomain: async (storageDomainId) => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_UNREGISTERD_DISK_FROM_STORAGE_DOMAINS(storageDomainId, diskId),
+    url: ENDPOINTS.FIND_UNREGISTERD_DISK_FROM_STORAGE_DOMAINS(storageDomainId),
   }),
   /**
    * @name ApiManager.registeredDiskFromDomain
@@ -2491,11 +2491,11 @@ const ApiManager = {
    * @param {string} diskId 
    * @returns {Promise<Object>}
    */
-  registeredDiskFromDomain: async (storageDomainId, diskId) => {
+  registeredDiskFromDomain: async (storageDomainId, diskImageVo) => {
     return makeAPICall({
       method: "POST",
-      url: ENDPOINTS.REGISTERD_DISK_FROM_STORAGE_DOMAINS(storageDomainId, diskId),
-      data: storageDomainId, 
+      url: ENDPOINTS.REGISTERD_DISK_FROM_STORAGE_DOMAINS(storageDomainId),
+      data: diskImageVo
     });
   },
   /**

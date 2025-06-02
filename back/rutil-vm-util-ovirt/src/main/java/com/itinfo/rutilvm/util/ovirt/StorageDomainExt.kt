@@ -314,12 +314,10 @@ fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String
 // 	throw if (it is Error) it.toItCloudException() else it
 // }
 
-fun Connection.registeredDiskFromStorageDomain(storageDomainId: String, diskId: String): Result<Boolean> = runCatching {
-	this.srvDisksFromStorageDomain(storageDomainId)
-		.add()
-		.disk(DiskBuilder().id(diskId).build())
-		.send()
-	true
+fun Connection.registeredDiskFromStorageDomain(storageDomainId: String, disk: Disk): Result<Disk?> = runCatching {
+	val diskRegister = this.srvDisksFromStorageDomain(storageDomainId).add().disk(disk).unregistered(true).send().disk()
+
+	diskRegister
 
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "디스크 불러오기", storageDomainId)

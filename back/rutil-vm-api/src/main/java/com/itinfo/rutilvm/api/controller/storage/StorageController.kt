@@ -698,30 +698,54 @@ class StorageController: BaseController() {
 
 	@ApiOperation(
 		httpMethod="POST",
-		value="스토리지 도메인 디스크 불러오기",
-		notes="스토리지 도메인 디스크 불러오기"
+		value="스토리지 도메인 디스크 불러오기 등록",
+		notes="스토리지 도메인 디스크 불러오기 등록"
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "disk", value = "디스크", dataTypeClass = DiskImageVo::class, required=true, paramType="body"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED")
 	)
-	@PostMapping("/{storageDomainId}/disks/{diskId}")
+	@PostMapping("/{storageDomainId}/disks/register")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
 	fun registerDisk(
 		@PathVariable("storageDomainId") storageDomainId: String? = null,
-		@PathVariable("diskId") diskId: String? = null,
-	): ResponseEntity<Boolean?> {
+		@RequestBody diskVo: DiskImageVo? = null,
+	): ResponseEntity<DiskImageVo?> {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-		if (diskId == null)
-			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
-		log.info("/storages/{}/disks/{} ... 스토리지 도메인 디스크 불러오기", storageDomainId, diskId)
-		return ResponseEntity.ok(iDomainImport.registeredDiskFromStorageDomain(storageDomainId, diskId))
+		if (diskVo == null)
+			throw ErrorPattern.DISK_VO_INVALID.toException()
+		log.info("/storages/{}/disks/{} ... 스토리지 도메인 디스크 불러오기", storageDomainId, diskVo)
+		return ResponseEntity.ok(iDomainImport.registeredDiskFromStorageDomain(storageDomainId, diskVo))
 	}
+
+
+	// @ApiOperation(
+	// 	httpMethod="POST",
+	// 	value="스토리지 도메인 생성",
+	// 	notes="스토리지 도메인을 생성"
+	// )
+	// @ApiImplicitParams(
+	// 	ApiImplicitParam(name = "storageDomain", value = "스토리지도메인", dataTypeClass = StorageDomainVo::class, required=true, paramType="body"),
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 201, message = "CREATED")
+	// )
+	// @PostMapping("")
+	// @ResponseBody
+	// @ResponseStatus(HttpStatus.CREATED)
+	// fun addStorageDomain(
+	// 	@RequestBody storageDomain: StorageDomainVo? = null,
+	// ): ResponseEntity<StorageDomainVo?> {
+	// 	if (storageDomain == null)
+	// 		throw ErrorPattern.STORAGE_DOMAIN_VO_INVALID.toException()
+	// 	log.info("/storages/domains ... 스토리지 도메인 생성")
+	// 	return ResponseEntity.ok(iDomain.add(storageDomain))
+	// }
 
 	@ApiOperation(
 		httpMethod="DELETE",

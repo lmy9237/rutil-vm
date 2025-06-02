@@ -583,6 +583,12 @@ const TableColumnsInfo = {
     { header: Localization.kr.DATE_CREATED, accessor: 'creationTime', clickable: false },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],  
+  
+  DISKS_IMPORT_FROM_STORAGE_DOMAIN: [
+    { header: Localization.kr.ALIAS, accessor: 'alias', clickable: false },
+    { header: Localization.kr.SIZE_VIRTUAL, accessor: 'virtualSize', clickable: false },
+    { header: Localization.kr.DISK_PROFILE, accessor: 'diskProfile', clickable: false },
+  ],  
   TEMPLATE_VMS:[
     { header: Localization.kr.STATUS, accessor: "icon", clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: Localization.kr.NAME, accessor: 'name', clickable: true, width: '20%' },
@@ -593,6 +599,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.UP_TIME, accessor: 'upTime', clickable: false, width: '20%' },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false, width: '25%' },
   ],
+
   DISKS: [
     { header: Localization.kr.ALIAS, accessor: '_alias', clickable: true },
     { header: 'ID', accessor: 'id', clickable: false },
