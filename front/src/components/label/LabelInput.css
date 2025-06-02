@@ -23,14 +23,6 @@ input[type="password"]
   color: var(--color-black);
   border-radius: 1px;
 }
-/* 
-그림자로 줬을 때 
-input[type="text"]:focus,
-input[type="number"]:focus,
-input[type="password"]:focus {
-  outline: none;
-  box-shadow: 0 0 0 1px #cfcfcf; 
-} */
 textarea {
   width: 100%;
   border: var(--border-default);
@@ -78,7 +70,6 @@ input[type="radio"] {
     margin-left: auto;
     height: var(--h-input);
     border: var(--border-default);
-    /* text-indent: 4px; */
     border-radius: 1px;
     color: var(--color-black);
 }
@@ -96,43 +87,3 @@ input[type="radio"] {
 .checkbox-number .input-container button{
   width: 100% !important;
 }
-
-/*임시*/
-
-/*
-.input-container {
-  position: relative;
-}
-.custom-select-box.disabled ,
-.custom-select.disabled {
-  color: #b3b3b3;
-  cursor: not-allowed;
-}
-.custom-select-select {
-  position: relative;
-} 
-  .custom-options {
-  position: absolute;top: 75%;right: 0;
-  min-width: 55%;
-  max-height: 142px;
-  background: var(--color-primary-white);
-  border-top: none !important;
-  border: var(--border-default);border-radius: 1px;
-  z-index: 10;
-  overflow-y: auto;
-}
-
-.custom-option {
-  height:var(--h-input) !important;
-  line-height:var(--h-input) !important;
-  padding: 0 5px;
-  cursor: pointer;
-}
-  .custom-option:hover {
-  background-color: var(--color-white);
-}
-.custom-option.selected {
-  background-color: var(--color-white);
-  font-weight: 600;
-}
-  */

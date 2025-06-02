@@ -57,15 +57,6 @@ const VmMigrationModal = ({
     setVmStates(initialState);
   }, [isOpen, vmsSelected]);
 
-  const validateForm = () => {
-    Logger.debug(`VmMigrationModal > validateForm ...`)
-    if (!isCluster) {
-      for (const entry of vmStates) {
-        Logger.debug(`VmMigrationModal > validateForm ... entry: `, entry)
-      }
-    }
-  }
-
   const handleFormSubmit = () => {
     Logger.debug(`VmMigrationModal > handleFormSubmit ...`)
     vmsSelected.forEach((vm) => {

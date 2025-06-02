@@ -20,7 +20,6 @@
   text-align: center;
 }
 .box.box-graph {
-  /* min-height: calc(100% - var(--h-dash-boxs-bar)) !important; */
   flex-grow: 1;
   width: calc(100% / 3 - 8px); /* 1열 */
   cursor: default;

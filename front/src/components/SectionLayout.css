@@ -2,8 +2,7 @@
   width: calc(100% - var(--w-aside-menu));height:100%;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: white;
-  /*border-left: var(--border-default);*/
+  background-color: var(--color-primary-white);
 }
 .content-outer {
   display: flex;

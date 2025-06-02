@@ -13,17 +13,6 @@ const Home = () => {
       <MainOuter>
         <Outlet/>
       </MainOuter>
-      
-      {/* 드래그바 */}
-      {/* <div className="footer-resizer f-center"
-        onMouseDown={handler}
-        style={{
-          bottom: `${footerHeight}px`
-        }}
-      />
-      <JobFooter
-        style={{ height: `${footerHeight}px` }}
-      /> */}
       <JobFooter />
       <RightClickMenu />
     </>

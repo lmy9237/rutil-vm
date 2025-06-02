@@ -7,16 +7,6 @@
 .info-table {
   border-collapse:collapse;
 }
-
-/* .info-table tbody:before,
-.info-table tbody:after {
-  content: '';display:block;height:10px !important;
-  
-}
-.info-table tr:before,
-.info-table tr:after {
-  content: '';display:block;width:10px !important;
-} */
 .info-table th,
 .info-table td {
   padding: 10px 0;

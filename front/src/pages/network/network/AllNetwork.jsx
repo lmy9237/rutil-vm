@@ -8,8 +8,6 @@ import {
   useAllNetworks
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
-import "./Network.css";
 
 /**
  * @name AllNetwork

@@ -14,7 +14,7 @@ import Localization from "@/utils/Localization";
  */
 const VmNicActionButtons = ({
   actionType = "default",
-  type = "vm", // ← 추가
+  type ,
   resourceId,  // ← 추가
 }) => {
   const { setActiveModal } = useUIState();

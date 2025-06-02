@@ -128,7 +128,22 @@ const VmModal = ({
   ]);
   const [diskListState, setDiskListState] = useState([]);
   
-  const { mutate: addVM } = useAddVm(onClose, onClose);
+  // const { mutate: addVM } = useAddVm(onClose, onClose);
+const { mutate: addVM } = useAddVm(
+  (result) => {
+    if (!result?.id) {
+      validationToast.fail("VM 생성 실패: ID가 반환되지 않았습니다.");
+      return;
+    }
+    Logger.info("생성된 VM ID:", result.id);
+    onClose();
+  },
+  (error) => {
+    validationToast.fail("VM 생성 실패: " + error?.message);
+    Logger.error("VM 생성 에러:", error);
+  }
+);
+
   const { mutate: editVM } = useEditVm(onClose, onClose);
 
   // 가상머신 상세데이터 가져오기

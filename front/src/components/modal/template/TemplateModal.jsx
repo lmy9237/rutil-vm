@@ -28,7 +28,6 @@ const initialFormState = {
   allowAllAccess: true,
   diskAlias: "",
   diskSize: "",
-  // diskFormat: "RAW",
   copyVmPermissions: false,
 };
 
@@ -37,7 +36,6 @@ const TemplateModal = ({
   isOpen,
   onClose,
 }) => {
-  // const { closeModal } = useUIState()
   const { vmsSelected } = useGlobal()
   const vmSelected = useMemo(() => vmsSelected[0], [vmsSelected])
   

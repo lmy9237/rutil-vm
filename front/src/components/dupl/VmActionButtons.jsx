@@ -12,8 +12,6 @@ import {
 } from "@/api/RQHook";
 import { ActionButtons, ActionButton } from "@/components/button/ActionButtons";
 import {
-  RVI16,
-  rvi16Globe,
   rvi16ChevronUp,
   rvi16ChevronDown
 } from "@/components/icons/RutilVmIcons";
@@ -53,14 +51,11 @@ const VmActionButtons = ({
   const isDown = selected1st?.status === "DOWN";
   const isMaintenance = selected1st?.status === "MAINTENANCE";
   const isPause = selected1st?.status === "SUSPENDED";
-  const isPoweringDown = selected1st?.status === "POWERING_DOWN";
-  const isPoweringUp = selected1st?.status === "POWERING_UP";
   const isTemplate = selected1st?.status === "SUSPENDED" || selected1st?.status === "UP";
-
+  const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === false); //삭제방지 조건
 
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "UP");
-    const isConsoleDisabled = !allUp;
-  const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "DOWN");
+  const isConsoleDisabled = !allUp;
   const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "SUSPENDED");
   const allDownOrSuspended = vmsSelected.length > 0 && vmsSelected.every(vm => 
     vm.status === "DOWN" || vm.status === "SUSPENDED"
@@ -84,7 +79,8 @@ const VmActionButtons = ({
   const manageActions = [
     // { type: "import", label: Localization.kr.IMPORT, },
     { type: "copy",       onClick: () => setActiveModal("vm:copy"), label: `${Localization.kr.VM} 복제`, disabled: vmsSelected.length !== 1 || allPause },
-    { type: "remove",     onClick: () => setActiveModal("vm:remove"), label: Localization.kr.REMOVE, disabled: vmsSelected.length === 0 || !isDown },
+    //{ type: "remove",     onClick: () => setActiveModal("vm:remove"), label: Localization.kr.REMOVE, disabled: vmsSelected.length === 0 || !isDown },
+    { type: "remove", onClick: () => setActiveModal("vm:remove"), label: Localization.kr.REMOVE, disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm },
     { type: "templates",  onClick: () => {},                    label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
     { type: "ova",        onClick: () => {},                    label: `ova로 ${Localization.kr.EXPORT}`, disabled: vmsSelected.length !== 1 || !isDown },
   ];

@@ -70,8 +70,11 @@ const VmNicModal = ({
   const [isProfileOriginallySet, setIsProfileOriginallySet] = useState(false);
   const isInterfaceDisabled = editMode && isProfileOriginallySet;
 
-  const { data: vm } = useVm(vmId);
-  const { data: template } = useTemplate(templateId);
+  // const { data: vm } = useVm(vmId);
+  // const { data: template } = useTemplate(templateId);
+  const { data: vm } = useVm(vmId, undefined, { enabled: type === "vm" });
+  const { data: template } = useTemplate(templateId, undefined, { enabled: type === "template" });
+
   useEffect(() => {
   console.log("🔍 vm 데이터:", vm);
 }, [vm]);
@@ -80,15 +83,30 @@ useEffect(() => {
   console.log("🔍 template 데이터:", template);
 }, [template]);
 
-  const clusterId = type === "vm" ? vm?.clusterVo?.id : template?.clusterVo?.id;
+  //const clusterId = type === "vm" ? vm?.clusterVo?.id : template?.clusterVo?.id;
+  const clusterId = useMemo(() => {
+  if (type === "vm") return vm?.clusterVo?.id;
+  if (type === "template") return template?.clusterVo?.id;
+  return undefined;
+}, [type, vm, template]);
 const {
   data: vnics = [],
   isLoading: isNicsLoading,
 } = useAllvnicFromCluster(
   clusterId,
   (e) => ({ ...e }),
-  { enabled: !!clusterId }
+  {
+    enabled: !!clusterId && (type === "vm" || type === "template")
+  }
 );
+  // const {
+  //   data: vnics = [],
+  //   isLoading: isNicsLoading,
+  // } = useAllvnicFromCluster(
+  //   clusterId,
+  //   (e) => ({ ...e }),
+  //   { enabled: !!clusterId }
+  // );
 
   const nicFromVM = useNetworkInterfaceFromVM(resourceId, selectedNicId);
   const nicFromTemplate = useAllNicsFromTemplate(resourceId, selectedNicId);
