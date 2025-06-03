@@ -304,3 +304,12 @@ fun VmCreateVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.appl
 // 		nics(nicVos.map { it.toVmNic() })
 // 	}
 // }
+
+
+fun VmCreateVo.toRegisterVm(): Vm {
+	return VmBuilder()
+		.id(this.id)
+		.name(this.name)
+		.cluster(ClusterBuilder().id(this.clusterVo.id).build())
+		.build()
+}

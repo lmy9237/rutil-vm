@@ -12,7 +12,7 @@ import VmImportModal from "./VmImportModal";
 import Logger from "../../../utils/Logger";
 import "./MVm.css";
 import { useParams } from "react-router-dom";
-import DomainGetVmTemplateModal from "../domain/DomainImportVmTemplateModal";
+import DomainImportVmTemplateModal from "../domain/DomainImportVmTemplateModal";
 
 /**
  * @name VmModals
@@ -62,7 +62,7 @@ const VmModals = ({
         onClose={() => closeModal("vm:import")}
       />
     ), domainvmimport: (
-      <DomainGetVmTemplateModal
+      <DomainImportVmTemplateModal
         key="vm:domainvmimport"
         isOpen={activeModal().includes("vm:domainvmimport")}
         onClose={() => closeModal("vm:domainvmimport")}

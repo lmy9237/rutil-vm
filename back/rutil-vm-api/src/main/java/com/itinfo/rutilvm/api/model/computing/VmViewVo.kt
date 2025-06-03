@@ -497,22 +497,38 @@ fun Vm.toDiskVm(conn: Connection): VmViewVo {
 fun List<Vm>.toDiskVms(conn: Connection): List<VmViewVo> =
 	this@toDiskVms.map { it.toDiskVm(conn) }
 
-fun Vm.toUnregisteredVm(): VmViewVo {
+fun Vm.toUnregisteredVm(conn: Connection): VmViewVo {
 	val vm = this@toUnregisteredVm
+	val tmp = conn.findTemplate(vm.template().id()).getOrNull()
 	return VmViewVo.builder {
 		id { vm.id() }
 		name { vm.name() }
-		comment { vm.comment() }
 		description { vm.description() }
-		memorySize { vm.memory() }
-		cpuTopologyCnt { calculateCpuTopology(this@toUnregisteredVm) }
+		comment { vm.comment() }
+		status { vm.status() }
+		templateVo { tmp?.fromTemplateToIdentifiedVo() }
+		biosType { vm.bios().type().toString() }
 		cpuArc { vm.cpu().architecture() }
-		creationTime { if(vm.creationTimePresent()) vm.creationTime() else null }
-		stopTime { if(vm.stopTimePresent()) vm.stopTime() else null }
+		cpuTopologyCnt { calculateCpuTopology(vm) }
+		cpuTopologyCore { vm.cpu().topology().coresAsInteger() }
+		cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
+		cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
+		cpuPinningPolicy { vm.cpuPinningPolicy().value() }
+		creationTime { vm.creationTime() }
+		monitor { if(vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
+		displayType { if(vm.displayPresent()) vm.display().type() else DisplayType.VNC }
+		ha { vm.highAvailability().enabled() }
+		haPriority { vm.highAvailability().priorityAsInteger() }
+		memorySize { vm.memory() }
+		memoryGuaranteed { vm.memoryPolicy().guaranteed() }
+		memoryMax { vm.memoryPolicy().max() }
+		osType { vm.os().type() }
+		type { vm.type().toString() }
+		usb { if(vm.usbPresent()) vm.usb().enabled() else false }
 	}
 }
-fun List<Vm>.toUnregisterdVms(): List<VmViewVo> =
-	this@toUnregisterdVms.map { it.toUnregisteredVm() }
+fun List<Vm>.toUnregisterdVms(conn: Connection): List<VmViewVo> =
+	this@toUnregisterdVms.map { it.toUnregisteredVm(conn) }
 
 
 /**

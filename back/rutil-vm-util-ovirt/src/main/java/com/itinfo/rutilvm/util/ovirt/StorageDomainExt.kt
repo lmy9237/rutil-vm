@@ -386,7 +386,6 @@ fun Connection.registeredTemplateFromStorageDomain(storageDomainId: String, temp
 		.cluster(template.cluster()).send()
 
 	true
-
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.TEMPLATE, "가져오기", storageDomainId)
 }.onFailure {

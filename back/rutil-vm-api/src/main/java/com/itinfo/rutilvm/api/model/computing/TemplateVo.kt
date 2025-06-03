@@ -321,6 +321,14 @@ fun TemplateVo.toEditTemplate(): Template {
 		.build()
 }
 
+fun TemplateVo.toRegisterTemplate(): Template {
+	return TemplateBuilder()
+		.id(this.id)
+		.cluster(
+			ClusterBuilder().id(this.clusterVo.id).build())
+		.build()
+}
+
 /**
  * <template>
  *   <name>mytemplate</name>

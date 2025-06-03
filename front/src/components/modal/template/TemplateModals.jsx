@@ -6,7 +6,7 @@ import VmModal from "../../modal/vm/VmModal";
 import DeleteModal from "../../../utils/DeleteModal";
 import { useDeleteTemplate } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
-import DomainGetVmTemplateModal from "../domain/DomainImportVmTemplateModal";
+import DomainGetVmTemplateModal from "../domain/DomainImportVmModal";
 
 const TemplateModals = ({
   template,

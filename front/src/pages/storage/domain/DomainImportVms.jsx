@@ -9,18 +9,17 @@ import { ActionButton } from '@/components/button/ActionButtons';
 import SearchBox from '@/components/button/SearchBox';
 import TablesOuter from "@/components/table/TablesOuter";
 import TableColumnsInfo from "@/components/table/TableColumnsInfo";
-import DomainGetVmTemplateModal from '@/components/modal/domain/DomainImportVmTemplateModal';
+import DomainImportVmModal from '@/components/modal/domain/DomainImportVmModal';
 import { useAllUnregisteredVMsFromDomain } from "@/api/RQHook";
 import { checkZeroSizeToMB } from '@/util';
-import DeleteModal from "@/utils/DeleteModal";
 import Localization from '@/utils/Localization';
 
 /**
- * @name DomainGetVms
+ * @name DomainImportVms
  * @description 도메인으로 가상머신 가져오기 목록
  *
  * @param {string} domainId 도메인ID
- * @returns {JSX.Element} DomainGetVms
+ * @returns {JSX.Element} DomainImportVms
  */
 const DomainImportVms = ({ domainId }) => {
   const {
@@ -37,6 +36,8 @@ const DomainImportVms = ({ domainId }) => {
     vmsSelected, setVmsSelected,
     domainsSelected,
   } = useGlobal(); // 다중 선택된 데이터센터
+
+  const [isImportPopup, setIsImportPopup] = useState(false); 
 
   const transformedData = [...vms].map((vm) => ({
     ...vm,
@@ -57,14 +58,12 @@ const DomainImportVms = ({ domainId }) => {
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={refetchVms} />
         <div className="header-right-btns">
-          <ActionButton 
-            label="도메인에서 가져오기"
+          <ActionButton label={Localization.kr.IMPORT}
             actionType="default"
             disabled={vmsSelected.length === 0}
-            onClick={() => setActiveModal("vm:domainvmimport")}
+            onClick={() => setIsImportPopup(true)}
           />
-           <ActionButton
-            label={Localization.kr.REMOVE}
+           <ActionButton label={Localization.kr.REMOVE}
             actionType="default"
             disabled={vmsSelected.length === 0}
             onClick={() => setActiveModal("vm:remove")}
@@ -87,20 +86,10 @@ const DomainImportVms = ({ domainId }) => {
         path={`storage-vm_register;name=${domainsSelected[0]?.name}`}
       />
       <Suspense fallback={<Loading />}>
-        {/* 가상머신 가져오기 모달 -> DomainImporttemplates에서도 쓰고있어서 domainmodals에 어떻게 써야하나! */}
-        {/* {activeModal().includes("domainvm:importVm") && (
-          <DomainGetVmTemplateModal
-            isOpen={true}
-            data={vmsSelected}
-          />
-        )}
-        {activeModal().includes("domainvm:remove") && (
-          <DeleteModal type="Vm" isOpen={true}
-            contentLabel={Localization.kr.VM}
-            data={vmsSelected}
-            onRequestClose={() => setActiveModal(null)}
-          />
-        )} */}
+        <DomainImportVmModal
+          isOpen={isImportPopup}
+          onClose={() => setIsImportPopup(false)}
+        />
       </Suspense>
     </>
   );

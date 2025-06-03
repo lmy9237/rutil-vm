@@ -470,7 +470,7 @@ class StorageController: BaseController() {
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
 		ApiImplicitParam(name = "vmId", value = "가상머신 Id", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name = "vmVo", value = "가상머신", dataTypeClass=VmViewVo::class, required=true, paramType="body"),
+		ApiImplicitParam(name = "vmCreateVo", value = "가상머신", dataTypeClass=VmCreateVo::class, required=true, paramType="body"),
 		ApiImplicitParam(name = "allowPartialImport", value = "부분허용 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
 		ApiImplicitParam(name = "reassignBadMacs", value = "불량 MAC 재배치 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
 	)
@@ -483,18 +483,18 @@ class StorageController: BaseController() {
 	fun registerVm(
 		@PathVariable("storageDomainId") storageDomainId: String? = null,
 		@PathVariable("vmId") vmId: String? = null,
-		@RequestBody vmViewVo: VmViewVo? = null,
-		@RequestParam("allowPartialImport") allowPartialImport: Boolean = false,
-		@RequestParam("reassignBadMacs") reassignBadMacs: Boolean = false,
+		@RequestBody vmCreateVo: VmCreateVo? = null,
+		@RequestParam("partialAllow") partialAllow: Boolean = false,
+		@RequestParam("relocation") relocation: Boolean = false,
 	): ResponseEntity<Boolean?> {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		if (vmId == null)
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		if (vmViewVo == null)
+		if (vmCreateVo == null)
 			throw ErrorPattern.VM_VO_INVALID.toException()
 		log.info("/storages/{}/vms/{} ... 스토리지 도메인 가상머신 불러오기", storageDomainId, vmId)
-		return ResponseEntity.ok(iDomainImport.registeredVmFromStorageDomain(storageDomainId, vmViewVo, allowPartialImport, reassignBadMacs))
+		return ResponseEntity.ok(iDomainImport.registeredVmFromStorageDomain(storageDomainId, vmCreateVo, partialAllow, relocation))
 	}
 
 	@ApiOperation(

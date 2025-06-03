@@ -1150,7 +1150,7 @@ const filterOptions = [
   
   return (
     <>
-    <div className="w-full">
+    <div className="w-[80%]">
       <div className="header-right-btns">
         {/* 변경항목이 있다면 활성화 */}
         {!cancelFlag && dragItemFlag && (

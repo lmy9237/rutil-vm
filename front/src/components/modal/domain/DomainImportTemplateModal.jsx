@@ -1,4 +1,3 @@
-/* 가상머신/템플릿 가져오기모달 */
 import { useState, useEffect } from "react";
 import BaseModal from "../BaseModal";
 import TablesOuter from "../../table/TablesOuter";
@@ -12,13 +11,6 @@ import { useValidationToast } from "@/hooks/useSimpleToast";
 import { useClustersFromDataCenter } from "@/api/RQHook";
 import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
 
-const initialFormState = {
-  id: "",
-  name: "",
-  comment: "",
-  description: "",
-};
-
 /**
  * @name DomainImportTemplateModal
  * @description 도메인 템플릿 가져오기 모달
@@ -28,8 +20,7 @@ const initialFormState = {
  * @returns {JSX.Element} DomainImportTemplateModal
  */
 const DomainImportTemplateModal = ({ 
-  isOpen,
-  onClose,
+  isOpen, onClose,
 }) => {
   const { validationToast } = useValidationToast();
 
@@ -41,25 +32,17 @@ const DomainImportTemplateModal = ({
   
   const [templateList, setTemplateList] = useState([]);
   const [clusterList, setClusterList] = useState({}); // 해당 도메인이 가진 데이터센터가 가지고 있는 클러스터 리스트
+  const [selectedTmpId, setSelectedTmpId] = useState(null);
+
+  const selectedTmp = templateList.find(tmp => tmp.id === selectedTmpId) || templateList[0];
 
   useEffect(() => {
     if (isOpen && templatesSelected.length > 0) {
       setTemplateList(templatesSelected);
+      setSelectedTmpId(templateList[0]?.id);
     }
   }, [isOpen]);
 
-  const transformedData = Array.isArray(templateList) && templateList.map((t) => {
-    return {
-      ...t,
-      name: t?.name,
-      memory: t?.memory,
-      cpu: t?.cpu,
-      cpuArc: t?.cpuArc,
-      disk: "",
-      cluster: ""
-    };
-  });
-  
   const {
     data: clusters = [],
     isLoading: isDcClustersLoading,
@@ -82,8 +65,7 @@ const DomainImportTemplateModal = ({
   useEffect(()=>{
     console.log("$ domainsSelected ", domainsSelected)
     console.log("$ templatesSelected ", templatesSelected)
-    console.log("$ transformedData ", transformedData)
-  }, [transformedData]);
+  }, []);
 
   const handleClusterChange = (tempId) => (selected) => {
     setClusterList(prev => ({ ...prev, [tempId]: selected.id }));
@@ -110,9 +92,8 @@ const DomainImportTemplateModal = ({
 
 
   const validateForm = () => {
-    const nameError = checkName(formState.name);
-    if (nameError) return nameError;
-    
+    // 템플릿은 이름 지정 없음
+       
     return null;
   };
 
@@ -129,7 +110,7 @@ const DomainImportTemplateModal = ({
     <BaseModal targetName={Localization.kr.TEMPLATE} submitTitle={Localization.kr.IMPORT}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "880px" }} 
+      contentStyle={{ width: "780px" }} 
     >
       <div className="section-table-outer">
         {/* <TablesOuter target={"template"}
@@ -152,7 +133,10 @@ const DomainImportTemplateModal = ({
           </thead>
           <tbody>
             {Array.isArray(templateList) && templateList.map((t) => (
-              <tr key={t.id}>
+              <tr 
+                key={t.id} 
+                onClick={() => setSelectedTmpId(t?.id)}
+              >
                 <td>{t.name}</td>
                 <td>{t.memory}</td>
                 <td>{t.cpu}</td>
@@ -176,7 +160,7 @@ const DomainImportTemplateModal = ({
       <div className="filter-table">
         <div className="mb-2">
           <FilterButtons options={filterOptions} activeOption={activeFilter} onClick={setActiveFilter} />
-        </div>
+        </div>        
 
         {/* 섹션 변경 */}
         {/* {activeFilter === "general" && (
@@ -189,16 +173,13 @@ const DomainImportTemplateModal = ({
             })}
           </div>
         )} */}
-        {activeFilter === "general" && (
+        {activeFilter === "general" && selectedTmp && (
           <div className="get-template-info f-btw three-columns">
-            {Array.isArray(templateList) && templateList.map((template, idx) => (
-              <div key={template.id} style={{ flex: 1, margin: "0 8px" }}>
-                <InfoTable tableRows={templateTableRows(template)} />
-              </div>
-            ))}
+            <div style={{ flex: 1, margin: "0 8px" }}>
+              <InfoTable tableRows={templateTableRows(selectedTmp)} />
+            </div>
           </div>
         )}
-
         {activeFilter === "disk" && (
           <TablesOuter target={"disk"}
             columns={TableColumnsInfo.GET_DISK_TEMPLATES}

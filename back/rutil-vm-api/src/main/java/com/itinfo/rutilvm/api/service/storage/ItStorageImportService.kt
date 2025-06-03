@@ -31,13 +31,13 @@ interface ItStorageImportService {
 	 * 스토리지도메인 - 가상머신 가져오기
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
-	 * @param vmViewVo [VmViewVo] 가상머신
-	 * @param allowPart [Boolean] 부분허용
-	 * @param badMac [Boolean] 불량 MAC 재배치
+	 * @param vmCreateVo [VmCreateVo] 가상머신
+	 * @param partialAllow [Boolean] 부분허용
+	 * @param relocation [Boolean] 불량 MAC 재배치
 	 * @return [Boolean]
 	 */
 	@Throws(Error::class)
-	fun registeredVmFromStorageDomain(storageDomainId: String, vmViewVo: VmViewVo, allowPart: Boolean, badMac: Boolean): Boolean
+	fun registeredVmFromStorageDomain(storageDomainId: String, vmCreateVo: VmCreateVo, partialAllow: Boolean, relocation: Boolean): Boolean
 	/**
 	 * [ItStorageImportService.removeUnregisteredVmFromStorageDomain]
 	 * 스토리지 도메인 가상머신 가져오기 삭제
@@ -128,17 +128,17 @@ class StorageImportServiceImpl(
 	override fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmViewVo> {
 		log.info("findAllUnregisteredVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<Vm> = conn.findAllUnregisteredVmsFromStorageDomain(storageDomainId).getOrDefault(emptyList())
-		return res.toUnregisterdVms()
+		return res.toUnregisterdVms(conn)
 	}
 
 	@Throws(Error::class)
-	override fun registeredVmFromStorageDomain(storageDomainId: String, vmViewVo: VmViewVo, allowPart: Boolean, badMac: Boolean): Boolean {
-		log.info("registeredVmFromStorageDomain ... storageDomainId: {}, vmId: {}, allowPart: {}, badMac: {}", storageDomainId, vmViewVo.id, allowPart, badMac)
+	override fun registeredVmFromStorageDomain(storageDomainId: String, vmCreateVo: VmCreateVo, partialAllow: Boolean, relocation: Boolean): Boolean {
+		log.info("registeredVmFromStorageDomain ... storageDomainId: {}, vmId: {}, allowPart: {}, badMac: {}", storageDomainId, vmCreateVo.id, partialAllow, relocation)
 		val res: Result<Boolean> = conn.registeredVmFromStorageDomain(
 			storageDomainId,
-			VmBuilder().id(vmViewVo.id).name(vmViewVo.name).cluster(ClusterBuilder().id(vmViewVo.clusterVo.id)).build(),
-			allowPart,
-			badMac
+			vmCreateVo.toRegisterVm(),
+			partialAllow,
+			relocation
 		)
 		return res.isSuccess
 	}
@@ -163,7 +163,7 @@ class StorageImportServiceImpl(
 		log.info("registeredTemplateFromStorageDomain ... storageDomainId: {}, templateVo: {}", storageDomainId, templateVo)
 		val res: Result<Boolean> = conn.registeredTemplateFromStorageDomain(
 			storageDomainId,
-			TemplateBuilder().id(templateVo.id).cluster(ClusterBuilder().id(templateVo.clusterVo.id)).build()
+			templateVo.toRegisterTemplate()
 		)
 		return res.isSuccess
 	}
