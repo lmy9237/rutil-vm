@@ -52,7 +52,7 @@ const VmActionButtons = ({
   const isMaintenance = selected1st?.status === "MAINTENANCE";
   const isPause = selected1st?.status === "SUSPENDED";
   const isTemplate = selected1st?.status === "SUSPENDED" || selected1st?.status === "UP";
-  const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === false); //삭제방지 조건
+  const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === true); //삭제방지 조건
 
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "UP");
   const isConsoleDisabled = !allUp;
@@ -80,7 +80,7 @@ const VmActionButtons = ({
     // { type: "import", label: Localization.kr.IMPORT, },
     { type: "copy",       onClick: () => setActiveModal("vm:copy"), label: `${Localization.kr.VM} 복제`, disabled: vmsSelected.length !== 1 || allPause },
     //{ type: "remove",     onClick: () => setActiveModal("vm:remove"), label: Localization.kr.REMOVE, disabled: vmsSelected.length === 0 || !isDown },
-    { type: "remove", onClick: () => setActiveModal("vm:remove"), label: Localization.kr.REMOVE, disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm },
+    { type: "remove",     onClick: () => setActiveModal("vm:remove"), label: Localization.kr.REMOVE, disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm },
     { type: "templates",  onClick: () => {},                    label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
     { type: "ova",        onClick: () => {},                    label: `ova로 ${Localization.kr.EXPORT}`, disabled: vmsSelected.length !== 1 || !isDown },
   ];
