@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo } from "react";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
@@ -12,7 +12,7 @@ import {
 } from "@/api/RQHook";
 import { checkZeroSizeToGiB } from "@/util";
 import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import { useNavigate } from "react-router-dom";
 
 /**
  * @name DomainTemplates
@@ -27,6 +27,7 @@ import Logger                 from "@/utils/Logger";
 const DomainTemplates = ({
   domainId
 }) => {
+  const navigate = useNavigate();
   const {
     domainsSelected,
     templatesSelected, setTemplatesSelected 
@@ -47,9 +48,15 @@ const DomainTemplates = ({
         {t?.name}
       </TableRowClick>
     ),
-    disk: (t?.diskAttachmentVos?.length || "") ,
-    virtualSize: checkZeroSizeToGiB(t?.memoryGuaranteed), 
-    actualSize: checkZeroSizeToGiB(t?.memorySize),
+    disk: (
+      <span 
+        onClick={() => navigate(`/computing/templates/${t?.id}/disks`)} 
+        style={{ color: 'rgb(9, 83, 153)' }}
+      > {t?.diskAttachmentVos?.length} 
+      </span>
+    ),
+    // virtualSize: checkZeroSizeToGiB(t?.memoryGuaranteed), 
+    // actualSize: checkZeroSizeToGiB(t?.memoryActual),
     creationTime: t?.creationTime || "-", 
   })), [templates]);
 

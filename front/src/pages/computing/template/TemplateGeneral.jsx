@@ -26,12 +26,12 @@ const TemplateGeneral = ({ templateId }) => {
     // { label: "비디오 유형",     value:  },
     { label: "최적화 옵션",     value: template?.optimizeOption },
     { label: "설정된 메모리",    value: checkZeroSizeToMB(template?.memorySize) },
-    { label: "CPU 코어 수",    value: `${template.cpuTopologyCnt} (${template.cpuTopologySocket}:${template.cpuTopologyCore}:${template.cpuTopologyThread})` || "" },
+    { label: "CPU 코어 수",    value: `${template?.cpuTopologyCnt} (${template?.cpuTopologySocket}:${template?.cpuTopologyCore}:${template?.cpuTopologyThread})` || "" },
     { label: "모니터 수",       value: template?.monitor },
     { label: Localization.kr.HA, value: template?.ha ? Localization.kr.YES : Localization.kr.NO },
     { label: "우선 순위", value: template?.haPriority },
-    { label: "USB", value: template.usb === true ? "활성화":"비활성화" || "" },
-    { label: Localization.kr.STATELESS, value: template?.stateless ? Localization.kr.YES : Localization.kr.NO },
+    { label: "USB", value: template?.usb === true ? "활성화":"비활성화" || "" },
+    // { label: Localization.kr.STATELESS, value: template?.stateless ? Localization.kr.YES : Localization.kr.NO },
   ];
 
   return (

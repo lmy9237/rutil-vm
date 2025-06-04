@@ -52,6 +52,7 @@ private val log = LoggerFactory.getLogger(VmCreateVo::class.java)
  * @property connVo [IdentifiedVo]
  * @property dataCenterVo [IdentifiedVo]
  * @property clusterVo [IdentifiedVo]
+ * @property originTemplateVo [IdentifiedVo]
  * @property templateVo [IdentifiedVo]
  * @property nicVos List<[NicVo]>
  * @property diskAttachmentVos List<[DiskAttachmentVo]>
@@ -91,6 +92,7 @@ class VmCreateVo (
     val connVo: IdentifiedVo = IdentifiedVo(),
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
 	val clusterVo: IdentifiedVo = IdentifiedVo(),
+	val originTemplateVo: IdentifiedVo = IdentifiedVo(),
 	val templateVo: IdentifiedVo = IdentifiedVo(),
 	val nicVos: List<NicVo> = listOf(),
 	val diskAttachmentVos: List<DiskAttachmentVo> = listOf(),
@@ -134,10 +136,11 @@ class VmCreateVo (
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo(); fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
 		private var bClusterVo: IdentifiedVo = IdentifiedVo(); fun clusterVo(block: () -> IdentifiedVo?) { bClusterVo = block() ?: IdentifiedVo() }
 		private var bTemplateVo: IdentifiedVo = IdentifiedVo(); fun templateVo(block: () -> IdentifiedVo?) { bTemplateVo = block() ?: IdentifiedVo() }
+		private var bOriginTemplateVo: IdentifiedVo = IdentifiedVo(); fun originTemplateVo(block: () -> IdentifiedVo?) { bOriginTemplateVo = block() ?: IdentifiedVo() }
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 
-		fun build(): VmCreateVo = VmCreateVo(bId, bName, bDescription, bComment, bOsSystem, bOsType, bOptimizeOption, bMemorySize, bMemoryMax, bMemoryActual, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationEncrypt, bParallelMigration, bHa, bPriority, bBootingMenu, bFirstDevice, bSecDevice, bDeviceList, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bConnVo, bDataCenterVo, bClusterVo, bTemplateVo, bNicVos, bDiskAttachmentVos, )
+		fun build(): VmCreateVo = VmCreateVo(bId, bName, bDescription, bComment, bOsSystem, bOsType, bOptimizeOption, bMemorySize, bMemoryMax, bMemoryActual, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationEncrypt, bParallelMigration, bHa, bPriority, bBootingMenu, bFirstDevice, bSecDevice, bDeviceList, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bConnVo, bDataCenterVo, bClusterVo, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, )
     }
 
     companion object {
@@ -148,6 +151,7 @@ class VmCreateVo (
 fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
     val vm = this@toVmCreateVo
     val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
+    val originTemplate: Template? = conn.findTemplate(vm.originalTemplate().id()).getOrNull()
 	val disk: Disk? = vm.cdroms().firstOrNull()?.file()?.id()?.let { conn.findDisk(it).getOrNull() }
 	val storageDomain: StorageDomain? =
 		if (vm.leasePresent()) { conn.findStorageDomain(vm.lease().storageDomain().id()).getOrNull() }
@@ -201,6 +205,7 @@ fun Vm.toVmCreateVo(conn: Connection): VmCreateVo {
 		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
 		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
 		templateVo { template?.fromTemplateToIdentifiedVo() }
+		originTemplateVo { originTemplate?.fromTemplateToIdentifiedVo() }
 		nicVos { vm.nics().toVmNics(conn) } // TODO
 	}
 }

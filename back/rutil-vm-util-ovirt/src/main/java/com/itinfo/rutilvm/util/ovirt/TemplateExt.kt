@@ -61,7 +61,7 @@ fun Connection.addTemplate(vmId: String, template: Template): Result<Template?> 
 	}
 
 	val templateAdded: Template? =
-		this.srvTemplates().add().template(template)/*.clonePermissions(f).seal(seal)*/.send().template()
+		this.srvTemplates().add().template(template).clonePermissions(true)/*.seal(seal)*/.send().template()
 
 	templateAdded ?: throw ErrorPattern.TEMPLATE_NOT_FOUND.toError()
 }.onSuccess {

@@ -15,8 +15,10 @@ import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toAddTemplateDisk
+import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentsToTemplate
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.common.ovirtDf
+import com.itinfo.rutilvm.util.ovirt.findAllDiskAttachmentsFromTemplate
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findDataCenter
 import com.itinfo.rutilvm.util.ovirt.findHost
@@ -221,13 +223,16 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 }
 
 fun Template.toStorageTemplate(conn: Connection): TemplateVo {
+	val template = this@toStorageTemplate
+	val disks: List<DiskAttachment> = conn.findAllDiskAttachmentsFromTemplate(template.id()).getOrDefault(emptyList());
 	return TemplateVo.builder {
-		id { this@toStorageTemplate.id() }
-		name { this@toStorageTemplate.name() }
-		comment { this@toStorageTemplate.comment() }
-		description { this@toStorageTemplate.description() }
-		creationTime { this@toStorageTemplate.creationTime() }
-		status { this@toStorageTemplate.status() }
+		id { template.id() }
+		name { template.name() }
+		comment { template.comment() }
+		description { template.description() }
+		creationTime { template.creationTime() }
+		status { template.status() }
+		diskAttachmentVos { disks.toDiskAttachmentsToTemplate(conn) }
 	}
 }
 fun List<Template>.toStorageTemplates(conn: Connection): List<TemplateVo> =
@@ -306,9 +311,9 @@ fun TemplateVo.toEditTemplate(): Template {
 		.os(OperatingSystemBuilder().type(osSystem))
 		.bios(BiosBuilder().type(BiosType.fromValue(chipsetFirmwareType)))
 		.type(VmType.fromValue(optimizeOption))
-		.stateless(stateless)
-		.startPaused(startPaused)
-		.deleteProtected(deleteProtected)
+		// .stateless(stateless)
+		// .startPaused(startPaused)
+		// .deleteProtected(deleteProtected)
 		.build()
 }
 
