@@ -141,7 +141,6 @@ const VmDisk = ({
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
         path={`vms-network_interfaces;name=${vmsSelected[0]?.name}`} 
       /> */}
-      <hr/>
       <Suspense fallback={<Loading/>}>
         {(isCreatePopupOpen || editDisk) && (
           <VmDiskModal

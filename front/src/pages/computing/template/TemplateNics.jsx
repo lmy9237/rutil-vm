@@ -14,6 +14,7 @@ import {
   useAllNicsFromTemplate
 } from "@/api/RQHook";
 import VmNicModals from "@/components/modal/vm/VmNicModals";
+import TemplateNicActionbuttons from "@/components/dupl/TemplateNicActionbuttons";
 
 /**
  * @name TemplateNics
@@ -65,25 +66,22 @@ const TemplateNics = ({
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
 
   return (
-    <>{/* v-start w-full으로 묶어짐*/}
+    <>
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchVnicProfiles}/>
-        <VmNicActionButtons  type="template" resourceId={templateId}/>
+        <TemplateNicActionbuttons />
       </div>
-      <TablesOuter target={"vnicprofile"}
+      <TablesOuter target={"templatenic"}
         columns={columns}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => {
-          if (activeModal().length > 0) return;
-       setVnicProfilesSelected(selectedRows);
-        }}
+        onRowClick={(selectedRows) => setNicsSelected(selectedRows)} 
         isLoading={isVnicProfilesLoading} isRefetching={isVnicProfilesRefetching}  isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
       />
       <SelectedIdView items={nicsSelected}/>
-      <VmNicModals type="template" resourceId={templateId} />
+      {/* <VmNicModals type="template" resourceId={templateId} /> */}
       {/* 
         {activeModal().includes("nic:remove") && (
           <TemplateNicDeleteModal

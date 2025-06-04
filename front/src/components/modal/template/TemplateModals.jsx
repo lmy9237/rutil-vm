@@ -13,7 +13,7 @@ const TemplateModals = ({
 }) => {
   const { activeModal, closeModal, } = useUIState()
   const { templatesSelected } = useGlobal()
-
+  //console.log("📌 TemplateModals > template?.id: ", template?.id);
   const modals = {
     update: (
       <TemplateEditModal isOpen={activeModal().includes("template:update")}

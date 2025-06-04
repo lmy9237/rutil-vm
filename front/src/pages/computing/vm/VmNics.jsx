@@ -105,7 +105,7 @@ useClickOutside(nicRef, (e) => {
         ref={nicRef} 
       > 
         <div className="dupl-header-group f-start gap-4 w-full mb-2">
-          <NicActionButtons  type="vm" resourceId={vmId}  />
+          <NicActionButtons />
         </div>
 
         <div className="network-interface-outer w-full">

@@ -8,8 +8,8 @@ import { triggerDownload }    from "@/util";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 
-const DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT = 10 * 1000; // 10초
-const DEFAULT_REFETCH_INTERVAL_IN_MILLI = 2 * 60 * 1000; // 2분
+export const DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT = 10 * 1000; // 10초
+export const DEFAULT_REFETCH_INTERVAL_IN_MILLI = 2 * 60 * 1000; // 2분
 
 //#region: 쿼리Key
 const QK = {
@@ -2122,7 +2122,7 @@ export const useDeactivateGlobalHaHost = (
 export const useAllVMs = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  // refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allVMs'],
   queryFn: async () => {
     const res = await ApiManager.findAllVMs()

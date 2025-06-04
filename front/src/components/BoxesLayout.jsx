@@ -189,7 +189,7 @@ export const BoxChartSummary = ({
       <div className="box-detail f-start gap-8 w-full"
         {...props}
       >
-        <div className="box-status v-start">
+        <div className="box-status v-start ml-1.5">
           <h1 className="fs-24">{availablePercentageComputed}%</h1>
           <span className="fs-12">{Localization.kr.AVAILABLE}</span>
           {/* (총 {total} {unit}) */}

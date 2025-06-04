@@ -91,8 +91,9 @@ const VmModal = ({
   onClose, 
   editMode=false,
   copyMode=false,
-  templateId,
+
 }) => {
+
   const { validationToast } = useValidationToast();
   const vLabel = editMode 
     ? Localization.kr.UPDATE
@@ -101,6 +102,9 @@ const VmModal = ({
       : Localization.kr.CREATE;
 
   const { vmsSelected } = useGlobal();
+  const { templatesSelected } = useGlobal();
+  const templateId = templatesSelected[0]?.id;
+
   const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
   const [selectedModalTab, setSelectedModalTab] = useState("common");
   const tabs = useMemo(() => [
@@ -527,16 +531,17 @@ const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
               formInfoState={formInfoState}
               setFormInfoState={setFormInfoState}
             />
-            
-            <VmDisk
-              editMode={editMode}
-              vm={vm}
-              vmName={formInfoState.name}
-              dataCenterId={dataCenterVo.id}
-              diskListState={diskListState}
-              setDiskListState={setDiskListState}
-              disabled={isDiskDisabled} // 기본템플릿이 아닐때는 버튼 disabled처리
-            />
+            {!copyMode && (
+              <VmDisk
+                editMode={editMode}
+                vm={vm}
+                vmName={formInfoState.name}
+                dataCenterId={dataCenterVo.id}
+                diskListState={diskListState}
+                setDiskListState={setDiskListState}
+                disabled={isDiskDisabled} // 기본템플릿이 아닐때는 버튼 disabled처리
+              />
+            )}
             <VmNic
               editMode={editMode}
               nics={vnics}

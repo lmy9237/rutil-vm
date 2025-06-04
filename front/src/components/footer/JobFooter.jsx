@@ -3,6 +3,8 @@ import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import useFooterState         from "@/hooks/useFooterState";
 import {
+  RVI16,
+  rvi16Refresh,
   RVI24,
   rvi24ChevronUp,
   rvi24DownArrow
@@ -20,6 +22,7 @@ import {
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./JobFooter.css";
+import IconButton from "../Input/IconButton";
 
 /**
  * @name JobFooter
@@ -147,7 +150,12 @@ const JobFooter = ({
           }}
         >
           <RVI24 className="mx-5" iconDef={footerVisible() ? rvi24DownArrow() : rvi24ChevronUp()}/>
-          <span>최근 작업</span>
+          <span className="mr-2">최근 작업</span>
+          <RVI16 iconDef={rvi16Refresh("black")} />(위치)
+          {/* <IconButton iconDef={rvi16Refresh("#717171")} 
+                onClick={handleRefresh}
+                 onClick={() =>  window.location.reload()}
+          /> */}
         </div>
 
         {/* 테이블 */}
@@ -156,12 +164,11 @@ const JobFooter = ({
           style={{ height: `${footerHeight - 40}px` }}
         >
           <div className="footer-nav v-start gap-8 w-full h-full">
-            <div className="dupl-header-group f-start gap-4 w-full">
+            {/* <div className="dupl-header-group f-start gap-4 w-full">
               {transformedData.length > 0 && 
                 <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchJobs} />
               }
-              {/*  */}
-            </div>
+            </div> */}
             <TablesOuter target={"job"}
               columns={TableColumnsInfo.JOB_HISTORY_COLUMNS}
               style={{ paddingLeft:'30px' }}

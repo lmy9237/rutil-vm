@@ -107,7 +107,7 @@
   cursor: pointer;
 }
 
-@media screen and (max-width:1500px) {
+@media screen and (max-width:1650px) {
   .dash-boxes {
     height: calc(2 * var(--h-dash-nav-box));
   }

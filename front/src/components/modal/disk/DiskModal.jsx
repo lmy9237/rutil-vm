@@ -182,12 +182,12 @@ const DiskModal = ({
       contentStyle={{ width: "640px" }}
     >
       <div className="disk-new-nav">
-        <div id="storage_img_btn"
+        {/* <div id="storage_img_btn"
           onClick={() => handleTabClick("img")}
           className={activeTab === "img" ? "active" : ""}
         >
           이미지
-        </div>
+        </div> */}
         {/* <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
           직접 LUN
         </div> */}

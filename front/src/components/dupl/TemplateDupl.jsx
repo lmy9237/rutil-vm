@@ -17,7 +17,6 @@ const TemplateDupl = ({
   refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal } = useUIState()
   const {
     templatesSelected, setTemplatesSelected
   } = useGlobal();
@@ -58,9 +57,8 @@ const TemplateDupl = ({
       </div>
       <TablesOuter target={"template"}
         columns={columns}
-        data={filteredData} // ✅ 검색 필터링된 데이터 사용
-        searchQuery={searchQuery} // ✅ 검색어 전달
-        setSearchQuery={setSearchQuery} // ✅ 검색어 변경 가능하도록 추가
+        data={filteredData}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}

@@ -296,7 +296,7 @@ const VmDiskModal = ({
       onSubmit={diskType? handleFormSubmit : handleOkClick}
       contentStyle={{ width: "700px" }} 
     >
-      <div className="disk-new-nav">
+      {/* <div className="disk-new-nav">
         <div
           id="storage_img_btn"
           onClick={() => handleTabClick("img")}
@@ -304,7 +304,7 @@ const VmDiskModal = ({
         >
           이미지
         </div>
-      </div>
+      </div> */}
       {/*이미지*/}
       {activeTab === "img" && (
         <div className="disk-new-img">

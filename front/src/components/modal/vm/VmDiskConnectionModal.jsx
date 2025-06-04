@@ -231,21 +231,21 @@ const VmDiskConnectionModal = ({
       }
       contentStyle={{ width: "1000px"}} 
     >
-      <div className="disk-new-nav">
+      {/* <div className="disk-new-nav">
         <div id="storage-img-btn"
           onClick={() => setActiveTab("img")}
           className={activeTab === "img" ? "active" : ""}
         >
           이미지 
         </div>
-        {/* <div
+         <div
           id="storage-directlun-btn"
           onClick={() => setActiveTab("directlun")}
           className={activeTab === "directlun" ? "active" : ""}
         >
           직접 LUN
-        </div> */}
-      </div>
+        </div> 
+      </div> */}
       <br/>
       <>
         <TablesOuter target={"disk"}

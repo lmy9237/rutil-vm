@@ -36,6 +36,8 @@ import EventActionButtons        from "@/components/dupl/EventActionButtons"
 import JobActionButtons          from "@/components/dupl/JobActionButtons";
 import DiskSnapshotActionButtons from "@/components/dupl/DiskSnapshotActionButtons";
 import "./RightClickMenu.css"
+import TemplateNicModals from "../modal/template/TemplateNicModals";
+import TemplateNicActionbuttons from "../dupl/TemplateNicActionbuttons";
 
 /**
  * @name RightClickMenu
@@ -69,6 +71,7 @@ const RightClickMenu = () => {
 
   const contextTargets2Ignore = useMemo(() => ([ /* 우킄릭시 메뉴 제공되지 않는 기능대상 */
     "application",
+    "hostnic",
     "usersession", // 활성화 세션
     "cert", // 인증서
     "disksnapshot", // NOTE: 삭제처리를 직접 하지 않음으로 기능 배제
@@ -80,10 +83,10 @@ const RightClickMenu = () => {
   const menuRef = useRef(null); // ✅ context menu 영역 참조
   useClickOutside(menuRef, (e) => {
     if (contextMenu() !== null) {
-      setTimeout(() => clearAllContextMenu(), 250)
+      //setTimeout(() => clearAllContextMenu(), 250)
+      setTimeout(() => clearAllContextMenu(), 0)
     }
   })
-
   return (
     <>
       <DataCenterModals dataCenter={datacentersSelected[0] ?? null} />
@@ -99,6 +102,7 @@ const RightClickMenu = () => {
       <DiskSnapshotModals shot={snapshotsSelected[0] ?? null} />
       <VmDiskModals disk={disksSelected[0] ?? null} />
       <VmNicModals nic={nicsSelected[0] ?? null} />
+      <TemplateNicModals nic={templatesSelected[0] ?? null} />
       <EventModals event={eventsSelected[0] ?? null}/>
       <JobModals job={jobsSelected[0] ?? null} />
       <SettingUsersModals user={usersSelected[0] ?? null} />
@@ -168,6 +172,10 @@ const RightClickMenu = () => {
             />
           ) : (contextMenuType() === "nic") ? (
             <VmNicActionButtons actionType={"context"} 
+              status={contextMenu()?.item?.status}
+            />
+          ) : (contextMenuType() === "templatenic") ? ( 
+            <TemplateNicActionbuttons actionType={"context"} 
               status={contextMenu()?.item?.status}
             />
           ) : (contextMenuType() === "user") ? (

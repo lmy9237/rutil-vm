@@ -6,7 +6,7 @@
   margin-left: 24px;
 }
 /*이미지,직접lun버튼*/
-.disk-new-nav {
+/* .disk-new-nav {
   width: 50%;
   display: flex;
 }
@@ -17,7 +17,7 @@
 .disk-new-nav .active {
   color: rgb(35, 132, 243);
   font-weight: 600;
-}
+} */
 
 /*디스크(업로드)*/
 .storage-upload-first {

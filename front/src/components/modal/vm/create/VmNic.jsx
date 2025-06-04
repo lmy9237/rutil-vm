@@ -80,7 +80,9 @@ const VmNic = ({
   }, [nicsState, setNicsState]);
 
   return (
-    <div className="host-second-content py-2">
+    <>
+    <hr/>
+    <div className="host-second-content py-3">
       <p className="mb-0.5">
         {Localization.kr.VNIC_PROFILE} 을 선택하여 {Localization.kr.VM} {Localization.kr.NICS}를 설정하세요.
       </p>
@@ -93,8 +95,8 @@ const VmNic = ({
         options={nics}
         showLabel={true}
       />
-
     </div>
+    </>
   );
   
 };
