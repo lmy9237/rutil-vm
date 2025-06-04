@@ -99,7 +99,9 @@ const DiskDupl = ({
     <>{/* v-start으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
-        <DiskActionButtons />
+        <DiskActionButtons 
+          hasConnectTemplate={disksSelected.some(disk => !!disk?.connectTemplate?.name)}
+        />
       </div>
       <TablesOuter target={"disk"}
         columns={columns}

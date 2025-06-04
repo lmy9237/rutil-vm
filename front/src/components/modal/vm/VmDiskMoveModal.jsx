@@ -5,7 +5,6 @@ import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
-import LabelInput                       from "@/components/label/LabelInput";
 import ApiManager                       from "@/api/ApiManager";
 import { 
   useCopyDisk, 
@@ -16,40 +15,34 @@ import Logger                           from "@/utils/Logger";
 import "../domain/MDomain.css";
 import { checkZeroSizeToGiB } from "@/util";
 
-const DiskActionModal = ({ 
+const VmDiskMoveModal = ({ 
   isOpen,
   onClose,
+  data
 }) => {
   const { validationToast } = useValidationToast();
   const { activeModal, } = useUIState()
-  const daLabel = activeModal().includes("disk:move")
-    ? Localization.kr.MOVE 
-    : Localization.kr.COPY;
   const { disksSelected } = useGlobal()
   
   const [diskList, setDiskList] = useState([]);
   const [domainList, setDomainList] = useState({});
-
-  const [aliases, setAliases] = useState({});
   const [targetDomains, setTargetDomains] = useState({});
 
-
-  const { mutate: copyDisk } = useCopyDisk(onClose, onClose);
   const { mutate: moveDisk } = useMoveDisk(onClose, onClose);
 
   useEffect(() => {
     if (isOpen && disksSelected.length > 0) {
-      setDiskList(disksSelected);
+      setDiskList(disksSelected.map(disk => disk.diskImageVo));
     }
   }, [isOpen]);
 
 
   const getDomains = useQueries({
     queries: diskList?.map((disk) => ({
-      queryKey: ['allDomainsFromDataCenter', disk.dataCenterVo?.id],
+      queryKey: ['allDomainsFromDataCenter', disk?.dataCenterVo?.id],
       queryFn: async () => {
         try {
-          const domains = await ApiManager.findAllDomainsFromDataCenter(disk.dataCenterVo?.id);
+          const domains = await ApiManager.findAllDomainsFromDataCenter(disk?.dataCenterVo?.id);
           return domains || [];
         } catch (error) {
           console.error(`Error fetching ${disk}`, error);
@@ -58,21 +51,13 @@ const DiskActionModal = ({
       }
     })),
   });  
-  useEffect(() => {
-    console.log("$diskList", diskList)
-    console.log("$getDomains", getDomains)
-  }, [])
+
 
   useEffect(() => {
-    if (activeModal().includes("disk:copy")) {
-      const initialAliases = {};
-      for (let i=0; i<diskList.length; i++) {
-        const disk = diskList[i];
-        initialAliases[disk.id] = `${disk.alias || ""}`;
-      }
-      setAliases(initialAliases);
-    }
-  }, [activeModal, diskList]);  
+    console.log("$diskList", diskList);
+    console.log("$getDomains", getDomains);
+  }, [diskList, getDomains]);
+
 
   useEffect(() => {
     const newDomainList = {};
@@ -84,14 +69,8 @@ const DiskActionModal = ({
 
       if (disk && queryResult.data && queryResult.isSuccess) {
         const domains = queryResult.data?.body ?? [];
-        // disk:move"일 때만 필터링
         const filteredDomains = domains
-          .filter(d => {
-            if (activeModal().includes("disk:move")) {
-              return d.status === "ACTIVE" && d.id !== currentDomainId;
-            }
-            return d.status === "ACTIVE";
-          })
+          .filter(d => d.status === "ACTIVE" && d.id !== currentDomainId)
           .map(d => ({
             id: d.id,
             name: d.name,
@@ -110,24 +89,22 @@ const DiskActionModal = ({
   }, [getDomains, diskList, activeModal]);
 
   useEffect(() => {
-  // domainList가 갱신될 때마다 실행
-  if (!domainList || Object.keys(domainList).length === 0) return;
+    if (!domainList || Object.keys(domainList).length === 0) return;
 
-  setTargetDomains(prev => {
-    const next = { ...prev };
-    let changed = false;
+    setTargetDomains(prev => {
+      const next = { ...prev };
+      let changed = false;
 
-    Object.entries(domainList).forEach(([diskId, domains]) => {
-      if (domains && domains.length > 0 && !next[diskId]) {
-        next[diskId] = domains[0].id;
-        changed = true;
-      }
+      Object.entries(domainList).forEach(([diskId, domains]) => {
+        if (domains && domains.length > 0 && !next[diskId]) {
+          next[diskId] = domains[0].id;
+          changed = true;
+        }
+      });
+
+      return changed ? next : prev;
     });
-
-    return changed ? next : prev;
-  });
-}, [domainList]);
-
+  }, [domainList]);
 
   
   const validateForm = () => {
@@ -164,34 +141,21 @@ const DiskActionModal = ({
         }
       }
   
-      // 복사 or 이동 처리
-      if (activeModal().includes("disk:copy")) {
-        copyDisk({
-          diskId: disk.id,
-          diskImage: {
-            id: disk.id,
-            alias: aliases[disk.id] || disk.alias,
-            storageDomainVo: { id: selectedDomainId }
-          }
-        });
-      } else {
-        moveDisk({
-          diskId: disk.id,
-          storageDomainId: selectedDomainId
-        });
-      }
+      moveDisk({
+        diskId: disk.id,
+        storageDomainId: selectedDomainId
+      });
     });
   };
 
   return (
-    <BaseModal targetName={Localization.kr.DISK} submitTitle={daLabel}
+    <BaseModal targetName={`${Localization.kr.VM} ${Localization.kr.DISK}`} submitTitle={Localization.kr.MOVE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "800px" }}
     >
     <div className="py-3">
       <div className="section-table-outer">
-        <h1 className="fs-16">디스크 할당:</h1>
         <table>
           <thead>
             <tr>
@@ -206,20 +170,8 @@ const DiskActionModal = ({
             {diskList.length > 0 ? (
               diskList?.map((disk, index) => (
                 <tr key={disk.id || index}>
-                  <td>
-                    {activeModal().includes("disk:move") ? (
-                      disk.alias
-                    ) : (
-                      <LabelInput label={""}
-                        value={aliases[disk.id] || ""}
-                        onChange={(e) => {
-                          const newAlias = e.target.value;
-                          setAliases((prev) => ({ ...prev, [disk.id]: newAlias }));
-                        }}
-                      />
-                    )}
-                  </td>
-                  <td>{disk?.virtualSize}</td>
+                  <td>{disk.alias}</td>
+                  <td>{checkZeroSizeToGiB(disk?.virtualSize)}</td>
                   <td>{disk.storageDomainVo?.name || ""}</td>
                   <td className="w-[230px]">
                     <LabelSelectOptionsID
@@ -259,4 +211,4 @@ const DiskActionModal = ({
   );
 };
 
-export default DiskActionModal;
+export default VmDiskMoveModal;

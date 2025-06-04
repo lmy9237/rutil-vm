@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import SearchBox              from "@/components/button/SearchBox";
 import FilterButtons          from "@/components/button/FilterButtons";
 import TablesOuter            from "@/components/table/TablesOuter";
@@ -38,8 +37,8 @@ const VmDiskDupl = ({
     const status = d?.active ? "UP" : "DOWN"; 
     return {
       ...d,
-      icon: status2Icon(status),
-      iconSortKey: getStatusSortKey(status),
+      icon: status2Icon(diskImage?.status),
+      iconSortKey: getStatusSortKey(diskImage?.status),
       _alias: (
         <TableRowClick type="disk" id={diskImage?.id}>
           {diskImage?.alias}
@@ -56,6 +55,7 @@ const VmDiskDupl = ({
       sparse: diskImage?.sparse ? "씬 프로비저닝" : "사전 할당",
       virtualSize: checkZeroSizeToGiB(diskImage?.virtualSize),
       actualSize: checkZeroSizeToGiB(diskImage?.actualSize),
+      // dataCenterVo: diskImage?.dataCenterVo?.id,
       storageDomain: (
         <TableRowClick type="domain" id={diskImage?.storageDomainVo?.id}>
           {diskImage?.storageDomainVo?.name}

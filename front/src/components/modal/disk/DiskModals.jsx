@@ -9,11 +9,6 @@ import { useDeleteDisk } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import "./MDisk.css";
 
-const ACTIONS = [
-  "disk:copy",
-  "disk:move"
-]
-
 const DiskModals = ({ 
   disk,
 }) => {

@@ -125,8 +125,8 @@ const DomainImportVmModal = ({
 
 
   const validateForm = () => {
-    const nameError = checkName(formState.name);
-    if (nameError) return nameError;
+    // const nameError = checkName(formState.name);
+    // if (nameError) return nameError;
     
     return null;
   };

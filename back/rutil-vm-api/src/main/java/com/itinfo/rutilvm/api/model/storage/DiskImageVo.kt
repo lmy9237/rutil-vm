@@ -255,6 +255,7 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 fun Disk.toVmDisk(conn: Connection): DiskImageVo {
 	val disk = this@toVmDisk
 	val storageDomain: StorageDomain? = conn.findStorageDomain(this.storageDomains().first().id()).getOrNull()
+	val dataCenter = storageDomain?.dataCenters()?.firstOrNull()?.id()?.let { conn.findDataCenter(it).getOrNull() }
 	val diskProfile: DiskProfile? =
 		if(disk.diskProfilePresent()) conn.findDiskProfile(disk.diskProfile().id()).getOrNull()
 		else null
@@ -270,6 +271,7 @@ fun Disk.toVmDisk(conn: Connection): DiskImageVo {
 		backup { disk.backup() == DiskBackup.INCREMENTAL }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
+		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
 		diskProfileVo { diskProfile?.fromDiskProfileToIdentifiedVo() }
 	}
@@ -471,5 +473,17 @@ fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 		.wipeAfterDelete(this.wipeAfterDelete)
 		.backup(DiskBackup.NONE) // 증분백업 되지 않음
 		.format(DiskFormat.RAW) // 이미지 업로드는 raw 형식만 가능 +front 처리?
+		.build()
+}
+
+
+fun DiskImageVo.toAddTemplateDisk(): Disk {
+	return DiskBuilder()
+		.id(this.id)
+		.alias(this.alias)
+		.format(this.format)
+		.sparse(false)
+		.storageDomains(*arrayOf(StorageDomainBuilder().id(this.storageDomainVo.id).build()))
+		.diskProfile(DiskProfileBuilder().id(this.diskProfileVo.id).build())
 		.build()
 }

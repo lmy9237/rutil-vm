@@ -14,6 +14,7 @@ import Localization from "@/utils/Localization";
  */
 const DiskActionButtons = ({
   actionType = "default",
+  hasConnectTemplate = false,
 }) => {
   const { setActiveModal } = useUIState()
   const { disksSelected } = useGlobal()
@@ -23,12 +24,16 @@ const DiskActionButtons = ({
 
   // 공유가능일때 이동,복사 버튼 비활성화(sharable)
   const basicActions = [
-    { type: "create",  onClick: () => setActiveModal("disk:create"), label: Localization.kr.CREATE, disabled: isContextMenu && disksSelected.length > 0, },
-    { type: "upload",  onClick: () => setActiveModal("disk:upload"), label: Localization.kr.UPLOAD, disabled: isContextMenu && disksSelected.length > 0, },
-    { type: "update",  onClick: () => setActiveModal("disk:update"), label: Localization.kr.UPDATE, disabled: disksSelected.length !== 1, },
-    { type: "remove",  onClick: () => setActiveModal("disk:remove"), label: Localization.kr.REMOVE, disabled: disksSelected.length === 0, },
-    { type: "move",    onClick: () => setActiveModal("disk:move"),   label: Localization.kr.MOVE,   disabled: disksSelected.length === 0 ||  selected1st?.sharable , },
-    { type: "copy",    onClick: () => setActiveModal("disk:copy"),   label: Localization.kr.COPY,   disabled: disksSelected.length === 0 ||  selected1st?.sharable  },
+    { type: "create",  onClick: () => setActiveModal("disk:create"), label: Localization.kr.CREATE, disabled: isContextMenu && disksSelected.length > 0 },
+    { type: "upload",  onClick: () => setActiveModal("disk:upload"), label: Localization.kr.UPLOAD, disabled: isContextMenu && disksSelected.length > 0 },
+    { type: "update",  onClick: () => setActiveModal("disk:update"), label: Localization.kr.UPDATE, 
+      disabled: disksSelected.length !== 1 || hasConnectTemplate },
+    { type: "remove",  onClick: () => setActiveModal("disk:remove"), label: Localization.kr.REMOVE, 
+      disabled: disksSelected.length === 0 || hasConnectTemplate },
+    { type: "move",    onClick: () => setActiveModal("disk:move"),   label: Localization.kr.MOVE,   
+      disabled: disksSelected.length === 0 || selected1st?.sharable || hasConnectTemplate },
+    { type: "copy",    onClick: () => setActiveModal("disk:copy"),   label: Localization.kr.COPY,   
+      disabled: disksSelected.length === 0 || selected1st?.sharable  },
   ];
 
   return (
