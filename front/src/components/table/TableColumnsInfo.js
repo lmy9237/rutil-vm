@@ -595,7 +595,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.SIZE_ACTUAL, accessor: 'actualSize', clickable: false },
     { header: Localization.kr.SIZE_VIRTUAL, accessor: 'virtualSize', clickable: false },
     { header: Localization.kr.SPARSE, accessor: 'sparse', clickable: false },
-    { header: Localization.kr.DATE_CREATED, accessor: 'creationTime', clickable: false },
+    { header: Localization.kr.DATE_CREATED, accessor: 'dateCreated', clickable: false },
     { header: Localization.kr.DESCRIPTION, accessor: 'description', clickable: false },
   ],  
   

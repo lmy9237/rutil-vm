@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.ovirt.business
 
 import java.util.concurrent.ConcurrentHashMap
+import com.itinfo.rutilvm.api.ovirt.business.Localization.Companion.ProviderTypeL
 
 /**
  * [ProviderType]
@@ -28,9 +29,9 @@ enum class ProviderType(
 	val localizationKey: String
 		get() = "${ProviderType::class.java.simpleName}.${this.name}"
 	val kr: String
-		get() = loc.findProviderTypeLocalizedName(this, "kr")
+		get() = loc.findLocalizedName4ProviderType(this, "kr")
 	val en: String
-		get() = loc.findProviderTypeLocalizedName(this, "en")
+		get() = loc.findLocalizedName4ProviderType(this, "en")
 
 	val defaultUrl: String
 		get() = when(this) {

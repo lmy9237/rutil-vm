@@ -3710,6 +3710,30 @@ export const useDeleteTemplate = (
   });
 };
 /**
+ * @name useAllBiosTypes
+ * @description  BIOS 유형 (a.k.a. 칩셋옵션) 목록 조회 useQuery훅
+ * 
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllBiosTypes
+ */
+export const useAllBiosTypes = (
+  mapPredicate = (e) => ({ ...e }),
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['allBiosTypes'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllBiosTypes();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? []
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllBiosTypes ... res: `, _res);
+    return _res;
+  },
+})
+
+
+/**
  * @name useAddNicFromTemplate
  * @description 템플릿 네트워크 생성 useMutation 훅
  * 
@@ -4421,18 +4445,18 @@ export const useAllNfsStorageDomains = (
   }
 })
 /**
- * @name useStroageDomain
+ * @name useStorageDomain
  * @description 도메인 상세조회 useQuery 훅
  * 
  * @param {string} domainId 도메인 ID
  * @returns useQuery 훅
  */
-export const useStroageDomain = (storageDomainId) => useQuery({
+export const useStorageDomain = (storageDomainId) => useQuery({
   queryKey: ['DomainById', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findDomain(storageDomainId);
     const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useStroageDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
+    Logger.debug(`RQHook > useStorageDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,

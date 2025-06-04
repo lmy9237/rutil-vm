@@ -6,6 +6,7 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.api.repository.engine.DetailedDiskSnapshot
 import com.itinfo.rutilvm.api.repository.engine.entity.VmSnapshotEntity
+import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.ovirtDf
 
 import org.ovirt.engine.sdk4.types.*
@@ -68,9 +69,9 @@ class SnapshotDiskVo (
 		gson.toJson(this)
 
 	val creationDate: String
-		get() = ovirtDf.formatEnhanced(Timestamp.valueOf(_creationDate))
+		get() = ovirtDf.formatEnhancedFromLDT(_creationDate)
 	val vmSnapshotCreationDate: String
-		get() = ovirtDf.formatEnhanced(Timestamp.valueOf(vmSnapshot?.creationDate))
+		get() = ovirtDf.formatEnhancedFromLDT(vmSnapshot?.creationDate)
 
     class Builder {
         private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: "" }

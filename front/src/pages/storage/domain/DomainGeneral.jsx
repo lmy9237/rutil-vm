@@ -5,7 +5,7 @@ import InfoTable              from "@/components/table/InfoTable";
 import {
   useAllDisksFromDomain,
   useAllDiskSnapshotsFromDomain,
-  useStroageDomain 
+  useStorageDomain 
 } from "@/api/RQHook";
 import {
   calculateOvercommitRatio,
@@ -29,7 +29,7 @@ const DomainGeneral = ({
   const {
     domainsSelected
   } = useGlobal()
-  const { data: domain } = useStroageDomain(domainId);
+  const { data: domain } = useStorageDomain(domainId);
   const { data: diskSnapshots = [] } = useAllDiskSnapshotsFromDomain(domainId, (e) => ({ ...e }));
   const { data: disks = [] } = useAllDisksFromDomain(domainId, (e) => ({ ...e }));
 

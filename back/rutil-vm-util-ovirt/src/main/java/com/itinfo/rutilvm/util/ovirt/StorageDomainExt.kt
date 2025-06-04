@@ -287,9 +287,16 @@ fun Connection.findAllDisksFromStorageDomain(storageDomainId: String, follow: St
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): Result<List<Disk>> = runCatching {
+fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String, follow: String = ""): Result<List<Disk>> = runCatching {
 	checkStorageDomainExists(storageDomainId)
-	this.srvDisksFromStorageDomain(storageDomainId).list().unregistered(true).send().disks()
+	val _follow = "storagedomain" +
+		if (follow.isNotEmpty()) ",$follow"
+		else ""
+	this.srvDisksFromStorageDomain(storageDomainId).list().apply {
+		follow(_follow)
+		.unregistered(true)
+	}
+	.send().disks()
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "가져오기 목록조회", storageDomainId)
 }.onFailure {

@@ -11,7 +11,7 @@ import TableRowClick          from "@/components/table/TableRowClick";
 import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import {
   useAllDisksFromTemplate,
-  useStroageDomain,
+  useStorageDomain,
 } from "@/api/RQHook";
 import { 
   checkZeroSizeToGiB,
@@ -88,7 +88,7 @@ const TemplateDisks = ({
 
 
 const StorageDomainWithTooltip = ({ domainId }) => {
-  const { data: storageDomain, isLoading } = useStroageDomain(domainId);
+  const { data: storageDomain, isLoading } = useStorageDomain(domainId);
   return (
     <>
       <span data-tooltip-id={`storage-domain-tooltip-${domainId}`}>

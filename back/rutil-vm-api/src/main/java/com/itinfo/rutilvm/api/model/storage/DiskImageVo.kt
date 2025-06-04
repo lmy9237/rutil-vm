@@ -4,6 +4,10 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
+import com.itinfo.rutilvm.api.repository.engine.entity.UnregisteredDiskEntity
+import com.itinfo.rutilvm.common.formatEnhancedFromLDT
+import com.itinfo.rutilvm.common.ovirtDf
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
@@ -15,6 +19,9 @@ import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
 import org.ovirt.engine.sdk4.types.*
 import java.io.Serializable
 import java.math.BigInteger
+import java.sql.Timestamp
+import java.time.LocalDateTime
+import java.util.UUID
 
 /**
  * [DiskImageVo]
@@ -62,7 +69,7 @@ class DiskImageVo(
 	val status: DiskStatus = DiskStatus.LOCKED,
 	val contentType: DiskContentType = DiskContentType.DATA, // unknown
 	val storageType: DiskStorageType = DiskStorageType.IMAGE,
-	val createDate: String = "",
+	private val _dateCreated: LocalDateTime? = null,
 	val connectVm: IdentifiedVo = IdentifiedVo(),
 	val connectTemplate: IdentifiedVo = IdentifiedVo(),
 	val diskProfileVo: IdentifiedVo = IdentifiedVo(),
@@ -70,6 +77,9 @@ class DiskImageVo(
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
 	// val diskProfileVos: List<IdentifiedVo> = listOf()
 ): Serializable {
+	val dateCreated: String?
+		get() = ovirtDf.formatEnhancedFromLDT(_dateCreated) ?: "N/A"
+
 	override fun toString(): String =
 		gson.toJson(this)
 
@@ -90,7 +100,7 @@ class DiskImageVo(
 		private var bStatus: DiskStatus = DiskStatus.LOCKED;fun status(block: () -> DiskStatus?) { bStatus = block() ?: DiskStatus.LOCKED }
 		private var bContentType: DiskContentType = DiskContentType.DATA;fun contentType(block: () -> DiskContentType?) { bContentType = block() ?: DiskContentType.DATA }
 		private var bStorageType: DiskStorageType = DiskStorageType.IMAGE;fun storageType(block: () -> DiskStorageType?) { bStorageType = block() ?: DiskStorageType.IMAGE }
-		private var bCreateDate: String = "";fun createDate(block: () -> String?) { bCreateDate = block() ?: "" }
+		private var bDateCreated: LocalDateTime? = null;fun dateCreated(block: () -> LocalDateTime?) { bDateCreated = block() }
 		private var bConnectVm: IdentifiedVo = IdentifiedVo();fun connectVm(block: () -> IdentifiedVo?) { bConnectVm = block() ?: IdentifiedVo() }
 		private var bConnectTemplate: IdentifiedVo = IdentifiedVo();fun connectTemplate(block: () -> IdentifiedVo?) { bConnectTemplate = block() ?: IdentifiedVo() }
 		private var bDiskProfileVo: IdentifiedVo = IdentifiedVo();fun diskProfileVo(block: () -> IdentifiedVo?) { bDiskProfileVo = block() ?: IdentifiedVo() }
@@ -98,9 +108,9 @@ class DiskImageVo(
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo();fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
 		// private var bDiskProfileVos: List<IdentifiedVo> = listOf();fun diskProfileVos(block: () -> List<IdentifiedVo>?) { bDiskProfileVos = block() ?: listOf() }
 
-        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bSparse, bWipeAfterDelete, bSharable, bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bCreateDate, bConnectVm, bConnectTemplate, bDiskProfileVo, bStorageDomainVo, bDataCenterVo, )
+        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bSparse, bWipeAfterDelete, bSharable, bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bDateCreated, bConnectVm, bConnectTemplate, bDiskProfileVo, bStorageDomainVo, bDataCenterVo, )
 	}
-	companion object {
+	companion  object {
 		private val log by LoggerDelegate()
 		inline fun builder(block: Builder.() -> Unit): DiskImageVo = Builder().apply(block).build()
 	}
@@ -186,7 +196,7 @@ fun List<Disk>.toDcDiskMenus(conn:Connection): List<DiskImageVo> =
 fun Disk.toDomainDiskMenu(conn: Connection): DiskImageVo {
 	val disk = this@toDomainDiskMenu
 	val diskLink: Disk? = conn.findDisk(disk.id()).getOrNull()
-	val vmConn: Vm? = if(diskLink?.vmsPresent() == true){
+	val vmConn: Vm? = if (diskLink?.vmsPresent() == true) {
 		conn.findVm(diskLink.vms().first().id()).getOrNull()
 	} else { null }
 
@@ -220,7 +230,7 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 	val storageDomain: StorageDomain? = conn.findStorageDomain(disk.storageDomains().first().id(), follow = "diskprofiles").getOrNull()
 
 	val vmConn: Vm? =
-		if(disk.vmsPresent()){ conn.findVm(disk.vms().first().id()).getOrNull() }
+		if (disk.vmsPresent()) { conn.findVm(disk.vms().first().id()).getOrNull() }
 		else { null }
 
 	val templateId: String? = conn.findAllTemplates(follow = "diskattachments").getOrDefault(emptyList())
@@ -388,20 +398,24 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 }
 
 
-fun Disk.toUnregisterdDisk(): DiskImageVo {
-    val disk = this@toUnregisterdDisk
+fun Disk.toUnregisterdDisk(disk: UnregisteredDiskEntity?=null): DiskImageVo {
     return DiskImageVo.builder {
-        id { disk.id() }
-        alias { disk.alias() }
-        sharable { disk.shareable() }
-        virtualSize { disk.provisionedSize() }
-        actualSize { disk.actualSize() }
-        sparse { disk.sparse() }
-        description { disk.description() }
+        id { this@toUnregisterdDisk.id() }
+        alias { this@toUnregisterdDisk.alias() }
+        sharable { this@toUnregisterdDisk.shareable() }
+        virtualSize { this@toUnregisterdDisk.provisionedSize() }
+        actualSize { this@toUnregisterdDisk.actualSize() }
+        sparse { this@toUnregisterdDisk.sparse() }
+        description { this@toUnregisterdDisk.description() }
+		dateCreated { disk?.creationDate }
     }
 }
-fun List<Disk>.toUnregisterdDisks(): List<DiskImageVo> =
-    this@toUnregisterdDisks.map { it.toUnregisterdDisk() }
+
+fun List<Disk>.toUnregisterdDisks(unregisteredDisks: List<UnregisteredDiskEntity>): List<DiskImageVo> {
+	val itemById: Map<UUID?, UnregisteredDiskEntity> =
+		unregisteredDisks.associateBy { it.id.diskId }
+	return this.map { it.toUnregisterdDisk(itemById[it.id().toUUID()]) }
+}
 
 fun DiskImageVo.toRegisterDiskBuilder(): Disk {
 	return DiskBuilder()

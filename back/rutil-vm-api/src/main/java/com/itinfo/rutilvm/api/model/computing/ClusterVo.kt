@@ -69,7 +69,7 @@ class ClusterVo(
     val biosType: BiosType = BiosType.CLUSTER_DEFAULT,
     val cpuArc: Architecture = Architecture.UNDEFINED,
     val cpuType: String = "",
-    val errorHandling: String = "",   /*MigrateOnError*/
+    val errorHandling: String = "",   /* MigrateOnError */
     val fipsMode: FipsMode = FipsMode.UNDEFINED,
     val firewallType: FirewallType = FirewallType.FIREWALLD,
     val glusterService: Boolean = false,
@@ -90,10 +90,19 @@ class ClusterVo(
     val hostSize: SizeVo = SizeVo(),
     val vmSize: SizeVo = SizeVo(),
     val hostVos: List<IdentifiedVo> = listOf(),
-    val networkVos: List<IdentifiedVo> = listOf(), // 관리네트워크가 핵심, 다른 네트워크 존재가능
+    val networkVos: List<IdentifiedVo> = listOf(), // 관리 네트워크가 핵심, 다른 네트워크 존재가능
     val templateVos: List<IdentifiedVo> = listOf(),
 	val required: Boolean = false, // 네트워크 생성시 필수 지정
 ): Serializable {
+	val biosTypeNameLcKr: String
+		get() = (if (biosType.name.lowercase() == "cluster_default")
+			com.itinfo.rutilvm.api.ovirt.business.BiosType.Q35_OVMF // TODO: 지금은 이 값으로 그냥 고정이지만 실제로 어디서 구하는지 찾아야 함
+			else com.itinfo.rutilvm.api.ovirt.business.BiosType.valueOf(biosType.name.uppercase())).kr
+	val biosTypeNameLcEn: String
+		get() = (if (biosType.name.lowercase() == "cluster_default")
+			com.itinfo.rutilvm.api.ovirt.business.BiosType.Q35_OVMF // TODO: 지금은 이 값으로 그냥 고정이지만 실제로 어디서 구하는지 찾아야 함
+		else com.itinfo.rutilvm.api.ovirt.business.BiosType.valueOf(biosType.name.uppercase())).en
+
 	override fun toString(): String =
 		gson.toJson(this)
 

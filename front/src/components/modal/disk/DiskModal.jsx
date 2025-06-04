@@ -52,7 +52,9 @@ const DiskModal = ({
     ? Localization.kr.UPDATE
     : Localization.kr.CREATE;
 
-  const { disksSelected } = useGlobal();
+  const { 
+    disksSelected, domainsSelected, datacentersSelected,
+   } = useGlobal();
   const diskId = useMemo(() => [...disksSelected][0]?.id, [disksSelected]);
 
   const [formState, setFormState] = useState(initialFormState);
@@ -85,7 +87,12 @@ const DiskModal = ({
   const handleTabClick = useCallback((tab) => { setActiveTab(tab) }, []);
 
   useEffect(() => {
-    if (!isOpen) return setFormState(initialFormState);
+    Logger.debug(`DiskModal > useEffect ... domainsSelected: `, domainsSelected[0]);
+   
+    if (!isOpen) {
+      setFormState(initialFormState);
+      return;
+    }
     if (editMode && disk) {
       setFormState({
         id: disk?.id,
@@ -102,19 +109,30 @@ const DiskModal = ({
       setDomainVo({id: disk?.storageDomainVo?.id, name: disk?.storageDomainVo?.name});
       setDiskProfileVo({id: disk?.diskProfileVo?.id, name: disk?.diskProfileVo?.name});
     }
-  }, [isOpen, editMode, disk]);
+  }, [isOpen, editMode, disk, domainsSelected]);
 
   useEffect(() => {
-    if (!editMode && datacenters && datacenters.length > 0) {
-      setDataCenterVo({id: datacenters[0].id});
+    if (datacentersSelected) {
+      setDataCenterVo({id: datacentersSelected[0]?.id, name: datacentersSelected[0]?.name});
+    } else if (
+      !editMode && 
+      datacenters && 
+      datacenters.length > 0) {
+      setDataCenterVo({id: datacenters[0].id, name: datacenters[0]?.name});
     }
-  }, [datacenters, editMode]);
+  }, [datacentersSelected, datacenters, editMode]);
 
   useEffect(() => {
-    if (!editMode && domains.length > 0) {
-      setDomainVo({id: domains[0].id});
+    if (domainsSelected) {
+      setDomainVo({id: domainsSelected[0]?.id, name: domainsSelected[0]?.name })
+    } else if (
+      !editMode && 
+      domains &&
+      domains.length > 0
+    ) {
+      setDomainVo({id: domains[0].id, name: domains[0].name});
     }
-  }, [domains, editMode]);
+  }, [domainsSelected, domains, editMode]);
 
   useEffect(() => {
     if (!editMode && diskProfiles.length > 0) {

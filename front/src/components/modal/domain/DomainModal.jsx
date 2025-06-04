@@ -17,7 +17,7 @@ import {
 import {
   useAddDomain,
   useAllDataCenters,
-  useStroageDomain,
+  useStorageDomain,
   useEditDomain,
   useHostsFromDataCenter,
   useFibreFromHost,
@@ -46,7 +46,9 @@ const DomainModal = ({
 }) => {
   const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
-  const { datacentersSelected, domainsSelected } = useGlobal()
+  const { 
+    datacentersSelected, domainsSelected,
+  } = useGlobal()
   const dLabel = editMode 
     ? Localization.kr.UPDATE 
     : Localization.kr.CREATE;
@@ -68,7 +70,7 @@ const DomainModal = ({
   const isNfs = formState.storageType === "NFS";
   const isFibre = formState.storageType === "FCP";
 
-  const { data: domain } = useStroageDomain(domainId);
+  const { data: domain } = useStorageDomain(domainId);
   const { mutate: addDomain } = useAddDomain(onClose, onClose);
   const { mutate: editDomain } = useEditDomain(onClose, onClose); // 편집은 단순 이름, 설명 변경정도
   const { 

@@ -20,7 +20,7 @@ import DomainImportVms        from "./DomainImportVms";
 import DomainImportTemplates  from "./DomainImportTemplates";
 import DomainImportDisks      from "./DomainImportDisks";
 import {
-  useStroageDomain,
+  useStorageDomain,
   useOvfUpdateDomain,
   useRefreshLunDomain,
   useAllUnregisteredDisksFromDomain,
@@ -41,9 +41,12 @@ const DomainInfo = () => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal, } = useUIState()
   const { id: domainId, section } = useParams();
-  const { setDomainsSelected, setSourceContext } = useGlobal()
+  const { 
+    setDomainsSelected, setDatacentersSelected,
+    setSourceContext
+  } = useGlobal()
 
-  const { data: domain } = useStroageDomain(domainId);
+  const { data: domain } = useStorageDomain(domainId);
   const { data: importVms = [], refetch: importVmsRefetch } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
   const { data: importTemplates = [], refetch: importTemplatesRefetch } = useAllUnregisteredTemplatesFromDomain(domainId, (e) => ({ ...e }));
   const { data: importDisks = [], refetch: importDisksRefetch } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
@@ -58,6 +61,8 @@ const DomainInfo = () => {
 
   const [activeTab, setActiveTab] = useState("general");
   useEffect(() => {
+    Logger.debug(`DomainInfo > useEffect ... domain: `, domain)
+    setDatacentersSelected(domain?.dataCenterVo)
     setDomainsSelected(domain);
     setSourceContext("fromDomain");
     importVmsRefetch();

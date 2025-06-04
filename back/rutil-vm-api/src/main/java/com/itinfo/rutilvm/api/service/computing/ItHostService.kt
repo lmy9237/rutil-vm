@@ -186,7 +186,10 @@ class HostServiceImpl(
 	}
 
 	private fun calculateUsage(host: Host, hostNic: HostNic?): UsageDto? {
-		return if (host.status() == HostStatus.UP && hostNic != null) {
+		return if (
+			host.status() == HostStatus.UP &&
+			hostNic != null
+		) {
 			itGraphService.hostPercent(host.id(), hostNic.id())
 		} else null
 	}

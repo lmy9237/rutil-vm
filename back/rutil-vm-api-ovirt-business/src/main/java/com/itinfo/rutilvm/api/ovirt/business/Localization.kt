@@ -1,14 +1,9 @@
 package com.itinfo.rutilvm.api.ovirt.business
 
-import com.itinfo.rutilvm.api.ovirt.business.ProviderType.EXTERNAL_NETWORK
-import com.itinfo.rutilvm.api.ovirt.business.ProviderType.FOREMAN
-import com.itinfo.rutilvm.api.ovirt.business.ProviderType.KUBEVIRT
-import com.itinfo.rutilvm.api.ovirt.business.ProviderType.KVM
-import com.itinfo.rutilvm.api.ovirt.business.ProviderType.OPENSTACK_IMAGE
-import com.itinfo.rutilvm.api.ovirt.business.ProviderType.OPENSTACK_NETWORK
-import com.itinfo.rutilvm.api.ovirt.business.ProviderType.OPENSTACK_VOLUME
-import com.itinfo.rutilvm.api.ovirt.business.ProviderType.VMWARE
-import com.itinfo.rutilvm.api.ovirt.business.ProviderType.XEN
+import com.itinfo.rutilvm.api.ovirt.business.BiosType.I440FX_SEA_BIOS
+import com.itinfo.rutilvm.api.ovirt.business.BiosType.Q35_OVMF
+import com.itinfo.rutilvm.api.ovirt.business.BiosType.Q35_SEA_BIOS
+import com.itinfo.rutilvm.api.ovirt.business.BiosType.Q35_SECURE_BOOT
 import com.itinfo.rutilvm.util.PropertiesHelper
 import java.util.*
 
@@ -38,7 +33,7 @@ class Localization {
 			return locH
 		}
 
-		//region ProviderType
+		//region ProviderTypeL
 		object ProviderTypeL {
 			object EN {
 				fun findBy(type: ProviderType): String =
@@ -76,18 +71,57 @@ class Localization {
 			}
 		}
 		//endregion
+
+		//region BiosTypeL
+		object BiosTypeL {
+			object KR {
+				fun findBy(type: BiosType): String =
+					when(type) {
+						BiosType.I440FX_SEA_BIOS -> I440FX_SEA_BIOS
+						BiosType.Q35_SEA_BIOS -> Q35_SEA_BIOS
+						BiosType.Q35_OVMF -> Q35_OVMF
+						BiosType.Q35_SECURE_BOOT -> Q35_SECURE_BOOT
+					}
+				val I440FX_SEA_BIOS	= locKr?.get(BiosType.I440FX_SEA_BIOS.localizationKey)?.toString() ?: ""
+				val Q35_SEA_BIOS		= locKr?.get(BiosType.Q35_SEA_BIOS.localizationKey)?.toString() ?: ""
+				val Q35_OVMF			= locKr?.get(BiosType.Q35_OVMF.localizationKey)?.toString() ?: ""
+				val Q35_SECURE_BOOT	= locKr?.get(BiosType.Q35_SECURE_BOOT.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				fun findBy(type: BiosType): String =
+					when(type) {
+						BiosType.I440FX_SEA_BIOS -> I440FX_SEA_BIOS
+						BiosType.Q35_SEA_BIOS -> Q35_SEA_BIOS
+						BiosType.Q35_OVMF -> Q35_OVMF
+						BiosType.Q35_SECURE_BOOT -> Q35_SECURE_BOOT
+					}
+				val I440FX_SEA_BIOS	= locEn?.get(BiosType.I440FX_SEA_BIOS.localizationKey)?.toString() ?: ""
+				val Q35_SEA_BIOS	= locEn?.get(BiosType.Q35_SEA_BIOS.localizationKey)?.toString() ?: ""
+				val Q35_OVMF		= locEn?.get(BiosType.Q35_OVMF.localizationKey)?.toString() ?: ""
+				val Q35_SECURE_BOOT	= locEn?.get(BiosType.Q35_SECURE_BOOT.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion
 	}
 
-	fun findProviderTypeLocalizedName(providerType: ProviderType, loc: String = "kr"): String =
-		when(providerType) {
-			OPENSTACK_NETWORK ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_NETWORK	else ProviderTypeL.EN.OPENSTACK_NETWORK
-			FOREMAN -> 				if (loc == "kr") ProviderTypeL.KR.FOREMAN 			else ProviderTypeL.EN.FOREMAN
-			OPENSTACK_IMAGE -> 		if (loc == "kr") ProviderTypeL.KR.OPENSTACK_IMAGE	else ProviderTypeL.EN.OPENSTACK_IMAGE
-			OPENSTACK_VOLUME ->		if (loc == "kr") ProviderTypeL.KR.OPENSTACK_VOLUME	else ProviderTypeL.EN.OPENSTACK_VOLUME
-			VMWARE -> 				if (loc == "kr") ProviderTypeL.KR.VMWARE			else ProviderTypeL.EN.VMWARE
-			EXTERNAL_NETWORK -> 	if (loc == "kr") ProviderTypeL.KR.EXTERNAL_NETWORK	else ProviderTypeL.EN.EXTERNAL_NETWORK
-			KVM ->					if (loc == "kr") ProviderTypeL.KR.KVM				else ProviderTypeL.EN.KVM
-			XEN ->					if (loc == "kr") ProviderTypeL.KR.XEN				else ProviderTypeL.EN.XEN
-			KUBEVIRT ->				if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
+	fun findLocalizedName4ProviderType(type: ProviderType, loc: String = "kr"): String =
+		when(type) {
+			ProviderType.OPENSTACK_NETWORK ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_NETWORK	else ProviderTypeL.EN.OPENSTACK_NETWORK
+			ProviderType.FOREMAN -> 				if (loc == "kr") ProviderTypeL.KR.FOREMAN 			else ProviderTypeL.EN.FOREMAN
+			ProviderType.OPENSTACK_IMAGE -> 		if (loc == "kr") ProviderTypeL.KR.OPENSTACK_IMAGE	else ProviderTypeL.EN.OPENSTACK_IMAGE
+			ProviderType.OPENSTACK_VOLUME ->		if (loc == "kr") ProviderTypeL.KR.OPENSTACK_VOLUME	else ProviderTypeL.EN.OPENSTACK_VOLUME
+			ProviderType.VMWARE -> 				if (loc == "kr") ProviderTypeL.KR.VMWARE			else ProviderTypeL.EN.VMWARE
+			ProviderType.EXTERNAL_NETWORK -> 	if (loc == "kr") ProviderTypeL.KR.EXTERNAL_NETWORK	else ProviderTypeL.EN.EXTERNAL_NETWORK
+			ProviderType.KVM ->					if (loc == "kr") ProviderTypeL.KR.KVM				else ProviderTypeL.EN.KVM
+			ProviderType.XEN ->					if (loc == "kr") ProviderTypeL.KR.XEN				else ProviderTypeL.EN.XEN
+			ProviderType.KUBEVIRT ->				if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
+		}
+
+	fun findLocalizedName4BiosType(type: BiosType, loc: String = "kr"): String =
+		when(type) {
+			I440FX_SEA_BIOS ->		if (loc == "kr") BiosTypeL.KR.I440FX_SEA_BIOS		else BiosTypeL.EN.I440FX_SEA_BIOS
+			Q35_SEA_BIOS -> 		if (loc == "kr") BiosTypeL.KR.Q35_SEA_BIOS 			else BiosTypeL.EN.Q35_SEA_BIOS
+			Q35_OVMF -> 			if (loc == "kr") BiosTypeL.KR.Q35_OVMF				else BiosTypeL.EN.Q35_OVMF
+			Q35_SECURE_BOOT ->		if (loc == "kr") BiosTypeL.KR.Q35_SECURE_BOOT		else BiosTypeL.EN.Q35_SECURE_BOOT
 		}
 }

@@ -1988,9 +1988,25 @@ const ApiManager = {
       // defaultValues: DEFAULT_VALUES.DELETE_TEMPLATE
     });
   },
-
-
   //#endregion : Template ---------------------------------------------
+
+
+  //#region: Type
+  /**
+   * @name ApiManager.findAllBiosTypes
+   * @description BIOS 유형 (a.k.a. 칩셋옵션) 목록 조회
+   *
+   * @returns 
+   * 
+   * @see
+   */
+  findAllBiosTypes : async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_BIOS_TYPES(), 
+    // defaultValues: DEFAULT_VALUES.FIND_EVENTS_FROM_TEMPLATE
+  }),
+
+  //#endregion: Type
 
 
   //#region: Network------------------------------------------------

@@ -12,6 +12,9 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.UUID
 import org.hibernate.annotations.Type
+import javax.persistence.CascadeType
+import javax.persistence.FetchType
+import javax.persistence.OneToMany
 
 private val log = LoggerFactory.getLogger(HostConfigurationEntity::class.java)
 
@@ -53,14 +56,16 @@ class HostConfigurationEntity(
 	@Id
 	@Column(unique = true, nullable = false)
 	val historyId: Int = -1,
-	
+
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name="host_id", unique=true, nullable=false)
 	val hostId: UUID? = null,
 
 	val hostUniqueId: String = "",
 	val hostName: String = "",
 
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name="cluster_id", unique=true, nullable=false)
 	val clusterId: UUID? = null,
 
 	val hostType: Int = -1,
@@ -94,8 +99,11 @@ class HostConfigurationEntity(
 	val hardwareSerialNumber: String = "",
 	@Column(nullable = true)
 	val numberOfThreads: Int? = null,
+
 ): Serializable {
-	override fun toString(): String = gson.toJson(this)
+
+	override fun toString(): String =
+		gson.toJson(this)
 
 	class Builder {
 		private var bHistoryId: Int = -1;fun HistoryId(block: () -> Int?) { bHistoryId = block() ?: -1 }
@@ -126,6 +134,7 @@ class HostConfigurationEntity(
 		private var bHardwareVersion: String = "";fun HardwareVersion(block: () -> String?) { bHardwareVersion = block() ?: "" }
 		private var bHardwareSerialNumber: String = "";fun HardwareSerialNumber(block: () -> String?) { bHardwareSerialNumber = block() ?: "" }
 		private var bNumberOfThreads: Int = -1;fun NumberOfThreads(block: () -> Int?) { bNumberOfThreads = block() ?: -1 }
+
 		fun build(): HostConfigurationEntity = HostConfigurationEntity(bHistoryId, bHostId, bHostUniqueId, bHostName, bClusterId, bHostType, bFqdnOrIp, bMemorySizeMb, bSwapSizeMb, bCpuModel, bNumberOfCores, bHostOs, bKernelVersion, bKvmVersion, bVdsmVersion, bVdsmPort, bClusterConfigurationVersion, bCreateDate, bUpdateDate, bDeleteDate, bNumberOfSockets, bCpuSpeedMh, bThreadsPerCore, bHardwareManufacturer, bHardwareProductName, bHardwareVersion, bHardwareSerialNumber, bNumberOfThreads)
 	}
 

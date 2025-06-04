@@ -16,6 +16,7 @@ import {
   useHostsFromCluster,
   useAllActiveDomainsFromDataCenter,
   useOsSystemsFromCluster,
+  useAllBiosTypes,
   useFindTemplatesFromDataCenter,
   useAllvnicFromCluster,
   useAllNicsFromTemplate, 
@@ -32,17 +33,6 @@ import { checkName }                    from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import './MVm.css';
-
-// 일반
-const infoform = {
-  id: "",
-  name: "",
-  description: "",
-  comment: "",
-  osSystem: "other_linux",
-  osType: "q35_ovmf" || chipsetOptionList[0].value,
-  optimizeOption: "server",
-};
 
 //시스템
 const systemForm = {
@@ -115,13 +105,6 @@ const VmModal = ({
     { id: "ha",        label: Localization.kr.HA,      onClick: () => setSelectedModalTab("ha") },
     { id: "boot",      label: "부트 옵션", onClick: () => setSelectedModalTab("boot") },
   ], []);
-  
-  const [formInfoState, setFormInfoState] = useState(infoform);
-  const [formSystemState, setFormSystemState] = useState(systemForm);
-  const [formCloudState, setFormCloudState] = useState(cloudForm);
-  const [formHostState, setFormHostState] = useState(hostForm);
-  const [formHaState, setFormHaState] = useState(haForm);
-  const [formBootState, setFormBootState] = useState(bootForm);
 
   const [architecture, setArchitecture] = useState("");
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
@@ -151,7 +134,9 @@ const { mutate: addVM } = useAddVm(
   const { mutate: editVM } = useEditVm(onClose, onClose);
 
   // 가상머신 상세데이터 가져오기
-  const { data: vm } = useFindEditVmById(vmId);
+  const {
+    data: vm
+  } = useFindEditVmById(vmId);
 
   // 클러스터 목록 가져오기
   const { 
@@ -182,6 +167,14 @@ const { mutate: addVM } = useAddVm(
     data: osList = [], 
     isLoading: isOsListLoading
   } = useOsSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
+  const {
+    data: biosTypes = [],
+    isLoading: isBiosTypesLoading
+  } = useAllBiosTypes((e) => ({ 
+    ...e,
+    value: e?.id,
+    label: e?.kr
+  }))
   const { 
     data: domains = [], 
     isLoading: isDomainsLoading 
@@ -193,7 +186,28 @@ const { mutate: addVM } = useAddVm(
 
 
   // 템플릿 id변경 시 NIC 초기화
-  const { data: vnicProfilesFromTemplate = [] } = useAllNicsFromTemplate(templateVo.id);
+  const {
+    data: vnicProfilesFromTemplate = []
+  } = useAllNicsFromTemplate(templateVo.id);
+
+  // 일반
+  const infoform = {
+    id: "",
+    name: "",
+    description: "",
+    comment: "",
+    osSystem: "other_linux",
+    osType: "q35_ovmf" || biosTypes[0].value,
+    optimizeOption: "server",
+  };
+  
+  const [formInfoState, setFormInfoState] = useState(infoform);
+  const [formSystemState, setFormSystemState] = useState(systemForm);
+  const [formCloudState, setFormCloudState] = useState(cloudForm);
+  const [formHostState, setFormHostState] = useState(hostForm);
+  const [formHaState, setFormHaState] = useState(haForm);
+  const [formBootState, setFormBootState] = useState(bootForm);
+
   useEffect(() => {
     if (!editMode && isOpen && templateVo.id) {
       if (vnicProfilesFromTemplate.length > 0) {
@@ -515,7 +529,7 @@ const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
           <LabelSelectOptions label="칩셋/펌웨어 유형"
             value={formInfoState.osType}
             disabled={["PPC64", "S390X"].includes(architecture)}
-            options={chipsetOptionList}
+            options={biosTypes}
             onChange={handleInputChange(setFormInfoState, "osType") }
           />
           <LabelSelectOptions label="최적화 옵션"

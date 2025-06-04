@@ -173,7 +173,6 @@ const ENDPOINTS = {
     }
     return url;
   },
-
   //#endregion: Vm
 
   //#region: Template
@@ -192,6 +191,10 @@ const ENDPOINTS = {
   EDIT_TEMPLATE: (templateId) =>                                           `${ENDPOINT_API_V1}/computing/templates/${templateId}`, 
   DELETE_TEMPLATE: (templateId) =>                                         `${ENDPOINT_API_V1}/computing/templates/${templateId}`, 
   //#endregion: Template
+
+  //#region: Type
+  FIND_ALL_BIOS_TYPES: () =>                                               `${ENDPOINT_API_V1}/types/bios`,
+  //#endregion: Type
 
   //#region: Network
   FIND_ALL_NETWORKS: () =>                                                 `${ENDPOINT_API_V1}/networks`,

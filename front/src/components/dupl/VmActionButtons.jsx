@@ -52,7 +52,7 @@ const VmActionButtons = ({
   const isMaintenance = selected1st?.status === "MAINTENANCE";
   const isPause = selected1st?.status === "SUSPENDED";
   const isTemplate = selected1st?.status === "SUSPENDED" || selected1st?.status === "UP";
-  const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === true); //삭제방지 조건
+  const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === true); // 삭제방지 조건
 
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "UP");
   const isConsoleDisabled = !allUp;

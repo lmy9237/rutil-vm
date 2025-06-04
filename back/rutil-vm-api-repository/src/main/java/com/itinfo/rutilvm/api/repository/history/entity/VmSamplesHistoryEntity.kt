@@ -127,7 +127,7 @@ class VmSamplesHistoryEntity(
 }
 
 // 가상머신 각각 현재 사용량 보여주는 거
-fun VmSamplesHistoryEntity.getUsage(): UsageDto {
+fun VmSamplesHistoryEntity.toUsageDto(): UsageDto {
 	return UsageDto.builder {
 //		.id(hostId.toString())
 		cpuPercent { cpuUsagePercent }

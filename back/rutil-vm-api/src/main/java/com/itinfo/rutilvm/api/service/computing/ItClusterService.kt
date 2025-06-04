@@ -243,7 +243,8 @@ class ClusterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllNetworksFromCluster(clusterId: String): List<NetworkVo> {
 		log.info("findAllNetworksFromCluster ... clusterId: {}", clusterId)
-		val res: List<Network> = conn.findAllNetworksFromCluster(clusterId).getOrDefault(emptyList())
+		val res: List<Network> = conn.findAllNetworksFromCluster(clusterId)
+			.getOrDefault(emptyList())
 		return res.toClusterNetworkMenus()
 	}
 
@@ -271,7 +272,8 @@ class ClusterServiceImpl(
 			.getOrNull() ?: throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
 
 		// 클러스터가 가지고 있는 네트워크
-		val clusterNetworks: List<Network> = conn.findAllNetworksFromCluster(clusterId).getOrDefault(emptyList())
+		val clusterNetworks: List<Network> = conn.findAllNetworksFromCluster(clusterId)
+			.getOrDefault(emptyList())
 
 		val networks: List<Network> = conn.findAllNetworksFromDataCenter(cluster.dataCenter().id())
 			.getOrDefault(emptyList())
@@ -331,7 +333,7 @@ class ClusterServiceImpl(
 
 	@Throws(Error::class)
 	override fun findAllOsSystemFromCluster(clusterId: String): List<OsVo> {
-		log.info("findAllOsSystemFromCluster ... clusterId:{}", clusterId)
+		log.info("findAllOsSystemFromCluster ... clusterId: {}", clusterId)
 		val cluster: Cluster? = conn.findCluster(clusterId).getOrNull()
 		val res: List<OperatingSystemInfo> = conn.findAllOperatingSystems().getOrDefault(emptyList())
 			.filter { it.architecture() == cluster?.cpu()?.architecture() }

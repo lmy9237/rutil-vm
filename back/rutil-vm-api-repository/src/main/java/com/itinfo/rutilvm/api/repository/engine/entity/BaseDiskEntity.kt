@@ -13,6 +13,8 @@ import javax.persistence.FetchType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
+import javax.persistence.OneToOne
 import javax.persistence.Table
 
 /**
@@ -30,14 +32,24 @@ class BaseDiskEntity(
 	@Column(name = "disk_id", unique = true, nullable = true)
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	val diskId: UUID? = null,
-	val diskAlias: String? = ""
+	val diskAlias: String? = "",
+	val shareable: Boolean? = false,
+
+	/*@OneToOne(
+		mappedBy="baseDisk",
+		fetch=FetchType.LAZY
+	)
+	val unregisteredDisk: UnregisteredDiskEntity? = null*/
 ): Serializable {
-	override fun toString(): String = gson.toJson(this)
+	override fun toString(): String =
+		gson.toJson(this)
 
 	class Builder {
 		private var bDiskId: UUID? = null;fun diskId(block: () -> UUID?) { bDiskId = block() }
 		private var bDiskAlias: String = "";fun diskAlias(block: () -> String?) { bDiskAlias = block() ?: "" }
-		fun build(): BaseDiskEntity = BaseDiskEntity(bDiskId, bDiskAlias)
+		private var bSharable: Boolean? = false;fun shareable(block: () -> Boolean?) { bSharable = block() ?: false }
+		// private var bUnregisteredDisk: UnregisteredDiskEntity? = null; fun unregisteredDisk(block: () -> UnregisteredDiskEntity?) { bUnregisteredDisk = block() }
+		fun build(): BaseDiskEntity = BaseDiskEntity(bDiskId, bDiskAlias, bSharable, /*bUnregisteredDisk*/)
 	}
 
 	companion object {

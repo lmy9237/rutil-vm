@@ -4,12 +4,17 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.repository.engine.UnregisteredDiskRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.UnregisteredDiskEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toUnregisteredDiskImageVos
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -122,7 +127,7 @@ interface ItStorageImportService {
 @Service
 class StorageImportServiceImpl(
 ): BaseService(), ItStorageImportService {
-
+	@Autowired private lateinit var unregisteredDisks: UnregisteredDiskRepository
 
 	@Throws(Error::class)
 	override fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmViewVo> {
@@ -179,9 +184,11 @@ class StorageImportServiceImpl(
 	@Throws(Error::class)
 	override fun findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo> {
 		log.info("findAllUnregisteredDisksFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val res: List<Disk> = conn.findAllUnregisteredDisksFromStorageDomain(storageDomainId)
+		val unregisteredDisksFromDB: List<UnregisteredDiskEntity> = unregisteredDisks.findByStorageDomainIdWithDetails(storageDomainId.toUUID())
+			.filter { it.diskToVmEntries.isEmpty() }
+		val disksFound: List<Disk> = conn.findAllUnregisteredDisksFromStorageDomain(storageDomainId)
 			.getOrDefault(emptyList())
-		return res.toUnregisterdDisks()
+		return unregisteredDisksFromDB.toUnregisteredDiskImageVos(disksFound)
 	}
 
 	@Throws(Error::class)
@@ -190,7 +197,6 @@ class StorageImportServiceImpl(
 		val res: Disk? = conn.findAllUnregisteredDisksFromStorageDomain(storageDomainId)
 			.getOrDefault(emptyList())
 			.firstOrNull { disk -> disk.id() == diskId }
-
 		return res?.toUnregisterdDisk()
 	}
 

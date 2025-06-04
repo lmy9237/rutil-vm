@@ -7,6 +7,7 @@ import com.itinfo.rutilvm.api.repository.history.*
 import com.itinfo.rutilvm.api.repository.history.dto.*
 import com.itinfo.rutilvm.api.repository.history.entity.*
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.types.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -140,6 +141,7 @@ class GraphServiceImpl(
 ): BaseService(), ItGraphService {
 	@Autowired private lateinit var propConfig: PropertiesConfig
 	@Autowired private lateinit var hostSamplesHistoryRepository: HostSamplesHistoryRepository
+	// @Autowired private lateinit var hostInterfaceConfigurationRepository: HostInterfaceConfigurationRepository
 	@Autowired private lateinit var hostInterfaceSampleHistoryRepository: HostInterfaceSampleHistoryRepository
 	@Autowired private lateinit var vmSamplesHistoryRepository: VmSamplesHistoryRepository
 	@Autowired private lateinit var vmInterfaceSamplesHistoryRepository: VmInterfaceSamplesHistoryRepository
@@ -157,9 +159,12 @@ class GraphServiceImpl(
 
 	override fun totalCpuMemory(): HostUsageDto {
 		log.info("totalCpuMemory ... ")
-		val hosts: List<Host> = conn.findAllHosts(searchQuery = "status=up").getOrDefault(listOf())
+		val hosts: List<Host> = conn.findAllHosts(searchQuery = "status=up")
+			.getOrDefault(listOf())
 		val hostSamplesHistoryEntities: List<HostSamplesHistoryEntity> =
-			hosts.map { hostSamplesHistoryRepository.findFirstByHostIdOrderByHistoryDatetimeDesc(UUID.fromString(it.id())) }
+			hosts.map {
+				hostSamplesHistoryRepository.findFirstByHostIdOrderByHistoryDatetimeDesc(it.id().toUUID())
+			}
 		return hosts.toHostUsageDto(conn, hostSamplesHistoryEntities)
 	}
 
@@ -294,14 +299,19 @@ class GraphServiceImpl(
 	}
 
 	override fun hostPercent(hostId: String, hostNicId: String): UsageDto {
-		log.info("hostPercent ... ")
 		val hostSampleHistoryEntity: HostSamplesHistoryEntity =
-			hostSamplesHistoryRepository.findFirstByHostIdOrderByHistoryDatetimeDesc(UUID.fromString(hostId))
-		val usageDto = hostSampleHistoryEntity.getUsage()
-		val hostInterfaceSamplesHistoryEntity: HostInterfaceSamplesHistoryEntity? =
-			hostInterfaceSampleHistoryRepository.findFirstByHostInterfaceIdOrderByHistoryDatetimeDesc(UUID.fromString(hostNicId))
-		val networkRate = hostInterfaceSamplesHistoryEntity?.receiveRatePercent?.toInt() ?: 0
-		usageDto.networkPercent = networkRate
+			hostSamplesHistoryRepository.findFirstByHostIdOrderByHistoryDatetimeDesc(hostId.toUUID())
+		val usageDto = hostSampleHistoryEntity.toUsageDto()
+		val hostInterfaceSamplesHistories: List<HostInterfaceSamplesHistoryEntity> =
+			hostInterfaceSampleHistoryRepository.findAllByHostInterfaceIdOrderByHistoryDatetimeDesc(hostNicId.toUUID())
+		/*val hostInterfaceConfiguration: HostInterfaceConfigurationEntity? =
+			hostInterfaceConfigurationRepository.findByHostInterfaceIdWithInterfaceSamplesHistories(
+				hostNicId.toUUID(),
+				hostInterfaceSamplesHistory?.hostInterfaceConfiguration?.hostConfigurationVersion
+			)*/
+		val latestHistory = hostInterfaceSamplesHistories.firstOrNull()
+		usageDto.networkPercent = latestHistory?.networkRate
+		log.info("hostPercent ... hostId: {}, hostNicId, {}", hostId, hostNicId)
 		return usageDto
 	}
 
@@ -309,7 +319,7 @@ class GraphServiceImpl(
 		log.info("vmPercent ... ")
 		val vmSamplesHistoryEntity =
 			vmSamplesHistoryRepository.findFirstByVmIdOrderByHistoryDatetimeDesc(UUID.fromString(vmId))
-		val usageDto = vmSamplesHistoryEntity.getUsage()
+		val usageDto = vmSamplesHistoryEntity.toUsageDto()
 		val vmInterfaceSamplesHistoryEntity: VmInterfaceSamplesHistoryEntity =
 			vmInterfaceSamplesHistoryRepository.findFirstByVmInterfaceIdOrderByHistoryDatetimeDesc(UUID.fromString(vmNicId))
 		val networkRate = vmInterfaceSamplesHistoryEntity.receiveRatePercent?.toInt() ?: 0

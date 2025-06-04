@@ -24,11 +24,14 @@ const OVirtWebAdminHyperlink = ({
       <p>(#{path})</p>
     </>
   )
-  const fullPath = useCallback((locale) => {
+  const fullPath = useCallback((locale) => { 
+    const baseUrl = CONSTANT.baseUrl === 'localhost'
+      ? '192.168.0.20'
+      : CONSTANT.baseUrl
     /*const baseUrl = (CONSTANT.baseUrl === 'localhost')
       ? ''
       : CONSTANT.baseUrl;*/
-    return `https://${CONSTANT.baseUrl}:8443/ovirt-engine/webadmin/?locale=${locale}#${path}`
+    return `https://${baseUrl}:8443/ovirt-engine/webadmin/?locale=${locale}#${path}`
   }, [name, path])
   const locales = useMemo(() => [{
     name: "한글", locale: "ko_KR",

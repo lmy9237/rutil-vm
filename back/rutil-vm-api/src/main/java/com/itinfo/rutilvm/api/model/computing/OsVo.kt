@@ -10,7 +10,8 @@ class OsVo (
     val description: String = "",
 	val architecture: Architecture = Architecture.UNDEFINED,
 ): Serializable {
-    override fun toString(): String = gson.toJson(this)
+    override fun toString(): String =
+		gson.toJson(this)
 
     class Builder {
 		private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: ""}

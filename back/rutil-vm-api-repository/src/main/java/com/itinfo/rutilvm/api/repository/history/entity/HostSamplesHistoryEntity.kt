@@ -123,7 +123,7 @@ fun HostSamplesHistoryEntity.totalUsage(): HostUsageDto {
 }
 
 // 호스트 각각 현재 사용량 보여주는 거
-fun HostSamplesHistoryEntity.getUsage(): UsageDto {
+fun HostSamplesHistoryEntity.toUsageDto(): UsageDto {
 	return UsageDto.builder {
 		id { hostId.toString() }
 		cpuPercent { cpuUsagePercent }

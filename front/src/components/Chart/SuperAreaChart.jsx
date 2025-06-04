@@ -51,7 +51,9 @@ const SuperAreaChart = ({
       setSeries([{
         name: type === "cpu" 
           ? "CPU 사용률 (%)"
-          : `${Localization.kr.MEMORY} 사용률 (%)`,
+          : type === "memory"
+            ? `${Localization.kr.MEMORY} 사용률 (%)`
+            : `${Localization.kr.STORAGE} 사용률 (%)`,
         data: selectedData,
       }]);
 

@@ -11,10 +11,15 @@ import java.util.UUID
 @Repository
 interface HostSamplesHistoryRepository : JpaRepository<HostSamplesHistoryEntity, Int> {
 	// 해당 호스트 cpu, memory 한행만 % 출력
-	fun findFirstByHostIdOrderByHistoryDatetimeDesc(hostId: UUID?): HostSamplesHistoryEntity
+	fun findFirstByHostIdOrderByHistoryDatetimeDesc(
+		hostId: UUID?
+	): HostSamplesHistoryEntity
 
 	// 해당 호스트 cpu,memory % List 출력
-	fun findByHostIdOrderByHistoryDatetimeDesc(hostId: UUID?, page: Pageable?): List<HostSamplesHistoryEntity>
+	fun findByHostIdOrderByHistoryDatetimeDesc(
+		hostId: UUID?,
+		page: Pageable?
+	): List<HostSamplesHistoryEntity>
 
 
 	@Query(value = """

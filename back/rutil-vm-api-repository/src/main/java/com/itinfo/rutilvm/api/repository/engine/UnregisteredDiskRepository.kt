@@ -10,7 +10,16 @@ import java.util.UUID
 
 @Repository
 interface UnregisteredDiskRepository : JpaRepository<UnregisteredDiskEntity, UnregisteredDiskId> {
-	fun findByIdStorageDomainId(storageDomainId: UUID): List<UnregisteredDiskEntity>
+	@Query("""
+SELECT ude FROM UnregisteredDiskEntity ude
+LEFT JOIN FETCH ude.diskToVmEntries dte
+LEFT JOIN FETCH dte.unregisteredOvfOfEntities
+WHERE 1=1
+AND ude.id.storageDomainId = :storageDomainId
+""")
+	fun findByStorageDomainIdWithDetails(
+		@Param("storageDomainId") storageDomainId: UUID
+	): List<UnregisteredDiskEntity>
 	// Find by the disk_id part of the composite key
 	fun findByIdDiskId(diskId: UUID): List<UnregisteredDiskEntity> // Might return multiple if disk_id isn't globally unique across storage domains
 
@@ -24,7 +33,7 @@ interface UnregisteredDiskRepository : JpaRepository<UnregisteredDiskEntity, Unr
 	@Query("""
 SELECT ud FROM UnregisteredDiskEntity ud WHERE 1=1
 AND ud.id.storageDomainId = :storageDomainId
-AND ud.volumeType = :volumeType
+AND ud._volumeType = :volumeType
 """)
 	fun findByStorageDomainIdAndVolumeType(
 		@Param("storageDomainId") storageDomainId: UUID,

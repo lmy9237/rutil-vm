@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.itinfo.rutilvm.api.ovirt.business.VolumeType
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Type
 import java.util.UUID
@@ -13,7 +14,9 @@ import javax.persistence.Embeddable
 import javax.persistence.EmbeddedId
 import javax.persistence.Entity
 import javax.persistence.FetchType
+import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
+import javax.persistence.OneToOne
 import javax.persistence.Table
 import javax.persistence.Temporal
 import javax.persistence.TemporalType
@@ -44,7 +47,8 @@ data class UnregisteredDiskEntity(
 	@Column(name = "last_modified", nullable = true)
 	val lastModified: LocalDateTime? = null,
 
-	val volumeType: Int? = null,
+	@Column(name = "volume_type", nullable=true)
+	val _volumeType: Int? = 0,
 	val volumeFormat: Int? = null,
 	val actualSize: BigInteger? = BigInteger.ZERO,
 	val size: BigInteger? = BigInteger.ZERO,
@@ -53,13 +57,19 @@ data class UnregisteredDiskEntity(
 	val imageId: UUID? = null,
 
 	@OneToMany(
+		fetch= FetchType.LAZY,
 		mappedBy="unregisteredDisk",
 		cascade=[CascadeType.ALL],
 		orphanRemoval=true,
-		fetch= FetchType.LAZY
 	)
-	val diskToVmEntries: MutableSet<UnregisteredDiskToVmEntity> = mutableSetOf()
+	val diskToVmEntries: MutableSet<UnregisteredDiskToVmEntity> = mutableSetOf(),
 ) : Serializable {
+	val volumeType: VolumeType?
+		get() = VolumeType.forValue(_volumeType)
+
+	val sparse: Boolean
+		get() = volumeType == VolumeType.Sparse
+
 	override fun toString(): String =
 		gson.toJson(this)
 
@@ -92,7 +102,7 @@ data class UnregisteredDiskEntity(
 		fun build(): UnregisteredDiskEntity {
 			return UnregisteredDiskEntity(
 				bId, bDiskAlias, bDescription, bCreationDate, bLastModified,
-				bVolumeType, bVolumeFormat, bActualSize, bDiskSize, bImageId, bDiskToVmEntries
+				bVolumeType, bVolumeFormat, bActualSize, bDiskSize, bImageId, bDiskToVmEntries, /*bBaseDisk*/
 			)
 		}
 	}

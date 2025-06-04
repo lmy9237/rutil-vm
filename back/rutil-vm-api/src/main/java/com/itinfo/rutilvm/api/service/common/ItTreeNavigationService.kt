@@ -68,5 +68,4 @@ class TreeNavigationServiceImpl (
     companion object{
         private val log by LoggerDelegate()
     }
-
 }

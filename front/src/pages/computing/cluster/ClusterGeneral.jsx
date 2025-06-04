@@ -1,6 +1,9 @@
 import InfoTable from "../../../components/table/InfoTable";
 import Localization from "../../../utils/Localization";
-import { useCluster } from "../../../api/RQHook";
+import { 
+  useAllBiosTypes,
+  useCluster
+} from "../../../api/RQHook";
 import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 
 /**
@@ -21,14 +24,14 @@ const ClusterGeneral = ({
     isSuccess: isClusterSuccess,
   } = useCluster(clusterId);
 
-  const biosTypeLabels = {
-    CLUSTER_DEFAULT: "자동 감지",
-    Q35_OVMF: "UEFI의 Q35 칩셋",
-    I440FX_SEA_BIOS: "BIOS의 I440FX 칩셋",
-    Q35_SEA_BIOS: "BIOS의 Q35 칩셋",
-    Q35_SECURE_BOOT: "UEFI SecureBoot의 Q35 칩셋",
-  };
-  const renderBiosType = (biosType) => biosTypeLabels[biosType] || biosType;
+  const {
+    data: biosTypes = [],
+    isLoading: isBiosTypesLoading,
+  } = useAllBiosTypes();
+
+  const renderBiosType = (biosType="") => [...biosTypes].filter((b) => {
+    return b.id.toLowerCase() === biosType.toLowerCase()
+  })[0]?.kr;
 
   const tableRows = [
     { label: Localization.kr.NAME, value: cluster?.name },
