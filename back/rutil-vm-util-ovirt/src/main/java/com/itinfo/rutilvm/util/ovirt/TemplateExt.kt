@@ -58,23 +58,11 @@ fun Connection.addTemplate(vmId: String, template: Template): Result<Template?> 
 	val vm = checkVm(vmId)
 	if (vm.status() == VmStatus.UP) {
 		throw ErrorPattern.VM_STATUS_ERROR.toError()
-		// log.error("addTemplate ... 가상머신 up 상태에서는 템플릿 생성 불가")
-		// return Result.failure(Error("가상머신    상태에서는 템플릿 생성 불가"))
 	}
-
-	// if (this.findAllTemplates().getOrDefault(listOf())
-	// 		.templateHasDuplicateName(template.name())) {
-	// 	throw ErrorPattern.TEMPLATE_DUPLICATE.toError()
-	// }
 
 	val templateAdded: Template? =
 		this.srvTemplates().add().template(template)/*.clonePermissions(f).seal(seal)*/.send().template()
 
-	// val templateIdAdded: String = templateAdded?.id() ?: ""
-	// if (templateAdded != null && this@addTemplate.expectTemplateStatus(templateIdAdded))
-	// 	return Result.success(templateAdded)
-	// else
-	// 	return Result.failure(Error("오류"))
 	templateAdded ?: throw ErrorPattern.TEMPLATE_NOT_FOUND.toError()
 }.onSuccess {
 	Term.TEMPLATE.logSuccess("생성", vmId)

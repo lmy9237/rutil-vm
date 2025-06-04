@@ -208,7 +208,7 @@ const TemplateModal = ({
       ...formState,
       clusterVo,
       cpuProfileVo,
-      vmVo: { id: vmsSelected.id, name: vmsSelected?.name },
+      vmVo: { id: vmSelected?.id, name: vmSelected?.name },
 
       diskAttachmentVos: diskVoList.map((disk) => ({
         diskImageVo: {
@@ -382,8 +382,7 @@ const TemplateModal = ({
                           />
                           {selectedDomain && (
                             <div className="text-xs text-gray-500 mt-1">
-                              사용 가능: {checkZeroSizeToGiB(selectedDomain.availableSize)} / 총 용량:{" "}
-                              {checkZeroSizeToGiB(selectedDomain.diskSize)}
+                              사용 가능: {checkZeroSizeToGiB(selectedDomain.availableSize)} / 총 용량: {checkZeroSizeToGiB(selectedDomain.diskSize)}
                             </div>
                           )}
                         </td>

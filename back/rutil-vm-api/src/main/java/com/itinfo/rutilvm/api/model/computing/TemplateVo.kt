@@ -14,6 +14,7 @@ import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
+import com.itinfo.rutilvm.api.model.storage.toAddTemplateDisk
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.util.ovirt.findCluster
@@ -286,26 +287,16 @@ fun TemplateVo.toTemplateBuilder(): TemplateBuilder {
 		.name(name)
 		.description(description)
 		.comment(comment)
-		.cluster(ClusterBuilder().id(clusterVo.id))
+		.cluster(ClusterBuilder().id(clusterVo.id).build())
 }
 
 fun TemplateVo.toAddTemplate(): Template {
 	val diskAttachments: List<DiskAttachment> = diskAttachmentVos.map { disk ->
-		DiskAttachmentBuilder()
-			.disk(
-				DiskBuilder()
-					.id(disk.diskImageVo.id)
-					.alias(disk.diskImageVo.alias)
-					.format(disk.diskImageVo.format)
-					.sparse(false)
-					.storageDomains(*arrayOf(StorageDomainBuilder().id(disk.diskImageVo.storageDomainVo.id).build()))
-					.diskProfile(DiskProfileBuilder().id(disk.diskImageVo.diskProfileVo.id).build())
-					.build()
-			).build()
+		DiskAttachmentBuilder().disk(disk.diskImageVo.toAddTemplateDisk()).build()
 	}
 	return toTemplateBuilder()
 		.vm(VmBuilder().id(vmVo.id).diskAttachments(diskAttachments).build())
-		.cpuProfile(CpuProfileBuilder().id(cpuProfileVo.id))
+		.cpuProfile(CpuProfileBuilder().id(cpuProfileVo.id).build())
 		.build()
 }
 
