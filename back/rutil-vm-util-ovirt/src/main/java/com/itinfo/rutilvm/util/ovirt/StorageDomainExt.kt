@@ -213,7 +213,6 @@ private fun Connection.srvVmsFromStorageDomain(storageId: String): StorageDomain
 
 fun Connection.findAllVmsFromStorageDomain(storageDomainId: String, follow: String = ""): Result<List<Vm>> = runCatching {
 	checkStorageDomainExists(storageDomainId)
-
 	this.srvVmsFromStorageDomain(storageDomainId).list().apply {
 		if(follow.isNotEmpty()) follow(follow)
 	}.send().vm()
@@ -225,10 +224,14 @@ fun Connection.findAllVmsFromStorageDomain(storageDomainId: String, follow: Stri
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): Result<List<Vm>> = runCatching {
+fun Connection.findAllUnregisteredVmsFromStorageDomain(storageDomainId: String, follow: String=""): Result<List<Vm>> = runCatching {
 	checkStorageDomainExists(storageDomainId)
-
-	this.srvVmsFromStorageDomain(storageDomainId).list().unregistered(true).send().vm()
+	val _follow = "storagedomain" +
+		if (follow.isNotEmpty()) ",$follow"
+		else ""
+	this.srvVmsFromStorageDomain(storageDomainId).list().apply {
+		unregistered(true)
+	}.send().vm()
 
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "가져오기 목록조회", storageDomainId)

@@ -1,18 +1,20 @@
 import React, { Suspense, useState } from "react";
-import useUIState from "@/hooks/useUIState";
-import useGlobal from "@/hooks/useGlobal";
-import useSearch from "@/hooks/useSearch";
-import SelectedIdView from '@/components/common/SelectedIdView';
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import Loading from '@/components/common/Loading';
-import { ActionButton } from '@/components/button/ActionButtons';
-import SearchBox from '@/components/button/SearchBox';
-import TablesOuter from "@/components/table/TablesOuter";
-import TableColumnsInfo from "@/components/table/TableColumnsInfo";
-import DomainImportVmModal from '@/components/modal/domain/DomainImportVmModal';
-import { useAllUnregisteredVMsFromDomain } from "@/api/RQHook";
+import useUIState                from "@/hooks/useUIState";
+import useGlobal                 from "@/hooks/useGlobal";
+import useSearch                 from "@/hooks/useSearch";
+import SelectedIdView            from '@/components/common/SelectedIdView';
+import OVirtWebAdminHyperlink    from "@/components/common/OVirtWebAdminHyperlink";
+import Loading                   from '@/components/common/Loading';
+import { ActionButton }          from '@/components/button/ActionButtons';
+import SearchBox                 from '@/components/button/SearchBox';
+import TablesOuter               from "@/components/table/TablesOuter";
+import TableColumnsInfo          from "@/components/table/TableColumnsInfo";
+import DomainImportVmModal       from '@/components/modal/domain/DomainImportVmModal';
+import { 
+  useAllUnregisteredVMsFromDomain
+} from "@/api/RQHook";
 import { checkZeroSizeToMB } from '@/util';
-import Localization from '@/utils/Localization';
+import Localization              from '@/utils/Localization';
 
 /**
  * @name DomainImportVms
@@ -21,7 +23,9 @@ import Localization from '@/utils/Localization';
  * @param {string} domainId 도메인ID
  * @returns {JSX.Element} DomainImportVms
  */
-const DomainImportVms = ({ domainId }) => {
+const DomainImportVms = ({ 
+  domainId
+}) => {
   const {
     data: vms = [],
     isLoading: isVmsLoading,
@@ -46,17 +50,17 @@ const DomainImportVms = ({ domainId }) => {
     cpuTopologyCnt: vm?.cpuTopologyCnt,
     cpuArc: vm?.cpuArc,
     creationTime: vm?.creationTime,
+    diskCnt: [...vm?.diskAttachmentVos]?.length ?? 0,
     // stopTime: vm?.stopTime,
   }))
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-
   // TODO: ActionButtons 생성
   // TODO: domainvm 관련 모달 생성
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={refetchVms} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchVms} />
         <div className="header-right-btns">
           <ActionButton label={Localization.kr.IMPORT}
             actionType="default"
@@ -74,8 +78,7 @@ const DomainImportVms = ({ domainId }) => {
         columns={TableColumnsInfo.VMS_IMPORT_FROM_STORAGE_DOMAIN}
         data={filteredData}
         shouldHighlight1stCol={true}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery}  setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         multiSelect={true}
         isLoading={isVmsLoading} isRefetching={isVmsRefetching} isError={isVmsError} isSuccess={isVmsSuccess}

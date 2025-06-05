@@ -34,6 +34,7 @@ private val log = LoggerFactory.getLogger(DiskAttachmentVo::class.java)
  */
 class DiskAttachmentVo(
 	val id: String = "",
+	val name: String? = "",
 	val active: Boolean = false,
 	val bootable: Boolean = false,
 	val readOnly: Boolean = false,
@@ -49,6 +50,7 @@ class DiskAttachmentVo(
 
 	class Builder {
 		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
+		private var bName: String? = "";fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bActive: Boolean = false;fun active(block: () -> Boolean?) { bActive = block() ?: false }
 		private var bBootable: Boolean = false;fun bootable(block: () -> Boolean?) { bBootable = block() ?: false }
 		private var bReadOnly: Boolean = false;fun readOnly(block: () -> Boolean?) { bReadOnly = block() ?: false }
@@ -59,7 +61,7 @@ class DiskAttachmentVo(
 		private var bDiskImageVo: DiskImageVo = DiskImageVo();fun diskImageVo(block: () -> DiskImageVo?) { bDiskImageVo = block() ?: DiskImageVo() }
 		private var bVmVo: IdentifiedVo = IdentifiedVo();fun vmVo(block: () -> IdentifiedVo?) { bVmVo = block() ?: IdentifiedVo() }
 
-		fun build(): DiskAttachmentVo = DiskAttachmentVo(bId, bActive, bBootable, bReadOnly, bPassDiscard, bInterface_, bLogicalName, bDetachOnly, bDiskImageVo, bVmVo)
+		fun build(): DiskAttachmentVo = DiskAttachmentVo(bId, bName, bActive, bBootable, bReadOnly, bPassDiscard, bInterface_, bLogicalName, bDetachOnly, bDiskImageVo, bVmVo)
 	}
 
 	companion object {
@@ -85,6 +87,7 @@ fun DiskAttachment.toDiskAttachmentVo(conn: Connection): DiskAttachmentVo {
 
 	return DiskAttachmentVo.builder {
 		id { this@toDiskAttachmentVo.id() }
+		name { this@toDiskAttachmentVo.name() }
 		active { this@toDiskAttachmentVo.active() }
 		bootable { this@toDiskAttachmentVo.bootable() }
 		readOnly { this@toDiskAttachmentVo.readOnly() }
@@ -104,6 +107,7 @@ fun DiskAttachment.toDiskAttachmentToTemplate(conn: Connection): DiskAttachmentV
 
 	return DiskAttachmentVo.builder {
 		id { this@toDiskAttachmentToTemplate.id() }
+		name { this@toDiskAttachmentToTemplate.name() }
 		active { this@toDiskAttachmentToTemplate.active() }
 		bootable { this@toDiskAttachmentToTemplate.bootable() }
 		readOnly { this@toDiskAttachmentToTemplate.readOnly() }

@@ -94,7 +94,7 @@ html {
   --h-input:24px;
   --h-tmi: 24px;          /* 트리메뉴 높이 */
   --h-rutil-header: 64px;
-  --h-rutil-footer: 33px; /* section-footer 높이 */
+  --h-rutil-footer: 36px; /* section-footer 높이 */
   --h-btn-tab-nav: 36px; /* 왼쪽 네비게이션 버튼 높이 */
   --h-rutil-footer-content: 20px;
   --h-rutil-footer-open: calc(var(--h-rutil-footer) + var(--h-rutil-footer-content));

@@ -12,13 +12,19 @@ import java.util.UUID
 interface UnregisteredOvfOfEntitiesRepository : JpaRepository<UnregisteredOvfOfEntities, UnregisteredOvfEntityId> {
 
 	// Find by the storage_domain_id part of the composite key
-	fun findByIdStorageDomainId(storageDomainId: UUID): List<UnregisteredOvfOfEntities>
+	fun findByIdStorageDomainId(
+		storageDomainId: UUID
+	): List<UnregisteredOvfOfEntities>
 
 	// Find by the entity_guid part of the composite key
-	fun findByIdEntityGuid(entityGuid: UUID): List<UnregisteredOvfOfEntities>
+	fun findByIdEntityGuid(
+		entityGuid: UUID
+	): List<UnregisteredOvfOfEntities>
 
 	// Find by entity type
-	fun findByEntityType(entityType: String): List<UnregisteredOvfOfEntities>
+	fun findByEntityType(
+		entityType: String
+	): List<UnregisteredOvfOfEntities>
 
 	// Find by entity type on a specific storage domain
 	@Query("""

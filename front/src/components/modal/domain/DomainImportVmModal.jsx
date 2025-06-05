@@ -270,6 +270,6 @@ export default DomainImportVmModal;
 
 const filterOptions = [
   { key: "general", label: Localization.kr.GENERAL },
-  { key: "disk", label: "디스크" },
+  { key: "disk", label: Localization.kr.DISK },
   { key: "network", label: Localization.kr.NICS },
 ];

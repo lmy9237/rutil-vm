@@ -5,8 +5,11 @@ import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.repository.engine.UnregisteredDiskRepository
+import com.itinfo.rutilvm.api.repository.engine.UnregisteredOvfOfEntitiesRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.UnregisteredDiskEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.UnregisteredOvfOfEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toUnregisteredDiskImageVos
+import com.itinfo.rutilvm.api.repository.engine.entity.toUnregisteredVms
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
@@ -127,13 +130,19 @@ interface ItStorageImportService {
 @Service
 class StorageImportServiceImpl(
 ): BaseService(), ItStorageImportService {
-	@Autowired private lateinit var unregisteredDisks: UnregisteredDiskRepository
+	@Autowired private lateinit var rUnregisteredDisks: UnregisteredDiskRepository
+	@Autowired private lateinit var rUnregisteredOvfOfEntities: UnregisteredOvfOfEntitiesRepository
 
 	@Throws(Error::class)
 	override fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmVo> {
 		log.info("findAllUnregisteredVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val res: List<Vm> = conn.findAllUnregisteredVmsFromStorageDomain(storageDomainId).getOrDefault(emptyList())
-		return res.toUnregisterdVms(conn)
+		val res: List<Vm> = conn.findAllUnregisteredVmsFromStorageDomain(storageDomainId)
+			.getOrDefault(emptyList())
+		val unregisteredOvfOfEntities: List<UnregisteredOvfOfEntities> =
+			rUnregisteredOvfOfEntities.findByIdStorageDomainId(storageDomainId.toUUID()).filter {
+				it.entityType == "vm".uppercase()
+			}
+		return unregisteredOvfOfEntities.toUnregisteredVms(res)
 	}
 
 	@Throws(Error::class)
@@ -184,8 +193,9 @@ class StorageImportServiceImpl(
 	@Throws(Error::class)
 	override fun findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo> {
 		log.info("findAllUnregisteredDisksFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val unregisteredDisksFromDB: List<UnregisteredDiskEntity> = unregisteredDisks.findByStorageDomainIdWithDetails(storageDomainId.toUUID())
-			.filter { it.diskToVmEntries.isEmpty() }
+		val unregisteredDisksFromDB: List<UnregisteredDiskEntity> =
+			rUnregisteredDisks.findByStorageDomainIdWithDetails(storageDomainId.toUUID())
+				.filter { it.diskToVmEntries.isEmpty() }
 		val disksFound: List<Disk> = conn.findAllUnregisteredDisksFromStorageDomain(storageDomainId)
 			.getOrDefault(emptyList())
 		return unregisteredDisksFromDB.toUnregisteredDiskImageVos(disksFound)

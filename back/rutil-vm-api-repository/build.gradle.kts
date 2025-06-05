@@ -18,6 +18,7 @@ dependencies {
     compileOnly(Dependencies.springBootWeb)
     compileOnly(Dependencies.kotlinStdlib)
     compileOnly(Dependencies.log4j)
+	compileOnly(Dependencies.jackson)
     compileOnly(Dependencies.gson)
     runtimeOnly(Dependencies.jdbc)
 

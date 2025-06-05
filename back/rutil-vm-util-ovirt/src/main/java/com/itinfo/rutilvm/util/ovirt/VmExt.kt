@@ -32,7 +32,6 @@ fun Connection.findVm(vmId: String, follow: String = ""): Result<Vm?> = runCatch
 	this.srvVm(vmId).get().apply {
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().vm()
-
 }.onSuccess {
 	Term.VM.logSuccess("상세조회", vmId)
 }.onFailure {
@@ -936,6 +935,14 @@ fun Connection.findAllAssignedPermissionsFromVm(vmId: String): Result<List<Permi
 
 }
 
+// CPU Topology 계산 최적화
+fun Vm?.cpuTopologyAll(): Int? {
+	val topology = this@cpuTopologyAll?.cpu()?.topology()
+	val cores = topology?.coresAsInteger() ?: 0
+	val sockets = topology?.socketsAsInteger() ?: 0
+	val threads = topology?.threadsAsInteger() ?: 0
+	return cores * sockets * threads
+}
 
 fun List<Vm>.nameDuplicateVm(name: String, id: String? = null): Boolean =
 	this.filter { it.id() != id }.any { it.name() == name }

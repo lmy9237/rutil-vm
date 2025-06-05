@@ -1,5 +1,13 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import com.fasterxml.jackson.module.kotlin.kotlinModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.itinfo.rutilvm.common.LoggerDelegate
 import org.hibernate.annotations.Type
 import java.util.UUID
 import java.io.Serializable
@@ -28,9 +36,8 @@ data class UnregisteredOvfEntityId(
 data class UnregisteredOvfOfEntities(
 	@EmbeddedId
 	var id: UnregisteredOvfEntityId? = null,
-
 	val entityName: String,
-	val entityType: String, // Could be UnregisteredEntityType enum via AttributeConverter
+	val entityType: String, // VM 또는 TEMPLATE
 	val architecture: Int? = null, // Map to ArchitectureType enum
 	val lowestCompVersion: String? = null,
 
@@ -64,6 +71,24 @@ data class UnregisteredOvfOfEntities(
 	val diskToVmEntries: MutableSet<UnregisteredDiskToVmEntity> = mutableSetOf()
 
 ) : Serializable {
+	val ovf: OvfEnvelope?
+		get() = try {
+			xmlMapper.readValue(ovfData, OvfEnvelope::class.java)
+		} catch (e: Exception) {
+			e.printStackTrace()
+			log.error("Error parsing ovf XML data for {}", id?.entityGuid)
+			null
+		}
+
+	val disksFromOvf: List<OvfDisk>
+		get() = try {
+			ovf?.diskSection?.disks ?: listOf()
+		} catch (e: Exception) {
+			e.printStackTrace()
+			log.error("Error retrieving ovf disks for {}", id?.entityGuid)
+			listOf()
+		}
+
 	override fun equals(other: Any?): Boolean {
 		if (this === other) return true
 		if (javaClass != other?.javaClass) return false
@@ -98,7 +123,15 @@ data class UnregisteredOvfOfEntities(
 			)
 		}
 	}
+
 	companion object {
+		private val log by LoggerDelegate()
+		private val xmlMapper: ObjectMapper = XmlMapper(JacksonXmlModule().apply {
+		}).registerKotlinModule()
+			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+			// .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 		inline fun builder(block: Builder.() -> Unit): UnregisteredOvfOfEntities = Builder().apply(block).build()
 	}
 }
+
+

@@ -201,6 +201,7 @@ dependencies {
 	implementation(Dependencies.springBootWebflux)
     implementation(Dependencies.spring)
     implementation(Dependencies.springSecurity)
+	implementation(Dependencies.jackson)
     implementation(Dependencies.jwt)
     runtimeOnly(Dependencies.jwtRuntime)
     implementation(Dependencies.swagger3)

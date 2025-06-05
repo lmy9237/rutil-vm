@@ -3,9 +3,8 @@ import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import useFooterState         from "@/hooks/useFooterState";
 import {
-  RVI16,
-  rvi16Refresh,
   RVI24,
+  rvi24Refresh,
   rvi24ChevronUp,
   rvi24DownArrow
 } from "@/components/icons/RutilVmIcons";
@@ -23,6 +22,7 @@ import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./JobFooter.css";
 import IconButton from "../Input/IconButton";
+import CONSTANT from "@/Constants";
 
 /**
  * @name JobFooter
@@ -142,16 +142,38 @@ const JobFooter = ({
       >
         {/* 상단 "최근작업" 바 */}
         <div
-          className="footer f-start fs-16"
+          className="footer f-start fs-16 w-full px-2"
           style={{ height: `40px` }}
-          onClick={(e) => {
-            e.stopPropagation()
-            toggleFooterVisible()
-          }}
+          // onClick={(e) => {
+          //   e.stopPropagation()
+          //   toggleFooterVisible()
+          // }}
         >
-          <RVI24 className="mx-5" iconDef={footerVisible() ? rvi24DownArrow() : rvi24ChevronUp()}/>
-          <span className="mr-2">최근 작업</span>
-          <RVI16 iconDef={rvi16Refresh("black")} />(위치)
+          <RVI24 className={`footer-opener${footerVisible() ? " open" : ""}`}
+            iconDef={footerVisible() 
+              ? rvi24DownArrow(CONSTANT.color.black)
+              : rvi24ChevronUp(CONSTANT.color.black)
+            }
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleFooterVisible()
+            }}
+          />
+          <span className="f-start w-full"
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleFooterVisible()
+            }}
+          >
+            최근 작업
+          </span>
+          <RVI24 className="footer-ico footer-ico-refresh ml-auto" 
+            iconDef={rvi24Refresh(CONSTANT.color.black)} 
+            onClick={(e) => {
+              e.stopPropagation()
+              if (footerVisible()) refetchJobs()
+            }}
+          />(위치)
           {/* <IconButton iconDef={rvi16Refresh("#717171")} 
                 onClick={handleRefresh}
                  onClick={() =>  window.location.reload()}

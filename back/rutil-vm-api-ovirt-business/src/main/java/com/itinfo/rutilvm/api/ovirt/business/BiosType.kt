@@ -29,7 +29,7 @@ enum class BiosType(
 		init {
 			BiosType.values().forEach { findMap[it.value] = it }
 		}
-		@JvmStatic fun forValue(value: Int): BiosType? = findMap[value]
+		@JvmStatic fun forValue(value: Int?): BiosType? = findMap[value]
 		val allBiosTypes: List<BiosType> = BiosType.values().toList()
 	}
 }

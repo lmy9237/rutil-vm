@@ -1,5 +1,5 @@
-import Tables from "./Tables";
-import useSearch from "../../hooks/useSearch"; // ✅ 검색 기능 추가
+import Tables from "@/components/table/Tables";
+import useSearch from "@/hooks/useSearch"; // ✅ 검색 기능 추가
 import "./Table.css";
 
 /**
@@ -38,8 +38,7 @@ const TablesOuter = ({
           shouldHighlight1stCol={shouldHighlight1stCol}
           // onContextMenuItems={onContextMenuItems}
           onClickableColumnClick={onClickableColumnClick}
-          isRefetching={isRefetching}
-          isLoading={isLoading} isError={isError} isSuccess={isSuccess}
+          isRefetching={isRefetching} isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         />
       </div>
     </>

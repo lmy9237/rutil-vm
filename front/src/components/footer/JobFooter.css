@@ -1,16 +1,16 @@
 .footer {
-  width:100%;height: var(--h-rutil-footer);
+  height: var(--h-rutil-footer);
   background:var(--color-primary-white);
   box-shadow: 0px -2px 4px 0px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
   z-index: 5;
 }
-.footer > span {
-  display: block;
+.footer > span,.footer > svg {
   font-weight: 500;
   cursor: pointer;
   color: var(--color-black);
 }
+.footer > svg { width: 40px;height:40px;padding:8px; }
+.footer > span { height: 40px; }
 .footer-content {
   overflow: hidden;
   /* border-top: var(--border-default); */
@@ -22,7 +22,6 @@
   padding: 10px;
   background:var(--color-primary-white);
 }
-
 .footer-nav table {
   width: 100%;
   border: var(--border-default);

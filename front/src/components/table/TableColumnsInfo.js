@@ -571,12 +571,12 @@ const TableColumnsInfo = {
     { header: Localization.kr.CLUSTER, accessor: 'cluster', clickable: false },
   ],  
   VMS_IMPORT_FROM_STORAGE_DOMAIN: [
-    { header: Localization.kr.NAME, accessor: 'name', clickable: false, width: '10%' },
-    { header: Localization.kr.MEMORY, accessor: 'memory', clickable: false },
-    { header: Localization.kr.CPU, accessor: 'cpuTopologyCnt', clickable: false },
-    { header: '아키텍처', accessor: 'cpuArc', clickable: false },
-    { header: '디스크', accessor: 'disk', clickable: false },
-    { header: '생성 일자', accessor: 'creationTime', clickable: false },
+    { accessor: 'name',           header: Localization.kr.NAME,         clickable: false, width: '10%' },
+    { accessor: 'memory',         header: Localization.kr.MEMORY,       clickable: false },
+    { accessor: 'cpuTopologyCnt', header: Localization.kr.CPU,          clickable: false },
+    { accessor: 'cpuArc',         header: '아키텍처',                     clickable: false },
+    { accessor: 'diskCnt',        header: `${Localization.kr.DISK} 수`,  clickable: false },
+    { accessor: 'creationTime',   header: Localization.kr.DATE_CREATED, clickable: false },
     // { header: '중지 일자', accessor: 'stopTime', clickable: false },
   ],  
   GET_DISK_TEMPLATES: [

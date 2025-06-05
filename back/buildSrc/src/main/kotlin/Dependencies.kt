@@ -70,6 +70,7 @@ object Dependencies {
         "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${Versions.jackson}",
         "com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}",
         "com.fasterxml.jackson.module:jackson-module-parameter-names:${Versions.jackson}",
+		"com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${Versions.jackson}",
     )
     val jacksonAnnotation =
         "com.fasterxml.jackson.core:jackson-annotations:${Versions.jackson}"
