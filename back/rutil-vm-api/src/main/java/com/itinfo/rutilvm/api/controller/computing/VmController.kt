@@ -44,7 +44,7 @@ class VmController: BaseController() {
 	@GetMapping
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	fun vms(): ResponseEntity<List<VmViewVo>> {
+	fun vms(): ResponseEntity<List<VmVo>> {
 		log.info("/computing/vms ... 가상머신 목록")
 		return ResponseEntity.ok(iVm.findAll())
 	}
@@ -65,7 +65,7 @@ class VmController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	fun vm(
 		@PathVariable vmId: String? = null,
-	): ResponseEntity<VmViewVo?> {
+	): ResponseEntity<VmVo?> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		log.info("/computing/vms/{} ... 가상머신 상세정보", vmId)
@@ -88,7 +88,7 @@ class VmController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	fun editVm(
 		@PathVariable vmId: String? = null,
-	): ResponseEntity<VmCreateVo?> {
+	): ResponseEntity<VmVo?> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		log.info("/computing/vms/{}/edit ... 가상머신 편집 상세정보", vmId)
@@ -102,7 +102,7 @@ class VmController: BaseController() {
 		notes="가상머신을 생성한다"
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name="vm", value="가상머신", dataTypeClass=VmCreateVo::class, paramType="body"),
+		ApiImplicitParam(name="vmVo", value="가상머신", dataTypeClass=VmVo::class, paramType="body"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED"),
@@ -112,12 +112,12 @@ class VmController: BaseController() {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
 	fun add(
-		@RequestBody vm: VmCreateVo? = null,
-	): ResponseEntity<VmCreateVo?> {
-		if (vm == null)
+		@RequestBody vmVo: VmVo? = null,
+	): ResponseEntity<VmVo?> {
+		if (vmVo == null)
 			throw ErrorPattern.VM_VO_INVALID.toException()
 		log.info("/computing/vms ... 가상머신 생성")
-		return ResponseEntity.ok(iVm.add(vm))
+		return ResponseEntity.ok(iVm.add(vmVo))
 	}
 
 	@ApiOperation(
@@ -127,7 +127,7 @@ class VmController: BaseController() {
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="vm", value="가상머신", dataTypeClass=VmCreateVo::class, paramType="body"),
+		ApiImplicitParam(name="vmVo", value="가상머신", dataTypeClass=VmVo::class, paramType="body"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
@@ -137,14 +137,14 @@ class VmController: BaseController() {
 	@ResponseStatus(HttpStatus.CREATED)
 	fun update(
 		@PathVariable vmId: String?,
-		@RequestBody vm: VmCreateVo?
-	): ResponseEntity<VmCreateVo?> {
+		@RequestBody vmVo: VmVo?
+	): ResponseEntity<VmVo?> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		if (vm == null)
+		if (vmVo == null)
 			throw ErrorPattern.VM_VO_INVALID.toException()
 		log.info("/computing/vms/{} ... 가상머신 편집", vmId)
-		return ResponseEntity.ok(iVm.update(vm))
+		return ResponseEntity.ok(iVm.update(vmVo))
 	}
 
 	@ApiOperation(
@@ -448,7 +448,7 @@ class VmController: BaseController() {
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name="vm", value="가상머신", dataTypeClass=VmViewVo::class, required=true, paramType="body"),
+		ApiImplicitParam(name="vmVo", value="가상머신", dataTypeClass=VmVo::class, required=true, paramType="body"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED"),
@@ -459,16 +459,16 @@ class VmController: BaseController() {
 	@ResponseStatus(HttpStatus.CREATED)
 	fun migrate(
 		@PathVariable vmId: String? = null,
-		@RequestBody vm: VmViewVo? = null,
+		@RequestBody vmVo: VmVo? = null,
 		@RequestParam(defaultValue = "false") affinityClosure: Boolean,
 	): ResponseEntity<Boolean> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		if (vm == null)
+		if (vmVo == null)
 			throw ErrorPattern.VM_VO_INVALID.toException()
 		log.info("receive affinty={}", affinityClosure)
 		log.info("/computing/vms/{}/migrate ... 가상머신 마이그레이션", vmId)
-		return ResponseEntity.ok(iVmOp.migrate(vmId, vm, affinityClosure))
+		return ResponseEntity.ok(iVmOp.migrate(vmId, vmVo, affinityClosure))
 	}
 
 	@ApiOperation(

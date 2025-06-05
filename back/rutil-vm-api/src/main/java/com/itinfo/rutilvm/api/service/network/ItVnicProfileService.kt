@@ -2,7 +2,7 @@ package com.itinfo.rutilvm.api.service.network
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
-import com.itinfo.rutilvm.api.model.computing.VmViewVo
+import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.computing.toTemplateIdNames
 import com.itinfo.rutilvm.api.model.computing.toVmsIdName
 import com.itinfo.rutilvm.api.model.network.*
@@ -75,10 +75,10 @@ interface ItVnicProfileService{
      * vNIC Profile가 가지고있는 가상머신 목록
      *
      * @param vnicProfileId [String] vnicProfile id
-     * @return List<[VmViewVo]>
+     * @return List<[VmVo]>
      */
     @Throws(Error::class)
-    fun findAllVmsFromVnicProfile(vnicProfileId: String): List<VmViewVo>
+    fun findAllVmsFromVnicProfile(vnicProfileId: String): List<VmVo>
     /**
      * [ItVnicProfileService.findAllTemplatesFromVnicProfile]
      * 네트워크 - 템플릿 목록
@@ -142,7 +142,7 @@ class VnicProfileServiceImpl(
     }
 
     @Throws(Error::class)
-    override fun findAllVmsFromVnicProfile(vnicProfileId: String): List<VmViewVo> {
+    override fun findAllVmsFromVnicProfile(vnicProfileId: String): List<VmVo> {
         log.info("findAllVmsFromVnicProfile ... vnicProfileId: {}", vnicProfileId)
         val res: List<Vm> = conn.findAllVms(follow = "nics").getOrDefault(emptyList())
             .filter { vm ->

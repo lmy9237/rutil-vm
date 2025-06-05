@@ -3,7 +3,7 @@ package com.itinfo.rutilvm.api.service.storage
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.computing.VmViewVo
+import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.computing.toDiskVms
 import com.itinfo.rutilvm.api.model.fromTemplateCdromsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromVmCdromsToIdentifiedVos
@@ -182,10 +182,10 @@ interface ItDiskService {
      * 스토리지도메인 - 가상머신
      *
      * @param diskId [String] 도메인 ID
-     * @return List<[VmViewVo]> 가상머신
+     * @return List<[VmVo]> 가상머신
      */
     @Throws(Error::class)
-    fun findAllVmsFromDisk(diskId: String): List<VmViewVo>
+    fun findAllVmsFromDisk(diskId: String): List<VmVo>
     /**
      * [ItDiskService.findAllStorageDomainsFromDisk]
      * 스토리지도메인 - 스토리지
@@ -347,7 +347,7 @@ class DiskServiceImpl(
     }
 
     @Throws(Error::class)
-    override fun findAllVmsFromDisk(diskId: String): List<VmViewVo> {
+    override fun findAllVmsFromDisk(diskId: String): List<VmVo> {
         log.info("findAllVmsFromDisk ... ")
         val res: List<Vm> = conn.findAllVmsFromDisk(diskId)
 			.getOrDefault(emptyList())

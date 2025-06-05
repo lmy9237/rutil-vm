@@ -6,8 +6,6 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.fromDisksToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
-import com.itinfo.rutilvm.api.model.network.VnicProfileVo
-import com.itinfo.rutilvm.api.model.network.toCVnicProfileMenus
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
@@ -91,10 +89,10 @@ interface ItDataCenterService {
 	 * 데이터센터가 가지고있는 가상머신 목록
 	 *
 	 * @param dataCenterId [String] 데이터센터 Id
-	 * @return List<[VmViewVo]> 가상머신 목록
+	 * @return List<[VmVo]> 가상머신 목록
 	 */
 	@Throws(Error::class)
-	fun findAllVmsFromDataCenter(dataCenterId: String): List<VmViewVo>
+	fun findAllVmsFromDataCenter(dataCenterId: String): List<VmVo>
 	/**
 	 * [ItDataCenterService.findAllStorageDomainsFromDataCenter]
 	 * 데이터센터가 가지고있는 스토리지 도메인 목록
@@ -265,7 +263,7 @@ class DataCenterServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllVmsFromDataCenter(dataCenterId: String): List<VmViewVo> {
+	override fun findAllVmsFromDataCenter(dataCenterId: String): List<VmVo> {
 		log.debug("findAllVmsFromDataCenter ... dataCenterId: {}", dataCenterId)
 		val res: List<Vm> = conn.findAllVmsFromDataCenter(dataCenterId).getOrDefault(emptyList())
 		return res.toVmMenus(conn)

@@ -7,7 +7,6 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.model.network.NetworkVo
-import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.service.computing.ItDataCenterService
@@ -206,7 +205,7 @@ class DataCenterController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	fun vms(
 		@PathVariable dataCenterId: String? = null
-	): ResponseEntity<List<VmViewVo>> {
+	): ResponseEntity<List<VmVo>> {
 		if (dataCenterId.isNullOrEmpty())
 			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
 		log.info("/computing/datacenters/{}/vms ... 데이터센터 가상머신 목록", dataCenterId)

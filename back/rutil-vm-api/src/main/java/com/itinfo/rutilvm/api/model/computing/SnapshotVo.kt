@@ -42,7 +42,8 @@ class SnapshotVo (
     val status: String = "",
 	private val _date: Date? = null,
     val persistMemory: Boolean = false,
-    val vmViewVo: VmViewVo = VmViewVo(),
+    // val vmViewVo: VmViewVo = VmViewVo(),
+	val vmVo: VmVo = VmVo(),
     val snapshotDiskVos: List<SnapshotDiskVo> = listOf(),
     val nicVos: List<NicVo> = listOf(),
     val applicationVos: List<IdentifiedVo> = listOf(),
@@ -59,13 +60,14 @@ class SnapshotVo (
         private var bStatus: String = ""; fun status(block: () -> String?) { bStatus= block() ?: "" }
         private var bDate: Date? = null; fun date(block: () -> Date?) { bDate= block() }
         private var bPersistMemory: Boolean = false; fun persistMemory(block: () -> Boolean?) { bPersistMemory= block() ?: false }
-        private var bVmViewVo: VmViewVo = VmViewVo(); fun vmViewVo(block: () -> VmViewVo?) { bVmViewVo = block() ?: VmViewVo()  }
+        private var bVmVo: VmVo = VmVo(); fun vmVo(block: () -> VmVo?) { bVmVo = block() ?: VmVo() }
+        // private var bVmViewVo: VmViewVo = VmViewVo(); fun vmViewVo(block: () -> VmViewVo?) { bVmViewVo = block() ?: VmViewVo()  }
         private var bSnapshotDiskVos: List<SnapshotDiskVo> = listOf(); fun snapshotDiskVos(block: () -> List<SnapshotDiskVo>?) { bSnapshotDiskVos = block() ?: listOf() }
         private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
         private var bApplicationVos: List<IdentifiedVo> = listOf(); fun applicationVos(block: () -> List<IdentifiedVo>?) { bApplicationVos = block() ?: listOf() }
         private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 
-        fun build(): SnapshotVo = SnapshotVo(bId, bDescription, bStatus, bDate, bPersistMemory, bVmViewVo, bSnapshotDiskVos, bNicVos, bApplicationVos, bDiskAttachmentVos )
+        fun build(): SnapshotVo = SnapshotVo(bId, bDescription, bStatus, bDate, bPersistMemory, bVmVo, /*bVmViewVo,*/ bSnapshotDiskVos, bNicVos, bApplicationVos, bDiskAttachmentVos )
     }
     companion object {
         inline fun builder(block: SnapshotVo.Builder.() -> Unit): SnapshotVo = SnapshotVo.Builder().apply(block).build()
@@ -88,7 +90,8 @@ fun Snapshot.toSnapshotMenu(): SnapshotVo {
         date { if (snapshot.vmPresent()) snapshot.date() else null }
         status { snapshot.snapshotStatus().value() }
         persistMemory { snapshot.persistMemorystate() }
-		vmViewVo { snapshot.vm().toVmSystem() }
+		vmVo { snapshot.vm().toVmSystem() }
+		// vmViewVo { snapshot.vm().toVmSystem() }
     }
 }
 fun List<Snapshot>.toSnapshotMenus(): List<SnapshotVo> =
@@ -106,7 +109,7 @@ fun Snapshot.toSnapshotVo(): SnapshotVo {
         date { if (snapshot.vmPresent()) this@toSnapshotVo.date() else null }
         status { snapshot.snapshotStatus().value() }
         persistMemory { snapshot.persistMemorystate() }
-		vmViewVo { snapshot.vm().toVmSystem() }
+		vmVo { snapshot.vm().toVmSystem() }
         // snapshotDiskVos { disks.toSnapshotDiskVoFromVms() }
         // nicVos { nics.toNicVosFromSnapshot(conn, vmId) }
         // applicationVos { applications.fromApplicationsToIdentifiedVos() }

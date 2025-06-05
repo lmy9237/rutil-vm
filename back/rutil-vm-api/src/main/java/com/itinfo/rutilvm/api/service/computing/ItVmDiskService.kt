@@ -4,13 +4,10 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.storage.DiskServiceImpl
-import com.itinfo.rutilvm.api.service.storage.DiskServiceImpl.Companion
 import com.itinfo.rutilvm.api.service.storage.ItStorageService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import org.ovirt.engine.sdk4.Error
-import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.DiskAttachment
 import org.ovirt.engine.sdk4.types.StorageDomain
 import org.ovirt.engine.sdk4.types.StorageDomainStatus

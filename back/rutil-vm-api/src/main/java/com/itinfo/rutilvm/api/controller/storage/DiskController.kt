@@ -7,18 +7,15 @@ import com.itinfo.rutilvm.api.error.IdNotFoundException
 import com.itinfo.rutilvm.api.error.InvalidRequestException
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.computing.VmViewVo
+import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.service.storage.ItDiskService
 
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.buffer.DataBuffer
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatus.HTTP_VERSION_NOT_SUPPORTED
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -26,10 +23,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.core.scheduler.Schedulers
 import java.io.IOException
-import java.nio.charset.StandardCharsets
-import java.nio.file.Files
 
 @Controller
 @Api(tags = ["Storage", "Disk"])
@@ -367,7 +361,7 @@ ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass = String
 	@ResponseBody
 	fun vms(
 		@PathVariable diskId: String? = null,
-	): ResponseEntity<List<VmViewVo>> {
+	): ResponseEntity<List<VmVo>> {
 		if (diskId.isNullOrEmpty())
 			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
 		log.info("/storages/disks/{}/vms ... ", diskId)

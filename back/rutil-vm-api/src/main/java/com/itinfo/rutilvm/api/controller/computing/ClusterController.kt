@@ -190,7 +190,7 @@ class ClusterController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	fun vms(
 		@PathVariable clusterId: String? = null
-	): ResponseEntity<List<VmViewVo>> {
+	): ResponseEntity<List<VmVo>> {
 		if (clusterId.isNullOrEmpty())
 			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
 		log.info("/computing/clusters/{}/vms ... 클러스터 가상머신 목록", clusterId)

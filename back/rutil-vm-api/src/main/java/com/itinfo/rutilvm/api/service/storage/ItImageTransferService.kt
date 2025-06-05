@@ -6,8 +6,6 @@ import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.common.ItJobService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
-import com.itinfo.rutilvm.util.ovirt.error.toError
-import com.itinfo.rutilvm.util.ovirt.findImageTransfer
 import com.itinfo.rutilvm.util.ovirt.srvImageTransfer
 
 import io.netty.handler.ssl.SslContextBuilder
@@ -26,7 +24,6 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers

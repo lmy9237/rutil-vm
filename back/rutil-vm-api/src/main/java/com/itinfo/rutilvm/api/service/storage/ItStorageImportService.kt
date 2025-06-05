@@ -27,22 +27,22 @@ interface ItStorageImportService {
 	 * 스토리지도메인 - 가상머신 가져오기 목록
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
-	 * @return List<[VmViewVo]> 가상머신 목록
+	 * @return List<[VmVo]> 가상머신 목록
 	 */
 	@Throws(Error::class)
-	fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmViewVo>
+	fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmVo>
 	/**
 	 * [ItStorageImportService.registeredVmFromStorageDomain]
 	 * 스토리지도메인 - 가상머신 가져오기
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
-	 * @param vmCreateVo [VmCreateVo] 가상머신
+	 * @param vmVo [VmVo] 가상머신
 	 * @param partialAllow [Boolean] 부분허용
 	 * @param relocation [Boolean] 불량 MAC 재배치
 	 * @return [Boolean]
 	 */
 	@Throws(Error::class)
-	fun registeredVmFromStorageDomain(storageDomainId: String, vmCreateVo: VmCreateVo, partialAllow: Boolean, relocation: Boolean): Boolean
+	fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo, partialAllow: Boolean, relocation: Boolean): Boolean
 	/**
 	 * [ItStorageImportService.removeUnregisteredVmFromStorageDomain]
 	 * 스토리지 도메인 가상머신 가져오기 삭제
@@ -130,18 +130,18 @@ class StorageImportServiceImpl(
 	@Autowired private lateinit var unregisteredDisks: UnregisteredDiskRepository
 
 	@Throws(Error::class)
-	override fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmViewVo> {
+	override fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmVo> {
 		log.info("findAllUnregisteredVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<Vm> = conn.findAllUnregisteredVmsFromStorageDomain(storageDomainId).getOrDefault(emptyList())
 		return res.toUnregisterdVms(conn)
 	}
 
 	@Throws(Error::class)
-	override fun registeredVmFromStorageDomain(storageDomainId: String, vmCreateVo: VmCreateVo, partialAllow: Boolean, relocation: Boolean): Boolean {
-		log.info("registeredVmFromStorageDomain ... storageDomainId: {}, vmId: {}, allowPart: {}, badMac: {}", storageDomainId, vmCreateVo.id, partialAllow, relocation)
+	override fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo, partialAllow: Boolean, relocation: Boolean): Boolean {
+		log.info("registeredVmFromStorageDomain ... storageDomainId: {}, vmId: {}, allowPart: {}, badMac: {}", storageDomainId, vmVo.id, partialAllow, relocation)
 		val res: Result<Boolean> = conn.registeredVmFromStorageDomain(
 			storageDomainId,
-			vmCreateVo.toRegisterVm(),
+			vmVo.toRegisterVm(),
 			partialAllow,
 			relocation
 		)

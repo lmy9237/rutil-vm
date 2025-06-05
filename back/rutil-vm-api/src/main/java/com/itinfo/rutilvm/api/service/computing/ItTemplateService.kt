@@ -78,10 +78,10 @@ interface ItTemplateService {
 	 * 가상머신에서 생성시 템플릿 선택하면 나오는 항목같음 => 아님 이거 뭐임?
 	 *
 	 * @param templateId [String] 템플릿 id
-	 * @return List<[VmViewVo]>
+	 * @return List<[VmVo]>
 	 */
 	@Throws(Error::class)
-	fun findAllVmsFromTemplate(templateId: String): List<VmViewVo>
+	fun findAllVmsFromTemplate(templateId: String): List<VmVo>
 
 	/**
 	 * [ItTemplateService.findAllNicsFromTemplate]
@@ -211,7 +211,7 @@ class TemplateServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllVmsFromTemplate(templateId: String): List<VmViewVo> {
+	override fun findAllVmsFromTemplate(templateId: String): List<VmVo> {
 		log.info("findAllVmsFromTemplate ... templateId: {}", templateId)
 		val res: List<Vm> = conn.findAllVms(follow = "reporteddevices").getOrDefault(emptyList())
 			.filter { it.templatePresent() && it.template().id() == templateId }

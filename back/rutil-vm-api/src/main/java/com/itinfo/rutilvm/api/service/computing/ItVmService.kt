@@ -5,8 +5,6 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.*
-import com.itinfo.rutilvm.api.model.setting.PermissionVo
-import com.itinfo.rutilvm.api.model.setting.toPermissionVos
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
@@ -24,47 +22,47 @@ interface ItVmService {
 	 * [ItVmService.findAll]
 	 * 가상머신 목록
 	 *
-	 * @return List<[VmViewVo]> 가상머신 목록
+	 * @return List<[VmVo]> 가상머신 목록
 	 */
 	@Throws(Error::class)
-	fun findAll(): List<VmViewVo>
+	fun findAll(): List<VmVo>
 	/**
 	 * [ItVmService.findOne]
 	 * 가상머신 정보
 	 *
 	 * @param vmId [String] 가상머신 Id
-	 * @return [VmViewVo]
+	 * @return [VmVo]
 	 */
 	@Throws(Error::class)
-	fun findOne(vmId: String): VmViewVo?
+	fun findOne(vmId: String): VmVo?
 	/**
 	 * [ItVmService.findEditOne]
 	 * 가상머신 편집
 	 *
 	 * @param vmId [String] 가상머신 Id
-	 * @return [VmCreateVo]
+	 * @return [VmVo]
 	 */
 	@Throws(Error::class)
-	fun findEditOne(vmId: String): VmCreateVo?
+	fun findEditOne(vmId: String): VmVo?
 
 	/**
 	 * [ItVmService.add]
 	 * 가상머신 생성
 	 *
-	 * @param vmCreateVo [VmCreateVo]
-	 * @return [VmCreateVo]
+	 * @param vmVo [VmVo]
+	 * @return [VmVo]
 	 */
 	@Throws(Error::class)
-	fun add(vmCreateVo: VmCreateVo): VmCreateVo?
+	fun add(vmVo: VmVo): VmVo?
 	/**
 	 * [ItVmService.update]
 	 * 가상머신 편집
 	 *
-	 * @param vmUpdateVo [VmCreateVo]
-	 * @return [VmCreateVo]
+	 * @param vmVo [VmVo]
+	 * @return [VmVo]
 	 */
 	@Throws(Error::class)
-	fun update(vmUpdateVo: VmCreateVo): VmCreateVo?
+	fun update(vmVo: VmVo): VmVo?
 	/**
 	 * [ItVmService.remove]
 	 * 가상머신 삭제
@@ -145,21 +143,21 @@ class VmServiceImpl(
 ) : BaseService(), ItVmService {
 
 	@Throws(Error::class)
-	override fun findAll(): List<VmViewVo> {
+	override fun findAll(): List<VmVo> {
 		log.info("findAll ... ")
 		val res: List<Vm> = conn.findAllVms(follow = "cluster.datacenter,reporteddevices,snapshots").getOrDefault(emptyList())
 		return res.toVmMenus(conn) // 3.86
 	}
 
 	@Throws(Error::class)
-	override fun findOne(vmId: String): VmViewVo? {
+	override fun findOne(vmId: String): VmVo? {
 		log.info("findOne ... vmId : {}", vmId)
 		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,reporteddevices,diskattachments,cdroms,statistics").getOrNull()
-		return res?.toVmViewVo(conn)
+		return res?.toVmVo(conn)
 	}
 
 	@Throws(Error::class)
-	override fun findEditOne(vmId: String): VmCreateVo? {
+	override fun findEditOne(vmId: String): VmVo? {
 		log.info("findEditOne ... vmId : {}", vmId)
 		// vm의 상태가 unknown일때 follow 일때 null
 		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,nics,diskattachments,cdroms,statistics").getOrNull()
@@ -169,62 +167,62 @@ class VmServiceImpl(
 
 
 	@Throws(Error::class)
-	override fun add(vmCreateVo: VmCreateVo): VmCreateVo? {
-		log.info("vmCreateVo {}", vmCreateVo)
+	override fun add(vmVo: VmVo): VmVo? {
+		log.info("vmCreateVo {}", vmVo)
 
-		if(vmCreateVo.diskAttachmentVos.filter { it.bootable }.size > 1){
+		if(vmVo.diskAttachmentVos.filter { it.bootable }.size > 1){
 			throw ErrorPattern.DISK_BOOT_OPTION.toException()
 		}
 
 		val res: Vm? = conn.addVm(
-			vmCreateVo.toAddVm(),
-			vmCreateVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
-			vmCreateVo.nicVos.takeIf { it.isNotEmpty() }?.map { it.toVmNic() }, // NIC가 있는 경우만 전달
-			vmCreateVo.connVo.id.takeIf { it.isNotEmpty() }  // ISO 설정이 있는 경우만 전달
+			vmVo.toAddVm(),
+			vmVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
+			vmVo.nicVos.takeIf { it.isNotEmpty() }?.map { it.toVmNic() }, // NIC가 있는 경우만 전달
+			vmVo.cdRomVo.id.takeIf { it.isNotEmpty() }  // ISO 설정이 있는 경우만 전달
 		).getOrNull()
 		return res?.toVmCreateVo(conn)
 	}
 
 	// 서비스에서 디스크 목록과 nic 목록을 분류(분류만)
 	@Throws(Error::class)
-	override fun update(vmUpdateVo: VmCreateVo): VmCreateVo? {
-		log.info("update ... vmCreateVo: {}", vmUpdateVo)
+	override fun update(vmVo: VmVo): VmVo? {
+		log.info("update ... vmCreateVo: {}", vmVo)
 
-		if(vmUpdateVo.diskAttachmentVos.filter { it.bootable }.size > 1){
+		if(vmVo.diskAttachmentVos.filter { it.bootable }.size > 1){
 			throw ErrorPattern.DISK_BOOT_OPTION.toException()
 		}
 
 		// 기존 디스크 목록 조회
-		val existDiskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmUpdateVo.id).getOrDefault(emptyList())
+		val existDiskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmVo.id).getOrDefault(emptyList())
 
 		// 기존 디스크 ID 목록 생성
 		val existDiskIds = existDiskAttachments.map { it.disk().id() }.toSet()
 
 		// 새로운 디스크 목록에서 기존에 존재하지 않는 디스크만 필터링
-		val newDisks = vmUpdateVo.diskAttachmentVos.filter { it.diskImageVo.id !in existDiskIds }
+		val newDisks = vmVo.diskAttachmentVos.filter { it.diskImageVo.id !in existDiskIds }
 
 		// 기존 nic 목록 조회
-		val existNics: List<Nic> = conn.findAllNicsFromVm(vmUpdateVo.id).getOrDefault(emptyList())
+		val existNics: List<Nic> = conn.findAllNicsFromVm(vmVo.id).getOrDefault(emptyList())
 
 		// 기존 nic ID 목록 생성
 		val existNicIds = existNics.map { it.id() }.toSet()
 
 		// 새로운 NIC 중 ID가 없는 NIC는 생성 대상
-		val newNics = vmUpdateVo.nicVos.filter { it.id.isEmpty() }
+		val newNics = vmVo.nicVos.filter { it.id.isEmpty() }
 
 		// 기존 NIC 중 vmUpdateVo.nicVos에 없는 NIC는 삭제 대상
-		val newNicIds = vmUpdateVo.nicVos.mapNotNull { it.id.takeIf { id -> id.isNotEmpty() } }.toSet()
+		val newNicIds = vmVo.nicVos.mapNotNull { it.id.takeIf { id -> id.isNotEmpty() } }.toSet()
 		val deleteNics = existNics.filter { it.id() !in newNicIds }
 
 		deleteNics.forEach { nic ->
-			conn.removeNicFromVm(vmUpdateVo.id, nic.id())
+			conn.removeNicFromVm(vmVo.id, nic.id())
 		}
 
 		val res: Vm? = conn.updateVm(
-			vmUpdateVo.toEditVm(),
+			vmVo.toEditVm(),
 			newDisks.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
 			newNics.map { it.toVmNic() }.takeIf { it.isNotEmpty() },
-			vmUpdateVo.connVo.id.takeIf { it.isNotEmpty() }
+			vmVo.cdRomVo.id.takeIf { it.isNotEmpty() }
 		).getOrNull()
 		return res?.toVmCreateVo(conn)
 	}

@@ -6,7 +6,7 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.model.computing.EventVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
-import com.itinfo.rutilvm.api.model.computing.VmViewVo
+import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.service.computing.ItTemplateService
@@ -157,7 +157,7 @@ class TemplateController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	fun vms(
 		@PathVariable templateId: String? = null,
-	): ResponseEntity<List<VmViewVo>> {
+	): ResponseEntity<List<VmVo>> {
 		if (templateId.isNullOrEmpty())
 			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
 		log.info("/computing/templates/{}/vms ... 템플릿 가상머신 목록", templateId)

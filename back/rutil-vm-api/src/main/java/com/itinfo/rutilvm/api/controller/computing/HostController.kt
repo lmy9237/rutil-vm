@@ -162,7 +162,7 @@ class HostController {
 	@ResponseStatus(HttpStatus.OK)
 	fun vms(
 		@PathVariable hostId: String? = null,
-	): ResponseEntity<List<VmViewVo>> {
+	): ResponseEntity<List<VmVo>> {
 		if (hostId.isNullOrEmpty())
 			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
 		log.info("/computing/hosts/{}/vms ... 호스트 가상머신 목록", hostId)

@@ -6,22 +6,16 @@ import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.Os
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromCpuProfileToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromDiskAttachmentsToIdentifiedVos
-import com.itinfo.rutilvm.api.model.fromDiskToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toAddTemplateDisk
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentsToTemplate
-import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
+import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.util.ovirt.findAllDiskAttachmentsFromTemplate
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findDataCenter
-import com.itinfo.rutilvm.util.ovirt.findHost
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.*
@@ -35,126 +29,174 @@ private val log = LoggerFactory.getLogger(TemplateVo::class.java)
 
 /**
  * [TemplateVo]
- *
- * @property id [String] template Id
- * @property name [String]
- * @property status [TemplateStatus] TemplateStatus
  */
 class TemplateVo(
 	val id: String = "",
 	val name: String = "",
 	val description: String = "",
 	val comment: String = "",
-	val chipsetFirmwareType: String = "",
+	val status: TemplateStatus = TemplateStatus.OK,
+	val optimizeOption: String = "", // VmType
+	val biosBootMenu: Boolean = false,
+	val biosType: String = "", // chipsetFirmwareType
+	val osType: String = "",
 	val cpuArc: Architecture = Architecture.UNDEFINED,
 	val cpuTopologyCnt: Int = 0,
 	val cpuTopologyCore: Int = 0,
 	val cpuTopologySocket: Int = 0,
 	val cpuTopologyThread: Int = 0,
 	val cpuPinningPolicy: String = "",
-	val cpuShare: Int = 0,
-	private val _creationTime: Date? = null,
-	val deleteProtected: Boolean = false,
-	val monitor: Int = 0,
-	val displayType: DisplayType = DisplayType.VNC,
+	val memorySize: BigInteger = BigInteger.ZERO,
+	val memoryGuaranteed: BigInteger = BigInteger.ZERO,
+	val memoryMax: BigInteger = BigInteger.ZERO,
 	val ha: Boolean = false,
 	val haPriority: Int = 0,
 	val ioThreadCnt: Int = 0,
-	val memorySize: BigInteger = BigInteger.ZERO,
-	val memoryBalloon: Boolean = false,
-	val memoryActual: BigInteger = BigInteger.ZERO,
-	val memoryMax: BigInteger = BigInteger.ZERO,
+	val timeOffset: String = "Etc/GMT",
+	val cloudInit: Boolean = false,
+	val script: String = "",
+	val placementPolicy: VmAffinity = VmAffinity.MIGRATABLE,
 	val migrationMode: String = "",
 	val migrationPolicy: String = "",
+	val migrationAutoConverge: InheritableBoolean = InheritableBoolean.INHERIT,
+	val migrationCompression: InheritableBoolean = InheritableBoolean.INHERIT,
 	val migrationEncrypt: InheritableBoolean = InheritableBoolean.INHERIT,
+	val migrationParallelPolicy: InheritableBoolean = InheritableBoolean.INHERIT,
 	val parallelMigration: String = "",
-	val multiQue: Boolean = false,
-	val origin: String = "",
-	val osSystem: String = "",
-	val deviceList: List<String> = listOf(),
+	val storageErrorResumeBehaviour: VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.AUTO_RESUME,
+	val virtioScsiMultiQueueEnabled: Boolean = false,
 	val firstDevice: String = "",
 	val secDevice: String = "",
-	val placement: String = "",
+	val deviceList: List<String> = listOf(),
+	val monitor: Int = 0,
+	val displayType: DisplayType = DisplayType.VNC,
+	val guestArc: String = "",
+	val guestOsType: String = "",
+	val guestDistribution: String = "",
+	val guestKernelVer: String = "",
+	val guestTimeZone: String = "",
+	val deleteProtected: Boolean = false,
 	val startPaused: Boolean = false,
-	val stateless: Boolean = false,
-	val timeZone: String = "",
-	val optimizeOption: String = "",
 	val usb: Boolean = false,
-	val virtSCSIEnable: Boolean = false,
-	val status: TemplateStatus = TemplateStatus.LOCKED,
-	val versionName: String = "",
-	val versionNum: Int = 0,
-	val baseTemplate: IdentifiedVo = IdentifiedVo(),
-	val clusterVo: IdentifiedVo = IdentifiedVo(),
-	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
-	val vmVo: IdentifiedVo = IdentifiedVo(),
+	val hostedEngineVm: Boolean = false,
+	val fqdn: String = "",
+	val nextRun: Boolean = false,
+	val runOnce: Boolean = false,
+	val upTime: String = "",
+	private val _creationTime: Date? = null,
+	private val _startTime: Date? = null,
+	private val _stopTime: Date? = null,
+	val ipv4: List<String> = listOf(),
+	val ipv6: List<String> = listOf(),
+	val hostInCluster: Boolean = false,
+	val hostVos: List<IdentifiedVo> = listOf(),
+	val storageDomainVo: IdentifiedVo = IdentifiedVo(),
 	val cpuProfileVo: IdentifiedVo = IdentifiedVo(),
+	val cdRomVo: IdentifiedVo = IdentifiedVo(),
+	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
+	val clusterVo: IdentifiedVo = IdentifiedVo(),
+	val hostVo: IdentifiedVo = IdentifiedVo(),
+	val snapshotVos: List<IdentifiedVo> = listOf(),
+	val hostDeviceVos: List<IdentifiedVo> = listOf(),
 	val nicVos: List<NicVo> = listOf(),
 	val diskAttachmentVos: List<DiskAttachmentVo> = listOf(),
+	val vmVo: IdentifiedVo = IdentifiedVo(),
+	val originTemplateVo: IdentifiedVo = IdentifiedVo(),
+	val versionName: String = "",           // <version><version_name>
+	val versionNumber: Int = 0,             // <version><version_number>
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
 
 	val creationTime: String
 		get() = ovirtDf.formatEnhanced(_creationTime)
+	val startTime: String
+		get() = ovirtDf.formatEnhanced(_startTime)
+	val stopTime: String
+		get() = ovirtDf.formatEnhanced(_stopTime)
 
 	class Builder {
-		private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: ""}
-		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: ""}
-		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: ""}
-		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: ""}
-		private var bChipsetFirmwareType: String = ""; fun chipsetFirmwareType(block: () -> String?) { bChipsetFirmwareType = block() ?: ""}
-		private var bCpuArc: Architecture = Architecture.UNDEFINED; fun cpuArc(block: () -> Architecture?) { bCpuArc = block() ?: Architecture.UNDEFINED}
-		private var bCpuTopologyCnt: Int = 0; fun cpuTopologyCnt(block: () -> Int?) { bCpuTopologyCnt = block() ?: 0}
-		private var bCpuTopologyCore: Int = 0; fun cpuTopologyCore(block: () -> Int?) { bCpuTopologyCore = block() ?: 0}
-		private var bCpuTopologySocket: Int = 0; fun cpuTopologySocket(block: () -> Int?) { bCpuTopologySocket = block() ?: 0}
-		private var bCpuTopologyThread: Int = 0; fun cpuTopologyThread(block: () -> Int?) { bCpuTopologyThread = block() ?: 0}
-		private var bCpuPinningPolicy: String = ""; fun cpuPinningPolicy(block: () -> String?) { bCpuPinningPolicy = block() ?: ""}
-		private var bCpuShare: Int = 0; fun cpuShare(block: () -> Int?) { bCpuShare = block() ?: 0}
-		private var bCreationTime: Date? = null; fun creationTime(block: () -> Date?) { bCreationTime = block() }
-		private var bDeleteProtected: Boolean = false; fun deleteProtected(block: () -> Boolean?) { bDeleteProtected = block() ?: false}
-		private var bMonitor: Int = 0; fun monitor(block: () -> Int?) { bMonitor = block() ?: 0}
-		private var bDisplayType: DisplayType = DisplayType.VNC; fun displayType(block: () -> DisplayType?) { bDisplayType = block() ?: DisplayType.VNC }
-		private var bHa: Boolean = false; fun ha(block: () -> Boolean?) { bHa = block() ?: false}
-		private var bHaPriority: Int = 0; fun haPriority(block: () -> Int?) { bHaPriority = block() ?: 0}
-		private var bIoThreadCnt: Int = 0; fun ioThreadCnt(block: () -> Int?) { bIoThreadCnt = block() ?: 0}
-		private var bMemorySize: BigInteger = BigInteger.ZERO; fun memorySize(block: () -> BigInteger?) { bMemorySize = block() ?: BigInteger.ZERO}
-		private var bMemoryBalloon: Boolean = false; fun memoryBalloon(block: () -> Boolean?) { bMemoryBalloon = block() ?: false}
-		private var bMemoryActual: BigInteger = BigInteger.ZERO; fun memoryActual(block: () -> BigInteger?) { bMemoryActual = block() ?: BigInteger.ZERO}
-		private var bMemoryMax: BigInteger = BigInteger.ZERO; fun memoryMax(block: () -> BigInteger?) { bMemoryMax = block() ?: BigInteger.ZERO}
-		private var bMigrationMode: String = ""; fun migrationMode(block: () -> String?) { bMigrationMode = block() ?: ""}
-		private var bMigrationPolicy: String = ""; fun migrationPolicy(block: () -> String?) { bMigrationPolicy = block() ?: ""}
-		private var bMigrationEncrypt: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationEncrypt(block: () -> InheritableBoolean?) { bMigrationEncrypt = block() ?: InheritableBoolean.INHERIT}
-		private var bParallelMigration: String = ""; fun parallelMigration(block: () -> String?) { bParallelMigration = block() ?: ""}
-		private var bMultiQue: Boolean = false; fun multiQue(block: () -> Boolean?) { bMultiQue = block() ?: false}
-		private var bOrigin: String = ""; fun origin(block: () -> String?) { bOrigin = block() ?: ""}
-		private var bOsSystem: String = ""; fun osSystem(block: () -> String?) { bOsSystem = block() ?: ""}
+
+		private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: "" }
+		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
+		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
+		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
+		private var bStatus: TemplateStatus = TemplateStatus.OK; fun status(block: () -> TemplateStatus?) { bStatus = block() ?: TemplateStatus.OK }
+		private var bOptimizeOption: String = ""; fun optimizeOption(block: () -> String?) { bOptimizeOption = block() ?: "" }
+		private var bBiosBootMenu: Boolean = false; fun biosBootMenu(block: () -> Boolean?) { bBiosBootMenu = block() ?: false }
+		private var bBiosType: String = ""; fun biosType(block: () -> String?) { bBiosType = block() ?: "" }
+		private var bOsType: String = ""; fun osType(block: () -> String?) { bOsType = block() ?: "" }
+		private var bCpuArc: Architecture = Architecture.UNDEFINED; fun cpuArc(block: () -> Architecture?) { bCpuArc = block() ?: Architecture.UNDEFINED }
+		private var bCpuTopologyCnt: Int = 0; fun cpuTopologyCnt(block: () -> Int?) { bCpuTopologyCnt = block() ?: 0 }
+		private var bCpuTopologyCore: Int = 0; fun cpuTopologyCore(block: () -> Int?) { bCpuTopologyCore = block() ?: 0 }
+		private var bCpuTopologySocket: Int = 0; fun cpuTopologySocket(block: () -> Int?) { bCpuTopologySocket = block() ?: 0 }
+		private var bCpuTopologyThread: Int = 0; fun cpuTopologyThread(block: () -> Int?) { bCpuTopologyThread = block() ?: 0 }
+		private var bCpuPinningPolicy: String = ""; fun cpuPinningPolicy(block: () -> String?) { bCpuPinningPolicy = block() ?: "" }
+		private var bMemorySize: BigInteger = BigInteger.ZERO; fun memorySize(block: () -> BigInteger?) { bMemorySize = block() ?: BigInteger.ZERO }
+		private var bMemoryGuaranteed: BigInteger = BigInteger.ZERO; fun memoryGuaranteed(block: () -> BigInteger?) { bMemoryGuaranteed = block() ?: BigInteger.ZERO }
+		private var bMemoryMax: BigInteger = BigInteger.ZERO; fun memoryMax(block: () -> BigInteger?) { bMemoryMax = block() ?: BigInteger.ZERO }
+		private var bHa: Boolean = false; fun ha(block: () -> Boolean?) { bHa = block() ?: false }
+		private var bHaPriority: Int = 0; fun haPriority(block: () -> Int?) { bHaPriority = block() ?: 0 }
+		private var bIoThreadCnt: Int = 0; fun ioThreadCnt(block: () -> Int?) { bIoThreadCnt = block() ?: 0 }
+		private var bTimeOffset: String = ""; fun timeOffset(block: () -> String?) { bTimeOffset = block() ?: "" }
+		private var bCloudInit: Boolean = false; fun cloudInit(block: () -> Boolean?) { bCloudInit = block() ?: false }
+		private var bScript: String = ""; fun script(block: () -> String?) { bScript = block() ?: "" }
+		private var bPlacementPolicy: VmAffinity = VmAffinity.MIGRATABLE; fun placementPolicy(block: () -> VmAffinity?) { bPlacementPolicy = block() ?: VmAffinity.MIGRATABLE }
+		private var bMigrationMode: String = ""; fun migrationMode(block: () -> String?) { bMigrationMode = block() ?: "" }
+		private var bMigrationPolicy: String = ""; fun migrationPolicy(block: () -> String?) { bMigrationPolicy = block() ?: "" }
+		private var bMigrationAutoConverge: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationAutoConverge(block: () -> InheritableBoolean?) { bMigrationAutoConverge = block() ?: InheritableBoolean.INHERIT }
+		private var bMigrationCompression: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationCompression(block: () -> InheritableBoolean?) { bMigrationCompression = block() ?: InheritableBoolean.INHERIT }
+		private var bMigrationEncrypt: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationEncrypt(block: () -> InheritableBoolean?) { bMigrationEncrypt = block() ?: InheritableBoolean.INHERIT }
+		private var bMigrationParallelPolicy: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationParallelPolicy(block: () -> InheritableBoolean?) { bMigrationParallelPolicy = block() ?: InheritableBoolean.INHERIT }
+		private var bParallelMigration: String = ""; fun parallelMigration(block: () -> String?) { bParallelMigration = block() ?: "" }
+		private var bStorageErrorResumeBehaviour: VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.AUTO_RESUME; fun storageErrorResumeBehaviour(block: () -> VmStorageErrorResumeBehaviour?) { bStorageErrorResumeBehaviour = block() ?: VmStorageErrorResumeBehaviour.AUTO_RESUME }
+		private var bVirtioScsiMultiQueueEnabled: Boolean = false; fun virtioScsiMultiQueueEnabled(block: () -> Boolean?) { bVirtioScsiMultiQueueEnabled = block() ?: false }
+		private var bFirstDevice: String = ""; fun firstDevice(block: () -> String?) { bFirstDevice = block() ?: "" }
+		private var bSecDevice: String = ""; fun secDevice(block: () -> String?) { bSecDevice = block() ?: "" }
 		private var bDeviceList: List<String> = listOf(); fun deviceList(block: () -> List<String>?) { bDeviceList = block() ?: listOf() }
-		private var bFirstDevice: String = ""; fun firstDevice(block: () -> String?) { bFirstDevice = block() ?: ""}
-		private var bSecDevice: String = ""; fun secDevice(block: () -> String?) { bSecDevice = block() ?: ""}
-		private var bPlacement: String = ""; fun placement(block: () -> String?) { bPlacement = block() ?: ""}
-		private var bStartPaused: Boolean = false; fun startPaused(block: () -> Boolean?) { bStartPaused = block() ?: false}
-		private var bStateless: Boolean = false; fun stateless(block: () -> Boolean?) { bStateless = block() ?: false}
-		private var bTimeZone: String = ""; fun timeZone(block: () -> String?) { bTimeZone = block() ?: ""}
-		private var bOptimizeOption: String = ""; fun optimizeOption(block: () -> String?) { bOptimizeOption = block() ?: ""}
-		private var bUsb: Boolean = false; fun usb(block: () -> Boolean?) { bUsb = block() ?: false}
-		private var bVirtSCSIEnable: Boolean = false; fun virtSCSIEnable(block: () -> Boolean?) { bVirtSCSIEnable = block() ?: false}
-		private var bStatus: TemplateStatus = TemplateStatus.LOCKED; fun status(block: () -> TemplateStatus?) { bStatus = block() ?: TemplateStatus.LOCKED}
-		private var bVersionName: String = ""; fun versionName(block: () -> String?) { bVersionName = block() ?: ""}
-		private var bVersionNum: Int = 0; fun versionNum(block: () -> Int?) { bVersionNum = block() ?: 0}
-		private var bBaseTemplate: IdentifiedVo = IdentifiedVo(); fun baseTemplate(block: () -> IdentifiedVo?) { bBaseTemplate = block() ?: IdentifiedVo()}
-		private var bClusterVo: IdentifiedVo = IdentifiedVo(); fun clusterVo(block: () -> IdentifiedVo?) { bClusterVo = block() ?: IdentifiedVo()}
-		private var bDataCenterVo: IdentifiedVo = IdentifiedVo(); fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo()}
-		private var bVmVo: IdentifiedVo = IdentifiedVo(); fun vmVo(block: () -> IdentifiedVo?) { bVmVo = block() ?: IdentifiedVo()}
-		private var bCpuProfileVo: IdentifiedVo = IdentifiedVo(); fun cpuProfileVo(block: () -> IdentifiedVo?) { bCpuProfileVo = block() ?: IdentifiedVo()}
+		private var bMonitor: Int = 0; fun monitor(block: () -> Int?) { bMonitor = block() ?: 0 }
+		private var bDisplayType: DisplayType = DisplayType.VNC; fun displayType(block: () -> DisplayType?) { bDisplayType = block() ?: DisplayType.VNC }
+		private var bGuestArc: String = ""; fun guestArc(block: () -> String?) { bGuestArc = block() ?: "" }
+		private var bGuestOsType: String = ""; fun guestOsType(block: () -> String?) { bGuestOsType = block() ?: "" }
+		private var bGuestDistribution: String = ""; fun guestDistribution(block: () -> String?) { bGuestDistribution = block() ?: "" }
+		private var bGuestKernelVer: String = ""; fun guestKernelVer(block: () -> String?) { bGuestKernelVer = block() ?: "" }
+		private var bGuestTimeZone: String = ""; fun guestTimeZone(block: () -> String?) { bGuestTimeZone = block() ?: "" }
+		private var bDeleteProtected: Boolean = false; fun deleteProtected(block: () -> Boolean?) { bDeleteProtected = block() ?: false }
+		private var bStartPaused: Boolean = false; fun startPaused(block: () -> Boolean?) { bStartPaused = block() ?: false }
+		private var bUsb: Boolean = false; fun usb(block: () -> Boolean?) { bUsb = block() ?: false }
+		private var bHostedEngineVm: Boolean = false; fun hostedEngineVm(block: () -> Boolean?) { bHostedEngineVm = block() ?: false }
+		private var bFqdn: String = ""; fun fqdn(block: () -> String?) { bFqdn = block() ?: "" }
+		private var bNextRun: Boolean = false; fun nextRun(block: () -> Boolean?) { bNextRun = block() ?: false }
+		private var bRunOnce: Boolean = false; fun runOnce(block: () -> Boolean?) { bRunOnce = block() ?: false }
+		private var bUpTime: String = ""; fun upTime(block: () -> String?) { bUpTime = block() ?: "" }
+		private var bCreationTime: Date? = null; fun creationTime(block: () -> Date?) { bCreationTime = block() }
+		private var bStartTime: Date? = null; fun startTime(block: () -> Date?) { bStartTime = block() }
+		private var bStopTime: Date? = null; fun stopTime(block: () -> Date?) { bStopTime = block() }
+		private var bIpv4: List<String> = listOf(); fun ipv4(block: () -> List<String>?) { bIpv4 = block() ?: listOf() }
+		private var bIpv6: List<String> = listOf(); fun ipv6(block: () -> List<String>?) { bIpv6 = block() ?: listOf() }
+		private var bHostInCluster: Boolean = false; fun hostInCluster(block: () -> Boolean?) { bHostInCluster = block() ?: false }
+		private var bHostVos: List<IdentifiedVo> = listOf(); fun hostVos(block: () -> List<IdentifiedVo>?) { bHostVos = block() ?: listOf() }
+		private var bStorageDomainVo: IdentifiedVo = IdentifiedVo(); fun storageDomainVo(block: () -> IdentifiedVo?) { bStorageDomainVo = block() ?: IdentifiedVo() }
+		private var bCpuProfileVo: IdentifiedVo = IdentifiedVo(); fun cpuProfileVo(block: () -> IdentifiedVo?) { bCpuProfileVo = block() ?: IdentifiedVo() }
+		private var bCdRomVo: IdentifiedVo = IdentifiedVo(); fun cdRomVo(block: () -> IdentifiedVo?) { bCdRomVo = block() ?: IdentifiedVo() }
+		private var bDataCenterVo: IdentifiedVo = IdentifiedVo(); fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
+		private var bClusterVo: IdentifiedVo = IdentifiedVo(); fun clusterVo(block: () -> IdentifiedVo?) { bClusterVo = block() ?: IdentifiedVo() }
+		private var bHostVo: IdentifiedVo = IdentifiedVo(); fun hostVo(block: () -> IdentifiedVo?) { bHostVo = block() ?: IdentifiedVo() }
+		private var bSnapshotVos: List<IdentifiedVo> = listOf(); fun snapshotVos(block: () -> List<IdentifiedVo>?) { bSnapshotVos = block() ?: listOf() }
+		private var bHostDeviceVos: List<IdentifiedVo> = listOf(); fun hostDeviceVos(block: () -> List<IdentifiedVo>?) { bHostDeviceVos = block() ?: listOf() }
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
-		fun build(): TemplateVo = TemplateVo(bId,bName,bDescription,bComment,bChipsetFirmwareType,bCpuArc,bCpuTopologyCnt,bCpuTopologyCore,bCpuTopologySocket,bCpuTopologyThread,bCpuPinningPolicy,bCpuShare,bCreationTime,bDeleteProtected,bMonitor,bDisplayType,bHa,bHaPriority,bIoThreadCnt,bMemorySize,bMemoryBalloon,bMemoryActual,bMemoryMax,bMigrationMode,bMigrationPolicy,bMigrationEncrypt,bParallelMigration,bMultiQue,bOrigin,bOsSystem,bDeviceList,bFirstDevice,bSecDevice,bPlacement,bStartPaused,bStateless,bTimeZone,bOptimizeOption,bUsb,bVirtSCSIEnable,bStatus,bVersionName,bVersionNum,bBaseTemplate,bClusterVo,bDataCenterVo,bVmVo,bCpuProfileVo,bNicVos,bDiskAttachmentVos,)
+		private var bVmVo: IdentifiedVo = IdentifiedVo(); fun vmVo(block: () -> IdentifiedVo?) { bVmVo = block() ?: IdentifiedVo() }
+		private var bOriginTemplateVo: IdentifiedVo = IdentifiedVo(); fun originTemplateVo(block: () -> IdentifiedVo?) { bOriginTemplateVo = block() ?: IdentifiedVo() }
+		private var bVersionName: String = ""; fun versionName(block: () -> String?) { bVersionName = block() ?: "" }
+		private var bVersionNumber: Int = 0; fun versionNumber(block: () -> Int?) { bVersionNumber = block() ?: 0 }
+
+		fun build(): TemplateVo = TemplateVo(bId, bName, bDescription, bComment, bStatus, bOptimizeOption, bBiosBootMenu, bBiosType, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bPlacementPolicy, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bUpTime, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bNicVos, bDiskAttachmentVos, bVmVo, bOriginTemplateVo, bVersionName, bVersionNumber)
 	}
 
 	companion object {
 		const val DEFAULT_BLANK_TEMPLATE_ID = "00000000-0000-0000-0000-000000000000" /* Blank 탬플릿 (기본적으로 생성 됨) */
-		inline fun builder(block: TemplateVo.Builder.() -> Unit): TemplateVo = TemplateVo.Builder().apply(block).build()
+		inline fun builder(block: Builder.() -> Unit): TemplateVo = TemplateVo.Builder().apply(block).build()
 	}
 }
 
@@ -199,26 +241,19 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 		comment { template.comment()}
 		description { template.description() }
 		status { template.status() }
-		versionName { if (template.versionPresent()) template.version().versionName() else "" }
-		versionNum { if (template.versionPresent()) template.version().versionNumberAsInteger() else 0 }
 		creationTime { template.creationTime() }
-		osSystem { if (template.osPresent()) Os.findByCode(template.os().type()).fullName else null }
-		chipsetFirmwareType { if (template.bios().typePresent()) template.bios().type().findBios() else null }
+		osType { if (template.osPresent()) Os.findByCode(template.os().type()).fullName else null }
+		biosType { if (template.bios().typePresent()) template.bios().type().findBios() else null }
 		optimizeOption { template.type().value() } // 최적화 옵션 template.type().findVmType()
 		memorySize { template.memory() }
 		cpuTopologyCore { template.cpu().topology().coresAsInteger() }
 		cpuTopologySocket { template.cpu().topology().socketsAsInteger() }
 		cpuTopologyThread { template.cpu().topology().threadsAsInteger() }
 		cpuTopologyCnt { calculateCpuTopology(template) }
-		monitor { if(template.displayPresent()) template.display().monitorsAsInteger() else 0 }
 		displayType { if(template.displayPresent()) template.display().type() else DisplayType.VNC }
 		ha { template.highAvailability().enabled() }
 		haPriority { template.highAvailability().priorityAsInteger() }
-		usb { template.usb().enabled() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
-		startPaused { template.startPaused() }
-		stateless { template.stateless() }
-		deleteProtected { template.deleteProtected() }
 	}
 }
 
@@ -243,39 +278,25 @@ fun Template.toUnregisterdTemplate(): TemplateVo {
 	val template = this@toUnregisterdTemplate
 
 	return TemplateVo.builder {
-		// id { template.id() }
-		// name { template.name() }
-		// description { template.description() }
-		// creationTime { template.creationTime() }
-		// cpuArc { template.cpu().architecture() }
-		// memorySize { template.memory() }
-		// cpuTopologyCnt {
-		// 	template.cpu().topology().coresAsInteger() *
-		// 		template.cpu().topology().socketsAsInteger() *
-		// 		template.cpu().topology().threadsAsInteger()
-		// }
-
 		id { template.id() }
 		name { template.name() }
 		description { template.description() }
 		comment { template.comment() }
-		// biosBootMenu { vm.bios().bootMenu() }
-		chipsetFirmwareType { template.bios().type().toString() }
+		biosType { if (template.bios().typePresent()) template.bios().type().findBios() else null }
 		cpuArc { template.cpu().architecture() }
 		cpuTopologyCnt { calculateCpuTopology(template) }
 		cpuTopologyCore { template.cpu().topology().coresAsInteger() }
 		cpuTopologySocket { template.cpu().topology().socketsAsInteger() }
 		cpuTopologyThread { template.cpu().topology().threadsAsInteger() }
-		osSystem { template.os().type() }
+		osType { template.os().type() }
 		optimizeOption { template.type().toString() }
 		creationTime { template.creationTime() }
 		displayType { if(template.displayPresent()) template.display().type() else DisplayType.VNC }
-		monitor { if(template.displayPresent()) template.display().monitorsAsInteger() else 0 }
 		ha { template.highAvailability().enabled() }
 		haPriority { template.highAvailability().priorityAsInteger() }
 		memorySize { template.memory() }
-		usb { if(template.usbPresent()) template.usb().enabled() else false }
-		stateless { template.stateless() }
+		// usb { if(template.usbPresent()) template.usb().enabled() else false }
+		// stateless { template.stateless() }
 	}
 }
 fun List<Template>.toUnregisterdTemplates() =
@@ -308,8 +329,8 @@ fun TemplateVo.toAddTemplate(): Template {
 fun TemplateVo.toEditTemplate(): Template {
 	return toTemplateBuilder()
 		.id(id)
-		.os(OperatingSystemBuilder().type(osSystem))
-		.bios(BiosBuilder().type(BiosType.fromValue(chipsetFirmwareType)))
+		.os(OperatingSystemBuilder().type(osType))
+		.bios(BiosBuilder().type(BiosType.fromValue(biosType)))
 		.type(VmType.fromValue(optimizeOption))
 		// .stateless(stateless)
 		// .startPaused(startPaused)
@@ -325,24 +346,8 @@ fun TemplateVo.toRegisterTemplate(): Template {
 		.build()
 }
 
-/**
- * <template>
- *   <name>mytemplate</name>
- *   <vm id="123">
- *     <disk_attachments>
- *       <disk_attachment>
- *         <disk id="456">
- *           <name>mydisk</name>
- *           <format>cow</format>
- *           <sparse>true</sparse>
- *         </disk>
- *       </disk_attachment>
- *     </disk_attachments>
- *   </vm>
- * </template>
- */
-
 // endregion
+
 private fun calculateCpuTopology(template: Template): Int {
 	val topology = template.cpu().topology()
 	return topology.coresAsInteger() * topology.socketsAsInteger() * topology.threadsAsInteger()

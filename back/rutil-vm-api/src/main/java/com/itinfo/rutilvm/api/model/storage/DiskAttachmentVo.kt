@@ -75,6 +75,8 @@ fun DiskAttachment.toDiskAttachmentIdName(conn: Connection): DiskAttachmentVo {
 		diskImageVo { disk?.toDiskIdName() }
 	}
 }
+fun List<DiskAttachment>.toDiskAttachmentIdNames(conn: Connection): List<DiskAttachmentVo> =
+	this@toDiskAttachmentIdNames.map { it.toDiskAttachmentIdName(conn) }
 
 
 fun DiskAttachment.toDiskAttachmentVo(conn: Connection): DiskAttachmentVo {

@@ -117,10 +117,10 @@ interface ItStorageService {
 	 * 스토리지도메인 - 가상머신 목록
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
-	 * @return List<[VmViewVo]> 가상머신 목록
+	 * @return List<[VmVo]> 가상머신 목록
 	 */
 	@Throws(Error::class)
-	fun findAllVmsFromStorageDomain(storageDomainId: String): List<VmViewVo>
+	fun findAllVmsFromStorageDomain(storageDomainId: String): List<VmVo>
 	/**
 	 * [ItStorageService.findAllTemplatesFromStorageDomain]
 	 * 스토리지도메인 - 템플릿 목록
@@ -284,7 +284,7 @@ class StorageServiceImpl(
 
 
 	@Throws(Error::class)
-	override fun findAllVmsFromStorageDomain(storageDomainId: String): List<VmViewVo> {
+	override fun findAllVmsFromStorageDomain(storageDomainId: String): List<VmVo> {
 		log.info("findAllVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<Vm> = conn.findAllVmsFromStorageDomain(storageDomainId).getOrDefault(emptyList())
 		return res.toVmStorageDomainMenus(conn, storageDomainId)

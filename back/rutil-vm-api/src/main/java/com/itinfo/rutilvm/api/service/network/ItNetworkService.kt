@@ -9,13 +9,11 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.fromNetworkFiltersToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromOpenStackNetworkProviderToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.*
-import com.itinfo.rutilvm.api.ovirt.business.BondMode
 import com.itinfo.rutilvm.api.ovirt.business.BondModeVo
 import com.itinfo.rutilvm.api.repository.engine.NetworkRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.DnsResolverConfigurationEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkEntity
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.computing.ItHostNicService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 

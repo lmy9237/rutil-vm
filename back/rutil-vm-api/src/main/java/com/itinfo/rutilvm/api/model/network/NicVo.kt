@@ -71,7 +71,8 @@ class NicVo (
 	val txTotalError: BigInteger = BigInteger.ZERO,
 	val networkVo: IdentifiedVo = IdentifiedVo(),
 	val vnicProfileVo: IdentifiedVo = IdentifiedVo(),
-	val vmViewVo: VmViewVo = VmViewVo(),
+	val vmVo: VmVo = VmVo(),
+	// val vmViewVo: VmViewVo = VmViewVo(),
 	val networkFilterVos: List<NetworkFilterVo> = listOf(),
 ) : Serializable {
 	override fun toString(): String =
@@ -98,10 +99,11 @@ class NicVo (
 		private var bTxTotalError: BigInteger = BigInteger.ZERO;fun txTotalError(block: () -> BigInteger?) { bTxTotalError = block() ?: BigInteger.ZERO }
 		private var bNetworkVo: IdentifiedVo = IdentifiedVo();fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
 		private var bVnicProfileVo: IdentifiedVo = IdentifiedVo();fun vnicProfileVo(block: () -> IdentifiedVo?) { bVnicProfileVo = block() ?: IdentifiedVo()}
-		private var bVmViewVo: VmViewVo = VmViewVo(); fun vmVo(block: () -> VmViewVo?) { bVmViewVo = block() ?: VmViewVo() }
+		// private var bVmViewVo: VmViewVo = VmViewVo(); fun vmVo(block: () -> VmViewVo?) { bVmViewVo = block() ?: VmViewVo() }
+		private var bVmVo: VmVo = VmVo(); fun vmVo(block: () -> VmVo?) { bVmVo = block() ?: VmVo() }
 		private var bNetworkFilterVos: List<NetworkFilterVo> = listOf(); fun networkFilterVos(block: () -> List<NetworkFilterVo>?) { bNetworkFilterVos = block() ?: listOf() }
 
-		fun build(): NicVo = NicVo(bId, bName, bInterface_, bMacAddress, bLinked, bPlugged, bSynced, bStatus, bIpv4, bIpv6, bGuestInterfaceName, bSpeed, bRxSpeed, bTxSpeed, bRxTotalSpeed, bTxTotalSpeed, bRxTotalError, bTxTotalError, bNetworkVo, bVnicProfileVo, bVmViewVo, bNetworkFilterVos, )
+		fun build(): NicVo = NicVo(bId, bName, bInterface_, bMacAddress, bLinked, bPlugged, bSynced, bStatus, bIpv4, bIpv6, bGuestInterfaceName, bSpeed, bRxSpeed, bTxSpeed, bRxTotalSpeed, bTxTotalSpeed, bRxTotalError, bTxTotalError, bNetworkVo, bVnicProfileVo, bVmVo,/*bVmViewVo,*/ bNetworkFilterVos, )
 	}
 
 	companion object {

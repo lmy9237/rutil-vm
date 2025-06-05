@@ -3,13 +3,10 @@ package com.itinfo.rutilvm.api.service.computing
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.*
-import com.itinfo.rutilvm.api.ovirt.business.BondMode
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.Error
-import org.ovirt.engine.sdk4.builders.HostNicBuilder
-import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.HostNic
 import org.ovirt.engine.sdk4.types.NetworkAttachment
 import org.springframework.stereotype.Service

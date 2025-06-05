@@ -433,7 +433,7 @@ class StorageController: BaseController() {
 	@ResponseBody
 	fun vms(
 		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
-	): ResponseEntity<List<VmViewVo>> {
+	): ResponseEntity<List<VmVo>> {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/vms ... 스토리지 도메인 밑에 붙어있는 가상머신 목록", storageDomainId)
@@ -455,7 +455,7 @@ class StorageController: BaseController() {
 	@ResponseBody
 	fun unregisteredVms(
 		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
-	): ResponseEntity<List<VmViewVo>> {
+	): ResponseEntity<List<VmVo>> {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/domains/{}/vms/unregistered ... 스토리지 도메인 밑에 붙어있는 가상머신 가져오기 목록", storageDomainId)
@@ -470,7 +470,7 @@ class StorageController: BaseController() {
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
 		ApiImplicitParam(name = "vmId", value = "가상머신 Id", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name = "vmCreateVo", value = "가상머신", dataTypeClass=VmCreateVo::class, required=true, paramType="body"),
+		ApiImplicitParam(name = "vmVo", value = "가상머신", dataTypeClass=VmVo::class, required=true, paramType="body"),
 		ApiImplicitParam(name = "allowPartialImport", value = "부분허용 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
 		ApiImplicitParam(name = "reassignBadMacs", value = "불량 MAC 재배치 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
 	)
@@ -483,7 +483,7 @@ class StorageController: BaseController() {
 	fun registerVm(
 		@PathVariable("storageDomainId") storageDomainId: String? = null,
 		@PathVariable("vmId") vmId: String? = null,
-		@RequestBody vmCreateVo: VmCreateVo? = null,
+		@RequestBody vmVo: VmVo? = null,
 		@RequestParam("partialAllow") partialAllow: Boolean = false,
 		@RequestParam("relocation") relocation: Boolean = false,
 	): ResponseEntity<Boolean?> {
@@ -491,10 +491,10 @@ class StorageController: BaseController() {
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		if (vmId == null)
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		if (vmCreateVo == null)
+		if (vmVo == null)
 			throw ErrorPattern.VM_VO_INVALID.toException()
 		log.info("/storages/{}/vms/{} ... 스토리지 도메인 가상머신 불러오기", storageDomainId, vmId)
-		return ResponseEntity.ok(iDomainImport.registeredVmFromStorageDomain(storageDomainId, vmCreateVo, partialAllow, relocation))
+		return ResponseEntity.ok(iDomainImport.registeredVmFromStorageDomain(storageDomainId, vmVo, partialAllow, relocation))
 	}
 
 	@ApiOperation(

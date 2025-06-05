@@ -12,7 +12,6 @@ import com.itinfo.rutilvm.api.model.storage.toBlockLogicalUnitVos
 import com.itinfo.rutilvm.api.model.storage.toDiscoverIscsiDetailVo
 import com.itinfo.rutilvm.api.model.storage.toLogicalUnitVos
 import com.itinfo.rutilvm.api.model.storage.toStorageDomainInfoVo
-import com.itinfo.rutilvm.api.model.storage.toStorageDomainInfoVos
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 

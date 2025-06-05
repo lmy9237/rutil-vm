@@ -74,10 +74,10 @@ interface ItHostService {
 	 * 호스트 가상머신 목록
 	 *
 	 * @param hostId [String] 호스트 Id
-	 * @return List<[VmViewVo]> 가상머신 목록
+	 * @return List<[VmVo]> 가상머신 목록
 	 */
 	@Throws(Error::class)
-	fun findAllVmsFromHost(hostId: String): List<VmViewVo>
+	fun findAllVmsFromHost(hostId: String): List<VmVo>
 	/**
 	 * [ItHostService.findAllHostDevicesFromHost]
 	 * 호스트 호스트장치 목록
@@ -163,7 +163,7 @@ class HostServiceImpl(
 
 
 	@Throws(Error::class)
-	override fun findAllVmsFromHost(hostId: String): List<VmViewVo> {
+	override fun findAllVmsFromHost(hostId: String): List<VmVo> {
 		log.info("findAllVmsFromHost ... hostId: {}", hostId)
 		val res: List<Vm> = conn.findAllVmsFromHost(hostId, follow = "cluster.datacenter,statistics,reporteddevices").getOrDefault(emptyList())
 		return res.toVmMenus(conn)
