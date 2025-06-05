@@ -173,14 +173,15 @@ const HostNetworkEditModal = ({
         />
 
         <div className="w-full px-4">
-          <ToggleSwitchButton label={`${Localization.kr.NETWORK} 동기화 (임시)`}
-            checked={networkModalState.inSync}
-            // disabled={true} 
-            // TODO: 비동기에 대한 엔지니어 의견 
-            onChange={() => handleChangeInSync("inSync", !networkModalState.inSync)}
-            tType={"동기화"} fType={"비동기화"}
-          />
-          
+          <div className ="w-[57.5%]">
+            <ToggleSwitchButton label={`${Localization.kr.NETWORK} 동기화 (임시)`}
+              checked={networkModalState.inSync}
+              // disabled={true} 
+              // TODO: 비동기에 대한 엔지니어 의견 
+              onChange={() => handleChangeInSync("inSync", !networkModalState.inSync)}
+              tType={"동기화"} fType={"비동기화"}
+            />
+          </div>
           {/* <span>nicname {networkModalState?.hostNicVo?.id} {networkModalState?.hostNicVo?.name}</span><br/> */}
           {/* <span>network {networkModalState?.networkVo?.id} {networkModalState?.networkVo?.name}</span><br/> */}
           <hr/>

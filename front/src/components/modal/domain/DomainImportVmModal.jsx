@@ -208,8 +208,9 @@ const DomainImportVmModal = ({
                     onChange={e => {setPartialAllow(prev => ({ ...prev, [vm.id]: e.target.checked }));}}
                   />
                 </td>
-                <td className="w-[230px]">
+                <td>
                   <LabelSelectOptionsID
+                    className="w-[280px]"
                     value={clusterList[vm.id] || ""}
                     loading={isDcClustersLoading}
                     options={clusters}

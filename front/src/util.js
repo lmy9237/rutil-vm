@@ -298,9 +298,6 @@ export function isNameDuplicated(
     return compare === input;
   });
 
-  Logger.debug(
-    `util > isNameDuplicated ... name: ${name}, result: ${result}`
-  );
+  Logger.debug(`util > isNameDuplicated ... name: ${name}, result: ${result}`);
   return result;
 }
-

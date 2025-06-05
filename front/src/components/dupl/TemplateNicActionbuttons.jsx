@@ -19,7 +19,6 @@ const TemplateNicActionbuttons = ({
   const { nicsSelected } = useGlobal()
   const isContextMenu = useMemo(() => actionType === "context", [actionType])
 
-  const selected1st = [...nicsSelected][0] ?? null
   const basicActions = useMemo(() => ([
     { type: "create", onClick: () => setActiveModal("templatenic:create"), label: Localization.kr.CREATE, disabled: isContextMenu && nicsSelected.length > 0, },
     { type: "update", onClick: () => setActiveModal("templatenic:update"), label: Localization.kr.UPDATE, disabled: nicsSelected.length !== 1, },

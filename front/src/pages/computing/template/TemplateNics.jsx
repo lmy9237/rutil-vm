@@ -9,11 +9,9 @@ import TablesOuter            from "@/components/table/TablesOuter";
 import TableRowClick          from "@/components/table/TableRowClick";
 import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import { status2Icon }        from "@/components/icons/RutilVmIcons";
-import VmNicActionButtons     from "@/components/dupl/VmNicActionButtons";
 import {
   useAllNicsFromTemplate
 } from "@/api/RQHook";
-import VmNicModals from "@/components/modal/vm/VmNicModals";
 import TemplateNicActionbuttons from "@/components/dupl/TemplateNicActionbuttons";
 
 /**
@@ -28,9 +26,10 @@ const TemplateNics = ({
 }) => {
   const { activeModal } = useUIState()
   const {
-    vnicProfilesSelected, setVnicProfilesSelected
+    contextMenu, setContextMenu
   } = useGlobal()
-    const {
+  const {
+    templatesSelected,
     nicsSelected, setNicsSelected
   } = useGlobal()
 
@@ -77,7 +76,10 @@ const TemplateNics = ({
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => setNicsSelected(selectedRows)} 
+        onRowClick={(selectedRows) => {
+          if (activeModal().length > 0) return;
+          setNicsSelected(selectedRows)
+        }} 
         isLoading={isVnicProfilesLoading} isRefetching={isVnicProfilesRefetching}  isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
       />
       <SelectedIdView items={nicsSelected}/>

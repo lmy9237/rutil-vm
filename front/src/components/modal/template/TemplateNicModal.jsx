@@ -1,16 +1,16 @@
 
 import { useState, useEffect, useMemo } from "react";
-import useUIState              from "@/hooks/useUIState";
 import useGlobal               from "@/hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import {
-  useAddNicFromVM,
-  useAllvnicFromCluster,
-  useEditNicFromVM,
-  useNetworkInterfaceFromVM,
+  useAddNicFromTemplate,
+  useAllVnicsFromCluster,
+  useEditNicFromTemplate,
+  useNicFromTemplate,
+  useTemplate,
   useVm,
 } from "../../../api/RQHook";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
@@ -33,13 +33,12 @@ const TemplateNicModal = ({
   editMode=false,
 }) => {
   const { toast } = useToast();
-  // const { closeModal } = useUIState()
   const nLabel = editMode 
     ? Localization.kr.UPDATE
     : Localization.kr.CREATE;
 
-  const { vmsSelected, nicsSelected } = useGlobal();
-  const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
+  const { templatesSelected, nicsSelected } = useGlobal();
+  const templateId = useMemo(() => [...templatesSelected][0]?.id, [templatesSelected]);
   const nicId = useMemo(() => [...nicsSelected][0]?.id, [nicsSelected]);
 
   const [formInfoState, setFormInfoState] = useState(initialFormState);
@@ -50,16 +49,17 @@ const TemplateNicModal = ({
   const isInterfaceDisabled = editMode && isProfileOriginallySet;
 
   const {
-    data: vm
-  } = useVm(vmId);
-  const { data: nicsdetail } = useNetworkInterfaceFromVM(vmId, nicId);
+    data: template
+  } = useTemplate(templateId);
+
+  const { data: nicsdetail } = useNicFromTemplate(templateId, nicId, (e) => ({ ...e }));
   const { 
     data: vnics=[],
     isLoading: isNicsLoading
-  } = useAllvnicFromCluster(vm?.clusterVo?.id, (e) => ({ ...e }));
+  } = useAllVnicsFromCluster(template?.clusterVo?.id, (e) => ({ ...e }));
 
-  const { mutate: addNicFromVM } = useAddNicFromVM(onClose, onClose);
-  const { mutate: editNicFromVM } = useEditNicFromVM(onClose, onClose);
+  const { mutate: addNicFromTemplate } = useAddNicFromTemplate(onClose, onClose);
+  const { mutate: editNicFromTemplate } = useEditNicFromTemplate(onClose, onClose);
 
   const filteredInterfaceOptions = useMemo(() => {
     const selectedVnicProfile = vnics.find((v) => v.id === vnicProfileVo.id);
@@ -74,29 +74,30 @@ const TemplateNicModal = ({
     setFormInfoState((prev) => ({ ...prev, [field]: value }));
   };
 
-  useEffect(() => {
-    if (!isOpen) {
-      setFormInfoState(initialFormState);
-      setVnicProfileVo({ id: "", name: "" });
-    } else if (editMode && nicsdetail) {
-      Logger.debug(`NIC 데이터: ${JSON.stringify(nicsdetail, null, 2)}`);
-      setFormInfoState({
-        id: nicsdetail?.id || "",
-        name: nicsdetail?.name || "",
-        linked: nicsdetail?.linked ?? true,
-        plugged: nicsdetail?.plugged ?? true,
-        macAddress: nicsdetail?.macAddress || "",
-        interface_: nicsdetail?.interface_ || "VIRTIO",
-      });
-      setVnicProfileVo({
-        id: nicsdetail?.vnicProfileVo?.id,
-        name: nicsdetail?.vnicProfileVo?.name,
-      });
+   useEffect(() => {
+  if (!isOpen) {
+    setFormInfoState(initialFormState);
+    setVnicProfileVo({ id: "", name: "" });
+    return;
+  }
 
-      // 최초 프로파일 존재 여부 저장
-      setIsProfileOriginallySet(!!nicsdetail?.vnicProfileVo?.id);
-    }
-  }, [isOpen, editMode, nicsdetail]);
+  if (editMode && nicsdetail && formInfoState.id !== nicsdetail.id) {
+    Logger.debug(`NIC 데이터: ${JSON.stringify(nicsdetail, null, 2)}`);
+    setFormInfoState({
+      id: nicsdetail?.id || "",
+      name: nicsdetail?.name || "",
+      linked: nicsdetail?.linked ?? true,
+      plugged: nicsdetail?.plugged ?? true,
+      macAddress: nicsdetail?.macAddress || "",
+      interface_: nicsdetail?.interface_ || "VIRTIO",
+    });
+    setVnicProfileVo({
+      id: nicsdetail?.vnicProfileVo?.id,
+      name: nicsdetail?.vnicProfileVo?.name,
+    });
+    setIsProfileOriginallySet(!!nicsdetail?.vnicProfileVo?.id);
+  }
+}, [isOpen, editMode, nicsdetail, formInfoState.id]);
 
   useEffect(() => {
     if (!editMode && vnics && vnics.length > 0) {
@@ -140,8 +141,8 @@ const TemplateNicModal = ({
     Logger.debug(`TemplateNicModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit); // 데이터 출력
 
     editMode
-      ? editNicFromVM({ vmId, nicId, nicData: dataToSubmit })
-      : addNicFromVM({ vmId, nicData: dataToSubmit });
+      ? editNicFromTemplate({ templateId, nicId, nicData: dataToSubmit })
+      : addNicFromTemplate({ templateId, nicData: dataToSubmit });
   };
 
   return (

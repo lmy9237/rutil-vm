@@ -1836,7 +1836,7 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.FIND_VMS_FROM_TEMPLATE
   }),
   /**
-   * @name ApiManager.findNicsFromTemplate
+   * @name ApiManager.findAllNicsFromTemplate
    * @description nic 목록
    *
    * @param {string} templateId
@@ -1844,9 +1844,24 @@ const ApiManager = {
    * 
    * @see
    */
-  findNicsFromTemplate : async (templateId) => makeAPICall({
+  findAllNicsFromTemplate : async (templateId) => makeAPICall({
     method: "GET", 
     url: ENDPOINTS.FIND_NICS_FROM_TEMPLATE(templateId), 
+    // defaultValues: DEFAULT_VALUES.FIND_NICS_FROM_TEMPLATE
+  }),
+  /**
+   * @name ApiManager.findNicFromTemplate
+   * @description nic 상세정보
+   *
+   * @param {string} templateId
+   * @param {string} nicId
+   * @returns 
+   * 
+   * @see
+   */
+  findNicFromTemplate : async (templateId, nicId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_NIC_FROM_TEMPLATE(templateId, nicId), 
     // defaultValues: DEFAULT_VALUES.FIND_NICS_FROM_TEMPLATE
   }),
   /**
@@ -2274,7 +2289,7 @@ const ApiManager = {
   }),
 
   /**
-   * @name ApiManager.findNicsFromTemplate
+   * @name ApiManager.findAllNicsFromTemplate
    * @description vnic profile내 템플릿 목록
    *
    * @param {string} vnicProfileId

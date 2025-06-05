@@ -903,7 +903,7 @@ export const useOsSystemsFromCluster = (
 })
 
 /**
- * @name useAllvnicFromCluster
+ * @name useAllVnicsFromCluster
  * @description  가상머신 생성창-nic목록 목록조회 useQuery훅
  * 
  * @param {string} dataCenterId 데이터센터 id
@@ -912,18 +912,18 @@ export const useOsSystemsFromCluster = (
  * 
  * @see ApiManager.findVNicFromCluster
  */
-export const useAllvnicFromCluster = (
+export const useAllVnicsFromCluster = (
   clusterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['AllnicFromVM', clusterId],
+  queryKey: ['allVnicFromCluster', clusterId],
   queryFn: async () => {
     const res = await ApiManager.findVNicFromCluster(clusterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllvnicFromCluster ... clusterId: ${clusterId}, res: `, _res);
+    Logger.debug(`RQHook > useAllVnicsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
   enabled: !!clusterId,
@@ -3509,7 +3509,7 @@ export const useAllNicsFromTemplate = (
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allNicsFromTemplate', templateId],
   queryFn: async () => {
-    const res = await ApiManager.findNicsFromTemplate(templateId);
+    const res = await ApiManager.findAllNicsFromTemplate(templateId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
@@ -3521,6 +3521,31 @@ export const useAllNicsFromTemplate = (
   cacheTime: 0,
 })
 
+/**
+ * @name useNicFromTemplate
+ * @description Template 내 네트워크 상세정보 useQuery훅
+ * 
+ * @param {string} templateId 탬플릿ID
+ * @param {string} nicId nic ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllVMsFromDomain
+ */
+export const useNicFromTemplate = (
+  templateId,
+  nicId,
+  mapPredicate = (e) => ({ ...e }),
+) =>
+  useQuery({
+    queryKey: ['nicFromTemplate', templateId, nicId],
+    queryFn: async () => {
+      const res = await ApiManager.findNicFromTemplate(templateId, nicId);
+      const validated = validate(res); 
+      return mapPredicate ? mapPredicate(validated) : validated;
+    },
+    enabled: !!templateId && !!nicId,
+  });
 /**
  * @name useAllDisksFromTemplate
  * @description Template 내 디스크 목록조회 useQuery훅

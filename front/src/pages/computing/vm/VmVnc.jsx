@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import HeaderButton           from "@/components/button/HeaderButton";
 import Vnc                    from "@/components/Vnc";
@@ -48,6 +48,13 @@ const VmVnc = ({
   const sectionHeaderButtons = [
     { type: "screenshot", label: "스크린샷", onClick: () => takeScreenshot()}
   ]
+
+  // 텝 이름변경
+  useEffect(() => {
+    Logger.debug(`VmVnc > useEffect ... `)
+    if (vm && vm.name)
+      document.title = `RutilVM (${vm.name})`
+  }, [vmId, vm])
 
   return (
     <div

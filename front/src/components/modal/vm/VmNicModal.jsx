@@ -15,7 +15,7 @@
 //   useAddNicFromTemplate,
 //   useEditNicFromVM,
 //   useEditNicFromTemplate,
-//   useAllvnicFromCluster,
+//   useAllVnicsFromCluster,
 //   useNetworkInterfaceFromVM,
 //   useAllNicsFromTemplate,
 //   useVm,
@@ -106,7 +106,7 @@
 //   const {
 //     data: vnics = [],
 //     isLoading: isNicsLoading,
-//   } = useAllvnicFromCluster(
+//   } = useAllVnicsFromCluster(
 //     clusterId,
 //     (e) => ({ ...e }),
 //     {
@@ -116,7 +116,7 @@
 //   // const {
 //   //   data: vnics = [],
 //   //   isLoading: isNicsLoading,
-//   // } = useAllvnicFromCluster(
+//   // } = useAllVnicsFromCluster(
 //   //   clusterId,
 //   //   (e) => ({ ...e }),
 //   //   { enabled: !!clusterId }
@@ -323,7 +323,7 @@ import LabelSelectOptions from "../../label/LabelSelectOptions";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import {
   useAddNicFromVM,
-  useAllvnicFromCluster,
+  useAllVnicsFromCluster,
   useEditNicFromVM,
   useNetworkInterfaceFromVM,
   useVm,
@@ -371,7 +371,7 @@ const VmNicModal = ({
   const { 
     data: vnics=[],
     isLoading: isNicsLoading
-  } = useAllvnicFromCluster(vm?.clusterVo?.id, (e) => ({ ...e }));
+  } = useAllVnicsFromCluster(vm?.clusterVo?.id, (e) => ({ ...e }));
 
   const { mutate: addNicFromVM } = useAddNicFromVM(onClose, onClose);
   const { mutate: editNicFromVM } = useEditNicFromVM(onClose, onClose);

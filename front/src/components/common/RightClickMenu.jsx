@@ -102,7 +102,7 @@ const RightClickMenu = () => {
       <DiskSnapshotModals shot={snapshotsSelected[0] ?? null} />
       <VmDiskModals disk={disksSelected[0] ?? null} />
       <VmNicModals nic={nicsSelected[0] ?? null} />
-      <TemplateNicModals nic={templatesSelected[0] ?? null} />
+      <TemplateNicModals nic={nicsSelected[0] ?? null} />
       <EventModals event={eventsSelected[0] ?? null}/>
       <JobModals job={jobsSelected[0] ?? null} />
       <SettingUsersModals user={usersSelected[0] ?? null} />

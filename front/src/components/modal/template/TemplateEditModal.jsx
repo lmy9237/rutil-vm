@@ -147,7 +147,7 @@ setDeleteProtected(Boolean(template?.deleteProtected));
     <BaseModal targetName={Localization.kr.TEMPLATE} submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "800px", height: "450px" }} 
+      contentStyle={{ width: "750px", height: "400px" }} 
     >
   
       <div className="popup-content-outer flex">
@@ -186,7 +186,7 @@ setDeleteProtected(Boolean(template?.deleteProtected));
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               />
-     
+{/*      
               <LabelCheckbox id="stateless"
                 label={Localization.kr.STATELESS}
                 checked={stateless}
@@ -205,7 +205,7 @@ setDeleteProtected(Boolean(template?.deleteProtected));
                 label="삭제 방지"
                 checked={deleteProtected}
                 onChange={(e) => setDeleteProtected(e.target.checked)}
-              />
+              /> */}
            
             </>
           )}

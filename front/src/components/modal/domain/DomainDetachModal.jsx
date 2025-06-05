@@ -46,51 +46,52 @@ const DomainDetachModal = ({
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       promptText={`다음 ${label ? `${Localization.kr.DATA_CENTER}에서` : ""}  ${Localization.kr.DOMAIN}를 ${Localization.kr.DETACH} 하시겠습니까?`}
-      contentStyle={{ width: "600px"}} 
+      contentStyle={{ width: "650px"}} 
       shouldWarn={true}
     >
       <div><b>{label ? datacentersSelected[0]?.name : domainsSelected[0]?.name}</b></div><br/>
       <div>분리 작업은 등록되지 않은 상태로 스토리지 도메인에 들어 있는 엔티티를 이동시킵니다.</div><br/>
       
-      {transformedVmData.length > 0 && (
-        <div>
-          <div><b>가상머신 목록:</b></div>
-          <ul>
-            {transformedVmData.map((vm, idx) => (
-              <li key={`vm-${idx}`}>{vm.name}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div className="flex py-2 associated-resource-lists">
+        {transformedVmData.length > 0 && (
+          <div>
+            <div><b>가상머신 목록:</b></div>
+            <ul>
+              {transformedVmData.map((vm, idx) => (
+                <li key={`vm-${idx}`}>{vm.name}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-      {transformedTmpData.length > 0 && (
-        <div>
-          <div><b>템플릿 목록:</b></div>
-          <ul>
-            {transformedTmpData.map((tmp, idx) => (
-              <li key={`tmp-${idx}`}>{tmp.name}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+        {transformedTmpData.length > 0 && (
+          <div>
+            <div><b>템플릿 목록:</b></div>
+            <ul>
+              {transformedTmpData.map((tmp, idx) => (
+                <li key={`tmp-${idx}`}>{tmp.name}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-      {transformedSnapshotData.length > 0 && (
-        <div>
-          <div><b>디스크 스냅샷 목록:</b></div>
-          <ul>
-            {transformedSnapshotData.map((snap, idx) => (
-              <li key={`snap-${idx}`}>{snap.name}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
+        {transformedSnapshotData.length > 0 && (
+          <div>
+            <div><b>디스크 스냅샷 목록:</b></div>
+            <ul>
+              {transformedSnapshotData.map((snap, idx) => (
+                <li key={`snap-${idx}`}>{snap.name}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
       
 
       {/* TODO: 가상머신과 템플릿, 스냅샷이 있으면 경고문구를 보여줘야하는데 기준을 잡던가 해야됨요 */}
       {/* {!label && ( */}
-        <div className="destroy-text"> 가상머신, 템플릿, 스냅샷이 있으면 안됨요.
-          {Localization.kr.DOMAIN}에는 다른 {Localization.kr.DOMAIN}에 디스크가 있는 다음 VM/템플릿에 대한 리스가 포함되어 있습니다.
+        <div className="destroy-text"> 
+          {Localization.kr.DOMAIN}에는 다른 {Localization.kr.DOMAIN}에 디스크가 있는 다음 VM/템플릿에 대한 리스가 포함되어 있습니다.<br/>
           {Localization.kr.DOMAIN} 제거를 진행하기 전에 해당 VM/템플릿 리스를 수동으로 제거하거나 이동하는 것을 고려해 주세요.
         </div>
       {/* )} */}

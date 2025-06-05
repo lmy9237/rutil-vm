@@ -6,6 +6,7 @@ import LabelCheckbox from "../../label/LabelCheckbox";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import { useMaintenanceDomain } from "../../../api/RQHook";
+import { RVI16, rvi16ChevronRight } from "@/components/icons/RutilVmIcons";
 
 const DomainMaintenanceModal = ({
   isOpen,
@@ -43,7 +44,8 @@ const DomainMaintenanceModal = ({
       contentStyle={{ width: "600px" }}
       shouldWarn={true}      
     >
-      <div className="domain-name-box">
+      <div className="domain-name-box flex f-start">
+        <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>
         {names.join(", ")}
       </div>
       

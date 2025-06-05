@@ -12,6 +12,7 @@ import ApiManager                       from "@/api/ApiManager";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "./MVm.css";
+import { RVI16, rvi16ChevronRight } from "@/components/icons/RutilVmIcons";
 
 const VmDeleteModal = ({ 
   isOpen,
@@ -112,7 +113,10 @@ const VmDeleteModal = ({
 
         return (
           <div key={vmId} className="f-btw">
-            <span className="fs-16 p-3.5 w-full">{names[index]}</span>
+            <span className="fs-16 p-3.5 w-full flex f-start">
+              <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>
+              {names[index]}
+            </span>
             <LabelCheckbox id={`diskDelete-${vmId}`} 
               label={`${Localization.kr.DISK} ${Localization.kr.REMOVE}`}               
               checked={detachOnlyList[vmId] || false}

@@ -164,7 +164,7 @@ const ENDPOINTS = {
   EXPORT_VM: (vmId) =>                                                     `${ENDPOINT_API_V1}/computing/vms/${vmId}/export`, 
   CONSOLE_VM: (vmId) =>                                                    `${ENDPOINT_API_V1}/computing/vms/${vmId}/console`,
   REMOTE_VIEWER_CONNECTION_FILE_VM: (vmId) =>                              `${ENDPOINT_API_V1}/computing/vms/${vmId}/remoteviewerconnection`,
-  FIND_ALL_MIGRATABLE_HOSTS_4_VMS: (vmIds) =>                                   `${ENDPOINT_API_V1}/computing/vms/migratableHosts?vmIds=${vmIds}`, 
+  FIND_ALL_MIGRATABLE_HOSTS_4_VMS: (vmIds) =>                              `${ENDPOINT_API_V1}/computing/vms/migratableHosts?vmIds=${vmIds}`, 
   MIGRATE_VM: (vmId, affinityClosure) => {
     let url = `${ENDPOINT_API_V1}/computing/vms/${vmId}/migrate`;
     const flag = affinityClosure === true || affinityClosure === 'true';
@@ -179,8 +179,9 @@ const ENDPOINTS = {
   FIND_ALL_TEMPLATES :() =>                                                `${ENDPOINT_API_V1}/computing/templates`,
   FIND_TEMPLATE: (templateId) =>                                           `${ENDPOINT_API_V1}/computing/templates/${templateId}`, 
   FIND_VMS_FROM_TEMPLATE: (templateId) =>                                  `${ENDPOINT_API_V1}/computing/templates/${templateId}/vms`, 
-  FIND_NICS_FROM_TEMPLATE: (templateId) =>                                 `${ENDPOINT_API_V1}/computing/templates/${templateId}/nics`, 
-  ADD_NICS_FROM_TEMPLATE: (templateId) =>                                  `${ENDPOINT_API_V1}/computing/templates/${templateId}/nics`, 
+  FIND_NICS_FROM_TEMPLATE: (templateId) =>                                 `${ENDPOINT_API_V1}/computing/templates/${templateId}/nics`,
+  FIND_NIC_FROM_TEMPLATE:  (templateId, nicId) =>                          `${ENDPOINT_API_V1}/computing/templates/${templateId}/nics/${nicId}`,
+  ADD_NICS_FROM_TEMPLATE: (templateId) =>                                  `${ENDPOINT_API_V1}/computing/templates/${templateId}/nics`,
   EDIT_NICS_FROM_TEMPLATE: (templateId, nicId) =>                          `${ENDPOINT_API_V1}/computing/templates/${templateId}/nics/${nicId}`,
   DELETE_NICS_FROM_TEMPLATE: (templateId, nicId) =>                        `${ENDPOINT_API_V1}/computing/templates/${templateId}/nics/${nicId}`,
   FIND_DISKS_FROM_TEMPLATE: (templateId) =>                                `${ENDPOINT_API_V1}/computing/templates/${templateId}/disks`,  

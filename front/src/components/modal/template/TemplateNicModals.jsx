@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import DeleteModal from "../../../utils/DeleteModal";
-import { useDeleteNetworkInterface } from "../../../api/RQHook";
+import { useDeleteNetworkFromTemplate, useDeleteNetworkInterface } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import TemplateNicModal from "./TemplateNicModal";
 
@@ -18,14 +18,22 @@ const TemplateNicModals = ({
 }) => {
   const { activeModal, closeModal } = useUIState()
   const {
-    vmsSelected, 
+    templatesSelected, 
     nicsSelected, setNicsSelected
   } = useGlobal()
 
-  const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
-  const { mutate: deleteNetworkInterface } = useDeleteNetworkInterface();
+  const templateId = useMemo(() => [...templatesSelected][0]?.id, [templatesSelected]);
+  const { mutate: deleteNetworkInterface } = useDeleteNetworkFromTemplate();
 
-  
+  const wrappedApi = {
+    mutate: (nicId, options) => {
+      if (!templateId || !nicId) {
+        return;
+      }
+      deleteNetworkInterface({ templateId, nicId }, options);
+    },
+  };
+
   const modals = {
     create: (
       <TemplateNicModal key={"templatenic:create"}  isOpen={activeModal().includes("templatenic:create")}
@@ -35,16 +43,15 @@ const TemplateNicModals = ({
       <TemplateNicModal key={"templatenic:update"} isOpen={activeModal().includes("templatenic:update")} editMode
         onClose={() => closeModal("templatenic:update")}
       />
+    ),remove: (
+      <DeleteModal key={"templatenic:remove"} isOpen={activeModal().includes("templatenic:remove")}
+        onClose={() => closeModal("templatenic:remove")}
+        label={Localization.kr.NICS}
+        data={nicsSelected}
+        api= {wrappedApi} 
+        shouldRedirect={false} 
+      />
     )
-    //  remove: (
-    //   <DeleteModal key={"nic:remove"} isOpen={activeModal().includes("nic:remove")}
-    //     onClose={() => closeModal("nic:remove")}
-    //     label={Localization.kr.NICS}
-    //     data={nicsSelected}
-    //     api= {wrappedApi} 
-    //     shouldRedirect={false} 
-    //   />
-    // )
   }
   
   return (

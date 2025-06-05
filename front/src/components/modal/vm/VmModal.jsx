@@ -18,7 +18,7 @@ import {
   useOsSystemsFromCluster,
   useAllBiosTypes,
   useFindTemplatesFromDataCenter,
-  useAllvnicFromCluster,
+  useAllVnicsFromCluster,
   useAllNicsFromTemplate, 
 } from '@/api/RQHook';
 import VmCommon from './create/VmCommon';
@@ -154,7 +154,7 @@ const { mutate: addVM } = useAddVm(
   const { 
     data: vnics = [], 
     isLoading: isNicsLoading 
-  } = useAllvnicFromCluster(clusterVo.id, (e) => ({ ...e }));
+  } = useAllVnicsFromCluster(clusterVo.id, (e) => ({ ...e }));
 
   // 편집: 가상머신이 가지고 있는 디스크 목록 가져오기
   // const { data: disks = [], isLoading: isDisksLoading } = 
