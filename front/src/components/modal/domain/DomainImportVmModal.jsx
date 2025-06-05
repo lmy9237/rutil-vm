@@ -58,10 +58,6 @@ const DomainImportVmModal = ({
     isLoading: isDcClustersLoading,
   } = useClustersFromDataCenter(domainsSelected[0]?.dataCenterVo?.id, (e) => ({...e,}));
   
-  useEffect(()=>{
-    console.log("$ domainsSelected ", domainsSelected)
-    console.log("$ vmsSelected ", vmsSelected)
-  }, []);
 
   useEffect(() => {
     if (vmList?.length && clusters.length) {

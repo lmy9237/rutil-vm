@@ -356,7 +356,7 @@ const VmDiskModal = ({
               onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true", }))}
             />
           </div>
-          <div className="img-checkbox-outer f-end gap-8">
+          <div className="img-checkbox-outer f-end">
             <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
               checked={Boolean(formState.wipeAfterDelete)} 
               onChange={handleInputChangeCheck("wipeAfterDelete")}

@@ -5,20 +5,6 @@
 .img-checkbox-outer {
   margin-left: 24px;
 }
-/*이미지,직접lun버튼*/
-/* .disk-new-nav {
-  width: 50%;
-  display: flex;
-}
-.disk-new-nav > div {
-  padding: 8px 0;
-  cursor: pointer;
-}
-.disk-new-nav .active {
-  color: rgb(35, 132, 243);
-  font-weight: 600;
-} */
-
 /*디스크(업로드)*/
 .storage-upload-first {
   height: 62px;
@@ -29,9 +15,8 @@
   margin-right: 16px;
 }
 .storage-upload-first>div{
-  width: 55%;height: var(--h-32);
+  width: 45%;height: var(--h-32);
 }
-
 .disk-option {
   padding-top: 16px;
 }

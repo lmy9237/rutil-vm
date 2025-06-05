@@ -199,96 +199,81 @@ const DiskModal = ({
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "640px" }}
     >
-      <div className="disk-new-nav">
-        {/* <div id="storage_img_btn"
-          onClick={() => handleTabClick("img")}
-          className={activeTab === "img" ? "active" : ""}
-        >
-          이미지
-        </div> */}
-        {/* <div id="storage_directlun_btn" onClick={() => handleTabClick('directlun')} className={activeTab === 'directlun' ? 'active' : ''} >
-          직접 LUN
-        </div> */}
-      </div>
-
-      {/*이미지*/}
-      {activeTab === "img" && (
-        <div className="disk-new-img">
-          <div>
-            <LabelInputNum label="크기(GB)"
-              value={formState.size}
-              autoFocus={true}
-              disabled={editMode}
-              onChange={handleInputSize("size")}
+      <div className="disk-new-img">
+        <div>
+          <LabelInputNum label="크기(GB)"
+            value={formState.size}
+            autoFocus={true}
+            disabled={editMode}
+            onChange={handleInputSize("size")}
+          />
+          {editMode && (
+            <LabelInputNum label="추가크기(GB)"
+              value={formState.appendSize}
+              onChange={handleInputSize("appendSize")}
             />
-            {editMode && (
-              <LabelInputNum label="추가크기(GB)"
-                value={formState.appendSize}
-                onChange={handleInputSize("appendSize")}
-              />
-            )}
-            <LabelInput label={Localization.kr.ALIAS}
-              value={formState.alias}
-              onChange={handleInputChange(setFormState, "alias")}
-            />
-            <LabelInput label={Localization.kr.DESCRIPTION}
-              value={formState.description}
-              onChange={handleInputChange(setFormState, "description")}
-            />
-            <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
-              value={dataCenterVo.id}
-              disabled={editMode}
-              loading={isDatacentersLoading}
-              options={datacenters}
-              onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
-            />
-            <LabelSelectOptionsID label={Localization.kr.DOMAIN}
-              value={domainVo.id}
-              disabled={editMode}
-              loading={isDomainsLoading}
-              options={domains}
-              onChange={handleSelectIdChange(setDomainVo, domains)}
-            />
-            <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
-              value={String(formState.sparse)}
-              onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true"}))}
-              disabled={editMode}
-              options={sparseList}
-            />
-            <LabelSelectOptionsID label={Localization.kr.DISK_PROFILE}
-              value={diskProfileVo.id}
-              loading={isDiskProfilesLoading}
-              options={diskProfiles}
-              onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles)}
+          )}
+          <LabelInput label={Localization.kr.ALIAS}
+            value={formState.alias}
+            onChange={handleInputChange(setFormState, "alias")}
+          />
+          <LabelInput label={Localization.kr.DESCRIPTION}
+            value={formState.description}
+            onChange={handleInputChange(setFormState, "description")}
+          />
+          <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
+            value={dataCenterVo.id}
+            disabled={editMode}
+            loading={isDatacentersLoading}
+            options={datacenters}
+            onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
+          />
+          <LabelSelectOptionsID label={Localization.kr.DOMAIN}
+            value={domainVo.id}
+            disabled={editMode}
+            loading={isDomainsLoading}
+            options={domains}
+            onChange={handleSelectIdChange(setDomainVo, domains)}
+          />
+          <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
+            value={String(formState.sparse)}
+            onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true"}))}
+            disabled={editMode}
+            options={sparseList}
+          />
+          <LabelSelectOptionsID label={Localization.kr.DISK_PROFILE}
+            value={diskProfileVo.id}
+            loading={isDiskProfilesLoading}
+            options={diskProfiles}
+            onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles)}
+          />
+        </div>
+        <div className="disk-new-img-right f-end">
+          <div className="img-checkbox-outer">
+            <LabelCheckbox label={Localization.kr.WIPE_AFTER_DELETE}
+              id="wipeAfterDelete"
+              checked={formState.wipeAfterDelete}
+              onChange={handleInputCheck(setFormState, "wipeAfterDelete")}
             />
           </div>
-          <div className="disk-new-img-right f-end">
-            <div className="img-checkbox-outer">
-              <LabelCheckbox label={Localization.kr.WIPE_AFTER_DELETE}
-                id="wipeAfterDelete"
-                checked={formState.wipeAfterDelete}
-                onChange={handleInputCheck(setFormState, "wipeAfterDelete")}
-              />
-            </div>
-            {/* <div className="img-checkbox-outer">
-              <LabelCheckbox label={Localization.kr.IS_SHARABLE}
-                id="sharable"
-                checked={formState.sharable}
-                onChange={handleInputChangeCheck("sharable")}
-                disabled={editMode}
-              />
-            </div> */}
-            <div className="img-checkbox-outer">
-              <LabelCheckbox label="증분 백업 사용"
-                id="backup"
-                checked={formState.backup}
-                onChange={handleInputCheck(setFormState, "backup")}
-              />
-            </div>
+          {/* <div className="img-checkbox-outer">
+            <LabelCheckbox label={Localization.kr.IS_SHARABLE}
+              id="sharable"
+              checked={formState.sharable}
+              onChange={handleInputChangeCheck("sharable")}
+              disabled={editMode}
+            />
+          </div> */}
+          <div className="img-checkbox-outer">
+            <LabelCheckbox label="증분 백업 사용"
+              id="backup"
+              checked={formState.backup}
+              onChange={handleInputCheck(setFormState, "backup")}
+            />
           </div>
         </div>
-      )}
-
+      </div>
+     
       {/* 직접LUN */}
       {/* {activeTab === 'directlun' && (
         <div id="storage-directlun-outer">

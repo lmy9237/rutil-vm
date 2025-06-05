@@ -117,8 +117,27 @@ const TemplateNicModal = ({
   }, [vnicProfileVo, vnics]);
 
   
+  const isPassthroughProfile = useMemo(() => {
+    return vnics.find((v) => v.id === vnicProfileVo.id)?.passThrough === "ENABLED";
+  }, [vnics, vnicProfileVo]);
+
+  const isPassthroughInterface = useMemo(() => {
+    return formInfoState.interface_ === "PCI_PASSTHROUGH";
+  }, [formInfoState.interface_]);
+
   const validateForm = () => {
-    if (!formInfoState.name) return `${Localization.kr.NAME}을 입력해주세요.`;
+    if (!formInfoState.name) {
+      return `${Localization.kr.NAME}을 입력해주세요.`;
+    }
+
+    if (isPassthroughInterface && !isPassthroughProfile) {
+      return "비 통과 프로파일은 유형 PCI Passthrough의 가상 머신에 연결할 수 없습니다.";
+    }
+
+    if (!isPassthroughInterface && isPassthroughProfile) {
+      return "Passthrough 프로파일은 PCI Passthrough 유형만 사용할 수 있습니다.";
+    }
+
     return null;
   };
 
