@@ -160,7 +160,7 @@ class TemplateController: BaseController() {
 	): ResponseEntity<List<VmViewVo>> {
 		if (templateId.isNullOrEmpty())
 			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
-		log.info("--- template 가상머신")
+		log.info("/computing/templates/{}/vms ... 템플릿 가상머신 목록", templateId)
 		return ResponseEntity.ok(iTemplate.findAllVmsFromTemplate(templateId))
 	}
 
@@ -183,8 +183,35 @@ class TemplateController: BaseController() {
 	): ResponseEntity<List<NicVo>> {
 		if (templateId.isNullOrEmpty())
 			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
-		log.info("--- template Nic")
+		log.info("/computing/templates/{}/nics ... 템플릿 nic 목록", templateId)
 		return ResponseEntity.ok(iTemplate.findAllNicsFromTemplate(templateId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="템플릿 Nic",
+		notes="선택된 템플릿의 Nic를 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="templateId", value="템플릿 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="nicId", value="Nic ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{templateId}/nics/{nicId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun nics(
+		@PathVariable templateId: String? = null,
+		@PathVariable nicId: String? = null,
+	): ResponseEntity<NicVo> {
+		if (templateId.isNullOrEmpty())
+			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
+		if (nicId.isNullOrEmpty())
+			throw ErrorPattern.NIC_ID_NOT_FOUND.toException()
+		log.info("/computing/templates/{}/nics/{} ... 템플릿 nic", templateId, nicId)
+		return ResponseEntity.ok(iTemplate.findNicFromTemplate(templateId, nicId))
 	}
 
 	@ApiOperation(

@@ -91,7 +91,15 @@ interface ItTemplateService {
 	 * @return 네트워크 인터페이스 목록
 	 */
 	fun findAllNicsFromTemplate(templateId: String): List<NicVo>
-	// TODO NIC 생성, 편집, 삭제 테스트 안해봄
+	/**
+	 * [ItTemplateService.findNicFromTemplate]
+	 * 템플릿 네트워크 인터페이스 목록
+	 *
+	 * @param templateId [String] 템플릿 id
+	 * @param nicId [String] nic id
+	 * @return 네트워크 인터페이스
+	 */
+	fun findNicFromTemplate(templateId: String, nicId: String): NicVo?
 	/**
 	 * [ItTemplateService.addNicFromTemplate]
 	 * 템플릿 nic 생성
@@ -215,6 +223,13 @@ class TemplateServiceImpl(
 		log.info("findAllNicsFromTemplate ... templateId: {}", templateId)
 		val res: List<Nic> = conn.findAllNicsFromTemplate(templateId).getOrDefault(emptyList())
 		return res.toNicVosFromTemplate(conn)
+	}
+
+	@Throws(Error::class)
+	override fun findNicFromTemplate(templateId: String, nicId: String): NicVo? {
+		log.info("findNicFromTemplate ... templateId: {}, nicId: {}", templateId, nicId)
+		val res: Nic? = conn.findNicFromTemplate(templateId, nicId).getOrNull()
+		return res?.toNicVoFromTemplate(conn)
 	}
 
 	@Throws(Error::class)
