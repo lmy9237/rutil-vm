@@ -1202,22 +1202,6 @@ const ApiManager = {
     });
   },
   /**
-   * @name ApiManager.attachDisksFromVM
-   * @description 가상머신 디스크 연결(여러개)
-   * 
-   * @param {String} vmId
-   * @param {Object} List<string> diskAttachmentIds
-   * @returns {Promise<Object>} API 응답 결과
-   */
-  attachDisksFromVM: async (vmId, diskData) => {
-    return makeAPICall({
-      method: "POST",
-      url: ENDPOINTS.ATTACH_DISKS_FROM_VM(vmId), 
-      data: diskData, // diskAttachmentId 목록
-      // defaultValues: DEFAULT_VALUES.ATTACH_DISKS_FROM_VM
-    });
-  },
-  /**
    * @name ApiManager.findStorageDomainsFromVM
    * @description 스토리지 도메인 목록
    *

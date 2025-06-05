@@ -22,6 +22,7 @@ import {
 } from "@/api/RQHook";
 import { 
   checkKoreanName, 
+  checkZeroSizeToGiB, 
   convertBytesToGB, 
   convertGBToBytes
 } from "@/util";
@@ -309,7 +310,7 @@ const VmDiskModal = ({
       {activeTab === "img" && (
         <div className="disk-new-img">
           <div>              
-            <span>Bootable Disk: {hasBootableDisk ? "true" : "false"}</span>
+            {/* <span>Bootable Disk: {hasBootableDisk ? "true" : "false"}</span> */}
             <LabelInputNum label="크기(GB)"
               value={formState.size}
               autoFocus
@@ -343,6 +344,17 @@ const VmDiskModal = ({
               options={domains}
               onChange={handleSelectIdChange(setStorageDomainVo, domains)}
             />
+            {storageDomainVo && (() => {
+              const domainObj = domains.find((d) => d.id === storageDomainVo.id);
+              if (!domainObj) return null;
+              return (
+                <div className="text-xs text-gray-500 mt-1">
+                  사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)}
+                  {" / "}
+                  총 용량: {checkZeroSizeToGiB(domainObj.size)}
+                </div>
+              );
+            })()}
             <LabelSelectOptionsID label={Localization.kr.DISK_PROFILE}
               value={diskProfileVo.id}
               loading={isDiskProfilesLoading}

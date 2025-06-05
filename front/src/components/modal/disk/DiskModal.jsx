@@ -21,7 +21,7 @@ import {
   useAllActiveDomainsFromDataCenter,
   useAllDiskProfilesFromDomain,
 } from "../../../api/RQHook";
-import { checkName, convertBytesToGB }  from "../../../util";
+import { checkName, checkZeroSizeToGiB, convertBytesToGB }  from "../../../util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -56,6 +56,7 @@ const DiskModal = ({
     disksSelected, domainsSelected, datacentersSelected,
    } = useGlobal();
   const diskId = useMemo(() => [...disksSelected][0]?.id, [disksSelected]);
+  const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
 
   const [formState, setFormState] = useState(initialFormState);
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
@@ -91,6 +92,8 @@ const DiskModal = ({
    
     if (!isOpen) {
       setFormState(initialFormState);
+      setDataCenterVo({id: "", name: ""});
+      setDomainVo({id: "", name: ""});
       return;
     }
     if (editMode && disk) {
@@ -112,34 +115,37 @@ const DiskModal = ({
   }, [isOpen, editMode, disk, domainsSelected]);
 
   useEffect(() => {
-    if (datacentersSelected) {
-      setDataCenterVo({id: datacentersSelected[0]?.id, name: datacentersSelected[0]?.name});
-    } else if (
-      !editMode && 
-      datacenters && 
-      datacenters.length > 0) {
-      setDataCenterVo({id: datacenters[0].id, name: datacenters[0]?.name});
+    if (datacenterId) {
+      const selected = datacenters.find(dc => dc.id === datacenterId);
+      setDataCenterVo({ id: selected?.id, name: selected?.name });
+      setDomainVo({id: "", name: ""});
+    } else if (!editMode && datacenters.length > 0) {
+      // datacenterId가 없다면 기본 데이터센터 선택
+      const defaultDc = datacenters.find(dc => dc.name === "Default");
+      const firstDc = defaultDc || datacenters[0];
+      setDataCenterVo({ id: firstDc.id, name: firstDc.name });
+      setDomainVo({id: "", name: ""});
     }
-  }, [datacentersSelected, datacenters, editMode]);
+  }, [datacenterId, datacenters, editMode]);
 
   useEffect(() => {
-    if (domainsSelected) {
-      setDomainVo({id: domainsSelected[0]?.id, name: domainsSelected[0]?.name })
-    } else if (
-      !editMode && 
-      domains &&
-      domains.length > 0
-    ) {
-      setDomainVo({id: domains[0].id, name: domains[0].name});
+    if (domainsSelected && domainsSelected.length > 0) {
+      setDomainVo({id: domainsSelected[0]?.id, name: domainsSelected[0]?.name });
+    } else if (!editMode && domains && domains.length > 0) {
+      const firstDomain = domains[0];
+      setDomainVo({id: firstDomain.id, name: firstDomain.name});
     }
   }, [domainsSelected, domains, editMode]);
 
+  // domainVo가 변경될 때 diskProfile 초기화 및 재선택
   useEffect(() => {
-    if (!editMode && diskProfiles.length > 0) {
-      setDiskProfileVo({id: diskProfiles[0].id});
+    if (!editMode && domainVo.id && diskProfiles.length > 0) {
+      const firstProfile = diskProfiles[0];
+      setDiskProfileVo({id: firstProfile.id, name: firstProfile.name});
     }
-  }, [diskProfiles, editMode]);
+  }, [domainVo.id, diskProfiles, editMode]);
 
+  
   const handleInputSize = (field) => (e) => {
     const value = e.target.value;
   
@@ -235,6 +241,17 @@ const DiskModal = ({
             options={domains}
             onChange={handleSelectIdChange(setDomainVo, domains)}
           />
+          {domainVo && (() => {
+              const domainObj = domains.find((d) => d.id === domainVo.id);
+              if (!domainObj) return null;
+              return (
+                <div className="text-xs text-gray-500 mt-1">
+                  사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)}
+                  {" / "}
+                  총 용량: {checkZeroSizeToGiB(domainObj.size)}
+                </div>
+              );
+            })()}
           <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
             value={String(formState.sparse)}
             onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true"}))}

@@ -330,10 +330,10 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findUnattachedDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo> {
 		log.info("findUnattachedDiskImageFromDataCenter  ... dataCenterId: {}", dataCenterId)
-		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks.storage_domain.vms").getOrDefault(emptyList())
-		val res = storageDomains.flatMap {
+		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
+		val res: List<Disk> = storageDomains.flatMap {
 			it.disks().filter { disk ->
-				disk.format() == DiskFormat.COW && !disk.vmsPresent()
+				disk.format() == DiskFormat.COW
 			}
 		}
 		return res.toDcDiskMenus(conn)
