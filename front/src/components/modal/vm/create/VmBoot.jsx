@@ -18,9 +18,9 @@ const VmBoot = ({
   useEffect(() => {
     setFormBootState((prev) => ({
       ...prev,
-      isCdDvdChecked: !!formBootState.connVo?.id, // id가 있으면 true, 없으면 false
+      isCdDvdChecked: !!formBootState.cdRomVo?.id, // id가 있으면 true, 없으면 false
     }));
-  }, [formBootState.connVo?.id]);
+  }, [formBootState.cdRomVo?.id]);
 
   return (
     <div className="host-second-content">
@@ -51,19 +51,19 @@ const VmBoot = ({
             setFormBootState((prev) => ({
               ...prev,
               isCdDvdChecked: isChecked,
-              connVo: isChecked ? firstIso : { id: "", name: "" },
+              cdRomVo: isChecked ? firstIso : { id: "", name: "" },
             }));
           }}
         />
         <div style={{width:"55%"}}>
           <LabelSelectOptionsID
-            value={formBootState.connVo?.id}
+            value={formBootState.cdRomVo?.id}
             disabled={!formBootState.isCdDvdChecked || isos.length === 0}
             loading={isIsoLoading}
             options={isos}
             onChange={(e) => {
               const selected = isos.find(i => i.id === (e?.target?.value ?? e?.id))
-              if (selected) setFormBootState((prev) => ({ ...prev, connVo: { id: selected.id, name: selected.name }}))
+              if (selected) setFormBootState((prev) => ({ ...prev, cdRomVo: { id: selected.id, name: selected.name }}))
               // TODO:handleSelectIdChange를 쓰려면 특정 prop에 값 변경하는 처리가 있어야함
             }}
           />
@@ -71,8 +71,8 @@ const VmBoot = ({
       </div>
 
       <LabelCheckbox id="enableBootMenu" label="부팅 메뉴를 활성화"
-        checked={formBootState.bootingMenu}
-        onChange={handleInputCheck(setFormBootState, "bootingMenu")}
+        checked={formBootState.biosBootMenu}
+        onChange={handleInputCheck(setFormBootState, "biosBootMenu")}
       />
     </div>
   );

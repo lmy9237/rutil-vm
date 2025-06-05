@@ -35,15 +35,6 @@ interface ItVmService {
 	 */
 	@Throws(Error::class)
 	fun findOne(vmId: String): VmVo?
-	/**
-	 * [ItVmService.findEditOne]
-	 * 가상머신 편집
-	 *
-	 * @param vmId [String] 가상머신 Id
-	 * @return [VmVo]
-	 */
-	@Throws(Error::class)
-	fun findEditOne(vmId: String): VmVo?
 
 	/**
 	 * [ItVmService.add]
@@ -152,19 +143,9 @@ class VmServiceImpl(
 	@Throws(Error::class)
 	override fun findOne(vmId: String): VmVo? {
 		log.info("findOne ... vmId : {}", vmId)
-		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,reporteddevices,diskattachments,cdroms,statistics").getOrNull()
+		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,reporteddevices,nics,diskattachments,cdroms,statistics").getOrNull()
 		return res?.toVmVo(conn)
 	}
-
-	@Throws(Error::class)
-	override fun findEditOne(vmId: String): VmVo? {
-		log.info("findEditOne ... vmId : {}", vmId)
-		// vm의 상태가 unknown일때 follow 일때 null
-		val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,nics,diskattachments,cdroms,statistics").getOrNull()
-		return res?.toVmCreateVo(conn)
-		// val res: Vm? = conn.findVm(vmId, follow = "cluster.datacenter,nics.vnicprofile.network,diskattachments,cdroms,statistics").getOrNull()
-	}
-
 
 	@Throws(Error::class)
 	override fun add(vmVo: VmVo): VmVo? {
@@ -180,13 +161,13 @@ class VmServiceImpl(
 			vmVo.nicVos.takeIf { it.isNotEmpty() }?.map { it.toVmNic() }, // NIC가 있는 경우만 전달
 			vmVo.cdRomVo.id.takeIf { it.isNotEmpty() }  // ISO 설정이 있는 경우만 전달
 		).getOrNull()
-		return res?.toVmCreateVo(conn)
+		return res?.toVmVo(conn)
 	}
 
 	// 서비스에서 디스크 목록과 nic 목록을 분류(분류만)
 	@Throws(Error::class)
 	override fun update(vmVo: VmVo): VmVo? {
-		log.info("update ... vmCreateVo: {}", vmVo)
+		log.info("update ... vmVo: {}", vmVo)
 
 		if(vmVo.diskAttachmentVos.filter { it.bootable }.size > 1){
 			throw ErrorPattern.DISK_BOOT_OPTION.toException()
@@ -224,7 +205,7 @@ class VmServiceImpl(
 			newNics.map { it.toVmNic() }.takeIf { it.isNotEmpty() },
 			vmVo.cdRomVo.id.takeIf { it.isNotEmpty() }
 		).getOrNull()
-		return res?.toVmCreateVo(conn)
+		return res?.toVmVo(conn)
 	}
 
 	// diskDelete(detachOnly)가 false 면 디스크는 삭제 안함, true면 삭제

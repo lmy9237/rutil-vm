@@ -10,7 +10,6 @@ import TablesOuter            from "@/components/table/TablesOuter";
 import TableRowClick          from "@/components/table/TableRowClick";
 import { 
   hostedEngineStatus2Icon,
-  RVI16, rvi16Refresh,
   status2Icon
 } from "@/components/icons/RutilVmIcons";
 import { getStatusSortKey }   from "@/components/icons/GetStatusSortkey";

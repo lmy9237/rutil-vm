@@ -2,10 +2,6 @@ import { useEffect } from "react";
 import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
 import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
 import LabelCheckbox          from "@/components/label/LabelCheckbox";
-import { 
-  handleInputChange, 
-  handleSelectIdChange,
-} from "@/components/label/HandleInput";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 
@@ -88,12 +84,11 @@ const VmHa = ({
       </div> */}
       <div className="py-2 font-bold">실행/{Localization.kr.MIGRATION} 큐에서 우선순위</div> 
       <LabelSelectOptions label="우선 순위"
-        value={formHaState.priority}
+        value={formHaState.haPriority}
         options={priorities}
-        // onChange={handleInputChange(setFormHaState, "priority")}
         onChange={(e) =>setFormHaState((prev) => ({ 
           ...prev,
-          priority: e.target.value
+          haPriority: e.target.value
         }))}
       />
     </>

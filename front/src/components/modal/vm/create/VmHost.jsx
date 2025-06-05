@@ -38,7 +38,6 @@ const VmHost = ({
         <div className="form-checks">
           <div className="f-start">
             <input
-              // className="form-check-input"
               type="radio"
               name="hostSelection"
               id="clusterHost"

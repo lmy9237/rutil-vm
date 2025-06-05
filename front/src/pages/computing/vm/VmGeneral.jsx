@@ -55,12 +55,11 @@ const VmGeneral = ({
   }, [vm])
 
   const osLabel = useMemo(() => (
-    osList.find((e) => e?.name === vm?.osType)
-      ?.description || vm?.osSystem
+    osList.find((e) => e?.name === vm?.osType)?.description
   ), [vmId, vm])
     
   const chipsetLabel = useMemo(() => (
-    CONSTANT.chipsetOptions.find((option) => option.value === vm?.biosType)?.label || vm?.chipsetFirmwareType
+    CONSTANT.chipsetOptions.find((option) => option.value === vm?.biosType)?.label || vm?.biosType
   ), [vm])
 
   const generalTableRows = [
@@ -69,8 +68,8 @@ const VmGeneral = ({
     { label: Localization.kr.UP_TIME, value: vm?.upTime },
     { label: "IP 주소", value: vm?.ipv4 },
     { label: "FQDN", value: vm?.fqdn },
-    { label: "최적화 옵션", value: vm?.type },
-    { label: Localization.kr.TIMEZONE, value: vm?.timeZone },
+    { label: "최적화 옵션", value: vm?.optimizeOption },
+    { label: Localization.kr.TIMEZONE, value: vm?.timeOffset },
     {
       label: Localization.kr.CLUSTER,
       value: (

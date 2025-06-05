@@ -8,7 +8,6 @@ import LabelSelectOptions               from '@/components/label/LabelSelectOpti
 import LabelSelectOptionsID             from '@/components/label/LabelSelectOptionsID';
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import {
-  useFindEditVmById,  
   useAddVm,
   useEditVm,
   useAllUpClusters,
@@ -19,7 +18,8 @@ import {
   useAllBiosTypes,
   useFindTemplatesFromDataCenter,
   useAllVnicsFromCluster,
-  useAllNicsFromTemplate, 
+  useAllNicsFromTemplate,
+  useVm, 
 } from '@/api/RQHook';
 import VmCommon from './create/VmCommon';
 import VmNic from './create/VmNic';
@@ -38,7 +38,7 @@ import './MVm.css';
 const systemForm = {
   memorySize: 1024, // 메모리 크기
   memoryMax: (1024*4), // 최대 메모리
-  memoryActual: 1024, // 할당할 실제메모리
+  memoryGuaranteed: 1024, // 할당할 실제메모리
   cpuTopologyCnt: 1, // 총cpu
   cpuTopologyCore: 1, // 가상 소켓 당 코어
   cpuTopologySocket: 1, // 가상소켓
@@ -63,7 +63,7 @@ const hostForm = {
 // 고가용성
 const haForm = {
   ha: false, // 고가용성(체크박스)
-  priority: 1, // 초기값
+  haPriority: 1, // 초기값
   storageDomainVo: { id: "", name: "" },
 };
 
@@ -72,8 +72,8 @@ const bootForm = {
   firstDevice: "hd", // 첫번째 장치
   secDevice: "", // 두번째 장치
   isCdDvdChecked: false, // cd/dvd 연결 체크박스
-  connVo: { id: "", name: "" }, // iso 파일
-  bootingMenu: false, // 부팅메뉴 활성화
+  cdRomVo: { id: "", name: "" }, // iso 파일
+  biosBootMenu: false, // 부팅메뉴 활성화
 };
 
 const VmModal = ({ 
@@ -81,7 +81,6 @@ const VmModal = ({
   onClose, 
   editMode=false,
   copyMode=false,
-
 }) => {
 
   const { validationToast } = useValidationToast();
@@ -136,7 +135,7 @@ const { mutate: addVM } = useAddVm(
   // 가상머신 상세데이터 가져오기
   const {
     data: vm
-  } = useFindEditVmById(vmId);
+  } = useVm(vmId);
 
   // 클러스터 목록 가져오기
   const { 
@@ -196,8 +195,8 @@ const { mutate: addVM } = useAddVm(
     name: "",
     description: "",
     comment: "",
-    osSystem: "other_linux",
-    osType: "q35_ovmf" || biosTypes[0].value,
+    osType: "other_linux",
+    biosType: "q35_ovmf" || biosTypes[0].value,
     optimizeOption: "server",
   };
   
@@ -263,14 +262,14 @@ const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
         name: vm?.name || "",
         description: vm?.description || "",
         comment: vm?.comment || "",
-        osSystem: vm?.osSystem || "",
-        osType: vm?.osType || "q35_ovmf",
+        osType: vm?.osType || "",
+        biosType: vm?.biosType || "q35_ovmf",
         optimizeOption: vm?.optimizeOption || "server"
       });
       setFormSystemState({
         memorySize: vm?.memorySize / (1024 * 1024), // 입력된 값는 mb, 보낼 단위는 byte
         memoryMax: vm?.memoryMax / (1024 * 1024),
-        memoryActual: vm?.memoryActual / (1024 * 1024),
+        memoryGuaranteed: vm?.memoryGuaranteed / (1024 * 1024),
         cpuTopologyCnt: vm?.cpuTopologyCnt ?? 1,
         cpuTopologyCore: vm?.cpuTopologyCore ?? 1,
         cpuTopologySocket: vm?.cpuTopologySocket ?? 1,
@@ -288,7 +287,7 @@ const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
       });
       setFormHaState({
         ha: vm?.ha || false,
-        priority: vm?.priority || 1,
+        haPriority: vm?.haPriority || 1,
         storageDomainVo: {
           id: vm?.storageDomainVo?.id ,
           name: vm?.storageDomainVo?.name
@@ -297,9 +296,9 @@ const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
       setFormBootState({
         firstDevice: vm?.firstDevice || "hd",
         secDevice: vm?.secDevice || "",
-        isCdDvdChecked: !vm?.connVo?.id,
-        connVo: {id: vm?.connVo?.id},
-        bootingMenu: vm?.bootingMenu || false, 
+        isCdDvdChecked: !vm?.cdRomVo?.id,
+        cdRomVo: {id: vm?.cdRomVo?.id},
+        biosBootMenu: vm?.biosBootMenu || false, 
       });
       setArchitecture("");
       setDataCenterVo({ id: vm?.dataCenterVo?.id, name: vm?.dataCenterVo?.name })
@@ -412,7 +411,7 @@ const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
     ...formSystemState,
     memorySize: formSystemState.memorySize * 1024 * 1024, 
     memoryMax: formSystemState.memoryMax * 1024 * 1024,
-    memoryActual: formSystemState.memoryActual * 1024 * 1024,
+    memoryGuaranteed: formSystemState.memoryGuaranteed * 1024 * 1024,
     
     // VmInit
     ...formCloudState,
@@ -471,6 +470,7 @@ const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
     if (nameError) return nameError;
 
     if (!clusterVo.id) return `${Localization.kr.CLUSTER}를 선택해주세요.`;
+    if(formSystemState.memorySize < formSystemState.memoryGuaranteed) return `최대 메모리 크기는 ${formSystemState.memorySize}입니다`
     return null;
   };
 
@@ -521,16 +521,16 @@ const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
               onChange={handleSelectIdChange(setTemplateVo, templates)}
             />
           )}
-          <LabelSelectOptionsID id="os_system" label="운영 시스템"
-            value={formInfoState.osSystem}
+          <LabelSelectOptionsID label="운영 시스템"
+            value={formInfoState.osType}
             options={osList.map((opt) => ({ id: opt.name, name: opt.description }))}
-            onChange={handleInputChange(setFormInfoState, "osSystem") }
+            onChange={handleInputChange(setFormInfoState, "osType") }
           />
           <LabelSelectOptions label="칩셋/펌웨어 유형"
-            value={formInfoState.osType}
+            value={formInfoState.biosType}
             disabled={["PPC64", "S390X"].includes(architecture)}
             options={biosTypes}
-            onChange={handleInputChange(setFormInfoState, "osType") }
+            onChange={handleInputChange(setFormInfoState, "biosType") }
           />
           <LabelSelectOptions label="최적화 옵션"
             value={formInfoState.optimizeOption}

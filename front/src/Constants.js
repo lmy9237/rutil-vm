@@ -31,10 +31,21 @@ const isLoggingEnabled = () => {
 
 // 칩셋 옵션
 const chipsetOptions = () => [
-  { value: "I440FX_SEA_BIOS", label: "BIOS의 I440FX 칩셋" },
-  { value: "Q35_OVMF", label: "UEFI의 Q35 칩셋" },
-  { value: "Q35_SEA_BIOS", label: "BIOS의 Q35 칩셋" },
-  { value: "Q35_SECURE_BOOT", label: "UEFI SecureBoot의 Q35 칩셋" },
+  // { value: "I440FX_SEA_BIOS", label: "BIOS의 I440FX 칩셋" },
+  // { value: "Q35_OVMF", label: "UEFI의 Q35 칩셋" },
+  // { value: "Q35_SEA_BIOS", label: "BIOS의 Q35 칩셋" },
+  // { value: "Q35_SECURE_BOOT", label: "UEFI SecureBoot의 Q35 칩셋" },
+  { value: "i440fx_sea_bios", label: "BIOS의 I440FX 칩셋" },
+  { value: "q35_ovmf", label: "UEFI의 Q35 칩셋" },
+  { value: "q35_sea_bios", label: "BIOS의 Q35 칩셋" },
+  { value: "q35_secure_boot", label: "UEFI SecureBoot의 Q35 칩셋" },
+];
+
+// 최적화옵션
+const optimizeOptionList = () => [
+  { value: "server", label: "서버" },
+  { value: "high_performance", label: "고성능" },
+  { value: "desktop", label: "데스크톱" },
 ];
 
 // CPU 아키텍쳐

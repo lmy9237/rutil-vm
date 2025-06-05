@@ -115,7 +115,6 @@ const ENDPOINTS = {
   //#region: Vm
   FIND_ALL_VMS: () =>                                                      `${ENDPOINT_API_V1}/computing/vms`,
   FIND_VM: (vmId) =>                                                       `${ENDPOINT_API_V1}/computing/vms/${vmId}`, 
-  FIND_EDIT_VM: (vmId) =>                                                  `${ENDPOINT_API_V1}/computing/vms/${vmId}/edit`, 
   
   FIND_DISKS_FROM_VM: (vmId) =>                                            `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks`, 
   FIND_DISK_FROM_VM: (vmId, diskAttachmentId) =>                           `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks/${diskAttachmentId}`,

@@ -2155,26 +2155,6 @@ export const useVm = (
   },
   enabled: !!vmId
 });
-/**
- * @name useFindEditVmById
- * @description 가상머신 편집 상세조회 useQuery 훅
- * 
- * @param {string} vmId 가상머신 ID
- * @returns useQuery 훅
- * @see ApiManager.findVM
- */
-export const useFindEditVmById = (
-  vmId
-) => useQuery({
-  queryKey: ['editVmById', vmId],
-  queryFn: async () => {
-    const res = await ApiManager.findEditVM(vmId);
-    const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useFindEditVmById ... vmId: ${vmId}, res: `, _res);
-    return _res;
-  },
-  enabled: !!vmId
-});
 
 /**
  * @name useDisksFromVM

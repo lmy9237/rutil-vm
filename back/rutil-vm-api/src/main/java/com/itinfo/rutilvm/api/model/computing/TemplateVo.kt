@@ -11,7 +11,6 @@ import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toAddTemplateDisk
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentsToTemplate
-import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.util.ovirt.findAllDiskAttachmentsFromTemplate
 import com.itinfo.rutilvm.util.ovirt.findCluster

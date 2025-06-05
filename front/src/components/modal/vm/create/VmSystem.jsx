@@ -35,9 +35,7 @@ const VmSystem = ({
     if (isNaN(totalCpu) || totalCpu <= 0) return;
   
     Logger.debug(`VmSystem > handleCpuChange ... value:${e.target.value}\ntotalCpu:${totalCpu}`)
-    const _formSystemState = {
-
-    }
+    
     setFormSystemState((prev) => {
       Logger.debug(`VmSystem > handleCpuChange ... prev: `, prev)
       return {
@@ -122,10 +120,10 @@ const VmSystem = ({
         const memSize = parseInt(value, 10);
         if (!isNaN(memSize)) {
           updatedState.memoryMax = memSize * 4;
-          updatedState.memoryActual = memSize;
+          updatedState.memoryGuaranteed = memSize;
         } else {
           updatedState.memoryMax = "";
-          updatedState.memoryActual = "";
+          updatedState.memoryGuaranteed = "";
         }
       }
   
@@ -167,8 +165,8 @@ const VmSystem = ({
           onChange={handleInputChange("memoryMax")}
         />
         <LabelInputNum id="mem-actual" label="할당할 실제 메모리(MB)"
-          value={formSystemState.memoryActual} 
-          onChange={handleInputChange("memoryActual") }
+          value={formSystemState.memoryGuaranteed} 
+          onChange={handleInputChange("memoryGuaranteed") }
         />
         <LabelInputNum id="cpu-total" label="총 가상 CPU"
           value={formSystemState.cpuTopologyCnt}

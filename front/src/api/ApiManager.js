@@ -1076,20 +1076,7 @@ const ApiManager = {
     url: ENDPOINTS.FIND_VM(vmId), 
     // defaultValues: DEFAULT_VALUES.FIND_VM
   }),
-  /**
-   * @name ApiManager.findVM
-   * @description 가상머신
-   *
-   * @param {string} vmId
-   * @returns 
-   * 
-   * @see
-   */
-  findEditVM : async (vmId) => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_EDIT_VM(vmId), 
-  }),
-
+  
   /**
    * @name ApiManager.findDisksFromVM
    * @description 디스크 목록

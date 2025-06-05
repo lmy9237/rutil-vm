@@ -73,30 +73,6 @@ class VmController: BaseController() {
 	}
 
 	@ApiOperation(
-		httpMethod="GET",
-		value="가상머신 편집 상세정보",
-		notes="편집할 가상머신의 정보를 조회한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/{vmId}/edit")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun editVm(
-		@PathVariable vmId: String? = null,
-	): ResponseEntity<VmVo?> {
-		if (vmId.isNullOrEmpty())
-			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		log.info("/computing/vms/{}/edit ... 가상머신 편집 상세정보", vmId)
-		return ResponseEntity.ok(iVm.findEditOne(vmId))
-	}
-
-
-	@ApiOperation(
 		httpMethod="POST",
 		value="가상머신 생성",
 		notes="가상머신을 생성한다"

@@ -154,7 +154,6 @@ const TableColumnsInfo = {
     { accessor: 'fqdn',          header: 'FQDN',                      clickable: false, width: '20%' },
     { accessor: 'status',        header: Localization.kr.STATUS,      clickable: false, width: '10%' },
     { accessor: 'host',          header: Localization.kr.HOST,        clickable: true,  width: '25%' },
-    { accessor: '',              header: '스냅샷',                     clickable: false },
     { accessor: 'cluster',       header: Localization.kr.CLUSTER,     clickable: true, width: '20%' },
     { accessor: 'dataCenter',    header: Localization.kr.DATA_CENTER, clickable: true, width: '20%' },
     { accessor: 'memoryUsage',   header: Localization.kr.MEMORY,      clickable: false, width: '12%' },

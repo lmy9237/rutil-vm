@@ -214,6 +214,9 @@ fun Connection.updateVm(
 		this.addCdromFromVm(vmUpdated.id(), connId)
 	}else if(connId != null && cdrom.filePresent() && cdrom.file().id() != connId ){
 		this.updateCdromFromVm(vmUpdated.id(), cdrom.file().id(), connId)
+	}else if (connId.isNullOrEmpty()){
+		log.info("removeCdromFromVm {}", cdrom.id())
+		this.removeCdromFromVm(vmUpdated.id(), cdrom.id())
 	}
 	// !cdrom.file().id().equals(connId)
 
@@ -372,7 +375,6 @@ fun Connection.addCdromFromVm(vmId: String, cdromId: String): Result<Cdrom> = ru
 
 fun Connection.updateCdromFromVm(vmId: String, cdromId: String, newCdromId: String): Result<Cdrom?> = runCatching {
 	val vm = checkVm(vmId)
-
 	// current는 실행중인 가상머신에서 바로 변경할때 가능
 	this.srvVmCdromFromVm(vmId, cdromId).update()
 		.cdrom(CdromBuilder().file(FileBuilder().id(newCdromId))).current(vm.status() == VmStatus.UP).send().cdrom()
@@ -381,6 +383,20 @@ fun Connection.updateCdromFromVm(vmId: String, cdromId: String, newCdromId: Stri
 	Term.VM.logSuccessWithin(Term.CD_ROM, "편집", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.CD_ROM, "편집", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.removeCdromFromVm(vmId: String, cdromId: String,): Result<Boolean?> = runCatching {
+	val vm = checkVm(vmId)
+
+	this.srvVmCdromFromVm(vmId, cdromId).update()
+		.cdrom(CdromBuilder().file(FileBuilder().id("").build()).build())    // null로 할당
+		.send()
+	true
+}.onSuccess {
+	Term.VM.logSuccessWithin(Term.CD_ROM, "삭제", vmId)
+}.onFailure {
+	Term.VM.logFailWithin(Term.CD_ROM, "삭제", it, vmId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 
