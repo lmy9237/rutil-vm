@@ -4602,6 +4602,43 @@ export const useAllUnregisteredVMsFromDomain = (storageDomainId,
   staleTime: 0,
   cacheTime: 0,
 })
+
+
+/**
+ * @name useRegisteredVmFromDomain
+ * @description 도메인 가상머신 불러오기
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
+export const useRegisteredVmFromDomain = (
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async ({ storageDomainId, vmVo, partialAllow, relocation }) => {
+      closeModal();
+      const res = await ApiManager.registeredVmFromDomain(storageDomainId, vmVo, partialAllow, relocation);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useRegisteredVmFromDomain ... storageDomainId: ${storageDomainId}, vmVo: ${vmVo}, partialAllow: ${partialAllow}, relocation: ${relocation}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useRegisteredVmFromDomain ... res: `, res);
+      
+      apiToast.ok(`${Localization.kr.DOMAIN} ${Localization.kr.VM} ${Localization.kr.IMPORT} 요청완료`,)
+      queryClient.invalidateQueries('allStorageDomains');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+
 /**
  * @name useAllDisksFromDomain
  * @description 도메인 내 디스크 목록조회 useQuery훅
@@ -4652,33 +4689,7 @@ export const useAllUnregisteredDisksFromDomain = (storageDomainId,
   },
   enabled: !!storageDomainId,
 })
-/**
- * @name useUnregisteredDiskFromDomain
- * @description 도메인 내 디스크 가져오기 한 항목 조회 useQuery훅
- * 
- * @param {string} storageDomainId 도메인ID
- * @param {string} diskId 디스크 ID
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findUnregisteredDiskFromDomain
- */
-export const useUnregisteredDiskFromDomain = (
-  storageDomainId, diskId,
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['unregisteredDiskFromDomain', storageDomainId, diskId],
-  queryFn: async () => {
-    const res = await ApiManager.findUnregisteredDiskFromDomain(storageDomainId);
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useUnregisteredDiskFromDomain ... storageDomainId: ${storageDomainId}, diskId: ${diskId} res: `, _res);
-    return _res;
-  },
-  enabled: !!storageDomainId  && !!diskId,
-})
+
 /**
  * @name useRegisteredDiskFromDomain
  * @description 도메인 디스크 불러오기

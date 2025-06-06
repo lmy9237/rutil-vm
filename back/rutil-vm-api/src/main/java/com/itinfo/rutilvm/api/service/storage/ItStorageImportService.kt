@@ -147,7 +147,7 @@ class StorageImportServiceImpl(
 
 	@Throws(Error::class)
 	override fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo, partialAllow: Boolean, relocation: Boolean): Boolean {
-		log.info("registeredVmFromStorageDomain ... storageDomainId: {}, vmId: {}, allowPart: {}, badMac: {}", storageDomainId, vmVo.id, partialAllow, relocation)
+		log.info("registeredVmFromStorageDomain ... storageDomainId: {}, vmVo: {}, allowPart: {}, badMac: {}", storageDomainId, vmVo, partialAllow, relocation)
 		val res: Result<Boolean> = conn.registeredVmFromStorageDomain(
 			storageDomainId,
 			vmVo.toRegisterVm(),

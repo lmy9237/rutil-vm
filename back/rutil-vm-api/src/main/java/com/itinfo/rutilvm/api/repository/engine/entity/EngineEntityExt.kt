@@ -105,6 +105,10 @@ fun OvfDisk.toDiskAttachmentIdentifiedVo(): DiskAttachmentVo = DiskAttachmentVo.
 		DiskImageVo.builder {
 			id { this@toDiskAttachmentIdentifiedVo.diskId }
 			alias { this@toDiskAttachmentIdentifiedVo.diskAlias }
+			description{ this@toDiskAttachmentIdentifiedVo.diskDescription }
+			sparse{ this@toDiskAttachmentIdentifiedVo.volumeType == "Sparse" }
+			actualSize { this@toDiskAttachmentIdentifiedVo.ovirtActualSize?.toBigInteger() }
+			size { this@toDiskAttachmentIdentifiedVo.ovirtSize?.toBigInteger() }
 		}
 	}
 }

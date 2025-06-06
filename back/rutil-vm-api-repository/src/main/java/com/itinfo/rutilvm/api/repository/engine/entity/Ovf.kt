@@ -66,6 +66,12 @@ data class OvfDisk(
 	@field:JacksonXmlProperty(isAttribute=true, localName="disk-alias", namespace=NS_OVF) // or just localName if namespace handling is simplified
 	val diskAlias: String? = "",
 
+	@field:JacksonXmlProperty(isAttribute=true, localName="disk-description", namespace=NS_OVF) // or just localName if namespace handling is simplified
+	val diskDescription: String? = "",
+
+	@field:JacksonXmlProperty(isAttribute=true, localName="volume-type", namespace=NS_OVF)
+	val volumeType: String? = "",
+
 	@field:JacksonXmlProperty(isAttribute=true, localName="fileRef", namespace=NS_OVF)
 	val fileRef: String? = "",
 
@@ -83,6 +89,9 @@ data class OvfDisk(
 
 	@field:JacksonXmlProperty(isAttribute=true, localName="actual_size", namespace=NS_OVF)
 	val ovirtActualSize: String? = "", // Can be Long if you parse units
+
+	@field:JacksonXmlProperty(isAttribute=true, localName="size", namespace=NS_OVF)
+	val ovirtSize: String? = "", // Can be Long if you parse units
 
 	@field:JacksonXmlProperty(isAttribute=true, localName="wipe-after-delete", namespace=NS_OVF)
 	val wipeAfterDelete: Boolean? = null

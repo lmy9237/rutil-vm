@@ -2445,6 +2445,21 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.FIND_VMS_FROM_STORAGE_DOMAINS
   }),
   /**
+   * @name ApiManager.registeredVmFromDomain
+   * @description
+   * 
+   * @param {string} storageDomainId 
+   * @param {string} vmVo 
+   * @returns {Promise<Object>}
+   */
+  registeredVmFromDomain: async (storageDomainId, vmVo, partialAllow, relocation) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.REGISTERD_VM_FROM_STORAGE_DOMAINS(storageDomainId, partialAllow, relocation),
+      data: vmVo
+    });
+  },
+  /**
    * @name ApiManager.findAllDisksFromDomain
    * @description 디스크 목록
    *
@@ -2471,19 +2486,6 @@ const ApiManager = {
     method: "GET", 
     url: ENDPOINTS.FIND_UNREGISTERD_DISKS_FROM_STORAGE_DOMAINS(storageDomainId),
     // defaultValues: DEFAULT_VALUES.FIND_DISK_FROM_DOMAIN
-  }),
-  /**
-   * @name ApiManager.findUnregisteredDiskFromDomain
-   * @description 디스크 가져오기 한개 목록
-   *
-   * @param {string} storageDomainId
-   * @returns 
-   * 
-   * @see
-   */
-  findUnregisteredDiskFromDomain: async (storageDomainId) => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_UNREGISTERD_DISK_FROM_STORAGE_DOMAINS(storageDomainId),
   }),
   /**
    * @name ApiManager.registeredDiskFromDomain

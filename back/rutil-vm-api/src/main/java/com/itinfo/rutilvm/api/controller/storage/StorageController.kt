@@ -469,7 +469,6 @@ class StorageController: BaseController() {
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name = "vmId", value = "가상머신 Id", dataTypeClass=String::class, required=true, paramType="path"),
 		ApiImplicitParam(name = "vmVo", value = "가상머신", dataTypeClass=VmVo::class, required=true, paramType="body"),
 		ApiImplicitParam(name = "allowPartialImport", value = "부분허용 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
 		ApiImplicitParam(name = "reassignBadMacs", value = "불량 MAC 재배치 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
@@ -477,23 +476,20 @@ class StorageController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 201, message = "CREATED")
 	)
-	@PostMapping("/{storageDomainId}/vms/{vmId}")
+	@PostMapping("/{storageDomainId}/vms/register")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
 	fun registerVm(
 		@PathVariable("storageDomainId") storageDomainId: String? = null,
-		@PathVariable("vmId") vmId: String? = null,
 		@RequestBody vmVo: VmVo? = null,
 		@RequestParam("partialAllow") partialAllow: Boolean = false,
 		@RequestParam("relocation") relocation: Boolean = false,
 	): ResponseEntity<Boolean?> {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-		if (vmId == null)
-			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		if (vmVo == null)
 			throw ErrorPattern.VM_VO_INVALID.toException()
-		log.info("/storages/{}/vms/{} ... 스토리지 도메인 가상머신 불러오기", storageDomainId, vmId)
+		log.info("/storages/{}/vms/register ... 스토리지 도메인 가상머신 불러오기", storageDomainId)
 		return ResponseEntity.ok(iDomainImport.registeredVmFromStorageDomain(storageDomainId, vmVo, partialAllow, relocation))
 	}
 
@@ -670,31 +666,31 @@ class StorageController: BaseController() {
 		return ResponseEntity.ok(iDomainImport.findAllUnregisteredDisksFromStorageDomain(storageDomainId))
 	}
 
-	@ApiOperation(
-		httpMethod="GET",
-		value="스토리지 도메인 디스크 불러오기",
-		notes="선택된 스토리지 도메인의 디스크 불러오기 조회한다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
-		ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/{storageDomainId}/disks/{diskId}/unregistered")
-	@ResponseBody
-	fun unregisteredDisk(
-		@PathVariable("storageDomainId") storageDomainId: String? = null,
-		@PathVariable("diskId") diskId: String? = null,
-	): ResponseEntity<DiskImageVo> {
-		if (storageDomainId == null)
-			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-		if (diskId == null)
-			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
-		log.info("/storages/{}/disks/{}/unregistered ... 스토리지 도메인 밑에 붙어있는 Disk 불러오기", storageDomainId, diskId)
-		return ResponseEntity.ok(iDomainImport.findUnregisteredDiskFromStorageDomain(storageDomainId, diskId))
-	}
+	// @ApiOperation(
+	// 	httpMethod="GET",
+	// 	value="스토리지 도메인 디스크 불러오기",
+	// 	notes="선택된 스토리지 도메인의 디스크 불러오기 조회한다"
+	// )
+	// @ApiImplicitParams(
+	// 	ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// 	ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	// )
+	// @ApiResponses(
+	// 	ApiResponse(code = 200, message = "OK")
+	// )
+	// @GetMapping("/{storageDomainId}/disks/{diskId}/unregistered")
+	// @ResponseBody
+	// fun unregisteredDisk(
+	// 	@PathVariable("storageDomainId") storageDomainId: String? = null,
+	// 	@PathVariable("diskId") diskId: String? = null,
+	// ): ResponseEntity<DiskImageVo> {
+	// 	if (storageDomainId == null)
+	// 		throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+	// 	if (diskId == null)
+	// 		throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
+	// 	log.info("/storages/{}/disks/{}/unregistered ... 스토리지 도메인 밑에 붙어있는 Disk 불러오기", storageDomainId, diskId)
+	// 	return ResponseEntity.ok(iDomainImport.findUnregisteredDiskFromStorageDomain(storageDomainId, diskId))
+	// }
 
 	@ApiOperation(
 		httpMethod="POST",

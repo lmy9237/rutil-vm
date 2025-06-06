@@ -246,11 +246,13 @@ fun Connection.registeredVmFromStorageDomain(storageDomainId: String, vm: Vm, al
 	this.srvVmsFromStorageDomain(storageDomainId)
 		.vmService(vm.id())
 		.register()
-		.vm(vm) // disk 정보 필요
+		.vm(vm)
 		.allowPartialImport(allowPart) // 부분 허용 여부
 		.reassignBadMacs(badMac) // 불량 MAC 재배치 여부
 		.cluster(ClusterBuilder().id(vm.cluster().id()).build())
 		.send()
+	
+
 	true
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "가져오기", storageDomainId)
