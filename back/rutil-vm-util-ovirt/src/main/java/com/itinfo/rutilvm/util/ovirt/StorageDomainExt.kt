@@ -7,6 +7,7 @@ import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.ClusterBuilder
 import org.ovirt.engine.sdk4.builders.DiskBuilder
 import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
+import org.ovirt.engine.sdk4.builders.VmBuilder
 import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
 
@@ -211,6 +212,9 @@ fun Connection.findFileFromStorageDomain(storageDomainId: String, fileId: String
 private fun Connection.srvVmsFromStorageDomain(storageId: String): StorageDomainVmsService =
 	this.srvStorageDomain(storageId).vmsService()
 
+private fun Connection.srvVmFromStorageDomain(storageId: String, vmId: String): StorageDomainVmService =
+	this.srvStorageDomain(storageId).vmsService().vmService(vmId)
+
 fun Connection.findAllVmsFromStorageDomain(storageDomainId: String, follow: String = ""): Result<List<Vm>> = runCatching {
 	checkStorageDomainExists(storageDomainId)
 	this.srvVmsFromStorageDomain(storageDomainId).list().apply {
@@ -243,19 +247,40 @@ fun Connection.findAllUnregisteredVmsFromStorageDomain(storageDomainId: String, 
 fun Connection.registeredVmFromStorageDomain(storageDomainId: String, vm: Vm, allowPart: Boolean, badMac: Boolean): Result<Boolean> = runCatching {
 	checkStorageDomainExists(storageDomainId)
 
-	this.srvVmsFromStorageDomain(storageDomainId)
-		.vmService(vm.id())
+	this.srvVmFromStorageDomain(storageDomainId, vm.id())
 		.register()
 		.vm(vm)
 		.allowPartialImport(allowPart) // 부분 허용 여부
 		.reassignBadMacs(badMac) // 불량 MAC 재배치 여부
+		// .clone_(true) // clone
 		.cluster(ClusterBuilder().id(vm.cluster().id()).build())
 		.send()
-	
+
+	this.srvVm(vm.id())
+		.update()
+		.vm(VmBuilder().name(vm.name()))
+		.send()
 
 	true
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "가져오기", storageDomainId)
+}.onFailure {
+	Term.STORAGE_DOMAIN.logFailWithin(Term.VM, "가져오기", it, storageDomainId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.importVmFromStorageDomain(storageDomainId: String, vm: Vm): Result<Boolean> = runCatching {
+	checkStorageDomainExists(storageDomainId)
+
+	this.srvVmFromStorageDomain(storageDomainId, vm.id())
+		.import_()
+		.vm(vm)
+		.cluster(ClusterBuilder().id(vm.cluster().id()).build())
+		.send()
+
+	true
+}.onSuccess {
+	Term.STORAGE_DOMAIN.logSuccessWithin(Term.VM, "가져오기(import)", storageDomainId)
 }.onFailure {
 	Term.STORAGE_DOMAIN.logFailWithin(Term.VM, "가져오기", it, storageDomainId)
 	throw if (it is Error) it.toItCloudException() else it

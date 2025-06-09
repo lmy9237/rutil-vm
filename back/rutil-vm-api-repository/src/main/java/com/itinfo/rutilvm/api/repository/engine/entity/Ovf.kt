@@ -119,6 +119,25 @@ data class OvfDiskSection(
 	val disks: List<OvfDisk>? = listOf()
 ): Serializable {
 }
+
+@JsonIgnoreProperties(ignoreUnknown=true)
+data class OvfDomainsSection(
+	@field:JacksonXmlElementWrapper(useWrapping=false)
+	@field:JacksonXmlProperty(localName="User")
+	val user: OvfUser? = null
+): Serializable {
+
+}
+
+@JsonIgnoreProperties(ignoreUnknown=true)
+data class OvfUser(
+	@field:JacksonXmlElementWrapper(useWrapping=false)
+	@field:JacksonXmlProperty(localName="UserDomain")
+	val userDomain: String? = ""
+): Serializable {
+
+}
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class RasdItem(
 	@field:JacksonXmlProperty(localName="Caption", namespace=NS_RASD)
@@ -367,7 +386,8 @@ data class OvfContent(
 	JsonSubTypes.Type(value = OvfOperatingSystemSection::class, name = "ovf:OperatingSystemSection_Type"),
 	JsonSubTypes.Type(value = OvfVirtualHardwareSection::class, name = "ovf:VirtualHardwareSection_Type"),
 	JsonSubTypes.Type(value = OvfSnapshotsSection::class, name = "ovf:SnapshotsSection_Type"),
-	JsonSubTypes.Type(value = OvfDiskSection::class, name = "ovf:DiskSection_Type") // Include if it can appear here
+	JsonSubTypes.Type(value = OvfDiskSection::class, name = "ovf:DiskSection_Type"),
+	JsonSubTypes.Type(value = OvfDomainsSection::class, name = "ovf:UserDomainsSection_Type")
 )
 sealed class OvfSectionBase(
 	// Common attributes for all Sections

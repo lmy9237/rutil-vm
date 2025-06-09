@@ -42,7 +42,10 @@ const DomainImportVmModal = ({
   
   const [vmList, setVmList] = useState([]);
   const [clusterList, setClusterList] = useState({}); // 해당 도메인이 가진 데이터센터가 가지고 있는 클러스터 리스트
-  const [selectedVm, setSelectedVm] = useState();
+  const [selectedVmId, setSelectedVmId] = useState(null);
+
+  const selectedVm = vmList.find(vm => vm.id === selectedVmId) || vmList[0];
+
   const [editVmNames, setEditVmNames] = useState({}); //변경된 이름저장
   const [relocation, setRelocation] = useState({}); // 불량 mac 재배치
   const [partialAllow, setPartialAllow] = useState({}); // 부분 허용
@@ -63,7 +66,7 @@ const DomainImportVmModal = ({
   useEffect(() => {
     if (isOpen && vmsSelected.length > 0) {
       setVmList(vmsSelected);
-      setSelectedVm(vmsSelected[0]);
+      setSelectedVmId(vmsSelected[0].id || vmList[0].id);
       setActiveFilter("general");
     }
     if (!isOpen) {
@@ -225,7 +228,7 @@ const DomainImportVmModal = ({
           data={transformedData}
           shouldHighlight1stCol={true}
           isSuccess={true}
-          onRowClick={(selectedRows) => setSelectedVm(selectedRows[0])}
+          onRowClick={(selectedRows) => setSelectedVmId(selectedRows[0].id)}
           multiSelect={false}
         />
       </div>
@@ -271,6 +274,18 @@ const DomainImportVmModal = ({
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
             multiSelect={true}
+            isSuccess={true}
+          />
+        )}
+        
+        {activeFilter === "vnicProfile" && (
+          <TablesOuter target={"vnicProfile"}
+            columns={TableColumnsInfo.VMS_VNICPROFILES_IMPORT_FROM_STORAGE_DOMAIN}
+            data={[]}
+            shouldHighlight1stCol={true}
+            onRowClick={{ console }}
+            multiSelect={true}
+            isSuccess={true}
           />
         )}
       </div>
@@ -284,4 +299,5 @@ const filterOptions = [
   { key: "general", label: Localization.kr.GENERAL },
   { key: "disk", label: Localization.kr.DISK },
   { key: "network", label: Localization.kr.NICS },
+  { key: "vnicProfile", label: Localization.kr.VNIC_PROFILE },
 ];

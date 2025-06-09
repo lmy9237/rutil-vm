@@ -469,6 +469,7 @@ class StorageController: BaseController() {
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		// ApiImplicitParam(name = "vmId", value = "가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
 		ApiImplicitParam(name = "vmVo", value = "가상머신", dataTypeClass=VmVo::class, required=true, paramType="body"),
 		ApiImplicitParam(name = "allowPartialImport", value = "부분허용 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
 		ApiImplicitParam(name = "reassignBadMacs", value = "불량 MAC 재배치 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
@@ -481,6 +482,7 @@ class StorageController: BaseController() {
 	@ResponseStatus(HttpStatus.CREATED)
 	fun registerVm(
 		@PathVariable("storageDomainId") storageDomainId: String? = null,
+		// @PathVariable("vmId") vmId: String? = null,
 		@RequestBody vmVo: VmVo? = null,
 		@RequestParam("partialAllow") partialAllow: Boolean = false,
 		@RequestParam("relocation") relocation: Boolean = false,
@@ -492,6 +494,37 @@ class StorageController: BaseController() {
 		log.info("/storages/{}/vms/register ... 스토리지 도메인 가상머신 불러오기", storageDomainId)
 		return ResponseEntity.ok(iDomainImport.registeredVmFromStorageDomain(storageDomainId, vmVo, partialAllow, relocation))
 	}
+
+	/*
+	@ApiOperation(
+		httpMethod="POST",
+		value="스토리지 도메인 가상머신 가져오기(import)",
+		notes="스토리지 도메인 가상머신 가져오기(import)"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "storageDomainId", value = "스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "vmVo", value = "가상머신", dataTypeClass=VmVo::class, required=true, paramType="body"),
+		ApiImplicitParam(name = "allowPartialImport", value = "부분허용 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
+		ApiImplicitParam(name = "reassignBadMacs", value = "불량 MAC 재배치 여부", dataTypeClass=Boolean::class, required=false, paramType="query"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED")
+	)
+	@PostMapping("/{storageDomainId}/vms/import")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun importVm(
+		@PathVariable("storageDomainId") storageDomainId: String? = null,
+		@RequestBody vmVo: VmVo? = null
+	): ResponseEntity<Boolean?> {
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		if (vmVo == null)
+			throw ErrorPattern.VM_VO_INVALID.toException()
+		log.info("/storages/{}/vms/import ... 스토리지 도메인 가상머신 불러오기(import)", storageDomainId)
+		return ResponseEntity.ok(iDomainImport.importVmFromStorageDomain(storageDomainId, vmVo))
+	}
+	*/
 
 	@ApiOperation(
 		httpMethod="DELETE",

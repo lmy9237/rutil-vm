@@ -16,7 +16,7 @@ private val log = LoggerFactory.getLogger(DiskVmElementEntity::class.java)
 
 /**
  * [DiskVmElementEntity]
- * 
+ *
  * @property diskId [UUID]
  * @property vmId [UUID]
  * @property isBoot [Boolean]
@@ -61,6 +61,14 @@ class DiskVmElementEntity(
 fun DiskVmElementEntity.toVmId(): String {
 	return vmId.toString()
 }
+fun List<DiskVmElementEntity>.toVmIds(): List<String> =
+	this@toVmIds.map { it.toVmId() }
+
+fun DiskVmElementEntity.toDiskId(): String {
+	return diskId.toString()
+}
+fun List<DiskVmElementEntity>.toDiskIds(): List<String> =
+	this@toDiskIds.map { it.toDiskId() }
 /*
 fun DiskVmElementEntity.toVmDisk(): DiskImageVo{
 	return DiskImageVo.builder {

@@ -4589,7 +4589,7 @@ export const useAllUnregisteredVMsFromDomain = (storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  // queryKey: ['AllVMFromDomain', storageDomainId], 
+  queryKey: ['AllUnregisterVMFromDomain', storageDomainId], 
   queryFn: async () => {
     const res = await ApiManager.findAllUnregisterdVMsFromDomain(storageDomainId);
     const _res = mapPredicate

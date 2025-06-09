@@ -96,3 +96,16 @@ fun BaseDiskEntity.toDiskId(): String {
 fun List<BaseDiskEntity>.toDiskIds(): List<String> =
 	this@toDiskIds.map { it.toDiskId() }
 
+
+// fun printAllDisks(baseDisksRepository: BaseDisksRepository) {
+// 	val disks: List<BaseDiskEntity> = baseDisksRepository.findAll()
+// 	disks.forEach { disk ->
+// 		println(
+// 			listOfNotNull(
+// 				disk.diskId,
+// 				disk.diskAlias,
+// 				disk.disDescription
+// 			).joinToString("\t")
+// 		)
+// 	}
+// }

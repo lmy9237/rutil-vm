@@ -237,8 +237,7 @@ const { mutate: addVM } = useAddVm(
       }
     }
   }, [templateVo.id, isOpen, editMode, vnicProfilesFromTemplate]);
-const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
-
+  const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
 
   // 초기값 설정
   useEffect(() => {
@@ -297,7 +296,7 @@ const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
         firstDevice: vm?.firstDevice || "hd",
         secDevice: vm?.secDevice || "",
         isCdDvdChecked: !vm?.cdRomVo?.id,
-        cdRomVo: {id: vm?.cdRomVo?.id},
+        cdRomVo: {id: vm?.cdRomVo?.id, name: "" },
         biosBootMenu: vm?.biosBootMenu || false, 
       });
       setArchitecture("");
@@ -321,8 +320,9 @@ const isDiskDisabled = templateVo.id !== CONSTANT.templateIdDefault;
       setDiskListState([...vm?.diskAttachmentVos].map((d) => ({
         id: d?.id,
         alias: d?.diskImageVo?.alias,
+
         virtualSize: d?.diskImageVo?.virtualSize
-          ? d.diskImageVo.virtualSize / (1024 * 1024 * 1024)
+          ? d?.diskImageVo?.virtualSize / (1024 * 1024 * 1024)
           : 0,
         interface_: d?.interface_ || "VIRTIO_SCSI",
         readOnly: d?.readOnly || false,

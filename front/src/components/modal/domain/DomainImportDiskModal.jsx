@@ -58,7 +58,7 @@ const DomainImportDiskModal = ({
     for (const disk of diskList) {
       const profileId = diskProfileList[disk.id];
       if (!profileId || profileId.trim() === "none") {
-        return `"${disk.alias}" 디스크에 디스크 프로파일이 지정되지 않았습니다.`;
+        return `"${disk.alias}" ${Localization.kr.DISK}에 ${Localization.kr.DISK_PROFILE}이 지정되지 않았습니다.`;
       }
     }
 

@@ -9,6 +9,7 @@ import com.itinfo.rutilvm.api.repository.engine.UnregisteredOvfOfEntitiesReposit
 import com.itinfo.rutilvm.api.repository.engine.entity.UnregisteredDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.UnregisteredOvfOfEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toUnregisteredDiskImageVos
+import com.itinfo.rutilvm.api.repository.engine.entity.toUnregisteredTemplates
 import com.itinfo.rutilvm.api.repository.engine.entity.toUnregisteredVms
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
@@ -46,6 +47,17 @@ interface ItStorageImportService {
 	 */
 	@Throws(Error::class)
 	fun registeredVmFromStorageDomain(storageDomainId: String, vmVo: VmVo, partialAllow: Boolean, relocation: Boolean): Boolean
+
+	/**
+	 * [ItStorageImportService.importVmFromStorageDomain]
+	 * 스토리지도메인 - 가상머신 가져오기(import)
+	 *
+	 * @param storageDomainId [String] 스토리지 도메인 Id
+	 * @param vmVo [VmVo] 가상머신
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class)
+	fun importVmFromStorageDomain(storageDomainId: String, vmVo: VmVo): Boolean
 	/**
 	 * [ItStorageImportService.removeUnregisteredVmFromStorageDomain]
 	 * 스토리지 도메인 가상머신 가져오기 삭제
@@ -158,6 +170,16 @@ class StorageImportServiceImpl(
 	}
 
 	@Throws(Error::class)
+	override fun importVmFromStorageDomain(storageDomainId: String, vmVo: VmVo): Boolean {
+		log.info("registeredVmFromStorageDomain ... storageDomainId: {}, vmVo: {}", storageDomainId, vmVo)
+		val res: Result<Boolean> = conn.importVmFromStorageDomain(
+			storageDomainId,
+			vmVo.toRegisterVm()
+		)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
 	override fun removeUnregisteredVmFromStorageDomain(storageDomainId: String, vmId: String): Boolean {
 		log.info("removeUnregisteredVmFromStorageDomain ... storageDomainId: {}, vmId: {}", storageDomainId, vmId)
 		val res: Result<Boolean> = conn.removeRegisteredVmFromStorageDomain(storageDomainId, vmId)
@@ -167,9 +189,17 @@ class StorageImportServiceImpl(
 
 	@Throws(Error::class)
 	override fun findAllUnregisteredTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo> {
+		// log.info("findAllUnregisteredTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
+		// val res: List<Template> = conn.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId).getOrDefault(emptyList())
+		// return res.toUnregisterdTemplates()
 		log.info("findAllUnregisteredTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val res: List<Template> = conn.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId).getOrDefault(emptyList())
-		return res.toUnregisterdTemplates()
+		val res: List<Template> = conn.findAllUnregisteredTemplatesFromStorageDomain(storageDomainId)
+			.getOrDefault(emptyList())
+		val unregisteredOvfOfEntities: List<UnregisteredOvfOfEntities> =
+			rUnregisteredOvfOfEntities.findByIdStorageDomainId(storageDomainId.toUUID()).filter {
+				it.entityType == "template".uppercase()
+			}
+		return unregisteredOvfOfEntities.toUnregisteredTemplates(res)
 	}
 
 	@Throws(Error::class)

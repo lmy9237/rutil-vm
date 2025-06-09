@@ -8,8 +8,13 @@ import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.DiskVmElementEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toDiskIds
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.api.service.storage.DiskServiceImpl
+import com.itinfo.rutilvm.api.service.storage.DiskServiceImpl.Companion
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.types.*
 import org.ovirt.engine.sdk4.Error
@@ -201,6 +206,7 @@ interface ItDataCenterService {
 class DataCenterServiceImpl(
 ): BaseService(), ItDataCenterService {
 	@Autowired private lateinit var itGraphService: ItGraphService
+	@Autowired private lateinit var rDiskVmElements: DiskVmElementRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<DataCenterVo> {
@@ -331,11 +337,14 @@ class DataCenterServiceImpl(
 	override fun findUnattachedDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo> {
 		log.info("findUnattachedDiskImageFromDataCenter  ... dataCenterId: {}", dataCenterId)
 		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
-		val res: List<Disk> = storageDomains.flatMap {
-			it.disks().filter { disk ->
-				disk.format() == DiskFormat.COW
-			}
+		// 디스크 포맷 필터링
+		val disks: List<Disk> = storageDomains.flatMap {
+			it.disks().filter { disk -> disk.format() == DiskFormat.COW }
 		}
+		// 이미 연결되어 있는 디스크는 제외
+		val elements: List<DiskVmElementEntity> = rDiskVmElements.findAll()
+
+		val res = disks.filter { disk -> disk.id() !in elements.toDiskIds() }
 		return res.toDcDiskMenus(conn)
 	}
 

@@ -9,6 +9,8 @@ import com.itinfo.rutilvm.api.model.fromTemplateCdromsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromVmCdromsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.repository.engine.BaseDisksRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.BaseDiskEntity
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
@@ -41,7 +43,6 @@ interface ItDiskService {
      */
     @Throws(Error::class)
     fun findAllId(): List<DiskImageVo>
-
 
 	/**
 	 * [ItDiskService.findAllCdRomsFromDisk]
@@ -201,6 +202,7 @@ interface ItDiskService {
 @Service
 class DiskServiceImpl(
 ): BaseService(), ItDiskService {
+	@Autowired private lateinit var rBaseDisks: BaseDisksRepository
 
     @Throws(Error::class)
     override fun findAll(): List<DiskImageVo> {
@@ -213,6 +215,8 @@ class DiskServiceImpl(
 	@Throws(Error::class)
 	override fun findAllId(): List<DiskImageVo> {
 		log.info("findAllId ... ")
+		val disks: List<BaseDiskEntity> = rBaseDisks.findAll()
+
 		val res: List<Disk> = conn.findAllDisks().getOrDefault(emptyList())
 			.filter { it.contentType() != DiskContentType.OVF_STORE } // ovf_store 값은 제외하고
 		return res.toDiskIdNames()

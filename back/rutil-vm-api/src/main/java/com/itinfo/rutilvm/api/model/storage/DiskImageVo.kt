@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
+import com.itinfo.rutilvm.api.repository.engine.entity.BaseDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.UnregisteredDiskEntity
 import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.ovirtDf
@@ -118,10 +119,12 @@ class DiskImageVo(
 
 fun Disk.toDiskIdName(): DiskImageVo = DiskImageVo.builder {
 	id { this@toDiskIdName.id() }
-	alias() { this@toDiskIdName.alias() }
+	alias { this@toDiskIdName.alias() }
 }
 fun List<Disk>.toDiskIdNames(): List<DiskImageVo> =
 	this@toDiskIdNames.map { it.toDiskIdName() }
+
+
 
 /**
  * 디스크 목록
