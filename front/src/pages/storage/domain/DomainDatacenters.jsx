@@ -1,4 +1,6 @@
 import React, { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
@@ -25,6 +27,8 @@ import Logger                 from "@/utils/Logger";
 const DomainDatacenters = ({
   domainId
 }) => {
+  const navigate = useNavigate();
+  const { activeModal } = useUIState();
   const {
     domainsSelected,
     datacentersSelected, setDatacentersSelected
@@ -52,29 +56,34 @@ const DomainDatacenters = ({
     searchText: `${datacenter?.name} ${datacenter?.domainStatus}`.toLowerCase(),
   }));
 
+  const handleNameClick = useCallback((id) => {
+    navigate(`/computing/vms/${id}`);
+  }, [navigate])
 
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-
   return (
     <>
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchDataCenters}/>
         <DomainDataCenterActionButtons actionType="default" />
       </div>
-      <TablesOuter target={"datacenter"}
+      <TablesOuter target={"domaindatacenter"}
         columns={TableColumnsInfo.DATACENTERS_FROM_STORAGE_DOMAIN}
         data={filteredData}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
-        onRowClick={(selectedRows) => setDatacentersSelected(selectedRows)}
+        onRowClick={(selectedRows) => {
+          if (activeModal().length > 0) return;
+          setDatacentersSelected(selectedRows)
+        }}
+        onClickableColumnClick={(row) => handleNameClick(row.id)}
         shouldHighlight1stCol={true}
         isLoading={isDataCentersLoading} isRefetching={isDataCentersRefetching} isError={isDataCentersError} isSuccess={isDataCentersSuccess}
       />
       <SelectedIdView items={datacentersSelected} />
       <OVirtWebAdminHyperlink
-        name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
+        name={`${Localization.kr.DOMAIN}>${Localization.kr.DATA_CENTER}>${domainsSelected[0]?.name}`}
         path={`storage-data_center;name=${domainsSelected[0]?.name}`}
       />
     </>

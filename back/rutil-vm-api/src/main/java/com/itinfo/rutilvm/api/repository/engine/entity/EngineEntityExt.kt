@@ -1,6 +1,5 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
-import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.auth.UserSessionVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
@@ -150,8 +149,8 @@ fun OvfDisk.toDiskAttachmentIdentifiedVo(): DiskAttachmentVo = DiskAttachmentVo.
 			alias { this@toDiskAttachmentIdentifiedVo.diskAlias }
 			description{ this@toDiskAttachmentIdentifiedVo.diskDescription }
 			sparse{ this@toDiskAttachmentIdentifiedVo.volumeType == "Sparse" }
-			actualSize { this@toDiskAttachmentIdentifiedVo.ovirtActualSize?.toBigInteger() }
-			size { this@toDiskAttachmentIdentifiedVo.ovirtSize?.toBigInteger() }
+			actualSize { this@toDiskAttachmentIdentifiedVo.actualSize?.toBigInteger() }
+			size { this@toDiskAttachmentIdentifiedVo.size?.toBigInteger() }
 		}
 	}
 }

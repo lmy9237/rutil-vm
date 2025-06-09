@@ -6207,6 +6207,36 @@ export const useCert = (
     return _res;
   }
 })
+
+export const useAttachCert = (
+  cert,
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async (username) => {
+      closeModal();
+      const res = await ApiManager.attachCert(cert)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAttachCert ... cert: `, cert);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAttachCert ... res: `, res);
+      apiToast.ok(`${Localization.kr.CERTIFICATE} ${Localization.kr.ATTACH} ${Localization.kr.REQ_COMPLETE}`)
+      queryClient.invalidateQueries('allCerts');
+      // queryClient.invalidateQueries(['cert', username]); // 수정된 네트워크 상세 정보 업데이트
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  })
+};
 //#endregion: Certificate(s)
 
 const validate = (res) => {

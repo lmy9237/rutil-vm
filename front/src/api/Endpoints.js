@@ -319,7 +319,8 @@ const ENDPOINTS = {
 
   //#region: Certificates
   FIND_ALL_CERTS: () =>                                                    `${ENDPOINT_API_V1}/admin/certs`,
-  FIND_CERT: (id) =>                                                       `${ENDPOINT_API_V1}/admin/certs/{id}`
+  FIND_CERT: (id) =>                                                       `${ENDPOINT_API_V1}/admin/certs/{id}`,
+  ATTACH_CERT: () =>                                                       `${ENDPOINT_API_V1}/admin/certs/attach`,
   //#endregion: Certificates
 }
 

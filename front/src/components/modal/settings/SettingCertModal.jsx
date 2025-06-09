@@ -1,0 +1,107 @@
+import { useState, useEffect, useMemo } from "react";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import BaseModal                        from "@/components/modal/BaseModal";
+import LabelInput                       from "@/components/label/LabelInput";
+import { 
+  handleInputChange, 
+} from "@/components/label/HandleInput";
+import {
+  useAttachCert
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
+
+const ACTIONS = {
+  "cert:attach": { label: Localization.kr.ATTACH, hook: useAttachCert },
+};
+
+/**
+ * @name SettingCertModal
+ * @description 인증서 관리 모달 모음
+ * 
+ * @returns {JSX.Element} SettingCertModal
+ */
+const SettingCertModal = ({
+  isOpen,
+  onClose,
+  // data
+}) => {
+  const { activeModal, closeModal } = useUIState();
+  const { certsSelected } = useGlobal();
+  const { validationToast } = useValidationToast();
+  const { label = "", hook } = ACTIONS[activeModal()] || {};
+  const { 
+    mutate
+  } = hook ? hook(closeModal, closeModal) : { mutate: null };
+
+  
+  const initialFormState = {
+    address: certsSelected[0]?.address || "",
+    rootPassword: "",
+  };
+  const [formState, setFormState] = useState(initialFormState);
+  
+  const {
+    names
+  } = useMemo(() => {
+    return { names: [...certsSelected].map((e) => e.address || "undefined")}
+  }, [certsSelected])
+
+  useEffect(() => {
+    Logger.debug(`SettingCertModal > useEffect ... `)
+    if (!isOpen) {
+      setFormState(initialFormState)
+    }
+
+    if (certsSelected[0]) {
+      setFormState({
+        address: certsSelected[0]?.address || "",
+        rootPassword: "",
+      })
+    }
+  }, [isOpen]); 
+
+  const validateForm = () => {
+    Logger.debug(`SettingCertModal > validateForm ... `)
+    return null;
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    const error = validateForm();
+    if (error) {
+      validationToast.fail(error);
+      return;
+    }
+    mutate(formState)
+  }
+
+  return (
+    <BaseModal targetName={Localization.kr.CERTIFICATE} submitTitle={label}
+      isOpen={isOpen} onClose={onClose}
+      onSubmit={handleFormSubmit}
+      promptText={`${names.join(", ")} 를(을) ${label} 하시겠습니까?`}
+      contentStyle={{ width: "473px" }} 
+    >
+      <div className="font-semibold py-1.5">
+        <label>SSH 연결</label>
+      </div>
+      <LabelInput id="address" label={`${Localization.kr.HOST} 이름/IP`}
+        value={formState.address}
+        disabled={true}
+        onChange={handleInputChange(setFormState, "address")}
+      />
+      <LabelInput id="username" label={`${Localization.kr.USER} ${Localization.kr.NAME}`}
+        value="root" disabled={true} />
+      <LabelInput id="rootPassword" label={Localization.kr.PLACEHOLDER_PASSWORD}
+        type="password"           
+        value={formState.rootPassword}
+        onChange={handleInputChange(setFormState, "rootPassword")}
+      />
+    </BaseModal>
+  )
+}
+
+export default SettingCertModal

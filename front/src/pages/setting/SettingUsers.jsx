@@ -64,7 +64,10 @@ const SettingUsers = () => {
         setSearchQuery={setSearchQuery} 
         multiSelect={true}
         /*shouldHighlight1stCol={true}*/
-        onRowClick={(selectedRows) => setUsersSelected(selectedRows)}
+        onRowClick={(selectedRows) => {
+setUsersSelected(selectedRows)
+        } 
+          }
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isUsersLoading} isRefetching={isUsersRefetching} isError={isUsersError} isSuccess={isUsersSuccess}
         /*onContextMenuItems={(row) => [

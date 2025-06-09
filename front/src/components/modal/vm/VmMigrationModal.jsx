@@ -18,7 +18,11 @@ const VmMigrationModal = ({
 }) => {
   const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
-  const { vmsSelected } = useGlobal()
+  const { 
+    vmsSelected, 
+    clustersSelected
+  } = useGlobal()
+  
   const {
     mutate: migration
   } = useMigration(onClose, onClose);

@@ -1,6 +1,15 @@
 import Logger from "./Logger";
 
 export const Localization = {
+  en: {
+    CERTIFICATE_GUIDES: [
+      "RutilVM automatically requires the renewal of certificates that are set to expire within 30 days.",
+      "If the engine-setup command is executed within 30 days before the expiration date, the PKI CONFIGURATION stage will be activated.",
+      "If more than 30 days remain before the expiration date, the PKI stage will be skipped when running the engine-setup command.",
+      "oVirt checks the expiration date of both the existing CA certificate and the server certificate. If either certificate is set to expire within 30 days, renewal is required.",
+      "Failure to renew the certificates may result in the inability to access the web interface and disruption of certain services, so it is crucial to renew them in advance.",
+    ]
+  },
   kr: {
     NAME: "이름",
     DESCRIPTION: "설명",
@@ -87,6 +96,7 @@ export const Localization = {
     TIMEZONE: "시간대",
     DATE: "날짜",
     DATE_CREATED: "생성일자",
+    DATE_EXPIRATION: "만료일자",
     HOUR: "시간",
     MINUTE: "분",
     SECOND: "초",
@@ -108,6 +118,7 @@ export const Localization = {
     ACTIVATE: "활성화",
     DEACTIVATE: "비활성화",
     MAINTENANCE: "유지보수",
+    ENROLL: "등록",
     MOVE: "이동",
     COPY: "복사",
     IMPORT: "가져오기",
@@ -122,6 +133,8 @@ export const Localization = {
     NO_CONTENT: "내용 없음",
     NO_ITEM: "항목 없음",
     PRIORITY: "우선순위",
+    CERTIFICATE: "인증서",
+    DAYS_REMAINING: "남은 일수",
 
     PLACEHOLDER: "임력하세요.",
     PLACEHOLDER_SELECT: "선택하세요.",
@@ -138,6 +151,13 @@ export const Localization = {
     REQ_COMPLETE: "요청완료",
     ERR_OCCURRED: "오류발생",
 
+    CERTIFICATE_GUIDES: [
+      "RutilVM은 만료까지 30일 이하로 남은 인증서를 자동으로 갱신해야 합니다.",
+      "engine-setup 명령어가 만료일 30일 이내에 실행되면, PKI CONFIGURATION 단계가 활성화됩니다.",
+      "만료일까지 30일 이상 남아 있는 경우, engine-setup 명령어를 실행할 때 PKI 단계는 건너뜁니다.",
+      "oVirt는 기존 CA 인증서와 서버 인증서의 만료일을 모두 확인합니다. 두 인증서 중 하나라도 만료까지 30일 이하로 남아 있으면 갱신이 필요합니다.",
+      "인증서를 갱신하지 않으면 웹 인터페이스에 접근할 수 없거나 일부 서비스가 중단될 수 있으므로, 사전에 반드시 갱신하는 것이 중요합니다.",
+    ],
     renderTime(milliseconds) {
       Logger.debug(`Localization > renderTime ... milliseconds: ${milliseconds}`)
       // Handle invalid or zero input

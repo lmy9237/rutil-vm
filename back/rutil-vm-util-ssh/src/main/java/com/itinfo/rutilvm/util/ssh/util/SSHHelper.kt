@@ -31,6 +31,8 @@ class SSHHelper {
 		 *
 		 * 목적: 신규 등록한 호스트에 접근하여 등록처리
 		 *
+		 * 참고: Linux 환경 (i.e. 앤진 내) 에서만 실행 가능
+		 *
 		 * @return [String] 조합 된 명령어
 		 */
 		fun registerRutilvmPubkey2Host(

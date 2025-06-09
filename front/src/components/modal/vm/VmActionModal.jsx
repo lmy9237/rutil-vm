@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useUIState                       from "@/hooks/useUIState";
-import BaseModal                        from "../BaseModal";
+import BaseModal                        from "@/components/modal/BaseModal";
 import {
   useStartVM,
   usePauseVM,

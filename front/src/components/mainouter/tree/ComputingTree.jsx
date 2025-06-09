@@ -166,6 +166,7 @@ const ComputingTree = ({}) => {
                               onClick={() => {
                                 setDatacentersSelected(dc)
                                 setClustersSelected(cluster)
+                                setHostsSelected(host)
                                 host?.id && navigate(`/computing/hosts/${host.id}`);
                               }}
                               onContextMenu={(e) => {
@@ -198,6 +199,8 @@ const ComputingTree = ({}) => {
                                   onClick={() => {
                                     setDatacentersSelected(dc)
                                     setClustersSelected(cluster)
+                                    setHostsSelected(host)
+                                    setVmsSelected(vm)
                                     vm?.id && navigate(`/computing/vms/${vm?.id}`);
                                   }}
                                   onContextMenu={(e) => {
@@ -235,6 +238,7 @@ const ComputingTree = ({}) => {
                             onClick={() => {
                               setDatacentersSelected(dc)
                               setClustersSelected(cluster)
+                              setVmsSelected(vm)
                               vm?.id && navigate(`/computing/vms/${vm?.id}`);
                             }}
                             onContextMenu={(e) => {

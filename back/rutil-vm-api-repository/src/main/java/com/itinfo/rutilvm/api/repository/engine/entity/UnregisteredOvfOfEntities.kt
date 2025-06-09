@@ -1,11 +1,17 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator
+import com.fasterxml.jackson.module.kotlin.KotlinFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.kotlinModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.itinfo.rutilvm.common.LoggerDelegate
 import org.hibernate.annotations.Type
@@ -126,9 +132,25 @@ data class UnregisteredOvfOfEntities(
 
 	companion object {
 		private val log by LoggerDelegate()
-		private val xmlMapper: ObjectMapper = XmlMapper(JacksonXmlModule().apply {
-		}).registerKotlinModule()
-			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+		val xmlMapper: ObjectMapper = XmlMapper.builder()
+			.defaultUseWrapper(false)
+			// .addModule(kotlinModule())
+			.build()
+			.registerModules(kotlinModule({
+				configure(KotlinFeature.NullIsSameAsDefault, true)
+				configure(KotlinFeature.NullToEmptyCollection, true)
+			}), SimpleModule().apply {
+				addDeserializer(OvfVirtualHardwareSection::class.java, OvfVirtualHardwareSectionDeserializer())
+				// addDeserializer(RasdItem::class.java, RasdItemDeserializer())
+			})
+			.enable(
+				DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT,
+				// DeserializationFeature.FAIL_ON_TRAILING_TOKENS,
+					DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY,
+						DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+			.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+				DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
+
 			// .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 		inline fun builder(block: Builder.() -> Unit): UnregisteredOvfOfEntities = Builder().apply(block).build()
 	}

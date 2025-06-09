@@ -1,14 +1,15 @@
 import React, { useCallback } from "react";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
-import SettingCertificatesRenewalPolicies from "./SettingCertificatesRenewalPolicies";
+import useUIState                         from "@/hooks/useUIState";
+import useGlobal                          from "@/hooks/useGlobal";
+import useSearch                          from "@/hooks/useSearch";
+import SelectedIdView                     from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink             from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                          from "@/components/button/SearchBox";
+import TablesOuter                        from "@/components/table/TablesOuter";
+import TableRowClick                      from "@/components/table/TableRowClick";
+import TableColumnsInfo                   from "@/components/table/TableColumnsInfo";
+import SettingCertActionButtons           from "@/components/dupl/SettingCertActionButtons";
+import SettingCertRenewalPolicies from "./SettingCertRenewalPolicies";
 import {
   useAllCerts
 } from "@/api/RQHook";
@@ -17,12 +18,12 @@ import Logger                 from "@/utils/Logger";
 
 
 /**
- * @name SettingCertificates
+ * @name SettingCerts
  * @description 관리 > 인증서
  *
- * @returns {JSX.Element} SettingCertificates
+ * @returns {JSX.Element} SettingCerts
  */
-const SettingCertificates = () => {
+const SettingCerts = () => {
   const { activeModal, setActiveModal } = useUIState();
   const {
     certsSelected, setCertsSelected
@@ -35,9 +36,7 @@ const SettingCertificates = () => {
     isSuccess: isCertsSuccess,
     refetch: refetchCerts,
     isRefetching: isCertsRefetching,
-  } = useAllCerts((e) => ({
-      ...e,
-  }));
+  } = useAllCerts((e) => ({ ...e, }));
 
   const transformedData = [...certs].map((e) => ({
     ...e,
@@ -46,12 +45,11 @@ const SettingCertificates = () => {
   }))
   
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchCerts} />
-        {/* <SettingUserSessionsActionButtons /> */}
+        <SettingCertActionButtons />
       </div>
       <TablesOuter target={"cert"}
         columns={TableColumnsInfo.SETTING_CERTIFICATES}
@@ -63,9 +61,9 @@ const SettingCertificates = () => {
       />
       <SelectedIdView items={certsSelected} />
       <br/>
-      <SettingCertificatesRenewalPolicies />
+      <SettingCertRenewalPolicies />
     </>
   );
 }
 
-export default SettingCertificates
+export default SettingCerts

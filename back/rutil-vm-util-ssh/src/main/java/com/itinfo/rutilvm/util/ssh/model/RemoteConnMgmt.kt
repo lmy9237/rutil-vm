@@ -109,7 +109,7 @@ fun RemoteConnMgmt.rebootSystem(command: String? = SSHHelper.SSH_COMMAND_RESTART
 	throw it
 }
 
-fun RemoteConnMgmt.registerRutilvmPubkey2Host(
+fun RemoteConnMgmt.registerRutilVMPubkey2Host(
 	targetHost: String? = "",
 	rootPassword4Host: String? = "",
 	pubkey2Add: String? = "",
@@ -122,9 +122,9 @@ fun RemoteConnMgmt.registerRutilvmPubkey2Host(
 	val command: String = SSHHelper.registerRutilvmPubkey2Host(targetHost, rootPassword4Host, pubkey2Add)
 	return session?.executeAll(listOf(command)) ?: throw Error("UNKNOWN ERROR!")
 }.onSuccess {
-	log.info("SSH로 엔진rutilvm의 pubkey를 호스트rutilvm에 등록 성공: {}", it)
+	log.info("SSH를 이용하여 RutilVM 엔진의 공개키를 호스트rutilvm에 등록 성공: {}", it)
 }.onFailure {
-	log.error("SSH로 엔진rutilvm의 pubkey를 호스트rutilvm에 등록 실패: {}", it.localizedMessage)
+	log.error("SSH를 이용하여 RutilVM 엔진의 공개키를 호스트rutilvm에 등록 실패: {}", it.localizedMessage)
 	// throw if (it is Error) it.toItCloudException() else it
 	throw it
 }

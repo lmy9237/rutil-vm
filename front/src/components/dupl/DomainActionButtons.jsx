@@ -37,8 +37,8 @@ const DomainActionButtons = ({
   const isUnattached = domain1st?.status === "UNATTACHED";
 
   const basicActions = [
-    { type: "create",  onClick: () => setActiveModal("domain:create"),  label: Localization.kr.CREATE,  disabled: isContextMenu && domainsSelected.length > 0},
-    { type: "import",  onClick: () => setActiveModal("domain:import"),  label: Localization.kr.IMPORT,  disabled: domainsSelected.length > 0 || isMaintenance, },
+    { type: "create",  onClick: () => setActiveModal("domain:create"),  label: Localization.kr.CREATE,  disabled: isContextMenu },
+    { type: "import",  onClick: () => setActiveModal("domain:import"),  label: Localization.kr.IMPORT,  disabled: isMaintenance, },
     { type: "update",  onClick: () => setActiveModal("domain:update"),  label: Localization.kr.UPDATE,  disabled: domainsSelected.length !== 1 || isUnattached, },
     { type: "remove",  onClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length !== 1 || !isUnattached, },
     /* { type: "destory", onClick: () => setActiveModal("domain:destroy"), label: Localization.kr.DESTROY, disabled: domainsSelected.length === 0 || !isUnattached || !isMaintenance }, */

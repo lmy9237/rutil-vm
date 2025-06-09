@@ -73,9 +73,9 @@ const VmDiskDupl = ({
 
   const [activeDiskType, setActiveDiskType] = useState("all");
   const diskFilters = [
-    { key: "all", label: "모두" },
+    { key: "all",   label: "모두" },
     { key: "image", label: "이미지" },
-    { key: "lun", label: "직접 LUN" },
+    { key: "lun",   label: "직접 LUN" },
   ];
   const columnMap = {
     all: TableColumnsInfo.DISKS_FROM_VM,
@@ -97,7 +97,9 @@ const VmDiskDupl = ({
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         multiSelect={true}
-        onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
+        onRowClick={(selectedRows) => {
+          setDisksSelected(selectedRows)
+        }}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />

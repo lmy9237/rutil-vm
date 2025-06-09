@@ -352,10 +352,12 @@ fun Connection.findAllUnregisteredDisksFromStorageDomain(storageDomainId: String
 // }
 
 fun Connection.registeredDiskFromStorageDomain(storageDomainId: String, disk: Disk): Result<Disk?> = runCatching {
-	val diskRegister = this.srvDisksFromStorageDomain(storageDomainId).add().disk(disk).unregistered(true).send().disk()
-
+	val diskRegister = this.srvDisksFromStorageDomain(storageDomainId).add()
+		.disk(disk)
+		.unregistered(true)
+		.send()
+		.disk()
 	diskRegister
-
 }.onSuccess {
 	Term.STORAGE_DOMAIN.logSuccessWithin(Term.DISK, "디스크 불러오기", storageDomainId)
 }.onFailure {

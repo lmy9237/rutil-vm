@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
-import BaseModal                        from "../BaseModal";
+import BaseModal                        from "@/components/modal/BaseModal";
 import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import LabelInput                       from "@/components/label/LabelInput";

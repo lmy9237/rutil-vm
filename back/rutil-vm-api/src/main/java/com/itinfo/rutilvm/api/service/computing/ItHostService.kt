@@ -4,9 +4,6 @@ import com.itinfo.rutilvm.api.configuration.CertConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
-import com.itinfo.rutilvm.api.model.network.*
-import com.itinfo.rutilvm.api.model.storage.*
-import com.itinfo.rutilvm.api.repository.*
 import com.itinfo.rutilvm.api.repository.history.*
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.entity.HostConfigurationEntity
@@ -14,7 +11,7 @@ import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
-import com.itinfo.rutilvm.util.ssh.model.registerRutilvmPubkey2Host
+import com.itinfo.rutilvm.util.ssh.model.registerRutilVMPubkey2Host
 import org.ovirt.engine.sdk4.types.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -136,7 +133,7 @@ class HostServiceImpl(
 		log.info("add ... registering rutilvm's pubkey to host's rutilvm begins")
 		log.debug("add ... sshRootPassword: {}", hostVo.ssh?.rootPassword)
 		val engineRemoteMgmt: RemoteConnMgmt? = certConfig.ovirtEngineSSH
-		engineRemoteMgmt?.registerRutilvmPubkey2Host(
+		engineRemoteMgmt?.registerRutilVMPubkey2Host(
 			hostVo.address,
 			hostVo.ssh?.rootPassword,
 			certConfig.ovirtSSHPubkey

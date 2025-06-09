@@ -77,7 +77,7 @@ const ACTIONS = {
   "host:activate": { label: Localization.kr.ACTIVATE, hook: useActivateHost },
   "host:restart": { label: Localization.kr.RESTART, hook: useRestartHost },
   "host:refresh": { label: Localization.kr.REFRESH, hook: useRefreshHost },
-  "host:enrollCert": { label: "인증서 등록", hook: useEnrollHostCertificate },
+  "host:enrollCert": { label: `${Localization.kr.CERTIFICATE} ${Localization.kr.ENROLL}`, hook: useEnrollHostCertificate },
   "host:haOn": { label: "글로벌 HA 유지관리 활성화", hook: useActivateGlobalHaHost },
   "host:haOff": { label: "글로벌 HA 유지관리 비활성화", hook: useDeactivateGlobalHaHost },
 };

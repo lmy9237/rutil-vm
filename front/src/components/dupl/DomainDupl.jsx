@@ -1,22 +1,22 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import DomainActionButtons    from "@/components/dupl/DomainActionButtons";
+import useGlobal                     from "@/hooks/useGlobal";
+import useSearch                     from "@/hooks/useSearch";
+import SelectedIdView                from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink        from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                     from "@/components/button/SearchBox";
+import TablesOuter                   from "@/components/table/TablesOuter";
+import TableRowClick                 from "@/components/table/TableRowClick";
+import DomainActionButtons           from "@/components/dupl/DomainActionButtons";
 import DomainDataCenterActionButtons from "@/components/dupl/DomainDataCenterActionButtons";
 import { 
   hostedEngineStatus2Icon,
   status2Icon
 } from "@/components/icons/RutilVmIcons";
-import { getStatusSortKey }   from "@/components/icons/GetStatusSortkey";
+import { getStatusSortKey }          from "@/components/icons/GetStatusSortkey";
 import { checkZeroSizeToGiB, convertBytesToGB } from "@/util";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                  from "@/utils/Localization";
+import Logger                        from "@/utils/Logger";
 /**
  * @name DomainDupl
  * @description 도메인 목록을 표시하는 컴포넌트 (검색 및 테이블 포함)
@@ -83,7 +83,7 @@ const DomainDupl = ({
           : <DomainDataCenterActionButtons actionType={actionType} />
         }
       </div>
-      <TablesOuter target={"domain"}
+      <TablesOuter target={sourceContext === "all" ? "domain" : "domaindatacenter"}
         columns={columns}
         data={filteredData} // ✅ 검색 필터링된 데이터 전달
         multiSelect={true}

@@ -880,12 +880,12 @@ const TableColumnsInfo = {
     { header: '만료', accessor: 'expiration', clickable: false }
   ],
   SETTING_CERTIFICATES: [
-    { header: 'ID', accessor: 'id', clickable: false },
-    { header: Localization.kr.NAME, accessor: 'alias', clickable: true },
-    { header: '주소', accessor: 'address', clickable: false },
-    { header: 'D-Day', accessor: 'dday', clickable: false },
-    { header: '만료일자', accessor: 'notAfter', clickable: false },
-    { header: '버전', accessor: 'version', clickable: false },
+    // { header: 'ID', accessor: 'id', clickable: false },
+    { accessor: 'alias',    clickable: true,  header: Localization.kr.NAME },
+    { accessor: 'address',  clickable: false, header: Localization.kr.ADDRESS },
+    { accessor: 'dday',     clickable: false, header: Localization.kr.DAYS_REMAINING },
+    { accessor: 'notAfter', clickable: false, header: Localization.kr.DATE_EXPIRATION },
+    // { header: '버전', accessor: 'version', clickable: false },
   ]
 }
 

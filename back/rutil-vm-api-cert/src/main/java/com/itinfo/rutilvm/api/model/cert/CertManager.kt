@@ -4,10 +4,12 @@ import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.cert.model.CertType
 import com.itinfo.rutilvm.util.cert.util.CertParser
 import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
+import com.itinfo.rutilvm.util.ssh.model.registerRutilVMPubkey2Host
 import com.itinfo.rutilvm.util.ssh.model.toInsecureSession
 import com.itinfo.rutilvm.util.ssh.util.fetchFile
 import com.jcraft.jsch.JSchException
 import org.slf4j.LoggerFactory
+
 import java.io.File
 import java.io.IOException
 import java.io.Serializable
@@ -33,9 +35,10 @@ open class CertManager(
 	val alias: String,
 	val path: String,
 	private val tempDest: String,
-	private val connInfo: RemoteConnMgmt?
+	val connInfo: RemoteConnMgmt?
 ): Serializable {
-	override fun toString(): String = gson.toJson(this)
+	override fun toString(): String =
+		gson.toJson(this)
 
 	private fun certFileLocal(): ByteArray? = try {
 		log.info("certFileLocal ... path: {}", path)
@@ -96,10 +99,10 @@ open class CertManager(
 	fun save2Tmp(): Result<Boolean> = runCatching {
 		val filenameExt: String = path.split("/").last().split(".").last()
 		val filename =
-			if (alias.contains("VDSM"))
+			if (alias.contains("VDSM")) // 호스트 인증서
 				"[${connInfo?.host}]${alias}.${filenameExt}"
 			else
-				"$alias.$filenameExt"
+				"$alias.$filenameExt" // 그 외 인증서 (엔진)
 		log.info("save2Tmp ... path: {}, filenameExt: {}, filename: {}", path, filenameExt, filename)
 		val tgtPath: Path = Paths.get(tempDest, filename)
 		val fTmpDest = File(tempDest)
@@ -121,6 +124,23 @@ open class CertManager(
 		log.info("인증서 임시보관 성공!")
 	}.onFailure {
 		log.error("인증서 임시보관 실패 ... 이유: {}", it.localizedMessage)
+		it.stackTrace
+	}
+
+	fun registerRutilVMPubkey2Host(
+		rootPassword: String? = "", ovirtSSHPubkey: String? = "",
+	): Result<Boolean> = runCatching {
+		connInfo?.registerRutilVMPubkey2Host(
+			"$address:${connInfo.port}",
+			rootPassword,
+			ovirtSSHPubkey
+		)?.getOrDefault(false)
+			?: false
+			// TODO: 예외처리 필요
+	}.onSuccess {
+		log.info("SSH 공개키 등록 및 연결 성공!")
+	}.onFailure {
+		log.error("SSH 공개키 등록 및 연결 실패 ... 이유: {}", it.localizedMessage)
 		it.stackTrace
 	}
 

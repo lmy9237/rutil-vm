@@ -30,6 +30,7 @@ dependencies {
 	testImplementation(Dependencies.kotlinStdlib)
     // testImplementation(Dependencies.springBootWeb)
     testImplementation(Dependencies.log4j)
+	testImplementation(Dependencies.jackson)
     testImplementation(Dependencies.junit)
     testImplementation(Dependencies.hamcrest)
 	testRuntimeOnly(Dependencies.jdbc)

@@ -17,9 +17,22 @@ LEFT JOIN FETCH dte.unregisteredOvfOfEntities
 WHERE 1=1
 AND ude.id.storageDomainId = :storageDomainId
 """)
-	fun findByStorageDomainIdWithDetails(
+	fun findAllByStorageDomainIdWithDetails(
 		@Param("storageDomainId") storageDomainId: UUID
 	): List<UnregisteredDiskEntity>
+
+	@Query("""
+SELECT ude FROM UnregisteredDiskEntity ude
+LEFT JOIN FETCH ude.diskToVmEntries dte
+LEFT JOIN FETCH dte.unregisteredOvfOfEntities
+WHERE 1=1
+AND ude.id.storageDomainId = :storageDomainId
+AND ude.id.diskId = :diskId
+""")
+	fun findByStorageDomainIdAndDiskIdWithDetails(
+		@Param("storageDomainId") storageDomainId: UUID,
+		@Param("diskId") diskId: UUID
+	): UnregisteredDiskEntity?
 	// Find by the disk_id part of the composite key
 	fun findByIdDiskId(diskId: UUID): List<UnregisteredDiskEntity> // Might return multiple if disk_id isn't globally unique across storage domains
 

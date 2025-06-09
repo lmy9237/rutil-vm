@@ -224,7 +224,7 @@ class StorageImportServiceImpl(
 	override fun findAllUnregisteredDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo> {
 		log.info("findAllUnregisteredDisksFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val unregisteredDisksFromDB: List<UnregisteredDiskEntity> =
-			rUnregisteredDisks.findByStorageDomainIdWithDetails(storageDomainId.toUUID())
+			rUnregisteredDisks.findAllByStorageDomainIdWithDetails(storageDomainId.toUUID())
 				.filter { it.diskToVmEntries.isEmpty() }
 		val disksFound: List<Disk> = conn.findAllUnregisteredDisksFromStorageDomain(storageDomainId)
 			.getOrDefault(emptyList())
@@ -234,6 +234,11 @@ class StorageImportServiceImpl(
 	@Throws(Error::class)
 	override fun findUnregisteredDiskFromStorageDomain(storageDomainId: String, diskId: String): DiskImageVo? {
 		log.info("findUnregisteredDiskFromStorageDomain ... storageDomainId: {}, diskId: {}", storageDomainId, diskId)
+		val unregisteredDiskFromDB: UnregisteredDiskEntity? =
+			rUnregisteredDisks.findByStorageDomainIdAndDiskIdWithDetails(
+				storageDomainId.toUUID(),
+				diskId.toUUID()
+			)
 		val res: Disk? = conn.findAllUnregisteredDisksFromStorageDomain(storageDomainId)
 			.getOrDefault(emptyList())
 			.firstOrNull { disk -> disk.id() == diskId }

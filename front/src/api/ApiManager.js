@@ -3306,7 +3306,18 @@ const ApiManager = {
   findCert: async (id) => makeAPICall({
     method: "GET",
     url: ENDPOINTS.FIND_CERT(id),
-  })
+  }),
+  /**
+   * @name ApiManager.attachCert
+   * @description oVirt 인증서 연결
+   * 
+   * @returns 
+   **/
+  attachCert: async ({ address, rootPassword }) => makeAPICall({
+    method: "POST",
+    url: ENDPOINTS.ATTACH_CERT(),
+    data: { address, rootPassword }
+  }),
   //#endregion: Certificate(s)
 }
 

@@ -8,6 +8,8 @@ import com.itinfo.rutilvm.api.configuration.PkiServiceClient
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.computing.ItHostService
 import com.itinfo.rutilvm.common.LoggerDelegate
+import com.itinfo.rutilvm.util.ssh.model.registerRutilVMPubkey2Host
+import okio.IOException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import kotlin.jvm.Throws
@@ -16,14 +18,28 @@ interface ItCertService {
 	/**
 	 * [ItCertService.findAll]
 	 * oVirt 관련 인증서 전체 조회
+	 * @return List<[CertManager]> 인증서 정보
 	 */
 	fun findAll(): List<CertManager>
 	/**
 	 * [ItCertService.findOne]
 	 * oVirt 관련 인증서 상세 조회
+	 *
+	 * @return [CertManager] 인증서 정보
 	 */
 	fun findOne(alias: String, address: String): CertManager?
-
+	/**
+	 * [ItCertService.attach]
+	 * oVirt 관련 인증서 연결
+	 */
+	@Throws(IOException::class)
+	fun attach(address: String?, rootPassword: String?): Boolean?
+	/**
+	 * [ItCertService.findEngineSshPublicKey]
+	 * oVirt 엔진 고유 SSH 공개키 조회
+	 *
+	 * @return [String] oVirt 엔진 인증서 SSH 공개키
+	 **/
 	@Throws(Exception::class)
 	fun findEngineSshPublicKey(): String
 }
@@ -61,6 +77,18 @@ class CertServiceImpl(
 		return cert
 	}
 
+	override fun attach(address: String?, rootPassword: String?): Boolean? {
+		log.info("attach ... address: {}", address)
+		if (rootPassword.isNullOrEmpty() || certConfig.ovirtSSHPubkey.isNullOrEmpty()) {
+			// TODO: 예외처리 필요
+			return@attach false
+		}
+		val cert: CertManager? = findAll().firstOrNull { it.address == it.address }
+		return cert?.registerRutilVMPubkey2Host(
+			rootPassword, certConfig.ovirtSSHPubkey
+		)?.getOrDefault(false)
+	}
+
 	override fun findEngineSshPublicKey(): String {
 		log.info("findEngineSshPublicKey ... ")
 		return pkiServiceClient.fetchEngineSshPublicKey()
@@ -70,3 +98,4 @@ class CertServiceImpl(
 		private val log by LoggerDelegate()
 	}
 }
+
