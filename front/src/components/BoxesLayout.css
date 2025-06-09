@@ -67,6 +67,9 @@
 .error { color: var(--color-orange); }
 .warning { color: var(--color-yellow); }
 
+.bar-chart-title{
+  margin-left: 18%;
+}
 .graphs {
   height: calc(100% - 28px - 32px - 4px);
 }

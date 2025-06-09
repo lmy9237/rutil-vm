@@ -42,7 +42,6 @@
 .section-table-outer table tbody tr:hover {
   background-color: var(--color-hover) !important;
 }
-.section-table-outer th,
 .section-table-outer td {
   border: 1px solid rgb(204, 204, 204);
   height: var(--h-primary);
@@ -50,6 +49,10 @@
 }
 .section-table-outer th {
   background-color: var(--color-table);
+  border: 1px solid rgb(204, 204, 204);
+  /* border: 1px solid red; */
+  height: var(--h-primary);
+  padding: 0 6px;
 }
 .section-table-outer input[type="checkbox"] {
   text-align: center;
@@ -93,4 +96,14 @@
 table .custom-select-wrapper button,
 table .input-container button {
   width: 100% !important;
+}
+/*th드레그*/
+.table-resizer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  cursor: col-resize;
+  user-select: none;
 }

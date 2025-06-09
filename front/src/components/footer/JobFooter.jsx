@@ -173,7 +173,7 @@ const JobFooter = ({
               e.stopPropagation()
               if (footerVisible()) refetchJobs()
             }}
-          />(위치)
+          />
           {/* <IconButton iconDef={rvi16Refresh("#717171")} 
                 onClick={handleRefresh}
                  onClick={() =>  window.location.reload()}

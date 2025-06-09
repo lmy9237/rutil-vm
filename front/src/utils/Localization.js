@@ -36,7 +36,7 @@ export const Localization = {
     EVENT: "이벤트",
     CONSOLE: "콘솔",
     UP: "실행 중",
-    DOWN: "중지",
+    DOWN: "정지",
     HA: "고가용성",
     SPARSE: "할당 정책",
     SIZE_AVAILABLE: "여유 공간",
@@ -213,7 +213,7 @@ export const Localization = {
       else if (_status === "ACTIVATING")    return "활성화 중";
       else if (_status === "INSTALLING")    return "설치 중";
       else if (_status === "INSTALL_FAILED")    return "설치 실패";
-      else if (_status === "DOWN")          return "중지";
+      else if (_status === "DOWN")          return "정지";
       else if (_status === "INACTIVE")      return "비활성화";
       else if (_status === "UNINITIALIZED") return "초기화되지 않음";
       else if (_status === "NEXT_RUN")      return "다음 실행 시 변경내용 적용";

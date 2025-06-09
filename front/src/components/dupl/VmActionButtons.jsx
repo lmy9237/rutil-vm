@@ -64,7 +64,7 @@ const VmActionButtons = ({
     ["UP", "POWERING_DOWN", "POWERING_UP", "SUSPENDED"].includes(vm?.status)
   );
   const console = vmsSelected.length > 0 && vmsSelected.some(vm =>
-    ["UP", "POWERING_DOWN", "POWERING_UP"].includes(vm?.status)
+    ["UP", "POWERING_DOWN", "POWERING_UP","WAIT_FOR_LAUNCH"].includes(vm?.status)
   );
   const { mutate: downloadRemoteViewerConnectionFileFromVm } = useRemoteViewerConnectionFileFromVm()
   const downloadRemoteViewerConnectionFile = (e) => {

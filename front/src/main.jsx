@@ -25,7 +25,7 @@ const queryClient = new QueryClient({ //자동 refetch
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: true,
-      // refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, //10초
+      //refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, //10초
       refetchInterval:  DEFAULT_REFETCH_INTERVAL_IN_MILLI, // 2분    새로고침이 너무 잦아서 임시로 2분으로 걸어두었습니다
       staleTime: 0,
     },

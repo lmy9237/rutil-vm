@@ -12,6 +12,9 @@
 .split-item:last-child {
   width: 38.5%;
 }
+.split-item:last-child:empty {
+  display: none;
+}
 .snapshot-item {
   cursor: pointer;
   padding: 4px 20px;

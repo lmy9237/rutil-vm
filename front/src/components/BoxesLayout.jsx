@@ -275,7 +275,7 @@ export const BoxChartAllGraphs = ({ type }) => {
   const [heightGraphRest, setHeightGraphRest] = useState(150);
 
   const updateHeightGraphRest = () => {
-    const isWide = window.innerWidth >= 2000;
+    const isWide = window.innerWidth >= 2300;
     const newHoriz = isWide ? 360 : 240;
     setHeightGraphHoriz(newHoriz);
 
@@ -294,13 +294,22 @@ export const BoxChartAllGraphs = ({ type }) => {
     <div id={`graphs-${type}`} className="graphs v-center w-full mt-auto">
       <div className="graphs-horizontal f-start w-full" style={{ height: `${heightGraphHoriz}px` }}>
         <RadialChartAll type={type} size={heightGraphHoriz} />
-        <BarChartAll type={type} size={heightGraphHoriz} className="ml-auto" />
+        <BarChartAll type={type} size={heightGraphHoriz} className="ml-auto"  title={
+            type === "cpu" ? "CPU 상위 VM"
+            : type === "memory" ? "메모리 상위 VM"
+            : type === "domain" ? "스토리지 목록"
+            : ""
+          }/>
       </div>
       <WaveChartCpu type={type} heightInn={heightGraphRest} style={{ height: `${heightGraphRest}px` }} />
-      <BoxGrids type={type} style={{ height: `${heightGraphRest}px` }} />
+      <BoxGrids type={type} title={
+        type === "cpu" ? "CPU 사용률" :
+        type === "memory" ? "메모리 사용률" :
+        type === "domain" ? "스토리지 사용률" : ""
+      } style={{ height: `${heightGraphRest}px` }} />
     </div>
-  );
-};
+    );
+  };
 
 const RadialChartAll = ({
   type, size
@@ -364,7 +373,7 @@ const RadialChartAll = ({
 }
 
 const BarChartAll = ({
-  type, size,
+  type, size, title,
   ...props
 }) => {
   const {
@@ -416,12 +425,17 @@ const BarChartAll = ({
   }, [type])
 
   return (
-    <div className="graph-chart-all f-center"
+    <div className="graph-chart-all f-center v-start"
       style={{
          height: `${size}px`,
         // height: `${HEIGHT_GRAPH_HORIZ}px`,
       }}
     >
+      {title && (
+          <div className="bar-chart-title fs-12 fw-500 w-full">
+            {title}
+          </div>
+      )}
       <BarChartWrapper 
         data={_data}
         keyName="name"
@@ -489,6 +503,7 @@ const BarChartWrapper = ({
     [...data]?.map((e) => e[keyPercent]) ?? []
   , [data, keyPercent]);
 
+  
   return <BarChart 
     names={names}
     percentages={percentages}
@@ -496,8 +511,10 @@ const BarChartWrapper = ({
   />;
 };
 
+
 const BoxGrids = ({
   type,
+  title,
   heightInn,
   ...props
 }) => {
@@ -505,14 +522,15 @@ const BoxGrids = ({
     <div className="graph-sub boxes-grid v-start w-full"
       {...props}
     >
-      {type ? <BoxGrid type={type} />
-        : ["cpu", "memory", "domain"].map((e) => (
-          <BoxGrid type={e} />
-        ))
-      }
+      {title && (
+        <div className="box-grid-title fs-14 fw-500 mb-3 ml-2">
+          {title}
+        </div>
+      )}
+      <BoxGrid type={type} />
       <GridLegends />
     </div>
-  )
+  );
 }
 
 const BoxGrid = ({

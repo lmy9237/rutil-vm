@@ -44,6 +44,7 @@ const TemplateEditModal = ({
     { value: "server", label: "서버" },
   ]);
   const monitorOptions = [
+    { value: 0, label: "0개" }, 
     { value: 1, label: "1개" },
     { value: 2, label: "2개" },
     { value: 3, label: "3개" },
@@ -91,10 +92,10 @@ useEffect(() => {
       
         setClsuterVoId(template.clusterVo?.id || "");
         setClsuterVoName(template.clusterVo?.name || "");
-        setMonitor(Number(template?.monitor ?? 1)); // ✅
- setStateless(Boolean(template?.stateless));
-setStartPaused(Boolean(template?.startPaused));
-setDeleteProtected(Boolean(template?.deleteProtected));
+        setMonitor(Number(template?.monitor ?? 1)); 
+        setStateless(Boolean(template?.stateless));
+        setStartPaused(Boolean(template?.startPaused));
+        setDeleteProtected(Boolean(template?.deleteProtected));
         setSelectedOptimizeOption(template?.optimizeOption || "server");
     //  setSelectedChipset(template?.chipsetFirmwareType || "Q35_OVMF");
       }

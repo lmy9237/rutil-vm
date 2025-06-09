@@ -30,32 +30,67 @@ const BarChart = ({
   //     setChartSize({ width: `${width}px`, height: `${height}px` });
   //   }
   // };
+
+
+  // 차트 수치가 0인건 1%로 표시하기
+  // useEffect(() => {
+  //   const paddedNames = [...names];
+  //   const paddedPercentages = [...percentages];
+  
+  //   // 3개가 안 되면 빈 항목으로 채움
+  //   // while (paddedNames.length < 3) {
+  //   //   paddedNames.push("");           
+  //   //   paddedPercentages.push(0);    
+  //   // }
+  //   const dynamicColors = paddedPercentages.map((e) => CONSTANT.color.byPercentage(e));
+  //   while (paddedNames.length < 3) {
+  //     paddedNames.push("");
+  //     paddedPercentages.push(0);
+  //     dynamicColors.push("transparent"); // 색도 빈 항목용
+  //   }
+
+  //   setSeries([{ data: paddedPercentages }]);
+  //   setChartOptions((prevOptions) => ({
+  //     ...prevOptions,
+  //     colors: dynamicColors,
+  //     xaxis: {
+  //       ...prevOptions.xaxis,
+  //       categories: paddedNames,
+  //     },
+  //   }));
+  // }, [names, percentages]);
   useEffect(() => {
     const paddedNames = [...names];
     const paddedPercentages = [...percentages];
-  
-    // 3개가 안 되면 빈 항목으로 채움
-    // while (paddedNames.length < 3) {
-    //   paddedNames.push("");           
-    //   paddedPercentages.push(0);    
-    // }
-    const dynamicColors = paddedPercentages.map((e) => CONSTANT.color.byPercentage(e));
+
     while (paddedNames.length < 3) {
       paddedNames.push("");
       paddedPercentages.push(0);
-      dynamicColors.push("transparent"); // 색도 빈 항목용
     }
 
-    setSeries([{ data: paddedPercentages }]);
-    setChartOptions((prevOptions) => ({
-      ...prevOptions,
-      colors: dynamicColors,
+    const displayed = paddedPercentages.map((p, i) => {
+      const isEmptyLabel = paddedNames[i] === "";
+      return p === 0 && !isEmptyLabel ? 1 : p;
+    });
+
+    const real = [...paddedPercentages];
+    const colors = displayed.map((val, i) => {
+      const isEmptyLabel = paddedNames[i] === "";
+      return isEmptyLabel ? "transparent" : CONSTANT.color.byPercentage(val);
+    });
+
+    setSeries([{ data: displayed, realData: real }]);
+    setChartOptions((prev) => ({
+      ...prev,
+      colors,
       xaxis: {
-        ...prevOptions.xaxis,
+        ...prev.xaxis,
         categories: paddedNames,
       },
     }));
   }, [names, percentages]);
+
+
 
   // useEffect(() => {
   //   updateChartSize();
@@ -148,12 +183,12 @@ const BarChart = ({
   });
 
   return (
-    <div className="f-center h-full">
+    <div className="f-center h-full" style={{ marginTop: "-20px" }}>
       <ReactApexChart type="bar" 
         id="chart-bar" /* css id는 먹히지만 class명은 안먹힘 */
         options={chartOptions}
         series={series}
-        height="80%" // 부모 기준
+        height="85%" // 부모 기준
         // width={chartSize.width}
         // height={chartSize.height || "250px"}
         {...props}
