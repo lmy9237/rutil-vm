@@ -9,6 +9,6 @@ import java.util.*
 
 @Repository
 interface BaseDisksRepository : JpaRepository<BaseDiskEntity, UUID> {
-	fun findByDiskId(diskId: UUID): Optional<DiskVmElementEntity>
+	fun findByDiskId(diskId: UUID): BaseDiskEntity?
 
 }
