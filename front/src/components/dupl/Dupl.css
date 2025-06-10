@@ -1,3 +1,10 @@
 .dupl-header-group {
   align-items: flex-start !important;
 }
+.disk-select-box {
+  border-radius: 1px !important;
+  padding: 4px 8px;
+  min-width: 120px;
+  height: var(--h-input);
+  border: var(--border-btn) !important;
+}

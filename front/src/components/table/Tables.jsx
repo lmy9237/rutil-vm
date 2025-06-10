@@ -47,7 +47,11 @@ const Tables = ({
   const [selectedRowIndex, setSelectedRowIndex] = useState(null); // 선택된 행의 인덱스를 관리
   const [tooltips, setTooltips] = useState({}); // 툴팁 상태 관리
   const [contextRowIndex, setContextRowIndex] = useState(null); // 우클릭한 행의 인덱스 관리
-  const [selectedRows, setSelectedRows] = useState([]); // ctrl다중선택택
+  const [selectedRows, setSelectedRows] = useState([]); // ctrl다중선택
+
+  // shift다중선택
+  const [lastClickedRowIndex, setLastClickedRowIndex] = useState(null);
+
 
   // 검색박스
   // 우클릭 메뉴 위치 관리
@@ -238,26 +242,52 @@ const Tables = ({
     }
   };
 
-  const handleRowClick = (rowIndex, e) => {
-    Logger.debug(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: `, e);
-    const clickedRow = sortedData[rowIndex];
-    if (!clickedRow) return;
+  // const handleRowClick = (rowIndex, e) => {
+  //   Logger.debug(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: `, e);
+  //   const clickedRow = sortedData[rowIndex];
+  //   if (!clickedRow) return;
 
-    if (e.ctrlKey) { /* ctrl 키를 눌렀을 때 */
-      setSelectedRows((prev) => {
-        const updated = prev.includes(rowIndex)
-          ? prev.filter((index) => index !== rowIndex)
-          : [...prev, rowIndex];
-        const selectedData = updated.map((index) => sortedData[index]);
-        onRowClick(selectedData); // 선택된 데이터 배열 전달
-        return updated;
-      });
-    } else {
-      const selectedData = [clickedRow];
-      setSelectedRows([rowIndex]);
-      onRowClick(selectedData); // 단일 선택된 데이터 전달
-    }
-  };
+  //   if (e.ctrlKey) { /* ctrl 키를 눌렀을 때 */
+  //     setSelectedRows((prev) => {
+  //       const updated = prev.includes(rowIndex)
+  //         ? prev.filter((index) => index !== rowIndex)
+  //         : [...prev, rowIndex];
+  //       const selectedData = updated.map((index) => sortedData[index]);
+  //       onRowClick(selectedData); // 선택된 데이터 배열 전달
+  //       return updated;
+  //     });
+  //   } else {
+  //     const selectedData = [clickedRow];
+  //     setSelectedRows([rowIndex]);
+  //     onRowClick(selectedData); // 단일 선택된 데이터 전달
+  //   }
+  // };
+const handleRowClick = (rowIndex, e) => {
+  Logger.debug(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: `, e);
+  const clickedRow = sortedData[rowIndex];
+  if (!clickedRow) return;
+
+  if (e.shiftKey && lastClickedRowIndex !== null) {
+    const start = Math.min(lastClickedRowIndex, rowIndex);
+    const end = Math.max(lastClickedRowIndex, rowIndex);
+    const range = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    setSelectedRows(range);
+    onRowClick(range.map(index => sortedData[index]));
+  } else if (e.ctrlKey || e.metaKey) {
+    setSelectedRows((prev) => {
+      const updated = prev.includes(rowIndex)
+        ? prev.filter((i) => i !== rowIndex)
+        : [...prev, rowIndex];
+      onRowClick(updated.map(i => sortedData[i]));
+      return updated;
+    });
+    setLastClickedRowIndex(rowIndex);
+  } else {
+    setSelectedRows([rowIndex]);
+    onRowClick([clickedRow]);
+    setLastClickedRowIndex(rowIndex);
+  }
+};
 
   useEffect(() => {
     if (sortConfig.key) {
@@ -405,11 +435,10 @@ const Tables = ({
                     theme="dark-tooltip"
                     className="tippy-box"
                     arrow={true}
-                
                     zIndex={9999} 
                     disabled={!tooltips[`${globalIndex}-${colIndex}`]}
                   >
-                    {/* <div className="cell-ellipsis" style={{ textAlign: isTableRowClick ? "left" : shouldCenter ? "center" : "left" }}> */}
+                    {/* <div className="cell-ellipsis" style={{ textAlign: isTableRowClick ? "left" : shouldCenter ? "center" : "left" }}>  
                     <div className="cell-ellipsis" style={{ textAlign: determinedAlign }}>
                       {isJSX ? (
                         isTableRowClick ? (
@@ -421,6 +450,19 @@ const Tables = ({
                         String(cellValue ?? "")
                       )}
                     </div>
+                    */}
+                      {isJSX ? (
+                          isTableRowClick ? (
+                            // ✅ TableRowClick은 스타일 덮지 않음
+                            cellValue
+                          ) : (
+                            <div className="cell-ellipsis f-center">{cellValue}</div>
+                          )
+                        ) : (
+                          <div className="cell-ellipsis" style={{ textAlign: determinedAlign }}>
+                            {String(cellValue ?? "")}
+                          </div>
+                      )}
                   </Tippy>
                   </td>
                 );
@@ -438,44 +480,51 @@ const Tables = ({
         <table className="custom-table w-full" 
           ref={tableRef}
         >
-          <thead>
-            <tr >
-              {columns.map((column, index) => (
-                // <th className="fw-700"
-                //   key={index}
-                //   onClick={() => handleSort(column)}
-                //   style={{
-                //     textAlign: "center",
-                //     cursor: column.isIcon ? "default" : "pointer",
-                //     width: column.width ?? "auto",
-                //     ...(column?.style ?? {}),
-                //   }}
-                // >
-                //   {column.header}
-                //   {!column.isIcon && sortConfig.key === column.accessor && (
-                //     <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                //   )}
-                // </th>
+        <thead>
+          <tr>
+            {columns.map((column, index) => (
+              <th
+                key={index}
+                className="fw-700" // ✅ 기존 굵기 유지
+                onClick={() => !column.isIcon && handleSort(column)}
+                style={{
+                  textAlign: "center",
+                  cursor: column.isIcon ? "default" : "pointer",
+                  width: columnWidths[column.accessor] ?? column.width ?? "auto",
+                  position: "relative",
+                  userSelect: "none",
+                  ...column.style,
+                }}
+              >
+                {/* 헤더명 + 정렬 아이콘 */}
+                <div className="f-center">
+                  {column.header}
+                  {!column.isIcon && sortConfig.key === column.accessor && (
+                    <span className="ml-1">
+                      {sortConfig.direction === "asc" ? "▲" : "▼"}
+                    </span>
+                  )}
+                </div>
 
-                // th드레그
-                  <th
-                    className="fw-700"
-                    style={{
-                       textAlign: "center",
-                      cursor: column.isIcon ? "default" : "pointer",
-                      width: columnWidths[column.accessor] ?? column.width ?? "auto",
-                      ...column.style,
-                    }}
-                  >
-                    {column.header}
-                    <div
-                      className="table-resizer"
-                      onMouseDown={(e) => handleMouseDown(e, column.accessor)}
-                    />
-                  </th>
-              ))}
-            </tr>
-          </thead>
+                {/* 🔧 드래그 핸들 */}
+                <div
+                  className="table-resizer"
+                  onMouseDown={(e) => handleMouseDown(e, column.accessor)}
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                    height: "100%",
+                    width: "6px",
+                    cursor: "col-resize",
+                    zIndex: 10,
+                  }}
+                />
+              </th>
+            ))}
+          </tr>
+        </thead>
+
           <tbody>{renderTableBody()}</tbody>
         </table>
 

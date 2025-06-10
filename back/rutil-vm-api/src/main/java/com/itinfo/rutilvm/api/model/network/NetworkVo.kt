@@ -55,7 +55,7 @@ class NetworkVo (
 	val name: String = "",
 	val description: String = "",
 	val comment: String = "",
-	val mtu: Int = 0,
+	val mtu: Int = 1500,
 	val portIsolation: Boolean = false,
 	val stp: Boolean = false,
 	val vdsmName: String = "",
@@ -79,7 +79,7 @@ class NetworkVo (
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
-		private var bMtu: Int = 0; fun mtu( block: () -> Int?) { bMtu = block() ?: 0 }
+		private var bMtu: Int = 0; fun mtu( block: () -> Int?) { bMtu = block() ?: 1500 }
 		private var bPortIsolation: Boolean = false; fun portIsolation( block: () -> Boolean?) { bPortIsolation = block() ?: false }
 		private var bStp: Boolean = false; fun stp( block: () -> Boolean?) { bStp = block() ?: false }
 		private var bVdsmName: String = ""; fun vdsmName(block: () -> String?) { bVdsmName = block() ?: "" }

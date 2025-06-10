@@ -154,7 +154,7 @@ const DomainInfo = () => {
 
   const sectionHeaderButtons = useMemo(() => ([
     { type: "update",   label: `${Localization.kr.DOMAIN} ${Localization.kr.UPDATE}`, onClick: () => setActiveModal("domain:update"), },
-    { type: "remove",   label: Localization.kr.REMOVE,                                onClick: () => setActiveModal("domain:remove"),   disabled: !isACTIVE || !isUnattached,  },
+    { type: "remove",   label: Localization.kr.REMOVE,                                onClick: () => setActiveModal("domain:remove"),   disabled: !isUnattached,  },
     /* { type: "destroy",  label: Localization.kr.DESTROY,                               onClick: () => setActiveModal("domain:destroy"),  disabled: isACTIVE || !(isMaintenance || isUnattached), }, */
   ]), [domain?.status]);
 

@@ -351,7 +351,7 @@ const VmDiskModal = ({
               const domainObj = domains.find((d) => d.id === storageDomainVo.id);
               if (!domainObj) return null;
               return (
-                <div className="text-xs text-gray-500 mt-1">
+                <div className="text-xs text-gray-500 f-end">
                   사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)}
                   {" / "}
                   총 용량: {checkZeroSizeToGiB(domainObj.size)}
@@ -371,7 +371,7 @@ const VmDiskModal = ({
               onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true", }))}
             />
           </div>
-          <div className="img-checkbox-outer f-end">
+          <div className="img-checkbox-outer f-end checkbox-outer">
             <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
               checked={Boolean(formState.wipeAfterDelete)} 
               onChange={handleInputChangeCheck("wipeAfterDelete")}

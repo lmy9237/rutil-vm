@@ -12,9 +12,9 @@ const TableColumnsInfo = {
     { accessor: 'comment',       header: Localization.kr.COMMENT,         clickable: false,   },
     { accessor: 'storageType',   header: '스토리지 유형',                   clickable: false,   },
     { accessor: 'status',        header: Localization.kr.STATUS,          clickable: false,   },
-    { accessor: 'hostCnt',       header: `${Localization.kr.HOST} 수`,    clickable: false,   width: '7%' },
-    { accessor: 'clusterCnt',    header: `${Localization.kr.CLUSTER} 수`, clickable: false,   width: '7%'  },
-    { accessor: 'version',       header: '호환 버전',                      clickable: false,   width: '7%' },
+    { accessor: 'hostCnt',       header: `${Localization.kr.HOST} 수`,    clickable: false,   width: '7%' ,align: "center" },
+    { accessor: 'clusterCnt',    header: `${Localization.kr.CLUSTER} 수`, clickable: false,   width: '7%' , align: "center"  },
+    { accessor: 'version',       header: '호환 버전',                      clickable: false,   width: '7%' , align: "center"  },
     { accessor: 'description',   header: Localization.kr.DESCRIPTION,     clickable: false,   },
   ],
   CLUSTERS_FROM_DATACENTER: [

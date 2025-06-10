@@ -255,7 +255,8 @@ const NetworkModal = ({
             onChange={(e) => {
               const isCustom = e.target.checked;
               setFormState((prev) => ({
-                ...prev, mtu: isCustom ? 1500 : 0, // 사용자 정의일 경우 기본값으로 시작
+                 ...prev,
+                  mtu: isCustom ? 1500 : 0, 
               }));
             }}
             tType="사용자 정의" fType="기본값 (1500)"
@@ -267,7 +268,7 @@ const NetworkModal = ({
             min="0"
             max="1500"
             step="1"
-            value={formState.mtu}
+            value={formState.mtu === 0 ? 1500 : formState.mtu}
             disabled={formState.mtu === 0}
             onChange={(e) => {
               const value = e.target.value;

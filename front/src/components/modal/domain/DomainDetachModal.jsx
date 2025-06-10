@@ -7,6 +7,7 @@ import {
   useDetachDomain,
 } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
+import { RVI16, rvi16ChevronRight } from "@/components/icons/RutilVmIcons";
 
 /**
  * @name DomainDetachModal
@@ -49,7 +50,10 @@ const DomainDetachModal = ({
       contentStyle={{ width: "650px"}} 
       shouldWarn={true}
     >
-      <div><b>{label ? datacentersSelected[0]?.name : domainsSelected[0]?.name}</b></div><br/>
+      <div className="p-1.5 font-bold flex f-start">
+        <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>
+        {label ? datacentersSelected[0]?.name : domainsSelected[0]?.name}
+      </div><br/>
       <div>분리 작업은 등록되지 않은 상태로 스토리지 도메인에 들어 있는 엔티티를 이동시킵니다.</div><br/>
       
       <div className="flex py-2 associated-resource-lists">

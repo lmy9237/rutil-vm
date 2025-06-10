@@ -40,7 +40,7 @@ export const BoxesLayout = ({
   ...props
 }) => {
   const [styleDashBoxes, setStyleDashBoxes] = useState({
-    height: '480px',
+    height: '450px',
   });
 
   const updateHeightDashBoxes = () => {
@@ -56,7 +56,7 @@ export const BoxesLayout = ({
       // height = Math.max(window.innerHeight * 0.3, 300);
     }
 
-    setStyleDashBoxes({ height: `${height}px` });
+    setStyleDashBoxes({ height: `${height-13}px` });
   }
   
   useEffect(() => {
@@ -295,17 +295,17 @@ export const BoxChartAllGraphs = ({ type }) => {
       <div className="graphs-horizontal f-start w-full" style={{ height: `${heightGraphHoriz}px` }}>
         <RadialChartAll type={type} size={heightGraphHoriz} />
         <BarChartAll type={type} size={heightGraphHoriz} className="ml-auto"  title={
-            type === "cpu" ? "CPU 상위 VM"
-            : type === "memory" ? "메모리 상위 VM"
-            : type === "domain" ? "스토리지 목록"
+            type === "cpu" ? "CPU Top3 VM" // "가상머신 CPU 사용률 Top3"
+            : type === "memory" ? " 메모리 Top3 VM" //"가상머신 메모리 사용률 Top3"
+            : type === "domain" ? " 스토리지 Top3 VM" //"가상머신 스토리지 사용률 Top3"
             : ""
           }/>
       </div>
       <WaveChartCpu type={type} heightInn={heightGraphRest} style={{ height: `${heightGraphRest}px` }} />
       <BoxGrids type={type} title={
-        type === "cpu" ? "CPU 사용률" :
-        type === "memory" ? "메모리 사용률" :
-        type === "domain" ? "스토리지 사용률" : ""
+        type === "cpu" ? "가상머신 CPU 사용률" :
+        type === "memory" ? "가상머신 메모리 사용률" : 
+        type === "domain" ? "가상머신 스토리지 사용률" : ""
       } style={{ height: `${heightGraphRest}px` }} />
     </div>
     );
@@ -480,7 +480,7 @@ const WaveChartCpu = ({
   }, [type, host, domain])
 
   return (
-    <div className="graph-sub graph-wave w-full"
+    <div className="graph-sub graph-wave w-full mb-4"
       {...props}
     >
       {/* <h2>Per CPU</h2> */}
@@ -523,7 +523,7 @@ const BoxGrids = ({
       {...props}
     >
       {title && (
-        <div className="box-grid-title fs-14 fw-500 mb-3 ml-2">
+        <div className="box-grid-title fs-12 fw-500 mb-3 ml-2">
           {title}
         </div>
       )}

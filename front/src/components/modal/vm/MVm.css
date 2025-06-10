@@ -67,6 +67,8 @@
   overflow-y: auto; 
   overflow-x: hidden;
 }
-
+.checkbox-outer .input-checkbox{
+  width: none !important;
+}
 
 

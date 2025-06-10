@@ -44,7 +44,7 @@ const TableRowClick = ({
   };
 
   return (
-    <span className="tr-clickable"
+    <span className="tr-clickable "
       data-rowclick 
       onClick={props.onClick ?? handleClick}
       style={{ 

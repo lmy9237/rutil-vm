@@ -57,7 +57,7 @@ const DomainActivateModal = ({
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       promptText={`${names.join(", ")} 를(을) 활성화 하시겠습니까?`}
-      contentStyle={{ width: "630px", height: "230px" }} 
+      contentStyle={{ width: "630px"}} 
       shouldWarn={true}
     />
   );
