@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.model.computing
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.computing.VmVo.Companion
 import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromCpuProfileToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
@@ -18,14 +19,18 @@ import com.itinfo.rutilvm.api.model.network.toVmNics
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentIdNames
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentVos
+import com.itinfo.rutilvm.api.repository.engine.entity.VmsEntity
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.common.formatEnhanced
+import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.common.ovirtDf
+import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.common.toTimeElapsedKr
 import com.itinfo.rutilvm.util.ovirt.findAllNicsFromVm
+import com.itinfo.rutilvm.util.ovirt.findAllSnapshotsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromVm
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findDisk
@@ -79,6 +84,7 @@ import org.ovirt.engine.sdk4.types.VmType
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
+import java.time.LocalDateTime
 import java.util.*
 
 private val log = LoggerFactory.getLogger(VmVo::class.java)
@@ -163,7 +169,8 @@ class VmVo (
 	val name: String = "",
 	val description: String = "",
 	val comment: String = "",
-	val status: VmStatus = VmStatus.UNKNOWN,
+	val status: String = "",
+	// val status: VmStatus = VmStatus.UNKNOWN,
 	val optimizeOption: String = "", // VmType
 	val biosBootMenu: Boolean = false,
 	val biosType: String = "", // chipsetFirmwareType
@@ -210,9 +217,9 @@ class VmVo (
 	val nextRun: Boolean = false,
 	val runOnce: Boolean = false,
 	val upTime: String = "",
-	private val _creationTime: Date? = null,
-	private val _startTime: Date? = null,
-	private val _stopTime: Date? = null,
+	private val _creationTime: LocalDateTime? = null,
+	private val _startTime: LocalDateTime? = null,
+	private val _stopTime: LocalDateTime? = null,
 	val ipv4: List<String> = listOf(),
 	val ipv6: List<String> = listOf(),
 	val hostInCluster: Boolean = false,
@@ -234,19 +241,20 @@ class VmVo (
     override fun toString(): String =
 		gson.toJson(this)
 
-	val creationTime: String
-		get() = ovirtDf.formatEnhanced(_creationTime)
-	val startTime: String
-		get() = ovirtDf.formatEnhanced(_startTime)
-	val stopTime: String
-		get() = ovirtDf.formatEnhanced(_stopTime)
+	val creationTime: String?
+		get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
+	val startTime: String?
+		get() = ovirtDf.formatEnhancedFromLDT(_startTime)
+	val stopTime: String?
+		get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
 
     class Builder {
 		private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
-		private var bStatus: VmStatus = VmStatus.UNKNOWN; fun status(block: () -> VmStatus?) { bStatus = block() ?: VmStatus.UNKNOWN }
+		// private var bStatus: VmStatus = VmStatus.UNKNOWN; fun status(block: () -> VmStatus?) { bStatus = block() ?: VmStatus.UNKNOWN }
+		private var bStatus: String = ""; fun status(block: () -> String?) { bStatus = block() ?: "" }
 		private var bOptimizeOption: String = ""; fun optimizeOption(block: () -> String?) { bOptimizeOption = block() ?: "" }
 		private var bBiosBootMenu: Boolean = false; fun biosBootMenu(block: () -> Boolean?) { bBiosBootMenu = block() ?: false }
 		private var bBiosType: String = ""; fun biosType(block: () -> String?) { bBiosType = block() ?: "" }
@@ -293,9 +301,9 @@ class VmVo (
 		private var bNextRun: Boolean = false; fun nextRun(block: () -> Boolean?) { bNextRun = block() ?: false }
 		private var bRunOnce: Boolean = false; fun runOnce(block: () -> Boolean?) { bRunOnce = block() ?: false }
 		private var bUpTime: String = ""; fun upTime(block: () -> String?) { bUpTime = block() ?: "" }
-		private var bCreationTime: Date? = null; fun creationTime(block: () -> Date?) { bCreationTime = block() }
-		private var bStartTime: Date? = null; fun startTime(block: () -> Date?) { bStartTime = block() }
-		private var bStopTime: Date? = null; fun stopTime(block: () -> Date?) { bStopTime = block() }
+		private var bCreationTime: LocalDateTime? = null; fun creationTime(block: () -> LocalDateTime?) { bCreationTime = block() }
+		private var bStartTime: LocalDateTime? = null; fun startTime(block: () -> LocalDateTime?) { bStartTime = block() }
+		private var bStopTime: LocalDateTime? = null; fun stopTime(block: () -> LocalDateTime?) { bStopTime = block() }
 		private var bIpv4: List<String> = listOf(); fun ipv4(block: () -> List<String>?) { bIpv4 = block() ?: listOf() }
 		private var bIpv6: List<String> = listOf(); fun ipv6(block: () -> List<String>?) { bIpv6 = block() ?: listOf() }
 		private var bHostInCluster: Boolean = false; fun hostInCluster(block: () -> Boolean?) { bHostInCluster = block() ?: false }
@@ -339,7 +347,7 @@ fun List<Vm>.toVmsIdName(): List<VmVo> =
 fun Vm.toVmStatus(): VmVo = VmVo.builder {
 	id { this@toVmStatus.id() }
 	name { this@toVmStatus.name() }
-	status { this@toVmStatus.status() }
+	status { this@toVmStatus.status().value() }
 }
 fun List<Vm>.toVmStatusList(): List<VmVo> =
 	this@toVmStatusList.map { it.toVmStatus() }
@@ -352,8 +360,8 @@ fun Vm.toVmMenu(conn: Connection): VmVo {
 		id { vm.id() }
 		name { vm.name() }
 		comment { vm.comment() }
-		creationTime {  vm.creationTime() }
-		status { vm.status() }
+		creationTime { vm.creationTime().toLocalDateTime() }
+		status { vm.status().value() }
 		description { vm.description() }
 		nextRun { vm.nextRunConfigurationExists() }
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
@@ -381,6 +389,62 @@ fun Vm.toVmMenu(conn: Connection): VmVo {
 fun List<Vm>.toVmMenus(conn: Connection): List<VmVo> =
 	this@toVmMenus.map { it.toVmMenu(conn) }
 
+fun VmsEntity.toVmEntity(conn: Connection): VmVo {
+	val entity = this@toVmEntity
+	// val snapshots: List<Snapshot> = conn.findAllSnapshotsFromVm(entity.vmGuid.toString())
+	// 	.getOrDefault(listOf())
+	// 	.filter { it.snapshotType() != ACTIVE && it.snapshotType() != PREVIEW }
+
+	return VmVo.builder {
+		id { entity.vmGuid.toString() }
+		name { entity.vmName }
+		comment { entity.freeTextComment }
+		creationTime { entity.creationDate }
+		stopTime { entity.lastStopTime }
+		// upTime { entity.elapsedTime }
+		status { com.itinfo.rutilvm.api.ovirt.business.VmStatus.forValue(entity.status).description }
+		description { entity.description }
+		nextRun { entity.nextRunConfigExists }
+		hostedEngineVm { entity.origin == 6 }
+		usageDto {
+			UsageDto.builder {
+				cpuPercent { usageCpuPercent }
+				memoryPercent { usageMemPercent }
+				networkPercent { usageNetworkPercent }
+			}
+		}
+		ipv4 { listOf(entity.vmIp) }
+		fqdn { entity.vmHost }
+		templateVo {
+			IdentifiedVo.builder {
+				id { entity.originalTemplateId.toString() }
+				name { entity.originalTemplateName }
+			}
+		}
+		hostVo {
+			IdentifiedVo.builder {
+				id { entity.runOnVds.toString() }
+				name { entity.runOnVdsName }
+			}
+		}
+		clusterVo {
+			IdentifiedVo.builder {
+				id { entity.clusterId.toString() }
+				name { entity.clusterName }
+			}
+		}
+		dataCenterVo {
+			IdentifiedVo.builder {
+				id { entity.storagePoolId.toString() }
+				name { entity.storagePoolName }
+			}
+		}
+		// snapshotVos { snapshots.fromSnapshotsToIdentifiedVos() }
+	}
+}
+
+fun List<VmsEntity>.toVmEntities(conn: Connection): List<VmVo> =
+	this@toVmEntities.map { it.toVmEntity(conn) }
 
 
 fun Vm.toVmVo(conn: Connection): VmVo {
@@ -408,7 +472,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		name { vm.name() }
 		description { vm.description() }
 		comment { vm.comment() }
-		status { vm.status() }
+		status { vm.status().value() }
 		optimizeOption { vm.type().value() }
 		biosType { vm.bios().type().value() }
 		osType { vm.os().type() }
@@ -421,7 +485,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		memorySize { vm.memory() }
 		memoryGuaranteed { vm.memoryPolicy().guaranteed() }
 		memoryMax { vm.memoryPolicy().max() }
-		creationTime { vm.creationTime() }
+		creationTime { vm.creationTime().toLocalDateTime() }
 		deleteProtected { vm.deleteProtected() }
 		monitor { if(vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
 		displayType { if(vm.displayPresent()) vm.display().type() else DisplayType.VNC }
@@ -493,7 +557,7 @@ fun Vm.toTemplateVmVo(conn: Connection): VmVo {
 	return VmVo.builder {
 		id { vm.id() }
 		name { vm.name() }
-		status { vm.status() }
+		status { vm.status().value() }
 		if (vm.status() == VmStatus.UP) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id()).getOrDefault(emptyList())
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
@@ -531,8 +595,8 @@ fun Vm.toVmStorageDomainMenu(conn: Connection, storageDomainId: String): VmVo {
 	return VmVo.builder {
 		id { this@toVmStorageDomainMenu.id() }
 		name { this@toVmStorageDomainMenu.name() }
-		status { this@toVmStorageDomainMenu.status() }
-		creationTime { this@toVmStorageDomainMenu.creationTime() }
+		status { this@toVmStorageDomainMenu.status().value() }
+		creationTime { this@toVmStorageDomainMenu.creationTime().toLocalDateTime() }
 		memoryGuaranteed { virtualSize }  // 원래 디스크의 가상크기 합친값
 		memorySize { actualSize }		// 디스크 실제 값 합친값
 		diskAttachmentVos { diskAttachments.toDiskAttachmentIdNames(conn) }
@@ -548,7 +612,7 @@ fun Vm.toNetworkVm(conn: Connection): VmVo {
 		id { this@toNetworkVm.id() }
 		name { this@toNetworkVm.name() }
 		description { this@toNetworkVm.description() }
-		status { this@toNetworkVm.status() }
+		status { this@toNetworkVm.status().value() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		if (this@toNetworkVm.status() == VmStatus.UP) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toNetworkVm.id()).getOrDefault(emptyList())
@@ -573,7 +637,7 @@ fun Vm.toDiskVm(conn: Connection): VmVo {
 		id { this@toDiskVm.id() }
 		name { this@toDiskVm.name() }
 		description { this@toDiskVm.description() }
-		status { this@toDiskVm.status() }
+		status { this@toDiskVm.status().value() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		if (this@toDiskVm.status() == VmStatus.UP) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toDiskVm.id()).getOrDefault(emptyList())
@@ -598,7 +662,7 @@ fun Vm.toUnregisteredVm(conn: Connection): VmVo {
 		name { vm.name() }
 		description { vm.description() }
 		comment { vm.comment() }
-		status { vm.status() }
+		status { vm.status().value() }
 		templateVo { tmp?.fromTemplateToIdentifiedVo() }
 		biosType { vm.bios().type().toString() }
 		cpuArc { vm.cpu().architecture() }
@@ -607,7 +671,7 @@ fun Vm.toUnregisteredVm(conn: Connection): VmVo {
 		cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
 		cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
 		cpuPinningPolicy { vm.cpuPinningPolicy().value() }
-		creationTime { vm.creationTime() }
+		creationTime { vm.creationTime().toLocalDateTime() }
 		monitor { if(vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
 		displayType { if(vm.displayPresent()) vm.display().type() else DisplayType.VNC }
 		ha { vm.highAvailability().enabled() }

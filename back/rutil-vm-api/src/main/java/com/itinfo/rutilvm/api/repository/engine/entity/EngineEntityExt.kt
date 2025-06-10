@@ -9,6 +9,7 @@ import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.toUnregisterdDisk
 import com.itinfo.rutilvm.api.ovirt.business.BiosType
 import com.itinfo.rutilvm.common.toDate
+import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll
 import org.ovirt.engine.sdk4.types.Disk
@@ -67,7 +68,7 @@ fun UnregisteredOvfOfEntities.toUnregisteredVm(vm: Vm?=null): VmVo {
 		name { this@toUnregisteredVm.ovf?.virtualSystem?.name }
 		description { this@toUnregisteredVm.ovf?.virtualSystem?.description }
 		comment { this@toUnregisteredVm.ovf?.virtualSystem?.comment }
-		status { vm?.status() }
+		status { vm?.status()?.value() }
 		// templateVo { tmp?.fromTemplateToIdentifiedVo() }
 		biosType {
 			vm?.bios()?.type()?.toString()
@@ -85,7 +86,7 @@ fun UnregisteredOvfOfEntities.toUnregisteredVm(vm: Vm?=null): VmVo {
 		creationTime {
 			// NOTE: 환산에 문제가 있는것으로 판단. 값이 좀 이상함 Locale 때문에 차이가 생김
 			// ovf?.virtualSystem?.creationDate?.toDate()
-			vm?.creationTime()
+			vm?.creationTime().toLocalDateTime()
 		}
 		monitor { if (vm?.displayPresent() == true) vm.display().monitorsAsInteger() else 0 }
 		displayType { if (vm?.displayPresent() == true) vm.display().type() else DisplayType.VNC }

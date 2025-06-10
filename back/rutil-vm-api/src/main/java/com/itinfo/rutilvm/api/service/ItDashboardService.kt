@@ -34,7 +34,7 @@ interface ItDashboardService {
 	/**
 	 * [ItDashboardService.getHosts]
 	 * 대시보드 - 호스트 개수
-	 * 
+	 *
 	 * @param type [String] 호스트 상태 (up, down, all)
 	 * @return [Int] 호스트 개수
 	 */
@@ -106,8 +106,8 @@ class DashboardServiceImpl(
 		log.info("getVms ... type: $type")
 		return vm.findAll().count {
 			when (type) {
-				"up" -> it.status == VmStatus.UP
-				"down" -> it.status != VmStatus.UP
+				"up" -> it.status == "UP"
+				"down" -> it.status != "UP"
 				else -> true
 			}
 		}
@@ -130,7 +130,7 @@ class DashboardServiceImpl(
 	 * 대시보드 - 이벤트 개수
 	 *
 	 * @return [Int] 이벤트 개수
-	 * 
+	 *
 	 * TODO : 기준이 애매하다
 	 */
 	override fun getEvents(type: String): Int {
