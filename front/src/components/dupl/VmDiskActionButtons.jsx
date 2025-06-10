@@ -26,7 +26,7 @@ const VmDiskActionButtons = ({
   const basicActions = [
     { type: "create",      onClick: () => setActiveModal("vmdisk:create"),     label: Localization.kr.CREATE,       disabled: isContextMenu && disksSelected.length > 0 },
     { type: "connect",     onClick: () => setActiveModal("vmdisk:connect"),    label: Localization.kr.CONNECTION,   disabled: isContextMenu && disksSelected.length > 0 },
-    { type: "update",      onClick: () => setActiveModal("vmdisk:update"),     label: Localization.kr.UPDATE,       disabled: disksSelected.length !== 1 || !isLock, },
+    { type: "update",      onClick: () => setActiveModal("vmdisk:update"),     label: Localization.kr.UPDATE,       disabled: disksSelected.length !== 1, },
     { type: "remove",      onClick: () => setActiveModal("vmdisk:remove"),     label: Localization.kr.REMOVE,       disabled: disksSelected.length === 0 || !isLock, },
     { type: "activate",    onClick: () => setActiveModal("vmdisk:activate"),   label: Localization.kr.ACTIVATE,     disabled: disksSelected.length === 0 || !isActive || isLock, },
     { type: "deactivate",  onClick: () => setActiveModal("vmdisk:deactivate"), label: Localization.kr.DEACTIVATE,   disabled: disksSelected.length === 0 || isActive || !isLock, },

@@ -42,7 +42,7 @@ const initialFormState = {
   sparse: true, //할당정책: 씬
   active: true, // 디스크 활성화
   wipeAfterDelete: false, // 삭제 후 초기화
-  bootable: true, // 부팅가능
+  bootable: false, // 부팅가능
   sharable: false, // 공유가능
   readOnly: false, // 읽기전용
   // cancelActive: false, // 취소 활성화
@@ -59,8 +59,7 @@ const initialFormState = {
  * @returns 
  */
 const VmDiskModal = ({
-  isOpen,
-  onClose,
+  isOpen, onClose,
   editMode = false,
   diskType = true,  // t=disk페이지에서 생성 f=vm만들때 같이 생성
   vmId,
@@ -73,28 +72,32 @@ const VmDiskModal = ({
 }) => {
   const { validationToast } = useValidationToast();
   // const { closeModal } = useUIState()
-  const { vmsSelected, disksSelected, setDisksSelected } = useGlobal()
+  const { 
+    vmsSelected, 
+    disksSelected, setDisksSelected 
+  } = useGlobal()
   const dLabel = editMode
     ? Localization.kr.UPDATE 
     : Localization.kr.CREATE;
   const [activeTab, setActiveTab] = useState("img");
+
   const handleTabClick = useCallback((tab) => { 
     setActiveTab(tab);
   }, []);
+
   const [formState, setFormState] = useState(initialFormState);
   const [storageDomainVo, setStorageDomainVo] = useState({ id: "", name: "" });
   const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
 
   const { mutate: addDiskVm } = useAddDiskFromVM(onClose, onClose);
   const { mutate: editDiskVm } = useEditDiskFromVM(onClose, onClose);
-  const {
-    data: vm 
-  } = useVm(vmsSelected[0]?.id);
+  const { data: vm } = useVm(vmsSelected[0]?.id);
   
   // 디스크 데이터 가져오기
   const {
     data: diskAttachment
   } = useDiskAttachmentFromVm(vmId, diskAttachmentId);
+
 
   // 선택한 데이터센터가 가진 도메인 가져오기
   const {
@@ -158,7 +161,7 @@ const VmDiskModal = ({
         sparse: diskAttachment?.diskImageVo?.sparse || false,
         active: diskAttachment?.active || false,
         wipeAfterDelete: diskAttachment?.diskImageVo?.wipeAfterDelete || false,
-        bootable: hasBootableDisk ? false : diskAttachment?.bootable || true,
+        bootable: diskAttachment?.bootable || false,
         sharable: diskAttachment?.diskImageVo?.sharable || false,
         readOnly: diskAttachment?.readOnly || false,
         // cancelActive: diskAttachment?.cancelActive || false,
@@ -374,7 +377,7 @@ const VmDiskModal = ({
               onChange={handleInputChangeCheck("wipeAfterDelete")}
             />
             <LabelCheckbox id="bootable" label={Localization.kr.IS_BOOTABLE}
-              checked={!hasBootableDisk && Boolean(formState.bootable)}
+              checked={diskAttachment?.bootable}
               disabled={hasBootableDisk} // 이미 부팅 디스크가 있으면 비활성화
               onChange={handleInputChangeCheck("bootable")}
             />
@@ -388,9 +391,7 @@ const VmDiskModal = ({
               disabled={editMode}
               onChange={handleInputChangeCheck("readOnly")} 
             />
-            <LabelCheckbox 
-              label="증분 백업 사용" 
-              id="backup" 
+            <LabelCheckbox id="backup" label="증분 백업 사용"               
               checked={Boolean(formState.backup)} 
               onChange={handleInputChangeCheck("backup")}
             />

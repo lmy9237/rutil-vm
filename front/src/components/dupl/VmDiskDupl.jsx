@@ -44,7 +44,7 @@ const VmDiskDupl = ({
           {diskImage?.alias}
         </TableRowClick>
       ),
-      connectionvm: vmsSelected[0]?.name || "",
+      // connectionvm: vmsSelected[0]?.name || "",
       description: diskImage?.description,
       bootable: d?.bootable ? Localization.kr.YES: "",
       readOnly: d?.readOnly ? Localization.kr.YES : "",

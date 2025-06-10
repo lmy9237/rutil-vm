@@ -71,9 +71,9 @@ const VmSnapshots = ({
     _persistMemory: snapshot?.persistMemory 
       ? rvi16DesktopFlag(CONSTANT.color.blue1) 
       : rvi16Desktop(),
-    cpuCore: `${snapshot?.vmViewVo?.cpuTopologyCnt} (${snapshot?.vmViewVo?.cpuTopologyCore}:${snapshot?.vmViewVo?.cpuTopologySocket}:${snapshot?.vmViewVo?.cpuTopologyThread})`,
-    memorySize: convertBytesToMB(snapshot?.vmViewVo?.memorySize) + " MB" ?? "",
-    memoryActual: convertBytesToMB(snapshot?.vmViewVo?.memoryGuaranteed) + " MB" ?? "",
+    cpuCore: `${snapshot?.vmVo?.cpuTopologyCnt} (${snapshot?.vmVo?.cpuTopologyCore}:${snapshot?.vmVo?.cpuTopologySocket}:${snapshot?.vmVo?.cpuTopologyThread})`,
+    memorySize: convertBytesToMB(snapshot?.vmVo?.memorySize) + " MB" ?? "",
+    memoryActual: convertBytesToMB(snapshot?.vmVo?.memoryGuaranteed) + " MB" ?? "",
     _status: status2Icon(snapshot?.status)
   })), [snapshots]);
 
