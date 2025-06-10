@@ -4,9 +4,11 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.DetailedDiskSnapshot
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
 import com.itinfo.rutilvm.api.repository.engine.ImageRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
@@ -138,7 +140,7 @@ interface ItStorageService {
 	 * @return List<[DiskImageVo]> 디스크 목록
 	 */
 	@Throws(Error::class)
-	fun findAllDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo>
+	fun findAllDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo>?
 	/**
 	 * [ItStorageService.findAllDiskSnapshotsFromStorageDomain]
 	 * 스토리지 도메인 - 디스크 스냅샷 목록
@@ -200,6 +202,7 @@ interface ItStorageService {
 class StorageServiceImpl(
 ): BaseService(), ItStorageService {
 	@Autowired private lateinit var diskVmElementRepository: DiskVmElementRepository
+	@Autowired private lateinit var rAllDisks: AllDisksRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<StorageDomainVo> {
@@ -299,11 +302,13 @@ class StorageServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo> {
+	override fun findAllDisksFromStorageDomain(storageDomainId: String): List<DiskImageVo>? {
 		log.info("findAllDisksFromStorageDomain ... storageDomainId: {}", storageDomainId)
-		val res: List<Disk> = conn.findAllDisksFromStorageDomain(storageDomainId)
-			.getOrDefault(emptyList())
-		return res.toDomainDiskMenus(conn)
+		// val res: List<Disk> = conn.findAllDisksFromStorageDomain(storageDomainId)
+		// 	.getOrDefault(emptyList())
+		// return res.toDomainDiskMenus(conn)
+		val res: List<AllDiskEntity>? = rAllDisks.findByStorageId(storageDomainId)
+		return res?.toDiskEntities()
 	}
 
 	@Autowired private lateinit var rImage: ImageRepository

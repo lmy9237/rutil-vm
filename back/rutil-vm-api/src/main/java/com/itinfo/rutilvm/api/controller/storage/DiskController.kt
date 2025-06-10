@@ -50,23 +50,6 @@ class DiskController: BaseController() {
 
 	@ApiOperation(
 		httpMethod="GET",
-		value="디스크 목록(simple)",
-		notes="전체 디스크 목록을 조회한다"
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/simple")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun simpleDisks(
-	): ResponseEntity<List<DiskImageVo>> {
-		log.info("/storages/disks/simple ... 디스크 목록")
-		return ResponseEntity.ok(iDisk.findAllId())
-	}
-
-	@ApiOperation(
-		httpMethod="GET",
 		value="디스크가 가진 연결 목록",
 		notes="전체 디스크 목록을 조회한다"
 	)

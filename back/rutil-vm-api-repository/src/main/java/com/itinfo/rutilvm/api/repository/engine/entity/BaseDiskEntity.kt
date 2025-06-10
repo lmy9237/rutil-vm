@@ -1,22 +1,13 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
-import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
-import com.itinfo.rutilvm.api.repository.engine.BaseDisksRepository
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Type
-import org.slf4j.LoggerFactory
-import java.time.LocalDateTime
 import java.util.UUID
 import java.io.Serializable
 // Or jakarta.persistence.* for newer Spring Boot
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.FetchType
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
-import javax.persistence.OneToOne
 import javax.persistence.Table
 
 /**

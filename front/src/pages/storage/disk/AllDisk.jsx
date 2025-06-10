@@ -5,10 +5,9 @@ import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import { rvi24HardDrive }     from "@/components/icons/RutilVmIcons";
 import DiskDupl               from "@/components/dupl/DiskDupl";
 import {
-  useAllDisks
+  useAllDisks,
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
 
 const AllDisk = () => {
   const {

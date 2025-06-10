@@ -4,7 +4,10 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
-import com.itinfo.rutilvm.api.repository.engine.entity.BaseDiskEntity
+import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
+import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
+import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
+import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.UnregisteredDiskEntity
 import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.ovirtDf
@@ -15,12 +18,18 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.DiskBuilder
 import org.ovirt.engine.sdk4.builders.DiskProfileBuilder
-import org.ovirt.engine.sdk4.builders.ImageTransferBuilder
 import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
-import org.ovirt.engine.sdk4.types.*
+import org.ovirt.engine.sdk4.types.DataCenter
+import org.ovirt.engine.sdk4.types.Disk
+import org.ovirt.engine.sdk4.types.DiskBackup
+import org.ovirt.engine.sdk4.types.DiskFormat
+import org.ovirt.engine.sdk4.types.DiskProfile
+import org.ovirt.engine.sdk4.types.StorageDomain
+import org.ovirt.engine.sdk4.types.StorageType
+import org.ovirt.engine.sdk4.types.Template
+import org.ovirt.engine.sdk4.types.Vm
 import java.io.Serializable
 import java.math.BigInteger
-import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -125,6 +134,52 @@ fun List<Disk>.toDiskIdNames(): List<DiskImageVo> =
 	this@toDiskIdNames.map { it.toDiskIdName() }
 
 
+fun AllDiskEntity.toDiskEntity(): DiskImageVo {
+	val entity = this@toDiskEntity
+	return DiskImageVo.builder {
+		id { entity.diskId.toString() }
+		alias { entity.diskAlias }
+		sharable { entity.shareable }
+		virtualSize { entity.size }
+		actualSize { entity.actualSize }
+		status { DiskStatus.forValue(entity.imagestatus) }
+		storageType { DiskStorageType.forValue(entity.diskStorageType) }
+		sparse { entity.volumeType == 2 }
+		description { entity.description }
+		dateCreated { entity.creationDate }
+		diskProfileVo {
+			IdentifiedVo.builder {
+				id { entity.diskProfileId }
+				name { entity.diskProfileName }
+			}
+		}
+		storageDomainVo {
+			IdentifiedVo.builder {
+				id { entity.storageId }
+				name { entity.storageName }
+			}
+		}
+		connectVm {
+			if(entity.entityType == "VM") {
+				IdentifiedVo.builder {
+					name { entity.vmNames }
+				}
+			}
+			else null
+		}
+		connectTemplate {
+			if(entity.entityType == "TEMPLATE") {
+				IdentifiedVo.builder {
+					name { entity.vmNames }
+				}
+			}
+			else null
+		}
+	}
+}
+fun List<AllDiskEntity>.toDiskEntities(): List<DiskImageVo> =
+	this@toDiskEntities.map { it.toDiskEntity() }
+
 
 /**
  * 디스크 목록
@@ -155,10 +210,10 @@ fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
-		status { disk.status() }
+		status { DiskStatus.forStorageValue(disk.status().value()) }
 		sparse { disk.sparse() }
-		contentType { disk.contentType() }
-		storageType { disk.storageType() }
+		contentType { DiskContentType.forStorageValue(disk.contentType().toString()) }
+		storageType { DiskStorageType.forStorageValue(disk.storageType().toString()) }
 		description { disk.description() }
 		connectVm { vmConn?.fromVmToIdentifiedVo() }
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
@@ -184,9 +239,9 @@ fun Disk.toDcDiskMenu(conn: Connection): DiskImageVo {
 		storageDomainVo { disk.storageDomain().fromStorageDomainToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
-		status { disk.status() }
+		status { DiskStatus.forStorageValue(disk.status().value()) }
 		sparse { disk.sparse() }
-		storageType { disk.storageType() }
+		storageType { DiskStorageType.forStorageValue(disk.storageType().toString()) }
 		description { disk.description() }
 		connectVm { if(disk.vmsPresent()) disk.vms().first().fromVmToIdentifiedVo() else null }
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
@@ -217,9 +272,9 @@ fun Disk.toDomainDiskMenu(conn: Connection): DiskImageVo {
 		storageDomainVo { disk.storageDomain().fromStorageDomainToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
-		status { disk.status() }
+		status { DiskStatus.forStorageValue(disk.status().value()) }
 		sparse { disk.sparse() }
-		storageType { disk.storageType() }
+		storageType { DiskStorageType.forStorageValue(disk.storageType().toString()) }
 		description { disk.description() }
 		connectVm { vmConn?.fromVmToIdentifiedVo() }
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
@@ -227,6 +282,7 @@ fun Disk.toDomainDiskMenu(conn: Connection): DiskImageVo {
 }
 fun List<Disk>.toDomainDiskMenus(conn: Connection): List<DiskImageVo> =
 	this@toDomainDiskMenus.map { it.toDomainDiskMenu(conn) }
+
 
 fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 	val disk = this@toDiskInfo
@@ -242,19 +298,20 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 					template.diskAttachments().any { diskAttachment -> diskAttachment.id() == disk.id() }
 		}?.id()
 	val tmp: Template? = templateId?.let { conn.findTemplate(it).getOrNull() }
+	val profile: DiskProfile? = if(disk.diskProfilePresent()) conn.findDiskProfile(disk.diskProfile().id()).getOrNull() else null
 
 	return DiskImageVo.builder {
 		id { disk.id() }
 		alias { disk.alias() }
 		description { disk.description() }
-		status { disk.status() }
+		status { DiskStatus.forStorageValue(disk.status().value()) }
 		sparse { disk.sparse() } // 할당정책
 		if (storageDomain != null) {
 			dataCenterVo { storageDomain.dataCenters().first()?.fromDataCenterToIdentifiedVo() }
 			storageDomainVo { storageDomain.fromStorageDomainToIdentifiedVo() }
 		}
-		diskProfileVo { if(disk.diskProfilePresent()) disk.diskProfile().fromDiskProfileToIdentifiedVo() else null }
-		contentType { disk.contentType() }
+		diskProfileVo { profile?.fromDiskProfileToIdentifiedVo() }
+		contentType { DiskContentType.forStorageValue(disk.contentType().toString()) }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
 		wipeAfterDelete { disk.wipeAfterDelete() }
@@ -277,7 +334,7 @@ fun Disk.toVmDisk(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		description { disk.description() }
-		status { disk.status() }
+		status { DiskStatus.forStorageValue(disk.status().value()) }
 		sparse { disk.sparse() } // 할당정책
 		wipeAfterDelete { disk.wipeAfterDelete() }
 		sharable { disk.shareable() }
@@ -321,10 +378,10 @@ fun Disk.toDiskImageVo(conn: Connection): DiskImageVo {
 		backup { this@toDiskImageVo.backup() == DiskBackup.INCREMENTAL }
 		virtualSize { this@toDiskImageVo.provisionedSize() }
 		actualSize { this@toDiskImageVo.actualSize() }
-		status { this@toDiskImageVo.status() }
-		contentType { this@toDiskImageVo.contentType() }
-		storageType { this@toDiskImageVo.storageType() }
-//		createDate { this@toDiskImageVo. } // TODO
+		status { DiskStatus.forStorageValue(this@toDiskImageVo.status().value()) }
+		contentType { DiskContentType.forStorageValue(this@toDiskImageVo.contentType().toString()) }
+		storageType { DiskStorageType.forStorageValue(this@toDiskImageVo.storageType().toString()) }
+		// dateCreated { this@toDiskImageVo. }
 //		connectVm { toConnectVm(conn, diskVmElementEntity) } } }  // TODO
 	}
 }
@@ -356,9 +413,9 @@ fun Disk.toDiskVo(conn: Connection, vmId: String): DiskImageVo {
 		backup { this@toDiskVo.backup() == DiskBackup.INCREMENTAL }
 		virtualSize { this@toDiskVo.provisionedSize() }
 		actualSize { this@toDiskVo.actualSize() }
-		status { this@toDiskVo.status() }
-		contentType { this@toDiskVo.contentType() }
-		storageType { this@toDiskVo.storageType() }
+		status { DiskStatus.forStorageValue(this@toDiskVo.status().value()) }
+		contentType { DiskContentType.forStorageValue(this@toDiskVo.contentType().toString()) }
+		storageType { DiskStorageType.forStorageValue(this@toDiskVo.storageType().toString()) }
 //		createDate { this@toDiskImageVo. } // TODO
 	}
 }
@@ -383,7 +440,7 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		description { disk.description() }
-		status { disk.status() }
+		status { DiskStatus.forStorageValue(disk.status().value()) }
 		sparse { disk.sparse() } // 할당정책
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
@@ -391,7 +448,7 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
 		wipeAfterDelete { disk.wipeAfterDelete() }
-		storageType { disk.storageType() }
+		storageType { DiskStorageType.forStorageValue(disk.storageType().toString()) }
 		sharable { disk.shareable() }
 		backup { disk.backup() == DiskBackup.INCREMENTAL }
 		connectVm { vmConn?.fromVmToIdentifiedVo() } // 연결된 가상머신
@@ -479,7 +536,7 @@ fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toException()
 
 	return DiskBuilder()
-		.contentType(DiskContentType.ISO)
+		.contentType ( org.ovirt.engine.sdk4.types.DiskContentType.ISO )
 		.provisionedSize(fileSize)
 		.sparse(storageDomain.storage().type() == StorageType.NFS)// storage가 nfs 면 씬, iscsi면 사전할당
 		.alias(this.alias)
@@ -504,3 +561,4 @@ fun DiskImageVo.toAddTemplateDisk(): Disk {
 		.diskProfile(DiskProfileBuilder().id(this.diskProfileVo.id).build())
 		.build()
 }
+

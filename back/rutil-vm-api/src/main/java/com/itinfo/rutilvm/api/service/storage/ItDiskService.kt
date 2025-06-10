@@ -9,8 +9,9 @@ import com.itinfo.rutilvm.api.model.fromTemplateCdromsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromVmCdromsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.BaseDisksRepository
-import com.itinfo.rutilvm.api.repository.engine.entity.BaseDiskEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
@@ -35,15 +36,6 @@ interface ItDiskService {
      */
     @Throws(Error::class)
     fun findAll(): List<DiskImageVo>
-    /**
-     * [ItDiskService.findAllId]
-     * 전체 디스크 목록 (아이디 이름만 뜨게)
-     *
-     * @return List<[DiskImageVo]> 디스크 아이디 목록
-     */
-    @Throws(Error::class)
-    fun findAllId(): List<DiskImageVo>
-
 	/**
 	 * [ItDiskService.findAllCdRomsFromDisk]
 	 * 디스크가 가진 cdrom정보
@@ -203,24 +195,17 @@ interface ItDiskService {
 class DiskServiceImpl(
 ): BaseService(), ItDiskService {
 	@Autowired private lateinit var rBaseDisks: BaseDisksRepository
+	@Autowired private lateinit var rAllDisks: AllDisksRepository
 
     @Throws(Error::class)
     override fun findAll(): List<DiskImageVo> {
         log.info("findAll ... ")
-        val res: List<Disk> = conn.findAllDisks().getOrDefault(emptyList())
-            .filter { it.contentType() != DiskContentType.OVF_STORE } // ovf_store 값은 제외하고
-        return res.toDiskMenus(conn)
+        // val res: List<Disk> = conn.findAllDisks().getOrDefault(emptyList())
+        //     .filter { it.contentType() != DiskContentType.OVF_STORE } // ovf_store 값은 제외하고
+        // return res.toDiskMenus(conn)
+		val res: List<AllDiskEntity> = rAllDisks.findAll()
+		return res.toDiskEntities()
     }
-
-	@Throws(Error::class)
-	override fun findAllId(): List<DiskImageVo> {
-		log.info("findAllId ... ")
-		val disks: List<BaseDiskEntity> = rBaseDisks.findAll()
-
-		val res: List<Disk> = conn.findAllDisks().getOrDefault(emptyList())
-			.filter { it.contentType() != DiskContentType.OVF_STORE } // ovf_store 값은 제외하고
-		return res.toDiskIdNames()
-	}
 
 	@Throws(Error::class)
 	override fun findAllCdRomsFromDisk(diskId: String): List<IdentifiedVo> {

@@ -524,6 +524,7 @@ const TableColumnsInfo = {
     { accessor: 'status',       header: Localization.kr.STATUS,       clickable: false },
     { accessor: 'storageType',  header: '유형',                        clickable: false },
     { accessor: 'description',  header: Localization.kr.DESCRIPTION,  clickable: false },
+    { accessor: 'dateCreated',  header: Localization.kr.DATE_CREATED,  clickable: false },
   ],
   DISK_SNAPSHOT_FROM_STORAGE_DOMAIN: [
     { accessor: 'actualSize',              header: Localization.kr.SIZE_ACTUAL,                clickable: false },
@@ -627,6 +628,7 @@ const TableColumnsInfo = {
     { accessor: 'status',       header: Localization.kr.STATUS,        clickable: false },
     { accessor: 'storageType',  header: '유형',                        clickable: false },
     { accessor: 'description',  header: Localization.kr.DESCRIPTION,   clickable: false },
+    { accessor: 'dateCreated',  header: Localization.kr.DATE_CREATED,  clickable: false },
   ],
   VMS_FROM_DISK: [
     { accessor: "icon",         header: Localization.kr.STATUS,       clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },

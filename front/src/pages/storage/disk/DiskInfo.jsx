@@ -17,7 +17,7 @@ import DiskVms                from "./DiskVms";
 import DiskDomains            from "./DiskDomains";
 
 /**
- * @name DiskDomains
+ * @name DiskInfo
  * @description 디스크 종합정보
  * (/storages/disks)
  *

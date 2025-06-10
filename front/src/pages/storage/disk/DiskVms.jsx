@@ -2,7 +2,6 @@ import React, { useCallback } from "react";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import SearchBox              from "@/components/button/SearchBox";
 import TablesOuter            from "@/components/table/TablesOuter";
 import TableRowClick          from "@/components/table/TableRowClick";
@@ -11,7 +10,6 @@ import { status2Icon }        from "@/components/icons/RutilVmIcons";
 import {
   useAllVmsFromDisk
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 
 /**
@@ -43,12 +41,18 @@ const DiskVms = ({
         {vm?.name}
       </TableRowClick>
     ),
+    cluster: (
+      <TableRowClick type="cluster" id={vm?.clusterVo?.id}>
+        {vm?.clusterVo?.name}
+      </TableRowClick>
+    ),
     host: (
       <TableRowClick type="host" id={vm?.hostVo?.id}>
         {vm?.hostVo?.name}
       </TableRowClick>
     ),
     ipv4: `${vm?.ipv4} ${vm?.ipv6}`,
+    uptime: vm?.upTime
   }));
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);

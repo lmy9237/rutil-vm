@@ -10,9 +10,6 @@ import TablesOuter            from "@/components/table/TablesOuter";
 import TableRowClick          from "@/components/table/TableRowClick";
 import DiskActionButtons      from "@/components/dupl/DiskActionButtons";
 import { status2Icon }        from "@/components/icons/RutilVmIcons";
-import {
-  useCdromsDisks 
-} from "@/api/RQHook";
 import { checkZeroSizeToGiB } from "@/util";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
@@ -32,13 +29,9 @@ const DiskDupl = ({
     [...disks].map((d) => d.id)
   ), [disks]);
 
-  const {
-    data: cdromsMap = [] 
-  } = useCdromsDisks(diskIds);
   
   // ✅ 데이터 변환: 검색이 가능하도록 `searchText` 추가
   const transformedData = [...disks].map((d) => {
-    const cdromObj = cdromsMap.find((item) => item.diskId === d.id);
     let diskData = {
       ...d,
       _alias: (
@@ -56,22 +49,8 @@ const DiskDupl = ({
       icon1: d?.bootable ? "🔑" : "",
       icon2: d?.readOnly ? "🔒" : "",
       sparse: d?.sparse ? "씬 프로비저닝" : "사전 할당",
-      /*
-      connect: (
-        <>
-        <TableRowClick
-          type={d?.connectVm?.id ? "vm" : "template"}
-          id={d?.connectVm?.id || d?.connectTemplate?.id}
-        >
-          {d?.connectVm?.name || d?.connectTemplate?.name}
-        </TableRowClick>
-        <span>{(cdromObj?.cdroms || []).map((cd) => cd.name).join(', ')}</span>
-        </>
-      ),
-      */
       connect: [
         d?.connectVm?.name || d?.connectTemplate?.name,
-        ...(cdromObj?.cdroms || []).map(cd => cd.name)
       ].filter(Boolean).join(", "),
       virtualSize: checkZeroSizeToGiB(d?.virtualSize),
       actualSize: checkZeroSizeToGiB(d?.actualSize),

@@ -39,3 +39,4 @@ enum class DiskContentType(
 		@JvmStatic fun forStorageValue(value: String="UNKNOWN"): DiskContentType = storageMapping[value] ?: UNKNOWN
 	}
 }
+
